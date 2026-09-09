@@ -10,6 +10,7 @@ import {
   retrieveOpenCheckoutSessionUrl,
   stripeCheckoutSessionLookup,
   resolveCheckoutPriceId,
+  findLiveStripeSubscription,
 } from "@/lib/stripe";
 import {
   CheckoutAttemptPersistenceError,
@@ -196,6 +197,56 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       session.user.email,
       session.user.name
     );
+
+    // STRIPE-SIDE half of the double-subscribe guard (C-91 / WP-14). The DB
+    // guard above is only as good as our subscription row, and that row is
+    // written by a webhook — so it is blind during exactly the window that
+    // matters: between a completed checkout and the
+    // customer.subscription.created delivery that records it. A member who
+    // double-clicks through that window, or whose webhook delivery is delayed,
+    // would otherwise get a SECOND real Stripe subscription and a second charge
+    // every month, with nothing in our own data able to see it. Stripe is
+    // authoritative about its own subscriptions, so ask Stripe.
+    //
+    // Placed AFTER the customer resolve (it needs the customer id) and BEFORE
+    // the CheckoutAttempt is minted, so a refused checkout consumes no
+    // idempotency key and leaves no attempt row to reconcile.
+    //
+    // FAIL CLOSED on an unreadable answer, matching the DB guard above: a
+    // lookup failure is a 503 with no further Stripe side effect, never
+    // "assume no subscription and charge them". This costs nothing real — the
+    // next call in this path creates a Stripe session, which would fail too.
+    const probe = await findLiveStripeSubscription(customerId);
+    if (probe.outcome === "unknown") {
+      console.error(
+        `[INCIDENT][checkout] could not read Stripe subscriptions for customer ${customerId} — ` +
+          `failing closed with 503, no Stripe side effect: ${probe.reason}`,
+      );
+      return NextResponse.json(
+        {
+          error: "Checkout is temporarily unavailable. Please try again shortly.",
+          code: "subscription_lookup_unavailable",
+        },
+        { status: 503 },
+      );
+    }
+    if (probe.outcome === "live") {
+      // Includes the dunning states: a member in past_due or unpaid must fix
+      // the card on the EXISTING subscription in the portal, not buy a second
+      // one alongside it.
+      console.warn(
+        `[checkout] refusing a second checkout for customer ${customerId} — Stripe still ` +
+          `reports subscription ${probe.subscriptionId} as ${probe.status}`,
+      );
+      return NextResponse.json(
+        {
+          error:
+            "You already have a subscription with us. Manage or change your plan from the billing portal.",
+          code: "already_subscribed",
+        },
+        { status: 409 },
+      );
+    }
 
     // Durable attempt: the server-side source of truth for this checkout's
     // idempotency (see lib/billing/checkout-attempt.ts). Race-safe via the

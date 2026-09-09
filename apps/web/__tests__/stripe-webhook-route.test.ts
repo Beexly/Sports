@@ -572,6 +572,37 @@ describe("POST /api/webhooks/stripe", () => {
       }
     });
 
+    it.each([
+      ["missing", undefined],
+      ["blank", "   "],
+    ])(
+      "returns 503 (not 400) when STRIPE_WEBHOOK_SECRET is %s, naming the correct env var",
+      async (_label, value) => {
+        // C-91. A configuration fault must not wear an attacker's clothes: as a
+        // 400 "Invalid signature" this is indistinguishable in Recent Deliveries
+        // from someone posting garbage at the endpoint, and an operator whose
+        // entitlement events have all stopped goes hunting the signing secret's
+        // VALUE when the variable is not set at all.
+        const saved = process.env["STRIPE_WEBHOOK_SECRET"];
+        if (value === undefined) delete process.env["STRIPE_WEBHOOK_SECRET"];
+        else process.env["STRIPE_WEBHOOK_SECRET"] = value;
+        const errSpy = vi.spyOn(console, "error").mockImplementation(() => undefined);
+        try {
+          mocks.constructEvent.mockReturnValue(stripeEvent("unhandled.event", {}));
+          const res = await POST(webhookRequest());
+          expect(res.status).toBe(503);
+          // Never attempt verification against a secret we do not have.
+          expect(mocks.constructEvent).not.toHaveBeenCalled();
+          const logged = errSpy.mock.calls.map((c) => String(c[0])).join(" ");
+          expect(logged).toContain("STRIPE_WEBHOOK_SECRET");
+        } finally {
+          errSpy.mockRestore();
+          if (saved !== undefined) process.env["STRIPE_WEBHOOK_SECRET"] = saved;
+          else delete process.env["STRIPE_WEBHOOK_SECRET"];
+        }
+      },
+    );
+
     it("returns 400 when the stripe-signature header is missing", async () => {
       const res = await POST(webhookRequest("{}", null));
       expect(res.status).toBe(400);

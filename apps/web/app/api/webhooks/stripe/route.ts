@@ -36,14 +36,33 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     throw err;
   }
 
+  // Same reasoning as the STRIPE_SECRET_KEY branch above, for the OTHER secret
+  // this handler needs (C-91). A missing or blank STRIPE_WEBHOOK_SECRET makes
+  // constructEvent throw, which the catch below reports as 400 "Invalid
+  // signature" — a configuration fault wearing an attacker's clothes. In the
+  // Dashboard's Recent Deliveries that is indistinguishable from someone
+  // posting garbage at the endpoint, so an operator whose entitlement events
+  // have all stopped goes looking for the wrong problem: they re-check the
+  // signing secret VALUE against the endpoint when the variable is not set at
+  // all. Fail closed with a 503 that names the variable, exactly as the sibling
+  // branch does. It is still a non-2xx, so Stripe keeps redelivering on its own
+  // schedule and no entitlement event is lost while the variable is being set.
+  const webhookSecret = process.env["STRIPE_WEBHOOK_SECRET"];
+  if (typeof webhookSecret !== "string" || webhookSecret.trim() === "") {
+    console.error(
+      "Stripe webhook config error: STRIPE_WEBHOOK_SECRET is missing or blank — cannot verify " +
+        "any delivery. Set it to the endpoint's signing secret and redeploy.",
+    );
+    return NextResponse.json(
+      { error: "Stripe is not configured (STRIPE_WEBHOOK_SECRET is missing or blank)" },
+      { status: 503 },
+    );
+  }
+
   let event: Stripe.Event;
 
   try {
-    event = stripeClient.webhooks.constructEvent(
-      body,
-      signature,
-      process.env["STRIPE_WEBHOOK_SECRET"]!
-    );
+    event = stripeClient.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error(`Stripe webhook signature verification failed: ${message}`);

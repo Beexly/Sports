@@ -20,6 +20,8 @@ const mocks = vi.hoisted(() => ({
   // Reconciliation lookup used by the inline past-TTL repair path (5.3).
   retrieveSession: vi.fn<(sessionId: string) => Promise<unknown>>(),
   listSessionsByCustomerSince: vi.fn<(customerId: string, since: Date) => Promise<unknown[]>>(),
+  // Stripe-side half of the double-subscribe guard (C-91).
+  findLiveStripeSubscription: vi.fn<(customerId: string) => Promise<unknown>>(),
 }));
 
 vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
@@ -32,6 +34,7 @@ vi.mock("@/lib/stripe", () => ({
     retrieveSession: mocks.retrieveSession,
     listSessionsByCustomerSince: mocks.listSessionsByCustomerSince,
   }),
+  findLiveStripeSubscription: mocks.findLiveStripeSubscription,
 }));
 const dbMock = vi.hoisted(() => ({
   subscriptionFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
@@ -167,6 +170,83 @@ describe("POST /api/subscriptions/checkout", () => {
     mocks.listSessionsByCustomerSince.mockReset();
     mocks.retrieveSession.mockResolvedValue(null);
     mocks.listSessionsByCustomerSince.mockResolvedValue([]);
+    // Stripe reports no existing subscription by default; the double-subscribe
+    // tests below override it.
+    mocks.findLiveStripeSubscription.mockReset();
+    mocks.findLiveStripeSubscription.mockResolvedValue({ outcome: "none" });
+  });
+
+  /**
+   * C-91 / WP-14 — the DB double-billing guard above is only as good as our
+   * subscription row, and that row is written by a webhook. It is therefore
+   * blind during exactly the window that matters: between a completed checkout
+   * and the customer.subscription.created delivery that records it. A member
+   * who double-clicks through that window gets a SECOND real Stripe
+   * subscription and a second charge every month, and nothing in our own data
+   * can see it. Stripe is authoritative about its own subscriptions.
+   */
+  describe("Stripe-side double-subscribe guard", () => {
+    it("refuses a second checkout when Stripe still reports a live subscription", async () => {
+      // Our row says nothing (the webhook has not landed yet) — the DB guard
+      // above passes, so this is the only thing standing between the member and
+      // a second monthly charge.
+      dbMock.subscriptionFindUnique.mockResolvedValue(null);
+      mocks.findLiveStripeSubscription.mockResolvedValue({
+        outcome: "live",
+        subscriptionId: "sub_already_live",
+        status: "active",
+      });
+
+      const res = await POST(checkoutRequest({ tier: "PRO" }));
+
+      expect(res.status).toBe(409);
+      expect((await res.json()).code).toBe("already_subscribed");
+      // No Stripe session, and no attempt row / idempotency key consumed.
+      expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
+      expect(dbMock.attemptCreate).not.toHaveBeenCalled();
+    });
+
+    it.each(["past_due", "unpaid"])(
+      "refuses a second checkout while the existing subscription is %s — the card is fixed in the portal",
+      async (status) => {
+        dbMock.subscriptionFindUnique.mockResolvedValue(null);
+        mocks.findLiveStripeSubscription.mockResolvedValue({
+          outcome: "live",
+          subscriptionId: "sub_dunning",
+          status,
+        });
+
+        const res = await POST(checkoutRequest({ tier: "PRO" }));
+
+        expect(res.status).toBe(409);
+        expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
+      },
+    );
+
+    it("FAILS CLOSED with 503 and no Stripe side effect when the probe cannot read Stripe", async () => {
+      mocks.findLiveStripeSubscription.mockResolvedValue({
+        outcome: "unknown",
+        reason: "fixture: stripe unreachable",
+      });
+
+      const res = await POST(checkoutRequest({ tier: "PRO" }));
+
+      expect(res.status).toBe(503);
+      expect((await res.json()).code).toBe("subscription_lookup_unavailable");
+      // Never "assume no subscription and charge them".
+      expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
+      expect(dbMock.attemptCreate).not.toHaveBeenCalled();
+    });
+
+    it("lets a genuine first-time buyer through when Stripe reports none", async () => {
+      mocks.findLiveStripeSubscription.mockResolvedValue({ outcome: "none" });
+
+      const res = await POST(checkoutRequest({ tier: "PRO" }));
+
+      expect(res.status).toBe(200);
+      expect(mocks.findLiveStripeSubscription).toHaveBeenCalledWith("cus_123");
+      expect(mocks.createCheckoutSession).toHaveBeenCalled();
+    });
   });
 
   it("returns 401 for unauthenticated requests", async () => {
