@@ -1,0 +1,6 @@
+# Hugging Face Spaces requirements for the GSE Calibration Lab.
+#
+# The gsecal core is pure standard library — gradio is the only dependency, and
+# it is only the UI. Keep this file minimal: every package added here is another
+# thing that can break a deploy of a tool whose entire value is trustworthiness.
+gradio>=5.0,<6.0

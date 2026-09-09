@@ -51,7 +51,7 @@ python3 -m gsecal gate --n 458 --brier 0.1926 --ece 0.0524 \
 Tests, also zero-install:
 
 ```bash
-python3 -m unittest discover -s tests -t .   # 86 tests
+python3 -m unittest discover -s tests -t .   # 108 tests
 ```
 
 ## Optional: the Gradio cockpit
@@ -62,6 +62,19 @@ pip install -r requirements-lab.txt
 python app.py            # http://127.0.0.1:7861
 python app.py --mcp      # also serve the analyses as MCP tools
 ```
+
+### Deploying it (Spaces, Kubernetes/LKE, a container host)
+
+See [`space/DEPLOY.md`](./space/DEPLOY.md). The short version: the app is
+fail-closed, so it refuses to bind publicly without a password — but **that does
+not make a host private**, and Hugging Face Spaces are public by default. A
+Space serving this must be created **private** *and* given both credentials as
+Space **secrets**.
+
+Prefer the local CLI. It needs no install, no host, no secret and no network,
+so there is no attack surface to reason about. Deploy only when more than one
+person genuinely needs the cockpit. Nothing here benefits from a GPU — it is
+stdlib arithmetic and runs on the smallest node available.
 
 > **Install into a separate environment from `gse-ml-service`.** That service's
 > `requirements.txt` is a hand-audited `--no-deps` lock whose entire point is
@@ -120,9 +133,13 @@ These are enforced in code and covered by tests, not merely intended.
   indistinguishable from a real finding of no cancellation. (Law 8.)
 - **Cannot reach a database or the network.** Input is an operator-supplied
   export. (Law 7.)
-- **Cannot publish.** Binds `127.0.0.1` only, never enables public tunnelling,
-  and neutralises `GRADIO_SHARE`. A test greps the source to keep that true.
-  Unpublished calibration numbers must not leave the box.
+- **Cannot publish by accident.** Public tunnelling is never enabled in any
+  configuration. Binding beyond loopback raises `PublicWithoutAuthError` unless
+  `GSECAL_AUTH_USER`/`GSECAL_AUTH_PASS` are set — with no escape-hatch flag,
+  because an escape hatch is the thing that gets used at 2am. A managed host
+  (Spaces, Cloud Run, Kubernetes/LKE) is treated as public even if it asks for
+  loopback, since being wrong in that direction publishes. 19 tests cover the
+  matrix; see `gsecal/serve.py`.
 - **Cannot deploy.** Not in the Next.js app, not on Vercel, not in the ML image.
   It shares no dependency with any shipped surface.
 
@@ -136,9 +153,10 @@ gsecal/
   bootstrap.py      seeded, reproducible intervals
   sweep.py          counterfactual link sweep (also the ETKF link)
   samples.py        strict loader that refuses to guess
+  serve.py          fail-closed launch policy (no public bind without auth)
   report.py         markdown rendering (no metric computed here)
   cli.py            zero-install command line
 app.py              optional Gradio cockpit (+ MCP)
 parity/             vector generators + committed vectors
-tests/              86 tests, stdlib unittest
+tests/              108 tests, stdlib unittest
 ```

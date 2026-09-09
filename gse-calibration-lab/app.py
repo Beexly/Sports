@@ -10,9 +10,10 @@ is not deployed to Vercel, is not customer-facing, and shares no dependency with
 the pinned gse-ml-service lock.
 
 Safety posture, enforced in code below:
-  * Never binds beyond 127.0.0.1 and never enables share= by default. A public
-    tunnel would expose unpublished calibration numbers, which is precisely the
-    honesty boundary AGENTS.md law 3 protects.
+  * Public tunnelling is never enabled, in any configuration. Binding beyond
+    loopback is allowed ONLY with a password (gsecal.serve enforces this and
+    raises otherwise), because exposing unpublished calibration numbers is
+    exactly the honesty boundary AGENTS.md law 3 protects.
   * No database, no network, no secrets. Input is an operator-supplied export.
   * No bundled sample dataset — every tab starts empty and refuses to guess
     (AGENTS.md law 8).
@@ -52,6 +53,12 @@ from gsecal.report import (
     render_strata_table,
 )
 from gsecal.samples import group_by, load_text
+from gsecal.serve import resolve_launch_config
+
+AUTH_MESSAGE = (
+    "GSE Calibration Lab — internal. These figures have not cleared the PROVEN "
+    "gate and must not be published."
+)
 
 LOAD_HELP = """Paste a CSV or JSON export of **settled** rows.
 
@@ -399,22 +406,35 @@ def main() -> None:
     parser = argparse.ArgumentParser(description="GSE Calibration Lab")
     parser.add_argument("--port", type=int, default=7861)
     parser.add_argument(
+        "--host",
+        default=None,
+        help="Bind address. Defaults to 127.0.0.1 locally, 0.0.0.0 on a managed "
+        "host. Any non-loopback bind REQUIRES GSECAL_AUTH_USER/PASS.",
+    )
+    parser.add_argument(
         "--mcp",
         action="store_true",
         help="Also serve the analysis functions as MCP tools.",
     )
     args = parser.parse_args()
 
-    # Bind loopback only. Unpublished calibration numbers must not leave the box.
-    # Public tunnelling is never enabled here, and GRADIO_SHARE is neutralised so
-    # it cannot be switched on from the environment behind the operator's back.
+    # Public tunnelling is never enabled, and GRADIO_SHARE is neutralised so it
+    # cannot be switched on from the environment behind the operator's back.
     # (tests/test_app_functions.py greps this file to keep that true.)
     os.environ["GRADIO_SHARE"] = "False"
 
+    # Fail-closed: raises rather than serving unpublished numbers to the world.
+    config = resolve_launch_config(host=args.host, port=args.port)
+    print(f"[gsecal] {config.posture}")
+    if config.managed_host:
+        print(f"[gsecal] managed host detected: {config.managed_host}")
+
     build_demo().launch(
-        server_name="127.0.0.1",
-        server_port=args.port,
-        share=False,
+        server_name=config.server_name,
+        server_port=config.server_port,
+        auth=config.auth,
+        auth_message=AUTH_MESSAGE if config.auth else None,
+        share=config.share,
         inbrowser=False,
         show_error=True,
         analytics_enabled=False,

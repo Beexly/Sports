@@ -47,6 +47,7 @@ _install_gradio_stub()
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 import app  # noqa: E402
+from gsecal.serve import PublicWithoutAuthError, resolve_launch_config  # noqa: E402
 
 CSV = "probability,result,modelVersion\n" + "\n".join(
     f"{0.05 + (i % 10) / 10:.2f},{'WIN' if i % 3 else 'LOSS'},v{5 + i % 2}"
@@ -142,20 +143,45 @@ class TestGateTab(unittest.TestCase):
 
 
 class TestLaunchSafety(unittest.TestCase):
-    """The app must never be able to publish unpublished numbers by accident."""
+    """The app must never publish unpublished numbers by accident.
 
-    def test_source_never_enables_share(self) -> None:
+    These assert the POLICY behaviourally via gsecal.serve, not by grepping
+    source. A grep only sees what a line looks like; these see what it does.
+    The one grep kept is the absolute: public tunnelling is never enabled in
+    any configuration, so the literal must not appear at all.
+    """
+
+    def test_share_is_never_enabled_anywhere(self) -> None:
         source = Path(app.__file__).read_text()
-        self.assertIn("share=False", source)
         self.assertNotIn("share=True", source)
-
-    def test_source_binds_loopback_only(self) -> None:
-        source = Path(app.__file__).read_text()
-        self.assertIn('server_name="127.0.0.1"', source)
-        self.assertNotIn("0.0.0.0", source)
 
     def test_analytics_disabled(self) -> None:
         self.assertIn("analytics_enabled=False", Path(app.__file__).read_text())
+
+    def test_launch_uses_the_policy_not_a_hardcoded_host(self) -> None:
+        source = Path(app.__file__).read_text()
+        self.assertIn("resolve_launch_config", source)
+        self.assertIn("server_name=config.server_name", source)
+        self.assertIn("auth=config.auth", source)
+
+    def test_policy_defaults_to_loopback(self) -> None:
+        config = resolve_launch_config(env={})
+        self.assertFalse(config.is_public)
+        self.assertFalse(config.share)
+        self.assertIn("127.0.0.1", config.server_name)
+
+    def test_policy_refuses_public_without_auth(self) -> None:
+        with self.assertRaises(PublicWithoutAuthError):
+            resolve_launch_config(host="0.0.0.0", env={})
+
+    def test_policy_allows_public_with_auth(self) -> None:
+        config = resolve_launch_config(
+            host="0.0.0.0",
+            env={"GSECAL_AUTH_USER": "u", "GSECAL_AUTH_PASS": "p"},
+        )
+        self.assertTrue(config.is_public)
+        self.assertEqual(config.auth, ("u", "p"))
+        self.assertFalse(config.share)
 
 
 if __name__ == "__main__":
