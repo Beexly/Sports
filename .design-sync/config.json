@@ -1,0 +1,92 @@
+{
+  "pkg": "sports-prediction-platform",
+  "globalName": "GalaxySportsEdge",
+  "shape": "package",
+  "entry": ".design-sync/entry.tsx",
+  "tsconfig": ".design-sync/tsconfig.json",
+  "srcDir": "apps/web/components",
+  "buildCmd": "cd apps/web && npx tailwindcss -c tailwind.config.ts -i app/globals.css -o ../../.design-sync/.cache/tailwind.css --minify",
+  "cssEntry": ".design-sync/.cache/tailwind.css",
+  "tokensGlob": "apps/web/styles/design-tokens.css",
+  "extraFonts": [
+    ".design-sync/fonts/fonts.css"
+  ],
+  "guidelinesGlob": [
+    "DESIGN.md",
+    "BRAND_AND_DESIGN_SYSTEM.md",
+    "design-system/README.md"
+  ],
+  "componentSrcMap": {
+    "KpiCard": "apps/web/components/ui/kpi-card.tsx",
+    "PageHero": "apps/web/components/ui/page-hero.tsx",
+    "Tabs": "apps/web/components/ui/tabs.tsx",
+    "FilterBar": "apps/web/components/ui/tabs.tsx",
+    "DataTable": "apps/web/components/ui/data-table.tsx",
+    "ToneCell": "apps/web/components/ui/data-table.tsx",
+    "MetricExplainer": "apps/web/components/ui/metric-explainer.tsx",
+    "MetricHonesty": "apps/web/components/ui/metric-honesty.tsx",
+    "Term": "apps/web/components/ui/term.tsx",
+    "Ticker": "apps/web/components/ui/ticker.tsx",
+    "CountUp": "apps/web/components/ui/count-up.tsx",
+    "RiskDisclosure": "apps/web/components/ui/risk-disclosure.tsx",
+    "SourceError": "apps/web/components/ui/source-error.tsx",
+    "MethodologySection": "apps/web/components/ui/methodology-section.tsx",
+    "ToolPageSkeleton": "apps/web/components/ui/tool-page-skeleton.tsx",
+    "NavMenu": "apps/web/components/ui/nav-menu.tsx",
+    "MobileNav": "apps/web/components/ui/mobile-nav.tsx",
+    "Footer": "apps/web/components/ui/footer.tsx",
+    "PickCard": "apps/web/components/picks/pick-card.tsx",
+    "LineFreshnessBadge": "apps/web/components/picks/line-freshness-badge.tsx",
+    "ValueGapBadge": "apps/web/components/picks/value-gap.tsx",
+    "DevigMethodDisclosure": "apps/web/components/picks/devig-method-disclosure.tsx",
+    "VerifyPickButton": "apps/web/components/picks/verify-pick-button.tsx",
+    "EvidenceAuditDrawer": "apps/web/components/picks/evidence-audit-drawer.tsx",
+    "ResultCard": "apps/web/components/cards/result-card.tsx",
+    "PlayerCard": "apps/web/components/cards/player-card.tsx",
+    "StatusTile": "apps/web/components/cockpit/status-tile.tsx",
+    "ChecklistRow": "apps/web/components/cockpit/checklist-row.tsx",
+    "JarvisDiffBadge": "apps/web/components/cockpit/jarvis-diff-badge.tsx",
+    "JarvisTrend": "apps/web/components/cockpit/jarvis-trend.tsx",
+    "HealthRing": "apps/web/components/motion/health-ring.tsx",
+    "Reveal": "apps/web/components/motion/reveal.tsx",
+    "Stagger": "apps/web/components/motion/reveal.tsx",
+    "Marquee": "apps/web/components/motion/marquee.tsx",
+    "SignalRule": "apps/web/components/motion/signal-rule.tsx",
+    "HoloTilt": "apps/web/components/motion/holo-tilt.tsx",
+    "HonestyNote": "apps/web/components/tools/honesty-note.tsx",
+    "FormulaPlaque": "apps/web/components/tools/formula-plaque.tsx",
+    "OddsFormatToggle": "apps/web/components/tools/odds-format-toggle.tsx",
+    "BoardHealthBadge": "apps/web/components/board/board-health-badge.tsx",
+    "BoardSurfaceChip": "apps/web/components/board/board-surface-chip.tsx",
+    "LogoMarkInline": "apps/web/components/brand/logo-mark-inline.tsx",
+    "BrandLockup": "apps/web/components/brand/brand-lockup.tsx",
+    "GsnLockup": "apps/web/components/brand/gsn-lockup.tsx",
+    "PricingPlans": "apps/web/components/pricing/pricing-plans.tsx",
+    "TierGatePanel": "apps/web/components/pricing/tier-gate-panel.tsx",
+    "CalibrationCurve": "apps/web/components/home/calibration-curve.tsx",
+    "ToutComparison": "apps/web/components/home/tout-comparison.tsx",
+    "StartInSixty": "apps/web/components/home/start-in-sixty.tsx",
+    "DoorCard": "apps/web/components/landing/door-card.tsx",
+    "WorldSection": "apps/web/components/world/world-section.tsx",
+    "ReliabilityChart": "apps/web/components/calibration/reliability-chart.tsx",
+    "HonestBand": "apps/web/components/performance/honest-band.tsx"
+  },
+  "readmeHeader": ".design-sync/conventions.md",
+  "overrides": {
+    "NavMenu": {
+      "cardMode": "column"
+    },
+    "PageHero": {
+      "cardMode": "column"
+    },
+    "ToutComparison": {
+      "cardMode": "column"
+    },
+    "PickCard": {
+      "cardMode": "column"
+    },
+    "PricingPlans": {
+      "cardMode": "column"
+    }
+  }
+}

@@ -1,0 +1,98 @@
+/* ============================================================
+   Galaxy Sports Edge -- proposed semantic design tokens
+   Redesign brief section 5 (visual identity) and section 7
+   (accessibility). See tokens-and-contrast.md in this folder for
+   the full rationale, the current-state inventory, and every
+   contrast ratio below (measured by contrast-check.mjs, not typed
+   by hand).
+
+   Role names are fixed by the brief and must not change:
+   surface, surface-raised, surface-sunken, hairline, text,
+   text-muted, accent, positive, negative, caution, info,
+   focus-ring.
+
+   One accent hue only. It is the existing orbital cyan
+   (#00E5FF dark / #06748A light) -- already the most-used, most
+   recognized single color in the current system ("the signature
+   accent" per DESIGN.md) -- not a new color and not derived from
+   space/nebula imagery. Positive, negative and caution are also
+   the current --verify / --alert / --caution hexes, unchanged.
+   --info is the one genuinely new value; no "info" role existed
+   before.
+   ============================================================ */
+
+:root {
+  /* Light theme (default). Values are the CURRENT --paper*, --ink*,
+     and --*-on-light hexes from apps/web/styles/design-tokens.css,
+     carried forward unchanged under their new role names. */
+
+  --surface: #F7F8FB;         /* page background. == old --paper */
+  --surface-raised: #FFFFFF;  /* cards, rows, popovers. == old --paper-raised */
+  --surface-sunken: #F0F2F6;  /* zebra stripes, wells, insets. == old --paper-sunken */
+  --hairline: #D9DEE7;        /* dividers and card edges. == old --paper-border.
+                                  Decorative only (WCAG 1.4.11 does not require
+                                  3:1 on plain dividers); do not use it to carry
+                                  a UI-component boundary that needs 3:1 -- give
+                                  that its own border color if one comes up. */
+
+  --text: #0E1320;            /* body copy and headings. == old --ink */
+  --text-muted: #3A4356;      /* secondary text, captions, meta. == old --ink-1 */
+
+  --accent: #06748A;          /* the one brand hue. == old --orbital-cyan-on-light.
+                                  Links, active states, the wordmark accent.
+                                  Sparingly -- never a large fill under body text. */
+
+  --positive: #0B6B46;        /* win, verified, settled-good. == old --verify-on-light */
+  --negative: #C0122F;        /* loss, void, error. == old --alert-on-light */
+  --caution: #9A4D00;         /* stale, degraded, pending review. == old --caution-on-light */
+  --info: #1D4E9B;            /* neutral disclosure, "how this is measured" callouts. NEW. */
+
+  --focus-ring: #06748A;      /* == --accent. 2px solid, 2px offset, every
+                                  interactive element (brief section 7). */
+}
+
+[data-theme="dark"] {
+  /* Dark theme. Values are the CURRENT --carbon/--eclipse/--void and
+     --ion/--ion-1/--verify/--alert/--caution hexes, carried forward
+     unchanged under their new role names. */
+
+  --surface: #0D1117;         /* page background. == old --carbon */
+  --surface-raised: #171228;  /* cards, rows, popovers. == old --eclipse */
+  --surface-sunken: #05070B;  /* recessed wells, deepest layer. == old --void / --obsidian */
+  --hairline: #3B3158;        /* dividers and card edges. == old --mineral.
+                                  Decorative only, see the light-theme note above. */
+
+  --text: #D5DDE9;            /* body copy and headings. == old --ion (today's body default) */
+  --text-muted: #AEB7D2;      /* secondary text, captions, meta. == old --ion-1 */
+
+  --accent: #00E5FF;          /* the one brand hue. == old --orbital-cyan.
+                                  Replaces the old plasma / ion-blue / ultraviolet
+                                  three-hue signal set -- one hue, used sparingly. */
+
+  --positive: #5FD9A3;        /* win, verified, settled-good. == old --verify */
+  --negative: #FF6470;        /* loss, void, error. == old --alert */
+  --caution: #FFB454;         /* stale, degraded, pending review. == old --caution */
+  --info: #8FB8F5;            /* neutral disclosure, "how this is measured" callouts. NEW. */
+
+  --focus-ring: #00E5FF;      /* == --accent. 2px solid, 2px offset, every
+                                  interactive element (brief section 7). */
+}
+
+/* prefers-color-scheme fallback for a viewer with no explicit
+   data-theme (system default), matching the dark values above. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --surface: #0D1117;
+    --surface-raised: #171228;
+    --surface-sunken: #05070B;
+    --hairline: #3B3158;
+    --text: #D5DDE9;
+    --text-muted: #AEB7D2;
+    --accent: #00E5FF;
+    --positive: #5FD9A3;
+    --negative: #FF6470;
+    --caution: #FFB454;
+    --info: #8FB8F5;
+    --focus-ring: #00E5FF;
+  }
+}
