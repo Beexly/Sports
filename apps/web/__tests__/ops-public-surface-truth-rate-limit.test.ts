@@ -435,6 +435,64 @@ describe("/api/ops/public-surface-truth — P13-03 rate limiting + Stripe gating
 
     expect(body.detail).toBe("public");
     expect(body).not.toHaveProperty("stripeWebhookHosts");
+    // C-182: the Stripe posture block enumerates which billing variables this
+    // deployment has set, so it is operator-detail only (C-102's finding about
+    // env-var names on the anonymous payload).
+    expect(body).not.toHaveProperty("stripe");
+  });
+
+  /**
+   * C-182 — the code half of F-18, F-19 and F-20. Those founder rows stayed
+   * OPEN because checking them meant opening the Stripe Dashboard. The surface
+   * now reports the half the server can honestly know, and says NOT_READABLE
+   * for the half it cannot — never a guessed Dashboard state.
+   */
+  it("reports the Stripe posture to an operator, with NOT_READABLE where the server cannot know", async () => {
+    const mod = await import("@/app/api/ops/public-surface-truth/route");
+    process.env.CRON_SECRET = "test-secret-123";
+    const savedConsent = process.env["STRIPE_TERMS_CONSENT_ENABLED"];
+    process.env["STRIPE_TERMS_CONSENT_ENABLED"] = "true";
+    try {
+      const req = makeRequest("http://localhost/api/ops/public-surface-truth", {
+        authorization: "Bearer test-secret-123",
+      });
+      const body = await mod.GET(req).then((r) => r.json());
+
+      // F-20: the handled list, read from the handler's own switch.
+      expect(body.stripe.handledEventCount).toBe(10);
+      expect(body.stripe.handledEvents).toContain("checkout.session.expired");
+      expect(body.stripe.handledEvents).toContain("invoice.paid");
+      expect(body.stripe.handledEvents).toContain("charge.refunded");
+
+      // F-18: readable from this deployment's own environment.
+      expect(body.stripe.termsConsentEnabled).toBe(true);
+
+      // The three the server genuinely cannot see. Any value other than
+      // NOT_READABLE here would be an invented Dashboard state — which is the
+      // failure these rows exist to prevent, not a nicety.
+      expect(body.stripe.dashboardSubscribedEvents).toBe("NOT_READABLE");
+      expect(body.stripe.termsUrlConfigured).toBe("NOT_READABLE");
+      expect(body.stripe.foundingPaymentLinkActive).toBe("NOT_READABLE");
+    } finally {
+      if (savedConsent === undefined) delete process.env["STRIPE_TERMS_CONSENT_ENABLED"];
+      else process.env["STRIPE_TERMS_CONSENT_ENABLED"] = savedConsent;
+    }
+  });
+
+  it("reports termsConsentEnabled false when the variable is unset — never assumed on", async () => {
+    const mod = await import("@/app/api/ops/public-surface-truth/route");
+    process.env.CRON_SECRET = "test-secret-123";
+    const savedConsent = process.env["STRIPE_TERMS_CONSENT_ENABLED"];
+    delete process.env["STRIPE_TERMS_CONSENT_ENABLED"];
+    try {
+      const req = makeRequest("http://localhost/api/ops/public-surface-truth", {
+        authorization: "Bearer test-secret-123",
+      });
+      const body = await mod.GET(req).then((r) => r.json());
+      expect(body.stripe.termsConsentEnabled).toBe(false);
+    } finally {
+      if (savedConsent !== undefined) process.env["STRIPE_TERMS_CONSENT_ENABLED"] = savedConsent;
+    }
   });
 
   it("carries the C-109 credits block, all null before the first observation (paceOk is null, not a claim)", async () => {

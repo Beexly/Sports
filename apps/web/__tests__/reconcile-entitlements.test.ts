@@ -266,20 +266,115 @@ describe("reconcileEntitlements — DOWNGRADE (stale paid rows, positively confi
     );
   });
 
-  it("FINDING 1: downgrades a paid row when Stripe positively reports 'unpaid' (confirmed non-access)", async () => {
+  /**
+   * C-91 / Devin Review on #736. Access revocation on `unpaid` is UNCHANGED and
+   * still asserted here — what changed is that it is no longer written as a
+   * CANCELLATION.
+   *
+   * Stamping status CANCELED + canceledAt armed the webhook's out-of-order
+   * resurrection guard, which then refused every later sync for that same
+   * subscription id — including the `active` one that arrives when the member
+   * pays the outstanding invoice. They paid and access never came back.
+   *
+   * The webhook maps `unpaid` to the recoverable, non-granting INCOMPLETE. This
+   * is the same decision on the other writer, so the two agree instead of racing
+   * to opposite terminal states.
+   */
+  it("FINDING 1 / C-91: revokes access on 'unpaid' RECOVERABLY — no cancellation stamp to block a later payment", async () => {
+    mocks.findMany.mockResolvedValue([
+      { id: "row_1", stripeCustomerId: "cus_2", stripeSubscriptionId: "sub_2", tier: "PRO" },
+    ]);
+    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSub({ id: "sub_2", status: "unpaid" }) as never);
+
+    const summary = await reconcileEntitlements();
+
+    // A paid ACTIVE row backed by an 'unpaid' Stripe sub must NOT keep access.
+    expect(summary.downgraded).toBe(1);
+    expect(summary.errors).toBe(0);
+
+    type Write = { where: Record<string, unknown>; data: Record<string, unknown> };
+    expect(mocks.updateMany).toHaveBeenCalledTimes(1);
+    const write = mocks.updateMany.mock.calls[0]?.[0] as Write;
+    // Guarded on the exact row AND on the anchor being absent: the status change
+    // and the dunning anchor land in ONE write, so no failure between them can
+    // leave INCOMPLETE without its anchor (Devin Review, #736).
+    expect(write.where).toEqual(
+      expect.objectContaining({ id: "row_1", stripeSubscriptionId: "sub_2", pastDueSince: null }),
+    );
+    // Access is denied: INCOMPLETE is not in the granting set.
+    expect(write.data["status"]).toBe("INCOMPLETE");
+    // The dunning anchor comes from Stripe's period start, never now(), so
+    // getBillingNotice reads DUNNING_EXHAUSTED rather than first-payment setup.
+    expect(write.data["pastDueSince"]).toEqual(new Date(1760000000 * 1000));
+    // And the two fields that would make it permanent are NOT written: no
+    // cancellation stamp for the resurrection guard to catch on, and the paid
+    // tier kept as the record of what the member is owed.
+    expect(write.data).not.toHaveProperty("canceledAt");
+    expect(write.data).not.toHaveProperty("tier");
+  });
+
+  it("a row that already carries a dunning anchor keeps it (second, narrower write)", async () => {
+    mocks.findMany.mockResolvedValue([
+      { id: "row_1", stripeCustomerId: "cus_2", stripeSubscriptionId: "sub_2", tier: "PRO" },
+    ]);
+    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSub({ id: "sub_2", status: "unpaid" }) as never);
+    // The anchored write matches nothing (the row has an anchor); the fallback lands.
+    mocks.updateMany.mockResolvedValueOnce({ count: 0 }).mockResolvedValueOnce({ count: 1 });
+
+    const summary = await reconcileEntitlements();
+
+    expect(summary.downgraded).toBe(1);
+    const fallback = mocks.updateMany.mock.calls.at(-1)?.[0] as { where: Record<string, unknown>; data: Record<string, unknown> };
+    expect(fallback.where).not.toHaveProperty("pastDueSince");
+    expect(fallback.data).toEqual({ status: "INCOMPLETE" });
+  });
+
+  it("anchors an unpaid revoke to the epoch sentinel when Stripe has no usable period start", async () => {
     mocks.findMany.mockResolvedValue([
       { id: "row_1", stripeCustomerId: "cus_2", stripeSubscriptionId: "sub_2", tier: "PRO" },
     ]);
     mocks.subscriptionsRetrieve.mockResolvedValue({ status: "unpaid" });
 
-    const summary = await reconcileEntitlements();
+    await reconcileEntitlements();
 
-    // A paid ACTIVE row backed by an 'unpaid' Stripe sub must NOT keep access forever.
-    expect(summary.downgraded).toBe(1);
-    expect(summary.errors).toBe(0);
+    const anchor = mocks.updateMany.mock.calls.at(-1)?.[0] as { data: Record<string, unknown> };
+    expect(anchor.data["pastDueSince"]).toEqual(new Date(0));
+  });
+
+  it.each(["canceled", "incomplete_expired"])(
+    "still writes a TERMINAL cancellation for '%s' — those are genuinely over",
+    async (status) => {
+      // The other direction: the recoverable lane must not swallow the statuses
+      // Stripe reports as dead, or a cancelled row would keep its paid tier.
+      mocks.findMany.mockResolvedValue([
+        { id: "row_1", stripeCustomerId: "cus_2", stripeSubscriptionId: "sub_2", tier: "PRO" },
+      ]);
+      mocks.subscriptionsRetrieve.mockResolvedValue({ status });
+
+      await reconcileEntitlements();
+
+      expect(mocks.updateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ tier: "FREE", status: "CANCELED" }),
+        }),
+      );
+    },
+  );
+
+  it("still writes a TERMINAL cancellation when Stripe reports the subscription does not exist", async () => {
+    // A confirmed ABSENCE has nothing to recover onto, so it must stay terminal
+    // even though a recoverable lane now exists.
+    mocks.findMany.mockResolvedValue([
+      { id: "row_1", stripeCustomerId: "cus_2", stripeSubscriptionId: "sub_2", tier: "PRO" },
+    ]);
+    mocks.subscriptionsRetrieve.mockRejectedValue(
+      Object.assign(new Error("No such subscription"), { code: "resource_missing" }),
+    );
+
+    await reconcileEntitlements();
+
     expect(mocks.updateMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: expect.objectContaining({ id: "row_1", stripeSubscriptionId: "sub_2" }),
         data: expect.objectContaining({ tier: "FREE", status: "CANCELED" }),
       }),
     );
@@ -362,6 +457,179 @@ describe("reconcileEntitlements — DOWNGRADE (stale paid rows, positively confi
     expect(summary.downgraded).toBe(0);
     expect(mocks.subscriptionsRetrieve).not.toHaveBeenCalled();
     expect(mocks.updateMany).not.toHaveBeenCalled();
+  });
+});
+
+describe("reconcileEntitlements — REPAIR rows an earlier reconciler cancelled on unpaid (Devin, #736)", () => {
+  /**
+   * The shared findMany answers by scan: the two repair cohorts are the capped
+   * queries (`take`), keyed by status; the downgrade scan has no cap and gets
+   * nothing here.
+   */
+  function canceledRowsOnly(rows: Array<{ status: string }>): void {
+    mocks.findMany.mockImplementation(async (args: unknown) => {
+      const a = args as { where?: { status?: unknown }; take?: number };
+      if (a.take === undefined) return [];
+      return rows.filter((r) => r.status === a.where?.status);
+    });
+  }
+  const stuckRow = {
+    id: "row_9",
+    stripeSubscriptionId: "sub_9",
+    status: "CANCELED",
+    canceledAt: new Date("2026-09-01T00:00:00Z"),
+  };
+
+  it("moves a CANCELED row whose Stripe sub is still unpaid back to recoverable INCOMPLETE, tier restored", async () => {
+    canceledRowsOnly([stuckRow]);
+    mocks.subscriptionsRetrieve.mockResolvedValue(
+      stripeSub({ id: "sub_9", status: "unpaid" }) as never,
+    );
+
+    const summary = await reconcileEntitlements();
+
+    expect(summary.repaired).toBe(1);
+    expect(summary.repairNeedsOperator).toBe(0);
+    expect(summary.downgraded).toBe(0);
+    expect(summary.errors).toBe(0);
+    type Write = { where: Record<string, unknown>; data: Record<string, unknown> };
+    expect(mocks.updateMany).toHaveBeenCalledTimes(1);
+    const repair = mocks.updateMany.mock.calls[0]?.[0] as Write;
+    // Guarded on the row still being the CANCELED row that was read, and the
+    // anchor lands in the SAME write as the status change.
+    expect(repair.where).toEqual(
+      expect.objectContaining({ id: "row_9", stripeSubscriptionId: "sub_9", status: "CANCELED", pastDueSince: null }),
+    );
+    expect(repair.data).toEqual({
+      status: "INCOMPLETE",
+      pastDueSince: new Date(1760000000 * 1000),
+      canceledAt: null,
+      tier: "PRO",
+    });
+  });
+
+  it("an unmapped (grandfathered) price un-cancels the row but counts it for the OPERATOR, not as repaired", async () => {
+    // The old downgrade erased the paid tier; guessing one back is worse than
+    // surfacing the row. Un-cancelling still lets a later paid recovery through
+    // the resurrection guard once the price id is mapped (Devin Review, #736).
+    canceledRowsOnly([stuckRow]);
+    mocks.subscriptionsRetrieve.mockResolvedValue(
+      stripeSub({ id: "sub_9", status: "unpaid", items: { data: [{ price: { id: "price_legacy" } }] } }) as never,
+    );
+
+    const summary = await reconcileEntitlements();
+
+    expect(summary.repaired).toBe(0);
+    expect(summary.repairNeedsOperator).toBe(1);
+    const repair = mocks.updateMany.mock.calls[0]?.[0] as { data: Record<string, unknown> };
+    expect(repair.data).not.toHaveProperty("tier");
+    expect(repair.data["status"]).toBe("INCOMPLETE");
+  });
+
+  it("both repair cohorts are BOUNDED: capped, and the CANCELED cohort is windowed on canceledAt", async () => {
+    canceledRowsOnly([]);
+
+    await reconcileEntitlements();
+
+    const calls = mocks.findMany.mock.calls.map((c) => c[0] as { where: Record<string, unknown>; take?: number; orderBy?: unknown });
+    const canceledScan = calls.find((c) => c.where["status"] === "CANCELED");
+    const incompleteScan = calls.find((c) => c.where["status"] === "INCOMPLETE");
+    expect(canceledScan?.take).toBe(100);
+    expect(canceledScan?.orderBy).toEqual({ canceledAt: "desc" });
+    const gte = (canceledScan?.where["canceledAt"] as { gte: Date }).gte;
+    const ageDays = (Date.now() - gte.getTime()) / 86_400_000;
+    expect(ageDays).toBeGreaterThan(59);
+    expect(ageDays).toBeLessThan(61);
+    expect(incompleteScan?.take).toBe(100);
+  });
+
+  it("an anchored INCOMPLETE dunning row whose terminal webhook was missed converges to CANCELED", async () => {
+    canceledRowsOnly([
+      { id: "row_11", stripeSubscriptionId: "sub_11", status: "INCOMPLETE", canceledAt: null, pastDueSince: new Date("2026-08-20T00:00:00Z") },
+    ]);
+    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSub({ id: "sub_11", status: "canceled" }) as never);
+
+    const summary = await reconcileEntitlements();
+
+    expect(summary.repaired).toBe(1);
+    const write = mocks.updateMany.mock.calls[0]?.[0] as { where: Record<string, unknown>; data: Record<string, unknown> };
+    expect(write.where).toEqual(expect.objectContaining({ id: "row_11", stripeSubscriptionId: "sub_11", status: "INCOMPLETE" }));
+    expect(write.data).toEqual(expect.objectContaining({ tier: "FREE", status: "CANCELED", pastDueSince: null }));
+    expect(write.data["canceledAt"]).toBeInstanceOf(Date);
+  });
+
+  it("a positively ABSENT subscription behind an anchored INCOMPLETE row also converges", async () => {
+    canceledRowsOnly([
+      { id: "row_12", stripeSubscriptionId: "sub_12", status: "INCOMPLETE", canceledAt: null, pastDueSince: new Date("2026-08-20T00:00:00Z") },
+    ]);
+    mocks.subscriptionsRetrieve.mockRejectedValue(Object.assign(new Error("No such subscription"), { code: "resource_missing" }));
+
+    const summary = await reconcileEntitlements();
+
+    expect(summary.repaired).toBe(1);
+    expect(summary.errors).toBe(0);
+    expect(mocks.updateMany).toHaveBeenCalledWith(
+      expect.objectContaining({ data: expect.objectContaining({ status: "CANCELED" }) }),
+    );
+  });
+
+  it("a first-payment INCOMPLETE row (no anchor) is never converged by the reconciler", async () => {
+    // Stripe's own ~23h expiry and the webhook own that lifecycle; guessing
+    // here could cancel a buyer mid-SCA.
+    canceledRowsOnly([
+      { id: "row_13", stripeSubscriptionId: "sub_13", status: "INCOMPLETE", canceledAt: null, pastDueSince: null },
+    ]);
+    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSub({ id: "sub_13", status: "canceled" }) as never);
+
+    const summary = await reconcileEntitlements();
+
+    expect(summary.repaired).toBe(0);
+    expect(mocks.updateMany).not.toHaveBeenCalled();
+  });
+
+  it("an INCOMPLETE row with no dunning anchor gets one when Stripe still reads unpaid (anchor backstop)", async () => {
+    canceledRowsOnly([
+      { id: "row_10", stripeSubscriptionId: "sub_10", status: "INCOMPLETE", canceledAt: null, pastDueSince: null },
+    ]);
+    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSub({ id: "sub_10", status: "unpaid" }) as never);
+
+    const summary = await reconcileEntitlements();
+
+    expect(summary.repaired).toBe(1);
+    expect(mocks.updateMany).toHaveBeenCalledTimes(1);
+    const stamp = mocks.updateMany.mock.calls[0]?.[0] as { where: Record<string, unknown>; data: Record<string, unknown> };
+    expect(stamp.where).toEqual(
+      expect.objectContaining({ id: "row_10", status: "INCOMPLETE", pastDueSince: null }),
+    );
+    expect(stamp.data).toEqual({ pastDueSince: new Date(1760000000 * 1000) });
+  });
+
+  it.each(["canceled", "incomplete_expired", "active"])(
+    "does NOT touch a CANCELED row whose Stripe sub reads '%s'",
+    async (status) => {
+      // canceled / incomplete_expired are genuinely over; active is the grant
+      // pass's job (and would be in the confirmed set on a real run).
+      canceledRowsOnly([stuckRow]);
+      mocks.subscriptionsRetrieve.mockResolvedValue(stripeSub({ id: "sub_9", status }) as never);
+
+      const summary = await reconcileEntitlements();
+
+      expect(summary.repaired).toBe(0);
+      expect(mocks.updateMany).not.toHaveBeenCalled();
+    },
+  );
+
+  it("a concurrent resubscribe (updateMany count 0) is not counted as repaired", async () => {
+    canceledRowsOnly([stuckRow]);
+    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSub({ id: "sub_9", status: "unpaid" }) as never);
+    mocks.updateMany.mockResolvedValue({ count: 0 });
+
+    const summary = await reconcileEntitlements();
+
+    expect(summary.repaired).toBe(0);
+    expect(summary.repairNeedsOperator).toBe(0);
+    // The anchored write and its fallback both miss; nothing else is written.
+    expect(mocks.updateMany).toHaveBeenCalledTimes(2);
   });
 });
 
@@ -629,7 +897,16 @@ describe("GET /api/cron/reconcile-entitlements — auth", () => {
     expect(res.status).toBe(200);
     const body = await res.json();
     expect(body.ok).toBe(true);
-    expect(body).toMatchObject({ checked: 0, granted: 0, downgraded: 0, errors: 0, listReliable: true });
+    expect(body).toMatchObject({
+      checked: 0,
+      granted: 0,
+      downgraded: 0,
+      repaired: 0,
+      repairNeedsOperator: 0,
+      attention: false,
+      errors: 0,
+      listReliable: true,
+    });
     // Proof the REAL reconcile function ran end-to-end (it pulled Stripe state).
     expect(mocks.subscriptionsList).toHaveBeenCalled();
   });

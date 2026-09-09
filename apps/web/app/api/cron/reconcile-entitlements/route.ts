@@ -45,9 +45,17 @@ export async function GET(request: Request): Promise<NextResponse> {
       // `ok` reflects a clean pass: any Stripe/DB error means some checks were
       // skipped fail-safe (nothing wrongly revoked) and the operator should look.
       ok: summary.errors === 0,
+      // Rows that still need a human (an un-cancelled member whose paid tier
+      // cannot be restored until the operator maps the price id). Not an
+      // error, so `ok` stays truthful about the pass; surfaced on its own so
+      // monitoring never reads "success" over an unrestored membership
+      // (Devin Review, #736).
+      attention: summary.repairNeedsOperator > 0,
       checked: summary.checked,
       granted: summary.granted,
       downgraded: summary.downgraded,
+      repaired: summary.repaired,
+      repairNeedsOperator: summary.repairNeedsOperator,
       errors: summary.errors,
       listReliable: summary.listReliable,
     });

@@ -28,6 +28,15 @@ export function BillingNoticeBanner({ notice }: { notice: BillingNotice }): JSX.
       detail =
         "We couldn't collect payment and the grace window has ended. Update your card to restore full access. Your history and settings are untouched.";
       break;
+    case "DUNNING_EXHAUSTED":
+      // Says exactly what happened and exactly what is true now: no grace
+      // window is promised here, because there is none left to promise.
+      headline = `Your ${tierLabel} access has ended`;
+      detail =
+        `We tried your card several times and couldn't collect payment, so your ${tierLabel} ` +
+        "access has ended. Update your card in billing to restore it — your history and " +
+        "settings are untouched.";
+      break;
     case "INCOMPLETE":
       headline = "Finish setting up your payment";
       detail = `Your ${tierLabel} payment needs one more verification step (your bank may require it). Open billing to complete it.`;
