@@ -110,7 +110,7 @@ export const FANTASY_BASELINE_MODULES: readonly FantasyBaselineModule[] = [
     status: "csv-import-ready",
     userValue: "Pin conviction plays, remove bad plays, and shape portfolio exposure.",
     dataRequired: "Optimizer player pool and validated slate inputs.",
-    currentTruth: "Controls exist in the DFS tool; public tool access remains gated by `FANTASY_PUBLIC_TOOLS_ENABLED`.",
+    currentTruth: "Controls exist in the DFS tool; public tool access is gated by the `canUseFantasyFull` entitlement, not an env flag.",
   },
   {
     key: "social-sentiment",

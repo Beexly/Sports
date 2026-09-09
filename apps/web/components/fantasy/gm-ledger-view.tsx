@@ -27,6 +27,12 @@ export function GmLedgerView({ data }: { data: GmLedger }) {
   const r = data.rating;
   return (
     <div className="space-y-6">
+      {/* demonstration banner — always first, never conditional */}
+      <div className="border border-mineral bg-eclipse px-4 py-3 text-xs uppercase tracking-[0.14em] text-ink-500">
+        Demonstration ledger — illustrative decisions with historical example dates, proving how the
+        commit-then-grade mechanics work. Not your real roster history.
+      </div>
+
       {/* rating + 2x2 */}
       <div className="grid gap-5 lg:grid-cols-[1fr_1.1fr]">
         {/* GM Rating */}

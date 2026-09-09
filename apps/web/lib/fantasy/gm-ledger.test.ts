@@ -50,4 +50,12 @@ describe("gm ledger", () => {
   it("the Merkle root is deterministic for the same committed ledger", () => {
     expect(buildGmLedger().publishedRoot).toBe(buildGmLedger().publishedRoot);
   });
+
+  it("uses obviously historical example dates so nobody mistakes this for a live decision feed (FAN-08)", () => {
+    const decisions = buildGmLedger().decisions;
+    expect(decisions.length).toBeGreaterThan(0);
+    for (const d of decisions) {
+      expect(new Date(d.committedAt).getUTCFullYear()).toBeLessThan(2025);
+    }
+  });
 });

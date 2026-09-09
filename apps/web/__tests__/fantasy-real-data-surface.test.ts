@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
+import { buildToolDirectory } from "@/app/fantasy/page";
 
 const repoRoot = resolve(__dirname, "..");
 
@@ -27,5 +28,30 @@ describe("Fantasy real-data entry surface", () => {
     expect(page).toMatch(/projection-driven lineup, waiver, trade, DFS, or pick'em/);
     expect(page).toMatch(/Projections/);
     expect(page).toMatch(/gated/);
+  });
+
+  it("never hardcodes the hub's Projections readiness metric to a literal status (FAN-06)", () => {
+    // The hub must report what getLiveProjectionsMeta() actually says, not a
+    // frozen claim — a hardcoded literal here can go stale the moment a
+    // provider is registered in production while the copy still says "gated".
+    expect(page).not.toMatch(/value="gated"/);
+  });
+
+  it("derives the projections-dependent tool statuses from live state instead of a frozen literal", () => {
+    const gatedDirectory = buildToolDirectory(false);
+    const liveDirectory = buildToolDirectory(true);
+
+    const statusFor = (dir: typeof gatedDirectory, tool: string) =>
+      dir.find(([name]) => name === tool)?.[3];
+
+    for (const tool of ["Waiver & FAAB", "Trade Analyzer", "Pick'em Edge", "League Twin"]) {
+      expect(statusFor(gatedDirectory, tool)).toBe("gated");
+      expect(statusFor(liveDirectory, tool)).toBe("partly live");
+    }
+
+    // GM Ledger's gate is about user roster events, not the projections
+    // provider, so it must not flip with projectionsLive.
+    expect(statusFor(gatedDirectory, "GM Ledger")).toBe("gated");
+    expect(statusFor(liveDirectory, "GM Ledger")).toBe("gated");
   });
 });
