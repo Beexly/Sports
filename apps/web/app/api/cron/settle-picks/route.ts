@@ -194,7 +194,7 @@ export async function GET(request: Request) {
   // pick the graders could still settle this cycle is not withdrawn out from
   // under them, and before the outbox drain in step 5 so its VOID receipts
   // close in the same cycle.
-  const lineIntegrity = await runLineIntegrityLaneSafe("[cron:settle-picks]");
+  const lineIntegrity = await runLineIntegrityLaneSafe("[cron:settle-picks]", requestedSport);
 
   // ── 4. Slate commitment freeze (hash-chained receipts; no odds key needed) ─
   let freeze: SlateFreezeResult[] = [];
@@ -428,9 +428,11 @@ async function runStaleBackfillSafe(
 
 async function runLineIntegrityLaneSafe(
   logPrefix: string,
+  sportKey: string | null,
 ): Promise<LineIntegrityLaneResult | { error: string }> {
   try {
-    return await runLineIntegrityLane({ db: db as never });
+    // Same `?sport=` scope as the other lanes.
+    return await runLineIntegrityLane({ db: db as never, sportKey });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.warn(`${logPrefix} line-integrity lane failed: ${message}`);

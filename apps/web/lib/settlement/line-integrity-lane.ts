@@ -51,6 +51,7 @@
  */
 
 import { isBaseballSport, isQuotedBookLine } from "@sports/prediction-engine";
+import { isRealBookmakerKey } from "@/lib/calibration/publish-time-market-p";
 import {
   enqueuePostSettlementWork,
   type PostSettlementWorkDelegate,
@@ -101,9 +102,45 @@ export type LineIntegrityDefectKind =
 export type LineIntegrityQuote = {
   readonly id: string;
   readonly bookmaker: string;
+  readonly fetchedAt: Date;
   /** The line this row quotes, in the pick's unit (points). */
   readonly line: number | null;
 };
+
+/**
+ * The latest row per REAL bookmaker at or before `asOf` — the repo's
+ * publish-time odds resolver contract (apps/web/lib/calibration/
+ * publish-time-market-p.ts `latestH2hRowPerBookmaker`, C-253/C-110).
+ *
+ * Why this and not "every earlier row" (Devin Review, #733): the odds table is
+ * append-only, so a game accumulates a row per book per refresh cycle. Matching
+ * the stored line against ALL of them lets a SUPERSEDED quote — or a non-book
+ * writer like `rundown_default` — vouch for a line no bookmaker was offering at
+ * publish time. That fails OPEN: the lane would skip a defective pick as
+ * LINE_IS_QUOTED. The check is "was this line on the board when we published",
+ * which is one snapshot per book, not the union of history.
+ */
+export function latestQuotePerBookmaker(
+  quotes: readonly LineIntegrityQuote[],
+  asOf: Date,
+): LineIntegrityQuote[] {
+  const eligible = quotes
+    .filter((q) => isRealBookmakerKey(q.bookmaker) && q.line !== null && Number.isFinite(q.line))
+    .filter((q) => q.fetchedAt.getTime() <= asOf.getTime())
+    .sort((a, b) => {
+      const dt = b.fetchedAt.getTime() - a.fetchedAt.getTime();
+      if (dt !== 0) return dt;
+      const dk = a.bookmaker.localeCompare(b.bookmaker);
+      if (dk !== 0) return dk;
+      return (a.line ?? 0) - (b.line ?? 0);
+    });
+  const latest = new Map<string, LineIntegrityQuote>();
+  for (const q of eligible) {
+    const key = q.bookmaker.trim();
+    if (!latest.has(key)) latest.set(key, q);
+  }
+  return [...latest.entries()].sort(([a], [b]) => a.localeCompare(b)).map(([, q]) => q);
+}
 
 export type LineIntegrityVerdict =
   | { readonly kind: "ok"; readonly matchedQuoteId: string }
@@ -162,6 +199,26 @@ export function isOffHalfPointGrid(line: number): boolean {
   return Math.abs(doubled - Math.round(doubled)) > 1e-9;
 }
 
+/**
+ * The value settlement actually grades against (the no-drift rule,
+ * selectGradingLine in the engine). `Pick.line` is rewritten on every refresh
+ * cycle while a pick is PENDING; `clvLockLine` is captured once at publish and
+ * is immutable, so it — not `line` — is what a settled result rests on.
+ *
+ * Classifying `line` instead (Devin Review, #733) makes the lane withdraw
+ * results that were graded against a perfectly good locked line, and keep
+ * defective ones whose drifted `line` happens to look fine. Measured on
+ * production 2026-09-09, the two differ enough to matter: 312 settled SPREAD
+ * picks are off-grid on `line` but only 186 on the grading line.
+ *
+ * `??` not `||`, so a genuine pick'em / even-total lock of 0 is honored.
+ */
+export function lineIntegrityGradingLine(
+  pick: Pick<LineIntegrityPickRow, "clvLockLine" | "line">,
+): number {
+  return pick.clvLockLine ?? pick.line;
+}
+
 /** A baseball run line is always ±1.5 (2.5 and 3.5 are the offered alternates). */
 export function isNonStandardRunline(sportKey: string, pickType: string, line: number): boolean {
   if (pickType !== "SPREAD" || !isBaseballSport(sportKey)) return false;
@@ -175,6 +232,8 @@ export type LineIntegrityPickRow = {
   readonly pickType: string;
   readonly selection: string;
   readonly line: number;
+  /** Write-once publish lock. Settlement grades THIS, not `line` (no-drift rule). */
+  readonly clvLockLine: number | null;
   readonly result: string;
   readonly settledAt: Date | null;
   readonly isPublished: boolean;
@@ -186,7 +245,6 @@ export type LineIntegrityPickRow = {
 /** Structural transaction surface (mirrors zero-sit-lane.ts's doctrine). */
 export type LineIntegrityTx = {
   pick: { updateMany(args: Record<string, unknown>): Promise<{ count: number }> };
-  pickSettlementEvent: { create(args: Record<string, unknown>): Promise<unknown> };
   postSettlementWork: unknown;
   jarvisMemoryEvent: { create(args: Record<string, unknown>): Promise<unknown> };
 };
@@ -198,14 +256,19 @@ export type LineIntegrityDb = {
   };
   odds: {
     findMany(args: Record<string, unknown>): Promise<
-      Array<{ id: string; bookmaker: string; spread: number | null; total: number | null }>
+      Array<{
+        id: string;
+        bookmaker: string;
+        fetchedAt: Date;
+        spread: number | null;
+        total: number | null;
+      }>
     >;
   };
   jarvisMemoryEvent: {
     create(args: Record<string, unknown>): Promise<unknown>;
     count(args: Record<string, unknown>): Promise<number>;
   };
-  pickSettlementEvent: { count(args: Record<string, unknown>): Promise<number> };
   $transaction(fn: (tx: LineIntegrityTx) => Promise<{ count: number }>): Promise<{ count: number }>;
 };
 
@@ -248,6 +311,7 @@ const LINE_INTEGRITY_PICK_SELECT = {
   pickType: true,
   selection: true,
   line: true,
+  clvLockLine: true,
   result: true,
   settledAt: true,
   isPublished: true,
@@ -287,13 +351,17 @@ async function readQuotesAtPublish(
       market: PICK_MARKET_TO_ODDS_MARKET[market],
       fetchedAt: { lte: row.generatedAt },
     },
-    select: { id: true, bookmaker: true, spread: true, total: true },
+    select: { id: true, bookmaker: true, fetchedAt: true, spread: true, total: true },
   });
-  return rows.map((o) => ({
+  const all: LineIntegrityQuote[] = rows.map((o) => ({
     id: o.id,
     bookmaker: o.bookmaker,
+    fetchedAt: o.fetchedAt,
     line: market === "SPREAD" ? o.spread : o.total,
   }));
+  // One snapshot per real book, never the union of history. See
+  // latestQuotePerBookmaker for why matching against every earlier row fails open.
+  return latestQuotePerBookmaker(all, row.generatedAt);
 }
 
 export function buildLineIntegrityPayload(args: {
@@ -315,7 +383,11 @@ export function buildLineIntegrityPayload(args: {
         : "The stored line was not quoted by any bookmaker for this game and market at or before generatedAt.",
     evidence: {
       defect: verdict.defect,
+      /** The value that was GRADED (clvLockLine ?? line) — what the verdict is about. */
+      gradingLine: lineIntegrityGradingLine(row),
+      /** The current `line` column, which drifts on refresh; kept for forensics. */
       storedLine: row.line,
+      clvLockLine: row.clvLockLine,
       bookLine: verdict.bookLine,
       sourceIds: verdict.sourceIds,
       pickType: row.pickType,
@@ -327,6 +399,43 @@ export function buildLineIntegrityPayload(args: {
       priorResult: row.result,
       settledAt: row.settledAt ? row.settledAt.toISOString() : null,
     },
+  };
+}
+
+/**
+ * Durable, append-only record of one VOID. Shares the shape and scope of the
+ * UNPUBLISH record below so the ops surface can count both from one store and
+ * tell them apart by `metadata.action`.
+ */
+export function lineIntegrityVoidMemoryEvent(
+  row: LineIntegrityPickRow,
+  verdict: Extract<LineIntegrityVerdict, { kind: "defect" }>,
+  now: Date,
+): Record<string, unknown> {
+  const payload = buildLineIntegrityPayload({ row, verdict, decidedAt: now });
+  const sportKey = row.game.sport?.key ?? "";
+  const metadata = { ...payload, action: "VOID" };
+  return {
+    memory_type: "decision",
+    memory_state: "confirmed",
+    scope: LINE_INTEGRITY_MEMORY_SCOPE,
+    title: `Line integrity: voided settled pick ${row.id}`,
+    summary:
+      `${sportKey} ${row.pickType} "${row.selection}": graded line ` +
+      `${lineIntegrityGradingLine(row)} was not quoted by any bookmaker at or before ` +
+      `${row.generatedAt.toISOString()} (nearest quoted ${verdict.bookLine ?? "NONE"}). ` +
+      `Prior result ${row.result} WITHDRAWN to VOID by the settle-picks cron under ` +
+      `${LINE_INTEGRITY_POLICY_REF}. settledAt preserved; the original grading ` +
+      `PickSettlementEvent is untouched.`,
+    full_text: JSON.stringify(metadata),
+    source_type: "cron",
+    source_ref: "settle-picks:line-integrity",
+    source_timestamp: now,
+    actor: LINE_INTEGRITY_ACTOR,
+    owner: "system",
+    confidence: 100,
+    tags: ["line-integrity", "void", sportKey, row.pickType],
+    metadata,
   };
 }
 
@@ -409,7 +518,7 @@ async function verdictFor(
     half.skippedByReason.ODDS_READ_FAILED += 1;
     return null;
   }
-  const verdict = classifyStoredLine(row.line, quotes);
+  const verdict = classifyStoredLine(lineIntegrityGradingLine(row), quotes);
   if (verdict.kind === "ok") {
     half.skippedByReason.LINE_IS_QUOTED += 1;
     return null;
@@ -444,6 +553,8 @@ export async function voidDefectiveSettledPicks(input: {
   readonly now?: Date;
   readonly cap?: number;
   readonly enabled?: boolean;
+  /** `?sport=` scope, exactly as the free, backfill and zero-sit lanes take it. */
+  readonly sportKey?: string | null;
 }): Promise<LineIntegrityHalfResult> {
   const enabled = input.enabled ?? lineIntegrityVoidEnabled();
   const half = emptyHalf(enabled);
@@ -456,6 +567,9 @@ export async function voidDefectiveSettledPicks(input: {
       isPublished: true,
       result: { in: ["WIN", "LOSS", "PUSH"] },
       pickType: { in: [...LINE_INTEGRITY_MARKETS] },
+      // A sport-scoped cycle must not touch another sport's picks (Devin
+      // Review, #733): every sibling lane scopes, this one did not.
+      ...(input.sportKey ? { game: { sport: { key: input.sportKey } } } : {}),
     },
     orderBy: [{ generatedAt: "asc" }],
     take: cap + 1,
@@ -468,7 +582,6 @@ export async function voidDefectiveSettledPicks(input: {
   for (const row of candidates) {
     const verdict = await verdictFor(input.db, row, half);
     if (!verdict) continue;
-    const payload = buildLineIntegrityPayload({ row, verdict, decidedAt: now });
     let written: { count: number };
     try {
       written = await input.db.$transaction(async (tx) => {
@@ -479,18 +592,24 @@ export async function voidDefectiveSettledPicks(input: {
           data: { result: "VOID" },
         });
         if (updated.count === 0) return updated;
-        // TRANSACTIONAL OUTBOX, same lane as the graders and zero-sit: the
-        // event rides in the settlement transaction.
-        await tx.pickSettlementEvent.create({
-          data: {
-            pickId: row.id,
-            gameId: row.gameId,
-            result: "VOID",
-            // The event records the ORIGINAL settlement time, not now.
-            settledAt: row.settledAt ?? row.generatedAt,
-            status: "PENDING",
-            payload,
-          },
+        // NOT a PickSettlementEvent. `PickSettlementEvent.pickId` is @unique
+        // (schema.prisma) — one event per pick, for all time — and an ALREADY
+        // SETTLED pick necessarily owns one already, written by the grader that
+        // settled it. Creating a second violates the constraint, rolls the whole
+        // transaction back, and lands in the catch below as WRITE_FAILED: the
+        // first version of this lane could not void a single pick, and the unit
+        // tests passed only because the test double did not enforce the
+        // constraint the database does (Devin Review, #733).
+        //
+        // The withdrawal is therefore recorded as an append-only
+        // JarvisMemoryEvent, the same durable store the UNPUBLISH half below
+        // uses. That LEAVES THE ORIGINAL GRADING EVENT INTACT, which is the
+        // right outcome regardless: the grader's evidence for how this pick was
+        // settled is history, and a withdrawal is a new fact about it, not a
+        // correction of it. Adding a table or relaxing the constraint is not
+        // available — law 2 freezes schema.prisma.
+        await tx.jarvisMemoryEvent.create({
+          data: lineIntegrityVoidMemoryEvent(row, verdict, now),
         });
         await enqueuePostSettlementWork(
           tx.postSettlementWork as unknown as PostSettlementWorkDelegate,
@@ -535,6 +654,8 @@ export async function unpublishDefectiveUnsettledPicks(input: {
   readonly now?: Date;
   readonly cap?: number;
   readonly enabled?: boolean;
+  /** `?sport=` scope, exactly as the free, backfill and zero-sit lanes take it. */
+  readonly sportKey?: string | null;
 }): Promise<LineIntegrityHalfResult> {
   const enabled = input.enabled ?? lineIntegrityVoidEnabled();
   const half = emptyHalf(enabled);
@@ -547,6 +668,7 @@ export async function unpublishDefectiveUnsettledPicks(input: {
       isPublished: true,
       result: "PENDING",
       pickType: { in: [...LINE_INTEGRITY_MARKETS] },
+      ...(input.sportKey ? { game: { sport: { key: input.sportKey } } } : {}),
     },
     orderBy: [{ generatedAt: "asc" }],
     take: cap + 1,
@@ -602,16 +724,20 @@ export async function runLineIntegrityLane(input: {
   readonly db: LineIntegrityDb;
   readonly now?: Date;
   readonly enabled?: boolean;
+  /** `?sport=` scope from the route; null/undefined means every sport. */
+  readonly sportKey?: string | null;
 }): Promise<LineIntegrityLaneResult> {
   const enabled = input.enabled ?? lineIntegrityVoidEnabled();
   const unpublished = await unpublishDefectiveUnsettledPicks({
     db: input.db,
     enabled,
+    sportKey: input.sportKey ?? null,
     ...(input.now ? { now: input.now } : {}),
   });
   const voids = await voidDefectiveSettledPicks({
     db: input.db,
     enabled,
+    sportKey: input.sportKey ?? null,
     ...(input.now ? { now: input.now } : {}),
   });
   return { lane: "line-integrity", enabled, voids, unpublished };
@@ -631,14 +757,25 @@ export type LineIntegrityBreakdown = { sportKey: string; pickType: string; count
 
 export type LineIntegritySurvey = {
   /**
-   * EXACT count, no odds join: currently published UNSETTLED SPREAD/TOTAL
-   * picks whose stored line is off the half-point grid, or is an MLB spread
-   * that is not +/-1.5, 2.5 or 3.5. This is a LOWER BOUND on the real defect —
-   * off-grid is certainly not a book line, but a line ON the grid may still
-   * never have been quoted. It is not the same number as
-   * `publishedUnsettledNotQuoted` below and must never be reported as one.
+   * Currently published UNSETTLED SPREAD/TOTAL picks whose GRADING line
+   * (clvLockLine ?? line) is off the half-point grid, or is an MLB spread that
+   * is not +/-1.5, 2.5 or 3.5 — counted over the rows this call inspected, NOT
+   * over the whole population.
+   *
+   * It carries its own denominator and cap flag for the same reason every
+   * other count here does. An earlier revision documented this as an "EXACT
+   * count" while computing it over the first `cap` rows, which is precisely the
+   * label-does-not-match-the-measurement defect this block exists to avoid
+   * (C-241/C-246/C-250, Devin Review #733).
+   *
+   * Needs no odds join, so it is a cheap LOWER BOUND on the real defect within
+   * that sample: off-grid is certainly not a book line, but a line ON the grid
+   * may still never have been quoted. Never report it as
+   * `publishedUnsettledNotQuoted`.
    */
   publishedUnsettledOffGridOrBadRunline: number;
+  publishedUnsettledOffGridOrBadRunlineInspected: number;
+  publishedUnsettledOffGridOrBadRunlineCapReached: boolean;
   publishedUnsettledOffGridOrBadRunlineBy: LineIntegrityBreakdown[];
   /**
    * Currently published UNSETTLED SPREAD/TOTAL picks inspected against the
@@ -659,9 +796,17 @@ export type LineIntegritySurvey = {
   remainingInspected: number;
   remainingToVoid: number;
   remainingCapReached: boolean;
-  /** Picks VOIDED by this lane: settlement events stamped rcaCode LINE_NOT_QUOTED. */
+  /**
+   * Picks VOIDED by this lane: append-only memory events in its scope whose
+   * metadata.action is VOID.
+   *
+   * NOT a PickSettlementEvent count: `PickSettlementEvent.pickId` is @unique and
+   * a settled pick already owns its grading event, so the void half records the
+   * withdrawal as a memory event and leaves that grading event intact. Counting
+   * settlement events here would have read 0 forever.
+   */
   voidedByLane: number;
-  /** Picks UNPUBLISHED by this lane: append-only memory events in its scope. */
+  /** Picks UNPUBLISHED by this lane: same store, metadata.action UNPUBLISH. */
   unpublishedByLane: number;
   /** Whether the remediation lane is currently enabled. */
   laneEnabled: boolean;
@@ -711,11 +856,15 @@ export async function surveyLineIntegrity(
     take: cap + 1,
     select: LINE_INTEGRITY_PICK_SELECT,
   });
+  const offGridCapReached = unsettledRows.length > cap;
+  const offGridInspected = unsettledRows.slice(0, cap);
   const byKey = new Map<string, LineIntegrityBreakdown>();
   let offGrid = 0;
-  for (const row of unsettledRows.slice(0, cap)) {
+  for (const row of offGridInspected) {
     const sportKey = row.game.sport?.key ?? "";
-    if (!isOffHalfPointGrid(row.line) && !isNonStandardRunline(sportKey, row.pickType, row.line)) {
+    // The GRADING line, matching what the lane and settlement both act on.
+    const graded = lineIntegrityGradingLine(row);
+    if (!isOffHalfPointGrid(graded) && !isNonStandardRunline(sportKey, row.pickType, graded)) {
       continue;
     }
     offGrid += 1;
@@ -732,15 +881,23 @@ export async function surveyLineIntegrity(
     cap,
   );
 
-  const voidedByLane = await db.pickSettlementEvent.count({
-    where: { result: "VOID", payload: { path: ["rcaCode"], equals: LINE_INTEGRITY_RCA_CODE } },
+  const voidedByLane = await db.jarvisMemoryEvent.count({
+    where: {
+      scope: LINE_INTEGRITY_MEMORY_SCOPE,
+      metadata: { path: ["action"], equals: "VOID" },
+    },
   });
   const unpublishedByLane = await db.jarvisMemoryEvent.count({
-    where: { scope: LINE_INTEGRITY_MEMORY_SCOPE },
+    where: {
+      scope: LINE_INTEGRITY_MEMORY_SCOPE,
+      metadata: { path: ["action"], equals: "UNPUBLISH" },
+    },
   });
 
   return {
     publishedUnsettledOffGridOrBadRunline: offGrid,
+    publishedUnsettledOffGridOrBadRunlineInspected: offGridInspected.length,
+    publishedUnsettledOffGridOrBadRunlineCapReached: offGridCapReached,
     publishedUnsettledOffGridOrBadRunlineBy: [...byKey.values()].sort(
       (a, b) => b.count - a.count || a.sportKey.localeCompare(b.sportKey),
     ),
