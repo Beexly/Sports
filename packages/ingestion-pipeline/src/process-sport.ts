@@ -84,6 +84,7 @@ import { ingestEventOddsIfEnabled, type EventOddsClient } from "./event-odds-ing
 import { eventOddsId, toPropLineSnapshotRows, type PropEventLike } from "./prop-line-rows.js";
 import { capturePinnacleLineSnapshotsIfEnabled } from "./pinnacle-line-archive.js";
 import { bookLineDispersion } from "./book-dispersion.js";
+import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
 import {
   RUNDOWN_RATE_LIMIT_COOLDOWN_MS,
   isRundownCoolingDown,
@@ -145,6 +146,12 @@ export interface ProcessSportResult {
   provider?: string;
   /** Raw events accepted before freshness filter. */
   eventsCount?: number;
+  /**
+   * Games refused this cycle because their kickoff had already arrived (C-299).
+   * A pick is a pre-game claim; these produced no new pick and no rewrite of an
+   * existing PENDING one.
+   */
+  skippedInPlay?: number;
   /**
    * The Odds API quota headers (x-requests-remaining / x-requests-used) from
    * this run's paid responses, exactly as the client parsed them: the latest
@@ -932,6 +939,8 @@ export async function processSport(
     const fixtureFor = (gameId: string): FixtureConfirmation | null =>
       fixtureBatch.status === "ok" ? (fixtureBatch.byGameId.get(gameId) ?? null) : null;
     let fixtureUnconfirmed = 0;
+    // Games refused because their kickoff had already arrived (C-299).
+    let skippedInPlay = 0;
     // Games that passed the guard; the pick loop below refuses any other gameId.
     const confirmedGameIds = new Set<string>();
 
@@ -970,7 +979,6 @@ export async function processSport(
         }
         continue;
       }
-      confirmedGameIds.add(gameRecord.id);
       // One effective kickoff for every consumer below (enrichment, independent
       // fair values, the OddsInput the scorer reads). It is the feed's time
       // unless ESPN's correction is persisted, so the row and this cycle's
@@ -999,6 +1007,19 @@ export async function processSport(
           );
         }
       }
+
+      // Kickoff guard (C-299). The ESPN check above reads the SCOREBOARD's
+      // clock; this reads the one we priced against, after any correction. A
+      // game already under way gets no OddsInput at all, so it cannot be
+      // scored, cannot create or refresh a pick, and cannot mint a receipt off
+      // a live price. Placed before confirmedGameIds so the write loop's
+      // existing membership test excludes it too.
+      if (hasKickedOff(kickoff, fetchedAt)) {
+        skippedInPlay += 1;
+        console.warn(`${logPrefix} ${sport.key}: ${inPlaySkipLine(gameRecord.id, kickoff, fetchedAt)}`);
+        continue;
+      }
+      confirmedGameIds.add(gameRecord.id);
 
       const gameOdds = normalizedOdds.filter((o) => o.gameExternalId === game.externalId);
 
@@ -1181,6 +1202,10 @@ export async function processSport(
     for (const pick of scoredPicks) {
       // Fixture guard (C-111): no pick is created or refreshed for a game the
       // day's ESPN scoreboard did not confirm, whatever the scorer emitted.
+      // C-299: this same membership test now also carries the kickoff
+      // invariant. A game already under way never enters confirmedGameIds, so
+      // this one line refuses the create, the PENDING refresh of selection /
+      // line / confidence / factorBreakdown, AND the receipt mint below.
       if (!confirmedGameIds.has(pick.gameId)) continue;
       // Fields refreshed on every cycle (confidence, odds, reasoning).
       // result, settledAt: intentionally absent — never overwritten by refresh.
@@ -1426,7 +1451,8 @@ export async function processSport(
     console.log(
       `${logPrefix} ${sport.key}: ${Object.keys(gameRecords).length} games, ` +
       `${oddsInserted} odds, ${picksGenerated} picks (bootstrap=${isBootstrap})` +
-      (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : "")
+      (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : "") +
+      (skippedInPlay > 0 ? ` skippedInPlay=${skippedInPlay}` : "")
     );
 
     const emptyNote =
@@ -1451,6 +1477,7 @@ export async function processSport(
       // picks; it must stay observable even when the cycle also inserted no
       // odds (an emptiness note would otherwise mask why picks were withheld).
       note: fixtureNote ?? emptyNote,
+      skippedInPlay,
       ...paidAccounting(),
     };
   } catch (err) {
@@ -1473,6 +1500,7 @@ export async function processSport(
       oddsInserted: 0,
       eventsCount: 0,
       error: message,
+      skippedInPlay: 0,
       // A run that fails after a paid response still spent the credits and
       // still saw the vendor's headers; the caller's governor needs both.
       ...paidAccounting(),
