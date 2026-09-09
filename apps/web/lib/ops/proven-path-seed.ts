@@ -32,6 +32,11 @@ import type { ProvenPathPlan } from "@/lib/calibration/proven-path-engine";
 import type { ProjectedProvenMetrics } from "@/lib/calibration/projected-proven-metrics";
 import { CANONICAL_LEARNING_PICK_WHERE } from "@/lib/ops/compute-live-calibration-metrics";
 import { loadRankingPauseApply } from "@/lib/ops/ranking-pause-durable";
+import { loadPublishTimeMarketPResolver } from "@/lib/calibration/publish-time-market-p-loader";
+import {
+  selectIdenticalRows,
+  type IdenticalRowSelection,
+} from "@/lib/calibration/identical-row-bakeoff";
 
 export type ProvenPathSurface = {
   readonly plan: ProvenPathPlan;
@@ -53,15 +58,60 @@ async function loadRows() {
       result: true,
       pickType: true,
       factorBreakdown: true,
+      modelVersion: true,
+      settledAt: true,
       // Lock-time market fair backs up a factor breakdown that lost it (proven-path-rows.ts).
       proofReceipt: { select: { marketFairProb: true } },
-      game: { select: { sport: { select: { key: true, name: true } } } },
+      // C-265 identity fields: the odds-table resolver (WP-28 / C-110) needs
+      // the pick's side and publish time to recompute a market probability
+      // for the identical-row bake-off, exactly as the calibration loader does.
+      id: true,
+      gameId: true,
+      generatedAt: true,
+      selection: true,
+      game: {
+        select: {
+          homeTeamName: true,
+          awayTeamName: true,
+          sport: { select: { key: true, name: true } },
+        },
+      },
     },
     orderBy: { settledAt: "desc" },
     take: 2000,
   });
   // Three-way moneyline sports are excluded here (shared row builder) and counted.
-  return toProvenPathPickRowsReport(picks);
+  const report = toProvenPathPickRowsReport(picks);
+
+  // C-265: one identical row set for every score. Market probability follows
+  // the calibration loader's resolver order (receipt, factor breakdown, then
+  // the read-only odds-table recompute at generatedAt). Best-effort: a failed
+  // odds read leaves the bake-off rows untouched and the table absent.
+  let identicalRows: IdenticalRowSelection | null = null;
+  try {
+    const forLiveCal = picks.map((pick) => ({
+      id: pick.id,
+      gameId: pick.gameId,
+      generatedAt: pick.generatedAt,
+      selection: pick.selection,
+      homeTeamName: pick.game?.homeTeamName ?? null,
+      awayTeamName: pick.game?.awayTeamName ?? null,
+      confidence: pick.confidence,
+      result: pick.result ?? "",
+      pickType: pick.pickType,
+      factorBreakdown: pick.factorBreakdown,
+      proofReceipt: pick.proofReceipt,
+      modelVersion: pick.modelVersion,
+      settledAt: pick.settledAt,
+      sportKey: pick.game?.sport?.key ?? null,
+    }));
+    const oddsTable = await loadPublishTimeMarketPResolver(db, forLiveCal);
+    identicalRows = selectIdenticalRows(forLiveCal, oddsTable.resolveMarketP);
+  } catch (err) {
+    captureError(err, { path: "proven-path-seed", stage: "selectIdenticalRows" });
+    identicalRows = null;
+  }
+  return { ...report, identicalRows };
 }
 
 export async function loadOrSeedProvenPathPlan(): Promise<ProvenPathPlan | null> {
@@ -72,10 +122,10 @@ export async function loadOrSeedProvenPathPlan(): Promise<ProvenPathPlan | null>
 export async function loadProvenPathSurface(): Promise<ProvenPathSurface | null> {
   if (isStubMode()) return null;
   try {
-    const { rows, excluded } = await loadRows();
+    const { rows, excluded, identicalRows } = await loadRows();
     if (rows.length < 50) return null;
     // Always rebuild so polarity law applies (edge-as-p plans are invalid).
-    const plan = buildProvenPathPlan(rows);
+    const plan = buildProvenPathPlan(rows, identicalRows ? { identicalRows } : undefined);
     const planWrite = await persistProvenPathPlan(plan);
     if (planWrite === "error") {
       // The plan was BUILT but not STORED. Returning a surface here would hand
