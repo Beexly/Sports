@@ -52,7 +52,16 @@ const mocks = vi.hoisted(() => ({
   pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string; selection?: string } | null>>(),
   snapshotUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
   resolveRundownApiKey: vi.fn<() => string>(),
-  fetchRundownEventsForSport: vi.fn<(sport: string, key: string) => Promise<{ events: unknown[]; remaining: number | null }>>(),
+  // Mirrors RundownFetchResult: `error` is the human note and `rateLimited`
+  // the structured 429 signal the cooldown reads (C-278a).
+  fetchRundownEventsForSport: vi.fn<
+    (sport: string, key: string) => Promise<{
+      events: unknown[];
+      remaining: number | null;
+      error?: string;
+      rateLimited?: boolean;
+    }>
+  >(),
   eventsBelowBookmakerThreshold: vi.fn<(events: unknown[], min?: number) => unknown[]>(),
   mergeBookmakersIntoPrimary: vi.fn<(primary: unknown[], secondary: unknown[], min?: number) => {
     events: unknown[];
@@ -202,6 +211,7 @@ vi.mock("../build-independent-fair-values.js", async () => {
 });
 
 import { processSport, pickSelectionSide } from "../process-sport.js";
+import { resetRundownCooldowns } from "../rundown-thin-fill.js";
 import { fetchEspnOddsForSport, isNflPreseasonFetchWindow } from "@sports/data-ingestion";
 
 /** Default guard behaviour for these tests: every probe is listed on the board. */
@@ -216,6 +226,9 @@ function confirmAll(_sportKey: string, probes: readonly { id: string }[]): Promi
 }
 
 const SPORT = { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" } as const;
+const MLB = { key: "baseball_mlb", name: "MLB", displayName: "MLB" } as const;
+/** Inside the 72h board window, measured from real now (fixtures must not rot). */
+const KICKOFF_IN_WINDOW = new Date(Date.now() + 6 * 3600 * 1000).toISOString();
 
 function gates(overrides: Partial<ReadinessGates> = {}): ReadinessGates {
   return {
@@ -305,6 +318,9 @@ describe("processSport", () => {
       skippedWellCovered: 0,
     }));
     mocks.confirmBatch.mockImplementation(confirmAll);
+    // The 429 cooldown is module state in a long-lived worker; each test starts
+    // from a clean one or the previous test's back-off leaks into this one.
+    resetRundownCooldowns();
   });
 
   describe("fixture confirmation guard (C-111)", () => {
@@ -696,7 +712,7 @@ describe("processSport", () => {
           id: "odds-1",
           home_team: "Chiefs",
           away_team: "Bills",
-          commence_time: "2026-08-23T17:00:00Z",
+          commence_time: KICKOFF_IN_WINDOW,
           bookmakers: [{ key: "fanduel" }, { key: "betmgm" }],
         },
       ],
@@ -714,14 +730,16 @@ describe("processSport", () => {
       id: "odds-1",
       home_team: "Chiefs",
       away_team: "Bills",
-      commence_time: "2026-08-23T17:00:00Z",
+      // Relative to real now: the thin-fill gate refuses to spend a rationed
+      // Rundown data point on a slate outside the board window.
+      commence_time: KICKOFF_IN_WINDOW,
       bookmakers: [{ key: "fanduel" }],
     };
     const secondary = {
       id: "rundown-1",
       home_team: "Chiefs",
       away_team: "Bills",
-      commence_time: "2026-08-23T17:00:00Z",
+      commence_time: KICKOFF_IN_WINDOW,
       bookmakers: [{ key: "betmgm" }],
     };
     mocks.getOdds.mockResolvedValue({ data: [primary], remainingRequests: 400 });
@@ -738,6 +756,179 @@ describe("processSport", () => {
     expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
     expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledWith(SPORT.key, "rundown-key");
     expect(mocks.mergeBookmakersIntoPrimary).toHaveBeenCalledWith([primary], [secondary], 2);
+  });
+
+  /**
+   * C-278a — the thin-fill has to survive the whole day, not just the first
+   * cycle. TheRundown's free tier is 20k data-points; production logged
+   * `rundown empty (2d): HTTP 429 rate_limited` on EVERY cycle for all four
+   * in-season sports because our own cadence burned the quota by morning.
+   */
+  describe("Rundown thin-fill rationing (C-278a)", () => {
+    /** One thin NFL game inside the board window, one Rundown Kalshi quote for it. */
+    function thinNflSlate() {
+      const primary = {
+        id: "odds-1",
+        home_team: "Chiefs",
+        away_team: "Bills",
+        commence_time: KICKOFF_IN_WINDOW,
+        bookmakers: [{ key: "fanduel" }],
+      };
+      const kalshiQuote = {
+        id: "rundown-1",
+        home_team: "Chiefs",
+        away_team: "Bills",
+        commence_time: KICKOFF_IN_WINDOW,
+        bookmakers: [{ key: "kalshi" }],
+      };
+      return { primary, kalshiQuote };
+    }
+
+    /** One normalized odds row, so the merged board reaches persistence. */
+    const mergedOddsRow = () => [
+      {
+        gameExternalId: "ext-1",
+        bookmaker: "fanduel",
+        market: "SPREADS",
+        spread: -3,
+        fetchedAt: new Date(),
+        bookmakerLastUpdate: new Date(),
+      },
+    ];
+
+    it("one paid book plus a Rundown Kalshi quote reaches MIN_BOOKMAKERS and the merged board is priced", async () => {
+      const { primary, kalshiQuote } = thinNflSlate();
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      mocks.getOdds.mockResolvedValue({ data: [primary], remainingRequests: 400 });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null });
+      const twoBooks = { ...primary, bookmakers: [{ key: "fanduel" }, { key: "kalshi" }] };
+      mocks.mergeBookmakersIntoPrimary.mockReturnValue({
+        events: [twoBooks],
+        filledGameIds: ["odds-1"],
+        unmatchedSecondary: 0,
+        skippedWellCovered: 0,
+      });
+      mocks.normalizeOdds.mockReturnValue(mergedOddsRow());
+      mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
+      expect(mocks.mergeBookmakersIntoPrimary).toHaveBeenCalledWith([primary], [kalshiQuote], 2);
+      // The merged two-book board — not the one-book primary — is what gets
+      // normalized and persisted, which is the whole point of the fill.
+      expect(mocks.normalizeOdds).toHaveBeenCalledWith([twoBooks], expect.any(Date));
+      expect(mocks.oddsCreateMany).toHaveBeenCalled();
+    });
+
+    it("makes no Rundown call for a sport outside NFL and NCAAF, on a board thin enough that NFL would be filled", async () => {
+      const { primary } = thinNflSlate();
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null });
+
+      // Same one-book slate, same window, same key — only the sport differs.
+      mocks.getOdds.mockResolvedValue({
+        data: [{ ...primary, home_team: "Yankees", away_team: "Red Sox" }],
+        remainingRequests: 400,
+      });
+      await processSport(MLB, "key", gates());
+      expect(mocks.fetchRundownEventsForSport).not.toHaveBeenCalled();
+
+      // The control: this slate IS thin enough to fill, so the refusal above
+      // is the sport gate and not an accidentally well-covered board.
+      mocks.getOdds.mockResolvedValue({ data: [primary], remainingRequests: 400 });
+      await processSport(SPORT, "key", gates());
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
+    });
+
+    it("a 429 opens a 30-minute cooldown, and the next cycle inside it makes no call", async () => {
+      const { primary, kalshiQuote } = thinNflSlate();
+      const t0 = Date.now();
+      const nowSpy = vi.spyOn(Date, "now").mockReturnValue(t0);
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      mocks.getOdds.mockResolvedValue({ data: [primary], remainingRequests: 400 });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({
+        events: [],
+        remaining: null,
+        error: "rundown empty (2d): HTTP 429 rate_limited (abort remaining days)",
+        rateLimited: true,
+      });
+
+      await processSport(SPORT, "key", gates());
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
+
+      // 29 minutes later — still inside the cooldown.
+      nowSpy.mockReturnValue(t0 + 29 * 60 * 1000);
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null });
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
+      const lines = warn.mock.calls.map((c) => String(c[0]));
+      // The 429 line names the resume instant and carries no key material.
+      expect(lines.some((l) => /rate_limited \(HTTP 429\).*resumes \d{4}-/.test(l))).toBe(true);
+      expect(lines.some((l) => /rundown-key/.test(l))).toBe(false);
+      nowSpy.mockRestore();
+      warn.mockRestore();
+    });
+
+    it("resumes calling once the 30-minute cooldown has passed", async () => {
+      const { primary, kalshiQuote } = thinNflSlate();
+      const t0 = Date.now();
+      const nowSpy = vi.spyOn(Date, "now").mockReturnValue(t0);
+      vi.spyOn(console, "warn").mockImplementation(() => {});
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      mocks.getOdds.mockResolvedValue({ data: [primary], remainingRequests: 400 });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({
+        events: [],
+        remaining: null,
+        error: "rundown empty (2d): HTTP 429 rate_limited (abort remaining days)",
+        rateLimited: true,
+      });
+
+      await processSport(SPORT, "key", gates());
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
+
+      // 31 minutes later — the cooldown has lapsed and the sport is eligible again.
+      nowSpy.mockReturnValue(t0 + 31 * 60 * 1000);
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null });
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(2);
+      nowSpy.mockRestore();
+      vi.mocked(console.warn).mockRestore?.();
+    });
+
+    it("makes one call per sport per cycle, never one per thin game", async () => {
+      const { primary } = thinNflSlate();
+      const second = { ...primary, id: "odds-2", home_team: "Jets", away_team: "Dolphins" };
+      const third = { ...primary, id: "odds-3", home_team: "Ravens", away_team: "Bengals" };
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      mocks.getOdds.mockResolvedValue({ data: [primary, second, third], remainingRequests: 400 });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null });
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
+    });
+
+    it("makes no call when the sport's only thin fixtures sit outside the board window", async () => {
+      const { primary } = thinNflSlate();
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      mocks.getOdds.mockResolvedValue({
+        data: [
+          // Finished two days ago, and kicking off in eight days: neither is
+          // the slate the second book is needed for.
+          { ...primary, commence_time: new Date(Date.now() - 48 * 3600 * 1000).toISOString() },
+          { ...primary, id: "odds-2", commence_time: new Date(Date.now() + 8 * 24 * 3600 * 1000).toISOString() },
+        ],
+        remainingRequests: 400,
+      });
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.fetchRundownEventsForSport).not.toHaveBeenCalled();
+    });
   });
 
   it("hands the engine the sport KEY, not the display name, so the three-way guard can fire", async () => {
