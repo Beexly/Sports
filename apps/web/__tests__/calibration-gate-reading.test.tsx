@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { render } from "@testing-library/react";
-import { GateReadingView, performanceStatsEnabled, type GateReadingModel } from "@/components/calibration/gate-reading";
+import { GateReadingView, MAX_SNAP_AGE_MS, performanceStatsEnabled, snapIsStale, type GateReadingModel } from "@/components/calibration/gate-reading";
 import type { EligibilityDurableSnap } from "@/lib/ops/calibration-eligibility-durable";
 
 /**
@@ -43,7 +43,7 @@ const receipt: GateReadingModel["receipt"] = { published: true, at: "2026-09-09T
 describe("calibration gate reading", () => {
   it("renders the figures with floors when the receipt exists and stats are enabled", () => {
     const { getByTestId, getAllByTestId, container } = render(
-      <GateReadingView model={{ snap, receipt, pBasis: "market_anchored_v4", numbersPublished: true }} />,
+      <GateReadingView model={{ snap, receipt, pBasis: "market_anchored_v4", numbersPublished: true, stale: false }} />,
     );
     expect(getByTestId("gate-reading-status").textContent).toBe("GREEN");
     const text = container.textContent ?? "";
@@ -57,11 +57,39 @@ describe("calibration gate reading", () => {
 
   it("withholds every figure until the receipt lands and the founder opens the record", () => {
     const { getByTestId, queryAllByTestId, container } = render(
-      <GateReadingView model={{ snap, receipt: null, pBasis: "market_anchored_v4", numbersPublished: false }} />,
+      <GateReadingView model={{ snap, receipt: null, pBasis: "market_anchored_v4", numbersPublished: false, stale: false }} />,
     );
     expect(getByTestId("gate-reading-withheld")).toBeInTheDocument();
     expect(queryAllByTestId("gate-reading-value").length).toBe(0);
     expect(container.textContent).not.toContain("380");
+  });
+
+  it("labels the deployed-version row as a point estimate when the artifact carries no bound", () => {
+    const noBound: EligibilityDurableSnap = {
+      ...snap,
+      report: { ...snap.report, deployedVersion: { key: "v5.2.7", n: 258, ece: 0.0911, eceDebiased: 0.058158, eceDebiasedCi90Lo: null } },
+    };
+    const { container } = render(
+      <GateReadingView model={{ snap: noBound, receipt, pBasis: "market_anchored_v4", numbersPublished: true, stale: false }} />,
+    );
+    const text = container.textContent ?? "";
+    expect(text).toContain("point estimate, no bound on this artifact");
+    expect(text).not.toContain("5th-percentile bound");
+    expect(text).toContain("0.058");
+    expect(text).toContain("fail");
+  });
+
+  it("marks a snap older than the schedule allows as STALE and withholds figures", () => {
+    const old: EligibilityDurableSnap = { ...snap, evaluatedAt: "2026-09-01T00:00:00.000Z" };
+    expect(snapIsStale(old, Date.parse("2026-09-09T00:00:00.000Z"))).toBe(true);
+    expect(snapIsStale(snap, Date.parse(snap.evaluatedAt) + MAX_SNAP_AGE_MS - 1)).toBe(false);
+    expect(snapIsStale({ ...snap, evaluatedAt: "not a date" })).toBe(true);
+    const { getByTestId, queryAllByTestId } = render(
+      <GateReadingView model={{ snap: old, receipt, pBasis: "market_anchored_v4", numbersPublished: false, stale: true }} />,
+    );
+    expect(getByTestId("gate-reading-stale").textContent).toContain("2026-09-01T00:00:00.000Z");
+    expect(getByTestId("gate-reading-withheld").textContent).toMatch(/older than the measurement schedule/);
+    expect(queryAllByTestId("gate-reading-value").length).toBe(0);
   });
 
   it("reads PERFORMANCE_STATS_ENABLED literally", () => {

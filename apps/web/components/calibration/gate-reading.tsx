@@ -7,9 +7,12 @@
  *
  * Honesty rules, in code:
  *   - No snap: renders nothing. Nothing is invented.
- *   - Numbers render only when a publish receipt exists AND
- *     PERFORMANCE_STATS_ENABLED is on. Before that the block shows the gate
- *     status and streak only, no figures.
+ *   - Numbers render only when the latest receipt says published AND
+ *     PERFORMANCE_STATS_ENABLED is on AND the snap is fresh. An unpublish
+ *     receipt, a missing flag, or a snap older than MAX_SNAP_AGE_MS closes
+ *     the figures; the block then shows status and streak only.
+ *   - Freshness: the eligibility cron is six-hourly. A snap older than four
+ *     missed runs (24h) is shown as STALE with its timestamp, never as live.
  *   - Every figure is the snap's own value; raw ECE is shown beside the
  *     bias-corrected figure the floor reads (AGENTS.md law 3 amendment).
  */
@@ -28,7 +31,18 @@ export type GateReadingModel = {
   readonly receipt: PublishReceipt | null;
   readonly pBasis: string;
   readonly numbersPublished: boolean;
+  /** True when the snap is older than MAX_SNAP_AGE_MS or carries no valid timestamp. */
+  readonly stale: boolean;
 };
+
+/** Four missed six-hourly runs. */
+export const MAX_SNAP_AGE_MS = 24 * 60 * 60 * 1000;
+
+export function snapIsStale(snap: EligibilityDurableSnap, now: number = Date.now()): boolean {
+  const t = Date.parse(snap.evaluatedAt);
+  if (!Number.isFinite(t)) return true;
+  return now - t > MAX_SNAP_AGE_MS;
+}
 
 function fmt(x: number | null | undefined, dp = 3): string {
   return typeof x === "number" && Number.isFinite(x) ? x.toFixed(dp) : "n/a";
@@ -46,11 +60,13 @@ export async function loadGateReading(): Promise<GateReadingModel | null> {
       loadLatestCalibrationMetrics(),
     ]);
     if (!snap) return null;
+    const stale = snapIsStale(snap);
     return {
       snap,
       receipt,
       pBasis: snap.pBasis ?? metricsPBasis(metrics),
-      numbersPublished: receipt != null && performanceStatsEnabled(),
+      numbersPublished: receipt?.published === true && performanceStatsEnabled() && !stale,
+      stale,
     };
   } catch {
     return null;
@@ -75,7 +91,8 @@ export function GateReadingView({ model }: { model: GateReadingModel }) {
   const f = r.floors;
   const green = r.status === "GREEN";
   const dv = r.deployedVersion;
-  const dvValue = dv?.eceDebiasedCi90Lo ?? dv?.eceDebiased ?? dv?.ece ?? null;
+  const dvHasBound = typeof dv?.eceDebiasedCi90Lo === "number" && Number.isFinite(dv.eceDebiasedCi90Lo);
+  const dvValue = dvHasBound ? dv.eceDebiasedCi90Lo : (dv?.eceDebiased ?? dv?.ece ?? null);
   return (
     <section
       data-testid="calibration-gate-reading"
@@ -91,6 +108,11 @@ export function GateReadingView({ model }: { model: GateReadingModel }) {
         >
           {r.status}
         </span>
+        {model.stale ? (
+          <span data-testid="gate-reading-stale" className="rounded-md bg-amber-500/15 px-2 py-0.5 font-mono text-sm text-amber-300">
+            STALE · last evaluated {model.snap.evaluatedAt}
+          </span>
+        ) : null}
         <span className="font-mono text-sm text-ion-1">
           streak {r.consecutiveGreen} of {r.streakRequired} required
         </span>
@@ -126,8 +148,8 @@ export function GateReadingView({ model }: { model: GateReadingModel }) {
             />
             {dv ? (
               <Row
-                label={`Deployed ${dv.key} on its own ${dv.n} rows (5th-percentile bound)`}
-                value={`${fmt(dvValue)} (point ${fmt(dv.eceDebiased ?? dv.ece)})`}
+                label={`Deployed ${dv.key} on its own ${dv.n} rows (${dvHasBound ? "5th-percentile bound" : "point estimate, no bound on this artifact"})`}
+                value={dvHasBound ? `${fmt(dvValue)} (point ${fmt(dv.eceDebiased ?? dv.ece)})` : fmt(dvValue)}
                 floor={`≤ ${f.ece}`}
                 pass={dvValue == null ? null : dvValue <= f.ece}
               />
@@ -136,8 +158,9 @@ export function GateReadingView({ model }: { model: GateReadingModel }) {
         </table>
       ) : (
         <p className="mt-3 text-sm text-ion-1" data-testid="gate-reading-withheld">
-          The figures publish when the receipt lands and the founder opens the record. Until then the
-          gate status and streak are the only numbers shown.
+          {model.stale
+            ? "This reading is older than the measurement schedule allows. Figures are withheld until a fresh evaluation lands."
+            : "The figures publish when the receipt lands and the founder opens the record. Until then the gate status and streak are the only numbers shown."}
         </p>
       )}
       <p className="mt-4 text-xs leading-5 text-ion-2">
