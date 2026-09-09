@@ -1,13 +1,23 @@
 # A published pick's "publish time" moves on every refresh — 2026-09-08
 
 Found by Devin Review on PR #720 (🔴), verified here against the source. **Not fixed. Founder
-decision.** Ledger C-265.
+decision.** Ledger C-267.
 
-> **Renumbered 2026-09-09.** This was filed as C-262. While this branch was open, PR #725 merged
+> **Renumbered twice, 2026-09-09.** Filed as C-262, briefly C-265, now **C-267**. While this branch was open, PR #725 merged
 > to `main` carrying its own C-261, C-262 and C-263 for unrelated work, so the three rows added
-> on this branch were renumbered C-264, C-265 and C-266 when `main` was merged in. `main`'s rows
-> keep the original numbers because they landed first. Commit messages and PR comments written
-> before that merge still say C-261 / C-262 / C-263; they mean these rows.
+> on this branch were renumbered C-264, C-267 and C-266 when `main` was merged in. `main`'s rows
+> keep the original numbers because they landed first. Then PR #722 merged, and it had hit the
+> same #725 collision and renumbered its own row to C-265 - the number this one had just taken -
+> so this row moved again to C-267. Its siblings C-264 and C-266 were not affected either time.
+> Commit messages and PR comments written before those merges still say C-261 / C-262 / C-263 or
+> C-265; they mean these rows.
+>
+> **Three collisions in one day, all on the same file.** Ledger ids are allocated by reading the
+> file and taking the next free number, which is a read-modify-write with no reservation, so any
+> two agents working concurrently pick the same id and only find out at merge time. Every
+> renumber invalidates ids already written into commit messages and PR comments, which cannot be
+> edited. This is worth a founder decision: either ids get allocated from something atomic, or
+> branches get id ranges, or rows are keyed by something that does not need allocating at all.
 
 This matters more than its size suggests, because the number it moves is the one the calibration
 gate reads.
