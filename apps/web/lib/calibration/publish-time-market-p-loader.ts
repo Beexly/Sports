@@ -1,8 +1,16 @@
 /**
- * WP-28 batch loader: for the settled MONEYLINE picks the market-anchored
- * sample would otherwise exclude as `no_market_probability` (no receipt, no
- * factor-breakdown market fair), fetch their games' H2H odds rows in ONE query
- * and build the synchronous resolver hook that live-calibration-p.ts accepts.
+ * WP-28 batch loader: for every settled two-way MONEYLINE pick in the sample,
+ * fetch its game's H2H odds rows in ONE query and build the synchronous
+ * resolver hook that live-calibration-p.ts accepts.
+ *
+ * C-301 (2026-09-09): a pick that carries a proof receipt or a factor-breakdown
+ * market fair IS a candidate. Since C-298 the builder reads the odds table
+ * FIRST and the receipt only as a fallback, and since C-300 the eligibility
+ * cron scores nothing but odds-table prices; a candidate filter that skipped
+ * receipted picks left every one of them unscored (57 rows on the 14:40 UTC
+ * run, 44 of them the deployed version's own multi-book rows), which is the
+ * opposite of what those two rows intended. The odds table decides, for every
+ * pick, whether it can price the pick at generatedAt.
  *
  * Zero writes. Read-only against the append-only odds table. The query is
  * bounded by the candidates' gameIds and by the latest generatedAt among them;
@@ -13,13 +21,12 @@
  *
  * Candidates are decided on pre-outcome, structural attributes only: settled
  * WIN/LOSS, MONEYLINE, not a three-way moneyline sport (the engine's own
- * refusal rule), and no market probability already present. A soccer moneyline
- * is never a candidate, so it is never resolved from the odds table.
+ * refusal rule). Whether a receipt exists is not read. A soccer moneyline is
+ * never a candidate, so it is never resolved from the odds table.
  */
 
 import {
   NULL_MARKET_PROBABILITY_RESOLVER,
-  resolveMarketAnchoredCalibrationP,
   type MarketAnchoredResolverSource,
   type MarketProbabilityResolver,
   type PickForLiveCal,
@@ -68,7 +75,7 @@ export type OddsTableUnresolvedCounts = Readonly<
 
 /** Coverage report for the odds-table recompute; carried on the metrics artifact. */
 export type OddsTableMarketPStats = {
-  /** Settled MONEYLINE picks with no receipt and no factor-breakdown market fair (two-way sports only). */
+  /** Settled two-way MONEYLINE picks sent to the odds table (receipted or not, C-301). */
   readonly candidates: number;
   readonly gamesQueried: number;
   /** Number of odds-table queries issued: 0 when there were no candidates, else 1. */
@@ -113,15 +120,15 @@ export function resolverSourceForPSource(pSource: PublishTimeMarketPSource): Mar
 
 /**
  * The pick as the pure resolver needs it, or null when it is not a candidate:
- * not settled WIN/LOSS, not MONEYLINE, a three-way moneyline sport, already
- * market-anchored, or missing an identity field (id, gameId, generatedAt,
- * selection, team names).
+ * not settled WIN/LOSS, not MONEYLINE, a three-way moneyline sport, or missing
+ * an identity field (id, gameId, generatedAt, selection, team names). A receipt
+ * or factor-breakdown probability does not disqualify a pick (C-301): the odds
+ * table is read first for every pick.
  */
 export function oddsTableCandidate(pick: PickForLiveCal): PickForMarketP | null {
   if (pick.result !== "WIN" && pick.result !== "LOSS") return null;
   if (!isMoneylinePickType(pick.pickType)) return null;
   if (threeWayMoneylineExclusion({ pickType: pick.pickType, sportKey: pick.sportKey })) return null;
-  if (resolveMarketAnchoredCalibrationP(pick, NULL_MARKET_PROBABILITY_RESOLVER) != null) return null;
   const { id, gameId, generatedAt, selection, homeTeamName, awayTeamName } = pick;
   if (!id || !gameId || !selection || !homeTeamName || !awayTeamName) return null;
   if (!(generatedAt instanceof Date) || !Number.isFinite(generatedAt.getTime())) return null;
