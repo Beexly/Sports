@@ -352,7 +352,7 @@ six-hourly runs are required again. No threshold, floor, bin or engine edit is p
 The levers remain more settled rows and a real calibration pass (v5.2.8 / HP-14 changes the
 displayed probability basis going forward; it does not re-grade the 481 rows).
 
-### 4d. Founder decisions 2026-09-09 03:05 UTC
+### 4d. Founder decisions 2026-09-09 03:05 UTC (APPROVED by the founder 03:10 UTC: age gate open via C-279; calibration gate stays; "measured, not yet eligible" display via C-280)
 
 1. **Age gate: OPEN, all ages.** Verbatim: "AGE GATE SHOULD BE OPEN - WE ARE NOT TAKING BETS OR MONEY
    AS OF YET SO KEEP IT ALL AGES." Supersedes the earlier "/fantasy 21+ gate stays" and the facts-only
