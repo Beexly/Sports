@@ -19,6 +19,23 @@ export type CalibrationSliceMetrics = {
   readonly ece: number;
   /** Murphy reliability term (lower is better; the floor is applied to the pooled value). */
   readonly murphyRel: number;
+  /**
+   * Murphy RESOLUTION term (C-276). HIGHER is better — it is the only term that
+   * says whether the slice's forecasts RANK outcomes, rather than merely being
+   * calibrated. Distinct from murphyRel above, and pulling the opposite way;
+   * confusing the two inverts the reading.
+   *
+   * Why it is here: every eligibility floor (n, Brier, ECE, murphyRel) measures
+   * calibration or volume. A forecaster that ignores its inputs and always
+   * predicts the base rate is perfectly calibrated by construction and clears
+   * all four, with RES exactly 0. So the floors cannot distinguish a model with
+   * skill from one with none.
+   *
+   * `brierDecomposition` already computed this for every slice and the value was
+   * discarded. Recording it does not floor it and changes no gate — but a floor
+   * cannot be argued about, let alone set, on a number nobody measures.
+   */
+  readonly murphyRes: number;
   readonly hitRate: number;
   readonly meanP: number;
 };
@@ -52,6 +69,7 @@ export function sliceCalibrationMetrics<T extends CalibrationSample>(
       brier: d.brier,
       ece: expectedCalibrationError(rows),
       murphyRel: d.reliability,
+      murphyRes: d.resolution,
       hitRate: wins / rows.length,
       meanP: pSum / rows.length,
     });
