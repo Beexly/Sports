@@ -433,7 +433,13 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // default: see isQuotedBookLine and lineIntegrityPublishGuardEnabled.
   if (
     lineIntegrityPublishGuardEnabled() &&
-    !isQuotedBookLine(avgSpread, spreads)
+    // Real bookmakers only. A `rundown_default` row is not a book offering a
+    // price, so letting it satisfy the guard would pass off an unplaceable
+    // consensus mean as quoted (Devin Review, #733).
+    !isQuotedBookLine(
+      avgSpread,
+      spreadOdds.filter((o) => isRealBookmakerKey(o.bookmaker)).map((o) => o.spread as number),
+    )
   ) {
     return null;
   }
@@ -698,7 +704,10 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // of 719). Gated OFF by default, same flag, same founder decision.
   if (
     lineIntegrityPublishGuardEnabled() &&
-    !isQuotedBookLine(avgTotal, totals)
+    !isQuotedBookLine(
+      avgTotal,
+      totalOdds.filter((o) => isRealBookmakerKey(o.bookmaker)).map((o) => o.total as number),
+    )
   ) {
     return null;
   }
@@ -977,6 +986,24 @@ export function isPublishableSpreadLine(sportKey: string, line: number): boolean
  * case this one cannot, where every book quotes the same contaminated line.
  */
 const QUOTED_LINE_EPSILON = 1e-9;
+
+/**
+ * Bookmaker keys that carry no book identity. CANONICAL: this is the one
+ * definition, and apps/web/lib/calibration/publish-time-market-p.ts re-exports
+ * it rather than keeping a second copy.
+ *
+ * It lives in the engine because the publish guard needs it and the engine
+ * cannot import from apps/web. Grows only with evidence of a new non-book
+ * writer, never to change a count.
+ */
+export const NON_BOOK_BOOKMAKER_KEYS: ReadonlySet<string> = new Set(["rundown_default"]);
+
+export function isRealBookmakerKey(key: string | null | undefined): key is string {
+  if (typeof key !== "string") return false;
+  const trimmed = key.trim();
+  if (trimmed.length === 0) return false;
+  return !NON_BOOK_BOOKMAKER_KEYS.has(trimmed);
+}
 
 /**
  * Read the enforcement flag straight from the environment rather than through

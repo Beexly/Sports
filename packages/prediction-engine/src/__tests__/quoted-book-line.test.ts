@@ -144,6 +144,46 @@ describe("lineIntegrityPublishGuardEnabled", () => {
   });
 });
 
+describe("the guard accepts only REAL bookmakers (Devin Review, #733)", () => {
+  /** Six books, five agreeing and one non-book writer sitting on the mean. */
+  const withNonBook = (sport: string, lines: readonly number[], market: "SPREADS" | "TOTALS") => ({
+    gameId: "game-nonbook",
+    homeTeam: "Fixture Home Bears",
+    awayTeam: "Fixture Away Hawks",
+    commenceTime: new Date("2026-09-13T17:00:00Z"),
+    sport,
+    bookmakerOdds: lines.map((v, i) => ({
+      // The LAST entry is the non-book writer.
+      bookmaker: i === lines.length - 1 ? "rundown_default" : `fixture-book-${i}`,
+      market,
+      ...(market === "SPREADS"
+        ? { spread: v, homeSpreadPrice: -110, awaySpreadPrice: -110 }
+        : { total: v, overPrice: -108, underPrice: -112 }),
+    })),
+  }) as OddsInput;
+
+  it("SPREAD: a rundown_default row sitting on the mean does not satisfy the guard", () => {
+    process.env[FLAG] = "true";
+    // The non-book quotes the mean of the five real books (-3.2), so the
+    // overall mean lands on it. No REAL book quotes -3.2, so the only thing
+    // vouching for the published line is a writer that is not a bookmaker.
+    const input = withNonBook("americanfootball_nfl", [-3, -3, -3, -3.5, -3.5, -3.2], "SPREADS");
+    expect(scoreGame(input).find((p) => p.pickType === "SPREAD")).toBeUndefined();
+  });
+
+  it("TOTAL: same, for the totals scorer", () => {
+    process.env[FLAG] = "true";
+    const input = withNonBook("americanfootball_nfl", [44, 44, 44, 44.5, 44.5, 44.2], "TOTALS");
+    expect(scoreGame(input).find((p) => p.pickType === "TOTAL")).toBeUndefined();
+  });
+
+  it("a REAL book quoting the mean still satisfies the guard", () => {
+    process.env[FLAG] = "true";
+    const input = withNonBook("americanfootball_nfl", [-3.5, -3.5, -3.5, -3.5, -3.5, -3.5], "SPREADS");
+    expect(scoreGame(input).find((p) => p.pickType === "SPREAD")).toBeDefined();
+  });
+});
+
 describe("scoreGame with the guard ON — the same rows are refused", () => {
   it("SPREAD: refuses the between-lines football mean", () => {
     process.env[FLAG] = "true";

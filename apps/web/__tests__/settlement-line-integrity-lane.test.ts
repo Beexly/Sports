@@ -3,7 +3,9 @@ import {
   classifyStoredLine,
   isNonStandardRunline,
   isOffHalfPointGrid,
+  judgementFor,
   latestQuotePerBookmaker,
+  lineIntegrityDeadline,
   lineIntegrityGradingLine,
   lineIntegrityVoidEnabled,
   runLineIntegrityLane,
@@ -45,7 +47,8 @@ function pickRow(over: Partial<LineIntegrityPickRow> = {}): LineIntegrityPickRow
     pickType: "SPREAD",
     selection: "Fixture Home Bears -3.2",
     line: -3.25,
-    clvLockLine: null,
+    clvLockLine: -3.25,
+    proofReceipt: null,
     result: "LOSS",
     settledAt: new Date("2026-09-01T23:00:00Z"),
     isPublished: true,
@@ -150,8 +153,12 @@ function makeDb(args: {
         jarvisMemoryEvent: { create: async (q: Record<string, unknown>) => memories.push(q) },
         postSettlementWork: {
           createMany: async (q: Record<string, unknown>) => {
-            work.push(q);
+            work.push({ op: "createMany", ...q });
             return { count: 2 };
+          },
+          updateMany: async (q: Record<string, unknown>) => {
+            work.push({ op: "updateMany", ...q });
+            return { count: 1 };
           },
         },
       } as never),
@@ -318,7 +325,13 @@ describe("VOID half with the flag ON", () => {
     await voidDefectiveSettledPicks({ db: h.db, enabled: true, now: PUBLISH });
     const meta = (h.actions()[0]!["data"] as Record<string, unknown>)["metadata"] as Record<string, unknown>;
     const evidence = meta["evidence"] as Record<string, unknown>;
-    expect(evidence).toMatchObject({ gradingLine: -3.25, storedLine: -3.25, bookLine: -3, priorResult: "LOSS" });
+    expect(evidence).toMatchObject({
+      judgedLine: -3.25,
+      judgedBasis: "clv_lock_at_publish",
+      storedLine: -3.25,
+      bookLine: -3,
+      priorResult: "LOSS",
+    });
     expect(evidence["sourceIds"]).toEqual(["o1", "o2"]);
     expect(evidence["settledAt"]).toBe("2026-09-01T23:00:00.000Z");
   });
@@ -329,7 +342,7 @@ describe("VOID half with the flag ON", () => {
     const half = await voidDefectiveSettledPicks({ db: h.db, enabled: true, now: PUBLISH });
     expect(half.acted).toBe(1);
     const meta = (h.actions()[0]!["data"] as Record<string, unknown>)["metadata"] as Record<string, unknown>;
-    expect((meta["evidence"] as Record<string, unknown>)["gradingLine"]).toBe(-3.25);
+    expect((meta["evidence"] as Record<string, unknown>)["judgedLine"]).toBe(-3.25);
   });
 
   it("leaves a pick alone when its LOCKED line was quoted, even if `line` drifted off-grid", async () => {
@@ -421,9 +434,9 @@ describe("the sweep cursor — capped cycles must make progress", () => {
 
   /** Two CLEAN picks (-3.5 is quoted) ahead of one DEFECTIVE pick (-3.25). */
   const population = (): LineIntegrityPickRow[] => [
-    pickRow({ id: "a-clean", line: -3.5 }),
-    pickRow({ id: "b-clean", line: -3.5 }),
-    pickRow({ id: "c-defect", line: -3.25 }),
+    pickRow({ id: "a-clean", line: -3.5, clvLockLine: -3.5 }),
+    pickRow({ id: "b-clean", line: -3.5, clvLockLine: -3.5 }),
+    pickRow({ id: "c-defect", line: -3.25, clvLockLine: -3.25 }),
   ];
 
   it("reaches a defect sitting behind a full page of valid picks", async () => {
@@ -462,7 +475,7 @@ describe("the sweep cursor — capped cycles must make progress", () => {
   it("the unpublish half keeps its own cursor, independent of the void half", async () => {
     const h = makeDb({
       picks: [
-        pickRow({ id: "s1", line: -3.5 }),
+        pickRow({ id: "s1", line: -3.5, clvLockLine: -3.5 }),
         pickRow({ id: "p1", line: -3.5, result: "PENDING", settledAt: null }),
         pickRow({ id: "p2", line: -3.25, result: "PENDING", settledAt: null }),
       ],
@@ -510,6 +523,163 @@ describe("UNPUBLISH half with the flag ON", () => {
     const second = await unpublishDefectiveUnsettledPicks({ db: h.db, enabled: true });
     expect(second.inspected).toBe(0);
     expect(second.acted).toBe(0);
+  });
+});
+
+describe("settled vs pending judge DIFFERENT lines (Devin round 3)", () => {
+  const quotes: OddsRow[] = [odds("o1", "a", -3), odds("o2", "b", -3.5)];
+
+  it("PENDING: an unplaceable DISPLAYED line is unpublished even when the lock was fine", async () => {
+    // The lock (-3.5) was quoted, but the member is looking at -3.25 right now.
+    const row = pickRow({ line: -3.25, clvLockLine: -3.5, result: "PENDING", settledAt: null });
+    const h = makeDb({ picks: [row], odds: quotes });
+    const half = await unpublishDefectiveUnsettledPicks({ db: h.db, enabled: true, now: PUBLISH });
+    expect(half.acted).toBe(1);
+    const meta = (h.actions()[0]!["data"] as Record<string, unknown>)["metadata"] as Record<string, unknown>;
+    expect(meta).toMatchObject({ judgedLine: -3.25, judgedBasis: "displayed_line_now" });
+  });
+
+  it("PENDING: a placeable displayed line stays up even when the lock drifted off", async () => {
+    const row = pickRow({ line: -3.5, clvLockLine: -3.25, result: "PENDING", settledAt: null });
+    const h = makeDb({ picks: [row], odds: quotes });
+    const half = await unpublishDefectiveUnsettledPicks({ db: h.db, enabled: true, now: PUBLISH });
+    expect(half.acted).toBe(0);
+    expect(half.skippedByReason.LINE_IS_QUOTED).toBe(1);
+  });
+
+  it("judgementFor names the line and the clock for each mode", () => {
+    const row = pickRow({ line: -1, clvLockLine: -2 });
+    expect(judgementFor(row, "void", PUBLISH)).toMatchObject({ line: -2, basis: "clv_lock_at_publish" });
+    expect(judgementFor(row, "unpublish", PUBLISH)).toMatchObject({
+      line: -1,
+      basis: "displayed_line_now",
+    });
+  });
+});
+
+describe("legacy settled rows with no publication lock (Devin round 3)", () => {
+  const quotes: OddsRow[] = [odds("o1", "a", -3), odds("o2", "b", -3.5)];
+
+  it("SKIPS rather than judging a refreshed line against publish-time odds", async () => {
+    const h = makeDb({
+      picks: [pickRow({ line: -3.25, clvLockLine: null, proofReceipt: null })],
+      odds: quotes,
+    });
+    const half = await voidDefectiveSettledPicks({ db: h.db, enabled: true, now: PUBLISH });
+    expect(half.acted).toBe(0);
+    expect(half.skippedByReason.NO_PUBLISH_LOCK).toBe(1);
+    expect(h.actions()).toHaveLength(0);
+  });
+
+  it("uses the immutable proof receipt when one exists, at ITS asOf", async () => {
+    const h = makeDb({
+      picks: [
+        pickRow({
+          line: -3.5, // refreshed since; must not be what is judged
+          clvLockLine: null,
+          proofReceipt: { line: -3.25, asOf: PUBLISH },
+        }),
+      ],
+      odds: quotes,
+    });
+    const half = await voidDefectiveSettledPicks({ db: h.db, enabled: true, now: PUBLISH });
+    expect(half.acted).toBe(1);
+    const meta = (h.actions()[0]!["data"] as Record<string, unknown>)["metadata"] as Record<string, unknown>;
+    expect((meta["evidence"] as Record<string, unknown>)["judgedBasis"]).toBe("proof_receipt_at_as_of");
+    expect((meta["evidence"] as Record<string, unknown>)["judgedLine"]).toBe(-3.25);
+  });
+
+  it("a receipt whose line WAS quoted leaves the pick alone", async () => {
+    const h = makeDb({
+      picks: [
+        pickRow({ line: -3.25, clvLockLine: null, proofReceipt: { line: -3.5, asOf: PUBLISH } }),
+      ],
+      odds: quotes,
+    });
+    const half = await voidDefectiveSettledPicks({ db: h.db, enabled: true, now: PUBLISH });
+    expect(half.acted).toBe(0);
+    expect(half.skippedByReason.LINE_IS_QUOTED).toBe(1);
+  });
+});
+
+describe("the route deadline (Devin round 3)", () => {
+  const quotes: OddsRow[] = [odds("o1", "a", -3), odds("o2", "b", -3.5)];
+
+  it("stops before the next read once the budget is spent, leaving the rest for next cycle", async () => {
+    const picks = Array.from({ length: 4 }, (_, i) =>
+      pickRow({ id: `p${i}`, line: -3.25, clvLockLine: -3.25 }),
+    );
+    const h = makeDb({ picks, odds: quotes });
+    let t = 1_000;
+    const half = await voidDefectiveSettledPicks({
+      db: h.db,
+      enabled: true,
+      now: PUBLISH,
+      deadlineAtMs: 1_002,
+      clock: () => (t += 1), // 1001 (ok), 1002 (spent)
+    });
+    expect(half.deadlineHit).toBe(true);
+    expect(half.acted).toBeLessThan(4);
+    expect(half.skippedByReason.DEADLINE_REACHED).toBeGreaterThan(0);
+  });
+
+  it("touches nothing at all when the budget is already spent", async () => {
+    const h = makeDb({ picks: [pickRow({ line: -3.25, clvLockLine: -3.25 })], odds: quotes });
+    const half = await voidDefectiveSettledPicks({
+      db: h.db,
+      enabled: true,
+      now: PUBLISH,
+      deadlineAtMs: 0,
+      clock: () => 1,
+    });
+    expect(half.acted).toBe(0);
+    expect(half.deadlineHit).toBe(true);
+    expect(h.oddsQueries()).toBe(0);
+    expect(h.actions()).toHaveLength(0);
+  });
+
+  it("lineIntegrityDeadline leaves the route a tail reserve", () => {
+    expect(lineIntegrityDeadline(1_000, 300)).toBe(1_000 + 300_000 - 60_000);
+  });
+});
+
+describe("post-settlement work is REOPENED, not just enqueued (Devin round 3)", () => {
+  it("resets CLV_GRADE and SNAPSHOT_OUTCOME so the withdrawn outcome is recomputed", async () => {
+    const h = makeDb({
+      picks: [pickRow()],
+      odds: [odds("o1", "a", -3), odds("o2", "b", -3.5)],
+    });
+    await voidDefectiveSettledPicks({ db: h.db, enabled: true, now: PUBLISH });
+    const reopens = h.work.filter((w) => (w as { op?: string }).op === "updateMany");
+    expect(reopens).toHaveLength(2);
+    for (const r of reopens) {
+      expect((r as { data: Record<string, unknown> }).data).toMatchObject({
+        status: "PENDING",
+        completedAt: null,
+      });
+    }
+  });
+});
+
+describe("the sweep cursor is scoped per sport (Devin round 3)", () => {
+  it("a sport-scoped run does not advance the unscoped cursor", async () => {
+    const h = makeDb({
+      picks: [pickRow({ id: "mlb", game: { id: "g", sport: { key: "baseball_mlb" } } })],
+      odds: [odds("o1", "a", -3), odds("o2", "b", -3.5)],
+    });
+    await voidDefectiveSettledPicks({
+      db: h.db,
+      enabled: true,
+      cap: 1,
+      sportKey: "baseball_mlb",
+      now: PUBLISH,
+    });
+    const cursors = h.memories
+      .map((m) => m["data"] as Record<string, unknown>)
+      .filter((d) => d["scope"] === "settlement.line-integrity.cursor")
+      .map((d) => (d["metadata"] as { half?: string }).half);
+    expect(cursors).toEqual(["void:baseball_mlb"]);
+    expect(cursors).not.toContain("void:*");
   });
 });
 
@@ -581,7 +751,7 @@ describe("surveyLineIntegrity — the ops truth-surface block (C-272)", () => {
     const db = surveyDb([
       pickRow({ id: "p1", result: "PENDING", settledAt: null, line: -3.25 }),
       pickRow({ id: "p2", result: "LOSS", line: -3.25 }),
-      pickRow({ id: "p3", result: "WIN", line: -3.5 }),
+      pickRow({ id: "p3", result: "WIN", line: -3.5, clvLockLine: -3.5 }),
     ]);
     const s = await surveyLineIntegrity(db, { env: {} });
     expect(s.publishedUnsettledInspected).toBe(1);

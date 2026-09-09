@@ -54,6 +54,7 @@ import { drainPendingSnapshotOutcomes } from "@/lib/settlement/free-path-snapsho
 import { paidScoresJustifiedSports } from "@/lib/odds/paid-scores-justification";
 import { runZeroSitLane, zeroSitDeadline, type ZeroSitLaneResult } from "@/lib/settlement/zero-sit-lane";
 import {
+  lineIntegrityDeadline,
   runLineIntegrityLane,
   type LineIntegrityLaneResult,
 } from "@/lib/settlement/line-integrity-lane";
@@ -194,7 +195,13 @@ export async function GET(request: Request) {
   // pick the graders could still settle this cycle is not withdrawn out from
   // under them, and before the outbox drain in step 5 so its VOID receipts
   // close in the same cycle.
-  const lineIntegrity = await runLineIntegrityLaneSafe("[cron:settle-picks]", requestedSport);
+  // Shares zero-sit's absolute deadline: both lanes stop at the same wall
+  // clock so steps 4-6 (slate freeze, outbox drain) keep their tail reserve.
+  const lineIntegrity = await runLineIntegrityLaneSafe(
+    "[cron:settle-picks]",
+    requestedSport,
+    lineIntegrityDeadline(startedAt, maxDuration),
+  );
 
   // ── 4. Slate commitment freeze (hash-chained receipts; no odds key needed) ─
   let freeze: SlateFreezeResult[] = [];
@@ -429,10 +436,11 @@ async function runStaleBackfillSafe(
 async function runLineIntegrityLaneSafe(
   logPrefix: string,
   sportKey: string | null,
+  deadlineAtMs: number,
 ): Promise<LineIntegrityLaneResult | { error: string }> {
   try {
     // Same `?sport=` scope as the other lanes.
-    return await runLineIntegrityLane({ db: db as never, sportKey });
+    return await runLineIntegrityLane({ db: db as never, sportKey, deadlineAtMs });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.warn(`${logPrefix} line-integrity lane failed: ${message}`);

@@ -46,6 +46,41 @@ export async function enqueuePostSettlementWork(
   });
 }
 
+/**
+ * REOPENS work rows for a subject whose settled outcome was withdrawn.
+ *
+ * `enqueuePostSettlementWork` is `createMany` with `skipDuplicates` on unique
+ * (subjectId, kind), so for an ALREADY SETTLED pick — whose rows are already
+ * DONE from the original settlement — it is a no-op. Without an explicit
+ * reopen, a withdrawal leaves the CLV grade and the signal snapshot holding
+ * the outcome that was just withdrawn (Devin Review, #733).
+ *
+ * Sets the rows back to PENDING and clears `completedAt`, so the existing
+ * repair path picks them up exactly as it does any other owed work. Rows are
+ * never deleted and the attempt history is preserved.
+ */
+export async function reopenPostSettlementWork(
+  delegate: PostSettlementWorkDelegate,
+  subjectId: string,
+  kinds: readonly PostSettlementWorkKind[],
+): Promise<void> {
+  for (const kind of kinds) {
+    try {
+      // No "reopenedAt" column exists and schema.prisma is frozen, so the
+      // reopen is recorded by status alone; `attemptCount` preserves the history.
+      await delegate.updateMany({
+        where: { subjectId, kind },
+        data: { status: "PENDING", completedAt: null, lastError: null },
+      });
+    } catch (err) {
+      console.warn(
+        `[post-settlement-work] could not reopen ${kind}/${subjectId}: ` +
+          `${err instanceof Error ? err.message : err}`,
+      );
+    }
+  }
+}
+
 /** Marks one work row DONE. Idempotent; never throws (the side task
  *  already succeeded — bookkeeping failure must not undo that). */
 export async function markPostSettlementWorkDone(

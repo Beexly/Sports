@@ -54,6 +54,7 @@ import { isBaseballSport, isQuotedBookLine } from "@sports/prediction-engine";
 import { isRealBookmakerKey } from "@/lib/calibration/publish-time-market-p";
 import {
   enqueuePostSettlementWork,
+  reopenPostSettlementWork,
   type PostSettlementWorkDelegate,
 } from "@sports/ingestion-pipeline";
 import type { SettlementRootCauseCode } from "./root-cause-analysis";
@@ -100,9 +101,18 @@ const SAMPLE_CAP = 20;
  */
 export type LineIntegrityHalfName = "void" | "unpublish";
 
+/**
+ * Cursor key. Includes the `?sport=` scope: a sport-scoped run walks a
+ * DIFFERENT population, so letting it advance the global cursor would skip
+ * rows the unscoped sweep has never seen (Devin Review, #733).
+ */
+function cursorKey(half: LineIntegrityHalfName, sportKey: string | null | undefined): string {
+  return `${half}:${sportKey ?? "*"}`;
+}
+
 async function readCursor(
   db: LineIntegrityDb,
-  half: LineIntegrityHalfName,
+  half: string,
 ): Promise<string | null> {
   const rows = await db.jarvisMemoryEvent.findMany({
     where: {
@@ -119,7 +129,7 @@ async function readCursor(
 
 async function writeCursor(
   db: LineIntegrityDb,
-  half: LineIntegrityHalfName,
+  half: string,
   pickId: string | null,
   now: Date,
 ): Promise<void> {
@@ -308,6 +318,12 @@ export type LineIntegrityPickRow = {
   readonly line: number;
   /** Write-once publish lock. Settlement grades THIS, not `line` (no-drift rule). */
   readonly clvLockLine: number | null;
+  /**
+   * Immutable pre-kickoff proof receipt, when one was minted. Its `line` and
+   * `asOf` are the only other trustworthy record of what was published and
+   * when, and they rescue legacy rows that predate `clvLockLine`.
+   */
+  readonly proofReceipt: { readonly line: number; readonly asOf: Date } | null;
   readonly result: string;
   readonly settledAt: Date | null;
   readonly isPublished: boolean;
@@ -353,6 +369,17 @@ export type LineIntegritySkipReason =
   | "MARKET_OUT_OF_SCOPE"
   | "ODDS_READ_FAILED"
   | "LINE_IS_QUOTED"
+  /**
+   * A SETTLED pick with no `clvLockLine` and no proof receipt. `line` is
+   * rewritten on every refresh, so for such a row there is no trustworthy
+   * record of WHICH line was published or WHEN — judging the current `line`
+   * against quotes capped at `generatedAt` compares a possibly post-publish
+   * value against pre-publish odds and can void a legitimately quoted pick
+   * (Devin Review, #733). The lane refuses to guess.
+   */
+  | "NO_PUBLISH_LOCK"
+  /** The route deadline was reached before this pick's read or write. */
+  | "DEADLINE_REACHED"
   | "WRITE_RACE_LOST"
   | "WRITE_FAILED";
 
@@ -363,6 +390,8 @@ export type LineIntegrityAction = {
   readonly pickType: string;
   readonly defect: LineIntegrityDefectKind;
   readonly storedLine: number;
+  /** The value the verdict was actually about (lock/receipt, or displayed line). */
+  readonly judgedLine: number;
   readonly bookLine: number | null;
 };
 
@@ -371,6 +400,8 @@ export type LineIntegrityHalfResult = {
   inspected: number;
   acted: number;
   capReached: boolean;
+  /** The route deadline stopped this half before every candidate was handled. */
+  deadlineHit: boolean;
   skippedByReason: Record<LineIntegritySkipReason, number>;
   actions: LineIntegrityAction[];
 };
@@ -389,6 +420,7 @@ const LINE_INTEGRITY_PICK_SELECT = {
   selection: true,
   line: true,
   clvLockLine: true,
+  proofReceipt: { select: { line: true, asOf: true } },
   result: true,
   settledAt: true,
   isPublished: true,
@@ -402,13 +434,23 @@ function emptySkips(): Record<LineIntegritySkipReason, number> {
     MARKET_OUT_OF_SCOPE: 0,
     ODDS_READ_FAILED: 0,
     LINE_IS_QUOTED: 0,
+    NO_PUBLISH_LOCK: 0,
+    DEADLINE_REACHED: 0,
     WRITE_RACE_LOST: 0,
     WRITE_FAILED: 0,
   };
 }
 
 function emptyHalf(enabled: boolean): LineIntegrityHalfResult {
-  return { enabled, inspected: 0, acted: 0, capReached: false, skippedByReason: emptySkips(), actions: [] };
+  return {
+    enabled,
+    inspected: 0,
+    acted: 0,
+    capReached: false,
+    deadlineHit: false,
+    skippedByReason: emptySkips(),
+    actions: [],
+  };
 }
 
 /**
@@ -421,12 +463,13 @@ async function readQuotesAtPublish(
   db: LineIntegrityDb,
   row: LineIntegrityPickRow,
   market: LineIntegrityMarket,
+  asOf: Date,
 ): Promise<LineIntegrityQuote[]> {
   const rows = await db.odds.findMany({
     where: {
       gameId: row.gameId,
       market: PICK_MARKET_TO_ODDS_MARKET[market],
-      fetchedAt: { lte: row.generatedAt },
+      fetchedAt: { lte: asOf },
     },
     select: { id: true, bookmaker: true, fetchedAt: true, spread: true, total: true },
   });
@@ -438,12 +481,17 @@ async function readQuotesAtPublish(
   }));
   // One snapshot per real book, never the union of history. See
   // latestQuotePerBookmaker for why matching against every earlier row fails open.
-  return latestQuotePerBookmaker(all, row.generatedAt);
+  return latestQuotePerBookmaker(all, asOf);
 }
+
+export type LineIntegrityJudgedVerdict = Extract<LineIntegrityVerdict, { kind: "defect" }> & {
+  readonly judgedLine: number;
+  readonly basis: string;
+};
 
 export function buildLineIntegrityPayload(args: {
   readonly row: LineIntegrityPickRow;
-  readonly verdict: Extract<LineIntegrityVerdict, { kind: "defect" }>;
+  readonly verdict: LineIntegrityJudgedVerdict;
   readonly decidedAt: Date;
 }): Record<string, unknown> {
   const { row, verdict, decidedAt } = args;
@@ -460,11 +508,19 @@ export function buildLineIntegrityPayload(args: {
         : "The stored line was not quoted by any bookmaker for this game and market at or before generatedAt.",
     evidence: {
       defect: verdict.defect,
-      /** The value that was GRADED (clvLockLine ?? line) — what the verdict is about. */
-      gradingLine: lineIntegrityGradingLine(row),
+      /**
+       * THE VALUE THIS VERDICT IS ABOUT, and how it was chosen. For a settled
+       * pick that is the publication lock (or the proof receipt's line); for a
+       * pending pick it is the line currently on display. Citing anything else
+       * would make the evidence describe a number the decision did not use
+       * (Devin Review, #733).
+       */
+      judgedLine: verdict.judgedLine,
+      judgedBasis: verdict.basis,
       /** The current `line` column, which drifts on refresh; kept for forensics. */
       storedLine: row.line,
       clvLockLine: row.clvLockLine,
+      proofReceiptLine: row.proofReceipt?.line ?? null,
       bookLine: verdict.bookLine,
       sourceIds: verdict.sourceIds,
       pickType: row.pickType,
@@ -486,7 +542,7 @@ export function buildLineIntegrityPayload(args: {
  */
 export function lineIntegrityVoidMemoryEvent(
   row: LineIntegrityPickRow,
-  verdict: Extract<LineIntegrityVerdict, { kind: "defect" }>,
+  verdict: LineIntegrityJudgedVerdict,
   now: Date,
 ): Record<string, unknown> {
   const payload = buildLineIntegrityPayload({ row, verdict, decidedAt: now });
@@ -499,7 +555,7 @@ export function lineIntegrityVoidMemoryEvent(
     title: `Line integrity: voided settled pick ${row.id}`,
     summary:
       `${sportKey} ${row.pickType} "${row.selection}": graded line ` +
-      `${lineIntegrityGradingLine(row)} was not quoted by any bookmaker at or before ` +
+      `${verdict.judgedLine} (${verdict.basis}) was not quoted by any bookmaker at or before ` +
       `${row.generatedAt.toISOString()} (nearest quoted ${verdict.bookLine ?? "NONE"}). ` +
       `Prior result ${row.result} WITHDRAWN to VOID by the settle-picks cron under ` +
       `${LINE_INTEGRITY_POLICY_REF}. settledAt preserved; the original grading ` +
@@ -524,7 +580,7 @@ export function lineIntegrityVoidMemoryEvent(
  */
 export function lineIntegrityUnpublishMemoryEvent(
   row: LineIntegrityPickRow,
-  verdict: Extract<LineIntegrityVerdict, { kind: "defect" }>,
+  verdict: LineIntegrityJudgedVerdict,
   now: Date,
 ): Record<string, unknown> {
   const sportKey = row.game.sport?.key ?? "";
@@ -540,6 +596,8 @@ export function lineIntegrityUnpublishMemoryEvent(
     sportKey,
     pickType: row.pickType,
     modelVersion: row.modelVersion,
+    judgedLine: verdict.judgedLine,
+    judgedBasis: verdict.basis,
     storedLine: row.line,
     bookLine: verdict.bookLine,
     sourceIds: verdict.sourceIds,
@@ -552,8 +610,9 @@ export function lineIntegrityUnpublishMemoryEvent(
     scope: LINE_INTEGRITY_MEMORY_SCOPE,
     title: `Line integrity: unpublished pick ${row.id}`,
     summary:
-      `${sportKey} ${row.pickType} "${row.selection}": stored line ${row.line} was not quoted by any ` +
-      `bookmaker at or before ${metadata.generatedAt} (nearest quoted ${verdict.bookLine ?? "NONE"}). ` +
+      `${sportKey} ${row.pickType} "${row.selection}": displayed line ${verdict.judgedLine} ` +
+      `(${verdict.basis}) is not quoted by any bookmaker on the current board ` +
+      `(nearest quoted ${verdict.bookLine ?? "NONE"}). ` +
       `isPublished set false by the settle-picks cron under ${LINE_INTEGRITY_POLICY_REF}. ` +
       `Row kept, result untouched.`,
     full_text: JSON.stringify(metadata),
@@ -573,19 +632,73 @@ export function lineIntegrityUnpublishMemoryEvent(
  * skipped. Shared by both halves so the two can never diverge on what counts
  * as the defect (the sibling-lane pattern this repo keeps hitting).
  */
+/**
+ * Which line to judge, against odds as of when — and it is NOT the same
+ * question for the two halves (Devin Review, #733).
+ *
+ * SETTLED ("what did we grade?"): the pick's result rests on the line that was
+ * locked at publication, so judge `clvLockLine` against the board as it stood
+ * at `generatedAt`. A legacy row with no lock has no trustworthy record of
+ * which line was published — `line` is rewritten on every refresh — so it is
+ * rescued only by an immutable proof receipt (its own `line` at its own
+ * `asOf`), and otherwise SKIPPED as NO_PUBLISH_LOCK rather than judged on a
+ * possibly post-publish value against pre-publish odds.
+ *
+ * PENDING ("what are we showing?"): nothing has been graded. The member is
+ * looking at `line` right now and would try to place THAT, so judge the
+ * displayed line against the CURRENT board. Judging the lock here would leave
+ * a presently unplaceable pick published because its publish-time lock was
+ * fine — the opposite of what this lane is for.
+ */
+export type LineIntegrityJudgement =
+  | { readonly kind: "judge"; readonly line: number; readonly asOf: Date; readonly basis: string }
+  | { readonly kind: "skip"; readonly reason: Extract<LineIntegritySkipReason, "NO_PUBLISH_LOCK"> };
+
+export function judgementFor(
+  row: LineIntegrityPickRow,
+  mode: LineIntegrityHalfName,
+  now: Date,
+): LineIntegrityJudgement {
+  if (mode === "unpublish") {
+    return { kind: "judge", line: row.line, asOf: now, basis: "displayed_line_now" };
+  }
+  if (row.clvLockLine !== null && row.clvLockLine !== undefined) {
+    return { kind: "judge", line: row.clvLockLine, asOf: row.generatedAt, basis: "clv_lock_at_publish" };
+  }
+  if (row.proofReceipt) {
+    return {
+      kind: "judge",
+      line: row.proofReceipt.line,
+      asOf: row.proofReceipt.asOf,
+      basis: "proof_receipt_at_as_of",
+    };
+  }
+  return { kind: "skip", reason: "NO_PUBLISH_LOCK" };
+}
+
 async function verdictFor(
   db: LineIntegrityDb,
   row: LineIntegrityPickRow,
   half: LineIntegrityHalfResult,
-): Promise<Extract<LineIntegrityVerdict, { kind: "defect" }> | null> {
+  mode: LineIntegrityHalfName,
+  now: Date,
+): Promise<
+  | (Extract<LineIntegrityVerdict, { kind: "defect" }> & { judgedLine: number; basis: string })
+  | null
+> {
   const market = LINE_INTEGRITY_MARKETS.find((m) => m === row.pickType);
   if (!market) {
     half.skippedByReason.MARKET_OUT_OF_SCOPE += 1;
     return null;
   }
+  const judgement = judgementFor(row, mode, now);
+  if (judgement.kind === "skip") {
+    half.skippedByReason[judgement.reason] += 1;
+    return null;
+  }
   let quotes: LineIntegrityQuote[];
   try {
-    quotes = await readQuotesAtPublish(db, row, market);
+    quotes = await readQuotesAtPublish(db, row, market, judgement.asOf);
   } catch (err) {
     // Nothing is voided on missing evidence.
     console.warn(
@@ -595,15 +708,15 @@ async function verdictFor(
     half.skippedByReason.ODDS_READ_FAILED += 1;
     return null;
   }
-  const verdict = classifyStoredLine(lineIntegrityGradingLine(row), quotes);
+  const verdict = classifyStoredLine(judgement.line, quotes);
   if (verdict.kind === "ok") {
     half.skippedByReason.LINE_IS_QUOTED += 1;
     return null;
   }
-  return verdict;
+  return { ...verdict, judgedLine: judgement.line, basis: judgement.basis };
 }
 
-function record(half: LineIntegrityHalfResult, row: LineIntegrityPickRow, verdict: Extract<LineIntegrityVerdict, { kind: "defect" }>): void {
+function record(half: LineIntegrityHalfResult, row: LineIntegrityPickRow, verdict: LineIntegrityJudgedVerdict): void {
   half.acted += 1;
   if (half.actions.length < SAMPLE_CAP) {
     half.actions.push({
@@ -613,6 +726,7 @@ function record(half: LineIntegrityHalfResult, row: LineIntegrityPickRow, verdic
       pickType: row.pickType,
       defect: verdict.defect,
       storedLine: row.line,
+      judgedLine: verdict.judgedLine,
       bookLine: verdict.bookLine,
     });
   }
@@ -632,6 +746,10 @@ export async function voidDefectiveSettledPicks(input: {
   readonly enabled?: boolean;
   /** `?sport=` scope, exactly as the free, backfill and zero-sit lanes take it. */
   readonly sportKey?: string | null;
+  /** Route deadline (epoch ms); the lane stops before its next read or write. */
+  readonly deadlineAtMs?: number;
+  /** Wall clock for the deadline check (tests inject one). */
+  readonly clock?: () => number;
 }): Promise<LineIntegrityHalfResult> {
   const enabled = input.enabled ?? lineIntegrityVoidEnabled();
   const half = emptyHalf(enabled);
@@ -639,7 +757,11 @@ export async function voidDefectiveSettledPicks(input: {
 
   const now = input.now ?? new Date();
   const cap = input.cap ?? LINE_INTEGRITY_VOID_CAP;
-  const cursor = await readCursor(input.db, "void");
+  const clock = input.clock ?? ((): number => Date.now());
+  const pastDeadline = (): boolean =>
+    input.deadlineAtMs !== undefined && clock() >= input.deadlineAtMs;
+  const key = cursorKey("void", input.sportKey);
+  const cursor = await readCursor(input.db, key);
   const rows = await input.db.pick.findMany({
     where: {
       isPublished: true,
@@ -660,11 +782,23 @@ export async function voidDefectiveSettledPicks(input: {
   const candidates = rows.slice(0, cap);
   half.inspected = candidates.length;
   // Advance, or reset when this sweep ran out of rows so the next one wraps.
-  await writeCursor(input.db, "void", half.capReached ? candidates[candidates.length - 1]!.id : null, now);
+  await writeCursor(input.db, key, half.capReached ? candidates[candidates.length - 1]!.id : null, now);
 
   for (const row of candidates) {
-    const verdict = await verdictFor(input.db, row, half);
+    // Deadline before every odds read AND every write; the row is untouched
+    // and the next cycle re-inspects it (the lane is idempotent).
+    if (pastDeadline()) {
+      half.deadlineHit = true;
+      half.skippedByReason.DEADLINE_REACHED += candidates.length - candidates.indexOf(row);
+      break;
+    }
+    const verdict = await verdictFor(input.db, row, half, "void", now);
     if (!verdict) continue;
+    if (pastDeadline()) {
+      half.deadlineHit = true;
+      half.skippedByReason.DEADLINE_REACHED += 1;
+      break;
+    }
     let written: { count: number };
     try {
       written = await input.db.$transaction(async (tx) => {
@@ -694,13 +828,17 @@ export async function voidDefectiveSettledPicks(input: {
         await tx.jarvisMemoryEvent.create({
           data: lineIntegrityVoidMemoryEvent(row, verdict, now),
         });
-        await enqueuePostSettlementWork(
-          tx.postSettlementWork as unknown as PostSettlementWorkDelegate,
-          [
-            { subjectId: row.id, kind: "CLV_GRADE" },
-            { subjectId: row.id, kind: "SNAPSHOT_OUTCOME" },
-          ],
-        );
+        // Enqueue covers a pick that somehow has no rows; REOPEN covers the
+        // normal case, where the original settlement already marked them DONE
+        // and `createMany({skipDuplicates})` would silently do nothing —
+        // leaving the CLV grade and signal snapshot holding the outcome this
+        // withdrawal just removed (Devin Review, #733).
+        const workDelegate = tx.postSettlementWork as unknown as PostSettlementWorkDelegate;
+        await enqueuePostSettlementWork(workDelegate, [
+          { subjectId: row.id, kind: "CLV_GRADE" },
+          { subjectId: row.id, kind: "SNAPSHOT_OUTCOME" },
+        ]);
+        await reopenPostSettlementWork(workDelegate, row.id, ["CLV_GRADE", "SNAPSHOT_OUTCOME"]);
         return updated;
       });
     } catch (err) {
@@ -739,6 +877,10 @@ export async function unpublishDefectiveUnsettledPicks(input: {
   readonly enabled?: boolean;
   /** `?sport=` scope, exactly as the free, backfill and zero-sit lanes take it. */
   readonly sportKey?: string | null;
+  /** Route deadline (epoch ms); the lane stops before its next read or write. */
+  readonly deadlineAtMs?: number;
+  /** Wall clock for the deadline check (tests inject one). */
+  readonly clock?: () => number;
 }): Promise<LineIntegrityHalfResult> {
   const enabled = input.enabled ?? lineIntegrityVoidEnabled();
   const half = emptyHalf(enabled);
@@ -746,7 +888,11 @@ export async function unpublishDefectiveUnsettledPicks(input: {
 
   const now = input.now ?? new Date();
   const cap = input.cap ?? LINE_INTEGRITY_UNPUBLISH_CAP;
-  const cursor = await readCursor(input.db, "unpublish");
+  const clock = input.clock ?? ((): number => Date.now());
+  const pastDeadline = (): boolean =>
+    input.deadlineAtMs !== undefined && clock() >= input.deadlineAtMs;
+  const key = cursorKey("unpublish", input.sportKey);
+  const cursor = await readCursor(input.db, key);
   const rows = await input.db.pick.findMany({
     where: {
       isPublished: true,
@@ -762,11 +908,21 @@ export async function unpublishDefectiveUnsettledPicks(input: {
   half.capReached = rows.length > cap;
   const candidates = rows.slice(0, cap);
   half.inspected = candidates.length;
-  await writeCursor(input.db, "unpublish", half.capReached ? candidates[candidates.length - 1]!.id : null, now);
+  await writeCursor(input.db, key, half.capReached ? candidates[candidates.length - 1]!.id : null, now);
 
   for (const row of candidates) {
-    const verdict = await verdictFor(input.db, row, half);
+    if (pastDeadline()) {
+      half.deadlineHit = true;
+      half.skippedByReason.DEADLINE_REACHED += candidates.length - candidates.indexOf(row);
+      break;
+    }
+    const verdict = await verdictFor(input.db, row, half, "unpublish", now);
     if (!verdict) continue;
+    if (pastDeadline()) {
+      half.deadlineHit = true;
+      half.skippedByReason.DEADLINE_REACHED += 1;
+      break;
+    }
     let written: { count: number };
     try {
       written = await input.db.$transaction(async (tx) => {
@@ -812,18 +968,27 @@ export async function runLineIntegrityLane(input: {
   readonly enabled?: boolean;
   /** `?sport=` scope from the route; null/undefined means every sport. */
   readonly sportKey?: string | null;
+  /** Route deadline (epoch ms, lineIntegrityDeadline). */
+  readonly deadlineAtMs?: number;
+  readonly clock?: () => number;
 }): Promise<LineIntegrityLaneResult> {
   const enabled = input.enabled ?? lineIntegrityVoidEnabled();
+  const budget = {
+    ...(input.deadlineAtMs !== undefined ? { deadlineAtMs: input.deadlineAtMs } : {}),
+    ...(input.clock ? { clock: input.clock } : {}),
+  };
   const unpublished = await unpublishDefectiveUnsettledPicks({
     db: input.db,
     enabled,
     sportKey: input.sportKey ?? null,
+    ...budget,
     ...(input.now ? { now: input.now } : {}),
   });
   const voids = await voidDefectiveSettledPicks({
     db: input.db,
     enabled,
     sportKey: input.sportKey ?? null,
+    ...budget,
     ...(input.now ? { now: input.now } : {}),
   });
   return { lane: "line-integrity", enabled, voids, unpublished };
@@ -838,6 +1003,27 @@ export async function runLineIntegrityLane(input: {
  * stated is the C-241/C-246/C-250 defect class.
  */
 export const LINE_INTEGRITY_SURVEY_CAP = 300;
+
+/**
+ * Wall-clock the lane leaves the settle-picks route after it stops.
+ *
+ * The lane runs at step 3c, AFTER zero-sit and BEFORE the slate freeze and the
+ * outbox drain — steps that must run every cycle. A full page is up to 250
+ * SEQUENTIAL odds reads (50 void + 200 unpublish), so without a budget the
+ * lane can consume the route's remaining 300s `maxDuration` and starve the
+ * settlement work it exists to protect (Devin Review, #733). A void lane that
+ * starves settlement breaks the thing it is protecting.
+ *
+ * The route passes the SAME absolute deadline zero-sit uses, so the two lanes
+ * share one tail reserve rather than each carving out their own.
+ */
+export function lineIntegrityDeadline(
+  routeStartedAtMs: number,
+  routeMaxDurationSeconds: number,
+  tailReserveMs = 60_000,
+): number {
+  return routeStartedAtMs + routeMaxDurationSeconds * 1000 - tailReserveMs;
+}
 
 export type LineIntegrityBreakdown = { sportKey: string; pickType: string; count: number };
 
@@ -904,6 +1090,8 @@ async function surveyHalf(
   db: LineIntegrityDb,
   where: Record<string, unknown>,
   cap: number,
+  mode: LineIntegrityHalfName,
+  now: Date,
 ): Promise<{ inspected: number; defective: number; capReached: boolean }> {
   const rows = await db.pick.findMany({
     where: { ...where, pickType: { in: [...LINE_INTEGRITY_MARKETS] } },
@@ -916,7 +1104,9 @@ async function surveyHalf(
   let defective = 0;
   const scratch = emptyHalf(true);
   for (const row of candidates) {
-    if (await verdictFor(db, row, scratch)) defective += 1;
+    // Same question the acting half asks, so the count and the action can
+    // never disagree about what counts as a defect.
+    if (await verdictFor(db, row, scratch, mode, now)) defective += 1;
   }
   return { inspected: candidates.length, defective, capReached };
 }
@@ -927,7 +1117,7 @@ async function surveyHalf(
  */
 export async function surveyLineIntegrity(
   db: LineIntegrityDb,
-  opts: { readonly cap?: number; readonly env?: NodeJS.ProcessEnv } = {},
+  opts: { readonly cap?: number; readonly env?: NodeJS.ProcessEnv; readonly now?: Date } = {},
 ): Promise<LineIntegritySurvey> {
   const cap = opts.cap ?? LINE_INTEGRITY_SURVEY_CAP;
   const env = opts.env ?? process.env;
@@ -948,8 +1138,9 @@ export async function surveyLineIntegrity(
   let offGrid = 0;
   for (const row of offGridInspected) {
     const sportKey = row.game.sport?.key ?? "";
-    // The GRADING line, matching what the lane and settlement both act on.
-    const graded = lineIntegrityGradingLine(row);
+    // The DISPLAYED line: this block counts published UNSETTLED picks, and the
+    // unpublish half judges what the member is looking at right now.
+    const graded = row.line;
     if (!isOffHalfPointGrid(graded) && !isNonStandardRunline(sportKey, row.pickType, graded)) {
       continue;
     }
@@ -960,11 +1151,14 @@ export async function surveyLineIntegrity(
     byKey.set(key, entry);
   }
 
-  const unsettled = await surveyHalf(db, { isPublished: true, result: "PENDING" }, cap);
+  const now = opts.now ?? new Date();
+  const unsettled = await surveyHalf(db, { isPublished: true, result: "PENDING" }, cap, "unpublish", now);
   const settled = await surveyHalf(
     db,
     { isPublished: true, result: { in: ["WIN", "LOSS", "PUSH"] } },
     cap,
+    "void",
+    now,
   );
 
   const voidedByLane = await db.jarvisMemoryEvent.count({

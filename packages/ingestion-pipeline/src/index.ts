@@ -42,6 +42,7 @@ export type {
 } from "./settlement-decisions.js";
 export {
   enqueuePostSettlementWork,
+  reopenPostSettlementWork,
   markPostSettlementWorkDone,
   markPostSettlementWorkFailed,
   POST_SETTLEMENT_WORK_KINDS,
