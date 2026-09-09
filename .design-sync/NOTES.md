@@ -124,3 +124,60 @@ Repo-specific gotchas for re-syncs. One bullet per item.
 - Converter deps: this clone already had `esbuild`, `@types/react`, `playwright` and `tailwindcss`
   in `Sports/node_modules`, so `.ds-sync/` only needed `npm i ts-morph` (no install scripts, so the
   repo's `strict-allow-scripts` control was never engaged).
+
+## Design-agent feedback folded 2026-09-09 (post-contract run)
+- **`JetBrainsMono-700.woff2` was missing; the fix is to ADD it, not to drop the `@font-face`.**
+  The design agent recommended deleting the rule on the grounds that "nothing asks for 700 / 500 is
+  the heaviest weight the number treatments use". That is wrong about this repo:
+  `design-tokens.css:267-269` sets `--t-num-3xl` / `--t-num-2xl` / `--t-num-xl` to weight **700** on
+  `var(--f-numerals)`, and 79 call sites under `apps/web` pair `font-mono`/`font-numerals` with
+  `font-bold`. Dropping the rule would degrade the largest numerals to synthetic bold or a fallback.
+  The fix was free: every per-weight woff2 in `.design-sync/fonts/` is **byte-identical within its
+  family** (JetBrains 400/500/600 share one md5; Inter's four share one; Exo2's five share one) —
+  they are variable fonts copied to per-weight filenames. `JetBrainsMono-700.woff2` had simply never
+  been copied. Fixed by copying the existing file to that name, matching how Inter-700 and
+  Exo2-700/800/900 already work. **When a weight goes missing again, copy — never download, never
+  delete the rule.**
+- **"183 custom properties under component selectors" is NOT a source problem — do not chase it.**
+  Parsing every rule block of `ds-bundle/_ds_bundle.css`: 417 non-`:root` custom properties, of which
+  **417 are `--tw-*`** and **0** are hand-authored. They are Tailwind's own internals — the
+  `*,:after,:before` and `::backdrop` reset blocks (51 each) plus `--tw-gradient-*` / `--tw-shadow-*`
+  on utility classes (`.from-accent-500`, `.shadow-lg`, `.via-caution`). There is nothing upstream in
+  `design-tokens.css` to annotate for these; adding `@kind` there would not touch one of them. This is
+  token-classifier noise, not repo debt.
+- **"79 unclassifiable tokens" is real but has no upstream `:root` fix.** All 170 declarations in
+  `apps/web/styles/design-tokens.css` are ALREADY under `:root` (line 6) — the `:root` scoping the
+  design agent asked for is done. The unclassifiable ones are the bare-name colors (`--void`,
+  `--eclipse`, `--titanium`, `--graphite`, `--mint`, `--premium`, `--magenta`, `--vermilion`, ...)
+  that carry no family prefix. Families that DO parse: `--t-*` (27), `--glow-*` (9), `--f-*` (7),
+  `--r-*` (5), `--s-*` (4), `--dur-*` (4), `--w-*` (3), `--ease-*` (2). No `@kind` annotation syntax
+  exists in this repo or in the skill's staged scripts, so none was invented — see the `tokensGlob`
+  NO-OP bullet under Re-sync risks for why the tokens only ever surface inside `_ds_bundle.css`.
+- **`--gold` is declared twice with conflicting values** — `design-tokens.css:120` = `var(--ion-blue)`
+  (blue) and `:149` = `var(--amber)`. Later wins, so `--gold` is amber; line 120 is dead and
+  misleading to anyone reading the palette. Left as-is (no runtime effect); flag it to the contract.
+
+## Re-sync 2026-09-09 (second run, post-contract)
+- **`package-validate.mjs` does NOT catch a broken `@font-face` src.** It validates that
+  `styles.css` `@import`s resolve and warns `[FONT_MISSING]` for families with no `@font-face` at
+  all, but a rule whose `src: url(./X.woff2)` points at a file that isn't in `fonts/` passes clean.
+  That is how `JetBrainsMono-700.woff2` shipped broken through a fully green validate. The design
+  agent found it, not the validator. **On any run that touches `fonts/`, check by hand that every
+  `url(./...)` in `.design-sync/fonts/fonts.css` has a matching file in that directory.**
+- **The project contains files this sync does not produce — never delete them.** As of this run
+  `list_files` also returns `DESIGN-CONTRACT.md` (authored by the Claude Design agent),
+  `uploads/**` (18 files: the redesign inputs, incl. a `redesign-2026-09/` copy), and the
+  server-generated `_adherence.oxlintrc.json` + `_ds_manifest.json`. On the anchored atomic path
+  this is safe automatically (`deletes` comes verbatim from `upload.deletePaths`, which was `[]`).
+  **The danger is a future NO-ANCHOR run** (re-adoption after a lost config), where the skill says
+  to review `list_files` and put files "this build doesn't produce" into the plan's `deletes` —
+  doing that literally would destroy the design agent's contract and the user's uploaded inputs.
+  Exclude `DESIGN-CONTRACT.md`, `uploads/**`, `_adherence.oxlintrc.json` and `_ds_manifest.json`
+  from any hand-reviewed delete list.
+- Verdict this run: `bundle:false`, `aux:false`, `styling:true` — the ONLY delta was the font file
+  landing in the `styles.css` import closure (`styleSha` 4694c72e… → fbc983187…). 53/53 components
+  carried forward from the anchor with zero re-grading (`capture: skipped=empty_worklist`), render
+  check 53/53, validate clean with the one known `[FONT_MISSING]` warn. 293 files uploaded.
+- `conventions.md` validated against the fresh build with **zero drift** — all 49 classes, 9 `var(--*)`
+  tokens and 9 component names it names still resolve. Not rewritten (correctly: content belongs to
+  its authors).
