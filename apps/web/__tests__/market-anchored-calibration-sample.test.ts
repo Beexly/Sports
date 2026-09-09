@@ -91,7 +91,7 @@ describe("three-way moneyline exclusion uses the engine's helper", () => {
       pick({ result: "WIN", sportKey: "baseball_mlb", proofReceipt: { marketFairProb: 0.61 } }),
     ]);
     expect(out.included).toBe(1);
-    expect(out.excluded).toEqual({ three_way_market: 2, no_market_probability: 0, non_moneyline_market: 0, in_play: 0 });
+    expect(out.excluded).toEqual({ three_way_market: 2, no_market_probability: 0, non_moneyline_market: 0, in_play: 0, unverifiable_market_p: 0 });
     expect(out.samples).toEqual([
       { p: 0.61, y: 1, sportKey: "baseball_mlb", modelVersion: "v5.2.7", pickType: "MONEYLINE" },
     ]);
@@ -115,7 +115,7 @@ describe("three-way moneyline exclusion uses the engine's helper", () => {
     ]);
     expect(report.rows).toHaveLength(2);
     expect(report.rows.map((r) => r.groupKey)).toEqual(["soccer_usa_mls|SPREAD", "baseball_mlb|MONEYLINE"]);
-    expect(report.excluded).toEqual({ three_way_market: 1, no_market_probability: 0, non_moneyline_market: 0, in_play: 0 });
+    expect(report.excluded).toEqual({ three_way_market: 1, no_market_probability: 0, non_moneyline_market: 0, in_play: 0, unverifiable_market_p: 0 });
   });
 });
 
@@ -127,7 +127,7 @@ describe("(b) no market probability: excluded, never scored on confidence/100", 
     ]);
     expect(out.included).toBe(0);
     expect(out.samples).toEqual([]);
-    expect(out.excluded).toEqual({ three_way_market: 0, no_market_probability: 2, non_moneyline_market: 0, in_play: 0 });
+    expect(out.excluded).toEqual({ three_way_market: 0, no_market_probability: 2, non_moneyline_market: 0, in_play: 0, unverifiable_market_p: 0 });
     expect(out.bySource).toEqual({});
   });
 
@@ -202,6 +202,32 @@ describe("(b) no market probability: excluded, never scored on confidence/100", 
     expect(out.notes.join(" ")).toContain("in_play 2");
   });
 
+  it("C-300: with verifiableOnly, receipt-only and factor-breakdown-only rows are counted as unverifiable_market_p and not scored; resolver rows still are", () => {
+    // The eligibility cron sets verifiableOnly. On the first market_anchored_v3
+    // run 57 receipt-only rows (no odds-table price at generatedAt) were the
+    // difference between the deployed slice's bound reading 0.0526 and reading
+    // under the floor; the receipt was measured 0.169 above the odds table on
+    // rows where both exist, so a receipt-only row cannot be verified.
+    const receiptOnly = pick({ result: "WIN", proofReceipt: { marketFairProb: 0.88 }, modelVersion: "r" });
+    const fbOnly = pick({ result: "LOSS", factorBreakdown: { marketFairProb: 0.8 }, proofReceipt: null, modelVersion: "f" });
+    const priced = pick({ result: "WIN", proofReceipt: { marketFairProb: 0.88 }, modelVersion: "o" });
+    const resolver = (p: PickForLiveCal) => (p.modelVersion === "o" ? { p: 0.58, source: "resolver_single_book" as const } : null);
+
+    const strict = picksToMarketAnchoredCalibrationSamples([receiptOnly, fbOnly, priced], { resolveMarketP: resolver, verifiableOnly: true });
+    expect(strict.included).toBe(1);
+    expect(strict.samples[0]).toMatchObject({ p: 0.58, y: 1 });
+    expect(strict.excluded.unverifiable_market_p).toBe(2);
+    expect(strict.excluded.no_market_probability).toBe(0);
+    expect(strict.bySource).toEqual({ resolver_single_book: 1 });
+    expect(strict.notes.join(" ")).toContain("unverifiable_market_p 2");
+
+    // Default (other readers): the fallback chain still scores those rows.
+    const lenient = picksToMarketAnchoredCalibrationSamples([receiptOnly, fbOnly, priced], { resolveMarketP: resolver });
+    expect(lenient.included).toBe(3);
+    expect(lenient.excluded.unverifiable_market_p).toBe(0);
+    expect(lenient.bySource).toEqual({ proof_receipt: 1, factor_breakdown: 1, resolver_single_book: 1 });
+  });
+
   it("the WP-28 resolver hook fills a receipt-less pick and is reported as its own source", () => {
     const out = picksToMarketAnchoredCalibrationSamples(
       [
@@ -233,7 +259,7 @@ describe("(b) no market probability: excluded, never scored on confidence/100", 
       },
     );
     expect(out.included).toBe(3);
-    expect(out.excluded).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0, in_play: 0 });
+    expect(out.excluded).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0, in_play: 0, unverifiable_market_p: 0 });
     expect(out.bySource).toEqual({ proof_receipt: 1, resolver: 1, resolver_single_book: 1 });
     expect(out.samples[2]).toEqual({ p: 0.58, y: 1, sportKey: "baseball_mlb", modelVersion: "v5.2.6", pickType: "MONEYLINE" });
     // The composition note says single-book probabilities are in, and how they are tagged.
@@ -260,7 +286,7 @@ describe("(b) no market probability: excluded, never scored on confidence/100", 
     ];
     const built = picksToCalibrationSamples(rows);
     expect(built.samples).toEqual([]);
-    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0, in_play: 0 });
+    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0, in_play: 0, unverifiable_market_p: 0 });
     const payload = buildDurableMetricsFromSamples({
       samples: built.samples,
       taggedSamples: built.taggedSamples,
@@ -272,8 +298,8 @@ describe("(b) no market probability: excluded, never scored on confidence/100", 
     expect(payload.status).toBe("collecting");
     expect(payload.n).toBe(0);
     expect(payload.pBasis).toBe(MARKET_ANCHORED_P_BASIS);
-    expect(payload.pBasis).toBe("market_anchored_v3");
-    expect(payload.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0, in_play: 0 });
+    expect(payload.pBasis).toBe("market_anchored_v4");
+    expect(payload.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0, in_play: 0, unverifiable_market_p: 0 });
   });
 });
 
@@ -351,7 +377,7 @@ describe("C-110 streak basis: market_anchored_v2 restarts a streak counted under
       { confidence: 70, result: "WIN", modelVersion: "v5.2.7", settledAt: settled, pickType: "MONEYLINE", proofReceipt: { marketFairProb: 0.66 }, sportKey: "baseball_mlb" },
     ]);
     const payload = buildDurableMetricsFromSamples({ ...built, samples: built.samples, taggedSamples: built.taggedSamples });
-    expect(metricsPBasis(payload)).toBe("market_anchored_v3");
+    expect(metricsPBasis(payload)).toBe("market_anchored_v4");
     // Artifacts persisted under the earlier tags read as themselves, never as v2.
     expect(metricsPBasis(metricsWithBasis("a", "market_anchored"))).toBe("market_anchored");
     expect(metricsPBasis(metricsWithBasis("a", undefined))).toBe("legacy");
@@ -379,7 +405,7 @@ describe("C-110 streak basis: market_anchored_v2 restarts a streak counted under
     // The reverse also resets: a v2 streak never seeds a v1 artifact.
     expect(consecutiveGreenPriorForBasis({ ...v1Snap, pBasis: MARKET_ANCHORED_P_BASIS }, "market_anchored")).toEqual({
       consecutiveGreenPrior: 0,
-      streakResetFromBasis: "market_anchored_v3",
+      streakResetFromBasis: "market_anchored_v4",
     });
   });
 
@@ -402,7 +428,7 @@ describe("C-110 streak basis: market_anchored_v2 restarts a streak counted under
     expect(first.eligibility.status).toBe("RED");
     expect(first.publish.published).toBe(false);
     let snap = lastSnap();
-    expect(snap.pBasis).toBe("market_anchored_v3");
+    expect(snap.pBasis).toBe("market_anchored_v4");
     expect(snap.streakResetFromBasis).toBe("market_anchored");
 
     // The next v2 artifact builds on the v2 streak, with no further reset.
@@ -413,7 +439,7 @@ describe("C-110 streak basis: market_anchored_v2 restarts a streak counted under
     expect(second.eligibility.consecutiveGreen).toBe(2);
     expect(second.eligibility.status).toBe("RED");
     snap = lastSnap();
-    expect(snap.pBasis).toBe("market_anchored_v3");
+    expect(snap.pBasis).toBe("market_anchored_v4");
     expect(snap.streakResetFromBasis).toBeNull();
   });
 });
@@ -456,7 +482,7 @@ describe("(c) bySport and byModelVersion slices", () => {
     });
     expect(payload.status).toBe("ok");
     expect(payload.n).toBe(90);
-    expect(payload.exclusions).toEqual({ three_way_market: 1, no_market_probability: 1, non_moneyline_market: 0, in_play: 0 });
+    expect(payload.exclusions).toEqual({ three_way_market: 1, no_market_probability: 1, non_moneyline_market: 0, in_play: 0, unverifiable_market_p: 0 });
 
     const bySport = payload.bySport ?? [];
     const byModelVersion = payload.byModelVersion ?? [];
@@ -545,7 +571,7 @@ describe("byMarket: the pooled floors sample is two-way moneyline only and the a
     expect(built.samples).toHaveLength(12);
     // 6 spreads, 1 total and the -110/-110 spread are excluded by market before
     // any price rule runs, so no_market_probability stays 0.
-    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 0, non_moneyline_market: 8, in_play: 0 });
+    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 0, non_moneyline_market: 8, in_play: 0, unverifiable_market_p: 0 });
     expect(built.taggedSamples.map((s) => s.pickType)).toEqual(Array<string>(12).fill("MONEYLINE"));
 
     const payload = buildDurableMetricsFromSamples({
@@ -591,7 +617,7 @@ describe("byMarket: the pooled floors sample is two-way moneyline only and the a
       { confidence: 70, result: "WIN", modelVersion: "v5.2.7", settledAt: settled, pickType: null, proofReceipt: { marketFairProb: 0.66 }, sportKey: "baseball_mlb" },
     ]);
     expect(built.samples).toHaveLength(0);
-    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 0, non_moneyline_market: 1, in_play: 0 });
+    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 0, non_moneyline_market: 1, in_play: 0, unverifiable_market_p: 0 });
     const payload = buildDurableMetricsFromSamples({ ...built, samples: built.samples, taggedSamples: built.taggedSamples });
     expect(payload.n).toBe(0);
     expect(payload.byMarket ?? []).toEqual([]);

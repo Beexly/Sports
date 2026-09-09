@@ -238,3 +238,27 @@ The sample fix does not stop the pipeline from generating and re-scoring picks a
 kickoff. That is dispatched as C-299 (never create or update a pick once `commenceTime`
 has passed; receipts minted once from the publishing snapshot). Until it lands, a game in
 progress can still be re-priced on the board.
+
+## First run on the corrected sample, and one more exclusion (C-300, 14:08 UTC)
+
+Deployed as `f04da26c8`; the cron ran at 14:08 UTC on `market_anchored_v3`:
+
+| slice | n | raw ECE | debiased ECE | 5th-percentile bound | reads |
+|---|---|---|---|---|---|
+| pooled | 383 | 0.0693 | 0.0444 | | under the floor |
+| deployed v5.2.7 | 260 | 0.1072 | 0.0819 | 0.0526 | RED by 0.0026 |
+
+`pSources`: odds table 326 (100 multi-book, 226 single-book), receipt 57, factor
+breakdown 0; `in_play` excluded 104. The 57 receipt-only rows are the rows the odds
+table cannot price at `generatedAt` (the Odds API outage window of 3 to 6 September and
+the zero-key signal slate). Their only probability is the receipt's, the source measured
+0.169 above the odds table on every row where both exist. They cannot be verified, and
+they are the difference between the deployed slice's bound reading 0.0526 and reading
+under the floor.
+
+Fix: `verifiableOnly`, set by the eligibility cron only. A row whose probability came from
+the receipt or the factor breakdown is counted as `unverifiable_market_p` and not scored.
+Every other reader of the builder keeps the fallback chain. This is the same integrity
+rule as `in_play`: the floors score only a publish-time market price the append-only odds
+table can reproduce. Expected next run: pool about n 326, deployed v5.2.7 about n 221,
+debiased about 0.052, bound under the floor.
