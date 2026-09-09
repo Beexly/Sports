@@ -2,7 +2,15 @@
  * Production-path composite provider for GSE Stats API.
  * - weather: Open-Meteo live (server)
  * - nfl: memory store hydrated by workers (empty until ingest)
- * - demo: deterministic fallback (explicit non-claim)
+ *
+ * There is deliberately NO fallback provider. A metric with no wired loader
+ * routes to nothing, `createCompositeProvider` returns null, and
+ * `handleGetMetricValue` refuses with 404 `no_value`. An earlier revision
+ * carried a `demo` provider that returned a hash of "<metricId>:<entityId>"
+ * for any ACTIVE public metric — a made-up number wrapped in a provenance
+ * block naming real sources, served to paying subscribers. CLAUDE.md rule 1
+ * (no fake data) and AGENTS.md law 8 (never fabricate product data) forbid
+ * it; refusing is the honest answer and it was already written.
  */
 
 import {
@@ -17,40 +25,16 @@ import {
   type ValueProvider,
 } from "@sports/stats-api";
 
-const SEED: Record<string, number> = {
-  "nfl.box.pass_yds|demo_player": 287,
-  "nfl.adv.epa|demo_player": 0.12,
-  "gse.edge_index|demo_game": 0.041,
-  "gse.clv_vs_pinnacle|demo_game": 0.018,
-  "mkt.consensus.spread.novig|demo_game": 0.52,
-};
-
-const demo: ValueProvider = (metric, entityId) => {
-  const loose = `${metric.id}|${entityId}`;
-  if (loose in SEED) return SEED[loose]!;
-  if (metric.status === "ACTIVE" && metric.publicApi && metric.family !== "calibration") {
-    let h = 0;
-    const s = `${metric.id}:${entityId}`;
-    for (let i = 0; i < s.length; i++) h = (h * 31 + s.charCodeAt(i)) | 0;
-    const u = (Math.abs(h) % 10000) / 10000;
-    if (metric.unit === "count" || metric.unit === "yds") return Math.round(u * 100);
-    if (metric.unit === "rate" || metric.unit === "prob") return Math.round(u * 1000) / 1000;
-    return u;
-  }
-  return null;
-};
-
 /** Process-local nflverse memory — workers will put rows here / Redis later. */
 export const nflverseMemory = new NflverseMemoryStore();
 
 const weather = createOpenMeteoProvider(liveOpenMeteoClient());
 const nfl = createNflverseMemoryProvider(nflverseMemory);
 
-export const demoValueProvider: ValueProvider = createCompositeProvider(
+export const wiredValueProvider: ValueProvider = createCompositeProvider(
   buildDefaultRouting({
     weather,
     nflverse: nfl,
-    demo,
   }),
 );
 

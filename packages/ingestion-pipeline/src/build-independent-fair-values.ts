@@ -42,6 +42,7 @@ import {
   fetchMlbStandings,
   buildMlbWinPctLookup,
   lookupMlbWinPct,
+  resolveNflWeek,
 } from "@sports/data-ingestion";
 import {
   isPoissonValidSport,
@@ -55,6 +56,7 @@ import {
   powerIndexToIndependentFairValue,
   standingsWinPctToIndependentFairValue,
   nflEpaToIndependentFairValue,
+  NFL_EPA_MIN_GAMES,
   opponentAdjustedRatings,
   type EloResultGame,
 } from "@sports/prediction-engine";
@@ -339,140 +341,234 @@ async function tryMlbStandingsFairValue(
   }
 }
 
+/**
+ * Provenance for a fair value built on the PRIOR season because the current one
+ * cannot yet meet NFL_EPA_MIN_GAMES (C-235). Distinct from "nfl_epa_adj" so a
+ * factor trail can never present last season's form as this season's.
+ */
+export const NFL_EPA_PRIOR_SEASON_SOURCE = "nfl_epa_adj_prior";
+
 /** Season cache for NFL EPA ratings within one process cycle. */
 const nflEpaRatingsCache = new Map<
   number,
   { readonly at: number; readonly byTeam: Map<string, { overall: number; games: number }> }
 >();
 
-async function tryNflEpaFairValue(
-  input: IndependentFairValueBuildInput,
-): Promise<IndependentMarketFairValue | null> {
-  if (
-    input.sportKey !== "americanfootball_nfl" &&
-    input.sportKey !== "nfl"
-  ) {
-    return null;
-  }
-  try {
-    const season = input.commenceTime.getUTCFullYear();
-    // NFL calendar: Jan–Feb games belong to prior season year label in nflverse
-    const month = input.commenceTime.getUTCMonth(); // 0-based
-    const nflSeason = month <= 1 ? season - 1 : season;
-    const nowMs = (input.now ?? (() => new Date()))().getTime();
-    let entry = nflEpaRatingsCache.get(nflSeason);
-    if (!entry || nowMs - entry.at > 30 * 60 * 1000) {
-      const rows = await db.teamGameEfficiency.findMany({
-        where: { season: nflSeason },
-        select: {
-          team: true,
-          opponent: true,
-          offEpaPerPlay: true,
-          defEpaPerPlay: true,
-        },
-        take: 5000,
-      });
-      if (rows.length === 0) {
-        nflEpaRatingsCache.set(nflSeason, {
-          at: nowMs,
-          byTeam: new Map(),
-        });
-        return null;
-      }
-      const games = rows.map((r) => ({
+/**
+ * Load and cache opponent-adjusted EPA ratings for one nflverse season.
+ * Returns an empty map (cached) when the season has no rows yet.
+ */
+async function loadNflEpaRatings(
+  nflSeason: number,
+  nowMs: number,
+): Promise<Map<string, { overall: number; games: number }>> {
+  const cached = nflEpaRatingsCache.get(nflSeason);
+  if (cached && nowMs - cached.at <= 30 * 60 * 1000) return cached.byTeam;
+
+  const rows = await db.teamGameEfficiency.findMany({
+    where: { season: nflSeason },
+    select: { team: true, opponent: true, offEpaPerPlay: true, defEpaPerPlay: true },
+    take: 5000,
+  });
+  const byTeam = new Map<string, { overall: number; games: number }>();
+  if (rows.length > 0) {
+    const ratings = opponentAdjustedRatings(
+      rows.map((r) => ({
         team: r.team,
         opponent: r.opponent,
         offValue: r.offEpaPerPlay,
         defValue: r.defEpaPerPlay,
-      }));
-      const ratings = opponentAdjustedRatings(games);
-      const byTeam = new Map<string, { overall: number; games: number }>();
-      for (const r of ratings) {
-        byTeam.set(r.team.toUpperCase(), { overall: r.overall, games: r.games });
-        byTeam.set(r.team, { overall: r.overall, games: r.games });
-      }
-      entry = { at: nowMs, byTeam };
-      nflEpaRatingsCache.set(nflSeason, entry);
+      })),
+    );
+    for (const r of ratings) {
+      byTeam.set(r.team.toUpperCase(), { overall: r.overall, games: r.games });
+      byTeam.set(r.team, { overall: r.overall, games: r.games });
     }
-    if (entry.byTeam.size === 0) return null;
+  }
+  nflEpaRatingsCache.set(nflSeason, { at: nowMs, byTeam });
+  return byTeam;
+}
 
-    // TeamGameEfficiency uses abbreviations; GSE games often use full names.
-    // Match by abbreviation tokens embedded in names (e.g. "Kansas City Chiefs" ↔ KC).
-    const resolve = (name: string): { overall: number; games: number } | null => {
-      const direct =
-        entry!.byTeam.get(name) ??
-        entry!.byTeam.get(name.toUpperCase()) ??
-        entry!.byTeam.get(name.trim());
-      if (direct) return direct;
-      // Token overlap: last word often matches mascot; try common abbrs via uppercase words
-      const upper = name.toUpperCase();
-      for (const [k, v] of entry!.byTeam) {
-        if (k.length <= 3 && upper.includes(k)) {
-          // require word boundary-ish: " NE " or start/end
-          const re = new RegExp(`(?:^|\\s)${k}(?:\\s|$)`);
-          if (re.test(upper) || upper.endsWith(k) || upper.startsWith(k)) {
-            return v;
-          }
-        }
-      }
+/** TeamGameEfficiency stores abbreviations; GSE game rows often carry full names. */
+const NFL_NAME_TO_ABBR: Record<string, string> = {
+  "arizona cardinals": "ARI",
+  "atlanta falcons": "ATL",
+  "baltimore ravens": "BAL",
+  "buffalo bills": "BUF",
+  "carolina panthers": "CAR",
+  "chicago bears": "CHI",
+  "cincinnati bengals": "CIN",
+  "cleveland browns": "CLE",
+  "dallas cowboys": "DAL",
+  "denver broncos": "DEN",
+  "detroit lions": "DET",
+  "green bay packers": "GB",
+  "houston texans": "HOU",
+  "indianapolis colts": "IND",
+  "jacksonville jaguars": "JAX",
+  "kansas city chiefs": "KC",
+  "las vegas raiders": "LV",
+  "los angeles chargers": "LAC",
+  "los angeles rams": "LA",
+  "miami dolphins": "MIA",
+  "minnesota vikings": "MIN",
+  "new england patriots": "NE",
+  "new orleans saints": "NO",
+  "new york giants": "NYG",
+  "new york jets": "NYJ",
+  "philadelphia eagles": "PHI",
+  "pittsburgh steelers": "PIT",
+  "san francisco 49ers": "SF",
+  "seattle seahawks": "SEA",
+  "tampa bay buccaneers": "TB",
+  "tennessee titans": "TEN",
+  "washington commanders": "WAS",
+};
+
+/** Resolve one team's rating from a season map, by abbreviation then by token. */
+function resolveNflTeamRating(
+  byTeam: Map<string, { overall: number; games: number }>,
+  name: string,
+): { overall: number; games: number } | null {
+  const abbr = NFL_NAME_TO_ABBR[name.toLowerCase().trim()];
+  const direct =
+    (abbr ? byTeam.get(abbr) : undefined) ??
+    byTeam.get(name) ??
+    byTeam.get(name.toUpperCase()) ??
+    byTeam.get(name.trim());
+  if (direct) return direct;
+
+  // Token match on a short key (e.g. "NE" inside "NE PATRIOTS").
+  //
+  // FIXED (C-237): the previous form tested a dynamic RegExp for a word
+  // boundary and then ALSO accepted `upper.startsWith(k) || upper.endsWith(k)`,
+  // which defeats the boundary it had just checked. Its own comment said "so
+  // 'NE' does not match inside 'NEW ORLEANS'" - and "NEW ORLEANS
+  // SAINTS".startsWith("NE") is true, so New Orleans resolved to NEW ENGLAND's
+  // rating. A team priced on another team's EPA is exactly the kind of silent
+  // wrong number this pipeline exists to refuse.
+  //
+  // Splitting on non-alphanumerics and comparing whole tokens gives the word
+  // boundary the comment always intended, and removes the interpolated RegExp
+  // (an unescaped key containing a metacharacter would have changed the pattern
+  // rather than been matched literally).
+  const tokens = new Set(name.toUpperCase().split(/[^A-Z0-9]+/).filter(Boolean));
+  for (const [k, v] of byTeam) {
+    if (k.length <= 3 && tokens.has(k)) return v;
+  }
+  return null;
+}
+
+/**
+ * Opponent-adjusted EPA fair value for one NFL game.
+ *
+ * EARLY-SEASON FALLBACK TO THE PRIOR SEASON (C-235). This looked up the current
+ * nflverse season only, and `nflEpaToWinProbs` refuses a team with fewer than
+ * NFL_EPA_MIN_GAMES (4) games. Together that meant NFL had NO independent fair
+ * value for the FIRST FOUR WEEKS OF EVERY SEASON: in Week 1 the season has zero
+ * rows at all, and through Week 4 no team has met the floor. The only other NFL
+ * independent is ESPN PowerIndex, which is rights-gated closed by default, so
+ * the signal slate - which is MONEYLINE-only and builds from independents -
+ * produced no NFL moneylines at all for the opening month. Measured on
+ * production 2026-09-08: 6 NFL games in the 72h window, 0 MONEYLINE picks.
+ *
+ * This is the same hole C-225 closed for the fantasy projection basis, in the
+ * picks path, and it takes the same shape of fix: while the CURRENT season
+ * cannot meet the sample floor, fall back to the PRIOR season, which is real
+ * measured data rather than an invention.
+ *
+ * Three properties keep it honest:
+ *   - The fallback is SELF-LIMITING. It applies only while a team is under
+ *     NFL_EPA_MIN_GAMES in the current season, so it stops on its own once the
+ *     season can stand up - no hand-picked week cutoff to drift out of sync
+ *     with the floor it is derived from.
+ *   - It reaches back exactly ONE season, never further. A gap in the data does
+ *     not silently serve three-year-old form.
+ *   - It carries DIFFERENT PROVENANCE: source "nfl_epa_adj_prior", so nothing
+ *     downstream can mistake last season's form for this season's. Both sides
+ *     must come from the same season - never one from each, which would compare
+ *     ratings built on different opponent pools.
+ */
+async function tryNflEpaFairValue(
+  input: IndependentFairValueBuildInput,
+): Promise<IndependentMarketFairValue | null> {
+  if (input.sportKey !== "americanfootball_nfl" && input.sportKey !== "nfl") {
+    return null;
+  }
+  try {
+    const season = input.commenceTime.getUTCFullYear();
+    // NFL calendar: Jan-Feb games belong to the prior season year label in nflverse.
+    const month = input.commenceTime.getUTCMonth(); // 0-based
+    const nflSeason = month <= 1 ? season - 1 : season;
+    const nowMs = (input.now ?? (() => new Date()))().getTime();
+
+    const current = await loadNflEpaRatings(nflSeason, nowMs);
+    const curHome = resolveNflTeamRating(current, input.homeTeam);
+    const curAway = resolveNflTeamRating(current, input.awayTeam);
+
+    // The current season stands on its own only when BOTH sides meet the floor.
+    const minGames = NFL_EPA_MIN_GAMES;
+    if (curHome && curAway && curHome.games >= minGames && curAway.games >= minGames) {
+      return nflEpaToIndependentFairValue(
+        {
+          homeOverall: curHome.overall,
+          awayOverall: curAway.overall,
+          homeGames: curHome.games,
+          awayGames: curAway.games,
+        },
+        { now: input.now },
+      );
+    }
+
+    // BOUND THE FALLBACK TO THE GENUINELY EARLY SEASON (C-238, Devin).
+    //
+    // The first version fell back whenever either current rating was absent or
+    // under the floor, REGARDLESS OF WEEK, and I described that as
+    // "self-limiting". It self-limits only while the data is healthy: teams
+    // accumulate games and the fallback stops. It does NOT self-limit when
+    // ingestion breaks. In Week 12, a TeamGameEfficiency table missing rows for
+    // a team is an OUTAGE, and falling back would publish a pick built on
+    // year-old form while reporting nothing wrong - the silent wrong basis this
+    // whole path exists to refuse.
+    //
+    // The bound is derived, not chosen, on the same reasoning as
+    // PRIOR_SEASON_GRACE_WEEKS in the fantasy gate: by target week W a team has
+    // played at most W-1 games, so a sample under NFL_EPA_MIN_GAMES is EXPECTED
+    // only while W-1 < NFL_EPA_MIN_GAMES. Past that point thin current-season
+    // data means something upstream is wrong, and the honest answer is no
+    // opinion rather than last season's.
+    const { week, season: resolvedSeason } = resolveNflWeek(input.commenceTime);
+    const withinEarlySeasonWindow =
+      resolvedSeason === nflSeason && week <= NFL_EPA_MIN_GAMES;
+    if (!withinEarlySeasonWindow) return null;
+
+    // Early season: the prior season is the honest basis, with its own label.
+    const prior = await loadNflEpaRatings(nflSeason - 1, nowMs);
+    const priorHome = resolveNflTeamRating(prior, input.homeTeam);
+    const priorAway = resolveNflTeamRating(prior, input.awayTeam);
+    if (
+      !priorHome ||
+      !priorAway ||
+      priorHome.games < minGames ||
+      priorAway.games < minGames
+    ) {
       return null;
-    };
-
-    // Prefer common NFL abbr maps for full names
-    const NFL_NAME_TO_ABBR: Record<string, string> = {
-      "arizona cardinals": "ARI",
-      "atlanta falcons": "ATL",
-      "baltimore ravens": "BAL",
-      "buffalo bills": "BUF",
-      "carolina panthers": "CAR",
-      "chicago bears": "CHI",
-      "cincinnati bengals": "CIN",
-      "cleveland browns": "CLE",
-      "dallas cowboys": "DAL",
-      "denver broncos": "DEN",
-      "detroit lions": "DET",
-      "green bay packers": "GB",
-      "houston texans": "HOU",
-      "indianapolis colts": "IND",
-      "jacksonville jaguars": "JAX",
-      "kansas city chiefs": "KC",
-      "las vegas raiders": "LV",
-      "los angeles chargers": "LAC",
-      "los angeles rams": "LA",
-      "miami dolphins": "MIA",
-      "minnesota vikings": "MIN",
-      "new england patriots": "NE",
-      "new orleans saints": "NO",
-      "new york giants": "NYG",
-      "new york jets": "NYJ",
-      "philadelphia eagles": "PHI",
-      "pittsburgh steelers": "PIT",
-      "san francisco 49ers": "SF",
-      "seattle seahawks": "SEA",
-      "tampa bay buccaneers": "TB",
-      "tennessee titans": "TEN",
-      "washington commanders": "WAS",
-    };
-    const homeAbbr = NFL_NAME_TO_ABBR[input.homeTeam.toLowerCase().trim()];
-    const awayAbbr = NFL_NAME_TO_ABBR[input.awayTeam.toLowerCase().trim()];
-    const home =
-      (homeAbbr ? entry.byTeam.get(homeAbbr) : null) ?? resolve(input.homeTeam);
-    const away =
-      (awayAbbr ? entry.byTeam.get(awayAbbr) : null) ?? resolve(input.awayTeam);
-    if (!home || !away) return null;
-    return nflEpaToIndependentFairValue(
+    }
+    const fv = nflEpaToIndependentFairValue(
       {
-        homeOverall: home.overall,
-        awayOverall: away.overall,
-        homeGames: home.games,
-        awayGames: away.games,
+        homeOverall: priorHome.overall,
+        awayOverall: priorAway.overall,
+        homeGames: priorHome.games,
+        awayGames: priorAway.games,
       },
       { now: input.now },
     );
+    return fv ? { ...fv, source: NFL_EPA_PRIOR_SEASON_SOURCE } : null;
   } catch {
     return null;
   }
 }
+
 
 /**
  * Assemble independent fair values for one game. Empty array = no opinion.

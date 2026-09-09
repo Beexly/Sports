@@ -39,6 +39,7 @@
  * deliberate go-live decision.
  */
 
+import { resolveNflWeek } from "@sports/data-ingestion";
 import { registerProjectionsProvider, type PlayerProjection, type ProjectionsProvider } from "./projections";
 import type { Player } from "../fantasy/players";
 import { loadPlayerModel, type PlayerProfile } from "../intelligence/player-model";
@@ -46,6 +47,11 @@ import { FF_OPPORTUNITY_ATTRIBUTION, type ExpectedPointsRow } from "../intellige
 import { normName, percentileRanks } from "../intelligence/qb-consensus";
 import type { TeamEnvironmentRow } from "../intelligence/team-environment";
 import type { QbForwardRow } from "../intelligence/qb-forward";
+import {
+  evaluateProjectionBasis,
+  PRIOR_SEASON_GRACE_WEEKS,
+  type ProjectionBasisCode,
+} from "./projection-basis";
 import { adpByNormName, adpJoinKey, loadFfcAdp, FFC_ATTRIBUTION, type FfcAdpRow } from "../fantasy/adp-source";
 import { checkClearance, wrapExtractedRecord, type ExtractedRecord } from "../scraping/clearance-engine";
 
@@ -172,22 +178,73 @@ export function injuryDisplayJoinKey(name: string, pos: string, team: string): s
   return `${normName(name)}|${pos.toUpperCase()}|${normTeam(team)}`;
 }
 
+/**
+ * Basis gate (C-213). A projection may only ship when the season behind it is
+ * a defensible basis for the week it is FOR, and it must carry the label that
+ * says which season that was. On the eve of Week 1 the correct answer is
+ * "prior season, and say so" - not "refuse", which would mean no Week 1 board
+ * at all, and not "ship it silently", which is the failure the label prevents.
+ */
+/** The xFP-per-game lookup both the pool and its provenance label read. */
+export function xfpByNormName(xfp: readonly ExpectedPointsRow[]): Map<string, number> {
+  return new Map(xfp.map((r) => [normName(r.name), r.xfpPerGame]));
+}
+
+/**
+ * The value a projection is built from, or null when there is none: expected
+ * points per game when positive (predictive), otherwise actual fantasy points
+ * per game.
+ *
+ * Extracted so ONE rule serves both call sites (C-233, CodeRabbit). The pool
+ * excludes a profile on two independent tests - the basis gate AND this value
+ * check - but the provenance label filtered on the basis gate alone, so a
+ * profile the pool had dropped for having no usable value still contributed
+ * its game count to the label. A backup with four games and no production
+ * would put "4 games" on a board whose published projections were all built
+ * from seventeen. The direction was safe (it understates) but the claim was
+ * still false, and the comment below it asserted "the profiles that actually
+ * survived" - which they had not. Two call sites deriving the same rule
+ * separately is what let them drift.
+ */
+export function usableValueBasis(
+  profile: Pick<PlayerProfile, "name" | "fppg">,
+  xfpByName: ReadonlyMap<string, number>,
+): number | null {
+  const xfpPg = xfpByName.get(normName(profile.name));
+  const basis = xfpPg != null && xfpPg > 0 ? xfpPg : profile.fppg;
+  return basis > 0 ? basis : null;
+}
+
 export function buildGradedPool(
   profiles: readonly PlayerProfile[],
   xfp: readonly ExpectedPointsRow[],
   teamEnv: readonly TeamEnvironmentRow[] = [],
   qbForward: readonly QbForwardRow[] = [],
   enrich: GradedPoolEnrichment = {},
+  basisContext?: GradedPoolBasisContext,
 ): Player[] {
-  const xfpByName = new Map(xfp.map((r) => [normName(r.name), r.xfpPerGame]));
+  const xfpByName = xfpByNormName(xfp);
   const schemeFitByTeam = buildSchemeFitByTeam(teamEnv);
   const qbGradeByTeam = buildQbGradeByTeam(qbForward);
 
   return profiles
     .map((p): Player | null => {
-      const xfpPg = xfpByName.get(normName(p.name));
-      const basis = xfpPg != null && xfpPg > 0 ? xfpPg : p.fppg; // prefer expected (predictive) over actual
-      if (!(basis > 0)) return null; // no usable input -> exclude, never invent
+      // Basis gate FIRST: a player whose evidence cannot support a projection
+      // is excluded here, on the same rule the value check below already uses
+      // - exclude, never invent. Skipped entirely when no context is supplied,
+      // so existing callers and tests are unaffected.
+      if (basisContext) {
+        const verdict = evaluateProjectionBasis({
+          targetSeason: basisContext.targetSeason,
+          targetWeek: basisContext.targetWeek,
+          basisSeason: basisContext.basisSeason,
+          gamesBehind: p.games,
+        });
+        if (!verdict.ok) return null;
+      }
+
+      const basis = usableValueBasis(p, xfpByName); // prefer expected (predictive) over actual
+      if (basis == null) return null; // no usable input -> exclude, never invent
       const proj = round(basis * SEASON_GAMES);
       const trend: Player["trend"] = p.signal === "buy-low" ? "up" : p.signal === "sell-high" ? "down" : "flat";
       const usage = p.position === "QB" ? 0 : clamp01(p.touches / Math.max(1, p.games * 18));
@@ -280,15 +337,28 @@ function toProjection(p: Player): PlayerProjection {
 const NFLVERSE_ATTRIBUTION = "Data via nflverse (CC-BY-4.0)";
 
 /** Build a live ProjectionsProvider from an already-loaded graded pool. Pure. */
-export function buildGradedProvider(pool: readonly Player[], fetchedAt?: string, attribution: string = NFLVERSE_ATTRIBUTION): ProjectionsProvider {
+export function buildGradedProvider(
+  pool: readonly Player[],
+  fetchedAt?: string,
+  attribution: string = NFLVERSE_ATTRIBUTION,
+  basisLabel?: string,
+): ProjectionsProvider {
   return {
     name: "Graded · nflverse process model",
     live: true,
     fetchedAt,
     attribution,
+    basisLabel,
     list: () => pool.map(toProjection),
     players: () => pool,
   };
+}
+
+/** What the basis gate needs to judge this pool. */
+export interface GradedPoolBasisContext {
+  readonly targetSeason: number;
+  readonly targetWeek: number;
+  readonly basisSeason: number;
 }
 
 export interface GradedPoolResult {
@@ -296,6 +366,15 @@ export interface GradedPoolResult {
   readonly season: number;
   readonly count: number;
   readonly players: readonly Player[];
+  /**
+   * The season these numbers were built from, in words, for display. Null only
+   * when no basis context was supplied (legacy callers) or the pool failed.
+   * A surface showing pool numbers without showing this is showing a number
+   * whose provenance the reader cannot see.
+   */
+  readonly basisLabel: string | null;
+  /** Machine-readable partner to basisLabel. */
+  readonly basisCode: ProjectionBasisCode | null;
   /** Source-license attribution for every surface that displays the pool. */
   readonly attribution: string;
   readonly error: string | null;
@@ -388,10 +467,71 @@ export async function loadSleeperInjuryDisplay(fetcher: FetchLike): Promise<Slee
  * compute the xFP-preferred basis (internal analysis is cleared by the
  * `ffverse-ffopportunity` registry entry).
  */
-export async function loadGradedPool({ fetcher = fetch, includeXfp = false }: { fetcher?: FetchLike; includeXfp?: boolean } = {}): Promise<GradedPoolResult> {
-  const model = await loadPlayerModel({ fetcher });
+export async function loadGradedPool({
+  fetcher = fetch,
+  includeXfp = false,
+  basisContext,
+  now = new Date(),
+}: {
+  fetcher?: FetchLike;
+  includeXfp?: boolean;
+  /**
+   * Target season/week this pool is FOR — the basis gate's frame of reference
+   * (C-213). Players whose evidence cannot support a projection are excluded
+   * and the result carries the label naming the season the numbers came from.
+   *
+   * DEFAULTED, NOT OPTIONAL, since C-220. It was opt-in, and no caller opted
+   * in: neither the API route nor the internal provider passed it, so the gate
+   * never ran anywhere in production, every player passed regardless of basis,
+   * and `basisLabel` was null on every response. A gate nothing calls is not a
+   * conservative gate, it is a gate that does not exist — and it fails OPEN,
+   * which is the direction that publishes an unsupported number. The default
+   * is derived from the calendar (`resolveNflWeek`), so the frame advances on
+   * its own and cannot go stale between seasons. Pass an explicit context to
+   * evaluate against a different target; the shape is unchanged for callers
+   * that already do.
+   */
+  basisContext?: { readonly targetSeason: number; readonly targetWeek: number };
+  /** Injectable clock, for tests and for evaluating a past target. */
+  now?: Date;
+} = {}): Promise<GradedPoolResult> {
+  // The target frame is resolved BEFORE the model loads, because it decides
+  // which season we ask nflverse for (C-223).
+  const target = basisContext ?? (() => {
+    const { season, week } = resolveNflWeek(now);
+    return { targetSeason: season, targetWeek: week };
+  })();
+
+  // Which season to ASK nflverse for, decided by the target week rather than
+  // by a fixed floor.
+  //
+  // Two review rounds shaped this line. First, it was loadPlayerModel's own
+  // default — latestNflverseInspectionSeason, the completed-REG floor. That is
+  // right for a stats page and fatal here: the target advanced week by week
+  // while the model stayed pinned to last season, so once targetWeek passed the
+  // grace window the gate refused EVERY player and the paid provider went
+  // silently empty (C-223).
+  //
+  // Then asking for `target.targetSeason` unconditionally traded that for the
+  // mirror-image failure, which the reviewer named immediately: early in a new
+  // season nflverse HAS current-season rows, but each player has only one or
+  // two games — under MIN_GAMES_FOR_BASIS — so the gate refused them all for a
+  // thin sample and the pool emptied again, this time in Weeks 2-4.
+  //
+  // The rule that satisfies both: inside the grace window the current season
+  // cannot yet supply the required games BY CONSTRUCTION, so ask for the prior
+  // season and let the gate label it honestly as a prior-season basis. From the
+  // first week outside the window, the current season can supply them, so ask
+  // for it. PRIOR_SEASON_GRACE_WEEKS is derived from MIN_GAMES_FOR_BASIS
+  // precisely so this handoff has no hole in it (C-225).
+  const basisSeasonToRequest =
+    target.targetWeek <= PRIOR_SEASON_GRACE_WEEKS ? target.targetSeason - 1 : target.targetSeason;
+  const model = await loadPlayerModel({ fetcher, season: basisSeasonToRequest });
   if (model.status === "source-error") {
-    return { status: "source-error", season: 0, count: 0, players: [], attribution: NFLVERSE_ATTRIBUTION, error: model.error };
+    return {
+      status: "source-error", season: 0, count: 0, players: [],
+      attribution: NFLVERSE_ATTRIBUTION, basisLabel: null, basisCode: null, error: model.error,
+    };
   }
   // Season-consistent composition: the (internal-only) expected-points basis and
   // the QB forward prior must describe the SAME season as the process grade. They
@@ -427,7 +567,42 @@ export async function loadGradedPool({ fetcher = fetch, includeXfp = false }: { 
   const injuryDisplayByKey = sleeperInjury.byKey;
 
   // teamEnv intentionally [] on the live path (see note above) -> neutral schemeFit.
-  const pool = buildGradedPool(model.profiles, xfpRows, [], qbForwardRows, { adpByName, injuryDisplayByKey });
+  // The basis the gate judges is the season the PROCESS GRADE describes -
+  // model.season - because that is what every number in the pool is composed
+  // from (xFP and the QB prior are pinned to it above, or dropped).
+  const gateContext = { ...target, basisSeason: model.season };
+  const pool = buildGradedPool(
+    model.profiles, xfpRows, [], qbForwardRows,
+    { adpByName, injuryDisplayByKey },
+    gateContext,
+  );
+
+  // One representative verdict for the whole pool: every surviving player
+  // cleared the same season rule, so the SEASON half of the label is a
+  // pool-level fact.
+  //
+  // The GAME COUNT is not, and the first version of this line invented one.
+  // It passed MIN_GAMES_FOR_BASIS, so every response said "4 games" no matter
+  // what the players' actual samples were - a number manufactured from a
+  // constant and printed as customer-facing provenance. Two reviewers caught
+  // it independently, and they are right: that is exactly the fabrication this
+  // whole gate exists to prevent, committed by the gate itself. The count is
+  // now the MINIMUM real sample among the profiles that actually survived, so
+  // the label understates rather than overstates, and when nothing survives
+  // there is no count to print because there is no basis (C-223).
+  //
+  // BOTH of the pool's exclusions, not just the gate (C-233). buildGradedPool
+  // drops a profile on the basis gate OR on having no usable value, and this
+  // filtered on the gate alone - so a profile the pool had already dropped
+  // could still set the count.
+  const poolXfpByName = xfpByNormName(xfpRows);
+  const survivingGames = model.profiles
+    .filter((p) => evaluateProjectionBasis({ ...gateContext, gamesBehind: p.games }).ok)
+    .filter((p) => usableValueBasis(p, poolXfpByName) != null)
+    .map((p) => p.games);
+  const poolVerdict = survivingGames.length > 0
+    ? evaluateProjectionBasis({ ...gateContext, gamesBehind: Math.min(...survivingGames) })
+    : evaluateProjectionBasis({ ...gateContext, gamesBehind: 0 });
   // Attribution composes from the sources ACTUALLY joined — a failed join must
   // not over-credit, and the ffverse CC-BY-SA line rides on every (internal)
   // pool that used the xFP basis, per the registry's propagation requirement.
@@ -437,7 +612,23 @@ export async function loadGradedPool({ fetcher = fetch, includeXfp = false }: { 
     ...(adpByName.size > 0 ? [FFC_ATTRIBUTION] : []),
     ...(injuryDisplayByKey.size > 0 ? ["rosters/injury via Sleeper"] : []),
   ].join(" · ");
-  return { status: "live", season: model.season, count: pool.length, players: pool, attribution, error: null };
+  // A REFUSED pool is not a healthy empty pool, and must not be reported as
+  // one. Found in review: with status "live", count 0 and error null, the API
+  // forwarded `success: true` and no consumer could tell "the gate rejected
+  // every player because the basis is too old" apart from "there are no
+  // players today". Reuse the existing source-error state and carry the
+  // gate's own reason, so the refusal is legible all the way to the caller.
+  const refused = !poolVerdict.ok;
+  return {
+    status: refused ? "source-error" : "live",
+    season: model.season,
+    count: pool.length,
+    players: pool,
+    attribution,
+    basisLabel: poolVerdict.ok ? poolVerdict.label : null,
+    basisCode: poolVerdict.code,
+    error: poolVerdict.ok ? null : poolVerdict.reason,
+  };
 }
 
 /**
@@ -446,8 +637,28 @@ export async function loadGradedPool({ fetcher = fetch, includeXfp = false }: { 
  * source-error model registers nothing (the tools stay on the illustrative pool).
  * Always the PUBLISHED pool: xFP stays excluded (see loadGradedPool).
  */
-export async function loadAndRegisterGradedProvider({ fetcher = fetch }: { fetcher?: FetchLike } = {}): Promise<GradedPoolResult> {
-  const result = await loadGradedPool({ fetcher });
-  registerProjectionsProvider(result.status === "live" && result.players.length > 0 ? buildGradedProvider(result.players, new Date().toISOString(), result.attribution) : null);
+export async function loadAndRegisterGradedProvider({
+  fetcher = fetch,
+  basisContext,
+  now = new Date(),
+}: {
+  fetcher?: FetchLike;
+  /** Passed straight through to loadGradedPool; defaults from the calendar. */
+  basisContext?: { readonly targetSeason: number; readonly targetWeek: number };
+  now?: Date;
+} = {}): Promise<GradedPoolResult> {
+  const result = await loadGradedPool({ fetcher, basisContext, now });
+  registerProjectionsProvider(
+    result.status === "live" && result.players.length > 0
+      ? buildGradedProvider(
+          result.players,
+          new Date().toISOString(),
+          result.attribution,
+          // The basis label travels with the provider so a customer can see
+          // which season the numbers came from (C-226).
+          result.basisLabel ?? undefined,
+        )
+      : null,
+  );
   return result;
 }

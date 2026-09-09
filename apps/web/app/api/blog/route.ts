@@ -6,18 +6,27 @@ import { bootstrapGateResponse, getReadinessGates } from "@sports/prediction-eng
 import type { PublicBlogPost } from "@sports/types";
 import { guardPublicContent, guardPublicExcerpt, guardPublicTitle } from "@/lib/blog/public-guard";
 import { clientIp, consumeRateLimit } from "@/lib/api/rate-limit";
+import { jsonNoStore } from "@/lib/api/no-store";
+
+// FORCE-DYNAMIC (C-240). This route had NO dynamic declaration at all, while its
+// body carries `content: entitlements.tier !== "FREE" ? guardPublicContent(...) :
+// null` - the paid article body, varying by viewer, from one URL. Without this,
+// Next is free to treat the route as statically optimizable; with it plus
+// jsonNoStore, neither Next nor an intermediary may hold a paid body and replay
+// it to a FREE reader (.claude/rules/nextjs-caching.md rules 1 and 3).
+export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
   const gates = getReadinessGates();
   if (!gates.canPublishContent) {
-    return NextResponse.json(bootstrapGateResponse("Public blog"), { status: 503 });
+    return jsonNoStore(bootstrapGateResponse("Public blog"), { status: 503 });
   }
 
   // Rate limit: 60 requests per minute per IP for public blog access
   const ip = clientIp(req);
   const rl = consumeRateLimit("public-blog", ip, 60, 60_000);
   if (!rl.ok) {
-    return NextResponse.json(
+    return jsonNoStore(
       { error: "Too many requests" },
       { status: 429, headers: { "retry-after": String(rl.retryAfterSec) } }
     );
@@ -48,7 +57,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     });
 
     if (!post) {
-      return NextResponse.json({ error: "Not found" }, { status: 404 });
+      return jsonNoStore({ error: "Not found" }, { status: 404 });
     }
 
     const publicPost: PublicBlogPost = {
@@ -68,7 +77,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       isFeatured: post.isFeatured,
     };
 
-    return NextResponse.json({ success: true, data: publicPost });
+    return jsonNoStore({ success: true, data: publicPost });
   }
 
   // List posts
@@ -109,7 +118,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     publishedAt: p.publishedAt?.toISOString() ?? null,
   }));
 
-  return NextResponse.json({
+  return jsonNoStore({
     success: true,
     data: publicPosts,
     meta: { total, page, pageSize, hasMore: page * pageSize < total },

@@ -19,6 +19,8 @@ export default function LeagueTwinPage() {
       intro="Every fantasy app shows your roster as a list. The League Twin shows it as a living system: each player is a star whose brightness is its projection, size is its usage, halo is its volatility, and rings mark byes and injuries, while same-team stacks bind as orbital ties. See your whole team's shape at a glance: where the light is, where the risk pulses, and which week your byes eclipse you. Click any star to read its encoding."
       note={`${ILLUSTRATIVE_NOTE} The galaxy is decorative and aria-hidden; the roster manifest and inspector beside it are the accessible source of truth.`}
       wide
+      // C-236: LeagueTwinGalaxy is dynamic({ ssr: false }) (league-twin-lazy.tsx:22-25), so buildLeagueTwin() only ever runs in the browser, where activePlayerPool() reads a client-side registry the server's instrumentation never populates. This page therefore cannot show real players, whatever the provider is doing.
+      projectionsPool={"illustrative"}
     >
       <LeagueTwinLazy />
     </FantasyShell>

@@ -225,6 +225,218 @@ describe("dfs optimizer", () => {
     exposure.forEach((e) => expect(e.count / lineups.length).toBeLessThanOrEqual(0.8));
   });
 
+  it("keeps a locked player in EVERY lineup, not just the first (C-204)", () => {
+    // The existing lock test calls optimizeOne ONCE, so it never saw this: the
+    // exposure excluder swept locked players up with everyone else, and a
+    // pinned player silently vanished from every lineup after the first.
+    const lockId = "dwr1";
+    const { lineups } = generateLineups(base({ mode: "gpp", locks: new Set([lockId]) }), 5);
+    expect(lineups.length).toBeGreaterThanOrEqual(3);
+    lineups.forEach((l, i) =>
+      expect(l.players.some((p) => p.id === lockId), `lineup ${i + 1} dropped the lock`).toBe(true),
+    );
+  });
+
+  it("treats maxExposure as a share of the REQUESTED set, not of lineups so far (C-204)", () => {
+    // The denominator was `n`, the count built so far. After lineup 1 that is
+    // 1, so any used player measured 1/1 = 1.0 against a 0.6 cap - which does
+    // not cap exposure, it forces lineup 2 to be fully disjoint from lineup 1.
+    // With the cap as a share of the requested count, consecutive lineups are
+    // allowed to overlap, which is what an exposure cap means.
+    const count = 5;
+    const { lineups, exposure } = generateLineups(base({ mode: "gpp" }), count, 0.6);
+    expect(lineups.length).toBeGreaterThanOrEqual(3);
+
+    // A real cap, asserted against maxExposure itself rather than a slack 0.8,
+    // and against the number of lineups ACTUALLY RETURNED - not the number
+    // requested. Measuring against `count` was the bug Devin found in the
+    // first version of this fix: on a partial run the cap referenced lineups
+    // that were never produced, so a player could sit in every returned
+    // lineup while the code believed it was under the ceiling.
+    //
+    // ceil, not floor: whole lineups make this a near-cap. A 60% ceiling over
+    // 3 lineups permits 2, which is 67%. That residual is inherent and is
+    // asserted honestly rather than hidden behind a slacker bound.
+    const produced = lineups.length;
+    const bound = Math.max(1, Math.ceil(0.6 * produced));
+    exposure.forEach((e) =>
+      expect(e.count, `${e.id} exceeded the cap over ${produced} lineups`).toBeLessThanOrEqual(bound),
+    );
+
+    // And the sets are NOT forced disjoint. This must be asserted on lineups
+    // ONE AND TWO specifically, not "some consecutive pair": under the old
+    // denominator n, later pairs could still overlap (by n=3 a player used
+    // once measures 1/3 < 0.6), so a loose any-pair check passed against the
+    // broken code and proved nothing. Lineup 2 is the discriminator - at n=1
+    // every player of lineup 1 measured 1/1 against the cap and was excluded.
+    const first = new Set(lineups[0]!.players.map((p) => p.id));
+    const second = lineups[1]!.players.map((p) => p.id);
+    expect(
+      second.some((id) => first.has(id)),
+      "lineup 2 was forced fully disjoint from lineup 1",
+    ).toBe(true);
+  });
+
+  it("holds the cap against the lineups PRODUCED when generation stops early (C-208)", () => {
+    // Devin's finding on the first version of C-204's fix. Measuring the cap
+    // against the REQUESTED count referenced lineups that were never produced:
+    // on a constrained pool that stops early, a player could sit in every
+    // lineup actually returned while the code believed it was under the
+    // ceiling. This slate is deliberately just big enough to fill the roster
+    // with almost no alternatives, so asking for 12 returns far fewer.
+    const mk = (id: string, pos: DfsPos, salary: number, proj: number): DfsPlayer => ({
+      id, name: id, pos, team: "AAA", opp: "BBB", salary, proj, floor: proj - 3, ceiling: proj + 6, own: 0.1,
+    });
+    const tiny: DfsPlayer[] = [
+      mk("q1", "QB", 5000, 20), mk("q2", "QB", 5000, 19),
+      mk("r1", "RB", 5000, 15), mk("r2", "RB", 5000, 14), mk("r3", "RB", 5000, 13),
+      mk("w1", "WR", 5000, 15), mk("w2", "WR", 5000, 14), mk("w3", "WR", 5000, 13), mk("w4", "WR", 5000, 12),
+      mk("t1", "TE", 5000, 10), mk("t2", "TE", 5000, 9),
+      mk("d1", "DST", 5000, 8),
+    ];
+
+    const requested = 12;
+    const { lineups, exposure, partial } = generateLineups(base({ mode: "gpp" }), requested, 0.6, tiny);
+
+    expect(lineups.length).toBeGreaterThan(0);
+    expect(lineups.length, "pool was not constrained enough to stop early").toBeLessThan(requested);
+    expect(partial).toBe(true);
+
+    // The cap must hold against what was RETURNED, not what was asked for.
+    const produced = lineups.length;
+    const bound = Math.max(1, Math.ceil(0.6 * produced));
+    exposure.forEach((e) =>
+      expect(
+        e.count,
+        `${e.id} in ${e.count} of ${produced} returned lineups, over the cap`,
+      ).toBeLessThanOrEqual(bound),
+    );
+  });
+
+  it("does not stop a set that is feasible at its own final exposure bound (C-217)", () => {
+    // Found in review, and it is the defect the C-208 fix introduced. That fix
+    // measured the cap against `n + 1`, the set being built, so the bound
+    // TIGHTENED mid-run - and a bound that tightens can refuse a lineup the
+    // final bound would have allowed.
+    //
+    // The case, stated exactly. Four interchangeable WRs, three WR slots, four
+    // lineups at a 0.6 ceiling. Every other slot is forced (one QB, three RBs
+    // for two RB slots plus FLEX, one TE, one DST), so the ONLY degree of
+    // freedom is which three of the four WRs play, giving exactly four distinct
+    // lineups: abc, abd, acd, bcd. Each WR appears in three of them, which sits
+    // exactly at the final bound ceil(0.6 * 4) = 3. All four are feasible.
+    //
+    // Under the prefix bound they were not reachable. Lineups 1 and 2 must
+    // share two WRs; iteration 3 saw those two at ceil(0.6 * 3) = 2, excluded
+    // both, left two WRs for three slots, and generation stopped at two.
+    //
+    // The forced players are LOCKED so the cap cannot reach them - otherwise
+    // this measures roster scarcity rather than the WR rotation it is about.
+    const mk = (id: string, pos: DfsPos, proj: number): DfsPlayer => ({
+      id, name: id, pos, team: "AAA", opp: "BBB", salary: 5000, proj,
+      floor: proj - 3, ceiling: proj + 6, own: 0.1,
+    });
+    const forced = ["q1:QB", "r1:RB", "r2:RB", "r3:RB", "t1:TE", "d1:DST"] as const;
+    const pool: DfsPlayer[] = [
+      ...forced.map((f, i) => mk(f.split(":")[0]!, f.split(":")[1] as DfsPos, 20 - i)),
+      // Deliberately DISTINCT projections. Equal ones would make the four
+      // lineups tie and let the tie-break, not the exposure bound, decide the
+      // order - which is a different test.
+      mk("wa", "WR", 15), mk("wb", "WR", 14), mk("wc", "WR", 13), mk("wd", "WR", 12),
+    ];
+    const locks = new Set(forced.map((f) => f.split(":")[0]!));
+
+    const { lineups, exposure, partial, exposureCap } = generateLineups(
+      { mode: "gpp", stack: false, locks, excludes: new Set() },
+      4,
+      0.6,
+      pool,
+    );
+
+    expect(lineups.length, "a feasible four-lineup set was cut short").toBe(4);
+    expect(partial).toBe(false);
+    expect(exposureCap).toBe(3);
+
+    // All four WR triples, and nothing repeated.
+    const keys = lineups.map((l) => l.players.map((p) => p.id).sort().join(","));
+    expect(new Set(keys).size).toBe(4);
+    const wrSets = lineups.map((l) =>
+      l.players.filter((p) => p.pos === "WR").map((p) => p.id).sort().join(""),
+    ).sort();
+    expect(wrSets).toEqual(["wawbwc", "wawbwd", "wawcwd", "wbwcwd"]);
+
+    // And the bound the set was built under actually held for every unlocked
+    // player. The locks are excluded on purpose: a lock outranks the cap, and
+    // asserting over them would assert the opposite of C-204.
+    exposure
+      .filter((e) => !locks.has(e.id))
+      .forEach((e) => expect(e.count, `${e.id} over the bound`).toBeLessThanOrEqual(exposureCap));
+  });
+
+  it("weights the Galaxy Index heavily, and is inert without one (C-212)", () => {
+    // The "unique to us" wire. compositeScore - the weighted-signal matrix
+    // built to blend usage, team environment, availability and beat reporting
+    // under a confidence valve - had zero consumers in lib/fantasy, so every
+    // fantasy surface ranked on a raw projection, which is the one input every
+    // competitor also has.
+    //
+    // THE POOL IS SHAPED SO THE INDEX HAS TO DECIDE SOMETHING. The first draft
+    // of this test put four WRs against three WR slots with the twins as the
+    // top two, so both twins made every lineup and every assertion passed with
+    // the wiring removed. Here wc and wd out-project both twins, so exactly one
+    // twin takes the third WR slot and the choice is the measurement. The FLEX
+    // is held by r3, who out-projects the losing twin, so it cannot absorb him.
+    const mkp = (id: string, pos: DfsPos, proj: number, over: Partial<DfsPlayer> = {}): DfsPlayer => ({
+      id, name: id, pos, team: "AAA", opp: "BBB", salary: 5000, proj,
+      floor: proj - 3, ceiling: proj + 6, own: 0.1, ...over,
+    });
+    const pool = (a: Partial<DfsPlayer>, b: Partial<DfsPlayer>): DfsPlayer[] => [
+      mkp("q1", "QB", 20), mkp("r1", "RB", 15), mkp("r2", "RB", 14), mkp("r3", "RB", 13),
+      mkp("t1", "TE", 10), mkp("d1", "DST", 8),
+      mkp("wc", "WR", 14), mkp("wd", "WR", 13),   // out-project both twins
+      mkp("wa", "WR", 12, a), mkp("wb", "WR", 12, b),
+    ];
+    const opts: OptOpts = { mode: "cash", stack: false, locks: new Set(), excludes: new Set() };
+    const idsOf = (lu: DfsPlayer[] | null) => (lu ?? []).map((p) => p.id);
+
+    // Exactly one twin is ever selected - the precondition this test rests on.
+    const neither = idsOf(optimizeOne(opts, undefined, pool({}, {})));
+    expect(neither.filter((id) => id === "wa" || id === "wb")).toHaveLength(1);
+    expect(neither).toContain("r3"); // FLEX is not free to take the other twin
+
+    // THE MEASUREMENT: the index, and only the index, decides which twin.
+    // Asserted in BOTH directions, because a one-directional assertion passes
+    // on any solver that happens to tie-break alphabetically - which is
+    // exactly what this solver does, and exactly how the first draft of this
+    // test passed with the wiring removed.
+    expect(idsOf(optimizeOne(opts, undefined, pool({ galaxyIndex: 88 }, { galaxyIndex: 22 })))).toContain("wa");
+    expect(idsOf(optimizeOne(opts, undefined, pool({ galaxyIndex: 22 }, { galaxyIndex: 88 })))).toContain("wb");
+
+    // HEAVY, measured rather than read off the constant. A 0.6 weight has to
+    // let a well-supported player beat a twin projected meaningfully higher;
+    // an index that could only break exact ties would not be worth wiring.
+    // 12 x 1.6 = 19.2 against 16 x 0.4 = 6.4, so "hi" takes the slot that pure
+    // projection would have given to "lo".
+    const outgunned = idsOf(optimizeOne(opts, undefined, [
+      mkp("q1", "QB", 20), mkp("r1", "RB", 15), mkp("r2", "RB", 14), mkp("r3", "RB", 13),
+      mkp("t1", "TE", 10), mkp("d1", "DST", 8),
+      mkp("wc", "WR", 14), mkp("wd", "WR", 13),
+      mkp("hi", "WR", 12, { galaxyIndex: 95 }),
+      mkp("lo", "WR", 16, { galaxyIndex: 20 }),
+    ]));
+    expect(outgunned).toContain("hi");
+    expect(outgunned).not.toContain("lo");
+
+    // A malformed index is treated as ABSENT, never coerced to a flattering
+    // number: the solver still returns a legal lineup and the twins fall back
+    // to the deterministic tie-break.
+    const hostile = optimizeOne(opts, undefined, pool(
+      { galaxyIndex: Number.NaN }, { galaxyIndex: Number.POSITIVE_INFINITY },
+    ));
+    expect(hostile).not.toBeNull();
+    expect(idsOf(hostile)).toEqual(neither);
+  });
+
   it("leverage mode favours lower total ownership than cash", () => {
     const lev = generateLineups(base({ mode: "leverage" }), 4).lineups;
     const cash = generateLineups(base({ mode: "cash" }), 4).lineups;
@@ -328,4 +540,55 @@ describe("dfs optimizer — 600-player scale (CI-safe timed)", () => {
     const b = optimizeOne(base({ mode: "gpp" }), undefined, pool);
     expect(a!.map((p) => p.id)).toEqual(b!.map((p) => p.id));
   }, 15000);
+});
+
+/**
+ * C-277 (Devin). C-217 made `optimizeOne` refuse a lock that is also excluded,
+ * on the stated rule that the docstring promises null when the locks and
+ * excludes admit no legal lineup. A lock naming a player who is not on the
+ * slate at all admits none either, and that case sailed past the C-217 guard:
+ * the id was never in the candidate pool, so the solver never saw a constraint
+ * to satisfy and returned a lineup silently missing the pinned player.
+ *
+ * A stale id from a reloaded slate is the ordinary way to reach it.
+ */
+describe("a lock that no player on the slate can fill is refused (C-277)", () => {
+  const missingId = "__not_on_this_slate__";
+
+  it("returns null rather than a lineup that drops the lock", () => {
+    const r = optimizeOne(base({ locks: new Set([missingId]) }), () => 1, DFS_SLATE);
+    expect(r).toBeNull();
+  });
+
+  it("refuses even when the rest of the locks are perfectly fillable", () => {
+    // The failure is per-lock: one unfillable id invalidates the request, and
+    // silently honouring the others would still be answering a question the
+    // caller did not ask.
+    const real = DFS_SLATE.find((p) => p.pos === "QB")!;
+    const r = optimizeOne(
+      base({ locks: new Set([real.id, missingId]) }),
+      () => 1,
+      DFS_SLATE,
+    );
+    expect(r).toBeNull();
+  });
+
+  it("still solves normally when every lock is on the slate", () => {
+    // The guard must refuse the unfillable case WITHOUT narrowing what already
+    // worked: a lock on a real player still produces a lineup containing them.
+    const real = DFS_SLATE.find((p) => p.pos === "QB")!;
+    const r = optimizeOne(base({ locks: new Set([real.id]) }), () => 1, DFS_SLATE);
+    expect(r).not.toBeNull();
+    expect(r!.some((p) => p.id === real.id)).toBe(true);
+  });
+
+  it("keeps the C-217 lock-and-exclude refusal intact", () => {
+    const real = DFS_SLATE.find((p) => p.pos === "QB")!;
+    const r = optimizeOne(
+      base({ locks: new Set([real.id]), excludes: new Set([real.id]) }),
+      () => 1,
+      DFS_SLATE,
+    );
+    expect(r).toBeNull();
+  });
 });

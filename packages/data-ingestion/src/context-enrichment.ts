@@ -188,9 +188,33 @@ export async function computeScheduleDensity(
  *                         Use when DERIVED_MODEL_HISTORY_ENABLED=true to prevent
  *                         bootstrap contamination from ever entering canonical scoring.
  */
+/**
+ * `asOf` IS REQUIRED, AND IT IS THE WHOLE POINT (C-187).
+ *
+ * This window had no date bound at all: it took the most recent N settled games
+ * for the team, full stop. Its two siblings in this same file, computeRestDays
+ * and computeScheduleDensity, both filter `gameDate: { lt: gameDate }` and
+ * always did - so the file contained the correct pattern and the incorrect one
+ * side by side.
+ *
+ * Unbounded is safe ONLY while every call happens in real time, because a game
+ * that has not been played yet cannot be in TeamGameLog. The moment any game is
+ * reprocessed, backfilled, or re-run after later fixtures have settled - and
+ * this repo's own history includes backfill-ordering bugs - the "last 15 games"
+ * form feature silently starts including results from AFTER the game being
+ * predicted. That is the classic leak: a model that looks excellent in testing
+ * because it was reading the future, and falls apart live.
+ *
+ * Required rather than optional and defaulted, deliberately. An optional bound
+ * is one a future caller forgets; a required one cannot be forgotten, and the
+ * type error is the reminder. Passing the fixture's own kickoff makes this a
+ * NO-OP for live generation - the excluded rows do not exist yet - so no live
+ * pick changes, and the leak closes for every other path.
+ */
 export async function getAtsForm(
   teamName: string,
   sport: string,
+  asOf: Date,
   windowGames: number = 15,
   venueFilter?: "HOME" | "AWAY",
   canonicalOnly: boolean = false
@@ -199,6 +223,7 @@ export async function getAtsForm(
     where: {
       teamName,
       sport,
+      gameDate: { lt: asOf },
       atsResult: { in: ["WIN", "LOSS", "PUSH"] },
       ...(venueFilter === "HOME" ? { isHome: true } : {}),
       ...(venueFilter === "AWAY" ? { isHome: false } : {}),
@@ -229,10 +254,12 @@ export async function getAtsForm(
  *
  * @param canonicalOnly - If true, exclude bootstrap-era logs (isBootstrap=false only).
  */
+/** Same required `asOf` bound and the same reasoning as getAtsForm (C-187). */
 export async function getHeadToHeadForm(
   teamName: string,
   opponentName: string,
   sport: string,
+  asOf: Date,
   windowGames: number = 10,
   canonicalOnly: boolean = false
 ): Promise<{ wins: number; losses: number; pushes: number; sampleSize: number } | null> {
@@ -241,6 +268,7 @@ export async function getHeadToHeadForm(
       teamName,
       opponentName,
       sport,
+      gameDate: { lt: asOf },
       atsResult: { in: ["WIN", "LOSS", "PUSH"] },
       ...(canonicalOnly ? { isBootstrap: false } : {}),
     },

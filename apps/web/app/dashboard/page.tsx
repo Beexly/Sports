@@ -100,6 +100,84 @@ export default async function DashboardPage({
   const entitlements = await getUserEntitlements(user.id);
   const phaseName = getCurrentPricingPhase().name;
 
+  // A ZERO A CUSTOMER CANNOT DISTINGUISH FROM AN OUTAGE IS A FALSE STATEMENT
+  // (C-179). Every count below fails soft so one dead query cannot take down a
+  // signed-in member's dashboard - which is right - but the fallbacks are 0 and
+  // [], so a database outage rendered "0 settled, 0 wins, no picks today" and a
+  // member read it as an empty account rather than a broken load. /board and
+  // /picks already say DB_UNREACHABLE out loud; this surface did not.
+  //
+  // The flag is set by the fallback itself, so it cannot drift from the catches
+  // it describes: adding a query without routing its catch through here is the
+  // only way to reintroduce a silent zero, and the test pins the count.
+  // C-205a. THREE questions, not one, because the banner makes a CLAIM about
+  // counts. `dbDegraded` answers "did anything fail"; `countsDegraded` answers
+  // "did a COUNT fail". Raising the counts banner on a list-only failure told
+  // members that displayed counts had fallen back to zero when every count had
+  // in fact succeeded - a false statement, inside the fix whose whole purpose
+  // is not making false statements. The banner now says only what failed.
+  let dbDegraded = false;
+  let countsDegraded = false;
+  const softZero = (): number => {
+    dbDegraded = true;
+    countsDegraded = true;
+    return 0;
+  };
+  // The list needs its OWN flag, not just the shared one. `dbDegraded` drives a
+  // banner that talks about COUNTS reading zero; the list below renders a
+  // different positive claim - "No picks published yet today" - and an empty
+  // array from a failed findMany is indistinguishable from a genuinely empty
+  // slate. Worse, the count query is independent, so a lone list failure prints
+  // "Today's Picks 6" directly above "No picks published yet today". Same
+  // defect class as C-179, one surface deeper than that fix reached.
+  let todayPicksDegraded = false;
+  const softTodayPicks = (): TodayPick[] => {
+    dbDegraded = true;
+    todayPicksDegraded = true;
+    return [];
+  };
+
+  // A THIRD flag, for the counts that become a PUBLISHED RECORD (C-201).
+  // `softZero` is right for a display count - a zero next to a banner is a
+  // degraded number a reader can discount. It is NOT right for the inputs to
+  // evaluatePublicPerformancePolicy, because those get COMBINED: if
+  // canonicalSettledCount succeeds with a real total while canonicalWins fails
+  // to its fallback, the page renders a zero-win record and the win rate that
+  // follows from it, as a statement of record. A fabricated performance claim
+  // is the single worst output this product can produce, and mixing one real
+  // count with one fallback zero manufactures one. (Written without a literal
+  // percentage on purpose: no-unsupported-performance-claims reads any
+  // hardcoded percent beside "win rate" on a customer page as a claim, and it
+  // is right to - the guard does not know a comment from a headline.)
+  // So the record is withheld entirely if ANY of its inputs failed.
+  //
+  // C-216, found in review. TWO corrections to the C-201 shape above.
+  //
+  // (a) SCOPE. Every count that reaches evaluatePublicPerformancePolicy is a
+  // record input, not just the five that form the W-L-P-V string. The recent-
+  // window pair drives the ALL_RECENT_PICKS_BOOTSTRAP blocker, and that blocker
+  // is written `recentTotal > 0 && recentBootstrap === recentTotal` - so a
+  // failed recentTotalCount falling back to 0 does not merely lose a number, it
+  // SATISFIES the blocker's guard and the gate opens. A partial outage was
+  // therefore able to publish a performance record whose required history was
+  // unreadable, which is the exact failure C-201 was written to stop, reached
+  // by a different door. The pending/bootstrap pair feeds the operator message
+  // for the same policy call. All four move here.
+  //
+  // (b) The banner's CLAIM. softPerfZero used to raise countsDegraded, which
+  // makes the banner tell a member that "some counts below are showing zero".
+  // None of these counts is rendered as a number: the record reads
+  // "Unavailable" and the win rate reads an em-less dash. Saying the visible
+  // counts fell back when the one visible count read fine is a false statement,
+  // the same C-205a defect one flag over. countsDegraded now belongs to
+  // softZero alone, which after this change guards exactly one displayed count.
+  let perfDegraded = false;
+  const softPerfZero = (): number => {
+    dbDegraded = true;
+    perfDegraded = true;
+    return 0;
+  };
+
   const [
     todayPicks,
     todayPicksCount,
@@ -132,16 +210,25 @@ export default async function DashboardPage({
           .sort(comparePicksByRanking)
           .slice(0, entitlements.canSeePremiumPicks ? 6 : (entitlements.dailyPickLimit ?? 1)),
       )
-      .catch(() => [] as unknown[]) as Promise<TodayPick[]>,
+      .catch(softTodayPicks),
     db.pick
       .count({
         where: {
           isPublished: true,
+          // isBootstrap: false to MATCH THE LIST ABOVE (C-241, Devin). The list
+          // excludes bootstrap rows and this count did not, so a member could
+          // read "Today's Picks 7" directly above a slate showing fewer - the
+          // same "count above an empty list" defect the comment at the top of
+          // this file describes, but always-on rather than only during a DB
+          // failure. Every other count in this block already carries the flag;
+          // this one was the exception. A number that does not correspond to
+          // what is shown beneath it is a fabricated stat.
+          isBootstrap: false,
           ...excludeSeedInProd,
           generatedAt: { gte: startOfDay(new Date()), lte: endOfDay(new Date()) },
         },
       })
-      .catch(() => 0),
+      .catch(softZero),
     db.pick
       .count({
         where: {
@@ -151,12 +238,12 @@ export default async function DashboardPage({
           ...excludeSeedInProd,
         },
       })
-      .catch(() => 0),
-    db.pick.count({ where: { result: "WIN", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
-    db.pick.count({ where: { result: "LOSS", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
-    db.pick.count({ where: { result: "PUSH", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
-    db.pick.count({ where: { result: "VOID", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
-    db.pick.count({ where: { result: "PENDING", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(() => 0),
+      .catch(softPerfZero),
+    db.pick.count({ where: { result: "WIN", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softPerfZero),
+    db.pick.count({ where: { result: "LOSS", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softPerfZero),
+    db.pick.count({ where: { result: "PUSH", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softPerfZero),
+    db.pick.count({ where: { result: "VOID", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softPerfZero),
+    db.pick.count({ where: { result: "PENDING", isPublished: true, isBootstrap: false, ...excludeSeedInProd } }).catch(softPerfZero),
     db.pick
       .count({
         where: {
@@ -165,9 +252,12 @@ export default async function DashboardPage({
           isBootstrap: true,
         },
       })
-      .catch(() => 0),
-    db.pick.count({ where: { generatedAt: { gte: recentSince } } }).catch(() => 0),
-    db.pick.count({ where: { generatedAt: { gte: recentSince }, isBootstrap: true } }).catch(() => 0),
+      .catch(softPerfZero),
+    // The recent-window pair: policy inputs, never displayed. A zero here is
+    // not a small number, it is the ALL_RECENT_PICKS_BOOTSTRAP blocker's
+    // off-switch (C-216).
+    db.pick.count({ where: { generatedAt: { gte: recentSince } } }).catch(softPerfZero),
+    db.pick.count({ where: { generatedAt: { gte: recentSince }, isBootstrap: true } }).catch(softPerfZero),
     getBillingNotice(user.id),
   ]);
 
@@ -196,12 +286,34 @@ export default async function DashboardPage({
     clv: clvPolicy,
   });
 
-  const performanceVisible = performancePolicy.canExposePerformanceStats;
-  const recordDisplay = performanceVisible ? performancePolicy.publicRecord : "Collecting…";
+  // perfDegraded withholds the record even when the gate would expose it: a
+  // partial outage must read as "not available", never as a real record.
+  const performanceVisible = performancePolicy.canExposePerformanceStats && !perfDegraded;
+  const recordDisplay = perfDegraded
+    ? "Unavailable"
+    : performanceVisible
+      ? performancePolicy.publicRecord
+      : "Collecting…";
   const winRateDisplay =
     performanceVisible && performancePolicy.publicWinRate !== null
       ? `${performancePolicy.publicWinRate}%`
       : "—";
+
+  // C-246, Devin. `publicMessage` comes out of the SAME policy call as the
+  // record, fed by the same counts softPerfZero falls back to ZERO. C-201 and
+  // C-216 established that the record is withheld entirely if any of those
+  // inputs failed, because one real count mixed with one fallback zero
+  // manufactures a claim - and then the message from that identical policy
+  // object was rendered anyway, in two places, describing a sample size and a
+  // gate status derived from zeros. One field over from the defect those rows
+  // fixed. A member during an outage read "Unavailable" in the record card and
+  // baseline-collection progress immediately beneath it.
+  //
+  // The replacement names what actually failed and refuses to characterise the
+  // sample, because the sample is exactly what we could not read.
+  const performanceMessage = perfDegraded
+    ? "We could not read the settled-pick counts just now, so there is nothing to report about the verified record or the baseline. That is a read failure on our side, not a statement about the sample."
+    : performancePolicy.publicMessage;
   const winRateHighlight =
     performanceVisible &&
     performancePolicy.publicWinRate !== null &&
@@ -237,6 +349,21 @@ export default async function DashboardPage({
 
       <main id="main-content" className="flex-1 px-4 py-10 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
+          {dbDegraded && (
+            <div
+              role="status"
+              className="mb-6 flex flex-col gap-2 rounded-lg border border-alert/40 bg-alert/10 px-4 py-3 text-sm text-ion-1 sm:flex-row sm:items-center"
+            >
+              <span className="font-mono text-[10px] font-bold uppercase tracking-[0.18em] text-alert">
+                Data store unreachable
+              </span>
+              <span className="break-words sm:ml-3">
+                {countsDegraded
+                  ? "At least one query did not respond, so some counts below are showing zero because they could not be read - not because they are zero. Nothing here has been changed."
+                  : "A query did not respond. The counts below did read correctly; the section that could not load says so where it appears. Nothing here has been changed."}
+              </span>
+            </div>
+          )}
           <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
             <div>
               <p className="font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">
@@ -356,7 +483,20 @@ export default async function DashboardPage({
           )}
 
           <div className="mb-2 grid grid-cols-2 gap-4 sm:grid-cols-4">
-            <StatCard label="Today's Picks" value={todayPicksCount.toString()} />
+            {/* "Published Today", not "Today's Picks" (C-246, Devin). The card
+                carried the SAME label as the list heading two blocks below it
+                while counting a different thing: the card is every published
+                pick, the list is the slice this viewer can act on - capped at
+                the teaser limit for FREE and at six for PRO. So the two numbers
+                legitimately differ, for two separate reasons, under one name.
+                C-241 aligned the count's FILTERS with the list and left that
+                alone; this is the half that was still misread.
+                The count itself is unchanged, because neither candidate number
+                is wrong: capping it at the list's length would hide from a FREE
+                member that a fuller board exists, and would drop a PRO member's
+                total to six. What was wrong was calling both of them the same
+                thing. */}
+            <StatCard label="Published Today" value={todayPicksCount.toString()} />
             <StatCard label="Verified Record" value={recordDisplay} />
             <StatCard label="Win Rate" value={winRateDisplay} highlight={winRateHighlight} subtext={winRateSubtext} />
             <StatCard
@@ -374,7 +514,7 @@ export default async function DashboardPage({
               data-testid="dashboard-performance-collecting"
               className="mb-6 rounded-lg border border-mineral bg-carbon/40 px-4 py-3 text-xs leading-relaxed text-ion-2"
             >
-              {performancePolicy.publicMessage}
+              {performanceMessage}
             </p>
           )}
           {performanceVisible && (
@@ -398,7 +538,12 @@ export default async function DashboardPage({
                 View all →
               </Link>
             </div>
-            {todayPicks.length === 0 ? (
+            {todayPicksDegraded ? (
+              <p role="status" className="py-6 text-center text-sm text-ion-2">
+                Today&rsquo;s picks could not be read - the query did not
+                respond. This is not an empty board; try again shortly.
+              </p>
+            ) : todayPicks.length === 0 ? (
               <p className="py-6 text-center text-sm text-ion-2">
                 No picks published yet today. The board fills in as games clear
                 the model — check back closer to game time.
@@ -440,9 +585,13 @@ export default async function DashboardPage({
               <h2 className="mb-3 font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
                 Where we are
               </h2>
-              <p className="text-sm leading-relaxed text-ion-1">{performancePolicy.publicMessage}</p>
+              <p className="text-sm leading-relaxed text-ion-1">{performanceMessage}</p>
               <p className="mt-3 text-xs leading-relaxed text-ion-2">
-                Pick generation, ingestion, and settlement are running.
+                {/* "are running" is an OBSERVATION, and during a count outage
+                    we have not observed it - the read that would tell us is
+                    the one that just failed. The two sentences after it are
+                    policy, true whatever the database says, so they stay. */}
+                {!perfDegraded && "Pick generation, ingestion, and settlement are running. "}
                 Your verified record will populate as canonical picks
                 settle. We do not publish a win rate until we have a
                 meaningful sample.

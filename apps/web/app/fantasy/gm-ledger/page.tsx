@@ -21,6 +21,8 @@ export default function GmLedgerPage() {
       note={GM_LEDGER_DISCLAIMER}
       wide
       projectionsBadge={false}
+      // C-236: GmLedgerView renders ledger entries, not player rows.
+      projectionsPool={"none"}
     >
       <GmLedgerView data={data} />
     </FantasyShell>

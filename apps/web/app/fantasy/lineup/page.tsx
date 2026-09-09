@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { LineupOptimizer } from "@/components/fantasy/lineup-optimizer";
 import { resolveToolPoolAsync } from "@/lib/integrations/projections-server";
+import { getLiveProjectionsMeta } from "@/lib/integrations/projections";
+import { FANTASY_DATA_ATTRIBUTION } from "@/lib/fantasy/attribution";
 import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 import { poolForViewer } from "@/lib/fantasy/free-trial";
 
@@ -32,6 +34,16 @@ export default async function LineupPage() {
       note={pool
         ? "Live graded pool: real players with model-derived projections. The roster shown is a sample drawn from that pool (no league connection yet); optimization, leverage, and the floor/ceiling band are computed from real grades."
         : "Illustrative roster and projections. Optimization, leverage, and the floor/ceiling band are computed live from the sample pool."}
+      // Dynamic attribution: the provider composes its line from the sources
+      // ACTUALLY joined this load, so a day with failed joins does not
+      // over-credit. The static constant is only the fallback.
+      attribution={pool ? getLiveProjectionsMeta().attribution ?? FANTASY_DATA_ATTRIBUTION : undefined}
+      // Derived from the SAME value the note above uses, so the badge and the
+      // note can never disagree about whether these are real players (C-173).
+      // Omitting it left FantasyShell's "illustrative" default in place, so a
+      // live pool rendered real players under a badge that called them
+      // illustrative and suppressed the basis label entirely (C-231).
+      projectionsPool={pool ? "real" : "illustrative"}
       wide
     >
       <LineupOptimizer pool={gatedPool} />

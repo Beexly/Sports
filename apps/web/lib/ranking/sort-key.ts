@@ -51,7 +51,23 @@ export function comparePicksByRanking(
   const rb = rankingSortKey(b);
   if (ra !== rb) return rb - ra;
 
-  const ta = a.generatedAt ? new Date(a.generatedAt).getTime() : 0;
-  const tb = b.generatedAt ? new Date(b.generatedAt).getTime() : 0;
-  return tb - ta;
+  // C-192. `new Date("garbage").getTime()` is NaN, and `NaN - NaN` is NaN, so
+  // an unparseable generatedAt made this comparator return NaN. A comparator
+  // that returns NaN does not throw: Array.prototype.sort silently produces an
+  // implementation-defined order, which on this product means the same slate
+  // can render in two different orders. Property fuzz (C-192) showed the NaN
+  // path breaks all four total-order laws at once - reflexivity included.
+  //
+  // NOT reachable from today's seven call sites: every one passes Prisma rows
+  // whose generatedAt is a DateTime column, so it is always a real Date. This
+  // is closing the hole the SIGNATURE leaves open (it accepts `string`), and
+  // matching rankingSortKey directly above, which already guards every one of
+  // its numeric reads the same way. Unparseable sorts as epoch 0 - oldest -
+  // rather than poisoning the whole comparison.
+  const timeOf = (value: Date | string | null | undefined): number => {
+    if (!value) return 0;
+    const ms = new Date(value).getTime();
+    return Number.isFinite(ms) ? ms : 0;
+  };
+  return timeOf(b.generatedAt) - timeOf(a.generatedAt);
 }

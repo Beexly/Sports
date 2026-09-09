@@ -12,6 +12,7 @@ import {
 import { db, isStubMode } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { resolveBoardSurface } from "@/lib/board/board-surface-policy";
+import { jsonNoStore } from "@/lib/api/no-store";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -20,7 +21,7 @@ export async function GET(req: Request): Promise<NextResponse> {
   // Scope decides whether this key may see PREMIUM rows. A bare key is FREE-only.
   const scope = resolveB2bKeyScope(req);
   if (scope === null) {
-    return NextResponse.json(
+    return jsonNoStore(
       { error: "Unauthorized — provide x-api-key (GSE_B2B_API_KEYS)" },
       { status: 401 },
     );
@@ -28,7 +29,7 @@ export async function GET(req: Request): Promise<NextResponse> {
   const key = extractB2bApiKey(req) ?? "";
   const rl = await rateLimitB2b(key);
   if (!rl.ok) {
-    return NextResponse.json(
+    return jsonNoStore(
       { error: rl.status === 429 ? "Rate limit exceeded" : "Rate limit service unavailable" },
       { status: rl.status },
     );
@@ -41,7 +42,7 @@ export async function GET(req: Request): Promise<NextResponse> {
       : "experimental_research_grade_not_verified_roi";
 
   if (isStubMode()) {
-    return NextResponse.json({
+    return jsonNoStore({
       schemaVersion: "v1",
       surface: "signals",
       claimPosture,
@@ -84,7 +85,7 @@ export async function GET(req: Request): Promise<NextResponse> {
     })
     .catch(() => []);
 
-  return NextResponse.json(
+  return jsonNoStore(
     {
       schemaVersion: "v1",
       surface: "signals",
@@ -124,10 +125,9 @@ export async function GET(req: Request): Promise<NextResponse> {
         "Sports intelligence API — model signals only. Not verified ROI, not PROVEN track record while eligibility RED.",
     },
     {
-      headers: {
-        "X-RateLimit-Remaining": String(rl.remaining),
-        "Cache-Control": "no-store",
-      },
+      // Cache-Control is set by jsonNoStore itself, which applies it AFTER
+      // spreading these headers so a caller can never weaken it (C-240).
+      headers: { "X-RateLimit-Remaining": String(rl.remaining) },
     },
   );
 }

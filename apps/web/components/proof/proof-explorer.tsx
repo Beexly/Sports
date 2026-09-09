@@ -21,7 +21,15 @@ export interface ProofBucket {
   readonly expectedWinRate: number;
   readonly observedWinRate: number;
   readonly sampleSize: number;
-  readonly delta: number;
+  /**
+   * Accepted but DELIBERATELY NOT RENDERED (C-229). It is
+   * `observedWinRate - expectedWinRate` - a difference against a
+   * confidence-derived number - and the Edge Index is a ranking signal, not a
+   * probability, so there is no rate a band is supposed to land on for the
+   * difference to measure. Kept on the type because the loader still computes
+   * it for operator surfaces; this public panel must not display it.
+   */
+  readonly delta?: number;
   /** True once the band clears the publish floor (30+ settled picks); below it,
    * its observed win rate is withheld (a 2-pick "100%" is not a claim we publish). */
   readonly sufficientSample: boolean;
@@ -30,7 +38,14 @@ export interface ProofBucket {
 export interface ProofExplorerProps {
   readonly buckets: readonly ProofBucket[];
   readonly sampleSize: number;
-  readonly brierScore: number | null;
+  /**
+   * Accepted but DELIBERATELY NOT RENDERED (C-223). Kept on the prop type
+   * because the loader still computes it for the operator/ops surfaces; this
+   * public panel must not display it, because scoring a 0-100 ranking signal
+   * as though it were a forecast probability is the claim this product
+   * refuses to make.
+   */
+  readonly brierScore?: number | null;
   readonly discriminationSpread: number | null;
   readonly discriminationTrend: string;
   readonly isCollecting: boolean;
@@ -42,7 +57,6 @@ const pct = (v: number) => `${Math.round(v * 100)}%`;
 export function ProofExplorer({
   buckets,
   sampleSize,
-  brierScore,
   discriminationSpread,
   discriminationTrend,
   isCollecting,
@@ -80,8 +94,16 @@ export function ProofExplorer({
             }))}
             sampleSize={sampleSize}
           />
+          {/* C-223. This caption used to read "predicted vs observed · the
+              diagonal is perfect calibration", and the Brier stat beside it
+              scored (confidence/100 - outcome)^2. Both treat the Edge Index AS
+              a forecast probability, which is the one claim this product
+              refuses to make - and CalibrationPanel had already been corrected
+              in this same change, so the two public surfaces contradicted each
+              other. Found in review. The band curve is a SEPARATION read: do
+              higher-Edge picks win more often than lower-Edge ones. */}
           <p className="mt-2 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-            predicted vs observed · the diagonal is perfect calibration
+            band rank vs observed rate · rising left to right is separation
           </p>
         </div>
 
@@ -89,10 +111,11 @@ export function ProofExplorer({
         <div className="flex flex-col gap-4">
           <div className="grid grid-cols-3 gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral">
             <Stat label="Settled" value={<CountUp value={sampleSize} group className="tabular-nums" />} />
-            <Stat
-              label="Brier"
-              value={brierScore === null ? "n/a" : <CountUp value={brierScore} decimals={3} className="tabular-nums" />}
-            />
+            {/* The Brier score is deliberately NOT shown: it is only a
+                calibration score if the number being scored is a probability,
+                and the Edge Index is a 0-100 ranking signal. The separation
+                spread beside this is the honest measure of the same panel. */}
+            <Stat label="Bands" value={<CountUp value={buckets.length} className="tabular-nums" />} />
             <Stat
               label="Disc. spread"
               value={
@@ -138,15 +161,22 @@ export function ProofExplorer({
             {active && active.sufficientSample ? (
               <div className="mt-3 grid grid-cols-3 gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral">
                 <Stat label="Observed" value={pct(active.observedWinRate)} tone="text-orbital-cyan" />
-                <Stat label="Expected" value={pct(active.expectedWinRate)} tone="text-ultraviolet" />
-                {/* Sign glyph carries the direction alongside the color —
-                    verify above expectation, caution below (plasma is CTA
-                    territory, never a shortfall signal). */}
-                <Stat
-                  label="Delta"
-                  value={`${active.delta >= 0 ? "+" : ""}${Math.round(active.delta * 100)}%`}
-                  tone={active.delta >= 0 ? "text-verify" : "text-caution"}
-                />
+                {/* "Expected" was the band's mean confidence rendered as a
+                    promised win rate. Same claim, one row down. It now reads as
+                    what it is: the band's own Edge level. */}
+                <Stat label="Edge level" value={pct(active.expectedWinRate)} tone="text-ultraviolet" />
+                {/* The "Delta" stat that stood here is GONE (C-229). It was
+                    observedWinRate - expectedWinRate: observed rate minus a
+                    CONFIDENCE-derived number, colour-coded verify/caution as
+                    though beating it were good news. That is the probability
+                    comparison this PR removed, surviving the relabelling one
+                    stat to the right - renaming its input to "Edge level" did
+                    not make the subtraction mean anything, because the Edge
+                    Index is a ranking signal and there is no rate a band is
+                    supposed to land on. Replaced with the band's settled
+                    count, which is a fact and is what a reader needs to judge
+                    the observed rate beside it. */}
+                <Stat label="Settled" value={String(active.sampleSize)} />
               </div>
             ) : active && active.sampleSize > 0 ? (
               <p className="mt-3 rounded-ds-md border border-mineral bg-carbon/50 px-3 py-3 text-xs text-ion-2">

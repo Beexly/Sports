@@ -575,6 +575,13 @@ async function loadMarketView(): Promise<ViewResult> {
 
 // ── DFS ───────────────────────────────────────────────────────────────────────
 
+/**
+ * Public teaser depth for licensed DFS salaries, matching the top-24 bound
+ * /fantasy/dfs already applies (C-236). The full reconciled board stays behind
+ * requireFantasyApi() on /api/dfs/salaries.
+ */
+const DFS_PUBLIC_TEASER_ROWS = 24;
+
 async function loadDfsView(): Promise<ViewResult> {
   const dfs = await loadDfsSalaries();
   if (dfs.status !== "live" || dfs.rows.length === 0) {
@@ -594,6 +601,23 @@ async function loadDfsView(): Promise<ViewResult> {
     };
   }
   const connectedLive = dfs.providers.filter((p) => p.status === "live").length;
+  // TEASER BOUND (C-236). /api/dfs/salaries gates this same data behind
+  // requireFantasyApi(), and its own comment states the rule: "The /fantasy/dfs
+  // page keeps its deliberate public teaser by SSR-ing loadDfsSalaries()
+  // directly and rendering only the top 24 rows; this raw JSON is the FULL
+  // reconciled board from paid providers, so it is gated." /fantasy/dfs honours
+  // that with `dfs.rows.slice(0, 24)` (app/fantasy/dfs/page.tsx:27); this view
+  // rendered `dfs.rows` unbounded, so /players?view=dfs — a page with NO
+  // entitlement gate, canonical metadata and a sitemap entry — would publish the
+  // entire licensed salary board to anonymous visitors and to crawlers.
+  //
+  // Latent today only because no DFS provider key is configured in production
+  // (the live page currently renders "no licensed feed is connected"), which is
+  // exactly why it has to be bounded BEFORE a feed is connected rather than
+  // after. The nflverse views on this page are deliberately public and stay
+  // unbounded — each links its PRO-gated raw JSON via jsonHref — but paid
+  // provider rows are not ours to publish in full.
+  const teaserRows = dfs.rows.slice(0, DFS_PUBLIC_TEASER_ROWS);
   return {
     status: "live",
     windowLabel: `DraftKings · ${dfs.date}`,
@@ -606,8 +630,8 @@ async function loadDfsView(): Promise<ViewResult> {
         eyebrow: `DraftKings salaries · ${dfs.date}`,
         title: `Reconciled across ${connectedLive} feed${connectedLive === 1 ? "" : "s"}`,
         blurb: "DK salaries via licensed DFS providers, reconciled across feeds. A salary is trusted when feeds agree; disagreement is flagged. Filter by position.",
-        footnote: `${dfs.discrepancies} disagreement${dfs.discrepancies === 1 ? "" : "s"} flagged across ${dfs.rows.length} salaries.`,
-        rows: dfs.rows,
+        footnote: `Showing the top ${teaserRows.length} of ${dfs.rows.length} salaries · ${dfs.discrepancies} disagreement${dfs.discrepancies === 1 ? "" : "s"} flagged across the full board.`,
+        rows: teaserRows,
         enumOptions: distinctOptions(dfs.rows, (r) => r.position),
         showRank: true,
         minWidth: 640,

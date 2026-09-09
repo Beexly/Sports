@@ -27,6 +27,8 @@ export default function PropsPage() {
       note={note}
       wide
       projectionsBadge={false}
+      // C-236: PropsEdge renders the static PROPS fixtures from lib/fantasy/props.
+      projectionsPool={"illustrative"}
     >
       <PropsEdge lines={lines} />
     </FantasyShell>

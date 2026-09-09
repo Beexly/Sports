@@ -35,7 +35,7 @@ const RESULT_STYLE: Record<CardResult, { label: string; text: string; ring: stri
   WIN: { label: "Win", text: "text-verify", ring: "border-verify/40", chip: "bg-verify/10 text-verify" },
   LOSS: { label: "Loss", text: "text-alert", ring: "border-alert/40", chip: "bg-alert/10 text-alert" },
   PUSH: { label: "Push", text: "text-ion-1", ring: "border-mineral", chip: "bg-titanium/50 text-ion-1" },
-  PENDING: { label: "Pending", text: "text-ultraviolet", ring: "border-ultraviolet/40", chip: "bg-ultraviolet/10 text-ultraviolet" },
+  PENDING: { label: "Pending", text: "text-ultraviolet-glow", ring: "border-ultraviolet/40", chip: "bg-ultraviolet/10 text-ultraviolet-glow" },
 };
 
 export function ResultCard({

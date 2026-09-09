@@ -28,7 +28,7 @@ const STATUS_TONE: Record<FantasyBaselineStatus, string> = {
   "live-proof": "border-verify/30 bg-verify/10 text-verify",
   "csv-import-ready": "border-orbital-cyan/30 bg-orbital-cyan/10 text-orbital-cyan",
   "gated-data": "border-caution/30 bg-caution/10 text-caution",
-  "content-ready": "border-ultraviolet/30 bg-ultraviolet/10 text-ultraviolet",
+  "content-ready": "border-ultraviolet/30 bg-ultraviolet/10 text-ultraviolet-glow",
   "manual-community": "border-titanium bg-carbon/70 text-ion-1",
 };
 

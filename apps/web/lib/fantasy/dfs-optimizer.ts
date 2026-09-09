@@ -57,10 +57,39 @@ export type OptOpts = {
 
 const FLEX_POS: readonly DfsPos[] = ["RB", "WR", "TE"];
 
+/**
+ * How hard the Galaxy Index pushes the objective. 0.6 means an index of 100
+ * multiplies a player's value term by 1.6 and an index of 0 by 0.4 - heavy,
+ * which is the point: an optimizer that ranks on a projection everyone else
+ * also has produces lineups everyone else also has. This is the field where
+ * being right about usage, team environment, availability and what the beat
+ * reporters are saying is supposed to show up (C-212).
+ */
+export const GALAXY_OBJECTIVE_WEIGHT = 0.6;
+
+/**
+ * The index's multiplier on a value term. 1.0 when there is no index, so a
+ * slate that cannot supply one optimizes exactly as it did before.
+ *
+ * MULTIPLICATIVE on the value term only, never on the whole objective. The
+ * leverage mode's contrarian component can be negative, and scaling a negative
+ * by a factor above 1 pushes it the WRONG way - a well-supported player would
+ * be penalised harder for being popular. Applying the factor to the points
+ * term and leaving the ownership term alone keeps each half meaning what it
+ * says.
+ */
+function galaxyFactor(p: DfsPlayer): number {
+  const idx = p.galaxyIndex;
+  if (idx === undefined || !Number.isFinite(idx)) return 1;
+  const clamped = Math.max(0, Math.min(100, idx));
+  return 1 + GALAXY_OBJECTIVE_WEIGHT * ((clamped - 50) / 50);
+}
+
 function objVal(p: DfsPlayer, mode: Mode): number {
-  if (mode === "cash") return p.proj;
-  if (mode === "gpp") return p.ceiling;
-  return leverage(p) * 6 + p.ceiling * 0.45; // leverage: contrarian ceiling
+  const g = galaxyFactor(p);
+  if (mode === "cash") return p.proj * g;
+  if (mode === "gpp") return p.ceiling * g;
+  return leverage(p) * 6 + p.ceiling * 0.45 * g; // leverage: contrarian ceiling
 }
 
 export type Lineup = readonly DfsPlayer[];
@@ -316,6 +345,31 @@ export function optimizeOne(
   decay: DecayFn = () => 1,
   slate: readonly DfsPlayer[] = activeDfsSlate(),
 ): DfsPlayer[] | null {
+  // A player both LOCKED and EXCLUDED is a contradiction, and the honest
+  // answer is "no lineup", not a lineup that quietly drops one of the two
+  // instructions. The exclude filter below removes the id from the pool, after
+  // which the lock has nothing to force - so the solver returned a perfectly
+  // good lineup that simply did not contain the player the user pinned, with
+  // nothing in the result saying the lock had been ignored. That is a guess
+  // dressed as an answer. The docstring above already promises null when the
+  // locks and excludes admit no legal lineup; this makes the code keep it.
+  // Found in review (C-217).
+  //
+  // C-277 (Devin) extends the SAME principle to a lock naming a player who is
+  // not on the slate at all. C-217 only caught lock-and-exclude; a lock on an
+  // unknown id sailed past this loop, was never in `cand` to begin with, and
+  // the solver therefore never saw a constraint to satisfy - so it returned a
+  // perfectly good lineup missing the pinned player, with nothing saying the
+  // lock had been dropped. Identical failure, one cause over, and the comment
+  // above already stated the rule that covers it: the docstring promises null
+  // when the locks and excludes admit no legal lineup, and a lock that cannot
+  // be filled by anyone on the slate admits none. A stale player id from a
+  // reloaded slate is the ordinary way to reach this.
+  const onSlate = new Set(slate.map((p) => p.id));
+  for (const id of opts.locks) {
+    if (opts.excludes.has(id) || !onSlate.has(id)) return null;
+  }
+
   const cand = slate.filter((p) => !opts.excludes.has(p.id));
   if (!cand.length) return null;
 
@@ -395,6 +449,28 @@ export type GenResult = {
    * not a bug in the count.
    */
   readonly partial: boolean;
+  /**
+   * The per-player appearance bound the RETURNED set was built under, in whole
+   * lineups: `max(1, ceil(maxExposure * lineups.length))`.
+   *
+   * Because the bound rounds UP, `exposureCap / lineups.length` CAN exceed
+   * `maxExposure` — 0.6 over 3 lineups yields 2 (67%), over 4 yields 3 (75%).
+   * An earlier version of this docstring asserted the opposite inequality held
+   * whenever `floor(maxExposure * n) >= 1`; that is false, it contradicted the
+   * `capFor` comment three screens below, and it was caught in review. Report
+   * THIS integer to a user and never restate `maxExposure` as the realized
+   * share — the arithmetic cannot honour the percentage, and saying so is the
+   * point (C-217).
+   *
+   * That instruction went unfollowed by the only consumer until C-242: the
+   * exposure panel drew a 67% bar with nothing to read it against, while the
+   * sibling `partial` field was surfaced. It now prints "no unpinned player in
+   * more than N of M" beside the bars. A stated bound is only worth having
+   * while it is true, so `__tests__/dfs-exposure-bound-disclosed.test.tsx`
+   * asserts the returned set honours the number on screen, not merely that a
+   * number is on screen.
+   */
+  readonly exposureCap: number;
 };
 
 const EXPOSURE_DECAY = 0.97;
@@ -412,38 +488,114 @@ const MAX_DEDUP_RETRIES = 5;
  * a fresh one, generation stops early (no duplicates are ever emitted).
  */
 export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6, slate: readonly DfsPlayer[] = activeDfsSlate()): GenResult {
-  const usage = new Map<string, number>();
-  const seen = new Set<string>();
-  const lineups: { players: Lineup; metrics: LineupMetrics }[] = [];
-
   const key = (lu: Lineup) => lu.map((p) => p.id).sort().join(",");
 
-  for (let n = 0; n < count; n++) {
-    // hard exclude players at max exposure
-    const overexposed = new Set<string>();
-    for (const [id, c] of usage) if (c / Math.max(1, n) >= maxExposure) overexposed.add(id);
-    const dynOpts: OptOpts = { ...opts, excludes: new Set([...opts.excludes, ...overexposed]) };
+  // The appearance bound for a FINAL set of `target` lineups.
+  //
+  // C-217, and this is the third shape this line has had. History matters here
+  // because each previous shape was a correct fix for the defect in front of it
+  // and introduced the next one:
+  //
+  //   C-204  denominator `n` (lineups so far). After lineup 1 every used
+  //          player measured 1/1 against the cap and was excluded, which does
+  //          not cap exposure - it forces every lineup to be disjoint.
+  //   C-208  denominator `count` (lineups requested). Correct for a full run,
+  //          wrong for a partial one: the cap referenced lineups that were
+  //          never produced, so a player could sit in every RETURNED lineup
+  //          while the code believed it was under the ceiling.
+  //   C-204b denominator `n + 1` (the set being built). Fixed C-208's phantom
+  //          lineups, but made the bound TIGHTEN mid-run, which can terminate a
+  //          set that is entirely feasible at its own final bound. Four
+  //          interchangeable WRs, three WR slots, four lineups at 0.6: lineups
+  //          1 and 2 must share two WRs, iteration 3 sees them at the prefix
+  //          bound ceil(0.6 * 3) = 2 and excludes both, two WRs remain for
+  //          three slots, generation stops at 2. All four of the three-of-four
+  //          WR lineups satisfy the final bound of 3. Found in review.
+  //
+  // The resolution is not a fourth denominator. A prefix bound cannot be right,
+  // because the quantity being bounded - a share of the final set - is not
+  // known until the set is final. So: build against a FIXED target, and if the
+  // run falls short, rebuild against the length it actually reached. `target`
+  // strictly decreases on every rebuild, so this terminates in at most `count`
+  // rounds and in practice in one.
+  //
+  // ceil, not floor - and this one was argued the other way in review, so the
+  // reasoning is recorded rather than left as a preference. ceil makes the
+  // bound a NEAR-cap that can exceed the number the caller typed: 0.6 over 3
+  // lineups permits 2, which is 67%. floor would be a true ceiling. It was
+  // built and MEASURED before being rejected:
+  //
+  //   - On the shipped slate floor costs nothing: requests of 2,3,4,5,6,8,10,12
+  //     all return in full with a realized share at or under 0.60.
+  //   - On a position-scarce pool it collapses. Four interchangeable WRs and
+  //     three WR slots is exactly the case raised in review, and its four-lineup
+  //     solution {abc, abd, acd, bcd} puts every WR in 3 of 4 - feasible under
+  //     ceil(0.6 * 4) = 3, INFEASIBLE under floor(0.6 * 4) = 2. Generation then
+  //     stops at 2, the shortfall rebuild retargets to 2 where floor(1.2) = 1,
+  //     and the caller who asked for four lineups is handed one.
+  //
+  // Trading four lineups for one to move a rounding residual is the wrong
+  // trade. The residual is inherent to whole lineups - no integer bound
+  // expresses 60% of 3 - so it is DISCLOSED instead of implied: `exposureCap`
+  // returns the appearance bound the returned set was actually built under, so
+  // a caller states the real number rather than repeating a percentage the
+  // arithmetic cannot honour.
+  const capFor = (target: number): number => Math.max(1, Math.ceil(maxExposure * target));
 
-    let extraDecay = new Map<string, number>();
-    let lu: DfsPlayer[] | null = null;
-    for (let attempt = 0; attempt <= MAX_DEDUP_RETRIES; attempt++) {
-      const decay: DecayFn = (p) => EXPOSURE_DECAY ** ((usage.get(p.id) ?? 0) + (extraDecay.get(p.id) ?? 0));
-      const c = optimizeOne(dynOpts, decay, slate);
-      if (!c) { lu = null; break; }
-      if (!seen.has(key(c))) { lu = c; break; }
-      // duplicate of an already-accepted lineup: compound decay on exactly
-      // these players (deterministically) and try again.
-      const next = new Map(extraDecay);
-      for (const p of c) next.set(p.id, (next.get(p.id) ?? 0) + 1);
-      extraDecay = next;
-      lu = null;
+  const build = (target: number): { players: Lineup; metrics: LineupMetrics }[] => {
+    const usage = new Map<string, number>();
+    const seen = new Set<string>();
+    const out: { players: Lineup; metrics: LineupMetrics }[] = [];
+    const capCount = capFor(target);
+
+    for (let n = 0; n < target; n++) {
+      // Hard-exclude players already at the final bound. A LOCKED player is
+      // never swept up: a lock is an instruction, not a preference (C-204). If
+      // a lock and the cap genuinely conflict the lock holds and exposure
+      // exceeds the cap - that is what the user asked for, and it is why the
+      // cap assertions in the tests exclude locked ids.
+      const overexposed = new Set<string>();
+      for (const [id, c] of usage) {
+        if (c >= capCount && !opts.locks.has(id)) overexposed.add(id);
+      }
+      const dynOpts: OptOpts = { ...opts, excludes: new Set([...opts.excludes, ...overexposed]) };
+
+      let extraDecay = new Map<string, number>();
+      let lu: DfsPlayer[] | null = null;
+      for (let attempt = 0; attempt <= MAX_DEDUP_RETRIES; attempt++) {
+        const decay: DecayFn = (p) => EXPOSURE_DECAY ** ((usage.get(p.id) ?? 0) + (extraDecay.get(p.id) ?? 0));
+        const c = optimizeOne(dynOpts, decay, slate);
+        if (!c) { lu = null; break; }
+        if (!seen.has(key(c))) { lu = c; break; }
+        // duplicate of an already-accepted lineup: compound decay on exactly
+        // these players (deterministically) and try again.
+        const next = new Map(extraDecay);
+        for (const p of c) next.set(p.id, (next.get(p.id) ?? 0) + 1);
+        extraDecay = next;
+        lu = null;
+      }
+      if (!lu) break; // exhausted: no more unique, feasible lineups under current pressure
+
+      seen.add(key(lu));
+      out.push({ players: lu, metrics: metrics(lu) });
+      for (const p of lu) usage.set(p.id, (usage.get(p.id) ?? 0) + 1);
     }
-    if (!lu) break; // exhausted: no more unique, feasible lineups under current pressure
+    return out;
+  };
 
-    seen.add(key(lu));
-    lineups.push({ players: lu, metrics: metrics(lu) });
-    for (const p of lu) usage.set(p.id, (usage.get(p.id) ?? 0) + 1);
+  let target = count;
+  let lineups = build(target);
+  // Rebuild only when the shortfall makes the bound the set was built under
+  // looser than the bound its actual length demands. A set that already
+  // satisfies capFor(its own length) is returned as-is - re-solving it would
+  // burn N more exact DP runs to reach the same place.
+  while (lineups.length > 0 && lineups.length < target && capFor(lineups.length) < capFor(target)) {
+    target = lineups.length;
+    lineups = build(target);
   }
+
+  const usage = new Map<string, number>();
+  for (const l of lineups) for (const p of l.players) usage.set(p.id, (usage.get(p.id) ?? 0) + 1);
 
   const byId = new Map(slate.map((p) => [p.id, p]));
   const exposure = [...usage.entries()]
@@ -453,5 +605,11 @@ export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6,
     })
     .sort((a, b) => b.count - a.count);
 
-  return { lineups, exposure, requested: count, partial: lineups.length < count };
+  return {
+    lineups,
+    exposure,
+    requested: count,
+    partial: lineups.length < count,
+    exposureCap: capFor(Math.max(1, lineups.length)),
+  };
 }

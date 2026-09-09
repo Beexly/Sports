@@ -30,6 +30,78 @@ before re-fixing anything from that list. The ledger guard now also prints
 SLA warnings: a CLAIMED row with no evidence or an OPEN row with evidence but
 no owner will be called out on every guard run — resolve or re-own them.
 
+**UPDATED 2026-09-08 (14:45 UTC) — READ THIS BEFORE THE CALIBRATION NOTES BELOW. THE SETTLED
+RECORD ITSELF IS NOT TRUSTWORTHY, WHICH MAKES EVERY CALIBRATION NUMBER IN THIS FILE A
+MEASUREMENT OVER BAD INPUTS.** Measured on production 14:20 to 14:45 UTC, read-only SELECT plus
+public ESPN reads: **25 of 169 `games` rows we mark FINAL hold a score that ESPN's own API
+contradicts, and 54 settled published picks sit on those rows.** ESPN is not an outside referee
+here, it is the feed we ingest from and every one of these rows carries an `espn:` external id,
+so our stored value diverged from the source we read it out of. 16 of the 54 are MONEYLINE, the
+market the calibration sample is built from, and **8 of those are recorded as the opposite of what
+happened** (the game's winner differs). The pattern: when two teams play on consecutive days, one
+game's score lands on every fixture in the series. A stale in-progress capture is ruled out for
+most of them, because several stored away scores EXCEED the final away score, which no partial
+reading can produce. NOT established: which code path wrote them. The obvious suspect
+(`free-score-persist.ts`, team+date match) inherits a 12h `MAX_KICKOFF_DRIFT_MS` whose comment
+says it exists precisely to stop this, and consecutive games sit 19 to 24h apart, so either that
+guard is bypassed or a different writer is responsible. Do not guess, and note that MORE THAN ONE MECHANISM IS AT WORK. **IT IS NOT MLB-ONLY**, measured
+over 21 days: **MLS 14 mismatched of 48 comparable (29 per cent, the worst), 12 settled picks**;
+NCAAF 2 of 37, 2 settled picks. Every rate is over the fraction the check can SEE: 63 MLS rows and
+146 NCAAF rows carry no ESPN event id and could not be compared at all. MLS breaks the MLB
+explanation: those teams never play on consecutive days, so the series-propagation pattern cannot
+apply, and the failures there are mixed (Seattle v Austin stored 2-1 against a real 1-2 is an exact
+reversal; Toronto v Charlotte stored 1-2 against a real 3-3 is neither a reversal nor a sibling
+fixture). A root cause that explains MLB will not automatically explain MLS. NFL has 37 FINAL rows
+and 59 settled picks but Week 1 has not kicked off; check it after 2026-09-14. Earlier dates are
+unaudited everywhere. A stored final whose id
+cannot be traced back to the feed it came from cannot be verified by anyone, which is its own
+problem. Full evidence, the per-series table and the reproduction method:
+**`docs/ops/SCORE_INTEGRITY_2026-09-08.md`** (ledger C-247). There is now a committed read-only
+tool for it, `npm run ops:verify-scores` (C-248), which reports an UNCOMPARABLE count beside the
+mismatches precisely so nobody reads "0 mismatches" off rows it could not see. **No agent may repair this: it needs database writes and a root cause. Publishing
+calibration, a win rate, or the PROVEN phase off this record is not defensible until the affected
+picks are re-settled.**
+
+**UPDATED 2026-09-08 (11:50 UTC) — THE 2026-09-06 NOTE BELOW IS STALE ON ITS CENTRAL CLAIM.
+READ THIS FIRST. Measured on production at 11:38:13 UTC (generatedAt from
+`/api/ops/public-surface-truth` itself), ALL FOUR CALIBRATION FLOORS NOW PASS:** n 475 against 100,
+**ECE 0.0466 against 0.05**, Brier 0.1898 against 0.22, Murphy reliability 0.005 against 0.05. The
+2026-09-06 note says ECE 0.0524 fails and "does not clear on its own, and nothing that has happened
+today moved it". More rows settled (n 458 to n 475) and it cleared. Nobody shipped a fix; the number
+moved. Do not act on the 0.0524 figure.
+
+**Eligibility is still RED, and `reasons` now contains exactly ONE entry: "Settlement not healthy."**
+`consecutiveGreen` 0 of `streakRequired` 3. What holds PROVEN is no longer the calibration
+arithmetic — it is a STRUCTURAL CONFLICT between three constants, found 2026-09-08 and verified in
+code:
+
+- settlement grace is **6 hours** (`apps/web/lib/performance/settlement-health.ts:58`),
+- `health = "HEALTHY"` requires **`overduePending === 0` exactly** (same file, line 86) — one pick
+  is enough for DEGRADED, which pushes "Settlement not healthy" into the eligibility reasons
+  (`apps/web/lib/ops/calibration-eligibility.ts:106`) and resets the streak,
+- but the zero-sit lane that finally clears an ungradeable pick **deliberately will not act until
+  24 hours past kickoff** (`apps/web/lib/settlement/zero-sit-lane.ts:104`).
+
+**So one ungradeable pick forces eligibility RED for up to 18 continuous hours, by design.** The
+eligibility cron runs `40 */6 * * *` and the streak needs three consecutive GREEN runs — 12 hours
+minimum of zero overdue picks, sampled at three fixed instants, while MLB alone shows 35 games in a
+72-hour window. That is the binding constraint on PROVEN, not the calibration math.
+
+**No agent may resolve this by touching any of those three constants, or a floor, or the health
+threshold.** Every one of them would turn the light green without making anything more true, and
+law 9 forbids it. It is a founder decision. Current reading: `overduePending` 2 of 2694
+(was 0 of 2627 on 09-06 19:08, so this is ordinary churn, not a stuck cohort), `stalePendingPicks`
+0, scheduler healthy.
+
+**The v5.2.7 caveat stands and is unchanged:** the pooled 0.0466 sits below every stratum it is
+built from, and the DEPLOYED version measures ECE **0.0947** on its own 262 rows — roughly twice
+the floor. MLB (n 373, ECE 0.0451) carries the pool; NCAAF (n 74, 0.1178) and NFL (n 28, 0.267) are
+too thin to steer by. Publishing a PROVEN claim off the pooled number while the version serving
+traffic measures twice the floor remains exactly what this product's premise forbids. Founder call.
+
+Full working, including NFL Week 1 coverage and the three separate go/no-go decisions:
+**`docs/ops/LAUNCH_VERIFICATION_2026-09-08.md`**.
+
 **UPDATED 2026-09-06 (16:40 UTC): PROVEN IS NOT CLOSE. Calibration eligibility reads RED on
 production and F-36's precondition cannot be met on current data. Do not wait for a publish
 receipt and do not flip anything.** Measured read of

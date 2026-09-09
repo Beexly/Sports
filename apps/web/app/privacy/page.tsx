@@ -61,9 +61,25 @@ export default function PrivacyPage() {
             </Para>
 
             <Heading>4. Your choices</Heading>
+            {/* C-183. This paragraph used to say "You can delete your account
+                at any time from the dashboard." No such control exists: there
+                is no delete-account UI, no deletion route, and no user delete
+                anywhere in the app. A privacy policy that describes a path a
+                reader cannot take is a false statement in a legal document,
+                and it is the kind of promise a regulator reads literally.
+                It now describes the mechanism that actually exists. The
+                30-day commitment and the retention carve-out are unchanged -
+                only the route to it is corrected. Building the self-service
+                control is the better fix and is founder-gated work. */}
             <Para>
-              You can delete your account at any time from the dashboard. When
-              you do, we delete your profile information within 30 days,
+              You can delete your account at any time by emailing{" "}
+              <a
+                href={`mailto:${LEGAL_EMAIL}`}
+                className="text-orbital-cyan underline-offset-4 transition-colors hover:text-ion-white hover:underline"
+              >
+                {LEGAL_EMAIL}
+              </a>
+              . When you do, we delete your profile information within 30 days,
               retaining only the minimum records required for tax, fraud,
               and legal compliance.
             </Para>

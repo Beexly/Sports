@@ -81,20 +81,19 @@ export function CalibrationCurve({
       ref={ref}
       viewBox={`0 0 ${WIDTH} ${HEIGHT}`}
       role="img"
-      aria-label={`Calibration reliability curve with ${sampleSize} settled canonical picks`}
+      aria-label={`Edge band separation curve with ${sampleSize} settled canonical picks`}
       className="h-auto w-full overflow-visible"
       data-testid="homepage-calibration-curve"
       data-visible={visible ? "true" : "false"}
     >
-      <line
-        x1={PAD}
-        y1={HEIGHT - PAD}
-        x2={WIDTH - PAD}
-        y2={PAD}
-        className="stroke-mineral"
-        strokeWidth="1.5"
-        strokeDasharray="5 7"
-      />
+      {/* The y = x diagonal that used to sit here is GONE, deliberately.
+          It reads as "perfect calibration", which is only a meaningful
+          reference if the x axis is a predicted PROBABILITY. It is not - it is
+          the band's Edge level, a 0-100 ranking signal. Drawing the diagonal
+          reinstated the exact claim CalibrationPanel stopped making, one
+          component deeper, and a caption change above it could not remove it.
+          Found in review (C-224). What matters here is whether the curve
+          RISES, and that is legible without a reference line. */}
       <line
         x1={PAD}
         y1={HEIGHT - PAD}
@@ -112,7 +111,7 @@ export function CalibrationCurve({
         strokeWidth="1"
       />
       <text x={PAD} y={HEIGHT - 8} className="fill-ion-2 font-mono text-[10px]">
-        predicted
+        edge band
       </text>
       <text
         x={8}

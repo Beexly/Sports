@@ -1,4 +1,5 @@
 import { db } from "@sports/db";
+import { SITE_URL } from "@/lib/seo/site-url";
 import {
   buildStudioDraftsForNode,
   buildStudioNode,
@@ -97,7 +98,14 @@ export async function loadStudioDashboard(
           gameId: selectedNode.id,
           modelVersion: selectedNode.picks[0]?.id ? "current" : "current",
           brandConfig: {
-            publicUrl: "https://galaxysportsedge.com",
+            // SITE_URL, not a literal. The old value here was the APEX host,
+            // which the canonical-host rule forbids outright (CLAUDE.md: every
+            // absolute URL derives from lib/seo/site-url.ts, the www host,
+            // never the apex) - and this one is not decoration: it is
+            // interpolated into generated X threads, TikTok scripts,
+            // newsletter blocks and sponsor copy, so a published draft carried
+            // the non-canonical host out into search and social (C-182).
+            publicUrl: SITE_URL,
             voiceReferences: ["docs/positioning.md", "docs/product/galaxy-studio-spec.md"],
           },
         })

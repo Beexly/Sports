@@ -34,6 +34,8 @@ export default async function DfsSuitePage() {
       intro="Salaries and the optimizer live in one room because they're one decision. The board shows what the field costs; the optimizer turns it into cash, GPP, or leverage lineups: QB stacking, locks and fades, unique portfolios with real exposure control. Every lineup ships with its salary, stack, field-ownership, and a leverage score."
       note="Illustrative classic-format sample pool drives the optimizer until a licensed salary feed is connected. Salary-cap optimization, stacking, exposure, and leverage are computed live in your browser."
       wide
+      // C-236: DfsOptimizer runs on the illustrative DFS slate; the note says so.
+      projectionsPool={"illustrative"}
     >
       {/* ── Salary Board — the optimizer's input layer ─────────────── */}
       <section id="salary-board" className="surface-card mb-8 p-5">

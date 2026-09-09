@@ -14,6 +14,7 @@ import { VerifyPickButton } from "./verify-pick-button";
 import { DevigMethodDisclosure } from "./devig-method-disclosure";
 import { displaySelection, NO_BOOK_PRICE_LABEL } from "@/lib/picks/display-selection";
 import { formatMarketImpliedLabel } from "@/lib/picks/market-implied-display";
+import { independentEdgeRankingBadge } from "@/lib/picks/independent-edge-badge";
 import Link from "next/link";
 
 // ─────────────────────────────────────────────
@@ -368,7 +369,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
         </div>
       )}
 
-      {/* Independent-edge layer — priced into ranking when rankingP/source present. */}
+      {/* Independent-edge layer — see independentEdgeRankingBadge for the badge law. */}
       {breakdown.independentEdge && breakdown.independentEdge.decision !== "PASS" && (
         <div className="mt-2 rounded-md border border-ion-blue/30 bg-ion-blue/5 p-2">
           <div className="mb-0.5 flex items-center gap-1.5">
@@ -378,12 +379,12 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
             <span className="rounded-full bg-titanium px-1.5 py-0.5 text-[9px] text-ion-2">
               {breakdown.independentEdge.sources.join(", ") || "—"}
               {" · "}
-              {typeof breakdown.rankingP === "number" &&
-              Number.isFinite(breakdown.rankingP) &&
-              (breakdown.rankingSource?.includes("independent") ||
-                typeof breakdown.independentEdge.trueProb === "number")
-                ? "priced into ranking"
-                : "signal only"}
+              {independentEdgeRankingBadge({
+                rankingP: breakdown.rankingP ?? null,
+                rankingSource: breakdown.rankingSource ?? null,
+                trueProb: breakdown.independentEdge.trueProb,
+                marketFairProb: breakdown.independentEdge.marketFairProb,
+              })}
             </span>
           </div>
           <p className="text-[10px] leading-relaxed text-ion-2">

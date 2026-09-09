@@ -37,6 +37,11 @@ export default defineConfig({
     alias: {
       "@": resolve(__dirname, "."),
       "next/server": nextServerEntry,
+      // `server-only` is a build-time marker with no runtime entry, so Vitest
+      // cannot resolve it and any test touching a server-only module dies at
+      // import. Stub the resolution; the real import stays in the source, so
+      // the client-bundle guarantee is unaffected.
+      "server-only": resolve(__dirname, "__tests__/support/server-only-stub.ts"),
     },
   },
 });

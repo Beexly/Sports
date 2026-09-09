@@ -4,7 +4,6 @@ import { formatClopperPearsonPct } from "@/lib/performance/clopper-pearson-inter
 import {
   NUMERIC_TEXT_CLASS,
   STAT_PLACEHOLDER,
-  formatBrier,
   formatCount,
   formatRatioAsPercent,
 } from "@/lib/format/stat";
@@ -19,7 +18,8 @@ import { formatRelative } from "@/lib/utils";
  *      the honest headline even for spread/total markets (priced ~50%), where an
  *      absolute "X% win rate" is the wrong lens. (Powered by computeDiscrimination.)
  *   2. The reliability curve — observed vs. expected win rate per confidence bucket.
- *   3. The Brier score — the single calibration number, with a plain-English read.
+ *   3. A statement of what the panel is: a separation read on a ranking
+ *      signal, NOT a calibration score on a probability (C-176).
  *
  * Honesty + brand rules this panel obeys:
  *   - Every number is rendered from `loadPublicCalibrationReport()` at request time;
@@ -33,15 +33,6 @@ import { formatRelative } from "@/lib/utils";
 type CalibrationData = Awaited<ReturnType<typeof loadPublicCalibrationReport>>["data"];
 type Bucket = CalibrationData["buckets"][number];
 type Discrimination = CalibrationData["discrimination"];
-
-// Brier score reads better with a plain-English band. Lower is better; 0.25 is
-// the coin-flip baseline for a binary outcome, so under it is meaningfully sharp.
-function brierRead(brier: number | null): string {
-  if (brier === null) return "Not enough settled picks yet.";
-  if (brier <= 0.18) return "Sharp. Confidence tracks outcomes closely.";
-  if (brier <= 0.25) return "Better than a coin flip. Calibration is holding.";
-  return "Above the coin-flip baseline. Calibration needs work.";
-}
 
 const VERDICT_META: Record<
   Discrimination["trend"],
@@ -74,7 +65,6 @@ const VERDICT_META: Record<
 };
 
 function ReliabilityRow({ bucket }: { bucket: Bucket }) {
-  const expectedLeft = `${Math.round(bucket.expectedWinRate * 100)}%`;
   const empty = bucket.sampleSize === 0;
   // Min-sample floor: a bucket below the publish threshold must NEVER show a
   // win-rate number — a 2-pick bucket reading a raw single-sample rate is an unsupported claim.
@@ -106,12 +96,12 @@ function ReliabilityRow({ bucket }: { bucket: Bucket }) {
             style={{ width: observedWidth }}
           />
         )}
-        {/* Expected marker — where a perfectly calibrated bucket would land. */}
-        <div
-          className="absolute top-0 h-full w-0.5 bg-ion-white/70"
-          style={{ left: expectedLeft }}
-          aria-hidden="true"
-        />
+        {/* NO "EXPECTED" MARKER (C-176). It used to sit at confidence/100, which
+            asserts the Edge Index IS a win probability. It is not - the home
+            copy, the proof page and the B2B API all say so, and this panel was
+            the last surface still drawing the diagonal. What the bar shows is
+            the OBSERVED decided win rate for the band, with its interval; the
+            reader compares bands to each other, not to a promised number. */}
       </div>
       <span
         className={`w-14 shrink-0 text-right text-xs font-semibold text-ion ${NUMERIC_TEXT_CLASS}`}
@@ -248,7 +238,13 @@ export async function CalibrationPanel() {
           <h3 className="text-xs font-semibold uppercase tracking-widest text-ion-2">
             Reliability by confidence bucket
           </h3>
-          <span className="text-[11px] text-ion-2">bar = observed · marker = expected</span>
+          {/* The marker this legend used to name was removed in C-176 because it
+              asserted the Edge Index IS a win probability. The legend outlived it,
+              so every row documented a cue that is not drawn - and re-made the
+              claim the marker was removed for. Describe only what is rendered. */}
+          <span className="text-[11px] text-ion-2">
+            bar = observed decided win rate · Clopper-Pearson interval
+          </span>
         </div>
         <div className="divide-y divide-titanium/60">
           {data.buckets.map((b) => (
@@ -278,15 +274,21 @@ export async function CalibrationPanel() {
         </div>
       )}
 
-      {/* Brier score footer. */}
-      <div className="flex flex-wrap items-center justify-between gap-2 border-t border-titanium px-6 py-4">
-        <div>
-          <span className="text-xs uppercase tracking-widest text-ion-2">Brier score</span>{" "}
-          <span className={`ml-1 text-sm font-semibold text-ion ${NUMERIC_TEXT_CLASS}`}>
-            {formatBrier(data.brierScore)}
-          </span>
-        </div>
-        <p className="text-xs text-ion-2">{brierRead(data.brierScore)}</p>
+      {/* WHAT THIS PANEL IS, AND WHAT IT IS NOT (C-176).
+          The Brier score that used to sit here was computed as
+          (confidence/100 - outcome)^2 - it scored the Edge Index AS a forecast
+          probability, which is exactly the claim this product refuses to make
+          everywhere else. A score is only a calibration score if the number
+          being scored is a probability. The calibration the gate measures is
+          the market-anchored one, on moneylines, and it is published under its
+          own eligibility floors - not here. */}
+      <div className="border-t border-titanium px-6 py-4">
+        <p className="text-xs leading-relaxed text-ion-2">
+          This is a separation read, not a calibration score. The Edge Index is a
+          0-100 ranking signal, not a win probability, so there is no promised
+          rate for a band to land on. What the bands answer is narrower and
+          checkable: do higher-Edge picks win more often than lower-Edge ones.
+        </p>
       </div>
 
       <div className="border-t border-titanium px-6 py-3">
