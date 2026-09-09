@@ -228,22 +228,37 @@ function fetchShaFromOrigin(sha, cwd) {
  * which is enough for a SHA that is itself a tip. Memoised because this is
  * the expensive path and every unresolved SHA in the ledger would otherwise
  * re-run it.
+ *
+ * Naming the checked-out branch: `git rev-parse --abbrev-ref HEAD` returns
+ * the literal string "HEAD" on a DETACHED checkout, and GitHub Actions
+ * checks out detached for `pull_request` events (`refs/pull/<n>/merge`),
+ * not an attached branch — reproduced directly (Devin Review, PR #734,
+ * fifth finding): `git fetch --depth=1 origin pull/734/merge` +
+ * `git checkout --force FETCH_HEAD` leaves `rev-parse --abbrev-ref HEAD`
+ * returning "HEAD", so the local lookup alone silently degrades every
+ * pull_request-triggered run back to the unreliable wildcard-only path.
+ * `GITHUB_HEAD_REF` (pull_request) / `GITHUB_REF_NAME` (push and most other
+ * events) are the CI-provided names that survive detachment; verified
+ * against that same detached checkout that the env-var name still deepens
+ * correctly. The local git lookup stays as the non-CI fallback.
  */
 let _widened = null;
 function widenOriginRefs(cwd) {
   if (_widened !== null) return _widened;
   let ok = false;
 
-  let currentRef = null;
-  try {
-    const ref = execFileSync("git", ["rev-parse", "--abbrev-ref", "HEAD"], {
-      cwd,
-      encoding: "utf8",
-    }).trim();
-    if (ref && ref !== "HEAD") currentRef = ref;
-  } catch {
-    // Detached HEAD or another lookup failure — the wildcard attempt below
-    // is the only remaining option.
+  let currentRef = process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME || null;
+  if (!currentRef) {
+    try {
+      const ref = execFileSync("git", ["rev-parse", "--abbrev-ref", "HEAD"], {
+        cwd,
+        encoding: "utf8",
+      }).trim();
+      if (ref && ref !== "HEAD") currentRef = ref;
+    } catch {
+      // Detached HEAD outside CI, or another lookup failure — the wildcard
+      // attempt below is the only remaining option.
+    }
   }
 
   if (currentRef) {
