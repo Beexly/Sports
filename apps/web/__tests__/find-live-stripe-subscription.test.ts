@@ -87,6 +87,31 @@ describe("reconcileOpenCheckoutSessions", () => {
     expect(mocks.sessionsExpire).toHaveBeenCalledWith("cs_other");
   });
 
+  it("expires the OTHER-price sessions before handing back the same-price one (Devin, #736)", async () => {
+    // A customer holding a same-price link AND an other-price link can pay
+    // both. Reuse alone left the older link payable.
+    mocks.sessionsList.mockResolvedValue(
+      page([openSession("cs_same", "price_pro_monthly"), openSession("cs_other", "price_elite_annual")]),
+    );
+
+    const probe = await reconcileOpenCheckoutSessions("cus_fixture", "price_pro_monthly");
+
+    expect(probe).toEqual({ outcome: "reusable", sessionId: "cs_same", url: "https://checkout.stripe.com/s/cs_same" });
+    expect(mocks.sessionsExpire).toHaveBeenCalledTimes(1);
+    expect(mocks.sessionsExpire).toHaveBeenCalledWith("cs_other");
+  });
+
+  it("answers UNKNOWN when an other-price session beside the same-price one cannot be expired", async () => {
+    mocks.sessionsList.mockResolvedValue(
+      page([openSession("cs_same", "price_pro_monthly"), openSession("cs_other", "price_elite_annual")]),
+    );
+    mocks.sessionsExpire.mockRejectedValue(new Error("fixture: expire failed"));
+
+    const probe = await reconcileOpenCheckoutSessions("cus_fixture", "price_pro_monthly");
+
+    expect(probe.outcome).toBe("unknown");
+  });
+
   it("ignores non-subscription sessions", async () => {
     // A one-off payment session is not a recurring double-charge risk and must
     // not be expired out from under the customer.

@@ -79,6 +79,13 @@ export interface ReconcileSummary {
   granted: number;
   /** Rows dropped to FREE after POSITIVE confirmation Stripe no longer grants access. */
   downgraded: number;
+  /**
+   * Rows an EARLIER reconciler had stamped CANCELED on a Stripe `unpaid` and
+   * that this run moved back to the recoverable INCOMPLETE because Stripe still
+   * reports them `unpaid` (Devin Review, #736). Without this the webhook's
+   * resurrection guard refuses the member's later paid recovery.
+   */
+  repaired: number;
   /** Count of Stripe/DB errors encountered. Nonzero ⇒ some checks were skipped fail-safe. */
   errors: number;
   /**
@@ -444,8 +451,11 @@ async function downgradeStaleRows(
     // (resource_missing, below) is always terminal — there is nothing left to
     // recover onto.
     let revokeMode: "terminal" | "recoverable" = "terminal";
+    // Kept in scope past the retrieve so the recoverable write can derive the
+    // dunning anchor from Stripe (Devin Review, #736).
+    let remote: Stripe.Subscription | null = null;
     try {
-      const remote = await stripe.subscriptions.retrieve(subscriptionId);
+      remote = await stripe.subscriptions.retrieve(subscriptionId);
       // FINDING 1: a positively-retrieved status is authoritative, never "ambiguous".
       // "keep" only for still-granting (active/trialing/past_due) or an unknown future
       // status. Every CONFIRMED non-access status revokes — but not all of them are
@@ -500,6 +510,16 @@ async function downgradeStaleRows(
         });
         if (revoke.count > 0) {
           downgraded++;
+          if (revokeMode === "recoverable" && remote) {
+            // The member-facing notice tells `unpaid` (dunning exhausted, access
+            // has ENDED) apart from a genuine first-payment `incomplete` by the
+            // pastDueSince anchor. A row that was ACTIVE when the reconciler
+            // observed `unpaid` has no anchor yet, so the notice would tell the
+            // member to finish setting up a payment we in fact retried and gave
+            // up on (Devin Review, #736). Stamp it only where absent, from
+            // Stripe's period start (never now()), same as the grant path.
+            await stampDunningAnchor(row.id, subscriptionId, remote);
+          }
         } else {
           console.warn(
             `[reconcile] downgrade for row ${row.id} affected 0 rows — the row moved on ` +
@@ -514,6 +534,112 @@ async function downgradeStaleRows(
   }
 
   return { downgraded, errors, checked };
+}
+
+/** Stamp the dunning anchor on a recoverable row only where it is absent. */
+async function stampDunningAnchor(
+  rowId: string,
+  subscriptionId: string,
+  remote: Stripe.Subscription,
+): Promise<void> {
+  await db.subscription.updateMany({
+    where: { id: rowId, stripeSubscriptionId: subscriptionId, status: "INCOMPLETE", pastDueSince: null },
+    data: { pastDueSince: derivePastDueAnchor(remote) ?? UNKNOWN_PAST_DUE_ANCHOR },
+  });
+}
+
+/**
+ * Repair rows an EARLIER reconciler converted from Stripe `unpaid` into a local
+ * terminal cancellation (tier FREE, status CANCELED, canceledAt stamped, the
+ * live subscription id still on the row). The downgrade scan above only looks
+ * at access-granting rows, so it never sees them, and the webhook's
+ * out-of-order resurrection guard refuses a later `active` for the same
+ * subscription id — so a member who pays the outstanding invoice stays locked
+ * out until the hourly grant pass happens to catch the active sub (Devin
+ * Review, #736).
+ *
+ * Only rows whose AUTHORITATIVE Stripe state is still `unpaid` are touched:
+ * they move to the recoverable INCOMPLETE (no access, no cancellation stamp,
+ * paid tier restored from the Stripe price where it maps). `canceled`,
+ * `incomplete_expired` and a confirmed absence stay exactly as they are; a
+ * subscription Stripe already reports as granting is the grant pass's job and
+ * is skipped here. Every write is guarded on the row still being the CANCELED
+ * row that was read, so a concurrent resubscribe is never clobbered.
+ */
+async function repairRecoverableCanceledRows(
+  confirmedSubscriptionIds: ReadonlySet<string>,
+): Promise<{ repaired: number; errors: number; checked: number }> {
+  let repaired = 0;
+  let errors = 0;
+  let checked = 0;
+
+  let rows: Array<{
+    id: string;
+    stripeSubscriptionId: string | null;
+    status?: string;
+    canceledAt?: Date | null;
+  }>;
+  try {
+    rows = await db.subscription.findMany({
+      where: { status: "CANCELED", stripeSubscriptionId: { not: null }, canceledAt: { not: null } },
+      select: { id: true, stripeSubscriptionId: true, status: true, canceledAt: true },
+    });
+  } catch (err) {
+    console.error(`[reconcile] failed to load canceled rows for repair check: ${errorMessage(err)}`);
+    return { repaired: 0, errors: 1, checked: 0 };
+  }
+
+  for (const row of rows) {
+    // The WHERE already selects CANCELED rows; re-check the shape so a row that
+    // moved between the read and here is skipped rather than re-judged.
+    if (row.status !== "CANCELED" || !row.canceledAt || !row.stripeSubscriptionId) continue;
+    const subscriptionId = row.stripeSubscriptionId;
+    if (confirmedSubscriptionIds.has(subscriptionId)) continue; // the grant pass owns it
+    checked++;
+
+    let remote: Stripe.Subscription;
+    try {
+      remote = await stripe.subscriptions.retrieve(subscriptionId);
+    } catch (err) {
+      if (!isResourceMissing(err)) {
+        errors++;
+        console.error(
+          `[reconcile] could not read subscription ${subscriptionId} for repair check; ` +
+            `leaving row ${row.id} as is: ${errorMessage(err)}`,
+        );
+      }
+      continue; // absent, or unreadable: nothing to recover onto / nothing proven
+    }
+    if (remote.status !== "unpaid") continue;
+
+    const tier = tierFromStripePrice(remote.items?.data[0]?.price);
+    try {
+      const write = await db.subscription.updateMany({
+        where: { id: row.id, stripeSubscriptionId: subscriptionId, status: "CANCELED" },
+        data: {
+          status: "INCOMPLETE" as const,
+          canceledAt: null,
+          // Restore the record of what the member is owed where the price maps;
+          // an unmapped (grandfathered) price leaves the tier untouched rather
+          // than guessing. INCOMPLETE grants nothing either way.
+          ...(tier !== "FREE" ? { tier } : {}),
+        },
+      });
+      if (write.count > 0) {
+        repaired++;
+        await stampDunningAnchor(row.id, subscriptionId, remote);
+        console.warn(
+          `[reconcile] repaired row ${row.id}: Stripe still reports ${subscriptionId} unpaid, ` +
+            "moved from CANCELED back to the recoverable INCOMPLETE",
+        );
+      }
+    } catch (err) {
+      errors++;
+      console.error(`[reconcile] failed to repair row ${row.id}: ${errorMessage(err)}`);
+    }
+  }
+
+  return { repaired, errors, checked };
 }
 
 /**
@@ -589,14 +715,21 @@ export async function reconcileEntitlements(): Promise<ReconcileSummary> {
   // Phase 3 — DOWNGRADE: only when the active-set is trustworthy. Skipping this
   // when a list call failed is the core fail-safe: never revoke on partial state.
   let downgraded = 0;
+  let repaired = 0;
   if (listReliable) {
     const result = await downgradeStaleRows(confirmedCustomerIds, confirmedSubscriptionIds);
     downgraded = result.downgraded;
     errors += result.errors;
     checked += result.checked;
+
+    // Phase 4 — REPAIR: rows an earlier reconciler cancelled on `unpaid`.
+    const repair = await repairRecoverableCanceledRows(confirmedSubscriptionIds);
+    repaired = repair.repaired;
+    errors += repair.errors;
+    checked += repair.checked;
   }
 
-  return { checked, granted, downgraded, errors, listReliable };
+  return { checked, granted, downgraded, repaired, errors, listReliable };
 }
 
 /**

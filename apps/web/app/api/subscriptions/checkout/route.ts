@@ -263,6 +263,71 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       );
     }
 
+    // The fingerprint covers the FULL canonical commercial request (5.5). It
+    // is computed BEFORE the open-session reconcile below because a reused
+    // clientIntentId with a CHANGED plan must be refused with no Stripe side
+    // effect at all: reconciling first would expire the intent's own valid
+    // session and then 409 on the changed fingerprint, leaving the customer
+    // with a conflict and no checkout (Devin Review, #736).
+    const requestFingerprint = computeRequestFingerprint(
+      currentCheckoutCommercialParams({
+        userId: session.user.id,
+        tier,
+        interval,
+        priceId,
+        currency: CHECKOUT_CURRENCY,
+      }),
+    );
+    if (clientIntentId) {
+      type PriorAttempt = {
+        requestFingerprint: string;
+        status: string;
+        stripeSessionId: string | null;
+        expiresAt: Date | string;
+      };
+      let prior: PriorAttempt | null = null;
+      try {
+        prior = (await db.checkoutAttempt.findUnique({
+          where: { userId_activeClientIntentId: { userId: session.user.id, activeClientIntentId: clientIntentId } },
+          select: { requestFingerprint: true, status: true, stripeSessionId: true, expiresAt: true },
+        })) as PriorAttempt | null;
+      } catch (err) {
+        console.error(
+          `[INCIDENT][checkout] attempt lookup failed for user ${session.user.id} — ` +
+            `failing closed with 503, no Stripe side effect: ${err instanceof Error ? err.message : "unknown"}`,
+        );
+        return jsonNoStore(
+          {
+            error: "Checkout is temporarily unavailable. Please try again shortly.",
+            code: "checkout_attempt_lookup_unavailable",
+          },
+          { status: 503 },
+        );
+      }
+      // Mirror of getOrCreateCheckoutAttempt's conflict rule: a live attempt, or
+      // a past-TTL one that is COMPLETED or still bound to a session, refuses a
+      // changed fingerprint. A past-TTL attempt with nothing bound is released
+      // by reconciliation and is not a conflict, so it is left to the authority
+      // below.
+      const pastTtl = prior ? new Date(prior.expiresAt).getTime() <= Date.now() : false;
+      const conflictable =
+        prior !== null &&
+        (!pastTtl ||
+          prior.status === "COMPLETED" ||
+          (prior.status === "SESSION_CREATED" && prior.stripeSessionId !== null));
+      if (prior && conflictable && prior.requestFingerprint !== requestFingerprint) {
+        // Same refusal getOrCreateCheckoutAttempt would raise, just earlier.
+        return jsonNoStore(
+          {
+            error:
+              "This checkout intent was started for a different plan. Start a new checkout to change plans.",
+            code: "checkout_intent_conflict",
+          },
+          { status: 409 },
+        );
+      }
+    }
+
     // C-185: reconcile the customer's OPEN Checkout Sessions before minting
     // another one. The probe above asks whether a SUBSCRIPTION exists, which is
     // only true once a payment has been attempted — so before that point two
@@ -318,18 +383,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // Durable attempt: the server-side source of truth for this checkout's
     // idempotency (see lib/billing/checkout-attempt.ts). Race-safe via the
     // (userId, activeClientIntentId) unique constraint; a same-intent retry
-    // with a CHANGED fingerprint is a hard 409, never a silent key reuse.
-    // The fingerprint covers the FULL canonical commercial request (5.5).
-    const requestFingerprint = computeRequestFingerprint(
-      currentCheckoutCommercialParams({
-        userId: session.user.id,
-        tier,
-        interval,
-        priceId,
-        currency: CHECKOUT_CURRENCY,
-      }),
-    );
-
+    // with a CHANGED fingerprint is a hard 409, never a silent key reuse (the
+    // early check above catches the common case before any Stripe call; this
+    // one is the race-safe authority).
     let attemptResult;
     try {
       attemptResult = await getOrCreateCheckoutAttempt(db as unknown as CheckoutAttemptDb, {

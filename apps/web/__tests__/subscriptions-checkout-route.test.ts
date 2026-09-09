@@ -269,6 +269,26 @@ describe("POST /api/subscriptions/checkout", () => {
       expect(mocks.reconcileOpenCheckoutSessions).not.toHaveBeenCalled();
     });
 
+    it("a reused intent with a CHANGED plan is refused BEFORE any open session is touched (Devin, #736)", async () => {
+      // The intent's own open session is valid. Reconciling first would expire
+      // it for the new plan and then 409 on the fingerprint, leaving the
+      // customer with a conflict and no checkout at all.
+      dbMock.attemptFindUnique.mockResolvedValue({
+        requestFingerprint: "fp_of_the_original_plan",
+        status: "SESSION_CREATED",
+        stripeSessionId: "cs_original_plan",
+        expiresAt: new Date(Date.now() + 60 * 60 * 1000),
+      });
+
+      const res = await POST(checkoutRequest({ tier: "ELITE", clientIntentId: INTENT_ID }));
+
+      expect(res.status).toBe(409);
+      expect((await res.json()).code).toBe("checkout_intent_conflict");
+      expect(mocks.reconcileOpenCheckoutSessions).not.toHaveBeenCalled();
+      expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
+      expect(dbMock.attemptCreate).not.toHaveBeenCalled();
+    });
+
     it("does not disturb the normal path when nothing is open", async () => {
       const res = await POST(checkoutRequest({ tier: "PRO" }));
 
@@ -649,7 +669,9 @@ describe("POST /api/subscriptions/checkout", () => {
       dbMock.attemptCreate
         .mockRejectedValueOnce(p2002())
         .mockImplementation(async ({ data }) => ({ ...data }));
-      dbMock.attemptFindUnique.mockResolvedValueOnce(expired);
+      // Read twice: once by the early changed-plan check (same fingerprint,
+      // so no conflict), once by getOrCreateCheckoutAttempt.
+      dbMock.attemptFindUnique.mockResolvedValueOnce(expired).mockResolvedValueOnce(expired);
       mocks.retrieveSession.mockResolvedValue({
         id: "cs_original",
         status: "expired",
