@@ -79,7 +79,7 @@ function Row({ label, value, floor, pass }: { label: string; value: string; floo
       <td className="py-2 pr-4 text-ion-1">{label}</td>
       <td className="py-2 pr-4 font-mono text-ion-white" data-testid="gate-reading-value">{value}</td>
       <td className="py-2 pr-4 font-mono text-ion-2">{floor}</td>
-      <td className={`py-2 font-mono ${pass === null ? "text-ion-2" : pass ? "text-orbital-cyan" : "text-red-400"}`}>
+      <td className={`py-2 font-mono ${pass === null ? "text-ion-2" : pass ? "text-orbital-cyan" : "text-alert"}`}>
         {pass === null ? "" : pass ? "pass" : "fail"}
       </td>
     </tr>
@@ -104,12 +104,12 @@ export function GateReadingView({ model }: { model: GateReadingModel }) {
       <div className="mt-2 flex flex-wrap items-baseline gap-x-4 gap-y-1">
         <span
           data-testid="gate-reading-status"
-          className={`rounded-md px-2 py-0.5 font-mono text-sm ${green ? "bg-orbital-cyan/15 text-orbital-cyan" : "bg-red-500/15 text-red-300"}`}
+          className={`rounded-md px-2 py-0.5 font-mono text-sm ${green ? "bg-orbital-cyan/15 text-orbital-cyan" : "bg-alert/15 text-alert"}`}
         >
           {r.status}
         </span>
         {model.stale ? (
-          <span data-testid="gate-reading-stale" className="rounded-md bg-amber-500/15 px-2 py-0.5 font-mono text-sm text-amber-300">
+          <span data-testid="gate-reading-stale" className="rounded-md bg-caution/15 px-2 py-0.5 font-mono text-sm text-caution">
             STALE · last evaluated {model.snap.evaluatedAt}
           </span>
         ) : null}
