@@ -27,7 +27,16 @@ export interface CalibrationEligibilityFloors {
 export interface LiveCalibrationMetrics {
   readonly n: number;
   readonly brier: number | null;
+  /** Raw binned ECE. Reported everywhere; see eceDebiased for what the floor reads. */
   readonly ece: number | null;
+  /**
+   * C-290: expected ECE of a perfectly calibrated forecaster on the sample's
+   * own bins (sampling noise), and the bias-corrected ECE = max(0, ece - noise).
+   * Absent on artifacts written before 2026-09-09; the floor then reads the
+   * raw value, which is the stricter direction.
+   */
+  readonly eceNoise?: number | null;
+  readonly eceDebiased?: number | null;
   readonly mce: number | null;
   readonly murphy: MurphyTerms | null;
   readonly modelVersion: string | null;
@@ -55,6 +64,9 @@ export interface CalibrationEligibilityReport {
   readonly n: number;
   readonly brier: number | null;
   readonly ece: number | null;
+  /** C-290: sampling-noise expectation and the corrected ECE the floor reads (null on old artifacts). */
+  readonly eceNoise: number | null;
+  readonly eceDebiased: number | null;
   readonly mce: number | null;
   readonly murphy: MurphyTerms | null;
   readonly floors: CalibrationEligibilityFloors;
@@ -99,6 +111,8 @@ export function evaluateCalibrationEligibility(
   const n = m?.n ?? 0;
   const brier = m?.brier ?? null;
   const ece = m?.ece ?? null;
+  const eceNoise = m?.eceNoise ?? null;
+  const eceDebiased = m?.eceDebiased ?? null;
   const mce = m?.mce ?? null;
   const murphy = m?.murphy ?? null;
 
@@ -117,7 +131,16 @@ export function evaluateCalibrationEligibility(
     if (brier == null || !Number.isFinite(brier)) reasons.push("Brier missing");
     else if (brier > floors.brier) reasons.push(`Brier ${brier.toFixed(4)} > ${floors.brier}`);
     if (ece == null || !Number.isFinite(ece)) reasons.push("ECE missing");
-    else if (ece > floors.ece) reasons.push(`ECE ${ece.toFixed(4)} > ${floors.ece}`);
+    else if (eceDebiased != null && Number.isFinite(eceDebiased)) {
+      // C-290: the floor reads the bias-corrected ECE. The raw value and the
+      // noise it was corrected by are stated in the same breath so nobody
+      // reads the corrected number without its provenance.
+      if (eceDebiased > floors.ece) {
+        reasons.push(
+          `ECE debiased ${eceDebiased.toFixed(4)} > ${floors.ece} (raw ${ece.toFixed(4)}, noise ${(eceNoise ?? 0).toFixed(4)})`,
+        );
+      }
+    } else if (ece > floors.ece) reasons.push(`ECE ${ece.toFixed(4)} > ${floors.ece}`);
     if (!murphy || !Number.isFinite(murphy.reliability)) {
       reasons.push("Murphy reliability missing");
     } else if (murphy.reliability > floors.murphyReliability) {
@@ -154,6 +177,8 @@ export function evaluateCalibrationEligibility(
     n,
     brier,
     ece,
+    eceNoise,
+    eceDebiased,
     mce,
     murphy,
     floors,

@@ -52,6 +52,9 @@ export interface DurableMetricsPayload {
   readonly overall: {
     readonly brier: number;
     readonly ece: number;
+    /** C-290: sampling-noise expectation and bias-corrected ECE; absent before 2026-09-09. */
+    readonly eceNoise?: number;
+    readonly eceDebiased?: number;
     readonly mce: number;
     readonly murphy: MurphyTerms;
   } | null;
@@ -294,6 +297,8 @@ export function metricsToLive(m: DurableMetricsPayload | null): LiveCalibrationM
       n: m.n,
       brier: null,
       ece: null,
+      eceNoise: null,
+      eceDebiased: null,
       mce: null,
       murphy: null,
       modelVersion: m.modelVersion,
@@ -305,6 +310,8 @@ export function metricsToLive(m: DurableMetricsPayload | null): LiveCalibrationM
     n: m.n,
     brier: m.overall.brier,
     ece: m.overall.ece,
+    eceNoise: m.overall.eceNoise ?? null,
+    eceDebiased: m.overall.eceDebiased ?? null,
     mce: m.overall.mce,
     murphy: m.overall.murphy,
     modelVersion: m.modelVersion,

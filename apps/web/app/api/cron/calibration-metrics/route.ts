@@ -25,6 +25,7 @@ import {
   type CalibrationSample,
 } from "@sports/prediction-engine";
 import { captureError } from "@/lib/observability/sentry";
+import { debiasedExpectedCalibrationError } from "@/lib/calibration/ece-debiased";
 import { db, isStubMode } from "@sports/db";
 import {
   evaluateAndPersistEligibility,
@@ -328,6 +329,8 @@ export async function GET(request: Request): Promise<NextResponse> {
     } else {
       const decomp = brierDecomposition(samples);
       const ece = expectedCalibrationError(samples);
+      // C-290: the floor reads the bias-corrected ECE; raw stays reported.
+      const eceCorrection = debiasedExpectedCalibrationError(samples);
       const curve = reliabilityCurve(samples);
       const mce = mceFromCurve(curve);
       const logLoss = meanLogLoss(samples);
@@ -364,6 +367,8 @@ export async function GET(request: Request): Promise<NextResponse> {
           brierDecomp: decomp,
           logLoss,
           ece,
+          eceNoise: eceCorrection.noise,
+          eceDebiased: eceCorrection.debiased,
           mce,
           bssHalf: bss(decomp.brier, "half", decomp.baseRate),
           bssClim: bss(decomp.brier, "climatology", decomp.baseRate),
@@ -395,6 +400,8 @@ export async function GET(request: Request): Promise<NextResponse> {
         overall: {
           brier: decomp.brier,
           ece,
+          eceNoise: eceCorrection.noise,
+          eceDebiased: eceCorrection.debiased,
           mce,
           murphy: {
             reliability: decomp.reliability,

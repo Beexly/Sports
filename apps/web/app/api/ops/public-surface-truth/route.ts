@@ -720,6 +720,9 @@ export async function GET(request: Request) {
             n: calibrationEligibility.n,
             brier: calibrationEligibility.brier,
             ece: calibrationEligibility.ece,
+            /** C-290: what the ECE floor reads, and the sampling noise it corrects for. */
+            eceNoise: calibrationEligibility.eceNoise,
+            eceDebiased: calibrationEligibility.eceDebiased,
             mce: calibrationEligibility.mce,
             murphy: calibrationEligibility.murphy,
             floors: calibrationEligibility.floors,
