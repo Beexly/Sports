@@ -242,9 +242,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       );
     }
     if (probe.outcome === "live") {
-      // Includes the dunning states: a member in past_due or unpaid must fix
-      // the card on the EXISTING subscription in the portal, not buy a second
-      // one alongside it.
+      // Includes the dunning states and `incomplete`: a member in past_due,
+      // unpaid, or mid-SCA must resolve payment on the EXISTING subscription in
+      // the portal (where the open invoice lives), not buy a second one
+      // alongside it. `incomplete` is the sharpest of these — the first payment
+      // was attempted and can still be collected, so a second checkout is how
+      // one customer ends up paying twice.
       console.warn(
         `[checkout] refusing a second checkout for customer ${customerId} — Stripe still ` +
           `reports subscription ${probe.subscriptionId} as ${probe.status}`,

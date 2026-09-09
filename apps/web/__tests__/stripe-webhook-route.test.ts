@@ -1117,6 +1117,62 @@ describe("POST /api/webhooks/stripe", () => {
         expect(second.update.status).toBe("INCOMPLETE");
       });
 
+      /**
+       * Devin Review, #736 — a regression THIS branch introduced, caught before
+       * it shipped. Before the `unpaid` remap, `unpaid` arrived as PAST_DUE, so
+       * an unmapped historical price hit the grandfathering guard and the paid
+       * tier survived. Once `unpaid` became INCOMPLETE the guard stopped firing
+       * and the tier was overwritten with FREE — and the damage is on the NEXT
+       * event: the recovery `active` sync re-derives FREE from the same unmapped
+       * price and finds existing.tier already FREE, so there is nothing left to
+       * preserve. The member pays and gets nothing back, permanently.
+       */
+      it("keeps a grandfathered paid tier when an unmapped price goes unpaid, without granting access", async () => {
+        mocks.subscriptionFindUnique.mockResolvedValue({
+          status: "PAST_DUE",
+          canceledAt: null,
+          stripeSubscriptionId: "sub_123",
+          tier: "PRO",
+        });
+        armSubscriptionEvent(
+          "customer.subscription.updated",
+          stripeSubscription({ status: "unpaid", items: { data: [{ price: { id: "price_orphaned_founding" } }] } }),
+        );
+
+        await POST(webhookRequest());
+
+        const call = mocks.subscriptionUpsert.mock.calls[0]?.[0] as
+          | { update: { tier: string; status: string } }
+          | undefined;
+        // The RECORD of what they are owed survives...
+        expect(call?.update.tier).toBe("PRO");
+        // ...while access still ends, because status is what gates.
+        expect(call?.update.status).toBe("INCOMPLETE");
+      });
+
+      it("restores a grandfathered member's access when they pay the outstanding invoice", async () => {
+        // The end-to-end of the regression above: the row kept PRO through the
+        // unpaid landing, so the recovery sync has a paid tier to preserve.
+        mocks.subscriptionFindUnique.mockResolvedValue({
+          status: "INCOMPLETE",
+          canceledAt: null,
+          stripeSubscriptionId: "sub_123",
+          tier: "PRO",
+        });
+        armSubscriptionEvent(
+          "customer.subscription.updated",
+          stripeSubscription({ status: "active", items: { data: [{ price: { id: "price_orphaned_founding" } }] } }),
+        );
+
+        await POST(webhookRequest());
+
+        expect(mocks.subscriptionUpsert).toHaveBeenCalledWith(
+          expect.objectContaining({
+            update: expect.objectContaining({ tier: "PRO", status: "ACTIVE" }),
+          }),
+        );
+      });
+
       it("still recovers to ACTIVE when the member pays the outstanding invoice", async () => {
         // The row is now INCOMPLETE (not CANCELED), so the resurrection guard —
         // which requires existing.status === "CANCELED" — does not fire.

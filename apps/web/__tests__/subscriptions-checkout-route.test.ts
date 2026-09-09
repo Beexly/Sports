@@ -206,8 +206,8 @@ describe("POST /api/subscriptions/checkout", () => {
       expect(dbMock.attemptCreate).not.toHaveBeenCalled();
     });
 
-    it.each(["past_due", "unpaid"])(
-      "refuses a second checkout while the existing subscription is %s — the card is fixed in the portal",
+    it.each(["past_due", "unpaid", "incomplete"])(
+      "refuses a second checkout while the existing subscription is %s — payment is resolved in the portal",
       async (status) => {
         dbMock.subscriptionFindUnique.mockResolvedValue(null);
         mocks.findLiveStripeSubscription.mockResolvedValue({

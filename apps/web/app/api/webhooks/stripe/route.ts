@@ -698,15 +698,42 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
   const status = mapStripeStatus(stripeSubscription.status);
   let tier = getTierFromPriceId(priceId, lookupKey);
 
+  // Read off the RAW Stripe status, not the mapped one: `unpaid` and a genuine
+  // SCA `incomplete` both map to INCOMPLETE, and only the first one means "we
+  // tried to collect and could not". Keeping the pastDueSince anchor on this
+  // landing is what lets lib/billing/notice.ts tell a member whose payment
+  // failed ("your access has ended") from one whose bank wants a verification
+  // step ("finish setting up your payment") — C-91 / D2a requires the copy to
+  // say what actually happened.
+  const isDunningExhausted = stripeSubscription.status === "unpaid";
+
   // Defensive no-downgrade guard (grandfathering safety net). If a NON-EMPTY price
   // id maps to no configured tier (an operator repointed a STRIPE_*_PRICE_ID and
   // dropped the historical id), do NOT downgrade a currently-paid member to FREE —
   // that would silently revoke a grandfathered subscriber's access on renewal.
-  // Retain their recorded paid tier and alert. Only applies to access-granting
-  // statuses; a genuinely canceled/incomplete sub still resolves to FREE normally.
+  // Retain their recorded paid tier and alert.
   const statusGrantsAccess = status === "ACTIVE" || status === "TRIALING" || status === "PAST_DUE";
+  // The dunning-exhausted landing must ALSO preserve the tier, and missing that
+  // was a real regression introduced by the `unpaid` remap above (Devin Review,
+  // #736). Before the remap, `unpaid` arrived here as PAST_DUE, so an unmapped
+  // historical price hit this guard and the grandfathered tier survived. Once
+  // `unpaid` became INCOMPLETE, statusGrantsAccess went false, the guard stopped
+  // firing, and the row's tier was overwritten with FREE. The trap is what
+  // happens NEXT: when that member pays the outstanding invoice, the `active`
+  // sync re-derives FREE from the same unmapped price and finds existing.tier
+  // already FREE — so there is no longer a paid tier to preserve, and the guard
+  // cannot save them. Paying would restore nothing, permanently.
+  //
+  // Preserving the tier here does NOT re-grant access: `status` is what gates,
+  // and INCOMPLETE does not grant. It only keeps the RECORD of what this member
+  // is owed, so recovery works.
+  //
+  // Deliberately not widened past this. PAUSED has the same shape and the same
+  // gap, but it had it before this branch too — fixing it is a separate change
+  // with its own test, not a drive-by on a money-path PR.
+  const preservesGrandfatheredTier = statusGrantsAccess || isDunningExhausted;
   const existingIsPaid = existing?.tier === "PRO" || existing?.tier === "ELITE" || existing?.tier === "FANTASY";
-  if (tier === "FREE" && priceId && statusGrantsAccess && existingIsPaid) {
+  if (tier === "FREE" && priceId && preservesGrandfatheredTier && existingIsPaid) {
     console.error(
       `[stripe] unmapped priceId ${priceId} on an active PAID subscription — retaining tier ` +
         `${existing!.tier} instead of downgrading to FREE. Add this historical price id to the ` +
@@ -730,14 +757,6 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
 
   const isPastDue = status === "PAST_DUE";
   const isCanceled = status === "CANCELED";
-  // Read off the RAW Stripe status, not the mapped one: `unpaid` and a genuine
-  // SCA `incomplete` both map to INCOMPLETE, and only the first one means "we
-  // tried to collect and could not". Keeping the pastDueSince anchor on this
-  // landing is what lets lib/billing/notice.ts tell a member whose payment
-  // failed ("your access has ended") from one whose bank wants a verification
-  // step ("finish setting up your payment") — C-91 / D2a requires the copy to
-  // say what actually happened.
-  const isDunningExhausted = stripeSubscription.status === "unpaid";
 
   const updateData = {
     stripeSubscriptionId: stripeSubscription.id,
