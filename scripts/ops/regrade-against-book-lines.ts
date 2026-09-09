@@ -85,6 +85,7 @@ async function main(): Promise<void> {
         selection: true,
         line: true,
         clvLockLine: true,
+        proofReceipt: { select: { line: true, asOf: true } },
         result: true,
         generatedAt: true,
         game: {
@@ -107,6 +108,7 @@ async function main(): Promise<void> {
         selection: p.selection,
         line: p.line,
         clvLockLine: p.clvLockLine,
+        proofReceipt: p.proofReceipt ? { line: p.proofReceipt.line, asOf: p.proofReceipt.asOf } : null,
         result: String(p.result),
         generatedAt: p.generatedAt,
         sportKey: p.game.sport?.key ?? "",
@@ -115,7 +117,13 @@ async function main(): Promise<void> {
         homeScore: p.game.homeScore,
         awayScore: p.game.awayScore,
       }))
-      .filter((p) => isOffHalfPointGrid(gradingLineOf(p)));
+      // A row with no establishable published line is still EXAMINED — it is
+      // reported as no_publish_lock rather than silently dropped, so the totals
+      // account for every candidate.
+      .filter((p) => {
+        const graded = gradingLineOf(p);
+        return graded === null || isOffHalfPointGrid(graded);
+      });
 
     const rows: Array<{ pick: RegradePickRow; verdict: RegradeVerdict }> = [];
     const detail: Array<Record<string, unknown>> = [];
@@ -160,18 +168,19 @@ async function main(): Promise<void> {
     console.log(`Scanned ${picks.length} settled published SPREAD/TOTAL picks (limit ${LIMIT}).`);
     console.log(`Off the half-point grid: ${report.examined}.`);
     console.log(
-      `  book line found: ${report.compared}   NONE: ${report.noBookLine}   no final: ${report.noFinal}`,
+      `  book line found: ${report.compared}   NONE: ${report.noBookLine}   ` +
+        `no publish lock: ${report.noPublishLock}   no final: ${report.noFinal}`,
     );
     console.log(
       `  recorded results a book-line grade would CHANGE: ${report.differs} of ${report.compared} compared.`,
     );
     console.log("");
-    console.log("sport                        market   examined  compared  NONE  differs");
+    console.log("sport                        market   examined  compared  NONE  noLock  differs");
     for (const b of report.buckets) {
       console.log(
         `${b.sportKey.padEnd(28)} ${b.pickType.padEnd(8)} ${String(b.examined).padStart(8)} ` +
           `${String(b.compared).padStart(9)} ${String(b.noBookLine).padStart(5)} ` +
-          `${String(b.differs).padStart(8)}`,
+          `${String(b.noPublishLock).padStart(7)} ${String(b.differs).padStart(8)}`,
       );
     }
     console.log("");

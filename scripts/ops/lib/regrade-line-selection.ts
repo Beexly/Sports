@@ -42,6 +42,8 @@ export type RegradePickRow = {
   readonly selection: string;
   readonly line: number;
   readonly clvLockLine: number | null;
+  /** Immutable pre-kickoff receipt, when one was minted (line + asOf). */
+  readonly proofReceipt: { readonly line: number; readonly asOf: Date } | null;
   readonly result: string;
   readonly generatedAt: Date;
   readonly sportKey: string;
@@ -124,9 +126,50 @@ export function resolveBookLine(
   return { bookLine: bestLine, bookCount: books.length, modalCount: counts.get(bestLine) ?? 0 };
 }
 
-/** The stored value the settlement lanes actually grade against (the no-drift rule). */
-export function gradingLineOf(pick: Pick<RegradePickRow, "clvLockLine" | "line">): number {
-  return pick.clvLockLine ?? pick.line;
+/**
+ * Which line this pick was graded against, and as of when — MIRRORING
+ * `judgementFor` in apps/web/lib/settlement/line-integrity-lane.ts.
+ *
+ * `clvLockLine ?? line` is wrong for a legacy row that has no lock: `line` is
+ * rewritten on every refresh cycle, so falling back to it compares a possibly
+ * post-publish value against publish-time quotes and reports a difference that
+ * is an artifact of the fallback, not of the pick (Devin Review, #733 round 6).
+ * The immutable proof receipt rescues such a row; without one the pick is
+ * UNRESOLVABLE and is reported as its own status rather than guessed at.
+ *
+ * The lane and this tool must agree, or the dry run describes a remediation
+ * that would not happen.
+ */
+export type RegradeGradingBasis =
+  | { readonly kind: "resolved"; readonly line: number; readonly asOf: Date | null; readonly basis: string }
+  | { readonly kind: "unresolvable"; readonly basis: "no_publish_lock" };
+
+export function gradingBasisOf(
+  pick: Pick<RegradePickRow, "clvLockLine" | "line" | "proofReceipt" | "generatedAt">,
+): RegradeGradingBasis {
+  if (pick.clvLockLine !== null && pick.clvLockLine !== undefined) {
+    return { kind: "resolved", line: pick.clvLockLine, asOf: pick.generatedAt, basis: "clv_lock_at_publish" };
+  }
+  if (pick.proofReceipt) {
+    return {
+      kind: "resolved",
+      line: pick.proofReceipt.line,
+      asOf: pick.proofReceipt.asOf,
+      basis: "proof_receipt_at_as_of",
+    };
+  }
+  return { kind: "unresolvable", basis: "no_publish_lock" };
+}
+
+/**
+ * The graded line when one can be established, else null. Kept for callers that
+ * only need the number; `gradingBasisOf` carries the reason and the clock.
+ */
+export function gradingLineOf(
+  pick: Pick<RegradePickRow, "clvLockLine" | "line" | "proofReceipt" | "generatedAt">,
+): number | null {
+  const basis = gradingBasisOf(pick);
+  return basis.kind === "resolved" ? basis.line : null;
 }
 
 export function isOffHalfPointGrid(line: number): boolean {
@@ -138,6 +181,8 @@ export function isOffHalfPointGrid(line: number): boolean {
 export type RegradeVerdict =
   | { readonly status: "no_book_line" }
   | { readonly status: "no_final" }
+  /** No clvLockLine and no proof receipt: which line was published is unknown. */
+  | { readonly status: "no_publish_lock" }
   | {
       readonly status: "compared";
       readonly storedLine: number;
@@ -169,8 +214,10 @@ export function regradeOne(
   if (pick.homeScore === null || pick.awayScore === null) return { status: "no_final" };
   if (pick.pickType !== "SPREAD" && pick.pickType !== "TOTAL") return { status: "no_final" };
 
-  const storedLine = gradingLineOf(pick);
-  const resolved = resolveBookLine(oddsRows, pick.generatedAt, storedLine);
+  const basis = gradingBasisOf(pick);
+  if (basis.kind === "unresolvable") return { status: "no_publish_lock" };
+  const storedLine = basis.line;
+  const resolved = resolveBookLine(oddsRows, basis.asOf ?? pick.generatedAt, storedLine);
   if (resolved.bookLine === null) return { status: "no_book_line" };
 
   const bookResult = calculateResult(
@@ -204,6 +251,8 @@ export type RegradeBucket = {
   compared: number;
   /** Of those, how many had NO book line: reported as NONE, never regraded. */
   noBookLine: number;
+  /** Of those, how many had no establishable published line at all. */
+  noPublishLock: number;
   /** Of the compared ones, how many results a book-line grade would change. */
   differs: number;
 };
@@ -212,6 +261,7 @@ export type RegradeReport = {
   readonly examined: number;
   readonly compared: number;
   readonly noBookLine: number;
+  readonly noPublishLock: number;
   readonly noFinal: number;
   readonly differs: number;
   readonly buckets: RegradeBucket[];
@@ -222,7 +272,7 @@ export function buildRegradeReport(
   rows: ReadonlyArray<{ pick: RegradePickRow; verdict: RegradeVerdict }>,
 ): RegradeReport {
   const buckets = new Map<string, RegradeBucket>();
-  const report = { examined: 0, compared: 0, noBookLine: 0, noFinal: 0, differs: 0 };
+  const report = { examined: 0, compared: 0, noBookLine: 0, noPublishLock: 0, noFinal: 0, differs: 0 };
   for (const { pick, verdict } of rows) {
     const key = `${pick.sportKey}|${pick.pickType}`;
     const bucket = buckets.get(key) ?? {
@@ -231,12 +281,16 @@ export function buildRegradeReport(
       examined: 0,
       compared: 0,
       noBookLine: 0,
+      noPublishLock: 0,
       differs: 0,
     };
     bucket.examined += 1;
     report.examined += 1;
     if (verdict.status === "no_final") {
       report.noFinal += 1;
+    } else if (verdict.status === "no_publish_lock") {
+      bucket.noPublishLock += 1;
+      report.noPublishLock += 1;
     } else if (verdict.status === "no_book_line") {
       bucket.noBookLine += 1;
       report.noBookLine += 1;

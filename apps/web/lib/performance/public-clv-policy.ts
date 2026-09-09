@@ -19,6 +19,7 @@
  */
 
 import { wilsonInterval, clearsThreshold } from "./wilson-interval";
+import { CLV_SAMPLE_RESULT_FILTER } from "@/lib/clv/clv-sample-policy";
 
 /** The market vig break-even line — beating the close below this isn't an edge. */
 const VIG_BREAK_EVEN = 0.524;
@@ -176,7 +177,7 @@ export async function loadPublicClvPolicy(
   const canonical = {
     isBootstrap: false,
     isPublished: true,
-    result: { not: "VOID" },
+    result: CLV_SAMPLE_RESULT_FILTER,
   } as const;
 
   const [gradedSampleSize, beatCloseCount, lostToCloseCount, matchedCloseCount] =
