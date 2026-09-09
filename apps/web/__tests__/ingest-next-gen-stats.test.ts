@@ -120,7 +120,12 @@ describe("ingestNextGenStats", () => {
     ).rejects.toThrow("constraint violation");
   });
 
-  it("batches createMany at 2000 rows so a full-season table doesn't blow Postgres's bound-parameter limit (Devin Review, PR #734)", async () => {
+  it("batches createMany at 1500 rows (not 2000) so a full-season table doesn't blow Postgres's bound-parameter limit (Devin Review, PR #734, second pass)", async () => {
+    // toRecord binds 34 fields per row. The first pass of this fix (C-266)
+    // reused the same CREATE_CHUNK=2000 as the other three ingesters, which
+    // are ~12-14 fields each; at 34 fields, 2000 rows binds 68,000
+    // parameters, already over Postgres's 65,535 limit, not merely close to
+    // it. Devin Review caught it; this pins the corrected value.
     const records = Array.from({ length: 4500 }, (_, i) => ({
       season: "2024", season_type: "REG", week: "1", player_gsis_id: `00-${i}`,
       player_display_name: `QB ${i}`, team_abbr: "BUF", avg_time_to_throw: "2.7",
@@ -128,8 +133,30 @@ describe("ingestNextGenStats", () => {
     const res = await ingestNextGenStats(2024, "passing", { now: NOW, fetcher: async () => ({ records }) });
     expect(res.status).toBe("ok");
     expect(res.rowsWritten).toBe(4500);
-    expect(mocks.createMany).toHaveBeenCalledTimes(3);
+    expect(mocks.createMany).toHaveBeenCalledTimes(3); // 1500 + 1500 + 1500
+    expect((mocks.createMany.mock.calls[0]![0] as { data: unknown[] }).data).toHaveLength(1500);
+    expect((mocks.createMany.mock.calls[1]![0] as { data: unknown[] }).data).toHaveLength(1500);
+    expect((mocks.createMany.mock.calls[2]![0] as { data: unknown[] }).data).toHaveLength(1500);
     expect(mocks.transaction).toHaveBeenCalledTimes(1);
     expect(mocks.transaction.mock.calls[0]![0]).toHaveLength(4); // delete + 3 batches
+  });
+
+  it("pins the exact chunk boundary at 1500, not 2000 (Devin Review, PR #734, second pass)", async () => {
+    // Behavioral pin, no internals reached into: exactly 1500 rows is one
+    // batch, 1501 is two. If CREATE_CHUNK ever drifts back toward 2000 (e.g.
+    // "made consistent" with the other three ingesters without re-deriving
+    // the math for NGS's 34-field row), this fails immediately rather than
+    // waiting for a production Postgres error.
+    const recordsAt = (n: number) => Array.from({ length: n }, (_, i) => ({
+      season: "2024", season_type: "REG", week: "1", player_gsis_id: `00-${i}`,
+      player_display_name: `QB ${i}`, team_abbr: "BUF",
+    }));
+
+    await ingestNextGenStats(2024, "passing", { now: NOW, fetcher: async () => ({ records: recordsAt(1500) }) });
+    expect(mocks.createMany).toHaveBeenCalledTimes(1);
+
+    mocks.createMany.mockClear();
+    await ingestNextGenStats(2024, "passing", { now: NOW, fetcher: async () => ({ records: recordsAt(1501) }) });
+    expect(mocks.createMany).toHaveBeenCalledTimes(2);
   });
 });

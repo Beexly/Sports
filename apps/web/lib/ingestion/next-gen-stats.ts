@@ -22,12 +22,13 @@ export type NgsStatType = "passing" | "receiving" | "rushing";
 type CsvRow = Readonly<Record<string, string>>;
 type NgsFetcher = (season: number, statType: NgsStatType) => Promise<{ records: readonly CsvRow[] }>;
 
-// Keep Postgres bound-parameter count well under its limit (same pattern and
-// value as historical-games.ts and depth-charts.ts). A full-season table
-// accumulates a row per player per week across every team, so batch
-// defensively rather than wait for it to actually exceed the limit in
-// production.
-const CREATE_CHUNK = 2000;
+// Keep Postgres bound-parameter count well under its limit (same pattern as
+// historical-games.ts and depth-charts.ts, LOWER value here). `toRecord`
+// below binds 34 fields per row — 2000 rows would bind 68,000 parameters,
+// already over Postgres's 65,535 limit, not merely close to it (measured by
+// counting toRecord's own fields, not assumed from the other ingesters'
+// smaller 12-14-field records).
+const CREATE_CHUNK = 1500;
 
 export interface NextGenStatsIngestResult {
   readonly status: "ok" | "clearance-denied" | "source-error";
