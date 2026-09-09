@@ -768,7 +768,20 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     )
   );
 
+  // Independent edge gate: suppress picks that lack independent fair values.
+  // Until an independent totals model is added, this will suppress all totals picks.
+  const independentEdgeRaw = assessIndependentEdge(
+    input.context?.independentFairValues,
+    overIsChosen,
+    fairProb,
+    dataQualityScore,
+    twoSidedImpliedSum >= 1
+  );
+
   if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
+
+  if (independentEdgeRaw == null || independentEdgeRaw.trueProb == null) return null;
+  if (independentEdgeRaw.trueProb <= fairProb) return null;
 
   const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
@@ -954,6 +967,8 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   );
 
   if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
+  if (independentEdgeRaw == null || independentEdgeRaw.trueProb == null) return null;
+  if (independentEdgeRaw.trueProb <= fairProb) return null;
 
   const rank = deriveRankingProbability(confidence, independentEdgeRaw, {
     independentWeight: 0.7,
