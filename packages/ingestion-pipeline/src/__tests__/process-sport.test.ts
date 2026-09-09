@@ -237,7 +237,20 @@ const SPORT = { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" } a
  * (inside the quiet-board horizon, like the espnBoard fixture below); every
  * other clock is an offset from K, preserving the original relationships.
  */
-const K_MS = Date.now() + 6 * 3_600_000;
+// Pinned to the next 16:00 UTC at least six hours out (noon Eastern in
+// summer, 11:00 in winter): every offset below then falls on ONE calendar
+// date in both UTC and Eastern, so FixtureConfirmer issues one scoreboard
+// request per probe day. A bare `now + 6h` put kickoff between 00:00 and
+// 04:00 UTC for part of every day, where the UTC and Eastern date keys
+// differ and the confirmer legitimately fetches two days; the "exactly one
+// request" assertion then failed on the clock, not the code.
+const K_MS = (() => {
+  const earliest = Date.now() + 6 * 3_600_000;
+  const d = new Date(earliest);
+  d.setUTCHours(16, 0, 0, 0);
+  if (d.getTime() < earliest) d.setUTCDate(d.getUTCDate() + 1);
+  return d.getTime();
+})();
 const at = (offsetMs: number) => new Date(K_MS + offsetMs).toISOString();
 /** kickoff */ const T_KICKOFF = at(0);
 /** two hours before kickoff */ const T_RUN_AT = at(-2 * 3_600_000);
