@@ -30,6 +30,19 @@ before re-fixing anything from that list. The ledger guard now also prints
 SLA warnings: a CLAIMED row with no evidence or an OPEN row with evidence but
 no owner will be called out on every guard run — resolve or re-own them.
 
+**UPDATED 2026-09-09 (17:55 UTC): PROVEN IS LIVE.** The 14:40 UTC RED had one cause, C-301: the
+odds-table loader skipped every receipted pick (57 rows, 54 of them priceable), so C-300's
+verifiableOnly pass dropped them. Fixed in #747 (`52711719c`). First run on the fix, 16:38 UTC:
+pool n 380, Brier 0.2099, debiased ECE 0.0374; deployed v5.2.7 n 258, debiased 0.0582, bound
+0.0438; GREEN, and the receipt auto-published on the third consecutive run. The founder flipped
+`PERFORMANCE_STATS_ENABLED=true`, `PRICING_PHASE=PROVEN` and `LINE_INTEGRITY_VOID_ENABLED=true`
+(Production, ~17:15 UTC) and `PUBLISH_LEDGER=true` after; the surface read phase PROVEN, gate GREEN,
+streak 8 at 17:25 UTC. Public surfaces: #751 adds the gate reading to /calibration and a
+phase-aware /pricing hero. Launch copy: `docs/launch/PROVEN_LAUNCH_KIT_2026-09-09.md`. Open
+integrity item: the public performance surfaces (confidence-bucket report, public-confidence,
+performanceSummary) do not yet exclude in-play-generated picks the way the eligibility sample does
+(C-302, OPEN). No floor, bin, basis or engine changed today; the streak reads on market_anchored_v4.
+
 **UPDATED 2026-09-09 (13:45 UTC): THE DEPLOYED VERSION WAS NEVER MISCALIBRATED. THE SAMPLE WAS
 (C-298, same branch, PR #742). This supersedes the 13:00 note below.** The founder said to assume
 more database bugs, and read-only production SQL found two in the eligibility sample. First,
