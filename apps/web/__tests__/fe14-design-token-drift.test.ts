@@ -19,9 +19,18 @@ describe("FE-14: tailwind.config.ts colors match design-tokens.css", () => {
   const tailwindSrc = readFileSync(join(process.cwd(), "tailwind.config.ts"), "utf8");
   const cssSrc = readFileSync(join(process.cwd(), "styles/design-tokens.css"), "utf8");
 
+  // Plain string search + a FIXED regex on the slice after it, rather than
+  // building a RegExp from the (test-only, always-literal-at-call-site)
+  // `name` argument — Codacy flags `new RegExp(non-literal)` as a DoS/ReDoS
+  // pattern regardless of how trusted the caller is, so this sidesteps the
+  // rule outright instead of arguing the false positive.
   function cssVar(name: string): string {
-    const match = cssSrc.match(new RegExp(`--${name}:\\s*(#[0-9A-Fa-f]{6})`));
-    if (!match) throw new Error(`--${name} not found in design-tokens.css`);
+    const needle = `--${name}:`;
+    const start = cssSrc.indexOf(needle);
+    if (start === -1) throw new Error(`--${name} not found in design-tokens.css`);
+    const after = cssSrc.slice(start + needle.length, start + needle.length + 40);
+    const match = after.match(/\s*(#[0-9A-Fa-f]{6})/);
+    if (!match) throw new Error(`--${name} has no hex value in design-tokens.css`);
     return match[1].toUpperCase();
   }
 
