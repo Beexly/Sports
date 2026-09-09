@@ -10,6 +10,7 @@ import {
   expectedCalibrationError,
   type CalibrationSample,
 } from "@sports/prediction-engine";
+import { debiasedExpectedCalibrationError } from "@/lib/calibration/ece-debiased";
 
 export type CalibrationSliceMetrics = {
   /** Slice label (sport key or model version); "unknown" when the row had none. */
@@ -17,8 +18,36 @@ export type CalibrationSliceMetrics = {
   readonly n: number;
   readonly brier: number;
   readonly ece: number;
+  /**
+   * C-292: the same finite-sample correction the pooled floor reads (C-290),
+   * computed on the slice's OWN rows. A slice is small by construction, so its
+   * raw ECE carries MORE noise bias than the pool's; without these the C-275
+   * deployed-version floor would penalise a fresh version for having few rows
+   * rather than for being miscalibrated. `eceNoise` is the expected raw ECE of
+   * a perfectly calibrated forecaster on this slice (diagnostic); `eceDebiased`
+   * is the per-bin variance-corrected value the deployed-version check reads.
+   */
+  readonly eceNoise: number;
+  readonly eceDebiased: number;
   /** Murphy reliability term (lower is better; the floor is applied to the pooled value). */
   readonly murphyRel: number;
+  /**
+   * Murphy RESOLUTION term (C-276). HIGHER is better — it is the only term that
+   * says whether the slice's forecasts RANK outcomes, rather than merely being
+   * calibrated. Distinct from murphyRel above, and pulling the opposite way;
+   * confusing the two inverts the reading.
+   *
+   * Why it is here: every eligibility floor (n, Brier, ECE, murphyRel) measures
+   * calibration or volume. A forecaster that ignores its inputs and always
+   * predicts the base rate is perfectly calibrated by construction and clears
+   * all four, with RES exactly 0. So the floors cannot distinguish a model with
+   * skill from one with none.
+   *
+   * `brierDecomposition` already computed this for every slice and the value was
+   * discarded. Recording it does not floor it and changes no gate — but a floor
+   * cannot be argued about, let alone set, on a number nobody measures.
+   */
+  readonly murphyRes: number;
   readonly hitRate: number;
   readonly meanP: number;
 };
@@ -44,6 +73,7 @@ export function sliceCalibrationMetrics<T extends CalibrationSample>(
   const out: CalibrationSliceMetrics[] = [];
   for (const [key, rows] of groups) {
     const d = brierDecomposition(rows);
+    const corrected = debiasedExpectedCalibrationError(rows);
     const wins = rows.reduce((a, s) => a + s.y, 0);
     const pSum = rows.reduce((a, s) => a + s.p, 0);
     out.push({
@@ -51,7 +81,10 @@ export function sliceCalibrationMetrics<T extends CalibrationSample>(
       n: rows.length,
       brier: d.brier,
       ece: expectedCalibrationError(rows),
+      eceNoise: corrected.noise,
+      eceDebiased: corrected.debiased,
       murphyRel: d.reliability,
+      murphyRes: d.resolution,
       hitRate: wins / rows.length,
       meanP: pSum / rows.length,
     });

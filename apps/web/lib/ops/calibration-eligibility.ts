@@ -27,7 +27,16 @@ export interface CalibrationEligibilityFloors {
 export interface LiveCalibrationMetrics {
   readonly n: number;
   readonly brier: number | null;
+  /** Raw binned ECE. Reported everywhere; see eceDebiased for what the floor reads. */
   readonly ece: number | null;
+  /**
+   * C-290: expected ECE of a perfectly calibrated forecaster on the sample's
+   * own bins (sampling noise), and the bias-corrected ECE = max(0, ece - noise).
+   * Absent on artifacts written before 2026-09-09; the floor then reads the
+   * raw value, which is the stricter direction.
+   */
+  readonly eceNoise?: number | null;
+  readonly eceDebiased?: number | null;
   readonly mce: number | null;
   readonly murphy: MurphyTerms | null;
   readonly modelVersion: string | null;
@@ -35,8 +44,46 @@ export interface LiveCalibrationMetrics {
   readonly generatedAt: string | null;
 }
 
+/**
+ * The slice of the sample belonging to the model version actually serving
+ * traffic. Shape matches CalibrationSliceMetrics (metric-slices.ts).
+ */
+export interface DeployedVersionSlice {
+  readonly key: string;
+  readonly n: number;
+  /** Raw binned ECE on the slice's own rows. */
+  readonly ece: number;
+  /**
+   * C-292: the per-bin variance-corrected ECE (C-290) computed on the slice's
+   * OWN rows, and the expected raw ECE of a perfectly calibrated forecaster on
+   * those rows. When present and finite the deployed-version floor reads
+   * `eceDebiased`; absent (an artifact written before C-292) it reads the raw
+   * value, which is the stricter direction.
+   */
+  readonly eceNoise?: number | null;
+  readonly eceDebiased?: number | null;
+}
+
 export interface CalibrationEligibilityInput {
   readonly metrics: LiveCalibrationMetrics | null;
+  /**
+   * C-275. The pooled ECE the floors are scored on can sit BELOW every stratum
+   * it is built from, because expectedCalibrationError weights ABSOLUTE per-bin
+   * gaps: strata erring in opposite directions inside one bin cancel before the
+   * absolute value is taken. That gap measured 0.0414 on live data (pooled
+   * 0.0524 against a weighted stratum mean of 0.0938), so a reachable state
+   * exists where the pooled figure clears the floor while the DEPLOYED model's
+   * own rows do not — the gate would then certify calibration for a model that
+   * is not calibrated.
+   *
+   * When supplied, the deployed version must ALSO clear the ECE floor on its
+   * own rows, and carry enough of them to say so. This only ever ADDS reasons;
+   * it can never clear one, so it cannot produce a GREEN the pooled floors
+   * would have refused.
+   *
+   * Omitted (undefined) preserves the pre-C-275 pooled-only behaviour.
+   */
+  readonly deployedVersion?: DeployedVersionSlice | null;
   readonly canonicalSettled: number;
   readonly minSettledForLearning: number;
   readonly settlementHealthy: boolean;
@@ -55,11 +102,18 @@ export interface CalibrationEligibilityReport {
   readonly n: number;
   readonly brier: number | null;
   readonly ece: number | null;
+  /** C-290: sampling-noise expectation and the corrected ECE the floor reads (null on old artifacts). */
+  readonly eceNoise: number | null;
+  readonly eceDebiased: number | null;
   readonly mce: number | null;
   readonly murphy: MurphyTerms | null;
   readonly floors: CalibrationEligibilityFloors;
   readonly consecutiveGreen: number;
   readonly streakRequired: number;
+  /** C-275: the deployed-version slice the floors were additionally applied to. */
+  readonly deployedVersion: DeployedVersionSlice | null;
+  /** True when a deployed-version slice was supplied and therefore checked. */
+  readonly deployedVersionChecked: boolean;
   readonly modelVersion: string | null;
   readonly dateRange: string | null;
   readonly generatedAt: string | null;
@@ -99,6 +153,8 @@ export function evaluateCalibrationEligibility(
   const n = m?.n ?? 0;
   const brier = m?.brier ?? null;
   const ece = m?.ece ?? null;
+  const eceNoise = m?.eceNoise ?? null;
+  const eceDebiased = m?.eceDebiased ?? null;
   const mce = m?.mce ?? null;
   const murphy = m?.murphy ?? null;
 
@@ -117,12 +173,50 @@ export function evaluateCalibrationEligibility(
     if (brier == null || !Number.isFinite(brier)) reasons.push("Brier missing");
     else if (brier > floors.brier) reasons.push(`Brier ${brier.toFixed(4)} > ${floors.brier}`);
     if (ece == null || !Number.isFinite(ece)) reasons.push("ECE missing");
-    else if (ece > floors.ece) reasons.push(`ECE ${ece.toFixed(4)} > ${floors.ece}`);
+    else if (eceDebiased != null && Number.isFinite(eceDebiased)) {
+      // C-290: the floor reads the bias-corrected ECE. The raw value and the
+      // noise it was corrected by are stated in the same breath so nobody
+      // reads the corrected number without its provenance.
+      if (eceDebiased > floors.ece) {
+        reasons.push(
+          `ECE debiased ${eceDebiased.toFixed(4)} > ${floors.ece} (raw ${ece.toFixed(4)}, noise ${(eceNoise ?? 0).toFixed(4)})`,
+        );
+      }
+    } else if (ece > floors.ece) reasons.push(`ECE ${ece.toFixed(4)} > ${floors.ece}`);
     if (!murphy || !Number.isFinite(murphy.reliability)) {
       reasons.push("Murphy reliability missing");
     } else if (murphy.reliability > floors.murphyReliability) {
       reasons.push(
         `Murphy reliability ${murphy.reliability.toFixed(4)} > ${floors.murphyReliability}`,
+      );
+    }
+  }
+
+  // C-275: the deployed model must clear the floor on its OWN rows, not only
+  // in a pool whose other strata can cancel its error away.
+  const deployed = input.deployedVersion ?? null;
+  if (deployed) {
+    if (deployed.n < floors.n) {
+      reasons.push(
+        `Deployed ${deployed.key} has ${deployed.n} own settled rows < floor ${floors.n}`,
+      );
+    }
+    const deployedDebiased = deployed.eceDebiased ?? null;
+    if (!Number.isFinite(deployed.ece)) {
+      reasons.push(`Deployed ${deployed.key} ECE missing`);
+    } else if (deployedDebiased != null && Number.isFinite(deployedDebiased)) {
+      // C-292: the slice is small by construction, so its raw ECE carries more
+      // finite-sample bias than the pool's. The floor reads the same per-bin
+      // correction the pooled floor reads (C-290); raw and noise stay in the
+      // reason so the corrected number never travels without its provenance.
+      if (deployedDebiased > floors.ece) {
+        reasons.push(
+          `Deployed ${deployed.key} ECE debiased ${deployedDebiased.toFixed(4)} > ${floors.ece} on its own rows (raw ${deployed.ece.toFixed(4)}, noise ${(deployed.eceNoise ?? 0).toFixed(4)})`,
+        );
+      }
+    } else if (deployed.ece > floors.ece) {
+      reasons.push(
+        `Deployed ${deployed.key} ECE ${deployed.ece.toFixed(4)} > ${floors.ece} on its own rows`,
       );
     }
   }
@@ -154,11 +248,15 @@ export function evaluateCalibrationEligibility(
     n,
     brier,
     ece,
+    eceNoise,
+    eceDebiased,
     mce,
     murphy,
     floors,
     consecutiveGreen,
     streakRequired,
+    deployedVersion: deployed,
+    deployedVersionChecked: deployed !== null,
     modelVersion: m?.modelVersion ?? null,
     dateRange: m?.dateRange ?? null,
     generatedAt: m?.generatedAt ?? null,

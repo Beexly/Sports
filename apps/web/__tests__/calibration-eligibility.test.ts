@@ -223,3 +223,99 @@ describe("publishedEffective matrix", () => {
     expect(r.autoPublish).toBe(env.CALIBRATION_AUTO_PUBLISH === "true");
   });
 });
+
+describe("C-275 deployed-version floor", () => {
+  // The floors are scored on a POOLED ECE, and pooled can sit below every
+  // stratum it is built from because expectedCalibrationError weights ABSOLUTE
+  // per-bin gaps — strata erring in opposite directions inside one bin cancel
+  // before the absolute value is taken. Measured 0.0414 below on live data
+  // (pooled 0.0524 against a weighted stratum mean of 0.0938). So a pooled pass
+  // does not imply the deployed model is calibrated.
+  const pooledPasses = {
+    ...goodMetrics,
+    ece: 0.0499, // clears the 0.05 floor
+    modelVersion: "v5.2.7",
+  };
+
+  const base = {
+    canonicalSettled: 500,
+    minSettledForLearning: 100,
+    settlementHealthy: true,
+    consecutiveGreenPrior: 2,
+    streakRequired: 3,
+  };
+
+  it("RED when pooled clears the floor but the deployed version does not", () => {
+    // THE REGRESSION THIS EXISTS FOR. Before C-275 this read GREEN: the gate
+    // certifying calibration for a model whose own rows fail the floor.
+    const report = evaluateCalibrationEligibility({
+      ...base,
+      metrics: pooledPasses,
+      deployedVersion: { key: "v5.2.7", n: 245, ece: 0.1089 },
+    });
+    expect(report.status).toBe("RED");
+    expect(report.reasons.some((r) => r.includes("Deployed v5.2.7") && r.includes("own rows"))).toBe(true);
+    expect(report.deployedVersionChecked).toBe(true);
+  });
+
+  it("RED when the deployed version has too few of its own rows to say", () => {
+    const report = evaluateCalibrationEligibility({
+      ...base,
+      metrics: pooledPasses,
+      deployedVersion: { key: "v5.2.8", n: 12, ece: 0.01 },
+    });
+    expect(report.status).toBe("RED");
+    expect(report.reasons.some((r) => r.includes("own settled rows"))).toBe(true);
+  });
+
+  it("RED when the deployed version's ECE is not finite", () => {
+    const report = evaluateCalibrationEligibility({
+      ...base,
+      metrics: pooledPasses,
+      deployedVersion: { key: "v5.2.8", n: 300, ece: Number.NaN },
+    });
+    expect(report.status).toBe("RED");
+    expect(report.reasons).toContain("Deployed v5.2.8 ECE missing");
+  });
+
+  it("GREEN when the deployed version clears the floor on its own rows", () => {
+    // The check must not block a model that genuinely earns the pass.
+    const report = evaluateCalibrationEligibility({
+      ...base,
+      metrics: { ...goodMetrics, modelVersion: "v5.2.8" },
+      deployedVersion: { key: "v5.2.8", n: 300, ece: 0.03 },
+    });
+    expect(report.status).toBe("GREEN");
+    expect(report.reasons).toEqual([]);
+    expect(report.deployedVersion).toEqual({ key: "v5.2.8", n: 300, ece: 0.03 });
+  });
+
+  it("omitting it preserves the pre-C-275 pooled-only behaviour exactly", () => {
+    const withField = evaluateCalibrationEligibility({
+      ...base,
+      metrics: goodMetrics,
+      deployedVersion: null,
+    });
+    const withoutField = evaluateCalibrationEligibility({ ...base, metrics: goodMetrics });
+    expect(withoutField.status).toBe(withField.status);
+    expect(withoutField.reasons).toEqual(withField.reasons);
+    expect(withoutField.deployedVersionChecked).toBe(false);
+    expect(withoutField.deployedVersion).toBeNull();
+  });
+
+  it("can only ADD reasons — it can never turn a RED into a GREEN", () => {
+    // Structural guarantee. A failing pooled run stays failing, and every
+    // reason it had is still present, whatever the deployed slice says.
+    const failing = { ...goodMetrics, ece: 0.4, modelVersion: "v5.2.7" };
+    const pooledOnly = evaluateCalibrationEligibility({ ...base, metrics: failing });
+    const withPerfectDeployed = evaluateCalibrationEligibility({
+      ...base,
+      metrics: failing,
+      deployedVersion: { key: "v5.2.7", n: 10_000, ece: 0.0 },
+    });
+    expect(withPerfectDeployed.status).toBe("RED");
+    for (const reason of pooledOnly.reasons) {
+      expect(withPerfectDeployed.reasons).toContain(reason);
+    }
+  });
+});
