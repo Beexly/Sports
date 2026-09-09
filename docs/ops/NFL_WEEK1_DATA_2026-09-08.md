@@ -14,7 +14,8 @@ public `nflverse-data` GitHub release assets (the same URLs
 code reading with file:line citations. Any cell that would require a
 production DB read is marked **NOT RUN (no DB access)**, not guessed.
 
-## Commands run (exact, so any cell is reproducible)
+## Commands run (templates below; one concrete resolved example per command,
+so any cell is reproducible without guessing what YYYYMMDD/tag/file resolve to)
 
 ```bash
 # 1. Live truth surface
@@ -22,10 +23,17 @@ curl -sS https://www.galaxysportsedge.com/api/ops/public-surface-truth
 # generatedAt 2026-09-09T00:09:32.298Z
 
 # 2. ESPN public scoreboard, one call per Eastern-anchored UTC date 09-09..09-16
-curl -sS "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=YYYYMMDD"
+# (8 dates). Resolved example (the 09-09 date):
+curl -sS "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260909"
 
-# 3. nflverse-data public release assets (HEAD for existence, GET for row counts)
-curl -sSI -L "https://github.com/nflverse/nflverse-data/releases/download/<tag>/<file>"
+# 3. nflverse-data public release assets (HEAD for existence, GET for row
+# counts); <tag> is the nflverse-data release name, <file> the CSV/CSV.GZ
+# asset inside it. Resolved example (Section B's depth-charts row):
+curl -sSI -L "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2026.csv"
+# other (tag, file) pairs queried the same way: rosters/roster_2026.csv,
+# injuries/injuries_2026.csv, nextgen_stats/ngs_passing.csv.gz (also
+# ngs_receiving.csv.gz, ngs_rushing.csv.gz), stats_player/stats_player_week_2026.csv,
+# pbp/play_by_play_2026.csv, snap_counts/snap_counts_2026.csv
 ```
 
 Fetched 2026-09-09T00:04–00:20 UTC.
@@ -148,9 +156,16 @@ Eastern calendar day (C-95 item 2, commit `23d2c3381`). Confirmed by
 reading the PR diff and its test suite (`espn-schedule-seed.test.ts`), not
 independently re-derived here — duplicating that work was out of this
 session's lane per the coordination instruction. My own ESPN queries above
-used UTC date buckets for measurement convenience only and independently
-found 0 games on 09-11 and 09-12 and games correctly split across 09-09/10
-and 09-13/14, consistent with what an Eastern-day walk should produce.
+passed `dates=YYYYMMDD` values 09-09..09-16, but ESPN's `dates` param keys
+its scoreboard slate by Eastern game-day, not by a UTC calendar filter — so
+`dates=20260911` and `dates=20260912` each returned 0 games, which is NOT a
+contradiction with Section A's table: that column reports each game's raw
+UTC kickoff instant, and SF @ LAR's `2026-09-11T00:35Z` UTC kickoff is
+`2026-09-10T20:35` Eastern — i.e. ESPN files it under the Eastern 09-10
+slate my `dates=20260910` query returned, even though its UTC timestamp
+reads 09-11. Two different axes (raw UTC instant vs. Eastern-day query
+key), not two disagreeing measurements of the same thing — consistent with
+what an Eastern-day walk should produce.
 
 ## Section F — Kalshi series map (KXNFLSPREAD / KXNFLTOTAL)
 
@@ -176,9 +191,9 @@ conflict with in-flight work outside this session's lane.
   handoff named. Confirmed still true by reading `galaxy-kalshi-book.ts` on
   `origin/claude/launch-c104-free-two-book-board` (no alias table present).
   Of the 16 games in Section A, the codes that would need an alias check are
-  **WSH@PHI** (WSH vs Kalshi's likely WAS) and **LAR** (in SF@LAR and
-  MIA@LV's division context) — not fixed here, owned by PR #724 (its own
-  "Remaining risk" section already names this).
+  **WSH@PHI** (WSH vs Kalshi's likely WAS), **SF@LAR** (LAR vs Kalshi's
+  likely LA), and **CLE@JAX** (JAX vs Kalshi's likely JAC) — not fixed here,
+  owned by PR #724 (its own "Remaining risk" section already names this).
 
 ## Gaps and owners (summary)
 
