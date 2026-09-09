@@ -1,0 +1,16 @@
+# GSE Calibration Lab — UI layer only.
+#
+# INSTALL INTO A SEPARATE ENVIRONMENT FROM gse-ml-service.
+#
+# gse-ml-service/requirements.txt is a hand-audited `--no-deps` lock whose whole
+# point is that pip resolves nothing. Gradio pulls a large transitive tree and
+# pins its own fastapi/starlette, which would silently contradict that lock and
+# change what the ML image contains. The two must never share an environment.
+#
+#   python -m venv .venv-cal && . .venv-cal/bin/activate
+#   pip install -r gse-calibration-lab/requirements-lab.txt
+#
+# The `gsecal` package itself needs NONE of this: it is pure standard library
+# and its full test suite runs with bare `python3 -m unittest`. Gradio is the
+# optional cockpit, not the product.
+gradio>=5.0,<6.0
