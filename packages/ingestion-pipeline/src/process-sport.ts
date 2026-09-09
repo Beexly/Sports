@@ -85,6 +85,14 @@ import { eventOddsId, toPropLineSnapshotRows, type PropEventLike } from "./prop-
 import { capturePinnacleLineSnapshotsIfEnabled } from "./pinnacle-line-archive.js";
 import { bookLineDispersion } from "./book-dispersion.js";
 import {
+  RUNDOWN_RATE_LIMIT_COOLDOWN_MS,
+  isRundownCoolingDown,
+  isRundownThinFillSport,
+  openRundownCooldown,
+  rundownCooldownRemainingMs,
+  thinFillCandidates,
+} from "./rundown-thin-fill.js";
+import {
   FixtureConfirmer,
   formatFixtureLine,
   type FixtureConfirmation,
@@ -254,6 +262,55 @@ export function bookDisagreementForPick(
     return pickedHome ? disp.moneylineHome : disp.moneylineAway;
   }
   return null;
+}
+
+/**
+ * One line per 429, with the resume time and never a key. Opening the cooldown
+ * and logging it are the same event, so they are the same call.
+ */
+function noteRundownRateLimit(sportKey: string, logPrefix: string): void {
+  const resumeAt = openRundownCooldown(sportKey);
+  console.warn(
+    `${logPrefix} ${sportKey}: rundown rate_limited (HTTP 429) — skipping this sport for ` +
+      `${Math.round(RUNDOWN_RATE_LIMIT_COOLDOWN_MS / 60000)}m, resumes ${resumeAt.toISOString()}`,
+  );
+}
+
+/**
+ * May this cycle spend ONE TheRundown call to thin-fill this sport?
+ *
+ * All five conditions, in the order they cost least to check (C-278a):
+ *   - a key exists;
+ *   - no 429 cooldown is open for this sport;
+ *   - the sport is NFL or NCAAF — the boards where a missing second book is
+ *     the reason MONEYLINE and TOTAL do not publish at all;
+ *   - at least one game sits UNDER MIN_BOOKMAKERS (a fully covered slate is
+ *     never dual-pulled — that is the whole point of the threshold filter);
+ *   - at least one of those thin games is inside the board window, so a day
+ *     with no live fixture for this sport spends nothing.
+ *
+ * A true answer authorises exactly one call for the whole sport, never one per
+ * game: `fetchRundownEventsForSport` returns the sport's whole slate.
+ */
+function shouldThinFillFromRundown(
+  sportKey: string,
+  events: readonly OddsApiEvent[],
+  rundownKey: string,
+  cooldownMs: number,
+  logPrefix: string,
+): boolean {
+  if (!rundownKey) return false;
+  if (cooldownMs > 0) {
+    console.warn(
+      `${logPrefix} ${sportKey}: rundown thin-fill skipped — cooling down, resumes in ` +
+        `${Math.ceil(cooldownMs / 60000)}m`,
+    );
+    return false;
+  }
+  if (!isRundownThinFillSport(sportKey)) return false;
+  const thin = eventsBelowBookmakerThreshold(events, THIN_FILL_MIN_BOOKMAKERS);
+  if (thin.length === 0) return false;
+  return thinFillCandidates(thin, Date.now()).length > 0;
 }
 
 export async function processSport(
@@ -489,9 +546,18 @@ export async function processSport(
     // thin-fill when some games sit under MIN_BOOKMAKERS. Never dual-pull a
     // fully covered slate.
     const rundownKey = resolveRundownApiKey();
+    const rundownCooldownMs = rundownCooldownRemainingMs(sport.key);
     if (events.length === 0) {
-      if (rundownKey) {
+      if (!rundownKey) {
+        rundownAttemptNote = "rundown key ABSENT";
+      } else if (rundownCooldownMs > 0) {
+        // Rate-limit cooldown covers the full-replace leg too: a 429 is the
+        // sport's whole daily quota talking, not this one endpoint's.
+        rundownAttemptNote = `rundown cooling down ${Math.ceil(rundownCooldownMs / 60000)}m`;
+        console.warn(`${logPrefix} ${sport.key}: ${rundownAttemptNote}`);
+      } else {
         const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
+        if (rd.rateLimited) noteRundownRateLimit(sport.key, logPrefix);
         if (rd.events.length > 0) {
           events = rd.events;
           oddsProviderTag = "therundown";
@@ -504,12 +570,11 @@ export async function processSport(
           rundownAttemptNote = rd.error ?? "rundown empty: no bookmaker lines";
           console.warn(`${logPrefix} ${sport.key}: rundown empty — ${rundownAttemptNote}`);
         }
-      } else {
-        rundownAttemptNote = "rundown key ABSENT";
       }
-    } else if (rundownKey && eventsBelowBookmakerThreshold(events, THIN_FILL_MIN_BOOKMAKERS).length > 0) {
+    } else if (shouldThinFillFromRundown(sport.key, events, rundownKey, rundownCooldownMs, logPrefix)) {
       try {
         const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
+        if (rd.rateLimited) noteRundownRateLimit(sport.key, logPrefix);
         if (rd.events.length > 0) {
           const merged = mergeBookmakersIntoPrimary(events, rd.events, THIN_FILL_MIN_BOOKMAKERS);
           events = merged.events;

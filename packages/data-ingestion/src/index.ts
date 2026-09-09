@@ -158,6 +158,14 @@ export {
   type FailoverReason,
 } from "./odds-failover.js";
 export {
+  KALSHI_TAKER_FEE_RATE,
+  kalshiTakerFeeDollars,
+  kalshiEffectiveAskPrice,
+  americanToImpliedPrice,
+  applyKalshiTakerFeeToAmericanPrice,
+  applyKalshiTakerFeeToBookmakers,
+} from "./kalshi-fee.js";
+export {
   THIN_FILL_MIN_BOOKMAKERS,
   THIN_FILL_COMMENCE_MATCH_MS,
   eventBookmakerCount,
