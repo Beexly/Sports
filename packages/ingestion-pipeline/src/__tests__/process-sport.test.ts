@@ -628,6 +628,58 @@ describe("processSport", () => {
     expect(inputs![0]!.sport).not.toBe("MLS");
   });
 
+  describe("three-way moneyline guard on the production path (C-118 verification)", () => {
+    // 2f9f7d90e fixed the one OddsInput.sport site that passed the display name.
+    // This drives processSport with the REAL scorer (not the recorder mock) so
+    // the assertion is about what gets WRITTEN, not about an input field: a
+    // soccer fixture priced by three books writes no MONEYLINE pick, while the
+    // identical odds under a two-way sport do.
+    const NOW = new Date("2026-09-08T19:00:00.000Z");
+    function twoWayFavouriteOdds(gameExternalId: string, withDraw: boolean) {
+      const books = ["draftkings", "fanduel", "betmgm", "caesars", "betrivers", "pointsbet", "bovada", "betonline", "mybookie", "lowvig", "unibet"];
+      return books.map((bookmaker) => ({
+        gameExternalId,
+        bookmaker,
+        market: "H2H" as const,
+        homePrice: -400,
+        awayPrice: 320,
+        ...(withDraw ? { drawPrice: 450 } : {}),
+        fetchedAt: NOW,
+        bookmakerLastUpdate: NOW,
+      }));
+    }
+    function writtenPickTypes(): string[] {
+      const created = mocks.pickCreate.mock.calls.map((c) => (c[0] as { data: { pickType: string } }).data.pickType);
+      const upserted = mocks.pickUpsert.mock.calls.map((c) => (c[0] as { create: { pickType: string } }).create.pickType);
+      return [...created, ...upserted];
+    }
+    async function driveWithRealScorer(sport: { key: string; name: string; displayName: string }, home: string, away: string, withDraw: boolean) {
+      const actual = await vi.importActual<typeof import("@sports/prediction-engine")>("@sports/prediction-engine");
+      mocks.scoreGames.mockImplementation((inputs, at) => actual.scoreGames(inputs as never, at));
+      mocks.normalizeGames.mockReturnValue([normalizedGame({ homeTeam: home, awayTeam: away, commenceTime: new Date("2026-09-12T23:30:00.000Z") })]);
+      mocks.normalizeOdds.mockReturnValue(twoWayFavouriteOdds("ext-1", withDraw));
+      mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+      mocks.gameUpsert.mockResolvedValue({ id: "game-1", homeTeamName: home, awayTeamName: away });
+      mocks.gameFindUnique.mockResolvedValue({ id: "game-1" });
+      return processSport(sport as never, "key", gates());
+    }
+
+    it("control: the same heavy-favourite odds on a two-way sport write a MONEYLINE pick", async () => {
+      const result = await driveWithRealScorer(SPORT, "Jacksonville Jaguars", "Cleveland Browns", false);
+      expect(result.status).toBe("success");
+      expect(writtenPickTypes()).toContain("MONEYLINE");
+    });
+
+    it("soccer_usa_mls (display name 'MLS') writes no MONEYLINE pick: the draw is unpriced by construction", async () => {
+      const soccer = { key: "soccer_usa_mls", name: "MLS", displayName: "MLS" } as const;
+      const result = await driveWithRealScorer(soccer, "Inter Miami CF", "Charlotte FC", true);
+      expect(result.status).toBe("success");
+      const inputs = mocks.scoreGames.mock.calls[0]?.[0] as Array<{ sport: string }> | undefined;
+      expect(inputs?.[0]?.sport).toBe("soccer_usa_mls");
+      expect(writtenPickTypes()).not.toContain("MONEYLINE");
+    });
+  });
+
   it("runs the happy path and marks the IngestionRun SUCCESS with counts", async () => {
     const result = await processSport(SPORT, "key", gates());
 
