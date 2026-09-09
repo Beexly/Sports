@@ -23,6 +23,7 @@ vi.mock("@sports/db", () => ({
 
 import {
   MARKET_ANCHORED_P_BASIS,
+  isInPlayPick,
   picksToMarketAnchoredCalibrationSamples,
   resolveMarketAnchoredCalibrationP,
   type PickForLiveCal,
@@ -90,7 +91,7 @@ describe("three-way moneyline exclusion uses the engine's helper", () => {
       pick({ result: "WIN", sportKey: "baseball_mlb", proofReceipt: { marketFairProb: 0.61 } }),
     ]);
     expect(out.included).toBe(1);
-    expect(out.excluded).toEqual({ three_way_market: 2, no_market_probability: 0, non_moneyline_market: 0 });
+    expect(out.excluded).toEqual({ three_way_market: 2, no_market_probability: 0, non_moneyline_market: 0, in_play: 0 });
     expect(out.samples).toEqual([
       { p: 0.61, y: 1, sportKey: "baseball_mlb", modelVersion: "v5.2.7", pickType: "MONEYLINE" },
     ]);
@@ -114,7 +115,7 @@ describe("three-way moneyline exclusion uses the engine's helper", () => {
     ]);
     expect(report.rows).toHaveLength(2);
     expect(report.rows.map((r) => r.groupKey)).toEqual(["soccer_usa_mls|SPREAD", "baseball_mlb|MONEYLINE"]);
-    expect(report.excluded).toEqual({ three_way_market: 1, no_market_probability: 0, non_moneyline_market: 0 });
+    expect(report.excluded).toEqual({ three_way_market: 1, no_market_probability: 0, non_moneyline_market: 0, in_play: 0 });
   });
 });
 
@@ -126,11 +127,11 @@ describe("(b) no market probability: excluded, never scored on confidence/100", 
     ]);
     expect(out.included).toBe(0);
     expect(out.samples).toEqual([]);
-    expect(out.excluded).toEqual({ three_way_market: 0, no_market_probability: 2, non_moneyline_market: 0 });
+    expect(out.excluded).toEqual({ three_way_market: 0, no_market_probability: 2, non_moneyline_market: 0, in_play: 0 });
     expect(out.bySource).toEqual({});
   });
 
-  it("resolution order: receipt (publish-time) first, factor breakdown only without a receipt, then the injected resolver", () => {
+  it("resolution order (C-298): the injected odds-table resolver first, then the receipt, then the factor breakdown", () => {
     // The factor breakdown is refreshed every ingestion cycle until settlement
     // and merged again after it (backfillIndependentTrueProb); the receipt is
     // minted once before kickoff. When both exist the receipt wins, so a
@@ -168,9 +169,37 @@ describe("(b) no market probability: excluded, never scored on confidence/100", 
     expect(resolveMarketAnchoredCalibrationP(none, () => ({ p: 0.58, source: "resolver" }))).toEqual({ p: 0.58, source: "resolver" });
     expect(resolveMarketAnchoredCalibrationP(none, () => ({ p: 0.5, source: "resolver_single_book" }))).toBeNull();
     expect(resolveMarketAnchoredCalibrationP(none, () => ({ p: 0, source: "resolver_single_book" }))).toBeNull();
-    // A receipt still wins over any resolver result.
+    // C-298: the odds table at generatedAt wins over the receipt. On production
+    // the receipt's marketFairProb sat 0.169 above the odds table on v5.2.7's
+    // pre-game rows (15 of 46 more than 0.15 off); the append-only odds table
+    // is the source of truth and the receipt is the fallback.
     const receipted = pick({ result: "WIN", proofReceipt: { marketFairProb: 0.61 } });
-    expect(resolveMarketAnchoredCalibrationP(receipted, () => ({ p: 0.58, source: "resolver_single_book" }))).toEqual({ p: 0.61, source: "proof_receipt" });
+    expect(resolveMarketAnchoredCalibrationP(receipted, () => ({ p: 0.58, source: "resolver_single_book" }))).toEqual({ p: 0.58, source: "resolver_single_book" });
+    expect(resolveMarketAnchoredCalibrationP(receipted, () => 0.58)).toEqual({ p: 0.58, source: "resolver" });
+    // A resolver that cannot price the row leaves the receipt in place; a
+    // resolver returning the synthetic 0.5 is not a price and falls through.
+    expect(resolveMarketAnchoredCalibrationP(receipted, () => null)).toEqual({ p: 0.61, source: "proof_receipt" });
+    expect(resolveMarketAnchoredCalibrationP(receipted, () => 0.5)).toEqual({ p: 0.61, source: "proof_receipt" });
+  });
+
+  it("C-298: a pick generated at or after its game's commenceTime is in-play, counted, never scored", () => {
+    const kickoff = new Date("2026-08-23T01:40:00Z");
+    const preGame = pick({ result: "WIN", proofReceipt: { marketFairProb: 0.61 }, generatedAt: new Date("2026-08-22T13:41:00Z"), commenceTime: kickoff });
+    // The production row that surfaced this: a Twins moneyline minted at -1771
+    // at 02:03 UTC with first pitch at 01:40 UTC, every book quoting in-play.
+    const inPlay = pick({ result: "LOSS", proofReceipt: { marketFairProb: 0.884 }, generatedAt: new Date("2026-08-23T02:03:01Z"), commenceTime: kickoff });
+    const atKickoff = pick({ result: "WIN", proofReceipt: { marketFairProb: 0.61 }, generatedAt: kickoff, commenceTime: kickoff });
+    // Unknown timing is kept: the exclusion removes only rows it can prove.
+    const unknown = pick({ result: "WIN", proofReceipt: { marketFairProb: 0.61 }, generatedAt: null, commenceTime: kickoff });
+    expect(isInPlayPick(preGame)).toBe(false);
+    expect(isInPlayPick(inPlay)).toBe(true);
+    expect(isInPlayPick(atKickoff)).toBe(true);
+    expect(isInPlayPick(unknown)).toBe(false);
+    const out = picksToMarketAnchoredCalibrationSamples([preGame, inPlay, atKickoff, unknown]);
+    expect(out.included).toBe(2);
+    expect(out.excluded.in_play).toBe(2);
+    expect(out.samples.map((s) => s.p)).toEqual([0.61, 0.61]);
+    expect(out.notes.join(" ")).toContain("in_play 2");
   });
 
   it("the WP-28 resolver hook fills a receipt-less pick and is reported as its own source", () => {
@@ -204,7 +233,7 @@ describe("(b) no market probability: excluded, never scored on confidence/100", 
       },
     );
     expect(out.included).toBe(3);
-    expect(out.excluded).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0 });
+    expect(out.excluded).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0, in_play: 0 });
     expect(out.bySource).toEqual({ proof_receipt: 1, resolver: 1, resolver_single_book: 1 });
     expect(out.samples[2]).toEqual({ p: 0.58, y: 1, sportKey: "baseball_mlb", modelVersion: "v5.2.6", pickType: "MONEYLINE" });
     // The composition note says single-book probabilities are in, and how they are tagged.
@@ -220,7 +249,9 @@ describe("(b) no market probability: excluded, never scored on confidence/100", 
     ]);
     expect(out.bySource).toEqual({ proof_receipt: 2, factor_breakdown: 1 });
     expect(out.samples.map((s) => s.p)).toEqual([0.62, 0.6, 0.57]);
-    expect(out.notes[0]).toMatch(/Order: proof receipt marketFairProb .* then factor-breakdown market fair only when no receipt exists/);
+    // C-298: the note states the new order (odds table first) and the in-play exclusion.
+    expect(out.notes[0]).toMatch(/Order: the injected resolver first .* then the proof receipt marketFairProb, then the factor-breakdown market fair/);
+    expect(out.notes[0]).toContain("excluded as in_play");
   });
 
   it("the shared eligibility builder never falls back to confidence for a MONEYLINE pick", () => {
@@ -229,7 +260,7 @@ describe("(b) no market probability: excluded, never scored on confidence/100", 
     ];
     const built = picksToCalibrationSamples(rows);
     expect(built.samples).toEqual([]);
-    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0 });
+    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0, in_play: 0 });
     const payload = buildDurableMetricsFromSamples({
       samples: built.samples,
       taggedSamples: built.taggedSamples,
@@ -241,8 +272,8 @@ describe("(b) no market probability: excluded, never scored on confidence/100", 
     expect(payload.status).toBe("collecting");
     expect(payload.n).toBe(0);
     expect(payload.pBasis).toBe(MARKET_ANCHORED_P_BASIS);
-    expect(payload.pBasis).toBe("market_anchored_v2");
-    expect(payload.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0 });
+    expect(payload.pBasis).toBe("market_anchored_v3");
+    expect(payload.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0, in_play: 0 });
   });
 });
 
@@ -320,7 +351,7 @@ describe("C-110 streak basis: market_anchored_v2 restarts a streak counted under
       { confidence: 70, result: "WIN", modelVersion: "v5.2.7", settledAt: settled, pickType: "MONEYLINE", proofReceipt: { marketFairProb: 0.66 }, sportKey: "baseball_mlb" },
     ]);
     const payload = buildDurableMetricsFromSamples({ ...built, samples: built.samples, taggedSamples: built.taggedSamples });
-    expect(metricsPBasis(payload)).toBe("market_anchored_v2");
+    expect(metricsPBasis(payload)).toBe("market_anchored_v3");
     // Artifacts persisted under the earlier tags read as themselves, never as v2.
     expect(metricsPBasis(metricsWithBasis("a", "market_anchored"))).toBe("market_anchored");
     expect(metricsPBasis(metricsWithBasis("a", undefined))).toBe("legacy");
@@ -348,7 +379,7 @@ describe("C-110 streak basis: market_anchored_v2 restarts a streak counted under
     // The reverse also resets: a v2 streak never seeds a v1 artifact.
     expect(consecutiveGreenPriorForBasis({ ...v1Snap, pBasis: MARKET_ANCHORED_P_BASIS }, "market_anchored")).toEqual({
       consecutiveGreenPrior: 0,
-      streakResetFromBasis: "market_anchored_v2",
+      streakResetFromBasis: "market_anchored_v3",
     });
   });
 
@@ -371,7 +402,7 @@ describe("C-110 streak basis: market_anchored_v2 restarts a streak counted under
     expect(first.eligibility.status).toBe("RED");
     expect(first.publish.published).toBe(false);
     let snap = lastSnap();
-    expect(snap.pBasis).toBe("market_anchored_v2");
+    expect(snap.pBasis).toBe("market_anchored_v3");
     expect(snap.streakResetFromBasis).toBe("market_anchored");
 
     // The next v2 artifact builds on the v2 streak, with no further reset.
@@ -382,7 +413,7 @@ describe("C-110 streak basis: market_anchored_v2 restarts a streak counted under
     expect(second.eligibility.consecutiveGreen).toBe(2);
     expect(second.eligibility.status).toBe("RED");
     snap = lastSnap();
-    expect(snap.pBasis).toBe("market_anchored_v2");
+    expect(snap.pBasis).toBe("market_anchored_v3");
     expect(snap.streakResetFromBasis).toBeNull();
   });
 });
@@ -425,7 +456,7 @@ describe("(c) bySport and byModelVersion slices", () => {
     });
     expect(payload.status).toBe("ok");
     expect(payload.n).toBe(90);
-    expect(payload.exclusions).toEqual({ three_way_market: 1, no_market_probability: 1, non_moneyline_market: 0 });
+    expect(payload.exclusions).toEqual({ three_way_market: 1, no_market_probability: 1, non_moneyline_market: 0, in_play: 0 });
 
     const bySport = payload.bySport ?? [];
     const byModelVersion = payload.byModelVersion ?? [];
@@ -514,7 +545,7 @@ describe("byMarket: the pooled floors sample is two-way moneyline only and the a
     expect(built.samples).toHaveLength(12);
     // 6 spreads, 1 total and the -110/-110 spread are excluded by market before
     // any price rule runs, so no_market_probability stays 0.
-    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 0, non_moneyline_market: 8 });
+    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 0, non_moneyline_market: 8, in_play: 0 });
     expect(built.taggedSamples.map((s) => s.pickType)).toEqual(Array<string>(12).fill("MONEYLINE"));
 
     const payload = buildDurableMetricsFromSamples({
@@ -560,7 +591,7 @@ describe("byMarket: the pooled floors sample is two-way moneyline only and the a
       { confidence: 70, result: "WIN", modelVersion: "v5.2.7", settledAt: settled, pickType: null, proofReceipt: { marketFairProb: 0.66 }, sportKey: "baseball_mlb" },
     ]);
     expect(built.samples).toHaveLength(0);
-    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 0, non_moneyline_market: 1 });
+    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 0, non_moneyline_market: 1, in_play: 0 });
     const payload = buildDurableMetricsFromSamples({ ...built, samples: built.samples, taggedSamples: built.taggedSamples });
     expect(payload.n).toBe(0);
     expect(payload.byMarket ?? []).toEqual([]);

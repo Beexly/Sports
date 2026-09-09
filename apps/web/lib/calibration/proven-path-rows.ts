@@ -36,12 +36,21 @@ import type { ProvenPathPickRow } from "@/lib/calibration/proven-path-engine";
 export type CalibrationExclusionReason =
   | "three_way_market"
   | "no_market_probability"
-  | "non_moneyline_market";
+  | "non_moneyline_market"
+  /**
+   * C-298 (2026-09-09): the pick was generated at or after its game's
+   * commenceTime, so its "publish-time" price is an in-play price. Measured on
+   * production: 113 of 477 settled moneyline rows, receipts frozen off live
+   * odds (a Twins pick minted at -1771 with the game already in the ninth).
+   * The public receipt contract is pre-kickoff; these rows are counted, never
+   * scored.
+   */
+  | "in_play";
 
 export type CalibrationExclusionCounts = Readonly<Record<CalibrationExclusionReason, number>>;
 
 export function emptyExclusionCounts(): Record<CalibrationExclusionReason, number> {
-  return { three_way_market: 0, no_market_probability: 0, non_moneyline_market: 0 };
+  return { three_way_market: 0, no_market_probability: 0, non_moneyline_market: 0, in_play: 0 };
 }
 
 /** Pick types that carry a moneyline probability claim on one side. */

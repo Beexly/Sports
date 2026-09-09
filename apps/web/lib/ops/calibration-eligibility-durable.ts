@@ -96,7 +96,11 @@ export interface DurableMetricsPayload {
  * another (consecutiveGreenPriorForBasis), so the v1 to v2 move restarted the
  * streak from 0 with streakResetFromBasis "market_anchored" on the first v2 snap.
  */
-export type CalibrationPBasis = MarketAnchoredPBasis | "market_anchored" | "legacy";
+export type CalibrationPBasis =
+  | MarketAnchoredPBasis
+  | "market_anchored_v2"
+  | "market_anchored"
+  | "legacy";
 
 export function metricsPBasis(m: DurableMetricsPayload | null | undefined): CalibrationPBasis {
   return m?.pBasis ?? "legacy";
@@ -132,6 +136,7 @@ export function deployedVersionSlice(
     ece: hit.ece,
     eceNoise: hit.eceNoise ?? null,
     eceDebiased: hit.eceDebiased ?? null,
+    eceDebiasedCi90Lo: hit.eceDebiasedCi90Lo ?? null,
   };
 }
 

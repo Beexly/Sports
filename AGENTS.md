@@ -30,6 +30,27 @@ before re-fixing anything from that list. The ledger guard now also prints
 SLA warnings: a CLAIMED row with no evidence or an OPEN row with evidence but
 no owner will be called out on every guard run — resolve or re-own them.
 
+**UPDATED 2026-09-09 (13:45 UTC): THE DEPLOYED VERSION WAS NEVER MISCALIBRATED. THE SAMPLE WAS
+(C-298, same branch, PR #742). This supersedes the 13:00 note below.** The founder said to assume
+more database bugs, and read-only production SQL found two in the eligibility sample. First,
+113 of 477 settled moneyline rows were generated at or after their game's commenceTime and priced
+off in-play odds (a Twins moneyline minted at -1771 at 02:03Z with first pitch at 01:40Z, receipt
+frozen at 0.884, Padres won); a live price already encodes part of the outcome. Second, on v5.2.7's
+pre-game rows the receipt's marketFairProb sat 0.169 above the odds table's de-vigged consensus at
+generatedAt on average (15 of 46 receipted rows more than 0.15 off), and the sample builder read
+the receipt first. Scored on clean pre-game rows from the odds table: pool n 344, debiased ECE
+0.033, hit 0.622 against stated 0.602; deployed v5.2.7 n 221, debiased ECE 0.052, hit 0.638 against
+0.617. The 0.1055 the surface showed for v5.2.7 was the two bugs, not the model. The fix: in-play
+rows excluded and counted (`in_play`), the odds table at generatedAt read first with the receipt
+and factor breakdown as fallbacks, basis tag `market_anchored_v3` (the streak restarts on the
+corrected definition, by design), and the deployed-version floor reads the slice's seeded
+5th-percentile bootstrap bound of its debiased ECE so a version a third the size of the pool fails
+only when it is demonstrably above the floor. Floors, bins, streak and env flags unchanged. Expected
+reading after deploy: GREEN floors on the first run; three consecutive runs are needed for the
+publish receipt, and the cron can be triggered by the founder or the browser agent with the real
+secret (never by an agent session). Pipeline follow-up C-299: stop generating and re-scoring picks
+after kickoff; until it lands, tonight's NFL game can still be re-priced in-play on the board.
+
 **UPDATED 2026-09-09 (13:00 UTC): PROVEN IS NOT AVAILABLE BEFORE KICKOFF, AND THE TWO GATE PRs OF
 THE MORNING WERE TWO HALVES OF ONE PROBLEM (C-292, branch `claude/gate-combined`).** Read
 together on the 12:23 UTC truth surface: the POOL (n 487) is calibrated to within sampling noise

@@ -169,3 +169,72 @@ its own rows. That RED is the honest state. It moves when the deployed version's
 displayed probability is calibrated on its own rows (the market-anchored p under-prices
 its heavy MLB favourites) and 100 of that version's rows have settled. No estimator,
 floor, sample or flag change moves it, and none should be attempted.
+
+## Correction, 13:45 UTC (C-298): the deployed version was never miscalibrated; the sample was
+
+The founder's instruction was to assume more database bugs. Read-only production SQL
+(13:05 to 13:40 UTC) found two in the eligibility sample, and together they account for
+the 0.1055 the surface showed for v5.2.7.
+
+### Bug 1: in-play picks
+
+113 of 477 settled moneyline rows were generated at or after their game's
+`commenceTime`. Their "publish-time" price is an in-play price. The row that surfaced it:
+pick `cmt55xbx606xqh8j1t81q8yfq`, "Minnesota Twins ML (-1771)", generated at 02:03:01Z
+with first pitch at 01:40Z; every book in the odds table at that minute quoted the Twins
+between -1000 and -3335 (they were leading late), the receipt froze `marketFairProb`
+0.884, and the Padres won 7-5. Twelve hours earlier the same books had the Twins at
++115 to +126. A live price already encodes part of the outcome, so scoring it is a
+look-ahead, and it breaks the pre-kickoff contract the receipt makes in public.
+
+Fix: a pick with both timestamps known and `generatedAt >= commenceTime` is excluded and
+counted as `in_play`; unknown timing is kept (the exclusion removes only rows it can
+prove). The cron now selects `commenceTime`.
+
+### Bug 2: the receipt is not the odds table
+
+On v5.2.7's pre-game moneyline rows the receipt's `marketFairProb` averaged 0.169 above
+the odds table's de-vigged consensus at `generatedAt`; 15 of 46 receipted rows were more
+than 0.15 off. The sample builder read the receipt first on the premise that it is
+"minted once before kickoff from the same fairProb the scorer wrote". Whatever the
+minting path does, the number is not the pre-game market price, and CLAUDE.md names
+structured odds data as the source of truth.
+
+Fix: the odds-table recompute at `generatedAt` is read first; the receipt and the
+factor breakdown remain as fallbacks for rows the odds table cannot price. Every source
+is still counted in `bySource`. The basis tag moves to `market_anchored_v3`, so the
+streak restarts on the corrected definition (the basis-aware reset was built for exactly
+this).
+
+### What the clean sample reads
+
+Pre-game moneyline rows, non-soccer, non-seed, probability from the odds table at
+`generatedAt` (latest row per real book within 36 hours before), per-bin
+variance-corrected ECE as defined in the section above:
+
+| slice | n | raw ECE | debiased ECE | Murphy REL | null REL | stated p | hit rate |
+|---|---|---|---|---|---|---|---|
+| pooled | 344 | 0.0577 | 0.0327 | 0.0077 | 0.0039 | 0.602 | 0.622 |
+| v5.2.7 (deployed) | 221 | 0.0933 | 0.0520 | 0.0158 | 0.0061 | 0.617 | 0.638 |
+| v5.2.6 | 109 | 0.0505 | 0.0189 | 0.0130 | 0.0107 | 0.575 | 0.569 |
+
+The pool clears the floor with margin. The deployed version sits at the floor on a
+third of the sample, beating the market by two points. That is a calibrated model.
+
+### The deployed-version floor, corrected once more
+
+Holding a slice a third the size of the pool to the pooled point-estimate floor fails it
+for sample size, not calibration. The floor now reads the slice's seeded 5th-percentile
+bootstrap bound of its debiased ECE (`eceDebiasedCi90Lo`, 200 resamples, null under 30
+rows): a version fails when its calibration error is demonstrably above the floor. The
+point estimate, raw and noise stay in the reason and on the surface, and the `n` floor
+on the slice is untouched. A slice 20 points off at n 274 still fails (tested); one 12
+points off reads a bound near 0.04 and is given the benefit of the doubt, which is what a
+5 percent one-sided test means.
+
+### Pipeline follow-up (C-299)
+
+The sample fix does not stop the pipeline from generating and re-scoring picks after
+kickoff. That is dispatched as C-299 (never create or update a pick once `commenceTime`
+has passed; receipts minted once from the publishing snapshot). Until it lands, a game in
+progress can still be re-priced on the board.

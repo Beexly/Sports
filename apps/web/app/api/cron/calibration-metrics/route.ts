@@ -112,7 +112,7 @@ async function loadSettledCalibrationSamples(): Promise<{
   settledTo: string | null;
 }> {
   const notes: string[] = [];
-  const emptyExclusions: CalibrationExclusionCounts = { three_way_market: 0, no_market_probability: 0, non_moneyline_market: 0 };
+  const emptyExclusions: CalibrationExclusionCounts = { three_way_market: 0, no_market_probability: 0, non_moneyline_market: 0, in_play: 0 };
   try {
     const picks = await db.pick.findMany({
       where: {
@@ -140,6 +140,8 @@ async function loadSettledCalibrationSamples(): Promise<{
           select: {
             homeTeamName: true,
             awayTeamName: true,
+            // C-298: a pick generated at or after kickoff is in-play and excluded.
+            commenceTime: true,
             sport: { select: { key: true, name: true } },
           },
         },
@@ -155,6 +157,7 @@ async function loadSettledCalibrationSamples(): Promise<{
       selection: pick.selection,
       homeTeamName: pick.game?.homeTeamName ?? null,
       awayTeamName: pick.game?.awayTeamName ?? null,
+      commenceTime: pick.game?.commenceTime ?? null,
       confidence: pick.confidence,
       result: pick.result ?? "",
       pickType: pick.pickType,
