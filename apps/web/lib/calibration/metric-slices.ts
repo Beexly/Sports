@@ -3,6 +3,15 @@
  * artifact. Same functions as the pooled numbers (brierDecomposition,
  * expectedCalibrationError) so a slice can be compared to the pooled row
  * without a basis change. Internal eligibility surface; never a public claim.
+ *
+ * `smallSample` (ledger C-176/178, 2026-09-09): a slice below the pooled
+ * eligibility floor (`DEFAULT_CALIBRATION_FLOORS.n`, currently 100) reads
+ * inside or near the pure-noise band for its own sample size (AGENTS.md's
+ * own NCAAF n 65/74 and NFL n 28 readings say so explicitly). This module's
+ * own header already says the slice surface is "never a public claim"; the
+ * flag makes that enforceable by any consumer instead of relying on every
+ * caller to remember the rule. It does not change the numbers or hide the
+ * slice — only marks whether it clears the floor a benchmark claim needs.
  */
 
 import {
@@ -10,6 +19,7 @@ import {
   expectedCalibrationError,
   type CalibrationSample,
 } from "@sports/prediction-engine";
+import { DEFAULT_CALIBRATION_FLOORS } from "@/lib/ops/calibration-eligibility";
 
 export type CalibrationSliceMetrics = {
   /** Slice label (sport key or model version); "unknown" when the row had none. */
@@ -21,6 +31,8 @@ export type CalibrationSliceMetrics = {
   readonly murphyRel: number;
   readonly hitRate: number;
   readonly meanP: number;
+  /** True when n is below the pooled eligibility floor: illustrative only, never a benchmark. */
+  readonly smallSample: boolean;
 };
 
 export const UNKNOWN_SLICE_KEY = "unknown";
@@ -54,6 +66,7 @@ export function sliceCalibrationMetrics<T extends CalibrationSample>(
       murphyRel: d.reliability,
       hitRate: wins / rows.length,
       meanP: pSum / rows.length,
+      smallSample: rows.length < DEFAULT_CALIBRATION_FLOORS.n,
     });
   }
   out.sort((a, b) => (b.n - a.n) || a.key.localeCompare(b.key));
