@@ -238,6 +238,24 @@ describe("POST /api/subscriptions/checkout", () => {
       expect(dbMock.attemptCreate).not.toHaveBeenCalled();
     });
 
+    it("never lets a per-customer Stripe URL be cached — no-store on the 200 and on a refusal", async () => {
+      // The 200 body carries a single-use, per-customer checkout URL and the
+      // refusals are entitlement-shaped; nextjs-caching.md rule 2 puts the gate
+      // bodies under the same rule as the happy path.
+      const ok = await POST(checkoutRequest({ tier: "PRO" }));
+      expect(ok.status).toBe(200);
+      expect(ok.headers.get("cache-control")).toBe("no-store, no-cache, must-revalidate");
+
+      mocks.findLiveStripeSubscription.mockResolvedValue({
+        outcome: "live",
+        subscriptionId: "sub_already_live",
+        status: "active",
+      });
+      const refused = await POST(checkoutRequest({ tier: "PRO" }));
+      expect(refused.status).toBe(409);
+      expect(refused.headers.get("cache-control")).toBe("no-store, no-cache, must-revalidate");
+    });
+
     it("lets a genuine first-time buyer through when Stripe reports none", async () => {
       mocks.findLiveStripeSubscription.mockResolvedValue({ outcome: "none" });
 

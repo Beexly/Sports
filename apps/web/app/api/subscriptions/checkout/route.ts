@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db, DurableWriteStoreUnavailableError, requireDurableWriteStore } from "@sports/db";
 import { auth } from "@/lib/auth";
 import { paidCheckoutOpen } from "@/lib/billing/paid-checkout";
+import { jsonNoStore } from "@/lib/api/no-store";
 import { consumeRateLimit } from "@/lib/api/rate-limit";
 import {
   getOrCreateStripeCustomer,
@@ -51,6 +52,16 @@ const CheckoutSchema = z.object({
 // Checkout charges USD only today (pricing-phases amounts are USD).
 const CHECKOUT_CURRENCY = "usd";
 
+/**
+ * NO-STORE on every response (C-91 / .claude/rules/nextjs-caching.md rule 2).
+ * The 200 body carries a SINGLE-USE, PER-CUSTOMER Stripe URL: a shared cache
+ * entry that served one member's checkout link to another would hand over
+ * their billing session, and the rule is explicit that the gate and error
+ * bodies are no less dangerous than the happy path (a cached 429 keeps
+ * refusing a caller whose window has reset; a cached 503 keeps the money path
+ * dark after the store recovers). These are POST routes, so no ordinary cache
+ * would store them today — this says it rather than relying on that.
+ */
 export async function POST(req: NextRequest): Promise<NextResponse> {
   // PART 4 (C12) free-only switch: one server-side choke for NEW paid
   // checkouts. Default open — PAID_CHECKOUT_OPEN=false in the console closes
@@ -58,7 +69,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   // lookup so the closed state costs zero DB/Stripe work. The billing portal
   // is deliberately NOT gated: existing subscribers keep managing/cancelling.
   if (!paidCheckoutOpen()) {
-    return NextResponse.json(
+    return jsonNoStore(
       {
         error:
           "Paid plans are opening soon. Everything free stays free — the board, stats, and alerts are open today.",
@@ -70,7 +81,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const session = await auth();
   if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return jsonNoStore({ error: "Unauthorized" }, { status: 401 });
   }
 
   // Defense-in-depth on Stripe resource creation: 10 checkout attempts / 5 min
@@ -78,7 +89,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   // looping client from minting unbounded checkout sessions/customers.
   const limit = consumeRateLimit("subscriptions-checkout", session.user.id, 10, 5 * 60 * 1000);
   if (!limit.ok) {
-    return NextResponse.json(
+    return jsonNoStore(
       { error: "Too many checkout attempts. Please wait a moment and try again." },
       { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
     );
@@ -87,18 +98,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const body = await req.json();
   const parsed = CheckoutSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Invalid tier" }, { status: 400 });
+    return jsonNoStore({ error: "Invalid tier" }, { status: 400 });
   }
 
   const { tier, interval } = parsed.data;
   const age = assertAtLeast21(parsed.data.dateOfBirth);
   if (!age.ok) {
     const status = age.code === "age_restricted" ? 403 : 400;
-    return NextResponse.json({ error: age.error, code: age.code }, { status });
+    return jsonNoStore({ error: age.error, code: age.code }, { status });
   }
   const clientIntentId = parsed.data.clientIntentId ?? null;
   if (clientIntentId !== null && !isValidClientIntentId(clientIntentId)) {
-    return NextResponse.json(
+    return jsonNoStore(
       {
         error: "clientIntentId must be a UUID.",
         code: "invalid_client_intent_id",
@@ -110,7 +121,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   // Env price IDs preferred; fallback to Stripe lookup_key (gse-*-monthly/annual).
   const priceId = await resolveCheckoutPriceId(tier, interval);
   if (!priceId) {
-    return NextResponse.json(
+    return jsonNoStore(
       { error: `Pricing for ${tier} (${interval}) is not configured yet.` },
       { status: 503 }
     );
@@ -120,7 +131,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   // check) instead of a non-null assertion, so we never hand Stripe a null email
   // when creating the customer — a missing email is a 400, not a runtime throw.
   if (!session.user.email) {
-    return NextResponse.json(
+    return jsonNoStore(
       { error: "An email address is required to start checkout." },
       { status: 400 }
     );
@@ -135,7 +146,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     requireDurableWriteStore("stripe-checkout");
   } catch (err) {
     if (err instanceof DurableWriteStoreUnavailableError) {
-      return NextResponse.json(
+      return jsonNoStore(
         {
           error: "Checkout is temporarily unavailable. Please try again shortly.",
           code: "durable_write_store_unavailable",
@@ -169,7 +180,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       `[INCIDENT][checkout] subscription lookup failed for user ${session.user.id} — ` +
         `failing closed with 503, no Stripe side effect: ${message}`,
     );
-    return NextResponse.json(
+    return jsonNoStore(
       {
         error: "Checkout is temporarily unavailable. Please try again shortly.",
         code: "subscription_lookup_unavailable",
@@ -182,7 +193,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     (existingSub.status === "ACTIVE" || existingSub.status === "TRIALING" || existingSub.status === "PAST_DUE") &&
     existingSub.tier !== "FREE";
   if (hasLivePaidSub) {
-    return NextResponse.json(
+    return jsonNoStore(
       {
         error: "You already have an active subscription. Manage or change your plan from the billing portal.",
         code: "already_subscribed",
@@ -222,7 +233,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         `[INCIDENT][checkout] could not read Stripe subscriptions for customer ${customerId} — ` +
           `failing closed with 503, no Stripe side effect: ${probe.reason}`,
       );
-      return NextResponse.json(
+      return jsonNoStore(
         {
           error: "Checkout is temporarily unavailable. Please try again shortly.",
           code: "subscription_lookup_unavailable",
@@ -238,7 +249,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         `[checkout] refusing a second checkout for customer ${customerId} — Stripe still ` +
           `reports subscription ${probe.subscriptionId} as ${probe.status}`,
       );
-      return NextResponse.json(
+      return jsonNoStore(
         {
           error:
             "You already have a subscription with us. Manage or change your plan from the billing portal.",
@@ -291,7 +302,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       });
     } catch (err) {
       if (err instanceof CheckoutIntentConflictError) {
-        return NextResponse.json(
+        return jsonNoStore(
           { error: err.message, code: "checkout_intent_conflict" },
           { status: 409 },
         );
@@ -301,7 +312,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         // unreachable, or reconciliation left it unresolved). A session it
         // created may still be payable — NEVER mint a fresh key here. The
         // repair cron owns durable resolution; the client may retry.
-        return NextResponse.json(
+        return jsonNoStore(
           {
             error:
               "A previous checkout for this session is still being confirmed with the payment provider. Please retry in a minute.",
@@ -316,7 +327,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         console.error(
           `[INCIDENT][checkout] non-durable attempt write detected for user ${session.user.id} — failing closed`,
         );
-        return NextResponse.json(
+        return jsonNoStore(
           {
             error: "Checkout is temporarily unavailable. Please try again shortly.",
             code: "durable_write_store_unavailable",
@@ -333,7 +344,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // catches this first once the subscription row syncs; this closes the
     // window between completion and sync.
     if (attempt.status === "COMPLETED") {
-      return NextResponse.json(
+      return jsonNoStore(
         {
           error: "This checkout was already completed. Manage your plan from the billing portal.",
           code: "checkout_attempt_completed",
@@ -348,7 +359,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // retry gets the SAME session URL). A crashed claimant is recovered by
     // the repair job, never by racing.
     if (attempt.status === "REQUEST_IN_FLIGHT") {
-      return NextResponse.json(
+      return jsonNoStore(
         {
           error: "This checkout is already being started. Please retry in a moment.",
           code: "checkout_attempt_in_progress",
@@ -365,7 +376,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if (reused && attempt.status === "SESSION_CREATED" && attempt.stripeSessionId) {
       const existingUrl = await retrieveOpenCheckoutSessionUrl(attempt.stripeSessionId);
       if (existingUrl) {
-        return NextResponse.json({ url: existingUrl });
+        return jsonNoStore({ url: existingUrl });
       }
     }
 
@@ -380,7 +391,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       attempt.id,
     );
     if (!claimed) {
-      return NextResponse.json(
+      return jsonNoStore(
         {
           error: "This checkout is already being started. Please retry in a moment.",
           code: "checkout_attempt_in_progress",
@@ -425,7 +436,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
       const message = err instanceof Error ? err.message : "unknown";
       console.error(`[checkout] stripe session create ${outcomeClass} for attempt ${attempt.id}: ${message}`);
-      return NextResponse.json(
+      return jsonNoStore(
         {
           error:
             outcomeClass === "AMBIGUOUS_NETWORK_OUTCOME"
@@ -465,12 +476,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       );
     }
 
-    return NextResponse.json({ url: checkoutSession.url });
+    return jsonNoStore({ url: checkoutSession.url });
   } catch (err) {
     // Log the detail server-side; return a generic message so internal/Stripe
     // error text never leaks to the client.
     const message = err instanceof Error ? err.message : "Checkout failed";
     console.error(`Checkout error: ${message}`);
-    return NextResponse.json({ error: "Checkout could not be started." }, { status: 500 });
+    return jsonNoStore({ error: "Checkout could not be started." }, { status: 500 });
   }
 }
