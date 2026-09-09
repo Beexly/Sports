@@ -583,52 +583,74 @@ async function transitionToRecoverableIncomplete(
  * is skipped here. Every write is guarded on the row still being the CANCELED
  * row that was read, so a concurrent resubscribe is never clobbered.
  */
+/** How far back the CANCELED repair cohort reaches. */
+export const REPAIR_CANCELED_LOOKBACK_DAYS = 60;
+/** Rows each repair scan inspects per run, per cohort; sequential Stripe reads sit behind each. */
+export const REPAIR_SCAN_CAP = 100;
+
+type RepairRow = {
+  id: string;
+  stripeSubscriptionId: string | null;
+  status?: string;
+  canceledAt?: Date | null;
+  pastDueSince?: Date | null;
+};
+
 async function repairRecoverableCanceledRows(
   confirmedSubscriptionIds: ReadonlySet<string>,
+  now: Date = new Date(),
 ): Promise<{ repaired: number; repairNeedsOperator: number; errors: number; checked: number }> {
   let repaired = 0;
   let repairNeedsOperator = 0;
   let errors = 0;
   let checked = 0;
 
-  let rows: Array<{
-    id: string;
-    stripeSubscriptionId: string | null;
-    status?: string;
-    canceledAt?: Date | null;
-    pastDueSince?: Date | null;
-  }>;
+  // BOUNDED cohorts (Devin Review, #736): an unbounded "every CANCELED row ever"
+  // scan grows with cancellation history and each row costs a sequential Stripe
+  // read, so it would eventually eat the five-minute run before the live rows
+  // are reconciled. Two capped queries instead:
+  //   1. CANCELED rows stamped inside the lookback window, newest first. The
+  //      former unpaid-to-CANCELED writer ran hourly, so anything it produced
+  //      carries a canceledAt from that run; a row older than the window is
+  //      either a genuine cancellation or Stripe's own dunning cancel, and
+  //      either way it has aged out of the repair.
+  //   2. INCOMPLETE rows with a subscription id: the anchor backstop (null
+  //      pastDueSince) AND the anchored dunning rows, which no other scan
+  //      selects. A missed terminal webhook would otherwise leave a dunning
+  //      row "recoverable" forever; here it converges to CANCELED once Stripe
+  //      positively reports canceled / incomplete_expired / absent.
+  const lookbackFrom = new Date(now.getTime() - REPAIR_CANCELED_LOOKBACK_DAYS * 24 * 60 * 60 * 1000);
+  const select = { id: true, stripeSubscriptionId: true, status: true, canceledAt: true, pastDueSince: true };
+  let rows: RepairRow[];
   try {
-    rows = await db.subscription.findMany({
-      where: {
-        stripeSubscriptionId: { not: null },
-        OR: [
-          // Rows an earlier reconciler cancelled on `unpaid`.
-          { status: "CANCELED", canceledAt: { not: null } },
-          // Backstop for any INCOMPLETE row left without its dunning anchor
-          // (a split write that failed halfway, or a row written before the
-          // anchor existed). Nothing else selects these (Devin Review, #736).
-          { status: "INCOMPLETE", pastDueSince: null },
-        ],
-      },
-      select: { id: true, stripeSubscriptionId: true, status: true, canceledAt: true, pastDueSince: true },
+    const canceled = await db.subscription.findMany({
+      where: { status: "CANCELED", stripeSubscriptionId: { not: null }, canceledAt: { gte: lookbackFrom } },
+      orderBy: { canceledAt: "desc" },
+      take: REPAIR_SCAN_CAP,
+      select,
     });
+    const incomplete = await db.subscription.findMany({
+      where: { status: "INCOMPLETE", stripeSubscriptionId: { not: null } },
+      take: REPAIR_SCAN_CAP,
+      select,
+    });
+    rows = [...canceled, ...incomplete];
   } catch (err) {
-    console.error(`[reconcile] failed to load canceled rows for repair check: ${errorMessage(err)}`);
+    console.error(`[reconcile] failed to load rows for repair check: ${errorMessage(err)}`);
     return { repaired: 0, repairNeedsOperator: 0, errors: 1, checked: 0 };
   }
 
   for (const row of rows) {
-    // The WHERE already selects the two shapes; re-check so a row that moved
+    // The WHEREs already select the two shapes; re-check so a row that moved
     // between the read and here is skipped rather than re-judged.
     const isCanceled = row.status === "CANCELED" && !!row.canceledAt;
-    const isUnanchored = row.status === "INCOMPLETE" && row.pastDueSince == null;
-    if ((!isCanceled && !isUnanchored) || !row.stripeSubscriptionId) continue;
+    const isIncomplete = row.status === "INCOMPLETE";
+    if ((!isCanceled && !isIncomplete) || !row.stripeSubscriptionId) continue;
     const subscriptionId = row.stripeSubscriptionId;
     if (confirmedSubscriptionIds.has(subscriptionId)) continue; // the grant pass owns it
     checked++;
 
-    let remote: Stripe.Subscription;
+    let remote: Stripe.Subscription | null = null;
     try {
       remote = await stripe.subscriptions.retrieve(subscriptionId);
     } catch (err) {
@@ -638,21 +660,40 @@ async function repairRecoverableCanceledRows(
           `[reconcile] could not read subscription ${subscriptionId} for repair check; ` +
             `leaving row ${row.id} as is: ${errorMessage(err)}`,
         );
+        continue; // unreadable: nothing proven
       }
-      continue; // absent, or unreadable: nothing to recover onto / nothing proven
+      // Positive absence: for a CANCELED row there is nothing to recover onto;
+      // for an INCOMPLETE dunning row it is a terminal fact (below).
     }
-    if (remote.status !== "unpaid") continue;
 
     try {
-      if (isUnanchored) {
-        // Anchor-only backstop: the status is already right.
-        const stamped = await db.subscription.updateMany({
-          where: { id: row.id, stripeSubscriptionId: subscriptionId, status: "INCOMPLETE", pastDueSince: null },
-          data: { pastDueSince: dunningAnchorFor(remote) },
-        });
-        if (stamped.count > 0) repaired++;
-        continue;
+      if (isIncomplete) {
+        const gone =
+          remote === null || remote.status === "canceled" || remote.status === "incomplete_expired";
+        if (gone && row.pastDueSince != null) {
+          // A dunning row whose terminal webhook was missed: converge it.
+          // First-payment INCOMPLETE rows (no anchor) are left to Stripe's own
+          // ~23h expiry and the webhook; nothing here guesses at them.
+          const terminal = await db.subscription.updateMany({
+            where: { id: row.id, stripeSubscriptionId: subscriptionId, status: "INCOMPLETE" },
+            data: { tier: "FREE" as const, status: "CANCELED" as const, canceledAt: now, pastDueSince: null },
+          });
+          if (terminal.count > 0) repaired++;
+          continue;
+        }
+        if (remote?.status === "unpaid" && row.pastDueSince == null) {
+          // Anchor-only backstop: the status is already right.
+          const stamped = await db.subscription.updateMany({
+            where: { id: row.id, stripeSubscriptionId: subscriptionId, status: "INCOMPLETE", pastDueSince: null },
+            data: { pastDueSince: dunningAnchorFor(remote) },
+          });
+          if (stamped.count > 0) repaired++;
+        }
+        continue; // still unpaid and anchored, or a first payment in flight
       }
+
+      // CANCELED cohort: only a subscription Stripe STILL reports unpaid is recoverable.
+      if (remote === null || remote.status !== "unpaid") continue;
 
       const priceId = remote.items?.data[0]?.price?.id ?? null;
       const tier = tierFromStripePrice(remote.items?.data[0]?.price);
