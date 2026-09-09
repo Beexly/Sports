@@ -315,6 +315,21 @@ chat), so `.freeSpine.oddsPath.paidSinglePath` still reads true with 7 sport cel
 the-odds-api. Note for the sheet: `paidSinglePath` lives under `freeSpine.oddsPath`, not
 `marketCoverage`. Re-read after the key lands; PredExon must clear the second book for it to flip.
 
+**01:48 UTC, key set and redeployed (browser agent ~01:33 UTC): `paidSinglePath` still true, and on
+the code that is on main it cannot flip from these flags.** Two measured reasons, both in code:
+(1) `packages/ingestion-pipeline/src/process-sport.ts:462-468` attaches the PredExon second book
+only inside the Galaxy/ESPN keyless fetch, and that fetch runs only when the paid feed returned zero
+events (`if (events.length === 0)`); `THE_ODDS_API_KEY` is present with the circuit closed
+(`oddsInserting.dualPath.credits.remaining` 13148 at 01:22 UTC), so the paid path always yields events
+and the Kalshi book is never reached. (2) `apps/web/lib/ops/free-spine-odds-path.ts:42` derives
+`paidSinglePath` from the registry coverage matrix (`requireSpend === criticalGaps`) with
+`primaryOddsSource` hard-coded to `the-odds-api`; it reads no runtime flag. Consequence: the two
+PredExon variables are inert tonight and harmless; the NFL MONEYLINE/TOTAL gap is not a book-count
+gap (the paid feed prices multiple books) but the scorer floors (0.58 fair-prob, 0.55 vote, 50
+confidence), which is HP-14 / v5.2.8. To make Kalshi a real second book alongside the paid feed, a
+code change is needed: thin-fill the paid slate with the PredExon catalog when a game sits under
+`MIN_BOOKMAKERS` (the same slot Rundown uses at :479). Opened as a Hermes package, not tonight's flip.
+
 ## 5. What was deliberately NOT started, and why
 
 - A queue/stream/microservice re-architecture: the platform runs on Vercel cron routes with no queue library
