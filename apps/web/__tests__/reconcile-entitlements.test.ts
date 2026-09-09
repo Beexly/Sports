@@ -293,24 +293,40 @@ describe("reconcileEntitlements — DOWNGRADE (stale paid rows, positively confi
     expect(summary.errors).toBe(0);
 
     type Write = { where: Record<string, unknown>; data: Record<string, unknown> };
-    const [write, anchor] = mocks.updateMany.mock.calls.slice(-2).map((c) => c[0] as Write);
-    expect(write?.where).toEqual(
-      expect.objectContaining({ id: "row_1", stripeSubscriptionId: "sub_2" }),
+    expect(mocks.updateMany).toHaveBeenCalledTimes(1);
+    const write = mocks.updateMany.mock.calls[0]?.[0] as Write;
+    // Guarded on the exact row AND on the anchor being absent: the status change
+    // and the dunning anchor land in ONE write, so no failure between them can
+    // leave INCOMPLETE without its anchor (Devin Review, #736).
+    expect(write.where).toEqual(
+      expect.objectContaining({ id: "row_1", stripeSubscriptionId: "sub_2", pastDueSince: null }),
     );
     // Access is denied: INCOMPLETE is not in the granting set.
-    expect(write?.data["status"]).toBe("INCOMPLETE");
+    expect(write.data["status"]).toBe("INCOMPLETE");
+    // The dunning anchor comes from Stripe's period start, never now(), so
+    // getBillingNotice reads DUNNING_EXHAUSTED rather than first-payment setup.
+    expect(write.data["pastDueSince"]).toEqual(new Date(1760000000 * 1000));
     // And the two fields that would make it permanent are NOT written: no
     // cancellation stamp for the resurrection guard to catch on, and the paid
     // tier kept as the record of what the member is owed.
-    expect(write?.data).not.toHaveProperty("canceledAt");
-    expect(write?.data).not.toHaveProperty("tier");
-    // The dunning anchor is stamped ONLY WHERE ABSENT, and from Stripe's period
-    // start, never now() — so getBillingNotice reads DUNNING_EXHAUSTED rather
-    // than telling the member to finish a first payment (Devin Review, #736).
-    expect(anchor?.where).toEqual(
-      expect.objectContaining({ id: "row_1", status: "INCOMPLETE", pastDueSince: null }),
-    );
-    expect(anchor?.data["pastDueSince"]).toEqual(new Date(1760000000 * 1000));
+    expect(write.data).not.toHaveProperty("canceledAt");
+    expect(write.data).not.toHaveProperty("tier");
+  });
+
+  it("a row that already carries a dunning anchor keeps it (second, narrower write)", async () => {
+    mocks.findMany.mockResolvedValue([
+      { id: "row_1", stripeCustomerId: "cus_2", stripeSubscriptionId: "sub_2", tier: "PRO" },
+    ]);
+    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSub({ id: "sub_2", status: "unpaid" }) as never);
+    // The anchored write matches nothing (the row has an anchor); the fallback lands.
+    mocks.updateMany.mockResolvedValueOnce({ count: 0 }).mockResolvedValueOnce({ count: 1 });
+
+    const summary = await reconcileEntitlements();
+
+    expect(summary.downgraded).toBe(1);
+    const fallback = mocks.updateMany.mock.calls.at(-1)?.[0] as { where: Record<string, unknown>; data: Record<string, unknown> };
+    expect(fallback.where).not.toHaveProperty("pastDueSince");
+    expect(fallback.data).toEqual({ status: "INCOMPLETE" });
   });
 
   it("anchors an unpaid revoke to the epoch sentinel when Stripe has no usable period start", async () => {
@@ -445,11 +461,11 @@ describe("reconcileEntitlements — DOWNGRADE (stale paid rows, positively confi
 });
 
 describe("reconcileEntitlements — REPAIR rows an earlier reconciler cancelled on unpaid (Devin, #736)", () => {
-  /** The shared findMany answers by scan: the repair scan asks for CANCELED rows. */
+  /** The shared findMany answers by scan: the repair scan is the one with an OR clause. */
   function canceledRowsOnly(rows: unknown[]): void {
     mocks.findMany.mockImplementation(async (args: unknown) => {
-      const where = (args as { where?: { status?: unknown } }).where;
-      return where?.status === "CANCELED" ? rows : [];
+      const where = (args as { where?: { OR?: unknown } }).where;
+      return Array.isArray(where?.OR) ? rows : [];
     });
   }
   const stuckRow = {
@@ -468,19 +484,29 @@ describe("reconcileEntitlements — REPAIR rows an earlier reconciler cancelled 
     const summary = await reconcileEntitlements();
 
     expect(summary.repaired).toBe(1);
+    expect(summary.repairNeedsOperator).toBe(0);
     expect(summary.downgraded).toBe(0);
     expect(summary.errors).toBe(0);
     type Write = { where: Record<string, unknown>; data: Record<string, unknown> };
-    const [repair, anchor] = mocks.updateMany.mock.calls.slice(-2).map((c) => c[0] as Write);
-    // Guarded on the row still being the CANCELED row that was read.
-    expect(repair?.where).toEqual(
-      expect.objectContaining({ id: "row_9", stripeSubscriptionId: "sub_9", status: "CANCELED" }),
+    expect(mocks.updateMany).toHaveBeenCalledTimes(1);
+    const repair = mocks.updateMany.mock.calls[0]?.[0] as Write;
+    // Guarded on the row still being the CANCELED row that was read, and the
+    // anchor lands in the SAME write as the status change.
+    expect(repair.where).toEqual(
+      expect.objectContaining({ id: "row_9", stripeSubscriptionId: "sub_9", status: "CANCELED", pastDueSince: null }),
     );
-    expect(repair?.data).toEqual({ status: "INCOMPLETE", canceledAt: null, tier: "PRO" });
-    expect(anchor?.where).toEqual(expect.objectContaining({ id: "row_9", pastDueSince: null }));
+    expect(repair.data).toEqual({
+      status: "INCOMPLETE",
+      pastDueSince: new Date(1760000000 * 1000),
+      canceledAt: null,
+      tier: "PRO",
+    });
   });
 
-  it("leaves the tier alone when the Stripe price is unmapped, but still un-cancels", async () => {
+  it("an unmapped (grandfathered) price un-cancels the row but counts it for the OPERATOR, not as repaired", async () => {
+    // The old downgrade erased the paid tier; guessing one back is worse than
+    // surfacing the row. Un-cancelling still lets a later paid recovery through
+    // the resurrection guard once the price id is mapped (Devin Review, #736).
     canceledRowsOnly([stuckRow]);
     mocks.subscriptionsRetrieve.mockResolvedValue(
       stripeSub({ id: "sub_9", status: "unpaid", items: { data: [{ price: { id: "price_legacy" } }] } }) as never,
@@ -488,9 +514,28 @@ describe("reconcileEntitlements — REPAIR rows an earlier reconciler cancelled 
 
     const summary = await reconcileEntitlements();
 
+    expect(summary.repaired).toBe(0);
+    expect(summary.repairNeedsOperator).toBe(1);
+    const repair = mocks.updateMany.mock.calls[0]?.[0] as { data: Record<string, unknown> };
+    expect(repair.data).not.toHaveProperty("tier");
+    expect(repair.data["status"]).toBe("INCOMPLETE");
+  });
+
+  it("an INCOMPLETE row with no dunning anchor gets one when Stripe still reads unpaid (anchor backstop)", async () => {
+    canceledRowsOnly([
+      { id: "row_10", stripeSubscriptionId: "sub_10", status: "INCOMPLETE", canceledAt: null, pastDueSince: null },
+    ]);
+    mocks.subscriptionsRetrieve.mockResolvedValue(stripeSub({ id: "sub_10", status: "unpaid" }) as never);
+
+    const summary = await reconcileEntitlements();
+
     expect(summary.repaired).toBe(1);
-    const repair = mocks.updateMany.mock.calls.at(-2)?.[0] as { data: Record<string, unknown> };
-    expect(repair.data).toEqual({ status: "INCOMPLETE", canceledAt: null });
+    expect(mocks.updateMany).toHaveBeenCalledTimes(1);
+    const stamp = mocks.updateMany.mock.calls[0]?.[0] as { where: Record<string, unknown>; data: Record<string, unknown> };
+    expect(stamp.where).toEqual(
+      expect.objectContaining({ id: "row_10", status: "INCOMPLETE", pastDueSince: null }),
+    );
+    expect(stamp.data).toEqual({ pastDueSince: new Date(1760000000 * 1000) });
   });
 
   it.each(["canceled", "incomplete_expired", "active"])(
@@ -516,7 +561,9 @@ describe("reconcileEntitlements — REPAIR rows an earlier reconciler cancelled 
     const summary = await reconcileEntitlements();
 
     expect(summary.repaired).toBe(0);
-    expect(mocks.updateMany).toHaveBeenCalledTimes(1); // no anchor write either
+    expect(summary.repairNeedsOperator).toBe(0);
+    // The anchored write and its fallback both miss; nothing else is written.
+    expect(mocks.updateMany).toHaveBeenCalledTimes(2);
   });
 });
 
