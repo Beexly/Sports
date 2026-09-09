@@ -18,10 +18,10 @@ each commit; keep the ledger rows honest; push to that PR's branch only.
 
 | PR | Branch | Head after this pass | Verdict |
 |---|---|---|---|
-| [#725](https://github.com/Beexly/Sports/pull/725) | `claude/launch-nfl-week1-coverage` | `0dc7f4973` | **READY TO MERGE** — merge first (it keeps ledger id C-261) |
-| [#724](https://github.com/Beexly/Sports/pull/724) | `claude/launch-c104-free-two-book-board` | `c8893d471` | **READY TO MERGE** once Codacy re-reads the head (see below) |
-| [#723](https://github.com/Beexly/Sports/pull/723) | `claude/launch-settlement-evidence` | `88109938f` | **READY TO MERGE** |
-| [#722](https://github.com/Beexly/Sports/pull/722) | `claude/launch-identical-row-bakeoff` | `b12eddbb6` | **READY TO MERGE** — merge after #725 |
+| [#725](https://github.com/Beexly/Sports/pull/725) | `claude/launch-nfl-week1-coverage` | `0dc7f4973` | **READY TO MERGE** — fully green. Merge first (it keeps ledger id C-261) |
+| [#724](https://github.com/Beexly/Sports/pull/724) | `claude/launch-c104-free-two-book-board` | `c8893d471` | **READY TO MERGE** — fully green, Codacy now 0 issues |
+| [#723](https://github.com/Beexly/Sports/pull/723) | `claude/launch-settlement-evidence` | `88109938f` | **BLOCKED on a guard false positive that is not this PR's** — see section "The ledger-guard false positive" |
+| [#722](https://github.com/Beexly/Sports/pull/722) | `claude/launch-identical-row-bakeoff` | `b12eddbb6` | **READY TO MERGE** — fully green. Merge after #725 |
 
 **Merge order matters once**: #725 and #722 both opened a ledger row numbered
 C-261. #722's row is renumbered to C-265 on the assumption that #725 lands
@@ -52,11 +52,9 @@ ignored: two rows sharing an id fail the ledger guard's duplicate-ID check
 - **Deliberately not done**: naming the floor as an exported constant, or
   pinning it with a scorer test. Both touch the frozen scorer, so it is ledger
   row **C-263 (OPEN)**, not a drive-by.
-- **Checks**: on `833027ff0` every CI job was green (Build, "Test, type-check,
-  lint, Prisma", "All guardrails", model freeze, trust gate, brand safety,
-  secret scan, dependency audit) and Codacy read "Up to standards, 0 new
-  issues". On `0dc7f4973` at 23:51 UTC: Codacy success, "All guardrails"
-  success, "Test, type-check, lint, Prisma" success, Build in progress.
+- **Checks**: on `833027ff0` every CI job was green and Codacy read "Up to
+  standards, 0 new issues". On `0dc7f4973`: every CI job green, Build success
+  at 23:53:29 UTC, Codacy success. Fully green.
 - **Locally**: `npm run typecheck` exit 0, `npm run lint` exit 0,
   `market-coverage.test.ts` 12 passed, `check-agent-ledger.mjs` exit 0.
 - **Bot findings addressed**: none outstanding. CodeRabbit skipped the PR for
@@ -108,18 +106,17 @@ ignored: two rows sharing an id fail the ledger guard's duplicate-ID check
   app's source-rights registry are unchanged by construction and cannot
   disagree as a result of this PR.
 - **Checks**: on `d3825a5a0`, every CI job green, Codacy `action_required`. On
-  `49d424f3e` at 23:46 UTC, every CI job green again with Codacy still
-  `action_required`; `c8893d471` pushed at 23:56 UTC and its run is the one to
-  read before merge.
+  `49d424f3e`, every CI job green with Codacy still `action_required` — which is
+  what prompted `c8893d471`. On `c8893d471`: "Test, type-check, lint, Prisma"
+  success, Build success at 00:08:08 UTC, and **Codacy success — "Up to
+  standards, 0 issues, 0 new issues"** (comment updated 23:57:34 UTC,
+  complexity 379). Fully green; the open item flagged in the first draft of
+  this document is closed, and the two-step diagnosis was right.
 - **Locally on `c8893d471`**: `npm run typecheck` exit 0, `npm run lint` exit 0,
   `packages/data-ingestion` 484 passed, `packages/ingestion-pipeline` 437
   passed / 6 skipped (921 total, one more than the body's original 920).
 - **Bot findings addressed**: the Codacy critical, twice (escape, then remove
   the dynamic RegExp). CodeRabbit skipped (draft). No review threads.
-- **Open item for the merger**: confirm Codacy reads clean on `c8893d471`
-  before merging. If it still reports the same issue, the diagnosis in
-  `c8893d471`'s commit message is wrong and the finding is somewhere else in the
-  diff; it was **not** re-read by this session after that push.
 - **Ledger rows**: C-104 DONE, evidence extended with the steward pass.
 
 ## #723 — settlement evidence and the C-143 decision (C-120, C-143, C-176)
@@ -153,9 +150,14 @@ ignored: two rows sharing an id fail the ledger guard's duplicate-ID check
   established** in this session. If it can, it is C-143's defect in a different
   place. Ledger row **C-264 (OPEN)**, filed as an open question, not as an
   observed defect.
-- **Checks**: on `32312c2e0` every CI job was green and Codacy read success. On
-  `88109938f` at 23:47 UTC the run is in progress (guardrails and the test job
-  had not finished at the time of writing).
+- **Checks on `88109938f`**: "All guardrails" success, Build success
+  (00:00:03 UTC), Codacy success, every other job green — **except** "Test,
+  type-check, lint, Prisma", which is RED in the `push`-event run
+  (34292165032) and GREEN in the `pull_request`-event run (34292163767) on the
+  same commit. One re-run was spent; it failed identically, so it is
+  reproducible rather than a flake. Root cause, and why it is not this PR's, is
+  the section below. Reported on the PR as
+  [#723 (comment)](https://github.com/Beexly/Sports/pull/723#issuecomment-5593947141).
 - **Locally**: `npm run typecheck` exit 0, `npm run lint` exit 0; every suite
   that renders `PickCard` — `graded-line-display`, `pick-card-a11y`,
   `pick-card-market-implied`, `picks-page-policy-gate` — 27 passed;
@@ -183,12 +185,95 @@ ignored: two rows sharing an id fail the ledger guard's duplicate-ID check
   pushed branch. The ledger row records the rename, so the SHAs rather than
   those numbers are the authority.
 - **Checks**: on `346330852` every CI job green and Codacy success. On
-  `b12eddbb6` at 23:53 UTC the run is in progress.
+  `b12eddbb6`: "Test, type-check, lint, Prisma" success, Build success
+  (00:07:54 UTC), Codacy success. Fully green.
 - **Locally**: `npm run typecheck` exit 0, `npm run lint` exit 0,
   `identical-row-bakeoff.test.ts` 16 passed, `check-agent-ledger.mjs` exit 0
   (269 rows, no duplicate-ID violation).
 - **Bot findings addressed**: none outstanding.
 - **Ledger rows**: C-265 DONE (was C-261).
+
+---
+
+## The ledger-guard false positive (blocks #723; latent on all four)
+
+This is the one thing on this page that outlives tonight, so it gets its own
+section.
+
+### What it looks like
+
+`apps/web/__tests__/agent-ledger.test.ts` fails with, on #723:
+
+```
+C-143: DONE cites ac9285dcd, ed6bcecc6 — none resolve locally, and origin
+does not serve any of them. Either the work was never committed or the hash
+is wrong.
+C-176: DONE cites 69da36811 — none resolve locally, and origin does not serve
+any of them. …
+```
+
+**The conclusion is false.** All three commits exist, are ancestors of the PR
+head, resolve under `git cat-file -t` in a full clone, and the same test passes
+locally 36/36.
+
+### It is not #723's diff
+
+- Reproduced on this branch's **previous** head `32312c2e0` in a fresh shallow
+  clone — before the C-143 commit.
+- Reproduced on **#725's branch**, which reports
+  `C-95: DONE cites 4b9d12639, 23d2c3381, 44a503673 — none resolve locally…`
+  while #725's CI is green. So the diff does not determine whether a run trips it.
+- On #723's exact head `88109938f`, the `pull_request`-event run passed this
+  test and the `push`-event run failed it. One re-run was spent; identical
+  failure, so it is reproducible, not a flake.
+
+### Root cause, measured
+
+`scripts/ops/check-agent-ledger.mjs` adjudicates a SHA it cannot see locally by
+fetching it from origin. CI checks out one commit deep, so every cited SHA takes
+that path. Per-SHA fetch is refused by GitHub for a non-tip object (the code
+already anticipates this) and falls back to `widenOriginRefs`, which fetches
+every branch head at `--depth=1000`.
+
+**That widen needs two passes.** From a fresh
+`git clone --depth=1 --branch claude/launch-settlement-evidence`:
+
+```
+shallow: true
+after widen #1: fatal: Not a valid object name ac9285dcd^{commit}
+after widen #2: commit
+```
+
+The first fetch reports success and creates the remote-tracking refs, but the
+mid-branch objects are still absent; an identical second fetch brings them.
+`widenOriginRefs` memoises on the first result, so the process never makes the
+second pass and concludes "origin does not serve any of them" about commits
+origin serves perfectly well.
+
+### Proposed patch — NOT applied
+
+In `widenOriginRefs`, after a successful widen, if the SHA still fails to
+resolve, run the same fetch once more before concluding origin cannot serve it.
+That **strengthens** the guard: a genuinely fabricated or never-pushed SHA still
+fails after both passes, and the check stops crying wolf on real ones — the
+exact failure mode that function's own comment says it exists to avoid.
+
+Only the two-pass behaviour is measured. `--unshallow` and `--refetch` may be
+cleaner; **neither was tested**.
+
+Not applied because it is a change to a shared guard affecting at least four
+open PRs, and putting it in the PR it currently blocks is the wrong place for
+it. It wants its own change and its own ledger row. Law 9 is not in tension
+here — this removes a false alarm, it does not lower a threshold — but that is a
+judgement the founder should make deliberately rather than find inside a
+settlement-evidence PR.
+
+### What it means for merging
+
+#723's content is otherwise green. The red check resolves on its own once these
+commits reach `main`, because they are then reachable from the default branch.
+The merger's choice is between waiting for the guard fix and accepting a known
+false positive on a PR whose every other check is green.
 
 ---
 
@@ -207,8 +292,8 @@ ignored: two rows sharing an id fail the ledger guard's duplicate-ID check
   (the 588/432/34 line counts, the 19:07 and 19:11 UTC truth-surface reads, the
   ESPN scoreboard fixtures). No database access, per law 3. Those claims are
   carried with the provenance their authors gave them.
-- **Codacy on #724's final head was not re-read** after `c8893d471`. Flagged
-  above as the one open item.
+- **No fix to the ledger guard.** The false positive above is reported with a
+  proposed patch and left unapplied, for the reasons in that section.
 
 ## New ledger rows opened by this pass
 
@@ -217,3 +302,7 @@ ignored: two rows sharing an id fail the ledger guard's duplicate-ID check
 | C-263 | `claude/launch-nfl-week1-coverage` | The moneyline fair-probability floor quoted in the marketCoverage operator hint restates a bare literal in the frozen scorer and nothing pins it |
 | C-264 | `claude/launch-settlement-evidence` | Whether a stored SPREAD `selection` string can drift after publish — open question, not an observed defect |
 | C-265 | `claude/launch-identical-row-bakeoff` | The renumbered identical-row bake-off row (was C-261) |
+
+No ledger row was opened for the guard false positive: it needs a branch to live
+on, and this branch is documentation only. It is written up in full above and
+reported on #723 so whoever picks it up does not have to re-derive it.
