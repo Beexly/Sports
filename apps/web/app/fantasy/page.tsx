@@ -6,6 +6,7 @@ import { Footer } from "@/components/ui/footer";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 import { loadSourceLiveEvidence } from "@/lib/data-sources/live-evidence";
+import { getLiveProjectionsMeta } from "@/lib/integrations/projections";
 
 export const dynamic = "force-dynamic";
 
@@ -53,16 +54,22 @@ const LIVE_FIRST = [
 ] as const;
 
 type ToolStatus = "live" | "partly live" | "gated";
-const TOOL_DIRECTORY: readonly (readonly [string, string, string, ToolStatus])[] = [
-  ["Optimizer: DFS · Start/Sit · Draft", "One workspace, one contest switch. Salaries and projections stay gated; the draft board (tiers, VOR, scarcity, run alerts, your ADP CSV) runs on the illustrative pool now.", "/optimizer", "partly live"],
-  ["Best Ball", "Draft-only roster construction: ceiling/spike upside, QB-to-catcher stacks, bye fragility, and a next-pick recommender. Runs on the illustrative pool now; real the moment projections flip on.", "/fantasy/bestball", "partly live"],
-  ["Human Performance", "Public confidence-band layer: venue surface, weather, official injury status. Live now; never a body claim.", "/human", "live"],
-  ["Waiver & FAAB", "Needs roster sync, projections, injuries, and league market context.", "/fantasy/waivers", "gated"],
-  ["Trade Analyzer", "Needs live player values and roster context.", "/fantasy/trade", "gated"],
-  ["Pick'em Edge", "Needs live pick'em lines and alt-line pricing.", "/fantasy/props", "gated"],
-  ["League Twin", "Can render a real roster after sync; advice waits for projections.", "/fantasy/league-twin", "gated"],
-  ["GM Ledger", "Proof mechanics are real; live decision history requires user roster events.", "/fantasy/gm-ledger", "gated"],
-] as const;
+/** Tools whose "gated" status is specifically about the projections provider —
+ * their status must track getLiveProjectionsMeta().live, not a hardcoded literal,
+ * or the hub can claim "gated" while the provider is actually enabled in production. */
+export function buildToolDirectory(projectionsLive: boolean): readonly (readonly [string, string, string, ToolStatus])[] {
+  const projStatus: ToolStatus = projectionsLive ? "partly live" : "gated";
+  return [
+    ["Optimizer: DFS · Start/Sit · Draft", "One workspace, one contest switch. Salaries and projections stay gated; the draft board (tiers, VOR, scarcity, run alerts, your ADP CSV) runs on the illustrative pool now.", "/optimizer", "partly live"],
+    ["Best Ball", "Draft-only roster construction: ceiling/spike upside, QB-to-catcher stacks, bye fragility, and a next-pick recommender. Runs on the illustrative pool now; real the moment projections flip on.", "/fantasy/bestball", "partly live"],
+    ["Human Performance", "Public confidence-band layer: venue surface, weather, official injury status. Live now; never a body claim.", "/human", "live"],
+    ["Waiver & FAAB", "Needs roster sync, projections, injuries, and league market context.", "/fantasy/waivers", projStatus],
+    ["Trade Analyzer", "Needs live player values and roster context.", "/fantasy/trade", projStatus],
+    ["Pick'em Edge", "Needs live pick'em lines and alt-line pricing.", "/fantasy/props", projStatus],
+    ["League Twin", "Can render a real roster after sync; advice waits for projections.", "/fantasy/league-twin", projStatus],
+    ["GM Ledger", "Proof mechanics are real; live decision history requires user roster events.", "/fantasy/gm-ledger", "gated"],
+  ];
+}
 
 const STATUS_TONE: Record<ToolStatus, string> = {
   live: "text-orbital-cyan",
@@ -81,6 +88,8 @@ export default async function FantasyHubPage({
   }
 
   const evidence = await loadSourceLiveEvidence({ timeoutMs: 15000 });
+  const projectionsLive = getLiveProjectionsMeta().live;
+  const toolDirectory = buildToolDirectory(projectionsLive);
   const qbAgeLift = evidence.summary.qbAge34Lift;
   const qbAgeLiftLabel = typeof qbAgeLift === "number" ? `${formatPercent(qbAgeLift)} lift` : "—";
   const latestWeek =
@@ -126,7 +135,7 @@ export default async function FantasyHubPage({
               </p>
               <dl className="mt-5 grid grid-cols-3 gap-3">
                 <ReadinessMetric label="Roster" value="sync" />
-                <ReadinessMetric label="Projections" value="gated" />
+                <ReadinessMetric label="Projections" value={projectionsLive ? "live" : "gated"} />
                 <ReadinessMetric label="Actions" value="no-write" />
               </dl>
               <p className="mt-4 text-sm leading-6 text-ion-1">
@@ -231,7 +240,7 @@ export default async function FantasyHubPage({
               </div>
             </div>
             <div className="mt-6 overflow-hidden border border-mineral">
-              {TOOL_DIRECTORY.map(([tool, requirement, href, status]) => (
+              {toolDirectory.map(([tool, requirement, href, status]) => (
                 <Link key={tool} href={href} className="group grid gap-3 border-b border-mineral bg-eclipse px-4 py-3 transition-colors last:border-b-0 hover:bg-carbon sm:grid-cols-[0.42fr_1fr_auto] sm:items-center">
                   <p className="font-semibold text-ion-white group-hover:text-orbital-cyan">{tool}</p>
                   <p className="text-sm leading-6 text-ion-1">{requirement}</p>
