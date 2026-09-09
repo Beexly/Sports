@@ -1,13 +1,12 @@
 # Gate Matrix — 2026-09-08
 
-**Status: documentation only. No gate was flipped. No code was changed. This pass
-is read-only research, produced by an autonomous session in response to an
-automated launch-dispatch brief that had not been confirmed by a human at the
-time this file was written (see "Provenance" below).** The founder/user
-narrowed the original 5-part brief down to this single deliverable — the gate
-matrix itself — and asked to check back in before any code (STATS_PUBLIC
-per-field gating, the ratchet test, or a Vercel flip script) is written. Those
-three items are listed under "Deferred" at the end of this file, not done.
+**Status: no gate was flipped.** This started as a documentation-only pass in
+response to an automated launch-dispatch brief that had not been confirmed by
+a human at the time this file was first written (see "Provenance" below); the
+founder/user then explicitly asked for one of the three originally-deferred
+items — the StatKing commercial-display gate — to be built. That part is now
+done (§2 below); the ratchet test and the Vercel flip script are still
+deferred (§6).
 
 ## Provenance
 
@@ -146,14 +145,12 @@ without any code change.
 
 ---
 
-## 2. `STATS_PUBLIC` — findings (no code written this pass)
+## 2. `STATS_PUBLIC` — findings, plus the commercial-display gate built on this branch
 
 **Current gate mechanics.** `isStatsPublic()` (`apps/web/lib/launch/public-surface-gate.ts:20-22`)
 reads a single boolean; the only enforcement point is
 `apps/web/app/stats/layout.tsx:15-17`, which calls Next's `notFound()` for the
-entire `/stats/*` tree when the flag is off. There is **no per-field or
-per-source gate** anywhere in `apps/web/lib/statking/*` or
-`apps/web/app/stats/**` — the code is all-or-nothing today. `gates.statsPublic: false`
+entire `/stats/*` tree when the flag is off. `gates.statsPublic: false`
 on the current truth surface; `productBoards` marks `STATKING` as
 `dark_by_law`.
 
@@ -177,17 +174,43 @@ consulted a second time at *render* time by the StatKing product layer — the
 render layer trusts whatever already made it into the derived JSON snapshots
 under `data/statking/**`.
 
-**What "facts-only, attributed, proprietary-fields-hidden" would require**
-(described, not built): tag each rendered field with its contributing
-`source_id`(s) — `source_lineage` already exists as the join key — and check
-`commercial_display_allowed` per source at serialize/render time, suppressing
-or redacting any field whose lineage touches a non-cleared source. The board
-surface already has an analogous pattern for entitlement-tier redaction
-(`apps/web/lib/board/state.ts:247-259,1006-1011`,
-`redactBoardConfidence`/`applyViewerRedaction`) that a StatKing version could
-mirror, keyed on source-rights status instead of viewer tier. `STATS_PUBLIC`
-would then gate the page shell; a second, narrower per-field check would gate
-each proprietary metric.
+**Correction to this section's first draft:** it originally described
+`source_lineage` as a per-field join key ("tag each rendered field with its
+contributing source_id"). Reading the actual data model
+(`apps/web/lib/statking/product.ts:47-54`, `StatKingPlayer.source_lineage:
+string[]`) shows that's wrong — `source_lineage` is one flat array per
+*record* (player/team/depth-chart row), not one per displayed metric. There
+is no existing mapping from an individual field (e.g.
+`galaxy_player_index`) to the specific source(s) that fed it. Building true
+per-field granularity would mean adding that mapping in the offline
+generation pipeline that produces `data/statking/**` — a real, separate
+piece of engineering, out of scope here. What was actually buildable today,
+and is now built, is a **per-record** gate: strictly more conservative than
+per-field (it can only hide more, never less), and it's the granularity the
+real, already-wired data actually supports.
+
+**Built this pass:** `apps/web/lib/statking/commercial-gate.ts` —
+`isLineageClearedForDisplay(sourceLineage)` walks a record's
+`source_lineage`, fails the whole record closed if any real (non-fixture)
+source is unregistered or registered with `commercial_display_allowed:
+false`. One deliberate carve-out: today's snapshots are 100% synthetic
+fixture data (`StatusRibbon status="fixture"` on every `/stats` page) whose
+`source_lineage` values are internal placeholders (`"open_snapshot"`,
+`"fixture_fallback"`), not real third-party ids — those two sentinel
+strings are excluded from the check (they're not the kind of thing this gate
+exists to police) rather than failed closed, which would otherwise redact
+every current player for no real rights reason. Confirmed by a regression
+test asserting every player in today's snapshot clears. The gate is wired
+into `apps/web/app/stats/player/[id]/page.tsx` — the surface the original
+research pass flagged as rendering raw `source_lineage` with no filtering —
+redacting derived scores and the raw source list when a record fails the
+check. The other 12 `/stats` sub-surfaces (players list, teams, compare,
+depth, etc.) still read snapshot data unfiltered; extending the same gate to
+them is a natural follow-up once real (non-fixture) ingestion actually
+writes source ids into their records — doing it now would touch many files
+for zero live effect, since nothing in today's fixture data would change.
+16 unit tests cover the primitives in
+`apps/web/lib/statking/__tests__/commercial-gate.test.ts`.
 
 **Named blockers and what clears them** (from each registry entry's
 `unlock_condition`):
@@ -211,15 +234,17 @@ each proprietary metric.
   closed on anything else); this is unset/false today, correctly, and is a
   distinct gate from the base ESPN facts API.
 
-**Status: NOT OPENABLE (rights)** in its current all-or-nothing form. A
-facts-only mode scoped to `nflverse` + `open-meteo` + `ffc-adp` fields only
-is the narrowest path this research surfaced, but building the per-field
-gate is real engineering work this session did not do — see "Deferred"
-below.
+**Status: NOT OPENABLE (rights)** for the page shell — `STATS_PUBLIC` itself
+still 404s the whole tree, and that's correct: a facts-only mode scoped to
+`nflverse` + `open-meteo` + `ffc-adp` is the narrowest honest path, and
+nothing in this pass changes when `STATS_PUBLIC` may flip. What changed is
+what happens *underneath* that flag once it does: the per-record commercial-
+display gate above means the player-profile surface won't blindly expose a
+future uncleared source's derived data just because the page shell opened.
 
 ---
 
-## 3. `LIVE_BOARD` — findings (no code written this pass)
+## 3. `LIVE_BOARD` — findings
 
 **Current gate mechanics.** `liveBoardOn(env)`
 (`apps/web/lib/board/state.ts:36-38`) reads `LIVE_BOARD === "true"`;
@@ -432,23 +457,26 @@ hand each time, which is why it's deferred rather than hand-rolled here.
 
 ---
 
-## 6. Deferred (explicitly out of scope for this pass)
+## 6. Deferred
 
-Per the founder/user's direction, this pass produced **only** the matrix
-above. Not done, and not started:
+Originally three items were held back pending direction; one is now done:
 
-1. **STATS_PUBLIC per-field fail-closed gating + tests** (§2 describes the
-   shape; no code was written).
+1. ~~STATS_PUBLIC per-field fail-closed gating + tests~~ — **done**, see §2.
+   Built as a per-record gate (`apps/web/lib/statking/commercial-gate.ts`),
+   which is what the real data model actually supports; wired into the
+   player-profile page only, with 16 unit tests plus a regression test
+   against today's live snapshot. The other 12 `/stats` sub-surfaces are not
+   yet wired — no live effect today either way, since `STATS_PUBLIC` is off
+   and current data is fixture-only.
 2. **Browser-agent script F** — the ordered Vercel Production variable
    sequence for the founder's browser agent to execute. §1 above documents
    precondition/verification/rollback per gate, which is most of the
-   groundwork, but the explicit ordered script was intentionally held back.
-3. **The grep-based ratchet test** (§5 documents the search it would run).
+   groundwork, but the explicit ordered script is still intentionally held
+   back pending direction.
+3. **The grep-based ratchet test** (§5 documents the search it would run) —
+   still not started.
 
-Recommended next step, if the founder/user wants to continue: review §1
-(launch-critical gates) and §2/§3 (STATS_PUBLIC, LIVE_BOARD) findings, then
-decide whether to green-light the STATS_PUBLIC per-field gate + tests as a
-follow-up commit on this same branch, and/or the ratchet test. Both are
-small, reversible, single-purpose changes once scoped, consistent with a
-"smallest validation command" approach — but neither should proceed without
-that go-ahead, per the earlier scoping decision on this session.
+Recommended next step, if the founder/user wants to continue: review §2's
+commercial-display gate and decide whether to extend it to the remaining
+`/stats` sub-surfaces now or wait for real ingestion; separately, green-light
+(or not) the ratchet test and/or the browser-agent script.
