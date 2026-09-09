@@ -4,9 +4,11 @@
  */
 
 import { db, isStubMode } from "@sports/db";
+import { MODEL_VERSION } from "@sports/prediction-engine";
 import {
   evaluateCalibrationEligibility,
   type CalibrationEligibilityReport,
+  type DeployedVersionSlice,
   type EligibilityStatus,
   type LiveCalibrationMetrics,
   type MurphyTerms,
@@ -95,6 +97,29 @@ export type CalibrationPBasis = MarketAnchoredPBasis | "market_anchored" | "lega
 
 export function metricsPBasis(m: DurableMetricsPayload | null | undefined): CalibrationPBasis {
   return m?.pBasis ?? "legacy";
+}
+
+/**
+ * C-275: the byModelVersion slice for the version actually serving traffic.
+ *
+ * The floors are scored on a POOLED ECE, and pooled can sit below every stratum
+ * it is built from (measured 0.0414 below on live data), so a pooled pass does
+ * not imply the deployed model is calibrated. Handing this slice to the gate
+ * makes it check the deployed version's own rows too.
+ *
+ * Returns null — meaning "no additional check" — when the artifact carries no
+ * byModelVersion breakdown (every artifact written before those were added) or
+ * when MODEL_VERSION has no rows in this sample yet. Null preserves the
+ * pre-C-275 behaviour exactly, so an old artifact is never retro-failed by a
+ * check its data cannot answer.
+ */
+export function deployedVersionSlice(
+  m: DurableMetricsPayload | null | undefined,
+): DeployedVersionSlice | null {
+  const slices = m?.byModelVersion;
+  if (!slices || slices.length === 0) return null;
+  const hit = slices.find((s) => s.key === MODEL_VERSION);
+  return hit ? { key: hit.key, n: hit.n, ece: hit.ece } : null;
 }
 
 export function snapPBasis(snap: EligibilityDurableSnap | null | undefined): CalibrationPBasis {
@@ -611,6 +636,7 @@ export async function evaluateAndPersistEligibility(input: {
     settlementHealthy: input.settlementHealthy,
     consecutiveGreenPrior,
     streakRequired: streakRequiredFromEnv(),
+    deployedVersion: deployedVersionSlice(input.metrics),
   });
 
   await persistEligibilitySnap({
@@ -781,6 +807,7 @@ export async function loadCalibrationOpsSurface(input: {
       settlementHealthy: input.settlementHealthy,
       consecutiveGreenPrior,
       streakRequired: streakRequiredFromEnv(),
+      deployedVersion: deployedVersionSlice(metrics),
     });
   }
 

@@ -137,6 +137,45 @@ const cases = [
       consecutiveGreenPrior: 0, streakRequired: 1,
     },
   },
+  // C-275: the deployed-version floor. These execute the REAL production gate.
+  {
+    name: "deployed_version_clears_its_own_floor",
+    input: {
+      metrics: { n: 458, brier: 0.19, ece: 0.04, mce: 0.1, murphy: murphy(0.004), modelVersion: "v5.2.8", dateRange: null, generatedAt: null },
+      canonicalSettled: 458, minSettledForLearning: 100, settlementHealthy: true,
+      consecutiveGreenPrior: 2, streakRequired: 3,
+      deployedVersion: { key: "v5.2.8", n: 300, ece: 0.03 },
+    },
+  },
+  {
+    // THE FALSE-GREEN CASE: pooled clears the floor, the deployed model does not.
+    // Pre-C-275 this read GREEN. It must now read RED.
+    name: "deployed_version_fails_while_pooled_passes",
+    input: {
+      metrics: { n: 458, brier: 0.19, ece: 0.0499, mce: 0.1, murphy: murphy(0.004), modelVersion: "v5.2.7", dateRange: null, generatedAt: null },
+      canonicalSettled: 458, minSettledForLearning: 100, settlementHealthy: true,
+      consecutiveGreenPrior: 2, streakRequired: 3,
+      deployedVersion: { key: "v5.2.7", n: 245, ece: 0.1089 },
+    },
+  },
+  {
+    name: "deployed_version_too_few_own_rows",
+    input: {
+      metrics: { n: 458, brier: 0.19, ece: 0.04, mce: 0.1, murphy: murphy(0.004), modelVersion: "v5.2.8", dateRange: null, generatedAt: null },
+      canonicalSettled: 458, minSettledForLearning: 100, settlementHealthy: true,
+      consecutiveGreenPrior: 2, streakRequired: 3,
+      deployedVersion: { key: "v5.2.8", n: 12, ece: 0.01 },
+    },
+  },
+  {
+    // Omitted entirely -> pre-C-275 behaviour, byte for byte.
+    name: "deployed_version_omitted_is_unchanged",
+    input: {
+      metrics: { n: 458, brier: 0.19, ece: 0.04, mce: 0.1, murphy: murphy(0.004), modelVersion: "v", dateRange: null, generatedAt: null },
+      canonicalSettled: 458, minSettledForLearning: 100, settlementHealthy: true,
+      consecutiveGreenPrior: 2, streakRequired: 3,
+    },
+  },
   {
     name: "ece_exactly_on_floor",
     input: {
@@ -158,6 +197,8 @@ const results = cases.map((c) => {
       reasons: report.reasons,
       consecutiveGreen: report.consecutiveGreen,
       streakRequired: report.streakRequired,
+      deployedVersion: report.deployedVersion,
+      deployedVersionChecked: report.deployedVersionChecked,
       operatorHint: report.operatorHint,
       floors: report.floors,
     },

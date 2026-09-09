@@ -39,6 +39,8 @@
         ],
         "consecutiveGreen": 0,
         "streakRequired": 3,
+        "deployedVersion": null,
+        "deployedVersionChecked": false,
         "operatorHint": "Eligibility RED: ECE 0.0524 > 0.05. Do not publish performance claims.",
         "floors": {
           "n": 100,
@@ -79,6 +81,8 @@
         ],
         "consecutiveGreen": 2,
         "streakRequired": 3,
+        "deployedVersion": null,
+        "deployedVersionChecked": false,
         "operatorHint": "Floors met this run; streak 2/3. Keep calibration-metrics cron running.",
         "floors": {
           "n": 100,
@@ -117,6 +121,8 @@
         "reasons": [],
         "consecutiveGreen": 3,
         "streakRequired": 3,
+        "deployedVersion": null,
+        "deployedVersionChecked": false,
         "operatorHint": "Eligibility GREEN (3≥3). Publish automation may promote when CALIBRATION_AUTO_PUBLISH=true.",
         "floors": {
           "n": 100,
@@ -157,6 +163,8 @@
         ],
         "consecutiveGreen": 0,
         "streakRequired": 3,
+        "deployedVersion": null,
+        "deployedVersionChecked": false,
         "operatorHint": "Eligibility RED: Settlement not healthy. Do not publish performance claims.",
         "floors": {
           "n": 100,
@@ -198,6 +206,8 @@
         ],
         "consecutiveGreen": 0,
         "streakRequired": 3,
+        "deployedVersion": null,
+        "deployedVersionChecked": false,
         "operatorHint": "Eligibility RED: Canonical settled 42/100; Map n 42 < floor 100. Do not publish performance claims.",
         "floors": {
           "n": 100,
@@ -238,6 +248,8 @@
         ],
         "consecutiveGreen": 0,
         "streakRequired": 3,
+        "deployedVersion": null,
+        "deployedVersionChecked": false,
         "operatorHint": "Eligibility RED: Brier 0.2401 > 0.22. Do not publish performance claims.",
         "floors": {
           "n": 100,
@@ -278,6 +290,8 @@
         ],
         "consecutiveGreen": 0,
         "streakRequired": 3,
+        "deployedVersion": null,
+        "deployedVersionChecked": false,
         "operatorHint": "Eligibility RED: Murphy reliability 0.0812 > 0.05. Do not publish performance claims.",
         "floors": {
           "n": 100,
@@ -305,6 +319,8 @@
         ],
         "consecutiveGreen": 0,
         "streakRequired": 3,
+        "deployedVersion": null,
+        "deployedVersionChecked": false,
         "operatorHint": "Eligibility RED: No live calibration metrics artifact. Do not publish performance claims.",
         "floors": {
           "n": 100,
@@ -343,6 +359,8 @@
         ],
         "consecutiveGreen": 0,
         "streakRequired": 3,
+        "deployedVersion": null,
+        "deployedVersionChecked": false,
         "operatorHint": "Eligibility RED: Brier missing; ECE missing; Murphy reliability missing. Do not publish performance claims.",
         "floors": {
           "n": 100,
@@ -388,6 +406,8 @@
         ],
         "consecutiveGreen": 0,
         "streakRequired": 3,
+        "deployedVersion": null,
+        "deployedVersionChecked": false,
         "operatorHint": "Eligibility RED: Settlement not healthy; Canonical settled 5/100; Map n 5 < floor 100. Do not publish performance claims.",
         "floors": {
           "n": 100,
@@ -426,7 +446,200 @@
         "reasons": [],
         "consecutiveGreen": 1,
         "streakRequired": 1,
+        "deployedVersion": null,
+        "deployedVersionChecked": false,
         "operatorHint": "Eligibility GREEN (1≥1). Publish automation may promote when CALIBRATION_AUTO_PUBLISH=true.",
+        "floors": {
+          "n": 100,
+          "brier": 0.22,
+          "ece": 0.05,
+          "murphyReliability": 0.05
+        }
+      }
+    },
+    {
+      "name": "deployed_version_clears_its_own_floor",
+      "input": {
+        "metrics": {
+          "n": 458,
+          "brier": 0.19,
+          "ece": 0.04,
+          "mce": 0.1,
+          "murphy": {
+            "reliability": 0.004,
+            "resolution": 0.02,
+            "uncertainty": 0.21
+          },
+          "modelVersion": "v5.2.8",
+          "dateRange": null,
+          "generatedAt": null
+        },
+        "canonicalSettled": 458,
+        "minSettledForLearning": 100,
+        "settlementHealthy": true,
+        "consecutiveGreenPrior": 2,
+        "streakRequired": 3,
+        "deployedVersion": {
+          "key": "v5.2.8",
+          "n": 300,
+          "ece": 0.03
+        }
+      },
+      "output": {
+        "status": "GREEN",
+        "runMeetsFloors": true,
+        "reasons": [],
+        "consecutiveGreen": 3,
+        "streakRequired": 3,
+        "deployedVersion": {
+          "key": "v5.2.8",
+          "n": 300,
+          "ece": 0.03
+        },
+        "deployedVersionChecked": true,
+        "operatorHint": "Eligibility GREEN (3≥3). Publish automation may promote when CALIBRATION_AUTO_PUBLISH=true.",
+        "floors": {
+          "n": 100,
+          "brier": 0.22,
+          "ece": 0.05,
+          "murphyReliability": 0.05
+        }
+      }
+    },
+    {
+      "name": "deployed_version_fails_while_pooled_passes",
+      "input": {
+        "metrics": {
+          "n": 458,
+          "brier": 0.19,
+          "ece": 0.0499,
+          "mce": 0.1,
+          "murphy": {
+            "reliability": 0.004,
+            "resolution": 0.02,
+            "uncertainty": 0.21
+          },
+          "modelVersion": "v5.2.7",
+          "dateRange": null,
+          "generatedAt": null
+        },
+        "canonicalSettled": 458,
+        "minSettledForLearning": 100,
+        "settlementHealthy": true,
+        "consecutiveGreenPrior": 2,
+        "streakRequired": 3,
+        "deployedVersion": {
+          "key": "v5.2.7",
+          "n": 245,
+          "ece": 0.1089
+        }
+      },
+      "output": {
+        "status": "RED",
+        "runMeetsFloors": false,
+        "reasons": [
+          "Deployed v5.2.7 ECE 0.1089 > 0.05 on its own rows"
+        ],
+        "consecutiveGreen": 0,
+        "streakRequired": 3,
+        "deployedVersion": {
+          "key": "v5.2.7",
+          "n": 245,
+          "ece": 0.1089
+        },
+        "deployedVersionChecked": true,
+        "operatorHint": "Eligibility RED: Deployed v5.2.7 ECE 0.1089 > 0.05 on its own rows. Do not publish performance claims.",
+        "floors": {
+          "n": 100,
+          "brier": 0.22,
+          "ece": 0.05,
+          "murphyReliability": 0.05
+        }
+      }
+    },
+    {
+      "name": "deployed_version_too_few_own_rows",
+      "input": {
+        "metrics": {
+          "n": 458,
+          "brier": 0.19,
+          "ece": 0.04,
+          "mce": 0.1,
+          "murphy": {
+            "reliability": 0.004,
+            "resolution": 0.02,
+            "uncertainty": 0.21
+          },
+          "modelVersion": "v5.2.8",
+          "dateRange": null,
+          "generatedAt": null
+        },
+        "canonicalSettled": 458,
+        "minSettledForLearning": 100,
+        "settlementHealthy": true,
+        "consecutiveGreenPrior": 2,
+        "streakRequired": 3,
+        "deployedVersion": {
+          "key": "v5.2.8",
+          "n": 12,
+          "ece": 0.01
+        }
+      },
+      "output": {
+        "status": "RED",
+        "runMeetsFloors": false,
+        "reasons": [
+          "Deployed v5.2.8 has 12 own settled rows < floor 100"
+        ],
+        "consecutiveGreen": 0,
+        "streakRequired": 3,
+        "deployedVersion": {
+          "key": "v5.2.8",
+          "n": 12,
+          "ece": 0.01
+        },
+        "deployedVersionChecked": true,
+        "operatorHint": "Eligibility RED: Deployed v5.2.8 has 12 own settled rows < floor 100. Do not publish performance claims.",
+        "floors": {
+          "n": 100,
+          "brier": 0.22,
+          "ece": 0.05,
+          "murphyReliability": 0.05
+        }
+      }
+    },
+    {
+      "name": "deployed_version_omitted_is_unchanged",
+      "input": {
+        "metrics": {
+          "n": 458,
+          "brier": 0.19,
+          "ece": 0.04,
+          "mce": 0.1,
+          "murphy": {
+            "reliability": 0.004,
+            "resolution": 0.02,
+            "uncertainty": 0.21
+          },
+          "modelVersion": "v",
+          "dateRange": null,
+          "generatedAt": null
+        },
+        "canonicalSettled": 458,
+        "minSettledForLearning": 100,
+        "settlementHealthy": true,
+        "consecutiveGreenPrior": 2,
+        "streakRequired": 3
+      },
+      "output": {
+        "status": "GREEN",
+        "runMeetsFloors": true,
+        "reasons": [],
+        "consecutiveGreen": 3,
+        "streakRequired": 3,
+        "deployedVersion": null,
+        "deployedVersionChecked": false,
+        "operatorHint": "Eligibility GREEN (3≥3). Publish automation may promote when CALIBRATION_AUTO_PUBLISH=true.",
         "floors": {
           "n": 100,
           "brier": 0.22,
@@ -464,6 +677,8 @@
         "reasons": [],
         "consecutiveGreen": 3,
         "streakRequired": 3,
+        "deployedVersion": null,
+        "deployedVersionChecked": false,
         "operatorHint": "Eligibility GREEN (3≥3). Publish automation may promote when CALIBRATION_AUTO_PUBLISH=true.",
         "floors": {
           "n": 100,

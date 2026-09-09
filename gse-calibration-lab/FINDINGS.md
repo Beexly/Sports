@@ -238,14 +238,22 @@ forecast, and that the Murphy reliability floor is ~4.47x looser than the ECE
 floor. What had not been stated is the consequence: they do not merely fail
 *individually*, they fail *together, to the same forecaster*.
 
-## Worse than unfloored — RES is unmeasured
+## Correction: RES is computed — it is unfloored, unsliced, and unquoted
 
-Murphy **resolution appears nowhere** in AGENTS.md's production readings. Those
-record n, Brier, ECE and Murphy **reliability** (0.0053). Reliability and
-resolution are different terms pulling in opposite directions.
+An earlier draft of this section said RES "is unmeasured" and "unknown". **That
+overstated it, and the correction matters.**
+`compute-live-calibration-metrics.ts` *does* compute and emit
+`overall.murphy.resolution`.
 
-So the deployed model's ranking power is not merely unconstrained by the gate —
-**it is unknown**. The first action is to measure it, not to floor it.
+What is actually true, and is still the point:
+
+1. **Not floored.** The gate applies no RES floor.
+2. **Not computed per slice.** `CalibrationSliceMetrics` carries `murphyRel` but
+   no `murphyRes`, so there is no per-version ranking power at all.
+3. **Not among the readings AGENTS.md quotes**, which record n, Brier, ECE and
+   Murphy **reliability** (0.0053) — a different term pulling the opposite way.
+
+The pooled number exists. Nobody floors it, and no per-version figure exists.
 
 *(A caution against a mistake made and caught while writing this: 0.0053 is
 RELIABILITY. Reading it as resolution would be a category error, and reading a
@@ -253,10 +261,14 @@ low value as bad would invert its meaning.)*
 
 ## Related: the gate compares a point estimate to a floor
 
+The gate compares a point estimate to the floor. **Same correction shape as
+above:** the artifact *already* computes `eceCi95` and `brierCi95`
+(`bootstrap-metric-ci.ts`). The uncertainty **is** measured — the *gate* just
+does not read it.
+
 AGENTS.md records that at n=223 the ECE was 0.0553 with a bootstrap CI of
 **[0.0365, 0.1142]** — an interval straddling the 0.05 floor by a wide margin in
-both directions. The gate compares the point estimate only; it has no
-uncertainty treatment. A GREEN reading near the floor can therefore be noise.
+both directions. A GREEN reading near the floor can therefore be noise.
 `gsecal.bootstrap` reports the interval and a verdict of CLEARS / FAILS /
 INCONCLUSIVE against the floor for exactly this reason.
 
@@ -272,3 +284,19 @@ No floor is added, changed or weakened. Adding a RES floor would make the guard
 strictly stronger (law 9's allowed direction) and is worth doing — but it is a
 production gate change on the honesty boundary, it needs a measured RES first,
 and it belongs to a human. This measures the gap so the decision is informed.
+
+
+---
+
+# Correction log
+
+Claims in this document that were wrong when first written, and what replaced
+them. Kept visible rather than silently edited, because a findings document that
+quietly rewrites itself is not evidence of anything.
+
+| First written | Corrected to |
+|---|---|
+| "compute-live-calibration-metrics.ts does not currently emit per-version ECE, so it is real scope, not a one-liner" (ledger C-275) | It already emits `byModelVersion` as `CalibrationSliceMetrics` including `ece`, already plumbed into `calibration-eligibility-durable.ts:76`. The fix is small. |
+| "RES is unmeasured / unknown" (Finding 3) | `overall.murphy.resolution` is computed and emitted. It is unfloored, not computed per slice, and not among AGENTS.md's quoted readings. |
+| "the gate ... has no uncertainty treatment" (Finding 3) | `eceCi95`/`brierCi95` are already computed. The gate does not read them. |
+| A test labelled 0.0053 as Murphy *resolution* | 0.0053 is Murphy *reliability*. Caught before commit; the test now states its RES value is illustrative, not measured. |

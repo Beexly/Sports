@@ -23,6 +23,7 @@ __all__ = [
     "Floors",
     "MurphyTerms",
     "LiveMetrics",
+    "DeployedVersionSlice",
     "EligibilityReport",
     "DEFAULT_FLOORS",
     "resolve_floors",
@@ -50,6 +51,15 @@ class MurphyTerms:
 
 
 @dataclass(frozen=True, slots=True)
+class DeployedVersionSlice:
+    """The sample slice belonging to the model version serving traffic (C-275)."""
+
+    key: str
+    n: int
+    ece: float
+
+
+@dataclass(frozen=True, slots=True)
 class LiveMetrics:
     n: int
     brier: float | None = None
@@ -74,6 +84,8 @@ class EligibilityReport:
     floors: Floors
     consecutive_green: int
     streak_required: int
+    deployed_version: DeployedVersionSlice | None
+    deployed_version_checked: bool
     operator_hint: str
 
 
@@ -128,6 +140,7 @@ def evaluate_eligibility(
     consecutive_green_prior: int,
     streak_required: int,
     floors: dict | None = None,
+    deployed_version: DeployedVersionSlice | None = None,
 ) -> EligibilityReport:
     """Mirrors evaluateCalibrationEligibility, reason strings included."""
     resolved = resolve_floors(floors, min_settled_for_learning)
@@ -165,6 +178,22 @@ def evaluate_eligibility(
         elif murphy.reliability > resolved.murphy_reliability:
             reasons.append(
                 f"Murphy reliability {_fixed4(murphy.reliability)} > {resolved.murphy_reliability}"
+            )
+
+    # C-275: the deployed model must clear the floor on its OWN rows, not only
+    # in a pool whose other strata can cancel its error away.
+    if deployed_version is not None:
+        if deployed_version.n < resolved.n:
+            reasons.append(
+                f"Deployed {deployed_version.key} has {deployed_version.n} "
+                f"own settled rows < floor {resolved.n}"
+            )
+        if not math.isfinite(deployed_version.ece):
+            reasons.append(f"Deployed {deployed_version.key} ECE missing")
+        elif deployed_version.ece > resolved.ece:
+            reasons.append(
+                f"Deployed {deployed_version.key} ECE {_fixed4(deployed_version.ece)} "
+                f"> {resolved.ece} on its own rows"
             )
 
     run_meets_floors = len(reasons) == 0
@@ -205,5 +234,7 @@ def evaluate_eligibility(
         floors=resolved,
         consecutive_green=consecutive_green,
         streak_required=streak_required,
+        deployed_version=deployed_version,
+        deployed_version_checked=deployed_version is not None,
         operator_hint=hint,
     )

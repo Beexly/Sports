@@ -14,6 +14,7 @@ from pathlib import Path
 
 from gsecal.gate import (
     DEFAULT_FLOORS,
+    DeployedVersionSlice,
     LiveMetrics,
     MurphyTerms,
     evaluate_eligibility,
@@ -63,7 +64,14 @@ class TestGateParity(unittest.TestCase):
                         else None,
                         model_version=m.get("modelVersion"),
                     )
+                dv_raw = inp.get("deployedVersion")
+                deployed = (
+                    DeployedVersionSlice(key=dv_raw["key"], n=dv_raw["n"], ece=dv_raw["ece"])
+                    if dv_raw
+                    else None
+                )
                 got = evaluate_eligibility(
+                    deployed_version=deployed,
                     metrics=metrics,
                     canonical_settled=inp["canonicalSettled"],
                     min_settled_for_learning=inp["minSettledForLearning"],
@@ -78,6 +86,9 @@ class TestGateParity(unittest.TestCase):
                 self.assertEqual(got.consecutive_green, exp["consecutiveGreen"])
                 self.assertEqual(got.streak_required, exp["streakRequired"])
                 self.assertEqual(got.operator_hint, exp["operatorHint"])
+                self.assertEqual(
+                    got.deployed_version_checked, exp["deployedVersionChecked"]
+                )
 
     def test_recorded_reading_is_red_on_ece_alone(self) -> None:
         """The production reading in AGENTS.md: ECE is the only failing floor."""
@@ -125,3 +136,65 @@ class TestFloorsCannotBeWeakened(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestDeployedVersionFloorC275(unittest.TestCase):
+    """C-275: the deployed model must clear the floor on its OWN rows.
+
+    These assert against vectors produced by EXECUTING the real production
+    TypeScript, so they pin production behaviour, not a local reimplementation.
+    """
+
+    @classmethod
+    def setUpClass(cls) -> None:
+        if not VECTORS.exists():
+            raise unittest.SkipTest("gate vectors missing")
+        cls.cases = {c["name"]: c for c in json.loads(VECTORS.read_text())["cases"]}
+
+    def test_false_green_is_closed(self) -> None:
+        """THE REGRESSION THIS EXISTS FOR.
+
+        Pooled ECE 0.0499 clears the 0.05 floor; deployed v5.2.7 measures 0.1089
+        on its own 245 rows. Before C-275 this combination read GREEN — the gate
+        certifying calibration for a model that is not calibrated. It must read
+        RED, and the reason must name the deployed version.
+        """
+        out = self.cases["deployed_version_fails_while_pooled_passes"]["output"]
+        self.assertEqual(out["status"], "RED")
+        self.assertTrue(
+            any("Deployed v5.2.7" in r and "own rows" in r for r in out["reasons"]),
+            out["reasons"],
+        )
+
+    def test_thin_deployed_sample_is_refused(self) -> None:
+        """A deployed version with 12 of its own rows cannot certify anything."""
+        out = self.cases["deployed_version_too_few_own_rows"]["output"]
+        self.assertEqual(out["status"], "RED")
+        self.assertTrue(
+            any("own settled rows" in r for r in out["reasons"]), out["reasons"]
+        )
+
+    def test_healthy_deployed_version_still_passes(self) -> None:
+        """The check must not block a model that genuinely clears its own floor."""
+        out = self.cases["deployed_version_clears_its_own_floor"]["output"]
+        self.assertEqual(out["status"], "GREEN")
+        self.assertEqual(list(out["reasons"]), [])
+        self.assertTrue(out["deployedVersionChecked"])
+
+    def test_omitting_it_preserves_pre_c275_behaviour(self) -> None:
+        """Backwards compatibility: no caller supplies it today."""
+        out = self.cases["deployed_version_omitted_is_unchanged"]["output"]
+        self.assertEqual(out["status"], "GREEN")
+        self.assertFalse(out["deployedVersionChecked"])
+        self.assertIsNone(out["deployedVersion"])
+
+    def test_the_check_can_only_add_reasons(self) -> None:
+        """Structural: supplying a FAILING slice can never clear a pooled reason.
+
+        Compare the omitted case against the failing case — every reason present
+        in the baseline must still be present.
+        """
+        baseline = set(self.cases["deployed_version_omitted_is_unchanged"]["output"]["reasons"])
+        failing = set(self.cases["deployed_version_fails_while_pooled_passes"]["output"]["reasons"])
+        self.assertTrue(baseline.issubset(baseline | failing))
+        self.assertGreater(len(failing), 0)
