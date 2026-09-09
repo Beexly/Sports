@@ -11,6 +11,10 @@ export {
   isPublishableSpreadLine,
   isBaseballSport,
   BASEBALL_RUN_LINES,
+  isQuotedBookLine,
+  lineIntegrityPublishGuardEnabled,
+  NON_BOOK_BOOKMAKER_KEYS,
+  isRealBookmakerKey,
 } from "./scoring.js";
 export {
   computeGameContext,

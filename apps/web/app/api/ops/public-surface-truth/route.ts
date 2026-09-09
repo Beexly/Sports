@@ -35,6 +35,7 @@ import { isSignalBoardSlateStale, isMarketBoardOddsStale } from "@/lib/data-reli
 import { boardSurfacePosture } from "@/lib/board/board-surface-policy";
 import { loadBillingMoneyPosture } from "@/lib/ops/billing-money-posture";
 import { loadAutonomyPosture } from "@/lib/ops/autonomy-posture";
+import { surveyLineIntegrity } from "@/lib/settlement/line-integrity-lane";
 import { loadStripeWebhookHostsPosture } from "@/lib/ops/stripe-webhook-hosts";
 import { loadWaitlistPosture } from "@/lib/ops/waitlist-posture";
 import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
@@ -622,6 +623,37 @@ export async function GET(request: Request) {
   const marketCoverage = isStubMode() ? null : await safeRead(() => loadMarketCoverage(db as never));
   const confidenceTail = isStubMode() ? null : await safeRead(() => loadConfidenceTail(db as never));
 
+  // Line integrity (C-283; ledger C-197/C-281/C-282): how many published picks
+  // carry a `line` no bookmaker quoted. Read-only, writes nothing.
+  //
+  // READ THE FIELD NAMES, NOT THE SHAPE. Two different populations are counted
+  // here and they are NOT interchangeable:
+  //   publishedUnsettledOffGridOrBadRunline  exact, no odds join, a LOWER BOUND
+  //     (off-grid is certainly not a book line; on-grid may still be unquoted)
+  //   publishedUnsettledNotQuoted / remainingToVoid  exact against the odds
+  //     table, but only over the rows this call INSPECTED — each carries its
+  //     own `*Inspected` denominator and `*CapReached` flag, and a count whose
+  //     denominator is not stated is the C-241/C-246/C-250 defect class.
+  //
+  // THE FLIP PRECONDITION IS `lineIntegrity.sweep.voidSweepComplete`, not
+  // `remainingToVoid === 0` (C-287). `remainingCapReached` is true on every
+  // production call — the survey samples the oldest 300 of a settled population
+  // in the thousands, and remediation only removes the DEFECTIVE ones — so the
+  // wording this comment used to carry could never be satisfied by any amount
+  // of correct remediation. `sweep` proves completeness from the actor's own
+  // full passes over the population; `remainingToVoid` is a spot check on the
+  // sample. See docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md §3c.
+  //
+  // OPERATOR-ONLY, and for the same reason `stripeWebhookHosts` above is:
+  // `surveyLineIntegrity` runs three capped pick scans plus counts on EVERY
+  // call. The public branch is rate-limited per IP, which bounds one caller,
+  // not the aggregate database work anonymous callers can provoke (CodeRabbit,
+  // #733). Nothing is lost by gating it — these are numbers the operator reads
+  // before a flip, not public claims — but reading them now needs
+  // the CRON_SECRET bearer. `docs/ops/OPERATOR.md` §5-LI says so.
+  const lineIntegrity =
+    !detailed || isStubMode() ? null : await safeRead(() => surveyLineIntegrity(db as never));
+
   // Proof-gated ladder — canonical settled; publish from eligibility policy.
   const revenueLadder = evaluateRevenueLadder({
     canonicalSettled: sample?.canonicalSettled ?? 0,
@@ -887,6 +919,7 @@ export async function GET(request: Request) {
       },
       marketCoverage,
       confidenceTail,
+      lineIntegrity,
       ...(detailed ? { mainFeatureMarkers: MAIN_FEATURE_MARKERS } : {}),
       /**
        * Stripe posture, operator-detail only (C-182, the code half of F-18,

@@ -19,6 +19,7 @@
  */
 
 import { wilsonInterval, clearsThreshold } from "./wilson-interval";
+import { CLV_SAMPLE_RESULT_FILTER } from "@/lib/clv/clv-sample-policy";
 
 /** The market vig break-even line — beating the close below this isn't an edge. */
 const VIG_BREAK_EVEN = 0.524;
@@ -164,7 +165,20 @@ export async function loadPublicClvPolicy(
   input: LoadClvPolicyInput
 ): Promise<PublicClvPolicy> {
   // Canonical only: bootstrap-era picks never touch a public claim.
-  const canonical = { isBootstrap: false, isPublished: true } as const;
+  //
+  // A VOID pick is EXCLUDED. A withdrawal means we no longer stand behind the
+  // recorded outcome, and CLV is a claim about a bet that stood — "we beat the
+  // close" on a pick we withdrew is exactly the kind of unearned claim this
+  // product's premise forbids. The row keeps its `clvVerdict` so the settlement
+  // history stays intact; it is filtered HERE, at the read, rather than erased
+  // (Devin Review, #733). Note this is a real interaction, not a hypothetical:
+  // the line-integrity lane withdraws settled picks that already carry a
+  // verdict from their original grading.
+  const canonical = {
+    isBootstrap: false,
+    isPublished: true,
+    result: CLV_SAMPLE_RESULT_FILTER,
+  } as const;
 
   const [gradedSampleSize, beatCloseCount, lostToCloseCount, matchedCloseCount] =
     await Promise.all([

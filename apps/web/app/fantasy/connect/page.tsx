@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   description:
     "Sync your Sleeper league read-only: enter your username, pick a league, and see your real roster resolved from Sleeper's public API. We never write to your league.",
   alternates: { canonical: "/fantasy/connect" },
+  robots: { index: false, follow: true },
 };
 
 export default function ConnectPage() {

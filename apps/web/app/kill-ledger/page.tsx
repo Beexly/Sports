@@ -28,7 +28,7 @@ import { jsonLdScript } from "@/lib/seo/json-ld";
 import { SITE_URL } from "@/lib/seo/site-url";
 
 export const metadata: Metadata = {
-  title: `Kill Ledger · ${BRAND_NAME}`,
+  title: { absolute: `Kill Ledger · ${BRAND_NAME}` },
   description:
     "We test the strategies this industry sells. When they fail, we publish the failure.",
   alternates: { canonical: "/kill-ledger" },

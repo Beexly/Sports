@@ -20,7 +20,7 @@ const RESULT_CLASS: Record<string, string> = {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Public Ledger - Galaxy Sports Edge",
+  title: { absolute: "Public Ledger - Galaxy Sports Edge" },
   description:
     "Settled canonical picks with the original signal snapshot preserved against the outcome.",
   alternates: { canonical: "/ledger" },

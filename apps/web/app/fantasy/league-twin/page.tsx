@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   description:
     "Your roster as a navigable galaxy: players are star systems whose brightness, size, halo, and shocks encode projection, usage, volatility, byes, and injuries, and your stacks are orbital ties. Nobody renders a roster this way.",
   alternates: { canonical: "/fantasy/league-twin" },
+  robots: { index: false, follow: true },
 };
 
 export default function LeagueTwinPage() {

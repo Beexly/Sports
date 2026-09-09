@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   description:
     "Drills that train the process behind great roster decisions, bias by bias, graded on the quality of your reasoning, building a GM IQ that rewards how you decide, not how the week broke.",
   alternates: { canonical: "/fantasy/academy" },
+  robots: { index: false, follow: true },
 };
 
 export default function GmAcademyPage() {

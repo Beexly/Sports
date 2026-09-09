@@ -136,6 +136,7 @@
     "ops:stale-picks": "TSX_TSCONFIG_PATH=apps/web/tsconfig.json tsx scripts/ops/list-stale-pending-picks.ts",
     "ops:stale-picks:unpublish": "TSX_TSCONFIG_PATH=apps/web/tsconfig.json tsx scripts/ops/adjudicate-stale-picks.ts",
     "ops:corrupted-picks": "TSX_TSCONFIG_PATH=apps/web/tsconfig.json tsx scripts/ops/unpublish-corrupted-picks.ts",
+    "ops:regrade-lines": "TSX_TSCONFIG_PATH=apps/web/tsconfig.json tsx scripts/ops/regrade-against-book-lines.ts",
     "ops:merge-games": "TSX_TSCONFIG_PATH=apps/web/tsconfig.json tsx scripts/ops/merge-duplicate-games.ts",
     "dspy:gse": "node scripts/dspy-gse/run.mjs",
     "session2:extract": "node scripts/orbit-extract-integrity.mjs --full",

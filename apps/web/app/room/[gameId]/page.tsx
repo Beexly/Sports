@@ -10,7 +10,7 @@ import { getViewerEntitlements } from "@/lib/pricing/tier-access";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Game Intelligence Room - Galaxy Sports Edge",
+  title: { absolute: "Game Intelligence Room - Galaxy Sports Edge" },
   description: "A read-only game room with market pulse, evidence timeline, lens projections, and memory.",
 };
 

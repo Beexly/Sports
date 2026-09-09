@@ -163,6 +163,10 @@ export function buildGroundedContext(input: GroundingInput): GroundedContext {
     lines.push("SIGNAL SNAPSHOT: none recorded for this pick.");
   }
 
+  // VOID is deliberately absent: a withdrawn pick has no outcome to explain and
+  // no bet that could have beaten the close, so neither OUTCOME nor
+  // CLOSING-LINE VALUE is grounded for one. This is the C-279 withdrawal rule
+  // for this surface — it was already correct, and the audit left it unchanged.
   const decisiveResult = pick.result === "WIN" || pick.result === "LOSS" || pick.result === "PUSH";
   if (decisiveResult) {
     lines.push(`OUTCOME: ${pick.result}`);

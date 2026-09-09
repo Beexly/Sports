@@ -10,7 +10,7 @@ const FABLE_DESCRIPTION =
   "The local-first evidence lab behind Galaxy Sports Edge: source-rights checks, claim ledgers, uncertainty review, drift tests, and AWS cost gates before any public claim or paid cloud action.";
 
 export const metadata: Metadata = {
-  title: `FABLE Evidence Lab | ${BRAND_NAME}`,
+  title: { absolute: `FABLE Evidence Lab | ${BRAND_NAME}` },
   description: FABLE_DESCRIPTION,
   alternates: { canonical: "/fable" },
   openGraph: {

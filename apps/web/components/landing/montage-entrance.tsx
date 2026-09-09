@@ -94,20 +94,12 @@ export function MontageEntrance() {
     }
 
     const search = window.location.search;
-    // ?intro=play force-replays the cold-open, overriding the once-per-session
-    // gate, so it can always be re-triggered (e.g. the footer "Replay intro").
+    // F-24 (founder-delegated 2026-09-08, via orchestrator): the montage is
+    // OFF by default for organic first visits — it no longer autoplays.
+    // ?intro=play still triggers it explicitly (wired to the footer
+    // "Replay intro"), which is the only way it plays now.
     const forcePlay = search.includes("intro=play");
-
-    let seen = false;
-    try {
-      // Per-SESSION gating (not localStorage): every genuine visit gets the
-      // hype, while in-session navigation does not replay it.
-      seen = sessionStorage.getItem(SEEN_KEY) === "1";
-    } catch {
-      /* ignore */
-    }
-
-    if (!forcePlay && (seen || search.includes("intro=skip"))) return;
+    if (!forcePlay) return;
 
     try {
       sessionStorage.setItem(SEEN_KEY, "1");
