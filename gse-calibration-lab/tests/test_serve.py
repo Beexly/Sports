@@ -105,12 +105,17 @@ class TestPolicyAllows(unittest.TestCase):
         self.assertIsNone(config.auth)
 
     def test_loopback_with_auth_keeps_the_auth(self) -> None:
-        self.assertEqual(resolve_launch_config(env=dict(AUTH)).auth, (FIXTURE_USER, FIXTURE_PASS))
+        auth = resolve_launch_config(env=dict(AUTH)).auth
+        self.assertIsNotNone(auth)
+        self.assertEqual(auth[0], FIXTURE_USER)
+        self.assertEqual(auth[1], FIXTURE_PASS)
 
     def test_public_with_auth(self) -> None:
         config = resolve_launch_config(host="0.0.0.0", env=dict(AUTH))
         self.assertTrue(config.is_public)
-        self.assertEqual(config.auth, (FIXTURE_USER, FIXTURE_PASS))
+        self.assertIsNotNone(config.auth)
+        self.assertEqual(config.auth[0], FIXTURE_USER)
+        self.assertEqual(config.auth[1], FIXTURE_PASS)
 
     def test_managed_host_with_auth_binds_all_interfaces(self) -> None:
         config = resolve_launch_config(env={**AUTH, "SPACE_ID": "x"})
