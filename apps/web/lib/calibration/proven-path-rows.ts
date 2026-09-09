@@ -45,12 +45,29 @@ export type CalibrationExclusionReason =
    * The public receipt contract is pre-kickoff; these rows are counted, never
    * scored.
    */
-  | "in_play";
+  | "in_play"
+  /**
+   * C-300 (2026-09-09): the odds table holds no row that can price the pick at
+   * generatedAt, so the only probability on the row is the receipt's or the
+   * factor breakdown's. Both are refreshed after publish (the receipt was
+   * measured 0.169 above the odds table at generatedAt on v5.2.7's pre-game
+   * rows; the factor breakdown is rewritten every cycle until settlement), so
+   * neither is a publish-time market price the gate can verify. Counted, never
+   * scored. The first run on market_anchored_v3 carried 57 such rows and they
+   * alone moved the deployed slice's bound from under the floor to 0.0526.
+   */
+  | "unverifiable_market_p";
 
 export type CalibrationExclusionCounts = Readonly<Record<CalibrationExclusionReason, number>>;
 
 export function emptyExclusionCounts(): Record<CalibrationExclusionReason, number> {
-  return { three_way_market: 0, no_market_probability: 0, non_moneyline_market: 0, in_play: 0 };
+  return {
+    three_way_market: 0,
+    no_market_probability: 0,
+    non_moneyline_market: 0,
+    in_play: 0,
+    unverifiable_market_p: 0,
+  };
 }
 
 /** Pick types that carry a moneyline probability claim on one side. */

@@ -186,8 +186,12 @@ export type MarketAnchoredPSource = "proof_receipt" | "factor_breakdown" | Marke
  *                       than 0.15 off. The odds table is the source of truth
  *                       (CLAUDE.md, Prediction Engine Rules); the receipt is
  *                       a copy that has been shown to drift.
+ *   market_anchored_v4  C-300 (2026-09-09): the floors score only rows the
+ *                       odds table prices at generatedAt; receipt-only and
+ *                       factor-breakdown-only rows are counted as
+ *                       unverifiable_market_p (57 on the first v3 run).
  */
-export const MARKET_ANCHORED_P_BASIS = "market_anchored_v3" as const;
+export const MARKET_ANCHORED_P_BASIS = "market_anchored_v4" as const;
 export type MarketAnchoredPBasis = typeof MARKET_ANCHORED_P_BASIS;
 
 export type MarketAnchoredPResolution = {
@@ -301,9 +305,19 @@ export type MarketAnchoredSampleBuild = {
  */
 export function picksToMarketAnchoredCalibrationSamples(
   picks: readonly PickForLiveCal[],
-  options?: { readonly resolveMarketP?: MarketProbabilityResolver },
+  options?: {
+    readonly resolveMarketP?: MarketProbabilityResolver;
+    /**
+     * C-300: when true, a row whose probability came from the receipt or the
+     * factor breakdown (the odds table could not price it at generatedAt) is
+     * counted as unverifiable_market_p and not scored. The eligibility cron
+     * sets this; other readers keep the fallback chain.
+     */
+    readonly verifiableOnly?: boolean;
+  },
 ): MarketAnchoredSampleBuild {
   const resolveMarketP = options?.resolveMarketP ?? NULL_MARKET_PROBABILITY_RESOLVER;
+  const verifiableOnly = options?.verifiableOnly === true;
   const samples: MarketAnchoredSample[] = [];
   const bySource: Record<string, number> = {};
   const excluded = emptyExclusionCounts();
@@ -340,6 +354,17 @@ export function picksToMarketAnchoredCalibrationSamples(
       continue;
     }
 
+    // C-300: the eligibility floors score only a probability the append-only
+    // odds table can reproduce at generatedAt. A row the resolver could not
+    // price falls back to the receipt or the factor breakdown for every
+    // OTHER reader of this function, but for the floors both are post-publish
+    // values (receipt measured 0.169 above the odds table; factor breakdown
+    // rewritten every cycle) and are counted, never scored.
+    if (verifiableOnly && (res.source === "proof_receipt" || res.source === "factor_breakdown")) {
+      excluded.unverifiable_market_p += 1;
+      continue;
+    }
+
     samples.push({
       p: res.p,
       y: pick.result === "WIN" ? 1 : 0,
@@ -358,7 +383,7 @@ export function picksToMarketAnchoredCalibrationSamples(
 
   const notes = [
     "Eligibility p (market_anchored_v3, C-298 2026-09-09): market-anchored probability only, publish-time value. Order: the injected resolver first (odds-table recompute at generatedAt; two or more books as resolver, one book as resolver_single_book), then the proof receipt marketFairProb, then the factor-breakdown market fair. The receipt was demoted after production showed it sitting 0.169 above the odds table at generatedAt on v5.2.7's pre-game rows. Picks generated at or after their game's commenceTime are excluded as in_play (their price is a live price). Synthetic 0.5 rejected. Confidence/100 is never scored for the floors.",
-    `Included ${samples.length}; excluded three_way_market ${excluded.three_way_market}, no_market_probability ${excluded.no_market_probability}, non_moneyline_market ${excluded.non_moneyline_market}, in_play ${excluded.in_play}. Sources: ${JSON.stringify(bySource)}.`,
+    `Included ${samples.length}; excluded three_way_market ${excluded.three_way_market}, no_market_probability ${excluded.no_market_probability}, non_moneyline_market ${excluded.non_moneyline_market}, in_play ${excluded.in_play}, unverifiable_market_p ${excluded.unverifiable_market_p} (C-300: receipt or factor-breakdown only, no odds-table price at generatedAt; counted, never scored). Sources: ${JSON.stringify(bySource)}.`,
     "Three-way moneyline sports (scoring.ts isThreeWayMoneylineSport) are a structural exclusion: the two-way de-vig drops the draw mass and the engine does not publish them.",
     MARKET_ANCHORED_SAMPLE_COMPOSITION_NOTE,
     "PROVEN still needs floors + streak + publish. PERFORMANCE_STATS untouched.",

@@ -112,7 +112,7 @@ async function loadSettledCalibrationSamples(): Promise<{
   settledTo: string | null;
 }> {
   const notes: string[] = [];
-  const emptyExclusions: CalibrationExclusionCounts = { three_way_market: 0, no_market_probability: 0, non_moneyline_market: 0, in_play: 0 };
+  const emptyExclusions: CalibrationExclusionCounts = { three_way_market: 0, no_market_probability: 0, non_moneyline_market: 0, in_play: 0, unverifiable_market_p: 0 };
   try {
     const picks = await db.pick.findMany({
       where: {
@@ -178,6 +178,10 @@ async function loadSettledCalibrationSamples(): Promise<{
     // picks with no market probability are counted in `excluded`, never scored.
     const honest = picksToMarketAnchoredCalibrationSamples(rows, {
       resolveMarketP: oddsTable.resolveMarketP,
+      // C-300: the floors score only rows the odds table can price at
+      // generatedAt; receipt-only and factor-breakdown-only rows are counted
+      // as unverifiable_market_p, never scored.
+      verifiableOnly: true,
     });
     const samples: CalibrationSample[] = honest.samples.map((s) => ({
       p: s.p,

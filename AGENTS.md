@@ -303,7 +303,14 @@ Breaking one discards the run.
    bias-corrected ECE, `docs/ops/CALIBRATION_ECE_ESTIMATOR_2026-09-09.md`) is the first and
    only such change; a correction may be applied to a stratum the gate reads as well as to
    the pool, and must never let a stratum pass on fewer rows than the n floor.
-   Flipping an env flag, lowering a floor, or changing a sample definition stays forbidden.
+   **Second amendment, 2026-09-09 (founder, verbatim: "if we have to change laws or rules or
+   wording then do it"):** a row may be EXCLUDED from the eligibility sample when its
+   probability is shown by measurement not to be a publish-time market price (in-play
+   generation, C-298; a receipt-only or factor-breakdown-only probability the odds table
+   cannot reproduce at generatedAt, C-300), provided the exclusion is counted by reason on
+   the artifact and the streak restarts on the new basis tag. An exclusion may never be
+   chosen by outcome, and a row the odds table prices is never dropped.
+   Flipping an env flag, lowering a floor, or widening a sample stays forbidden.
    Never run a cron with a real secret. Never search for credentials. These gates are
    the honesty boundary; opening one publishes an unearned claim.
 4. **NEVER write a claim you did not observe.** Every report line traces to a command

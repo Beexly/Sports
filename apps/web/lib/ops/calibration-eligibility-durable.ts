@@ -98,6 +98,7 @@ export interface DurableMetricsPayload {
  */
 export type CalibrationPBasis =
   | MarketAnchoredPBasis
+  | "market_anchored_v3"
   | "market_anchored_v2"
   | "market_anchored"
   | "legacy";
