@@ -57,12 +57,30 @@ export class PredExonError extends Error {
   }
 }
 
+/** One side of a PredExon market: bid/ask are DOLLARS in [0,1] (null when unquoted). */
+export interface PredExonKalshiOutcome {
+  readonly label: string;
+  readonly bid: number | null;
+  readonly ask: number | null;
+}
+
 export interface PredExonKalshiMarket {
   readonly ticker: string;
   readonly event_ticker: string;
   readonly title: string;
+  /** Kalshi's short YES-side label (e.g. a team, "PHI -6.5", "Over 45.5"); "" when absent. */
+  readonly yes_subtitle: string;
   readonly status: string;
+  /** Most recent trade print (dollars). Discovery only — never a quote (see gateKalshiListing). */
   readonly last_price: number | null;
+  /** Kalshi settlement rule (greater / greater_or_equal / less / ...); null when absent. */
+  readonly strike_type: string | null;
+  /** Numeric strikes when the vendor relays them; null when absent. */
+  readonly floor_strike: number | null;
+  readonly cap_strike: number | null;
+  readonly close_time: string | null;
+  /** Two-way listing per side (docs: "Market outcome options with bid/ask prices"). */
+  readonly outcomes: readonly PredExonKalshiOutcome[];
 }
 
 export interface PredExonKalshiMarketsPage {
@@ -80,13 +98,37 @@ function asMarkets(body: unknown): PredExonKalshiMarket[] {
     if (!row || typeof row !== "object") continue;
     const r = row as Record<string, unknown>;
     if (typeof r.ticker !== "string" || typeof r.event_ticker !== "string") continue;
-    const last = r.last_price;
     out.push({
       ticker: r.ticker,
       event_ticker: r.event_ticker,
       title: typeof r.title === "string" ? r.title : "",
+      yes_subtitle: typeof r.yes_subtitle === "string" ? r.yes_subtitle : "",
       status: typeof r.status === "string" ? r.status : "",
-      last_price: typeof last === "number" && Number.isFinite(last) ? last : null,
+      last_price: finiteOrNull(r.last_price),
+      strike_type: typeof r.strike_type === "string" ? r.strike_type : null,
+      floor_strike: finiteOrNull(r.floor_strike),
+      cap_strike: finiteOrNull(r.cap_strike),
+      close_time: typeof r.close_time === "string" ? r.close_time : null,
+      outcomes: asOutcomes(r.outcomes),
+    });
+  }
+  return out;
+}
+
+function finiteOrNull(v: unknown): number | null {
+  return typeof v === "number" && Number.isFinite(v) ? v : null;
+}
+
+function asOutcomes(raw: unknown): PredExonKalshiOutcome[] {
+  if (!Array.isArray(raw)) return [];
+  const out: PredExonKalshiOutcome[] = [];
+  for (const row of raw) {
+    if (!row || typeof row !== "object") continue;
+    const r = row as Record<string, unknown>;
+    out.push({
+      label: typeof r.label === "string" ? r.label : "",
+      bid: finiteOrNull(r.bid),
+      ask: finiteOrNull(r.ask),
     });
   }
   return out;
@@ -112,6 +154,8 @@ export class PredExonClient {
     readonly ticker?: string;
     readonly status?: "open" | "closed";
     readonly limit?: number;
+    /** Cursor from a previous page's `paginationKey`. */
+    readonly paginationKey?: string;
   } = {}): Promise<PredExonKalshiMarketsPage | null> {
     if (!isPredExonIngestEnabled(this.env)) return null;
     assertIngestible(PREDEXON_SOURCE_ID);
@@ -125,6 +169,7 @@ export class PredExonClient {
     if (query.ticker) params.set("ticker", query.ticker);
     if (query.status) params.set("status", query.status);
     params.set("limit", String(Math.min(100, Math.max(1, query.limit ?? 20))));
+    if (query.paginationKey) params.set("pagination_key", query.paginationKey);
 
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), TIMEOUT_MS);
