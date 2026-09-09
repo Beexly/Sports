@@ -429,6 +429,29 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // isPublishableSpreadLine: baseball's run line is a fixed ladder, and the
   // mean of contaminated book rows lands off it.
   if (!isPublishableSpreadLine(input.sport, chosenSpread)) return null;
+  // Refuse a stored line no book in this consensus set quoted. Gated OFF by
+  // default: see isQuotedBookLine and lineIntegrityPublishGuardEnabled.
+  //
+  // JUDGED AGAINST `pricedOdds`, NOT `spreadOdds` (Devin Review, #733). The
+  // guard asks whether the member could actually place this pick, and a pick is
+  // a LINE AND A PRICE. `spreadOdds` includes rows carrying a line with no
+  // two-sided price; `entryPrice` and the fair value below both come from
+  // `pricedOdds`. Letting an unpriced row vouch for the line therefore approves
+  // a line-price combination no single book offers — the same mixed-book-set
+  // error #717 found in the price math, reappearing in the integrity check that
+  // was supposed to prevent unplaceable picks. Narrower is the safe direction.
+  if (
+    lineIntegrityPublishGuardEnabled() &&
+    // Real bookmakers only. A `rundown_default` row is not a book offering a
+    // price, so letting it satisfy the guard would pass off an unplaceable
+    // consensus mean as quoted (Devin Review, #733).
+    !isQuotedBookLine(
+      avgSpread,
+      pricedOdds.filter((o) => isRealBookmakerKey(o.bookmaker)).map((o) => o.spread as number),
+    )
+  ) {
+    return null;
+  }
   const pickedSide = homeIsChosen ? "HOME" : "AWAY";
 
   // ONE book set for every price-derived value below.
@@ -702,6 +725,30 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // information about where the line sits.
   if (pricedTotals.length < MIN_BOOKMAKERS) return null;
 
+  // The SPREAD twin of this check lives beside isPublishableSpreadLine. Totals
+  // had no line-integrity guard of any kind (the run-line ladder is
+  // spread-only), which is the sibling-lane pattern this repo keeps hitting;
+  // TOTAL is in fact the worse half of the finding (369 of 599 off-grid vs 310
+  // of 719). Gated OFF by default, same flag, same founder decision.
+  //
+  // It sits HERE, below `pricedTotals`, rather than beside `avgTotal` where it
+  // was first written, and judges against that set for the reason the spread
+  // twin does: a placeable pick is a line AND a price, and a totals row with a
+  // line but no over/under prices carries neither a consensus signal (the
+  // comment directly above says so) nor a price a member could take. Judging
+  // the guard against `totalOdds` while the displayed price comes from
+  // `pricedTotals` let an unpriced row approve a combination no book offers
+  // (Devin Review, #733).
+  if (
+    lineIntegrityPublishGuardEnabled() &&
+    !isQuotedBookLine(
+      avgTotal,
+      pricedTotals.filter((o) => isRealBookmakerKey(o.bookmaker)).map((o) => o.total as number),
+    )
+  ) {
+    return null;
+  }
+
   // Over is the market favorite when its SIGNED American price is <= the under
   // price: the higher-implied-probability side is the one with the smaller
   // signed price (e.g. -115 over is favored over -105 under). Using Math.abs
@@ -932,6 +979,70 @@ export function isPublishableSpreadLine(sportKey: string, line: number): boolean
   if (!Number.isFinite(line)) return false;
   const abs = Math.abs(line);
   return BASEBALL_RUN_LINES.some((valid) => Math.abs(abs - valid) < RUN_LINE_EPSILON);
+}
+
+/**
+ * Is `line` a value at least one book in `quotedLines` actually quoted?
+ *
+ * C-281 (ledger C-197). The published `line` is the arithmetic MEAN of every
+ * book's line (`avgSpread`, `avgTotal` below). On a market where books agree
+ * the mean IS a quoted line; where they disagree it is not, and the member is
+ * shown a price nobody offers — "Missouri Tigers -53.8", stored as
+ * -53.83333333333334, is the mean of three real FCS book lines, not a model
+ * margin. Measured on production 2026-09-08: SPREAD 310 of 719 and TOTAL 369
+ * of 599 published settled picks sit off the half-point grid.
+ *
+ * This predicate is the measurement. Whether the engine ACTS on it is gated by
+ * lineIntegrityPublishGuardEnabled below, default OFF: enforcing it
+ * suppresses roughly half the board, which is a founder decision (see
+ * docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md) and directly overturns the
+ * recorded C-119/C-125 call that a blanket rule would gut it.
+ *
+ * Deliberately NOT a half-point-grid test: books quote quarter-point Asian
+ * handicaps and whole-number totals, so the grid is a proxy and the book set is
+ * the fact. The baseball run-line ladder above stays as well — it catches the
+ * case this one cannot, where every book quotes the same contaminated line.
+ */
+const QUOTED_LINE_EPSILON = 1e-9;
+
+/**
+ * Bookmaker keys that carry no book identity. CANONICAL: this is the one
+ * definition, and apps/web/lib/calibration/publish-time-market-p.ts re-exports
+ * it rather than keeping a second copy.
+ *
+ * It lives in the engine because the publish guard needs it and the engine
+ * cannot import from apps/web. Grows only with evidence of a new non-book
+ * writer, never to change a count.
+ */
+export const NON_BOOK_BOOKMAKER_KEYS: ReadonlySet<string> = new Set(["rundown_default"]);
+
+export function isRealBookmakerKey(key: string | null | undefined): key is string {
+  if (typeof key !== "string") return false;
+  const trimmed = key.trim();
+  if (trimmed.length === 0) return false;
+  return !NON_BOOK_BOOKMAKER_KEYS.has(trimmed);
+}
+
+/**
+ * Read the enforcement flag straight from the environment rather than through
+ * PlatformConfig. Not a style choice: `apps/web/__tests__/env-example-coverage.test.ts`
+ * requires every `process.env` key PlatformConfig reads to have a matching
+ * `.env.example` entry, and AGENTS.md law 2 freezes any `.env*` file for
+ * agents. The same conflict was recorded for C-108, with the same resolution:
+ * keep the variable out of the shared config surface and document it in
+ * docs/ops/OPERATOR.md section 5. The idiom is the repo's
+ * (free-settlement-runner.ts, public-surface-truth/route.ts): trimmed,
+ * lower-cased, exact "true", default false.
+ */
+export function lineIntegrityPublishGuardEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env["LINE_INTEGRITY_PUBLISH_GUARD_ENABLED"]?.trim().toLowerCase() === "true";
+}
+
+export function isQuotedBookLine(line: number, quotedLines: readonly number[]): boolean {
+  if (!Number.isFinite(line)) return false;
+  return quotedLines.some(
+    (quoted) => Number.isFinite(quoted) && Math.abs(quoted - line) < QUOTED_LINE_EPSILON,
+  );
 }
 
 function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | null {

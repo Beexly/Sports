@@ -23,6 +23,9 @@ vi.mock("@sports/data-ingestion", () => ({
     { key: "baseball_mlb", name: "MLB" },
     { key: "americanfootball_nfl", name: "NFL" },
   ],
+  // The line-integrity lane reads the platform's odds-freshness line from here
+  // rather than defining a second "stale odds" of its own (C-287).
+  FRESHNESS_THRESHOLD_MS: 4 * 60 * 60 * 1000,
 }));
 vi.mock("@sports/prediction-engine", () => ({
   getReadinessGates: () => ({ isBootstrapMode: false }),
