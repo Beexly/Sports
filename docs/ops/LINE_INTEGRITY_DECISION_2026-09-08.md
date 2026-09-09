@@ -23,6 +23,12 @@ and stores that mean in `Pick.line` (lines 653 and 857). `Missouri Tigers -53.8`
 not model output: it is reproduced in test from `[-53.5, -54, -54, -53.5, -54, -54]`
 (`packages/prediction-engine/src/__tests__/quoted-book-line.test.ts`).
 
+> **Corrected 2026-09-09 — read §5b before relying on this section.** Measured
+> on production, the claim below holds for 442 of 523 off-grid settled picks.
+> For the other 81 the stored line lies *outside* the min/max of the books
+> quoting at publish, so it cannot be a mean of them, and stating the mechanism
+> this flatly is wrong for those.
+
 This changes the remedy, not the severity. There is **no write path connecting
 the engine's margin to the price field**, so there is nothing to disconnect.
 What is wrong is that a *consensus statistic* is displayed as a placeable price
@@ -195,12 +201,102 @@ not independent evidence that the input is sound, so it is not a reason to
 flip anything, and it is not a reason not to. It is the reason the
 `remainingToVoid` precondition in §3c exists.
 
+## 5b. MEASURED 2026-09-09, and it corrects §1
+
+Read-only SELECT on Neon `gse-postgres`, branch `main` (`br-green-leaf-apdgksoe`),
+2026-09-09 ~00:20 UTC.
+
+**How it was run, stated precisely.** `npm run ops:regrade-lines` could NOT be
+run: this session has no `DATABASE_URL` and no connection-string tool, and
+hunting for one is forbidden (law 3). Instead the SQL above fetched the tool's
+inputs and the tool's **own** `resolveBookLine`, `regradeOne` and the engine's
+`calculatePickResult` were run over them. The grading logic is the real code
+path; the Prisma driver is not. Read every number below with that caveat.
+
+The query was validated against C-197's published baseline before use: measured
+on the `line` column it reproduces SPREAD 312 (C-197: 310, two more have settled
+since), TOTAL 369 (exact), MONEYLINE 34 (exact).
+
+### Correction 1 — the off-grid count is smaller than C-197 states
+
+C-197 counts off-grid on the `line` column. Settlement does not grade against
+`line`; `selectGradingLine` grades against `clvLockLine ?? line`, and the locked
+line is frequently on-grid where the drifting one is not.
+
+| Market | off-grid on `line` (C-197) | off-grid on the **grading** line |
+|---|---|---|
+| SPREAD | 312 | **186** |
+| TOTAL | 369 | **336** |
+
+523 settled published picks are off-grid on the line that actually graded them,
+not ~680. Every count below is on those 523.
+
+### What a book-line grade would change
+
+All 523 had a real book line at publish time (`NONE` = 0).
+**85 of 523 recorded results would change** — 85 of the 1,329 settled published
+SPREAD/TOTAL picks overall. No hit rate is derived from this, per §3d.
+
+| sport | market | examined | differs |
+|---|---|---|---|
+| baseball_mlb | TOTAL | 242 | 58 |
+| baseball_mlb | SPREAD | 60 | 11 |
+| soccer_usa_mls | SPREAD | 40 | 5 |
+| soccer_usa_mls | TOTAL | 38 | 4 |
+| americanfootball_ncaaf | SPREAD | 74 | 2 |
+| americanfootball_ncaaf | TOTAL | 40 | 2 |
+| icehockey_nhl | TOTAL | 3 | 2 |
+| basketball_nba | SPREAD | 3 | 1 |
+| **americanfootball_nfl** | **SPREAD + TOTAL** | **19** | **0** |
+
+**NFL is clean on this measure** — 19 off-grid picks, none of which a book-line
+grade would change. That is a narrow finding about 19 picks, not a statement
+that NFL is unaffected going forward.
+
+### Correction 2 — §1's mechanism claim is too strong
+
+§1 says the stored line is the arithmetic mean of quoted book lines, "not model
+output". A mean must lie within the `[min, max]` of the values averaged. It does
+not, for a sixth of the sample:
+
+| Stored grading line vs the books quoting at publish | n |
+|---|---|
+| **inside** `[min, max]` — consistent with averaging | 442 |
+| **outside** `[min, max]` — **cannot** be a mean of them | **81** |
+
+The gap distribution splits the same way: 433 of 523 sit within 0.5 of a real
+book line, and a tail does not — `LSU Tigers -35.9` stored while the books
+present read `[-11.5, -10.5]`, out by 24.42; `Mississippi State -48.8` against a
+book `-28.5`. `soccer_usa_mls` (78 picks) and `americanfootball_nfl` (19) are
+100% in-range; `americanfootball_ncaaf` SPREAD is 39 in / 35 out.
+
+**So C-197 was partly right and this document was partly wrong.** For ~85% of
+the sample the mechanism is consensus averaging exactly as §1 describes. For the
+other 81 it is not, and §1 should not have said so flatly.
+
+**What the 81 are is NOT established.** A competing explanation is live and
+untested: many of those rows show only one or two surviving book lines, while
+`MIN_BOOKMAKERS` requires two priced books before a pick can publish at all — so
+odds rows may be missing from this query's view or keyed to a duplicate game row
+(the repo carries `scripts/ops/merge-duplicate-games.ts` for exactly that). That
+would produce this signature without any model contamination. Distinguishing the
+two needs the ingestion-run trail for those 81 picks, which nobody has pulled.
+
+**None of this changes what ships.** Both flags stay OFF; both explanations are
+defects; the guard and the lane refuse or withdraw on the same rule either way.
+What changes is the story the founder should tell about cause — and that story
+is not settled.
+
 ## 6. Not established here
 
 - **The engine's quality.** Nothing above measures whether the model is good.
-- **How many recorded results are actually wrong.** `ops:regrade-lines` reports
-  what a book-line grade would change; it has not been run against production
-  by this branch, and running it is read-only whenever someone chooses to.
+- **How many recorded results are actually wrong.** §5b measures what a
+  book-line grade would CHANGE (85 of 523). "Changed" is not "corrected": it
+  assumes the modal book line is the right one to grade against, which is a
+  reporting choice, not an approved policy.
+- **What caused the 81 out-of-range lines.** Model contamination and missing or
+  mis-keyed odds rows both produce that signature; §5b says why, and neither is
+  ruled out.
 - **Whether the surviving board is large enough to sell.** The ~43%/62%
   suppression figures come from C-197's production counts, not from a run of the
   guard against live data.
