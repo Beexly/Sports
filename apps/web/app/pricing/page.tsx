@@ -40,7 +40,7 @@ const phase = getCurrentPricingPhase();
 
 /**
  * Phase-aware hero copy. FOUNDING invites backing before the record exists;
- * every later phase names the milestone that earned it. The price lock and
+ * every later phase names the milestone that earned it. The fixed-price promise and
  * grandfathering promise is the same in every phase.
  */
 const PHASE_HEADLINE: Record<PricingPhaseId, { headline: string; sub: string }> = {
