@@ -2,13 +2,21 @@
  * Vercel cron — refresh NFL player weekly stats from nflverse.
  *
  * Primary path (default): weekly player stats only + free IngestionRun SUCCESS.
- * Full path (?mode=full): sequential satellites (snaps, injuries, depth, NGS).
+ * Full path (?mode=full, or the daily window): sequential satellites (snaps,
+ * injuries, depth, NGS).
  *
  * Why default is primary-only:
  * Hobby serverless OOM'd even with sequential satellites after weekly stats
  * (2026-08-06: killed after ~90s post-primary). Health SLA + paid-worth
- * spine need the primary stamp; satellites can run less often via mode=full
- * or a future larger memory tier.
+ * spine need the primary stamp.
+ *
+ * C-244 — "satellites can run less often via mode=full" was the plan and it
+ * did not happen: the scheduled invocation carries no query string, so on the
+ * schedule they ran NEVER. Measured on production 2026-09-08,
+ * depth_chart_entries held zero rows. They now also run once a day on their
+ * own; lib/ingestion/satellite-window.ts holds the decision and the reasoning,
+ * including why the Hobby constraint above is out of date (the account is on
+ * Vercel Pro) without being disproven.
  *
  * Auth: Bearer <CRON_SECRET>.
  */
@@ -22,6 +30,7 @@ import { ingestInjuries } from "@/lib/ingestion/injuries";
 import { ingestDepthCharts } from "@/lib/ingestion/depth-charts";
 import { ingestNextGenStats } from "@/lib/ingestion/next-gen-stats";
 import { recordFreeIngestionRun } from "@/lib/data-sources/free-ingestion-run";
+import { decideSatelliteRun } from "@/lib/ingestion/satellite-window";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -44,8 +53,13 @@ export async function GET(request: Request): Promise<NextResponse> {
 
   const url = new URL(request.url);
   const seasonParam = url.searchParams.get("season");
-  const mode = (url.searchParams.get("mode") ?? "primary").toLowerCase();
-  const runFull = mode === "full" || mode === "all";
+  // C-244: the scheduled invocation carries no query string, so `?mode=full`
+  // meant the satellites never ran on the schedule at all — measurably, not
+  // theoretically (depth_chart_entries held zero rows). They now run once a
+  // day; an explicit ?mode= still wins in both directions. See
+  // lib/ingestion/satellite-window.ts for why a clock window and not a
+  // coverage check.
+  const satelliteDecision = decideSatelliteRun(url.searchParams, new Date());
 
   // Ask the source for the labelled season (September 2026 → 2026). The
   // resolved display floor (2025 until 2026 REG rows exist) is the fallback
@@ -76,6 +90,22 @@ export async function GET(request: Request): Promise<NextResponse> {
     stats = await ingestPlayerWeeklyStats(season);
   }
   const primaryOk = stats.status === "ok";
+
+  // C-198's second-order risk, closed before it could bite. The fallback above
+  // silently moves `season` to the last completed one when the labelled season
+  // is not published yet — and `season` is what the satellites are ingested
+  // for. So an automatic full run today would write 2025 depth charts, the
+  // newest of them from the Super Bowl, as the newest depth-chart rows there
+  // are. That is worse than the empty table it would fill: an empty table
+  // reads as "no data", while a stale one reads as a lineup. An EXPLICIT
+  // ?mode=full is untouched — an operator who names the mode gets it, and
+  // ?season is theirs to aim — but the unattended daily run refuses a season
+  // it did not ask for. Once nflverse ships 2026 REG rows there is no fallback
+  // and the window runs normally.
+  const priorSeasonFallback =
+    satelliteDecision.reason === "daily-window" && labelledAttempt !== null;
+  const runFull = satelliteDecision.runFull && !priorSeasonFallback;
+  const satelliteReason = priorSeasonFallback ? "skipped-prior-season" : satelliteDecision.reason;
 
   const ingestionRun = await recordFreeIngestionRun({
     sport: "nflverse-player-stats",
@@ -115,6 +145,10 @@ export async function GET(request: Request): Promise<NextResponse> {
       success,
       season,
       mode: runFull ? "full" : "primary",
+      // Which path this invocation took and WHY, so a reader of the cron log
+      // can tell a daily satellite run from an operator's explicit one and
+      // from the 47 primary-only runs, without inferring it from the clock.
+      satelliteReason,
       seasonResolution: {
         season: resolved.season,
         reason: resolved.reason,
