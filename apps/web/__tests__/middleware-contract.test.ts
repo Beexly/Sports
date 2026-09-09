@@ -74,21 +74,22 @@ describe("middleware route protection", () => {
     }
   });
 
-  it("age-gates betting surfaces without an attestation cookie", () => {
+  it("does NOT age-gate the betting-analysis surfaces (C-291, founder decision 2026-09-09: all ages, no wagers taken)", () => {
+    // Before C-291 every unattested visitor, crawlers included, was 307'd to
+    // /age-verify off these prefixes. The founder opened them: the site
+    // publishes analysis and a record, it takes no bet and no wager money.
     for (const path of ["/board", "/picks", "/performance", "/today", "/stats", "/pricing"]) {
       const res = middleware(reqTo(path));
-      expect(res.status, `${path} must redirect`).toBe(307);
-      const location = new URL(res.headers.get("location") ?? "");
-      expect(location.pathname, `${path} → age-verify`).toBe("/age-verify");
-      expect(location.searchParams.get("next"), `${path} keeps target`).toBe(path);
+      expect(res.status, `${path} must pass through`).not.toBe(307);
+      expect(res.headers.get("location"), `${path} must not redirect`).toBeNull();
     }
   });
 
-  it("lets an attested visitor through, and never loops on /age-verify itself", () => {
+  it("an attested visitor is unaffected, and /age-verify itself still renders", () => {
     const attested = middleware(reqTo("/board", { cookie: "gse_age_ok=1" }));
     expect(attested.status).not.toBe(307);
 
-    // The redirect target must never itself be gated (loop guard).
+    // The page stays reachable for any surface that opts back into the gate.
     const verify = middleware(reqTo("/age-verify"));
     expect(verify.status).not.toBe(307);
   });
