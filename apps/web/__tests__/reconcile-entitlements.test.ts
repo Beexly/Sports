@@ -266,7 +266,21 @@ describe("reconcileEntitlements — DOWNGRADE (stale paid rows, positively confi
     );
   });
 
-  it("FINDING 1: downgrades a paid row when Stripe positively reports 'unpaid' (confirmed non-access)", async () => {
+  /**
+   * C-91 / Devin Review on #736. Access revocation on `unpaid` is UNCHANGED and
+   * still asserted here — what changed is that it is no longer written as a
+   * CANCELLATION.
+   *
+   * Stamping status CANCELED + canceledAt armed the webhook's out-of-order
+   * resurrection guard, which then refused every later sync for that same
+   * subscription id — including the `active` one that arrives when the member
+   * pays the outstanding invoice. They paid and access never came back.
+   *
+   * The webhook maps `unpaid` to the recoverable, non-granting INCOMPLETE. This
+   * is the same decision on the other writer, so the two agree instead of racing
+   * to opposite terminal states.
+   */
+  it("FINDING 1 / C-91: revokes access on 'unpaid' RECOVERABLY — no cancellation stamp to block a later payment", async () => {
     mocks.findMany.mockResolvedValue([
       { id: "row_1", stripeCustomerId: "cus_2", stripeSubscriptionId: "sub_2", tier: "PRO" },
     ]);
@@ -274,12 +288,61 @@ describe("reconcileEntitlements — DOWNGRADE (stale paid rows, positively confi
 
     const summary = await reconcileEntitlements();
 
-    // A paid ACTIVE row backed by an 'unpaid' Stripe sub must NOT keep access forever.
+    // A paid ACTIVE row backed by an 'unpaid' Stripe sub must NOT keep access.
     expect(summary.downgraded).toBe(1);
     expect(summary.errors).toBe(0);
+
+    const write = mocks.updateMany.mock.calls.at(-1)?.[0] as
+      | { where: Record<string, unknown>; data: Record<string, unknown> }
+      | undefined;
+    expect(write?.where).toEqual(
+      expect.objectContaining({ id: "row_1", stripeSubscriptionId: "sub_2" }),
+    );
+    // Access is denied: INCOMPLETE is not in the granting set.
+    expect(write?.data["status"]).toBe("INCOMPLETE");
+    // And the three fields that would make it permanent are NOT written: no
+    // cancellation stamp for the resurrection guard to catch on, the paid tier
+    // kept as the record of what the member is owed, and the dunning anchor left
+    // alone so the member-facing notice can still say why.
+    expect(write?.data).not.toHaveProperty("canceledAt");
+    expect(write?.data).not.toHaveProperty("tier");
+    expect(write?.data).not.toHaveProperty("pastDueSince");
+  });
+
+  it.each(["canceled", "incomplete_expired"])(
+    "still writes a TERMINAL cancellation for '%s' — those are genuinely over",
+    async (status) => {
+      // The other direction: the recoverable lane must not swallow the statuses
+      // Stripe reports as dead, or a cancelled row would keep its paid tier.
+      mocks.findMany.mockResolvedValue([
+        { id: "row_1", stripeCustomerId: "cus_2", stripeSubscriptionId: "sub_2", tier: "PRO" },
+      ]);
+      mocks.subscriptionsRetrieve.mockResolvedValue({ status });
+
+      await reconcileEntitlements();
+
+      expect(mocks.updateMany).toHaveBeenCalledWith(
+        expect.objectContaining({
+          data: expect.objectContaining({ tier: "FREE", status: "CANCELED" }),
+        }),
+      );
+    },
+  );
+
+  it("still writes a TERMINAL cancellation when Stripe reports the subscription does not exist", async () => {
+    // A confirmed ABSENCE has nothing to recover onto, so it must stay terminal
+    // even though a recoverable lane now exists.
+    mocks.findMany.mockResolvedValue([
+      { id: "row_1", stripeCustomerId: "cus_2", stripeSubscriptionId: "sub_2", tier: "PRO" },
+    ]);
+    mocks.subscriptionsRetrieve.mockRejectedValue(
+      Object.assign(new Error("No such subscription"), { code: "resource_missing" }),
+    );
+
+    await reconcileEntitlements();
+
     expect(mocks.updateMany).toHaveBeenCalledWith(
       expect.objectContaining({
-        where: expect.objectContaining({ id: "row_1", stripeSubscriptionId: "sub_2" }),
         data: expect.objectContaining({ tier: "FREE", status: "CANCELED" }),
       }),
     );

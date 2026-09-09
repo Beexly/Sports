@@ -135,7 +135,7 @@ function isResourceMissing(err: unknown): boolean {
  */
 function downgradeActionForRetrievedStatus(
   status: Stripe.Subscription.Status,
-): "keep" | "downgrade" {
+): "keep" | "downgrade" | "revoke-recoverable" {
   switch (status) {
     case "active":
     case "trialing":
@@ -143,10 +143,29 @@ function downgradeActionForRetrievedStatus(
       return "keep";
     case "canceled":
     case "incomplete_expired":
-    case "unpaid":
     case "incomplete":
     case "paused":
       return "downgrade";
+    case "unpaid":
+      // NOT "downgrade" (C-91, Devin Review on #736). `unpaid` denies access —
+      // that part was right and is unchanged — but it is NOT a cancellation, and
+      // writing one here locked a paying customer out permanently:
+      //
+      //   1. this path stamped status CANCELED + canceledAt on the row;
+      //   2. the webhook's out-of-order resurrection guard refuses ANY later
+      //      non-CANCELED sync for that same subscription id (it exists to stop
+      //      a delayed `updated` from resurrecting a dead subscription);
+      //   3. so when the member paid the outstanding invoice, the `active`
+      //      webhook was discarded as stale and access never came back.
+      //
+      // The webhook maps `unpaid` to the recoverable, non-granting INCOMPLETE
+      // (see mapStripeStatus). This is the same decision on the other writer, so
+      // the two finally agree about one status instead of racing to opposite
+      // terminal states — which is the whole point of C-91 / D2a.
+      //
+      // `canceled` and `incomplete_expired` stay terminal: Stripe reports those
+      // as genuinely over, and nothing can ever be collected on them.
+      return "revoke-recoverable";
     default: {
       // Exhaustiveness guard. Stripe's status set is closed and fully handled
       // above; this only fires if Stripe introduces a NEW status — which we must
@@ -421,15 +440,24 @@ async function downgradeStaleRows(
     const subscriptionId = row.stripeSubscriptionId; // narrowed non-null by the guard above
 
     let confirmedGone = false;
+    // Terminal unless Stripe positively says otherwise. A confirmed ABSENCE
+    // (resource_missing, below) is always terminal — there is nothing left to
+    // recover onto.
+    let revokeMode: "terminal" | "recoverable" = "terminal";
     try {
       const remote = await stripe.subscriptions.retrieve(subscriptionId);
       // FINDING 1: a positively-retrieved status is authoritative, never "ambiguous".
       // "keep" only for still-granting (active/trialing/past_due) or an unknown future
-      // status; every CONFIRMED non-access status (canceled / incomplete_expired /
-      // unpaid / incomplete / paused) is a downgrade. The fail-safe now lives in the
-      // catch below (errors only) — never on a definitively-retrieved terminal status.
-      if (downgradeActionForRetrievedStatus(remote.status) === "keep") {
+      // status. Every CONFIRMED non-access status revokes — but not all of them are
+      // cancellations: `unpaid` revokes RECOVERABLY (see the classifier above), so a
+      // member who pays the outstanding invoice can still be restored. The fail-safe
+      // lives in the catch below (errors only) — never on a definitive status.
+      const action = downgradeActionForRetrievedStatus(remote.status);
+      if (action === "keep") {
         continue;
+      }
+      if (action === "revoke-recoverable") {
+        revokeMode = "recoverable";
       }
       confirmedGone = true;
     } catch (err) {
@@ -459,7 +487,16 @@ async function downgradeStaleRows(
             stripeSubscriptionId: subscriptionId,
             status: { in: [...PAID_DB_STATUSES] },
           },
-          data: { tier: "FREE", status: "CANCELED", canceledAt: new Date(), pastDueSince: null },
+          data:
+            revokeMode === "recoverable"
+              ? // Access ends (INCOMPLETE does not grant) but the subscription is
+                // not declared dead: no canceledAt to arm the webhook's
+                // resurrection guard, the paid tier kept as the RECORD of what
+                // this member is owed, and pastDueSince left alone so the
+                // member-facing notice can still say why. Mirrors what
+                // syncSubscription writes for the same Stripe status.
+                { status: "INCOMPLETE" as const }
+              : { tier: "FREE" as const, status: "CANCELED" as const, canceledAt: new Date(), pastDueSince: null },
         });
         if (revoke.count > 0) {
           downgraded++;
