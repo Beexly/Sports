@@ -22,6 +22,14 @@ export type NgsStatType = "passing" | "receiving" | "rushing";
 type CsvRow = Readonly<Record<string, string>>;
 type NgsFetcher = (season: number, statType: NgsStatType) => Promise<{ records: readonly CsvRow[] }>;
 
+// Keep Postgres bound-parameter count well under its limit (same pattern as
+// historical-games.ts and depth-charts.ts, LOWER value here). `toRecord`
+// below binds 34 fields per row — 2000 rows would bind 68,000 parameters,
+// already over Postgres's 65,535 limit, not merely close to it (measured by
+// counting toRecord's own fields, not assumed from the other ingesters'
+// smaller 12-14-field records).
+const CREATE_CHUNK = 1500;
+
 export interface NextGenStatsIngestResult {
   readonly status: "ok" | "clearance-denied" | "source-error";
   readonly season: number;
@@ -150,8 +158,16 @@ export async function ingestNextGenStats(
   if (data.length === 0) {
     return { status: "source-error", season, statType, rowsWritten: 0, error: "upstream returned no rows; existing data preserved" };
   }
-  await db.nextGenStat.deleteMany({ where: { season, statType } });
-  const created = data.length > 0 ? await db.nextGenStat.createMany({ data }) : null;
+  // One atomic transaction covering the delete and every insert batch: a
+  // createMany failure partway through must not leave the season's rows
+  // erased with only some of the replacement written.
+  const chunks: (typeof data)[] = [];
+  for (let i = 0; i < data.length; i += CREATE_CHUNK) chunks.push(data.slice(i, i + CREATE_CHUNK));
+  const [, ...createdChunks] = await db.$transaction([
+    db.nextGenStat.deleteMany({ where: { season, statType } }),
+    ...chunks.map((c) => db.nextGenStat.createMany({ data: c })),
+  ]);
+  const rowsWritten = createdChunks.reduce((sum, c) => sum + c.count, 0);
 
-  return { status: "ok", season, statType, rowsWritten: created?.count ?? data.length };
+  return { status: "ok", season, statType, rowsWritten };
 }
