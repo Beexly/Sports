@@ -49,15 +49,15 @@ const PHASE_HEADLINE: Record<PricingPhaseId, { headline: string; sub: string }> 
     sub: "Start free. Back us before the record exists and your price never moves, even as it rises for everyone who joins later.",
   },
   PROVEN: {
-    headline: "The record is public. Lock the Proven rate.",
+    headline: "The record is public. Claim the Proven rate.",
     sub: "Start free. The calibration report is live and gated in public. Your price is fixed the day you join, even as it rises at the next milestone. Founding members keep their founding rate.",
   },
   ESTABLISHED: {
-    headline: "Verified against the closing line. Lock the Established rate.",
+    headline: "Verified against the closing line. Claim the Established rate.",
     sub: "Start free. Closing-line value is verified in public. Your price is fixed the day you join; earlier members keep theirs.",
   },
   AUTHORITY: {
-    headline: "A multi-season public record. Lock the Authority rate.",
+    headline: "A multi-season public record. Claim the Authority rate.",
     sub: "Start free. The record spans seasons and stays public. Your price is fixed the day you join; earlier members keep theirs.",
   },
 };
