@@ -38,17 +38,21 @@ import { PricingPageAnalytics } from "@/components/pricing/pricing-page-analytic
 const phase = getCurrentPricingPhase();
 
 /**
- * Phase-aware hero copy, derived from the ladder itself so this file carries
- * no phase claim of its own: the headline names the current phase and the
- * sub-line is that phase's addedValue from pricing-phases.ts. The fixed-price
- * promise and grandfathering are the same in every phase.
+ * Phase-aware hero copy. The headline names the current phase from the
+ * ladder; the sub-line states only the milestone that phase's trigger
+ * establishes (indexed by phase.order, see pricing-phases.ts), never a
+ * comparison with anyone else. The fixed-price promise and grandfathering
+ * are the same in every phase.
  */
+const HERO_SUB_BY_ORDER: readonly string[] = [
+  "Start free. Back us before the record exists and your price never moves, even as it rises for everyone who joins later.",
+  "Start free. The calibration report is live and gated in public. Your price is fixed the day you join; earlier members keep theirs.",
+  "Start free. Closing-line value is measured in public over a meaningful sample. Your price is fixed the day you join; earlier members keep theirs.",
+  "Start free. The public record now spans multiple seasons. Your price is fixed the day you join; earlier members keep theirs.",
+];
 const HERO_HEADLINE =
   phase.id === "FOUNDING" ? "Claim the founding rate." : `Claim the ${phase.name} rate.`;
-const HERO_SUB =
-  phase.id === "FOUNDING"
-    ? "Start free. Back us before the record exists and your price never moves, even as it rises for everyone who joins later."
-    : `Start free. ${phase.addedValue} Your price is fixed the day you join; earlier members keep theirs.`;
+const HERO_SUB = HERO_SUB_BY_ORDER[phase.order] ?? HERO_SUB_BY_ORDER[0]!;
 
 export const metadata: Metadata = {
   title: "Pricing: Founding-Member Rates, Locked For Life",
