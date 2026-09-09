@@ -71,5 +71,22 @@
     "ReliabilityChart": "apps/web/components/calibration/reliability-chart.tsx",
     "HonestBand": "apps/web/components/performance/honest-band.tsx"
   },
-  "readmeHeader": ".design-sync/conventions.md"
+  "readmeHeader": ".design-sync/conventions.md",
+  "overrides": {
+    "NavMenu": {
+      "cardMode": "column"
+    },
+    "PageHero": {
+      "cardMode": "column"
+    },
+    "ToutComparison": {
+      "cardMode": "column"
+    },
+    "PickCard": {
+      "cardMode": "column"
+    },
+    "PricingPlans": {
+      "cardMode": "column"
+    }
+  }
 }

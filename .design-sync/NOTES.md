@@ -36,6 +36,24 @@ Repo-specific gotchas for re-syncs. One bullet per item.
   is expected: those are fallback names inside the token font stacks and the app itself never
   ships them (`--f-body` resolves to Inter in production too).
 
+- The compiled CSS carries `body { color: var(--ion) }` from globals.css. The card page only
+  overrides the body background to white, so any plain, unclassed text in a preview inherits the pale
+  dark-theme foreground and disappears on white. Give preview prose an explicit `color: var(--ink)`
+  or put it on a `var(--carbon)` ground.
+- Components styled only with `ion-*` / `orbital-*` text utilities and no background of their own
+  (ValueGapBadge, BoardHealthBadge, NavMenu, MetricHonesty, RiskDisclosure, StatusTile, ChecklistRow,
+  Jarvis*, HonestyNote, FormulaPlaque, OddsFormatToggle, HonestBand, ReliabilityChart,
+  CalibrationCurve) need the dark wrapper even though they have no `variant` prop. ResultCard and
+  PlayerCard set `bg-obsidian` themselves and are fine on white.
+- Full-bleed marketing sections (ToutComparison, PricingPlans) exceed the 900x700 capture frame;
+  their previews use a fixed frame with `overflow: hidden` and a scaled inner wrapper. Wide cards use
+  `cfg.overrides.<Name>.cardMode = "column"` (NavMenu, PageHero, ToutComparison, PickCard, PricingPlans).
+- Components that hardcode `next/image src="/brand/gse-emblem*.png"` (BrandLockup, Footer, ResultCard,
+  PlayerCard) get the emblem from the `PUBLIC_ASSETS` map in `.design-sync/shims/next-image.tsx`
+  (inlined data URI). Add any new `/public` asset a component hardcodes to that map.
+- MobileNav has no controlled-open prop, so only its closed trigger is previewed. Marquee is captured
+  mid-scroll by design.
+
 ## Fixture policy (AGENTS.md law 8)
 - Preview fixtures under `.design-sync/previews/` are layout fixtures for the design tool, exactly
   like test fixtures — every file says so in its header comment. They never state win rates, ROI,
@@ -43,6 +61,7 @@ Repo-specific gotchas for re-syncs. One bullet per item.
 
 ## Known render warns
 - `[FONT_MISSING]` for the five fallback families above (see Styling).
+- None of the 53 cards is flagged `bad`; the GRID_OVERFLOW warns were resolved with column card mode.
 
 ## Re-sync risks
 - `.design-sync/.cache/tailwind.css` is regenerated, so the compiled CSS depends on the Tailwind
