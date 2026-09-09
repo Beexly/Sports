@@ -34,7 +34,7 @@ estimator and every exclusion are documented in `docs/ops/CALIBRATION_ECE_ESTIMA
 ## Short-form lines (under 280 characters, brand-checked)
 
 1. Galaxy Sports Edge is now PROVEN: 380 settled moneyline picks, calibration error 0.037 against a 0.05 floor, measured on publish-time market prices. We're not AI. We're math you can read.
-2. We publish calibration, not a headline win rate. On 380 settled picks, our bias-corrected calibration error was 0.037 against a 0.05 floor. Read the report on /calibration.
+2. We publish calibration, not a headline win rate. On 380 settled picks, scored on publish-time market prices, our bias-corrected calibration error was 0.037 against a 0.05 floor. Read the report on /calibration.
 3. NFL Week 1 is live on the board. Every pick carries its factor breakdown and the line it was priced at. Founding rates locked for life for members who join before the step-up.
 4. Our calibration gate ran five times in a row GREEN before we flipped the phase. The floors are public, the exclusions are counted, the estimator is documented.
 
