@@ -330,6 +330,28 @@ confidence), which is HP-14 / v5.2.8. To make Kalshi a real second book alongsid
 code change is needed: thin-fill the paid slate with the PredExon catalog when a game sits under
 `MIN_BOOKMAKERS` (the same slot Rundown uses at :479). Opened as a Hermes package, not tonight's flip.
 
+### 4c. 02:08 UTC: calibration eligibility went RED on data; auto-unpublish fired; ladder reads FOUNDING
+
+Measured on the truth surface (generatedAt 02:08:20 UTC, sha `acb2c81a2` = PR #722 merge, settlement
+HEALTHY): `calibrationEligibility.status` RED, reason "ECE 0.0522 > 0.05", n 481 (was 458 in the
+2026-09-06 note, streak 40 GREEN at 01:41 UTC tonight with ECE 0.0466 on the 00:35 read).
+`consecutiveGreen` 0 of 3. `calibrationPublish.published` false, `source` "unpublish",
+`autoUnpublish` true; `gates.calibrationPublished` false; `revenueLadder.currentStep` FOUNDING;
+`pricingPhaseReadiness.eligible` false ("published calibration curve" unmet). By sport: MLB n 379
+ECE 0.0523 (carries the pool), NCAAF n 74 ECE 0.1178, NFL n 28 ECE 0.267 (both too thin to steer by).
+By model version: v5.2.7 n 268 ECE 0.1037, v5.2.6 n 110 0.0587, v5.1.0 n 74 0.0729, v5.0.0 n 29 0.1531.
+
+Cause check: PR #722's diff touches `proven-path-engine.ts` (26 lines, bake-off wiring only, no
+eligibility/streak/floor hunks) and adds the identical-row bake-off; it does not change the
+eligibility computation. The change is the sample: settled MONEYLINE rows grew from 458 to 481
+tonight (MLB games settling after ~01:30 UTC) and the pooled ECE crossed the 0.05 floor on the
+six-hourly run. This is the honesty machinery working as designed (AGENTS.md 2026-09-06 note:
+"ECE does not clear on its own"). Consequence for the flip order: `PERFORMANCE_STATS_ENABLED` and
+`PRICING_PHASE=PROVEN` are blocked by data now, not only by #733; three consecutive GREEN
+six-hourly runs are required again. No threshold, floor, bin or engine edit is permitted (law 9).
+The levers remain more settled rows and a real calibration pass (v5.2.8 / HP-14 changes the
+displayed probability basis going forward; it does not re-grade the 481 rows).
+
 ## 5. What was deliberately NOT started, and why
 
 - A queue/stream/microservice re-architecture: the platform runs on Vercel cron routes with no queue library
