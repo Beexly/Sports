@@ -40,6 +40,14 @@ export function PricingPlans({
   const [interval, setInterval] = useState<Interval>("month");
   const annual = interval === "year";
 
+  // FE-18: computed from the plans actually passed in (pricing-phases.ts),
+  // never hardcoded — a fixed "45%" survives a phase change (e.g. PROVEN's
+  // rates) and becomes a stale, unsupportable claim.
+  const maxAnnualSavingsPct = Math.max(
+    0,
+    ...plans.map((plan) => plan.annualSavingsPct ?? 0),
+  );
+
   // FE-08: put the billing toggle back where a resumed checkout intent left
   // it (SubscribeButton restores the DOB into the matching tier's own
   // field; this restores the shared monthly/annual toggle they both read).
@@ -64,7 +72,11 @@ export function PricingPlans({
             Annual
           </ToggleButton>
         </div>
-        <span className="text-xs font-medium text-brand-400">Save up to 45% annually</span>
+        {maxAnnualSavingsPct > 0 && (
+          <span className="text-xs font-medium text-brand-400">
+            Save up to {maxAnnualSavingsPct}% annually
+          </span>
+        )}
       </div>
 
       {/* Plan cards */}
