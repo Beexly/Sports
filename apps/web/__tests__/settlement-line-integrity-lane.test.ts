@@ -10,6 +10,7 @@ import {
   lineIntegrityVoidEnabled,
   runLineIntegrityLane,
   surveyLineIntegrity,
+  sweepCursorTarget,
   unpublishDefectiveUnsettledPicks,
   voidDefectiveSettledPicks,
   type LineIntegrityDb,
@@ -73,8 +74,11 @@ function makeDb(args: {
   odds: OddsRow[];
   oddsThrows?: boolean;
   updateCount?: number;
+  /** Rows the snapshot withdrawal matches; 0 models a pick with no snapshot. */
+  snapshotCount?: number;
 }) {
   const pickUpdates: Array<Record<string, unknown>> = [];
+  const snapshotUpdates: Array<Record<string, unknown>> = [];
   const memories: Array<Record<string, unknown>> = [];
   const work: Array<unknown> = [];
   const pickQueries: Array<Record<string, unknown>> = [];
@@ -151,6 +155,16 @@ function makeDb(args: {
           },
         },
         jarvisMemoryEvent: { create: async (q: Record<string, unknown>) => memories.push(q) },
+        // The signal snapshot's outcome is withdrawn in the SAME transaction.
+        // Its absence from this double is not cosmetic: without it the lane
+        // throws mid-transaction and voids nothing, which is how the missing
+        // collaborator is caught here rather than in production.
+        pickSignalSnapshot: {
+          updateMany: async (q: Record<string, unknown>) => {
+            snapshotUpdates.push(q);
+            return { count: args.snapshotCount ?? 1 };
+          },
+        },
         postSettlementWork: {
           createMany: async (q: Record<string, unknown>) => {
             work.push({ op: "createMany", ...q });
@@ -171,6 +185,7 @@ function makeDb(args: {
   return {
     db: db as unknown as LineIntegrityDb,
     pickUpdates,
+    snapshotUpdates,
     memories,
     actions,
     work,
@@ -814,5 +829,159 @@ describe("no divergent copies of the non-book bookmaker list", () => {
     // DATABASE_URL, so it keeps its own copy — pinned here so the two cannot
     // drift apart silently (Devin Review, #733).
     expect([...SCRIPT_NON_BOOK_KEYS].sort()).toEqual([...NON_BOOK_BOOKMAKER_KEYS].sort());
+  });
+});
+
+describe("the cursor must never pass a row the deadline stopped (C-286)", () => {
+  const quotes: OddsRow[] = [odds("o1", "a", -3), odds("o2", "b", -3.5)];
+
+  /**
+   * THE DEFECT. The cursor was written BEFORE the loop, at the last candidate
+   * of the page. That is right only if the loop always finishes the page, and
+   * the deadline is precisely the thing that stops it finishing. Every
+   * candidate behind the break was then resumed PAST and stayed defective until
+   * the sweep wrapped the whole population — and the more time-pressured the
+   * lane was, the more it skipped.
+   */
+  it("resumes at the FIRST untouched candidate, not past the whole page", async () => {
+    const picks = Array.from({ length: 4 }, (_, i) =>
+      pickRow({ id: `p${i}`, line: -3.25, clvLockLine: -3.25 }),
+    );
+    const h = makeDb({ picks, odds: quotes });
+    let t = 1_000;
+    const first = await voidDefectiveSettledPicks({
+      db: h.db,
+      enabled: true,
+      now: PUBLISH,
+      cap: 10, // one page holds all four, so capReached is false
+      deadlineAtMs: 1_003,
+      clock: () => (t += 1), // p0 ok, then spent
+    });
+    expect(first.deadlineHit).toBe(true);
+    const handled = first.inspected;
+    expect(handled).toBeGreaterThan(0);
+    expect(handled).toBeLessThan(4);
+
+    // The cursor resumes after the LAST HANDLED pick, so the first untouched
+    // one is the next row the following cycle sees.
+    const cursorWrite = h.memories
+      .map((m) => m["data"] as Record<string, unknown>)
+      .filter((d) => d["scope"] === "settlement.line-integrity.cursor")
+      .pop();
+    expect((cursorWrite!["metadata"] as { pickId: string }).pickId).toBe(`p${handled - 1}`);
+  });
+
+  it("an already-spent budget leaves the cursor exactly where it was", async () => {
+    const picks = [pickRow({ id: "p0", line: -3.25, clvLockLine: -3.25 })];
+    const h = makeDb({ picks, odds: quotes });
+    const half = await voidDefectiveSettledPicks({
+      db: h.db,
+      enabled: true,
+      now: PUBLISH,
+      deadlineAtMs: 0,
+      clock: () => 1,
+    });
+    expect(half.deadlineHit).toBe(true);
+    expect(half.inspected).toBe(0);
+    // No cursor row written at all: writing one would move the resume point
+    // forward on a cycle that inspected nothing.
+    const cursorWrites = h.memories
+      .map((m) => m["data"] as Record<string, unknown>)
+      .filter((d) => d["scope"] === "settlement.line-integrity.cursor");
+    expect(cursorWrites).toHaveLength(0);
+  });
+
+  it("inspected counts what was HANDLED, and reconciles with DEADLINE_REACHED", async () => {
+    const picks = Array.from({ length: 4 }, (_, i) =>
+      pickRow({ id: `p${i}`, line: -3.25, clvLockLine: -3.25 }),
+    );
+    const h = makeDb({ picks, odds: quotes });
+    let t = 1_000;
+    const half = await voidDefectiveSettledPicks({
+      db: h.db,
+      enabled: true,
+      now: PUBLISH,
+      cap: 10,
+      deadlineAtMs: 1_003,
+      clock: () => (t += 1),
+    });
+    // Every selected candidate lands in exactly one of the two buckets. Before
+    // this fix a break at the second deadline check counted ONE row and left
+    // the rest of the page in no bucket at all.
+    expect(half.inspected + half.skippedByReason.DEADLINE_REACHED).toBe(4);
+  });
+
+  it("sweepCursorTarget: the whole rule, stated once for both halves", () => {
+    // Nothing follows the cursor -> wrap.
+    expect(sweepCursorTarget({ candidateIds: [], lastHandledIndex: -1, capReached: false }))
+      .toEqual({ write: true, pickId: null });
+    // Candidates existed but none were handled -> do not move it.
+    expect(sweepCursorTarget({ candidateIds: ["a", "b"], lastHandledIndex: -1, capReached: false }))
+      .toEqual({ write: false });
+    // Finished the page and it was the last page -> wrap.
+    expect(sweepCursorTarget({ candidateIds: ["a", "b"], lastHandledIndex: 1, capReached: false }))
+      .toEqual({ write: true, pickId: null });
+    // Finished a full page with more behind it -> resume after the last row.
+    expect(sweepCursorTarget({ candidateIds: ["a", "b"], lastHandledIndex: 1, capReached: true }))
+      .toEqual({ write: true, pickId: "b" });
+    // Stopped mid-page -> resume after the last row HANDLED, never past it.
+    expect(sweepCursorTarget({ candidateIds: ["a", "b", "c"], lastHandledIndex: 0, capReached: false }))
+      .toEqual({ write: true, pickId: "a" });
+  });
+});
+
+describe("the signal snapshot's outcome is withdrawn with the pick (C-286)", () => {
+  const quotes: OddsRow[] = [odds("o1", "a", -3), odds("o2", "b", -3.5)];
+
+  /**
+   * The reopened SNAPSHOT_OUTCOME work does NOT do this on its own, and the
+   * lane's comment used to claim it did. `recordPickSettlementSnapshot` updates
+   * `where: { pickId, settlementResult: null }`; an already-graded pick's
+   * snapshot has a non-null result, so the drain matches nothing, reports
+   * "already-settled", and marks the work DONE having changed nothing.
+   */
+  it("writes VOID and clears learning eligibility, atomically with the pick", async () => {
+    const h = makeDb({ picks: [pickRow({ line: -3.25, clvLockLine: -3.25 })], odds: quotes });
+    const half = await voidDefectiveSettledPicks({ db: h.db, enabled: true, now: PUBLISH });
+    expect(half.acted).toBe(1);
+    expect(h.snapshotUpdates).toHaveLength(1);
+    expect(h.snapshotUpdates[0]).toEqual({
+      where: { pickId: "pick-1" },
+      data: { settlementResult: "VOID", eligibleForLearning: false, learningEligibleAt: null },
+    });
+  });
+
+  it("still enqueues SNAPSHOT_OUTCOME when the pick has no snapshot row to update", async () => {
+    // count 0 models a pick with no snapshot at all. The work row is what
+    // creates one, through the drain's create-fallback path, so the enqueue is
+    // not redundant with the direct write.
+    //
+    // Stated precisely: this test does NOT bite if the direct write is removed
+    // — it bites if the ENQUEUE is removed as newly redundant, which is the
+    // mistake the direct write invites. Red-checked against that mutation.
+    const h = makeDb({
+      picks: [pickRow({ line: -3.25, clvLockLine: -3.25 })],
+      odds: quotes,
+      snapshotCount: 0,
+    });
+    const half = await voidDefectiveSettledPicks({ db: h.db, enabled: true, now: PUBLISH });
+    expect(half.acted).toBe(1);
+    const kinds = h.work.flatMap((w) => {
+      const rec = w as Record<string, unknown>;
+      const data = rec["data"];
+      if (Array.isArray(data)) return (data as Array<{ kind: string }>).map((d) => d.kind);
+      const where = rec["where"] as { kind?: string } | undefined;
+      return where?.kind ? [where.kind] : [];
+    });
+    expect(kinds).toContain("SNAPSHOT_OUTCOME");
+  });
+
+  // Also not a red-check of the write itself: it bites when the write is moved
+  // OUT of the acted path and runs for every candidate. Red-checked that way.
+  it("leaves the snapshot alone when nothing is voided", async () => {
+    const h = makeDb({ picks: [pickRow({ line: -3.5, clvLockLine: -3.5 })], odds: quotes });
+    const half = await voidDefectiveSettledPicks({ db: h.db, enabled: true, now: PUBLISH });
+    expect(half.acted).toBe(0);
+    expect(h.snapshotUpdates).toHaveLength(0);
   });
 });

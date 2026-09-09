@@ -638,7 +638,16 @@ export async function GET(request: Request) {
   // precondition the founder flips PERFORMANCE_STATS_ENABLED and
   // PRICING_PHASE=PROVEN against. See
   // docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md.
-  const lineIntegrity = isStubMode() ? null : await safeRead(() => surveyLineIntegrity(db as never));
+  //
+  // OPERATOR-ONLY, and for the same reason `stripeWebhookHosts` above is:
+  // `surveyLineIntegrity` runs three capped pick scans plus counts on EVERY
+  // call. The public branch is rate-limited per IP, which bounds one caller,
+  // not the aggregate database work anonymous callers can provoke (CodeRabbit,
+  // #733). Nothing is lost by gating it — `remainingToVoid` is a number the
+  // operator reads before a flip, not a public claim — but reading it now needs
+  // the CRON_SECRET bearer. `docs/ops/OPERATOR.md` §5-LI says so.
+  const lineIntegrity =
+    !detailed || isStubMode() ? null : await safeRead(() => surveyLineIntegrity(db as never));
 
   // Proof-gated ladder — canonical settled; publish from eligibility policy.
   const revenueLadder = evaluateRevenueLadder({

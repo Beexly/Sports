@@ -128,8 +128,14 @@ env-flag idiom (`?.trim().toLowerCase() === "true"`, default false).
 
 ### 3c. Exposure without SQL (C-283)
 
-`lineIntegrity` on `/api/ops/public-surface-truth`, read-only. Two different
-populations, named apart, because the recurring defect class here
+`lineIntegrity` on `/api/ops/public-surface-truth`, read-only and **operator-only
+(C-286)**: it is returned for an authenticated call and is `null` for an
+anonymous one, because the survey runs three capped pick scans plus counts on
+every request and the public branch's per-IP rate limit bounds one caller rather
+than the aggregate. `null` therefore means NOT SURVEYED — never "nothing to
+void". `docs/ops/OPERATOR.md` §5-LI has the curl.
+
+Two different populations, named apart, because the recurring defect class here
 (C-241/C-246/C-250) is a count whose label is not what it measures:
 
 | Field | What it counts |

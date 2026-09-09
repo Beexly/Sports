@@ -120,6 +120,18 @@ LINE_INTEGRITY_PUBLISH_GUARD_ENABLED=
 LINE_INTEGRITY_VOID_ENABLED=
 ```
 
+**Reading the counts requires operator auth (C-286).** The `lineIntegrity` block
+on `/api/ops/public-surface-truth` is returned only for an authenticated call —
+it runs three capped pick scans plus counts, and the per-IP rate limit on the
+public branch bounds one caller, not the aggregate work anonymous callers can
+provoke. An anonymous GET now reads `lineIntegrity: null`, which means NOT
+SURVEYED, not "nothing to void":
+
+```bash
+curl -s -H "Authorization: Bearer $CRON_SECRET" \
+  https://www.galaxysportsedge.com/api/ops/public-surface-truth | jq .lineIntegrity
+```
+
 Full context, the flip precondition, and what each ops count means:
 `docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md`.
 

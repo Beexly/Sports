@@ -149,6 +149,51 @@ describe("drainPendingClvGrades never grades a withdrawn pick", () => {
     expect(h.queue.find((w) => w.subjectId === "b-valid")!.status).not.toBe("PENDING");
   });
 
+  // ── C-286: a retirement that did not land must not be reported as one ──
+  //
+  // Retirement is best-effort by design (it must not abort a drain that is
+  // otherwise progressing), and the first version turned that into a lie by
+  // counting every attempt. A row whose cancellation threw or matched nothing
+  // is still PENDING and still occupies the oldest batch next cycle — exactly
+  // the starvation the retirement exists to end, now hidden behind a count
+  // that said it was handled.
+  it("does NOT count a retirement the database refused", async () => {
+    const h = drainDb([{ id: "voided", result: "VOID" }]);
+    // updateMany matches nothing (the work row is gone, or its status moved).
+    h.db.postSettlementWork.updateMany = async () => ({ count: 0 });
+    const out = await drainPendingClvGrades(h.db as never, { take: 10 });
+    expect(out.retired).toBe(0);
+    expect(out.retireFailed).toBe(1);
+  });
+
+  it("does NOT count one whose update threw, and keeps draining", async () => {
+    const h = drainDb([
+      { id: "a-void", result: "VOID" },
+      { id: "b-valid", result: "WIN" },
+    ]);
+    const realUpdate = h.db.postSettlementWork.updateMany;
+    h.db.postSettlementWork.updateMany = async (args: never) => {
+      const a = args as unknown as { where: { subjectId: string } };
+      if (a.where.subjectId === "a-void") throw new Error("connection reset");
+      return realUpdate(args as never);
+    };
+    const out = await drainPendingClvGrades(h.db as never, { take: 10 });
+    expect(out.retired).toBe(0);
+    expect(out.retireFailed).toBe(1);
+    // The failed retirement does not stop the valid pick being worked.
+    expect(out.attempted).toBe(1);
+    // And it stays PENDING, which is the honest state — it really was not
+    // retired, so the next cycle must see it again.
+    expect(h.queue.find((w) => w.subjectId === "a-void")!.status).toBe("PENDING");
+  });
+
+  it("a confirmed retirement is still counted as one", async () => {
+    const h = drainDb([{ id: "voided", result: "VOID" }]);
+    const out = await drainPendingClvGrades(h.db as never, { take: 10 });
+    expect(out.retired).toBe(1);
+    expect(out.retireFailed).toBe(0);
+  });
+
   it("a still-PENDING pick is left in the queue, not retired", async () => {
     const h = drainDb([{ id: "waiting", result: "PENDING" }]);
     const out = await drainPendingClvGrades(h.db as never, { take: 10 });
@@ -187,6 +232,7 @@ describe("the void lane does not reopen CLV grading", () => {
             },
           },
           jarvisMemoryEvent: { create: async () => undefined },
+          pickSignalSnapshot: { updateMany: async () => ({ count: 1 }) },
           postSettlementWork: {
             createMany: async (q: Record<string, unknown>) => {
               work.push({ op: "createMany", ...q });

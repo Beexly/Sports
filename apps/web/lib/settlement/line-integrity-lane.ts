@@ -157,6 +157,52 @@ async function writeCursor(
   });
 }
 
+/**
+ * Where the durable cursor must land once a sweep stops (Devin Review, #733).
+ *
+ * THE DEFECT THIS EXISTS TO PREVENT. Both halves used to advance the cursor to
+ * the LAST candidate of the page, before the loop ran. That is correct only if
+ * the loop always finishes the page. It does not: the route deadline breaks out
+ * of it. The cursor then pointed past rows nobody had looked at, and the next
+ * cycle resumed AFTER them — so every candidate behind a deadline break was
+ * skipped until the sweep wrapped all the way round. Defective picks stayed
+ * published for a full wrap, and the more the lane was time-pressured the more
+ * it skipped, which is the opposite of the behaviour under load that a
+ * remediation lane needs.
+ *
+ * The rule, and it is ONE rule for both halves on purpose — the same "two
+ * implementations of one rule" divergence this PR already had to fix once:
+ *
+ *   no candidates at all       -> reset. Nothing follows the cursor, so the
+ *                                 next sweep must wrap to the oldest row.
+ *   none handled               -> DO NOT WRITE. The cursor stays exactly where
+ *                                 it was; every candidate is re-selected next
+ *                                 cycle. (An already-expired deadline lands
+ *                                 here.)
+ *   whole page handled, and it -> reset, as above.
+ *     was the last page
+ *   otherwise                  -> the last candidate actually handled, so the
+ *                                 first untouched one is selected next cycle.
+ *
+ * "Handled" means the row reached a terminal decision — voided, unpublished,
+ * skipped for a stated reason, lost a write race, or failed its write. A row
+ * whose odds read returned but whose write was cut off by the deadline is NOT
+ * handled: it was never written, the lane is idempotent, and the next cycle
+ * re-inspects it.
+ */
+export function sweepCursorTarget(input: {
+  readonly candidateIds: readonly string[];
+  /** Index of the last candidate that reached a terminal decision; -1 if none. */
+  readonly lastHandledIndex: number;
+  readonly capReached: boolean;
+}): { readonly write: false } | { readonly write: true; readonly pickId: string | null } {
+  if (input.candidateIds.length === 0) return { write: true, pickId: null };
+  if (input.lastHandledIndex < 0) return { write: false };
+  const finishedPage = input.lastHandledIndex === input.candidateIds.length - 1;
+  if (finishedPage && !input.capReached) return { write: true, pickId: null };
+  return { write: true, pickId: input.candidateIds[input.lastHandledIndex]! };
+}
+
 /** Pick markets that carry a points line. MONEYLINE has none and is out of scope. */
 export const LINE_INTEGRITY_MARKETS = ["SPREAD", "TOTAL"] as const;
 export type LineIntegrityMarket = (typeof LINE_INTEGRITY_MARKETS)[number];
@@ -337,6 +383,8 @@ export type LineIntegrityTx = {
   pick: { updateMany(args: Record<string, unknown>): Promise<{ count: number }> };
   postSettlementWork: unknown;
   jarvisMemoryEvent: { create(args: Record<string, unknown>): Promise<unknown> };
+  /** Withdraws the signal snapshot's outcome atomically with the VOID. */
+  pickSignalSnapshot: { updateMany(args: Record<string, unknown>): Promise<{ count: number }> };
 };
 
 export type LineIntegrityDb = {
@@ -397,6 +445,12 @@ export type LineIntegrityAction = {
 
 export type LineIntegrityHalfResult = {
   readonly enabled: boolean;
+  /**
+   * Candidates that reached a terminal decision this cycle — NOT the number
+   * selected. A deadline break leaves the rest in `DEADLINE_REACHED`, and the
+   * two reconcile: `inspected + DEADLINE_REACHED === candidates selected`.
+   * Naming this after the wider number is the C-241/C-246/C-250 defect class.
+   */
   inspected: number;
   acted: number;
   capReached: boolean;
@@ -780,25 +834,36 @@ export async function voidDefectiveSettledPicks(input: {
   });
   half.capReached = rows.length > cap;
   const candidates = rows.slice(0, cap);
-  half.inspected = candidates.length;
-  // Advance, or reset when this sweep ran out of rows so the next one wraps.
-  await writeCursor(input.db, key, half.capReached ? candidates[candidates.length - 1]!.id : null, now);
+  // The cursor is written AFTER the loop, from the last row actually handled.
+  // See sweepCursorTarget: writing it here skipped everything behind a deadline
+  // break for a whole wrap of the population.
+  let lastHandledIndex = -1;
 
-  for (const row of candidates) {
+  for (let i = 0; i < candidates.length; i++) {
+    const row = candidates[i]!;
     // Deadline before every odds read AND every write; the row is untouched
     // and the next cycle re-inspects it (the lane is idempotent).
     if (pastDeadline()) {
       half.deadlineHit = true;
-      half.skippedByReason.DEADLINE_REACHED += candidates.length - candidates.indexOf(row);
+      half.skippedByReason.DEADLINE_REACHED += candidates.length - i;
       break;
     }
     const verdict = await verdictFor(input.db, row, half, "void", now);
-    if (!verdict) continue;
+    if (!verdict) {
+      lastHandledIndex = i;
+      continue;
+    }
     if (pastDeadline()) {
       half.deadlineHit = true;
-      half.skippedByReason.DEADLINE_REACHED += 1;
+      // This row AND every candidate behind it. Counting only this one left the
+      // rest in no bucket at all, so `inspected + DEADLINE_REACHED` did not
+      // reconcile to the candidates the sweep selected.
+      half.skippedByReason.DEADLINE_REACHED += candidates.length - i;
       break;
     }
+    // From here the row reaches a terminal decision on every path — written,
+    // race lost, or write failed — so the cursor may pass it.
+    lastHandledIndex = i;
     let written: { count: number };
     try {
       written = await input.db.$transaction(async (tx) => {
@@ -828,14 +893,46 @@ export async function voidDefectiveSettledPicks(input: {
         await tx.jarvisMemoryEvent.create({
           data: lineIntegrityVoidMemoryEvent(row, verdict, now),
         });
-        // SNAPSHOT_OUTCOME only, and deliberately NOT CLV_GRADE.
+        // WITHDRAW THE SIGNAL SNAPSHOT'S OUTCOME HERE, IN THIS TRANSACTION.
         //
-        // Enqueue covers a pick that somehow has no row; REOPEN covers the
-        // normal case, where the original settlement already marked it DONE and
-        // `createMany({skipDuplicates})` would silently do nothing, leaving the
-        // signal snapshot holding the outcome this withdrawal just removed.
-        // `drainPendingSnapshotOutcomes` treats VOID as a real result and
-        // rewrites the snapshot, which is what we want.
+        // A CORRECTION TO WHAT THIS COMMENT USED TO SAY (Devin Review, #733).
+        // It claimed the reopened SNAPSHOT_OUTCOME work would rewrite the
+        // snapshot because "drainPendingSnapshotOutcomes treats VOID as a real
+        // result". The first half is true and the second half is not, and I
+        // asserted it without reading the writer. `recordPickSettlementSnapshot`
+        // updates `where: { pickId, settlementResult: null }`; an already-graded
+        // pick's snapshot has a non-null result, so the update matches nothing,
+        // the findUnique fallback returns "already-settled", and the work row is
+        // marked DONE having changed NOTHING. The snapshot would keep the old
+        // WIN or LOSS, with `eligibleForLearning` still true, for a pick the
+        // record now says was withdrawn.
+        //
+        // WHAT THAT WOULD AND WOULD NOT HAVE REACHED, stated exactly rather
+        // than at the scale it first appears. Both calibration crons
+        // (calibration-metrics, backtest-calibration) and the gate slate also
+        // filter `pick.result in [WIN, LOSS(, PUSH)]`, so a VOID pick drops out
+        // there on its own and the published calibration numbers were never
+        // exposed. What was exposed is the snapshot store itself: the admin
+        // dashboard's `snapshots.learningEligible` counts snapshots WITHOUT
+        // joining the pick, so it would have counted withdrawn picks as
+        // learning-eligible — and, more simply, the row pair would contradict
+        // itself, Pick saying VOID while its snapshot said LOSS.
+        //
+        // So the withdrawal is written directly, atomically with the VOID, and
+        // does not depend on a drain running later. `learningEligibleAt` is
+        // cleared with the flag; leaving a timestamp on a record that is no
+        // longer eligible is the kind of half-truth this lane exists to remove.
+        await tx.pickSignalSnapshot.updateMany({
+          where: { pickId: row.id },
+          data: { settlementResult: "VOID", eligibleForLearning: false, learningEligibleAt: null },
+        });
+        // SNAPSHOT_OUTCOME work is still enqueued and reopened, and it is NOT
+        // redundant: it covers the pick that has NO snapshot row at all, where
+        // the updateMany above matches nothing and the drain's create-fallback
+        // path writes one with the VOID outcome. Where a row does exist the
+        // drain now finds it already withdrawn and completes as a no-op.
+        //
+        // Deliberately NOT CLV_GRADE.
         //
         // CLV IS DIFFERENT AND MUST NOT BE REOPENED. CLV is a claim about a bet
         // that stood; a withdrawn pick has none. An earlier revision of this
@@ -870,6 +967,13 @@ export async function voidDefectiveSettledPicks(input: {
         `stored=${row.line} book=${verdict.bookLine ?? "NONE"}`,
     );
   }
+  half.inspected = lastHandledIndex + 1;
+  const target = sweepCursorTarget({
+    candidateIds: candidates.map((c) => c.id),
+    lastHandledIndex,
+    capReached: half.capReached,
+  });
+  if (target.write) await writeCursor(input.db, key, target.pickId, now);
   return half;
 }
 
@@ -917,22 +1021,27 @@ export async function unpublishDefectiveUnsettledPicks(input: {
   });
   half.capReached = rows.length > cap;
   const candidates = rows.slice(0, cap);
-  half.inspected = candidates.length;
-  await writeCursor(input.db, key, half.capReached ? candidates[candidates.length - 1]!.id : null, now);
+  // Cursor after the loop, from the last row handled. See sweepCursorTarget.
+  let lastHandledIndex = -1;
 
-  for (const row of candidates) {
+  for (let i = 0; i < candidates.length; i++) {
+    const row = candidates[i]!;
     if (pastDeadline()) {
       half.deadlineHit = true;
-      half.skippedByReason.DEADLINE_REACHED += candidates.length - candidates.indexOf(row);
+      half.skippedByReason.DEADLINE_REACHED += candidates.length - i;
       break;
     }
     const verdict = await verdictFor(input.db, row, half, "unpublish", now);
-    if (!verdict) continue;
+    if (!verdict) {
+      lastHandledIndex = i;
+      continue;
+    }
     if (pastDeadline()) {
       half.deadlineHit = true;
-      half.skippedByReason.DEADLINE_REACHED += 1;
+      half.skippedByReason.DEADLINE_REACHED += candidates.length - i;
       break;
     }
+    lastHandledIndex = i;
     let written: { count: number };
     try {
       written = await input.db.$transaction(async (tx) => {
@@ -968,6 +1077,13 @@ export async function unpublishDefectiveUnsettledPicks(input: {
         `stored=${row.line} book=${verdict.bookLine ?? "NONE"}`,
     );
   }
+  half.inspected = lastHandledIndex + 1;
+  const target = sweepCursorTarget({
+    candidateIds: candidates.map((c) => c.id),
+    lastHandledIndex,
+    capReached: half.capReached,
+  });
+  if (target.write) await writeCursor(input.db, key, target.pickId, now);
   return half;
 }
 

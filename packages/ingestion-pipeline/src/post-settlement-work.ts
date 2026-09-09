@@ -123,15 +123,29 @@ export async function markPostSettlementWorkDone(
  */
 export const POST_SETTLEMENT_WORK_CANCELLED = "CANCELLED" as const;
 
+/**
+ * Returns the number of rows actually retired: 0 when the update threw, and 0
+ * when it matched nothing.
+ *
+ * IT RETURNS A COUNT RATHER THAN VOID BECAUSE SILENCE HERE IS THE BUG (Devin
+ * Review, #733). This function must never throw — a failed retirement cannot be
+ * allowed to abort a drain that is otherwise making progress — but "never
+ * throws" was implemented as "tells the caller nothing", and the caller then
+ * reported every attempt as a retirement. A row whose cancellation failed stays
+ * PENDING, keeps its slot in the oldest batch, and is re-selected next cycle:
+ * exactly the starvation this whole mechanism was added to end, now hidden
+ * behind a count that said it had been dealt with. Callers MUST branch on the
+ * return value and report unconfirmed retirements separately.
+ */
 export async function cancelPostSettlementWork(
   delegate: PostSettlementWorkDelegate,
   subjectId: string,
   kind: PostSettlementWorkKind,
   reason: string,
   now: Date = new Date(),
-): Promise<void> {
+): Promise<number> {
   try {
-    await delegate.updateMany({
+    const updated = await delegate.updateMany({
       where: { subjectId, kind },
       data: {
         status: POST_SETTLEMENT_WORK_CANCELLED,
@@ -139,11 +153,13 @@ export async function cancelPostSettlementWork(
         lastError: reason,
       },
     });
+    return typeof updated.count === "number" ? updated.count : 0;
   } catch (err) {
     console.warn(
       `[post-settlement-work] could not cancel ${kind}/${subjectId}: ` +
         `${err instanceof Error ? err.message : err}`,
     );
+    return 0;
   }
 }
 
