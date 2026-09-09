@@ -40,7 +40,7 @@ pool n 380, Brier 0.2099, debiased ECE 0.0374; deployed v5.2.7 n 258, debiased 0
 streak 8 at 17:25 UTC. Public surfaces: #751 adds the gate reading to /calibration and a
 phase-aware /pricing hero. Launch copy: `docs/launch/PROVEN_LAUNCH_KIT_2026-09-09.md`. Open
 integrity item: the public performance surfaces (confidence-bucket report, public-confidence,
-performanceSummary) do not yet exclude in-play-generated picks the way the eligibility sample does
+confidence-tail, performanceSummary) do not yet exclude in-play-generated picks the way the eligibility sample does
 (C-302, OPEN). No floor, bin, basis or engine changed today; the streak reads on market_anchored_v4.
 
 **UPDATED 2026-09-09 (13:45 UTC): THE DEPLOYED VERSION WAS NEVER MISCALIBRATED. THE SAMPLE WAS
