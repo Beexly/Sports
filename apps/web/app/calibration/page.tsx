@@ -29,6 +29,7 @@ import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { ProofExplorer } from "@/components/proof/proof-explorer";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { MARKET_IMPLIED_CALIBRATION_CLAIM } from "@/lib/picks/market-implied-display";
+import GateReading from "@/components/calibration/gate-reading";
 
 export const dynamic = "force-dynamic";
 
@@ -118,6 +119,9 @@ export default async function CalibrationProofRoomPage() {
             above.
           </p>
         </header>
+
+        {/* The gate reading: the numbers the calibration receipt is built on. */}
+        <GateReading />
 
         {/* Interactive head, the live calibration, explorable, not a link hub. */}
         <ProofExplorer

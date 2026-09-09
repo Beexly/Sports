@@ -11,6 +11,7 @@ import {
   annualMonthlyEquivalent,
   GRANDFATHER_GUARANTEE as LIFETIME_PRICE_NOTE,
   PRICING_PHASES,
+  type PricingPhaseId,
 } from "@/lib/pricing/pricing-phases";
 import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
 import { Reveal } from "@/components/motion/reveal";
@@ -36,6 +37,30 @@ import { PricingPageAnalytics } from "@/components/pricing/pricing-page-analytic
 // ─────────────────────────────────────────────
 
 const phase = getCurrentPricingPhase();
+
+/**
+ * Phase-aware hero copy. FOUNDING invites backing before the record exists;
+ * every later phase names the milestone that earned it. The price lock and
+ * grandfathering promise is the same in every phase.
+ */
+const PHASE_HEADLINE: Record<PricingPhaseId, { headline: string; sub: string }> = {
+  FOUNDING: {
+    headline: "Claim the founding rate.",
+    sub: "Start free. Back us before the record exists and your price never moves, even as it rises for everyone who joins later.",
+  },
+  PROVEN: {
+    headline: "The record is public. Lock the Proven rate.",
+    sub: "Start free. The calibration report is live and gated in public. Your price is fixed the day you join, even as it rises at the next milestone. Founding members keep their founding rate.",
+  },
+  ESTABLISHED: {
+    headline: "Verified against the closing line. Lock the Established rate.",
+    sub: "Start free. Closing-line value is verified in public. Your price is fixed the day you join; earlier members keep theirs.",
+  },
+  AUTHORITY: {
+    headline: "A multi-season public record. Lock the Authority rate.",
+    sub: "Start free. The record spans seasons and stays public. Your price is fixed the day you join; earlier members keep theirs.",
+  },
+};
 
 export const metadata: Metadata = {
   title: "Pricing: Founding-Member Rates, Locked For Life",
@@ -334,13 +359,12 @@ export default function PricingPage() {
             </Reveal>
             <Reveal delay={90}>
               <h1 className="mt-3 font-display text-display-xl text-balance text-white">
-                Claim the founding rate.
+                {PHASE_HEADLINE[phase.id].headline}
               </h1>
             </Reveal>
             <Reveal delay={180}>
               <p className="mx-auto mt-4 max-w-xl text-lg text-ink-300">
-                Start free. Back us before the record exists and your price never moves,
-                even as it rises for everyone who joins later.
+                {PHASE_HEADLINE[phase.id].sub}
               </p>
             </Reveal>
             <Reveal delay={260}>
