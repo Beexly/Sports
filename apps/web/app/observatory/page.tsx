@@ -22,7 +22,7 @@ import { BRAND_NAME, SURFACES } from "@/lib/brand";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Edge Map — Observatory | Galaxy Sports Edge",
+  title: { absolute: "Edge Map — Observatory | Galaxy Sports Edge" },
   description:
     "Sealed market intelligence surface: illustrative twin and market boards when odds exist; calibrated Edge Map after readiness. No invented sharp/public splits while the gate holds.",
   alternates: { canonical: "/observatory" },

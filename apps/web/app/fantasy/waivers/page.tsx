@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   description:
     "Ranked waiver adds and FAAB bids that re-price to your remaining budget, each with the rationale, plus the weakest rostered players surfaced as drop candidates.",
   alternates: { canonical: "/fantasy/waivers" },
+  robots: { index: false, follow: true },
 };
 
 // Render per-request so the founder-gated live-projections status is reflected at

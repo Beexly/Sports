@@ -17,7 +17,7 @@ const PLEDGE_DESCRIPTION =
   "Galaxy Sports Edge does not carry sportsbook or DFS affiliate or commission links, and never will.";
 
 export const metadata: Metadata = {
-  title: `Affiliate pledge · ${BRAND_NAME}`,
+  title: { absolute: `Affiliate pledge · ${BRAND_NAME}` },
   description: PLEDGE_DESCRIPTION,
   alternates: { canonical: "/pledge" },
   openGraph: {

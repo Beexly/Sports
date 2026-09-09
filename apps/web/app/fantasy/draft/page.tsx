@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   description:
     "A glass-box draft board: VOR, tiers, best-available, and live pick recommendations with the reasoning: need, tier cliffs, value, and bye stacking.",
   alternates: { canonical: "/fantasy/draft" },
+  robots: { index: false, follow: true },
 };
 
 // Render per-request so the founder-gated live-projections status is reflected at

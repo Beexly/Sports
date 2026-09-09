@@ -64,7 +64,10 @@ export default function DeckPage(): JSX.Element {
       <SignalSpine />
 
       {/* ── HERO: The Command Deck ──────────────────────────────────────── */}
-      <section className="relative isolate flex min-h-screen items-center overflow-hidden border-b border-mineral">
+      <section
+        id="main-content"
+        className="relative isolate flex min-h-screen items-center overflow-hidden border-b border-mineral"
+      >
         {plate && (
           <GeneratedPlate
             className="opacity-90"

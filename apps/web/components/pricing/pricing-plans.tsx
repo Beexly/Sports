@@ -1,10 +1,9 @@
 "use client";
 
-import { HoloTilt } from "@/components/motion/holo-tilt";
-
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
 import { SubscribeButton } from "./subscribe-button";
+import { readCheckoutIntent } from "@/lib/pricing/checkout-resume";
 
 /**
  * Pricing plan cards with a monthly/annual billing toggle.
@@ -41,6 +40,22 @@ export function PricingPlans({
   const [interval, setInterval] = useState<Interval>("month");
   const annual = interval === "year";
 
+  // FE-18: computed from the plans actually passed in (pricing-phases.ts),
+  // never hardcoded — a fixed "45%" survives a phase change (e.g. PROVEN's
+  // rates) and becomes a stale, unsupportable claim.
+  const maxAnnualSavingsPct = Math.max(
+    0,
+    ...plans.map((plan) => plan.annualSavingsPct ?? 0),
+  );
+
+  // FE-08: put the billing toggle back where a resumed checkout intent left
+  // it (SubscribeButton restores the DOB into the matching tier's own
+  // field; this restores the shared monthly/annual toggle they both read).
+  useEffect(() => {
+    const intent = readCheckoutIntent();
+    if (intent) setInterval(intent.interval);
+  }, []);
+
   return (
     <div>
       {/* Billing toggle */}
@@ -57,7 +72,11 @@ export function PricingPlans({
             Annual
           </ToggleButton>
         </div>
-        <span className="text-xs font-medium text-brand-400">Save up to 45% annually</span>
+        {maxAnnualSavingsPct > 0 && (
+          <span className="text-xs font-medium text-brand-400">
+            Save up to {maxAnnualSavingsPct}% annually
+          </span>
+        )}
       </div>
 
       {/* Plan cards */}
@@ -67,8 +86,8 @@ export function PricingPlans({
           const isElite = plan.id === "ELITE";
           const isPaid = plan.id !== "FREE";
           return (
-            <HoloTilt key={plan.id} className="h-full">
             <div
+              key={plan.id}
               className={[
                 "relative flex h-full flex-col rounded-2xl border p-6",
                 isPro
@@ -136,7 +155,7 @@ export function PricingPlans({
               <div className="mt-auto">
                 {plan.id === "FREE" ? (
                   <Link
-                    href="/auth/signin"
+                    href="/auth/signin?callbackUrl=/dashboard"
                     className="block w-full rounded-xl border border-titanium bg-titanium py-2.5 text-center text-sm font-semibold text-ion-1 transition-colors hover:bg-titanium"
                   >
                     {plan.cta}
@@ -153,7 +172,6 @@ export function PricingPlans({
                 )}
               </div>
             </div>
-            </HoloTilt>
           );
         })}
       </div>

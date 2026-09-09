@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   description:
     "Value both sides of any trade on VOR, projection, trend, and injury risk, with fairness, a win-now vs. depth lean, consolidation detection, and the reasoning behind the verdict.",
   alternates: { canonical: "/fantasy/trade" },
+  robots: { index: false, follow: true },
 };
 
 // Render per-request so the founder-gated live-projections status is reflected at

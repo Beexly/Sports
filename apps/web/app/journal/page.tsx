@@ -12,7 +12,7 @@ const JOURNAL_DESCRIPTION =
   "Weekly research notes on settled picks, gated slates, factor behavior, and model-version changes from Galaxy Sports Edge.";
 
 export const metadata: Metadata = {
-  title: "Model Journal - Weekly research notes from Galaxy Sports Edge",
+  title: { absolute: "Model Journal - Weekly research notes from Galaxy Sports Edge" },
   description: JOURNAL_DESCRIPTION,
   alternates: { canonical: "/journal" },
 };

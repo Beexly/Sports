@@ -55,10 +55,14 @@ export function ObservatoryBeacon() {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       aria-label="Return to Observatory"
-      className="pointer-events-none fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-full transition-all duration-500 lg:pointer-events-auto"
+      // top-20 (80px), not top-6: the sticky Nav occupies 0-64px at z-50
+      // (styles/pickpilot-kit.css .nav-inner height: 64px) — top-6 (24px)
+      // put the beacon inside that band, at the same z-index, over whatever
+      // sits in the nav's right side (sign-in, pricing, account controls).
+      className="pointer-events-none fixed top-20 right-6 z-50 flex items-center gap-3 rounded-full transition-all duration-500 lg:pointer-events-auto"
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(20px)",
+        transform: visible ? "translateY(0)" : "translateY(-20px)",
       }}
     >
       {/* Tooltip */}

@@ -33,7 +33,7 @@ import { MARKET_IMPLIED_CALIBRATION_CLAIM } from "@/lib/picks/market-implied-dis
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: `The Proof Room · ${BRAND_NAME}`,
+  title: { absolute: `The Proof Room · ${BRAND_NAME}` },
   description:
     "Galaxy Calibration: every credibility receipt in one place. Calibration report, closing line value, the trust ledger, tamper-evident proof of record, FABLE evidence gates, and public loss autopsies. No fabricated stats. Every number is gated until it can be honestly backed.",
   alternates: { canonical: "/calibration" },

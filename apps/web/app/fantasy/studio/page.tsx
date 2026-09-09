@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   description:
     "The weekly Galaxy Brief, generated from the whole OS (waivers, scheme moves, roster risk, and the sharpest DFS and pick'em edges) as a production-ready draft for review. Never auto-published.",
   alternates: { canonical: "/fantasy/studio" },
+  robots: { index: false, follow: true },
 };
 
 export default function StudioPage() {

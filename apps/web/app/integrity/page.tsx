@@ -28,7 +28,7 @@ import { HONESTY_CONTRAST } from "@/lib/competitive/honesty-contrast";
 const REPO_BLOB = "https://github.com/Beexly/Sports/blob/main";
 
 export const metadata: Metadata = {
-  title: `Integrity · Governed Decision Path · ${BRAND_NAME}`,
+  title: { absolute: `Integrity · Governed Decision Path · ${BRAND_NAME}` },
   description:
     "How the AI/agent control plane governs its own tool calls: what we govern, what SHADOW mode actually does, signed receipts you can verify yourself, and what we do not claim.",
   alternates: { canonical: "/integrity" },

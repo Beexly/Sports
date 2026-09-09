@@ -39,12 +39,6 @@ export function GmAutopilot() {
           Sleeper
           <span className="text-[9px] uppercase tracking-wider" style={{ color: BRAND_COLORS.orbitalCyan }}>connect →</span>
         </a>
-        {(["ESPN", "Yahoo"] as const).map((p) => (
-          <span key={p} className="flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs" style={{ borderColor: BRAND_COLORS.steelGray, color: "#c8d2dd" }}>
-            {p}
-            <span className="text-[9px] uppercase tracking-wider text-ink-600">soon</span>
-          </span>
-        ))}
         <span className="ml-auto text-[10px] text-ink-600">Read-only sync + write-back are founder-gated behind OAuth & compliance.</span>
       </div>
 
