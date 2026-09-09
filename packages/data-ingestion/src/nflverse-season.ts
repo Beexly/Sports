@@ -120,3 +120,59 @@ export function resolveFootballStatsSeason(
     completedFloor,
   };
 }
+
+// ---------------------------------------------------------------------------
+// REG-row probe (C-95).
+// ---------------------------------------------------------------------------
+
+/** True when `season` has regular-season source rows stored. */
+export type RegRowsProbe = (season: number) => Promise<boolean>;
+
+/**
+ * `resolveFootballStatsSeason` with a real, asynchronous REG-row probe.
+ *
+ * Every production caller of the sync resolver omitted `hasRegRows`, so the
+ * "advances on its own once REG rows exist" promise in the docblock above was
+ * never kept: the display season sat on the completed floor (2025) for the whole
+ * 2026 regular season. This walks the same candidates in the same order as the
+ * sync resolver (labelled current, completed floor, then three seasons back),
+ * probing lazily and stopping at the first season that has rows, then hands
+ * the sync resolver a lookup over exactly what was probed so the two can never
+ * disagree on precedence or wording.
+ *
+ * A probe that throws is treated as "no rows" for that season and reported in
+ * `probeErrors`, never as a newer season: a database hiccup must not advertise
+ * an empty season, and it must not hide either.
+ */
+export async function resolveFootballStatsSeasonAsync(
+  now: Date,
+  hasRegRows: RegRowsProbe,
+): Promise<StatsSeasonResolution & { readonly probed: readonly number[]; readonly probeErrors: readonly string[] }> {
+  const labelledCurrent = currentNflSeasonLabel(now);
+  const completedFloor = latestCompletedNflSeasonFloor(now);
+  const candidates = [
+    labelledCurrent,
+    completedFloor,
+    completedFloor - 1,
+    completedFloor - 2,
+    completedFloor - 3,
+  ].filter((season, index, all) => all.indexOf(season) === index);
+
+  const withRows = new Set<number>();
+  const probed: number[] = [];
+  const probeErrors: string[] = [];
+  for (const season of candidates) {
+    probed.push(season);
+    try {
+      if (await hasRegRows(season)) {
+        withRows.add(season);
+        break;
+      }
+    } catch (err) {
+      probeErrors.push(`${season}: ${err instanceof Error ? err.message : String(err)}`);
+    }
+  }
+
+  const resolution = resolveFootballStatsSeason(now, (season) => withRows.has(season));
+  return { ...resolution, probed, probeErrors };
+}

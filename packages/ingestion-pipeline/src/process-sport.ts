@@ -33,6 +33,8 @@ import {
   resolveRundownApiKey,
   fetchRundownEventsForSport,
   fetchEspnOddsForSport,
+  createGalaxySecondBook,
+  getOddsPaymentCircuitBreaker,
   NFL_PRESEASON_ODDS_KEY,
   NFL_CANONICAL_SPORT_KEY,
   isNflPreseasonFetchWindow,
@@ -323,7 +325,21 @@ export async function processSport(
     let oddsProviderTag = oddsKeyIsSentinel ? "none" : "the-odds-api";
     const eventOddsByExternalId = new Map<string, unknown>();
 
-    if (!oddsKeyIsSentinel) {
+    // WP-27 step 2: while the HTTP 402 payment circuit is OPEN the paid client
+    // refuses every call anyway (fail-closed, no upstream request). Skip the
+    // paid leg outright so the cycle goes straight to the keyless Galaxy path
+    // and no phantom paid request is counted. half_open still probes upstream
+    // (one call at a time) so a recovered key is noticed on its own.
+    const paidCircuitOpen = !oddsKeyIsSentinel && getOddsPaymentCircuitBreaker().getState() === "open";
+    if (paidCircuitOpen) {
+      oddsProviderTag = "paid-circuit-open";
+      console.warn(
+        `${logPrefix} ${sport.key}: Odds API payment circuit open — skipping paid fetch, ` +
+          `using the keyless Galaxy/ESPN path`,
+      );
+    }
+
+    if (!oddsKeyIsSentinel && !paidCircuitOpen) {
       // GSE-SEC-039: spend guard — refuse paid fetch when a cleared free source
       // covers the need. For "odds" the guard passes today (no free odds source
       // is cleared), so the paid call proceeds. If a free odds source is cleared
@@ -436,10 +452,42 @@ export async function processSport(
       }
     }
 
-    // TheRundown: full replace when primary empty; thin-fill when some games
-    // sit under MIN_BOOKMAKERS. Never dual-pull a fully covered slate.
+    // Galaxy/ESPN keyless (inline scoreboard odds, registry-gated) is the
+    // product path when the paid feed yields nothing (key absent, circuit open,
+    // or an empty/failed paid response). It runs BEFORE Rundown: we are the
+    // provider, Rundown is at most a bridge (ledger C-103/C-104). Never invents
+    // — soft-fails empty. The second book (Kalshi via PredExon) is attached
+    // inside the fetch when PREDEXON_INGEST is on.
     let rundownAttemptNote: string | null = null;
     let espnAttemptNote: string | null = null;
+    if (events.length === 0) {
+      try {
+        // One PredExon catalog per sport per cycle (cached inside; undefined
+        // while PREDEXON_INGEST is off, which is the default).
+        const espn = await fetchEspnOddsForSport(sport.key, {
+          secondBook: createGalaxySecondBook(),
+        });
+        if (espn.events.length > 0) {
+          events = espn.events;
+          oddsProviderTag = "espn_public";
+          console.log(
+            `${logPrefix} ${sport.key}: Galaxy/ESPN keyless path ${events.length} events` +
+              (espn.error ? ` (note: ${espn.error})` : ""),
+          );
+        } else {
+          espnAttemptNote = espn.error ?? "espn odds empty";
+          console.warn(`${logPrefix} ${sport.key}: espn odds empty — ${espnAttemptNote}`);
+        }
+      } catch (espnErr) {
+        espnAttemptNote =
+          espnErr instanceof Error ? espnErr.message : String(espnErr);
+        console.warn(`${logPrefix} ${sport.key}: espn odds failed — ${espnAttemptNote}`);
+      }
+    }
+
+    // TheRundown: full replace when primary AND the keyless path are empty;
+    // thin-fill when some games sit under MIN_BOOKMAKERS. Never dual-pull a
+    // fully covered slate.
     const rundownKey = resolveRundownApiKey();
     if (events.length === 0) {
       if (rundownKey) {
@@ -481,31 +529,13 @@ export async function processSport(
       }
     }
 
-    // Free tertiary path: ESPN public odds (zero keys) when Odds+Rundown empty.
-    // Never invents — soft-fails empty. Community routing: pseudo-r/Public-ESPN-API.
-    if (events.length === 0) {
-      try {
-        const espn = await fetchEspnOddsForSport(sport.key);
-        if (espn.events.length > 0) {
-          events = espn.events;
-          oddsProviderTag = "espn_public";
-          console.log(
-            `${logPrefix} ${sport.key}: ESPN public free path ${events.length} events` +
-              (espn.error ? ` (note: ${espn.error})` : ""),
-          );
-        } else {
-          oddsProviderTag =
-            oddsProviderTag === "therundown-empty" || oddsProviderTag === "none"
-              ? "espn_public-empty"
-              : oddsProviderTag;
-          espnAttemptNote = espn.error ?? "espn odds empty";
-          console.warn(`${logPrefix} ${sport.key}: espn odds empty — ${espnAttemptNote}`);
-        }
-      } catch (espnErr) {
-        espnAttemptNote =
-          espnErr instanceof Error ? espnErr.message : String(espnErr);
-        console.warn(`${logPrefix} ${sport.key}: espn odds failed — ${espnAttemptNote}`);
-      }
+    // Nothing from any path: keep the provider tag honest about which free
+    // source came up empty last (the truth surface reads it).
+    if (events.length === 0 && espnAttemptNote) {
+      oddsProviderTag =
+        oddsProviderTag === "therundown-empty" || oddsProviderTag === "none" || oddsProviderTag === "paid-circuit-open"
+          ? "espn_public-empty"
+          : oddsProviderTag;
     }
 
     try {
