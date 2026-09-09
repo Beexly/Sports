@@ -46,6 +46,9 @@ python3 -m gsecal bootstrap rows.csv --seed 20260909
 # Can the gate pass on a model that is not calibrated? (exit 1 if at risk)
 python3 -m gsecal readiness --version v5.2.7:245:0.1089 --deployed v5.2.7 --pooled-ece 0.0524
 
+# Does a zero-skill forecaster pass every floor? (exit 1 if it does)
+python3 -m gsecal skill --base-rate 0.694 --n 458
+
 # The production eligibility verdict (exit 0 GREEN, 1 RED — scriptable)
 python3 -m gsecal gate --n 458 --brier 0.1926 --ece 0.0524 \
   --murphy-rel 0.0053 --canonical-settled 458
@@ -54,7 +57,7 @@ python3 -m gsecal gate --n 458 --brier 0.1926 --ece 0.0524 \
 Tests, also zero-install:
 
 ```bash
-python3 -m unittest discover -s tests -t .   # 126 tests
+python3 -m unittest discover -s tests -t .   # 136 tests
 ```
 
 ## Optional: the Gradio cockpit
@@ -158,9 +161,10 @@ gsecal/
   samples.py        strict loader that refuses to guess
   serve.py          fail-closed launch policy (no public bind without auth)
   readiness.py      false-GREEN detection + rows-to-floor projection
+  skill.py          zero-skill null: does the gate test skill at all?
   report.py         markdown rendering (no metric computed here)
   cli.py            zero-install command line
 app.py              optional Gradio cockpit (+ MCP)
 parity/             vector generators + committed vectors
-tests/              126 tests, stdlib unittest
+tests/              136 tests, stdlib unittest
 ```

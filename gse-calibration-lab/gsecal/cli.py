@@ -31,6 +31,7 @@ from gsecal.readiness import (
     rows_needed_for_floor,
 )
 from gsecal.report import render_decomposition, render_gate, render_interval
+from gsecal.skill import assess_skill, no_skill_baseline
 from gsecal.samples import group_by, load_path
 
 
@@ -188,6 +189,40 @@ def cmd_readiness(args) -> int:
     return 1 if report.at_risk else 0
 
 
+def cmd_skill(args) -> int:
+    """Does the gate discriminate skill, or only calibration?"""
+    baseline = no_skill_baseline(args.base_rate, args.n)
+    print("=== Zero-skill reference: always forecast the base rate ===")
+    print(f"  base rate    {baseline.base_rate:.4f}   n {baseline.n}")
+    print(f"  ECE          {baseline.ece:.4f}   floor <= {DEFAULT_FLOORS.ece}   "
+          f"{'PASS' if baseline.passes_ece_floor else 'FAIL'}")
+    print(f"  Brier        {baseline.brier:.4f}   floor <= {DEFAULT_FLOORS.brier}   "
+          f"{'PASS' if baseline.passes_brier_floor else 'FAIL'}")
+    print(f"  Murphy REL   {baseline.reliability:.4f}   floor <= "
+          f"{DEFAULT_FLOORS.murphy_reliability}   "
+          f"{'PASS' if baseline.passes_reliability_floor else 'FAIL'}")
+    print(f"  Murphy RES   {baseline.resolution:.4f}   NO FLOOR EXISTS")
+    print()
+    if baseline.passes_every_floor:
+        print("  ** A forecaster with NO predictive value clears every floor. **")
+        print("  The gate certifies calibration, not skill.")
+    else:
+        print("  The floors do discriminate at this base rate.")
+
+    if args.model_resolution is not None:
+        print()
+        verdict = assess_skill(
+            model_resolution=args.model_resolution,
+            model_brier=args.model_brier if args.model_brier is not None else baseline.brier,
+            base_rate=args.base_rate,
+            n=args.n,
+        )
+        print("=== Model vs that reference ===")
+        print(f"  {verdict.verdict()}")
+        return 0 if verdict.has_material_resolution else 1
+    return 1 if baseline.passes_every_floor else 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python3 -m gsecal",
@@ -238,6 +273,16 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--pooled-ece", type=float, required=True)
     p.add_argument("--floor", type=float, default=0.05)
     p.set_defaults(func=cmd_readiness)
+
+    p = sub.add_parser(
+        "skill", help="does a zero-skill forecaster pass the floors? (exit 1 if yes)"
+    )
+    p.add_argument("--base-rate", type=float, required=True)
+    p.add_argument("--n", type=int, required=True)
+    p.add_argument("--model-resolution", type=float, default=None,
+                   help="the model's Murphy RES, to compare against the null")
+    p.add_argument("--model-brier", type=float, default=None)
+    p.set_defaults(func=cmd_skill)
 
     p = sub.add_parser("gate", help="production eligibility verdict")
     p.add_argument("--n", type=int, required=True)

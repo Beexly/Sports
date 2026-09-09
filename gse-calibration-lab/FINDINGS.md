@@ -193,3 +193,82 @@ python3 -m gsecal readiness \
   --version v5.1.0:74:0.0729  --version v5.0.0:29:0.1531 \
   --deployed v5.2.7 --pooled-ece 0.0524
 ```
+
+---
+
+# Finding 3: the gate certifies calibration, not skill
+
+**Status:** structural. A zero-skill model passes every floor today.
+
+## The demonstration
+
+A forecaster that ignores every input and always predicts the base rate is
+**perfectly calibrated by construction**. Measured against the conditions
+recorded in AGENTS.md (base rate ~0.694 implied by uncertainty 0.2139, n 458):
+
+```
+n            458      floor >= 100    PASS
+ECE          0.0003   floor <= 0.05   PASS
+Brier        0.2122   floor <= 0.22   PASS
+Murphy REL   0.0000   floor <= 0.05   PASS
+Murphy RES   0.0000   <-- NO FLOOR EXISTS
+GATE VERDICT: GREEN   (reasons: none — every floor met)
+```
+
+Run end-to-end through the production gate mirror, not just the floor
+comparisons: `tests/test_skill.py::test_the_gate_itself_reads_green_on_zero_skill`.
+
+## Why all four fail together
+
+All four floors measure **calibration or volume**. None measures discrimination.
+Murphy's own decomposition, which this repo already uses, says why:
+
+```
+Brier = REL - RES + UNC
+  REL  reliability   lower better   floored three different ways
+  RES  resolution    HIGHER better  NOT FLOORED AT ALL
+  UNC  uncertainty   fixed by data  not a lever
+```
+
+Calibration is free if you predict the base rate. Skill is not. The gate only
+tests the free part.
+
+AGENTS.md already records that the Brier floor alone is clearable by a no-skill
+forecast, and that the Murphy reliability floor is ~4.47x looser than the ECE
+floor. What had not been stated is the consequence: they do not merely fail
+*individually*, they fail *together, to the same forecaster*.
+
+## Worse than unfloored — RES is unmeasured
+
+Murphy **resolution appears nowhere** in AGENTS.md's production readings. Those
+record n, Brier, ECE and Murphy **reliability** (0.0053). Reliability and
+resolution are different terms pulling in opposite directions.
+
+So the deployed model's ranking power is not merely unconstrained by the gate —
+**it is unknown**. The first action is to measure it, not to floor it.
+
+*(A caution against a mistake made and caught while writing this: 0.0053 is
+RELIABILITY. Reading it as resolution would be a category error, and reading a
+low value as bad would invert its meaning.)*
+
+## Related: the gate compares a point estimate to a floor
+
+AGENTS.md records that at n=223 the ECE was 0.0553 with a bootstrap CI of
+**[0.0365, 0.1142]** — an interval straddling the 0.05 floor by a wide margin in
+both directions. The gate compares the point estimate only; it has no
+uncertainty treatment. A GREEN reading near the floor can therefore be noise.
+`gsecal.bootstrap` reports the interval and a verdict of CLEARS / FAILS /
+INCONCLUSIVE against the floor for exactly this reason.
+
+## Reproduce
+
+```bash
+python3 -m gsecal skill --base-rate 0.694 --n 458    # exits 1: zero skill passes
+```
+
+## What is NOT proposed here
+
+No floor is added, changed or weakened. Adding a RES floor would make the guard
+strictly stronger (law 9's allowed direction) and is worth doing — but it is a
+production gate change on the honesty boundary, it needs a measured RES first,
+and it belongs to a human. This measures the gap so the decision is informed.
