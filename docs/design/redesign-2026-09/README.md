@@ -56,5 +56,10 @@ screen becomes one ledger row per `docs/ops/AGENT_LEDGER.md` rules; copy changes
 ## Open items for the founder
 
 - claude.ai/design authorization (blocks the upload only; everything else proceeds).
-- The brief's §10 says "no age gate"; `/fantasy` currently has one and `AGENTS.md` records it as a
-  decision already taken. The audit reports where it lives; removing it is a founder decision.
+- The brief's §10 says "no age gate". The audit found the gate is not only on `/fantasy`: six of the
+  brief's screens (board, picks, performance, pricing, stats, fantasy) sit behind the prefixes in
+  `apps/web/lib/age-verify/surface.ts`, enforced in `apps/web/middleware.ts` with no flag, and
+  `AGENTS.md` records the `/fantasy` gate as a decision already taken. Removing it is a founder decision.
+- The footer's "Replay intro" link contradicts brief §5 (no replay-intro link); flagged in the audit.
+- Seven of the brief's twelve component-library items do not exist as shared components today
+  (buttons, inputs, chart frame, badge set, sheet, toast, empty state); see `component-inventory.md`.
