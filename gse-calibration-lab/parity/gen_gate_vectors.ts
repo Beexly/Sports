@@ -1,44 +1,31 @@
 /**
  * Parity vectors for the eligibility GATE.
  *
- * Transpiles apps/web/lib/ops/calibration-eligibility.ts (dependency-free) and
- * records its verdicts, including the exact reason strings, so the Python
- * mirror in gsecal/gate.py can be proven to make the same decision production
- * makes — not merely a similar-looking one.
+ * Imports and runs the REAL production gate over a fixed case set, recording its
+ * verdicts including the exact reason strings, so the Python mirror in
+ * gsecal/gate.py is proven to make the same decision production makes — not
+ * merely a similar-looking one.
  *
- *   node gse-calibration-lab/parity/gen_gate_vectors.mjs
+ *   npx tsx gse-calibration-lab/parity/gen_gate_vectors.ts
+ *
+ * WHY STATIC IMPORTS. An earlier version transpiled the source with esbuild and
+ * evaluated the generated source through a dynamic import of an inline data
+ * URI — an eval-equivalent, correctly flagged by static analysis. tsx imports TypeScript directly, so the
+ * dependency below is an ordinary static import with no generated code and no
+ * containment check to keep in sync.
  */
 
-import { readFileSync, writeFileSync } from "node:fs";
+import { writeFileSync } from "node:fs";
 import { dirname, resolve } from "node:path";
 import { fileURLToPath } from "node:url";
-import { transformSync } from "esbuild";
+
+import {
+  evaluateCalibrationEligibility,
+  DEFAULT_CALIBRATION_FLOORS,
+} from "../../apps/web/lib/ops/calibration-eligibility.ts";
 
 const HERE = dirname(fileURLToPath(import.meta.url));
-const REPO = resolve(HERE, "..", "..");
 const SOURCE = "apps/web/lib/ops/calibration-eligibility.ts";
-
-/**
- * SECURITY: this dynamically executes code (esbuild output imported from a
- * data: URI). That is inherent to proving parity — the point is to run the REAL
- * production gate, not a transcription of it. The path is a module constant,
- * never a parameter or external input, and is asserted to resolve inside the
- * repo before anything is read. Developer-only harness: not imported by shipped
- * code, not on any request path.
- */
-const SOURCE_ABS = resolve(REPO, SOURCE);
-if (!SOURCE_ABS.startsWith(REPO + "/")) {
-  throw new Error(`refusing to load ${SOURCE_ABS}: resolves outside the repo`);
-}
-
-const { code } = transformSync(readFileSync(SOURCE_ABS, "utf8"), {
-  loader: "ts",
-  format: "esm",
-  target: "es2022",
-});
-const mod = await import(
-  `data:text/javascript;base64,${Buffer.from(code).toString("base64")}`
-);
 
 const murphy = (reliability) => ({ reliability, resolution: 0.02, uncertainty: 0.21 });
 
@@ -187,7 +174,7 @@ const cases = [
 ];
 
 const results = cases.map((c) => {
-  const report = mod.evaluateCalibrationEligibility(c.input);
+  const report = evaluateCalibrationEligibility(c.input as never);
   return {
     name: c.name,
     input: c.input,
@@ -210,9 +197,9 @@ writeFileSync(
   outPath,
   `${JSON.stringify(
     {
-      generatedBy: "gse-calibration-lab/parity/gen_gate_vectors.mjs",
+      generatedBy: "gse-calibration-lab/parity/gen_gate_vectors.ts",
       source: SOURCE,
-      defaultFloors: mod.DEFAULT_CALIBRATION_FLOORS,
+      defaultFloors: DEFAULT_CALIBRATION_FLOORS,
       cases: results,
     },
     null,
@@ -222,4 +209,4 @@ writeFileSync(
 );
 console.log(`wrote ${outPath}`);
 console.log(`gate cases: ${results.length}`);
-for (const r of results) console.log(`  ${r.name.padEnd(34)} ${r.output.status}`);
+for (const r of results) console.log(`  ${r.name.padEnd(42)} ${r.output.status}`);

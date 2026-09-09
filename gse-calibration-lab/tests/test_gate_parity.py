@@ -29,7 +29,7 @@ class TestGateParity(unittest.TestCase):
     def setUpClass(cls) -> None:
         if not VECTORS.exists():
             raise unittest.SkipTest(
-                f"{VECTORS} missing — run: node gse-calibration-lab/parity/gen_gate_vectors.mjs"
+                f"{VECTORS} missing — run: npx tsx gse-calibration-lab/parity/gen_gate_vectors.ts"
             )
         cls.payload = json.loads(VECTORS.read_text())
 

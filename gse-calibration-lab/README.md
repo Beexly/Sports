@@ -103,8 +103,8 @@ over adversarial fixtures, and asserting the Python reproduces their output to
 `1e-12`.
 
 ```bash
-node parity/gen_vectors.mjs        # 15 fixtures x 3 bin counts
-node parity/gen_gate_vectors.mjs   # 12 gate cases, reason strings included
+npx tsx parity/gen_vectors.ts        # 15 fixtures x 3 bin counts
+npx tsx parity/gen_gate_vectors.ts   # 12 gate cases, reason strings included
 python3 -m unittest discover -s tests -t .
 ```
 

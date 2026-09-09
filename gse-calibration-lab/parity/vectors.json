@@ -1,11 +1,11 @@
 {
-  "generatedBy": "gse-calibration-lab/parity/gen_vectors.mjs",
+  "generatedBy": "gse-calibration-lab/parity/gen_vectors.ts",
   "sources": {
     "ece": "apps/web/lib/calibration/ece.ts",
     "brier": "apps/web/lib/calibration/brier.ts",
     "decomposition": "packages/prediction-engine/src/probability-calibration.ts"
   },
-  "note": "Outputs produced by transpiling and executing the production TypeScript. Fixtures are abstract (p, y) mathematics — not picks, odds, or product data.",
+  "note": "Outputs produced by importing and executing the production TypeScript directly (tsx). Fixtures are abstract (p, y) mathematics — not picks, odds, or product data.",
   "binCounts": [
     5,
     10,

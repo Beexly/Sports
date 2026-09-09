@@ -2,7 +2,7 @@
 Parity: the Python port must reproduce the production TypeScript exactly.
 
 Vectors in parity/vectors.json are produced by transpiling and executing the
-real source files (see parity/gen_vectors.mjs). If this test fails, the port is
+real source files (see parity/gen_vectors.ts). If this test fails, the port is
 wrong — not the vectors.
 
 Tolerance is 1e-12 on floats, which is IEEE-754 noise between two engines doing
@@ -33,7 +33,7 @@ class TestMetricsParity(unittest.TestCase):
     def setUpClass(cls) -> None:
         if not VECTORS.exists():
             raise unittest.SkipTest(
-                f"{VECTORS} missing — run: node gse-calibration-lab/parity/gen_vectors.mjs"
+                f"{VECTORS} missing — run: npx tsx gse-calibration-lab/parity/gen_vectors.ts"
             )
         cls.payload = json.loads(VECTORS.read_text())
 
