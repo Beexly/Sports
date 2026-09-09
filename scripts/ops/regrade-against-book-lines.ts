@@ -36,6 +36,7 @@ import {
   type RegradeOddsRow,
   type RegradePickRow,
   type RegradeVerdict,
+  pricedLineOf,
 } from "./lib/regrade-line-selection";
 
 const argv = process.argv.slice(2);
@@ -135,12 +136,22 @@ async function main(): Promise<void> {
             market: PICK_MARKET_TO_ODDS_MARKET[pick.pickType] ?? "SPREADS",
             fetchedAt: { lte: pick.generatedAt },
           },
-          select: { bookmaker: true, fetchedAt: true, spread: true, total: true },
+          select: {
+            bookmaker: true,
+            fetchedAt: true,
+            spread: true,
+            homeSpreadPrice: true,
+            awaySpreadPrice: true,
+            total: true,
+            overPrice: true,
+            underPrice: true,
+          },
         })
       ).map((o) => ({
         bookmaker: o.bookmaker,
         fetchedAt: o.fetchedAt,
-        line: pick.pickType === "SPREAD" ? o.spread : o.total,
+        // Same rule as the lane: a line with no price is not a quote.
+        line: pricedLineOf(pick.pickType === "SPREAD" ? "SPREAD" : "TOTAL", o),
       }));
       const verdict = regradeOne(pick, oddsRows, calculatePickResult as never);
       rows.push({ pick, verdict });

@@ -143,10 +143,18 @@ function cursorKey(half: LineIntegrityHalfName, sportKey: string | null | undefi
   return `${half}:${sportKey ?? "*"}`;
 }
 
-async function readCursor(
-  db: LineIntegrityDb,
-  half: string,
-): Promise<string | null> {
+export type SweepCursor = {
+  /** Resume after this pick; null means start from the oldest. */
+  readonly pickId: string | null;
+  /**
+   * Rows this PASS could not verify so far: odds reads that failed and writes
+   * that failed. Accumulated across the cycles of one pass and reset at the
+   * wrap, so the wrap marker states whether the pass it closes was complete.
+   */
+  readonly unverified: number;
+};
+
+async function readCursor(db: LineIntegrityDb, half: string): Promise<SweepCursor> {
   const rows = await db.jarvisMemoryEvent.findMany({
     where: {
       scope: LINE_INTEGRITY_CURSOR_SCOPE,
@@ -156,8 +164,22 @@ async function readCursor(
     take: 1,
     select: { metadata: true },
   });
-  const meta = rows[0]?.metadata as { pickId?: unknown } | null | undefined;
-  return typeof meta?.pickId === "string" && meta.pickId.length > 0 ? meta.pickId : null;
+  const meta = rows[0]?.metadata as
+    | { pickId?: unknown; wrapped?: unknown; unverified?: unknown }
+    | null
+    | undefined;
+  const pickId = typeof meta?.pickId === "string" && meta.pickId.length > 0 ? meta.pickId : null;
+  // A wrap closes a pass: the next pass starts its own count at zero.
+  const unverified =
+    pickId !== null && typeof meta?.unverified === "number" && Number.isFinite(meta.unverified)
+      ? Math.max(0, meta.unverified)
+      : 0;
+  return { pickId, unverified };
+}
+
+/** Skip reasons that mean "this row was NOT judged", as opposed to "judged and left alone". */
+export function unverifiedSkips(skipped: Record<LineIntegritySkipReason, number>): number {
+  return skipped.ODDS_READ_FAILED + skipped.WRITE_FAILED;
 }
 
 async function writeCursor(
@@ -165,14 +187,21 @@ async function writeCursor(
   half: string,
   pickId: string | null,
   now: Date,
+  /** Rows the pass has failed to verify so far, this cycle's included. */
+  unverified: number,
 ): Promise<void> {
   // `wrapped` is an EXPLICIT boolean rather than "pickId is null", because that
   // is the fact the completeness signal below has to query and JSON-null
-  // filtering is not something to rest a flip precondition on.
+  // filtering is not something to rest a flip precondition on. `unverified`
+  // rides on the same marker so a wrap can say whether the pass it closes
+  // actually judged every row (Devin Review, #733): a row skipped for a failed
+  // odds read or a failed write is a row the sweep did NOT clear, and a pass
+  // that skipped any must not certify the population clean.
   const metadata = {
     half,
     pickId,
     wrapped: pickId === null,
+    unverified,
     lane: "line-integrity",
     at: now.toISOString(),
   };
@@ -270,6 +299,35 @@ export type LineIntegrityDefectKind =
   | "LINE_NOT_QUOTED"
   /** No odds row at all for the game and market by generatedAt: the line has no book basis. */
   | "NO_QUOTE_ROWS";
+
+/**
+ * The odds columns a quoted line is read from, prices included. Mirror of the
+ * dry-run tool's `PricedLineRow` (scripts/ops/lib/regrade-line-selection.ts),
+ * which is dependency-free by design; the drift test pins the two rules
+ * together the same way it pins the non-book list.
+ */
+export type PricedLineRow = {
+  readonly spread: number | null;
+  readonly homeSpreadPrice: number | null;
+  readonly awaySpreadPrice: number | null;
+  readonly total: number | null;
+  readonly overPrice: number | null;
+  readonly underPrice: number | null;
+};
+
+/**
+ * The quoted line for `market`, or null when the row carries no price for it.
+ * A line with NO price on either side is not a quote a bettor could take, so it
+ * must not vouch for a published line (Devin Review, #733).
+ */
+export function pricedLineOf(market: LineIntegrityMarket, row: PricedLineRow): number | null {
+  if (market === "SPREAD") {
+    if (row.spread === null || !Number.isFinite(row.spread)) return null;
+    return row.homeSpreadPrice !== null || row.awaySpreadPrice !== null ? row.spread : null;
+  }
+  if (row.total === null || !Number.isFinite(row.total)) return null;
+  return row.overPrice !== null || row.underPrice !== null ? row.total : null;
+}
 
 export type LineIntegrityQuote = {
   readonly id: string;
@@ -441,7 +499,11 @@ export type LineIntegrityDb = {
         bookmaker: string;
         fetchedAt: Date;
         spread: number | null;
+        homeSpreadPrice: number | null;
+        awaySpreadPrice: number | null;
         total: number | null;
+        overPrice: number | null;
+        underPrice: number | null;
       }>
     >;
   };
@@ -587,13 +649,27 @@ async function readQuotesAtPublish(
       market: PICK_MARKET_TO_ODDS_MARKET[market],
       fetchedAt: freshSince ? { lte: asOf, gte: freshSince } : { lte: asOf },
     },
-    select: { id: true, bookmaker: true, fetchedAt: true, spread: true, total: true },
+    select: {
+      id: true,
+      bookmaker: true,
+      fetchedAt: true,
+      spread: true,
+      homeSpreadPrice: true,
+      awaySpreadPrice: true,
+      total: true,
+      overPrice: true,
+      underPrice: true,
+    },
   });
+  // A line with no price on either side is NOT a quote (Devin Review, #733):
+  // nobody could have placed it, so it cannot vouch for a published line.
+  // `pricedLineOf` is the ONE rule the lane and the regrade tool share; it
+  // returns null for such rows and latestQuotePerBookmaker drops nulls.
   const all: LineIntegrityQuote[] = rows.map((o) => ({
     id: o.id,
     bookmaker: o.bookmaker,
     fetchedAt: o.fetchedAt,
-    line: market === "SPREAD" ? o.spread : o.total,
+    line: pricedLineOf(market, o),
   }));
   // One snapshot per real book, never the union of history. See
   // latestQuotePerBookmaker for why matching against every earlier row fails open.
@@ -908,7 +984,7 @@ export async function voidDefectiveSettledPicks(input: {
     orderBy: [{ id: "asc" }],
     // Resume after the last row inspected, so clean rows cannot hold the
     // oldest page forever and starve defects behind them. See readCursor.
-    ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+    ...(cursor.pickId ? { cursor: { id: cursor.pickId }, skip: 1 } : {}),
     take: cap + 1,
     select: LINE_INTEGRITY_PICK_SELECT,
   });
@@ -1053,7 +1129,15 @@ export async function voidDefectiveSettledPicks(input: {
     lastHandledIndex,
     capReached: half.capReached,
   });
-  if (target.write) await writeCursor(input.db, key, target.pickId, now);
+  if (target.write) {
+    await writeCursor(
+      input.db,
+      key,
+      target.pickId,
+      now,
+      cursor.unverified + unverifiedSkips(half.skippedByReason),
+    );
+  }
   return half;
 }
 
@@ -1095,7 +1179,7 @@ export async function unpublishDefectiveUnsettledPicks(input: {
       ...(input.sportKey ? { game: { sport: { key: input.sportKey } } } : {}),
     },
     orderBy: [{ id: "asc" }],
-    ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
+    ...(cursor.pickId ? { cursor: { id: cursor.pickId }, skip: 1 } : {}),
     take: cap + 1,
     select: LINE_INTEGRITY_PICK_SELECT,
   });
@@ -1163,7 +1247,15 @@ export async function unpublishDefectiveUnsettledPicks(input: {
     lastHandledIndex,
     capReached: half.capReached,
   });
-  if (target.write) await writeCursor(input.db, key, target.pickId, now);
+  if (target.write) {
+    await writeCursor(
+      input.db,
+      key,
+      target.pickId,
+      now,
+      cursor.unverified + unverifiedSkips(half.skippedByReason),
+    );
+  }
   return half;
 }
 
@@ -1263,8 +1355,15 @@ export type LineIntegritySweepCompleteness = {
    */
   voidsInLastCompleteSweep: number | null;
   /**
-   * True only when a complete pass has happened and acted on nothing. This, not
-   * a capped sample, is what the flip is entitled to rely on.
+   * Rows the closing pass skipped for a failed odds read or a failed write.
+   * Those rows were never judged, so the pass cannot vouch for them; any
+   * value above 0 (or null, from a marker written before the count existed)
+   * keeps `voidSweepComplete` false.
+   */
+  unverifiedInLastCompleteSweep: number | null;
+  /**
+   * True only when a complete pass has happened, acted on nothing, and judged
+   * every row. This, not a capped sample, is what the flip is entitled to rely on.
    */
   voidSweepComplete: boolean;
 };
@@ -1274,6 +1373,7 @@ async function loadSweepCompleteness(db: LineIntegrityDb): Promise<LineIntegrity
     lastWrapAt: null,
     priorWrapAt: null,
     voidsInLastCompleteSweep: null,
+    unverifiedInLastCompleteSweep: null,
     voidSweepComplete: false,
   };
   // The UNSCOPED void cursor only. A `?sport=` run walks a different
@@ -1287,14 +1387,23 @@ async function loadSweepCompleteness(db: LineIntegrityDb): Promise<LineIntegrity
     take: 40,
     select: { metadata: true, created_at: true },
   });
-  const wrapTimes = wraps
-    .filter((w) => (w.metadata as { wrapped?: unknown } | null)?.wrapped === true)
-    .map((w) => w.created_at)
-    .filter((d): d is Date => d instanceof Date);
+  const wrapRows = wraps.filter(
+    (w) =>
+      (w.metadata as { wrapped?: unknown } | null)?.wrapped === true && w.created_at instanceof Date,
+  );
+  const wrapTimes = wrapRows.map((w) => w.created_at as Date);
   if (wrapTimes.length === 0) return empty;
   const lastWrapAt = wrapTimes[0]!;
+  // Rows the closing pass could not verify (failed odds reads, failed writes).
+  // Written by writeCursor on every marker; a wrap marker from before this
+  // field existed carries no count and is treated as unverified, never as 0.
+  const lastUnverifiedRaw = (wrapRows[0]!.metadata as { unverified?: unknown } | null)?.unverified;
+  const unverifiedInLastCompleteSweep =
+    typeof lastUnverifiedRaw === "number" && Number.isFinite(lastUnverifiedRaw)
+      ? Math.max(0, lastUnverifiedRaw)
+      : null;
   if (wrapTimes.length < 2) {
-    return { ...empty, lastWrapAt: lastWrapAt.toISOString() };
+    return { ...empty, lastWrapAt: lastWrapAt.toISOString(), unverifiedInLastCompleteSweep };
   }
   const priorWrapAt = wrapTimes[1]!;
   const voids = await db.jarvisMemoryEvent.count({
@@ -1308,7 +1417,10 @@ async function loadSweepCompleteness(db: LineIntegrityDb): Promise<LineIntegrity
     lastWrapAt: lastWrapAt.toISOString(),
     priorWrapAt: priorWrapAt.toISOString(),
     voidsInLastCompleteSweep: voids,
-    voidSweepComplete: voids === 0,
+    unverifiedInLastCompleteSweep,
+    // Clean means: the pass acted on nothing AND judged every row it passed.
+    // A skipped row is a row nobody cleared (Devin Review, #733).
+    voidSweepComplete: voids === 0 && unverifiedInLastCompleteSweep === 0,
   };
 }
 

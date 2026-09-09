@@ -6,6 +6,7 @@ import {
   judgementFor,
   latestQuotePerBookmaker,
   lineIntegrityDeadline,
+  pricedLineOf,
   LINE_INTEGRITY_PENDING_FRESHNESS_MS,
   lineIntegrityGradingLine,
   lineIntegrityVoidEnabled,
@@ -18,7 +19,10 @@ import {
   type LineIntegrityPickRow,
 } from "@/lib/settlement/line-integrity-lane";
 import { NON_BOOK_BOOKMAKER_KEYS } from "@/lib/calibration/publish-time-market-p";
-import { NON_BOOK_BOOKMAKER_KEYS as SCRIPT_NON_BOOK_KEYS } from "../../../scripts/ops/lib/regrade-line-selection";
+import {
+  NON_BOOK_BOOKMAKER_KEYS as SCRIPT_NON_BOOK_KEYS,
+  pricedLineOf as SCRIPT_PRICED_LINE_OF,
+} from "../../../scripts/ops/lib/regrade-line-selection";
 
 /**
  * C-282 (ledger C-197/C-281). Every value here is a LINE or a pick STATE:
@@ -36,7 +40,11 @@ type OddsRow = {
   bookmaker: string;
   fetchedAt: Date;
   spread: number | null;
+  homeSpreadPrice: number | null;
+  awaySpreadPrice: number | null;
   total: number | null;
+  overPrice: number | null;
+  underPrice: number | null;
 };
 
 const T0 = new Date("2026-09-01T09:00:00Z");
@@ -67,7 +75,25 @@ const odds = (
   spread: number | null,
   total: number | null = null,
   fetchedAt: Date = T0,
-): OddsRow => ({ id, bookmaker, fetchedAt, spread, total });
+): OddsRow => ({
+  id,
+  bookmaker,
+  fetchedAt,
+  spread,
+  // A fixture line is PRICED by default; `unpricedOdds` below is the exception.
+  homeSpreadPrice: spread === null ? null : -110,
+  awaySpreadPrice: spread === null ? null : -110,
+  total,
+  overPrice: total === null ? null : -110,
+  underPrice: total === null ? null : -110,
+});
+
+/** A row that lists a line but offers no price on it: not a quote. */
+const unpricedOdds = (id: string, bookmaker: string, spread: number | null, fetchedAt: Date = T0): OddsRow => ({
+  ...odds(id, bookmaker, spread, null, fetchedAt),
+  homeSpreadPrice: null,
+  awaySpreadPrice: null,
+});
 
 /** Minimal structural double; records every write so the assertions can read them. */
 function makeDb(args: {
@@ -729,6 +755,8 @@ describe("surveyLineIntegrity — the ops truth-surface block (C-283)", () => {
     wraps: Date[] = [],
     /** VOIDs recorded between the two most recent wraps. */
     voidsBetweenWraps = 0,
+    /** `unverified` on the newest wrap marker; null leaves the field off (a pre-count marker). */
+    wrapUnverified: number | null = 0,
   ) {
     const base = makeDb({ picks, odds: spreadQuotes });
     const db = base.db as unknown as Record<string, unknown>;
@@ -745,7 +773,14 @@ describe("surveyLineIntegrity — the ops truth-surface block (C-283)", () => {
         return counts.unpublished;
       },
       findMany: async () =>
-        wraps.map((at) => ({ metadata: { half: "void:*", wrapped: true }, created_at: at })),
+        wraps.map((at, i) => ({
+          metadata: {
+            half: "void:*",
+            wrapped: true,
+            ...(i === 0 && wrapUnverified !== null ? { unverified: wrapUnverified } : {}),
+          },
+          created_at: at,
+        })),
     };
     return base.db;
   }
@@ -891,6 +926,26 @@ describe("surveyLineIntegrity — the ops truth-surface block (C-283)", () => {
       expect(s.sweep.voidSweepComplete).toBe(false);
     });
 
+    it("a pass that SKIPPED rows it could not verify does not certify the population clean", async () => {
+      // Two wraps, zero voids — but the closing pass could not read odds for
+      // (or failed to write) some rows. Those rows were never judged, so the
+      // sweep cannot vouch for them (Devin Review, #733).
+      const s = await surveyLineIntegrity(surveyDb([], undefined, [WRAP_2, WRAP_1], 0, 2), {
+        env: {},
+      });
+      expect(s.sweep.voidsInLastCompleteSweep).toBe(0);
+      expect(s.sweep.unverifiedInLastCompleteSweep).toBe(2);
+      expect(s.sweep.voidSweepComplete).toBe(false);
+    });
+
+    it("a wrap marker written before the count existed is unverified, never zero", async () => {
+      const s = await surveyLineIntegrity(surveyDb([], undefined, [WRAP_2, WRAP_1], 0, null), {
+        env: {},
+      });
+      expect(s.sweep.unverifiedInLastCompleteSweep).toBeNull();
+      expect(s.sweep.voidSweepComplete).toBe(false);
+    });
+
     it("completeness does not depend on the capped sample being uncapped", async () => {
       // The point of the whole change: a permanently-capped survey can still
       // report a conclusive answer about the whole population.
@@ -974,6 +1029,47 @@ describe("surveyLineIntegrity — the ops truth-surface block (C-283)", () => {
     await surveyLineIntegrity(base.db, { env: {} });
     expect(base.pickUpdates).toHaveLength(0);
     expect(base.memories).toHaveLength(0);
+  });
+});
+
+describe("a line with no price is not a quote (Devin Review, #733)", () => {
+  it("pricedLineOf: the rule, stated once", () => {
+    const row = { spread: -3.5, homeSpreadPrice: null, awaySpreadPrice: null, total: 44.5, overPrice: -110, underPrice: null };
+    expect(pricedLineOf("SPREAD", row)).toBeNull();
+    expect(pricedLineOf("TOTAL", row)).toBe(44.5);
+    expect(pricedLineOf("SPREAD", { ...row, awaySpreadPrice: -105 })).toBe(-3.5);
+    expect(pricedLineOf("TOTAL", { ...row, overPrice: null })).toBeNull();
+    expect(pricedLineOf("SPREAD", { ...row, spread: null, homeSpreadPrice: -110 })).toBeNull();
+  });
+
+  it("the dry-run tool's rule matches the lane's", () => {
+    const rows = [
+      { spread: -3.5, homeSpreadPrice: null, awaySpreadPrice: null, total: 44.5, overPrice: null, underPrice: null },
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: null, total: 44.5, overPrice: null, underPrice: -105 },
+      { spread: null, homeSpreadPrice: -110, awaySpreadPrice: -110, total: null, overPrice: -110, underPrice: -110 },
+      { spread: 7, homeSpreadPrice: null, awaySpreadPrice: -120, total: 51, overPrice: -110, underPrice: null },
+    ];
+    for (const market of ["SPREAD", "TOTAL"] as const) {
+      expect(rows.map((r) => SCRIPT_PRICED_LINE_OF(market, r))).toEqual(rows.map((r) => pricedLineOf(market, r)));
+    }
+  });
+
+  it("an unpriced matching line does NOT exempt a settled pick from withdrawal", async () => {
+    // The only "quote" that matches the stored line has no price on either
+    // side. Before the fix that row vouched for the pick and it stayed graded.
+    const h = makeDb({
+      picks: [pickRow()],
+      odds: [unpricedOdds("u1", "dk", -3.25), odds("o1", "fd", -7)],
+    });
+    const half = await voidDefectiveSettledPicks({ db: h.db, enabled: true, now: PUBLISH });
+    expect(half.acted).toBe(1);
+    expect(half.skippedByReason.LINE_IS_QUOTED).toBe(0);
+    // And the same rows with a price on the line DO exempt it: the fixture is
+    // the negative control for the rule, not a coincidence of the odds.
+    const priced = makeDb({ picks: [pickRow()], odds: [odds("u1", "dk", -3.25), odds("o1", "fd", -7)] });
+    const control = await voidDefectiveSettledPicks({ db: priced.db, enabled: true, now: PUBLISH });
+    expect(control.acted).toBe(0);
+    expect(control.skippedByReason.LINE_IS_QUOTED).toBe(1);
   });
 });
 

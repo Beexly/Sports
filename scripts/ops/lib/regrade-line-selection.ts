@@ -35,6 +35,36 @@ export type RegradeOddsRow = {
   readonly line: number | null;
 };
 
+/**
+ * The odds columns a quoted line is read from, prices included.
+ *
+ * A line with NO price on either side is not a quote a bettor could take: the
+ * row records that a book listed the number without offering a price on it
+ * (or that the ingester read the line and not the prices). Treating such a row
+ * as a quote let an unplaceable line exempt a defective pick from withdrawal
+ * and from unpublishing, and the report-only tool repeated the mismatch
+ * (Devin Review, #733). ONE rule, used by the lane and the tool, so the drift
+ * guard below can pin them together.
+ */
+export type PricedLineRow = {
+  readonly spread: number | null;
+  readonly homeSpreadPrice: number | null;
+  readonly awaySpreadPrice: number | null;
+  readonly total: number | null;
+  readonly overPrice: number | null;
+  readonly underPrice: number | null;
+};
+
+/** The quoted line for `market`, or null when the row carries no price for it. */
+export function pricedLineOf(market: "SPREAD" | "TOTAL", row: PricedLineRow): number | null {
+  if (market === "SPREAD") {
+    if (row.spread === null || !Number.isFinite(row.spread)) return null;
+    return row.homeSpreadPrice !== null || row.awaySpreadPrice !== null ? row.spread : null;
+  }
+  if (row.total === null || !Number.isFinite(row.total)) return null;
+  return row.overPrice !== null || row.underPrice !== null ? row.total : null;
+}
+
 export type RegradePickRow = {
   readonly id: string;
   readonly gameId: string;
