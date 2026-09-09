@@ -634,17 +634,21 @@ export async function GET(request: Request) {
   //     own `*Inspected` denominator and `*CapReached` flag, and a count whose
   //     denominator is not stated is the C-241/C-246/C-250 defect class.
   //
-  // `remainingToVoid` reading 0 with `remainingCapReached` false is the
-  // precondition the founder flips PERFORMANCE_STATS_ENABLED and
-  // PRICING_PHASE=PROVEN against. See
-  // docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md.
+  // THE FLIP PRECONDITION IS `lineIntegrity.sweep.voidSweepComplete`, not
+  // `remainingToVoid === 0` (C-287). `remainingCapReached` is true on every
+  // production call — the survey samples the oldest 300 of a settled population
+  // in the thousands, and remediation only removes the DEFECTIVE ones — so the
+  // wording this comment used to carry could never be satisfied by any amount
+  // of correct remediation. `sweep` proves completeness from the actor's own
+  // full passes over the population; `remainingToVoid` is a spot check on the
+  // sample. See docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md §3c.
   //
   // OPERATOR-ONLY, and for the same reason `stripeWebhookHosts` above is:
   // `surveyLineIntegrity` runs three capped pick scans plus counts on EVERY
   // call. The public branch is rate-limited per IP, which bounds one caller,
   // not the aggregate database work anonymous callers can provoke (CodeRabbit,
-  // #733). Nothing is lost by gating it — `remainingToVoid` is a number the
-  // operator reads before a flip, not a public claim — but reading it now needs
+  // #733). Nothing is lost by gating it — these are numbers the operator reads
+  // before a flip, not public claims — but reading them now needs
   // the CRON_SECRET bearer. `docs/ops/OPERATOR.md` §5-LI says so.
   const lineIntegrity =
     !detailed || isStubMode() ? null : await safeRead(() => surveyLineIntegrity(db as never));

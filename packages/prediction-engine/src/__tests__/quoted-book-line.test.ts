@@ -218,3 +218,105 @@ describe("scoreGame with the guard ON — the same rows are refused", () => {
     expect(pick!.line).toBeCloseTo(-3.5, 12);
   });
 });
+
+describe("a line only an UNPRICED row quotes is not placeable (Devin Review, #733)", () => {
+  /**
+   * A pick is a LINE AND A PRICE. `spreadOdds`/`totalOdds` carry every row with
+   * a line, including rows with no two-sided price; `entryPrice` and the fair
+   * value come from `pricedOdds`/`pricedTotals`. The guard first judged against
+   * the wider set, so a row that quotes a line but offers no price could
+   * approve a line-price combination NO SINGLE BOOK offers — the mixed-book-set
+   * error #717 found in the price math, reappearing in the check meant to stop
+   * unplaceable picks.
+   *
+   * Both fixtures below are built so the mean lands EXACTLY on the line only
+   * the unpriced row carries, which is the only case where the two sets
+   * disagree.
+   */
+
+  const spreadWithUnpriced = (priced: readonly number[], unpriced: number): OddsInput => ({
+    gameId: "game-unpriced-line-fixture",
+    homeTeam: "Fixture Home Bears",
+    awayTeam: "Fixture Away Hawks",
+    commenceTime: new Date("2026-09-13T17:00:00Z"),
+    sport: "americanfootball_nfl",
+    bookmakerOdds: [
+      ...priced.map((spread, i) => ({
+        bookmaker: `fixture-book-${i}`,
+        market: "SPREADS" as const,
+        spread,
+        homeSpreadPrice: -110,
+        awaySpreadPrice: -110,
+      })),
+      // A line with no price. Real in the feed, and worthless as evidence that
+      // this pick could be placed.
+      {
+        bookmaker: "fixture-book-lineonly",
+        market: "SPREADS" as const,
+        spread: unpriced,
+      },
+    ],
+  });
+
+  const totalWithUnpriced = (priced: readonly number[], unpriced: number): OddsInput => ({
+    gameId: "game-unpriced-total-fixture",
+    homeTeam: "Fixture Home Bears",
+    awayTeam: "Fixture Away Hawks",
+    commenceTime: new Date("2026-09-13T17:00:00Z"),
+    sport: "americanfootball_nfl",
+    bookmakerOdds: [
+      ...priced.map((total, i) => ({
+        bookmaker: `fixture-book-${i}`,
+        market: "TOTALS" as const,
+        total,
+        overPrice: -110,
+        underPrice: -110,
+      })),
+      { bookmaker: "fixture-book-lineonly", market: "TOTALS" as const, total: unpriced },
+    ],
+  });
+
+  // mean of [-3,-3,-3,-4,-4,-4,-3.5] is exactly -3.5, and -3.5 is quoted by the
+  // unpriced row alone.
+  const SPREAD_PRICED = [-3, -3, -3, -4, -4, -4] as const;
+  // mean of [44,44,44,45,45,45,44.5] is exactly 44.5, same construction.
+  const TOTAL_PRICED = [44, 44, 44, 45, 45, 45] as const;
+
+  it("the fixture really does put the mean on the unpriced row's line", () => {
+    // If this drifts the two tests below would pass for the wrong reason.
+    const spreadMean = [...SPREAD_PRICED, -3.5].reduce((a, b) => a + b, 0) / 7;
+    expect(spreadMean).toBeCloseTo(-3.5, 10);
+    const totalMean = [...TOTAL_PRICED, 44.5].reduce((a, b) => a + b, 0) / 7;
+    expect(totalMean).toBeCloseTo(44.5, 10);
+  });
+
+  it("SPREAD: refused, because no PRICED book quoted that line", () => {
+    process.env[FLAG] = "true";
+    expect(spreadOf(spreadWithUnpriced(SPREAD_PRICED, -3.5))).toBeUndefined();
+  });
+
+  it("TOTAL: refused for the same reason", () => {
+    process.env[FLAG] = "true";
+    expect(totalOf(totalWithUnpriced(TOTAL_PRICED, 44.5))).toBeUndefined();
+  });
+
+  it("SPREAD: allowed once a PRICED book quotes that same line", () => {
+    // The control. Only the missing price separates this from the fixture
+    // above, so it is the price — not the line — that the refusal turns on.
+    process.env[FLAG] = "true";
+    const input = spreadWithUnpriced(SPREAD_PRICED, -3.5);
+    const lineOnly = input.bookmakerOdds[input.bookmakerOdds.length - 1]!;
+    (lineOnly as { homeSpreadPrice?: number }).homeSpreadPrice = -110;
+    (lineOnly as { awaySpreadPrice?: number }).awaySpreadPrice = -110;
+    expect(spreadOf(input)).toBeDefined();
+  });
+
+  it("TOTAL: allowed once a PRICED book quotes that same line", () => {
+    process.env[FLAG] = "true";
+    const input = totalWithUnpriced(TOTAL_PRICED, 44.5);
+    const lineOnly = input.bookmakerOdds[input.bookmakerOdds.length - 1]!;
+    (lineOnly as { overPrice?: number }).overPrice = -110;
+    (lineOnly as { underPrice?: number }).underPrice = -110;
+    expect(totalOf(input)).toBeDefined();
+  });
+});

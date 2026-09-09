@@ -104,22 +104,42 @@ Automated, per the founder policy of 2026-09-05 that no pick ever sits on a
 human (founder-delegated 2026-09-08, via orchestrator). Runs as settle-picks
 step 3c, after the zero-sit lane and before the outbox drain.
 
-- **VOID half** — a settled published SPREAD/TOTAL pick whose stored line was
-  not quoted by any book for that game and market at or before `generatedAt`
-  gets `result = VOID` through the same transactional outbox the graders use,
-  with one `PickSettlementEvent` carrying `rcaCode: LINE_NOT_QUOTED`, the stored
-  line, the nearest book line (or `null`), and the source odds row ids.
-  **`settledAt` is never re-stamped** and the result is **withdrawn, never
-  rewritten in place** to some other outcome.
-- **UNPUBLISH half** — an unsettled published pick with the same defect gets
-  `isPublished = false`, with an append-only memory event in the same
-  transaction. Nothing is deleted; the result stays `PENDING` and the zero-sit
-  lane still owns its eventual grading.
+**The two halves judge different lines against different boards.** Describing
+both as "the stored line" and "the same defect", as this section did until
+C-287, names the wrong evidence and the wrong population:
 
-Nothing is voided on missing evidence: an odds read failure skips the pick, and
-the `NO_QUOTE_ROWS` branch fires only when the query succeeded and returned
-nothing. Both halves are idempotent — every write is scoped to the state it
-read, so a second run selects nothing and a race loser writes nothing.
+- **VOID half** — a settled published SPREAD/TOTAL pick whose **grading line**
+  (`clvLockLine`, or an immutable proof receipt's line — never the drifting
+  `line` column) was not quoted by any book for that game and market **at or
+  before publish time** gets `result = VOID` through the same transactional
+  outbox the graders use. A legacy row carrying neither lock nor receipt is
+  **skipped** (`NO_PUBLISH_LOCK`): there is no trustworthy record of what was
+  published, and the lane does not guess.
+
+  The withdrawal is recorded as an **append-only `JarvisMemoryEvent`** carrying
+  `rcaCode: LINE_NOT_QUOTED`, the judged line and its basis, the nearest book
+  line (or `null`), and the source odds row ids — **while the original
+  `PickSettlementEvent` is preserved**. It is not a second settlement event:
+  `PickSettlementEvent.pickId` is `@unique` and a settled pick already owns its
+  grading event, so an operator looking for the withdrawal record reads the
+  memory event, not the settlement event. **`settledAt` is never re-stamped**
+  and the result is **withdrawn, never rewritten in place** to some other
+  outcome.
+- **UNPUBLISH half** — an unsettled published pick whose **displayed line**
+  (`line`, what the member is looking at) is not quoted on the **current board**
+  gets `isPublished = false`, with an append-only memory event in the same
+  transaction. "Current" means quotes inside the platform's own odds-freshness
+  window (`FRESHNESS_THRESHOLD_MS`, 4h by default): without that bound a book's
+  weeks-old row vouched for a line every live book had moved away from. Nothing
+  is deleted; the result stays `PENDING` and the zero-sit lane still owns its
+  eventual grading.
+
+Nothing is voided on missing evidence: an odds read failure skips the pick, the
+`NO_QUOTE_ROWS` branch fires only when the query succeeded and returned nothing,
+and a pending pick whose board has gone quiet inside the freshness window is
+skipped (`NO_FRESH_QUOTES`) rather than unpublished — one ingestion outage must
+not clear the board. Both halves are idempotent — every write is scoped to the
+state it read, so a second run selects nothing and a race loser writes nothing.
 
 One deviation, recorded rather than silently substituted: the brief asked for
 the flag to be read "exactly the way the zero-sit lane reads its flag". **The
@@ -147,9 +167,44 @@ Two different populations, named apart, because the recurring defect class here
 | `unpublishedByLane` | Append-only memory events written by the unpublish half. |
 | `laneEnabled`, `publishGuardEnabled` | Whether either flag is currently on. |
 
-**The flip precondition: `remainingToVoid` reads 0, with `remainingCapReached`
-false.** A `remainingToVoid` of 0 while `remainingCapReached` is true is a floor,
-not a total, and does not satisfy it.
+**The flip precondition (corrected, C-287): `sweep.voidSweepComplete` is true.**
+
+The precondition previously documented here — "`remainingToVoid` reads 0 with
+`remainingCapReached` false" — **was unreachable, and would have stayed
+unreachable no matter how well remediation worked.** `surveyHalf` samples the
+oldest `cap` of EVERY published settled SPREAD/TOTAL pick, clean ones included;
+production holds thousands, so `remainingCapReached` is true on every call, and
+remediation only removes the *defective* picks from that population. The exit
+condition for this whole workstream could not be satisfied. It is the C-276
+defect one level up: there the acting half could never finish its page, here the
+count can never cover its population.
+
+A capped page cannot prove a negative about an uncapped population, and loading
+the whole population per request is the unbounded work the survey was
+simultaneously told to stop doing. So the proof comes from the **actor**, not the
+counter. The void half already walks the entire population with a durable cursor
+that resets on exhaustion; **two consecutive resets bracket one complete pass**,
+and if no VOID was recorded between them the lane has looked at every settled
+pick and found nothing:
+
+| Field | Meaning |
+|---|---|
+| `sweep.lastWrapAt` / `sweep.priorWrapAt` | The two most recent completions of a full pass. |
+| `sweep.voidsInLastCompleteSweep` | VOIDs recorded between them. **`null` means fewer than two wraps exist** — "not established", which is not the same as 0 and is never rendered as it. |
+| `sweep.voidSweepComplete` | True only when a complete pass happened and acted on nothing. |
+
+Three cheap indexed reads, no odds joins. **It requires the lane to have run**:
+while `LINE_INTEGRITY_VOID_ENABLED` is off there are no wrap markers and
+`voidSweepComplete` is false, which is the honest answer — nothing has swept, so
+nothing is established.
+
+`remainingToVoid` remains useful as a **spot check** on the oldest sampled page.
+It is not the precondition, and a 0 there has never meant "none anywhere".
+
+`surveyBudgetExhausted` reports a half that stopped early because the shared
+odds-read budget (`LINE_INTEGRITY_SURVEY_ODDS_BUDGET`, 240 across both halves)
+ran out; the inspected denominators shrink with it and `capReached` is set too,
+so no count is reported as covering more than it did.
 
 ### 3d. The dry-run tool (C-284)
 
@@ -204,8 +259,8 @@ State plainly what that does and does not mean. The eligibility floors are
 computed from settled picks graded against the stored lines — the same lines
 this document is about. A GREEN calibration streak measured on that input is
 not independent evidence that the input is sound, so it is not a reason to
-flip anything, and it is not a reason not to. It is the reason the
-`remainingToVoid` precondition in §3c exists.
+flip anything, and it is not a reason not to. It is the reason the sweep-
+completeness precondition in §3c exists.
 
 ## 5b. MEASURED 2026-09-09, and it corrects §1
 

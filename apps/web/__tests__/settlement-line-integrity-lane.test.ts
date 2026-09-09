@@ -6,6 +6,7 @@ import {
   judgementFor,
   latestQuotePerBookmaker,
   lineIntegrityDeadline,
+  LINE_INTEGRITY_PENDING_FRESHNESS_MS,
   lineIntegrityGradingLine,
   lineIntegrityVoidEnabled,
   runLineIntegrityLane,
@@ -112,10 +113,20 @@ function makeDb(args: {
       },
     },
     odds: {
-      findMany: async () => {
+      // The double HONOURS the fetchedAt bounds. It used to return every row
+      // regardless, which would have made the pending-freshness tests below
+      // pass without the filter existing at all (Devin Review, #733).
+      findMany: async (q: Record<string, unknown>) => {
         oddsQueries += 1;
         if (args.oddsThrows) throw new Error("odds read boom");
-        return args.odds;
+        const where = (q["where"] ?? {}) as { fetchedAt?: { lte?: Date; gte?: Date } };
+        const lte = where.fetchedAt?.lte;
+        const gte = where.fetchedAt?.gte;
+        return args.odds.filter(
+          (o) =>
+            (lte === undefined || o.fetchedAt.getTime() <= lte.getTime()) &&
+            (gte === undefined || o.fetchedAt.getTime() >= gte.getTime()),
+        );
       },
     },
     jarvisMemoryEvent: {
@@ -518,7 +529,9 @@ describe("UNPUBLISH half with the flag ON", () => {
       settledAt: null,
     });
     const h = makeDb({ picks: [row], odds: defectiveTotals });
-    const half = await unpublishDefectiveUnsettledPicks({ db: h.db, enabled: true });
+    // `now` is pinned: the pending half judges the CURRENT board, so the
+    // fixture's quotes must be inside the freshness window relative to it.
+    const half = await unpublishDefectiveUnsettledPicks({ db: h.db, enabled: true, now: PUBLISH });
     expect(half.acted).toBe(1);
     expect(h.pickUpdates[0]!["data"]).toEqual({ isPublished: false });
     // Never deleted, never graded: it stays PENDING.
@@ -533,9 +546,11 @@ describe("UNPUBLISH half with the flag ON", () => {
       pickRow({ pickType: "TOTAL", line: 44.333333333333336, result: "PENDING", settledAt: null }),
     ];
     const h = makeDb({ picks: rows, odds: defectiveTotals });
-    expect((await unpublishDefectiveUnsettledPicks({ db: h.db, enabled: true })).acted).toBe(1);
+    expect(
+      (await unpublishDefectiveUnsettledPicks({ db: h.db, enabled: true, now: PUBLISH })).acted,
+    ).toBe(1);
     rows.length = 0;
-    const second = await unpublishDefectiveUnsettledPicks({ db: h.db, enabled: true });
+    const second = await unpublishDefectiveUnsettledPicks({ db: h.db, enabled: true, now: PUBLISH });
     expect(second.inspected).toBe(0);
     expect(second.acted).toBe(0);
   });
@@ -707,7 +722,14 @@ describe("the sweep cursor is scoped per sport (Devin round 3)", () => {
 describe("surveyLineIntegrity — the ops truth-surface block (C-283)", () => {
   const spreadQuotes: OddsRow[] = [odds("o1", "a", -3), odds("o2", "b", -3.5)];
 
-  function surveyDb(picks: LineIntegrityPickRow[], counts = { voids: 4, unpublished: 7 }) {
+  function surveyDb(
+    picks: LineIntegrityPickRow[],
+    counts = { voids: 4, unpublished: 7 },
+    /** Wrap markers the void half has written, newest first. */
+    wraps: Date[] = [],
+    /** VOIDs recorded between the two most recent wraps. */
+    voidsBetweenWraps = 0,
+  ) {
     const base = makeDb({ picks, odds: spreadQuotes });
     const db = base.db as unknown as Record<string, unknown>;
     db["jarvisMemoryEvent"] = {
@@ -715,8 +737,15 @@ describe("surveyLineIntegrity — the ops truth-surface block (C-283)", () => {
       count: async (q: Record<string, unknown>) => {
         const where = q["where"] as Record<string, unknown>;
         const meta = where["metadata"] as { equals?: string } | undefined;
-        return meta?.equals === "VOID" ? counts.voids : counts.unpublished;
+        // The completeness read is the VOID count NARROWED to a created_at
+        // window; the flat lane-total is the one without it.
+        if (meta?.equals === "VOID") {
+          return where["created_at"] === undefined ? counts.voids : voidsBetweenWraps;
+        }
+        return counts.unpublished;
       },
+      findMany: async () =>
+        wraps.map((at) => ({ metadata: { half: "void:*", wrapped: true }, created_at: at })),
     };
     return base.db;
   }
@@ -774,7 +803,7 @@ describe("surveyLineIntegrity — the ops truth-surface block (C-283)", () => {
       pickRow({ id: "p2", result: "LOSS", line: -3.25 }),
       pickRow({ id: "p3", result: "WIN", line: -3.5, clvLockLine: -3.5 }),
     ]);
-    const s = await surveyLineIntegrity(db, { env: {} });
+    const s = await surveyLineIntegrity(db, { env: {}, now: PUBLISH });
     expect(s.publishedUnsettledInspected).toBe(1);
     expect(s.publishedUnsettledNotQuoted).toBe(1);
     expect(s.remainingInspected).toBe(2);
@@ -812,10 +841,136 @@ describe("surveyLineIntegrity — the ops truth-surface block (C-283)", () => {
     expect(s.publishGuardEnabled).toBe(false);
   });
 
+  // ── C-287: the flip precondition must be REACHABLE ──────────────────────
+  //
+  // `remainingCapReached` is true on every production call and always will be:
+  // the settled population is thousands of picks, the survey samples the oldest
+  // `cap`, and remediation only removes the DEFECTIVE ones. So the documented
+  // "remainingToVoid 0 with remainingCapReached false" could never be satisfied
+  // by any amount of correct remediation — the C-276 defect one level up, in
+  // the counter rather than the actor.
+  //
+  // A capped page cannot prove a negative about an uncapped population, so the
+  // proof comes from the actor: two consecutive cursor wraps bracket one
+  // complete pass over every settled pick.
+  describe("whole-population completeness (C-287)", () => {
+    const WRAP_2 = new Date("2026-09-08T12:00:00Z");
+    const WRAP_1 = new Date("2026-09-07T12:00:00Z");
+
+    it("no wraps yet: nothing is established, and it does not read as zero", async () => {
+      const s = await surveyLineIntegrity(surveyDb([]), { env: {} });
+      expect(s.sweep.voidSweepComplete).toBe(false);
+      expect(s.sweep.lastWrapAt).toBeNull();
+      // null, NOT 0: "we have not swept" and "we swept and found none" are
+      // different claims and must never render the same.
+      expect(s.sweep.voidsInLastCompleteSweep).toBeNull();
+    });
+
+    it("one wrap is not a complete pass — it takes two to bracket one", async () => {
+      const s = await surveyLineIntegrity(surveyDb([], undefined, [WRAP_2]), { env: {} });
+      expect(s.sweep.lastWrapAt).toBe(WRAP_2.toISOString());
+      expect(s.sweep.priorWrapAt).toBeNull();
+      expect(s.sweep.voidsInLastCompleteSweep).toBeNull();
+      expect(s.sweep.voidSweepComplete).toBe(false);
+    });
+
+    it("two wraps with NO voids between them: the population is clean", async () => {
+      const s = await surveyLineIntegrity(surveyDb([], undefined, [WRAP_2, WRAP_1], 0), {
+        env: {},
+      });
+      expect(s.sweep.priorWrapAt).toBe(WRAP_1.toISOString());
+      expect(s.sweep.voidsInLastCompleteSweep).toBe(0);
+      expect(s.sweep.voidSweepComplete).toBe(true);
+    });
+
+    it("two wraps WITH voids between them: the last complete pass still acted", async () => {
+      const s = await surveyLineIntegrity(surveyDb([], undefined, [WRAP_2, WRAP_1], 3), {
+        env: {},
+      });
+      expect(s.sweep.voidsInLastCompleteSweep).toBe(3);
+      expect(s.sweep.voidSweepComplete).toBe(false);
+    });
+
+    it("completeness does not depend on the capped sample being uncapped", async () => {
+      // The point of the whole change: a permanently-capped survey can still
+      // report a conclusive answer about the whole population.
+      const picks = Array.from({ length: 3 }, (_, i) =>
+        pickRow({ id: `p${i}`, result: "LOSS", line: -3.5, clvLockLine: -3.5 }),
+      );
+      const s = await surveyLineIntegrity(surveyDb(picks, undefined, [WRAP_2, WRAP_1], 0), {
+        cap: 2,
+        env: {},
+      });
+      expect(s.remainingCapReached).toBe(true);
+      expect(s.sweep.voidSweepComplete).toBe(true);
+    });
+  });
+
+  describe("the survey is bounded and does not double-query (C-287)", () => {
+    it("spends at most the shared odds budget across BOTH halves", async () => {
+      const picks = [
+        ...Array.from({ length: 4 }, (_, i) =>
+          pickRow({ id: `s${i}`, result: "LOSS", line: -3.25, clvLockLine: -3.25 }),
+        ),
+        ...Array.from({ length: 4 }, (_, i) =>
+          pickRow({ id: `u${i}`, result: "PENDING", settledAt: null, line: -3.25 }),
+        ),
+      ];
+      const base = makeDb({ picks, odds: spreadQuotes });
+      const db = base.db as unknown as Record<string, unknown>;
+      db["jarvisMemoryEvent"] = {
+        create: async () => undefined,
+        count: async () => 0,
+        findMany: async () => [],
+      };
+      const s = await surveyLineIntegrity(base.db, { env: {}, oddsBudget: 3, now: PUBLISH });
+      expect(base.oddsQueries()).toBe(3);
+      // Settled is surveyed FIRST, so the half the flip reads is the one that
+      // gets the allowance.
+      expect(s.remainingInspected).toBe(3);
+      expect(s.publishedUnsettledInspected).toBe(0);
+      // A sample cut short by the budget is incomplete, and says so on both
+      // flags rather than quietly reporting a floor as a total.
+      expect(s.surveyBudgetExhausted).toBe(true);
+      expect(s.remainingCapReached).toBe(true);
+    });
+
+    it("loads the published PENDING rows ONCE, not twice", async () => {
+      const base = makeDb({
+        picks: [
+          pickRow({ id: "p1", result: "PENDING", settledAt: null, line: -3.25 }),
+          pickRow({ id: "p2", result: "LOSS", line: -3.25, clvLockLine: -3.25 }),
+        ],
+        odds: spreadQuotes,
+      });
+      const db = base.db as unknown as Record<string, unknown>;
+      db["jarvisMemoryEvent"] = {
+        create: async () => undefined,
+        count: async () => 0,
+        findMany: async () => [],
+      };
+      const s = await surveyLineIntegrity(base.db, { env: {}, now: PUBLISH });
+
+      // The off-grid screen and the unpublish half asked the SAME question of
+      // the same rows; the second query was pure waste on every call.
+      const pendingQueries = base.pickQueries.filter(
+        (q) => (q["where"] as { result?: unknown }).result === "PENDING",
+      );
+      expect(pendingQueries).toHaveLength(1);
+      // And the reuse is real, not a silent skip: the half still reports on it.
+      expect(s.publishedUnsettledInspected).toBe(1);
+      expect(s.publishedUnsettledNotQuoted).toBe(1);
+    });
+  });
+
   it("writes nothing", async () => {
     const base = makeDb({ picks: [pickRow({ id: "p1", result: "LOSS", line: -3.25 })], odds: spreadQuotes });
     const db = base.db as unknown as Record<string, unknown>;
-    db["jarvisMemoryEvent"] = { create: async () => undefined, count: async () => 0 };
+    db["jarvisMemoryEvent"] = {
+      create: async () => undefined,
+      count: async () => 0,
+      findMany: async () => [],
+    };
     await surveyLineIntegrity(base.db, { env: {} });
     expect(base.pickUpdates).toHaveLength(0);
     expect(base.memories).toHaveLength(0);
@@ -983,5 +1138,79 @@ describe("the signal snapshot's outcome is withdrawn with the pick (C-286)", () 
     const half = await voidDefectiveSettledPicks({ db: h.db, enabled: true, now: PUBLISH });
     expect(half.acted).toBe(0);
     expect(h.snapshotUpdates).toHaveLength(0);
+  });
+});
+
+describe("the PENDING half judges the CURRENT board, not book history (C-287)", () => {
+  /**
+   * `latestQuotePerBookmaker` takes each book's newest surviving row. With no
+   * lower bound on `fetchedAt` that included rows of any age, so a quote a book
+   * posted weeks ago and has long since moved off still vouched for the line on
+   * display — keeping an unplaceable pick published, which is the one thing
+   * this half exists to prevent.
+   *
+   * The window is the platform's own odds-freshness line
+   * (LINE_INTEGRITY_PENDING_FRESHNESS_MS = FRESHNESS_THRESHOLD_MS), not a
+   * number invented here.
+   */
+  const NOW = new Date("2026-09-01T12:00:00Z");
+  const STALE = new Date(NOW.getTime() - LINE_INTEGRITY_PENDING_FRESHNESS_MS - 60_000);
+  const FRESH = new Date(NOW.getTime() - 60_000);
+
+  it("an OLD matching quote does not save a pick the current board has left behind", async () => {
+    const row = pickRow({ line: -3.25, result: "PENDING", settledAt: null });
+    const h = makeDb({
+      picks: [row],
+      odds: [
+        // Book A quoted exactly -3.25, but that was before the window.
+        odds("stale", "a", -3.25, null, STALE),
+        // The board today: nobody offers -3.25.
+        odds("f1", "b", -3, null, FRESH),
+        odds("f2", "c", -3.5, null, FRESH),
+      ],
+    });
+    const half = await unpublishDefectiveUnsettledPicks({ db: h.db, enabled: true, now: NOW });
+    expect(half.acted).toBe(1);
+    expect(half.skippedByReason.LINE_IS_QUOTED).toBe(0);
+  });
+
+  it("the same quote INSIDE the window does save it", async () => {
+    // The control: only the age of the matching row differs.
+    const row = pickRow({ line: -3.25, result: "PENDING", settledAt: null });
+    const h = makeDb({
+      picks: [row],
+      odds: [
+        odds("fresh-match", "a", -3.25, null, FRESH),
+        odds("f1", "b", -3, null, FRESH),
+      ],
+    });
+    const half = await unpublishDefectiveUnsettledPicks({ db: h.db, enabled: true, now: NOW });
+    expect(half.acted).toBe(0);
+    expect(half.skippedByReason.LINE_IS_QUOTED).toBe(1);
+  });
+
+  it("a board that has gone QUIET is skipped, never unpublished", async () => {
+    // Absence of evidence is not a defect. Without this branch one ingestion
+    // outage would unpublish every pending pick on the board — the lane acting
+    // hardest at exactly the moment it knows least.
+    const row = pickRow({ line: -3.25, result: "PENDING", settledAt: null });
+    const h = makeDb({ picks: [row], odds: [odds("stale", "a", -3, null, STALE)] });
+    const half = await unpublishDefectiveUnsettledPicks({ db: h.db, enabled: true, now: NOW });
+    expect(half.acted).toBe(0);
+    expect(half.skippedByReason.NO_FRESH_QUOTES).toBe(1);
+  });
+
+  it("the SETTLED half is unchanged: it reconstructs publish time, however old", async () => {
+    // A settled pick's evidence is by definition old. Applying a current-board
+    // window there would void picks for the crime of having been published a
+    // while ago.
+    const row = pickRow({ line: -3.25, clvLockLine: -3.25, result: "LOSS" });
+    const h = makeDb({
+      picks: [row],
+      odds: [odds("old-match", "a", -3.25, null, new Date("2026-08-01T00:00:00Z"))],
+    });
+    const half = await voidDefectiveSettledPicks({ db: h.db, enabled: true, now: NOW });
+    expect(half.acted).toBe(0);
+    expect(half.skippedByReason.LINE_IS_QUOTED).toBe(1);
   });
 });

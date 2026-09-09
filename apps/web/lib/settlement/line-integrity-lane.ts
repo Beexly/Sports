@@ -16,11 +16,26 @@
  *
  * WHAT THIS LANE DOES, when LINE_INTEGRITY_VOID_ENABLED is true:
  *
+ *   THE TWO HALVES JUDGE DIFFERENT LINES AGAINST DIFFERENT BOARDS. Saying
+ *   "the stored line" and "the same defect" for both, as this header once did,
+ *   describes the wrong evidence and the wrong population (CodeRabbit, #733).
+ *
  *   VOID half (voidDefectiveSettledPicks): a SETTLED, published pick whose
- *   stored line was not quoted by any bookmaker for that game and market at or
- *   before `generatedAt` has its result set to VOID through the same
- *   transactional outbox the graders use — one PickSettlementEvent carrying
- *   rcaCode LINE_NOT_QUOTED and the evidence, plus post-settlement work rows.
+ *   GRADING line — `clvLockLine`, or an immutable proof receipt's line, never
+ *   the drifting `line` column — was not quoted by any bookmaker for that game
+ *   and market AT OR BEFORE publish time. A legacy row carrying neither lock
+ *   nor receipt is SKIPPED (NO_PUBLISH_LOCK), because there is no trustworthy
+ *   record of what was published. Its result is set to VOID, and the withdrawal
+ *   is recorded as an append-only JarvisMemoryEvent carrying rcaCode
+ *   LINE_NOT_QUOTED and the evidence, plus post-settlement work rows.
+ *
+ *   NOT a second PickSettlementEvent: `PickSettlementEvent.pickId` is @unique
+ *   and a settled pick already owns its grading event, so the ORIGINAL event is
+ *   left intact and the withdrawal is a new fact recorded beside it. The first
+ *   version of this lane tried to write a second one and could not void a
+ *   single pick. Operators looking for the record should read the memory event,
+ *   not the settlement event.
+ *
  *   The recorded result is WITHDRAWN, never rewritten in place to some other
  *   outcome, and `settledAt` is NEVER re-stamped: the pick was settled when it
  *   was settled, and moving that timestamp would falsify the settlement
@@ -28,9 +43,12 @@
  *   settledAt-preservation rule.)
  *
  *   UNPUBLISH half (unpublishDefectiveUnsettledPicks): an UNSETTLED published
- *   pick with the same defect is set isPublished=false in one PENDING-scoped
- *   updateMany. Nothing is deleted; the result stays PENDING and the zero-sit
- *   lane still owns its eventual grading or void.
+ *   pick whose DISPLAYED line (`line`, what the member is looking at) is not
+ *   quoted on the CURRENT board — quotes inside the platform's odds-freshness
+ *   window, not a book's whole history — is set isPublished=false in one
+ *   PENDING-scoped updateMany. A game whose board has gone quiet is skipped
+ *   (NO_FRESH_QUOTES), never unpublished. Nothing is deleted; the result stays
+ *   PENDING and the zero-sit lane still owns its eventual grading or void.
  *
  * WHY VOID AND NOT RE-GRADE. Re-grading a settled pick against a book line
  * requires choosing WHICH book line at WHICH timestamp, which is a policy
@@ -52,6 +70,7 @@
 
 import { isBaseballSport, isQuotedBookLine } from "@sports/prediction-engine";
 import { isRealBookmakerKey } from "@/lib/calibration/publish-time-market-p";
+import { FRESHNESS_THRESHOLD_MS } from "@sports/data-ingestion";
 import {
   enqueuePostSettlementWork,
   reopenPostSettlementWork,
@@ -73,6 +92,18 @@ export const LINE_INTEGRITY_CURSOR_SCOPE = "settlement.line-integrity.cursor";
 export const LINE_INTEGRITY_POLICY_REF = "docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md";
 export const LINE_INTEGRITY_EVENT_SCHEMA_VERSION = 1;
 
+/**
+ * How far back a quote may be and still count as the CURRENT board, for the
+ * PENDING half only (Devin Review, #733).
+ *
+ * Deliberately the platform's own odds-freshness line rather than a number
+ * invented here: `FRESHNESS_THRESHOLD_MS` is what the ingestion gate already
+ * calls a stale pregame board (4h, owner-tunable via ODDS_FRESHNESS_MAX_HOURS),
+ * and a second definition of "stale odds" in a lane that unpublishes picks is
+ * exactly the divergence this repo keeps paying for.
+ */
+export const LINE_INTEGRITY_PENDING_FRESHNESS_MS = FRESHNESS_THRESHOLD_MS;
+
 /** Oldest-first cap on candidates inspected per cycle, per half. */
 export const LINE_INTEGRITY_VOID_CAP = 50;
 export const LINE_INTEGRITY_UNPUBLISH_CAP = 200;
@@ -88,8 +119,10 @@ const SAMPLE_CAP = 20;
  * cannot be expressed in the `where`. So once the oldest `cap` rows are CLEAN,
  * the same clean rows are re-selected every cycle forever and a defect sitting
  * behind them is never reached. The lane would look healthy while making zero
- * progress, and `remainingToVoid` — the founder's flip precondition — could
- * never reach 0.
+ * progress, and `remainingToVoid` could never reach 0. (The flip precondition
+ * has since moved off that number entirely — see
+ * LineIntegritySweepCompleteness — for a related reason: a capped sample of an
+ * uncapped population can never establish that nothing remains.)
  *
  * The cursor is the last pick id inspected, appended to JarvisMemoryEvent
  * (schema.prisma is frozen, so no new table or column). Each cycle resumes
@@ -133,7 +166,16 @@ async function writeCursor(
   pickId: string | null,
   now: Date,
 ): Promise<void> {
-  const metadata = { half, pickId, lane: "line-integrity", at: now.toISOString() };
+  // `wrapped` is an EXPLICIT boolean rather than "pickId is null", because that
+  // is the fact the completeness signal below has to query and JSON-null
+  // filtering is not something to rest a flip precondition on.
+  const metadata = {
+    half,
+    pickId,
+    wrapped: pickId === null,
+    lane: "line-integrity",
+    at: now.toISOString(),
+  };
   await db.jarvisMemoryEvent.create({
     data: {
       memory_type: "observation",
@@ -408,7 +450,7 @@ export type LineIntegrityDb = {
     count(args: Record<string, unknown>): Promise<number>;
     findMany(
       args: Record<string, unknown>,
-    ): Promise<Array<{ metadata: unknown }>>;
+    ): Promise<Array<{ metadata: unknown; created_at?: Date }>>;
   };
   $transaction(fn: (tx: LineIntegrityTx) => Promise<{ count: number }>): Promise<{ count: number }>;
 };
@@ -426,6 +468,13 @@ export type LineIntegritySkipReason =
    * (Devin Review, #733). The lane refuses to guess.
    */
   | "NO_PUBLISH_LOCK"
+  /**
+   * PENDING half only: no book has quoted this game and market inside the
+   * freshness window, so there is no CURRENT board to judge the displayed line
+   * against. Skipped, never unpublished — a quiet feed is missing evidence, and
+   * unpublishing on it would let one ingestion outage clear the board.
+   */
+  | "NO_FRESH_QUOTES"
   /** The route deadline was reached before this pick's read or write. */
   | "DEADLINE_REACHED"
   | "WRITE_RACE_LOST"
@@ -489,6 +538,7 @@ function emptySkips(): Record<LineIntegritySkipReason, number> {
     ODDS_READ_FAILED: 0,
     LINE_IS_QUOTED: 0,
     NO_PUBLISH_LOCK: 0,
+    NO_FRESH_QUOTES: 0,
     DEADLINE_REACHED: 0,
     WRITE_RACE_LOST: 0,
     WRITE_FAILED: 0,
@@ -518,12 +568,24 @@ async function readQuotesAtPublish(
   row: LineIntegrityPickRow,
   market: LineIntegrityMarket,
   asOf: Date,
+  /**
+   * Lower bound on `fetchedAt`, for the PENDING half only (Devin Review, #733).
+   *
+   * The settled half reconstructs the board as it stood at publish time, where
+   * the oldest surviving row per book is exactly the right answer. The pending
+   * half asks a different question — is this line placeable on the board RIGHT
+   * NOW — and with no lower bound `latestQuotePerBookmaker` happily treats a
+   * book's three-week-old row as its current quote. An obsolete matching line
+   * then vouches for a pick every live book has moved away from, keeping an
+   * unplaceable pick published: the precise failure this half exists to end.
+   */
+  freshSince?: Date,
 ): Promise<LineIntegrityQuote[]> {
   const rows = await db.odds.findMany({
     where: {
       gameId: row.gameId,
       market: PICK_MARKET_TO_ODDS_MARKET[market],
-      fetchedAt: { lte: asOf },
+      fetchedAt: freshSince ? { lte: asOf, gte: freshSince } : { lte: asOf },
     },
     select: { id: true, bookmaker: true, fetchedAt: true, spread: true, total: true },
   });
@@ -752,7 +814,17 @@ async function verdictFor(
   }
   let quotes: LineIntegrityQuote[];
   try {
-    quotes = await readQuotesAtPublish(db, row, market, judgement.asOf);
+    quotes = await readQuotesAtPublish(
+      db,
+      row,
+      market,
+      judgement.asOf,
+      // PENDING only: judge the displayed line against the CURRENT board, not
+      // against whatever each book last said at any point in history.
+      ...(mode === "unpublish"
+        ? [new Date(judgement.asOf.getTime() - LINE_INTEGRITY_PENDING_FRESHNESS_MS)]
+        : []),
+    );
   } catch (err) {
     // Nothing is voided on missing evidence.
     console.warn(
@@ -760,6 +832,14 @@ async function verdictFor(
         (err instanceof Error ? err.message : String(err)),
     );
     half.skippedByReason.ODDS_READ_FAILED += 1;
+    return null;
+  }
+  // A pending pick with NO fresh quote at all is not evidence of a defect, it
+  // is absence of evidence, and the lane never acts on that. NO_QUOTE_ROWS
+  // stays a defect for the SETTLED half, where "no book ever quoted this at
+  // publish time" is a real and permanent finding about a published pick.
+  if (mode === "unpublish" && quotes.length === 0) {
+    half.skippedByReason.NO_FRESH_QUOTES += 1;
     return null;
   }
   const verdict = classifyStoredLine(judgement.line, quotes);
@@ -1131,6 +1211,108 @@ export async function runLineIntegrityLane(input: {
 export const LINE_INTEGRITY_SURVEY_CAP = 300;
 
 /**
+ * Total odds reads one survey call may spend, across BOTH halves.
+ *
+ * Each candidate costs one sequential `db.odds.findMany`, so an uncapped survey
+ * at cap 300 per half was up to 600 serial round-trips on a single request
+ * (CodeRabbit, #733). The budget is shared, not per-half, so the ceiling is the
+ * number stated here rather than twice it, and whichever half runs first cannot
+ * silently starve the other of its whole allowance — the settled half is the
+ * one the flip reads, so it is surveyed FIRST.
+ */
+export const LINE_INTEGRITY_SURVEY_ODDS_BUDGET = 240;
+
+/**
+ * COMPLETENESS, and why the sampled counts alone could never establish it
+ * (Devin Review, #733).
+ *
+ * The flip precondition was documented as "`remainingToVoid` reads 0 with
+ * `remainingCapReached` false". `surveyHalf` selects EVERY published settled
+ * SPREAD/TOTAL pick, clean ones included, and production holds thousands, so
+ * `remainingCapReached` is true on every call and always will be: remediation
+ * only removes DEFECTIVE picks from that population (by making them VOID), and
+ * the clean majority stays forever. The precondition was therefore unreachable
+ * — the deliverable's own exit condition could not be satisfied by any amount
+ * of correct remediation. It is the C-276 defect one level up: there the ACTING
+ * half could never finish its page, here the COUNT can never cover its
+ * population.
+ *
+ * A capped page cannot prove a negative about an uncapped population, and
+ * loading the whole population per request is exactly the unbounded work the
+ * survey was just told to stop doing. So the proof comes from the actor, not
+ * the counter: the void half already walks the ENTIRE population with a durable
+ * cursor that resets on exhaustion. Two consecutive resets bracket one complete
+ * pass over every settled pick, and if no VOID was recorded between them, the
+ * lane has looked at all of them and found nothing.
+ *
+ * That is a real completeness claim, it costs three cheap indexed reads and no
+ * odds joins, and — stated plainly because it matters — it requires the lane to
+ * have RUN. While `LINE_INTEGRITY_VOID_ENABLED` is off there are no wrap
+ * markers and `voidSweepComplete` is false, which is the honest answer: nothing
+ * has swept, so nothing is established.
+ */
+export type LineIntegritySweepCompleteness = {
+  /** When the void half last finished a pass over the whole population. */
+  lastWrapAt: string | null;
+  /** The wrap before it. Two are needed to bracket one complete pass. */
+  priorWrapAt: string | null;
+  /**
+   * VOIDs recorded between those two wraps — i.e. during one complete pass.
+   * `null` when fewer than two wraps exist, which is NOT the same as 0 and must
+   * never be rendered as it.
+   */
+  voidsInLastCompleteSweep: number | null;
+  /**
+   * True only when a complete pass has happened and acted on nothing. This, not
+   * a capped sample, is what the flip is entitled to rely on.
+   */
+  voidSweepComplete: boolean;
+};
+
+async function loadSweepCompleteness(db: LineIntegrityDb): Promise<LineIntegritySweepCompleteness> {
+  const empty: LineIntegritySweepCompleteness = {
+    lastWrapAt: null,
+    priorWrapAt: null,
+    voidsInLastCompleteSweep: null,
+    voidSweepComplete: false,
+  };
+  // The UNSCOPED void cursor only. A `?sport=` run walks a different
+  // population, so its wraps say nothing about the whole board.
+  const wraps = await db.jarvisMemoryEvent.findMany({
+    where: {
+      scope: LINE_INTEGRITY_CURSOR_SCOPE,
+      metadata: { path: ["half"], equals: cursorKey("void", null) },
+    },
+    orderBy: { created_at: "desc" },
+    take: 40,
+    select: { metadata: true, created_at: true },
+  });
+  const wrapTimes = wraps
+    .filter((w) => (w.metadata as { wrapped?: unknown } | null)?.wrapped === true)
+    .map((w) => w.created_at)
+    .filter((d): d is Date => d instanceof Date);
+  if (wrapTimes.length === 0) return empty;
+  const lastWrapAt = wrapTimes[0]!;
+  if (wrapTimes.length < 2) {
+    return { ...empty, lastWrapAt: lastWrapAt.toISOString() };
+  }
+  const priorWrapAt = wrapTimes[1]!;
+  const voids = await db.jarvisMemoryEvent.count({
+    where: {
+      scope: LINE_INTEGRITY_MEMORY_SCOPE,
+      metadata: { path: ["action"], equals: "VOID" },
+      created_at: { gt: priorWrapAt, lte: lastWrapAt },
+    },
+  });
+  return {
+    lastWrapAt: lastWrapAt.toISOString(),
+    priorWrapAt: priorWrapAt.toISOString(),
+    voidsInLastCompleteSweep: voids,
+    voidSweepComplete: voids === 0,
+  };
+}
+
+/**
  * Wall-clock the lane leaves the settle-picks route after it stops.
  *
  * The lane runs at step 3c, AFTER zero-sit and BEFORE the slate freeze and the
@@ -1190,10 +1372,25 @@ export type LineIntegritySurvey = {
    * call, and how many the VOID half would act on right now. This is the
    * "remaining to void" figure. EXACT over `remainingInspected` rows;
    * `remainingCapReached` true means the count is a floor, not a total.
+   *
+   * IT IS A SPOT CHECK, NOT A COMPLETENESS PROOF. `remainingCapReached` is true
+   * on every production call and always will be — the settled population is
+   * thousands of picks and remediation only removes the defective ones — so a
+   * `remainingToVoid` of 0 here means "none in the oldest sampled page", never
+   * "none anywhere". `sweep.voidSweepComplete` is the claim about the whole
+   * population; see LineIntegritySweepCompleteness.
    */
   remainingInspected: number;
   remainingToVoid: number;
   remainingCapReached: boolean;
+  /**
+   * True when a half stopped early because the shared odds-read budget ran out.
+   * The inspected denominators shrink with it, and `capReached` is set too, so
+   * no count is ever reported as covering more than it did.
+   */
+  surveyBudgetExhausted: boolean;
+  /** Whole-population completeness for the VOID half. The flip reads THIS. */
+  sweep: LineIntegritySweepCompleteness;
   /**
    * Picks VOIDED by this lane: append-only memory events in its scope whose
    * metadata.action is VOID.
@@ -1214,27 +1411,57 @@ export type LineIntegritySurvey = {
 
 async function surveyHalf(
   db: LineIntegrityDb,
-  where: Record<string, unknown>,
-  cap: number,
-  mode: LineIntegrityHalfName,
-  now: Date,
-): Promise<{ inspected: number; defective: number; capReached: boolean }> {
-  const rows = await db.pick.findMany({
-    where: { ...where, pickType: { in: [...LINE_INTEGRITY_MARKETS] } },
-    orderBy: [{ generatedAt: "asc" }],
-    take: cap + 1,
-    select: LINE_INTEGRITY_PICK_SELECT,
-  });
-  const capReached = rows.length > cap;
-  const candidates = rows.slice(0, cap);
+  args: {
+    readonly where: Record<string, unknown>;
+    readonly cap: number;
+    readonly mode: LineIntegrityHalfName;
+    readonly now: Date;
+    /** Rows already loaded by the caller; skips a duplicate query. */
+    readonly rows?: LineIntegrityPickRow[];
+    readonly capReached?: boolean;
+    /** Shared odds-read allowance; see LINE_INTEGRITY_SURVEY_ODDS_BUDGET. */
+    readonly budget: { remaining: number };
+  },
+): Promise<{ inspected: number; defective: number; capReached: boolean; budgetExhausted: boolean }> {
+  let rows = args.rows;
+  let capReached = args.capReached;
+  if (rows === undefined || capReached === undefined) {
+    const loaded = await db.pick.findMany({
+      where: { ...args.where, pickType: { in: [...LINE_INTEGRITY_MARKETS] } },
+      orderBy: [{ generatedAt: "asc" }],
+      take: args.cap + 1,
+      select: LINE_INTEGRITY_PICK_SELECT,
+    });
+    capReached = loaded.length > args.cap;
+    rows = loaded;
+  }
+  const candidates = rows.slice(0, args.cap);
   let defective = 0;
+  let inspected = 0;
+  let budgetExhausted = false;
   const scratch = emptyHalf(true);
   for (const row of candidates) {
+    // The budget bounds the SEQUENTIAL odds reads, which are the whole cost of
+    // this survey. Stopping short is reported, never silently folded into the
+    // count: `inspected` is the denominator and it shrinks with the sample.
+    if (args.budget.remaining <= 0) {
+      budgetExhausted = true;
+      break;
+    }
+    args.budget.remaining -= 1;
+    inspected += 1;
     // Same question the acting half asks, so the count and the action can
     // never disagree about what counts as a defect.
-    if (await verdictFor(db, row, scratch, mode, now)) defective += 1;
+    if (await verdictFor(db, row, scratch, args.mode, args.now)) defective += 1;
   }
-  return { inspected: candidates.length, defective, capReached };
+  return {
+    inspected,
+    defective,
+    // A sample cut short by the budget is just as incomplete as one cut short
+    // by the cap, and the flag the operator reads must say so.
+    capReached: Boolean(capReached) || budgetExhausted,
+    budgetExhausted,
+  };
 }
 
 /**
@@ -1243,7 +1470,13 @@ async function surveyHalf(
  */
 export async function surveyLineIntegrity(
   db: LineIntegrityDb,
-  opts: { readonly cap?: number; readonly env?: NodeJS.ProcessEnv; readonly now?: Date } = {},
+  opts: {
+    readonly cap?: number;
+    readonly env?: NodeJS.ProcessEnv;
+    readonly now?: Date;
+    /** Shared odds-read allowance across both halves. */
+    readonly oddsBudget?: number;
+  } = {},
 ): Promise<LineIntegritySurvey> {
   const cap = opts.cap ?? LINE_INTEGRITY_SURVEY_CAP;
   const env = opts.env ?? process.env;
@@ -1278,14 +1511,30 @@ export async function surveyLineIntegrity(
   }
 
   const now = opts.now ?? new Date();
-  const unsettled = await surveyHalf(db, { isPublished: true, result: "PENDING" }, cap, "unpublish", now);
-  const settled = await surveyHalf(
-    db,
-    { isPublished: true, result: { in: ["WIN", "LOSS", "PUSH"] } },
+  const budget = { remaining: opts.oddsBudget ?? LINE_INTEGRITY_SURVEY_ODDS_BUDGET };
+  // SETTLED FIRST, deliberately. The budget is shared, and this is the half the
+  // flip precondition reads; surveying it second would let the pending half
+  // spend the whole allowance and leave the number that matters unmeasured.
+  const settled = await surveyHalf(db, {
+    where: { isPublished: true, result: { in: ["WIN", "LOSS", "PUSH"] } },
     cap,
-    "void",
+    mode: "void",
     now,
-  );
+    budget,
+  });
+  // `unsettledRows` above is the SAME query this half would run — same where,
+  // same order, same take. Re-running it was one wasted round-trip per call
+  // (CodeRabbit, #733).
+  const unsettled = await surveyHalf(db, {
+    where: { isPublished: true, result: "PENDING" },
+    cap,
+    mode: "unpublish",
+    now,
+    rows: unsettledRows,
+    capReached: offGridCapReached,
+    budget,
+  });
+  const sweep = await loadSweepCompleteness(db);
 
   const voidedByLane = await db.jarvisMemoryEvent.count({
     where: {
@@ -1313,6 +1562,8 @@ export async function surveyLineIntegrity(
     remainingInspected: settled.inspected,
     remainingToVoid: settled.defective,
     remainingCapReached: settled.capReached,
+    surveyBudgetExhausted: settled.budgetExhausted || unsettled.budgetExhausted,
+    sweep,
     voidedByLane,
     unpublishedByLane,
     laneEnabled: lineIntegrityVoidEnabled(env),

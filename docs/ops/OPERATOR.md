@@ -132,6 +132,14 @@ curl -s -H "Authorization: Bearer $CRON_SECRET" \
   https://www.galaxysportsedge.com/api/ops/public-surface-truth | jq .lineIntegrity
 ```
 
+**The flip precondition is `lineIntegrity.sweep.voidSweepComplete === true`, not
+`remainingToVoid === 0` (C-287).** `remainingCapReached` is true on every
+production call — the survey samples the oldest 300 of a settled population in
+the thousands — so the old wording could never be satisfied. `remainingToVoid`
+is a spot check on that sample; `sweep` is the claim about the whole population,
+and it reads false until the lane has actually run two complete passes. See the
+decision doc §3c.
+
 Full context, the flip precondition, and what each ops count means:
 `docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md`.
 

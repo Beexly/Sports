@@ -431,6 +431,15 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   if (!isPublishableSpreadLine(input.sport, chosenSpread)) return null;
   // Refuse a stored line no book in this consensus set quoted. Gated OFF by
   // default: see isQuotedBookLine and lineIntegrityPublishGuardEnabled.
+  //
+  // JUDGED AGAINST `pricedOdds`, NOT `spreadOdds` (Devin Review, #733). The
+  // guard asks whether the member could actually place this pick, and a pick is
+  // a LINE AND A PRICE. `spreadOdds` includes rows carrying a line with no
+  // two-sided price; `entryPrice` and the fair value below both come from
+  // `pricedOdds`. Letting an unpriced row vouch for the line therefore approves
+  // a line-price combination no single book offers — the same mixed-book-set
+  // error #717 found in the price math, reappearing in the integrity check that
+  // was supposed to prevent unplaceable picks. Narrower is the safe direction.
   if (
     lineIntegrityPublishGuardEnabled() &&
     // Real bookmakers only. A `rundown_default` row is not a book offering a
@@ -438,7 +447,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     // consensus mean as quoted (Devin Review, #733).
     !isQuotedBookLine(
       avgSpread,
-      spreadOdds.filter((o) => isRealBookmakerKey(o.bookmaker)).map((o) => o.spread as number),
+      pricedOdds.filter((o) => isRealBookmakerKey(o.bookmaker)).map((o) => o.spread as number),
     )
   ) {
     return null;
@@ -697,21 +706,6 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const totals = totalOdds.map((o) => o.total as number);
   const avgTotal = totals.reduce((a, b) => a + b, 0) / totals.length;
 
-  // The SPREAD twin of this check lives beside isPublishableSpreadLine. Totals
-  // had no line-integrity guard of any kind (the run-line ladder is
-  // spread-only), which is the sibling-lane pattern this repo keeps hitting;
-  // TOTAL is in fact the worse half of the finding (369 of 599 off-grid vs 310
-  // of 719). Gated OFF by default, same flag, same founder decision.
-  if (
-    lineIntegrityPublishGuardEnabled() &&
-    !isQuotedBookLine(
-      avgTotal,
-      totalOdds.filter((o) => isRealBookmakerKey(o.bookmaker)).map((o) => o.total as number),
-    )
-  ) {
-    return null;
-  }
-
   // Consensus is only meaningful over books that quote BOTH sides. A totals row
   // with a `total` but no over/under prices carries no consensus signal, so we
   // must not let its absence fabricate a one-sided (100% UNDER) consensus.
@@ -730,6 +724,30 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // every book carrying a total: a line without a price is still real
   // information about where the line sits.
   if (pricedTotals.length < MIN_BOOKMAKERS) return null;
+
+  // The SPREAD twin of this check lives beside isPublishableSpreadLine. Totals
+  // had no line-integrity guard of any kind (the run-line ladder is
+  // spread-only), which is the sibling-lane pattern this repo keeps hitting;
+  // TOTAL is in fact the worse half of the finding (369 of 599 off-grid vs 310
+  // of 719). Gated OFF by default, same flag, same founder decision.
+  //
+  // It sits HERE, below `pricedTotals`, rather than beside `avgTotal` where it
+  // was first written, and judges against that set for the reason the spread
+  // twin does: a placeable pick is a line AND a price, and a totals row with a
+  // line but no over/under prices carries neither a consensus signal (the
+  // comment directly above says so) nor a price a member could take. Judging
+  // the guard against `totalOdds` while the displayed price comes from
+  // `pricedTotals` let an unpriced row approve a combination no book offers
+  // (Devin Review, #733).
+  if (
+    lineIntegrityPublishGuardEnabled() &&
+    !isQuotedBookLine(
+      avgTotal,
+      pricedTotals.filter((o) => isRealBookmakerKey(o.bookmaker)).map((o) => o.total as number),
+    )
+  ) {
+    return null;
+  }
 
   // Over is the market favorite when its SIGNED American price is <= the under
   // price: the higher-implied-probability side is the one with the smaller
