@@ -212,6 +212,11 @@ function calibration(sampleSize: number) {
     data: {
       sampleSize,
       brierScore: null,
+      // C-224: board/page.tsx now reads population + the Clopper-Pearson
+      // interval instead of brierScore for its "Decided W-L" metric.
+      population: { wins: 0, losses: 0, pushes: 0, voids: 0, pending: 0, decided: 0 },
+      headlineClopperPearsonLow: null,
+      headlineClopperPearsonHigh: null,
       isCollecting: sampleSize === 0,
       publicMessage: "Building calibration history from settled canonical picks.",
       updatedAt: NOW,

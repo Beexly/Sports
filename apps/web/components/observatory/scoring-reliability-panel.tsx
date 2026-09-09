@@ -5,7 +5,6 @@ import {
 } from "@/lib/calibration/scoring-reliability";
 import {
   NUMERIC_TEXT_CLASS,
-  formatBrier,
   formatCount,
   formatRatioAsPercent,
 } from "@/lib/format/stat";
@@ -46,7 +45,9 @@ export function ScoringReliabilityPanel({
             Scoring rules: reliability diagram
           </h2>
           <p className="mt-1 text-[11px] text-ion-2">
-            Brier score, expected calibration error, and bucket reliability from settled canonical picks.
+            Expected calibration error and bucket reliability from settled canonical picks. The
+            Edge Index is a ranking signal, not a forecast probability, so no Brier score is
+            scored against it.
           </p>
         </div>
         <span className="rounded-full border border-titanium px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-ion-2">
@@ -57,7 +58,7 @@ export function ScoringReliabilityPanel({
       <div className="grid gap-4 px-6 py-5 sm:grid-cols-4">
         {[
           { label: "Sample", value: formatCount(scoring.sampleSize) },
-          { label: "Brier", value: formatBrier(scoring.brierScore) },
+          { label: "Buckets", value: formatCount(scoring.reliabilityPoints.length) },
           { label: "ECE", value: formatRatioAsPercent(scoring.expectedCalibrationError) },
           { label: "Max gap", value: formatRatioAsPercent(scoring.maximumCalibrationError) },
         ].map((stat) => (
@@ -106,8 +107,12 @@ export function ScoringReliabilityPanel({
               </div>
 
               <div className={`text-sm sm:text-right ${NUMERIC_TEXT_CLASS}`}>
+                {/* "Edge" is the bucket's mean confidence, not a promised win
+                    rate — the Edge Index is a ranking signal, never a forecast
+                    probability. Renamed from "Exp" so this panel cannot be
+                    read as scoring a probability against an outcome. */}
                 <p className="text-ion-2">
-                  Exp {formatRatioAsPercent(point.expectedWinRate)}
+                  Edge {formatRatioAsPercent(point.expectedWinRate)}
                 </p>
                 <p className="text-ion-1">
                   Obs {formatRatioAsPercent(point.observedWinRate)}

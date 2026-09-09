@@ -62,7 +62,6 @@ export async function ProofDashboard() {
   const rel = overall?.murphy.reliability ?? null;
   const res = overall?.murphy.resolution ?? null;
   const unc = overall?.murphy.uncertainty ?? null;
-  const brier = published ? report.data.brierScore : null;
   const bss =
     overall !== null && unc !== null ? brierSkillScoreVsBaseRate(overall.brier, unc) : null;
   const emptyReason = report.meta.gated
@@ -144,9 +143,14 @@ export async function ProofDashboard() {
             Durable ECE is unpublished or the artifact has not been written yet.
           </p>
         )}
-        {brier !== null && (
+        {/* C-224: the public calibration report's own brierScore buckets by
+            confidence, not a market-anchored probability — scoring it as a
+            Brier score would be the exact claim this product refuses to
+            make. REL/RES/UNC/BSS above already carry the real, durable,
+            market-anchored measurement; this line duplicated the wrong one. */}
+        {published && (
           <p className={`mt-2 text-xs text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
-            Public Brier {formatBrier(brier)} · n={formatCount(report.data.sampleSize)}
+            n={formatCount(report.data.sampleSize)}
           </p>
         )}
       </div>
