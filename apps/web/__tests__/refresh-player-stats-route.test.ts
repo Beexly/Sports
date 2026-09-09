@@ -145,14 +145,17 @@ describe("GET /api/cron/refresh-player-stats", () => {
     }
   });
 
-  it("the daily window refuses a season it did not ask for (C-198 second-order risk)", async () => {
-    // The unpublished-season fallback silently moves `season` to the last
-    // completed one, and `season` is what the satellites are ingested FOR. An
-    // unattended full run today would therefore write 2025 depth charts - the
-    // newest from the Super Bowl - as the newest depth-chart rows in the
-    // database. That is worse than the empty table it fills: empty reads as
-    // "no data", stale reads as a lineup. So the window stands down while the
-    // primary is on a fallback season.
+  it("the daily window runs satellites at the labelled season, never the primary's demoted fallback (C-264)", async () => {
+    // C-198's original guard stood the WHOLE window down whenever the primary
+    // path fell back, to stop 2025 depth charts (the newest from the Super
+    // Bowl) being written as current. That was too broad: nflverse ships
+    // rosters/depth-charts/injuries on an earlier cadence than player-week
+    // stats, so a satellite whose OWN season is already published should not
+    // stay dark just because player-week stats haven't shipped. The fix
+    // points every satellite at `labelled` directly (never the primary's own
+    // demoted `season`), so an unpublished satellite reports its own honest
+    // source-error/zero-row status instead of writing a stale season, and a
+    // published one is no longer blocked by an unrelated asset's lag.
     const clock = new Date(Date.UTC(2026, 8, 8, SATELLITE_DAILY_HOUR_UTC, 0, 0));
     const labelled = ingestionTargetNflSeason(clock);
     const floor = currentNflSeason(clock);
@@ -169,13 +172,53 @@ describe("GET /api/cron/refresh-player-stats", () => {
       const res = await GET(req("http://x/api/cron/refresh-player-stats", "Bearer secret"));
       const body = await res.json();
 
-      expect(body.season).toBe(floor); // the fallback did happen
-      expect(body.mode).toBe("primary");
-      expect(body.satelliteReason).toBe("skipped-prior-season");
-      expect(ingestDepthCharts).not.toHaveBeenCalled();
-      expect(ingestInjuries).not.toHaveBeenCalled();
-      expect(ingestSnapCounts).not.toHaveBeenCalled();
-      expect(ingestNextGenStats).not.toHaveBeenCalled();
+      expect(body.season).toBe(floor); // the primary path's own fallback, unchanged
+      expect(body.mode).toBe("full");
+      expect(body.satelliteReason).toBe("daily-window");
+      // Every satellite targets the TRUE current season, and NEVER the
+      // primary's demoted floor — that is what makes a stale-season write
+      // impossible without the old blanket skip.
+      expect(ingestDepthCharts).toHaveBeenCalledWith(labelled);
+      expect(ingestInjuries).toHaveBeenCalledWith(labelled);
+      expect(ingestSnapCounts).toHaveBeenCalledWith(labelled);
+      expect(ingestNextGenStats).toHaveBeenCalledWith(labelled, "passing");
+      expect(ingestDepthCharts).not.toHaveBeenCalledWith(floor);
+      expect(ingestInjuries).not.toHaveBeenCalledWith(floor);
+    } finally {
+      vi.useRealTimers();
+    }
+  });
+
+  it("a satellite whose own season is already published is not blocked by another satellite's lag (C-264)", async () => {
+    // The exact split measured live 2026-09-09: depth charts/injuries publish
+    // before player-week stats. Depth charts succeeding must not depend on
+    // snap counts (a later-publishing asset) also succeeding.
+    const clock = new Date(Date.UTC(2026, 8, 8, SATELLITE_DAILY_HOUR_UTC, 0, 0));
+    const labelled = ingestionTargetNflSeason(clock);
+    (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
+      status: "source-error", season: labelled, playersUpserted: 0, statsUpserted: 0, error: "HTTP 404",
+    });
+    (ingestDepthCharts as Mock).mockResolvedValue({ status: "ok", season: labelled, rowsWritten: 1600 });
+    (ingestInjuries as Mock).mockResolvedValue({ status: "ok", season: labelled, rowsWritten: 12 });
+    (ingestSnapCounts as Mock).mockResolvedValue({
+      status: "source-error", season: labelled, rowsWritten: 0, error: "HTTP 404",
+    });
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(clock);
+    try {
+      const res = await GET(req("http://x/api/cron/refresh-player-stats", "Bearer secret"));
+      const body = (await res.json()) as {
+        success: boolean;
+        depth: { status: string; rowsWritten: number };
+        snaps: { status: string };
+      };
+      // Body-level success is false (snap counts genuinely aren't out yet),
+      // but that must not suppress the depth-chart write that succeeded —
+      // the whole point of decoupling the satellites from one shared season.
+      expect(body.success).toBe(false);
+      expect(body.depth.status).toBe("ok");
+      expect(body.depth.rowsWritten).toBe(1600);
+      expect(body.snaps.status).toBe("source-error");
     } finally {
       vi.useRealTimers();
     }

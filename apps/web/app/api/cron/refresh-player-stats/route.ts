@@ -18,6 +18,13 @@
  * including why the Hobby constraint above is out of date (the account is on
  * Vercel Pro) without being disproven.
  *
+ * C-264 — satellites target the LABELLED season directly (see
+ * `satelliteSeason` below), never the primary path's own possibly-demoted
+ * `season`. nflverse publishes rosters/depth-charts/injuries on an earlier
+ * cadence than player-week stats, so coupling the two meant an already-
+ * published depth chart stayed dark until player-week stats also shipped.
+ * Each satellite's own result is the authority on whether its asset exists.
+ *
  * Auth: Bearer <CRON_SECRET>.
  */
 import { NextResponse } from "next/server";
@@ -94,21 +101,28 @@ export async function GET(request: Request): Promise<NextResponse> {
   }
   const primaryOk = stats.status === "ok";
 
-  // C-198's second-order risk, closed before it could bite. The fallback above
-  // silently moves `season` to the last completed one when the labelled season
-  // is not published yet — and `season` is what the satellites are ingested
-  // for. So an automatic full run today would write 2025 depth charts, the
-  // newest of them from the Super Bowl, as the newest depth-chart rows there
-  // are. That is worse than the empty table it would fill: an empty table
-  // reads as "no data", while a stale one reads as a lineup. An EXPLICIT
-  // ?mode=full is untouched — an operator who names the mode gets it, and
-  // ?season is theirs to aim — but the unattended daily run refuses a season
-  // it did not ask for. Once nflverse ships 2026 REG rows there is no fallback
-  // and the window runs normally.
-  const priorSeasonFallback =
-    satelliteDecision.reason === "daily-window" && labelledAttempt !== null;
-  const runFull = satelliteDecision.runFull && !priorSeasonFallback;
-  const satelliteReason = priorSeasonFallback ? "skipped-prior-season" : satelliteDecision.reason;
+  // C-264 fix. C-198's original guard stood the WHOLE satellite window down
+  // whenever the primary path had fallen back to the completed floor, to stop
+  // an automatic run writing 2025 depth charts — the newest of them from the
+  // Super Bowl — as if they were current. That guard was correct about the
+  // failure mode but too broad about the cause: it treated "player-week
+  // stats aren't published for the labelled season" as if it meant "nothing
+  // is", when nflverse ships rosters/depth-charts/injuries on an earlier
+  // cadence than player-week stats/PBP/snap-counts. Measured 2026-09-09:
+  // depth_charts_2026.csv (505k rows) and injuries_2026.csv were already
+  // live while player_stats.csv.gz had no 2026 rows at all — the exact split
+  // this coupling was blind to.
+  //
+  // Fix: satellites always target the LABELLED season directly, never the
+  // primary's own demoted `season`. Each satellite's own result is the
+  // authority on whether ITS asset is published — an unpublished satellite
+  // returns its own honest source-error/zero-row status (surfaced in the
+  // response body, e.g. `depth.status`) and writes nothing, exactly like an
+  // outage would, so no stale prior-season data can ever be written as
+  // current. An explicit `?season=` is still the operator's to aim.
+  const runFull = satelliteDecision.runFull;
+  const satelliteReason = satelliteDecision.reason;
+  const satelliteSeason = seasonParam ? season : labelled;
 
   const ingestionRun = await recordFreeIngestionRun({
     sport: "nflverse-player-stats",
@@ -124,12 +138,12 @@ export async function GET(request: Request): Promise<NextResponse> {
   let satellitesOk = true;
 
   if (runFull) {
-    const snaps = await ingestSnapCounts(season);
-    const injuries = await ingestInjuries(season);
-    const depth = await ingestDepthCharts(season);
-    const ngsPassing = await ingestNextGenStats(season, "passing");
-    const ngsReceiving = await ingestNextGenStats(season, "receiving");
-    const ngsRushing = await ingestNextGenStats(season, "rushing");
+    const snaps = await ingestSnapCounts(satelliteSeason);
+    const injuries = await ingestInjuries(satelliteSeason);
+    const depth = await ingestDepthCharts(satelliteSeason);
+    const ngsPassing = await ingestNextGenStats(satelliteSeason, "passing");
+    const ngsReceiving = await ingestNextGenStats(satelliteSeason, "receiving");
+    const ngsRushing = await ingestNextGenStats(satelliteSeason, "rushing");
     satellites = {
       snaps,
       injuries,

@@ -318,7 +318,7 @@ async function main(): Promise<void> {
             data: { result: p.to as "WIN" | "LOSS" | "PUSH" },
           }),
         ),
-        // C-264 (Devin). TeamGameLog stores teamScore, opponentScore, result
+        // C-274 (Devin). TeamGameLog stores teamScore, opponentScore, result
         // and atsResult DERIVED from this game's score, and it is not a dead
         // archive: build-independent-fair-values.ts reads it to produce the
         // independent factors behind trueProb, and context-enrichment /

@@ -357,7 +357,7 @@ describe("the runner refuses before writing", () => {
   });
 
   it("re-queues team game logs rather than rewriting them itself", () => {
-    // C-264 (Devin). TeamGameLog holds teamScore/opponentScore/result/atsResult
+    // C-274 (Devin). TeamGameLog holds teamScore/opponentScore/result/atsResult
     // derived from the game score, and build-independent-fair-values.ts reads
     // it to produce the independent factors behind trueProb - so a corrected
     // score with stale team logs feeds the wrong outcome back into the engine
@@ -421,7 +421,7 @@ describe("the runner refuses before writing", () => {
   });
 
   it("still writes only the fields it documents", () => {
-    // The allow-list GREW by `status` and `completedAt` in C-264, and that is a
+    // The allow-list GREW by `status` and `completedAt` in C-274, and that is a
     // real surface change rather than a loosened guard: the runner now resets
     // the game's TEAM_GAME_LOG work row so the canonical drain rebuilds the
     // team logs from the corrected score. The assertion keeps its full power -
