@@ -393,3 +393,11 @@ export {
   buildPaidOddsGovernor,
 } from "./paid-odds-governor.js";
 export type { PaidOddsGovernor, PaidOddsGovernorDeps } from "./paid-odds-governor.js";
+export {
+  FBS_CONFERENCE_TEAMS,
+  FBS_TEAM_BY_ESPN_ID,
+  FBS_TEAM_BY_SLUG,
+  FBS_NAME_ALIASES,
+  resolveFbsTeam,
+  type FbsConferenceTeam,
+} from "./ncaaf-conference-map.js";
