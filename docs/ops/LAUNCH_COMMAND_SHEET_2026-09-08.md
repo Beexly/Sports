@@ -265,20 +265,20 @@ Values now are from [T] at 19:01:53 UTC. "Required" is the value the surface's o
 
 | Signal | JSON path | Value now | Value required | Who closes it |
 |---|---|---|---|---|
-| Deployed SHA is main | `.deployment.sha` | `8cc069585…` = `origin/main` | equals `main` tip after (a) | founder merge, auto-deploy |
+| Deployed SHA is main | `.deployment.sha` | `9046ff22a…` = `origin/main` (Hermes P0 PR #726 merged, 00:26 UTC) | equals `main` tip after (a) | founder merge, auto-deploy |
 | Settlement | `.settlement.health` / `.overduePending` | `HEALTHY` / 0 of 2694 | `HEALTHY` / 0 | holds by itself; C-106 lane |
 | Stale unstarted picks | `.stalePendingPicks.count` | 0 | 0 | zero-sit lane every settle cycle |
 | Odds inserting | `.oddsInserting.withinRefreshSla` | `true` (9 min old, 240 min SLA) | `true` | refresh-odds cron |
 | Credit pace | `.oddsInserting.dualPath.credits.paceOk` | `false` (13306 left, exhaustion 2026-10-02, reset Sep 22) | `true`, or exhaustion after reset | C-109 governor; (e) removes the dependence |
 | Free dual-path odds | `.freeSpine.oddsPath.paidSinglePath` | `true` (7 cells mustSpend) | `false` | WP-1 then (e) F-34, F-35 |
-| Market coverage | `.marketCoverage.degraded` | 3 rows: NCAAF ML, NFL ML, NFL TOTAL | `[]` for in-season sports | WP-2; NFL TOTAL needs a live odds feed per the hint |
-| Calibration published | `.calibrationPublish.publishedEffective` | `false` | `true` | founder (b) |
-| Record gate | `.gates.calibrationPublished` | `false` | `true` | follows (b) + GREEN |
+| Market coverage | `.marketCoverage.degraded` | 2 rows at 00:35 UTC: NFL ML, NFL TOTAL (NCAAF now 9 games, ML 3 / SPR 6 / TOT 5) | `[]` for in-season sports | WP-2; NFL TOTAL needs a live odds feed per the hint |
+| Calibration published | `.calibrationPublish.publishedEffective` | `true`, source `auto` (variable set 00:26 UTC) | `true` | founder (b) |
+| Record gate | `.gates.calibrationPublished` | `true` (00:35 UTC) | `true` | follows (b) + GREEN |
 | Performance env gate | `.gates.envPerformanceStatsEnabled` | `false` | `true` | founder (c), after C-197 |
-| Ladder step | `.revenueLadder.currentStep` | `FOUNDING` (blocker: Calibration not published) | `PROVEN` | founder (d) |
-| Pricing readiness | `.pricingPhaseReadiness.eligible` | `false` (unmet: published calibration curve) | `true` | follows (b) |
+| Ladder step | `.revenueLadder.currentStep` | `PROVEN` (00:35 UTC; next blocker toward ESTABLISHED: CLV 22.8% < 52.4%); `PRICING_PHASE` still unset, so customer-facing rates stay FOUNDING | `PROVEN` | founder (d) |
+| Pricing readiness | `.pricingPhaseReadiness.eligible` | `true`, unmet `[]` (00:35 UTC) | `true` | follows (b) |
 | Money path | `.billingMoney.moneyPathReady` | `true` (6/6 slots) | `true` | holds; (g) proves the charge |
-| Eligibility streak | `.calibrationEligibility.consecutiveGreen` | 10 of 3, ECE 0.0466 | ≥ 3, ECE ≤ 0.05 after (f) re-read | six-hourly cron; never a floor change |
+| Eligibility streak | `.calibrationEligibility.consecutiveGreen` | 34 of 3, ECE 0.0466 (00:35 UTC) | ≥ 3, ECE ≤ 0.05 after (f) re-read | six-hourly cron; never a floor change |
 | Deployed-version stratum | `.calibrationEligibility.byModelVersion[v5.2.7].ece` | 0.0947 (n 262) | no floor exists per stratum; report it beside the pooled number | more settled rows; v5.2.8 after 2026-09-13 |
 | Confidence tail | `.confidenceTail.verdict` | `overconfident` (52.11% won vs 86.69% claimed, n 213) | not `overconfident` | needs a calibration proposal, founder-gated; see note |
 | Map / adjustments | `.mapBakeoff.applyOff`, `.bestByBrier` | `true`, `"raw"` | unchanged | no map is justified today; see note |
@@ -293,6 +293,17 @@ currently justified, and shrinking the ≥80 tail is a calibration-proposal deci
 threshold an agent moves ([A] lines 78-79; law 9). The tail is worst on SPREAD (44.44% won vs 88.04%
 claimed, n 99) and TOTAL (25.64% vs 83.85%, n 39) and least bad on MONEYLINE (76% vs 86.37%, n 75) [T
 `confidenceTail.byMarket`], which is the same market split C-197 describes.
+
+
+### 4a. Executed 2026-09-09 00:26 UTC by the browser agent, verified on the truth surface at 00:35 UTC
+
+`STATS_PUBLIC=true`, `CALIBRATION_AUTO_PUBLISH=true`, `LINE_ARCHIVE_ENABLED=true`, Production only,
+one redeploy (sha `9046ff22a`). Verified: `.gates.statsPublic` true, STATKING `live_public`,
+`.calibrationPublish.publishedEffective` true (`auto`), `.gates.calibrationPublished` true,
+`.revenueLadder.currentStep` PROVEN, `.pricingPhaseReadiness.eligible` true, settlement HEALTHY.
+Finding: an anonymous `GET /stats` returns 307 to `/age-verify?next=%2Fstats`, so StatKing sits
+behind the 21+ attestation and search engines do not see it. Decision recorded for Agent 3 (gates):
+the stats facts routes leave the age-gate matcher, `/stats/ask` and `/fantasy/*` keep it.
 
 ## 5. What was deliberately NOT started, and why
 
