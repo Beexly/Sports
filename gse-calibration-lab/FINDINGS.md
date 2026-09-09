@@ -111,3 +111,85 @@ python3 -m gsecal cancellation \
   --stratum v5.1.0:74:0.0729  --stratum v5.0.0:29:0.1531 \
   --pooled-ece 0.0524
 ```
+
+---
+
+# Finding 2: the gate can go GREEN on a model that is not calibrated
+
+**Status:** latent, not live. Detector shipped; the production fix is NOT made here (ledger C-275).
+
+## The defect
+
+`evaluateCalibrationEligibility` compares a **pooled** ECE against the 0.05 floor.
+Finding 1 measures that pooling runs **0.0414 below** the honest weighted mean on
+live data. Those two facts together mean a reachable state exists where:
+
+```
+pooled ECE  <=  0.05  <  the deployed version's own ECE
+```
+
+In that state the gate reads GREEN and the product publishes a calibration claim
+about a model whose own rows fail the floor. The mechanism producing it is
+measured, not assumed.
+
+## How close it is
+
+```
+pooled (what the gate reads)   0.0524
+deployed v5.2.7 (own 245 rows) 0.1089
+margin before a false GREEN     +0.0024
+```
+
+**0.0024.** A shift in the version mix of a couple of hundred rows covers that.
+
+Today the gate is **HONESTLY RED** — pooled and deployed both fail, and they
+agree. This finding is about the state one data cycle away, which arrives
+without anybody deciding anything.
+
+## Waiting is not the fix — it is the opposite
+
+As v5.2.7's weight rises toward 1, the honest figure converges **up** toward its
+own 0.1089:
+
+| additional v5.2.7 rows | honest weighted mean |
+|---|---|
+| +0 | 0.0938 |
+| +250 | 0.0991 |
+| +1000 | 0.1042 |
+| +3000 | 0.1069 |
+
+And no volume of rows at the current quality reaches the floor at all:
+
+| future rows measure | rows needed to reach 0.05 |
+|---|---|
+| 0.10 / 0.06 / 0.05 | **never** — more data is not the lever |
+| 0.04 | 1,444 |
+| 0.02 | 482 |
+
+The lever is a better-calibrated model measured on its own rows — v5.2.8's
+market-anchored probability — not patience.
+
+## What shipped, and what deliberately did not
+
+**Shipped:** `gsecal.readiness.false_green_risk` classifies four states —
+HONESTLY RED, HONESTLY GREEN, **FALSE GREEN**, and CONSERVATIVE RED (deployed
+clears but retired versions hold the pool back; errs safe). `python3 -m gsecal
+readiness` **exits 1** on FALSE GREEN, so it can gate a publish script.
+
+**Not shipped:** the production fix. The gate should additionally require the
+**deployed** version to clear the floor on its own rows. That direction is
+allowed under law 9 — a guard may be given narrower context, never less power —
+and can only ever prevent a false GREEN, never cause one. But it is a production
+gate change on the honesty boundary, and `compute-live-calibration-metrics.ts`
+does not currently emit per-version ECE, so it is real scope rather than a
+one-liner. It needs an owner. Measuring the cancellation is not the same as
+preventing the publish.
+
+## Reproduce
+
+```bash
+python3 -m gsecal readiness \
+  --version v5.2.7:245:0.1089 --version v5.2.6:110:0.0587 \
+  --version v5.1.0:74:0.0729  --version v5.0.0:29:0.1531 \
+  --deployed v5.2.7 --pooled-ece 0.0524
+```

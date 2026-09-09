@@ -68,6 +68,13 @@ Required: a probability column and an outcome column (`WIN`/`LOSS`).
 This tool has no demo data and will not invent any."""
 
 
+# The domain errors these handlers legitimately expect: bad operator input,
+# a missing file, a mistyped column. Anything else is a bug in this tool and
+# MUST propagate — rendering it as a tidy "Error" panel would make our own
+# defect indistinguishable from the operator mistyping a column name.
+OPERATOR_ERRORS = (ValueError, TypeError, FileNotFoundError, KeyError)
+
+
 def _err(exc: Exception) -> str:
     return f"### ❌ Error\n\n```\n{exc}\n```"
 
@@ -114,7 +121,7 @@ def analyze_overview(
         if warning:
             md += ["", f"> ⚠️ {warning}"]
         return "\n".join(md), res.summary()
-    except Exception as exc:  # noqa: BLE001 - surfaced to the operator verbatim
+    except OPERATOR_ERRORS as exc:
         return _err(exc), traceback.format_exc(limit=1)
 
 
@@ -153,7 +160,7 @@ def analyze_stratified(
         )
         report = decompose_stratified_ece(group_by(res, stratum_field), bins=bins)
         return render_decomposition(report, DEFAULT_FLOORS.ece), render_strata_table(report)
-    except Exception as exc:  # noqa: BLE001
+    except OPERATOR_ERRORS as exc:
         return _err(exc), []
 
 
@@ -183,7 +190,7 @@ def analyze_summary_cancellation(table: list[list], pooled_ece: float) -> str:
             return "Enter at least two strata (label, n, ECE)."
         report = cancellation_from_summaries(parsed, pooled_ece=float(pooled_ece))
         return render_decomposition(report, DEFAULT_FLOORS.ece)
-    except Exception as exc:  # noqa: BLE001
+    except OPERATOR_ERRORS as exc:
         return _err(exc)
 
 
@@ -227,7 +234,7 @@ def analyze_bootstrap(
         if warning:
             out += f"\n\n> ⚠️ {warning}"
         return out
-    except Exception as exc:  # noqa: BLE001
+    except OPERATOR_ERRORS as exc:
         return _err(exc)
 
 
@@ -280,7 +287,7 @@ def analyze_gate(
             streak_required=int(streak_required),
         )
         return render_gate(report)
-    except Exception as exc:  # noqa: BLE001
+    except OPERATOR_ERRORS as exc:
         return _err(exc)
 
 

@@ -18,7 +18,20 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const REPO = resolve(HERE, "..", "..");
 const SOURCE = "apps/web/lib/ops/calibration-eligibility.ts";
 
-const { code } = transformSync(readFileSync(resolve(REPO, SOURCE), "utf8"), {
+/**
+ * SECURITY: this dynamically executes code (esbuild output imported from a
+ * data: URI). That is inherent to proving parity — the point is to run the REAL
+ * production gate, not a transcription of it. The path is a module constant,
+ * never a parameter or external input, and is asserted to resolve inside the
+ * repo before anything is read. Developer-only harness: not imported by shipped
+ * code, not on any request path.
+ */
+const SOURCE_ABS = resolve(REPO, SOURCE);
+if (!SOURCE_ABS.startsWith(REPO + "/")) {
+  throw new Error(`refusing to load ${SOURCE_ABS}: resolves outside the repo`);
+}
+
+const { code } = transformSync(readFileSync(SOURCE_ABS, "utf8"), {
   loader: "ts",
   format: "esm",
   target: "es2022",

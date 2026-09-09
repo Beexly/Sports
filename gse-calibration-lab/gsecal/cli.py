@@ -24,6 +24,12 @@ from gsecal.bootstrap import bins_occupancy_warning, bootstrap_ece
 from gsecal.decomposition import cancellation_from_summaries, decompose_stratified_ece
 from gsecal.gate import DEFAULT_FLOORS, LiveMetrics, MurphyTerms, evaluate_eligibility
 from gsecal.metrics import brier_decomposition, brier_score, expected_calibration_error
+from gsecal.readiness import (
+    VersionStratum,
+    convergence_path,
+    false_green_risk,
+    rows_needed_for_floor,
+)
 from gsecal.report import render_decomposition, render_gate, render_interval
 from gsecal.samples import group_by, load_path
 
@@ -126,6 +132,62 @@ def cmd_gate(args) -> int:
     return 0 if report.status == "GREEN" else 1
 
 
+def cmd_readiness(args) -> int:
+    """False-GREEN risk + how far the deployed model is from an honest pass."""
+    strata = []
+    for spec in args.version:
+        try:
+            label, n, ece = spec.split(":")
+            strata.append(
+                VersionStratum(
+                    label=label,
+                    n=int(n),
+                    ece=float(ece),
+                    deployed=(label == args.deployed),
+                )
+            )
+        except ValueError:
+            print(f"bad --version {spec!r}; expected label:n:ece", file=sys.stderr)
+            return 2
+    if not strata:
+        print("need at least one --version", file=sys.stderr)
+        return 2
+    if args.deployed and not any(s.deployed for s in strata):
+        print(f"--deployed {args.deployed!r} matches no --version label", file=sys.stderr)
+        return 2
+
+    report = false_green_risk(strata, pooled_ece=args.pooled_ece, floor=args.floor)
+    print("=== Gate honesty ===")
+    print(report.verdict())
+    print()
+    print(f"pooled (gate reads)   {report.pooled_ece:.4f}")
+    print(f"weighted mean (honest) {report.weighted_mean_ece:.4f}")
+    if report.deployed_ece is not None:
+        print(f"deployed {report.deployed_label:<12} {report.deployed_ece:.4f}  (n={report.deployed_n})")
+    print(f"margin before a false GREEN becomes possible: {report.margin_to_false_green:+.4f}")
+
+    if report.deployed_ece is not None:
+        print()
+        print("=== Does waiting help? (honest figure as the deployed version accumulates) ===")
+        for extra, value in convergence_path(
+            strata, deployed_label=report.deployed_label, steps=[0, 100, 250, 500, 1000, 3000]
+        ):
+            print(f"  +{extra:5d} rows -> {value:.4f}")
+
+        print()
+        print("=== Rows needed for the deployed version to clear the floor on its OWN rows ===")
+        for future in (args.floor * 2, args.floor * 1.2, args.floor, args.floor * 0.8, args.floor * 0.4):
+            result = rows_needed_for_floor(
+                current_n=report.deployed_n,
+                current_ece=report.deployed_ece,
+                assumed_future_ece=future,
+                floor=args.floor,
+            )
+            print(f"  future rows at ECE {future:.4f}: {result}")
+
+    return 1 if report.at_risk else 0
+
+
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python3 -m gsecal",
@@ -160,6 +222,22 @@ def build_parser() -> argparse.ArgumentParser:
     p.add_argument("--level", type=float, default=0.95)
     p.add_argument("--seed", type=int, default=20260909)
     p.set_defaults(func=cmd_bootstrap)
+
+    p = sub.add_parser(
+        "readiness",
+        help="false-GREEN risk + distance to an honest pass (exit 1 if at risk)",
+    )
+    p.add_argument(
+        "--version",
+        action="append",
+        required=True,
+        metavar="LABEL:N:ECE",
+        help="repeatable, e.g. --version v5.2.7:245:0.1089",
+    )
+    p.add_argument("--deployed", required=True, help="label of the version serving traffic")
+    p.add_argument("--pooled-ece", type=float, required=True)
+    p.add_argument("--floor", type=float, default=0.05)
+    p.set_defaults(func=cmd_readiness)
 
     p = sub.add_parser("gate", help="production eligibility verdict")
     p.add_argument("--n", type=int, required=True)

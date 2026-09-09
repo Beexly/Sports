@@ -177,10 +177,10 @@ class TestLaunchSafety(unittest.TestCase):
     def test_policy_allows_public_with_auth(self) -> None:
         config = resolve_launch_config(
             host="0.0.0.0",
-            env={"GSECAL_AUTH_USER": "u", "GSECAL_AUTH_PASS": "p"},
+            env={"GSECAL_AUTH_USER": "fixture-user", "GSECAL_AUTH_PASS": "fixture-value"},
         )
         self.assertTrue(config.is_public)
-        self.assertEqual(config.auth, ("u", "p"))
+        self.assertEqual(config.auth, ("fixture-user", "fixture-value"))
         self.assertFalse(config.share)
 
 

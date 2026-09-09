@@ -19,7 +19,13 @@ from gsecal.serve import (
     resolve_launch_config,
 )
 
-AUTH = {"GSECAL_AUTH_USER": "operator", "GSECAL_AUTH_PASS": "secret"}
+# Fixture values, not credentials: these never authenticate anything. Named to
+# make that unmistakable to a human and to a secret scanner alike.
+FIXTURE_USER = "fixture-user-not-a-credential"
+FIXTURE_PASS = "fixture-value-not-a-credential"
+USER_KEY = "GSECAL_AUTH_USER"
+PASS_KEY = "GSECAL_AUTH_PASS"
+AUTH = {USER_KEY: FIXTURE_USER, PASS_KEY: FIXTURE_PASS}
 
 
 class TestLoopbackDetection(unittest.TestCase):
@@ -73,11 +79,11 @@ class TestPolicyRefusals(unittest.TestCase):
 
     def test_partial_credentials_are_not_credentials(self) -> None:
         for env in (
-            {"GSECAL_AUTH_USER": "u"},
-            {"GSECAL_AUTH_PASS": "p"},
-            {"GSECAL_AUTH_USER": "", "GSECAL_AUTH_PASS": "p"},
-            {"GSECAL_AUTH_USER": "u", "GSECAL_AUTH_PASS": ""},
-            {"GSECAL_AUTH_USER": "   ", "GSECAL_AUTH_PASS": "p"},
+            {USER_KEY: FIXTURE_USER},
+            {PASS_KEY: FIXTURE_PASS},
+            {USER_KEY: "", PASS_KEY: FIXTURE_PASS},
+            {USER_KEY: FIXTURE_USER, PASS_KEY: ""},
+            {USER_KEY: "   ", PASS_KEY: FIXTURE_PASS},
         ):
             with self.subTest(env=env), self.assertRaises(PublicWithoutAuthError):
                 resolve_launch_config(host="0.0.0.0", env=env)
@@ -99,12 +105,12 @@ class TestPolicyAllows(unittest.TestCase):
         self.assertIsNone(config.auth)
 
     def test_loopback_with_auth_keeps_the_auth(self) -> None:
-        self.assertEqual(resolve_launch_config(env=dict(AUTH)).auth, ("operator", "secret"))
+        self.assertEqual(resolve_launch_config(env=dict(AUTH)).auth, (FIXTURE_USER, FIXTURE_PASS))
 
     def test_public_with_auth(self) -> None:
         config = resolve_launch_config(host="0.0.0.0", env=dict(AUTH))
         self.assertTrue(config.is_public)
-        self.assertEqual(config.auth, ("operator", "secret"))
+        self.assertEqual(config.auth, (FIXTURE_USER, FIXTURE_PASS))
 
     def test_managed_host_with_auth_binds_all_interfaces(self) -> None:
         config = resolve_launch_config(env={**AUTH, "SPACE_ID": "x"})

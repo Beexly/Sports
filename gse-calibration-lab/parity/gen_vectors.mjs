@@ -31,9 +31,37 @@ const SOURCES = {
   decomposition: "packages/prediction-engine/src/probability-calibration.ts",
 };
 
-/** Transpile a dependency-free TS module and evaluate it to its exports. */
+/**
+ * Transpile a dependency-free TS module and evaluate it to its exports.
+ *
+ * SECURITY: this dynamically executes code (esbuild output imported from a
+ * data: URI) — an eval-equivalent, and static analysis is right to flag it. It
+ * is inherent to the design: proving parity REQUIRES running the real
+ * production implementation, and a hand-copied JS transcription would prove
+ * nothing about the TypeScript that actually ships.
+ *
+ * What is NOT inherent is letting it run anything. Two constraints below:
+ *   1. relPath must be one of the four allow-listed production sources.
+ *   2. the resolved absolute path must stay inside the repo.
+ * Together those mean this can only ever execute checked-in repo source that a
+ * reviewer has already seen, never an arbitrary or attacker-supplied file.
+ *
+ * This is a developer-only harness. It is not imported by any shipped code, is
+ * not on any request path, and takes no external input.
+ */
+const ALLOWED_SOURCES = new Set(Object.values(SOURCES));
+
 async function loadTs(relPath) {
+  if (!ALLOWED_SOURCES.has(relPath)) {
+    throw new Error(
+      `refusing to transpile-and-execute ${relPath}: not in the allow-list ` +
+        `(${[...ALLOWED_SOURCES].join(", ")})`,
+    );
+  }
   const abs = resolve(REPO, relPath);
+  if (!abs.startsWith(REPO + "/")) {
+    throw new Error(`refusing to load ${abs}: resolves outside the repo`);
+  }
   const source = readFileSync(abs, "utf8");
   const { code } = transformSync(source, {
     loader: "ts",

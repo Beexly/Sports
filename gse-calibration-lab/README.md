@@ -43,6 +43,9 @@ python3 -m gsecal cancellation \
 # Seeded, reproducible confidence interval
 python3 -m gsecal bootstrap rows.csv --seed 20260909
 
+# Can the gate pass on a model that is not calibrated? (exit 1 if at risk)
+python3 -m gsecal readiness --version v5.2.7:245:0.1089 --deployed v5.2.7 --pooled-ece 0.0524
+
 # The production eligibility verdict (exit 0 GREEN, 1 RED — scriptable)
 python3 -m gsecal gate --n 458 --brier 0.1926 --ece 0.0524 \
   --murphy-rel 0.0053 --canonical-settled 458
@@ -51,7 +54,7 @@ python3 -m gsecal gate --n 458 --brier 0.1926 --ece 0.0524 \
 Tests, also zero-install:
 
 ```bash
-python3 -m unittest discover -s tests -t .   # 108 tests
+python3 -m unittest discover -s tests -t .   # 126 tests
 ```
 
 ## Optional: the Gradio cockpit
@@ -154,9 +157,10 @@ gsecal/
   sweep.py          counterfactual link sweep (also the ETKF link)
   samples.py        strict loader that refuses to guess
   serve.py          fail-closed launch policy (no public bind without auth)
+  readiness.py      false-GREEN detection + rows-to-floor projection
   report.py         markdown rendering (no metric computed here)
   cli.py            zero-install command line
 app.py              optional Gradio cockpit (+ MCP)
 parity/             vector generators + committed vectors
-tests/              108 tests, stdlib unittest
+tests/              126 tests, stdlib unittest
 ```
