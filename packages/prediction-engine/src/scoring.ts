@@ -536,6 +536,11 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
 
+  // HP-14 v5.2.8 market-anchored gate: publish only when model has positive
+  // market-relative edge (trueProb > marketFairProb). Picks with negative or
+  // zero edge are suppressed even when confidence is high — this prevents
+  // publishing overpriced picks that only look valuable due to confidence
+  // inflation without genuine edge over the market.
   const skellamIndependents = (input.context?.independentFairValues ?? []).filter(
     (fv) => fv.source === SKELLAM_COVER_SOURCE,
   );
@@ -553,6 +558,10 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const independentEdge: IndependentEdgeSummary | null = independentEdgeRaw
     ? { ...independentEdgeRaw, priced: rank.priced }
     : null;
+  // Market-anchored gate: suppress picks where trueProb <= marketFairProb
+  if (independentEdge == null || independentEdge.trueProb == null) return null;
+  const mlFair = mlFairProbHome ?? fairProb;
+  if (independentEdge.trueProb <= mlFair) return null;
   const independentEdgeFactors: FactorDetail[] = independentEdge
     ? [
         {
@@ -810,6 +819,32 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
 
+  // HP-14 v5.2.8 market-anchored gate: publish only when model has positive
+  // market-relative edge (trueProb > marketFairProb). Picks with negative or
+  // zero edge are suppressed even when confidence is high — this prevents
+  // publishing overpriced picks that only look valuable due to confidence
+  // inflation without genuine edge over the market.
+  const skellamIndependents = (input.context?.independentFairValues ?? []).filter(
+    (fv) => fv.source === SKELLAM_COVER_SOURCE,
+  );
+  const independentEdgeRaw = assessIndependentEdge(
+    skellamIndependents.length > 0 ? skellamIndependents : undefined,
+    overIsChosen,
+    fairProb,
+    dataQualityScore,
+    twoSidedImpliedSum >= 1,
+  );
+  const rank = deriveRankingProbability(confidence, independentEdgeRaw, {
+    independentWeight: 0.7,
+    rankOnAnyTrueProb: true,
+  });
+  const independentEdge: IndependentEdgeSummary | null = independentEdgeRaw
+    ? { ...independentEdgeRaw, priced: rank.priced }
+    : null;
+  // Market-anchored gate: suppress picks where trueProb <= fairProb
+  if (independentEdge == null || independentEdge.trueProb == null) return null;
+  if (independentEdge.trueProb <= fairProb) return null;
+  
   const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
   const riskLevel: RiskLevel = computeRiskLevel(pricedTotals.length, consensusPct, lineMovementScore);
