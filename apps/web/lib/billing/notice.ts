@@ -10,7 +10,7 @@ import { PAST_DUE_GRACE_DAYS } from "@/lib/entitlements";
 
 export interface BillingNotice {
   /** Why the banner is showing. */
-  kind: "PAST_DUE_IN_GRACE" | "PAST_DUE_EXPIRED" | "INCOMPLETE";
+  kind: "PAST_DUE_IN_GRACE" | "PAST_DUE_EXPIRED" | "DUNNING_EXHAUSTED" | "INCOMPLETE";
   /** Paid tier the member is at risk of losing. */
   tier: "PRO" | "ELITE";
   /** End of the grace window, when one applies. */
@@ -40,7 +40,17 @@ export async function getBillingNotice(userId: string): Promise<BillingNotice | 
   const tier = subscription.tier;
 
   if (subscription.status === "INCOMPLETE") {
-    return { kind: "INCOMPLETE", tier, graceEndsAt: null };
+    // Two different facts land on INCOMPLETE and the member deserves to be told
+    // which one (C-91 / D2a). Stripe `unpaid` — dunning exhausted, access has
+    // ENDED — is synced here with its pastDueSince anchor preserved; a genuine
+    // SCA `incomplete` (first charge never cleared, bank wants a verification
+    // step) has no anchor. Telling someone to "finish setting up your payment"
+    // when we in fact tried five times and gave up is the wrong instruction,
+    // and promising grace we are not giving is the failure this row exists to
+    // close.
+    return subscription.pastDueSince
+      ? { kind: "DUNNING_EXHAUSTED", tier, graceEndsAt: null }
+      : { kind: "INCOMPLETE", tier, graceEndsAt: null };
   }
 
   if (subscription.status === "PAST_DUE") {

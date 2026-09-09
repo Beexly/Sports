@@ -956,7 +956,9 @@ describe("POST /api/webhooks/stripe", () => {
     it.each([
       ["trialing", "TRIALING"],
       ["past_due", "PAST_DUE"],
-      ["unpaid", "PAST_DUE"],
+      // C-91 / D2a: `unpaid` is the END of Stripe's dunning schedule, so it must
+      // NOT land on the access-GRANTING PAST_DUE. See the dedicated block below.
+      ["unpaid", "INCOMPLETE"],
       ["canceled", "CANCELED"],
       ["incomplete_expired", "CANCELED"],
       ["incomplete", "INCOMPLETE"],
@@ -1000,6 +1002,109 @@ describe("POST /api/webhooks/stripe", () => {
           update: expect.not.objectContaining({ pastDueSince: expect.anything() }),
         })
       );
+    });
+
+    /**
+     * C-91 / D2a — the two halves of the money path used to disagree about
+     * Stripe `unpaid`, and the member was told the more generous of the two.
+     *
+     * The webhook mapped `unpaid` to PAST_DUE, which is access-GRANTING for
+     * PAST_DUE_GRACE_DAYS (7) and which the dashboard banner promises in
+     * writing. The hourly reconciler classifies `unpaid` as a CONFIRMED
+     * non-access status and downgrades on it. So a member whose dunning had
+     * already been exhausted read "you keep full access until <date>" and was
+     * cut off within the hour.
+     *
+     * Stripe's semantics win: `unpaid` revokes on the webhook itself. These
+     * tests pin the landing (INCOMPLETE — not access-granting, and NOT the
+     * terminal CANCELED, which would arm the resurrection guard against a
+     * member who then pays), the preserved dunning anchor that lets the
+     * member-facing copy name the real reason, and idempotency on redelivery.
+     */
+    describe("Stripe `unpaid` revokes on the webhook itself (C-91 / D2a)", () => {
+      it("never lands on the access-granting PAST_DUE", async () => {
+        armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ status: "unpaid" }));
+
+        await POST(webhookRequest());
+
+        const call = mocks.subscriptionUpsert.mock.calls[0]?.[0] as
+          | { update: { status: string; tier: string } }
+          | undefined;
+        expect(call?.update.status).toBe("INCOMPLETE");
+        expect(call?.update.status).not.toBe("PAST_DUE");
+        // The subscription is real and recoverable, so the paid tier stays on
+        // the row; `status` is what gates access, and INCOMPLETE does not grant.
+        expect(call?.update.tier).toBe("PRO");
+      });
+
+      it("does not stamp a cancellation Stripe never reported", async () => {
+        armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ status: "unpaid" }));
+
+        await POST(webhookRequest());
+
+        // CANCELED would be terminal: the out-of-order resurrection guard
+        // refuses a later same-id reactivation, locking out a member who pays
+        // the outstanding invoice.
+        expect(mocks.subscriptionUpsert).toHaveBeenCalledWith(
+          expect.objectContaining({ update: expect.objectContaining({ canceledAt: null }) }),
+        );
+      });
+
+      it("preserves the dunning anchor instead of clearing it", async () => {
+        armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ status: "unpaid" }));
+
+        await POST(webhookRequest());
+
+        // Clearing it (the non-PAST_DUE branch) would make this row
+        // indistinguishable from an SCA-incomplete first charge, and the member
+        // would be told to "finish setting up your payment" after we tried and
+        // gave up.
+        expect(mocks.subscriptionUpsert).toHaveBeenCalledWith(
+          expect.objectContaining({
+            update: expect.not.objectContaining({ pastDueSince: null }),
+          }),
+        );
+        expect(mocks.subscriptionUpdateMany).toHaveBeenCalledWith(
+          expect.objectContaining({
+            where: { stripeCustomerId: "cus_123", pastDueSince: null },
+            data: { pastDueSince: expect.any(Date) },
+          }),
+        );
+      });
+
+      it("is idempotent — a redelivery writes the same non-granting row", async () => {
+        armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ status: "unpaid" }));
+        await POST(webhookRequest());
+        const first = mocks.subscriptionUpsert.mock.calls[0]?.[0] as { update: { status: string } };
+
+        mocks.subscriptionUpsert.mockClear();
+        armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ status: "unpaid" }));
+        await POST(webhookRequest());
+        const second = mocks.subscriptionUpsert.mock.calls[0]?.[0] as { update: { status: string } };
+
+        expect(second.update.status).toBe(first.update.status);
+        expect(second.update.status).toBe("INCOMPLETE");
+      });
+
+      it("still recovers to ACTIVE when the member pays the outstanding invoice", async () => {
+        // The row is now INCOMPLETE (not CANCELED), so the resurrection guard —
+        // which requires existing.status === "CANCELED" — does not fire.
+        mocks.subscriptionFindUnique.mockResolvedValue({
+          status: "INCOMPLETE",
+          canceledAt: null,
+          stripeSubscriptionId: "sub_123",
+          tier: "PRO",
+        });
+        armSubscriptionEvent("customer.subscription.updated", stripeSubscription({ status: "active" }));
+
+        await POST(webhookRequest());
+
+        expect(mocks.subscriptionUpsert).toHaveBeenCalledWith(
+          expect.objectContaining({
+            update: expect.objectContaining({ status: "ACTIVE", pastDueSince: null }),
+          }),
+        );
+      });
     });
 
     it("falls back to updateMany by stripeCustomerId when userId metadata is missing", async () => {

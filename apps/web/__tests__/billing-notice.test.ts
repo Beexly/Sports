@@ -106,6 +106,28 @@ describe("getBillingNotice", () => {
     expect(notice!.kind).toBe("INCOMPLETE");
   });
 
+  /**
+   * C-91 / D2a. Stripe `unpaid` now syncs to INCOMPLETE with its pastDueSince
+   * anchor PRESERVED, so INCOMPLETE carries two different facts and the anchor
+   * is what separates them. Getting this wrong tells a member whose card we
+   * tried five times and gave up on to "finish setting up your payment", and
+   * getting it wrong in the other direction would promise a grace window that
+   * the reconciler has already ended.
+   */
+  it("reports DUNNING_EXHAUSTED for an INCOMPLETE row that carries a dunning anchor", async () => {
+    mocks.subscriptionFindUnique.mockResolvedValue({
+      tier: "PRO",
+      status: "INCOMPLETE",
+      pastDueSince: new Date(Date.now() - 20 * DAY_MS),
+    });
+
+    const notice = await getBillingNotice("user_1");
+
+    expect(notice!.kind).toBe("DUNNING_EXHAUSTED");
+    // No grace window is offered, because there is none left to offer.
+    expect(notice!.graceEndsAt).toBeNull();
+  });
+
   it("returns null instead of throwing when the DB lookup fails (best-effort banner)", async () => {
     mocks.subscriptionFindUnique.mockRejectedValue(new Error("db down"));
     expect(await getBillingNotice("user_1")).toBeNull();
@@ -136,6 +158,22 @@ describe("BillingNoticeBanner", () => {
 
     expect(screen.getByText(/elite access is paused/i)).toBeInTheDocument();
     expect(screen.getByText(/grace window has ended/i)).toBeInTheDocument();
+  });
+
+  it("tells a dunning-exhausted member their access has ended, and promises no grace", () => {
+    render(
+      createElement(BillingNoticeBanner, {
+        notice: { kind: "DUNNING_EXHAUSTED", tier: "PRO", graceEndsAt: null },
+      })
+    );
+
+    // Anchored: the detail sentence repeats the phrase, so an unanchored
+    // matcher finds two nodes and fails for the wrong reason.
+    expect(screen.getByText(/^Your Pro access has ended$/)).toBeInTheDocument();
+    expect(screen.getByText(/couldn't collect payment/i)).toBeInTheDocument();
+    // The grace promise belongs to PAST_DUE_IN_GRACE only — never here.
+    expect(screen.queryByText(/you keep full access/i)).toBeNull();
+    expect(screen.getByRole("button", { name: /manage billing/i })).toBeInTheDocument();
   });
 
   it("renders the verification message for INCOMPLETE payments", () => {
