@@ -156,7 +156,7 @@ export async function drainPendingClvGrades(
     };
     pick: FreePathClvDb["pick"] & {
       findMany: (args: {
-        where: { id: { in: string[] }; result: { not: string } };
+        where: { id: { in: string[] }; result: { notIn: string[] } };
         select: Record<string, unknown>;
       }) => Promise<FreePathClvPick[]>;
     };
@@ -177,7 +177,10 @@ export async function drainPendingClvGrades(
 
   const ids = pending.map((p) => p.subjectId);
   const picks = await db.pick.findMany({
-    where: { id: { in: ids }, result: { not: "PENDING" } },
+    // PENDING has no outcome to grade; VOID has no bet. Grading a withdrawn
+    // pick would mint a fresh clvVerdict for a claim we have retracted, and
+    // that verdict feeds the public CLV sample (Devin Review, #733).
+    where: { id: { in: ids }, result: { notIn: ["PENDING", "VOID"] } },
     select: {
       id: true,
       pickType: true,

@@ -828,17 +828,27 @@ export async function voidDefectiveSettledPicks(input: {
         await tx.jarvisMemoryEvent.create({
           data: lineIntegrityVoidMemoryEvent(row, verdict, now),
         });
-        // Enqueue covers a pick that somehow has no rows; REOPEN covers the
-        // normal case, where the original settlement already marked them DONE
-        // and `createMany({skipDuplicates})` would silently do nothing —
-        // leaving the CLV grade and signal snapshot holding the outcome this
-        // withdrawal just removed (Devin Review, #733).
+        // SNAPSHOT_OUTCOME only, and deliberately NOT CLV_GRADE.
+        //
+        // Enqueue covers a pick that somehow has no row; REOPEN covers the
+        // normal case, where the original settlement already marked it DONE and
+        // `createMany({skipDuplicates})` would silently do nothing, leaving the
+        // signal snapshot holding the outcome this withdrawal just removed.
+        // `drainPendingSnapshotOutcomes` treats VOID as a real result and
+        // rewrites the snapshot, which is what we want.
+        //
+        // CLV IS DIFFERENT AND MUST NOT BE REOPENED. CLV is a claim about a bet
+        // that stood; a withdrawn pick has none. An earlier revision of this
+        // lane reopened it, and because the CLV drain accepted any non-PENDING
+        // result that would have MINTED a fresh public CLV verdict for a pick
+        // we had just retracted (Devin Review, #733). The existing verdict is
+        // left on the row as history and filtered out of every public sample by
+        // loadPublicClvPolicy instead.
         const workDelegate = tx.postSettlementWork as unknown as PostSettlementWorkDelegate;
         await enqueuePostSettlementWork(workDelegate, [
-          { subjectId: row.id, kind: "CLV_GRADE" },
           { subjectId: row.id, kind: "SNAPSHOT_OUTCOME" },
         ]);
-        await reopenPostSettlementWork(workDelegate, row.id, ["CLV_GRADE", "SNAPSHOT_OUTCOME"]);
+        await reopenPostSettlementWork(workDelegate, row.id, ["SNAPSHOT_OUTCOME"]);
         return updated;
       });
     } catch (err) {

@@ -643,21 +643,27 @@ describe("the route deadline (Devin round 3)", () => {
   });
 });
 
-describe("post-settlement work is REOPENED, not just enqueued (Devin round 3)", () => {
-  it("resets CLV_GRADE and SNAPSHOT_OUTCOME so the withdrawn outcome is recomputed", async () => {
+describe("post-settlement work is REOPENED, not just enqueued (Devin rounds 3-4)", () => {
+  it("resets SNAPSHOT_OUTCOME — and ONLY that — so the withdrawn outcome is recomputed", async () => {
     const h = makeDb({
       picks: [pickRow()],
       odds: [odds("o1", "a", -3), odds("o2", "b", -3.5)],
     });
     await voidDefectiveSettledPicks({ db: h.db, enabled: true, now: PUBLISH });
     const reopens = h.work.filter((w) => (w as { op?: string }).op === "updateMany");
-    expect(reopens).toHaveLength(2);
-    for (const r of reopens) {
-      expect((r as { data: Record<string, unknown> }).data).toMatchObject({
-        status: "PENDING",
-        completedAt: null,
-      });
-    }
+    // Round 3 reopened CLV_GRADE too. Round 4 found that the CLV drain accepts
+    // any non-PENDING result, so that reopen would have MINTED a fresh public
+    // CLV verdict for a pick we had just withdrawn. The snapshot is reopened
+    // (its drain treats VOID as a real result); CLV is not.
+    expect(reopens).toHaveLength(1);
+    const only = reopens[0] as { where: { kind: string }; data: Record<string, unknown> };
+    expect(only.where.kind).toBe("SNAPSHOT_OUTCOME");
+    expect(only.data).toMatchObject({ status: "PENDING", completedAt: null });
+
+    const enqueued = h.work
+      .filter((w) => (w as { op?: string }).op === "createMany")
+      .flatMap((w) => ((w as { data?: Array<{ kind: string }> }).data ?? []).map((d) => d.kind));
+    expect(enqueued).toEqual(["SNAPSHOT_OUTCOME"]);
   });
 });
 
