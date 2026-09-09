@@ -720,11 +720,29 @@ export async function GET(request: Request) {
             n: calibrationEligibility.n,
             brier: calibrationEligibility.brier,
             ece: calibrationEligibility.ece,
+            /** C-290: what the ECE floor reads, and the sampling noise it corrects for. */
+            eceNoise: calibrationEligibility.eceNoise,
+            eceDebiased: calibrationEligibility.eceDebiased,
             mce: calibrationEligibility.mce,
             murphy: calibrationEligibility.murphy,
             floors: calibrationEligibility.floors,
             consecutiveGreen: calibrationEligibility.consecutiveGreen,
             streakRequired: calibrationEligibility.streakRequired,
+            /**
+             * C-275. The pooled ECE the floors are scored on can sit BELOW every
+             * stratum it is built from, so a pooled pass does not imply the
+             * DEPLOYED model is calibrated. These say whether the deployed
+             * version was additionally checked on its own rows, and on which
+             * slice.
+             *
+             * `?? false` / `?? null` are load-bearing, not defensive noise: a
+             * report replayed from a snap persisted before C-275 carries neither
+             * field, and `loadLatestEligibilitySnap` casts stored JSON without
+             * validating it. Reading them raw would surface `undefined` as if it
+             * were a measurement. Absent means "not checked", never "passed".
+             */
+            deployedVersionChecked: calibrationEligibility.deployedVersionChecked ?? false,
+            deployedVersion: calibrationEligibility.deployedVersion ?? null,
             modelVersion: calibrationEligibility.modelVersion,
             dateRange: calibrationEligibility.dateRange,
             generatedAt: calibrationEligibility.generatedAt,

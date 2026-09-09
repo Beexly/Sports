@@ -307,7 +307,7 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
 
     const built = picksToMarketAnchoredCalibrationSamples([soccer], { resolveMarketP: load.resolveMarketP });
     expect(built.included).toBe(0);
-    expect(built.excluded).toEqual({ three_way_market: 1, no_market_probability: 0, non_moneyline_market: 0 });
+    expect(built.excluded).toEqual({ three_way_market: 1, no_market_probability: 0, non_moneyline_market: 0, in_play: 0 });
   });
 
   it("issues exactly one odds query for N picks, bounded by their gameIds and latest generatedAt", async () => {
@@ -426,7 +426,7 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
 
     const built = picksToCalibrationSamples(picks, { resolveMarketP: load.resolveMarketP });
     expect(built.samples).toHaveLength(3);
-    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0 });
+    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0, in_play: 0 });
     expect(built.bySource).toEqual({ proof_receipt: 1, resolver: 1, resolver_single_book: 1 });
     expect(built.taggedSamples[1]).toEqual({
       p: 0.579712,
@@ -463,8 +463,8 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
       settledTo: built.settledTo,
     });
     // C-110 changed the sample definition, so the streak basis tag moved to v2.
-    expect(MARKET_ANCHORED_P_BASIS).toBe("market_anchored_v2");
-    expect(payload.pBasis).toBe("market_anchored_v2");
+    expect(MARKET_ANCHORED_P_BASIS).toBe("market_anchored_v3");
+    expect(payload.pBasis).toBe("market_anchored_v3");
     expect(payload.pSources).toEqual({ factor_breakdown: 0, proof_receipt: 1, market_p_from_odds_table: 1, market_p_single_book: 1 });
     expect(payload.marketPFromOddsTable).toEqual(load.stats);
     expect(payload.marketPFromOddsTable?.queries).toBe(1);
