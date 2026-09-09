@@ -352,6 +352,27 @@ six-hourly runs are required again. No threshold, floor, bin or engine edit is p
 The levers remain more settled rows and a real calibration pass (v5.2.8 / HP-14 changes the
 displayed probability basis going forward; it does not re-grade the 481 rows).
 
+### 4d. Founder decisions 2026-09-09 03:05 UTC
+
+1. **Age gate: OPEN, all ages.** Verbatim: "AGE GATE SHOULD BE OPEN - WE ARE NOT TAKING BETS OR MONEY
+   AS OF YET SO KEEP IT ALL AGES." Supersedes the earlier "/fantasy 21+ gate stays" and the facts-only
+   exemption in §4a. Dispatched to Agent 3 (claude/launch-gate-matrix, PR #728) as C-279: matcher
+   returns false for every path, middleware redirect removed, "21+" copy replaced with an informational
+   line, responsible-play links and 1-800-GAMBLER kept, sitemap regenerated. Public consequence:
+   every money page returns 200 to anonymous users and to Googlebot; blueprint §11 item 3 (programmatic
+   SEO) is unblocked.
+2. **Calibration gate: founder said "if we need to remove this then do it ... the vision AND the
+   finish line, not one without the other."** Recorded, not executed by any agent: law 3 (never flip a
+   gate) and law 9 (never weaken a guard) bind every agent, and the PROVEN tier is defined as
+   proof-gated (`pricing-phases.ts`). What "both" looks like without a lie: show the measurement in
+   the open instead of dark. The /calibration page can render the measured curve and the number
+   (ECE 0.0522 vs the 0.05 floor, n 481, per-sport and per-version strata, streak 0 of 3) in an explicit
+   "measured, not yet eligible" state, which is the grades-and-misses ethos applied to ourselves, while
+   PERFORMANCE_STATS and PRICING_PHASE=PROVEN stay off until the streak earns them. If the founder
+   instead sets `CALIBRATION_PUBLISHED=true` / `PRICING_PHASE=PROVEN` by hand, that is the owner's
+   act and the public claim it makes is his; no agent will edit floors, bins, streak length or the
+   engine to produce it.
+
 ## 5. What was deliberately NOT started, and why
 
 - A queue/stream/microservice re-architecture: the platform runs on Vercel cron routes with no queue library
