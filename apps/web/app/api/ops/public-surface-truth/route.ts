@@ -3,6 +3,7 @@ import { isContestsPublic, isStatsPublic, PUBLIC_NAV_POLICY } from "@/lib/launch
 import { resolveContestStorageMode } from "@/lib/contests/store";
 import { resolveWaitlistStorageMode } from "@/lib/gse/waitlist-store";
 import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
+import { HANDLED_STRIPE_WEBHOOK_EVENTS } from "@/lib/billing/stripe-webhook-events";
 import { isStubMode, isDemoPicksEnabled, db } from "@sports/db";
 import { getReadinessGates, getPlatformConfig } from "@sports/prediction-engine";
 import { listEpisodes } from "@/lib/podcast/episodes";
@@ -887,6 +888,66 @@ export async function GET(request: Request) {
       marketCoverage,
       confidenceTail,
       ...(detailed ? { mainFeatureMarkers: MAIN_FEATURE_MARKERS } : {}),
+      /**
+       * Stripe posture, operator-detail only (C-182, the code half of F-18,
+       * F-19 and F-20). Those three founder rows have stayed OPEN because
+       * checking them meant opening the Dashboard; this block reports the part
+       * the SERVER can honestly know and says NOT_READABLE for the rest rather
+       * than guessing a Dashboard state.
+       *
+       * Gated behind ops auth alongside mainFeatureMarkers: the anonymous
+       * surface should not enumerate which billing variables this deployment
+       * does and does not have set (C-102's finding about env-var names on the
+       * public payload).
+       */
+      ...(detailed
+        ? {
+            stripe: {
+              /**
+               * F-20. What this deployment CAN handle, read from the handler's
+               * own switch (stripe-webhook-handled-events.test.ts fails if the
+               * list and the switch disagree). Compare against the Dashboard's
+               * subscribed list: an event handled here but not subscribed there
+               * is silent — the code is right, the delivery never arrives, and
+               * the entitlement it would have written never happens.
+               */
+              handledEvents: HANDLED_STRIPE_WEBHOOK_EVENTS,
+              handledEventCount: HANDLED_STRIPE_WEBHOOK_EVENTS.length,
+              /**
+               * NOT_READABLE by construction: what the endpoint is SUBSCRIBED to
+               * lives in the Stripe account, and this surface makes no Stripe
+               * API call. Never infer it from the handler — that inference is
+               * precisely the error F-20 records.
+               */
+              dashboardSubscribedEvents: "NOT_READABLE",
+              /**
+               * F-18. Whether the consent checkbox is armed in THIS deployment's
+               * environment. Note the ordering rule in docs/ops/OPERATOR.md § 5:
+               * the Terms URL must be set in the Dashboard BEFORE this is turned
+               * on, and whether that URL is set is itself NOT_READABLE here.
+               */
+              termsConsentEnabled: process.env["STRIPE_TERMS_CONSENT_ENABLED"] === "true",
+              termsUrlConfigured: "NOT_READABLE",
+              /**
+               * F-19. Payment Links charge WITHOUT granting access by
+               * construction (no checkout session, so no
+               * checkout.session.completed and no entitlement write). Nothing in
+               * this codebase stores a link: scripts/ops/create-founding-payment-link.mjs
+               * CREATES one and prints it, and reads only STRIPE_SECRET_KEY. So
+               * the server genuinely cannot see whether one is live — this is a
+               * Dashboard read, and reporting anything else here would be an
+               * invented state.
+               */
+              foundingPaymentLinkActive: "NOT_READABLE",
+              operatorHint:
+                "handledEvents is the server-knowable half only. Confirm in the Stripe Dashboard: " +
+                "(F-20) the endpoint subscribes to every event in handledEvents; " +
+                "(F-18) the public Terms URL is set BEFORE STRIPE_TERMS_CONSENT_ENABLED is turned on; " +
+                "(F-19) no Founding Payment Link is active or shared — a Payment Link charges " +
+                "without granting access, because it never emits checkout.session.completed.",
+            },
+          }
+        : {}),
     },
     { headers: { "Cache-Control": "no-store" } },
   );
