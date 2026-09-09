@@ -12,6 +12,7 @@ import {
   stripeCheckoutSessionLookup,
   resolveCheckoutPriceId,
   findLiveStripeSubscription,
+  reconcileOpenCheckoutSessions,
 } from "@/lib/stripe";
 import {
   CheckoutAttemptPersistenceError,
@@ -259,6 +260,58 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
           code: "already_subscribed",
         },
         { status: 409 },
+      );
+    }
+
+    // C-185: reconcile the customer's OPEN Checkout Sessions before minting
+    // another one. The probe above asks whether a SUBSCRIPTION exists, which is
+    // only true once a payment has been attempted — so before that point two
+    // tabs with different clientIntentId values both saw "no subscription" and
+    // both walked away holding a payable session. The (userId,
+    // activeClientIntentId) unique constraint does not collide across DIFFERENT
+    // intents, and a token-less request has no intent to collide on at all, so
+    // nothing downstream caught it either. A Checkout Session, unlike a
+    // Subscription, exists from creation — which makes it the artifact that can
+    // actually be reconciled.
+    //
+    // Placed here, before getOrCreateCheckoutAttempt, so a reused session costs
+    // no new attempt row and no new Stripe idempotency key: the attempt backing
+    // the returned session is left exactly as it is, and the Idempotency-Key
+    // flow and AMBIGUOUS handling downstream are untouched.
+    const openSessions = await reconcileOpenCheckoutSessions(customerId, priceId);
+    if (openSessions.outcome === "unknown") {
+      // Includes "an open session exists that we could not retire". Minting
+      // now would leave two payable sessions, so refuse with no side effect —
+      // same fail-closed posture as the guards above.
+      console.error(
+        `[INCIDENT][checkout] could not reconcile open sessions for customer ${customerId} — ` +
+          `failing closed with 503, no new session minted: ${openSessions.reason}`,
+      );
+      return jsonNoStore(
+        {
+          error: "Checkout is temporarily unavailable. Please try again shortly.",
+          code: "checkout_session_reconcile_unavailable",
+        },
+        { status: 503 },
+      );
+    }
+    if (openSessions.outcome === "reusable") {
+      // Same plan, already payable. Hand back the SAME url — which is also what
+      // a same-intent replay would have returned further down, so the buyer's
+      // experience is unchanged and only the duplicate session is prevented.
+      console.warn(
+        `[checkout] reusing open session ${openSessions.sessionId} for customer ${customerId} ` +
+          "instead of minting a second payable session for the same plan",
+      );
+      return jsonNoStore({ url: openSessions.url });
+    }
+    if (openSessions.outcome === "superseded") {
+      // Different plan: the old sessions were payable and are now expired, so
+      // the customer cannot complete a plan they have navigated away from.
+      console.warn(
+        `[checkout] expired ${openSessions.expiredSessionIds.length} open session(s) for ` +
+          `customer ${customerId} before minting a ${tier}/${interval} session: ` +
+          openSessions.expiredSessionIds.join(", "),
       );
     }
 

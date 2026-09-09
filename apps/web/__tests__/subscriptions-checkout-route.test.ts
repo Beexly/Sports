@@ -22,6 +22,8 @@ const mocks = vi.hoisted(() => ({
   listSessionsByCustomerSince: vi.fn<(customerId: string, since: Date) => Promise<unknown[]>>(),
   // Stripe-side half of the double-subscribe guard (C-91).
   findLiveStripeSubscription: vi.fn<(customerId: string) => Promise<unknown>>(),
+  // C-185 open-session reconciliation.
+  reconcileOpenCheckoutSessions: vi.fn<(customerId: string, priceId: string) => Promise<unknown>>(),
 }));
 
 vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
@@ -35,6 +37,7 @@ vi.mock("@/lib/stripe", () => ({
     listSessionsByCustomerSince: mocks.listSessionsByCustomerSince,
   }),
   findLiveStripeSubscription: mocks.findLiveStripeSubscription,
+  reconcileOpenCheckoutSessions: mocks.reconcileOpenCheckoutSessions,
 }));
 const dbMock = vi.hoisted(() => ({
   subscriptionFindUnique: vi.fn<(args: unknown) => Promise<unknown>>(),
@@ -174,6 +177,105 @@ describe("POST /api/subscriptions/checkout", () => {
     // tests below override it.
     mocks.findLiveStripeSubscription.mockReset();
     mocks.findLiveStripeSubscription.mockResolvedValue({ outcome: "none" });
+    // No open sessions by default; the C-185 tests below override it.
+    mocks.reconcileOpenCheckoutSessions.mockReset();
+    mocks.reconcileOpenCheckoutSessions.mockResolvedValue({ outcome: "none" });
+  });
+
+  /**
+   * C-185 — two DISTINCT checkout intents for one user could each mint a
+   * payable Checkout Session.
+   *
+   * findLiveStripeSubscription asks whether a SUBSCRIPTION exists, which is only
+   * true once a payment has been attempted. Before that, two tabs with different
+   * clientIntentId values both saw "no subscription", both minted their own
+   * CheckoutAttempt — the (userId, activeClientIntentId) unique constraint does
+   * not collide across DIFFERENT intents, and a token-less request has no intent
+   * to collide on at all — and both walked away payable. Completing both charges
+   * the customer twice, every month.
+   *
+   * A Checkout Session exists from creation, so it is the artifact that can be
+   * reconciled. Every value below is a labelled fixture.
+   */
+  describe("C-185 open-session reconciliation", () => {
+    const SECOND_INTENT = "11112222-3333-4444-8555-666677778888";
+
+    it("a SECOND intent gets the first intent's session instead of a second payable one", async () => {
+      // The exact failure: same user, same plan, a DIFFERENT clientIntentId, and
+      // no subscription yet because nobody has paid.
+      mocks.findLiveStripeSubscription.mockResolvedValue({ outcome: "none" });
+      mocks.reconcileOpenCheckoutSessions.mockResolvedValue({
+        outcome: "reusable",
+        sessionId: "cs_open_first_intent",
+        url: "https://checkout.stripe.com/s/open_first_intent",
+      });
+
+      const res = await POST(checkoutRequest({ tier: "PRO", clientIntentId: SECOND_INTENT }));
+
+      expect(res.status).toBe(200);
+      expect((await res.json()).url).toBe("https://checkout.stripe.com/s/open_first_intent");
+      // The whole point: no second session, and no second idempotency key.
+      expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
+      expect(dbMock.attemptCreate).not.toHaveBeenCalled();
+    });
+
+    it("expires an open session for a DIFFERENT plan before minting", async () => {
+      // An open session is payable. Leaving one behind while minting another is
+      // the double-charge, so the old one is retired first.
+      mocks.reconcileOpenCheckoutSessions.mockResolvedValue({
+        outcome: "superseded",
+        expiredSessionIds: ["cs_open_other_plan"],
+      });
+
+      const res = await POST(checkoutRequest({ tier: "ELITE" }));
+
+      expect(res.status).toBe(200);
+      expect(mocks.createCheckoutSession).toHaveBeenCalled();
+    });
+
+    it("FAILS CLOSED with 503 when an open session cannot be read or retired", async () => {
+      // "unknown" covers both an unreadable listing and a failed expire. Either
+      // way, minting now could leave two payable sessions.
+      mocks.reconcileOpenCheckoutSessions.mockResolvedValue({
+        outcome: "unknown",
+        reason: "fixture: could not expire open session",
+      });
+
+      const res = await POST(checkoutRequest({ tier: "PRO" }));
+
+      expect(res.status).toBe(503);
+      expect((await res.json()).code).toBe("checkout_session_reconcile_unavailable");
+      expect(mocks.createCheckoutSession).not.toHaveBeenCalled();
+      expect(dbMock.attemptCreate).not.toHaveBeenCalled();
+    });
+
+    it("runs AFTER the live-subscription probe, so an existing subscriber still gets 409", async () => {
+      // Ordering matters: a member who already pays must be sent to the portal,
+      // not handed a checkout URL.
+      mocks.findLiveStripeSubscription.mockResolvedValue({
+        outcome: "live",
+        subscriptionId: "sub_already_live",
+        status: "active",
+      });
+      mocks.reconcileOpenCheckoutSessions.mockResolvedValue({
+        outcome: "reusable",
+        sessionId: "cs_open_stale",
+        url: "https://checkout.stripe.com/s/open_stale",
+      });
+
+      const res = await POST(checkoutRequest({ tier: "PRO" }));
+
+      expect(res.status).toBe(409);
+      expect(mocks.reconcileOpenCheckoutSessions).not.toHaveBeenCalled();
+    });
+
+    it("does not disturb the normal path when nothing is open", async () => {
+      const res = await POST(checkoutRequest({ tier: "PRO" }));
+
+      expect(res.status).toBe(200);
+      expect(mocks.reconcileOpenCheckoutSessions).toHaveBeenCalledWith("cus_123", "price_pro_monthly");
+      expect(mocks.createCheckoutSession).toHaveBeenCalled();
+    });
   });
 
   /**

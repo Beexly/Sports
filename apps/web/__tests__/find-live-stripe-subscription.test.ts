@@ -2,15 +2,18 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const mocks = vi.hoisted(() => ({
   subscriptionsList: vi.fn(),
+  sessionsList: vi.fn(),
+  sessionsExpire: vi.fn(),
 }));
 
 vi.mock("stripe", () => ({
   default: class {
     subscriptions = { list: mocks.subscriptionsList };
+    checkout = { sessions: { list: mocks.sessionsList, expire: mocks.sessionsExpire } };
   },
 }));
 
-import { findLiveStripeSubscription } from "@/lib/stripe";
+import { findLiveStripeSubscription, reconcileOpenCheckoutSessions } from "@/lib/stripe";
 
 /**
  * The Stripe-side half of the double-subscribe guard (C-91 / WP-14). Its answer
@@ -38,7 +41,128 @@ const page = (data: unknown[], hasMore = false) => ({ data, has_more: hasMore })
 
 beforeEach(() => {
   mocks.subscriptionsList.mockReset();
+  mocks.sessionsList.mockReset();
+  mocks.sessionsExpire.mockReset();
+  mocks.sessionsExpire.mockResolvedValue({});
   process.env["STRIPE_SECRET_KEY"] = "sk_test_fixture";
+});
+
+/** An open subscription-mode Checkout Session for `price`. */
+const openSession = (id: string, price: string, over: Record<string, unknown> = {}) => ({
+  id,
+  mode: "subscription",
+  url: `https://checkout.stripe.com/s/${id}`,
+  line_items: { data: [{ price: { id: price } }] },
+  ...over,
+});
+
+/**
+ * C-185, founder-ordered after Devin Review on #736. Two DISTINCT checkout
+ * intents for one user could each mint a payable Checkout Session, because the
+ * subscription probe only sees a Subscription once a payment has been
+ * attempted. A Checkout Session exists from creation, so it is the artifact
+ * that can actually be reconciled.
+ */
+describe("reconcileOpenCheckoutSessions", () => {
+  it("hands back an open session for the SAME price instead of minting a second", async () => {
+    mocks.sessionsList.mockResolvedValue(page([openSession("cs_same", "price_pro_monthly")]));
+
+    const probe = await reconcileOpenCheckoutSessions("cus_fixture", "price_pro_monthly");
+
+    expect(probe).toEqual({
+      outcome: "reusable",
+      sessionId: "cs_same",
+      url: "https://checkout.stripe.com/s/cs_same",
+    });
+    // Never expire the session we are about to reuse.
+    expect(mocks.sessionsExpire).not.toHaveBeenCalled();
+  });
+
+  it("expires an open session for a DIFFERENT price — an open session is payable", async () => {
+    mocks.sessionsList.mockResolvedValue(page([openSession("cs_other", "price_elite_annual")]));
+
+    const probe = await reconcileOpenCheckoutSessions("cus_fixture", "price_pro_monthly");
+
+    expect(probe).toEqual({ outcome: "superseded", expiredSessionIds: ["cs_other"] });
+    expect(mocks.sessionsExpire).toHaveBeenCalledWith("cs_other");
+  });
+
+  it("ignores non-subscription sessions", async () => {
+    // A one-off payment session is not a recurring double-charge risk and must
+    // not be expired out from under the customer.
+    mocks.sessionsList.mockResolvedValue(
+      page([openSession("cs_payment", "price_one_off", { mode: "payment" })]),
+    );
+
+    const probe = await reconcileOpenCheckoutSessions("cus_fixture", "price_pro_monthly");
+
+    expect(probe).toEqual({ outcome: "none" });
+    expect(mocks.sessionsExpire).not.toHaveBeenCalled();
+  });
+
+  it("treats an unreadable price as NOT the same plan and expires it (fail closed)", async () => {
+    mocks.sessionsList.mockResolvedValue(
+      page([openSession("cs_no_items", "price_pro_monthly", { line_items: { data: [] } })]),
+    );
+
+    const probe = await reconcileOpenCheckoutSessions("cus_fixture", "price_pro_monthly");
+
+    expect(probe).toEqual({ outcome: "superseded", expiredSessionIds: ["cs_no_items"] });
+  });
+
+  it("answers UNKNOWN when an open session cannot be EXPIRED — never mint alongside it", async () => {
+    // The sharpest case: we know a payable session exists and we could not
+    // retire it. Minting now is the double-charge.
+    mocks.sessionsList.mockResolvedValue(page([openSession("cs_stuck", "price_elite_annual")]));
+    mocks.sessionsExpire.mockRejectedValue(new Error("fixture: expire failed"));
+
+    const probe = await reconcileOpenCheckoutSessions("cus_fixture", "price_pro_monthly");
+
+    expect(probe.outcome).toBe("unknown");
+  });
+
+  it("answers UNKNOWN when the listing throws — never none", async () => {
+    mocks.sessionsList.mockRejectedValue(new Error("fixture: stripe unreachable"));
+
+    const probe = await reconcileOpenCheckoutSessions("cus_fixture", "price_pro_monthly");
+
+    expect(probe).toEqual({ outcome: "unknown", reason: "fixture: stripe unreachable" });
+  });
+
+  it("returns none only after exhausting the customer's open sessions", async () => {
+    mocks.sessionsList
+      .mockResolvedValueOnce(page([openSession("cs_pay", "p", { mode: "payment" })], true))
+      .mockResolvedValueOnce(page([openSession("cs_pay2", "p", { mode: "payment" })], false));
+
+    const probe = await reconcileOpenCheckoutSessions("cus_fixture", "price_pro_monthly");
+
+    expect(probe).toEqual({ outcome: "none" });
+    expect(mocks.sessionsList).toHaveBeenCalledTimes(2);
+  });
+
+  it("finds a reusable session on page two that a single-page read would have missed", async () => {
+    mocks.sessionsList
+      .mockResolvedValueOnce(page([openSession("cs_pay", "p", { mode: "payment" })], true))
+      .mockResolvedValueOnce(page([openSession("cs_same_p2", "price_pro_monthly")], false));
+
+    const probe = await reconcileOpenCheckoutSessions("cus_fixture", "price_pro_monthly");
+
+    expect(probe).toMatchObject({ outcome: "reusable", sessionId: "cs_same_p2" });
+  });
+
+  it("requests line_items so the price is actually readable", async () => {
+    mocks.sessionsList.mockResolvedValue(page([]));
+
+    await reconcileOpenCheckoutSessions("cus_fixture", "price_pro_monthly");
+
+    expect(mocks.sessionsList).toHaveBeenCalledWith(
+      expect.objectContaining({
+        customer: "cus_fixture",
+        status: "open",
+        expand: ["data.line_items"],
+      }),
+    );
+  });
 });
 
 describe("findLiveStripeSubscription", () => {
