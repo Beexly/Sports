@@ -138,7 +138,12 @@ export {
 } from "./proof-of-record.js";
 export type { HashFn, PickRecord, MerkleSibling, MerkleProof } from "./proof-of-record.js";
 // Pre-result proof receipt — freeze + verify a tamper-evident per-pick claim.
-export { buildPickProofReceipt, verifyPickProofReceipt } from "./pick-proof-receipt.js";
+export {
+  buildPickProofReceipt,
+  verifyPickProofReceipt,
+  isPlausibleEntryOdds,
+  ENTRY_ODDS_MIN_ABS,
+} from "./pick-proof-receipt.js";
 export type { PickProofInput, PickProofReceipt } from "./pick-proof-receipt.js";
 // Slate commitment (commit-reveal) — pre-register the whole population; kills cherry-picking.
 export {
