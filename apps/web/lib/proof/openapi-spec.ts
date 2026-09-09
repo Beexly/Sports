@@ -177,6 +177,7 @@ export function buildProofOpenApiSpec(opts: BuildProofOpenApiOptions = {}) {
             contentHash: { type: "string", pattern: "^[0-9a-f]{64}$" },
             slateKey: { type: ["string", "null"] },
             result: { type: "string" },
+            pickType: { type: ["string", "null"], description: "SPREAD | TOTAL | MONEYLINE — null only for orphaned receipts." },
             frozenAt: { type: "string" },
             modelVersion: { type: "string" },
             verified: { type: "boolean", description: "Server-side tamper check: hash intact AND columns match the hashed payload." },
