@@ -226,6 +226,27 @@ function confirmAll(_sportKey: string, probes: readonly { id: string }[]): Promi
 }
 
 const SPORT = { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" } as const;
+
+/**
+ * Kickoff fixtures are RELATIVE to real now, not a fixed calendar day.
+ *
+ * The suite used to anchor every game on a fixed day in June 2026, which has
+ * since gone past — and the C-299 kickoff guard refuses a game whose kickoff is
+ * not ahead of the run clock, so a rotted fixture would have read as "in play"
+ * and silently emptied the board these tests assert on. K is six hours out
+ * (inside the quiet-board horizon, like the espnBoard fixture below); every
+ * other clock is an offset from K, preserving the original relationships.
+ */
+const K_MS = Date.now() + 6 * 3_600_000;
+const at = (offsetMs: number) => new Date(K_MS + offsetMs).toISOString();
+/** kickoff */ const T_KICKOFF = at(0);
+/** two hours before kickoff */ const T_RUN_AT = at(-2 * 3_600_000);
+/** four hours before kickoff — a contest already under way */ const T_STARTED = at(-4 * 3_600_000);
+/** ESPN's corrected clock, 2.5h after the feed's */ const T_CORRECTED = at(2.5 * 3_600_000);
+/** five minutes after kickoff */ const T_KICKOFF_P5 = at(5 * 60_000);
+/** six hours ten minutes after kickoff */ const T_LATE = at(6 * 3_600_000 + 10 * 60_000);
+/** two hours before kickoff (twin row) */ const T_TWIN_EARLY = at(-2 * 3_600_000);
+/** two hours after kickoff (twin row) */ const T_TWIN_LATE = at(2 * 3_600_000);
 const MLB = { key: "baseball_mlb", name: "MLB", displayName: "MLB" } as const;
 /** Inside the 72h board window, measured from real now (fixtures must not rot). */
 const KICKOFF_IN_WINDOW = new Date(Date.now() + 6 * 3600 * 1000).toISOString();
@@ -247,7 +268,7 @@ function normalizedGame(overrides: Record<string, unknown> = {}): Record<string,
     externalId: "ext-1",
     homeTeam: "Chiefs",
     awayTeam: "Bills",
-    commenceTime: new Date("2026-06-12T17:00:00.000Z"),
+    commenceTime: new Date(T_KICKOFF),
     ...overrides,
   };
 }
@@ -359,7 +380,7 @@ describe("processSport", () => {
             "game-1",
             {
               status: "event_already_started",
-              event: { externalId: "espn:nfl:1", commenceTime: new Date("2026-06-12T13:00:00.000Z") },
+              event: { externalId: "espn:nfl:1", commenceTime: new Date(T_STARTED) },
             },
           ],
         ]),
@@ -387,8 +408,8 @@ describe("processSport", () => {
       // day, so a bare "New York" is an ambiguous city the matcher refuses;
       // the stored name confirms. ESPN-shaped TEST FIXTURE, injected fetch.
       const MLB = { key: "baseball_mlb", name: "MLB", displayName: "MLB" } as const;
-      const kickoff = new Date("2026-06-12T17:00:00.000Z");
-      const runAt = new Date("2026-06-12T15:00:00.000Z");
+      const kickoff = new Date(T_KICKOFF);
+      const runAt = new Date(T_RUN_AT);
       mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
         const where = (args as { where?: { externalId?: string; id?: string } }).where;
         return where?.externalId === "odds-api-1"
@@ -422,8 +443,8 @@ describe("processSport", () => {
       });
       const board = {
         events: [
-          espnEvent("501", "2026-06-12T17:05Z", "New York Yankees", "Tampa Bay Rays"),
-          espnEvent("502", "2026-06-12T23:10Z", "New York Mets", "Atlanta Braves"),
+          espnEvent("501", T_KICKOFF_P5, "New York Yankees", "Tampa Bay Rays"),
+          espnEvent("502", T_LATE, "New York Mets", "Atlanta Braves"),
         ],
       };
       const espnFetch = vi.fn<(url: string) => Promise<Response>>(
@@ -447,7 +468,12 @@ describe("processSport", () => {
         [expect.objectContaining({ id: "game-1", homeTeamName: "New York Yankees", awayTeamName: "Tampa Bay Rays" })],
       );
       expect(espnFetch).toHaveBeenCalledTimes(1);
-      expect(String(espnFetch.mock.calls[0]![0])).toContain("/baseball/mlb/scoreboard?dates=20260612");
+      // The board is fetched for the probe's own date. Derived from the same
+      // relative clock as the fixture, not a hard-coded day, so this cannot rot.
+      const probeDay = new Date(T_KICKOFF).toISOString().slice(0, 10).replace(/-/g, "");
+      expect(String(espnFetch.mock.calls[0]![0])).toContain(
+        `/baseball/mlb/scoreboard?dates=${probeDay}`,
+      );
       expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
       expect(result).toMatchObject({ status: "success", games: 1, picks: 1 });
       // Control on the same cached board: the feed's own name is refused.
@@ -504,7 +530,7 @@ describe("processSport", () => {
     });
 
     it("applies ESPN's kickoff to a confirmed old row when the batch carries a correction", async () => {
-      const corrected = new Date("2026-06-12T19:30:00.000Z");
+      const corrected = new Date(T_CORRECTED);
       mocks.confirmBatch.mockResolvedValue({
         status: "ok",
         eventsOnBoard: 1,
@@ -536,8 +562,8 @@ describe("processSport", () => {
     });
 
     it("keeps the feed kickoff in the row and in every input when the correction write fails", async () => {
-      const feedTime = new Date("2026-06-12T17:00:00.000Z");
-      const corrected = new Date("2026-06-12T19:30:00.000Z");
+      const feedTime = new Date(T_KICKOFF);
+      const corrected = new Date(T_CORRECTED);
       mocks.confirmBatch.mockResolvedValue({
         status: "ok",
         eventsOnBoard: 1,
@@ -764,6 +790,130 @@ describe("processSport", () => {
    * `rundown empty (2d): HTTP 429 rate_limited` on EVERY cycle for all four
    * in-season sports because our own cadence burned the quota by morning.
    */
+  /**
+   * C-299 — a pick is a claim made BEFORE the game, or it is not a pick.
+   *
+   * Measured on production 2026-09-09: 113 of 477 settled moneyline picks carry
+   * generatedAt >= games.commenceTime. One was generated 23 minutes after first
+   * pitch off in-play quotes and froze a proof receipt at marketFairProb 0.884
+   * on a game the other side went on to win. The existing C-111 guard reads the
+   * ESPN scoreboard's clock; this one reads the kickoff we actually priced.
+   */
+  describe("kickoff guard (C-299)", () => {
+    it("creates no pick for a game whose kickoff has already passed, and never reaches the scorer", async () => {
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ commenceTime: new Date(Date.now() - 23 * 60 * 1000) }),
+      ]);
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      // Never scored: the in-play game contributes no OddsInput at all, so no
+      // receipt can be minted off a live price either.
+      expect(mocks.scoreGames).toHaveBeenCalledWith([], expect.any(Date));
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(result).toMatchObject({ status: "success", skippedInPlay: 1 });
+      expect(warn.mock.calls.some((c) => /in-play, no pick/.test(String(c[0])))).toBe(true);
+      warn.mockRestore();
+    });
+
+    it("refuses at the kickoff instant itself, not only after it", async () => {
+      // The scorer's clock is `new Date()` inside processSport, so a kickoff set
+      // to "now" is at or a hair behind it — the `<=` boundary, not `<`.
+      mocks.normalizeGames.mockReturnValue([normalizedGame({ commenceTime: new Date() })]);
+      vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(result).toMatchObject({ skippedInPlay: 1 });
+      vi.mocked(console.warn).mockRestore?.();
+    });
+
+    it("never overwrites an existing PENDING pick once the kickoff has passed", async () => {
+      // The row exists and is PENDING — exactly the state the refresh cycle
+      // would rewrite (selection, line, confidence, factorBreakdown).
+      mocks.pickFindUnique.mockResolvedValue({
+        id: "pick-1",
+        result: "PENDING",
+        selection: "Chiefs -3.5",
+      });
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ commenceTime: new Date(Date.now() - 60 * 60 * 1000) }),
+      ]);
+      vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+      expect(mocks.pickUpsert).not.toHaveBeenCalled();
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(result).toMatchObject({ skippedInPlay: 1, picks: 0 });
+      vi.mocked(console.warn).mockRestore?.();
+    });
+
+    it("still prices a game five minutes from kickoff — no invented pre-game cushion", async () => {
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ commenceTime: new Date(Date.now() + 5 * 60 * 1000) }),
+      ]);
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(mocks.scoreGames).toHaveBeenCalledWith(
+        [expect.objectContaining({ gameId: "game-1" })],
+        expect.any(Date),
+      );
+      expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
+      expect(result).toMatchObject({ status: "success", picks: 1, skippedInPlay: 0 });
+    });
+
+    it("counts every in-play game and still prices the ones still ahead in the same cycle", async () => {
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ externalId: "ext-past-1", commenceTime: new Date(Date.now() - 3_600_000) }),
+        normalizedGame({ externalId: "ext-past-2", commenceTime: new Date(Date.now() - 600_000) }),
+        normalizedGame({ externalId: "ext-live", commenceTime: new Date(Date.now() + 3_600_000) }),
+      ]);
+      // Distinct rows per fixture: the default single-id mocks would collapse
+      // all three onto one game and the counter could never read more than 1.
+      const idFor = (externalId?: string) => `game-${externalId ?? "x"}`;
+      mocks.gameUpsert.mockImplementation(async (args: unknown) => {
+        const create = (args as { create?: { externalId?: string } }).create;
+        return { id: idFor(create?.externalId), homeTeamName: "Chiefs", awayTeamName: "Bills" };
+      });
+      mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
+        const where = (args as { where?: { externalId?: string; id?: string } }).where;
+        return where?.externalId ? { id: idFor(where.externalId), externalId: where.externalId } : null;
+      });
+      mocks.gameUpdate.mockImplementation(async (args: unknown) => {
+        const where = (args as { where?: { id?: string } }).where;
+        return { id: where?.id ?? "game-1", homeTeamName: "Chiefs", awayTeamName: "Bills" };
+      });
+      mocks.confirmBatch.mockImplementation((_s: string, probes: readonly { id: string }[]) =>
+        Promise.resolve({
+          status: "ok",
+          eventsOnBoard: probes.length,
+          byGameId: new Map(
+            probes.map((p) => [
+              p.id,
+              { status: "confirmed", event: { externalId: `espn:${p.id}` }, correctedCommenceTime: null },
+            ]),
+          ),
+        }),
+      );
+      vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(result).toMatchObject({ skippedInPlay: 2 });
+      // Only the game still ahead reaches the scorer.
+      expect(mocks.scoreGames).toHaveBeenCalledWith(
+        [expect.objectContaining({ gameId: "game-ext-live" })],
+        expect.any(Date),
+      );
+      vi.mocked(console.warn).mockRestore?.();
+    });
+  });
+
   describe("Rundown thin-fill rationing (C-278a)", () => {
     /** One thin NFL game inside the board window, one Rundown Kalshi quote for it. */
     function thinNflSlate() {
@@ -1642,7 +1792,7 @@ describe("processSport", () => {
       sportId: "sport-1",
       homeTeamName: "Kansas City Chiefs",
       awayTeamName: "Buffalo Bills",
-      commenceTime: new Date("2026-06-12T17:00:00.000Z"),
+      commenceTime: new Date(T_KICKOFF),
     };
 
     beforeEach(() => {
@@ -1726,12 +1876,12 @@ describe("processSport", () => {
       ]);
       // Two rows tie on kickoff distance → no honest winner.
       mocks.gameFindMany.mockResolvedValue([
-        { ...TWIN, id: "twin-a", commenceTime: new Date("2026-06-12T15:00:00.000Z") },
+        { ...TWIN, id: "twin-a", commenceTime: new Date(T_TWIN_EARLY) },
         {
           ...TWIN,
           id: "twin-b",
           externalId: "espn:americanfootball_nfl:401872656",
-          commenceTime: new Date("2026-06-12T19:00:00.000Z"),
+          commenceTime: new Date(T_TWIN_LATE),
         },
       ]);
 
@@ -1827,7 +1977,7 @@ describe("processSport", () => {
         // Stored home is the full name, stored away is city-only.
         homeTeamName: "New York Yankees",
         awayTeamName: "Tampa Bay",
-        commenceTime: new Date("2026-06-12T17:00:00.000Z"),
+        commenceTime: new Date(T_KICKOFF),
         mergedIntoGameId: null,
       };
       mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
