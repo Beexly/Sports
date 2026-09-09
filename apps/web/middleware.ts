@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkWaitlistGate } from "@/lib/waitlist/access-gate";
-import { AGE_COOKIE, isAgeGatedSurface } from "@/lib/age-verify/surface";
 
 /**
  * Middleware for route protection.
@@ -42,18 +41,19 @@ export function middleware(req: NextRequest): NextResponse {
     return NextResponse.next();
   }
 
-  // ── D-8 / S3 age attestation gate ─────────────────────────────────────────
-  // One-click 21+ cookie gate on every betting-analysis surface. Always on —
-  // no env flag (an off-switch on an age gate is the first thing a regulator
-  // asks about). /age-verify itself is not in AGE_GATED_PREFIXES, so the
-  // redirect target can never loop. This is a UX/attestation floor, not a
-  // real identity check; the money path has its own server-side
-  // assertAtLeast21 (apps/web/lib/auth/age-gate.ts) at checkout.
-  if (isAgeGatedSurface(pathname) && !req.cookies.has(AGE_COOKIE)) {
-    const verifyUrl = new URL("/age-verify", req.url);
-    verifyUrl.searchParams.set("next", pathname);
-    return NextResponse.redirect(verifyUrl);
-  }
+  // ── Age attestation gate: REMOVED from the public surfaces (C-291) ────────
+  // Founder decision 2026-09-09, verbatim: "AGE GATE SHOULD BE OPEN - WE ARE
+  // NOT TAKING BETS OR MONEY AS OF YET SO KEEP IT ALL AGES", then "APPROVED".
+  // The site publishes analysis and a public track record; it takes no wager.
+  // The one-click 21+ cookie redirect (D-8 / S3) that used to 302 every
+  // unattested visitor, crawlers included, off /board, /picks, /pricing,
+  // /performance and the other AGE_GATED_PREFIXES therefore no longer runs
+  // here. What stays: the /age-verify page itself, the AGE_GATED_PREFIXES
+  // registry (lib/age-verify/surface.ts) for any surface that opts back in,
+  // the responsible-play footer on every page, and the server-side
+  // assertAtLeast21 (apps/web/lib/auth/age-gate.ts) on the paid checkout,
+  // which is the only place money changes hands. Re-enabling the redirect is
+  // a founder decision, not an env flag.
 
   // ── Waitlist Basic Auth gate ──────────────────────────────────────────────
   // Protects /waitlist and /waitlist/* only.
