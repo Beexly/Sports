@@ -64,6 +64,11 @@ export const LINE_INTEGRITY_RCA_CODE: Extract<SettlementRootCauseCode, "LINE_NOT
 
 export const LINE_INTEGRITY_ACTOR = "system:settle-picks:line-integrity";
 export const LINE_INTEGRITY_MEMORY_SCOPE = "settlement.line-integrity";
+/**
+ * Scope for the sweep cursors. Separate from the action scope above so the
+ * ops counts (which filter on metadata.action) can never pick a cursor up.
+ */
+export const LINE_INTEGRITY_CURSOR_SCOPE = "settlement.line-integrity.cursor";
 export const LINE_INTEGRITY_POLICY_REF = "docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md";
 export const LINE_INTEGRITY_EVENT_SCHEMA_VERSION = 1;
 
@@ -72,6 +77,75 @@ export const LINE_INTEGRITY_VOID_CAP = 50;
 export const LINE_INTEGRITY_UNPUBLISH_CAP = 200;
 /** Cap on the sample arrays returned for the ops surface. */
 const SAMPLE_CAP = 20;
+
+/**
+ * Durable sweep cursor (Devin Review, #733 round 2).
+ *
+ * Both halves take the OLDEST `cap` candidates each cycle, and "candidate"
+ * means every published SPREAD/TOTAL pick in the relevant state — not just the
+ * defective ones, because "was this line quoted" needs the odds table and
+ * cannot be expressed in the `where`. So once the oldest `cap` rows are CLEAN,
+ * the same clean rows are re-selected every cycle forever and a defect sitting
+ * behind them is never reached. The lane would look healthy while making zero
+ * progress, and `remainingToVoid` — the founder's flip precondition — could
+ * never reach 0.
+ *
+ * The cursor is the last pick id inspected, appended to JarvisMemoryEvent
+ * (schema.prisma is frozen, so no new table or column). Each cycle resumes
+ * after it; when a sweep runs out of rows the cursor resets and the next sweep
+ * starts from the beginning. Re-inspecting a clean row costs one odds read and
+ * changes nothing, so wrapping is safe — and it is REQUIRED rather than
+ * one-and-done: a pick generated long ago can settle later and land behind a
+ * cursor that has already passed it.
+ */
+export type LineIntegrityHalfName = "void" | "unpublish";
+
+async function readCursor(
+  db: LineIntegrityDb,
+  half: LineIntegrityHalfName,
+): Promise<string | null> {
+  const rows = await db.jarvisMemoryEvent.findMany({
+    where: {
+      scope: LINE_INTEGRITY_CURSOR_SCOPE,
+      metadata: { path: ["half"], equals: half },
+    },
+    orderBy: { created_at: "desc" },
+    take: 1,
+    select: { metadata: true },
+  });
+  const meta = rows[0]?.metadata as { pickId?: unknown } | null | undefined;
+  return typeof meta?.pickId === "string" && meta.pickId.length > 0 ? meta.pickId : null;
+}
+
+async function writeCursor(
+  db: LineIntegrityDb,
+  half: LineIntegrityHalfName,
+  pickId: string | null,
+  now: Date,
+): Promise<void> {
+  const metadata = { half, pickId, lane: "line-integrity", at: now.toISOString() };
+  await db.jarvisMemoryEvent.create({
+    data: {
+      memory_type: "observation",
+      memory_state: "confirmed",
+      scope: LINE_INTEGRITY_CURSOR_SCOPE,
+      title: `Line integrity sweep cursor (${half})`,
+      summary:
+        pickId === null
+          ? `${half} sweep reached the end of the population; the next sweep restarts from the oldest pick.`
+          : `${half} sweep resumes after pick ${pickId}.`,
+      full_text: JSON.stringify(metadata),
+      source_type: "cron",
+      source_ref: "settle-picks:line-integrity",
+      source_timestamp: now,
+      actor: LINE_INTEGRITY_ACTOR,
+      owner: "system",
+      confidence: 100,
+      tags: ["line-integrity", "cursor", half],
+      metadata,
+    },
+  });
+}
 
 /** Pick markets that carry a points line. MONEYLINE has none and is out of scope. */
 export const LINE_INTEGRITY_MARKETS = ["SPREAD", "TOTAL"] as const;
@@ -268,6 +342,9 @@ export type LineIntegrityDb = {
   jarvisMemoryEvent: {
     create(args: Record<string, unknown>): Promise<unknown>;
     count(args: Record<string, unknown>): Promise<number>;
+    findMany(
+      args: Record<string, unknown>,
+    ): Promise<Array<{ metadata: unknown }>>;
   };
   $transaction(fn: (tx: LineIntegrityTx) => Promise<{ count: number }>): Promise<{ count: number }>;
 };
@@ -562,6 +639,7 @@ export async function voidDefectiveSettledPicks(input: {
 
   const now = input.now ?? new Date();
   const cap = input.cap ?? LINE_INTEGRITY_VOID_CAP;
+  const cursor = await readCursor(input.db, "void");
   const rows = await input.db.pick.findMany({
     where: {
       isPublished: true,
@@ -571,13 +649,18 @@ export async function voidDefectiveSettledPicks(input: {
       // Review, #733): every sibling lane scopes, this one did not.
       ...(input.sportKey ? { game: { sport: { key: input.sportKey } } } : {}),
     },
-    orderBy: [{ generatedAt: "asc" }],
+    orderBy: [{ id: "asc" }],
+    // Resume after the last row inspected, so clean rows cannot hold the
+    // oldest page forever and starve defects behind them. See readCursor.
+    ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
     take: cap + 1,
     select: LINE_INTEGRITY_PICK_SELECT,
   });
   half.capReached = rows.length > cap;
   const candidates = rows.slice(0, cap);
   half.inspected = candidates.length;
+  // Advance, or reset when this sweep ran out of rows so the next one wraps.
+  await writeCursor(input.db, "void", half.capReached ? candidates[candidates.length - 1]!.id : null, now);
 
   for (const row of candidates) {
     const verdict = await verdictFor(input.db, row, half);
@@ -663,6 +746,7 @@ export async function unpublishDefectiveUnsettledPicks(input: {
 
   const now = input.now ?? new Date();
   const cap = input.cap ?? LINE_INTEGRITY_UNPUBLISH_CAP;
+  const cursor = await readCursor(input.db, "unpublish");
   const rows = await input.db.pick.findMany({
     where: {
       isPublished: true,
@@ -670,13 +754,15 @@ export async function unpublishDefectiveUnsettledPicks(input: {
       pickType: { in: [...LINE_INTEGRITY_MARKETS] },
       ...(input.sportKey ? { game: { sport: { key: input.sportKey } } } : {}),
     },
-    orderBy: [{ generatedAt: "asc" }],
+    orderBy: [{ id: "asc" }],
+    ...(cursor ? { cursor: { id: cursor }, skip: 1 } : {}),
     take: cap + 1,
     select: LINE_INTEGRITY_PICK_SELECT,
   });
   half.capReached = rows.length > cap;
   const candidates = rows.slice(0, cap);
   half.inspected = candidates.length;
+  await writeCursor(input.db, "unpublish", half.capReached ? candidates[candidates.length - 1]!.id : null, now);
 
   for (const row of candidates) {
     const verdict = await verdictFor(input.db, row, half);

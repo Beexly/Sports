@@ -83,12 +83,21 @@ function makeDb(args: {
         pickQueries.push(q);
         const where = q["where"] as Record<string, unknown>;
         const scoped = (where["game"] as { sport?: { key?: string } } | undefined)?.sport?.key;
-        return args.picks.filter((p) => {
+        let rows = args.picks.filter((p) => {
           if (scoped && p.game.sport?.key !== scoped) return false;
           if (where["result"] === "PENDING") return p.result === "PENDING";
           const r = where["result"] as { in?: string[] } | undefined;
           return r?.in ? r.in.includes(p.result) : true;
         });
+        // Prisma cursor + skip:1 semantics, on the id ordering the lane asks for.
+        rows = [...rows].sort((a, b) => a.id.localeCompare(b.id));
+        const cur = (q["cursor"] as { id?: string } | undefined)?.id;
+        if (cur) {
+          const at = rows.findIndex((p) => p.id === cur);
+          rows = at >= 0 ? rows.slice(at + 1) : rows;
+        }
+        const take = q["take"] as number | undefined;
+        return take === undefined ? rows : rows.slice(0, take);
       },
       updateMany: async (q: Record<string, unknown>) => {
         pickUpdates.push(q);
@@ -105,6 +114,18 @@ function makeDb(args: {
     jarvisMemoryEvent: {
       create: async (q: Record<string, unknown>) => memories.push(q),
       count: async () => 0,
+      // Cursor store: newest matching write wins, exactly as readCursor's
+      // created_at DESC take 1 does against the real table.
+      findMany: async (q: Record<string, unknown>) => {
+        const where = q["where"] as Record<string, unknown>;
+        const halfName = (where["metadata"] as { equals?: string } | undefined)?.equals;
+        const matches = memories
+          .map((m) => (m["data"] as Record<string, unknown>))
+          .filter((d) => d["scope"] === "settlement.line-integrity.cursor")
+          .filter((d) => (d["metadata"] as { half?: string }).half === halfName);
+        const last = matches[matches.length - 1];
+        return last ? [{ metadata: last["metadata"] }] : [];
+      },
     },
     $transaction: async (fn: (tx: never) => Promise<{ count: number }>) =>
       fn({
@@ -135,10 +156,16 @@ function makeDb(args: {
         },
       } as never),
   };
+  /** Only the VOID/UNPUBLISH records — cursor writes live in the same table. */
+  const actions = (): Array<Record<string, unknown>> =>
+    memories.filter(
+      (m) => (m["data"] as Record<string, unknown>)["scope"] === "settlement.line-integrity",
+    );
   return {
     db: db as unknown as LineIntegrityDb,
     pickUpdates,
     memories,
+    actions,
     work,
     pickQueries,
     oddsQueries: () => oddsQueries,
@@ -273,7 +300,7 @@ describe("VOID half with the flag ON", () => {
     const half = await voidDefectiveSettledPicks({ db: h.db, enabled: true, now: PUBLISH });
     expect(half.acted).toBe(1);
     expect(half.skippedByReason.WRITE_FAILED).toBe(0);
-    const mem = h.memories[0]!["data"] as Record<string, unknown>;
+    const mem = h.actions()[0]!["data"] as Record<string, unknown>;
     expect(mem["scope"]).toBe("settlement.line-integrity");
     expect(mem["metadata"]).toMatchObject({ action: "VOID", rcaCode: "LINE_NOT_QUOTED" });
   });
@@ -289,7 +316,7 @@ describe("VOID half with the flag ON", () => {
   it("carries the grading line, the drifting line and the source ids as evidence", async () => {
     const h = makeDb({ picks: [pickRow()], odds: defectiveOdds });
     await voidDefectiveSettledPicks({ db: h.db, enabled: true, now: PUBLISH });
-    const meta = (h.memories[0]!["data"] as Record<string, unknown>)["metadata"] as Record<string, unknown>;
+    const meta = (h.actions()[0]!["data"] as Record<string, unknown>)["metadata"] as Record<string, unknown>;
     const evidence = meta["evidence"] as Record<string, unknown>;
     expect(evidence).toMatchObject({ gradingLine: -3.25, storedLine: -3.25, bookLine: -3, priorResult: "LOSS" });
     expect(evidence["sourceIds"]).toEqual(["o1", "o2"]);
@@ -301,7 +328,7 @@ describe("VOID half with the flag ON", () => {
     const h = makeDb({ picks: [pickRow({ line: -3.5, clvLockLine: -3.25 })], odds: defectiveOdds });
     const half = await voidDefectiveSettledPicks({ db: h.db, enabled: true, now: PUBLISH });
     expect(half.acted).toBe(1);
-    const meta = (h.memories[0]!["data"] as Record<string, unknown>)["metadata"] as Record<string, unknown>;
+    const meta = (h.actions()[0]!["data"] as Record<string, unknown>)["metadata"] as Record<string, unknown>;
     expect((meta["evidence"] as Record<string, unknown>)["gradingLine"]).toBe(-3.25);
   });
 
@@ -331,7 +358,7 @@ describe("VOID half with the flag ON", () => {
     const h = makeDb({ picks: [pickRow()], odds: [odds("r", "rundown_default", -3.25)] });
     const half = await voidDefectiveSettledPicks({ db: h.db, enabled: true, now: PUBLISH });
     expect(half.acted).toBe(1);
-    const meta = (h.memories[0]!["data"] as Record<string, unknown>)["metadata"] as Record<string, unknown>;
+    const meta = (h.actions()[0]!["data"] as Record<string, unknown>)["metadata"] as Record<string, unknown>;
     expect((meta["evidence"] as Record<string, unknown>)["defect"]).toBe("NO_QUOTE_ROWS");
   });
 
@@ -341,7 +368,7 @@ describe("VOID half with the flag ON", () => {
     const half = await voidDefectiveSettledPicks({ db: h.db, enabled: true });
     expect(half.acted).toBe(0);
     expect(half.skippedByReason.ODDS_READ_FAILED).toBe(1);
-    expect(h.memories).toHaveLength(0);
+    expect(h.actions()).toHaveLength(0);
   });
 
   it("skips MONEYLINE, which carries no line", async () => {
@@ -367,7 +394,7 @@ describe("VOID half with the flag ON", () => {
     const second = await voidDefectiveSettledPicks({ db: h.db, enabled: true });
     expect(second.inspected).toBe(0);
     expect(second.acted).toBe(0);
-    expect(h.memories).toHaveLength(1);
+    expect(h.actions()).toHaveLength(1);
   });
 
   it("a sport-scoped cycle cannot act on another sport", async () => {
@@ -389,6 +416,69 @@ describe("VOID half with the flag ON", () => {
   });
 });
 
+describe("the sweep cursor — capped cycles must make progress", () => {
+  const quotes: OddsRow[] = [odds("o1", "a", -3), odds("o2", "b", -3.5)];
+
+  /** Two CLEAN picks (-3.5 is quoted) ahead of one DEFECTIVE pick (-3.25). */
+  const population = (): LineIntegrityPickRow[] => [
+    pickRow({ id: "a-clean", line: -3.5 }),
+    pickRow({ id: "b-clean", line: -3.5 }),
+    pickRow({ id: "c-defect", line: -3.25 }),
+  ];
+
+  it("reaches a defect sitting behind a full page of valid picks", async () => {
+    const picks = population();
+    const h = makeDb({ picks, odds: quotes });
+    // Cap 2: cycle one sees only the two clean rows and acts on nothing.
+    const first = await voidDefectiveSettledPicks({ db: h.db, enabled: true, cap: 2, now: PUBLISH });
+    expect(first.inspected).toBe(2);
+    expect(first.acted).toBe(0);
+    expect(first.capReached).toBe(true);
+
+    // Cycle two resumes AFTER them and finds the defect. Without the cursor
+    // this would re-select the same two clean rows forever and the defect
+    // would never be voided (Devin Review, #733 round 2).
+    const second = await voidDefectiveSettledPicks({ db: h.db, enabled: true, cap: 2, now: PUBLISH });
+    expect(second.acted).toBe(1);
+    expect(second.actions[0]!.pickId).toBe("c-defect");
+  });
+
+  it("wraps once the sweep runs out, so later arrivals are not stranded", async () => {
+    const picks = population();
+    const h = makeDb({ picks, odds: quotes });
+    await voidDefectiveSettledPicks({ db: h.db, enabled: true, cap: 2, now: PUBLISH });
+    const second = await voidDefectiveSettledPicks({ db: h.db, enabled: true, cap: 2, now: PUBLISH });
+    expect(second.capReached).toBe(false); // end of population -> cursor resets
+    // A pick generated long ago can settle later and land BEHIND the cursor,
+    // so the next sweep must start over rather than stop.
+    const before = h.pickQueries.length;
+    const third = await voidDefectiveSettledPicks({ db: h.db, enabled: true, cap: 2, now: PUBLISH });
+    expect(third.inspected).toBe(2);
+    // The third sweep issued its query with NO cursor — it restarted.
+    expect(h.pickQueries[before]!["cursor"]).toBeUndefined();
+    expect(third.actions).toEqual([]); // the two it re-inspects are the clean ones
+  });
+
+  it("the unpublish half keeps its own cursor, independent of the void half", async () => {
+    const h = makeDb({
+      picks: [
+        pickRow({ id: "s1", line: -3.5 }),
+        pickRow({ id: "p1", line: -3.5, result: "PENDING", settledAt: null }),
+        pickRow({ id: "p2", line: -3.25, result: "PENDING", settledAt: null }),
+      ],
+      odds: quotes,
+    });
+    await voidDefectiveSettledPicks({ db: h.db, enabled: true, cap: 1, now: PUBLISH });
+    // The void half advanced its own cursor; the unpublish half starts fresh.
+    const un = await unpublishDefectiveUnsettledPicks({ db: h.db, enabled: true, cap: 1, now: PUBLISH });
+    expect(un.inspected).toBe(1);
+    expect(un.acted).toBe(0); // p1 is clean; the cursor lets p2 come next cycle
+    const un2 = await unpublishDefectiveUnsettledPicks({ db: h.db, enabled: true, cap: 1, now: PUBLISH });
+    expect(un2.acted).toBe(1);
+    expect(un2.actions[0]!.pickId).toBe("p2");
+  });
+});
+
 describe("UNPUBLISH half with the flag ON", () => {
   const defectiveTotals: OddsRow[] = [odds("t1", "a", null, 44), odds("t2", "b", null, 44.5)];
 
@@ -405,8 +495,8 @@ describe("UNPUBLISH half with the flag ON", () => {
     expect(h.pickUpdates[0]!["data"]).toEqual({ isPublished: false });
     // Never deleted, never graded: it stays PENDING.
     expect(h.pickUpdates[0]!["where"]).toMatchObject({ result: "PENDING", isPublished: true });
-    expect(h.memories).toHaveLength(1);
-    const mem = h.memories[0]!["data"] as Record<string, unknown>;
+    expect(h.actions()).toHaveLength(1);
+    const mem = h.actions()[0]!["data"] as Record<string, unknown>;
     expect(mem["metadata"]).toMatchObject({ action: "UNPUBLISH", storedLine: 44.333333333333336 });
   });
 
