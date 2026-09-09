@@ -11,7 +11,6 @@ import {
   annualMonthlyEquivalent,
   GRANDFATHER_GUARANTEE as LIFETIME_PRICE_NOTE,
   PRICING_PHASES,
-  type PricingPhaseId,
 } from "@/lib/pricing/pricing-phases";
 import { BRAND_NAME, BRAND_COLORS } from "@/lib/brand";
 import { Reveal } from "@/components/motion/reveal";
@@ -39,28 +38,17 @@ import { PricingPageAnalytics } from "@/components/pricing/pricing-page-analytic
 const phase = getCurrentPricingPhase();
 
 /**
- * Phase-aware hero copy. FOUNDING invites backing before the record exists;
- * every later phase names the milestone that earned it. The fixed-price promise and
- * grandfathering promise is the same in every phase.
+ * Phase-aware hero copy, derived from the ladder itself so this file carries
+ * no phase claim of its own: the headline names the current phase and the
+ * sub-line is that phase's addedValue from pricing-phases.ts. The fixed-price
+ * promise and grandfathering are the same in every phase.
  */
-const PHASE_HEADLINE: Record<PricingPhaseId, { headline: string; sub: string }> = {
-  FOUNDING: {
-    headline: "Claim the founding rate.",
-    sub: "Start free. Back us before the record exists and your price never moves, even as it rises for everyone who joins later.",
-  },
-  PROVEN: {
-    headline: "The record is public. Claim the Proven rate.",
-    sub: "Start free. The calibration report is live and gated in public. Your price is fixed the day you join, even as it rises at the next milestone. Founding members keep their founding rate.",
-  },
-  ESTABLISHED: {
-    headline: "Verified against the closing line. Claim the Established rate.",
-    sub: "Start free. Closing-line value is verified in public. Your price is fixed the day you join; earlier members keep theirs.",
-  },
-  AUTHORITY: {
-    headline: "A multi-season public record. Claim the Authority rate.",
-    sub: "Start free. The record spans seasons and stays public. Your price is fixed the day you join; earlier members keep theirs.",
-  },
-};
+const HERO_HEADLINE =
+  phase.id === "FOUNDING" ? "Claim the founding rate." : `Claim the ${phase.name} rate.`;
+const HERO_SUB =
+  phase.id === "FOUNDING"
+    ? "Start free. Back us before the record exists and your price never moves, even as it rises for everyone who joins later."
+    : `Start free. ${phase.addedValue} Your price is fixed the day you join; earlier members keep theirs.`;
 
 export const metadata: Metadata = {
   title: "Pricing: Founding-Member Rates, Locked For Life",
@@ -359,12 +347,12 @@ export default function PricingPage() {
             </Reveal>
             <Reveal delay={90}>
               <h1 className="mt-3 font-display text-display-xl text-balance text-white">
-                {PHASE_HEADLINE[phase.id].headline}
+                {HERO_HEADLINE}
               </h1>
             </Reveal>
             <Reveal delay={180}>
               <p className="mx-auto mt-4 max-w-xl text-lg text-ink-300">
-                {PHASE_HEADLINE[phase.id].sub}
+                {HERO_SUB}
               </p>
             </Reveal>
             <Reveal delay={260}>
