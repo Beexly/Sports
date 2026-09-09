@@ -30,6 +30,120 @@ before re-fixing anything from that list. The ledger guard now also prints
 SLA warnings: a CLAIMED row with no evidence or an OPEN row with evidence but
 no owner will be called out on every guard run — resolve or re-own them.
 
+**UPDATED 2026-09-07: C-119 (MLB run-line consensus contamination) — root cause fixed and
+shipped, on `claude/gse-gsn-architecture-research-3iidd4`; two pieces stay open, both marked
+below rather than guessed at.** Founder measurement: 568/1116 published spread picks carry a
+line no book quoted; NCAAF's share of that (three real per-book quotes averaging to an
+unquotable-but-legitimate consensus, e.g. -3/-3.5/-3 -> -3.1667) is NOT a bug — do not build a
+blanket "must be quoted" refusal, it would kill 72% of the NCAAF board for a correct behavior.
+MLB is the real exposure: only 370/725 published MLB spread picks sit on a real run line, and
+8/12 bookmakers carry impossible MLB spreads (11,112/426,019 rows, up to 19.5) across 45% of
+MLB games — a pattern that (low per-row rate, broad per-book/per-game spread) is the signature
+of a missing validation gate, not one bad source or one mis-keyed field.
+**Root cause, confirmed by code, not by guessing:** `packages/data-ingestion/src/normalizer.ts`
+sanitizes bookmaker PRICES (`sanitizeAmericanPrice`, guarding the exact same "upstream didn't
+honor the contract" failure mode already named in that function's own comment as the root of
+the earlier "Edge Index 100" board bug) but never sanitized the spread POINT — `spread:
+home?.point` shipped raw straight into `packages/prediction-engine/src/scoring.ts`'s
+`avgSpread` mean (`scoreSpreadPick`, line ~394) and then onto the published pick's `line`
+field (line ~615).
+**Fixed:** added `sanitizeSpreadPoint()` alongside `sanitizeAmericanPrice()` in
+`normalizer.ts`, scoped ONLY to `baseball_mlb`/`icehockey_nhl` (`FIXED_LINE_SPORTS`), rejecting
+any point beyond +/-6 — deliberately generous (a real run/puck line is ~+/-1.5, rare alt lines
+to +/-2.5) so it can never touch a legitimate quote, while still killing the 19.5-class
+contamination actually observed. NFL/NCAAF/NBA/NCAAB are untouched — their wide spread
+dispersion is real. This lives entirely in `packages/data-ingestion`, upstream of
+`packages/prediction-engine`: it changes what data is ADMITTED as a real quote, not the
+scoring formula, so it does not touch `MODEL_VERSION` (`model-freeze` guard still passes) and
+needs no version bump. Once garbage quotes are excluded, `scoreSpreadPick`'s existing mean runs
+over genuine quotes only — for a structurally-clustered market that lands on or near a real
+quoted value far more often than not, without a publish-time "snap" and without refusing the
+pick. Validated: `npx tsc --noEmit -p packages/data-ingestion/tsconfig.json` (0 errors),
+`npx vitest run packages/data-ingestion/src/__tests__/` (391/391), `npx vitest run
+packages/ingestion-pipeline/src/__tests__/` (389/389, 6 pre-existing skips unrelated), `npm run
+guardrails` (26/26 including model-freeze). 3 new tests added (real MLB run line survives;
+19.5-magnitude MLB contamination dropped; a genuine 45-point NCAAF blowout line is untouched).
+**What is NOT done, and why — both need something this session does not have:**
+(1) **The exact bound (6) is a conservative first pass, not confirmed against production
+data.** No live DB access here (Law 7) — nobody has run the query that would confirm this
+mechanism against the real 11,112 contaminated rows or tighten the bound. Whoever has DB access
+should group those rows by `bookmaker` and confirm excluding them (keeping >=2 real quotes)
+recovers a real quoted average on the 355 currently-unresolvable MLB picks; that also validates
+whether 6 is the right number or should move.
+(2) **NHL is assumed, not measured** — C-119's numbers are MLB-only; the puck line shares MLB's
+fixed-line structure so the same fix was applied, but nobody has run NHL's equivalent query to
+confirm the same contamination pattern actually exists there.
+(3) **Any residual after this fix** — games where too few genuine quotes remain post-filter, or
+where real alt-line mixing still produces an unquotable mean — still needs the void-lane
+fallback (the founder's original option 1), sized to whatever's actually left, not 49% of the
+board. Not sized or built this pass; needs the query in (1) first to know if it's even
+meaningfully nonzero.
+(4) **The mean-vs-median question for fixed-line markets stays out of scope on purpose** — that
+edit would live inside `packages/prediction-engine/src/scoring.ts` itself (MODEL_VERSION-frozen
+territory) and was explicitly sequenced by the founder for after 2026-09-13. This fix was
+designed specifically to get most of the recovery without needing that bump at all; if the
+query in (1) shows a meaningful residual even after clean inputs, the median question is the
+next lever, on schedule, not before.
+
+**UPDATED 2026-09-07 (second pass): C-119's root cause above was real but incomplete — a
+sharper mechanism was found by direct Neon SQL (`summer-brook-99380762`, production), fixed,
+and shipped on this same branch. Read this before touching `sanitizeSpreadPoint()`'s bound or
+the fixture-confirmation guard again.** The magnitude-bound story ("garbage quotes up to 19.5")
+undersold the exposure: querying the live `picks` table directly (not just `odds`) shows
+**259 of 735 published MLB SPREAD picks (35%) carry a `line` field with `|line| > 1.5`** — an
+impossible run line — as of this session, including picks settled as recently as
+2026-09-06T02:45 UTC, i.e. this was still actively happening, not just historical residue. Most
+of these sit in the 3.5-6.5 range, comfortably inside the already-shipped +/-6 bound, so
+deploying that fix alone would not have caught them. Root cause, confirmed by reading one
+game's full odds history end to end (Rangers @ Angels, `cmt56muo10gq6qvfgy2hhecqd`,
+2026-08-23): **every one of 11 books quoted a clean, unanimous -1.5 run line continuously for
+16 straight hours before kickoff — the free ESPN scoreboard confirmed this game "not started"
+on every one of those cycles — and then the market genuinely went live at kickoff** (in-play
+run line escalating past -5.5 as the game progressed). A later cycle, still inside that live
+window, still read "confirmed" from `FixtureConfirmer` and wrote `-3.75` into the pick's
+persisted `line` — a number no book ever quoted pre-game. That `-3.75` is what
+`apps/web/app/api/picks/route.ts` serves to every viewer as the pick's spread (`line: pick.line`
+at its line ~274): this is customer-facing, not an internal artifact. Critically,
+`pick.line`/`pick.selection` are BY DESIGN refreshed on every ingestion cycle while a pick is
+PENDING (`packages/ingestion-pipeline/src/process-sport.ts`'s `pickUpdateData`) — the "current
+line" Pro-tier users see as market movement — while grading/settlement correctly uses the
+write-once `clvLockLine` instead (`settle-sport.ts`'s own comment: "NOT pick.line, which can
+drift on every refresh cycle while the pick is PENDING"). So settlement was never
+mis-graded by this bug; only the live-displayed line was wrong, for up to 35% of MLB spread
+picks, for as long as they stayed PENDING.
+Fixed (this branch, commit after `c595bc5`): a second, ESPN-independent kickoff guard in
+`process-sport.ts`, right after `kickoff` is resolved (including any ESPN correction) and before
+`gameOdds`/`OddsInput` are built. It does not trust `FixtureConfirmer`'s "confirmed" verdict
+alone — it independently refuses to score or refresh a game whose OWN resolved kickoff is
+already at or before this cycle's `fetchedAt` (`new Date()`, this cycle's real wall-clock time),
+the same authoritative kickoff already trusted for settlement and CLV grading. This closes the
+exact mechanism proven above regardless of why ESPN's status lagged (a delay, a postponement it
+hadn't reflected yet, or anything else) — it is a defense-in-depth check on data already in
+hand, not a fix to ESPN's own data. Scoped to one file, no schema/migration/gate touched.
+Validated: `npx tsc --noEmit -p packages/ingestion-pipeline/tsconfig.json` (0 errors),
+`npx vitest run packages/ingestion-pipeline/src/__tests__/` (390/390, 6 pre-existing skips), `npm
+run guardrails` (26/26). One new regression test added
+(`process-sport.test.ts`, "generates no pick when ESPN reports confirmed but the game's own
+kickoff is already at/before this cycle's fetch time"); five pre-existing tests in the same file
+had their kickoff fixtures moved from a hardcoded calendar date to a real-clock-relative one —
+they were unknowingly relying on "2026-06-12" still being in the future, which this same-shaped
+guard now correctly refuses now that real time has passed it.
+**What this does NOT fix, honestly:** (1) The 259 already-contaminated picks currently in
+production keep their wrong `line` until they next refresh (if still PENDING) or stay wrong
+forever (if already settled/frozen) — this fix stops new contamination, it does not repair
+history; a backfill/repair pass for currently-PENDING contaminated rows is a separate, not yet
+scoped task. (2) The earlier +/-6 `sanitizeSpreadPoint()` bound in `normalizer.ts` is still
+correct to keep as defense-in-depth (it catches genuinely extreme values from a source-level
+data error, a different failure mode than this timing gap) but should not be read as "the C-119
+fix" on its own — this kickoff guard is the primary mechanism for the 259-pick exposure measured
+above. (3) NHL puck line was never independently re-measured this pass either (still assumed,
+per the original C-119 note) — the same kickoff guard applies to it for free since it's
+sport-agnostic, but nobody has confirmed NHL had this same live-line pattern in its own data.
+(4) The exact ESPN-lag mechanism (why this specific game's "confirmed" status didn't flip to
+"event_already_started" in time) was not root-caused inside ESPN's own data — a delay/
+postponement flag ESPN hadn't reflected yet is the leading hypothesis, not a proven one; the fix
+above does not depend on knowing this, since it no longer trusts ESPN's status alone.
+
 **UPDATED 2026-09-06 (16:40 UTC): PROVEN IS NOT CLOSE. Calibration eligibility reads RED on
 production and F-36's precondition cannot be met on current data. Do not wait for a publish
 receipt and do not flip anything.** Measured read of
@@ -200,6 +314,566 @@ TCI, SEC) with entry files and acceptance commands. Ledger rows C-80..C-103 and 
 - Settlement CRITICAL (36 overdue) root causes are fixed on the PR branch, not on main:
   ESPN `limit=1000` truncation, matcher containment on 2-3 letter abbreviations and bare
   club tokens, overdue-only runner slice, backfill date order. Do not re-fix them; land #707.
+
+**UPDATED 2026-09-06 — External repo leverage audit complete; nothing installed.**
+Two rounds independently fact-checked (license fetched raw, real commit history, not
+star counts) a set of MCP/RAG/code-graph/agent-memory repos for GSE/GSN fit. Full detail:
+`docs/ai/airwave/GSE_GSN_REPO_LEVERAGE_AUDIT_2026-09.md`. Nothing was installed, no schema
+changed, no account created — every item needs the founder personally, per Law 2 (frozen
+`package-lock.json`/`packages/db/prisma/**`), Law 7/8 (no autonomous package installs), or
+because it needs an external account an agent can't create. A same-session attempt to add
+`@playwright/mcp` to `.mcp.json` was denied by this session's own tool permissions, not by
+AGENTS.md — confirming even the lowest-risk item on the list needs a human hand on it.
+Founder-only next actions, fastest-value first: (1) add `@playwright/mcp` to `.mcp.json`
+for supervised console-step 2FA/SSO (never for unattended autonomous browsing — still
+gated by the clearance-engine rule same as any extraction); (2) Helicone free-tier signup
++ Claude-API proxy URL swap (LLM cost tracing, zero new dependency); (3) approve
+`npm install @orama/orama` (local search — the single most-requested item across the prior
+audit's own domains). Do not approve mem0 AND mcp-memory-service together — two competing
+agent-memory stores is a regression, not a leverage gain. **Round 3 landed same-day**:
+a broader, six-area exploratory sweep (same doc, new section) — highlights: the
+TheRundown 429 incident has a free, no-new-vendor fix (a Redis daily-quota counter GSE
+already has the connection for); a real CC-BY-4.0 nflverse-equivalent exists for
+NBA/NHL (`sportsdataverse-data`) and a real negative finding for soccer (`worldfootballR`
+archived, no replacement); visual-regression testing for the ~30-route cockpit needs
+zero new dependencies (Playwright's built-in `toHaveScreenshot`); and `NVIDIA/openshell`
+could make this file's own frozen-path/no-install/no-gate-flip laws machine-enforced
+instead of honor-system. Nothing in Round 3 was installed either — same founder-only
+posture as Round 2. **Round 4 added a design reference, not a repo**: a founder-shared
+bitemporal memory-repair pattern that is now the strongest available citation for the
+Airwave `claim-consistency-check.ts` work (supersedes NanoIndex) and directly targets
+the dormant `Entity`/`EntityEdge`/`Signal` schema — see the doc for the open question
+it raises about `Signal.capturedAt` semantics before that gets wired up.
+**Round 5 (same day): eleven of Round 1-2's repos re-verified at the source-code level**
+(cloned fresh, exact files/lines cited, not README/license-level like Rounds 1-2) —
+several prior recommendations are corrected, not just deepened. Highlights: Helicone
+should run in **Async** logging mode, not the proxy-URL-swap Round 2 recommended (Helicone's
+own docs mark Proxy mode as on the critical path — an outage there fails live Claude calls
+outright); Langfuse's SDK is a different repo (`langfuse-js`) with a different package name
+(`@langfuse/otel`, not `langfuse`) after a full OTel-based rewrite; **cut `Stevenic/vectra`
+entirely** (no cross-process concurrency control — a real lost-update race, not just "less
+durable" than Postgres); Orama's "sub-2KB" tagline is false (measured 63-77KB) and it has no
+ANN index at all, fine for small static corpora, wrong for growing semantic search where
+Neon's own pgvector is the better fit; `mem0` is usable only as retrieval plumbing behind
+GSE's own `write-gate.ts` (every mutating call commits synchronously, no pending state);
+`pg_bitemporal`'s real design is a shadow-table + stored-procedure API, not triggers, and
+its portability to `EntityEdge` needs real rework for the compound `cuid` key; the
+`typescript-language-server` MCP bridge is now sized (~300-600 lines, days not weeks), with
+the real risk being silent under-reporting on this repo's own 24-tsconfig-file shape, not
+the wire protocol. Full detail and citations in the doc's Round 5 section. `@ast-grep/cli`'s
+deep dive **stalled** (~2h50m hung on an `npx` registry install in this sandbox, stopped
+rather than left running) and was not completed — Round 2's original finding (BLOCKED, new
+dependency, `allowScripts` needed) stands, un-re-verified at the source level. See the doc's
+addendum. **Round 7: 12 deep-code-dives on the Round 6 sweep, two consequential findings.**
+(1) GSE already built a complete, tested `henrygd-ncaa` adapter with dual-source consensus
+checking — it's fail-closed pending one `source-rights-registry.ts` entry
+(`GSE-SEC-050`), not missing. The dive fetched NCAA.com's live ToS directly and found
+explicit commercial-use restriction language on "statistics, updated scores" — the correct
+classification is `permission_required`, matching Kalshi/ClubElo/scores24.live precedent, not
+`approved_public_logged_off`. Not added to the registry autonomously (a legal/compliance
+call), but the exact entry is fully drafted in the doc. (2) GSE's three real ESPN client files
+(`espn-schedule-seed.ts`/`espn-results-client.ts`/`espn-odds-client.ts`) never call
+`assertIngestible()` at all — confirmed by grep — so `source-registry.ts`'s `espn-hidden-api:
+forbidden` verdict (with a passing test asserting it throws) has zero effect on the ESPN
+traffic GSE actually generates; production runs under the other, more permissive registry's
+posture unchecked. One document disagrees with the running code, not just with the other
+document — a founder/legal item, independent of Round 6's original registry-disagreement
+flag. Also confirmed GSE's own prediction/calibration engine is ahead of every betting-math
+repo checked (Shin devig, robust Kelly, PAV/IVAP/CVAP, purged-embargoed walk-forward, real
+timing CLV) — no gap, a reassurance. One idea was concrete enough to build:
+`apps/web/lib/market/shop-advantage.ts`, a pure "shop vs. edge" probability-delta function,
+deliberately left unwired pending a product decision on placement/wording. Full detail in
+the doc's Round 7 section. **Round 6 (founder-sourced, live-tested): 14 more repos.** Real finding independent
+of any repo: GSE's own two rights registries disagree on ESPN's status
+(`packages/data-ingestion/src/source-registry.ts`'s `espn-hidden-api` = forbidden vs.
+`apps/web/lib/scraping/source-rights-registry.ts`'s `espn-public-api` = approved,
+`commercial_display_allowed: false`) — worth a founder/legal look. `ParlayAPI`'s keyless
+endpoints were called live, not read from the README: the real one (`/v1/widget/odds`) is
+genuinely live NFL data but h2h-only at 60 req/hour (too thin for GSE's cadence); the
+similarly-named `/v1/sandbox/...` endpoint returns equally plausible-looking data that its own
+docs say is synthetic — a real trap if integrated from the README alone. `sofascore.com`
+returned a verified HTTP 403 on a plain robots.txt fetch (real anti-bot control, not a guess);
+`api-football.com` stayed unverified after three independent attempts, reported honestly as
+open rather than guessed. `multiplex-invertsoap119/polymarket-sports-arbitrage-bot` is
+excluded outright, not just deprioritized — it touches Polymarket, which
+`.claude/skills/polymarket-hold/SKILL.md` puts under a counsel compliance hold. Nine of
+fourteen repos (course material, meetup demos, near-empty repos) got a second, closer look per
+founder instruction and still had no realistic adoption angle — verified, not assumed. Full
+detail in the doc's Round 6 section.
+
+**Round 8 (same day): 13 sports-specific external repos** (MCP servers, ESPN/odds clients,
+Kalshi tooling, betting math, fantasy platforms) — all cloned and read at the source level, all
+live-data claims tested directly. Highlights: `Backspace-me/sportscore-mcp` is a vendor SEO
+vehicle requiring a mandatory unwaivable attribution badge, not neutral OSS — treat as
+`permission_required`, not free; `pseudo-r/Public-ESPN-API`'s live-tested endpoints confirm
+GSE's own ESPN odds parsing hits the right shape and document the same free pattern already
+live for NHL/tennis/UFC/F1, sports GSE doesn't yet ingest; `sportsdataverse/sportsdataverse-js`
+does **not** solve the NCAA rights problem (it scrapes NCAA.com directly under a different
+wrapper, and its NCAA endpoint 404s in production today) — the real unlock, if any, is the
+separately-licensed `sportsdataverse-data` (CC-BY-4.0) dataset, untouched by this library;
+`machina-sports/sports-skills` and `TexasCoding/kalshi-python-sdk` corroborate WP-27's premise
+(Kalshi market-data is genuinely keyless, `KXNFLSPREAD`/`KXNFLTOTAL` are real live series) and
+surface two edge cases to check against the unmerged `galaxy-kalshi-book.ts` branch: one
+contract per strike line, not one line-and-price pair, and four distinct expiration timestamps
+that can diverge; `jdguggs10/flaim` is a mature, production Yahoo OAuth2 reference (token
+refresh-lease/cooldown/app-fingerprint logic worth adapting; its plaintext token storage is
+not); and `x402-fpl-api` confirms x402 (a real, Stripe-backed Linux Foundation payment
+protocol) is genuinely implemented in-repo, worth the founder's awareness for a future
+"Galaxy Sports API" monetization surface, not a build-now item. Full detail in the doc's
+Round 8 section.
+
+**Round 9 (same day): the same lens turned inward — 8 parallel read-only audits of GSE's own
+codebase**, not external repos, per founder instruction to find what to add/what's missing/
+what to polish. Three findings stand out. (1) A full calibration-regression detector
+(`calibration-monitor.ts`/`regression-detector.ts`, Brier/RES baseline comparison) is built and
+unit-tested but its DB-backed data feed (`calibration-regression-snapshot.ts`) has zero callers
+in any cron route — a live regression today raises no alert anywhere; the math is done, only
+the wiring is missing. (2) GSE already has a real, working Sleeper league sync
+(`sleeper-sync.ts`) and a real, working League Twin visualization
+(`fantasy/league-twin.ts`) with a tested live-data seam already built — but the synced roster
+is never passed into the Twin, so `/fantasy/league-twin` shows illustrative sample players even
+after a user connects their real league; a projections join is the remaining gap, not a stub.
+(3) `workers/content-publishing` has zero callers anywhere (confirmed by grep) despite CLAUDE.md
+calling it "hard-gated" — the real draft pipeline bypasses it entirely — and the fully-built
+weekly transparency-recap draft template appears to generate a `DRAFT` row every week that
+nobody has ever reviewed into publication. Also found: two dead/duplicate systems needing a
+founder look — `.claude/skills/clearance/` and `clearance-registry/` are duplicate skills that
+have already drifted out of sync (the same failure mode as the code-level rights registries,
+now in the skills docs describing them), and `packages/partner-stack` contains a second,
+competing Stripe-tier resolver with placeholder price IDs that would violate rule 3 if anyone
+ever imported it believing it authoritative. Four of the seven packages CLAUDE.md calls
+dormant (`epistemic-twin`, `quote-plane`, `governed`, `crypto`) are corrected in the doc as
+actually live in production; `genesis-kernel` is confirmed *deliberately* unwired by its own
+CI-enforced structural tests, not neglected. Nothing built autonomously this round — every item
+is either purely additive tooling for the owning domain agent or a founder-decision item. Full
+detail in the doc's Round 9 section.
+
+**Round 10 (same day): new categories — play-by-play/win-probability models, betting exchanges,
+injury data, distribution.** Most directly actionable round yet; three small, single-adapter
+tasks are now scoped needing only a free API-key signup, no schema change, no founder rights
+call beyond that. (1) `nflverse/nflverse-data`'s compiled play-by-play releases (win probability,
+EPA) are **CC-BY-4.0 licensed**, confirmed by reading the full license text — attribution-only,
+no non-commercial clause — and live-tested as real 2025-season data pulled via a plain HTTP GET.
+A thin adapter here gives GSE a genuine third probability signal (alongside the factor model and
+market-implied probability) for the internal drift/QA gap Round 7 already flagged. (2) CFBD's
+own REST API — the same `cfbd` source `cost-policy.ts` already references — already returns
+pre-computed EPA (`ppa`) and win probability as JSON, confirmed by reading `cfbfastR`'s source
+(a thin wrapper around those exact endpoints) and live-testing the API directly; the CFB
+equivalent may need only a thin adapter, not new licensing. (3) MLB's official Stats API
+(`statsapi.mlb.com/api/v1/transactions`) is live, keyless, and directly portable into an injury
+adapter — GSE ships zero player-availability signal for MLB/NBA/NHL/MLS today. NBA's official
+injury-PDF source is equally clean rights-wise but unreachable from this sandbox (Akamai
+mitigation, not a rights problem); `balldontlie.io`'s injury endpoint is confirmed paid-gated
+and Big Balls Data's NBA/NHL feed is confirmed dead by its own current docs — both ruled out with
+direct evidence, not assumed. Two non-buildable-now findings, still useful: ProphetX and Novig
+are real, CFTC-verified (via CFTC.gov's own filings) sports exchanges, but both gate API access
+behind an approval/sales process, not a fit for the free-first board today. And one genuinely
+different lever — a Discord bot posting GSE's Free-tier daily teaser, sketched against a real,
+validated precedent (a comparable bot, BettorEdge, confirmed live in 1,100+ servers running the
+same free-picks-plus-leaderboard shape) — a founder marketing decision, not built. Full detail
+in the doc's Round 10 section.
+
+**Round 11 (2026-09-06/07): GSE's own dev-process pain point — 10 multi-agent coding-
+orchestration repos.** Headline finding: **GSE's own ledger (claim in the same git commit) is
+already more rigorous than most of what's out there.** `code-conductor`'s "atomic" claiming is
+actually an unlocked race (contradicting its own docs), and its install path suffered a real
+supply-chain compromise in March 2026; Podiom and `taskq` both lack a compare-and-swap guarantee
+GSE's git-push atomicity gets for free; `deepseek-ai/deepseek-harness` (verified real) is the one
+genuine exception, with a revision-CAS primitive worth borrowing as a guard-script idea (reject a
+merge introducing two `CLAIMED` owners in one diff hunk). `mission-control` is a real, substantial
+project (1,577 tests run directly, genuinely heterogeneous 5-runtime dispatch) but its review gate
+is one LLM judging another's output via string-matched verdict parsing — named as a real risk if
+that pattern were ever applied to anything touching settlement/entitlements/PROVEN-gate decisions.
+`agentjj` and `Agent-Git` (agent-native VCS tools) are both honest negatives: agentjj's own latest
+commit is a post-mortem admitting its core model breaks under exactly GSE's shape (parallel
+writers, single-writer working copy); Agent-Git never touches git at all. `gitagent-protocol`
+requires files GSE doesn't have to even count as conformant — low priority, revisit later; its one
+real transferable idea is a lightweight schema/validator for `.claude/agents/*.md` frontmatter.
+Nothing installed, no repo recommended as a dependency. Full detail in the doc's Round 11 section.
+
+**Round 12 (2026-09-07): creative-fit pass on founder-sourced items, integrate where real.**
+One thing actually built and shipped: `apps/web/lib/fantasy/td-equity.ts` — three pure, tested
+functions (goal-line QB "vulture" risk, touchdown scoring-distance profile, defensive red-zone
+soft spot) replacing three LLM prompt templates that were circulating as "AI fantasy analyst"
+prompts for the same three real, quantifiable questions — deliberately unwired pending real
+play-by-play (the Round 10 nflverse/CFBD path). Two real repos researched deeply, not buildable
+without a founder-approved new dependency: `claude-faceless-shorts-creator`'s Remotion track is
+genuinely 100%-code-rendered (verified in the actual composition source) and could turn the
+already-built-but-never-published weekly transparency-recap draft into a short, auditable video —
+its other two tracks are generative-AI content and must never be adopted; `CopilotKit/openbot`'s
+"decide before, record after" audit gate is real and load-bearing but solves a harder problem than
+GSE's actual one-agent scripted-playbook need — the pattern itself (log the decision before
+acting) is buildable today with zero new dependencies. A final set, researched for genuine
+leverage rather than written off: Appsmith's Community Edition is verified genuinely free
+(Apache-2.0, self-hosted, no user cap) — real, low-cost leverage for the "no unified ops-health
+view" gap this audit has now flagged twice independently, though it needs new self-hosted infra;
+Google's TimesFM-3 required a correction the marketing clip didn't carry — its code is Apache-2.0
+but its **pretrained weights are Non-Commercial-licensed** (verified from the model's own LICENSE
+file), so a revenue company cannot run it even for internal QA without breaching the license; the
+Perplexity/NVIDIA local-orchestrator hardware product isn't adoptable (GSE runs no local GPU
+hardware) but is real outside validation that GSE's already-planned local-cheap/cloud-frontier
+routing work (C-108) is the right direction. Full detail in the doc's Round 12 section.
+
+**Round 13 (2026-09-07): synthesis pass — connecting Round 11-12's findings into GSE's own
+systems, not more repo research.** Biggest correction: Round 10 was WRONG that nflverse-data
+needs new ingestion — `packages/data-ingestion/src/nflverse-source.ts` is already a complete,
+registered adapter (`commercialUse: true`), and `apps/web/lib/intelligence/scoring-zone.ts` is
+already a LIVE production module pulling real nflverse play-by-play for red-zone/goal-line
+opportunity share, gated through `assertIngestible("nflverse")`. Verified directly by reading
+the file: fully wiring `td-equity.ts` to it is real, precisely scoped work (needs a
+`passer_player_id` column for QB detection, TD tracking beyond the red-zone-only filter, and a
+`defteam`-side aggregation the module doesn't do today) touching a deliberately
+OOM-hardened parsing path — not a new external source, but not a five-minute edit either; both
+"blocked on ingestion" and "trivial" would have been wrong framings. Four previously-isolated
+Round 11 tool verdicts (Podiom, taskq, dsh-goal, code-conductor) are now one phased "ledger
+companion" design: a gitignored SQLite mirror of `AGENT_LEDGER.md` with a revision/CAS column,
+synced via the ledger guard's own already-tested `parseLedger()`, optionally exposed as a local
+MCP server for atomic claim attempts — Phase 0 needs **zero new dependency** (`node:sqlite`
+live-verified working on this environment's Node version), Phase 1 (the MCP server) needs one
+new package, a real Law 7 founder call. mission-control's routing pattern (separate from its
+already-flagged-risky review gate) is filed as a trigger condition — not urgent for today's four
+fixed agent identities, genuinely worth building the moment a fifth (e.g., a rights-registry
+agent) is added. Three previously-scattered findings (the unwired regression detector, nflverse
+as a scoped third calibration signal, nflverse's own publish-a-reproducible-history credibility
+strategy) are now one 3-phase plan directly serving the live PROVEN-gate push, Phase 1 being one
+function call connecting two already-built, already-tested pieces before the flip. Sharpest
+single finding: GSE's settlement pipeline already has its own full "decide before, record after"
+discipline (`SettlementObservation`/`SettlementAnomaly`/`SettlementDecisionEvent` — insert-only,
+independent-corroboration-before-promotion, revisioned decision log) sitting right next to the
+pick-generation side's already-public `/verify` system, with confirmed zero callers outside
+internal ops — the exact patterns this audit found valuable in *external* tools already exist
+inside GSE, unused and unseen by any customer. Full detail in the doc's Round 13 section.
+
+**Round 14 (2026-09-07): turned inward with a dead-code scanner instead of more repo browsing —
+5 dormant-subsystem investigations, one real bug fixed and shipped.** `npx knip` (one-off, no
+install) against the whole monorepo found 275 unused files / 282 unused exports / 380 unused
+exported types, an order of magnitude past prior manual-grep audits. Fixed and shipped (`ed39253`,
+typecheck/tests/guardrails all green): `catalog-expand.ts`'s 16 "zero-importer" functions were a
+knip false positive (already live — `expandAll()` feeds the real public catalog, 881 metrics
+confirmed by running the build), but the investigation found a real bug underneath — `SportCode`
+had no `WNBA`/`F1`/`TENNIS`/`MMA` members, so ~50 real, already-live catalog rows were mistagged
+`sport: "MULTI"` and invisible to `?sport=` filtering on the public API; added the 4 codes and
+retagged the 4 affected functions, purely additive, 2 files. Two real parallel-implementation
+problems found, left as product decisions rather than autonomous fixes: `packages/prediction-
+engine/src/metrics/core/` (89 files, 14,439 lines, 296 tests, a genuine SHADOW-gated metric-
+governance framework) duplicates `packages/prediction-engine/src/nfl/`'s independent QB-burden/
+YAC/rush-environment implementations — different weights, both unwired outside their own tests,
+picking one is a founder/product call before either goes through the existing `metric-
+graduation.ts` gate. `apps/web/lib/decision-genome/` (17 modules, 65 tests, a real pre-decision
+Signal/Shadow/Wait/Pass/Quarantine governance layer) has two pieces that duplicate rather than
+complement already-live systems (`conformal.ts` vs. the production-authority `selective-
+abstention.ts`/`selective-gate.ts`; `agent-court.ts`'s Brier-scored court vs. the live `jarvis/
+agent-council.ts` roster, no type link keeping them in sync) — recommend archiving/folding those
+two, the rest is a real candidate to activate as the pre-result complement to the already-live
+post-result settlement discipline Round 13 found. One non-finding worth recording so it isn't
+re-investigated: `apps/web/lib/fable/` is not sports- or AI-related at all — it's the repo
+owner's own AWS re/Start career-credentialing evidence tracker, fail-closed, zero real AWS calls,
+working as designed; CLAUDE.md/AGENTS.md should eventually get one line noting it exists so a
+future audit doesn't reconstruct its purpose from scratch again. The revenue/content cluster
+resolved into three distinct problems, not one: media-revenue's 30-day draft queue is genuinely
+built-and-never-reviewed (needs an admin UI, real small next step); `revenue/`'s partner engine
+has no data to govern (nothing code can fix); `pre-mortem/templates` is an orphaned duplicate of
+the different, already-live `premortem/` module (a founder call on which survives). Full detail
+in the doc's Round 14 section.
+
+**Round 15 (2026-09-07): the widest sweep yet — 10 parallel domains on explicit founder
+instruction to cast a wide net, no cap, find what's unresearched or regressed, ship coded and
+tested fixes, put everything where every agent can see it.** Two real fixes shipped, zero new
+dependency, outside any frozen/gated territory: the public `/calibration` reliability chart
+(`CalibrationCurve`) plotted only the point estimate even though `compute.ts` had always computed
+a 95% Clopper-Pearson interval per bucket — wired it through as a whisker (`5d94003`), so a
+30-sample bucket no longer reads as solid as a 500-sample one. GSE's MLB client already called
+`statsapi.mlb.com` for standings/scores but never its free `/transactions` endpoint — added
+`fetchMlbInjuredListMoves()` (`b4a5a5d`, verified live against a real Aug-2026 sample before
+writing the parser), giving MLB an availability signal parallel to NFL's; not yet wired into any
+scoring path. **Single highest-leverage finding of the round: "steam"/line-velocity is fully
+built and switched off, not a data gap.** `line-archive.ts`/`pinnacle-line-archive.ts` persist
+timestamped OPEN/INTERIM/CLOSE snapshots but are hard-gated off (`LINE_ARCHIVE_ENABLED="false"`)
+— this history isn't even being collected today — and three independent, tested compute
+libraries (`market-memory.ts`, `line-dna.ts`, `consensus-clock.ts`) already implement the
+velocity/CLV/dispersion-decay math on top of it, verified by grep to have zero callers anywhere.
+`market-memory.ts`'s `sharpSplitSourced` gate already hard-blocks any informed-bettor-movement
+framing without a real sourced split — GSE has already drawn that honesty line in code. Flipping the
+env flag is a Law-3 founder call; wiring the three functions to a real caller ahead of that flip
+is safe, low-risk follow-on work nobody has done yet. Other real, buildable-now-free-small items
+named per domain: an NFL crew-identity-to-penalty-rate join from already-licensed nflverse data
+(referee signal — real but literature says marginal vs. team-strength factors, not a headline
+feature); a travel-distance-in-miles haversine feature alongside the already-built-but-unwired
+`nfl-body-clock.ts` (zero new dependency, real MIT-licensed methodology reference
+`josedv82/airball` verified); wiring the already-cleared, sport-agnostic `espn-boxscore.ts`
+injuries parser into NBA/NHL (zero callers today despite being fully generic); swapping the live
+(shadow, unpriced) Parlay MRI's variance-of-sum approximation for a real per-leg Φ⁻¹/MVN
+joint-tail calculation and fitting its hardcoded 0.25/0.35 correlation constants from GSE's own
+settled-picks history instead. Two strong reassurance findings, no gap: GSE's Elo is fixed-K, but
+a full tested particle filter (`team-strength-filter.ts`) already implements the state-space
+model a Kalman filter targets, more correctly (handles the Bernoulli-through-sigmoid observation
+a textbook linear KF can't) — a graduation decision, not new research; and its existing
+key-number margin-mixture model already covers what extreme-value theory would chase, better
+suited to a bounded, moderate-variance quantity than a heavy-tail method. A clear, valuable
+"do not adopt" result: all six browser-automation/scraping tools checked (Firecrawl, Browserbase,
+Stagehand, browser-use, ScrapingBee, Apify/Crawlee) have anti-bot evasion as a first-class,
+vendor-documented feature or cloud-tier upsell — confirmed by fetching their own docs, not
+assumed — squarely the class of tool GSE's scraping rule already bans; nothing here should be
+re-investigated without new evidence one of them changed its core design. Player-prop support is
+real but partially built at best: production `scoring.ts`/`settlement.ts` have zero prop
+awareness, `/fantasy/props` runs on a hardcoded illustrative array today, and the one piece
+already wired into production ingestion (`event-odds-ingest.ts`, same paid Odds API plan, no new
+contract) is gated off (`EVENT_ODDS_INGEST_ENABLED`, another founder-only flag) and a real budget
+tradeoff against the same credit pool C-109 already flagged as tight. Two real MCP finds for
+prediction-engine R&D (`posit-dev/mcptools`, an R-stats server maintained by Posit/RStudio;
+`finite-sample/rmcp`), zero production footprint, same class as the already-filed
+`@playwright/mcp` item — and one repo to actively never add: `DanielTomaro13/sportsdata-mcp`
+ships real-money bet-placement tools since v0.31.0, a hard exclusion, not a caution. The internal
+regression self-audit confirmed the founder's "somewhat regressing" instinct was correct, but the
+regression already had a fix in flight: this branch was two commits behind `origin/main`, and
+those two commits correct the 2026-09-05 "all four floors pass today" PROVEN read — the fuller
+production sample reads ECE 0.0524 against a 0.05 floor, RED, with the pooled figure flattering
+every individual model-version stratum. This branch has since merged `origin/main` (`dabc428`)
+specifically to carry that correction forward rather than let a superseded status keep
+circulating. Full detail, every file/line checked, and every external source verified in the
+doc's Round 15 section.
+
+**Round 15 follow-up (2026-09-07, same branch): a real bug fixed inside the "steam" cluster
+Round 15 flagged, plus two honest negatives from reading the rest of that cluster line by
+line.** Round 15 named `market-memory.ts`/`line-dna.ts`/`consensus-clock.ts` as fully built,
+zero-caller, ready to wire once `LINE_ARCHIVE_ENABLED` flips — true, but nobody had yet read
+`market-memory.ts` against `packages/prediction-engine/src/clv.ts`'s own worked examples
+line by line. Doing that (commit `c595bc5`) found a genuine sign inversion, not a wiring gap:
+`buildMarketMemory()`'s `clvVsCloseFavorable` field is documented as matching clv.ts's
+"beat the close" convention (positive = good), but reused the SAME `fav(lockLine, closeLine,
+lower)` formula as the movement-so-far fields (`openToLockFavorable`, `lockToCurrentFavorable`,
+`openToCloseFavorable`) — a different question with the opposite sign. Movement-so-far asks "is
+the market right now at a number better than where it started" (toward-favorable = positive);
+beating the close means the market moved AWAY from favorable after our price was captured (a
+later bettor gets a worse number than ours) — the logical inverse. Fixed by swapping `fav()`'s
+argument order for that one field only (`fav(closeLine, lockLine, lower)`); the module's OWN
+pre-existing tests had
+encoded the wrong/inverted sign as their spec, so 3 of them were corrected and 4 new tests added
+anchored directly to `clv.ts`'s own docstring numbers (HOME beat, AWAY lost, OVER beat, UNDER
+lost) — 11/11 pass. Still zero callers (unaffected by the fix) and still gated off by
+`LINE_ARCHIVE_ENABLED`; this is a latent-bug fix for whenever a founder-approved wiring pass
+happens, not a live-behavior change today.
+Read in full and found CORRECT, no bug, nothing to fix: `line-dna.ts` (purely descriptive path
+metrics — normalized total variation, increment/book counts, snapshot ages — no
+favorable/unfavorable framing exists in it, so no sign-convention bug is possible) and
+`consensus-clock.ts` (the exponential dispersion-decay fit; its moneyline branch computing
+`probs = 1/price` looks like it assumes decimal odds, which it does — verified against
+`line-snapshot.ts`'s own doc comment that THIS module's `LineSnapshot.price` convention is
+genuinely decimal-for-moneyline, so the code matches its documented contract). Recording this so
+neither gets re-audited from scratch on the strength of "it's dormant, it might have a bug too."
+Also investigated and deliberately NOT wired: whether `market-memory.ts` should feed
+`/api/picks/[id]/audit` once the gate flips. That route already has a THIRD, independent,
+already-LIVE module doing a related-but-distinct job — `apps/web/lib/market/pick-death-clock.ts`
+(read in full), which reports `toward_pick`/`away_from_pick`/`flat` directional movement from the
+same bounded `pick.game.odds` rows, deliberately staying in price-space with no fair-probability
+framing (the audit-drawer contract bans EV language on pick surfaces until a separate gate
+lifts). Wiring `market-memory.ts`'s CLV-framed numbers into the same surface risks two
+overlapping "market moved" narratives on one page — filed as a product-design question for
+whoever owns that wiring pass, not resolved here.
+
+**C-119 branch status as of this note (2026-09-07, PR** `Beexly/Sports#712` **head** `76a5b7c`
+**): all CI green** — guardrails 26/26, test/typecheck/lint/Prisma, trust gate, AI Council,
+brand safety, Codacy (0 issues), dependency audit, secret scan, build. Draft, not yet merged;
+subscribed for CI/review events. Nothing else queued behind it on this branch as of this note.
+
+**Round 16 (2026-09-07): free-for.dev — a real integrity failure, caught by the founder, then
+corrected properly. Record this honestly; do not sand off the mistake.** First pass: fetched
+free-for.dev via a tool that summarizes pages through a small model rather than reading the raw
+text, then handed 6 agents subsets of that already-lossy summary. They reported "nothing
+genuinely new" — a claim built on maybe half the real list (whole categories, e.g. Analytics/
+Events/Statistics, BaaS, Low-code Platforms, CDN and Protection, Crash and Exception Handling,
+Privacy Management, never even appeared in the extraction) filtered through two layers of
+summarization before any real evaluation happened. Founder called this out directly: **"No way
+in hell you went through everything in that dev list... I literally told you to do it with
+integrity."** Correct. That first pass should never have been reported as thorough.
+Corrected by pulling the raw file directly (`curl`, not the summarizing fetch tool — 1,717
+lines, 257KB, confirmed by `wc`), splitting it into 7 chunks by exact line number covering
+every one of its ~58 real categories with no gaps, and having 7 fresh agents `Read` their
+verbatim range directly (not a paraphrase from the orchestrating session) with an explicit
+per-category completeness tally required in the report (e.g. "APIs, Data and ML: 150 entries
+listed, all 150 checked"). That tally is what makes the completeness claim below verifiable
+rather than asserted — an agent that skips entries has nowhere to hide a fabricated count.
+**Result of the honest pass: ~1,600 entries across ~58 categories, all individually accounted
+for, and the overwhelming majority confirmed already covered** — by the live codebase, by the
+June `handoff/leverage/` audit (~2,200 founder-sourced resources, 5 subagents), or by Round
+1-15 here. Categories confirmed non-gaps BY DESIGN, not by omission, worth distinguishing from
+"nobody looked": no cookie-consent banner (analytics already cookieless), no team/league logos
+(explicit policy in `visual-production/types.ts`), USD-only pricing, no upload/blob-storage
+feature anywhere in the product, feature-flag SaaS conflicts with Law 3's founder-only gate
+design, AGENT_LEDGER.md stays git-native (Round 11/13), Codecov/CodeRabbit configs exist but
+are correctly inert (private-repo free-tier math doesn't work; re-verified live against both
+vendors' current pricing pages, not trusted from a stale doc). BaaS, Low-code Platforms, and
+CDN/Protection — three genuinely fresh categories nobody had looked at before this pass — were
+checked cold and confirmed structurally inapplicable to a single-Vercel-deployment, no-second-
+backend, custom-Next.js architecture (`docs/ops/INTEGRATIONS_FREE_STACK.md`'s explicit "no
+second backend" line already rules most of it out).
+**Genuinely new findings that survived the exhaustive pass** (all research only, nothing
+installed): (1) **semgrep** (free OSS CLI, zero signup) — GSE's 26-script guardrail suite does
+brand/architecture/model-freeze/secret/dependency-CVE checks but zero generic SAST for bug
+patterns (SSRF, injection, unsafe deserialization) in a real-money app with Stripe webhooks and
+Prisma queries; the single most concrete, adopt-today candidate from the entire list. (2) **A
+built dead-man's-switch is wired to 1 of ~22 crons.** `apps/web/lib/data-reliability/
+healthcheck-ping.ts` already implements the Healthchecks.io wire protocol by name in its own
+docstring, but `grep` shows only `refresh-odds` calls it — `settle-picks`, the cron carrying
+AGENTS.md's entire "no pick ever sits" policy, has zero external heartbeat coverage. Real
+precedent this exact gap already caused, per `apps/web/lib/ops/traffic-heartbeat.ts`'s own
+docs: a 13-hour ingestion outage on 2026-08-10 when both schedulers died at once and nothing
+paged anyone. A founder-only signup + one env var, using code that already exists. (3) A local
+coverage number is missing and the correct fix is not on the free-for.dev list at all: `npm
+test` runs plain `vitest run` with no `--coverage` flag and no `@vitest/coverage-v8` package
+exists; every hosted option in the list (Codecov, coveralls.io) is either cost- or OSS-gated
+against a private repo — a bare `npm install @vitest/coverage-v8` (Law 7-compliant, no script
+execution) for a local text/HTML/lcov report is the actual answer, and it beats every SaaS
+alternative. (4) **XFlux** (X/Twitter read API, 1,000 free calls/mo) — genuinely new, not a
+duplicate: `apps/web/lib/twitter-bot/` only posts outbound, nothing monitors inbound, and
+breaking injury/lineup news often surfaces on X first; filed as a human-verified-alert-layer
+idea only (rule 1 forbids it ever becoming a pick input directly), not built. (5) **TinyMCE**
+(free rich-text editor) as the missing building block for the still-unbuilt content-review
+admin UI (Round 9/14's "drafts generate weekly, nobody reviews them" gap) — the CMS entries in
+the list don't fix that (a full headless CMS solves storage, not review), a plain rich-text
+approval screen might. (6) **Preset Cloud** (hosted Apache Superset, free 5 users) — a second,
+previously-unconsidered option alongside Round 12's Appsmith for the twice-flagged "no unified
+ops-health dashboard" gap. (7) **A latent, unaddressed signup-abuse vector**: no disposable-
+email/signup-fraud check exists anywhere for the Free tier's 2-picks/day teaser — flagged as a
+founder-level risk call, no vendor recommended. (8) **Personal, not GSE-product: CloudCertPrep**
+(free, open-source AWS certification practice exams) — a real, on-topic study resource for the
+founder's own `apps/web/lib/fable/` AWS re/Start credentialing tracker (confirmed via
+`docs/fable/aws/AWS_MACHINE_LADDER.md`).
+Nothing above was installed or wired — all research, same founder-decision posture as prior
+rounds. Full per-chunk completeness tallies and every individual disposition live in this
+session's transcript; this entry is the durable summary.
+
+**Round 16 creative wide-net wave (2026-09-07, same day): explicit founder instruction to think
+past what already exists, front end AND back end, "GSE OR personal," ship the safe small wins
+and prep the rest.** Six agents, each told to implement+validate anything small/safe/zero-
+dependency directly and only describe (never build) anything needing a founder call. Four
+items were independently re-validated by the orchestrating session (not just trusted from the
+agent's own report) and shipped:
+1. **`c595bc5`-adjacent research, `f337fa6`: a stadium-altitude proof-of-concept** (Denver's
+   Empower Field at Mile High, 5,280 ft — the one NFL venue with a materially different
+   elevation from the rest of the league, real FIFA-2007-altitude-rule precedent, not
+   folklore). Two pure functions + a verified fixture, deliberately no 32-team elevation table
+   (that needs real per-venue sourcing, not reconstruction from memory), not registered in the
+   edge-lab trials registry, not wired into scoring. `packages/prediction-engine/src/research/
+   creative-signals-2026-09-07/`.
+2. **`31d69de`: Web Share API on every pick card, a print stylesheet for the dark cockpit theme
+   (previously zero `@media print` handling anywhere), and a real a11y fix in the hand-rolled
+   `EvidenceAuditDrawer`** (focus never returned to the triggering button on close; no Tab
+   focus-trap) — found by reading the actual UI for rough edges, not by guessing.
+3. **`fd6f764`: Open Graph images + JSON-LD for `/calibration` and `/verify`** — both core public
+   trust/share pages had full metadata but silently fell back to the generic homepage card when
+   linked externally, undercutting the platform's own receipts-based credibility pitch.
+4. **`992c962`: a cross-bookmaker robust outlier detector** (median/MAD "modified z-score",
+   Iglewicz & Hoaglin), directly answering this session's own C-119 finding that
+   `sanitizeSpreadPoint`'s fixed magnitude bound is "a conservative first pass, not confirmed
+   against production data" and has no defense at all for a same-game outlier inside that bound,
+   or for any sport without a bound. `scoring.ts`'s own `spreadOfSpreads` and `consensus-
+   clock.ts`'s `measureDispersion` both use non-robust mean/variance — the same failure shape
+   C-119 exploited. Deliberately unwired: a pure diagnostic primitive, not a scoring-path change
+   (that needs the founder-gated MODEL_VERSION sequencing already scheduled for after
+   2026-09-13). `packages/data-ingestion/src/cross-book-outlier.ts`.
+All four validated independently by the orchestrating session before commit (typecheck across
+every affected package, the specific test files each agent cited plus adjacent suites, eslint,
+and for the customer-facing pair, the trust-gate/no-unsupported-performance-claims/commercial-
+copy-scan guardrails) — not taken on the subagent's word alone. Full `npm run typecheck` (all
+16 workspaces) and `npm run guardrails` (26/26) both re-run clean after all four commits
+together, before push.
+**Prepped, not built — each needs a founder call, code/idea only:** (a) the same ledger-SLA and
+calibration-eligibility manual-polling gaps independently surfaced here as in Round 16's
+free-for.dev pass — both fixable by extending the already-scheduled `external-watchdog.yml`,
+zero new dependency; (b) an independent, non-circular historical benchmark for
+`team-strength-filter.ts`'s particle filter using `nflverse-source.ts`'s already-cleared,
+already-`commercialUse: true` schedule data — every existing backtest replays GSE's own settled
+picks, none is a check against outcomes outside that lineage; scoping a fair train/holdout split
+safely was judged to need more than the remaining pass warranted, so it was described precisely
+instead of rushed; (c) offline/PWA caching for the picks board — real and free, but tensions
+with the "no stale data" rule and needs a visible "last synced" UI treatment, a product call,
+not a silent cache; (d) wiring `healthcheck-ping.ts` into `settle-picks` (see Round 16's
+free-for.dev entry above — same finding, arrived at independently by a different agent).
+**Personal (grounded in `apps/web/lib/fable/`, read in full, not guessed):** the module is a
+fail-closed AWS Well-Architected self-study and portfolio-evidence harness, not a simple
+tracker — six pillars simulated locally, IAM/CDK synth-only fixtures, an anti-fabrication claim
+scanner matching the rest of GSE's own discipline. LocalStack (free AWS emulator), `cdk synth`
+against real AWS CDK docs, the official Well-Architected whitepapers, and CloudCertPrep (see
+above) are grounded, evidence-based suggestions. Generic productivity ideas (a Trello/GitHub-
+Projects job-tracker, Obsidian/Markdown notes) were explicitly flagged as low-confidence
+speculation, not inferred from anything the code actually shows.
+**Honest negatives, checked and confirmed, not assumed:** databases/search (Neon+pgvector
+already the pick, no search feature exists to need one), message queues (the existing Postgres-
+backed transactional outbox and native Web Push already do what Kafka/SQS/Pusher would),
+storage/media (zero upload feature anywhere), most of Security/Auth (NextAuth/Stripe/
+GitGuardian/Socket/Dependabot already live, CSP/HSTS already set), most Growth/Content
+(Resend/Cloudflare-Analytics/Clarity/the embeddable Edge Index widget/RSS feeds already live or
+built), most Devtools/CI (Codacy/Socket already live, visual regression already covered by
+Playwright's own `toHaveScreenshot`), and betting-percentage/attendance data signals (real
+concepts, but no confirmed-free, rights-clear source — correctly left unbuilt rather than
+guessed at).
+
+**Round 16 second follow-up (2026-09-08): explicit founder instruction to distrust every prior
+claim, including this session's own, re-verify everything from scratch, wire in what is safe,
+and document what is not.** Nothing from the prior entries was taken on faith — every claim
+below traces to a command re-run in this pass, not a citation of an earlier report.
+**Re-verification (not new work, confirming old work actually holds):** `git status`/`git log`/
+`git fetch` showed the branch genuinely clean and fully pushed (the stop-hook's "uncommitted
+changes" warning was stale). Every file the prior Round 16 entries claim to exist was confirmed
+on disk and correctly wired (`grep` for `SharePickButton` in `pick-card.tsx`, direct `ls` on
+every new path). Re-ran, from zero, not trusted from any commit message: `npm run typecheck`
+(24 workspaces, 0 errors), `npm run guardrails` (26/26), and every test file any prior commit
+message cited by name, individually. All held.
+**Newly wired in (was "prepped," now shipped, commit `65c382de1`):** `settle-picks`'s cron route
+now calls the already-built `healthcheck-ping.ts` dead-man's-switch, mirroring `refresh-odds`'s
+existing `HC_REFRESH_PING_URL` pattern exactly (`HC_SETTLE_PICKS_PING_URL`, same env-gated
+no-op contract, pings the route's own `freeOk` verdict). This was safe to wire autonomously
+because the helper's own contract (read in full before wiring) guarantees a no-op with no
+network call at all until a founder sets the env var, and it never throws. 3 new tests pin the
+wiring itself (success signal, fail signal, no-op-passthrough when unset); all 4 pre-existing
+settle-picks route test files (28 tests total) still pass unchanged.
+**Found by adversarial re-review, not by re-running the same tests (commit `be850256e`):**
+`cross-book-outlier.ts`'s `findOddsOutliers()` grouped raw odds rows by game+market with no
+dedup by bookmaker. Under how it is actually called today (one ingestion cycle's fresh
+`normalizeOdds()` output, at most one row per bookmaker) this was never wrong in production —
+but the module is explicitly a reusable, not-yet-wired utility "for a future gated caller," and
+a caller who ever fed it a batch spanning multiple fetch cycles (exactly what this session's own
+earlier C-119 SQL investigation did against raw odds history) would have one book's own time
+series silently counted as several independent bookmakers, corrupting the median/MAD the whole
+detector depends on. Hardened to keep only the latest `fetchedAt` reading per (game, bookmaker)
+before judging; a new regression test proves it (7 rows including 3 stale duplicates of one
+book correctly collapse to the 6 real quotes a fresh cycle would actually see). The core
+`detectCrossBookOutliers()` math itself (median, MAD, the Iglewicz & Hoaglin modified z-score,
+and its documented mean-absolute-deviation fallback for the MAD=0 quantized-tie case) was
+re-derived by hand against the literature during this review and found correct as originally
+shipped — nothing there needed changing. `stadium-altitude.ts`'s two functions are one-line
+arithmetic/comparison with negligible bug surface; added one boundary test (exactly-at-threshold
+and just-under) that didn't exist before, found no defect.
+**Re-run one more time, after both fixes, before this note was written:** the full suite for
+every touched package, not just the changed files — `apps/web` (929 files / 12,468 tests / 97
+pre-existing skips), `packages/data-ingestion` (39 files / 403 tests), `packages/prediction-
+engine` (276 files / 3,082 tests) — zero failures anywhere. `npm run typecheck` and `npm run
+guardrails` both re-run clean a second time after the two new commits, before push.
+**Explicitly NOT safe to complete autonomously, and why — do not attempt without a founder
+decision, even though each is otherwise small:**
+(1) **Scheduling the ledger-SLA and calibration-eligibility checks** (both independently
+flagged twice now — Round 16's free-for.dev pass and its creative wave) needs a new or edited
+entry in `.github/workflows/*.yml` or `external-watchdog.yml`'s own cron body — `.github/
+workflows/**` is a Law-2 frozen path for every agent, no exception. The code-side half (what to
+check) already exists and needs no work; only the scheduling entry point is blocked.
+(2) **Offline/PWA caching for the picks board** — real and free, but caching anything
+picks-shaped risks colliding with the explicit no-store contract in `.claude/rules/
+nextjs-caching.md` (picks/odds/entitlement data must never be cached) unless designed very
+carefully with a visible "last synced" UI treatment; that is a product/security judgment call,
+not a mechanical wire-up, so it stays prepped-only.
+(3) **A non-circular historical benchmark for `team-strength-filter.ts`** needs a real train/
+holdout split against `nflverse-source.ts` data sized correctly enough to be honest, not
+rushed — attempting it in the time remaining in a pass risks producing a benchmark that LOOKS
+rigorous but leaks information, which is worse than not building it; still described, not built.
+(4) **`cross-book-outlier.ts` and `stadium-altitude.ts` stay deliberately unwired from any
+scoring path** — wiring either into `scoring.ts` would be a scoring-path behavior change
+requiring the founder-gated `MODEL_VERSION` sequencing already scheduled for after 2026-09-13,
+and `stadium-altitude.ts` additionally has no real per-venue elevation table (only Denver's
+figure is a verified fixture) — building one out would mean fabricating 31 other teams'
+numbers from memory, which Law 8 forbids outright.
+No schema, migration, workflow file, `.env*`, gate, or dependency was touched in this pass.
+Both new commits pushed to this branch; PR #712 CI to be watched for the result.
 
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip

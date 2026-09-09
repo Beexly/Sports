@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { validateClaimBatchFromEnv } from "@/lib/airwave/claim-batch-validator";
+import { checkClaimConsistency } from "@/lib/airwave/claim-consistency-check";
 import { auth } from "@/lib/auth";
 import { isAdminSession, ADMIN_ONLY_MESSAGE } from "@/lib/auth/require-admin";
 
@@ -38,6 +39,7 @@ export async function GET(): Promise<NextResponse> {
         gsnReadyRows: 0,
         publicSafeRows: 0,
         generatedAt: new Date().toISOString(),
+        consistency: checkClaimConsistency([]),
       },
       policy: {
         writesDatabase: false,

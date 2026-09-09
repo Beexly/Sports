@@ -43,6 +43,36 @@ describe("Claim Batch Validator", () => {
     });
   });
 
+  describe("consistency wiring", () => {
+    it("returns an empty consistency report for an empty batch", () => {
+      const result = validateClaimBatchJson([]);
+      expect(result.consistency.totalClaimsChecked).toBe(0);
+      expect(result.consistency.findings).toHaveLength(0);
+      expect(result.consistency.policy.readOnly).toBe(true);
+    });
+
+    it("surfaces a supersession finding across two valid rows in the same batch", () => {
+      const older = { ...VALID_CLAIM, id: "c-old", aired_at_ct: "2026-06-10T10:00:00" };
+      const newer = { ...VALID_CLAIM, id: "c-new", aired_at_ct: "2026-06-11T10:00:00" };
+      const result = validateClaimBatchJson([older, newer]);
+
+      expect(result.validRows).toBe(2);
+      const finding = result.consistency.findings.find((f) => f.kind === "supersession_candidate");
+      expect(finding).toBeDefined();
+      expect(finding!.claimIds).toEqual(["c-old", "c-new"]);
+      expect(result.consistency.supersessionCandidates).toBe(1);
+    });
+
+    it("excludes invalid rows from the consistency check", () => {
+      const invalid = { ...VALID_CLAIM, id: "c-invalid", claim_type: undefined };
+      const valid = { ...VALID_CLAIM, id: "c-valid" };
+      const result = validateClaimBatchJson([invalid, valid]);
+
+      expect(result.consistency.totalClaimsChecked).toBe(1);
+      expect(result.consistency.findings.some((f) => f.claimIds.includes("c-invalid"))).toBe(false);
+    });
+  });
+
   describe("validateClaimBatchJson — valid input", () => {
     it("accepts a valid single claim", () => {
       const result = validateClaimBatchJson([VALID_CLAIM]);

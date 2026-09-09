@@ -19,6 +19,7 @@ import {
   type ClaimCandidateOperatorStatus,
   type PublicClaimCandidate,
 } from "./claim-extraction-contract";
+import { checkClaimConsistency, type ClaimConsistencyReport } from "./claim-consistency-check";
 import { parseAirwaveDelimitedTable } from "./intake-readiness";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -53,6 +54,13 @@ export type ClaimBatchSummary = {
   readonly gsnReadyRows: number;
   readonly publicSafeRows: number;
   readonly rows: readonly ClaimBatchRow[];
+  /**
+   * Supersession/competing-unresolved/staleness findings across the batch's
+   * valid rows (see claim-consistency-check.ts). Advisory only — never
+   * mutates operatorStatus, and its own `policy` field restates that it
+   * does not inspect claim text for contradiction.
+   */
+  readonly consistency: ClaimConsistencyReport;
   readonly policy: {
     readonly validatesOnly: true;
     readonly writesDatabase: false;
@@ -106,6 +114,7 @@ function validateBatch(
   now: Date,
 ): ClaimBatchSummary {
   const rows: ClaimBatchRow[] = [];
+  const validCandidates: ClaimCandidate[] = [];
   const statusCounts = {
     DRAFT: 0,
     REVIEW: 0,
@@ -134,6 +143,7 @@ function validateBatch(
       gseRelevant = isClaimCandidateGseRelevant(full);
       gsnRelevant = isClaimCandidateGsnRelevant(full);
       publicProjection = redactClaimCandidateForPublic(full);
+      validCandidates.push(full);
     }
 
     rows.push({
@@ -161,6 +171,7 @@ function validateBatch(
     gsnReadyRows: rows.filter((r) => r.gsnRelevant).length,
     publicSafeRows: rows.filter((r) => r.publicSafe && r.valid).length,
     rows,
+    consistency: checkClaimConsistency(validCandidates, now),
     policy: {
       validatesOnly: true,
       writesDatabase: false,

@@ -37,6 +37,37 @@ export class DataNormalizer {
     return price;
   }
 
+  /**
+   * Guard the spread-POINT boundary for structurally fixed-line sports.
+   *
+   * Same failure mode as `sanitizeAmericanPrice` above (an unsanitized upstream
+   * field flowing straight into scoring), just never closed for `point`. MLB's
+   * run line and NHL's puck line are near-universally +/-1.5 (rare alt lines out
+   * to +/-2.5); a value far outside that is not a real quote for these markets —
+   * production has observed magnitudes up to 19.5 on this exact field. The bound
+   * here (6) is deliberately generous — wide enough to never touch a genuine alt
+   * line, tight enough to catch what's actually been seen contaminating the feed.
+   *
+   * Deliberately NOT applied to other sports: NFL/NCAAF/NBA/NCAAB spreads
+   * legitimately range far wider (a 40+ point NCAAF blowout line is real), so a
+   * single global bound would either miss this contamination or reject real
+   * football lines. Scope stays narrow to the two markets actually measured.
+   */
+  private static readonly FIXED_LINE_SPORTS = new Set(["baseball_mlb", "icehockey_nhl"]);
+  private static readonly MAX_FIXED_LINE_POINTS = 6;
+
+  private sanitizeSpreadPoint(sportKey: string, point: number | undefined): number | undefined {
+    if (point === undefined || point === null) return undefined;
+    if (!Number.isFinite(point)) return undefined;
+    if (
+      DataNormalizer.FIXED_LINE_SPORTS.has(sportKey) &&
+      Math.abs(point) > DataNormalizer.MAX_FIXED_LINE_POINTS
+    ) {
+      return undefined;
+    }
+    return point;
+  }
+
   normalizeGames(events: OddsApiEvent[]): NormalizedGame[] {
     return events.map((event) => ({
       externalId: event.id,
@@ -103,11 +134,13 @@ export class DataNormalizer {
             results.push({
               ...base,
               market: "SPREADS",
-              spread: home?.point,
+              // Sanitized for fixed-line sports (MLB/NHL) via sanitizeSpreadPoint
+              // above; a leaked/malformed point otherwise flows raw into the
+              // consensus mean and fabricates an unquotable published line.
+              spread: this.sanitizeSpreadPoint(event.sport_key, home?.point),
               // Sanitize the PRICES the same way h2h does — a leaked decimal
               // price (e.g. 1.91 when oddsFormat=american) otherwise flows raw
               // into implied-probability math and fabricates a spurious edge.
-              // `spread` above is a POINT (e.g. -3.5), not a price — left as-is.
               homeSpreadPrice: this.sanitizeAmericanPrice(home?.price),
               awaySpreadPrice: this.sanitizeAmericanPrice(away?.price),
             });

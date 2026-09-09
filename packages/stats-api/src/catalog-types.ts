@@ -22,7 +22,11 @@ export type SportCode =
   | "MLB"
   | "NHL"
   | "MULTI"
-  | "SOCCER";
+  | "SOCCER"
+  | "WNBA"
+  | "F1"
+  | "TENNIS"
+  | "MMA";
 
 export interface MetricDef {
   readonly id: string;

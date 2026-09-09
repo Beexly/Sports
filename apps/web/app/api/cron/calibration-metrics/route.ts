@@ -59,6 +59,8 @@ import {
 } from "@/lib/calibration/publish-time-market-p-loader";
 import { persistProvenPathPlan } from "@/lib/ops/proven-path-durable";
 import { backfillIndependentTrueProb } from "@sports/ingestion-pipeline";
+import { checkForRegression } from "@sports/prediction-engine";
+import { getRecentCalibrationSnapshot } from "@/lib/ops/calibration-regression-snapshot";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -513,6 +515,50 @@ export async function GET(request: Request): Promise<NextResponse> {
       }
     } catch {
       /* ranking diagnostic best-effort */
+    }
+
+    // Calibration-regression check (shadow/internal only — never a gate input).
+    // checkForRegression/buildCalibrationSnapshot are pure and were previously
+    // unwired: this connects them to real settled picks so a live regression
+    // raises a real alert instead of nothing. Best-effort: a failure here must
+    // never fail the cron run that everything above this point depends on.
+    try {
+      const windowDays = 14;
+      const now = new Date();
+      const [current, baseline] = await Promise.all([
+        getRecentCalibrationSnapshot(now, { windowDays }),
+        getRecentCalibrationSnapshot(new Date(now.getTime() - windowDays * 24 * 60 * 60 * 1000), { windowDays }),
+      ]);
+      if (current && baseline) {
+        const verdict = checkForRegression(current, baseline);
+        await writeFile(
+          path.join(dir, "regression-check.json"),
+          JSON.stringify(verdict, null, 2),
+          "utf8",
+        ).catch(() => undefined);
+        if (verdict.regressed) {
+          console.error(
+            `[cron:calibration-metrics] CALIBRATION REGRESSION: ${verdict.reasons.join(" ")} ` +
+              `(current n=${current.sampleSize} "${current.windowLabel}", baseline n=${baseline.sampleSize} "${baseline.windowLabel}")`,
+          );
+          captureError(new Error(`Calibration regression detected: ${verdict.reasons.join(" ")}`), {
+            route: "cron/calibration-metrics",
+            check: "regression-detector",
+            brierDelta: verdict.brierDelta,
+            resolutionDelta: verdict.resolutionDelta,
+          });
+        } else if (!verdict.sufficientSample) {
+          console.info(`[cron:calibration-metrics] regression check: ${verdict.reasons.join(" ")}`);
+        } else {
+          console.info(
+            `[cron:calibration-metrics] regression check: no regression (Δbrier=${verdict.brierDelta.toFixed(4)}, ΔRES=${verdict.resolutionDelta.toFixed(4)}).`,
+          );
+        }
+      }
+    } catch (regressionErr) {
+      console.warn(
+        `[cron:calibration-metrics] regression check skipped: ${regressionErr instanceof Error ? regressionErr.message : String(regressionErr)}`,
+      );
     }
 
     // Sample + settlement for eligibility (canonical only)

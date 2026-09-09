@@ -70,6 +70,8 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
   const [open, setOpen] = useState(false);
   const [load, setLoad] = useState<LoadState>({ status: "idle" });
   const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const triggerBtnRef = useRef<HTMLButtonElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
 
   const handleOpen = useCallback(async () => {
     setOpen(true);
@@ -114,11 +116,33 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
 
   const handleClose = useCallback(() => setOpen(false), []);
 
-  // Escape key to close + focus management
+  // Escape to close, Tab trapped inside the panel, focus managed both ways:
+  // moved into the drawer on open (already did this) and explicitly
+  // returned to the button that opened it on close, so a keyboard or
+  // screen-reader user isn't dropped back at the top of the document.
   useEffect(() => {
     if (!open) return;
+    const trigger = triggerBtnRef.current;
     const onKey = (e: KeyboardEvent) => {
-      if (e.key === "Escape") setOpen(false);
+      if (e.key === "Escape") {
+        setOpen(false);
+        return;
+      }
+      if (e.key === "Tab" && dialogRef.current) {
+        const focusables = dialogRef.current.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input, select, textarea, [tabindex]:not([tabindex="-1"])'
+        );
+        if (focusables.length === 0) return;
+        const first = focusables[0]!;
+        const last = focusables[focusables.length - 1]!;
+        if (e.shiftKey && document.activeElement === first) {
+          e.preventDefault();
+          last.focus();
+        } else if (!e.shiftKey && document.activeElement === last) {
+          e.preventDefault();
+          first.focus();
+        }
+      }
     };
     window.addEventListener("keydown", onKey);
     // Focus the close button on open for keyboard users
@@ -129,12 +153,14 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
     return () => {
       window.removeEventListener("keydown", onKey);
       document.body.style.overflow = prevOverflow;
+      trigger?.focus();
     };
   }, [open]);
 
   return (
     <>
       <button
+        ref={triggerBtnRef}
         type="button"
         onClick={handleOpen}
         className="inline-flex min-h-11 w-full items-center justify-center gap-1.5 rounded-full border border-ion-blue/30 bg-ion-blue/5 px-4 py-2 text-[11px] font-medium tracking-wide text-ion-blue/90 transition hover:border-ion-blue/50 hover:bg-ion-blue/10 hover:text-ion-blue-glow sm:w-auto"
@@ -146,6 +172,7 @@ export function EvidenceAuditDrawer({ pickId, label }: EvidenceAuditDrawerProps)
 
       {open && (
         <div
+          ref={dialogRef}
           role="dialog"
           aria-modal="true"
           aria-label="Evidence audit"

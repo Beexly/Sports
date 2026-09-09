@@ -4,6 +4,7 @@
  * Used as independent-signal INPUTS only:
  *  - Season standings win% → logistic fair value (never a book line)
  *  - Completed schedule scores → densify TeamGameLog when matched to Game rows
+ *  - Injured-list transactions → player-availability signal (see below)
  *
  * Never invents wins/losses/scores. Soft-fails empty on HTTP/parse miss.
  * Attribution: MLB Stats API public endpoints.
@@ -202,6 +203,111 @@ export async function fetchMlbCompletedGamesForDate(
           awayScore,
         });
       }
+    }
+    return out;
+  } catch {
+    return [];
+  }
+}
+
+export type MlbInjuredListAction = "placed" | "activated" | "transferred" | "other";
+
+export type MlbInjuredListMove = {
+  readonly transactionId: number;
+  readonly playerId: number;
+  readonly playerName: string;
+  readonly teamId: number;
+  readonly teamName: string;
+  readonly date: string;
+  readonly action: MlbInjuredListAction;
+  /** Verbatim upstream text — never paraphrased, so a caller can re-derive
+   * anything this parser's classification might have gotten wrong. */
+  readonly description: string;
+};
+
+function classifyIlAction(description: string): MlbInjuredListAction {
+  const lower = description.toLowerCase();
+  if (lower.includes("activated")) return "activated";
+  if (lower.includes("transferred")) return "transferred";
+  if (lower.includes("placed")) return "placed";
+  return "other";
+}
+
+/**
+ * Fetch injured-list transactions (both MLB clubs and their minor-league
+ * affiliates — this endpoint's `sportId=1` scope covers the whole
+ * organization tree, verified live 2026-09-07) for a date range.
+ *
+ * Real MLB team names live at `fetchMlbStandings()`; this function does not
+ * filter to them, mirroring `fetchMlbCompletedGamesForDate`'s own design —
+ * a downstream caller matching against real MLB Game rows naturally never
+ * matches an affiliate's name, so no team allowlist needs guessing here.
+ *
+ * Filters to `typeDesc === "Status Change"` descriptions mentioning
+ * "injured list" (the exact, stable phrasing this feed uses for every IL
+ * move — verified against a real Aug 2026 sample: "placed ... on the
+ * 15-day injured list", "activated ... from the 60-day injured list",
+ * "transferred ... from the 15-day injured list to the 60-day injured
+ * list"). Soft-fails [] on HTTP/parse miss, same as every other fetcher
+ * in this file — never invents a move that didn't happen.
+ */
+export async function fetchMlbInjuredListMoves(
+  options?: {
+    readonly startDate?: string;
+    readonly endDate?: string;
+    readonly fetchImpl?: typeof fetch;
+  },
+): Promise<MlbInjuredListMove[]> {
+  const fetchImpl = options?.fetchImpl ?? fetch;
+  const endDate = options?.endDate ?? isoDateUtc(new Date());
+  const startDate =
+    options?.startDate ??
+    isoDateUtc(new Date(Date.now() - 3 * 24 * 60 * 60 * 1000));
+  const url =
+    `${MLB_STATS_BASE}/transactions?sportId=1` +
+    `&startDate=${encodeURIComponent(startDate)}&endDate=${encodeURIComponent(endDate)}`;
+  try {
+    const res = await fetchImpl(url, {
+      headers: { Accept: "application/json" },
+      cache: "no-store",
+    });
+    if (!res.ok) return [];
+    const body = (await res.json()) as Loose;
+    const transactions = (body["transactions"] as Loose[] | undefined) ?? [];
+    const out: MlbInjuredListMove[] = [];
+    for (const t of transactions) {
+      const typeDesc = String(t["typeDesc"] ?? "");
+      const description = String(t["description"] ?? "");
+      if (typeDesc !== "Status Change") continue;
+      if (!description.toLowerCase().includes("injured list")) continue;
+      const person = (t["person"] as Loose | undefined) ?? {};
+      const team = (t["toTeam"] as Loose | undefined) ?? {};
+      const transactionId = Number(t["id"]);
+      const playerId = Number(person["id"]);
+      const playerName = String(person["fullName"] ?? "").trim();
+      const teamId = Number(team["id"]);
+      const teamName = String(team["name"] ?? "").trim();
+      const date = String(t["date"] ?? "");
+      if (
+        !Number.isFinite(transactionId) ||
+        !Number.isFinite(playerId) ||
+        !playerName ||
+        !Number.isFinite(teamId) ||
+        !teamName ||
+        !date
+      ) {
+        continue;
+      }
+      out.push({
+        transactionId,
+        playerId,
+        playerName,
+        teamId,
+        teamName,
+        date,
+        action: classifyIlAction(description),
+        description,
+      });
     }
     return out;
   } catch {

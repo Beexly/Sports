@@ -25,6 +25,9 @@ export interface ProofBucket {
   /** True once the band clears the publish floor (30+ settled picks); below it,
    * its observed win rate is withheld (a 2-pick "100%" is not a claim we publish). */
   readonly sufficientSample: boolean;
+  /** 95% Clopper-Pearson interval on observedWinRate; null with no decided picks. */
+  readonly clopperPearsonLow: number | null;
+  readonly clopperPearsonHigh: number | null;
 }
 
 export interface ProofExplorerProps {
@@ -77,6 +80,8 @@ export function ProofExplorer({
               observedWinRate: b.observedWinRate,
               sampleSize: b.sampleSize,
               sufficientSample: b.sufficientSample,
+              clopperPearsonLow: b.clopperPearsonLow,
+              clopperPearsonHigh: b.clopperPearsonHigh,
             }))}
             sampleSize={sampleSize}
           />

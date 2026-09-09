@@ -4,6 +4,7 @@ import {
   buildMlbWinPctLookup,
   lookupMlbWinPct,
   fetchMlbCompletedGamesForDate,
+  fetchMlbInjuredListMoves,
 } from "../mlb-statsapi-client.js";
 
 describe("mlb-statsapi-client", () => {
@@ -100,5 +101,81 @@ describe("mlb-statsapi-client", () => {
     expect(games).toHaveLength(1);
     expect(games[0]!.homeScore).toBe(5);
     expect(games[0]!.awayTeam).toBe("Cincinnati Reds");
+  });
+
+  // Real shapes captured live from statsapi.mlb.com/api/v1/transactions
+  // (2026-08-01 sample) — not invented fixtures.
+  it("parses injured-list moves and classifies action from real transaction shapes", async () => {
+    const payload = {
+      transactions: [
+        {
+          id: 933995,
+          person: { id: 694361, fullName: "Will Klein" },
+          toTeam: { id: 119, name: "Los Angeles Dodgers" },
+          date: "2026-08-01",
+          typeCode: "SC",
+          typeDesc: "Status Change",
+          description:
+            "Los Angeles Dodgers placed RHP Will Klein on the 15-day injured list. Right elbow discomfort.",
+        },
+        {
+          id: 933953,
+          person: { id: 663604, fullName: "Brandon Lockridge" },
+          toTeam: { id: 158, name: "Milwaukee Brewers" },
+          date: "2026-08-01",
+          typeCode: "SC",
+          typeDesc: "Status Change",
+          description:
+            "Milwaukee Brewers activated LF Brandon Lockridge from the 60-day injured list.",
+        },
+        {
+          id: 933803,
+          person: { id: 702474, fullName: "Mike Paredes" },
+          toTeam: { id: 142, name: "Minnesota Twins" },
+          date: "2026-08-01",
+          typeCode: "SC",
+          typeDesc: "Status Change",
+          description:
+            "Minnesota Twins transferred RHP Mike Paredes from the 15-day injured list to the 60-day injured list. Left oblique strain.",
+        },
+        {
+          // Non-IL transaction — must be filtered out.
+          id: 933811,
+          person: { id: 844379, fullName: "Hunter Kingsbury" },
+          toTeam: { id: 6096, name: "Brewster Whitecaps" },
+          date: "2026-08-01",
+          typeCode: "ASG",
+          typeDesc: "Assigned",
+          description: "OF Hunter Kingsbury assigned to Brewster Whitecaps.",
+        },
+      ],
+    };
+    const fetchImpl = vi.fn(async () => ({
+      ok: true,
+      json: async () => payload,
+    })) as unknown as typeof fetch;
+
+    const moves = await fetchMlbInjuredListMoves({
+      startDate: "2026-08-01",
+      endDate: "2026-08-01",
+      fetchImpl,
+    });
+
+    expect(moves).toHaveLength(3);
+    expect(moves[0]!).toMatchObject({
+      playerName: "Will Klein",
+      teamName: "Los Angeles Dodgers",
+      action: "placed",
+    });
+    expect(moves[1]!.action).toBe("activated");
+    expect(moves[2]!.action).toBe("transferred");
+  });
+
+  it("soft-fails empty on HTTP error for injured-list moves", async () => {
+    const fetchImpl = vi.fn(async () => ({
+      ok: false,
+      status: 500,
+    })) as unknown as typeof fetch;
+    expect(await fetchMlbInjuredListMoves({ fetchImpl })).toEqual([]);
   });
 });

@@ -223,12 +223,19 @@ function gates(overrides: Partial<ReadinessGates> = {}): ReadinessGates {
   } as unknown as ReadinessGates;
 }
 
+// Relative to the real clock (the C-119 follow-up guard in processSport
+// compares a game's kickoff against its own `new Date()`, not a mockable
+// "now"), not a fixed calendar date that would eventually fall into the past
+// on its own. Fixed once at module load so every test that relies on the
+// default gets byte-identical Date objects (safe for `toEqual`/`toBe`).
+const FUTURE_KICKOFF = new Date(Date.now() + 6 * 3_600_000);
+
 function normalizedGame(overrides: Record<string, unknown> = {}): Record<string, unknown> {
   return {
     externalId: "ext-1",
     homeTeam: "Chiefs",
     awayTeam: "Bills",
-    commenceTime: new Date("2026-06-12T17:00:00.000Z"),
+    commenceTime: FUTURE_KICKOFF,
     ...overrides,
   };
 }
@@ -357,14 +364,58 @@ describe("processSport", () => {
       warn.mockRestore();
     });
 
+    it("generates no pick when ESPN reports confirmed but the game's own kickoff is already at/before this cycle's fetch time (C-119 follow-up)", async () => {
+      // ESPN's board can lag reality (a delay or postponement it hasn't
+      // reflected yet). This is the redundant, ESPN-independent guard: our own
+      // kickoff — already in the past relative to any real test run time —
+      // must refuse scoring even when the (mocked) confirmer says "confirmed".
+      const pastKickoff = new Date("2020-01-01T00:00:00.000Z");
+      mocks.normalizeGames.mockReturnValue([normalizedGame({ commenceTime: pastKickoff })]);
+      mocks.gameUpsert.mockResolvedValue({ id: "game-1", homeTeamName: "Chiefs", awayTeamName: "Bills" });
+      mocks.confirmBatch.mockResolvedValue({
+        status: "ok",
+        eventsOnBoard: 1,
+        byGameId: new Map([
+          [
+            "game-1",
+            {
+              status: "confirmed",
+              event: { externalId: "espn:nfl:1", commenceTime: pastKickoff },
+              correctedCommenceTime: null,
+            },
+          ],
+        ]),
+      });
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(mocks.scoreGames).toHaveBeenCalledWith([], expect.any(Date));
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+      expect(result).toMatchObject({ status: "success", games: 1, picks: 0 });
+      expect(
+        warn.mock.calls.some(
+          (c) => /kickoff .* is at or before this cycle's fetch time/.test(String(c[0])) && /game-1/.test(String(c[0])),
+        ),
+      ).toBe(true);
+      warn.mockRestore();
+    });
+
     it("probes the guard with the names the row stores, not the feed's city-only names (real confirmer, MLB)", async () => {
       // Feed says "New York"; the row keeps "New York Yankees" through the
       // plain-upsert name guard. The board lists the Yankees AND the Mets that
       // day, so a bare "New York" is an ambiguous city the matcher refuses;
       // the stored name confirms. ESPN-shaped TEST FIXTURE, injected fetch.
       const MLB = { key: "baseball_mlb", name: "MLB", displayName: "MLB" } as const;
-      const kickoff = new Date("2026-06-12T17:00:00.000Z");
-      const runAt = new Date("2026-06-12T15:00:00.000Z");
+      // Pinned to a fixed UTC clock (not just Date.now() + offset) so the
+      // event dates below stay on the same UTC calendar day regardless of
+      // what real time this suite happens to run at; 30h out is comfortably
+      // ahead of "now" even after truncating to that fixed hour.
+      const kickoff = new Date(Date.now() + 30 * 3_600_000);
+      kickoff.setUTCHours(17, 0, 0, 0);
+      const runAt = new Date(kickoff.getTime() - 2 * 3_600_000);
+      const dateKey = kickoff.toISOString().slice(0, 10).replace(/-/g, "");
       mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
         const where = (args as { where?: { externalId?: string; id?: string } }).where;
         return where?.externalId === "odds-api-1"
@@ -398,8 +449,13 @@ describe("processSport", () => {
       });
       const board = {
         events: [
-          espnEvent("501", "2026-06-12T17:05Z", "New York Yankees", "Tampa Bay Rays"),
-          espnEvent("502", "2026-06-12T23:10Z", "New York Mets", "Atlanta Braves"),
+          espnEvent("501", new Date(kickoff.getTime() + 5 * 60_000).toISOString(), "New York Yankees", "Tampa Bay Rays"),
+          espnEvent(
+            "502",
+            new Date(kickoff.getTime() + 6 * 3_600_000 + 10 * 60_000).toISOString(),
+            "New York Mets",
+            "Atlanta Braves",
+          ),
         ],
       };
       const espnFetch = vi.fn<(url: string) => Promise<Response>>(
@@ -423,7 +479,7 @@ describe("processSport", () => {
         [expect.objectContaining({ id: "game-1", homeTeamName: "New York Yankees", awayTeamName: "Tampa Bay Rays" })],
       );
       expect(espnFetch).toHaveBeenCalledTimes(1);
-      expect(String(espnFetch.mock.calls[0]![0])).toContain("/baseball/mlb/scoreboard?dates=20260612");
+      expect(String(espnFetch.mock.calls[0]![0])).toContain(`/baseball/mlb/scoreboard?dates=${dateKey}`);
       expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
       expect(result).toMatchObject({ status: "success", games: 1, picks: 1 });
       // Control on the same cached board: the feed's own name is refused.
@@ -480,7 +536,7 @@ describe("processSport", () => {
     });
 
     it("applies ESPN's kickoff to a confirmed old row when the batch carries a correction", async () => {
-      const corrected = new Date("2026-06-12T19:30:00.000Z");
+      const corrected = new Date(FUTURE_KICKOFF.getTime() + 2.5 * 3_600_000);
       mocks.confirmBatch.mockResolvedValue({
         status: "ok",
         eventsOnBoard: 1,
@@ -512,8 +568,8 @@ describe("processSport", () => {
     });
 
     it("keeps the feed kickoff in the row and in every input when the correction write fails", async () => {
-      const feedTime = new Date("2026-06-12T17:00:00.000Z");
-      const corrected = new Date("2026-06-12T19:30:00.000Z");
+      const feedTime = FUTURE_KICKOFF;
+      const corrected = new Date(FUTURE_KICKOFF.getTime() + 2.5 * 3_600_000);
       mocks.confirmBatch.mockResolvedValue({
         status: "ok",
         eventsOnBoard: 1,
@@ -1269,7 +1325,7 @@ describe("processSport", () => {
       sportId: "sport-1",
       homeTeamName: "Kansas City Chiefs",
       awayTeamName: "Buffalo Bills",
-      commenceTime: new Date("2026-06-12T17:00:00.000Z"),
+      commenceTime: FUTURE_KICKOFF,
     };
 
     beforeEach(() => {

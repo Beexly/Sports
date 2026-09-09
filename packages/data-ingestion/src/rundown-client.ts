@@ -385,6 +385,14 @@ export type RundownFetchResult = {
   readonly events: OddsApiEvent[];
   readonly remaining: number | null;
   readonly error?: string;
+  /**
+   * True when this call observed an HTTP 429 from TheRundown on any day in
+   * the fan-out. Callers with a durable, cross-invocation store (this package
+   * has none — see rundown-quota-gate.ts in @sports/ingestion-pipeline)
+   * should treat this as an authoritative "stop calling TheRundown until the
+   * quota window resets" signal rather than re-deriving it from `error` text.
+   */
+  readonly rateLimited: boolean;
 };
 
 export async function fetchRundownEventsForSport(
@@ -404,7 +412,12 @@ export async function fetchRundownEventsForSport(
   assertIngestible("therundown");
   const sportId = RUNDOWN_SPORT_IDS[sportKey];
   if (sportId == null) {
-    return { events: [], remaining: null, error: `rundown: no sport_id map for ${sportKey}` };
+    return {
+      events: [],
+      remaining: null,
+      error: `rundown: no sport_id map for ${sportKey}`,
+      rateLimited: false,
+    };
   }
   const startDate = options?.date ?? todayIsoUtc();
   const envSpanRaw = Number(process.env["RUNDOWN_DAY_SPAN"] ?? "");
@@ -467,11 +480,13 @@ export async function fetchRundownEventsForSport(
       error: errors.length
         ? `rundown empty (${daySpan}d): ${errors.slice(0, 4).join("; ")}`
         : `rundown empty (${daySpan}d): no bookmaker lines`,
+      rateLimited,
     };
   }
   return {
     events: all,
     remaining: null,
     error: errors.length ? `partial: ${errors.slice(0, 3).join("; ")}` : undefined,
+    rateLimited,
   };
 }

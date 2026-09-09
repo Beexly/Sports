@@ -69,6 +69,7 @@ import type {
   OddsApiEvent,
 } from "@sports/types";
 import { recordSourceSnapshot } from "./source-snapshot.js";
+import { checkRundownQuotaGate, recordRundownRateLimited } from "./rundown-quota-gate.js";
 import {
   resolveCanonicalGame,
   preferLongerTeamName,
@@ -113,6 +114,45 @@ function paidCallJustified(
   if (need === "scores") return false;
   // odds: no free odds source is cleared today → paid is always justified.
   return true;
+}
+
+/**
+ * Gate + fetch TheRundown together so every call site pays for the durable
+ * day-quota check and, on an observed 429, durably records it (see
+ * rundown-quota-gate.ts for why: TheRundown's own 429 is the only honest
+ * signal we have, and it must survive across serverless invocations, not
+ * just within one).
+ *
+ * Returns `result: null` when the gate itself refused the call (no network
+ * request was made) — the caller treats that exactly like "rundown key
+ * ABSENT": a benign, already-explained empty result, not an error.
+ */
+async function fetchRundownGated(
+  sportKey: SupportedSportKey,
+  apiKey: string,
+  logPrefix: string,
+): Promise<{
+  result: Awaited<ReturnType<typeof fetchRundownEventsForSport>> | null;
+  gateNote: string | null;
+}> {
+  const gate = await checkRundownQuotaGate(db);
+  if (!gate.allowed) {
+    return { result: null, gateNote: gate.reason ?? "rundown day-quota gate closed" };
+  }
+  const result = await fetchRundownEventsForSport(sportKey, apiKey);
+  if (result.rateLimited) {
+    try {
+      await recordRundownRateLimited(db);
+    } catch (err) {
+      // Non-fatal: worst case is the NEXT invocation re-attempts once more
+      // before its own 429 is recorded — never block ingestion on this.
+      console.warn(
+        `${logPrefix} ${sportKey}: failed to record rundown 429 for the day-quota gate — ` +
+          `${err instanceof Error ? err.message : err}`,
+      );
+    }
+  }
+  return { result, gateNote: null };
 }
 
 export interface SportConfig {
@@ -443,17 +483,21 @@ export async function processSport(
     const rundownKey = resolveRundownApiKey();
     if (events.length === 0) {
       if (rundownKey) {
-        const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
-        if (rd.events.length > 0) {
-          events = rd.events;
+        const { result: rd, gateNote } = await fetchRundownGated(sport.key, rundownKey, logPrefix);
+        if (gateNote) {
+          oddsProviderTag = "therundown-quota-closed";
+          rundownAttemptNote = gateNote;
+          console.warn(`${logPrefix} ${sport.key}: ${gateNote}`);
+        } else if (rd!.events.length > 0) {
+          events = rd!.events;
           oddsProviderTag = "therundown";
           console.log(
             `${logPrefix} ${sport.key}: rundown free path ${events.length} events` +
-              (rd.error ? ` (note: ${rd.error})` : ""),
+              (rd!.error ? ` (note: ${rd!.error})` : ""),
           );
         } else {
           oddsProviderTag = "therundown-empty";
-          rundownAttemptNote = rd.error ?? "rundown empty: no bookmaker lines";
+          rundownAttemptNote = rd!.error ?? "rundown empty: no bookmaker lines";
           console.warn(`${logPrefix} ${sport.key}: rundown empty — ${rundownAttemptNote}`);
         }
       } else {
@@ -461,15 +505,17 @@ export async function processSport(
       }
     } else if (rundownKey && eventsBelowBookmakerThreshold(events, THIN_FILL_MIN_BOOKMAKERS).length > 0) {
       try {
-        const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
-        if (rd.events.length > 0) {
-          const merged = mergeBookmakersIntoPrimary(events, rd.events, THIN_FILL_MIN_BOOKMAKERS);
+        const { result: rd, gateNote } = await fetchRundownGated(sport.key, rundownKey, logPrefix);
+        if (gateNote) {
+          console.warn(`${logPrefix} ${sport.key}: thin-fill skipped — ${gateNote}`);
+        } else if (rd!.events.length > 0) {
+          const merged = mergeBookmakersIntoPrimary(events, rd!.events, THIN_FILL_MIN_BOOKMAKERS);
           events = merged.events;
           if (merged.filledGameIds.length > 0) {
             oddsProviderTag = `${oddsProviderTag}+therundown-thin`;
             console.log(
               `${logPrefix} ${sport.key}: rundown thin-fill ${merged.filledGameIds.length} games` +
-                (rd.error ? ` (note: ${rd.error})` : ""),
+                (rd!.error ? ` (note: ${rd!.error})` : ""),
             );
           }
         }
@@ -875,7 +921,6 @@ export async function processSport(
         }
         continue;
       }
-      confirmedGameIds.add(gameRecord.id);
       // One effective kickoff for every consumer below (enrichment, independent
       // fair values, the OddsInput the scorer reads). It is the feed's time
       // unless ESPN's correction is persisted, so the row and this cycle's
@@ -904,6 +949,39 @@ export async function processSport(
           );
         }
       }
+
+      // Redundant, ESPN-independent kickoff guard (C-119 follow-up). The
+      // FixtureConfirmer above trusts ESPN's own listed status to say whether
+      // a game has started; when that status lags reality (a delay/postponement
+      // ESPN hasn't reflected yet, or any other drift between its board and
+      // the actual first pitch), "confirmed" can still be wrong. Proven in
+      // production: Rangers @ Angels (2026-08-23) held a clean, unanimous -1.5
+      // MLB run line across 11 books for 16 straight hours — confirmed
+      // "not started" by this same ESPN check every cycle — then the market
+      // genuinely went live (in-play run line escalating past -5.5), and a
+      // later cycle inside that live window still read "confirmed" and wrote
+      // -3.75 into the published pick's line: a run line no book ever quoted
+      // pre-game. This check does not depend on ESPN being right: it refuses
+      // to score/refresh using odds fetched at or after the kickoff we already
+      // trust for settlement and CLV grading (settle-sport.ts grades against
+      // clvLockLine precisely because pick.line drifts on every refresh cycle
+      // while PENDING, and it is pick.line — not clvLockLine — that the public
+      // API serves at apps/web/app/api/picks/route.ts).
+      if (kickoff.getTime() <= fetchedAt.getTime()) {
+        fixtureUnconfirmed += 1;
+        console.warn(
+          `${logPrefix} ${sport.key}: kickoff ${kickoff.toISOString()} is at or before this cycle's ` +
+            `fetch time ${fetchedAt.toISOString()} though ESPN reports it not yet started — refusing ` +
+            `to score/refresh with possibly-live odds: ${formatFixtureLine({
+              id: gameRecord.id,
+              homeTeamName: gameRecord.homeTeamName,
+              awayTeamName: gameRecord.awayTeamName,
+              commenceTime: kickoff,
+            })}`,
+        );
+        continue;
+      }
+      confirmedGameIds.add(gameRecord.id);
 
       const gameOdds = normalizedOdds.filter((o) => o.gameExternalId === game.externalId);
 

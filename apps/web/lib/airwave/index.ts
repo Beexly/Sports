@@ -23,6 +23,7 @@ export * from "./sports-source-roadmap";
 export * from "./intelligence-control-plane";
 export * from "./show-block-import";
 export * from "./claim-batch-validator";
+export * from "./claim-consistency-check";
 export {
   DEMO_PUNDITS,
   DEMO_CLAIMS,

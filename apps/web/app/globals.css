@@ -765,3 +765,41 @@
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
 }
+
+/*
+ * ── Print stylesheet ─────────────────────────────────────────────────────
+ * The cockpit theme is dark-on-dark with glow effects designed for a screen;
+ * printed as-is it wastes ink and, worse, can render near-white text on
+ * white paper (unreadable). This is a global, print-only override — it has
+ * zero effect on screen rendering — so pages like /calibration, /performance,
+ * /clv and /ledger (the "proof" surfaces most likely to be printed or saved
+ * as a PDF to share) come out as plain, legible dark-on-white text instead of
+ * a blank or unreadable page. Chrome that only makes sense on a live page
+ * (nav, footer, buttons, decorative glow) is hidden; content and its
+ * necessary borders remain.
+ */
+@media print {
+  html, body {
+    background: #ffffff !important;
+    background-image: none !important;
+    color: #111111 !important;
+  }
+  * {
+    color: #111111 !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+  }
+  .nav,
+  .footer,
+  button,
+  [aria-hidden="true"] {
+    display: none !important;
+  }
+  a {
+    color: #111111 !important;
+    text-decoration: underline;
+  }
+  main {
+    background: transparent !important;
+  }
+}

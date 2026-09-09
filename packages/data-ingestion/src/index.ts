@@ -73,6 +73,13 @@ export {
 } from "./espn-powerindex-client.js";
 export { DataNormalizer } from "./normalizer.js";
 export {
+  detectCrossBookOutliers,
+  findOddsOutliers,
+  DEFAULT_MODIFIED_Z_THRESHOLD,
+  MIN_QUOTES_TO_JUDGE,
+} from "./cross-book-outlier.js";
+export type { CrossBookQuote, CrossBookOutlierResult, OddsOutlierFlag } from "./cross-book-outlier.js";
+export {
   enrichGameContext,
   trackOpeningLines,
   computeRestDays,

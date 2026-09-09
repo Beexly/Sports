@@ -11,6 +11,7 @@ import { EvidenceAuditDrawer } from "./evidence-audit-drawer";
 import { ValueGapBadge } from "./value-gap";
 import { AskWhy } from "./ask-why";
 import { VerifyPickButton } from "./verify-pick-button";
+import { SharePickButton } from "./share-pick-button";
 import { DevigMethodDisclosure } from "./devig-method-disclosure";
 import { displaySelection, NO_BOOK_PRICE_LABEL } from "@/lib/picks/display-selection";
 import { formatMarketImpliedLabel } from "@/lib/picks/market-implied-display";
@@ -247,7 +248,7 @@ export function PickCard({
       {pick.receiptHash && <VerifyPickButton receiptHash={pick.receiptHash} />}
 
       {/* Evidence audit trigger — visible to ALL tiers for real picks (drives upgrade for FREE). */}
-      <div className="flex items-center justify-stretch sm:justify-end">
+      <div className="flex flex-wrap items-center justify-stretch gap-2 sm:justify-end">
         {pick.isAuditAvailable ? (
           <EvidenceAuditDrawer pickId={pick.id} />
         ) : (
@@ -255,6 +256,12 @@ export function PickCard({
             Evidence opens on live picks
           </span>
         )}
+        <SharePickButton
+          awayTeam={pick.game.awayTeam}
+          homeTeam={pick.game.homeTeam}
+          selection={displaySelection(pick.selection)}
+          receiptHash={pick.receiptHash ?? null}
+        />
       </div>
 
       {/* Glass-box explainer — PRO+ only, on real picks (server enforces the gate too). */}

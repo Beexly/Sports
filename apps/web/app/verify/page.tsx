@@ -3,12 +3,30 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { VerifyConsole } from "@/components/trust-ledger/verify-console";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import { jsonLdScript } from "@/lib/seo/json-ld";
+import { SITE_URL } from "@/lib/seo/site-url";
+
+const VERIFY_DESCRIPTION =
+  "Picks are committed to tamper-evident SHA-256 receipts before kickoff and never rewritten. Paste a receipt hash and check the commitment yourself: the integrity check runs live against the stored record.";
 
 export const metadata: Metadata = {
   title: "Verify a Pick · Tamper-Evident Proof of Record",
-  description:
-    "Picks are committed to tamper-evident SHA-256 receipts before kickoff and never rewritten. Paste a receipt hash and check the commitment yourself: the integrity check runs live against the stored record.",
+  description: VERIFY_DESCRIPTION,
   alternates: { canonical: "/verify" },
+  openGraph: {
+    title: "Verify a Pick · Tamper-Evident Proof of Record",
+    description: VERIFY_DESCRIPTION,
+    url: "/verify",
+    type: "website",
+  },
+};
+
+const verifyJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebPage",
+  name: "Verify a Pick · Tamper-Evident Proof of Record",
+  description: VERIFY_DESCRIPTION,
+  url: `${SITE_URL}/verify`,
 };
 
 export default function VerifyPage({
@@ -26,6 +44,10 @@ export default function VerifyPage({
     : "";
   return (
     <div className="relative isolate flex min-h-screen flex-col bg-obsidian text-ion-white">
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(verifyJsonLd) }}
+      />
       {/* Same atmosphere as /proof and /calibration — the trust surfaces read
           as one room. */}
       <GeneratedPlate assetId="proof-crystal" className="-z-10 opacity-20" />
