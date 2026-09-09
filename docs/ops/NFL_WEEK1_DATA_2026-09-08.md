@@ -14,8 +14,11 @@ public `nflverse-data` GitHub release assets (the same URLs
 code reading with file:line citations. Any cell that would require a
 production DB read is marked **NOT RUN (no DB access)**, not guessed.
 
-## Commands run (templates below; one concrete resolved example per command,
-so any cell is reproducible without guessing what YYYYMMDD/tag/file resolve to)
+## Commands run (one concrete, resolved, copy-pasteable example per command
+shape below — HEAD for existence, GET+count for row counts. Narrowed claim,
+not "every cell": the (tag, file) pairs are listed so the same two shapes can
+be re-run against any of them, not because every one was individually re-run
+here)
 
 ```bash
 # 1. Live truth surface
@@ -26,14 +29,22 @@ curl -sS https://www.galaxysportsedge.com/api/ops/public-surface-truth
 # (8 dates). Resolved example (the 09-09 date):
 curl -sS "https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard?dates=20260909"
 
-# 3. nflverse-data public release assets (HEAD for existence, GET for row
-# counts); <tag> is the nflverse-data release name, <file> the CSV/CSV.GZ
-# asset inside it. Resolved example (Section B's depth-charts row):
+# 3a. nflverse-data public release assets, HEAD for existence. Resolved
+# example (Section B's depth-charts row):
 curl -sSI -L "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2026.csv"
-# other (tag, file) pairs queried the same way: rosters/roster_2026.csv,
-# injuries/injuries_2026.csv, nextgen_stats/ngs_passing.csv.gz (also
-# ngs_receiving.csv.gz, ngs_rushing.csv.gz), stats_player/stats_player_week_2026.csv,
-# pbp/play_by_play_2026.csv, snap_counts/snap_counts_2026.csv
+
+# 3b. Same assets, GET + row count (uncompressed .csv; a .csv.gz asset pipes
+# through zcat first). Resolved example, the 505,423-row depth-charts count
+# cited in Section B:
+curl -sS -L "https://github.com/nflverse/nflverse-data/releases/download/depth_charts/depth_charts_2026.csv" | wc -l
+# minus 1 for the header row = 505423 data rows
+
+# other (tag, file) pairs queried the same way (3a and/or 3b, per cell):
+# rosters/roster_2026.csv, injuries/injuries_2026.csv,
+# nextgen_stats/ngs_passing.csv.gz (also ngs_receiving.csv.gz,
+# ngs_rushing.csv.gz; .gz assets need `curl ... | zcat | wc -l`),
+# stats_player/stats_player_week_2026.csv, pbp/play_by_play_2026.csv,
+# snap_counts/snap_counts_2026.csv
 ```
 
 Fetched 2026-09-09T00:04–00:20 UTC.
@@ -188,12 +199,21 @@ conflict with in-flight work outside this session's lane.
 - What PR #724 does still carry as an open, named risk in its own PR body:
   **ESPN vs Kalshi team-abbreviation drift (WSH/WAS, JAX/JAC, LAR/LA) has no
   alias lookup yet** — exactly the C-112 alias lesson this session's
-  handoff named. Confirmed still true by reading `galaxy-kalshi-book.ts` on
-  `origin/claude/launch-c104-free-two-book-board` (no alias table present).
-  Of the 16 games in Section A, the codes that would need an alias check are
-  **WSH@PHI** (WSH vs Kalshi's likely WAS), **SF@LAR** (LAR vs Kalshi's
-  likely LA), and **CLE@JAX** (JAX vs Kalshi's likely JAC) — not fixed here,
-  owned by PR #724 (its own "Remaining risk" section already names this).
+  handoff named. Re-confirmed 2026-09-09 by reading `galaxy-kalshi-book.ts`
+  on current `main` (PR #724 has since merged, so this is now the live
+  path, not the branch snapshot): its whole-word matcher (line ~182) scans
+  literal ESPN abbreviations from the fixture feed directly — no alias
+  table, no import of `apps/web/lib/nfl/team-resolver.ts` (this repo's
+  actual internal normalizer, which does carry JAX/JAC and LAR/LA aliases
+  — `packages/ingestion-pipeline/src/kalshi-team-abbr.ts` is a separate,
+  narrower alias set for a different consumer). All three pairs are
+  equally unhandled by the Galaxy/Kalshi path today; nothing in the code
+  makes WSH/WAS more "verified" than the other two, and whether Kalshi's
+  actual ticker text uses WAS/JAC/LA rather than ESPN's WSH/JAX/LAR is a
+  live-market fact only PR #724 can confirm. Of the 16 games in Section A,
+  the codes that would hit this if it matters are **WSH@PHI**, **SF@LAR**,
+  and **CLE@JAX** — not fixed here, owned by PR #724 (its own "Remaining
+  risk" section already names this).
 
 ## Gaps and owners (summary)
 
