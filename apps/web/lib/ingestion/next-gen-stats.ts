@@ -150,8 +150,12 @@ export async function ingestNextGenStats(
   if (data.length === 0) {
     return { status: "source-error", season, statType, rowsWritten: 0, error: "upstream returned no rows; existing data preserved" };
   }
-  await db.nextGenStat.deleteMany({ where: { season, statType } });
-  const created = data.length > 0 ? await db.nextGenStat.createMany({ data }) : null;
+  // One atomic transaction: a createMany failure after deleteMany succeeds
+  // must not leave the season's rows erased with nothing to replace them.
+  const [, created] = await db.$transaction([
+    db.nextGenStat.deleteMany({ where: { season, statType } }),
+    db.nextGenStat.createMany({ data }),
+  ]);
 
-  return { status: "ok", season, statType, rowsWritten: created?.count ?? data.length };
+  return { status: "ok", season, statType, rowsWritten: created.count };
 }

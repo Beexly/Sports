@@ -80,8 +80,12 @@ export async function ingestSnapCounts(
   if (data.length === 0) {
     return { status: "source-error", season, rowsWritten: 0, error: "upstream returned no rows; existing data preserved" };
   }
-  await db.snapCount.deleteMany({ where: { season } });
-  const created = data.length > 0 ? await db.snapCount.createMany({ data }) : null;
+  // One atomic transaction: a createMany failure after deleteMany succeeds
+  // must not leave the season's rows erased with nothing to replace them.
+  const [, created] = await db.$transaction([
+    db.snapCount.deleteMany({ where: { season } }),
+    db.snapCount.createMany({ data }),
+  ]);
 
-  return { status: "ok", season, rowsWritten: created?.count ?? data.length };
+  return { status: "ok", season, rowsWritten: created.count };
 }

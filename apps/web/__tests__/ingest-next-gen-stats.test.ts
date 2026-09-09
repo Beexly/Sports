@@ -1,7 +1,15 @@
 import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 
-const mocks = vi.hoisted(() => ({ deleteMany: vi.fn(), createMany: vi.fn() }));
-vi.mock("@sports/db", () => ({ db: { nextGenStat: { deleteMany: mocks.deleteMany, createMany: mocks.createMany } } }));
+const mocks = vi.hoisted(() => ({
+  deleteMany: vi.fn(), createMany: vi.fn(),
+  transaction: vi.fn((ops: unknown[]) => Promise.all(ops)),
+}));
+vi.mock("@sports/db", () => ({
+  db: {
+    nextGenStat: { deleteMany: mocks.deleteMany, createMany: mocks.createMany },
+    $transaction: mocks.transaction,
+  },
+}));
 vi.mock("@/lib/ingestion/nflverse-gate", async (importActual) => {
   const actual = await importActual<typeof import("@/lib/ingestion/nflverse-gate")>();
   return { ...actual, nflverseIngestionGate: vi.fn(actual.nflverseIngestionGate) };
@@ -15,8 +23,10 @@ const NOW = new Date("2026-06-15T12:00:00.000Z");
 beforeEach(() => {
   mocks.deleteMany.mockReset();
   mocks.createMany.mockReset();
+  mocks.transaction.mockReset();
   (nflverseIngestionGate as Mock).mockClear();
   mocks.createMany.mockImplementation(async (a: { data: unknown[] }) => ({ count: a.data.length }));
+  mocks.transaction.mockImplementation((ops: unknown[]) => Promise.all(ops));
 });
 
 function dataOf(): Array<Record<string, unknown>> {
@@ -93,5 +103,20 @@ describe("ingestNextGenStats", () => {
     const err = await ingestNextGenStats(2024, "passing", { fetcher: async () => { throw new Error("down"); } });
     expect(err.status).toBe("source-error");
     expect(mocks.deleteMany).not.toHaveBeenCalled();
+  });
+
+  it("routes the season replace through db.$transaction (Devin Review, PR #734): a createMany failure cannot erase the season with nothing to replace it", async () => {
+    const records = [{
+      season: "2024", season_type: "REG", week: "1", player_gsis_id: "00-1",
+      player_display_name: "QB", team_abbr: "BUF", avg_time_to_throw: "2.7",
+    }];
+    await ingestNextGenStats(2024, "passing", { now: NOW, fetcher: async () => ({ records }) });
+    expect(mocks.transaction).toHaveBeenCalledTimes(1);
+    expect(mocks.transaction.mock.calls[0]![0]).toHaveLength(2);
+
+    mocks.createMany.mockRejectedValueOnce(new Error("constraint violation"));
+    await expect(
+      ingestNextGenStats(2024, "passing", { now: NOW, fetcher: async () => ({ records }) }),
+    ).rejects.toThrow("constraint violation");
   });
 });

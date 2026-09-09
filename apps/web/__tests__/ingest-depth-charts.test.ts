@@ -6,10 +6,14 @@ import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
  * playerId via gsis crosswalk, skips nameless rows, and replaces the season.
  */
 
-const mocks = vi.hoisted(() => ({ deleteMany: vi.fn(), createMany: vi.fn(), playerFindMany: vi.fn() }));
+const mocks = vi.hoisted(() => ({
+  deleteMany: vi.fn(), createMany: vi.fn(), playerFindMany: vi.fn(),
+  transaction: vi.fn((ops: unknown[]) => Promise.all(ops)),
+}));
 vi.mock("@sports/db", () => ({ db: {
   depthChartEntry: { deleteMany: mocks.deleteMany, createMany: mocks.createMany },
   player: { findMany: mocks.playerFindMany },
+  $transaction: mocks.transaction,
 } }));
 vi.mock("@/lib/ingestion/nflverse-gate", async (importActual) => {
   const actual = await importActual<typeof import("@/lib/ingestion/nflverse-gate")>();
@@ -26,6 +30,7 @@ beforeEach(() => {
   (nflverseIngestionGate as Mock).mockClear();
   mocks.createMany.mockImplementation(async (a: { data: unknown[] }) => ({ count: a.data.length }));
   mocks.playerFindMany.mockResolvedValue([{ id: "pid-00-1", gsisId: "00-1" }]);
+  mocks.transaction.mockImplementation((ops: unknown[]) => Promise.all(ops));
 });
 
 describe("ingestDepthCharts", () => {
@@ -40,6 +45,11 @@ describe("ingestDepthCharts", () => {
     expect(res.status).toBe("ok");
     expect(res.rowsWritten).toBe(2);
     expect(mocks.deleteMany).toHaveBeenCalledWith({ where: { season: 2024 } });
+    // Devin Review (PR #734): delete + insert must be one atomic transaction,
+    // not two independent statements, so a createMany failure after deleteMany
+    // succeeds cannot erase the season's rows with nothing to replace them.
+    expect(mocks.transaction).toHaveBeenCalledTimes(1);
+    expect(mocks.transaction.mock.calls[0]![0]).toHaveLength(2);
     const data = (mocks.createMany.mock.calls[0]![0] as { data: Array<Record<string, unknown>> }).data;
     // legacy row
     expect(data[0]!["playerName"]).toBe("Alpha Back");
@@ -68,5 +78,25 @@ describe("ingestDepthCharts", () => {
     const res = await ingestDepthCharts(2024, { now: NOW, fetcher: async () => { throw new Error("down"); } });
     expect(res.status).toBe("source-error");
     expect(mocks.deleteMany).not.toHaveBeenCalled();
+  });
+
+  it("routes the season replace through db.$transaction, not two bare calls (Devin Review, PR #734)", async () => {
+    const records = [{ full_name: "Alpha Back", gsis_id: "00-1", season: "2024", week: "3", club_code: "kc", position: "RB" }];
+    await ingestDepthCharts(2024, { now: NOW, fetcher: async () => ({ records }) });
+    expect(mocks.transaction).toHaveBeenCalledTimes(1);
+    const ops = mocks.transaction.mock.calls[0]![0] as unknown[];
+    expect(ops).toHaveLength(2);
+    // The delete and create calls are issued (constructing the transaction's
+    // operations) before $transaction is invoked to run them atomically.
+    expect(mocks.deleteMany).toHaveBeenCalledTimes(1);
+    expect(mocks.createMany).toHaveBeenCalledTimes(1);
+  });
+
+  it("propagates a createMany failure rather than reporting a false ok (atomicity depends on this reaching db.$transaction)", async () => {
+    mocks.createMany.mockRejectedValueOnce(new Error("constraint violation"));
+    const records = [{ full_name: "Alpha Back", gsis_id: "00-1", season: "2024", week: "3", club_code: "kc", position: "RB" }];
+    await expect(
+      ingestDepthCharts(2024, { now: NOW, fetcher: async () => ({ records }) }),
+    ).rejects.toThrow("constraint violation");
   });
 });
