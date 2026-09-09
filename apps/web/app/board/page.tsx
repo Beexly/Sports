@@ -8,7 +8,6 @@ import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
 import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
-import type { CalibrationReport } from "@/lib/calibration/compute";
 import { BoardHealthBadge } from "@/components/board/board-health-badge";
 import { BoardSurfaceChip } from "@/components/board/board-surface-chip";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
@@ -277,10 +276,16 @@ export default async function BoardPage(): Promise<JSX.Element> {
             <dl className="mt-6 grid grid-cols-2 gap-3">
               <Metric label="Sample" value={String(calibration.sampleSize)} />
               {/* C-224: Brier score treats confidence as a forecast
-                  probability, which the Edge Index is not. Replaced with the
-                  real measurement this page can honestly show: the observed
-                  decided win rate and its 95% Clopper-Pearson interval. */}
-              <Metric label="Decided W-L" value={decidedWinRateLabel(calibration)} />
+                  probability, which the Edge Index is not. NOT replaced with
+                  a win rate: lib/performance/public-performance-policy.ts is
+                  explicit that the win-rate number is reserved for a
+                  governed headline slot behind evaluatePublicPerformancePolicy
+                  (min sample, bootstrap exclusion, CLV-first) and is
+                  deliberately never a type this page can construct on its
+                  own — "it can never silently fall back to a win-rate
+                  number." A settled-picks count is a fact, not a
+                  performance claim, so it carries no such gate. */}
+              <Metric label="Decided" value={String(calibration.population.decided)} />
             </dl>
             <p className="mt-5 text-xs text-ion-3">Updated {timeLabel(calibration.updatedAt)}</p>
           </div>
@@ -380,24 +385,6 @@ function PassListItem({ row }: { row: PassListRow }): JSX.Element {
       )}
     </div>
   );
-}
-
-/**
- * Observed decided win rate + 95% Clopper-Pearson interval, e.g. "56%
- * (44-68%)". Real, measured — unlike a Brier score, it never treats
- * confidence as a probability it is scoring.
- */
-function decidedWinRateLabel(
-  calibration: Pick<
-    CalibrationReport,
-    "population" | "headlineClopperPearsonLow" | "headlineClopperPearsonHigh"
-  >,
-): string {
-  const { decided, wins } = calibration.population;
-  const { headlineClopperPearsonLow: low, headlineClopperPearsonHigh: high } = calibration;
-  if (decided <= 0 || low === null || high === null) return "N/A";
-  const point = Math.round((wins / decided) * 100);
-  return `${point}% (${Math.round(low * 100)}-${Math.round(high * 100)}%)`;
 }
 
 function Metric({ label, value }: { label: string; value: string }): JSX.Element {

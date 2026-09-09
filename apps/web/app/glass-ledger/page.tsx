@@ -377,9 +377,6 @@ function BucketRow({ bucket }: { bucket: LedgerReliabilityBucket }): JSX.Element
     <tr className="border-b border-mineral/60">
       <td className="px-4 py-3 text-sm text-ion-white">{bucket.label}</td>
       <td className="px-4 py-3">
-        <MetricValue metric={bucket.predicted} unit="percent" />
-      </td>
-      <td className="px-4 py-3">
         <MetricValue metric={bucket.observed} unit="percent" />
       </td>
     </tr>
@@ -608,16 +605,13 @@ export default async function LedgerPage(): Promise<JSX.Element> {
             <div className="mt-4 overflow-x-auto rounded-2xl border border-mineral">
               <table className="w-full border-collapse text-left">
                 <thead>
+                  {/* Devin Review (PR #737): a confidence-band column beside
+                      Observed still read as a predicted-vs-actual table
+                      structurally, whatever its header said — dropped rather
+                      than relabelled. */}
                   <tr className="border-b border-mineral bg-eclipse/50">
                     <th scope="col" className="px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-ion-2">
                       Confidence band
-                    </th>
-                    <th
-                      scope="col"
-                      title="The band's mean confidence — an Edge Index level, not a promised win rate"
-                      className="px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-ion-2"
-                    >
-                      Edge level
                     </th>
                     <th scope="col" className="px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-ion-2">
                       Observed

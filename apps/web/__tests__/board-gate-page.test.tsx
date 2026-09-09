@@ -152,12 +152,12 @@ describe("/board/gate — illustrative mode (the default)", () => {
     expect(a).toBe(b);
   });
 
-  it("sets a canonical metadata entry", () => {
-    expect(generateMetadata().alternates?.canonical).toBe("/board/gate");
+  it("sets a canonical metadata entry", async () => {
+    expect((await generateMetadata()).alternates?.canonical).toBe("/board/gate");
   });
 
-  it("noindexes the page in illustrative mode (FE-12) — a demo must not be crawled as a live surface", () => {
-    const meta = generateMetadata();
+  it("noindexes the page in illustrative mode (FE-12) — a demo must not be crawled as a live surface", async () => {
+    const meta = await generateMetadata();
     expect(meta.robots).toEqual({ index: false, follow: true });
   });
 });
@@ -227,9 +227,16 @@ describe("/board/gate — live mode", () => {
     expect(text).toContain("What the gate returned");
   });
 
-  it("does not noindex the page once it is live", () => {
-    const meta = generateMetadata();
+  it("does not noindex the page once it is live", async () => {
+    fetchSlate.mockResolvedValue(liveSlate());
+    const meta = await generateMetadata();
     expect(meta.robots).toBeUndefined();
+  });
+
+  it("noindexes even in live mode when the live read fails (FE-224 fix) — the fallback response is still a demo", async () => {
+    fetchSlate.mockRejectedValue(new Error("connect ECONNREFUSED"));
+    const meta = await generateMetadata();
+    expect(meta.robots).toEqual({ index: false, follow: true });
   });
 
   it("warns that a live price is the one evaluated, not the one obtainable", async () => {

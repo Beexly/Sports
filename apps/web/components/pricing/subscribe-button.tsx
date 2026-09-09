@@ -106,17 +106,20 @@ export function SubscribeButton({
   const intentRef = useRef<{ key: string; id: string | null } | null>(null);
 
   // FE-08: restore the date of birth this button's own tier+interval saved
-  // just before a sign-in bounce. Runs once per mount; only the button whose
-  // tier and interval match the stored intent claims (and clears) it, so a
-  // resumed FANTASY intent never leaks its DOB into the PRO button.
+  // just before a sign-in bounce. Re-checks whenever tier/interval change,
+  // not just on mount — PricingPlans restores its own interval state
+  // slightly after mount (its own effect), so a button that mounted before
+  // that update needs to re-check once its interval prop catches up, or an
+  // annual intent's DOB is silently dropped. Only the button whose tier and
+  // interval match the stored intent claims (and clears) it, so a resumed
+  // FANTASY intent never leaks its DOB into the PRO button.
   useEffect(() => {
     const intent = readCheckoutIntent();
     if (intent && intent.tier === tier && intent.interval === interval) {
       setDateOfBirth(intent.dateOfBirth);
       clearCheckoutIntent();
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [tier, interval]);
 
   // Interval-appropriate recurring amount, pulled from the pricing-phases source
   // (never hardcoded). Falls back to the amount shown on the plan if a price prop

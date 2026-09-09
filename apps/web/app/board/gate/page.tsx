@@ -29,20 +29,24 @@ import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME } from "@/lib/brand";
 import { evaluateBoardGate, type GateOutcome, type GateOutcomeCode } from "@/lib/board/gate-consumer";
 import { resolveGateSlate, type GateMode } from "@/lib/board/gate-page-mode";
-import { isLiveGateSlateEnabled } from "@/lib/board/load-gate-slate";
 
 // FE-12: illustrative-mode content noindexed. The page ships with seeded
-// demonstration rows by default (LIVE_BOARD_GATE_SLATE unset) — a search
-// engine indexing it as a live "today's calls" surface would be indexing a
-// demo. Real-mode metadata is unaffected.
-export function generateMetadata(): Metadata {
-  const live = isLiveGateSlateEnabled();
+// demonstration rows by default (LIVE_BOARD_GATE_SLATE unset), and
+// resolveGateSlate falls back to illustrative on a failed or empty live read
+// even when the flag is on — checking the raw flag here instead of the
+// actually-resolved mode would have left that fallback response indexable.
+// This re-resolves (a second read, alongside the page body's own call)
+// rather than sharing one result across both: React's `cache()` needs a
+// canary build this repo does not run, and duplicating a read is a smaller
+// risk than depending on an API that silently does not dedupe here.
+export async function generateMetadata(): Promise<Metadata> {
+  const source = await resolveGateSlate();
   return {
     title: { absolute: `How the gate decides · ${BRAND_NAME}` },
     description:
       "The selective gate, run live: which calls clear the bar, which are refused, and which we decline to judge at all because the evidence is not there yet.",
     alternates: { canonical: "/board/gate" },
-    ...(live ? {} : { robots: { index: false, follow: true } }),
+    ...(source.mode === "live" ? {} : { robots: { index: false, follow: true } }),
   };
 }
 

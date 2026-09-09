@@ -241,6 +241,11 @@ function ReliabilityCurve({
               <span className={`w-14 shrink-0 text-xs text-ion-1 ${NUMERIC_TEXT_CLASS}`}>
                 {bucket.label}
               </span>
+              {/* Devin Review (PR #737): the marker line at expectedWinRate
+                  (confidence/100) visually implied "this is where the bar
+                  should land if calibrated" — the Edge Index is a ranking
+                  signal, not a forecast probability, so there is no such
+                  target. Only the real, gated observed rate is shown. */}
               <div className="relative h-3 flex-1 overflow-hidden rounded-full bg-titanium">
                 {publishable && (
                   <div
@@ -248,11 +253,6 @@ function ReliabilityCurve({
                     style={{ width: `${Math.round(bucket.observedWinRate * 100)}%` }}
                   />
                 )}
-                <div
-                  className="absolute top-0 h-full w-0.5 bg-ion-white/70"
-                  style={{ left: `${Math.round(bucket.expectedWinRate * 100)}%` }}
-                  aria-hidden
-                />
               </div>
               <span className={`w-14 shrink-0 text-right text-xs text-ion ${NUMERIC_TEXT_CLASS}`}>
                 {publishable ? formatRatioAsPercent(bucket.observedWinRate) : STAT_PLACEHOLDER}

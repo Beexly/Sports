@@ -128,4 +128,42 @@ describe("SubscribeButton checkout resume", () => {
     // Left for whichever button actually matches.
     expect(readCheckoutIntent()).not.toBeNull();
   });
+
+  it("restores the DOB once the interval prop catches up after mount (Devin finding, PR #737)", () => {
+    // Mirrors the real sequence: PricingPlans starts its child buttons at the
+    // default "month" interval, then its own effect (also on mount) restores
+    // the saved interval a tick later, re-rendering the button with the
+    // correct prop. Before the fix, SubscribeButton's restore effect had an
+    // empty dependency array, so it never re-checked storage after this prop
+    // update and an annual intent's DOB was silently dropped.
+    saveCheckoutIntent({ tier: "PRO", interval: "year", dateOfBirth: "1979-04-02" });
+
+    const { rerender } = render(
+      <SubscribeButton
+        tier="PRO"
+        label="Go Pro"
+        variant="primary"
+        interval="month"
+        priceMonthly={14.99}
+        priceAnnual={99}
+      />,
+    );
+    // Mismatched on first mount (month vs. the stored year intent) — nothing
+    // restored yet, and the intent is left untouched for the correct pass.
+    expect(screen.getByLabelText(/date of birth/i)).toHaveValue("");
+
+    rerender(
+      <SubscribeButton
+        tier="PRO"
+        label="Go Pro"
+        variant="primary"
+        interval="year"
+        priceMonthly={14.99}
+        priceAnnual={99}
+      />,
+    );
+
+    expect(screen.getByLabelText(/date of birth/i)).toHaveValue("1979-04-02");
+    expect(readCheckoutIntent()).toBeNull();
+  });
 });
