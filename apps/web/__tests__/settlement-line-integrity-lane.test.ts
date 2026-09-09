@@ -19,7 +19,7 @@ import { NON_BOOK_BOOKMAKER_KEYS } from "@/lib/calibration/publish-time-market-p
 import { NON_BOOK_BOOKMAKER_KEYS as SCRIPT_NON_BOOK_KEYS } from "../../../scripts/ops/lib/regrade-line-selection";
 
 /**
- * C-271 (ledger C-197/C-270). Every value here is a LINE or a pick STATE:
+ * C-282 (ledger C-197/C-281). Every value here is a LINE or a pick STATE:
  * no scores, win rates or product data.
  */
 
@@ -689,7 +689,7 @@ describe("the sweep cursor is scoped per sport (Devin round 3)", () => {
   });
 });
 
-describe("surveyLineIntegrity — the ops truth-surface block (C-272)", () => {
+describe("surveyLineIntegrity — the ops truth-surface block (C-283)", () => {
   const spreadQuotes: OddsRow[] = [odds("o1", "a", -3), odds("o2", "b", -3.5)];
 
   function surveyDb(picks: LineIntegrityPickRow[], counts = { voids: 4, unpublished: 7 }) {

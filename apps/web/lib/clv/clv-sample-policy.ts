@@ -1,6 +1,6 @@
 /**
  * ONE rule for whether a pick's CLV verdict may be presented, and one place to
- * change it (C-279; ledger C-197 / C-271 / C-278, Devin Review #733 round 6).
+ * change it (C-279; ledger C-197 / C-282 / C-278, Devin Review #733 round 6).
  *
  * CLV is a claim about a bet that STOOD: "we beat the close" only means
  * anything if the pick was live at the close. A pick withdrawn to VOID — by the

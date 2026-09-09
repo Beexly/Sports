@@ -966,7 +966,7 @@ export function isPublishableSpreadLine(sportKey: string, line: number): boolean
 /**
  * Is `line` a value at least one book in `quotedLines` actually quoted?
  *
- * C-270 (ledger C-197). The published `line` is the arithmetic MEAN of every
+ * C-281 (ledger C-197). The published `line` is the arithmetic MEAN of every
  * book's line (`avgSpread`, `avgTotal` below). On a market where books agree
  * the mean IS a quoted line; where they disagree it is not, and the member is
  * shown a price nobody offers — "Missouri Tigers -53.8", stored as

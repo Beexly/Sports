@@ -1,6 +1,6 @@
 #!/usr/bin/env npx tsx
 /**
- * REPORT-ONLY dry run for ledger C-197 (line integrity). C-273.
+ * REPORT-ONLY dry run for ledger C-197 (line integrity). C-284.
  *
  * For every settled, published SPREAD/TOTAL pick whose stored grading line is
  * off the half-point grid, look up the publish-time book line using the same

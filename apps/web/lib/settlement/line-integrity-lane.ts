@@ -1,5 +1,5 @@
 /**
- * Line-integrity remediation lane (C-271; ledger C-197 finding, C-270 guard).
+ * Line-integrity remediation lane (C-282; ledger C-197 finding, C-281 guard).
  *
  * Founder-delegated 2026-09-08, via orchestrator. Founder policy since
  * 2026-09-05 is that no pick ever sits on a human, so the remediation for
@@ -11,7 +11,7 @@
  * field the product displays as a price and settles against. Where books agree
  * that mean IS a quoted line; where they disagree it is not, and the member is
  * shown something no book offers. C-197 called this a model-predicted margin;
- * it is not (C-270 records the correction), but the consequence it describes —
+ * it is not (C-281 records the correction), but the consequence it describes —
  * an unplaceable pick, graded against a price that never existed — stands.
  *
  * WHAT THIS LANE DOES, when LINE_INTEGRITY_VOID_ENABLED is true:
@@ -1004,7 +1004,7 @@ export async function runLineIntegrityLane(input: {
   return { lane: "line-integrity", enabled, voids, unpublished };
 }
 
-// ── Read-only survey for the ops truth surface (C-272) ──────────────────────
+// ── Read-only survey for the ops truth surface (C-283) ──────────────────────
 
 /**
  * Cap on the picks the survey inspects against the odds table per call. The
@@ -1092,7 +1092,7 @@ export type LineIntegritySurvey = {
   unpublishedByLane: number;
   /** Whether the remediation lane is currently enabled. */
   laneEnabled: boolean;
-  /** Whether the publish-time guard (C-270) is currently enabled. */
+  /** Whether the publish-time guard (C-281) is currently enabled. */
   publishGuardEnabled: boolean;
 };
 

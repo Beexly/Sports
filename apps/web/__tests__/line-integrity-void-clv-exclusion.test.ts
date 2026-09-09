@@ -4,7 +4,7 @@ import { drainPendingClvGrades } from "@/lib/settlement/free-path-clv";
 import { voidDefectiveSettledPicks, type LineIntegrityDb, type LineIntegrityPickRow } from "@/lib/settlement/line-integrity-lane";
 
 /**
- * C-278 (ledger C-197 / C-271 / C-277; Devin Review #733 round 4).
+ * C-278 (ledger C-197 / C-282 / C-277; Devin Review #733 round 4).
  *
  * A withdrawn (VOID) pick must not carry a public CLV claim. CLV is a statement
  * about a bet that stood; "we beat the close" on a pick we retracted is exactly

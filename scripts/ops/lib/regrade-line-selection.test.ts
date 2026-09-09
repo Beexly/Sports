@@ -14,7 +14,7 @@ import {
 } from "./regrade-line-selection";
 
 /**
- * C-273 (ledger C-197). Fixtures only — every number is a LINE or a SCORE on a
+ * C-284 (ledger C-197). Fixtures only — every number is a LINE or a SCORE on a
  * fixture game, and nothing here is or becomes product data.
  */
 

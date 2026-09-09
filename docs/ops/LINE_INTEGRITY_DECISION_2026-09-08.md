@@ -1,6 +1,6 @@
 # Line integrity — what was found, what shipped, and what is the founder's to decide
 
-**Ledger rows: C-270, C-271, C-272, C-273. Remediation of C-197.**
+**Ledger rows: C-281, C-282, C-283, C-284. Remediation of C-197.**
 **Branch `claude/launch-line-integrity`. Nothing in this branch is enabled by default.**
 
 This document contains no recommendation to flip anything, and no corrected
@@ -68,12 +68,12 @@ book quotes the same contaminated line.
 
 | Ships | State | Flag |
 |---|---|---|
-| `isQuotedBookLine` + refusal in both scorers (C-270) | **OFF** | `LINE_INTEGRITY_PUBLISH_GUARD_ENABLED` |
-| Void/unpublish remediation lane (C-271) | **OFF** | `LINE_INTEGRITY_VOID_ENABLED` |
-| `lineIntegrity` block on the ops truth surface (C-272) | **On, read-only** | — |
-| `npm run ops:regrade-lines` (C-273) | **On, report-only** | — |
+| `isQuotedBookLine` + refusal in both scorers (C-281) | **OFF** | `LINE_INTEGRITY_PUBLISH_GUARD_ENABLED` |
+| Void/unpublish remediation lane (C-282) | **OFF** | `LINE_INTEGRITY_VOID_ENABLED` |
+| `lineIntegrity` block on the ops truth surface (C-283) | **On, read-only** | — |
+| `npm run ops:regrade-lines` (C-284) | **On, report-only** | — |
 
-### 3a. The publish guard (C-270) — and why it is BLOCKED to the founder
+### 3a. The publish guard (C-281) — and why it is BLOCKED to the founder
 
 `isQuotedBookLine(line, quotedLines)` refuses a pick whose stored mean is not a
 line some book on the row quoted. It is deliberately **not** a half-point-grid
@@ -98,7 +98,7 @@ NULL** in `schema.prisma`, which AGENTS.md law 2 freezes. So the C-252
 "no book price" semantics cannot be applied to SPREAD/TOTAL: the only two
 states are publish-the-mean or refuse.
 
-### 3b. The remediation lane (C-271)
+### 3b. The remediation lane (C-282)
 
 Automated, per the founder policy of 2026-09-05 that no pick ever sits on a
 human (founder-delegated 2026-09-08, via orchestrator). Runs as settle-picks
@@ -126,7 +126,7 @@ the flag to be read "exactly the way the zero-sit lane reads its flag". **The
 zero-sit lane has no flag** — it ships always-on — so this uses the repo's
 env-flag idiom (`?.trim().toLowerCase() === "true"`, default false).
 
-### 3c. Exposure without SQL (C-272)
+### 3c. Exposure without SQL (C-283)
 
 `lineIntegrity` on `/api/ops/public-surface-truth`, read-only. Two different
 populations, named apart, because the recurring defect class here
@@ -145,7 +145,7 @@ populations, named apart, because the recurring defect class here
 false.** A `remainingToVoid` of 0 while `remainingCapReached` is true is a floor,
 not a total, and does not satisfy it.
 
-### 3d. The dry-run tool (C-273)
+### 3d. The dry-run tool (C-284)
 
 ```
 npm run ops:regrade-lines

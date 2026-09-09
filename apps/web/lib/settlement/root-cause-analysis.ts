@@ -27,7 +27,7 @@ export type SettlementRootCauseCode =
   | "SCORE_MISMATCH_CROSS_PATH"
   | "AMBIGUOUS_TEAM_NAME"
   | "FIXTURE_NOT_FOUND"
-  // Line-integrity lane void code (C-271, ledger C-197/C-270). Stamped on the
+  // Line-integrity lane void code (C-282, ledger C-197/C-281). Stamped on the
   // VOID PickSettlementEvent payload by
   // apps/web/lib/settlement/line-integrity-lane.ts; never produced by
   // classifySettlementRootCause (it explains, the lane acts). Means: the pick's
@@ -381,7 +381,7 @@ function remediationFor(
       return [
         "Already voided by the line-integrity lane; read evidence.storedLine, evidence.bookLine and evidence.sourceIds on the PickSettlementEvent payload. bookLine null means no book quoted ANY line for that game and market by generatedAt; a number means books quoted, just never the stored value.",
         "Run `npm run ops:regrade-lines` to see, per sport and market, what a publish-time book line would have graded instead. It writes nothing and reports no corrected hit rate.",
-        "Upstream: LINE_INTEGRITY_PUBLISH_GUARD_ENABLED refuses these at publish time (C-270). It is OFF by default because enabling it suppresses roughly half the board — a founder decision, see docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md.",
+        "Upstream: LINE_INTEGRITY_PUBLISH_GUARD_ENABLED refuses these at publish time (C-281). It is OFF by default because enabling it suppresses roughly half the board — a founder decision, see docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md.",
       ];
     default:
       return ["Inspect raw settlement outcome and extend RCA classifier."];

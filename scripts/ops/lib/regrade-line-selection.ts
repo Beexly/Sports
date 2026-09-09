@@ -1,6 +1,6 @@
 /**
- * Pure logic for scripts/ops/regrade-against-book-lines.ts (C-273; ledger
- * C-197 / C-270 / C-271). No Prisma import, no DATABASE_URL, no I/O — so it
+ * Pure logic for scripts/ops/regrade-against-book-lines.ts (C-284; ledger
+ * C-197 / C-281 / C-282). No Prisma import, no DATABASE_URL, no I/O — so it
  * typechecks and unit-tests without a database.
  *
  * WHAT THIS ANSWERS. For a settled published SPREAD/TOTAL pick whose stored

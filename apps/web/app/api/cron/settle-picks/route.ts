@@ -187,7 +187,7 @@ export async function GET(request: Request) {
     zeroSitDeadline(startedAt, maxDuration),
   );
 
-  // ── 3c. Line-integrity lane (C-271; ledger C-197/C-270): unpublish, and
+  // ── 3c. Line-integrity lane (C-282; ledger C-197/C-281): unpublish, and
   // VOID through the same outbox, published picks whose stored `line` was
   // never quoted by any bookmaker for that game and market at or before
   // generatedAt. Gated by LINE_INTEGRITY_VOID_ENABLED, default OFF — with the

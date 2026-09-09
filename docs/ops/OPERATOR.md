@@ -98,7 +98,7 @@ REDIS_URL=
 NEXT_PUBLIC_APP_URL=
 ```
 
-### 5-LI. Line-integrity flags (C-270..C-273; ledger C-197)
+### 5-LI. Line-integrity flags (C-281..C-284; ledger C-197)
 
 Two founder-only flags, both **default OFF** and both absent from `.env.example`
 by design: AGENTS.md law 2 freezes any `.env*` for agents, so they are

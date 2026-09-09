@@ -3,7 +3,7 @@ import { isQuotedBookLine, lineIntegrityPublishGuardEnabled, scoreGame } from ".
 import type { OddsInput } from "@sports/types";
 
 /**
- * C-270 (ledger C-197): does a pick still publish with a line no book quoted?
+ * C-281 (ledger C-197): does a pick still publish with a line no book quoted?
  *
  * C-197 diagnosed the stored `line` as a MODEL-PREDICTED MARGIN. It is not.
  * scoring.ts computes `avgSpread` (line ~411) and `avgTotal` (line ~684) as the

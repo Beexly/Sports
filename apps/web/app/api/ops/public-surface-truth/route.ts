@@ -622,7 +622,7 @@ export async function GET(request: Request) {
   const marketCoverage = isStubMode() ? null : await safeRead(() => loadMarketCoverage(db as never));
   const confidenceTail = isStubMode() ? null : await safeRead(() => loadConfidenceTail(db as never));
 
-  // Line integrity (C-272; ledger C-197/C-270/C-271): how many published picks
+  // Line integrity (C-283; ledger C-197/C-281/C-282): how many published picks
   // carry a `line` no bookmaker quoted. Read-only, writes nothing.
   //
   // READ THE FIELD NAMES, NOT THE SHAPE. Two different populations are counted
