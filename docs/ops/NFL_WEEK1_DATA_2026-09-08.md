@@ -87,7 +87,12 @@ hint text) — both draft, both read, neither touched by this agent per the
 | Next Gen Stats (passing/receiving/rushing) | `nextgen_stats/ngs_passing.csv.gz` → HTTP 200, but **0 rows with `season == 2026`** (checked passing only; NGS is play-derived and cannot exist before a game is played). | DB-persisted via `apps/web/lib/ingestion/next-gen-stats.ts` → `ingestNextGenStats(season, variant)`, same cron/window. | Expected-empty, not a defect. Will populate after the first games are played (2026-09-10 onward). |
 | nflverse REG rows for 2026 (`stats_player_week`, `play_by_play`, `snap_counts`) | All three → HTTP 404 (`stats_player/stats_player_week_2026.csv`, `pbp/play_by_play_2026.csv`, `snap_counts/snap_counts_2026.csv`). 2025 equivalents all HTTP 200. | `resolveFootballStatsSeason()` / `hasRegRows` probe (`packages/data-ingestion/src/nflverse-season.ts:69-83`, wired to a live `PlayerGameStat` probe on PR #725, C-95 item 3, unmerged) is exactly the mechanism that is supposed to flip the **display** season to 2026 once these exist. | Expected-empty (games haven't been played), not a defect. This is also why the display season cannot advance yet — nothing to advance to. |
 
-## Section C — New finding: the C-244 daily satellite window and the roster/depth-chart/injury season can disagree, and today they do
+## Section C — Finding and fix: the C-244 daily satellite window and the roster/depth-chart/injury season could disagree
+
+**Update:** fixed in this PR (commit `f2dfa7bc0`) after Devin Review independently
+flagged the same root cause on this PR. Originally recorded below as an
+open, unfixed gap; kept as written for the record, with the fix noted at
+the end of this section.
 
 `apps/web/app/api/cron/refresh-player-stats/route.ts` (ported this session,
 C-244) uses **one `season` variable for all four satellites** — the same one
@@ -116,15 +121,18 @@ C-244) uses **one `season` variable for all four satellites** — the same one
    slate) — even though the depth-chart and injury data they would write is
    correct and available today.
 
-**Not fixed in this pass.** The correct fix has more than one viable shape —
-give each satellite its own "does *this* asset have 2026 rows" probe
-(depth_charts_2026.csv / injuries_2026.csv both already 200) rather than
-inheriting player-stats' probe, or accept the coupling and document the lag
-— and picking one is exactly the kind of judgment call this session's
-operating instructions say to raise rather than decide unilaterally, on a
-file this session had just finished making correct in the C-198 sense.
-Recorded as ledger row **C-264 (OPEN, unowned)** below for whoever's lane
-takes it next; no code changed for this finding beyond the ledger entry.
+**Fixed, commit `f2dfa7bc0`.** On reflection (and independently confirmed by
+Devin Review flagging the same file:line on this PR) the fix is smaller
+than first assessed here: each satellite already returns its own
+`status`/`rowsWritten`/`error`, so it does not need a *shared* fallback
+decision — it needs to stop *inheriting* the primary path's. Each satellite
+now targets `labelled` (the true current season) directly instead of the
+primary's possibly-demoted `season`. An unpublished satellite reports its
+own honest source-error/zero-row status and writes nothing — the exact
+outcome the C-198 guard existed to guarantee, so that guarantee still holds
+without the old blanket skip — and a satellite whose own asset *is*
+published is no longer blocked by an unrelated satellite's lag. Ledger row
+**C-264 is DONE**; see `docs/ops/AGENT_LEDGER.md`.
 
 ## Section D — Fixture guard (never publish on a game ESPN doesn't list)
 
@@ -178,7 +186,7 @@ conflict with in-flight work outside this session's lane.
 |---|---|---|
 | NFL board has 0 MONEYLINE / 0 TOTAL picks (single-book) | PR #724 (second book) + PR #725 (root cause, hint text) | Both draft, unmerged; not this session's lane |
 | Satellite ingests never ran on the schedule | This session | **DONE**, C-244, commit `72221ad6e` |
-| Satellite season coupled to player-stats availability, silently skips available roster/depth/injury data | Unowned | **New, ledger C-264, OPEN** (this session; not fixed, needs a design decision) |
+| Satellite season coupled to player-stats availability, silently skipped available roster/depth/injury data | This session | **DONE**, C-264, commit `f2dfa7bc0` |
 | nflverse display season stuck at 2025 for 8 sync callers | PR #725 (opened, unclaimed) | Ledger C-262, OPEN, unowned — out of this session's file budget |
 | Kalshi team-abbreviation alias drift (WSH/WAS, JAX/JAC, LAR/LA) | PR #724 | Named in that PR's own "Remaining risk"; not duplicated here |
 | ESPN schedule seed Eastern-day coverage | PR #725 | DONE on that branch (unmerged) |
