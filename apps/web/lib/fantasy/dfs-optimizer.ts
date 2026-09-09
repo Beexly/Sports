@@ -354,8 +354,20 @@ export function optimizeOne(
   // dressed as an answer. The docstring above already promises null when the
   // locks and excludes admit no legal lineup; this makes the code keep it.
   // Found in review (C-217).
+  //
+  // C-277 (Devin) extends the SAME principle to a lock naming a player who is
+  // not on the slate at all. C-217 only caught lock-and-exclude; a lock on an
+  // unknown id sailed past this loop, was never in `cand` to begin with, and
+  // the solver therefore never saw a constraint to satisfy - so it returned a
+  // perfectly good lineup missing the pinned player, with nothing saying the
+  // lock had been dropped. Identical failure, one cause over, and the comment
+  // above already stated the rule that covers it: the docstring promises null
+  // when the locks and excludes admit no legal lineup, and a lock that cannot
+  // be filled by anyone on the slate admits none. A stale player id from a
+  // reloaded slate is the ordinary way to reach this.
+  const onSlate = new Set(slate.map((p) => p.id));
   for (const id of opts.locks) {
-    if (opts.excludes.has(id)) return null;
+    if (opts.excludes.has(id) || !onSlate.has(id)) return null;
   }
 
   const cand = slate.filter((p) => !opts.excludes.has(p.id));

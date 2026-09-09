@@ -541,3 +541,54 @@ describe("dfs optimizer — 600-player scale (CI-safe timed)", () => {
     expect(a!.map((p) => p.id)).toEqual(b!.map((p) => p.id));
   }, 15000);
 });
+
+/**
+ * C-277 (Devin). C-217 made `optimizeOne` refuse a lock that is also excluded,
+ * on the stated rule that the docstring promises null when the locks and
+ * excludes admit no legal lineup. A lock naming a player who is not on the
+ * slate at all admits none either, and that case sailed past the C-217 guard:
+ * the id was never in the candidate pool, so the solver never saw a constraint
+ * to satisfy and returned a lineup silently missing the pinned player.
+ *
+ * A stale id from a reloaded slate is the ordinary way to reach it.
+ */
+describe("a lock that no player on the slate can fill is refused (C-277)", () => {
+  const missingId = "__not_on_this_slate__";
+
+  it("returns null rather than a lineup that drops the lock", () => {
+    const r = optimizeOne(base({ locks: new Set([missingId]) }), () => 1, DFS_SLATE);
+    expect(r).toBeNull();
+  });
+
+  it("refuses even when the rest of the locks are perfectly fillable", () => {
+    // The failure is per-lock: one unfillable id invalidates the request, and
+    // silently honouring the others would still be answering a question the
+    // caller did not ask.
+    const real = DFS_SLATE.find((p) => p.pos === "QB")!;
+    const r = optimizeOne(
+      base({ locks: new Set([real.id, missingId]) }),
+      () => 1,
+      DFS_SLATE,
+    );
+    expect(r).toBeNull();
+  });
+
+  it("still solves normally when every lock is on the slate", () => {
+    // The guard must refuse the unfillable case WITHOUT narrowing what already
+    // worked: a lock on a real player still produces a lineup containing them.
+    const real = DFS_SLATE.find((p) => p.pos === "QB")!;
+    const r = optimizeOne(base({ locks: new Set([real.id]) }), () => 1, DFS_SLATE);
+    expect(r).not.toBeNull();
+    expect(r!.some((p) => p.id === real.id)).toBe(true);
+  });
+
+  it("keeps the C-217 lock-and-exclude refusal intact", () => {
+    const real = DFS_SLATE.find((p) => p.pos === "QB")!;
+    const r = optimizeOne(
+      base({ locks: new Set([real.id]), excludes: new Set([real.id]) }),
+      () => 1,
+      DFS_SLATE,
+    );
+    expect(r).toBeNull();
+  });
+});
