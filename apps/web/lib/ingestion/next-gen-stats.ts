@@ -22,6 +22,13 @@ export type NgsStatType = "passing" | "receiving" | "rushing";
 type CsvRow = Readonly<Record<string, string>>;
 type NgsFetcher = (season: number, statType: NgsStatType) => Promise<{ records: readonly CsvRow[] }>;
 
+// Keep Postgres bound-parameter count well under its limit (same pattern and
+// value as historical-games.ts and depth-charts.ts). A full-season table
+// accumulates a row per player per week across every team, so batch
+// defensively rather than wait for it to actually exceed the limit in
+// production.
+const CREATE_CHUNK = 2000;
+
 export interface NextGenStatsIngestResult {
   readonly status: "ok" | "clearance-denied" | "source-error";
   readonly season: number;
@@ -150,12 +157,16 @@ export async function ingestNextGenStats(
   if (data.length === 0) {
     return { status: "source-error", season, statType, rowsWritten: 0, error: "upstream returned no rows; existing data preserved" };
   }
-  // One atomic transaction: a createMany failure after deleteMany succeeds
-  // must not leave the season's rows erased with nothing to replace them.
-  const [, created] = await db.$transaction([
+  // One atomic transaction covering the delete and every insert batch: a
+  // createMany failure partway through must not leave the season's rows
+  // erased with only some of the replacement written.
+  const chunks: (typeof data)[] = [];
+  for (let i = 0; i < data.length; i += CREATE_CHUNK) chunks.push(data.slice(i, i + CREATE_CHUNK));
+  const [, ...createdChunks] = await db.$transaction([
     db.nextGenStat.deleteMany({ where: { season, statType } }),
-    db.nextGenStat.createMany({ data }),
+    ...chunks.map((c) => db.nextGenStat.createMany({ data: c })),
   ]);
+  const rowsWritten = createdChunks.reduce((sum, c) => sum + c.count, 0);
 
-  return { status: "ok", season, statType, rowsWritten: created.count };
+  return { status: "ok", season, statType, rowsWritten };
 }

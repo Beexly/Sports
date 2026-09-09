@@ -99,4 +99,26 @@ describe("ingestDepthCharts", () => {
       ingestDepthCharts(2024, { now: NOW, fetcher: async () => ({ records }) }),
     ).rejects.toThrow("constraint violation");
   });
+
+  it("batches createMany at 2000 rows so a full-season depth chart doesn't blow Postgres's bound-parameter limit (Devin Review, PR #734)", async () => {
+    // Measured live 2026-09-09: depth_charts_2026.csv carried 505,423 rows
+    // across all 32 teams. 4,500 generated rows exercises the same code path
+    // (3 batches: 2000 + 2000 + 500) without an actually-slow test.
+    const records = Array.from({ length: 4500 }, (_, i) => ({
+      full_name: `Player ${i}`, gsis_id: `00-${i}`, season: "2024", week: "3", club_code: "KC", position: "RB",
+    }));
+    const res = await ingestDepthCharts(2024, { now: NOW, fetcher: async () => ({ records }) });
+
+    expect(res.status).toBe("ok");
+    expect(res.rowsWritten).toBe(4500); // summed across every batch, not just the first
+    expect(mocks.createMany).toHaveBeenCalledTimes(3);
+    expect((mocks.createMany.mock.calls[0]![0] as { data: unknown[] }).data).toHaveLength(2000);
+    expect((mocks.createMany.mock.calls[1]![0] as { data: unknown[] }).data).toHaveLength(2000);
+    expect((mocks.createMany.mock.calls[2]![0] as { data: unknown[] }).data).toHaveLength(500);
+    // The delete plus all three batches are one $transaction call, not four
+    // independent statements — the atomicity guarantee from the prior fix
+    // must survive batching, not just the single-createMany case.
+    expect(mocks.transaction).toHaveBeenCalledTimes(1);
+    expect(mocks.transaction.mock.calls[0]![0]).toHaveLength(4);
+  });
 });

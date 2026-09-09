@@ -16,6 +16,12 @@ import { nflverseIngestionGate } from "@/lib/ingestion/nflverse-gate";
 type CsvRow = Readonly<Record<string, string>>;
 type TableFetcher = (key: NflverseDatasetKey, season: number, variant?: string) => Promise<{ records: readonly CsvRow[] }>;
 
+// Keep Postgres bound-parameter count well under its limit (same pattern and
+// value as historical-games.ts and depth-charts.ts). A full-season report
+// accumulates across every team and week, so batch defensively rather than
+// wait for it to actually exceed the limit in production.
+const CREATE_CHUNK = 2000;
+
 export interface InjuryIngestResult {
   readonly status: "ok" | "clearance-denied" | "source-error";
   readonly season: number;
@@ -80,12 +86,16 @@ export async function ingestInjuries(
   if (data.length === 0) {
     return { status: "source-error", season, rowsWritten: 0, error: "upstream returned no rows; existing data preserved" };
   }
-  // One atomic transaction: a createMany failure after deleteMany succeeds
-  // must not leave the season's rows erased with nothing to replace them.
-  const [, created] = await db.$transaction([
+  // One atomic transaction covering the delete and every insert batch: a
+  // createMany failure partway through must not leave the season's rows
+  // erased with only some of the replacement written.
+  const chunks: (typeof data)[] = [];
+  for (let i = 0; i < data.length; i += CREATE_CHUNK) chunks.push(data.slice(i, i + CREATE_CHUNK));
+  const [, ...createdChunks] = await db.$transaction([
     db.injury.deleteMany({ where: { season } }),
-    db.injury.createMany({ data }),
+    ...chunks.map((c) => db.injury.createMany({ data: c })),
   ]);
+  const rowsWritten = createdChunks.reduce((sum, c) => sum + c.count, 0);
 
-  return { status: "ok", season, rowsWritten: created.count };
+  return { status: "ok", season, rowsWritten };
 }

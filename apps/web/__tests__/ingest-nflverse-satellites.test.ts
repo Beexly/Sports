@@ -91,6 +91,18 @@ describe("ingestSnapCounts", () => {
       ingestSnapCounts(2024, { now: NOW, fetcher: async () => fixture() }),
     ).rejects.toThrow("constraint violation");
   });
+
+  it("batches createMany at 2000 rows so a full-season table doesn't blow Postgres's bound-parameter limit (Devin Review, PR #734)", async () => {
+    const records = Array.from({ length: 4500 }, (_, i) => ({
+      player: `Player ${i}`, pfr_player_id: `P${i}`, season: "2024", week: "1", team: "KC",
+    }));
+    const res = await ingestSnapCounts(2024, { now: NOW, fetcher: async () => ({ records }) });
+    expect(res.status).toBe("ok");
+    expect(res.rowsWritten).toBe(4500);
+    expect(mocks.snapCreate).toHaveBeenCalledTimes(3);
+    expect(mocks.transaction).toHaveBeenCalledTimes(1);
+    expect(mocks.transaction.mock.calls[0]![0]).toHaveLength(4); // delete + 3 batches
+  });
 });
 
 describe("ingestInjuries", () => {
@@ -130,5 +142,17 @@ describe("ingestInjuries", () => {
     await expect(
       ingestInjuries(2024, { now: NOW, fetcher: async () => fixture() }),
     ).rejects.toThrow("constraint violation");
+  });
+
+  it("batches createMany at 2000 rows so a full-season report doesn't blow Postgres's bound-parameter limit (Devin Review, PR #734)", async () => {
+    const records = Array.from({ length: 4500 }, (_, i) => ({
+      full_name: `Player ${i}`, gsis_id: `00-${i}`, season: "2024", week: "3", team: "KC",
+    }));
+    const res = await ingestInjuries(2024, { now: NOW, fetcher: async () => ({ records }) });
+    expect(res.status).toBe("ok");
+    expect(res.rowsWritten).toBe(4500);
+    expect(mocks.injCreate).toHaveBeenCalledTimes(3);
+    expect(mocks.transaction).toHaveBeenCalledTimes(1);
+    expect(mocks.transaction.mock.calls[0]![0]).toHaveLength(4); // delete + 3 batches
   });
 });

@@ -15,6 +15,12 @@ import { nflverseIngestionGate } from "@/lib/ingestion/nflverse-gate";
 type CsvRow = Readonly<Record<string, string>>;
 type TableFetcher = (key: NflverseDatasetKey, season: number, variant?: string) => Promise<{ records: readonly CsvRow[] }>;
 
+// Keep Postgres bound-parameter count well under its limit (same pattern and
+// value as historical-games.ts). The full-season depth-chart asset is not
+// small: measured live 2026-09-09, depth_charts_2026.csv carried 505,423 rows
+// across all 32 teams — a single unbatched createMany would fail outright.
+const CREATE_CHUNK = 2000;
+
 export interface DepthChartIngestResult {
   readonly status: "ok" | "clearance-denied" | "source-error";
   readonly season: number;
@@ -83,12 +89,16 @@ export async function ingestDepthCharts(
   if (data.length === 0) {
     return { status: "source-error", season, rowsWritten: 0, error: "upstream returned no rows; existing data preserved" };
   }
-  // One atomic transaction: a createMany failure after deleteMany succeeds
-  // must not leave the season's rows erased with nothing to replace them.
-  const [, created] = await db.$transaction([
+  // One atomic transaction covering the delete and every insert batch: a
+  // createMany failure partway through must not leave the season's rows
+  // erased with only some of the replacement written.
+  const chunks: (typeof data)[] = [];
+  for (let i = 0; i < data.length; i += CREATE_CHUNK) chunks.push(data.slice(i, i + CREATE_CHUNK));
+  const [, ...createdChunks] = await db.$transaction([
     db.depthChartEntry.deleteMany({ where: { season } }),
-    db.depthChartEntry.createMany({ data }),
+    ...chunks.map((c) => db.depthChartEntry.createMany({ data: c })),
   ]);
+  const rowsWritten = createdChunks.reduce((sum, c) => sum + c.count, 0);
 
-  return { status: "ok", season, rowsWritten: created.count };
+  return { status: "ok", season, rowsWritten };
 }

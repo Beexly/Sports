@@ -119,4 +119,17 @@ describe("ingestNextGenStats", () => {
       ingestNextGenStats(2024, "passing", { now: NOW, fetcher: async () => ({ records }) }),
     ).rejects.toThrow("constraint violation");
   });
+
+  it("batches createMany at 2000 rows so a full-season table doesn't blow Postgres's bound-parameter limit (Devin Review, PR #734)", async () => {
+    const records = Array.from({ length: 4500 }, (_, i) => ({
+      season: "2024", season_type: "REG", week: "1", player_gsis_id: `00-${i}`,
+      player_display_name: `QB ${i}`, team_abbr: "BUF", avg_time_to_throw: "2.7",
+    }));
+    const res = await ingestNextGenStats(2024, "passing", { now: NOW, fetcher: async () => ({ records }) });
+    expect(res.status).toBe("ok");
+    expect(res.rowsWritten).toBe(4500);
+    expect(mocks.createMany).toHaveBeenCalledTimes(3);
+    expect(mocks.transaction).toHaveBeenCalledTimes(1);
+    expect(mocks.transaction.mock.calls[0]![0]).toHaveLength(4); // delete + 3 batches
+  });
 });
