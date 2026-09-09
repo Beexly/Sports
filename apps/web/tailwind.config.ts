@@ -45,7 +45,7 @@ const config: Config = {
         // ── ENVIRONMENT — cosmic dark scale ───────────────
         // Surfaces step from #05070B (deepest) up to raised panels.
         void:       "#05070B",
-        obsidian:   "#080A0F",
+        obsidian:   "#05070B",     // FE-14: was #080A0F, drifted from design-tokens.css --obsidian
         carbon:     "#0D1117",
         eclipse:    "#171228",
         titanium:   "#211A33",        // Steel Gray sits here
@@ -61,7 +61,7 @@ const config: Config = {
           DEFAULT: "#D5DDE9", // 13.83:1 on carbon
           1: "#AEB7D2",       // nebula silver — brighter + violet-tinted, AA+
           2: "#B1BAD5",       // brighter + violet-tinted, AA+
-          3: "#9AA3C0",       // violet-tinted, AA
+          3: "#8B97AB",       // FE-14: was #9AA3C0, drifted from the WCAG AA-verified --ion-3 in design-tokens.css
         },
 
         // ── PAPER — LIGHT data-surface scale (ADDITIVE) ───
