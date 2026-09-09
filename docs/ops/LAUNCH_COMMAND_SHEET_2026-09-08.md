@@ -305,6 +305,16 @@ Finding: an anonymous `GET /stats` returns 307 to `/age-verify?next=%2Fstats`, s
 behind the 21+ attestation and search engines do not see it. Decision recorded for Agent 3 (gates):
 the stats facts routes leave the age-gate matcher, `/stats/ask` and `/fantasy/*` keep it.
 
+### 4b. Executed 2026-09-09 ~01:15 UTC by the browser agent, verified on the truth surface at 01:22 UTC
+
+`LIVE_BOARD=true`, `PREDEXON_INGEST=true`, Production only, one redeploy from main (sha `0a3003ebe`,
+the PR #724 merge). Verified: GSE_BOARD `live_public` (hint "LIVE_BOARD ON — rows must sort by
+rankingP; market vs signal kill switch still applies"), freeSpine present/durable/withinSla, settlement
+HEALTHY, `ok` true. NOT yet: `PREDEXON_API_KEY` is unset (founder pastes it in the Vercel UI, never in
+chat), so `.freeSpine.oddsPath.paidSinglePath` still reads true with 7 sport cells single-cleared via
+the-odds-api. Note for the sheet: `paidSinglePath` lives under `freeSpine.oddsPath`, not
+`marketCoverage`. Re-read after the key lands; PredExon must clear the second book for it to flip.
+
 ## 5. What was deliberately NOT started, and why
 
 - A queue/stream/microservice re-architecture: the platform runs on Vercel cron routes with no queue library
