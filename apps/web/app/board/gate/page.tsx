@@ -22,25 +22,37 @@
  * faked decision — is the one thing this page must never be.
  */
 
+import { cache as reactCache } from "react";
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { BRAND_NAME } from "@/lib/brand";
 import { evaluateBoardGate, type GateOutcome, type GateOutcomeCode } from "@/lib/board/gate-consumer";
-import { resolveGateSlate, type GateMode } from "@/lib/board/gate-page-mode";
+import { resolveGateSlate, type GateMode, type GateSlateSource } from "@/lib/board/gate-page-mode";
+
+// Devin Review (PR #737): two independent resolveGateSlate() calls (one in
+// generateMetadata, one in the page body) could observe DIFFERENT outcomes
+// across a transient DB blip between them — live content marked noindex, or
+// worse, an illustrative fallback marked indexable. React's `cache()` is
+// Next.js's documented fix for exactly this (dedupe one async call across
+// generateMetadata and the page tree within a single request); this repo's
+// plain "react" package (not Next's bundled canary) exports it as undefined
+// under Vitest, so the fallback below is an identity wrapper there — tests
+// keep today's "call resolveGateSlate once per site, mock consistently"
+// behavior, while real Next.js rendering gets true per-request dedup.
+const cache: <Args extends unknown[], T>(fn: (...args: Args) => T) => (...args: Args) => T =
+  typeof reactCache === "function" ? reactCache : (fn) => fn;
+
+const resolveGateSlateOnce = cache((): Promise<GateSlateSource> => resolveGateSlate());
 
 // FE-12: illustrative-mode content noindexed. The page ships with seeded
 // demonstration rows by default (LIVE_BOARD_GATE_SLATE unset), and
 // resolveGateSlate falls back to illustrative on a failed or empty live read
 // even when the flag is on — checking the raw flag here instead of the
 // actually-resolved mode would have left that fallback response indexable.
-// This re-resolves (a second read, alongside the page body's own call)
-// rather than sharing one result across both: React's `cache()` needs a
-// canary build this repo does not run, and duplicating a read is a smaller
-// risk than depending on an API that silently does not dedupe here.
 export async function generateMetadata(): Promise<Metadata> {
-  const source = await resolveGateSlate();
+  const source = await resolveGateSlateOnce();
   return {
     title: { absolute: `How the gate decides · ${BRAND_NAME}` },
     description:
@@ -154,7 +166,7 @@ function nonClaims(mode: GateMode): string[] {
 export default async function GatePage(): Promise<JSX.Element> {
   // One call decides both the mode and the rows. See gate-page-mode.ts for why
   // they are not resolved separately.
-  const source = await resolveGateSlate();
+  const source = await resolveGateSlateOnce();
   const { mode } = source;
 
   // The real consumer, the real gate.

@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render } from "@testing-library/react";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 /**
  * /board/gate — the gate decided live, in front of the reader.
@@ -295,5 +297,22 @@ describe("/board/gate — fails closed, and says so", () => {
     expect(text).toContain("had no upcoming games to judge");
     // And the illustrative board is genuinely shown, not an empty page.
     expect(text).toContain("Not judged");
+  });
+});
+
+describe("/board/gate — metadata and body share one resolution (Devin finding, PR #737)", () => {
+  it("both generateMetadata and the page body read through the same memoized resolveGateSlateOnce", () => {
+    // Two independent resolveGateSlate() calls could disagree across a
+    // transient DB blip between them — live content marked noindex, or an
+    // illustrative fallback marked indexable. Pinned at the source because
+    // React's cache() (the fix) only actually dedupes under a real Next.js
+    // build; this repo's plain "react" package resolves it to undefined
+    // under Vitest, so the *behavioral* property (one physical read) isn't
+    // exercisable here — only that both sites go through the same wrapper.
+    const src = readFileSync(resolve(__dirname, "..", "app/board/gate/page.tsx"), "utf8");
+    const siteCount = (src.match(/await resolveGateSlateOnce\(\)/g) ?? []).length;
+    expect(siteCount).toBe(2);
+    expect(src).not.toMatch(/await resolveGateSlate\(\)/);
+    expect(src).toMatch(/from\s+"react"/);
   });
 });
