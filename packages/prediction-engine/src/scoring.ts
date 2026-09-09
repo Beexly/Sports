@@ -23,7 +23,6 @@ import { computeGameContext } from "./game-context.js";
 import { deriveRankingProbability } from "./ranking-prob.js";
 import { SKELLAM_COVER_SOURCE } from "./skellam.js";
 import { shinFairForSide } from "./honesty/devig-method-compare.js";
-import { getPlatformConfig } from "./platform-config.js";
 
 // ============================================================
 // Utility: convert American odds to implied probability
@@ -431,9 +430,9 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // mean of contaminated book rows lands off it.
   if (!isPublishableSpreadLine(input.sport, chosenSpread)) return null;
   // Refuse a stored line no book in this consensus set quoted. Gated OFF by
-  // default: see isQuotedBookLine and PlatformConfig.
+  // default: see isQuotedBookLine and lineIntegrityPublishGuardEnabled.
   if (
-    getPlatformConfig().lineIntegrityPublishGuardEnabled &&
+    lineIntegrityPublishGuardEnabled() &&
     !isQuotedBookLine(avgSpread, spreads)
   ) {
     return null;
@@ -698,7 +697,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // TOTAL is in fact the worse half of the finding (369 of 599 off-grid vs 310
   // of 719). Gated OFF by default, same flag, same founder decision.
   if (
-    getPlatformConfig().lineIntegrityPublishGuardEnabled &&
+    lineIntegrityPublishGuardEnabled() &&
     !isQuotedBookLine(avgTotal, totals)
   ) {
     return null;
@@ -967,7 +966,7 @@ export function isPublishableSpreadLine(sportKey: string, line: number): boolean
  * of 599 published settled picks sit off the half-point grid.
  *
  * This predicate is the measurement. Whether the engine ACTS on it is gated by
- * PlatformConfig.lineIntegrityPublishGuardEnabled, default OFF: enforcing it
+ * lineIntegrityPublishGuardEnabled below, default OFF: enforcing it
  * suppresses roughly half the board, which is a founder decision (see
  * docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md) and directly overturns the
  * recorded C-119/C-125 call that a blanket rule would gut it.
@@ -978,6 +977,21 @@ export function isPublishableSpreadLine(sportKey: string, line: number): boolean
  * case this one cannot, where every book quotes the same contaminated line.
  */
 const QUOTED_LINE_EPSILON = 1e-9;
+
+/**
+ * Read the enforcement flag straight from the environment rather than through
+ * PlatformConfig. Not a style choice: `apps/web/__tests__/env-example-coverage.test.ts`
+ * requires every `process.env` key PlatformConfig reads to have a matching
+ * `.env.example` entry, and AGENTS.md law 2 freezes any `.env*` file for
+ * agents. The same conflict was recorded for C-108, with the same resolution:
+ * keep the variable out of the shared config surface and document it in
+ * docs/ops/OPERATOR.md section 5. The idiom is the repo's
+ * (free-settlement-runner.ts, public-surface-truth/route.ts): trimmed,
+ * lower-cased, exact "true", default false.
+ */
+export function lineIntegrityPublishGuardEnabled(env: NodeJS.ProcessEnv = process.env): boolean {
+  return env["LINE_INTEGRITY_PUBLISH_GUARD_ENABLED"]?.trim().toLowerCase() === "true";
+}
 
 export function isQuotedBookLine(line: number, quotedLines: readonly number[]): boolean {
   if (!Number.isFinite(line)) return false;

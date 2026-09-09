@@ -12,6 +12,7 @@ export {
   isBaseballSport,
   BASEBALL_RUN_LINES,
   isQuotedBookLine,
+  lineIntegrityPublishGuardEnabled,
 } from "./scoring.js";
 export {
   computeGameContext,

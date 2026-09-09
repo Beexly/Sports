@@ -1,5 +1,5 @@
 import { afterEach, describe, expect, it } from "vitest";
-import { isQuotedBookLine, scoreGame } from "../scoring.js";
+import { isQuotedBookLine, lineIntegrityPublishGuardEnabled, scoreGame } from "../scoring.js";
 import type { OddsInput } from "@sports/types";
 
 /**
@@ -128,6 +128,19 @@ describe("scoreGame with the guard OFF — the finding still reproduces today", 
     const pick = totalOf(totalInput("baseball_mlb", [8.5, 9, 9, 8.5, 9, 9]));
     expect(pick).toBeDefined();
     expect(pick!.line).toBeCloseTo(8.833333333333334, 12);
+  });
+});
+
+describe("lineIntegrityPublishGuardEnabled", () => {
+  it("is off unless the flag is exactly true", () => {
+    // Read from the environment rather than PlatformConfig on purpose: the
+    // env-example coverage guard requires a .env.example entry for every key
+    // PlatformConfig reads, and law 2 freezes .env* for agents (same conflict
+    // and same resolution as C-108).
+    expect(lineIntegrityPublishGuardEnabled({})).toBe(false);
+    expect(lineIntegrityPublishGuardEnabled({ [FLAG]: "false" })).toBe(false);
+    expect(lineIntegrityPublishGuardEnabled({ [FLAG]: "1" })).toBe(false);
+    expect(lineIntegrityPublishGuardEnabled({ [FLAG]: " TRUE " })).toBe(true);
   });
 });
 

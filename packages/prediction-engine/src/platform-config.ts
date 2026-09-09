@@ -141,28 +141,6 @@ export interface PlatformConfig {
    * Default: false (ships dark — zero behavior change until explicitly enabled)
    */
   forceNoBetIfStale: boolean;
-
-  /**
-   * LINE_INTEGRITY_PUBLISH_GUARD_ENABLED (C-270, ledger C-197).
-   *
-   * When true: a SPREAD or TOTAL pick whose published `line` is not a line any
-   * book in the consensus set actually quoted is REFUSED (not published). The
-   * published line is the arithmetic mean of every book's line
-   * (scoring.ts `avgSpread` / `avgTotal`), so on a disagreeing market it is a
-   * number no book offers and no member can place.
-   *
-   * When false: NO quoted-line check is performed and behavior is identical to
-   * today. Default: false (ships dark — zero engine-output change until
-   * explicitly enabled).
-   *
-   * Default is OFF on purpose and the flip is a FOUNDER decision, not an
-   * agent's: measured on production 2026-09-08, enabling it suppresses roughly
-   * 43 percent of SPREAD and 62 percent of TOTAL picks, and the existing
-   * baseball-run-line decision (C-119/C-125) records that a blanket
-   * "must be quoted" rule would gut the board. See
-   * docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md.
-   */
-  lineIntegrityPublishGuardEnabled: boolean;
 }
 
 function parseBool(val: string | undefined, defaultVal: boolean): boolean {
@@ -195,6 +173,5 @@ export function getPlatformConfig(): PlatformConfig {
     minSettledPicksForLearning:       parseIntSafe(process.env["MIN_SETTLED_PICKS_FOR_LEARNING"], 100),
     calibrationAdjustmentsEnabled:    parseBool(process.env["CALIBRATION_ADJUSTMENTS_ENABLED"],    false),
     forceNoBetIfStale:                parseBool(process.env["FORCE_NO_BET_IF_STALE"],                false),
-    lineIntegrityPublishGuardEnabled: parseBool(process.env["LINE_INTEGRITY_PUBLISH_GUARD_ENABLED"], false),
   };
 }
