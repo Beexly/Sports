@@ -80,7 +80,7 @@ export function Footer() {
         </div>
         <p className="disclaim py-5" style={{ maxWidth: "52rem" }}>
           {BRAND_NAME} delivers market signals, not certainty. One input in a
-          disciplined decision — never the decision itself. Set limits before
+          disciplined decision, never the decision itself. Set limits before
           emotion enters. Only stake what you can afford to lose without changing
           your week. Past results promise nothing about the next one.{" "}
           <a href={HELPLINE.href} target="_blank" rel="noopener noreferrer">
