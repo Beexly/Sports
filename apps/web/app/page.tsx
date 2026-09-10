@@ -11,7 +11,7 @@ import { SentientWeather } from "@/components/motion/sentient-weather";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { getPlate } from "@/lib/visual-production/asset-manifest";
 import { MontageEntrance } from "@/components/landing/montage-entrance";
-import { BRAND_COLORS } from "@/lib/brand";
+import { CLOSING_LINE } from "@/lib/brand";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { MethodologySection } from "@/components/ui/methodology-section";
 import { Reveal } from "@/components/motion/reveal";
@@ -24,9 +24,9 @@ import { NflverseLabDoor, NflverseLabDoorPlaceholder } from "@/components/landin
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "A Sports Intelligence Operating System",
+  title: "Galaxy Sports Edge",
   description:
-    "Galaxy Sports Edge turns market noise into structured signal: free calculators, methodology, paper contests, and a gated board that refuses forced action until the sample is honest. We detect. You decide.",
+    "A scored board, a public record, and the guts to show what we held back. We detect. You decide.",
   alternates: { canonical: "/" },
 };
 
@@ -77,64 +77,60 @@ export default async function HomePage(): Promise<JSX.Element> {
       <Nav />
       <SignalSpine />
       <main id="main-content">
-        {/* ── HERO · the thesis, the graphic, two ways in ─────────────── */}
-        <section className="gw-nebula-deep relative isolate overflow-hidden border-b border-mineral">
+        {/* ── HERO · Field thesis ──────────────────────────────────────── */}
+        <section className="relative isolate overflow-hidden border-b border-mineral" style={{ background: "var(--void)" }}>
           {heroPlate && (
             <GeneratedPlate
-              className="-z-30 opacity-85"
+              className="-z-30 opacity-60"
               gradient={heroPlate.gradient}
               still={heroPlate.still}
               motion={heroPlate.motion}
               eager
             />
           )}
-          <div aria-hidden="true" className="gw-starfield -z-10" />
           <div
             aria-hidden="true"
             className="absolute inset-0 -z-10"
             style={{
-              background: `radial-gradient(ellipse 70% 60% at 78% 18%, ${BRAND_COLORS.ionMagenta}1c, transparent 60%), radial-gradient(ellipse 60% 55% at 12% 80%, ${BRAND_COLORS.softUltraviolet}24, transparent 65%), linear-gradient(180deg, ${BRAND_COLORS.obsidianBlack}b3 0%, ${BRAND_COLORS.obsidianBlack}4d 46%, ${BRAND_COLORS.obsidianBlack}99 74%, ${BRAND_COLORS.obsidianBlack} 100%)`,
+              background:
+                "radial-gradient(ellipse 55% 45% at 80% 20%, rgba(255,77,60,0.08), transparent 55%), linear-gradient(180deg, #08090Ccc 0%, #08090C66 45%, #08090C 100%)",
             }}
           />
           <div className="mx-auto max-w-5xl px-4 py-24 text-center sm:px-6 sm:py-32 lg:px-8">
             <Reveal>
-              <p className="mb-7 inline-flex items-center gap-2.5 rounded-full border border-mineral/80 bg-eclipse/40 px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-ion-2 backdrop-blur-sm">
-                <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-orbital-cyan" style={{ animation: "pp-live-pulse 2s ease-in-out infinite" }} />
-                Sports decision intelligence
+              <p className="mb-7 inline-flex items-center gap-2.5 border border-mineral bg-eclipse/60 px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-ion-2">
+                <span aria-hidden className="h-1.5 w-1.5 rounded-full bg-plasma" style={{ animation: "pp-live-pulse 2s ease-in-out infinite" }} />
+                Live slate
               </p>
             </Reveal>
             <Reveal delay={80}>
-              <h1 className="mx-auto max-w-4xl font-display text-display-xl font-semibold leading-[1.0] text-balance text-ion-white">
-                The market is full of <span className="gw-chrome-plasma">noise</span>.
+              <h1 className="mx-auto max-w-4xl font-display text-display-xl font-semibold leading-[0.95] text-balance text-ion-white">
+                Noise.
                 <br />
-                <span className="gw-chrome-ice">Galaxy turns it into</span>{" "}
-                <span className="gse-editorial text-orbital-cyan gw-text-glow-cyan">signal</span>.
+                <span className="text-plasma">Signal.</span>
               </h1>
             </Reveal>
             <Reveal delay={150}>
               <p className="mx-auto mt-6 max-w-2xl text-lg leading-8 text-ion-1">
-                Free tools and transparent process first. The public board opens
-                only when the slate is honest, and the discipline to know when
-                not to bet is always on.
+                Every Sunday the takes pile up. We score the markets, publish what
+                survives, and put the holds on the record with their reasons.
               </p>
             </Reveal>
             <Reveal delay={220}>
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                {/* F-28 (founder-delegated 2026-09-08, via orchestrator): primary
-                    CTA to /picks, secondary to /pricing. */}
                 <Link href="/picks" className="btn-primary min-h-11 px-6 py-3">
-                  See today&apos;s picks
+                  Open the board
                 </Link>
                 <Link
-                  href="/pricing"
+                  href="/performance"
                   className="inline-flex min-h-11 items-center justify-center rounded-xl border border-mineral px-6 py-3 text-sm font-semibold text-ion-1 transition-colors hover:border-mineral-hi hover:text-ion-white"
                 >
-                  See pricing
+                  See the record
                 </Link>
               </div>
             </Reveal>
             <p className="mt-7 font-mono text-[10px] uppercase tracking-[0.24em] text-ion-2">
-              <SignalDecode speed={28}>We detect. You decide.</SignalDecode>
+              <SignalDecode speed={28}>{CLOSING_LINE}</SignalDecode>
             </p>
           </div>
         </section>
@@ -147,7 +143,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                 Four doors
               </p>
               <h2 className="mt-3 max-w-3xl font-display text-3xl font-semibold text-ion-white sm:text-4xl">
-                Pick the decision you came to make.
+                What are you here to do?
               </h2>
             </Reveal>
             <div className="mt-10 grid gap-px overflow-hidden rounded-ds-lg border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-4">
@@ -211,8 +207,8 @@ export default async function HomePage(): Promise<JSX.Element> {
           id="gate"
           className="neb-band"
           eyebrow="The No-Bet Gate"
-          title={<>No-Bet is not absence. It is <span className="gw-chrome-ice">intelligence</span>.</>}
-          lede="The edge is not the pick. The edge is knowing what not to trust. Restraint is a decision this system makes on purpose, logged with reasons like any other."
+          title={<>A held row is not a blank. It is <span className="text-plasma">the finding</span>.</>}
+          lede="Knowing what not to trust is the product. Four gates keep weak markets off the board, and every pass is logged in public — same as a published pick."
           tone="deep"
         >
           <NoBetGateChapter />
@@ -226,13 +222,13 @@ export default async function HomePage(): Promise<JSX.Element> {
                 The proof
               </p>
               <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
-                Trust is an architecture, not a tagline.
+                Every number ships with its sample.
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
-                Picks publish with tamper-evident receipts, frozen before kickoff:
-                hashed, committed, impossible to edit after the game. No fabricated
-                picks, no invented stats, no silent edits. And you don&apos;t have to
-                take our word for it. Check a receipt yourself.
+                Receipts freeze before kickoff. Hits print with period, sample size,
+                model version, and the definition used. When the sample is too thin
+                to stand up, we withhold the number and print why. Recompute any
+                seal yourself.
               </p>
             </div>
             <div className="flex flex-wrap items-center gap-x-5 gap-y-3">
@@ -268,10 +264,10 @@ export default async function HomePage(): Promise<JSX.Element> {
 
         <section data-testid="homepage-responsible-close" className="gw-nebula px-4 py-14 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl rounded-ds-lg border border-mineral bg-eclipse p-5 sm:p-7">
-            <h2 className="text-2xl font-semibold text-ion-white">The math can point. The decision stays yours.</h2>
+            <h2 className="text-2xl font-semibold text-ion-white">The model can point. The call stays yours.</h2>
             <p className="mt-3 text-sm leading-6 text-ion-1">
-              This product is research, not certainty. The upgrade path is more data, better receipts,
-              and clearer uncertainty, not louder claims.
+              Research, not certainty. We get better by adding settled rows and clearer
+              uncertainty — not louder claims.
             </p>
             <RiskDisclosure variant="compact" includePastPerformance className="mt-5 text-ion-1" />
           </div>
