@@ -87,8 +87,13 @@ describe("homepage doctrine hero", () => {
     expect(page).toContain("The market is full of");
     expect(page).toContain("Galaxy turns it into");
     expect(page).toContain("We detect. You decide.");
-    // ONE cold-open: the montage stays, the slow doctrine intro is retired.
-    expect(page).toContain("MontageEntrance");
+    // ONE cold-open: the Field intro replaced the montage (96e505471 hero,
+    // 417fa6ae3 strip) with a lighter canvas sting that downloads no video
+    // (F-24 media weight). The intent of this line is unchanged — exactly one
+    // self-gating cold-open — so it pins the live intro and keeps the retired
+    // ones retired.
+    expect(page).toContain("FieldCinematicIntro");
+    expect(page).not.toContain("MontageEntrance");
     expect(page).not.toContain("CinematicEntrance");
     expect(page).not.toContain("We&apos;re not AI");
     expect(page).not.toMatch(/data-testid="homepage-arch-headline"/);

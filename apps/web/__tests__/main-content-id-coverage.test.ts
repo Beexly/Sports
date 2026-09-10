@@ -37,7 +37,11 @@ function findPageFiles(dir: string, base: string): string[] {
     if (stat.isDirectory()) {
       out.push(...findPageFiles(full, base));
     } else if (entry === "page.tsx") {
-      out.push(relative(base, full));
+      // Normalize separators: relative() returns backslashes on Windows, and
+      // every consumer below splits these paths on "/" (isInScope's top-level
+      // exclusion list among them). Without this, api/admin/cockpit/embed pages
+      // read as in-scope orphans on Windows while the same run is clean on CI.
+      out.push(relative(base, full).replace(/\\/g, "/"));
     }
   }
   return out;
