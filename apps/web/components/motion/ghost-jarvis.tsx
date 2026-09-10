@@ -78,7 +78,7 @@ export function GhostJarvis() {
           opacity: visible ? 1 : 0,
           transform: visible ? "translateY(0)" : "translateY(12px)",
           transition: "opacity 1.2s ease-out, transform 1.2s ease-out",
-          boxShadow: "0 0 20px rgba(0,229,255,0.06)",
+          boxShadow: "0 0 20px rgba(255,77,46,0.06)",
         }}
       >
         <div className="flex items-center gap-2">

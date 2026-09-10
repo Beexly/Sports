@@ -274,8 +274,18 @@ export default async function BoardPage(): Promise<JSX.Element> {
             </h2>
             <p className="mt-4 text-sm leading-6 text-ion-2">{calibration.publicMessage}</p>
             <dl className="mt-6 grid grid-cols-2 gap-3">
-              <Metric label="Settled picks" value={String(calibration.sampleSize)} />
-              <Metric label="Updated" value={timeLabel(calibration.updatedAt)} />
+              <Metric label="Sample" value={String(calibration.sampleSize)} />
+              {/* C-224: Brier score treats confidence as a forecast
+                  probability, which the Edge Index is not. NOT replaced with
+                  a win rate: lib/performance/public-performance-policy.ts is
+                  explicit that the win-rate number is reserved for a
+                  governed headline slot behind evaluatePublicPerformancePolicy
+                  (min sample, bootstrap exclusion, CLV-first) and is
+                  deliberately never a type this page can construct on its
+                  own — "it can never silently fall back to a win-rate
+                  number." A settled-picks count is a fact, not a
+                  performance claim, so it carries no such gate. */}
+              <Metric label="Decided" value={String(calibration.population.decided)} />
             </dl>
             <p className="mt-5 text-xs text-ion-3">
               <Link href="/calibration" className="font-semibold text-orbital-cyan hover:text-ion-white">

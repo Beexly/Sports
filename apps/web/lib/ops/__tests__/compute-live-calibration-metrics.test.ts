@@ -32,7 +32,7 @@ describe("picksToCalibrationSamples", () => {
     expect(built.modelVersions).toEqual([]);
     expect(built.settledFrom).toBeNull();
     expect(built.settledTo).toBeNull();
-    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 0, non_moneyline_market: 0 });
+    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 0, non_moneyline_market: 0, in_play: 0, unverifiable_market_p: 0 });
   });
 
   it("a MONEYLINE row without any market probability is excluded and counted, never scored on confidence", () => {
@@ -41,7 +41,7 @@ describe("picksToCalibrationSamples", () => {
     ]);
     expect(built.samples).toEqual([]);
     expect(built.modelVersions).toEqual([]);
-    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0 });
+    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0, in_play: 0, unverifiable_market_p: 0 });
   });
 
   it("keeps a single modelVersion and ISO-settled range from honest MONEYLINE rows", () => {

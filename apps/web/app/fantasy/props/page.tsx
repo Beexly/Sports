@@ -11,6 +11,7 @@ export const metadata: Metadata = {
   description:
     "An edge advisor on Underdog / DK Pick6-style lines: where our model disagrees with the posted line, the conviction behind every call, the most valuable alt line, and the true odds and EV of any Power-Play entry.",
   alternates: { canonical: "/fantasy/props" },
+  robots: { index: false, follow: true },
 };
 
 export default function PropsPage() {

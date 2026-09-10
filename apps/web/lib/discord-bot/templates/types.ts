@@ -79,7 +79,7 @@ export interface SettlementInput {
 
 // Brand colors as decimal RGB ints (Discord's color field accepts decimal).
 export const BRAND_COLORS = {
-  ULTRAVIOLET: 0x7b61ff, // brand primary
+  ULTRAVIOLET: 0xFF4D2E, // brand primary
   WIN_GREEN: 0x4caf50,
   LOSS_RED: 0xe53935,
   PUSH_AMBER: 0xffb300,

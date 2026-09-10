@@ -3,6 +3,7 @@ import { z } from "zod";
 import { db, DurableWriteStoreUnavailableError, requireDurableWriteStore } from "@sports/db";
 import { auth } from "@/lib/auth";
 import { paidCheckoutOpen } from "@/lib/billing/paid-checkout";
+import { jsonNoStore } from "@/lib/api/no-store";
 import { consumeRateLimit } from "@/lib/api/rate-limit";
 import {
   getOrCreateStripeCustomer,
@@ -10,6 +11,8 @@ import {
   retrieveOpenCheckoutSessionUrl,
   stripeCheckoutSessionLookup,
   resolveCheckoutPriceId,
+  findLiveStripeSubscription,
+  reconcileOpenCheckoutSessions,
 } from "@/lib/stripe";
 import {
   CheckoutAttemptPersistenceError,
@@ -50,6 +53,16 @@ const CheckoutSchema = z.object({
 // Checkout charges USD only today (pricing-phases amounts are USD).
 const CHECKOUT_CURRENCY = "usd";
 
+/**
+ * NO-STORE on every response (C-91 / .claude/rules/nextjs-caching.md rule 2).
+ * The 200 body carries a SINGLE-USE, PER-CUSTOMER Stripe URL: a shared cache
+ * entry that served one member's checkout link to another would hand over
+ * their billing session, and the rule is explicit that the gate and error
+ * bodies are no less dangerous than the happy path (a cached 429 keeps
+ * refusing a caller whose window has reset; a cached 503 keeps the money path
+ * dark after the store recovers). These are POST routes, so no ordinary cache
+ * would store them today — this says it rather than relying on that.
+ */
 export async function POST(req: NextRequest): Promise<NextResponse> {
   // PART 4 (C12) free-only switch: one server-side choke for NEW paid
   // checkouts. Default open — PAID_CHECKOUT_OPEN=false in the console closes
@@ -57,7 +70,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   // lookup so the closed state costs zero DB/Stripe work. The billing portal
   // is deliberately NOT gated: existing subscribers keep managing/cancelling.
   if (!paidCheckoutOpen()) {
-    return NextResponse.json(
+    return jsonNoStore(
       {
         error:
           "Paid plans are opening soon. Everything free stays free — the board, stats, and alerts are open today.",
@@ -69,7 +82,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
   const session = await auth();
   if (!session?.user?.id) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    return jsonNoStore({ error: "Unauthorized" }, { status: 401 });
   }
 
   // Defense-in-depth on Stripe resource creation: 10 checkout attempts / 5 min
@@ -77,7 +90,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   // looping client from minting unbounded checkout sessions/customers.
   const limit = consumeRateLimit("subscriptions-checkout", session.user.id, 10, 5 * 60 * 1000);
   if (!limit.ok) {
-    return NextResponse.json(
+    return jsonNoStore(
       { error: "Too many checkout attempts. Please wait a moment and try again." },
       { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
     );
@@ -86,18 +99,18 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   const body = await req.json();
   const parsed = CheckoutSchema.safeParse(body);
   if (!parsed.success) {
-    return NextResponse.json({ error: "Invalid tier" }, { status: 400 });
+    return jsonNoStore({ error: "Invalid tier" }, { status: 400 });
   }
 
   const { tier, interval } = parsed.data;
   const age = assertAtLeast21(parsed.data.dateOfBirth);
   if (!age.ok) {
     const status = age.code === "age_restricted" ? 403 : 400;
-    return NextResponse.json({ error: age.error, code: age.code }, { status });
+    return jsonNoStore({ error: age.error, code: age.code }, { status });
   }
   const clientIntentId = parsed.data.clientIntentId ?? null;
   if (clientIntentId !== null && !isValidClientIntentId(clientIntentId)) {
-    return NextResponse.json(
+    return jsonNoStore(
       {
         error: "clientIntentId must be a UUID.",
         code: "invalid_client_intent_id",
@@ -109,7 +122,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   // Env price IDs preferred; fallback to Stripe lookup_key (gse-*-monthly/annual).
   const priceId = await resolveCheckoutPriceId(tier, interval);
   if (!priceId) {
-    return NextResponse.json(
+    return jsonNoStore(
       { error: `Pricing for ${tier} (${interval}) is not configured yet.` },
       { status: 503 }
     );
@@ -119,7 +132,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
   // check) instead of a non-null assertion, so we never hand Stripe a null email
   // when creating the customer — a missing email is a 400, not a runtime throw.
   if (!session.user.email) {
-    return NextResponse.json(
+    return jsonNoStore(
       { error: "An email address is required to start checkout." },
       { status: 400 }
     );
@@ -134,7 +147,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     requireDurableWriteStore("stripe-checkout");
   } catch (err) {
     if (err instanceof DurableWriteStoreUnavailableError) {
-      return NextResponse.json(
+      return jsonNoStore(
         {
           error: "Checkout is temporarily unavailable. Please try again shortly.",
           code: "durable_write_store_unavailable",
@@ -168,7 +181,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       `[INCIDENT][checkout] subscription lookup failed for user ${session.user.id} — ` +
         `failing closed with 503, no Stripe side effect: ${message}`,
     );
-    return NextResponse.json(
+    return jsonNoStore(
       {
         error: "Checkout is temporarily unavailable. Please try again shortly.",
         code: "subscription_lookup_unavailable",
@@ -181,7 +194,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     (existingSub.status === "ACTIVE" || existingSub.status === "TRIALING" || existingSub.status === "PAST_DUE") &&
     existingSub.tier !== "FREE";
   if (hasLivePaidSub) {
-    return NextResponse.json(
+    return jsonNoStore(
       {
         error: "You already have an active subscription. Manage or change your plan from the billing portal.",
         code: "already_subscribed",
@@ -197,11 +210,65 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       session.user.name
     );
 
-    // Durable attempt: the server-side source of truth for this checkout's
-    // idempotency (see lib/billing/checkout-attempt.ts). Race-safe via the
-    // (userId, activeClientIntentId) unique constraint; a same-intent retry
-    // with a CHANGED fingerprint is a hard 409, never a silent key reuse.
-    // The fingerprint covers the FULL canonical commercial request (5.5).
+    // STRIPE-SIDE half of the double-subscribe guard (C-91 / WP-14). The DB
+    // guard above is only as good as our subscription row, and that row is
+    // written by a webhook — so it is blind during exactly the window that
+    // matters: between a completed checkout and the
+    // customer.subscription.created delivery that records it. A member who
+    // double-clicks through that window, or whose webhook delivery is delayed,
+    // would otherwise get a SECOND real Stripe subscription and a second charge
+    // every month, with nothing in our own data able to see it. Stripe is
+    // authoritative about its own subscriptions, so ask Stripe.
+    //
+    // Placed AFTER the customer resolve (it needs the customer id) and BEFORE
+    // the CheckoutAttempt is minted, so a refused checkout consumes no
+    // idempotency key and leaves no attempt row to reconcile.
+    //
+    // FAIL CLOSED on an unreadable answer, matching the DB guard above: a
+    // lookup failure is a 503 with no further Stripe side effect, never
+    // "assume no subscription and charge them". This costs nothing real — the
+    // next call in this path creates a Stripe session, which would fail too.
+    const probe = await findLiveStripeSubscription(customerId);
+    if (probe.outcome === "unknown") {
+      console.error(
+        `[INCIDENT][checkout] could not read Stripe subscriptions for customer ${customerId} — ` +
+          `failing closed with 503, no Stripe side effect: ${probe.reason}`,
+      );
+      return jsonNoStore(
+        {
+          error: "Checkout is temporarily unavailable. Please try again shortly.",
+          code: "subscription_lookup_unavailable",
+        },
+        { status: 503 },
+      );
+    }
+    if (probe.outcome === "live") {
+      // Includes the dunning states and `incomplete`: a member in past_due,
+      // unpaid, or mid-SCA must resolve payment on the EXISTING subscription in
+      // the portal (where the open invoice lives), not buy a second one
+      // alongside it. `incomplete` is the sharpest of these — the first payment
+      // was attempted and can still be collected, so a second checkout is how
+      // one customer ends up paying twice.
+      console.warn(
+        `[checkout] refusing a second checkout for customer ${customerId} — Stripe still ` +
+          `reports subscription ${probe.subscriptionId} as ${probe.status}`,
+      );
+      return jsonNoStore(
+        {
+          error:
+            "You already have a subscription with us. Manage or change your plan from the billing portal.",
+          code: "already_subscribed",
+        },
+        { status: 409 },
+      );
+    }
+
+    // The fingerprint covers the FULL canonical commercial request (5.5). It
+    // is computed BEFORE the open-session reconcile below because a reused
+    // clientIntentId with a CHANGED plan must be refused with no Stripe side
+    // effect at all: reconciling first would expire the intent's own valid
+    // session and then 409 on the changed fingerprint, leaving the customer
+    // with a conflict and no checkout (Devin Review, #736).
     const requestFingerprint = computeRequestFingerprint(
       currentCheckoutCommercialParams({
         userId: session.user.id,
@@ -211,7 +278,114 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         currency: CHECKOUT_CURRENCY,
       }),
     );
+    if (clientIntentId) {
+      type PriorAttempt = {
+        requestFingerprint: string;
+        status: string;
+        stripeSessionId: string | null;
+        expiresAt: Date | string;
+      };
+      let prior: PriorAttempt | null = null;
+      try {
+        prior = (await db.checkoutAttempt.findUnique({
+          where: { userId_activeClientIntentId: { userId: session.user.id, activeClientIntentId: clientIntentId } },
+          select: { requestFingerprint: true, status: true, stripeSessionId: true, expiresAt: true },
+        })) as PriorAttempt | null;
+      } catch (err) {
+        console.error(
+          `[INCIDENT][checkout] attempt lookup failed for user ${session.user.id} — ` +
+            `failing closed with 503, no Stripe side effect: ${err instanceof Error ? err.message : "unknown"}`,
+        );
+        return jsonNoStore(
+          {
+            error: "Checkout is temporarily unavailable. Please try again shortly.",
+            code: "checkout_attempt_lookup_unavailable",
+          },
+          { status: 503 },
+        );
+      }
+      // Mirror of getOrCreateCheckoutAttempt's conflict rule: a live attempt, or
+      // a past-TTL one that is COMPLETED or still bound to a session, refuses a
+      // changed fingerprint. A past-TTL attempt with nothing bound is released
+      // by reconciliation and is not a conflict, so it is left to the authority
+      // below.
+      const pastTtl = prior ? new Date(prior.expiresAt).getTime() <= Date.now() : false;
+      const conflictable =
+        prior !== null &&
+        (!pastTtl ||
+          prior.status === "COMPLETED" ||
+          (prior.status === "SESSION_CREATED" && prior.stripeSessionId !== null));
+      if (prior && conflictable && prior.requestFingerprint !== requestFingerprint) {
+        // Same refusal getOrCreateCheckoutAttempt would raise, just earlier.
+        return jsonNoStore(
+          {
+            error:
+              "This checkout intent was started for a different plan. Start a new checkout to change plans.",
+            code: "checkout_intent_conflict",
+          },
+          { status: 409 },
+        );
+      }
+    }
 
+    // C-185: reconcile the customer's OPEN Checkout Sessions before minting
+    // another one. The probe above asks whether a SUBSCRIPTION exists, which is
+    // only true once a payment has been attempted — so before that point two
+    // tabs with different clientIntentId values both saw "no subscription" and
+    // both walked away holding a payable session. The (userId,
+    // activeClientIntentId) unique constraint does not collide across DIFFERENT
+    // intents, and a token-less request has no intent to collide on at all, so
+    // nothing downstream caught it either. A Checkout Session, unlike a
+    // Subscription, exists from creation — which makes it the artifact that can
+    // actually be reconciled.
+    //
+    // Placed here, before getOrCreateCheckoutAttempt, so a reused session costs
+    // no new attempt row and no new Stripe idempotency key: the attempt backing
+    // the returned session is left exactly as it is, and the Idempotency-Key
+    // flow and AMBIGUOUS handling downstream are untouched.
+    const openSessions = await reconcileOpenCheckoutSessions(customerId, priceId);
+    if (openSessions.outcome === "unknown") {
+      // Includes "an open session exists that we could not retire". Minting
+      // now would leave two payable sessions, so refuse with no side effect —
+      // same fail-closed posture as the guards above.
+      console.error(
+        `[INCIDENT][checkout] could not reconcile open sessions for customer ${customerId} — ` +
+          `failing closed with 503, no new session minted: ${openSessions.reason}`,
+      );
+      return jsonNoStore(
+        {
+          error: "Checkout is temporarily unavailable. Please try again shortly.",
+          code: "checkout_session_reconcile_unavailable",
+        },
+        { status: 503 },
+      );
+    }
+    if (openSessions.outcome === "reusable") {
+      // Same plan, already payable. Hand back the SAME url — which is also what
+      // a same-intent replay would have returned further down, so the buyer's
+      // experience is unchanged and only the duplicate session is prevented.
+      console.warn(
+        `[checkout] reusing open session ${openSessions.sessionId} for customer ${customerId} ` +
+          "instead of minting a second payable session for the same plan",
+      );
+      return jsonNoStore({ url: openSessions.url });
+    }
+    if (openSessions.outcome === "superseded") {
+      // Different plan: the old sessions were payable and are now expired, so
+      // the customer cannot complete a plan they have navigated away from.
+      console.warn(
+        `[checkout] expired ${openSessions.expiredSessionIds.length} open session(s) for ` +
+          `customer ${customerId} before minting a ${tier}/${interval} session: ` +
+          openSessions.expiredSessionIds.join(", "),
+      );
+    }
+
+    // Durable attempt: the server-side source of truth for this checkout's
+    // idempotency (see lib/billing/checkout-attempt.ts). Race-safe via the
+    // (userId, activeClientIntentId) unique constraint; a same-intent retry
+    // with a CHANGED fingerprint is a hard 409, never a silent key reuse (the
+    // early check above catches the common case before any Stripe call; this
+    // one is the race-safe authority).
     let attemptResult;
     try {
       attemptResult = await getOrCreateCheckoutAttempt(db as unknown as CheckoutAttemptDb, {
@@ -240,7 +414,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       });
     } catch (err) {
       if (err instanceof CheckoutIntentConflictError) {
-        return NextResponse.json(
+        return jsonNoStore(
           { error: err.message, code: "checkout_intent_conflict" },
           { status: 409 },
         );
@@ -250,7 +424,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         // unreachable, or reconciliation left it unresolved). A session it
         // created may still be payable — NEVER mint a fresh key here. The
         // repair cron owns durable resolution; the client may retry.
-        return NextResponse.json(
+        return jsonNoStore(
           {
             error:
               "A previous checkout for this session is still being confirmed with the payment provider. Please retry in a minute.",
@@ -265,7 +439,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
         console.error(
           `[INCIDENT][checkout] non-durable attempt write detected for user ${session.user.id} — failing closed`,
         );
-        return NextResponse.json(
+        return jsonNoStore(
           {
             error: "Checkout is temporarily unavailable. Please try again shortly.",
             code: "durable_write_store_unavailable",
@@ -282,7 +456,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // catches this first once the subscription row syncs; this closes the
     // window between completion and sync.
     if (attempt.status === "COMPLETED") {
-      return NextResponse.json(
+      return jsonNoStore(
         {
           error: "This checkout was already completed. Manage your plan from the billing portal.",
           code: "checkout_attempt_completed",
@@ -297,7 +471,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     // retry gets the SAME session URL). A crashed claimant is recovered by
     // the repair job, never by racing.
     if (attempt.status === "REQUEST_IN_FLIGHT") {
-      return NextResponse.json(
+      return jsonNoStore(
         {
           error: "This checkout is already being started. Please retry in a moment.",
           code: "checkout_attempt_in_progress",
@@ -314,7 +488,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     if (reused && attempt.status === "SESSION_CREATED" && attempt.stripeSessionId) {
       const existingUrl = await retrieveOpenCheckoutSessionUrl(attempt.stripeSessionId);
       if (existingUrl) {
-        return NextResponse.json({ url: existingUrl });
+        return jsonNoStore({ url: existingUrl });
       }
     }
 
@@ -329,7 +503,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       attempt.id,
     );
     if (!claimed) {
-      return NextResponse.json(
+      return jsonNoStore(
         {
           error: "This checkout is already being started. Please retry in a moment.",
           code: "checkout_attempt_in_progress",
@@ -374,7 +548,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
       const message = err instanceof Error ? err.message : "unknown";
       console.error(`[checkout] stripe session create ${outcomeClass} for attempt ${attempt.id}: ${message}`);
-      return NextResponse.json(
+      return jsonNoStore(
         {
           error:
             outcomeClass === "AMBIGUOUS_NETWORK_OUTCOME"
@@ -414,12 +588,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
       );
     }
 
-    return NextResponse.json({ url: checkoutSession.url });
+    return jsonNoStore({ url: checkoutSession.url });
   } catch (err) {
     // Log the detail server-side; return a generic message so internal/Stripe
     // error text never leaks to the client.
     const message = err instanceof Error ? err.message : "Checkout failed";
     console.error(`Checkout error: ${message}`);
-    return NextResponse.json({ error: "Checkout could not be started." }, { status: 500 });
+    return jsonNoStore({ error: "Checkout could not be started." }, { status: 500 });
   }
 }

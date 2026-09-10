@@ -1,9 +1,10 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { track } from "@/lib/analytics/events";
+import { clearCheckoutIntent, readCheckoutIntent, saveCheckoutIntent } from "@/lib/pricing/checkout-resume";
 
 /**
  * Subscribe button — isolates the Stripe checkout side-effect so the
@@ -104,6 +105,22 @@ export function SubscribeButton({
   // different Stripe parameters (the server would 409 that anyway).
   const intentRef = useRef<{ key: string; id: string | null } | null>(null);
 
+  // FE-08: restore the date of birth this button's own tier+interval saved
+  // just before a sign-in bounce. Re-checks whenever tier/interval change,
+  // not just on mount — PricingPlans restores its own interval state
+  // slightly after mount (its own effect), so a button that mounted before
+  // that update needs to re-check once its interval prop catches up, or an
+  // annual intent's DOB is silently dropped. Only the button whose tier and
+  // interval match the stored intent claims (and clears) it, so a resumed
+  // FANTASY intent never leaks its DOB into the PRO button.
+  useEffect(() => {
+    const intent = readCheckoutIntent();
+    if (intent && intent.tier === tier && intent.interval === interval) {
+      setDateOfBirth(intent.dateOfBirth);
+      clearCheckoutIntent();
+    }
+  }, [tier, interval]);
+
   // Interval-appropriate recurring amount, pulled from the pricing-phases source
   // (never hardcoded). Falls back to the amount shown on the plan if a price prop
   // was not passed, so the disclosure is always honest and never invents a number.
@@ -146,6 +163,10 @@ export function SubscribeButton({
       });
 
       if (res.status === 401) {
+        // FE-08: the sign-in round trip drops React state entirely — without
+        // this, the tier/interval/DOB the visitor just entered vanish and
+        // they land back on a blank pricing form.
+        saveCheckoutIntent({ tier, interval, dateOfBirth });
         router.push("/auth/signin?callbackUrl=/pricing");
         return;
       }

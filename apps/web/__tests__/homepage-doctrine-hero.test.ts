@@ -16,27 +16,37 @@ describe("homepage doctrine hero", () => {
   const tailwind = readRepoFile("apps/web/tailwind.config.ts");
   const galaxy = readRepoFile("apps/web/components/hero/interactive-galaxy.tsx");
 
-  it("ships exactly one type family, with tabular figures (design contract Law 1)", () => {
+  it("keeps evidence single-family with tabular figures; display faces are headlines-only (NEBULA v7)", () => {
     // Law 1 — evidence sets the rendering. A figure and its sample size must sit
     // at the same optical size at n=10-29, which is unachievable across two
     // families: a mono figure beside a sans caption reads as machine output
-    // annotated by a human. Inter carries every role, and "tnum" replaces the
+    // annotated by a human. Inter carries every DATA role, and "tnum" replaces the
     // half of the mono role that was load-bearing (column alignment).
     //
+    // NEBULA v7 (owner-approved 2026-09-10) narrows — not repeals — this law:
+    // display headlines and the wordmark may use approved display faces
+    // (Barlow Condensed, Chakra Petch), because headlines never carry evidence.
+    // Figures, captions, numerals and body stay Inter. If you are here because
+    // this test failed, the question is "did evidence leave Inter", not
+    // "how do I make it pass".
+    //
     // Supersedes the previous Exo 2 / JetBrains Mono / Instrument Serif doctrine.
-    // If you are here because this test failed, the question is not "how do I
-    // make it pass" but "am I re-opening Law 1".
 
-    // Exactly one family is fetched, and it is Inter.
+    // Inter is fetched exactly once; the only other allowed fetches are the
+    // two approved display faces.
     expect(layout.match(/Inter\(/g)).toHaveLength(1);
     for (const retired of ["Exo_2", "JetBrains_Mono", "Instrument_Serif"]) {
       expect(layout).not.toMatch(new RegExp(retired));
     }
+    for (const approved of ["Barlow_Condensed", "Chakra_Petch"]) {
+      expect(layout).toContain(approved);
+    }
 
-    // next/font binds --f-body and nothing else; every other family derives.
-    expect(layout).toContain(`variable: "--f-body"`);
+    // next/font binds --f-body, --f-cond and --f-word; every other family derives.
+    for (const bound of ["--f-body", "--f-cond", "--f-word"]) {
+      expect(layout).toContain(`variable: "${bound}"`);
+    }
     for (const derived of [
-      "--f-display",
       "--f-arch",
       "--f-display-tech",
       "--f-numerals",
@@ -47,6 +57,9 @@ describe("homepage doctrine hero", () => {
       // ...and each one resolves back to --f-body in the token file.
       expect(tokens).toMatch(new RegExp(`${derived}:\\s*var\\(--f-body`));
     }
+    // --f-display is the single exception: headlines resolve to the condensed
+    // display face, never to a data role.
+    expect(tokens).toMatch(/--f-display:\s*var\(--f-cond/);
 
     // --f-body is owned by next/font and must NOT be redeclared in :root, or the
     // element-level binding and the token file fight over the cascade.

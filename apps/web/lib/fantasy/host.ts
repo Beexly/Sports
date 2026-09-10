@@ -95,12 +95,12 @@ export const ORION: Persona = {
 export type Scene = "studio" | "sideline" | "practice" | "clubhouse" | "draft" | "community" | "office";
 
 export const SCENES: Record<Scene, { readonly label: string; readonly setting: string; readonly accent: string }> = {
-  studio: { label: "Studio desk", setting: "the Galaxy Studios desk", accent: "#00E5FF" },
-  sideline: { label: "Sideline", setting: "field level, warmups behind her", accent: "#FF38C7" },
-  practice: { label: "Practice facility", setting: "the practice facility", accent: "#7B61FF" },
-  clubhouse: { label: "Clubhouse", setting: "the clubhouse", accent: "#F5F7FF" },
-  draft: { label: "Draft floor", setting: "the draft floor", accent: "#00E5FF" },
-  community: { label: "In the community", setting: "out with the fans", accent: "#7B61FF" },
+  studio: { label: "Studio desk", setting: "the Galaxy Studios desk", accent: "#FF4D2E" },
+  sideline: { label: "Sideline", setting: "field level, warmups behind her", accent: "#FF7A5C" },
+  practice: { label: "Practice facility", setting: "the practice facility", accent: "#C9D4CE" },
+  clubhouse: { label: "Clubhouse", setting: "the clubhouse", accent: "#EDE8E0" },
+  draft: { label: "Draft floor", setting: "the draft floor", accent: "#FF4D2E" },
+  community: { label: "In the community", setting: "out with the fans", accent: "#C9D4CE" },
   office: { label: "Front office", setting: "the front office", accent: "#9fb3c8" },
 };
 

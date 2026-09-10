@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   description:
     "How one coaching or scheme change cascades through a whole offense: the gainers, the faders, the projection delta, the reasoning, and the confidence from the source's reliability tier.",
   alternates: { canonical: "/fantasy/scheme" },
+  robots: { index: false, follow: true },
 };
 
 export default function SchemePage() {

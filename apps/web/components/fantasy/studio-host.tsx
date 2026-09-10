@@ -128,7 +128,7 @@ function ReadinessPanel({ broadcast }: { broadcast: Broadcast }) {
     <div className="surface-card p-5">
       <div className="flex flex-wrap items-center gap-3">
         <p className="text-xs uppercase tracking-[0.18em] text-ion-2">Publish readiness</p>
-        <span className="rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider" style={{ background: r.ready ? `${BRAND_COLORS.orbitalCyan}1c` : "rgba(255,255,255,0.06)", color: r.ready ? BRAND_COLORS.orbitalCyan : "#E0A800" }}>
+        <span className="rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider" style={{ background: r.ready ? `${BRAND_COLORS.orbitalCyan}1c` : "rgba(255,255,255,0.06)", color: r.ready ? BRAND_COLORS.orbitalCyan : "#FFB454" }}>
           {r.ready ? "Ready to publish" : "Held, human approval required"}
         </span>
       </div>

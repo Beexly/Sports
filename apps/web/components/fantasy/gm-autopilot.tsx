@@ -39,12 +39,6 @@ export function GmAutopilot() {
           Sleeper
           <span className="text-[9px] uppercase tracking-wider" style={{ color: BRAND_COLORS.orbitalCyan }}>connect →</span>
         </a>
-        {(["ESPN", "Yahoo"] as const).map((p) => (
-          <span key={p} className="flex items-center gap-1.5 rounded-full border px-3 py-1 text-xs" style={{ borderColor: BRAND_COLORS.steelGray, color: "#c8d2dd" }}>
-            {p}
-            <span className="text-[9px] uppercase tracking-wider text-ink-600">soon</span>
-          </span>
-        ))}
         <span className="ml-auto text-[10px] text-ink-600">Read-only sync + write-back are founder-gated behind OAuth & compliance.</span>
       </div>
 
@@ -106,7 +100,7 @@ export function GmAutopilot() {
                   <div className="flex flex-wrap items-center gap-2">
                     <span className="rounded px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-wider" style={{ color: hex, background: `${hex}1c` }}>{a.type}</span>
                     <span className="text-sm font-semibold text-white">{a.title}</span>
-                    <span className="rounded-full px-2 py-0.5 text-[9px] uppercase tracking-wider" style={{ background: a.reversible ? "rgba(0,229,255,0.12)" : "rgba(255,56,199,0.12)", color: a.reversible ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>
+                    <span className="rounded-full px-2 py-0.5 text-[9px] uppercase tracking-wider" style={{ background: a.reversible ? "rgba(255,77,46,0.12)" : "rgba(255,77,46,0.12)", color: a.reversible ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>
                       {a.reversible ? "reversible" : "commits FAAB"}
                     </span>
                     <span className="ml-auto font-mono text-[11px] text-ink-500">{Math.round(a.confidence * 100)}% conf</span>

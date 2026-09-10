@@ -28,6 +28,7 @@ import {
   type FixtureBatchResult,
   type FixtureProbe,
 } from "./fixture-confirmation.js";
+import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
 import { collapseGameRowsToFixtures } from "./fixture-collapse.js";
 
 /**
@@ -52,6 +53,12 @@ export type SignalSlateResult = {
    * day's free ESPN scoreboard, or the board could not be fetched (fail-closed).
    */
   readonly fixtureUnconfirmed: number;
+  /**
+   * Games refused because their kickoff had already arrived (C-299). Counted
+   * separately from fixtureUnconfirmed: the ESPN board did confirm these, our
+   * own clock is what refused them.
+   */
+  readonly skippedInPlay: number;
   readonly errors: readonly string[];
   readonly note: string;
 };
@@ -153,6 +160,7 @@ export async function generateSignalSlate(opts?: {
   let picksUpserted = 0;
   let picksSkipped = 0;
   let fixtureUnconfirmed = 0;
+  let skippedInPlay = 0;
 
   // Cold Game table: seed free ESPN schedule so signals can publish without quote keys.
   if (!opts?.skipSeed) {
@@ -312,6 +320,16 @@ export async function generateSignalSlate(opts?: {
           `${game.id}: commenceTime correction failed: ${err instanceof Error ? err.message : String(err)}`,
         );
       }
+    }
+    // Kickoff guard (C-299). Same rule and same module as the book-priced path
+    // in process-sport.ts: the ESPN check above reads the SCOREBOARD's clock,
+    // this reads the one we priced against, after any correction. No new signal
+    // pick and no refresh of an existing PENDING one once the game is under way.
+    if (hasKickedOff(commenceTime, now)) {
+      picksSkipped += 1;
+      skippedInPlay += 1;
+      console.warn(`${logPrefix} ${inPlaySkipLine(game.id, commenceTime, now)}`);
+      continue;
     }
     const homeTeam = game.homeTeamName;
     const awayTeam = game.awayTeamName;
@@ -569,7 +587,8 @@ export async function generateSignalSlate(opts?: {
 
   console.log(
     `${logPrefix} ${note}` +
-      (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : ""),
+      (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : "") +
+      (skippedInPlay > 0 ? ` skippedInPlay=${skippedInPlay}` : ""),
   );
 
   return {
@@ -579,6 +598,7 @@ export async function generateSignalSlate(opts?: {
     picksUpserted,
     picksSkipped,
     fixtureUnconfirmed,
+    skippedInPlay,
     errors,
     note,
   };

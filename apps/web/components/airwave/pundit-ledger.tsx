@@ -20,7 +20,7 @@ const VERDICT_HEX: Record<ClaimVerdict, string> = {
   MISS: BRAND_COLORS.ionMagenta,
   PUSH: BRAND_COLORS.softUltraviolet,
   UNFALSIFIABLE: "#7E8a9c",
-  PENDING: "#E0A800",
+  PENDING: "#FFB454",
 };
 
 const VERDICT_LABEL: Record<ClaimVerdict, string> = {

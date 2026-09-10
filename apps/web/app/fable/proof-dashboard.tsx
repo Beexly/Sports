@@ -62,7 +62,6 @@ export async function ProofDashboard() {
   const rel = overall?.murphy.reliability ?? null;
   const res = overall?.murphy.resolution ?? null;
   const unc = overall?.murphy.uncertainty ?? null;
-  const brier = published ? report.data.brierScore : null;
   const bss =
     overall !== null && unc !== null ? brierSkillScoreVsBaseRate(overall.brier, unc) : null;
   const emptyReason = report.meta.gated
@@ -144,9 +143,14 @@ export async function ProofDashboard() {
             Durable ECE is unpublished or the artifact has not been written yet.
           </p>
         )}
-        {brier !== null && (
+        {/* C-224: the public calibration report's own brierScore buckets by
+            confidence, not a market-anchored probability — scoring it as a
+            Brier score would be the exact claim this product refuses to
+            make. REL/RES/UNC/BSS above already carry the real, durable,
+            market-anchored measurement; this line duplicated the wrong one. */}
+        {published && (
           <p className={`mt-2 text-xs text-ion-2 ${NUMERIC_TEXT_CLASS}`}>
-            Public Brier {formatBrier(brier)} · n={formatCount(report.data.sampleSize)}
+            n={formatCount(report.data.sampleSize)}
           </p>
         )}
       </div>
@@ -237,6 +241,11 @@ function ReliabilityCurve({
               <span className={`w-14 shrink-0 text-xs text-ion-1 ${NUMERIC_TEXT_CLASS}`}>
                 {bucket.label}
               </span>
+              {/* Devin Review (PR #737): the marker line at expectedWinRate
+                  (confidence/100) visually implied "this is where the bar
+                  should land if calibrated" — the Edge Index is a ranking
+                  signal, not a forecast probability, so there is no such
+                  target. Only the real, gated observed rate is shown. */}
               <div className="relative h-3 flex-1 overflow-hidden rounded-full bg-titanium">
                 {publishable && (
                   <div
@@ -244,11 +253,6 @@ function ReliabilityCurve({
                     style={{ width: `${Math.round(bucket.observedWinRate * 100)}%` }}
                   />
                 )}
-                <div
-                  className="absolute top-0 h-full w-0.5 bg-ion-white/70"
-                  style={{ left: `${Math.round(bucket.expectedWinRate * 100)}%` }}
-                  aria-hidden
-                />
               </div>
               <span className={`w-14 shrink-0 text-right text-xs text-ion ${NUMERIC_TEXT_CLASS}`}>
                 {publishable ? formatRatioAsPercent(bucket.observedWinRate) : STAT_PLACEHOLDER}

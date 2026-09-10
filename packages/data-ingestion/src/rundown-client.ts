@@ -10,6 +10,7 @@
 
 import type { OddsApiEvent, OddsApiBookmaker, OddsApiMarket } from "@sports/types";
 import { assertIngestible } from "./source-registry.js";
+import { applyKalshiTakerFeeToBookmakers } from "./kalshi-fee.js";
 
 const RUNDOWN_BASE = "https://therundown.io/api/v2";
 
@@ -198,6 +199,12 @@ export function rundownEventToOddsApiEvent(raw: unknown, sportKey: string): Odds
     };
   }
 
+  // Affiliate 25 is Kalshi, an EXCHANGE. Its ask carries no book margin but
+  // does carry a taker fee, so the raw price understates what the member would
+  // pay. Restate it here, at the one place the affiliate is known, so every
+  // downstream de-vig sees the taker-inclusive price (C-278a).
+  const priced = applyKalshiTakerFeeToBookmakers(bookmakers);
+
   return {
     id: eventId,
     sport_key: sportKey,
@@ -205,7 +212,7 @@ export function rundownEventToOddsApiEvent(raw: unknown, sportKey: string): Odds
     commence_time: commence,
     home_team: home,
     away_team: away,
-    bookmakers,
+    bookmakers: priced,
   };
 }
 
@@ -385,6 +392,12 @@ export type RundownFetchResult = {
   readonly events: OddsApiEvent[];
   readonly remaining: number | null;
   readonly error?: string;
+  /**
+   * True when the free tier answered HTTP 429 on any day of the fan-out. The
+   * caller uses this to open a per-sport cooldown; string-matching the `error`
+   * text for "429" would break the moment the message is reworded (C-278a).
+   */
+  readonly rateLimited?: boolean;
 };
 
 export async function fetchRundownEventsForSport(
@@ -467,11 +480,13 @@ export async function fetchRundownEventsForSport(
       error: errors.length
         ? `rundown empty (${daySpan}d): ${errors.slice(0, 4).join("; ")}`
         : `rundown empty (${daySpan}d): no bookmaker lines`,
+      rateLimited,
     };
   }
   return {
     events: all,
     remaining: null,
     error: errors.length ? `partial: ${errors.slice(0, 3).join("; ")}` : undefined,
+    rateLimited,
   };
 }

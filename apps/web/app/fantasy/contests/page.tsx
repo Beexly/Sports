@@ -10,7 +10,7 @@ import { isContestsPublic } from "@/lib/launch/public-surface-gate";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Contest Bay · Free Paper Board | Galaxy Sports Edge",
+  title: { absolute: "Contest Bay · Free Paper Board | Galaxy Sports Edge" },
   description:
     "Free skill-only paper contest: pick the board, close entries before kickoff, climb the accuracy leaderboard. No entry fee, no prize pool, no real money.",
   alternates: { canonical: "/fantasy/contests" },

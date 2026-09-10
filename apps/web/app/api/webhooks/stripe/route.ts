@@ -36,14 +36,33 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     throw err;
   }
 
+  // Same reasoning as the STRIPE_SECRET_KEY branch above, for the OTHER secret
+  // this handler needs (C-91). A missing or blank STRIPE_WEBHOOK_SECRET makes
+  // constructEvent throw, which the catch below reports as 400 "Invalid
+  // signature" — a configuration fault wearing an attacker's clothes. In the
+  // Dashboard's Recent Deliveries that is indistinguishable from someone
+  // posting garbage at the endpoint, so an operator whose entitlement events
+  // have all stopped goes looking for the wrong problem: they re-check the
+  // signing secret VALUE against the endpoint when the variable is not set at
+  // all. Fail closed with a 503 that names the variable, exactly as the sibling
+  // branch does. It is still a non-2xx, so Stripe keeps redelivering on its own
+  // schedule and no entitlement event is lost while the variable is being set.
+  const webhookSecret = process.env["STRIPE_WEBHOOK_SECRET"];
+  if (typeof webhookSecret !== "string" || webhookSecret.trim() === "") {
+    console.error(
+      "Stripe webhook config error: STRIPE_WEBHOOK_SECRET is missing or blank — cannot verify " +
+        "any delivery. Set it to the endpoint's signing secret and redeploy.",
+    );
+    return NextResponse.json(
+      { error: "Stripe is not configured (STRIPE_WEBHOOK_SECRET is missing or blank)" },
+      { status: 503 },
+    );
+  }
+
   let event: Stripe.Event;
 
   try {
-    event = stripeClient.webhooks.constructEvent(
-      body,
-      signature,
-      process.env["STRIPE_WEBHOOK_SECRET"]!
-    );
+    event = stripeClient.webhooks.constructEvent(body, signature, webhookSecret);
   } catch (err) {
     const message = err instanceof Error ? err.message : "Unknown error";
     console.error(`Stripe webhook signature verification failed: ${message}`);
@@ -679,15 +698,42 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
   const status = mapStripeStatus(stripeSubscription.status);
   let tier = getTierFromPriceId(priceId, lookupKey);
 
+  // Read off the RAW Stripe status, not the mapped one: `unpaid` and a genuine
+  // SCA `incomplete` both map to INCOMPLETE, and only the first one means "we
+  // tried to collect and could not". Keeping the pastDueSince anchor on this
+  // landing is what lets lib/billing/notice.ts tell a member whose payment
+  // failed ("your access has ended") from one whose bank wants a verification
+  // step ("finish setting up your payment") — C-91 / D2a requires the copy to
+  // say what actually happened.
+  const isDunningExhausted = stripeSubscription.status === "unpaid";
+
   // Defensive no-downgrade guard (grandfathering safety net). If a NON-EMPTY price
   // id maps to no configured tier (an operator repointed a STRIPE_*_PRICE_ID and
   // dropped the historical id), do NOT downgrade a currently-paid member to FREE —
   // that would silently revoke a grandfathered subscriber's access on renewal.
-  // Retain their recorded paid tier and alert. Only applies to access-granting
-  // statuses; a genuinely canceled/incomplete sub still resolves to FREE normally.
+  // Retain their recorded paid tier and alert.
   const statusGrantsAccess = status === "ACTIVE" || status === "TRIALING" || status === "PAST_DUE";
+  // The dunning-exhausted landing must ALSO preserve the tier, and missing that
+  // was a real regression introduced by the `unpaid` remap above (Devin Review,
+  // #736). Before the remap, `unpaid` arrived here as PAST_DUE, so an unmapped
+  // historical price hit this guard and the grandfathered tier survived. Once
+  // `unpaid` became INCOMPLETE, statusGrantsAccess went false, the guard stopped
+  // firing, and the row's tier was overwritten with FREE. The trap is what
+  // happens NEXT: when that member pays the outstanding invoice, the `active`
+  // sync re-derives FREE from the same unmapped price and finds existing.tier
+  // already FREE — so there is no longer a paid tier to preserve, and the guard
+  // cannot save them. Paying would restore nothing, permanently.
+  //
+  // Preserving the tier here does NOT re-grant access: `status` is what gates,
+  // and INCOMPLETE does not grant. It only keeps the RECORD of what this member
+  // is owed, so recovery works.
+  //
+  // Deliberately not widened past this. PAUSED has the same shape and the same
+  // gap, but it had it before this branch too — fixing it is a separate change
+  // with its own test, not a drive-by on a money-path PR.
+  const preservesGrandfatheredTier = statusGrantsAccess || isDunningExhausted;
   const existingIsPaid = existing?.tier === "PRO" || existing?.tier === "ELITE" || existing?.tier === "FANTASY";
-  if (tier === "FREE" && priceId && statusGrantsAccess && existingIsPaid) {
+  if (tier === "FREE" && priceId && preservesGrandfatheredTier && existingIsPaid) {
     console.error(
       `[stripe] unmapped priceId ${priceId} on an active PAID subscription — retaining tier ` +
         `${existing!.tier} instead of downgrading to FREE. Add this historical price id to the ` +
@@ -732,13 +778,16 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
     // CANCELED sync preserves the delete handler's stamp (or sets one when
     // the cancellation arrives via `updated` before/without a delete event).
     canceledAt: isCanceled ? (existing?.canceledAt ?? new Date()) : null,
-    // Recovery clears the grace anchor. While PAST_DUE the existing
-    // first-failure stamp is preserved (and backfilled below if a sync
-    // arrives before any invoice.payment_failed event).
-    ...(isPastDue ? {} : { pastDueSince: null }),
+    // Recovery clears the grace anchor. While PAST_DUE — or on the `unpaid`
+    // landing, which is the same dunning episode after Stripe gave up — the
+    // existing first-failure stamp is preserved (and backfilled below if a sync
+    // arrives before any invoice.payment_failed event). On the unpaid landing
+    // the anchor no longer buys access (INCOMPLETE does not grant); it is kept
+    // so the member-facing notice can name the real reason.
+    ...(isPastDue || isDunningExhausted ? {} : { pastDueSince: null }),
   };
 
-  if (isPastDue) {
+  if (isPastDue || isDunningExhausted) {
     await db.subscription.updateMany({
       where: { stripeCustomerId: customerId, pastDueSince: null },
       data: { pastDueSince: new Date() },
@@ -757,7 +806,7 @@ async function syncSubscription(stripeSubscription: Stripe.Subscription): Promis
         userId,
         stripeCustomerId: customerId,
         ...updateData,
-        ...(isPastDue ? { pastDueSince: new Date() } : {}),
+        ...(isPastDue || isDunningExhausted ? { pastDueSince: new Date() } : {}),
       },
       update: updateData,
     });
@@ -800,7 +849,42 @@ function mapStripeStatus(
     case "paused":
       return "PAUSED";
     case "unpaid":
-      return "PAST_DUE";
+      // NOT "PAST_DUE" (C-91, founder decision D2a). Stripe's `past_due` and
+      // `unpaid` are two different facts and this handler used to collapse them
+      // into one, which put the two halves of the money path in direct
+      // contradiction:
+      //
+      //   - `PAST_DUE` is access-GRANTING here for PAST_DUE_GRACE_DAYS (7),
+      //     anchored to pastDueSince (lib/entitlements.ts), and the dashboard
+      //     banner promises the member exactly that window in writing
+      //     ("You keep full access while we retry, until <date>").
+      //   - the reconciler classifies Stripe `unpaid` as a CONFIRMED non-access
+      //     status and downgrades on it (lib/billing/reconcile-entitlements.ts,
+      //     downgradeActionForRetrievedStatus), on an hourly cron.
+      //
+      // So a member whose dunning had ALREADY been exhausted was shown a 7-day
+      // grace promise and then cut off within the hour by the reconciler. The
+      // promise was the wrong half: `unpaid` is the END of Stripe's retry
+      // schedule, not the start of it — the grace window exists to cover the
+      // retries, and by `unpaid` there are none left to cover.
+      //
+      // INCOMPLETE, not CANCELED, is the honest landing:
+      //   - it is not access-granting (getUserEntitlements grants only ACTIVE,
+      //     TRIALING, and in-window PAST_DUE), so access ends on THIS event,
+      //     idempotently — a redelivery writes the same row;
+      //   - it is not TERMINAL, so a member who pays the outstanding invoice and
+      //     returns to `active` syncs normally. Mapping to CANCELED would stamp
+      //     canceledAt and arm the out-of-order resurrection guard above, which
+      //     refuses a later same-id reactivation — locking out a customer who
+      //     had just paid;
+      //   - it does not invent a cancellation Stripe never reported;
+      //   - invoice.payment_failed already refuses to promote an INCOMPLETE row
+      //     to PAST_DUE (NEVER_GRANT_GRACE), so a late dunning event cannot
+      //     re-open the grace window behind this decision.
+      //
+      // The row keeps its paid `tier` (it is a real, recoverable subscription);
+      // `status` is what gates access, and it no longer grants.
+      return "INCOMPLETE";
     default:
       // Fail CLOSED. Stripe's status set is closed and fully handled above, so
       // this only fires if Stripe introduces a new status — in which case the

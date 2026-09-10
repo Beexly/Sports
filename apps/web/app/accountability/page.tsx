@@ -22,7 +22,7 @@ import { BRAND_NAME } from "@/lib/brand";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 export const metadata: Metadata = {
-  title: `Accountability · ${BRAND_NAME}`,
+  title: { absolute: `Accountability · ${BRAND_NAME}` },
   description:
     "We grade ourselves in public. Losses get autopsies. The model is versioned and every version is logged. Nothing is hidden to make the record look cleaner.",
   alternates: { canonical: "/accountability" },

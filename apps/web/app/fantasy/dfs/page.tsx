@@ -9,6 +9,7 @@ export const metadata: Metadata = {
   description:
     "DFS salaries and the glass-box optimizer in one room: reconciled DraftKings salaries feed cash, GPP, and leverage objectives with QB stacking, locks/fades, and real exposure control.",
   alternates: { canonical: "/fantasy/dfs" },
+  robots: { index: false, follow: true },
 };
 
 // Salary feeds are provider-keyed at runtime; render per-request so the

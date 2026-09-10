@@ -267,7 +267,7 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
       const satHalos: InstanceType<typeof THREE.Sprite>[] = [];
       for (let mi = 0; mi < game.markets.length; mi++) {
         const mk = game.markets[mi]!;
-        const haloM = new THREE.SpriteMaterial({ map: soft, color: new THREE.Color(mk.volatility > 0.55 ? 0xff2dd6 : 0x7a5cff), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
+        const haloM = new THREE.SpriteMaterial({ map: soft, color: new THREE.Color(mk.volatility > 0.55 ? 0xFF4D2E : 0xC9D4CE), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
         const sh = new THREE.Sprite(haloM);
         const hs = 0.5 + mk.volatility * 1.3;
         sh.scale.set(hs, hs, 1);
@@ -306,7 +306,7 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
       disposables.push(headMat);
 
       const pm = game.publicMoney ?? 0;
-      const pressMat = new THREE.SpriteMaterial({ map: soft, color: new THREE.Color(0xff2dd6), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
+      const pressMat = new THREE.SpriteMaterial({ map: soft, color: new THREE.Color(0xFF4D2E), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
       const pressure = new THREE.Sprite(pressMat);
       const ps = 1.5 + pm * 1.9;
       pressure.scale.set(ps, ps, 1);
@@ -314,20 +314,20 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
       disposables.push(pressMat);
 
       const sharp = game.sharp ?? 0;
-      const sharpMat = new THREE.SpriteMaterial({ map: glow, color: new THREE.Color(0x00e5ff), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
+      const sharpMat = new THREE.SpriteMaterial({ map: glow, color: new THREE.Color(0xFF4D2E), transparent: true, opacity: 0, depthWrite: false, blending: THREE.AdditiveBlending });
       const sharpNode = new THREE.Sprite(sharpMat);
       const sns = 0.7 + sharp * 1.0;
       sharpNode.scale.set(sns, sns, 1);
       group.add(sharpNode);
       disposables.push(sharpMat);
 
-      const lensMat = new THREE.LineBasicMaterial({ color: new THREE.Color(0x00e5ff), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+      const lensMat = new THREE.LineBasicMaterial({ color: new THREE.Color(0xFF4D2E), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
       const lensRing = new THREE.LineLoop(ringGeo, lensMat);
       group.add(lensRing);
       disposables.push(lensMat);
 
       const impact = game.impact ?? null;
-      const impMat = new THREE.LineBasicMaterial({ color: new THREE.Color(0xff2dd6), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
+      const impMat = new THREE.LineBasicMaterial({ color: new THREE.Color(0xFF4D2E), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false });
       const impactRing = new THREE.LineLoop(ringGeo, impMat);
       group.add(impactRing);
       disposables.push(impMat);

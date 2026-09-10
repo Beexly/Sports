@@ -308,7 +308,7 @@ export function LeagueTwinGalaxy() {
         <div className="grid grid-cols-4 gap-2 text-center">
           <Stat label="Proj" value={twin.totalProj} />
           <Stat label="Stacks" value={twin.stackCount} hex={BRAND_COLORS.softUltraviolet} />
-          <Stat label="Risk" value={twin.riskCount} hex="#E0A800" />
+          <Stat label="Risk" value={twin.riskCount} hex="#FFB454" />
           <Stat label={`Bye W${twin.currentWeek}`} value={twin.byeExposure} hex={BRAND_COLORS.ionMagenta} />
         </div>
 

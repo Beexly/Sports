@@ -12,7 +12,7 @@ import { BRAND_NAME } from "@/lib/brand";
  */
 
 export const metadata: Metadata = {
-  title: "Changelog - Ship log for Galaxy Sports Edge",
+  title: { absolute: "Changelog - Ship log for Galaxy Sports Edge" },
   description:
     "What changed and when. Every model version, gate flip, and calibration update logged publicly.",
   alternates: { canonical: "/changelog" },

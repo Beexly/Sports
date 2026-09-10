@@ -12,7 +12,6 @@ import {
   SUPPORT_EMAIL,
 } from "@/lib/brand";
 import { CommandPalette } from "@/components/ui/command-palette";
-import { GalaxyCursor } from "@/components/ui/galaxy-cursor";
 import { SentryClientInit } from "@/components/observability/SentryClientInit";
 import { PageExplainerAuto } from "@/components/explainers/page-explainer";
 import {
@@ -230,7 +229,10 @@ export default function RootLayout({
         </a>
         {children}
         <CommandPalette />
-        <GalaxyCursor />
+        {/* GalaxyCursor (FE-17) is mounted on the home hero only
+            (app/page.tsx), not globally — a custom cursor overlay on
+            data-dense surfaces (dashboard, board, stats) is a distraction
+            this product's "math you can read" positioning does not need. */}
         {/* SentientShell (GhostJarvis "machine thoughts", a coin-flip "data
             uncertainty" glitch, dream mode, thermal toggle) is no longer mounted
             on public routes: first-person machine narration and a random

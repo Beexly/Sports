@@ -284,6 +284,47 @@ describe("generateSignalSlate fixture confirmation guard (C-111)", () => {
     expect(out.fixtureUnconfirmed).toBe(1);
   });
 
+  /**
+   * C-299 — the second clock, ours. The scanned-games query already filters
+   * `commenceTime: { gte: now }`, so on this path the kickoff guard is defence
+   * in depth rather than a live hole-closer: it holds even when a row reaches
+   * the loop in play, which is what a loosened query filter or a backwards
+   * correction would produce. `gameFindMany` is mocked here, so the row arrives
+   * exactly as such a regression would deliver it.
+   */
+  it("prices no signal for a row that reaches the loop already in play, and counts it", async () => {
+    espnFetch.mockImplementation(async () =>
+      boardResponse({ events: [espnEvent("406", "2026-09-05T19:30Z", "Cincinnati Bearcats", "Boston College Eagles")] }),
+    );
+    // Kickoff 14:00Z against NOW 15:00Z: an hour under way. ESPN still lists it
+    // at 19:30Z, so the C-111 guard CONFIRMS it — only our own clock refuses.
+    mocks.gameFindMany.mockResolvedValue([{ ...GAME, commenceTime: new Date("2026-09-05T14:00:00.000Z") }]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const out = await runSlate();
+
+    // Neither half of the write: no new signal pick, and no rewrite of an
+    // existing PENDING one.
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
+    expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+    expect(out).toMatchObject({ skippedInPlay: 1, picksUpserted: 0 });
+    expect(warn.mock.calls.some((c) => /in-play, no pick/.test(String(c[0])))).toBe(true);
+    warn.mockRestore();
+  });
+
+  it("still prices a row five minutes from kickoff", async () => {
+    espnFetch.mockImplementation(async () =>
+      boardResponse({ events: [espnEvent("407", "2026-09-05T15:05Z", "Cincinnati Bearcats", "Boston College Eagles")] }),
+    );
+    mocks.gameFindMany.mockResolvedValue([{ ...GAME, commenceTime: new Date("2026-09-05T15:05:00.000Z") }]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+
+    const out = await runSlate();
+
+    expect(out).toMatchObject({ skippedInPlay: 0 });
+  });
+
   it("writes no pick and no correction when the board lists the fixture but its ESPN kickoff is already behind the run clock", async () => {
     // Our row still says 16:00Z (ahead of NOW 15:00Z); ESPN lists the same
     // pair at 13:00Z, 2h in the past. The past clock is never written to the

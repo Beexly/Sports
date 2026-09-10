@@ -64,7 +64,10 @@ export default function DeckPage(): JSX.Element {
       <SignalSpine />
 
       {/* ── HERO: The Command Deck ──────────────────────────────────────── */}
-      <section className="relative isolate flex min-h-screen items-center overflow-hidden border-b border-mineral">
+      <section
+        id="main-content"
+        className="relative isolate flex min-h-screen items-center overflow-hidden border-b border-mineral"
+      >
         {plate && (
           <GeneratedPlate
             className="opacity-90"
@@ -182,7 +185,7 @@ export default function DeckPage(): JSX.Element {
                             sys.status === "live" ? "var(--orbital-cyan)" : "var(--caution)",
                           boxShadow:
                             sys.status === "live"
-                              ? "0 0 8px 2px rgba(0,229,255,0.5)"
+                              ? "0 0 8px 2px rgba(255,77,46,0.5)"
                               : "0 0 8px 2px rgba(255,180,84,0.4)",
                         }}
                       />
@@ -199,7 +202,7 @@ export default function DeckPage(): JSX.Element {
                               : sys.health > 0.75
                                 ? "var(--ultraviolet)"
                                 : "var(--plasma)",
-                          boxShadow: `0 0 8px ${sys.health > 0.9 ? "rgba(0,229,255,0.4)" : sys.health > 0.75 ? "rgba(123,97,255,0.4)" : "rgba(255,56,199,0.4)"}`,
+                          boxShadow: `0 0 8px ${sys.health > 0.9 ? "rgba(255,77,46,0.4)" : sys.health > 0.75 ? "rgba(60,45,110,0.4)" : "rgba(255,77,46,0.4)"}`,
                         }}
                       />
                     </div>
@@ -302,10 +305,10 @@ export default function DeckPage(): JSX.Element {
                             : "var(--orbital-cyan)",
                       boxShadow:
                         agent.state === "alert"
-                          ? "0 0 8px 2px rgba(255,56,199,0.5)"
+                          ? "0 0 8px 2px rgba(255,77,46,0.5)"
                           : agent.state === "idle"
-                            ? "0 0 6px 1px rgba(123,97,255,0.3)"
-                            : "0 0 8px 2px rgba(0,229,255,0.4)",
+                            ? "0 0 6px 1px rgba(60,45,110,0.3)"
+                            : "0 0 8px 2px rgba(255,77,46,0.4)",
                       animation:
                         agent.state === "alert"
                           ? "pp-live-pulse 1.5s ease-in-out infinite"

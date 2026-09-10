@@ -98,6 +98,51 @@ REDIS_URL=
 NEXT_PUBLIC_APP_URL=
 ```
 
+### 5-LI. Line-integrity flags (C-281..C-284; ledger C-197)
+
+Two founder-only flags, both **default OFF** and both absent from `.env.example`
+by design: AGENTS.md law 2 freezes any `.env*` for agents, so they are
+documented here instead (the same resolution recorded for C-108). Neither is
+read through `PlatformConfig`, for the same reason.
+
+```bash
+# Refuse to PUBLISH a SPREAD/TOTAL pick whose stored `line` is not a line some
+# book on the row actually quoted. The stored line is the arithmetic mean of
+# every book's line, so on a disagreeing market it is a number nobody offers.
+# Turning this ON suppresses roughly 43% of SPREAD and 62% of TOTAL picks on
+# the production counts in ledger C-197 — a board decision, not an ops toggle.
+LINE_INTEGRITY_PUBLISH_GUARD_ENABLED=
+
+# Let the settle-picks remediation lane VOID (through the settlement outbox,
+# rcaCode LINE_NOT_QUOTED, never re-stamping settledAt) settled published picks
+# with that defect, and UNPUBLISH unsettled ones. Idempotent; writes nothing
+# while unset.
+LINE_INTEGRITY_VOID_ENABLED=
+```
+
+**Reading the counts requires operator auth (C-286).** The `lineIntegrity` block
+on `/api/ops/public-surface-truth` is returned only for an authenticated call —
+it runs three capped pick scans plus counts, and the per-IP rate limit on the
+public branch bounds one caller, not the aggregate work anonymous callers can
+provoke. An anonymous GET now reads `lineIntegrity: null`, which means NOT
+SURVEYED, not "nothing to void":
+
+```bash
+curl -s -H "Authorization: Bearer $CRON_SECRET" \
+  https://www.galaxysportsedge.com/api/ops/public-surface-truth | jq .lineIntegrity
+```
+
+**The flip precondition is `lineIntegrity.sweep.voidSweepComplete === true`, not
+`remainingToVoid === 0` (C-287).** `remainingCapReached` is true on every
+production call — the survey samples the oldest 300 of a settled population in
+the thousands — so the old wording could never be satisfied. `remainingToVoid`
+is a spot check on that sample; `sweep` is the claim about the whole population,
+and it reads false until the lane has actually run two complete passes. See the
+decision doc §3c.
+
+Full context, the flip precondition, and what each ops count means:
+`docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md`.
+
 ### 5a. Canonical host (single source of truth)
 
 The one canonical base URL lives in `apps/web/lib/seo/site-url.ts` (`SITE_URL`):

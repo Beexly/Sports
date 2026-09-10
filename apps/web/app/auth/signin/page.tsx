@@ -4,6 +4,7 @@ import { safeCallbackUrl } from "@/lib/auth/callback-url-guard";
 import Link from "next/link";
 import { BRAND_NAME } from "@/lib/brand";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+import { BrandLockup } from "@/components/brand/brand-lockup";
 
 // ─────────────────────────────────────────────
 // Page
@@ -25,32 +26,17 @@ export default async function SignInPage({ searchParams }: SignInPageProps) {
   const errorMessage = getErrorMessage(searchParams.error);
 
   return (
-    <div className="relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden bg-obsidian px-4 py-12">
+    <div
+      id="main-content"
+      className="relative isolate flex min-h-screen flex-col items-center justify-center overflow-hidden bg-obsidian px-4 py-12"
+    >
       {/* Atmosphere — calm deep-space plate, truth rendered on top */}
       <GeneratedPlate assetId="intro-galaxy" className="-z-10 opacity-20" />
 
-      {/* Logo */}
-      <Link href="/" className="group mb-10 flex items-center gap-2">
-        <div className="flex h-9 w-9 items-center justify-center rounded-xl bg-plasma transition-colors group-hover:bg-plasma-glow">
-          <svg
-            className="h-5 w-5 text-plasma-ink"
-            fill="none"
-            viewBox="0 0 24 24"
-            strokeWidth={2}
-            stroke="currentColor"
-            aria-hidden="true"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              d="M3 13.125C3 12.504 3.504 12 4.125 12h2.25c.621 0 1.125.504 1.125 1.125v6.75C7.5 20.496 6.996 21 6.375 21h-2.25A1.125 1.125 0 0 1 3 19.875v-6.75ZM9.75 8.625c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125v11.25c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V8.625ZM16.5 4.125c0-.621.504-1.125 1.125-1.125h2.25C20.496 3 21 3.504 21 4.125v15.75c0 .621-.504 1.125-1.125 1.125h-2.25a1.125 1.125 0 0 1-1.125-1.125V4.125Z"
-            />
-          </svg>
-        </div>
-        <span className="text-xl font-bold tracking-tight text-ion-white">
-          {BRAND_NAME}
-        </span>
-      </Link>
+      {/* Logo — the official lockup (FE-18), not a generic placeholder mark */}
+      <div className="mb-10">
+        <BrandLockup />
+      </div>
 
       {/* Card */}
       <div className="w-full max-w-sm rounded-2xl border border-mineral bg-carbon p-8 shadow-2xl shadow-black/60">

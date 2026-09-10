@@ -132,6 +132,13 @@ export type PickForLiveCal = {
   readonly selection?: string | null;
   readonly homeTeamName?: string | null;
   readonly awayTeamName?: string | null;
+  /**
+   * C-298: the game's scheduled start. A pick generated at or after it was
+   * priced in-play and is excluded from the eligibility sample (counted as
+   * in_play). Absent means "cannot tell", and the row is kept: the exclusion
+   * only ever removes rows it can prove are in-play.
+   */
+  readonly commenceTime?: Date | null;
 };
 
 /**
@@ -169,8 +176,22 @@ export type MarketAnchoredPSource = "proof_receipt" | "factor_breakdown" | Marke
  *                       or more books.
  *   market_anchored_v2  C-110 (2026-09-06): the same, plus single-book
  *                       publish-time market probabilities (market_p_single_book).
+ *   market_anchored_v3  C-298 (2026-09-09): in-play rows excluded, and the
+ *                       odds-table recompute at generatedAt is read FIRST;
+ *                       the receipt and the factor breakdown are fallbacks for
+ *                       rows the odds table cannot price. Measured on
+ *                       production: on v5.2.7's pre-game rows the receipt's
+ *                       marketFairProb sat 0.169 above the odds table at
+ *                       generatedAt on average, 15 of 46 receipted rows more
+ *                       than 0.15 off. The odds table is the source of truth
+ *                       (CLAUDE.md, Prediction Engine Rules); the receipt is
+ *                       a copy that has been shown to drift.
+ *   market_anchored_v4  C-300 (2026-09-09): the floors score only rows the
+ *                       odds table prices at generatedAt; receipt-only and
+ *                       factor-breakdown-only rows are counted as
+ *                       unverifiable_market_p (57 on the first v3 run).
  */
-export const MARKET_ANCHORED_P_BASIS = "market_anchored_v2" as const;
+export const MARKET_ANCHORED_P_BASIS = "market_anchored_v4" as const;
 export type MarketAnchoredPBasis = typeof MARKET_ANCHORED_P_BASIS;
 
 export type MarketAnchoredPResolution = {
@@ -203,17 +224,37 @@ export function resolveMarketAnchoredCalibrationP(
   pick: PickForLiveCal,
   resolveMarketP: MarketProbabilityResolver = NULL_MARKET_PROBABILITY_RESOLVER,
 ): MarketAnchoredPResolution {
+  // C-298 (2026-09-09): the odds table at generatedAt is read FIRST. The order
+  // above (receipt first) was written on the premise that the receipt is
+  // "minted once before kickoff from the same fairProb the scorer wrote". On
+  // production it is not that number: across v5.2.7's pre-game moneyline rows
+  // the receipt's marketFairProb averaged 0.169 above the odds table's
+  // de-vigged consensus at generatedAt, and 15 of 46 receipted rows were more
+  // than 0.15 off (read-only SQL, 2026-09-09 13:20 UTC). The append-only odds
+  // table is the source of truth; the receipt and the factor breakdown remain
+  // as fallbacks for rows the odds table cannot price, and every source is
+  // still counted apart in bySource.
+  const resolved = resolveMarketP(pick);
+  if (resolved != null) {
+    const resolvedP = typeof resolved === "number" ? resolved : resolved.p;
+    const source: MarketAnchoredResolverSource =
+      typeof resolved === "number" ? "resolver" : resolved.source;
+    if (isRealMarketP(resolvedP)) return { p: clamp01(resolvedP), source };
+  }
   const receiptP = receiptMarketFairProb(pick.proofReceipt);
   if (isRealMarketP(receiptP)) return { p: clamp01(receiptP), source: "proof_receipt" };
   const fb = (pick.factorBreakdown ?? null) as FactorBreakdownLike | null;
   const { marketP: fbMarketP } = extractProvenPathProbs(fb);
   if (isRealMarketP(fbMarketP)) return { p: clamp01(fbMarketP), source: "factor_breakdown" };
-  const resolved = resolveMarketP(pick);
-  if (resolved == null) return null;
-  const resolvedP = typeof resolved === "number" ? resolved : resolved.p;
-  const source: MarketAnchoredResolverSource = typeof resolved === "number" ? "resolver" : resolved.source;
-  if (isRealMarketP(resolvedP)) return { p: clamp01(resolvedP), source };
   return null;
+}
+
+/** C-298: true only when both timestamps are known and the pick was generated at or after kickoff. */
+export function isInPlayPick(pick: Pick<PickForLiveCal, "generatedAt" | "commenceTime">): boolean {
+  const g = pick.generatedAt?.getTime();
+  const c = pick.commenceTime?.getTime();
+  if (g == null || c == null || !Number.isFinite(g) || !Number.isFinite(c)) return false;
+  return g >= c;
 }
 
 export type MarketAnchoredSample = {
@@ -264,9 +305,19 @@ export type MarketAnchoredSampleBuild = {
  */
 export function picksToMarketAnchoredCalibrationSamples(
   picks: readonly PickForLiveCal[],
-  options?: { readonly resolveMarketP?: MarketProbabilityResolver },
+  options?: {
+    readonly resolveMarketP?: MarketProbabilityResolver;
+    /**
+     * C-300: when true, a row whose probability came from the receipt or the
+     * factor breakdown (the odds table could not price it at generatedAt) is
+     * counted as unverifiable_market_p and not scored. The eligibility cron
+     * sets this; other readers keep the fallback chain.
+     */
+    readonly verifiableOnly?: boolean;
+  },
 ): MarketAnchoredSampleBuild {
   const resolveMarketP = options?.resolveMarketP ?? NULL_MARKET_PROBABILITY_RESOLVER;
+  const verifiableOnly = options?.verifiableOnly === true;
   const samples: MarketAnchoredSample[] = [];
   const bySource: Record<string, number> = {};
   const excluded = emptyExclusionCounts();
@@ -289,9 +340,28 @@ export function picksToMarketAnchoredCalibrationSamples(
       continue;
     }
 
+    // C-298: a pick generated at or after kickoff was priced in-play. Its
+    // "publish-time" probability is a live price that already encodes part of
+    // the outcome, so scoring it is a look-ahead. Counted, never scored.
+    if (isInPlayPick(pick)) {
+      excluded.in_play += 1;
+      continue;
+    }
+
     const res = resolveMarketAnchoredCalibrationP(pick, resolveMarketP);
     if (!res) {
       excluded.no_market_probability += 1;
+      continue;
+    }
+
+    // C-300: the eligibility floors score only a probability the append-only
+    // odds table can reproduce at generatedAt. A row the resolver could not
+    // price falls back to the receipt or the factor breakdown for every
+    // OTHER reader of this function, but for the floors both are post-publish
+    // values (receipt measured 0.169 above the odds table; factor breakdown
+    // rewritten every cycle) and are counted, never scored.
+    if (verifiableOnly && (res.source === "proof_receipt" || res.source === "factor_breakdown")) {
+      excluded.unverifiable_market_p += 1;
       continue;
     }
 
@@ -312,8 +382,8 @@ export function picksToMarketAnchoredCalibrationSamples(
   }
 
   const notes = [
-    "Eligibility p (v5.2.8 Phase 2): market-anchored probability only, publish-time value. Order: proof receipt marketFairProb (minted once before kickoff, immutable), then factor-breakdown market fair only when no receipt exists (rows that predate receipts; the factor breakdown is refreshed until settlement and merged after it, so it is not publish-time-fixed), then the injected resolver (odds-table recompute at generatedAt; two or more books as resolver, one book as resolver_single_book). Synthetic 0.5 rejected. Confidence/100 is never scored for the floors.",
-    `Included ${samples.length}; excluded three_way_market ${excluded.three_way_market}, no_market_probability ${excluded.no_market_probability}, non_moneyline_market ${excluded.non_moneyline_market}. Sources: ${JSON.stringify(bySource)}.`,
+    "Eligibility p (market_anchored_v3, C-298 2026-09-09): market-anchored probability only, publish-time value. Order: the injected resolver first (odds-table recompute at generatedAt; two or more books as resolver, one book as resolver_single_book), then the proof receipt marketFairProb, then the factor-breakdown market fair. The receipt was demoted after production showed it sitting 0.169 above the odds table at generatedAt on v5.2.7's pre-game rows. Picks generated at or after their game's commenceTime are excluded as in_play (their price is a live price). Synthetic 0.5 rejected. Confidence/100 is never scored for the floors.",
+    `Included ${samples.length}; excluded three_way_market ${excluded.three_way_market}, no_market_probability ${excluded.no_market_probability}, non_moneyline_market ${excluded.non_moneyline_market}, in_play ${excluded.in_play}, unverifiable_market_p ${excluded.unverifiable_market_p} (C-300: receipt or factor-breakdown only, no odds-table price at generatedAt; counted, never scored). Sources: ${JSON.stringify(bySource)}.`,
     "Three-way moneyline sports (scoring.ts isThreeWayMoneylineSport) are a structural exclusion: the two-way de-vig drops the draw mass and the engine does not publish them.",
     MARKET_ANCHORED_SAMPLE_COMPOSITION_NOTE,
     "PROVEN still needs floors + streak + publish. PERFORMANCE_STATS untouched.",

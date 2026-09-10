@@ -84,6 +84,15 @@ import { ingestEventOddsIfEnabled, type EventOddsClient } from "./event-odds-ing
 import { eventOddsId, toPropLineSnapshotRows, type PropEventLike } from "./prop-line-rows.js";
 import { capturePinnacleLineSnapshotsIfEnabled } from "./pinnacle-line-archive.js";
 import { bookLineDispersion } from "./book-dispersion.js";
+import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
+import {
+  RUNDOWN_RATE_LIMIT_COOLDOWN_MS,
+  isRundownCoolingDown,
+  isRundownThinFillSport,
+  openRundownCooldown,
+  rundownCooldownRemainingMs,
+  thinFillCandidates,
+} from "./rundown-thin-fill.js";
 import {
   FixtureConfirmer,
   formatFixtureLine,
@@ -137,6 +146,12 @@ export interface ProcessSportResult {
   provider?: string;
   /** Raw events accepted before freshness filter. */
   eventsCount?: number;
+  /**
+   * Games refused this cycle because their kickoff had already arrived (C-299).
+   * A pick is a pre-game claim; these produced no new pick and no rewrite of an
+   * existing PENDING one.
+   */
+  skippedInPlay?: number;
   /**
    * The Odds API quota headers (x-requests-remaining / x-requests-used) from
    * this run's paid responses, exactly as the client parsed them: the latest
@@ -254,6 +269,55 @@ export function bookDisagreementForPick(
     return pickedHome ? disp.moneylineHome : disp.moneylineAway;
   }
   return null;
+}
+
+/**
+ * One line per 429, with the resume time and never a key. Opening the cooldown
+ * and logging it are the same event, so they are the same call.
+ */
+function noteRundownRateLimit(sportKey: string, logPrefix: string): void {
+  const resumeAt = openRundownCooldown(sportKey);
+  console.warn(
+    `${logPrefix} ${sportKey}: rundown rate_limited (HTTP 429) — skipping this sport for ` +
+      `${Math.round(RUNDOWN_RATE_LIMIT_COOLDOWN_MS / 60000)}m, resumes ${resumeAt.toISOString()}`,
+  );
+}
+
+/**
+ * May this cycle spend ONE TheRundown call to thin-fill this sport?
+ *
+ * All five conditions, in the order they cost least to check (C-278a):
+ *   - a key exists;
+ *   - no 429 cooldown is open for this sport;
+ *   - the sport is NFL or NCAAF — the boards where a missing second book is
+ *     the reason MONEYLINE and TOTAL do not publish at all;
+ *   - at least one game sits UNDER MIN_BOOKMAKERS (a fully covered slate is
+ *     never dual-pulled — that is the whole point of the threshold filter);
+ *   - at least one of those thin games is inside the board window, so a day
+ *     with no live fixture for this sport spends nothing.
+ *
+ * A true answer authorises exactly one call for the whole sport, never one per
+ * game: `fetchRundownEventsForSport` returns the sport's whole slate.
+ */
+function shouldThinFillFromRundown(
+  sportKey: string,
+  events: readonly OddsApiEvent[],
+  rundownKey: string,
+  cooldownMs: number,
+  logPrefix: string,
+): boolean {
+  if (!rundownKey) return false;
+  if (cooldownMs > 0) {
+    console.warn(
+      `${logPrefix} ${sportKey}: rundown thin-fill skipped — cooling down, resumes in ` +
+        `${Math.ceil(cooldownMs / 60000)}m`,
+    );
+    return false;
+  }
+  if (!isRundownThinFillSport(sportKey)) return false;
+  const thin = eventsBelowBookmakerThreshold(events, THIN_FILL_MIN_BOOKMAKERS);
+  if (thin.length === 0) return false;
+  return thinFillCandidates(thin, Date.now()).length > 0;
 }
 
 export async function processSport(
@@ -489,9 +553,18 @@ export async function processSport(
     // thin-fill when some games sit under MIN_BOOKMAKERS. Never dual-pull a
     // fully covered slate.
     const rundownKey = resolveRundownApiKey();
+    const rundownCooldownMs = rundownCooldownRemainingMs(sport.key);
     if (events.length === 0) {
-      if (rundownKey) {
+      if (!rundownKey) {
+        rundownAttemptNote = "rundown key ABSENT";
+      } else if (rundownCooldownMs > 0) {
+        // Rate-limit cooldown covers the full-replace leg too: a 429 is the
+        // sport's whole daily quota talking, not this one endpoint's.
+        rundownAttemptNote = `rundown cooling down ${Math.ceil(rundownCooldownMs / 60000)}m`;
+        console.warn(`${logPrefix} ${sport.key}: ${rundownAttemptNote}`);
+      } else {
         const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
+        if (rd.rateLimited) noteRundownRateLimit(sport.key, logPrefix);
         if (rd.events.length > 0) {
           events = rd.events;
           oddsProviderTag = "therundown";
@@ -504,12 +577,11 @@ export async function processSport(
           rundownAttemptNote = rd.error ?? "rundown empty: no bookmaker lines";
           console.warn(`${logPrefix} ${sport.key}: rundown empty — ${rundownAttemptNote}`);
         }
-      } else {
-        rundownAttemptNote = "rundown key ABSENT";
       }
-    } else if (rundownKey && eventsBelowBookmakerThreshold(events, THIN_FILL_MIN_BOOKMAKERS).length > 0) {
+    } else if (shouldThinFillFromRundown(sport.key, events, rundownKey, rundownCooldownMs, logPrefix)) {
       try {
         const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
+        if (rd.rateLimited) noteRundownRateLimit(sport.key, logPrefix);
         if (rd.events.length > 0) {
           const merged = mergeBookmakersIntoPrimary(events, rd.events, THIN_FILL_MIN_BOOKMAKERS);
           events = merged.events;
@@ -867,6 +939,8 @@ export async function processSport(
     const fixtureFor = (gameId: string): FixtureConfirmation | null =>
       fixtureBatch.status === "ok" ? (fixtureBatch.byGameId.get(gameId) ?? null) : null;
     let fixtureUnconfirmed = 0;
+    // Games refused because their kickoff had already arrived (C-299).
+    let skippedInPlay = 0;
     // Games that passed the guard; the pick loop below refuses any other gameId.
     const confirmedGameIds = new Set<string>();
 
@@ -905,7 +979,6 @@ export async function processSport(
         }
         continue;
       }
-      confirmedGameIds.add(gameRecord.id);
       // One effective kickoff for every consumer below (enrichment, independent
       // fair values, the OddsInput the scorer reads). It is the feed's time
       // unless ESPN's correction is persisted, so the row and this cycle's
@@ -934,6 +1007,19 @@ export async function processSport(
           );
         }
       }
+
+      // Kickoff guard (C-299). The ESPN check above reads the SCOREBOARD's
+      // clock; this reads the one we priced against, after any correction. A
+      // game already under way gets no OddsInput at all, so it cannot be
+      // scored, cannot create or refresh a pick, and cannot mint a receipt off
+      // a live price. Placed before confirmedGameIds so the write loop's
+      // existing membership test excludes it too.
+      if (hasKickedOff(kickoff, fetchedAt)) {
+        skippedInPlay += 1;
+        console.warn(`${logPrefix} ${sport.key}: ${inPlaySkipLine(gameRecord.id, kickoff, fetchedAt)}`);
+        continue;
+      }
+      confirmedGameIds.add(gameRecord.id);
 
       const gameOdds = normalizedOdds.filter((o) => o.gameExternalId === game.externalId);
 
@@ -1116,6 +1202,10 @@ export async function processSport(
     for (const pick of scoredPicks) {
       // Fixture guard (C-111): no pick is created or refreshed for a game the
       // day's ESPN scoreboard did not confirm, whatever the scorer emitted.
+      // C-299: this same membership test now also carries the kickoff
+      // invariant. A game already under way never enters confirmedGameIds, so
+      // this one line refuses the create, the PENDING refresh of selection /
+      // line / confidence / factorBreakdown, AND the receipt mint below.
       if (!confirmedGameIds.has(pick.gameId)) continue;
       // Fields refreshed on every cycle (confidence, odds, reasoning).
       // result, settledAt: intentionally absent — never overwritten by refresh.
@@ -1361,7 +1451,8 @@ export async function processSport(
     console.log(
       `${logPrefix} ${sport.key}: ${Object.keys(gameRecords).length} games, ` +
       `${oddsInserted} odds, ${picksGenerated} picks (bootstrap=${isBootstrap})` +
-      (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : "")
+      (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : "") +
+      (skippedInPlay > 0 ? ` skippedInPlay=${skippedInPlay}` : "")
     );
 
     const emptyNote =
@@ -1386,6 +1477,7 @@ export async function processSport(
       // picks; it must stay observable even when the cycle also inserted no
       // odds (an emptiness note would otherwise mask why picks were withheld).
       note: fixtureNote ?? emptyNote,
+      skippedInPlay,
       ...paidAccounting(),
     };
   } catch (err) {
@@ -1408,6 +1500,7 @@ export async function processSport(
       oddsInserted: 0,
       eventsCount: 0,
       error: message,
+      skippedInPlay: 0,
       // A run that fails after a paid response still spent the credits and
       // still saw the vendor's headers; the caller's governor needs both.
       ...paidAccounting(),

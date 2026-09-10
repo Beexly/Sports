@@ -13,6 +13,7 @@ import {
 } from "@/lib/performance/clv-segments";
 import { wilsonInterval, formatWilsonPct, clearsThreshold } from "@/lib/performance/wilson-interval";
 import { verifyReceiptHash } from "@/lib/performance/proof-hash";
+import { CLV_SAMPLE_RESULT_FILTER } from "@/lib/clv/clv-sample-policy";
 
 /**
  * Private CLV dashboard (admin-only) — the internal read on whether the model is
@@ -43,6 +44,9 @@ export default async function AdminClvPage() {
       clvVerdict: { not: null },
       clvValue: { not: null },
       isBootstrap: false,
+      // Withdrawn picks carry no live CLV claim (C-279), so they stay out of
+      // the aggregate even on an internal page.
+      result: CLV_SAMPLE_RESULT_FILTER,
       NOT: { modelVersion: { contains: "seed" } },
     },
     select: {

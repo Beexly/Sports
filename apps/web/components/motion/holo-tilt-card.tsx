@@ -61,7 +61,7 @@ export function HoloTiltCard({
         aria-hidden
         className="pointer-events-none absolute inset-0 rounded-ds-lg opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{
-          background: `radial-gradient(circle at ${sheen.x}% ${sheen.y}%, rgba(0,229,255,0.08) 0%, transparent 60%)`,
+          background: `radial-gradient(circle at ${sheen.x}% ${sheen.y}%, rgba(255,77,46,0.08) 0%, transparent 60%)`,
           mixBlendMode: "overlay",
         }}
       />

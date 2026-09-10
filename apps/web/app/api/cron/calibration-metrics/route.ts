@@ -25,6 +25,7 @@ import {
   type CalibrationSample,
 } from "@sports/prediction-engine";
 import { captureError } from "@/lib/observability/sentry";
+import { debiasedExpectedCalibrationError } from "@/lib/calibration/ece-debiased";
 import { db, isStubMode } from "@sports/db";
 import {
   evaluateAndPersistEligibility,
@@ -111,7 +112,7 @@ async function loadSettledCalibrationSamples(): Promise<{
   settledTo: string | null;
 }> {
   const notes: string[] = [];
-  const emptyExclusions: CalibrationExclusionCounts = { three_way_market: 0, no_market_probability: 0, non_moneyline_market: 0 };
+  const emptyExclusions: CalibrationExclusionCounts = { three_way_market: 0, no_market_probability: 0, non_moneyline_market: 0, in_play: 0, unverifiable_market_p: 0 };
   try {
     const picks = await db.pick.findMany({
       where: {
@@ -139,6 +140,8 @@ async function loadSettledCalibrationSamples(): Promise<{
           select: {
             homeTeamName: true,
             awayTeamName: true,
+            // C-298: a pick generated at or after kickoff is in-play and excluded.
+            commenceTime: true,
             sport: { select: { key: true, name: true } },
           },
         },
@@ -154,6 +157,7 @@ async function loadSettledCalibrationSamples(): Promise<{
       selection: pick.selection,
       homeTeamName: pick.game?.homeTeamName ?? null,
       awayTeamName: pick.game?.awayTeamName ?? null,
+      commenceTime: pick.game?.commenceTime ?? null,
       confidence: pick.confidence,
       result: pick.result ?? "",
       pickType: pick.pickType,
@@ -174,6 +178,10 @@ async function loadSettledCalibrationSamples(): Promise<{
     // picks with no market probability are counted in `excluded`, never scored.
     const honest = picksToMarketAnchoredCalibrationSamples(rows, {
       resolveMarketP: oddsTable.resolveMarketP,
+      // C-300: the floors score only rows the odds table can price at
+      // generatedAt; receipt-only and factor-breakdown-only rows are counted
+      // as unverifiable_market_p, never scored.
+      verifiableOnly: true,
     });
     const samples: CalibrationSample[] = honest.samples.map((s) => ({
       p: s.p,
@@ -328,6 +336,8 @@ export async function GET(request: Request): Promise<NextResponse> {
     } else {
       const decomp = brierDecomposition(samples);
       const ece = expectedCalibrationError(samples);
+      // C-290: the floor reads the bias-corrected ECE; raw stays reported.
+      const eceCorrection = debiasedExpectedCalibrationError(samples);
       const curve = reliabilityCurve(samples);
       const mce = mceFromCurve(curve);
       const logLoss = meanLogLoss(samples);
@@ -364,6 +374,8 @@ export async function GET(request: Request): Promise<NextResponse> {
           brierDecomp: decomp,
           logLoss,
           ece,
+          eceNoise: eceCorrection.noise,
+          eceDebiased: eceCorrection.debiased,
           mce,
           bssHalf: bss(decomp.brier, "half", decomp.baseRate),
           bssClim: bss(decomp.brier, "climatology", decomp.baseRate),
@@ -395,6 +407,8 @@ export async function GET(request: Request): Promise<NextResponse> {
         overall: {
           brier: decomp.brier,
           ece,
+          eceNoise: eceCorrection.noise,
+          eceDebiased: eceCorrection.debiased,
           mce,
           murphy: {
             reliability: decomp.reliability,

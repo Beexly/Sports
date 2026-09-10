@@ -7,6 +7,7 @@ import { SignalCoreLazy } from "@/components/hero/signal-core-lazy";
 import { SignalSpine } from "@/components/motion/signal-spine";
 import { SignalDecode } from "@/components/motion/signal-decode";
 import { ObservatoryBeacon } from "@/components/motion/observatory-beacon";
+import { GalaxyCursor } from "@/components/ui/galaxy-cursor";
 import { SentientWeather } from "@/components/motion/sentient-weather";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { getPlate } from "@/lib/visual-production/asset-manifest";
@@ -126,14 +127,16 @@ export default async function HomePage(): Promise<JSX.Element> {
             </Reveal>
             <Reveal delay={220}>
               <div className="mt-8 flex flex-col items-center justify-center gap-3 sm:flex-row">
-                <Link href="/tools" className="btn-primary min-h-11 px-6 py-3">
-                  Free calculators
+                {/* F-28 (founder-delegated 2026-09-08, via orchestrator): primary
+                    CTA to /picks, secondary to /pricing. */}
+                <Link href="/picks" className="btn-primary min-h-11 px-6 py-3">
+                  See today&apos;s picks
                 </Link>
                 <Link
-                  href="/methodology"
+                  href="/pricing"
                   className="inline-flex min-h-11 items-center justify-center rounded-xl border border-mineral px-6 py-3 text-sm font-semibold text-ion-1 transition-colors hover:border-mineral-hi hover:text-ion-white"
                 >
-                  How the engine works
+                  See pricing
                 </Link>
               </div>
             </Reveal>
@@ -158,7 +161,7 @@ export default async function HomePage(): Promise<JSX.Element> {
               <DoorCard
                 index={1}
                 label="Board"
-                decides="What's worth a play today, and what to pass."
+                decides="The gate's reasoning behind every pass and every clear."
                 stat={
                   boardUnavailable
                     ? "Live board data unavailable"
@@ -328,6 +331,9 @@ export default async function HomePage(): Promise<JSX.Element> {
         </section>
       </main>
       <ObservatoryBeacon />
+      {/* FE-17: restricted to the home hero, not mounted globally.
+          See app/layout.tsx. */}
+      <GalaxyCursor />
       <Footer />
     </div>
   );

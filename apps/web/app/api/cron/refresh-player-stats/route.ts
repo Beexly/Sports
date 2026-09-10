@@ -2,13 +2,28 @@
  * Vercel cron — refresh NFL player weekly stats from nflverse.
  *
  * Primary path (default): weekly player stats only + free IngestionRun SUCCESS.
- * Full path (?mode=full): sequential satellites (snaps, injuries, depth, NGS).
+ * Full path (?mode=full, or the daily window): sequential satellites (snaps,
+ * injuries, depth, NGS).
  *
  * Why default is primary-only:
  * Hobby serverless OOM'd even with sequential satellites after weekly stats
  * (2026-08-06: killed after ~90s post-primary). Health SLA + paid-worth
- * spine need the primary stamp; satellites can run less often via mode=full
- * or a future larger memory tier.
+ * spine need the primary stamp.
+ *
+ * C-244 — "satellites can run less often via mode=full" was the plan and it
+ * did not happen: the scheduled invocation carries no query string, so on the
+ * schedule they ran NEVER. Measured on production 2026-09-08,
+ * depth_chart_entries held zero rows. They now also run once a day on their
+ * own; lib/ingestion/satellite-window.ts holds the decision and the reasoning,
+ * including why the Hobby constraint above is out of date (the account is on
+ * Vercel Pro) without being disproven.
+ *
+ * C-264 — satellites target the LABELLED season directly (see
+ * `satelliteSeason` below), never the primary path's own possibly-demoted
+ * `season`. nflverse publishes rosters/depth-charts/injuries on an earlier
+ * cadence than player-week stats, so coupling the two meant an already-
+ * published depth chart stayed dark until player-week stats also shipped.
+ * Each satellite's own result is the authority on whether its asset exists.
  *
  * Auth: Bearer <CRON_SECRET>.
  */
@@ -22,6 +37,7 @@ import { ingestInjuries } from "@/lib/ingestion/injuries";
 import { ingestDepthCharts } from "@/lib/ingestion/depth-charts";
 import { ingestNextGenStats } from "@/lib/ingestion/next-gen-stats";
 import { recordFreeIngestionRun } from "@/lib/data-sources/free-ingestion-run";
+import { decideSatelliteRun } from "@/lib/ingestion/satellite-window";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -44,8 +60,13 @@ export async function GET(request: Request): Promise<NextResponse> {
 
   const url = new URL(request.url);
   const seasonParam = url.searchParams.get("season");
-  const mode = (url.searchParams.get("mode") ?? "primary").toLowerCase();
-  const runFull = mode === "full" || mode === "all";
+  // C-244: the scheduled invocation carries no query string, so `?mode=full`
+  // meant the satellites never ran on the schedule at all — measurably, not
+  // theoretically (depth_chart_entries held zero rows). They now run once a
+  // day; an explicit ?mode= still wins in both directions. See
+  // lib/ingestion/satellite-window.ts for why a clock window and not a
+  // coverage check.
+  const satelliteDecision = decideSatelliteRun(url.searchParams, new Date());
 
   // Ask the source for the labelled season (September 2026 → 2026). The
   // resolved display floor (2025 until 2026 REG rows exist) is the fallback
@@ -80,6 +101,29 @@ export async function GET(request: Request): Promise<NextResponse> {
   }
   const primaryOk = stats.status === "ok";
 
+  // C-264 fix. C-198's original guard stood the WHOLE satellite window down
+  // whenever the primary path had fallen back to the completed floor, to stop
+  // an automatic run writing 2025 depth charts — the newest of them from the
+  // Super Bowl — as if they were current. That guard was correct about the
+  // failure mode but too broad about the cause: it treated "player-week
+  // stats aren't published for the labelled season" as if it meant "nothing
+  // is", when nflverse ships rosters/depth-charts/injuries on an earlier
+  // cadence than player-week stats/PBP/snap-counts. Measured 2026-09-09:
+  // depth_charts_2026.csv (505k rows) and injuries_2026.csv were already
+  // live while player_stats.csv.gz had no 2026 rows at all — the exact split
+  // this coupling was blind to.
+  //
+  // Fix: satellites always target the LABELLED season directly, never the
+  // primary's own demoted `season`. Each satellite's own result is the
+  // authority on whether ITS asset is published — an unpublished satellite
+  // returns its own honest source-error/zero-row status (surfaced in the
+  // response body, e.g. `depth.status`) and writes nothing, exactly like an
+  // outage would, so no stale prior-season data can ever be written as
+  // current. An explicit `?season=` is still the operator's to aim.
+  const runFull = satelliteDecision.runFull;
+  const satelliteReason = satelliteDecision.reason;
+  const satelliteSeason = seasonParam ? season : labelled;
+
   const ingestionRun = await recordFreeIngestionRun({
     sport: "nflverse-player-stats",
     gamesUpserted: stats.statsUpserted,
@@ -94,12 +138,12 @@ export async function GET(request: Request): Promise<NextResponse> {
   let satellitesOk = true;
 
   if (runFull) {
-    const snaps = await ingestSnapCounts(season);
-    const injuries = await ingestInjuries(season);
-    const depth = await ingestDepthCharts(season);
-    const ngsPassing = await ingestNextGenStats(season, "passing");
-    const ngsReceiving = await ingestNextGenStats(season, "receiving");
-    const ngsRushing = await ingestNextGenStats(season, "rushing");
+    const snaps = await ingestSnapCounts(satelliteSeason);
+    const injuries = await ingestInjuries(satelliteSeason);
+    const depth = await ingestDepthCharts(satelliteSeason);
+    const ngsPassing = await ingestNextGenStats(satelliteSeason, "passing");
+    const ngsReceiving = await ingestNextGenStats(satelliteSeason, "receiving");
+    const ngsRushing = await ingestNextGenStats(satelliteSeason, "rushing");
     satellites = {
       snaps,
       injuries,
@@ -118,6 +162,10 @@ export async function GET(request: Request): Promise<NextResponse> {
       success,
       season,
       mode: runFull ? "full" : "primary",
+      // Which path this invocation took and WHY, so a reader of the cron log
+      // can tell a daily satellite run from an operator's explicit one and
+      // from the 47 primary-only runs, without inferring it from the clock.
+      satelliteReason,
       seasonResolution: {
         season: resolved.season,
         reason: resolved.reason,

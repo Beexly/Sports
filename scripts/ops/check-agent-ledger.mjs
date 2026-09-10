@@ -209,26 +209,83 @@ function fetchShaFromOrigin(sha, cwd) {
  * constant goes stale as the branch grows is the same kind of guard that
  * cries wolf.
  *
- * Fetching every advertised branch tip with generous depth in one call —
- * verified against the real GitHub origin from a genuinely shallow clone —
- * solves both: breadth covers branch-only commits, depth=1000 comfortably
- * covers this project's full history (~760 commits) with room to grow.
- * Memoised because this is the expensive path and every unresolved SHA in
- * the ledger would otherwise re-run it.
+ * A single wildcard fetch (`+refs/heads/*:refs/remotes/origin/*` with
+ * `--depth=1000`) was the first fix for that, and it silently stopped
+ * working: reproduced directly against this repo's real GitHub origin from a
+ * genuinely shallow clone 2026-09-09 (PR #734 C-268) — the command exits 0
+ * and updates every branch's tip pointer, but leaves the ALREADY-SHALLOW
+ * checked-out ref's boundary untouched, so a real, pushed, mid-branch commit
+ * (e.g. C-264's evidence SHA, five commits behind the branch tip) still does
+ * not resolve. An explicit single-ref `git fetch --depth=1000 origin
+ * <branch>:refs/remotes/origin/<branch>` reliably deepens that same ref; the
+ * difference reproduces even when both refspecs are passed to ONE `git
+ * fetch` invocation (only the ref fetched by explicit name deepens), so this
+ * is not a matter of trying harder with the wildcard — it is two SEPARATE
+ * fetches. Widen the checked-out branch by name first (the case that blocks
+ * the actual CI run), then attempt the wildcard as a best-effort second pass
+ * for the branch-scope case (a cited SHA that lives only on some OTHER
+ * branch) — unreliable at deepening but still advances every branch's tip,
+ * which is enough for a SHA that is itself a tip. Memoised because this is
+ * the expensive path and every unresolved SHA in the ledger would otherwise
+ * re-run it.
+ *
+ * Naming the checked-out branch: `git rev-parse --abbrev-ref HEAD` returns
+ * the literal string "HEAD" on a DETACHED checkout, and GitHub Actions
+ * checks out detached for `pull_request` events (`refs/pull/<n>/merge`),
+ * not an attached branch — reproduced directly (Devin Review, PR #734,
+ * fifth finding): `git fetch --depth=1 origin pull/734/merge` +
+ * `git checkout --force FETCH_HEAD` leaves `rev-parse --abbrev-ref HEAD`
+ * returning "HEAD", so the local lookup alone silently degrades every
+ * pull_request-triggered run back to the unreliable wildcard-only path.
+ * `GITHUB_HEAD_REF` (pull_request) / `GITHUB_REF_NAME` (push and most other
+ * events) are the CI-provided names that survive detachment; verified
+ * against that same detached checkout that the env-var name still deepens
+ * correctly. The local git lookup stays as the non-CI fallback.
  */
 let _widened = null;
 function widenOriginRefs(cwd) {
   if (_widened !== null) return _widened;
+  let ok = false;
+
+  let currentRef = process.env.GITHUB_HEAD_REF || process.env.GITHUB_REF_NAME || null;
+  if (!currentRef) {
+    try {
+      const ref = execFileSync("git", ["rev-parse", "--abbrev-ref", "HEAD"], {
+        cwd,
+        encoding: "utf8",
+      }).trim();
+      if (ref && ref !== "HEAD") currentRef = ref;
+    } catch {
+      // Detached HEAD outside CI, or another lookup failure — the wildcard
+      // attempt below is the only remaining option.
+    }
+  }
+
+  if (currentRef) {
+    try {
+      execFileSync(
+        "git",
+        ["fetch", "--quiet", "--depth=1000", "origin", `${currentRef}:refs/remotes/origin/${currentRef}`],
+        { cwd, stdio: "ignore" },
+      );
+      ok = true;
+    } catch {
+      // Fall through to the wildcard attempt.
+    }
+  }
+
   try {
     execFileSync(
       "git",
       ["fetch", "--quiet", "--depth=1000", "origin", "+refs/heads/*:refs/remotes/origin/*"],
       { cwd, stdio: "ignore" },
     );
-    _widened = true;
+    ok = true;
   } catch {
-    _widened = false;
+    // ok already reflects whether the named-ref attempt above succeeded.
   }
+
+  _widened = ok;
   return _widened;
 }
 

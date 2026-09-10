@@ -61,7 +61,7 @@ export function SignalFragmentField(): JSX.Element {
       {/* the beam */}
       <div aria-hidden className="relative hidden w-px justify-self-center lg:block">
         <div className="gw-beam absolute inset-y-0 w-px" />
-        <span className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ion-white shadow-[0_0_18px_4px_rgba(0,229,255,0.6)]" />
+        <span className="absolute left-1/2 top-1/2 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-ion-white shadow-[0_0_18px_4px_rgba(255,77,46,0.6)]" />
       </div>
       {/* mobile: the beam continues the journey downward between the panels */}
       <div aria-hidden className="relative mx-auto h-16 w-px lg:hidden">

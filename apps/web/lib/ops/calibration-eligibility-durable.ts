@@ -4,9 +4,11 @@
  */
 
 import { db, isStubMode } from "@sports/db";
+import { MODEL_VERSION } from "@sports/prediction-engine";
 import {
   evaluateCalibrationEligibility,
   type CalibrationEligibilityReport,
+  type DeployedVersionSlice,
   type EligibilityStatus,
   type LiveCalibrationMetrics,
   type MurphyTerms,
@@ -52,6 +54,9 @@ export interface DurableMetricsPayload {
   readonly overall: {
     readonly brier: number;
     readonly ece: number;
+    /** C-290: sampling-noise expectation and bias-corrected ECE; absent before 2026-09-09. */
+    readonly eceNoise?: number;
+    readonly eceDebiased?: number;
     readonly mce: number;
     readonly murphy: MurphyTerms;
   } | null;
@@ -91,10 +96,49 @@ export interface DurableMetricsPayload {
  * another (consecutiveGreenPriorForBasis), so the v1 to v2 move restarted the
  * streak from 0 with streakResetFromBasis "market_anchored" on the first v2 snap.
  */
-export type CalibrationPBasis = MarketAnchoredPBasis | "market_anchored" | "legacy";
+export type CalibrationPBasis =
+  | MarketAnchoredPBasis
+  | "market_anchored_v3"
+  | "market_anchored_v2"
+  | "market_anchored"
+  | "legacy";
 
 export function metricsPBasis(m: DurableMetricsPayload | null | undefined): CalibrationPBasis {
   return m?.pBasis ?? "legacy";
+}
+
+/**
+ * C-275: the byModelVersion slice for the version actually serving traffic.
+ *
+ * The floors are scored on a POOLED ECE, and pooled can sit below every stratum
+ * it is built from (measured 0.0414 below on live data), so a pooled pass does
+ * not imply the deployed model is calibrated. Handing this slice to the gate
+ * makes it check the deployed version's own rows too.
+ *
+ * Returns null — meaning "no additional check" — when the artifact carries no
+ * byModelVersion breakdown (every artifact written before those were added) or
+ * when MODEL_VERSION has no rows in this sample yet. Null preserves the
+ * pre-C-275 behaviour exactly, so an old artifact is never retro-failed by a
+ * check its data cannot answer.
+ */
+export function deployedVersionSlice(
+  m: DurableMetricsPayload | null | undefined,
+): DeployedVersionSlice | null {
+  const slices = m?.byModelVersion;
+  if (!slices || slices.length === 0) return null;
+  const hit = slices.find((s) => s.key === MODEL_VERSION);
+  if (!hit) return null;
+  // C-292: slices written before the per-slice correction carry neither field;
+  // `?? null` keeps that "not corrected" rather than surfacing undefined, and
+  // the gate then reads the raw value (the stricter direction).
+  return {
+    key: hit.key,
+    n: hit.n,
+    ece: hit.ece,
+    eceNoise: hit.eceNoise ?? null,
+    eceDebiased: hit.eceDebiased ?? null,
+    eceDebiasedCi90Lo: hit.eceDebiasedCi90Lo ?? null,
+  };
 }
 
 export function snapPBasis(snap: EligibilityDurableSnap | null | undefined): CalibrationPBasis {
@@ -294,6 +338,8 @@ export function metricsToLive(m: DurableMetricsPayload | null): LiveCalibrationM
       n: m.n,
       brier: null,
       ece: null,
+      eceNoise: null,
+      eceDebiased: null,
       mce: null,
       murphy: null,
       modelVersion: m.modelVersion,
@@ -305,6 +351,8 @@ export function metricsToLive(m: DurableMetricsPayload | null): LiveCalibrationM
     n: m.n,
     brier: m.overall.brier,
     ece: m.overall.ece,
+    eceNoise: m.overall.eceNoise ?? null,
+    eceDebiased: m.overall.eceDebiased ?? null,
     mce: m.overall.mce,
     murphy: m.overall.murphy,
     modelVersion: m.modelVersion,
@@ -611,6 +659,7 @@ export async function evaluateAndPersistEligibility(input: {
     settlementHealthy: input.settlementHealthy,
     consecutiveGreenPrior,
     streakRequired: streakRequiredFromEnv(),
+    deployedVersion: deployedVersionSlice(input.metrics),
   });
 
   await persistEligibilitySnap({
@@ -781,6 +830,7 @@ export async function loadCalibrationOpsSurface(input: {
       settlementHealthy: input.settlementHealthy,
       consecutiveGreenPrior,
       streakRequired: streakRequiredFromEnv(),
+      deployedVersion: deployedVersionSlice(metrics),
     });
   }
 

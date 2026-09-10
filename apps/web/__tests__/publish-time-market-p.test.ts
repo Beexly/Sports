@@ -307,7 +307,7 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
 
     const built = picksToMarketAnchoredCalibrationSamples([soccer], { resolveMarketP: load.resolveMarketP });
     expect(built.included).toBe(0);
-    expect(built.excluded).toEqual({ three_way_market: 1, no_market_probability: 0, non_moneyline_market: 0 });
+    expect(built.excluded).toEqual({ three_way_market: 1, no_market_probability: 0, non_moneyline_market: 0, in_play: 0, unverifiable_market_p: 0 });
   });
 
   it("issues exactly one odds query for N picks, bounded by their gameIds and latest generatedAt", async () => {
@@ -316,7 +316,7 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
       mlPick({ id: "a", gameId: "g1" }),
       mlPick({ id: "b", gameId: "g2", generatedAt: later, selection: `${AWAY} ML (+130)` }),
       mlPick({ id: "c", gameId: "g1", result: "LOSS" }),
-      // Already market-anchored: not a candidate, its game is not queried.
+      // Receipted: still a candidate (C-301); its game is queried and the odds table prices it first.
       mlPick({ id: "d", gameId: "g9", proofReceipt: { marketFairProb: 0.63 } }),
       // Not a moneyline: not a candidate.
       mlPick({ id: "e", gameId: "g8", pickType: "SPREAD" }),
@@ -330,16 +330,16 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
 
     expect(findMany).toHaveBeenCalledTimes(1);
     const args = findMany.mock.calls[0]![0];
-    expect(args.where.gameId.in).toEqual(["g1", "g2"]);
+    expect(args.where.gameId.in).toEqual(["g1", "g2", "g9"]);
     expect(args.where.market).toBe("H2H");
     expect(args.where.fetchedAt.lte.getTime()).toBe(later.getTime());
     expect(args.select).toEqual({ gameId: true, bookmaker: true, homePrice: true, awayPrice: true, fetchedAt: true });
 
-    expect(load.stats.candidates).toBe(3);
-    expect(load.stats.gamesQueried).toBe(2);
+    expect(load.stats.candidates).toBe(4);
+    expect(load.stats.gamesQueried).toBe(3);
     expect(load.stats.queries).toBe(1);
-    expect(load.stats.oddsRows).toBe(7);
-    expect(load.stats.resolved).toBe(3);
+    expect(load.stats.oddsRows).toBe(10);
+    expect(load.stats.resolved).toBe(4);
     expect(load.stats.resolvedSingleBook).toBe(0);
     expect(load.stats.unresolved).toEqual({ no_rows: 0, no_usable_book: 0, insufficient_books: 0, no_side: 0 });
     expect(load.stats.note).toBeNull();
@@ -350,7 +350,8 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
     const pB = load.resolveMarketP(picks[1]!);
     expect(pB).not.toBeNull();
     expect(typeof pB === "object" && pB !== null ? pB.p : null).not.toBeCloseTo(0.420288, 6);
-    expect(load.resolveMarketP(picks[3]!)).toBeNull();
+    // The receipted pick (C-301): priced from g9's own books, not from its receipt.
+    expect(load.resolveMarketP(picks[3]!)).toEqual({ p: 0.579712, source: "resolver" });
     expect(load.resolveMarketP({ ...picks[0]!, id: null })).toBeNull();
   });
 
@@ -411,6 +412,26 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
     expect(oddsTableStatsNote(load.stats)).toContain("odds table unavailable");
   });
 
+  it("C-301: a receipted pick is a candidate; the odds table prices it first and verifiableOnly keeps it", async () => {
+    // Regression: before C-301 the candidate filter skipped any pick that
+    // already carried a receipt, so the odds table was never read for it and
+    // the cron's verifiableOnly pass dropped it as unverifiable_market_p even
+    // when the odds table held its game's books. 57 production rows, 44 of
+    // them the deployed version's own, went unscored on the 14:40 UTC run.
+    const receipted = mlPick({ id: "r", gameId: "g1", proofReceipt: { marketFairProb: 0.75 } });
+    expect(oddsTableCandidate(receipted)).not.toBeNull();
+    const { db, findMany } = mockOddsDb(threeBooks("g1"));
+    const load = await loadPublishTimeMarketPResolver(db, [receipted]);
+    expect(findMany).toHaveBeenCalledTimes(1);
+    expect(load.stats.candidates).toBe(1);
+    expect(load.stats.resolved).toBe(1);
+    const built = picksToCalibrationSamples([receipted], { resolveMarketP: load.resolveMarketP, verifiableOnly: true });
+    expect(built.samples).toHaveLength(1);
+    expect(built.taggedSamples[0]?.p).toBe(0.579712);
+    expect(built.bySource).toEqual({ resolver: 1 });
+    expect(built.exclusions.unverifiable_market_p).toBe(0);
+  });
+
   it("feeds the shared builder; two-or-more books report as market_p_from_odds_table, one book as market_p_single_book", async () => {
     const picks = [
       mlPick({ id: "r", gameId: "g9", proofReceipt: { marketFairProb: 0.63 } }),
@@ -418,15 +439,19 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
       mlPick({ id: "s", gameId: "g6", result: "WIN" }),
       mlPick({ id: "x", gameId: "g5" }),
     ];
-    // g1: three books; g6: fanduel alone; g5: nothing stored.
+    // g1: three books; g6: fanduel alone; g5 and g9: nothing stored. The
+    // receipted pick on g9 is a candidate (C-301) with no rows, so this
+    // non-verifiableOnly reader falls back to its receipt.
     const { db } = mockOddsDb([...threeBooks("g1"), row("g6", "fanduel", -145, 125, T0)]);
     const load = await loadPublishTimeMarketPResolver(db, picks);
+    expect(load.stats.candidates).toBe(4);
     expect(load.stats.resolved).toBe(2);
     expect(load.stats.resolvedSingleBook).toBe(1);
+    expect(load.stats.unresolved.no_rows).toBe(2);
 
     const built = picksToCalibrationSamples(picks, { resolveMarketP: load.resolveMarketP });
     expect(built.samples).toHaveLength(3);
-    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0 });
+    expect(built.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0, in_play: 0, unverifiable_market_p: 0 });
     expect(built.bySource).toEqual({ proof_receipt: 1, resolver: 1, resolver_single_book: 1 });
     expect(built.taggedSamples[1]).toEqual({
       p: 0.579712,
@@ -463,13 +488,13 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
       settledTo: built.settledTo,
     });
     // C-110 changed the sample definition, so the streak basis tag moved to v2.
-    expect(MARKET_ANCHORED_P_BASIS).toBe("market_anchored_v2");
-    expect(payload.pBasis).toBe("market_anchored_v2");
+    expect(MARKET_ANCHORED_P_BASIS).toBe("market_anchored_v4");
+    expect(payload.pBasis).toBe("market_anchored_v4");
     expect(payload.pSources).toEqual({ factor_breakdown: 0, proof_receipt: 1, market_p_from_odds_table: 1, market_p_single_book: 1 });
     expect(payload.marketPFromOddsTable).toEqual(load.stats);
     expect(payload.marketPFromOddsTable?.queries).toBe(1);
     expect(payload.marketPFromOddsTable?.resolvedSingleBook).toBe(1);
-    expect(payload.marketPFromOddsTable?.unresolved.no_rows).toBe(1);
+    expect(payload.marketPFromOddsTable?.unresolved.no_rows).toBe(2);
     expect(payload.marketPFromOddsTable?.unresolved.insufficient_books).toBe(0);
     expect(payload.notes?.some((n) => /market_p_single_book/.test(n))).toBe(true);
   });

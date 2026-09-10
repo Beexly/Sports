@@ -22,8 +22,8 @@ export default async function Image() {
           display: "flex",
           flexDirection: "column",
           background:
-            "radial-gradient(120% 80% at 30% 0%, #101A33 0%, #08091A 55%, #05070B 100%)",
-          color: "#F5F7FF",
+            "radial-gradient(120% 80% at 30% 0%, #131022 0%, #060F0E 55%, #060F0E 100%)",
+          color: "#EDE8E0",
           padding: "72px 88px",
           position: "relative",
           fontFamily: "Inter, system-ui, sans-serif",
@@ -38,16 +38,16 @@ export default async function Image() {
             height: 520,
             borderRadius: "50%",
             background:
-              "radial-gradient(50% 50% at 50% 50%, rgba(0,229,255,0.38) 0%, rgba(123,97,255,0.12) 60%, transparent 100%)",
+              "radial-gradient(50% 50% at 50% 50%, rgba(255,77,46,0.38) 0%, rgba(60,45,110,0.12) 60%, transparent 100%)",
             display: "flex",
           }}
         />
         {/* Wordmark */}
         <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
-          <div style={{ fontSize: 52, fontWeight: 800, letterSpacing: "0.12em", color: "#F5F7FF", display: "flex" }}>
+          <div style={{ fontSize: 52, fontWeight: 800, letterSpacing: "0.12em", color: "#EDE8E0", display: "flex" }}>
             GALAXY
           </div>
-          <div style={{ fontSize: 26, fontWeight: 500, letterSpacing: "0.30em", color: "#00E5FF", marginTop: 10, display: "flex" }}>
+          <div style={{ fontSize: 26, fontWeight: 500, letterSpacing: "0.30em", color: "#FF4D2E", marginTop: 10, display: "flex" }}>
             FANTASY
           </div>
         </div>
@@ -62,10 +62,10 @@ export default async function Image() {
             fontSize: 22,
             letterSpacing: "0.24em",
             textTransform: "uppercase",
-            color: "#7B61FF",
+            color: "#FF4D2E",
           }}
         >
-          <div style={{ width: 12, height: 12, borderRadius: 999, background: "#00E5FF", display: "flex" }} />
+          <div style={{ width: 12, height: 12, borderRadius: 999, background: "#FF4D2E", display: "flex" }} />
           Draft season · Best Ball
         </div>
 
@@ -77,7 +77,7 @@ export default async function Image() {
             fontWeight: 600,
             lineHeight: 1.04,
             letterSpacing: "-0.015em",
-            color: "#F5F7FF",
+            color: "#EDE8E0",
             maxWidth: 1000,
           }}
         >
@@ -109,12 +109,12 @@ export default async function Image() {
             letterSpacing: "0.18em",
             textTransform: "uppercase",
             color: "#8089A0",
-            borderTop: "1px solid rgba(0, 229, 255, 0.22)",
+            borderTop: "1px solid rgba(255,77,46, 0.22)",
             paddingTop: 28,
           }}
         >
           <span>Real grades, not fabricated projections.</span>
-          <span style={{ color: "#00E5FF" }}>galaxysportsedge.com</span>
+          <span style={{ color: "#FF4D2E" }}>galaxysportsedge.com</span>
         </div>
       </div>
     ),

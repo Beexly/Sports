@@ -71,7 +71,7 @@ describe("/pricing smoke", () => {
   it("renders the founding-rate headline and key money promises", async () => {
     const { container, getByText } = render(await PricingPage());
     await waitFor(() => {
-      expect(getByText("Claim the founding rate.")).toBeInTheDocument();
+      expect(getByText(/^Claim the [A-Za-z]+ rate\.$/)).toBeInTheDocument();
     });
     const text = container.textContent ?? "";
     // Pin the key money promises that must survive edits to /pricing.

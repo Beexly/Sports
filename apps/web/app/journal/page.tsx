@@ -12,7 +12,7 @@ const JOURNAL_DESCRIPTION =
   "Weekly research notes on settled picks, gated slates, factor behavior, and model-version changes from Galaxy Sports Edge.";
 
 export const metadata: Metadata = {
-  title: "Model Journal - Weekly research notes from Galaxy Sports Edge",
+  title: { absolute: "Model Journal - Weekly research notes from Galaxy Sports Edge" },
   description: JOURNAL_DESCRIPTION,
   alternates: { canonical: "/journal" },
 };
@@ -70,7 +70,7 @@ export default async function JournalPage(): Promise<JSX.Element> {
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
-            style={{ background: "radial-gradient(60% 80% at 50% 0%, rgba(123, 97, 255, 0.09), transparent 70%)" }}
+            style={{ background: "radial-gradient(60% 80% at 50% 0%, rgba(60,45,110, 0.09), transparent 70%)" }}
           />
           <div className="mx-auto max-w-5xl">
             <Reveal>
