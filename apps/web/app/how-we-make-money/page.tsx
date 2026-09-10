@@ -92,7 +92,7 @@ const DISCLOSURE_POINTS = [
 // Section accents as design-token classes, in doctrine order: orbital-cyan
 // (data), ultraviolet (model depth), plasma (emphasis). No raw hex — the
 // palette-cohesion guard and the token file stay the single source of truth.
-const ACCENT_BAR = ["bg-orbital-cyan", "bg-ultraviolet", "bg-plasma"] as const;
+const ACCENT_BAR = ["bg-ion-1", "bg-mineral", "bg-plasma"] as const;
 const ACCENT_TEXT = ["text-orbital-cyan", "text-ultraviolet", "text-ion-1"] as const;
 
 export default function HowWeMakeMoneyPage(): JSX.Element {

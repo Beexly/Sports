@@ -40,7 +40,7 @@ const CALCULATORS = [
     href: "/tools/no-vig-calculator",
     body: "Strip the bookmaker's margin out of a two-way (or n-way) market and see the fair, no-vig probability on each side, plus the hold percentage.",
     formula: "fair_i = (1/odds_i) / Σ(1/odds_j)",
-    accentBar: "bg-ultraviolet",
+    accentBar: "bg-mineral",
     accentText: "text-ultraviolet-glow",
   },
   {
@@ -72,7 +72,7 @@ const CALCULATORS = [
     href: "/tools/clv-calculator",
     body: "Closing-line value in basis points from your decision price vs the close. Your prices only — not a Galaxy track-record claim.",
     formula: "CLV bps = 10000 × (1/close − 1/decision)",
-    accentBar: "bg-ultraviolet",
+    accentBar: "bg-mineral",
     accentText: "text-ultraviolet-glow",
   },
 ] as const;
