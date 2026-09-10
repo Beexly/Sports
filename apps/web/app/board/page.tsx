@@ -268,16 +268,20 @@ export default async function BoardPage(): Promise<JSX.Element> {
           </div>
 
           <div className="border border-titanium bg-carbon/45 p-5">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-orbital-cyan">Live Calibration</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-orbital-cyan">Track record</p>
             <h2 className="mt-2 text-2xl font-bold text-white">
-              {calibration.isCollecting ? "Building history" : "Calibration sample"}
+              {calibration.isCollecting ? "Building history" : "Results tracked"}
             </h2>
             <p className="mt-4 text-sm leading-6 text-ion-2">{calibration.publicMessage}</p>
             <dl className="mt-6 grid grid-cols-2 gap-3">
-              <Metric label="Sample" value={String(calibration.sampleSize)} />
-              <Metric label="Brier" value={calibration.brierScore === null ? "N/A" : String(calibration.brierScore)} />
+              <Metric label="Settled picks" value={String(calibration.sampleSize)} />
+              <Metric label="Updated" value={timeLabel(calibration.updatedAt)} />
             </dl>
-            <p className="mt-5 text-xs text-ion-3">Updated {timeLabel(calibration.updatedAt)}</p>
+            <p className="mt-5 text-xs text-ion-3">
+              <Link href="/calibration" className="font-semibold text-orbital-cyan hover:text-ion-white">
+                How to read this →
+              </Link>
+            </p>
           </div>
         </section>
 

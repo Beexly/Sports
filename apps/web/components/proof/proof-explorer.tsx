@@ -90,11 +90,11 @@ export function ProofExplorer({
           <div className="grid grid-cols-3 gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral">
             <Stat label="Settled" value={<CountUp value={sampleSize} group className="tabular-nums" />} />
             <Stat
-              label="Brier"
+              label="Avg error"
               value={brierScore === null ? "n/a" : <CountUp value={brierScore} decimals={3} className="tabular-nums" />}
             />
             <Stat
-              label="Disc. spread"
+              label="Spread"
               value={
                 discriminationSpread === null ? (
                   "n/a"

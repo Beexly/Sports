@@ -116,9 +116,9 @@ describe("/calibration/market — empty state (no backfill yet)", () => {
 
     const text = await pageText();
 
-    // Market renders its stats...
+    // Market renders its stats (plain-language labels; owner directive 2026-09-10: no Brier/ECE jargon on customer surfaces)...
     expect(text).toContain("n=100");
-    expect(text).toContain("Brier score");
+    expect(text).toContain("Forecast error");
     // ...and the elo empty state also shows its own note.
     expect(text).toContain("No historical games with closing moneylines yet");
   });
@@ -161,12 +161,12 @@ describe("/calibration/market — populated state", () => {
     expect(text).toContain("The market baseline");
     expect(text).toContain("n=5,280");
     expect(text).toContain("1999–2024");
-    expect(text).toContain("0.1832"); // Brier score
-    expect(text).toContain("6.80"); // ECE as percentage (0.068 * 100 = 6.80%)
+    expect(text).toContain("0.1832"); // Forecast error
+    expect(text).toContain("6.80"); // Avg gap as percentage (0.068 * 100 = 6.80%)
 
     // Elo-vs-market comparison renders with the verdict.
     expect(text).toContain("Elo vs. the market");
-    expect(text).toContain("Better calibrated");
+    expect(text).toContain("Better predicted");
     expect(text).toContain("MARKET");
     expect(text).toContain("68"); // teams rated
 
