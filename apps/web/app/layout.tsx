@@ -238,7 +238,7 @@ export default function RootLayout({
             interference effect that claims uncertainty without a data signal
             contradict "not AI, math you can read" and rule 1 (no fabricated
             signals). The components remain for /cockpit use. */}
-        {/* Field: Nova explainer launcher hidden � chrome fought the instrument look */}
+        {/* Field: Nova explainer launcher hidden � chrome fought the instrument look */}
         <SentryClientInit />
 
         {/* ── Free analytics (prod-only, cookieless / consent-free) ────────── */}
