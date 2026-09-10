@@ -356,7 +356,7 @@ export default async function ProofOfRecordPage() {
               data-testid="proof-funnel-close"
               className="mt-10 rounded-2xl border border-plasma/30 bg-plasma/[0.06] px-6 py-8"
             >
-              <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-plasma">
+              <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-ion-2">
                 The same receipts run the live board
               </p>
               <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white">

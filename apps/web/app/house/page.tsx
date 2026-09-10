@@ -317,7 +317,7 @@ export default async function NflHousePage() {
         >
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow text-plasma">
+              <p className="eyebrow text-ion-2">
                 The rhythm
               </p>
               <h2
@@ -381,7 +381,7 @@ export default async function NflHousePage() {
             </Reveal>
             <Reveal delay={120}>
               <div className="flex h-full flex-col rounded-2xl border border-mineral bg-carbon/60 p-7">
-                <p className="eyebrow text-plasma">
+                <p className="eyebrow text-ion-2">
                   The Sunday Couch
                 </p>
                 <h3 className="mt-3 font-display text-xl text-ion-white">

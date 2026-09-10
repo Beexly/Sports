@@ -29,10 +29,12 @@ describe("Kinetic logo signature", () => {
     expect(css).toContain(".brand-lockup-kinetic .brand-wordmark");
   });
 
-  it("renders the official chrome emblem + signal-fade wordmark in the lockup", () => {
+  it("renders the inline true-break mark + wordmark in the lockup", () => {
     const lockup = read("components/brand/brand-lockup.tsx");
-    // Official emblem asset (Brand Bible v1.0), not the retired hand-built SVG.
-    expect(lockup).toContain("/brand/gse-emblem-180.png");
+    // NEBULA v7 (owner-directed: the chrome raster emblem is retired) — the
+    // lockup renders the inline true-break SVG mark, not a PNG asset.
+    expect(lockup).toContain("LogoMarkInline");
+    expect(lockup).not.toContain("/brand/gse-emblem-180.png");
     expect(lockup).toContain("brand-wordmark-text");
     // Wordmark filled with the signature signal fade.
     expect(css).toContain(".brand-wordmark-text");

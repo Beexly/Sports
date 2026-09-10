@@ -53,7 +53,7 @@ export default async function PromotionsPage({
       <main id="main-content" className="flex-1">
         <section className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8">
           <div className="mb-8 max-w-3xl">
-            <p className="eyebrow mb-2 text-plasma">
+            <p className="eyebrow mb-2 text-ion-2">
               Sportsbook Promotions
             </p>
             <h1 className="font-display text-3xl font-bold text-ion-white sm:text-4xl">
@@ -143,7 +143,7 @@ function PromotionCard({ promo }: { promo: PublicPromotion }) {
       className="flex h-full flex-col gap-3 rounded-xl border border-titanium bg-carbon/40 p-5"
     >
       <header className="flex items-center justify-between">
-        <span className="rounded bg-plasma/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-plasma-glow">
+        <span className="rounded bg-plasma/10 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-widest text-ion-2-glow">
           {promo.offerCategory.replaceAll("_", " ")}
         </span>
         <span className="text-[10px] uppercase tracking-widest text-ion-3">

@@ -93,7 +93,7 @@ const DISCLOSURE_POINTS = [
 // (data), ultraviolet (model depth), plasma (emphasis). No raw hex — the
 // palette-cohesion guard and the token file stay the single source of truth.
 const ACCENT_BAR = ["bg-orbital-cyan", "bg-ultraviolet", "bg-plasma"] as const;
-const ACCENT_TEXT = ["text-orbital-cyan", "text-ultraviolet", "text-plasma"] as const;
+const ACCENT_TEXT = ["text-orbital-cyan", "text-ultraviolet", "text-ion-1"] as const;
 
 export default function HowWeMakeMoneyPage(): JSX.Element {
   return (

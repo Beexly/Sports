@@ -197,7 +197,7 @@ export default async function SealedEnginePage() {
             <section className="px-4 py-14 sm:px-6 lg:px-8">
               <div className="mx-auto max-w-5xl">
                 <Reveal>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-plasma">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-ion-2">
                     03 · The seal
                   </p>
                   <h2 className="mt-2 font-display text-3xl font-semibold">
@@ -264,11 +264,11 @@ export default async function SealedEnginePage() {
             <section className="border-t border-plasma/20 bg-plasma/[0.04] px-4 py-14 sm:px-6 lg:px-8">
               <div className="mx-auto max-w-5xl">
                 <Reveal>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-plasma">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-ion-2">
                     04 · The record
                   </p>
                   <h2 className="mt-2 font-display text-3xl font-semibold">
-                    <SurgeCount value={story.record.totalSettled} className="text-plasma" />{" "}
+                    <SurgeCount value={story.record.totalSettled} className="text-ion-white" />{" "}
                     settled picks stand behind today&apos;s board.
                   </h2>
                   <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">

@@ -152,7 +152,7 @@ export default function AcademyPage() {
         <section id="live-fire" className="scroll-mt-24 px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <Reveal>
-              <p className="eyebrow text-plasma">live fire</p>
+              <p className="eyebrow text-ion-2">live fire</p>
               <h2 className="mt-3 font-display text-3xl font-semibold text-ion-white">
                 Decide blind. Get graded on the decision.
               </h2>

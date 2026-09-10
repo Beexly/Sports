@@ -276,7 +276,7 @@ export default function IntelligencePage() {
         <section className="px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="courtroom-heading">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow text-plasma">
+              <p className="eyebrow text-ion-2">
                 A signal is a case, not a badge
               </p>
             </Reveal>
