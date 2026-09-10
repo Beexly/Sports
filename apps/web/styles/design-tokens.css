@@ -64,10 +64,15 @@
   --plasma-deep:   #C22E1A;
   --plasma-ink:    #1A0703;
 
-  /* ── RETIRED CYAN — now fog ─────────────────────────── */
-  /* NEBULA v7: orbital cyan retired (no v7 equivalent — single-accent rule).
-     482 text-orbital-cyan sites become calm fog text (12.74:1 — PASS);
-     the action role moves to ember. Names kept so call sites compile. */
+  /* IRIS — the wayfinding accent. Active nav, current-section markers,
+     wayfinding only. Never CTAs, never body, never data.
+     Ratios: 8.44 on ground, 8.13 on panel. */
+  --iris:         #9AA8E8;
+  --iris-glow:    #C3CDEF;
+  --iris-deep:    #6E7BB8;
+  --iris-ink:     #0A0E1A;
+
+  /* RETIRED CYAN — now fog. */
   --ion-blue:      #C9D4CE;
   --ion-blue-glow: #E4EBE7;
   --ion-blue-deep: #A7B8B2;
