@@ -57,7 +57,7 @@ export function ReliabilityChart(props: {
               cx={x}
               cy={y}
               r={r}
-              fill="var(--orbital-cyan, #00E5FF)"
+              fill="var(--orbital-cyan, #FF4D2E)"
               fillOpacity={0.85}
             />
           );

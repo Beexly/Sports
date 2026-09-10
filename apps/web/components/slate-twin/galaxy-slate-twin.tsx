@@ -86,7 +86,7 @@ type StarTier = {
 };
 
 /** Hex for drift-moving state — matches text-plasma in market-fair-board. */
-const DRIFT_HEX = "#FF38C7";
+const DRIFT_HEX = "#FF4D2E";
 /** Hex for book-disagreement (argued) state — amber, distinct from all existing signals. */
 const ARGUED_HEX = "#FFB627";
 
@@ -237,7 +237,7 @@ export function GalaxySlateTwin({ slate }: { slate: TwinSlate }) {
     const systems: System[] = [];
     for (const game of games) {
       const boardHex =
-        game.boardStatus === "PUBLISHED_TODAY" ? "#00E5FF" : game.boardStatus === "GATED_TODAY" ? "#FF38C7" : null;
+        game.boardStatus === "PUBLISHED_TODAY" ? "#FF4D2E" : game.boardStatus === "GATED_TODAY" ? "#FF4D2E" : null;
       const color = new THREE.Color(boardHex ?? VERDICT_HEX[game.verdict]);
       const group = new THREE.Group();
       const p = layout.positions.get(game.id) ?? (game.pos as Vec3);
@@ -1056,10 +1056,10 @@ function Inspector({ game, timeIndex, illustrative, marketIndex, onMarket }: { g
               className="rounded-full px-2.5 py-0.5 font-mono text-[10px] font-semibold uppercase tracking-[0.18em]"
               style={
                 game.boardStatus === "PUBLISHED_TODAY"
-                  ? { color: "#00E5FF", border: "1px solid #00E5FF55", background: "#00E5FF12" }
+                  ? { color: "#FF4D2E", border: "1px solid #FF4D2E55", background: "#FF4D2E12" }
                   : game.boardStatus === "GATED_TODAY"
-                    ? { color: "#FF38C7", border: "1px solid #FF38C755", background: "#FF38C70f" }
-                    : { color: "#F5F7FF", border: "1px solid #F5F7FF44", background: "#F5F7FF10" }
+                    ? { color: "#FF4D2E", border: "1px solid #FF4D2E55", background: "#FF4D2E0f" }
+                    : { color: "#EDE8E0", border: "1px solid #EDE8E044", background: "#EDE8E010" }
               }
               title={game.gateReason ?? undefined}
             >

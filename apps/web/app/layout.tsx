@@ -2,7 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { jsonLdScript } from "@/lib/seo/json-ld";
 import { SITE_URL } from "@/lib/seo/site-url";
-import { Inter } from "next/font/google";
+import { Inter, Barlow_Condensed, Chakra_Petch } from "next/font/google";
 import "./globals.css";
 import {
   BRAND_META,
@@ -47,8 +47,27 @@ const brandFont = Inter({
   display: "swap",
 });
 
+// NEBULA v7 display faces (owner-approved 2026-09-10): Barlow Condensed
+// carries DISPLAY HEADLINES ONLY via --f-display; Chakra Petch carries the
+// wordmark via --f-word. Body, figures and numerals stay Inter with global
+// tabular figures — Law 1's evidence requirement (claim + sample size at the
+// same optical size) is untouched. next/font, zero added network requests.
+const displayFont = Barlow_Condensed({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--f-cond",
+  display: "swap",
+});
+
+const wordmarkFont = Chakra_Petch({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--f-word",
+  display: "swap",
+});
+
 export const viewport: Viewport = {
-  themeColor: "#05070B",
+  themeColor: "#060F0E",
   width: "device-width",
   initialScale: 1,
 };
@@ -179,9 +198,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  // One family, one variable. Every other family token derives from --f-body
-  // in styles/design-tokens.css. See the brandFont comment above.
-  const fontVariables = brandFont.variable;
+  // One family for body/data, display faces for headlines/wordmark. Every
+  // other family token derives from --f-body in styles/design-tokens.css;
+  // --f-display resolves to --f-cond (Barlow Condensed). See above.
+  const fontVariables = `${brandFont.variable} ${displayFont.variable} ${wordmarkFont.variable}`;
 
   return (
     <html lang="en" className={`scroll-smooth ${fontVariables}`}>

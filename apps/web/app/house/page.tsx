@@ -30,9 +30,9 @@ export const metadata: Metadata = {
  * Door accents — canonical token hexes (styles/design-tokens.css). Kept as
  * literals (not var() refs) because they feed hex+alpha template styles below.
  */
-const ACCENT_CYAN = "#00E5FF"; // --orbital-cyan
-const ACCENT_UV = "#7B61FF"; // --ultraviolet
-const ACCENT_MAGENTA = "#FF38C7"; // --plasma
+const ACCENT_CYAN = "#FF4D2E"; // --orbital-cyan
+const ACCENT_UV = "#C9D4CE"; // --ultraviolet
+const ACCENT_MAGENTA = "#FF4D2E"; // --plasma
 
 interface RoomDoor {
   readonly name: string;
@@ -162,7 +162,7 @@ export default async function NflHousePage() {
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[28rem]"
             style={{
               background:
-                "radial-gradient(55% 75% at 50% 0%, rgba(123, 97, 255, 0.12), transparent 70%), radial-gradient(35% 55% at 78% 12%, rgba(255, 56, 199, 0.07), transparent 70%)",
+                "radial-gradient(55% 75% at 50% 0%, rgba(201, 212, 206, 0.12), transparent 70%), radial-gradient(35% 55% at 78% 12%, rgba(255, 77, 46, 0.07), transparent 70%)",
             }}
           />
           <div className="mx-auto max-w-5xl">

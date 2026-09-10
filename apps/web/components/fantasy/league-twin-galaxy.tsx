@@ -293,7 +293,7 @@ export function LeagueTwinGalaxy() {
         <div ref={mountRef} className="h-[58vh] min-h-[360px] w-full" />
         <div className="pointer-events-none absolute left-4 top-4 flex flex-wrap gap-3 text-[10px] uppercase tracking-wider">
           {(["QB", "RB", "WR", "TE"] as const).map((p) => (
-            <span key={p} className="flex items-center gap-1" style={{ color: { QB: "#00E5FF", RB: "#7B61FF", WR: "#FF38C7", TE: "#F5F7FF" }[p] }}>
+            <span key={p} className="flex items-center gap-1" style={{ color: { QB: "#FF4D2E", RB: "#C9D4CE", WR: "#FF4D2E", TE: "#EDE8E0" }[p] }}>
               <span className="inline-block h-2 w-2 rounded-full" style={{ background: "currentColor" }} /> {p}
             </span>
           ))}

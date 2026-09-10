@@ -268,7 +268,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
           </div>
 
           <div className="border border-titanium bg-carbon/45 p-5">
-            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-orbital-cyan">Track record</p>
+            <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-orbital-cyan">Results</p>
             <h2 className="mt-2 text-2xl font-bold text-white">
               {calibration.isCollecting ? "Building history" : "Results tracked"}
             </h2>

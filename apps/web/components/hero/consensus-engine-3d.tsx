@@ -271,8 +271,8 @@ export function ConsensusEngine3D() {
       position: "absolute", left: "0", top: "0", transform: "translate(-50%,-50%)",
       padding: "4px 10px", borderRadius: "999px", fontSize: "11px", fontWeight: "700",
       letterSpacing: "0.08em", textTransform: "uppercase", whiteSpace: "nowrap",
-      color: "#F5F7FF", background: "rgba(5,6,8,0.55)", border: "1px solid rgba(0,229,255,0.45)",
-      backdropFilter: "blur(6px)", boxShadow: "0 0 18px rgba(0,229,255,0.25)",
+      color: "#EDE8E0", background: "rgba(5,6,8,0.55)", border: "1px solid rgba(255,77,46,0.45)",
+      backdropFilter: "blur(6px)", boxShadow: "0 0 18px rgba(255,77,46,0.25)",
     });
     overlay.appendChild(coreLabel);
     for (let i = 0; i < N; i++) {
@@ -380,8 +380,8 @@ export function ConsensusEngine3D() {
         const el = labelEls[i]!, s = screen[i]!, active = i === nearest;
         el.style.transform = `translate(-50%,-50%) translate(${s.x.toFixed(1)}px, ${s.y.toFixed(1)}px) scale(${active ? 1.08 : 1})`;
         el.style.opacity = s.vis ? "1" : "0";
-        el.style.color = active ? "#F5F7FF" : "#cfd6e6";
-        el.style.borderColor = active ? "rgba(0,229,255,0.6)" : "rgba(255,255,255,0.1)";
+        el.style.color = active ? "#EDE8E0" : "#cfd6e6";
+        el.style.borderColor = active ? "rgba(255,77,46,0.6)" : "rgba(255,255,255,0.1)";
         const sp = nodeSprites[i]!;
         sp.scale.setScalar(active ? 0.52 : 0.32);
         (sp.material as InstanceType<typeof THREE.SpriteMaterial>).opacity = active ? 1 : 0.85;

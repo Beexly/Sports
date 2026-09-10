@@ -5,15 +5,15 @@
 
 :root {
   /* ── ENVIRONMENT — cosmic dark scale ──────────────────── */
-  /* Canonical values from Brand Use Pack §4. Tailwind config mirrors. */
-  --void:        #05070B;   /* OBSIDIAN BLACK — Brand Use Pack §4 */
-  --obsidian:    #05070B;   /* default canvas — exact spec */
-  --carbon:      #0D1117;   /* cosmic gray — page background (matches Tailwind `carbon`) */
-  --eclipse:     #171228;   /* raised surface (matches Tailwind `eclipse`) */
-  --titanium:    #211A33;   /* elevated — STEEL GRAY from spec */
-  --slate:       #20283A;   /* hover (matches Tailwind `slate`) */
-  --mineral:     #3B3158;   /* default border (matches Tailwind `mineral`) */
-  --mineral-hi:  #4D4175;   /* border hover · strong divider */
+  /* Canonical values: NEBULA v7 (approved 2026-09-10). Tailwind config mirrors. */
+  --void:        #060F0E;   /* NEBULA ground — teal-black page canvas */
+  --obsidian:    #060F0E;   /* default canvas */
+  --carbon:      #060F0E;   /* page background (matches Tailwind `carbon`) */
+  --eclipse:     #131022;   /* violet-black card (matches Tailwind `eclipse`) */
+  --titanium:    #1B1530;   /* violet lift — nested/hover (matches `titanium`) */
+  --slate:       #1B1530;   /* hover (matches Tailwind `slate`) */
+  --mineral:     #2A3532;   /* teal hairline border (matches `mineral`) */
+  --mineral-hi:  #3A4A46;   /* border hover · strong divider */
 
   /* Legacy aliases — older boards use these names */
   --carbon-1:    var(--obsidian);
@@ -21,22 +21,16 @@
   --steel-1:     var(--titanium);
   --graphite:    var(--slate);
 
-  /* ── ION — cool whites & mineral silvers ──────────────── */
-  /* DARK SCALE = marketing / cinematic surfaces (canvas is carbon #0D1117).
-     Every value below is verified WCAG AA (>=4.5:1) as TEXT on carbon/eclipse
-     so existing text-ion-* / var(--ion-*) usages are legible without renaming. */
-  --ion-white:   #F5F7FF;   /* ION WHITE — 17.67:1 on carbon — PASS */
-  --ion:         #D5DDE9;   /* primary text — 13.83:1 on carbon — PASS */
-  --ion-1:       #AEB7D2;   /* secondary · nebula silver — brighter, violet-tinted — PASS */
-  /* WCAG AA fix: --ion-2 re-valued from #5E6878 (3.36:1, FAIL) to #9AA6B8
-     (7.68:1 on carbon, 7.36:1 on eclipse — PASS). Used as text in tables/nav/meta. */
-  --ion-2:       #B1BAD5;   /* tertiary · meta — brighter, violet-tinted — PASS */
-  /* WCAG AA fix: --ion-3 re-valued from #3D4555 (1.97:1, FAIL) to #8B97AB
-     (6.41:1 on carbon, 6.14:1 on eclipse — PASS). Kept a touch darker than
-     ion-2 to preserve the muted hierarchy. Used as text in nav sublabels.
-     Decorative non-text uses (giant step numbers, muted bullet dots) were
-     moved to --mineral so this lighter value never over-weights them. */
-  --ion-3:       #8B97AB;   /* muted — 6.41:1 on carbon — PASS */
+  /* ── BONE — warm chalky text on nebula ground ───────── */
+  /* NEBULA v7: bone/fog/mist. Ratios on ground #060F0E: bone 15.91,
+     fog 12.74, mist 9.37 — all AA/AAA. On panel #131022: 15.31/12.26/9.02. */
+  --ion-white:   #EDE8E0;   /* BONE identity — 15.91:1 on ground — PASS */
+  --ion:         #EDE8E0;   /* primary text — bone — PASS */
+  --ion-1:       #C9D4CE;   /* secondary · fog — PASS */
+  /* NEBULA v7: ion-2/ion-3 → mist. Used as text in tables/nav/meta. */
+  --ion-2:       #A7B8B2;   /* tertiary · meta mist — 9.37:1 on ground — PASS */
+  /* NEBULA v7: ion-3 → mist. Used as text in nav sublabels. */
+  --ion-3:       #A7B8B2;   /* muted mist — 9.37:1 on ground — PASS */
 
   /* ── PAPER — LIGHT data-surface scale (ADDITIVE) ──────── */
   /* LIGHT SCALE = data surfaces (tables, tools, boards) where dense numbers
@@ -61,54 +55,55 @@
   --alert-on-light:       #C0122F;   /* 5.87:1 on paper — PASS */
   --caution-on-light:     #9A4D00;   /* 5.76:1 on paper — PASS */
 
-  /* ── PRIMARY SIGNAL — ion magenta ─────────────────────── */
-  /* DARK SCALE accents — highlights only, never long prose. */
-  /* ION MAGENTA from Brand Use Pack §4. */
-  --plasma:        #FF38C7;
-  --plasma-glow:   #FF66E0;
-  --plasma-deep:   #C81EAA;
-  --plasma-ink:    #1A0014;
+  /* ── EMBER — the single action accent ───────────────── */
+  /* NEBULA v7: magenta retired → ember #FF4D2E. AA on ground 5.87 (action/
+     large/bold only, never body prose). text-plasma (80 sites) becomes the
+     action color; bg-plasma washes become ember washes. */
+  --plasma:        #FF4D2E;
+  --plasma-glow:   #FF7A5C;
+  --plasma-deep:   #C22E1A;
+  --plasma-ink:    #1A0703;
 
-  /* ── SIGNATURE ACCENT — orbital cyan ──────────────────── */
-  /* ORBITAL CYAN from Brand Use Pack §4. `--ion-blue` historically
-     aliased a true blue (#3B82FF); the spec only names cyan, so we
-     unify both names to #00E5FF and let legacy classes inherit the
-     correct brand color automatically. */
-  --ion-blue:      #00E5FF;
-  --ion-blue-glow: #5BEEFF;
-  --ion-blue-deep: #00A8BF;
-  --ion-blue-ink:  #001226;
+  /* ── RETIRED CYAN — now fog ─────────────────────────── */
+  /* NEBULA v7: orbital cyan retired (no v7 equivalent — single-accent rule).
+     482 text-orbital-cyan sites become calm fog text (12.74:1 — PASS);
+     the action role moves to ember. Names kept so call sites compile. */
+  --ion-blue:      #C9D4CE;
+  --ion-blue-glow: #E4EBE7;
+  --ion-blue-deep: #A7B8B2;
+  --ion-blue-ink:  #060F0E;
 
-  --orbital-cyan:      #00E5FF;
-  --orbital-cyan-glow: #5BEEFF;
-  --orbital-cyan-deep: #00A8BF;
+  --orbital-cyan:      #C9D4CE;
+  --orbital-cyan-glow: #E4EBE7;
+  --orbital-cyan-deep: #A7B8B2;
 
-  /* ── NEBULA PURPLE — gradient anchor (rare, decorative) ─ */
-  /* Brand Bible v1.0: NEBULA PURPLE #A855F7 — nebula atmosphere. */
-  --nebula-purple:     #A855F7;
-  --nebula-purple-glow:#C084FC;
-  --nebula-purple-deep:#7E3FC2;
+  /* ── RETIRED VIOLET/BLUE — now panel + fog ──────────── */
+  /* NEBULA v7: decorative violet/blue retired; intelligence = surface, not
+     accent. bg roles → panel-2 (surfaces); text roles must stay readable so
+     the family centers on fog (12.74:1). Names kept so call sites compile. */
+  --nebula-purple:     #1B1530;
+  --nebula-purple-glow:#2A2145;
+  --nebula-purple-deep:#131022;
 
-  /* ── ELECTRIC BLUE — supporting cool (Brand Bible v1.0) ─ */
-  --electric-blue:      #2A6BFF;
-  --electric-blue-glow: #5B8DFF;
-  --electric-blue-deep: #1A4ACC;
+  --electric-blue:      #131022;
+  --electric-blue-glow: #2A2145;
+  --electric-blue-deep: #060F0E;
 
-  /* ── DEPTH — SOFT ULTRAVIOLET (model layer) ───────────── */
-  /* Brand Use Pack §4: SOFT ULTRAVIOLET #7B61FF. */
-  --ultraviolet:      #7B61FF;
-  --ultraviolet-glow: #9F87FF;
-  --ultraviolet-deep: #5942CC;
+  --ultraviolet:      #C9D4CE;
+  --ultraviolet-glow: #E4EBE7;
+  --ultraviolet-deep: #A7B8B2;
 
-  /* ── RARE ACCENTS — use sparingly, never as surface ──── */
-  --lime:          #D4FF3D;    /* live tick / fresh-data ping only */
-  --lime-glow:     #E8FF6B;
-  --lime-deep:     #A8CC22;
-  --lime-ink:      #1A2400;
-  --cyan:          #6FD9FF;    /* small telemetry only */
-  --cyan-glow:     #A8E8FF;
-  --cyan-deep:     #2A8FAF;
-  --cyan-ink:      #001824;
+  /* ── LIVE PINGS — ember dot, telemetry fog ──────────── */
+  /* NEBULA v7: lime/cyan rares retired; live pings → ember dot, small
+     telemetry → fog. Names kept so call sites compile. */
+  --lime:          #FF4D2E;    /* live tick / fresh-data ping = ember dot */
+  --lime-glow:     #FF7A5C;
+  --lime-deep:     #C22E1A;
+  --lime-ink:      #1A0703;
+  --cyan:          #C9D4CE;    /* small telemetry only */
+  --cyan-glow:     #E4EBE7;
+  --cyan-deep:     #A7B8B2;
+  --cyan-ink:      #060F0E;
 
   /* ── DEPRECATED — gold / amber removed from system ───── */
   /* Auto-redirects so older boards inherit ion-blue */
@@ -183,13 +178,19 @@
   --accent-3:     var(--ultraviolet);
   --premium:      var(--ultraviolet);  /* premium tier reads deep, mysterious */
 
-  /* ── SIGNAL FADE — the brand's signature gradient ─────── */
-  /* Brand Bible v1.0: Orbital Cyan -> Ion Magenta -> Ultraviolet.
-     The single canonical brand gradient. Use for wordmark fills,
-     underlines, hero accents, and rule lines. Never re-author inline. */
-  --signal-fade: linear-gradient(90deg, #00E5FF 0%, #FF38C7 52%, #7B61FF 100%);
-  --signal-fade-135: linear-gradient(135deg, #00E5FF 0%, #FF38C7 52%, #7B61FF 100%);
-  --signal-fade-soft: linear-gradient(90deg, rgba(0,229,255,0.18) 0%, rgba(255,56,199,0.18) 52%, rgba(123,97,255,0.18) 100%);
+  /* ── SIGNAL FADE — RETIRED (design contract §1) ───────── */
+  /* Was: the Brand Bible v1.0 three-stop cyan -> magenta -> violet gradient,
+     used for wordmark fills, underlines, hero accents and rule lines.
+     Retired because a gradient makes colour decorative, and colour here is
+     semantic — one hue, one meaning.
+
+     The token NAMES are kept, not deleted, so all 14 render sites across 10
+     files (and the two tests that assert them) keep working while call sites
+     are cleaned up. Each now resolves to a flat accent, so every former
+     gradient surface renders as a solid fill. */
+  --signal-fade: var(--orbital-cyan);
+  --signal-fade-135: var(--orbital-cyan);
+  --signal-fade-soft: color-mix(in srgb, var(--orbital-cyan) 18%, transparent);
 
   /* ── Spacing ─────────────────────────────────────────── */
   --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
@@ -217,16 +218,23 @@
   --dur-slow: 520ms;
   --dur-cinematic: 880ms;
 
-  /* ── Shadows · atmospheric glows ─────────────────────── */
-  --glow-plasma:    0 0 48px -8px rgba(255,56,199, 0.58);
-  --glow-ion-blue:  0 0 42px -8px rgba(59, 130, 255, 0.52);
-  --glow-uv:        0 0 46px -6px rgba(192, 132, 252, 0.58);
-  --glow-lime:      0 0 32px -8px rgba(212, 255, 61, 0.40);
-  --glow-cyan:      0 0 36px -8px rgba(111, 217, 255, 0.40);
-  --glow-soft:      0 0 80px -20px rgba(255, 45, 138, 0.18);
-  --glow-signal:    var(--glow-plasma);
-  --glow-amber:     var(--glow-ion-blue);   /* deprecated alias */
-  --glow-cobalt:    var(--glow-ion-blue);   /* deprecated alias */
+  /* ── Atmospheric glows — RETIRED (design contract §1) ─── */
+  /* A blurred halo makes a colour read as an emitting sign rather than as ink.
+     Hairline borders separate; shadows do not. All nine resolve to `none`.
+     Names kept so .btn-primary (globals.css:70,78 — 56 files) and the Tailwind
+     shadow-glow-* utilities keep compiling. Only --glow-plasma and --glow-uv
+     ever had consumers; the other seven were already dead. */
+  /* NEBULA v7: the ember core glows (hero, primary CTA); all other glows
+     stay none per the retired-glow doctrine. Names kept so utilities compile. */
+  --glow-plasma:    0 0 48px -8px rgba(255, 77, 46, 0.55);
+  --glow-ion-blue:  none;
+  --glow-uv:        none;
+  --glow-lime:      0 0 32px -8px rgba(255, 77, 46, 0.40);
+  --glow-cyan:      none;
+  --glow-soft:      0 0 80px -20px rgba(255, 77, 46, 0.20);
+  --glow-signal:    0 0 48px -8px rgba(255, 77, 46, 0.55);
+  --glow-amber:     none;   /* deprecated alias */
+  --glow-cobalt:    none;   /* deprecated alias */
   --shadow-modal: 0 24px 64px -16px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.5);
   --shadow-float: 0 8px 32px -8px rgba(0,0,0,0.7);
 
@@ -245,7 +253,7 @@
      font-numerals / font-arch and none of them need to change. Retired with this
      change: Exo 2, JetBrains Mono, Instrument Serif. Do not re-introduce a second
      family without re-opening Law 1. */
-  --f-display:      var(--f-body, Inter, system-ui, -apple-system, sans-serif);
+  --f-display:      var(--f-cond, "Barlow Condensed", var(--f-body, Inter, system-ui, -apple-system, sans-serif));
   --f-arch:         var(--f-body, Inter, system-ui, -apple-system, sans-serif);
   --f-display-tech: var(--f-body, Inter, system-ui, -apple-system, sans-serif);
   --f-numerals:     var(--f-body, Inter, system-ui, -apple-system, sans-serif);
