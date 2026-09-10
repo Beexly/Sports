@@ -555,18 +555,14 @@ button { font-family: inherit; cursor: pointer; }
 /* Wordmark moment — giant ambient EDGE behind the footer columns.
    Reference: linear.app, vercel.com — footers earn their pixels with
    a closing brand statement, not just link columns. */
+/* RETIRED (design contract §1 + §7): 240px decorative type, five times over the
+   48px display cap, in a face and a weight (900) that are no longer loaded — it
+   would now render as synthetic bold. "Don't let a headline out-weigh the
+   numbers on the same screen"; a giant ambient wordmark is the purest form of
+   that failure. Kept and hidden rather than deleted so no markup referencing
+   .footer-wordmark breaks. */
 .footer-wordmark {
-  position: absolute;
-  bottom: -42px;
-  left: 50%;
-  transform: translateX(-50%);
-  font: 900 240px/0.85 "Exo 2", var(--f-arch);
-  letter-spacing: -0.05em;
-  color: transparent;
-  -webkit-text-stroke: 1px color-mix(in srgb, var(--ion-blue-glow) 18%, transparent);
-  text-transform: uppercase;
-  pointer-events: none;
-  z-index: 0;
+  display: none;
   white-space: nowrap;
   user-select: none;
 }

@@ -30,7 +30,7 @@ export default async function Image() {
           color: "#F5F7FF",
           padding: "72px 88px",
           position: "relative",
-          fontFamily: "'Exo 2', system-ui, sans-serif",
+          fontFamily: "Inter, system-ui, sans-serif",
         }}
       >
         {/* Verify-mint accent glow — "the receipts" */}
@@ -72,7 +72,7 @@ export default async function Image() {
             display: "flex",
             alignItems: "center",
             gap: 14,
-            fontFamily: "monospace",
+            fontFamily: "Inter, system-ui, sans-serif",
             fontSize: 22,
             letterSpacing: "0.24em",
             textTransform: "uppercase",
@@ -110,7 +110,7 @@ export default async function Image() {
             maxWidth: 940,
           }}
         >
-          Calibrated confidence, Brier-scored against real outcomes, and every loss posted, never deleted.
+          Scored against real outcomes, and every loss posted, never deleted.
         </div>
 
         {/* Footer principle */}
@@ -120,7 +120,7 @@ export default async function Image() {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            fontFamily: "monospace",
+            fontFamily: "Inter, system-ui, sans-serif",
             fontSize: 22,
             letterSpacing: "0.18em",
             textTransform: "uppercase",
