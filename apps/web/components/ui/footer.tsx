@@ -38,7 +38,7 @@ const COMPANY_LINKS = [
   { label: "Affiliate Pledge", href: "/pledge" },
   { label: "The Vault", href: "/vault" },
   { label: "Pricing", href: "/pricing" },
-  { label: "Founding waitlist", href: "/#founding-waitlist" },
+  { label: "Founding waitlist", href: "/waitlist" },
   { label: "About", href: "/about" },
   { label: "Press", href: "/press" },
   { label: "FAQ", href: "/faq" },
