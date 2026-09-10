@@ -230,15 +230,15 @@ export const HERO_SUBHEAD =
  * Mirrors `tailwind.config.ts` + `styles/design-tokens.css`.
  */
 export const BRAND_COLORS = {
-  obsidianBlack: "#060F0E",   // ground — teal-black page canvas
-  cosmicGray: "#060F0E",      // surface → ground
+  obsidianBlack: "#08090C",   // Field ground — near-black page canvas
+  cosmicGray: "#08090C",      // surface → ground
   ionWhite: "#EDE8E0",        // bone identity
-  orbitalCyan: "#C9D4CE",     // retired → fog (name kept)
-  ionMagenta: "#FF4D2E",      // retired → ember (name kept)
-  softUltraviolet: "#C9D4CE", // retired → fog (name kept)
-  electricBlue: "#131022",    // retired → panel (name kept)
-  nebulaPurple: "#1B1530",    // retired → panel-2 (name kept)
-  steelGray: "#1B1530",       // panels → panel-2
+  orbitalCyan: "#C4BFB6",     // retired → bone-1 (name kept)
+  ionMagenta: "#FF4D2E",      // Field signal — ember (name kept)
+  softUltraviolet: "#C4BFB6", // retired → bone-1 (name kept)
+  electricBlue: "#12141A",    // retired → panel (name kept)
+  nebulaPurple: "#191C23",    // retired → panel-2 (name kept)
+  steelGray: "#191C23",       // panels → panel-2
 } as const;
 
 /** Flat ember rule — the retired gradient's replacement. */

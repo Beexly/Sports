@@ -1,19 +1,19 @@
 /* ============================================================
-   Galaxy Sports Edge — Foundation tokens · "Cosmic Intelligence"
-   Orbital cyan signal · ion magenta energy · ultraviolet depth
+   Galaxy Sports Edge — Foundation tokens · "Field"
+   Near-black ground · bone ink · molten ember signal
    ============================================================ */
 
 :root {
-  /* ── ENVIRONMENT — cosmic dark scale ──────────────────── */
-  /* Canonical values: NEBULA v7 (approved 2026-09-10). Tailwind config mirrors. */
-  --void:        #060F0E;   /* NEBULA ground — teal-black page canvas */
-  --obsidian:    #060F0E;   /* default canvas */
-  --carbon:      #060F0E;   /* page background (matches Tailwind `carbon`) */
-  --eclipse:     #131022;   /* violet-black card (matches Tailwind `eclipse`) */
-  --titanium:    #1B1530;   /* violet lift — nested/hover (matches `titanium`) */
-  --slate:       #1B1530;   /* hover (matches Tailwind `slate`) */
-  --mineral:     #2A3532;   /* teal hairline border (matches `mineral`) */
-  --mineral-hi:  #3A4A46;   /* border hover · strong divider */
+  /* ── ENVIRONMENT — Field dark scale ───────────────────── */
+  /* Canonical values: FIELD (approved 2026-09-10). Tailwind config mirrors. */
+  --void:        #08090C;   /* Field ground — near-black page canvas */
+  --obsidian:    #08090C;   /* default canvas */
+  --carbon:      #08090C;   /* page background (matches Tailwind `carbon`) */
+  --eclipse:     #12141A;   /* panel card (matches Tailwind `eclipse`) */
+  --titanium:    #191C23;   /* panel lift — nested/hover (matches `titanium`) */
+  --slate:       #191C23;   /* hover (matches Tailwind `slate`) */
+  --mineral:     #23262E;   /* hairline border (matches `mineral`) */
+  --mineral-hi:  #31353F;   /* border hover · strong divider */
 
   /* Legacy aliases — older boards use these names */
   --carbon-1:    var(--obsidian);
@@ -24,13 +24,11 @@
   /* ── BONE — warm chalky text on nebula ground ───────── */
   /* NEBULA v7: bone/fog/mist. Ratios on ground #060F0E: bone 15.91,
      fog 12.74, mist 9.37 — all AA/AAA. On panel #131022: 15.31/12.26/9.02. */
-  --ion-white:   #EDE8E0;   /* BONE identity — 15.91:1 on ground — PASS */
-  --ion:         #EDE8E0;   /* primary text — bone — PASS */
-  --ion-1:       #C9D4CE;   /* secondary · fog — PASS */
-  /* NEBULA v7: ion-2/ion-3 → mist. Used as text in tables/nav/meta. */
-  --ion-2:       #A7B8B2;   /* tertiary · meta mist — 9.37:1 on ground — PASS */
-  /* NEBULA v7: ion-3 → mist. Used as text in nav sublabels. */
-  --ion-3:       #A7B8B2;   /* muted mist — 9.37:1 on ground — PASS */
+  --ion-white:   #EDE8E0;   /* BONE identity */
+  --ion:         #EDE8E0;   /* primary text — bone */
+  --ion-1:       #C4BFB6;   /* secondary · fog */
+  --ion-2:       #8F8A82;   /* tertiary · meta mist */
+  --ion-3:       #8F8A82;   /* muted mist */
 
   /* ── PAPER — LIGHT data-surface scale (ADDITIVE) ──────── */
   /* LIGHT SCALE = data surfaces (tables, tools, boards) where dense numbers
