@@ -20,7 +20,7 @@ const TEAMS = Object.keys(NFL_VENUE_ENV).sort();
 
 const TIER_HEX: Record<ProvenanceTier, string> = {
   official: BRAND_COLORS.orbitalCyan,
-  licensed: "#E0A800",
+  licensed: "#FFB454",
   modeled: BRAND_COLORS.softUltraviolet,
   inferred: "#9fb3c8",
   illustrative: "#6b7785",
@@ -28,7 +28,7 @@ const TIER_HEX: Record<ProvenanceTier, string> = {
 
 const VERDICT_HEX: Record<Verdict, string> = {
   play: BRAND_COLORS.orbitalCyan,
-  watchlist: "#E0A800",
+  watchlist: "#FFB454",
   "no-bet": BRAND_COLORS.ionMagenta,
 };
 
@@ -217,7 +217,7 @@ function Contract({ label, value }: { label: string; value: string }) {
 const STATUS_HEX: Record<string, string> = {
   live: BRAND_COLORS.orbitalCyan,
   "r&d": BRAND_COLORS.softUltraviolet,
-  "admin-only": "#E0A800",
+  "admin-only": "#FFB454",
   "not-built": "#6b7785",
 };
 

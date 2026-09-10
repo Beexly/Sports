@@ -167,9 +167,9 @@ function ChainMotif({ className, gradientId }: { className?: string; gradientId:
     <svg aria-hidden="true" viewBox="0 0 400 24" preserveAspectRatio="none" className={className}>
       <defs>
         <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#00E5FF" />
-          <stop offset="52%" stopColor="#FF38C7" />
-          <stop offset="100%" stopColor="#7B61FF" />
+          <stop offset="0%" stopColor="#FF4D2E" />
+          <stop offset="52%" stopColor="#FF4D2E" />
+          <stop offset="100%" stopColor="#C9D4CE" />
         </linearGradient>
       </defs>
       {Array.from({ length: linkCount }).map((_, i) => (

@@ -23,11 +23,11 @@ export default async function Image() {
           display: "flex",
           flexDirection: "column",
           background:
-            "radial-gradient(120% 80% at 70% 0%, #1A1D33 0%, #08091A 55%, #05070B 100%)",
-          color: "#F5F7FF",
+            "radial-gradient(120% 80% at 70% 0%, #131022 0%, #060F0E 55%, #060F0E 100%)",
+          color: "#EDE8E0",
           padding: "72px 88px",
           position: "relative",
-          fontFamily: "'Exo 2', system-ui, sans-serif",
+          fontFamily: "Inter, system-ui, sans-serif",
         }}
       >
         {/* Cyan accent — upper-left orbital glow */}
@@ -40,7 +40,7 @@ export default async function Image() {
             height: 500,
             borderRadius: "50%",
             background:
-              "radial-gradient(50% 50% at 50% 50%, rgba(0,229,255,0.35) 0%, rgba(123,97,255,0.12) 60%, transparent 100%)",
+              "radial-gradient(50% 50% at 50% 50%, rgba(255,77,46,0.35) 0%, rgba(60,45,110,0.12) 60%, transparent 100%)",
             display: "flex",
           }}
         />
@@ -55,7 +55,7 @@ export default async function Image() {
             height: 520,
             borderRadius: "50%",
             background:
-              "radial-gradient(50% 50% at 50% 50%, rgba(255,56,199,0.40) 0%, rgba(123,97,255,0.15) 60%, transparent 100%)",
+              "radial-gradient(50% 50% at 50% 50%, rgba(255,77,46,0.40) 0%, rgba(60,45,110,0.15) 60%, transparent 100%)",
             display: "flex",
           }}
         />
@@ -65,9 +65,9 @@ export default async function Image() {
           <svg width="84" height="84" viewBox="0 0 64 64" fill="none">
             <defs>
               <linearGradient id="og-grad" x1="0%" y1="0%" x2="100%" y2="100%">
-                <stop offset="0%" stopColor="#00E5FF" />
-                <stop offset="55%" stopColor="#7B61FF" />
-                <stop offset="100%" stopColor="#FF38C7" />
+                <stop offset="0%" stopColor="#FF4D2E" />
+                <stop offset="55%" stopColor="#FF4D2E" />
+                <stop offset="100%" stopColor="#FF4D2E" />
               </linearGradient>
             </defs>
             <path
@@ -78,8 +78,8 @@ export default async function Image() {
               fill="none"
             />
             <line x1="10" y1="16" x2="54" y2="50" stroke="url(#og-grad)" strokeWidth="3" strokeLinecap="round" />
-            <circle cx="34" cy="30" r="4" fill="#FF38C7" />
-            <circle cx="34" cy="30" r="1.5" fill="#F5F7FF" />
+            <circle cx="34" cy="30" r="4" fill="#FF4D2E" />
+            <circle cx="34" cy="30" r="1.5" fill="#EDE8E0" />
           </svg>
           <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
             <div
@@ -87,7 +87,7 @@ export default async function Image() {
                 fontSize: 56,
                 fontWeight: 800,
                 letterSpacing: "0.12em",
-                color: "#F5F7FF",
+                color: "#EDE8E0",
                 display: "flex",
               }}
             >
@@ -98,7 +98,7 @@ export default async function Image() {
                 fontSize: 28,
                 fontWeight: 500,
                 letterSpacing: "0.30em",
-                color: "#00E5FF",
+                color: "#FF4D2E",
                 marginTop: 10,
                 display: "flex",
               }}
@@ -115,11 +115,11 @@ export default async function Image() {
             display: "flex",
             alignItems: "center",
             gap: 14,
-            fontFamily: "monospace",
+            fontFamily: "Inter, system-ui, sans-serif",
             fontSize: 22,
             letterSpacing: "0.24em",
             textTransform: "uppercase",
-            color: "#7B61FF",
+            color: "#FF4D2E",
           }}
         >
           <div
@@ -127,7 +127,7 @@ export default async function Image() {
               width: 12,
               height: 12,
               borderRadius: 999,
-              background: "#00E5FF",
+              background: "#FF4D2E",
               display: "flex",
             }}
           />
@@ -143,7 +143,7 @@ export default async function Image() {
             fontWeight: 600,
             lineHeight: 1.02,
             letterSpacing: "-0.015em",
-            color: "#F5F7FF",
+            color: "#EDE8E0",
             maxWidth: 980,
           }}
         >
@@ -173,17 +173,17 @@ export default async function Image() {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            fontFamily: "monospace",
+            fontFamily: "Inter, system-ui, sans-serif",
             fontSize: 22,
             letterSpacing: "0.18em",
             textTransform: "uppercase",
             color: "#8089A0",
-            borderTop: "1px solid rgba(0, 229, 255, 0.22)",
+            borderTop: "1px solid rgba(255,77,46, 0.22)",
             paddingTop: 28,
           }}
         >
           <span>If the work can&apos;t be shown, it doesn&apos;t get published.</span>
-          <span style={{ color: "#00E5FF" }}>galaxysportsedge.com</span>
+          <span style={{ color: "#FF4D2E" }}>galaxysportsedge.com</span>
         </div>
       </div>
     ),

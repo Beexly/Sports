@@ -32,10 +32,10 @@ export function LogoMarkInline({
   /** Monochrome override (every element uses this color). */
   color?: string;
 }) {
-  const ring = color ?? "#00E5FF";
-  const blade = color ?? "#F5F7FF";
-  const core = color ?? "#FF38C7";
-  const ping = color ?? "#7B61FF";
+  const ring = color ?? "#FF4D2E";
+  const blade = color ?? "#EDE8E0";
+  const core = color ?? "#FF4D2E";
+  const ping = color ?? "#C9D4CE";
 
   return (
     <svg
@@ -47,7 +47,7 @@ export function LogoMarkInline({
       className={`${className}${kinetic ? " logo-mark-kinetic" : ""}`.trim()}
       style={{
         animation: pulse ? "logo-mark-pulse 2.4s ease-in-out infinite" : undefined,
-        filter: glow ? "drop-shadow(0 0 12px rgba(0,229,255,0.5))" : undefined,
+        filter: glow ? "drop-shadow(0 0 12px rgba(255,77,46,0.5))" : undefined,
       }}
     >
       {/* Split orbital ring — open via the dash gaps so it never reads as a coin */}

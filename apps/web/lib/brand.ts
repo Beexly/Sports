@@ -225,24 +225,24 @@ export const HERO_SUBHEAD =
   "pricing gaps into auditable signals.";
 
 /**
- * Canonical brand colors — exact hex from the Galaxy Sports Edge Brand Bible v1.0.
- * Color is signal, not decoration. Never substitute. Mirrors `tailwind.config.ts`.
- * Signal fade = Orbital Cyan -> Ion Magenta -> Ultraviolet.
+ * Canonical brand colors — NEBULA v7 (approved 2026-09-10).
+ * Key names kept so every consumer compiles; values carry the new system.
+ * Mirrors `tailwind.config.ts` + `styles/design-tokens.css`.
  */
 export const BRAND_COLORS = {
-  obsidianBlack: "#05070B",   // primary background
-  cosmicGray: "#0D1117",      // surface / UI panels
-  ionWhite: "#F5F7FF",        // starlight white — chrome highlights / text
-  orbitalCyan: "#00E5FF",     // primary energy / leading edge
-  ionMagenta: "#FF38C7",      // secondary energy / accent
-  softUltraviolet: "#7B61FF", // tertiary glow / transitions
-  electricBlue: "#2A6BFF",    // supporting cool
-  nebulaPurple: "#A855F7",    // nebula atmosphere
-  steelGray: "#211A33",       // panels, dividers, UI depth
+  obsidianBlack: "#060F0E",   // ground — teal-black page canvas
+  cosmicGray: "#060F0E",      // surface → ground
+  ionWhite: "#EDE8E0",        // bone identity
+  orbitalCyan: "#C9D4CE",     // retired → fog (name kept)
+  ionMagenta: "#FF4D2E",      // retired → ember (name kept)
+  softUltraviolet: "#C9D4CE", // retired → fog (name kept)
+  electricBlue: "#131022",    // retired → panel (name kept)
+  nebulaPurple: "#1B1530",    // retired → panel-2 (name kept)
+  steelGray: "#1B1530",       // panels → panel-2
 } as const;
 
-/** The signal fade — the brand's signature gradient (cyan -> magenta -> violet). */
-export const SIGNAL_FADE = "linear-gradient(90deg, #00E5FF 0%, #FF38C7 52%, #7B61FF 100%)";
+/** Flat ember rule — the retired gradient's replacement. */
+export const SIGNAL_FADE = "linear-gradient(90deg, #FF4D2E 0%, #FF4D2E 100%)";
 
 /**
  * Compliance guardrails — language we cannot use, per the Brand Use Pack

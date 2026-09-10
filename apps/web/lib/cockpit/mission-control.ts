@@ -44,7 +44,7 @@ export type BriefingCard = {
 /** Prefix applied to a sample card's eyebrow so provenance shows per-card. */
 const SAMPLE_TAG = "Sample · ";
 
-const HEX = { cyan: "#00E5FF", magenta: "#FF38C7", uv: "#7B61FF", amber: "#E0A800", white: "#F5F7FF" };
+const HEX = { cyan: "#FF4D2E", magenta: "#FF4D2E", uv: "#C9D4CE", amber: "#FFB454", white: "#EDE8E0" };
 
 /** Compose the prioritized, cross-product briefing from the live engines. */
 export function buildBriefing(): BriefingCard[] {

@@ -12,10 +12,10 @@ import {
 } from "@/lib/fantasy/academy";
 import { BRAND_COLORS } from "@/lib/brand";
 
-const V_HEX: Record<ProcessVerdict, string> = { sound: BRAND_COLORS.orbitalCyan, thin: "#E0A800", unsound: BRAND_COLORS.ionMagenta };
+const V_HEX: Record<ProcessVerdict, string> = { sound: BRAND_COLORS.orbitalCyan, thin: "#FFB454", unsound: BRAND_COLORS.ionMagenta };
 const V_LABEL: Record<ProcessVerdict, string> = { sound: "Sound process", thin: "Thin", unsound: "Unsound" };
 const DIFF_HEX: Record<Difficulty, string> = { Core: "#9fb3c8", Advanced: BRAND_COLORS.softUltraviolet, Pro: BRAND_COLORS.ionMagenta };
-const TRACK_HEX: Record<Track, string> = { Process: BRAND_COLORS.orbitalCyan, Market: "#E0A800", Analytics: BRAND_COLORS.softUltraviolet, Injury: BRAND_COLORS.ionMagenta };
+const TRACK_HEX: Record<Track, string> = { Process: BRAND_COLORS.orbitalCyan, Market: "#FFB454", Analytics: BRAND_COLORS.softUltraviolet, Injury: BRAND_COLORS.ionMagenta };
 
 type View = "drills" | "reference";
 
@@ -139,7 +139,7 @@ function Summary({ result, onRestart }: { result: ReturnType<typeof scoreAcademy
       {result.weakPatterns.length > 0 && (
         <div className="mx-auto mt-5 max-w-md text-left">
           <p className="text-xs uppercase tracking-wider text-ink-600">Patterns to drill</p>
-          <ul className="mt-2 space-y-1">{[...new Set(result.weakPatterns)].map((p) => <li key={p} className="text-sm" style={{ color: "#E0A800" }}>▸ {p}</li>)}</ul>
+          <ul className="mt-2 space-y-1">{[...new Set(result.weakPatterns)].map((p) => <li key={p} className="text-sm" style={{ color: "#FFB454" }}>▸ {p}</li>)}</ul>
         </div>
       )}
       <button type="button" onClick={onRestart} className="btn btn-primary mt-6">Run this track again</button>

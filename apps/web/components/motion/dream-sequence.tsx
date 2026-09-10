@@ -27,13 +27,13 @@ interface DreamDot {
 }
 
 const DREAM_MEMORIES = [
-  { label: "WEEK 3", color: "0,229,255" },
+  { label: "WEEK 3", color: "255,77,46" },
   { label: "GATED", color: "255,45,214" },
-  { label: "SCORING", color: "0,229,255" },
+  { label: "SCORING", color: "255,77,46" },
   { label: "PUBLISHED", color: "95,217,163" },
   { label: "NO BET", color: "255,45,214" },
   { label: "PENDING", color: "122,92,255" },
-  { label: "SIGNAL", color: "0,229,255" },
+  { label: "SIGNAL", color: "255,77,46" },
   { label: "NOISE", color: "122,92,255" },
 ] as const;
 

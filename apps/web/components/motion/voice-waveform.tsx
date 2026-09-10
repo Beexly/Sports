@@ -63,7 +63,7 @@ export function VoiceWaveform({ className }: { className?: string }) {
 
         ctx.beginPath();
         ctx.arc(cx, cy, radius, 0, Math.PI * 2);
-        ctx.strokeStyle = `rgba(0, 229, 255, ${alpha})`;
+        ctx.strokeStyle = `rgba(255,77,46, ${alpha})`;
         ctx.lineWidth = 1 * dpr;
         ctx.stroke();
 
@@ -73,7 +73,7 @@ export function VoiceWaveform({ className }: { className?: string }) {
         const arcEnd = speakAngle + 0.3 + Math.sin(time * 0.05 + i) * 0.2;
         ctx.beginPath();
         ctx.arc(cx, cy, radius, arcStart, arcEnd);
-        ctx.strokeStyle = `rgba(0, 229, 255, ${alpha + 0.15})`;
+        ctx.strokeStyle = `rgba(255,77,46, ${alpha + 0.15})`;
         ctx.lineWidth = 2 * dpr;
         ctx.stroke();
       }
@@ -81,16 +81,16 @@ export function VoiceWaveform({ className }: { className?: string }) {
       // Central glow
       const glowRadius = 20 * dpr + Math.sin(time * 0.04) * 6 * dpr;
       const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, glowRadius * 3);
-      glow.addColorStop(0, "rgba(0, 229, 255, 0.25)");
-      glow.addColorStop(0.5, "rgba(0, 229, 255, 0.08)");
-      glow.addColorStop(1, "rgba(0, 229, 255, 0)");
+      glow.addColorStop(0, "rgba(255,77,46, 0.25)");
+      glow.addColorStop(0.5, "rgba(255,77,46, 0.08)");
+      glow.addColorStop(1, "rgba(255,77,46, 0)");
       ctx.fillStyle = glow;
       ctx.beginPath();
       ctx.arc(cx, cy, glowRadius * 3, 0, Math.PI * 2);
       ctx.fill();
 
       // Core dot
-      ctx.fillStyle = "rgba(0, 229, 255, 0.9)";
+      ctx.fillStyle = "rgba(255,77,46, 0.9)";
       ctx.beginPath();
       ctx.arc(cx, cy, 3 * dpr, 0, Math.PI * 2);
       ctx.fill();

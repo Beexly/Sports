@@ -75,7 +75,7 @@ export const DFS_SLATE: readonly DfsPlayer[] = [
 ];
 
 export const DFS_POS_HEX: Record<DfsPos, string> = {
-  QB: "#00E5FF", RB: "#7B61FF", WR: "#FF38C7", TE: "#F5F7FF", DST: "#9fb3c8",
+  QB: "#FF4D2E", RB: "#C9D4CE", WR: "#FF7A5C", TE: "#EDE8E0", DST: "#A7B8B2",
 };
 
 /** Leverage: ceiling per point of ownership — the tournament edge. Higher = more contrarian upside. */

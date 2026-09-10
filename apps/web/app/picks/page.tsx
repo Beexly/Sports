@@ -623,7 +623,7 @@ function SlateBar({ slate }: { slate: DailySlate }) {
         {/* Last updated */}
         {lastUpdated && (
           <div className="ml-auto flex items-center gap-1.5">
-            <span className="h-2 w-2 rounded-full bg-orbital-cyan shadow-[0_0_10px_rgba(0,229,255,0.6)]" aria-hidden="true" />
+            <span className="h-2 w-2 rounded-full bg-orbital-cyan shadow-[0_0_10px_rgba(255,77,46,0.6)]" aria-hidden="true" />
             <span className="text-[10px] font-semibold uppercase tracking-[0.18em] text-orbital-cyan">Updated {lastUpdated}</span>
           </div>
         )}

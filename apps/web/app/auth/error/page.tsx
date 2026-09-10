@@ -29,9 +29,9 @@ export default function AuthErrorPage({
 
       <div className="w-full max-w-sm">
         <div className="rounded-2xl border border-mineral bg-carbon p-8 text-center shadow-2xl shadow-black/60">
-          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-alert/10">
+          <div className="mx-auto mb-6 flex h-16 w-16 items-center justify-center rounded-full bg-alarm/10">
             <svg
-              className="h-8 w-8 text-alert"
+              className="h-8 w-8 text-alarm"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"

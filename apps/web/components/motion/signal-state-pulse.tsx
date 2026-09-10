@@ -29,8 +29,8 @@ export function SignalStatePulse({
       style={{
         width: size,
         height: size,
-        background: `rgba(0, 229, 255, ${0.08 + intensity * 0.12})`,
-        border: `1px solid rgba(0, 229, 255, ${0.25 + intensity * 0.35})`,
+        background: `rgba(255,77,46, ${0.08 + intensity * 0.12})`,
+        border: `1px solid rgba(255,77,46, ${0.25 + intensity * 0.35})`,
       }}
     >
       {/* Outer pulse ring */}
@@ -38,7 +38,7 @@ export function SignalStatePulse({
         className="absolute inset-0 rounded-full"
         style={{
           animation: `signal-pulse-ring ${duration}s ease-in-out infinite`,
-          background: `radial-gradient(circle, rgba(0,229,255,${glowIntensity}) 0%, transparent 70%)`,
+          background: `radial-gradient(circle, rgba(255,77,46,${glowIntensity}) 0%, transparent 70%)`,
         }}
       />
       {/* Middle pulse ring (offset) */}
@@ -47,7 +47,7 @@ export function SignalStatePulse({
         style={{
           animation: `signal-pulse-ring ${duration * 0.7}s ease-in-out infinite`,
           animationDelay: `${duration * 0.3}s`,
-          background: `radial-gradient(circle, rgba(123,97,255,${glowIntensity * 0.6}) 0%, transparent 60%)`,
+          background: `radial-gradient(circle, rgba(60,45,110,${glowIntensity * 0.6}) 0%, transparent 60%)`,
         }}
       />
       {/* Core dot */}
@@ -56,7 +56,7 @@ export function SignalStatePulse({
         style={{
           width: size * 0.35,
           height: size * 0.35,
-          boxShadow: `0 0 ${size * 0.4}px ${size * 0.15}px rgba(0,229,255,${0.4 + intensity * 0.4})`,
+          boxShadow: `0 0 ${size * 0.4}px ${size * 0.15}px rgba(255,77,46,${0.4 + intensity * 0.4})`,
           animation: `signal-pulse-core ${duration * 0.5}s ease-in-out infinite`,
         }}
       />

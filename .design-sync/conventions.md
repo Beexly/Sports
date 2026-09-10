@@ -36,7 +36,7 @@ Color is never the only carrier of meaning: pair it with a label or glyph, as th
 
 ## Where the truth lives
 
-- `styles.css` imports `_ds_bundle.css`, the compiled Tailwind + tokens; grep it before inventing a class. `tokens/design-tokens.css` holds every custom property with comments.
+- `styles.css` imports `_ds_bundle.css`, the compiled Tailwind + every design token (`:root` custom properties included); grep it before inventing a class or a `var(--*)` name — it is the authoritative list of what actually resolves in a rendered design.
 - Each component's `<Name>.d.ts` is the prop contract and `<Name>.prompt.md` the usage notes. `PickCard` takes a `PublicPick` (see its `.d.ts`) plus three `canSee*` gates that must mirror the server entitlement; never show a confidence number to a free viewer by faking the gate.
 
 ## Content rules the product enforces

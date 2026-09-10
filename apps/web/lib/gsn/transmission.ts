@@ -33,9 +33,9 @@ export type Transmission = {
 };
 
 export const TONE_HEX: Record<SegmentTone, string> = {
-  ion: "#00E5FF",
-  anomaly: "#FF38C7",
-  deep: "#7B61FF",
+  ion: "#FF4D2E",
+  anomaly: "#FF7A5C",
+  deep: "#C9D4CE",
 };
 
 export const SAMPLE_TRANSMISSION: Transmission = {

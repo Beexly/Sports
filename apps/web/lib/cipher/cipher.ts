@@ -48,9 +48,9 @@ export function normalizeAnswer(raw: string): string {
   return raw.toLowerCase().replace(/[^a-z0-9]/g, "");
 }
 
-const CYAN = "#00E5FF";
-const MAGENTA = "#FF38C7";
-const UV = "#7B61FF";
+const CYAN = "#FF4D2E";
+const MAGENTA = "#FF7A5C";
+const UV = "#C9D4CE";
 
 /**
  * The storyline. Append a chapter per week; the season can build (later answers

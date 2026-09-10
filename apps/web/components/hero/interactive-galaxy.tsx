@@ -34,7 +34,7 @@ function prefersReducedMotion(): boolean {
 type Vec2 = { x: number; y: number };
 
 const ION_WHITE = "246, 247, 250";
-const ORBITAL_CYAN = "0, 229, 255";
+const ORBITAL_CYAN = "255,77,46";
 const ION_MAGENTA = "255, 45, 214";
 const SOFT_ULTRAVIOLET = "122, 92, 255";
 const MAX_CURSOR_DISPLACEMENT = 30;

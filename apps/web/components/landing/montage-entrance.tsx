@@ -156,7 +156,7 @@ export function MontageEntrance() {
     <div
       className="fixed inset-0 z-[80] flex items-center justify-center overflow-hidden transition-opacity ease-out"
       style={{
-        background: "#05070B",
+        background: "#060F0E",
         opacity: exiting ? 0 : 1,
         transitionDuration: `${DISSOLVE_MS}ms`,
       }}

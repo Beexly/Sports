@@ -26,11 +26,11 @@ export default async function Image() {
           display: "flex",
           flexDirection: "column",
           background:
-            "radial-gradient(120% 80% at 30% 0%, #14182A 0%, #08091A 55%, #05070B 100%)",
-          color: "#F5F7FF",
+            "radial-gradient(120% 80% at 30% 0%, #131022 0%, #060F0E 55%, #060F0E 100%)",
+          color: "#EDE8E0",
           padding: "72px 88px",
           position: "relative",
-          fontFamily: "'Exo 2', system-ui, sans-serif",
+          fontFamily: "Inter, system-ui, sans-serif",
         }}
       >
         {/* Verify-mint accent glow — "the receipts" */}
@@ -43,23 +43,23 @@ export default async function Image() {
             height: 480,
             borderRadius: "50%",
             background:
-              "radial-gradient(50% 50% at 50% 50%, rgba(95,217,163,0.30) 0%, rgba(0,229,255,0.10) 60%, transparent 100%)",
+              "radial-gradient(50% 50% at 50% 50%, rgba(95,217,163,0.30) 0%, rgba(255,77,46,0.10) 60%, transparent 100%)",
             display: "flex",
           }}
         />
 
         {/* Brand mark + wordmark */}
         <div style={{ display: "flex", alignItems: "center", gap: 22 }}>
-          <svg width="72" height="72" viewBox="0 0 48 48" fill="none" stroke="#F5F7FF" strokeWidth="3" strokeLinecap="round">
+          <svg width="72" height="72" viewBox="0 0 48 48" fill="none" stroke="#EDE8E0" strokeWidth="3" strokeLinecap="round">
             <path d="M 8 30 A 16 16 0 1 0 40 27" />
             <line x1="6" y1="10" x2="42" y2="38" />
-            <circle cx="25" cy="22" r="4" fill="#FF38C7" stroke="none" />
+            <circle cx="25" cy="22" r="4" fill="#FF4D2E" stroke="none" />
           </svg>
           <div style={{ display: "flex", flexDirection: "column", lineHeight: 1 }}>
             <div style={{ fontSize: 44, fontWeight: 800, letterSpacing: "0.12em", display: "flex" }}>
               GALAXY
             </div>
-            <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: "0.30em", color: "#00E5FF", marginTop: 8, display: "flex" }}>
+            <div style={{ fontSize: 22, fontWeight: 500, letterSpacing: "0.30em", color: "#FF4D2E", marginTop: 8, display: "flex" }}>
               SPORTS EDGE
             </div>
           </div>
@@ -72,7 +72,7 @@ export default async function Image() {
             display: "flex",
             alignItems: "center",
             gap: 14,
-            fontFamily: "monospace",
+            fontFamily: "Inter, system-ui, sans-serif",
             fontSize: 22,
             letterSpacing: "0.24em",
             textTransform: "uppercase",
@@ -92,7 +92,7 @@ export default async function Image() {
             fontWeight: 700,
             lineHeight: 1.0,
             letterSpacing: "-0.02em",
-            color: "#F5F7FF",
+            color: "#EDE8E0",
           }}
         >
           Graded in public.
@@ -110,7 +110,7 @@ export default async function Image() {
             maxWidth: 940,
           }}
         >
-          Calibrated confidence, Brier-scored against real outcomes, and every loss posted, never deleted.
+          Scored against real outcomes, and every loss posted, never deleted.
         </div>
 
         {/* Footer principle */}
@@ -120,7 +120,7 @@ export default async function Image() {
             display: "flex",
             justifyContent: "space-between",
             alignItems: "center",
-            fontFamily: "monospace",
+            fontFamily: "Inter, system-ui, sans-serif",
             fontSize: 22,
             letterSpacing: "0.18em",
             textTransform: "uppercase",

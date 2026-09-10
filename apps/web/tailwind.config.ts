@@ -1,25 +1,21 @@
 import type { Config } from "tailwindcss";
 
 /**
- * Galaxy Sports Edge Tailwind config — cosmic intelligence palette.
+ * Galaxy Sports Edge Tailwind config — NEBULA v7 palette (approved 2026-09-10).
  *
- * Canonical palette (verbatim from the Brand Bible v1.0):
- *  - OBSIDIAN BLACK   #05070B   — primary background
- *  - COSMIC GRAY      #0D1117   — surface / UI panels
- *  - STARLIGHT WHITE  #F5F7FF   — primary text / chrome highlights
- *  - ORBITAL CYAN     #00E5FF   — signal, data, active states
- *  - ION MAGENTA      #FF38C7   — alert signal / emphasis
- *  - SOFT ULTRAVIOLET #7B61FF   — depth, intelligence, secondary signal
- *  - ELECTRIC BLUE    #2A6BFF   — supporting cool
- *  - NEBULA PURPLE    #A855F7   — nebula atmosphere
- *  - STEEL GRAY       #211A33   — panels, dividers, UI depth
- *  Signal fade = Orbital Cyan -> Ion Magenta -> Ultraviolet.
+ * Canonical palette (NEBULA v7 commit):
+ *  - GROUND #060F0E — teal-black page canvas
+ *  - PANEL  #131022 — violet-black cards / raised
+ *  - PANEL-2 #1B1530 — violet lift, nested / hover
+ *  - BONE   #EDE8E0 — primary text / identity
+ *  - FOG    #C9D4CE — secondary text
+ *  - MIST   #A7B8B2 — muted meta
+ *  - EMBER  #FF4D2E — the single action accent
+ *  - LINE   #2A3532 — hairline borders
+ *  verify/alert/caution ladder kept for settlement + data states only.
  *
- * Typography is bound to the doctrine CSS variables loaded through
- * next/font in `app/layout.tsx`.
- *
- * Legacy aliases (brand-*, accent-*, plasma-*, ion-blue-*) are kept and
- * REPOINTED to the new palette. No component refactor required.
+ * Legacy names (brand-*, accent-*, plasma-*, ion-blue-*, orbital-cyan, …)
+ * are kept and REPOINTED. No component refactor required.
  */
 
 const config: Config = {
@@ -31,37 +27,34 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // ── CANONICAL GALAXY SPORTS EDGE PALETTE (Brand Bible v1.0) ─────────
-        "obsidian-black":    "#05070B",
-        "ion-white-2":       "#F5F7FF",   // distinct from the .ion-white alias
-        "orbital-cyan":      "#00E5FF",
-        "ion-magenta":       "#FF38C7",
-        "soft-ultraviolet":  "#7B61FF",
-        "electric-blue":     "#2A6BFF",   // supporting cool (bible)
-        "nebula-purple":     "#A855F7",   // nebula atmosphere (bible)
-        "cosmic-gray":       "#0D1117",   // surface / UI panels (bible)
-        "steel-gray":        "#211A33",
+        // ── NEBULA v7 CANONICAL (approved 2026-09-10) ─────────
+        "obsidian-black":    "#060F0E",
+        "ion-white-2":       "#EDE8E0",   // bone identity
+        "orbital-cyan":      "#C9D4CE",   // retired → fog (name kept, call sites compile)
+        "ion-magenta":       "#FF4D2E",   // retired → ember (name kept)
+        "soft-ultraviolet":  "#C9D4CE",   // retired → fog (name kept)
+        "electric-blue":     "#131022",   // retired → panel (name kept)
+        "nebula-purple":     "#1B1530",   // retired → panel-2 (name kept)
+        "cosmic-gray":       "#060F0E",   // surface → ground
+        "steel-gray":        "#1B1530",
 
-        // ── ENVIRONMENT — cosmic dark scale ───────────────
-        // Surfaces step from #05070B (deepest) up to raised panels.
-        void:       "#05070B",
-        obsidian:   "#05070B",     // FE-14: was #080A0F, drifted from design-tokens.css --obsidian
-        carbon:     "#0D1117",
-        eclipse:    "#171228",
-        titanium:   "#211A33",        // Steel Gray sits here
-        slate:      "#20283A",
-        mineral:    "#3B3158",
-        "mineral-hi": "#4D4175",
+        // ── ENVIRONMENT — nebula dark scale ────────────────
+        void:       "#060F0E",
+        obsidian:   "#060F0E",
+        carbon:     "#060F0E",
+        eclipse:    "#131022",
+        titanium:   "#1B1530",
+        slate:      "#1B1530",
+        mineral:    "#2A3532",
+        "mineral-hi": "#3A4A46",
 
-        // ── ION — cool whites & mineral silvers (DARK SCALE) ──
-        // Marketing / cinematic text on carbon #0D1117. ion-2 / ion-3 were
-        // re-valued to pass WCAG AA (>=4.5:1) as text; see design-tokens.css.
-        "ion-white": "#F5F7FF",
+        // ── BONE / FOG / MIST text ──
+        "ion-white": "#EDE8E0",
         ion: {
-          DEFAULT: "#D5DDE9", // 13.83:1 on carbon
-          1: "#AEB7D2",       // nebula silver — brighter + violet-tinted, AA+
-          2: "#B1BAD5",       // brighter + violet-tinted, AA+
-          3: "#8B97AB",       // FE-14: was #9AA3C0, drifted from the WCAG AA-verified --ion-3 in design-tokens.css
+          DEFAULT: "#EDE8E0", // 15.91:1 on ground
+          1: "#C9D4CE",       // fog
+          2: "#A7B8B2",       // mist
+          3: "#A7B8B2",       // mist
         },
 
         // ── PAPER — LIGHT data-surface scale (ADDITIVE) ───
@@ -76,52 +69,81 @@ const config: Config = {
         "plasma-on-light":       "#B0118C", // 5.98:1 on paper — text accent
         "orbital-cyan-on-light": "#06748A", // 5.11:1 on paper — text accent
         "ultraviolet-on-light":  "#5B43C9", // 6.40:1 on paper — text accent
-        // Semantic-on-light — verify/alert/caution darkened for AA on paper.
-        "verify-on-light":       "#0B6B46", // 6.17:1 on paper — text accent
-        "alert-on-light":        "#C0122F", // 5.87:1 on paper — text accent
-        "caution-on-light":      "#9A4D00", // 5.76:1 on paper — text accent
+        // Semantic-on-light — the paper-surface half of Law 2.
+        // Outcome carries no colour here either: verify/alert resolve to the
+        // paper text colour. Only `caution-on-light` keeps a hue, because it is
+        // system state (stale / degraded), not a result.
+        "verify-on-light":       "#0E1320", // = --ink, 17.46:1 on paper. Neutral.
+        "alert-on-light":        "#0E1320", // = --ink, 17.46:1 on paper. Neutral.
+        "alarm-on-light":        "#9A4D00", // 5.76:1 on paper — system failure only
+        "caution-on-light":      "#9A4D00", // 5.76:1 on paper — system state
 
-        // ── PRIMARY SIGNAL — ion magenta ──────────────────
+        // ── NEBULA v7 EMBER — the single action accent ──────
         plasma: {
-          DEFAULT: "#FF38C7",
-          glow: "#FF66E0",
-          deep: "#C81EAA",
-          ink: "#1A0014",
+          DEFAULT: "#FF4D2E",
+          glow: "#FF7A5C",
+          deep: "#C22E1A",
+          ink: "#1A0703",
         },
 
-        // ── SECONDARY — orbital cyan (live signal) ────────
+        // ── RETIRED CYAN → fog (calm text, never action) ───
         "ion-blue": {
-          DEFAULT: "#00E5FF",
-          glow: "#5BEEFF",
-          deep: "#00A8BF",
-          ink: "#001226",
+          DEFAULT: "#C9D4CE",
+          glow: "#E4EBE7",
+          deep: "#A7B8B2",
+          ink: "#060F0E",
         },
 
-        // ── DEPTH — soft ultraviolet (model layer) ────────
+        // ── RETIRED VIOLET → fog text ───────────────────────
         ultraviolet: {
-          DEFAULT: "#7B61FF",
-          glow: "#9F87FF",
-          deep: "#5942CC",
+          DEFAULT: "#C9D4CE",
+          glow: "#E4EBE7",
+          deep: "#A7B8B2",
         },
 
-        // ── ACCENT — orbital cyan (live telemetry pings) ──
+        // ── RETIRED CYAN → fog ──────────────────────────────
         "ds-cyan": {
-          DEFAULT: "#00E5FF",
-          glow: "#5BEEFF",
-          deep: "#00A8BF",
+          DEFAULT: "#C9D4CE",
+          glow: "#E4EBE7",
+          deep: "#A7B8B2",
         },
         lime: {
-          DEFAULT: "#D4FF3D",
-          glow: "#E8FF6B",
-          deep: "#A8CC22",
+          DEFAULT: "#FF4D2E",
+          glow: "#FF7A5C",
+          deep: "#C22E1A",
         },
 
-        // ── INFORMATIONAL ─────────────────────────────────
-        verify: "#5FD9A3",
-        alert: "#FF6470",
-        // Semantic caution — incomplete data / review needed. Distinct from
-        // the deprecated warm `amber` alias (which now resolves to cyan);
-        // this is the only sanctioned warm warning hue in the world layer.
+        // ── OUTCOME — NEUTRALISED (design contract Law 2) ──
+        // "Nothing reacts to outcome." A win, a loss, a push and a void are set
+        // in the same type, size, weight and colour; only the WORD differs. So
+        // `verify` and `alert` resolve to the ordinary text colour and carry no
+        // valence at all.
+        //
+        // Kept as hex, not var(), on purpose: 564 uses across the app carry
+        // Tailwind opacity modifiers (bg-alert/20, text-caution/50) and a var()
+        // colour breaks every one of them. Hex keeps them all compiling.
+        //
+        // Deliberately repointed rather than deleted. Deleting would touch 150
+        // files; repointing enforces Law 2 everywhere at once and lets call
+        // sites be cleaned up incrementally. A `text-alert` that renders as body
+        // text is correct under Law 2, not a bug.
+        //
+        // Genuine system failure is NOT an outcome — see `alarm` below.
+        // NEBULA v7 (owner-approved 2026-09-10) keeps the semantic ladder:
+        // verify/alert carry hue for settlement + data states only, never brand.
+        // This supersedes the Law-2 neutralization; `alarm` (system failure)
+        // stays as the louder tier.
+        verify: "#5FD9A3", // settlement W
+        alert: "#FF6470", // settlement L / critical
+
+        // ── SYSTEM STATE — the only thing that may still shout ──
+        // Source outage, stale feed, settlement lag. Never a result.
+        // `caution` is repointed here: "incomplete data / review needed" was
+        // always system state, never outcome, so it survives Law 2 intact.
+        alarm: {
+          DEFAULT: "#FFB454",
+          deep: "#B5781F",
+        },
         caution: {
           DEFAULT: "#FFB454",
           deep: "#B5781F",
@@ -132,30 +154,30 @@ const config: Config = {
         // The scales below resolve to the new tokens automatically, so the
         // whole app inherits Galaxy Sports Edge without a refactor.
         brand: {
-          50:  "#FFE3F6",
-          100: "#FFB8E8",
-          200: "#FF8ADA",
-          300: "#FF6FD8",
-          400: "#FF55D0",
-          500: "#FF3BC7",
-          600: "#E62EB1",
-          700: "#C81E9C",
-          800: "#A11578",
-          900: "#7A0E58",
-          950: "#1A0014",
+          50:  "#FDEEE9",
+          100: "#FAC9BB",
+          200: "#F7A48D",
+          300: "#F47F60",
+          400: "#F7613F",
+          500: "#FF4D2E",
+          600: "#D63A1F",
+          700: "#A82D18",
+          800: "#722013",
+          900: "#3D120B",
+          950: "#1A0703",
         },
         accent: {
-          50:  "#E6F8FF",
-          100: "#B8EEFF",
-          200: "#8AE3FF",
-          300: "#5BD8FF",
-          400: "#33CEFF",
-          500: "#00E5FF",
-          600: "#00B8CC",
-          700: "#008CA0",
-          800: "#005F73",
-          900: "#003647",
-          950: "#001226",
+          50:  "#FDEEE9",
+          100: "#FAC9BB",
+          200: "#F7A48D",
+          300: "#F47F60",
+          400: "#F7613F",
+          500: "#FF4D2E",
+          600: "#D63A1F",
+          700: "#A82D18",
+          800: "#722013",
+          900: "#3D120B",
+          950: "#1A0703",
         },
         ink: {
           // LIGHT body inks for the PAPER data-surface scale (ADDITIVE).
@@ -164,11 +186,11 @@ const config: Config = {
           DEFAULT: "#0E1320",  // body — 17.46:1 on paper
           1:    "#3A4356",     // secondary — 9.34:1 on paper
           2:    "#5B6678",     // muted meta — 5.47:1 on paper
-          // ── legacy DARK ramp (unchanged) — ink-50..ink-1000 ──
-          50:   "#F5F7FF",
-          100:  "#D5DDE9",
-          200:  "#AEB7D2",
-          300:  "#AEB7D2",
+          // ── legacy DARK ramp — repointed NEBULA v7 ──
+          50:   "#EDE8E0",
+          100:  "#C9D4CE",
+          200:  "#C9D4CE",
+          300:  "#A7B8B2",
           400:  "#5E6878",
           500:  "#3D4555",
           600:  "#2E3849",
@@ -182,13 +204,13 @@ const config: Config = {
         // drifted (#FF3BC7 vs canonical plasma #FF38C7) and unused; kept as
         // a legacy 3-tier alias so it can't silently diverge again.
         confidence: {
-          high: "#FF38C7",     // = --conf-elite (plasma)
-          mid:  "#7B61FF",     // = --conf-solid (ultraviolet)
-          low:  "#AEB7D2",     // = --conf-lean (ion-1)
+          high: "#FF4D2E",     // = --conf-elite (ember)
+          mid:  "#C9D4CE",     // = --conf-solid (fog)
+          low:  "#A7B8B2",     // = --conf-lean (mist)
         },
         risk: {
           low:  "#5FD9A3",
-          mid:  "#7B61FF",
+          mid:  "#C9D4CE",
           high: "#FF6470",
         },
       },
@@ -240,33 +262,35 @@ const config: Config = {
         "2.5xl":  "1.25rem",
       },
       boxShadow: {
-        "glow-plasma":  "0 0 40px -8px rgba(255, 59, 199, 0.45)",
-        "glow-ion-blue":"0 0 36px -8px rgba(42, 107, 255, 0.42)",
-        "glow-uv":      "0 0 32px -6px rgba(123, 97, 255, 0.38)",
-        "glow-cyan":    "0 0 32px -6px rgba(0, 229, 255, 0.40)",
-        "glow-lime":    "0 0 32px -8px rgba(212, 255, 61, 0.40)",
-        "glow-soft":    "0 0 80px -20px rgba(0, 229, 255, 0.18)",
+        "glow-plasma":  "0 0 40px -8px rgba(255, 77, 46, 0.45)",
+        "glow-ion-blue":"0 0 36px -8px rgba(27, 21, 48, 0.9)",
+        "glow-uv":      "0 0 32px -6px rgba(27, 21, 48, 0.9)",
+        "glow-cyan":    "0 0 32px -6px rgba(201, 212, 206, 0.25)",
+        "glow-lime":    "0 0 32px -8px rgba(255, 77, 46, 0.40)",
+        "glow-soft":    "0 0 80px -20px rgba(255, 77, 46, 0.20)",
         glass:
           "0 1px 0 0 rgba(255,255,255,0.04) inset, 0 12px 32px -8px rgba(0,0,0,0.6)",
         pop:
-          "0 24px 48px -12px rgba(255,59,199,0.30), 0 0 0 1px rgba(0,229,255,0.20) inset",
+          "0 24px 48px -12px rgba(255,77,46,0.30), 0 0 0 1px rgba(201,212,206,0.20) inset",
         modal: "0 24px 64px -16px rgba(0,0,0,0.8), 0 2px 8px rgba(0,0,0,0.5)",
         float: "0 8px 32px -8px rgba(0,0,0,0.7)",
       },
       backgroundImage: {
-        // The signature brand gradient (Brand Bible v1.0): cyan -> magenta -> violet.
+        // NEBULA v7: the signature gradient is retired. signal-fade resolves
+        // to flat ember (rules/wordmark accents); atmosphere bands carry the
+        // violet depth instead of decorative color washes.
         "signal-fade":
-          "linear-gradient(90deg, #00E5FF 0%, #FF38C7 52%, #7B61FF 100%)",
+          "linear-gradient(90deg, #FF4D2E 0%, #FF4D2E 100%)",
         "signal-fade-135":
-          "linear-gradient(135deg, #00E5FF 0%, #FF38C7 52%, #7B61FF 100%)",
+          "linear-gradient(135deg, #FF4D2E 0%, #FF4D2E 100%)",
         "stadium-glow":
-          "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(0,229,255,0.16), rgba(255,59,199,0.10) 35%, transparent 70%)",
+          "radial-gradient(ellipse 80% 50% at 50% -10%, rgba(27,21,48,0.9), rgba(255,77,46,0.10) 35%, transparent 70%)",
         "cosmic-sweep":
-          "linear-gradient(135deg, rgba(0,229,255,0.18) 0%, rgba(123,97,255,0.18) 50%, rgba(255,59,199,0.18) 100%)",
+          "linear-gradient(135deg, rgba(27,21,48,0.6) 0%, rgba(19,16,34,0.6) 50%, rgba(255,77,46,0.08) 100%)",
         "rule-fade":
-          "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.08) 50%, transparent 100%)",
+          "linear-gradient(90deg, transparent 0%, rgba(237,232,224,0.14) 50%, transparent 100%)",
         "accent-stripe":
-          "linear-gradient(90deg, transparent 0%, rgba(0,229,255,0.6) 30%, rgba(255,59,199,0.6) 70%, transparent 100%)",
+          "linear-gradient(90deg, transparent 0%, rgba(255,77,46,0.7) 30%, rgba(255,77,46,0.7) 70%, transparent 100%)",
       },
       animation: {
         "live-pulse": "live-pulse 2.4s cubic-bezier(0.4, 0, 0.6, 1) infinite",

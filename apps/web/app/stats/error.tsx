@@ -47,7 +47,7 @@ export default function StatsError({
       <Nav />
 
       <main className="relative z-10 flex flex-1 items-center justify-center px-4 py-22 sm:px-6 lg:px-8">
-        <div className="w-full max-w-xl rounded-2xl border border-alert/30 bg-alert/10 p-8 text-center">
+        <div className="w-full max-w-xl rounded-2xl border border-alarm/30 bg-alarm/10 p-8 text-center">
           <div className="mb-5 flex justify-center">
             <LogoMarkInline size={40} pulse glow />
           </div>
@@ -65,13 +65,13 @@ export default function StatsError({
           <div className="mt-5 flex flex-wrap justify-center gap-2">
             <button
               onClick={() => reset()}
-              className="rounded-lg bg-alert/20 px-4 py-2 text-sm font-semibold text-white hover:bg-alert/30"
+              className="rounded-lg bg-alarm/20 px-4 py-2 text-sm font-semibold text-white hover:bg-alarm/30"
             >
               Retry
             </button>
             <Link
               href="/stats"
-              className="rounded-lg border border-alert/30 px-4 py-2 text-sm text-ion-1 hover:bg-alert/10"
+              className="rounded-lg border border-alarm/30 px-4 py-2 text-sm text-ion-1 hover:bg-alarm/10"
             >
               Back to Stats overview
             </Link>

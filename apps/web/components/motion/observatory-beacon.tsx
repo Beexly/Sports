@@ -80,16 +80,16 @@ export function ObservatoryBeacon() {
       <span
         className="relative flex h-10 w-10 items-center justify-center rounded-full"
         style={{
-          background: "rgba(0, 229, 255, 0.12)",
-          border: "1px solid rgba(0, 229, 255, 0.35)",
-          boxShadow: "0 0 20px rgba(0,229,255,0.15), inset 0 0 12px rgba(0,229,255,0.08)",
+          background: "rgba(255,77,46, 0.12)",
+          border: "1px solid rgba(255,77,46, 0.35)",
+          boxShadow: "0 0 20px rgba(255,77,46,0.15), inset 0 0 12px rgba(255,77,46,0.08)",
         }}
       >
         {/* Pulsing inner glow */}
         <span
           className="absolute inset-0 rounded-full"
           style={{
-            background: "radial-gradient(circle, rgba(0,229,255,0.3) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(255,77,46,0.3) 0%, transparent 70%)",
             animation: "observatory-beacon-pulse 3s ease-in-out infinite",
           }}
         />
@@ -97,7 +97,7 @@ export function ObservatoryBeacon() {
         <span
           className="relative h-2 w-2 rounded-full bg-orbital-cyan"
           style={{
-            boxShadow: "0 0 8px 2px rgba(0,229,255,0.6)",
+            boxShadow: "0 0 8px 2px rgba(255,77,46,0.6)",
           }}
         />
         {/* Up arrow */}

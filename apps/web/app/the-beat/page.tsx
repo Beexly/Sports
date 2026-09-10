@@ -43,7 +43,7 @@ export default async function TheBeatPage() {
           <div
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
-            style={{ background: "radial-gradient(55% 80% at 50% 0%, rgba(0, 229, 255, 0.09), transparent 70%)" }}
+            style={{ background: "radial-gradient(55% 80% at 50% 0%, rgba(255,77,46, 0.09), transparent 70%)" }}
           />
           <div className="mx-auto max-w-5xl">
             <Reveal>
@@ -78,7 +78,7 @@ export default async function TheBeatPage() {
         <section className="px-4 pb-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
             {/* The transmission flows down into the ledger */}
-            <div aria-hidden className="mx-auto h-10 w-px" style={{ background: "linear-gradient(to bottom, transparent, rgba(0, 229, 255, 0.4))" }} />
+            <div aria-hidden className="mx-auto h-10 w-px" style={{ background: "linear-gradient(to bottom, transparent, rgba(255,77,46, 0.4))" }} />
             <Reveal>
               <div className="flex flex-col gap-2 pt-2">
                 <p className="eyebrow text-orbital-cyan">The Signal Ledger</p>

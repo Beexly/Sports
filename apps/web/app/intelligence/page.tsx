@@ -49,10 +49,10 @@ export const metadata: Metadata = {
  * literals (not var() refs) because ReasoningShowcase derives hex+alpha
  * washes from them, and the SVG motif needs attribute-safe color values.
  */
-const ACCENT_CYAN = "#00E5FF"; // --orbital-cyan
-const ACCENT_UV = "#7B61FF"; // --ultraviolet
-const ACCENT_MAGENTA = "#FF38C7"; // --plasma
-const ION_WHITE = "#F5F7FF"; // --ion-white
+const ACCENT_CYAN = "#FF4D2E"; // --orbital-cyan
+const ACCENT_UV = "#C9D4CE"; // --ultraviolet
+const ACCENT_MAGENTA = "#FF4D2E"; // --plasma
+const ION_WHITE = "#EDE8E0"; // --ion-white
 
 const CHAIN: ReadonlyArray<{
   readonly step: string;

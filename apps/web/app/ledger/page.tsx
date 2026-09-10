@@ -108,7 +108,7 @@ export default async function LedgerPage(): Promise<JSX.Element> {
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
-            style={{ background: "radial-gradient(60% 80% at 50% 0%, rgba(0,229,255,0.08), transparent 70%)" }}
+            style={{ background: "radial-gradient(60% 80% at 50% 0%, rgba(255,77,46,0.08), transparent 70%)" }}
           />
           <div className="mx-auto max-w-5xl">
             <Reveal>

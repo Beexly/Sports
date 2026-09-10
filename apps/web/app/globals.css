@@ -26,12 +26,11 @@
     background: var(--carbon);
     color: var(--ion);
     font-family: var(--f-body);
-    /* Multi-layer atmospheric glow — never a flat black. ENERGI PASS:
-       purple/magenta atmosphere turned up so the canvas reads cosmic. */
+    /* NEBULA v7: violet depth + ember crown — never flat black. */
     background-image:
-      radial-gradient(ellipse 100% 60% at 50% -20%, rgba(255,56,199, 0.09), transparent 70%),
-      radial-gradient(ellipse 80% 50% at 80% 0%, rgba(123,97,255, 0.10), transparent 60%),
-      radial-gradient(ellipse 90% 70% at 15% 100%, rgba(123,97,255, 0.07), transparent 65%);
+      radial-gradient(ellipse 100% 60% at 50% -20%, rgba(255,77,46, 0.07), transparent 70%),
+      radial-gradient(ellipse 80% 50% at 80% 0%, rgba(60,45,110, 0.35), transparent 60%),
+      radial-gradient(ellipse 90% 70% at 15% 100%, rgba(60,45,110, 0.28), transparent 65%);
     background-attachment: fixed;
     min-height: 100vh;
   }
@@ -415,24 +414,23 @@
    ════════════════════════════════════════════════════════════════════ */
 
 /* Void + nebula atmosphere — the section canvas. Never flat black.
-   ENERGI PASS: purple is the atmosphere's co-lead — sections read as cosmic
-   nebula, not near-black. Text sits on the darker wells, so AA holds. */
+   NEBULA v7: violet panels breathe, ember is the single crown. */
 .gw-nebula {
   position: relative;
   background:
-    radial-gradient(ellipse 90% 55% at 18% 0%, rgba(123,97,255, 0.22), transparent 62%),
-    radial-gradient(ellipse 70% 45% at 86% 18%, rgba(255,56,199, 0.12), transparent 60%),
-    radial-gradient(ellipse 60% 60% at 50% 110%, rgba(0, 229, 255, 0.09), transparent 65%),
-    radial-gradient(ellipse 45% 35% at 70% 65%, rgba(90, 30, 90, 0.35), transparent 70%),
-    linear-gradient(180deg, var(--void) 0%, #0E0A1C 50%, var(--void) 100%);
+    radial-gradient(ellipse 90% 55% at 18% 0%, rgba(60,45,110, 0.45), transparent 62%),
+    radial-gradient(ellipse 70% 45% at 86% 18%, rgba(255,77,46, 0.10), transparent 60%),
+    radial-gradient(ellipse 60% 60% at 50% 110%, rgba(60,45,110, 0.30), transparent 65%),
+    radial-gradient(ellipse 45% 35% at 70% 65%, rgba(27, 21, 48, 0.9), transparent 70%),
+    linear-gradient(180deg, var(--void) 0%, #131022 50%, var(--void) 100%);
 }
 .gw-nebula-deep {
   position: relative;
   background:
-    radial-gradient(ellipse 100% 65% at 50% -10%, rgba(123,97,255, 0.28), transparent 65%),
-    radial-gradient(ellipse 60% 45% at 88% 30%, rgba(255,56,199, 0.14), transparent 60%),
-    radial-gradient(ellipse 55% 40% at 8% 90%, rgba(0, 229, 255, 0.10), transparent 60%),
-    radial-gradient(ellipse 80% 60% at 30% 55%, rgba(58, 22, 70, 0.45), transparent 75%),
+    radial-gradient(ellipse 100% 65% at 50% -10%, rgba(60,45,110, 0.5), transparent 65%),
+    radial-gradient(ellipse 60% 45% at 88% 30%, rgba(255,77,46, 0.12), transparent 60%),
+    radial-gradient(ellipse 55% 40% at 8% 90%, rgba(60,45,110, 0.35), transparent 60%),
+    radial-gradient(ellipse 80% 60% at 30% 55%, rgba(27, 21, 48, 0.9), transparent 75%),
     var(--void);
 }
 
@@ -442,11 +440,11 @@
   background-image:
     radial-gradient(1px 1px at 12% 22%, rgba(246, 247, 250, 0.55), transparent 50%),
     radial-gradient(1px 1px at 34% 68%, rgba(246, 247, 250, 0.35), transparent 50%),
-    radial-gradient(1.5px 1.5px at 56% 14%, rgba(0, 229, 255, 0.45), transparent 50%),
+    radial-gradient(1.5px 1.5px at 56% 14%, rgba(255,77,46, 0.45), transparent 50%),
     radial-gradient(1px 1px at 71% 47%, rgba(246, 247, 250, 0.4), transparent 50%),
-    radial-gradient(1px 1px at 87% 79%, rgba(123,97,255, 0.5), transparent 50%),
+    radial-gradient(1px 1px at 87% 79%, rgba(60,45,110, 0.5), transparent 50%),
     radial-gradient(1.5px 1.5px at 23% 88%, rgba(246, 247, 250, 0.3), transparent 50%),
-    radial-gradient(1px 1px at 64% 92%, rgba(255,56,199, 0.35), transparent 50%),
+    radial-gradient(1px 1px at 64% 92%, rgba(255,77,46, 0.35), transparent 50%),
     radial-gradient(1px 1px at 92% 8%, rgba(246, 247, 250, 0.45), transparent 50%);
   background-size: 520px 520px;
   mask-image: radial-gradient(ellipse at center, black 45%, transparent 95%);
@@ -461,13 +459,13 @@
 /* Signal beam — fragments resolve INTO this. Vertical cyan column. */
 .gw-beam {
   position: relative;
-  background: linear-gradient(180deg, transparent, rgba(0, 229, 255, 0.75) 18%, rgba(0, 229, 255, 0.95) 50%, rgba(0, 229, 255, 0.75) 82%, transparent);
-  box-shadow: 0 0 18px 2px rgba(0, 229, 255, 0.35);
+  background: linear-gradient(180deg, transparent, rgba(255,77,46, 0.75) 18%, rgba(255,77,46, 0.95) 50%, rgba(255,77,46, 0.75) 82%, transparent);
+  box-shadow: 0 0 18px 2px rgba(255,77,46, 0.35);
   animation: gw-beam-breathe 4.5s ease-in-out infinite;
 }
 @keyframes gw-beam-breathe {
   0%, 100% { opacity: 0.85; }
-  50%      { opacity: 1; box-shadow: 0 0 26px 4px rgba(0, 229, 255, 0.5); }
+  50%      { opacity: 1; box-shadow: 0 0 26px 4px rgba(255,77,46, 0.5); }
 }
 
 /* Market-gravity stroke flow — apply to SVG paths (pair with stroke-dasharray). */
@@ -507,58 +505,58 @@
    glow, and solid filled chips with dark ink (higher contrast than dim
    outline tints). Semantics unchanged: cyan = signal, plasma = heat. */
 
-/* Chrome headline fills — vertical white→hue gradients, clipped to text. */
+/* Chrome headline fills — NEBULA v7: bone→fog, bone→ember, bone→mist. */
 .gw-chrome-ice {
-  background: linear-gradient(180deg, #FFFFFF 0%, #E8FBFF 38%, #8FECFF 100%);
+  background: linear-gradient(180deg, #EDE8E0 0%, #C9D4CE 55%, #A7B8B2 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 24px rgba(0, 229, 255, 0.28));
+  filter: drop-shadow(0 0 24px rgba(201, 212, 206, 0.28));
 }
 .gw-chrome-plasma {
-  background: linear-gradient(180deg, #FFFFFF 0%, #FFB8EE 30%, #FF38C7 100%);
+  background: linear-gradient(180deg, #EDE8E0 0%, #FF7A5C 45%, #FF4D2E 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 26px rgba(255,56,199, 0.38));
+  filter: drop-shadow(0 0 26px rgba(255,77,46, 0.38));
 }
 .gw-chrome-violet {
-  background: linear-gradient(180deg, #FFFFFF 0%, #D9CBFF 35%, #9F87FF 100%);
+  background: linear-gradient(180deg, #EDE8E0 0%, #C9D4CE 55%, #A7B8B2 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
-  filter: drop-shadow(0 0 24px rgba(123,97,255, 0.35));
+  filter: drop-shadow(0 0 24px rgba(201, 212, 206, 0.3));
 }
 
 /* Saturated text glow — for short accent words only, never prose. */
-.gw-text-glow-cyan   { text-shadow: 0 0 18px rgba(0, 229, 255, 0.65), 0 0 44px rgba(0, 229, 255, 0.3); }
-.gw-text-glow-plasma { text-shadow: 0 0 18px rgba(255,56,199, 0.6), 0 0 44px rgba(255,56,199, 0.3); }
+.gw-text-glow-cyan   { text-shadow: 0 0 18px rgba(255,77,46, 0.65), 0 0 44px rgba(255,77,46, 0.3); }
+.gw-text-glow-plasma { text-shadow: 0 0 18px rgba(255,77,46, 0.6), 0 0 44px rgba(255,77,46, 0.3); }
 .gw-text-glow-alert  { text-shadow: 0 0 18px rgba(255, 100, 112, 0.55), 0 0 40px rgba(255, 100, 112, 0.28); }
-.gw-text-glow-white  { text-shadow: 0 0 22px rgba(246, 247, 250, 0.45); }
+.gw-text-glow-white  { text-shadow: 0 0 22px rgba(237, 232, 224, 0.45); }
 
-/* Filled identity chips — dark ink on full-saturation fill. */
+/* Filled identity chips — dark ink on ember fill (cyan chip retired). */
 .gw-chip-cyan {
   display: inline-flex; align-items: center; gap: 8px;
   border-radius: 999px; padding: 5px 13px;
   font-family: var(--f-mono); font-size: 10px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.18em;
-  background: linear-gradient(110deg, #5BEEFF, #00E5FF);
-  color: var(--ion-blue-ink);
-  box-shadow: 0 0 26px -4px rgba(0, 229, 255, 0.55);
+  background: linear-gradient(110deg, #FF7A5C, #FF4D2E);
+  color: var(--plasma-ink);
+  box-shadow: 0 0 26px -4px rgba(255, 77, 46, 0.55);
 }
 .gw-chip-plasma {
   display: inline-flex; align-items: center; gap: 8px;
   border-radius: 999px; padding: 5px 13px;
   font-family: var(--f-mono); font-size: 10px; font-weight: 700;
   text-transform: uppercase; letter-spacing: 0.18em;
-  background: linear-gradient(110deg, #FF66E0, #FF38C7);
+  background: linear-gradient(110deg, #FF7A5C, #FF4D2E);
   color: var(--plasma-ink);
-  box-shadow: 0 0 26px -4px rgba(255,56,199, 0.55);
+  box-shadow: 0 0 26px -4px rgba(255,77,46, 0.55);
 }
 
 /* Glow rings — semantic halo states for nodes and readouts. */
-.gw-ring-signal   { box-shadow: 0 0 0 1px rgba(0, 229, 255, 0.45), 0 0 24px -4px rgba(0, 229, 255, 0.5); }
-.gw-ring-heat     { box-shadow: 0 0 0 1px rgba(255,56,199, 0.4), 0 0 24px -4px rgba(255,56,199, 0.45); }
+.gw-ring-signal   { box-shadow: 0 0 0 1px rgba(255,77,46, 0.45), 0 0 24px -4px rgba(255,77,46, 0.5); }
+.gw-ring-heat     { box-shadow: 0 0 0 1px rgba(255,77,46, 0.4), 0 0 24px -4px rgba(255,77,46, 0.45); }
 .gw-ring-caution  { box-shadow: 0 0 0 1px rgba(255, 180, 84, 0.45), 0 0 20px -4px rgba(255, 180, 84, 0.4); }
 .gw-ring-gate     { box-shadow: 0 0 0 1px rgba(255, 100, 112, 0.45), 0 0 20px -4px rgba(255, 100, 112, 0.4); }
 
@@ -581,7 +579,7 @@
 .gw-chapter-index::after {
   content: ""; width: 64px; height: 2px; border-radius: 999px;
   background: linear-gradient(90deg, var(--orbital-cyan), var(--plasma) 70%, transparent);
-  box-shadow: 0 0 12px -2px rgba(0, 229, 255, 0.5);
+  box-shadow: 0 0 12px -2px rgba(255,77,46, 0.5);
 }
 
 /* Mirage degrade — truth layers revealing under a too-good surface. */
@@ -589,7 +587,7 @@
 
 /* Hover depth for world cards — restrained lift, no scale soup. */
 .gw-card-hover { transition: transform 200ms var(--ease-out), border-color 200ms var(--ease-out), box-shadow 200ms var(--ease-out); }
-.gw-card-hover:hover { transform: translateY(-2px); border-color: var(--mineral-hi); box-shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.8), 0 0 24px -10px rgba(0, 229, 255, 0.25); }
+.gw-card-hover:hover { transform: translateY(-2px); border-color: var(--mineral-hi); box-shadow: 0 12px 40px -12px rgba(0, 0, 0, 0.8), 0 0 24px -10px rgba(255,77,46, 0.25); }
 
 /* Reduced motion — every gw animation collapses to its readable end state. */
 @media (prefers-reduced-motion: reduce) {
@@ -655,8 +653,8 @@
   position: absolute;
   inset: 0;
   background-image:
-    linear-gradient(to right, rgba(0, 229, 255, 0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(0, 229, 255, 0.025) 1px, transparent 1px);
+    linear-gradient(to right, rgba(255,77,46, 0.025) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255,77,46, 0.025) 1px, transparent 1px);
   background-size: 56px 56px;
   pointer-events: none;
   mask-image: radial-gradient(ellipse at center, black 20%, transparent 80%);
@@ -754,8 +752,8 @@
 
 /* ── Thermal Vision animations ────────────────────────────────────────────────── */
 @keyframes thermal-pulse-hot {
-  0%, 100% { opacity: 0.7; transform: scale(1); box-shadow: 0 0 4px rgba(255,56,199,0.4); }
-  50% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 10px rgba(255,56,199,0.7); }
+  0%, 100% { opacity: 0.7; transform: scale(1); box-shadow: 0 0 4px rgba(255,77,46,0.4); }
+  50% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 10px rgba(255,77,46,0.7); }
 }
 @keyframes thermal-pulse-cold {
   0%, 100% { opacity: 0.5; transform: scale(1); }
@@ -764,4 +762,66 @@
 @keyframes thermal-breathe {
   0%, 100% { opacity: 0.6; }
   50% { opacity: 1; }
+}
+
+/* ═══════════════════════════════════════════════════════════
+   NEBULA v7 override layer (approved 2026-09-10).
+   Token VALUES flipped in design-tokens.css + tailwind.config;
+   this block carries the signature treatments: wordmark, nav
+   atmosphere, broadcast headlines, ember CTA, gate band.
+   ═══════════════════════════════════════════════════════════ */
+
+/* Wordmark: Chakra Petch bone, ember rule. Beats the retired gradient. */
+.brand-wordmark-text {
+  font-family: var(--f-word, "Chakra Petch", var(--f-display)) !important;
+  background: none !important;
+  color: #EDE8E0 !important;
+  -webkit-text-fill-color: #EDE8E0 !important;
+}
+.brand-wordmark-underline {
+  background: #FF4D2E !important;
+  opacity: 1 !important;
+}
+.brand-emblem { filter: drop-shadow(0 0 14px rgba(255, 77, 46, 0.30)); }
+
+/* Nav: violet-black glass over the ground. */
+.nav {
+  background: rgba(19, 16, 34, 0.82) !important;
+  border-bottom: 1px solid #2A3532 !important;
+  backdrop-filter: blur(14px);
+}
+
+/* Broadcast headlines: condensed caps wherever font-display lands. */
+.font-display, .font-arch {
+  text-transform: none;
+  letter-spacing: 0.01em;
+}
+
+/* Ember CTA: the one action per screen. */
+.btn-primary, .gse-btn-primary {
+  background: #FF4D2E !important;
+  color: #1A0703 !important;
+  border-color: transparent !important;
+  box-shadow: 0 0 48px -8px rgba(255, 77, 46, 0.55);
+}
+.btn-primary:hover, .gse-btn-primary:hover { background: #FF6A4D !important; }
+
+/* Gate band: ember rule districts. */
+.neb-gate {
+  border-top: 2px solid #FF4D2E;
+  border-bottom: 2px solid #FF4D2E;
+  background: rgba(255, 77, 46, 0.06);
+}
+
+/* Violet atmosphere panel for proof/board bands. */
+.neb-band {
+  background: linear-gradient(180deg, rgba(27, 21, 48, 0.9), rgba(19, 16, 34, 0.9));
+  border-top: 1px solid #2A3532;
+  border-bottom: 1px solid #2A3532;
+}
+
+/* Thermal pulse keyframes follow ember (were magenta). */
+@keyframes thermal-pulse-hot {
+  0%, 100% { opacity: 0.7; transform: scale(1); box-shadow: 0 0 4px rgba(255,77,46,0.4); }
+  50% { opacity: 1; transform: scale(1.3); box-shadow: 0 0 10px rgba(255,77,46,0.7); }
 }

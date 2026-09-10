@@ -101,7 +101,7 @@ export function GalaxyCursor() {
         ref={dotRef}
         aria-hidden
         className="pointer-events-none fixed left-0 top-0 z-[90] h-1.5 w-1.5 rounded-full opacity-0"
-        style={{ background: "#00E5FF", boxShadow: "0 0 10px #00E5FFAA", willChange: "transform" }}
+        style={{ background: "#FF4D2E", boxShadow: "0 0 10px #FF4D2EAA", willChange: "transform" }}
       />
       <div
         ref={ringRef}

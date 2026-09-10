@@ -290,8 +290,7 @@ export default function MethodologyPage(): JSX.Element {
                 <p className="mt-2 text-sm leading-6 text-ink-300">
                   Edge is the gap between an independent true probability and the
                   market's fair price — a signed difference, not P(side wins). Edge
-                  can filter and explain; it never enters Brier, resolution, or separation
-                  as if it were a win probability.
+                  can filter and explain; it is never scored as if it were a win probability.
                 </p>
               </article>
             </Stagger>

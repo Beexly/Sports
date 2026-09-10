@@ -16,15 +16,15 @@ export const Default = () => (
   <div style={row}>
     <div>
       <span style={big}>
-        <CountUp value={458} group />
+        <CountUp value={1284} group />
       </span>
-      <p style={label}>Settled picks calibrated</p>
+      <p style={label}>Design tokens in this sheet</p>
     </div>
     <div>
       <span style={big}>
-        <CountUp value={64.2} decimals={1} suffix="%" />
+        <CountUp value={3.2} decimals={1} suffix="s" />
       </span>
-      <p style={label}>Confidence, ten-bin average</p>
+      <p style={label}>Animation duration, illustrative</p>
     </div>
   </div>
 );
