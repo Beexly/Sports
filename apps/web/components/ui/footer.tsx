@@ -82,7 +82,7 @@ export function Footer() {
           {BRAND_NAME} delivers market signals, not certainty. One input in a
           disciplined decision — never the decision itself. Set limits before
           emotion enters. Only stake what you can afford to lose without changing
-          your week. Past results do not guarantee future ones.{" "}
+          your week. Past results promise nothing about the next one.{" "}
           <a href={HELPLINE.href} target="_blank" rel="noopener noreferrer">
             {HELPLINE.shortLabel}
           </a>
