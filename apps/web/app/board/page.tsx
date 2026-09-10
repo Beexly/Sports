@@ -219,8 +219,9 @@ export default async function BoardPage(): Promise<JSX.Element> {
           <StateTile label="Model" value={state.modelVersion} />
         </section>
 
-        <section className="grid gap-4 lg:grid-cols-3">
+        <section className="grid gap-10 lg:grid-cols-3">
           <BoardLane
+            index="01"
             title="Scoring Now"
             rows={state.scoringNow}
             empty={
@@ -230,6 +231,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
             }
           />
           <BoardLane
+            index="02"
             title="Published Today"
             rows={state.publishedToday}
             empty={
@@ -239,6 +241,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
             }
           />
           <BoardLane
+            index="03"
             title="Gated Today"
             rows={state.gatedTodayRows}
             empty={
@@ -311,39 +314,48 @@ function StateTile({ label, value, dataTestid }: { label: string; value: string;
   );
 }
 
-function BoardLane({ title, rows, empty }: { title: string; rows: BoardStateRow[]; empty: string }): JSX.Element {
+function BoardLane({ title, rows, empty, index }: { title: string; rows: BoardStateRow[]; empty: string; index: string }): JSX.Element {
+  const live = index === "02";
   return (
-    <section className="border border-titanium bg-carbon/45 p-4">
-      <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-orbital-cyan">{title}</h2>
-      <div className="mt-4 flex flex-col gap-3">
-        {rows.length > 0 ? rows.map((row) => <BoardRowItem key={row.id} row={row} />) : (
-          <p className="text-sm text-ion-3">{empty}</p>
+    <section>
+      <div className="flex items-baseline gap-3 border-b border-mineral pb-3">
+        <span className={`font-display text-2xl font-semibold ${live ? "text-plasma" : "text-ion-3"}`}>{index}</span>
+        <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-ion-1">{title}</h2>
+        <span className="ml-auto font-mono text-[10px] tabular-nums text-ion-3">{rows.length}</span>
+      </div>
+      <div className="divide-y divide-mineral">
+        {rows.length > 0 ? rows.map((row) => <BoardRowItem key={row.id} row={row} live={live} />) : (
+          <p className="py-5 text-sm text-ion-3">{empty}</p>
         )}
       </div>
     </section>
   );
 }
 
-function BoardRowItem({ row }: { row: BoardStateRow }): JSX.Element {
+function BoardRowItem({ row, live }: { row: BoardStateRow; live: boolean }): JSX.Element {
+  const held = row.status !== "PUBLISHED_TODAY";
   return (
-    <article className="border border-titanium bg-obsidian/55 p-4">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3 className="font-semibold text-white">{row.matchup}</h3>
-          <p className="mt-1 text-xs text-ion-3">{row.sport} / {row.market}</p>
-        </div>
-        <span className="font-mono text-xs text-orbital-cyan">
-          {row.edgeIndex === null ? "EI N/A" : `EI ${row.edgeIndex}`}
-        </span>
+    <article className="grid grid-cols-[1fr_auto] items-baseline gap-x-4 py-4">
+      <div className="min-w-0">
+        <h3 className={`font-display text-xl font-semibold tracking-tight ${held ? "text-ion-3" : "text-ion-white"}`}>{row.matchup}</h3>
+        <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] text-ion-3">{row.sport} · {row.market}</p>
+      </div>
+      <div className="text-right">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-3">Edge</p>
+        <p className={`font-display text-2xl font-semibold tabular-nums ${held ? "text-ion-3" : live ? "text-plasma" : "text-ion-white"}`}>
+          {row.edgeIndex === null ? "—" : row.edgeIndex}
+        </p>
       </div>
       {/* The ranking sort key and its source are model internals; the public
-          row does not render them (FE-10). The pick view carries the label. */}
-      {row.confidence !== null && (
-        <p className="mt-3 text-sm text-ion-1">Confidence label available on the pick view.</p>
+          row does not render them (FE-10). Confidence stays on the pick view
+          behind the paywall (FE-15); C-224 forbids scoring it here. */}
+      {row.gateReason && (
+        <p className="col-span-2 mt-1 text-sm text-ion-2">
+          {held && <span className="font-semibold text-plasma">Held. </span>}{row.gateReason}
+        </p>
       )}
-      {row.gateReason && <p className="mt-3 text-sm text-ion-2">{row.gateReason}</p>}
-      <Link href={`/room/${row.gameId}`} className="mt-4 inline-flex text-sm font-semibold text-orbital-cyan hover:text-ion-white">
-        Open room
+      <Link href={`/room/${row.gameId}`} className="col-span-2 mt-2 inline-flex text-sm font-semibold text-ion-1 hover:text-ion-white">
+        Open room →
       </Link>
     </article>
   );

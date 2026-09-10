@@ -323,7 +323,7 @@ export default function DeckPage(): JSX.Element {
                   {agent.state}
                 </p>
                 {'alert' in agent && agent.alert && (
-                  <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.14em] text-plasma">
+                  <p className="mt-2 font-mono text-[9px] uppercase tracking-[0.14em] text-ion-2">
                     {agent.alert}
                   </p>
                 )}

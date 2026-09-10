@@ -86,7 +86,12 @@ const config: Config = {
           ink: "#1A0703",
         },
 
-        // ── RETIRED CYAN → fog (calm text, never action) ───
+        // ── IRIS — the wayfinding accent ────────────────────
+        iris: {
+          DEFAULT: "#9AA8E8",
+          glow: "#C3CDEF",
+          deep: "#6E7BB8",
+        },
         "ion-blue": {
           DEFAULT: "#C9D4CE",
           glow: "#E4EBE7",

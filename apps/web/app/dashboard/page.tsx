@@ -493,9 +493,9 @@ function SampleDataBanner() {
  */
 function confidenceBarClass(confidence: number): string {
   if (confidence >= 80) return "bg-plasma/70";
-  if (confidence >= 65) return "bg-orbital-cyan/70";
-  if (confidence >= 50) return "bg-ultraviolet/70";
-  return "bg-ion-1/50";
+  if (confidence >= 65) return "bg-plasma/40";
+  if (confidence >= 50) return "bg-ion-1/50";
+  return "bg-ion-3/50";
 }
 
 function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: boolean }) {

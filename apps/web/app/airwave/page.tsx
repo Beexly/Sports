@@ -82,7 +82,7 @@ export default async function AirwavePage() {
             {STEPS.map((s) => (
               <Reveal key={s.n} delay={80}>
                 <div className="surface-card h-full p-5">
-                  <span className="font-display text-2xl tabular-nums text-plasma">{s.n}</span>
+                  <span className="font-display text-2xl tabular-nums text-ion-white">{s.n}</span>
                   <h2 className="mt-2 text-base font-semibold text-ion-white">{s.t}</h2>
                   <p className="mt-1.5 text-sm leading-relaxed text-ion-1">{s.b}</p>
                 </div>

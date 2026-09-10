@@ -1,6 +1,6 @@
-import Link from "next/link";
 import { Suspense } from "react";
 import { BrandLockup } from "@/components/brand/brand-lockup";
+import { NavActiveLink } from "@/components/ui/nav-active-link";
 import { NavMenu } from "@/components/ui/nav-menu";
 import { NavAuth, NavAuthFallback } from "@/components/ui/nav-auth";
 
@@ -96,16 +96,16 @@ export function Nav() {
 
           <nav className="nav-links" aria-label="Primary">
             <NavMenu label="Board" href="/board" groups={BOARD_MENU} />
-            <Link href="/players" title="The Lab: every player, every signal, one place">
+            <NavActiveLink href="/players" title="The Lab: every player, every signal, one place">
               The Lab
-            </Link>
+            </NavActiveLink>
             <NavMenu label="Intelligence" href="/intelligence/engines" groups={INTELLIGENCE_MENU} />
             <NavMenu label="Fantasy & Daily" href="/fantasy" groups={FANTASY_DAILY_MENU} />
             <NavMenu label="GSN" href="/the-beat" groups={GSN_MENU} />
 
-            <Link href="/calibration" title="The Proof Room: calibration, CLV, and the public ledger">
+            <NavActiveLink href="/calibration" title="The Proof Room: calibration, CLV, and the public ledger">
               Proof
-            </Link>
+            </NavActiveLink>
           </nav>
         </div>
 
