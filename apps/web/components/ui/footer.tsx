@@ -16,6 +16,23 @@ const SOCIAL_LINKS = [
   { href: SOCIAL.instagram, label: "Instagram" },
 ].filter((link) => link.href);
 
+/**
+ * Disclosure links. These were carried by the previous footer's COMPANY_LINKS
+ * and RESPONSIBLE_LINKS and must survive any visual redesign: the affiliate
+ * pledge, the how-we-make-money disclosure, the accountability record, the
+ * responsible-play help, and the terms/privacy pair are the public record of
+ * how this product earns and what it promises. Dropping them from the footer
+ * removes them from every page at once.
+ */
+const DISCLOSURE_LINKS = [
+  { label: "Accountability", href: "/accountability" },
+  { label: "How We Make Money", href: "/how-we-make-money" },
+  { label: "Affiliate Pledge", href: "/pledge" },
+  { label: "Responsible play", href: "/responsible-play" },
+  { label: "Terms", href: "/terms" },
+  { label: "Privacy", href: "/privacy" },
+] as const;
+
 export function Footer() {
   return (
     <footer className="footer">
@@ -70,6 +87,21 @@ export function Footer() {
             {HELPLINE.shortLabel}
           </a>
         </p>
+        <nav
+          aria-label="Disclosures"
+          className="flex flex-wrap items-center gap-x-5 gap-y-2 py-4 font-mono text-[10px] uppercase tracking-[0.14em]"
+          style={{ borderTop: "1px solid var(--mineral)" }}
+        >
+          {DISCLOSURE_LINKS.map(({ label, href }) => (
+            <Link
+              key={href}
+              href={href}
+              className="text-ion-2 transition-colors hover:text-plasma"
+            >
+              {label}
+            </Link>
+          ))}
+        </nav>
         <div className="bottom flex flex-wrap items-center gap-x-4 gap-y-2 pb-6">
           <span>
             © {new Date().getFullYear()} {BRAND_NAME} · {GSN_NAME}
