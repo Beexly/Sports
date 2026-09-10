@@ -9,6 +9,43 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ## THE LOOP
 
+**UPDATED 2026-09-10 (21:15 UTC): FIELD visual system is LIVE on production
+(galaxysportsedge.com). Founder-approved direction + logo; "math you can read"
+is retired as a public tagline (internal trust-claim comments may still cite
+BS-004; do not put the phrase on public chrome).**
+
+FIELD tokens (authoritative — keep in sync across three files):
+- Ground `#08090C` · panel `#12141A` · panel-2 `#191C23` · line `#23262E` · line-2 `#31353F`
+- Bone `#EDE8E0` · fog `#C4BFB6` · mist `#8F8A82`
+- Signal (action only) `#FF4D2E` · paper `#F4F1EB`
+- Sources of truth: `apps/web/styles/design-tokens.css`, `apps/web/tailwind.config.ts`,
+  `apps/web/lib/brand.ts` `BRAND_COLORS`. Change all three together.
+
+FIELD IA (nav = footer = five destinations, not a sitemap):
+- Board `/board` · Record `/calibration` · Method `/intelligence` · Verify `/verify` · Plans `/pricing`
+- Fantasy stays a secondary menu under Fantasy. Deep routes live on hubs.
+- Footer is one bar: lockup · Board/Record/Method/Verify/Plans · X · 1-800-GAMBLER · one legal line.
+- Do NOT restore the 4-column footer sitemap, footer-wordmark, or "MATH YOU CAN READ" stamp.
+
+FIELD logo (`LogoMarkInline`): outer ring + tilted ellipse + thick arc + bone core + ember ping.
+Wordmark: solid bone text + solid ember underline. No chrome/gradient fill, no Exo 2, no cyan→magenta fade.
+
+FIELD copy rules (public surfaces):
+- Hero thesis: Noise. / Signal. Closer: We detect. You decide.
+- Holds are first-class ("a held row is not a blank — it is the finding").
+- Never: "math you can read" on chrome, Mission Control as a primary label, "Four doors",
+  sports decision intelligence, neon/crypto vocabulary.
+- Prefer: Board, Record, Method, edge rank (not win probability), sealed receipt.
+
+FIELD atmosphere: `gw-nebula` / `gw-nebula-deep` are quiet near-black + one ember crown.
+Do not reintroduce violet radials (`rgba(60,45,110` / `#131022` / `#1B1530`).
+
+**Audit 2026-09-10 (this pass):** live site verified Field (Noise hero, condensed footer, no
+MATH YOU CAN READ, no starfield). Remaining NEBULA aliases in tokens/tailwind repointed to Field
+hexes; nav condensed to five destinations; tools/intelligence public "math you can read" strings
+replaced; brand lockup wordmark de-gradiented; gw-nebula de-violeted. typecheck/lint/brand must
+pass before deploy (`vercel deploy --prod` from a worktree linked to project `sports-web`).
+
 **UPDATED 2026-09-10 (17:15 UTC): NFL CLIP OPERATION — "GSE Film Room" on @GalaxySportsHQ (Motif, Muse agent).** Garrett's directive: real clipped sports footage with our data narrative; no synthetic/fake footage; no commercial license; transformative edits only. Full build artifacts live in the revenue-engine workspace under `clips/video-builds/` (not in this repo).
 
 1. **First native clipped video POSTED 2026-09-10:** "How Seattle manufactured THREE fourth-quarter INTs off Drake Maye" (74.7s, 1080x1920, H.264+AAC). Live: https://x.com/GalaxySportsHQ/status/2098095892268273696. Final file `gse-filmroom-seahawks-3int-mayes-meltdown-v2.mp4`; source log `SOURCE-LOG-seahawks-3int.md` carries both official @Seahawks post URLs, exact excerpt timestamps, and every transformation.

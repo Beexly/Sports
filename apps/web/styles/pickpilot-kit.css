@@ -668,25 +668,23 @@ button { font-family: inherit; cursor: pointer; }
   gap: 3px;
   line-height: 1;
 }
-/* Wordmark in Exo 2, filled with the signal fade (cyan -> magenta -> violet). */
+/* Wordmark — bone on void, ember underline. No chrome gradient. */
 .brand-wordmark-text {
   font: 800 17px/1 var(--f-display);
   text-transform: uppercase;
   letter-spacing: 0.15em;
   white-space: nowrap;
-  background: var(--signal-fade);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-  -webkit-text-fill-color: transparent;
+  color: var(--ion-white);
+  background: none;
+  -webkit-text-fill-color: currentColor;
 }
-/* The signal underline — the brand's signature rule beneath the wordmark. */
+/* Ember rule under the wordmark — Field signature. */
 .brand-wordmark-underline {
   height: 2px;
   width: 100%;
-  border-radius: 2px;
-  background: var(--signal-fade);
-  opacity: 0.85;
+  border-radius: 0;
+  background: var(--plasma);
+  opacity: 1;
 }
 .brand-lockup-compact .brand-wordmark-text { font-size: 19px; letter-spacing: 0.06em; }
 .footer-lockup { margin-bottom: 16px; }

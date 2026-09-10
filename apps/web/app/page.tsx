@@ -140,7 +140,7 @@ export default async function HomePage(): Promise<JSX.Element> {
           <div className="mx-auto max-w-7xl">
             <Reveal>
               <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">
-                Four doors
+                Where to start
               </p>
               <h2 className="mt-3 max-w-3xl font-display text-3xl font-semibold text-ion-white sm:text-4xl">
                 What are you here to do?
