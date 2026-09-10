@@ -22,7 +22,7 @@ export default async function Image() {
           display: "flex",
           flexDirection: "column",
           background:
-            "radial-gradient(120% 80% at 30% 0%, #131022 0%, #060F0E 55%, #060F0E 100%)",
+            "radial-gradient(120% 80% at 30% 0%, #12141A 0%, #08090C 55%, #08090C 100%)",
           color: "#EDE8E0",
           padding: "72px 88px",
           position: "relative",
@@ -38,7 +38,7 @@ export default async function Image() {
             height: 520,
             borderRadius: "50%",
             background:
-              "radial-gradient(50% 50% at 50% 50%, rgba(255,77,46,0.38) 0%, rgba(60,45,110,0.12) 60%, transparent 100%)",
+              "radial-gradient(50% 50% at 50% 50%, rgba(255,77,46,0.38) 0%, rgba(25,28,35,0.35) 60%, transparent 100%)",
             display: "flex",
           }}
         />

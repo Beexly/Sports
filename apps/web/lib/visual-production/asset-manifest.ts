@@ -15,31 +15,30 @@ export interface PlateManifest {
   readonly motion?: string;
 }
 
-const OBSIDIAN = "#060F0E";
+const OBSIDIAN = "#08090C";
 
 export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
-  // Cinematic-entrance backdrop. Calm deep-space still:
+  // Cinematic-entrance backdrop. Field near-black + ember crown.
   "intro-galaxy": {
     gradient:
-      `radial-gradient(48% 42% at 18% 16%, rgba(34,211,238,0.10), transparent 62%), ` +
-      `radial-gradient(70% 45% at 50% 116%, rgba(60,45,110,0.12), transparent 70%), ` +
-      `linear-gradient(180deg, ${OBSIDIAN} 0%, #131022 60%, ${OBSIDIAN} 100%)`,
+      `radial-gradient(70% 45% at 50% 116%, rgba(255,77,46,0.08), transparent 70%), ` +
+      `linear-gradient(180deg, ${OBSIDIAN} 0%, #12141A 60%, ${OBSIDIAN} 100%)`,
     still: "/immersive/intro-galaxy.webp",
   },
-  // Signal Room hero — the new flagship intelligence command room
+  // Signal Room hero
   "signal-room-hero": {
     gradient:
-      `radial-gradient(70% 60% at 78% 18%, rgba(34,211,238,0.10), transparent 60%), ` +
-      `radial-gradient(60% 55% at 12% 80%, rgba(139,92,246,0.14), transparent 65%), ` +
-      `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+      `radial-gradient(70% 60% at 78% 18%, rgba(255,77,46,0.10), transparent 60%), ` +
+      `radial-gradient(60% 55% at 12% 80%, rgba(25,28,35,0.35), transparent 65%), ` +
+      `linear-gradient(180deg, ${OBSIDIAN}, #0A0B0E)`,
     still: "/immersive/signal-room-hero-a.webp",
     motion: "/immersive/signal-room-hero.mp4",
-  },  // The Owner's Command Deck — a single operator watching the company run itself
+  },  // The Owner's Command Deck
   "command-deck": {
     gradient:
       `radial-gradient(70% 60% at 50% 35%, rgba(255,77,46,0.08), transparent 60%), ` +
-      `radial-gradient(50% 50% at 85% 75%, rgba(60,45,110,0.10), transparent 65%), ` +
-      `linear-gradient(180deg, ${OBSIDIAN}, #080a12)`,
+      `radial-gradient(50% 50% at 85% 75%, rgba(25,28,35,0.35), transparent 65%), ` +
+      `linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/command-deck-wide-a.webp",
     motion: "/immersive/command-deck-motion.mp4",
   },
@@ -47,92 +46,92 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
     gradient:
       `radial-gradient(70% 60% at 50% 35%, rgba(255,77,46,0.08), transparent 60%), ` +
       `radial-gradient(50% 50% at 15% 80%, rgba(255,77,46,0.08), transparent 65%), ` +
-      `linear-gradient(180deg, ${OBSIDIAN}, #080a12)`,
+      `linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/command-deck-wide-b.webp",
   },
   // Jarvis is speaking — the intelligence core, alive
   "jarvis-speaking": {
     gradient:
       `radial-gradient(60% 50% at 60% 45%, rgba(255,77,46,0.12), transparent 55%), ` +
-      `radial-gradient(50% 40% at 30% 70%, rgba(60,45,110,0.10), transparent 60%), ` +
-      `linear-gradient(180deg, ${OBSIDIAN}, #080a12)`,
+      `radial-gradient(50% 40% at 30% 70%, rgba(25,28,35,0.35), transparent 60%), ` +
+      `linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/jarvis-speaking-a.webp",
   },
   "jarvis-speaking-alt": {
     gradient:
       `radial-gradient(60% 50% at 55% 50%, rgba(255,77,46,0.10), transparent 55%), ` +
-      `radial-gradient(50% 40% at 25% 75%, rgba(60,45,110,0.08), transparent 60%), ` +
-      `linear-gradient(180deg, ${OBSIDIAN}, #080a12)`,
+      `radial-gradient(50% 40% at 25% 75%, rgba(25,28,35,0.35), transparent 60%), ` +
+      `linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/jarvis-speaking-b.webp",
   },
 
   // Legacy hero — preserved for fallback
   "home-hero-cosmos": {
     gradient:
-      `radial-gradient(70% 60% at 78% 18%, rgba(34,211,238,0.10), transparent 60%), ` +
-      `radial-gradient(60% 55% at 12% 80%, rgba(139,92,246,0.14), transparent 65%), ` +
-      `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+      `radial-gradient(70% 60% at 78% 18%, rgba(201,164,108,0.06), transparent 60%), ` +
+      `radial-gradient(60% 55% at 12% 80%, rgba(25,28,35,0.35), transparent 65%), ` +
+      `linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/home-hero-cosmos.webp",
     motion: "/immersive/home-hero-cosmos.mp4",
   },
   "observatory-market-field": {
     gradient:
-      `radial-gradient(60% 55% at 70% 25%, rgba(34,211,238,0.10), transparent 60%), ` +
+      `radial-gradient(60% 55% at 70% 25%, rgba(201,164,108,0.06), transparent 60%), ` +
       `radial-gradient(55% 50% at 20% 80%, rgba(255,77,46,0.10), transparent 65%), ` +
-      `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+      `linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/observatory-market-field.webp",
     motion: "/immersive/observatory-market-field.mp4",
   },
   "no-bet-stillness": {
     gradient:
       `radial-gradient(70% 80% at 50% 0%, rgba(255,77,46,0.10), transparent 70%), ` +
-      `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+      `linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/no-bet-stillness.webp",
   },
   "today-mission": {
-    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.12), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(201,164,108,0.06), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/today-mission.webp",
     motion: "/immersive/today-mission.mp4",
   },
   "house-belonging": {
-    gradient: `radial-gradient(55% 75% at 50% 0%, rgba(255,77,46,0.12), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    gradient: `radial-gradient(55% 75% at 50% 0%, rgba(255,77,46,0.12), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/house-belonging.webp",
     motion: "/immersive/house-belonging.mp4",
   },
   "academy-path": {
-    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(139,92,246,0.12), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(25,28,35,0.35), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/academy-path.webp",
   },
   "board-command": {
-    gradient: `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    gradient: `linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/board-command.webp",
   },
   "brief-horizon": {
-    gradient: `linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    gradient: `linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/brief-horizon.webp",
   },
   "intelligence-deepsignal": {
-    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.10), transparent 70%), radial-gradient(50% 50% at 22% 80%, rgba(255,77,46,0.08), transparent 65%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(201,164,108,0.06), transparent 70%), radial-gradient(50% 50% at 22% 80%, rgba(255,77,46,0.08), transparent 65%), linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/intelligence-deepsignal.webp",
   },
   "trends-field": {
-    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.11), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(201,164,108,0.06), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/trends-field.webp",
   },
   "performance-grid": {
-    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.10), transparent 70%), radial-gradient(50% 50% at 78% 20%, rgba(139,92,246,0.08), transparent 65%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(201,164,108,0.06), transparent 70%), radial-gradient(50% 50% at 78% 20%, rgba(25,28,35,0.35), transparent 65%), linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/performance-grid.webp",
   },
   "proof-crystal": {
-    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.11), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(201,164,108,0.06), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/proof-crystal.webp",
   },
   "accountability-steady": {
-    gradient: `radial-gradient(55% 80% at 50% 0%, rgba(139,92,246,0.11), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    gradient: `radial-gradient(55% 80% at 50% 0%, rgba(25,28,35,0.35), transparent 70%), linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/accountability-steady.webp",
   },
   "players-constellation": {
-    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(34,211,238,0.10), transparent 70%), radial-gradient(50% 50% at 22% 78%, rgba(255,77,46,0.08), transparent 65%), linear-gradient(180deg, ${OBSIDIAN}, #0a0b12)`,
+    gradient: `radial-gradient(60% 80% at 50% 0%, rgba(201,164,108,0.06), transparent 70%), radial-gradient(50% 50% at 22% 78%, rgba(255,77,46,0.08), transparent 65%), linear-gradient(180deg, ${OBSIDIAN}, #08090C)`,
     still: "/immersive/players-constellation.webp",
   },
 
@@ -144,29 +143,29 @@ export const PLATE_MANIFEST: Readonly<Record<string, PlateManifest>> = {
     gradient:
       `radial-gradient(65% 55% at 50% 108%, rgba(255,77,46,0.10), transparent 65%), ` +
       `radial-gradient(35% 40% at 74% 70%, rgba(255,77,46,0.07), transparent 60%), ` +
-      `linear-gradient(180deg, ${OBSIDIAN} 0%, #131022 55%, #0a0b12 100%)`,
+      `linear-gradient(180deg, ${OBSIDIAN} 0%, #12141A 55%, #08090C 100%)`,
   },
   // Black ice under a cyan/ultraviolet aurora.
   "nhl-icefield": {
     gradient:
       `radial-gradient(70% 45% at 50% 112%, rgba(255,77,46,0.11), transparent 68%), ` +
-      `radial-gradient(45% 40% at 28% 78%, rgba(60,45,110,0.09), transparent 62%), ` +
-      `linear-gradient(180deg, ${OBSIDIAN} 0%, #131022 55%, #090a11 100%)`,
+      `radial-gradient(45% 40% at 28% 78%, rgba(25,28,35,0.35), transparent 62%), ` +
+      `linear-gradient(180deg, ${OBSIDIAN} 0%, #12141A 55%, #090a11 100%)`,
   },
   // Diamond geometry etched in cyan, one magenta flight trace.
   "mlb-diamond": {
     gradient:
       `radial-gradient(55% 50% at 50% 105%, rgba(255,77,46,0.10), transparent 62%), ` +
       `radial-gradient(30% 35% at 68% 62%, rgba(255,77,46,0.06), transparent 58%), ` +
-      `linear-gradient(180deg, ${OBSIDIAN} 0%, #131022 58%, #0a0b12 100%)`,
+      `linear-gradient(180deg, ${OBSIDIAN} 0%, #12141A 58%, #08090C 100%)`,
   },
   // Draft board as star chart: ultraviolet web, plasma-marked nodes.
   "fantasy-constellation": {
     gradient:
-      `radial-gradient(60% 55% at 62% 88%, rgba(60,45,110,0.11), transparent 64%), ` +
+      `radial-gradient(60% 55% at 62% 88%, rgba(25,28,35,0.35), transparent 64%), ` +
       `radial-gradient(40% 45% at 22% 70%, rgba(255,77,46,0.08), transparent 60%), ` +
       `radial-gradient(18% 22% at 78% 55%, rgba(255,77,46,0.07), transparent 55%), ` +
-      `linear-gradient(180deg, ${OBSIDIAN} 0%, #131022 55%, #0a0b12 100%)`,
+      `linear-gradient(180deg, ${OBSIDIAN} 0%, #12141A 55%, #08090C 100%)`,
   },
 };
 
