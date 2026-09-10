@@ -10,18 +10,16 @@ import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { BoardHealthBadge } from "@/components/board/board-health-badge";
 import { BoardSurfaceChip } from "@/components/board/board-surface-chip";
-import { GeneratedPlate } from "@/components/immersive/generated-plate";
-import { SignalRoomAtmosphere } from "@/components/motion/signal-room-atmosphere";
 
 export const metadata: Metadata = {
-  title: "Today's Board",
+  title: "Board",
   description:
-    "Model-signal board, gated games, and calibration posture from Galaxy Sports Edge. Quiet when the slate is empty — free tools stay open. Not a PROVEN track record while eligibility is RED.",
+    "Today's scored markets: what cleared, what we held, and why. Edge rank is a ranking score, not a probability.",
   alternates: { canonical: "/board" },
   openGraph: {
-    title: "Today's Board",
+    title: "Board",
     description:
-      "Model-signal board, gated games, and calibration posture from Galaxy Sports Edge. Quiet when the slate is empty — free tools stay open. Not a PROVEN track record while eligibility is RED.",
+      "Today's scored markets: what cleared, what we held, and why. Edge rank is a ranking score, not a probability.",
   },
 };
 
@@ -72,9 +70,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
 
   return (
     <div className="relative isolate min-h-screen w-full overflow-x-hidden bg-obsidian text-ion-white">
-      <GeneratedPlate assetId="board-command" className="-z-10 opacity-20" />
       <Nav />
-      <SignalRoomAtmosphere mode="ambient" />
       <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         {dbUnreachable && (
           <div className="flex flex-col gap-2 border border-alert/40 bg-alert/10 px-4 py-3 text-sm text-ion-1 sm:flex-row sm:items-center">
@@ -174,43 +170,45 @@ export default async function BoardPage(): Promise<JSX.Element> {
             </div>
           )}
 
-        <section className="border-b border-titanium pb-8">
-          <p className="font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">Today&apos;s Board</p>
+        <section className="border-b border-mineral pb-8">
+          <p className="font-mono text-xs uppercase tracking-[0.22em] text-plasma">The board</p>
           <div className="mt-4 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
             <div>
-              <h1 className="max-w-4xl break-words text-3xl font-black tracking-tight text-white sm:text-5xl">
-                Scored, published, and passed.
+              <h1 className="max-w-4xl break-words text-4xl font-semibold tracking-tight text-ion-white sm:text-6xl" style={{ lineHeight: 0.95 }}>
+                Scored.
+                <br />
+                <span className="text-plasma">Published or held.</span>
               </h1>
-              <p className="mt-4 max-w-2xl text-sm leading-6 text-ion-2">
-                The board shows what is being evaluated now, what cleared the gate today,
-                and what was evaluated without becoming a pick.
+              <p className="mt-4 max-w-2xl text-sm leading-6 text-ion-1">
+                What is scoring now, what cleared the gate, and what we refused with a reason.
+                Edge rank orders the board. It does not predict the final score.
               </p>
             </div>
             <div className="flex min-w-0 flex-col gap-3 sm:items-end">
               <BoardSurfaceChip />
               <BoardHealthBadge meta={stateResult.meta} />
               <div className="flex flex-wrap gap-3 sm:justify-end">
-                <Link href="/pricing" className="btn btn-primary min-h-11 px-5 py-3">
+                <Link href="/pricing" className="btn-primary min-h-11 px-5 py-3">
                   See what Pro unlocks
                 </Link>
                 <Link
-                  href="/accountability"
-                  className="inline-flex min-h-11 items-center justify-center rounded-lg border border-titanium px-5 py-3 text-sm font-bold text-ion-white hover:border-orbital-cyan"
+                  href="/calibration"
+                  className="inline-flex min-h-11 items-center justify-center border border-mineral px-5 py-3 text-sm font-semibold text-ion-1 hover:border-plasma hover:text-ion-white"
                 >
-                  See the receipts
+                  Record
                 </Link>
                 <Link
-                  href="/methodology"
-                  className="inline-flex min-h-11 items-center justify-center rounded-lg border border-titanium px-5 py-3 text-sm font-bold text-ion-white hover:border-orbital-cyan"
+                  href="/intelligence"
+                  className="inline-flex min-h-11 items-center justify-center border border-mineral px-5 py-3 text-sm font-semibold text-ion-1 hover:border-plasma hover:text-ion-white"
                 >
-                  Read methodology
+                  Method
                 </Link>
               </div>
             </div>
           </div>
         </section>
 
-        <section aria-label="Board state" className="grid gap-px sm:grid-cols-2 lg:grid-cols-6">
+        <section aria-label="Board state" className="grid gap-px border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-6">
           <StateTile label="Sports watched" value={String(state.sportsWatched)} />
           <StateTile label="Books polled" value={String(state.booksPolled)} />
           <StateTile label="Open picks" value={String(state.openPicks)} />

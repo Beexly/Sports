@@ -3,8 +3,6 @@ import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal, Stagger } from "@/components/motion/reveal";
-import { Atmosphere } from "@/components/ui/atmosphere";
-import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { ReaderDoorway } from "@/components/house/reader-doorway";
 import { WEEKLY_RITUAL } from "@/lib/house/weekly-ritual";
 import { loadBoardState } from "@/lib/board/state";
@@ -150,13 +148,11 @@ export default async function NflHousePage() {
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">
-      <Atmosphere />
       <Nav />
 
       <main id="main-content" className="flex-1">
         {/* Hero — belonging before odds. */}
         <section className="relative isolate overflow-hidden px-4 pb-10 pt-24 sm:px-6 lg:px-8">
-          <GeneratedPlate assetId="house-belonging" className="-z-20 opacity-60" />
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[28rem]"
