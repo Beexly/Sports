@@ -3,7 +3,6 @@ import { Suspense } from "react";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { SignalCoreLazy } from "@/components/hero/signal-core-lazy";
 import { SignalSpine } from "@/components/motion/signal-spine";
 import { SignalDecode } from "@/components/motion/signal-decode";
 import { ObservatoryBeacon } from "@/components/motion/observatory-beacon";
@@ -17,13 +16,10 @@ import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { MethodologySection } from "@/components/ui/methodology-section";
 import { Reveal } from "@/components/motion/reveal";
 import { WorldSection } from "@/components/world/world-section";
-import { SignalFragmentField } from "@/components/world/signal-fragment-field";
 import { NoBetGateChapter } from "@/components/world/no-bet-gate";
 import { loadBoardState } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { NflverseLabDoor, NflverseLabDoorPlaceholder } from "@/components/landing/nflverse-lab-door";
-import { WaitlistForm } from "@/components/gsn/waitlist-form";
-import { WAITLIST_COPY } from "@/lib/gse/waitlist-copy";
 
 export const dynamic = "force-dynamic";
 
@@ -92,9 +88,6 @@ export default async function HomePage(): Promise<JSX.Element> {
               eager
             />
           )}
-          <div aria-hidden="true" className="absolute inset-0 -z-20">
-            <SignalCoreLazy />
-          </div>
           <div aria-hidden="true" className="gw-starfield -z-10" />
           <div
             aria-hidden="true"
@@ -194,44 +187,29 @@ export default async function HomePage(): Promise<JSX.Element> {
                 href="/fantasy"
               />
             </div>
+            <p className="mt-8 text-center font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">
+              {boardUnavailable ? (
+                <>Live board counts are temporarily unavailable.</>
+              ) : (
+                <>
+                  Right now · <span className="text-ion-white">{cleared} cleared</span> ·{" "}
+                  <span className="text-ion-white">{gated} gated</span> ·{" "}
+                </>
+              )}
+              {settled > 0 ? (
+                <>graded on <span className="text-ion-white">{settled} settled picks</span></>
+              ) : (
+                <>calibration sample building</>
+              )}
+            </p>
           </div>
         </section>
 
-        {/* ── SIGNAL VS NOISE · the one signature teaching beat ───────── */}
-        <WorldSection
-          index="01"
-          id="signal"
-          className="gw-grid-field"
-          eyebrow="Signal vs noise"
-          title="Same market. Two completely different readings."
-          lede="Takes, steam, rumor, stale numbers: what reaches you arrives as argument. The engine starts from the same inputs and structures them into something accountable."
-        >
-          <SignalFragmentField />
-          <p className="mt-10 text-center font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">
-            {boardUnavailable ? (
-              <>Live board counts are temporarily unavailable ·{" "}</>
-            ) : (
-              <>
-                Right now ·{" "}
-                <span className="text-orbital-cyan">{cleared} cleared</span> ·{" "}
-                <span className="text-plasma">{gated} gated</span> ·{" "}
-              </>
-            )}
-            {settled > 0 ? (
-              <>graded on <span className="text-ion-white">{settled} settled picks</span> ·{" "}</>
-            ) : (
-              <>calibration sample building ·{" "}</>
-            )}
-            <Link href="/accountability" className="text-orbital-cyan underline-offset-4 hover:text-ion-white hover:underline">
-              see the receipts
-            </Link>
-          </p>
-        </WorldSection>
-
         {/* ── NO-BET · restraint is a first-class output ──────────────── */}
         <WorldSection
-          index="02"
+          index="01"
           id="gate"
+          className="neb-band"
           eyebrow="The No-Bet Gate"
           title={<>No-Bet is not absence. It is <span className="gw-chrome-ice">intelligence</span>.</>}
           lede="The edge is not the pick. The edge is knowing what not to trust. Restraint is a decision this system makes on purpose, logged with reasons like any other."
@@ -241,7 +219,7 @@ export default async function HomePage(): Promise<JSX.Element> {
         </WorldSection>
 
         {/* ── PROOF STRIP · one band, routes to the proof ─────────────── */}
-        <section className="border-y border-orbital-cyan/20 bg-orbital-cyan/[0.04] px-4 py-12 sm:px-6 lg:px-8">
+        <section className="neb-band border-y border-mineral px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-orbital-cyan">
@@ -261,17 +239,8 @@ export default async function HomePage(): Promise<JSX.Element> {
               <Link href="/proof" className="btn btn-primary whitespace-nowrap">
                 See the sealed record
               </Link>
-              <Link href="/engine" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
-                Watch it commit →
-              </Link>
-              <Link href="/verify" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
+              <Link href="/verify" className="text-sm font-semibold text-ion-1 hover:text-ion-white">
                 Check a receipt →
-              </Link>
-              <Link href="/clv" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
-                Closing line value →
-              </Link>
-              <Link href="/performance" className="text-sm font-semibold text-orbital-cyan hover:text-ion-white">
-                Calibration →
               </Link>
             </div>
           </div>
@@ -308,27 +277,6 @@ export default async function HomePage(): Promise<JSX.Element> {
           </div>
         </section>
 
-        {/* Founding waitlist: public lead capture (API /api/waitlist; no gate flip) */}
-        <section
-          id="founding-waitlist"
-          data-testid="homepage-waitlist"
-          className="gw-nebula-deep border-t border-mineral px-4 py-16 sm:px-6 lg:px-8"
-        >
-          <div className="mx-auto max-w-xl">
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">
-              {WAITLIST_COPY.eyebrow}
-            </p>
-            <h2 className="mt-3 text-2xl font-semibold tracking-tight text-ion-white sm:text-3xl">
-              {WAITLIST_COPY.headline}
-            </h2>
-            <p className="mt-3 text-sm leading-6 text-ion-1 sm:text-base">
-              {WAITLIST_COPY.subhead}
-            </p>
-            <div className="mt-8">
-              <WaitlistForm />
-            </div>
-          </div>
-        </section>
       </main>
       <ObservatoryBeacon />
       {/* FE-17: restricted to the home hero, not mounted globally.
