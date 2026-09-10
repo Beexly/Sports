@@ -96,6 +96,7 @@ the only copy, and nobody else can verify or build on it.
 | H-P | Triage the 73 CI test failures | claude | DONE | #434: every cluster root-caused; fixes shipped for checkout, copy, nflverse, waitlist, kill-switches, PAVA |
 | C-5 | PAVA forward-violation bug in calibration core | claude | DONE | 9627379 |
 | H-Q | Fix remaining singleton test failures (triage notes in v7 handoff) | hermes | DONE | 14b74b5c, merged via 3e997adf; full apps/web suite ZERO failures locally for the first time this session |
+| H-R | NEBULA v7 full reskin + Brier-wording cut (owner-ordered overnight redesign) | hermes | DONE | 9dd470802 (plain-language proof copy) + 9b380eb09 (reskin) + 73205dce5 + 1fe63dbc8 + a39668b5a (main merge), merged as 94706a839 via #754; typecheck 0, lint 0, full suite 12949 pass / 8 fail all triaged Windows-local-env (backslash paths, QUIVERAI env key, 60s scan timeouts passing solo) except homepage-doctrine narrowed to evidence-single-family per owner-approved display faces |
 | F-4 | Authorize one-time Hermes push of its local sprint branch (8 UNPUSHED deliverables, single-copy risk) | founder | DONE | 63e84c32 (sprint-backup tip) + cd5086f7 (h-m tip) both on origin, independently verified; grant spent |
 | C-1 | vercel.json guard drift + drift test | claude | DONE | 657a7f1 |
 | C-2 | Land v5.2.6 calibration evidence | claude | DONE | 175c44f |
