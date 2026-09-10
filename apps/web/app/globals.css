@@ -413,24 +413,19 @@
    explain signal / risk / trust / gravity — never decorate.
    ════════════════════════════════════════════════════════════════════ */
 
-/* Void + nebula atmosphere — the section canvas. Never flat black.
-   NEBULA v7: violet panels breathe, ember is the single crown. */
+/* Void + field atmosphere — the section canvas. Never flat black.
+   FIELD: quiet near-black, one ember crown. No violet nebula. */
 .gw-nebula {
   position: relative;
   background:
-    radial-gradient(ellipse 90% 55% at 18% 0%, rgba(60,45,110, 0.45), transparent 62%),
-    radial-gradient(ellipse 70% 45% at 86% 18%, rgba(255,77,46, 0.10), transparent 60%),
-    radial-gradient(ellipse 60% 60% at 50% 110%, rgba(60,45,110, 0.30), transparent 65%),
-    radial-gradient(ellipse 45% 35% at 70% 65%, rgba(27, 21, 48, 0.9), transparent 70%),
-    linear-gradient(180deg, var(--void) 0%, #131022 50%, var(--void) 100%);
+    radial-gradient(ellipse 70% 50% at 80% 12%, rgba(255, 77, 46, 0.08), transparent 58%),
+    linear-gradient(180deg, var(--void) 0%, #12141A 50%, var(--void) 100%);
 }
 .gw-nebula-deep {
   position: relative;
   background:
-    radial-gradient(ellipse 100% 65% at 50% -10%, rgba(60,45,110, 0.5), transparent 65%),
-    radial-gradient(ellipse 60% 45% at 88% 30%, rgba(255,77,46, 0.12), transparent 60%),
-    radial-gradient(ellipse 55% 40% at 8% 90%, rgba(60,45,110, 0.35), transparent 60%),
-    radial-gradient(ellipse 80% 60% at 30% 55%, rgba(27, 21, 48, 0.9), transparent 75%),
+    radial-gradient(ellipse 80% 55% at 70% 20%, rgba(255, 77, 46, 0.10), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 10% 90%, rgba(25, 28, 35, 0.9), transparent 65%),
     var(--void);
 }
 

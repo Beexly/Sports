@@ -107,7 +107,7 @@ export default function ToolsHubPage(): JSX.Element {
             </Reveal>
             <Reveal delay={90}>
               <h1 className="mt-4 font-display text-display-xl text-balance tracking-tight text-ion-white">
-                Math you can read, not math you have to trust.
+                Six tools. The formula on every result.
               </h1>
             </Reveal>
             <Reveal delay={180}>

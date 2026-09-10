@@ -102,9 +102,9 @@ const config: Config = {
 
         // ── RETIRED CYAN → bone-1 ──────────────────────────────
         "ds-cyan": {
-          DEFAULT: "#C9D4CE",
-          glow: "#E4EBE7",
-          deep: "#A7B8B2",
+          DEFAULT: "#C4BFB6",
+          glow: "#EDE8E0",
+          deep: "#8F8A82",
         },
         lime: {
           DEFAULT: "#FF4D2E",
@@ -128,7 +128,7 @@ const config: Config = {
         // text is correct under Law 2, not a bug.
         //
         // Genuine system failure is NOT an outcome — see `alarm` below.
-        // NEBULA v7 (owner-approved 2026-09-10) keeps the semantic ladder:
+        // FIELD (owner-approved 2026-09-10) keeps the semantic ladder:
         // verify/alert carry hue for settlement + data states only, never brand.
         // This supersedes the Law-2 neutralization; `alarm` (system failure)
         // stays as the louder tier.
@@ -185,11 +185,11 @@ const config: Config = {
           DEFAULT: "#0E1320",  // body — 17.46:1 on paper
           1:    "#3A4356",     // secondary — 9.34:1 on paper
           2:    "#5B6678",     // muted meta — 5.47:1 on paper
-          // ── legacy DARK ramp — repointed NEBULA v7 ──
+          // ── legacy DARK ramp — repointed FIELD ──
           50:   "#EDE8E0",
-          100:  "#C9D4CE",
-          200:  "#C9D4CE",
-          300:  "#A7B8B2",
+          100:  "#C4BFB6",
+          200:  "#C4BFB6",
+          300:  "#8F8A82",
           400:  "#5E6878",
           500:  "#3D4555",
           600:  "#2E3849",
@@ -204,12 +204,12 @@ const config: Config = {
         // a legacy 3-tier alias so it can't silently diverge again.
         confidence: {
           high: "#FF4D2E",     // = --conf-elite (ember)
-          mid:  "#C9D4CE",     // = --conf-solid (fog)
-          low:  "#A7B8B2",     // = --conf-lean (mist)
+          mid:  "#C4BFB6",     // = --conf-solid (fog)
+          low:  "#8F8A82",     // = --conf-lean (mist)
         },
         risk: {
           low:  "#5FD9A3",
-          mid:  "#C9D4CE",
+          mid:  "#C4BFB6",
           high: "#FF6470",
         },
       },
@@ -275,7 +275,7 @@ const config: Config = {
         float: "0 8px 32px -8px rgba(0,0,0,0.7)",
       },
       backgroundImage: {
-        // NEBULA v7: the signature gradient is retired. signal-fade resolves
+        // FIELD: the signature gradient is retired. signal-fade resolves
         // to flat ember (rules/wordmark accents); atmosphere bands carry the
         // violet depth instead of decorative color washes.
         "signal-fade":
