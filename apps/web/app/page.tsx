@@ -47,7 +47,7 @@ export default async function HomePage(): Promise<JSX.Element> {
 
   const tickerItems = [
     ...state.publishedToday.slice(0, 8).map(
-      (p) => `${p.matchup} · ${p.market} · cleared · edge ${p.edgeIndex ?? "—"}`,
+      (p) => `${p.matchup} · ${p.market} · cleared · edge ${p.edgeIndex ?? "n/a"}`,
     ),
     ...state.gatedTodayRows.slice(0, 6).map(
       (row) => `${row.matchup} · held · ${row.gateReason ?? "gate"}`,
@@ -118,8 +118,8 @@ export default async function HomePage(): Promise<JSX.Element> {
             <Reveal delay={280}>
               <dl className="mt-12 grid max-w-2xl grid-cols-2 gap-px border border-mineral bg-mineral sm:grid-cols-4">
                 {[
-                  { k: "Cleared", v: boardUnavailable ? "—" : String(cleared) },
-                  { k: "Held", v: boardUnavailable ? "—" : String(gated) },
+                  { k: "Cleared", v: boardUnavailable ? "n/a" : String(cleared) },
+                  { k: "Held", v: boardUnavailable ? "n/a" : String(gated) },
                   { k: "Settled n", v: settled > 0 ? String(settled) : "building" },
                   { k: "Verify", v: "public" },
                 ].map((cell) => (
@@ -206,7 +206,7 @@ export default async function HomePage(): Promise<JSX.Element> {
           className="neb-band"
           eyebrow="The hold"
           title={<>A held row is not a blank. It is <span className="text-plasma">the finding</span>.</>}
-          lede="Knowing what not to trust is the product. Four gates keep weak markets off the board, and every pass is logged in public — same as a published pick."
+          lede="Knowing what not to trust is the product. Four gates keep weak markets off the board, and every pass is logged in public, same as a published pick."
           tone="deep"
         >
           <NoBetGateChapter />
@@ -267,7 +267,7 @@ export default async function HomePage(): Promise<JSX.Element> {
             <h2 className="text-2xl font-semibold text-ion-white">The model can point. The call stays yours.</h2>
             <p className="mt-3 text-sm leading-6 text-ion-1">
               Research, not certainty. We get better by adding settled rows and clearer
-              uncertainty — not louder claims.
+              uncertainty, not louder claims.
             </p>
             <RiskDisclosure variant="compact" includePastPerformance className="mt-5 text-ion-1" />
           </div>
