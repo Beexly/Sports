@@ -10,7 +10,10 @@ import { usePathname } from "next/navigation";
  */
 export function NavActiveLink({ href, title, children }: { href: string; title?: string; children: React.ReactNode }) {
   const pathname = usePathname();
-  const active = pathname === href || pathname.startsWith(`${href}/`);
+  // usePathname() is null outside a router context (a static render, a route
+  // that has not resolved yet, a test render). Treat that as "not active"
+  // instead of throwing on pathname.startsWith.
+  const active = pathname ? pathname === href || pathname.startsWith(`${href}/`) : false;
   return (
     <Link
       href={href}

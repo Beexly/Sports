@@ -6,7 +6,13 @@ import { NavAuth, NavAuthFallback } from "@/components/ui/nav-auth";
 
 /**
  * Field IA — one door per job. Board is THE board.
- * Do not nest Today / Today's Board / Today's Picks / House in one dropdown.
+ *
+ * The desktop bar mirrors components/ui/mobile-nav.tsx section for section
+ * (Board, Players, Intelligence, Fantasy, GSN, Proof). The two menus are read
+ * by the same integrity guard, and a desktop bar that quietly drops a door the
+ * mobile panel still carries is how a route becomes unreachable on desktop
+ * only. Keep them in step: a door added or removed here is added or removed
+ * there in the same change.
  */
 type NavItem = { label: string; href: string; desc: string };
 type NavGroup = { heading?: string; items: readonly NavItem[] };
@@ -20,10 +26,20 @@ const BOARD_MENU: readonly NavGroup[] = [
   },
 ];
 
-const METHOD_MENU: readonly NavGroup[] = [
+const PLAYERS_MENU: readonly NavGroup[] = [
   {
     items: [
-      { label: "How it works", href: "/intelligence", desc: "Inside the scoring pass" },
+      { label: "Player lab", href: "/players", desc: "Every player, every signal" },
+      { label: "The NFL house", href: "/house", desc: "The NFL hub" },
+    ],
+  },
+];
+
+const INTELLIGENCE_MENU: readonly NavGroup[] = [
+  {
+    items: [
+      { label: "Engines", href: "/intelligence/engines", desc: "Inside the scoring pass" },
+      { label: "Galaxy Twin", href: "/observatory", desc: "Market map" },
       { label: "Methodology", href: "/methodology", desc: "Factors, data rights, gates" },
       { label: "Free tools", href: "/tools", desc: "EV, no-vig, parlay, CLV — live calculators" },
     ],
@@ -49,6 +65,17 @@ const FANTASY_MENU: readonly NavGroup[] = [
   },
 ];
 
+const GSN_MENU: readonly NavGroup[] = [
+  {
+    heading: "GSN",
+    items: [
+      { label: "The Beat", href: "/the-beat", desc: "Cinematic broadcast" },
+      { label: "The Studio", href: "/fantasy/studio", desc: "Production desk" },
+      { label: "The Academy", href: "/academy", desc: "Learn the signal" },
+    ],
+  },
+];
+
 /**
  * Nav — global bar. Auth rail is Suspense-split so public pages prerender.
  */
@@ -61,11 +88,13 @@ export function Nav() {
 
           <nav className="nav-links" aria-label="Primary">
             <NavMenu label="Board" href="/board" groups={BOARD_MENU} />
+            <NavMenu label="Players" href="/players" groups={PLAYERS_MENU} />
+            <NavMenu label="Intelligence" href="/intelligence/engines" groups={INTELLIGENCE_MENU} />
+            <NavMenu label="Fantasy" href="/fantasy" groups={FANTASY_MENU} />
+            <NavMenu label="GSN" href="/the-beat" groups={GSN_MENU} />
             <NavActiveLink href="/calibration" title="Record: calibration, CLV, receipts">
               Record
             </NavActiveLink>
-            <NavMenu label="Method" href="/intelligence" groups={METHOD_MENU} />
-            <NavMenu label="Fantasy" href="/fantasy" groups={FANTASY_MENU} />
             <NavActiveLink href="/verify" title="Recompute a sealed receipt">
               Verify
             </NavActiveLink>
