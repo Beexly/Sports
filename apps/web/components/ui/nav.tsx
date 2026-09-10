@@ -5,9 +5,8 @@ import { NavMenu } from "@/components/ui/nav-menu";
 import { NavAuth, NavAuthFallback } from "@/components/ui/nav-auth";
 
 /**
- * Field IA — five destinations, matching the condensed footer.
- * Board · Record · Method · Fantasy · Plans
- * Deep product routes stay on their hubs; the bar is not a sitemap.
+ * Field IA — one door per job. Board is THE board.
+ * Do not nest Today / Today's Board / Today's Picks / House in one dropdown.
  */
 type NavItem = { label: string; href: string; desc: string };
 type NavGroup = { heading?: string; items: readonly NavItem[] };
@@ -15,10 +14,8 @@ type NavGroup = { heading?: string; items: readonly NavItem[] };
 const BOARD_MENU: readonly NavGroup[] = [
   {
     items: [
-      { label: "Today's Board", href: "/board", desc: "Scored markets, cleared and held" },
-      { label: "Today's Picks", href: "/picks", desc: "Every pick, with the reasoning attached" },
-      { label: "The House", href: "/house", desc: "NFL hub: odds, picks & matchups" },
-      { label: "Today", href: "/today", desc: "Everything happening today, in one view" },
+      { label: "The board", href: "/board", desc: "Scored today · cleared · held" },
+      { label: "Picks with reasoning", href: "/picks", desc: "Published picks and factor notes" },
     ],
   },
 ];
@@ -27,9 +24,8 @@ const METHOD_MENU: readonly NavGroup[] = [
   {
     items: [
       { label: "How it works", href: "/intelligence", desc: "Inside the scoring pass" },
-      { label: "Engines", href: "/intelligence/engines", desc: "Every engine we run" },
       { label: "Methodology", href: "/methodology", desc: "Factors, data rights, gates" },
-      { label: "Free tools", href: "/tools", desc: "EV, no-vig, parlay, CLV calculators" },
+      { label: "Free tools", href: "/tools", desc: "EV, no-vig, parlay, CLV — live calculators" },
     ],
   },
 ];

@@ -13,7 +13,6 @@ import {
 } from "@/lib/brand";
 import { CommandPalette } from "@/components/ui/command-palette";
 import { SentryClientInit } from "@/components/observability/SentryClientInit";
-import { PageExplainerAuto } from "@/components/explainers/page-explainer";
 import {
   shouldRenderCloudflareAnalytics,
   shouldRenderMicrosoftClarity,
@@ -239,7 +238,7 @@ export default function RootLayout({
             interference effect that claims uncertainty without a data signal
             contradict "not AI, math you can read" and rule 1 (no fabricated
             signals). The components remain for /cockpit use. */}
-        <PageExplainerAuto />
+        {/* Field: Nova explainer launcher hidden � chrome fought the instrument look */}
         <SentryClientInit />
 
         {/* ── Free analytics (prod-only, cookieless / consent-free) ────────── */}

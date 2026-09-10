@@ -40,6 +40,17 @@ FIELD copy rules (public surfaces):
 FIELD atmosphere: `gw-nebula` / `gw-nebula-deep` are quiet near-black + one ember crown.
 Do not reintroduce violet radials (`rgba(60,45,110` / `#131022` / `#1B1530`).
 
+
+**NEXT LEVEL 2026-09-10 (22:30 UTC):** Homepage rebuilt without GeneratedPlate /
+SentientWeather / GalaxyCursor / SignalSpine / Nova launcher (those fight Field).
+Cinematic intro = FieldCinematicIntro (canvas, once/session, skippable). Hero =
+FieldHeroCanvas + Noise/Signal + three doors (Board / Record / Verify). Live
+FieldBoardTicker from real board rows. Calm FieldRecordPanel wrapping
+CalibrationCurve. Board page: plate + atmosphere removed; title "Scored.
+Published or held." Nav Board menu collapsed to The board + Picks (no House/
+Today in the dropdown). House = NFL hub, plate removed. Brand kit:
+Downloads/gse-brand-kit (SVG mark + lockup + X/YT/FB headers).
+
 **Audit 2026-09-10 (this pass):** live site verified Field (Noise hero, condensed footer, no
 MATH YOU CAN READ, no starfield). Remaining NEBULA aliases in tokens/tailwind repointed to Field
 hexes; nav condensed to five destinations; tools/intelligence public "math you can read" strings
