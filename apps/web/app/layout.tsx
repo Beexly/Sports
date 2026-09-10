@@ -66,7 +66,7 @@ const wordmarkFont = Chakra_Petch({
 });
 
 export const viewport: Viewport = {
-  themeColor: "#060F0E",
+  themeColor: "#08090C",
   width: "device-width",
   initialScale: 1,
 };
