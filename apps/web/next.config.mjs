@@ -93,6 +93,10 @@ const nextConfig = {
       { source: "/players/qbr", destination: "/players?view=qbr", permanent: false },
       { source: "/players/snaps", destination: "/players?view=snaps", permanent: false },
       { source: "/players/trenches", destination: "/players?view=trenches", permanent: false },
+      // C-332: the Edge Map / Galaxy Twin surface is retired from the product for now. The
+      // page remains in the tree so this is reversible, but nothing links it and the
+      // pricing catalog no longer calls it live.
+      { source: "/observatory", destination: "/board", permanent: false },
     ];
   },
   async headers() {
