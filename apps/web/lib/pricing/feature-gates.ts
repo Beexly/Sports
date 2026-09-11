@@ -148,7 +148,7 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
     key: "galaxy-twin",
     displayName: "Galaxy Twin / Edge Map",
     customerExplanation: "A visual map of how the game, market, and signal environment are changing.",
-    internalNote: "RETIRED FROM THE PRODUCT 2026-09-11 (founder): the surface is not functional and is removed from both navs and the home grid for now. This entry previously read status live with freePreview true and a teaser lock, which advertised a working feature that is not one. Set to disabled/hidden so the catalog stops claiming it. RESTORING IT IS THREE EDITS: this entry back to live/teaser, the two nav lines in components/ui/nav.tsx and components/ui/mobile-nav.tsx, and the home card in components/home/intelligence-layer.tsx; the /observatory route and the Slate Twin components were deliberately left in the tree.",
+    internalNote: "RETIRED FROM THE PRODUCT 2026-09-11 (founder): the surface is not functional and is removed from both navs and the home grid for now. This entry previously read status live with freePreview true and a teaser treatment, which advertised a working feature that is not one. Set to disabled/hidden so the catalog stops claiming it. RESTORING IT IS THREE EDITS: this entry back to live/teaser, the two nav lines in components/ui/nav.tsx and components/ui/mobile-nav.tsx, and the home card in components/home/intelligence-layer.tsx; the /observatory route and the Slate Twin components were deliberately left in the tree.",
     minTier: "ELITE", status: "disabled", freePreview: false, lockBehaviorForFree: "hidden", upgradeCtaTier: "ELITE",
   },
   {
