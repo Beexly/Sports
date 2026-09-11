@@ -28,7 +28,6 @@ import {
 import { BRAND_NAME } from "@/lib/brand";
 import { loadProofOfRecord } from "@/lib/proof/load-proof-of-record";
 import type { ProofPickRow } from "@/lib/proof/load-proof-of-record";
-import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 export const dynamic = "force-dynamic";
 
@@ -121,8 +120,8 @@ export default async function ProofOfRecordPage() {
   const hasLedger = board.picks.length > 0;
 
   return (
-    <div className="relative isolate flex min-h-screen flex-col bg-carbon">
-      <GeneratedPlate assetId="proof-crystal" className="-z-10 opacity-20" />
+    // Same Field atmosphere as /verify and /calibration — one trust room.
+    <div className="relative isolate flex min-h-screen flex-col bg-carbon gw-nebula">
       <Nav />
 
       <main id="main-content" className="flex-1 px-4 py-12 sm:px-6 lg:px-8">

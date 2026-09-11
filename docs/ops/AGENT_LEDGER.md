@@ -449,7 +449,9 @@ the only copy, and nobody else can verify or build on it.
 
 | A-2 | ASTRA owner item 11: fix the /board vs /picks information-architecture failure. The owner could not tell the two apart; /picks literally wore the eyebrow "Today's Board". Renamed that eyebrow to "Published picks", rewrote nav labels (desktop + mobile) to state the job of each door, added one-line cross-links on both pages, and updated metadata titles/descriptions. | claude | DONE | f0f2ba13a; typecheck 0, 18/18 nav + plain-language tests |
 
-| A-3 | ASTRA owner item 8: strip insider jargon from customer-facing intelligence surfaces. The JSON button label is gone (now "Live feed" / "Pro feed"); raw API-path links keep the route but the visible label is plain; engine titles and More-Engines summaries rewritten in plain language. Technical terms (DAKOTA, ANY/A, WOPR, CPOE, PROE) stay only inside the explainer rail, which is the "show me the math" surface. | claude | DONE | — |
+| A-3 | ASTRA owner item 8: strip insider jargon from customer-facing intelligence surfaces. The JSON button label is gone (now "Live feed" / "Pro feed"); raw API-path links keep the route but the visible label is plain; engine titles and More-Engines summaries rewritten in plain language. Technical terms (DAKOTA, ANY/A, WOPR, CPOE, PROE) stay only inside the explainer rail, which is the "show me the math" surface. | claude | DONE | 9a7c84c95; typecheck 0, lint 0, 49/49 brand + public-copy tests |
+
+| A-4 | ASTRA owner item 3: replace the proof-crystal background on the trust surfaces. /verify, /calibration, /proof and /engine all dropped the GeneratedPlate proof-crystal.webp (owner: "hideous, doesn't match"). They now share one Field atmosphere (gw-nebula: quiet near-black + one ember crown). /calibration also lost the extra gw-nebula-deep wash that made the two trust pages not even match each other. | claude | DONE | — |
 
 <!-- LEDGER:END -->
 
