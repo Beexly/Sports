@@ -78,5 +78,55 @@ describe("loadPublicCalibrationReport — the sample is the whole eligible popul
     expect(mocks.pickFindMany).not.toHaveBeenCalled();
     expect(report.meta.gated).toBe(true);
     expect(report.data.sampleSize).toBe(0);
+    // Nothing was read, so nothing was excluded — stated, not left undefined.
+    expect(report.data.excludedInPlay).toBe(0);
+  });
+
+  /**
+   * C-302. C-298 excluded in-play-generated rows from the ELIGIBILITY sample and
+   * C-299 stopped the generator minting new ones, but this reader did not apply
+   * it — so with the performance gate open a pick priced off a live line still
+   * moved a published number. The withheld row below is a HIGH-confidence WIN on
+   * purpose: it is the row that would IMPROVE the record, so withholding it is
+   * not self-serving, and the kept row is the losing one.
+   */
+  it("withholds a row generated at or after kickoff, and discloses the count with its denominator", async () => {
+    const inPlay = new Date("2026-09-10T23:30:00Z");
+    const kickoff = new Date("2026-09-10T23:00:00Z");
+    mocks.pickFindMany.mockResolvedValue([
+      {
+        ...settledPick(85, "WIN", "in-play"),
+        generatedAt: inPlay,
+        game: { sport: { name: "MLB" }, dataQualityScore: 80, commenceTime: kickoff },
+      },
+      {
+        ...settledPick(85, "LOSS", "pre-game"),
+        generatedAt: new Date("2026-09-10T12:00:00Z"),
+        game: { sport: { name: "MLB" }, dataQualityScore: 80, commenceTime: kickoff },
+      },
+    ]);
+
+    const report = await loadPublicCalibrationReport();
+
+    expect(report.data.sampleSize).toBe(1);
+    expect(report.data.population.decided).toBe(1);
+    expect(report.data.excludedInPlay).toBe(1);
+    expect(report.data.inPlayNote).toMatch(/Excluded 1 of 2 settled rows as in-play/);
+    // Never dropped by outcome: the excluded row is the WIN, the scored row the LOSS.
+    expect(report.data.buckets.find((b) => b.label === "80-89")?.wins).toBe(0);
+  });
+
+  it("keeps a row whose clocks cannot be read, and reports zero exclusions", async () => {
+    // Absent means "cannot tell". Dropping on a missing timestamp would shrink
+    // every published denominator by however much the data happened to be missing.
+    mocks.pickFindMany.mockResolvedValue([
+      { ...settledPick(85, "WIN", "no-clocks"), generatedAt: null, game: { sport: { name: "MLB" }, dataQualityScore: 80, commenceTime: null } },
+    ]);
+
+    const report = await loadPublicCalibrationReport();
+
+    expect(report.data.sampleSize).toBe(1);
+    expect(report.data.excludedInPlay).toBe(0);
+    expect(report.data.inPlayNote).toMatch(/Excluded 0 of 1 settled rows as in-play/);
   });
 });
