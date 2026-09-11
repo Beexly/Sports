@@ -115,7 +115,7 @@ export const BRAND_PILLARS = [
  */
 export const SURFACES = {
   picks: {
-    label: "Today's Board",
+    label: "Published picks",
     tagline: "Published picks with reasoning attached.",
     blurb:
       "Published signals that cleared the board, price, timing, and discipline checks.",

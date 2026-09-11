@@ -66,7 +66,7 @@ export default async function Image() {
           }}
         >
           <div style={{ width: 12, height: 12, borderRadius: 999, background: "#FF4D2E", display: "flex" }} />
-          Draft season · Best Ball
+          DFS &amp; season · Best Ball
         </div>
 
         <div
