@@ -33,6 +33,11 @@ import {
   marketPSourcesFromBySource,
   type OddsTableMarketPStats,
 } from "@/lib/calibration/publish-time-market-p-loader";
+import {
+  evaluateMarketGate,
+  type MarketKey,
+  type MarketGateInputs,
+} from "@/lib/ops/per-market-gate";
 
 export interface PickRowForCal {
   readonly confidence: number | null;
@@ -130,6 +135,19 @@ export type CalibrationBreakdowns = {
   readonly byMarket: CalibrationSliceMetrics[];
   readonly brierCi95: MetricCi95 | null;
   readonly eceCi95: MetricCi95 | null;
+  /**
+   * ADDITIVE (ASTRA A-12, 2026-09-14): per-market gate diagnostics from
+   * lib/ops/per-market-gate.ts. Reports the verdict each market WOULD get
+   * under the measured null-band ECE + RES floors. Does NOT replace the
+   * existing eligibility gate and never flips a floor. The known live finding
+   * this surfaces: TOTAL fails on resolution (0.00119 vs floor 0.0036) while
+   * passing every legacy floor.
+   */
+  readonly marketGates: readonly {
+    readonly market: string;
+    readonly status: "PASS" | "FAIL" | "INSUFFICIENT";
+    readonly reasons: readonly string[];
+  }[];
 };
 
 /**
@@ -146,12 +164,39 @@ export function computeCalibrationBreakdowns(
   // (the C-317 flip: identical metrics, opposite verdict two runs apart).
   const ordered = canonicalSampleOrder(taggedSamples);
   const cis = bootstrapCalibrationMetricCis(ordered, options);
+  const byMarket = sliceCalibrationMetrics(ordered, (s) => s.pickType);
+  // ADDITIVE diagnostic: per-market gate verdicts from the measured null-band
+  // ECE + RES floors. Never replaces the eligibility gate; never flips a floor.
+  const marketGates = byMarket
+    .filter((slice): slice is CalibrationSliceMetrics & { key: MarketKey } =>
+      slice.key === "MONEYLINE" || slice.key === "SPREAD" || slice.key === "TOTAL" || slice.key === "PROPS",
+    )
+    .map((slice) => {
+      const inputs: MarketGateInputs = {
+        n: slice.n,
+        ece: slice.ece,
+        eceDebiased: slice.eceDebiased,
+        brier: slice.brier,
+        reliability: slice.murphyRel,
+        resolution: slice.murphyRes,
+        // hitRate is the observed win rate on this market's own rows — the
+        // no-skill base rate the Brier floor is derived from at evaluation time.
+        baseRate: slice.hitRate,
+      };
+      const verdict = evaluateMarketGate(slice.key, inputs);
+      return {
+        market: slice.key,
+        status: verdict.status,
+        reasons: verdict.reasons,
+      };
+    });
   return {
     bySport: sliceCalibrationMetrics(ordered, (s) => s.sportKey),
     byModelVersion: sliceCalibrationMetrics(ordered, (s) => s.modelVersion),
-    byMarket: sliceCalibrationMetrics(ordered, (s) => s.pickType),
+    byMarket,
     brierCi95: cis?.brierCi95 ?? null,
     eceCi95: cis?.eceCi95 ?? null,
+    marketGates,
   };
 }
 
@@ -239,6 +284,7 @@ export function buildDurableMetricsFromSamples(input: {
     bySport: breakdowns?.bySport,
     byModelVersion: breakdowns?.byModelVersion,
     byMarket: breakdowns?.byMarket,
+    marketGates: breakdowns?.marketGates,
     brierCi95: breakdowns?.brierCi95 ?? null,
     eceCi95: breakdowns?.eceCi95 ?? null,
     notes: [

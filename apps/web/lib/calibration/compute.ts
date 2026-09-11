@@ -7,6 +7,7 @@
  */
 
 import { clopperPearsonInterval } from "@/lib/performance/clopper-pearson-interval";
+import { computeSkillMetrics, type SkillMetrics } from "@/lib/calibration/skill-metrics";
 
 export type CalibrationProposalKind =
   | "CONFIDENCE_SHIFT"
@@ -114,6 +115,13 @@ export interface CalibrationReport {
   readonly headlineClopperPearsonHigh: number | null;
   readonly brierScore: number | null;
   readonly discrimination: CalibrationDiscrimination;
+  /**
+   * ADDITIVE (ASTRA A-12, 2026-09-14): BSS, NLL, Murphy split, and the
+   * null-band ECE diagnostic. Never a floor, never a gate, never a claim —
+   * the honest skill picture next to the existing Brier/ECE so a reader (or a
+   * future founder-approved gate) can see whether the model beats no-skill.
+   */
+  readonly skill: SkillMetrics | null;
   readonly note: string;
   readonly disclaimer: string;
 }
@@ -402,6 +410,17 @@ export function computeCalibration(input: readonly CalibrationPickInput[] = []):
         )
       : null;
 
+  // ADDITIVE skill picture (BSS / NLL / Murphy / null-band ECE). Pure, no floors.
+  const skill =
+    settled.length > 0
+      ? computeSkillMetrics(
+          settled.map((row) => ({
+            p: expectedFromConfidence(row.pick.confidence),
+            y: row.outcome === 1 ? (1 as const) : (0 as const),
+          })),
+        )
+      : null;
+
   return {
     buckets,
     quantileBuckets,
@@ -412,6 +431,7 @@ export function computeCalibration(input: readonly CalibrationPickInput[] = []):
     headlineClopperPearsonHigh: headline ? round(headline.high) : null,
     brierScore,
     discrimination,
+    skill,
     note:
       settled.length === 0
         ? "No settled canonical picks were provided. Calibration remains collecting."
