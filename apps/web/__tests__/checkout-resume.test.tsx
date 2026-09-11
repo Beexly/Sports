@@ -14,7 +14,9 @@ import {
  * SubscribeButton sends an unauthenticated visitor to /auth/signin, which
  * unmounts the pricing page and drops all React state. Without persisting
  * the intent first, the visitor lands back on a blank form and has to
- * re-pick a tier, re-toggle billing interval, and retype their DOB.
+ * re-pick a tier and re-toggle billing interval.
+ *
+ * Age gate / DOB removed 2026-09-14.
  */
 
 const pushMock = vi.fn();
@@ -36,32 +38,31 @@ beforeEach(() => {
 
 describe("checkout-resume storage helpers", () => {
   it("round-trips a saved intent", () => {
-    saveCheckoutIntent({ tier: "PRO", interval: "year", dateOfBirth: "1990-01-01" });
+    saveCheckoutIntent({ tier: "PRO", interval: "year" });
     expect(readCheckoutIntent()).toEqual({
       tier: "PRO",
       interval: "year",
-      dateOfBirth: "1990-01-01",
     });
   });
 
   it("does not resurrect an intent older than 30 minutes", () => {
     const now = Date.now();
     vi.spyOn(Date, "now").mockReturnValue(now);
-    saveCheckoutIntent({ tier: "ELITE", interval: "month", dateOfBirth: "1985-05-05" });
+    saveCheckoutIntent({ tier: "ELITE", interval: "month" });
 
     vi.spyOn(Date, "now").mockReturnValue(now + 31 * 60 * 1000);
     expect(readCheckoutIntent()).toBeNull();
   });
 
   it("clears the stored intent", () => {
-    saveCheckoutIntent({ tier: "FANTASY", interval: "month", dateOfBirth: "2000-06-15" });
+    saveCheckoutIntent({ tier: "FANTASY", interval: "month" });
     clearCheckoutIntent();
     expect(readCheckoutIntent()).toBeNull();
   });
 });
 
 describe("SubscribeButton checkout resume", () => {
-  it("saves tier/interval/DOB before bouncing an unauthenticated click to sign-in", async () => {
+  it("saves tier/interval before bouncing an unauthenticated click to sign-in", async () => {
     vi.stubGlobal(
       "fetch",
       vi.fn().mockResolvedValue({ status: 401, ok: false, json: async () => ({}) }),
@@ -78,21 +79,28 @@ describe("SubscribeButton checkout resume", () => {
       />,
     );
 
-    fireEvent.change(screen.getByLabelText(/date of birth/i), {
-      target: { value: "1992-03-04" },
-    });
     fireEvent.click(screen.getByRole("button", { name: /go elite/i }));
 
     await waitFor(() => expect(pushMock).toHaveBeenCalledWith("/auth/signin?callbackUrl=/pricing"));
     expect(readCheckoutIntent()).toEqual({
       tier: "ELITE",
       interval: "year",
-      dateOfBirth: "1992-03-04",
     });
   });
 
-  it("restores the DOB it saved when the matching tier/interval button remounts", () => {
-    saveCheckoutIntent({ tier: "PRO", interval: "month", dateOfBirth: "1988-11-20" });
+  it("does not require a date of birth to start checkout", async () => {
+    const fetchMock = vi.fn().mockResolvedValue({
+      status: 200,
+      ok: true,
+      json: async () => ({ url: "https://checkout.stripe.test/session" }),
+    });
+    vi.stubGlobal("fetch", fetchMock);
+    // jsdom has no location assignment target; intercept.
+    const locationSpy = vi.fn();
+    Object.defineProperty(window, "location", {
+      value: { href: "", assign: locationSpy },
+      writable: true,
+    });
 
     render(
       <SubscribeButton
@@ -105,65 +113,12 @@ describe("SubscribeButton checkout resume", () => {
       />,
     );
 
-    expect(screen.getByLabelText(/date of birth/i)).toHaveValue("1988-11-20");
-    // Consumed once restored — a second, unrelated button must not also claim it.
-    expect(readCheckoutIntent()).toBeNull();
-  });
+    fireEvent.click(screen.getByRole("button", { name: /go pro/i }));
 
-  it("never fills in a DOB saved for a different tier or interval", () => {
-    saveCheckoutIntent({ tier: "PRO", interval: "year", dateOfBirth: "1988-11-20" });
-
-    render(
-      <SubscribeButton
-        tier="ELITE"
-        label="Go Elite"
-        variant="primary"
-        interval="year"
-        priceMonthly={24.99}
-        priceAnnual={179}
-      />,
-    );
-
-    expect(screen.getByLabelText(/date of birth/i)).toHaveValue("");
-    // Left for whichever button actually matches.
-    expect(readCheckoutIntent()).not.toBeNull();
-  });
-
-  it("restores the DOB once the interval prop catches up after mount (Devin finding, PR #737)", () => {
-    // Mirrors the real sequence: PricingPlans starts its child buttons at the
-    // default "month" interval, then its own effect (also on mount) restores
-    // the saved interval a tick later, re-rendering the button with the
-    // correct prop. Before the fix, SubscribeButton's restore effect had an
-    // empty dependency array, so it never re-checked storage after this prop
-    // update and an annual intent's DOB was silently dropped.
-    saveCheckoutIntent({ tier: "PRO", interval: "year", dateOfBirth: "1979-04-02" });
-
-    const { rerender } = render(
-      <SubscribeButton
-        tier="PRO"
-        label="Go Pro"
-        variant="primary"
-        interval="month"
-        priceMonthly={14.99}
-        priceAnnual={99}
-      />,
-    );
-    // Mismatched on first mount (month vs. the stored year intent) — nothing
-    // restored yet, and the intent is left untouched for the correct pass.
-    expect(screen.getByLabelText(/date of birth/i)).toHaveValue("");
-
-    rerender(
-      <SubscribeButton
-        tier="PRO"
-        label="Go Pro"
-        variant="primary"
-        interval="year"
-        priceMonthly={14.99}
-        priceAnnual={99}
-      />,
-    );
-
-    expect(screen.getByLabelText(/date of birth/i)).toHaveValue("1979-04-02");
-    expect(readCheckoutIntent()).toBeNull();
+    await waitFor(() => expect(fetchMock).toHaveBeenCalled());
+    const body = JSON.parse(fetchMock.mock.calls[0][1].body as string) as Record<string, unknown>;
+    expect(body.tier).toBe("PRO");
+    expect(body).not.toHaveProperty("dateOfBirth");
+    expect(screen.queryByLabelText(/date of birth/i)).toBeNull();
   });
 });

@@ -48,11 +48,11 @@ export function middleware(req: NextRequest): NextResponse {
   // The one-click 21+ cookie redirect (D-8 / S3) that used to 302 every
   // unattested visitor, crawlers included, off /board, /picks, /pricing,
   // /performance and the other AGE_GATED_PREFIXES therefore no longer runs
-  // here. What stays: the /age-verify page itself, the AGE_GATED_PREFIXES
+  // here. The hard DOB gate on paid checkout was also removed 2026-09-14
+  // (ASTRA owner item 1: "Remove the age-21 requirement from subscriptions").
+  // What stays: the /age-verify page itself and the AGE_GATED_PREFIXES
   // registry (lib/age-verify/surface.ts) for any surface that opts back in,
-  // the responsible-play footer on every page, and the server-side
-  // assertAtLeast21 (apps/web/lib/auth/age-gate.ts) on the paid checkout,
-  // which is the only place money changes hands. Re-enabling the redirect is
+  // plus the responsible-play footer on every page. Re-enabling any of it is
   // a founder decision, not an env flag.
 
   // ── Waitlist Basic Auth gate ──────────────────────────────────────────────
