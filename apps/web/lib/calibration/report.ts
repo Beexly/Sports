@@ -77,6 +77,9 @@ export async function loadPublicCalibrationReport(now = new Date()): Promise<Cal
         isCollecting: true,
         publicMessage: "Calibration is temporarily unavailable; building history from settled canonical picks.",
         modelVersions: [],
+        // The read failed, so nothing was scored and nothing was excluded.
+        excludedInPlay: 0,
+        inPlayNote: inPlayExclusionNote(0, 0),
       },
       meta: { gated: false, isSampleData: false },
     };
