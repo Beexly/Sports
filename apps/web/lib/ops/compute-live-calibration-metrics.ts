@@ -136,14 +136,10 @@ export type CalibrationBreakdowns = {
   readonly brierCi95: MetricCi95 | null;
   readonly eceCi95: MetricCi95 | null;
   /**
-   * ADDITIVE (ASTRA A-12, 2026-09-14): per-market gate diagnostics from
-   * lib/ops/per-market-gate.ts. Reports the verdict each market WOULD get
-   * under the measured null-band ECE + RES floors. Does NOT replace the
-   * existing eligibility gate and never flips a floor. The known live finding
-   * this surfaces: TOTAL fails on resolution (0.00119 vs floor 0.0036) while
-   * passing every legacy floor.
+   * ADDITIVE ADVISORY ONLY (ASTRA A-12). NOT A GATE. calibration-eligibility.ts
+   * does not read this. Live eligibility is the pooled MONEYLINE-only sample.
    */
-  readonly marketGates: readonly {
+  readonly marketGatesAdvisory: readonly {
     readonly market: string;
     readonly status: "PASS" | "FAIL" | "INSUFFICIENT";
     readonly reasons: readonly string[];
@@ -165,9 +161,8 @@ export function computeCalibrationBreakdowns(
   const ordered = canonicalSampleOrder(taggedSamples);
   const cis = bootstrapCalibrationMetricCis(ordered, options);
   const byMarket = sliceCalibrationMetrics(ordered, (s) => s.pickType);
-  // ADDITIVE diagnostic: per-market gate verdicts from the measured null-band
-  // ECE + RES floors. Never replaces the eligibility gate; never flips a floor.
-  const marketGates = byMarket
+  // ADVISORY ONLY — never gates eligibility, publication, or any env flag.
+  const marketGatesAdvisory = byMarket
     .filter((slice): slice is CalibrationSliceMetrics & { key: MarketKey } =>
       slice.key === "MONEYLINE" || slice.key === "SPREAD" || slice.key === "TOTAL" || slice.key === "PROPS",
     )
@@ -196,7 +191,7 @@ export function computeCalibrationBreakdowns(
     byMarket,
     brierCi95: cis?.brierCi95 ?? null,
     eceCi95: cis?.eceCi95 ?? null,
-    marketGates,
+    marketGatesAdvisory,
   };
 }
 
@@ -284,7 +279,7 @@ export function buildDurableMetricsFromSamples(input: {
     bySport: breakdowns?.bySport,
     byModelVersion: breakdowns?.byModelVersion,
     byMarket: breakdowns?.byMarket,
-    marketGates: breakdowns?.marketGates,
+    marketGatesAdvisory: breakdowns?.marketGatesAdvisory,
     brierCi95: breakdowns?.brierCi95 ?? null,
     eceCi95: breakdowns?.eceCi95 ?? null,
     notes: [

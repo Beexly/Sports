@@ -82,11 +82,12 @@ export interface DurableMetricsPayload {
   /** Per pick type; the pooled sample holds every market with a market-anchored p. */
   readonly byMarket?: readonly CalibrationSliceMetrics[];
   /**
-   * ADDITIVE (ASTRA A-12, 2026-09-14): per-market gate diagnostics from
-   * evaluateMarketGate. Reports what each market WOULD get under the measured
-   * null-band ECE + RES floors. Does not replace the eligibility gate.
+   * ADDITIVE ADVISORY (ASTRA A-12). NOT A GATE. calibration-eligibility.ts
+   * does not read this field. Live eligibility is the pooled MONEYLINE-only
+   * sample; spread/total are excluded from that sample by design. A FAIL here
+   * is an internal measurement, not a product outage.
    */
-  readonly marketGates?: readonly {
+  readonly marketGatesAdvisory?: readonly {
     readonly market: string;
     readonly status: "PASS" | "FAIL" | "INSUFFICIENT";
     readonly reasons: readonly string[];
