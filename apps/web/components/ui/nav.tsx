@@ -20,8 +20,16 @@ type NavGroup = { heading?: string; items: readonly NavItem[] };
 const BOARD_MENU: readonly NavGroup[] = [
   {
     items: [
-      { label: "The board", href: "/board", desc: "Scored today · cleared · held" },
-      { label: "Picks with reasoning", href: "/picks", desc: "Published picks and factor notes" },
+      {
+        label: "The board",
+        href: "/board",
+        desc: "Every decision · published or held",
+      },
+      {
+        label: "Published picks",
+        href: "/picks",
+        desc: "What cleared the gate, with the reason",
+      },
     ],
   },
 ];

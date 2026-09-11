@@ -23,9 +23,9 @@ import { GET as getDailySlate } from "@/app/api/picks/daily-slate/route";
 export function generateMetadata(): Metadata {
   const publicPicksOpen = getReadinessGates().canExposePublicPicks;
   return {
-    title: "Today's Signals",
+    title: "Published Picks",
     description: publicPicksOpen
-      ? "Today's picks from a deterministic factor model: two free picks a day with the public Edge Index. The full board, the confidence score and the factor trail are on Pro and Elite."
+      ? "Published picks from a deterministic factor model: what cleared the gate today, with price, timing, and the reason. The board also shows what we held. Free gets a small daily teaser; Pro and Elite unlock the full set."
       : "Public picks open when the sample and gates allow. Until then this surface stays intentionally dark: no invented slate, no certainty theater. Methodology, tools, and paper contests remain free.",
     alternates: { canonical: "/picks" },
   };
@@ -251,14 +251,18 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {/* Header */}
           <div className="mb-6">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-300">
-              Today&apos;s Board
+              Published picks
             </p>
             <h1 className="mt-1.5 text-3xl font-bold tracking-tight text-white">
               Today&apos;s sports signals.
             </h1>
             <p className="mt-1.5 text-sm text-ion-2">
               Every signal published today, with price, timing, risk, and the
-              reason it cleared the gate.
+              reason it cleared the gate.{" "}
+              <Link href="/board" className="underline hover:text-ion-1">
+                The board
+              </Link>{" "}
+              also shows what we held and why.
             </p>
           </div>
 
