@@ -21,6 +21,7 @@
 
 import { db, isStubMode } from "@sports/db";
 import { getReadinessGates, GSE_PROPRIETARY_METRIC_BIRTH_CERTIFICATES } from "@sports/prediction-engine";
+import { resolveEffectivePerformanceGate } from "@/lib/ops/effective-performance-gate";
 import { loadCoverage } from "@/lib/statking/product";
 import {
   computeLiveFeeds,
@@ -71,6 +72,14 @@ export async function loadKingStandard(now: Date = new Date()): Promise<KingStan
   if (!isStubMode()) {
     const gates = getReadinessGates();
 
+    // The public copy must never outrun the canonical gate. `gates` above is the
+    // RAW config flag (env-level: performanceStatsEnabled), which can be true while
+    // the canonical calibration eligibility is RED — that is exactly how /stats came
+    // to print "calibration report: publishing" while /api/ops/public-surface-truth
+    // reported published:false, canExposePerformanceStats:false. Read the same
+    // resolver the truth surface uses so the two can never disagree. Fails closed.
+    const effective = await resolveEffectivePerformanceGate();
+
     const settledCount = await db.pick
       .count({
         where: { isPublished: true, isBootstrap: false, result: { in: ["WIN", "LOSS", "PUSH"] } },
@@ -84,7 +93,7 @@ export async function loadKingStandard(now: Date = new Date()): Promise<KingStan
             reachable: true,
             settledCount,
             settledThreshold: gates.minSettledPicksForLearning,
-            calibrationGateOpen: gates.canExposePerformanceStats,
+            calibrationGateOpen: effective.calibrationPublished && effective.canExposePerformanceStats,
           });
 
     const lastIngestionRun = await db.ingestionRun
