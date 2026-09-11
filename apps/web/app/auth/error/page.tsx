@@ -1,6 +1,19 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { BRAND_NAME } from "@/lib/brand";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+
+/**
+ * C-330. This page set no metadata, so it inherited the root layout's default title
+ * — which is why the sweep found /auth/signin and /auth/error sharing the site's
+ * generic title with the whole /players family. The title template is
+ * "%s | Galaxy Sports Edge", so the title here is the bare name. Indexability was
+ * ALREADY correct (app/auth/layout.tsx sets robots index:false, follow:false,
+ * nocache:true) and is inherited, not repeated here.
+ */
+export const metadata: Metadata = {
+  title: "Sign-in error",
+};
 
 export default function AuthErrorPage({
   searchParams,
