@@ -447,7 +447,9 @@ the only copy, and nobody else can verify or build on it.
 
 | A-1 | ASTRA owner item 1: remove the age-21 hard gate from subscriptions. Checkout no longer requires a date of birth; SubscribeButton no longer renders a DOB field; checkout-resume no longer stores one. Compliance "21+" promo/footer copy is unchanged. Browsing was already all-ages (C-291). age-gate.ts module retained as a utility (tests still green) in case the founder re-imposes a policy later. | claude | DONE | e7f9c7f07; typecheck 0, lint 0, 56/56 checkout-resume + subscriptions-checkout-route + age-gate |
 
-| A-2 | ASTRA owner item 11: fix the /board vs /picks information-architecture failure. The owner could not tell the two apart; /picks literally wore the eyebrow "Today's Board". Renamed that eyebrow to "Published picks", rewrote nav labels (desktop + mobile) to state the job of each door, added one-line cross-links on both pages, and updated metadata titles/descriptions. | claude | DONE | — |
+| A-2 | ASTRA owner item 11: fix the /board vs /picks information-architecture failure. The owner could not tell the two apart; /picks literally wore the eyebrow "Today's Board". Renamed that eyebrow to "Published picks", rewrote nav labels (desktop + mobile) to state the job of each door, added one-line cross-links on both pages, and updated metadata titles/descriptions. | claude | DONE | f0f2ba13a; typecheck 0, 18/18 nav + plain-language tests |
+
+| A-3 | ASTRA owner item 8: strip insider jargon from customer-facing intelligence surfaces. The JSON button label is gone (now "Live feed" / "Pro feed"); raw API-path links keep the route but the visible label is plain; engine titles and More-Engines summaries rewritten in plain language. Technical terms (DAKOTA, ANY/A, WOPR, CPOE, PROE) stay only inside the explainer rail, which is the "show me the math" surface. | claude | DONE | — |
 
 <!-- LEDGER:END -->
 

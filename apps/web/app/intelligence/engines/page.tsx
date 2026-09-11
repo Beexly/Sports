@@ -16,9 +16,9 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60; // heavy nflverse loads (scoring-zone / team / proof) need headroom
 
 export const metadata: Metadata = {
-  title: "Intelligence Engines: the advanced-data layer, browsable",
+  title: "Intelligence Engines",
   description:
-    "Every advanced-data engine GSE runs in one browsable surface: QB, RB, WR/TE, team, and cross-position signals mined from cleared nflverse data, each read for the predictive edge, each a live glass-box API with an honest empty state.",
+    "Every engine GSE runs, in one place: quarterback, running back, receiver, and team signals read for the fantasy and betting edge. Browse each one live, or open the plain-language method.",
   alternates: { canonical: "/intelligence/engines" },
 };
 
@@ -45,36 +45,36 @@ interface MoreEngine {
 const MORE_ENGINES: readonly MoreEngine[] = [
   {
     name: "Roster Advice",
-    summary: "Model → real add/drop/read decisions for a posted roster (composes with Sleeper sync).",
+    summary: "Turns a posted roster into real add / drop / hold decisions (pairs with league sync).",
     api: "/api/intelligence/roster-advice",
-    apiLabel: "API (POST)",
+    apiLabel: "Live feed",
   },
   {
     name: "Graded Pool",
     summary:
-      "Composes the model + xFP + team environment (real schemeFit from neutral-script offensive EPA) + QB-forward passing signal into a real graded pool that drives every fantasy tool when the founder enables it.",
+      "Combines the player grade, expected points, team environment, and passing signal into one ranked pool that feeds every fantasy tool.",
     api: "/api/intelligence/graded-pool",
-    apiLabel: "API (gated)",
+    apiLabel: "Pro feed",
   },
   {
     name: "QB Consensus",
-    summary: "ESPN QBR (results) vs Next Gen CPOE (accuracy), triangulated. Disagreement surfaced, not averaged.",
+    summary: "Two public QB ratings side by side. When they disagree, we show it instead of averaging it away.",
     api: "/api/intelligence/qb-consensus",
-    apiLabel: "JSON",
+    apiLabel: "Live feed",
     board: "/players/qbr",
   },
   {
     name: "Rushing Efficiency",
-    summary: "RYOE/att vs volume with stacked-box context: bell-cow / buy-low / volume-dependent.",
+    summary: "Yards over expected per carry, next to volume and stacked-box context: bell-cow, buy-low, or volume-dependent.",
     api: "/api/intelligence/rushing-efficiency",
-    apiLabel: "JSON",
+    apiLabel: "Live feed",
     board: "/players/opportunity",
   },
   {
-    name: "Receiving Opportunity (WOPR)",
-    summary: "Air-yards & target share → WOPR, with opportunity-vs-production buy/sell.",
+    name: "Receiving Opportunity",
+    summary: "Air yards and target share combined into one opportunity score, with a clear buy / sell read.",
     api: "/api/intelligence/receiving-opportunity",
-    apiLabel: "JSON",
+    apiLabel: "Live feed",
     board: "/players/opportunity",
   },
 ];
@@ -98,7 +98,7 @@ function MoreEnginesSection(): JSX.Element {
             {MORE_ENGINES.length} engines without a standalone board
           </span>
           <span className="mt-1 block max-w-3xl text-sm leading-6 text-ion-1">
-            POST-only, founder-gated, or rendered on the player boards under /players. Expand to browse them.
+            Extra feeds and player boards. Expand to browse them.
           </span>
         </span>
         <span
@@ -123,7 +123,7 @@ function MoreEnginesSection(): JSX.Element {
               </Link>
               {e.board ? (
                 <Link href={e.board} className="text-ultraviolet hover:text-ion-white">
-                  Board →
+                  Open board →
                 </Link>
               ) : null}
             </div>
