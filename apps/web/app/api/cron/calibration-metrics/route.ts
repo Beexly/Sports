@@ -17,6 +17,7 @@ import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { canonicalSampleOrder } from "@/lib/calibration/canonical-sample-order";
 import {
   brierDecomposition,
   expectedCalibrationError,
@@ -334,11 +335,15 @@ export async function GET(request: Request): Promise<NextResponse> {
         ],
       };
     } else {
-      const decomp = brierDecomposition(samples);
-      const ece = expectedCalibrationError(samples);
+      // Canonical order before any seeded estimator (see canonical-sample-order.ts):
+      // the Monte Carlo noise term and the bootstrap bound are order-sensitive, and
+      // an unordered query flipped eligibility on identical metrics on 09-10.
+      const ordered = canonicalSampleOrder(samples);
+      const decomp = brierDecomposition(ordered);
+      const ece = expectedCalibrationError(ordered);
       // C-290: the floor reads the bias-corrected ECE; raw stays reported.
-      const eceCorrection = debiasedExpectedCalibrationError(samples);
-      const curve = reliabilityCurve(samples);
+      const eceCorrection = debiasedExpectedCalibrationError(ordered);
+      const curve = reliabilityCurve(ordered);
       const mce = mceFromCurve(curve);
       const logLoss = meanLogLoss(samples);
       // bySport / byModelVersion (same functions as the pooled numbers) and the

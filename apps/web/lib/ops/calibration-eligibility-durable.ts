@@ -159,6 +159,44 @@ export interface EligibilityDurableSnap {
    * streak therefore restarted from 0 on this evaluation; null otherwise.
    */
   readonly streakResetFromBasis?: CalibrationPBasis | null;
+  /**
+   * Determinism guard (2026-09-11): set when this evaluation returned a
+   * DIFFERENT verdict than the previous one while every measured metric was
+   * identical. That is not a data change — it is estimator non-determinism, and
+   * it is what flipped the gate GREEN → RED 15 minutes apart on 09-10. Absent
+   * when the verdict did not move or the metrics actually changed.
+   */
+  readonly verdictStability?: VerdictStability;
+}
+
+export interface VerdictStability {
+  readonly flagged: boolean;
+  readonly note: string;
+}
+
+/**
+ * True when the only thing that changed between two evaluations is the verdict.
+ * Pure; safe to call with a null prior snap.
+ */
+export function verdictStabilityOnIdenticalMetrics(
+  prior: CalibrationEligibilityReport | null | undefined,
+  next: CalibrationEligibilityReport,
+): VerdictStability | undefined {
+  if (!prior || prior.status === next.status) return undefined;
+  const identical =
+    prior.n === next.n &&
+    prior.brier === next.brier &&
+    prior.ece === next.ece &&
+    prior.eceDebiased === next.eceDebiased;
+  if (!identical) return undefined;
+  return {
+    flagged: true,
+    note:
+      `Same metrics, different verdict: ${prior.status} → ${next.status} ` +
+      `(n ${next.n}, ece ${next.ece}, eceDebiased ${next.eceDebiased}). ` +
+      "The sample did not move; the seeded estimator did. See " +
+      "lib/calibration/canonical-sample-order.ts.",
+  };
 }
 
 /**
@@ -668,6 +706,7 @@ export async function evaluateAndPersistEligibility(input: {
     report: eligibility,
     pBasis,
     streakResetFromBasis,
+    verdictStability: verdictStabilityOnIdenticalMetrics(priorSnap?.report, eligibility),
   });
 
   const receipt = await loadPublishReceipt();
