@@ -453,6 +453,10 @@ the only copy, and nobody else can verify or build on it.
 
 | A-4 | ASTRA owner item 3: replace the proof-crystal background on the trust surfaces. /verify, /calibration, /proof and /engine all dropped the GeneratedPlate proof-crystal.webp (owner: "hideous, doesn't match"). They now share one Field atmosphere (gw-nebula: quiet near-black + one ember crown). /calibration also lost the extra gw-nebula-deep wash that made the two trust pages not even match each other. | claude | DONE | e641103cf; typecheck 0, 16/16 copy tests |
 
+| A-5 | ASTRA owner items 5+6: Studio moved internal-only (removed from public nav, command palette; route stays, already noindex). Academy hidden from public nav, command palette, and homepage intelligence layer; route stays and is now noindex until redesigned into membership value. Command palette also dropped the retired Edge Map and gained a Published picks entry. | claude | DONE | 0c2111998; typecheck 0, 11/11 nav + edge-map tests |
+
+| A-6 | ASTRA owner item 10: collapse NFL House to ONE place, not six "rooms". Owner: "if we are going to have a chat room, then we need to have ONE SINGLE CHAT... our engagement is nowhere near to where we can have multiple rooms." House is now a single hub with a primary door (The Beat) and tools below; the dead Observatory door (route redirects to /board) and the staged Sunday Couch room are gone. | claude | DONE | — |
+
 <!-- LEDGER:END -->
 
 
