@@ -732,9 +732,42 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     ? overFavoredPct > 0.5
     : overFavoredPct >= 0.5;
   if (strictTiebreak && overFavoredPct === 0.5) return null;
-  const consensusPct = overIsChosen ? overFavoredPct : 1 - overFavoredPct;
 
-  if (consensusPct < WEIGHTS.CONSENSUS_MIN_PCT) return null;
+  // Compute fairProb early for the market-relative edge test
+  const fairProb = overIsChosen 
+    ? pricedTotals.reduce((acc, o) => acc + americanToImpliedProbability(o.overPrice!), 0) /
+      pricedTotals.length
+    : pricedTotals.reduce((acc, o) => acc + americanToImpliedProbability(o.underPrice!), 0) /
+      pricedTotals.length;
+
+  // Compute independent edge without SKELLAM spread model (task HP-14b step 3)
+  // Use all independent fair values, not just SKELLAM filtered
+  const independentEdgeRaw = input.context?.independentFairValues
+    ? assessIndependentEdge(input.context.independentFairValues, overIsChosen ? 1 : 0, fairProb, 0, true)
+    : null;
+
+  const rank = deriveRankingProbability(
+    clamp(
+      consensusScore + depthScore + edgeComponentScore + volatilityPenalty
+      + lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty
+      + headToHeadScore + venueFormScore + uncertaintyPenalty + scheduleStressScore + 10,
+      0, 100
+    ),
+    independentEdgeRaw ? { ...independentEdgeRaw, priced: true } : { priced: false },
+    { independentWeight: 0.7, rankOnAnyTrueProb: true }
+  );
+
+  // Market-relative edge test: replace 0.55 vote gate
+  // p = rank.rankingP (market-anchored probability), q = fairProb
+  // Publish when p - q > 0; when no p exists, fall back to 0.55 vote gate
+  if (rank.priced) {
+    // publish when model's probability exceeds market fair probability
+    if (rank.rankingP <= fairProb) return null;
+  } else {
+    // fallback: original 0.55 confidence floor
+    if (consensusPct < WEIGHTS.CONSENSUS_MIN_PCT) return null;
+  }
+
 
   const pickedSide = overIsChosen ? "OVER" : "UNDER";
 
@@ -961,8 +994,23 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   );
   const consensusPct = fairProb; // for ML, fair prob IS the consensus signal
 
-  // Need strong conviction on ML — higher threshold
-  if (fairProb < 0.58) return null;
+  // HP-14 v5.2.8 market-anchored gate: replace 0.58 floor with market-relative edge test
+  // p = market-anchored probability for chosen side (rank.rankingP when priced)
+  // q = de-vigged consensus fair probability for chosen side (fairProb, already side-selected)
+  // Publish when p - q > 0; when no p exists, fall back to 0.58 floor
+  const rank = deriveRankingProbability(confidence, independentEdgeRaw, {
+    independentWeight: 0.7,
+    rankOnAnyTrueProb: true,
+  });
+
+  // Market-anchored gate: suppress picks where trueProb <= marketFairProb
+  if (rank.priced) {
+    // publish when model's probability exceeds market fair probability
+    if (rank.rankingP <= fairProb) return null;
+  } else {
+    // fallback: original 0.58 confidence floor
+    if (fairProb < 0.58) return null;
+  }
 
   const chosenTeam = homeIsChosen ? input.homeTeam : input.awayTeam;
   const pickedSide = homeIsChosen ? "HOME" : "AWAY";
@@ -1031,14 +1079,6 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   );
 
   if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
-
-  const rank = deriveRankingProbability(confidence, independentEdgeRaw, {
-    independentWeight: 0.7,
-    rankOnAnyTrueProb: true,
-  });
-  const independentEdge: IndependentEdgeSummary | null = independentEdgeRaw
-    ? { ...independentEdgeRaw, priced: rank.priced }
-    : null;
 
   const independentEdgeFactors: FactorDetail[] = independentEdge
     ? [
