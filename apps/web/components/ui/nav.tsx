@@ -79,8 +79,6 @@ const GSN_MENU: readonly NavGroup[] = [
     heading: "GSN",
     items: [
       { label: "The Beat", href: "/the-beat", desc: "Cinematic broadcast" },
-      { label: "The Studio", href: "/fantasy/studio", desc: "Production desk" },
-      { label: "The Academy", href: "/academy", desc: "Learn the signal" },
     ],
   },
 ];
