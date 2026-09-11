@@ -11,9 +11,9 @@ import { WIRE_DISCLAIMER, WIRE_LIVE_DISCLAIMER } from "@/lib/news/wire";
 import { fetchLiveWire } from "@/lib/news/rss";
 
 export const metadata: Metadata = {
-  title: "The Beat · Galaxy Broadcast & Reliability-Tiered Newsroom",
+  title: "The Beat · Sports media, scored",
   description:
-    "A constantly-running transmission: Nova reports the week's top signals on location, then the Signal Ledger scores every breaking report the instant it lands. Source reliability, the players and lines it moves, and the move to make before the market prices it in.",
+    "Sports media is a market too. The Beat weighs every report by source reliability, maps it to the players and lines it moves, and tells you the move before the market prices it in.",
   alternates: { canonical: "/the-beat" },
 };
 
