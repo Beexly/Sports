@@ -44,8 +44,15 @@ export async function loadPublicCalibrationReport(now = new Date()): Promise<Cal
         NOT: { modelVersion: "v5.0.0-seed" },
       },
       include: { game: { include: { sport: { select: { name: true } } } } },
+      // ORDER IS PRESENTATION ONLY; THERE IS NO `take`. A cap here silently
+      // replaced the record with a rolling window of the newest settled picks
+      // while the header still read "N settled picks" — so the published
+      // 80-89 bucket read 78.0% (n=41) here and 51.9% (n=129) over the full
+      // record, and the confidence-tail monitor, which reads the same
+      // population with no cap, called the same tail overconfident at 52.3%
+      // (n=222). Two public surfaces, one population, two samples: the panel
+      // must score everything the population definition admits.
       orderBy: { settledAt: "desc" },
-      take: 500,
     })
     .catch(() => null);
 
