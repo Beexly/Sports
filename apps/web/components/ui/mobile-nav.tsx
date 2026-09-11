@@ -33,7 +33,8 @@ const SECTIONS: readonly Section[] = [
     collapsible: true,
     links: [
       { label: "Intelligence Engines", href: "/intelligence/engines" },
-      { label: "Galaxy Twin: market map", href: "/observatory" },
+
+
     ],
   },
   {

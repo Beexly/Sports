@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
@@ -80,14 +81,16 @@ export default async function FantasyHubPage({
     redirect(LEGACY_TOOL_ROUTES[requestedTool]!);
   }
 
-  const evidence = await loadSourceLiveEvidence({ timeoutMs: 15000 });
-  const qbAgeLift = evidence.summary.qbAge34Lift;
-  const qbAgeLiftLabel = typeof qbAgeLift === "number" ? `${formatPercent(qbAgeLift)} lift` : "—";
-  const latestWeek =
-    evidence.summary.latestUsageSeason && evidence.summary.latestUsageWeek
-      ? `${evidence.summary.latestUsageSeason} W${evidence.summary.latestUsageWeek}`
-      : "—";
-
+  // The evidence read is NOT awaited here any more. It lives in <LiveEvidenceGrid/>
+  // behind a Suspense boundary, because it is a decorative four-card status strip
+  // and it was gating the ENTIRE page render: loadSourceLiveEvidence pulls four
+  // nflverse datasets SEQUENTIALLY (deliberately — running them concurrently
+  // OOM-killed the instance) with a 15s budget each, so a cold serverless instance
+  // took 13-15s to return ANY html. Measured on production 2026-09-11: cold
+  // 13.8s, warm 0.25s over five consecutive hits. The cold case is exactly what a
+  // marketing surge produces, since scaling out creates fresh instances whose
+  // first request pays it. Streaming the strip means the page paints immediately
+  // and only the cards wait.
   return (
     <div className="relative isolate flex min-h-screen flex-col bg-obsidian">
       <GeneratedPlate assetId="fantasy-constellation" className="-z-10 opacity-25" />
@@ -164,28 +167,9 @@ export default async function FantasyHubPage({
                 </Link>
               </div>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <EvidenceMetric
-                label="Player-stat rows"
-                value={formatCount(evidence.summary.usagePlayerStatsRows)}
-                detail="Read-only weekly source release pulls."
-              />
-              <EvidenceMetric
-                label="Latest usage week"
-                value={latestWeek}
-                detail={`${formatCount(evidence.summary.latestWeekPlayerRows)} player rows in the latest REG week.`}
-              />
-              <EvidenceMetric
-                label="Accepted research"
-                value={qbAgeLiftLabel}
-                detail={`${formatCount(evidence.summary.cohortObservations)} team-week observations for QB-age/RB target share.`}
-              />
-              <EvidenceMetric
-                label="Rejected narratives"
-                value={evidence.summary.birthdayUsageConclusion ?? "—"}
-                detail={`${formatCount(evidence.summary.birthdayWindowObservations)} birthday-window and ${formatCount(evidence.summary.careerMilestone50Observations)} milestone observations.`}
-              />
-            </div>
+            <Suspense fallback={<EvidenceGridPlaceholder />}>
+              <LiveEvidenceGrid />
+            </Suspense>
           </div>
         </section>
 
@@ -256,6 +240,63 @@ function formatCount(value: number | null | undefined): string {
 
 function formatPercent(value: number): string {
   return `${value > 0 ? "+" : ""}${(value * 100).toFixed(1)}%`;
+}
+
+/**
+ * The four-card live-evidence strip, STREAMED. It is its own async component so
+ * the page shell never waits on four sequential nflverse dataset pulls — see the
+ * note in FantasyHubPage for the measured cost. The placeholder keeps the same
+ * grid geometry so the layout does not jump when the real cards arrive.
+ */
+async function LiveEvidenceGrid(): Promise<JSX.Element> {
+  const evidence = await loadSourceLiveEvidence({ timeoutMs: 15000 });
+  const qbAgeLift = evidence.summary.qbAge34Lift;
+  const qbAgeLiftLabel = typeof qbAgeLift === "number" ? `${formatPercent(qbAgeLift)} lift` : "—";
+  const latestWeek =
+    evidence.summary.latestUsageSeason && evidence.summary.latestUsageWeek
+      ? `${evidence.summary.latestUsageSeason} W${evidence.summary.latestUsageWeek}`
+      : "—";
+
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      <EvidenceMetric
+        label="Player-stat rows"
+        value={formatCount(evidence.summary.usagePlayerStatsRows)}
+        detail="Read-only weekly source release pulls."
+      />
+      <EvidenceMetric
+        label="Latest usage week"
+        value={latestWeek}
+        detail={`${formatCount(evidence.summary.latestWeekPlayerRows)} player rows in the latest REG week.`}
+      />
+      <EvidenceMetric
+        label="Accepted research"
+        value={qbAgeLiftLabel}
+        detail={`${formatCount(evidence.summary.cohortObservations)} team-week observations for QB-age/RB target share.`}
+      />
+      <EvidenceMetric
+        label="Rejected narratives"
+        value={evidence.summary.birthdayUsageConclusion ?? "—"}
+        detail={`${formatCount(evidence.summary.birthdayWindowObservations)} birthday-window and ${formatCount(evidence.summary.careerMilestone50Observations)} milestone observations.`}
+      />
+    </div>
+  );
+}
+
+/**
+ * The Suspense fallback: same grid, same card count, same geometry, so streaming
+ * in the real cards cannot shift the hero. aria-hidden because it is a status
+ * placeholder, not content.
+ */
+function EvidenceGridPlaceholder(): JSX.Element {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2" aria-hidden="true">
+      <EvidenceMetric label="Player-stat rows" value="…" detail="Reading live sources." />
+      <EvidenceMetric label="Latest usage week" value="…" detail="Reading live sources." />
+      <EvidenceMetric label="Accepted research" value="…" detail="Reading live sources." />
+      <EvidenceMetric label="Rejected narratives" value="…" detail="Reading live sources." />
+    </div>
+  );
 }
 
 function EvidenceMetric({ label, value, detail }: { label: string; value: string; detail: string }): JSX.Element {

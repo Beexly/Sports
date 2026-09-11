@@ -52,6 +52,14 @@ export interface PickRowForCal {
   readonly selection?: string | null;
   readonly homeTeamName?: string | null;
   readonly awayTeamName?: string | null;
+  /**
+   * C-298 parity: the game's scheduled start. Without it `isInPlayPick` can
+   * never PROVE a row was priced in-play, so every late-generated pick is
+   * scored with a live price that already encodes part of the outcome. The
+   * eligibility cron has always selected it; this reader must too, or its
+   * sample silently differs from the sample the cron writes.
+   */
+  readonly commenceTime?: Date | null;
 }
 
 function mceFromCurve(
@@ -97,6 +105,9 @@ export function picksToCalibrationSamples(
       selection: pick.selection ?? null,
       homeTeamName: pick.homeTeamName ?? null,
       awayTeamName: pick.awayTeamName ?? null,
+      // C-298 parity with the eligibility cron: without this the in_play
+      // exclusion can never fire on this reader's path.
+      commenceTime: pick.commenceTime ?? null,
     })),
     options,
   );

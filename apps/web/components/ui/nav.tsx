@@ -39,7 +39,8 @@ const INTELLIGENCE_MENU: readonly NavGroup[] = [
   {
     items: [
       { label: "Engines", href: "/intelligence/engines", desc: "Inside the scoring pass" },
-      { label: "Galaxy Twin", href: "/observatory", desc: "Market map" },
+
+
       { label: "Methodology", href: "/methodology", desc: "Factors, data rights, gates" },
       { label: "Free tools", href: "/tools", desc: "EV, no-vig, parlay, CLV — live calculators" },
     ],

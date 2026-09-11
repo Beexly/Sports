@@ -60,6 +60,7 @@ import {
   type OddsTableMarketPStats,
 } from "@/lib/calibration/publish-time-market-p-loader";
 import { persistProvenPathPlan } from "@/lib/ops/proven-path-durable";
+import { rebuildPerformanceSummaries } from "@/lib/performance/rebuild-performance-summaries";
 import { backfillIndependentTrueProb } from "@sports/ingestion-pipeline";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -444,6 +445,30 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     await persistCalibrationMetrics(payload);
 
+    // C-319: /performance renders its record section from performance_summaries,
+    // and nothing in this repo has ever written a row to it — measured 2026-09-11,
+    // the table holds 0 rows while the page publishes "No official record yet"
+    // over 2,298 settled picks with the gate open.
+    //
+    // INERT BY DEFAULT: the persist path checks PERFORMANCE_SUMMARIES_WRITE_ENABLED
+    // BEFORE it reads, so an unconfigured deployment pays nothing — no query, no
+    // transaction — and the rebuild only reports `skipped_flag_off`.
+    //
+    // NON-FATAL ON PURPOSE: these rows are a derived artifact, and a failure in a
+    // summary rebuild must never take down the calibration cycle it rides on. The
+    // error is reported in the response rather than thrown.
+    let performanceSummaries: Awaited<ReturnType<typeof rebuildPerformanceSummaries>> | null = null;
+    let performanceSummariesError: string | null = null;
+    try {
+      performanceSummaries = await rebuildPerformanceSummaries();
+    } catch (e) {
+      performanceSummariesError = e instanceof Error ? e.message : String(e);
+      console.warn(
+        "[cron:calibration-metrics] performance_summaries rebuild failed; the calibration cycle is unaffected:",
+        performanceSummariesError,
+      );
+    }
+
     // Offline Bayesian bake-off artifact (internal only; never publish/adjustments).
     if (payload.status === "ok" && samples.length >= 50) {
       try {
@@ -582,6 +607,13 @@ export async function GET(request: Request): Promise<NextResponse> {
         canExposePerformanceStats: publish.canExposePerformanceStats,
         autoPublish: publish.autoPublish,
       },
+      /**
+       * C-319: the /performance summary rebuild. `skipped_flag_off` until
+       * PERFORMANCE_SUMMARIES_WRITE_ENABLED is exactly "true"; `null` if it threw,
+       * which is non-fatal by design and reported in performanceSummariesError.
+       */
+      performanceSummaries,
+      performanceSummariesError,
       /** Open post-publish drift marker (scope ops.calibration.drift), or null. */
       calibrationDrift: drift
         ? {
