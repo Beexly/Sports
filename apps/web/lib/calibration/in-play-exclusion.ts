@@ -18,19 +18,40 @@
  * incomplete, which is the defect class this repo keeps re-finding.
  */
 
+export type ClockInput = Date | string | number | null | undefined;
+
 export interface InPlayCandidate {
-  readonly generatedAt: Date | null | undefined;
-  readonly commenceTime: Date | null | undefined;
+  readonly generatedAt: ClockInput;
+  readonly commenceTime: ClockInput;
 }
 
-/** True only when both timestamps are known and the pick was generated at/after kickoff. */
-export function isInPlayGenerated(
-  generatedAt: Date | null | undefined,
-  commenceTime: Date | null | undefined,
-): boolean {
-  const g = generatedAt?.getTime();
-  const c = commenceTime?.getTime();
-  if (g == null || c == null || !Number.isFinite(g) || !Number.isFinite(c)) return false;
+/**
+ * Read a clock to epoch milliseconds WITHOUT throwing.
+ *
+ * The first version called `value?.getTime()`. That is null-safe but not
+ * type-safe: a string (a JSON round-trip, a raw-SQL row, a caller handing back a
+ * serialized payload) has no `getTime`, so `?.` does not help and the whole
+ * reader THREW — taking down a public surface instead of degrading. Found by the
+ * boundary test, not by production.
+ *
+ * A string is now PARSED rather than ignored. An ISO timestamp is readable
+ * information, and treating it as "cannot tell" would have kept look-ahead rows
+ * in a published number — the wrong direction to fail in. Anything genuinely
+ * unreadable becomes NaN, which keeps the row.
+ */
+function clockMs(value: ClockInput): number {
+  if (value == null) return Number.NaN;
+  if (value instanceof Date) return value.getTime();
+  if (typeof value === "number") return value;
+  if (typeof value === "string") return new Date(value).getTime();
+  return Number.NaN;
+}
+
+/** True only when both timestamps are readable and the pick was generated at/after kickoff. */
+export function isInPlayGenerated(generatedAt: ClockInput, commenceTime: ClockInput): boolean {
+  const g = clockMs(generatedAt);
+  const c = clockMs(commenceTime);
+  if (!Number.isFinite(g) || !Number.isFinite(c)) return false;
   return g >= c;
 }
 
