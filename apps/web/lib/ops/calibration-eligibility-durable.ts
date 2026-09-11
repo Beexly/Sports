@@ -777,6 +777,10 @@ async function seedMetricsIfMissing(): Promise<DurableMetricsPayload | null> {
           select: {
             homeTeamName: true,
             awayTeamName: true,
+            // C-298 parity: without commenceTime the in_play exclusion cannot
+            // fire on this path, and a pick generated after kickoff is scored
+            // with a live price that already encodes part of the outcome.
+            commenceTime: true,
             sport: { select: { key: true } },
           },
         },
@@ -794,6 +798,7 @@ async function seedMetricsIfMissing(): Promise<DurableMetricsPayload | null> {
       selection: pick.selection,
       homeTeamName: pick.game?.homeTeamName ?? null,
       awayTeamName: pick.game?.awayTeamName ?? null,
+      commenceTime: pick.game?.commenceTime ?? null,
       confidence: pick.confidence,
       result: pick.result ?? "",
       modelVersion: pick.modelVersion,
