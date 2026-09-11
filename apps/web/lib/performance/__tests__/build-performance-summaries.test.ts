@@ -1,3 +1,8 @@
+/**
+ * buildPerformanceSummaries: the shape /performance reads, and the invariants that
+ * keep it honest — pushes in the population not the rate, in-play rows withheld,
+ * and the rate in PERCENTAGE POINTS through the allow-listed helper.
+ */
 import { describe, expect, it } from "vitest";
 import {
   buildPerformanceSummaries,

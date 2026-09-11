@@ -1,3 +1,8 @@
+/**
+ * persistPerformanceSummaries: the flag gate, the delete-and-insert shape (an upsert
+ * cannot target a key holding a NULL, which is why this is not one), and the fact
+ * that an empty build clears rather than inserts eleven empty rows.
+ */
 import { describe, expect, it, vi } from "vitest";
 import {
   PERFORMANCE_SUMMARIES_WRITE_FLAG,

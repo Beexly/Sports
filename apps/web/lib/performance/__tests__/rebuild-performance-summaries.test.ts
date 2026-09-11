@@ -1,3 +1,7 @@
+/**
+ * rebuildPerformanceSummaries: the flag is checked BEFORE the read, so an unenabled
+ * deployment pays no query at all — and an unkeyable row is reported, never invented.
+ */
 import { describe, expect, it, vi } from "vitest";
 import { rebuildPerformanceSummaries } from "@/lib/performance/rebuild-performance-summaries";
 import type { PerformanceSummaryWriterDb } from "@/lib/performance/persist-performance-summaries";
