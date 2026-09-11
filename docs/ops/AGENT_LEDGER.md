@@ -469,6 +469,8 @@ the only copy, and nobody else can verify or build on it.
 
 | A-AUDIT-1 | Adversarial audit pass 1: killed every remaining public claim that fantasy tools run on "real, cleared data" while the shipped default is an illustrative sample pool (/launch hero + metadata, fantasy OG image alt + hero, /optimizer metadata + body, /launch data-status footnote). Also brand.ts SURFACES.picks still labelled "Today's Board" (the IA collision). Floors verified byte-identical (n 100 / Brier 0.22 / ECE 0.05); MODEL_VERSION still v5.2.7; no env flag flipped. | claude | DONE | 19981eea8 + follow-up; typecheck 0, 33/33 pricing+brand+copy, 118/118 performance-policy+trust-claims+entitlements+ledger |
 
+| A-AUDIT-3 | Customer-facing "de-vig" jargon on pick cards softened. Pick card label "Market fair (de-vig)" → "Market fair"; value-gap tooltip no longer spells de-vig. DevigMethodDisclosure still explains the method below the number for readers who want it. Branch diff confirmed: ZERO changes to packages/types/src/index.ts, lib/ops/calibration-eligibility.ts, or packages/prediction-engine/src/constants.ts (floors and MODEL_VERSION untouched). | claude | DONE | 221d998b8; typecheck 0, 358/358 public-copy + no-fake-percentages |
+
 | A-N1 | Install Neon skills for DB access (`npx neon@latest skills -s neon -s neon-postgres -y`). FAILED on the supply-chain control: esbuild@0.28.1 postinstall not in allowScripts (ESTRICTALLOWSCRIPTS). That is law 7 working as designed — not deleted .npmrc, not set ignore-scripts, not approved. Founder can approve the one-off or run the install outside the repo. | claude | BLOCKED | npx neon@latest skills ... -> ESTRICTALLOWSCRIPTS esbuild@0.28.1 |
 
 <!-- LEDGER:END -->
