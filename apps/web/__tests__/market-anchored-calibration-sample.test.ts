@@ -630,10 +630,26 @@ describe("every canonical loader runs the market-anchored sample and the three-w
 
   it("calibration-eligibility-durable.ts selects the sport key and feeds the shared builder", () => {
     const src = read("lib/ops/calibration-eligibility-durable.ts");
-    // The game select carries the sport key (this exclusion) and, since WP-28,
-    // the two team names the odds-table resolver needs for the pick's side.
-    expect(src).toMatch(/game:\s*\{\s*select:\s*\{[^}]*homeTeamName:\s*true,\s*awayTeamName:\s*true,\s*sport:\s*\{\s*select:\s*\{\s*key:\s*true\s*\}\s*\}/);
+    // The game select must carry all four of: the sport key (three-way moneyline
+    // exclusion + bySport slice), the two team names the WP-28 odds-table resolver
+    // needs for the pick's side, and commenceTime — without which the in_play
+    // exclusion cannot fire on this path and a pick generated after kickoff is
+    // scored off a live price that already encodes part of the outcome (C-298).
+    //
+    // This pins PRESENCE INSIDE THE GAME SELECT, not field order. The previous
+    // form required homeTeamName/awayTeamName/sport to be comma-adjacent, so
+    // inserting any sibling field broke the guard while the contract it guards
+    // was still satisfied. Dropping any of the four still fails this test.
+    const block = /game:\s*\{\s*select:\s*\{([\s\S]*?)\n\s*\},\s*\n\s*\},/.exec(src)?.[1] ?? "";
+    expect(block, "the game select block is present").not.toBe("");
+    expect(block).toMatch(/homeTeamName:\s*true/);
+    expect(block).toMatch(/awayTeamName:\s*true/);
+    expect(block).toMatch(/commenceTime:\s*true/);
+    expect(block).toMatch(/sport:\s*\{\s*select:\s*\{\s*key:\s*true\s*\}\s*\}/);
     expect(src).toMatch(/sportKey:\s*pick\.game\?\.sport\?\.key/);
+    // Reading commenceTime is not enough: it has to reach the row the exclusion
+    // reads, or the exclusion still cannot fire.
+    expect(src).toMatch(/commenceTime:\s*pick\.game\?\.commenceTime\s*\?\?\s*null/);
     expect(src).toMatch(/taggedSamples:\s*built\.taggedSamples/);
     expect(src).toMatch(/exclusions:\s*built\.exclusions/);
   });
