@@ -761,6 +761,29 @@ export async function GET(request: Request) {
             byMarket: calibrationMetricsArtifact?.byMarket ?? null,
             brierCi95: calibrationMetricsArtifact?.brierCi95 ?? null,
             eceCi95: calibrationMetricsArtifact?.eceCi95 ?? null,
+            /**
+             * C-297. PROJECTION, NOT A CLAIM, AND NOT AN INPUT TO THE GATE.
+             *
+             * `deployedVersionChecked` above says whether the DEPLOYED version
+             * passed the floors on its own rows as it stands today. This says
+             * something strictly hypothetical: whether that version's displayed
+             * probability WOULD clear the ECE floor on rows it never saw, if it
+             * were first passed through a calibration map fitted on its own
+             * earlier settled rows. Maps are fitted on a time-ordered train
+             * slice and scored on the held-out test slice only, at two split
+             * points, so a map cannot flatter itself on its own fit rows.
+             *
+             * Nothing here feeds `evaluateCalibrationEligibility`, no map is
+             * fitted or applied in the product by computing it, and the
+             * deployed model still displays the UNMAPPED probability — so the
+             * `identity` method row, not the best map row, is the reading that
+             * corresponds to what the product shows today. `?? null` means "not
+             * measured" (a pre-C-297 artifact, or too few rows to split), never
+             * "passed". Its `operatorHint` states all of this on the surface
+             * itself, for anyone reading the JSON without this comment.
+             */
+            deployedVersionMapHoldout:
+              calibrationMetricsArtifact?.deployedVersionMapHoldout ?? null,
           }
         : null,
       calibrationPublish: calibrationPublish

@@ -264,6 +264,14 @@ export type MarketAnchoredSample = {
   readonly modelVersion: string | null;
   /** Pick market (MONEYLINE / SPREAD / TOTAL); drives the byMarket slice. */
   readonly pickType: string | null;
+  /**
+   * Settled time in unix ms, null when the row carries no settledAt.
+   * C-297: the deployed-version map hold-out orders rows by this and drops
+   * the ones that have none — a time split cannot place an undated row, and
+   * guessing its position would manufacture the look-ahead the split exists
+   * to prevent. Nothing the eligibility gate reads uses this field.
+   */
+  readonly settledAtMs: number | null;
 };
 
 /**
@@ -371,6 +379,7 @@ export function picksToMarketAnchoredCalibrationSamples(
       sportKey: pick.sportKey ?? null,
       modelVersion: pick.modelVersion ?? null,
       pickType: pick.pickType ?? null,
+      settledAtMs: pick.settledAt ? pick.settledAt.getTime() : null,
     });
     bySource[res.source] = (bySource[res.source] ?? 0) + 1;
     if (pick.modelVersion) versions.add(pick.modelVersion);
