@@ -30,6 +30,12 @@
  * flag-gated; see its own comment.
  */
 import { isInPlayGenerated } from "@/lib/calibration/in-play-exclusion";
+// The allow-listed public rate helper. lib/performance/public-performance-policy.ts
+// and __tests__/policy-only-winrate.test.ts make this the ONLY sanctioned path to a
+// customer-facing win rate; a second implementation anywhere else fails the build,
+// and a differently-spelled copy of the same arithmetic would satisfy that test
+// while violating the invariant it protects.
+import { winRatePct } from "@/lib/format/stat";
 
 /** One graded pick, in the shape the summary needs. */
 export interface SummaryPickRow {
@@ -54,7 +60,7 @@ export interface PerformanceSummaryRow {
   readonly wins: number;
   readonly losses: number;
   readonly pushes: number;
-  /** wins / (wins + losses). Pushes are population, never rate — as the site says. */
+  /** Decided picks only: the allow-listed helper keeps pushes out of the denominator, as the site says. */
   readonly winRate: number;
   /** "all-time" or "YYYY-MM", derived from settledAt. */
   readonly period: string;
@@ -81,9 +87,10 @@ function periodOf(settledAt: Date | null): string | null {
   return `${y}-${m}`;
 }
 
-function round4(x: number): number {
-  return Math.round(x * 10000) / 10000;
-}
+// round4() lived here to round a 0-1 fraction for the winRate column. It was removed
+// with the fraction: the column carries percentage points from winRatePct, which owns
+// its own rounding contract, and an unused local rounding helper invites a future
+// contributor to re-derive a rate in this file.
 
 /**
  * Group graded picks into one row per (sport, pickType, tier, modelVersion, period),
@@ -134,14 +141,17 @@ export function buildPerformanceSummaries(
 
   const out: PerformanceSummaryRow[] = [];
   for (const b of buckets.values()) {
-    const decided = b.wins + b.losses;
     out.push({
       ...b.key,
       totalPicks: b.wins + b.losses + b.pushes,
       wins: b.wins,
       losses: b.losses,
       pushes: b.pushes,
-      winRate: decided > 0 ? round4(b.wins / decided) : 0,
+      // PERCENTAGE POINTS, via the allow-listed helper — not a 0-1 fraction. The
+      // first version of this stored a rounded fraction, which against a column whose
+      // sanctioned producer (public-performance-policy.ts) and consumer (winRatePct,
+      // used by /performance) both speak in percentage points was wrong by 100x.
+      winRate: winRatePct(b.wins, b.losses) ?? 0,
     });
   }
   // Deterministic order so a diff of two builds means something.

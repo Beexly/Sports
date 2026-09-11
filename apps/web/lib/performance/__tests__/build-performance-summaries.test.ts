@@ -3,6 +3,7 @@ import {
   buildPerformanceSummaries,
   type SummaryPickRow,
 } from "@/lib/performance/build-performance-summaries";
+import { winRatePct } from "@/lib/format/stat";
 
 const KICKOFF = new Date("2026-09-10T23:00:00Z");
 
@@ -39,10 +40,32 @@ describe("buildPerformanceSummaries — the shape /performance reads", () => {
       wins: 2,
       losses: 1,
       pushes: 1,
-      // 2/3, not 2/4: a push is population, never rate — the same rule the page states.
-      winRate: 0.6667,
+      // 2 of 3 DECIDED picks, in PERCENTAGE POINTS, through the allow-listed helper:
+      // a push is population, never rate — the same rule the page states. Pinned
+      // against winRatePct rather than a literal so the unit cannot drift back to a
+      // fraction: the first version of this stored 0.6667 here, wrong by 100x.
+      winRate: winRatePct(2, 1),
     });
     expect(built.rows.filter((r) => r.period === "2026-09")).toHaveLength(1);
+  });
+
+  it("stores PERCENTAGE POINTS, not a 0-1 fraction — a regression to a fraction is 100x wrong", () => {
+    // 50% is the clean discriminator: a fraction implementation would store 0.5.
+    const built = buildPerformanceSummaries([row({ result: "WIN" }), row({ result: "LOSS" })]);
+    const all = built.rows.find((r) => r.period === "all-time");
+    expect(all?.winRate).toBe(50);
+    expect(all?.winRate).not.toBe(0.5);
+  });
+
+  it("a group with no decided pick stores 0 through the helper's null case, never a fabricated rate", () => {
+    const built = buildPerformanceSummaries([row({ result: "PUSH" })]);
+    const all = built.rows.find((r) => r.period === "all-time");
+    // No decided pick exists, so the sanctioned helper refuses to state a rate at all...
+    expect(winRatePct(all?.wins ?? 0, all?.losses ?? 0)).toBeNull();
+    // ...and the non-nullable column carries the schema's default, meaning "no decided
+    // pick" rather than a 0% record.
+    expect(all?.winRate).toBe(0);
+    expect(all?.pushes).toBe(1);
   });
 
   it("emits all-time even when settledAt is missing, but no monthly row for it", () => {
