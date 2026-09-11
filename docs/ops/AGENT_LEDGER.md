@@ -455,7 +455,11 @@ the only copy, and nobody else can verify or build on it.
 
 | A-5 | ASTRA owner items 5+6: Studio moved internal-only (removed from public nav, command palette; route stays, already noindex). Academy hidden from public nav, command palette, and homepage intelligence layer; route stays and is now noindex until redesigned into membership value. Command palette also dropped the retired Edge Map and gained a Published picks entry. | claude | DONE | 0c2111998; typecheck 0, 11/11 nav + edge-map tests |
 
-| A-6 | ASTRA owner item 10: collapse NFL House to ONE place, not six "rooms". Owner: "if we are going to have a chat room, then we need to have ONE SINGLE CHAT... our engagement is nowhere near to where we can have multiple rooms." House is now a single hub with a primary door (The Beat) and tools below; the dead Observatory door (route redirects to /board) and the staged Sunday Couch room are gone. | claude | DONE | — |
+| A-6 | ASTRA owner item 10: collapse NFL House to ONE place, not six "rooms". Owner: "if we are going to have a chat room, then we need to have ONE SINGLE CHAT... our engagement is nowhere near to where we can have multiple rooms." House is now a single hub with a primary door (The Beat) and tools below; the dead Observatory door (route redirects to /board) and the staged Sunday Couch room are gone. | claude | DONE | 329d1a99c; typecheck 0, 5/5 nav-route-integrity |
+
+| A-7 | ASTRA owner item 7 (partial): fantasy suite dual-door + gated-badge honesty. The hub badge "gated" lied — those tools open in full for anonymous visitors on illustrative data; the badge meant "data not real", not "paywall". Status vocabulary is now live / partly live / sample, with a legend on the hub. Optimizer DFS and Start/Sit tabs now link through to the full pages (salary board, licensed-feed status) so the two doors stop shipping different content. | claude | DONE | — |
+
+| A-N1 | Install Neon skills for DB access (`npx neon@latest skills -s neon -s neon-postgres -y`). FAILED on the supply-chain control: esbuild@0.28.1 postinstall not in allowScripts (ESTRICTALLOWSCRIPTS). That is law 7 working as designed — not deleted .npmrc, not set ignore-scripts, not approved. Founder can approve the one-off or run the install outside the repo. | claude | BLOCKED | npx neon@latest skills ... -> ESTRICTALLOWSCRIPTS esbuild@0.28.1 |
 
 <!-- LEDGER:END -->
 
