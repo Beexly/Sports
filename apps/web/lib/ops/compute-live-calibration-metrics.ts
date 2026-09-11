@@ -23,6 +23,7 @@ import {
 } from "@/lib/calibration/live-calibration-p";
 import type { CalibrationExclusionCounts } from "@/lib/calibration/proven-path-rows";
 import { sliceCalibrationMetrics, type CalibrationSliceMetrics } from "@/lib/calibration/metric-slices";
+import { canonicalSampleOrder } from "@/lib/calibration/canonical-sample-order";
 import {
   bootstrapCalibrationMetricCis,
   METRIC_CI_READING_NOTE,
@@ -129,11 +130,15 @@ export function computeCalibrationBreakdowns(
   taggedSamples: readonly MarketAnchoredSample[],
   options?: { readonly seed?: number; readonly resamples?: number },
 ): CalibrationBreakdowns {
-  const cis = bootstrapCalibrationMetricCis(taggedSamples, options);
+  // Seeded bootstrap — order-sensitive. Canonicalise the pooled sample once so
+  // the CI is a function of the multiset, not of the row order Postgres returned
+  // (the C-317 flip: identical metrics, opposite verdict two runs apart).
+  const ordered = canonicalSampleOrder(taggedSamples);
+  const cis = bootstrapCalibrationMetricCis(ordered, options);
   return {
-    bySport: sliceCalibrationMetrics(taggedSamples, (s) => s.sportKey),
-    byModelVersion: sliceCalibrationMetrics(taggedSamples, (s) => s.modelVersion),
-    byMarket: sliceCalibrationMetrics(taggedSamples, (s) => s.pickType),
+    bySport: sliceCalibrationMetrics(ordered, (s) => s.sportKey),
+    byModelVersion: sliceCalibrationMetrics(ordered, (s) => s.modelVersion),
+    byMarket: sliceCalibrationMetrics(ordered, (s) => s.pickType),
     brierCi95: cis?.brierCi95 ?? null,
     eceCi95: cis?.eceCi95 ?? null,
   };
