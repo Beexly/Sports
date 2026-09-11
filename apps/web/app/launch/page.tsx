@@ -115,8 +115,9 @@ export default function LaunchPage() {
               </div>
             </div>
             <p className="mt-6 text-xs text-ink-500">
-              Why we lead with this: a tool on fabricated data isn&apos;t worth paying for. Everything you
-              pay for here is real, cleared, and attributed. See the <Link href="/integrations" className="underline" style={{ color: BRAND_COLORS.softUltraviolet }}>data status</Link>.
+              Why we lead with this: a tool on fabricated data isn&apos;t worth paying for. Tools that
+              are not on a licensed feed yet say so, clearly, and never present sample players as
+              live advice. See the <Link href="/integrations" className="underline" style={{ color: BRAND_COLORS.softUltraviolet }}>data status</Link>.
             </p>
           </div>
         </section>
