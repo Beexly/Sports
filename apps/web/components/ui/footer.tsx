@@ -29,6 +29,7 @@ const DISCLOSURE_LINKS = [
   { label: "How We Make Money", href: "/how-we-make-money" },
   { label: "Affiliate Pledge", href: "/pledge" },
   { label: "Responsible play", href: "/responsible-play" },
+  { label: "Variance guide", href: "/responsible-play#variance" },
   { label: "Terms", href: "/terms" },
   { label: "Privacy", href: "/privacy" },
 ] as const;
