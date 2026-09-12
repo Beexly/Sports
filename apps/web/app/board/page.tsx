@@ -183,6 +183,13 @@ export default async function BoardPage(): Promise<JSX.Element> {
                 What is scoring now, what cleared the gate, and what we refused with a reason.
                 Edge rank orders the board. It does not predict the final score.
               </p>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-2">
+                After just today&apos;s published picks with reasoning?{" "}
+                <Link href="/picks" className="font-semibold text-ion-white underline decoration-plasma underline-offset-4 hover:text-plasma">
+                  Today&apos;s signals
+                </Link>
+                .
+              </p>
             </div>
             <div className="flex min-w-0 flex-col gap-3 sm:items-end">
               <BoardSurfaceChip />

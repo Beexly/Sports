@@ -447,6 +447,7 @@ the only copy, and nobody else can verify or build on it.
 
 | C-336 | Launch L1: DFS optimizer stops presenting fictional sample slate as generated advice | hermes | UNPUSHED | b691c0115 on hermes/c298-inplay-parity-2026-09-12 (local only, no push). No auto-generate on mount/reset; objective blurbs without tournament promises; empty-state directs to Generate/DK import. New __tests__/dfs-customer-data-contract.test.tsx 2/2 pass; existing dfs-optimizer/dk-import/dfs suites 32/32; typecheck 0; eslint 0; ledger guard OK. |
 | C-337 | Launch L2: Beat shows unavailable/empty honestly, tier weights labeled heuristic | hermes | UNPUSHED | 9edc97fb1 on hermes/c298-inplay-parity-2026-09-12 (local only, no push). Feed failure renders unavailable (never sample); empty live wire has honest empty copy; tier weights labeled heuristic; advice conditional; priced-in copy removed. New news-customer-truth.test.tsx 3/3; existing beat/rss/corroboration/impact 34/34 total; typecheck 0; eslint 0; ledger guard OK. |
+| C-338 | Launch L3: Board and Picks differentiated with named cross-links, jobs preserved | hermes | CLAIMED | handoff .hermes/plans/2026-09-12_095304-gse-launch-execution-handoff.md |
 
 <!-- LEDGER:END -->
 

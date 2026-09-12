@@ -258,7 +258,12 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
             </h1>
             <p className="mt-1.5 text-sm text-ion-2">
               Every signal published today, with price, timing, risk, and the
-              reason it cleared the gate.
+              reason it cleared the gate. For the full pipeline — everything
+              scoring now, cleared or held with reasons — see{" "}
+              <Link href="/board" className="font-semibold text-white underline decoration-plasma underline-offset-4 hover:text-plasma">
+                The board
+              </Link>
+              .
             </p>
           </div>
 
