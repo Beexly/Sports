@@ -296,7 +296,7 @@ const productJsonLd = {
   "@type": "Product",
   name: `${BRAND_NAME} Membership`,
   description:
-    "Sports decision intelligence: free calculators, methodology, and paper contests now; full board, confidence ratings, factor trails, and alerts on paid tiers when the public sample is honest.",
+    "Free calculators, methodology, and paper contests. Paid tiers unlock the full board, confidence ratings, factor trails, and alerts.",
   brand: { "@type": "Brand", name: BRAND_NAME },
   offers: PLANS.filter((p) => p.monthly !== null).map((p) => ({
     "@type": "Offer",

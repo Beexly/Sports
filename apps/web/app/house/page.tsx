@@ -57,7 +57,7 @@ const ROOM_DOORS: readonly RoomDoor[] = [
     href: "/board",
     whose: "For the reader who wants the number",
     promise:
-      "The live decision surface: published rows, held rows, and the discipline of No-Bet. Bring the number, not the ego.",
+      "The NFL hub: today's picks, what we passed on, and the weekly rhythm. Bring the number, not the ego.",
     accent: ACCENT_CYAN,
     live: "board",
   },
@@ -107,10 +107,10 @@ function doorBadge(
   switch (live) {
     case "board":
       return data.cleared > 0 || data.gated > 0
-        ? `${data.cleared} cleared · ${data.gated} held`
-        : "Gate holding";
+        ? `${data.cleared} picks · ${data.gated} passed`
+        : "Quiet slate";
     case "receipts":
-      return data.settled > 0 ? `${data.settled} settled` : "Calibrating";
+      return data.settled > 0 ? `${data.settled} graded` : "Building sample";
     default:
       return null;
   }

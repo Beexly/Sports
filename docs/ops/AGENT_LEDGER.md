@@ -485,7 +485,17 @@ the only copy, and nobody else can verify or build on it.
 
 | A-18 | Props activation path. Code ready and tested (edge-lab/props-hb*, fire-gate, line-shop, juice-floor; process-sport ingestEventOddsIfEnabled). LINE_ARCHIVE_ENABLED is already ON in production (C-62: odds_line_snapshots 37,402 rows and growing). Remaining founder flip: EVENT_ODDS_INGEST_ENABLED=true in Vercel (credit-capped, default 8 calls). Schema sealed — prop lines persist in OddsLineSnapshot. | claude | OPEN | code ready; EVENT_ODDS_INGEST_ENABLED is founder-only (law 3) |
 
-| A-21 | SESSION CLOSE 2026-09-12. Production SHA 913d1ea3ad = PR #771. Eligibility GREEN streak 98, PERFORMANCE_STATS ON, calibration published, ladder PROVEN, settlement HEALTHY. Branch claude/astra-redesign-2026-09-14 fully merged (0 ahead). Owner allow-list live in code (baxley full admin, dbax secondary). Founder picks live at /founder-picks. AGENTS.md carries the full session record. Remaining founder hands: EVENT_ODDS_INGEST_ENABLED, INTERNAL_LLM_API_KEY (Vercel AI Gateway), ADMIN_EMAILS belt-and-braces. Only ESTABLISHED blocker: CLV 23% vs 52.4%. | claude | DONE | live truth surface 2026-09-12T01:17Z |
+| A-21 | SESSION CLOSE 2026-09-12. Production SHA 913d1ea3ad = PR #771. Eligibility GREEN streak 98, PERFORMANCE_STATS ON, calibration published, ladder PROVEN, settlement HEALTHY. Branch claude/astra-redesign-2026-09-14 fully merged (0 ahead). Owner allow-list live in code (baxley full admin, dbax secondary). Founder picks live at /founder-picks. AGENTS.md carries the full session record. Remaining founder hands: EVENT_ODDS_INGEST_ENABLED, INTERNAL_LLM_API_KEY (Vercel AI Gateway), ADMIN_EMAILS belt-and-braces. Only ESTABLISHED blocker: CLV 23% vs 52.4%. | claude | DONE | #771 (913d1ea3ad); live truth surface 2026-09-12T01:17Z |
+| A-43 | Statcast loader + scrape wave 2 research. baseball-savant added to source registry (use-with-caution). apps/web/lib/statcast/ loads batter/pitcher/sprint-speed CSVs from Savant. 8 unit tests. docs/research/scrape-wave-2-results.md: full wiring map from two scrape JSONs (124 features, 660 columns). | claude | DONE | 74e59b9a6; typecheck 0, lint 0, 8/8 statcast tests |
+| A-44 | Humanizer pass: nav trimmed to Board/Players/Fantasy/GSN. Record/Verify/Plans moved to footer + Board menu. Ticker slowed 48s to 90s. Gate reasons rewritten in plain English. Homepage stats relabeled. Mission Control removed from public copy. Methodology cards humanized. | claude | DONE | be568ac19; typecheck 0, lint 0, 25/26 guardrails |
+| A-45 | Methodology cards: plain-English titles replacing jargon (Live odds ingestion -> We pull live odds from real sportsbooks, etc.) | claude | DONE | 73bf35954 |
+| A-46 | AGENTS.md session record + em-dash fixes + nav doctrine update | claude | DONE | b7a5bff9d; em-dash-scan OK, trust-gate OK |
+| A-47 | Remove remaining Sports decision intelligence + Four doors from public copy | claude | DONE | 9accef8fb |
+| A-48 | Fantasy + DFS page copy: plain English metadata and intros | claude | DONE | c08a9f594; typecheck 0, lint 0 |
+| A-49 | Ledger: add A-43 through A-48 rows + fix A-21 evidence SHA | claude | DONE | e8af3f48b |
+| A-50 | Board + House visual pass: plain-English lane titles, state tiles, empty states | claude | DONE | dd758cf1b; em-dash OK, trust-gate OK |
+| A-51 | Remaining held/cleared language: house metadata, board empty states, picks copy, homepage | claude | DONE | f9fe56e65 |
+| A-52 | Methodology page: gate held -> we passed | claude | DONE | 3173063a7 |
 
 <!-- LEDGER:END -->
 

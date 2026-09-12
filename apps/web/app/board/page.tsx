@@ -14,12 +14,12 @@ import { BoardSurfaceChip } from "@/components/board/board-surface-chip";
 export const metadata: Metadata = {
   title: "Board",
   description:
-    "The full decision surface: what scored, what cleared, and what we held with a reason. Edge rank is a ranking score, not a probability. Published picks with reasoning live at /picks.",
+    "Every game we scored today. What we're on, what we passed on, and why.",
   alternates: { canonical: "/board" },
   openGraph: {
     title: "Board",
     description:
-      "Today's scored markets: what cleared, what we held, and why. Edge rank is a ranking score, not a probability.",
+      "Every game we scored today. What we're on, what we passed on, and why.",
   },
 };
 
@@ -200,13 +200,13 @@ export default async function BoardPage(): Promise<JSX.Element> {
               className="mt-5 max-w-4xl font-display text-balance text-ion-white"
               style={{ fontSize: "clamp(2.5rem, 8vw, 5.5rem)", lineHeight: 0.94, letterSpacing: "-0.03em" }}
             >
-              Scored.
+              Every game.
               <br />
-              <span className="text-plasma">Published or held.</span>
+              <span className="text-plasma">Scored and honest.</span>
             </h1>
             <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
-              What is scoring now, what cleared the gate, and what we refused with a reason.
-              Edge rank orders the board. It does not predict the final score.
+              What we&apos;re on today, what we passed on, and why. The board shows every
+              game we looked at, not just the ones we liked.
             </p>
             <div className="mt-7 flex flex-wrap items-center gap-3">
               <Link href="/pricing" className="btn-primary min-h-11 px-5 py-3">
@@ -238,7 +238,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-plasma">You are here</p>
               <p className="mt-1 text-sm font-semibold text-ion-white">The board</p>
               <p className="mt-0.5 text-xs leading-5 text-ion-2">
-                Every decision today — scoring, published, and held. The full picture.
+                Every game today: scoring, published, and passed on. The full picture.
               </p>
             </div>
             <Link
@@ -246,9 +246,9 @@ export default async function BoardPage(): Promise<JSX.Element> {
               className="rounded-xl border border-mineral bg-eclipse/40 px-4 py-3 transition-colors hover:border-orbital-cyan/50"
             >
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-3">Also open</p>
-              <p className="mt-1 text-sm font-semibold text-ion-white">Published picks</p>
+              <p className="mt-1 text-sm font-semibold text-ion-white">Today&apos;s picks</p>
               <p className="mt-0.5 text-xs leading-5 text-ion-2">
-                Only the ones that cleared — with price, timing, and the reason.
+                Only the ones we&apos;re on, with the line, timing, and reason.
               </p>
             </Link>
             <Link
@@ -276,7 +276,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
           <StateTile label="Sports watched" value={String(state.sportsWatched)} />
           <StateTile label="Books polled" value={String(state.booksPolled)} />
           <StateTile label="Open picks" value={String(state.openPicks)} />
-          <StateTile label="Held today" value={String(state.gatedToday)} />
+          <StateTile label="Passed on" value={String(state.gatedToday)} />
           <StateTile label="Last refresh" value={timeLabel(state.lastRefresh)} dataTestid="board-freshness" />
           <StateTile label="Model" value={state.modelVersion} />
         </section>
@@ -294,22 +294,22 @@ export default async function BoardPage(): Promise<JSX.Element> {
           />
           <BoardLane
             index="02"
-            title="Published Today"
+            title="Today's Picks"
             rows={state.publishedToday}
             empty={
               stateResult.meta.boardClass.refusePublicFire
-                ? "No public fires: nothing is published while the board is closed."
-                : "No picks have cleared today."
+                ? "Nothing published right now. The board is paused until data checks pass."
+                : "No picks published yet today."
             }
           />
           <BoardLane
             index="03"
-            title="Held Today"
+            title="Passed On"
             rows={state.gatedTodayRows}
             empty={
               stateResult.meta.boardClass.honestEmpty
-                ? "No held rows while the board is honestly empty."
-                : "Nothing held yet today."
+                ? "Nothing to pass on while the board is honestly empty."
+                : "Nothing passed on yet today."
             }
           />
         </section>
@@ -415,7 +415,7 @@ function BoardRowItem({ row, live }: { row: BoardStateRow; live: boolean }): JSX
           behind the paywall (FE-15); C-224 forbids scoring it here. */}
       {row.gateReason && (
         <p className="col-span-2 mt-1 text-sm text-ion-2">
-          {held && <span className="font-semibold text-plasma">Held. </span>}{row.gateReason}
+          {held && <span className="font-semibold text-plasma">Passed. </span>}{row.gateReason}
         </p>
       )}
       <Link href={`/room/${row.gameId}`} className="col-span-2 mt-2 inline-flex text-sm font-semibold text-ion-1 hover:text-ion-white">

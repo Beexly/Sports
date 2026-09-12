@@ -1,18 +1,14 @@
 import { Suspense } from "react";
 import { BrandLockup } from "@/components/brand/brand-lockup";
-import { NavActiveLink } from "@/components/ui/nav-active-link";
 import { NavMenu } from "@/components/ui/nav-menu";
 import { NavAuth, NavAuthFallback } from "@/components/ui/nav-auth";
 
 /**
  * Field IA — one door per job. Board is THE board.
  *
- * The desktop bar mirrors components/ui/mobile-nav.tsx section for section
- * (Board, Players, Intelligence, Fantasy, GSN, Proof). The two menus are read
- * by the same integrity guard, and a desktop bar that quietly drops a door the
- * mobile panel still carries is how a route becomes unreachable on desktop
- * only. Keep them in step: a door added or removed here is added or removed
- * there in the same change.
+ * The desktop bar mirrors components/ui/mobile-nav.tsx section for section.
+ * Keep them in step: a door added or removed here is added or removed there
+ * in the same change.
  */
 type NavItem = { label: string; href: string; desc: string };
 type NavGroup = { heading?: string; items: readonly NavItem[] };
@@ -23,12 +19,17 @@ const BOARD_MENU: readonly NavGroup[] = [
       {
         label: "The board",
         href: "/board",
-        desc: "Every decision · published or held",
+        desc: "Every game we scored today",
       },
       {
-        label: "Published picks",
+        label: "Today's picks",
         href: "/picks",
-        desc: "What cleared the gate, with the reason",
+        desc: "What we're on, with the reason",
+      },
+      {
+        label: "Our record",
+        href: "/calibration",
+        desc: "How we've done, graded in public",
       },
     ],
   },
@@ -39,18 +40,6 @@ const PLAYERS_MENU: readonly NavGroup[] = [
     items: [
       { label: "Player lab", href: "/players", desc: "Every player, every signal" },
       { label: "The NFL house", href: "/house", desc: "The NFL hub" },
-    ],
-  },
-];
-
-const INTELLIGENCE_MENU: readonly NavGroup[] = [
-  {
-    items: [
-      { label: "Engines", href: "/intelligence/engines", desc: "Inside the scoring pass" },
-
-
-      { label: "Methodology", href: "/methodology", desc: "Factors, data rights, gates" },
-      { label: "Free tools", href: "/tools", desc: "EV, no-vig, parlay, CLV — live calculators" },
     ],
   },
 ];
@@ -96,18 +85,8 @@ export function Nav() {
           <nav className="nav-links" aria-label="Primary">
             <NavMenu label="Board" href="/board" groups={BOARD_MENU} />
             <NavMenu label="Players" href="/players" groups={PLAYERS_MENU} />
-            <NavMenu label="Intelligence" href="/intelligence/engines" groups={INTELLIGENCE_MENU} />
             <NavMenu label="Fantasy" href="/fantasy" groups={FANTASY_MENU} />
             <NavMenu label="GSN" href="/the-beat" groups={GSN_MENU} />
-            <NavActiveLink href="/calibration" title="Record: calibration, CLV, receipts">
-              Record
-            </NavActiveLink>
-            <NavActiveLink href="/verify" title="Recompute a sealed receipt">
-              Verify
-            </NavActiveLink>
-            <NavActiveLink href="/pricing" title="Plans">
-              Plans
-            </NavActiveLink>
           </nav>
         </div>
 

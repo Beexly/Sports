@@ -42,7 +42,7 @@ const BEATS: readonly Beat[] = [
 export function MissionControlHow(): JSX.Element {
   return (
     <section
-      aria-label="How Mission Control works"
+      aria-label="How this works"
       className="relative overflow-hidden rounded-ds-lg border border-mineral bg-eclipse/40 p-5 sm:p-6"
     >
       <div aria-hidden className="absolute inset-x-0 top-0 h-1 bg-signal-fade" />

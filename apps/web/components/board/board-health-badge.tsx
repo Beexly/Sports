@@ -36,7 +36,7 @@ export function BoardHealthBadge({ meta }: { readonly meta: BoardStatePayload["m
           {meta.boardClass.state}
         </span>
         {meta.boardClass.refusePublicFire && (
-          <span className="text-ion-3">public fire held</span>
+          <span className="text-ion-3">publishing paused</span>
         )}
         {primaryDegradation && <span>{primaryDegradation.message}</span>}
       </div>
