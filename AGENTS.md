@@ -57,6 +57,96 @@ hexes; nav condensed to five destinations; tools/intelligence public "math you c
 replaced; brand lockup wordmark de-gradiented; gw-nebula de-violeted. typecheck/lint/brand must
 pass before deploy (`vercel deploy --prod` from a worktree linked to project `sports-web`).
 
+---
+
+**UPDATED 2026-09-12 (ASTRA REDESIGN + RECORD ACCURACY + FOUNDER PICKS — merged as PR #769,
+main `8a1df39cf`).** Full session record. Other agents: read this before touching anything
+listed below. Ledger rows A-1..A-18 in `docs/ops/AGENT_LEDGER.md`.
+
+**What shipped (24 commits on `claude/astra-redesign-2026-09-14`, merged):**
+
+1. **ASTRA 12 owner items** — age-21 gate off subscriptions; tiers re-weighted for DFS season
+   (Elite no longer sells retired Galaxy Twin / useless Academy); proof-crystal backgrounds
+   replaced on /verify /calibration /proof /engine with one Field atmosphere; The Beat made
+   interactive (pulse, sort, quiet-the-noise, expandable cards); Studio internal-only; Academy
+   hidden from public nav + noindex; fantasy "gated" badge honesty (live / partly live / sample);
+   jargon stripped from intelligence engines (JSON button gone, titles plain); free tools given
+   usage moments; House collapsed to 4 doors (no Observatory, no Sunday Couch); /board vs /picks
+   IA fixed ("Published picks" vs "The board").
+2. **Record accuracy (the big one)** —
+   - PUSH was structurally unreachable for spreads/totals (settlement needs an integer line; the
+     mean is an integer only when every book agrees). Published and graded the POSTED book line
+     nearest the consensus mean (`packages/prediction-engine/src/published-line.ts`). Scoring math
+     still reads the raw mean — no grade/rank moves, MODEL_VERSION stays v5.2.7. Ties resolve
+     against us. Forward-only.
+   - Published bet terms (selection/line/reasoning/reasoningShort) frozen write-once at creation
+     in `process-sport.ts`, minted with clvLockLine. The card can no longer show -4.5 while we
+     grade -3.0.
+   - Calibration bucket win rates excluded pushes (were averaging push as half a win, flattering
+     sub-50% buckets). Correlation WIN_RATE excluded pushes (were counting every push as a loss).
+   - /api/performance floor now counts decided picks only (was counting pushes toward the floor).
+3. **Calibration skill picture (additive, no floors)** — `apps/web/lib/calibration/skill-metrics.ts`:
+   BSS, NLL, Murphy REL/RES/UNC, null-band ECE diagnostic. Wired into computeCalibration as
+   `report.skill`. Synthetic-forecaster tests pin constant/perfect/overconfident behaviour.
+   `marketGatesAdvisory` on the live metrics artifact — ADVISORY ONLY, calibration-eligibility.ts
+   never reads it. Live eligibility is MONEYLINE-only.
+4. **Landed unlanded branches** — `claude/calibration-math-verification` (39 hand-computed math
+   pins + the performance floor bug), `claude/push-handling-in-rates`, `claude/settlement-push-and-line-drift`.
+5. **Founder picks ("Beak's picks")** — `apps/web/lib/founder-picks/`. modelVersion=founder-v1,
+   isBootstrap=false, ADMIN POST /api/admin/founder-picks, public /founder-picks + /api/founder-picks.
+   Decided-only win rate. Locks at kickoff (fail-closed). Requires a written reason. factorBreakdown
+   tags source=founder, rankingP null. Can fill a held game or override a PENDING engine pick.
+   No schema change.
+6. **Owner permissions (code-level, works even when ADMIN_EMAILS env is empty)** —
+   `apps/web/lib/auth.ts` `CODE_OWNER_ALLOWLIST`:
+   - `baxley.garrett@gmail.com` — primary owner, full admin. The ONLY email that should ever flip
+     gates/env flags (law 3).
+   - `dbax66@icloud.com` — secondary admin. Cockpit, founder picks, ops surfaces. Do NOT flip
+     gates or env flags.
+   ADMIN_EMAILS env still works and is OR'd with this list.
+
+**Verified at merge:** typecheck 0, lint 0, model-freeze OK (MODEL_VERSION v5.2.7), trust-gate OK
+(2138 files), 2323-test calibration+honesty+settlement sweep green, auth 34/34, founder-picks 9/9,
+calibration-math-invariants 39/39. Floors (n 100 / Brier 0.22 / ECE 0.05) byte-identical. No env
+flag flipped.
+
+**Live truth surface 2026-09-11T23:56Z (do not re-litigate):** eligibility GREEN, streak 93,
+PERFORMANCE_STATS ON, calibration published, revenue ladder PROVEN, money path ready, settlement
+HEALTHY (0 of 2802 overdue), canonicalSettled 2300. The only unmet ESTABLISHED requirement is
+CLV beat-close 23.0% vs 52.4%.
+
+**Props activation (founder env only, NOT flipped):** the full hierarchical-Bayes props engine
+already exists (`packages/prediction-engine/src/edge-lab/props-hb*.ts`, fire-gate, line-shop,
+juice-floor). Ingest is wired and no-ops unless `EVENT_ODDS_INGEST_ENABLED=true` (credit-capped,
+default 8 calls) and `LINE_ARCHIVE_ENABLED=true`. Schema sealed — prop lines persist in
+OddsLineSnapshot. Two founder env flips turn it on.
+
+**Founder env actions still open:**
+- Set `ADMIN_EMAILS=baxley.garrett@gmail.com,dbax66@icloud.com` in Vercel (belt-and-braces; the
+  code allow-list already works without it).
+- Props: `EVENT_ODDS_INGEST_ENABLED=true` + `LINE_ARCHIVE_ENABLED=true`.
+- Vercel AI Gateway for internal LLM: `INTERNAL_LLM_BASE_URL=https://ai-gateway.vercel.sh/v1`,
+  `INTERNAL_LLM_API_KEY=<vck_… key from founder, NEVER commit it>`, `INTERNAL_LLM_MODEL=<model>`.
+- Merge is done; production auto-deploys from main at `8a1df39cf`. Redeploy if the truth surface
+  SHA lags.
+
+**Do not regress:**
+- Never restore the age-21 checkout gate.
+- Never put "gated" back on fantasy tools that render on sample data.
+- Never put "Today's Board" eyebrow back on /picks.
+- Never re-add proof-crystal to the trust surfaces.
+- Never average a push into a published win rate.
+- Never publish a pick whose displayed line differs from its clvLockLine.
+- `marketGatesAdvisory` is NOT a gate. calibration-eligibility.ts does not read it.
+- Founder picks use modelVersion `founder-v1` — never mix them into engine calibration samples.
+
+**Next highest-value work (in order):**
+1. Props env flip (founder) + verify prop lines land in OddsLineSnapshot.
+2. Owner starts locking founder picks; promote the honest record.
+3. Keep selective δ=0.1 + pause ON; rank on marketFairProb (bestScore per the bake-off).
+4. CLV 23% → 52.4% is the ESTABLISHED blocker — that is a model problem, not a gate problem.
+5. Visual polish pass on /founder-picks and the props board once props are live.
+
 **UPDATED 2026-09-10 (17:15 UTC): NFL CLIP OPERATION — "GSE Film Room" on @GalaxySportsHQ (Motif, Muse agent).** Garrett's directive: real clipped sports footage with our data narrative; no synthetic/fake footage; no commercial license; transformative edits only. Full build artifacts live in the revenue-engine workspace under `clips/video-builds/` (not in this repo).
 
 1. **First native clipped video POSTED 2026-09-10:** "How Seattle manufactured THREE fourth-quarter INTs off Drake Maye" (74.7s, 1080x1920, H.264+AAC). Live: https://x.com/GalaxySportsHQ/status/2098095892268273696. Final file `gse-filmroom-seahawks-3int-mayes-meltdown-v2.mp4`; source log `SOURCE-LOG-seahawks-3int.md` carries both official @Seahawks post URLs, exact excerpt timestamps, and every transformation.
