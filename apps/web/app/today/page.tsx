@@ -10,9 +10,9 @@ import { buildBriefing } from "@/lib/cockpit/mission-control";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Mission Control: What Matters Now",
+  title: "Today: What Matters Now",
   description:
-    "One glance across the whole platform: breaking news, the scheme move re-pricing an offense, your roster's risk, the sharpest DFS and pick'em edges, and your CLV discipline, prioritized and actionable.",
+    "One glance across the whole platform: breaking news, the sharpest DFS and pick'em edges, and what to watch today.",
   alternates: { canonical: "/today" },
 };
 
@@ -28,7 +28,7 @@ export default function TodayPage() {
           <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80" style={{ background: `radial-gradient(60% 80% at 50% 0%, ${BRAND_COLORS.orbitalCyan}18, transparent 70%), radial-gradient(40% 60% at 76% 6%, ${BRAND_COLORS.ionMagenta}10, transparent 70%)` }} />
           <div className="mx-auto max-w-6xl">
             <Reveal>
-              <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan"><span className="live-dot" /> Mission Control</p>
+              <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan"><span className="live-dot" /> Today</p>
             </Reveal>
             <Reveal delay={90}>
               <h1 className="mt-5 max-w-3xl font-display text-balance text-ion-white" style={{ fontSize: "clamp(2.4rem, 7vw, 5rem)", lineHeight: 0.98, letterSpacing: "-0.02em" }}>

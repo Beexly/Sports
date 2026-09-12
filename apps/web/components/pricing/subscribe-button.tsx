@@ -1,10 +1,10 @@
 "use client";
 
-import { useEffect, useId, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { track } from "@/lib/analytics/events";
-import { clearCheckoutIntent, readCheckoutIntent, saveCheckoutIntent } from "@/lib/pricing/checkout-resume";
+import { saveCheckoutIntent } from "@/lib/pricing/checkout-resume";
 
 /**
  * Subscribe button — isolates the Stripe checkout side-effect so the
@@ -23,6 +23,10 @@ import { clearCheckoutIntent, readCheckoutIntent, saveCheckoutIntent } from "@/l
  * comes from the pricing-phases single source via the `priceMonthly`/`priceAnnual`
  * props the server page already derives. Stripe Checkout also collects an
  * affirmative Terms consent (see lib/stripe.ts).
+ *
+ * Age gate removed 2026-09-14 (founder: "Remove the age-21 requirement from
+ * subscriptions"). Browsing was already all-ages (C-291); the hard DOB block
+ * on checkout is gone. Compliance "21+" copy on promos/footer is unchanged.
  */
 
 type Tier = "FANTASY" | "PRO" | "ELITE";
@@ -92,7 +96,6 @@ export function SubscribeButton({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [dateOfBirth, setDateOfBirth] = useState("");
   // Unique id so assistive tech can announce the recurring-billing disclosure as
   // the button's description (aria-describedby). useId keeps it unique even when
   // several SubscribeButtons render on the same /pricing page.
@@ -105,22 +108,6 @@ export function SubscribeButton({
   // different Stripe parameters (the server would 409 that anyway).
   const intentRef = useRef<{ key: string; id: string | null } | null>(null);
 
-  // FE-08: restore the date of birth this button's own tier+interval saved
-  // just before a sign-in bounce. Re-checks whenever tier/interval change,
-  // not just on mount — PricingPlans restores its own interval state
-  // slightly after mount (its own effect), so a button that mounted before
-  // that update needs to re-check once its interval prop catches up, or an
-  // annual intent's DOB is silently dropped. Only the button whose tier and
-  // interval match the stored intent claims (and clears) it, so a resumed
-  // FANTASY intent never leaks its DOB into the PRO button.
-  useEffect(() => {
-    const intent = readCheckoutIntent();
-    if (intent && intent.tier === tier && intent.interval === interval) {
-      setDateOfBirth(intent.dateOfBirth);
-      clearCheckoutIntent();
-    }
-  }, [tier, interval]);
-
   // Interval-appropriate recurring amount, pulled from the pricing-phases source
   // (never hardcoded). Falls back to the amount shown on the plan if a price prop
   // was not passed, so the disclosure is always honest and never invents a number.
@@ -131,10 +118,6 @@ export function SubscribeButton({
 
   async function handleClick() {
     setError(null);
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateOfBirth)) {
-      setError("Enter your date of birth. You must be 21 or older to subscribe.");
-      return;
-    }
     setLoading(true);
     // Intent signal — the user committed to moving up a tier (before the
     // network round-trip). Inert no-op until a provider is wired.
@@ -157,16 +140,15 @@ export function SubscribeButton({
         body: JSON.stringify({
           tier,
           interval,
-          dateOfBirth,
           ...(intentId !== null ? { clientIntentId: intentId } : {}),
         }),
       });
 
       if (res.status === 401) {
         // FE-08: the sign-in round trip drops React state entirely — without
-        // this, the tier/interval/DOB the visitor just entered vanish and
-        // they land back on a blank pricing form.
-        saveCheckoutIntent({ tier, interval, dateOfBirth });
+        // this, the tier/interval the visitor just picked vanish and they
+        // land back on a blank pricing form.
+        saveCheckoutIntent({ tier, interval });
         router.push("/auth/signin?callbackUrl=/pricing");
         return;
       }
@@ -193,18 +175,6 @@ export function SubscribeButton({
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="flex flex-col gap-1 text-[11px] leading-relaxed text-ion-3">
-        Date of birth (21+)
-        <input
-          type="date"
-          name="dateOfBirth"
-          required
-          autoComplete="bday"
-          value={dateOfBirth}
-          onChange={(e) => setDateOfBirth(e.target.value)}
-          className="rounded-lg border border-ion-4/40 bg-void px-3 py-2 text-sm text-ion-1"
-        />
-      </label>
       <button
         type="button"
         disabled={loading}

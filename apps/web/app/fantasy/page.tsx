@@ -26,9 +26,9 @@ const LEGACY_TOOL_ROUTES: Record<string, string> = {
 };
 
 export const metadata: Metadata = {
-  title: "Galaxy Fantasy - Real Roster First",
+  title: "Fantasy Tools",
   description:
-    "Galaxy Fantasy starts with read-only roster sync and stays gated until live player projections are connected. No fictional projections are presented as live advice.",
+    "Start-sit, waivers, trades, DFS, and pick'em. Real roster data when you connect; honest sample data when you don't.",
   alternates: { canonical: "/fantasy" },
 };
 
@@ -53,22 +53,33 @@ const LIVE_FIRST = [
   },
 ] as const;
 
-type ToolStatus = "live" | "partly live" | "gated";
+/**
+ * Honest status vocabulary (ASTRA A-7, owner item 7).
+ *
+ * "Gated" used to mean "you cannot open this" — but every tool below renders
+ * in full for an anonymous visitor on an illustrative pool. The badge was
+ * describing the DATA, and it was lying about the ACCESS. Now:
+ *   live        — real public data, working today
+ *   partly live — real data in some tabs, sample in others
+ *   sample      — opens now on clearly-labelled sample players until a
+ *                 licensed projections feed is connected
+ */
+type ToolStatus = "live" | "partly live" | "sample";
 const TOOL_DIRECTORY: readonly (readonly [string, string, string, ToolStatus])[] = [
-  ["Optimizer: DFS · Start/Sit · Draft", "One workspace, one contest switch. Salaries and projections stay gated; the draft board (tiers, VOR, scarcity, run alerts, your ADP CSV) runs on the illustrative pool now.", "/optimizer", "partly live"],
-  ["Best Ball", "Draft-only roster construction: ceiling/spike upside, QB-to-catcher stacks, bye fragility, and a next-pick recommender. Runs on the illustrative pool now; real the moment projections flip on.", "/fantasy/bestball", "partly live"],
+  ["Optimizer: DFS · Start/Sit · Draft", "One workspace, one contest switch. LineStar-style projections table (salary, value, pOwn%, leverage), QB stack, max exposure, CSV export. Opens on a sample slate; import your DK CSV for the real one today.", "/optimizer", "partly live"],
+  ["Best Ball", "Draft-only roster construction: ceiling/spike upside, QB-to-catcher stacks, bye fragility. Ranked by GSE Score.", "/fantasy/bestball", "partly live"],
   ["Human Performance", "Public confidence-band layer: venue surface, weather, official injury status. Live now; never a body claim.", "/human", "live"],
-  ["Waiver & FAAB", "Needs roster sync, projections, injuries, and league market context.", "/fantasy/waivers", "gated"],
-  ["Trade Analyzer", "Needs live player values and roster context.", "/fantasy/trade", "gated"],
-  ["Pick'em Edge", "Needs live pick'em lines and alt-line pricing.", "/fantasy/props", "gated"],
-  ["League Twin", "Can render a real roster after sync; advice waits for projections.", "/fantasy/league-twin", "gated"],
-  ["GM Ledger", "Proof mechanics are real; live decision history requires user roster events.", "/fantasy/gm-ledger", "gated"],
+  ["Waiver & FAAB", "Opens now on sample players ranked by GSE Score. Needs roster sync and a projections feed to become advice.", "/fantasy/waivers", "sample"],
+  ["Trade Analyzer", "Both sides valued on GSE Score. Opens now on sample players; live the moment a projections feed is connected.", "/fantasy/trade", "sample"],
+  ["Pick'em Edge", "Our number vs their line, with the most valuable alt. Market and team filters. Opens on sample lines.", "/fantasy/props", "sample"],
+  ["League Twin", "Can render a real roster after sync; advice waits for projections.", "/fantasy/league-twin", "sample"],
+  ["GM Ledger", "Proof mechanics are real; live decision history requires user roster events. Today the history is a disclosed demonstration.", "/fantasy/gm-ledger", "sample"],
 ] as const;
 
 const STATUS_TONE: Record<ToolStatus, string> = {
   live: "text-orbital-cyan",
   "partly live": "text-ultraviolet",
-  gated: "text-ion-2",
+  sample: "text-ion-2",
 };
 
 export default async function FantasyHubPage({
@@ -129,7 +140,7 @@ export default async function FantasyHubPage({
               </p>
               <dl className="mt-5 grid grid-cols-3 gap-3">
                 <ReadinessMetric label="Roster" value="sync" />
-                <ReadinessMetric label="Projections" value="gated" />
+                <ReadinessMetric label="Projections" value="sample" />
                 <ReadinessMetric label="Actions" value="no-write" />
               </dl>
               <p className="mt-4 text-sm leading-6 text-ion-1">
@@ -160,7 +171,7 @@ export default async function FantasyHubPage({
                   NFLverse Pulse
                 </Link>
                 <Link href="/api/sources/catalog" className="btn btn-ghost">
-                  Source JSON
+                  Data sources
                 </Link>
                 <Link href="/fantasy/baseline" className="btn btn-ghost">
                   Baseline map
@@ -202,7 +213,13 @@ export default async function FantasyHubPage({
                 <h2 className="font-display text-3xl font-semibold text-ion-white">Every tool, with its honest status</h2>
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
                   One directory, no dead ends. Each tool links straight through and shows whether it&apos;s
-                  live, partly live, or gated on a real data feed. Never a design delay, never a fictional input.
+                  live, partly live, or running on sample players until a licensed feed is connected.
+                  Never a design delay, never a fictional input presented as live advice.
+                </p>
+                <p className="mt-2 text-xs leading-5 text-ion-2">
+                  <span className="text-orbital-cyan">Live</span> = real public data today.{" "}
+                  <span className="text-ultraviolet">Partly live</span> = real in some tabs, sample in others.{" "}
+                  Sample = opens now, clearly labelled, not advice.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3 text-sm font-semibold">

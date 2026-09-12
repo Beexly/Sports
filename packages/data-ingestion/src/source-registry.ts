@@ -728,6 +728,23 @@ export const SOURCE_REGISTRY: Readonly<Record<string, LegalSource>> = {
     datasets: [],
     docsUrl: "https://github.com/pinnacleapi/pinnacleapi-documentation",
   },
+  "baseball-savant": {
+    id: "baseball-savant",
+    provider: "Baseball Savant / MLB Statcast",
+    kind: "public-api",
+    license: { spdx: null, name: "MLBAM Terms of Use (facts-as-inputs)", url: "https://www.mlb.com/official-information/terms-of-use" },
+    commercialUse: true,
+    attributionRequired: true,
+    attributionText: "Statcast data via Baseball Savant (baseballsavant.mlb.com).",
+    robotsRespected: true,
+    rateLimit: "Public CSV export endpoints; cache 6h+, no high-frequency polling.",
+    verdict: "use-with-caution",
+    reason:
+      "Public sabermetric leaderboards with CSV export (the endpoints pybaseball documents). Facts are not copyrightable (Feist); use as model inputs only, never re-expose the feed. Same facts-as-inputs pattern as other public sports data.",
+    baseUrl: "https://baseballsavant.mlb.com",
+    datasets: ["statcast_leaderboard", "expected_statistics", "sprint_speed", "statcast_search"],
+    docsUrl: "https://baseballsavant.mlb.com/statcast_search",
+  },
 };
 
 export function getSource(id: string): LegalSource | undefined {

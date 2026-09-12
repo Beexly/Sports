@@ -145,8 +145,8 @@ export default async function ContestBayPage() {
 
           <div className="mx-auto mt-14 max-w-3xl text-center text-sm text-ion-2">
             Prefer picks with reasoning attached?{" "}
-            <Link href="/board" className="text-orbital-cyan underline-offset-4 hover:underline">
-              Today's Board
+            <Link href="/picks" className="text-orbital-cyan underline-offset-4 hover:underline">
+              Published picks
             </Link>{" "}
             ·{" "}
             <Link href="/academy" className="text-orbital-cyan underline-offset-4 hover:underline">

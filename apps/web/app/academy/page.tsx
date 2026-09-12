@@ -27,6 +27,10 @@ export const metadata: Metadata = {
   description:
     "A real curriculum: tracks and modules with saved progress and mastery, interactive courses with graded quizzes, a live-fire decision simulator, the Beat the Close training game, and the GM Academy. Train process, calibration, and restraint.",
   alternates: { canonical: "/academy" },
+  // Hidden from public nav 2026-09-14 (ASTRA A-5, owner item 6). Route stays
+  // reachable by direct link; de-indexed until the surface is redesigned into
+  // membership value.
+  robots: { index: false, follow: true },
 };
 
 /**

@@ -23,10 +23,10 @@ import { GET as getDailySlate } from "@/app/api/picks/daily-slate/route";
 export function generateMetadata(): Metadata {
   const publicPicksOpen = getReadinessGates().canExposePublicPicks;
   return {
-    title: "Today's Signals",
+    title: "Today's Picks",
     description: publicPicksOpen
-      ? "Today's picks from a deterministic factor model: two free picks a day with the public Edge Index. The full board, the confidence score and the factor trail are on Pro and Elite."
-      : "Public picks open when the sample and gates allow. Until then this surface stays intentionally dark: no invented slate, no certainty theater. Methodology, tools, and paper contests remain free.",
+      ? "What we're on today, with the line, the timing, and the reason. Free gets a daily teaser; Pro and Elite unlock the full set."
+      : "Picks open when our sample and gates allow. Until then this page stays dark — no invented slate, no fake certainty.",
     alternates: { canonical: "/picks" },
   };
 }
@@ -124,7 +124,7 @@ async function fetchPicks(
           date: date ?? new Date().toISOString().split("T")[0]!,
         },
         bootstrap: {
-          message: body.error ?? "Today's Board is collecting live history.",
+          message: body.error ?? "Published picks are collecting live history.",
           hint: body.hint,
           kind,
         },
@@ -251,19 +251,18 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {/* Header */}
           <div className="mb-6">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-300">
-              Today&apos;s Board
+              Published picks
             </p>
             <h1 className="mt-1.5 text-3xl font-bold tracking-tight text-white">
               Today&apos;s sports signals.
             </h1>
             <p className="mt-1.5 text-sm text-ion-2">
-              Every signal published today, with price, timing, risk, and the
-              reason it cleared the gate. For the full pipeline — everything
-              scoring now, cleared or held with reasons — see{" "}
-              <Link href="/board" className="font-semibold text-white underline decoration-plasma underline-offset-4 hover:text-plasma">
+              Every pick we&apos;re on today, with the line, timing, risk, and the
+              reason.{" "}
+              <Link href="/board" className="underline hover:text-ion-1">
                 The board
-              </Link>
-              .
+              </Link>{" "}
+              also shows what we passed on.
             </p>
           </div>
 
@@ -501,13 +500,13 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </div>
               <h2 className="text-base font-semibold text-white">
                 {activeSportLabel
-                  ? `No ${activeSportLabel} signals published for this date`
-                  : "No signals published for this date"}
+                  ? `No ${activeSportLabel} picks for this date`
+                  : "No picks for this date"}
               </h2>
               <p className="mt-2 text-sm text-ion-3">
                 {activeSportLabel
-                  ? `Nothing on the ${activeSportLabel} board cleared the gate for this date (quiet board / no published signals). Try another sport or date.`
-                  : "Quiet board for this date: no published signals cleared the gate. Awaiting fresh odds or eligible games — not an outage."}
+                  ? `Nothing on the ${activeSportLabel} slate today. Try another sport or date.`
+                  : "Quiet day. No picks published yet. Try another date."}
               </p>
             </div>
           )}

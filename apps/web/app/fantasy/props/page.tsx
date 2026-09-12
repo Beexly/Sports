@@ -7,9 +7,9 @@ import { activePickemLines, isLivePickem } from "@/lib/integrations/pickem";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Pick'em Edge · Galaxy Fantasy",
+  title: "Pick'em Edge · Our number vs their line",
   description:
-    "An edge advisor on Underdog / DK Pick6-style lines: where our model disagrees with the posted line, the conviction behind every call, the most valuable alt line, and the true odds and EV of any Power-Play entry.",
+    "Where our model disagrees with the posted Underdog / DK Pick6 line. Every prop shows the side, the conviction, and the most valuable alt line. Build a Power-Play entry and see its true odds and EV before you stake a dollar.",
   alternates: { canonical: "/fantasy/props" },
   robots: { index: false, follow: true },
 };
@@ -24,7 +24,7 @@ export default function PropsPage() {
       eyebrow="Pick'em Edge"
       accent="ultraviolet"
       title={<>Their line. <span className="gse-editorial" style={{ fontSize: "1.08em" }}>Our number</span>. Your edge.</>}
-      intro="We read the lines Underdog, DK Pick6, and PrizePicks post, and tell you where our model disagrees. Every prop shows the side, the conviction, and the single most valuable alt line: the line and multiplier where edge × payout pays best. Build a Power-Play entry and see its real combined odds and expected value before you stake a dollar. We advise on these lines; we don't operate a pick'em product."
+      intro="Filter by market or team. Every prop shows the side we'd take, how strongly, and the single alt line where edge times payout pays best. Build a 2-to-6 leg entry and see its real combined odds and expected value before you stake a dollar. We advise on these lines; we don't operate a pick'em product."
       note={note}
       wide
       projectionsBadge={false}

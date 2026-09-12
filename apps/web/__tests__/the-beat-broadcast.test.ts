@@ -5,11 +5,12 @@ import { resolve } from "node:path";
 /**
  * The Beat → Galaxy Broadcast contract.
  *
- * The Beat is no longer a static ledger: it now leads with a cinematic, always-on
- * transmission fronted by Nova (the synthetic field anchor), with the graded feed
- * preserved below as the Signal Ledger. These guards keep that wiring honest and
- * non-deceptive: the synthetic-presenter disclosure is always rendered, Nova is a
- * stylized brand mark (never a photoreal likeness), and the proof feed stays.
+ * The Beat is a full-bleed cinematic surface: a scored opening, an always-on
+ * transmission fronted by Nova (the synthetic field anchor), and the graded
+ * Signal Ledger below. These guards keep that wiring honest and non-deceptive:
+ * the synthetic-presenter disclosure is always rendered, Nova is a stylized
+ * brand mark (never a photoreal likeness), the proof feed stays, and the
+ * robotic speech-synthesis Play control stays dead.
  */
 
 const webRoot = resolve(__dirname, "..");
@@ -20,10 +21,9 @@ describe("The Beat — Galaxy Broadcast", () => {
   const broadcast = read("components/news/galaxy-broadcast.tsx");
   const host = read("lib/fantasy/host.ts");
 
-  it("wires the cinematic broadcast in above the graded feed", () => {
+  it("wires the cinematic broadcast and the graded feed", () => {
     expect(page).toContain("GalaxyBroadcast");
     expect(page).toContain("buildBroadcast");
-    // The graded feed is preserved as the Signal Ledger (proof not removed).
     expect(page).toContain("TheBeat");
     expect(page).toContain("The Signal Ledger");
   });
@@ -39,10 +39,20 @@ describe("The Beat — Galaxy Broadcast", () => {
     expect(broadcast.toLowerCase()).not.toContain("<video");
   });
 
-  it("keeps the broadcast backdrop decorative and reduced-motion safe", () => {
-    // The motion plate is the decorative GeneratedPlate (which disables video
-    // under reduced motion); no raw autoplaying media is hand-rolled here.
-    expect(page).toContain("GeneratedPlate");
+  it("does NOT ship the robotic speech-synthesis Play control", () => {
+    // Founder 2026-09-12: "the voice is horrible and nothing human-like."
+    // Browser speechSynthesis is gone. A real TTS lane can return behind
+    // an explicit opt-in; the default surface must not sound like a robot.
+    expect(broadcast).not.toContain("speechSynthesis");
+    expect(broadcast).not.toContain("SpeechSynthesisUtterance");
+    expect(broadcast).not.toMatch(/▶ Play/);
+  });
+
+  it("has no autoplaying media and no decorative plate on the page shell", () => {
     expect(broadcast.toLowerCase()).not.toContain("autoplay");
+    // The opening is pure Field atmosphere (gradient + scanline wash),
+    // not a GeneratedPlate still.
+    expect(page).not.toContain("GeneratedPlate");
+    expect(page).toContain("radial-gradient");
   });
 });

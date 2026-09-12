@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   // already the brand, so it must be absolute.
   title: { absolute: "Galaxy Sports Edge" },
   description:
-    "A scored board, a public record, and the guts to show what we held back. We detect. You decide.",
+    "A scored board, a public record, and the guts to show what we passed on. We detect. You decide.",
   alternates: { canonical: "/" },
 };
 
@@ -71,10 +71,10 @@ export default async function HomePage(): Promise<JSX.Element> {
 
   const tickerItems = [
     ...state.publishedToday.slice(0, 8).map(
-      (p) => `${p.matchup} · ${p.market} · cleared · edge ${p.edgeIndex ?? "n/a"}`,
+      (p) => `${p.matchup}: we're on ${p.market}`,
     ),
     ...state.gatedTodayRows.slice(0, 6).map(
-      (row) => `${row.matchup} · held · ${row.gateReason ?? "gate"}`,
+      (row) => `${row.matchup}: we passed`,
     ),
   ];
 
@@ -105,15 +105,15 @@ export default async function HomePage(): Promise<JSX.Element> {
                 "radial-gradient(ellipse 55% 40% at 70% 18%, rgba(255,77,46,0.09), transparent 58%), linear-gradient(180deg, #08090Cdd 0%, #08090C88 42%, #08090C 100%)",
             }}
           />
-          <div className="relative mx-auto flex min-h-[inherit] w-full max-w-7xl flex-col justify-center px-4 py-32 sm:px-6 sm:py-40 lg:px-8">
+          <div className="relative mx-auto flex min-h-[inherit] max-w-5xl flex-col justify-center px-4 py-28 sm:px-6 lg:px-8">
             <Reveal>
-              <p className="mb-6 inline-flex items-center gap-2.5 border border-mineral bg-eclipse/70 px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-ion-2">
+              <p className="mb-6 inline-flex items-center gap-2.5 border border-mineral bg-eclipse/70 px-3.5 py-1.5 text-[11px] uppercase tracking-wider text-ion-2">
                 <span
                   aria-hidden
                   className="h-1.5 w-1.5 rounded-full bg-plasma"
                   style={{ animation: "pp-live-pulse 2s ease-in-out infinite" }}
                 />
-                Compare fantasy options · today&apos;s picks · the evidence
+                Live now
               </p>
             </Reveal>
             <Reveal delay={60}>
@@ -123,13 +123,13 @@ export default async function HomePage(): Promise<JSX.Element> {
               >
                 The market is full of <span className="text-plasma">noise</span>.
                 <br />
-                Galaxy turns it into <span className="text-plasma">signal</span>.
+                We find the <span className="text-plasma">signal</span>.
               </h1>
             </Reveal>
             <Reveal delay={120}>
               <p className="mt-6 max-w-xl text-lg leading-8 text-ion-1">
-                Every Sunday the takes pile up. We score the markets, publish what
-                survives, and put the holds on the record with their reasons.
+                Every Sunday the takes pile up. We score every game, publish what
+                we&apos;re on, and show what we passed on, with the reason.
               </p>
             </Reveal>
             <Reveal delay={180}>
@@ -153,18 +153,18 @@ export default async function HomePage(): Promise<JSX.Element> {
               </p>
             </Reveal>
             <Reveal delay={280}>
-              <dl className="mt-14 grid max-w-4xl grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-4">
+              <dl className="mt-12 grid max-w-2xl grid-cols-2 gap-px border border-mineral bg-mineral sm:grid-cols-4">
                 {[
-                  { k: "Cleared", v: boardUnavailable ? "n/a" : String(cleared) },
-                  { k: "Held", v: boardUnavailable ? "n/a" : String(gated) },
-                  { k: "Settled n", v: settled > 0 ? String(settled) : "building" },
-                  { k: "Verify", v: "public" },
+                  { k: "Today's picks", v: boardUnavailable ? "n/a" : String(cleared) },
+                  { k: "We passed on", v: boardUnavailable ? "n/a" : String(gated) },
+                  { k: "Graded picks", v: settled > 0 ? String(settled) : "building" },
+                  { k: "Anyone can check", v: "yes" },
                 ].map((cell) => (
-                  <div key={cell.k} className="border-t border-mineral-hi pt-3">
-                    <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                  <div key={cell.k} className="bg-eclipse px-4 py-3">
+                    <dt className="text-[11px] uppercase tracking-wider text-ion-2">
                       {cell.k}
                     </dt>
-                    <dd className="mt-1 font-display text-4xl font-semibold tabular-nums text-ion-white">
+                    <dd className="mt-1 font-display text-2xl font-semibold tabular-nums text-ion-white">
                       {cell.v}
                     </dd>
                   </div>
@@ -176,31 +176,31 @@ export default async function HomePage(): Promise<JSX.Element> {
 
         <FieldBoardTicker items={tickerItems} />
 
-        {/* SIGNAL MAP. One decision per card. */}
+        {/* SIGNAL MAP. Four ways in, one decision each. */}
         <section
           id="doors"
           className="border-b border-mineral px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
         >
           <div className="mx-auto max-w-7xl">
             <Reveal>
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-plasma">
-                <span className="mr-3 text-ion-2">01</span>Decisions
+              <p className="text-[11px] uppercase tracking-wider text-plasma">
+                Where to start
               </p>
-              <h2 className="mt-4 max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-5xl">
-                Pick the decision you came to make.
+              <h2 className="mt-3 max-w-3xl font-display text-3xl font-semibold text-ion-white sm:text-4xl">
+                What are you here to decide?
               </h2>
             </Reveal>
             <div className="mt-10 grid gap-px overflow-hidden border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-4">
               <DoorCard
                 index={1}
                 label="Board"
-                decides="The gate's reasoning behind every pass and every clear."
+                decides="Every game we scored today, and what we decided."
                 stat={
                   boardUnavailable
-                    ? "Live board data unavailable"
+                    ? "Board temporarily unavailable"
                     : cleared > 0 || gated > 0
-                      ? `${cleared} cleared · ${gated} gated`
-                      : "Gate holding. No forced action"
+                      ? `${cleared} picks · ${gated} passes`
+                      : "Quiet slate. Nothing forced."
                 }
                 action="Open the board"
                 href="/board"
@@ -237,21 +237,19 @@ export default async function HomePage(): Promise<JSX.Element> {
                 "Live counts". The player-rows metric lives in the
                 Suspense-bounded NflverseLabDoor above (P16-01): nflverse errors
                 surface there, not here. */}
-            <p className="mt-8 text-center font-mono text-[11px] uppercase tracking-[0.16em] text-orbital-cyan tabular-nums">
+            <p className="mt-8 text-center text-sm text-ion-2">
               {boardUnavailable ? (
-                <>Live board counts are temporarily unavailable.</>
+                <>Board counts are temporarily unavailable.</>
               ) : (
                 <>
-                  Right now · <span className="text-ion-white">{cleared} cleared</span> ·{" "}
-                  <span className="text-ion-white">{gated} gated</span> ·{" "}
+                  Right now: <span className="text-ion-white">{cleared} picks</span> on the board,{" "}
+                  <span className="text-ion-white">{gated} we passed on</span>.
                 </>
               )}
               {settled > 0 ? (
-                <>
-                  graded on <span className="text-ion-white">{settled} settled picks</span>
-                </>
+                <>  Graded on {settled} settled picks.</>
               ) : (
-                <>calibration sample building</>
+                <>  Building our graded sample.</>
               )}
             </p>
           </div>
@@ -265,24 +263,24 @@ export default async function HomePage(): Promise<JSX.Element> {
           eyebrow="The hold"
           title={
             <>
-              A held row is not a blank. It is{" "}
+              A pass is not a blank. It is{" "}
               <span className="text-plasma">the finding</span>.
             </>
           }
-          lede="Knowing what not to trust is the product. Four gates keep weak markets off the board, and every pass is logged in public, same as a published pick."
+          lede="Knowing what not to trust is the product. Four checks keep weak games off the board, and every pass is logged in public, same as a published pick."
           tone="deep"
         >
           <NoBetGateChapter />
         </WorldSection>
 
         {/* PROOF STRIP. One band, routes to the proof itself. */}
-        <section className="neb-band border-b border-mineral px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
-          <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 lg:flex-row lg:items-end">
+        <section className="neb-band border-b border-mineral px-4 py-12 sm:px-6 lg:px-8">
+          <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-plasma">
-                <span className="mr-3 text-ion-2">02</span>The proof
+                The proof
               </p>
-              <h2 className="mt-3 max-w-3xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-5xl">
+              <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
                 Trust is an architecture, not a tagline.
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
@@ -298,13 +296,13 @@ export default async function HomePage(): Promise<JSX.Element> {
               </Link>
               <Link
                 href="/engine"
-                className="link-underline text-sm font-semibold text-ion-1 hover:text-ion-white"
+                className="text-sm font-semibold text-ion-1 hover:text-ion-white"
               >
                 Open the sealed engine
               </Link>
               <Link
                 href="/verify"
-                className="link-underline text-sm font-semibold text-ion-1 hover:text-ion-white"
+                className="text-sm font-semibold text-ion-1 hover:text-ion-white"
               >
                 Check a receipt →
               </Link>
@@ -320,9 +318,9 @@ export default async function HomePage(): Promise<JSX.Element> {
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-plasma">
-                <span className="mr-3 text-ion-2">03</span>Record
+                Record
               </p>
-              <h2 className="mt-3 max-w-2xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-5xl">
+              <h2 className="mt-2 font-display text-3xl font-semibold text-ion-white sm:text-4xl">
                 Every number ships with its sample.
               </h2>
               <p className="mt-3 max-w-xl text-sm leading-6 text-ion-1">

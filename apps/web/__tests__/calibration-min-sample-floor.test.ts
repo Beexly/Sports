@@ -48,6 +48,70 @@ describe("calibration min-sample floor (sufficientSample)", () => {
     expect(report.buckets.every((b) => b.sufficientSample === false)).toBe(true);
   });
 
+  it("counts DECIDED picks against the floor, not pushes padding the population", () => {
+    // 25 decided (13W/12L) + 5 pushes = 30 rows. The bucket clears a 30-row
+    // population but rests on only 25 real outcomes, so it must NOT publish.
+    const rows: CalibrationPickInput[] = [
+      ...Array.from({ length: 25 }, (_, i) => ({
+        id: `d-${i}`,
+        confidence: 75,
+        result: (i % 2 === 0 ? "WIN" : "LOSS") as CalibrationPickInput["result"],
+      })),
+      ...Array.from({ length: 5 }, (_, i) => ({
+        id: `p-${i}`,
+        confidence: 75,
+        result: "PUSH" as CalibrationPickInput["result"],
+      })),
+    ];
+
+    const report = computeCalibration(rows);
+    const b = report.buckets.find((x) => x.label === "70-79");
+
+    expect(b?.sampleSize).toBe(30); // population reaches the floor...
+    expect(b?.wins).toBe(13);
+    expect(b?.losses).toBe(12);
+    expect(b?.pushes).toBe(5);
+    expect(b?.sufficientSample).toBe(false); // ...but 25 decided does not.
+  });
+
+  it("publishes once DECIDED picks reach the floor even with pushes alongside", () => {
+    const rows: CalibrationPickInput[] = [
+      ...Array.from({ length: 30 }, (_, i) => ({
+        id: `d-${i}`,
+        confidence: 75,
+        result: (i % 2 === 0 ? "WIN" : "LOSS") as CalibrationPickInput["result"],
+      })),
+      ...Array.from({ length: 5 }, (_, i) => ({
+        id: `p-${i}`,
+        confidence: 75,
+        result: "PUSH" as CalibrationPickInput["result"],
+      })),
+    ];
+
+    const report = computeCalibration(rows);
+    const b = report.buckets.find((x) => x.label === "70-79");
+
+    expect(b?.sampleSize).toBe(35);
+    expect((b?.wins ?? 0) + (b?.losses ?? 0)).toBe(30);
+    expect(b?.sufficientSample).toBe(true);
+  });
+
+  it("a bucket of nothing but pushes is never publishable", () => {
+    const report = computeCalibration(
+      Array.from({ length: 40 }, (_, i) => ({
+        id: `p-${i}`,
+        confidence: 75,
+        result: "PUSH" as CalibrationPickInput["result"],
+      }))
+    );
+    const b = report.buckets.find((x) => x.label === "70-79");
+
+    expect(b?.sampleSize).toBe(40);
+    expect(b?.sufficientSample).toBe(false);
+    // No decided outcomes means no drift evidence — delta must not fabricate one.
+    expect(b?.delta).toBe(0);
+  });
+
   it("a thin bucket below the floor never publishes a 100%-from-2-picks rate", () => {
     // 2 settled wins in one band → observedWinRate would be 1.0; the floor must
     // mark it not publishable so no renderer shows "100%".

@@ -17,7 +17,7 @@ describe("Fantasy real-data entry surface", () => {
     expect(page).toMatch(/Player-stat rows/);
     expect(page).toMatch(/Accepted research/);
     expect(page).toMatch(/Rejected narratives/);
-    expect(page).toMatch(/Source JSON/);
+    expect(page).toMatch(/Data sources/);
     expect(page).toMatch(/Baseline map/);
     expect(page).toMatch(/LineStar \/ Elite baseline/);
   });

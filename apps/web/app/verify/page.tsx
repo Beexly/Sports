@@ -24,7 +24,10 @@ export default function VerifyPage({
     ? raw!.toLowerCase()
     : "";
   return (
-    <div className="relative isolate flex min-h-screen flex-col bg-obsidian text-ion-white">
+    // Same Field atmosphere as /calibration and /proof — the trust surfaces
+    // read as one room. proof-crystal plate removed 2026-09-14 (owner: hideous,
+    // does not match). Quiet near-black + one ember crown, no decorative still.
+    <div className="relative isolate flex min-h-screen flex-col bg-obsidian text-ion-white gw-nebula">
       <Nav />
       <main id="main-content" className="mx-auto w-full max-w-3xl flex-1 px-4 py-12 sm:px-6">
         <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-orbital-cyan">

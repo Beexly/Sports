@@ -14,12 +14,12 @@ import { BoardSurfaceChip } from "@/components/board/board-surface-chip";
 export const metadata: Metadata = {
   title: "Board",
   description:
-    "Today's scored markets: what cleared, what we held, and why. Edge rank is a ranking score, not a probability.",
+    "Every game we scored today. What we're on, what we passed on, and why.",
   alternates: { canonical: "/board" },
   openGraph: {
     title: "Board",
     description:
-      "Today's scored markets: what cleared, what we held, and why. Edge rank is a ranking score, not a probability.",
+      "Every game we scored today. What we're on, what we passed on, and why.",
   },
 };
 
@@ -170,56 +170,113 @@ export default async function BoardPage(): Promise<JSX.Element> {
             </div>
           )}
 
-        <section className="border-b border-mineral pb-8">
-          <p className="font-mono text-xs uppercase tracking-[0.22em] text-plasma">The Board</p>
-          <div className="mt-4 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-            <div>
-              <h1 className="max-w-4xl break-words text-4xl font-semibold tracking-tight text-ion-white sm:text-6xl" style={{ lineHeight: 0.95 }}>
-                Scored.
-                <br />
-                <span className="text-plasma">Published or held.</span>
-              </h1>
-              <p className="mt-4 max-w-2xl text-sm leading-6 text-ion-1">
-                What is scoring now, what cleared the gate, and what we refused with a reason.
-                Edge rank orders the board. It does not predict the final score.
-              </p>
-              <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-2">
-                After just today&apos;s published picks with reasoning?{" "}
-                <Link href="/picks" className="font-semibold text-ion-white underline decoration-plasma underline-offset-4 hover:text-plasma">
-                  Today&apos;s signals
-                </Link>
-                .
-              </p>
-            </div>
-            <div className="flex min-w-0 flex-col gap-3 sm:items-end">
-              <BoardSurfaceChip />
-              <BoardHealthBadge meta={stateResult.meta} />
-              <div className="flex flex-wrap gap-3 sm:justify-end">
-                <Link href="/pricing" className="btn-primary min-h-11 px-5 py-3">
-                  See what Pro unlocks
-                </Link>
-                <Link
-                  href="/calibration"
-                  className="inline-flex min-h-11 items-center justify-center border border-mineral px-5 py-3 text-sm font-semibold text-ion-1 hover:border-plasma hover:text-ion-white"
-                >
-                  Record
-                </Link>
-                <Link
-                  href="/intelligence"
-                  className="inline-flex min-h-11 items-center justify-center border border-mineral px-5 py-3 text-sm font-semibold text-ion-1 hover:border-plasma hover:text-ion-white"
-                >
-                  Method
-                </Link>
-              </div>
+        {/* ── FULL-BLEED OPENING · the premier surface ────────────────────── */}
+        <section
+          className="relative isolate flex min-h-[58vh] flex-col justify-end overflow-hidden border-b border-mineral px-4 pb-10 pt-24 sm:px-6 lg:px-8"
+          aria-labelledby="board-title"
+        >
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 -z-10"
+            style={{
+              background:
+                "radial-gradient(ellipse 70% 50% at 80% 0%, rgba(255,77,46,0.12), transparent 60%)," +
+                "radial-gradient(ellipse 50% 40% at 10% 100%, rgba(25,28,35,0.9), transparent 65%)," +
+                "linear-gradient(180deg, #08090C 0%, #12141A 50%, #08090C 100%)",
+            }}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 -z-10 opacity-[0.06]"
+            style={{
+              backgroundImage:
+                "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(237,232,224,0.5) 2px, rgba(237,232,224,0.5) 3px)",
+            }}
+          />
+          <div className="mx-auto w-full max-w-6xl">
+            <p className="font-mono text-xs uppercase tracking-[0.28em] text-plasma">The Board</p>
+            <h1
+              id="board-title"
+              className="mt-5 max-w-4xl font-display text-balance text-ion-white"
+              style={{ fontSize: "clamp(2.5rem, 8vw, 5.5rem)", lineHeight: 0.94, letterSpacing: "-0.03em" }}
+            >
+              Every game.
+              <br />
+              <span className="text-plasma">Scored and honest.</span>
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
+              What we&apos;re on today, what we passed on, and why. The board shows every
+              game we looked at, not just the ones we liked.
+            </p>
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <Link href="/pricing" className="btn-primary min-h-11 px-5 py-3">
+                See what Pro unlocks
+              </Link>
+              <Link
+                href="/calibration"
+                className="inline-flex min-h-11 items-center justify-center border border-mineral px-5 py-3 text-sm font-semibold text-ion-1 hover:border-plasma hover:text-ion-white"
+              >
+                Record
+              </Link>
+              <Link
+                href="/intelligence"
+                className="inline-flex min-h-11 items-center justify-center border border-mineral px-5 py-3 text-sm font-semibold text-ion-1 hover:border-plasma hover:text-ion-white"
+              >
+                Method
+              </Link>
             </div>
           </div>
         </section>
+
+        {/* ── YOU ARE HERE · three surfaces, one sentence each ────────────── */}
+        <section
+          aria-label="Where you are"
+          className="border-b border-mineral px-4 py-5 sm:px-6 lg:px-8"
+        >
+          <div className="mx-auto grid max-w-6xl gap-3 sm:grid-cols-3">
+            <div className="rounded-xl border border-plasma/50 bg-plasma/[0.06] px-4 py-3">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-plasma">You are here</p>
+              <p className="mt-1 text-sm font-semibold text-ion-white">The board</p>
+              <p className="mt-0.5 text-xs leading-5 text-ion-2">
+                Every game today: scoring, published, and passed on. The full picture.
+              </p>
+            </div>
+            <Link
+              href="/picks"
+              className="rounded-xl border border-mineral bg-eclipse/40 px-4 py-3 transition-colors hover:border-orbital-cyan/50"
+            >
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-3">Also open</p>
+              <p className="mt-1 text-sm font-semibold text-ion-white">Today&apos;s picks</p>
+              <p className="mt-0.5 text-xs leading-5 text-ion-2">
+                Only the ones we&apos;re on, with the line, timing, and reason.
+              </p>
+            </Link>
+            <Link
+              href="/founder-picks"
+              className="rounded-xl border border-mineral bg-eclipse/40 px-4 py-3 transition-colors hover:border-orbital-cyan/50"
+            >
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-3">Also open</p>
+              <p className="mt-1 text-sm font-semibold text-ion-white">Founder picks</p>
+              <p className="mt-0.5 text-xs leading-5 text-ion-2">
+                The owner&apos;s personal calls, on the same honest record.
+              </p>
+            </Link>
+          </div>
+        </section>
+
+        <div className="px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl pt-8">
+
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <BoardSurfaceChip />
+          <BoardHealthBadge meta={stateResult.meta} />
+        </div>
 
         <section aria-label="Board state" className="grid gap-px border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-6">
           <StateTile label="Sports watched" value={String(state.sportsWatched)} />
           <StateTile label="Books polled" value={String(state.booksPolled)} />
           <StateTile label="Open picks" value={String(state.openPicks)} />
-          <StateTile label="Gated today" value={String(state.gatedToday)} />
+          <StateTile label="Passed on" value={String(state.gatedToday)} />
           <StateTile label="Last refresh" value={timeLabel(state.lastRefresh)} dataTestid="board-freshness" />
           <StateTile label="Model" value={state.modelVersion} />
         </section>
@@ -237,22 +294,22 @@ export default async function BoardPage(): Promise<JSX.Element> {
           />
           <BoardLane
             index="02"
-            title="Published Today"
+            title="Today's Picks"
             rows={state.publishedToday}
             empty={
               stateResult.meta.boardClass.refusePublicFire
-                ? "No public fires: nothing is published while the board is closed."
-                : "No picks have cleared today."
+                ? "Nothing published right now. The board is paused until data checks pass."
+                : "No picks published yet today."
             }
           />
           <BoardLane
             index="03"
-            title="Gated Today"
+            title="Passed On"
             rows={state.gatedTodayRows}
             empty={
               stateResult.meta.boardClass.honestEmpty
-                ? "No gated rows while the board is honestly empty."
-                : "No passed games logged yet."
+                ? "Nothing to pass on while the board is honestly empty."
+                : "Nothing passed on yet today."
             }
           />
         </section>
@@ -304,6 +361,8 @@ export default async function BoardPage(): Promise<JSX.Element> {
         </section>
 
         <RiskDisclosure variant="compact" className="text-center" />
+        </div>
+        </div>
       </main>
       <Footer />
     </div>
@@ -356,7 +415,7 @@ function BoardRowItem({ row, live }: { row: BoardStateRow; live: boolean }): JSX
           behind the paywall (FE-15); C-224 forbids scoring it here. */}
       {row.gateReason && (
         <p className="col-span-2 mt-1 text-sm text-ion-2">
-          {held && <span className="font-semibold text-plasma">Held. </span>}{row.gateReason}
+          {held && <span className="font-semibold text-plasma">Passed. </span>}{row.gateReason}
         </p>
       )}
       <Link href={`/room/${row.gameId}`} className="col-span-2 mt-2 inline-flex text-sm font-semibold text-ion-1 hover:text-ion-white">

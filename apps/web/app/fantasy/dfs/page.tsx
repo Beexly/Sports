@@ -5,9 +5,9 @@ import { DfsOptimizer } from "@/components/fantasy/dfs-optimizer";
 import { loadDfsSalaries } from "@/lib/dfs/salaries";
 
 export const metadata: Metadata = {
-  title: "DFS Suite: Salary Board + Optimizer · Galaxy Fantasy",
+  title: "DFS Optimizer",
   description:
-    "DFS salaries and the glass-box optimizer in one room: reconciled DraftKings salaries feed cash, GPP, and leverage objectives with QB stacking, locks/fades, and real exposure control.",
+    "Build cash, tournament, and leverage lineups. QB stacking, locks, fades, exposure control. CSV export for DraftKings.",
   alternates: { canonical: "/fantasy/dfs" },
   robots: { index: false, follow: true },
 };
@@ -29,11 +29,11 @@ export default async function DfsSuitePage() {
 
   return (
     <FantasyShell
-      eyebrow="DFS Suite · Salary Board + Optimizer"
+      eyebrow="DFS Optimizer"
       accent="cyan"
-      title={<>Solve the slate. <span className="gse-editorial" style={{ fontSize: "1.08em" }}>See the why</span>.</>}
-      intro="Salaries and the optimizer live in one room because they're one decision. The board shows what the field costs; the optimizer turns it into cash, GPP, or leverage lineups: QB stacking, locks and fades, unique portfolios with real exposure control. Every lineup ships with its salary, stack, field-ownership, and a leverage score."
-      note="Illustrative classic-format sample pool drives the optimizer until a licensed salary feed is connected. Salary-cap optimization, stacking, exposure, and leverage are computed live in your browser."
+      title={<>Build the lineup. <span className="gse-editorial" style={{ fontSize: "1.08em" }}>See the why</span>.</>}
+      intro="Pick your mode, set your locks and fades, and the optimizer builds lineups that actually fit the salary cap. Every lineup shows its salary, stack, projected ownership, and leverage score. Export straight to DraftKings CSV."
+      note="Running on a sample slate until a live salary feed is connected. The math is real; the player pool is illustrative."
       wide
     >
       {/* ── Salary Board — the optimizer's input layer ─────────────── */}

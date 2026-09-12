@@ -72,9 +72,8 @@ export const metadata: Metadata = {
 
 const FREE_FEATURES = [
   // Honesty: public picks board is founder-gated until calibration is published.
-  // Free still delivers tools, Academy, and transparent process — not invented free picks.
+  // Free still delivers tools and transparent process — not invented free picks.
   { label: "Free calculators & intelligence tools (no account wall)", included: true },
-  { label: "The Academy: full training floor", included: true },
   { label: "Public methodology + calibration status (building honestly)", included: true },
   { label: "Contest Bay paper skills (no fees, no prizes, no wagering)", included: true },
   { label: "Founding waitlist for early operator updates", included: true },
@@ -96,7 +95,7 @@ const PRO_FEATURES = [
   { label: "Multiprobability intervals: the honest range, not a confident-sounding single number", included: true },
   { label: "Glass Ledger access: every published number with its coverage, bound, and provenance", included: true },
   { label: "Recompute any claim yourself — the verifier is named, not hand-waved", included: true },
-  { label: "The Academy + public record", included: true },
+  { label: "Public record + methodology", included: true },
   { label: "The full board unlocked: every signal, every day, all 7 sports", included: true },
   { label: "Confidence rating on every signal", included: true },
   { label: "Full factor trail & reasoning", included: true },
@@ -111,8 +110,11 @@ const PRO_FEATURES = [
 
 const ELITE_FEATURES = [
   { label: "Email + push alerts when a pick you follow settles", included: true },
-  { label: "Line-value tracker: your glass-box bet tracker", included: true },
+  { label: "Line-value tracker: your private bet log, graded against the close", included: true },
   { label: "Staking calculator: Kelly-aware sizing", included: true },
+  { label: "Deeper market-movement context", included: true },
+  { label: "Advanced filters and saved watchlists", included: true },
+  { label: "Calibration reports: how confidence has matched outcomes", included: true },
   { label: "First access to new intelligence surfaces", included: true },
   { label: "Every signal, every day: all 7 sports", included: true },
   { label: "Confidence rating on every signal", included: true },
@@ -120,16 +122,15 @@ const ELITE_FEATURES = [
   { label: "Ask the model why + line-movement intel", included: true },
   { label: "Trend Lab: full cohort workbench", included: true },
   { label: "Parlay MRI: the portfolio surgeon", included: true },
-  { label: "The Academy + public record", included: true },
 ] as const;
 
 const FANTASY_FEATURES = [
-  { label: "Draft Assistant + Best Ball, on real, cleared data", included: true },
+  { label: "Draft Assistant + Best Ball on sample players until a licensed feed lands", included: true },
   { label: "Roster ceiling, spike upside & QB-stack correlation", included: true },
   { label: "Bye-week fragility + roster-construction guidance", included: true },
+  { label: "Start/Sit, Waivers, Trade, and Pick'em tools", included: true },
   { label: "Your-own-ADP overlay (no scraped feeds)", included: true },
   { label: "Everything free plus Fantasy depth tools", included: true },
-  { label: "The Academy: full training floor", included: true },
   { label: "Betting depth: factor trail & line movement (Pro)", included: false },
   { label: "Trend Lab + Parlay MRI (Pro)", included: false },
   { label: "Graded-pick alerts (Elite)", included: false },
@@ -143,7 +144,7 @@ const PLANS: PlanView[] = [
     annual: null,
     annualSavingsPct: null,
     annualMonthly: null,
-    description: "Tools, Academy, and transparent process first. Full board on paid tiers when gates open with proof — not promises.",
+    description: "Tools and transparent process first. Full board on paid tiers when gates open with proof — not promises.",
     badge: null,
     cta: "Start free",
     features: [...FREE_FEATURES],
@@ -155,8 +156,8 @@ const PLANS: PlanView[] = [
     annual: phase.fantasy.annual,
     annualSavingsPct: annualSavingsPct(phase.fantasy),
     annualMonthly: annualMonthlyEquivalent(phase.fantasy),
-    description: "The fantasy suite: the Draft Assistant and Best Ball board on real, cleared data. Roster construction, stacks, and bye structure, with the reasoning.",
-    badge: "Draft season",
+    description: "The fantasy suite: Start/Sit, Waivers, Trade, DFS, Pick'em, Draft Assistant and Best Ball. Opens now on sample players; real the moment a licensed projections feed is connected.",
+    badge: "DFS & season",
     cta: "Subscribe to Fantasy",
     features: [...FANTASY_FEATURES],
   },
@@ -179,8 +180,8 @@ const PLANS: PlanView[] = [
     annual: phase.elite.annual,
     annualSavingsPct: annualSavingsPct(phase.elite),
     annualMonthly: annualMonthlyEquivalent(phase.elite),
-    description: "The professional toolkit: everything in Pro, plus graded-pick alerts and a line-value tracker for post-close review.",
-    badge: "The professional toolkit",
+    description: "Act sooner and grade the timing: graded-pick alerts when a followed pick settles, plus a private line-value tracker that scores every entry price against the close.",
+    badge: "Alerts + tracker",
     cta: "Subscribe to Elite",
     features: [...ELITE_FEATURES],
   },
@@ -295,7 +296,7 @@ const productJsonLd = {
   "@type": "Product",
   name: `${BRAND_NAME} Membership`,
   description:
-    "Sports decision intelligence: free calculators, methodology, and paper contests now; full board, confidence ratings, factor trails, and alerts on paid tiers when the public sample is honest.",
+    "Free calculators, methodology, and paper contests. Paid tiers unlock the full board, confidence ratings, factor trails, and alerts.",
   brand: { "@type": "Brand", name: BRAND_NAME },
   offers: PLANS.filter((p) => p.monthly !== null).map((p) => ({
     "@type": "Offer",

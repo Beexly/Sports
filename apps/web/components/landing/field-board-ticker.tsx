@@ -1,8 +1,9 @@
 "use client";
 
 /**
- * FieldBoardTicker — calm live marquee of today's cleared / held rows.
+ * FieldBoardTicker — calm live marquee of today's board.
  * Hover pauses. Reduced motion freezes. aria-hidden (data lives in tables).
+ * Speed is slow enough that a visitor can finish reading one line before it scrolls off.
  */
 
 import type { CSSProperties } from "react";
@@ -26,17 +27,17 @@ export function FieldBoardTicker({ items }: { items: readonly string[] }) {
       />
       <div
         className="gse-marquee-track py-3"
-        style={{ "--gse-marquee-dur": "48s" } as CSSProperties}
+        style={{ "--gse-marquee-dur": "90s" } as CSSProperties}
       >
         {doubled.map((item, i) => (
           <span key={`${item}-${i}`} className="inline-flex items-center">
-            <span className="px-5 font-mono text-[11px] uppercase tracking-[0.1em] text-ion-2 tabular-nums">
+            <span className="px-5 text-[13px] tracking-wide text-ion-2 tabular-nums">
               {item}
             </span>
             <span
               aria-hidden
               className="h-1 w-1"
-              style={{ background: item.includes("cleared") ? "#FF4D2E" : "#8F8A82" }}
+              style={{ background: item.includes("On") ? "#FF4D2E" : "#8F8A82" }}
             />
           </span>
         ))}

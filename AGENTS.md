@@ -21,10 +21,11 @@ FIELD tokens (authoritative — keep in sync across three files):
 - Sources of truth: `apps/web/styles/design-tokens.css`, `apps/web/tailwind.config.ts`,
   `apps/web/lib/brand.ts` `BRAND_COLORS`. Change all three together.
 
-FIELD IA (nav = footer = five destinations, not a sitemap):
-- Board `/board` · Record `/calibration` · Method `/intelligence` · Verify `/verify` · Plans `/pricing`
-- Fantasy stays a secondary menu under Fantasy. Deep routes live on hubs.
-- Footer is one bar: lockup · Board/Record/Method/Verify/Plans · X · 1-800-GAMBLER · one legal line.
+FIELD IA (nav = footer, trimmed 2026-09-12):
+- Top bar: Board / Players / Fantasy / GSN (four doors, not seven)
+- Board menu: The board · Today's picks · Our record
+- Footer: Board / Record / Method / Verify / Plans · X · 1-800-GAMBLER · one legal line
+- Do NOT restore Record/Verify/Plans to the top bar. Do NOT restore Intelligence as a top-bar item.
 - Do NOT restore the 4-column footer sitemap, footer-wordmark, or "MATH YOU CAN READ" stamp.
 
 FIELD logo (`LogoMarkInline`): outer ring + tilted ellipse + thick arc + bone core + ember ping.
@@ -56,6 +57,233 @@ MATH YOU CAN READ, no starfield). Remaining NEBULA aliases in tokens/tailwind re
 hexes; nav condensed to five destinations; tools/intelligence public "math you can read" strings
 replaced; brand lockup wordmark de-gradiented; gw-nebula de-violeted. typecheck/lint/brand must
 pass before deploy (`vercel deploy --prod` from a worktree linked to project `sports-web`).
+
+---
+
+**SCRAPING QUEUE (founder has a scraping agent — 2026-09-12). Scrape these, in this order.
+Format: what → why → where it lands. Founder will run the scrape; agents wire the results.**
+
+1. **MLB Statcast (Savant) — pitcher + batter underlying.**
+   Why: founder wants barrel%, hard-hit%, spin rate, exit velo, launch angle for
+   every MLB prop/pick. The factor engine already accepts an `underlying` input;
+   this is the data.
+   Land: `apps/web/lib/statcast/` (new). Mirror the nflverse loader pattern
+   (fetchWithFailover, assertIngestible, honest empty state). Source rights:
+   MLB Stats API is facts-only; Savant is the public sabermetric backbone.
+   Columns per player-season and per-pitcher-start: barrel%, hard-hit%, xwOBA,
+   avg exit velo, avg launch angle, whiff%, chase%, spin rate (pitchers),
+   sprint speed (batters).
+2. **NBA rest / back-to-back + minutes.**
+   Why: founder's own example — a player on a B2B or 3-in-4 is tired. The
+   factor engine has a `rest` input ready.
+   Land: `apps/web/lib/nba/rest.ts` (new). Source: Basketball-Reference or
+   the NBA schedule + player game logs (facts). Fields: gamesInLast7Days,
+   daysRest, minutesLast3.
+3. **NFL coach / beat-reporter news (structured).**
+   Why: founder wants coach news, coach rumors, beat reporter rumors as a
+   factor. The news wire already classifies signals; this adds a
+   `coach-report` tier.
+   Land: extend `apps/web/lib/news/impact.ts` with a `coach-report` signal
+   type, and add RSS feeds for each team's top beat reporter to
+   `NEWS_RSS_FEEDS`. Founder: provide the feed URLs.
+4. **Public pick consensus (over/under split).**
+   Why: founder's 5,000-over / 3,700-under example. The factor engine
+   already accepts `consensus: { overCount, underCount }`.
+   Land: `apps/web/lib/consensus/public-picks.ts` (new). Sources: PrizePicks /
+   Underdog public pick percentages if scraped; otherwise Action Network or
+   similar public consensus pages. Store as a per-prop over/under count.
+   NEVER fabricate a consensus number — absent = factor does not fire.
+5. **Defensive-front / coverage splits (zone vs man, box counts).**
+   Why: founder wants "this RB does better vs this front" and "this QB reads
+   zone better than man."
+   Land: `apps/web/lib/nfl/coverage-splits.ts` (new). Source: nflverse
+   play-by-play already has some of this; supplement with Next Gen Stats if
+   the license clears. Fields per player: rate vs man, rate vs zone, rate
+   vs light box, rate vs stacked box, with sample sizes.
+6. **Historical prop closing lines (for CLV).**
+   Why: CLV 23% vs 52.4% is the ESTABLISHED blocker. More closing-line
+   history = more graded CLV samples.
+   Land: `odds_line_snapshots` already persists (LINE_ARCHIVE_ENABLED is ON).
+   Founder: if you can scrape historical prop closing lines from a cleared
+   source, we ingest them through the same path.
+
+**Do NOT scrape:** sportsbook sites for display prices without a license;
+fantasy sites that prohibit scraping (check `source-rights-registry.ts` first);
+anything that would put a real book's quotes into a paid SaaS without rights.
+
+**Founder feedback 2026-09-12 (post-merge, progress log):**
+
+SHIPPED this round (PRs #773-#781, commits A22-A33):
+- ADMIN→ELITE so the owner is never paywalled out of their own product
+- Source JSON → Data sources (leftover jargon)
+- The Beat rebuilt: robotic speechSynthesis REMOVED, full-bleed cinematic opening
+- /calibration condensed: graph is the hero, 3 doors, rest collapsed
+- **GSE Score + GSE Index** (`lib/fantasy/gse-score.ts`): real player ranking.
+  LIVE reads processGrade from nflverse; SAMPLE is a pool percentile, labelled.
+  Wired into trade analyzer AND draft assistant — one ranking system.
+- **Board** cinematic opening + "You are here" IA strip naming all three
+  surfaces (board / published picks / founder picks). Lane "Gated Today" →
+  "Held Today".
+- **House** weekly rhythm is now an actionable calendar: every beat carries
+  action + href, today's CTA banner, today highlighted in the grid.
+- **DFS projections table** (LineStar parity): sortable Sal/Proj/Val/Ceil/
+  pOwn%/Lev, pin/exclude from the row.
+- **Props board** market + team filters (PropFinder parity).
+- **CSV export** of generated lineups (DK Classic format).
+- **Max exposure slider** on the optimizer (10-100%).
+- **Last JSON button** on the intelligence engines page killed.
+
+STILL OPEN — next agents pick these up in order:
+
+1. **Optimizer / props rebuild against LineStar + PropFinder.** Founder wants the
+   optimizer to look and work like LineStar. Feature map scraped 2026-09-12 from
+   linestarapp.com and propfinder.app — DO NOT re-scrape from scratch, use this:
+   - LineStar: Projections table (salary, proj pts, value, pOwn%), Daily Dashboard,
+     Patented Optimizer (150+ lineup MME, pin/fade, exposure, stacks, budget),
+     Value Plays, Projected Ownership (pOwn%), Social Sentiment, Breaking News &
+     Injuries with push alerts, Community Chat, Export Lineups (DK/FD/Yahoo),
+     Salary Comparison + Salary Changes, Vegas Odds inline, Import/Export Custom
+     Projections, Advanced Lineup Settings (stack finders, exposure, models).
+     Sports: NFL/MLB/NBA/NHL/PGA/CFB/CBB/WNBA/UFC/NAS/CSGO/LOL/CFL.
+   - PropFinder: Player Dashboard (trends, matchup, advanced stats, opponent
+     game logs, injury reports, real-time odds, custom filters), Cheatsheets
+     (TD / rushing / redzone / line / coverage matchups), Power Ratings with QB
+     adjustments + weekly movement, Games Board (model spreads/totals/projections),
+     QB rankings, win totals, HFA, weather, hit rates, opponent matchup ranks,
+     conference filters. 18+ sportsbooks. Free tier 1 game/league; $14.99/mo.
+   - Our props HB engine already exists (`edge-lab/props-hb*.ts`). Ingest needs
+     `EVENT_ODDS_INGEST_ENABLED=true` (founder env).
+2. **Player rankings are wrong.** Trade analyzer showed Lamar Jackson as most
+   valuable — the illustrative pool is not real rankings. Need a live player
+   ranking system plus a visible **GSE score** and **GSE index** per player.
+3. **Board is still confusing and boring.** Founder cannot tell public picks vs
+   published picks vs the board. This is the premier surface; it should be
+   cinematic (visual presentation, not research). Optimizers = functional
+   engagement. Beat = cinematic.
+4. **House is underutilized.** No leverage for the customer. Tie in the weekly
+   rhythm as a real calendar with alerts: do your waivers, set your lineups,
+   this player is out (injury).
+5. **Trade analyzer** needs real values, not the sample pool.
+
+**UPDATED 2026-09-12 (ASTRA REDESIGN + RECORD ACCURACY + FOUNDER PICKS — merged as PR #769,
+main `8a1df39cf`).** Full session record. Other agents: read this before touching anything
+listed below. Ledger rows A-1..A-24 in `docs/ops/AGENT_LEDGER.md`.
+
+**What shipped (24 commits on `claude/astra-redesign-2026-09-14`, merged):**
+
+1. **ASTRA 12 owner items** — age-21 gate off subscriptions; tiers re-weighted for DFS season
+   (Elite no longer sells retired Galaxy Twin / useless Academy); proof-crystal backgrounds
+   replaced on /verify /calibration /proof /engine with one Field atmosphere; The Beat made
+   interactive (pulse, sort, quiet-the-noise, expandable cards); Studio internal-only; Academy
+   hidden from public nav + noindex; fantasy "gated" badge honesty (live / partly live / sample);
+   jargon stripped from intelligence engines (JSON button gone, titles plain); free tools given
+   usage moments; House collapsed to 4 doors (no Observatory, no Sunday Couch); /board vs /picks
+   IA fixed ("Published picks" vs "The board").
+2. **Record accuracy (the big one)** —
+   - PUSH was structurally unreachable for spreads/totals (settlement needs an integer line; the
+     mean is an integer only when every book agrees). Published and graded the POSTED book line
+     nearest the consensus mean (`packages/prediction-engine/src/published-line.ts`). Scoring math
+     still reads the raw mean — no grade/rank moves, MODEL_VERSION stays v5.2.7. Ties resolve
+     against us. Forward-only.
+   - Published bet terms (selection/line/reasoning/reasoningShort) frozen write-once at creation
+     in `process-sport.ts`, minted with clvLockLine. The card can no longer show -4.5 while we
+     grade -3.0.
+   - Calibration bucket win rates excluded pushes (were averaging push as half a win, flattering
+     sub-50% buckets). Correlation WIN_RATE excluded pushes (were counting every push as a loss).
+   - /api/performance floor now counts decided picks only (was counting pushes toward the floor).
+3. **Calibration skill picture (additive, no floors)** — `apps/web/lib/calibration/skill-metrics.ts`:
+   BSS, NLL, Murphy REL/RES/UNC, null-band ECE diagnostic. Wired into computeCalibration as
+   `report.skill`. Synthetic-forecaster tests pin constant/perfect/overconfident behaviour.
+   `marketGatesAdvisory` on the live metrics artifact — ADVISORY ONLY, calibration-eligibility.ts
+   never reads it. Live eligibility is MONEYLINE-only.
+4. **Landed unlanded branches** — `claude/calibration-math-verification` (39 hand-computed math
+   pins + the performance floor bug), `claude/push-handling-in-rates`, `claude/settlement-push-and-line-drift`.
+5. **Founder picks ("Beak's picks")** — `apps/web/lib/founder-picks/`. modelVersion=founder-v1,
+   isBootstrap=false, ADMIN POST /api/admin/founder-picks, public /founder-picks + /api/founder-picks.
+   Decided-only win rate. Locks at kickoff (fail-closed). Requires a written reason. factorBreakdown
+   tags source=founder, rankingP null. Can fill a held game or override a PENDING engine pick.
+   No schema change.
+6. **Owner permissions (code-level, works even when ADMIN_EMAILS env is empty)** —
+   `apps/web/lib/auth.ts` `CODE_OWNER_ALLOWLIST`:
+   - `baxley.garrett@gmail.com` — primary owner, full admin. The ONLY email that should ever flip
+     gates/env flags (law 3).
+   - `dbax66@icloud.com` — secondary admin. Cockpit, founder picks, ops surfaces. Do NOT flip
+     gates or env flags.
+   ADMIN_EMAILS env still works and is OR'd with this list.
+
+**Verified at merge:** typecheck 0, lint 0, model-freeze OK (MODEL_VERSION v5.2.7), trust-gate OK
+(2138 files), 2323-test calibration+honesty+settlement sweep green, auth 34/34, founder-picks 9/9,
+calibration-math-invariants 39/39. Floors (n 100 / Brier 0.22 / ECE 0.05) byte-identical. No env
+flag flipped.
+
+**Live truth surface 2026-09-11T23:56Z (do not re-litigate):** eligibility GREEN, streak 93,
+PERFORMANCE_STATS ON, calibration published, revenue ladder PROVEN, money path ready, settlement
+HEALTHY (0 of 2802 overdue), canonicalSettled 2300. The only unmet ESTABLISHED requirement is
+CLV beat-close 23.0% vs 52.4%.
+
+**Props activation (founder env only, NOT flipped):** the full hierarchical-Bayes props engine
+already exists (`packages/prediction-engine/src/edge-lab/props-hb*.ts`, fire-gate, line-shop,
+juice-floor). Ingest is wired and no-ops unless `EVENT_ODDS_INGEST_ENABLED=true` (credit-capped,
+default 8 calls) and `LINE_ARCHIVE_ENABLED=true`. Schema sealed — prop lines persist in
+OddsLineSnapshot. Two founder env flips turn it on.
+
+**Founder env actions still open:**
+- Set `ADMIN_EMAILS=baxley.garrett@gmail.com,dbax66@icloud.com` in Vercel (belt-and-braces; the
+  code allow-list already works without it).
+- Props: `EVENT_ODDS_INGEST_ENABLED=true` + `LINE_ARCHIVE_ENABLED=true`.
+- Vercel AI Gateway for internal LLM: `INTERNAL_LLM_BASE_URL=https://ai-gateway.vercel.sh/v1`,
+  `INTERNAL_LLM_API_KEY=<vck_… key from founder, NEVER commit it>`, `INTERNAL_LLM_MODEL=<model>`.
+- Merge is done; production auto-deploys from main at `8a1df39cf`. Redeploy if the truth surface
+  SHA lags.
+
+**Do not regress:**
+- Never restore the age-21 checkout gate.
+- Never put "gated" back on fantasy tools that render on sample data.
+- Never put "Today's Board" eyebrow back on /picks.
+- Never re-add proof-crystal to the trust surfaces.
+- Never average a push into a published win rate.
+- Never publish a pick whose displayed line differs from its clvLockLine.
+- `marketGatesAdvisory` is NOT a gate. calibration-eligibility.ts does not read it.
+- Founder picks use modelVersion `founder-v1` — never mix them into engine calibration samples.
+
+**Next highest-value work (in order):**
+1. Props env flip (founder) + verify prop lines land in OddsLineSnapshot.
+2. Owner starts locking founder picks; promote the honest record.
+3. Keep selective δ=0.1 + pause ON; rank on marketFairProb (bestScore per the bake-off).
+4. CLV 23% → 52.4% is the ESTABLISHED blocker — that is a model problem, not a gate problem.
+5. Visual polish pass on /founder-picks and the props board once props are live.
+
+**UPDATED 2026-09-12 (OVERNIGHT AUTONOMOUS RUN — scrape wave 2 + humanizer + nav trim).**
+Branch `claude/astra-redesign-2026-09-14`, commits A43-A45. Other agents: read this.
+
+**What shipped:**
+
+1. **Statcast loader** (`apps/web/lib/statcast/`) — batter/pitcher/sprint-speed CSV endpoints
+   from baseballsavant.mlb.com. `baseball-savant` added to source registry (use-with-caution,
+   facts-as-inputs). 8 unit tests. Feeds the `underlying` factor in the founder-picks engine.
+2. **Scrape wave 2 research** (`docs/research/scrape-wave-2-results.md`) — full wiring map from
+   two scrape JSONs (71+53 features, 567+93 columns). Covers Statcast, LineStar, PropFinder,
+   RBSDM, NFL/Savant, NGS, Fangraphs, competitor pricing.
+3. **Humanizer pass** — nav trimmed to Board / Players / Fantasy / GSN (Record, Verify, Plans
+   moved to footer + Board menu). Intelligence folded into Board menu. Ticker slowed 48s→90s.
+   Gate reasons rewritten in plain English. Homepage stats relabeled. Mission Control removed
+   from public copy. Methodology cards humanized.
+
+**Nav doctrine (updated):** top bar = Board / Players / Fantasy / GSN only. Record lives under
+Board menu ("Our record"). Verify and Plans live in footer. Intelligence tools live under
+Board menu ("Free tools") and /intelligence/engines. Do NOT add Record/Verify/Plans back to
+the top bar.
+
+**Copy doctrine (updated):** every customer-facing string must pass the "would a sharp friend
+who actually plays DFS say this?" test. Banned: "cleared the gate", "market depth below
+publish threshold", "not evaluated", "no pick generated", "Mission Control", "Sports decision
+intelligence", "Four doors". Use: "we're on this", "we passed", "not enough sportsbooks are
+pricing this", "we haven't scored this yet".
+
+**Founder env actions still open (unchanged):**
+- `ADMIN_EMAILS=baxley.garrett@gmail.com,dbax66@icloud.com`
+- `EVENT_ODDS_INGEST_ENABLED=true` + `LINE_ARCHIVE_ENABLED=true`
+- `INTERNAL_LLM_BASE_URL` + `INTERNAL_LLM_API_KEY` + `INTERNAL_LLM_MODEL`
 
 **UPDATED 2026-09-10 (17:15 UTC): NFL CLIP OPERATION — "GSE Film Room" on @GalaxySportsHQ (Motif, Muse agent).** Garrett's directive: real clipped sports footage with our data narrative; no synthetic/fake footage; no commercial license; transformative edits only. Full build artifacts live in the revenue-engine workspace under `clips/video-builds/` (not in this repo).
 

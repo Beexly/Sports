@@ -3,7 +3,6 @@ import Link from "next/link";
 import { Footer } from "@/components/ui/footer";
 import { Nav } from "@/components/ui/nav";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
-import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import type { FablePublicSummary } from "@/lib/fable/public-summary";
 import { COMMANDS, NON_CLAIMS, PROOF_LAYERS } from "./fable-data";
 import { EvidenceMetric, formatLedgerDate, LayerCard, OwnerGatedClaimCard } from "./fable-cards";
@@ -23,8 +22,8 @@ export function FableEvidenceLab({
     !evidenceSummary.awsDecisionDefaultAllowed;
 
   return (
-    <div className="relative isolate min-h-screen bg-carbon text-ion">
-      <GeneratedPlate assetId="proof-crystal" className="-z-10 opacity-20" />
+    // Same Field atmosphere as the trust surfaces — proof-crystal removed.
+    <div className="relative isolate min-h-screen bg-carbon text-ion gw-nebula">
       <Nav />
 
       <main id="main-content" className="mx-auto max-w-6xl px-4 py-12 sm:px-6 lg:px-8">
