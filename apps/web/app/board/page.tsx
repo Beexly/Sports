@@ -308,8 +308,8 @@ export default async function BoardPage(): Promise<JSX.Element> {
             rows={state.gatedTodayRows}
             empty={
               stateResult.meta.boardClass.honestEmpty
-                ? "No held rows while the board is honestly empty."
-                : "Nothing held yet today."
+                ? "Nothing to pass on while the board is honestly empty."
+                : "Nothing passed on yet today."
             }
           />
         </section>

@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   // already the brand, so it must be absolute.
   title: { absolute: "Galaxy Sports Edge" },
   description:
-    "A scored board, a public record, and the guts to show what we held back. We detect. You decide.",
+    "A scored board, a public record, and the guts to show what we passed on. We detect. You decide.",
   alternates: { canonical: "/" },
 };
 
@@ -259,11 +259,11 @@ export default async function HomePage(): Promise<JSX.Element> {
           eyebrow="The hold"
           title={
             <>
-              A held row is not a blank. It is{" "}
+              A pass is not a blank. It is{" "}
               <span className="text-plasma">the finding</span>.
             </>
           }
-          lede="Knowing what not to trust is the product. Four gates keep weak markets off the board, and every pass is logged in public, same as a published pick."
+          lede="Knowing what not to trust is the product. Four checks keep weak games off the board, and every pass is logged in public, same as a published pick."
           tone="deep"
         >
           <NoBetGateChapter />

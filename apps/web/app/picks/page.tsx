@@ -257,12 +257,12 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               Today&apos;s sports signals.
             </h1>
             <p className="mt-1.5 text-sm text-ion-2">
-              Every signal published today, with price, timing, risk, and the
-              reason it cleared the gate.{" "}
+              Every pick we&apos;re on today, with the line, timing, risk, and the
+              reason.{" "}
               <Link href="/board" className="underline hover:text-ion-1">
                 The board
               </Link>{" "}
-              also shows what we held and why.
+              also shows what we passed on.
             </p>
           </div>
 
@@ -500,13 +500,13 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </div>
               <h2 className="text-base font-semibold text-white">
                 {activeSportLabel
-                  ? `No ${activeSportLabel} signals published for this date`
-                  : "No signals published for this date"}
+                  ? `No ${activeSportLabel} picks for this date`
+                  : "No picks for this date"}
               </h2>
               <p className="mt-2 text-sm text-ion-3">
                 {activeSportLabel
-                  ? `Nothing on the ${activeSportLabel} board cleared the gate for this date (quiet board / no published signals). Try another sport or date.`
-                  : "Quiet board for this date: no published signals cleared the gate. Awaiting fresh odds or eligible games — not an outage."}
+                  ? `Nothing on the ${activeSportLabel} slate today. Try another sport or date.`
+                  : "Quiet day. No picks published yet. Try another date."}
               </p>
             </div>
           )}
