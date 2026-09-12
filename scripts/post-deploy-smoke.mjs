@@ -39,6 +39,9 @@ const PUBLIC_PAGES = [
   // Observatory is readiness-sealed (307 to /board until data lands), and
   // fetch follows the redirect — so assert the sealed landing, not the name.
   { path: "/observatory", mustContain: ["Galaxy Sports Edge"] },
+  { path: "/fantasy/touchdowns", mustContain: ["Anytime TD board", "Vegas team total"] },
+  { path: "/bankroll", mustContain: ["Bankroll ledger"] },
+  { path: "/fantasy/nba", mustContain: ["NBA"] },
   { path: "/vault", mustContain: ["Vault"] },
   { path: "/about", mustContain: ["About"] },
   { path: "/press", mustContain: ["Press"] },
