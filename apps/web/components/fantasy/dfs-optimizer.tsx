@@ -9,15 +9,15 @@
  * buries, surfaced. Illustrative slate.
  */
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { DFS_SLATE, DFS_SLOTS, SALARY_CAP, DFS_POS_HEX, leverage, type DfsPlayer } from "@/lib/fantasy/dfs-slate";
 import { generateLineups, type Mode, type GenResult } from "@/lib/fantasy/dfs-optimizer";
 import { DkImportPanel } from "@/components/fantasy/dk-import-panel";
 
 const MODES: { key: Mode; label: string; blurb: string }[] = [
-  { key: "cash", label: "Cash", blurb: "Maximise projection: the safest median." },
-  { key: "gpp", label: "GPP", blurb: "Maximise ceiling: win the tournament." },
-  { key: "leverage", label: "Leverage", blurb: "Contrarian ceiling vs. ownership: the edge." },
+  { key: "cash", label: "Cash", blurb: "Maximise projected points." },
+  { key: "gpp", label: "GPP", blurb: "Maximise ceiling points." },
+  { key: "leverage", label: "Leverage", blurb: "Contrarian ceiling vs. ownership (heuristic)." },
 ];
 
 export function DfsOptimizer() {
@@ -39,14 +39,14 @@ export function DfsOptimizer() {
       setBusy(false);
     }, 10);
   };
-  // initial build
-  useEffect(() => { setResult(generateLineups({ mode: "gpp", stack: true, locks: new Set(), excludes: new Set() }, 3, 0.6, DFS_SLATE)); }, []);
+  // No auto-generate: the default slate is fictional, so lineups are built
+  // only after the user presses Generate (or imports a real DK CSV).
 
   const onImport = (players: DfsPlayer[]) => {
     setSlate(players); setImported(true); setLocks(new Set()); setExcludes(new Set()); run(players);
   };
   const onReset = () => {
-    const base = [...DFS_SLATE]; setSlate(base); setImported(false); setLocks(new Set()); setExcludes(new Set()); run(base);
+    const base = [...DFS_SLATE]; setSlate(base); setImported(false); setLocks(new Set()); setExcludes(new Set()); setResult(null);
   };
 
   const toggle = (set: Set<string>, setter: (s: Set<string>) => void, id: string) => {
@@ -169,7 +169,8 @@ export function DfsOptimizer() {
               </div>
             );
           })}
-          {!result?.lineups.length && <div className="surface-card p-6 text-sm text-ion-1">No lineup fits the constraints. Loosen your locks or excludes.</div>}
+          {result === null && <div className="surface-card p-6 text-sm text-ion-1">Choose a slate and press Generate. The sample slate is fictional — import a DraftKings CSV for real players.</div>}
+          {result !== null && result.lineups.length === 0 && <div className="surface-card p-6 text-sm text-ion-1">No lineup fits the constraints. Loosen your locks or excludes.</div>}
         </div>
 
         {/* exposure + pool */}

@@ -445,6 +445,8 @@ the only copy, and nobody else can verify or build on it.
 
 | C-335 | Three repo-scanning guard tests are LOAD-SENSITIVE and can time out on a busy machine: observed both failing and passing on identical code | hermes | OPEN | Evidence from one session, three separate guards. sealed-holdout-open-scan-guard (180s cap): FAILED in the first full run, PASSED in all three later runs on the same code. affiliate-structural-separation-guard (60s cap) and ai-control-plane-sealing-guard (180s cap): BOTH failed by timeout in the run that was concurrent with a dev server, two next builds and other vitest processes, and BOTH passed in the run against the identical head 52709e106 with the machine otherwise idle. That final run: 1 failed, 965 passed, 12 skipped, ZERO timeouts, zero trust-gate failures - the single failure being the host-only checkout-live-mode artifact, which CI cannot see. CORRELATIONAL, NOT PROVEN: load fits every observation, but nothing here isolates the cause, and no run was made on a deliberately idle machine as a control. NOT FIXED ON PURPOSE: ai-control-plane-sealing-guard is explicitly about SEALED modules and the standing rule is that sealed paths are BLOCKED rather than worked around, and raising a timeout so a guard passes is the fake-green pattern this repo polices. ACTION FOR THE FOUNDER: if CI's runner is loaded, these guards can go red for reasons unrelated to a diff, which matters while a marketing push generates PR volume. |
 
+| C-336 | Launch L1: DFS optimizer stops presenting fictional sample slate as generated advice | hermes | CLAIMED | handoff .hermes/plans/2026-09-12_095304-gse-launch-execution-handoff.md; evidence doc docs/ops/LAUNCH_EXECUTION_EVIDENCE_2026-09-12.md |
+
 <!-- LEDGER:END -->
 
 
