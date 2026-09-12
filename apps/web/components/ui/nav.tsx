@@ -72,6 +72,7 @@ const FANTASY_MENU: readonly NavGroup[] = [
       { label: "Best ball", href: "/fantasy/bestball", desc: "Season-long drafts, solved" },
       { label: "NBA slate", href: "/fantasy/nba", desc: "The hoops board" },
       { label: "Touchdowns", href: "/fantasy/touchdowns", desc: "Anytime TD, glass-box" },
+      { label: "Showdown", href: "/fantasy/showdown", desc: "Single game, 1.5x captain" },
       { label: "Optimizer", href: "/optimizer", desc: "Every lineup, one workspace" },
       { label: "Connect league", href: "/fantasy/connect", desc: "Sync your real roster" },
     ],

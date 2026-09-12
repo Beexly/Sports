@@ -40,6 +40,7 @@ const PUBLIC_PAGES = [
   // fetch follows the redirect — so assert the sealed landing, not the name.
   { path: "/observatory", mustContain: ["Galaxy Sports Edge"] },
   { path: "/fantasy/touchdowns", mustContain: ["Anytime TD board", "Vegas team total"] },
+  { path: "/fantasy/showdown", mustContain: ["Showdown room", "1 CPT + 5 FLEX"] },
   { path: "/bankroll", mustContain: ["Bankroll ledger"] },
   { path: "/fantasy/nba", mustContain: ["NBA"] },
   { path: "/vault", mustContain: ["Vault"] },

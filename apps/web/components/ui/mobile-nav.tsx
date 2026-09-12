@@ -43,6 +43,7 @@ const SECTIONS: readonly Section[] = [
       { label: "Best ball", href: "/fantasy/bestball" },
       { label: "NBA slate", href: "/fantasy/nba" },
       { label: "Touchdowns", href: "/fantasy/touchdowns" },
+      { label: "Showdown", href: "/fantasy/showdown" },
       { label: "Optimizer", href: "/optimizer" },
       { label: "Connect league", href: "/fantasy/connect" },
     ],
