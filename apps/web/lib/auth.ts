@@ -51,6 +51,24 @@ export async function stampEmailVerifiedFromProfile(
 }
 
 /**
+ * Code-level owner allow-list (2026-09-12). Always-admin, independent of the
+ * ADMIN_EMAILS env var — so the founder can reach /cockpit even when the env
+ * slot is empty (which it has been; see docs/ops/OPERATOR_TASKS.md ADMIN_EMAILS).
+ *
+ * ADMIN_EMAILS still works and is still applied; this list is OR'd with it.
+ * Removing a person from BOTH this list AND ADMIN_EMAILS revokes admin.
+ *
+ * baxley.garrett@gmail.com  — primary owner. Full admin. The only email that
+ *                             should ever flip gates/env flags (law 3).
+ * dbax66@icloud.com         — secondary admin. Cockpit, founder picks, ops
+ *                             surfaces. Do NOT flip gates or env flags.
+ */
+const CODE_OWNER_ALLOWLIST: readonly string[] = [
+  "baxley.garrett@gmail.com",
+  "dbax66@icloud.com",
+];
+
+/**
  * Owner/operator allow-list: comma-separated emails in ADMIN_EMAILS are
  * elevated to ADMIN at session time. This is the production path for the
  * founder to reach /cockpit without manual DB writes; the DB role still
@@ -61,11 +79,13 @@ export async function stampEmailVerifiedFromProfile(
  */
 export function isAdminEmail(email: string | null | undefined): boolean {
   if (!isAsciiEmail(email)) return false;
+  const canonical = canonicalEmail(email);
+  if (CODE_OWNER_ALLOWLIST.includes(canonical)) return true;
   const list = (process.env["ADMIN_EMAILS"] ?? "")
     .split(",")
     .map((e) => e.trim().toLowerCase())
     .filter(Boolean);
-  return list.includes(canonicalEmail(email));
+  return list.includes(canonical);
 }
 
 const config: NextAuthConfig = {
