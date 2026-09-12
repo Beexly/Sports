@@ -21,10 +21,11 @@ FIELD tokens (authoritative — keep in sync across three files):
 - Sources of truth: `apps/web/styles/design-tokens.css`, `apps/web/tailwind.config.ts`,
   `apps/web/lib/brand.ts` `BRAND_COLORS`. Change all three together.
 
-FIELD IA (nav = footer = five destinations, not a sitemap):
-- Board `/board` · Record `/calibration` · Method `/intelligence` · Verify `/verify` · Plans `/pricing`
-- Fantasy stays a secondary menu under Fantasy. Deep routes live on hubs.
-- Footer is one bar: lockup · Board/Record/Method/Verify/Plans · X · 1-800-GAMBLER · one legal line.
+FIELD IA (nav = footer, trimmed 2026-09-12):
+- Top bar: Board / Players / Fantasy / GSN (four doors, not seven)
+- Board menu: The board · Today's picks · Our record
+- Footer: Board / Record / Method / Verify / Plans · X · 1-800-GAMBLER · one legal line
+- Do NOT restore Record/Verify/Plans to the top bar. Do NOT restore Intelligence as a top-bar item.
 - Do NOT restore the 4-column footer sitemap, footer-wordmark, or "MATH YOU CAN READ" stamp.
 
 FIELD logo (`LogoMarkInline`): outer ring + tilted ellipse + thick arc + bone core + ember ping.
@@ -251,6 +252,38 @@ OddsLineSnapshot. Two founder env flips turn it on.
 3. Keep selective δ=0.1 + pause ON; rank on marketFairProb (bestScore per the bake-off).
 4. CLV 23% → 52.4% is the ESTABLISHED blocker — that is a model problem, not a gate problem.
 5. Visual polish pass on /founder-picks and the props board once props are live.
+
+**UPDATED 2026-09-12 (OVERNIGHT AUTONOMOUS RUN — scrape wave 2 + humanizer + nav trim).**
+Branch `claude/astra-redesign-2026-09-14`, commits A43-A45. Other agents: read this.
+
+**What shipped:**
+
+1. **Statcast loader** (`apps/web/lib/statcast/`) — batter/pitcher/sprint-speed CSV endpoints
+   from baseballsavant.mlb.com. `baseball-savant` added to source registry (use-with-caution,
+   facts-as-inputs). 8 unit tests. Feeds the `underlying` factor in the founder-picks engine.
+2. **Scrape wave 2 research** (`docs/research/scrape-wave-2-results.md`) — full wiring map from
+   two scrape JSONs (71+53 features, 567+93 columns). Covers Statcast, LineStar, PropFinder,
+   RBSDM, NFL/Savant, NGS, Fangraphs, competitor pricing.
+3. **Humanizer pass** — nav trimmed to Board / Players / Fantasy / GSN (Record, Verify, Plans
+   moved to footer + Board menu). Intelligence folded into Board menu. Ticker slowed 48s→90s.
+   Gate reasons rewritten in plain English. Homepage stats relabeled. Mission Control removed
+   from public copy. Methodology cards humanized.
+
+**Nav doctrine (updated):** top bar = Board / Players / Fantasy / GSN only. Record lives under
+Board menu ("Our record"). Verify and Plans live in footer. Intelligence tools live under
+Board menu ("Free tools") and /intelligence/engines. Do NOT add Record/Verify/Plans back to
+the top bar.
+
+**Copy doctrine (updated):** every customer-facing string must pass the "would a sharp friend
+who actually plays DFS say this?" test. Banned: "cleared the gate", "market depth below
+publish threshold", "not evaluated", "no pick generated", "Mission Control", "Sports decision
+intelligence", "Four doors". Use: "we're on this", "we passed", "not enough sportsbooks are
+pricing this", "we haven't scored this yet".
+
+**Founder env actions still open (unchanged):**
+- `ADMIN_EMAILS=baxley.garrett@gmail.com,dbax66@icloud.com`
+- `EVENT_ODDS_INGEST_ENABLED=true` + `LINE_ARCHIVE_ENABLED=true`
+- `INTERNAL_LLM_BASE_URL` + `INTERNAL_LLM_API_KEY` + `INTERNAL_LLM_MODEL`
 
 **UPDATED 2026-09-10 (17:15 UTC): NFL CLIP OPERATION — "GSE Film Room" on @GalaxySportsHQ (Motif, Muse agent).** Garrett's directive: real clipped sports footage with our data narrative; no synthetic/fake footage; no commercial license; transformative edits only. Full build artifacts live in the revenue-engine workspace under `clips/video-builds/` (not in this repo).
 

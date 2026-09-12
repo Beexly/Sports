@@ -71,10 +71,10 @@ export default async function HomePage(): Promise<JSX.Element> {
 
   const tickerItems = [
     ...state.publishedToday.slice(0, 8).map(
-      (p) => `${p.matchup} — we're on ${p.market}`,
+      (p) => `${p.matchup}: we're on ${p.market}`,
     ),
     ...state.gatedTodayRows.slice(0, 6).map(
-      (row) => `${row.matchup} — we passed`,
+      (row) => `${row.matchup}: we passed`,
     ),
   ];
 
@@ -125,7 +125,7 @@ export default async function HomePage(): Promise<JSX.Element> {
             <Reveal delay={120}>
               <p className="mt-6 max-w-xl text-lg leading-8 text-ion-1">
                 Every Sunday the takes pile up. We score every game, publish what
-                we&apos;re on, and show what we passed on — with the reason.
+                we&apos;re on, and show what we passed on, with the reason.
               </p>
             </Reveal>
             <Reveal delay={180}>
@@ -151,8 +151,8 @@ export default async function HomePage(): Promise<JSX.Element> {
             <Reveal delay={280}>
               <dl className="mt-12 grid max-w-2xl grid-cols-2 gap-px border border-mineral bg-mineral sm:grid-cols-4">
                 {[
-                  { k: "Today's picks", v: boardUnavailable ? "—" : String(cleared) },
-                  { k: "We passed on", v: boardUnavailable ? "—" : String(gated) },
+                  { k: "Today's picks", v: boardUnavailable ? "n/a" : String(cleared) },
+                  { k: "We passed on", v: boardUnavailable ? "n/a" : String(gated) },
                   { k: "Graded picks", v: settled > 0 ? String(settled) : "building" },
                   { k: "Anyone can check", v: "yes" },
                 ].map((cell) => (
