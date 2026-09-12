@@ -172,7 +172,7 @@ export default async function HomePage(): Promise<JSX.Element> {
 
         <FieldBoardTicker items={tickerItems} />
 
-        {/* SIGNAL MAP. Four doors, one decision each. */}
+        {/* SIGNAL MAP. Four ways in, one decision each. */}
         <section
           id="doors"
           className="border-b border-mineral px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
