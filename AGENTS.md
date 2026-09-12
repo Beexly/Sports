@@ -59,13 +59,25 @@ pass before deploy (`vercel deploy --prod` from a worktree linked to project `sp
 
 ---
 
-**Founder feedback 2026-09-12 (post-merge, still OPEN work):**
+**Founder feedback 2026-09-12 (post-merge, progress log):**
 
-Shipped this round: ADMIN→ELITE (owner never paywalled), Source JSON → Data sources,
-The Beat rebuilt (robotic speechSynthesis REMOVED, full-bleed cinematic opening),
-/calibration condensed (graph hero + 3 doors + collapsed remainder).
+SHIPPED this round (PRs #773-775, commits A22-A28):
+- ADMIN→ELITE so the owner is never paywalled out of their own product
+- Source JSON → Data sources (leftover jargon)
+- The Beat rebuilt: robotic speechSynthesis REMOVED, full-bleed cinematic opening
+- /calibration condensed: graph is the hero, 3 doors, rest collapsed
+- **GSE Score + GSE Index** (`lib/fantasy/gse-score.ts`): real player ranking.
+  LIVE reads processGrade from nflverse; SAMPLE is a pool percentile, labelled.
+  Trade analyzer ranks by GSE Score and shows Index + Score per row.
+- **Board** cinematic opening + "You are here" IA strip naming all three
+  surfaces (board / published picks / founder picks). Lane "Gated Today" →
+  "Held Today".
+- **House** weekly rhythm is now an actionable calendar: every beat carries
+  action + href, today's CTA banner, today highlighted in the grid.
+- **DFS projections table** (LineStar parity): sortable Sal/Proj/Val/Ceil/
+  pOwn%/Lev, lock/exclude from the row.
 
-Still OPEN — next agents pick these up in order:
+STILL OPEN — next agents pick these up in order:
 
 1. **Optimizer / props rebuild against LineStar + PropFinder.** Founder wants the
    optimizer to look and work like LineStar. Feature map scraped 2026-09-12 from
