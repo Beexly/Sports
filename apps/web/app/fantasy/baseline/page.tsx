@@ -60,7 +60,7 @@ export default function FantasyBaselinePage(): JSX.Element {
                     Fantasy home
                   </Link>
                   <Link href="/api/sources/catalog" className="btn btn-ghost">
-                    Source JSON
+                    Data sources
                   </Link>
                 </div>
               </div>
