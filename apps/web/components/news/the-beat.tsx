@@ -53,7 +53,7 @@ export function TheBeat({ liveWire = null, unavailable = false }: { liveWire?: N
   if (unavailable) {
     return (
       <div className="surface-card p-6 text-sm text-ion-1">
-        Live feed unavailable — couldn&apos;t reach the news feeds right now. No sample is shown in its place.
+        Live feed unavailable: couldn&apos;t reach the news feeds right now. No sample is shown in its place.
       </div>
     );
   }
@@ -152,7 +152,7 @@ export function TheBeat({ liveWire = null, unavailable = false }: { liveWire?: N
         {shown.length === 0 && (
           <div className="surface-card p-6 text-sm text-ion-2">
             {isLive && wire.length === 0
-              ? "No fresh reports in this window — the feeds are reachable, nothing classifiable arrived."
+              ? "No fresh reports in this window: the feeds are reachable, nothing classifiable arrived."
               : "No items match this filter."}
           </div>
         )}

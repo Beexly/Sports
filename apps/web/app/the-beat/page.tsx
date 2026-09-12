@@ -13,7 +13,7 @@ import { fetchLiveWire } from "@/lib/news/rss";
 export const metadata: Metadata = {
   title: "The Beat · Galaxy Broadcast & Reliability-Tiered Newsroom",
   description:
-    "A constantly-running transmission: Nova reports the week's top signals on location, then the Signal Ledger scores every breaking report the instant it lands. Source tier, the players and lines it may affect, and what to consider — with the model's read labeled as its own, not the source's claim.",
+    "A constantly-running transmission: Nova reports the week's top signals on location, then the Signal Ledger scores every breaking report the instant it lands. Source tier, the players and lines it may affect, and what to consider, with the model's read labeled as its own, not the source's claim.",
   alternates: { canonical: "/the-beat" },
 };
 
@@ -92,7 +92,7 @@ export default async function TheBeatPage() {
                 </h2>
                 <p className="max-w-2xl text-sm leading-6 text-ion-1">
                   The instant a report lands we weigh the source by tier, map it to the players and lines it
-                  may affect, and decay it by freshness — our model&apos;s read, labeled as such.
+                  may affect, and decay it by freshness, our model&apos;s read, labeled as such.
                 </p>
               </div>
             </Reveal>
@@ -102,7 +102,7 @@ export default async function TheBeatPage() {
             <Reveal delay={120}>
               <p className="mt-6 text-xs leading-relaxed text-ion-2">
                 {wireUnavailable
-                  ? "Live feed unavailable — the news feeds couldn't be reached, so nothing is shown rather than a substitute."
+                  ? "Live feed unavailable: the news feeds couldn't be reached, so nothing is shown rather than a substitute."
                   : liveWire ? WIRE_LIVE_DISCLAIMER : WIRE_DISCLAIMER}
               </p>
             </Reveal>
