@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { optimizeOne, optimizeHeuristic, type Mode, type OptOpts } from "./dfs-optimizer";
+import { optimizeOne, type Mode, type OptOpts } from "./dfs-optimizer";
 import { DFS_SLATE, DFS_SLOTS, SALARY_CAP } from "./dfs-slate";
 
 /**
@@ -57,7 +57,7 @@ describe("dfs optimizer — optimality (oracle-checked)", () => {
     ({ mode, stack, optimum, tol }) => {
       // generous node budget: this asserts optimality, and the UI's own budget
       // is about latency, not correctness
-      const lu = optimizeOne(base({ mode, stack }), undefined, 60, DFS_SLATE, 1_000_000)!;
+      const lu = optimizeOne(base({ mode, stack }), undefined, DFS_SLATE)!;
       expect(lu).not.toBeNull();
       expect(lu.length).toBe(DFS_SLOTS.length);
       expect(slotsValid(lu)).toBe(true);
@@ -72,26 +72,21 @@ describe("dfs optimizer — optimality (oracle-checked)", () => {
   );
 
   it("honours stack:true instead of silently returning an unstacked lineup", () => {
-    const lu = optimizeOne(base({ stack: true }), undefined, 60, DFS_SLATE)!;
+    const lu = optimizeOne(base({ stack: true }), undefined, DFS_SLATE)!;
     const qb = lu.find((p) => p.pos === "QB")!;
     const catchers = lu.filter((p) => p.team === qb.team && (p.pos === "WR" || p.pos === "TE")).length;
     expect(catchers).toBeGreaterThanOrEqual(1);
   });
 
-  it("beats or matches the heuristic it seeds from", () => {
-    for (const mode of ["cash", "gpp", "leverage"] as Mode[]) {
-      const heur = optimizeHeuristic(base({ mode }), undefined, 60, DFS_SLATE)!;
-      const exact = optimizeOne(base({ mode }), undefined, 60, DFS_SLATE)!;
-      expect(objective(mode, exact.map((p) => p.id))).toBeGreaterThanOrEqual(
-        objective(mode, heur.map((p) => p.id)) - 1e-9,
-      );
-    }
-  });
+  // Note: the engine is an exact dynamic program (see dfs-optimizer.ts); the
+  // oracle-pin tests above are the optimality proof. There is no heuristic to
+  // "beat" anymore — that test was retired when the heuristic was removed from
+  // the engine in favor of the exact DP.
 
   it("keeps locks in the lineup and excludes out of it", () => {
     const lockId = "dwr1";
     const fadeId = "dqb1";
-    const lu = optimizeOne(base({ locks: new Set([lockId]), excludes: new Set([fadeId]) }), undefined, 40)!;
+    const lu = optimizeOne(base({ locks: new Set([lockId]), excludes: new Set([fadeId]) }), undefined, DFS_SLATE)!;
     expect(lu.some((p) => p.id === lockId)).toBe(true);
     expect(lu.some((p) => p.id === fadeId)).toBe(false);
   });

@@ -64,7 +64,7 @@ const results = job.cases.map((c) => {
     locks: new Set(c.locks ?? []),
     excludes: new Set(c.excludes ?? []),
   };
-  const lu = optimizeOne(opts, () => 0, c.restarts ?? 60, c.slate);
+  const lu = optimizeOne(opts, undefined, c.slate);
   if (!lu) return { id: c.id, mode: c.mode, objective: null, lineup: [], note: "no feasible lineup" };
   return {
     id: c.id,
