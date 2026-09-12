@@ -59,9 +59,47 @@ pass before deploy (`vercel deploy --prod` from a worktree linked to project `sp
 
 ---
 
+**Founder feedback 2026-09-12 (post-merge, still OPEN work):**
+
+Shipped this round: ADMIN→ELITE (owner never paywalled), Source JSON → Data sources,
+The Beat rebuilt (robotic speechSynthesis REMOVED, full-bleed cinematic opening),
+/calibration condensed (graph hero + 3 doors + collapsed remainder).
+
+Still OPEN — next agents pick these up in order:
+
+1. **Optimizer / props rebuild against LineStar + PropFinder.** Founder wants the
+   optimizer to look and work like LineStar. Feature map scraped 2026-09-12 from
+   linestarapp.com and propfinder.app — DO NOT re-scrape from scratch, use this:
+   - LineStar: Projections table (salary, proj pts, value, pOwn%), Daily Dashboard,
+     Patented Optimizer (150+ lineup MME, lock/fade, exposure, stacks, budget),
+     Value Plays, Projected Ownership (pOwn%), Social Sentiment, Breaking News &
+     Injuries with push alerts, Community Chat, Export Lineups (DK/FD/Yahoo),
+     Salary Comparison + Salary Changes, Vegas Odds inline, Import/Export Custom
+     Projections, Advanced Lineup Settings (stack finders, exposure, models).
+     Sports: NFL/MLB/NBA/NHL/PGA/CFB/CBB/WNBA/UFC/NAS/CSGO/LOL/CFL.
+   - PropFinder: Player Dashboard (trends, matchup, advanced stats, opponent
+     game logs, injury reports, real-time odds, custom filters), Cheatsheets
+     (TD / rushing / redzone / line / coverage matchups), Power Ratings with QB
+     adjustments + weekly movement, Games Board (model spreads/totals/projections),
+     QB rankings, win totals, HFA, weather, hit rates, opponent matchup ranks,
+     conference filters. 18+ sportsbooks. Free tier 1 game/league; $14.99/mo.
+   - Our props HB engine already exists (`edge-lab/props-hb*.ts`). Ingest needs
+     `EVENT_ODDS_INGEST_ENABLED=true` (founder env).
+2. **Player rankings are wrong.** Trade analyzer showed Lamar Jackson as most
+   valuable — the illustrative pool is not real rankings. Need a live player
+   ranking system plus a visible **GSE score** and **GSE index** per player.
+3. **Board is still confusing and boring.** Founder cannot tell public picks vs
+   published picks vs the board. This is the premier surface; it should be
+   cinematic (visual presentation, not research). Optimizers = functional
+   engagement. Beat = cinematic.
+4. **House is underutilized.** No leverage for the customer. Tie in the weekly
+   rhythm as a real calendar with alerts: do your waivers, set your lineups,
+   this player is out (injury).
+5. **Trade analyzer** needs real values, not the sample pool.
+
 **UPDATED 2026-09-12 (ASTRA REDESIGN + RECORD ACCURACY + FOUNDER PICKS — merged as PR #769,
 main `8a1df39cf`).** Full session record. Other agents: read this before touching anything
-listed below. Ledger rows A-1..A-18 in `docs/ops/AGENT_LEDGER.md`.
+listed below. Ledger rows A-1..A-24 in `docs/ops/AGENT_LEDGER.md`.
 
 **What shipped (24 commits on `claude/astra-redesign-2026-09-14`, merged):**
 
