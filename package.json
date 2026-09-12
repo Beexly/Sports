@@ -77,6 +77,8 @@
     "statking:backtest": "python3 scripts/statking_backtest.py",
     "statking:comps": "python3 scripts/statking_player_comps.py",
     "statking:all": "npm run statking:product && npm run statking:autonomous && npm run statking:coverage && npm run statking:trust && npm run statking:conflicts && npm run statking:freshness && npm run statking:backtest && npm run statking:comps && npm run statking:activation-roi && npm run statking:proof",
+    "dfs:oracle": "python scripts/dfs/oracle.py",
+    "dfs:oracle:synthetic": "python scripts/dfs/oracle.py --synthetic 12",
     "test:statking": "vitest run apps/web/__tests__/statking-hardening.test.ts apps/web/__tests__/statking-product-depth.test.ts apps/web/__tests__/statking-autonomous-integrity.test.ts",
     "statking:sources:expand": "python3 scripts/statking_expand_source_graph.py",
     "statking:sources:discover": "python3 scripts/statking_discover_sources.py",
