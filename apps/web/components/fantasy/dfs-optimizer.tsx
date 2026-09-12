@@ -25,6 +25,7 @@ export function DfsOptimizer() {
   const [mode, setMode] = useState<Mode>("gpp");
   const [stack, setStack] = useState(true);
   const [count, setCount] = useState(3);
+  const [maxExp, setMaxExp] = useState(100);
   const [locks, setLocks] = useState<Set<string>>(new Set());
   const [excludes, setExcludes] = useState<Set<string>>(new Set());
   const [result, setResult] = useState<GenResult | null>(null);
@@ -36,7 +37,8 @@ export function DfsOptimizer() {
     setBusy(true);
     // let the button paint, then compute (synchronous but quick)
     setTimeout(() => {
-      setResult(generateLineups({ mode, stack, locks, excludes }, count, 0.6, s));
+      // maxExp is a 1-100 percent; the engine takes a 0-1 fraction.
+      setResult(generateLineups({ mode, stack, locks, excludes }, count, maxExp / 100, s));
       setBusy(false);
     }, 10);
   };
@@ -95,6 +97,11 @@ export function DfsOptimizer() {
           Lineups
           <input type="range" min={1} max={20} value={count} onChange={(e) => setCount(Number(e.target.value))} className="accent-orbital-cyan" />
           <span className="w-6 font-mono text-sm text-ion-white">{count}</span>
+        </label>
+        <label className="flex items-center gap-2 text-sm text-ion-1" title="No player appears in more than this share of lineups">
+          Max exposure
+          <input type="range" min={10} max={100} step={5} value={maxExp} onChange={(e) => setMaxExp(Number(e.target.value))} className="accent-orbital-cyan" />
+          <span className="w-10 font-mono text-sm text-ion-white">{maxExp}%</span>
         </label>
         <button type="button" onClick={() => run()} disabled={busy} className="btn btn-primary ml-auto disabled:opacity-60">
           {busy ? "Solving…" : "Generate lineups"}
