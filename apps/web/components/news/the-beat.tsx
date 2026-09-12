@@ -137,11 +137,18 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
             </button>
           );
         })}
-        <select value={team} onChange={(e) => setTeam(e.target.value)}
-          className="rounded-md border bg-transparent px-2 py-1 text-xs text-ion-1"
-          style={{ borderColor: BRAND_COLORS.steelGray }} aria-label="Filter by team">
-          {teams.map((t) => <option key={t} value={t} style={{ color: "#000" }}>{t === "All" ? "All teams" : t}</option>)}
-        </select>
+        <div className="flex gap-1.5 overflow-x-auto pb-1" role="group" aria-label="Filter by team">
+          {teams.map((t) => {
+            const active = team === t;
+            return (
+              <button key={t} type="button" onClick={() => setTeam(t)} aria-pressed={active}
+                className={`shrink-0 rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider transition-colors ${active ? "bg-ion-white text-black" : "text-ion-2 hover:text-ion-white"}`}
+                style={active ? undefined : { background: "rgba(255,255,255,0.05)" }}>
+                {t === "All" ? "All teams" : t}
+              </button>
+            );
+          })}
+        </div>
         <div className="flex rounded-full border border-mineral p-0.5" role="group" aria-label="Sort order">
           <button
             type="button"
@@ -171,19 +178,41 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
         </label>
       </div>
 
-      {/* wire */}
+      {/* wire — the lead story gets the front page, the rest get the wire */}
       <div className="space-y-2.5">
-        {shown.map((r) => {
+        {shown.map((r, idx) => {
           const hex = TIER_HEX[r.item.tier];
           const fav = r.fantasyDelta;
           const open = expandedId === r.item.id;
+          const lead = idx === 0;
           return (
-            <article key={r.item.id} className="surface-card grid grid-cols-[auto_1fr] gap-3 p-4">
-              {/* urgency dial */}
+            <article key={r.item.id}
+              className={lead
+                ? "relative overflow-hidden rounded-2xl border p-5 sm:p-6"
+                : "surface-card grid grid-cols-[auto_1fr] gap-3 p-4"}
+              style={lead ? { borderColor: `${hex}55`, background: `linear-gradient(180deg, ${hex}14, transparent 70%)` } : undefined}>
+              {lead && (
+                <p className="mb-2 font-mono text-[10px] uppercase tracking-[0.28em]" style={{ color: hex }}>
+                  Lead story · {r.item.tier}
+                </p>
+              )}
+              {/* urgency — lead gets a meter, the wire gets the dial */}
+              {lead ? (
+                <div className="mb-3" aria-label={`Urgency ${r.urgency} of 100`}>
+                  <div className="flex items-baseline justify-between">
+                    <span className="font-display text-4xl leading-none text-ion-white">{r.urgency}</span>
+                    <span className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-3">urgency / 100</span>
+                  </div>
+                  <div className="mt-2 h-1 overflow-hidden rounded-full bg-white/10">
+                    <div className="h-full rounded-full" style={{ width: `${Math.min(100, Math.max(0, r.urgency))}%`, background: hex }} />
+                  </div>
+                </div>
+              ) : (
               <div className="flex w-14 flex-col items-center justify-center border-r pr-3" style={{ borderColor: `${BRAND_COLORS.steelGray}90` }}>
                 <span className="font-display text-2xl leading-none" style={{ color: r.urgency >= 55 ? BRAND_COLORS.orbitalCyan : r.urgency >= 25 ? BRAND_COLORS.ionWhite : "var(--ion-3)" }}>{r.urgency}</span>
                 <span className="mt-0.5 text-[8px] uppercase tracking-wider text-ion-3">urgency</span>
               </div>
+              )}
 
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-2">
@@ -204,7 +233,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
                   aria-expanded={open}
                   className="mt-1.5 block w-full text-left"
                 >
-                  <p className="text-sm font-medium text-ion-white">{r.item.headline}</p>
+                  <p className={lead ? "font-display text-xl font-semibold leading-snug text-ion-white sm:text-2xl" : "text-sm font-medium text-ion-white"}>{r.item.headline}</p>
                 </button>
 
                 <div
@@ -238,7 +267,16 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
             </article>
           );
         })}
-        {shown.length === 0 && <div className="surface-card p-6 text-sm text-ion-2">No items match this filter.</div>}
+        {shown.length === 0 && (
+          <div className="surface-card p-8 text-center">
+            <p className="font-display text-xl text-ion-white">The wire is quiet on this frequency.</p>
+            <p className="mx-auto mt-1 max-w-md text-sm text-ion-2">Nothing at this tier, team, or heat level right now — that is the filter talking, not the newsroom. Loosen it and the wire comes back.</p>
+            <button type="button" onClick={() => { setTierFilter("All"); setTeam("All"); setOnlyActionable(false); }}
+              className="mt-4 rounded-full bg-ion-white px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider text-black">
+              Reset the wire
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
