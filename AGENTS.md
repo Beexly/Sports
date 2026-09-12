@@ -59,6 +59,57 @@ pass before deploy (`vercel deploy --prod` from a worktree linked to project `sp
 
 ---
 
+**SCRAPING QUEUE (founder has a scraping agent — 2026-09-12). Scrape these, in this order.
+Format: what → why → where it lands. Founder will run the scrape; agents wire the results.**
+
+1. **MLB Statcast (Savant) — pitcher + batter underlying.**
+   Why: founder wants barrel%, hard-hit%, spin rate, exit velo, launch angle for
+   every MLB prop/pick. The factor engine already accepts an `underlying` input;
+   this is the data.
+   Land: `apps/web/lib/statcast/` (new). Mirror the nflverse loader pattern
+   (fetchWithFailover, assertIngestible, honest empty state). Source rights:
+   MLB Stats API is facts-only; Savant is the public sabermetric backbone.
+   Columns per player-season and per-pitcher-start: barrel%, hard-hit%, xwOBA,
+   avg exit velo, avg launch angle, whiff%, chase%, spin rate (pitchers),
+   sprint speed (batters).
+2. **NBA rest / back-to-back + minutes.**
+   Why: founder's own example — a player on a B2B or 3-in-4 is tired. The
+   factor engine has a `rest` input ready.
+   Land: `apps/web/lib/nba/rest.ts` (new). Source: Basketball-Reference or
+   the NBA schedule + player game logs (facts). Fields: gamesInLast7Days,
+   daysRest, minutesLast3.
+3. **NFL coach / beat-reporter news (structured).**
+   Why: founder wants coach news, coach rumors, beat reporter rumors as a
+   factor. The news wire already classifies signals; this adds a
+   `coach-report` tier.
+   Land: extend `apps/web/lib/news/impact.ts` with a `coach-report` signal
+   type, and add RSS feeds for each team's top beat reporter to
+   `NEWS_RSS_FEEDS`. Founder: provide the feed URLs.
+4. **Public pick consensus (over/under split).**
+   Why: founder's 5,000-over / 3,700-under example. The factor engine
+   already accepts `consensus: { overCount, underCount }`.
+   Land: `apps/web/lib/consensus/public-picks.ts` (new). Sources: PrizePicks /
+   Underdog public pick percentages if scraped; otherwise Action Network or
+   similar public consensus pages. Store as a per-prop over/under count.
+   NEVER fabricate a consensus number — absent = factor does not fire.
+5. **Defensive-front / coverage splits (zone vs man, box counts).**
+   Why: founder wants "this RB does better vs this front" and "this QB reads
+   zone better than man."
+   Land: `apps/web/lib/nfl/coverage-splits.ts` (new). Source: nflverse
+   play-by-play already has some of this; supplement with Next Gen Stats if
+   the license clears. Fields per player: rate vs man, rate vs zone, rate
+   vs light box, rate vs stacked box, with sample sizes.
+6. **Historical prop closing lines (for CLV).**
+   Why: CLV 23% vs 52.4% is the ESTABLISHED blocker. More closing-line
+   history = more graded CLV samples.
+   Land: `odds_line_snapshots` already persists (LINE_ARCHIVE_ENABLED is ON).
+   Founder: if you can scrape historical prop closing lines from a cleared
+   source, we ingest them through the same path.
+
+**Do NOT scrape:** sportsbook sites for display prices without a license;
+fantasy sites that prohibit scraping (check `source-rights-registry.ts` first);
+anything that would put a real book's quotes into a paid SaaS without rights.
+
 **Founder feedback 2026-09-12 (post-merge, progress log):**
 
 SHIPPED this round (PRs #773-#781, commits A22-A33):
