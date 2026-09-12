@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { gseScore, gseRankPool, gseIndex, isLiveGse } from "@/lib/fantasy/gse-score";
-import { PLAYERS, playerById, type Player } from "@/lib/fantasy/players";
+import { PLAYERS, type Player } from "@/lib/fantasy/players";
 
 describe("gseScore — sample pool", () => {
   it("returns a 0-100 score labelled sample-vor on the illustrative pool", () => {
