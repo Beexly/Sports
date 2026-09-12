@@ -479,6 +479,12 @@ the only copy, and nobody else can verify or build on it.
 
 | A-15 | Freeze published bet terms write-once at creation. pickUpdateData reapplied selection/line/reasoning/reasoningShort on every PENDING refresh while clvLockLine is create-only — the card could show -4.5 while we graded -3.0. Those four are now minted once with the lock. Confidence/grade/factor trail still refresh. | claude | DONE | 7259741db; 77/77 process-sport, typecheck 0 |
 
+| A-16 | Rename marketGates to marketGatesAdvisory so it cannot be misread as a production gate. calibration-eligibility.ts never reads it. Live eligibility is the pooled MONEYLINE-only sample. Truth surface 2026-09-11T23:56Z: eligibility GREEN, streak 93, PERFORMANCE_STATS on, calibration published, revenue ladder PROVEN. | claude | DONE | cc03d4176 |
+
+| A-17 | Founder picks ("Beak's picks"): owner-submitted, sealed, graded on the real record. modelVersion=founder-v1, isBootstrap=false, ADMIN POST /api/admin/founder-picks, public /founder-picks + /api/founder-picks. Decided-only win rate. Locks at kickoff (fail-closed). Requires a written reason. factorBreakdown tags source=founder, rankingP null. Can fill a held game or override a PENDING engine pick. No schema change. | claude | DONE | 2d3ba6f0b; typecheck 0, 9/9 founder-picks tests |
+
+| A-18 | Props activation path (NOT flipped — founder env only). The full hierarchical-Bayes props engine already exists in packages/prediction-engine/src/edge-lab/props-hb*.ts (pass/rush/rec yards, TDs, attempts, comps, air yards, ADOT, catch rate) plus props-fire-gate, props-line-shop, props-juice-floor, props-priced-edge. Ingest is wired in process-sport.ts via ingestEventOddsIfEnabled and no-ops unless EVENT_ODDS_INGEST_ENABLED=true (credit-capped, default 8 calls, books draftkings/fanduel/betmgm). Two founder env flips turn it on: EVENT_ODDS_INGEST_ENABLED=true and LINE_ARCHIVE_ENABLED=true. Schema is sealed — prop lines persist in OddsLineSnapshot, no new table. | claude | OPEN | code ready; env flip is founder-only |
+
 | A-N1 | Install Neon skills for DB access (`npx neon@latest skills -s neon -s neon-postgres -y`). FAILED on the supply-chain control: esbuild@0.28.1 postinstall not in allowScripts (ESTRICTALLOWSCRIPTS). That is law 7 working as designed — not deleted .npmrc, not set ignore-scripts, not approved. Founder can approve the one-off or run the install outside the repo. | claude | BLOCKED | npx neon@latest skills ... -> ESTRICTALLOWSCRIPTS esbuild@0.28.1 |
 
 <!-- LEDGER:END -->
