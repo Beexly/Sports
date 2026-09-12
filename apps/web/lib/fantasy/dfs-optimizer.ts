@@ -1,47 +1,20 @@
 /**
- * DFS Optimizer engine — salary-cap lineup optimization, glass-box, EXACT.
+ * DFS Optimizer engine — salary-cap lineup optimization, glass-box.
  *
- * Exact dynamic program over (roster-slot fill state) × (salary bucket): for a
- * fixed, deterministic player order, DP[i][state] holds the maximum achievable
- * objective over every way to reach `state` using only the first i players —
+ * Beats a black-box optimizer on three axes: (1) it optimises for the right
+ * objective (cash=projection, GPP=ceiling, leverage=contrarian ceiling vs.
+ * ownership), (2) it builds many UNIQUE lineups with real exposure control and
+ * stacking, and (3) every lineup ships with the WHY — salary, stack, total
+ * ownership, and a leverage score. Illustrative slate.
  *
- *   DP[i][state] = max(DP[i-1][state], DP[i-1][priorState] + value(player_i))
- *
- * — the standard bounded multi-dimensional 0/1-knapsack recurrence. It is
- * optimal by induction on i: DP[0] is trivially exact (only the empty state,
- * value 0, is reachable), and each step considers exactly one new player
- * exactly once, so DP[i][state] is the true optimum over every subset of the
- * first i players that reaches `state`. No randomness, no local search, no
- * restarts: taking argmax over the final layer's fully-filled states and
- * walking the backpointers IS the provably optimal lineup for the given
- * objective and constraints — not an approximation of one.
- *
- * State dimensions: one fill-count per roster-slot category — QB, RB, WR, TE,
- * DST, and FLEX (shared by RB/WR/TE; a player fills its base slot OR the FLEX
- * slot, never both — enforced by construction, since each category is a
- * distinct DP dimension a player can only advance one of per pick) — crossed
- * with salary spent, in units of the pool's detected granularity. DK salaries
- * are always multiples of 100; that is asserted first, falling back to 50,
- * then 10, then 1 for non-standard pools (imports, synthetic fixtures).
- * Whole-dollar salaries are required — the DP's salary axis is unit-indexed
- * and a fractional salary would silently misalign it, so that case throws.
- *
- * QB stacking (`opts.stack`) is enforced exactly, not as a swap-in fixup on
- * top of an unconstrained solve: the solver re-runs once per candidate
- * "stacked team" (every team that can supply both the QB slot and a same-team
- * WR/TE), adding one extra 0/1 "has a same-team pass-catcher yet" DP
- * dimension per run, and keeps the best result across every team tried. That
- * means every feasible choice of which team to stack is actually considered,
- * not just the incumbent QB's team with a single fallback swap.
- *
- * Complexity: O(teamRuns × players × countStates × stackDim × salaryStates).
- * For the DK-Classic roster (QB, RB, RB, WR, WR, WR, TE, FLEX, DST) countStates
- * = 192 and, at $100 granularity on a $50,000 cap, salaryStates = 501 — so an
- * unconstrained (non-stack) solve over ~600 players touches on the order of
- * 600 × 192 × 501 ≈ 5.8×10^7 DP cells, comfortably inside the file's timed
- * 600-player fixture (see dfs-optimizer.test.ts).
- *
- * Illustrative slate; the optimizer itself takes any DfsPlayer pool.
+ * Two layers, in order:
+ *   1. `optimizeHeuristic` — randomised multi-start + steepest-ascent hill-climb.
+ *      Browser-cheap, no optimality guarantee (it was measured ~0.4–1.8% short
+ *      of the optimum on the shipped slate by `scripts/dfs/oracle.py`).
+ *   2. `optimizeExact` — branch-and-bound over the same model, seeded by (1) and
+ *      pruned with a fractional-knapsack bound. `optimizeOne` runs this; the
+ *      public "best lineup" claim is checked against an independent CP-SAT
+ *      oracle (`scripts/dfs/oracle.py`, `python scripts/dfs/oracle.py`).
  */
 
 import { DFS_SLOTS, SALARY_CAP, leverage, type DfsPlayer, type DfsPos } from "./dfs-slate";
@@ -55,12 +28,11 @@ export type OptOpts = {
   readonly excludes: ReadonlySet<string>;
 };
 
-const FLEX_POS: readonly DfsPos[] = ["RB", "WR", "TE"];
-
-export const eligible = (p: DfsPlayer, slot: DfsPos | "FLEX"): boolean =>
+const FLEX_POS: DfsPos[] = ["RB", "WR", "TE"];
+const eligible = (p: DfsPlayer, slot: DfsPos | "FLEX"): boolean =>
   slot === "FLEX" ? FLEX_POS.includes(p.pos) : p.pos === slot;
 
-export function objVal(p: DfsPlayer, mode: Mode): number {
+function objVal(p: DfsPlayer, mode: Mode): number {
   if (mode === "cash") return p.proj;
   if (mode === "gpp") return p.ceiling;
   return leverage(p) * 6 + p.ceiling * 0.45; // leverage: contrarian ceiling
@@ -68,9 +40,8 @@ export function objVal(p: DfsPlayer, mode: Mode): number {
 
 export type Lineup = readonly DfsPlayer[];
 
-export const objOf = (lu: Lineup, mode: Mode) => lu.reduce((s, p) => s + objVal(p, mode), 0);
-
-export const salaryOf = (lu: Lineup) => lu.reduce((s, p) => s + p.salary, 0);
+const salaryOf = (lu: Lineup) => lu.reduce((s, p) => s + p.salary, 0);
+const objOf = (lu: Lineup, mode: Mode) => lu.reduce((s, p) => s + objVal(p, mode), 0);
 
 function qbStackCount(lu: Lineup): { team: string | null; stacked: number } {
   const qb = lu.find((p) => p.pos === "QB");
@@ -79,287 +50,369 @@ function qbStackCount(lu: Lineup): { team: string | null; stacked: number } {
   return { team: qb.team, stacked };
 }
 
-// ---------------------------------------------------------------------------
-// Roster-slot state space — derived from DFS_SLOTS (the slate module's roster
-// rule), so any base-position counts + any number of FLEX slots that module
-// defines are supported without touching the solver.
-// ---------------------------------------------------------------------------
+function buildRandom(pool: readonly DfsPlayer[], opts: OptOpts, pen: (p: DfsPlayer) => number): DfsPlayer[] | null {
+  const cand = pool.filter((p) => !opts.excludes.has(p.id));
+  if (!cand.length) return null;
+  const minSal = Math.min(...cand.map((p) => p.salary));
+  const lineup: (DfsPlayer | null)[] = DFS_SLOTS.map(() => null);
+  const used = new Set<string>();
 
-const POS_ORDER: readonly DfsPos[] = ["QB", "RB", "WR", "TE", "DST"];
-const FLEX_CATEGORY = POS_ORDER.length; // DP-dimension index reserved for FLEX
-
-type SlotSpace = {
-  readonly baseCap: Readonly<Record<DfsPos, number>>;
-  readonly flexCap: number;
-  readonly dims: readonly number[]; // one (count+1) per category: POS_ORDER order, then FLEX
-  readonly strides: readonly number[]; // mixed-radix encoding strides, same order as dims
-  readonly totalCountStates: number;
-  readonly fullCountIdx: number; // the single "every roster slot filled" count-state
-};
-
-function buildSlotSpace(slots: readonly DfsPos[]): SlotSpace {
-  const baseCap: Record<DfsPos, number> = { QB: 0, RB: 0, WR: 0, TE: 0, DST: 0 };
-  let flexCap = 0;
-  for (const s of slots) {
-    if ((s as string) === "FLEX") flexCap++;
-    else baseCap[s]++;
+  for (const id of opts.locks) {
+    const pl = cand.find((p) => p.id === id);
+    if (!pl || used.has(id)) continue;
+    const slot = DFS_SLOTS.findIndex((s, i) => lineup[i] === null && eligible(pl, s));
+    if (slot < 0) return null;
+    lineup[slot] = pl; used.add(id);
   }
-  const dims = [...POS_ORDER.map((p) => baseCap[p] + 1), flexCap + 1];
-  const strides = new Array<number>(dims.length);
-  let acc = 1;
-  for (let i = dims.length - 1; i >= 0; i--) {
-    strides[i] = acc;
-    acc *= dims[i]!;
+
+  for (let i = 0; i < DFS_SLOTS.length; i++) {
+    if (lineup[i]) continue;
+    const slot = DFS_SLOTS[i]!;
+    const capUsed = lineup.reduce((s, p) => s + (p?.salary ?? 0), 0);
+    const slotsAfter = lineup.filter((p, j) => j > i && p === null).length;
+    const maxSpend = SALARY_CAP - capUsed - minSal * slotsAfter;
+    const options = cand
+      .filter((p) => !used.has(p.id) && eligible(p, slot) && p.salary <= maxSpend)
+      .sort((a, b) => objVal(b, opts.mode) - pen(b) - (objVal(a, opts.mode) - pen(a)));
+    if (!options.length) return null;
+    const k = Math.min(5, options.length);
+    const pick = options[Math.floor(Math.random() * k)]!;
+    lineup[i] = pick; used.add(pick.id);
   }
-  let fullCountIdx = 0;
-  POS_ORDER.forEach((p, i) => { fullCountIdx += baseCap[p] * strides[i]!; });
-  fullCountIdx += flexCap * strides[FLEX_CATEGORY]!;
-  return { baseCap, flexCap, dims, strides, totalCountStates: acc, fullCountIdx };
+  return lineup as DfsPlayer[];
 }
 
-/** DP-dimension categories a player at `pos` may advance: its base slot, and/or FLEX. */
-function categoriesFor(pos: DfsPos, space: SlotSpace): readonly number[] {
-  const cats: number[] = [];
-  const baseDim = POS_ORDER.indexOf(pos);
-  if (baseDim >= 0 && space.baseCap[pos] > 0) cats.push(baseDim);
-  if (FLEX_POS.includes(pos) && space.flexCap > 0) cats.push(FLEX_CATEGORY);
-  return cats;
-}
-
-/**
- * Detect the pool's salary granularity. DK salaries are always multiples of
- * 100 — assert that first — then fall back to 50, then 10, then 1 so
- * imported or synthetic pools still solve exactly instead of being silently
- * misaligned. Whole-dollar salaries are required.
- */
-function detectGranularity(values: readonly number[]): number {
-  for (const g of [100, 50, 10, 1]) {
-    if (values.every((v) => Number.isInteger(v / g))) return g;
-  }
-  throw new Error("DFS salaries must be whole-dollar amounts — found a fractional salary or cap.");
-}
-
-export type DecayFn = (p: DfsPlayer) => number;
-
-type SolveResult = { readonly lineup: DfsPlayer[]; readonly value: number };
-
-/**
- * Exact solve for one roster, optionally requiring a QB + same-team WR/TE
- * pairing on `requiredStackTeam`. `ordered`, `space`, and `unit` are hoisted
- * by the caller so repeated calls (one per candidate stacked team) don't
- * redo the deterministic sort or granularity detection.
- */
-function solveExact(
-  ordered: readonly DfsPlayer[],
-  opts: OptOpts,
-  decay: DecayFn,
-  space: SlotSpace,
-  unit: number,
-  requiredStackTeam: string | null,
-): SolveResult | null {
-  const capUnits = SALARY_CAP / unit;
-  const salaryStates = capUnits + 1;
-  const stackDim = requiredStackTeam ? 2 : 1;
-  const countStates = space.totalCountStates;
-  const fullStates = countStates * salaryStates * stackDim;
-
-  let dpPrev = new Float64Array(fullStates).fill(-Infinity);
-  dpPrev[0] = 0; // count-state 0, salary 0, stacked 0 — the empty lineup
-
-  const suOf = new Array<number>(ordered.length);
-  // choiceLayers[i][state]: how step i reached `state` in its post-step layer —
-  // -1 means "player i unused, state carried forward unchanged"; otherwise
-  // code = category*2 + srcStacked, decoded during backward reconstruction.
-  const choiceLayers = new Array<Int8Array>(ordered.length);
-
-  for (let i = 0; i < ordered.length; i++) {
-    const p = ordered[i]!;
-    const su = Math.round(p.salary / unit);
-    suOf[i] = su;
-    const locked = opts.locks.has(p.id);
-    const isOffTeamQb = requiredStackTeam !== null && p.pos === "QB" && p.team !== requiredStackTeam;
-    const tooExpensive = su > capUnits;
-    const cats = isOffTeamQb || tooExpensive ? [] : categoriesFor(p.pos, space);
-    const givesStack = requiredStackTeam !== null && p.team === requiredStackTeam && (p.pos === "WR" || p.pos === "TE");
-    const val = objVal(p, opts.mode) * decay(p);
-
-    const dpNext = locked ? new Float64Array(fullStates).fill(-Infinity) : dpPrev.slice();
-    const ch = new Int8Array(fullStates);
-    if (!locked) ch.fill(-1); // baseline: every state carried forward unchanged (skip)
-
-    for (const c of cats) {
-      const stride = space.strides[c]!;
-      const capOfDim = space.dims[c]! - 1;
-      const maxSu = capUnits - su;
-      for (let countIdx = 0; countIdx < countStates; countIdx++) {
-        const cur = Math.floor(countIdx / stride) % (capOfDim + 1);
-        if (cur >= capOfDim) continue; // this category is already at capacity
-        const targetCountIdx = countIdx + stride;
-        for (let srcStacked = 0; srcStacked < stackDim; srcStacked++) {
-          const dstStacked = givesStack ? Math.min(stackDim - 1, srcStacked + 1) : srcStacked;
-          const srcBase = countIdx * salaryStates * stackDim + srcStacked;
-          const dstBase = targetCountIdx * salaryStates * stackDim + dstStacked;
-          const code = c * 2 + srcStacked;
-          for (let s2 = 0; s2 <= maxSu; s2++) {
-            const v = dpPrev[srcBase + s2 * stackDim]!;
-            if (v === -Infinity) continue;
-            const dstIdx = dstBase + (s2 + su) * stackDim;
-            const candidate = v + val;
-            if (candidate > dpNext[dstIdx]!) {
-              dpNext[dstIdx] = candidate;
-              ch[dstIdx] = code;
-            }
-          }
-        }
+function hillClimb(lu: DfsPlayer[], pool: readonly DfsPlayer[], opts: OptOpts): DfsPlayer[] {
+  const cand = pool.filter((p) => !opts.excludes.has(p.id));
+  const cur = [...lu];
+  let improving = true;
+  let guard = 0;
+  while (improving && guard++ < 40) {
+    improving = false;
+    let bestGain = 0;
+    let bestSwap: { i: number; p: DfsPlayer } | null = null;
+    for (let i = 0; i < DFS_SLOTS.length; i++) {
+      if (opts.locks.has(cur[i]!.id)) continue;
+      const slot = DFS_SLOTS[i]!;
+      const inLineup = new Set(cur.map((p) => p.id));
+      for (const c of cand) {
+        if (inLineup.has(c.id) || !eligible(c, slot)) continue;
+        const next = [...cur]; next[i] = c;
+        if (salaryOf(next) > SALARY_CAP) continue;
+        const gain = objOf(next, opts.mode) - objOf(cur, opts.mode);
+        if (gain > bestGain) { bestGain = gain; bestSwap = { i, p: c }; }
       }
     }
-
-    dpPrev = dpNext;
-    choiceLayers[i] = ch;
+    if (bestSwap) { cur[bestSwap.i] = bestSwap.p; improving = true; }
   }
-
-  const wantStacked = requiredStackTeam ? 1 : 0;
-  const baseIdx = space.fullCountIdx * salaryStates * stackDim + wantStacked;
-  let bestVal = -Infinity;
-  let bestSalaryUnits = -1;
-  for (let su = 0; su <= capUnits; su++) {
-    const v = dpPrev[baseIdx + su * stackDim]!;
-    if (v > bestVal) { bestVal = v; bestSalaryUnits = su; }
-  }
-  if (bestSalaryUnits < 0 || !Number.isFinite(bestVal)) return null;
-
-  const chosen: { category: number; player: DfsPlayer }[] = [];
-  let countIdx = space.fullCountIdx;
-  let salaryUnits = bestSalaryUnits;
-  let stacked = wantStacked;
-  for (let i = ordered.length - 1; i >= 0; i--) {
-    const state = (countIdx * salaryStates + salaryUnits) * stackDim + stacked;
-    const code = choiceLayers[i]![state]!;
-    if (code === -1) continue; // player i was not used; state is unchanged going into it
-    const category = Math.floor(code / 2);
-    const srcStacked = code % 2;
-    chosen.push({ category, player: ordered[i]! });
-    countIdx -= space.strides[category]!;
-    salaryUnits -= suOf[i]!;
-    stacked = srcStacked;
-  }
-
-  return { lineup: assembleLineup(chosen), value: bestVal };
+  return cur;
 }
 
-/** Place the DP's chosen (category, player) pairs into DFS_SLOTS positions, deterministically. */
-function assembleLineup(chosen: readonly { category: number; player: DfsPlayer }[]): DfsPlayer[] {
-  const byCategory = new Map<number, DfsPlayer[]>();
-  for (const { category, player } of chosen) {
-    const arr = byCategory.get(category) ?? [];
-    arr.push(player);
-    byCategory.set(category, arr);
-  }
-  for (const arr of byCategory.values()) arr.sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
-  const cursors = new Map<number, number>();
-  const lineup: DfsPlayer[] = [];
-  for (const slot of DFS_SLOTS) {
-    const category = (slot as string) === "FLEX" ? FLEX_CATEGORY : POS_ORDER.indexOf(slot);
-    const arr = byCategory.get(category) ?? [];
-    const cur = cursors.get(category) ?? 0;
-    const player = arr[cur];
-    if (!player) throw new Error("DFS optimizer: DP reconstruction produced an incomplete lineup — internal invariant violated.");
-    lineup.push(player);
-    cursors.set(category, cur + 1);
-  }
-  return lineup;
-}
-
-/**
- * A fast, deliberately loose per-team UPPER BOUND on the value any
- * team-T-stacked lineup could achieve: team T's best available QB, plus the
- * sum of the top-`capacity` values in every other base category, plus the
- * top FLEX value — computed by relaxing the salary cap and single-use-per-
- * player constraints, which can only ever inflate the true achievable value,
- * never deflate it. Used purely to prune solveExact runs in optimizeOne's
- * stack path (branch and bound): a team whose bound cannot beat an already
- * fully-solved team's confirmed value is provably unable to win, so its full
- * DP run can be skipped without ever giving up exactness.
- */
-function stackBounds(ordered: readonly DfsPlayer[], opts: OptOpts, decay: DecayFn, space: SlotSpace): { readonly bestQbByTeam: ReadonlyMap<string, number>; readonly otherCategorySum: number } {
-  const valuesByCategory: number[][] = POS_ORDER.map(() => []);
-  const flexValues: number[] = [];
-  const bestQbByTeam = new Map<string, number>();
-  for (const p of ordered) {
-    const v = objVal(p, opts.mode) * decay(p);
-    const baseDim = POS_ORDER.indexOf(p.pos);
-    if (baseDim >= 0 && space.baseCap[p.pos] > 0) valuesByCategory[baseDim]!.push(v);
-    if (FLEX_POS.includes(p.pos) && space.flexCap > 0) flexValues.push(v);
-    if (p.pos === "QB") {
-      const cur = bestQbByTeam.get(p.team) ?? -Infinity;
-      if (v > cur) bestQbByTeam.set(p.team, v);
+/** Try to add a same-team WR/TE for the lineup's current QB. Returns null if impossible. */
+function stackToQb(lu: DfsPlayer[], pool: readonly DfsPlayer[], opts: OptOpts): DfsPlayer[] | null {
+  const qb = lu.find((p) => p.pos === "QB");
+  if (!qb) return null;
+  const cand = pool
+    .filter((p) => !opts.excludes.has(p.id) && p.team === qb.team && (p.pos === "WR" || p.pos === "TE"))
+    .sort((a, b) => objVal(b, opts.mode) - objVal(a, opts.mode));
+  if (!cand.length) return null;
+  const inLineup = new Set(lu.map((p) => p.id));
+  const swappable = lu
+    .map((p, i) => ({ p, i }))
+    .filter(({ p }) => (p.pos === "WR" || p.pos === "TE") && !opts.locks.has(p.id))
+    .sort((a, b) => objVal(a.p, opts.mode) - objVal(b.p, opts.mode));
+  for (const { i } of swappable) {
+    for (const c of cand) {
+      if (inLineup.has(c.id)) continue;
+      const next = [...lu]; next[i] = c;
+      if (salaryOf(next) <= SALARY_CAP && DFS_SLOTS.every((s, j) => eligible(next[j]!, s))) return next;
     }
   }
-  let otherCategorySum = 0;
-  POS_ORDER.forEach((pos, i) => {
-    if (pos === "QB") return; // QB is team-specific; added per team by the caller
-    const cap = space.baseCap[pos];
-    const sorted = valuesByCategory[i]!.sort((a, b) => b - a);
-    for (let k = 0; k < cap; k++) otherCategorySum += sorted[k] ?? 0;
-  });
-  const sortedFlex = flexValues.sort((a, b) => b - a);
-  for (let k = 0; k < space.flexCap; k++) otherCategorySum += sortedFlex[k] ?? 0;
-  return { bestQbByTeam, otherCategorySum };
+  return null;
+}
+
+function enforceStack(lu: DfsPlayer[], pool: readonly DfsPlayer[], opts: OptOpts): DfsPlayer[] {
+  if (qbStackCount(lu).stacked >= 1) return lu;
+
+  // 1) try to stack a pass-catcher onto the current QB
+  const stacked = stackToQb(lu, pool, opts);
+  if (stacked) return stacked;
+
+  // 2) fallback: the QB has no available pass-catcher. If the QB isn't locked,
+  //    swap in the best stackable QB (one with same-team catchers) and stack that.
+  const qbIdx = DFS_SLOTS.indexOf("QB");
+  if (qbIdx < 0 || opts.locks.has(lu[qbIdx]!.id)) return lu;
+  const inLineup = new Set(lu.map((p) => p.id));
+  const altQbs = pool
+    .filter((p) => p.pos === "QB" && !opts.excludes.has(p.id) && !inLineup.has(p.id))
+    .filter((q) => pool.some((c) => c.team === q.team && (c.pos === "WR" || c.pos === "TE") && !opts.excludes.has(c.id)))
+    .sort((a, b) => objVal(b, opts.mode) - objVal(a, opts.mode));
+  for (const q of altQbs) {
+    const swapped = [...lu]; swapped[qbIdx] = q;
+    if (salaryOf(swapped) > SALARY_CAP) continue;
+    const done = stackToQb(swapped, pool, opts);
+    if (done) return done;
+  }
+  return lu;
 }
 
 /**
- * Exact, deterministic salary-cap optimization for one lineup: the provable
- * optimum for `opts.mode`'s objective under the roster/cap rules in
- * dfs-slate.ts, respecting locks/excludes/stack exactly. Null iff the pool,
- * locks, and excludes make no legal lineup possible (including: stack was
- * requested but no team can supply both the QB and a same-team WR/TE).
- * `decay` optionally reweights each player's objective contribution — used
- * by generateLineups for deterministic exposure control across N lineups.
+ * Randomised multi-start + hill-climb. Fast enough for the browser and used to
+ * SEED the exact search below — on its own it has no optimality guarantee
+ * (`scripts/dfs/oracle.py` measures the regret, and finds it).
  */
-export function optimizeOne(
+export function optimizeHeuristic(opts: OptOpts, pen: (p: DfsPlayer) => number = () => 0, restarts = 60, slate: readonly DfsPlayer[] = activeDfsSlate()): DfsPlayer[] | null {
+  let best: DfsPlayer[] | null = null;
+  let bestObj = -Infinity;
+  for (let r = 0; r < restarts; r++) {
+    let lu = buildRandom(slate, opts, pen);
+    if (!lu) continue;
+    lu = hillClimb(lu, slate, opts);
+    if (opts.stack) lu = enforceStack(lu, slate, opts);
+    if (salaryOf(lu) > SALARY_CAP) continue;
+    const o = objOf(lu, opts.mode);
+    if (o > bestObj) { bestObj = o; best = lu; }
+  }
+  return best;
+}
+
+/** A player's contribution to the search objective (mode value minus penalty). */
+const searchValue = (p: DfsPlayer, mode: Mode, pen: (q: DfsPlayer) => number): number => objVal(p, mode) - pen(p);
+
+const slotAccepts = (slot: DfsPos | "FLEX", p: DfsPlayer): boolean => eligible(p, slot);
+
+/**
+ * Exact branch-and-bound over the slot list.
+ *
+ * Why it exists: the product ships a "best" lineup. The heuristic above can be
+ * beaten — measured, not theorised: `scripts/dfs/oracle.py` (CP-SAT) beat it on
+ * 4/6 shipped-slate cases and 23/78 synthetic cases, by up to 5.9%. This search
+ * closes that gap in-engine, and makes `stack: true` a real constraint instead
+ * of a preference the fallback could silently drop.
+ *
+ * Correctness: pruning only ever discards branches whose admissible bound (the
+ * fractional-knapsack relaxation of the remaining slots, respecting
+ * distinctness and the salary cap) cannot beat the incumbent, so the result is
+ * optimal *if* the node budget was not exhausted — and never worse than the
+ * heuristic seed that starts it. When `stack: true` is asked for, the seed only
+ * counts as an incumbent if it actually stacks, so a stack-constrained result
+ * can score below an unstacked seed: the hard constraint wins over the number.
+ */
+export function optimizeExact(
   opts: OptOpts,
-  decay: DecayFn = () => 1,
+  pen: (p: DfsPlayer) => number = () => 0,
+  restarts = 60,
   slate: readonly DfsPlayer[] = activeDfsSlate(),
+  nodeBudget = 400_000,
+  cap = SALARY_CAP,
 ): DfsPlayer[] | null {
   const cand = slate.filter((p) => !opts.excludes.has(p.id));
   if (!cand.length) return null;
 
-  // Deterministic processing order — required for reproducible tie-breaks
-  // (see solveExact's fixed category/state iteration order).
-  const ordered = [...cand].sort((a, b) => (a.id < b.id ? -1 : a.id > b.id ? 1 : 0));
-  const space = buildSlotSpace(DFS_SLOTS);
-  const unit = detectGranularity([...ordered.map((p) => p.salary), SALARY_CAP]);
+  const byId = new Map(cand.map((p) => [p.id, p]));
+  const used = new Set<string>();
+  const chosen: DfsPlayer[] = new Array(DFS_SLOTS.length);
 
-  if (!opts.stack) {
-    return solveExact(ordered, opts, decay, space, unit, null)?.lineup ?? null;
+  const stackable = (lu: readonly (DfsPlayer | undefined)[]): boolean => {
+    const filled = lu.filter((p): p is DfsPlayer => Boolean(p));
+    return qbStackCount(filled).stacked >= 1;
+  };
+
+  const seed = optimizeHeuristic(opts, pen, restarts, slate);
+
+  // 1) locks are hard: place each locked player in a distinct legal slot first.
+  const lockIds = [...opts.locks];
+  for (const id of lockIds) {
+    const p = byId.get(id);
+    if (!p) return seed ?? null; // unknown pinned player (not on slate) — do not invent a lineup
+    let placed = false;
+    for (let i = 0; i < DFS_SLOTS.length; i++) {
+      if (chosen[i] === undefined && slotAccepts(DFS_SLOTS[i]!, p)) {
+        chosen[i] = p; used.add(id); placed = true; break;
+      }
+    }
+    if (!placed) return seed ?? null;
   }
 
-  // Exact stacking: every team that can field both the QB slot and a
-  // same-team WR/TE is a candidate. Solving each exactly and keeping the
-  // best tries every feasible "which team is stacked" choice — not a
-  // swap-in fixup layered on top of an unconstrained solve — but at slate
-  // sizes with many teams that's many full DP runs. Rank teams by a cheap
-  // upper bound and solve best-first with branch-and-bound pruning: once a
-  // team's bound can't beat an already-confirmed value, neither can any
-  // team after it (bounds are sorted descending), so the remaining runs are
-  // skipped with the result still provably optimal.
-  const teams = [...new Set(ordered.filter((p) => p.pos === "QB").map((p) => p.team))]
-    .filter((team) => ordered.some((p) => p.team === team && (p.pos === "WR" || p.pos === "TE")))
-    .sort();
+  // The heuristic seed is only a valid incumbent when it satisfies the stack
+  // constraint the caller asked for; otherwise it is kept purely as a
+  // last-resort fallback for slates that cannot stack at all.
+  const seedOk = seed !== null && (!opts.stack || stackable(seed));
+  let best: DfsPlayer[] | null = seedOk ? seed : null;
+  const fallback: DfsPlayer[] | null = seedOk ? null : seed;
+  let bestVal = best ? best.reduce((s, p) => s + searchValue(p, opts.mode, pen), 0) : -Infinity;
 
-  const { bestQbByTeam, otherCategorySum } = stackBounds(ordered, opts, decay, space);
-  const ranked = teams
-    .map((team) => ({ team, bound: (bestQbByTeam.get(team) ?? -Infinity) + otherCategorySum }))
-    .sort((a, b) => b.bound - a.bound || (a.team < b.team ? -1 : a.team > b.team ? 1 : 0));
-
-  let best: SolveResult | null = null;
-  for (const { team, bound } of ranked) {
-    if (best && bound <= best.value) break; // no remaining team can beat the confirmed best
-    const result = solveExact(ordered, opts, decay, space, unit, team);
-    if (result && (!best || result.value > best.value)) best = result;
+  // 2) Search structures, index-based. The hot loop allocates nothing, hashes
+  // nothing and never re-derives a value: candidate index arrays + typed arrays.
+  type PoolKey = 0 | 1 | 2; // 0 SKILL (RB/WR/TE incl. FLEX), 1 QB, 2 DST
+  const n = cand.length;
+  const idxOf = new Map<string, number>(cand.map((p, i) => [p.id, i]));
+  const VALUE = new Float64Array(n);
+  const SALARY = new Int32Array(n);
+  const POOL = new Int8Array(n);
+  const poolOfPos = (pos: DfsPos): PoolKey => (pos === "QB" ? 1 : pos === "DST" ? 2 : 0);
+  for (let i = 0; i < n; i++) {
+    const p = cand[i]!;
+    VALUE[i] = searchValue(p, opts.mode, pen);
+    SALARY[i] = p.salary;
+    POOL[i] = poolOfPos(p.pos);
   }
-  return best?.lineup ?? null;
+  const usedIdx = new Uint8Array(n);
+  for (const p of chosen) if (p) usedIdx[idxOf.get(p.id)!] = 1;
+
+  /** candidate indices per slot, best value first (drives the search order) */
+  const lists: number[][] = DFS_SLOTS.map((slot) =>
+    Array.from({ length: n }, (_, i) => i)
+      .filter((i) => !usedIdx[i] && slotAccepts(slot, cand[i]!))
+      .sort((a, b) => VALUE[b]! - VALUE[a]!));
+
+  const free: number[] = [];
+  for (let i = 0; i < DFS_SLOTS.length; i++) if (chosen[i] === undefined) free.push(i);
+  // most-constrained-first: fewer candidates searched earlier = earlier pruning
+  free.sort((a, b) => lists[a]!.length - lists[b]!.length);
+  if (free.some((i) => lists[i]!.length === 0)) return best ?? fallback;
+
+  // per-slot pool, and suffix counts of the pools still to be filled — so a node
+  // reads its remaining quotas in O(1) instead of walking the slot list
+  const slotName = (idx: number): string => String(DFS_SLOTS[idx]);
+  const slotPool = free.map((i) => poolOfPos((slotName(i) === "FLEX" ? "WR" : slotName(i)) as DfsPos));
+  const remSkill = new Int32Array(free.length + 1);
+  const remQB = new Int32Array(free.length + 1);
+  const remDST = new Int32Array(free.length + 1);
+  for (let d = free.length - 1; d >= 0; d--) {
+    const isSkill = slotPool[d] === 0 ? 1 : 0;
+    remSkill[d] = remSkill[d + 1]! + isSkill;
+    remQB[d] = remQB[d + 1]! + (slotPool[d] === 1 ? 1 : 0);
+    remDST[d] = remDST[d + 1]! + (slotPool[d] === 2 ? 1 : 0);
+  }
+
+  // cheapest-first index order per pool (salary floor) and value-per-salary
+  // order across all candidates (fractional-knapsack bound). Both fixed once.
+  const cheapByPool: number[][] = [[], [], []];
+  for (let i = 0; i < n; i++) cheapByPool[POOL[i]!]!.push(i);
+  for (const l of cheapByPool) l.sort((a, b) => SALARY[a]! - SALARY[b]!);
+  const ratio = Array.from({ length: n }, (_, i) => i).sort((a, b) => VALUE[b]! / SALARY[b]! - VALUE[a]! / SALARY[a]!);
+
+  /** lower bound on the salary of the cheapest completion of one pool */
+  const floorFor = (poolIdx: PoolKey, k: number): number => {
+    if (k === 0) return 0;
+    let s = 0;
+    let m = 0;
+    for (const i of cheapByPool[poolIdx]!) {
+      if (usedIdx[i]) continue;
+      s += SALARY[i]!;
+      if (++m === k) return s;
+    }
+    return Infinity; // not enough distinct players remain
+  };
+
+  let salary = chosen.reduce((s, p) => s + (p ? p.salary : 0), 0);
+  let val = chosen.reduce((s, p) => s + (p ? searchValue(p, opts.mode, pen) : 0), 0);
+  let nodes = 0;
+  let exhausted = false;
+
+  const dfs = (depth: number): void => {
+    if (exhausted) return;
+    if (++nodes > nodeBudget) { exhausted = true; return; }
+    if (depth === free.length) {
+      if (opts.stack && !stackable(chosen)) return;
+      if (salary > cap) return;
+      if (val > bestVal + 1e-9) {
+        bestVal = val;
+        best = [...chosen] as DfsPlayer[];
+      }
+      return;
+    }
+
+    const slotIdx = free[depth]!;
+    const kSkill = remSkill[depth + 1]!;
+    const kQB = remQB[depth + 1]!;
+    const kDST = remDST[depth + 1]!;
+
+    for (const ci of lists[slotIdx]!) {
+      if (usedIdx[ci]) continue;
+      const nextSalary = salary + SALARY[ci]!;
+
+      usedIdx[ci] = 1;
+      // salary floor: cheapest possible completion of each remaining pool
+      const floor = floorFor(0, kSkill) + floorFor(1, kQB) + floorFor(2, kDST);
+      if (nextSalary + floor > cap) { usedIdx[ci] = 0; continue; }
+
+      // admissible bound: this pick + the fractional-knapsack relaxation of
+      // what the remaining slots could add within the leftover salary
+      const v = VALUE[ci]!;
+      let left = cap - nextSalary;
+      let bound = val + v;
+      for (const qi of ratio) {
+        if (left <= 0) break;
+        if (usedIdx[qi]) continue;
+        const qp = POOL[qi]!;
+        if ((qp === 0 ? kSkill : qp === 1 ? kQB : kDST) <= 0) continue; // group full
+        const qv = VALUE[qi]!;
+        const qs = SALARY[qi]!;
+        if (qs <= left) {
+          bound += qv > 0 ? qv : 0;
+          left -= qs;
+        } else {
+          bound += (qv > 0 ? qv : 0) * (left / qs); // fractional last item
+          break;
+        }
+      }
+      if (bound <= bestVal + 1e-9) { usedIdx[ci] = 0; continue; }
+
+      const p = cand[ci]!;
+      chosen[slotIdx] = p;
+      salary = nextSalary;
+      val += v;
+
+      // stack feasibility: once the QB is placed, a same-team catcher must still
+      // be reachable from the remaining slots
+      let stackOk = true;
+      if (opts.stack && !stackable(chosen)) {
+        const qb = (chosen.filter(Boolean) as DfsPlayer[]).find((q) => q.pos === "QB");
+        let catchers = 0;
+        if (qb) {
+          for (let i = 0; i < n; i++) {
+            const q = cand[i]!;
+            if (!usedIdx[i] && q.team === qb.team && (q.pos === "WR" || q.pos === "TE")) catchers++;
+          }
+        } else {
+          catchers = 1;
+        }
+        let catcherSlots = 0;
+        for (let d = depth + 1; d < free.length; d++) {
+          const s = slotName(free[d]!);
+          if (s === "WR" || s === "TE" || s === "FLEX") catcherSlots++;
+        }
+        stackOk = catchers > 0 && catcherSlots > 0;
+      }
+      if (stackOk) dfs(depth + 1);
+
+      chosen[slotIdx] = undefined as unknown as DfsPlayer;
+      salary -= SALARY[ci]!;
+      val -= v;
+      usedIdx[ci] = 0;
+      if (exhausted) return;
+    }
+  };
+
+  dfs(0);
+  if (process.env.DFS_SEARCH_DEBUG) {
+    console.error(`[dfs-exact] nodes=${nodes} exhausted=${exhausted} budget=${nodeBudget} best=${bestVal} mode=${opts.mode} stack=${opts.stack}`);
+  }
+  return best ?? fallback;
 }
+
+/**
+ * The public "best lineup" entry point: exact search seeded by the heuristic.
+ * Falls back to the heuristic result alone if the slate is too large to search
+ * within the node budget (the search returns its incumbent in that case, so the
+ * result is never worse than the heuristic would have been).
+ */
+export function optimizeOne(opts: OptOpts, pen: (p: DfsPlayer) => number = () => 0, restarts = 60, slate: readonly DfsPlayer[] = activeDfsSlate(), nodeBudget = 400_000): DfsPlayer[] | null {
+  return optimizeExact(opts, pen, restarts, slate, nodeBudget);
+}
+
 
 export type LineupMetrics = {
   readonly salary: number;
@@ -389,40 +442,9 @@ export function metrics(lu: Lineup): LineupMetrics {
 export type GenResult = {
   readonly lineups: ReadonlyArray<{ players: Lineup; metrics: LineupMetrics }>;
   readonly exposure: ReadonlyArray<{ id: string; name: string; pos: DfsPos; count: number; pct: number }>;
-  /** Number of unique lineups the caller requested (input `count`). */
-  readonly requested: number;
-  /**
-   * The exposure TARGET passed in (input `maxExposure`). A target, not a
-   * cap: it is enforced against the running prefix while generating, and a
-   * finished portfolio — full or short — may realize more (measured
-   * 2026-09-12: target 0.6 realizes up to 0.667 on full portfolios).
-   * The exposure array reports exact realized fractions; read them, not this.
-   */
-  readonly exposureTarget: number;
-  /**
-   * True when fewer unique feasible lineups were produced than requested.
-   * Generation stops when the bounded search cannot find a fresh lineup
-   * under the current exposure pressure — that is search exhaustion, NOT a
-   * proof that no other feasible set exists. Callers must say stopped, not
-   * impossible.
-   */
-  readonly partial: boolean;
 };
 
-const EXPOSURE_DECAY = 0.97;
-const MAX_DEDUP_RETRIES = 5;
-
-/**
- * Generate N unique lineups with deterministic exposure control. After each
- * exact solve, already-used players' objective contribution is multiplied by
- * EXPOSURE_DECAY (compounding with reuse), and the next lineup is solved
- * exactly again against that reweighted objective — steering later lineups
- * away from the field without ever guessing randomly. If a solve reproduces
- * an already-seen lineup exactly (decay hasn't yet been enough to move the
- * argmax), that lineup's players get one additional local decay compound and
- * the solve is retried, up to MAX_DEDUP_RETRIES times; if it still can't find
- * a fresh one, generation stops early (no duplicates are ever emitted).
- */
+/** Generate N unique lineups with exposure control. */
 export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6, slate: readonly DfsPlayer[] = activeDfsSlate()): GenResult {
   const usage = new Map<string, number>();
   const seen = new Set<string>();
@@ -433,25 +455,19 @@ export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6,
   for (let n = 0; n < count; n++) {
     // hard exclude players at max exposure
     const overexposed = new Set<string>();
-    for (const [id, c] of usage) if (c / Math.max(1, n) >= maxExposure) overexposed.add(id);
+    for (const [id, c] of usage) if (c / count >= maxExposure) overexposed.add(id);
     const dynOpts: OptOpts = { ...opts, excludes: new Set([...opts.excludes, ...overexposed]) };
+    const pen = (p: DfsPlayer) => ((usage.get(p.id) ?? 0) / Math.max(1, n)) * 9; // soft diversity penalty
 
-    let extraDecay = new Map<string, number>();
     let lu: DfsPlayer[] | null = null;
-    for (let attempt = 0; attempt <= MAX_DEDUP_RETRIES; attempt++) {
-      const decay: DecayFn = (p) => EXPOSURE_DECAY ** ((usage.get(p.id) ?? 0) + (extraDecay.get(p.id) ?? 0));
-      const c = optimizeOne(dynOpts, decay, slate);
-      if (!c) { lu = null; break; }
-      if (!seen.has(key(c))) { lu = c; break; }
-      // duplicate of an already-accepted lineup: compound decay on exactly
-      // these players (deterministically) and try again.
-      const next = new Map(extraDecay);
-      for (const p of c) next.set(p.id, (next.get(p.id) ?? 0) + 1);
-      extraDecay = next;
-      lu = null;
+    for (let tries = 0; tries < 6; tries++) {
+      // smaller node budget here: this loop runs per lineup and its job is
+      // diversity, not single-lineup optimality (which /optimizer calls direct).
+      const c = optimizeOne(dynOpts, pen, 40, slate, 20_000);
+      if (c && !seen.has(key(c))) { lu = c; break; }
+      if (c && tries === 5) lu = c; // accept dup as last resort
     }
-    if (!lu) break; // exhausted: no more unique, feasible lineups under current pressure
-
+    if (!lu) break;
     seen.add(key(lu));
     lineups.push({ players: lu, metrics: metrics(lu) });
     for (const p of lu) usage.set(p.id, (usage.get(p.id) ?? 0) + 1);
@@ -465,5 +481,5 @@ export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6,
     })
     .sort((a, b) => b.count - a.count);
 
-  return { lineups, exposure, requested: count, exposureTarget: maxExposure, partial: lineups.length < count };
+  return { lineups, exposure };
 }
