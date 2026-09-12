@@ -4,7 +4,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { Reveal, Stagger } from "@/components/motion/reveal";
 import { ReaderDoorway } from "@/components/house/reader-doorway";
-import { WEEKLY_RITUAL } from "@/lib/house/weekly-ritual";
+import { WEEKLY_RITUAL, todayAction } from "@/lib/house/weekly-ritual";
 import { loadBoardState } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 
@@ -287,7 +287,7 @@ export default async function NflHousePage() {
           </div>
         </section>
 
-        {/* The week has a shape. */}
+        {/* The week has a shape — now a calendar you can act on. */}
         <section
           aria-labelledby="house-week-heading"
           className="px-4 py-14 sm:px-6 lg:px-8"
@@ -295,31 +295,87 @@ export default async function NflHousePage() {
           <div className="mx-auto max-w-5xl">
             <Reveal>
               <p className="eyebrow text-ion-2">
-                The rhythm
+                The rhythm · your week
               </p>
               <h2
                 id="house-week-heading"
                 className="mt-3 font-display text-2xl text-ion-white"
               >
-                The week has a shape. The desk works it.
+                The week has a shape. Here is what to do today.
               </h2>
               <p className="mt-2 max-w-2xl text-sm text-ion-1">
-                An NFL week is a ritual, not a feed. This is how we move through
-                it.
+                Waivers, lineups, injuries, game day. One action per day — tap it and go.
               </p>
             </Reveal>
-            <Stagger className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
-              {WEEK_RHYTHM.map((slot, i) => (
+
+            {/* Today's call-to-action — the alert. */}
+            {(() => {
+              const today = todayAction();
+              if (!today) return null;
+              return (
+              <Reveal delay={80}>
                 <div
-                  key={`${slot.day}-${i}`}
-                  className="rounded-xl border border-mineral/70 bg-carbon/60 p-4"
+                  className="mt-6 flex flex-wrap items-center gap-4 rounded-2xl border border-orbital-cyan/40 bg-orbital-cyan/[0.06] px-5 py-4"
+                  data-testid="house-today-action"
                 >
-                  <p className="font-numerals text-xs font-semibold uppercase tracking-[0.18em] text-orbital-cyan">
-                    {slot.day}
+                  <span
+                    className="rounded-full px-2.5 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.16em]"
+                    style={{ background: "rgba(255,77,46,0.16)", color: "#FF4D2E" }}
+                  >
+                    {today.day} · today
+                  </span>
+                  <p className="flex-1 text-sm font-semibold text-ion-white">
+                    {today.action}
                   </p>
-                  <p className="mt-2 text-sm leading-snug text-ion-1">{slot.beat}</p>
+                  {today.actionHref && (
+                    <Link href={today.actionHref} className="btn btn-primary btn-sm">
+                      Go →
+                    </Link>
+                  )}
                 </div>
-              ))}
+              </Reveal>
+              );
+            })()}
+
+            <Stagger className="mt-8 grid grid-cols-2 gap-3 sm:grid-cols-4">
+              {WEEK_RHYTHM.map((slot, i) => {
+                const isToday = slot.dayIndex === new Date().getUTCDay();
+                return (
+                  <div
+                    key={`${slot.day}-${i}`}
+                    className={`rounded-xl border p-4 transition-colors ${
+                      isToday
+                        ? "border-orbital-cyan/60 bg-orbital-cyan/[0.05]"
+                        : "border-mineral/70 bg-carbon/60"
+                    }`}
+                    data-testid={isToday ? "house-rhythm-today" : undefined}
+                  >
+                    <div className="flex items-center justify-between">
+                      <p className="font-numerals text-xs font-semibold uppercase tracking-[0.18em] text-orbital-cyan">
+                        {slot.day}
+                      </p>
+                      {isToday && (
+                        <span className="rounded-full bg-orbital-cyan/20 px-1.5 py-0.5 font-mono text-[9px] font-bold uppercase tracking-wider text-orbital-cyan">
+                          Today
+                        </span>
+                      )}
+                    </div>
+                    <p className="mt-2 text-sm leading-snug text-ion-1">{slot.beat}</p>
+                    {slot.action && slot.actionHref ? (
+                      <Link
+                        href={slot.actionHref}
+                        className={`mt-3 block text-xs font-semibold ${
+                          isToday ? "text-orbital-cyan hover:text-ion-white" : "text-ion-2 hover:text-ion-white"
+                        }`}
+                      >
+                        {slot.action} →
+                      </Link>
+                    ) : (
+                      <p className="mt-3 text-xs text-ion-3">We handle this one.</p>
+                    )}
+                  </div>
+                );
+              })}
             </Stagger>
           </div>
         </section>
