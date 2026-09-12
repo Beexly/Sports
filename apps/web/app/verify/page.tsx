@@ -2,7 +2,6 @@ import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { VerifyConsole } from "@/components/trust-ledger/verify-console";
-import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 export const metadata: Metadata = {
   title: "Verify a Pick · Tamper-Evident Proof of Record",
@@ -26,9 +25,6 @@ export default function VerifyPage({
     : "";
   return (
     <div className="relative isolate flex min-h-screen flex-col bg-obsidian text-ion-white">
-      {/* Same atmosphere as /proof and /calibration — the trust surfaces read
-          as one room. */}
-      <GeneratedPlate assetId="proof-crystal" className="-z-10 opacity-20" />
       <Nav />
       <main id="main-content" className="mx-auto w-full max-w-3xl flex-1 px-4 py-12 sm:px-6">
         <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-orbital-cyan">

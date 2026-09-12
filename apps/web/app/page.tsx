@@ -109,7 +109,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   className="h-1.5 w-1.5 rounded-full bg-plasma"
                   style={{ animation: "pp-live-pulse 2s ease-in-out infinite" }}
                 />
-                Sports decision intelligence
+                Compare fantasy options · today&apos;s picks · the evidence
               </p>
             </Reveal>
             <Reveal delay={60}>
@@ -172,7 +172,7 @@ export default async function HomePage(): Promise<JSX.Element> {
 
         <FieldBoardTicker items={tickerItems} />
 
-        {/* SIGNAL MAP. Four doors, one decision each. */}
+        {/* SIGNAL MAP. One decision per card. */}
         <section
           id="doors"
           className="border-b border-mineral px-4 py-16 sm:px-6 sm:py-20 lg:px-8"
@@ -180,7 +180,7 @@ export default async function HomePage(): Promise<JSX.Element> {
           <div className="mx-auto max-w-7xl">
             <Reveal>
               <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-plasma">
-                Four doors
+                Decisions
               </p>
               <h2 className="mt-3 max-w-3xl font-display text-3xl font-semibold text-ion-white sm:text-4xl">
                 Pick the decision you came to make.

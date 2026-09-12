@@ -25,7 +25,6 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BRAND_NAME } from "@/lib/brand";
-import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { ProofExplorer } from "@/components/proof/proof-explorer";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { MARKET_IMPLIED_CALIBRATION_CLAIM } from "@/lib/picks/market-implied-display";
@@ -93,7 +92,6 @@ export default async function CalibrationProofRoomPage() {
 
   return (
     <div className="relative isolate min-h-screen bg-carbon text-ion">
-      <GeneratedPlate assetId="proof-crystal" className="-z-10 opacity-20" />
       <Nav />
 
       <main id="main-content" className="mx-auto flex max-w-5xl flex-col gap-12 px-4 py-12 sm:px-6 lg:px-8">
