@@ -102,7 +102,7 @@ export function validateFounderPick(
   // engine (hasKickedOff, C-299). Unparseable kickoff fails CLOSED.
   if (opts.kickoff) {
     if (opts.kickoff.getTime() <= now.getTime()) {
-      return { ok: false, error: "Game has already kicked off. Founder picks lock at kickoff." };
+      return { ok: false, error: "Game has already kicked off. Founder picks freeze at kickoff." };
     }
   } else {
     return { ok: false, error: "Game kickoff time is unknown. Refusing to publish." };

@@ -10,7 +10,7 @@ import { fetchLiveWire } from "@/lib/news/rss";
 /**
  * The Beat.
  *
- * Governing idea (Unseen Studio method — one idea dictates layout, motion,
+ * Governing idea (Unseen Studio method: one idea dictates layout, motion,
  * type and copy together): SPORTS MEDIA IS A MARKET. Every report is a quote.
  * This page is the newsroom that scores every story the instant it lands.
  *
@@ -53,7 +53,7 @@ export default async function TheBeatPage() {
                 "linear-gradient(180deg, #08090C 0%, #12141A 55%, #08090C 100%)",
             }}
           />
-          {/* Scanline wash — the newsroom, not a stock photo. */}
+          {/* Scanline wash: the newsroom, not a stock photo. */}
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 -z-10 opacity-[0.07]"
@@ -95,7 +95,7 @@ export default async function TheBeatPage() {
             <p className="mt-6 max-w-2xl text-lg leading-8 text-ion-1">
               Sports media is a market too. Noisy, and now accountable. Every
               report that lands gets weighed, mapped to the players and lines it
-              moves, and handed to you as a move — before the market prices it in.
+              moves, and handed to you as a move, before the market prices it in.
             </p>
 
             <div className="mt-8 flex flex-wrap gap-3">
@@ -129,7 +129,7 @@ export default async function TheBeatPage() {
                 </h2>
               </div>
               <p className="max-w-md text-sm leading-6 text-ion-2">
-                Nova from the field. Orion at the desk. Segment by segment —
+                Nova from the field. Orion at the desk. Segment by segment.
                 the script on screen, never a robotic voice in your ear.
               </p>
             </div>
@@ -156,7 +156,7 @@ export default async function TheBeatPage() {
               </h2>
               <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">
                 Source tier. Freshness. Fantasy and market impact. The move to
-                make. Sort it, quiet it, open a card for the full read — then
+                make. Sort it, quiet it, open a card for the full read, then
                 act before the number moves.
               </p>
             </div>

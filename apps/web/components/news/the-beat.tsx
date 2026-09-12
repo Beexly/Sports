@@ -4,7 +4,7 @@
  * The Beat. A reliability-tiered, impact-scored newsroom.
  *
  * Governing idea (ASTRA A-9): sports media is a market. Every report is a
- * quote — some are worth acting on, most are noise. This surface ranks every
+ * quote. Some are worth acting on, most are noise. This surface ranks every
  * item by what deserves attention RIGHT NOW (source tier, fantasy + market
  * delta, freshness decay) and hands you the move, not just the headline.
  *
@@ -96,7 +96,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
         </span>
       )}
 
-      {/* Pulse strip — the one-screen answer to "is anything worth my time?" */}
+      {/* Pulse strip: the one-screen answer to "is anything worth my time?" */}
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4" data-testid="beat-pulse">
         <div className="surface-card p-3">
           <p className="font-numerals text-[10px] uppercase tracking-[0.16em] text-ion-3">On the wire</p>
@@ -113,7 +113,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
         <div className="surface-card min-w-0 p-3">
           <p className="font-numerals text-[10px] uppercase tracking-[0.16em] text-ion-3">Top signal</p>
           <p className="mt-1 truncate text-sm font-semibold text-ion-white" title={pulse.top?.item.headline}>
-            {pulse.top ? `${pulse.top.item.team} · ${pulse.top.urgency}` : "—"}
+            {pulse.top ? `${pulse.top.item.team} · ${pulse.top.urgency}` : "n/a"}
           </p>
         </div>
       </div>

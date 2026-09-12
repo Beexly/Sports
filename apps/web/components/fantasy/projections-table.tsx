@@ -130,7 +130,7 @@ export function ProjectionsTable({
                       type="checkbox"
                       checked={locked}
                       onChange={() => onToggleLock(p.id)}
-                      aria-label={`Lock ${p.name}`}
+                      aria-label={`Pin ${p.name}`}
                       className="h-3.5 w-3.5 accent-[#FF4D2E]"
                     />
                   </td>
@@ -174,8 +174,8 @@ export function ProjectionsTable({
         </table>
       </div>
       <p className="border-t border-mineral px-4 py-2 text-[11px] text-ion-3">
-        Val = points per $1k. Lev = ceiling vs ownership — higher is more contrarian upside.
-        Check to lock a player into every lineup. Exclude removes them.
+        Val = points per $1k. Lev = ceiling vs ownership (higher is more contrarian upside).
+        Check to pin a player into every lineup. Exclude removes them.
       </p>
     </div>
   );

@@ -8,11 +8,11 @@
  * lower-third, a teleprompter, a segment rundown, and a drop-cadence strip.
  *
  * Audio: the browser speech-synthesis Play control was removed 2026-09-12.
- * It sounded robotic and nothing like a human read — the founder called it
+ * It sounded robotic and nothing like a human read. The founder called it
  * "horrible and nothing human-like." The segment script is still on screen;
  * when a real TTS lane lands it can come back behind an explicit opt-in.
  *
- * No photoreal likeness — the anchors are stylized brand marks, never
+ * No photoreal likeness. The anchors are stylized brand marks, never
  * generated faces. Reduced-motion safe: the scene is CSS only. Nothing
  * plays on load.
  */

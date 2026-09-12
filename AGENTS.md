@@ -126,7 +126,7 @@ SHIPPED this round (PRs #773-#781, commits A22-A33):
 - **House** weekly rhythm is now an actionable calendar: every beat carries
   action + href, today's CTA banner, today highlighted in the grid.
 - **DFS projections table** (LineStar parity): sortable Sal/Proj/Val/Ceil/
-  pOwn%/Lev, lock/exclude from the row.
+  pOwn%/Lev, pin/exclude from the row.
 - **Props board** market + team filters (PropFinder parity).
 - **CSV export** of generated lineups (DK Classic format).
 - **Max exposure slider** on the optimizer (10-100%).
@@ -138,7 +138,7 @@ STILL OPEN — next agents pick these up in order:
    optimizer to look and work like LineStar. Feature map scraped 2026-09-12 from
    linestarapp.com and propfinder.app — DO NOT re-scrape from scratch, use this:
    - LineStar: Projections table (salary, proj pts, value, pOwn%), Daily Dashboard,
-     Patented Optimizer (150+ lineup MME, lock/fade, exposure, stacks, budget),
+     Patented Optimizer (150+ lineup MME, pin/fade, exposure, stacks, budget),
      Value Plays, Projected Ownership (pOwn%), Social Sentiment, Breaking News &
      Injuries with push alerts, Community Chat, Export Lineups (DK/FD/Yahoo),
      Salary Comparison + Salary Changes, Vegas Odds inline, Import/Export Custom
