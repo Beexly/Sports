@@ -5,6 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { PunditLedger } from "@/components/airwave/pundit-ledger";
+import { ExpertBoard } from "@/components/airwave/expert-board";
 import {
   leaderboard,
   toPublicLedger,
@@ -156,7 +157,16 @@ export default async function AirwavePage() {
         {/* The ledger */}
         <section className="px-4 pb-10 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
-            <PunditLedger scorecards={scorecards} claims={claims} />
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-orbital-cyan">The standings</p>
+            <h2 className="mt-1 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
+              Ranked by <span className="gse-editorial" style={{ fontSize: "1.08em" }}>accountability.</span>
+            </h2>
+            <div className="mt-4">
+              <ExpertBoard />
+            </div>
+            <div className="mt-6">
+              <PunditLedger scorecards={scorecards} claims={claims} />
+            </div>
           </div>
         </section>
 

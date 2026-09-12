@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { PropsEdge } from "@/components/fantasy/props-edge";
+import { PickemRanker } from "@/components/fantasy/pickem-ranker";
 import { PROPS_DISCLAIMER } from "@/lib/fantasy/props";
 import { activePickemLines, isLivePickem } from "@/lib/integrations/pickem";
 
@@ -30,6 +31,16 @@ export default function PropsPage() {
       projectionsBadge={false}
     >
       <PropsEdge lines={lines} />
+
+      <section aria-label="Ranked board" className="mt-8">
+        <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-ultraviolet">The ranked board</p>
+        <h2 className="mt-1 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
+          Every line, <span className="gse-editorial" style={{ fontSize: "1.08em" }}>strongest edge first.</span>
+        </h2>
+        <div className="mt-4">
+          <PickemRanker lines={lines} live={isLivePickem()} />
+        </div>
+      </section>
     </FantasyShell>
   );
 }

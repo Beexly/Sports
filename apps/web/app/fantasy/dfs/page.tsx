@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { FantasyShell } from "@/components/fantasy/fantasy-shell";
 import { DfsOptimizer } from "@/components/fantasy/dfs-optimizer";
+import { TournamentLab } from "@/components/fantasy/tournament-lab";
 import { loadDfsSalaries } from "@/lib/dfs/salaries";
 
 export const metadata: Metadata = {
@@ -94,6 +95,8 @@ export default async function DfsSuitePage() {
       </section>
 
       <DfsOptimizer />
+
+      <TournamentLab />
     </FantasyShell>
   );
 }
