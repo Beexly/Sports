@@ -1,0 +1,43 @@
+name: TestDriver
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  testdriver:
+    name: Run TestDriver smoke tests
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run TestDriver — homepage
+        uses: testdriverai/action@main
+        with:
+          key: ${{ secrets.TESTDRIVER_API_KEY }}
+          prompt: |
+            1. /run testdriver/homepage.yml
+
+      - name: Run TestDriver — sign-in page
+        uses: testdriverai/action@main
+        with:
+          key: ${{ secrets.TESTDRIVER_API_KEY }}
+          prompt: |
+            1. /run testdriver/signin.yml
+
+      - name: Run TestDriver — pricing page
+        uses: testdriverai/action@main
+        with:
+          key: ${{ secrets.TESTDRIVER_API_KEY }}
+          prompt: |
+            1. /run testdriver/pricing.yml
+
+      - name: Run TestDriver — picks board
+        uses: testdriverai/action@main
+        with:
+          key: ${{ secrets.TESTDRIVER_API_KEY }}
+          prompt: |
+            1. /run testdriver/board.yml
