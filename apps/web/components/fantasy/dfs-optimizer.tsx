@@ -13,6 +13,7 @@ import { useEffect, useMemo, useState } from "react";
 import { DFS_SLATE, DFS_SLOTS, SALARY_CAP, DFS_POS_HEX, leverage, type DfsPlayer } from "@/lib/fantasy/dfs-slate";
 import { generateLineups, type Mode, type GenResult } from "@/lib/fantasy/dfs-optimizer";
 import { DkImportPanel } from "@/components/fantasy/dk-import-panel";
+import { ProjectionsTable } from "@/components/fantasy/projections-table";
 
 const MODES: { key: Mode; label: string; blurb: string }[] = [
   { key: "cash", label: "Cash", blurb: "Maximise projection: the safest median." },
@@ -191,34 +192,14 @@ export function DfsOptimizer() {
             </div>
           )}
 
-          <div className="surface-card p-5">
-            <div className="mb-2 flex items-center justify-between">
-              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Slate ({pool.length})</p>
-              <p className="font-mono text-[10px] tabular-nums text-ion-2">
-                <span className="text-orbital-cyan">★ {locks.size} pinned</span>
-                {" · "}
-                {/* fading a player is an exclusion — alert tone, not plasma */}
-                <span className="text-alert">✕ {excludes.size} faded</span>
-              </p>
-            </div>
-            <div className="max-h-[60vh] space-y-0.5 overflow-y-auto">
-              {pool.map((p: DfsPlayer) => {
-                const c = DFS_POS_HEX[p.pos];
-                const locked = locks.has(p.id); const fade = excludes.has(p.id);
-                return (
-                  <div key={p.id} className="flex items-center gap-2 rounded px-1.5 py-1.5" style={{ opacity: fade ? 0.4 : 1, background: locked ? "color-mix(in srgb, var(--orbital-cyan) 7%, transparent)" : "transparent" }}>
-                    <span className="rounded px-1.5 py-0.5 font-mono text-[10px] font-bold" style={{ color: c, background: `${c}18` }}>{p.pos}</span>
-                    <span className="flex-1 truncate text-sm text-ion-white">{p.name}</span>
-                    <span className="font-mono text-[11px] tabular-nums text-ion-2">${p.salary}</span>
-                    <span className="w-8 text-right font-mono text-[11px] tabular-nums text-plasma">{leverage(p).toFixed(1)}</span>
-                    <button type="button" onClick={() => toggle(locks, setLocks, p.id)} title="pin" aria-label={`Pin ${p.name}`} aria-pressed={locked} className="px-1 text-sm" style={{ color: locked ? "var(--orbital-cyan)" : "var(--ion-3)" }}>★</button>
-                    <button type="button" onClick={() => toggle(excludes, setExcludes, p.id)} title="fade" aria-label={`Fade ${p.name}`} aria-pressed={fade} className="px-1 text-sm" style={{ color: fade ? "var(--alert)" : "var(--ion-3)" }}>✕</button>
-                  </div>
-                );
-              })}
-            </div>
-            <p className="mt-2 text-[10px] text-ion-2">Rightmost number is leverage (ceiling vs. ownership). Pin/fade, then Generate.</p>
-          </div>
+          <ProjectionsTable
+            players={pool}
+            locks={locks}
+            excludes={excludes}
+            onToggleLock={(id) => toggle(locks, setLocks, id)}
+            onToggleExclude={(id) => toggle(excludes, setExcludes, id)}
+            isLive={imported}
+          />
         </div>
       </div>
     </div>
