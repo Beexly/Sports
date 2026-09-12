@@ -91,7 +91,7 @@ export default async function CalibrationProofRoomPage() {
   const { data: report } = await loadPublicCalibrationReport();
 
   return (
-    // Same Field atmosphere as /verify — one room, one look. proof-crystal
+    // Same Field atmosphere as /verify: one room, one look. proof-crystal
     // plate + the extra nebula wash removed 2026-09-14 (owner: hideous, does
     // not match; the two trust pages did not even match each other).
     <div className="relative isolate min-h-screen bg-carbon text-ion gw-nebula">
@@ -148,7 +148,7 @@ export default async function CalibrationProofRoomPage() {
           <ProofCard
             eyebrow="The record"
             title="Win rate, honestly banded"
-            body="Every finished live-engine pick, with the uncertainty band shown — and held back entirely until the sample is honest."
+            body="Every finished live-engine pick, with the uncertainty band shown, and held back entirely until the sample is honest."
             href="/performance"
             linkLabel="Open the record"
             accent
