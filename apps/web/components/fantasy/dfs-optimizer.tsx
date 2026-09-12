@@ -9,16 +9,16 @@
  * buries, surfaced. Illustrative slate.
  */
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import { DFS_SLATE, DFS_SLOTS, SALARY_CAP, DFS_POS_HEX, type DfsPlayer } from "@/lib/fantasy/dfs-slate";
 import { generateLineups, type Mode, type GenResult } from "@/lib/fantasy/dfs-optimizer";
 import { DkImportPanel } from "@/components/fantasy/dk-import-panel";
 import { ProjectionsTable } from "@/components/fantasy/projections-table";
 
 const MODES: { key: Mode; label: string; blurb: string }[] = [
-  { key: "cash", label: "Cash", blurb: "Maximise projection: the safest median." },
-  { key: "gpp", label: "GPP", blurb: "Maximise ceiling: win the tournament." },
-  { key: "leverage", label: "Leverage", blurb: "Contrarian ceiling vs. ownership: the edge." },
+  { key: "cash", label: "Cash", blurb: "Maximise projection: highest median." },
+  { key: "gpp", label: "GPP", blurb: "Maximise ceiling: highest upside." },
+  { key: "leverage", label: "Leverage", blurb: "Contrarian ceiling vs. ownership: low-owned upside." },
 ];
 
 export function DfsOptimizer() {
@@ -42,8 +42,8 @@ export function DfsOptimizer() {
       setBusy(false);
     }, 10);
   };
-  // initial build
-  useEffect(() => { setResult(generateLineups({ mode: "gpp", stack: true, locks: new Set(), excludes: new Set() }, 3, 0.6, DFS_SLATE)); }, []);
+  // No auto-generate on mount: fictional sample lineups are never presented
+  // unasked. The user presses Generate explicitly (customer-data contract).
 
   const onImport = (players: DfsPlayer[]) => {
     setSlate(players); setImported(true); setLocks(new Set()); setExcludes(new Set()); run(players);
@@ -201,7 +201,8 @@ export function DfsOptimizer() {
               </div>
             );
           })}
-          {!result?.lineups.length && <div className="surface-card p-6 text-sm text-ion-1">No lineup fits the constraints. Loosen your locks or excludes.</div>}
+          {result === null && <div className="surface-card p-6 text-sm text-ion-1">Press Generate to build lineups from the current pool.</div>}
+          {result !== null && !result.lineups.length && <div className="surface-card p-6 text-sm text-ion-1">No lineup fits the constraints. Loosen your locks or excludes.</div>}
         </div>
 
         {/* exposure + pool */}
