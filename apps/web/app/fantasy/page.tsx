@@ -66,12 +66,12 @@ const LIVE_FIRST = [
  */
 type ToolStatus = "live" | "partly live" | "sample";
 const TOOL_DIRECTORY: readonly (readonly [string, string, string, ToolStatus])[] = [
-  ["Optimizer: DFS · Start/Sit · Draft", "One workspace, one contest switch. Salaries and projections stay on sample until a licensed feed is connected; the draft board (tiers, VOR, scarcity, run alerts, your ADP CSV) runs on the sample pool now.", "/optimizer", "partly live"],
-  ["Best Ball", "Draft-only roster construction: ceiling/spike upside, QB-to-catcher stacks, bye fragility, and a next-pick recommender. Runs on the sample pool now; real the moment projections flip on.", "/fantasy/bestball", "partly live"],
+  ["Optimizer: DFS · Start/Sit · Draft", "One workspace, one contest switch. LineStar-style projections table (salary, value, pOwn%, leverage), QB stack, max exposure, CSV export. Opens on a sample slate; import your DK CSV for the real one today.", "/optimizer", "partly live"],
+  ["Best Ball", "Draft-only roster construction: ceiling/spike upside, QB-to-catcher stacks, bye fragility. Ranked by GSE Score.", "/fantasy/bestball", "partly live"],
   ["Human Performance", "Public confidence-band layer: venue surface, weather, official injury status. Live now; never a body claim.", "/human", "live"],
-  ["Waiver & FAAB", "Opens now on sample players. Needs roster sync, projections, injuries, and league market context to become advice.", "/fantasy/waivers", "sample"],
-  ["Trade Analyzer", "Opens now on sample players. Needs live player values and roster context to become advice.", "/fantasy/trade", "sample"],
-  ["Pick'em Edge", "Opens now on sample lines. Needs live pick'em lines and alt-line pricing to become advice.", "/fantasy/props", "sample"],
+  ["Waiver & FAAB", "Opens now on sample players ranked by GSE Score. Needs roster sync and a projections feed to become advice.", "/fantasy/waivers", "sample"],
+  ["Trade Analyzer", "Both sides valued on GSE Score. Opens now on sample players; live the moment a projections feed is connected.", "/fantasy/trade", "sample"],
+  ["Pick'em Edge", "Our number vs their line, with the most valuable alt. Market and team filters. Opens on sample lines.", "/fantasy/props", "sample"],
   ["League Twin", "Can render a real roster after sync; advice waits for projections.", "/fantasy/league-twin", "sample"],
   ["GM Ledger", "Proof mechanics are real; live decision history requires user roster events. Today the history is a disclosed demonstration.", "/fantasy/gm-ledger", "sample"],
 ] as const;
