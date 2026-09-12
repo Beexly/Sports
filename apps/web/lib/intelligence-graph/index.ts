@@ -194,17 +194,80 @@ export function buildSlateWeather(nodes: readonly GameIntelligenceNode[]): Slate
   }));
 }
 
+/**
+ * Project a game-intelligence node through a user lens.
+ *
+ * Each lens gets a genuinely DIFFERENT summary. Before 2026-09-12, BETTOR,
+ * CREATOR and ANALYST all produced the identical string (only FAN differed),
+ * which made the lens switcher look broken. Now:
+ *
+ *   FAN      plain English, no jargon, no numbers
+ *   BETTOR   the Edge Index and what it means for the bet
+ *   CREATOR  the story angle: what changed and why it matters
+ *   ANALYST  every number we have, in one line
+ *
+ * `canShowConfidence` and `canShowFactorBreakdown` still gate the deeper
+ * panels; this function only controls the one-line summary.
+ */
 export function projectForLens(node: GameIntelligenceNode, lens: UserLens): MonetizationSurface {
   const canShowConfidence = lens === "BETTOR" || lens === "ANALYST";
   const canShowFactorBreakdown = lens === "ANALYST";
+  const ei = node.marketPulse.edgeIndex;
+  const ev = node.evidenceHealth;
+  const books = node.marketPulse.bookmakerCoverage;
+  const lineMove =
+    node.marketPulse.lineMovementSpread != null
+      ? `spread moved ${node.marketPulse.lineMovementSpread > 0 ? "+" : ""}${node.marketPulse.lineMovementSpread}`
+      : node.marketPulse.lineMovementTotal != null
+        ? `total moved ${node.marketPulse.lineMovementTotal > 0 ? "+" : ""}${node.marketPulse.lineMovementTotal}`
+        : null;
+
+  let visibleSummary: string;
+  switch (lens) {
+    case "FAN":
+      visibleSummary =
+        ev.status === "STRONG"
+          ? `${node.matchup}: our sources are solid on this one.`
+          : ev.status === "WATCH"
+            ? `${node.matchup}: a few sources are getting stale. We are watching it.`
+            : `${node.matchup}: not enough fresh data yet to say anything honest.`;
+      break;
+    case "BETTOR":
+      visibleSummary =
+        ei != null
+          ? `${node.matchup}: Edge Index ${ei}. ${books} book${books === 1 ? "" : "s"} pricing this. ${
+              ei >= 70
+                ? "The market and our number disagree — that is the gap."
+                : ei >= 40
+                  ? "Some disagreement, nothing screaming."
+                  : "Market and our number are close. Thin edge."
+            }`
+          : `${node.matchup}: no Edge Index yet — the market is not priced enough to compare.`;
+      break;
+    case "CREATOR":
+      visibleSummary =
+        `${node.matchup}: evidence ${ev.score}/100 (${ev.status.toLowerCase()}). ` +
+        (lineMove
+          ? `${lineMove} — that is the hook.`
+          : ei != null && ei >= 60
+            ? "Edge Index is high enough to write about."
+            : "Quiet game. Angle is the matchup, not the number.");
+      break;
+    case "ANALYST":
+    default:
+      visibleSummary =
+        `${node.matchup}: Edge Index ${ei ?? "N/A"}, evidence ${ev.score}/100 (${ev.status}). ` +
+        `${books} book${books === 1 ? "" : "s"}, ${ev.staleCount} stale, ${ev.bootstrapCount} bootstrap.` +
+        (lineMove ? ` ${lineMove}.` : "") +
+        ` Published picks: ${node.marketPulse.publishedPickCount}.`;
+      break;
+  }
+
   return {
     lens,
     canShowFactorBreakdown,
     canShowConfidence,
     canShowEdgeIndex: true,
-    visibleSummary:
-      lens === "FAN"
-        ? `${node.matchup} has ${node.evidenceHealth.status.toLowerCase()} evidence health.`
-        : `${node.matchup}: Edge Index ${node.marketPulse.edgeIndex ?? "N/A"}, evidence ${node.evidenceHealth.score}/100.`,
+    visibleSummary,
   };
 }
