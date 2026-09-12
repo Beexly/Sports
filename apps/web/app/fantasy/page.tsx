@@ -26,9 +26,9 @@ const LEGACY_TOOL_ROUTES: Record<string, string> = {
 };
 
 export const metadata: Metadata = {
-  title: "Galaxy Fantasy - Real Roster First",
+  title: "Fantasy Tools",
   description:
-    "Galaxy Fantasy starts with read-only roster sync and stays gated until live player projections are connected. No fictional projections are presented as live advice.",
+    "Start-sit, waivers, trades, DFS, and pick'em. Real roster data when you connect; honest sample data when you don't.",
   alternates: { canonical: "/fantasy" },
 };
 
