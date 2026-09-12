@@ -200,7 +200,7 @@ export default async function EnginesBrowserPage({ searchParams }: EnginesBrowse
           actions={
             <>
               <Link href={active.api} className="btn-primary min-h-11 px-5 py-3">
-                JSON
+                Live data
               </Link>
               <Link
                 href="/intelligence/metrics"
