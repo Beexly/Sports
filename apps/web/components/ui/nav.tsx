@@ -36,6 +36,11 @@ const BOARD_MENU: readonly NavGroup[] = [
         href: "/calibration",
         desc: "How we've done, graded in public",
       },
+      {
+        label: "Bankroll",
+        href: "/bankroll",
+        desc: "Every settled result, counted",
+      },
     ],
   },
 ];
@@ -64,6 +69,10 @@ const FANTASY_MENU: readonly NavGroup[] = [
     items: [
       { label: "DFS", href: "/fantasy/dfs", desc: "Cash and tournament builders" },
       { label: "Pick'em", href: "/fantasy/props", desc: "Underdog & PrizePicks edges" },
+      { label: "Best ball", href: "/fantasy/bestball", desc: "Season-long drafts, solved" },
+      { label: "NBA slate", href: "/fantasy/nba", desc: "The hoops board" },
+      { label: "Optimizer", href: "/optimizer", desc: "Every lineup, one workspace" },
+      { label: "Connect league", href: "/fantasy/connect", desc: "Sync your real roster" },
     ],
   },
 ];

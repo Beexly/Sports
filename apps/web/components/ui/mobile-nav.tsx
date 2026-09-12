@@ -21,6 +21,7 @@ const SECTIONS: readonly Section[] = [
       { label: "League slates", href: "/slate" },
       { label: "Today's picks", href: "/picks" },
       { label: "Our record", href: "/calibration" },
+      { label: "Bankroll", href: "/bankroll" },
       { label: "NFL hub", href: "/house" },
     ],
   },
@@ -39,6 +40,10 @@ const SECTIONS: readonly Section[] = [
       { label: "Trades", href: "/fantasy/trade" },
       { label: "DFS Optimizer", href: "/fantasy/dfs" },
       { label: "Pick'em", href: "/fantasy/props" },
+      { label: "Best ball", href: "/fantasy/bestball" },
+      { label: "NBA slate", href: "/fantasy/nba" },
+      { label: "Optimizer", href: "/optimizer" },
+      { label: "Connect league", href: "/fantasy/connect" },
     ],
   },
   {
