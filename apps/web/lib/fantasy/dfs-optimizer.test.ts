@@ -133,6 +133,31 @@ describe("dfs optimizer — exact DP correctness proof", () => {
     expect(bfLineups.length).toBeGreaterThan(1); // confirm the fixture really is tied
   });
 
+  it("matches brute-force optimum under a lock + stack intersection (locks constrain, stack binds)", () => {
+    // Lock r1 AND require a stack: the optimum must contain r1, satisfy the
+    // stack, and still be value-optimal among exactly those lineups — the
+    // brute-force reference enforces the same intersection independently.
+    const locks = new Set(["r1"]);
+    const dp = optimizeOne(base({ mode: "gpp", stack: true, locks }), undefined, POOL_CLEAR);
+    const mustHave = [...locks];
+    let bestValue = -Infinity;
+    let bestKeys: string[] = [];
+    for (const sel of combinations(POOL_CLEAR, DFS_SLOTS.length)) {
+      if (!rosterFeasible(sel)) continue;
+      if (salaryOfLocal(sel) > SALARY_CAP) continue;
+      if (!stackSatisfied(sel)) continue;
+      if (!mustHave.every((id) => sel.some((p) => p.id === id))) continue;
+      const v = sel.reduce((s, p) => s + objValRef(p, "gpp"), 0);
+      if (v > bestValue + 1e-9) { bestValue = v; bestKeys = [sel.map((p) => p.id).sort().join(",")]; }
+      else if (Math.abs(v - bestValue) <= 1e-9) bestKeys.push(sel.map((p) => p.id).sort().join(","));
+    }
+    expect(bestKeys.length).toBeGreaterThan(0); // fixture really has a feasible intersection
+    expect(dp).not.toBeNull();
+    expect(dp!.some((p) => p.id === "r1")).toBe(true);
+    expect(dp!.reduce((s, p) => s + objValRef(p, "gpp"), 0)).toBeCloseTo(bestValue, 6);
+    expect(bestKeys).toContain(dp!.map((p) => p.id).sort().join(","));
+  });
+
   it("picks the higher-value player for FLEX across positions (TE beats RB in FLEX)", () => {
     // 3 RB (1 unavoidably spare) and 3 TE (1 unavoidably spare) compete for
     // the single FLEX slot; the spare TE (t3) out-values the spare RB (r5),
