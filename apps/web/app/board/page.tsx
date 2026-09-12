@@ -171,7 +171,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
           )}
 
         <section className="border-b border-mineral pb-8">
-          <p className="font-mono text-xs uppercase tracking-[0.22em] text-plasma">The board</p>
+          <p className="font-mono text-xs uppercase tracking-[0.22em] text-plasma">The Board</p>
           <div className="mt-4 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
             <div>
               <h1 className="max-w-4xl break-words text-4xl font-semibold tracking-tight text-ion-white sm:text-6xl" style={{ lineHeight: 0.95 }}>
