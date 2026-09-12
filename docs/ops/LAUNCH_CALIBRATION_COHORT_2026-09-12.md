@@ -36,6 +36,13 @@ Endpoint-reported standing (quoted, NOT independently recomputed):
 eligibility GREEN n=407, Brier 0.2103, raw ECE 0.0549, debiased 0.038688;
 gates statsPublic, canExposePublicPicks, canExposePerformanceStats,
 calibrationPublished all true (docs/ops/LAUNCH_EXECUTION_EVIDENCE_2026-09-12.md).
+Version note: the endpoint reports probability basis `market_anchored_v4`
+while this checkout's eligibility sample definition is `market_anchored_v3`
+(C-298) — deployed-vs-local drift consistent with the known SHA mismatch;
+ancestry unestablished, so v4 semantics are NOT attributed to this code.
+Endpoint CLV posture (quoted, same source): graded 1443, beat 328, matched
+611, lost 504, rate 0.2273, clearsBreakEven=false, canExposeClv=true —
+an honestly labeled result, not proof of edge.
 
 ## Cohort B — publish-time market_p recompute (WP-28 / WP-28b)
 
