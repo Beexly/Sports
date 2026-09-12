@@ -34,9 +34,11 @@ const PUBLIC_PAGES = [
   { path: "/", mustContain: ["Galaxy Sports Edge", "Find the", "before the market moves"] },
   { path: "/picks", mustContain: ["Galaxy Sports Edge"] },
   { path: "/methodology", mustContain: ["Methodology"] },
-  { path: "/performance", mustContain: ["Performance"] },
+  { path: "/performance", mustContain: ["Calibration Report"] },
   { path: "/pricing", mustContain: ["Free", "Pro", "Elite"] },
-  { path: "/observatory", mustContain: ["Observatory"] },
+  // Observatory is readiness-sealed (307 to /board until data lands), and
+  // fetch follows the redirect — so assert the sealed landing, not the name.
+  { path: "/observatory", mustContain: ["Galaxy Sports Edge"] },
   { path: "/vault", mustContain: ["Vault"] },
   { path: "/about", mustContain: ["About"] },
   { path: "/press", mustContain: ["Press"] },
