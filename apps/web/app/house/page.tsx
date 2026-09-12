@@ -107,10 +107,10 @@ function doorBadge(
   switch (live) {
     case "board":
       return data.cleared > 0 || data.gated > 0
-        ? `${data.cleared} cleared · ${data.gated} held`
-        : "Gate holding";
+        ? `${data.cleared} picks · ${data.gated} passed`
+        : "Quiet slate";
     case "receipts":
-      return data.settled > 0 ? `${data.settled} settled` : "Calibrating";
+      return data.settled > 0 ? `${data.settled} graded` : "Building sample";
     default:
       return null;
   }
