@@ -14,6 +14,7 @@ import { kBest, lateSwap } from "@/lib/fantasy/dfs-exact";
 import { activeDfsSlate } from "@/lib/integrations/dfs";
 import { PortfolioSim } from "./portfolio-sim";
 import { PostLockPanel } from "./postlock-panel";
+import { StackExposurePanel } from "./stack-exposure-panel";
 
 export function TournamentLab() {
   const { pools, pre, post, locked } = useMemo(() => {
@@ -48,6 +49,7 @@ export function TournamentLab() {
       </p>
       <div className="mt-6 grid gap-4">
         <PortfolioSim lineups={pools} />
+        <StackExposurePanel lineups={pools} />
         <PostLockPanel pre={pre} post={post} lockedIds={locked} />
       </div>
     </section>
