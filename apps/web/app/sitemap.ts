@@ -56,6 +56,7 @@ const ROUTES: ReadonlyArray<{
   { path: "/terms", priority: 0.3, changeFrequency: "yearly" },
   { path: "/privacy", priority: 0.3, changeFrequency: "yearly" },
   { path: "/board", priority: 0.65, changeFrequency: "daily" },
+  { path: "/slate", priority: 0.65, changeFrequency: "daily" },
   // /board/gate is deliberately excluded: it ships illustrative demonstration
   // rows by default (LIVE_BOARD_GATE_SLATE unset) and is noindexed in that
   // mode (see its generateMetadata) — a sitemap entry would tell crawlers to

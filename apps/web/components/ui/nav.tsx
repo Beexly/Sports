@@ -21,6 +21,7 @@ const BOARD_MENU: readonly NavGroup[] = [
   {
     items: [
       { label: "The board", href: "/board", desc: "Scored today · cleared · held" },
+      { label: "League slates", href: "/slate", desc: "NFL · NCAAF · NBA · NCAAB · MLB · NHL · MLS" },
       { label: "Picks with reasoning", href: "/picks", desc: "Published picks and factor notes" },
     ],
   },
