@@ -99,6 +99,30 @@ export function DfsOptimizer() {
         <button type="button" onClick={() => run()} disabled={busy} className="btn btn-primary ml-auto disabled:opacity-60">
           {busy ? "Solving…" : "Generate lineups"}
         </button>
+        {result && result.lineups.length > 0 && (
+          <button
+            type="button"
+            onClick={() => {
+              // DK Classic CSV: one row per lineup, slot order matches DFS_SLOTS.
+              const header = DFS_SLOTS.join(",");
+              const rows = result.lineups.map((lu) =>
+                lu.players.map((p) => `"${p.name}"`).join(","),
+              );
+              const csv = [header, ...rows].join("\n");
+              const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = `gse-lineups-${result.lineups.length}.csv`;
+              a.click();
+              URL.revokeObjectURL(url);
+            }}
+            className="btn btn-ghost"
+            aria-label="Export lineups as CSV"
+          >
+            Export CSV ({result.lineups.length})
+          </button>
+        )}
       </div>
       <p className="-mt-3 text-xs text-ion-2">
         {MODES.find((m) => m.key === mode)!.blurb} · Cap ${SALARY_CAP.toLocaleString()}
