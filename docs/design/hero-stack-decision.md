@@ -65,7 +65,8 @@ mounted on `/observatory` in place of the hand-rolled `interactive-galaxy`.
 | Candidate | Verdict | Reason |
 |---|---|---|
 | `lenis` | dropped after evaluation | Scroll feel change for ~4 KB brotli; the page already couples scroll through RAF + CSS vars. Installed, trialled, then removed — not left in `package.json` unused. |
-| `locomotive-scroll` | dropped | Superseded by lenis; 11k weekly downloads vs lenis 1.1M. |
+| `locomotive-scroll` | dropped | Superseded by lenis; 11,127 weekly downloads vs lenis 1,100,438 (npm registry, 2026-09-12). Last repo commit 2026-04-01. |
+| `motion` / `framer-motion` | **not adopted, adoptable now** | 13.2.0, MIT, `react ^18 || ^19` — so unlike r3f it does **not** need the React 19 migration. 15.4M + 34.3M weekly downloads, repo pushed 2026-09-12. Dropped only on budget: ~18 KB brotli (the `LazyMotion`/`m` subset) on a page already 2× a world-class marketing page. This is the first call to revisit if declarative React UI animation is ever needed beyond `components/motion/reveal.tsx` — it is a better fit than GSAP for DOM/React state transitions. |
 | `Theatre.js` | dropped | Public repo dormant since 2024-04-11 (npm `@theatre/core` 0.7.2, 2024-05-19); development moved to a private repo promising 1.0. Also `@theatre/studio` is **AGPL-3.0-only** while `@theatre/core` is Apache-2.0 — a footing we do not want in a paid product's dependency graph. |
 | `anime.js` | dropped (optional later) | MIT and healthy (v4.5.0), but it overlaps GSAP for the same job; one timeline engine, not two. |
 | GSAP on the homepage | not adopted | ~25 KB brotli against a page already 2× budget. GSAP ships only inside the lazy 3D chunk today. |
@@ -121,3 +122,24 @@ for it) and costs nothing at runtime. Revisit when `@types/three` gains a proper
    used by `/human`, `/methodology`), `consensus-engine-3d` (`/intelligence`),
    `galaxy-slate-twin` (`/observatory`) are candidates for the same r3f
    treatment, one route at a time, each behind the same lazy boundary.
+
+## 8. List closure — the ten supplied repos
+
+Every link in the operator's 2026-09-12 list, with a verdict. Fresh registry /
+GitHub reads on 2026-09-12 (npm registry + GitHub API, not memory).
+
+| # | Repo | Verdict | Current | Reason in one line |
+|---|---|---|---|---|
+| 1 | mrdoob/three.js | **adopted** | 0.184.0 in use; r186.0 published 2026-09-08 | Engine. Stay ≤ r186: `postprocessing` peers `three >=0.168 <0.187`. |
+| 2 | pmndrs/react-three-fiber | **adopted (8.18.0)** | 9.7.0 latest, peers `react >=19 <19.3` | React-18 line is 8.x; 9.x waits on the migration. |
+| 3 | pmndrs/drei | **adopted (9.122.0)** | 10.7.8, peers `react ^19` + `r3f ^9` | Same gate. Helpers only — no drei import on the homepage. |
+| 4 | greensock/GSAP | **adopted, lazy chunk only** | 3.15.0 | Proprietary "no charge" licence (§5). Never on the homepage critical path. |
+| 5 | pmndrs/react-postprocessing | **adopted (2.19.1)** | 3.1.1, peers `react ^19` + `r3f >=9.7` | Bloom is the only effect used; engine `postprocessing` 6.39.4 pinned by peer range. |
+| 6 | framer/motion | **not adopted — adoptable** | 13.2.0, MIT, `react ^18 \|\| ^19` | No migration needed; dropped on ~18 KB brotli budget only. See §4. |
+| 7 | darkroomengineering/lenis | **dropped after trial** | 1.3.26, MIT | 4 KB brotli for a feel change the RAF + CSS-var scroll already covers. |
+| 8 | locomotivemtl/locomotive-scroll | **dropped** | 5.0.1 (2026-01-15) | Superseded by lenis; ~1% of its traction. |
+| 9 | theatre-js/theatre | **dropped** | @theatre/core 0.7.2 (2024-05-19) | Dormant since 2024-04-11; `@theatre/studio` is AGPL-3.0-only. |
+| 10 | juliangarnier/anime | **dropped (optional later)** | animejs 4.5.0, MIT | Duplicates GSAP's job; one timeline engine, not two. |
+
+Net: 5 adopted (three, r3f, drei, r3pp, gsap), 5 declined with reasons. The React
+19 gate plus the homepage JS budget decide the list — not library quality.
