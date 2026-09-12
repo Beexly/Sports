@@ -23,6 +23,7 @@ import {
 } from "@/lib/calibration/live-calibration-p";
 import type { CalibrationExclusionCounts } from "@/lib/calibration/proven-path-rows";
 import { sliceCalibrationMetrics, type CalibrationSliceMetrics } from "@/lib/calibration/metric-slices";
+import { canonicalSampleOrder } from "@/lib/calibration/canonical-sample-order";
 import {
   bootstrapCalibrationMetricCis,
   METRIC_CI_READING_NOTE,
@@ -32,6 +33,11 @@ import {
   marketPSourcesFromBySource,
   type OddsTableMarketPStats,
 } from "@/lib/calibration/publish-time-market-p-loader";
+import {
+  evaluateMarketGate,
+  type MarketKey,
+  type MarketGateInputs,
+} from "@/lib/ops/per-market-gate";
 
 export interface PickRowForCal {
   readonly confidence: number | null;
@@ -51,6 +57,14 @@ export interface PickRowForCal {
   readonly selection?: string | null;
   readonly homeTeamName?: string | null;
   readonly awayTeamName?: string | null;
+  /**
+   * C-298 parity: the game's scheduled start. Without it `isInPlayPick` can
+   * never PROVE a row was priced in-play, so every late-generated pick is
+   * scored with a live price that already encodes part of the outcome. The
+   * eligibility cron has always selected it; this reader must too, or its
+   * sample silently differs from the sample the cron writes.
+   */
+  readonly commenceTime?: Date | null;
 }
 
 function mceFromCurve(
@@ -96,6 +110,9 @@ export function picksToCalibrationSamples(
       selection: pick.selection ?? null,
       homeTeamName: pick.homeTeamName ?? null,
       awayTeamName: pick.awayTeamName ?? null,
+      // C-298 parity with the eligibility cron: without this the in_play
+      // exclusion can never fire on this reader's path.
+      commenceTime: pick.commenceTime ?? null,
     })),
     options,
   );
@@ -118,6 +135,15 @@ export type CalibrationBreakdowns = {
   readonly byMarket: CalibrationSliceMetrics[];
   readonly brierCi95: MetricCi95 | null;
   readonly eceCi95: MetricCi95 | null;
+  /**
+   * ADDITIVE ADVISORY ONLY (ASTRA A-12). NOT A GATE. calibration-eligibility.ts
+   * does not read this. Live eligibility is the pooled MONEYLINE-only sample.
+   */
+  readonly marketGatesAdvisory: readonly {
+    readonly market: string;
+    readonly status: "PASS" | "FAIL" | "INSUFFICIENT";
+    readonly reasons: readonly string[];
+  }[];
 };
 
 /**
@@ -129,13 +155,43 @@ export function computeCalibrationBreakdowns(
   taggedSamples: readonly MarketAnchoredSample[],
   options?: { readonly seed?: number; readonly resamples?: number },
 ): CalibrationBreakdowns {
-  const cis = bootstrapCalibrationMetricCis(taggedSamples, options);
+  // Seeded bootstrap — order-sensitive. Canonicalise the pooled sample once so
+  // the CI is a function of the multiset, not of the row order Postgres returned
+  // (the C-317 flip: identical metrics, opposite verdict two runs apart).
+  const ordered = canonicalSampleOrder(taggedSamples);
+  const cis = bootstrapCalibrationMetricCis(ordered, options);
+  const byMarket = sliceCalibrationMetrics(ordered, (s) => s.pickType);
+  // ADVISORY ONLY — never gates eligibility, publication, or any env flag.
+  const marketGatesAdvisory = byMarket
+    .filter((slice): slice is CalibrationSliceMetrics & { key: MarketKey } =>
+      slice.key === "MONEYLINE" || slice.key === "SPREAD" || slice.key === "TOTAL" || slice.key === "PROPS",
+    )
+    .map((slice) => {
+      const inputs: MarketGateInputs = {
+        n: slice.n,
+        ece: slice.ece,
+        eceDebiased: slice.eceDebiased,
+        brier: slice.brier,
+        reliability: slice.murphyRel,
+        resolution: slice.murphyRes,
+        // hitRate is the observed win rate on this market's own rows — the
+        // no-skill base rate the Brier floor is derived from at evaluation time.
+        baseRate: slice.hitRate,
+      };
+      const verdict = evaluateMarketGate(slice.key, inputs);
+      return {
+        market: slice.key,
+        status: verdict.status,
+        reasons: verdict.reasons,
+      };
+    });
   return {
-    bySport: sliceCalibrationMetrics(taggedSamples, (s) => s.sportKey),
-    byModelVersion: sliceCalibrationMetrics(taggedSamples, (s) => s.modelVersion),
-    byMarket: sliceCalibrationMetrics(taggedSamples, (s) => s.pickType),
+    bySport: sliceCalibrationMetrics(ordered, (s) => s.sportKey),
+    byModelVersion: sliceCalibrationMetrics(ordered, (s) => s.modelVersion),
+    byMarket,
     brierCi95: cis?.brierCi95 ?? null,
     eceCi95: cis?.eceCi95 ?? null,
+    marketGatesAdvisory,
   };
 }
 
@@ -223,6 +279,7 @@ export function buildDurableMetricsFromSamples(input: {
     bySport: breakdowns?.bySport,
     byModelVersion: breakdowns?.byModelVersion,
     byMarket: breakdowns?.byMarket,
+    marketGatesAdvisory: breakdowns?.marketGatesAdvisory,
     brierCi95: breakdowns?.brierCi95 ?? null,
     eceCi95: breakdowns?.eceCi95 ?? null,
     notes: [

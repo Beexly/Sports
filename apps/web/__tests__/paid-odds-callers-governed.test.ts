@@ -206,7 +206,7 @@ function listTsFiles(dir: string): string[] {
 
 const paidCallers = SEARCH_ROOTS.flatMap((root) => listTsFiles(resolve(repoRoot, root)))
   .filter((file) => callsProcessSport(readFileSync(file, "utf8")))
-  .map((file) => relative(repoRoot, file))
+  .map((file) => relative(repoRoot, file).replace(/\\/g, "/"))
   .sort();
 
 describe("C-109: the paid-caller detector itself", () => {

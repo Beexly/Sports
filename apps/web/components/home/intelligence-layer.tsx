@@ -14,9 +14,7 @@ import { BRAND_COLORS } from "@/lib/brand";
 
 const SURFACES: ReadonlyArray<{ title: string; href: string; desc: string; tag: string; accent: string }> = [
   { title: "Inside the Signal", href: "/intelligence", desc: "See the reasoning, not just the number. The engine prosecutes every call.", tag: "Engine", accent: BRAND_COLORS.orbitalCyan },
-  { title: "Edge Map", href: "/observatory", desc: "Enter the slate as a navigable universe: games as star systems, markets as orbits.", tag: "Slate Twin", accent: BRAND_COLORS.softUltraviolet },
   { title: "Parlay MRI", href: "/parlay-mri", desc: "X-ray a ticket's hidden risk and correlation before you ever place it.", tag: "Surgeon", accent: BRAND_COLORS.ionMagenta },
-  { title: "The Academy", href: "/academy", desc: "Train on process, not luck. Earn rank by calibration and restraint.", tag: "Training", accent: BRAND_COLORS.orbitalCyan },
   { title: "GSN", href: "/gsn", desc: "The daily intelligence transmission: the whole board read as a briefing.", tag: "Network", accent: BRAND_COLORS.softUltraviolet },
   { title: "Trust Ledger", href: "/ledger", desc: "A record that can't be rewritten: a tamper-evident commitment you can verify.", tag: "Proof", accent: BRAND_COLORS.orbitalCyan },
   { title: "The Bias Mirror", href: "/responsible-play", desc: "A private check on how you decide. Protective, never predatory.", tag: "Responsible", accent: BRAND_COLORS.softUltraviolet },

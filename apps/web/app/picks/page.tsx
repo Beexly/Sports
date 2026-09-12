@@ -23,10 +23,10 @@ import { GET as getDailySlate } from "@/app/api/picks/daily-slate/route";
 export function generateMetadata(): Metadata {
   const publicPicksOpen = getReadinessGates().canExposePublicPicks;
   return {
-    title: "Today's Signals",
+    title: "Today's Picks",
     description: publicPicksOpen
-      ? "Today's picks from a deterministic factor model: two free picks a day with the public Edge Index. The full board, the confidence score and the factor trail are on Pro and Elite."
-      : "Public picks open when the sample and gates allow. Until then this surface stays intentionally dark: no invented slate, no certainty theater. Methodology, tools, and paper contests remain free.",
+      ? "What we're on today, with the line, the timing, and the reason. Free gets a daily teaser; Pro and Elite unlock the full set."
+      : "Picks open when our sample and gates allow. Until then this page stays dark — no invented slate, no fake certainty.",
     alternates: { canonical: "/picks" },
   };
 }
@@ -124,7 +124,7 @@ async function fetchPicks(
           date: date ?? new Date().toISOString().split("T")[0]!,
         },
         bootstrap: {
-          message: body.error ?? "Today's Board is collecting live history.",
+          message: body.error ?? "Published picks are collecting live history.",
           hint: body.hint,
           kind,
         },
@@ -251,14 +251,18 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {/* Header */}
           <div className="mb-6">
             <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-accent-300">
-              Today&apos;s Board
+              Published picks
             </p>
             <h1 className="mt-1.5 text-3xl font-bold tracking-tight text-white">
               Today&apos;s sports signals.
             </h1>
             <p className="mt-1.5 text-sm text-ion-2">
-              Every signal published today, with price, timing, risk, and the
-              reason it cleared the gate.
+              Every pick we&apos;re on today, with the line, timing, risk, and the
+              reason.{" "}
+              <Link href="/board" className="underline hover:text-ion-1">
+                The board
+              </Link>{" "}
+              also shows what we passed on.
             </p>
           </div>
 
@@ -296,7 +300,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                     className={[
                       "inline-flex min-h-11 items-center rounded-lg border px-3 py-1.5 text-sm font-semibold transition-colors",
                       isActive
-                        ? "border-orbital-cyan bg-orbital-cyan text-eclipse shadow-[0_0_18px_rgba(34,211,238,0.35)]"
+                        ? "border-orbital-cyan bg-orbital-cyan text-eclipse shadow-[0_0_18px_rgba(255,77,46,0.35)]"
                         : "border-titanium bg-carbon text-ion-1 hover:border-orbital-cyan hover:text-ion-white",
                     ].join(" ")}
                   >
@@ -322,7 +326,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
                     className={[
                       "inline-flex min-h-11 items-center rounded-full border px-3 py-1 text-xs font-semibold transition-colors",
                       isActive
-                        ? "border-plasma bg-plasma text-plasma-ink shadow-[0_0_18px_rgba(217,70,239,0.35)]"
+                        ? "border-plasma bg-plasma text-plasma-ink shadow-[0_0_18px_rgba(255,77,46,0.35)]"
                         : "border-titanium bg-carbon text-ion-1 hover:border-plasma hover:text-ion-white",
                     ].join(" ")}
                   >
@@ -384,7 +388,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
           {/* Empty state */}
           {!fetchError && bootstrapState && picks.length === 0 && (
-            <div className="rounded-xl border border-orbital-cyan/25 bg-orbital-cyan/10 p-8 text-center shadow-[0_0_28px_rgba(34,211,238,0.10)]">
+            <div className="rounded-xl border border-orbital-cyan/25 bg-orbital-cyan/10 p-8 text-center shadow-[0_0_28px_rgba(255,77,46,0.10)]">
               <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full border border-orbital-cyan/30 bg-orbital-cyan/10">
                 <svg
                   className="h-7 w-7 text-orbital-cyan"
@@ -463,7 +467,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </p>
               <Link
                 href="/pricing"
-                className="mt-6 inline-flex rounded-lg bg-ultraviolet px-6 py-2.5 text-sm font-semibold text-ion-white transition-colors hover:bg-ultraviolet/80"
+                className="mt-6 inline-flex rounded-lg bg-plasma px-6 py-2.5 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
               >
                 {`Upgrade to Pro · $${phase.pro.monthly}/mo`}
               </Link>
@@ -496,13 +500,13 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </div>
               <h2 className="text-base font-semibold text-white">
                 {activeSportLabel
-                  ? `No ${activeSportLabel} signals published for this date`
-                  : "No signals published for this date"}
+                  ? `No ${activeSportLabel} picks for this date`
+                  : "No picks for this date"}
               </h2>
               <p className="mt-2 text-sm text-ion-3">
                 {activeSportLabel
-                  ? `Nothing on the ${activeSportLabel} board cleared the gate for this date (quiet board / no published signals). Try another sport or date.`
-                  : "Quiet board for this date: no published signals cleared the gate. Awaiting fresh odds or eligible games — not an outage."}
+                  ? `Nothing on the ${activeSportLabel} slate today. Try another sport or date.`
+                  : "Quiet day. No picks published yet. Try another date."}
               </p>
             </div>
           )}
@@ -552,7 +556,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </p>
               <Link
                 href="/pricing"
-                className="mt-4 inline-flex rounded-lg bg-ultraviolet px-6 py-2.5 text-sm font-semibold text-ion-white transition-colors hover:bg-ultraviolet/80"
+                className="mt-4 inline-flex rounded-lg bg-plasma px-6 py-2.5 text-sm font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
               >
                 {`Upgrade to Pro · $${phase.pro.monthly}/mo`}
               </Link>
@@ -593,7 +597,7 @@ function SlateBar({ slate }: { slate: DailySlate }) {
     : null;
 
   return (
-    <div className="mb-6 rounded-xl border border-orbital-cyan/20 bg-obsidian/80 px-5 py-4 shadow-[0_0_28px_rgba(8,145,178,0.12)]">
+    <div className="mb-6 rounded-xl border border-orbital-cyan/20 bg-obsidian/80 px-5 py-4 shadow-[0_0_28px_rgba(194,46,26,0.12)]">
       <div className="flex flex-wrap items-center gap-3">
         {/* Games / picks */}
         <StatPill label="Games Today" value={String(slate.totalGames)} />
@@ -728,7 +732,7 @@ function PaywallBanner({
         )}
         <Link
           href="/pricing"
-          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-ultraviolet px-4 py-2 text-xs font-semibold text-ion-white transition-colors hover:bg-ultraviolet/80"
+          className="inline-flex min-h-11 items-center justify-center rounded-lg bg-plasma px-4 py-2 text-xs font-semibold text-plasma-ink transition-colors hover:bg-plasma-glow"
         >
           See plans
         </Link>

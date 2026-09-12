@@ -4,6 +4,7 @@
 // into the picks-route tests; the db import is the effective guard.
 import { db } from "@sports/db";
 import { buildCalibrator, type Calibrator } from "@sports/prediction-engine";
+import { inPlayExclusionNote, partitionInPlay } from "./in-play-exclusion";
 
 export { honestConfidence, type HonestConfidence } from "./honest-confidence";
 
@@ -27,14 +28,39 @@ export { honestConfidence, type HonestConfidence } from "./honest-confidence";
 interface SettledRow {
   readonly confidence: number;
   readonly result: string;
+  readonly generatedAt?: Date | null;
+  readonly game?: { commenceTime?: Date | null } | null;
 }
 
-let cached: { calibrator: Calibrator; at: number } | null = null;
+let cached: { fit: PublicCalibratorFit; at: number } | null = null;
 const TTL_MS = 10 * 60 * 1000; // refit at most every 10 minutes
 
-/** Build (or reuse) the public calibrator from learning-eligible settled picks. */
-export async function getPublicCalibrator(now: number = Date.now()): Promise<Calibrator> {
-  if (cached && now - cached.at < TTL_MS) return cached.calibrator;
+export interface PublicCalibratorFit {
+  readonly calibrator: Calibrator;
+  /** Rows that were eligible to be fit, after the in-play exclusion. */
+  readonly sampleSize: number;
+  /**
+   * C-302: learning-eligible settled rows withheld from the fit because they were
+   * generated at or after kickoff — a live price scored against the outcome it
+   * partly encodes. Reported so the exclusion is visible rather than silent.
+   */
+  readonly excludedInPlay: number;
+  readonly inPlayNote: string;
+}
+
+/**
+ * Build (or reuse) the public calibrator from learning-eligible settled picks,
+ * and report what the fit withheld.
+ *
+ * C-302: this is a public-facing fit — it produces the map applied to the
+ * confidence shown on picks — so a row generated at or after kickoff must not
+ * shape it. It was excluded from the C-298 eligibility sample and from the
+ * performance panel and the tail monitor (report.ts, confidence-tail.ts); this
+ * is the same rule from the same shared definition, not a second interpretation
+ * of it.
+ */
+export async function loadPublicCalibratorFit(now: number = Date.now()): Promise<PublicCalibratorFit> {
+  if (cached && now - cached.at < TTL_MS) return cached.fit;
   const rows: SettledRow[] = await db.pick
     .findMany({
       where: {
@@ -42,18 +68,37 @@ export async function getPublicCalibrator(now: number = Date.now()): Promise<Cal
         isBootstrap: false,
         signalSnapshot: { is: { eligibleForLearning: true } },
       },
-      select: { confidence: true, result: true },
+      select: {
+        confidence: true,
+        result: true,
+        generatedAt: true,
+        game: { select: { commenceTime: true } },
+      },
       orderBy: { settledAt: "desc" },
       take: 2000,
     })
     .catch(() => [] as SettledRow[]);
-  const samples = rows.map((r) => ({
+  const { scored, excludedInPlay } = partitionInPlay(rows, (r) => ({
+    generatedAt: r.generatedAt ?? null,
+    commenceTime: r.game?.commenceTime ?? null,
+  }));
+  const samples = scored.map((r) => ({
     p: Math.max(0, Math.min(1, r.confidence / 100)),
     y: (r.result === "WIN" ? 1 : 0) as 0 | 1,
   }));
-  const calibrator = buildCalibrator(samples);
-  cached = { calibrator, at: now };
-  return calibrator;
+  const fit: PublicCalibratorFit = {
+    calibrator: buildCalibrator(samples),
+    sampleSize: samples.length,
+    excludedInPlay: excludedInPlay.length,
+    inPlayNote: inPlayExclusionNote(excludedInPlay.length, rows.length),
+  };
+  cached = { fit, at: now };
+  return fit;
+}
+
+/** Build (or reuse) the public calibrator from learning-eligible settled picks. */
+export async function getPublicCalibrator(now: number = Date.now()): Promise<Calibrator> {
+  return (await loadPublicCalibratorFit(now)).calibrator;
 }
 
 /** Reset the memo — test-only. */

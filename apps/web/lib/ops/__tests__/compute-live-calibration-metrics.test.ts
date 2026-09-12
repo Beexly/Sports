@@ -78,6 +78,52 @@ describe("picksToCalibrationSamples", () => {
     );
     expect(built.modelVersions).toEqual(versions);
   });
+
+  it("excludes a pick generated at or after kickoff as in_play, counted and never scored (C-298 parity)", () => {
+    const built = picksToCalibrationSamples([
+      moneylinePick({
+        confidence: 62,
+        result: "WIN",
+        modelVersion: "v5.2.7",
+        generatedAt: new Date("2026-04-02T18:05:00.000Z"),
+        commenceTime: new Date("2026-04-02T18:00:00.000Z"),
+      }),
+    ]);
+    expect(built.samples).toEqual([]);
+    expect(built.exclusions).toEqual({
+      three_way_market: 0,
+      no_market_probability: 0,
+      non_moneyline_market: 0,
+      in_play: 1,
+      unverifiable_market_p: 0,
+    });
+  });
+
+  it("scores a pick generated before kickoff, and keeps one whose start time is unknown", () => {
+    const preGame = picksToCalibrationSamples([
+      moneylinePick({
+        confidence: 62,
+        result: "WIN",
+        modelVersion: "v5.2.7",
+        generatedAt: new Date("2026-04-02T17:00:00.000Z"),
+        commenceTime: new Date("2026-04-02T18:00:00.000Z"),
+      }),
+    ]);
+    expect(preGame.samples).toHaveLength(1);
+    expect(preGame.exclusions.in_play).toBe(0);
+
+    // Absent commenceTime means "cannot tell": the row is kept, never guessed.
+    const unknown = picksToCalibrationSamples([
+      moneylinePick({
+        confidence: 62,
+        result: "WIN",
+        modelVersion: "v5.2.7",
+        generatedAt: new Date("2026-04-02T18:05:00.000Z"),
+      }),
+    ]);
+    expect(unknown.samples).toHaveLength(1);
+    expect(unknown.exclusions.in_play).toBe(0);
+  });
 });
 
 describe("buildDurableMetricsFromSamples", () => {

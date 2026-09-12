@@ -26,11 +26,11 @@
     background: var(--carbon);
     color: var(--ion);
     font-family: var(--f-body);
-    /* NEBULA v7: violet depth + ember crown — never flat black. */
+    /* FIELD: near-black + one ember crown — never violet, never flat black. */
     background-image:
       radial-gradient(ellipse 100% 60% at 50% -20%, rgba(255,77,46, 0.07), transparent 70%),
-      radial-gradient(ellipse 80% 50% at 80% 0%, rgba(60,45,110, 0.35), transparent 60%),
-      radial-gradient(ellipse 90% 70% at 15% 100%, rgba(60,45,110, 0.28), transparent 65%);
+      radial-gradient(ellipse 80% 50% at 80% 0%, rgba(25,28,35, 0.55), transparent 60%),
+      radial-gradient(ellipse 90% 70% at 15% 100%, rgba(18,20,26, 0.4), transparent 65%);
     background-attachment: fixed;
     min-height: 100vh;
   }
@@ -179,6 +179,38 @@
 @layer utilities {
   .text-balance { text-wrap: balance; }
   .text-pretty  { text-wrap: pretty; }
+  /* Animated underline for text links. Ember rule draws left to right on
+   * hover and focus-visible; motion-safe (global reduced-motion kills it). */
+  .link-underline {
+    background-image: linear-gradient(currentColor, currentColor);
+    background-size: 0% 1px;
+    background-repeat: no-repeat;
+    background-position: left calc(100% - 1px);
+    padding-bottom: 2px;
+    transition: background-size 0.35s cubic-bezier(0.22, 1, 0.36, 1), color 0.2s ease;
+  }
+  .link-underline:hover,
+  .link-underline:focus-visible {
+    background-size: 100% 1px;
+  }
+  /* Film grain. Static SVG noise at 5 percent over dark grounds; purely
+   * decorative (aria-hidden at use site), pointer-transparent. */
+  .grain-overlay {
+    pointer-events: none;
+    opacity: 0.05;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)' opacity='1'/%3E%3C/svg%3E");
+  }
+  /* Oversized ghost numeral watermark for index cards. */
+  .ghost-numeral {
+    font-family: var(--f-display);
+    font-weight: 700;
+    line-height: 0.8;
+    color: transparent;
+    -webkit-text-stroke: 1px var(--mineral-hi);
+    opacity: 0.55;
+    transition: opacity 0.3s ease;
+  }
+  .group:hover .ghost-numeral { opacity: 1; }
   .mask-fade-bottom {
     -webkit-mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
     mask-image: linear-gradient(to bottom, black 60%, transparent 100%);
@@ -413,24 +445,19 @@
    explain signal / risk / trust / gravity — never decorate.
    ════════════════════════════════════════════════════════════════════ */
 
-/* Void + nebula atmosphere — the section canvas. Never flat black.
-   NEBULA v7: violet panels breathe, ember is the single crown. */
+/* Void + field atmosphere — the section canvas. Never flat black.
+   FIELD: quiet near-black, one ember crown. No violet nebula. */
 .gw-nebula {
   position: relative;
   background:
-    radial-gradient(ellipse 90% 55% at 18% 0%, rgba(60,45,110, 0.45), transparent 62%),
-    radial-gradient(ellipse 70% 45% at 86% 18%, rgba(255,77,46, 0.10), transparent 60%),
-    radial-gradient(ellipse 60% 60% at 50% 110%, rgba(60,45,110, 0.30), transparent 65%),
-    radial-gradient(ellipse 45% 35% at 70% 65%, rgba(27, 21, 48, 0.9), transparent 70%),
-    linear-gradient(180deg, var(--void) 0%, #131022 50%, var(--void) 100%);
+    radial-gradient(ellipse 70% 50% at 80% 12%, rgba(255, 77, 46, 0.08), transparent 58%),
+    linear-gradient(180deg, var(--void) 0%, #12141A 50%, var(--void) 100%);
 }
 .gw-nebula-deep {
   position: relative;
   background:
-    radial-gradient(ellipse 100% 65% at 50% -10%, rgba(60,45,110, 0.5), transparent 65%),
-    radial-gradient(ellipse 60% 45% at 88% 30%, rgba(255,77,46, 0.12), transparent 60%),
-    radial-gradient(ellipse 55% 40% at 8% 90%, rgba(60,45,110, 0.35), transparent 60%),
-    radial-gradient(ellipse 80% 60% at 30% 55%, rgba(27, 21, 48, 0.9), transparent 75%),
+    radial-gradient(ellipse 80% 55% at 70% 20%, rgba(255, 77, 46, 0.10), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 10% 90%, rgba(25, 28, 35, 0.9), transparent 65%),
     var(--void);
 }
 

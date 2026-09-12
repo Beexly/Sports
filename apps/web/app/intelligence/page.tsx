@@ -17,7 +17,6 @@ import { ILLUSTRATIVE_BRIEF } from "@/lib/courtroom/courtroom";
 import { CLOSING_LINE } from "@/lib/brand";
 
 const TICKER_PHRASES = [
-  "Math you can read",
   "See the reasoning, not just the number",
   "Independent referees, judged on their own",
   "Edge lives in the disagreement",
@@ -25,6 +24,7 @@ const TICKER_PHRASES = [
   "It audits its own calibration",
   "A record that can't be rewritten",
   "Silence when there's nothing honest to say",
+  "We detect. You decide.",
 ] as const;
 
 export const metadata: Metadata = {
@@ -276,7 +276,7 @@ export default function IntelligencePage() {
         <section className="px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="courtroom-heading">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow text-plasma">
+              <p className="eyebrow text-ion-2">
                 A signal is a case, not a badge
               </p>
             </Reveal>

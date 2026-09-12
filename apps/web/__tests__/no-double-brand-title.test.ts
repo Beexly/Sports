@@ -29,7 +29,7 @@ function findPageFiles(dir: string, base: string): string[] {
     const full = join(dir, entry);
     const stat = statSync(full);
     if (stat.isDirectory()) out.push(...findPageFiles(full, base));
-    else if (entry === "page.tsx") out.push(relative(base, full));
+    else if (entry === "page.tsx") out.push(relative(base, full).replace(/\\/g, "/"));
   }
   return out;
 }

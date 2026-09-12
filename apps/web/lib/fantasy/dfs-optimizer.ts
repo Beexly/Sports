@@ -387,12 +387,19 @@ export type GenResult = {
   /** Number of unique lineups the caller requested (input `count`). */
   readonly requested: number;
   /**
-   * True when fewer unique feasible lineups could be found than requested.
-   * The optimizer never emits duplicates — if the exposure pressure or
-   * salary-stack constraints exhaust the solution space before `count`
-   * lineups are produced, generation stops early and `partial` is set.
-   * Callers should surface this so the user knows the result is truncated,
-   * not a bug in the count.
+   * The exposure TARGET passed in (input `maxExposure`). A target, not a
+   * cap: it is enforced against the running prefix while generating, and a
+   * finished portfolio — full or short — may realize more (measured
+   * 2026-09-12: target 0.6 realizes up to 0.667 on full portfolios).
+   * The exposure array reports exact realized fractions; read them, not this.
+   */
+  readonly exposureTarget: number;
+  /**
+   * True when fewer unique feasible lineups were produced than requested.
+   * Generation stops when the bounded search cannot find a fresh lineup
+   * under the current exposure pressure — that is search exhaustion, NOT a
+   * proof that no other feasible set exists. Callers must say stopped, not
+   * impossible.
    */
   readonly partial: boolean;
 };
@@ -453,5 +460,5 @@ export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6,
     })
     .sort((a, b) => b.count - a.count);
 
-  return { lineups, exposure, requested: count, partial: lineups.length < count };
+  return { lineups, exposure, requested: count, exposureTarget: maxExposure, partial: lineups.length < count };
 }

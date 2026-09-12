@@ -156,7 +156,7 @@ export function ContestEntryForm({ week }: Props) {
         aria-hidden
       />
 
-      {status === "error" && <p className="text-sm text-plasma">{message}</p>}
+      {status === "error" && <p className="text-sm text-alert">{message}</p>}
 
       <button
         type="submit"

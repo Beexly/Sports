@@ -21,7 +21,7 @@ export const metadata: Metadata = {
 function stabilityClass(s: Stability): string {
   if (s === "anchor") return "text-orbital-cyan";
   if (s === "signal") return "text-ultraviolet";
-  return "text-plasma";
+  return "text-caution";
 }
 
 function MetricCard({ m }: { m: Metric }): JSX.Element {
@@ -46,7 +46,7 @@ function MetricCard({ m }: { m: Metric }): JSX.Element {
       <dl className="mt-3 space-y-2.5 text-sm leading-6">
         <Row term="What it is" tone="text-ion-1">{m.whatItIs}</Row>
         <Row term="How we read it" tone="text-orbital-cyan">{m.howWeRead}</Row>
-        <Row term="Commonly misread" tone="text-plasma">{m.commonMistake}</Row>
+        <Row term="Commonly misread" tone="text-caution">{m.commonMistake}</Row>
         <Row term="Our edge" tone="text-ultraviolet">{m.ourEdge}</Row>
       </dl>
 
@@ -105,7 +105,7 @@ function CoverageMapSection({ data }: { data: CoverageMapUiData }): JSX.Element 
               </span>
             </div>
             <dl className="mt-4 grid gap-3 text-sm leading-6">
-              <Row term="Closed-box gap" tone="text-plasma">{row.competitorGap}</Row>
+              <Row term="Closed-box gap" tone="text-caution">{row.competitorGap}</Row>
               <Row term="Transparent equivalent" tone="text-orbital-cyan">{row.transparentEquivalent}</Row>
               <Row term="Attribution" tone="text-ion-2">{row.attribution}</Row>
             </dl>
@@ -132,7 +132,7 @@ export default function MetricsMethodologyPage(): JSX.Element {
           </h1>
           <p className="mt-5 max-w-3xl text-base leading-7 text-ion-1">
             Most products show you stats. The edge is in reading them. We separate <span className="text-orbital-cyan">anchors</span>,
-            stable, predictive inputs like opportunity, volume, accuracy, and quality of contact, from <span className="text-plasma">noisy</span> outputs
+            stable, predictive inputs like opportunity, volume, accuracy, and quality of contact, from <span className="text-caution">noisy</span> outputs
             like efficiency, results, and touchdown rate that regress to the mean. An accurate projection leans on the anchors
             and treats the noise as a sample, not a skill. Here&apos;s every signal we use, and exactly how we read it.
           </p>

@@ -53,7 +53,7 @@ function Intake({ initial, onSave, onCancel }: { initial: Preferences; onSave: (
   return (
     <div className="surface-card p-6">
       <p className="text-xs uppercase tracking-[0.18em]" style={{ color: BRAND_COLORS.orbitalCyan }}>Make it yours · 15 seconds</p>
-      <h3 className="mt-2 font-display text-xl text-ion-white">Tune Mission Control to you.</h3>
+      <h3 className="mt-2 font-display text-xl text-ion-white">Tune your feed.</h3>
 
       <div className="mt-5 space-y-4">
         <Field label="What are you here for?">

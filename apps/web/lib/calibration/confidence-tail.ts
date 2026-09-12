@@ -14,6 +14,7 @@
  * This module only measures it so the ops truth surface and the launch
  * checker show the state honestly every day. It never changes a pick.
  */
+import { inPlayExclusionNote, partitionInPlay } from "./in-play-exclusion";
 
 export const CONFIDENCE_TAIL_FLOOR = 80;
 /** Below this many graded tail picks the verdict is "insufficient", never a claim. */
@@ -66,6 +67,14 @@ export interface ConfidenceTailSummary {
   readonly byMarket: readonly ConfidenceTailMarketRow[];
   readonly verdict: ConfidenceTailVerdict;
   readonly operatorHint: string;
+  /**
+   * C-302: graded tail rows withheld because they were generated at or after
+   * kickoff (a live price scored against the outcome it partly encodes), and the
+   * sentence that discloses it. Optional so a pure caller that passes rows
+   * directly still typechecks; the loader always sets both.
+   */
+  readonly excludedInPlay?: number;
+  readonly inPlayNote?: string;
 }
 
 function round4(x: number): number {
@@ -166,7 +175,14 @@ export function summarizeConfidenceTail(
  */
 const SEED_MODEL_VERSION = "v5.0.0-seed";
 
-/** Narrow read surface so the loader stays testable without a Prisma client. */
+/**
+ * Narrow read surface so the loader stays testable without a Prisma client.
+ *
+ * C-302: `generatedAt` (pick scalar) and `game.commenceTime` are selected so the
+ * loader can withhold rows generated at or after kickoff. Both are optional in
+ * this type on purpose — an existing stub that does not select them still
+ * typechecks, and a row whose clocks cannot be read is KEPT, not dropped.
+ */
 export interface ConfidenceTailDb {
   pick: {
     findMany(args: {
@@ -177,8 +193,24 @@ export interface ConfidenceTailDb {
         isBootstrap: false;
         NOT: { modelVersion: string };
       };
-      select: { confidence: true; result: true; modelVersion: true; pickType: true };
-    }): Promise<Array<{ confidence: number; result: string; modelVersion: string; pickType: string }>>;
+      select: {
+        confidence: true;
+        result: true;
+        modelVersion: true;
+        pickType: true;
+        generatedAt?: true;
+        game?: { select: { commenceTime: true } };
+      };
+    }): Promise<
+      Array<{
+        confidence: number;
+        result: string;
+        modelVersion: string;
+        pickType: string;
+        generatedAt?: Date | null;
+        game?: { commenceTime?: Date | null } | null;
+      }>
+    >;
   };
 }
 
@@ -194,20 +226,37 @@ export async function loadConfidenceTail(
       isBootstrap: false,
       NOT: { modelVersion: SEED_MODEL_VERSION },
     },
-    select: { confidence: true, result: true, modelVersion: true, pickType: true },
+    select: {
+      confidence: true,
+      result: true,
+      modelVersion: true,
+      pickType: true,
+      generatedAt: true,
+      game: { select: { commenceTime: true } },
+    },
   });
-  return summarizeConfidenceTail(
-    rows
-      .filter((r) => r.result === "WIN" || r.result === "LOSS")
-      .map((r) => ({
-        confidence: r.confidence,
-        result: r.result === "WIN" ? "WIN" : "LOSS",
-        modelVersion: r.modelVersion,
-        // Selected above but dropped here until 2026-09-05, so byMarket was always
-        // empty on the truth surface and the inverted tail could not be attributed
-        // to a market.
-        pickType: r.pickType,
-      })),
+  const graded = rows.filter((r) => r.result === "WIN" || r.result === "LOSS");
+  // C-302: the tail verdict must not be moved by a row priced off a live line.
+  // Same rule and same reading of a missing timestamp as the C-298 sample.
+  const { scored, excludedInPlay } = partitionInPlay(graded, (r) => ({
+    generatedAt: r.generatedAt ?? null,
+    commenceTime: r.game?.commenceTime ?? null,
+  }));
+  const summary = summarizeConfidenceTail(
+    scored.map((r) => ({
+      confidence: r.confidence,
+      result: r.result === "WIN" ? ("WIN" as const) : ("LOSS" as const),
+      modelVersion: r.modelVersion,
+      // Selected above but dropped here until 2026-09-05, so byMarket was always
+      // empty on the truth surface and the inverted tail could not be attributed
+      // to a market.
+      pickType: r.pickType,
+    })),
     { floor },
   );
+  return {
+    ...summary,
+    excludedInPlay: excludedInPlay.length,
+    inPlayNote: inPlayExclusionNote(excludedInPlay.length, graded.length),
+  };
 }

@@ -29,14 +29,32 @@ describe("Kinetic logo signature", () => {
     expect(css).toContain(".brand-lockup-kinetic .brand-wordmark");
   });
 
-  it("renders the official chrome emblem + signal-fade wordmark in the lockup", () => {
+  it("renders the inline true-break mark + wordmark in the lockup", () => {
     const lockup = read("components/brand/brand-lockup.tsx");
-    // Official emblem asset (Brand Bible v1.0), not the retired hand-built SVG.
-    expect(lockup).toContain("/brand/gse-emblem-180.png");
+    // NEBULA v7 (owner-directed: the chrome raster emblem is retired) — the
+    // lockup renders the inline true-break SVG mark, not a PNG asset.
+    expect(lockup).toContain("LogoMarkInline");
+    expect(lockup).not.toContain("/brand/gse-emblem-180.png");
     expect(lockup).toContain("brand-wordmark-text");
-    // Wordmark filled with the signature signal fade.
+    // Field visual system (96e505471, merged as #758) replaced the chrome
+    // signal fade with the Field signature: bone wordmark on void, ember rule
+    // under it, and "No chrome gradient" spelled out in the stylesheet. The
+    // intent of this assertion is unchanged — the wordmark is filled by a
+    // deliberate brand treatment rather than an inherited default — so it now
+    // pins the current treatment instead of the retired gradient.
     expect(css).toContain(".brand-wordmark-text");
-    expect(css).toContain("var(--signal-fade)");
+    const wordmarkBlock = css.slice(
+      css.indexOf(".brand-wordmark-text"),
+      css.indexOf("}", css.indexOf(".brand-wordmark-text")),
+    );
+    expect(wordmarkBlock).toContain("color: var(--ion-white)");
+    expect(wordmarkBlock).toContain("background: none");
+    // The ember rule under the wordmark carries the signal now.
+    const underlineBlock = css.slice(
+      css.indexOf(".brand-wordmark-underline"),
+      css.indexOf("}", css.indexOf(".brand-wordmark-underline")),
+    );
+    expect(underlineBlock).toContain("var(--plasma)");
   });
 
   it("disables all kinetic animation under prefers-reduced-motion", () => {

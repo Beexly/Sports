@@ -10,9 +10,10 @@
  */
 
 import { useEffect, useMemo, useState } from "react";
-import { DFS_SLATE, DFS_SLOTS, SALARY_CAP, DFS_POS_HEX, leverage, type DfsPlayer } from "@/lib/fantasy/dfs-slate";
+import { DFS_SLATE, DFS_SLOTS, SALARY_CAP, DFS_POS_HEX, type DfsPlayer } from "@/lib/fantasy/dfs-slate";
 import { generateLineups, type Mode, type GenResult } from "@/lib/fantasy/dfs-optimizer";
 import { DkImportPanel } from "@/components/fantasy/dk-import-panel";
+import { ProjectionsTable } from "@/components/fantasy/projections-table";
 
 const MODES: { key: Mode; label: string; blurb: string }[] = [
   { key: "cash", label: "Cash", blurb: "Maximise projection: the safest median." },
@@ -24,6 +25,7 @@ export function DfsOptimizer() {
   const [mode, setMode] = useState<Mode>("gpp");
   const [stack, setStack] = useState(true);
   const [count, setCount] = useState(3);
+  const [maxExp, setMaxExp] = useState(100);
   const [locks, setLocks] = useState<Set<string>>(new Set());
   const [excludes, setExcludes] = useState<Set<string>>(new Set());
   const [result, setResult] = useState<GenResult | null>(null);
@@ -35,7 +37,8 @@ export function DfsOptimizer() {
     setBusy(true);
     // let the button paint, then compute (synchronous but quick)
     setTimeout(() => {
-      setResult(generateLineups({ mode, stack, locks, excludes }, count, 0.6, s));
+      // maxExp is a 1-100 percent; the engine takes a 0-1 fraction.
+      setResult(generateLineups({ mode, stack, locks, excludes }, count, maxExp / 100, s));
       setBusy(false);
     }, 10);
   };
@@ -95,9 +98,38 @@ export function DfsOptimizer() {
           <input type="range" min={1} max={20} value={count} onChange={(e) => setCount(Number(e.target.value))} className="accent-orbital-cyan" />
           <span className="w-6 font-mono text-sm text-ion-white">{count}</span>
         </label>
+        <label className="flex items-center gap-2 text-sm text-ion-1" title="No player appears in more than this share of lineups">
+          Max exposure
+          <input type="range" min={10} max={100} step={5} value={maxExp} onChange={(e) => setMaxExp(Number(e.target.value))} className="accent-orbital-cyan" />
+          <span className="w-10 font-mono text-sm text-ion-white">{maxExp}%</span>
+        </label>
         <button type="button" onClick={() => run()} disabled={busy} className="btn btn-primary ml-auto disabled:opacity-60">
           {busy ? "Solving…" : "Generate lineups"}
         </button>
+        {result && result.lineups.length > 0 && (
+          <button
+            type="button"
+            onClick={() => {
+              // DK Classic CSV: one row per lineup, slot order matches DFS_SLOTS.
+              const header = DFS_SLOTS.join(",");
+              const rows = result.lineups.map((lu) =>
+                lu.players.map((p) => `"${p.name}"`).join(","),
+              );
+              const csv = [header, ...rows].join("\n");
+              const blob = new Blob([csv], { type: "text/csv;charset=utf-8" });
+              const url = URL.createObjectURL(blob);
+              const a = document.createElement("a");
+              a.href = url;
+              a.download = `gse-lineups-${result.lineups.length}.csv`;
+              a.click();
+              URL.revokeObjectURL(url);
+            }}
+            className="btn btn-ghost"
+            aria-label="Export lineups as CSV"
+          >
+            Export CSV ({result.lineups.length})
+          </button>
+        )}
       </div>
       <p className="-mt-3 text-xs text-ion-2">
         {MODES.find((m) => m.key === mode)!.blurb} · Cap ${SALARY_CAP.toLocaleString()}
@@ -106,18 +138,18 @@ export function DfsOptimizer() {
 
       <DkImportPanel onImport={onImport} onReset={onReset} imported={imported} />
 
-      {/* partial-result notice — the optimizer never emits duplicates, so a
-          shortfall means the slate's constraints (locks/excludes/salary/stack)
-          exhausted the feasible solution space before `count` lineups. Surface
-          this so the user knows it is NOT a count bug. */
-      result?.partial && (
+      {/* partial-result notice — generation stopped under the current search
+          pressure (locks/excludes/salary/stack/decay retries). That is NOT a
+          proof that no other feasible set exists, so the copy says stopped
+          and shows returned-vs-requested, never "exhausted". */}
+      {result?.partial && (
         <div className="flex flex-wrap items-center gap-3 rounded-xl border border-caution/30 bg-caution/5 px-4 py-3">
           <span className="rounded-full bg-caution px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-obsidian">
             partial
           </span>
           <p className="text-xs text-ion-1">
-            Only <strong className="text-ion-white">{result.lineups.length} of {result.requested} requested</strong> lineups could be generated — the
-            salary-cap and uniqueness constraints are exhausted under the current constraints/excludes. Relax a constraint or fade to unlock more combinations.
+            Only <strong className="text-ion-white">{result.lineups.length} of {result.requested} requested</strong> lineups generated — the search
+            stopped under the current locks, salary cap, and exposure target. This is not proof no other combination exists: request fewer lineups or loosen pins/fades and generate again.
           </p>
         </div>
       )}
@@ -176,7 +208,7 @@ export function DfsOptimizer() {
         <div className="space-y-4">
           {result && result.exposure.length > 0 && (
             <div className="surface-card p-5">
-              <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Exposure across {result.lineups.length} lineups</p>
+              <p className="mb-3 font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Exposure across {result.lineups.length} lineups · target {Math.round(result.exposureTarget * 100)}% (shares below are realized, not capped)</p>
               <div className="max-h-[40vh] space-y-1.5 overflow-y-auto">
                 {result.exposure.map((e) => (
                   <div key={e.id} className="flex items-center gap-2">
@@ -191,34 +223,14 @@ export function DfsOptimizer() {
             </div>
           )}
 
-          <div className="surface-card p-5">
-            <div className="mb-2 flex items-center justify-between">
-              <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Slate ({pool.length})</p>
-              <p className="font-mono text-[10px] tabular-nums text-ion-2">
-                <span className="text-orbital-cyan">★ {locks.size} pinned</span>
-                {" · "}
-                {/* fading a player is an exclusion — alert tone, not plasma */}
-                <span className="text-alert">✕ {excludes.size} faded</span>
-              </p>
-            </div>
-            <div className="max-h-[60vh] space-y-0.5 overflow-y-auto">
-              {pool.map((p: DfsPlayer) => {
-                const c = DFS_POS_HEX[p.pos];
-                const locked = locks.has(p.id); const fade = excludes.has(p.id);
-                return (
-                  <div key={p.id} className="flex items-center gap-2 rounded px-1.5 py-1.5" style={{ opacity: fade ? 0.4 : 1, background: locked ? "color-mix(in srgb, var(--orbital-cyan) 7%, transparent)" : "transparent" }}>
-                    <span className="rounded px-1.5 py-0.5 font-mono text-[10px] font-bold" style={{ color: c, background: `${c}18` }}>{p.pos}</span>
-                    <span className="flex-1 truncate text-sm text-ion-white">{p.name}</span>
-                    <span className="font-mono text-[11px] tabular-nums text-ion-2">${p.salary}</span>
-                    <span className="w-8 text-right font-mono text-[11px] tabular-nums text-plasma">{leverage(p).toFixed(1)}</span>
-                    <button type="button" onClick={() => toggle(locks, setLocks, p.id)} title="pin" aria-label={`Pin ${p.name}`} aria-pressed={locked} className="px-1 text-sm" style={{ color: locked ? "var(--orbital-cyan)" : "var(--ion-3)" }}>★</button>
-                    <button type="button" onClick={() => toggle(excludes, setExcludes, p.id)} title="fade" aria-label={`Fade ${p.name}`} aria-pressed={fade} className="px-1 text-sm" style={{ color: fade ? "var(--alert)" : "var(--ion-3)" }}>✕</button>
-                  </div>
-                );
-              })}
-            </div>
-            <p className="mt-2 text-[10px] text-ion-2">Rightmost number is leverage (ceiling vs. ownership). Pin/fade, then Generate.</p>
-          </div>
+          <ProjectionsTable
+            players={pool}
+            locks={locks}
+            excludes={excludes}
+            onToggleLock={(id) => toggle(locks, setLocks, id)}
+            onToggleExclude={(id) => toggle(excludes, setExcludes, id)}
+            isLive={imported}
+          />
         </div>
       </div>
     </div>

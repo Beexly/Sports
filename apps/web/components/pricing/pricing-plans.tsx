@@ -102,7 +102,7 @@ export function PricingPlans({
                   <span
                     className={[
                       "rounded-full px-3 py-0.5 text-xs font-semibold",
-                      isPro ? "bg-brand-600 text-white" : "bg-ultraviolet text-white",
+                      isPro ? "bg-brand-600 text-white" : "bg-plasma text-plasma-ink",
                     ].join(" ")}
                   >
                     {plan.badge}

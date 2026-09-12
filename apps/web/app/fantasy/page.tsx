@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { Suspense } from "react";
 import { redirect } from "next/navigation";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
@@ -25,9 +26,9 @@ const LEGACY_TOOL_ROUTES: Record<string, string> = {
 };
 
 export const metadata: Metadata = {
-  title: "Galaxy Fantasy - Real Roster First",
+  title: "Fantasy Tools",
   description:
-    "Galaxy Fantasy starts with read-only roster sync and stays gated until live player projections are connected. No fictional projections are presented as live advice.",
+    "Start-sit, waivers, trades, DFS, and pick'em. Real roster data when you connect; honest sample data when you don't.",
   alternates: { canonical: "/fantasy" },
 };
 
@@ -52,22 +53,33 @@ const LIVE_FIRST = [
   },
 ] as const;
 
-type ToolStatus = "live" | "partly live" | "gated";
+/**
+ * Honest status vocabulary (ASTRA A-7, owner item 7).
+ *
+ * "Gated" used to mean "you cannot open this" — but every tool below renders
+ * in full for an anonymous visitor on an illustrative pool. The badge was
+ * describing the DATA, and it was lying about the ACCESS. Now:
+ *   live        — real public data, working today
+ *   partly live — real data in some tabs, sample in others
+ *   sample      — opens now on clearly-labelled sample players until a
+ *                 licensed projections feed is connected
+ */
+type ToolStatus = "live" | "partly live" | "sample";
 const TOOL_DIRECTORY: readonly (readonly [string, string, string, ToolStatus])[] = [
-  ["Optimizer: DFS · Start/Sit · Draft", "One workspace, one contest switch. Salaries and projections stay gated; the draft board (tiers, VOR, scarcity, run alerts, your ADP CSV) runs on the illustrative pool now.", "/optimizer", "partly live"],
-  ["Best Ball", "Draft-only roster construction: ceiling/spike upside, QB-to-catcher stacks, bye fragility, and a next-pick recommender. Runs on the illustrative pool now; real the moment projections flip on.", "/fantasy/bestball", "partly live"],
+  ["Optimizer: DFS · Start/Sit · Draft", "One workspace, one contest switch. LineStar-style projections table (salary, value, pOwn%, leverage), QB stack, max exposure, CSV export. Opens on a sample slate; import your DK CSV for the real one today.", "/optimizer", "partly live"],
+  ["Best Ball", "Draft-only roster construction: ceiling/spike upside, QB-to-catcher stacks, bye fragility. Ranked by GSE Score.", "/fantasy/bestball", "partly live"],
   ["Human Performance", "Public confidence-band layer: venue surface, weather, official injury status. Live now; never a body claim.", "/human", "live"],
-  ["Waiver & FAAB", "Needs roster sync, projections, injuries, and league market context.", "/fantasy/waivers", "gated"],
-  ["Trade Analyzer", "Needs live player values and roster context.", "/fantasy/trade", "gated"],
-  ["Pick'em Edge", "Needs live pick'em lines and alt-line pricing.", "/fantasy/props", "gated"],
-  ["League Twin", "Can render a real roster after sync; advice waits for projections.", "/fantasy/league-twin", "gated"],
-  ["GM Ledger", "Proof mechanics are real; live decision history requires user roster events.", "/fantasy/gm-ledger", "gated"],
+  ["Waiver & FAAB", "Opens now on sample players ranked by GSE Score. Needs roster sync and a projections feed to become advice.", "/fantasy/waivers", "sample"],
+  ["Trade Analyzer", "Both sides valued on GSE Score. Opens now on sample players; live the moment a projections feed is connected.", "/fantasy/trade", "sample"],
+  ["Pick'em Edge", "Our number vs their line, with the most valuable alt. Market and team filters. Opens on sample lines.", "/fantasy/props", "sample"],
+  ["League Twin", "Can render a real roster after sync; advice waits for projections.", "/fantasy/league-twin", "sample"],
+  ["GM Ledger", "Proof mechanics are real; live decision history requires user roster events. Today the history is a disclosed demonstration.", "/fantasy/gm-ledger", "sample"],
 ] as const;
 
 const STATUS_TONE: Record<ToolStatus, string> = {
   live: "text-orbital-cyan",
   "partly live": "text-ultraviolet",
-  gated: "text-ion-2",
+  sample: "text-ion-2",
 };
 
 export default async function FantasyHubPage({
@@ -80,14 +92,16 @@ export default async function FantasyHubPage({
     redirect(LEGACY_TOOL_ROUTES[requestedTool]!);
   }
 
-  const evidence = await loadSourceLiveEvidence({ timeoutMs: 15000 });
-  const qbAgeLift = evidence.summary.qbAge34Lift;
-  const qbAgeLiftLabel = typeof qbAgeLift === "number" ? `${formatPercent(qbAgeLift)} lift` : "—";
-  const latestWeek =
-    evidence.summary.latestUsageSeason && evidence.summary.latestUsageWeek
-      ? `${evidence.summary.latestUsageSeason} W${evidence.summary.latestUsageWeek}`
-      : "—";
-
+  // The evidence read is NOT awaited here any more. It lives in <LiveEvidenceGrid/>
+  // behind a Suspense boundary, because it is a decorative four-card status strip
+  // and it was gating the ENTIRE page render: loadSourceLiveEvidence pulls four
+  // nflverse datasets SEQUENTIALLY (deliberately — running them concurrently
+  // OOM-killed the instance) with a 15s budget each, so a cold serverless instance
+  // took 13-15s to return ANY html. Measured on production 2026-09-11: cold
+  // 13.8s, warm 0.25s over five consecutive hits. The cold case is exactly what a
+  // marketing surge produces, since scaling out creates fresh instances whose
+  // first request pays it. Streaming the strip means the page paints immediately
+  // and only the cards wait.
   return (
     <div className="relative isolate flex min-h-screen flex-col bg-obsidian">
       <GeneratedPlate assetId="fantasy-constellation" className="-z-10 opacity-25" />
@@ -126,7 +140,7 @@ export default async function FantasyHubPage({
               </p>
               <dl className="mt-5 grid grid-cols-3 gap-3">
                 <ReadinessMetric label="Roster" value="sync" />
-                <ReadinessMetric label="Projections" value="gated" />
+                <ReadinessMetric label="Projections" value="sample" />
                 <ReadinessMetric label="Actions" value="no-write" />
               </dl>
               <p className="mt-4 text-sm leading-6 text-ion-1">
@@ -157,35 +171,16 @@ export default async function FantasyHubPage({
                   NFLverse Pulse
                 </Link>
                 <Link href="/api/sources/catalog" className="btn btn-ghost">
-                  Source JSON
+                  Data sources
                 </Link>
                 <Link href="/fantasy/baseline" className="btn btn-ghost">
                   Baseline map
                 </Link>
               </div>
             </div>
-            <div className="grid gap-3 sm:grid-cols-2">
-              <EvidenceMetric
-                label="Player-stat rows"
-                value={formatCount(evidence.summary.usagePlayerStatsRows)}
-                detail="Read-only weekly source release pulls."
-              />
-              <EvidenceMetric
-                label="Latest usage week"
-                value={latestWeek}
-                detail={`${formatCount(evidence.summary.latestWeekPlayerRows)} player rows in the latest REG week.`}
-              />
-              <EvidenceMetric
-                label="Accepted research"
-                value={qbAgeLiftLabel}
-                detail={`${formatCount(evidence.summary.cohortObservations)} team-week observations for QB-age/RB target share.`}
-              />
-              <EvidenceMetric
-                label="Rejected narratives"
-                value={evidence.summary.birthdayUsageConclusion ?? "—"}
-                detail={`${formatCount(evidence.summary.birthdayWindowObservations)} birthday-window and ${formatCount(evidence.summary.careerMilestone50Observations)} milestone observations.`}
-              />
-            </div>
+            <Suspense fallback={<EvidenceGridPlaceholder />}>
+              <LiveEvidenceGrid />
+            </Suspense>
           </div>
         </section>
 
@@ -218,7 +213,13 @@ export default async function FantasyHubPage({
                 <h2 className="font-display text-3xl font-semibold text-ion-white">Every tool, with its honest status</h2>
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
                   One directory, no dead ends. Each tool links straight through and shows whether it&apos;s
-                  live, partly live, or gated on a real data feed. Never a design delay, never a fictional input.
+                  live, partly live, or running on sample players until a licensed feed is connected.
+                  Never a design delay, never a fictional input presented as live advice.
+                </p>
+                <p className="mt-2 text-xs leading-5 text-ion-2">
+                  <span className="text-orbital-cyan">Live</span> = real public data today.{" "}
+                  <span className="text-ultraviolet">Partly live</span> = real in some tabs, sample in others.{" "}
+                  Sample = opens now, clearly labelled, not advice.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3 text-sm font-semibold">
@@ -256,6 +257,63 @@ function formatCount(value: number | null | undefined): string {
 
 function formatPercent(value: number): string {
   return `${value > 0 ? "+" : ""}${(value * 100).toFixed(1)}%`;
+}
+
+/**
+ * The four-card live-evidence strip, STREAMED. It is its own async component so
+ * the page shell never waits on four sequential nflverse dataset pulls — see the
+ * note in FantasyHubPage for the measured cost. The placeholder keeps the same
+ * grid geometry so the layout does not jump when the real cards arrive.
+ */
+async function LiveEvidenceGrid(): Promise<JSX.Element> {
+  const evidence = await loadSourceLiveEvidence({ timeoutMs: 15000 });
+  const qbAgeLift = evidence.summary.qbAge34Lift;
+  const qbAgeLiftLabel = typeof qbAgeLift === "number" ? `${formatPercent(qbAgeLift)} lift` : "—";
+  const latestWeek =
+    evidence.summary.latestUsageSeason && evidence.summary.latestUsageWeek
+      ? `${evidence.summary.latestUsageSeason} W${evidence.summary.latestUsageWeek}`
+      : "—";
+
+  return (
+    <div className="grid gap-3 sm:grid-cols-2">
+      <EvidenceMetric
+        label="Player-stat rows"
+        value={formatCount(evidence.summary.usagePlayerStatsRows)}
+        detail="Read-only weekly source release pulls."
+      />
+      <EvidenceMetric
+        label="Latest usage week"
+        value={latestWeek}
+        detail={`${formatCount(evidence.summary.latestWeekPlayerRows)} player rows in the latest REG week.`}
+      />
+      <EvidenceMetric
+        label="Accepted research"
+        value={qbAgeLiftLabel}
+        detail={`${formatCount(evidence.summary.cohortObservations)} team-week observations for QB-age/RB target share.`}
+      />
+      <EvidenceMetric
+        label="Rejected narratives"
+        value={evidence.summary.birthdayUsageConclusion ?? "—"}
+        detail={`${formatCount(evidence.summary.birthdayWindowObservations)} birthday-window and ${formatCount(evidence.summary.careerMilestone50Observations)} milestone observations.`}
+      />
+    </div>
+  );
+}
+
+/**
+ * The Suspense fallback: same grid, same card count, same geometry, so streaming
+ * in the real cards cannot shift the hero. aria-hidden because it is a status
+ * placeholder, not content.
+ */
+function EvidenceGridPlaceholder(): JSX.Element {
+  return (
+    <div className="grid gap-3 sm:grid-cols-2" aria-hidden="true">
+      <EvidenceMetric label="Player-stat rows" value="…" detail="Reading live sources." />
+      <EvidenceMetric label="Latest usage week" value="…" detail="Reading live sources." />
+      <EvidenceMetric label="Accepted research" value="…" detail="Reading live sources." />
+      <EvidenceMetric label="Rejected narratives" value="…" detail="Reading live sources." />
+    </div>
+  );
 }
 
 function EvidenceMetric({ label, value, detail }: { label: string; value: string; detail: string }): JSX.Element {

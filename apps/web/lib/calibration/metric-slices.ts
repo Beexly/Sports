@@ -12,6 +12,7 @@ import {
 } from "@sports/prediction-engine";
 import { debiasedExpectedCalibrationError } from "@/lib/calibration/ece-debiased";
 import { mulberry32 } from "@/lib/calibration/bootstrap-calib-ci";
+import { canonicalSampleOrder } from "@/lib/calibration/canonical-sample-order";
 
 export const SLICE_CI_RESAMPLES = 200;
 export const SLICE_CI_SEED = 0x5eed_c298;
@@ -111,7 +112,11 @@ export function sliceCalibrationMetrics<T extends CalibrationSample>(
     else groups.set(key, [s]);
   }
   const out: CalibrationSliceMetrics[] = [];
-  for (const [key, rows] of groups) {
+  for (const [key, bucket] of groups) {
+    // Seeded estimators are order-sensitive (see canonical-sample-order.ts): a
+    // different permutation of the same rows produced a different 5th-percentile
+    // bound and flipped eligibility GREEN → RED on 09-10. Canonicalise first.
+    const rows = canonicalSampleOrder(bucket);
     const d = brierDecomposition(rows);
     const corrected = debiasedExpectedCalibrationError(rows);
     const wins = rows.reduce((a, s) => a + s.y, 0);

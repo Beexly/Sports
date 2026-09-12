@@ -192,7 +192,7 @@ export function ShaderAurora({ className }: { className?: string }) {
         className={className}
         style={{
           background:
-            "radial-gradient(60% 80% at 30% 20%, rgba(201,212,206,0.20), transparent 60%), radial-gradient(50% 70% at 78% 30%, rgba(201,212,206,0.14), transparent 60%), radial-gradient(60% 80% at 50% 100%, rgba(255,77,46,0.10), transparent 60%), #060F0E",
+            "radial-gradient(60% 80% at 30% 20%, rgba(201,212,206,0.20), transparent 60%), radial-gradient(50% 70% at 78% 30%, rgba(201,212,206,0.14), transparent 60%), radial-gradient(60% 80% at 50% 100%, rgba(255,77,46,0.10), transparent 60%), #08090C",
         }}
       />
     );

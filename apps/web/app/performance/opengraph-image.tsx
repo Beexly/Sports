@@ -26,7 +26,7 @@ export default async function Image() {
           display: "flex",
           flexDirection: "column",
           background:
-            "radial-gradient(120% 80% at 30% 0%, #131022 0%, #060F0E 55%, #060F0E 100%)",
+            "radial-gradient(120% 80% at 30% 0%, #12141A 0%, #08090C 55%, #08090C 100%)",
           color: "#EDE8E0",
           padding: "72px 88px",
           position: "relative",

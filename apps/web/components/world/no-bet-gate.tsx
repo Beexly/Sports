@@ -42,10 +42,10 @@ export function NoBetGateChapter(): JSX.Element {
         <span aria-hidden className="absolute inset-12 rounded-full border border-mineral/60" />
         <div className="relative text-center">
           <p className="gw-text-glow-white font-display text-5xl font-semibold tracking-tight text-ion-white">
-            NO BET
+            WE PASSED
           </p>
-          <p className="gw-text-glow-alert mt-2 font-mono text-[10px] uppercase tracking-[0.3em] text-alert">
-            gate closed · pass logged
+          <p className="gw-text-glow-alert mt-2 text-[11px] uppercase tracking-wider text-alert">
+            and we show you why
           </p>
         </div>
       </div>
@@ -56,10 +56,10 @@ export function NoBetGateChapter(): JSX.Element {
           Sometimes the sharpest pick is no pick.
         </p>
         <p className="mt-4 max-w-xl text-sm leading-7 text-ion-1">
-          Most products treat an empty board as a failure to hide. Galaxy treats
-          it as the system working. Every held row is a decision with reasons
+          Most products treat an empty board as a failure to hide. We treat
+          it as the system working. Every pass is a decision with reasons
           attached: recorded, public, and accountable, exactly like a
-          published one.
+          published pick.
         </p>
         <dl className="mt-7 grid gap-4 sm:grid-cols-2">
           {GATE_REASONS.map((reason) => (

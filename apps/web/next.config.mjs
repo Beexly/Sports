@@ -70,6 +70,33 @@ const nextConfig = {
       { source: "/login", destination: "/auth/signin", permanent: false },
       { source: "/checkout", destination: "/pricing", permanent: false },
       { source: "/subscribe", destination: "/pricing", permanent: false },
+      // C-329: the ten legacy player-lab aliases live here so they are REAL HTTP
+      // redirects. They already had `redirect()` stubs in app/players/<view>/page.tsx,
+      // but `app/players/loading.tsx` exists — the segment needs it for the hub's own
+      // loading state — and a segment-level loading boundary makes Next STREAM the
+      // skeleton instead of returning a status, so a document request to
+      // /players/snaps answered 200 with 109 characters of "Loading players ..." and
+      // no data. Measured on production 2026-09-11. The identical stubs under
+      // /intelligence and /stats DO return 307, and the only difference is that those
+      // segments have no loading.tsx. Config redirects are evaluated before the
+      // filesystem routes, so these answer 307 at the routing layer, never render the
+      // shell, and are correct for crawlers and no-JS clients. The page stubs are left
+      // in place deliberately: unreachable while this list stands, and a working
+      // fallback if it is ever trimmed.
+      { source: "/players/combine", destination: "/players?view=combine", permanent: false },
+      { source: "/players/dfs", destination: "/players?view=dfs", permanent: false },
+      { source: "/players/edge", destination: "/players?view=edge", permanent: false },
+      { source: "/players/injuries", destination: "/players?view=injuries", permanent: false },
+      { source: "/players/market", destination: "/players?view=market", permanent: false },
+      { source: "/players/nextgen", destination: "/players?view=nextgen", permanent: false },
+      { source: "/players/opportunity", destination: "/players?view=opportunity", permanent: false },
+      { source: "/players/qbr", destination: "/players?view=qbr", permanent: false },
+      { source: "/players/snaps", destination: "/players?view=snaps", permanent: false },
+      { source: "/players/trenches", destination: "/players?view=trenches", permanent: false },
+      // C-332: the Edge Map / Galaxy Twin surface is retired from the product for now. The
+      // page remains in the tree so this is reversible, but nothing links it and the
+      // pricing catalog no longer calls it live.
+      { source: "/observatory", destination: "/board", permanent: false },
     ];
   },
   async headers() {

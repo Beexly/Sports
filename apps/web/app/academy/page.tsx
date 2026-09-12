@@ -27,6 +27,10 @@ export const metadata: Metadata = {
   description:
     "A real curriculum: tracks and modules with saved progress and mastery, interactive courses with graded quizzes, a live-fire decision simulator, the Beat the Close training game, and the GM Academy. Train process, calibration, and restraint.",
   alternates: { canonical: "/academy" },
+  // Hidden from public nav 2026-09-14 (ASTRA A-5, owner item 6). Route stays
+  // reachable by direct link; de-indexed until the surface is redesigned into
+  // membership value.
+  robots: { index: false, follow: true },
 };
 
 /**
@@ -152,7 +156,7 @@ export default function AcademyPage() {
         <section id="live-fire" className="scroll-mt-24 px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <Reveal>
-              <p className="eyebrow text-plasma">live fire</p>
+              <p className="eyebrow text-ion-2">live fire</p>
               <h2 className="mt-3 font-display text-3xl font-semibold text-ion-white">
                 Decide blind. Get graded on the decision.
               </h2>

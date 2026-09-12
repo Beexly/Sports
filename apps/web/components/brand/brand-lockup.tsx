@@ -1,11 +1,12 @@
 import Link from "next/link";
-import Image from "next/image";
+import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 import { BRAND_NAME } from "@/lib/brand";
 
 /**
  * BrandLockup — the official Galaxy Sports Edge horizontal lockup.
  *
- * Renders the approved chrome emblem (Brand Bible v1.0) alongside the
+ * Renders the NEBULA v7 true-break mark (inline SVG: bone blade, ember core)
+ * alongside the wordmark...[truncated]
  * "GALAXY SPORTS EDGE" wordmark set in Exo 2 with the signal-fade gradient
  * (cyan -> magenta -> violet) and the signal underline. Horizontal only —
  * the wordmark never stacks. `compact` collapses to emblem + "GSE" for the
@@ -26,18 +27,7 @@ export function BrandLockup({
       aria-label={`${BRAND_NAME} home`}
     >
       <span className="brand-emblem">
-        <Image
-          // The pre-sized 180px emblem downsamples much crisper than the full
-          // raster re-encoded to 40px; quality=100 stops the optimizer from
-          // muddying the chrome gloss at this tiny render size.
-          src="/brand/gse-emblem-180.png"
-          alt=""
-          width={40}
-          height={40}
-          quality={100}
-          priority
-          className="brand-emblem-img"
-        />
+        <LogoMarkInline size={40} kinetic={kinetic} />
       </span>
       <span className="brand-wordmark">
         <span className="brand-wordmark-text">

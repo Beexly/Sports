@@ -9,11 +9,17 @@
 
 import { vor, type Player } from "./players";
 import { activePlayerPool } from "@/lib/integrations/projections";
+import { gseScore } from "./gse-score";
 
-/** A single player's trade value (higher = more valuable). VOR is computed
- *  against the active pool so values stay correct on a live feed. */
+/** A single player's trade value (higher = more valuable). The GSE Score is
+ *  the primary input — it is the real process grade on a live feed. VOR and
+ *  trend/injury adjust it. Values stay correct on a live feed because GSE
+ *  Score reads processGrade when present. */
 export function tradeValue(p: Player, pool: readonly Player[] = activePlayerPool()): number {
-  const base = p.proj * 0.45 + Math.max(0, vor(p, pool)) * 0.85;
+  const gse = gseScore(p, pool);
+  // GSE Score (0-100) is the spine. VOR adds positional scarcity on top.
+  // On a live feed GSE is the process grade; on sample it is a pool percentile.
+  const base = gse.score * 1.6 + Math.max(0, vor(p, pool)) * 0.5;
   const trend = p.trend === "up" ? 1.1 : p.trend === "down" ? 0.86 : 1;
   const inj = p.injury === "out" ? 0.6 : p.injury === "questionable" ? 0.88 : 1;
   return Math.round(base * trend * inj);

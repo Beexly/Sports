@@ -31,6 +31,7 @@ const CALCULATORS = [
     title: "EV Calculator",
     href: "/tools/ev-calculator",
     body: "Enter your own win-probability estimate and a price. See the expected value per dollar staked, and exactly where the breakeven probability sits.",
+    when: "Before you place anything: is this price even worth it at your number?",
     formula: "EV = p × decimal − 1",
     accentBar: "bg-orbital-cyan",
     accentText: "text-orbital-cyan",
@@ -39,14 +40,16 @@ const CALCULATORS = [
     title: "No-Vig Calculator",
     href: "/tools/no-vig-calculator",
     body: "Strip the bookmaker's margin out of a two-way (or n-way) market and see the fair, no-vig probability on each side, plus the hold percentage.",
+    when: "When two books disagree and you want the real fair price, not the juice.",
     formula: "fair_i = (1/odds_i) / Σ(1/odds_j)",
-    accentBar: "bg-ultraviolet",
+    accentBar: "bg-mineral",
     accentText: "text-ultraviolet-glow",
   },
   {
     title: "Odds Converter",
     href: "/tools/odds-converter",
     body: "American, decimal, and implied probability, all from one input. Type a price in either format and see all three update together.",
+    when: "Anytime a price is in a format you don't use — or you want the probability behind it.",
     formula: "decimal = 1 + A/100  (A > 0)",
     accentBar: "bg-plasma",
     accentText: "text-plasma-glow",
@@ -55,6 +58,7 @@ const CALCULATORS = [
     title: "Parlay Calculator",
     href: "/tools/parlay-calculator",
     body: "Combine two or more legs into a parlay's total decimal price, American price, and implied probability, assuming independent legs.",
+    when: "Sunday morning, when a 4-leg ticket looks free and you want the real combined price.",
     formula: "combined = odds₁ × odds₂ × ... × oddsₙ",
     accentBar: "bg-orbital-cyan",
     accentText: "text-orbital-cyan",
@@ -63,6 +67,7 @@ const CALCULATORS = [
     title: "Line Movement",
     href: "/tools/line-movement",
     body: "Enter an open price and a current price. See implied-probability shift — pure arithmetic, no sharp/public claims.",
+    when: "When the number moved and you want to know by how much, in probability terms.",
     formula: "Δimpl = impl(current) − impl(open)",
     accentBar: "bg-plasma",
     accentText: "text-plasma-glow",
@@ -71,8 +76,9 @@ const CALCULATORS = [
     title: "CLV Calculator",
     href: "/tools/clv-calculator",
     body: "Closing-line value in basis points from your decision price vs the close. Your prices only — not a Galaxy track-record claim.",
+    when: "After the game: did your price beat the close? That's the honest scoreboard.",
     formula: "CLV bps = 10000 × (1/close − 1/decision)",
-    accentBar: "bg-ultraviolet",
+    accentBar: "bg-mineral",
     accentText: "text-ultraviolet-glow",
   },
 ] as const;
@@ -107,15 +113,16 @@ export default function ToolsHubPage(): JSX.Element {
             </Reveal>
             <Reveal delay={90}>
               <h1 className="mt-4 font-display text-display-xl text-balance tracking-tight text-ion-white">
-                Math you can read, not math you have to trust.
+                Six tools. The formula on every result.
               </h1>
             </Reveal>
             <Reveal delay={180}>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-ion-1">
-                Six free tools for the math behind a bet: expected value, no-vig
-                fair odds, odds conversion, parlay combining, line
-                movement, and closing-line value. No account, no email, no affiliate link — every
-                result shows the formula that produced it.
+                Six free tools for the math behind a bet: expected value, fair
+                odds without the bookmaker margin, odds conversion, parlay combining,
+                line movement, and closing-line value. No account, no email, no
+                affiliate link — every result shows the formula and the moment
+                you&apos;d actually reach for it.
               </p>
             </Reveal>
           </div>
@@ -130,6 +137,9 @@ export default function ToolsHubPage(): JSX.Element {
                   <span aria-hidden="true" className={`block h-1 w-10 rounded-full ${tool.accentBar}`} />
                   <h2 className="mt-4 text-xl font-semibold text-ion-white">{tool.title}</h2>
                   <p className="mt-2 text-sm leading-6 text-ion-1">{tool.body}</p>
+                  <p className="mt-2 text-xs leading-5 text-ion-2">
+                    <span className="font-semibold text-ion-1">When you&apos;d use it:</span> {tool.when}
+                  </p>
                   <FormulaPlaque formula={tool.formula} className="mt-4" />
                   <span className={`mt-4 inline-block font-mono text-sm font-semibold ${tool.accentText}`}>
                     Open the calculator →

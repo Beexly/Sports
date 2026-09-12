@@ -10,18 +10,16 @@ import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { BoardHealthBadge } from "@/components/board/board-health-badge";
 import { BoardSurfaceChip } from "@/components/board/board-surface-chip";
-import { GeneratedPlate } from "@/components/immersive/generated-plate";
-import { SignalRoomAtmosphere } from "@/components/motion/signal-room-atmosphere";
 
 export const metadata: Metadata = {
-  title: "Today's Board",
+  title: "Board",
   description:
-    "Model-signal board, gated games, and calibration posture from Galaxy Sports Edge. Quiet when the slate is empty — free tools stay open. Not a PROVEN track record while eligibility is RED.",
+    "Every game we scored today. What we're on, what we passed on, and why.",
   alternates: { canonical: "/board" },
   openGraph: {
-    title: "Today's Board",
+    title: "Board",
     description:
-      "Model-signal board, gated games, and calibration posture from Galaxy Sports Edge. Quiet when the slate is empty — free tools stay open. Not a PROVEN track record while eligibility is RED.",
+      "Every game we scored today. What we're on, what we passed on, and why.",
   },
 };
 
@@ -72,9 +70,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
 
   return (
     <div className="relative isolate min-h-screen w-full overflow-x-hidden bg-obsidian text-ion-white">
-      <GeneratedPlate assetId="board-command" className="-z-10 opacity-20" />
       <Nav />
-      <SignalRoomAtmosphere mode="ambient" />
       <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-8 px-4 py-8 sm:px-6 lg:px-8">
         {dbUnreachable && (
           <div className="flex flex-col gap-2 border border-alert/40 bg-alert/10 px-4 py-3 text-sm text-ion-1 sm:flex-row sm:items-center">
@@ -174,53 +170,120 @@ export default async function BoardPage(): Promise<JSX.Element> {
             </div>
           )}
 
-        <section className="border-b border-titanium pb-8">
-          <p className="font-mono text-xs uppercase tracking-[0.22em] text-orbital-cyan">Today&apos;s Board</p>
-          <div className="mt-4 flex flex-col justify-between gap-6 lg:flex-row lg:items-end">
-            <div>
-              <h1 className="max-w-4xl break-words text-3xl font-black tracking-tight text-white sm:text-5xl">
-                Scored, published, and passed.
-              </h1>
-              <p className="mt-4 max-w-2xl text-sm leading-6 text-ion-2">
-                The board shows what is being evaluated now, what cleared the gate today,
-                and what was evaluated without becoming a pick.
-              </p>
-            </div>
-            <div className="flex min-w-0 flex-col gap-3 sm:items-end">
-              <BoardSurfaceChip />
-              <BoardHealthBadge meta={stateResult.meta} />
-              <div className="flex flex-wrap gap-3 sm:justify-end">
-                <Link href="/pricing" className="btn btn-primary min-h-11 px-5 py-3">
-                  See what Pro unlocks
-                </Link>
-                <Link
-                  href="/accountability"
-                  className="inline-flex min-h-11 items-center justify-center rounded-lg border border-titanium px-5 py-3 text-sm font-bold text-ion-white hover:border-orbital-cyan"
-                >
-                  See the receipts
-                </Link>
-                <Link
-                  href="/methodology"
-                  className="inline-flex min-h-11 items-center justify-center rounded-lg border border-titanium px-5 py-3 text-sm font-bold text-ion-white hover:border-orbital-cyan"
-                >
-                  Read methodology
-                </Link>
-              </div>
+        {/* ── FULL-BLEED OPENING · the premier surface ────────────────────── */}
+        <section
+          className="relative isolate flex min-h-[58vh] flex-col justify-end overflow-hidden border-b border-mineral px-4 pb-10 pt-24 sm:px-6 lg:px-8"
+          aria-labelledby="board-title"
+        >
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 -z-10"
+            style={{
+              background:
+                "radial-gradient(ellipse 70% 50% at 80% 0%, rgba(255,77,46,0.12), transparent 60%)," +
+                "radial-gradient(ellipse 50% 40% at 10% 100%, rgba(25,28,35,0.9), transparent 65%)," +
+                "linear-gradient(180deg, #08090C 0%, #12141A 50%, #08090C 100%)",
+            }}
+          />
+          <div
+            aria-hidden
+            className="pointer-events-none absolute inset-0 -z-10 opacity-[0.06]"
+            style={{
+              backgroundImage:
+                "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(237,232,224,0.5) 2px, rgba(237,232,224,0.5) 3px)",
+            }}
+          />
+          <div className="mx-auto w-full max-w-6xl">
+            <p className="font-mono text-xs uppercase tracking-[0.28em] text-plasma">The Board</p>
+            <h1
+              id="board-title"
+              className="mt-5 max-w-4xl font-display text-balance text-ion-white"
+              style={{ fontSize: "clamp(2.5rem, 8vw, 5.5rem)", lineHeight: 0.94, letterSpacing: "-0.03em" }}
+            >
+              Every game.
+              <br />
+              <span className="text-plasma">Scored and honest.</span>
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
+              What we&apos;re on today, what we passed on, and why. The board shows every
+              game we looked at, not just the ones we liked.
+            </p>
+            <div className="mt-7 flex flex-wrap items-center gap-3">
+              <Link href="/pricing" className="btn-primary min-h-11 px-5 py-3">
+                See what Pro unlocks
+              </Link>
+              <Link
+                href="/calibration"
+                className="inline-flex min-h-11 items-center justify-center border border-mineral px-5 py-3 text-sm font-semibold text-ion-1 hover:border-plasma hover:text-ion-white"
+              >
+                Record
+              </Link>
+              <Link
+                href="/intelligence"
+                className="inline-flex min-h-11 items-center justify-center border border-mineral px-5 py-3 text-sm font-semibold text-ion-1 hover:border-plasma hover:text-ion-white"
+              >
+                Method
+              </Link>
             </div>
           </div>
         </section>
 
-        <section aria-label="Board state" className="grid gap-px sm:grid-cols-2 lg:grid-cols-6">
+        {/* ── YOU ARE HERE · three surfaces, one sentence each ────────────── */}
+        <section
+          aria-label="Where you are"
+          className="border-b border-mineral px-4 py-5 sm:px-6 lg:px-8"
+        >
+          <div className="mx-auto grid max-w-6xl gap-3 sm:grid-cols-3">
+            <div className="rounded-xl border border-plasma/50 bg-plasma/[0.06] px-4 py-3">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-plasma">You are here</p>
+              <p className="mt-1 text-sm font-semibold text-ion-white">The board</p>
+              <p className="mt-0.5 text-xs leading-5 text-ion-2">
+                Every game today: scoring, published, and passed on. The full picture.
+              </p>
+            </div>
+            <Link
+              href="/picks"
+              className="rounded-xl border border-mineral bg-eclipse/40 px-4 py-3 transition-colors hover:border-orbital-cyan/50"
+            >
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-3">Also open</p>
+              <p className="mt-1 text-sm font-semibold text-ion-white">Today&apos;s picks</p>
+              <p className="mt-0.5 text-xs leading-5 text-ion-2">
+                Only the ones we&apos;re on, with the line, timing, and reason.
+              </p>
+            </Link>
+            <Link
+              href="/founder-picks"
+              className="rounded-xl border border-mineral bg-eclipse/40 px-4 py-3 transition-colors hover:border-orbital-cyan/50"
+            >
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-3">Also open</p>
+              <p className="mt-1 text-sm font-semibold text-ion-white">Founder picks</p>
+              <p className="mt-0.5 text-xs leading-5 text-ion-2">
+                The owner&apos;s personal calls, on the same honest record.
+              </p>
+            </Link>
+          </div>
+        </section>
+
+        <div className="px-4 sm:px-6 lg:px-8">
+        <div className="mx-auto max-w-6xl pt-8">
+
+        <div className="mb-4 flex flex-wrap items-center gap-3">
+          <BoardSurfaceChip />
+          <BoardHealthBadge meta={stateResult.meta} />
+        </div>
+
+        <section aria-label="Board state" className="grid gap-px border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-6">
           <StateTile label="Sports watched" value={String(state.sportsWatched)} />
           <StateTile label="Books polled" value={String(state.booksPolled)} />
           <StateTile label="Open picks" value={String(state.openPicks)} />
-          <StateTile label="Gated today" value={String(state.gatedToday)} />
+          <StateTile label="Passed on" value={String(state.gatedToday)} />
           <StateTile label="Last refresh" value={timeLabel(state.lastRefresh)} dataTestid="board-freshness" />
           <StateTile label="Model" value={state.modelVersion} />
         </section>
 
-        <section className="grid gap-4 lg:grid-cols-3">
+        <section className="grid gap-10 lg:grid-cols-3">
           <BoardLane
+            index="01"
             title="Scoring Now"
             rows={state.scoringNow}
             empty={
@@ -230,21 +293,23 @@ export default async function BoardPage(): Promise<JSX.Element> {
             }
           />
           <BoardLane
-            title="Published Today"
+            index="02"
+            title="Today's Picks"
             rows={state.publishedToday}
             empty={
               stateResult.meta.boardClass.refusePublicFire
-                ? "No public fires: nothing is published while the board is closed."
-                : "No picks have cleared today."
+                ? "Nothing published right now. The board is paused until data checks pass."
+                : "No picks published yet today."
             }
           />
           <BoardLane
-            title="Gated Today"
+            index="03"
+            title="Passed On"
             rows={state.gatedTodayRows}
             empty={
               stateResult.meta.boardClass.honestEmpty
-                ? "No gated rows while the board is honestly empty."
-                : "No passed games logged yet."
+                ? "Nothing to pass on while the board is honestly empty."
+                : "Nothing passed on yet today."
             }
           />
         </section>
@@ -296,6 +361,8 @@ export default async function BoardPage(): Promise<JSX.Element> {
         </section>
 
         <RiskDisclosure variant="compact" className="text-center" />
+        </div>
+        </div>
       </main>
       <Footer />
     </div>
@@ -311,39 +378,48 @@ function StateTile({ label, value, dataTestid }: { label: string; value: string;
   );
 }
 
-function BoardLane({ title, rows, empty }: { title: string; rows: BoardStateRow[]; empty: string }): JSX.Element {
+function BoardLane({ title, rows, empty, index }: { title: string; rows: BoardStateRow[]; empty: string; index: string }): JSX.Element {
+  const live = index === "02";
   return (
-    <section className="border border-titanium bg-carbon/45 p-4">
-      <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-orbital-cyan">{title}</h2>
-      <div className="mt-4 flex flex-col gap-3">
-        {rows.length > 0 ? rows.map((row) => <BoardRowItem key={row.id} row={row} />) : (
-          <p className="text-sm text-ion-3">{empty}</p>
+    <section>
+      <div className="flex items-baseline gap-3 border-b border-mineral pb-3">
+        <span className={`font-display text-2xl font-semibold ${live ? "text-plasma" : "text-ion-3"}`}>{index}</span>
+        <h2 className="font-mono text-[10px] uppercase tracking-[0.2em] text-ion-1">{title}</h2>
+        <span className="ml-auto font-mono text-[10px] tabular-nums text-ion-3">{rows.length}</span>
+      </div>
+      <div className="divide-y divide-mineral">
+        {rows.length > 0 ? rows.map((row) => <BoardRowItem key={row.id} row={row} live={live} />) : (
+          <p className="py-5 text-sm text-ion-3">{empty}</p>
         )}
       </div>
     </section>
   );
 }
 
-function BoardRowItem({ row }: { row: BoardStateRow }): JSX.Element {
+function BoardRowItem({ row, live }: { row: BoardStateRow; live: boolean }): JSX.Element {
+  const held = row.status !== "PUBLISHED_TODAY";
   return (
-    <article className="border border-titanium bg-obsidian/55 p-4">
-      <div className="flex items-start justify-between gap-3">
-        <div>
-          <h3 className="font-semibold text-white">{row.matchup}</h3>
-          <p className="mt-1 text-xs text-ion-3">{row.sport} / {row.market}</p>
-        </div>
-        <span className="font-mono text-xs text-orbital-cyan">
-          {row.edgeIndex === null ? "EI N/A" : `EI ${row.edgeIndex}`}
-        </span>
+    <article className="grid grid-cols-[1fr_auto] items-baseline gap-x-4 py-4">
+      <div className="min-w-0">
+        <h3 className={`font-display text-xl font-semibold tracking-tight ${held ? "text-ion-3" : "text-ion-white"}`}>{row.matchup}</h3>
+        <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] text-ion-3">{row.sport} · {row.market}</p>
+      </div>
+      <div className="text-right">
+        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-3">Edge</p>
+        <p className={`font-display text-2xl font-semibold tabular-nums ${held ? "text-ion-3" : live ? "text-plasma" : "text-ion-white"}`}>
+          {row.edgeIndex === null ? "—" : row.edgeIndex}
+        </p>
       </div>
       {/* The ranking sort key and its source are model internals; the public
-          row does not render them (FE-10). The pick view carries the label. */}
-      {row.confidence !== null && (
-        <p className="mt-3 text-sm text-ion-1">Confidence label available on the pick view.</p>
+          row does not render them (FE-10). Confidence stays on the pick view
+          behind the paywall (FE-15); C-224 forbids scoring it here. */}
+      {row.gateReason && (
+        <p className="col-span-2 mt-1 text-sm text-ion-2">
+          {held && <span className="font-semibold text-plasma">Passed. </span>}{row.gateReason}
+        </p>
       )}
-      {row.gateReason && <p className="mt-3 text-sm text-ion-2">{row.gateReason}</p>}
-      <Link href={`/room/${row.gameId}`} className="mt-4 inline-flex text-sm font-semibold text-orbital-cyan hover:text-ion-white">
-        Open room
+      <Link href={`/room/${row.gameId}`} className="col-span-2 mt-2 inline-flex text-sm font-semibold text-ion-1 hover:text-ion-white">
+        Open room →
       </Link>
     </article>
   );

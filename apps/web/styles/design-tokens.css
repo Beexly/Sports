@@ -1,19 +1,19 @@
 /* ============================================================
-   Galaxy Sports Edge — Foundation tokens · "Cosmic Intelligence"
-   Orbital cyan signal · ion magenta energy · ultraviolet depth
+   Galaxy Sports Edge — Foundation tokens · "Field"
+   Near-black ground · bone ink · molten ember signal
    ============================================================ */
 
 :root {
-  /* ── ENVIRONMENT — cosmic dark scale ──────────────────── */
-  /* Canonical values: NEBULA v7 (approved 2026-09-10). Tailwind config mirrors. */
-  --void:        #060F0E;   /* NEBULA ground — teal-black page canvas */
-  --obsidian:    #060F0E;   /* default canvas */
-  --carbon:      #060F0E;   /* page background (matches Tailwind `carbon`) */
-  --eclipse:     #131022;   /* violet-black card (matches Tailwind `eclipse`) */
-  --titanium:    #1B1530;   /* violet lift — nested/hover (matches `titanium`) */
-  --slate:       #1B1530;   /* hover (matches Tailwind `slate`) */
-  --mineral:     #2A3532;   /* teal hairline border (matches `mineral`) */
-  --mineral-hi:  #3A4A46;   /* border hover · strong divider */
+  /* ── ENVIRONMENT — Field dark scale ───────────────────── */
+  /* Canonical values: FIELD (approved 2026-09-10). Tailwind config mirrors. */
+  --void:        #08090C;   /* Field ground — near-black page canvas */
+  --obsidian:    #08090C;   /* default canvas */
+  --carbon:      #08090C;   /* page background (matches Tailwind `carbon`) */
+  --eclipse:     #12141A;   /* panel card (matches Tailwind `eclipse`) */
+  --titanium:    #191C23;   /* panel lift — nested/hover (matches `titanium`) */
+  --slate:       #191C23;   /* hover (matches Tailwind `slate`) */
+  --mineral:     #23262E;   /* hairline border (matches `mineral`) */
+  --mineral-hi:  #31353F;   /* border hover · strong divider */
 
   /* Legacy aliases — older boards use these names */
   --carbon-1:    var(--obsidian);
@@ -22,15 +22,13 @@
   --graphite:    var(--slate);
 
   /* ── BONE — warm chalky text on nebula ground ───────── */
-  /* NEBULA v7: bone/fog/mist. Ratios on ground #060F0E: bone 15.91,
-     fog 12.74, mist 9.37 — all AA/AAA. On panel #131022: 15.31/12.26/9.02. */
-  --ion-white:   #EDE8E0;   /* BONE identity — 15.91:1 on ground — PASS */
-  --ion:         #EDE8E0;   /* primary text — bone — PASS */
-  --ion-1:       #C9D4CE;   /* secondary · fog — PASS */
-  /* NEBULA v7: ion-2/ion-3 → mist. Used as text in tables/nav/meta. */
-  --ion-2:       #A7B8B2;   /* tertiary · meta mist — 9.37:1 on ground — PASS */
-  /* NEBULA v7: ion-3 → mist. Used as text in nav sublabels. */
-  --ion-3:       #A7B8B2;   /* muted mist — 9.37:1 on ground — PASS */
+  /* FIELD: bone/fog/mist. Ratios on ground #08090C: bone 15.91,
+     fog 12.74, mist 9.37 — all AA/AAA. On panel #12141A: 15.31/12.26/9.02. */
+  --ion-white:   #EDE8E0;   /* BONE identity */
+  --ion:         #EDE8E0;   /* primary text — bone */
+  --ion-1:       #C4BFB6;   /* secondary · fog */
+  --ion-2:       #8F8A82;   /* tertiary · meta mist */
+  --ion-3:       #8F8A82;   /* muted mist */
 
   /* ── PAPER — LIGHT data-surface scale (ADDITIVE) ──────── */
   /* LIGHT SCALE = data surfaces (tables, tools, boards) where dense numbers
@@ -56,7 +54,7 @@
   --caution-on-light:     #9A4D00;   /* 5.76:1 on paper — PASS */
 
   /* ── EMBER — the single action accent ───────────────── */
-  /* NEBULA v7: magenta retired → ember #FF4D2E. AA on ground 5.87 (action/
+  /* FIELD: magenta retired → ember #FF4D2E. AA on ground 5.87 (action/
      large/bold only, never body prose). text-plasma (80 sites) becomes the
      action color; bg-plasma washes become ember washes. */
   --plasma:        #FF4D2E;
@@ -64,46 +62,51 @@
   --plasma-deep:   #C22E1A;
   --plasma-ink:    #1A0703;
 
-  /* ── RETIRED CYAN — now fog ─────────────────────────── */
-  /* NEBULA v7: orbital cyan retired (no v7 equivalent — single-accent rule).
-     482 text-orbital-cyan sites become calm fog text (12.74:1 — PASS);
-     the action role moves to ember. Names kept so call sites compile. */
-  --ion-blue:      #C9D4CE;
-  --ion-blue-glow: #E4EBE7;
-  --ion-blue-deep: #A7B8B2;
-  --ion-blue-ink:  #060F0E;
+  /* IRIS — the wayfinding accent. Active nav, current-section markers,
+     wayfinding only. Never CTAs, never body, never data.
+     Ratios: 8.44 on ground, 8.13 on panel. */
+  --iris:         #9AA8E8;
+  --iris-glow:    #C3CDEF;
+  --iris-deep:    #6E7BB8;
+  --iris-ink:     #0A0E1A;
 
-  --orbital-cyan:      #C9D4CE;
-  --orbital-cyan-glow: #E4EBE7;
-  --orbital-cyan-deep: #A7B8B2;
+  /* RETIRED CYAN — now fog. */
+  --ion-blue:      #C4BFB6;
+  --ion-blue-glow: #EDE8E0;
+  --ion-blue-deep: #8F8A82;
+  --ion-blue-ink:  #08090C;
+
+  --orbital-cyan:      #C4BFB6;
+  --orbital-cyan-glow: #EDE8E0;
+  --orbital-cyan-deep: #8F8A82;
 
   /* ── RETIRED VIOLET/BLUE — now panel + fog ──────────── */
-  /* NEBULA v7: decorative violet/blue retired; intelligence = surface, not
+  /* FIELD: decorative violet/blue retired; intelligence = surface, not
      accent. bg roles → panel-2 (surfaces); text roles must stay readable so
      the family centers on fog (12.74:1). Names kept so call sites compile. */
-  --nebula-purple:     #1B1530;
-  --nebula-purple-glow:#2A2145;
-  --nebula-purple-deep:#131022;
+  --nebula-purple:     #191C23;
+  --nebula-purple-glow:#23262E;
+  --nebula-purple-deep:#12141A;
 
-  --electric-blue:      #131022;
-  --electric-blue-glow: #2A2145;
-  --electric-blue-deep: #060F0E;
+  --electric-blue:      #12141A;
+  --electric-blue-glow: #23262E;
+  --electric-blue-deep: #08090C;
 
-  --ultraviolet:      #C9D4CE;
-  --ultraviolet-glow: #E4EBE7;
-  --ultraviolet-deep: #A7B8B2;
+  --ultraviolet:      #C4BFB6;
+  --ultraviolet-glow: #EDE8E0;
+  --ultraviolet-deep: #8F8A82;
 
   /* ── LIVE PINGS — ember dot, telemetry fog ──────────── */
-  /* NEBULA v7: lime/cyan rares retired; live pings → ember dot, small
+  /* FIELD: lime/cyan rares retired; live pings → ember dot, small
      telemetry → fog. Names kept so call sites compile. */
   --lime:          #FF4D2E;    /* live tick / fresh-data ping = ember dot */
   --lime-glow:     #FF7A5C;
   --lime-deep:     #C22E1A;
   --lime-ink:      #1A0703;
-  --cyan:          #C9D4CE;    /* small telemetry only */
-  --cyan-glow:     #E4EBE7;
-  --cyan-deep:     #A7B8B2;
-  --cyan-ink:      #060F0E;
+  --cyan:          #C4BFB6;    /* small telemetry only */
+  --cyan-glow:     #EDE8E0;
+  --cyan-deep:     #8F8A82;
+  --cyan-ink:      #08090C;
 
   /* ── DEPRECATED — gold / amber removed from system ───── */
   /* Auto-redirects so older boards inherit ion-blue */
@@ -224,7 +227,7 @@
      Names kept so .btn-primary (globals.css:70,78 — 56 files) and the Tailwind
      shadow-glow-* utilities keep compiling. Only --glow-plasma and --glow-uv
      ever had consumers; the other seven were already dead. */
-  /* NEBULA v7: the ember core glows (hero, primary CTA); all other glows
+  /* FIELD: the ember core glows (hero, primary CTA); all other glows
      stay none per the retired-glow doctrine. Names kept so utilities compile. */
   --glow-plasma:    0 0 48px -8px rgba(255, 77, 46, 0.55);
   --glow-ion-blue:  none;

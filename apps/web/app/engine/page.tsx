@@ -4,7 +4,6 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { Reveal } from "@/components/motion/reveal";
-import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { loadEngineStory } from "@/lib/engine/load-engine-story";
 import { SurgeCount, HashMaterialize, GateBar } from "@/components/engine/engine-atoms";
 
@@ -40,8 +39,8 @@ export default async function SealedEnginePage() {
     story.seals.receiptsFrozenToday === 0;
 
   return (
-    <div className="relative isolate flex min-h-screen flex-col bg-void text-ion-white">
-      <GeneratedPlate assetId="proof-crystal" className="-z-10 opacity-25" />
+    // Same Field atmosphere as the trust surfaces — proof-crystal removed.
+    <div className="relative isolate flex min-h-screen flex-col bg-void text-ion-white gw-nebula">
       <Nav />
 
       <main id="main-content" className="flex-1">
@@ -197,7 +196,7 @@ export default async function SealedEnginePage() {
             <section className="px-4 py-14 sm:px-6 lg:px-8">
               <div className="mx-auto max-w-5xl">
                 <Reveal>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-plasma">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-ion-2">
                     03 · The seal
                   </p>
                   <h2 className="mt-2 font-display text-3xl font-semibold">
@@ -264,11 +263,11 @@ export default async function SealedEnginePage() {
             <section className="border-t border-plasma/20 bg-plasma/[0.04] px-4 py-14 sm:px-6 lg:px-8">
               <div className="mx-auto max-w-5xl">
                 <Reveal>
-                  <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-plasma">
+                  <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-ion-2">
                     04 · The record
                   </p>
                   <h2 className="mt-2 font-display text-3xl font-semibold">
-                    <SurgeCount value={story.record.totalSettled} className="text-plasma" />{" "}
+                    <SurgeCount value={story.record.totalSettled} className="text-ion-white" />{" "}
                     settled picks stand behind today&apos;s board.
                   </h2>
                   <p className="mt-3 max-w-2xl text-sm leading-6 text-ion-1">

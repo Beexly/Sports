@@ -3,18 +3,18 @@
  *
  * SubscribeButton sends an unauthenticated visitor to /auth/signin before
  * Stripe Checkout ever opens. Without this, the round trip through sign-in
- * silently discarded the tier/interval the visitor picked and the date of
- * birth they typed, landing them back on a blank /pricing form. This stores
- * that intent in sessionStorage (tab-scoped, cleared on close, never sent to
- * a server) just before the redirect, so the pricing page can restore it on
- * return instead of re-asking.
+ * silently discarded the tier/interval the visitor picked, landing them back
+ * on a blank /pricing form. This stores that intent in sessionStorage
+ * (tab-scoped, cleared on close, never sent to a server) just before the
+ * redirect, so the pricing page can restore it on return instead of re-asking.
  *
  * Short TTL (30 min): a stale intent from a much earlier visit should not
- * silently reappear and fill in someone else's date of birth on a shared
- * machine's next unrelated visit.
+ * silently reappear on a shared machine's next unrelated visit.
+ *
+ * Date-of-birth removed 2026-09-14 with the age-gate removal.
  */
 
-const STORAGE_KEY = "gse:checkout-intent:v1";
+const STORAGE_KEY = "gse:checkout-intent:v2";
 const MAX_AGE_MS = 30 * 60 * 1000;
 
 export type Interval = "month" | "year";
@@ -22,7 +22,6 @@ export type Interval = "month" | "year";
 export interface CheckoutIntent {
   readonly tier: "FANTASY" | "PRO" | "ELITE";
   readonly interval: Interval;
-  readonly dateOfBirth: string;
 }
 
 interface StoredCheckoutIntent extends CheckoutIntent {
@@ -60,7 +59,6 @@ export function readCheckoutIntent(): CheckoutIntent | null {
     if (
       typeof parsed.tier !== "string" ||
       typeof parsed.interval !== "string" ||
-      typeof parsed.dateOfBirth !== "string" ||
       typeof parsed.savedAt !== "number"
     ) {
       return null;
@@ -69,7 +67,7 @@ export function readCheckoutIntent(): CheckoutIntent | null {
       storage.removeItem(STORAGE_KEY);
       return null;
     }
-    return { tier: parsed.tier as CheckoutIntent["tier"], interval: parsed.interval as Interval, dateOfBirth: parsed.dateOfBirth };
+    return { tier: parsed.tier as CheckoutIntent["tier"], interval: parsed.interval as Interval };
   } catch {
     return null;
   }

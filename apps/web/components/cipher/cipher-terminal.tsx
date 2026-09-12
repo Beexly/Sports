@@ -170,7 +170,7 @@ export function CipherTerminal({ view, state, boundaryISO }: Props) {
           </div>
         )}
         {result?.kind === "miss" && (
-          <p className="text-sm text-plasma">
+          <p className="text-sm text-ion-1">
             {result.message}
           </p>
         )}

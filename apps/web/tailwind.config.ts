@@ -1,17 +1,17 @@
 import type { Config } from "tailwindcss";
 
 /**
- * Galaxy Sports Edge Tailwind config — NEBULA v7 palette (approved 2026-09-10).
+ * Galaxy Sports Edge Tailwind config — FIELD palette (approved 2026-09-10).
  *
- * Canonical palette (NEBULA v7 commit):
- *  - GROUND #060F0E — teal-black page canvas
- *  - PANEL  #131022 — violet-black cards / raised
- *  - PANEL-2 #1B1530 — violet lift, nested / hover
+ * Canonical palette:
+ *  - GROUND #08090C — near-black page canvas
+ *  - PANEL  #12141A — cards / raised
+ *  - PANEL-2 #191C23 — nested / hover
  *  - BONE   #EDE8E0 — primary text / identity
- *  - FOG    #C9D4CE — secondary text
- *  - MIST   #A7B8B2 — muted meta
+ *  - FOG    #C4BFB6 — secondary text
+ *  - MIST   #8F8A82 — muted meta
  *  - EMBER  #FF4D2E — the single action accent
- *  - LINE   #2A3532 — hairline borders
+ *  - LINE   #23262E — hairline borders
  *  verify/alert/caution ladder kept for settlement + data states only.
  *
  * Legacy names (brand-*, accent-*, plasma-*, ion-blue-*, orbital-cyan, …)
@@ -27,58 +27,52 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // ── NEBULA v7 CANONICAL (approved 2026-09-10) ─────────
-        "obsidian-black":    "#060F0E",
+        // ── FIELD CANONICAL (approved 2026-09-10) ─────────
+        "obsidian-black":    "#08090C",
         "ion-white-2":       "#EDE8E0",   // bone identity
-        "orbital-cyan":      "#C9D4CE",   // retired → fog (name kept, call sites compile)
-        "ion-magenta":       "#FF4D2E",   // retired → ember (name kept)
-        "soft-ultraviolet":  "#C9D4CE",   // retired → fog (name kept)
-        "electric-blue":     "#131022",   // retired → panel (name kept)
-        "nebula-purple":     "#1B1530",   // retired → panel-2 (name kept)
-        "cosmic-gray":       "#060F0E",   // surface → ground
-        "steel-gray":        "#1B1530",
+        "orbital-cyan":      "#C4BFB6",   // retired → bone-1 (name kept)
+        "ion-magenta":       "#FF4D2E",   // Field signal — ember (name kept)
+        "soft-ultraviolet":  "#C4BFB6",   // retired → bone-1 (name kept)
+        "electric-blue":     "#12141A",   // retired → panel (name kept)
+        "nebula-purple":     "#191C23",   // retired → panel-2 (name kept)
+        "cosmic-gray":       "#08090C",   // surface → ground
+        "steel-gray":        "#191C23",
 
-        // ── ENVIRONMENT — nebula dark scale ────────────────
-        void:       "#060F0E",
-        obsidian:   "#060F0E",
-        carbon:     "#060F0E",
-        eclipse:    "#131022",
-        titanium:   "#1B1530",
-        slate:      "#1B1530",
-        mineral:    "#2A3532",
-        "mineral-hi": "#3A4A46",
+        // ── ENVIRONMENT — Field dark scale ────────────────
+        void:       "#08090C",
+        obsidian:   "#08090C",
+        carbon:     "#08090C",
+        eclipse:    "#12141A",
+        titanium:   "#191C23",
+        slate:      "#191C23",
+        mineral:    "#23262E",
+        "mineral-hi": "#31353F",
 
         // ── BONE / FOG / MIST text ──
         "ion-white": "#EDE8E0",
         ion: {
-          DEFAULT: "#EDE8E0", // 15.91:1 on ground
-          1: "#C9D4CE",       // fog
-          2: "#A7B8B2",       // mist
-          3: "#A7B8B2",       // mist
+          DEFAULT: "#EDE8E0",
+          1: "#C4BFB6",
+          2: "#8F8A82",
+          3: "#8F8A82",
         },
 
         // ── PAPER — LIGHT data-surface scale (ADDITIVE) ───
-        // Data surfaces (tables/tools/boards). All text tokens pass WCAG AA
-        // on paper; accents-on-light are darkened for AA text use only.
         paper: {
-          DEFAULT: "#F7F8FB",  // page bg → bg-paper
-          raised:  "#FFFFFF",  // cards → bg-paper-raised
-          sunken:  "#F0F2F6",  // zebra → bg-paper-sunken
-          border:  "#D9DEE7",  // hairline → border-paper-border
+          DEFAULT: "#F4F1EB",
+          raised:  "#FAF8F4",
+          sunken:  "#E9E5DC",
+          border:  "#D8D2C6",
         },
-        "plasma-on-light":       "#B0118C", // 5.98:1 on paper — text accent
-        "orbital-cyan-on-light": "#06748A", // 5.11:1 on paper — text accent
-        "ultraviolet-on-light":  "#5B43C9", // 6.40:1 on paper — text accent
-        // Semantic-on-light — the paper-surface half of Law 2.
-        // Outcome carries no colour here either: verify/alert resolve to the
-        // paper text colour. Only `caution-on-light` keeps a hue, because it is
-        // system state (stale / degraded), not a result.
-        "verify-on-light":       "#0E1320", // = --ink, 17.46:1 on paper. Neutral.
-        "alert-on-light":        "#0E1320", // = --ink, 17.46:1 on paper. Neutral.
-        "alarm-on-light":        "#9A4D00", // 5.76:1 on paper — system failure only
-        "caution-on-light":      "#9A4D00", // 5.76:1 on paper — system state
+        "plasma-on-light":       "#B33D22",
+        "orbital-cyan-on-light": "#5B6678",
+        "ultraviolet-on-light":  "#5B43C9",
+        "verify-on-light":       "#0E1320",
+        "alert-on-light":        "#0E1320",
+        "alarm-on-light":        "#9A4D00",
+        "caution-on-light":      "#9A4D00",
 
-        // ── NEBULA v7 EMBER — the single action accent ──────
+        // ── FIELD EMBER — the single action accent ──────
         plasma: {
           DEFAULT: "#FF4D2E",
           glow: "#FF7A5C",
@@ -86,26 +80,31 @@ const config: Config = {
           ink: "#1A0703",
         },
 
-        // ── RETIRED CYAN → fog (calm text, never action) ───
+        // ── IRIS — the wayfinding accent ────────────────────
+        iris: {
+          DEFAULT: "#9AA8E8",
+          glow: "#C3CDEF",
+          deep: "#6E7BB8",
+        },
         "ion-blue": {
-          DEFAULT: "#C9D4CE",
-          glow: "#E4EBE7",
-          deep: "#A7B8B2",
-          ink: "#060F0E",
+          DEFAULT: "#C4BFB6",
+          glow: "#EDE8E0",
+          deep: "#8F8A82",
+          ink: "#08090C",
         },
 
-        // ── RETIRED VIOLET → fog text ───────────────────────
+        // ── RETIRED VIOLET → bone-1 text ───────────────────
         ultraviolet: {
-          DEFAULT: "#C9D4CE",
-          glow: "#E4EBE7",
-          deep: "#A7B8B2",
+          DEFAULT: "#C4BFB6",
+          glow: "#EDE8E0",
+          deep: "#8F8A82",
         },
 
-        // ── RETIRED CYAN → fog ──────────────────────────────
+        // ── RETIRED CYAN → bone-1 ──────────────────────────────
         "ds-cyan": {
-          DEFAULT: "#C9D4CE",
-          glow: "#E4EBE7",
-          deep: "#A7B8B2",
+          DEFAULT: "#C4BFB6",
+          glow: "#EDE8E0",
+          deep: "#8F8A82",
         },
         lime: {
           DEFAULT: "#FF4D2E",
@@ -129,7 +128,7 @@ const config: Config = {
         // text is correct under Law 2, not a bug.
         //
         // Genuine system failure is NOT an outcome — see `alarm` below.
-        // NEBULA v7 (owner-approved 2026-09-10) keeps the semantic ladder:
+        // FIELD (owner-approved 2026-09-10) keeps the semantic ladder:
         // verify/alert carry hue for settlement + data states only, never brand.
         // This supersedes the Law-2 neutralization; `alarm` (system failure)
         // stays as the louder tier.
@@ -186,11 +185,11 @@ const config: Config = {
           DEFAULT: "#0E1320",  // body — 17.46:1 on paper
           1:    "#3A4356",     // secondary — 9.34:1 on paper
           2:    "#5B6678",     // muted meta — 5.47:1 on paper
-          // ── legacy DARK ramp — repointed NEBULA v7 ──
+          // ── legacy DARK ramp — repointed FIELD ──
           50:   "#EDE8E0",
-          100:  "#C9D4CE",
-          200:  "#C9D4CE",
-          300:  "#A7B8B2",
+          100:  "#C4BFB6",
+          200:  "#C4BFB6",
+          300:  "#8F8A82",
           400:  "#5E6878",
           500:  "#3D4555",
           600:  "#2E3849",
@@ -205,12 +204,12 @@ const config: Config = {
         // a legacy 3-tier alias so it can't silently diverge again.
         confidence: {
           high: "#FF4D2E",     // = --conf-elite (ember)
-          mid:  "#C9D4CE",     // = --conf-solid (fog)
-          low:  "#A7B8B2",     // = --conf-lean (mist)
+          mid:  "#C4BFB6",     // = --conf-solid (fog)
+          low:  "#8F8A82",     // = --conf-lean (mist)
         },
         risk: {
           low:  "#5FD9A3",
-          mid:  "#C9D4CE",
+          mid:  "#C4BFB6",
           high: "#FF6470",
         },
       },
@@ -276,7 +275,7 @@ const config: Config = {
         float: "0 8px 32px -8px rgba(0,0,0,0.7)",
       },
       backgroundImage: {
-        // NEBULA v7: the signature gradient is retired. signal-fade resolves
+        // FIELD: the signature gradient is retired. signal-fade resolves
         // to flat ember (rules/wordmark accents); atmosphere bands carry the
         // violet depth instead of decorative color washes.
         "signal-fade":

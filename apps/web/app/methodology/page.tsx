@@ -201,10 +201,9 @@ export default function MethodologyPage(): JSX.Element {
               <article className="surface-card p-6">
                 <h3 className="text-lg font-semibold text-white">A quiet board is a position</h3>
                 <p className="mt-2 text-sm leading-6 text-ink-300">
-                  When lines are stale or coverage is thin, the system
-                  publishes nothing rather than something it can&apos;t stand
-                  behind. Zero picks on a given day means the gate held, and
-                  that discipline is the product.
+                  When lines are stale or coverage is thin, we publish nothing
+                  rather than something we can&apos;t stand behind. Zero picks on
+                  a given day means we passed, and that discipline is the product.
                 </p>
               </article>
             </Stagger>

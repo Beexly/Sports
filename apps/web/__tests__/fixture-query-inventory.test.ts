@@ -135,7 +135,10 @@ function inventory(): Record<string, number> {
   for (const file of files) {
     const matches = readFileSync(file, "utf8").match(CALL);
     if (!matches) continue;
-    found[file.slice(REPO_ROOT.length + 1)] = matches.length;
+    // Normalize separators: slice() keeps Windows backslashes, and the registry
+    // below is keyed with forward slashes, so a Windows run would otherwise
+    // compare two identical inventories and call them different.
+    found[file.slice(REPO_ROOT.length + 1).replace(/\\/g, "/")] = matches.length;
   }
   return found;
 }

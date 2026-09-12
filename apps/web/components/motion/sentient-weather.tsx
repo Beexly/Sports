@@ -26,31 +26,31 @@ export function SentientWeather({
     calm: {
       background:
         "radial-gradient(ellipse 80% 60% at 50% 30%, rgba(255,77,46,0.06) 0%, transparent 60%), " +
-        "radial-gradient(ellipse 60% 50% at 20% 80%, rgba(60,45,110,0.04) 0%, transparent 55%), " +
-        "linear-gradient(180deg, #060F0E 0%, #060F0E 100%)",
+        "radial-gradient(ellipse 60% 50% at 20% 80%, rgba(25,28,35,0.35) 0%, transparent 55%), " +
+        "linear-gradient(180deg, #08090C 0%, #08090C 100%)",
     },
     active: {
       background:
         "radial-gradient(ellipse 70% 50% at 60% 25%, rgba(255,77,46,0.10) 0%, transparent 55%), " +
-        "radial-gradient(ellipse 50% 40% at 30% 70%, rgba(60,45,110,0.08) 0%, transparent 50%), " +
-        "linear-gradient(180deg, #060F0E 0%, #060F0E 100%)",
+        "radial-gradient(ellipse 50% 40% at 30% 70%, rgba(25,28,35,0.4) 0%, transparent 50%), " +
+        "linear-gradient(180deg, #08090C 0%, #08090C 100%)",
     },
     volatile: {
       background:
         "radial-gradient(ellipse 60% 45% at 70% 20%, rgba(255,77,46,0.12) 0%, transparent 50%), " +
         "radial-gradient(ellipse 50% 35% at 25% 75%, rgba(255,77,46,0.06) 0%, transparent 45%), " +
-        "linear-gradient(180deg, #060F0E 0%, #131022 100%)",
+        "linear-gradient(180deg, #08090C 0%, #12141A 100%)",
     },
     stale: {
       background:
-        "radial-gradient(ellipse 70% 55% at 50% 40%, rgba(100,100,120,0.05) 0%, transparent 60%), " +
-        "linear-gradient(180deg, #060F0E 0%, #060608 100%)",
+        "radial-gradient(ellipse 70% 55% at 50% 40%, rgba(143,138,130,0.06) 0%, transparent 60%), " +
+        "linear-gradient(180deg, #08090C 0%, #0A0B0E 100%)",
     },
     gated: {
       background:
-        "radial-gradient(ellipse 65% 50% at 50% 35%, rgba(60,45,110,0.10) 0%, transparent 55%), " +
+        "radial-gradient(ellipse 65% 50% at 50% 35%, rgba(25,28,35,0.45) 0%, transparent 55%), " +
         "radial-gradient(ellipse 45% 40% at 80% 80%, rgba(255,77,46,0.06) 0%, transparent 50%), " +
-        "linear-gradient(180deg, #060F0E 0%, #0c0a18 100%)",
+        "linear-gradient(180deg, #08090C 0%, #0C0D12 100%)",
     },
   };
 

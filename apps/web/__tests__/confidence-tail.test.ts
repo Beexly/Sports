@@ -121,4 +121,58 @@ describe("loadConfidenceTail", () => {
     expect(s.wins).toBe(1);
     expect(s.verdict).toBe("insufficient");
   });
+
+  /**
+   * C-302: the tail verdict is a public number, so a row generated at or after
+   * kickoff (priced off a LIVE line that already encodes part of the outcome) must
+   * not move it. The withheld row here is a WIN at 90 on purpose — it is the row
+   * that would help the tail — while the kept row is a LOSS, so the exclusion
+   * cannot be mistaken for outcome-shopping.
+   */
+  it("withholds a row generated at or after kickoff and discloses the count with its denominator", async () => {
+    const kickoff = new Date("2026-09-10T23:00:00Z");
+    const db: ConfidenceTailDb = {
+      pick: {
+        findMany: async () => [
+          {
+            confidence: 90,
+            result: "WIN",
+            modelVersion: "v5.2.7",
+            pickType: "MONEYLINE",
+            generatedAt: new Date("2026-09-10T23:30:00Z"), // after kickoff
+            game: { commenceTime: kickoff },
+          },
+          {
+            confidence: 90,
+            result: "LOSS",
+            modelVersion: "v5.2.7",
+            pickType: "MONEYLINE",
+            generatedAt: new Date("2026-09-10T09:00:00Z"), // pre-game
+            game: { commenceTime: kickoff },
+          },
+        ],
+      },
+    };
+    const s = await loadConfidenceTail(db, 80);
+    expect(s.n).toBe(1);
+    expect(s.wins).toBe(0);
+    expect(s.excludedInPlay).toBe(1);
+    expect(s.inPlayNote).toMatch(/Excluded 1 of 2 settled rows as in-play/);
+  });
+
+  it("keeps a row whose clocks cannot be read, and reports zero exclusions", async () => {
+    // Absent means "cannot tell": dropping would shrink the published denominator
+    // by however much the data happened to be missing.
+    const db: ConfidenceTailDb = {
+      pick: {
+        findMany: async () => [
+          { confidence: 90, result: "WIN", modelVersion: "v5.2.7", pickType: "MONEYLINE", generatedAt: null, game: null },
+        ],
+      },
+    };
+    const s = await loadConfidenceTail(db, 80);
+    expect(s.n).toBe(1);
+    expect(s.excludedInPlay).toBe(0);
+    expect(s.inPlayNote).toMatch(/Excluded 0 of 1 settled rows as in-play/);
+  });
 });

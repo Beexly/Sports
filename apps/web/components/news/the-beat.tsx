@@ -3,9 +3,13 @@
 /**
  * The Beat. A reliability-tiered, impact-scored newsroom.
  *
- * Every breaking item, ranked by what deserves attention RIGHT NOW: source tier,
- * the fantasy + market delta, freshness decay, and the move to make. Filter by
- * tier or team. The reasoning the timeline never gives you.
+ * Governing idea (ASTRA A-9): sports media is a market. Every report is a
+ * quote. Some are worth acting on, most are noise. This surface ranks every
+ * item by what deserves attention RIGHT NOW (source tier, fantasy + market
+ * delta, freshness decay) and hands you the move, not just the headline.
+ *
+ * Interactive: tier + team filters, strongest/newest sort, a live pulse
+ * strip, and expandable cards. Sample vs live is always unmistakable.
  */
 
 import { useMemo, useState } from "react";
@@ -31,6 +35,8 @@ const TIERS: Tier[] = ["Insider", "Beat", "Verified", "Aggregator", "Unconfirmed
 
 const ago = (m: number) => (m < 60 ? `${m}m ago` : `${Math.round(m / 60)}h ago`);
 
+type SortMode = "strongest" | "newest";
+
 export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
   // Live RSS wire when the owner has whitelisted feeds (NEWS_RSS_FEEDS);
   // otherwise the clearly-labeled fictional sample. The two states are
@@ -40,15 +46,34 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
   const wire = liveWire ?? DEMO_WIRE;
   const ranked = useMemo(() => rankWireCorroborated(wire), [wire]);
   const [tierFilter, setTierFilter] = useState<Tier | "All">("All");
+  const [sort, setSort] = useState<SortMode>("strongest");
+  const [onlyActionable, setOnlyActionable] = useState(false);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const teams = useMemo(
     () => ["All", ...Array.from(new Set(wire.map((i) => i.team))).sort()],
     [wire],
   );
   const [team, setTeam] = useState("All");
 
-  const shown = ranked.filter(
-    (r) => (tierFilter === "All" || r.item.tier === tierFilter) && (team === "All" || r.item.team === team),
-  );
+  const shown = useMemo(() => {
+    const filtered = ranked.filter(
+      (r) =>
+        (tierFilter === "All" || r.item.tier === tierFilter) &&
+        (team === "All" || r.item.team === team) &&
+        (!onlyActionable || r.urgency >= 55),
+    );
+    if (sort === "newest") {
+      return [...filtered].sort((a, b) => a.item.minutesAgo - b.item.minutesAgo);
+    }
+    return filtered; // already ranked by urgency
+  }, [ranked, tierFilter, team, onlyActionable, sort]);
+
+  const pulse = useMemo(() => {
+    const confirmed = ranked.filter((r) => r.corroboration.confirmed).length;
+    const hot = ranked.filter((r) => r.urgency >= 55).length;
+    const top = ranked[0];
+    return { total: ranked.length, confirmed, hot, top };
+  }, [ranked]);
 
   return (
     <div className="space-y-5">
@@ -70,7 +95,30 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
           Sample feed · fictional sources
         </span>
       )}
-      {/* tier legend / filter */}
+
+      {/* Pulse strip: the one-screen answer to "is anything worth my time?" */}
+      <div className="grid grid-cols-2 gap-3 sm:grid-cols-4" data-testid="beat-pulse">
+        <div className="surface-card p-3">
+          <p className="font-numerals text-[10px] uppercase tracking-[0.16em] text-ion-3">On the wire</p>
+          <p className="mt-1 font-display text-2xl text-ion-white">{pulse.total}</p>
+        </div>
+        <div className="surface-card p-3">
+          <p className="font-numerals text-[10px] uppercase tracking-[0.16em] text-ion-3">Confirmed</p>
+          <p className="mt-1 font-display text-2xl" style={{ color: BRAND_COLORS.orbitalCyan }}>{pulse.confirmed}</p>
+        </div>
+        <div className="surface-card p-3">
+          <p className="font-numerals text-[10px] uppercase tracking-[0.16em] text-ion-3">Hot now</p>
+          <p className="mt-1 font-display text-2xl" style={{ color: BRAND_COLORS.ionMagenta }}>{pulse.hot}</p>
+        </div>
+        <div className="surface-card min-w-0 p-3">
+          <p className="font-numerals text-[10px] uppercase tracking-[0.16em] text-ion-3">Top signal</p>
+          <p className="mt-1 truncate text-sm font-semibold text-ion-white" title={pulse.top?.item.headline}>
+            {pulse.top ? `${pulse.top.item.team} · ${pulse.top.urgency}` : "n/a"}
+          </p>
+        </div>
+      </div>
+
+      {/* Controls: tier legend / filter, team, sort, actionable-only */}
       <div className="surface-card flex flex-wrap items-center gap-3 p-4">
         <span className="text-[10px] uppercase tracking-[0.18em] text-ion-3">Source tier</span>
         <button type="button" onClick={() => setTierFilter("All")}
@@ -90,10 +138,37 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
           );
         })}
         <select value={team} onChange={(e) => setTeam(e.target.value)}
-          className="ml-auto rounded-md border bg-transparent px-2 py-1 text-xs text-ion-1"
+          className="rounded-md border bg-transparent px-2 py-1 text-xs text-ion-1"
           style={{ borderColor: BRAND_COLORS.steelGray }} aria-label="Filter by team">
           {teams.map((t) => <option key={t} value={t} style={{ color: "#000" }}>{t === "All" ? "All teams" : t}</option>)}
         </select>
+        <div className="flex rounded-full border border-mineral p-0.5" role="group" aria-label="Sort order">
+          <button
+            type="button"
+            onClick={() => setSort("strongest")}
+            aria-pressed={sort === "strongest"}
+            className={`rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider ${sort === "strongest" ? "bg-orbital-cyan/20 text-orbital-cyan" : "text-ion-2"}`}
+          >
+            Strongest
+          </button>
+          <button
+            type="button"
+            onClick={() => setSort("newest")}
+            aria-pressed={sort === "newest"}
+            className={`rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider ${sort === "newest" ? "bg-orbital-cyan/20 text-orbital-cyan" : "text-ion-2"}`}
+          >
+            Newest
+          </button>
+        </div>
+        <label className="ml-auto flex cursor-pointer items-center gap-2 text-[11px] font-semibold uppercase tracking-wider text-ion-2">
+          <input
+            type="checkbox"
+            checked={onlyActionable}
+            onChange={(e) => setOnlyActionable(e.target.checked)}
+            className="h-3.5 w-3.5 accent-[#FF4D2E]"
+          />
+          Quiet the noise (hot only)
+        </label>
       </div>
 
       {/* wire */}
@@ -101,6 +176,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
         {shown.map((r) => {
           const hex = TIER_HEX[r.item.tier];
           const fav = r.fantasyDelta;
+          const open = expandedId === r.item.id;
           return (
             <article key={r.item.id} className="surface-card grid grid-cols-[auto_1fr] gap-3 p-4">
               {/* urgency dial */}
@@ -122,7 +198,14 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
                   <span className="ml-auto text-[10px] text-ion-3">{ago(r.item.minutesAgo)}</span>
                 </div>
 
-                <p className="mt-1.5 text-sm font-medium text-ion-white">{r.item.headline}</p>
+                <button
+                  type="button"
+                  onClick={() => setExpandedId(open ? null : r.item.id)}
+                  aria-expanded={open}
+                  className="mt-1.5 block w-full text-left"
+                >
+                  <p className="text-sm font-medium text-ion-white">{r.item.headline}</p>
+                </button>
 
                 <div
                   className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 text-[11px]"
@@ -134,9 +217,23 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
                   <span className="text-ion-2">Reliability <strong className="text-ion-white">{Math.round(r.reliability * 100)}%</strong></span>
                 </div>
 
-                <p className="mt-2 text-[12px] leading-relaxed" style={{ color: "#aeb8c4" }}>
-                  <span style={{ color: hex }}>▸ </span>{r.action}
-                </p>
+                {open ? (
+                  <div className="mt-3 rounded-lg border border-mineral/70 bg-carbon/50 p-3">
+                    <p className="text-[11px] font-semibold uppercase tracking-wider text-ion-3">The move</p>
+                    <p className="mt-1 text-[12px] leading-relaxed" style={{ color: "#aeb8c4" }}>
+                      {r.action}
+                    </p>
+                    <p className="mt-2 text-[11px] text-ion-3">
+                      Weighted by source reliability {Math.round(r.reliability * 100)}%
+                      {r.corroboration.confirmed ? `, confirmed across ${r.corroboration.sources} sources` : ", single source"}.
+                      Urgency {r.urgency} of 100 after freshness decay.
+                    </p>
+                  </div>
+                ) : (
+                  <p className="mt-2 text-[12px] leading-relaxed" style={{ color: "#aeb8c4" }}>
+                    <span style={{ color: hex }}>▸ </span>{r.action}
+                  </p>
+                )}
               </div>
             </article>
           );

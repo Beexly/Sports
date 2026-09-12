@@ -71,11 +71,17 @@ async function tempRepo(): Promise<string> {
 }
 
 describe("AI control-plane sealing guard", () => {
+  // This case walks the whole repository (6792 files) and reads every source
+  // file in it. It measures ~1.9s idle, but under full-suite load it can exceed
+  // the 60s default (reproduced timing out at 61535ms with the machine loaded),
+  // which is a wall-clock problem, not a detection problem. It gets its own
+  // allowance; the assertion below is untouched, so the scan still fails the
+  // moment a sealed module becomes reachable from production code.
   it("passes against the real repo (no production imports of sealed modules)", async () => {
     const guard = await loadGuard();
     const violations = await guard.collectAiControlPlaneSealingViolations(repoRoot);
     expect(violations).toEqual([]);
-  });
+  }, 180_000);
 
   it("clean synthetic repo passes (public-index import is allowed)", async () => {
     const root = await tempRepo();
