@@ -20,6 +20,19 @@ export type DfsPlayer = {
   readonly floor: number;
   readonly ceiling: number;
   readonly own: number; // projected ownership 0..1
+  /**
+   * Recent form windows, points per game. Absent on the sample slate.
+   * LineStar ships Last 5 / Last 10 / Season / Last LG — we carry L5 and L10.
+   */
+  readonly formL5?: number | null;
+  readonly formL10?: number | null;
+  /**
+   * Matchup impact: how the opponent ranks against this position, 0-100.
+   * Higher = softer matchup. Absent on the sample slate.
+   */
+  readonly matchupImpact?: number | null;
+  /** Over/under consensus on this player's prop, 0-1. Absent on sample. */
+  readonly consensusOver?: number | null;
 };
 
 const d = (id: string, name: string, pos: DfsPos, team: string, opp: string, salary: number, proj: number, floor: number, ceiling: number, own: number): DfsPlayer =>

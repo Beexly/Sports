@@ -14,7 +14,7 @@
 import { useMemo, useState } from "react";
 import { DFS_POS_HEX, leverage, type DfsPlayer } from "@/lib/fantasy/dfs-slate";
 
-type SortKey = "name" | "pos" | "salary" | "proj" | "value" | "own" | "lev" | "ceiling";
+type SortKey = "name" | "pos" | "salary" | "proj" | "value" | "own" | "lev" | "ceiling" | "form" | "matchup";
 
 const COLUMNS: { key: SortKey; label: string; numeric: boolean; title: string }[] = [
   { key: "name", label: "Player", numeric: false, title: "Name and matchup" },
@@ -23,6 +23,8 @@ const COLUMNS: { key: SortKey; label: string; numeric: boolean; title: string }[
   { key: "proj", label: "Proj", numeric: true, title: "Projected points" },
   { key: "value", label: "Val", numeric: true, title: "Points per $1k salary" },
   { key: "ceiling", label: "Ceil", numeric: true, title: "Ceiling points" },
+  { key: "form", label: "L5", numeric: true, title: "Last 5 games, points per game" },
+  { key: "matchup", label: "M/U", numeric: true, title: "Matchup impact: opponent rank vs this position, 0-100" },
   { key: "own", label: "pOwn%", numeric: true, title: "Projected field ownership" },
   { key: "lev", label: "Lev", numeric: true, title: "Leverage: ceiling vs ownership" },
 ];
@@ -65,6 +67,8 @@ export function ProjectionsTable({
       else if (k === "own") cmp = a.p.own - b.p.own;
       else if (k === "lev") cmp = a.lev - b.lev;
       else if (k === "ceiling") cmp = a.p.ceiling - b.p.ceiling;
+      else if (k === "form") cmp = (a.p.formL5 ?? -1) - (b.p.formL5 ?? -1);
+      else if (k === "matchup") cmp = (a.p.matchupImpact ?? -1) - (b.p.matchupImpact ?? -1);
       return cmp * sort.dir;
     });
     return mapped;
@@ -147,6 +151,25 @@ export function ProjectionsTable({
                   <td className="px-2 py-1.5 font-mono font-semibold tabular-nums text-ion-white">{p.proj.toFixed(1)}</td>
                   <td className="px-2 py-1.5 font-mono tabular-nums text-ion-1">{value.toFixed(2)}</td>
                   <td className="px-2 py-1.5 font-mono tabular-nums text-ion-2">{p.ceiling.toFixed(1)}</td>
+                  <td className="px-2 py-1.5 font-mono tabular-nums text-ion-1" title="Last 5 games, points per game">
+                    {p.formL5 != null ? p.formL5.toFixed(1) : <span className="text-ion-3">n/a</span>}
+                  </td>
+                  <td
+                    className="px-2 py-1.5 font-mono tabular-nums"
+                    style={{
+                      color:
+                        p.matchupImpact == null
+                          ? "var(--ion-3)"
+                          : p.matchupImpact >= 60
+                            ? "#FF4D2E"
+                            : p.matchupImpact <= 40
+                              ? "#C4BFB6"
+                              : "var(--ion-1)",
+                    }}
+                    title="Matchup impact: opponent rank vs this position, 0-100. Higher = softer."
+                  >
+                    {p.matchupImpact != null ? Math.round(p.matchupImpact) : <span className="text-ion-3">n/a</span>}
+                  </td>
                   <td className="px-2 py-1.5 font-mono tabular-nums text-ion-1">{(p.own * 100).toFixed(1)}%</td>
                   <td
                     className="px-2 py-1.5 font-mono font-semibold tabular-nums"
