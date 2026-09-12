@@ -28,6 +28,19 @@ const COLOR = process.stdout.isTTY
 const argUrl = process.argv.find((a) => a.startsWith("--url="));
 const BASE = (argUrl ? argUrl.split("=")[1] : "https://www.galaxysportsedge.com").replace(/\/$/, "");
 
+// A push triggers a Vercel build; the alias for a brand-new route can lag the
+// "Ready" status by a few seconds. Without a settle+retry window this script
+// reports a route that is about to exist as a hard 404 failure, which is a
+// FALSE failure — it burns a fix cycle chasing a page that is already fine.
+// `--settle=<seconds>` (default 25) is the wait before one retry; `--retries=0`
+// disables the retry entirely when you want an immediate, strict verdict.
+const argSettle = process.argv.find((a) => a.startsWith("--settle="));
+const argRetries = process.argv.find((a) => a.startsWith("--retries="));
+const SETTLE_MS = Math.max(0, Number(argSettle ? argSettle.split("=")[1] : 25) * 1000) || 0;
+const RETRIES = argRetries ? Math.max(0, Number(argRetries.split("=")[1]) || 0) : 1;
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
+
 const PUBLIC_PAGES = [
   // Homepage hero splits the tagline with <em>, so we check for the surrounding
   // fragments rather than the full continuous string.
@@ -80,6 +93,8 @@ const BANNED_PHRASES = [
 let failures = 0;
 let warnings = 0;
 const lines = [];
+/** Routes that failed once and passed on retry — deploy lag, reported distinctly. */
+const recovered = [];
 
 function ok(label, detail = "") {
   lines.push(`  ${COLOR.green}✓${COLOR.reset}  ${label}${detail ? COLOR.dim + " — " + detail + COLOR.reset : ""}`);
@@ -107,30 +122,44 @@ async function fetchWithTimeout(url, opts = {}, ms = 15000) {
   }
 }
 
-async function checkPage(p) {
-  const url = `${BASE}${p.path}`;
+async function evaluatePage(p) {
   try {
-    const res = await fetchWithTimeout(url);
-    if (!res.ok) {
-      bad(`${p.path}`, `HTTP ${res.status}`);
-      return;
-    }
+    const res = await fetchWithTimeout(`${BASE}${p.path}`);
+    if (!res.ok) return { ok: false, detail: `HTTP ${res.status}` };
     const body = await res.text();
     const missing = (p.mustContain ?? []).filter((needle) => !body.includes(needle));
     if (missing.length > 0) {
-      bad(`${p.path}`, `200 but missing: ${missing.map((s) => `"${s}"`).join(", ")}`);
-      return;
+      return {
+        ok: false,
+        detail: `200 but missing: ${missing.map((s) => `"${s}"`).join(", ")}`,
+      };
     }
-    // Banned phrase scan on rendered HTML
+    // Banned phrase scan on rendered HTML. A matched promise of an outcome is a
+    // content bug, never a propagation artifact — mark it non-retryable.
     const bannedHit = BANNED_PHRASES.find((re) => re.test(body));
     if (bannedHit) {
-      bad(`${p.path}`, `BANNED PHRASE matched: ${bannedHit}`);
+      return { ok: false, detail: `BANNED PHRASE matched: ${bannedHit}`, fatal: true };
+    }
+    return { ok: true, detail: `200 · ${body.length.toLocaleString()} bytes` };
+  } catch (err) {
+    return { ok: false, detail: err.message };
+  }
+}
+
+async function checkPage(p) {
+  let res = await evaluatePage(p);
+  if (!res.ok && !res.fatal && RETRIES > 0 && SETTLE_MS > 0) {
+    await sleep(SETTLE_MS);
+    const retry = await evaluatePage(p);
+    if (retry.ok) {
+      recovered.push(`${p.path} (after ${SETTLE_MS / 1000}s)`);
+      warn(`${p.path}`, `recovered after ${SETTLE_MS / 1000}s — deploy propagation lag, not a failure`);
       return;
     }
-    ok(`${p.path}`, `200 · ${body.length.toLocaleString()} bytes`);
-  } catch (err) {
-    bad(`${p.path}`, err.message);
+    res = retry;
   }
+  if (res.ok) ok(`${p.path}`, res.detail);
+  else bad(`${p.path}`, res.detail);
 }
 
 async function checkSeo(p) {
@@ -240,6 +269,14 @@ async function main() {
 
   console.log(lines.join("\n"));
   console.log("");
+
+  if (recovered.length > 0) {
+    console.log(
+      `${COLOR.yellow}Note: ${recovered.length} route(s) needed a retry after the settle window ` +
+        `(${recovered.join(", ")}). That is deploy propagation, not a page fault. ` +
+        `Run with --settle=0 --retries=0 for a strict immediate verdict.${COLOR.reset}`,
+    );
+  }
 
   if (failures > 0) {
     console.log(`${COLOR.red}Result: ${failures} failure(s)${warnings ? `, ${warnings} warning(s)` : ""}.${COLOR.reset}`);
