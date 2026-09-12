@@ -122,9 +122,9 @@ const PLAYER_MODEL_ENGINE = engine({
   title: "The process grade behind every player.",
   description: (
     <>
-      One canonical profile per player, mined from the full nflverse advanced field set: EPA efficiency, opportunity
-      (WOPR, target share), and volume, combined into a position-aware <em>process grade</em>. We compare it to actual
-      production and surface the gap: where the inputs say more is coming (<span className="text-verify-on-light font-semibold">buy-low</span>)
+      One canonical profile per player, built from public advanced stats: efficiency, opportunity, and
+      volume combined into a position-aware <em>process grade</em>. We compare it to actual production
+      and surface the gap: where the inputs say more is coming (<span className="text-verify-on-light font-semibold">buy-low</span>)
       or running hot (<span className="text-alert-on-light font-semibold">sell-high</span>). The data layer that drives the tools. Not a pick.
     </>
   ),
@@ -181,8 +181,8 @@ const PLAYER_MODEL_ENGINE = engine({
 const EXPECTED_POINTS_ENGINE = engine({
   slug: "expected-points",
   group: "Cross-position core",
-  label: "Expected Points (xFP)",
-  title: "Expected Fantasy Points: the opportunity backbone",
+  label: "Expected Points",
+  title: "Expected Points: what the usage should have produced",
   description: (
     <>
       What a player&apos;s real usage <em>should</em> have produced: expected points from the carries, targets, air
@@ -229,12 +229,13 @@ const EXPECTED_POINTS_ENGINE = engine({
 const QB_FORWARD_ENGINE = engine({
   slug: "qb-forward",
   group: "Quarterback",
-  label: "QB Forward Prior",
-  title: "QB Forward Prior: DAKOTA & ANY/A",
+  label: "QB Forward",
+  title: "QB Forward: which throwers are about to improve",
   description: (
     <>
-      The most forward-looking QB reads: DAKOTA (EPA+CPOE composite) and Adjusted Net Yards per Attempt, with the
-      agreement between them surfaced, not averaged away.
+      Two independent public reads of quarterback play — a composite efficiency grade and a classic
+      yards-per-attempt yardstick — compared side by side. When they agree, the signal is clean;
+      when they disagree, we say so instead of averaging it away.
     </>
   ),
   api: "/api/intelligence/qb-forward",
@@ -272,12 +273,11 @@ const RUSHING_CONTACT_ENGINE = engine({
   slug: "rushing-contact",
   group: "Running back",
   label: "Rushing Contact",
-  title: "Rushing Contact: YAC vs YBC per carry",
+  title: "Rushing Contact: who earns the yards himself",
   description: (
     <>
-      PFR advanced charting splits each carry into yards <em>after</em> contact, the back&apos;s own elusiveness and
-      power, and yards <em>before</em> contact, the line and scheme term. An independent estimator to triangulate
-      against Next Gen RYOE.
+      Splits every carry into yards <em>after</em> contact (the back&apos;s own elusiveness and power) and
+      yards <em>before</em> contact (the line and scheme). An independent second look at the back.
     </>
   ),
   api: "/api/intelligence/rushing-contact",
@@ -318,12 +318,12 @@ const RUSHING_CONTACT_ENGINE = engine({
 const ROUTE_RATE_ENGINE = engine({
   slug: "route-rate",
   group: "Receiver",
-  label: "Route Rate (TPRR)",
-  title: "Route Rate: targets per route run (proxy)",
+  label: "Route Rate",
+  title: "Route Rate: who earns targets when he runs routes",
   description: (
     <>
-      A snaps&times;dropbacks proxy for targets per route run: high TPRR on low routes is the breakout signal; empty
-      volume is the fade. Labelled a proxy (true routes are PFF-gated).
+      How often a receiver is targeted on the routes he runs. High rate on a small sample is the breakout
+      signal; plenty of routes with thin targets is the fade. Labelled a proxy (true routes are paid data).
     </>
   ),
   api: "/api/intelligence/route-rate",
@@ -360,11 +360,11 @@ const SCORING_ZONE_ENGINE = engine({
   slug: "scoring-zone",
   group: "Running back",
   label: "Scoring-Zone Equity",
-  title: "Scoring-Zone Equity: TD equity from opportunity",
+  title: "Scoring-Zone Equity: touchdown chances from opportunity",
   description: (
     <>
-      Red-zone and goal-line opportunity share, with the TD rate regressed toward the positional mean: TD equity from
-      sticky opportunity, not noisy past touchdowns.
+      Share of red-zone and goal-line looks, with the touchdown rate pulled back toward the positional
+      average. Scores the looks a player owns, not the touchdowns that already bounced his way.
     </>
   ),
   api: "/api/intelligence/scoring-zone",
@@ -402,11 +402,11 @@ const TEAM_ENVIRONMENT_ENGINE = engine({
   slug: "team",
   group: "Team & market",
   label: "Team Environment",
-  title: "Team Environment: EPA, PROE & pace",
+  title: "Team Environment: how the offense actually plays",
   description: (
     <>
-      Neutral-script offensive and defensive EPA per play, success rate, PROE (pass rate over expected), and pace: the
-      top-down team prior every player share sits in front of.
+      How efficient a team is, how often it passes versus the situation, and how fast it moves. Every
+      player share sits in front of this — buy the offense, not just the name.
     </>
   ),
   api: "/api/intelligence/team-environment",
@@ -442,8 +442,8 @@ const OPPORTUNITY_TRANSFER_ENGINE = engine({
   title: "Opportunity Transfer: who inherits the vacated role",
   description: (
     <>
-      When a player is OUT, we quantify the targets and carries his role vacates and rank the most likely beneficiary:
-      the waiver predictive core.
+      When a player is OUT, we quantify the targets and carries his role leaves behind and rank the
+      most likely beneficiary: the waiver predictive core.
     </>
   ),
   api: "/api/intelligence/opportunity-transfer",
@@ -480,11 +480,11 @@ const OPPORTUNITY_TRANSFER_ENGINE = engine({
 const CLV_ENGINE = engine({
   slug: "clv",
   group: "Team & market",
-  label: "CLV Calibration",
-  title: "CLV Calibration: proving the method",
+  label: "Beat the Close",
+  title: "Beat the Close: does the number out-run the market?",
   description: (
     <>
-      An <strong>illustrative baseline model</strong> backtested against nflverse closing lines: a demonstration of how
+      An <strong>illustrative baseline model</strong> backtested against public closing lines: a demonstration of how
       closing-line value is computed and graded, not our pick engine&apos;s record (that stays gated until it can be
       honestly published). Self-grading, never a bet; forward odds stay gated.
     </>

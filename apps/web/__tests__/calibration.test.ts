@@ -60,6 +60,58 @@ describe("computeCalibration", () => {
     expect(report.disclaimer).toMatch(/population/i);
   });
 
+  it("excludes pushes from the bucket win rate while keeping them in the population", () => {
+    // 70-79 bucket: 9 WIN / 11 LOSS / 5 PUSH.
+    //   decided-only : 9 / 20         = 0.45  <- truth, what we must publish
+    //   outcome-mean : (9 + 2.5) / 25 = 0.46  <- push as half a win, still in
+    //                                            the denominator; flatters a
+    //                                            sub-50% bucket.
+    const result = (i: number): "WIN" | "LOSS" | "PUSH" =>
+      i < 9 ? "WIN" : i < 20 ? "LOSS" : "PUSH";
+    const report = computeCalibration(
+      Array.from({ length: 25 }, (_, i) => ({
+        id: `p${i}`,
+        confidence: 75,
+        result: result(i),
+      }))
+    );
+
+    const bucket = report.buckets.find((entry) => entry.label === "70-79");
+    expect(bucket?.wins).toBe(9);
+    expect(bucket?.losses).toBe(11);
+    expect(bucket?.pushes).toBe(5);
+    // Pushes stay in the population...
+    expect(bucket?.sampleSize).toBe(25);
+    // ...but never in the rate.
+    expect(bucket?.observedWinRate).toBe(0.45);
+    expect(bucket?.observedWinRate).not.toBe(0.46);
+    // delta = observed - expected, so the corrected rate must widen the drift
+    // signal that feeds computeCalibrationProposals (0.45 - 0.75 = -0.30,
+    // vs the flattered 0.46 - 0.75 = -0.29).
+    expect(bucket?.delta).toBe(-0.3);
+  });
+
+  it("does not flatter a losing bucket upward when pushes are heavy", () => {
+    // This is the dangerous direction. 8 WIN / 12 LOSS / 10 PUSH:
+    //   decided-only : 8 / 20        = 0.400  <- truth
+    //   outcome-mean : (8 + 5) / 30  = 0.433  <- pushes pull it toward 50%,
+    //                                            reporting a losing bucket as
+    //                                            better than it really is.
+    const report = computeCalibration(
+      Array.from({ length: 30 }, (_, i) => ({
+        id: `p${i}`,
+        confidence: 75,
+        result: (i < 8 ? "WIN" : i < 20 ? "LOSS" : "PUSH") as "WIN" | "LOSS" | "PUSH",
+      }))
+    );
+
+    const bucket = report.buckets.find((entry) => entry.label === "70-79")!;
+    expect(bucket.observedWinRate).toBe(0.4);
+    expect(bucket.observedWinRate).not.toBe(0.433);
+    // The published rate must never sit above the true decided rate.
+    expect(bucket.observedWinRate).toBeLessThanOrEqual(bucket.wins / (bucket.wins + bucket.losses));
+  });
+
   it("builds five equal-mass quantile bins from settled confidence", () => {
     const picks = Array.from({ length: 10 }, (_, i) => ({
       id: `p${i}`,

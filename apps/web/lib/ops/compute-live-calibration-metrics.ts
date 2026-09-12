@@ -33,6 +33,11 @@ import {
   marketPSourcesFromBySource,
   type OddsTableMarketPStats,
 } from "@/lib/calibration/publish-time-market-p-loader";
+import {
+  evaluateMarketGate,
+  type MarketKey,
+  type MarketGateInputs,
+} from "@/lib/ops/per-market-gate";
 
 export interface PickRowForCal {
   readonly confidence: number | null;
@@ -130,6 +135,15 @@ export type CalibrationBreakdowns = {
   readonly byMarket: CalibrationSliceMetrics[];
   readonly brierCi95: MetricCi95 | null;
   readonly eceCi95: MetricCi95 | null;
+  /**
+   * ADDITIVE ADVISORY ONLY (ASTRA A-12). NOT A GATE. calibration-eligibility.ts
+   * does not read this. Live eligibility is the pooled MONEYLINE-only sample.
+   */
+  readonly marketGatesAdvisory: readonly {
+    readonly market: string;
+    readonly status: "PASS" | "FAIL" | "INSUFFICIENT";
+    readonly reasons: readonly string[];
+  }[];
 };
 
 /**
@@ -146,12 +160,38 @@ export function computeCalibrationBreakdowns(
   // (the C-317 flip: identical metrics, opposite verdict two runs apart).
   const ordered = canonicalSampleOrder(taggedSamples);
   const cis = bootstrapCalibrationMetricCis(ordered, options);
+  const byMarket = sliceCalibrationMetrics(ordered, (s) => s.pickType);
+  // ADVISORY ONLY — never gates eligibility, publication, or any env flag.
+  const marketGatesAdvisory = byMarket
+    .filter((slice): slice is CalibrationSliceMetrics & { key: MarketKey } =>
+      slice.key === "MONEYLINE" || slice.key === "SPREAD" || slice.key === "TOTAL" || slice.key === "PROPS",
+    )
+    .map((slice) => {
+      const inputs: MarketGateInputs = {
+        n: slice.n,
+        ece: slice.ece,
+        eceDebiased: slice.eceDebiased,
+        brier: slice.brier,
+        reliability: slice.murphyRel,
+        resolution: slice.murphyRes,
+        // hitRate is the observed win rate on this market's own rows — the
+        // no-skill base rate the Brier floor is derived from at evaluation time.
+        baseRate: slice.hitRate,
+      };
+      const verdict = evaluateMarketGate(slice.key, inputs);
+      return {
+        market: slice.key,
+        status: verdict.status,
+        reasons: verdict.reasons,
+      };
+    });
   return {
     bySport: sliceCalibrationMetrics(ordered, (s) => s.sportKey),
     byModelVersion: sliceCalibrationMetrics(ordered, (s) => s.modelVersion),
-    byMarket: sliceCalibrationMetrics(ordered, (s) => s.pickType),
+    byMarket,
     brierCi95: cis?.brierCi95 ?? null,
     eceCi95: cis?.eceCi95 ?? null,
+    marketGatesAdvisory,
   };
 }
 
@@ -239,6 +279,7 @@ export function buildDurableMetricsFromSamples(input: {
     bySport: breakdowns?.bySport,
     byModelVersion: breakdowns?.byModelVersion,
     byMarket: breakdowns?.byMarket,
+    marketGatesAdvisory: breakdowns?.marketGatesAdvisory,
     brierCi95: breakdowns?.brierCi95 ?? null,
     eceCi95: breakdowns?.eceCi95 ?? null,
     notes: [

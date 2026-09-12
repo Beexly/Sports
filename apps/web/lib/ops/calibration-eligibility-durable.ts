@@ -81,6 +81,17 @@ export interface DurableMetricsPayload {
   readonly byModelVersion?: readonly CalibrationSliceMetrics[];
   /** Per pick type; the pooled sample holds every market with a market-anchored p. */
   readonly byMarket?: readonly CalibrationSliceMetrics[];
+  /**
+   * ADDITIVE ADVISORY (ASTRA A-12). NOT A GATE. calibration-eligibility.ts
+   * does not read this field. Live eligibility is the pooled MONEYLINE-only
+   * sample; spread/total are excluded from that sample by design. A FAIL here
+   * is an internal measurement, not a product outage.
+   */
+  readonly marketGatesAdvisory?: readonly {
+    readonly market: string;
+    readonly status: "PASS" | "FAIL" | "INSUFFICIENT";
+    readonly reasons: readonly string[];
+  }[];
   /** Seeded percentile bootstrap (bootstrap-metric-ci.ts); null below two samples. */
   readonly brierCi95?: MetricCi95 | null;
   readonly eceCi95?: MetricCi95 | null;

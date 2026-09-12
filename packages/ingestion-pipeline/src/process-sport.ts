@@ -1207,12 +1207,14 @@ export async function processSport(
       // this one line refuses the create, the PENDING refresh of selection /
       // line / confidence / factorBreakdown, AND the receipt mint below.
       if (!confirmedGameIds.has(pick.gameId)) continue;
-      // Fields refreshed on every cycle (confidence, odds, reasoning).
+      // Fields refreshed on every cycle (confidence, grade, market depth).
       // result, settledAt: intentionally absent — never overwritten by refresh.
       // ingestionRunId: intentionally absent from update — preserves creation run ID.
+      //
+      // selection / line / reasoning / reasoningShort are NOT here. Those four
+      // are the published bet, and settlement grades the write-once lock, so
+      // refreshing them published a bet we do not grade. See publishedTerms below.
       const pickUpdateData = {
-        selection: pick.selection,
-        line: pick.line,
         confidence: pick.confidence,
         edgeScore: pick.edgeScore,
         consensusPct: pick.consensusPct,
@@ -1220,11 +1222,32 @@ export async function processSport(
         tier: pick.tier,
         pickGrade: pick.pickGrade,
         riskLevel: pick.riskLevel,
-        reasoning: pick.reasoning,
-        reasoningShort: pick.reasoningShort,
         factorBreakdown: JSON.parse(JSON.stringify(pick.factorBreakdown)),
         modelVersion: pick.modelVersion,
         dataFreshnessAt: pick.dataFreshnessAt,
+      };
+
+      // The PUBLISHED BET TERMS — write-once at creation, exactly like the CLV
+      // lock they are minted alongside.
+      //
+      // Settlement grades SPREAD/TOTAL against `clvLockLine` (selectGradingLine),
+      // which is create-only. When these four drifted on every refresh, the row
+      // the customer read stopped being the row we graded:
+      //
+      //   Tue: created at consensus -3.0 → clvLockLine = -3.0, card "Chiefs -3.0"
+      //   Thu: consensus moves to -4.5  → card now "Chiefs -4.5", line = -4.5,
+      //                                    lock still -3.0
+      //   Chiefs win by 4 → graded at -3.0 = WIN; every customer who opened
+      //   /picks after Thursday saw -4.5 and lost.
+      //
+      // Freezing here fixes every surface at once. Confidence, grade, market
+      // depth, factor trail and freshness still refresh: freezing the bet is
+      // not freezing the row.
+      const publishedTerms = {
+        selection: pick.selection,
+        line: pick.line,
+        reasoning: pick.reasoning,
+        reasoningShort: pick.reasoningShort,
       };
 
       // Featured promotion gate: only auto-promote when explicitly enabled.
@@ -1283,6 +1306,11 @@ export async function processSport(
             ...pickUpdateData,
             // Re-evaluate featured status on each refresh when promotion is enabled.
             isFeatured,
+            // publishedTerms are deliberately NOT here. A row created BEFORE this
+            // change can already carry a selection/line that drifted off its
+            // write-once clvLockLine. Freezing stops the drift going forward;
+            // retro-correcting those rows is a deliberate backfill, not a
+            // refresh-cycle side effect.
           },
         });
 
@@ -1321,7 +1349,8 @@ export async function processSport(
               isFeatured,
               // CLV lock snapshot — the line/price we ACTUALLY published at, captured
               // once at creation. Absent from the updateMany above, so the refresh
-              // cycle can never overwrite it (Pick.line itself IS mutated each cycle).
+              // cycle can never overwrite it. `Pick.line` is now frozen alongside it
+              // (see publishedTerms), so the two agree for the row's whole life.
               // Moneyline `pick.line` holds the American price; spread/total `pick.line`
               // holds the points line. Graded against the closing line at settlement.
               clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
@@ -1337,6 +1366,9 @@ export async function processSport(
                 dispersionByGame.get(pick.gameId),
               ),
               ...pickUpdateData,
+              // Minted in the same write as clvLockLine above, from the same
+              // `pick.line`, so display == lock == graded line from birth.
+              ...publishedTerms,
             },
           });
         }

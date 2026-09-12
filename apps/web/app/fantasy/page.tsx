@@ -53,22 +53,33 @@ const LIVE_FIRST = [
   },
 ] as const;
 
-type ToolStatus = "live" | "partly live" | "gated";
+/**
+ * Honest status vocabulary (ASTRA A-7, owner item 7).
+ *
+ * "Gated" used to mean "you cannot open this" — but every tool below renders
+ * in full for an anonymous visitor on an illustrative pool. The badge was
+ * describing the DATA, and it was lying about the ACCESS. Now:
+ *   live        — real public data, working today
+ *   partly live — real data in some tabs, sample in others
+ *   sample      — opens now on clearly-labelled sample players until a
+ *                 licensed projections feed is connected
+ */
+type ToolStatus = "live" | "partly live" | "sample";
 const TOOL_DIRECTORY: readonly (readonly [string, string, string, ToolStatus])[] = [
-  ["Optimizer: DFS · Start/Sit · Draft", "One workspace, one contest switch. Salaries and projections stay gated; the draft board (tiers, VOR, scarcity, run alerts, your ADP CSV) runs on the illustrative pool now.", "/optimizer", "partly live"],
-  ["Best Ball", "Draft-only roster construction: ceiling/spike upside, QB-to-catcher stacks, bye fragility, and a next-pick recommender. Runs on the illustrative pool now; real the moment projections flip on.", "/fantasy/bestball", "partly live"],
+  ["Optimizer: DFS · Start/Sit · Draft", "One workspace, one contest switch. Salaries and projections stay on sample until a licensed feed is connected; the draft board (tiers, VOR, scarcity, run alerts, your ADP CSV) runs on the sample pool now.", "/optimizer", "partly live"],
+  ["Best Ball", "Draft-only roster construction: ceiling/spike upside, QB-to-catcher stacks, bye fragility, and a next-pick recommender. Runs on the sample pool now; real the moment projections flip on.", "/fantasy/bestball", "partly live"],
   ["Human Performance", "Public confidence-band layer: venue surface, weather, official injury status. Live now; never a body claim.", "/human", "live"],
-  ["Waiver & FAAB", "Needs roster sync, projections, injuries, and league market context.", "/fantasy/waivers", "gated"],
-  ["Trade Analyzer", "Needs live player values and roster context.", "/fantasy/trade", "gated"],
-  ["Pick'em Edge", "Needs live pick'em lines and alt-line pricing.", "/fantasy/props", "gated"],
-  ["League Twin", "Can render a real roster after sync; advice waits for projections.", "/fantasy/league-twin", "gated"],
-  ["GM Ledger", "Proof mechanics are real; live decision history requires user roster events.", "/fantasy/gm-ledger", "gated"],
+  ["Waiver & FAAB", "Opens now on sample players. Needs roster sync, projections, injuries, and league market context to become advice.", "/fantasy/waivers", "sample"],
+  ["Trade Analyzer", "Opens now on sample players. Needs live player values and roster context to become advice.", "/fantasy/trade", "sample"],
+  ["Pick'em Edge", "Opens now on sample lines. Needs live pick'em lines and alt-line pricing to become advice.", "/fantasy/props", "sample"],
+  ["League Twin", "Can render a real roster after sync; advice waits for projections.", "/fantasy/league-twin", "sample"],
+  ["GM Ledger", "Proof mechanics are real; live decision history requires user roster events. Today the history is a disclosed demonstration.", "/fantasy/gm-ledger", "sample"],
 ] as const;
 
 const STATUS_TONE: Record<ToolStatus, string> = {
   live: "text-orbital-cyan",
   "partly live": "text-ultraviolet",
-  gated: "text-ion-2",
+  sample: "text-ion-2",
 };
 
 export default async function FantasyHubPage({
@@ -129,7 +140,7 @@ export default async function FantasyHubPage({
               </p>
               <dl className="mt-5 grid grid-cols-3 gap-3">
                 <ReadinessMetric label="Roster" value="sync" />
-                <ReadinessMetric label="Projections" value="gated" />
+                <ReadinessMetric label="Projections" value="sample" />
                 <ReadinessMetric label="Actions" value="no-write" />
               </dl>
               <p className="mt-4 text-sm leading-6 text-ion-1">
@@ -202,7 +213,13 @@ export default async function FantasyHubPage({
                 <h2 className="font-display text-3xl font-semibold text-ion-white">Every tool, with its honest status</h2>
                 <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
                   One directory, no dead ends. Each tool links straight through and shows whether it&apos;s
-                  live, partly live, or gated on a real data feed. Never a design delay, never a fictional input.
+                  live, partly live, or running on sample players until a licensed feed is connected.
+                  Never a design delay, never a fictional input presented as live advice.
+                </p>
+                <p className="mt-2 text-xs leading-5 text-ion-2">
+                  <span className="text-orbital-cyan">Live</span> = real public data today.{" "}
+                  <span className="text-ultraviolet">Partly live</span> = real in some tabs, sample in others.{" "}
+                  Sample = opens now, clearly labelled, not advice.
                 </p>
               </div>
               <div className="flex flex-wrap gap-3 text-sm font-semibold">

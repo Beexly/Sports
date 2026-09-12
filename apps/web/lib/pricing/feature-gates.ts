@@ -38,7 +38,20 @@ export interface FeatureGate {
   readonly upgradeCtaTier: ValueTierId | null;
 }
 
-const TIER_ORDER: Record<ValueTierId, number> = { FREE: 0, PRO: 1, ELITE: 2, OPERATOR: 3 };
+/**
+ * FANTASY is a billable tier (packages/types SubscriptionTier) but was missing
+ * from this presentation ladder, so every FANTASY viewer resolved TIER_ORDER to
+ * undefined and every feature read as locked. Added 2026-09-14 (ASTRA A-8) so
+ * the three tier vocabularies stop disagreeing. FANTASY sits between FREE and
+ * PRO: it unlocks the fantasy suite, not the betting depth tools.
+ */
+const TIER_ORDER: Record<ValueTierId | "FANTASY", number> = {
+  FREE: 0,
+  FANTASY: 1,
+  PRO: 2,
+  ELITE: 3,
+  OPERATOR: 4,
+};
 
 export const FEATURE_GATES: readonly FeatureGate[] = [
   // ── Education & trust (open to Free) ─────────────────────────────────────
@@ -237,15 +250,15 @@ export function getFeature(key: string): FeatureGate | undefined {
   return FEATURE_GATES.find((f) => f.key === key);
 }
 
-/** True when `tier` fully unlocks the feature. */
-export function isFeatureUnlocked(tier: ValueTierId, key: string): boolean {
+/** True when `tier` fully unlocks the feature. FANTASY is billable and sits between FREE and PRO. */
+export function isFeatureUnlocked(tier: ValueTierId | "FANTASY", key: string): boolean {
   const f = getFeature(key);
   if (!f) return false;
   return TIER_ORDER[tier] >= TIER_ORDER[f.minTier];
 }
 
 /** Features fully unlocked at a tier, in registry order. */
-export function featuresForTier(tier: ValueTierId): readonly FeatureGate[] {
+export function featuresForTier(tier: ValueTierId | "FANTASY"): readonly FeatureGate[] {
   return FEATURE_GATES.filter((f) => TIER_ORDER[tier] >= TIER_ORDER[f.minTier]);
 }
 

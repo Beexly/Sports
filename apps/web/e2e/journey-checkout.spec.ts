@@ -277,7 +277,6 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
         data: {
           tier: "PRO",
           interval: "month",
-          dateOfBirth: "1990-01-15",
           priceId: "price_evil_client_supplied",
         },
       });
@@ -308,7 +307,7 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
       request,
     }) => {
       const res = await request.post("/api/subscriptions/checkout", {
-        data: { tier: "PRO", interval: "month", dateOfBirth: "1990-01-15" },
+        data: { tier: "PRO", interval: "month" },
       });
 
       const body = await res.json();
@@ -350,7 +349,7 @@ test.describe("P9.5-04 — Checkout journey (Stripe TEST mode only)", () => {
       const devFakeAdmin = devState.devFakeAdmin === true;
 
       const res = await request.post("/api/subscriptions/checkout", {
-        data: { tier: "PRO", interval: "month", dateOfBirth: "1990-01-15" },
+        data: { tier: "PRO", interval: "month" },
       });
 
       if (devFakeAdmin) {

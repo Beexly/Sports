@@ -67,11 +67,17 @@ describe("Nav route integrity", () => {
     }
   });
 
-  it("GSN is its own door grouping The Beat, The Studio, and The Academy", () => {
-    for (const route of ["/the-beat", "/fantasy/studio", "/academy"]) {
-      expect(desktop.includes(`"${route}"`), `desktop GSN missing ${route}`).toBe(true);
-      expect(mobile.includes(`"${route}"`), `mobile GSN missing ${route}`).toBe(true);
-    }
+  it("GSN is its own door for The Beat; Studio and Academy are unlinked (ASTRA A-5, owner 2026-09-14)", () => {
+    // Owner: Studio "was supposed to be more internal... zero value, causing
+    // confusion" — moved internal. Academy "completely useless... redesign or
+    // remove" — hidden from public nav (route stays, robots noindex).
+    // GSN now carries The Beat only.
+    expect(desktop).toContain('"/the-beat"');
+    expect(mobile).toContain('"/the-beat"');
+    expect(desktop).not.toContain('"/fantasy/studio"');
+    expect(desktop).not.toContain('"/academy"');
+    expect(mobile).not.toContain('"/fantasy/studio"');
+    expect(mobile).not.toContain('"/academy"');
     // Metrics moved out of Intelligence (it lives under Proof / on /calibration).
     expect(desktop).not.toContain('"/intelligence/metrics"');
   });

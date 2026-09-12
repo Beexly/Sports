@@ -14,7 +14,7 @@ import { BoardSurfaceChip } from "@/components/board/board-surface-chip";
 export const metadata: Metadata = {
   title: "Board",
   description:
-    "Today's scored markets: what cleared, what we held, and why. Edge rank is a ranking score, not a probability.",
+    "The full decision surface: what scored, what cleared, and what we held with a reason. Edge rank is a ranking score, not a probability. Published picks with reasoning live at /picks.",
   alternates: { canonical: "/board" },
   openGraph: {
     title: "Board",
@@ -181,7 +181,11 @@ export default async function BoardPage(): Promise<JSX.Element> {
               </h1>
               <p className="mt-4 max-w-2xl text-sm leading-6 text-ion-1">
                 What is scoring now, what cleared the gate, and what we refused with a reason.
-                Edge rank orders the board. It does not predict the final score.
+                Edge rank orders the board. It does not predict the final score.{" "}
+                <Link href="/picks" className="underline hover:text-ion-white">
+                  Published picks
+                </Link>{" "}
+                are the ones that cleared — with the reasoning.
               </p>
             </div>
             <div className="flex min-w-0 flex-col gap-3 sm:items-end">

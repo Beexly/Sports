@@ -25,7 +25,6 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BRAND_NAME } from "@/lib/brand";
-import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { ProofExplorer } from "@/components/proof/proof-explorer";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { MARKET_IMPLIED_CALIBRATION_CLAIM } from "@/lib/picks/market-implied-display";
@@ -92,12 +91,14 @@ export default async function CalibrationProofRoomPage() {
   const { data: report } = await loadPublicCalibrationReport();
 
   return (
-    <div className="relative isolate min-h-screen bg-carbon text-ion">
-      <GeneratedPlate assetId="proof-crystal" className="-z-10 opacity-20" />
+    // Same Field atmosphere as /verify — one room, one look. proof-crystal
+    // plate + the extra nebula wash removed 2026-09-14 (owner: hideous, does
+    // not match; the two trust pages did not even match each other).
+    <div className="relative isolate min-h-screen bg-carbon text-ion gw-nebula">
       <Nav />
 
       <main id="main-content" className="mx-auto flex max-w-5xl flex-col gap-12 px-4 py-12 sm:px-6 lg:px-8">
-        <header className="gw-nebula-deep -mx-4 rounded-ds-lg border-b border-mineral px-4 pb-10 pt-6 sm:-mx-6 sm:px-6">
+        <header className="-mx-4 border-b border-mineral px-4 pb-10 pt-6 sm:-mx-6 sm:px-6">
           <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-orbital-cyan">
             The Proof Room · Galaxy Calibration
           </p>

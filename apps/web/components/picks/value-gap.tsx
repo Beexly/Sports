@@ -72,7 +72,7 @@ export function ValueGapBadge({ rankingP, marketFairProb }: ValueGapInput) {
     <span
       data-testid="value-gap-badge"
       className={`ml-2 text-[10px] font-normal ${SIGN_CLASS[result.sign]}`}
-      title="Model ranking probability minus market fair (de-vig) probability. This is a disagreement with the market's price — it says nothing about whether the bet wins."
+      title="Model ranking probability minus the market's fair probability. This is a disagreement with the market's price — it says nothing about whether the bet wins."
     >
       {label}
     </span>

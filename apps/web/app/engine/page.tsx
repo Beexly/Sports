@@ -4,7 +4,6 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { Reveal } from "@/components/motion/reveal";
-import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { loadEngineStory } from "@/lib/engine/load-engine-story";
 import { SurgeCount, HashMaterialize, GateBar } from "@/components/engine/engine-atoms";
 
@@ -40,8 +39,8 @@ export default async function SealedEnginePage() {
     story.seals.receiptsFrozenToday === 0;
 
   return (
-    <div className="relative isolate flex min-h-screen flex-col bg-void text-ion-white">
-      <GeneratedPlate assetId="proof-crystal" className="-z-10 opacity-25" />
+    // Same Field atmosphere as the trust surfaces — proof-crystal removed.
+    <div className="relative isolate flex min-h-screen flex-col bg-void text-ion-white gw-nebula">
       <Nav />
 
       <main id="main-content" className="flex-1">

@@ -48,7 +48,10 @@ describe("correlation evaluator", () => {
     expect(result.groups).toHaveLength(1);
     expect(result.groups[0]?.key).toBe("pickType:SPREAD");
     expect(result.groups[0]?.aggregates.COUNT).toBe(25);
-    expect(result.groups[0]?.aggregates.WIN_RATE).toBe(0.4);
+    // 10W / 10L / 5 PUSH. WIN_RATE is decided-only: 10 / (10 + 10) = 0.5.
+    // This assertion previously read 0.4 — 10/25, which silently counted each
+    // push as a loss. COUNT and PUSH_RATE keep the full 25-row denominator.
+    expect(result.groups[0]?.aggregates.WIN_RATE).toBe(0.5);
     expect(result.groups[0]?.aggregates.PUSH_RATE).toBe(0.2);
     expect(result.groups[0]?.aggregates.AVG_EDGE).toBe(4);
   });

@@ -1,13 +1,9 @@
 /**
- * Server-side 21+ age gate — launch blocker for paid acquisition.
- *
- * Copy already says 21+ everywhere; nothing in the User model or checkout
- * path actually verified it. This module is the single source of truth for
- * "is this date of birth at least 21 full years old?"
- *
- * Persistence (User.dateOfBirth) needs a Prisma field + migration — that is
- * OWNER_GATE (schema is sealed). This helper is the app-side check: checkout
- * must call it *before* any Stripe side effect.
+ * Age utilities retained for compliance copy and any future owner-approved
+ * age policy. The hard 21+ checkout gate was removed 2026-09-14
+ * (founder: "Remove the age-21 requirement from subscriptions").
+ * Browsing has been all-ages since C-291. Compliance "21+" promo/footer
+ * copy is unchanged and does not call this module.
  *
  * Dates are calendar dates (YYYY-MM-DD), interpreted in UTC so a timezone
  * cannot grant a day of eligibility.
