@@ -2,9 +2,9 @@
  * News Impact Engine — turns a breaking item into a decision.
  *
  * The value isn't aggregating beat-writer chatter (everyone does that). It's
- * answering, the instant a report lands: how reliable is the source, which
- * players and lines does it move, by how much, and what should you do — before
- * the market prices it in. Reliability tier × signal magnitude × freshness decay.
+ * answering, the instant a report lands: the source tier, which players and
+ * lines it may affect, by roughly how much our heuristic reads, and what to
+ * consider. Heuristic tier weights × signal magnitude × freshness decay.
  *
  * Pure functions. Source roster and live ingestion are founder-gated; the engine
  * runs on any item regardless of where it came from.
@@ -80,23 +80,23 @@ function actionFor(item: NewsItem, fantasyDelta: number, reliability: number): s
   if (reliability < 0.4) return `Hold: single ${item.tier.toLowerCase()} source; wait for a second report before acting on ${who}.`;
   switch (item.signal) {
     case "injury-out":
-      return `Pivot off ${who}. The backup is the speculative add. Get there before your league.`;
+      return `Consider pivoting off ${who}; the backup is worth a look as a speculative add.`;
     case "injury-return":
-      return `${who} back in play; re-slot and discount the contingency you were holding.`;
+      return `${who} may be back in play; re-check status before re-slotting.`;
     case "role-up":
-      return `Buy-low window on ${who} closing; claim or start before the number moves.`;
+      return `${who}'s role may be growing; monitor before claiming or starting.`;
     case "role-down":
-      return `Fade ${who} this week; the touches are leaking elsewhere.`;
+      return `${who}'s touches may be leaking elsewhere; consider fading this week.`;
     case "suspension":
-      return `${who} out multi-week: drop in redraft, the next man up is the real add.`;
+      return `${who} could miss multiple weeks: a possible drop in redraft once confirmed.`;
     case "trade":
-      return `New context for ${who}; revalue on the new offense before the market resets.`;
+      return `New context for ${who}; revalue on the new offense once details land.`;
     case "scheme":
-      return `Scheme change reshapes ${who}'s usage; see Scheme Intelligence for the cascade.`;
+      return `Possible scheme change around ${who}'s usage; see Scheme Intelligence for the cascade.`;
     case "weather":
       return `Game-script risk on ${who}; lean the floor, fade the ceiling.`;
     case "depth-chart":
-      return `${who} climbing the chart: a snap-count story worth a speculative stash.`;
+      return `${who} climbing the chart: a snap-count story worth watching.`;
   }
 }
 

@@ -13,7 +13,7 @@ import { fetchLiveWire } from "@/lib/news/rss";
 export const metadata: Metadata = {
   title: "The Beat · Galaxy Broadcast & Reliability-Tiered Newsroom",
   description:
-    "A constantly-running transmission: Nova reports the week's top signals on location, then the Signal Ledger scores every breaking report the instant it lands. Source reliability, the players and lines it moves, and the move to make before the market prices it in.",
+    "A constantly-running transmission: Nova reports the week's top signals on location, then the Signal Ledger scores every breaking report the instant it lands. Source tier, the players and lines it may affect, and what to consider — with the model's read labeled as its own, not the source's claim.",
   alternates: { canonical: "/the-beat" },
 };
 
@@ -21,9 +21,14 @@ export default async function TheBeatPage() {
   const broadcast = buildBroadcast();
   // Live RSS wire when NEWS_RSS_FEEDS is configured (headlines only,
   // source-attributed, classified into the signal taxonomy); null keeps the
-  // clearly-labeled fictional sample. Fails soft: a feed outage falls back
-  // to whatever fetched, never fabricates.
-  const liveWire = await fetchLiveWire().catch(() => null);
+  // clearly-labeled fictional sample. A fetch FAILURE is distinct from
+  // unconfigured: it renders unavailable, never the sample as cover.
+  const fetched = await fetchLiveWire().then(
+    (wire) => ({ wire, failed: false as const }),
+    () => ({ wire: null, failed: true as const }),
+  );
+  const liveWire = fetched.wire;
+  const wireUnavailable = fetched.failed;
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">
@@ -87,16 +92,18 @@ export default async function TheBeatPage() {
                 </h2>
                 <p className="max-w-2xl text-sm leading-6 text-ion-1">
                   The instant a report lands we weigh the source by tier, map it to the players and lines it
-                  moves, decay it by freshness, and tell you the move. Before it&apos;s priced in.
+                  may affect, and decay it by freshness — our model&apos;s read, labeled as such.
                 </p>
               </div>
             </Reveal>
             <div className="mt-8">
-              <TheBeat liveWire={liveWire} />
+              <TheBeat liveWire={liveWire} unavailable={wireUnavailable} />
             </div>
             <Reveal delay={120}>
               <p className="mt-6 text-xs leading-relaxed text-ion-2">
-                {liveWire ? WIRE_LIVE_DISCLAIMER : WIRE_DISCLAIMER}
+                {wireUnavailable
+                  ? "Live feed unavailable — the news feeds couldn't be reached, so nothing is shown rather than a substitute."
+                  : liveWire ? WIRE_LIVE_DISCLAIMER : WIRE_DISCLAIMER}
               </p>
             </Reveal>
           </div>

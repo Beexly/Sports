@@ -31,11 +31,10 @@ const TIERS: Tier[] = ["Insider", "Beat", "Verified", "Aggregator", "Unconfirmed
 
 const ago = (m: number) => (m < 60 ? `${m}m ago` : `${Math.round(m / 60)}h ago`);
 
-export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
-  // Live RSS wire when the owner has whitelisted feeds (NEWS_RSS_FEEDS);
-  // otherwise the clearly-labeled fictional sample. The two states are
-  // visually unmistakable: sample shows the fictional-sources marker, live
-  // shows the real-source attribution instead.
+export function TheBeat({ liveWire = null, unavailable = false }: { liveWire?: NewsItem[] | null; unavailable?: boolean }) {
+  // Three honest states: failed fetch = unavailable (never the sample);
+  // unconfigured (null) = clearly-labeled fictional sample; configured =
+  // live wire, possibly empty (an honest empty wire, never an error).
   const isLive = liveWire !== null;
   const wire = liveWire ?? DEMO_WIRE;
   const ranked = useMemo(() => rankWireCorroborated(wire), [wire]);
@@ -49,6 +48,15 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
   const shown = ranked.filter(
     (r) => (tierFilter === "All" || r.item.tier === tierFilter) && (team === "All" || r.item.team === team),
   );
+
+  // Unavailable renders after all hooks so hook order stays unconditional.
+  if (unavailable) {
+    return (
+      <div className="surface-card p-6 text-sm text-ion-1">
+        Live feed unavailable — couldn&apos;t reach the news feeds right now. No sample is shown in its place.
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-5">
@@ -84,7 +92,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
               aria-pressed={active}
               className="rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider transition-colors"
               style={{ background: active ? `${TIER_HEX[t]}22` : "transparent", color: TIER_HEX[t], boxShadow: active ? `inset 0 0 0 1px ${TIER_HEX[t]}` : "none" }}
-              title={`reliability ${Math.round(TIER_WEIGHT[t] * 100)}%`}>
+              title={`tier weight ${Math.round(TIER_WEIGHT[t] * 100)} (heuristic, not measured)`}>
               {t}
             </button>
           );
@@ -131,7 +139,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
                   <span className="rounded-full px-2 py-0.5" style={{ background: "rgba(255,255,255,0.06)", color: "#c8d2dd" }}>{signalLabel(r.item.signal)}</span>
                   <span className="text-ion-2">{isLive ? "Est. fantasy" : "Fantasy"} <strong style={{ color: fav >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{fav >= 0 ? "+" : ""}{fav}</strong></span>
                   <span className="text-ion-2">{isLive ? "Est. market" : "Market"} <strong style={{ color: r.marketDelta >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{r.marketDelta >= 0 ? "+" : ""}{r.marketDelta}</strong></span>
-                  <span className="text-ion-2">Reliability <strong className="text-ion-white">{Math.round(r.reliability * 100)}%</strong></span>
+                  <span className="text-ion-2">Tier weight <strong className="text-ion-white">{Math.round(r.reliability * 100)}</strong> <span className="text-ion-3">(heuristic)</span></span>
                 </div>
 
                 <p className="mt-2 text-[12px] leading-relaxed" style={{ color: "#aeb8c4" }}>
@@ -141,7 +149,13 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
             </article>
           );
         })}
-        {shown.length === 0 && <div className="surface-card p-6 text-sm text-ion-2">No items match this filter.</div>}
+        {shown.length === 0 && (
+          <div className="surface-card p-6 text-sm text-ion-2">
+            {isLive && wire.length === 0
+              ? "No fresh reports in this window — the feeds are reachable, nothing classifiable arrived."
+              : "No items match this filter."}
+          </div>
+        )}
       </div>
     </div>
   );
