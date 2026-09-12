@@ -69,7 +69,7 @@ export default function EdgeIndexMarketingPage(): JSX.Element {
           <p className="mt-8 text-sm text-ion-2">
             See also{" "}
             <Link href="/board" className="text-orbital-cyan hover:text-ion-white">
-              Today's Board
+              The board
             </Link>{" "}
             and{" "}
             <Link href="/methodology" className="text-orbital-cyan hover:text-ion-white">

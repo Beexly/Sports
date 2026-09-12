@@ -26,7 +26,6 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 export const metadata: Metadata = {
   title: "Opening a Slate Commitment · Binding Check on the Record",
@@ -43,9 +42,8 @@ export default function SlateOpeningExplainerPage(): JSX.Element {
   const revealEnabled = process.env["SLATE_OPENING_REVEAL_ENABLED"] === "true";
 
   return (
-    <div className="relative isolate flex min-h-screen flex-col bg-obsidian text-ion-white">
-      {/* Same atmosphere as /verify — the trust surfaces read as one room. */}
-      <GeneratedPlate assetId="proof-crystal" className="-z-10 opacity-20" />
+    // Same Field atmosphere as /verify — the trust surfaces read as one room.
+    <div className="relative isolate flex min-h-screen flex-col bg-obsidian text-ion-white gw-nebula">
       <Nav />
       <main id="main-content" className="mx-auto w-full max-w-3xl flex-1 px-4 py-12 sm:px-6">
         <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-orbital-cyan">
