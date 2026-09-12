@@ -492,6 +492,10 @@ the only copy, and nobody else can verify or build on it.
 | A-46 | AGENTS.md session record + em-dash fixes + nav doctrine update | claude | DONE | b7a5bff9d; em-dash-scan OK, trust-gate OK |
 | A-47 | Remove remaining Sports decision intelligence + Four doors from public copy | claude | DONE | 9accef8fb |
 | A-48 | Fantasy + DFS page copy: plain English metadata and intros | claude | DONE | c08a9f594; typecheck 0, lint 0 |
+| A-49 | Ledger: add A-43 through A-48 rows + fix A-21 evidence SHA | claude | DONE | e8af3f48b |
+| A-50 | Board + House visual pass: plain-English lane titles, state tiles, empty states | claude | DONE | dd758cf1b; em-dash OK, trust-gate OK |
+| A-51 | Remaining held/cleared language: house metadata, board empty states, picks copy, homepage | claude | DONE | f9fe56e65 |
+| A-52 | Methodology page: gate held -> we passed | claude | DONE | 3173063a7 |
 
 <!-- LEDGER:END -->
 
