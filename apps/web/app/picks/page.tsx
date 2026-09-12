@@ -124,7 +124,7 @@ async function fetchPicks(
           date: date ?? new Date().toISOString().split("T")[0]!,
         },
         bootstrap: {
-          message: body.error ?? "Today's Board is collecting live history.",
+          message: body.error ?? "Published picks are collecting live history.",
           hint: body.hint,
           kind,
         },
