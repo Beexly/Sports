@@ -50,40 +50,40 @@ export interface TrustLedgerMetrics {
 
 const ITEMS: readonly MethodologyItem[] = [
   {
-    title: "Live odds ingestion",
+    title: "We pull live odds from real sportsbooks",
     claimId: "methodology.odds-ingestion",
     lane: "data",
   },
   {
-    title: "Bookmaker coverage as a transparency signal",
+    title: "More books pricing a game = more trust in the number",
     claimId: "methodology.bookmaker-coverage",
     lane: "data",
   },
   {
-    title: "Data freshness on every pick",
+    title: "Every pick shows when its data was last updated",
     claimId: "methodology.data-freshness",
     lane: "data",
   },
   {
-    title: "Calibrated confidence presentation",
+    title: "We don't fake confidence with decimal points",
     claimId: "methodology.confidence-presentation",
-    hint: "Until we have enough settled outcomes to calibrate against, confidence is shown as a label, not a number.",
+    hint: "Until we have enough settled games to calibrate against, confidence is a label, not a number.",
     lane: "model",
   },
   {
-    title: "Risk level on every pick",
+    title: "Every pick carries a risk level",
     claimId: "methodology.risk-levels",
     lane: "model",
   },
   {
-    title: "Factor breakdown for subscribers",
+    title: "Subscribers see exactly which factors moved a pick",
     claimId: "methodology.factor-breakdown",
     lane: "model",
   },
   {
-    title: "Public performance is gated, not advertised",
+    title: "We don't advertise win rates we can't back up",
     claimId: "performance.public-stats-gated",
-    hint: "When you see win-loss numbers on the Performance page, you'll also see the period, sample size, model version, and the exact win-rate definition.",
+    hint: "When you see win-loss numbers, you'll also see the period, sample size, model version, and the exact definition.",
     lane: "gate",
   },
 ];
