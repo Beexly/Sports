@@ -142,68 +142,98 @@ export default async function CalibrationProofRoomPage() {
           publicMessage={report.publicMessage}
         />
 
-        <section className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {/* Three primary doors. The graph above is the hero; these are the
+            next steps, not a sitemap. Everything else collapses. */}
+        <section className="grid gap-6 sm:grid-cols-3">
           <ProofCard
-            eyebrow="Live telemetry"
-            title="The Sealed Engine"
-            body="Watch the machine commit, live: what it swept today, how much of the slate it declined in writing, and the receipts it froze before kickoff. The commitments are public. The recipe never is."
-            href="/engine"
-            linkLabel="Watch it commit"
-            accent
-          />
-          <ProofCard
-            eyebrow="Calibration report"
-            title="Honest Band"
-            body="Win rate across every finished live-engine pick, with the uncertainty band shown. And held back entirely until the sample is honest. Warm-up picks from before the live engine never pad the sample."
+            eyebrow="The record"
+            title="Win rate, honestly banded"
+            body="Every finished live-engine pick, with the uncertainty band shown — and held back entirely until the sample is honest."
             href="/performance"
-            linkLabel="View Calibration Report"
+            linkLabel="Open the record"
             accent
           />
           <ProofCard
-            eyebrow="Closing line value"
-            title="Beat the close"
-            body="Whether the price we locked beat where the market closed. The sharp-credible leading indicator of a real edge, and the one number tout services never show."
+            eyebrow="Beat the close"
+            title="Did our price win?"
+            body="Whether the price we locked beat where the market closed. The one number tout services never show."
             href="/clv"
             linkLabel="See our CLV"
-          />
-          <ProofCard
-            eyebrow="Tamper-evident receipts"
-            title="Trust Ledger"
-            body="Every settled pick carries a receipt stamped at generation time. The ledger is the running record. Nothing is quietly removed to make it look cleaner."
-            href="/ledger"
-            linkLabel="Open the Ledger"
             accent
           />
           <ProofCard
-            eyebrow="Cryptographic proof"
-            title="Proof of Record"
-            body="Every settled pick gets a digital fingerprint (a hash) the moment it is written. One published master fingerprint covers the whole record, so anyone can recheck that nothing was ever edited."
-            href="/proof"
-            linkLabel="View Proof of Record"
+            eyebrow="Verify"
+            title="Check any receipt"
+            body="Paste a hash. The server recomputes it live. If anything was edited after the fact, the hashes would not match."
+            href="/verify"
+            linkLabel="Verify a pick"
             accent
-          />
-          <ProofCard
-            eyebrow="Research evidence"
-            title="FABLE Evidence Lab"
-            body="Source rights, claim ledgers, uncertainty gates, drift checks, and AWS deploy controls. This is the research layer that says what can be shown, what stays gated, and what still needs owner approval."
-            href="/fable"
-            linkLabel="Open FABLE Evidence Lab"
-          />
-          <ProofCard
-            eyebrow="Loss autopsies"
-            title="The full record"
-            body="Losses get post-mortems: the original reasoning, the signal snapshot, what we saw versus what happened, and what changed afterward. The public record, no cherry-picking."
-            href="/accountability"
-            linkLabel="Open Accountability"
-          />
-          <ProofCard
-            eyebrow="Your own record"
-            title="CLV Tracker"
-            body="Track your own bets against the same closing-line benchmark we hold ourselves to. The proof works the same whether the bet is ours or yours."
-            href="/track"
-            linkLabel="Track your bets (Elite)"
           />
         </section>
+
+        <details className="group rounded-2xl border border-mineral bg-eclipse/30">
+          <summary className="flex cursor-pointer list-none items-center justify-between p-5 [&::-webkit-details-marker]:hidden">
+            <span>
+              <span className="font-mono text-[11px] uppercase tracking-[0.18em] text-ion-2">
+                More proof surfaces
+              </span>
+              <span className="mt-1 block text-sm text-ion-1">
+                Engine telemetry, trust ledger, cryptographic proof, research lab, loss autopsies, and your own tracker.
+              </span>
+            </span>
+            <span
+              aria-hidden
+              className="shrink-0 rounded-full border border-mineral px-3 py-1 font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2 transition-colors group-open:border-orbital-cyan/60 group-open:text-orbital-cyan"
+            >
+              <span className="group-open:hidden">Show</span>
+              <span className="hidden group-open:inline">Hide</span>
+            </span>
+          </summary>
+          <div className="grid gap-4 border-t border-mineral p-5 sm:grid-cols-2 lg:grid-cols-3">
+            <ProofCard
+              eyebrow="Live telemetry"
+              title="The Sealed Engine"
+              body="What the machine swept today, what it declined in writing, and the receipts it froze before kickoff."
+              href="/engine"
+              linkLabel="Watch it commit"
+            />
+            <ProofCard
+              eyebrow="Tamper-evident receipts"
+              title="Trust Ledger"
+              body="Every settled pick carries a receipt stamped at generation time. Nothing is quietly removed."
+              href="/ledger"
+              linkLabel="Open the Ledger"
+            />
+            <ProofCard
+              eyebrow="Cryptographic proof"
+              title="Proof of Record"
+              body="One published master fingerprint covers the whole record, so anyone can recheck that nothing was edited."
+              href="/proof"
+              linkLabel="View Proof of Record"
+            />
+            <ProofCard
+              eyebrow="Research evidence"
+              title="FABLE Evidence Lab"
+              body="Source rights, claim ledgers, uncertainty gates, and what still needs owner approval."
+              href="/fable"
+              linkLabel="Open FABLE"
+            />
+            <ProofCard
+              eyebrow="Loss autopsies"
+              title="The full record"
+              body="Losses get post-mortems: original reasoning, signal snapshot, what we saw versus what happened."
+              href="/accountability"
+              linkLabel="Open Accountability"
+            />
+            <ProofCard
+              eyebrow="Your own record"
+              title="CLV Tracker"
+              body="Track your own bets against the same closing-line benchmark we hold ourselves to."
+              href="/track"
+              linkLabel="Track your bets (Elite)"
+            />
+          </div>
+        </details>
 
         <section className="rounded-2xl border border-mineral bg-eclipse/30 p-6">
           <h2 className="mb-3 font-mono text-xs uppercase tracking-[0.16em] text-ion-2">
