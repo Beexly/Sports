@@ -95,13 +95,17 @@ export default async function HomePage(): Promise<JSX.Element> {
           <FieldHeroCanvas />
           <div
             aria-hidden="true"
+            className="grain-overlay absolute inset-0 -z-10"
+          />
+          <div
+            aria-hidden="true"
             className="absolute inset-0 -z-10"
             style={{
               background:
                 "radial-gradient(ellipse 55% 40% at 70% 18%, rgba(255,77,46,0.09), transparent 58%), linear-gradient(180deg, #08090Cdd 0%, #08090C88 42%, #08090C 100%)",
             }}
           />
-          <div className="relative mx-auto flex min-h-[inherit] max-w-5xl flex-col justify-center px-4 py-28 sm:px-6 lg:px-8">
+          <div className="relative mx-auto flex min-h-[inherit] w-full max-w-7xl flex-col justify-center px-4 py-32 sm:px-6 sm:py-40 lg:px-8">
             <Reveal>
               <p className="mb-6 inline-flex items-center gap-2.5 border border-mineral bg-eclipse/70 px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-ion-2">
                 <span
@@ -114,8 +118,8 @@ export default async function HomePage(): Promise<JSX.Element> {
             </Reveal>
             <Reveal delay={60}>
               <h1
-                className="max-w-3xl font-display font-semibold leading-[0.95] tracking-tight text-ion-white"
-                style={{ fontSize: "clamp(2.6rem, 7.5vw, 5rem)" }}
+                className="max-w-5xl font-display font-semibold leading-[0.9] tracking-tight text-ion-white"
+                style={{ fontSize: "clamp(3.5rem, 10vw, 7.5rem)" }}
               >
                 The market is full of <span className="text-plasma">noise</span>.
                 <br />
@@ -149,18 +153,18 @@ export default async function HomePage(): Promise<JSX.Element> {
               </p>
             </Reveal>
             <Reveal delay={280}>
-              <dl className="mt-12 grid max-w-2xl grid-cols-2 gap-px border border-mineral bg-mineral sm:grid-cols-4">
+              <dl className="mt-14 grid max-w-4xl grid-cols-2 gap-x-8 gap-y-6 sm:grid-cols-4">
                 {[
                   { k: "Cleared", v: boardUnavailable ? "n/a" : String(cleared) },
                   { k: "Held", v: boardUnavailable ? "n/a" : String(gated) },
                   { k: "Settled n", v: settled > 0 ? String(settled) : "building" },
                   { k: "Verify", v: "public" },
                 ].map((cell) => (
-                  <div key={cell.k} className="bg-eclipse px-4 py-3">
+                  <div key={cell.k} className="border-t border-mineral-hi pt-3">
                     <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
                       {cell.k}
                     </dt>
-                    <dd className="mt-1 font-display text-2xl font-semibold tabular-nums text-ion-white">
+                    <dd className="mt-1 font-display text-4xl font-semibold tabular-nums text-ion-white">
                       {cell.v}
                     </dd>
                   </div>
@@ -180,9 +184,9 @@ export default async function HomePage(): Promise<JSX.Element> {
           <div className="mx-auto max-w-7xl">
             <Reveal>
               <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-plasma">
-                Decisions
+                <span className="mr-3 text-ion-2">01</span>Decisions
               </p>
-              <h2 className="mt-3 max-w-3xl font-display text-3xl font-semibold text-ion-white sm:text-4xl">
+              <h2 className="mt-4 max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-5xl">
                 Pick the decision you came to make.
               </h2>
             </Reveal>
@@ -272,13 +276,13 @@ export default async function HomePage(): Promise<JSX.Element> {
         </WorldSection>
 
         {/* PROOF STRIP. One band, routes to the proof itself. */}
-        <section className="neb-band border-b border-mineral px-4 py-12 sm:px-6 lg:px-8">
-          <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-6 lg:flex-row lg:items-center">
+        <section className="neb-band border-b border-mineral px-4 py-20 sm:px-6 sm:py-28 lg:px-8">
+          <div className="mx-auto flex max-w-7xl flex-col items-start justify-between gap-8 lg:flex-row lg:items-end">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-plasma">
-                The proof
+                <span className="mr-3 text-ion-2">02</span>The proof
               </p>
-              <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
+              <h2 className="mt-3 max-w-3xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-5xl">
                 Trust is an architecture, not a tagline.
               </h2>
               <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
@@ -294,13 +298,13 @@ export default async function HomePage(): Promise<JSX.Element> {
               </Link>
               <Link
                 href="/engine"
-                className="text-sm font-semibold text-ion-1 hover:text-ion-white"
+                className="link-underline text-sm font-semibold text-ion-1 hover:text-ion-white"
               >
                 Open the sealed engine
               </Link>
               <Link
                 href="/verify"
-                className="text-sm font-semibold text-ion-1 hover:text-ion-white"
+                className="link-underline text-sm font-semibold text-ion-1 hover:text-ion-white"
               >
                 Check a receipt →
               </Link>
@@ -316,9 +320,9 @@ export default async function HomePage(): Promise<JSX.Element> {
           <div className="mx-auto grid max-w-7xl gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
             <div>
               <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-plasma">
-                Record
+                <span className="mr-3 text-ion-2">03</span>Record
               </p>
-              <h2 className="mt-2 font-display text-3xl font-semibold text-ion-white sm:text-4xl">
+              <h2 className="mt-3 max-w-2xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-5xl">
                 Every number ships with its sample.
               </h2>
               <p className="mt-3 max-w-xl text-sm leading-6 text-ion-1">

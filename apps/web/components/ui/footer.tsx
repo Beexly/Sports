@@ -37,6 +37,16 @@ const DISCLOSURE_LINKS = [
 export function Footer() {
   return (
     <footer className="footer">
+      {/* Oversized wordmark sign-off. Pure typography; every link, disclosure
+          and the disclaimer below survive unchanged. */}
+      <div aria-hidden="true" className="select-none overflow-hidden px-4 sm:px-6 lg:px-8">
+        <p
+          className="mx-auto max-w-7xl whitespace-nowrap font-display font-semibold uppercase leading-[0.85] tracking-tight text-mineral-hi"
+          style={{ fontSize: "clamp(3.5rem, 12.5vw, 11rem)" }}
+        >
+          {BRAND_NAME}
+        </p>
+      </div>
       <div className="container">
         <div
           className="flex flex-wrap items-center gap-x-8 gap-y-4 py-6"
