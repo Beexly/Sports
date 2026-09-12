@@ -61,14 +61,14 @@ pass before deploy (`vercel deploy --prod` from a worktree linked to project `sp
 
 **Founder feedback 2026-09-12 (post-merge, progress log):**
 
-SHIPPED this round (PRs #773-775, commits A22-A28):
+SHIPPED this round (PRs #773-#781, commits A22-A33):
 - ADMIN→ELITE so the owner is never paywalled out of their own product
 - Source JSON → Data sources (leftover jargon)
 - The Beat rebuilt: robotic speechSynthesis REMOVED, full-bleed cinematic opening
 - /calibration condensed: graph is the hero, 3 doors, rest collapsed
 - **GSE Score + GSE Index** (`lib/fantasy/gse-score.ts`): real player ranking.
   LIVE reads processGrade from nflverse; SAMPLE is a pool percentile, labelled.
-  Trade analyzer ranks by GSE Score and shows Index + Score per row.
+  Wired into trade analyzer AND draft assistant — one ranking system.
 - **Board** cinematic opening + "You are here" IA strip naming all three
   surfaces (board / published picks / founder picks). Lane "Gated Today" →
   "Held Today".
@@ -76,6 +76,10 @@ SHIPPED this round (PRs #773-775, commits A22-A28):
   action + href, today's CTA banner, today highlighted in the grid.
 - **DFS projections table** (LineStar parity): sortable Sal/Proj/Val/Ceil/
   pOwn%/Lev, lock/exclude from the row.
+- **Props board** market + team filters (PropFinder parity).
+- **CSV export** of generated lineups (DK Classic format).
+- **Max exposure slider** on the optimizer (10-100%).
+- **Last JSON button** on the intelligence engines page killed.
 
 STILL OPEN — next agents pick these up in order:
 
