@@ -19,6 +19,7 @@ import {
   positionalScarcity, detectRuns, parseAdpCsv, valueVsAdp, marketAdpMap, valueVsMarket,
   type AdpLabel, type ScarcityLevel,
 } from "@/lib/fantasy/draft";
+import { gseScore } from "@/lib/fantasy/gse-score";
 import { LivePoolEmpty } from "@/components/fantasy/live-pool-empty";
 import { FantasyUpsell } from "@/components/fantasy/fantasy-upsell";
 import { FREE_BOARD_DEPTH } from "@/lib/fantasy/free-trial";
@@ -191,8 +192,12 @@ export function DraftAssistant({ pool, canUseFantasyFull = false }: { pool?: rea
                       <p className="mt-0.5 font-mono text-[11px] text-ion-2">{pl.team}{pl.bye > 0 ? ` · Bye ${pl.bye}` : ""} · {pl.role}</p>
                     </div>
                     <div className="text-right">
-                      <p className="font-mono text-sm tabular-nums" style={{ color: c }}>{vor(pl, universe) >= 0 ? "+" : ""}{vor(pl, universe)}</p>
-                      <p className="font-mono text-[11px] tabular-nums text-ion-2">T{tier(pl, universe)}{av?.adp != null ? ` · ${av.adp}` : ""}</p>
+                      <p className="font-mono text-sm font-bold tabular-nums text-orbital-cyan" title="GSE Score 0-100">
+                        {gseScore(pl, universe).score}
+                      </p>
+                      <p className="font-mono text-[11px] tabular-nums text-ion-2">
+                        {vor(pl, universe) >= 0 ? "+" : ""}{vor(pl, universe)} VOR · T{tier(pl, universe)}{av?.adp != null ? ` · ${av.adp}` : ""}
+                      </p>
                     </div>
                     <div className="flex shrink-0 gap-1.5">
                       <button type="button" onClick={() => draftMine(pl.id)} className="rounded-md bg-orbital-cyan px-2.5 py-1 text-[11px] font-semibold text-obsidian">Draft</button>
