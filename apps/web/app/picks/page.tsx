@@ -23,10 +23,10 @@ import { GET as getDailySlate } from "@/app/api/picks/daily-slate/route";
 export function generateMetadata(): Metadata {
   const publicPicksOpen = getReadinessGates().canExposePublicPicks;
   return {
-    title: "Published Picks",
+    title: "Today's Picks",
     description: publicPicksOpen
-      ? "Published picks from a deterministic factor model: what cleared the gate today, with price, timing, and the reason. The board also shows what we held. Free gets a small daily teaser; Pro and Elite unlock the full set."
-      : "Public picks open when the sample and gates allow. Until then this surface stays intentionally dark: no invented slate, no certainty theater. Methodology, tools, and paper contests remain free.",
+      ? "What we're on today, with the line, the timing, and the reason. Free gets a daily teaser; Pro and Elite unlock the full set."
+      : "Picks open when our sample and gates allow. Until then this page stays dark — no invented slate, no fake certainty.",
     alternates: { canonical: "/picks" },
   };
 }

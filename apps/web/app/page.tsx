@@ -71,10 +71,10 @@ export default async function HomePage(): Promise<JSX.Element> {
 
   const tickerItems = [
     ...state.publishedToday.slice(0, 8).map(
-      (p) => `${p.matchup} · ${p.market} · cleared · edge ${p.edgeIndex ?? "n/a"}`,
+      (p) => `${p.matchup} — we're on ${p.market}`,
     ),
     ...state.gatedTodayRows.slice(0, 6).map(
-      (row) => `${row.matchup} · held · ${row.gateReason ?? "gate"}`,
+      (row) => `${row.matchup} — we passed`,
     ),
   ];
 
@@ -103,13 +103,13 @@ export default async function HomePage(): Promise<JSX.Element> {
           />
           <div className="relative mx-auto flex min-h-[inherit] max-w-5xl flex-col justify-center px-4 py-28 sm:px-6 lg:px-8">
             <Reveal>
-              <p className="mb-6 inline-flex items-center gap-2.5 border border-mineral bg-eclipse/70 px-3.5 py-1.5 font-mono text-[10px] uppercase tracking-[0.22em] text-ion-2">
+              <p className="mb-6 inline-flex items-center gap-2.5 border border-mineral bg-eclipse/70 px-3.5 py-1.5 text-[11px] uppercase tracking-wider text-ion-2">
                 <span
                   aria-hidden
                   className="h-1.5 w-1.5 rounded-full bg-plasma"
                   style={{ animation: "pp-live-pulse 2s ease-in-out infinite" }}
                 />
-                Sports decision intelligence
+                Live now
               </p>
             </Reveal>
             <Reveal delay={60}>
@@ -119,13 +119,13 @@ export default async function HomePage(): Promise<JSX.Element> {
               >
                 The market is full of <span className="text-plasma">noise</span>.
                 <br />
-                Galaxy turns it into <span className="text-plasma">signal</span>.
+                We find the <span className="text-plasma">signal</span>.
               </h1>
             </Reveal>
             <Reveal delay={120}>
               <p className="mt-6 max-w-xl text-lg leading-8 text-ion-1">
-                Every Sunday the takes pile up. We score the markets, publish what
-                survives, and put the holds on the record with their reasons.
+                Every Sunday the takes pile up. We score every game, publish what
+                we&apos;re on, and show what we passed on — with the reason.
               </p>
             </Reveal>
             <Reveal delay={180}>
@@ -151,13 +151,13 @@ export default async function HomePage(): Promise<JSX.Element> {
             <Reveal delay={280}>
               <dl className="mt-12 grid max-w-2xl grid-cols-2 gap-px border border-mineral bg-mineral sm:grid-cols-4">
                 {[
-                  { k: "Cleared", v: boardUnavailable ? "n/a" : String(cleared) },
-                  { k: "Held", v: boardUnavailable ? "n/a" : String(gated) },
-                  { k: "Settled n", v: settled > 0 ? String(settled) : "building" },
-                  { k: "Verify", v: "public" },
+                  { k: "Today's picks", v: boardUnavailable ? "—" : String(cleared) },
+                  { k: "We passed on", v: boardUnavailable ? "—" : String(gated) },
+                  { k: "Graded picks", v: settled > 0 ? String(settled) : "building" },
+                  { k: "Anyone can check", v: "yes" },
                 ].map((cell) => (
                   <div key={cell.k} className="bg-eclipse px-4 py-3">
-                    <dt className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
+                    <dt className="text-[11px] uppercase tracking-wider text-ion-2">
                       {cell.k}
                     </dt>
                     <dd className="mt-1 font-display text-2xl font-semibold tabular-nums text-ion-white">
@@ -179,24 +179,24 @@ export default async function HomePage(): Promise<JSX.Element> {
         >
           <div className="mx-auto max-w-7xl">
             <Reveal>
-              <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-plasma">
-                Four doors
+              <p className="text-[11px] uppercase tracking-wider text-plasma">
+                Where to start
               </p>
               <h2 className="mt-3 max-w-3xl font-display text-3xl font-semibold text-ion-white sm:text-4xl">
-                Pick the decision you came to make.
+                What are you here to decide?
               </h2>
             </Reveal>
             <div className="mt-10 grid gap-px overflow-hidden border border-mineral bg-mineral sm:grid-cols-2 lg:grid-cols-4">
               <DoorCard
                 index={1}
                 label="Board"
-                decides="The gate's reasoning behind every pass and every clear."
+                decides="Every game we scored today, and what we decided."
                 stat={
                   boardUnavailable
-                    ? "Live board data unavailable"
+                    ? "Board temporarily unavailable"
                     : cleared > 0 || gated > 0
-                      ? `${cleared} cleared · ${gated} gated`
-                      : "Gate holding. No forced action"
+                      ? `${cleared} picks · ${gated} passes`
+                      : "Quiet slate. Nothing forced."
                 }
                 action="Open the board"
                 href="/board"
@@ -233,21 +233,19 @@ export default async function HomePage(): Promise<JSX.Element> {
                 "Live counts". The player-rows metric lives in the
                 Suspense-bounded NflverseLabDoor above (P16-01): nflverse errors
                 surface there, not here. */}
-            <p className="mt-8 text-center font-mono text-[11px] uppercase tracking-[0.16em] text-orbital-cyan tabular-nums">
+            <p className="mt-8 text-center text-sm text-ion-2">
               {boardUnavailable ? (
-                <>Live board counts are temporarily unavailable.</>
+                <>Board counts are temporarily unavailable.</>
               ) : (
                 <>
-                  Right now · <span className="text-ion-white">{cleared} cleared</span> ·{" "}
-                  <span className="text-ion-white">{gated} gated</span> ·{" "}
+                  Right now: <span className="text-ion-white">{cleared} picks</span> on the board,{" "}
+                  <span className="text-ion-white">{gated} we passed on</span>.
                 </>
               )}
               {settled > 0 ? (
-                <>
-                  graded on <span className="text-ion-white">{settled} settled picks</span>
-                </>
+                <>  Graded on {settled} settled picks.</>
               ) : (
-                <>calibration sample building</>
+                <>  Building our graded sample.</>
               )}
             </p>
           </div>

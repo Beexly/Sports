@@ -14,12 +14,12 @@ import { BoardSurfaceChip } from "@/components/board/board-surface-chip";
 export const metadata: Metadata = {
   title: "Board",
   description:
-    "The full decision surface: what scored, what cleared, and what we held with a reason. Edge rank is a ranking score, not a probability. Published picks with reasoning live at /picks.",
+    "Every game we scored today. What we're on, what we passed on, and why.",
   alternates: { canonical: "/board" },
   openGraph: {
     title: "Board",
     description:
-      "Today's scored markets: what cleared, what we held, and why. Edge rank is a ranking score, not a probability.",
+      "Every game we scored today. What we're on, what we passed on, and why.",
   },
 };
 

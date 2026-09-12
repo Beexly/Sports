@@ -116,15 +116,15 @@ export interface BoardGateEvaluation {
 }
 
 const REASONS: Record<GateOutcomeCode, string> = {
-  FIRE: "Cleared the edge threshold on its calibrated lower bound.",
+  FIRE: "We're on this one. The edge cleared our bar.",
   NO_BET_LCB:
-    "No bet — the calibrated lower bound did not clear the market's price after vig.",
+    "We passed. After the vig, the price didn't give us enough edge.",
   NO_BET_WIDTH:
-    "No bet — the calibrated probability range was too wide to act on, even though the midpoint looked favourable.",
+    "We passed. Our range was too wide to feel good about a side.",
   INSUFFICIENT_CALIBRATION:
-    "No bet — not enough settled history in this category yet to calibrate a trustworthy probability.",
+    "We passed. Not enough history in this category yet to trust our number.",
   NOT_EVALUATED_MISSING_INPUTS:
-    "Not evaluated — a required input was missing, so this was never put to the model. This is not a judgement about the game.",
+    "We couldn't score this one — a key piece of data was missing. Not a judgment about the game.",
 };
 
 /**

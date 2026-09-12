@@ -56,10 +56,10 @@ export function unevaluatedPassReason(
   dataQualityScore: number,
 ): string {
   if (bookmakerCoverageMax < MIN_BOOKMAKER_COVERAGE) {
-    return "Market depth below publish threshold.";
+    return "Not enough sportsbooks are pricing this game yet.";
   }
   if (dataQualityScore < MIN_DATA_QUALITY_SCORE) {
-    return "Evidence health below publish threshold.";
+    return "We don't have enough reliable data on this one.";
   }
-  return "Not evaluated: no pick was generated for this game today.";
+  return "We haven't scored this game yet.";
 }
