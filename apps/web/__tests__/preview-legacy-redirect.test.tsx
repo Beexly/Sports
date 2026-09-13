@@ -42,7 +42,7 @@ const sentinels = vi.hoisted(() => {
   return { PermanentRedirectSentinel, NotFoundSentinel };
 });
 
-import { authModuleMock } from "./helpers/auth-mock";
+import { authModuleMock } from "@/lib/testing/auth-mock";
 
 const mocks = vi.hoisted(() => ({
   gameFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),

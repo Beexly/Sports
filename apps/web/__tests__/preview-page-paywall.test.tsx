@@ -41,7 +41,7 @@ import { getEntitlements, type Entitlements } from "@sports/types";
  *    the selection and a locked-hint for confidence instead.
  */
 
-import { authModuleMock } from "./helpers/auth-mock";
+import { authModuleMock } from "@/lib/testing/auth-mock";
 
 const mocks = vi.hoisted(() => ({
   gameFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),

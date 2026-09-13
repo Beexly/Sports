@@ -19,7 +19,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const findFirstMock = vi.fn();
 const authMock = vi.fn();
 
-import { authModuleMock } from "./helpers/auth-mock";
+import { authModuleMock } from "@/lib/testing/auth-mock";
 
 vi.mock("@sports/db", () => ({
   db: { subscription: { findFirst: (...a: unknown[]) => findFirstMock(...a) } },
