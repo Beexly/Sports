@@ -21,6 +21,7 @@ import { publicEdgeScore } from "@/lib/picks/public-edge-score";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 import { dropContradictedModelSignals } from "@/lib/picks/model-signal-coherence";
+import { dropAdverseEdgePicks } from "@/lib/picks/adverse-edge-suppression";
 import { clientIp } from "@/lib/api/rate-limit";
 import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
 
@@ -212,9 +213,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // that survive rather than on rows about to be dropped.
   const coherentPicks = dropContradictedModelSignals(filteredPicks);
 
+  // Never sell a bet our own model prices worse than the book. scoring.ts has
+  // withheld these at mint since the PASS-leak fix, but that gate is
+  // forward-only: measured 2026-09-13, nine rows minted before it deployed were
+  // still published, worst -0.1742. Display-side and withhold-only — it writes
+  // nothing, so a suppressed row still settles into the public record.
+  const soundPicks = dropAdverseEdgePicks(coherentPicks);
+
   // Display order must match generation ranking law (rankingP, not confidence).
   // DB orderBy confidence is a cheap pre-filter only — re-rank survivors here.
-  const rankedPicks = [...coherentPicks].sort(comparePicksByRanking);
+  const rankedPicks = [...soundPicks].sort(comparePicksByRanking);
 
   // Tier cap applied AFTER filter + rank so a limited viewer always gets their
   // full allowance (best-ranked survivors), never fewer because the filter ate

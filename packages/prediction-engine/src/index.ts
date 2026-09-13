@@ -15,6 +15,7 @@ export {
   lineIntegrityPublishGuardEnabled,
   NON_BOOK_BOOKMAKER_KEYS,
   isRealBookmakerKey,
+  pricesWorseThanMarket,
 } from "./scoring.js";
 export {
   computeGameContext,

@@ -200,7 +200,12 @@ function buildShadowEvidenceFactors(input: OddsInput): FactorDetail[] {
 // No estimate means no vote. A null summary, or a non-finite expectedClv, is
 // silence — never read as agreement, disagreement, or zero.
 // ============================================================
-function pricesWorseThanMarket(edge: IndependentEdgeSummary | null): boolean {
+// Exported so the DISPLAY-side suppression in apps/web reads the identical
+// predicate (lib/picks/adverse-edge-suppression.ts). The mint gate below can
+// only withhold rows minted from here on; rows already published were minted
+// before it existed and are unreachable from this file. Two gates spelling the
+// same rule two ways is how they drift, so there is one spelling.
+export function pricesWorseThanMarket(edge: IndependentEdgeSummary | null): boolean {
   if (!edge) return false;
   if (!Number.isFinite(edge.expectedClv)) return false;
   return edge.expectedClv < 0;

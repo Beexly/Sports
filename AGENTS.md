@@ -97,9 +97,56 @@ and every one of them is `isPublished = true`:
 | 66 | Minnesota Twins -1.5 | 0.353 | 0.362 | PASS | -0.0055 |
 | 56 | Seattle Mariners -1.5 | 0.412 | 0.434 | PASS | -0.0134 |
 
-`decision` is computed, persisted, and rendered in the paying customer's factor trail. The publish
-path does not appear to read it. Confirming that in code is the open work; the DATA above is
-measured and is not in doubt.
+`decision` is computed, persisted, and rendered in the paying customer's factor trail.
+
+**CONFIRMED IN CODE AND CLOSED, 2026-09-13 20:30 UTC. Both halves. Do not re-open.**
+
+The publish path genuinely did not read it. `scoring.ts` asked the independent model AFTER its
+last publish veto, then used the answer only as a display label. Fixed at mint in PR #811
+(`pricesWorseThanMarket`, applied in the spread and moneyline scorers): a row whose own
+`expectedClv` is negative is no longer minted.
+
+That gate is FORWARD-ONLY and it does not reach rows that already exist. Re-measured 20:20 UTC
+over published PENDING rows carrying an edge estimate:
+
+```
+published PENDING rows with an edge estimate   71
+  of those, expectedClv < 0                      9
+  of those 9, independentEdge.decision = PASS    9   (the predicates agree exactly)
+  worst                                    -0.1742
+  still pre-kickoff                              1
+```
+
+Nine rows minted before the gate deployed were still on the board, so a DISPLAY-side rule now
+runs on both read surfaces: `apps/web/lib/picks/adverse-edge-suppression.ts`, applied in
+`/api/picks` and `lib/board/state.ts` before their row caps. Four things about it that must
+survive future edits:
+
+- It IMPORTS `pricesWorseThanMarket` from the engine rather than restating the rule. Two gates
+  spelling one rule two ways is how they drift, and a drift in this direction publishes a row
+  the engine said to withhold.
+- It gates on the signed number, never on `decision === "PASS"`. The two select the same nine
+  rows today, but a CONTRADICTS row carries `expectedClv` 0.0 by construction, so the label
+  would drop rows that are not adverse.
+- Absence is SILENCE. No estimate, a non-finite value, or an unparseable breakdown all KEEP the
+  row. If that asymmetry ever inverts, a parse bug becomes a silent board wipe; there is a
+  negative-control test pinning it.
+- It writes NOTHING. `isPublished` is untouched, so a suppressed row still settles and still
+  counts in the published record, win or lose. That is deliberate: these nine are expected to
+  grade badly, and removing them from the record would flatter our numbers by dropping exactly
+  the rows the model said were worst. Hiding a row we should not have offered is honest;
+  erasing it from the track record is not.
+
+Considered and REJECTED: promoting a suppressed row into the Held lane. That lane is built from
+GAMES, not picks (`state.ts`, `gatedToday.map((game) => ...)`), and a game whose adverse row is
+suppressed may still carry a good published row, so the promotion would put the same game in
+both lanes and re-create the "one game, one story" contradiction that
+`model-signal-coherence.ts` exists to prevent.
+
+Still OPEN from this section: the RANKING half. Confidence still orders the board and is still
+anti-correlated with the engine's own edge (re-measured 20:20 UTC: conf 91 carries +0.0217, the
+smallest positive edge on the slate, while conf 85 carries +0.2257, the largest). Suppression
+removes the negatives; it does not reorder the positives.
 
 **Second, `confidence` is not monotone in the engine's own probability, and today it inverted the
 board.** Ranked by the engine's own `expectedClv`, today's book-priced MLB slate reads D-backs -1.5
