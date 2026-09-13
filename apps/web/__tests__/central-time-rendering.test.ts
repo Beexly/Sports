@@ -34,6 +34,11 @@ const CUSTOMER_TIME_SURFACES = [
   "app/board/page.tsx",
   "app/slate/[sport]/page.tsx",
   "components/picks/pick-card.tsx",
+  // The picks board's own "last updated", and the "Board data as-of" stamp that
+  // renders on the HOMEPAGE. The second was the worst of the set: no
+  // `timeZoneName` at all, so it printed a bare wrong clock face.
+  "app/picks/page.tsx",
+  "components/ui/methodology-section.tsx",
 ] as const;
 
 /**
