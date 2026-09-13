@@ -46,6 +46,40 @@ picks API, the DFS optimizer, or CLV.**
    runs on fixture identity via `findTwinCandidate` and reads the full published set, not
    the 12-row display slice.
 
+**MEASURED 2026-09-13 19:30 UTC: `confidence` IS ANTI-PREDICTIVE AT THE TOP, AND NO
+CALIBRATOR CAN FIX IT. The v5.2.8 proposal is right and now has 15x the evidence. The
+IMPLEMENTED flip and the MODEL_VERSION bump remain FOUNDER-ONLY.**
+
+Full tables are in `docs/calibration-proposals/2026-09-05-market-anchored-display-probability-v5.2.8.md`
+section 3b. The three numbers that matter, over settled published non-bootstrap picks with
+pushes excluded:
+
+- `confidence` (n 2,385): conf 80+ claims 0.8663 and realizes **0.5191**, gap -0.3472,
+  **z = -10.7**. Its Brier as a probability on that band is **0.3617**; a constant 0.5
+  forecast scores 0.25. Realized win rate PEAKS at conf 75-79 (0.6146) and FALLS to 0.4643
+  by conf 90-94, below the 0.5280 of the lowest band.
+- `rankingP` (n 1,390): monotone, over-confident in the upper middle, top band 0.8934
+  claimed against 0.8286 realized.
+- `marketFairProb` (n 622, books >= 2): monotone and every gap within 0.07.
+
+**Why this cannot be calibrated away, and why nobody should try.** The display calibrator
+(`calibration-apply.ts:70,80`) is isotonic regression (PAVA), monotone non-decreasing by
+construction. It can flatten a curve; it can never invert one. Applied to a non-monotone
+score it turns a score inversion into a stated win-probability inversion. More sample does
+not help. The repo already half-knew this: the truth surface's `confidenceTail` has read
+`verdict=inverted` since at least 2026-09-05 at n 167.
+
+**What is already true in code, so nobody re-derives it:** `pick-card.tsx` renders raw
+confidence as a SCORE ("72/100") with a comment saying a percent would read as a win
+probability which this number is not, and it already has a `marketImplied` block from the
+v5.2.8 display side (Phase 1). The gap is that `/calibration` still publishes
+`expectedFromConfidence = confidence / 100` as the forecast (`compute.ts:260`, consumed at
+:349/:355/:448/:459), and the `marketImplied` block is gated on `canSeeConfidence` while the
+proposal says FREE viewers get it too because it is public arithmetic.
+
+**Do not:** flip `status: IMPLEMENTED`, bump MODEL_VERSION, or change a floor to make any of
+this pass. The proposal names the flip as the founder's and `model-freeze.mjs` guards it.
+
 **STOP: THE BOARD PUBLISHES PICKS THE ENGINE ITSELF SAYS ARE LOSING BETS (2026-09-13 17:20 UTC,
 read-only production SQL, 124 published PENDING rows). This is the most serious defect found today
 and it outranks everything else in this file.**
@@ -98,7 +132,37 @@ selection is published once per fixture across a whole series with byte-identica
 `pickGrade` disagrees with both confidence and decision (Rays ML 0 books graded STRONG_PLAY at 86,
 Yankees -1.5 11 books graded LEAN at 91).
 
-**FOUR DATA OUTAGES FOUND — none fixed, all need an owner:**
+**FIVE DATA OUTAGES FOUND — none fixed, all need an owner:**
+
+- **THE GATE-DECISION TABLE HAS NO WRITER, AND HAS NOT BEEN WRITTEN IN 94 DAYS
+  (found 2026-09-13 19:20 UTC).** `gate_decisions` holds 1,167 rows spanning
+  **2026-06-10 23:54 to 2026-06-11 21:14** and nothing since. This is not a stalled cron:
+  `git grep` for `gateDecision.create`, `.createMany` and `.upsert` across the repo, tests
+  excluded, returns **NOTHING**. No code writes this table. Three files read it:
+  `apps/web/lib/board/passes.ts`, `apps/web/lib/board/state.ts`,
+  `apps/web/lib/bot-outbox/load.ts`.
+
+  So every consumer of the gate's own record has been on its fallback path for three
+  months, and always will be. That is why `pass-reason.ts` documents that fallback rows
+  "were never evaluated" and why the ticker had to be changed from "we passed" to "held"
+  (#810) — the stronger word asserted a judgement that no longer exists anywhere. There is
+  no audit trail of why any game was passed on since 2026-06-11.
+
+  Two knock-on facts, both measured. `todayBounds()` — duplicated byte-for-byte at
+  `passes.ts:76` and `state.ts:305`, both using `setHours(0,0,0,0)`, i.e. the Node process
+  zone, i.e. UTC on Vercel — bounds THIS table, so its timezone is currently moot: 0 rows
+  in the UTC day, 0 in the Central day. Do not "fix" that boundary in isolation; it changes
+  nothing until a writer exists, and when one does the right zone is Central (it answers
+  "what did we evaluate today" for a reader) and NOT Eastern (which is the game-day
+  contract, a different question). Separately, `passes.ts:126/277/361/366` stamp the panel
+  with `now.toISOString().slice(0, 10)`, a UTC date, so from 19:00 Central onward the board
+  would headline today's passes with tomorrow's date — latent today only because the panel
+  has no rows to headline.
+
+  Whoever owns this decides first whether the gate decision record is coming back or is
+  retired. If it is retired, the three readers and the table should go, because code that
+  reads a source nothing writes is worse than no code. If it is coming back, the writer is
+  the work and the two items above ride with it.
 
 - **THE LINE ARCHIVE HAS BEEN DEAD SINCE 2026-08-22.** `odds_line_snapshots` holds
   684,498 rows across 526 games spanning **only 2026-08-19 to 2026-08-22** — four days,
