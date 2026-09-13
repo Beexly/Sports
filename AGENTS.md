@@ -108,11 +108,39 @@ Yankees -1.5 11 books graded LEAN at 91).
   recorded three weeks ago, so CLV cannot be graded on any pick generated since. Find why
   the archive writer stopped before drawing any further conclusion about CLV.
 
-- **Stale-generation picks are live on today's board.** `Chicago Bears -3.0` and
-  `Los Angeles Chargers ML (-503)` were generated **2026-05-22**; `Jaguars ML (-429)` and
-  `Lions ML (-324)` on 2026-08-22. They pass `freshPickWhere` because `dataFreshnessAt` is
-  restamped every refresh cycle while `selection`/`line` are frozen write-once (A-15). A
-  four-month-old line is being sold as today's read.
+- **~~Stale-generation picks are live on today's board.~~ MEASURED AND LARGELY WITHDRAWN
+  2026-09-13 18:55 UTC. Do not "fix" this — the obvious fix re-creates a bug that was
+  already fixed on purpose.** The original claim: `Chicago Bears -3.0` and
+  `Los Angeles Chargers ML (-503)` generated 2026-05-22, `Jaguars ML (-429)` and
+  `Lions ML (-324)` on 2026-08-22, passing `freshPickWhere` because `dataFreshnessAt` is
+  restamped every refresh while `selection`/`line` are frozen write-once (A-15) — "a
+  four-month-old line is being sold as today's read."
+
+  **The line is not stale. Only the timestamp is.** Read-only SQL over every published
+  PENDING row on a future game: 103 rows, 28 with `generatedAt` older than 14 days, 8
+  older than 30, oldest 2026-05-22. Joining each to the consensus of the last six hours
+  of the odds table, the drift between the published line and the current market is
+  **at most 0.07 points, and exactly 0.00 on 15 of the 18 rows** with live odds
+  (`Bengals -6.0` generated 05-22 against a current 5.96; `Ravens -10.0` from 08-22
+  against 9.96). These are October-to-January NFL fixtures where books post season-long
+  lines early and they do not move. An old `generatedAt` on an unmoved line is not a
+  wrong price.
+
+  **Why the obvious fix is forbidden.** Bounding the selection on `generatedAt` would
+  unpublish all 28. `stale-pick-policy.ts`'s own header records that `generatedAt`-based
+  selection WAS the defect, fixed on 2026-09-05: it hid 80 book-priced picks created
+  earlier in the week for that day's games. Re-introducing it re-creates that. It is also
+  the shape a reviewer flagged as silently unpublishing every founder pick, since
+  `dataFreshnessAt` is nullable and the founder lane leaves it null (0 such rows in this
+  selection today, but the hazard is real for any broader version).
+
+  **What survives, and it is a different defect: board SCOPE, not freshness.** 103
+  published PENDING rows sit on future games, including fixtures on 10-27, 11-08, 12-06,
+  12-13, 12-20, 12-27 and 01-10. A day board should not carry January. Whoever takes this
+  bounds the horizon or labels the row's date; nobody touches `freshPickWhere`.
+
+  Anyone re-opening the original claim needs a measurement that shows real drift, not an
+  old timestamp.
 
 - **The NFL elo path is not carrying information.** Six model-signal NFL picks today, six
   HOME teams, confidence 60-64, and three land on the identical `consensusPct` 0.6036.
