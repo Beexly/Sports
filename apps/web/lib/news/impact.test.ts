@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { readImpact, rankWire, corroborate, rankWireCorroborated, TIER_WEIGHT, type NewsItem } from "./impact";
+import { readImpact, rankWire, corroborate, rankWireCorroborated, TIER_WEIGHT, signalLabel, type NewsItem } from "./impact";
 import { DEMO_WIRE, NATIONAL_INSIDERS, NFL_TEAMS } from "./wire";
 
 const item = (over: Partial<NewsItem> = {}): NewsItem => ({
@@ -41,6 +41,20 @@ describe("news impact engine", () => {
   it("injury-return is positive, role-down is negative", () => {
     expect(readImpact(item({ signal: "injury-return" })).fantasyDelta).toBeGreaterThan(0);
     expect(readImpact(item({ signal: "role-down" })).fantasyDelta).toBeLessThan(0);
+  });
+
+  it("coach-report fires as a moderate positive with a distinct label", () => {
+    const r = readImpact(item({ signal: "coach-report" }));
+    expect(r.fantasyDelta).toBeGreaterThan(0);
+    expect(r.fantasyDelta).toBeLessThan(60); // below injury-return's 64 — coach news is context, not a rule change
+    expect(signalLabel("coach-report")).toBe("Coach report");
+  });
+
+  it("a low-reliability coach-report still yields a measured read, not a hold", () => {
+    const r = readImpact(item({ tier: "Beat", signal: "coach-report" }));
+    expect(r.reliability).toBe(TIER_WEIGHT.Beat);
+    expect(r.fantasyDelta).toBeGreaterThan(0);
+    expect(r.action.toLowerCase()).toContain("coach");
   });
 
   it("rankWire orders by urgency, fresh insider out-news on top", () => {

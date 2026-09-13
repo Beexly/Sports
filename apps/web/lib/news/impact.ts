@@ -31,7 +31,8 @@ export type SignalType =
   | "scheme"
   | "suspension"
   | "weather"
-  | "depth-chart";
+  | "depth-chart"
+  | "coach-report";
 
 /** Base fantasy magnitude (−100..100) and how fast it decays (half-life, minutes). */
 const SIGNAL: Record<SignalType, { fantasy: number; market: number; halfLife: number; label: string }> = {
@@ -44,6 +45,7 @@ const SIGNAL: Record<SignalType, { fantasy: number; market: number; halfLife: nu
   suspension: { fantasy: -70, market: -44, halfLife: 180, label: "Suspension" },
   weather: { fantasy: -24, market: -30, halfLife: 300, label: "Weather" },
   "depth-chart": { fantasy: 34, market: 18, halfLife: 480, label: "Depth chart" },
+  "coach-report": { fantasy: 26, market: 24, halfLife: 480, label: "Coach report" },
 };
 
 export type NewsItem = {
@@ -97,6 +99,8 @@ function actionFor(item: NewsItem, fantasyDelta: number, reliability: number): s
       return `Game-script risk on ${who}; lean the floor, fade the ceiling.`;
     case "depth-chart":
       return `${who} climbing the chart: a snap-count story worth watching.`;
+    case "coach-report":
+      return `Coach/beat signal on ${who}: context worth weighing before locking lineups or bets.`;
   }
 }
 

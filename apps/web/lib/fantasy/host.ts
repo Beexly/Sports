@@ -108,7 +108,7 @@ export const SCENES: Record<Scene, { readonly label: string; readonly setting: s
 function sceneForSignal(signal: SignalType): Scene {
   switch (signal) {
     case "injury-out": case "injury-return": case "weather": return "sideline";
-    case "role-up": case "role-down": case "depth-chart": case "scheme": return "practice";
+    case "role-up": case "role-down": case "depth-chart": case "scheme": case "coach-report": return "practice";
     case "trade": case "suspension": return "office";
   }
 }

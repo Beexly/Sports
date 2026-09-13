@@ -177,6 +177,15 @@ export function classifySignal(headline: string): SignalType | null {
   if (/\b(rain|wind|snow|weather|postponed|delay(ed)?)\b/.test(h)) return "weather";
   if (/\b(new (offensive|defensive) coordinator|scheme|play-?calling)\b/.test(h))
     return "scheme";
+  // Coach / beat-reporter report tier — checked LAST so a headline that also
+  // matches a stronger signal (injury, role, trade…) keeps the stronger one.
+  // Coach rumors and beat-reporter rumors are the founder's requested factor;
+  // this only fires on explicit coach/report framing, never on plain prose.
+  if (
+    /\b(coach(es)?|head coach|offensive coordinator|defensive coordinator|oc|dc|gm|general manager|beat writer|beat reporter|reporter(s)?|insider(s)?|source(s)?)\b/.test(h) ||
+    /\b(says?|said|according to|expected to|reported|per +[a-z-]+ +(report|source))\b/.test(h)
+  )
+    return "coach-report";
   return null;
 }
 
