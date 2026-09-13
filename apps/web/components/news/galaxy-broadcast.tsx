@@ -66,7 +66,7 @@ export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
           On air
         </span>
         {/* The week number came from league-twin.ts, where `currentWeek` is the
-            most common bye week in the FICTIONAL roster — not a calendar week.
+            most common bye week in the FICTIONAL roster, not a calendar week.
             It rendered "Week 10" on NFL Week 1 Sunday beside a live-pulsing ON
             AIR dot. A wrong week stamped on a broadcast is a factual claim, so
             it is gone rather than corrected: there is no real week to show. */}
