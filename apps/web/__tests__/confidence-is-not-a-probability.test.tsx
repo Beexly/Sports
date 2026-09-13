@@ -5,6 +5,7 @@ import path from "node:path";
 
 import { AnnotatedSampleSignal } from "@/components/home/annotated-sample-signal";
 import { Footer } from "@/components/ui/footer";
+import { honestConfidence } from "@/lib/calibration/honest-confidence";
 
 /**
  * C-88: THE EDGE INDEX IS NOT A WIN PROBABILITY, AND FOUR PUBLIC SURFACES SAID
@@ -29,6 +30,33 @@ import { Footer } from "@/components/ui/footer";
  * rendering is the honest place to assert it: this survives the copy being
  * moved into a constant, a CMS, or a map, and it fails only when a customer
  * would actually see the claim.
+ *
+ * MEASURED 2026-09-13, which turns the principle above from a design choice
+ * into a finding. Read-only over settled published non-bootstrap picks, pushes
+ * excluded, founder-v1 excluded (full tables in
+ * docs/calibration-proposals/2026-09-05-market-anchored-display-probability-v5.2.8.md
+ * section 3b):
+ *
+ *   confidence 80+ : n 235, claimed 0.8663, realized 0.5191, z = -10.7
+ *   Brier of confidence-as-probability on that band: 0.3617, where a constant
+ *   0.5 forecast scores 0.25 — worse than saying nothing
+ *
+ * And the structural reason no downstream repair works: confidence is NOT
+ * MONOTONE in outcome. Realized win rate peaks at conf 75-79 (0.6146) and falls
+ * to 0.4643 by conf 90-94, below the 0.5280 of the lowest band. The display
+ * calibrator (packages/prediction-engine/src/calibration-apply.ts) is isotonic
+ * regression, monotone non-decreasing BY CONSTRUCTION: it can flatten a curve,
+ * it can never invert one.
+ *
+ * The two blocks at the end of this file were added then. They cover the
+ * highest-traffic confidence render, the pick card, which the four surfaces
+ * above did not reach, and the calibrator's refusal paths — the only thing
+ * standing between a hidden or uncalibrated score and a printed percentage.
+ *
+ * KNOWN GAP, deliberately not asserted away: /calibration still scores
+ * confidence/100 as its forecast (lib/calibration/compute.ts
+ * expectedFromConfidence, consumed at :349/:355/:448/:459). That is Phase 2 of
+ * the v5.2.8 proposal and the flip is the founder's.
  */
 
 describe("customer copy does not claim the Edge Index is calibrated or a win rate", () => {
@@ -116,5 +144,63 @@ describe("the B2B probabilities route says what pModel actually is", () => {
     // both real quantities are already in the payload.
     expect(PROBABILITIES_ROUTE).toContain("marketFairProb");
     expect(PROBABILITIES_ROUTE).toContain("rankingP");
+  });
+});
+
+describe("the pick card renders confidence as a score, never a percent", () => {
+  const PICK_CARD = fs.readFileSync(
+    path.resolve(__dirname, "../components/picks/pick-card.tsx"),
+    "utf8",
+  );
+
+  it("prints the raw value as NN/100", () => {
+    expect(PICK_CARD).toContain("{confidence}/100");
+  });
+
+  it("never interpolates the raw value against a percent sign", () => {
+    // The card is the highest-traffic surface carrying this number. "91%" here
+    // is the exact claim the measurement in the header refutes.
+    expect(PICK_CARD).not.toMatch(/\{\s*confidence\s*\}\s*%/);
+    expect(PICK_CARD).not.toMatch(/\$\{\s*confidence\s*\}\s*%/);
+  });
+
+  it("keeps the reason on the page, so the next editor inherits it", () => {
+    expect(PICK_CARD).toMatch(/win probability, which this number is not/i);
+  });
+});
+
+describe("honestConfidence refuses to manufacture a percentage", () => {
+  const calibrator = (over: Record<string, unknown> = {}) =>
+    ({
+      isActive: true,
+      sampleSize: 500,
+      minSample: 100,
+      rawEce: 0.2,
+      calibratedEce: 0.05,
+      inactiveReason: "",
+      apply: (c: number) => ({ probability: c / 100, calibrated: true }),
+      ...over,
+    }) as Parameters<typeof honestConfidence>[1];
+
+  it("returns null when the calibrator is INACTIVE, so callers fall back to the score", () => {
+    expect(
+      honestConfidence(91, calibrator({ isActive: false, inactiveReason: "insufficient sample" }), true),
+    ).toBeNull();
+  });
+
+  it("returns null when the gate says calibration must not be applied", () => {
+    expect(honestConfidence(91, calibrator(), false)).toBeNull();
+  });
+
+  it("returns null when there is no confidence to calibrate", () => {
+    expect(honestConfidence(null, calibrator(), true)).toBeNull();
+  });
+
+  it("only produces a percentage when score, gate and audited calibrator all agree", () => {
+    // The one path that may print a percent, asserted positively so this suite
+    // pins the boundary rather than only its refusals.
+    const ok = honestConfidence(72, calibrator(), true);
+    expect(ok).not.toBeNull();
+    expect(ok!.pct).toBe(72);
   });
 });
