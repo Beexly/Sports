@@ -300,21 +300,50 @@ Yankees -1.5 11 books graded LEAN at 91).
   with a rounding wobble, not a per-game read — and it outranks genuine 11-book picks
   (Steelers -285 at conf 50) because elo returns ~60 while a real consensus returns ~50.
 
-- **`consensusPct` carries no information on MLB run lines either (measured 17:08 UTC,
-  read-only SQL).** Every one of the 14 published MLB SPREAD picks open on today's board
-  reads `consensusPct` exactly 1.0000 — Yankees -1.5 at confidence 91 and Blue Jays -1.5
-  at 58 are on the identical consensus figure. The card copy renders this as "100%
-  bookmaker consensus on <selection>", which a customer reads as "every book likes this
-  side". It does not mean that. An MLB run line is always 1.5, so "every book posts the
-  same number" is true by construction and says nothing about which side the books favour.
-  TOTAL picks on the same board do vary (0.6364 to 1.0000) and MONEYLINE picks vary, so
-  this is specific to the MLB spread path. The consequence is the same shape as the elo
-  bullet above: a factor pinned to a constant is still inside the ranking, so the 91-to-58
-  ordering on MLB run lines is being produced entirely by the other factors while the copy
-  credits consensus. Whoever owns this: either the reasoning string stops claiming
-  consensus on a structurally-constant input, or the run-line consensus is recomputed as a
-  side-agreement fraction (share of books whose price favours the selection) rather than a
-  line-agreement fraction. Do NOT "fix" it by suppressing the number — that hides it.
+- **`consensusPct` carries no information on ANY spread, in ANY sport. COPY FIXED
+  2026-09-13; the scoring input is unchanged and STILL OPEN.** The earlier note here scoped
+  this to "the MLB spread path" because an MLB run line is always 1.5, so "every book posts
+  the same number" is true by construction. **That reasoning was wrong and the scope was far
+  too narrow.** Re-measured 20:50 UTC over every published PENDING pick:
+
+```
+sport                  pickType    n   distinct consensusPct   all exactly 1.0000?
+americanfootball_nfl   SPREAD     30                       1   yes
+baseball_mlb           SPREAD      9                       1   yes
+americanfootball_ncaaf SPREAD      5                       1   yes
+soccer_usa_mls         SPREAD      4                       1   yes
+baseball_mlb           MONEYLINE  41                      30   no (0.6000-0.8604)
+baseball_mlb           TOTAL       9                       6   no (0.6364-1.0000)
+```
+
+  NFL spreads are not a fixed ladder (they run -3, -6.5, -10) and all 30 still read exactly
+  1.0000, so the run-line ladder is NOT the mechanism. The code says what is:
+  `homeFavoredCount = spreads.filter((s) => s < 0).length` counts books whose spread SIGN
+  puts the same team in front. `consensusPct` is agreement about **which team is favoured**,
+  a question books essentially never disagree on. It is not agreement about the line, and
+  not about which side holds value. MONEYLINE and TOTAL genuinely vary, so the degeneracy is
+  SPREAD-specific but sport-agnostic: 48 of 48 published spread picks, four sports.
+
+  Copy fixed in `scoring.ts`: the two spread strings now say how many books have that team
+  favoured and state the selection separately. Two things rode with it. First, the long-form
+  string printed a percentage computed over `spreadOdds` as a percentage "of
+  `pricedOdds.length`", a DIFFERENT array; both now come from the same set. Second, and more
+  important, the T-1 evidence binder (`lib/claims/public-consensus-claim.ts`) matched only
+  the literal phrase "NN% bookmaker consensus", and it is what forces a consensus claim to
+  carry a book count and freshness stamp or not render. The corrected wording would have
+  failed that match and rendered UNGATED, so the copy fix would have walked the claim out
+  from under its own tripwire. `CONSENSUS_CLAIM_RE` now has a second arm; both arms are
+  pinned by test. Legacy rows keep matching arm one, which they must: reasoning strings are
+  frozen write-once at creation, so the 48 already-published rows keep the old wording and
+  this fix is forward-only.
+
+  **STILL OPEN, and it is the bigger half:** `consensusPct` still FEEDS THE SCORE. It drives
+  `consensusScore` up to `CONSENSUS_COMPONENT_MAX` = 30 of 100 confidence points and sets
+  LOW_RISK at `LOW_RISK_CONSENSUS_THRESHOLD` = 0.70. Pinned at 1.0, that is 30 constant
+  points on every spread pick plus an automatic LOW_RISK label regardless of the game.
+  Recomputing it as a real side-agreement or price-agreement figure is a SCORING change: it
+  needs a MODEL_VERSION bump and a calibration pass, and must never be smuggled in as a
+  string edit. Do NOT "fix" it by suppressing the number either; that hides it.
 
 **CI: THE LOCKFILE BLOCKER IS CLEARED, AND IT UNCOVERED THREE REAL FAILURES (2026-09-13
 17:15 UTC).** The founder landed the resync (`077afd2` resync + `ff44d73` audit-fix); every
