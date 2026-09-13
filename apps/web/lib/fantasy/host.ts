@@ -199,7 +199,12 @@ export function buildBroadcast(persona: Persona = NOVA): Broadcast {
   const field = reporterTag(persona);
   const desk = reporterTag(ORION);
 
-  const coldOpen = `${persona.signOn} Week ${week} is loaded. Orion's at the desk; let's get you the edge before everybody else does.`;
+  // No week number in the script. `week` here is derived from the FICTIONAL
+  // roster's most common bye (lib/fantasy/league-twin.ts), not the calendar, so
+  // stating it asserts a fact that is simply wrong: it read "Week 10" on NFL
+  // Week 1 Sunday. The slate is invented anyway, so there is no real week to
+  // put here; the line works without one.
+  const coldOpen = `${persona.signOn} The slate is loaded. Orion's at the desk; let's get you the edge before everybody else does.`;
 
   const segments: Segment[] = [];
 
@@ -250,7 +255,7 @@ export function buildBroadcast(persona: Persona = NOVA): Broadcast {
   const signOff = persona.signOff;
 
   const plaintext = [
-    `GALAXY STUDIOS. THE GALAXY BRIEF · WEEK ${week}`,
+    `GALAXY STUDIOS. THE GALAXY BRIEF · SAMPLE SCRIPT`,
     `Anchors: ${persona.name} (${persona.role}) · ${ORION.name} (${ORION.role})`,
     "",
     `[COLD OPEN · ${SCENES.studio.label}]`,
@@ -266,7 +271,7 @@ export function buildBroadcast(persona: Persona = NOVA): Broadcast {
   return {
     persona,
     week,
-    title: `The Galaxy Brief. Week ${week}, with ${persona.name}`,
+    title: `The Galaxy Brief, with ${persona.name}`,
     coldOpen,
     segments,
     signOff,

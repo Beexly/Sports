@@ -6,6 +6,7 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
+import { boardMarketLabel } from "@/lib/board/market-label";
 import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { BoardHealthBadge } from "@/components/board/board-health-badge";
@@ -402,7 +403,14 @@ function BoardRowItem({ row, live }: { row: BoardStateRow; live: boolean }): JSX
     <article className="grid grid-cols-[1fr_auto] items-baseline gap-x-4 py-4">
       <div className="min-w-0">
         <h3 className={`font-display text-xl font-semibold tracking-tight ${held ? "text-ion-3" : "text-ion-white"}`}>{row.matchup}</h3>
-        <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] text-ion-3">{row.sport} · {row.market}</p>
+        {/* The market slot is a tier-redaction sentinel for non-premium viewers
+            and was rendering as the literal "ALL_MARKETS". A redacted row has
+            nothing truthful to say about the market, so it shows the sport
+            alone rather than a token or a guess. */}
+        <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] text-ion-3">
+          {row.sport}
+          {boardMarketLabel(row.market) ? ` · ${boardMarketLabel(row.market)}` : ""}
+        </p>
       </div>
       <div className="text-right">
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-3">Edge</p>
