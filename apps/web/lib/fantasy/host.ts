@@ -151,8 +151,13 @@ export type Broadcast = {
 // Honest and brand-safe: these scripts are composed deterministically from
 // templates in this module (no language model is involved), and the previous
 // wording used a phrase banned by apps/web/lib/positioning-vocab.json (rule 8).
+// The second sentence is load-bearing and was missing. The first only disclosed
+// WHO the anchors are, which a reader can take as "synthetic voice, real news".
+// The script reads out injury and transaction claims about named players — on an
+// NFL Sunday a visitor could act on one. The players, reporters and reports are
+// invented, and the disclosure has to say so, not merely say the anchors are.
 export const HOST_DISCLOSURE =
-  "Nova and Orion are Galaxy Sports Edge's synthetic presenters. Their scripts are machine-drafted from templates and human-reviewed before anything is published; they do not post or reply on their own.";
+  "Nova and Orion are Galaxy Sports Edge's synthetic presenters. Their scripts are machine-drafted from templates and human-reviewed before anything is published; they do not post or reply on their own. The players, reporters and reports in this script are fictional — nothing here is a real injury report or a real transaction.";
 
 // ─────────────── publish-readiness pipeline (enforced doctrine) ───────────────
 

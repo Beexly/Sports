@@ -65,10 +65,26 @@ export function GalaxyBroadcast({ broadcast }: { broadcast: Broadcast }) {
           <span className="inline-block h-1.5 w-1.5 rounded-full" style={{ background: "#ff5a5a", animation: "pp-live-pulse 2s ease-in-out infinite" }} />
           On air
         </span>
+        {/* The week number came from league-twin.ts, where `currentWeek` is the
+            most common bye week in the FICTIONAL roster — not a calendar week.
+            It rendered "Week 10" on NFL Week 1 Sunday beside a live-pulsing ON
+            AIR dot. A wrong week stamped on a broadcast is a factual claim, so
+            it is gone rather than corrected: there is no real week to show. */}
         <p className="font-display text-sm font-semibold text-ion-white">
-          GSN Broadcast <span className="text-ion-3">· Week {broadcast.week}</span>
+          GSN Broadcast <span className="text-ion-3">· sample script</span>
         </p>
-        <span className="ml-auto rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider" style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}>
+        {/* Two badges, because they answer two different questions. "Synthetic
+            presenters" says who is reading. It does NOT say the reports are
+            invented, and a reader can take it as a synthetic voice reading real
+            news. On a Sunday this card reads out injury claims about named
+            players. The content badge goes first and carries the caution tone. */}
+        <span
+          className="ml-auto rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider"
+          style={{ background: "rgba(255,180,84,0.2)", color: "#FFB454" }}
+        >
+          Sample script · fictional reports
+        </span>
+        <span className="rounded-full px-2.5 py-1 text-[10px] font-bold uppercase tracking-wider" style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}>
           Synthetic presenters
         </span>
       </div>

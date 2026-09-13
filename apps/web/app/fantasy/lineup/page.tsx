@@ -34,6 +34,7 @@ export default async function LineupPage() {
         ? "Live graded pool: real players with model-derived projections. The roster shown is a sample drawn from that pool (no league connection yet); optimization, leverage, and the floor/ceiling band are computed from real grades."
         : "Illustrative roster and projections. Optimization, leverage, and the floor/ceiling band are computed live from the sample pool."}
       wide
+      projectionsPool={pool ? "real" : "illustrative"}
     >
       <LineupOptimizer pool={gatedPool} />
     </FantasyShell>

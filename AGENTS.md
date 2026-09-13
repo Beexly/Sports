@@ -71,7 +71,7 @@ picks API, the DFS optimizer, or CLV.**
 **CI IS RED REPO-WIDE AND IT IS NOT ANY PR's FAULT.** Every job on every recent `main`
 run dies at `npm ci` with EUSAGE: `package-lock.json` is out of sync with the workspace
 set (11 `@sports/*` packages missing). Reproduced locally. `npm install` fixes it but the
-regenerated lock also adds 18 registry packages `package.json` already declares
+regenerated `package-lock.json` also adds 18 registry packages `package.json` already declares
 (`resend`, `web-push`, `@types/web-push`, `fast-check`, `standardwebhooks`, `postal-mime`,
 and transitives). `package-lock.json` is frozen for agents by law 2, so this needs a human
 commit: `npm install && git add package-lock.json && git commit`. Until it lands, NO PR in
