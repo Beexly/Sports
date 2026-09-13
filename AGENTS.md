@@ -46,7 +46,59 @@ picks API, the DFS optimizer, or CLV.**
    runs on fixture identity via `findTwinCandidate` and reads the full published set, not
    the 12-row display slice.
 
-**THREE DATA OUTAGES FOUND — none fixed, all need an owner:**
+**STOP: THE BOARD PUBLISHES PICKS THE ENGINE ITSELF SAYS ARE LOSING BETS (2026-09-13 17:20 UTC,
+read-only production SQL, 124 published PENDING rows). This is the most serious defect found today
+and it outranks everything else in this file.**
+
+Seven rows carry `factorBreakdown.independentEdge.decision = "PASS"` AND a negative `expectedClv`,
+and every one of them is `isPublished = true`:
+
+| conf | selection | trueProb | marketFairProb | decision | expectedClv |
+|---|---|---|---|---|---|
+| 78 | Los Angeles Dodgers -1.5 | 0.208 | 0.434 | PASS | -0.1356 |
+| 79 | San Diego Padres -1.5 | 0.307 | 0.405 | PASS | -0.0592 |
+| 58 | Toronto Blue Jays -1.5 | 0.097 | 0.387 | PASS | -0.1742 |
+| 64 | Atlanta Braves -1.5 | 0.217 | 0.378 | PASS | -0.0964 |
+| 72 | Milwaukee Brewers -1.5 | 0.425 | 0.462 | PASS | -0.0226 |
+| 66 | Minnesota Twins -1.5 | 0.353 | 0.362 | PASS | -0.0055 |
+| 56 | Seattle Mariners -1.5 | 0.412 | 0.434 | PASS | -0.0134 |
+
+`decision` is computed, persisted, and rendered in the paying customer's factor trail. The publish
+path does not appear to read it. Confirming that in code is the open work; the DATA above is
+measured and is not in doubt.
+
+**Second, `confidence` is not monotone in the engine's own probability, and today it inverted the
+board.** Ranked by the engine's own `expectedClv`, today's book-priced MLB slate reads D-backs -1.5
+(+0.2257), Red Sox -1.5 (+0.1351), White Sox -1.5 (+0.1032), Cubs -1.5 (+0.1010), Nationals -1.5
+(+0.0697), Rays -1.5 (+0.0629), Yankees ML (+0.0614), Yankees -1.5 (+0.0217). Ranked by
+`confidence` the same slate reads Yankees -1.5 **91** first and D-backs 85 third, with four PASS
+rows interleaved at 79/78/72/66. The top-ranked pick on the board had the SMALLEST positive edge on
+the board.
+
+The mechanism is visible in the stored breakdown for that 91: `consensusScore` 30 +
+`marketDepthScore` 20 are **constants** for any 11-book MLB run line (see the consensusPct bullet
+below), so 50 of the points are fixed before the engine looks at the game. The only term that knows
+whether the bet is good, `Independent Edge (skellam_cover)`, is stored with `"weight": -31` and
+`"impact": "positive"` — a negative weight labelled positive, on a customer-facing surface.
+
+**Rules from here:**
+- Never publish a row whose own `independentEdge.decision` is PASS. Withholding needs no
+  MODEL_VERSION bump (same asymmetry argument as the conviction gate) and is the safe direction.
+- Never present `confidence` to a customer as a probability or a win rate. It is a weighted factor
+  sum and today it was anti-correlated with the model's own P(win).
+- Rank public boards on `expectedClv` / `trueProb` vs `marketFairProb`, never on `confidence` alone,
+  until the composite is refit under a real MODEL_VERSION bump.
+- Do NOT "fix" any of this by suppressing the numbers. The numbers are right; the gate and the
+  ordering are wrong.
+
+**Also measured on the same pull, not yet root-caused:** 124 published PENDING rows include fixtures
+on 10-27, 12-06, 12-13, 12-20 and 01-10 with `generatedAt` of 05-22 and 08-22; the same model-signal
+selection is published once per fixture across a whole series with byte-identical trueProb
+(Rays ML 0.8597101874244611 on three different dates, Red Sox ML 0.7666284226276924 on three); and
+`pickGrade` disagrees with both confidence and decision (Rays ML 0 books graded STRONG_PLAY at 86,
+Yankees -1.5 11 books graded LEAN at 91).
+
+**FOUR DATA OUTAGES FOUND — none fixed, all need an owner:**
 
 - **THE LINE ARCHIVE HAS BEEN DEAD SINCE 2026-08-22.** `odds_line_snapshots` holds
   684,498 rows across 526 games spanning **only 2026-08-19 to 2026-08-22** — four days,
@@ -68,14 +120,43 @@ picks API, the DFS optimizer, or CLV.**
   with a rounding wobble, not a per-game read — and it outranks genuine 11-book picks
   (Steelers -285 at conf 50) because elo returns ~60 while a real consensus returns ~50.
 
-**CI IS RED REPO-WIDE AND IT IS NOT ANY PR's FAULT.** Every job on every recent `main`
-run dies at `npm ci` with EUSAGE: `package-lock.json` is out of sync with the workspace
-set (11 `@sports/*` packages missing). Reproduced locally. `npm install` fixes it but the
-regenerated `package-lock.json` also adds 18 registry packages `package.json` already declares
-(`resend`, `web-push`, `@types/web-push`, `fast-check`, `standardwebhooks`, `postal-mime`,
-and transitives). `package-lock.json` is frozen for agents by law 2, so this needs a human
-commit: `npm install && git add package-lock.json && git commit`. Until it lands, NO PR in
-this repo can pass CI.
+- **`consensusPct` carries no information on MLB run lines either (measured 17:08 UTC,
+  read-only SQL).** Every one of the 14 published MLB SPREAD picks open on today's board
+  reads `consensusPct` exactly 1.0000 — Yankees -1.5 at confidence 91 and Blue Jays -1.5
+  at 58 are on the identical consensus figure. The card copy renders this as "100%
+  bookmaker consensus on <selection>", which a customer reads as "every book likes this
+  side". It does not mean that. An MLB run line is always 1.5, so "every book posts the
+  same number" is true by construction and says nothing about which side the books favour.
+  TOTAL picks on the same board do vary (0.6364 to 1.0000) and MONEYLINE picks vary, so
+  this is specific to the MLB spread path. The consequence is the same shape as the elo
+  bullet above: a factor pinned to a constant is still inside the ranking, so the 91-to-58
+  ordering on MLB run lines is being produced entirely by the other factors while the copy
+  credits consensus. Whoever owns this: either the reasoning string stops claiming
+  consensus on a structurally-constant input, or the run-line consensus is recomputed as a
+  side-agreement fraction (share of books whose price favours the selection) rather than a
+  line-agreement fraction. Do NOT "fix" it by suppressing the number — that hides it.
+
+**CI: THE LOCKFILE BLOCKER IS CLEARED, AND IT UNCOVERED THREE REAL FAILURES (2026-09-13
+17:15 UTC).** The founder landed the resync (`077afd2` resync + `ff44d73` audit-fix); every
+`npm ci` step on main run 5618 is now green, so the EUSAGE blocker described in earlier
+notes is HISTORY — do not re-diagnose it. But `main` at `a0879d9e` still reads RED, because
+for the first time in weeks CI got far enough to run anything. Three jobs failed and none of
+them was caused by the merges that day; all three predate them and were simply unreachable
+behind the install error:
+
+- `Trust gate` — 2 `banned.lock` hits in `apps/web/components/fantasy/postlock-panel.tsx`
+  ("Post-lock readout" in the aria-label and the h2). The temporal-idiom exemption in
+  trust-gate covers "at lock"/"lock time"/"before the lock" but not "post-lock".
+- `All guardrails` — the same trust-gate hit, plus 1 `commercial-copy.tout:lock` on a code
+  comment in `components/three/signal-core-scene.tsx` ("the lock-on entrance") and 3
+  `em-dash-scan` hits in `components/news/the-beat.tsx` (two comments, one customer string).
+- `Test, type-check, lint, Prisma` — lint and typecheck both PASS; the failure is in
+  "Run tests (all workspaces)".
+
+The copy half is fixed by rewording the source, never the guard (law 9): the panel now reads
+"Late swap: what changed", the comment reads "the entrance sequence", and the-beat's dashes
+are prose. 26/26 guardrails green locally after that. Anyone picking this up: the guards were
+right and the phrases were real, so do not add allowlist entries.
 
 **NEW: THE CONVICTION GATE (`apps/web/lib/conviction/`).** Founder ask 2026-09-13: beat
 and coach reporting, prop alignment, travel and rest, offense-vs-defense and scheme
