@@ -698,16 +698,35 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // a scoring change, needs a MODEL_VERSION bump and a calibration pass, and
   // does not belong in a string edit.
   //
-  // Note also the denominator: consensusPct is computed over `spreads` (from
-  // `spreadOdds`), and the old long-form string printed it as a percentage "of
-  // ${pricedOdds.length}" — a DIFFERENT array, since `pricedOdds` excludes rows
-  // carrying a line with no two-sided price. Both numbers now come from the
-  // same set.
-  const favouredCount = Math.round(consensusPct * spreads.length);
+  // THE COUNT IS OVER `pricedOdds`, NOT `spreads`, and that is the whole point
+  // (Devin Review + CodeRabbit on PR #819, agreeing independently; both were
+  // right and the first draft of this clause was wrong).
+  //
+  // `spreadOdds` is every row carrying a spread; `pricedOdds` is the subset
+  // that also carries both prices, and `bookmakerCount: pricedOdds.length` is
+  // what the pick publishes as its evidence count. Counting over the wider
+  // array let the card read "11 of 14 books pricing this game have X favoured"
+  // beside an evidence caption reading "11 books" — the claim disagreeing with
+  // the very number offered to support it, which is the failure the T-1
+  // tripwire exists to prevent. The clause says "pricing", so it counts rows
+  // that are priced.
+  //
+  // STRICT sign checks, both directions. `consensusPct` is derived from
+  // `spreads.filter((s) => s < 0)`, so a PICK'EM row (spread exactly 0) is not
+  // home-favoured — and for an away pick `1 - homeFavoredPct` then counts it as
+  // away-favoured, which it is not either. A zero spread means the books name
+  // no favourite and it belongs in neither count. (The all-zero board is
+  // already refused above; a MIXED board reaches here.)
+  //
+  // `consensusPct` itself is UNCHANGED and still feeds consensusScore and
+  // LOW_RISK. This is display arithmetic only.
+  const favouredCount = pricedOdds.filter((o) =>
+    homeIsChosen ? (o.spread as number) < 0 : (o.spread as number) > 0,
+  ).length;
   const favouredClause =
-    favouredCount >= spreads.length
+    favouredCount === pricedOdds.length
       ? `Every book pricing this game has ${chosenTeam} favoured`
-      : `${favouredCount} of ${spreads.length} books pricing this game have ${chosenTeam} favoured`;
+      : `${favouredCount} of ${pricedOdds.length} books pricing this game have ${chosenTeam} favoured`;
 
   const reasoning =
     `${favouredClause}. We are on ${chosenTeam} ${spreadDisplay}. ` +

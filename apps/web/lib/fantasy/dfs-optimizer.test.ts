@@ -350,6 +350,39 @@ describe("dfs optimizer", () => {
     expect(res.partial).toBe(true);
   });
 
+  it("never puts the same lineup in a portfolio twice, even when alternatives run out", () => {
+    // THE REGRESSION THIS PINS (Devin Review, PR #819). Replacing Math.random()
+    // with a seeded PRNG made every retry inside generateLineups re-run the
+    // IDENTICAL search: same opts, same penalty, same slate, same seed. A
+    // collision could therefore never be escaped, and the loop used to accept
+    // the duplicate on the sixth attempt ("accept dup as last resort"), putting
+    // the same nine players in a portfolio twice as two contest entries.
+    //
+    // The randomness had been supplying that variation as a side effect of
+    // being wrong. It is now supplied on purpose, by a seed offset derived only
+    // from the lineup index and the attempt index — deterministic, and
+    // different per attempt.
+    //
+    // Asking for far more lineups than the pool can distinctly fill is the
+    // case that used to produce duplicates.
+    const r = generateLineups(base({ mode: "gpp" }), 40, 1);
+    const keys = r.lineups.map((l) => l.players.map((p) => p.id).sort().join(","));
+    expect(new Set(keys).size).toBe(keys.length);
+
+    // And when it genuinely runs out, it says so rather than padding.
+    if (r.lineups.length < 40) expect(r.partial).toBe(true);
+  }, 60_000);
+
+  it("is reproducible across calls — same request, same portfolio", () => {
+    // The other half of the same property: varying the seed per attempt must
+    // not make the portfolio itself vary between runs.
+    const a = generateLineups(base({ mode: "gpp" }), 5, 0.8);
+    const b = generateLineups(base({ mode: "gpp" }), 5, 0.8);
+    expect(a.lineups.map((l) => l.players.map((p) => p.id).join(","))).toEqual(
+      b.lineups.map((l) => l.players.map((p) => p.id).join(",")),
+    );
+  }, 60_000);
+
   it("calls no nondeterministic RNG anywhere — the solver is fully deterministic", () => {
     // Strip comments before scanning. The module now DOCUMENTS at length why the
     // platform RNG was removed and what it broke, and that prose is the record of
