@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { CENTRAL_TZ, CT_SUFFIX, formatCentralTime } from "@/lib/time/central";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { Nav } from "@/components/ui/nav";
@@ -23,11 +24,21 @@ export function generateMetadata({ params }: { params: { sport: string } }): Met
   };
 }
 
+/**
+ * Kickoffs read Central, and say so. Server component, so the bare
+ * toLocaleString() here formatted in the SERVER's zone (UTC on Vercel) and
+ * printed a UTC clock face with no zone label — see the same defect and its
+ * production measurement in app/board/page.tsx.
+ */
 function kickLabel(commenceTime: string | null): string {
   if (!commenceTime) return "Kickoff unlisted";
   const d = new Date(commenceTime);
   if (Number.isNaN(d.getTime())) return "Kickoff unlisted";
-  return d.toLocaleString("en-US", { weekday: "short", hour: "numeric", minute: "2-digit" });
+  const day = new Intl.DateTimeFormat("en-US", {
+    timeZone: CENTRAL_TZ,
+    weekday: "short",
+  }).format(d);
+  return `${day} ${formatCentralTime(d)} ${CT_SUFFIX}`;
 }
 
 export default async function LeagueSlatePage({

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
+import { formatCentralTime, CT_SUFFIX } from "@/lib/time/central";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
@@ -27,10 +28,23 @@ export const metadata: Metadata = {
 // Reads live board state per request; never statically prerendered.
 export const dynamic = "force-dynamic";
 
+/**
+ * Board timestamps read Central, and say so.
+ *
+ * This is a server component, so a bare toLocaleTimeString() formatted in the
+ * SERVER's zone — UTC on Vercel — and printed a UTC clock face with no zone
+ * label at all. Measured on production 2026-09-13: /api/board/state reported
+ * lastRefresh 18:06:07Z and the page rendered "Last refresh 6:06 PM". It was
+ * 1:06 PM in Central. Five hours wrong, and nothing on the page said which zone
+ * it meant, so a reader could not even correct for it.
+ *
+ * formatCentralTime pins the zone explicitly, and the CT suffix makes the
+ * reading self-describing rather than something the viewer has to infer.
+ */
 function timeLabel(value: string): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "Unavailable";
-  return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+  return `${formatCentralTime(date)} ${CT_SUFFIX}`;
 }
 
 export default async function BoardPage(): Promise<JSX.Element> {
