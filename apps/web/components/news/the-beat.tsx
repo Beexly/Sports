@@ -178,7 +178,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
         </label>
       </div>
 
-      {/* wire — the lead story gets the front page, the rest get the wire */}
+      {/* wire: the lead story gets the front page, the rest get the wire */}
       <div className="space-y-2.5">
         {shown.map((r, idx) => {
           const hex = TIER_HEX[r.item.tier];
@@ -196,7 +196,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
                   Lead story · {r.item.tier}
                 </p>
               )}
-              {/* urgency — lead gets a meter, the wire gets the dial */}
+              {/* urgency: lead gets a meter, the wire gets the dial */}
               {lead ? (
                 <div className="mb-3" aria-label={`Urgency ${r.urgency} of 100`}>
                   <div className="flex items-baseline justify-between">
@@ -270,7 +270,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
         {shown.length === 0 && (
           <div className="surface-card p-8 text-center">
             <p className="font-display text-xl text-ion-white">The wire is quiet on this frequency.</p>
-            <p className="mx-auto mt-1 max-w-md text-sm text-ion-2">Nothing at this tier, team, or heat level right now — that is the filter talking, not the newsroom. Loosen it and the wire comes back.</p>
+            <p className="mx-auto mt-1 max-w-md text-sm text-ion-2">Nothing at this tier, team, or heat level right now. That is the filter talking, not the newsroom. Loosen it and the wire comes back.</p>
             <button type="button" onClick={() => { setTierFilter("All"); setTeam("All"); setOnlyActionable(false); }}
               className="mt-4 rounded-full bg-ion-white px-4 py-1.5 text-[11px] font-bold uppercase tracking-wider text-black">
               Reset the wire

@@ -55,10 +55,18 @@ describe("skellamCoverFairValue", () => {
 describe("scoreSpreadPick — Skellam ATS ranking", () => {
   it("leaves heuristic confidence unchanged and prices ranking when skellam_cover is present", () => {
     const baseline = spread(scoreGame(spreadInput(undefined)));
+    // Home must be a BACKABLE cover here, not just a favourite. At 3.4/2.2 the
+    // expected margin is +1.2, so P(home covers -1.5) lands BELOW the -110/-110
+    // market's ~0.5 — an adverse edge, which scoreSpreadPick now withholds
+    // (scoring.ts pricesWorseThanMarket). That withhold is correct and is what
+    // this fixture accidentally exercised; it is not what this test is about.
+    // This test is about ranking: confidence stays the market-echo composite
+    // while rankingScore moves onto trueProb. So the lambdas below give home a
+    // real cover edge, and every assertion in this test is unchanged.
     const cover = skellamCoverFairValue({
       sportKey: "icehockey_nhl",
-      lambdaHome: 3.4,
-      lambdaAway: 2.2,
+      lambdaHome: 4.6,
+      lambdaAway: 1.6,
       spreadHome: -1.5,
     })!;
     const withSkellam = spread(
