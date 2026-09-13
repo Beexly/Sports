@@ -115,9 +115,14 @@ export default async function CalibrationProofRoomPage() {
             {MARKET_IMPLIED_CALIBRATION_CLAIM}
           </p>
           <p className="mt-2 max-w-2xl text-xs leading-5 text-ion-2" data-testid="calibration-chart-basis">
-            The interactive chart below groups settled picks by confidence score. It is a
-            separate view of the same record, not the market-implied measurement described
-            above.
+            The interactive chart below groups settled picks by confidence score, and its
+            &ldquo;expected&rdquo; line is that score read as a percentage. It is a separate
+            view of the same record, not the market-implied measurement described above, and
+            it is not a forecast. We have measured how far off it runs: across 2,385 settled
+            picks, the rows we scored 80 and above won 51.9% of the time, not the 86.6% the
+            score reads as. It also does not climb in a straight line - our 75-79 rows have
+            won more often than our 90-plus rows. Read it as a picture of how our selection
+            score has behaved, not as a rate we are claiming.
           </p>
         </header>
 
