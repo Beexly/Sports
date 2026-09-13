@@ -20,6 +20,7 @@ import { Reveal } from "@/components/motion/reveal";
 import { WorldSection } from "@/components/world/world-section";
 import { NoBetGateChapter } from "@/components/world/no-bet-gate";
 import { loadBoardState } from "@/lib/board/state";
+import { publishedTickerLine, heldTickerLine } from "@/lib/board/market-label";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 
 export const dynamic = "force-dynamic";
@@ -69,12 +70,16 @@ export default async function HomePage(): Promise<JSX.Element> {
   const boardUnavailable =
     stateResult.meta.dataError === "DB_UNREACHABLE" || boardSuppressed;
 
+  // The market slot is redacted to a sentinel for non-premium viewers, and it
+  // was being printed raw: "we're on ALL_MARKETS". A held row also said "we
+  // passed", which on the fallback path is a judgement nobody made. Both now go
+  // through lib/board/market-label.ts.
   const tickerItems = [
     ...state.publishedToday.slice(0, 8).map(
-      (p) => `${p.matchup}: we're on ${p.market}`,
+      (p) => publishedTickerLine(p.matchup, p.market),
     ),
     ...state.gatedTodayRows.slice(0, 6).map(
-      (row) => `${row.matchup}: we passed`,
+      (row) => heldTickerLine(row.matchup, row.gateReason),
     ),
   ];
 
