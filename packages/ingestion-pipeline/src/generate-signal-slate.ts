@@ -59,6 +59,12 @@ export type SignalSlateResult = {
    * own clock is what refused them.
    */
   readonly skippedInPlay: number;
+  /**
+   * Fixtures refused because an earlier fixture of the SAME matchup was already
+   * minted this run. Counted rather than silently dropped: this is a real slate
+   * reduction and someone must be able to see its size.
+   */
+  readonly seriesRepeatsSkipped: number;
   readonly errors: readonly string[];
   readonly note: string;
 };
@@ -132,11 +138,32 @@ export function blendIndependentHomeFair(
   return { homeP: clamp01(homeP), sources: pairs.map((p) => p.s) };
 }
 
-function pickGradeFromConfidence(confidence: number): "STRONG_PLAY" | "SOLID_PLAY" | "LEAN" {
-  if (confidence >= 80) return "STRONG_PLAY";
-  if (confidence >= 65) return "SOLID_PLAY";
-  return "LEAN";
-}
+/**
+ * A model signal is graded LEAN. Always.
+ *
+ * This lane used to run its own confidence ladder (>=80 STRONG_PLAY, >=65
+ * SOLID_PLAY) while every book-priced row was graded by the engine's shared
+ * ladder, which is a CONJUNCTION of confidence AND a measured pricing edge. Two
+ * incompatible ladders wrote the same `pickGrade` column, and because this
+ * lane's `confidence` is `Math.round(trueProb * 100)` — a probability, not the
+ * book lane's evidence-strength composite — the looser cut-points fired
+ * constantly.
+ *
+ * Measured on the 124 published PENDING rows of 2026-09-13: of the 44 rows
+ * graded SOLID_PLAY or better, 35 (80%) had bookmakerCount 0. Recomputing the
+ * shared ladder over the whole board disagreed with the stored grade on exactly
+ * those 35 rows and on none of the 79 book-priced rows.
+ *
+ * There is nothing to conjoin here. A pure signal has no book price, so
+ * `marketFairProb` is null and `expectedClv` is 0 by construction a few lines
+ * below — there is no measured edge over any market, and a grade that claims one
+ * is an unearned claim. LEAN is the honest floor, and it only ever REMOVES a
+ * label: no row gains one.
+ *
+ * Raising a model signal above LEAN again means giving it a real market to be
+ * measured against, not a looser threshold.
+ */
+const MODEL_SIGNAL_GRADE = "LEAN" as const;
 
 /**
  * Generate model-signal MONEYLINE picks for upcoming games using independents only.
@@ -272,6 +299,32 @@ export async function generateSignalSlate(opts?: {
     return batch;
   };
 
+  /**
+   * Matchups already minted this run, as `sportKey|teamA|teamB` with the pair
+   * sorted so home/away cannot split it.
+   *
+   * The estimator conditions on (sportKey, homeTeam, awayTeam) plus a
+   * `gameDate < commenceTime` history cutoff, and for two not-yet-played games
+   * of the same series that cutoff selects the identical history. So every game
+   * of an upcoming series receives a BYTE-IDENTICAL trueProb, and minting one
+   * pick per fixture sells a single read as N reads that then compete with each
+   * other for board space against genuine book-priced rows.
+   *
+   * Measured on 2026-09-13: 18 of 124 published rows (40% of the 45 model
+   * signals) were exact repeats across 9 matchups — San Diego Padres ML at
+   * trueProb 0.7509071950876358 on four separate dates, Tampa Bay Rays ML at
+   * 0.8597101874244611 on three.
+   *
+   * `gameList` is ordered by commenceTime ascending and collapseGameRowsToFixtures
+   * preserves input order, so the survivor is the earliest kickoff — the one
+   * whose history cutoff is soonest and therefore least stale.
+   *
+   * WITHHOLD-ONLY: nothing is scored, re-priced, re-ranked or unpublished. The
+   * surviving set is a strict subset of what this path would have written.
+   */
+  const mintedMatchups = new Set<string>();
+  let seriesRepeatsSkipped = 0;
+
   for (const game of gameList) {
     const sportKey = game.sport?.key ?? "unknown";
     // A two-way moneyline on a three-way market overstates P(win): the blend
@@ -333,6 +386,14 @@ export async function generateSignalSlate(opts?: {
     }
     const homeTeam = game.homeTeamName;
     const awayTeam = game.awayTeamName;
+
+    // Same two teams, same run: the estimator cannot tell these apart.
+    const matchupKey = `${sportKey}|${[homeTeam, awayTeam].sort().join("|")}`;
+    if (mintedMatchups.has(matchupKey)) {
+      seriesRepeatsSkipped += 1;
+      picksSkipped += 1;
+      continue;
+    }
     let independents: IndependentMarketFairValue[];
     try {
       independents = await buildIndependentFairValues({
@@ -379,7 +440,8 @@ export async function generateSignalSlate(opts?: {
     const chosenTeam = homeChosen ? homeTeam : awayTeam;
     const rankingP = trueProb;
     const edgePts = Math.max(0, Math.round((trueProb - 0.5) * 100));
-    const pickGrade = pickGradeFromConfidence(confidence);
+    mintedMatchups.add(matchupKey);
+    const pickGrade = MODEL_SIGNAL_GRADE;
     const tier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
     const sources = blend.sources;
     const sourcesLabel = sources.join(", ");
@@ -588,7 +650,8 @@ export async function generateSignalSlate(opts?: {
   console.log(
     `${logPrefix} ${note}` +
       (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : "") +
-      (skippedInPlay > 0 ? ` skippedInPlay=${skippedInPlay}` : ""),
+      (skippedInPlay > 0 ? ` skippedInPlay=${skippedInPlay}` : "") +
+      (seriesRepeatsSkipped > 0 ? ` seriesRepeatsSkipped=${seriesRepeatsSkipped}` : ""),
   );
 
   return {
@@ -599,6 +662,7 @@ export async function generateSignalSlate(opts?: {
     picksSkipped,
     fixtureUnconfirmed,
     skippedInPlay,
+    seriesRepeatsSkipped,
     errors,
     note,
   };
