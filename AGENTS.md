@@ -149,10 +149,35 @@ suppressed may still carry a good published row, so the promotion would put the 
 both lanes and re-create the "one game, one story" contradiction that
 `model-signal-coherence.ts` exists to prevent.
 
-Still OPEN from this section: the RANKING half. Confidence still orders the board and is still
+Still OPEN from this section: the RANKING half. Confidence is still
 anti-correlated with the engine's own edge (re-measured 20:20 UTC: conf 91 carries +0.0217, the
 smallest positive edge on the slate, while conf 85 carries +0.2257, the largest). Suppression
 removes the negatives; it does not reorder the positives.
+
+**One half of that IS now closed: POOL SELECTION.** Both public read surfaces sort in app code on
+`rankingSortKey` (`lib/ranking/sort-key.ts`, key = `factorBreakdown.rankingP`), but `/api/picks`
+fetched its candidate pool with `orderBy` confidence and a `take`, so the truncation ran in the
+DATABASE and the app-level re-rank could only reorder rows confidence had already approved. A row
+with the best rankingP on the slate and a middling confidence never reached the sort function. The
+pool is now fetched on `generatedAt`, which is what `lib/board/state.ts` already did and says why
+in its own comment. `isFeatured` stays in both orderings because the app-level comparator pins it
+first as well.
+
+The same edit removed a viewer asymmetry nobody had noticed: the pool was 48 rows for a viewer
+with a daily cap and 200 for one without, so a FREE viewer's two picks were the best of a quarter
+of the slate while a PRO viewer ranked over all of it. It is one constant for everyone now. The
+RESPONSE cap is untouched — still `slice(0, dailyPickLimit)` after filter and rank.
+
+Note for whoever takes the remaining half: `picks-paywall-copy-truth.test.ts` had pinned the
+literal ternary `dailyPickLimit != null ? 48 : 200`, so that asymmetry was being guarded as if it
+were the paywall invariant. Its own comment states the real invariant (bounded over-fetch, then
+slice after filter and rank) and it now asserts that. Expect more of this: an assertion written to
+match the code it was shipped beside pins whatever that code happened to do, defect included — the
+line-archive outage earlier in this file is the same failure at larger cost.
+
+What is still open is the SCORE, not the plumbing: `confidence` remains a weighted factor sum with
+50 constant points on any 11-book spread, and refitting it needs a MODEL_VERSION bump and a
+calibration pass. Nothing about pool selection changes that.
 
 **Second, `confidence` is not monotone in the engine's own probability, and today it inverted the
 board.** Ranked by the engine's own `expectedClv`, today's book-priced MLB slate reads D-backs -1.5
