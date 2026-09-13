@@ -135,7 +135,14 @@ describe("toEdgeIndex", () => {
 // ============================================================
 // Edge score sanity: a consistent two-way market cannot fabricate a max edge.
 // A vanilla -110/-110 total de-vigs to ~0.5 fair vs ~0.524 offered → rawEdge
-// is slightly NEGATIVE, so the Edge Index lands near ~26, never 100.
+// is slightly NEGATIVE, so the Edge Index lands near ~52, never 100.
+//
+// SCALE NOTE (v5.2.7 → v5.3.0). The Edge Index is now published across the whole
+// range an honest market can produce: EdgeIndex = clamp(round(100 + 2000 *
+// rawEdge), 0, 100), so 100 is a fair price and ~50 an ordinary -110/-110
+// two-way. It used to be 50 + 1000 * rawEdge, which put a fair price at 50 and
+// left the published 50-100 half unreachable. The numbers below moved with the
+// axis; the PROPERTY each one protects — no fabricated maximum — did not.
 // ============================================================
 
 const makeTwoWayTotalInput = (
@@ -159,42 +166,80 @@ const makeTwoWayTotalInput = (
 });
 
 describe("scoreTotalPick — edge score of a realistic two-way total", () => {
-  it("a -110/-110 total scores a modest edge (~26), never the 100 max", () => {
+  it("a -110/-110 total scores a modest edge (~52), never the 100 max", () => {
     const total = scoreGame(makeTwoWayTotalInput(-110, -110)).find(
       (p) => p.pickType === "TOTAL",
     );
     expect(total).toBeTruthy();
     expect(total!.edgeScore).toBeGreaterThan(0);
-    expect(total!.edgeScore).toBeLessThan(40);
+    // A fair price is 100. This market charges ~2.4 points of juice on the
+    // picked side, so it must land clearly short of the maximum.
+    expect(total!.edgeScore).toBeLessThan(80);
     // And the public Edge Index derived from it is well under 100.
-    expect(toEdgeIndex(total!.edgeScore)).toBeLessThan(40);
+    expect(toEdgeIndex(total!.edgeScore)).toBeLessThan(80);
   });
 
   it("no two-way American price combo drives the Edge Index to 100", () => {
     const prices = [-200, -150, -120, -110, 100, 120, 150, 170];
+    let vigged = 0;
+    let inconsistent = 0;
     for (const over of prices) {
       for (const under of prices) {
         const total = scoreGame(makeTwoWayTotalInput(over, under)).find(
           (p) => p.pickType === "TOTAL",
         );
         if (!total) continue;
-        // Whether the book is vigged (sum > 1, real) or sub-vig (sum < 1,
-        // inconsistent), the engine never fabricates a maxed-out edge.
-        expect(total.edgeScore).toBeLessThanOrEqual(50);
+        const overround =
+          americanToImpliedProbability(over) + americanToImpliedProbability(under);
+
+        if (overround < 1) {
+          // Sub-vig: internally inconsistent, no trustworthy price. A
+          // price-quality reading we cannot vouch for fails closed at the
+          // BOTTOM of the axis, never the top.
+          inconsistent++;
+          expect(total.edgeScore, `${over}/${under} overround ${overround}`).toBe(0);
+          continue;
+        }
+        if (overround === 1) {
+          // Exactly zero hold (e.g. -200/+200). This is a genuinely fair price,
+          // and 100 is the truthful reading of it on a price-quality axis. It is
+          // an artefact of exact integer fixtures, not something a book offers.
+          expect(total.edgeScore, `${over}/${under} is zero-hold`).toBe(100);
+          continue;
+        }
+        // The real case: the book charges vig, so the picked side pays juice,
+        // rawEdge < 0, and the index MUST fall short of the maximum. This is
+        // the property the original "never 100" guard was protecting.
+        vigged++;
+        expect(
+          total.edgeScore,
+          `${over}/${under} charges hold ${(overround - 1).toFixed(4)} yet published a fair-price index`,
+        ).toBeLessThan(100);
       }
     }
+    // Non-vacuity: both branches must actually have been exercised.
+    expect(vigged).toBeGreaterThan(0);
+    expect(inconsistent).toBeGreaterThan(0);
   });
 
   it("an inconsistent sub-vig book (-120/+170, implied sum 0.92) does NOT fabricate a max edge", () => {
     // This is the exact shape behind the reported bug: de-vigging a negative-hold
     // book inflated the chosen-side fair prob to +5% over the offered price and
-    // maxed the Edge Index. The overround guard now neutralizes the positive edge.
+    // maxed the Edge Index. The overround guard neutralizes the positive edge.
+    //
+    // On the retired half scale the neutralized value rendered as 50 — the top
+    // of what an honest market could reach, but only the MIDDLE of the published
+    // axis, so it read as unremarkable. On the current scale rawEdge = 0 is 100,
+    // the loudest number the product prints, so passing the clamped value
+    // through would turn a refusal-to-vouch into a claim of a perfect price.
+    // An inconsistent market therefore publishes the BOTTOM of the axis.
     const total = scoreGame(makeTwoWayTotalInput(-120, 170)).find(
       (p) => p.pickType === "TOTAL",
     );
     expect(total).toBeTruthy();
-    expect(total!.edgeScore).toBeLessThanOrEqual(50);
-    expect(toEdgeIndex(total!.edgeScore)).toBeLessThan(100);
+    expect(total!.edgeScore).toBe(0);
+    expect(toEdgeIndex(total!.edgeScore)).toBe(0);
+    expect(total!.pickGrade).toBe("LEAN");
   });
 });
 

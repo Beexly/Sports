@@ -44,6 +44,7 @@
 // ============================================================
 
 import type { ScoredPick } from "@sports/types";
+import { EDGE_INDEX_MAX } from "@sports/types";
 import { americanToImpliedProbability, clamp } from "./scoring.js";
 
 // Fraction of full Kelly to apply. 0.25 = quarter-Kelly, a
@@ -59,9 +60,22 @@ export const MAX_UNITS_PER_PICK = 3;
 // but no stake is suggested.
 export const MIN_CONFIDENCE_FOR_STAKE = 65;
 
-// Below this edge we return null — without a clear pricing edge,
+// Below this Edge Index we return null — without a clear pricing edge,
 // Kelly is undefined or negative.
-export const MIN_EDGE_FOR_STAKE = 50;
+//
+// SCALE MIGRATION (v5.2.7 → v5.3.0), behaviour-preserving BY CONSTRUCTION.
+// This was 50 on the retired half scale, where 50 was the zero-hold ceiling —
+// i.e. the gate admitted nothing an honest market could produce, and
+// `recommendStake` returned null for every real pick. The full scale is exactly
+// twice the half scale (`legacyHalfScaleToCurrent`), so the image of the old
+// threshold is 2 × 50 = 100 = `EDGE_INDEX_MAX`. Carrying the number across
+// unchanged would have silently HALVED this gate and switched bankroll-sizing
+// advice on for the whole board as a side effect of a display rescale.
+//
+// This is the old guard restated on the new axis, not a new guard: it still
+// admits only a perfectly fair price. Loosening it is a separate, deliberate
+// decision that must be made on its own evidence.
+export const MIN_EDGE_FOR_STAKE = EDGE_INDEX_MAX;
 
 export interface KellyStake {
   /**

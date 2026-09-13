@@ -115,10 +115,30 @@ function confidenceBand(confidence: number): string {
   if (confidence >= 50) return "a lean";
   return "low conviction";
 }
+/**
+ * Describe the pick's Edge Index in words.
+ *
+ * The Edge Index is a PRICE-QUALITY reading — the de-vigged fair probability of
+ * the picked side minus the probability implied by the price actually offered on
+ * it (see `@sports/types`' `edge-index.ts`). It says how much of the side's fair
+ * value the book's price takes. It is not a forecast, and nothing fits it to
+ * settled results.
+ *
+ * These bands used to read "a strong / moderate / slim EDGE". On the retired
+ * half scale that was harmless only by accident: the index could never exceed
+ * 50, so every pick landed in "a slim edge" and the upper bands never fired. On
+ * the current full scale an ordinary −110/−110 market reads ~52 and a sharp one
+ * reads ~76, so the old wording would have started telling a drafting model that
+ * routine markets carry "a strong edge" — a claim about our advantage that the
+ * number does not make. The bands now describe the PRICE, which is what is
+ * measured.
+ *
+ * Cut-points are the same 70 / 50; only the words changed.
+ */
 function edgeBand(edgeScore: number): string {
-  if (edgeScore >= 70) return "a strong edge";
-  if (edgeScore >= 50) return "a moderate edge";
-  return "a slim edge";
+  if (edgeScore >= 70) return "a cheap price vs fair value";
+  if (edgeScore >= 50) return "an ordinary price vs fair value";
+  return "an expensive price vs fair value";
 }
 
 function formatPicks(weekData: JournalWeekData): string {
@@ -132,7 +152,7 @@ function formatPicks(weekData: JournalWeekData): string {
       pick.result,
       // Qualitative only — never the raw paid confidence or internal edge number.
       `conviction: ${confidenceBand(pick.confidence)}`,
-      `edge: ${edgeBand(pick.edgeScore)}`,
+      `price vs fair value: ${edgeBand(pick.edgeScore)}`,
       `consensus ${Math.round(pick.consensusPct * 100)}%`,
       `${pick.bookmakerCount} books`,
       `model ${pick.modelVersion}`,
