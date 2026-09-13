@@ -209,7 +209,19 @@ describe("/picks — the server paywall is NOT weakened by the copy fix", () => 
     // 0-1 picks instead of their 2. The paywall invariant is response-level:
     // a bounded over-fetch pool, then slice(0, dailyPickLimit) AFTER
     // filter + rank. Both halves are pinned here.
-    expect(routeSrc).toMatch(/take:\s*entitlements\.dailyPickLimit\s*!=\s*null\s*\?\s*48\s*:\s*200/);
+    //
+    // This assertion used to pin the literal `dailyPickLimit != null ? 48 :
+    // 200`, which encoded a SECOND, unintended rule: a capped viewer ranked
+    // over a quarter of the pool an uncapped viewer ranked over. The pool is
+    // now one constant for everyone (see lib/picks/picks-pool-ordering.test.ts),
+    // so what is pinned here is the property the paragraph above actually
+    // states — bounded, over-fetched, and not a function of the viewer.
+    const take = /take:\s*([^,\n]+)/.exec(routeSrc)?.[1]?.trim() ?? "";
+    expect(take).not.toMatch(/dailyPickLimit|\?/);
+    // Over-fetched: far above any daily limit the ladder sells.
+    expect(Number(take)).toBeGreaterThan(50);
+    // Still bounded: an unbounded fetch is its own production hazard.
+    expect(Number(take)).toBeLessThanOrEqual(500);
     expect(routeSrc).toMatch(/rankedPicks\.slice\(0,\s*entitlements\.dailyPickLimit\)/);
     expect(routeSrc).toMatch(/limitedPicks\.map/);
   });
