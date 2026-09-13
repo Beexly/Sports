@@ -40,6 +40,8 @@ import { loadStripeWebhookHostsPosture } from "@/lib/ops/stripe-webhook-hosts";
 import { loadWaitlistPosture } from "@/lib/ops/waitlist-posture";
 import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
 import { loadCanonicalSamplePosture } from "@/lib/ops/canonical-sample-posture";
+import { loadLineArchiveFreshness } from "@/lib/ops/line-archive-freshness";
+import { isLineArchiveEnabled } from "@sports/ingestion-pipeline";
 import {
   calibrationDriftPosture,
   loadCalibrationOpsSurface,
@@ -253,6 +255,23 @@ export async function GET(request: Request) {
     } catch {
       sample = null;
     }
+  }
+
+  // Line-archive freshness. The archive went quiet on 2026-08-22 and the
+  // outage was found by hand three weeks later, because the capture path
+  // swallows its own errors by design and nothing read the row count. This is
+  // that reader. Closing lines are what CLV is graded from, and CLV is the one
+  // unmet ESTABLISHED requirement, so silence here is not a cosmetic gap.
+  //
+  // The module reports DISABLED without touching the database, so it costs
+  // nothing while the founder's flag is off — and DISABLED vs STALE is exactly
+  // the distinction the repo could not make when diagnosing the outage.
+  let lineArchive: Awaited<ReturnType<typeof loadLineArchiveFreshness>> | null = null;
+  if (!isStubMode()) {
+    lineArchive = await loadLineArchiveFreshness(db, {
+      enabled: isLineArchiveEnabled(),
+      now: new Date(),
+    });
   }
 
   // Kill-switch clock: last SUCCESS with oddsInserted > 0 (not free-spine zeros).
@@ -734,6 +753,14 @@ export async function GET(request: Request) {
        * settle = grade; filter = these counts; publish = eligibility GREEN + policy (AUTO_PUBLISH or PUBLISHED).
        */
       sample,
+      /**
+       * Is the closing-line archive actually being written?
+       * HEALTHY is the only status that means yes. SILENT (on, never written)
+       * and UNKNOWN (unreadable) are deliberately NOT folded into it — that
+       * folding is what made the 2026-08-22 outage invisible for three weeks.
+       * DISABLED means the founder's flag is off, which is a state, not a bug.
+       */
+      lineArchive,
       oddsInserting,
       calibrationEligibility: calibrationEligibility
         ? {
