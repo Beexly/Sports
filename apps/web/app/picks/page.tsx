@@ -5,6 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { PickCard } from "@/components/picks/pick-card";
 import { LineFreshnessBadge } from "@/components/picks/line-freshness-badge";
 import { freshestLineTimestamp } from "@/lib/picks/line-freshness";
+import { CT_SUFFIX, formatCentralTime } from "@/lib/time/central";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
@@ -588,12 +589,11 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
 
 function SlateBar({ slate }: { slate: DailySlate }) {
   const record = slate.recentRecord;
+  // Central. `timeZoneName` without `timeZone` prints whichever zone the
+  // formatter happened to run in — the server's (UTC on Vercel) during SSR —
+  // so it was labelling the wrong reading rather than fixing it.
   const lastUpdated = slate.lastUpdatedAt
-    ? new Date(slate.lastUpdatedAt).toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        timeZoneName: "short",
-      })
+    ? `${formatCentralTime(new Date(slate.lastUpdatedAt))} ${CT_SUFFIX}`
     : null;
 
   return (

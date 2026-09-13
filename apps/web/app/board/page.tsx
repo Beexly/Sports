@@ -2,10 +2,12 @@ import Link from "next/link";
 import type { Metadata } from "next";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
+import { formatCentralTime, CT_SUFFIX } from "@/lib/time/central";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { loadBoardPasses, type PassListRow } from "@/lib/board/passes";
+import { boardMarketLabel } from "@/lib/board/market-label";
 import { loadBoardState, type BoardStateRow } from "@/lib/board/state";
 import { loadPublicCalibrationReport } from "@/lib/calibration/report";
 import { BoardHealthBadge } from "@/components/board/board-health-badge";
@@ -26,10 +28,23 @@ export const metadata: Metadata = {
 // Reads live board state per request; never statically prerendered.
 export const dynamic = "force-dynamic";
 
+/**
+ * Board timestamps read Central, and say so.
+ *
+ * This is a server component, so a bare toLocaleTimeString() formatted in the
+ * SERVER's zone — UTC on Vercel — and printed a UTC clock face with no zone
+ * label at all. Measured on production 2026-09-13: /api/board/state reported
+ * lastRefresh 18:06:07Z and the page rendered "Last refresh 6:06 PM". It was
+ * 1:06 PM in Central. Five hours wrong, and nothing on the page said which zone
+ * it meant, so a reader could not even correct for it.
+ *
+ * formatCentralTime pins the zone explicitly, and the CT suffix makes the
+ * reading self-describing rather than something the viewer has to infer.
+ */
 function timeLabel(value: string): string {
   const date = new Date(value);
   if (Number.isNaN(date.getTime())) return "Unavailable";
-  return date.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit" });
+  return `${formatCentralTime(date)} ${CT_SUFFIX}`;
 }
 
 export default async function BoardPage(): Promise<JSX.Element> {
@@ -402,7 +417,14 @@ function BoardRowItem({ row, live }: { row: BoardStateRow; live: boolean }): JSX
     <article className="grid grid-cols-[1fr_auto] items-baseline gap-x-4 py-4">
       <div className="min-w-0">
         <h3 className={`font-display text-xl font-semibold tracking-tight ${held ? "text-ion-3" : "text-ion-white"}`}>{row.matchup}</h3>
-        <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] text-ion-3">{row.sport} · {row.market}</p>
+        {/* The market slot is a tier-redaction sentinel for non-premium viewers
+            and was rendering as the literal "ALL_MARKETS". A redacted row has
+            nothing truthful to say about the market, so it shows the sport
+            alone rather than a token or a guess. */}
+        <p className="mt-1 font-mono text-[11px] uppercase tracking-[0.14em] text-ion-3">
+          {row.sport}
+          {boardMarketLabel(row.market) ? ` · ${boardMarketLabel(row.market)}` : ""}
+        </p>
       </div>
       <div className="text-right">
         <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-ion-3">Edge</p>

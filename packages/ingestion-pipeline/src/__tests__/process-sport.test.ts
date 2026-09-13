@@ -1118,7 +1118,15 @@ describe("processSport", () => {
     // the assertion is about what gets WRITTEN, not about an input field: a
     // soccer fixture priced by three books writes no MONEYLINE pick, while the
     // identical odds under a two-way sport do.
-    const NOW = new Date("2026-09-08T19:00:00.000Z");
+    // Relative to the file's own clock (K_MS/at()), never absolute. The first
+    // draft hardcoded fetchedAt 2026-09-08T19:00Z and a kickoff of
+    // 2026-09-12T23:30Z. Both were in the future when written and the kickoff
+    // went into the past at 23:30Z on 2026-09-12, at which point isQuietBoard
+    // (process-sport.ts:664) saw no game ahead inside the horizon, took the
+    // quiet-board early return, and produced a clean zero-pick SUCCESS. The
+    // status assertion still passed and only writtenPickTypes() went empty, so
+    // the whole repo's CI went red overnight on a test nobody had touched.
+    const NOW = new Date(T_RUN_AT);
     function twoWayFavouriteOdds(gameExternalId: string, withDraw: boolean) {
       const books = ["draftkings", "fanduel", "betmgm", "caesars", "betrivers", "pointsbet", "bovada", "betonline", "mybookie", "lowvig", "unibet"];
       return books.map((bookmaker) => ({
@@ -1140,7 +1148,9 @@ describe("processSport", () => {
     async function driveWithRealScorer(sport: { key: string; name: string; displayName: string }, home: string, away: string, withDraw: boolean) {
       const actual = await vi.importActual<typeof import("@sports/prediction-engine")>("@sports/prediction-engine");
       mocks.scoreGames.mockImplementation((inputs, at) => actual.scoreGames(inputs as never, at));
-      mocks.normalizeGames.mockReturnValue([normalizedGame({ homeTeam: home, awayTeam: away, commenceTime: new Date("2026-09-12T23:30:00.000Z") })]);
+      // commenceTime omitted on purpose: normalizedGame defaults to T_KICKOFF,
+      // which is always ahead of now, so this fixture cannot rot again.
+      mocks.normalizeGames.mockReturnValue([normalizedGame({ homeTeam: home, awayTeam: away })]);
       mocks.normalizeOdds.mockReturnValue(twoWayFavouriteOdds("ext-1", withDraw));
       mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
       mocks.gameUpsert.mockResolvedValue({ id: "game-1", homeTeamName: home, awayTeamName: away });

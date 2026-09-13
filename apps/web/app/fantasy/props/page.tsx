@@ -28,9 +28,17 @@ export default function PropsPage() {
       intro="Filter by market or team. Every prop shows the side we'd take, how strongly, and the single alt line where edge times payout pays best. Build a 2-to-6 leg entry and see its real combined odds and expected value before you stake a dollar. We advise on these lines; we don't operate a pick'em product."
       note={note}
       wide
-      projectionsBadge={false}
+      // The illustrative badge was suppressed on the ONE page that most needs
+      // it. Every prop row here is a fictional player (lib/fantasy/players.ts:
+      // "~40 illustrative players") on a real team code, carrying a conviction
+      // percentage and an EV figure in the same visual language the real board
+      // uses. The only honesty text was PROPS_DISCLAIMER, rendered 11px mist
+      // grey below the fold. FantasyShell already defaults the badge ON with
+      // pool "illustrative"; letting the default stand puts the claim in the
+      // hero where a visitor actually reads it.
+      projectionsPool={isLivePickem() ? "real" : "illustrative"}
     >
-      <PropsEdge lines={lines} />
+      <PropsEdge lines={lines} live={isLivePickem()} />
 
       <section aria-label="Ranked board" className="mt-8">
         <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-ultraviolet">The ranked board</p>

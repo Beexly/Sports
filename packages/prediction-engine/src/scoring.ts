@@ -171,6 +171,41 @@ function buildShadowEvidenceFactors(input: OddsInput): FactorDetail[] {
 // edge from the market's own price.
 // ============================================================
 
+// ============================================================
+// Adverse-edge withhold gate.
+//
+// `assessIndependentEdge` can conclude that our own cover model prices the
+// chosen side WORSE than the sportsbook does. edge-engine.ts encodes that as a
+// negative signed `shrunkEdge`, mirrored into `expectedClv`, and reports
+// `decision: "PASS"` — the engine, in its own words, declining the bet.
+//
+// Until 2026-09-13 that verdict had exactly two consumers: a cosmetic factor
+// `impact` label, and `deriveRankingProbability`, whose one decision gate the
+// callers below disable with `rankOnAnyTrueProb: true`. Nothing read it as a
+// publish veto, so on 2026-09-13 seven rows shipped to production carrying the
+// engine's own refusal — Dodgers -1.5 at trueProb 0.208 against a market fair
+// value of 0.434 (expectedClv -0.1356), published at confidence 78 as PREMIUM.
+// Measured on the same pull: of the published PENDING rows, every PASS row was
+// adverse and no row read CONTRADICTS, so `expectedClv < 0` and
+// `decision === "PASS"` selected the identical set.
+//
+// This gate may only WITHHOLD. It does not score, rank, or alter a selection,
+// line or probability, so MODEL_VERSION stays v5.2.7 and the scoring math is
+// untouched. That asymmetry is the whole safety argument and must survive every
+// future edit: a wrong reading here costs us a pick we would have published,
+// never a pick we would not have. Anything that wants to ADD conviction from
+// this signal is a scoring change and needs a version bump plus a calibration
+// pass.
+//
+// No estimate means no vote. A null summary, or a non-finite expectedClv, is
+// silence — never read as agreement, disagreement, or zero.
+// ============================================================
+function pricesWorseThanMarket(edge: IndependentEdgeSummary | null): boolean {
+  if (!edge) return false;
+  if (!Number.isFinite(edge.expectedClv)) return false;
+  return edge.expectedClv < 0;
+}
+
 function assessIndependentEdge(
   fairValues: IndependentMarketFairValue[] | undefined,
   homeIsChosen: boolean,
@@ -570,6 +605,10 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     dataQualityScore,
     twoSidedImpliedSum >= 1,
   );
+
+  // Our own model prices this side worse than the book. Do not sell it.
+  if (pricesWorseThanMarket(independentEdgeRaw)) return null;
+
   const rank = deriveRankingProbability(confidence, independentEdgeRaw, {
     independentWeight: 0.7,
     rankOnAnyTrueProb: true,
@@ -1159,6 +1198,9 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     dataQualityScore,
     twoSidedImpliedSum >= 1
   );
+
+  // Our own model prices this side worse than the book. Do not sell it.
+  if (pricesWorseThanMarket(independentEdgeRaw)) return null;
 
   const confidence = Math.round(
     clamp(

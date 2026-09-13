@@ -1,4 +1,5 @@
 import type { BoardStateRow } from "@/lib/board/state";
+import { boardMarketLabel } from "@/lib/board/market-label";
 
 /**
  * League slate grouping — pure projection over board rows.
@@ -51,7 +52,10 @@ export function groupGame(
   const first = mine[0]!;
   const markets: string[] = [];
   for (const r of mine) {
-    if (!markets.includes(r.market)) markets.push(r.market);
+    // Skip the tier-redaction sentinel: a redacted row cannot name its market,
+    // and printing the token was how "ALL_MARKETS" reached /slate.
+    const label = boardMarketLabel(r.market);
+    if (label && !markets.includes(label)) markets.push(label);
   }
   let bestEdge: number | null = null;
   for (const r of mine) {

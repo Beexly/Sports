@@ -50,6 +50,17 @@ export default function TodayPage() {
         </section>
         <section className="px-4 pb-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
+            {/* ABOVE the cards, not below them. The featured card renders
+                "Confirmed: Vale will not play" at text-3xl with a P100 priority
+                score; the only qualifier was the word "Sample" concatenated into
+                a 10px eyebrow in the card's own accent colour, reading as a
+                category next to "Breaking" and "Insider" rather than as a
+                warning. A reader who stops after the cards must already know. */}
+            <Reveal>
+              <p className="mb-6 inline-block rounded-full bg-caution/20 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-caution">
+                Sample briefing · the players, reporters and injury reports below are fictional
+              </p>
+            </Reveal>
             <Reveal><PersonalizedBriefing cards={cards} /></Reveal>
             <Reveal delay={120}>
               <p className="mt-8 text-xs leading-relaxed text-ion-2">

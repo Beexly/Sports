@@ -45,7 +45,7 @@ describe("portfolio-sim + postlock-panel smoke", () => {
 
   it("renders PostLockPanel with deltas and swap lists", () => {
     render(<PostLockPanel pre={lineupA} post={lineupB} lockedIds={new Set()} />);
-    expect(screen.getByLabelText("Post-lock readout")).toBeInTheDocument();
+    expect(screen.getByLabelText("Late swap changes")).toBeInTheDocument();
     expect(screen.getByText(/swapped out/i)).toBeInTheDocument();
     expect(screen.getByText(/swapped in/i)).toBeInTheDocument();
   });

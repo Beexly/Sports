@@ -26,9 +26,9 @@ export function PostLockPanel({
   const report = useMemo(() => postLockReadout(pre, post, lockedIds), [pre, post, lockedIds]);
 
   return (
-    <section aria-label="Post-lock readout" className="surface-card flex flex-col gap-4 p-5">
+    <section aria-label="Late swap changes" className="surface-card flex flex-col gap-4 p-5">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="font-display text-xl font-semibold text-ion-white">Post-lock readout</h2>
+        <h2 className="font-display text-xl font-semibold text-ion-white">Late swap: what changed</h2>
         <span
           className={`rounded-full px-2.5 py-0.5 font-mono text-[10px] font-bold uppercase tracking-[0.2em] ${
             report.lockedKept ? "bg-verify/20 text-verify" : "bg-caution/20 text-caution"

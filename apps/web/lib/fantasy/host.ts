@@ -151,8 +151,13 @@ export type Broadcast = {
 // Honest and brand-safe: these scripts are composed deterministically from
 // templates in this module (no language model is involved), and the previous
 // wording used a phrase banned by apps/web/lib/positioning-vocab.json (rule 8).
+// The second sentence is load-bearing and was missing. The first only disclosed
+// WHO the anchors are, which a reader can take as "synthetic voice, real news".
+// The script reads out injury and transaction claims about named players, and on
+// an NFL Sunday a visitor could act on one. The players, reporters and reports are
+// invented, and the disclosure has to say so, not merely say the anchors are.
 export const HOST_DISCLOSURE =
-  "Nova and Orion are Galaxy Sports Edge's synthetic presenters. Their scripts are machine-drafted from templates and human-reviewed before anything is published; they do not post or reply on their own.";
+  "Nova and Orion are Galaxy Sports Edge's synthetic presenters. Their scripts are machine-drafted from templates and human-reviewed before anything is published; they do not post or reply on their own. The players, reporters and reports in this script are fictional: nothing here is a real injury report or a real transaction.";
 
 // ─────────────── publish-readiness pipeline (enforced doctrine) ───────────────
 
@@ -194,7 +199,12 @@ export function buildBroadcast(persona: Persona = NOVA): Broadcast {
   const field = reporterTag(persona);
   const desk = reporterTag(ORION);
 
-  const coldOpen = `${persona.signOn} Week ${week} is loaded. Orion's at the desk; let's get you the edge before everybody else does.`;
+  // No week number in the script. `week` here is derived from the FICTIONAL
+  // roster's most common bye (lib/fantasy/league-twin.ts), not the calendar, so
+  // stating it asserts a fact that is simply wrong: it read "Week 10" on NFL
+  // Week 1 Sunday. The slate is invented anyway, so there is no real week to
+  // put here; the line works without one.
+  const coldOpen = `${persona.signOn} The slate is loaded. Orion's at the desk; let's get you the edge before everybody else does.`;
 
   const segments: Segment[] = [];
 
@@ -245,7 +255,7 @@ export function buildBroadcast(persona: Persona = NOVA): Broadcast {
   const signOff = persona.signOff;
 
   const plaintext = [
-    `GALAXY STUDIOS. THE GALAXY BRIEF · WEEK ${week}`,
+    `GALAXY STUDIOS. THE GALAXY BRIEF · SAMPLE SCRIPT`,
     `Anchors: ${persona.name} (${persona.role}) · ${ORION.name} (${ORION.role})`,
     "",
     `[COLD OPEN · ${SCENES.studio.label}]`,
@@ -261,7 +271,7 @@ export function buildBroadcast(persona: Persona = NOVA): Broadcast {
   return {
     persona,
     week,
-    title: `The Galaxy Brief. Week ${week}, with ${persona.name}`,
+    title: `The Galaxy Brief, with ${persona.name}`,
     coldOpen,
     segments,
     signOff,

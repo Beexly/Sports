@@ -132,7 +132,10 @@ export type Benchmark = {
 export function benchmark(slate: readonly DfsPlayer[] = activeDfsSlate(), seed = 7): Benchmark {
   // ── CASH: cross-check two independently-implemented exact solvers ──
   const exactCash = optimizeExact({ mode: "cash", locks: new Set(), excludes: new Set() }, slate);
-  const incumbentLu = optimizeOne({ mode: "cash", stack: false, locks: new Set(), excludes: new Set() }, undefined, slate);
+  // Arg order is (opts, pen, restarts, slate): passing `slate` third fed the
+  // player array in as the restart COUNT and left the solver on the default
+  // slate, so the "incumbent" was never run against the caller's pool.
+  const incumbentLu = optimizeOne({ mode: "cash", stack: false, locks: new Set(), excludes: new Set() }, undefined, 60, slate);
   const incumbentObjective = incumbentLu ? objOf(incumbentLu, "cash") : 0;
 
   // ── GPP: point-sum-optimal lineup vs correlation-aware SELECTION ──

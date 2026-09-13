@@ -204,8 +204,8 @@ export function calibrationReport(
     improvedOutOfSample === null
       ? "No holdout slice — out-of-sample improvement is unknown."
       : improvedOutOfSample
-        ? `Holdout MAE fell ${rawHoldout!.toFixed(3)} → ${maeHoldout.toFixed(3)}.`
-        : `Holdout MAE did NOT improve (${rawHoldout!.toFixed(3)} → ${maeHoldout.toFixed(3)}) — ` +
+        ? `Holdout MAE fell ${rawHoldout!.toFixed(3)} → ${maeHoldout!.toFixed(3)}.`
+        : `Holdout MAE did NOT improve (${rawHoldout!.toFixed(3)} → ${maeHoldout!.toFixed(3)}) — ` +
           `the correction does not generalise on this sample.`;
 
   return {

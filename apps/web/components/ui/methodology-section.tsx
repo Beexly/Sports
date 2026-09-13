@@ -1,6 +1,7 @@
 import { LogoMarkInline } from "@/components/brand/logo-mark-inline";
 import { CountUp } from "@/components/ui/count-up";
 import { getClaim } from "@/lib/trust-claims";
+import { CT_SUFFIX, formatCentralTime } from "@/lib/time/central";
 
 /**
  * Methodology / Trust Surface
@@ -220,10 +221,12 @@ export function MethodologySection({ metrics }: { metrics?: TrustLedgerMetrics }
               >
                 Board data as-of{" "}
                 <time dateTime={metrics.lastRefresh}>
-                  {new Date(metrics.lastRefresh).toLocaleTimeString("en-US", {
-                    hour: "numeric",
-                    minute: "2-digit",
-                  })}
+                  {/* Central, and labelled. Without an explicit timeZone this
+                      formatted in the SERVER's zone (UTC on Vercel) and, with no
+                      timeZoneName either, printed a bare wrong clock face with
+                      nothing for the reader to correct by. This block renders on
+                      the homepage. */}
+                  {formatCentralTime(new Date(metrics.lastRefresh))} {CT_SUFFIX}
                 </time>
               </p>
             )}
