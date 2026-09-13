@@ -245,7 +245,7 @@ export function buildMethodologyEducationDraft(input: {
       lines.push("# How confidence labels work");
       lines.push("");
       lines.push(
-        "The platform displays either a numeric confidence score or a label depending on the configured confidence-display mode. Numeric scores are only enabled once they have been calibrated against settled outcomes."
+        "Confidence is a 0-100 selection score, shown as \"NN/100\" and never as a percentage. It ranks value on the board; it is not a win probability. The only win probability published is the market-implied one, de-vigged from the book prices on the pick."
       );
       break;
     case "GENERAL":

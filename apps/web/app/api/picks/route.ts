@@ -16,11 +16,12 @@ import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-pu
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
 import { teaserForViewer } from "@/lib/picks/teaser-text";
 import { displaySelection } from "@/lib/picks/display-selection";
-import { resolveMarketImplied } from "@/lib/picks/market-implied-display";
+import { resolveMarketImplied, resolveWinProbability } from "@/lib/picks/market-implied-display";
 import { publicEdgeScore } from "@/lib/picks/public-edge-score";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 import { dropContradictedModelSignals } from "@/lib/picks/model-signal-coherence";
+import { dropAdverseEdgePicks } from "@/lib/picks/adverse-edge-suppression";
 import { clientIp } from "@/lib/api/rate-limit";
 import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
 
@@ -212,9 +213,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // that survive rather than on rows about to be dropped.
   const coherentPicks = dropContradictedModelSignals(filteredPicks);
 
+  // Never sell a bet our own model prices worse than the book. scoring.ts has
+  // withheld these at mint since the PASS-leak fix, but that gate is
+  // forward-only: measured 2026-09-13, nine rows minted before it deployed were
+  // still published, worst -0.1742. Display-side and withhold-only — it writes
+  // nothing, so a suppressed row still settles into the public record.
+  const soundPicks = dropAdverseEdgePicks(coherentPicks);
+
   // Display order must match generation ranking law (rankingP, not confidence).
   // DB orderBy confidence is a cheap pre-filter only — re-rank survivors here.
-  const rankedPicks = [...coherentPicks].sort(comparePicksByRanking);
+  const rankedPicks = [...soundPicks].sort(comparePicksByRanking);
 
   // Tier cap applied AFTER filter + rank so a limited viewer always gets their
   // full allowance (best-ranked survivors), never fewer because the filter ate
@@ -264,20 +272,24 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     // the snapshot let a transient feed gap render the pill beside a percentage.
     const bookmakerCount = pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount;
 
-    // v5.2.8 display side: the receipt's market-implied win probability on
-    // book-priced two-way MONEYLINE picks, under the SAME entitlement as
-    // confidence. Null resolves to an omitted key, so no FREE payload carries it.
-    // N is the immutable snapshot count (mint time), not the live Pick column;
-    // a pick without a snapshot count shows no percentage rather than a
-    // drifting N.
-    const marketImplied = resolveMarketImplied(
-      {
-        pickType: pick.pickType,
-        bookmakerCount: pick.signalSnapshot?.bookmakerCount ?? 0,
-        receiptMarketFairProb: pick.proofReceipt?.marketFairProb,
-      },
-      entitlements,
-    );
+    // v5.2.8 Phase 2: the receipt's market-implied win probability on
+    // book-priced two-way MONEYLINE picks with >= 2 books, for EVERY tier.
+    // It is a de-vig of quoted prices a reader can recompute, not a model
+    // output, and the public calibration claim is about this number — so the
+    // free tier, which reads that claim, can see it. Confidence, the calibrated
+    // confidence label and the factor trail stay paid below. (The Edge Index is
+    // already a free trust signal by separate design — see publicEdgeScore.)
+    //
+    // N is the immutable mint-time snapshot count, not the live Pick column a
+    // refresh cycle rewrites; a pick without a snapshot shows no percentage
+    // rather than a drifting N. Null resolves to an omitted key.
+    const marketImpliedInput = {
+      pickType: pick.pickType,
+      bookmakerCount: pick.signalSnapshot?.bookmakerCount ?? 0,
+      receiptMarketFairProb: pick.proofReceipt?.marketFairProb,
+    };
+    const marketImplied = resolveMarketImplied(marketImpliedInput);
+    const winProbability = resolveWinProbability(marketImpliedInput);
 
     return {
       id: pick.id,
@@ -294,6 +306,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       line: pick.line,
       hasBookPrice: bookmakerCount > 0,
       ...(marketImplied ? { marketImplied } : {}),
+      ...(winProbability ? { winProbability } : {}),
       // Opening -> current movement, the Pro-tier market read. Only SPREAD and
       // TOTAL carry a comparable opening line (enrichment captures it at first
       // ingestion); MONEYLINE and games without a captured open return null,

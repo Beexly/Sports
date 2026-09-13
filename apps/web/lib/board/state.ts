@@ -23,6 +23,7 @@ import {
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 import { publicEdgeScore } from "@/lib/picks/public-edge-score";
 import { dropContradictedModelSignals } from "@/lib/picks/model-signal-coherence";
+import { dropAdverseEdgePicks } from "@/lib/picks/adverse-edge-suppression";
 import { freshPickWhere } from "@/lib/board/stale-pick-policy";
 import { gameInSlateWindow, resolveSlateWindow } from "@/lib/picks/slate-window";
 
@@ -851,7 +852,11 @@ async function loadBoardStateInner(
   // cannot claim "no book line" for a game that also carries a book-priced row
   // (lib/picks/model-signal-coherence.ts). Applied before the lane slice so the
   // 12 rows shown are 12 rows that survive.
-  const publishedToday = dropContradictedModelSignals(publishedTodayRaw)
+  // ...and the same "never sell a bet we price worse than the book" rule
+  // (lib/picks/adverse-edge-suppression.ts). Both run BEFORE the lane slice so
+  // the 12 rows shown are 12 rows that survive, rather than 12 rows of which
+  // some are then hidden.
+  const publishedToday = dropAdverseEdgePicks(dropContradictedModelSignals(publishedTodayRaw))
     .sort(comparePicksByRanking)
     .slice(0, 12);
 

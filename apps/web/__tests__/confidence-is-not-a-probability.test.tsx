@@ -130,13 +130,16 @@ describe("the proof page does not derive a market comparison from confidence", (
 });
 
 describe("the B2B probabilities route says what pModel actually is", () => {
-  it("names pModel a confidence score rather than leaving the field to imply a probability", () => {
-    // The contract is NOT changed: pModel keeps its value and its type, so no
-    // consumer breaks. What changes is that the payload stops letting the field
-    // name do the claiming. Which value pModel should carry is an open product
-    // decision, recorded as C-88.
-    expect(PROBABILITIES_ROUTE).toMatch(/CONFIDENCE SCORE, not a calibrated win probability/);
-    expect(PROBABILITIES_ROUTE).toContain("C-88");
+  it("retires pModel rather than shipping confidence/100 under a probability name", () => {
+    // C-88 was the open product decision "should pModel carry a real
+    // probability instead of the confidence score". v5.2.8 Phase 2 takes it:
+    // neither. The key is kept so no consumer breaks on a missing field, and
+    // pinned to null so none can read a wrong number from it. The score ships
+    // beside it under a name that cannot be mistaken for a rate.
+    expect(PROBABILITIES_ROUTE).toMatch(/pModel:\s*null/);
+    expect(PROBABILITIES_ROUTE).toMatch(/pModel is RETIRED and always null/);
+    expect(PROBABILITIES_ROUTE).toMatch(/confidenceScore:/);
+    expect(PROBABILITIES_ROUTE).toMatch(/do not read it as a probability/);
   });
 
   it("still points integrators at the fields that ARE probabilities", () => {

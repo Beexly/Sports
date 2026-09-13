@@ -9,7 +9,7 @@ import type {
   IndependentMarketFairValue,
   IndependentEdgeSummary,
 } from "@sports/types";
-import { computePickGrade } from "@sports/types";
+import { computePickGrade, pricesWorseThanMarket } from "@sports/types";
 import { assessEdge, type IndependentEstimate } from "./edge-engine.js";
 import {
   MODEL_VERSION,
@@ -200,12 +200,6 @@ function buildShadowEvidenceFactors(input: OddsInput): FactorDetail[] {
 // No estimate means no vote. A null summary, or a non-finite expectedClv, is
 // silence — never read as agreement, disagreement, or zero.
 // ============================================================
-function pricesWorseThanMarket(edge: IndependentEdgeSummary | null): boolean {
-  if (!edge) return false;
-  if (!Number.isFinite(edge.expectedClv)) return false;
-  return edge.expectedClv < 0;
-}
-
 function assessIndependentEdge(
   fairValues: IndependentMarketFairValue[] | undefined,
   homeIsChosen: boolean,

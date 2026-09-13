@@ -1,7 +1,10 @@
 /**
  * Value gap — the honest "GSE vs market" number.
  *
- * `p` (the model's calibrated ranking probability) and `q` (the market's
+ * `p` (the model's ranking probability — a sort key, NOT calibrated; the word
+ * was removed in v5.2.8 Phase 2 / CAL-11 because no fitted map is applied to
+ * it and measuring it against outcomes shows it over-confident through the
+ * upper middle) and `q` (the market's
  * de-vig fair probability) already render separately on every pick card
  * (see pick-card.tsx's "Ranking P" / "Market fair (de-vig)" lines). Nobody
  * subtracts them for the reader. This is that subtraction, made a first-class

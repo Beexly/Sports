@@ -189,12 +189,15 @@ export function PickCard({
         </div>
       </div>
 
-      {/* Market-implied win probability (v5.2.8 display side): the receipt's
-          number on book-priced two-way moneyline picks, shown under the same
-          entitlement as confidence. The API omits the field for every other
-          viewer and for signal-slate, SPREAD and TOTAL picks, so this renders
-          no percentage there. Label text is the verified proposal wording. */}
-      {canSeeConfidence && pick.marketImplied && (
+      {/* Market-implied win probability (v5.2.8 Phase 2): the receipt's number
+          on book-priced two-way moneyline picks with at least two books, shown
+          to EVERY tier. Deliberately not gated on canSeeConfidence — this is a
+          de-vig of quoted prices a reader can recompute, and the calibration
+          claim we publish is about it, so the free tier must be able to see the
+          number that claim describes. Scope is enforced server-side: the API
+          omits the field for signal-slate, SPREAD and TOTAL picks, so nothing
+          renders there. Label text is the verified proposal wording. */}
+      {pick.marketImplied && (
         <p
           className="rounded-lg border border-orbital-cyan/30 bg-orbital-cyan/5 px-3 py-2 text-xs leading-relaxed text-ion-1"
           data-testid="market-implied-win-probability"

@@ -137,14 +137,14 @@ export const TRUST_CLAIMS: readonly TrustClaim[] = [
   {
     id: "methodology.confidence-presentation",
     copy:
-      "Confidence is expressed as a label or score depending on the platform's current confidence-display mode. Numeric scores are only shown once calibrated against settled outcomes.",
+      "Confidence is a 0-100 selection score, shown as \"NN/100\" and never as a percentage. It ranks how much value we think is on the board, and it is not a win probability. The only win probability we publish is the market-implied one, taken from the book prices on the pick.",
     category: "METHODOLOGY",
     status: "APPROVED",
     evidence: "ENGINE_BEHAVIOR",
     visibility: "PUBLIC",
     lastReviewedAt: LAST_REVIEW,
     reviewNote:
-      "platform-config.ts exposes CONFIDENCE_DISPLAY_MODE; defaults to 'labels' until calibration verified.",
+      "Corrected v5.2.8 Phase 2. The previous copy claimed a CONFIDENCE_DISPLAY_MODE that does not exist in platform-config.ts (verified by grep), and claimed numeric scores appear only once calibrated - pick-card.tsx renders NN/100 unconditionally. Both halves were unobservable claims on a PUBLIC surface. The copy now describes what the code does: a 0-100 score rendered NN/100, never a percent.",
   },
   {
     id: "methodology.risk-levels",

@@ -97,9 +97,62 @@ and every one of them is `isPublished = true`:
 | 66 | Minnesota Twins -1.5 | 0.353 | 0.362 | PASS | -0.0055 |
 | 56 | Seattle Mariners -1.5 | 0.412 | 0.434 | PASS | -0.0134 |
 
-`decision` is computed, persisted, and rendered in the paying customer's factor trail. The publish
-path does not appear to read it. Confirming that in code is the open work; the DATA above is
-measured and is not in doubt.
+`decision` is computed, persisted, and rendered in the paying customer's factor trail.
+
+**CONFIRMED IN CODE AND CLOSED, 2026-09-13 20:30 UTC. Both halves. Do not re-open.**
+
+The publish path genuinely did not read it. `scoring.ts` asked the independent model AFTER its
+last publish veto, then used the answer only as a display label. Fixed at mint in PR #811
+(`pricesWorseThanMarket`, applied in the spread and moneyline scorers): a row whose own
+`expectedClv` is negative is no longer minted.
+
+That gate is FORWARD-ONLY and it does not reach rows that already exist. Re-measured 20:20 UTC
+over published PENDING rows carrying an edge estimate:
+
+```
+published PENDING rows with an edge estimate   71
+  of those, expectedClv < 0                      9
+  of those 9, independentEdge.decision = PASS    9   (the predicates agree exactly)
+  worst                                    -0.1742
+  still pre-kickoff                              1
+```
+
+Nine rows minted before the gate deployed were still on the board, so a DISPLAY-side rule now
+runs on both read surfaces: `apps/web/lib/picks/adverse-edge-suppression.ts`, applied in
+`/api/picks` and `lib/board/state.ts` before their row caps. Four things about it that must
+survive future edits:
+
+- It IMPORTS `pricesWorseThanMarket` rather than restating the rule. Two gates spelling one rule
+  two ways is how they drift, and a drift in this direction publishes a row the engine said to
+  withhold. The predicate lives in `@sports/types`, NOT in the engine, and that placement is
+  load-bearing: **nineteen web test files replace `@sports/prediction-engine` with a partial
+  `vi.mock` factory defining only the symbols they need**, so importing it from there resolved to
+  `undefined` under those mocks and collapsed the board's published lane to zero rows. The board
+  suite caught it (10 pre-existing failures went to 15) before it shipped. Anyone adding a new
+  cross-package import into `lib/board/state.ts` or the picks route should check that mock list
+  first; `@sports/types` is the boundary both sides already cross intact.
+- It gates on the signed number, never on `decision === "PASS"`. The two select the same nine
+  rows today, but a CONTRADICTS row carries `expectedClv` 0.0 by construction, so the label
+  would drop rows that are not adverse.
+- Absence is SILENCE. No estimate, a non-finite value, or an unparseable breakdown all KEEP the
+  row. If that asymmetry ever inverts, a parse bug becomes a silent board wipe; there is a
+  negative-control test pinning it.
+- It writes NOTHING. `isPublished` is untouched, so a suppressed row still settles and still
+  counts in the published record, win or lose. That is deliberate: these nine are expected to
+  grade badly, and removing them from the record would flatter our numbers by dropping exactly
+  the rows the model said were worst. Hiding a row we should not have offered is honest;
+  erasing it from the track record is not.
+
+Considered and REJECTED: promoting a suppressed row into the Held lane. That lane is built from
+GAMES, not picks (`state.ts`, `gatedToday.map((game) => ...)`), and a game whose adverse row is
+suppressed may still carry a good published row, so the promotion would put the same game in
+both lanes and re-create the "one game, one story" contradiction that
+`model-signal-coherence.ts` exists to prevent.
+
+Still OPEN from this section: the RANKING half. Confidence still orders the board and is still
+anti-correlated with the engine's own edge (re-measured 20:20 UTC: conf 91 carries +0.0217, the
+smallest positive edge on the slate, while conf 85 carries +0.2257, the largest). Suppression
+removes the negatives; it does not reorder the positives.
 
 **Second, `confidence` is not monotone in the engine's own probability, and today it inverted the
 board.** Ranked by the engine's own `expectedClv`, today's book-priced MLB slate reads D-backs -1.5
@@ -164,13 +217,48 @@ Yankees -1.5 11 books graded LEAN at 91).
   reads a source nothing writes is worse than no code. If it is coming back, the writer is
   the work and the two items above ride with it.
 
-- **THE LINE ARCHIVE HAS BEEN DEAD SINCE 2026-08-22.** `odds_line_snapshots` holds
-  684,498 rows across 526 games spanning **only 2026-08-19 to 2026-08-22** — four days,
-  three weeks ago. Nothing has been captured since. **This reframes the ESTABLISHED
-  blocker:** AGENTS.md currently states "CLV 23% vs 52.4% ... that is a model problem,
-  not a gate problem". That conclusion is no longer safe — closing lines stopped being
-  recorded three weeks ago, so CLV cannot be graded on any pick generated since. Find why
-  the archive writer stopped before drawing any further conclusion about CLV.
+- **THE LINE ARCHIVE HAS BEEN DEAD SINCE 2026-08-22. ROOT CAUSE FOUND AND FIXED
+  2026-09-13.** `odds_line_snapshots` held 684,498 rows spanning only 2026-08-19 to
+  2026-08-22. **This reframes the ESTABLISHED blocker:** the older note "CLV 23% vs 52.4%
+  ... that is a model problem, not a gate problem" is NOT safe, because closing lines
+  stopped being recorded, so CLV cannot be graded on any pick generated since.
+
+  The cause was one argument shape, in `544d0148e` ("line-archive N+1 batch", landed
+  2026-08-22, the archive's last day). It replaced N per-market `count()` calls with one
+  `findMany` and wrote the filter as `where: { gameId, market: markets }` where `markets`
+  is a `string[]`. `OddsLineSnapshot.market` is a scalar String (`schema.prisma:473`), so
+  Prisma spells list membership `{ in: [...] }`; a bare array is a validation error.
+  `captureLineSnapshots` wraps its body in a catch returning `{ persisted: 0, error }`
+  instead of raising, so every capture since threw there and was swallowed.
+
+  Fixed in `line-archive.ts`. **Three things let it survive three weeks, and all three
+  are worth knowing because none of them is specific to this file:**
+  1. The catch swallows. Failure isolation is right (a broken archive must not take down
+     ingestion) but the only signal was a row count, and NOTHING in the repo monitors the
+     freshness of `odds_line_snapshots`. A three-week outage had no alarm to trip.
+  2. `db` enters the module as `unknown` and is cast, so the real Prisma client's types
+     never constrain the call.
+  3. The local `LineArchiveDb` interface declared `market?: readonly string[]` — written
+     to match the buggy call rather than Prisma's actual filter. With the type endorsing
+     the mistake, `tsc` passed throughout. It now declares `{ in: readonly string[] }`.
+
+  **And the test suite CERTIFIED the bug.** Three assertions in `line-archive.test.ts`
+  read `toHaveBeenCalledWith({ where: { gameId, market: ["SPREAD"] } })`. They were
+  written to match the new call, so they locked the wrong wire format in place.
+  Corrected, plus a dedicated `line-archive-filter-shape.test.ts` that pins the shape and
+  explains the failure mode. Correcting an assertion that pinned a defect is not
+  weakening a guard; it is the guard finally pointing at the right thing.
+
+  **NOT VERIFIED, state it honestly:** that Prisma rejects this specific shape at runtime
+  was NOT observed against a live database — no DB was reachable from the session, and a
+  probe against an unreachable DSN returns an initialization error for every shape. What
+  is verified: the column is scalar, the API requires `{ in: ... }`, the commit date is
+  the archive's last day, and the error path is swallowed. The fix is correct by Prisma's
+  contract either way. A COMPETING hypothesis that cannot be eliminated from the repo is
+  that `LINE_ARCHIVE_ENABLED` was simply turned off in Vercel on 2026-08-22 — the founder
+  can settle that by checking the flag, and both fixes are wanted regardless.
+
+  **Still open:** nothing alarms on archive staleness. That monitor is the follow-up.
 
 - **~~Stale-generation picks are live on today's board.~~ MEASURED AND LARGELY WITHDRAWN
   2026-09-13 18:55 UTC. Do not "fix" this — the obvious fix re-creates a bug that was

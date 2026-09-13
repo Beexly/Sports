@@ -149,6 +149,7 @@ export {
   verifyPickProofReceipt,
   isPlausibleEntryOdds,
   ENTRY_ODDS_MIN_ABS,
+  MARKET_FAIR_METHOD_TAG,
 } from "./pick-proof-receipt.js";
 export type { PickProofInput, PickProofReceipt } from "./pick-proof-receipt.js";
 // Slate commitment (commit-reveal) — pre-register the whole population; kills cherry-picking.

@@ -11,10 +11,17 @@ import {
 import { receiptMarketFairProb } from "@/lib/calibration/proven-path-rows";
 
 /**
- * v5.2.8 display side (ledger C-107): the market-implied win probability is
- * the receipt's number, shown only on book-priced two-way MONEYLINE picks and
- * only to viewers the paywall shows confidence to. Label wording is the
- * verified text from the proposal (section 1).
+ * v5.2.8 Phase 2 (ledger C-107): the market-implied win probability is the
+ * receipt's number, shown on book-priced two-way MONEYLINE picks with at least
+ * two books, to EVERY tier. Label wording is the verified text from the
+ * proposal (section 1).
+ *
+ * Phase 1 gated this behind `canSeeConfidence`; the assertions below used to
+ * pin that gate and now pin its removal, on the proposal's recorded founder
+ * decision ("FREE viewers get it too: it is public arithmetic"). What must NOT
+ * relax with it is the paywall on what is actually ours — confidence, edge
+ * score, factor trail — so the FREE-branch assertions below still pin those as
+ * absent, and pin that FREE receives no percent-formatted confidence anywhere.
  *
  * Executed-handler section mirrors the vi.mock("@sports/db") pattern from
  * picks-prod-seed-exclusion.test.ts.
@@ -26,42 +33,51 @@ const PRO = getEntitlements("PRO");
 const RECEIPTED_ML = { pickType: "MONEYLINE", bookmakerCount: 6, receiptMarketFairProb: 0.6142 };
 
 describe("resolveMarketImplied", () => {
-  it("resolves for a confidence buyer on a receipted book-priced moneyline", () => {
-    expect(PRO.canSeeConfidence).toBe(true);
-    expect(resolveMarketImplied(RECEIPTED_ML, PRO)).toEqual({ prob: 0.6142, bookmakerCount: 6 });
+  it("resolves on a receipted book-priced moneyline", () => {
+    expect(resolveMarketImplied(RECEIPTED_ML)).toEqual({ prob: 0.6142, bookmakerCount: 6 });
   });
 
-  it("returns null for a viewer the paywall hides confidence from", () => {
+  it("does not vary by tier — it is arithmetic on quoted prices, not our model", () => {
+    // Phase 2: the resolver takes no viewer at all, so a future edit cannot
+    // silently re-gate it. FREE still buys nothing here; see the payload
+    // assertions below, which pin confidence/edgeScore/factorBreakdown as the
+    // things that stay paid.
     expect(FREE.canSeeConfidence).toBe(false);
-    expect(resolveMarketImplied(RECEIPTED_ML, FREE)).toBeNull();
+    expect(resolveMarketImplied(RECEIPTED_ML)).toEqual({ prob: 0.6142, bookmakerCount: 6 });
+  });
+
+  it("returns null on a single-book row: one book is not a consensus", () => {
+    // The label says "averaged across the N books"; at N = 1 that is false.
+    expect(resolveMarketImplied({ ...RECEIPTED_ML, bookmakerCount: 1 })).toBeNull();
+    expect(resolveMarketImplied({ ...RECEIPTED_ML, bookmakerCount: 2 })).not.toBeNull();
   });
 
   it("returns null on SPREAD and TOTAL picks", () => {
-    expect(resolveMarketImplied({ ...RECEIPTED_ML, pickType: "SPREAD" }, PRO)).toBeNull();
-    expect(resolveMarketImplied({ ...RECEIPTED_ML, pickType: "TOTAL" }, PRO)).toBeNull();
+    expect(resolveMarketImplied({ ...RECEIPTED_ML, pickType: "SPREAD" })).toBeNull();
+    expect(resolveMarketImplied({ ...RECEIPTED_ML, pickType: "TOTAL" })).toBeNull();
   });
 
   it("returns null on a signal-slate row (no book behind it)", () => {
-    expect(resolveMarketImplied({ ...RECEIPTED_ML, bookmakerCount: 0 }, PRO)).toBeNull();
+    expect(resolveMarketImplied({ ...RECEIPTED_ML, bookmakerCount: 0 })).toBeNull();
   });
 
   it("returns null without a receipt or with a degenerate probability", () => {
-    expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: null }, PRO)).toBeNull();
-    expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: undefined }, PRO)).toBeNull();
-    expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: 0 }, PRO)).toBeNull();
-    expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: 1 }, PRO)).toBeNull();
-    expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: Number.NaN }, PRO)).toBeNull();
+    expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: null })).toBeNull();
+    expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: undefined })).toBeNull();
+    expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: 0 })).toBeNull();
+    expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: 1 })).toBeNull();
+    expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: Number.NaN })).toBeNull();
   });
 
   it("never displays the synthetic coin-flip 0.5 a receipt may carry, the same rule the calibration paths apply", () => {
     // A receipt minted without a resolved market probability carries 0.5; the
     // public calibration loaders reject it (receiptMarketFairProb), so "50%"
     // must never be shown as a market price either.
-    expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: 0.5 }, PRO)).toBeNull();
+    expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: 0.5 })).toBeNull();
     expect(receiptMarketFairProb({ marketFairProb: 0.5 })).toBeNull();
     // Same tolerance as the calibration rule: a real price near a coin flip still shows.
     for (const p of [0.51, 0.49, 0.5000001, 0.4999999]) {
-      expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: p }, PRO)?.prob).toBe(p);
+      expect(resolveMarketImplied({ ...RECEIPTED_ML, receiptMarketFairProb: p })?.prob).toBe(p);
       expect(receiptMarketFairProb({ marketFairProb: p })).toBe(p);
     }
   });
@@ -85,18 +101,26 @@ describe("formatMarketImpliedLabel", () => {
   });
 });
 
-describe("/api/picks source wires the receipt through the confidence entitlement", () => {
+describe("/api/picks source wires the receipt through the shared resolver", () => {
   const src = readFileSync(resolve(__dirname, "..", "app/api/picks/route.ts"), "utf8");
   it("selects the receipt's marketFairProb and resolves through the helper", () => {
     expect(src).toMatch(/proofReceipt:\s*\{\s*select:\s*\{\s*contentHash:\s*true,\s*marketFairProb:\s*true\s*\}\s*\}/);
     expect(src).toMatch(/signalSnapshot:\s*\{\s*select:\s*\{\s*bookmakerCount:\s*true\s*\}\s*\}/);
     expect(src).toContain('from "@/lib/picks/market-implied-display"');
-    expect(src).toMatch(/resolveMarketImplied\(\s*\{[\s\S]{0,300}\},\s*entitlements,?\s*\)/);
+    // Phase 2: resolved once, with NO entitlement argument, and both the
+    // public `winProbability` and the deprecated `marketImplied` alias are
+    // derived from that one call so they can never disagree.
+    expect(src).toMatch(/const marketImpliedInput = \{/);
+    expect(src).toMatch(/resolveMarketImplied\(marketImpliedInput\)/);
+    expect(src).toMatch(/resolveWinProbability\(marketImpliedInput\)/);
+    expect(src).not.toMatch(/resolveMarketImplied\([^)]*entitlements/);
     // N in the label is the immutable mint-time snapshot count, never the live
     // Pick.bookmakerCount column that every refresh cycle rewrites.
     expect(src).toMatch(/bookmakerCount:\s*pick\.signalSnapshot\?\.bookmakerCount\s*\?\?\s*0/);
-    // The key is spread in only when resolved: no FREE payload branch carries it.
+    // Spread in only when resolved, so an unresolved pick omits the key
+    // entirely rather than carrying a null the UI would have to special-case.
     expect(src).toMatch(/\.\.\.\(marketImplied \? \{ marketImplied \} : \{\}\)/);
+    expect(src).toMatch(/\.\.\.\(winProbability \? \{ winProbability \} : \{\}\)/);
   });
 });
 
@@ -186,7 +210,7 @@ async function callPicks(): Promise<{ status: number; body: Record<string, unkno
   return { status: res.status, body: (await res.json()) as Record<string, unknown> };
 }
 
-describe("/api/picks payload: market-implied win probability follows the confidence gate", () => {
+describe("/api/picks payload: market-implied win probability reaches every tier", () => {
   beforeEach(() => {
     mocks.pickFindMany.mockReset().mockResolvedValue([receiptedMoneylineRow("ml-1")]);
     mocks.pickCount.mockReset().mockResolvedValue(1);
@@ -198,16 +222,48 @@ describe("/api/picks payload: market-implied win probability follows the confide
     vi.restoreAllMocks();
   });
 
-  it("FREE (anonymous) branch omits marketImplied and confidence", async () => {
+  it("FREE (anonymous) branch RECEIVES the probability but still buys nothing of ours", async () => {
     const { status, body } = await callPicks();
     expect(status).toBe(200);
     const data = body["data"] as Array<Record<string, unknown>>;
     expect(data).toHaveLength(1);
     const row = data[0]!;
+
+    // Phase 2: public arithmetic on quoted prices, so FREE sees it. The public
+    // calibration claim is about this number; hiding it from the tier that
+    // reads the claim was incoherent.
+    expect(row["winProbability"]).toEqual({
+      value: 0.6142,
+      basis: "market_devig",
+      books: 6,
+      method: "proportional",
+    });
+    expect(row["marketImplied"]).toEqual({ prob: 0.6142, bookmakerCount: 6 });
+
+    // What stays paid is what is actually ours. This is the invariant that must
+    // never relax, and it is the reason the gate above could be removed safely.
+    // (The Edge Index is deliberately NOT on this list: it is the free tier's
+    // trust signal by design — see publicEdgeScore — so it is asserted present
+    // rather than absent, to catch a regression in either direction.)
     expect(row["confidence"]).toBeNull();
-    expect(row).not.toHaveProperty("marketImplied");
+    expect(row["confidenceCalibrated"]).toBeNull();
+    expect(row["factorBreakdown"]).toBeNull();
+    expect(typeof row["edgeScore"]).toBe("number");
     expect(row["hasBookPrice"]).toBe(true);
+
+    // The raw engine field name never ships, and no confidence-as-a-percent
+    // reaches an anonymous reader anywhere in the payload.
     expect(JSON.stringify(row)).not.toContain("marketFairProb");
+    expect(JSON.stringify(row)).not.toMatch(/\d+\s?%/);
+  });
+
+  it("never emits the reserved independent_estimate basis", async () => {
+    // The union member exists because the proposal names it; no estimator in
+    // the engine has been shown to carry information at publish time, so the
+    // API must never label a guess as a probability.
+    const { body } = await callPicks();
+    const data = body["data"] as Array<Record<string, unknown>>;
+    expect(JSON.stringify(data)).not.toContain("independent_estimate");
   });
 
   it("PRO branch carries the receipt's probability and the bookmaker count", async () => {
@@ -218,6 +274,12 @@ describe("/api/picks payload: market-implied win probability follows the confide
     const data = body["data"] as Array<Record<string, unknown>>;
     expect(data[0]?.["confidence"]).toBe(70);
     expect(data[0]?.["marketImplied"]).toEqual({ prob: 0.6142, bookmakerCount: 6 });
+    expect(data[0]?.["winProbability"]).toEqual({
+      value: 0.6142,
+      basis: "market_devig",
+      books: 6,
+      method: "proportional",
+    });
   });
 
   it("PRO branch reports the mint-time snapshot count, not the live Pick column after a refresh", async () => {
@@ -245,6 +307,7 @@ describe("/api/picks payload: market-implied win probability follows the confide
     const data = body["data"] as Array<Record<string, unknown>>;
     expect(data[0]?.["confidence"]).toBe(70);
     expect(data[0]).not.toHaveProperty("marketImplied");
+    expect(data[0]).not.toHaveProperty("winProbability");
     expect(data[0]?.["hasBookPrice"]).toBe(true);
   });
 
@@ -255,11 +318,13 @@ describe("/api/picks payload: market-implied win probability follows the confide
     const gapRow = { ...receiptedMoneylineRow("ml-gap"), bookmakerCount: 0, signalSnapshot: { bookmakerCount: 6 } };
     mocks.pickFindMany.mockResolvedValue([gapRow]);
 
-    // FREE branch: the pill reads the snapshot count; no percentage as ever.
+    // FREE branch: the pill and the percentage read the SAME snapshot count,
+    // so "No book price attached" can never render beside a percentage.
     const free = await callPicks();
     const freeRow = (free.body["data"] as Array<Record<string, unknown>>)[0]!;
     expect(freeRow["hasBookPrice"]).toBe(true);
-    expect(freeRow).not.toHaveProperty("marketImplied");
+    expect(freeRow["marketImplied"]).toEqual({ prob: 0.6142, bookmakerCount: 6 });
+    expect(freeRow["confidence"]).toBeNull();
 
     // PRO branch: the pill and the percentage agree.
     mocks.auth.mockResolvedValue({ user: { id: "user-pro" } });
