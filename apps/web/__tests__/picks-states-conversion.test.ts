@@ -47,7 +47,13 @@ const gateBlock = between(
   "!fetchError && bootstrapState && picks.length === 0",
   "!fetchError && !bootstrapState",
 );
-const emptyBlock = between(pageSrc, "No signals published for this date", "{/* Picks grid */}");
+// Anchored on the block's test id, NOT on its headline. The headline used to
+// be "No signals published for this date"; the humanizer pass replaced that
+// wording, the marker stopped resolving, and `between` threw at MODULE scope —
+// so all 16 tests in this file silently stopped running rather than one failing
+// loudly. A slice anchor must be a structural handle the copy doctrine has no
+// reason to touch.
+const emptyBlock = between(pageSrc, 'data-testid="picks-quiet-empty"', "{/* Picks grid */}");
 
 describe("/picks — backend outage is a distinct, honest state (item 3)", () => {
   it("renders a dedicated, testable outage block gated on the fetch-failure branch", () => {
@@ -154,7 +160,14 @@ describe("/picks — empty/gated state fabricates nothing (item 2)", () => {
   });
 
   it("the no-data empty state says nothing was published, not that a pick exists", () => {
-    expect(emptyBlock).toMatch(/No signals published/i);
+    // The invariant is the MEANING, not the sentence: this block states the
+    // absence of picks. It used to pin the literal "No signals published",
+    // which the copy doctrine has since retired as jargon — pinning a phrase a
+    // guard elsewhere bans is a test that can only ever be wrong.
+    expect(emptyBlock).toMatch(/\bNo\b[^<]*\bpicks?\b/i);
+    // It must not imply a pick is there after all.
+    expect(emptyBlock).not.toMatch(/\bview (the |your )?picks?\b/i);
+    // And no fabricated record/accuracy number in a state with no data behind it.
     expect(emptyBlock).not.toMatch(/\d{1,3}\s*%/);
   });
 });
