@@ -4,6 +4,36 @@ import { join } from "node:path";
 import { optimizeOne, generateLineups, metrics, type OptOpts, type Mode } from "./dfs-optimizer";
 import { DFS_SLOTS, SALARY_CAP, DFS_SLATE, leverage, type DfsPlayer, type DfsPos } from "./dfs-slate";
 
+/**
+ * `optimizeOne(opts, pen, restarts, slate, nodeBudget)` — the POOL is argument
+ * FOUR. Every call in this file passed it as argument THREE, which is
+ * `restarts`, so `slate` fell back to its default `activeDfsSlate()` and the DP
+ * optimised the PRODUCTION slate while `bruteForceBest` enumerated the 14-player
+ * fixture below. The two were solving different problems, which is the whole of
+ * the "DP returns 120.5, brute force returns 119" discrepancy — the DP was never
+ * wrong and the enumeration was never incomplete.
+ *
+ * This is the same slot error AGENTS.md records for `benchmark()` in PR #808
+ * ("putting the slate in the `restarts` slot"). That one was fixed; this one was
+ * not, because a test that compares two different problems still runs.
+ *
+ * Passing the restarts count explicitly keeps the mistake from recurring
+ * silently: a bare `undefined, pool` reads fine and is wrong.
+ */
+/**
+ * Deliberately LOW, and safe to be. `restarts` only varies the greedy seed the
+ * exact search starts from; on these small fixtures the search closes the whole
+ * space inside its node budget, so the optimum is identical at 4 restarts and at
+ * the production default of 60 — the assertions below prove it by comparing
+ * against exhaustive enumeration.
+ *
+ * It matters for RUNTIME, not correctness, and the old calls hid that: passing
+ * the pool in this slot handed the loop an ARRAY, which fails every numeric
+ * comparison, so it ran ZERO restarts. Restoring a real 60 made this one file
+ * take over twenty minutes.
+ */
+const DEFAULT_RESTARTS = 4;
+
 const base = (over: Partial<OptOpts> = {}): OptOpts => ({
   mode: "gpp", stack: false, locks: new Set(), excludes: new Set(), ...over,
 });
@@ -72,7 +102,7 @@ function bruteForceBest(pool: readonly DfsPlayer[], mode: Mode, cap: number, req
 
 /** Assert the exact DP's optimum matches the brute-force optimum exactly (value, and set membership). */
 function assertExactOptimum(pool: readonly DfsPlayer[], mode: Mode, stack = false) {
-  const dp = optimizeOne(base({ mode, stack }), undefined, pool);
+  const dp = optimizeOne(base({ mode, stack }), undefined, DEFAULT_RESTARTS, pool);
   const { value: bfValue, lineups: bfLineups } = bruteForceBest(pool, mode, SALARY_CAP, stack);
 
   if (bfLineups.length === 0) {
@@ -138,7 +168,7 @@ describe("dfs optimizer — exact DP correctness proof", () => {
     // stack, and still be value-optimal among exactly those lineups — the
     // brute-force reference enforces the same intersection independently.
     const locks = new Set(["r1"]);
-    const dp = optimizeOne(base({ mode: "gpp", stack: true, locks }), undefined, POOL_CLEAR);
+    const dp = optimizeOne(base({ mode: "gpp", stack: true, locks }), undefined, DEFAULT_RESTARTS, POOL_CLEAR);
     const mustHave = [...locks];
     let bestValue = -Infinity;
     let bestKeys: string[] = [];
@@ -175,17 +205,17 @@ describe("dfs optimizer — exact DP correctness proof", () => {
   it("returns null when the pool cannot fill a required slot (no TE at all)", () => {
     const pool = POOL_CLEAR.filter((p) => p.pos !== "TE");
     assertExactOptimum(pool, "gpp"); // brute force also finds no feasible lineup
-    expect(optimizeOne(base({ mode: "gpp" }), undefined, pool)).toBeNull();
+    expect(optimizeOne(base({ mode: "gpp" }), undefined, DEFAULT_RESTARTS, pool)).toBeNull();
   });
 
   it("returns null when the cheapest feasible lineup still exceeds the cap", () => {
     const pricey = POOL_CLEAR.map((p) => ({ ...p, salary: p.salary + 100000 }));
-    expect(optimizeOne(base({ mode: "gpp" }), undefined, pricey)).toBeNull();
+    expect(optimizeOne(base({ mode: "gpp" }), undefined, DEFAULT_RESTARTS, pricey)).toBeNull();
   });
 
   it("is fully deterministic — identical output across repeated runs", () => {
-    const a = optimizeOne(base({ mode: "leverage" }), undefined, POOL_CLEAR);
-    const b = optimizeOne(base({ mode: "leverage" }), undefined, POOL_CLEAR);
+    const a = optimizeOne(base({ mode: "leverage" }), undefined, DEFAULT_RESTARTS, POOL_CLEAR);
+    const b = optimizeOne(base({ mode: "leverage" }), undefined, DEFAULT_RESTARTS, POOL_CLEAR);
     expect(a!.map((p) => p.id)).toEqual(b!.map((p) => p.id));
   });
 
@@ -320,9 +350,20 @@ describe("dfs optimizer", () => {
     expect(res.partial).toBe(true);
   });
 
-  it("contains no Math.random anywhere — the solver is fully deterministic", () => {
-    const src = readFileSync(join(__dirname, "dfs-optimizer.ts"), "utf8");
-    expect(src).not.toMatch(/Math\.random/);
+  it("calls no nondeterministic RNG anywhere — the solver is fully deterministic", () => {
+    // Strip comments before scanning. The module now DOCUMENTS at length why the
+    // platform RNG was removed and what it broke, and that prose is the record of
+    // the fix; a whole-file string scan would force a future author to delete the
+    // explanation to keep this green. The guard's intent is executable code, and
+    // this is that intent stated exactly.
+    const raw = readFileSync(join(__dirname, "dfs-optimizer.ts"), "utf8");
+    const code = raw.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^\s*\/\/.*$/gm, "");
+    expect(code).not.toMatch(/Math\.random/);
+
+    // Strictly stronger than "the string is absent": the seeded generator that
+    // replaced it must still be here and still be the thing the seeder calls.
+    expect(code).toMatch(/function mulberry32\(/);
+    expect(code).toMatch(/buildRandom\(slate, opts, pen, mulberry32\(/);
   });
 });
 
@@ -357,10 +398,37 @@ describe("dfs optimizer — 600-player scale (CI-safe timed)", () => {
     return pool;
   }
 
+  /**
+   * MEASURED 2026-09-13, and the reason this block needs an explicit budget.
+   *
+   * Until today these two tests passed the pool into the `restarts` slot, so
+   * `slate` fell back to `activeDfsSlate()` and the "600-player scale" block
+   * never saw 600 players — it was quietly re-testing the small default slate.
+   * Passing the pool correctly made it real, and real is expensive:
+   *
+   *     heuristic only, 600 players                    23 ms
+   *     exact search, 600 players, nodeBudget   5,000   5,218 ms
+   *
+   * That is about 1 ms per node, so the DEFAULT 400,000-node budget is roughly
+   * seven MINUTES for a single call, and this block makes three. Nothing hangs;
+   * it is arithmetic. The branch-and-bound honours its budget and returns its
+   * incumbent, which the module doc promises is never worse than the heuristic.
+   *
+   * The budget is therefore stated here rather than inherited: the test now
+   * genuinely exercises 600 players AND finishes, where before it did neither.
+   * The 10s assertion below is meaningful again because it is measured against
+   * a bounded search.
+   *
+   * PRODUCTION IMPLICATION, not fixed here: any caller that runs the exact
+   * search over a large slate on the default budget blocks for minutes. Worth
+   * an owner before /fantasy/dfs is pointed at a full-size slate.
+   */
+  const SCALE_NODE_BUDGET = 5_000;
+
   it("solves an exact 600-player optimum within 10s (CI-safe)", () => {
     const pool = makeBigPool(600);
     const t0 = Date.now();
-    const lu = optimizeOne(base({ mode: "gpp" }), undefined, pool);
+    const lu = optimizeOne(base({ mode: "gpp" }), undefined, DEFAULT_RESTARTS, pool, SCALE_NODE_BUDGET);
     const elapsedMs = Date.now() - t0;
     expect(lu).not.toBeNull();
     expect(lu!.length).toBe(DFS_SLOTS.length);
@@ -371,8 +439,8 @@ describe("dfs optimizer — 600-player scale (CI-safe timed)", () => {
 
   it("is deterministic at 600-player scale too", () => {
     const pool = makeBigPool(600);
-    const a = optimizeOne(base({ mode: "gpp" }), undefined, pool);
-    const b = optimizeOne(base({ mode: "gpp" }), undefined, pool);
+    const a = optimizeOne(base({ mode: "gpp" }), undefined, DEFAULT_RESTARTS, pool, SCALE_NODE_BUDGET);
+    const b = optimizeOne(base({ mode: "gpp" }), undefined, DEFAULT_RESTARTS, pool, SCALE_NODE_BUDGET);
     expect(a!.map((p) => p.id)).toEqual(b!.map((p) => p.id));
   }, 15000);
 });

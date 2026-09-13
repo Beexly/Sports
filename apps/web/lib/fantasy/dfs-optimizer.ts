@@ -50,7 +50,43 @@ function qbStackCount(lu: Lineup): { team: string | null; stacked: number } {
   return { team: qb.team, stacked };
 }
 
-function buildRandom(pool: readonly DfsPlayer[], opts: OptOpts, pen: (p: DfsPlayer) => number): DfsPlayer[] | null {
+/**
+ * Deterministic PRNG (mulberry32) replacing `Math.random()` in the multi-start
+ * seeder.
+ *
+ * `Math.random()` made this solver return DIFFERENT LINEUPS FOR IDENTICAL
+ * INPUTS. Two back-to-back `optimizeOne` calls on the same pool came back with
+ * the same nine players assigned to different slots — r1/r2 and w1/w3 swapped —
+ * because the seeder picked from the top-k options at random and the exact
+ * search inherited that arrangement wherever values tie.
+ *
+ * This file has ALWAYS carried a test demanding it not be there ("contains no
+ * Math.random anywhere — the solver is fully deterministic"), and that test has
+ * been failing. The companion test ("identical output across repeated runs")
+ * passed only by luck of scale: on the full slate the optimum is unique, so
+ * every seed converges to it and the randomness is invisible. It becomes
+ * visible the moment a small pool with ties is passed, which is what the
+ * correctness fixtures do.
+ *
+ * It is not a cosmetic guarantee. CLAUDE.md's engine rule is deterministic
+ * scoring, and a customer who regenerates the same lineup and gets a different
+ * answer has been shown that the "math you can read" is not reproducible.
+ *
+ * The seed is the restart index alone, so the sequence is identical on every
+ * call, in every process, forever. Restarts still diversify — r = 0..n each
+ * explore a different corner — but they explore the SAME corners every time.
+ */
+function mulberry32(seed: number): () => number {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function buildRandom(pool: readonly DfsPlayer[], opts: OptOpts, pen: (p: DfsPlayer) => number, rand: () => number): DfsPlayer[] | null {
   const cand = pool.filter((p) => !opts.excludes.has(p.id));
   if (!cand.length) return null;
   const minSal = Math.min(...cand.map((p) => p.salary));
@@ -76,7 +112,7 @@ function buildRandom(pool: readonly DfsPlayer[], opts: OptOpts, pen: (p: DfsPlay
       .sort((a, b) => objVal(b, opts.mode) - pen(b) - (objVal(a, opts.mode) - pen(a)));
     if (!options.length) return null;
     const k = Math.min(5, options.length);
-    const pick = options[Math.floor(Math.random() * k)]!;
+    const pick = options[Math.floor(rand() * k)]!;
     lineup[i] = pick; used.add(pick.id);
   }
   return lineup as DfsPlayer[];
@@ -165,7 +201,9 @@ export function optimizeHeuristic(opts: OptOpts, pen: (p: DfsPlayer) => number =
   let best: DfsPlayer[] | null = null;
   let bestObj = -Infinity;
   for (let r = 0; r < restarts; r++) {
-    let lu = buildRandom(slate, opts, pen);
+    // Seeded by the restart index only: the same call twice explores the same
+    // corners in the same order, so the result is byte-identical.
+    let lu = buildRandom(slate, opts, pen, mulberry32(r + 1));
     if (!lu) continue;
     lu = hillClimb(lu, slate, opts);
     if (opts.stack) lu = enforceStack(lu, slate, opts);
