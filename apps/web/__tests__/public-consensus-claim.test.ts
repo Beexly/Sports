@@ -21,6 +21,46 @@ describe("public consensus claim binder (T-1 tripwire)", () => {
     expect(isBookmakerConsensusClaim("Market and rest edges align.")).toBe(false);
   });
 
+  it("ALSO detects the corrected spread wording, so the fix cannot un-gate the claim", () => {
+    // The spread copy was corrected on 2026-09-13: consensusPct measures
+    // agreement about WHICH TEAM IS FAVOURED, not about the line, and it is
+    // pinned at 1.0 in practice. The new wording still asserts a fact about how
+    // many books did something, so it must still carry evidence. If this arm is
+    // ever dropped, every teaser minted from that day forward renders ungated.
+    expect(
+      isBookmakerConsensusClaim(
+        "Every book pricing this game has Kansas City Chiefs favoured. We are on Kansas City Chiefs -5.5.",
+      ),
+    ).toBe(true);
+    expect(
+      isBookmakerConsensusClaim(
+        "7 of 11 books pricing this game have Kansas City Chiefs favoured. We are on Kansas City Chiefs -5.5.",
+      ),
+    ).toBe(true);
+    // Still not a consensus claim, so still not gated into the binder.
+    expect(isBookmakerConsensusClaim("Market and rest edges align.")).toBe(false);
+    expect(isBookmakerConsensusClaim("We are on Kansas City Chiefs -5.5.")).toBe(false);
+  });
+
+  it("binds the corrected wording to the same evidence the legacy wording needed", () => {
+    const bound = bindPublicConsensusClaim(
+      {
+        reasoningShort:
+          "Every book pricing this game has Kansas City Chiefs favoured. We are on Kansas City Chiefs -5.5.",
+        consensusPct: 1,
+        bookmakerCount: 11,
+        dataFreshnessAt: new Date("2026-08-06T12:00:00.000Z"),
+      },
+      NOW,
+    );
+    expect(bound).not.toBeNull();
+    expect(bound!.bookmakerCount).toBe(11);
+    expect(consensusEvidenceCaption(bound!)).toMatch(/11 books/);
+    // The teaser is never rewritten by the binder — it carries the claim as minted.
+    expect(bound!.claimText).toContain("favoured");
+    expect(bound!.claimText).not.toContain("bookmaker consensus");
+  });
+
   it("binds claim + book count + freshness together", () => {
     const bound = bindPublicConsensusClaim(
       {

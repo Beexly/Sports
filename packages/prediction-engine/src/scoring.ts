@@ -675,15 +675,49 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     ? ` Context: ${contextClauses.join(", ")}.`
     : "";
 
+  // WHAT consensusPct MEASURES ON A SPREAD, and why the old copy misdescribed it.
+  //
+  // It is `spreads.filter((s) => s < 0).length / spreads.length` (see above):
+  // the share of books whose spread SIGN puts the same team in front. It is
+  // agreement about WHICH TEAM IS FAVOURED, not about the number, and not about
+  // which side holds value. Books essentially never disagree about who is
+  // favoured, so it is pinned at 1.0 in practice: measured on production
+  // 2026-09-13, all 48 published SPREAD picks across NFL (30), MLB (9),
+  // NCAAF (5) and MLS (4) read exactly 1.0000.
+  //
+  // The old strings rendered that as "backed by 100% of 11 bookmakers" and
+  // "100% bookmaker consensus on Chicago Bears -3.0", which a customer reads as
+  // "every book likes the Bears to cover -3". No book was asked that question.
+  // The T-1 evidence binder then attaches a book count and a freshness stamp to
+  // the claim (lib/claims/public-consensus-claim.ts), so it renders looking
+  // audited.
+  //
+  // This is a COPY fix. consensusPct itself is unchanged, still feeds
+  // consensusScore (up to CONSENSUS_COMPONENT_MAX = 30 points) and still sets
+  // LOW_RISK — recomputing it as a side-agreement or price-agreement figure is
+  // a scoring change, needs a MODEL_VERSION bump and a calibration pass, and
+  // does not belong in a string edit.
+  //
+  // Note also the denominator: consensusPct is computed over `spreads` (from
+  // `spreadOdds`), and the old long-form string printed it as a percentage "of
+  // ${pricedOdds.length}" — a DIFFERENT array, since `pricedOdds` excludes rows
+  // carrying a line with no two-sided price. Both numbers now come from the
+  // same set.
+  const favouredCount = Math.round(consensusPct * spreads.length);
+  const favouredClause =
+    favouredCount >= spreads.length
+      ? `Every book pricing this game has ${chosenTeam} favoured`
+      : `${favouredCount} of ${spreads.length} books pricing this game have ${chosenTeam} favoured`;
+
   const reasoning =
-    `${chosenTeam} ${spreadDisplay} backed by ${Math.round(consensusPct * 100)}% of ${pricedOdds.length} ` +
-    `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
+    `${favouredClause}. We are on ${chosenTeam} ${spreadDisplay}. ` +
+    `Fair value: ${Math.round(fairProb * 100)}%. ` +
     `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
     contextNote +
     ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
 
   const reasoningShort =
-    `${Math.round(consensusPct * 100)}% bookmaker consensus on ${chosenTeam} ${spreadDisplay}.` +
+    `${favouredClause}. We are on ${chosenTeam} ${spreadDisplay}.` +
     (contextClauses.length > 0 ? ` ${contextClauses[0]!.charAt(0).toUpperCase() + contextClauses[0]!.slice(1)} noted.` : "");
 
   const factorBreakdown: FactorBreakdown = {

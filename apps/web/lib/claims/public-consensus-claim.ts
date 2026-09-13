@@ -11,8 +11,29 @@
  * sit next to it.
  */
 
+/**
+ * A teaser asserts a quantified claim ABOUT BOOKS when it matches either arm.
+ *
+ * Arm 1, LEGACY: "100% bookmaker consensus on Chicago Bears -3.0." Minted until
+ * 2026-09-13. Published bet terms are frozen write-once at creation
+ * (process-sport.ts), so every pick already in the table keeps this wording
+ * forever and the tripwire must keep recognising it.
+ *
+ * Arm 2, CURRENT: "Every book pricing this game has Chicago Bears favoured" /
+ * "7 of 11 books pricing this game have Chicago Bears favoured". The spread
+ * copy was corrected because `consensusPct` measures agreement about WHICH TEAM
+ * IS FAVOURED, not about the line or the side's value, and it is pinned at
+ * 1.0 in practice (all 48 published SPREAD picks on 2026-09-13 read exactly
+ * 1.0000, across four sports).
+ *
+ * The second arm exists so the correction could not walk the claim out from
+ * under its own guard. The new wording still asserts a fact about how many
+ * books did something, so it still has to carry the book count and the
+ * freshness stamp. Narrowing this regex to only the legacy arm would silently
+ * un-gate every teaser minted from now on.
+ */
 export const CONSENSUS_CLAIM_RE =
-  /\b(\d{1,3})%\s+bookmaker consensus\b/i;
+  /\b(\d{1,3})%\s+bookmaker consensus\b|\b(?:every book|\d{1,3}\s+of\s+\d{1,3}\s+books)\s+pricing this game\b/i;
 
 export type PublicConsensusEvidence = {
   /** Unmodified teaser text from the pick (no rewrite). */
