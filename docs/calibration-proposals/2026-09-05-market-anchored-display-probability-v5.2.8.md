@@ -129,6 +129,87 @@ with `marketFairProb: null` every cycle (fixed in 31564d9), and the loaders neve
 receipt copy (fixed in 8a8f292). n=28 is far too small to state a Brier; the number above
 is recorded as an observation, not a result.
 
+## 3b. Evidence refresh (read-only SQL, 2026-09-13 19:30 UTC)
+
+Section 3 recorded `confidenceTail ... n=167 winRate=0.4371 claimedRate=0.8619
+verdict=inverted` and `marketFairProb n=408 brier=0.234 ece=0.053 coverage=0.34`. Both hold
+on a much larger sample, and one structural fact is added that the section above does not
+state. Population throughout: `isPublished`, not `isBootstrap`, `result` in (WIN, LOSS) so
+pushes are never averaged in, `modelVersion <> 'founder-v1'`.
+
+**1. `confidence` against outcomes, n 2,385.** The number `expectedFromConfidence`
+(`apps/web/lib/calibration/compute.ts:260`) publishes as the forecast probability on
+/calibration:
+
+```
+conf    n     claimed  realized   gap
+50-54   483   0.5175   0.5280   +0.0105
+55-59   312   0.5689   0.4968   -0.0721
+60-64   456   0.6206   0.5702   -0.0504
+65-69   443   0.6695   0.5305   -0.1390
+70-74   294   0.7170   0.5918   -0.1252
+75-79   192   0.7704   0.6146   -0.1558
+80-84   104   0.8184   0.4423   -0.3761
+85-89    73   0.8708   0.5479   -0.3229
+90-94    28   0.9179   0.4643   -0.4536
+```
+
+Banded: conf 80+ reads n 235, claimed 0.8663, realized 0.5191, gap -0.3472, standard error
+0.0326, **z = -10.7**. Conf 50-79 reads n 2,180, claimed 0.6265, realized 0.5491,
+z = -7.3. The Brier score of confidence-as-probability on the 80+ band is **0.3617**. A
+constant 0.5 forecast scores 0.25, so on its most confident picks this forecast is worse
+than saying nothing.
+
+**2. The structural fact, which is the reason this cannot be fixed by calibrating harder.**
+`confidence` is not merely overstated, it is NOT MONOTONE in outcome: realized win rate
+peaks around conf 75-79 at 0.6146 and falls to 0.4643 by conf 90-94, below the 0.5280 of
+the lowest band. The display calibrator
+(`packages/prediction-engine/src/calibration-apply.ts:70,80`) is isotonic regression
+(PAVA), which is monotone non-decreasing BY CONSTRUCTION. It can flatten the top of a
+curve; it can never invert one. So applying it to `confidence` converts a score inversion
+into a stated win-probability inversion, and no amount of additional sample changes that.
+The fix is not a better calibrator. It is to stop treating this number as a probability,
+which is exactly what section 1 proposes.
+
+**3. `rankingP`, for comparison, n 1,390.** Monotone and therefore calibratable:
+
+```
+rankingP     n     claimed  realized   gap
+0.21-0.39    48    0.3209   0.4583   +0.1374
+0.40-0.49    38    0.4559   0.5526   +0.0967
+0.49-0.58   307    0.5348   0.5049   -0.0299
+0.58-0.68   514    0.6339   0.5875   -0.0464
+0.68-0.76   314    0.7138   0.5828   -0.1310
+0.77-0.85   134    0.7960   0.6119   -0.1841
+0.86-0.95    35    0.8934   0.8286   -0.0648
+```
+
+**4. `marketFairProb`, the number section 1 proposes publishing, n 622** (book-priced,
+bookmakerCount >= 2):
+
+```
+marketFairProb   n    claimed  realized   gap      brier
+0.30-0.40        73   0.3695   0.3014   -0.0681   0.2163
+0.40-0.50       196   0.4682   0.4592   -0.0090   0.2475
+0.50-0.60       247   0.5161   0.4980   -0.0181   0.2496
+0.71-0.80        30   0.7563   0.7000   -0.0563   0.2004
+0.81-0.90        26   0.8609   0.9231   +0.0622   0.0778
+0.90-0.99        50   0.9399   0.8800   -0.0599   0.1047
+```
+
+Monotone, and every gap within 0.07. Against the same outcomes the three candidates rank
+unambiguously: marketFairProb (monotone, tight), rankingP (monotone, over-confident in the
+upper middle), confidence (inverted at the top). That is the proposal's thesis, measured on
+15x the sample section 3 had.
+
+**Honest limits.** The top marketFairProb bands are thin (26 and 50 rows) and the 0.60-0.71
+band did not reach the 25-row floor, so it is absent rather than zero. This is a
+retrospective sample over settled picks, not a forward test. Nothing here measures the Shin
+consensus switch that Phase 2 also proposes; it measures the PROPORTIONAL value receipts
+carry today, which is the number a reader can recompute. And this section changes no floor,
+no gate and no status: `status:` above stays PROPOSED and `model-freeze.mjs` keeps guarding
+the bump until a founder flips it.
+
 ## 4. Phases
 
 ### Phase 0, shipped (bug fixes, no MODEL_VERSION change)
