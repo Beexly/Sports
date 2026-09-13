@@ -20,7 +20,13 @@
  * forever and the tripwire must keep recognising it.
  *
  * Arm 2, CURRENT: "Every book pricing this game has Chicago Bears favoured" /
- * "7 of 11 books pricing this game have Chicago Bears favoured". The spread
+ * "Most books pricing this game have Chicago Bears favoured, though they are
+ * split". Both forms are deliberately SCALE-FREE — no raw count is embedded,
+ * because reasoning text is frozen write-once while the evidence caption is
+ * rebuilt from live columns that drift (772 of 1,076 published spread picks
+ * already differ from their mint-time book count). An earlier draft did embed
+ * "N of M" and had to be withdrawn; if that wording ever returns, this arm must
+ * cover it too or the claim renders ungated. The spread
  * copy was corrected because `consensusPct` measures agreement about WHICH TEAM
  * IS FAVOURED, not about the line or the side's value, and it is pinned at
  * 1.0 in practice (all 48 published SPREAD picks on 2026-09-13 read exactly
@@ -33,7 +39,7 @@
  * un-gate every teaser minted from now on.
  */
 export const CONSENSUS_CLAIM_RE =
-  /\b(\d{1,3})%\s+bookmaker consensus\b|\b(?:every book|\d{1,3}\s+of\s+\d{1,3}\s+books)\s+pricing this game\b/i;
+  /\b(\d{1,3})%\s+bookmaker consensus\b|\b(?:every book|most books|\d{1,3}\s+of\s+\d{1,3}\s+books)\s+pricing this game\b/i;
 
 export type PublicConsensusEvidence = {
   /** Unmodified teaser text from the pick (no rewrite). */

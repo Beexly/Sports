@@ -34,6 +34,14 @@ describe("public consensus claim binder (T-1 tripwire)", () => {
     ).toBe(true);
     expect(
       isBookmakerConsensusClaim(
+        "Most books pricing this game have Kansas City Chiefs favoured, though they are split. We are on Kansas City Chiefs -5.5.",
+      ),
+    ).toBe(true);
+    // The withdrawn "N of M" form stays covered: reasoning is frozen
+    // write-once, so any pick minted while that draft was live keeps it
+    // forever and must still be gated.
+    expect(
+      isBookmakerConsensusClaim(
         "7 of 11 books pricing this game have Kansas City Chiefs favoured. We are on Kansas City Chiefs -5.5.",
       ),
     ).toBe(true);

@@ -22,6 +22,14 @@ import type { BookmakerOddsInput, OddsInput, ScoredPick } from "@sports/types";
  *
  * Twice is a pattern, so this file pins it rather than trusting the comment.
  *
+ * Third invariant, added after the first draft shipped the opposite: the frozen
+ * text carries NO RAW COUNT. `reasoning`/`reasoningShort` are frozen write-once
+ * at creation while `bookmakerCount` and `dataFreshnessAt` refresh every cycle,
+ * and the T-1 caption is built from the live columns — so "7 of 8" in permanent
+ * text sits beside a caption that has moved on. Measured: 772 of 1,076
+ * published spread picks (72%) already drift from their mint-time snapshot,
+ * mean 2.70 books, max 9.
+ *
  * Second invariant here: a PICK'EM row (spread exactly 0) names no favourite
  * and belongs in NEITHER side's count. `consensusPct` derives from
  * `spreads.filter((s) => s < 0)`, which is a home test; for an away pick
@@ -82,16 +90,20 @@ describe("the spread teaser counts the books it publishes as evidence", () => {
     expect(pick!.bookmakerCount).toBe(8);
 
     // Every priced book has the same side favoured, so the clause takes the
-    // "every book" form — and must NOT mention the 11 line-carrying rows.
+    // scale-free "every book" form.
     expect(pick!.reasoningShort).toContain("Every book pricing this game has");
+    // NO RAW COUNT anywhere in the frozen text: not the 8 priced rows, not the
+    // 11 line-carrying ones. The text outlives both numbers.
+    expect(pick!.reasoningShort).not.toMatch(/\d+ of \d+ books/);
+    expect(pick!.reasoning).not.toMatch(/\d+ of \d+ books/);
     expect(pick!.reasoningShort).not.toContain("11");
-    expect(pick!.reasoning).not.toContain("of 11 books");
   });
 
   it("a pick'em row counts for neither side", () => {
     // 7 priced books favour the AWAY team (positive spread) and one priced book
-    // is a pick'em. The away pick must read 7 of 8, never 8 of 8: a zero spread
-    // names no favourite.
+    // is a pick'em. A zero spread names no favourite, so this is NOT unanimous
+    // and must not take the "every book" form — but it must not pin "7 of 8"
+    // either, because that text is frozen while the evidence caption is not.
     const pick = spread(
       scoreGame(
         input([
@@ -102,8 +114,9 @@ describe("the spread teaser counts the books it publishes as evidence", () => {
     );
     expect(pick).toBeDefined();
     expect(pick!.bookmakerCount).toBe(8);
-    expect(pick!.reasoningShort).toContain("7 of 8 books pricing this game have");
     expect(pick!.reasoningShort).not.toContain("Every book");
+    expect(pick!.reasoningShort).toContain("split");
+    expect(pick!.reasoningShort).not.toMatch(/\d+ of \d+/);
   });
 
   it("never claims consensus ON the selection — the agreement is about who is favoured", () => {

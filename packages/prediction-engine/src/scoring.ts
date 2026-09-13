@@ -723,10 +723,35 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const favouredCount = pricedOdds.filter((o) =>
     homeIsChosen ? (o.spread as number) < 0 : (o.spread as number) > 0,
   ).length;
+
+  // NO RAW COUNT IN THE FROZEN TEXT. This clause is persisted into
+  // `reasoning`/`reasoningShort`, which are frozen write-once at creation
+  // (process-sport.ts), while `bookmakerCount` and `dataFreshnessAt` are
+  // REFRESHED every ingestion cycle — and the T-1 evidence caption is built
+  // from those live columns. Embedding "7 of 8" in text that never changes,
+  // beside a caption that does, means the claim contradicts its own evidence.
+  //
+  // Measured 2026-09-13 over the 1,076 published SPREAD picks that carry a
+  // mint-time signal snapshot: 772 of them (72%) already have a live
+  // bookmakerCount different from their snapshot, mean absolute drift 2.70
+  // books, max 9. So this is the common case, not an edge (Devin Review, #819 —
+  // the first draft of this clause did embed the pair).
+  //
+  // The unanimous wording is SCALE-FREE and survives that drift: if the set
+  // grows from 8 books to 10 and all 10 still make the same team the
+  // favourite, "every book" is still true. The split wording says the books
+  // disagree without pinning a ratio that will go stale. Neither can contradict
+  // the caption's live count.
+  //
+  // Nothing is lost in practice: a spread's favourite is near-unanimous by
+  // construction (that is the whole finding this copy exists to correct —
+  // consensusPct reads exactly 1.0000 on all 48 published spread picks across
+  // four sports), so the split branch is the rare case and the exact ratio was
+  // never the information the reader needed.
   const favouredClause =
     favouredCount === pricedOdds.length
       ? `Every book pricing this game has ${chosenTeam} favoured`
-      : `${favouredCount} of ${pricedOdds.length} books pricing this game have ${chosenTeam} favoured`;
+      : `Most books pricing this game have ${chosenTeam} favoured, though they are split`;
 
   const reasoning =
     `${favouredClause}. We are on ${chosenTeam} ${spreadDisplay}. ` +
