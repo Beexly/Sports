@@ -74,6 +74,28 @@ import {
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
+/**
+ * This route was DOWN in production before this was set.
+ *
+ * Measured 2026-09-13 18:5x UTC, seven consecutive requests: no response inside
+ * 45s (curl exit 28, HTTP 000) while / , /board and /picks all returned 200 and
+ * /api/board/state returned 200 in 14.7s. With no `maxDuration` export a Vercel
+ * Node function takes the account default, and this handler does 21 awaits —
+ * most of them database round trips — across 1000 lines. It was being killed
+ * mid-flight every time.
+ *
+ * 120s matches its sibling ops route, api/ops/settlement-rca. That is the
+ * precedent in this directory; every cron route sets its own ceiling too, and
+ * vercel.json declares no global `functions` config, so an unset export means
+ * the default and nothing else.
+ *
+ * Raising the ceiling is not a fix for the handler being slow. This is the
+ * surface that reports whether the product is telling the truth about itself,
+ * so it failing silently is the worst possible thing for it to do — the ceiling
+ * buys back visibility. If it starts returning 500 rather than timing out, the
+ * cause is memory, not duration, and that is a different fix.
+ */
+export const maxDuration = 120;
 
 /** Features expected on main that older deploys may lack — diagnose lag. */
 const MAIN_FEATURE_MARKERS = [
