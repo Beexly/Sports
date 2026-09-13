@@ -144,19 +144,26 @@ for the first time in weeks CI got far enough to run anything. Three jobs failed
 them was caused by the merges that day; all three predate them and were simply unreachable
 behind the install error:
 
-- `Trust gate` — 2 `banned.lock` hits in `apps/web/components/fantasy/postlock-panel.tsx`
-  ("Post-lock readout" in the aria-label and the h2). The temporal-idiom exemption in
-  trust-gate covers "at lock"/"lock time"/"before the lock" but not "post-lock".
-- `All guardrails` — the same trust-gate hit, plus 1 `commercial-copy.tout:lock` on a code
-  comment in `components/three/signal-core-scene.tsx` ("the lock-on entrance") and 3
-  `em-dash-scan` hits in `components/news/the-beat.tsx` (two comments, one customer string).
+- `Trust gate` — 2 betting-slang hits in `apps/web/components/fantasy/postlock-panel.tsx`,
+  on the section aria-label and the h2. The rule bans the sure-thing noun and exempts only
+  the temporal idioms ("at ...", "... time", "before the ..."); the panel's hyphenated
+  prefix form was not among them.
+- `All guardrails` — the same hit, plus 1 `commercial-copy` hit on a code comment in
+  `components/three/signal-core-scene.tsx` and 3 `em-dash-scan` hits in
+  `components/news/the-beat.tsx` (two comments, one customer string).
 - `Test, type-check, lint, Prisma` — lint and typecheck both PASS; the failure is in
   "Run tests (all workspaces)".
 
-The copy half is fixed by rewording the source, never the guard (law 9): the panel now reads
-"Late swap: what changed", the comment reads "the entrance sequence", and the-beat's dashes
-are prose. 26/26 guardrails green locally after that. Anyone picking this up: the guards were
-right and the phrases were real, so do not add allowlist entries.
+Fixed by rewording the source, never the guard (law 9): the panel now reads "Late swap:
+what changed", the comment reads "the entrance sequence", and the-beat's dashes are prose.
+26/26 guardrails green after that.
+
+**Two process notes, learned the hard way on this pass.** First, the guards were right and
+every phrase was real, so do not add allowlist entries. Second, the scanners read THIS FILE
+too, and a note that QUOTES the banned token to explain the fix trips the same rule — the
+first draft of the four bullets above added 5 fresh hits and turned the PR red. Describe the
+offending string, never reproduce it, and re-run `npm run guardrails` after editing AGENTS.md,
+not only after editing code.
 
 **NEW: THE CONVICTION GATE (`apps/web/lib/conviction/`).** Founder ask 2026-09-13: beat
 and coach reporting, prop alignment, travel and rest, offense-vs-defense and scheme
