@@ -20,6 +20,7 @@ import { resolveMarketImplied } from "@/lib/picks/market-implied-display";
 import { publicEdgeScore } from "@/lib/picks/public-edge-score";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
+import { dropContradictedModelSignals } from "@/lib/picks/model-signal-coherence";
 import { clientIp } from "@/lib/api/rate-limit";
 import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
 
@@ -203,9 +204,17 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     )
   ).filter((p): p is NonNullable<typeof p> => p != null);
 
+  // One game, one story. A model-signal row claims "no book line" for its game;
+  // that claim cannot stand beside a book-priced row for the SAME game, and on
+  // 2026-09-13 two such pairs were live on opposite sides (see
+  // lib/picks/model-signal-coherence.ts). Applied AFTER the selective filter
+  // and BEFORE the tier cap, so a capped viewer spends their allowance on rows
+  // that survive rather than on rows about to be dropped.
+  const coherentPicks = dropContradictedModelSignals(filteredPicks);
+
   // Display order must match generation ranking law (rankingP, not confidence).
   // DB orderBy confidence is a cheap pre-filter only — re-rank survivors here.
-  const rankedPicks = [...filteredPicks].sort(comparePicksByRanking);
+  const rankedPicks = [...coherentPicks].sort(comparePicksByRanking);
 
   // Tier cap applied AFTER filter + rank so a limited viewer always gets their
   // full allowance (best-ranked survivors), never fewer because the filter ate

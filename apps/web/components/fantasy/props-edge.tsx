@@ -17,7 +17,19 @@ import { PROPS, readProp, evalEntry, type Prop, type PropRead } from "@/lib/fant
 // verify/alert; plasma is never a negative.
 const sideTone = (side: "over" | "under") => (side === "over" ? "var(--orbital-cyan)" : "var(--plasma)");
 
-export function PropsEdge({ lines = PROPS }: { lines?: readonly Prop[] }) {
+export function PropsEdge({
+  lines = PROPS,
+  live = false,
+}: {
+  lines?: readonly Prop[];
+  /**
+   * True only when a licensed lines feed is connected. Defaults FALSE so the
+   * board says "fictional" unless something proves otherwise — the honest
+   * direction to be wrong in, since every row here is an invented player
+   * until a real feed lands.
+   */
+  live?: boolean;
+}) {
   const [entry, setEntry] = useState<Set<string>>(new Set());
   const [market, setMarket] = useState<string>("All");
   const [team, setTeam] = useState<string>("All");
@@ -102,6 +114,18 @@ export function PropsEdge({ lines = PROPS }: { lines?: readonly Prop[] }) {
         </select>
         <span className="font-mono text-[10px] tabular-nums text-ion-3">
           {reads.length} props
+        </span>
+        {/* The source pill sits IN the filter bar, directly above the cards,
+            because that is where a visitor's eye already is when they start
+            reading conviction percentages and EV figures. Mirrors the pill
+            PickemRanker already ships. */}
+        <span
+          data-testid="props-edge-source"
+          className={`ml-auto rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider ${
+            live ? "bg-orbital-cyan/20 text-orbital-cyan" : "bg-caution/20 text-caution"
+          }`}
+        >
+          {live ? "Source: live" : "Source: fictional (illustrative)"}
         </span>
       </div>
 

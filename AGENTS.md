@@ -9,6 +9,113 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ## THE LOOP
 
+**UPDATED 2026-09-13 (NFL WEEK 1 LIVE CHECK — three production defects fixed, three
+data outages found, conviction gate built). PR #808, branch
+`claude/nfl-kickoff-live-check-0qwxfm`. Read this before touching the board, the
+picks API, the DFS optimizer, or CLV.**
+
+**FIXED AND PUSHED (PR #808, not yet merged):**
+
+1. **`/fantasy/dfs` was HTTP 500 in production all day.** `dfs-exact.ts` imported
+   `eligible`/`objVal`/`salaryOf` and `dfs-optimizer-edge.ts` imported `objOf` from
+   `dfs-optimizer.ts`; none of the four was exported. `tsc` reported TS2459 on every
+   one, but `next.config` sets `typescript.ignoreBuildErrors`, so it built and the
+   bindings resolved to `undefined` at runtime (8 Vercel errors logged today,
+   `TypeError: (0 , l.objVal) is not a function`). Also fixed in the same pass:
+   `benchmark()` called `optimizeOne(opts, undefined, slate)`, putting the slate in the
+   `restarts` slot; and `GenResult` lacked `partial`/`requested`/`exposureTarget`, which
+   the optimizer component already read, so the partial notice never rendered and the
+   exposure header printed `NaN%`. tsc 10 errors -> 0; 49/49 tests (21 were failing).
+
+2. **Opposite sides published on one game.** Chicago Bears -3.0 (PREMIUM, conf 72,
+   11 books) beside Carolina Panthers ML (model signal) (FREE, conf 63, 0 books) on
+   game `cmpg6t8pl000f1hera7bgiigu`; Toronto Blue Jays -1.5 beside Baltimore Orioles ML
+   (model signal), both FREE, on `cmt63npik073a29ovi2mlgrrc`. New
+   `apps/web/lib/picks/model-signal-coherence.ts` drops a `bookmakerCount<=0` row when
+   the same VIEWER's slate already carries a book-priced row for the same game.
+   Viewer-scoped so the tier filter cannot defeat it. Never drops a book-priced row,
+   never touches a game whose only read IS a model signal, writes nothing. 10/10 tests.
+
+3. **"We passed" on games we were selling picks on.** Root cause is FIXTURE
+   TRIPLICATION: every NFL fixture exists as THREE `games` rows, none tombstoned.
+   Atlanta @ Pittsburgh: `cmpg6t8jg` (odds-api id, 11 books, dq 100, 35,016 odds, 1 live
+   pick), `cmtfag55p` (`espn:americanfootball_nfl:`, 1 book, dq 64, 6,522 odds, 0 picks),
+   `cmt621rco` (`espn:nfl:`, 0 books, dq 0, 0 odds, 0 picks). The gated lane's
+   `picks: {none}` predicate is per-ROW, so the rich row was excluded and a thin phantom
+   rendered as held with a reason computed off the phantom's own columns. Suppression now
+   runs on fixture identity via `findTwinCandidate` and reads the full published set, not
+   the 12-row display slice.
+
+**THREE DATA OUTAGES FOUND — none fixed, all need an owner:**
+
+- **THE LINE ARCHIVE HAS BEEN DEAD SINCE 2026-08-22.** `odds_line_snapshots` holds
+  684,498 rows across 526 games spanning **only 2026-08-19 to 2026-08-22** — four days,
+  three weeks ago. Nothing has been captured since. **This reframes the ESTABLISHED
+  blocker:** AGENTS.md currently states "CLV 23% vs 52.4% ... that is a model problem,
+  not a gate problem". That conclusion is no longer safe — closing lines stopped being
+  recorded three weeks ago, so CLV cannot be graded on any pick generated since. Find why
+  the archive writer stopped before drawing any further conclusion about CLV.
+
+- **Stale-generation picks are live on today's board.** `Chicago Bears -3.0` and
+  `Los Angeles Chargers ML (-503)` were generated **2026-05-22**; `Jaguars ML (-429)` and
+  `Lions ML (-324)` on 2026-08-22. They pass `freshPickWhere` because `dataFreshnessAt` is
+  restamped every refresh cycle while `selection`/`line` are frozen write-once (A-15). A
+  four-month-old line is being sold as today's read.
+
+- **The NFL elo path is not carrying information.** Six model-signal NFL picks today, six
+  HOME teams, confidence 60-64, and three land on the identical `consensusPct` 0.6036.
+  Full spread across six different games is 0.6036 to 0.6399. That is home-field advantage
+  with a rounding wobble, not a per-game read — and it outranks genuine 11-book picks
+  (Steelers -285 at conf 50) because elo returns ~60 while a real consensus returns ~50.
+
+**CI IS RED REPO-WIDE AND IT IS NOT ANY PR's FAULT.** Every job on every recent `main`
+run dies at `npm ci` with EUSAGE: `package-lock.json` is out of sync with the workspace
+set (11 `@sports/*` packages missing). Reproduced locally. `npm install` fixes it but the
+regenerated `package-lock.json` also adds 18 registry packages `package.json` already declares
+(`resend`, `web-push`, `@types/web-push`, `fast-check`, `standardwebhooks`, `postal-mime`,
+and transitives). `package-lock.json` is frozen for agents by law 2, so this needs a human
+commit: `npm install && git add package-lock.json && git commit`. Until it lands, NO PR in
+this repo can pass CI.
+
+**NEW: THE CONVICTION GATE (`apps/web/lib/conviction/`).** Founder ask 2026-09-13: beat
+and coach reporting, prop alignment, travel and rest, offense-vs-defense and scheme
+matchups, and narrative/contract-incentive angles (his example: a receiver needing 105
+yards for a season bonus) all feeding a TOUGHER gate so published picks hit better.
+
+Built as a SECOND gate that runs AFTER the engine decides, and it may only WITHHOLD
+publication. It does not score, rank, or alter a selection, line or probability, so
+MODEL_VERSION stays v5.2.7 and the scoring math is untouched. That asymmetry is the whole
+safety argument and must survive every future edit: a noisy signal costs us picks we would
+have published, never a pick we would not have. A signal that wants to ADD conviction is a
+scoring change, needs a MODEL_VERSION bump and a calibration pass, and does not belong here.
+
+- `gate-contract.ts` — `SignalFn`, `SignalRead`, `evaluateGate`. Conjunctive: any one
+  CONTRADICTS holds the pick; otherwise `minCorroborations` CONFIRMS are needed. A signal
+  returning `null` has no data and gets no vote; `null` is never read as agreement,
+  disagreement or zero. A signal that THROWS is silent, never evidence.
+- `registry.ts` — the honest inventory of which signals are live and exactly what blocks
+  each one. `requireEvidence` defaults FALSE, so wiring the gate changes nothing until an
+  operator turns it on. **That last switch is founder-only under law 3 — no agent may flip
+  it.** Report first, withhold on the founder's word.
+- `signals/` — rest-travel, market-movement, book-agreement, beat-report, prop-alignment,
+  scheme-matchup, narrative-incentive.
+
+**What is actually live today, measured:** only `book-agreement`. `market-movement` is
+dead because the line archive stopped on 08-22. `rest-travel` computes but CANNOT
+DISCRIMINATE IN WEEK 1 — every team's previous game is a preseason game from 08-21..08-29,
+so all rest gaps are 15-23 days; it becomes meaningful from Week 2. `beat-report` is inert
+because the news wire is still fictional sample data and a fabricated wire must never gate
+a real pick. `prop-alignment` is inert pending `EVENT_ODDS_INGEST_ENABLED`.
+`scheme-matchup` is inert because nflverse is unreachable. `narrative-incentive` has no
+source at all — the input contract is defined and requires `source` + `verifiedAt` on every
+fact, and the module will never infer a narrative on its own.
+
+**Do not regress:** never let the conviction gate ADD conviction or alter a pick. Never let
+an inert signal default to NEUTRAL instead of null. Never let illustrative props or the
+sample news wire reach a signal that gates a real pick. Never flip `requireEvidence` from
+an agent session.
+
+
 **UPDATED 2026-09-10 (21:15 UTC): FIELD visual system is LIVE on production
 (galaxysportsedge.com). Founder-approved direction + logo; "math you can read"
 is retired as a public tagline (internal trust-claim comments may still cite

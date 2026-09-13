@@ -1,6 +1,10 @@
 import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { getReadinessGates, MODEL_VERSION, toEdgeIndex } from "@sports/prediction-engine";
-import { collapseGameRowsToFixtures } from "@sports/ingestion-pipeline";
+import {
+  collapseGameRowsToFixtures,
+  findTwinCandidate,
+  type GameTwinCandidate,
+} from "@sports/ingestion-pipeline";
 import type { Entitlements } from "@sports/types";
 import {
   buildBoardHealth,
@@ -18,6 +22,7 @@ import {
 } from "./classify-board-state";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 import { publicEdgeScore } from "@/lib/picks/public-edge-score";
+import { dropContradictedModelSignals } from "@/lib/picks/model-signal-coherence";
 import { freshPickWhere } from "@/lib/board/stale-pick-policy";
 import { gameInSlateWindow, resolveSlateWindow } from "@/lib/picks/slate-window";
 
@@ -181,6 +186,21 @@ const LANE_RANK: Record<BoardStateRow["status"], number> = {
  * the lexically smallest id so the result never depends on query order.
  */
 export type DedupeEntry = { readonly key: string; readonly row: BoardStateRow };
+
+/**
+ * The `games` columns fixture identity needs. A caller may carry any others
+ * alongside; `sport.key` is optional and its absence only makes the twin
+ * matcher stricter (18h window, exact names only).
+ */
+type FixtureIdentityRow = {
+  readonly id: string;
+  readonly externalId: string;
+  readonly sportId: string;
+  readonly homeTeamName: string;
+  readonly awayTeamName: string;
+  readonly commenceTime: Date;
+  readonly sport?: { readonly key?: string | null } | null;
+};
 
 /**
  * The key MUST come from the caller, not from `row.market`.
@@ -827,7 +847,11 @@ async function loadBoardStateInner(
   const scoringNow = collapseGameRowsToFixtures(scoringNowRaw).slice(0, SCORING_LANE_LIMIT);
   const gatedToday = collapseGameRowsToFixtures(gatedTodayRaw).slice(0, GATED_LANE_LIMIT);
 
-  const publishedToday = [...publishedTodayRaw]
+  // Same "one game, one story" rule the picks API applies: a model-signal row
+  // cannot claim "no book line" for a game that also carries a book-priced row
+  // (lib/picks/model-signal-coherence.ts). Applied before the lane slice so the
+  // 12 rows shown are 12 rows that survive.
+  const publishedToday = dropContradictedModelSignals(publishedTodayRaw)
     .sort(comparePicksByRanking)
     .slice(0, 12);
 
@@ -923,9 +947,75 @@ async function loadBoardStateInner(
     // The published half stays. Published rows key on the real pickType and the
     // generic lanes on NO_PICK, so their keys never collide and the collapse
     // cannot pair them; only excluding the fixture can.
-    const publishedGameIds = new Set(publishedEntries.map((e) => e.row.gameId));
-    const scoringRowsScoped = scoringRows.filter((row) => !publishedGameIds.has(row.gameId));
-    const gatedRowsScoped = gatedRows.filter((row) => !publishedGameIds.has(row.gameId));
+    // SUPPRESS BY FIXTURE, NOT BY ROW ID.
+    //
+    // The gated query excludes games carrying a published pick with
+    // `picks: { none }`, which is a predicate on ONE `games` row. The table
+    // holds more than one row per real contest, and the generator writes its
+    // pick to the CANONICAL twin, so the pick-less twin passed the predicate,
+    // survived the collapse and rendered as "we passed" on a fixture we were
+    // publicly selling a pick on. Measured on production 2026-09-13T15:52Z:
+    // /api/picks published "Las Vegas Raiders ML" on Miami @ Las Vegas and
+    // "Carolina Panthers ML" on Chicago @ Carolina while /api/board/state
+    // carried both matchups in gatedTodayRows and the homepage ticker printed
+    // "Chicago Bears @ Carolina Panthers: we passed".
+    //
+    // Two changes, both narrowing what we are willing to claim:
+    //   - the suppression set is built from the FULL published read, not the
+    //     12-row display slice: a pick that exists is a pick that exists
+    //     whether or not it made the cut for the lane;
+    //   - identity is the repo's own twin matcher, the one the collapse above
+    //     already uses. It fails closed (null) on ambiguity and takes a 2h
+    //     window for baseball so a doubleheader stays two contests.
+    //
+    // Asymmetric on purpose. A false positive drops a held row and we say
+    // nothing about a game. A false negative is the live defect: we tell a
+    // visitor we passed on a game we published. Silence is the cheaper error.
+    const publishedGameIds = new Set(publishedTodayRaw.map((pick) => pick.gameId));
+    const publishedTwinCandidates: GameTwinCandidate[] = [];
+    const seenTwinCandidateIds = new Set<string>();
+    for (const pick of publishedTodayRaw) {
+      const g = pick.game;
+      if (seenTwinCandidateIds.has(g.id)) continue;
+      if (!(g.commenceTime instanceof Date) || !Number.isFinite(g.commenceTime.getTime())) continue;
+      seenTwinCandidateIds.add(g.id);
+      publishedTwinCandidates.push({
+        id: g.id,
+        externalId: g.externalId,
+        sportId: g.sportId,
+        homeTeamName: g.homeTeamName,
+        awayTeamName: g.awayTeamName,
+        commenceTime: g.commenceTime,
+        mergedIntoGameId: g.mergedIntoGameId,
+      });
+    }
+    /** True when a live published pick exists on this game's fixture. */
+    const fixtureIsPublished = (game: FixtureIdentityRow): boolean => {
+      if (publishedGameIds.has(game.id)) return true;
+      if (publishedTwinCandidates.length === 0) return false;
+      if (!(game.commenceTime instanceof Date) || !Number.isFinite(game.commenceTime.getTime())) {
+        return false;
+      }
+      const sportKey = game.sport?.key;
+      const twin = findTwinCandidate(publishedTwinCandidates, {
+        sportId: game.sportId,
+        externalId: game.externalId,
+        homeTeamName: game.homeTeamName,
+        awayTeamName: game.awayTeamName,
+        commenceTime: game.commenceTime,
+        ...(sportKey ? { sportKey } : {}),
+      });
+      // "flipped" is the matcher's own refusal to act: home and away disagree,
+      // so the two rows may not be the same contest. Treated as no match,
+      // exactly as fixture-collapse.ts treats it.
+      return twin !== null && twin.orientation !== "flipped";
+    };
+    const suppressedGameIds = new Set<string>([
+      ...scoringNow.filter(fixtureIsPublished).map((game) => game.id),
+      ...gatedToday.filter(fixtureIsPublished).map((game) => game.id),
+    ]);
+    const scoringRowsScoped = scoringRows.filter((row) => !suppressedGameIds.has(row.gameId));
+    const gatedRowsScoped = gatedRows.filter((row) => !suppressedGameIds.has(row.gameId));
 
     const dedupedFallback = dedupeBoardRows([
       ...scoringRowsScoped.map((row) => ({ key: boardDedupeKey(row.gameId, null), row })),
