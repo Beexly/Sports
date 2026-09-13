@@ -745,6 +745,30 @@ export const SOURCE_REGISTRY: Readonly<Record<string, LegalSource>> = {
     datasets: ["statcast_leaderboard", "expected_statistics", "sprint_speed", "statcast_search"],
     docsUrl: "https://baseballsavant.mlb.com/statcast_search",
   },
+  "espn-public-api": {
+    id: "espn-public-api",
+    provider: "ESPN public scoreboard / summary JSON (unofficial)",
+    // Mirror of the app registry's espn-public-api row (source-rights-registry.ts):
+    // approved_public_logged_off, derived_analytics_allowed. The free adapters
+    // (espn-scores / espn-boxscore) already operate on these endpoints without a
+    // commercial-display grant; rest/schedule factors derived from scores and box
+    // scores are facts, attributed, low volume.
+    kind: "public-api",
+    license: { spdx: null, name: "ESPN Terms of Use (public scoreboard/summary facts)", url: "https://www.espn.com/espn/tos" },
+    commercialUse: false,
+    attributionRequired: true,
+    attributionText: "Scores data via ESPN",
+    robotsRespected: true,
+    rateLimit: "Scoreboard/summary: ~4 requests/cycle, every request carries a timeout (12s default); never bulk poll.",
+    verdict: "use-with-caution",
+    reason:
+      "Unofficial public endpoint; facts (scores, schedules, box-score minutes) are not copyrightable (Feist). " +
+      "No key, no login, no evasion; derived analytics allowed, commercial DISPLAY of the feed is not — derived " +
+      "signals with attribution only. Narrow facts-as-inputs posture mirrors the app registry's espn-public-api row.",
+    baseUrl: "https://site.api.espn.com/apis/site/v2/sports",
+    datasets: ["scoreboard (schedules)", "summary (box scores)"],
+    docsUrl: "https://www.espn.com/espn/tos",
+  },
 };
 
 export function getSource(id: string): LegalSource | undefined {
