@@ -50,6 +50,7 @@ import {
   scoreGames,
   buildPickSignalSnapshot,
   buildPickProofReceipt,
+  MARKET_FAIR_METHOD_TAG,
   isPlausibleEntryOdds,
   selectionIsHomeSide,
 } from "@sports/prediction-engine";
@@ -1435,6 +1436,11 @@ export async function processSport(
               line: pick.line,
               entryOdds,
               marketFairProb: pick.marketFairProb,
+              // Name the de-vig that produced the committed number (v5.2.8
+              // Phase 2). Additive: it only appears in receipts minted from
+              // here on, and an older receipt still verifies against its own
+              // stored payload, where an absent tag commits as "none".
+              marketFairMethodTag: MARKET_FAIR_METHOD_TAG,
               confidence: pick.confidence,
               edgeScore: pick.edgeScore,
               modelProb: null,

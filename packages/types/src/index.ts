@@ -627,13 +627,46 @@ export interface PublicPick {
    */
   hasBookPrice?: boolean;
   /**
-   * Market-implied win probability for the picked side, 0..1, read from the
-   * pick's immutable proof receipt, with the bookmaker count it was averaged
-   * across. Present ONLY on book-priced two-way MONEYLINE picks that carry a
-   * receipt AND for viewers entitled to see confidence; the key is omitted
-   * otherwise (v5.2.8 display side, apps/web/lib/picks/market-implied-display.ts).
+   * @deprecated Phase 1 shape, superseded by `winProbability`. Kept so existing
+   * consumers do not break; both are resolved from ONE call to
+   * `resolveWinProbability` so they can never disagree. New code reads
+   * `winProbability`.
    */
   marketImplied?: { prob: number; bookmakerCount: number } | null;
+  /**
+   * The ONLY probability this API publishes on a pick (v5.2.8 Phase 2).
+   *
+   * `value` is the picked side's market-implied win probability, 0..1, read
+   * from the pick's immutable proof receipt: each book's quoted price for each
+   * side converted to an implied probability, averaged across the books in the
+   * mint-time snapshot, and the two-sided average normalised to sum to one.
+   * It is fixed at publish time and never recomputed.
+   *
+   * Present on book-priced two-way MONEYLINE picks carrying a receipt and at
+   * least two books, **for every tier** — it is arithmetic on quoted prices a
+   * reader can redo by hand, not a model output, and the public calibration
+   * claim is about this number, so the people reading that claim must be able
+   * to see it. The key is omitted when any scope rule fails.
+   *
+   * It is NEVER derived from `confidence`. `confidence` is a 0-100 selection
+   * score, rendered "NN/100", and is measurably anti-predictive at its top end
+   * (proposal section 3b: conf 80+ claims 0.8663, realizes 0.5191, z = -10.7).
+   *
+   * `basis: "independent_estimate"` is reserved for a future signal-slate
+   * estimate and is NEVER emitted today — no independent estimator in the
+   * engine has been shown to carry information at publish time, and a labeled
+   * guess is still a guess. A test pins that the API emits only "market_devig".
+   */
+  winProbability?: {
+    /** Picked side's win probability, 0..1, exclusive of 0 and 1. */
+    value: number;
+    /** Where the number came from. Only "market_devig" is emitted today. */
+    basis: "market_devig" | "independent_estimate";
+    /** Books in the mint-time snapshot the implied probabilities were averaged across (>= 2). */
+    books: number;
+    /** The de-vig method that produced `value`. */
+    method: "proportional";
+  } | null;
 
   // Gated by subscription
   confidence: number | null;         // null for FREE

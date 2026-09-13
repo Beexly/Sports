@@ -61,6 +61,23 @@ export interface PickProofInput {
   readonly asOf: string;
 }
 
+/**
+ * The de-vig method every scoring path in this engine actually uses for
+ * `marketFairProb`: each book's quoted price for each side converted to an
+ * implied probability, averaged across the books, and the two-sided average
+ * divided by its own sum. Committed to the receipt so a verifier can tell
+ * which method produced the committed number instead of assuming one.
+ *
+ * NOT swapped to Shin (`shin_devig_v1`, market-read.ts). Measured 2026-09-13
+ * on 621 settled book-priced picks carrying both values, the paired Brier
+ * difference is +0.0022 (t = 1.80, not significant), and the entire moneyline
+ * advantage comes from 11 rows where the methods disagree by over 10 points —
+ * pathological books. Excluding those, Shin is slightly worse (t = -1.13).
+ * Changing the committed method without evidence would break CLV continuity
+ * (`sameMethodOrRefuse`) for nothing.
+ */
+export const MARKET_FAIR_METHOD_TAG = "proportional_devig_v1";
+
 export interface PickProofReceipt {
   readonly pickId: string;
   /** Canonical serialization of the committed fields — the source of truth for verification. */

@@ -127,7 +127,9 @@ describe("model-signal lane: one read is published once", () => {
   it("keeps the EARLIEST fixture, whose history cutoff is least stale", async () => {
     await runSlate();
 
-    const [data] = createdData();
+    const data = createdData()[0];
+    expect(data).toBeDefined();
+    if (!data) throw new Error("unreachable");
     expect(data.gameId).toBe("g1");
   });
 
@@ -164,7 +166,9 @@ describe("model-signal lane: grade is LEAN, always", () => {
   it("grades a read that would have been STRONG_PLAY as LEAN", async () => {
     await runSlate();
 
-    const [data] = createdData();
+    const data = createdData()[0];
+    expect(data).toBeDefined();
+    if (!data) throw new Error("unreachable");
     const confidence = data.confidence as number;
 
     // Pin the premise, not a magic number: the blend weights sharp sources, so
@@ -178,7 +182,9 @@ describe("model-signal lane: grade is LEAN, always", () => {
   it("has no book price to grade against, which is why", async () => {
     await runSlate();
 
-    const [data] = createdData();
+    const data = createdData()[0];
+    expect(data).toBeDefined();
+    if (!data) throw new Error("unreachable");
     expect(data.bookmakerCount).toBe(0);
     const fb = data.factorBreakdown as { independentEdge?: { marketFairProb: unknown; expectedClv: number } };
     expect(fb.independentEdge?.marketFairProb).toBeNull();

@@ -85,13 +85,22 @@ export async function GET(req: Request): Promise<NextResponse> {
         id: p.id,
         sport: p.game?.sport?.key ?? null,
         market: p.pickType,
-        pModel:
-          typeof p.confidence === "number"
-            ? Math.min(1, Math.max(0, p.confidence / 100))
-            : null,
+        // RETIRED (v5.2.8 Phase 2, CAL-06). This used to carry confidence/100
+        // and call it a model probability. It is not one: measured on 2,385
+        // settled picks, confidence 80+ claims 0.8663 and realizes 0.5191
+        // (z = -10.7), and the curve is not even monotone — realized win rate
+        // peaks at confidence 75-79 and falls below the lowest band by 90-94.
+        // The key is kept and pinned to null so an integrator reading it gets
+        // nothing rather than a wrong number; the score itself is published
+        // below under a name that says what it is.
+        pModel: null,
+        /** The 0-100 selection score, as a score. Never divide this by 100. */
+        confidenceScore: typeof p.confidence === "number" ? p.confidence : null,
         rankingP,
         rankingSource,
         marketFairProb,
+        /** De-vig method behind marketFairProb. Proportional on every path today. */
+        marketFairMethod: marketFairProb == null ? null : "proportional",
         modelVersion: p.modelVersion,
         _sort: rankingSortKey({ confidence: conf, factorBreakdown: p.factorBreakdown }),
       };
@@ -106,8 +115,9 @@ export async function GET(req: Request): Promise<NextResponse> {
     data,
     disclaimer:
       "Experimental probabilities for research/integration. rankingP is a model ranking key when present — not a verified edge product. Eligibility may be RED. " +
-      "pModel is the 0-100 Edge Index divided by 100. It is a CONFIDENCE SCORE, not a calibrated win probability, and this service never scores it as one: " +
-      "the calibration floors are computed on market-anchored probabilities only. Use marketFairProb for a market probability and rankingP for the model's ranking key. " +
-      "Whether pModel should carry a real probability instead of the confidence score is an open product decision (ledger C-88); until it is taken, this note is the contract.",
+      "pModel is RETIRED and always null: it used to be the 0-100 selection score divided by 100, which is not a win probability at any scale. " +
+      "confidenceScore is that selection score, on its own 0-100 scale — do not divide it by 100 and do not read it as a probability; it is measurably anti-predictive at its top end. " +
+      "marketFairProb is the only probability here: the de-vigged consensus of quoted book prices for the picked side, with marketFairMethod naming the de-vig used. " +
+      "rankingP is the model's ranking key. The calibration floors are computed on market-anchored probabilities only.",
   });
 }

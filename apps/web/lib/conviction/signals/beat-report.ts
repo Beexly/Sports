@@ -78,6 +78,12 @@ const TEAM_DIRECTION: Record<SignalType, "helps" | "hurts" | "irrelevant"> = {
   scheme: "helps",
   suspension: "hurts",
   weather: "irrelevant",
+  // Added to SignalType by the scraping-queue "coach-report" tier. Its sign is
+  // NOT knowable from the type alone — "coach news" covers a coordinator hire
+  // and a coordinator firing equally — so it is irrelevant here rather than
+  // guessed. It stays that way until the beat feeds land and carry a direction
+  // of their own; this signal never infers one.
+  "coach-report": "irrelevant",
   "depth-chart": "helps",
 };
 
