@@ -98,7 +98,37 @@ selection is published once per fixture across a whole series with byte-identica
 `pickGrade` disagrees with both confidence and decision (Rays ML 0 books graded STRONG_PLAY at 86,
 Yankees -1.5 11 books graded LEAN at 91).
 
-**FOUR DATA OUTAGES FOUND — none fixed, all need an owner:**
+**FIVE DATA OUTAGES FOUND — none fixed, all need an owner:**
+
+- **THE GATE-DECISION TABLE HAS NO WRITER, AND HAS NOT BEEN WRITTEN IN 94 DAYS
+  (found 2026-09-13 19:20 UTC).** `gate_decisions` holds 1,167 rows spanning
+  **2026-06-10 23:54 to 2026-06-11 21:14** and nothing since. This is not a stalled cron:
+  `git grep` for `gateDecision.create`, `.createMany` and `.upsert` across the repo, tests
+  excluded, returns **NOTHING**. No code writes this table. Three files read it:
+  `apps/web/lib/board/passes.ts`, `apps/web/lib/board/state.ts`,
+  `apps/web/lib/bot-outbox/load.ts`.
+
+  So every consumer of the gate's own record has been on its fallback path for three
+  months, and always will be. That is why `pass-reason.ts` documents that fallback rows
+  "were never evaluated" and why the ticker had to be changed from "we passed" to "held"
+  (#810) — the stronger word asserted a judgement that no longer exists anywhere. There is
+  no audit trail of why any game was passed on since 2026-06-11.
+
+  Two knock-on facts, both measured. `todayBounds()` — duplicated byte-for-byte at
+  `passes.ts:76` and `state.ts:305`, both using `setHours(0,0,0,0)`, i.e. the Node process
+  zone, i.e. UTC on Vercel — bounds THIS table, so its timezone is currently moot: 0 rows
+  in the UTC day, 0 in the Central day. Do not "fix" that boundary in isolation; it changes
+  nothing until a writer exists, and when one does the right zone is Central (it answers
+  "what did we evaluate today" for a reader) and NOT Eastern (which is the game-day
+  contract, a different question). Separately, `passes.ts:126/277/361/366` stamp the panel
+  with `now.toISOString().slice(0, 10)`, a UTC date, so from 19:00 Central onward the board
+  would headline today's passes with tomorrow's date — latent today only because the panel
+  has no rows to headline.
+
+  Whoever owns this decides first whether the gate decision record is coming back or is
+  retired. If it is retired, the three readers and the table should go, because code that
+  reads a source nothing writes is worse than no code. If it is coming back, the writer is
+  the work and the two items above ride with it.
 
 - **THE LINE ARCHIVE HAS BEEN DEAD SINCE 2026-08-22.** `odds_line_snapshots` holds
   684,498 rows across 526 games spanning **only 2026-08-19 to 2026-08-22** — four days,
