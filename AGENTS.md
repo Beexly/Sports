@@ -122,9 +122,15 @@ runs on both read surfaces: `apps/web/lib/picks/adverse-edge-suppression.ts`, ap
 `/api/picks` and `lib/board/state.ts` before their row caps. Four things about it that must
 survive future edits:
 
-- It IMPORTS `pricesWorseThanMarket` from the engine rather than restating the rule. Two gates
-  spelling one rule two ways is how they drift, and a drift in this direction publishes a row
-  the engine said to withhold.
+- It IMPORTS `pricesWorseThanMarket` rather than restating the rule. Two gates spelling one rule
+  two ways is how they drift, and a drift in this direction publishes a row the engine said to
+  withhold. The predicate lives in `@sports/types`, NOT in the engine, and that placement is
+  load-bearing: **nineteen web test files replace `@sports/prediction-engine` with a partial
+  `vi.mock` factory defining only the symbols they need**, so importing it from there resolved to
+  `undefined` under those mocks and collapsed the board's published lane to zero rows. The board
+  suite caught it (10 pre-existing failures went to 15) before it shipped. Anyone adding a new
+  cross-package import into `lib/board/state.ts` or the picks route should check that mock list
+  first; `@sports/types` is the boundary both sides already cross intact.
 - It gates on the signed number, never on `decision === "PASS"`. The two select the same nine
   rows today, but a CONTRADICTS row carries `expectedClv` 0.0 by construction, so the label
   would drop rows that are not adverse.

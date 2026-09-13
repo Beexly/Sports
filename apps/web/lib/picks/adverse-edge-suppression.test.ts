@@ -134,7 +134,8 @@ describe("it suppresses a display and does not retract a pick", () => {
     // One spelling of the rule. Two gates restating it is how they drift, and a
     // drift in this direction publishes a bet we said not to take.
     const src = code(resolve(__dirname, "adverse-edge-suppression.ts"));
-    expect(src).toMatch(/import \{ pricesWorseThanMarket \} from "@sports\/prediction-engine"/);
+    expect(src).toMatch(/import \{ pricesWorseThanMarket, type IndependentEdgeSummary \} from "@sports\/types"/);
+    expect(src).not.toMatch(/from "@sports\/prediction-engine"/);
     expect(src).not.toMatch(/expectedClv\s*<\s*0/);
   });
 

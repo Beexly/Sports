@@ -20,10 +20,17 @@
  * San Diego Padres -1.5 at -0.0591 and Los Angeles Dodgers -1.5 at -0.1356. A
  * mint-time gate cannot reach them, so the display must.
  *
- * The predicate is IMPORTED from the engine rather than restated here
- * (`pricesWorseThanMarket`, packages/prediction-engine/src/scoring.ts). Two
- * gates spelling the same rule two ways is exactly how they drift apart, and a
+ * The predicate is IMPORTED, never restated here: `pricesWorseThanMarket` in
+ * @sports/types, which the mint gate in scoring.ts imports from the same place.
+ * Two gates spelling one rule two ways is exactly how they drift apart, and a
  * drift in this direction publishes a bet we said not to take.
+ *
+ * It lives in @sports/types rather than in the engine for a concrete reason:
+ * nineteen web test files replace @sports/prediction-engine with a partial mock
+ * defining only the symbols they need, so importing it from there resolved to
+ * undefined under those mocks and collapsed the board lane to empty. That was
+ * caught by the board suite before this shipped (10 pre-existing failures went
+ * to 15). @sports/types is the boundary both sides already cross intact.
  *
  * Why `expectedClv < 0` and not `decision === "PASS"`: the two select the same
  * nine rows today, but `decision` also carries CONTRADICTS, whose `expectedClv`
@@ -49,8 +56,7 @@
  * invariant: whatever mints a pick, the board cannot show an adverse one.
  */
 
-import { pricesWorseThanMarket } from "@sports/prediction-engine";
-import type { IndependentEdgeSummary } from "@sports/types";
+import { pricesWorseThanMarket, type IndependentEdgeSummary } from "@sports/types";
 
 /** The shape this rule needs. Callers may carry any other fields alongside. */
 export type AdverseEdgeRow = {

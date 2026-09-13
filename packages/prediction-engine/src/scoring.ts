@@ -9,7 +9,7 @@ import type {
   IndependentMarketFairValue,
   IndependentEdgeSummary,
 } from "@sports/types";
-import { computePickGrade } from "@sports/types";
+import { computePickGrade, pricesWorseThanMarket } from "@sports/types";
 import { assessEdge, type IndependentEstimate } from "./edge-engine.js";
 import {
   MODEL_VERSION,
@@ -200,17 +200,6 @@ function buildShadowEvidenceFactors(input: OddsInput): FactorDetail[] {
 // No estimate means no vote. A null summary, or a non-finite expectedClv, is
 // silence — never read as agreement, disagreement, or zero.
 // ============================================================
-// Exported so the DISPLAY-side suppression in apps/web reads the identical
-// predicate (lib/picks/adverse-edge-suppression.ts). The mint gate below can
-// only withhold rows minted from here on; rows already published were minted
-// before it existed and are unreachable from this file. Two gates spelling the
-// same rule two ways is how they drift, so there is one spelling.
-export function pricesWorseThanMarket(edge: IndependentEdgeSummary | null): boolean {
-  if (!edge) return false;
-  if (!Number.isFinite(edge.expectedClv)) return false;
-  return edge.expectedClv < 0;
-}
-
 function assessIndependentEdge(
   fairValues: IndependentMarketFairValue[] | undefined,
   homeIsChosen: boolean,

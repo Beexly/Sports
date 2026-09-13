@@ -59,6 +59,36 @@ export interface IndependentEdgeSummary {
   rationale: string;            // plain-language "why"
 }
 
+/**
+ * True when the engine's own estimate prices the chosen side WORSE than the
+ * book is offering: a bet we should not be selling.
+ *
+ * It lives here, beside the type it reads, because both gates that enforce it
+ * need the identical spelling and neither may own it:
+ *   - the MINT gate, packages/prediction-engine/src/scoring.ts, which refuses
+ *     to create such a row; and
+ *   - the DISPLAY gate, apps/web/lib/picks/adverse-edge-suppression.ts, which
+ *     hides rows minted before that gate existed (nine were still published on
+ *     2026-09-13, worst -0.1742).
+ *
+ * Two gates restating one rule is how they drift, and a drift in this direction
+ * publishes a bet the engine said to withhold. It is NOT exported from the
+ * engine, because nineteen web test files replace @sports/prediction-engine
+ * with a partial mock that defines only the few symbols they need; importing it
+ * from there resolved to undefined under those mocks and collapsed the board
+ * lane to empty. @sports/types is the boundary both sides already cross intact.
+ *
+ * NO ESTIMATE MEANS NO VOTE. A null summary or a non-finite expectedClv is
+ * silence, never read as agreement, disagreement, or zero. Exactly zero is "no
+ * edge either way" and is kept. If that asymmetry ever inverts, a parse bug
+ * becomes a silent board wipe.
+ */
+export function pricesWorseThanMarket(edge: IndependentEdgeSummary | null): boolean {
+  if (!edge) return false;
+  if (!Number.isFinite(edge.expectedClv)) return false;
+  return edge.expectedClv < 0;
+}
+
 export interface FactorBreakdown {
   marketPriceShapeScore?: number; // 0-25: no-vig market shape; not independent EV
   trueEvScore?: number | null; // future: independent EV score once source-backed fair probability exists
