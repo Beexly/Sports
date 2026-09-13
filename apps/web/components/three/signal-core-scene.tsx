@@ -229,7 +229,7 @@ function SignalCore({
 }) {
   const scroll = useScrollProgressRef();
 
-  // The lock-on entrance: the core resolves, the lattice ignites on the next
+  // The entrance sequence: the core resolves, the lattice ignites on the next
   // beat, the filaments fade in behind it, the shell counter-rotates last.
   useEffect(() => {
     if (reduced) return;
