@@ -64,12 +64,18 @@ describe("P16-03 — Nav does not block on auth() in the static shell", () => {
     expect(mocks.auth).not.toHaveBeenCalled();
 
     // The static nav links render from the static nav-left, not from auth.
+    // These are the FOUR DOORS the nav doctrine leaves in the top bar. Record
+    // (/calibration) used to be asserted here and is not a top-bar link any
+    // more — it moved into the Board menu, whose items are not in the static
+    // DOM. nav-route-integrity is what proves that route is still reachable;
+    // this file's job is that the shell renders WITHOUT auth.
     expect(container.querySelector('a[href="/board"]')).not.toBeNull();
     expect(container.querySelector('a[href="/players"]')).not.toBeNull();
-    expect(container.querySelector('a[href="/calibration"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/fantasy"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/the-beat"]')).not.toBeNull();
   });
 
-  it("Nav() renders all four primary doors + The Lab + Proof as static links", () => {
+  it("Nav() renders the four top-bar doors as static links, whatever the auth state", () => {
     mocks.auth.mockResolvedValue({
       user: { id: "u1", name: "Test", email: "t@e.com", image: null },
     });
@@ -82,14 +88,18 @@ describe("P16-03 — Nav does not block on auth() in the static shell", () => {
       .map((a) => a.getAttribute("href"))
       .filter(Boolean);
 
+    // Board / Players / Fantasy / GSN — the top bar the nav doctrine specifies.
+    // /intelligence/engines and /calibration were pinned here from the
+    // pre-trim nav; both now live inside menus that do not render in the
+    // static shell, so asserting them here tested the menu, not the shell.
     expect(hrefs).toContain("/board");
     expect(hrefs).toContain("/players");
-    expect(hrefs).toContain("/intelligence/engines");
     expect(hrefs).toContain("/fantasy");
     expect(hrefs).toContain("/the-beat");
-    expect(hrefs).toContain("/calibration");
 
-    // auth() was NOT called during static shell render.
+    // The point of the test: this render is signed IN and must be identical to
+    // the signed-out one above, because auth state lives in the stubbed
+    // NavAuth and Nav() never resolves it.
     expect(mocks.auth).not.toHaveBeenCalled();
   });
 });
