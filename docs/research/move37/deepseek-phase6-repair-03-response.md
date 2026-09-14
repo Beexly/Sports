@@ -445,13 +445,16 @@ UNSOURCED count: 2 of 25 (N-46, N-47). Both are pilot-dependent inputs the lab s
 The lab's Round-4 and Fix-1 results provide direct calibration measurements:
 
 Prediction Lab-observed Ratio
-W1 spectral increment ≥ +0.03 −0.031 (2.6 sd, sign reversed) sign wrong
-IRL α ∈ [0.5, 5.0] risk-averse α̂ = −1.70 (fix-1) sign wrong
+W1 spectral increment ≥ +0.03 −0.0212 (sign reversed) sign wrong; |0.03|/|0.0212| ≈ 1.4×
+W4 change-point Spearman r ≥ 0.10 (response-01 §N-45) −0.031 (2.6 sd, sign reversed) sign wrong; |0.10|/|0.031| ≈ 3.2×
+IRL α ∈ [0.5, 5.0] risk-averse α̂ = −1.70 (fix-1) sign wrong (risk-seeking, not risk-averse)
 IRL accuracy > baseline + 0.02 73.7% vs 79.1% (baseline) prediction falsified
 
-Pattern: in three executed families where the effect was measurable, my predicted sign was wrong in two (W1, W4) and my predicted magnitude was wrong in all three by 7× to 13×.
+Pattern: in three executed families (four comparisons) where the effect was measurable, the predicted sign was wrong in three of four (W1, W4, IRL α) and the observed effect ran opposite to prediction in all three. The re-derivable magnitude ratios are ≈1.4× (W1) and ≈3.2× (W4); the "7× to 13×" range stated here previously does not follow from any shown predicted/observed pair and is withdrawn.
 
-Implied calibration factor: median |predicted|/|observed| magnitude ratio ≈ 10× overestimate.
+[Motif correction 2026-09-14, provenance: independent audit of this response + AGENTS.md family-status table: the W1 row previously carried W4's observed value (−0.031, 2.6 sd); W1's actual lab-observed value is −0.0212 with no sd attached. Rows split and values restored above.]
+
+Implied calibration factor: the 10× overestimate previously stated here is NOT supported by the corrected arithmetic — it was computed from the corrupted W1/W4 row plus unshown ratio arithmetic. The 8-family EV table below is downstream of that factor; treat it as illustrative judgment, not a measurement, until re-derived from shown numbers.
 
 Applying 10× to the current atlas:
 

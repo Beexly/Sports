@@ -716,11 +716,16 @@ missed-FG spot `100−yl+8` should be `100−yl−8`; punt `100−yl−40` shoul
 `100−yl+40` with touchback handling (verbatim produced negative yardlines in
 Fix-1 — fixed in the lab execution copy, theorist never repaired it in REPAIR-03).
 
-**Calibration (theorist's own, §7 of REPAIR-03):** median |predicted|/|observed|
-≈ 10× overestimate across measured families (predicted sign wrong in 2 of 3
-measurable cases). 8-family calibration-adjusted EVs: IRL 0.03, T3 0.02, T7 0.015,
-T9 0.02, W5 0.012, W6 0.008, W7 0.015, W8 0.018. Honest portfolio: cheapest kill
-tests first, every positive exploratory, majority expected to die.
+**Calibration (theorist's own, §7 of REPAIR-03) — CORRECTED 2026-09-14:** the
+"10× overestimate" previously stated here rested on a corrupted §7 table (W4's
+observed −0.031 sat in W1's row) plus unshown ratio arithmetic, and is
+withdrawn as a measurement. Corrected ratios: W1 ≈1.4× (sign wrong), W4 ≈3.2×
+(sign wrong), IRL α sign wrong. The real pattern is sign error, not magnitude
+overestimate. The 8-family calibration-adjusted EVs (IRL 0.03, T3 0.02, T7
+0.015, T9 0.02, W5 0.012, W6 0.008, W7 0.015, W8 0.018) are downstream of the
+withdrawn factor — treat as illustrative judgment. Honest portfolio unchanged:
+cheapest kill tests first, every positive exploratory, majority expected to
+die.
 
 **Citation audit state:** REPAIR-03 self-audit has 25 rows, 2 unsourced (N-46:
 play-level WPA SD ≈ 0.15; N-47: go-vs-punt WPA effect ≈ 0.02) — lab must
@@ -736,6 +741,46 @@ their own AGENTS.md sections.
 every prediction; preserve null and negative results; separate observation,
 inference, speculation; never present a theorist SPEC as a lab OBS; dumb-baseline
 duel on the same test set for every family; market duel where claim is predictive.
+
+**Minis overnight compound battery (2026-09-14, executed on nflverse 2020–2025):**
+13 contextual compounds (state × situation × biography × weather × narrative),
+tool-gain gate (logistic out-of-sample ΔLL ≥ threshold, permutation nulls,
+flagged-subset residual bootstrap). Result: **0/13 passed** — contract pass,
+honest null reporting, full failures log preserved. Killed-with-evidence: D1
+n=369 (+0.05, wrong sign), E1 n=1,093 (ΔLL −0.00014), F2 n=235, F3 n=140;
+power-dead: A1 18, B1 71, B2 68, C1 7, C2 10, F1 13; SPEC-ONLY: A2/E2/F4.
+Post-hoc variants D1r/B2r/D3r ran, labeled, excluded from rankings. Verdict:
+public pre-kickoff game-level information is absorbed by the closing market —
+game-level branch closed with receipts. Full report:
+`docs/research/move37/minis-overnight-deep-report-2026-09-14.md`; prompt:
+`minis-overnight-compounding-grout-prompt.md`.
+
+**Props-space pivot (2026-09-14, architect decision):** game-level is closed;
+edge search moves to props exposure where books post softer lines — L1
+cold/wind × play-action passing, L3 starter-weighted unavailability → teammate
+pricing gap, L2 within-player former-team exposure, L5 pooled hierarchical
+game-level closure test. Prompt: `minis-props-followup-prompt.md`.
+Minis-reported L1 stage-1: KILLED on both primary lines, c = +0.082131 vs
+pre-registered c < 0 (sign flip), OOS ΔLL ≈ −0.00003 vs 0.002 threshold,
+n=39,986 (flagged 2,479); **independent sign re-verification running on the
+Motif VM** — kill is Minis-reported until the lab confirms the sign is real and
+not a pipeline sign-convention bug (this program's confirmed failure mode:
+three sign/orientation bugs in `move37_irl_prelec.py`). L2/L3 Minis-reported
+data-blocked (no player_stats/snap_counts on that host); L3 additionally
+untestable there (no book prop lines — the pricing gap is its estimand).
+IC9 admission runner: no props candidate earns production admission without
+passing the gated runner.
+
+**Independent audit (2026-09-14, external):** gate-integrity review found
+SUPPORTED reads only 5a+5e (Gate 6 veto not in the rule), Gate 5b has no
+numeric criterion (boilerplate pass, can never fail), post-hoc control is a
+label not a cap. Repairs adopted in `minis-grout-prompt-v4-gate-amendment.md`
+(v4, 2026-09-14): SUPPORTED = pass 5a+5e AND no FAIL on any other gate (R/5b/
+5c/5d/5f/6 are vetoes); Gate 5b gains a numeric degeneracy/concentration
+check; post-hoc capped at 2 per compound, Bonferroni-corrected, hash-sealed;
+Gate R split into representability vs frequency/power. Audit also confirmed
+the REPAIR-03 §7 corruption (now corrected in-file) and the DeCaro citation
+defect (`minis-overnight-deep-report-2026-09-14.md:61`, fix pending).
 
 
 ---

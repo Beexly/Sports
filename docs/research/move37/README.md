@@ -39,13 +39,20 @@ repo.
 | File | What it is |
 |------|------------|
 | `minis-move37-retest-prompt.md` | Pass-1 / Pass-2 retest prompt for Minis agents: independently re-run everything, document in AGENTS.md, then adversarially test again |
+| `minis-overnight-compounding-grout-prompt.md` | Overnight battery prompt (13 contextual compounds, tool-gain gate, 8-gate compound contract) |
+| `minis-overnight-deep-report-2026-09-14.md` | **Overnight battery report: 0/13 passed — game-level branch closed** |
+| `minis-props-followup-prompt.md` | Props-space follow-up prompt (L1 cold/wind × play-action, L2 revenge, L3 unavailability pricing gap, L5 pooled closure) |
+| `minis-grout-prompt-v4-gate-amendment.md` | v4 gate repairs (SUPPORTED veto semantics, numeric 5b, post-hoc cap, Gate R split) |
+| `repair-03-lab-report.md` | Lab's REPAIR-03 audit + cheapest-kill repair order (IRL killed, W8 killed as named, T9 borderline) |
 
 ## Reading order for a new agent
 
-1. The MOVE-37 section of the repo `AGENTS.md` (current status, all kills).
-2. `deepseek-phase6-repair-03-response.md` (current theorist submission).
-3. `deepseek-phase6-sendback-03.md` (what the audit demanded).
-4. `minis-move37-retest-prompt.md` (your instructions, if you are a Minis agent).
+1. The MOVE-37 section of the repo `AGENTS.md` (current status, all kills — now includes the overnight battery and props pivot).
+2. `minis-overnight-deep-report-2026-09-14.md` (the program's most consequential finding: 0/13, game-level closed).
+3. `deepseek-phase6-repair-03-response.md` (current theorist submission — note the corrected §7).
+4. `repair-03-lab-report.md` (lab's audit of REPAIR-03: what was killed, what needs repair).
+5. `deepseek-phase6-sendback-03.md` (what the audit demanded).
+6. `minis-props-followup-prompt.md` (current active work: props-space lab).
 
 **Standing rule:** DeepSeek has no code-execution environment. Its numbers are
 SPEC until the lab measures them. Never publish a theorist claim as a finding.
