@@ -772,13 +772,20 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // Past tense makes each clause a statement about a moment that has already
   // happened, so it cannot be falsified by a later refresh. It is the same fix
   // as dropping the raw count, one level up: say the durable thing.
-  // (Devin Review, #819, third round on this clause.)
+  //
+  // EVERY verb, including the embedded one. The first pass at this converted
+  // the outer verb and left the minority branch reading "were not unanimous
+  // that X IS favoured" -- half past, half present, so the branch it was
+  // supposed to fix still asserted a current market state. Caught by Devin on
+  // the very next round. If a fourth form is ever added, check the whole
+  // sentence, not just its main clause.
+  // (Devin Review, #819, third and fourth rounds on this clause.)
   const favouredClause =
     favouredCount === pricedOdds.length
       ? `When we published, every book pricing this game had ${chosenTeam} favoured`
       : favouredCount * 2 > pricedOdds.length
         ? `When we published, most books pricing this game had ${chosenTeam} favoured, though not every book did`
-        : `When we published, books pricing this game were not unanimous that ${chosenTeam} is favoured`;
+        : `When we published, books pricing this game were not unanimous that ${chosenTeam} was favoured`;
 
   const reasoning =
     `${favouredClause}. We are on ${chosenTeam} ${spreadDisplay}. ` +

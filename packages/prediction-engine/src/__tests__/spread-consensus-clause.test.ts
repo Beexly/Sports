@@ -151,6 +151,11 @@ describe("the spread teaser counts the books it publishes as evidence", () => {
     expect(pick!.reasoningShort).not.toContain("most books pricing this game had");
     expect(pick!.reasoningShort).not.toContain("every book pricing this game had");
     expect(pick!.reasoningShort).toContain("not unanimous");
+    // EVERY verb past tense, embedded clause included. The first pass left this
+    // one reading "... not unanimous that X IS favoured", so the branch meant to
+    // be drift-proof still asserted a live market state.
+    expect(pick!.reasoningShort).toContain("was favoured");
+    expect(pick!.reasoningShort).not.toContain("is favoured");
     // Still scale-free: the frozen text pins no raw count.
     expect(pick!.reasoningShort).not.toMatch(/\d+ of \d+/);
   });
