@@ -71,7 +71,11 @@ describe("line-archive freshness", () => {
 
     const r = await loadLineArchiveFreshness(db, { enabled: true, now: NOW });
     expect(r.status).toBe("UNKNOWN");
-    expect(r.error).toContain("connection terminated");
+    // The raw driver message must NOT survive into the payload: this object is
+    // served to anonymous callers by /api/ops/public-surface-truth, and a
+    // Prisma error names tables, columns and sometimes the host.
+    expect(r.error).toBeTruthy();
+    expect(r.error).not.toContain("connection terminated");
     // Null, not 0: a reader must not be able to mistake a failure for a count.
     expect(r.capturedLast24h).toBeNull();
     expect(r.hoursSinceNewest).toBeNull();

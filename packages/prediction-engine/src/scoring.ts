@@ -748,10 +748,23 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // consensusPct reads exactly 1.0000 on all 48 published spread picks across
   // four sports), so the split branch is the rare case and the exact ratio was
   // never the information the reader needed.
+  // THREE outcomes, not two. The binary form said "Most books ... favoured" for
+  // ANY non-unanimous slate, and because a pick'em row (spread 0) counts for
+  // neither side, favouredCount can be a MINORITY or even zero while the clause
+  // still claims most: one book at +3 beside seven pick'ems reads "Most books
+  // pricing this game have X favoured" at 1 of 8. That is a false statement
+  // about bookmaker agreement, frozen write-once into the published reasoning.
+  // (CodeRabbit, #819.)
+  //
+  // Still scale-free: none of the three states a raw count, because the caption
+  // beside them is rebuilt from live columns that drift from the mint-time
+  // snapshot on 72% of published spread picks.
   const favouredClause =
     favouredCount === pricedOdds.length
       ? `Every book pricing this game has ${chosenTeam} favoured`
-      : `Most books pricing this game have ${chosenTeam} favoured, though they are split`;
+      : favouredCount * 2 > pricedOdds.length
+        ? `Most books pricing this game have ${chosenTeam} favoured, though not every book does`
+        : `Books pricing this game are not unanimous that ${chosenTeam} is favoured`;
 
   const reasoning =
     `${favouredClause}. We are on ${chosenTeam} ${spreadDisplay}. ` +

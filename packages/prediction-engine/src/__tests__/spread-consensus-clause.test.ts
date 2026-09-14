@@ -115,7 +115,34 @@ describe("the spread teaser counts the books it publishes as evidence", () => {
     expect(pick).toBeDefined();
     expect(pick!.bookmakerCount).toBe(8);
     expect(pick!.reasoningShort).not.toContain("Every book");
-    expect(pick!.reasoningShort).toContain("split");
+    // 7 of 8 IS a strict majority, so this takes the "most books" form — but it
+    // must acknowledge the dissent rather than imply unanimity. ("split" was
+    // the old wording; the clause became three-way when it turned out "Most
+    // books" also fired on a MINORITY. See the minority test above.)
+    expect(pick!.reasoningShort).toContain("Most books pricing this game");
+    expect(pick!.reasoningShort).toContain("not every book does");
+    expect(pick!.reasoningShort).not.toMatch(/\d+ of \d+/);
+  });
+
+  it("never says 'Most books' when the favoured side is a MINORITY", () => {
+    // One book at +3 beside seven pick'ems. Pick'em rows count for neither
+    // side, so favouredCount is 1 of 8 — and the old binary clause said "Most
+    // books pricing this game have X favoured" for any non-unanimous slate,
+    // which is simply false here and is frozen write-once into the published
+    // reasoning. (CodeRabbit, #819.)
+    const pick = spread(
+      scoreGame(
+        input([
+          priced("solo-book", 3),
+          ...BOOKS.slice(0, 7).map((b) => priced(b, 0)),
+        ]),
+      ),
+    );
+    expect(pick).toBeDefined();
+    expect(pick!.reasoningShort).not.toContain("Most books");
+    expect(pick!.reasoningShort).not.toContain("Every book");
+    expect(pick!.reasoningShort).toContain("not unanimous");
+    // Still scale-free: the frozen text pins no raw count.
     expect(pick!.reasoningShort).not.toMatch(/\d+ of \d+/);
   });
 

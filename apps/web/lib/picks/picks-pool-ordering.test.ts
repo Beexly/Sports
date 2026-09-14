@@ -73,10 +73,22 @@ describe("the /api/picks candidate pool is not selected by confidence", () => {
 
   it("still caps AFTER ranking, so the filter cannot starve a capped viewer", () => {
     const src = code();
-    const rankAt = src.indexOf("comparePicksByRanking");
-    const capAt = src.indexOf("dailyPickLimit != null");
+    // These anchors used to be indexOf("comparePicksByRanking") and
+    // indexOf("dailyPickLimit != null"). The first resolves to the IMPORT at
+    // the top of the route, which sits before the whole handler body, so the
+    // ordering assertion compared the cap against a fixed point near offset 0
+    // and would have passed with the cap moved ahead of the sort — the exact
+    // regression it claims to catch. (CodeRabbit, #819. Its other half, an
+    // "earlier query-tier dailyPickLimit predicate", does not exist: there is
+    // exactly one occurrence and it is the real cap. The weakness was real for
+    // the first reason only.)
+    //
+    // Anchor on the DECLARATIONS, and pin what the cap actually slices.
+    const rankAt = src.indexOf("const rankedPicks");
+    const capAt = src.indexOf("const limitedPicks");
     expect(rankAt).toBeGreaterThan(-1);
     expect(capAt).toBeGreaterThan(rankAt);
+    expect(src).toMatch(/rankedPicks\.slice\(0,\s*entitlements\.dailyPickLimit\)/);
   });
 });
 

@@ -165,6 +165,8 @@ export async function loadLineArchiveFreshness(
     };
   } catch (err) {
     // Rule 2: a failure that reads like a measurement is worse than no reading.
+    // The detail is logged, not returned — see the error field below.
+    console.error("[line-archive-freshness] read failed:", err);
     return {
       status: "UNKNOWN",
       enabled: true,
@@ -172,7 +174,14 @@ export async function loadLineArchiveFreshness(
       hoursSinceNewest: null,
       capturedLast24h: null,
       staleAfterHours,
-      error: err instanceof Error ? err.message : String(err),
+      // A FIXED string, never the driver's message. This whole payload is
+      // returned by GET /api/ops/public-surface-truth, whose hasOpsAuth check
+      // gates only the `detailed` block — everything else, including this, is
+      // served to anonymous callers. A Prisma error text carries table and
+      // column names and sometimes the connection target, which is free
+      // reconnaissance. The status is what an operator acts on; the detail
+      // belongs in the server log, not the response body. (CodeRabbit, #819.)
+      error: "Archive freshness query failed (see server logs).",
       operatorHint:
         "Archive freshness could not be read, so its health is unknown — this is NOT a report that the archive is fine. Fix the read before drawing any conclusion about CLV coverage.",
     };
