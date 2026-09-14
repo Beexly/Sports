@@ -1,0 +1,145 @@
+  season 2014: 47629 plays
+  season 2015: 48122 plays
+  season 2016: 47651 plays
+  season 2017: 47245 plays
+  season 2018: 47109 plays
+  season 2019: 47260 plays
+  season 2020: 47705 plays
+  season 2021: 49922 plays
+  season 2022: 49434 plays
+  season 2023: 49665 plays
+  season 2024: 49492 plays
+EXIT:137
+=== attempt 1 01:44:46 ===
+  season 2014: 47629 plays
+  season 2015: 48122 plays
+  season 2016: 47651 plays
+EXIT:137
+=== attempt 2 01:50:12 ===
+  season 2014: 47629 plays
+  season 2015: 48122 plays
+  season 2016: 47651 plays
+  season 2017: 47245 plays
+  season 2018: 47109 plays
+  season 2019: 47260 plays
+  season 2020: 47705 plays
+  season 2021: 49922 plays
+=== attempt 3 02:09:25 ===
+  season 2014: 47629 plays
+  season 2015: 48122 plays
+  season 2016: 47651 plays
+  season 2017: 47245 plays
+  season 2018: 47109 plays
+  season 2019: 47260 plays
+  season 2020: 47705 plays
+  season 2021: 49922 plays
+  season 2022: 49434 plays
+  season 2023: 49665 plays
+  season 2024: 49492 plays
+EXIT:137
+=== attempt 4 02:49:25 ===
+  season 2014: 47629 plays
+  season 2015: 48122 plays
+  season 2016: 47651 plays
+  season 2017: 47245 plays
+  season 2018: 47109 plays
+  season 2019: 47260 plays
+  season 2020: 47705 plays
+  season 2021: 49922 plays
+  season 2022: 49434 plays
+  season 2023: 49665 plays
+  season 2024: 49492 plays
+Loaded 531234 total plays (2014-2024)
+Column verification passed.
+WP model fit on 401903 plays (2014-2022)
+Conversion model fit on 5449 fourth-down attempts
+Empirical mean yards gained on successful 4th-down conversions (train): 9.49 (n=2800)
+Fourth-down decisions: train 34321, test 8073
+Train action mix:
+{'punt': 0.6, 'kick': 0.2477, 'go': 0.1524}
+Test action mix:
+{'punt': 0.5443, 'kick': 0.2585, 'go': 0.1972}
+Stage 1 best: alpha=-2.0, beta=20.0, NLL=0.6537
+  season 2014: 47629 plays
+  season 2015: 48122 plays
+  season 2016: 47651 plays
+  season 2017: 47245 plays
+  season 2018: 47109 plays
+  season 2019: 47260 plays
+  season 2020: 47705 plays
+  season 2014: 47629 plays
+  season 2015: 48122 plays
+  season 2016: 47651 plays
+  season 2017: 47245 plays
+  season 2018: 47109 plays
+  season 2019: 47260 plays
+  season 2020: 47705 plays
+  season 2021: 49922 plays
+  season 2022: 49434 plays
+  season 2023: 49665 plays
+  season 2024: 49492 plays
+Loaded 531234 total plays (2014-2024)
+Column verification passed.
+WP model fit on 401903 plays (2014-2022)
+Conversion model fit on 5449 fourth-down attempts
+Empirical mean yards gained on successful 4th-down conversions (train): 9.49 (n=2800)
+Fourth-down decisions: train 34321, test 8073
+Train action mix:
+{'punt': 0.6, 'kick': 0.2477, 'go': 0.1524}
+Test action mix:
+{'punt': 0.5443, 'kick': 0.2585, 'go': 0.1972}
+Traceback (most recent call last):
+  File "/home/hatch/workspace/gse-discovery/move37_irl_cara_fix1.py", line 324, in <module>
+    nll = neg_log_likelihood((a, b), terms_train, obs_idx_train)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/home/hatch/workspace/gse-discovery/move37_irl_cara_fix1.py", line 305, in neg_log_likelihood
+    log_p_obs = logits[np.arange(len(states)), observed_idx] - log_Z
+                                     ^^^^^^
+NameError: name 'states' is not defined
+  season 2014: 47629 plays
+  season 2015: 48122 plays
+  season 2016: 47651 plays
+  season 2017: 47245 plays
+  season 2018: 47109 plays
+  season 2019: 47260 plays
+  season 2020: 47705 plays
+  season 2021: 49922 plays
+  season 2022: 49434 plays
+  season 2023: 49665 plays
+  season 2024: 49492 plays
+Loaded 531234 total plays (2014-2024)
+Column verification passed.
+WP model fit on 401903 plays (2014-2022)
+Conversion model fit on 5449 fourth-down attempts
+Empirical mean yards gained on successful 4th-down conversions (train): 9.49 (n=2800)
+Fourth-down decisions: train 34321, test 8073
+Train action mix:
+{'punt': 0.6, 'kick': 0.2477, 'go': 0.1524}
+Test action mix:
+{'punt': 0.5443, 'kick': 0.2585, 'go': 0.1972}
+Stage 1 best: alpha=-2.0, beta=20.0, NLL=0.6537
+Final MLE: alpha=-1.7000, beta=22.0000, NLL=0.6438
+Test accuracy (IRL): 0.7370
+Baseline always-go:  0.1972
+Baseline position:   0.7907
+Test log-loss:       0.6073
+{
+  "alpha_hat": -1.7,
+  "beta_hat": 22.0,
+  "nll_train": 0.6437955714133621,
+  "empirical_conversion_gain": 9.486071428571428,
+  "accuracy": 0.7370246500681283,
+  "baseline_always_go": 0.19720054502663198,
+  "baseline_position_rule": 0.7906602254428341,
+  "log_loss": 0.6073414480804199,
+  "c1_accuracy_beats_baseline": false,
+  "c2_alpha_in_preregistered_range": false,
+  "c3_alpha_in_wide_range_and_positive": false,
+  "c4_beta_sane": true,
+  "lab_fixes": [
+    "kick_miss yardline sign: 100-yl+8 -> 100-yl-8",
+    "punt yardline sign: 100-yl-40 -> 100-yl+40 with touchback->75",
+    "empirical conversion gain replaces hard-coded 5"
+  ],
+  "verdict": "NULL"
+}
