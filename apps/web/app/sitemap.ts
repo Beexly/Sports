@@ -6,6 +6,7 @@ import { db } from "@sports/db";
 import { isContestsPublic, isStatsPublic } from "@/lib/launch/public-surface-gate";
 import { listEpisodes } from "@/lib/podcast/episodes";
 import { listIssues } from "@/lib/newsletter/issues";
+import { findTwinCandidate, type GameTwinCandidate } from "@sports/ingestion-pipeline";
 
 /**
  * sitemap.xml — public product URLs + a **bounded** preview set.
@@ -110,7 +111,11 @@ async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
       orderBy: { commenceTime: "asc" },
       take: SITEMAP_PREVIEW_CAP,
       select: {
-        sport: { select: { name: true } },
+        id: true,
+        externalId: true,
+        sportId: true,
+        mergedIntoGameId: true,
+        sport: { select: { name: true, key: true } },
         awayTeamName: true,
         homeTeamName: true,
         commenceTime: true,
@@ -118,8 +123,44 @@ async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
       },
     });
 
+    // Fixture triplication (AGENTS.md "THE LOOP"): the same real-world contest
+    // can exist as up to THREE `games` rows (Odds API id / TheRundown id /
+    // ESPN feed id), none tombstoned, and each row independently satisfies the
+    // query above and would emit the SAME "N game rows -> N sitemap URLs"
+    // count for what is one indexable page. De-duplicate on fixture identity,
+    // not row id, with the repo's own twin matcher (the one
+    // lib/board/state.ts already uses for the same triplication problem on a
+    // different surface) rather than a naive string/URL dedup, so a row whose
+    // team names differ slightly across feeds (city-only vs full name) still
+    // collapses correctly. `orientation === "flipped"` is the matcher's own
+    // refusal to treat two rows as the same fixture (home/away disagree) —
+    // never collapsed, exactly as the board treats it.
+    const twinCandidates: GameTwinCandidate[] = [];
+    const deduped: typeof games = [];
+    for (const g of games) {
+      const twin = findTwinCandidate(twinCandidates, {
+        sportId: g.sportId,
+        externalId: g.externalId,
+        homeTeamName: g.homeTeamName,
+        awayTeamName: g.awayTeamName,
+        commenceTime: g.commenceTime,
+        sportKey: g.sport.key,
+      });
+      if (twin && twin.orientation !== "flipped") continue;
+      twinCandidates.push({
+        id: g.id,
+        externalId: g.externalId,
+        sportId: g.sportId,
+        homeTeamName: g.homeTeamName,
+        awayTeamName: g.awayTeamName,
+        commenceTime: g.commenceTime,
+        mergedIntoGameId: g.mergedIntoGameId,
+      });
+      deduped.push(g);
+    }
+
     const baseUrl = SITE_URL;
-    return games.map((g) => ({
+    return deduped.map((g) => ({
       url: `${baseUrl}/preview/${slugify(g.sport.name)}/${slugify(g.awayTeamName)}-vs-${slugify(g.homeTeamName)}`,
       lastModified: g.updatedAt,
       changeFrequency: "daily" as const,

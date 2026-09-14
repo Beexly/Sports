@@ -58,3 +58,84 @@ describe("sitemap — preview URLs emit the sport-slug form only", () => {
     }
   });
 });
+
+describe("sitemap — de-duplicates triplicated fixtures (AGENTS.md: up to 3 `games` rows per real contest)", () => {
+  it("collapses same-fixture rows (same team pair, same sport, kickoff within 18h) to ONE URL", async () => {
+    // Mirrors the Atlanta @ Pittsburgh example in AGENTS.md: one games row
+    // per feed (Odds API id, `espn:<sportKey>:`, `espn:<short>:`), none
+    // tombstoned, same teams, kickoff clocks minutes apart.
+    mocks.gameFindMany.mockReset().mockResolvedValue([
+      {
+        id: "g-odds-api",
+        externalId: "odds-api-abc123",
+        sportId: "sport-nfl",
+        mergedIntoGameId: null,
+        sport: { name: "NFL", key: "americanfootball_nfl" },
+        awayTeamName: "Atlanta Falcons",
+        homeTeamName: "Pittsburgh Steelers",
+        commenceTime: new Date("2026-09-14T17:00:00.000Z"),
+        updatedAt: new Date("2026-09-14T09:00:00.000Z"),
+      },
+      {
+        id: "g-espn-full",
+        externalId: "espn:americanfootball_nfl:401671000",
+        sportId: "sport-nfl",
+        mergedIntoGameId: null,
+        sport: { name: "NFL", key: "americanfootball_nfl" },
+        awayTeamName: "Atlanta Falcons",
+        homeTeamName: "Pittsburgh Steelers",
+        commenceTime: new Date("2026-09-14T17:00:00.000Z"),
+        updatedAt: new Date("2026-09-14T08:00:00.000Z"),
+      },
+      {
+        id: "g-espn-short",
+        externalId: "espn:nfl:401671000",
+        sportId: "sport-nfl",
+        mergedIntoGameId: null,
+        sport: { name: "NFL", key: "americanfootball_nfl" },
+        awayTeamName: "Atlanta Falcons",
+        homeTeamName: "Pittsburgh Steelers",
+        commenceTime: new Date("2026-09-14T17:05:00.000Z"),
+        updatedAt: new Date("2026-09-14T07:00:00.000Z"),
+      },
+    ]);
+
+    const entries = await sitemap();
+    const preview = entries.filter((e) => e.url.includes("/preview/"));
+    expect(preview).toHaveLength(1);
+    expect(preview[0]?.url).toBe(
+      `${SITE_URL}/preview/nfl/atlanta-falcons-vs-pittsburgh-steelers`,
+    );
+  });
+
+  it("negative control: two genuinely different fixtures each keep their own URL", async () => {
+    mocks.gameFindMany.mockReset().mockResolvedValue([
+      {
+        id: "g1",
+        externalId: "odds-api-1",
+        sportId: "sport-nfl",
+        mergedIntoGameId: null,
+        sport: { name: "NFL", key: "americanfootball_nfl" },
+        awayTeamName: "Baltimore Ravens",
+        homeTeamName: "Cleveland Browns",
+        commenceTime: new Date("2026-09-14T17:00:00.000Z"),
+        updatedAt: new Date("2026-09-14T09:00:00.000Z"),
+      },
+      {
+        id: "g2",
+        externalId: "odds-api-2",
+        sportId: "sport-nfl",
+        mergedIntoGameId: null,
+        sport: { name: "NFL", key: "americanfootball_nfl" },
+        awayTeamName: "Chicago Bears",
+        homeTeamName: "Carolina Panthers",
+        commenceTime: new Date("2026-09-14T20:00:00.000Z"),
+        updatedAt: new Date("2026-09-14T09:00:00.000Z"),
+      },
+    ]);
+
+    const entries = await sitemap();
+    const preview = entries.filter((e) => e.url.includes("/preview/"));
+    expect(preview).toHaveLength(2);
+  });
+});
