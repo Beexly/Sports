@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   classifySignal,
   fetchLiveWire,
+  fetchLiveWireWithHealth,
   parseFeedConfig,
   parseRssItems,
 } from "@/lib/news/rss";
@@ -124,5 +125,51 @@ describe("fetchLiveWire", () => {
     const wire = await fetchLiveWire(new Date("2026-07-02T12:00:00Z"));
     expect(wire).toHaveLength(1);
     expect(wire![0]!.source).toBe("Up");
+  });
+});
+
+describe("fetchLiveWireWithHealth — a dead wire is not a quiet wire", () => {
+  /**
+   * The per-feed task RETURNS an empty array for almost every failure (SSRF
+   * refusal, non-ok response, refused redirect) and Promise.allSettled absorbs
+   * the ones that throw. So "every configured feed returned HTTP 500" resolves
+   * as a perfectly fulfilled `[]`, identical in shape to a genuinely quiet
+   * live wire. Only the reached count separates them, and the page renders a
+   * different sentence for each: "no fresh reports" vs "feed unavailable".
+   *
+   * Caught by Devin Review on PR #819 against an earlier version of this fix
+   * that only trapped a throw, which meant a total outage still rendered as
+   * "the wire is live and nothing has landed". (Devin Review, PR #819.)
+   */
+  const ORIGINAL = process.env["NEWS_RSS_FEEDS"];
+  afterEach(() => {
+    if (ORIGINAL === undefined) delete process.env["NEWS_RSS_FEEDS"];
+    else process.env["NEWS_RSS_FEEDS"] = ORIGINAL;
+    vi.restoreAllMocks();
+  });
+
+  it("reports reached 0 when every configured feed answers with an error", async () => {
+    process.env["NEWS_RSS_FEEDS"] =
+      "https://a.example.com/rss|A|Insider|NFL;https://b.example.com/rss|B|Beat|NFL";
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: false, status: 500, headers: new Headers() }),
+    );
+
+    const health = await fetchLiveWireWithHealth(new Date("2026-09-14T00:00:00Z"));
+    expect(health.items).toEqual([]);
+    expect(health.configured).toBe(2);
+    // The whole point: an empty wire with reached 0 is an OUTAGE, and the page
+    // must be able to tell that from a live wire that simply has no news.
+    expect(health.reached).toBe(0);
+  });
+
+  it("reports no feeds configured as null, distinct from an outage", async () => {
+    delete process.env["NEWS_RSS_FEEDS"];
+    const health = await fetchLiveWireWithHealth();
+    expect(health.items).toBeNull();
+    expect(health.configured).toBe(0);
+    // configured 0 must never be read as an outage — there is nothing to reach.
+    expect(health.reached).toBe(0);
   });
 });

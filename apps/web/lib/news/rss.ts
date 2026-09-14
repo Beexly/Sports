@@ -204,9 +204,33 @@ function headlineId(source: string, title: string): string {
  * (caller falls back to the labeled sample); returns [] when configured but
  * nothing classifiable arrived (an honest empty wire).
  */
-export async function fetchLiveWire(
+/**
+ * The wire plus its fetch health.
+ *
+ * `items === null` means NO FEEDS ARE CONFIGURED, which is a settled state: the
+ * labelled sample is the honest thing to render. Everything else needs
+ * `reached` to interpret, because an empty array is ambiguous on its own.
+ *
+ * Why `reached` has to exist: almost every failure path inside the per-feed
+ * task RETURNS an empty array rather than throwing (SSRF refusal, a non-ok
+ * response, a redirect we refuse to follow), and Promise.allSettled absorbs the
+ * ones that do throw. So "every configured feed returned HTTP 500" produces a
+ * perfectly fulfilled `[]` that is indistinguishable from "the wire is live and
+ * quiet" unless the count is carried out with it. Calling that a quiet wire is
+ * a confident false statement during a total outage.
+ */
+export interface LiveWireResult {
+  /** null when no feeds are configured. */
+  readonly items: NewsItem[] | null;
+  /** How many feeds were configured for this call. */
+  readonly configured: number;
+  /** How many of them actually returned a response we could read. */
+  readonly reached: number;
+}
+
+export async function fetchLiveWireWithHealth(
   now: Date = new Date(),
-): Promise<NewsItem[] | null> {
+): Promise<LiveWireResult> {
   let feeds = parseFeedConfig(process.env["NEWS_RSS_FEEDS"]);
   if (
     feeds.length === 0 &&
@@ -214,13 +238,13 @@ export async function fetchLiveWire(
   ) {
     feeds = [...CURATED_SPORTS_NEWS_RSS];
   }
-  if (feeds.length === 0) return null;
+  if (feeds.length === 0) return { items: null, configured: 0, reached: 0 };
 
   const results = await Promise.allSettled(
     feeds.map(async (feed) => {
       // SSRF choke point: refuse private/metadata IP literals before issuing.
       const check = validateEndpointUrl(feed.url);
-      if (!check.ok) return [];
+      if (!check.ok) return { ok: false, items: [] as NewsItem[] };
       const res = await fetch(feed.url, {
         headers: { "user-agent": "GSE-wire/1.0 (headlines only; contact: site)" },
         signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
@@ -234,19 +258,19 @@ export async function fetchLiveWire(
       let xml: string;
       if (res.status >= 300 && res.status < 400) {
         const location = res.headers.get("location");
-        if (!location) return [];
-        if (locationIsInternalTargetLocation(location)) return [];
+        if (!location) return { ok: false, items: [] as NewsItem[] };
+        if (locationIsInternalTargetLocation(location)) return { ok: false, items: [] as NewsItem[] };
         const recheck = validateEndpointUrl(location);
-        if (!recheck.ok) return [];
+        if (!recheck.ok) return { ok: false, items: [] as NewsItem[] };
         const followed = await fetch(location, {
           headers: { "user-agent": "GSE-wire/1.0 (headlines only; contact: site)" },
           signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
           redirect: "manual",
         });
-        if (!followed.ok) return [];
+        if (!followed.ok) return { ok: false, items: [] as NewsItem[] };
         xml = await followed.text();
       } else {
-        if (!res.ok) return [];
+        if (!res.ok) return { ok: false, items: [] as NewsItem[] };
         xml = await res.text();
       }
       const items: NewsItem[] = [];
@@ -268,14 +292,32 @@ export async function fetchLiveWire(
           minutesAgo,
         });
       }
-      return items;
+      return { ok: true, items };
     }),
   );
 
-  const wire = results
-    .filter((r): r is PromiseFulfilledResult<NewsItem[]> => r.status === "fulfilled")
-    .flatMap((r) => r.value)
+  const settled = results.filter(
+    (r): r is PromiseFulfilledResult<{ ok: boolean; items: NewsItem[] }> =>
+      r.status === "fulfilled",
+  );
+  const wire = settled
+    .flatMap((r) => r.value.items)
     .sort((a, b) => a.minutesAgo - b.minutesAgo)
     .slice(0, 60);
-  return wire;
+  return {
+    items: wire,
+    configured: feeds.length,
+    reached: settled.filter((r) => r.value.ok).length,
+  };
+}
+
+/**
+ * Items only. Kept for callers that cannot act on fetch health; anything that
+ * renders a state to a customer should use fetchLiveWireWithHealth, because
+ * this signature cannot tell a quiet wire from a dead one.
+ */
+export async function fetchLiveWire(
+  now: Date = new Date(),
+): Promise<NewsItem[] | null> {
+  return (await fetchLiveWireWithHealth(now)).items;
 }

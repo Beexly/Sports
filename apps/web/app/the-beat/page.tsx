@@ -5,7 +5,8 @@ import { TheBeat } from "@/components/news/the-beat";
 import { GalaxyBroadcast } from "@/components/news/galaxy-broadcast";
 import { buildBroadcast } from "@/lib/fantasy/host";
 import { WIRE_DISCLAIMER, WIRE_LIVE_DISCLAIMER } from "@/lib/news/wire";
-import { fetchLiveWire } from "@/lib/news/rss";
+import { fetchLiveWireWithHealth } from "@/lib/news/rss";
+import type { NewsItem } from "@/lib/news/impact";
 
 /**
  * The Beat.
@@ -37,10 +38,20 @@ export default async function TheBeatPage() {
   // configured", which made TheBeat fall through to the fictional DEMO_WIRE.
   // A failed fetch would have rendered invented sources as the day's news.
   // The two cases are kept apart now.
-  let liveWire: Awaited<ReturnType<typeof fetchLiveWire>> = null;
+  let liveWire: NewsItem[] | null = null;
   let wireUnavailable = false;
   try {
-    liveWire = await fetchLiveWire();
+    const health = await fetchLiveWireWithHealth();
+    liveWire = health.items;
+    // Unavailable means "feeds are configured and NONE of them answered". An
+    // earlier version of this only caught a THROW, which almost never happens:
+    // the per-feed task returns an empty array for an SSRF refusal, a non-ok
+    // response and a refused redirect, and Promise.allSettled absorbs the rest.
+    // Every feed returning HTTP 500 therefore produced a fulfilled `[]` that
+    // rendered as "the wire is live and nothing has landed", a confident false
+    // statement during a total outage. The reached count is what tells them
+    // apart (Devin Review, PR #819).
+    wireUnavailable = health.configured > 0 && health.reached === 0;
   } catch {
     wireUnavailable = true;
   }
