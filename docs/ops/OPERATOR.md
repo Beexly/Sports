@@ -77,6 +77,24 @@ STRIPE_ELITE_MONTHLY_PRICE_ID=
 STRIPE_ELITE_ANNUAL_PRICE_ID=
 STRIPE_FANTASY_MONTHLY_PRICE_ID=
 STRIPE_FANTASY_ANNUAL_PRICE_ID=
+# PRICING_PHASE (apps/web/lib/pricing/pricing-phases.ts) selects the advertised
+# amount per tier/interval; defaults to FOUNDING when unset. ORDER MATTERS, and
+# getting it backwards is what cost checkout five days (issue #822): a Stripe
+# Price is IMMUTABLE, so stepping this var alone does not change what any
+# existing STRIPE_*_PRICE_ID actually charges. lib/stripe.ts:248
+# (verifyEnvPriceAmount / resolveCheckoutPriceId) fails CLOSED — correctly —
+# whenever the resolved Stripe Price's unit_amount does not equal what this
+# phase advertises, and checkout/route.ts 503s before writing a
+# checkout_attempts row, so the failure leaves no row, no Stripe session, and
+# no log anyone reads. The safe order: in the Stripe Dashboard, create (or
+# confirm) a Price for every tier/interval that charges the NEW phase's
+# amount FIRST, repoint each STRIPE_*_PRICE_ID at it (comma-prepend to keep
+# grandfathered members mapped — see price-ids.ts), THEN set PRICING_PHASE to
+# the new phase. Never the reverse. `/api/ops/public-surface-truth`'s
+# `checkoutPrice` field reports the advertised cents per slot after any step
+# so you can eyeball it against the Dashboard, but it makes no Stripe calls
+# and cannot itself confirm a match — only Stripe's Price objects can.
+PRICING_PHASE=
 # Point-of-sale Terms consent at Stripe Checkout. DEFAULT OFF. Order matters:
 # set the Stripe Dashboard Terms-of-Service URL FIRST, THEN flip this to "true"
 # (otherwise Stripe rejects every Checkout Session and new subscriptions 500).
