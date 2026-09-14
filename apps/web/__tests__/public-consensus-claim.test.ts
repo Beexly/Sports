@@ -6,6 +6,7 @@ import { describe, it, expect } from "vitest";
 import {
   bindPublicConsensusClaim,
   consensusEvidenceCaption,
+  gateConsensusClaimText,
   isBookmakerConsensusClaim,
 } from "@/lib/claims/public-consensus-claim";
 
@@ -153,5 +154,64 @@ describe("preview page contract (T-1)", () => {
     );
     expect(src).toMatch(/bindPublicConsensusClaim/);
     expect(src).toMatch(/consensusEvidenceCaption/);
+  });
+});
+
+describe("gateConsensusClaimText — /api/picks server-side suppression (Devin, #819)", () => {
+  // PickCard renders `reasoningShort` (and `reasoning`, which carries the same
+  // lead clause for SPREAD picks) with no binder call at all. PublicPick also
+  // does not carry consensusPct/bookmakerCount for a client-side check, so the
+  // gate has to run in the API serializer against the Prisma row's own columns
+  // before the string ever reaches the DTO.
+  it("suppresses a consensus claim to '' when its evidence does not bind", () => {
+    const claim =
+      "Every book pricing this game has Kansas City Chiefs favoured. We are on Kansas City Chiefs -5.5.";
+    expect(
+      gateConsensusClaimText(claim, {
+        consensusPct: 1,
+        bookmakerCount: 1, // below MIN_BOOKMAKERS
+        dataFreshnessAt: NOW,
+      }, NOW),
+    ).toBe("");
+    expect(
+      gateConsensusClaimText(claim, {
+        consensusPct: 1,
+        bookmakerCount: 5,
+        dataFreshnessAt: null, // no freshness stamp
+      }, NOW),
+    ).toBe("");
+  });
+
+  it("renders a consensus claim verbatim, never rewritten, when it binds", () => {
+    const claim =
+      "100% bookmaker consensus on Kansas City Chiefs -5.5. Fair value: 61%.";
+    expect(
+      gateConsensusClaimText(claim, {
+        consensusPct: 1,
+        bookmakerCount: 5,
+        dataFreshnessAt: new Date("2026-08-04T16:00:00.000Z"),
+      }, NOW),
+    ).toBe(claim);
+  });
+
+  it("negative control: an ordinary non-consensus teaser still renders as stored", () => {
+    const teaser = "Rest advantage noted. We are on Kansas City Chiefs -5.5.";
+    expect(
+      gateConsensusClaimText(teaser, {
+        consensusPct: 1,
+        bookmakerCount: 0, // would fail the binder if this text were gated
+        dataFreshnessAt: null,
+      }, NOW),
+    ).toBe(teaser);
+  });
+
+  it("/api/picks route wires the gate into both reasoning and reasoningShort", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { resolve } = await import("node:path");
+    const src = readFileSync(resolve(__dirname, "../app/api/picks/route.ts"), "utf8");
+    expect(src).toMatch(/gateConsensusClaimText/);
+    // Both fields must route through the gate — not just the one Devin named.
+    expect(src).toMatch(/reasoning:\s*entitlements\.canSeeFactorBreakdown[\s\S]{0,40}gateConsensusClaimText\(pick\.reasoning/);
+    expect(src).toMatch(/reasoningShort:\s*teaserForViewer\(\s*gateConsensusClaimText\(pick\.reasoningShort/);
   });
 });

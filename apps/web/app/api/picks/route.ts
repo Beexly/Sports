@@ -15,6 +15,7 @@ import {
 import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-publish-runtime";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
 import { teaserForViewer } from "@/lib/picks/teaser-text";
+import { gateConsensusClaimText } from "@/lib/claims/public-consensus-claim";
 import { displaySelection } from "@/lib/picks/display-selection";
 import { resolveMarketImplied, resolveWinProbability } from "@/lib/picks/market-implied-display";
 import { publicEdgeScore } from "@/lib/picks/public-edge-score";
@@ -362,10 +363,24 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       // free the premium reasoning trail. FREE gets the short teaser.
       // A viewer who cannot see confidence must not read it back as a percentage
       // inside the teaser (lib/picks/teaser-text.ts).
+      //
+      // T-1 tripwire (Devin, #819): a quantified "bookmaker consensus" claim
+      // must carry its own evidence (book count >= 2, freshness stamp,
+      // consensusPct in (0,1]) or it must not render at all — gated here,
+      // server-side, against the SAME Prisma row's evidence columns, since
+      // PublicPick does not carry consensusPct/bookmakerCount to gate on
+      // client-side. reasoningShort is frozen write-once; this only decides
+      // what the API echoes back, never what is stored.
       reasoning: entitlements.canSeeFactorBreakdown
-        ? pick.reasoning
-        : teaserForViewer(pick.reasoningShort || pick.reasoning.split(".")[0] + ".", entitlements.canSeeConfidence),
-      reasoningShort: teaserForViewer(pick.reasoningShort, entitlements.canSeeConfidence),
+        ? gateConsensusClaimText(pick.reasoning, pick, now)
+        : teaserForViewer(
+            gateConsensusClaimText(pick.reasoningShort || pick.reasoning.split(".")[0] + ".", pick, now),
+            entitlements.canSeeConfidence,
+          ),
+      reasoningShort: teaserForViewer(
+        gateConsensusClaimText(pick.reasoningShort, pick, now),
+        entitlements.canSeeConfidence,
+      ),
       isFeatured: pick.isFeatured,
       isAuditAvailable:
         !pick.id.startsWith("sample-pick-") &&

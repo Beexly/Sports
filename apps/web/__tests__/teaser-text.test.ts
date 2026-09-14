@@ -33,10 +33,18 @@ describe("/api/picks wires the teaser scrub", () => {
   it("passes both reasoning fields through teaserForViewer keyed on canSeeConfidence", () => {
     expect(routeSrc).toContain('from "@/lib/picks/teaser-text"');
     const calls = routeSrc.match(/teaserForViewer\(/g) ?? [];
-    const keyedOnConfidence = routeSrc.match(/entitlements\.canSeeConfidence\)/g) ?? [];
+    // The T-1 gate (gateConsensusClaimText) now sits inside the call, so the
+    // second argument may be followed by a trailing comma/newline before the
+    // closing paren rather than an immediate `)`. Tolerate that formatting
+    // without loosening the actual invariant: canSeeConfidence must still be
+    // the argument keying every teaserForViewer call.
+    const keyedOnConfidence = routeSrc.match(/entitlements\.canSeeConfidence\s*,?\s*\)/g) ?? [];
     expect(calls.length).toBeGreaterThanOrEqual(2);
     expect(keyedOnConfidence.length).toBeGreaterThanOrEqual(2);
-    // Both reasoning fields, not just one, go through the scrub.
-    expect(routeSrc).toMatch(/reasoningShort:\s*teaserForViewer\(pick\.reasoningShort,\s*entitlements\.canSeeConfidence\)/);
+    // Both reasoning fields, not just one, go through the scrub, and both now
+    // go through the T-1 consensus-claim gate first (Devin, #819).
+    expect(routeSrc).toMatch(
+      /reasoningShort:\s*teaserForViewer\(\s*gateConsensusClaimText\(pick\.reasoningShort,\s*pick,\s*now\),\s*entitlements\.canSeeConfidence,\s*\)/,
+    );
   });
 });

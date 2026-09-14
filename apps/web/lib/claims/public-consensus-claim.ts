@@ -104,6 +104,37 @@ export function bindPublicConsensusClaim(
   };
 }
 
+/** The evidence a pick row carries, independent of which text field is being gated. */
+export type ConsensusEvidenceSource = {
+  readonly consensusPct?: number | null;
+  readonly bookmakerCount?: number | null;
+  readonly dataFreshnessAt?: Date | string | null;
+};
+
+/**
+ * Gate a render-time reasoning string against the T-1 tripwire.
+ *
+ * `bindPublicConsensusClaim` is keyed on `reasoningShort` specifically, but
+ * the same unquantified "every book pricing this game had X favoured" clause
+ * is also the LEAD SENTENCE of the full `reasoning` string for SPREAD picks
+ * (same generator, `scoring.ts`), so both fields need the same gate. Never
+ * rewrites or truncates the stored string — a non-claim string, or a claim
+ * that binds, passes through untouched; a claim that fails to bind renders as
+ * "" (nothing), the same "must not render" outcome the /preview page already
+ * gives a claim it cannot bind. Suppressing to an empty string, rather than
+ * composing a replacement sentence, is deliberate: new customer-facing copy
+ * for the suppressed case is a founder decision, not one this gate makes.
+ */
+export function gateConsensusClaimText(
+  text: string,
+  evidence: ConsensusEvidenceSource,
+  now: Date = new Date(),
+): string {
+  if (!isBookmakerConsensusClaim(text)) return text;
+  const bound = bindPublicConsensusClaim({ reasoningShort: text, ...evidence }, now);
+  return bound ? text : "";
+}
+
 /**
  * One-line evidence caption for UI — not a rewrite of the claim itself.
  * Example: "2 books · scored 48h ago"
