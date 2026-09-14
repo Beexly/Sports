@@ -161,6 +161,12 @@ export function parseRssItems(
  * Keyword classifier into the existing signal taxonomy. Deliberately
  * conservative: no match means the headline is dropped, never guessed.
  */
+/** Most entries we will classify from one feed. A bound on work, not on output. */
+const MAX_SCAN_PER_FEED = 200;
+
+/** Most entries we will keep from one feed, applied AFTER classification. */
+const MAX_ITEMS_PER_FEED = 40;
+
 export function classifySignal(headline: string): SignalType | null {
   const h = headline.toLowerCase();
   if (/\b(out for|ruled out|out indefinitely|placed on (the )?(il|ir)|torn|surgery|fracture|acl|achilles)\b/.test(h))
@@ -295,7 +301,17 @@ export async function fetchLiveWireWithHealth(
         xml = await res.text();
       }
       const items: NewsItem[] = [];
-      for (const raw of parseRssItems(xml).slice(0, 40)) {
+      // The cap bounds what we KEEP, not what we look at. It used to slice the
+      // parsed entries to 40 BEFORE classification, so a feed that opened with
+      // 40 headlines we do not classify dropped every qualifying report sitting
+      // behind them: the wire read empty while real injury news was in the
+      // feed, and the empty-state copy then blamed the publication bar for an
+      // omission the bar had not made. Classification is one regex per
+      // headline, so the cheap place to bound is the output. MAX_SCAN_PER_FEED
+      // still stops a pathological feed from unbounded work.
+      // (Devin Review, PR #819.)
+      for (const raw of parseRssItems(xml).slice(0, MAX_SCAN_PER_FEED)) {
+        if (items.length >= MAX_ITEMS_PER_FEED) break;
         const signal = classifySignal(raw.title);
         if (!signal) continue; // no guessing
         if (!raw.pubDate) continue; // no fake freshness

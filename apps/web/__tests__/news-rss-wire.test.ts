@@ -113,6 +113,48 @@ describe("fetchLiveWire", () => {
     expect(wire![0]!.tier).toBe("Verified");
   });
 
+  it("the per-feed cap bounds what is KEPT, not what is scanned", async () => {
+    // Devin Review, PR #819. The loop used to run over
+    // `parseRssItems(xml).slice(0, 40)` — truncating BEFORE classification — so
+    // a feed that opened with 40 headlines we do not classify dropped every
+    // qualifying report behind them. The wire read empty while real injury news
+    // sat in the feed, and the empty-state copy then blamed the publication bar
+    // for an omission the bar had not made.
+    process.env["NEWS_RSS_FEEDS"] = "https://feed.example/rss|Wire Test|Verified|NFL";
+    const now = new Date("2026-07-02T12:00:00Z");
+    const filler = Array.from(
+      { length: 45 },
+      (_, i) =>
+        `<item><title>Ten takeaways from Tuesday number ${i}</title>` +
+        `<pubDate>Wed, 02 Jul 2026 11:30:00 GMT</pubDate></item>`,
+    ).join("");
+    const xml = `<rss><channel>${filler}
+      <item><title>Star RB ruled out for Sunday</title><pubDate>Wed, 02 Jul 2026 11:00:00 GMT</pubDate></item>
+    </channel></rss>`;
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(xml, { status: 200 }));
+
+    const wire = await fetchLiveWire(now);
+    // The one qualifying report sits at position 46, past the old cap of 40.
+    expect(wire).toHaveLength(1);
+    expect(wire![0]!.signal).toBe("injury-out");
+  });
+
+  it("still caps the kept items per feed", async () => {
+    // The bound must survive the move. Fifty qualifying reports, cap is 40.
+    process.env["NEWS_RSS_FEEDS"] = "https://feed.example/rss|Wire Test|Verified|NFL";
+    const items = Array.from(
+      { length: 50 },
+      (_, i) =>
+        `<item><title>Star RB number ${i} ruled out for Sunday</title>` +
+        `<pubDate>Wed, 02 Jul 2026 11:00:00 GMT</pubDate></item>`,
+    ).join("");
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(`<rss><channel>${items}</channel></rss>`, { status: 200 }),
+    );
+    const wire = await fetchLiveWire(new Date("2026-07-02T12:00:00Z"));
+    expect(wire).toHaveLength(40);
+  });
+
   it("fails soft: a feed outage returns what succeeded, never throws", async () => {
     process.env["NEWS_RSS_FEEDS"] =
       "https://down.example/rss|Down|Beat|NFL; https://up.example/rss|Up|Beat|NFL";

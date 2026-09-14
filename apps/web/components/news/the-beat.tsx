@@ -312,17 +312,24 @@ export function TheBeat({
           // would be false, because there is nothing behind the filter.
           //
           // But "nothing is being withheld" was false too: fetchLiveWire drops
-          // a headline on FOUR conditions (lib/news/rss.ts) - no classified
-          // signal, no publish date, an unparseable date, or older than 48
-          // hours - so an empty wire can mean headlines arrived and every one
-          // of them was dropped upstream. The copy now names the bar instead
-          // of denying the omission.
+          // headlines upstream (lib/news/rss.ts), so an empty wire can mean
+          // reports arrived and every one was dropped before this component
+          // saw them.
+          //
+          // The replacement then ENUMERATED the drop conditions, which was the
+          // same over-claim one layer down: the feed was truncated to 40
+          // entries BEFORE classification, so a qualifying report could be
+          // dropped by position while the copy blamed the publication bar.
+          // That truncation is fixed in rss.ts. This copy no longer asserts a
+          // complete cause set either way - it states the outcome (nothing
+          // made the wire) and what generally qualifies, which stays true
+          // whatever the drop path.
           <div className="surface-card p-8 text-center">
             <p className="font-display text-xl text-ion-white">No fresh reports.</p>
             <p className="mx-auto mt-1 max-w-md text-sm text-ion-2">
               The wire is live, and this is not an error. Either nothing
-              arrived, or what arrived did not clear what we publish: a signal
-              we classify, a real publish time, and inside the last 48 hours.
+              arrived, or no recent report with a real publish time and a
+              signal we classify made the wire.
             </p>
           </div>
         )}
