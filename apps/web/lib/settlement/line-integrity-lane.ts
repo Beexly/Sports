@@ -649,6 +649,8 @@ async function readQuotesAtPublish(
       market: PICK_MARKET_TO_ODDS_MARKET[market],
       fetchedAt: freshSince ? { lte: asOf, gte: freshSince } : { lte: asOf },
     },
+    orderBy: { fetchedAt: \"desc\" },
+    take: 1000,
     select: {
       id: true,
       bookmaker: true,
