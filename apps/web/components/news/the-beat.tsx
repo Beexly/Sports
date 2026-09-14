@@ -313,8 +313,9 @@ export function TheBeat({
           <div className="surface-card p-8 text-center">
             <p className="font-display text-xl text-ion-white">No fresh reports.</p>
             <p className="mx-auto mt-1 max-w-md text-sm text-ion-2">
-              The wire is live and nothing has landed in the window yet. Not an
-              error, and nothing is being withheld.
+              The wire is live. Either nothing arrived in the window, or what
+              did arrive carried no signal we classify. Not an error, and
+              nothing is being withheld.
             </p>
           </div>
         )}
