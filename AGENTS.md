@@ -9,6 +9,59 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ## THE LOOP
 
+**DO NOT MERGE `hermes/v528-market-gate-preserved-2026-09-11`. IT MERGES CLEAN AND BREAKS
+PICK MINTING IN PRODUCTION (surveyed 2026-09-14, assessed and adversarially re-verified).**
+
+One commit, `e2ec2262f`. Three independent disqualifiers, each on its own sufficient:
+
+1. **It does not compile, and nothing stops it deploying.** In the merged result
+   `scoreTotalPick` declares `fairProb` twice at function-body scope (TS2451) and reads a
+   `consensusPct` that the branch deleted at five sites (TS2304); `scoreMoneylinePick` reads
+   an `independentEdge` that is never declared, seven times, and reads `independentEdgeRaw`
+   63 lines before main declares it. `next.config` sets `typescript.ignoreBuildErrors`, so
+   this BUILDS and throws at runtime — the same mechanism that took `/fantasy/dfs` to HTTP
+   500 in PR #808. Totals and moneylines would stop minting.
+2. **It is founder-only twice over.** It bumps MODEL_VERSION to v5.2.8, and it replaces the
+   publish floors with a market-relative test that both withholds AND admits, so it is a
+   scoring change needing a calibration pass — not the withhold-only asymmetry that let
+   `pricesWorseThanMarket` ship without a bump. CI would reject it anyway: `model-freeze.mjs`
+   requires an IMPLEMENTED proposal for the target version and the v5.2.8 doc still reads
+   PROPOSED.
+3. **The v5.2.8 label is wrong.** The approved v5.2.8 proposal is a DISPLAY-probability
+   change; grepping it for the publish floors this branch replaces returns nothing. The
+   branch is an undocumented scoring change wearing an approved proposal's name, which is
+   exactly what makes it look safe to land.
+
+**The reason this needs writing down rather than leaving alone:** `git merge-tree` against
+main produces NO conflict markers. It merges silently. Anyone doing a well-meant sweep of
+abandoned Hermes branches lands a clean-looking merge straight into the adverse-edge lane.
+Keep the branch as a record; never merge it, and do not repair it from an agent session —
+a compiling version is still founder-only.
+
+**The one durable finding inside it, which IS worth an owner: TOTALS are uncovered by the
+adverse-edge gate at BOTH mint and display.** Verified on main: `scoring.ts` applies
+`pricesWorseThanMarket` at :604 (SPREAD) and :1197 (MONEYLINE), but `scoreTotalPick`
+(751-1003) computes no independent edge at all — it sets `rankingP: confidence / 100` with
+`rankingSource: "confidence"` and its own comment says there is no independent total model
+yet. `lib/picks/adverse-edge-suppression.ts` then reads `independentEdge` off the stored
+breakdown, which totals never populate, so the display-side rule cannot see them either.
+**This is NOT a gate extension.** Calling `pricesWorseThanMarket` from the totals scorer is
+a literal no-op — the predicate opens `if (!edge) return false` — so closing it means
+building a totals edge model first, which is scoring work under a MODEL_VERSION bump. Do not
+file it as a quick withhold-only fix; it is not one.
+
+**Everything else surveyed was already landed.** Twelve unmerged branches (31 commits) were
+assessed and the salvage claims adversarially re-verified. Ten are already on main by another
+route and carry nothing but stale ledger bookkeeping — `hermes/hero-r3f-stack`,
+`hermes/plain-proof-2026-09-10`, `hermes/fe-c93`, `claude/proven-surfaces`,
+`claude/proven-live-ledger`, `claude/c299-test-clock`, `claude/launch-proof`,
+`claude/c301-ledger-done`, `claude/no-inplay-picks`, `claude/c301-loader-candidates`. Do not
+re-survey them. The eleventh, `props/production-path-2026-09-11` (a standalone props-slate
+CLI, genuinely absent from main), was assessed SALVAGE and then REFUTED on verification: it
+ships no tests against its own stated acceptance numbers, documents two options it never
+reads, and has an unguarded division that emits a non-finite probability for a thin position
+group. Worth rebuilding against main, not cherry-picking.
+
 **UPDATED 2026-09-13 (NFL WEEK 1 LIVE CHECK — three production defects fixed, three
 data outages found, conviction gate built). PR #808, branch
 `claude/nfl-kickoff-live-check-0qwxfm`. Read this before touching the board, the
