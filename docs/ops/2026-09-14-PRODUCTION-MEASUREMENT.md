@@ -128,6 +128,97 @@ holds the rule; CLV is the surface it has not reached.
 
 ---
 
+## 2b. The 52.4% threshold is a category error, and half the MATCHED rows are a bug
+
+Literature review commissioned this session. Full citations in the research artifact;
+the load-bearing points and what they are graded as:
+
+**52.4% does not apply to CLV. ESTABLISHED.** It is the settlement break-even for a
+-110 *ticket* (`100·WR = 110·(1−WR)` → 0.5238). A CLV verdict compares two prices;
+nothing settles and no vig is paid on the comparison. The null for a beat rate is
+**50%**, stated explicitly in Buchdahl's tipster work ("Assuming we would expect 50% to
+shorten and lengthen where the tipster was just guessing"). No source was found
+applying 52.4% to CLV.
+
+The instinct behind 52.4% is half-right and the correction matters: measured against a
+**de-vigged** close, a zero-edge bettor loses half the hold every time. Buchdahl on
+1,525 real bettors: "a t-score of 0 broadly equates to losing the equivalent of
+Pinnacle's margin". **But that fact belongs to the CLV magnitude, not to the rate.**
+
+**MATCHED does not belong in the denominator. ESTABLISHED.** This is the zero-difference
+problem in the sign and Wilcoxon tests, and all three recognised conventions -- Wilcoxon
+(discard), Pratt (1959), zsplit -- decline to score a zero as a failure. Counting a tie
+as a loss estimates a different quantity, P(market moved my way) rather than
+P(our price better | prices differ), and it is driven by liquidity rather than skill.
+The "it is conservative" defence fails because the distortion is non-uniform: it
+punishes thin markets hardest, biasing across sports rather than shrinking evenly.
+
+**A rate is the wrong statistic. ESTABLISHED, convergent across sources.** The
+defensible measure is mean vig-adjusted CLV, which is not a proxy for EV but *is* the EV
+estimate. The decisive case is Buchdahl's own: a tipster beat the close on 17 of 23
+picks -- a 74% rate, above every consumer benchmark -- while averaging a 2% edge, which
+after margin is break-even. A rate is a sign test on a continuous quantity and discards
+the half of the information that carries the money. `ClvSummary.averageClv` already
+exists in this repo and is already computed; it is simply not headlined.
+
+**CLV predicts profit far more weakly than the product's premise assumes. IMPORTANT.**
+Three layers, unevenly evidenced. That the closing consensus is an excellent forecast is
+strongly established (Kaunitz et al., 479,440 games, R² 0.999/0.995/0.998). That CLV
+skill persists is established on one large study (Buchdahl: first-half CLV t-score
+explains half the variance of second-half). That CLV predicts *realised profit* is the
+weak link, and measured rather than asserted in that same dataset: **R² = 6%**. Only 60
+of 1,525 bettors had profitable CLV. The real argument for measuring CLV is that P&L
+variance was **75× CLV variance** -- it reveals signal fast, not strongly. Public copy
+should not overstate this.
+
+### The spread/total CLV comparison is price-blind, and it is ours to fix
+
+`packages/prediction-engine/src/clv.ts`:
+
+```ts
+export function computeSpreadClv(pickHomeLine, closeHomeLine, side)   // three args
+export function computeTotalClv(pickTotal, closeTotal, side)          // three args
+```
+
+Neither takes a price. A spread holding at -3 while its price moves -105 → -125 is real,
+capturable CLV recorded as `MATCHED_CLOSE` with `clvPoints: 0`.
+
+**Measured, `odds` table, spread markets since 2026-08-01, prices restricted to
+-400..+400, game-book pairs with more than one observation:**
+
+```
+line held first-to-last                      3,481
+  of those, the PRICE moved anyway           1,737   (49.9%)
+  median move                                    9 cents
+  moved >= 10 cents                            856
+  moved >= 20 cents                            490
+```
+
+**Half of every MATCHED_CLOSE on a spread hides a real price move.** So the 43% MATCHED
+share is substantially a grading artefact, not a still market, and fixing the comparison
+collapses much of the denominator argument before anyone has to decide it.
+`computeMoneylineClv` has a related issue: it compares raw implied probability with
+`DEFAULT_ML_EPSILON = 0.005`, folding genuine moves into MATCHED too.
+
+There is also an internal inconsistency: `clv.ts:170` uses 0.5 as its note threshold
+while `public-clv-policy.ts` uses 0.524.
+
+### Sample size
+
+At the corrected rate, against a 50% null: the 95% Wilson interval first excludes 50% at
+**n 1,934**; 80% power needs **n ≈ 3,950**. At today's n 718 the interval is
+[44.14%, 51.43%], z = -1.19, p = 0.23 -- **indistinguishable from 50%**. Against 52.4%
+it is z = -2.48, p = 0.013, significantly below. So the honest statement is not "not yet
+proven" but "failing a threshold that does not apply, and indistinguishable from the one
+that does." All of this assumes independence; correlated picks on one slate make the
+effective n smaller, so 3,950 is a floor.
+
+**Order of operations that falls out of this.** Fix the price-blind comparison first
+(engine bug, nobody has to decide anything). Re-measure. Then the denominator and
+threshold questions are much smaller, and may answer themselves.
+
+---
+
 ## 3. Published spread and total picks lose, and the deployed version has not fixed it
 
 Pre-game, decided, published, non-bootstrap, book-priced:
@@ -245,11 +336,22 @@ Nothing behavioural. This pass added measurement and two records:
 
 ## Open, in the order they are worth taking
 
-1. **FOUNDER** -- the CLV denominator (section 2). Changes a gate input; changes no
-   verdict today.
-2. **FOUNDER** -- whether 52.4% is the right null for a beat-close rate at all.
-3. **AGENT** -- apply `in-play-exclusion` to the CLV reader, the third surface the
-   rule has not reached (section 2a). Counted by reason, both numbers reported.
-4. **FOUNDER** -- a totals edge model (section 4a). Needs a `MODEL_VERSION` bump.
-5. **AGENT** -- an archive-staleness monitor (section 1).
-6. Correct AGENTS.md's confidence-tail wording to match section 4.
+1. ~~**AGENT** -- apply `in-play-exclusion` to the CLV reader.~~ **DONE**, commit
+   `1f95c8873`. 22.69% -> 24.93%, exclusion counted and named on the policy object,
+   verdict unchanged.
+2. **AGENT, and do this before deciding anything else** -- make the spread/total CLV
+   comparison price-aware (section 2b). It is an engine bug with no policy question
+   attached, and it is upstream of both founder decisions below: half the MATCHED rows
+   are its artefact, so fixing it shrinks the denominator argument before anyone has to
+   rule on it. Needs no `MODEL_VERSION` bump -- CLV grading is settlement bookkeeping,
+   not scoring.
+3. **FOUNDER** -- the CLV denominator, and whether 52.4% applies at all (sections 2, 2b).
+   The literature says the null is 50% and that ties should be discarded. Take it after
+   item 2, on re-measured numbers.
+4. **FOUNDER** -- headline mean vig-adjusted CLV rather than a beat rate. `averageClv`
+   already exists and is already computed.
+5. **FOUNDER** -- a totals edge model (section 4a). Needs a `MODEL_VERSION` bump.
+6. **AGENT** -- an archive-staleness monitor (section 1).
+7. ~~Correct AGENTS.md's confidence-tail wording.~~ **DONE**, commit `ee4ee449d`.
+8. Review public CLV copy against the R² = 6% finding (section 2b). "Leading indicator
+   of edge" is defensible; anything stronger is not.
