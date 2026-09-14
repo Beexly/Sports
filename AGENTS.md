@@ -9,6 +9,51 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ## THE LOOP
 
+**THE PUBLIC RECORD PAGE PUBLISHES A WINNING VERDICT BUILT FROM PICKS NOBODY COULD BET
+(measured 2026-09-14, read-only production SQL). This outranks the checkout outage below.
+Full audit: `docs/ops/2026-09-14-FUNNEL-AUDIT.md` section 1.**
+
+`/performance` reads "Win Rate 53.2% ... Conclusive ... above the 50.0% threshold". Split on
+the page's own population (the exact filter in `rebuild-performance-summaries.ts` plus the
+in-play exclusion `build-performance-summaries.ts` applies), it reconciles to the page row for
+row and decomposes as:
+
+| lane | W | L | rate |
+|---|---|---|---|
+| book-priced (>= 1 book) | 745 | 777 | **48.95%** |
+| model signal (0 books, unbettable) | 470 | 292 | 61.68% |
+| total (= the live page) | 1,215 | 1,069 | 53.2% |
+
+By market: SPREAD book-priced 363-413 (46.78%), TOTAL book-priced 284-334 (45.95%),
+MONEYLINE book-priced 98-30, MONEYLINE model-signal 470-292. So every market where 52.4% is
+the break-even is losing, and 762 of the 890 settled moneylines had zero books pricing them.
+Only 125 of 2,292 settled rows carry a stored price, so no realized return is computable for
+94.5% of the published record.
+
+Source of the wrong bar: `performance/page.tsx:385` renders `<VerdictLine>` with no
+`threshold` prop and `verdict-line.tsx:22` defaults it to `0.5`. The component already accepts
+and is tested with an explicit threshold, so this is an omitted argument, not a missing
+capability. The site's own `/pricing` ladder names the real bar at 52.4%.
+
+Same live site, opposite verdict: `lib/gse/waitlist-copy.ts:34` publishes "The model does not
+beat naive on this tested setup" on `/waitlist`.
+
+**Do NOT** drop the model-signal rows from the record (they were published and they settle;
+removing them flatters our numbers by deleting the rows the customer never had access to, the
+same argument that governs `adverse-edge-suppression.ts`), do NOT move the 52.4% figure, and
+do NOT pass a lower threshold to make the verdict survive. The fix is to split the display
+into bettable and model-signal, pass the real per-market threshold, publish coverage, and
+withhold the word until the interval clears break-even. Founder decides the hero framing.
+
+**CHECKOUT HAS RETURNED 503 SINCE 2026-09-09 AND WRITES NOTHING (issue #822, founder-only).**
+`PRICING_PHASE=PROVEN` advertises Pro at 1999c; the Stripe Price the resolver returns is
+immutable at 1499c; `stripe.ts:248` fails closed and `checkout/route.ts:114` returns 503
+before Stripe is called and 268 lines before the `checkout_attempts` row is written. Failing
+closed is CORRECT (the alternative charges an amount the customer did not agree to) and the
+post-payment path is healthy (live events processed end-to-end 2026-06-20). Fix is one env
+var or six new Stripe Prices with `<new>,<old>` fallbacks. **No agent touches this** — editing
+`pricing-phases.ts` amounts or loosening `stripe.ts:248` mis-states a price to a customer.
+
 **DO NOT MERGE `hermes/v528-market-gate-preserved-2026-09-11`. IT MERGES CLEAN AND BREAKS
 PICK MINTING IN PRODUCTION (surveyed 2026-09-14, assessed and adversarially re-verified).**
 
