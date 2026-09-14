@@ -327,16 +327,38 @@ Yankees -1.5 11 books graded LEAN at 91).
   explains the failure mode. Correcting an assertion that pinned a defect is not
   weakening a guard; it is the guard finally pointing at the right thing.
 
-  **NOT VERIFIED, state it honestly:** that Prisma rejects this specific shape at runtime
-  was NOT observed against a live database — no DB was reachable from the session, and a
-  probe against an unreachable DSN returns an initialization error for every shape. What
-  is verified: the column is scalar, the API requires `{ in: ... }`, the commit date is
-  the archive's last day, and the error path is swallowed. The fix is correct by Prisma's
-  contract either way. A COMPETING hypothesis that cannot be eliminated from the repo is
-  that `LINE_ARCHIVE_ENABLED` was simply turned off in Vercel on 2026-08-22 — the founder
-  can settle that by checking the flag, and both fixes are wanted regardless.
+  **~~NOT VERIFIED~~ — NOW CONFIRMED BY PRODUCTION MEASUREMENT, 2026-09-14 01:45 UTC.** The
+  earlier note said honestly that Prisma rejecting this shape at runtime had not been observed,
+  because no database was reachable from that session, and it named a competing hypothesis that
+  could not be eliminated from the repo: that `LINE_ARCHIVE_ENABLED` was simply switched off in
+  Vercel on 08-22. Read-only production SQL settles it, and the competing hypothesis is refuted:
 
-  **Still open:** nothing alarms on archive staleness. That monitor is the follow-up.
+```
+  odds_line_snapshots by day
+    2026-08-19    24,172      2026-08-22   478,222
+    2026-08-20   107,944      2026-08-23 .. 09-12        0      <- 21 days, exactly zero
+    2026-08-21    74,160      2026-09-13     4,187
+                              2026-09-14     2,661 (and writing every ~20 min)
+
+  fix 080dd1976 merged to main (PR #818, 53c764847)   2026-09-13 20:45:20 UTC
+  first archived row after the outage                 2026-09-13 21:02:40 UTC   <- +17 minutes
+```
+
+  Vercel auto-deploys from main. The archive resumed seventeen minutes after the filter-shape fix
+  deployed, having written nothing at all for twenty-one days. A flag flip would have to have
+  landed inside that same window by coincidence. The bare-array-on-a-scalar-filter root cause is
+  the cause.
+
+  **Also now measured: the props lane is live.** `player_receptions|*` and `player_pass_tds|*`
+  rows begin 2026-09-13 21:30:15 UTC, so `EVENT_ODDS_INGEST_ENABLED` is ON — both founder env
+  actions this file lists as open are done. Coverage is credit-capped as designed: two games.
+
+  **Consequence for the ESTABLISHED blocker:** closing lines are being recorded again, so CLV is
+  gradable on picks generated from 2026-09-13 onward. The 08-22..09-12 gap is permanent — those
+  closes were never captured and cannot be backfilled.
+
+  **Still open:** nothing alarms on archive staleness. Twenty-one silent days is the argument for
+  that monitor, and `apps/web/lib/ops/line-archive-freshness.ts` (PR #819) is the reader it needs.
 
 - **~~Stale-generation picks are live on today's board.~~ MEASURED AND LARGELY WITHDRAWN
   2026-09-13 18:55 UTC. Do not "fix" this — the obvious fix re-creates a bug that was
