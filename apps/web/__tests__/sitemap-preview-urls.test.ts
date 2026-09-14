@@ -150,6 +150,23 @@ describe("sitemap — dedup does not shrink the output below the cap (Devin Revi
     expect(args.take).toBe(SITEMAP_PREVIEW_CAP * 3);
   });
 
+  it("never fetches an alias row (Devin Review, #819, second round)", async () => {
+    // findTwinCandidate resolves an alias only against candidates already
+    // seen (the dedup loop below builds twinCandidates incrementally as it
+    // walks commenceTime order), so an alias arriving before its canonical
+    // cannot be resolved and both rows survive as two URLs. Prisma orders
+    // only by commenceTime, so an alias and its canonical sharing a kickoff
+    // have no guaranteed relative order. The fix is to never fetch an alias
+    // at all (same mergedIntoGameId: null predicate /api/picks/route.ts
+    // already applies, C-117) rather than make the dedup loop order-safe.
+    mocks.gameFindMany.mockReset().mockResolvedValue([]);
+    await sitemap();
+    const args = mocks.gameFindMany.mock.calls[0]?.[0] as {
+      where?: { mergedIntoGameId?: unknown };
+    };
+    expect(args.where?.mergedIntoGameId).toBeNull();
+  });
+
   it("recovers up to the full cap of UNIQUE fixtures even when triplication is front-loaded", async () => {
     // Devin's exact counterexample: "if the first 120 rows represent 40
     // triplicated fixtures, this code emits 40 previews even when 80

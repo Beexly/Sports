@@ -107,6 +107,19 @@ async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
         status: { in: ["SCHEDULED", "LIVE"] },
         commenceTime: { gte: windowStart, lte: windowEnd },
         sport: { is: { active: true } },
+        // Never fetch an ALIAS row (Devin Review, #819). The dedup loop below
+        // builds twinCandidates incrementally as it walks the commenceTime
+        // order, so an alias whose mergedIntoGameId target has not been seen
+        // YET cannot be resolved to its canonical (findTwinCandidate only
+        // resolves an alias against candidates already in the array it was
+        // given) -- Prisma orders only by commenceTime, so an alias and its
+        // canonical sharing a kickoff have no guaranteed relative order, and
+        // an unresolved alias is kept rather than collapsed, emitting two
+        // URLs for one fixture. Same predicate /api/picks/route.ts already
+        // applies to its own game filter (C-117) for the same reason: a
+        // tombstoned row's own `status` can still read SCHEDULED/LIVE, so it
+        // is never excluded on that column alone.
+        mergedIntoGameId: null,
       },
       orderBy: { commenceTime: "asc" },
       // Over-fetch a bounded pool, not exactly the cap (Devin Review, #819).
