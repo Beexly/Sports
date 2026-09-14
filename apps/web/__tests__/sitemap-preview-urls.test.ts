@@ -1,5 +1,6 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { SITE_URL } from "@/lib/seo/site-url";
+import { SITEMAP_PREVIEW_CAP } from "@/app/sitemap";
 
 /**
  * sitemap.xml preview URLs — slug form ONLY.
@@ -137,5 +138,57 @@ describe("sitemap — de-duplicates triplicated fixtures (AGENTS.md: up to 3 `ga
     const entries = await sitemap();
     const preview = entries.filter((e) => e.url.includes("/preview/"));
     expect(preview).toHaveLength(2);
+  });
+});
+
+describe("sitemap — dedup does not shrink the output below the cap (Devin Review, #819)", () => {
+  it("requests a bounded over-fetch (3x the cap), not exactly the cap", async () => {
+    mocks.gameFindMany.mockReset().mockResolvedValue([]);
+    await sitemap();
+    expect(mocks.gameFindMany).toHaveBeenCalledTimes(1);
+    const args = mocks.gameFindMany.mock.calls[0]?.[0] as { take?: number };
+    expect(args.take).toBe(SITEMAP_PREVIEW_CAP * 3);
+  });
+
+  it("recovers up to the full cap of UNIQUE fixtures even when triplication is front-loaded", async () => {
+    // Devin's exact counterexample: "if the first 120 rows represent 40
+    // triplicated fixtures, this code emits 40 previews even when 80
+    // additional unique fixtures fall inside the window." Construct
+    // SITEMAP_PREVIEW_CAP distinct fixtures, each present 3 times
+    // consecutively (worst-case front-loading), for 3x the cap in raw rows —
+    // exactly what the over-fetch now requests.
+    const rows: unknown[] = [];
+    for (let i = 0; i < SITEMAP_PREVIEW_CAP; i++) {
+      // Fixed-width, zero-padded index: an unpadded numeric suffix (e.g.
+      // "Team 1" vs "Team 10") would prefix-match under matchTeamSide's
+      // city-name prefix rule and wrongly collapse two DIFFERENT fixtures —
+      // a test-data artifact, not the thing this test is pinning. Equal
+      // widths make every name either an exact match or no match at all.
+      const idx = String(i).padStart(4, "0");
+      const away = `Away Team ${idx}`;
+      const home = `Home Team ${idx}`;
+      const commenceTime = new Date(Date.UTC(2026, 8, 14, 17, 0, 0) + i * 60_000);
+      for (const feed of ["odds-api", "espn:americanfootball_nfl:", "espn:nfl:"]) {
+        rows.push({
+          id: `g-${i}-${feed}`,
+          externalId: `${feed}-${i}`,
+          sportId: "sport-nfl",
+          mergedIntoGameId: null,
+          sport: { name: "NFL", key: "americanfootball_nfl" },
+          awayTeamName: away,
+          homeTeamName: home,
+          commenceTime,
+          updatedAt: commenceTime,
+        });
+      }
+    }
+    mocks.gameFindMany.mockReset().mockResolvedValue(rows);
+
+    const entries = await sitemap();
+    const preview = entries.filter((e) => e.url.includes("/preview/"));
+    expect(preview).toHaveLength(SITEMAP_PREVIEW_CAP);
+    // Every emitted URL is genuinely unique — the fix recovered CAP distinct
+    // fixtures from 3x CAP raw (triplicated) rows, not CAP/3.
+    expect(new Set(preview.map((e) => e.url)).size).toBe(SITEMAP_PREVIEW_CAP);
   });
 });

@@ -109,7 +109,15 @@ async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
         sport: { is: { active: true } },
       },
       orderBy: { commenceTime: "asc" },
-      take: SITEMAP_PREVIEW_CAP,
+      // Over-fetch a bounded pool, not exactly the cap (Devin Review, #819).
+      // Dedup runs AFTER this query, and fixture triplication means up to
+      // THREE rows can collapse to one URL (AGENTS.md), so capping the FETCH
+      // at SITEMAP_PREVIEW_CAP could return as few as CAP/3 unique fixtures
+      // whenever triplication concentrates in the earliest-kickoff rows —
+      // exactly backwards for a page ordered by commenceTime ascending. 3x is
+      // the documented worst case, not an arbitrary multiplier; the dedup
+      // loop below still bounds the OUTPUT at SITEMAP_PREVIEW_CAP.
+      take: SITEMAP_PREVIEW_CAP * 3,
       select: {
         id: true,
         externalId: true,
@@ -138,6 +146,10 @@ async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
     const twinCandidates: GameTwinCandidate[] = [];
     const deduped: typeof games = [];
     for (const g of games) {
+      // Output bound, not just an input bound: the over-fetch above only
+      // makes SITEMAP_PREVIEW_CAP unique fixtures REACHABLE, this stop is
+      // what actually caps the emitted URL count once they are found.
+      if (deduped.length >= SITEMAP_PREVIEW_CAP) break;
       const twin = findTwinCandidate(twinCandidates, {
         sportId: g.sportId,
         externalId: g.externalId,
