@@ -67,6 +67,7 @@ vi.mock("@sports/db", () => ({
 
 vi.mock("@/lib/auth", () => ({
   auth: mocks.auth,
+  isAdminEmail: () => false,
 }));
 
 vi.mock("@/lib/entitlements", () => ({
