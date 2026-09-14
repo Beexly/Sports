@@ -15,7 +15,7 @@ import {
 import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-publish-runtime";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
 import { teaserForViewer } from "@/lib/picks/teaser-text";
-import { gateConsensusClaimText } from "@/lib/claims/public-consensus-claim";
+import { gateConsensusClaim, gateConsensusClaimText } from "@/lib/claims/public-consensus-claim";
 import { displaySelection } from "@/lib/picks/display-selection";
 import { resolveMarketImplied, resolveWinProbability } from "@/lib/picks/market-implied-display";
 import { publicEdgeScore } from "@/lib/picks/public-edge-score";
@@ -309,6 +309,18 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const marketImplied = resolveMarketImplied(marketImpliedInput);
     const winProbability = resolveWinProbability(marketImpliedInput);
 
+    // T-1 gate applied to whichever text this viewer will actually see, so
+    // the evidence caption returned below always matches the visible claim
+    // (see the reasoning/reasoningShort assignment for why this mirrors that
+    // branch selection).
+    const gatedDisplayedText = gateConsensusClaim(
+      entitlements.canSeeFactorBreakdown
+        ? pick.reasoning
+        : pick.reasoningShort || pick.reasoning.split(".")[0] + ".",
+      pick,
+      now,
+    );
+
     return {
       id: pick.id,
       game: {
@@ -371,16 +383,22 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       // PublicPick does not carry consensusPct/bookmakerCount to gate on
       // client-side. reasoningShort is frozen write-once; this only decides
       // what the API echoes back, never what is stored.
+      //
+      // A bound claim must render its evidence CAPTION beside it too (Devin
+      // Review, #819) — the pass/suppress decision alone is not the whole
+      // contract; /preview already renders bound.claimText AND
+      // consensusEvidenceCaption(bound) together. `gatedDisplayedText` is
+      // gated against whichever of reasoning/reasoningShort this viewer
+      // actually sees (the same branch selection below), so the one caption
+      // field on the DTO always matches the text it is captioned for.
       reasoning: entitlements.canSeeFactorBreakdown
-        ? gateConsensusClaimText(pick.reasoning, pick, now)
-        : teaserForViewer(
-            gateConsensusClaimText(pick.reasoningShort || pick.reasoning.split(".")[0] + ".", pick, now),
-            entitlements.canSeeConfidence,
-          ),
+        ? gatedDisplayedText.text
+        : teaserForViewer(gatedDisplayedText.text, entitlements.canSeeConfidence),
       reasoningShort: teaserForViewer(
         gateConsensusClaimText(pick.reasoningShort, pick, now),
         entitlements.canSeeConfidence,
       ),
+      consensusEvidenceCaption: gatedDisplayedText.evidenceCaption,
       isFeatured: pick.isFeatured,
       isAuditAvailable:
         !pick.id.startsWith("sample-pick-") &&

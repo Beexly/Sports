@@ -111,8 +111,20 @@ export type ConsensusEvidenceSource = {
   readonly dataFreshnessAt?: Date | string | null;
 };
 
+export type GatedConsensusClaim = {
+  /** The (possibly suppressed) render-time text. Never a rewrite of the input. */
+  readonly text: string;
+  /**
+   * Pre-formatted "N books · scored Nh ago" caption, present ONLY when `text`
+   * is a bound claim. Null for a non-claim string and for a suppressed claim
+   * (nothing renders either way, so there is nothing to caption).
+   */
+  readonly evidenceCaption: string | null;
+};
+
 /**
- * Gate a render-time reasoning string against the T-1 tripwire.
+ * Gate a render-time reasoning string against the T-1 tripwire, and return
+ * the evidence caption that must render beside it when it does.
  *
  * `bindPublicConsensusClaim` is keyed on `reasoningShort` specifically, but
  * the same unquantified "every book pricing this game had X favoured" clause
@@ -124,15 +136,31 @@ export type ConsensusEvidenceSource = {
  * gives a claim it cannot bind. Suppressing to an empty string, rather than
  * composing a replacement sentence, is deliberate: new customer-facing copy
  * for the suppressed case is a founder decision, not one this gate makes.
+ *
+ * A bound claim without its evidence displayed alongside it is still the
+ * contract this module exists to enforce (Devin Review, #819): `/preview`
+ * renders `bound.claimText` AND `consensusEvidenceCaption(bound)` together,
+ * so the API-side gate must hand back the same caption for `/picks` to do
+ * the same, not just decide the pass/suppress question.
  */
+export function gateConsensusClaim(
+  text: string,
+  evidence: ConsensusEvidenceSource,
+  now: Date = new Date(),
+): GatedConsensusClaim {
+  if (!isBookmakerConsensusClaim(text)) return { text, evidenceCaption: null };
+  const bound = bindPublicConsensusClaim({ reasoningShort: text, ...evidence }, now);
+  if (!bound) return { text: "", evidenceCaption: null };
+  return { text, evidenceCaption: consensusEvidenceCaption(bound) };
+}
+
+/** @deprecated Use `gateConsensusClaim` — this discards the evidence caption it must render beside a bound claim. */
 export function gateConsensusClaimText(
   text: string,
   evidence: ConsensusEvidenceSource,
   now: Date = new Date(),
 ): string {
-  if (!isBookmakerConsensusClaim(text)) return text;
-  const bound = bindPublicConsensusClaim({ reasoningShort: text, ...evidence }, now);
-  return bound ? text : "";
+  return gateConsensusClaim(text, evidence, now).text;
 }
 
 /**

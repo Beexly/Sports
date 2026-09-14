@@ -6,6 +6,7 @@ import { describe, it, expect } from "vitest";
 import {
   bindPublicConsensusClaim,
   consensusEvidenceCaption,
+  gateConsensusClaim,
   gateConsensusClaimText,
   isBookmakerConsensusClaim,
 } from "@/lib/claims/public-consensus-claim";
@@ -209,9 +210,69 @@ describe("gateConsensusClaimText — /api/picks server-side suppression (Devin, 
     const { readFileSync } = await import("node:fs");
     const { resolve } = await import("node:path");
     const src = readFileSync(resolve(__dirname, "../app/api/picks/route.ts"), "utf8");
-    expect(src).toMatch(/gateConsensusClaimText/);
-    // Both fields must route through the gate — not just the one Devin named.
-    expect(src).toMatch(/reasoning:\s*entitlements\.canSeeFactorBreakdown[\s\S]{0,40}gateConsensusClaimText\(pick\.reasoning/);
+    // The viewer's DISPLAYED field (reasoning or reasoningShort, mirrored from
+    // the entitlement branch below) is gated through gateConsensusClaim so its
+    // evidence caption is available; reasoningShort is ALSO independently
+    // gated on its own, since the API always returns it regardless of which
+    // branch the viewer actually sees.
+    expect(src).toMatch(/gatedDisplayedText\s*=\s*gateConsensusClaim\(/);
+    expect(src).toMatch(/reasoning:\s*entitlements\.canSeeFactorBreakdown[\s\S]{0,40}gatedDisplayedText\.text/);
     expect(src).toMatch(/reasoningShort:\s*teaserForViewer\(\s*gateConsensusClaimText\(pick\.reasoningShort/);
+    expect(src).toMatch(/consensusEvidenceCaption:\s*gatedDisplayedText\.evidenceCaption/);
+  });
+});
+
+describe("gateConsensusClaim — returns the evidence caption a bound claim must render beside it (Devin Review, #819)", () => {
+  it("returns the caption only when the claim binds", () => {
+    const claim = "100% bookmaker consensus on Kansas City Chiefs -5.5.";
+    const bound = gateConsensusClaim(claim, {
+      consensusPct: 1,
+      bookmakerCount: 5,
+      dataFreshnessAt: new Date("2026-08-06T14:00:00.000Z"), // 2h before NOW
+    }, NOW);
+    expect(bound.text).toBe(claim);
+    expect(bound.evidenceCaption).toBe("5 books · scored 2h ago");
+  });
+
+  it("suppresses both the text AND the caption when the claim cannot bind", () => {
+    const claim = "100% bookmaker consensus on Kansas City Chiefs -5.5.";
+    const unbound = gateConsensusClaim(claim, {
+      consensusPct: 1,
+      bookmakerCount: 1, // below MIN_BOOKMAKERS
+      dataFreshnessAt: NOW,
+    }, NOW);
+    expect(unbound.text).toBe("");
+    expect(unbound.evidenceCaption).toBeNull();
+  });
+
+  it("negative control: an ordinary non-consensus teaser has no caption", () => {
+    const teaser = "Rest advantage noted. We are on Kansas City Chiefs -5.5.";
+    const gated = gateConsensusClaim(teaser, {
+      consensusPct: 1,
+      bookmakerCount: 0,
+      dataFreshnessAt: null,
+    }, NOW);
+    expect(gated.text).toBe(teaser);
+    expect(gated.evidenceCaption).toBeNull();
+  });
+
+  it("gateConsensusClaimText is a thin wrapper — text always agrees with gateConsensusClaim", () => {
+    const cases: Array<[string, { consensusPct: number; bookmakerCount: number; dataFreshnessAt: Date | null }]> = [
+      ["100% bookmaker consensus on Chiefs -5.5.", { consensusPct: 1, bookmakerCount: 5, dataFreshnessAt: NOW }],
+      ["100% bookmaker consensus on Chiefs -5.5.", { consensusPct: 1, bookmakerCount: 1, dataFreshnessAt: NOW }],
+      ["Rest advantage noted.", { consensusPct: 1, bookmakerCount: 0, dataFreshnessAt: null }],
+    ];
+    for (const [text, evidence] of cases) {
+      expect(gateConsensusClaimText(text, evidence, NOW)).toBe(gateConsensusClaim(text, evidence, NOW).text);
+    }
+  });
+});
+
+describe("PickCard renders the evidence caption beside a bound claim (Devin Review, #819)", () => {
+  it("pick-card.tsx renders pick.consensusEvidenceCaption next to the reasoning text", async () => {
+    const { readFileSync } = await import("node:fs");
+    const { resolve } = await import("node:path");
+    const src = readFileSync(resolve(__dirname, "../components/picks/pick-card.tsx"), "utf8");
+    expect(src).toMatch(/pick\.consensusEvidenceCaption/);
   });
 });

@@ -717,6 +717,16 @@ export interface PublicPick {
   riskLevel: RiskLevel;
   reasoning: string;                 // full (PRO) or short teaser (FREE)
   reasoningShort: string;
+  /**
+   * "N books · scored Nh ago" — present ONLY when the displayed `reasoning` /
+   * `reasoningShort` text is a bound bookmaker-consensus claim (T-1 tripwire,
+   * lib/claims/public-consensus-claim.ts). A claim that could not bind its
+   * evidence renders as "" already (never reaches the customer), so this is
+   * never populated for a claim without evidence — it is the caption the
+   * still-visible, evidence-backed claim must render beside it. Null for an
+   * ordinary non-consensus teaser.
+   */
+  consensusEvidenceCaption?: string | null;
 
   isFeatured: boolean;
   isAuditAvailable: boolean;          // false for sample/demo rows with no SourceSnapshot chain
