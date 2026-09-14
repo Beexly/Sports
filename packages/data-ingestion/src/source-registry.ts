@@ -769,6 +769,26 @@ export const SOURCE_REGISTRY: Readonly<Record<string, LegalSource>> = {
     datasets: ["scoreboard (schedules)", "summary (box scores)"],
     docsUrl: "https://www.espn.com/espn/tos",
   },
+  "action-network": {
+    id: "action-network",
+    provider: "Action Network",
+    kind: "public-api",
+    license: { spdx: null, name: "Action Network Terms of Use", url: "https://www.actionnetwork.com/terms" },
+    commercialUse: false,
+    attributionRequired: true,
+    attributionText: "Public betting data via Action Network",
+    robotsRespected: true,
+    rateLimit: "Public consensus pages: cache 15m, avoid polling individual props",
+    verdict: "use-with-caution",
+    reason:
+      "Action Network publishes public betting percentages (over/under splits) on props pages. " +
+      "These are facts-as-inputs (public aggregate behavior) and not copyrightable odds themselves. " +
+      "Attribution required; never re-expose as our own consensus feed. " +
+      "Verify specific endpoint terms before commercial use.",
+    baseUrl: "https://www.actionnetwork.com",
+    datasets: ["nfl/props", "nba/props", "mlb/props", "nhl/props", "soccer/props"],
+    docsUrl: "https://www.actionnetwork.com/",
+  },
 };
 
 export function getSource(id: string): LegalSource | undefined {
