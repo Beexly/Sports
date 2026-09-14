@@ -307,15 +307,22 @@ export function TheBeat({
           );
         })}
         {shown.length === 0 && wire.length === 0 && (
-          // The wire itself is empty. Blaming the filter here would be a claim
-          // we have not checked, and "loosen it and the wire comes back" would
-          // be false, because there is nothing behind the filter to come back.
+          // The wire itself is empty. Blaming the UI filter here would be a
+          // claim we have not checked, and "loosen it and the wire comes back"
+          // would be false, because there is nothing behind the filter.
+          //
+          // But "nothing is being withheld" was false too: fetchLiveWire drops
+          // a headline on FOUR conditions (lib/news/rss.ts) - no classified
+          // signal, no publish date, an unparseable date, or older than 48
+          // hours - so an empty wire can mean headlines arrived and every one
+          // of them was dropped upstream. The copy now names the bar instead
+          // of denying the omission.
           <div className="surface-card p-8 text-center">
             <p className="font-display text-xl text-ion-white">No fresh reports.</p>
             <p className="mx-auto mt-1 max-w-md text-sm text-ion-2">
-              The wire is live. Either nothing arrived in the window, or what
-              did arrive carried no signal we classify. Not an error, and
-              nothing is being withheld.
+              The wire is live, and this is not an error. Either nothing
+              arrived, or what arrived did not clear what we publish: a signal
+              we classify, a real publish time, and inside the last 48 hours.
             </p>
           </div>
         )}
