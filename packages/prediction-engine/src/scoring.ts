@@ -759,12 +759,26 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // Still scale-free: none of the three states a raw count, because the caption
   // beside them is rebuilt from live columns that drift from the mint-time
   // snapshot on 72% of published spread picks.
+  //
+  // And all three are PAST TENSE, scoped to publication. Scale-free was not
+  // enough: `reasoning` is frozen write-once while `bookmakerCount`,
+  // `consensusPct` and `dataFreshnessAt` refresh every cycle, so a present-tense
+  // "Every book ... has X favoured" keeps asserting current unanimity while the
+  // caption beside it moves. A ninth book posting a pick'em makes the frozen
+  // sentence false. That is not hypothetical: measured 2026-09-14 over all 1,076
+  // published book-priced spread picks, 64 of them (5.9%) read consensusPct
+  // below 1.0 today, as low as 0.5556.
+  //
+  // Past tense makes each clause a statement about a moment that has already
+  // happened, so it cannot be falsified by a later refresh. It is the same fix
+  // as dropping the raw count, one level up: say the durable thing.
+  // (Devin Review, #819, third round on this clause.)
   const favouredClause =
     favouredCount === pricedOdds.length
-      ? `Every book pricing this game has ${chosenTeam} favoured`
+      ? `When we published, every book pricing this game had ${chosenTeam} favoured`
       : favouredCount * 2 > pricedOdds.length
-        ? `Most books pricing this game have ${chosenTeam} favoured, though not every book does`
-        : `Books pricing this game are not unanimous that ${chosenTeam} is favoured`;
+        ? `When we published, most books pricing this game had ${chosenTeam} favoured, though not every book did`
+        : `When we published, books pricing this game were not unanimous that ${chosenTeam} is favoured`;
 
   const reasoning =
     `${favouredClause}. We are on ${chosenTeam} ${spreadDisplay}. ` +

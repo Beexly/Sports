@@ -39,7 +39,7 @@
  * un-gate every teaser minted from now on.
  */
 export const CONSENSUS_CLAIM_RE =
-  /\b(\d{1,3})%\s+bookmaker consensus\b|\b(?:every book|most books|\d{1,3}\s+of\s+\d{1,3}\s+books)\s+pricing this game\b|\bbooks pricing this game are not unanimous\b/i;
+  /\b(\d{1,3})%\s+bookmaker consensus\b|\b(?:every book|most books|\d{1,3}\s+of\s+\d{1,3}\s+books)\s+pricing this game\b|\bbooks pricing this game (?:are|were) not unanimous\b/i;
 
 export type PublicConsensusEvidence = {
   /** Unmodified teaser text from the pick (no rewrite). */

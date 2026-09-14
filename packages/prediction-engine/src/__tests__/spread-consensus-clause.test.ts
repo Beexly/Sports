@@ -30,6 +30,15 @@ import type { BookmakerOddsInput, OddsInput, ScoredPick } from "@sports/types";
  * published spread picks (72%) already drift from their mint-time snapshot,
  * mean 2.70 books, max 9.
  *
+ * Fourth invariant, added after Devin's third round on this same clause: all
+ * three forms are PAST TENSE. Scale-free was not enough. `reasoning` is frozen
+ * write-once while `bookmakerCount`/`consensusPct` refresh, so a present-tense
+ * "every book ... has X favoured" keeps asserting CURRENT unanimity beside a
+ * caption that has moved on, and a later dissenting book makes the frozen
+ * sentence false. Measured 2026-09-14: 64 of 1,076 published book-priced spread
+ * picks (5.9%) read consensusPct below 1.0 today. Past tense states a fact about
+ * a moment that already happened, which no refresh can falsify.
+ *
  * Second invariant here: a PICK'EM row (spread exactly 0) names no favourite
  * and belongs in NEITHER side's count. `consensusPct` derives from
  * `spreads.filter((s) => s < 0)`, which is a home test; for an away pick
@@ -91,7 +100,7 @@ describe("the spread teaser counts the books it publishes as evidence", () => {
 
     // Every priced book has the same side favoured, so the clause takes the
     // scale-free "every book" form.
-    expect(pick!.reasoningShort).toContain("Every book pricing this game has");
+    expect(pick!.reasoningShort).toContain("When we published, every book pricing this game had");
     // NO RAW COUNT anywhere in the frozen text: not the 8 priced rows, not the
     // 11 line-carrying ones. The text outlives both numbers.
     expect(pick!.reasoningShort).not.toMatch(/\d+ of \d+ books/);
@@ -114,13 +123,13 @@ describe("the spread teaser counts the books it publishes as evidence", () => {
     );
     expect(pick).toBeDefined();
     expect(pick!.bookmakerCount).toBe(8);
-    expect(pick!.reasoningShort).not.toContain("Every book");
+    expect(pick!.reasoningShort).not.toContain("every book pricing this game had");
     // 7 of 8 IS a strict majority, so this takes the "most books" form — but it
     // must acknowledge the dissent rather than imply unanimity. ("split" was
     // the old wording; the clause became three-way when it turned out "Most
     // books" also fired on a MINORITY. See the minority test above.)
-    expect(pick!.reasoningShort).toContain("Most books pricing this game");
-    expect(pick!.reasoningShort).toContain("not every book does");
+    expect(pick!.reasoningShort).toContain("most books pricing this game had");
+    expect(pick!.reasoningShort).toContain("not every book did");
     expect(pick!.reasoningShort).not.toMatch(/\d+ of \d+/);
   });
 
@@ -139,8 +148,8 @@ describe("the spread teaser counts the books it publishes as evidence", () => {
       ),
     );
     expect(pick).toBeDefined();
-    expect(pick!.reasoningShort).not.toContain("Most books");
-    expect(pick!.reasoningShort).not.toContain("Every book");
+    expect(pick!.reasoningShort).not.toContain("most books pricing this game had");
+    expect(pick!.reasoningShort).not.toContain("every book pricing this game had");
     expect(pick!.reasoningShort).toContain("not unanimous");
     // Still scale-free: the frozen text pins no raw count.
     expect(pick!.reasoningShort).not.toMatch(/\d+ of \d+/);
