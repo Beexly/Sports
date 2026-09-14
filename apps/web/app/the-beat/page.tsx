@@ -30,7 +30,20 @@ export default async function TheBeatPage() {
   // source-attributed, classified into the signal taxonomy); null keeps the
   // clearly-labeled fictional sample. Fails soft: a feed outage falls back
   // to whatever fetched, never fabricates.
-  const liveWire = await fetchLiveWire().catch(() => null);
+  // fetchLiveWire returns null for "no feeds configured" (rss.ts:217) and uses
+  // Promise.allSettled internally, so an individual feed failing is already
+  // absorbed. A THROW therefore means something unexpected went wrong, and
+  // collapsing that to null with `.catch(() => null)` relabelled it as "not
+  // configured", which made TheBeat fall through to the fictional DEMO_WIRE.
+  // A failed fetch would have rendered invented sources as the day's news.
+  // The two cases are kept apart now.
+  let liveWire: Awaited<ReturnType<typeof fetchLiveWire>> = null;
+  let wireUnavailable = false;
+  try {
+    liveWire = await fetchLiveWire();
+  } catch {
+    wireUnavailable = true;
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">
@@ -160,10 +173,14 @@ export default async function TheBeatPage() {
                 act before the number moves.
               </p>
             </div>
-            <TheBeat liveWire={liveWire} />
-            <p className="mt-6 text-xs leading-relaxed text-ion-2">
-              {liveWire ? WIRE_LIVE_DISCLAIMER : WIRE_DISCLAIMER}
-            </p>
+            <TheBeat liveWire={liveWire} unavailable={wireUnavailable} />
+            {/* No sample is on screen when the wire is unavailable, so the
+                sample disclaimer would describe something that is not there. */}
+            {wireUnavailable ? null : (
+              <p className="mt-6 text-xs leading-relaxed text-ion-2">
+                {liveWire ? WIRE_LIVE_DISCLAIMER : WIRE_DISCLAIMER}
+              </p>
+            )}
           </div>
         </section>
       </main>

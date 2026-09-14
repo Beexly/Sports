@@ -37,7 +37,20 @@ const ago = (m: number) => (m < 60 ? `${m}m ago` : `${Math.round(m / 60)}h ago`)
 
 type SortMode = "strongest" | "newest";
 
-export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
+export function TheBeat({
+  liveWire = null,
+  unavailable = false,
+}: {
+  liveWire?: NewsItem[] | null;
+  /**
+   * The live feed was attempted and FAILED. Distinct from `liveWire === null`,
+   * which means no feed is configured and the labelled sample is the honest
+   * thing to show. On a failure we must show neither: falling back to the
+   * fictional sample after a failed fetch reads as "here is the news" when the
+   * truth is "we could not get the news".
+   */
+  unavailable?: boolean;
+}) {
   // Live RSS wire when the owner has whitelisted feeds (NEWS_RSS_FEEDS);
   // otherwise the clearly-labeled fictional sample. The two states are
   // visually unmistakable: sample shows the fictional-sources marker, live
@@ -74,6 +87,32 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
     const top = ranked[0];
     return { total: ranked.length, confirmed, hot, top };
   }, [ranked]);
+
+  // A FAILED feed renders nothing but the failure. This returns BEFORE the
+  // DEMO_WIRE fallback below can run: `liveWire === null` means "no feed
+  // configured", and the labelled sample is honest for that case, but after a
+  // fetch that FAILED the same fallback would present fictional sources as the
+  // news of the day. Unavailable is its own state, and it is not an error
+  // either. We just do not have the wire right now.
+  if (unavailable) {
+    return (
+      <div className="space-y-5">
+        <span
+          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
+          style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}
+        >
+          Wire offline · no sources reached
+        </span>
+        <div className="surface-card p-8 text-center">
+          <p className="font-display text-xl text-ion-white">Feed unavailable.</p>
+          <p className="mx-auto mt-1 max-w-md text-sm text-ion-2">
+            We could not reach the news sources just now, so there is nothing to
+            show. We will not fill the gap with the sample wire.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-5">
@@ -132,7 +171,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
               aria-pressed={active}
               className="rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider transition-colors"
               style={{ background: active ? `${TIER_HEX[t]}22` : "transparent", color: TIER_HEX[t], boxShadow: active ? `inset 0 0 0 1px ${TIER_HEX[t]}` : "none" }}
-              title={`reliability ${Math.round(TIER_WEIGHT[t] * 100)}%`}>
+              title={`source tier ${t}: editorial weight ${TIER_WEIGHT[t].toFixed(2)}, not a measured hit rate`}>
               {t}
             </button>
           );
@@ -243,7 +282,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
                   <span className="rounded-full px-2 py-0.5" style={{ background: "rgba(255,255,255,0.06)", color: "#c8d2dd" }}>{signalLabel(r.item.signal)}</span>
                   <span className="text-ion-2">{isLive ? "Est. fantasy" : "Fantasy"} <strong style={{ color: fav >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{fav >= 0 ? "+" : ""}{fav}</strong></span>
                   <span className="text-ion-2">{isLive ? "Est. market" : "Market"} <strong style={{ color: r.marketDelta >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{r.marketDelta >= 0 ? "+" : ""}{r.marketDelta}</strong></span>
-                  <span className="text-ion-2">Reliability <strong className="text-ion-white">{Math.round(r.reliability * 100)}%</strong></span>
+                  <span className="text-ion-2">Source <strong className="text-ion-white">{r.item.tier}</strong></span>
                 </div>
 
                 {open ? (
@@ -253,7 +292,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
                       {r.action}
                     </p>
                     <p className="mt-2 text-[11px] text-ion-3">
-                      Weighted by source reliability {Math.round(r.reliability * 100)}%
+                      Weighted by source tier {r.item.tier}
                       {r.corroboration.confirmed ? `, confirmed across ${r.corroboration.sources} sources` : ", single source"}.
                       Urgency {r.urgency} of 100 after freshness decay.
                     </p>
@@ -267,7 +306,20 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
             </article>
           );
         })}
-        {shown.length === 0 && (
+        {shown.length === 0 && wire.length === 0 && (
+          // The wire itself is empty. Blaming the filter here would be a claim
+          // we have not checked, and "loosen it and the wire comes back" would
+          // be false, because there is nothing behind the filter to come back.
+          <div className="surface-card p-8 text-center">
+            <p className="font-display text-xl text-ion-white">No fresh reports.</p>
+            <p className="mx-auto mt-1 max-w-md text-sm text-ion-2">
+              The wire is live and nothing has landed in the window yet. Not an
+              error, and nothing is being withheld.
+            </p>
+          </div>
+        )}
+        {shown.length === 0 && wire.length > 0 && (
+          // Genuinely the filter: there ARE items, they are just all excluded.
           <div className="surface-card p-8 text-center">
             <p className="font-display text-xl text-ion-white">The wire is quiet on this frequency.</p>
             <p className="mx-auto mt-1 max-w-md text-sm text-ion-2">Nothing at this tier, team, or heat level right now. That is the filter talking, not the newsroom. Loosen it and the wire comes back.</p>

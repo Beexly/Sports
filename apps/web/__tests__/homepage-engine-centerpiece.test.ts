@@ -14,10 +14,16 @@ describe("homepage engine centerpiece", () => {
   const curve = readRepoFile("apps/web/components/home/calibration-curve.tsx");
 
   it("leads with the thesis and routes to the four doors", () => {
+    // FIELD (2026-09-10, founder-approved) rewrote the thesis: the second half
+    // was "Galaxy turns it into <signal>" and is now "We find the <signal>".
+    // The doctrine's hero is Noise. / Signal. with the closer "We detect. You
+    // decide." — brand-forward chrome was retired on purpose, so pinning
+    // "Galaxy turns it into" held the page to copy the redesign removed.
     expect(page).toContain("The market is full of");
-    expect(page).toContain("Galaxy turns it into");
+    expect(page).toContain("We find the");
     expect(page).toContain("We detect. You decide.");
-    expect(page).toContain("Pick the decision you came to make.");
+    // Same pass reworded the doors heading to a question.
+    expect(page).toContain("What are you here to decide?");
     // "The Lab" label lives in the NflverseLabDoor component (P16-01 moved it
     // off the page's critical path via Suspense); the other three are inline.
     for (const door of ["Board", "Intelligence", "Fantasy & Daily"]) {
@@ -44,7 +50,11 @@ describe("homepage engine centerpiece", () => {
     expect(page).toMatch(/bg-carbon/);
     expect(page).toMatch(/bg-eclipse/);
     expect(page).toMatch(/border-mineral/);
-    expect(page).toMatch(/text-orbital-cyan/);
+    // orbital-cyan is listed under "Legacy names" in tailwind.config.ts and the
+    // homepage uses it zero times: FIELD retired the cyan accent ("no
+    // cyan-to-magenta fade") in favour of plasma. Demanding the legacy token
+    // would have pushed the front door back onto a dead palette.
+    expect(page).toMatch(/text-plasma/);
     expect(page).toMatch(/text-ion-white/);
   });
 

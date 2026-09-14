@@ -121,7 +121,11 @@ describe("/picks — empty board is honest about the paywall", () => {
 
 describe("/picks — the true-empty state fabricates nothing", () => {
   it("reflects the active sport filter rather than always blaming the date", () => {
-    expect(picksSrc).toMatch(/activeSportLabel\s*\?\s*`No \$\{activeSportLabel\} signals published for this date`/);
+    // "signals published" was the jargon the humanizer pass retired; the shipped
+    // string is "No ${activeSportLabel} picks for this date". The invariant is
+    // that an empty board reflects the active SPORT filter instead of blaming
+    // the date — that is what this pins, not the noun.
+    expect(picksSrc).toMatch(/activeSportLabel\s*\?\s*`No \$\{activeSportLabel\} picks for this date`/);
     expect(picksSrc).toMatch(
       /activeSportLabel\s*=\s*sport[\s\S]{0,80}SPORTS\.find\([\s\S]{0,80}\?\?\s*null/
     );
