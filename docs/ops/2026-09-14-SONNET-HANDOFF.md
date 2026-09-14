@@ -41,11 +41,19 @@ Claude-Session: https://claude.ai/code/session_01Kfn3zR6n2fUjiDaqjYAFks
 
 ## 1. State at handoff (verified 04:50 UTC, not assumed)
 
-- Branch `claude/nfl-kickoff-live-check-0qwxfm`, head **`01f20cb28`**, 36 commits,
-  0 behind `main`, merges clean.
+- Branch `claude/nfl-kickoff-live-check-0qwxfm`, head **`0e3816c97`** (the commit
+  that added this file), 37 commits, 0 behind `main`, merges clean.
 - PR **#819**, open. Commit statuses all `success` (CodeRabbit, Vercel, Devin Review).
-- `ci.yml` run **5729** (`pull_request` event) was **in_progress** on this head.
-  The prior `pull_request` run 5727 on `7a00d1ed1` was **success**.
+- `ci.yml` run **5731** (`pull_request`) was **in_progress** on this head at
+  05:00 UTC. The last COMPLETED `pull_request` run is **5727** on `7a00d1ed1`:
+  **success**. Run **5729** on `01f20cb28` reads `cancelled` — the push that added
+  this file superseded it mid-flight. That is not a failure and there is nothing
+  to investigate in it.
+- The only two commits since the last green run are **docs-only**
+  (`docs/ops/2026-09-14-FUNNEL-AUDIT.md`, this file, and one `AGENTS.md` block),
+  and `npm run guardrails` was 26/26 locally on each. So if 5731 comes back red,
+  suspect an infrastructure or pre-existing failure before you suspect the diff —
+  but read the failing step's log either way and do not assume flake.
 - **Normal and not a failure:** each push spawns two CI runs, a `push` one and a
   `pull_request` one, and the `push` one is cancelled seconds in by the
   concurrency group. The `pull_request` run is the authoritative one. Do not
