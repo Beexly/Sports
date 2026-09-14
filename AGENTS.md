@@ -662,9 +662,13 @@ Inspired by the Sept 2026 claimed Navier-Stokes AI-agent breakthrough: the play 
 the METHOD (machines discovering mathematical structures humans missed), not the
 equation. White space confirmed: no widely-used sports metric was machine-discovered.
 
-**Division of labor (structural, verified 2026-09-13):** DeepSeek has NO code-execution
-environment — its "results" are protocols/predictions, never observations. DeepSeek =
-theorist/protocol engineer; the Motif lab = execution. NOTHING from the theorist is
+**Division of labor (structural, verified 2026-09-13; owner directive 2026-09-14):**
+DeepSeek has NO code-execution environment — its "results" are
+protocols/predictions, never observations. DeepSeek = theorist/protocol
+engineer; **Minis (phone) = heavy execution** (data pulls, model runs,
+reports); **Motif = architect** (specs, prompts, gate design) **+ independent
+verifier/auditor**. Heavy runs go to Minis; the Motif VM does verification
+checks and audits only. NOTHING from the theorist is
 published or built on until independently rerun. Every theorist number is SPEC until
 the lab measures it.
 
