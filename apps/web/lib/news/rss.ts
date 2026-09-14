@@ -252,17 +252,38 @@ export async function fetchLiveWireWithHealth(
         next: { revalidate: 300 },
       });
       // Reject 3xx redirects whose Location points at a private/metadata host
-      // (redirect-to-internal-IP SSRF bypass). Same-origin relative redirects
-      // are safe (skip check); absolute public redirects are re-validated then
-      // followed exactly once, still under redirect:"manual".
+      // (redirect-to-internal-IP SSRF bypass). The redirect is RESOLVED against
+      // the feed URL first, then the resolved absolute URL is validated, and
+      // that is what gets followed — exactly once, still under
+      // redirect:"manual".
+      //
+      // The comment here used to claim "same-origin relative redirects are safe
+      // (skip check)", which the code did not do: validateEndpointUrl calls
+      // `new URL(url)`, which THROWS on a relative location, so a feed issuing
+      // `Location: /feed.xml` was refused outright. Harmless while a refused
+      // feed merely contributed no items — but once `reached` began driving the
+      // "feed unavailable" banner, a perfectly healthy feed could render the
+      // whole wire as offline. (Devin Review, #819.)
+      //
+      // Resolving is also the SAFER reading, not just the working one: a
+      // PROTOCOL-RELATIVE location like `//evil.example/x` looks relative and
+      // resolves to a different origin, so "relative implies same-origin" was
+      // never true. Validating the resolved URL is what actually checks the
+      // host we are about to fetch.
       let xml: string;
       if (res.status >= 300 && res.status < 400) {
         const location = res.headers.get("location");
         if (!location) return { ok: false, items: [] as NewsItem[] };
         if (locationIsInternalTargetLocation(location)) return { ok: false, items: [] as NewsItem[] };
-        const recheck = validateEndpointUrl(location);
+        let resolved: string;
+        try {
+          resolved = new URL(location, feed.url).toString();
+        } catch {
+          return { ok: false, items: [] as NewsItem[] };
+        }
+        const recheck = validateEndpointUrl(resolved);
         if (!recheck.ok) return { ok: false, items: [] as NewsItem[] };
-        const followed = await fetch(location, {
+        const followed = await fetch(resolved, {
           headers: { "user-agent": "GSE-wire/1.0 (headlines only; contact: site)" },
           signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
           redirect: "manual",

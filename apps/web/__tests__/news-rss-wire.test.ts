@@ -164,6 +164,59 @@ describe("fetchLiveWireWithHealth — a dead wire is not a quiet wire", () => {
     expect(health.reached).toBe(0);
   });
 
+  it("follows a RELATIVE redirect instead of counting a healthy feed as offline", async () => {
+    // `Location: /feed.xml` is resolved against the feed URL. Before this, the
+    // location went straight to validateEndpointUrl, whose `new URL(location)`
+    // throws on a relative string, so the feed was refused and reached stayed
+    // 0 — rendering a reachable feed as "feed unavailable".
+    process.env["NEWS_RSS_FEEDS"] = "https://a.example.com/rss|A|Insider|NFL";
+    const calls: string[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: unknown) => {
+        calls.push(String(url));
+        if (calls.length === 1) {
+          return {
+            ok: false,
+            status: 301,
+            headers: new Headers({ location: "/moved.xml" }),
+          };
+        }
+        return { ok: true, status: 200, headers: new Headers(), text: async () => "<rss></rss>" };
+      }),
+    );
+
+    const health = await fetchLiveWireWithHealth(new Date("2026-09-14T00:00:00Z"));
+    // The redirect was resolved to an absolute same-origin URL and followed.
+    expect(calls[1]).toBe("https://a.example.com/moved.xml");
+    // And the feed counts as reached, so the page does not claim an outage.
+    expect(health.reached).toBe(1);
+  });
+
+  it("refuses a PROTOCOL-RELATIVE redirect that leaves the origin", async () => {
+    // `//other.example/x` looks relative but resolves to a DIFFERENT origin, so
+    // "relative implies same-origin" was never true. The resolved URL is what
+    // gets validated, and an origin hop is not followed blind.
+    process.env["NEWS_RSS_FEEDS"] = "https://a.example.com/rss|A|Insider|NFL";
+    const calls: string[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: unknown) => {
+        calls.push(String(url));
+        return {
+          ok: false,
+          status: 302,
+          headers: new Headers({ location: "//169.254.169.254/latest/meta-data" }),
+        };
+      }),
+    );
+
+    const health = await fetchLiveWireWithHealth(new Date("2026-09-14T00:00:00Z"));
+    // Exactly one call: the feed itself. The metadata host is never fetched.
+    expect(calls).toHaveLength(1);
+    expect(health.reached).toBe(0);
+  });
+
   it("reports no feeds configured as null, distinct from an outage", async () => {
     delete process.env["NEWS_RSS_FEEDS"];
     const health = await fetchLiveWireWithHealth();
