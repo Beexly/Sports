@@ -115,7 +115,13 @@ export interface BoardGateEvaluation {
   readonly prefire: UnifiedPrefireDecision;
 }
 
-const REASONS: Record<GateOutcomeCode, string> = {
+/**
+ * The gate's own customer-facing vocabulary — the single source for every
+ * reason string the board surfaces show. Exported so tests can assert that a
+ * page renders THESE words rather than page-authored copy, without copying
+ * the literals (a copy drifts; an import cannot).
+ */
+export const REASONS: Record<GateOutcomeCode, string> = {
   FIRE: "We're on this one. The edge cleared our bar.",
   NO_BET_LCB:
     "We passed. After the vig, the price didn't give us enough edge.",
