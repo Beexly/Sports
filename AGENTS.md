@@ -111,6 +111,16 @@ pushes excluded:
   **z = -10.7**. Its Brier as a probability on that band is **0.3617**; a constant 0.5
   forecast scores 0.25. Realized win rate PEAKS at conf 75-79 (0.6146) and FALLS to 0.4643
   by conf 90-94, below the 0.5280 of the lowest band.
+  **PARTIALLY CORRECTED 2026-09-14 by production measurement — see
+  `docs/ops/2026-09-14-PRODUCTION-MEASUREMENT.md` section 4.** The overconfidence half is
+  confirmed and is the part that matters: conf 80+ realizes 0.5109 on n 229 against a
+  claimed ~0.87, so never present confidence as a win probability. The TAIL half is not
+  supported. Re-measured pre-game and decided-only, the bands the claim rests on are
+  **n 25 (90-94) and n 28 (95+)**, and 95+ — which the sentence above omits — reads
+  **0.7500**, the best band on the board. The inversion is a localized dip at 80-84
+  (0.4231, n 104), and inside that band it is one pick type: TOTAL 0.2692 on n 26.
+  Do not cite "monotonically anti-predictive at the top" as established; cite the
+  overconfidence, which is.
 - `rankingP` (n 1,390): monotone, over-confident in the upper middle, top band 0.8934
   claimed against 0.8286 realized.
 - `marketFairProb` (n 622, books >= 2): monotone and every gap within 0.07.
