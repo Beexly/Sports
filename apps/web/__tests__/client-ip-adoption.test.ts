@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
-import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
-import { globSync } from "node:fs";
+import { readFileSync, readdirSync } from "node:fs";
+import { resolve, sep } from "node:path";
 
 /**
  * Every rate limiter must key on `clientIp()`, not on a hand-rolled header read.
@@ -38,8 +37,26 @@ import { globSync } from "node:fs";
 
 const webRoot = resolve(__dirname, "..");
 
-/** Every route handler in the app. */
-const ROUTES = globSync("app/**/route.ts", { cwd: webRoot }).sort();
+/**
+ * Every route handler in the app.
+ *
+ * Hand-rolled rather than `fs.globSync`, which is Node 22+. The first version
+ * used it, passed locally on Node 22, and failed CI on Node 20 with
+ * "globSync is not a function" -- a collection-time throw, so the whole file
+ * reported as a failed SUITE and ran none of its four tests. A guard that
+ * cannot load is a guard that is not guarding, so the walk below uses only
+ * `readdirSync`, which every supported Node has.
+ */
+function findRoutes(dir: string, acc: string[] = [], base = ""): string[] {
+  for (const entry of readdirSync(resolve(webRoot, dir), { withFileTypes: true })) {
+    const rel = base ? `${base}/${entry.name}` : entry.name;
+    if (entry.isDirectory()) findRoutes(`${dir}${sep}${entry.name}`, acc, rel);
+    else if (entry.name === "route.ts") acc.push(`app/${rel}`);
+  }
+  return acc;
+}
+
+const ROUTES = findRoutes("app").sort();
 
 /** Reading the client address straight off a header, in any of its spellings. */
 const RAW_READ = /headers\s*\.\s*get\s*\(\s*["'`]x-(?:forwarded-for|real-ip|vercel-forwarded-for)["'`]\s*\)/;

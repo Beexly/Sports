@@ -14,13 +14,27 @@ import {
  * upstream date are dropped (no fake freshness), stale items age out.
  */
 
-const SAVED = process.env["NEWS_RSS_FEEDS"];
+/**
+ * BOTH feed switches are cleared for every test, not just NEWS_RSS_FEEDS.
+ *
+ * rss.ts:243 falls back to a CURATED feed list when NEWS_RSS_FEEDS is empty and
+ * NEWS_RSS_USE_CURATED_DEFAULTS is "true". Clearing only the first left every
+ * "no feeds configured" assertion dependent on ambient environment: with that
+ * flag set, real feeds load, the assertion fails, and a unit test goes to the
+ * network. CodeRabbit (#819) reported it on one test; running with the flag set
+ * showed a SECOND test with the same defect, so the clearing lives here rather
+ * than in either of them. One place, and a third test cannot reintroduce it.
+ */
+const ENV_KEYS = ["NEWS_RSS_FEEDS", "NEWS_RSS_USE_CURATED_DEFAULTS"] as const;
+const SAVED_ENV = ENV_KEYS.map((k) => [k, process.env[k]] as const);
 beforeEach(() => {
-  delete process.env["NEWS_RSS_FEEDS"];
+  for (const k of ENV_KEYS) delete process.env[k];
 });
 afterEach(() => {
-  if (SAVED === undefined) delete process.env["NEWS_RSS_FEEDS"];
-  else process.env["NEWS_RSS_FEEDS"] = SAVED;
+  for (const [k, v] of SAVED_ENV) {
+    if (v === undefined) delete process.env[k];
+    else process.env[k] = v;
+  }
   vi.restoreAllMocks();
 });
 
@@ -260,11 +274,15 @@ describe("fetchLiveWireWithHealth — a dead wire is not a quiet wire", () => {
   });
 
   it("reports no feeds configured as null, distinct from an outage", async () => {
-    delete process.env["NEWS_RSS_FEEDS"];
+    // Both feed switches are cleared by the shared beforeEach; see its comment.
+    const spy = vi.spyOn(globalThis, "fetch");
     const health = await fetchLiveWireWithHealth();
     expect(health.items).toBeNull();
     expect(health.configured).toBe(0);
     // configured 0 must never be read as an outage — there is nothing to reach.
     expect(health.reached).toBe(0);
+    // And nothing was fetched. Without this the test could "pass" its counts
+    // while still having gone to the network.
+    expect(spy).not.toHaveBeenCalled();
   });
 });
