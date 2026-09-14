@@ -762,10 +762,18 @@ pricing gap, L2 within-player former-team exposure, L5 pooled hierarchical
 game-level closure test. Prompt: `minis-props-followup-prompt.md`.
 Minis-reported L1 stage-1: KILLED on both primary lines, c = +0.082131 vs
 pre-registered c < 0 (sign flip), OOS ΔLL ≈ −0.00003 vs 0.002 threshold,
-n=39,986 (flagged 2,479); **independent sign re-verification running on the
-Motif VM** — kill is Minis-reported until the lab confirms the sign is real and
-not a pipeline sign-convention bug (this program's confirmed failure mode:
-three sign/orientation bugs in `move37_irl_prelec.py`). L2/L3 Minis-reported
+n=39,986 (flagged 2,479); **lab-confirmed 2026-09-14:** independent Motif-VM
+recomputation (nflverse ftn_charting 2022–2025, join rates 99.66/100/100/100 =
+41,568 attempts, exact match to Minis's pipeline) gives interaction sign
+POSITIVE — diff-in-diff +0.0158, independent logit c = +0.0649 (se 0.0546)
+vs Minis's +0.082. The sign flip is in the data, not a pipeline sign-convention
+bug (the program's known failure mode was explicitly tested and cleared).
+Play-action's completion premium is if anything LARGER in cold/wind (+0.0374)
+than neutral (+0.0215) — the pre-registered theory was backwards. Kill stands
+as genuine null-with-evidence. Minis's stage-1 ΔLL values and stage-2
+efficient-score procedure remain unreproduced (audit charges 2/3 still open).
+Report: `docs/research/move37/l1-sign-check-2026-09-14.md`; repro:
+`l1_sign_check_run.py`. L2/L3 Minis-reported
 data-blocked (no player_stats/snap_counts on that host); L3 additionally
 untestable there (no book prop lines — the pricing gap is its estimand).
 IC9 admission runner: no props candidate earns production admission without
