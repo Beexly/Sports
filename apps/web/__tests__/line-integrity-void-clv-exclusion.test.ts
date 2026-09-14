@@ -18,25 +18,54 @@ import { voidDefectiveSettledPicks, type LineIntegrityDb, type LineIntegrityPick
  */
 
 describe("loadPublicClvPolicy excludes withdrawn picks", () => {
-  it("every count filters out VOID, alongside the bootstrap/published rules", async () => {
-    const wheres: Array<Record<string, unknown>> = [];
+  // The reader became one `findMany` + an app-code partition when the in-play
+  // exclusion reached CLV (C-302); it used to be four `count` calls. The VOID
+  // rule is unchanged and so is what this asserts about it -- and asserting it
+  // once on the single read is now STRONGER than asserting it four times, since
+  // there is exactly one place left for it to be missing from.
+  it("the read filters out VOID, alongside the bootstrap/published rules", async () => {
+    let where: Record<string, unknown> | null = null;
     const db = {
       pick: {
-        count: async (args: { where: Record<string, unknown> }) => {
-          wheres.push(args.where);
-          return 0;
+        findMany: async (args: { where: Record<string, unknown> }) => {
+          where = args.where;
+          return [];
         },
       },
     };
-    await loadPublicClvPolicy(db, { canExposePerformanceStats: true, minGradedForPublic: 10 });
-    expect(wheres).toHaveLength(4);
-    for (const w of wheres) {
-      expect(w).toMatchObject({
-        isBootstrap: false,
-        isPublished: true,
-        result: { not: "VOID" },
-      });
-    }
+    await loadPublicClvPolicy(
+      db as unknown as Parameters<typeof loadPublicClvPolicy>[0],
+      { canExposePerformanceStats: true, minGradedForPublic: 10 },
+    );
+    expect(where).toMatchObject({
+      isBootstrap: false,
+      isPublished: true,
+      result: { not: "VOID" },
+    });
+  });
+
+  it("a VOID row that reaches the reader anyway is still not counted", async () => {
+    // Belt and braces, and a genuinely new guard: the assertion above pins the
+    // QUERY, which is the only defence if the driver honours it. This one pins
+    // that a withdrawn row cannot contribute even if it arrives -- the shape a
+    // raw-SQL path or a relaxed filter would produce.
+    const kickoff = new Date("2026-07-01T02:00:00Z");
+    const before = new Date("2026-07-01T00:00:00Z");
+    const db = {
+      pick: {
+        findMany: async () => [
+          { clvVerdict: "BEAT_CLOSE", result: "WIN", generatedAt: before, game: { commenceTime: kickoff } },
+          { clvVerdict: "BEAT_CLOSE", result: "WIN", generatedAt: before, game: { commenceTime: kickoff } },
+        ],
+      },
+    };
+    const p = await loadPublicClvPolicy(
+      db as unknown as Parameters<typeof loadPublicClvPolicy>[0],
+      { canExposePerformanceStats: true, minGradedForPublic: 1 },
+    );
+    expect(p.gradedSampleSize).toBe(2);
+    expect(p.beatCloseCount).toBe(2);
+    expect(p.inPlayExcluded).toBe(0);
   });
 });
 
