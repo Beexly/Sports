@@ -60,9 +60,14 @@ Claude-Session: https://claude.ai/code/session_01Kfn3zR6n2fUjiDaqjYAFks
   report "CI cancelled" as red.
 - Local: working tree clean, `npm run guardrails` 26/26 green.
 
-**First thing you do:** re-check run 5729's conclusion. If red, read the failing
-step's log before concluding anything — do not assume flake. If green, proceed
-to §2.
+**First thing you do:** `git fetch origin`, then look up the latest `ci.yml` run
+with event `pull_request` **for whatever the current head SHA is** — not a run
+number from this file. Every push moves the head and cancels the previous run, so
+a number written here is stale the moment it is written (it already happened
+twice while this file was being committed). Ignore `push`-event runs and
+`cancelled` runs entirely; read the `pull_request` run on the current head. If it
+is red, read the failing step's log before concluding anything — do not assume
+flake. If green, proceed to §2.
 
 ---
 
