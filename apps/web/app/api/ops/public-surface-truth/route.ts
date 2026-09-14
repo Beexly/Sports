@@ -42,6 +42,7 @@ import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
 import { loadCanonicalSamplePosture } from "@/lib/ops/canonical-sample-posture";
 import { loadLineArchiveFreshness } from "@/lib/ops/line-archive-freshness";
 import { isLineArchiveEnabled } from "@sports/ingestion-pipeline";
+import { loadCheckoutPricePosture } from "@/lib/ops/checkout-price-posture";
 import {
   calibrationDriftPosture,
   loadCalibrationOpsSurface,
@@ -273,6 +274,10 @@ export async function GET(request: Request) {
       now: new Date(),
     });
   }
+
+  // Checkout price-consistency posture (issue #822). No DB, no Stripe network
+  // call — pure config-shape read, safe to compute unconditionally.
+  const checkoutPrice = loadCheckoutPricePosture();
 
   // Kill-switch clock: last SUCCESS with oddsInserted > 0 (not free-spine zeros).
   // Dual-path visibility: keys present + last zero-odds SUCCESS (often quiet/empty provider).
@@ -761,6 +766,17 @@ export async function GET(request: Request) {
        * DISABLED means the founder's flag is off, which is a state, not a bug.
        */
       lineArchive,
+      /**
+       * Checkout price-consistency posture (issue #822): checkout has been
+       * 503ing since 2026-09-09 and writing nothing — no checkout_attempts
+       * row, no Stripe session, no log anyone reads. This makes the RISK
+       * shape visible (advertised phase, its cents per tier/interval, and
+       * whether an explicit env price id is configured for each slot)
+       * without ever calling Stripe — it cannot confirm a configured price id
+       * actually charges the advertised amount, only that the shape is
+       * there. Fixing a real mismatch is founder-only.
+       */
+      checkoutPrice,
       oddsInserting,
       calibrationEligibility: calibrationEligibility
         ? {
