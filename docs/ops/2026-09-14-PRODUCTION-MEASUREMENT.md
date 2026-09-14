@@ -203,6 +203,29 @@ collapses much of the denominator argument before anyone has to decide it.
 There is also an internal inconsistency: `clv.ts:170` uses 0.5 as its note threshold
 while `public-clv-policy.ts` uses 0.524.
 
+**Scoping, measured, because it changes who should do this.** The price was never
+captured for these markets at all:
+
+| pickType | graded | has lock LINE | has lock PRICE |
+|---|---|---|---|
+| SPREAD | 713 | 713 | **0** |
+| TOTAL | 598 | 598 | **0** |
+| MONEYLINE | 245 | 0 | 245 |
+
+So the fix is **forward-only and cannot be backfilled** -- the 1,311 historical spread
+and total verdicts can never be re-graded, because the prices they were locked and
+closed at do not exist anywhere. It also is not a one-function change: the mint path has
+to start writing `clvLockPrice` for these markets, the close capture has to write
+`clvClosePrice`, and `computeSpreadClv`/`computeTotalClv` plus their four call sites
+(`clv-capture.ts`, `historical-replay.ts`, `clv-harness.ts`, the package index) all move.
+
+And there is a real methodology choice inside it, not just an implementation: grade on
+the price alone, or convert line-and-price to a single implied probability and grade on
+that (the "odds-based CLV" the sources prefer). Those give different numbers and the
+second is the better answer. **That combination -- multi-file, changes a published gate
+input, and has more than one defensible path -- is why this is written up rather than
+built here.**
+
 ### Sample size
 
 At the corrected rate, against a 50% null: the 95% Wilson interval first excludes 50% at
