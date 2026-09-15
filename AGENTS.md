@@ -794,6 +794,36 @@ Gate R split into representability vs frequency/power. Audit also confirmed
 the REPAIR-03 §7 corruption (now corrected in-file) and the DeCaro citation
 defect (`minis-overnight-deep-report-2026-09-14.md:61`, fix pending).
 
+**Independent audit follow-up (2026-09-15, external, code-level):** a second
+pass found this same excluded-criterion gate defect one level down, in code:
+`move37_irl_cara_fix1.py`'s own verdict computed 4 pre-registered criteria
+(c1-c4) but the boolean gate only read 3 — c2 was silently dropped, same
+shape as the family-level SUPPORTED bug above. Fixed; does not change the
+already-recorded NULL verdict (alpha_hat=-1.70 already fails c3 independent
+of c2). Added `import_construct_probe.py` — an import-and-construct dry-run
+gate that reproduces the known `GradientBoostingRegressor(max_iter=...)`
+crash in `move37_irl_prelec.py` on demand (exit 1) and confirms
+`move37_irl_cara_fix1.py`'s constructor calls are clean (exit 0); recommend
+running it on every future script resubmission before calling it "ready."
+Added `move37-code-regression-ledger.md` (7 checkable code-defect rows) and
+`t7-feasibility-check-2026-09-15.md`: empirically confirmed (not assumed)
+that neither scipy nor scikit-learn ships any Rips-filtration or
+persistence-diagram API — T7's "likely null" needs an explicit
+hand-roll/exception/kill decision before its 400-run budget is spent, not
+after. Externally re-verified three citations independently (not trusting
+self-report): DeCaro/Beilock (2011) is real/correctly-dated/fairly
+characterized, the actual authors are DeCaro, Thomas, Albert & Beilock (the
+corpus's "Beilock & Gray-line" byline names no real co-author); Prelec
+(1998) citation and functional form both confirmed correct against the
+primary-source PDF; nflverse `player_stats`/`snap_counts` are live, current
+release assets (renamed upstream to `stats_player`/`stats_team`, old tag
+deprecated but still resolving 200) — the "blocked" claim does not hold up
+externally, consistent with `minis-heavy-work-order-2026-09-14.md` H2
+already queuing the correct remedy (retry + log the real error). Audit
+charges 2/3 (missing L1 stage-2 artifact) remain open pending H1's
+delivery — not duplicated here. Full detail:
+`move37-audit-corrections-ledger.md`.
+
 
 ---
 
