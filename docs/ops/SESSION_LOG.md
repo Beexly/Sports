@@ -1234,3 +1234,4 @@ C-364 UNPUSHED 60abc03bb — factor YAMLs pre-registered; kill lines committed b
 C-363 UNPUSHED frozen-path PR (guardrails) — founder merges.
 C-365 UNPUSHED b3a8f2e30 — A1 DEAD: birthday/former-team target-share -0.13 pp, n=550, CI includes 0.
 C-366 UNPUSHED addbb6ae2 — A2 shrinkage BLOCKED on real export; proposal PROPOSED.
+C-367/368/369 UNPUSHED b2b81c1a0 — A3/A4/A5 all DEAD against pre-registered kill lines.
