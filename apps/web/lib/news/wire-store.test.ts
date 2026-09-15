@@ -62,12 +62,17 @@ describe("wire-store classify → upsert candidate", () => {
     expect(c!.season).toBe(2026);
     expect(c!.week).toBe(0);
     expect(c!.capturedAt.toISOString()).toBe("2026-09-15T17:30:00.000Z");
-    expect(c!.rightsSnapshot).toEqual({
+    expect(c!.rightsSnapshot.sourceName).toBe("Example Beat (Outlet)");
+    expect(c!.rightsSnapshot.headline).toBe("Falcons RB ruled out for Sunday");
+    expect(c!.rightsSnapshot.url).toBe(FEED.url);
+    expect(c!.rightsSnapshot.tier).toBe("Beat");
+    expect(c!.rightsSnapshot.feedUrl).toBe(FEED.url);
+    expect(c!.rightsSnapshot.reports).toHaveLength(1);
+    expect(c!.rightsSnapshot.reports![0]).toMatchObject({
+      sourceId: FEED.url,
       sourceName: "Example Beat (Outlet)",
       headline: "Falcons RB ruled out for Sunday",
-      url: FEED.url,
       tier: "Beat",
-      feedUrl: FEED.url,
     });
     expect(c!.value).toBe(wireValueFor("injury-out"));
     expect(c!.valueRaw).toBe(SIGNAL_MAGNITUDES["injury-out"].fantasy);
@@ -181,10 +186,17 @@ describe("C-416 honesty surface", () => {
 const dbMocks = vi.hoisted(() => ({
   upsert: vi.fn(),
   findMany: vi.fn(),
+  findUnique: vi.fn(),
 }));
 
 vi.mock("@sports/db", () => ({
-  db: { signal: { upsert: dbMocks.upsert, findMany: dbMocks.findMany } },
+  db: {
+    signal: {
+      upsert: dbMocks.upsert,
+      findMany: dbMocks.findMany,
+      findUnique: dbMocks.findUnique,
+    },
+  },
   isStubMode: () => false,
 }));
 
@@ -192,6 +204,7 @@ describe("wire-store I/O", () => {
   beforeEach(() => {
     dbMocks.upsert.mockReset();
     dbMocks.findMany.mockReset();
+    dbMocks.findUnique.mockReset().mockResolvedValue(null);
   });
 
   it("refreshWireFromRoster skips out of season without fetching", async () => {
@@ -200,6 +213,7 @@ describe("wire-store I/O", () => {
       now: new Date("2026-06-15T12:00:00Z"),
     });
     expect(result.skipped).toBe("out-of-season");
+    expect(result.newReports).toEqual([]);
     expect(dbMocks.upsert).not.toHaveBeenCalled();
   });
 
@@ -227,6 +241,9 @@ describe("wire-store I/O", () => {
       expect(result.reached).toBe(1);
       expect(result.classified).toBe(1);
       expect(result.upserted).toBe(1);
+      expect(result.newReports).toHaveLength(1);
+      expect(result.newReports[0]!.signal).toBe("injury-out");
+      expect(result.newReports[0]!.report.sourceName).toBe("Example Beat (Outlet)");
       expect(dbMocks.upsert).toHaveBeenCalledTimes(1);
       const arg = dbMocks.upsert.mock.calls[0]![0] as {
         where: { entityType_entityId_key_season_week: Record<string, unknown> };
@@ -241,6 +258,8 @@ describe("wire-store I/O", () => {
       });
       expect(arg.create.confidence).toBe(TIER_WEIGHT.Beat);
       expect(arg.create.sourceId).toBe(FEED.url);
+      const rights = arg.create.rightsSnapshot as { reports?: unknown[] };
+      expect(rights.reports).toHaveLength(1);
     } finally {
       fetchSpy.mockRestore();
     }

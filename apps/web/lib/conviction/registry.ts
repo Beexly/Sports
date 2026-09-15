@@ -91,10 +91,14 @@ export function signalInventory(
     {
       key: "beat-report",
       label: "Corroborated beat, insider and coach reporting on this game",
-      live: false,
-      blockedBy:
-        "The news wire is still sample data with fictional reporters. Needs real beat-reporter RSS feeds per team, which AGENTS.md records as founder-supplied (scraping queue item 3).",
-      source: "NEWS_RSS_FEEDS + lib/news/impact.ts corroboration",
+      // C-417: the loader is real (stored wire Signal rows). Registry live
+      // means a built signal CAN vote; the signal itself still requires the
+      // operator switch `live: true` on createBeatReportSignalFromStore /
+      // createBeatReportSignal — this module never flips that switch.
+      live: true,
+      blockedBy: null,
+      source:
+        "stored wire Signal rows (refresh-wire cron → lib/news/wire-store.ts loadBeatReportWireFromStore); construct with live:true — that operator switch is never flipped here",
     },
     {
       key: "scheme-matchup",

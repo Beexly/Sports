@@ -19,13 +19,14 @@
  * and it returns `null` — not NEUTRAL, not 0 — whenever it has nothing real to
  * say. Absent data is not evidence.
  *
- * HONESTY CONSTRAINT — READ THIS BEFORE WIRING IT UP.
- *
- *   C-416: the wire is stored Signal rows (`lib/news/wire-store.ts`), polled
- *   by the refresh-wire cron. This module still defaults `live` to FALSE and
- *   returns null until an operator passes `live: true` with a loader backed by
- *   those stored rows (C-417 builds that loader). Wiring this module in before
- *   that flip is a no-op by construction, which is exactly the intent.
+ * C-417 LIVE LOADER. `createBeatReportSignalFromStore` wires the real loader:
+ * `loadBeatReportWireFromStore` expands stored Signal `rightsSnapshot.reports`
+ * into NewsItems (one row per team+signal, many sources in the snapshot —
+ * never extra Signal rows). Self-sourced GSN reports never count. Corroboration
+ * is two distinct Beat/Insider/Verified sources within six hours, per
+ * `impact.ts` `corroborate()`. `live` is still an operator switch on the deps
+ * object — this module never flips it. `requireEvidence` stays exactly where
+ * law 3 leaves it (default false; the registry never overrides it).
  */
 
 import type { GateCandidate, SignalFn, SignalRead } from "../gate-contract";
@@ -235,4 +236,42 @@ export function createBeatReportSignal(deps: BeatReportDeps): SignalFn {
       completeness,
     };
   };
+}
+
+/**
+ * C-417 — the real loader, built on stored Signal rows.
+ *
+ * Pass `live: true` (the operator switch this module never flips) to let the
+ * signal vote. Default stays false so an unflagged factory never gates a pick.
+ * `loadPlayerNames` is optional; without it, items stay player-less and
+ * therefore cannot corroborate — honest silence, not a guessed match.
+ */
+export function createBeatReportSignalFromStore(
+  options: {
+    readonly live?: boolean;
+    readonly now?: () => Date;
+    readonly loadPlayerNames?: () => Promise<readonly string[]>;
+    readonly dbArg?: unknown;
+  } = {},
+): SignalFn {
+  const live = options.live ?? false;
+  return createBeatReportSignal({
+    live,
+    loadWireForGame: async (_gameId, teams) => {
+      const { loadBeatReportWireFromStore } = await import("@/lib/news/wire-store");
+      let playerNames: readonly string[] | undefined;
+      if (options.loadPlayerNames) {
+        try {
+          playerNames = await options.loadPlayerNames();
+        } catch {
+          playerNames = undefined;
+        }
+      }
+      return loadBeatReportWireFromStore(teams, {
+        now: options.now?.() ?? new Date(),
+        playerNames,
+        dbArg: options.dbArg,
+      });
+    },
+  });
 }

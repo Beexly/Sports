@@ -10,12 +10,14 @@
  */
 
 import { NextResponse } from "next/server";
+import { db } from "@sports/db";
 import { cronAuthError } from "@/lib/cron/authorize";
 import {
   isInNflWireSeason,
   refreshWireFromRoster,
   wireSeasonLabel,
 } from "@/lib/news/wire-store";
+import { dispatchWireReportAlerts } from "@/lib/watchlist/wire-alert-hook";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -37,10 +39,35 @@ export async function GET(request: Request): Promise<NextResponse> {
       });
     }
     const result = await refreshWireFromRoster({ now });
+    // C-417: fan out watchlist alerts for reports that were NOT already on
+    // each Signal slot. Fail-isolated — a broken alert path never fails the
+    // ingest the operator actually cares about.
+    let wireAlerts: Awaited<ReturnType<typeof dispatchWireReportAlerts>> | null = null;
+    try {
+      wireAlerts = await dispatchWireReportAlerts(db, result.newReports, now);
+    } catch (alertErr) {
+      console.warn(
+        `[cron:refresh-wire] wire alerts failed: ${
+          alertErr instanceof Error ? alertErr.message : alertErr
+        }`,
+      );
+    }
     return NextResponse.json({
       ok: true,
       season: wireSeasonLabel(now),
-      ...result,
+      configured: result.configured,
+      reached: result.reached,
+      classified: result.classified,
+      upserted: result.upserted,
+      skipped: result.skipped,
+      newReports: result.newReports.length,
+      wireAlerts: wireAlerts
+        ? {
+            matchedReports: wireAlerts.matchedReports,
+            followersMatched: wireAlerts.followersMatched,
+            dispatches: wireAlerts.dispatches.length,
+          }
+        : null,
     });
   } catch (err) {
     console.error(

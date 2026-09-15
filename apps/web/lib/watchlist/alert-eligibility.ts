@@ -40,16 +40,24 @@ export interface GradedEventInput {
  * class as a graded pick, never a forecast — so it is eligible under the
  * same alerts-enabled + Elite gates and skips the graded-only check
  * (which exists solely to stop ungraded TIPS; a status change is not a tip).
+ *
+ * C-417 adds `wire_report`: a beat/insider headline about a watched player
+ * that landed on the stored wire. Same doctrine — a published report is a
+ * fact, not a tip — so it clears the same two gates and skips graded-only.
  */
 export interface StatusChangeEventInput {
   readonly kind: "status_change";
-  readonly statusKind: "injury" | "depth_chart";
+  readonly statusKind: "injury" | "depth_chart" | "wire_report";
   readonly playerName: string;
   /** Previous published value; null when the player had no prior row. */
   readonly previous: string | null;
   /** Current published value; null when the player dropped off the report. */
   readonly current: string | null;
   readonly changedAt: Date;
+  /** C-417: the wire signal type (injury-out, role-up, …) when statusKind is wire_report. */
+  readonly signalType?: string;
+  /** C-417: the reporting source's display name. */
+  readonly sourceName?: string;
 }
 
 export type WatchlistAlertEventInput = GradedEventInput | StatusChangeEventInput;

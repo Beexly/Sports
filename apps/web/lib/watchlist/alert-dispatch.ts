@@ -30,10 +30,12 @@
  * only affects whether the eligible alert was actually delivered, never
  * whether it was allowed to be attempted.
  *
- * Two production callers:
+ * Production callers:
  *   - settlement-hook.ts  — graded picks (settlement outbox worker)
  *   - status-alert-hook.ts — watched-player injury / depth-chart changes
  *     (injury refresh cron, C-413)
+ *   - wire-alert-hook.ts — reporter-wire reports on a watched player
+ *     (refresh-wire cron, C-417)
  */
 
 import {

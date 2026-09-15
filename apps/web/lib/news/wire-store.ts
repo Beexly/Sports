@@ -22,6 +22,7 @@ import {
 } from "./impact";
 import { classifySignal, parseRssItems, type RssFeedConfig } from "./rss";
 import { toCuratedRssFeeds } from "./reporter-roster";
+import { normalizeTeamAlias } from "@/lib/nfl/team-resolver";
 import {
   locationIsInternalTargetLocation,
   validateEndpointUrl,
@@ -57,6 +58,26 @@ export function isInNflWireSeason(now: Date = new Date()): boolean {
   return month >= 8 || month <= 1;
 }
 
+/**
+ * One source's report on a (team, signal) slot.
+ *
+ * C-417: the Signal unique key is one row per (team, signal, season), so
+ * multi-source corroboration and "one alert per (player, signal, source)"
+ * both live in `rightsSnapshot.reports` — never in extra Signal rows.
+ */
+export type WireReport = {
+  /** Feed URL — the stable per-source identity. */
+  readonly sourceId: string;
+  readonly sourceName: string;
+  readonly headline: string;
+  readonly url: string;
+  readonly tier: Tier;
+  /** ISO timestamp of the report's own pubDate. */
+  readonly capturedAt: string;
+  /** C-415/C-417: GSN's own feed never counts toward corroboration. */
+  readonly selfSourced?: boolean;
+};
+
 /** Rights snapshot stored on every wire Signal row. */
 export type WireRightsSnapshot = {
   readonly sourceName: string;
@@ -64,7 +85,19 @@ export type WireRightsSnapshot = {
   readonly url: string;
   readonly tier: Tier;
   readonly feedUrl: string;
+  /**
+   * Every distinct source that has reported this (team, signal) recently.
+   * Absent on rows written before C-417; readers fall back to the primary
+   * fields above as a single-source report.
+   */
+  readonly reports?: readonly WireReport[];
 };
+
+/** How long two sources may be apart and still corroborate (C-417). */
+export const CORROBORATION_WINDOW_MINUTES = 6 * 60;
+
+/** Bound on stored reports per Signal slot (work bound, not a truth claim). */
+export const MAX_REPORTS_PER_SIGNAL = 12;
 
 /** Map a signal type onto the SignalCategory vocabulary (string column). */
 export function wireCategoryFor(signal: SignalType): string {
@@ -125,6 +158,23 @@ export type WireUpsertCandidate = {
   readonly headline: string;
 };
 
+/** Map a feed + raw entry into one stored report (C-417). */
+export function toWireReport(
+  feed: RssFeedConfig,
+  raw: { title: string },
+  capturedAt: Date,
+): WireReport {
+  return {
+    sourceId: feedIdFor(feed),
+    sourceName: feed.source,
+    headline: raw.title,
+    url: feed.url,
+    tier: feed.tier,
+    capturedAt: capturedAt.toISOString(),
+    ...(feed.selfSourced ? { selfSourced: true as const } : {}),
+  };
+}
+
 /**
  * Classify one raw feed entry into an upsert candidate, or drop it.
  * Headlines that do not classify are dropped (never guessed). Items without a
@@ -144,6 +194,7 @@ export function toWireCandidate(
   if (minutesAgo > MAX_AGE_MINUTES) return null;
   const capturedAt = new Date(t);
   const tier = feed.tier;
+  const report = toWireReport(feed, raw, capturedAt);
   return {
     entityType: "team",
     entityId: feed.team,
@@ -163,12 +214,60 @@ export function toWireCandidate(
       url: feed.url,
       tier,
       feedUrl: feed.url,
+      reports: [report],
     },
     headline: raw.title,
   };
 }
 
-/** Map a stored Signal row (plus rightsSnapshot) back into a NewsItem. */
+/**
+ * Merge one incoming report into the slot's report list.
+ *
+ * Same sourceId → refresh that source's headline/time; NOT a new report
+ * (so a cron re-run against unchanged feeds never re-alerts). New sourceId →
+ * append (this is what produces "one alert per (player, signal, source)").
+ * Stale reports (older than the corroboration window relative to the newest)
+ * and overflow past MAX_REPORTS_PER_SIGNAL are pruned.
+ */
+export function mergeWireReports(
+  existing: readonly WireReport[] | undefined,
+  incoming: WireReport,
+  options: { readonly now?: Date } = {},
+): { readonly reports: WireReport[]; readonly added: boolean } {
+  const now = options.now ?? new Date();
+  const prior = Array.isArray(existing) ? [...existing] : [];
+  const idx = prior.findIndex((r) => r.sourceId === incoming.sourceId);
+  let added = false;
+  if (idx >= 0) {
+    prior[idx] = incoming;
+  } else {
+    prior.push(incoming);
+    added = true;
+  }
+
+  // Keep the window honest: reports older than 6h from the newest drop out
+  // of corroboration (and of the alert surface) so two sources a day apart
+  // can never claim to confirm each other.
+  const times = prior.map((r) => Date.parse(r.capturedAt)).filter((t) => Number.isFinite(t));
+  const newest = times.length > 0 ? Math.max(...times) : now.getTime();
+  const windowStart = newest - CORROBORATION_WINDOW_MINUTES * 60_000;
+  let kept = prior.filter((r) => {
+    const t = Date.parse(r.capturedAt);
+    return Number.isFinite(t) && t >= windowStart;
+  });
+  // Newest first, then cap.
+  kept = kept
+    .slice()
+    .sort((a, b) => Date.parse(b.capturedAt) - Date.parse(a.capturedAt))
+    .slice(0, MAX_REPORTS_PER_SIGNAL);
+  return { reports: kept, added };
+}
+
+/**
+ * Map a stored Signal row's primary (freshest) report into one NewsItem.
+ * Prefer `signalRowToNewsItems` when corroboration matters — one Signal row
+ * can carry many sources in `rightsSnapshot.reports` (C-417).
+ */
 export function signalRowToNewsItem(
   row: {
     id: string;
@@ -204,6 +303,110 @@ export function signalRowToNewsItem(
   };
 }
 
+/**
+ * Expand one Signal row into one NewsItem per stored report (C-417).
+ *
+ * Falls back to the primary rights fields when `reports` is absent (rows
+ * written before C-417). Each report becomes a distinct NewsItem so
+ * `impact.ts` `corroborate()` can count two distinct sources without needing
+ * two Signal rows — the unique key forbids that.
+ *
+ * `options.playerByName` maps a lowercased player full name to that name,
+ * used to attach `player` so corroboration can group by player. Headlines
+ * that mention no known player stay player-less and therefore never
+ * corroborate (same honesty rule as impact.ts).
+ */
+export function signalRowToNewsItems(
+  row: {
+    id: string;
+    entityId: string;
+    key: string;
+    capturedAt: Date;
+    sourceId: string;
+    rightsSnapshot: unknown;
+  },
+  options: {
+    readonly now?: Date;
+    /** Drop self-sourced (GSN) reports entirely. Default true (C-417). */
+    readonly dropSelfSourced?: boolean;
+    readonly playerByName?: readonly string[];
+  } = {},
+): NewsItem[] {
+  const now = options.now ?? new Date();
+  const dropSelfSourced = options.dropSelfSourced ?? true;
+  const signal = signalTypeFromKey(row.key);
+  if (!signal) return [];
+  const snap = row.rightsSnapshot as Partial<WireRightsSnapshot> | null;
+  if (!snap || typeof snap !== "object") return [];
+
+  const primary: WireReport = {
+    sourceId: row.sourceId,
+    sourceName: typeof snap.sourceName === "string" ? snap.sourceName : row.sourceId,
+    headline: typeof snap.headline === "string" ? snap.headline : "",
+    url: typeof snap.url === "string" ? snap.url : "",
+    tier: (typeof snap.tier === "string" && snap.tier in TIER_WEIGHT ? snap.tier : "Unconfirmed") as Tier,
+    capturedAt: row.capturedAt.toISOString(),
+  };
+  const reports =
+    Array.isArray(snap.reports) && snap.reports.length > 0 ? snap.reports : [primary];
+
+  const out: NewsItem[] = [];
+  reports.forEach((report, index) => {
+    if (!report || typeof report !== "object") return;
+    if (dropSelfSourced && report.selfSourced === true) return;
+    const headline = typeof report.headline === "string" ? report.headline : null;
+    const sourceName = typeof report.sourceName === "string" ? report.sourceName : row.sourceId;
+    const tierRaw = typeof report.tier === "string" ? report.tier : null;
+    if (!headline || !tierRaw || !(tierRaw in TIER_WEIGHT)) return;
+    const capturedMs = Date.parse(report.capturedAt);
+    const capturedAt = Number.isFinite(capturedMs) ? new Date(capturedMs) : row.capturedAt;
+    const minutesAgo = Math.max(0, Math.round((now.getTime() - capturedAt.getTime()) / 60_000));
+    const player = matchPlayerInHeadline(headline, options.playerByName);
+    out.push({
+      // Distinct id per report so corroborate() can key each item.
+      id: `${row.id}#${index}`,
+      source: sourceName,
+      tier: tierRaw as Tier,
+      team: row.entityId,
+      ...(player ? { player } : {}),
+      headline,
+      signal,
+      minutesAgo,
+    });
+  });
+  return out;
+}
+
+/**
+ * Conservative player match: full-name containment, or a unique last name of
+ * 4+ characters when several candidates are supplied. Never guesses a player
+ * the headline does not name.
+ */
+export function matchPlayerInHeadline(
+  headline: string,
+  playerNames: readonly string[] | undefined,
+): string | null {
+  if (!playerNames || playerNames.length === 0) return null;
+  const h = headline.toLowerCase();
+
+  const lastNameCounts = new Map<string, number>();
+  for (const name of playerNames) {
+    const parts = name.trim().split(/\s+/);
+    const last = (parts[parts.length - 1] ?? "").toLowerCase();
+    if (last.length >= 4) lastNameCounts.set(last, (lastNameCounts.get(last) ?? 0) + 1);
+  }
+
+  for (const name of playerNames) {
+    const n = name.trim();
+    if (n.length < 3) continue;
+    if (h.includes(n.toLowerCase())) return n;
+    const parts = n.split(/\s+/);
+    const last = (parts[parts.length - 1] ?? "").toLowerCase();
+    if (last.length >= 4 && lastNameCounts.get(last) === 1 && h.includes(last)) return n;
+  }
+  return null;
+}
+
 /** Collapse candidates that share the same feed + headline in one cycle. */
 export function dedupeCandidates(
   candidates: readonly WireUpsertCandidate[],
@@ -225,6 +428,19 @@ export type WireFetchHealth = {
   readonly classified: number;
   readonly upserted: number;
   readonly skipped: "out-of-season" | null;
+  /**
+   * C-417: reports that were NOT already on the slot (new sourceId). This is
+   * the alert surface — a re-run against unchanged feeds yields an empty list.
+   */
+  readonly newReports: readonly WireNewReport[];
+};
+
+/** A report that landed on a Signal slot for the first time this cycle. */
+export type WireNewReport = {
+  readonly team: string;
+  readonly signal: SignalType;
+  readonly key: string;
+  readonly report: WireReport;
 };
 
 type FetchOneResult = { ok: boolean; candidates: WireUpsertCandidate[] };
@@ -285,7 +501,8 @@ async function fetchAndClassifyFeed(
 
 /**
  * Poll every curated roster feed and upsert classified items into Signal.
- * Used by the refresh-wire cron. Returns fetch health for the JSON envelope.
+ * Used by the refresh-wire cron. Returns fetch health for the JSON envelope
+ * plus `newReports` — the sources that were not already on each slot (C-417).
  */
 export async function refreshWireFromRoster(
   options: {
@@ -293,9 +510,17 @@ export async function refreshWireFromRoster(
     readonly feeds?: readonly RssFeedConfig[];
     /** Skip the in-season gate (tests). */
     readonly force?: boolean;
+    /** Injectable db for tests; defaults to the shared Prisma handle. */
+    readonly dbArg?: unknown;
   } = {},
 ): Promise<WireFetchHealth> {
   const now = options.now ?? new Date();
+  const dbHandle = (options.dbArg ?? db) as {
+    signal: {
+      findUnique(args: unknown): Promise<{ rightsSnapshot: unknown } | null>;
+      upsert(args: unknown): Promise<unknown>;
+    };
+  };
   if (!options.force && !isInNflWireSeason(now)) {
     return {
       configured: 0,
@@ -303,6 +528,7 @@ export async function refreshWireFromRoster(
       classified: 0,
       upserted: 0,
       skipped: "out-of-season",
+      newReports: [],
     };
   }
   const feeds = options.feeds ?? toCuratedRssFeeds();
@@ -316,18 +542,56 @@ export async function refreshWireFromRoster(
   const candidates = dedupeCandidates(results.flatMap((r) => r.candidates));
 
   let upserted = 0;
+  const newReports: WireNewReport[] = [];
   for (const c of candidates) {
     try {
-      await db.signal.upsert({
-        where: {
-          entityType_entityId_key_season_week: {
-            entityType: c.entityType,
-            entityId: c.entityId,
-            key: c.key,
-            season: c.season,
-            week: c.week,
-          },
+      const uniqueWhere = {
+        entityType_entityId_key_season_week: {
+          entityType: c.entityType,
+          entityId: c.entityId,
+          key: c.key,
+          season: c.season,
+          week: c.week,
         },
+      };
+      let priorReports: readonly WireReport[] | undefined;
+      try {
+        const existing = await dbHandle.signal.findUnique({ where: uniqueWhere });
+        const snap = existing?.rightsSnapshot as Partial<WireRightsSnapshot> | null;
+        if (snap && Array.isArray(snap.reports)) priorReports = snap.reports;
+      } catch {
+        priorReports = undefined;
+      }
+
+      const incomingReport =
+        c.rightsSnapshot.reports?.[0] ??
+        toWireReport(
+          {
+            url: c.rightsSnapshot.url,
+            source: c.rightsSnapshot.sourceName,
+            tier: c.rightsSnapshot.tier,
+            team: c.entityId,
+          },
+          { title: c.headline },
+          c.capturedAt,
+        );
+      const merged = mergeWireReports(priorReports, incomingReport, { now });
+      const signalType = signalTypeFromKey(c.key);
+      if (merged.added && signalType) {
+        newReports.push({
+          team: c.entityId,
+          signal: signalType,
+          key: c.key,
+          report: incomingReport,
+        });
+      }
+      const rightsSnapshot = {
+        ...c.rightsSnapshot,
+        reports: merged.reports,
+      };
+
+      await dbHandle.signal.upsert({
+        where: uniqueWhere,
         create: {
           entityType: c.entityType,
           entityId: c.entityId,
@@ -341,7 +605,7 @@ export async function refreshWireFromRoster(
           season: c.season,
           week: c.week,
           sourceId: c.sourceId,
-          rightsSnapshot: { ...c.rightsSnapshot },
+          rightsSnapshot,
           fetchedAt: now,
         },
         update: {
@@ -352,7 +616,7 @@ export async function refreshWireFromRoster(
           confidence: c.confidence,
           capturedAt: c.capturedAt,
           sourceId: c.sourceId,
-          rightsSnapshot: { ...c.rightsSnapshot },
+          rightsSnapshot,
           fetchedAt: now,
         },
       });
@@ -372,6 +636,7 @@ export async function refreshWireFromRoster(
     classified: candidates.length,
     upserted,
     skipped: null,
+    newReports,
   };
 }
 
@@ -417,5 +682,103 @@ export async function loadWireFromStore(
       `[wire-store] load failed: ${err instanceof Error ? err.message : err}`,
     );
     return { items: [], failed: true };
+  }
+}
+
+/**
+ * Resolve a game team name ("Kansas City Chiefs") or abbreviation ("KC")
+ * onto the Signal.entityId vocabulary. Tries the full string first, then the
+ * nickname token ("Chiefs") — the same tokens `team-resolver` already knows.
+ */
+export function wireTeamIdFromName(name: string): string | null {
+  const direct = normalizeTeamAlias(name);
+  if (direct) return direct;
+  const parts = name.trim().split(/\s+/);
+  const last = parts.length > 0 ? parts[parts.length - 1] : "";
+  return last ? normalizeTeamAlias(last) : null;
+}
+
+/**
+ * C-417 — the beat-report live loader.
+ *
+ * `NewsItem[]` built from stored Signal rows for the two teams in a game.
+ * Each stored report becomes its own NewsItem so `impact.ts` `corroborate()`
+ * can see two distinct sources without two Signal rows (the unique key
+ * forbids that). Self-sourced GSN reports are dropped. Only Beat / Insider /
+ * Verified reports are returned — Aggregator and Unconfirmed may render on
+ * The Beat but never count toward the two-source rule.
+ *
+ * The caller (beat-report.ts) still owns `live`: this function only ever
+ * reads real stored rows, and an empty store is an honest empty wire.
+ */
+export async function loadBeatReportWireFromStore(
+  teams: { home: string; away: string },
+  options: {
+    readonly now?: Date;
+    readonly dbArg?: unknown;
+    /** Player full names used to attach `player` for corroboration grouping. */
+    readonly playerNames?: readonly string[];
+    readonly limit?: number;
+  } = {},
+): Promise<NewsItem[]> {
+  const now = options.now ?? new Date();
+  const limit = options.limit ?? 120;
+  const dbHandle = (options.dbArg ?? db) as {
+    signal: {
+      findMany(args: unknown): Promise<
+        Array<{
+          id: string;
+          entityId: string;
+          key: string;
+          capturedAt: Date;
+          sourceId: string;
+          rightsSnapshot: unknown;
+        }>
+      >;
+    };
+  };
+
+  const homeId = wireTeamIdFromName(teams.home);
+  const awayId = wireTeamIdFromName(teams.away);
+  const teamIds = [homeId, awayId].filter((t): t is string => t !== null);
+  if (teamIds.length === 0) return [];
+  // beat-report's teamMatches compares display names ("Kansas City Chiefs"),
+  // while Signal.entityId is the abbreviation ("KC"). Carry the game's own
+  // display name onto each NewsItem so the gate can match without a second
+  // vocabulary table.
+  const idToDisplayName = new Map<string, string>();
+  if (homeId) idToDisplayName.set(homeId, teams.home);
+  if (awayId) idToDisplayName.set(awayId, teams.away);
+
+  try {
+    const rows = await dbHandle.signal.findMany({
+      where: {
+        key: { startsWith: WIRE_KEY_PREFIX },
+        entityId: { in: teamIds },
+      },
+      orderBy: { capturedAt: "desc" },
+      take: limit,
+    });
+    const verdictTiers: ReadonlySet<Tier> = new Set(["Insider", "Beat", "Verified"]);
+    const items: NewsItem[] = [];
+    for (const row of Array.isArray(rows) ? rows : []) {
+      for (const item of signalRowToNewsItems(row, {
+        now,
+        dropSelfSourced: true,
+        playerByName: options.playerNames,
+      })) {
+        if (!verdictTiers.has(item.tier)) continue;
+        items.push({
+          ...item,
+          team: idToDisplayName.get(item.team) ?? item.team,
+        });
+      }
+    }
+    return items;
+  } catch (err) {
+    console.error(
+      `[wire-store] beat-report load failed: ${err instanceof Error ? err.message : err}`,
+    );
+    return [];
   }
 }
