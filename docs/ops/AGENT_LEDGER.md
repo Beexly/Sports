@@ -546,11 +546,11 @@ the only copy, and nobody else can verify or build on it.
 | C-367 | LP2 Run A3 referee crews | hermes | UNPUSHED | b2b81c1a0 — A3 DEAD -2.9pp n=90 |
 | C-368 | LP2 Run A4 eastward travel | hermes | UNPUSHED | b2b81c1a0 — A4 DEAD sign-flip validate |
 | C-369 | LP2 Run A5 wind totals yearly | hermes | UNPUSHED | b2b81c1a0 — A5 DEAD CI includes 0, recent-3 mixed |
-| C-370 | LP2 Run A6 permutation entropy | hermes | OPEN | - |
-| C-371 | LP2 Run A7 intrinsic dimension | hermes | OPEN | - |
-| C-372 | LP2 Run A8 Boltzmann recalibration | hermes | OPEN | - |
-| C-373 | LP2 Run A9 DFA | hermes | OPEN | - |
-| C-374 | LP2 Run A10 Wasserstein | hermes | OPEN | - |
+| C-370 | LP2 Run A6 permutation entropy | hermes | UNPUSHED | 8ef1bc065 — A6 CANDIDATE R2+0.096 n=2686 |
+| C-371 | LP2 Run A7 intrinsic dimension | hermes | UNPUSHED | 8ef1bc065 — A7 CANDIDATE R2+0.025 n=2686 |
+| C-372 | LP2 Run A8 Boltzmann recalibration | hermes | UNPUSHED | 8ef1bc065 — A8 BLOCKED on real export |
+| C-373 | LP2 Run A9 DFA | hermes | UNPUSHED | 8ef1bc065 — A9 DEAD |
+| C-374 | LP2 Run A10 Wasserstein | hermes | UNPUSHED | 8ef1bc065 — A10 DEAD |
 | C-375 | LP2 Run A11 HMM regimes | hermes | OPEN | - |
 | C-376 | LP2 Run A12 Prelec 4th down | hermes | OPEN | - |
 | C-377 | LP2 Run A13 persistent homology | hermes | OPEN | - |

@@ -1236,3 +1236,4 @@ C-365 UNPUSHED b3a8f2e30 — A1 DEAD: birthday/former-team target-share -0.13 pp
 C-366 UNPUSHED addbb6ae2 — A2 shrinkage BLOCKED on real export; proposal PROPOSED.
 C-367/368/369 UNPUSHED b2b81c1a0 — A3/A4/A5 all DEAD against pre-registered kill lines.
 C-417 UNPUSHED 7d57defd9 — Phase 1 complete. Wire alerts + beat-report loader.
+C-370..374 UNPUSHED 8ef1bc065 — A6/A7 CANDIDATE (first positives); A8 BLOCKED; A9/A10 DEAD.
