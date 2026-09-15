@@ -7,15 +7,14 @@ data: [nflverse.pbp]
 discover_era: 1999-2019
 validate_era: 2020-2024
 kill_line: "validate-era ΔBrier >= 0 or P(better) < 0.75"
-mde_80pct_power: null
+mde_80pct_power: 0.00033
 script: scripts/factors/A10.mjs
-status: UNTESTED
-number: null
-ci: null
-n: null
-run_sha: null
-run_at: null
+status: DEAD
+number: 0.00008
+ci: [-0.00015, 0.00032]
+n: 1020
+run_sha: "3b35c099e2a437bce75f50550f05b28881c27dbc"
+run_at: "2026-09-15T22:37:45.786Z"
 blocked_on: null
 notes: >
-  W5. Low prior (W2 was field position in disguise). Same pbp path as A6.
-  C-374.
+  W5. Low prior (W2 was field position in disguise). This run bins (down 1-4 × pass/run) only — no field-position channel — so the W2 distance is not a yardline_100 proxy by construction. Barycenter = discover-era mean histogram. Factor = W2(home,bary) − W2(away,bary), season-to-date prior games only (min 4 games, 80 plays). C-374. C-374 run 2026-09-15: REG home-win, nBins=8. Discover n=573; Validate n=1020. Brier market-only=0.20513 with-factor=0.20522. ΔBrier=0.00008 CI[-0.00015,0.00032] P(better)=0.253 MDE80=0.00033 coefD=0.1918 coefV=-0.3431 signAgrees=false. YAML lists discover 1999-2019; this run uses the user-sliced 2017-2024 window. Data: nflverse pbp + nfldata games.csv (CC BY 4.0); no DB.

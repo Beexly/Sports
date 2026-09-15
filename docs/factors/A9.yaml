@@ -7,16 +7,14 @@ data: [nflverse.pbp]
 discover_era: 1999-2019
 validate_era: 2020-2024
 kill_line: "validate-era ΔBrier >= 0 or P(better) < 0.75"
-mde_80pct_power: null
+mde_80pct_power: 0.00095
 script: scripts/factors/A9.mjs
-status: UNTESTED
-number: null
-ci: null
-n: null
-run_sha: null
-run_at: null
+status: DEAD
+number: 0.0002
+ci: [-0.00047, 0.00087]
+n: 1020
+run_sha: "3b35c099e2a437bce75f50550f05b28881c27dbc"
+run_at: "2026-09-15T22:38:00.488Z"
 blocked_on: null
 notes: >
-  W6. Low prior (Koopman p=0.89); cheap; run. EPA input is nflfastR; Brill 2409.04889
-  documents its selection bias — the YAML names the EP model used by the release
-  (nflfastR EP, not a custom EP). C-373.
+  W6. Low prior (Koopman p=0.89); cheap; run. EPA input is nflfastR EP from the nflverse pbp release (not a custom EP). Brill 2409.04889 documents nflfastR EP selection bias — named caveat, not a correction. C-373. C-373 run 2026-09-15: REG home-win, factor = home DFA α − away DFA α (season-to-date, prior games only; min 4 prior games and 120 EPA plays). Discover n=573; Validate n=1020. Brier market-only=0.20513 with-factor=0.20533. ΔBrier=0.0002 CI[-0.00047,0.00087] P(better)=0.275 MDE80=0.00095 coefD=-0.6981 coefV=0.328 signAgrees=false. YAML lists discover 1999-2019; this run uses the user-sliced 2017-2024 window. Data: nflverse pbp + nfldata games.csv (CC BY 4.0); no DB.

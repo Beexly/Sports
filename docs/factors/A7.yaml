@@ -7,14 +7,14 @@ data: [nflverse.pbp]
 discover_era: 1999-2019
 validate_era: 2020-2024
 kill_line: "validate-era R² margin vs distinct-play-type count < 0.02"
-mde_80pct_power: null
+mde_80pct_power: 0.0176
 script: scripts/factors/A7.mjs
-status: UNTESTED
-number: null
-ci: null
-n: null
-run_sha: null
-run_at: null
+status: CANDIDATE
+number: 0.0249
+ci: [0.0123, 0.0369]
+n: 2686
+run_sha: "3b35c099e2a437bce75f50550f05b28881c27dbc"
+run_at: "2026-09-15T22:37:36.906Z"
 blocked_on: null
 notes: >
-  W7. Never run. Same pbp path as A6. C-371.
+  W7. Never run before this row. Intrinsic dimension = covariance participation ratio of standardized [down, ydstogo, yardline_100] on each team-game's scrimmage plays. Baseline = distinct play_type count. Outcome = EPA/play. kill_line: R² margin vs distinct-play-type count < 0.02. C-371. C-371 run 2026-09-15: REG team-games 2017–2024. Discover n=1536; Validate n=2686. R2 base=0.047 full=0.0719 margin=0.0249 CI[0.0123,0.0369] MDE80=0.0176. Mean ID D=2.6205 V=2.5779. YAML lists discover 1999-2019; this run uses the user-sliced 2017-2024 window. Data: nflverse pbp (CC BY 4.0), projected cache; no DB.

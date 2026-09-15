@@ -1,0 +1,25 @@
+{
+  "factorId": "A8",
+  "runAt": "2026-09-15T22:37:41.443Z",
+  "runSha": "3b35c099e2a437bce75f50550f05b28881c27dbc",
+  "source": "C:\\Users\\Garrett\\projects\\Sports\\packages\\verifier\\fixtures\\picks-h1.json",
+  "fromFixture": true,
+  "nPicksH1": 33,
+  "nTrain": 13,
+  "nValidate": 20,
+  "temperature": 3,
+  "trainBrier": 0.250419796948664,
+  "validate": {
+    "brierBoltzmann": 0.2557809710764997,
+    "brierIsotonic": 0.21481481481481485,
+    "brierRaw": 0.28147,
+    "brierMarket": 0.23432500000000003,
+    "deltaBoltzMinusIso": 0.040966156261684886,
+    "ci95": [
+      0.0019804985676297737,
+      0.07995181395574
+    ],
+    "mde80": 0.055726351696053236,
+    "pBetterBoltzVsIso": 0.014
+  }
+}
