@@ -7,23 +7,14 @@ data: [nflverse.weekly_rosters, nflverse.schedules, nflverse.player_stats]
 discover_era: 2017-2019
 validate_era: 2020-2024
 kill_line: "validate-era age>=29 minus age<29 post-bye residual <= 0 or 95% CI includes 0 with n >= 100"
-mde_80pct_power: null
+mde_80pct_power: 0.0153
 script: scripts/factors/A24.mjs
-status: UNTESTED
-number: null
-ci: null
-n: null
-run_sha: null
-run_at: null
+status: DEAD
+number: -0.0057
+ci: [-0.0164, 0.005]
+n: 1297
+run_sha: "7a474a6b557bb20e34fa8b826f5d1c3ebe94c57d"
+run_at: "2026-09-15T23:21:32.787Z"
 blocked_on: null
 notes: >
-  C-405. Pre-registered 2026-09-15 per LAST_PLAN.md section 4.3 (A24), citing the
-  ACTE (age-conditioned treatment effect) shape from arXiv 2402.12400 as a prior,
-  not a copied result — the estimand here is target share, not the source paper's
-  outcome. Bye week = a team-week whose games.csv rest field (home_rest/away_rest
-  for that team) is >= 12 days. Age = (game date - birth_date) in years from
-  nflverse weekly_rosters, at the post-bye game. Skill positions (WR/TE/RB) with a
-  trailing 3-game mean available. Primary: CR1 mean(residual | age>=29) -
-  CR1 mean(residual | age<29), validate era. Discover era reported for comparison,
-  never used to pick the cut. Data: nflverse weekly_rosters + player_stats
-  (CC BY 4.0) + nfldata games.csv, local cache; no DB.
+  C-405. Bye = games.csv rest field >= 12 days for that team-week. Age = (gameday - birth_date) at the post-bye game. Trailing baseline: up to 3 most recent same-season games (>=2 required), player's own mean target_share. Validate nOld=231 nYoung=1066 Δ=-0.0057 CI[-0.01639,0.00499] MDE80=0.01528; oldMean=-0.00713 youngMean=-0.00143. Discover nOld=122 nYoung=572 Δ=-0.00803. Data: nfldata games.csv + nflverse weekly_rosters + player_stats (CC BY 4.0), local cache; no DB.

@@ -9,13 +9,14 @@
 
 import assert from "node:assert/strict";
 import { execFileSync } from "node:child_process";
-import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
+import { mkdtempSync, readdirSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import test from "node:test";
 
 import {
+  FACTOR_STATUSES,
   FactorSpecSchema,
   buildIndex,
   loadSpecFromText,
@@ -220,27 +221,36 @@ run_at: 2026-09-01T00:00:00.000Z
   }
 });
 
-test("buildIndex accepts UNTESTED A1–A16 from docs/factors and renders INDEX.md", () => {
+test("buildIndex accepts every committed docs/factors spec and renders INDEX.md", () => {
+  // Reads the real, live docs/factors directory (not a fixture) — deliberately,
+  // as a whole-repo smoke test that every committed spec still loads and
+  // passes pre-registration. The spec count is NOT hardcoded: as of C-364 it
+  // was 16 (A1-A16, all UNTESTED); by C-409 it is 28 (A1-A28, real results).
+  // A prior version of this test hardcoded both "16" and "every status is
+  // UNTESTED or BLOCKED" and broke the moment the very first real run (A1,
+  // C-365) landed a DEAD status — asserting a transient state as if it were
+  // permanent. Read the directory itself for ground truth instead.
+  const expectedIds = readdirSync(FACTORS_DIR)
+    .filter((f) => /^[A-Z][0-9]+\.yaml$/.test(f))
+    .map((f) => f.replace(/\.yaml$/, ""));
+  assert.ok(expectedIds.length > 0, "docs/factors must carry at least one spec");
+
   const result = buildIndex({ repoRoot: REPO_ROOT, factorsDir: FACTORS_DIR, gitCheck: true });
   assert.equal(
     result.ok,
     true,
     `index errors:\n${result.errors.join("\n")}`,
   );
-  assert.equal(result.specs.length, 16, "A1–A16 must all load");
+  assert.equal(result.specs.length, expectedIds.length, "every docs/factors/*.yaml must load");
   for (const s of result.specs) {
     assert.ok(s.kill_line && s.kill_line.trim().length > 0, `${s.id} missing kill_line`);
-    assert.ok(
-      s.status === "UNTESTED" || s.status === "BLOCKED",
-      `${s.id} must be UNTESTED or BLOCKED before any run, got ${s.status}`,
-    );
+    assert.ok(FACTOR_STATUSES.includes(s.status), `${s.id} has an invalid status: ${s.status}`);
   }
   const md = result.markdown;
   assert.match(md, /\| id \| hypothesis \| status \|/);
-  for (let i = 1; i <= 16; i += 1) {
-    assert.match(md, new RegExp(`\\| A${i} \\|`), `INDEX must render A${i}`);
+  for (const id of expectedIds) {
+    assert.match(md, new RegExp(`\\| ${id} \\|`), `INDEX must render ${id}`);
   }
-  assert.match(md, /UNTESTED/);
 });
 
 test("parseFactorYaml folds > blocks and handles inline arrays", () => {
