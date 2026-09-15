@@ -32,6 +32,9 @@ export const STATS_SEASON_URL = (s) => `${BASE}/stats_player/stats_player_week_$
 export const SNAP_COUNTS_URL = (s) => `${BASE}/snap_counts/snap_counts_${s}.csv`;
 export const INJURIES_URL = (s) => `${BASE}/injuries/injuries_${s}.csv`;
 export const PBP_URL = (s) => `${BASE}/pbp/play_by_play_${s}.csv`;
+export const ROSTER_WEEKLY_URL = (s) => `${BASE}/weekly_rosters/roster_weekly_${s}.csv`;
+export const OFFICIALS_URL = `${BASE}/officials/officials.csv`;
+export const DRAFT_PICKS_URL = `${BASE}/draft_picks/draft_picks.csv`;
 
 export function eraOf(season) {
   if (season >= DISCOVER_MIN && season <= DISCOVER_MAX) return "discover";

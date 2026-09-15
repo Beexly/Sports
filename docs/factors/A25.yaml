@@ -1,0 +1,28 @@
+id: A25
+title: Weather on pass-yardage props (A5 extended to players)
+hypothesis: High wind at kickoff suppresses passing and receiving yardage relative to each player's trailing baseline, the same direction as A5's team-total effect.
+estimand: passing/receiving-yards residual (actual minus trailing-3-game mean) for games with wind >= 15 mph and an open/outdoors roof vs the indoor baseline, cluster-robust by player
+unit: yards below trailing baseline
+data: [nflverse.schedules, nflverse.player_stats]
+discover_era: 1999-2019
+validate_era: 2020-2025
+kill_line: "validate-era wind-vs-indoor residual difference >= 0 (no suppression) or 95% CI includes 0 with n >= 200"
+mde_80pct_power: null
+script: scripts/factors/A25.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  C-406. Pre-registered 2026-09-15 per LAST_PLAN.md section 4.3 (A25). No posted
+  player prop line exists in the free spine for any historical season, so this
+  runs on the same trailing-baseline-residual shape as A17-A24, not against a
+  book line — same honest limit A22 already states. QB passing_yards and
+  WR/TE/RB receiving_yards, separately. Wind/roof thresholds match A5 exactly
+  (wind>=15mph, outdoors/open vs dome/closed). Sign convention: effect =
+  wind residual - indoor residual; negative means wind suppresses yardage
+  beyond what the trailing mean already predicts, matching A5's direction.
+  Data: nflverse player_stats (CC BY 4.0) + nfldata games.csv, local cache; no DB.

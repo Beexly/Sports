@@ -1,0 +1,26 @@
+id: A23
+title: Snap-share slope, last three weeks
+hypothesis: A player's rising or falling trailing-3-week offensive snap-share slope predicts next-week snap share beyond the trailing mean alone.
+estimand: next-week offense-share residual (actual minus trailing-3-week mean) regressed on the trailing-3-week slope, pooled, cluster-robust by player
+unit: percentage points of offense-snap share per unit slope
+data: [nflverse.snap_counts]
+discover_era: 2017-2019
+validate_era: 2020-2024
+kill_line: "validate-era slope coefficient <= 0 or 95% CI includes 0 with n >= 300"
+mde_80pct_power: null
+script: scripts/factors/A23.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  C-404. Pre-registered 2026-09-15 per LAST_PLAN.md section 4.3 (A23). Trailing-3-week
+  slope = OLS slope of offense_pct over the player's most recent 3 REG weeks (same
+  team, no gap > 1 bye week). Outcome = next observed week's offense_pct minus the
+  trailing-3-week mean (the part the mean alone does not explain). Primary test:
+  does the slope coefficient in a next-week-residual ~ slope regression clear zero,
+  cluster-robust by player. Skill positions only (WR/TE/RB). Data: nflverse
+  snap_counts (CC BY 4.0), local cache under packages/verifier/data/; no DB.

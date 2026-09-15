@@ -1,0 +1,29 @@
+id: A24
+title: Age-conditioned rest effect (ACTE shape)
+hypothesis: The usage/efficiency boost a player gets from a bye-week rest is larger for older players than younger ones.
+estimand: post-bye-game target-share residual (vs trailing-3-game mean) for age >= 29 minus the same residual for age < 29, validate era, cluster-robust by player
+unit: percentage points of target share
+data: [nflverse.weekly_rosters, nflverse.schedules, nflverse.player_stats]
+discover_era: 2017-2019
+validate_era: 2020-2024
+kill_line: "validate-era age>=29 minus age<29 post-bye residual <= 0 or 95% CI includes 0 with n >= 100"
+mde_80pct_power: null
+script: scripts/factors/A24.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  C-405. Pre-registered 2026-09-15 per LAST_PLAN.md section 4.3 (A24), citing the
+  ACTE (age-conditioned treatment effect) shape from arXiv 2402.12400 as a prior,
+  not a copied result — the estimand here is target share, not the source paper's
+  outcome. Bye week = a team-week whose games.csv rest field (home_rest/away_rest
+  for that team) is >= 12 days. Age = (game date - birth_date) in years from
+  nflverse weekly_rosters, at the post-bye game. Skill positions (WR/TE/RB) with a
+  trailing 3-game mean available. Primary: CR1 mean(residual | age>=29) -
+  CR1 mean(residual | age<29), validate era. Discover era reported for comparison,
+  never used to pick the cut. Data: nflverse weekly_rosters + player_stats
+  (CC BY 4.0) + nfldata games.csv, local cache; no DB.
