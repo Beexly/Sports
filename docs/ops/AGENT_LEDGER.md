@@ -541,7 +541,7 @@ the only copy, and nobody else can verify or build on it.
 | C-362 | LP2 packages/verifier: frozen holdouts, scorecard, duel, joint, factgraph | hermes | UNPUSHED | dd58e6ebc — holdout/scorecard/duel/joint/factgraph; fixture verify:holdout PASS |
 | C-363 | LP2 CI precondition: the frozen-path PR for the guardrails | hermes | UNPUSHED | #829 frozen-path draft — verify:holdout in run-all; L11 scorecard in model-freeze |
 | C-364 | LP2 Factor Foundry: YAML specs A1-A16, runner, index | hermes | UNPUSHED | 60abc03bb — A1-A16 YAML + zod index/run; tests (16); nothing run |
-| C-365 | LP2 Run A1: birthday or former-team target share | hermes | OPEN | - |
+| C-365 | LP2 Run A1: birthday or former-team target share | hermes | UNPUSHED | b3a8f2e30 — A1 DEAD -0.13pp n=550 CI includes 0 |
 | C-366 | LP2 Run A2 on PICKS-H1 and write the v5.2.8 shrinkage proposal | hermes | OPEN | - |
 | C-367 | LP2 Run A3 referee crews | hermes | OPEN | - |
 | C-368 | LP2 Run A4 eastward travel | hermes | OPEN | - |
