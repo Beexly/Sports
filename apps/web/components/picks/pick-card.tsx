@@ -72,10 +72,11 @@ export function PickCard({
 
   const isFeatured = pick.isFeatured;
 
-  // C-354: card price = lock price. MONEYLINE reads `clvLockPrice`, TOTAL
-  // reads `clvLockLine`, each falling back to `line` only when the lock was
-  // never captured. Zero is treated as "no number" (same as the previous
-  // `pick.line !== 0` guard). Nothing here parses `selection`.
+  // C-354: card price = publish-time captured price. MONEYLINE reads
+  // `clvLockPrice`, TOTAL reads `clvLockLine`, each falling back to `line`
+  // only when that capture was never written. Zero is treated as "no number"
+  // (same as the previous `pick.line !== 0` guard). Nothing here parses
+  // `selection`.
   const cardPrice: number | null =
     pick.pickType === "MONEYLINE"
       ? (pick.clvLockPrice ?? (pick.line !== 0 ? pick.line : null))
@@ -142,15 +143,16 @@ export function PickCard({
             {NO_BOOK_PRICE_LABEL}
           </p>
         ) : (
-          /* C-354: the card's price/line is the publish-time LOCK when present
-             — `clvLockPrice` for MONEYLINE, `clvLockLine` for TOTAL. Never a
-             number parsed out of `selection`: "Away ML (+102)" can disagree
-             with the locked -135, and the lock is the immutable one. Legacy
-             rows with no lock fall back to `line`; neither path invents a
-             number. SPREAD's chosen-side number already lives in `selection`
-             ("Away Favs -6.0"); `line` is HOME-team perspective for
-             settlement, so rendering it raw would contradict the selection
-             for away-favored picks — no price slot for SPREAD. */
+          /* C-354: the card's price/line is the publish-time capture when
+             present — `clvLockPrice` for MONEYLINE, `clvLockLine` for TOTAL.
+             Never a number parsed out of `selection`: the selection string
+             can carry a different American price than the stored capture,
+             and the stored capture is the immutable record. Legacy rows
+             without that capture fall back to `line`; neither path invents
+             a number. SPREAD's chosen-side number already lives in
+             `selection` ("Away Favs -6.0"); `line` is HOME-team perspective
+             for settlement, so rendering it raw would contradict the
+             selection for away-favored picks — no price slot for SPREAD. */
           cardPrice !== null ? (
             <p className="mt-0.5 text-xs text-ion-1" data-testid="card-price">
               Line: {cardPrice > 0 ? "+" : ""}{cardPrice}
