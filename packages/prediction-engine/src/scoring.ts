@@ -65,6 +65,38 @@ export function averageAmericanPrices(prices: readonly number[]): number | null 
 }
 
 // ============================================================
+// C-359: Kalshi exchange midpoint as a vig-free reference.
+//
+// The PredExon Kalshi book attaches as a real bookmaker (`kalshi`). Its
+// American prices were built from the catalog's live two-way YES/NO mid
+// (predexonTwoWay → probToAmerican), so converting the chosen side's price
+// back to implied probability recovers that exchange mid. Stored beside
+// marketFairProb as `exchangeMidpointProb` — display / calibration reference
+// only; no scoring path reads it. Null when the Kalshi book is absent.
+// ============================================================
+
+/** Bookmaker key the PredExon Kalshi catalog stamps on its OddsApiBookmaker. */
+const KALSHI_BOOKMAKER_KEY = "kalshi";
+
+function exchangeMidpointFromOdds(
+  odds: readonly { bookmaker: string; market?: string; homePrice?: number; awayPrice?: number; homeSpreadPrice?: number; awaySpreadPrice?: number; overPrice?: number; underPrice?: number }[],
+  market: "H2H" | "SPREADS" | "TOTALS",
+  chosenHomeOrOver: boolean,
+): number | null {
+  // Rows are one book × market, so both filters are required: a H2H-only
+  // find would return the ESPN moneyline row for a SPREAD request.
+  const kalshi = odds.find((o) => o.bookmaker === KALSHI_BOOKMAKER_KEY && o.market === market);
+  if (!kalshi) return null;
+  let american: number | undefined;
+  if (market === "H2H") american = chosenHomeOrOver ? kalshi.homePrice : kalshi.awayPrice;
+  else if (market === "SPREADS") american = chosenHomeOrOver ? kalshi.homeSpreadPrice : kalshi.awaySpreadPrice;
+  else american = chosenHomeOrOver ? kalshi.overPrice : kalshi.underPrice;
+  if (american == null || !Number.isFinite(american) || american === 0) return null;
+  const p = americanToImpliedProbability(american);
+  return Number.isFinite(p) && p > 0 && p < 1 ? p : null;
+}
+
+// ============================================================
 // Utility: remove vig to get fair-value probability
 // ============================================================
 
@@ -819,6 +851,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     marketFairProb: fairProb,
     marketFairMethod: "proportional",
     marketFairShinProb: fairShinProb,
+    exchangeMidpointProb: exchangeMidpointFromOdds(input.bookmakerOdds, "SPREADS", homeIsChosen),
     factors,
   };
 
@@ -1064,6 +1097,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     marketFairProb: fairProb,
     marketFairMethod: "proportional",
     marketFairShinProb: fairShinProb,
+    exchangeMidpointProb: exchangeMidpointFromOdds(input.bookmakerOdds, "TOTALS", overIsChosen),
     factors,
   };
 
@@ -1413,6 +1447,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     marketFairProb: fairProb,
     marketFairMethod: "proportional",
     marketFairShinProb: fairShinProb,
+    exchangeMidpointProb: exchangeMidpointFromOdds(input.bookmakerOdds, "H2H", homeIsChosen),
     factors,
   };
 

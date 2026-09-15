@@ -132,6 +132,14 @@ export interface FactorBreakdown {
    * Null when the book is degenerate. Display only: no scoring path reads this.
    */
   marketFairShinProb?: number | null;
+  /**
+   * C-359: Kalshi exchange midpoint for the chosen side (0–1), stored as a
+   * vig-free reference beside marketFairProb. Source is the PredExon catalog's
+   * live two-way mid (YES bid/ask mid; NO mid or 1−YES), never last_price.
+   * Null when the Kalshi book is absent for this game/market — honest miss.
+   * Display / calibration reference only: no scoring path reads this.
+   */
+  exchangeMidpointProb?: number | null;
   factors: FactorDetail[];     // human-readable factor list
 }
 

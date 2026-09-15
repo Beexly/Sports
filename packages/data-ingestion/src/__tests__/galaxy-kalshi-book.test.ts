@@ -40,6 +40,10 @@ function market(overrides: Partial<PredExonKalshiMarket> & Pick<PredExonKalshiMa
     cap_strike: null,
     close_time: null,
     outcomes: [],
+    volume: null,
+    dollar_volume: null,
+    open_interest: null,
+    dollar_open_interest: null,
     ...overrides,
   };
 }
@@ -287,10 +291,20 @@ describe("PredExonKalshiCatalog (Kalshi via PredExon, never the Kalshi API)", ()
     expect((await partial.bookmakerFor(GAME))?.markets.map((m) => m.key)).toEqual(["spreads", "totals"]);
   });
 
-  it("returns null (no network) while PREDEXON_INGEST is off, and for an unmapped sport", async () => {
-    const { cat, fetchImpl } = catalog(NFL_FIXTURE, { PREDEXON_API_KEY: "test-not-a-real-key" });
-    expect(await cat.bookmakerFor(GAME)).toBeNull();
+  it("D19: returns null (no network) only when the key is absent or PREDEXON_INGEST is explicitly off; unmapped sport always null", async () => {
+    // No key → off (fail closed).
+    const { cat: noKey, fetchImpl } = catalog(NFL_FIXTURE, {});
+    expect(await noKey.bookmakerFor(GAME)).toBeNull();
     expect(fetchImpl).not.toHaveBeenCalled();
+    // Key present + explicit off → off.
+    const { cat: off, fetchImpl: fOff } = catalog(NFL_FIXTURE, { PREDEXON_API_KEY: "k", PREDEXON_INGEST: "off" });
+    expect(await off.bookmakerFor(GAME)).toBeNull();
+    expect(fOff).not.toHaveBeenCalled();
+    // D19: key alone is ON — network runs and a book is built.
+    const { cat: on, fetchImpl: fOn } = catalog(NFL_FIXTURE, { PREDEXON_API_KEY: "test-not-a-real-key" });
+    expect(await on.bookmakerFor(GAME)).not.toBeNull();
+    expect(fOn).toHaveBeenCalled();
+    // Unmapped sport never fetches.
     const { cat: nfl, fetchImpl: f2 } = catalog(NFL_FIXTURE);
     expect(await nfl.bookmakerFor({ ...GAME, sportKey: "cricket_ipl" })).toBeNull();
     expect(f2).not.toHaveBeenCalled();
@@ -306,11 +320,19 @@ describe("PredExonKalshiCatalog (Kalshi via PredExon, never the Kalshi API)", ()
   });
 });
 
-describe("createGalaxySecondBook (default OFF — founder flips PREDEXON_INGEST + PREDEXON_API_KEY, ledger F-34)", () => {
-  it("is undefined unless ingest is on AND a key is present", () => {
+describe("createGalaxySecondBook (D19: ON when key present unless PREDEXON_INGEST is explicitly false)", () => {
+  it("is undefined without a key", () => {
     expect(createGalaxySecondBook({})).toBeUndefined();
     expect(createGalaxySecondBook({ PREDEXON_INGEST: "true" })).toBeUndefined();
-    expect(createGalaxySecondBook({ PREDEXON_API_KEY: "test-not-a-real-key" })).toBeUndefined();
+  });
+
+  it("D19: key alone turns it ON", () => {
+    expect(createGalaxySecondBook({ PREDEXON_API_KEY: "test-not-a-real-key" })).toBeInstanceOf(PredExonKalshiCatalog);
     expect(createGalaxySecondBook(ENV)).toBeInstanceOf(PredExonKalshiCatalog);
+  });
+
+  it("D19: explicit false/off with a key stays undefined", () => {
+    expect(createGalaxySecondBook({ PREDEXON_API_KEY: "k", PREDEXON_INGEST: "false" })).toBeUndefined();
+    expect(createGalaxySecondBook({ PREDEXON_API_KEY: "k", PREDEXON_INGEST: "off" })).toBeUndefined();
   });
 });

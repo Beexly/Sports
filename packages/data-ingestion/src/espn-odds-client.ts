@@ -364,6 +364,12 @@ export async function fetchEspnOddsForSport(
     /** Per-request timeout (ms, default 8000) — blocked hosts fail fast. */
     readonly fetchTimeoutMs?: number;
     /**
+     * Injected clock for the -6h..+21d event window and the scoreboard
+     * dates= horizon. Production uses Date; tests pin it so a recorded
+     * fixture does not expire against wall-clock time.
+     */
+    readonly now?: () => Date;
+    /**
      * Optional second real bookmaker (Kalshi via PredExon). When provided,
      * each event may gain a second book from a live two-way exchange quote —
      * the honest path past MIN_BOOKMAKERS=2 on the keyless plane. Failures
@@ -395,7 +401,8 @@ export async function fetchEspnOddsForSport(
   const interEventMs = Math.max(0, options?.interEventMs ?? 120);
   const horizonDays = Math.min(7, Math.max(0, options?.horizonDays ?? 3));
   const errors: string[] = [];
-  const now = new Date();
+  const now = options?.now ? options.now() : new Date();
+  const nowMs = now.getTime();
   const dateParams = scoreboardDateParams(now, horizonDays);
   const byId = new Map<string, Candidate>();
 
@@ -454,7 +461,6 @@ export async function fetchEspnOddsForSport(
 
   const out: OddsApiEvent[] = [];
   const lastUpdate = new Date().toISOString();
-  const nowMs = now.getTime();
 
   for (let i = 0; i < candidates.length; i++) {
     const ev = candidates[i]!;
