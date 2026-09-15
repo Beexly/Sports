@@ -1,14 +1,10 @@
-/**
+﻿/**
  * VerdictLine — the interval gets a vote on the public calibration report.
  *
- * Closes wave 4 issue #806. The page already computes a Wilson band and withholds
- * the win rate below a sample floor; what it never did was *label* the result. A
- * rate whose 95% band still straddles the 50% line is now printed as
- * INCONCLUSIVE rather than presented with the same authority as a tight one.
- *
- * The competitor worth imitating (wbp318/cfb_2026) leads with an unproven result:
- * n=51, ROI −2.1%, CI [−40%, +41%], verdicts labeled inconclusive. One of 22
- * profiled repos does this; it is the one whose number could be trusted.
+ * C-352 / D22: the verdict WORD ("Conclusive") renders only when the interval's
+ * LOWER bound clears the threshold. A band that straddles it, or lies entirely
+ * below it, prints the factual reason (interval + threshold) without a verdict
+ * badge. The page must pass the real bar (0.524), never the coin-flip default.
  *
  * Server component — pure read of lib/tracker/inconclusive.ts.
  */
@@ -29,12 +25,14 @@ export function VerdictLine({
 }) {
   const n = wins + losses;
   const read = readRate(wins, n, { threshold, minSample });
-  const inconclusive = read.confidence === "inconclusive";
+  // D22: a verdict word only when the LOWER bound clears the threshold.
+  const clearsBreakEven = read.rate !== null && read.low > threshold;
 
   return (
     <p
       data-testid="verdict-line"
       data-verdict={read.confidence}
+      data-threshold={threshold}
       className="mt-1 text-xs text-ion-2"
     >
       {read.rate === null ? (
@@ -44,17 +42,15 @@ export function VerdictLine({
           </span>{" "}
           — {read.reason}
         </>
-      ) : (
+      ) : clearsBreakEven ? (
         <>
-          <span
-            className={`font-mono uppercase tracking-wider ${
-              inconclusive ? "text-caution" : "text-verify"
-            }`}
-          >
-            {inconclusive ? "Inconclusive" : "Conclusive"}
+          <span className="font-mono uppercase tracking-wider text-verify">
+            Conclusive
           </span>{" "}
           — {read.reason}
         </>
+      ) : (
+        read.reason
       )}
     </p>
   );

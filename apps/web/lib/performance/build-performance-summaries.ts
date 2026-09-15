@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Build the rows behind /performance's summary section (C-319).
  *
  * WHY THIS EXISTS. `apps/web/app/performance/page.tsx` renders its record
@@ -37,6 +37,53 @@ import { isInPlayGenerated } from "@/lib/calibration/in-play-exclusion";
 // while violating the invariant it protects.
 import { winRatePct } from "@/lib/format/stat";
 
+/**
+ * Two display lanes (C-352, AGENTS.md 2026-09-14 audit).
+ *
+ * book-priced  — bookmakerCount >= 1: a market priced the pick. This is the
+ *                only lane a customer could have placed, so it leads the hero.
+ * model-signal — bookmakerCount 0: published and settled, never bettable.
+ *                Stays in the record; never summed into the headline.
+ */
+export type PerformanceLane = "book-priced" | "model-signal";
+
+/**
+ * Lane is encoded into `modelVersion` because `performance_summaries` has no
+ * lane column and its unique key (sport, pickType, tier, modelVersion, period)
+ * is schema-frozen. Suffixing the version is the only existing key column that
+ * (a) is always non-null, (b) participates in the unique index, and (c) is
+ * strip-able on read. Persist writes the encoded form; the page decodes.
+ */
+export const MODEL_SIGNAL_LANE_SUFFIX = " (model signal)";
+
+export function laneFromBookmakerCount(
+  bookmakerCount: number | null | undefined,
+): PerformanceLane {
+  return (bookmakerCount ?? 0) >= 1 ? "book-priced" : "model-signal";
+}
+
+export function encodeLaneModelVersion(
+  modelVersion: string,
+  lane: PerformanceLane,
+): string {
+  return lane === "book-priced"
+    ? modelVersion
+    : `${modelVersion}${MODEL_SIGNAL_LANE_SUFFIX}`;
+}
+
+export function decodeLaneModelVersion(stored: string): {
+  readonly modelVersion: string;
+  readonly lane: PerformanceLane;
+} {
+  if (stored.endsWith(MODEL_SIGNAL_LANE_SUFFIX)) {
+    return {
+      modelVersion: stored.slice(0, -MODEL_SIGNAL_LANE_SUFFIX.length),
+      lane: "model-signal",
+    };
+  }
+  return { modelVersion: stored, lane: "book-priced" };
+}
+
 /** One graded pick, in the shape the summary needs. */
 export interface SummaryPickRow {
   readonly sport: string | null;
@@ -48,6 +95,12 @@ export interface SummaryPickRow {
   readonly settledAt: Date | null;
   readonly generatedAt: Date | null;
   readonly commenceTime: Date | null;
+  /**
+   * Mint-time book count. >= 1 → book-priced lane; 0/null/absent → model-signal.
+   * Absent is treated as 0 so a caller that forgets the field cannot silently
+   * promote an unpriced row into the bettable hero.
+   */
+  readonly bookmakerCount?: number | null;
 }
 
 export interface PerformanceSummaryRow {
@@ -55,6 +108,7 @@ export interface PerformanceSummaryRow {
   readonly league: string | null;
   readonly pickType: string | null;
   readonly tier: string | null;
+  /** May carry MODEL_SIGNAL_LANE_SUFFIX — decode before display. */
   readonly modelVersion: string;
   readonly totalPicks: number;
   readonly wins: number;
@@ -87,14 +141,15 @@ function periodOf(settledAt: Date | null): string | null {
   return `${y}-${m}`;
 }
 
-// round4() lived here to round a 0-1 fraction for the winRate column. It was removed
-// with the fraction: the column carries percentage points from winRatePct, which owns
-// its own rounding contract, and an unused local rounding helper invites a future
-// contributor to re-derive a rate in this file.
-
 /**
- * Group graded picks into one row per (sport, pickType, tier, modelVersion, period),
+ * Group graded picks into one row per
+ * (sport, pickType, tier, modelVersion, period, lane),
  * plus an "all-time" row for every key that has any history.
+ *
+ * Lane (book-priced vs model-signal) is part of the key so a mixed population
+ * cannot average an unbettable signal into the bettable record (C-352). Both
+ * lanes are written; the page leads with book-priced and never sums signal
+ * into the headline.
  */
 export function buildPerformanceSummaries(
   rows: readonly SummaryPickRow[],
@@ -109,11 +164,13 @@ export function buildPerformanceSummaries(
     modelVersion: string,
     period: string,
     result: string,
+    lane: PerformanceLane,
   ) => {
-    const id = [sport, pickType ?? "", tier ?? "", modelVersion, period].join("|");
+    const storedVersion = encodeLaneModelVersion(modelVersion, lane);
+    const id = [sport, pickType ?? "", tier ?? "", storedVersion, period].join("|");
     const b =
       buckets.get(id) ??
-      { key: { sport, league: null, pickType, tier, modelVersion, period }, wins: 0, losses: 0, pushes: 0 };
+      { key: { sport, league: null, pickType, tier, modelVersion: storedVersion, period }, wins: 0, losses: 0, pushes: 0 };
     if (result === "WIN") b.wins += 1;
     else if (result === "LOSS") b.losses += 1;
     else b.pushes += 1;
@@ -125,7 +182,6 @@ export function buildPerformanceSummaries(
       skipped.notDecidedOrVoid += 1;
       continue;
     }
-    // Same rule, same shared predicate as every other public reader (C-302).
     if (isInPlayGenerated(row.generatedAt, row.commenceTime)) {
       skipped.inPlay += 1;
       continue;
@@ -134,9 +190,10 @@ export function buildPerformanceSummaries(
       skipped.unkeyable += 1;
       continue;
     }
-    add(row.sport, row.pickType, row.tier, row.modelVersion, "all-time", row.result);
+    const lane = laneFromBookmakerCount(row.bookmakerCount);
+    add(row.sport, row.pickType, row.tier, row.modelVersion, "all-time", row.result, lane);
     const period = periodOf(row.settledAt);
-    if (period) add(row.sport, row.pickType, row.tier, row.modelVersion, period, row.result);
+    if (period) add(row.sport, row.pickType, row.tier, row.modelVersion, period, row.result, lane);
   }
 
   const out: PerformanceSummaryRow[] = [];
@@ -147,14 +204,9 @@ export function buildPerformanceSummaries(
       wins: b.wins,
       losses: b.losses,
       pushes: b.pushes,
-      // PERCENTAGE POINTS, via the allow-listed helper — not a 0-1 fraction. The
-      // first version of this stored a rounded fraction, which against a column whose
-      // sanctioned producer (public-performance-policy.ts) and consumer (winRatePct,
-      // used by /performance) both speak in percentage points was wrong by 100x.
       winRate: winRatePct(b.wins, b.losses) ?? 0,
     });
   }
-  // Deterministic order so a diff of two builds means something.
   out.sort(
     (a, z) =>
       a.period.localeCompare(z.period) ||

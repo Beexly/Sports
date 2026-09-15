@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Rebuild the /performance summary rows end to end (C-319).
  *
  * The population is the canonical public one, and it is the same definition the
@@ -44,6 +44,7 @@ type RawRow = {
   readonly pickType: string | null;
   readonly tier: string | null;
   readonly modelVersion: string | null;
+  readonly bookmakerCount?: number | null;
   readonly game?: { readonly commenceTime?: Date | null; readonly sport?: { readonly key?: string | null } | null } | null;
 };
 
@@ -57,6 +58,8 @@ function toSummaryPickRow(r: RawRow): SummaryPickRow {
     settledAt: r.settledAt ?? null,
     generatedAt: r.generatedAt ?? null,
     commenceTime: r.game?.commenceTime ?? null,
+    // C-352: drives the book-priced vs model-signal lane split.
+    bookmakerCount: r.bookmakerCount ?? 0,
   };
 }
 
@@ -98,6 +101,8 @@ export async function rebuildPerformanceSummaries(
       pickType: true,
       tier: true,
       modelVersion: true,
+      // C-352: lane split (book-priced >= 1 book vs model-signal 0 books).
+      bookmakerCount: true,
       game: { select: { commenceTime: true, sport: { select: { key: true } } } },
     },
   })) as readonly RawRow[];

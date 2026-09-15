@@ -1,11 +1,15 @@
-/**
+﻿/**
  * buildPerformanceSummaries: the shape /performance reads, and the invariants that
- * keep it honest — pushes in the population not the rate, in-play rows withheld,
+ * keep it honest â€” pushes in the population not the rate, in-play rows withheld,
  * and the rate in PERCENTAGE POINTS through the allow-listed helper.
  */
 import { describe, expect, it } from "vitest";
 import {
   buildPerformanceSummaries,
+  decodeLaneModelVersion,
+  encodeLaneModelVersion,
+  laneFromBookmakerCount,
+  MODEL_SIGNAL_LANE_SUFFIX,
   type SummaryPickRow,
 } from "@/lib/performance/build-performance-summaries";
 import { winRatePct } from "@/lib/format/stat";
@@ -22,11 +26,12 @@ function row(over: Partial<SummaryPickRow> = {}): SummaryPickRow {
     settledAt: new Date("2026-09-11T02:00:00Z"),
     generatedAt: new Date("2026-09-10T12:00:00Z"), // pre-game on purpose
     commenceTime: KICKOFF,
+    bookmakerCount: 8,
     ...over,
   };
 }
 
-describe("buildPerformanceSummaries — the shape /performance reads", () => {
+describe("buildPerformanceSummaries â€” the shape /performance reads", () => {
   it("groups one row per key and period, with winRate over decided picks only", () => {
     const built = buildPerformanceSummaries([
       row({ result: "WIN" }),
@@ -46,7 +51,7 @@ describe("buildPerformanceSummaries — the shape /performance reads", () => {
       losses: 1,
       pushes: 1,
       // 2 of 3 DECIDED picks, in PERCENTAGE POINTS, through the allow-listed helper:
-      // a push is population, never rate — the same rule the page states. Pinned
+      // a push is population, never rate â€” the same rule the page states. Pinned
       // against winRatePct rather than a literal so the unit cannot drift back to a
       // fraction: the first version of this stored 0.6667 here, wrong by 100x.
       winRate: winRatePct(2, 1),
@@ -54,7 +59,7 @@ describe("buildPerformanceSummaries — the shape /performance reads", () => {
     expect(built.rows.filter((r) => r.period === "2026-09")).toHaveLength(1);
   });
 
-  it("stores PERCENTAGE POINTS, not a 0-1 fraction — a regression to a fraction is 100x wrong", () => {
+  it("stores PERCENTAGE POINTS, not a 0-1 fraction â€” a regression to a fraction is 100x wrong", () => {
     // 50% is the clean discriminator: a fraction implementation would store 0.5.
     const built = buildPerformanceSummaries([row({ result: "WIN" }), row({ result: "LOSS" })]);
     const all = built.rows.find((r) => r.period === "all-time");
@@ -88,7 +93,7 @@ describe("buildPerformanceSummaries — the shape /performance reads", () => {
   });
 });
 
-describe("buildPerformanceSummaries — what it refuses to count", () => {
+describe("buildPerformanceSummaries â€” what it refuses to count", () => {
   it("withholds in-play rows and reports them (C-302, same rule as the calibration readers)", () => {
     const built = buildPerformanceSummaries([
       row({ result: "WIN", generatedAt: new Date("2026-09-10T23:30:00Z") }), // after kickoff
@@ -129,7 +134,7 @@ describe("buildPerformanceSummaries — what it refuses to count", () => {
   });
 });
 
-describe("buildPerformanceSummaries — determinism", () => {
+describe("buildPerformanceSummaries â€” determinism", () => {
   it("orders rows so two builds of the same input diff clean", () => {
     const input = [row({ tier: "B" }), row({ tier: "A" }), row({ modelVersion: "v5.2.6" })];
     const a = buildPerformanceSummaries(input).rows;
@@ -150,5 +155,61 @@ describe("buildPerformanceSummaries — determinism", () => {
     expect(built.rows).toHaveLength(0);
     expect(built.periods).toHaveLength(0);
     expect(built.skipped).toEqual({ notDecidedOrVoid: 0, inPlay: 0, unkeyable: 0 });
+  });
+});
+
+describe("buildPerformanceSummaries — book-priced vs model-signal lanes (C-352)", () => {
+  it("classifies by bookmakerCount >= 1 vs 0; absent/null counts as model-signal", () => {
+    expect(laneFromBookmakerCount(1)).toBe("book-priced");
+    expect(laneFromBookmakerCount(8)).toBe("book-priced");
+    expect(laneFromBookmakerCount(0)).toBe("model-signal");
+    expect(laneFromBookmakerCount(null)).toBe("model-signal");
+    expect(laneFromBookmakerCount(undefined)).toBe("model-signal");
+  });
+
+  it("encodes the model-signal lane into modelVersion so the frozen unique key holds both", () => {
+    expect(encodeLaneModelVersion("v5.2.7", "book-priced")).toBe("v5.2.7");
+    expect(encodeLaneModelVersion("v5.2.7", "model-signal")).toBe(
+      `v5.2.7${MODEL_SIGNAL_LANE_SUFFIX}`,
+    );
+    expect(decodeLaneModelVersion("v5.2.7")).toEqual({
+      modelVersion: "v5.2.7",
+      lane: "book-priced",
+    });
+    expect(decodeLaneModelVersion(`v5.2.7${MODEL_SIGNAL_LANE_SUFFIX}`)).toEqual({
+      modelVersion: "v5.2.7",
+      lane: "model-signal",
+    });
+  });
+
+  it("emits TWO all-time rows when the population mixes lanes, and keeps both in the record", () => {
+    const built = buildPerformanceSummaries([
+      row({ result: "WIN", bookmakerCount: 8 }),
+      row({ result: "LOSS", bookmakerCount: 8 }),
+      row({ result: "WIN", bookmakerCount: 0 }),
+      row({ result: "WIN", bookmakerCount: 0 }),
+      row({ result: "LOSS", bookmakerCount: 0 }),
+    ]);
+    const all = built.rows.filter((r) => r.period === "all-time");
+    expect(all).toHaveLength(2);
+
+    const book = all.find((r) => decodeLaneModelVersion(r.modelVersion).lane === "book-priced")!;
+    const signal = all.find((r) => decodeLaneModelVersion(r.modelVersion).lane === "model-signal")!;
+
+    expect(book).toMatchObject({ wins: 1, losses: 1, totalPicks: 2 });
+    expect(signal).toMatchObject({ wins: 2, losses: 1, totalPicks: 3 });
+    expect(book.wins + signal.wins).toBe(3);
+    expect(book.losses + signal.losses).toBe(2);
+  });
+
+  it("a model-signal row cannot land in the book-priced bucket", () => {
+    const built = buildPerformanceSummaries([
+      row({ result: "WIN", bookmakerCount: 0 }),
+      row({ result: "LOSS", bookmakerCount: 0 }),
+    ]);
+    const all = built.rows.filter((r) => r.period === "all-time");
+    expect(all).toHaveLength(1);
+    expect(decodeLaneModelVersion(all[0]!.modelVersion).lane).toBe("model-signal");
+    expect(all[0]!.modelVersion).not.toBe("v5.2.7");
   });
 });
