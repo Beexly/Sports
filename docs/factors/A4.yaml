@@ -7,15 +7,14 @@ data: [nflverse.games, stadium_tz]
 discover_era: 2000-2019
 validate_era: 2020-2025
 kill_line: "validate-era effect <= 0 or 95% CI includes 0 with n >= 200"
-mde_80pct_power: null
+mde_80pct_power: 12.676
 script: scripts/factors/A4.mjs
-status: UNTESTED
-number: null
-ci: null
-n: null
-run_sha: null
-run_at: null
+status: DEAD
+number: -3.2921
+ci: [-12.1601, 5.5759]
+n: 149
+run_sha: "a62e5f378ba947203e709af31e8c041469bf7a55"
+run_at: "2026-09-15T22:28:46.856Z"
 blocked_on: null
 notes: >
-  F12 tested west-early (sign flip) and east-late (collapsed), not this exact published
-  spec. Run the published spec first, then the decay check by season. C-368.
+  F12 tested west-early (sign flip) and east-late (collapsed), not this exact published spec. Run the published spec first, then the decay check by season. C-368. C-368 run 2026-09-15: Fodor-Krieger shape — away ATS cover residual for eastward >=2-zone afternoon (ET hour [12,16)) REG games vs afternoon controls. effect = control − treated (pp); positive = travelers cover less. Discover 2000-2019 treated n=435 cover=45.75% control n=2314 cover=52.29% θ=6.5433 pp. Validate 2020-2025 treated n=149 cover=54.36% control n=654 cover=51.07% θ=-3.2921 pp CI[-12.1601,5.5759] MDE80=12.676. Validate yearly: 2020: nT=27 cover=55.56% nC=105 cover=49.52% eff=-6.03; 2021: nT=25 cover=60% nC=113 cover=54.87% eff=-5.13; 2022: nT=16 cover=37.5% nC=120 cover=47.5% eff=10; 2023: nT=26 cover=53.85% nC=103 cover=49.51% eff=-4.33; 2024: nT=26 cover=57.69% nC=109 cover=54.13% eff=-3.56; 2025: nT=29 cover=55.17% nC=104 cover=50.96% eff=-4.21. Treated zones: 2z:277 3z:307. Neutral sites excluded (n=66). Data: nflverse/nfldata games.csv (CC BY 4.0), local cache only; tz table port of rest-travel.ts; no DB.

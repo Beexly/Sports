@@ -7,15 +7,14 @@ data: [nflverse.games.wind, nflverse.games.temp, nflverse.games.roof]
 discover_era: 1999-2019
 validate_era: 2020-2025
 kill_line: "validate-era over-rate effect <= 0 or the effect is not positive in the most recent three seasons"
-mde_80pct_power: null
+mde_80pct_power: 14.4881
 script: scripts/factors/A5.mjs
-status: UNTESTED
-number: null
-ci: null
-n: null
-run_sha: null
-run_at: null
+status: DEAD
+number: 6.7048
+ci: [-3.431, 16.8405]
+n: 113
+run_sha: "a62e5f378ba947203e709af31e8c041469bf7a55"
+run_at: "2026-09-15T22:28:48.609Z"
 blocked_on: null
 notes: >
-  54.64% over 27 seasons, ~0 by 2025. Re-run yearly — not dead forever, dead now.
-  A 30-second script on games.csv. C-369.
+  54.64% over 27 seasons, ~0 by 2025. Re-run yearly — not dead forever, dead now. A 30-second script on games.csv. C-369. C-369 run 2026-09-15: REG, under-rate residual (pp) wind>=15 mph open/outdoors vs indoor (dome/closed). effect = wind_under − indoor_under; positive = wind pushes under. Precip is not a games.csv column — untestable on this spine. Discover 1999-2019 wind n=529 under=56.52% indoor n=1196 under=49.08% θ=7.4415 pp. Validate 2020-2025 wind n=113 under=54.87% indoor n=517 under=48.16% θ=6.7048 pp CI[-3.431,16.8405] MDE80=14.4881. Recent-3 (2023,2024,2025): not all positive — 2023: eff=19.64 nW=11; 2024: eff=-9.46 nW=15; 2025: eff=2.63 nW=19. Full-sample wind under rate 56.23% (n=642). Validate yearly: 2020: nW=26 under=34.62% nI=89 under=42.7% eff=-8.08; 2021: nW=29 under=72.41% nI=79 under=48.1% eff=24.31; 2022: nW=13 under=61.54% nI=83 under=45.78% eff=15.76; 2023: nW=11 under=72.73% nI=81 under=53.09% eff=19.64; 2024: nW=15 under=40% nI=93 under=49.46% eff=-9.46; 2025: nW=19 under=52.63% nI=92 under=50% eff=2.63. Data: nflverse/nfldata games.csv (CC BY 4.0), local cache only; no DB.
