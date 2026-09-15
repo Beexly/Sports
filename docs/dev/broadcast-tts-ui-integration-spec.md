@@ -41,7 +41,7 @@ TTS-provider list this doc did not wait for).
    the client — it needs the secret key, which must stay server-side (rule 4).
 3. **New route: `app/api/broadcast/narrate/route.ts`.** POST `{ segmentScript: string }`
    → calls `synthesizeSegment` server-side → streams back `audio/mpeg` bytes, or a JSON
-   `{ reason }` on the `not_configured`/`request_failed`/`empty_script` paths (the client
+   `{ reason }` on the `not_configured`/`request_failed`/`empty_script`/`invalid_voice_id` paths (the client
    renders each reason as a distinct, honest message — "narration unavailable" for
    `not_configured`, "couldn't generate narration, try again" for `request_failed` —
    never a silently-failed-but-looks-fine button).

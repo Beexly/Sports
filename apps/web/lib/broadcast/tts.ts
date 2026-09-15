@@ -24,6 +24,11 @@
  * fabricating silence-as-success. The caller (the opt-in UI toggle) must render
  * that as "narration unavailable," never as a played (but silent) track.
  *
+ * `voiceId` is validated against a strict alphanumeric pattern before it is
+ * interpolated into the request URL — it is never trusted verbatim, whether it
+ * comes from a caller or from `ELEVENLABS_VOICE_ID`, since an unvalidated value
+ * in a URL path is a real injection surface, not just a style concern.
+ *
  * NOT WIRED INTO THE UI YET. `galaxy-broadcast.tsx` needs a real opt-in toggle,
  * an <audio> element, loading/error states, and — because it's a delicate,
  * carefully art-directed cinematic surface — actual browser QA before landing,
@@ -37,9 +42,22 @@ const ELEVENLABS_TTS_URL = "https://api.elevenlabs.io/v1/text-to-speech";
 /** A calm, professional narration voice — not the default demo voice. Override via env. */
 const DEFAULT_VOICE_ID = "21m00Tcm4TlvDq8ikWAM"; // ElevenLabs "Rachel" — stable public voice ID
 
+/**
+ * ElevenLabs voice IDs are alphanumeric only. `voiceId` is interpolated directly
+ * into the request URL's path (`${ELEVENLABS_TTS_URL}/${voiceId}`), so an
+ * unvalidated value — whether from a caller or from `ELEVENLABS_VOICE_ID` — is a
+ * URL/path-injection surface (a `/`, `?`, or `#` could redirect the path or
+ * append query params the caller didn't intend). Reject anything outside the
+ * real ID shape before it ever reaches the URL rather than trusting the source.
+ */
+const VOICE_ID_PATTERN = /^[A-Za-z0-9]+$/;
+
 export type SynthesizeResult =
   | { readonly audio: ArrayBuffer; readonly reason: null }
-  | { readonly audio: null; readonly reason: "not_configured" | "request_failed" | "empty_script" };
+  | {
+      readonly audio: null;
+      readonly reason: "not_configured" | "request_failed" | "empty_script" | "invalid_voice_id";
+    };
 
 export interface SynthesizeOptions {
   readonly apiKey?: string; // defaults to process.env.ELEVENLABS_API_KEY
@@ -69,6 +87,11 @@ export async function synthesizeSegment(
   if (!apiKey) return { audio: null, reason: "not_configured" };
 
   const voiceId = options.voiceId ?? process.env["ELEVENLABS_VOICE_ID"] ?? DEFAULT_VOICE_ID;
+  if (!VOICE_ID_PATTERN.test(voiceId)) {
+    console.warn(`[broadcast-tts] rejected invalid voiceId (not alphanumeric)`);
+    return { audio: null, reason: "invalid_voice_id" };
+  }
+
   const doFetch = options.fetchImpl ?? fetch;
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), options.timeoutMs ?? 20_000);
