@@ -500,8 +500,9 @@ export async function processSport(
       // Never historical. Never throws. Persistence uses OddsLineSnapshot
       // string market/side (no new table) when LINE_ARCHIVE is on.
       if (events.length > 0) {
-        // Kickoff-sorted so the credit cap does not starve late games on a
-        // dense slate (Sunday 16-game). commenceByEventId maps each Odds API
+        // T-15-close first, then kickoff-sorted, so the credit cap spends its
+        // first calls on the close and does not starve late games on a dense
+        // slate (Sunday 16-game). commenceByEventId maps each Odds API
         // event id to its commence_time — events with a missing time sort last.
         const commenceByEventId: Record<string, Date> = {};
         for (const event of events) {

@@ -10,6 +10,11 @@
  * Books: draftkings, fanduel, betmgm — already on the licensed Odds API plan.
  * Persistence is the caller's job (LINE_ARCHIVE / Odds rows). This module
  * only fetches. Schema is sealed; we do not invent an EventOdds table.
+ *
+ * C-357 / D15: the credit cap stays where the C-109 governor and
+ * EVENT_ODDS_CREDIT_CAP put it on the plan already paid for — this module
+ * never raises the cap. Markets are widened only to every key the props-HB
+ * engine actually scores; sweep order puts the T-15-minute close first.
  */
 
 export const DEFAULT_EVENT_ODDS_BOOKS = ["draftkings", "fanduel", "betmgm"] as const;
@@ -19,13 +24,72 @@ export const DEFAULT_EVENT_ODDS_MARKETS = [
   "player_points",
   "player_receptions",
 ] as const;
-export const NFL_EVENT_ODDS_MARKETS = ["player_pass_tds", "player_receptions"] as const;
+/**
+ * Every NFL market the props-HB engine scores (C-357).
+ *
+ * Each key is listed on The Odds API's NFL/NCAAF/CFL player-props table
+ * (https://the-odds-api.com/sports-odds-data/betting-markets.html#nfl-ncaaf-cfl-player-props-api,
+ * read 2026-09-15). `player_pass_tds` and `player_receptions` were already
+ * proven live in production; the rest match a props-hb-* adapter 1:1:
+ *
+ *   player_pass_tds            ← props-hb-pass-td.ts
+ *   player_pass_yds            ← props-hb-pass-yards.ts
+ *   player_pass_completions    ← props-hb-comp.ts
+ *   player_pass_interceptions  ← props-hb-int.ts
+ *   player_rush_yds            ← props-hb-rush.ts
+ *   player_rush_attempts       ← props-hb-rush-attempts.ts
+ *   player_rush_tds            ← props-hb-rush-td.ts
+ *   player_receptions          ← props-hb-catch.ts / props-hb.ts
+ *   player_reception_yds       ← props-hb-air-yac.ts
+ *   player_reception_tds       ← props-hb-rec-td.ts
+ *   player_anytime_td          ← props-hb-atd.ts (Yes/No; see prop-line-rows)
+ *   player_sacks               ← props-hb-sacks.ts
+ *
+ * Feature-only HB modules (obs, nested, snap-exposure, adot-*, *-bind) have
+ * no book market of their own and are not listed. No alternate_* ladders.
+ *
+ * Credits/cycle arithmetic on the existing plan (D15 / C-109; The Odds API
+ * bills 1 credit × market × region — `handoff/ODDS_API_TIER_DECISION.md`
+ * quoting their docs; ODDS_REGION = "us" so 1 region):
+ *   - one getEventOdds call with this list costs 12 vendor credits
+ *   - EVENT_ODDS_CREDIT_CAP (default 8) is a CALL cap, so a cap-8 cycle
+ *     costs 8 × 12 = 96 vendor credits when EVENT_ODDS_INGEST_ENABLED=true
+ *   - a full 16-game slate sweep is 16 × 12 = 192 credits (plan D15's
+ *     "~13 markets ≈ 208" is the same arithmetic at 13 keys)
+ *   - ingest stays INERT by default; the C-109 governor still paces the
+ *     broader paid path; this module never raises the cap
+ */
+export const NFL_EVENT_ODDS_MARKETS = [
+  "player_pass_tds",
+  "player_pass_yds",
+  "player_pass_completions",
+  "player_pass_interceptions",
+  "player_rush_yds",
+  "player_rush_attempts",
+  "player_rush_tds",
+  "player_receptions",
+  "player_reception_yds",
+  "player_reception_tds",
+  "player_anytime_td",
+  "player_sacks",
+] as const;
 export const NBA_EVENT_ODDS_MARKETS = ["player_points"] as const;
+/**
+ * Cap is on getEventOdds CALLS (events), not markets. C-109 / D15: leave it
+ * where the governor puts it — do not raise it when widening the market list.
+ */
 export const DEFAULT_EVENT_ODDS_CREDIT_CAP = 8;
 
 /**
- * Sport-aware live event-odds keys. Receptions is the props-HB validated
- * count. Does not include historical* (10× credits).
+ * Minutes before kickoff in which the prop close must be captured (C-357).
+ * An event whose commenceTime falls in [now, now + PROP_CLOSE_SWEEP_MINUTES]
+ * is in the close window and sorts ahead of every other prop refresh.
+ */
+export const PROP_CLOSE_SWEEP_MINUTES = 15;
+
+/**
+ * Sport-aware live event-odds keys. NFL lists every props-HB market (C-357).
+ * Does not include historical* (10× credits).
  */
 export function defaultEventOddsMarkets(sportKey: string): readonly string[] {
   const k = sportKey.toLowerCase();
@@ -62,9 +126,12 @@ export interface EventOddsIngestArgs {
   readonly markets?: readonly string[];
   readonly bookmakers?: readonly string[];
   /** Optional kickoff time per event id. When provided, events are processed
-   *  sooner-first so the credit cap does not starve late kickoffs on a dense
-   *  slate (e.g. Sunday 16-game). Events with a missing time sort last. */
+   *  T-15-close first, then sooner-first, so the credit cap does not starve
+   *  the close or late kickoffs on a dense slate (e.g. Sunday 16-game).
+   *  Events with a missing time sort last. */
   readonly commenceByEventId?: Record<string, Date>;
+  /** Clock for the T-15 close window. Defaults to `new Date()`. Tests inject. */
+  readonly now?: Date;
 }
 
 export interface EventOddsIngestReport {
@@ -113,29 +180,47 @@ export function eventOddsCreditCap(
 }
 
 /**
- * Order event ids so the credit cap does not starve late kickoffs on a dense
- * slate (Sunday 16-game). Returns a NEW array; does not mutate the input.
+ * Order event ids so the credit cap spends its first calls on the T-15-minute
+ * prop close, then on nearer kickoffs (C-357). Returns a NEW array; does not
+ * mutate the input.
  *
- * Sort: sooner commenceTime first. Events with a missing time sort AFTER all
- * events with known times, preserving input order among themselves (stable).
+ * Buckets (stable within each):
+ *   0. close-now: commenceTime in [now, now + PROP_CLOSE_SWEEP_MINUTES]
+ *      — the close is the one row CLV cannot live without; it outranks every
+ *      other prop refresh.
+ *   1. future: commenceTime after the close window — sooner first, so late
+ *      kickoffs are not preempted on a dense Sunday slate.
+ *   2. past: commenceTime before now — already kicked off; the pre-kickoff
+ *      close window is gone, so these never starve bucket 0.
+ *   3. missing commenceTime — last, preserving input order among themselves.
  *
- * Called from `process-sport.ts` to build the slice the cap will actually
- * burn on — early games first, so late games are not preempted.
- *
- * Tests: sooner first; missing times last (stable). No DB/network side effects.
+ * Called from `ingestEventOddsIfEnabled` to build the slice the cap will
+ * actually burn on. No DB/network side effects.
  */
 export function orderEventIdsForCreditCap(
   eventIds: readonly string[],
   commenceByEventId: Record<string, Date> | undefined,
+  now: Date = new Date(),
 ): string[] {
   if (!commenceByEventId) return [...eventIds];
+  const nowMs = now.getTime();
+  const closeUntilMs = nowMs + PROP_CLOSE_SWEEP_MINUTES * 60_000;
+  const bucketOf = (id: string): 0 | 1 | 2 | 3 => {
+    const t = commenceByEventId[id];
+    if (!t) return 3;
+    const ms = t.getTime();
+    if (ms >= nowMs && ms <= closeUntilMs) return 0;
+    if (ms > closeUntilMs) return 1;
+    return 2;
+  };
   return [...eventIds].sort((a, b) => {
+    const ba = bucketOf(a);
+    const bb = bucketOf(b);
+    if (ba !== bb) return ba - bb;
     const ta = commenceByEventId[a];
     const tb = commenceByEventId[b];
-    if (ta && tb) return ta.getTime() - tb.getTime(); // sooner first
-    if (ta && !tb) return -1; // known before unknown
-    if (!ta && tb) return 1; // unknown after known
-    return 0; // both missing — stable, keep input order
+    if (ta && tb) return ta.getTime() - tb.getTime(); // sooner first within bucket
+    return 0; // missing-time bucket is already stable in input order
   });
 }
 
@@ -186,8 +271,13 @@ export async function ingestEventOddsIfEnabled(
     if (h.usedRequests != null) usedRequests = h.usedRequests;
   };
 
-  // Kickoff-sorted so the credit cap does not starve late games on a dense slate.
-  const orderedIds = orderEventIdsForCreditCap(args.eventIds, args.commenceByEventId);
+  // T-15-close first, then kickoff-sorted, so the credit cap spends its
+  // first calls on the close and does not starve late games on a dense slate.
+  const orderedIds = orderEventIdsForCreditCap(
+    args.eventIds,
+    args.commenceByEventId,
+    args.now ?? new Date(),
+  );
   for (const eventId of orderedIds) {
     if (fetched >= cap) break;
     try {
