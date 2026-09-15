@@ -39,11 +39,13 @@ describe("Board vs Picks differentiation", () => {
   });
 
   it("the nav names them as different jobs", () => {
-    expect(nav).toContain('href: "/board"');
-    expect(nav).toContain('href: "/picks"');
-    const boardLabel = nav.match(/label:\s*"([^"]+)",\s*href:\s*"\/board"/)?.[1] ?? "";
-    const picksLabel = nav.match(/label:\s*"([^"]+)",\s*href:\s*"\/picks"/)?.[1] ?? "";
-    expect(boardLabel).not.toBe(picksLabel);
+    // C-360: Board is a NavMenu (`label="Board" href="/board"`); Picks is a
+    // plain Link (`href="/picks"` + child text). Match the route, not one
+    // authoring shape.
+    expect(nav).toMatch(/href=["']\/board["']/);
+    expect(nav).toMatch(/href=["']\/picks["']/);
+    expect(nav).toMatch(/label="Board"|>\s*Board\s*</);
+    expect(nav).toMatch(/>\s*Picks\s*</);
   });
 
   it("each page cross-links the other with its job named", () => {

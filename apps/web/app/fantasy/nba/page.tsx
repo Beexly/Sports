@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description:
     "A fictional NBA DFS slate for optimizer and lineup-validation testing. All players, salaries, and projections are invented — not real contest data.",
   alternates: { canonical: "/fantasy/nba" },
+  // Parked sample tool (C-360 / D3): keep the route, drop it from the index.
+  robots: { index: false },
 };
 
 /**

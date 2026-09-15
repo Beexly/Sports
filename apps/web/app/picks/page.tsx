@@ -255,8 +255,11 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               Published picks
             </p>
             <h1 className="mt-1.5 text-3xl font-bold tracking-tight text-white">
-              Today&apos;s sports signals.
+              Picks
             </h1>
+            <p className="mt-1.5 text-lg font-semibold tracking-tight text-ion-1">
+              Today&apos;s sports signals.
+            </p>
             <p className="mt-1.5 text-sm text-ion-2">
               Every pick we&apos;re on today, with the line, timing, risk, and the
               reason.{" "}

@@ -57,9 +57,14 @@ export default async function GSNPage() {
                 className="mt-5 font-display text-balance text-ion-white"
                 style={{ fontSize: "clamp(2.5rem, 8vw, 5.5rem)", lineHeight: 0.98, letterSpacing: "-0.02em" }}
               >
-                GSN: the{" "}
-                <span className="gse-editorial" style={{ fontSize: "1.08em" }}>transmission</span>, not the blog.
+                GSN
               </h1>
+            </Reveal>
+            <Reveal delay={140}>
+              <p className="mt-3 max-w-2xl font-display text-balance text-ion-1" style={{ fontSize: "clamp(1.5rem, 4vw, 2.5rem)", lineHeight: 1.05 }}>
+                the{" "}
+                <span className="gse-editorial" style={{ fontSize: "1.08em" }}>transmission</span>, not the blog.
+              </p>
             </Reveal>
             <Reveal delay={170}>
               <p className="mt-5 max-w-2xl text-lg text-ion-1">

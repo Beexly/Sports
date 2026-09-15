@@ -624,7 +624,7 @@ export const PLAYER_VIEWS: readonly PlayerView[] = [
     label: "Production",
     tabTooltip: "Season leaders, last-5 form, defense ranks",
     eyebrow: "Production Lab",
-    title: "Who is producing, who is heating up, who is easy to score on.",
+    title: "Players",
     description:
       "Season leaders, last-5 recent form, and positional defense ranks, all computed from real nflverse player-week rows. Settled, historical facts, not forecasts.",
     explainer: [

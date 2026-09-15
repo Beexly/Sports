@@ -352,8 +352,13 @@ export default function PricingPage() {
             </Reveal>
             <Reveal delay={90}>
               <h1 className="mt-3 font-display text-display-xl text-balance text-white">
-                {HERO_HEADLINE}
+                Plans
               </h1>
+            </Reveal>
+            <Reveal delay={140}>
+              <p className="mt-3 font-display text-balance text-ink-200" style={{ fontSize: "clamp(1.25rem, 3vw, 2rem)", lineHeight: 1.15 }}>
+                {HERO_HEADLINE}
+              </p>
             </Reveal>
             <Reveal delay={180}>
               <p className="mx-auto mt-4 max-w-xl text-lg text-ink-300">

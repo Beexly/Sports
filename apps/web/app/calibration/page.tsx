@@ -103,8 +103,11 @@ export default async function CalibrationProofRoomPage() {
             The Proof Room · Galaxy Calibration
           </p>
           <h1 className="mt-4 text-4xl font-black tracking-tight text-ion-white sm:text-5xl">
-            Trust is an architecture, not a tagline.
+            Calibration
           </h1>
+          <p className="mt-2 text-xl font-semibold tracking-tight text-ion-1">
+            Trust is an architecture, not a tagline.
+          </p>
           <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
             Every credibility receipt the platform publishes, gathered in one place. No
             fabricated picks, no invented stats, no silent edits. Each number stays gated

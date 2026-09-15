@@ -64,18 +64,16 @@ describe("P16-03 — Nav does not block on auth() in the static shell", () => {
     expect(mocks.auth).not.toHaveBeenCalled();
 
     // The static nav links render from the static nav-left, not from auth.
-    // These are the FOUR DOORS the nav doctrine leaves in the top bar. Record
-    // (/calibration) used to be asserted here and is not a top-bar link any
-    // more — it moved into the Board menu, whose items are not in the static
-    // DOM. nav-route-integrity is what proves that route is still reachable;
-    // this file's job is that the shell renders WITHOUT auth.
+    // C-360 top-bar doors. Menu children (Calibration) are not in the static
+    // DOM; nav-route-integrity proves those routes are still reachable.
     expect(container.querySelector('a[href="/board"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/picks"]')).not.toBeNull();
     expect(container.querySelector('a[href="/players"]')).not.toBeNull();
-    expect(container.querySelector('a[href="/fantasy"]')).not.toBeNull();
-    expect(container.querySelector('a[href="/the-beat"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/fantasy/dfs"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/gsn"]')).not.toBeNull();
   });
 
-  it("Nav() renders the four top-bar doors as static links, whatever the auth state", () => {
+  it("Nav() renders the C-360 top-bar doors as static links, whatever the auth state", () => {
     mocks.auth.mockResolvedValue({
       user: { id: "u1", name: "Test", email: "t@e.com", image: null },
     });
@@ -88,14 +86,17 @@ describe("P16-03 — Nav does not block on auth() in the static shell", () => {
       .map((a) => a.getAttribute("href"))
       .filter(Boolean);
 
-    // Board / Players / Fantasy / GSN — the top bar the nav doctrine specifies.
-    // /intelligence/engines and /calibration were pinned here from the
-    // pre-trim nav; both now live inside menus that do not render in the
-    // static shell, so asserting them here tested the menu, not the shell.
+    // C-360: Board · Picks · Record · Method · Verify · Plans · Players · DFS · Props · GSN
     expect(hrefs).toContain("/board");
+    expect(hrefs).toContain("/picks");
+    expect(hrefs).toContain("/performance");
+    expect(hrefs).toContain("/methodology");
+    expect(hrefs).toContain("/verify");
+    expect(hrefs).toContain("/pricing");
     expect(hrefs).toContain("/players");
-    expect(hrefs).toContain("/fantasy");
-    expect(hrefs).toContain("/the-beat");
+    expect(hrefs).toContain("/fantasy/dfs");
+    expect(hrefs).toContain("/fantasy/props");
+    expect(hrefs).toContain("/gsn");
 
     // The point of the test: this render is signed IN and must be identical to
     // the signed-out one above, because auth state lives in the stubbed

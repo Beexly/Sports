@@ -121,7 +121,7 @@ function BootstrapShell({ children }: { children: React.ReactNode }) {
       <Nav />
       <main id="main-content" className="flex-1 px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
-          <h1 className="sr-only">Performance</h1>
+          <h1 className="sr-only">Record</h1>
           {children}
         </div>
       </main>
@@ -281,8 +281,11 @@ export default async function PerformancePage() {
               Settled-pick audit trail
             </p>
             <h1 className="mt-3 text-4xl font-black tracking-tight text-ion-white sm:text-5xl">
-              Calibration Report
+              Record
             </h1>
+            <p className="mx-auto mt-2 max-w-xl text-xl font-semibold text-ion-1">
+              Calibration Report
+            </p>
             <p className="mx-auto mt-4 max-w-xl text-ion-1">
               Every finished pick from the live engine is counted, wins and
               losses alike. Picks from our early warm-up period are excluded

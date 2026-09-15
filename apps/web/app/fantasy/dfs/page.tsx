@@ -32,8 +32,8 @@ export default async function DfsSuitePage() {
     <FantasyShell
       eyebrow="DFS Optimizer"
       accent="cyan"
-      title={<>Build the lineup. <span className="gse-editorial" style={{ fontSize: "1.08em" }}>See the why</span>.</>}
-      intro="Pick your mode, set your locks and fades, and the optimizer builds lineups that actually fit the salary cap. Every lineup shows its salary, stack, projected ownership, and leverage score. Export straight to DraftKings CSV."
+      title="DFS"
+      intro="Build the lineup. See the why. Pick your mode, set your locks and fades, and the optimizer builds lineups that actually fit the salary cap. Every lineup shows its salary, stack, projected ownership, and leverage score. Export straight to DraftKings CSV."
       note="Running on a sample slate until a live salary feed is connected. The math is real; the player pool is illustrative."
       wide
     >

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { VerifyConsole } from "@/components/trust-ledger/verify-console";
@@ -34,8 +35,11 @@ export default function VerifyPage({
           Proof of record
         </p>
         <h1 className="mt-3 text-3xl font-black tracking-tight text-ion-white sm:text-4xl">
-          Verify any pick yourself.
+          Verify
         </h1>
+        <p className="mt-2 text-xl font-semibold tracking-tight text-ion-1">
+          Verify any pick yourself.
+        </p>
         <p className="mt-3 text-sm leading-6 text-ion-1">
           Before kickoff, each published pick with a full market quote is
           frozen into a receipt: the side, the line, the price, the scores we
@@ -50,7 +54,11 @@ export default function VerifyPage({
         <p className="mt-2 text-xs leading-5 text-ion-2">
           Receipts for games that have not started verify as sealed: you can
           confirm the commitment exists and predates kickoff, and the fields
-          open automatically once the game begins.
+          open automatically once the game begins.{" "}
+          <Link href="/sealed" className="underline hover:text-orbital-cyan">
+            Open the sealed slate
+          </Link>
+          .
         </p>
         <div className="mt-8">
           <VerifyConsole initialHash={initialHash} />

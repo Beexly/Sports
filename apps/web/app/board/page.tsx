@@ -215,10 +215,13 @@ export default async function BoardPage(): Promise<JSX.Element> {
               className="mt-5 max-w-4xl font-display text-balance text-ion-white"
               style={{ fontSize: "clamp(2.5rem, 8vw, 5.5rem)", lineHeight: 0.94, letterSpacing: "-0.03em" }}
             >
+              Board
+            </h1>
+            <p className="mt-3 max-w-4xl font-display text-balance text-ion-1" style={{ fontSize: "clamp(1.5rem, 4vw, 2.5rem)", lineHeight: 1.05, letterSpacing: "-0.02em" }}>
               Every game.
               <br />
               <span className="text-plasma">Scored and honest.</span>
-            </h1>
+            </p>
             <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
               What we&apos;re on today, what we passed on, and why. The board shows every
               game we looked at, not just the ones we liked.
