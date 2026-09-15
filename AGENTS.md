@@ -9,11 +9,12 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ## CURRENT STATE
 
-Plan: `docs/ops/LAST_PLAN_2026-09-15.md` · branch `hermes/last-plan-2026-09-15` · head `7f4f29e82` · Phase 0 · rows: Phase 0+1 DONE/UNPUSHED. Phase 2: C-362/363/364/365/366/367-369 UNPUSHED. Next: C-370-379, C-394, C-398-409.
-Founder hands-only pending: §0.2 items 1–5 (rotate secrets; Stripe/Vercel PRICING=FOUNDING; set PREDEXON_API_KEY/HEALTH_ALERT_WEBHOOK_URL/SENTRY_DSN/OPS_READ_SECRET; merge labelled PRs; supply oddsmagnet months + prop-line file).
+Plan: `docs/ops/LAST_PLAN_2026-09-15.md` · branch `hermes/last-plan-2026-09-15` · head `58a8cdfc9` · Phase 2 · rows: Phase 0+1 DONE/UNPUSHED. Phase 2: C-362-379, C-394-409 UNPUSHED (A1-A28 all scored/BLOCKED; INDEX.md current). Next: C-397 (assemble v5.3.0 candidate + duel on PICKS-H1), then C-380 (retire gate_decisions readers), then Phase 3.
+Founder hands-only pending: §0.2 items 1–5 (rotate secrets; Stripe/Vercel PRICING=FOUNDING; set PREDEXON_API_KEY/HEALTH_ALERT_WEBHOOK_URL/SENTRY_DSN/OPS_READ_SECRET; merge labelled PRs #828/#829 + PR #819; supply oddsmagnet months + prop-line file).
 Open security work not in this plan: issue #820 transport half (connect-time address check).
 Do-not-touch: `hermes/v528-market-gate-preserved-2026-09-11` (does not compile); checkout price-mismatch (fail-closed is correct); pricing amounts; any gate/env flag.
-Last five: C-415 943937478; C-414 78838246d; C-362/395 dd58e6ebc; C-358 71815cdc5; C-360 55a474ade.
+C-421 residual: A17-A22's original single-commit registration+run violated the kill_line-before-run_sha order gate (repaired 73dcee8a0, run_sha bumped, no recompute); A23-A28 register-then-run in two commits from the start — keep doing that for every future factor, never collapse it back to one commit. Also fixed: AGENTS.md mojibake, 2 pre-existing guardrail false positives (trust-gate on a real CSV column name, 5 em-dashes), and a stale test in index.test.mjs that hardcoded 16 UNTESTED specs against the live docs/factors dir.
+Last five: C-404-409 58a8cdfc9 — A23/A25 CANDIDATE, A24/A27/A28 DEAD, A26 BLOCKED; C-421 73dcee8a0+58a8cdfc9 — maintenance (see above); C-398-403 4283b538b; C-375-379/394 de3bdc215; C-370-374 8ef1bc065.
 
 ### PredExon handoff (for every later agent)
 

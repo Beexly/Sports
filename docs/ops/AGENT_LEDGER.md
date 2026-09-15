@@ -563,12 +563,13 @@ the only copy, and nobody else can verify or build on it.
 | C-401 | LP2 Run A20 backup QB usage | hermes | UNPUSHED | 4283b538b — A20 DEAD |
 | C-402 | LP2 Run A21 OL continuity | hermes | UNPUSHED | 4283b538b — A21 DEAD |
 | C-403 | LP2 Run A22 red-zone share to TD | hermes | UNPUSHED | 4283b538b — A22 CANDIDATE +0.32pp n=5725 |
-| C-404 | LP2 Run A23 snap-share slope | hermes | OPEN | - |
-| C-405 | LP2 Run A24 age-conditioned rest | hermes | OPEN | - |
-| C-406 | LP2 Run A25 weather on pass props | hermes | OPEN | - |
-| C-407 | LP2 Run A26 man-zone by receiver type | hermes | OPEN | - |
-| C-408 | LP2 Run A27 crew penalties | hermes | OPEN | - |
-| C-409 | LP2 Run A28 rookie breakout curve | hermes | OPEN | - |
+| C-404 | LP2 Run A23 snap-share slope | hermes | UNPUSHED | 58a8cdfc9 — A23 CANDIDATE slope=0.2937 CI[0.2664,0.3211] n=21656 |
+| C-405 | LP2 Run A24 age-conditioned rest | hermes | UNPUSHED | 58a8cdfc9 — A24 DEAD Δ=-0.0057 CI[-0.0164,0.005] n=1297 |
+| C-406 | LP2 Run A25 weather on pass props | hermes | UNPUSHED | 58a8cdfc9 — A25 CANDIDATE REC Δ=-4.24 CI[-5.75,-2.73] n=7196 |
+| C-407 | LP2 Run A26 man-zone by receiver type | hermes | UNPUSHED | 58a8cdfc9 — A26 BLOCKED, live header confirms no man/zone column |
+| C-408 | LP2 Run A27 crew penalties | hermes | UNPUSHED | 58a8cdfc9 — A27 DEAD, discover crew sign-flips in validate |
+| C-409 | LP2 Run A28 rookie breakout curve | hermes | UNPUSHED | 58a8cdfc9 — A28 DEAD Δ=0.0082 CI[-0.013,0.0294] n=115 |
+| C-421 | LP-maint found while running A23-A409: AGENTS.md mojibake, A17-22 run-order, stale index test, 2 guardrail false positives | hermes | UNPUSHED | 73dcee8a0 + 58a8cdfc9 — see commit bodies; guardrails 26/26, factors:index --check OK (28 specs), index.test.mjs 16/16 |
 | C-397 | LP2 Assemble the v5.3.0 candidate and duel it on PICKS-H1 | hermes | OPEN | - |
 | C-380 | LP2 Retire gate_decisions readers; the verifier mint log is the audit trail | hermes | OPEN | - |
 | C-381 | LP3 Power certificate and scorecard for the HB props engine vs posted lines | hermes | OPEN | - |
