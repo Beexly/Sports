@@ -1220,3 +1220,4 @@ C-359 UNPUSHED 14ac7ce6b — Kalshi book 2 via PredExon; D19 key ON.
 C-396 UNPUSHED 54d6d2a16 — Kalshi tape kalshi-predexon; free plane only.
 C-392 UNPUSHED 13ab1bc99 — SSRF guard doc half (literal-only, cite #820).
 C-361 UNPUSHED 64a1a26bb — dead duplicate loaders deleted.
+C-357 UNPUSHED 2d35b1ed6 — prop markets widened to 12; T-15 close sweep.
