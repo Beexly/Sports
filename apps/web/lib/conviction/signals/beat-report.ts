@@ -21,16 +21,11 @@
  *
  * HONESTY CONSTRAINT — READ THIS BEFORE WIRING IT UP.
  *
- *   The wire this repo ships today (`lib/news/wire.ts` DEMO_WIRE) is SAMPLE
- *   data with fictional reporters and fictional reports. A fabricated wire must
- *   never gate a real pick: a made-up "two sources say the starting QB is out"
- *   would hold a real published row for a reason that does not exist, and the
- *   held-row explanation shown to a reader would be a lie.
- *
- *   So `live` defaults to FALSE and the signal returns null unconditionally
- *   until an operator passes `live: true` alongside a loader backed by real
- *   ingested reporting. Wiring this module in before that flip is a no-op by
- *   construction, which is exactly the intent.
+ *   C-416: the wire is stored Signal rows (`lib/news/wire-store.ts`), polled
+ *   by the refresh-wire cron. This module still defaults `live` to FALSE and
+ *   returns null until an operator passes `live: true` with a loader backed by
+ *   those stored rows (C-417 builds that loader). Wiring this module in before
+ *   that flip is a no-op by construction, which is exactly the intent.
  */
 
 import type { GateCandidate, SignalFn, SignalRead } from "../gate-contract";

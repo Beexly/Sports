@@ -20,7 +20,6 @@ import {
   type NewsItem,
   type Tier,
 } from "@/lib/news/impact";
-import { DEMO_WIRE } from "@/lib/news/wire";
 import { BRAND_COLORS } from "@/lib/brand";
 
 const TIER_HEX: Record<Tier, string> = {
@@ -37,26 +36,25 @@ const ago = (m: number) => (m < 60 ? `${m}m ago` : `${Math.round(m / 60)}h ago`)
 
 type SortMode = "strongest" | "newest";
 
+const EMPTY_WIRE: NewsItem[] = [];
+
 export function TheBeat({
   liveWire = null,
   unavailable = false,
 }: {
   liveWire?: NewsItem[] | null;
   /**
-   * The live feed was attempted and FAILED. Distinct from `liveWire === null`,
-   * which means no feed is configured and the labelled sample is the honest
-   * thing to show. On a failure we must show neither: falling back to the
-   * fictional sample after a failed fetch reads as "here is the news" when the
-   * truth is "we could not get the news".
+   * The stored wire read FAILED. Distinct from an empty store: an empty array
+   * is the honest empty state (nothing classified / nothing landed); a failure
+   * means we could not read the store and must not invent a wire.
    */
   unavailable?: boolean;
 }) {
-  // Live RSS wire when the owner has whitelisted feeds (NEWS_RSS_FEEDS);
-  // otherwise the clearly-labeled fictional sample. The two states are
-  // visually unmistakable: sample shows the fictional-sources marker, live
-  // shows the real-source attribution instead.
+  // Stored wire (C-416). Empty store is honest empty — never a sample.
+  // EMPTY_WIRE is a stable module constant so useMemo deps stay stable when
+  // nothing is loaded (liveWire === null).
   const isLive = liveWire !== null;
-  const wire = liveWire ?? DEMO_WIRE;
+  const wire = liveWire ?? EMPTY_WIRE;
   const ranked = useMemo(() => rankWireCorroborated(wire), [wire]);
   const [tierFilter, setTierFilter] = useState<Tier | "All">("All");
   const [sort, setSort] = useState<SortMode>("strongest");
@@ -88,12 +86,8 @@ export function TheBeat({
     return { total: ranked.length, confirmed, hot, top };
   }, [ranked]);
 
-  // A FAILED feed renders nothing but the failure. This returns BEFORE the
-  // DEMO_WIRE fallback below can run: `liveWire === null` means "no feed
-  // configured", and the labelled sample is honest for that case, but after a
-  // fetch that FAILED the same fallback would present fictional sources as the
-  // news of the day. Unavailable is its own state, and it is not an error
-  // either. We just do not have the wire right now.
+  // A FAILED store read renders nothing but the failure. This returns BEFORE
+  // the empty-wire path below: a read error is not the same as a quiet wire.
   if (unavailable) {
     return (
       <div className="space-y-5">
@@ -101,13 +95,13 @@ export function TheBeat({
           className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
           style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}
         >
-          Wire offline · no sources reached
+          Wire offline · store unreadable
         </span>
         <div className="surface-card p-8 text-center">
           <p className="font-display text-xl text-ion-white">Feed unavailable.</p>
           <p className="mx-auto mt-1 max-w-md text-sm text-ion-2">
-            We could not reach the news sources just now, so there is nothing to
-            show. We will not fill the gap with the sample wire.
+            We could not read the stored wire just now, so there is nothing to
+            show. We will not fill the gap with a sample.
           </p>
         </div>
       </div>
@@ -116,8 +110,8 @@ export function TheBeat({
 
   return (
     <div className="space-y-5">
-      {/* Provenance marker, unmistakable at the point of display: a sample
-          card is never read as live, and a live card names its feed sources. */}
+      {/* Provenance marker, unmistakable at the point of display: live cards
+          name their feed sources. There is no sample wire (C-416). */}
       {isLive ? (
         <span
           className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
@@ -131,7 +125,7 @@ export function TheBeat({
           className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
           style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}
         >
-          Sample feed · fictional sources
+          Wire · store not loaded
         </span>
       )}
 

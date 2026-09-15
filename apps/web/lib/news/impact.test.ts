@@ -1,10 +1,18 @@
 import { describe, it, expect } from "vitest";
 import { readImpact, rankWire, corroborate, rankWireCorroborated, TIER_WEIGHT, signalLabel, type NewsItem } from "./impact";
-import { DEMO_WIRE, NATIONAL_INSIDERS, NFL_TEAMS } from "./wire";
+import { NATIONAL_INSIDERS, NFL_TEAMS } from "./wire";
 
 const item = (over: Partial<NewsItem> = {}): NewsItem => ({
   id: "x", source: "src", tier: "Insider", team: "ATL", player: "X", headline: "h", signal: "injury-out", minutesAgo: 0, ...over,
 });
+
+/** C-416: local fixtures replace the deleted DEMO_WIRE. Fictional names only. */
+const FIXTURE_WIRE: NewsItem[] = [
+  { id: "n1", source: "Dana Frost", tier: "Insider", team: "ATL", player: "Marcus Vale", headline: "Vale (ankle) ruled OUT for Sunday after no practice all week", signal: "injury-out", minutesAgo: 12 },
+  { id: "n1b", source: "Marcus Kline", tier: "Insider", team: "ATL", player: "Marcus Vale", headline: "Confirmed: Vale will not play; the team is elevating depth at the position", signal: "injury-out", minutesAgo: 6 },
+  { id: "n2", source: "PHI beat", tier: "Beat", team: "PHI", player: "Tariq Bell", headline: "Bell taking clear lead-back reps with the starter limited", signal: "role-up", minutesAgo: 40 },
+  { id: "n9", source: "single source", tier: "Unconfirmed", team: "SEA", player: "Tobias Frey", headline: "Whisper of a possible trade. No corroboration", signal: "trade", minutesAgo: 8 },
+];
 
 describe("news impact engine", () => {
   it("injury-out is a strong negative fantasy delta", () => {
@@ -58,9 +66,8 @@ describe("news impact engine", () => {
   });
 
   it("rankWire orders by urgency, fresh insider out-news on top", () => {
-    const ranked = rankWire(DEMO_WIRE);
+    const ranked = rankWire(FIXTURE_WIRE);
     expect(ranked[0]!.urgency).toBeGreaterThanOrEqual(ranked[ranked.length - 1]!.urgency);
-    // the fresh insider 'ruled out' should outrank a stale low-tier rumor
     const top = ranked[0]!;
     expect(top.item.tier).toBe("Insider");
   });
@@ -77,18 +84,6 @@ describe("news impact engine", () => {
     expect(new Set(NFL_TEAMS).size).toBe(32);
     expect(NATIONAL_INSIDERS.length).toBeGreaterThanOrEqual(5);
     expect(NATIONAL_INSIDERS.every((i) => i.tier === "Insider")).toBe(true);
-  });
-
-  it("the public DEMO_WIRE never attributes a fabricated report to a real journalist", () => {
-    // The Beat renders DEMO_WIRE with each item's `source` shown next to a
-    // "Confirmed / Reliability %" badge. A fabricated report attributed to a real
-    // reporter (Schefter, Pelissero, …) reads as a genuine endorsement — a trust +
-    // right-of-publicity risk. Demo sources must be fictional; real insider names
-    // stay an internal reliability seed only.
-    const realInsiders = new Set(NATIONAL_INSIDERS.map((i) => i.name));
-    for (const w of DEMO_WIRE) {
-      expect(realInsiders.has(w.source), `demo source "${w.source}" is a real insider`).toBe(false);
-    }
   });
 });
 
@@ -124,9 +119,9 @@ describe("corroboration", () => {
     expect(doubled[0]!.urgency).toBeGreaterThan(single[0]!.urgency);
   });
 
-  it("the live demo wire surfaces the corroborated top story", () => {
-    const ranked = rankWireCorroborated(DEMO_WIRE);
-    expect(ranked[0]!.corroboration.confirmed).toBe(true); // Vale injury-out, two insiders
+  it("a two-source fixture wire surfaces the corroborated top story", () => {
+    const ranked = rankWireCorroborated(FIXTURE_WIRE);
+    expect(ranked[0]!.corroboration.confirmed).toBe(true);
     expect(ranked[0]!.corroboration.sources).toBeGreaterThanOrEqual(2);
   });
 });

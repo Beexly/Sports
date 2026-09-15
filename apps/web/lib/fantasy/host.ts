@@ -15,8 +15,7 @@
  * Pure, deterministic, illustrative.
  */
 
-import { rankWire, type SignalType } from "../news/impact";
-import { DEMO_WIRE } from "../news/wire";
+import { rankWire, type NewsItem, type SignalType } from "../news/impact";
 import { generateWeeklyBrief } from "./studio";
 import { scanText, type SafetyVerdict } from "../safety/content-safety";
 
@@ -188,12 +187,17 @@ export function assessPublishReadiness(broadcast: Broadcast, ctx: PublishContext
   return { ready: gates.every((g) => g.passed), gates, safety: safety.verdict };
 }
 
-export function buildBroadcast(persona: Persona = NOVA): Broadcast {
+export function buildBroadcast(
+  persona: Persona = NOVA,
+  wireItems: readonly NewsItem[] = [],
+): Broadcast {
   const brief = generateWeeklyBrief();
   const week = brief.week;
-  const wire = rankWire(DEMO_WIRE);
-  const top = wire[0]!;
-  const topScene = sceneForSignal(top.item.signal);
+  const wire = rankWire(wireItems);
+  const top = wire[0];
+  // Honest empty: no stored wire signals means no invented headline — the
+  // segment still opens on location so the broadcast contract holds.
+  const topScene = top ? sceneForSignal(top.item.signal) : "sideline";
 
   // Two reporters trade segments: Nova works the field, Orion holds the desk.
   const field = reporterTag(persona);
@@ -208,13 +212,17 @@ export function buildBroadcast(persona: Persona = NOVA): Broadcast {
 
   const segments: Segment[] = [];
 
-  // 1. Top story. From the field, Nova
+  // 1. Top story. From the field, Nova — only when the stored wire has one.
   segments.push({
     id: "seg-top",
     scene: topScene,
     kicker: "Top story",
-    script: `We start from ${SCENES[topScene].setting}. ${top.item.headline}. Here's what it means for you: ${top.action}`,
-    broll: `${SCENES[topScene].label}. Lower-third with the player and the fantasy/market delta.`,
+    script: top
+      ? `We start from ${SCENES[topScene].setting}. ${top.item.headline}. Here's what it means for you: ${top.action}`
+      : `We start from the desk. The stored wire is quiet right now — no classified reports have landed. When the cron fills the ledger, this is where the loudest one leads.`,
+    broll: top
+      ? `${SCENES[topScene].label}. Lower-third with the player and the fantasy/market delta.`
+      : `Desk. Empty signal ledger graphic, honest empty state.`,
     reporter: field,
   });
 

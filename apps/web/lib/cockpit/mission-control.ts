@@ -8,8 +8,7 @@
  * actionable card that deep-links to the tool. Pure, deterministic, illustrative.
  */
 
-import { rankWireCorroborated } from "../news/impact";
-import { DEMO_WIRE } from "../news/wire";
+import { rankWireCorroborated, type NewsItem } from "../news/impact";
 import { SCHEME_SCENARIOS, applyScheme } from "../fantasy/scheme";
 import { DFS_SLATE, leverage } from "../fantasy/dfs-slate";
 import { PROPS, readProp } from "../fantasy/props";
@@ -30,11 +29,12 @@ export type BriefingCard = {
   readonly accent: string;
   /**
    * True when the card's headline/detail numbers come from an illustrative,
-   * fictional engine (DEMO_WIRE, sample slates, illustrative props) rather than
-   * a live licensed feed. Provenance travels with the card so the surface can
-   * badge it "Sample" and fabricated demo data is never mistaken for a live,
-   * sourced alert. The eyebrow of a sample card is also prefixed "Sample · ".
-   * See lib/news/wire.ts (WIRE_DISCLAIMER). Non-negotiables #1/#4.
+   * fictional engine (sample slates, illustrative props) rather than a live
+   * licensed feed. Provenance travels with the card so the surface can badge
+   * it "Sample" and fabricated demo data is never mistaken for a live, sourced
+   * alert. The eyebrow of a sample card is also prefixed "Sample · ".
+   * Non-negotiables #1/#4. The breaking card is live-only (stored wire,
+   * C-416) and is omitted when the store is empty — never sample.
    * Optional at the type level (absent ⇒ treat as non-sample), but buildBriefing
    * always sets it explicitly on every card it composes.
    */
@@ -47,21 +47,21 @@ const SAMPLE_TAG = "Sample · ";
 const HEX = { cyan: "#FF4D2E", magenta: "#FF4D2E", uv: "#C9D4CE", amber: "#FFB454", white: "#EDE8E0" };
 
 /** Compose the prioritized, cross-product briefing from the live engines. */
-export function buildBriefing(): BriefingCard[] {
+export function buildBriefing(wireItems: readonly NewsItem[] = []): BriefingCard[] {
   const cards: BriefingCard[] = [];
 
-  // Breaking — top of the wire by urgency (corroboration-aware).
-  // DEMO_WIRE is fictional (see wire.ts): the eyebrow must NOT assert a
-  // real-world "confirmed by N sources" corroboration over invented reports.
-  // Label by source tier only and mark the card a sample.
-  const top = rankWireCorroborated(DEMO_WIRE)[0];
+  // Breaking — top of the stored wire by urgency (corroboration-aware).
+  // C-416: live-only. An empty store omits the card entirely — never invent
+  // a sample breaking story. Sample badge only if the caller still passes
+  // illustrative items; production passes the stored wire.
+  const top = rankWireCorroborated(wireItems)[0];
   if (top) {
     cards.push({
       id: "brief-breaking", kind: "breaking", priority: Math.min(100, top.urgency + 20),
-      eyebrow: `${SAMPLE_TAG}Breaking · ${top.item.tier}`,
+      eyebrow: `Breaking · ${top.item.tier}`,
       headline: top.item.headline,
       detail: top.action, action: "Open The Beat", href: "/the-beat", accent: HEX.cyan,
-      sample: true,
+      sample: false,
     });
   }
 
