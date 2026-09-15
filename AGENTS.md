@@ -9,6 +9,143 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ## THE LOOP
 
+**UPDATED 2026-09-15 (FRAMEWORK-INTEGRATION WAVE — 17 agent frameworks evaluated against
+real source, not READMEs; 3 of 5 proposed builds turned out to already exist in
+production. Branch `claude/framework-integration-2026-09-15`, 3 commits, 7 files, 632
+lines, zero deletions, zero touches to any frozen path. NOT MERGED, NOT PUSHED (law 1 —
+no push authorization was given for this branch this session). Read this before
+proposing any of langchain/langgraph/xstate/promptfoo/haystack/AstrBot/pipecat/
+elizaOS/agent-zero/mastra/MetaGPT/autogen/crewAI/nanobot/openai-agents-python/
+superpowers/microsoft-agent-framework as new work — the verdict on all 15 is already
+decided below, and re-litigating it wastes a session.**
+
+**THE HEADLINE FINDING: before proposing new infra, read the actual source. Three
+separate "let's build X" proposals this session turned out to already be built, better,
+in production — found only by reading real files, not by trusting a summary (including
+this file's own summaries).** In order of how much time it would have wasted:
+
+1. **Prompt-regression eval suite already exists**: `eval/promptfoo/` (promptfooconfig.yaml,
+   scorer.ts, report.ts, surface-prompts.ts, README.md) since at least PR #725 (`35bc641`).
+   Covers all 6 Claude surfaces (studio/journal/calibration-insight/model-court/content/brief),
+   banned-phrase checks correctly sourced from `positioning-vocab.json` via `trust-claims.ts`
+   (verified: same canonical source, no drift). Run: `npm run eval:prompts`. Do not build a
+   second one. (A deep-research sub-agent this same session reported NOT finding this file —
+   it was wrong; re-verified directly by `ls eval/promptfoo/` and `git log`, present on
+   `origin/main`, present on this branch. If a future agent's search also misses it, that is a
+   search-path bug in the agent, not a gap in the repo.)
+2. **Numeric fact-grounding already exists**: `apps/web/lib/claude-api/numeric-guard.ts`
+   (`extractNumericClaims`/`validateNumericClaims`) is wired into `content-generator.ts`
+   (line ~283), `journal/claude.ts`, `pick-explainer/policy.ts`, `calibration-training/claude.ts`,
+   and `intelligence-graph/model-court/answer.ts` — 5 generation surfaces. Checks that every
+   numeric claim in generated text traces to a real, provided grounding value. **What it does
+   NOT cover**: non-numeric qualitative claims ("the Seahawks have won 3 straight" — no number,
+   so numeric-guard has nothing to check). A genuine, still-open, narrow gap if anyone wants it:
+   a Haystack-inspired embeddings/cosine-similarity check for qualitative claims specifically —
+   port spec in the session's PR (not merged) — but numeric claims are fully covered today.
+3. **Ops alerting already exists, better than proposed**: `apps/web/app/api/cron/health-alert/route.ts`
+   has a real Discord/Slack/ntfy-compatible webhook dispatcher (one URL, vendor-agnostic
+   payload), an honest escalation ladder (`lib/ops/health-alert-decision.ts` — rung-based,
+   stateless-safe, survives cold starts), and explicit BLIND/UNDELIVERED failure states so a
+   broken alert path is never silently green. `deliver-settlement-alerts` is a second,
+   transactional-outbox-based Web Push + email system. **The one real remaining gap**: PR #819
+   (branch `claude/nfl-kickoff-live-check-0qwxfm`, commit `6e56864`, NOT YET MERGED) already
+   built `apps/web/lib/ops/line-archive-freshness.ts` as a READ-ONLY reader wired into
+   `/api/ops/public-surface-truth` — but not into the ACTIVE `health-alert` paging path. Whoever
+   merges #819 should also wire `lineArchive` status into `classifyHealthAlertSnapshot` so a
+   SILENT/STALE archive actually pages, not just shows up on a surface someone has to check by
+   hand. This is a natural #819 follow-up, not a fresh build.
+
+**What actually got built this session (genuinely net-new, all additive, all tested)**,
+on `claude/framework-integration-2026-09-15`:
+
+- `apps/web/lib/picks/lifecycle-model.ts` + `.test.ts` (10/10 tests) — a dependency-free,
+  ~150-line formal state model of the pick lifecycle (MINTED → ADVERSE_VETOED /
+  MODEL_SIGNAL_SUPPRESSED / CONVICTION_HELD → PUBLISHED → SETTLED_*/VOIDED), composing the
+  REAL predicates (`pricesWorseThanMarket` from `@sports/types`, model-signal-coherence,
+  the conviction gate's verdict, the `PickResult` enum) rather than reimplementing any of
+  them. Read-only, nothing wired into mint/publish/settle. Built dependency-free because
+  law 2 freezes `package-lock.json` and blocks adding `xstate` as a real dependency — a
+  deep-research pass afterward confirmed `port_pattern_only` was the right call and gave a
+  concrete upgrade path if a founder ever approves the dependency: hand-roll
+  `packages/pick-lifecycle/` as `transition(logic, snapshot, event)` (xstate's own pure-function
+  shape) plus a `projectPickLifecycleState(pick)` that derives state from existing columns
+  (no new migration). Same pass flagged one real design nuance already respected in the
+  code: model-signal suppression is viewer-scoped and writes nothing (per the "opposite
+  sides published" fix) — it must stay an orthogonal `isSuppressedForViewer()` check, never
+  a persisted FSM node, or it regresses that fix. Also flagged, not built: langgraph's
+  `interrupt()`/`Command({resume})` pattern maps cleanly onto the founder-picks manual-hold
+  flow if anyone wants founder-hold-and-resume formalized later — ~80% of the ergonomics,
+  zero new infrastructure, reusing the existing Pick/founder-picks row instead of a new
+  checkpoint table.
+- `apps/web/lib/broadcast/tts.ts` + `.test.ts` (9/9 tests) — a real, working ElevenLabs TTS
+  integration via plain `fetch` (no new npm dependency) for The Beat / Galaxy Broadcast,
+  which both `components/news/galaxy-broadcast.tsx`'s own header comment and
+  `apps/web/__tests__/the-beat-broadcast.test.ts` already anticipate ("a real TTS lane can
+  return behind an explicit opt-in" — founder, 2026-09-12, on why browser speechSynthesis
+  was pulled: "the voice is horrible and nothing human-like"). Honest empty state
+  throughout: no `ELEVENLABS_API_KEY` configured returns `{audio:null, reason:"not_configured"}`,
+  never fabricated silence-as-success. **NOT wired into the UI** — that component is
+  delicate and art-directed and this session had no dev server/browser to verify a visual
+  change; `docs/dev/broadcast-tts-ui-integration-spec.md` has the exact toggle/route/playback
+  design ready to implement with real browser QA. **Correction from the same deep-research
+  pass**: for the SEPARATE, external GSE Film Room clip pipeline (lives in the revenue-engine
+  workspace, `clips/video-builds/`, NOT this repo — confirmed both by this file's own prior
+  notes and by independent re-verification), the named best-fit TTS is **Google Cloud TTS,
+  Chirp3-HD voices, one-shot REST path** (read directly out of `pipecat-ai/pipecat`'s actual
+  `GoogleHttpTTSService` source), not ElevenLabs — different surface, different repo, whoever
+  picks up that separate work should use Chirp3-HD.
+- `docs/dev/superpowers-skills-pilot.md` — the 3 highest-value `obra/superpowers` skills
+  (systematic-debugging: 4-phase root cause + "3 failed fixes = stop and question the
+  architecture"; test-driven-development: TDD Iron Law "no production code without a
+  failing test first" — the exact discipline that would have caught the line-archive
+  test-that-certified-the-bug failure mode above; dispatching-parallel-agents: formalizes
+  what `docs/ops/AGENT_LEDGER.md` already does ad hoc). Description-only in this doc; the
+  deep-research pass recommends actually staging the verbatim skill files (MIT, Jesse
+  Vincent, commit `b36e082`, v6.3.0) under a new `docs/superpowers/skills-staging/` with a
+  `SOURCE.md` preserving the license notice — a real upgrade over this session's
+  prose-only version, not done yet. **Cannot be installed into `.claude/` by an agent —
+  law 2 freezes that path.** Founder action: `/plugin install superpowers@claude-plugins-official`.
+- `docs/dev/claude-agent-sdk-vs-openai-agents-python.md` — primitive-by-primitive mapping
+  showing GSE's `.claude/agents/*.md` + the Workflow/Agent tools already independently
+  converged on the same shape openai-agents-python formalizes (Agent↔named subagent,
+  Handoff↔total-control-transfer [explicitly NOT what GSE's agents do — they're
+  `Agent.as_tool()`-shaped, manager keeps control], Guardrail↔tool-scoping + AGENTS.md laws,
+  Runner↔the Claude Agent SDK itself, already running every session in this repo).
+
+**Full 17-repo verdict table (15 original candidates + the 2 adjacent picks that got
+built), each read from actual cloned source, not a README, by a dedicated deep-research
+pass — do not re-research these without a specific new reason:**
+
+| Repo | Verdict | One-line why |
+|---|---|---|
+| langchain-ai/langchain | no fit | 100% Python; prompts/output-parsers/evaluation are fused into a 14,312-line RunnableSerializable/LCEL runtime with langsmith tracing baked in — confirmed by reading the actual import lines, no narrow slice to lift |
+| langchain-ai/langgraph | port pattern only | `interrupt()`/`Command({resume})` is the one idea worth porting natively (founder-picks hold/resume) — the dependency itself is Python + a self-migrating checkpoint-Postgres schema, conflicting with "Prisma migrations are the source of truth" |
+| statelyai/xstate | port pattern only | built as `lifecycle-model.ts` above, dependency-free — law 2 blocks the real package |
+| promptfoo/promptfoo | **already adopted** | `eval/promptfoo/`, see finding #1 above |
+| deepset-ai/haystack | port pattern only | the reusable unit is ~50 lines of cosine-similarity math (`InMemoryDocumentStore`), not the 5500-line pipeline DAG executor; the numeric half of this already exists (finding #2), the qualitative-claim half is still open |
+| obra/superpowers | port pattern only (staged) | Claude-Code-native, real fit, but `.claude/` is law-2 frozen — staged in `docs/dev/`, founder installs |
+| openai/openai-agents-python | port pattern only (documented) | wrong vendor, wrong language, and has grown to an 82,000-LOC sandbox/docker/realtime/voice runtime; GSE's own agent/subagent system already IS the correct-vendor equivalent |
+| mastra-ai/mastra | port pattern only | its `@mastra/evals` scorer design independently corroborates the numeric-guard pattern GSE already has; adopting the framework itself means a Hono server + MCP server + two `@a2a-js/sdk` versions + posthog telemetry by default for a narrowly-scoped content task — not worth the footprint |
+| FoundationAgents/MetaGPT | port pattern only | role-based review already natively implemented via `.claude/agents/*.md`; one bonus idea worth a ledger row someday — `get_changed_dependency()`-style scoping so `scripts/guardrails/run-all.mjs` only re-runs guards whose declared dependencies actually changed (law-9 safe: narrows re-run scope, never guard strictness) |
+| microsoft/autogen | port pattern only | confirmed in MAINTENANCE MODE by Microsoft's own README, redirecting to agent-framework; its `TerminationCondition`/`Handoff` primitives are worth porting as ~150-200 lines of TS — but to **agent-bus** (a separate repo), to give `AGENT_LEDGER.md`'s claim/handoff convention a typed stop-condition object, not to GSE |
+| crewAIInc/crewAI | port pattern only | same "already have it natively via `.claude/agents/`" answer as MetaGPT/autogen |
+| HKUDS/nanobot | no fit for GSE | its WebUI is entirely chat-and-settings shaped, zero table/kanban/status-grid widgets — no fit for GSE; if a cross-venture fleet dashboard is ever wanted, build it natively off the CCR MCP tools + `AGENT_LEDGER.md`, in **agent-bus**, not by retrofitting nanobot |
+| AstrBotDevs/AstrBot | port pattern only | the per-channel isolated-try/catch dispatch pattern (`_task_wrapper`, `get_all_stats()`) is a real, still-unbuilt upgrade over the current single-webhook-URL approach if GSE ever wants true multi-channel (Discord AND email AND push simultaneously with independent failure isolation) rather than one vendor-agnostic URL — not built this session, the current health-alert dispatcher is good enough for now |
+| elizaOS/eliza | **hard pass, reputational risk** | its flagship plugin does live Hyperliquid perps, **Polymarket**, and multi-DEX trading; ~1/3 of its plugin registry is crypto/payment-shaped by name. Given GSE's own active Polymarket compliance hold (see the `polymarket-hold` skill), do not reference, credit, or pattern-match this project publicly even for its one reusable idea (Zod persona-schema design) |
+| agent0ai/agent-zero | **hard pass, evidence-backed** | reads real source: its dispatch loop drives shell/Python/Node via a persistent PTY and the user's real desktop (mouse/keyboard/window control) with **no synchronous per-action approval anywhere in the path** — only a manual, proactive pause button. This validates, with hard evidence, that GSE's existing pattern (every state-changing browser-agent action routed through an explicit synchronous founder APPROVE step, as already used in the Film Room X-posting flow) is the necessary design, not overcaution |
+| microsoft/agent-framework | no fit, corrected reason | prior note said "no .NET/Azure footprint" — that was WRONG, re-read the source: Azure is a peer provider package like every other cloud, not core-coupled. **The real disqualifier**: no JS/TS SDK exists anywhere in the tree, only Python + .NET (Go is a separate sister repo) — adopting it would mean standing up a persistent-process microservice GSE's Vercel-serverless architecture has no room for |
+
+**Push status: NOT PUSHED, NOT MERGED.** Branch `claude/framework-integration-2026-09-15`
+sits 3 commits ahead of `origin/main` locally. Law 1 — no explicit push authorization was
+given for this branch this session. typecheck 0 errors, lint 0 errors, all 19 new tests
+pass; 4 pre-existing, unrelated test files fail on module resolution
+(`@/lib/claude-api/cost-monitor` etc.) confirmed pre-existing and unrelated (same failure
+with zero uncommitted changes present) — not this branch's to fix, flagging for whoever
+owns it. Whoever picks this branch up: get explicit push authorization first, then `git
+push -u origin claude/framework-integration-2026-09-15` and open a draft PR.
+
+---
+
 **UPDATED 2026-09-13 (NFL WEEK 1 LIVE CHECK — three production defects fixed, three
 data outages found, conviction gate built). PR #808, branch
 `claude/nfl-kickoff-live-check-0qwxfm`. Read this before touching the board, the
