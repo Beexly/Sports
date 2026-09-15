@@ -533,8 +533,8 @@ the only copy, and nobody else can verify or build on it.
 | C-396 | LP1 Record the Kalshi NFL tape and book, forward-only, from day one | hermes | UNPUSHED | 54d6d2a16 — kalshi-predexon tape; free list+trades only; no paid ticks; dropped fields named |
 | C-410 | LP1 Rights verdicts for the pick'em boards, and the one free prop-line check that is left | hermes | UNPUSHED | 94d04a9b2 — three forbidden verdicts + SOURCE_FORBIDDEN; ESPN has no prop lines |
 | C-413 | LP1 Injury and status alerts on the customer's players, through the alert path that already exists | hermes | UNPUSHED | bd5dd5fff — status-alert-hook + cron wire; Elite; tests (22+) |
-| C-414 | LP1 Live weather into the totals and props feature path | hermes | UNPUSHED |  — shared KickoffWeatherField; T-6h/T-1h; tests (18) |
-| C-415 | LP1 The reporter roster, in code, for all 32 teams | hermes | UNPUSHED |  — 143 entries; 32 club RSS live; ESPN blogs dead; tests (16) |
+| C-414 | LP1 Live weather into the totals and props feature path | hermes | UNPUSHED | 78838246d — shared KickoffWeatherField; T-6h/T-1h; tests (18) |
+| C-415 | LP1 The reporter roster, in code, for all 32 teams | hermes | UNPUSHED | 943937478 — 143 entries; 32 club RSS live; ESPN blogs dead; tests (16) |
 | C-416 | LP1 The wire becomes a stored, polled feed instead of a page-render fetch | hermes | OPEN | - |
 | C-417 | LP1 Alerts when a reporter posts, and the beat-report gate goes live on real reporting | hermes | OPEN | - |
 | C-420 | LP1 Read-only operator surfaces stop sharing the cron mutation secret | hermes | UNPUSHED | 7044acadb — OPS_READ_SECRET on read-only ops; unset falls back to CRON_SECRET; mutations reject it; tests (11) |
