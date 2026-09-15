@@ -531,7 +531,7 @@ the only copy, and nobody else can verify or build on it.
 | C-393 | LP1 The line archive alarms when it goes quiet | hermes | UNPUSHED | 17c20e9d9 — STALE/SILENT page via health-alert; DISABLED zero-DB; UNKNOWN carries error; test (26) |
 | C-395 | LP1 nflverse loaders for the releases the factor queue needs and nothing pulls yet | hermes | OPEN | - |
 | C-396 | LP1 Record the Kalshi NFL tape and book, forward-only, from day one | hermes | UNPUSHED | 54d6d2a16 — kalshi-predexon tape; free list+trades only; no paid ticks; dropped fields named |
-| C-410 | LP1 Rights verdicts for the pick'em boards, and the one free prop-line check that is left | hermes | OPEN | - |
+| C-410 | LP1 Rights verdicts for the pick'em boards, and the one free prop-line check that is left | hermes | UNPUSHED | 94d04a9b2 — three forbidden verdicts + SOURCE_FORBIDDEN; ESPN has no prop lines |
 | C-413 | LP1 Injury and status alerts on the customer's players, through the alert path that already exists | hermes | OPEN | - |
 | C-414 | LP1 Live weather into the totals and props feature path | hermes | OPEN | - |
 | C-415 | LP1 The reporter roster, in code, for all 32 teams | hermes | OPEN | - |

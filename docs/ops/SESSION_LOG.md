@@ -1221,3 +1221,4 @@ C-396 UNPUSHED 54d6d2a16 — Kalshi tape kalshi-predexon; free plane only.
 C-392 UNPUSHED 13ab1bc99 — SSRF guard doc half (literal-only, cite #820).
 C-361 UNPUSHED 64a1a26bb — dead duplicate loaders deleted.
 C-357 UNPUSHED 2d35b1ed6 — prop markets widened to 12; T-15 close sweep.
+C-410 UNPUSHED 94d04a9b2 — pick'em boards forbidden; ESPN NFL has no player props.
