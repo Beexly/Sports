@@ -1194,3 +1194,10 @@ TCI, SEC) with entry files and acceptance commands. Ledger rows C-80..C-103 and 
 ## 2026-09-15 hermes/last-plan
 C-347 DONE 7f4f29e82 — merged origin/main into PR #819; branch hermes/last-plan-2026-09-15 cut and pushed.
 C-348 DONE — AGENTS.md restructured to 176 lines (CURRENT STATE, LOOP, LAWS+L10/L11, WORKING RULES); history 1187 lines moved verbatim to docs/ops/SESSION_LOG.md.
+C-349 UNPUSHED ff92268db (ledger restored from stash; commit landed code only) — 74 LP rows; 103 OPEN cancelled.
+C-350 DONE 531ba65d3 — in-play exclusion rendered on /clv and CalibrationPanel.
+C-351 DONE e607279cd — GSN empty/error is unavailable, zero invented counts.
+C-352 DONE 9558a1c2f — /performance two lanes at 52.4% with coverage line.
+C-353 DONE 3ab6649e7 — mint withhold preseason/MLB S-T/soccer ML/0-book.
+C-354 DONE 8cbd0b962 — pick-card lock price + DoD test.
+C-419 DONE — target PRs already merged; nothing open to close.

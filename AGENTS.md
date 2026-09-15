@@ -9,11 +9,11 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ## CURRENT STATE
 
-Plan: `docs/ops/LAST_PLAN_2026-09-15.md` Â· branch `hermes/last-plan-2026-09-15` Â· head `7f4f29e82` Â· Phase 0 Â· rows: C-347 DONE, C-348 DONE, C-349 next.
+Plan: `docs/ops/LAST_PLAN_2026-09-15.md` Â· branch `hermes/last-plan-2026-09-15` Â· head `7f4f29e82` Â· Phase 0 Â· rows: Phase 0 code DONE C-347..C-354+C-419; C-349 ledger restored; Phase 1 next.
 Founder hands-only pending: Â§0.2 items 1â€“5 (rotate secrets; Stripe/Vercel PRICING=FOUNDING; set PREDEXON_API_KEY/HEALTH_ALERT_WEBHOOK_URL/SENTRY_DSN/OPS_READ_SECRET; merge labelled PRs; supply oddsmagnet months + prop-line file).
 Open security work not in this plan: issue #820 transport half (connect-time address check).
 Do-not-touch: `hermes/v528-market-gate-preserved-2026-09-11` (does not compile); checkout price-mismatch (fail-closed is correct); pricing amounts; any gate/env flag.
-Last five DONE: C-347 landed PR #819 merge (7f4f29e82); commit 1 saved LAST_PLAN verbatim (2879487f1).
+Last five DONE: C-354 8cbd0b962; C-353 3ab6649e7; C-352 9558a1c2f; C-351 e607279cd; C-350 531ba65d3.
 
 ---
 
