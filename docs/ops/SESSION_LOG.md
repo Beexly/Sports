@@ -1215,3 +1215,4 @@ C-420 UNPUSHED 7044acadb — OPS_READ_SECRET for read-only ops surfaces.
 - Live probe 2026-09-15: polymarket markets 200; kalshi markets 200; KXNFLSPREAD 200 (closed SEA-NE rows with last_price 0.99); `/v2/kalshi/series` 403; `/v1/` 410 Gone.
 - Tick-history Parquet is **paid** ($80/GiB Kalshi ≈ $95/day). D15: never buy. Live WS not on free.
 - Capture budget for C-396: prefer markets list (free/unlimited) over counted endpoints; still pace ≤1 req/s.
+C-356 UNPUSHED ddcb663a7 — twin fixture tombstones via mergedIntoGameId.

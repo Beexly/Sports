@@ -521,7 +521,7 @@ the only copy, and nobody else can verify or build on it.
 | C-418 | LP0 One scheduler for settle-picks: the frozen-path PR | hermes | UNPUSHED | #828 frozen-path draft + cdcf6a6f8 on hermes/last-plan-2026-09-15 — Vercel only; founder merges #828 |
 | C-419 | LP0 PR triage: close what main already carries | hermes | DONE | #754 #751 #752 #753 #750 #749 #748 #745 #747 already MERGED; no open PR to close |
 | C-355 | LP1 Fill pfr_adv_stats and player_rush_profiles from the nflverse release | hermes | UNPUSHED | 6b07785be — both ingesters on refresh-player-stats cron; PFR direct URL removed; dry-run NOT RUN (no network); tests (30) |
-| C-356 | LP1 Tombstone fixture twins: write mergedIntoGameId | hermes | OPEN | - |
+| C-356 | LP1 Tombstone fixture twins: write mergedIntoGameId | hermes | UNPUSHED | ddcb663a7 — planTwinTombstones + applyTwinTombstones write mergedIntoGameId; tests (133) |
 | C-357 | LP1 Widen NFL prop ingest to every market the HB engine scores | hermes | OPEN | - |
 | C-358 | LP1 Prop reader: OddsLineSnapshot to RateSample + graded outcome | hermes | OPEN | - |
 | C-359 | LP1 Kalshi as book 2 via PredExon, behind PREDEXON_INGEST | hermes | OPEN | - |
