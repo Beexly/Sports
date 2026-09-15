@@ -81,7 +81,10 @@ import {
   resolveCanonicalGame,
   preferLongerTeamName,
   gameIdentityMergeDisabled,
+  commenceMatchMsFor,
+  applyTwinTombstones,
   type GameIdentityDb,
+  type TwinTombstoneDb,
 } from "./game-identity.js";
 import { notifyOwner } from "./owner-alert.js";
 import { isQuietBoard, quietBoardHorizonHours } from "./quiet-board.js";
@@ -842,6 +845,49 @@ export async function processSport(
       // all key off this id below, so a reused twin receives this cycle's odds
       // instead of a duplicate row receiving them.
       gameRecords[game.externalId] = record;
+    }
+
+    // C-356: Tombstone existing twin duplicates. `resolveCanonicalGame` above
+    // stops a NEW feed row from becoming another duplicate, but rows created
+    // before identity resolution was wired already sit in `games` as live
+    // twins. Sweep the window this cycle's games span, group twins, and stamp
+    // `mergedIntoGameId` on the weaker row (most books / highest dq survives)
+    // so `/api/picks`, `lib/board/state.ts`, and the sitemap exclude it.
+    // Protected: the rows this cycle just wrote — they may only be canonical,
+    // never turned into a tombstone under the children we just attached.
+    // Never blocks ingestion; a failure is a warning, same as identity lookup.
+    if (!gameIdentityMergeDisabled() && normalizedGames.length > 0) {
+      try {
+        const commenceTimes = normalizedGames
+          .map((g) => g.commenceTime.getTime())
+          .filter((t) => Number.isFinite(t));
+        if (commenceTimes.length > 0) {
+          const windowMs = commenceMatchMsFor(sport.key);
+          const minT = Math.min(...commenceTimes);
+          const maxT = Math.max(...commenceTimes);
+          const tombstoned = await applyTwinTombstones(
+            db as unknown as TwinTombstoneDb,
+            {
+              sportId: sportRecord.id,
+              sportKey: sport.key,
+              commenceFrom: new Date(minT - windowMs),
+              commenceTo: new Date(maxT + windowMs),
+              protectedIds: Object.values(gameRecords).map((r) => r.id),
+              logPrefix,
+            },
+          );
+          if (tombstoned > 0) {
+            console.info(
+              `${logPrefix} tombstoned ${tombstoned} twin duplicate game row(s) for ${sport.key}`,
+            );
+          }
+        }
+      } catch (tombstoneErr) {
+        console.warn(
+          `${logPrefix} twin tombstone sweep failed for ${sport.key}: ` +
+            `${tombstoneErr instanceof Error ? tombstoneErr.message : tombstoneErr}`,
+        );
+      }
     }
 
     // Pinnacle closing-line leg of the Glass Ledger forward line archive

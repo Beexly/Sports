@@ -9,8 +9,13 @@ import {
   AMBIGUOUS_CITY_TOKENS,
   commenceMatchMsFor,
   MAX_ALIAS_HOPS,
+  planTwinTombstones,
+  applyTwinTombstones,
+  isBetterTwinCanonical,
   type GameIdentityDb,
   type GameTwinCandidate,
+  type TwinTombstoneCandidate,
+  type TwinTombstoneDb,
 } from "../game-identity.js";
 
 /**
@@ -584,5 +589,233 @@ describe("preferLongerTeamName", () => {
     );
     expect(preferLongerTeamName("Athletics", "")).toBe("Athletics");
     expect(preferLongerTeamName("", "Athletics")).toBe("Athletics");
+  });
+});
+
+// ── C-356: Tombstone existing twin duplicates ──────────────────────────────
+
+function tombstoneCandidate(
+  overrides: Partial<TwinTombstoneCandidate> = {},
+): TwinTombstoneCandidate {
+  return {
+    id: "game-1",
+    externalId: "espn:mlb:401816772",
+    sportId: "sport-mlb",
+    homeTeamName: "San Diego Padres",
+    awayTeamName: "Los Angeles Dodgers",
+    commenceTime: BASE,
+    mergedIntoGameId: null,
+    bookmakerCoverageMax: 0,
+    dataQualityScore: 0,
+    createdAt: new Date("2026-09-01T00:00:00.000Z"),
+    ...overrides,
+  };
+}
+
+describe("isBetterTwinCanonical", () => {
+  it("prefers more books", () => {
+    const rich = tombstoneCandidate({ bookmakerCoverageMax: 12 });
+    const poor = tombstoneCandidate({ bookmakerCoverageMax: 3 });
+    expect(isBetterTwinCanonical(rich, poor)).toBe(true);
+    expect(isBetterTwinCanonical(poor, rich)).toBe(false);
+  });
+
+  it("falls back to data-quality when books tie", () => {
+    const high = tombstoneCandidate({ dataQualityScore: 90 });
+    const low = tombstoneCandidate({ dataQualityScore: 40 });
+    expect(isBetterTwinCanonical(high, low)).toBe(true);
+  });
+
+  it("falls back to oldest createdAt when books and dq tie (stable)", () => {
+    const older = tombstoneCandidate({ createdAt: new Date("2026-08-01") });
+    const newer = tombstoneCandidate({ createdAt: new Date("2026-09-01") });
+    expect(isBetterTwinCanonical(older, newer)).toBe(true);
+    expect(isBetterTwinCanonical(newer, older)).toBe(false);
+  });
+});
+
+describe("planTwinTombstones (C-356)", () => {
+  it("2 rows for one fixture → 1 canonical (most books) + 1 alias", () => {
+    const rich = tombstoneCandidate({
+      id: "game-rich",
+      externalId: "odds-api-1",
+      bookmakerCoverageMax: 12,
+      dataQualityScore: 80,
+    });
+    const poor = tombstoneCandidate({
+      id: "game-poor",
+      externalId: "espn:mlb:401816772",
+      bookmakerCoverageMax: 0,
+      dataQualityScore: 0,
+    });
+    const plans = planTwinTombstones([poor, rich], "baseball_mlb");
+    expect(plans).toHaveLength(1);
+    expect(plans[0]!.canonicalId).toBe("game-rich");
+    expect(plans[0]!.aliasIds).toEqual(["game-poor"]);
+  });
+
+  it("2 rows for one fixture → 1 canonical (highest dq when books tie) + 1 alias", () => {
+    const high = tombstoneCandidate({
+      id: "game-high",
+      externalId: "odds-api-1",
+      dataQualityScore: 92,
+    });
+    const low = tombstoneCandidate({
+      id: "game-low",
+      externalId: "espn:mlb:401816772",
+      dataQualityScore: 10,
+    });
+    const plans = planTwinTombstones([low, high], "baseball_mlb");
+    expect(plans).toHaveLength(1);
+    expect(plans[0]!.canonicalId).toBe("game-high");
+    expect(plans[0]!.aliasIds).toEqual(["game-low"]);
+  });
+
+  it("returns empty when no twins exist", () => {
+    const a = tombstoneCandidate({
+      id: "game-a",
+      homeTeamName: "San Diego Padres",
+      awayTeamName: "Los Angeles Dodgers",
+    });
+    const b = tombstoneCandidate({
+      id: "game-b",
+      externalId: "espn:mlb:other",
+      homeTeamName: "New York Yankees",
+      awayTeamName: "Tampa Bay Rays",
+      commenceTime: new Date(BASE.getTime() + 3 * HOUR),
+    });
+    expect(planTwinTombstones([a, b], "baseball_mlb")).toEqual([]);
+  });
+
+  it("returns empty for a single live row", () => {
+    expect(planTwinTombstones([tombstoneCandidate()], "baseball_mlb")).toEqual([]);
+  });
+
+  it("excludes already-aliased rows from grouping", () => {
+    const live = tombstoneCandidate({ id: "game-live", externalId: "odds-api-1" });
+    const alias = tombstoneCandidate({
+      id: "game-alias",
+      externalId: "espn:mlb:401816772",
+      mergedIntoGameId: "game-live",
+    });
+    // Only the alias matches as a twin, but it is already tombstoned — no plan.
+    expect(planTwinTombstones([live, alias], "baseball_mlb")).toEqual([]);
+  });
+
+  it("never tombstones a flipped pair (home/away disagree)", () => {
+    const a = tombstoneCandidate({ id: "game-a", externalId: "odds-api-1" });
+    const flipped = tombstoneCandidate({
+      id: "game-flipped",
+      externalId: "espn:mlb:401816772",
+      homeTeamName: "Los Angeles Dodgers",
+      awayTeamName: "San Diego Padres",
+    });
+    expect(planTwinTombstones([a, flipped], "baseball_mlb")).toEqual([]);
+  });
+
+  it("refuses a group whose commenceTime span exceeds the twin window (chaining guard)", () => {
+    // Three rows chained across a window: A↔B and B↔C are twins, but A↔C
+    // are 3h apart — beyond baseball's 2h window — so they may be a
+    // doubleheader. Refuse to tombstone anyone.
+    const t0 = BASE;
+    const t1 = new Date(BASE.getTime() + 1.5 * HOUR);
+    const t2 = new Date(BASE.getTime() + 3 * HOUR);
+    const a = tombstoneCandidate({ id: "game-a", externalId: "a", commenceTime: t0 });
+    const b = tombstoneCandidate({ id: "game-b", externalId: "b", commenceTime: t1 });
+    const c = tombstoneCandidate({ id: "game-c", externalId: "c", commenceTime: t2 });
+    expect(planTwinTombstones([a, b, c], "baseball_mlb")).toEqual([]);
+  });
+
+  it("3 rows for one fixture → 1 canonical + 2 aliases", () => {
+    const best = tombstoneCandidate({
+      id: "game-best",
+      externalId: "odds-api-1",
+      bookmakerCoverageMax: 15,
+      dataQualityScore: 90,
+    });
+    const mid = tombstoneCandidate({
+      id: "game-mid",
+      externalId: "rundown-1",
+      bookmakerCoverageMax: 2,
+      dataQualityScore: 50,
+    });
+    const worst = tombstoneCandidate({
+      id: "game-worst",
+      externalId: "espn:mlb:401816772",
+      bookmakerCoverageMax: 0,
+      dataQualityScore: 0,
+    });
+    const plans = planTwinTombstones([worst, mid, best], "baseball_mlb");
+    expect(plans).toHaveLength(1);
+    expect(plans[0]!.canonicalId).toBe("game-best");
+    expect(plans[0]!.aliasIds).toEqual(["game-mid", "game-worst"]);
+  });
+});
+
+describe("applyTwinTombstones (C-356 writer)", () => {
+  function mockTombstoneDb(rows: TwinTombstoneCandidate[]) {
+    const updates: Array<{ where: { id: string }; data: { mergedIntoGameId: string } }> = [];
+    const db: TwinTombstoneDb = {
+      game: {
+        findMany: vi.fn(async () => rows),
+        update: vi.fn(async (args: { where: { id: string }; data: { mergedIntoGameId: string } }) => {
+          updates.push(args);
+          return { id: args.where.id };
+        }),
+      },
+    };
+    return { db, updates };
+  }
+
+  const rich = tombstoneCandidate({
+    id: "game-rich",
+    externalId: "odds-api-1",
+    bookmakerCoverageMax: 12,
+  });
+  const poor = tombstoneCandidate({
+    id: "game-poor",
+    externalId: "espn:mlb:401816772",
+  });
+
+  it("writes mergedIntoGameId on the weaker twin (2 rows → 1 canonical + 1 alias)", async () => {
+    const { db, updates } = mockTombstoneDb([poor, rich]);
+    const written = await applyTwinTombstones(db, {
+      sportId: "sport-mlb",
+      sportKey: "baseball_mlb",
+      commenceFrom: new Date(BASE.getTime() - HOUR),
+      commenceTo: new Date(BASE.getTime() + HOUR),
+    });
+    expect(written).toBe(1);
+    expect(updates).toEqual([
+      { where: { id: "game-poor" }, data: { mergedIntoGameId: "game-rich" } },
+    ]);
+  });
+
+  it("skips an alias write when the loser is a protected (this-cycle) row", async () => {
+    const { db, updates } = mockTombstoneDb([poor, rich]);
+    const written = await applyTwinTombstones(db, {
+      sportId: "sport-mlb",
+      sportKey: "baseball_mlb",
+      commenceFrom: new Date(BASE.getTime() - HOUR),
+      commenceTo: new Date(BASE.getTime() + HOUR),
+      // "poor" was written this cycle — it may only be canonical, never tombstoned.
+      protectedIds: ["game-poor"],
+    });
+    expect(written).toBe(0);
+    expect(updates).toEqual([]);
+  });
+
+  it("is a no-op under the kill switch", async () => {
+    const { db, updates } = mockTombstoneDb([poor, rich]);
+    const written = await applyTwinTombstones(db, {
+      sportId: "sport-mlb",
+      sportKey: "baseball_mlb",
+      commenceFrom: new Date(BASE.getTime() - HOUR),
+      commenceTo: new Date(BASE.getTime() + HOUR),
+      env: { GAME_IDENTITY_MERGE_DISABLED: "true" },
+    });
+    expect(written).toBe(0);
+    expect(db.game.findMany).not.toHaveBeenCalled();
+    expect(updates).toEqual([]);
   });
 });

@@ -1924,7 +1924,17 @@ describe("processSport", () => {
 
       await processSport(SPORT, "key", gates());
 
-      expect(mocks.gameUpdate).not.toHaveBeenCalled();
+      // The twin REUSE path did not fire — a new row was created via upsert.
+      // (The C-356 tombstone sweep may still call gameUpdate to stamp
+      // mergedIntoGameId on one of the two existing twins; that is a
+      // separate concern covered by its own tests.)
+      const twinReuseCalls = mocks.gameUpdate.mock.calls.filter(
+        (c) => {
+          const data = (c[0] as { data?: Record<string, unknown> }).data;
+          return data && "homeTeamName" in data && !("mergedIntoGameId" in data);
+        },
+      );
+      expect(twinReuseCalls).toHaveLength(0);
       expect(mocks.gameUpsert).toHaveBeenCalledWith(
         expect.objectContaining({ where: { externalId: "odds-api-1" } }),
       );
@@ -1997,6 +2007,154 @@ describe("processSport", () => {
         expect.stringContaining("game identity lookup failed"),
       );
       warnSpy.mockRestore();
+    });
+
+    /**
+     * C-356: two rows already sit in `games` for one fixture. The tombstone
+     * sweep after the upsert loop stamps `mergedIntoGameId` on the weaker
+     * row (most books / highest dq survives) so /api/picks, board/state, and
+     * sitemap exclude it. The richer row is the one this cycle writes to, so
+     * it is protected — it may only be canonical, never tombstoned.
+     */
+    it("tombstones an existing twin duplicate: 2 rows → 1 canonical + 1 alias (C-356)", async () => {
+      const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
+      const RICH = {
+        id: "game-rich",
+        externalId: "odds-api-1",
+        sportId: "sport-1",
+        homeTeamName: "Kansas City Chiefs",
+        awayTeamName: "Buffalo Bills",
+        commenceTime: new Date(T_KICKOFF),
+        mergedIntoGameId: null,
+        bookmakerCoverageMax: 12,
+        dataQualityScore: 85,
+        createdAt: new Date("2026-09-01T00:00:00.000Z"),
+      };
+      const POOR = {
+        ...RICH,
+        id: "game-poor",
+        externalId: "espn:nfl:401872656",
+        bookmakerCoverageMax: 0,
+        dataQualityScore: 0,
+        createdAt: new Date("2026-09-02T00:00:00.000Z"),
+      };
+      // Feed row matches RICH by externalId → plain upsert, no twin update.
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({
+          externalId: "odds-api-1",
+          homeTeam: "Kansas City Chiefs",
+          awayTeam: "Buffalo Bills",
+        }),
+      ]);
+      mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
+        const where = (args as { where?: { externalId?: string; id?: string } }).where;
+        return where?.externalId === "odds-api-1" ? RICH : { id: "game-rich" };
+      });
+      // The tombstone sweep loads both rows in the window.
+      mocks.gameFindMany.mockResolvedValue([RICH, POOR]);
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("success");
+      // POOR was tombstoned into RICH.
+      expect(mocks.gameUpdate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: "game-poor" },
+          data: { mergedIntoGameId: "game-rich" },
+        }),
+      );
+      // RICH was NOT tombstoned (it is the canonical).
+      const tombstoneCalls = mocks.gameUpdate.mock.calls.filter(
+        (c) => (c[0] as { data?: { mergedIntoGameId?: string } }).data?.mergedIntoGameId !== undefined,
+      );
+      expect(tombstoneCalls).toHaveLength(1);
+      expect(infoSpy.mock.calls.some((c) => /tombstoned 1 twin duplicate/.test(String(c[0])))).toBe(true);
+      infoSpy.mockRestore();
+    });
+
+    it("never tombstones a row this cycle just wrote (protectedIds)", async () => {
+      // The sweep would pick POOR as canonical (more books), but RICH is the
+      // row this cycle wrote to — protected, so the alias write is skipped
+      // and both rows stay live (fail closed).
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
+      const RICH = {
+        id: "game-rich",
+        externalId: "odds-api-1",
+        sportId: "sport-1",
+        homeTeamName: "Kansas City Chiefs",
+        awayTeamName: "Buffalo Bills",
+        commenceTime: new Date(T_KICKOFF),
+        mergedIntoGameId: null,
+        bookmakerCoverageMax: 0,
+        dataQualityScore: 0,
+        createdAt: new Date("2026-09-01T00:00:00.000Z"),
+      };
+      const POOR = {
+        ...RICH,
+        id: "game-poor",
+        externalId: "espn:nfl:401872656",
+        bookmakerCoverageMax: 12,
+        dataQualityScore: 85,
+      };
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({
+          externalId: "odds-api-1",
+          homeTeam: "Kansas City Chiefs",
+          awayTeam: "Buffalo Bills",
+        }),
+      ]);
+      mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
+        const where = (args as { where?: { externalId?: string; id?: string } }).where;
+        return where?.externalId === "odds-api-1" ? RICH : { id: "game-rich" };
+      });
+      // The upsert returns the row it wrote — id must match RICH so protectedIds works.
+      mocks.gameUpsert.mockResolvedValue({ id: "game-rich", homeTeamName: "Kansas City Chiefs", awayTeamName: "Buffalo Bills" });
+      mocks.gameFindMany.mockResolvedValue([RICH, POOR]);
+
+      await processSport(SPORT, "key", gates());
+
+      // No tombstone write: the only gameUpdate calls are NOT mergedIntoGameId stamps.
+      const tombstoneCalls = mocks.gameUpdate.mock.calls.filter(
+        (c) => (c[0] as { data?: { mergedIntoGameId?: string } }).data?.mergedIntoGameId !== undefined,
+      );
+      expect(tombstoneCalls).toHaveLength(0);
+      infoSpy.mockRestore();
+      warnSpy.mockRestore();
+    });
+
+    it("tombstone sweep is a no-op under the kill switch", async () => {
+      process.env["GAME_IDENTITY_MERGE_DISABLED"] = "true";
+      const RICH = {
+        id: "game-rich",
+        externalId: "odds-api-1",
+        sportId: "sport-1",
+        homeTeamName: "Kansas City Chiefs",
+        awayTeamName: "Buffalo Bills",
+        commenceTime: new Date(T_KICKOFF),
+        mergedIntoGameId: null,
+        bookmakerCoverageMax: 12,
+        dataQualityScore: 85,
+        createdAt: new Date("2026-09-01T00:00:00.000Z"),
+      };
+      const POOR = { ...RICH, id: "game-poor", externalId: "espn:nfl:401872656", bookmakerCoverageMax: 0 };
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ externalId: "odds-api-1", homeTeam: "Kansas City Chiefs", awayTeam: "Buffalo Bills" }),
+      ]);
+      mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
+        const where = (args as { where?: { externalId?: string; id?: string } }).where;
+        return where?.externalId === "odds-api-1" ? RICH : { id: "game-rich" };
+      });
+      mocks.gameFindMany.mockResolvedValue([RICH, POOR]);
+
+      await processSport(SPORT, "key", gates());
+
+      // Kill switch: no twin scan at all (identity) and no tombstone sweep.
+      expect(mocks.gameFindMany).not.toHaveBeenCalled();
+      const tombstoneCalls = mocks.gameUpdate.mock.calls.filter(
+        (c) => (c[0] as { data?: { mergedIntoGameId?: string } }).data?.mergedIntoGameId !== undefined,
+      );
+      expect(tombstoneCalls).toHaveLength(0);
     });
 
     /**

@@ -146,6 +146,9 @@ export {
   PREFIX_MATCH_SPORT_KEYS,
   normalizeGameTeamToken,
   matchTeamSide,
+  planTwinTombstones,
+  applyTwinTombstones,
+  isBetterTwinCanonical,
 } from "./game-identity.js";
 export type {
   GameIdentityDb,
@@ -153,6 +156,9 @@ export type {
   GameTwinCandidate,
   GameTwinMatch,
   CanonicalGameResolution,
+  TwinTombstoneCandidate,
+  TwinTombstonePlan,
+  TwinTombstoneDb,
 } from "./game-identity.js";
 
 export {
