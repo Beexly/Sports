@@ -9,11 +9,11 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ## CURRENT STATE
 
-Plan: `docs/ops/LAST_PLAN_2026-09-15.md` Â· branch `hermes/last-plan-2026-09-15` Â· head `7f4f29e82` Â· Phase 0 Â· rows: Phase 0 DONE; Phase 1: C-355/356/359/393/396/420 UNPUSHED; next C-357/360/361/392/410+.
+Plan: `docs/ops/LAST_PLAN_2026-09-15.md` Â· branch `hermes/last-plan-2026-09-15` Â· head `7f4f29e82` Â· Phase 0 Â· rows: Phase 0 DONE. Phase 1 DONE/UNPUSHED: C-355 356 357 359 361 392 393 396 410 413 420. In flight: C-360 C-414. Next: C-358 C-395 C-415-417.
 Founder hands-only pending: Â§0.2 items 1â€“5 (rotate secrets; Stripe/Vercel PRICING=FOUNDING; set PREDEXON_API_KEY/HEALTH_ALERT_WEBHOOK_URL/SENTRY_DSN/OPS_READ_SECRET; merge labelled PRs; supply oddsmagnet months + prop-line file).
 Open security work not in this plan: issue #820 transport half (connect-time address check).
 Do-not-touch: `hermes/v528-market-gate-preserved-2026-09-11` (does not compile); checkout price-mismatch (fail-closed is correct); pricing amounts; any gate/env flag.
-Last five DONE: C-396 54d6d2a16; C-359 14ac7ce6b; C-356 ddcb663a7; C-420 7044acadb; C-393 17c20e9d9.
+Last five DONE: C-413 bd5dd5fff; C-410 94d04a9b2; C-357 2d35b1ed6; C-361 64a1a26bb; C-392 13ab1bc99.
 
 ### PredExon handoff (for every later agent)
 
