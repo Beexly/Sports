@@ -195,3 +195,20 @@ export type {
 export { backfillIndependentTrueProb } from "./backfill-independent-trueprob.js";
 export type { BackfillIndependentResult } from "./backfill-independent-trueprob.js";
 
+// Kalshi NFL exchange tape (C-396, D18a). Double-gated; free PredExon only.
+export {
+  captureExchangeTapeIfEnabled,
+  createExchangeTapeClient,
+  isExchangeTapeEnabled,
+  KALSHI_PREDEXON_BOOK,
+  EXCHANGE_TAPE_SOURCE,
+  EXCHANGE_TAPE_NFL_SERIES,
+  EXCHANGE_TAPE_DROPPED_FIELDS,
+  EXCHANGE_TAPE_CATALOG_ABSENT_FIELDS,
+} from "./exchange-tape-capture.js";
+export type {
+  ExchangeTapeGame,
+  CaptureExchangeTapeArgs,
+  CaptureExchangeTapeResult,
+} from "./exchange-tape-capture.js";
+

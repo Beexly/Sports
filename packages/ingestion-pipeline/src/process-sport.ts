@@ -92,6 +92,10 @@ import { captureLineSnapshotsIfEnabled, toLineSnapshotRows } from "./line-archiv
 import { ingestEventOddsIfEnabled, type EventOddsClient } from "./event-odds-ingest.js";
 import { eventOddsId, toPropLineSnapshotRows, type PropEventLike } from "./prop-line-rows.js";
 import { capturePinnacleLineSnapshotsIfEnabled } from "./pinnacle-line-archive.js";
+import {
+  captureExchangeTapeIfEnabled,
+  createExchangeTapeClient,
+} from "./exchange-tape-capture.js";
 import { bookLineDispersion } from "./book-dispersion.js";
 import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
 import {
@@ -919,6 +923,42 @@ export async function processSport(
       console.warn(
         `${logPrefix} EU Pinnacle line archive failed for ${sport.key}: ${pinnacleResult.error}`
       );
+    }
+
+    // Kalshi NFL exchange tape via PredExon free tier (C-396 / D18a).
+    // Double-gated (LINE_ARCHIVE_ENABLED + PREDEXON_INGEST); default OFF.
+    // Paces ≤1 req/s; never paid tick-history. Writes book=kalshi-predexon
+    // rows into odds_line_snapshots; fields the schema cannot hold are named
+    // in the returned evidence (no migration).
+    if (sport.key === NFL_CANONICAL_SPORT_KEY) {
+      const tapeGames = normalizedGames.flatMap((game) => {
+        const rec = gameRecords[game.externalId];
+        if (!rec) return [];
+        return [
+          {
+            id: rec.id,
+            homeTeamName: rec.homeTeamName,
+            awayTeamName: rec.awayTeamName,
+            commenceTime: game.commenceTime,
+          },
+        ];
+      });
+      const tapeResult = await captureExchangeTapeIfEnabled({
+        db,
+        games: tapeGames,
+        capturedAt: fetchedAt,
+        client: createExchangeTapeClient(),
+      });
+      if (tapeResult.error) {
+        console.warn(`${logPrefix} exchange tape failed: ${tapeResult.error}`);
+      } else if (tapeResult.enabled && tapeResult.persisted > 0) {
+        console.log(
+          `${logPrefix} exchange tape: ${tapeResult.persisted} rows ` +
+            `(${tapeResult.marketsMatched}/${tapeResult.marketsSeen} markets, ` +
+            `${tapeResult.tradesSeen} trades, ${tapeResult.requests} reqs); ` +
+            `dropped=${tapeResult.droppedFields.join(",")}`,
+        );
+      }
     }
 
     // Ingest all odds records

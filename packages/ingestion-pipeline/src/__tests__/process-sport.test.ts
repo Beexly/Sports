@@ -150,6 +150,12 @@ vi.mock("@sports/data-ingestion", async () => {
   fetchEspnOddsForSport: vi.fn().mockResolvedValue({ events: [], provider: "espn_public" }),
   // Second book (Kalshi via PredExon) is OFF by default: no catalog, no seam.
   createGalaxySecondBook: mocks.createGalaxySecondBook,
+  // C-396 exchange tape: read gate closed in unit tests (zero PredExon calls).
+  isPredExonIngestEnabled: vi.fn().mockReturnValue(false),
+  PredExonClient: vi.fn(),
+  eventTickerMatchesGame: vi.fn().mockReturnValue(false),
+  parseKalshiSpreadLine: vi.fn().mockReturnValue(null),
+  parseKalshiTotalLine: vi.fn().mockReturnValue(null),
   NFL_PRESEASON_ODDS_KEY: "americanfootball_nfl_preseason",
   NFL_CANONICAL_SPORT_KEY: "americanfootball_nfl",
   // Real month check so isNflPreseasonKickoff (C-353) works against a July/August kickoff.
