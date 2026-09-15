@@ -1203,3 +1203,5 @@ C-354 DONE 8cbd0b962 — pick-card lock price + DoD test.
 C-419 DONE — target PRs already merged; nothing open to close.
 C-418 UNPUSHED  — GH settle job removed in frozen-path #828; autonomy no longer re-invokes settle-picks.
 C-393 UNPUSHED  — line archive alarm wired into health-alert cron.
+C-355 UNPUSHED 6b07785be — pfr_adv_stats + rush tendencies on refresh-player-stats.
+C-420 UNPUSHED 7044acadb — OPS_READ_SECRET for read-only ops surfaces.

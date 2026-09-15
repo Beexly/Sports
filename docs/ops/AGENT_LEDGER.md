@@ -520,7 +520,7 @@ the only copy, and nobody else can verify or build on it.
 | C-354 | LP0 Card price is the lock price, never a string-embedded number | hermes | DONE | 8cbd0b962 — card uses clvLockPrice/Line; test (5); source on branch |
 | C-418 | LP0 One scheduler for settle-picks: the frozen-path PR | hermes | UNPUSHED | #828 frozen-path draft + cdcf6a6f8 on hermes/last-plan-2026-09-15 — Vercel only; founder merges #828 |
 | C-419 | LP0 PR triage: close what main already carries | hermes | DONE | #754 #751 #752 #753 #750 #749 #748 #745 #747 already MERGED; no open PR to close |
-| C-355 | LP1 Fill pfr_adv_stats and player_rush_profiles from the nflverse release | hermes | OPEN | - |
+| C-355 | LP1 Fill pfr_adv_stats and player_rush_profiles from the nflverse release | hermes | UNPUSHED | 6b07785be — both ingesters on refresh-player-stats cron; PFR direct URL removed; dry-run NOT RUN (no network); tests (30) |
 | C-356 | LP1 Tombstone fixture twins: write mergedIntoGameId | hermes | OPEN | - |
 | C-357 | LP1 Widen NFL prop ingest to every market the HB engine scores | hermes | OPEN | - |
 | C-358 | LP1 Prop reader: OddsLineSnapshot to RateSample + graded outcome | hermes | OPEN | - |
@@ -537,7 +537,7 @@ the only copy, and nobody else can verify or build on it.
 | C-415 | LP1 The reporter roster, in code, for all 32 teams | hermes | OPEN | - |
 | C-416 | LP1 The wire becomes a stored, polled feed instead of a page-render fetch | hermes | OPEN | - |
 | C-417 | LP1 Alerts when a reporter posts, and the beat-report gate goes live on real reporting | hermes | OPEN | - |
-| C-420 | LP1 Read-only operator surfaces stop sharing the cron mutation secret | hermes | OPEN | - |
+| C-420 | LP1 Read-only operator surfaces stop sharing the cron mutation secret | hermes | UNPUSHED | 7044acadb — OPS_READ_SECRET on read-only ops; unset falls back to CRON_SECRET; mutations reject it; tests (11) |
 | C-362 | LP2 packages/verifier: frozen holdouts, scorecard, duel, joint, factgraph | hermes | OPEN | - |
 | C-363 | LP2 CI precondition: the frozen-path PR for the guardrails | hermes | OPEN | - |
 | C-364 | LP2 Factor Foundry: YAML specs A1-A16, runner, index | hermes | OPEN | - |
