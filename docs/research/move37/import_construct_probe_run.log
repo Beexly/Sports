@@ -1,0 +1,15 @@
+
+=== move37_irl_prelec.py ===
+  [OK] syntax
+  [SKIP] log_loss(obs_te, probs, labels=[0, 1, 2])  (not a class (e.g. a metrics function like log_loss))
+  [FAIL] GradientBoostingRegressor(max_iter=150, max_depth=4, random_state=42)
+         TypeError: GradientBoostingRegressor.__init__() got an unexpected keyword argument 'max_iter'
+  [OK]   LogisticRegression(max_iter=1000)
+
+=== move37_irl_cara_fix1.py ===
+  [OK] syntax
+  [SKIP] log_loss(obs_idx_test, probs_test, labels=[0, 1, 2])  (not a class (e.g. a metrics function like log_loss))
+  [OK]   HistGradientBoostingRegressor(max_iter=150, max_depth=4, random_state=42)
+  [OK]   LogisticRegression(max_iter=1000)
+
+RESULT: DEFECTS FOUND
