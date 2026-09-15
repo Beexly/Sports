@@ -1,0 +1,52 @@
+{
+  "rows_raw": 52172,
+  "seasons": [
+    2015,
+    2024
+  ],
+  "revenge_rows": 812,
+  "players": 1966,
+  "analysis_rows": 40464,
+  "analysis_players": 1178,
+  "dt_nonnull": 20746,
+  "fe_ols": {
+    "intercept": -5.5401420561972366e-18,
+    "revenge": -0.3664941402193216,
+    "dt": -0.0068691570721568914,
+    "n": 20746
+  },
+  "fe_boot": {
+    "draws": 2000,
+    "players": 949,
+    "revenge_p5": -0.5975283172057444,
+    "revenge_p95": -0.11901702124855758,
+    "dt_p5": -0.008777866678346007,
+    "dt_p95": -0.005127356102965106,
+    "revenge_excl0": true,
+    "dt_excl0": true
+  },
+  "ratio": {
+    "players_with_both": 319,
+    "geo_mean_ratio": 0.019980285933180842,
+    "median_ratio": 0.7286324786324786,
+    "ci90_lo": 0.009503472094674104,
+    "ci90_hi": 0.0410711396131114,
+    "covers_1": false
+  },
+  "ratio_robust": {
+    "players_with_both": 298,
+    "median_ratio": 0.7735690235690236,
+    "median_ci90": [
+      0.7114275414563807,
+      0.8217391304347826
+    ],
+    "median_covers_1": false,
+    "pooled_rev_mean_targets": 3.041361723660381,
+    "pooled_non_mean_targets": 3.3386874325336118,
+    "pooled_ratio_of_means": 0.9109453295999019,
+    "mean_targets_revenge_all": 2.7302452316076296,
+    "mean_targets_nonrevenge_all": 3.6186005537377297,
+    "n_revenge_rows": 734,
+    "note": "geo-mean in res_L2.ratio is UNSTABLE (near-zero baselines); median governs"
+  }
+}
