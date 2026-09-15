@@ -1,13 +1,12 @@
-import { describe, it, expect, vi } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 
-// P4-05 added a PFR-specific checkClearance gate for `pfr-advstats-via-nflverse`
-// (status: permission_required, automation_allowed: false in the real registry).
-// Mock checkClearance to return allowed=true so the happy-path and source-error
-// degradation tests actually exercise the fetcher path.
-const cmocks = vi.hoisted(() => ({ checkClearance: vi.fn() }));
-vi.mock("@/lib/scraping/clearance-engine", () => ({ checkClearance: cmocks.checkClearance }));
+// C-355: loadRushingContact reads persisted PfrAdvStat rows (the ingester is
+// the only write path). Mock checkClearance (rights gate) and the DB.
+const mocks = vi.hoisted(() => ({ checkClearance: vi.fn(), findMany: vi.fn() }));
+vi.mock("@/lib/scraping/clearance-engine", () => ({ checkClearance: mocks.checkClearance }));
+vi.mock("@sports/db", () => ({ db: { pfrAdvStat: { findMany: mocks.findMany } } }));
 
-import { buildRushingContact, loadRushingContact } from "./rushing-contact";
+import { buildRushingContactFromDb, loadRushingContact, type PfrRushDbRow } from "./rushing-contact";
 
 /** Build a minimal allowed ClearanceResult for the given source_id. */
 function allowedClearance(source_id: string) {
@@ -25,31 +24,48 @@ function allowedClearance(source_id: string) {
   };
 }
 
-// Default: clearance always allowed
-cmocks.checkClearance.mockImplementation((req: { source_id?: string }) =>
-  allowedClearance(req.source_id ?? "nflverse"),
-);
-
-type Row = Record<string, string>;
-// Mirrors the real combined SEASON file (advstats_season_rush.csv): one row per
-// player-season, columns season / player / pfr_id / tm / att / yac / ybc / brk_tkl.
-function ps(o: Partial<Row>): Row {
-  return { season: "2024", pfr_id: "x", player: "X", tm: "ATL", att: "120", yac: "240", ybc: "240", brk_tkl: "6", ...o };
+function deniedClearance(source_id: string) {
+  return {
+    ...allowedClearance(source_id),
+    allowed: false,
+    blocks: [{ code: "permission_required", message: "PFR advanced requires written confirmation" }],
+  };
 }
 
-const RECORDS: Row[] = [
-  ps({ pfr_id: "ELU", player: "Elusive Back", att: "220", yac: "600", ybc: "400", brk_tkl: "30" }),
-  ps({ pfr_id: "PLD", player: "Plodder", att: "200", yac: "300", ybc: "600", brk_tkl: "10" }),
-  ps({ pfr_id: "TINY", player: "Tiny", att: "10" }), // below MIN_ATT
-  ps({ pfr_id: "OLD", player: "Old Season", season: "2023", att: "300", yac: "900" }), // other season, excluded
+function row(o: Partial<PfrRushDbRow>): PfrRushDbRow {
+  return {
+    pfrPlayerId: "x",
+    playerName: "X",
+    team: "ATL",
+    carries: 120,
+    rushingYardsAfterContact: 240,
+    rushingYardsBeforeContact: 240,
+    rushingBrokenTackles: 6,
+    ...o,
+  };
+}
+
+const ROWS: PfrRushDbRow[] = [
+  row({ pfrPlayerId: "ELU", playerName: "Elusive Back", carries: 220, rushingYardsAfterContact: 600, rushingYardsBeforeContact: 400, rushingBrokenTackles: 30 }),
+  row({ pfrPlayerId: "PLD", playerName: "Plodder", carries: 200, rushingYardsAfterContact: 300, rushingYardsBeforeContact: 600, rushingBrokenTackles: 10 }),
+  row({ pfrPlayerId: "TINY", playerName: "Tiny", carries: 10 }), // below MIN_ATT
 ];
 
-describe("buildRushingContact", () => {
-  const rows = buildRushingContact(RECORDS, 2024);
+beforeEach(() => {
+  mocks.checkClearance.mockReset();
+  mocks.findMany.mockReset();
+  mocks.checkClearance.mockImplementation((req: { source_id?: string }) =>
+    allowedClearance(req.source_id ?? "nflverse"),
+  );
+  mocks.findMany.mockResolvedValue([]);
+});
+
+describe("buildRushingContactFromDb", () => {
+  const rows = buildRushingContactFromDb(ROWS);
   const by = (n: string) => rows.find((r) => r.name === n);
 
-  it("filters to the active season, drops sub-threshold, ranks by YAC/att", () => {
-    expect(rows.map((r) => r.name)).toEqual(["Elusive Back", "Plodder"]); // TINY excluded, 2023 ignored
+  it("drops sub-threshold and ranks by YAC/att", () => {
+    expect(rows.map((r) => r.name)).toEqual(["Elusive Back", "Plodder"]);
     expect(by("Elusive Back")!.attempts).toBe(220);
     expect(by("Elusive Back")!.yacPerAtt).toBe(2.73); // 600/220
     expect(by("Elusive Back")!.brokenTackles).toBe(30);
@@ -59,11 +75,60 @@ describe("buildRushingContact", () => {
     expect(by("Elusive Back")!.yacPerAtt).toBeGreaterThan(by("Plodder")!.yacPerAtt);
     expect(by("Plodder")!.ybcPerAtt).toBeGreaterThan(by("Elusive Back")!.ybcPerAtt);
   });
+
+  it("sums weekly rows for the same player", () => {
+    const summed = buildRushingContactFromDb([
+      row({ pfrPlayerId: "W1", playerName: "Week One", carries: 40, rushingYardsAfterContact: 80, rushingYardsBeforeContact: 40, rushingBrokenTackles: 2 }),
+      row({ pfrPlayerId: "W1", playerName: "Week One", carries: 40, rushingYardsAfterContact: 100, rushingYardsBeforeContact: 50, rushingBrokenTackles: 3 }),
+    ]);
+    expect(summed[0]!.attempts).toBe(80);
+    expect(summed[0]!.yacPerAtt).toBe(2.25); // 180/80
+    expect(summed[0]!.brokenTackles).toBe(5);
+  });
 });
 
 describe("loadRushingContact", () => {
-  it("degrades to source-error when PFR is unreachable (both seasons)", async () => {
-    const r = await loadRushingContact({ fetcher: async () => { throw new Error("blocked"); } });
+  it("returns live rows from the ingester's store", async () => {
+    mocks.findMany.mockResolvedValue(ROWS);
+    const r = await loadRushingContact({ season: 2024 });
+    expect(r.status).toBe("live");
+    expect(r.season).toBe(2024);
+    expect(r.rows.map((x) => x.name)).toEqual(["Elusive Back", "Plodder"]);
+    expect(r.sourceUrl).toContain("nflverse-data/releases/tag/pfr_advstats");
+    expect(r.canPublishProjections).toBe(false);
+  });
+
+  it("falls back to the previous season when the labelled one has no stored rows", async () => {
+    mocks.findMany.mockImplementation(async ({ where }: { where: { season: number } }) =>
+      where.season === 2023 ? ROWS : [],
+    );
+    const r = await loadRushingContact({ season: 2024 });
+    expect(r.status).toBe("live");
+    expect(r.season).toBe(2023);
+  });
+
+  it("degrades to source-error when no rows are stored (rights gate / unpublished)", async () => {
+    mocks.findMany.mockResolvedValue([]);
+    const r = await loadRushingContact({ season: 2024 });
+    expect(r.status).toBe("source-error");
+    expect(r.rows).toEqual([]);
+    expect(r.error).toContain("no stored pfr_adv_stats rush rows");
+  });
+
+  it("returns a rights-gated empty state when clearance denies pfr-advstats-via-nflverse", async () => {
+    mocks.checkClearance.mockImplementation((req: { source_id?: string }) =>
+      deniedClearance(req.source_id ?? "nflverse"),
+    );
+    const r = await loadRushingContact({ season: 2024 });
+    expect(r.status).toBe("source-error");
+    expect(r.rows).toEqual([]);
+    expect(mocks.findMany).not.toHaveBeenCalled();
+    expect(r.error).toContain("permission_required");
+  });
+
+  it("degrades to source-error when the store is unreachable", async () => {
+    mocks.findMany.mockRejectedValue(new Error("db down"));
+    const r = await loadRushingContact({ season: 2024 });
     expect(r.status).toBe("source-error");
     expect(r.rows).toEqual([]);
   });

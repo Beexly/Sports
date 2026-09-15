@@ -36,6 +36,16 @@ import { ingestSnapCounts } from "@/lib/ingestion/snap-counts";
 import { ingestInjuries } from "@/lib/ingestion/injuries";
 import { ingestDepthCharts } from "@/lib/ingestion/depth-charts";
 import { ingestNextGenStats } from "@/lib/ingestion/next-gen-stats";
+// C-355: PFR advanced charting + rush tendencies. Rights citation —
+// source-rights-registry.ts entry `pfr-advstats-via-nflverse`
+// (status: permission_required, automation_allowed: false; verdict 2026-07-16,
+// reports/rights/pfr-advstats-verdict-2026-07-16.md). The nflverse pfr_advstats
+// RELEASE is the route; PFR direct stays `forbidden` in
+// packages/data-ingestion/src/source-registry.ts (`pro-football-reference`,
+// `sports-reference`). Until written confirmation from Sports Reference LLC
+// lands, ingestPfrAdvStats returns clearance-denied and writes nothing.
+import { ingestPfrAdvStats } from "@/lib/ingestion/pfr-adv-stats";
+import { ingestRushTendencies } from "@/lib/ingestion/rush-tendencies";
 import { recordFreeIngestionRun } from "@/lib/data-sources/free-ingestion-run";
 import { decideSatelliteRun } from "@/lib/ingestion/satellite-window";
 
@@ -52,6 +62,12 @@ type SatelliteBundle = {
     receiving: unknown;
     rushing: unknown;
   };
+  pfrAdv: {
+    pass: unknown;
+    rec: unknown;
+    rush: unknown;
+  };
+  rushTendencies: unknown;
 };
 
 export async function GET(request: Request): Promise<NextResponse> {
@@ -144,15 +160,37 @@ export async function GET(request: Request): Promise<NextResponse> {
     const ngsPassing = await ingestNextGenStats(satelliteSeason, "passing");
     const ngsReceiving = await ingestNextGenStats(satelliteSeason, "receiving");
     const ngsRushing = await ingestNextGenStats(satelliteSeason, "rushing");
+    // C-355. Sequential, same as the other satellites. PFR weekly files are
+    // small; rush-tendencies fetches PBP with COLUMN PROJECTION
+    // (lib/ingestion/rush-tendencies.ts) so the big file stays light.
+    // ingestPfrAdvStats is clearance-gated on `pfr-advstats-via-nflverse`
+    // (permission_required) — a denial is a rights stop, not an outage, and
+    // the route still returns 200 on a healthy primary (see the satellite
+    // SLA comment below).
+    const pfrPass = await ingestPfrAdvStats(satelliteSeason, "pass");
+    const pfrRec = await ingestPfrAdvStats(satelliteSeason, "rec");
+    const pfrRush = await ingestPfrAdvStats(satelliteSeason, "rush");
+    const rushTendencies = await ingestRushTendencies(satelliteSeason);
     satellites = {
       snaps,
       injuries,
       depth,
       ngs: { passing: ngsPassing, receiving: ngsReceiving, rushing: ngsRushing },
+      pfrAdv: { pass: pfrPass, rec: pfrRec, rush: pfrRush },
+      rushTendencies,
     };
-    satellitesOk = [snaps, injuries, depth, ngsPassing, ngsReceiving, ngsRushing].every(
-      (r) => r.status === "ok",
-    );
+    satellitesOk = [
+      snaps,
+      injuries,
+      depth,
+      ngsPassing,
+      ngsReceiving,
+      ngsRushing,
+      pfrPass,
+      pfrRec,
+      pfrRush,
+      rushTendencies,
+    ].every((r) => r.status === "ok");
   }
 
   const success = primaryOk && satellitesOk;
