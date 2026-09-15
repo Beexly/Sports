@@ -8,14 +8,35 @@
  */
 
 import { loadBoardState, type BoardStatePayload, type BoardStateRow } from "@/lib/board/state";
-import type { Transmission, TransmissionSegment } from "./transmission";
-import { SAMPLE_TRANSMISSION } from "./transmission";
+import type {
+  Transmission,
+  TransmissionSegment,
+  TransmissionUnavailableReason,
+} from "./transmission";
 
 function codeFromDate(d = new Date()): string {
   const mm = String(d.getUTCMonth() + 1).padStart(2, "0");
   const dd = String(d.getUTCDate()).padStart(2, "0");
   const yy = String(d.getUTCFullYear()).slice(-2);
   return `${mm} · ${dd} · ${yy}`;
+}
+
+/**
+ * Honest empty/error state — zero invented counts, never SAMPLE_TRANSMISSION.
+ * SAMPLE_TRANSMISSION remains only for lib/gsn/beex-weekly.ts.
+ */
+export function unavailableTransmission(
+  now: Date,
+  reason: TransmissionUnavailableReason,
+): Transmission {
+  return {
+    code: codeFromDate(now),
+    source: "unavailable",
+    unavailableReason: reason,
+    illustrative: false,
+    summary: [],
+    segments: [],
+  };
 }
 
 function rowLabel(row: BoardStateRow): string {
@@ -35,13 +56,14 @@ export async function buildDailyTransmission(
     const scoringN = scoringNow.length;
     const total = pubN + passN + scoringN;
 
-    if (total === 0 || board.meta.suppressedDemoData || board.meta.dataError) {
-      return {
-        ...SAMPLE_TRANSMISSION,
-        code: codeFromDate(now),
-        source: "methodology",
-        illustrative: true,
-      };
+    if (board.meta.dataError) {
+      return unavailableTransmission(now, "data-error");
+    }
+    if (board.meta.suppressedDemoData) {
+      return unavailableTransmission(now, "suppressed-demo");
+    }
+    if (total === 0) {
+      return unavailableTransmission(now, "empty-board");
     }
 
     const segments: TransmissionSegment[] = [
@@ -122,11 +144,6 @@ export async function buildDailyTransmission(
       segments,
     };
   } catch {
-    return {
-      ...SAMPLE_TRANSMISSION,
-      code: codeFromDate(now),
-      source: "methodology",
-      illustrative: true,
-    };
+    return unavailableTransmission(now, "load-failed");
   }
 }

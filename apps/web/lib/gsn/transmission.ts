@@ -21,13 +21,20 @@ export type TransmissionSegment = {
   readonly points: readonly string[];
 };
 
+export type TransmissionUnavailableReason =
+  | "empty-board"
+  | "suppressed-demo"
+  | "data-error"
+  | "load-failed";
+
 export type Transmission = {
   /** True when content is methodology/demo structure, not live board-derived. */
   readonly illustrative: boolean;
-  /** Provenance for the badge. */
-  readonly source: "board" | "methodology";
+  /** Provenance for the badge. `unavailable` means the feed failed — no sample copy. */
+  readonly source: "board" | "methodology" | "unavailable";
   /** Date code, shown after "GSN TRANSMISSION //". */
   readonly code: string;
+  readonly unavailableReason?: TransmissionUnavailableReason;
   readonly summary: ReadonlyArray<{ label: string; count: number; tone: SegmentTone }>;
   readonly segments: readonly TransmissionSegment[];
 };

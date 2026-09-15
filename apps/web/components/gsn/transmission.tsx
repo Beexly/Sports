@@ -15,9 +15,43 @@ import { useRef, useState } from "react";
 import { TONE_HEX, type Transmission } from "@/lib/gsn/transmission";
 import { BRAND_COLORS } from "@/lib/brand";
 
+const UNAVAILABLE_COPY: Record<string, string> = {
+  "empty-board": "The board is empty on this snapshot. No published, gated, or scoring rows.",
+  "suppressed-demo": "Sample data is suppressed. No live board rows to file.",
+  "data-error": "The board could not be read. This transmission is offline.",
+  "load-failed": "The board load failed. This transmission is offline.",
+};
+
 export function GSNTransmission({ transmission }: { transmission: Transmission }) {
   const [open, setOpen] = useState<number>(0);
   const segmentRefs = useRef<Array<HTMLDivElement | null>>([]);
+
+  if (transmission.source === "unavailable") {
+    const reason = transmission.unavailableReason ?? "load-failed";
+    return (
+      <div className="surface-card overflow-hidden p-0" data-testid="gsn-transmission-unavailable">
+        <div
+          className="flex flex-wrap items-center justify-between gap-3 border-b px-5 py-3 font-mono"
+          style={{ borderColor: BRAND_COLORS.steelGray, background: `linear-gradient(90deg, ${BRAND_COLORS.obsidianBlack}, ${BRAND_COLORS.steelGray}44)` }}
+        >
+          <p className="flex items-center gap-2 text-sm tracking-[0.18em]" style={{ color: BRAND_COLORS.orbitalCyan }}>
+            GSN TRANSMISSION // OFFLINE
+          </p>
+          <span className="text-[10px] uppercase tracking-[0.22em] text-ion-2">
+            {reason}
+          </span>
+        </div>
+        <div className="px-5 py-8 text-center">
+          <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-ion-2">
+            counts · 0 published · 0 gated · 0 scoring · 0 segments
+          </p>
+          <p className="mx-auto mt-4 max-w-md text-base text-ion-1">
+            {UNAVAILABLE_COPY[reason] ?? UNAVAILABLE_COPY["load-failed"]}
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   // Map a count-strip cell to the segment that shares its tone (falls back to
   // the cell's index), so clicking a number opens the segment behind it.
