@@ -536,7 +536,7 @@ the only copy, and nobody else can verify or build on it.
 | C-414 | LP1 Live weather into the totals and props feature path | hermes | UNPUSHED | 78838246d — shared KickoffWeatherField; T-6h/T-1h; tests (18) |
 | C-415 | LP1 The reporter roster, in code, for all 32 teams | hermes | UNPUSHED | 943937478 — 143 entries; 32 club RSS live; ESPN blogs dead; tests (16) |
 | C-416 | LP1 The wire becomes a stored, polled feed instead of a page-render fetch | hermes | UNPUSHED | 3721fbddb — cron refresh-wire; DEMO_WIRE deleted; tests (15) |
-| C-417 | LP1 Alerts when a reporter posts, and the beat-report gate goes live on real reporting | hermes | OPEN | - |
+| C-417 | LP1 Alerts when a reporter posts, and the beat-report gate goes live on real reporting | hermes | UNPUSHED | 7d57defd9 — wire alerts + beat-report store loader; live false |
 | C-420 | LP1 Read-only operator surfaces stop sharing the cron mutation secret | hermes | UNPUSHED | 7044acadb — OPS_READ_SECRET on read-only ops; unset falls back to CRON_SECRET; mutations reject it; tests (11) |
 | C-362 | LP2 packages/verifier: frozen holdouts, scorecard, duel, joint, factgraph | hermes | UNPUSHED | dd58e6ebc — holdout/scorecard/duel/joint/factgraph; fixture verify:holdout PASS |
 | C-363 | LP2 CI precondition: the frozen-path PR for the guardrails | hermes | UNPUSHED | #829 frozen-path draft — verify:holdout in run-all; L11 scorecard in model-freeze |
