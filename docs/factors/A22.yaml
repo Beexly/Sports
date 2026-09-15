@@ -1,0 +1,20 @@
+id: A22
+title: Red-zone target share to anytime TD
+hypothesis: Higher red-zone target share raises the same-week anytime-TD hit rate beyond the league base rate.
+estimand: anytime-TD hit-rate delta, top tercile vs bottom tercile of player-game RZ target share
+unit: hit-rate delta (probability points)
+data: [nflverse.pbp, nflverse.player_stats]
+discover_era: 2017-2019
+validate_era: 2020-2024
+kill_line: "validate-era top-minus-bottom RZ-share tercile anytime-TD hit-rate delta <= 0 or 95% CI includes 0 with n >= 300"
+mde_80pct_power: 0.0313
+script: scripts/factors/A22.mjs
+status: CANDIDATE
+number: 0.3158
+ci: [0.294, 0.3377]
+n: 5725
+run_sha: "b17e6530602a26de77dcb0cf72737853a769fb21"
+run_at: "2026-09-15T22:45:14.566Z"
+blocked_on: null
+notes: >
+  C-403. RZ target share = player RZ targets / team RZ pass attempts (pbp yardline_100<=20, pass_attempt). Players need >=2 targets that game. Anytime TD = receiving_tds+rushing_tds>0 (player_stats). Posted player-TD lines are not in the free spine — comparison is tercile hit rates vs era base rate (named, not invented). Validate top n=5725 rate=0.4487 bottom n=8149 rate=0.1329 Δ=0.3158 CI[0.294,0.3377] MDE80=0.0313 base=0.2663; terciles t1=0 t2=0.1667. Discover nTop=3162 Δ=0.3276 CI[0.302,0.3533]. YAML lists 1999-2019/2020-2024; this run uses 2017-2024 (discover 2017-2019). Data: nflverse pbp + player_stats (CC BY 4.0), projected cache under packages/verifier/data/; no DB.

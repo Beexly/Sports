@@ -1,0 +1,20 @@
+id: A18
+title: Primetime target concentration
+hypothesis: Team WR1 target share is higher in primetime windows than in Sunday 1 p.m. kickoffs, within the same player.
+estimand: within-player mean target_share (pp) primetime minus Sunday 1pm, cluster-robust by player
+unit: percentage points of target share
+data: [nflverse.player_stats, nflverse.games]
+discover_era: 2017-2019
+validate_era: 2020-2024
+kill_line: "validate-era within-player primetime-minus-1pm target-share delta <= 0 or 95% CI includes 0 with n >= 300"
+mde_80pct_power: 1.5806
+script: scripts/factors/A18.mjs
+status: DEAD
+number: -0.2123
+ci: [-1.3181, 0.8934]
+n: 75
+run_sha: "b17e6530602a26de77dcb0cf72737853a769fb21"
+run_at: "2026-09-15T22:45:06.987Z"
+blocked_on: null
+notes: >
+  C-399. WR1 = team WR with most targets (min 8 REG games) that season. Primetime = hour>=19 or Thu/Mon/Tue/Wed night; control = Sunday 12:30/13:00/13:05. Within-player mean(TS primetime)-mean(TS 1pm) in pp, CR1 by player. Validate players=75 Δ=-0.2123 CI[-1.3181,0.8934] MDE80=1.5806 (pt games 524, 1pm games 1221). Discover players=62 Δ=-0.1296 CI[-1.5201,1.2609]. YAML lists 1999-2019/2020-2024; this run uses 2017-2024 (discover 2017-2019). Data: nflverse player_stats + nfldata games.csv (CC BY 4.0), local cache; no DB.

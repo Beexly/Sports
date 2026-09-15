@@ -1,0 +1,20 @@
+id: A20
+title: Backup-QB effect on receiver usage
+hypothesis: WR1 target share and air-yards share fall when the team starts a QB other than its Week-1 starter.
+estimand: residual WR1 target_share and air_yards_share (pp vs trailing-5) under backup-QB games
+unit: percentage points of target share
+data: [nflverse.games, nflverse.player_stats]
+discover_era: 2017-2019
+validate_era: 2020-2024
+kill_line: "validate-era WR1 residual target-share under backup QB >= 0 (no concentration loss) or 95% CI includes 0 with n >= 300"
+mde_80pct_power: 0.9176
+script: scripts/factors/A20.mjs
+status: DEAD
+number: -0.568
+ci: [-1.2099, 0.0739]
+n: 505
+run_sha: "b17e6530602a26de77dcb0cf72737853a769fb21"
+run_at: "2026-09-15T22:45:07.671Z"
+blocked_on: null
+notes: >
+  C-401. Backup = games.csv QB id != team Week-1 starter. WR1 = season WR targets leader (min 8 games). Primary: WR1 residual target_share (pp vs trailing-5), backup minus starter means, conservative SE. Validate nBackup=505 nStart=1769 Δ=-0.568 CI[-1.2099,0.0739] MDE80=0.9176; backup mean=-0.2466 starter mean=0.3214. Secondary ΔAYS=-0.005 CI[-0.015,0.0049]. Discover nBackup=266 Δ=0.5677 CI[-0.4269,1.5624]. YAML lists 1999-2019/2020-2024; this run uses 2017-2024 (discover 2017-2019). Data: nflverse player_stats + nfldata games.csv (CC BY 4.0), local cache; no DB.
