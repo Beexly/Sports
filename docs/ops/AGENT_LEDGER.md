@@ -539,7 +539,7 @@ the only copy, and nobody else can verify or build on it.
 | C-417 | LP1 Alerts when a reporter posts, and the beat-report gate goes live on real reporting | hermes | OPEN | - |
 | C-420 | LP1 Read-only operator surfaces stop sharing the cron mutation secret | hermes | UNPUSHED | 7044acadb — OPS_READ_SECRET on read-only ops; unset falls back to CRON_SECRET; mutations reject it; tests (11) |
 | C-362 | LP2 packages/verifier: frozen holdouts, scorecard, duel, joint, factgraph | hermes | UNPUSHED | dd58e6ebc — holdout/scorecard/duel/joint/factgraph; fixture verify:holdout PASS |
-| C-363 | LP2 CI precondition: the frozen-path PR for the guardrails | hermes | OPEN | - |
+| C-363 | LP2 CI precondition: the frozen-path PR for the guardrails | hermes | UNPUSHED | #829 frozen-path draft — verify:holdout in run-all; L11 scorecard in model-freeze |
 | C-364 | LP2 Factor Foundry: YAML specs A1-A16, runner, index | hermes | UNPUSHED | 60abc03bb — A1-A16 YAML + zod index/run; tests (16); nothing run |
 | C-365 | LP2 Run A1: birthday or former-team target share | hermes | OPEN | - |
 | C-366 | LP2 Run A2 on PICKS-H1 and write the v5.2.8 shrinkage proposal | hermes | OPEN | - |

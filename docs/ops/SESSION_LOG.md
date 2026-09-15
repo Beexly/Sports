@@ -1231,3 +1231,4 @@ C-414 UNPUSHED  — kickoff weather field shared.
 C-415 UNPUSHED  — reporter roster in code; ESPN team RSS discontinued.
 C-416 UNPUSHED 3721fbddb — wire stored + polled; sample gone.
 C-364 UNPUSHED 60abc03bb — factor YAMLs pre-registered; kill lines committed before any run.
+C-363 UNPUSHED frozen-path PR (guardrails) — founder merges.
