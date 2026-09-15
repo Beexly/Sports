@@ -145,6 +145,88 @@ async function fetchVenue(venue: NflVenue, fetcher: FetchLike, timeoutMs: number
   }
 }
 
+/**
+ * C-414 — pick the NWS hourly period closest to a kickoff instant.
+ * Pure. Returns null when there are no periods or the kickoff ISO is invalid.
+ * The public /weather page uses `periods[0]` (now); the totals/props feature
+ * path uses THIS so the field is kickoff-hour, not fetch-hour.
+ */
+export function pickPeriodAtKickoff<T extends { readonly startTime?: string }>(
+  periods: ReadonlyArray<T | undefined>,
+  kickoffIso: string,
+): T | null {
+  const target = Date.parse(kickoffIso);
+  if (!Number.isFinite(target) || periods.length === 0) return null;
+  let best: T | null = null;
+  let bestDelta = Infinity;
+  for (const p of periods) {
+    if (!p?.startTime) continue;
+    const t = Date.parse(p.startTime);
+    if (!Number.isFinite(t)) continue;
+    const delta = Math.abs(t - target);
+    if (delta < bestDelta) {
+      bestDelta = delta;
+      best = p;
+    }
+  }
+  return best;
+}
+
+/**
+ * C-414 — fetch kickoff-hour conditions for one venue.
+ * Same NWS rights posture as `loadNflGameWeather` (public domain, no key).
+ * Does NOT share the "current conditions" cache — kickoff-hour values are a
+ * different observation and must not be aliased to the /weather page's nowcast.
+ */
+export async function fetchVenueKickoffWeather(args: {
+  readonly venue: NflVenue;
+  readonly kickoffIso: string;
+  readonly timeoutMs?: number;
+  readonly fetcher?: FetchLike;
+}): Promise<VenueWeather> {
+  assertIngestible("nws-weather");
+  const { venue, kickoffIso } = args;
+  const timeoutMs = args.timeoutMs ?? 12_000;
+  const fetcher = args.fetcher ?? fetch;
+  try {
+    const points = await fetchJson<PointsResponse>(
+      `https://api.weather.gov/points/${venue.lat},${venue.lon}`,
+      fetcher,
+      timeoutMs,
+    );
+    const hourlyUrl = points.properties?.forecastHourly;
+    if (!hourlyUrl) throw new Error("no hourly forecast URL");
+    const hourly = await fetchJson<HourlyResponse>(hourlyUrl, fetcher, timeoutMs);
+    const period = pickPeriodAtKickoff(hourly.properties?.periods ?? [], kickoffIso);
+    if (!period) throw new Error("no forecast period near kickoff");
+    return {
+      team: venue.team,
+      stadium: venue.stadium,
+      status: "ok",
+      tempF: typeof period.temperature === "number" ? period.temperature : null,
+      windMph: parseWindMph(period.windSpeed),
+      windDirection: period.windDirection ?? "",
+      precipPct: period.probabilityOfPrecipitation?.value ?? null,
+      shortForecast: period.shortForecast ?? "",
+      observedFor: period.startTime ?? null,
+      error: null,
+    };
+  } catch (error) {
+    return {
+      team: venue.team,
+      stadium: venue.stadium,
+      status: "error",
+      tempF: null,
+      windMph: null,
+      windDirection: "",
+      precipPct: null,
+      shortForecast: "",
+      observedFor: null,
+      error: error instanceof Error ? error.message : "UNKNOWN",
+    };
+  }
+}
+
 export function resetGameWeatherCacheForTests(): void {
   cache = null;
 }
