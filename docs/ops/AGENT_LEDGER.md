@@ -528,7 +528,7 @@ the only copy, and nobody else can verify or build on it.
 | C-360 | LP1 Unlink the fiction: nav ≤12 labels, nine fantasy tools parked, labels match H1 | hermes | OPEN | - |
 | C-361 | LP1 Delete the dead duplicate loaders | hermes | OPEN | - |
 | C-392 | LP1 Issue #820 doc half: the SSRF guard says it is literal-only | hermes | OPEN | - |
-| C-393 | LP1 The line archive alarms when it goes quiet | hermes | OPEN | - |
+| C-393 | LP1 The line archive alarms when it goes quiet | hermes | UNPUSHED |  — STALE/SILENT page via health-alert; DISABLED zero-DB; UNKNOWN carries error; test (26) |
 | C-395 | LP1 nflverse loaders for the releases the factor queue needs and nothing pulls yet | hermes | OPEN | - |
 | C-396 | LP1 Record the Kalshi NFL tape and book, forward-only, from day one | hermes | OPEN | - |
 | C-410 | LP1 Rights verdicts for the pick'em boards, and the one free prop-line check that is left | hermes | OPEN | - |
