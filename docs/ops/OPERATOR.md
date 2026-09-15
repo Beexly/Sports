@@ -109,6 +109,27 @@ THE_ODDS_API_KEY=
 # src/independent-source-rights.ts. Agents never set this (AGENTS.md law 3).
 ESPN_POWERINDEX_LICENSED=
 ANTHROPIC_API_KEY=
+# Content free-lane (apps/web/lib/claude-api/free-lane.ts). DEFAULT OFF. Only
+# the "content" and "brief" Claude surfaces ever route here (free-lane-policy.ts
+# FREE_LANE_SURFACES) — never picks/scoring (CLAUDE.md: Claude API is content
+# generation only). Chain: Cerebras first (if CEREBRAS_API_KEY set), then this
+# secondary OpenAI-compatible host, then callClaude (Jynx credits, then cash).
+CONTENT_FREE_LANE_ENABLED=
+CEREBRAS_API_KEY=
+# Secondary slot is a generic OpenAI-compatible /chat/completions host
+# (openai-compat.ts) — this is where OpenRouter goes. To use the
+# "gse-free-content-lane" OpenRouter preset as the secondary free lane:
+#   FREE_LANE_SECONDARY_BASE_URL=https://openrouter.ai/api/v1
+#   FREE_LANE_SECONDARY_MODEL=@preset/gse-free-content-lane
+#   FREE_LANE_SECONDARY_API_KEY=<the OpenRouter key>
+# No code change needed — callOpenAiCompatMessages already POSTs
+# {baseUrl}/chat/completions with Authorization: Bearer <key> and the standard
+# {model, messages:[{role:"system"},{role:"user"}]} body, which is exactly
+# OpenRouter's own API shape.
+FREE_LANE_SECONDARY_BASE_URL=
+FREE_LANE_SECONDARY_MODEL=
+FREE_LANE_SECONDARY_API_KEY=
+FREE_LANE_SECONDARY_LEDGER_PREFIX=
 REDIS_URL=
 # Canonical public base URL. The single source of truth is
 # apps/web/lib/seo/site-url.ts, which resolves to NEXT_PUBLIC_APP_URL when set,
