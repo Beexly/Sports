@@ -551,18 +551,18 @@ the only copy, and nobody else can verify or build on it.
 | C-372 | LP2 Run A8 Boltzmann recalibration | hermes | UNPUSHED | 8ef1bc065 — A8 BLOCKED on real export |
 | C-373 | LP2 Run A9 DFA | hermes | UNPUSHED | 8ef1bc065 — A9 DEAD |
 | C-374 | LP2 Run A10 Wasserstein | hermes | UNPUSHED | 8ef1bc065 — A10 DEAD |
-| C-375 | LP2 Run A11 HMM regimes | hermes | OPEN | - |
-| C-376 | LP2 Run A12 Prelec 4th down | hermes | OPEN | - |
-| C-377 | LP2 Run A13 persistent homology | hermes | OPEN | - |
-| C-378 | LP2 Run A14 ftn charting props features | hermes | OPEN | - |
-| C-379 | LP2 Run A15 OTC contract incentives | hermes | OPEN | - |
-| C-394 | LP2 Run A16 Bradley-Terry covariates in the joint model | hermes | OPEN | - |
-| C-398 | LP2 Run A17 QB-receiver chemistry | hermes | OPEN | - |
-| C-399 | LP2 Run A18 primetime concentration | hermes | OPEN | - |
-| C-400 | LP2 Run A19 WR1-out redistribution | hermes | OPEN | - |
-| C-401 | LP2 Run A20 backup QB usage | hermes | OPEN | - |
-| C-402 | LP2 Run A21 OL continuity | hermes | OPEN | - |
-| C-403 | LP2 Run A22 red-zone share to TD | hermes | OPEN | - |
+| C-375 | LP2 Run A11 HMM regimes | hermes | UNPUSHED | de3bdc215 — A11 DEAD shuffle gate |
+| C-376 | LP2 Run A12 Prelec 4th down | hermes | UNPUSHED | de3bdc215 — A12 DEAD |
+| C-377 | LP2 Run A13 persistent homology | hermes | UNPUSHED | de3bdc215 — A13 DEAD lost to nulls |
+| C-378 | LP2 Run A14 ftn charting props features | hermes | UNPUSHED | de3bdc215 — A14 CANDIDATE FTN dBrier-0.00093 P=0.992 n=2134 |
+| C-379 | LP2 Run A15 OTC contract incentives | hermes | UNPUSHED | de3bdc215 — A15 DEAD artifact placebo larger |
+| C-394 | LP2 Run A16 Bradley-Terry covariates in the joint model | hermes | UNPUSHED | de3bdc215 — A16 DEAD |
+| C-398 | LP2 Run A17 QB-receiver chemistry | hermes | UNPUSHED | 4283b538b — A17 DEAD |
+| C-399 | LP2 Run A18 primetime concentration | hermes | UNPUSHED | 4283b538b — A18 DEAD |
+| C-400 | LP2 Run A19 WR1-out redistribution | hermes | UNPUSHED | 4283b538b — A19 CANDIDATE +1.20pp nOut=78 underpowered |
+| C-401 | LP2 Run A20 backup QB usage | hermes | UNPUSHED | 4283b538b — A20 DEAD |
+| C-402 | LP2 Run A21 OL continuity | hermes | UNPUSHED | 4283b538b — A21 DEAD |
+| C-403 | LP2 Run A22 red-zone share to TD | hermes | UNPUSHED | 4283b538b — A22 CANDIDATE +0.32pp n=5725 |
 | C-404 | LP2 Run A23 snap-share slope | hermes | OPEN | - |
 | C-405 | LP2 Run A24 age-conditioned rest | hermes | OPEN | - |
 | C-406 | LP2 Run A25 weather on pass props | hermes | OPEN | - |

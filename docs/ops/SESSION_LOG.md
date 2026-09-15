@@ -1237,3 +1237,5 @@ C-366 UNPUSHED addbb6ae2 — A2 shrinkage BLOCKED on real export; proposal PROPO
 C-367/368/369 UNPUSHED b2b81c1a0 — A3/A4/A5 all DEAD against pre-registered kill lines.
 C-417 UNPUSHED 7d57defd9 — Phase 1 complete. Wire alerts + beat-report loader.
 C-370..374 UNPUSHED 8ef1bc065 — A6/A7 CANDIDATE (first positives); A8 BLOCKED; A9/A10 DEAD.
+C-375..379/394 UNPUSHED de3bdc215 — A14 CANDIDATE FTN; rest DEAD.
+C-398..403 UNPUSHED 4283b538b — A19/A22 CANDIDATE; rest DEAD.
