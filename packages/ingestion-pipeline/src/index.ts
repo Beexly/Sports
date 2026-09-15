@@ -212,3 +212,30 @@ export type {
   CaptureExchangeTapeResult,
 } from "./exchange-tape-capture.js";
 
+// C-358: first production reader over prop OddsLineSnapshot rows → graded RateSample.
+export {
+  readPropSamples,
+  buildPropSampleLines,
+  buildPlayerIdMap,
+  buildGameSeasonWeekMap,
+  gradePropSide,
+  rateSampleFromWeek,
+  rushAttemptsForProp,
+  PROP_MARKET_STAT_FIELD,
+  attachWeatherToPropLines,
+  logPropSlateWeatherCoverage,
+} from "./prop-sample-reader.js";
+export type {
+  PropSampleLine,
+  PropGradedOutcome,
+  PropSide,
+  PlayerIdentityRow,
+  PlayerIdMap,
+  GameSeasonWeek,
+  ArchivePropRow,
+  PlayerWeekStatRow,
+  SnapCountRow,
+  BuildPropSampleInput,
+  ReadPropSamplesArgs,
+} from "./prop-sample-reader.js";
+

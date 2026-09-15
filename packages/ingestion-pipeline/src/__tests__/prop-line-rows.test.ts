@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   decodePropMarket,
   encodePropMarket,
+  parsePropSide,
   slugPlayer,
   toPropLineSnapshotRows,
 } from "../prop-line-rows.js";
@@ -112,5 +113,30 @@ describe("toPropLineSnapshotRows", () => {
       ],
     });
     expect(rows).toEqual([]);
+  });
+
+  it("archives player_anytime_td Yes/No (C-357)", () => {
+    expect(parsePropSide("Yes")).toBe("yes");
+    expect(parsePropSide("No")).toBe("no");
+    const rows = toPropLineSnapshotRows({
+      bookmakers: [
+        {
+          key: "draftkings",
+          markets: [
+            {
+              key: "player_anytime_td",
+              outcomes: [
+                { name: "Yes", description: "Justin Jefferson", price: -140 },
+                { name: "No", description: "Justin Jefferson", price: 120 },
+              ],
+            },
+          ],
+        },
+      ],
+    });
+    expect(rows).toHaveLength(2);
+    expect(rows.map((r) => r.side).sort()).toEqual(["no", "yes"]);
+    expect(rows[0]?.market).toBe("player_anytime_td|justin_jefferson");
+    expect(rows.find((r) => r.side === "yes")?.line).toBeNull();
   });
 });
