@@ -9,7 +9,8 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ## CURRENT STATE
 
-Plan: `docs/ops/LAST_PLAN_2026-09-15.md` · branch `hermes/last-plan-2026-09-15` · head `58a8cdfc9` · Phase 2 · rows: Phase 0+1 DONE/UNPUSHED. Phase 2: C-362-379, C-394-409 UNPUSHED (A1-A28 all scored/BLOCKED; INDEX.md current). Next: C-397 (assemble v5.3.0 candidate + duel on PICKS-H1), then C-380 (retire gate_decisions readers), then Phase 3.
+Plan: `docs/ops/LAST_PLAN_2026-09-15.md` · branch `hermes/last-plan-2026-09-15` · head `909925139` · Phase 2 · rows: Phase 0+1 DONE/UNPUSHED. Phase 2: C-362-379, C-394-409 UNPUSHED (A1-A28 all scored/BLOCKED; INDEX.md current). Next: C-397 (assemble v5.3.0 candidate + duel on PICKS-H1), then C-380 (retire gate_decisions readers), then Phase 3. Branch pushed 2026-09-15, PR #830 open (draft).
+**CI BLOCKED on PR #830, founder action needed:** `package-lock.json` was never regenerated after `packages/verifier` (C-362) was added as a workspace member — `npm ci` fails EUSAGE (missing `@sports/verifier@1.0.0` from the dependency manifest), taking down all 7 guardrail-family checks before they run a single real check. This file is fully frozen for every agent (law 2, no frozen-path carve-out for it). Fix: `npm install` at the repo root, commit the regenerated file, push to `hermes/last-plan-2026-09-15`. See PR #830 comment for the full trace.
 Founder hands-only pending: §0.2 items 1–5 (rotate secrets; Stripe/Vercel PRICING=FOUNDING; set PREDEXON_API_KEY/HEALTH_ALERT_WEBHOOK_URL/SENTRY_DSN/OPS_READ_SECRET; merge labelled PRs #828/#829 + PR #819; supply oddsmagnet months + prop-line file).
 Open security work not in this plan: issue #820 transport half (connect-time address check).
 Do-not-touch: `hermes/v528-market-gate-preserved-2026-09-11` (does not compile); checkout price-mismatch (fail-closed is correct); pricing amounts; any gate/env flag.
