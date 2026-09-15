@@ -35,6 +35,9 @@ vi.mock("@sports/prediction-engine", () => ({
   MODEL_VERSION: "vtest",
   MIN_PUBLISH_CONFIDENCE: 50,
   PREMIUM_CONFIDENCE_THRESHOLD: 70,
+  // C-353: the slate now asserts the engine predicate at its ML mint site.
+  isThreeWayMoneylineSport: (sportKey: string) =>
+    sportKey.toLowerCase().startsWith("soccer"),
 }));
 
 vi.mock("../build-independent-fair-values.js", () => ({
@@ -225,6 +228,7 @@ describe("generateSignalSlate never overwrites a book-priced pick", () => {
       { ...GAME, id: "game-mls", homeTeamName: "Portland Timbers", awayTeamName: "Austin FC", sport: { key: "soccer_usa_mls", name: "MLS" } },
     ]);
     mocks.pickFindUnique.mockResolvedValue(null);
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
     const out = await runSlate();
     expect(mocks.buildIndependents).not.toHaveBeenCalled();
     expect(mocks.pickCreate).not.toHaveBeenCalled();
@@ -233,6 +237,33 @@ describe("generateSignalSlate never overwrites a book-priced pick", () => {
     expect(out.picksSkipped).toBe(1);
     // Soccer is refused before the guard runs: no scoreboard fetch is spent on it.
     expect(espnFetch).not.toHaveBeenCalled();
+    // C-353: one structured withhold line.
+    expect(warn.mock.calls.some((c) => /withheld: reason=soccer_moneyline gameId=game-mls pickType=MONEYLINE/.test(String(c[0])))).toBe(true);
+    warn.mockRestore();
+  });
+
+  it("C-353: never writes a model-signal MONEYLINE for NFL preseason (July-August kickoff)", async () => {
+    mocks.gameFindMany.mockResolvedValue([
+      {
+        ...GAME,
+        id: "game-nfl-pre",
+        externalId: "odds-nfl-pre",
+        homeTeamName: "Kansas City Chiefs",
+        awayTeamName: "Chicago Bears",
+        commenceTime: new Date("2027-08-15T16:00:00.000Z"),
+        sport: { key: "americanfootball_nfl", name: "NFL" },
+      },
+    ]);
+    mocks.pickFindUnique.mockResolvedValue(null);
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+    const out = await runSlate();
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
+    expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+    expect(out.picksUpserted).toBe(0);
+    expect(out.picksSkipped).toBe(1);
+    expect(espnFetch).not.toHaveBeenCalled();
+    expect(warn.mock.calls.some((c) => /withheld: reason=nfl_preseason gameId=game-nfl-pre pickType=MONEYLINE/.test(String(c[0])))).toBe(true);
+    warn.mockRestore();
   });
 });
 

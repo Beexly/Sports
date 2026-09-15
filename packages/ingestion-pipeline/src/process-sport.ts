@@ -58,6 +58,11 @@ import {
   buildIndependentFairValues,
   type EloRatingsCache,
 } from "./build-independent-fair-values.js";
+import {
+  bookPricedMintWithholdReason,
+  isNflPreseasonKickoff,
+  logMintWithhold,
+} from "./mint-withhold.js";
 import type { ReadinessGates } from "@sports/prediction-engine";
 
 /** Production SHA-256 HashFn for the proof spine — a weak hash would void the guarantee. */
@@ -381,6 +386,10 @@ export async function processSport(
     const fetchedAt = new Date();
 
     let events: import("@sports/types").OddsApiEvent[] = [];
+    // C-353: externalIds of Odds API preseason feed rows remapped onto
+    // ESPN-seeded NFL games this cycle. Used at mint to withhold exhibition
+    // picks; never used to create or re-price anything.
+    const preseasonExternalIds = new Set<string>();
     // Sentinel used when only free paths are configured (no real Odds key).
     const oddsKeyIsSentinel =
       !apiKey ||
@@ -449,6 +458,7 @@ export async function processSport(
                 preseason.data as OddsApiEvent[],
                 candidates,
               );
+              for (const row of remapped) preseasonExternalIds.add(row.id);
               if (unmatched > 0) {
                 console.warn(
                   `${logPrefix} ${sport.key}: preseason map skipped ${unmatched} unmatched Odds API events`,
@@ -944,6 +954,9 @@ export async function processSport(
     let skippedInPlay = 0;
     // Games that passed the guard; the pick loop below refuses any other gameId.
     const confirmedGameIds = new Set<string>();
+    // C-353: gameIds identified as NFL preseason this cycle (remapped feed rows
+    // and/or a July-August kickoff). Mint withhold only - never creates a pick.
+    const preseasonGameIds = new Set<string>();
 
     // Build OddsInputs with full context enrichment
     const oddsInputs: OddsInput[] = [];
@@ -958,6 +971,14 @@ export async function processSport(
     for (const game of normalizedGames) {
       const gameRecord = gameRecords[game.externalId];
       if (!gameRecord) continue;
+
+      if (
+        sport.key === NFL_CANONICAL_SPORT_KEY &&
+        (preseasonExternalIds.has(game.externalId) ||
+          isNflPreseasonKickoff(sport.key, game.commenceTime))
+      ) {
+        preseasonGameIds.add(gameRecord.id);
+      }
 
       const fixture = fixtureFor(gameRecord.id);
       if (!fixture || fixture.status !== "confirmed") {
@@ -1208,6 +1229,19 @@ export async function processSport(
       // this one line refuses the create, the PENDING refresh of selection /
       // line / confidence / factorBreakdown, AND the receipt mint below.
       if (!confirmedGameIds.has(pick.gameId)) continue;
+      // C-353 book-priced mint withhold (WITHHOLD-ONLY). Can only prevent this
+      // candidate from being created or refreshed - never creates, reorders, or
+      // re-prices. One structured log line per withheld candidate.
+      const withholdReason = bookPricedMintWithholdReason({
+        sportKey: sport.key,
+        pickType: pick.pickType,
+        bookmakerCount: pick.bookmakerCount,
+        isNflPreseasonGame: preseasonGameIds.has(pick.gameId),
+      });
+      if (withholdReason) {
+        logMintWithhold(logPrefix, withholdReason, pick.gameId, pick.pickType);
+        continue;
+      }
       // Fields refreshed on every cycle (confidence, grade, market depth).
       // result, settledAt: intentionally absent — never overwritten by refresh.
       // ingestionRunId: intentionally absent from update — preserves creation run ID.
