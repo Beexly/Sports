@@ -525,7 +525,7 @@ the only copy, and nobody else can verify or build on it.
 | C-357 | LP1 Widen NFL prop ingest to every market the HB engine scores | hermes | UNPUSHED | 2d35b1ed6 — 12 HB markets; cap 8; T-15 close-first; tests (21) |
 | C-358 | LP1 Prop reader: OddsLineSnapshot to RateSample + graded outcome | hermes | OPEN | - |
 | C-359 | LP1 Kalshi as book 2 via PredExon, behind PREDEXON_INGEST | hermes | UNPUSHED | 14ac7ce6b — D19 key-present ON; midpoint beside marketFairProb; tests green |
-| C-360 | LP1 Unlink the fiction: nav ≤12 labels, nine fantasy tools parked, labels match H1 | hermes | OPEN | - |
+| C-360 | LP1 Unlink the fiction: nav ≤12 labels, nine fantasy tools parked, labels match H1 | hermes | UNPUSHED | 55a474ade — ten doors + parked tools + FANTASY_TOOLS.md + twitter handle |
 | C-361 | LP1 Delete the dead duplicate loaders | hermes | UNPUSHED | 64a1a26bb — deleted nflverse.ts + espn-public.ts + tests; typecheck clean |
 | C-392 | LP1 Issue #820 doc half: the SSRF guard says it is literal-only | hermes | UNPUSHED | 13ab1bc99 — literal-only/no-DNS comments cite #820; no behaviour change |
 | C-393 | LP1 The line archive alarms when it goes quiet | hermes | UNPUSHED | 17c20e9d9 — STALE/SILENT page via health-alert; DISABLED zero-DB; UNKNOWN carries error; test (26) |
