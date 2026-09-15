@@ -26,7 +26,8 @@ import {
 /** Cron paths the executor is allowed to invoke. Anything else is skipped. */
 export const EXECUTABLE_CRON_TARGETS = {
   RUN_FREE_SPINE_HEALTH: "/api/cron/free-spine-health",
-  RUN_FREE_SETTLE: "/api/cron/settle-picks",
+  // RUN_FREE_SETTLE / settle-picks deliberately absent — C-418: Vercel cron is the
+  // only settle-picks scheduler. Autonomy must not re-invoke settlement (F-30).
   RUN_REFRESH_ODDS_FREE: "/api/cron/refresh-odds",
   RUN_GENERATE_DRAFTS: "/api/cron/generate-drafts",
   RUN_CALIBRATION_METRICS: "/api/cron/calibration-metrics",
@@ -41,17 +42,12 @@ export const EXECUTABLE_CRON_TARGETS = {
 
 /**
  * Query string appended at invoke time for actions that must take the FREE
- * settlement branch. `?path=free` is load-bearing: without it the settle-picks
- * route takes the paid branch whenever THE_ODDS_API_KEY is present, so the
- * planner's "free settle" never ran the free path in production (observed
- * 2026-09-02). Kept apart from EXECUTABLE_CRON_TARGETS so the allow-list
- * comparison below stays a plain path comparison.
+ * settlement branch. Kept empty for settle paths: C-418 removed settle-picks
+ * from the autonomy allow-list, so these actions skip (executableTargetFor
+ * returns null). Historical note: `?path=free` was load-bearing when autonomy
+ * did invoke settle-picks (2026-09-02 paid-path bug).
  */
-export const EXECUTABLE_CRON_QUERY = {
-  RUN_FREE_SETTLE: "?path=free",
-  ATTACK_RCA_WAVE_A: "?path=free",
-  ACCUMULATE_SETTLED_SAMPLE: "?path=free",
-} as const satisfies Partial<Record<AutonomyActionKind, string>>;
+export const EXECUTABLE_CRON_QUERY = {} as const satisfies Partial<Record<AutonomyActionKind, string>>;
 
 /** Full request target (path + query) for an executable action. */
 export function executableRequestFor(action: AutonomyAction): string | null {
@@ -151,9 +147,8 @@ export function executableTargetFor(action: AutonomyAction): string | null {
   if (action.kind === "RUN_FREE_SPINE_HEALTH") {
     return EXECUTABLE_CRON_TARGETS.RUN_FREE_SPINE_HEALTH;
   }
-  if (action.kind === "RUN_FREE_SETTLE") {
-    return EXECUTABLE_CRON_TARGETS.RUN_FREE_SETTLE;
-  }
+  // C-418: settle-picks is Vercel-cron only. RUN_FREE_SETTLE / ATTACK_RCA_WAVE_A /
+  // ACCUMULATE_SETTLED_SAMPLE no longer map to a cron path (they skip).
   if (action.kind === "RUN_REFRESH_ODDS_FREE") {
     return EXECUTABLE_CRON_TARGETS.RUN_REFRESH_ODDS_FREE;
   }
@@ -162,14 +157,6 @@ export function executableTargetFor(action: AutonomyAction): string | null {
   }
   if (action.kind === "RUN_CALIBRATION_METRICS") {
     return EXECUTABLE_CRON_TARGETS.RUN_CALIBRATION_METRICS;
-  }
-  // Safe subset of Wave A: settle path only (free-spine is usually a sibling item).
-  if (action.kind === "ATTACK_RCA_WAVE_A") {
-    return EXECUTABLE_CRON_TARGETS.RUN_FREE_SETTLE;
-  }
-  // Sample accumulation → settle finished games (honest grades only).
-  if (action.kind === "ACCUMULATE_SETTLED_SAMPLE") {
-    return EXECUTABLE_CRON_TARGETS.RUN_FREE_SETTLE;
   }
   return null;
 }
