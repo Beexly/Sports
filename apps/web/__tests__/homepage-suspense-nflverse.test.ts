@@ -168,9 +168,9 @@ describe("P16-01 — homepage shell renders without awaiting nflverse loader", (
 
     // The page shell rendered without waiting for nflverse.
     expect(text).toContain("The market is full of");
-    expect(text).toContain("Galaxy turns it into");
+    expect(text).toContain("We find the")  // FIELD rewrote the thesis; see homepage-doctrine-hero;
     expect(text).toContain("We detect. You decide.");
-    expect(text).toContain("Pick the decision you came to make.");
+    expect(text).toContain("What are you here to decide?")  // FIELD reworded the doors heading;
     expect(text).toContain("Board");
     // "The Lab" door label lives inside the suspended NflverseLabDoor
     // component — it does NOT appear in the shell text when the loader
@@ -202,7 +202,7 @@ describe("P16-01 — homepage shell renders without awaiting nflverse loader", (
     const text = textOf(tree);
 
     expect(text).toContain("The market is full of");
-    expect(text).toContain("Galaxy turns it into");
+    expect(text).toContain("We find the")  // FIELD rewrote the thesis; see homepage-doctrine-hero;
     // The nflverse door is still present (as a Suspense boundary, unresolved).
     expect(hasType(tree, NflverseLabDoor)).toBe(true);
   });

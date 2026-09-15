@@ -263,7 +263,12 @@ describe("board gate consumer — excluded candidates are reported, never droppe
     expect(excluded[0]!.rowId).toBe("no-odds-1");
     expect(excluded[0]!.reason).toContain("q (no two-sided odds)");
     // It must NOT read as a judgement about the game.
-    expect(excluded[0]!.reason).toContain("not a judgement");
+    // Spelling-agnostic: pass-reason.ts writes "judgement" in its own docs, the
+    // shipped customer string uses American "judgment", and the repo is split
+    // 12/7 between them. The invariant is the CLAIM — an absence is never
+    // reported as a verdict on the game — not which side of the Atlantic spelled
+    // it. Pinning one spelling made a correct string fail.
+    expect(excluded[0]!.reason).toMatch(/not a judge?ment/i);
   });
 
   it("an excluded candidate never appears as FIRE or as a refusal", () => {

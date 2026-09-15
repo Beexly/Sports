@@ -9,6 +9,104 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ## THE LOOP
 
+**THE PUBLIC RECORD PAGE PUBLISHES A WINNING VERDICT BUILT FROM PICKS NOBODY COULD BET
+(measured 2026-09-14, read-only production SQL). This outranks the checkout outage below.
+Full audit: `docs/ops/2026-09-14-FUNNEL-AUDIT.md` section 1.**
+
+`/performance` reads "Win Rate 53.2% ... Conclusive ... above the 50.0% threshold". Split on
+the page's own population (the exact filter in `rebuild-performance-summaries.ts` plus the
+in-play exclusion `build-performance-summaries.ts` applies), it reconciles to the page row for
+row and decomposes as:
+
+| lane | W | L | rate |
+|---|---|---|---|
+| book-priced (>= 1 book) | 745 | 777 | **48.95%** |
+| model signal (0 books, unbettable) | 470 | 292 | 61.68% |
+| total (= the live page) | 1,215 | 1,069 | 53.2% |
+
+By market: SPREAD book-priced 363-413 (46.78%), TOTAL book-priced 284-334 (45.95%),
+MONEYLINE book-priced 98-30, MONEYLINE model-signal 470-292. So every market where 52.4% is
+the break-even is losing, and 762 of the 890 settled moneylines had zero books pricing them.
+Only 125 of 2,292 settled rows carry a stored price, so no realized return is computable for
+94.5% of the published record.
+
+Source of the wrong bar: `performance/page.tsx:385` renders `<VerdictLine>` with no
+`threshold` prop and `verdict-line.tsx:22` defaults it to `0.5`. The component already accepts
+and is tested with an explicit threshold, so this is an omitted argument, not a missing
+capability. The site's own `/pricing` ladder names the real bar at 52.4%.
+
+Same live site, opposite verdict: `lib/gse/waitlist-copy.ts:34` publishes "The model does not
+beat naive on this tested setup" on `/waitlist`.
+
+**Do NOT** drop the model-signal rows from the record (they were published and they settle;
+removing them flatters our numbers by deleting the rows the customer never had access to, the
+same argument that governs `adverse-edge-suppression.ts`), do NOT move the 52.4% figure, and
+do NOT pass a lower threshold to make the verdict survive. The fix is to split the display
+into bettable and model-signal, pass the real per-market threshold, publish coverage, and
+withhold the word until the interval clears break-even. Founder decides the hero framing.
+
+**CHECKOUT HAS RETURNED 503 SINCE 2026-09-09 AND WRITES NOTHING (issue #822, founder-only).**
+`PRICING_PHASE=PROVEN` advertises Pro at 1999c; the Stripe Price the resolver returns is
+immutable at 1499c; `stripe.ts:248` fails closed and `checkout/route.ts:114` returns 503
+before Stripe is called and 268 lines before the `checkout_attempts` row is written. Failing
+closed is CORRECT (the alternative charges an amount the customer did not agree to) and the
+post-payment path is healthy (live events processed end-to-end 2026-06-20). Fix is one env
+var or six new Stripe Prices with `<new>,<old>` fallbacks. **No agent touches this** — editing
+`pricing-phases.ts` amounts or loosening `stripe.ts:248` mis-states a price to a customer.
+
+**DO NOT MERGE `hermes/v528-market-gate-preserved-2026-09-11`. IT MERGES CLEAN AND BREAKS
+PICK MINTING IN PRODUCTION (surveyed 2026-09-14, assessed and adversarially re-verified).**
+
+One commit, `e2ec2262f`. Three independent disqualifiers, each on its own sufficient:
+
+1. **It does not compile, and nothing stops it deploying.** In the merged result
+   `scoreTotalPick` declares `fairProb` twice at function-body scope (TS2451) and reads a
+   `consensusPct` that the branch deleted at five sites (TS2304); `scoreMoneylinePick` reads
+   an `independentEdge` that is never declared, seven times, and reads `independentEdgeRaw`
+   63 lines before main declares it. `next.config` sets `typescript.ignoreBuildErrors`, so
+   this BUILDS and throws at runtime — the same mechanism that took `/fantasy/dfs` to HTTP
+   500 in PR #808. Totals and moneylines would stop minting.
+2. **It is founder-only twice over.** It bumps MODEL_VERSION to v5.2.8, and it replaces the
+   publish floors with a market-relative test that both withholds AND admits, so it is a
+   scoring change needing a calibration pass — not the withhold-only asymmetry that let
+   `pricesWorseThanMarket` ship without a bump. CI would reject it anyway: `model-freeze.mjs`
+   requires an IMPLEMENTED proposal for the target version and the v5.2.8 doc still reads
+   PROPOSED.
+3. **The v5.2.8 label is wrong.** The approved v5.2.8 proposal is a DISPLAY-probability
+   change; grepping it for the publish floors this branch replaces returns nothing. The
+   branch is an undocumented scoring change wearing an approved proposal's name, which is
+   exactly what makes it look safe to land.
+
+**The reason this needs writing down rather than leaving alone:** `git merge-tree` against
+main produces NO conflict markers. It merges silently. Anyone doing a well-meant sweep of
+abandoned Hermes branches lands a clean-looking merge straight into the adverse-edge lane.
+Keep the branch as a record; never merge it, and do not repair it from an agent session —
+a compiling version is still founder-only.
+
+**The one durable finding inside it, which IS worth an owner: TOTALS are uncovered by the
+adverse-edge gate at BOTH mint and display.** Verified on main: `scoring.ts` applies
+`pricesWorseThanMarket` at :604 (SPREAD) and :1197 (MONEYLINE), but `scoreTotalPick`
+(751-1003) computes no independent edge at all — it sets `rankingP: confidence / 100` with
+`rankingSource: "confidence"` and its own comment says there is no independent total model
+yet. `lib/picks/adverse-edge-suppression.ts` then reads `independentEdge` off the stored
+breakdown, which totals never populate, so the display-side rule cannot see them either.
+**This is NOT a gate extension.** Calling `pricesWorseThanMarket` from the totals scorer is
+a literal no-op — the predicate opens `if (!edge) return false` — so closing it means
+building a totals edge model first, which is scoring work under a MODEL_VERSION bump. Do not
+file it as a quick withhold-only fix; it is not one.
+
+**Everything else surveyed was already landed.** Twelve unmerged branches (31 commits) were
+assessed and the salvage claims adversarially re-verified. Ten are already on main by another
+route and carry nothing but stale ledger bookkeeping — `hermes/hero-r3f-stack`,
+`hermes/plain-proof-2026-09-10`, `hermes/fe-c93`, `claude/proven-surfaces`,
+`claude/proven-live-ledger`, `claude/c299-test-clock`, `claude/launch-proof`,
+`claude/c301-ledger-done`, `claude/no-inplay-picks`, `claude/c301-loader-candidates`. Do not
+re-survey them. The eleventh, `props/production-path-2026-09-11` (a standalone props-slate
+CLI, genuinely absent from main), was assessed SALVAGE and then REFUTED on verification: it
+ships no tests against its own stated acceptance numbers, documents two options it never
+reads, and has an unguarded division that emits a non-finite probability for a thin position
+group. Worth rebuilding against main, not cherry-picking.
+
 **UPDATED 2026-09-13 (NFL WEEK 1 LIVE CHECK — three production defects fixed, three
 data outages found, conviction gate built). PR #808, branch
 `claude/nfl-kickoff-live-check-0qwxfm`. Read this before touching the board, the
@@ -58,6 +156,16 @@ pushes excluded:
   **z = -10.7**. Its Brier as a probability on that band is **0.3617**; a constant 0.5
   forecast scores 0.25. Realized win rate PEAKS at conf 75-79 (0.6146) and FALLS to 0.4643
   by conf 90-94, below the 0.5280 of the lowest band.
+  **PARTIALLY CORRECTED 2026-09-14 by production measurement — see
+  `docs/ops/2026-09-14-PRODUCTION-MEASUREMENT.md` section 4.** The overconfidence half is
+  confirmed and is the part that matters: conf 80+ realizes 0.5109 on n 229 against a
+  claimed ~0.87, so never present confidence as a win probability. The TAIL half is not
+  supported. Re-measured pre-game and decided-only, the bands the claim rests on are
+  **n 25 (90-94) and n 28 (95+)**, and 95+ — which the sentence above omits — reads
+  **0.7500**, the best band on the board. The inversion is a localized dip at 80-84
+  (0.4231, n 104), and inside that band it is one pick type: TOTAL 0.2692 on n 26.
+  Do not cite "monotonically anti-predictive at the top" as established; cite the
+  overconfidence, which is.
 - `rankingP` (n 1,390): monotone, over-confident in the upper middle, top band 0.8934
   claimed against 0.8286 realized.
 - `marketFairProb` (n 622, books >= 2): monotone and every gap within 0.07.
@@ -149,10 +257,35 @@ suppressed may still carry a good published row, so the promotion would put the 
 both lanes and re-create the "one game, one story" contradiction that
 `model-signal-coherence.ts` exists to prevent.
 
-Still OPEN from this section: the RANKING half. Confidence still orders the board and is still
+Still OPEN from this section: the RANKING half. Confidence is still
 anti-correlated with the engine's own edge (re-measured 20:20 UTC: conf 91 carries +0.0217, the
 smallest positive edge on the slate, while conf 85 carries +0.2257, the largest). Suppression
 removes the negatives; it does not reorder the positives.
+
+**One half of that IS now closed: POOL SELECTION.** Both public read surfaces sort in app code on
+`rankingSortKey` (`lib/ranking/sort-key.ts`, key = `factorBreakdown.rankingP`), but `/api/picks`
+fetched its candidate pool with `orderBy` confidence and a `take`, so the truncation ran in the
+DATABASE and the app-level re-rank could only reorder rows confidence had already approved. A row
+with the best rankingP on the slate and a middling confidence never reached the sort function. The
+pool is now fetched on `generatedAt`, which is what `lib/board/state.ts` already did and says why
+in its own comment. `isFeatured` stays in both orderings because the app-level comparator pins it
+first as well.
+
+The same edit removed a viewer asymmetry nobody had noticed: the pool was 48 rows for a viewer
+with a daily cap and 200 for one without, so a FREE viewer's two picks were the best of a quarter
+of the slate while a PRO viewer ranked over all of it. It is one constant for everyone now. The
+RESPONSE cap is untouched — still `slice(0, dailyPickLimit)` after filter and rank.
+
+Note for whoever takes the remaining half: `picks-paywall-copy-truth.test.ts` had pinned the
+literal ternary `dailyPickLimit != null ? 48 : 200`, so that asymmetry was being guarded as if it
+were the paywall invariant. Its own comment states the real invariant (bounded over-fetch, then
+slice after filter and rank) and it now asserts that. Expect more of this: an assertion written to
+match the code it was shipped beside pins whatever that code happened to do, defect included — the
+line-archive outage earlier in this file is the same failure at larger cost.
+
+What is still open is the SCORE, not the plumbing: `confidence` remains a weighted factor sum with
+50 constant points on any 11-book spread, and refitting it needs a MODEL_VERSION bump and a
+calibration pass. Nothing about pool selection changes that.
 
 **Second, `confidence` is not monotone in the engine's own probability, and today it inverted the
 board.** Ranked by the engine's own `expectedClv`, today's book-priced MLB slate reads D-backs -1.5
@@ -249,16 +382,38 @@ Yankees -1.5 11 books graded LEAN at 91).
   explains the failure mode. Correcting an assertion that pinned a defect is not
   weakening a guard; it is the guard finally pointing at the right thing.
 
-  **NOT VERIFIED, state it honestly:** that Prisma rejects this specific shape at runtime
-  was NOT observed against a live database — no DB was reachable from the session, and a
-  probe against an unreachable DSN returns an initialization error for every shape. What
-  is verified: the column is scalar, the API requires `{ in: ... }`, the commit date is
-  the archive's last day, and the error path is swallowed. The fix is correct by Prisma's
-  contract either way. A COMPETING hypothesis that cannot be eliminated from the repo is
-  that `LINE_ARCHIVE_ENABLED` was simply turned off in Vercel on 2026-08-22 — the founder
-  can settle that by checking the flag, and both fixes are wanted regardless.
+  **~~NOT VERIFIED~~ — NOW CONFIRMED BY PRODUCTION MEASUREMENT, 2026-09-14 01:45 UTC.** The
+  earlier note said honestly that Prisma rejecting this shape at runtime had not been observed,
+  because no database was reachable from that session, and it named a competing hypothesis that
+  could not be eliminated from the repo: that `LINE_ARCHIVE_ENABLED` was simply switched off in
+  Vercel on 08-22. Read-only production SQL settles it, and the competing hypothesis is refuted:
 
-  **Still open:** nothing alarms on archive staleness. That monitor is the follow-up.
+```
+  odds_line_snapshots by day
+    2026-08-19    24,172      2026-08-22   478,222
+    2026-08-20   107,944      2026-08-23 .. 09-12        0      <- 21 days, exactly zero
+    2026-08-21    74,160      2026-09-13     4,187
+                              2026-09-14     2,661 (and writing every ~20 min)
+
+  fix 080dd1976 merged to main (PR #818, 53c764847)   2026-09-13 20:45:20 UTC
+  first archived row after the outage                 2026-09-13 21:02:40 UTC   <- +17 minutes
+```
+
+  Vercel auto-deploys from main. The archive resumed seventeen minutes after the filter-shape fix
+  deployed, having written nothing at all for twenty-one days. A flag flip would have to have
+  landed inside that same window by coincidence. The bare-array-on-a-scalar-filter root cause is
+  the cause.
+
+  **Also now measured: the props lane is live.** `player_receptions|*` and `player_pass_tds|*`
+  rows begin 2026-09-13 21:30:15 UTC, so `EVENT_ODDS_INGEST_ENABLED` is ON — both founder env
+  actions this file lists as open are done. Coverage is credit-capped as designed: two games.
+
+  **Consequence for the ESTABLISHED blocker:** closing lines are being recorded again, so CLV is
+  gradable on picks generated from 2026-09-13 onward. The 08-22..09-12 gap is permanent — those
+  closes were never captured and cannot be backfilled.
+
+  **Still open:** nothing alarms on archive staleness. Twenty-one silent days is the argument for
+  that monitor, and `apps/web/lib/ops/line-archive-freshness.ts` (PR #819) is the reader it needs.
 
 - **~~Stale-generation picks are live on today's board.~~ MEASURED AND LARGELY WITHDRAWN
   2026-09-13 18:55 UTC. Do not "fix" this — the obvious fix re-creates a bug that was
@@ -300,21 +455,50 @@ Yankees -1.5 11 books graded LEAN at 91).
   with a rounding wobble, not a per-game read — and it outranks genuine 11-book picks
   (Steelers -285 at conf 50) because elo returns ~60 while a real consensus returns ~50.
 
-- **`consensusPct` carries no information on MLB run lines either (measured 17:08 UTC,
-  read-only SQL).** Every one of the 14 published MLB SPREAD picks open on today's board
-  reads `consensusPct` exactly 1.0000 — Yankees -1.5 at confidence 91 and Blue Jays -1.5
-  at 58 are on the identical consensus figure. The card copy renders this as "100%
-  bookmaker consensus on <selection>", which a customer reads as "every book likes this
-  side". It does not mean that. An MLB run line is always 1.5, so "every book posts the
-  same number" is true by construction and says nothing about which side the books favour.
-  TOTAL picks on the same board do vary (0.6364 to 1.0000) and MONEYLINE picks vary, so
-  this is specific to the MLB spread path. The consequence is the same shape as the elo
-  bullet above: a factor pinned to a constant is still inside the ranking, so the 91-to-58
-  ordering on MLB run lines is being produced entirely by the other factors while the copy
-  credits consensus. Whoever owns this: either the reasoning string stops claiming
-  consensus on a structurally-constant input, or the run-line consensus is recomputed as a
-  side-agreement fraction (share of books whose price favours the selection) rather than a
-  line-agreement fraction. Do NOT "fix" it by suppressing the number — that hides it.
+- **`consensusPct` carries no information on ANY spread, in ANY sport. COPY FIXED
+  2026-09-13; the scoring input is unchanged and STILL OPEN.** The earlier note here scoped
+  this to "the MLB spread path" because an MLB run line is always 1.5, so "every book posts
+  the same number" is true by construction. **That reasoning was wrong and the scope was far
+  too narrow.** Re-measured 20:50 UTC over every published PENDING pick:
+
+```
+sport                  pickType    n   distinct consensusPct   all exactly 1.0000?
+americanfootball_nfl   SPREAD     30                       1   yes
+baseball_mlb           SPREAD      9                       1   yes
+americanfootball_ncaaf SPREAD      5                       1   yes
+soccer_usa_mls         SPREAD      4                       1   yes
+baseball_mlb           MONEYLINE  41                      30   no (0.6000-0.8604)
+baseball_mlb           TOTAL       9                       6   no (0.6364-1.0000)
+```
+
+  NFL spreads are not a fixed ladder (they run -3, -6.5, -10) and all 30 still read exactly
+  1.0000, so the run-line ladder is NOT the mechanism. The code says what is:
+  `homeFavoredCount = spreads.filter((s) => s < 0).length` counts books whose spread SIGN
+  puts the same team in front. `consensusPct` is agreement about **which team is favoured**,
+  a question books essentially never disagree on. It is not agreement about the line, and
+  not about which side holds value. MONEYLINE and TOTAL genuinely vary, so the degeneracy is
+  SPREAD-specific but sport-agnostic: 48 of 48 published spread picks, four sports.
+
+  Copy fixed in `scoring.ts`: the two spread strings now say how many books have that team
+  favoured and state the selection separately. Two things rode with it. First, the long-form
+  string printed a percentage computed over `spreadOdds` as a percentage "of
+  `pricedOdds.length`", a DIFFERENT array; both now come from the same set. Second, and more
+  important, the T-1 evidence binder (`lib/claims/public-consensus-claim.ts`) matched only
+  the literal phrase "NN% bookmaker consensus", and it is what forces a consensus claim to
+  carry a book count and freshness stamp or not render. The corrected wording would have
+  failed that match and rendered UNGATED, so the copy fix would have walked the claim out
+  from under its own tripwire. `CONSENSUS_CLAIM_RE` now has a second arm; both arms are
+  pinned by test. Legacy rows keep matching arm one, which they must: reasoning strings are
+  frozen write-once at creation, so the 48 already-published rows keep the old wording and
+  this fix is forward-only.
+
+  **STILL OPEN, and it is the bigger half:** `consensusPct` still FEEDS THE SCORE. It drives
+  `consensusScore` up to `CONSENSUS_COMPONENT_MAX` = 30 of 100 confidence points and sets
+  LOW_RISK at `LOW_RISK_CONSENSUS_THRESHOLD` = 0.70. Pinned at 1.0, that is 30 constant
+  points on every spread pick plus an automatic LOW_RISK label regardless of the game.
+  Recomputing it as a real side-agreement or price-agreement figure is a SCORING change: it
+  needs a MODEL_VERSION bump and a calibration pass, and must never be smuggled in as a
+  string edit. Do NOT "fix" it by suppressing the number either; that hides it.
 
 **CI: THE LOCKFILE BLOCKER IS CLEARED, AND IT UNCOVERED THREE REAL FAILURES (2026-09-13
 17:15 UTC).** The founder landed the resync (`077afd2` resync + `ff44d73` audit-fix); every

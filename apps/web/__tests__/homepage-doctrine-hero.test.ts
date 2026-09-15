@@ -84,8 +84,13 @@ describe("homepage doctrine hero", () => {
   });
 
   it("uses the noise-to-signal thesis headline, one cold-open, no legacy hero", () => {
+    // FIELD (2026-09-10, founder-approved) rewrote the thesis: the second half
+    // was "Galaxy turns it into <signal>" and is now "We find the <signal>".
+    // The doctrine's hero is Noise. / Signal. with the closer "We detect. You
+    // decide." — brand-forward chrome was retired on purpose, so pinning
+    // "Galaxy turns it into" held the page to copy the redesign removed.
     expect(page).toContain("The market is full of");
-    expect(page).toContain("Galaxy turns it into");
+    expect(page).toContain("We find the");
     expect(page).toContain("We detect. You decide.");
     // ONE cold-open: the Field intro replaced the montage (96e505471 hero,
     // 417fa6ae3 strip) with a lighter canvas sting that downloads no video

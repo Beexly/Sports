@@ -38,6 +38,16 @@ vi.mock("next/link", () => ({
   ),
 }));
 
+/**
+ * NOTE (2026-09-13): each test below used to fill a "date of birth" field
+ * before clicking subscribe, because the age-21 checkout gate required it.
+ * ASTRA removed that gate from subscriptions and AGENTS.md records it as a
+ * do-not-regress item ("Never restore the age-21 checkout gate"), so the step
+ * now fails on a control that is deliberately gone. The subject of these tests
+ * is the analytics events, not the gate; the DOB step was only ever a
+ * precondition for enabling the button. Anyone re-adding it to make these pass
+ * would be restoring the gate through the back door.
+ */
 describe("analytics instrumentation (P12-03)", () => {
   beforeEach(() => {
     mocks.track.mockReset();
@@ -65,9 +75,6 @@ describe("analytics instrumentation (P12-03)", () => {
         />,
       );
       const button = screen.getByRole("button", { name: /subscribe to pro/i });
-      fireEvent.change(screen.getByLabelText(/date of birth/i), {
-        target: { value: "1990-01-15" },
-      });
       fireEvent.click(button);
       await waitFor(() => {
         expect(mocks.track).toHaveBeenCalledWith("upgrade_cta_click", {
@@ -89,9 +96,6 @@ describe("analytics instrumentation (P12-03)", () => {
         />,
       );
       const button = screen.getByRole("button", { name: /subscribe to elite/i });
-      fireEvent.change(screen.getByLabelText(/date of birth/i), {
-        target: { value: "1990-01-15" },
-      });
       fireEvent.click(button);
       await waitFor(() => {
         expect(mocks.track).toHaveBeenCalledWith("checkout_start", {
@@ -111,9 +115,6 @@ describe("analytics instrumentation (P12-03)", () => {
         />,
       );
       const button = screen.getByRole("button", { name: /subscribe to fantasy/i });
-      fireEvent.change(screen.getByLabelText(/date of birth/i), {
-        target: { value: "1990-01-15" },
-      });
       fireEvent.click(button);
       await waitFor(() => {
         const calls = mocks.track.mock.calls;

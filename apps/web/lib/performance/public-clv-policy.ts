@@ -20,6 +20,7 @@
 
 import { wilsonInterval, clearsThreshold } from "./wilson-interval";
 import { CLV_SAMPLE_RESULT_FILTER } from "@/lib/clv/clv-sample-policy";
+import { partitionInPlay, inPlayExclusionNote } from "@/lib/calibration/in-play-exclusion";
 
 /** The market vig break-even line — beating the close below this isn't an edge. */
 const VIG_BREAK_EVEN = 0.524;
@@ -36,6 +37,10 @@ export interface PublicClvPolicyInput {
   readonly beatCloseCount: number;
   readonly lostToCloseCount: number;
   readonly matchedCloseCount: number;
+  /** Graded rows dropped because they were minted at/after kickoff. Reported, never silent. */
+  readonly inPlayExcluded?: number;
+  /** The one sentence describing that exclusion with its denominator. */
+  readonly inPlayNote?: string;
 }
 
 export interface PublicClvPolicy {
@@ -47,6 +52,10 @@ export interface PublicClvPolicy {
   readonly lostToCloseCount: number;
   readonly matchedCloseCount: number;
   /** Share (0–100, one decimal) of graded picks that beat the close. Null when gated. */
+  /** Graded rows excluded as in-play. Always present so the number is never silent. */
+  readonly inPlayExcluded: number;
+  /** Operator-readable statement of that exclusion, with its denominator. */
+  readonly inPlayNote: string;
   readonly beatCloseRatePct: number | null;
   /** 95% Wilson lower/upper bound on the beat-close rate (0–100, one decimal). Null when gated. */
   readonly beatCloseCiLowPct: number | null;
@@ -139,6 +148,10 @@ export function evaluatePublicClvPolicy(
     beatCloseCount: input.beatCloseCount,
     lostToCloseCount: input.lostToCloseCount,
     matchedCloseCount: input.matchedCloseCount,
+    inPlayExcluded: input.inPlayExcluded ?? 0,
+    inPlayNote:
+      input.inPlayNote ??
+      inPlayExclusionNote(input.inPlayExcluded ?? 0, input.gradedSampleSize + (input.inPlayExcluded ?? 0)),
     beatCloseRatePct: allowed ? beatCloseRatePct : null,
     beatCloseCiLowPct: allowed ? beatCloseCiLowPct : null,
     beatCloseCiHighPct: allowed ? beatCloseCiHighPct : null,
@@ -151,7 +164,37 @@ export function evaluatePublicClvPolicy(
 
 export interface LoadableClvClient {
   pick: {
-    count: (args: { where: Record<string, unknown> }) => Promise<number>;
+    /**
+     * Typed to the EXACT call below rather than to Record<string, unknown>.
+     *
+     * A loose structural signature is not assignable from the real PrismaClient
+     * (its findMany is generic and overloaded), and the looser version of this
+     * interface failed to compile against it. A local interface written to fit
+     * a call rather than the driver is also how the line-archive outage of
+     * 2026-08-22 stayed invisible to tsc for three weeks -- the type endorsed
+     * the mistake. Same literal shape as ConfidenceTailDb, which does compile.
+     */
+    findMany(args: {
+      where: {
+        isBootstrap: false;
+        isPublished: true;
+        // Reference the shared constant's own type so the filter cannot drift
+        // from the rule it implements (the VOID exclusion, C-279).
+        result: typeof CLV_SAMPLE_RESULT_FILTER;
+        clvVerdict: { not: null };
+      };
+      select: {
+        clvVerdict: true;
+        generatedAt: true;
+        game: { select: { commenceTime: true } };
+      };
+    }): Promise<
+      Array<{
+        clvVerdict: string | null;
+        generatedAt?: Date | null;
+        game?: { commenceTime?: Date | null } | null;
+      }>
+    >;
   };
 }
 
@@ -174,26 +217,52 @@ export async function loadPublicClvPolicy(
   // (Devin Review, #733). Note this is a real interaction, not a hypothetical:
   // the line-integrity lane withdraws settled picks that already carry a
   // verdict from their original grading.
+  //
+  // An IN-PLAY pick is EXCLUDED for the same reason, one step harder. A pick
+  // generated at or after kickoff was locked at a LIVE price, so there is no
+  // close for it to have beaten — the comparison is a live price against a
+  // pre-game close and can only read as a loss. Measured 2026-09-14: 158 graded
+  // rows were minted after kickoff and 0 of the 119 moneylines among them beat
+  // the close, which is arithmetic rather than a model outcome. C-298 applied
+  // this rule to the eligibility sample, C-299 stopped the generator minting
+  // new ones, C-302 applied it to the confidence readers — and CLV is the
+  // surface it had not reached. Same module, same semantics, so the rule still
+  // has exactly one definition.
   const canonical = {
     isBootstrap: false,
     isPublished: true,
     result: CLV_SAMPLE_RESULT_FILTER,
   } as const;
 
-  const [gradedSampleSize, beatCloseCount, lostToCloseCount, matchedCloseCount] =
-    await Promise.all([
-      db.pick.count({ where: { ...canonical, clvVerdict: { not: null } } }),
-      db.pick.count({ where: { ...canonical, clvVerdict: "BEAT_CLOSE" } }),
-      db.pick.count({ where: { ...canonical, clvVerdict: "LOST_TO_CLOSE" } }),
-      db.pick.count({ where: { ...canonical, clvVerdict: "MATCHED_CLOSE" } }),
-    ]);
+  // One read rather than four counts: "in-play" compares a pick column against
+  // a GAME column, which a Prisma `where` cannot express, so the partition has
+  // to happen in app code. The select stays narrow and the population is the
+  // graded rows only (~1.5k today), so this is a cheap read, not a table scan.
+  const rows = await db.pick.findMany({
+    where: { ...canonical, clvVerdict: { not: null } },
+    select: {
+      clvVerdict: true,
+      generatedAt: true,
+      game: { select: { commenceTime: true } },
+    },
+  });
+
+  const { scored, excludedInPlay } = partitionInPlay(rows, (r) => ({
+    generatedAt: r.generatedAt ?? null,
+    commenceTime: r.game?.commenceTime ?? null,
+  }));
+
+  const countOf = (verdict: string): number =>
+    scored.reduce((n, r) => (r.clvVerdict === verdict ? n + 1 : n), 0);
 
   return evaluatePublicClvPolicy({
     canExposePerformanceStats: input.canExposePerformanceStats,
     minGradedForPublic: input.minGradedForPublic,
-    gradedSampleSize,
-    beatCloseCount,
-    lostToCloseCount,
-    matchedCloseCount,
+    gradedSampleSize: scored.length,
+    beatCloseCount: countOf("BEAT_CLOSE"),
+    lostToCloseCount: countOf("LOST_TO_CLOSE"),
+    matchedCloseCount: countOf("MATCHED_CLOSE"),
+    inPlayExcluded: excludedInPlay.length,
+    inPlayNote: inPlayExclusionNote(excludedInPlay.length, rows.length),
   });
 }

@@ -212,6 +212,17 @@ export function PickCard({
       <p className="text-xs leading-relaxed text-ion-1">
         {canSeeFactorBreakdown ? pick.reasoning : pick.reasoningShort}
       </p>
+      {/* T-1 evidence caption (Devin Review, #819): when the text above is a
+          bound bookmaker-consensus claim, the API returns its source count +
+          freshness caption here — the same evidence /preview renders beside
+          a bound claim (bound.claimText + consensusEvidenceCaption(bound)).
+          Absent for an ordinary teaser and for a suppressed (unbound) claim,
+          since nothing renders there to caption. */}
+      {pick.consensusEvidenceCaption && (
+        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
+          {pick.consensusEvidenceCaption}
+        </p>
+      )}
 
       {/* Factor breakdown (PRO+ only) */}
       {canSeeFactorBreakdown && pick.factorBreakdown && (

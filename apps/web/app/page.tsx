@@ -204,7 +204,7 @@ export default async function HomePage(): Promise<JSX.Element> {
                   boardUnavailable
                     ? "Board temporarily unavailable"
                     : cleared > 0 || gated > 0
-                      ? `${cleared} picks · ${gated} passes`
+                      ? `${cleared} ${cleared === 1 ? "pick" : "picks"} · ${gated} ${gated === 1 ? "pass" : "passes"}`
                       : "Quiet slate. Nothing forced."
                 }
                 action="Open the board"

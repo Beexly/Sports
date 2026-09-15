@@ -6,6 +6,7 @@ import { db } from "@sports/db";
 import { isContestsPublic, isStatsPublic } from "@/lib/launch/public-surface-gate";
 import { listEpisodes } from "@/lib/podcast/episodes";
 import { listIssues } from "@/lib/newsletter/issues";
+import { findTwinCandidate, type GameTwinCandidate } from "@sports/ingestion-pipeline";
 
 /**
  * sitemap.xml — public product URLs + a **bounded** preview set.
@@ -106,11 +107,36 @@ async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
         status: { in: ["SCHEDULED", "LIVE"] },
         commenceTime: { gte: windowStart, lte: windowEnd },
         sport: { is: { active: true } },
+        // Never fetch an ALIAS row (Devin Review, #819). The dedup loop below
+        // builds twinCandidates incrementally as it walks the commenceTime
+        // order, so an alias whose mergedIntoGameId target has not been seen
+        // YET cannot be resolved to its canonical (findTwinCandidate only
+        // resolves an alias against candidates already in the array it was
+        // given) -- Prisma orders only by commenceTime, so an alias and its
+        // canonical sharing a kickoff have no guaranteed relative order, and
+        // an unresolved alias is kept rather than collapsed, emitting two
+        // URLs for one fixture. Same predicate /api/picks/route.ts already
+        // applies to its own game filter (C-117) for the same reason: a
+        // tombstoned row's own `status` can still read SCHEDULED/LIVE, so it
+        // is never excluded on that column alone.
+        mergedIntoGameId: null,
       },
       orderBy: { commenceTime: "asc" },
-      take: SITEMAP_PREVIEW_CAP,
+      // Over-fetch a bounded pool, not exactly the cap (Devin Review, #819).
+      // Dedup runs AFTER this query, and fixture triplication means up to
+      // THREE rows can collapse to one URL (AGENTS.md), so capping the FETCH
+      // at SITEMAP_PREVIEW_CAP could return as few as CAP/3 unique fixtures
+      // whenever triplication concentrates in the earliest-kickoff rows —
+      // exactly backwards for a page ordered by commenceTime ascending. 3x is
+      // the documented worst case, not an arbitrary multiplier; the dedup
+      // loop below still bounds the OUTPUT at SITEMAP_PREVIEW_CAP.
+      take: SITEMAP_PREVIEW_CAP * 3,
       select: {
-        sport: { select: { name: true } },
+        id: true,
+        externalId: true,
+        sportId: true,
+        mergedIntoGameId: true,
+        sport: { select: { name: true, key: true } },
         awayTeamName: true,
         homeTeamName: true,
         commenceTime: true,
@@ -118,8 +144,48 @@ async function loadPreviewGames(): Promise<MetadataRoute.Sitemap> {
       },
     });
 
+    // Fixture triplication (AGENTS.md "THE LOOP"): the same real-world contest
+    // can exist as up to THREE `games` rows (Odds API id / TheRundown id /
+    // ESPN feed id), none tombstoned, and each row independently satisfies the
+    // query above and would emit the SAME "N game rows -> N sitemap URLs"
+    // count for what is one indexable page. De-duplicate on fixture identity,
+    // not row id, with the repo's own twin matcher (the one
+    // lib/board/state.ts already uses for the same triplication problem on a
+    // different surface) rather than a naive string/URL dedup, so a row whose
+    // team names differ slightly across feeds (city-only vs full name) still
+    // collapses correctly. `orientation === "flipped"` is the matcher's own
+    // refusal to treat two rows as the same fixture (home/away disagree) —
+    // never collapsed, exactly as the board treats it.
+    const twinCandidates: GameTwinCandidate[] = [];
+    const deduped: typeof games = [];
+    for (const g of games) {
+      // Output bound, not just an input bound: the over-fetch above only
+      // makes SITEMAP_PREVIEW_CAP unique fixtures REACHABLE, this stop is
+      // what actually caps the emitted URL count once they are found.
+      if (deduped.length >= SITEMAP_PREVIEW_CAP) break;
+      const twin = findTwinCandidate(twinCandidates, {
+        sportId: g.sportId,
+        externalId: g.externalId,
+        homeTeamName: g.homeTeamName,
+        awayTeamName: g.awayTeamName,
+        commenceTime: g.commenceTime,
+        sportKey: g.sport.key,
+      });
+      if (twin && twin.orientation !== "flipped") continue;
+      twinCandidates.push({
+        id: g.id,
+        externalId: g.externalId,
+        sportId: g.sportId,
+        homeTeamName: g.homeTeamName,
+        awayTeamName: g.awayTeamName,
+        commenceTime: g.commenceTime,
+        mergedIntoGameId: g.mergedIntoGameId,
+      });
+      deduped.push(g);
+    }
+
     const baseUrl = SITE_URL;
-    return games.map((g) => ({
+    return deduped.map((g) => ({
       url: `${baseUrl}/preview/${slugify(g.sport.name)}/${slugify(g.awayTeamName)}-vs-${slugify(g.homeTeamName)}`,
       lastModified: g.updatedAt,
       changeFrequency: "daily" as const,

@@ -58,11 +58,17 @@ describe("Nav route integrity", () => {
   });
 
   it("the four doors + Proof + The Beat are all present on desktop and mobile", () => {
-    for (const route of ["/board", "/players", "/intelligence/engines", "/fantasy", "/calibration", "/the-beat"]) {
+    // The free-tools door moved from /intelligence/engines to /tools. Pinning
+    // the old route hid a real parity gap behind a stale literal: the entry was
+    // in the mobile menu and missing from the desktop Board menu entirely, so
+    // "Intelligence tools live under Board menu (Free tools)" held on a phone
+    // and not on a desktop. Both carry it now.
+    const PRIMARY = ["/board", "/players", "/tools", "/fantasy", "/calibration", "/the-beat"];
+    for (const route of PRIMARY) {
       expect(desktop.includes(`"${route}"`), `desktop missing ${route}`).toBe(true);
     }
     // Mobile parity: the same primary doors are reachable.
-    for (const route of ["/board", "/players", "/intelligence/engines", "/fantasy", "/calibration", "/the-beat"]) {
+    for (const route of PRIMARY) {
       expect(mobile.includes(`"${route}"`), `mobile missing ${route}`).toBe(true);
     }
   });
@@ -91,6 +97,10 @@ describe("Nav route integrity", () => {
     expect(desktop).not.toContain('heading: "The Proof Room"');
     expect(desktop).not.toContain('"/performance"');
     expect(desktop).not.toContain('"/clv"');
-    expect(desktop).toContain('href="/calibration"');
+    // The nav is data-driven (`href: "/calibration"` in a NavGroup), not JSX
+    // attributes, so the old `href="/calibration"` form matched nothing and this
+    // positive assertion failed while the route was present the whole time.
+    // Match the route itself and stay indifferent to how the nav is authored.
+    expect(desktop).toContain('"/calibration"');
   });
 });

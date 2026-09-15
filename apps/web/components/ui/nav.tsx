@@ -41,6 +41,11 @@ const BOARD_MENU: readonly NavGroup[] = [
         href: "/bankroll",
         desc: "Every settled result, counted",
       },
+      {
+        label: "Free tools",
+        href: "/tools",
+        desc: "EV, no-vig, odds and parlay calculators",
+      },
     ],
   },
 ];

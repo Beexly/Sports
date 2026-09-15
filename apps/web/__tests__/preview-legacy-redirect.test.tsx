@@ -42,6 +42,8 @@ const sentinels = vi.hoisted(() => {
   return { PermanentRedirectSentinel, NotFoundSentinel };
 });
 
+import { authModuleMock } from "@/lib/testing/auth-mock";
+
 const mocks = vi.hoisted(() => ({
   gameFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
   sportFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
@@ -65,10 +67,7 @@ vi.mock("@sports/db", () => ({
   },
 }));
 
-vi.mock("@/lib/auth", () => ({
-  auth: mocks.auth,
-  isAdminEmail: () => false,
-}));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: mocks.auth }));
 
 vi.mock("@/lib/entitlements", () => ({
   getUserEntitlements: mocks.getUserEntitlements,

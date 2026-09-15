@@ -71,19 +71,39 @@ describe("the shared predicate", () => {
 });
 
 describe("reader: loadPublicClvPolicy", () => {
-  it("excludes VOID from every count", async () => {
-    const wheres: Array<Record<string, unknown>> = [];
+  // The reader issued four `count` calls until the in-play exclusion landed
+  // (C-302 extended to CLV). "In-play" compares a pick column to a GAME column,
+  // which a Prisma `where` cannot express, so it is now ONE `findMany` that is
+  // partitioned in app code. The VOID rule this file guards did not change --
+  // only where it is asserted. The assertion is strengthened, not relaxed: it
+  // now also pins that the read still joins the game, because the in-play rule
+  // silently degrades to "keep everything" if commenceTime stops being selected.
+  it("excludes VOID from the read", async () => {
+    let where: Record<string, unknown> | null = null;
+    let select: Record<string, unknown> | null = null;
     const db = {
       pick: {
-        count: async (args: { where: Record<string, unknown> }) => {
-          wheres.push(args.where);
-          return 0;
+        findMany: async (args: { where: Record<string, unknown>; select: Record<string, unknown> }) => {
+          where = args.where;
+          select = args.select;
+          return [];
         },
       },
     };
-    await loadPublicClvPolicy(db, { canExposePerformanceStats: true, minGradedForPublic: 10 });
-    expect(wheres).toHaveLength(4);
-    for (const w of wheres) expect(w["result"]).toEqual({ not: "VOID" });
+    await loadPublicClvPolicy(
+      db as unknown as Parameters<typeof loadPublicClvPolicy>[0],
+      { canExposePerformanceStats: true, minGradedForPublic: 10 },
+    );
+    expect(where).not.toBeNull();
+    expect(where!["result"]).toEqual({ not: "VOID" });
+    // Canonical-only still holds alongside it.
+    expect(where!["isPublished"]).toBe(true);
+    expect(where!["isBootstrap"]).toBe(false);
+    // And the in-play rule has the timestamps it needs. Without these two the
+    // partition reads "cannot tell" on every row and keeps the lot -- a silent
+    // regression that no count-based assertion would catch.
+    expect(select!["generatedAt"]).toBe(true);
+    expect(select!["game"]).toEqual({ select: { commenceTime: true } });
   });
 });
 
