@@ -33,6 +33,7 @@ import { cpus } from "node:os";
  */
 const GUARDS = [
   ["trust-gate", ["node", "scripts/guardrails/trust-gate.mjs"]],
+  ["verify-holdout", ["npx", "tsx", "packages/verifier/src/cli/verify-holdout.ts"]],
   ["model-freeze", ["node", "scripts/guardrails/model-freeze.mjs"]],
   ["draft-only", ["node", "scripts/guardrails/draft-only.mjs"]],
   ["claude-api-usage", ["node", "scripts/guardrails/claude-api-usage.mjs"]],
@@ -92,7 +93,10 @@ if (only !== null) {
 function runGuard([name, argv]) {
   return new Promise((resolve) => {
     const startedAt = Date.now();
-    const child = spawn(argv[0], argv.slice(1), { stdio: ["ignore", "pipe", "pipe"] });
+    const child = spawn(argv[0], argv.slice(1), {
+      stdio: ["ignore", "pipe", "pipe"],
+      shell: process.platform === "win32" && (argv[0] === "npm" || argv[0] === "npx"),
+    });
     let out = "";
     let err = "";
     child.stdout.on("data", (d) => {
