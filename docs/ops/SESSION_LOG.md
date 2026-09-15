@@ -1233,3 +1233,4 @@ C-416 UNPUSHED 3721fbddb — wire stored + polled; sample gone.
 C-364 UNPUSHED 60abc03bb — factor YAMLs pre-registered; kill lines committed before any run.
 C-363 UNPUSHED frozen-path PR (guardrails) — founder merges.
 C-365 UNPUSHED b3a8f2e30 — A1 DEAD: birthday/former-team target-share -0.13 pp, n=550, CI includes 0.
+C-366 UNPUSHED addbb6ae2 — A2 shrinkage BLOCKED on real export; proposal PROPOSED.
