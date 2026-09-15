@@ -1205,3 +1205,13 @@ C-418 UNPUSHED  — GH settle job removed in frozen-path #828; autonomy no longe
 C-393 UNPUSHED  — line archive alarm wired into health-alert cron.
 C-355 UNPUSHED 6b07785be — pfr_adv_stats + rush tendencies on refresh-player-stats.
 C-420 UNPUSHED 7044acadb — OPS_READ_SECRET for read-only ops surfaces.
+
+## 2026-09-15 PredExon free-tier facts (docs + live key probe; key NOT stored)
+
+- Auth: `x-api-key` header. Base `https://api.predexon.com`.
+- **Free & unlimited (does not count monthly quota):** list-market and orderbook-history endpoints, including `GET /v2/kalshi/markets`.
+- Free plan otherwise: **1 req/s**, **1,000 requests/month** counted quota. No WebSocket, no smart-money.
+- Kalshi prices are **decimals 0–1**, not cents. Filter `series_ticker=KXNFLSPREAD|KXNFLTOTAL|KXNFLGAME`.
+- Live probe 2026-09-15: polymarket markets 200; kalshi markets 200; KXNFLSPREAD 200 (closed SEA-NE rows with last_price 0.99); `/v2/kalshi/series` 403; `/v1/` 410 Gone.
+- Tick-history Parquet is **paid** ($80/GiB Kalshi ≈ $95/day). D15: never buy. Live WS not on free.
+- Capture budget for C-396: prefer markets list (free/unlimited) over counted endpoints; still pace ≤1 req/s.
