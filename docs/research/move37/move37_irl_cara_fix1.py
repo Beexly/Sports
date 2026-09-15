@@ -391,7 +391,14 @@ summary = {
     "c4_beta_sane": bool(c4),
     "lab_fixes": ["kick_miss yardline sign: 100-yl+8 -> 100-yl-8",
                   "punt yardline sign: 100-yl-40 -> 100-yl+40 with touchback->75",
-                  "empirical conversion gain replaces hard-coded 5"],
-    "verdict": "PROVISIONAL_PASS" if (c1 and c3 and c4) else "NULL"
+                  "empirical conversion gain replaces hard-coded 5",
+                  "verdict gate now reads all 4 pre-registered criteria (c2 was "
+                  "computed and reported but excluded from the boolean gate; "
+                  "audit-corrections-ledger.md item 1/9 — does not change this "
+                  "run's recorded verdict, since alpha_hat<0 already fails c3)"],
+    # All four criteria in this section are pre-registered above c1..c4;
+    # the verdict must read all four, not a subset — c2 was previously
+    # computed and reported here but silently dropped from this gate.
+    "verdict": "PROVISIONAL_PASS" if (c1 and c2 and c3 and c4) else "NULL"
 }
 print(json.dumps(summary, indent=2))
