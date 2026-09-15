@@ -1,14 +1,15 @@
 /**
  * Founder / ops: enable durable RANKING_PAUSE_APPLY without Vercel env redeploy.
  *
- * POST { enabled: true|false, groups?: string[] }
- * Auth: Bearer CRON_SECRET or x-vercel-cron (same dual auth as other ops).
+ * GET (read-only): Bearer OPS_READ_SECRET or CRON_SECRET (C-420).
+ * POST { enabled: true|false, groups?: string[] } (mutation):
+ *   Bearer CRON_SECRET only — never OPS_READ_SECRET.
  *
  * Does NOT flip PERFORMANCE_STATS / maps / PROVEN.
  */
 
 import { NextResponse } from "next/server";
-import { cronAuthError } from "@/lib/cron/authorize";
+import { cronAuthError, opsReadAuthError } from "@/lib/cron/authorize";
 import {
   persistRankingPauseApply,
   loadRankingPauseApply,
@@ -22,7 +23,9 @@ export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
 export async function GET(request: Request) {
-  const denied = cronAuthError(request);
+  // Read-only half: OPS_READ_SECRET authorises when set (C-420); CRON_SECRET
+  // remains the fallback. Mutation POST below stays on cronAuthError alone.
+  const denied = opsReadAuthError(request);
   if (denied) return denied;
   const snap = await loadRankingPauseApply();
   const plan = await loadProvenPathPlan();

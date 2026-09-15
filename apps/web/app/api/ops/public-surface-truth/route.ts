@@ -65,7 +65,7 @@ import {
   freeSpineWithinSla,
   resolveBestFreeSpineSnapshot,
 } from "@/lib/data-sources/free-spine-durable";
-import { timingSafeEqual } from "node:crypto";
+import { hasOpsAuth } from "@/lib/ops/ops-auth";
 import {
   oddsApiKeyPresence,
   rundownApiKeyPresence,
@@ -162,24 +162,11 @@ const MAIN_FEATURE_MARKERS = [
   "signal-board-launch-path",
 ] as const;
 
-function hasOpsAuth(request: Request): boolean {
-  const secret = process.env.CRON_SECRET?.trim();
-  if (!secret) return false;
-  const auth = request.headers.get("authorization") ?? "";
-  const expected = `Bearer ${secret}`;
-  try {
-    const a = Buffer.from(auth);
-    const b = Buffer.from(expected);
-    return a.length === b.length && timingSafeEqual(a, b);
-  } catch {
-    return false;
-  }
-}
-
 /**
  * Surface truth snapshot.
  * - Public: gates, storage modes, settlement band counts, deploymentSha, sample.
- * - Bearer CRON_SECRET: bySport + operatorNext (internal remediation).
+ * - Bearer OPS_READ_SECRET (C-420) or CRON_SECRET: bySport + operatorNext
+ *   (internal remediation).
  */
 export async function GET(request: Request) {
   const detailed = hasOpsAuth(request);

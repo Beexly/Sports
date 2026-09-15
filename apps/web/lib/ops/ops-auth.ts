@@ -1,24 +1,19 @@
-import { timingSafeEqual } from "node:crypto";
+import { hasOpsReadAuth } from "@/lib/cron/authorize";
 
 /**
- * Operator authentication for read-only ops surfaces: `Authorization: Bearer
- * <CRON_SECRET>`, compared in constant time. Same rule as the `?detailed`
- * view of /api/ops/public-surface-truth and /api/ops/daily-truth, which carry
- * their own copies; new ops routes import this one. Never accepts the
- * x-vercel-cron header (that header is not proof of origin) and returns
- * false when no secret is configured, so a misconfigured deployment fails
- * closed rather than open.
+ * Operator authentication for read-only ops surfaces.
+ *
+ * C-420 / F-32: accepts `Authorization: Bearer <OPS_READ_SECRET>` when that
+ * env is set, and always accepts `Bearer <CRON_SECRET>` (fallback when the
+ * read secret is unset so nothing changes until the founder sets it). Never
+ * accepts the x-vercel-cron header (that header is not proof of origin) and
+ * fails closed when neither secret is configured.
+ *
+ * Shared SoT lives in `apps/web/lib/cron/authorize.ts` (`opsReadAuthError` /
+ * `hasOpsReadAuth`). `public-surface-truth` and `daily-truth` import this
+ * helper; `settlement-rca` does too. Mutation crons must never use it — they
+ * keep `cronAuthError`, which never reads OPS_READ_SECRET.
  */
 export function hasOpsAuth(request: Request): boolean {
-  const secret = process.env.CRON_SECRET?.trim();
-  if (!secret) return false;
-  const auth = request.headers.get("authorization") ?? "";
-  const expected = `Bearer ${secret}`;
-  try {
-    const a = Buffer.from(auth);
-    const b = Buffer.from(expected);
-    return a.length === b.length && timingSafeEqual(a, b);
-  } catch {
-    return false;
-  }
+  return hasOpsReadAuth(request);
 }
