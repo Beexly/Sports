@@ -523,7 +523,7 @@ the only copy, and nobody else can verify or build on it.
 | C-355 | LP1 Fill pfr_adv_stats and player_rush_profiles from the nflverse release | hermes | UNPUSHED | 6b07785be — both ingesters on refresh-player-stats cron; PFR direct URL removed; dry-run NOT RUN (no network); tests (30) |
 | C-356 | LP1 Tombstone fixture twins: write mergedIntoGameId | hermes | UNPUSHED | ddcb663a7 — planTwinTombstones + applyTwinTombstones write mergedIntoGameId; tests (133) |
 | C-357 | LP1 Widen NFL prop ingest to every market the HB engine scores | hermes | UNPUSHED | 2d35b1ed6 — 12 HB markets; cap 8; T-15 close-first; tests (21) |
-| C-358 | LP1 Prop reader: OddsLineSnapshot to RateSample + graded outcome | hermes | OPEN | - |
+| C-358 | LP1 Prop reader: OddsLineSnapshot to RateSample + graded outcome | hermes | UNPUSHED | 71815cdc5 — decodePropMarket production caller; grading rules pinned |
 | C-359 | LP1 Kalshi as book 2 via PredExon, behind PREDEXON_INGEST | hermes | UNPUSHED | 14ac7ce6b — D19 key-present ON; midpoint beside marketFairProb; tests green |
 | C-360 | LP1 Unlink the fiction: nav ≤12 labels, nine fantasy tools parked, labels match H1 | hermes | UNPUSHED | 55a474ade — ten doors + parked tools + FANTASY_TOOLS.md + twitter handle |
 | C-361 | LP1 Delete the dead duplicate loaders | hermes | UNPUSHED | 64a1a26bb — deleted nflverse.ts + espn-public.ts + tests; typecheck clean |

@@ -1224,3 +1224,4 @@ C-357 UNPUSHED 2d35b1ed6 — prop markets widened to 12; T-15 close sweep.
 C-410 UNPUSHED 94d04a9b2 — pick'em boards forbidden; ESPN NFL has no player props.
 C-413 UNPUSHED bd5dd5fff — watched-player injury/depth alerts through existing dispatch path.
 C-360 UNPUSHED 55a474ade — nav fiction unlinked; FANTASY_TOOLS.md written.
+C-358 UNPUSHED 71815cdc5 — prop sample reader + book settlement rules.
