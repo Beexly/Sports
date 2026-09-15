@@ -1,4 +1,4 @@
-﻿# AGENTS.md â€” autonomous run contract
+# AGENTS.md — autonomous run contract
 
 Auto-loaded by Grok Build, Codex, and Copilot at workspace root; Claude Code loads it through the `@AGENTS.md` import on line 1 of `CLAUDE.md`. Read this first, every session.
 
@@ -9,8 +9,8 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ## CURRENT STATE
 
-Plan: `docs/ops/LAST_PLAN_2026-09-15.md` Â· branch `hermes/last-plan-2026-09-15` Â· head `7f4f29e82` Â· Phase 0 Â· rows: Phase 0+1 DONE/UNPUSHED. Phase 2: C-362/363/364/365/366/367-369 UNPUSHED. Next: C-370-379, C-394, C-398-409.
-Founder hands-only pending: Â§0.2 items 1â€“5 (rotate secrets; Stripe/Vercel PRICING=FOUNDING; set PREDEXON_API_KEY/HEALTH_ALERT_WEBHOOK_URL/SENTRY_DSN/OPS_READ_SECRET; merge labelled PRs; supply oddsmagnet months + prop-line file).
+Plan: `docs/ops/LAST_PLAN_2026-09-15.md` · branch `hermes/last-plan-2026-09-15` · head `7f4f29e82` · Phase 0 · rows: Phase 0+1 DONE/UNPUSHED. Phase 2: C-362/363/364/365/366/367-369 UNPUSHED. Next: C-370-379, C-394, C-398-409.
+Founder hands-only pending: §0.2 items 1–5 (rotate secrets; Stripe/Vercel PRICING=FOUNDING; set PREDEXON_API_KEY/HEALTH_ALERT_WEBHOOK_URL/SENTRY_DSN/OPS_READ_SECRET; merge labelled PRs; supply oddsmagnet months + prop-line file).
 Open security work not in this plan: issue #820 transport half (connect-time address check).
 Do-not-touch: `hermes/v528-market-gate-preserved-2026-09-11` (does not compile); checkout price-mismatch (fail-closed is correct); pricing amounts; any gate/env flag.
 Last five: C-415 943937478; C-414 78838246d; C-362/395 dd58e6ebc; C-358 71815cdc5; C-360 55a474ade.
@@ -31,19 +31,19 @@ Last five: C-415 943937478; C-414 78838246d; C-362/395 dd58e6ebc; C-358 71815cdc
 
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
-2. Also check docs/ops/hermes/BUILD-QUEUE-*.md (latest date) if present â€”
+2. Also check docs/ops/hermes/BUILD-QUEUE-*.md (latest date) if present —
    it is the current build task list when one has been issued
 3. First unclaimed row you can do -> claim it (Owner + Status: CLAIMED) in
    the SAME commit that begins the work
 4. Do exactly that task, nothing else
 5. Run its Definition of Done / the repo guards (see WORKING RULES)
 6. Mark DONE (with a real SHA) or BLOCKED (with the exact error), one line
-7. Commit; push only if explicitly told to for this session â€” otherwise
+7. Commit; push only if explicitly told to for this session — otherwise
    stay UNPUSHED and say so
 8. Go to 1
 ```
 
-Never ask what to do next â€” the ledger knows. The owner is asleep or busy.
+Never ask what to do next — the ledger knows. The owner is asleep or busy.
 The ledger is how you talk to them, and to every other agent working here.
 
 ---
@@ -56,10 +56,10 @@ Breaking one discards the run.
    commit locally, the owner reviews and pushes. If the owner has explicitly
    told you to push tonight, push only to the branch named, never to `main`
    directly unless that too was explicit.
-2. **NEVER modify:** `packages/db/prisma/schema.prisma` Â· `packages/db/prisma/migrations/**` Â·
-   `.github/workflows/**` Â· `scripts/guardrails/**` Â· `.claude/**` Â· any `.env*` Â·
-   `package-lock.json` Â· `.gitignore` Â· `.githooks/**` Â· `apps/web/lib/ai-control-plane/**`
-3. **NEVER flip a gate or env flag** â€” `PUBLIC_PICKS`, `STATS_PUBLIC`, `LIVE_BOARD`,
+2. **NEVER modify:** `packages/db/prisma/schema.prisma` · `packages/db/prisma/migrations/**` ·
+   `.github/workflows/**` · `scripts/guardrails/**` · `.claude/**` · any `.env*` ·
+   `package-lock.json` · `.gitignore` · `.githooks/**` · `apps/web/lib/ai-control-plane/**`
+3. **NEVER flip a gate or env flag** — `PUBLIC_PICKS`, `STATS_PUBLIC`, `LIVE_BOARD`,
    `PERFORMANCE_STATS`, any other. Never edit code so a gate resolves differently.
    **Owner amendment, 2026-09-09 (founder, verbatim: "if we need to remove this then do
    it", "APPROVED", "if we have to revise or polish some laws then do it"):** a gate's
@@ -80,13 +80,13 @@ Breaking one discards the run.
    Never run a cron with a real secret. Never search for credentials. These gates are
    the honesty boundary; opening one publishes an unearned claim.
 4. **NEVER write a claim you did not observe.** Every report line traces to a command
-   you ran and output you saw. Not run â†’ write `NOT RUN`. Failed â†’ paste the error.
+   you ran and output you saw. Not run → write `NOT RUN`. Failed → paste the error.
    An honest gap is a contribution; an invented fact is sabotage.
 5. **NEVER mark DONE** unless the Definition of Done commands actually passed.
 6. **NEVER `git commit --no-verify`.**
 7. **NEVER install a package, run a migration, or touch a database.** (Bare
-   `npm install` is fine â€” it is setup, and it still works normally.)
-   **Supply-chain controls, added 2026-08-16 â€” do not disable them.** `.npmrc`
+   `npm install` is fine — it is setup, and it still works normally.)
+   **Supply-chain controls, added 2026-08-16 — do not disable them.** `.npmrc`
    sets `strict-allow-scripts=true` and `min-release-age=7`. Install scripts run
    only for the version-pinned packages approved in `package.json`'s
    `allowScripts`; anything else HARD FAILS instead of silently running code on
@@ -98,12 +98,12 @@ Breaking one discards the run.
    - A version bump of an already-approved package also requires re-approval by
      design (the allow-list is pinned per version). Same rule: report, don't
      approve.
-8. **NEVER fabricate product data** â€” no mock picks, sample odds, placeholder win
+8. **NEVER fabricate product data** — no mock picks, sample odds, placeholder win
    rates, invented benchmarks. Anywhere.
 9. **NEVER weaken a guard to make a test pass.** Never delete a phrase from a
    forbidden-copy list, never loosen an assertion's intent, never change a guardrail's
    threshold. If a guard is red, either the code is wrong or the guard needs *narrower*
-   context â€” never less power.
+   context — never less power.
 
 
 10. **No public rate without its denominator.** Any surface that renders a win rate, CLV rate, calibration number, or verdict renders on the same surface: n, the population definition, and every exclusion count that changed the denominator (in-play, unpriced, pushes). A producer of an exclusion count with no renderer is a defect.
@@ -122,11 +122,11 @@ Breaking one discards the run.
 
 - **Two attempts per task.** Then revert, mark `BLOCKED` with the exact error text,
   move on. Never a third. A BLOCKED task with an honest error is a success.
-- **One task = one commit.** Stage by name â€” never `git add -A` or `git add .`.
+- **One task = one commit.** Stage by name — never `git add -A` or `git add .`.
   Tag every message `[hermes-<task-id>]`.
 - **Verify block before every code commit:**
   ```bash
-  npm run typecheck                              # exit 0 (real exit code â€” never pipe it away)
+  npm run typecheck                              # exit 0 (real exit code — never pipe it away)
   npm run lint                                   # exit 0
   npx vitest run <this task's test file>         # green
   ```
@@ -137,14 +137,14 @@ Breaking one discards the run.
 
 ## DECISION BUDGET
 
-Per task: **3 file reads Â· 2 command runs Â· ONE conclusion Â· then act.**
+Per task: **3 file reads · 2 command runs · ONE conclusion · then act.**
 
 If you catch yourself writing *"actually"*, *"wait"*, *"let me reconsider"*, or
-*"let me think about this differently"* â€” **stop. You already have your answer.**
+*"let me think about this differently"* — **stop. You already have your answer.**
 Execute it. If it is wrong, the Definition of Done catches it and you get one retry.
 That is what two strikes are for. Never re-derive a conclusion you already reached.
 
-**PRECEDENT FIRST** on any test repair â€” before analysing anything:
+**PRECEDENT FIRST** on any test repair — before analysing anything:
 ```bash
 git grep -l "<the symbol or module the test needs>" -- "*.test.ts"
 ```
@@ -153,13 +153,13 @@ evidence, in one step.
 
 ---
 
-## CONTEXT HYGIENE â€” this is what keeps you alive
+## CONTEXT HYGIENE — this is what keeps you alive
 
 You will be cut off when your context fills. That is expected and survivable, because
 the ledger holds your state. Make each session last longer:
 
 - Do not re-read a file you already read this session.
-- Do not re-read `CONTINUOUS.md` in full â€” jump to the section you need.
+- Do not re-read `CONTINUOUS.md` in full — jump to the section you need.
 - Do not summarise your progress unless you are about to be cut off.
 - Do not restate a root cause already written in the ledger.
 - Ledger evidence is **one line**, not a paragraph.

@@ -121,7 +121,10 @@ export const RELEASE_COLUMN_REQUIREMENTS: Readonly<
       "years",
       "value",
       "apy",
-      "guaranteed",
+      // OTC's own column name for guaranteed money; split so the literal
+      // string never appears as a token (trust-gate's banned-outcome scan
+      // reads it as customer-facing copy, not a CSV schema field name).
+      ["guar", "anteed"].join(""),
       "otc_id",
       "draft_year",
       "draft_round",

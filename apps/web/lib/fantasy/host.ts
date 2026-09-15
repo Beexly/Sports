@@ -195,8 +195,8 @@ export function buildBroadcast(
   const week = brief.week;
   const wire = rankWire(wireItems);
   const top = wire[0];
-  // Honest empty: no stored wire signals means no invented headline — the
-  // segment still opens on location so the broadcast contract holds.
+  // Honest empty: no stored wire signals means no invented headline, so the
+  // segment still opens on location and the broadcast contract holds.
   const topScene = top ? sceneForSignal(top.item.signal) : "sideline";
 
   // Two reporters trade segments: Nova works the field, Orion holds the desk.
@@ -212,14 +212,14 @@ export function buildBroadcast(
 
   const segments: Segment[] = [];
 
-  // 1. Top story. From the field, Nova — only when the stored wire has one.
+  // 1. Top story. From the field, Nova, only when the stored wire has one.
   segments.push({
     id: "seg-top",
     scene: topScene,
     kicker: "Top story",
     script: top
       ? `We start from ${SCENES[topScene].setting}. ${top.item.headline}. Here's what it means for you: ${top.action}`
-      : `We start from the desk. The stored wire is quiet right now — no classified reports have landed. When the cron fills the ledger, this is where the loudest one leads.`,
+      : `We start from the desk. The stored wire is quiet right now, no classified reports have landed. When the cron fills the ledger, this is where the loudest one leads.`,
     broll: top
       ? `${SCENES[topScene].label}. Lower-third with the player and the fantasy/market delta.`
       : `Desk. Empty signal ledger graphic, honest empty state.`,

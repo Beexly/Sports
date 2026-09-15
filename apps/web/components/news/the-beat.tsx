@@ -50,7 +50,7 @@ export function TheBeat({
    */
   unavailable?: boolean;
 }) {
-  // Stored wire (C-416). Empty store is honest empty — never a sample.
+  // Stored wire (C-416). Empty store is honest empty, never a sample.
   // EMPTY_WIRE is a stable module constant so useMemo deps stay stable when
   // nothing is loaded (liveWire === null).
   const isLive = liveWire !== null;

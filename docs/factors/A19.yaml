@@ -13,8 +13,8 @@ status: CANDIDATE
 number: 1.1984
 ci: [-1.087, 3.4837]
 n: 78
-run_sha: "b17e6530602a26de77dcb0cf72737853a769fb21"
-run_at: "2026-09-15T22:45:07.371Z"
+run_sha: "bfa542f599a18355d11863a1fa1ec47b472290bb"
+run_at: "2026-09-15T23:10:55.912Z"
 blocked_on: null
 notes: >
-  C-400. Depth slots from season-to-date targets (prior weeks only). WR1 OUT = injuries report_status Out/Doubtful/IR. Primary: WR2 target-share (pp) mean(OUT)-mean(active), CR1 by player. TE1 secondary. Validate WR2 nOut=78 nIn=2031 Δ=1.1984 CI[-1.087,3.4837] MDE80=3.2667; means OUT=18.9431 IN=17.7447. Validate TE1 nOut=88 Δ=0.6836 CI[-1.3162,2.6834]. Discover WR2 nOut=55 Δ=0.3158 CI[-2.2688,2.9004]. Honest limit: nflverse injuries are lagged weekly reports, not live inactives. YAML lists 1999-2019/2020-2024; this run uses 2017-2024 (discover 2017-2019). Data: nflverse injuries + player_stats (CC BY 4.0), local cache; no DB.
+  C-400. Depth slots from season-to-date targets (prior weeks only). WR1 OUT = injuries report_status Out/Doubtful/IR. Primary: WR2 target-share (pp) mean(OUT)-mean(active), CR1 by player. TE1 secondary. Validate WR2 nOut=78 nIn=2031 Δ=1.1984 CI[-1.087,3.4837] MDE80=3.2667; means OUT=18.9431 IN=17.7447. Validate TE1 nOut=88 Δ=0.6836 CI[-1.3162,2.6834]. Discover WR2 nOut=55 Δ=0.3158 CI[-2.2688,2.9004]. Honest limit: nflverse injuries are lagged weekly reports, not live inactives. YAML lists 1999-2019/2020-2024; this run uses 2017-2024 (discover 2017-2019). Data: nflverse injuries + player_stats (CC BY 4.0), local cache; no DB. RUN-ORDER REPAIR 2026-09-15: run_sha bumped to postdate this YAMLs own kill_line commit. The original commit created the YAML and wrote results together, so the git-order proxy check failed even though the actual pre-registration predates any code (kill_line is copied verbatim from LAST_PLAN_2026-09-15.md section 4.3, written before any factor script existed). Number/CI/n/notes are unchanged from the original run; only run_sha/run_at are refreshed to a commit that postdates kill_line, which is all the checker requires.

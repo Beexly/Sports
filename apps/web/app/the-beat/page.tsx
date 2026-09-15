@@ -29,7 +29,7 @@ export const metadata: Metadata = {
 
 export default async function TheBeatPage() {
   // Stored wire. Empty store is the honest empty state (rule 1). A failed
-  // store read is `unavailable` — never a sample fallback.
+  // store read is `unavailable`, never a sample fallback.
   const store = await loadWireFromStore();
   const liveWire = store.failed ? null : store.items;
   const wireUnavailable = store.failed;
