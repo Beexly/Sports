@@ -1227,3 +1227,5 @@ C-360 UNPUSHED 55a474ade — nav fiction unlinked; FANTASY_TOOLS.md written.
 C-358 UNPUSHED 71815cdc5 — prop sample reader + book settlement rules.
 C-395 residual: packages/verifier/data/ cannot be added to .gitignore (law 2 freezes .gitignore). Keep release downloads local only; never git add that dir. A26 FTN public has no man/zone columns; A15 OTC has no incentive text.
 C-395+C-362 UNPUSHED dd58e6ebc — packages/verifier harness + nflverse loaders.
+C-414 UNPUSHED  — kickoff weather field shared.
+C-415 UNPUSHED  — reporter roster in code; ESPN team RSS discontinued.
