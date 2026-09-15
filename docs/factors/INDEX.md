@@ -5,7 +5,7 @@ DEAD rows stay forever. LIVE rows link to the pick-card factor trail.
 
 | id | hypothesis | status | validate-era | CI | n | kill line | run |
 |---|---|---|---|---|---|---|---|
-| A1 | A WR/TE is targeted more when playing on/near his birthday or against a team that cut or traded him. | UNTESTED | — | — | — | validate-era effect <= 0 or 95% CI includes 0 with n >= 300 | — |
+| A1 | A WR/TE is targeted more when playing on/near his birthday or against a team that cut or traded him. | DEAD | -0.1349 | [-0.6987, 0.4289] | 550 | validate-era effect <= 0 or 95% CI includes 0 with n >= 300 | 2026-09-15T22:22:41.937Z |
 | A2 | A fixed shrinkage p = market + w·(model − market) with w near 0.10 improves Brier vs the market on the frozen holdout. | UNTESTED | — | — | — | validate-era ΔBrier >= 0 or P(better) < 0.75 on PICKS-H1 | — |
 | A3 | Named crews have stable home/under lean (Vinovich under, Hussey home) that the market does not fully price. | UNTESTED | — | — | — | validate-era \|effect\| <= 0 or Bonferroni-adjusted 95% CI includes 0 across crews | — |
 | A4 | Teams travelling east across two or more time zones for an afternoon kickoff cover less often (Fodor and Krieger published spec). | UNTESTED | — | — | — | validate-era effect <= 0 or 95% CI includes 0 with n >= 200 | — |
