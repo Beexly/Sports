@@ -96,6 +96,7 @@ function rightsAndLicense(status?: SourceRightsStatus): {
     case "blocked_technical_controls":
       return { rights: "low", license: "low", ownerApproval: true };
     case "excluded":
+    case "forbidden":
       return { rights: "low", license: "low", ownerApproval: true };
     default:
       return { rights: "unknown", license: "unknown", ownerApproval: true };

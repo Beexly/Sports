@@ -23,6 +23,7 @@ export type SourceRightsStatus =
   | "manual_research_only"         // Human UX/taxonomy review only; no automated extraction
   | "permission_required"          // Terms prohibit automation without consent
   | "blocked_technical_controls"   // Anti-bot / IP-block / CAPTCHA — cannot proceed
+  | "forbidden"                    // Terms expressly forbid automated collection — never fetch
   | "excluded";                    // No safe path; permanently excluded
 
 // ─── Risk levels ──────────────────────────────────────────────────────────────
@@ -857,6 +858,146 @@ export const SOURCE_RIGHTS_REGISTRY: readonly SourceRightsEntry[] = [
       "the unlock condition is met.",
   },
 
+  // ── Forbidden ─────────────────────────────────────────────────────────────────
+  // C-410, clauses read 2026-09-15. Terms of Use forbid automated collection.
+  // checkClearance() refuses every mode, including manual_research_note through
+  // this engine. A permissive robots.txt is NOT a licence — the terms govern.
+  // The registry, not any scraping agent's brief, decides what enters this repo
+  // (the 2026-09-04 Firecrawl brief's "record terms as metadata, never as a
+  // blocker" has no force here). Nothing is ever fetched from these boards.
+  {
+    source_id: "prizepicks",
+    source_name: "PrizePicks",
+    source_url: "https://www.prizepicks.com",
+    terms_url: "https://www.prizepicks.com/tos",
+    robots_url: "https://www.prizepicks.com/robots.txt",
+    jurisdiction: "US",
+    source_type: "fantasy_platform",
+    status: "forbidden",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: false,
+    attribution_text: null,
+    personal_data_risk: "low",
+    copyright_expression_risk: "medium",
+    database_right_risk: "high",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-09-15",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://www.prizepicks.com/tos",
+      "https://www.prizepicks.com/robots.txt",
+    ],
+    unlock_condition:
+      "Written license or partnership agreement from PrizePicks covering automated " +
+      "collection, storage, and commercial display of pick'em/prop board data. " +
+      "Absent that grant: never fetch, never store, never display.",
+    vendor_contact: null,
+    notes:
+      "FORBIDDEN 2026-09-15 (C-410). PrizePicks Terms §(l): no robot, spider or " +
+      "automatic means \"for any purpose, including monitoring or copying\". " +
+      "robots.txt on prizepicks.com was observed to permit crawlers; a permissive " +
+      "robots file is NOT a licence and the terms govern. The registry, not any " +
+      "scraping agent's brief, decides what enters this repo — the 2026-09-04 " +
+      "Firecrawl brief instruction \"Record terms as metadata, never as a blocker\" " +
+      "has no force here. Nothing is fetched from this source, ever. Pick'em and " +
+      "consensus prop lines stay on the cleared free spine + existing Odds API plan.",
+  },
+
+  {
+    source_id: "underdog",
+    source_name: "Underdog Fantasy",
+    source_url: "https://underdogfantasy.com",
+    terms_url: "https://underdogfantasy.com/terms",
+    robots_url: "https://underdogfantasy.com/robots.txt",
+    jurisdiction: "US",
+    source_type: "fantasy_platform",
+    status: "forbidden",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: false,
+    attribution_text: null,
+    personal_data_risk: "low",
+    copyright_expression_risk: "medium",
+    database_right_risk: "high",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-09-15",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://underdogfantasy.com/terms",
+      "https://underdogfantasy.com/robots.txt",
+    ],
+    unlock_condition:
+      "Written license or partnership agreement from Underdog Fantasy covering " +
+      "automated collection, storage, and commercial display of pick'em/prop board " +
+      "data. Absent that grant: never fetch, never store, never display.",
+    vendor_contact: null,
+    notes:
+      "FORBIDDEN 2026-09-15 (C-410). Underdog Terms ix–x: no scraping, no " +
+      "robots-exclusion bypass. A permissive robots.txt is NOT a licence and the " +
+      "terms govern. The registry, not any scraping agent's brief, " +
+      "decides what enters this repo — the 2026-09-04 Firecrawl brief instruction " +
+      "\"Record terms as metadata, never as a blocker\" has no force here. Nothing " +
+      "is fetched from this source, ever. Pick'em and consensus prop lines stay on " +
+      "the cleared free spine + existing Odds API plan.",
+  },
+
+  {
+    source_id: "dknetwork",
+    source_name: "DraftKings Network / DK pick'em boards",
+    source_url: "https://dknetwork.draftkings.com",
+    terms_url: "https://dknetwork.draftkings.com/terms-of-use/",
+    robots_url: "https://dknetwork.draftkings.com/robots.txt",
+    jurisdiction: "US",
+    source_type: "fantasy_platform",
+    status: "forbidden",
+    automation_allowed: false,
+    public_logged_off_allowed: false,
+    commercial_display_allowed: false,
+    storage_allowed: false,
+    derived_analytics_allowed: false,
+    model_training_allowed: false,
+    attribution_required: false,
+    attribution_text: null,
+    personal_data_risk: "low",
+    copyright_expression_risk: "medium",
+    database_right_risk: "high",
+    technical_controls_detected: false,
+    cease_and_desist_received: false,
+    reviewed_at: "2026-09-15",
+    reviewed_by: "internal",
+    evidence_urls: [
+      "https://dknetwork.draftkings.com/terms-of-use/",
+      "https://dknetwork.draftkings.com/robots.txt",
+    ],
+    unlock_condition:
+      "Written license or partnership agreement from DraftKings covering automated " +
+      "collection, storage, and commercial display of DK Network / pick'em board " +
+      "data. Absent that grant: never fetch, never store, never display.",
+    vendor_contact: null,
+    notes:
+      "FORBIDDEN 2026-09-15 (C-410). DraftKings Terms of Use: no automated means " +
+      "\"to obtain, collect or access any information\". robots.txt on " +
+      "dknetwork.draftkings.com was observed to permit crawlers; a permissive " +
+      "robots file is NOT a licence and the terms govern. The registry, not any " +
+      "scraping agent's brief, decides what enters this repo — the 2026-09-04 " +
+      "Firecrawl brief instruction \"Record terms as metadata, never as a blocker\" " +
+      "has no force here. Nothing is fetched from this source, ever. Pick'em and " +
+      "consensus prop lines stay on the cleared free spine + existing Odds API plan. " +
+      "Related: packages/data-ingestion source id draftkings-unofficial is also " +
+      "verdict forbidden (hidden JSON API).",
+  },
+
   // ── Excluded ─────────────────────────────────────────────────────────────────
   {
     source_id: "siriusxm-activator",
@@ -946,6 +1087,7 @@ export function getRegistrySummary() {
     manual_research_only: 0,
     permission_required: 0,
     blocked_technical_controls: 0,
+    forbidden: 0,
     excluded: 0,
   };
   for (const s of SOURCE_RIGHTS_REGISTRY) {

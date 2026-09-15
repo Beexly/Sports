@@ -76,6 +76,7 @@ const RIGHTS_STATUS_TONE: Record<SourceRightsStatus, string> = {
   manual_research_only: "border-ultraviolet/30 bg-ultraviolet/30 text-ultraviolet",
   permission_required: "border-caution/30 bg-caution/10 text-caution",
   blocked_technical_controls: "border-alarm/40 bg-alarm/30 text-alarm",
+  forbidden: "border-alarm/60 bg-alarm/40 text-alarm",
   excluded: "border-alarm/60 bg-alarm/40 text-alarm",
 };
 
@@ -88,6 +89,7 @@ const RIGHTS_STATUS_LABEL: Record<SourceRightsStatus, string> = {
   manual_research_only: "Manual research only",
   permission_required: "Permission required",
   blocked_technical_controls: "Blocked: technical controls",
+  forbidden: "Forbidden",
   excluded: "Excluded",
 };
 
@@ -115,6 +117,7 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
   const permissionRequiredSources = getSourcesByStatus("permission_required");
   const vendorCandidates = getVendorCandidates();
   const excludedSources = getSourcesByStatus("excluded");
+  const forbiddenSources = getSourcesByStatus("forbidden");
   const legalReviewQueue = [
     ...permissionRequiredSources.map((s) => ({ source: s, action: "outreach" as const })),
     ...vendorCandidates.map((s) => ({ source: s, action: "questionnaire" as const })),
@@ -339,10 +342,10 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
             detail="Questionnaire pending. No ingestion until contract signed."
           />
           <RightsMetric
-            label="Excluded"
-            value={String(excludedSources.length)}
+            label="Forbidden / Excluded"
+            value={String(forbiddenSources.length + excludedSources.length)}
             tone="text-alarm"
-            detail="No safe path. Permanently blocked."
+            detail="Terms forbid automation, or no safe path. Permanently blocked."
           />
         </div>
       </section>
