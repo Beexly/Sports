@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import type { GradedEventInput } from "./alert-eligibility";
+import type { GradedEventInput, StatusChangeEventInput } from "./alert-eligibility";
 
 /**
  * alert-dispatch.ts — now wired to two real channels (push fan-out +
@@ -265,5 +265,65 @@ describe("dispatchWatchlistAlert — email", () => {
         verifiedEmail: "user@example.com",
       }),
     ).resolves.toEqual({ sent: false, outcome: "disabled", channels: [] });
+  });
+});
+
+describe("dispatchWatchlistAlert — status-change events (C-413)", () => {
+  const statusChange: StatusChangeEventInput = {
+    kind: "status_change",
+    statusKind: "injury",
+    playerName: "Patrick Mahomes",
+    previous: "Questionable",
+    current: "Out",
+    changedAt: new Date("2026-09-15T12:00:00.000Z"),
+  };
+
+  function statusPayload() {
+    return {
+      userId: "user-1",
+      entityType: "PLAYER" as const,
+      entityId: "player-1",
+      event: statusChange,
+      message: "Patrick Mahomes: injury status changed from Questionable to Out.",
+    };
+  }
+
+  beforeEach(() => {
+    process.env["WATCHLIST_ALERTS_ENABLED"] = "true";
+    mocks.listPushSubscriptionsForUser.mockResolvedValue({ ok: true, data: [] });
+    mocks.isEmailConfigured.mockReturnValue(true);
+  });
+
+  it("uses a status-specific push title and email subject, never the pick-graded copy", async () => {
+    mocks.sendAlertEmail.mockResolvedValue({ sent: true, detail: "sent" });
+
+    const result = await dispatchWatchlistAlert(FAKE_DB, statusPayload(), {
+      canGetAlerts: true,
+      verifiedEmail: "user@example.com",
+    });
+
+    expect(result.sent).toBe(true);
+    expect(result.outcome).toBe("dispatched");
+    expect(mocks.sendAlertEmail).toHaveBeenCalledWith(
+      "user@example.com",
+      "GalaxySportsEdge — your watchlist player status changed",
+      "Patrick Mahomes: injury status changed from Questionable to Out.",
+    );
+  });
+
+  it("still blocks a non-Elite recipient — the tier gate is unchanged", async () => {
+    const result = await dispatchWatchlistAlert(FAKE_DB, statusPayload(), {
+      canGetAlerts: false,
+    });
+    expect(result).toEqual({ sent: false, outcome: "tier_ineligible", channels: [] });
+    expect(mocks.sendAlertEmail).not.toHaveBeenCalled();
+  });
+
+  it("still no-ops when the kill switch is off", async () => {
+    delete process.env["WATCHLIST_ALERTS_ENABLED"];
+    const result = await dispatchWatchlistAlert(FAKE_DB, statusPayload(), {
+      canGetAlerts: true,
+    });
+    expect(result).toEqual({ sent: false, outcome: "disabled", channels: [] });
   });
 });

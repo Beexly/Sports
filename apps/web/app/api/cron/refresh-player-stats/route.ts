@@ -48,6 +48,15 @@ import { ingestPfrAdvStats } from "@/lib/ingestion/pfr-adv-stats";
 import { ingestRushTendencies } from "@/lib/ingestion/rush-tendencies";
 import { recordFreeIngestionRun } from "@/lib/data-sources/free-ingestion-run";
 import { decideSatelliteRun } from "@/lib/ingestion/satellite-window";
+// C-413: watched-player injury / depth-chart status alerts. Snapshot BEFORE
+// the injury+depth ingest, dispatch AFTER — the diff is the dedup (a re-run
+// against unchanged upstream data produces zero changes and zero sends).
+import {
+  loadStatusSnapshot,
+  dispatchStatusChangeAlerts,
+  type StatusAlertSummary,
+} from "@/lib/watchlist/status-alert-hook";
+import { db } from "@sports/db";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -152,8 +161,19 @@ export async function GET(request: Request): Promise<NextResponse> {
 
   let satellites: SatelliteBundle | null = null;
   let satellitesOk = true;
+  /** C-413. Null when the satellite window did not run (nothing to diff). */
+  let statusAlerts: StatusAlertSummary | null = null;
 
   if (runFull) {
+    // C-413: capture the pre-ingest published status of every watched PLAYER
+    // so the post-ingest snapshot can be diffed. Fail-isolated — a watchlist
+    // table that is missing or unreachable yields an empty snapshot and the
+    // ingest still proceeds.
+    const statusBefore = await loadStatusSnapshot(db, satelliteSeason).catch(() => ({
+      playerIds: [] as string[],
+      snapshot: [],
+    }));
+
     const snaps = await ingestSnapCounts(satelliteSeason);
     const injuries = await ingestInjuries(satelliteSeason);
     const depth = await ingestDepthCharts(satelliteSeason);
@@ -171,6 +191,14 @@ export async function GET(request: Request): Promise<NextResponse> {
     const pfrRec = await ingestPfrAdvStats(satelliteSeason, "rec");
     const pfrRush = await ingestPfrAdvStats(satelliteSeason, "rush");
     const rushTendencies = await ingestRushTendencies(satelliteSeason);
+    // C-413: diff the post-ingest published status against the pre-ingest
+    // snapshot and fan out through dispatchWatchlistAlert. Fail-isolated —
+    // a broken alert path never fails the ingest the operator paid for.
+    statusAlerts = await dispatchStatusChangeAlerts(
+      db,
+      statusBefore.snapshot,
+      satelliteSeason,
+    ).catch(() => null);
     satellites = {
       snaps,
       injuries,
@@ -216,6 +244,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       labelledAttempt,
       stats,
       ...(satellites ?? {}),
+      ...(statusAlerts ? { statusAlerts } : {}),
       ingestionRun,
     },
     { status: primaryOk ? 200 : 502 },

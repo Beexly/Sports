@@ -1,9 +1,11 @@
 import { describe, it, expect } from "vitest";
 import {
   isGradedEvent,
+  isStatusChangeEvent,
   evaluateAlertEligibility,
   isAlertEligible,
   type GradedEventInput,
+  type StatusChangeEventInput,
 } from "./alert-eligibility";
 
 const gradedWin: GradedEventInput = {
@@ -25,6 +27,15 @@ const gradedVoid: GradedEventInput = {
 // The planted ungraded event: a live/PENDING pick that must NEVER alert,
 // no matter how the other gates are configured.
 const ungradedPending: GradedEventInput = { pickResult: "PENDING", settledAt: null };
+// C-413: a published status change — a fact, not a tip.
+const statusChange: StatusChangeEventInput = {
+  kind: "status_change",
+  statusKind: "injury",
+  playerName: "Patrick Mahomes",
+  previous: "Questionable",
+  current: "Out",
+  changedAt: new Date("2026-09-15T12:00:00.000Z"),
+};
 
 describe("isGradedEvent — the graded-only doctrine primitive", () => {
   it("WIN/LOSS/PUSH/VOID with a settledAt timestamp are graded", () => {
@@ -104,5 +115,30 @@ describe("evaluateAlertEligibility / isAlertEligible — combined gate", () => {
         );
       }
     }
+  });
+});
+
+describe("isStatusChangeEvent / status-change eligibility (C-413)", () => {
+  it("recognises a status_change and never a graded pick", () => {
+    expect(isStatusChangeEvent(statusChange)).toBe(true);
+    expect(isStatusChangeEvent(gradedWin)).toBe(false);
+  });
+
+  it("a status change is eligible under the fully-open gate (it is a fact, not a tip)", () => {
+    expect(
+      evaluateAlertEligibility({ alertsEnabled: true, canGetAlerts: true, event: statusChange }),
+    ).toEqual({ eligible: true });
+  });
+
+  it("the kill switch still blocks a status change", () => {
+    expect(
+      evaluateAlertEligibility({ alertsEnabled: false, canGetAlerts: true, event: statusChange }),
+    ).toEqual({ eligible: false, reason: "alerts_disabled" });
+  });
+
+  it("a non-Elite recipient is still blocked for a status change", () => {
+    expect(
+      evaluateAlertEligibility({ alertsEnabled: true, canGetAlerts: false, event: statusChange }),
+    ).toEqual({ eligible: false, reason: "tier_ineligible" });
   });
 });
