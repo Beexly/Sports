@@ -335,6 +335,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       selection: displaySelection(pick.selection),
       line: pick.line,
       hasBookPrice: bookmakerCount > 0,
+      // C-354: publish-time lock columns, exposed so the card can show the
+      // locked price/line instead of any number embedded in `selection`.
+      // Null for legacy rows that predate the columns; the surface falls back
+      // to `line` and never invents or string-parses a price.
+      clvLockPrice: pick.clvLockPrice ?? null,
+      clvLockLine: pick.clvLockLine ?? null,
       ...(marketImplied ? { marketImplied } : {}),
       ...(winProbability ? { winProbability } : {}),
       // Opening -> current movement, the Pro-tier market read. Only SPREAD and

@@ -657,6 +657,19 @@ export interface PublicPick {
    */
   hasBookPrice?: boolean;
   /**
+   * American price captured once at publish (MONEYLINE only; null otherwise).
+   * This — never a number parsed out of `selection` — is the card's price.
+   * A selection like "Away ML (+102)" can disagree with the lock (−135); the
+   * lock is immutable and is what settlement/CLV use.
+   */
+  clvLockPrice?: number | null;
+  /**
+   * Points line captured once at publish (SPREAD/TOTAL; null for MONEYLINE
+   * and for legacy rows that predate the lock columns). Same rule as
+   * `clvLockPrice`: the card's line is this value when present.
+   */
+  clvLockLine?: number | null;
+  /**
    * @deprecated Phase 1 shape, superseded by `winProbability`. Kept so existing
    * consumers do not break; both are resolved from ONE call to
    * `resolveWinProbability` so they can never disagree. New code reads
