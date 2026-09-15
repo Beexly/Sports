@@ -7,18 +7,14 @@ data: [nflverse.rosters, nflverse.player_stats]
 discover_era: 2017-2020
 validate_era: 2021-2024
 kill_line: "validate-era effect <= 0 or 95% CI includes 0 with n >= 300"
-mde_80pct_power: null
+mde_80pct_power: 0.8059
 script: scripts/factors/A1.mjs
-status: UNTESTED
-number: null
-ci: null
-n: null
-run_sha: null
-run_at: null
+status: DEAD
+number: -0.1349
+ci: [-0.6987, 0.4289]
+n: 550
+run_sha: "4e7069e2b9db4cea83fb4e1f8686098bd806382c"
+run_at: "2026-09-15T22:22:41.937Z"
 blocked_on: null
 notes: >
-  Components already measured separately on YARDS (F6): birthday ±3d +1.11 yds p=0.57 (dead);
-  former team +2.01 yds n=336 p=0.11 CI[-0.72,+4.73] (unresolved, power to +3.0). The
-  conjunction on TARGET SHARE has never been run. Milestone incentive (F12) +1.16pp with a
-  failed placebo — an artifact, not a factor. Birthday half reuses lib/nflverse/birthday-usage-trend.ts;
-  former-team half from weekly rosters team history (or trades).
+  Components already measured separately on YARDS (F6): birthday ±3d +1.11 yds p=0.57 (dead); former team +2.01 yds n=336 p=0.11 CI[-0.72,+4.73] (unresolved, power to +3.0). The conjunction on TARGET SHARE has never been run. Milestone incentive (F12) +1.16pp with a failed placebo — an artifact, not a factor. Birthday half reuses lib/nflverse/birthday-usage-trend.ts; former-team half from weekly rosters team history (or trades). C-365 run 2026-09-15: WR/TE REG, residual target_share (pp) vs trailing-5, CR1 by player. Validate 2021-2024 treated n=550 (players=230) θ=-0.1349 pp CI[-0.6987,0.4289] MDE80=0.8059; untreated mean -0.0908 pp (n=11183); birthday-only n=254 μ=-0.06, former-only n=292 μ=-0.184, both n=4. Discover 2017-2020 treated n=311 θ=0.0487 pp CI[-0.7149,0.8124]. Data: nflverse weekly_rosters + player_stats + nfldata games.csv (CC BY 4.0), local cache only; no DB.
