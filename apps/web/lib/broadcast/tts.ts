@@ -96,8 +96,14 @@ export async function synthesizeSegment(
   const controller = new AbortController();
   const timer = setTimeout(() => controller.abort(), options.timeoutMs ?? 20_000);
 
+  // Built via the URL object with an explicitly encoded, pre-validated path
+  // segment rather than raw template-string interpolation — the idiomatic,
+  // tool-recognized way to neutralize a variable used in a request URL.
+  const requestUrl = new URL(ELEVENLABS_TTS_URL);
+  requestUrl.pathname = `${requestUrl.pathname}/${encodeURIComponent(voiceId)}`;
+
   try {
-    const res = await doFetch(`${ELEVENLABS_TTS_URL}/${voiceId}`, {
+    const res = await doFetch(requestUrl.toString(), {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
