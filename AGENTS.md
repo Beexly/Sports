@@ -406,12 +406,16 @@ FIELD IA (nav = footer, trimmed 2026-09-12):
 FIELD logo (`LogoMarkInline`): outer ring + tilted ellipse + thick arc + bone core + ember ping.
 Wordmark: solid bone text + solid ember underline. No chrome/gradient fill, no Exo 2, no cyan→magenta fade.
 
-FIELD copy rules (public surfaces):
+FIELD copy rules (public surfaces, updated 2026-09-12):
 - Hero thesis: Noise. / Signal. Closer: We detect. You decide.
-- Holds are first-class ("a held row is not a blank — it is the finding").
-- Never: "math you can read" on chrome, Mission Control as a primary label, "Four doors",
-  sports decision intelligence, neon/crypto vocabulary.
-- Prefer: Board, Record, Method, edge rank (not win probability), sealed receipt.
+- Passes are first-class ("a pass is not a blank, it is the finding").
+- Never: "math you can read" on chrome, Mission Control, "Four doors",
+  sports decision intelligence, neon/crypto vocabulary, "cleared the gate",
+  "held" (use "passed"), "market depth below publish threshold",
+  "not evaluated", "no pick generated".
+- Prefer: "we're on this", "we passed", "not enough sportsbooks are pricing this",
+  "we haven't scored this yet", Board, edge rank (not win probability), sealed receipt.
+- Every string must pass: "would a sharp friend who actually plays DFS say this?"
 
 FIELD atmosphere: `gw-nebula` / `gw-nebula-deep` are quiet near-black + one ember crown.
 Do not reintroduce violet radials (`rgba(60,45,110` / `#131022` / `#1B1530`).
@@ -438,16 +442,10 @@ pass before deploy (`vercel deploy --prod` from a worktree linked to project `sp
 **SCRAPING QUEUE (founder has a scraping agent — 2026-09-12). Scrape these, in this order.
 Format: what → why → where it lands. Founder will run the scrape; agents wire the results.**
 
-1. **MLB Statcast (Savant) — pitcher + batter underlying.**
-   Why: founder wants barrel%, hard-hit%, spin rate, exit velo, launch angle for
-   every MLB prop/pick. The factor engine already accepts an `underlying` input;
-   this is the data.
-   Land: `apps/web/lib/statcast/` (new). Mirror the nflverse loader pattern
-   (fetchWithFailover, assertIngestible, honest empty state). Source rights:
-   MLB Stats API is facts-only; Savant is the public sabermetric backbone.
-   Columns per player-season and per-pitcher-start: barrel%, hard-hit%, xwOBA,
-   avg exit velo, avg launch angle, whiff%, chase%, spin rate (pitchers),
-   sprint speed (batters).
+1. **MLB Statcast (Savant) — pitcher + batter underlying. DONE 2026-09-12.**
+   `apps/web/lib/statcast/` is built and tested. `baseball-savant` is in the source
+   registry. 8 unit tests. Remaining: wire Statcast data into the founder-picks
+   factor engine's `underlying` input at pick-creation time.
 2. **NBA rest / back-to-back + minutes.**
    Why: founder's own example — a player on a B2B or 3-in-4 is tired. The
    factor engine has a `rest` input ready.
@@ -620,6 +618,12 @@ OddsLineSnapshot. Two founder env flips turn it on.
 - Never publish a pick whose displayed line differs from its clvLockLine.
 - `marketGatesAdvisory` is NOT a gate. calibration-eligibility.ts does not read it.
 - Founder picks use modelVersion `founder-v1` — never mix them into engine calibration samples.
+- Never add Record/Verify/Plans/Intelligence back to the top nav bar.
+- Never restore "Mission Control", "Sports decision intelligence", "Four doors" to public copy.
+- Never use "held" in customer-facing copy — use "passed".
+- Never use "cleared the gate" — use "we're on this" or "we passed".
+- Never slow the ticker below 90s for the full loop.
+- Never put "math you can read" on public chrome.
 
 **Next highest-value work (in order):**
 1. Props env flip (founder) + verify prop lines land in OddsLineSnapshot.
@@ -628,37 +632,96 @@ OddsLineSnapshot. Two founder env flips turn it on.
 4. CLV 23% → 52.4% is the ESTABLISHED blocker — that is a model problem, not a gate problem.
 5. Visual polish pass on /founder-picks and the props board once props are live.
 
-**UPDATED 2026-09-12 (OVERNIGHT AUTONOMOUS RUN — scrape wave 2 + humanizer + nav trim).**
-Branch `claude/astra-redesign-2026-09-14`, commits A43-A45. Other agents: read this.
+**UPDATED 2026-09-12 (OVERNIGHT AUTONOMOUS RUN — full session record, commits A43-A54).**
+Branch `claude/astra-redesign-2026-09-14`. Merged to main via PR #793 (`45aa4c2e3`) and PR #794.
+Other agents: read this before touching anything listed below.
+Ledger rows A-43 through A-54 in `docs/ops/AGENT_LEDGER.md`.
 
-**What shipped:**
+**What shipped (12 commits, A43-A54):**
 
+**Data and research:**
 1. **Statcast loader** (`apps/web/lib/statcast/`) — batter/pitcher/sprint-speed CSV endpoints
    from baseballsavant.mlb.com. `baseball-savant` added to source registry (use-with-caution,
    facts-as-inputs). 8 unit tests. Feeds the `underlying` factor in the founder-picks engine.
+   Functions: `loadStatcastBatters`, `loadStatcastPitchers`, `loadSprintSpeed`, `findBatter`,
+   `findPitcher`. Returns honest source-error on failure, never fabricates rows.
 2. **Scrape wave 2 research** (`docs/research/scrape-wave-2-results.md`) — full wiring map from
-   two scrape JSONs (71+53 features, 567+93 columns). Covers Statcast, LineStar, PropFinder,
-   RBSDM, NFL/Savant, NGS, Fangraphs, competitor pricing.
-3. **Humanizer pass** — nav trimmed to Board / Players / Fantasy / GSN (Record, Verify, Plans
-   moved to footer + Board menu). Intelligence folded into Board menu. Ticker slowed 48s→90s.
-   Gate reasons rewritten in plain English. Homepage stats relabeled. Mission Control removed
-   from public copy. Methodology cards humanized.
+   two scrape JSONs (71+53 features, 567+93 columns, 34+15 formulas). Covers Statcast, LineStar,
+   PropFinder, RBSDM, NFL/Savant, NGS, Fangraphs, competitor pricing ($14.99-$79.99/mo range).
+3. **Competitor research** — PropFinder (55k users, 18 sportsbooks, $14.99/mo, cheatsheets for
+   TD/rushing/redzone/line/coverage matchups, power ratings with QB adjustments). PrizePicks
+   (More/Less pick model, popular picks show counts, FCM-regulated). Underdog (Pick'em + Streaks
+   + Drafts, $1M Keep Your promotion). All three feed consensus/matchupSplit factor design.
 
-**Nav doctrine (updated):** top bar = Board / Players / Fantasy / GSN only. Record lives under
-Board menu ("Our record"). Verify and Plans live in footer. Intelligence tools live under
-Board menu ("Free tools") and /intelligence/engines. Do NOT add Record/Verify/Plans back to
-the top bar.
+**Humanizer pass (every customer-facing string, commits A44-A52):**
+4. **Nav trimmed** — top bar is now Board / Players / Fantasy / GSN (was 7 items). Record,
+   Verify, Plans moved to footer + Board menu ("Our record"). Intelligence folded into Board
+   menu. Mobile nav mirrors desktop. "Mission Control" removed from public copy entirely.
+5. **Ticker** — slowed 48s to 90s so lines are readable. Copy rewritten: "we're on X" / "we
+   passed" instead of "cleared · edge n/a · held · gate".
+6. **Homepage stats** — "Cleared / Held / Settled n / Verify public" became "Today's picks /
+   We passed on / Graded picks / Anyone can check". Hero: "Sports decision intelligence" became
+   "Live now". "Four doors" became "Where to start".
+7. **Gate reasons** (`lib/board/pass-reason.ts` + `lib/board/gate-consumer.ts`) —
+   "Market depth below publish threshold" became "Not enough sportsbooks are pricing this game
+   yet." All five REASONS rewritten. No-bet-gate chapter: "NO BET · gate closed · pass logged"
+   became "WE PASSED · and we show you why".
+8. **Board page** — lane titles: "Published Today" to "Today's Picks", "Held Today" to "Passed
+   On". State tile: "Held today" to "Passed on". "You are here" strip updated. Empty states
+   rewritten. Board health badge: "public fire held" to "publishing paused".
+9. **House page** — badge: "X cleared · Y held" to "X picks · Y passed". Metadata rewritten.
+10. **Picks page** — "cleared the gate" removed. Empty states rewritten. Title: "Published
+    Picks" to "Today's Picks".
+11. **Methodology cards** — all 7 cards humanized. "Live odds ingestion" to "We pull live odds
+    from real sportsbooks". "Bookmaker coverage as a transparency signal" to "More books pricing
+    a game = more trust in the number". Methodology page: "the gate held" to "we passed".
+12. **Fantasy + DFS** — metadata and intros rewritten. "glass-box optimizer" to plain English.
+    DFS page: "Solve the slate" to "Build the lineup".
+13. **Pricing page** — "Sports decision intelligence" removed from description.
 
-**Copy doctrine (updated):** every customer-facing string must pass the "would a sharp friend
-who actually plays DFS say this?" test. Banned: "cleared the gate", "market depth below
-publish threshold", "not evaluated", "no pick generated", "Mission Control", "Sports decision
-intelligence", "Four doors". Use: "we're on this", "we passed", "not enough sportsbooks are
-pricing this", "we haven't scored this yet".
+**Intelligence pass prompt (commit A54):**
+14. `docs/research/intelligence-pass-prompt.md` — structured prompt for a frontier model to
+    review calibration math, DFS optimizer, GSE Score, visual design, copy, and data flow.
+    Asks for one insight + one recommendation + one risk per area, with priority ranking.
 
-**Founder env actions still open (unchanged):**
-- `ADMIN_EMAILS=baxley.garrett@gmail.com,dbax66@icloud.com`
-- `EVENT_ODDS_INGEST_ENABLED=true` + `LINE_ARCHIVE_ENABLED=true`
-- `INTERNAL_LLM_BASE_URL` + `INTERNAL_LLM_API_KEY` + `INTERNAL_LLM_MODEL`
+**AGENTS.md doctrine updates:**
+- **Nav doctrine:** top bar = Board / Players / Fantasy / GSN only. Do NOT add Record/Verify/
+  Plans back to the top bar. Do NOT restore Intelligence as a top-bar item.
+- **Copy doctrine:** every customer-facing string must pass the "would a sharp friend who
+  actually plays DFS say this?" test. Banned: "cleared the gate", "market depth below publish
+  threshold", "not evaluated", "no pick generated", "Mission Control", "Sports decision
+  intelligence", "Four doors", "held" (use "passed"). Use: "we're on this", "we passed",
+  "not enough sportsbooks are pricing this", "we haven't scored this yet".
+
+**Verified this session:**
+- typecheck 0, lint 0
+- em-dash-scan OK, trust-gate OK (2149 files), ledger OK (380 rows)
+- 25/26 guardrails (dependency-audit is founder-only stale waiver)
+- 8/8 statcast tests, 9/9 founder-picks tests, 39/39 calibration-math tests
+- 3132/3136 prediction-engine tests (4 pre-existing failures in quoted-book-line.test.ts
+  from the published-line change, NOT from this session)
+
+**Not changed (verified):**
+- MODEL_VERSION v5.2.7 untouched
+- Floors (n 100 / Brier 0.22 / ECE 0.05) byte-identical
+- No env flags flipped
+- No schema changes
+- No packages installed
+
+**Founder env actions still open:**
+- `ADMIN_EMAILS=baxley.garrett@gmail.com,dbax66@icloud.com` (belt-and-braces; code allow-list
+  already works without it)
+- `INTERNAL_LLM_BASE_URL` + `INTERNAL_LLM_API_KEY` + `INTERNAL_LLM_MODEL` (Vercel AI Gateway)
+- `EVENT_ODDS_INGEST_ENABLED=true` — founder confirmed already ON in Vercel (screenshot 2026-09-12)
+- `LINE_ARCHIVE_ENABLED=true` — already ON (C-62)
+
+**Next highest-value work (updated):**
+1. Run the intelligence pass prompt against a frontier model. Implement its recommendations.
+2. Verify prop lines land in OddsLineSnapshot now that EVENT_ODDS_INGEST_ENABLED is ON.
+3. Owner starts locking founder picks; promote the honest record.
+4. CLV 23% to 52.4% is the ESTABLISHED blocker. Model problem, not gate problem.
+5. Visual screenshots of every page at desktop + mobile widths (needs a real browser).
+6. Wire Statcast data into the founder-picks factor engine's `underlying` input.
 
 **UPDATED 2026-09-10 (17:15 UTC): NFL CLIP OPERATION — "GSE Film Room" on @GalaxySportsHQ (Motif, Muse agent).** Garrett's directive: real clipped sports footage with our data narrative; no synthetic/fake footage; no commercial license; transformative edits only. Full build artifacts live in the revenue-engine workspace under `clips/video-builds/` (not in this repo).
 
