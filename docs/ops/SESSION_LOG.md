@@ -1218,3 +1218,4 @@ C-420 UNPUSHED 7044acadb — OPS_READ_SECRET for read-only ops surfaces.
 C-356 UNPUSHED ddcb663a7 — twin fixture tombstones via mergedIntoGameId.
 C-359 UNPUSHED 14ac7ce6b — Kalshi book 2 via PredExon; D19 key ON.
 C-396 UNPUSHED 54d6d2a16 — Kalshi tape kalshi-predexon; free plane only.
+C-392 UNPUSHED 13ab1bc99 — SSRF guard doc half (literal-only, cite #820).
