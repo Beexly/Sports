@@ -217,7 +217,7 @@ function ClvGatedState({
   );
 }
 
-function ClvScoreboard({ policy, coverage }: { policy: PublicClvPolicy; coverage: ClvCoverage | null }) {
+export function ClvScoreboard({ policy, coverage }: { policy: PublicClvPolicy; coverage: ClvCoverage | null }) {
   return (
     <section data-testid="clv-scoreboard">
       <div className="overflow-hidden rounded-2xl border border-mineral bg-gradient-to-br from-eclipse to-carbon">
@@ -249,6 +249,21 @@ function ClvScoreboard({ policy, coverage }: { policy: PublicClvPolicy; coverage
                   ? "Lower bound clears the 52.4% break-even line"
                   : "Range still includes 52.4% break-even. No settled-edge claim yet"}
               </span>
+            </div>
+          )}
+          {/* C-350: an in-play exclusion MOVES this rate — the count and the
+              sentence that explains it sit beside the number they changed.
+              Never silent, never a footnote on a different surface. */}
+          {policy.inPlayExcluded > 0 && (
+            <div
+              data-testid="clv-in-play-exclusion"
+              className="mx-auto mt-4 max-w-lg border-t border-mineral/40 pt-3"
+            >
+              <p className={`text-xs font-semibold text-caution ${NUMERIC_TEXT_CLASS}`}>
+                {policy.inPlayExcluded} in-play{" "}
+                {policy.inPlayExcluded === 1 ? "row" : "rows"} excluded from this rate
+              </p>
+              <p className="mt-1 text-[11px] leading-snug text-ion-2">{policy.inPlayNote}</p>
             </div>
           )}
           {/* Coverage integrity note — surface the denominator behind the rate. */}
