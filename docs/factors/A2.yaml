@@ -9,14 +9,12 @@ validate_era: PICKS-H1 (generatedAt >= 2026-08-01)
 kill_line: "validate-era ΔBrier >= 0 or P(better) < 0.75 on PICKS-H1"
 mde_80pct_power: null
 script: scripts/factors/A2.mjs
-status: UNTESTED
+status: BLOCKED
 number: null
 ci: null
 n: null
-run_sha: null
-run_at: null
-blocked_on: null
+run_sha: "a62e5f378ba947203e709af31e8c041469bf7a55"
+run_at: "2026-09-15T22:28:26.554Z"
+blocked_on: "verifier/picks-h1.json real export (fixture smoke only; synthetic n=33 fails keep rule — expected, not a kill)"
 notes: >
-  F18: first positive in ~190 specs; ad-hoc holdout 0.20818 vs market 0.20905 at w=0.10.
-  C-366 confirms on the frozen split and becomes the v5.2.8 scorecard (D5). Consistent
-  across w=0.05–0.15 and in the football subset. Calibration, not edge.
+  F18: first positive in ~190 specs; ad-hoc holdout 0.20818 vs market 0.20905 at w=0.10. C-366 confirms on the frozen split and becomes the v5.2.8 scorecard (D5). Consistent across w=0.05–0.15 and in the football subset. Calibration, not edge. C-366 run 2026-09-15: PICKS-H1 fromFixture=true n=33. Primary w=0.10: candBrier=0.23549 mktBrier=0.23222 ΔBrier=0.00327 P(better)=0.036 CI95[-0.00007,0.00661] MDE80=0.00477. Football subset n=18 ΔBrier=-0.00122 P(better)=0.691. Raw model w=1 ΔBrier=0.04255 (engine worse than market without shrinkage). w-grid 0.05:0.00161 0.06:0.00194 0.07:0.00227 0.08:0.0026 0.09:0.00293 0.1:0.00327 0.11:0.00361 0.12:0.00395 0.13:0.00429 0.14:0.00464 0.15:0.00499. Evidence: docs/calibration-proposals/evidence/2026-09-15-a2-shrinkage-scorecard.json. HONEST LIMIT: committed fixture (synthetic n=33). Fixture FAILS the keep rule (model is overconfident by construction); it must not CANDIDATE/DEAD A2. Real-export scorecard is the DoD and is NOT RUN.
