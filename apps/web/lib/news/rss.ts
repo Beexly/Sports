@@ -3,6 +3,7 @@ import {
   locationIsInternalTargetLocation,
   validateEndpointUrl,
 } from "@sports/prediction-engine/src/ensemble/remote-model-client";
+import { toCuratedRssFeeds } from "./reporter-roster";
 
 /**
  * SSRF guard for the RSS wire: feed URLs come from operator config (`$NEXT_PUBLIC_...`/env),
@@ -62,6 +63,12 @@ export type RssFeedConfig = {
   readonly source: string;
   readonly tier: Tier;
   readonly team: string;
+  /**
+   * GSN's own published feed. Marked so the beat-report gate can never let a
+   * self-sourced item corroborate itself (C-415 / C-417). Absent on every
+   * third-party feed.
+   */
+  readonly selfSourced?: true;
 };
 
 /** Parse the NEWS_RSS_FEEDS env format. Malformed entries are skipped. */
@@ -84,17 +91,19 @@ export function parseFeedConfig(raw: string | undefined): RssFeedConfig[] {
 
 
 /**
- * Curated free sports RSS catalog (sports-skills harvest).
- * Opt-in via NEWS_RSS_USE_CURATED_DEFAULTS=true when NEWS_RSS_FEEDS is empty.
- * Headlines only; never invent signals.
+ * Curated free sports RSS catalog.
+ *
+ * C-415: the NFL reporter roster (`reporter-roster.ts`) — every club official
+ * feed, every primary beat Bluesky/Substack feed, the league insiders, the
+ * working league aggregators, and GSN's own feed marked `selfSourced: true` —
+ * feeds this list. ESPN per-team blog RSS is in the roster for audit but
+ * excluded here because those URLs no longer return RSS (fixtures 2026-09-15).
+ *
+ * The pre-existing non-NFL league feeds are kept so C-415 does not regress
+ * NBA/MLB/Soccer coverage. Opt-in via NEWS_RSS_USE_CURATED_DEFAULTS=true when
+ * NEWS_RSS_FEEDS is empty. Headlines only; never invent signals.
  */
-export const CURATED_SPORTS_NEWS_RSS: readonly RssFeedConfig[] = [
-  {
-    url: "https://www.espn.com/espn/rss/nfl/news",
-    source: "ESPN NFL",
-    tier: "Aggregator",
-    team: "NFL",
-  },
+const NON_NFL_LEAGUE_FEEDS: readonly RssFeedConfig[] = [
   {
     url: "https://www.espn.com/espn/rss/nba/news",
     source: "ESPN NBA",
@@ -125,6 +134,11 @@ export const CURATED_SPORTS_NEWS_RSS: readonly RssFeedConfig[] = [
     tier: "Aggregator",
     team: "Soccer",
   },
+] as const;
+
+export const CURATED_SPORTS_NEWS_RSS: readonly RssFeedConfig[] = [
+  ...toCuratedRssFeeds(),
+  ...NON_NFL_LEAGUE_FEEDS,
 ] as const;
 
 /** Env string form of curated catalog (founder can paste into NEWS_RSS_FEEDS). */
