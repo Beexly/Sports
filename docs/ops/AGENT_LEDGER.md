@@ -535,12 +535,12 @@ the only copy, and nobody else can verify or build on it.
 | C-413 | LP1 Injury and status alerts on the customer's players, through the alert path that already exists | hermes | UNPUSHED | bd5dd5fff — status-alert-hook + cron wire; Elite; tests (22+) |
 | C-414 | LP1 Live weather into the totals and props feature path | hermes | UNPUSHED | 78838246d — shared KickoffWeatherField; T-6h/T-1h; tests (18) |
 | C-415 | LP1 The reporter roster, in code, for all 32 teams | hermes | UNPUSHED | 943937478 — 143 entries; 32 club RSS live; ESPN blogs dead; tests (16) |
-| C-416 | LP1 The wire becomes a stored, polled feed instead of a page-render fetch | hermes | OPEN | - |
+| C-416 | LP1 The wire becomes a stored, polled feed instead of a page-render fetch | hermes | UNPUSHED | 3721fbddb — cron refresh-wire; DEMO_WIRE deleted; tests (15) |
 | C-417 | LP1 Alerts when a reporter posts, and the beat-report gate goes live on real reporting | hermes | OPEN | - |
 | C-420 | LP1 Read-only operator surfaces stop sharing the cron mutation secret | hermes | UNPUSHED | 7044acadb — OPS_READ_SECRET on read-only ops; unset falls back to CRON_SECRET; mutations reject it; tests (11) |
 | C-362 | LP2 packages/verifier: frozen holdouts, scorecard, duel, joint, factgraph | hermes | UNPUSHED | dd58e6ebc — holdout/scorecard/duel/joint/factgraph; fixture verify:holdout PASS |
 | C-363 | LP2 CI precondition: the frozen-path PR for the guardrails | hermes | OPEN | - |
-| C-364 | LP2 Factor Foundry: YAML specs A1-A16, runner, index | hermes | OPEN | - |
+| C-364 | LP2 Factor Foundry: YAML specs A1-A16, runner, index | hermes | UNPUSHED | 60abc03bb — A1-A16 YAML + zod index/run; tests (16); nothing run |
 | C-365 | LP2 Run A1: birthday or former-team target share | hermes | OPEN | - |
 | C-366 | LP2 Run A2 on PICKS-H1 and write the v5.2.8 shrinkage proposal | hermes | OPEN | - |
 | C-367 | LP2 Run A3 referee crews | hermes | OPEN | - |
