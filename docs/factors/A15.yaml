@@ -7,16 +7,14 @@ data: [nflverse.contracts]
 discover_era: 2017-2019
 validate_era: 2020-2024
 kill_line: "validate-era effect <= 0 or 95% CI includes 0 or the placebo on non-incentive contracts passes"
-mde_80pct_power: null
+mde_80pct_power: 0.39913
 script: scripts/factors/A15.mjs
-status: UNTESTED
-number: null
-ci: null
-n: null
-run_sha: null
-run_at: null
+status: DEAD
+number: 0.33189
+ci: [0.05266, 0.61112]
+n: 3515
+run_sha: "b17e6530602a26de77dcb0cf72737853a769fb21"
+run_at: "2026-09-15T22:48:31.932Z"
 blocked_on: null
 notes: >
-  The documented incentive, not an inferred one. Milestone version (F12) measured
-  +1.16pp with a failed placebo — an artifact. Script reuses stats-api expandContractRows
-  and fetches the contracts release directly. C-379.
+  Documented incentive, not an inferred one — BUT the OTC dump has no incentive-text column (only value/years/APY/guaranteed). This run therefore tests CONTRACT-YEAR proximity (final season of the signed deal) as the machine-readable proxy; incentive text is never invented. expandContractRows-compatible (gsis_id+apy): kept=0 skipped=31893; estimand joins by player name+team+season. Milestone incentive version (F12) measured +1.16pp with a failed placebo — an artifact. Placebo here = ≥2 years remaining. C-379. C-379 run 2026-09-15: WR/TE/RB REG residual target_share (pp) vs trailing-5. Discover treated n=2174 θ=0.19646 CI[-0.16765,0.56056]. Validate treated n=3515 θ=0.33189 CI[0.05266,0.61112] MDE80=0.39913. Validate placebo n=2460 θ=0.4569 CI[0.10405,0.80974]. YAML lists discover 2017-2019 / validate 2020-2024 — this run matches. Data: nflverse contracts + player_stats (CC BY 4.0); no DB.

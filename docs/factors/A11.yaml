@@ -7,16 +7,14 @@ data: [nflverse.pbp]
 discover_era: 1999-2019
 validate_era: 2020-2024
 kill_line: "shuffle gate fails or validate-era ΔBrier >= 0 or P(better) < 0.75"
-mde_80pct_power: null
+mde_80pct_power: 0.00085
 script: scripts/factors/A11.mjs
-status: UNTESTED
-number: null
-ci: null
-n: null
-run_sha: null
-run_at: null
+status: DEAD
+number: 0.00027
+ci: [-0.00032, 0.00086]
+n: 1020
+run_sha: "b17e6530602a26de77dcb0cf72737853a769fb21"
+run_at: "2026-09-15T22:47:46.535Z"
 blocked_on: null
 notes: >
-  T3. Never run. Report K* under AIC and BIC. Tennis-momentum priors 2404.13300 and
-  2409.10176 are on a different sport and a different unit — cited, not assumed.
-  C-375.
+  T3. HMM form regimes on game-level offensive EPA/play sequences. Pooled Baum–Welch on discover team-seasons; K* AIC=3 BIC=1. Shuffle gate (within-team-season, 20 reps): gainReal=20.978 q95=24.572 pass=false. Factor = P(high state) home − away from prior-only season-to-date filter (min 4 games). C-375. C-375 run 2026-09-15: REG home-win 2017–2024. Discover n=537; Validate n=1020. Brier market-only=0.20502 with-factor=0.20529. ΔBrier=0.00027 CI[-0.00032,0.00086] P(better)=0.184 MDE80=0.00085 coefD=0.1544 coefV=-0.0756 signAgrees=false. YAML lists discover 1999-2019; this run uses the user-sliced 2017-2024 window. Tennis-momentum priors 2404.13300 and 2409.10176 are a different sport/unit — cited, not assumed. Data: nflverse pbp + nfldata games.csv (CC BY 4.0); no DB.

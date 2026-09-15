@@ -7,17 +7,14 @@ data: [nflverse.games]
 discover_era: 1999-2019
 validate_era: 2020-2025
 kill_line: "validate-era ΔBrier >= 0 or P(better) < 0.75 or discover-vs-validate sign disagrees"
-mde_80pct_power: null
+mde_80pct_power: 0.00084
 script: scripts/factors/A16.mjs
-status: UNTESTED
-number: null
-ci: null
-n: null
-run_sha: null
-run_at: null
+status: DEAD
+number: 0.00001
+ci: [-0.00058, 0.0006]
+n: 1610
+run_sha: "b17e6530602a26de77dcb0cf72737853a769fb21"
+run_at: "2026-09-15T22:47:00.682Z"
 blocked_on: null
 notes: >
-  arXiv 2507.22472 (home-field consistency); rating uncertainty per 2605.24445;
-  luck-vs-skill depth per 2312.04711. The standalone team model is DEAD at 49.83% ATS —
-  a different test. The question is whether the rating carries information the price
-  lacks, scored by ΔBrier under §4.2. C-394; runs after C-379.
+  Bradley–Terry rating with covariates (home, rest, QB change) as ONE feature added to the market logit — not the standalone team model (DEAD at 49.83% ATS). Prequential online BT: each game's factor uses prior games only; logistic joint fit on discover, scored on validate. C-394; runs after C-379. C-394 run 2026-09-15: REG home-win 1999–2025 games.csv. Discover n=3441; Validate n=1610. Brier market-only=0.20995 with-factor=0.20996. ΔBrier=0.00001 CI[-0.00058,0.0006] P(better)=0.497 MDE80=0.00084 coefD=0.1071 coefV=0.0284 signAgrees=true. Final β_home=0.1662 β_rest=0.0775 β_qbH=-0.2265 β_qbA=0.1925. arXiv 2507.22472 / 2605.24445 / 2312.04711 cited as priors, not assumed. Data: nflverse/nfldata games.csv (CC BY 4.0); no DB.

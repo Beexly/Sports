@@ -7,15 +7,14 @@ data: [nflverse.pbp]
 discover_era: 1999-2019
 validate_era: 2020-2024
 kill_line: "validate-era residual sign flips from discover or 95% CI includes 0 with n >= 400"
-mde_80pct_power: null
+mde_80pct_power: 0.42416
 script: scripts/factors/A12.mjs
-status: UNTESTED
-number: null
-ci: null
-n: null
-run_sha: null
-run_at: null
+status: DEAD
+number: -0.25744
+ci: [-0.55418, 0.0393]
+n: 9171
+run_sha: "b17e6530602a26de77dcb0cf72737853a769fb21"
+run_at: "2026-09-15T22:48:31.138Z"
 blocked_on: null
 notes: >
-  IRL coaching estimand, not a pick input; last in the pbp group on purpose.
-  C-376.
+  IRL coaching estimand, not a pick input; last in the pbp group on purpose. Prelec γ=0.65 (pre-registered). Cells = yardline×ydstogo buckets on discover. Residual = coach go − 1{Prelec-weighted EPA(go|convert/fail) > EPA(punt)}; linear-EPA residual also reported. Conversion from nflfastR success (fourth_down_* not in the projected cache). Prelec flips linear EPA in 0/10 cells — when it does not flip, the Prelec residual is the linear-EPA residual by construction. C-376. C-376 run 2026-09-15: REG 4th-down go vs punt 2017–2024. Discover n=5441 θ=-0.3209 CI[-0.656,0.01421] cells=10. Validate n=9171 θ=-0.25744 CI[-0.55418,0.0393] cells=10 MDE80=0.42416. Linear-EPA residual discover θ=-0.3209 validate θ=-0.25744. Go rate discover=0.2231 validate=0.3055. YAML lists discover 1999-2019; this run uses the user-sliced 2017-2024 window. Data: nflverse pbp (CC BY 4.0) projected cache; no DB.

@@ -7,15 +7,14 @@ data: [nflverse.pbp]
 discover_era: 1999-2019
 validate_era: 2020-2024
 kill_line: "does not beat both Null A and Null B on validate era"
-mde_80pct_power: null
+mde_80pct_power: 0.00443
 script: scripts/factors/A13.mjs
-status: UNTESTED
-number: null
-ci: null
-n: null
-run_sha: null
-run_at: null
+status: DEAD
+number: 0.00205
+ci: [-0.00105, 0.00515]
+n: 1020
+run_sha: "b17e6530602a26de77dcb0cf72737853a769fb21"
+run_at: "2026-09-15T22:48:36.367Z"
 blocked_on: null
 notes: >
-  T7. Published prior is null. Single shot — no re-queue without a new spec.
-  C-377.
+  T7. Persistent homology (H0 total MST persistence of delay-embedded EPA). Published prior is null. SINGLE SHOT — no re-queue without a new spec. Null A = within-sequence shuffle; Null B = order-1 Markov sign surrogate (8 reps on discover subsample). PH means real=0.46201 nullA=0.4836 nullB=0.44163. Best null joint ΔBrier A=0.00116 B=0.00038. Factor = prior-only season-to-date mean PH home − away. C-377. C-377 run 2026-09-15: REG home-win 2017–2024. Discover n=537; Validate n=1020. Brier market-only=0.20502 with-factor=0.20707. ΔBrier=0.00205 CI[-0.00105,0.00515] P(better)=0.097 MDE80=0.00443 coefD=-5.1054 coefV=-0.5137 signAgrees=true. Topology-only tennis prior 2607.23509 is a different sport — cited, not assumed. YAML lists discover 1999-2019; this run uses the user-sliced 2017-2024 window. Data: nflverse pbp + nfldata games.csv (CC BY 4.0); no DB.
