@@ -1,0 +1,22 @@
+id: A11
+title: HMM form regimes with shuffle gate
+hypothesis: Hidden Markov form regimes on team efficiency beats a shuffled-sequence control and improves holdout Brier.
+estimand: out-of-sample ΔBrier of HMM regime posterior added to market logit; K* under AIC and BIC
+unit: ΔBrier on validate era
+data: [nflverse.pbp]
+discover_era: 1999-2019
+validate_era: 2020-2024
+kill_line: "shuffle gate fails or validate-era ΔBrier >= 0 or P(better) < 0.75"
+mde_80pct_power: null
+script: scripts/factors/A11.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  T3. Never run. Report K* under AIC and BIC. Tennis-momentum priors 2404.13300 and
+  2409.10176 are on a different sport and a different unit — cited, not assumed.
+  C-375.

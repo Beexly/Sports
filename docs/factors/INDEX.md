@@ -5,4 +5,19 @@ DEAD rows stay forever. LIVE rows link to the pick-card factor trail.
 
 | id | hypothesis | status | validate-era | CI | n | kill line | run |
 |---|---|---|---|---|---|---|---|
-| — | *(no factor specs yet)* | — | — | — | — | — | — |
+| A1 | A WR/TE is targeted more when playing on/near his birthday or against a team that cut or traded him. | UNTESTED | — | — | — | validate-era effect <= 0 or 95% CI includes 0 with n >= 300 | — |
+| A2 | A fixed shrinkage p = market + w·(model − market) with w near 0.10 improves Brier vs the market on the frozen holdout. | UNTESTED | — | — | — | validate-era ΔBrier >= 0 or P(better) < 0.75 on PICKS-H1 | — |
+| A3 | Named crews have stable home/under lean (Vinovich under, Hussey home) that the market does not fully price. | UNTESTED | — | — | — | validate-era \|effect\| <= 0 or Bonferroni-adjusted 95% CI includes 0 across crews | — |
+| A4 | Teams travelling east across two or more time zones for an afternoon kickoff cover less often (Fodor and Krieger published spec). | UNTESTED | — | — | — | validate-era effect <= 0 or 95% CI includes 0 with n >= 200 | — |
+| A5 | High wind and open roofs push NFL totals under (Borghesi); the effect decays and may be gone by the current era. | UNTESTED | — | — | — | validate-era over-rate effect <= 0 or the effect is not positive in the most recent three seasons | — |
+| A6 | Offensive play-call unpredictability within drives carries information beyond pass_oe for game outcomes. | UNTESTED | — | — | — | validate-era R² margin vs pass_oe < 0.02 | — |
+| A7 | The intrinsic dimension of a team play-call manifold predicts efficiency beyond distinct-play-type count. | UNTESTED | — | — | — | validate-era R² margin vs distinct-play-type count < 0.02 | — |
+| A8 | A Boltzmann temperature transform of our own p improves calibration on PICKS-H1 versus isotonic. | UNTESTED | — | — | — | validate-era Brier >= isotonic Brier on PICKS-H1 | — |
+| A9 | Long-range dependence in a team EPA sequence (DFA exponent) predicts next-game efficiency beyond recent mean EPA. | UNTESTED | — | — | — | validate-era ΔBrier >= 0 or P(better) < 0.75 | — |
+| A10 | Wasserstein barycenter distance between opponent play-call distributions carries matchup information the market lacks. | UNTESTED | — | — | — | validate-era ΔBrier >= 0 or P(better) < 0.75 | — |
+| A11 | Hidden Markov form regimes on team efficiency beats a shuffled-sequence control and improves holdout Brier. | UNTESTED | — | — | — | shuffle gate fails or validate-era ΔBrier >= 0 or P(better) < 0.75 | — |
+| A12 | Coach fourth-down decisions follow Prelec decision weights rather than EPA-optimal thresholds, and the gap is stable. | UNTESTED | — | — | — | validate-era residual sign flips from discover or 95% CI includes 0 with n >= 400 | — |
+| A13 | Persistent-homology features of within-game play sequences beat both published nulls and improve holdout Brier. | UNTESTED | — | — | — | does not beat both Null A and Null B on validate era | — |
+| A14 | FTN pressure, coverage and motion rates improve player-prop feature sets beyond box-score usage. | UNTESTED | — | — | — | validate-era ΔBrier >= 0 or P(better) < 0.75 | — |
+| A15 | Documented contract incentives (OTC contracts) near expiry change usage or efficiency in a way the market does not price. | UNTESTED | — | — | — | validate-era effect <= 0 or 95% CI includes 0 or the placebo on non-incentive contracts passes | — |
+| A16 | A Bradley-Terry team rating with home, rest and QB-change covariates carries information the market price lacks when added as one feature. | UNTESTED | — | — | — | validate-era ΔBrier >= 0 or P(better) < 0.75 or discover-vs-validate sign disagrees | — |

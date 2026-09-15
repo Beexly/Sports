@@ -1,0 +1,22 @@
+id: A15
+title: Contract-year and documented incentive proximity
+hypothesis: Documented contract incentives (OTC contracts) near expiry change usage or efficiency in a way the market does not price.
+estimand: usage and efficiency residual vs trailing baseline for players within a documented incentive window
+unit: standardised residual (usage) and yards (efficiency)
+data: [nflverse.contracts]
+discover_era: 2017-2019
+validate_era: 2020-2024
+kill_line: "validate-era effect <= 0 or 95% CI includes 0 or the placebo on non-incentive contracts passes"
+mde_80pct_power: null
+script: scripts/factors/A15.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  The documented incentive, not an inferred one. Milestone version (F12) measured
+  +1.16pp with a failed placebo — an artifact. Script reuses stats-api expandContractRows
+  and fetches the contracts release directly. C-379.

@@ -1,0 +1,22 @@
+id: A2
+title: Market-anchored shrinkage weight w
+hypothesis: A fixed shrinkage p = market + w·(model − market) with w near 0.10 improves Brier vs the market on the frozen holdout.
+estimand: holdout Brier of shrunk display probability vs marketFairProb on identical rows
+unit: ΔBrier (candidate minus market)
+data: [verifier.picks-h1, marketFairProb]
+discover_era: pre-PICKS-H1 ad-hoc splits
+validate_era: PICKS-H1 (generatedAt >= 2026-08-01)
+kill_line: "validate-era ΔBrier >= 0 or P(better) < 0.75 on PICKS-H1"
+mde_80pct_power: null
+script: scripts/factors/A2.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  F18: first positive in ~190 specs; ad-hoc holdout 0.20818 vs market 0.20905 at w=0.10.
+  C-366 confirms on the frozen split and becomes the v5.2.8 scorecard (D5). Consistent
+  across w=0.05–0.15 and in the football subset. Calibration, not edge.

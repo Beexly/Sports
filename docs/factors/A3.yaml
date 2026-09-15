@@ -1,0 +1,22 @@
+id: A3
+title: Referee and crew tendencies
+hypothesis: Named crews have stable home/under lean (Vinovich under, Hussey home) that the market does not fully price.
+estimand: ATS cover rate and total side rate by referee vs league base rate
+unit: percentage points of cover rate
+data: [nflverse.games.referee, nflverse.officials]
+discover_era: 2009-2019
+validate_era: 2020-2025
+kill_line: "validate-era |effect| <= 0 or Bonferroni-adjusted 95% CI includes 0 across crews"
+mde_80pct_power: null
+script: scripts/factors/A3.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  Best-of-17 was 49.61% uncorrected. Bonferroni over crews is mandatory. officials
+  release (full crew) is catalogued in nflverse and not yet fetched; games.csv referee
+  alone is enough for the single-referee split. C-367.

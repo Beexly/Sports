@@ -1,0 +1,20 @@
+id: A7
+title: Intrinsic dimension of the play-call manifold
+hypothesis: The intrinsic dimension of a team play-call manifold predicts efficiency beyond distinct-play-type count.
+estimand: out-of-sample R² margin of intrinsic-dimension features vs distinct-play-type count
+unit: ΔR² versus distinct-play-type count
+data: [nflverse.pbp]
+discover_era: 1999-2019
+validate_era: 2020-2024
+kill_line: "validate-era R² margin vs distinct-play-type count < 0.02"
+mde_80pct_power: null
+script: scripts/factors/A7.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  W7. Never run. Same pbp path as A6. C-371.

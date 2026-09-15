@@ -1,0 +1,22 @@
+id: A14
+title: FTN charting pressure coverage and motion rates as props features
+hypothesis: FTN pressure, coverage and motion rates improve player-prop feature sets beyond box-score usage.
+estimand: out-of-sample ΔBrier of ftn_charting rates added to the props baseline
+unit: ΔBrier on validate era
+data: [nflverse.ftn_charting]
+discover_era: 2022-2023
+validate_era: 2024-2025
+kill_line: "validate-era ΔBrier >= 0 or P(better) < 0.75"
+mde_80pct_power: null
+script: scripts/factors/A14.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  The closest thing to tracking we can legally have. Catalogued in nflverse-source.ts
+  and never fetched; the script pulls the release directly. Big Data Bowl tracking is
+  CC BY-NC-4.0 non-commercial and closed. C-378.

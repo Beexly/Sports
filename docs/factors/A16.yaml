@@ -1,0 +1,23 @@
+id: A16
+title: Bradley-Terry rating with covariates added to the market logit
+hypothesis: A Bradley-Terry team rating with home, rest and QB-change covariates carries information the market price lacks when added as one feature.
+estimand: out-of-sample ΔBrier of BT-rating feature added to the market logit
+unit: ΔBrier on validate era
+data: [nflverse.games]
+discover_era: 1999-2019
+validate_era: 2020-2025
+kill_line: "validate-era ΔBrier >= 0 or P(better) < 0.75 or discover-vs-validate sign disagrees"
+mde_80pct_power: null
+script: scripts/factors/A16.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  arXiv 2507.22472 (home-field consistency); rating uncertainty per 2605.24445;
+  luck-vs-skill depth per 2312.04711. The standalone team model is DEAD at 49.83% ATS —
+  a different test. The question is whether the rating carries information the price
+  lacks, scored by ΔBrier under §4.2. C-394; runs after C-379.

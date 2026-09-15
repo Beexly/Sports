@@ -1,0 +1,22 @@
+id: A9
+title: DFA scaling exponent of EPA sequences
+hypothesis: Long-range dependence in a team EPA sequence (DFA exponent) predicts next-game efficiency beyond recent mean EPA.
+estimand: out-of-sample ΔBrier of DFA-exponent feature added to market logit
+unit: ΔBrier on validate era
+data: [nflverse.pbp]
+discover_era: 1999-2019
+validate_era: 2020-2024
+kill_line: "validate-era ΔBrier >= 0 or P(better) < 0.75"
+mde_80pct_power: null
+script: scripts/factors/A9.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  W6. Low prior (Koopman p=0.89); cheap; run. EPA input is nflfastR; Brill 2409.04889
+  documents its selection bias — the YAML names the EP model used by the release
+  (nflfastR EP, not a custom EP). C-373.

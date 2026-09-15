@@ -1,0 +1,21 @@
+id: A12
+title: Prelec fourth-down decision weighting
+hypothesis: Coach fourth-down decisions follow Prelec decision weights rather than EPA-optimal thresholds, and the gap is stable.
+estimand: residual go-for-it rate vs EPA-optimal threshold under Prelec weighting
+unit: percentage points of go rate residual
+data: [nflverse.pbp]
+discover_era: 1999-2019
+validate_era: 2020-2024
+kill_line: "validate-era residual sign flips from discover or 95% CI includes 0 with n >= 400"
+mde_80pct_power: null
+script: scripts/factors/A12.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  IRL coaching estimand, not a pick input; last in the pbp group on purpose.
+  C-376.

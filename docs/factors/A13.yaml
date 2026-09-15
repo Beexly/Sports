@@ -1,0 +1,21 @@
+id: A13
+title: Persistent homology of play sequences
+hypothesis: Persistent-homology features of within-game play sequences beat both published nulls and improve holdout Brier.
+estimand: out-of-sample ΔBrier of persistence-image features vs Null A and Null B
+unit: ΔBrier on validate era
+data: [nflverse.pbp]
+discover_era: 1999-2019
+validate_era: 2020-2024
+kill_line: "does not beat both Null A and Null B on validate era"
+mde_80pct_power: null
+script: scripts/factors/A13.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  T7. Published prior is null. Single shot — no re-queue without a new spec.
+  C-377.

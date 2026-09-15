@@ -1,0 +1,24 @@
+id: A1
+title: Birthday-or-former-team target-share bump
+hypothesis: A WR/TE is targeted more when playing on/near his birthday or against a team that cut or traded him.
+estimand: residual target_share vs the player trailing-5-game baseline pooled cluster-robust by player
+unit: percentage points of target share
+data: [nflverse.rosters, nflverse.player_stats]
+discover_era: 2017-2020
+validate_era: 2021-2024
+kill_line: "validate-era effect <= 0 or 95% CI includes 0 with n >= 300"
+mde_80pct_power: null
+script: scripts/factors/A1.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  Components already measured separately on YARDS (F6): birthday ±3d +1.11 yds p=0.57 (dead);
+  former team +2.01 yds n=336 p=0.11 CI[-0.72,+4.73] (unresolved, power to +3.0). The
+  conjunction on TARGET SHARE has never been run. Milestone incentive (F12) +1.16pp with a
+  failed placebo — an artifact, not a factor. Birthday half reuses lib/nflverse/birthday-usage-trend.ts;
+  former-team half from weekly rosters team history (or trades).

@@ -1,0 +1,21 @@
+id: A4
+title: Eastward travel of two-plus zones for afternoon kickoff
+hypothesis: Teams travelling east across two or more time zones for an afternoon kickoff cover less often (Fodor and Krieger published spec).
+estimand: cover rate residual for eastward ≥2-zone afternoon games vs matched controls
+unit: percentage points of cover rate
+data: [nflverse.games, stadium_tz]
+discover_era: 2000-2019
+validate_era: 2020-2025
+kill_line: "validate-era effect <= 0 or 95% CI includes 0 with n >= 200"
+mde_80pct_power: null
+script: scripts/factors/A4.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  F12 tested west-early (sign flip) and east-late (collapsed), not this exact published
+  spec. Run the published spec first, then the decay check by season. C-368.

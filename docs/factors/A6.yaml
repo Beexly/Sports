@@ -1,0 +1,21 @@
+id: A6
+title: Permutation entropy of within-drive play calling
+hypothesis: Offensive play-call unpredictability within drives carries information beyond pass_oe for game outcomes.
+estimand: out-of-sample R² margin of permutation-entropy features vs pass_oe baseline
+unit: ΔR² versus pass_oe
+data: [nflverse.pbp]
+discover_era: 1999-2019
+validate_era: 2020-2024
+kill_line: "validate-era R² margin vs pass_oe < 0.02"
+mde_80pct_power: null
+script: scripts/factors/A6.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  W8. Never run. pbp 2023–2024 already local; script fetches wider years like
+  edge-lab/loaders/nfl-games.ts. C-370.

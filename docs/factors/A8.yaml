@@ -1,0 +1,21 @@
+id: A8
+title: Boltzmann recalibration of model probability
+hypothesis: A Boltzmann temperature transform of our own p improves calibration on PICKS-H1 versus isotonic.
+estimand: Brier of Boltzmann-calibrated p vs isotonic-calibrated p on identical holdout rows
+unit: ΔBrier versus isotonic
+data: [verifier.picks-h1]
+discover_era: pre-PICKS-H1 ad-hoc splits
+validate_era: PICKS-H1 (generatedAt >= 2026-08-01)
+kill_line: "validate-era Brier >= isotonic Brier on PICKS-H1"
+mde_80pct_power: null
+script: scripts/factors/A8.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  A transform, not a new signal. Scored vs isotonic on the frozen split only.
+  C-372.

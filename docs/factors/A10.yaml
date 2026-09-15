@@ -1,0 +1,21 @@
+id: A10
+title: Wasserstein barycenter distance between play-call distributions
+hypothesis: Wasserstein barycenter distance between opponent play-call distributions carries matchup information the market lacks.
+estimand: out-of-sample ΔBrier of barycenter-distance feature added to market logit
+unit: ΔBrier on validate era
+data: [nflverse.pbp]
+discover_era: 1999-2019
+validate_era: 2020-2024
+kill_line: "validate-era ΔBrier >= 0 or P(better) < 0.75"
+mde_80pct_power: null
+script: scripts/factors/A10.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  W5. Low prior (W2 was field position in disguise). Same pbp path as A6.
+  C-374.

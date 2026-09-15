@@ -1,0 +1,21 @@
+id: A5
+title: Wind and precipitation on totals
+hypothesis: High wind and open roofs push NFL totals under (Borghesi); the effect decays and may be gone by the current era.
+estimand: over-rate residual for wind ≥15 mph open-roof games vs indoor baseline
+unit: percentage points of over rate
+data: [nflverse.games.wind, nflverse.games.temp, nflverse.games.roof]
+discover_era: 1999-2019
+validate_era: 2020-2025
+kill_line: "validate-era over-rate effect <= 0 or the effect is not positive in the most recent three seasons"
+mde_80pct_power: null
+script: scripts/factors/A5.mjs
+status: UNTESTED
+number: null
+ci: null
+n: null
+run_sha: null
+run_at: null
+blocked_on: null
+notes: >
+  54.64% over 27 seasons, ~0 by 2025. Re-run yearly — not dead forever, dead now.
+  A 30-second script on games.csv. C-369.
