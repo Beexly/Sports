@@ -518,7 +518,7 @@ the only copy, and nobody else can verify or build on it.
 | C-352 | LP0 /performance judged at 52.4% in two lanes | hermes | DONE | 9558a1c2f — two lanes at 52.4%; coverage line; signal not in headline; tests (18) |
 | C-353 | LP0 Withhold at mint: NFL preseason, MLB spread/total, soccer ML on every path, 0-book rows | hermes | DONE | 3ab6649e7 — withhold D2 paths; model-freeze OK; tests (113) |
 | C-354 | LP0 Card price is the lock price, never a string-embedded number | hermes | DONE | 8cbd0b962 — card uses clvLockPrice/Line; test (5); source on branch |
-| C-418 | LP0 One scheduler for settle-picks: the frozen-path PR | hermes | UNPUSHED | #828 frozen-path draft +  on hermes/last-plan-2026-09-15 — Vercel only; founder merges #828 |
+| C-418 | LP0 One scheduler for settle-picks: the frozen-path PR | hermes | UNPUSHED | #828 frozen-path draft + cdcf6a6f8 on hermes/last-plan-2026-09-15 — Vercel only; founder merges #828 |
 | C-419 | LP0 PR triage: close what main already carries | hermes | DONE | #754 #751 #752 #753 #750 #749 #748 #745 #747 already MERGED; no open PR to close |
 | C-355 | LP1 Fill pfr_adv_stats and player_rush_profiles from the nflverse release | hermes | OPEN | - |
 | C-356 | LP1 Tombstone fixture twins: write mergedIntoGameId | hermes | OPEN | - |
