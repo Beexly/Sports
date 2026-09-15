@@ -1216,3 +1216,5 @@ C-420 UNPUSHED 7044acadb — OPS_READ_SECRET for read-only ops surfaces.
 - Tick-history Parquet is **paid** ($80/GiB Kalshi ≈ $95/day). D15: never buy. Live WS not on free.
 - Capture budget for C-396: prefer markets list (free/unlimited) over counted endpoints; still pace ≤1 req/s.
 C-356 UNPUSHED ddcb663a7 — twin fixture tombstones via mergedIntoGameId.
+C-359 UNPUSHED 14ac7ce6b — Kalshi book 2 via PredExon; D19 key ON.
+C-396 UNPUSHED 54d6d2a16 — Kalshi tape kalshi-predexon; free plane only.

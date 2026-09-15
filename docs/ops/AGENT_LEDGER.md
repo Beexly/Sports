@@ -524,13 +524,13 @@ the only copy, and nobody else can verify or build on it.
 | C-356 | LP1 Tombstone fixture twins: write mergedIntoGameId | hermes | UNPUSHED | ddcb663a7 — planTwinTombstones + applyTwinTombstones write mergedIntoGameId; tests (133) |
 | C-357 | LP1 Widen NFL prop ingest to every market the HB engine scores | hermes | OPEN | - |
 | C-358 | LP1 Prop reader: OddsLineSnapshot to RateSample + graded outcome | hermes | OPEN | - |
-| C-359 | LP1 Kalshi as book 2 via PredExon, behind PREDEXON_INGEST | hermes | OPEN | - |
+| C-359 | LP1 Kalshi as book 2 via PredExon, behind PREDEXON_INGEST | hermes | UNPUSHED | 14ac7ce6b — D19 key-present ON; midpoint beside marketFairProb; tests green |
 | C-360 | LP1 Unlink the fiction: nav ≤12 labels, nine fantasy tools parked, labels match H1 | hermes | OPEN | - |
 | C-361 | LP1 Delete the dead duplicate loaders | hermes | OPEN | - |
 | C-392 | LP1 Issue #820 doc half: the SSRF guard says it is literal-only | hermes | OPEN | - |
 | C-393 | LP1 The line archive alarms when it goes quiet | hermes | UNPUSHED | 17c20e9d9 — STALE/SILENT page via health-alert; DISABLED zero-DB; UNKNOWN carries error; test (26) |
 | C-395 | LP1 nflverse loaders for the releases the factor queue needs and nothing pulls yet | hermes | OPEN | - |
-| C-396 | LP1 Record the Kalshi NFL tape and book, forward-only, from day one | hermes | OPEN | - |
+| C-396 | LP1 Record the Kalshi NFL tape and book, forward-only, from day one | hermes | UNPUSHED | 54d6d2a16 — kalshi-predexon tape; free list+trades only; no paid ticks; dropped fields named |
 | C-410 | LP1 Rights verdicts for the pick'em boards, and the one free prop-line check that is left | hermes | OPEN | - |
 | C-413 | LP1 Injury and status alerts on the customer's players, through the alert path that already exists | hermes | OPEN | - |
 | C-414 | LP1 Live weather into the totals and props feature path | hermes | OPEN | - |

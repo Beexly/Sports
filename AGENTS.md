@@ -9,11 +9,21 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ## CURRENT STATE
 
-Plan: `docs/ops/LAST_PLAN_2026-09-15.md` Â· branch `hermes/last-plan-2026-09-15` Â· head `7f4f29e82` Â· Phase 0 Â· rows: Phase 0 code DONE C-347..C-354+C-419; C-349 ledger restored; Phase 1 next.
+Plan: `docs/ops/LAST_PLAN_2026-09-15.md` Â· branch `hermes/last-plan-2026-09-15` Â· head `7f4f29e82` Â· Phase 0 Â· rows: Phase 0 DONE; Phase 1: C-355/356/359/393/396/420 UNPUSHED; next C-357/360/361/392/410+.
 Founder hands-only pending: Â§0.2 items 1â€“5 (rotate secrets; Stripe/Vercel PRICING=FOUNDING; set PREDEXON_API_KEY/HEALTH_ALERT_WEBHOOK_URL/SENTRY_DSN/OPS_READ_SECRET; merge labelled PRs; supply oddsmagnet months + prop-line file).
 Open security work not in this plan: issue #820 transport half (connect-time address check).
 Do-not-touch: `hermes/v528-market-gate-preserved-2026-09-11` (does not compile); checkout price-mismatch (fail-closed is correct); pricing amounts; any gate/env flag.
-Last five DONE: C-354 8cbd0b962; C-353 3ab6649e7; C-352 9558a1c2f; C-351 e607279cd; C-350 531ba65d3.
+Last five DONE: C-396 54d6d2a16; C-359 14ac7ce6b; C-356 ddcb663a7; C-420 7044acadb; C-393 17c20e9d9.
+
+### PredExon handoff (for every later agent)
+
+- Key lives only in Vercel PREDEXON_API_KEY (founder §0.2 item 3). Never commit/log a key.
+- Free & unlimited: GET /v2/kalshi/markets, GET /v2/kalshi/trades, all list-markets and orderbook-history endpoints. Counted 1k/month: everything else. Rate limit free: 1 req/s.
+- **Never** call /v2/data/ticks (paid Parquet, D15). Guard: ssertNotPaidTickPath in predexon-client.ts.
+- Ingest ON when key present (D19) unless PREDEXON_INGEST explicitly off. No key → fail closed.
+- Book 2: galaxy-kalshi-book.ts via PredExon only (D4). Midpoint: actorBreakdown.exchangeMidpointProb.
+- Tape: exchange-tape-capture.ts → odds_line_snapshots book kalshi-predexon, series KXNFL*. Pace default 1100ms. Volume/OI/trades have **no schema column** — name them in evidence, do not migrate (law 2).
+- Improvements welcome: keep free-plane only, cite docs.predexon.com, add tests, update this block.
 
 ---
 
