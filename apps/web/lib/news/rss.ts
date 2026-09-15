@@ -11,6 +11,12 @@ import {
  * `redirect: "manual"` and reject any 3xx whose Location points at one of those hosts,
  * closing the redirect-to-internal-IP bypass. Relative redirects (same-origin) are safe.
  *
+ * SCOPE, stated honestly (issue #820, doc half): the shared validators reject
+ * private/metadata IP *literals* only and never resolve DNS. A hostname that
+ * merely resolves to a private or metadata address therefore passes this guard;
+ * the connect-time address check that would close that hole is the #820
+ * transport half and is not implemented here.
+ *
  * Reuses the prediction-engine's exported validators so the guard logic lives in one place
  * and stays tested by the remote-model-client suite.
  */
