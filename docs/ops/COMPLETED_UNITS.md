@@ -1,6 +1,6 @@
 # COMPLETED UNITS — GSE coding handoff log
 
-**Updated:** 2026-09-16 ~4:15 PM CT  
+**Updated:** 2026-09-16 ~4:25 PM CT  
 **Owner agent:** GSE  
 **Purpose:** When Copilot usage is exhausted, Cloud coding agents read this + `AGENTS.md` THE LOOP and continue the next incomplete unit. Do **not** re-search arXiv.
 
@@ -18,8 +18,8 @@
 | ID | Category | Unit | Status | PR(s) | Notes |
 |----|----------|------|--------|-------|-------|
 | U0 | docs | Research intake + category SoT (C1–C8) | **DONE** | #855, #852 | High 58 (57 PDF verified, 1 withdrawn); Medium 401; P0 order C5→C1→C2→C4→C3→C6→C7→C8 |
-| U1 | C5 | Board edge sort + partial-rank tie clusters + advisory CI flag | **IN_PROGRESS** | #858 (consolidate #847/#853) | Copilot WIP; empty diff as of handoff write |
-| U2 | C1 | Offline per-sport generative bake-off harness | **IN_PROGRESS** | #857 | Copilot WIP; offline only; no publish wiring |
+| U1 | C5 | Board edge sort + partial-rank tie clusters + advisory CI flag | **IN_PROGRESS** | branch `gse/cat-c5-c1-offline-helpers` | Helpers landed (reviewed polish: no input mutation; edgeless rows not labeled ties). Still need CI green before DONE. |
+| U2 | C1 | Offline per-sport generative bake-off harness | **IN_PROGRESS** | branch `gse/cat-c5-c1-offline-helpers` | Fixture harness + `C1_OFFLINE_BAKEOFF.md` on same branch. Still need CI green before DONE. |
 | U3 | C2 | Strength/ranking feature bake-off (Elo/BTL vs current) | **NEXT** | — | After U1/U2 green |
 | U4 | C4 | CLV↔Brier diagnostic (needs line archive) | **BLOCKED** | — | Needs line-archive data |
 | U5 | C3 | Offline CEPT/BMA weight schedule proposal | **NEXT** | — | After C1 baseline exists |
@@ -37,10 +37,12 @@
 ### U1 — C5 board (IN_PROGRESS)
 - Acceptance: edge sort tests; tie clusters; confidence stays score/100; advisory only for CI-cross; no gate flips
 - High anchors: 2208.08598, 2501.02505, 2406.19563, 2311.03490
+- **Landed on `gse/cat-c5-c1-offline-helpers`:** `edge-rank.ts` + tests; signals route orders by edge when `independentEdge` priced. Not DONE until CI green.
 
 ### U2 — C1 offline bake-off (IN_PROGRESS)
 - Acceptance: runnable offline diagnostic; CE/RPS/Brier table or fixture; how-to docs; no live board wiring
 - High anchors: 1704.00197, 2408.08331, 2105.09881, 1701.05976
+- **Landed on `gse/cat-c5-c1-offline-helpers`:** `offline-generative-bakeoff.ts` + tests + `docs/ops/C1_OFFLINE_BAKEOFF.md`. Not DONE until CI green.
 
 ## Copilot → Cloud handoff rule
 
