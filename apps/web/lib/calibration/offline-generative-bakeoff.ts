@@ -103,7 +103,7 @@ function extract(
         p = r.pPoisson;
         break;
     }
-    if (typeof p === "number" && Number.isFinite(p)) out.push({ p, y: r.y });
+    if (typeof p === "number" && Number.isFinite(p) && (r.y === 0 || r.y === 1)) out.push({ p, y: r.y });
   }
   return out;
 }
