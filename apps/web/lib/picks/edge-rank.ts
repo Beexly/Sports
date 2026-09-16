@@ -52,7 +52,7 @@ export function advisoryFlags(
   if (modelProb == null || !Number.isFinite(modelProb)) {
     return { crossesHalf: false, crossesMarket: false };
   }
-  const hw = halfWidth != null && Number.isFinite(halfWidth) ? Math.abs(halfWidth) : null;
+  const hw = halfWidth != null && Number.isFinite(halfWidth) && halfWidth > 0 ? Math.abs(halfWidth) : null;
   if (hw == null) return { crossesHalf: false, crossesMarket: false };
   const lo = modelProb - hw;
   const hi = modelProb + hw;
@@ -65,45 +65,63 @@ export function advisoryFlags(
   return { crossesHalf, crossesMarket };
 }
 
+type MutableRanked<T extends EdgeRankable> = T & {
+  edge: number | null;
+  rankCluster: number;
+  tieLabel: string | null;
+  advisoryCrossesHalf: boolean;
+  advisoryCrossesMarket: boolean;
+};
+
+function edgeSortKey(edge: number | null, confidenceScore: number | null, id: string): [number, number, number, string] {
+  // Tuple compare: edged rows (0) before edgeless (1); then -edge; then -confidence; then id.
+  if (edge != null) return [0, -edge, 0, id];
+  const conf = confidenceScore != null && Number.isFinite(confidenceScore) ? confidenceScore : Number.NEGATIVE_INFINITY;
+  return [1, 0, -conf, id];
+}
+
+function cmpKeys(a: ReturnType<typeof edgeSortKey>, b: ReturnType<typeof edgeSortKey>): number {
+  if (a[0] !== b[0]) return a[0] - b[0];
+  if (a[1] !== b[1]) return a[1] < b[1] ? -1 : 1;
+  if (a[2] !== b[2]) return a[2] < b[2] ? -1 : 1;
+  return a[3].localeCompare(b[3]);
+}
+
 /**
  * Sort by edge descending (best edge first). Rows without edge fall after edged
  * rows, ordered by confidence score descending as a display fallback only.
  * Then assign partial-rank clusters for inseparable edges.
+ *
+ * Does not mutate the input array or row objects.
  */
 export function rankByEdge<T extends EdgeRankable>(
   rows: readonly T[],
   epsilon: number = EDGE_TIE_EPSILON,
 ): EdgeRanked<T>[] {
-  const enriched = rows.map((r) => {
+  const eps = Number.isFinite(epsilon) && epsilon >= 0 ? epsilon : EDGE_TIE_EPSILON;
+
+  const enriched: MutableRanked<T>[] = rows.map((r) => {
     const edge = computeEdge(r.modelProb, r.marketImplied);
     const adv = advisoryFlags(r.modelProb, r.marketImplied, r.probHalfWidth);
     return {
       ...r,
       edge,
       rankCluster: 0,
-      tieLabel: null as string | null,
+      tieLabel: null,
       advisoryCrossesHalf: adv.crossesHalf,
       advisoryCrossesMarket: adv.crossesMarket,
     };
   });
 
-  enriched.sort((a, b) => {
-    const ae = a.edge;
-    const be = b.edge;
-    if (ae != null && be != null) {
-      if (be !== ae) return be - ae;
-      return a.id.localeCompare(b.id);
-    }
-    if (ae != null && be == null) return -1;
-    if (ae == null && be != null) return 1;
-    const ac = a.confidenceScore ?? -Infinity;
-    const bc = b.confidenceScore ?? -Infinity;
-    if (bc !== ac) return bc - ac;
-    return a.id.localeCompare(b.id);
-  });
+  enriched.sort((a, b) =>
+    cmpKeys(
+      edgeSortKey(a.edge, a.confidenceScore, a.id),
+      edgeSortKey(b.edge, b.confidenceScore, b.id),
+    ),
+  );
 
-  // Partial-rank clusters among consecutive edged rows within epsilon.
-  let cluster = 0;
+  // Partial-rank: only cluster consecutive *edged* rows within epsilon.
+  // Edgeless rows each get their own cluster (confidence fallback is not a tie claim).
   for (let i = 0; i < enriched.length; i++) {
     const cur = enriched[i]!;
     if (i === 0) {
@@ -111,24 +129,20 @@ export function rankByEdge<T extends EdgeRankable>(
       continue;
     }
     const prev = enriched[i - 1]!;
-    if (
-      cur.edge != null &&
-      prev.edge != null &&
-      Math.abs(prev.edge - cur.edge) <= epsilon
-    ) {
+    const bothEdged = cur.edge != null && prev.edge != null;
+    if (bothEdged && Math.abs(prev.edge! - cur.edge!) <= eps) {
       cur.rankCluster = prev.rankCluster;
     } else {
-      cluster = prev.rankCluster + 1;
-      cur.rankCluster = cluster;
+      cur.rankCluster = prev.rankCluster + 1;
     }
   }
 
-  // Label multi-member clusters.
   const sizes = new Map<number, number>();
   for (const r of enriched) sizes.set(r.rankCluster, (sizes.get(r.rankCluster) ?? 0) + 1);
   for (const r of enriched) {
     const n = sizes.get(r.rankCluster) ?? 1;
-    r.tieLabel = n > 1 ? "too close to call / tied cluster" : null;
+    // Only label multi-member *edged* clusters — never claim a tie on confidence fallback.
+    r.tieLabel = n > 1 && r.edge != null ? "too close to call / tied cluster" : null;
   }
 
   return enriched;
