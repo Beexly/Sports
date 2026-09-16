@@ -78,10 +78,10 @@ export async function seedGamesFromEspn(opts?: {
         },
         update: {},
       });
-      // This seed writes `espn:<short>:<id>` while espn-odds-client writes
-      // `espn:<sportKey>:<id>` and the paid path writes the Odds API id — three
-      // ids for one contest. Reuse the row we already have when identity proves
-      // it is the same game; a twin is claimed at most once per run.
+      // This seed and the free ESPN odds path both write `espn:<short>:<id>`.
+      // The paid path still writes its own provider id. Reuse the row we
+      // already have when identity proves it is the same game; a twin is
+      // claimed at most once per run.
       const claimedTwinIds = new Set<string>();
       for (const g of list) {
         try {

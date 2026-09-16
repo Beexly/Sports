@@ -133,6 +133,7 @@ describe("fetchEspnOddsForSport", () => {
     expect(res.provider).toBe("espn_public");
     expect(res.events.length).toBe(1);
     const ev = res.events[0]!;
+    expect(ev.id).toBe("espn:mlb:401");
     expect(ev.home_team).toBe("Washington Nationals");
     expect(ev.away_team).toBe("Cincinnati Reds");
     expect(ev.bookmakers[0]!.key).toBe("espn_public");

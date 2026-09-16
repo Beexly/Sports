@@ -34,49 +34,62 @@ export const GALAXY_ESPN_INLINE_SOURCE_ID = "galaxy-espn-inline";
 /** Odds-API sport key → ESPN site path + core league path */
 export const ESPN_ODDS_SPORT_MAP: Record<
   string,
-  { sitePath: string; coreSport: string; coreLeague: string; title: string }
+  {
+    sitePath: string;
+    coreSport: string;
+    coreLeague: string;
+    title: string;
+    canonicalExternalSport?: string;
+  }
 > = {
   americanfootball_nfl: {
     sitePath: "football/nfl",
     coreSport: "football",
     coreLeague: "nfl",
     title: "NFL",
+    canonicalExternalSport: "nfl",
   },
   americanfootball_ncaaf: {
     sitePath: "football/college-football",
     coreSport: "football",
     coreLeague: "college-football",
     title: "NCAAF",
+    canonicalExternalSport: "ncaaf",
   },
   baseball_mlb: {
     sitePath: "baseball/mlb",
     coreSport: "baseball",
     coreLeague: "mlb",
     title: "MLB",
+    canonicalExternalSport: "mlb",
   },
   basketball_nba: {
     sitePath: "basketball/nba",
     coreSport: "basketball",
     coreLeague: "nba",
     title: "NBA",
+    canonicalExternalSport: "nba",
   },
   basketball_ncaab: {
     sitePath: "basketball/mens-college-basketball",
     coreSport: "basketball",
     coreLeague: "mens-college-basketball",
     title: "NCAAB",
+    canonicalExternalSport: "ncaab",
   },
   icehockey_nhl: {
     sitePath: "hockey/nhl",
     coreSport: "hockey",
     coreLeague: "nhl",
     title: "NHL",
+    canonicalExternalSport: "nhl",
   },
   soccer_usa_mls: {
     sitePath: "soccer/usa.1",
     coreSport: "soccer",
     coreLeague: "usa.1",
     title: "MLS",
+    canonicalExternalSport: "mls",
   },
   soccer_epl: {
     sitePath: "soccer/eng.1",
@@ -87,6 +100,11 @@ export const ESPN_ODDS_SPORT_MAP: Record<
 };
 
 type Loose = Record<string, unknown>;
+
+function canonicalEspnExternalId(sportKey: string, eventId: string): string {
+  const canonicalSport = ESPN_ODDS_SPORT_MAP[sportKey]?.canonicalExternalSport ?? sportKey;
+  return `espn:${canonicalSport}:${eventId}`;
+}
 
 function americanNum(v: unknown): number | null {
   if (typeof v === "number" && Number.isFinite(v) && v !== 0) return Math.round(v);
@@ -297,7 +315,7 @@ function eventFromInlineOdds(
     markets,
   };
   return {
-    id: `espn:${sportKey}:${ev.id}`,
+    id: canonicalEspnExternalId(sportKey, ev.id),
     sport_key: sportKey,
     sport_title: title,
     commence_time: ev.commence,
@@ -564,7 +582,7 @@ export async function fetchEspnOddsForSport(
       };
 
       out.push({
-        id: `espn:${sportKey}:${ev.id}`,
+        id: canonicalEspnExternalId(sportKey, ev.id),
         sport_key: sportKey,
         sport_title: meta.title,
         commence_time: ev.commence,

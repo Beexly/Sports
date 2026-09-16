@@ -630,7 +630,7 @@ describe("processSport", () => {
       provider: "espn_public" as const,
       events: [
         {
-          id: "espn:americanfootball_nfl:401",
+          id: "espn:nfl:401",
           sport_key: "americanfootball_nfl",
           sport_title: "NFL",
           // Within 24h of real now — a stale fixture date trips the quiet-board
