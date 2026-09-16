@@ -51,17 +51,37 @@ with `fsync` and prints its own summary line — **a missing summary line means 
 killed, not that the code is clean.** Before trusting any check, feed it a known-bad input. Last
 full run: 42 files, 0 diagnostics, twice consecutively.
 
-**Three templates are WRONG TODAY and will publish incorrect copy the moment a transport
-exists.** Fix them in the same PR as the transport, not after:
+**The X transport now EXISTS** at `workers/twitter-bot/` (OAuth 1.0a signer, API v2 client,
+send pipeline). It is tested and NOT wired up: it needs credentials, a real ledger over
+`BotOutboxRecord`, and a cron entry. Read `workers/twitter-bot/README.md` before touching it.
 
-1. `apps/web/lib/twitter-bot/templates/pick-publication.ts` renders confidence as a percent
-   ("at 73% confidence"). The voice spec it implements predates the 2026-09-13 finding. Render
-   `72/100` and say "score".
-2. `docs/product/twitter-bot-voice-spec.md` permits ✅/❌/⚖️ while `DESIGN.md` mandates W/L/P/V
-   monograms and forbids emoji. Resolution is recorded in `docs/mobile/X_COMMUNITY_STRATEGY.md`
-   §3: the settlement glyph is a single-use exception on the settlement lead post only.
-3. The spec is the voice authority and must be corrected alongside the template, or the next
-   agent will re-derive the percent from it.
+**TWO LINES FROM THAT README ARE LOAD-BEARING, so they are repeated here:**
+
+- **`MUTE_BOT` is checked at SEND time, not at schedule time**, and only the literal `"true"`
+  mutes. A mute that takes effect next cycle is not a mute.
+- **A lost response is classified `UNKNOWN` and MUST NOT be retried.** The failure mode that
+  matters is not "posted never", it is "posted twice after a timeout". A duplicate post to a
+  public account is worse than a missing one.
+
+**`XClient` has exactly ONE mutating method: `postTweet`.** There is no follow, like, retweet,
+unfollow, unlike or delete, because the voice spec says the bot does none of those and a
+capability that does not exist cannot be called. There is a test asserting the prototype
+surface. Adding one of those methods is a product decision, not a refactor.
+
+**One template defect is FIXED and one question is still OPEN.**
+
+Fixed 2026-09-15, found by EXECUTING the template rather than reading it:
+`pick-publication.ts` rendered the pick line TWICE (`BOS @ NYK BOS -3.5` in production,
+`BOS -3.5 -3.5` in any test whose fixture followed the field names instead of the adapter —
+the `matchup`/`line` split is not what the field names suggest). It also rendered confidence as
+a percent. Both are corrected, with a test that asserts the exact rendered line and counts the
+side occurrences so the duplication cannot return.
+
+Still OPEN, and it is an OWNER decision: `docs/product/twitter-bot-voice-spec.md` permits
+✅/❌/⚖️ while `DESIGN.md` mandates W/L/P/V monograms and forbids emoji. Both cannot be right.
+The proposed resolution is in `docs/mobile/X_COMMUNITY_STRATEGY.md` section 3: the settlement
+glyph is a single-use exception on the settlement lead post only. It was NOT changed
+unilaterally, because it would override an explicit product decision and break pinned tests.
 
 **Upstream findings an agent should carry forward** (full detail in
 `docs/mobile/REVIEW_AND_AUDIT.md` §4):
