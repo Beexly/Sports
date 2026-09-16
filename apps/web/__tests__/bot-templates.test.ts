@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  buildPickPublicationTweet,
   buildPostMortemThread,
   buildSettlementTweet,
   buildSlateStateGatedTweet,
@@ -30,6 +31,44 @@ describe("Twitter bot templates", () => {
     expect(output.text).toContain("Just gated MIA @ NYY - spread balanced");
     expect(output.text).toContain("#MLB");
     expect(output.text).not.toMatch(/Ã¢|Ã‚|â/);
+  });
+
+  it("renders confidence as a SCORE, never a percent", () => {
+    // The voice spec this template came from said "at 73% confidence". That
+    // predates the 2026-09-13 measurement (AGENTS.md): the 80+ band claims
+    // 0.8663 and realizes 0.5191, z = -10.7. A percent sign states a win
+    // probability the number demonstrably is not, and on X it cannot be recalled.
+    const output = buildPickPublicationTweet(
+      {
+        gameId: "nba-bos-nyk-2026-09-15",
+        // Mirrors pickRecordToPublicationInput: matchup is the GAME, line is the
+        // SELECTION (which already carries the side).
+        matchup: "BOS @ NYK",
+        pickKind: "SPREAD",
+        line: "BOS -3.5",
+        side: "BOS -3.5",
+        // ELITE_PLAY is used deliberately: it is one of the two grades the
+        // label map was missing until 2026-09-15, so this fixture covers the fix.
+        pickGrade: "ELITE_PLAY",
+        // Deliberately the worst band, so a regression to a percent is loud.
+        confidence: 91,
+        sport: "NBA",
+        modelVersion: "v5.2.8",
+      },
+      publicUrl,
+    );
+
+    // The pick line appears EXACTLY ONCE. The defect this pins rendered it
+    // twice ("BOS -3.5 -3.5"), and a bare toContain() would not have caught it.
+    expect(output.text).toContain("Published BOS -3.5 at 91/100 confidence score (ELITE_PLAY).");
+    expect(output.text.match(/BOS/g) ?? []).toHaveLength(1);
+    expect(output.text).toContain("91/100");
+    expect(output.text).toContain("confidence score");
+    expect(output.text).not.toContain("%");
+    expect(output.text).not.toMatch(/\b(probability|chance|win rate|likely)\b/i);
+    // Still a publication and still links out.
+    expect(output.text).toContain("Published");
+    expect(output.text).toContain("/room/nba-bos-nyk-2026-09-15");
   });
 
   it("formats settlement outcomes with the approved settlement symbols", () => {
@@ -98,7 +137,7 @@ describe("Discord bot templates", () => {
         matchup: "BOS @ NYK",
         pickKind: "SPREAD",
         line: "BOS -3.5",
-        side: "BOS",
+        side: "BOS -3.5",
         pickGrade: "SOLID_PLAY",
         confidence: 73,
         edgeIndex: 68.4,
