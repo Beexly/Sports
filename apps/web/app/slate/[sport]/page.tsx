@@ -106,7 +106,7 @@ export default async function LeagueSlatePage({
               return (
                 <Reveal key={game.gameId} delay={Math.min(i, 8) * 40}>
                   <Link
-                    href={`/games/${game.gameId}`}
+                    href={`/room/${game.gameId}`}
                     className="group flex flex-col gap-2 border-b border-mineral bg-eclipse p-5 transition-colors last:border-b-0 hover:bg-carbon sm:flex-row sm:items-center sm:gap-6 sm:p-6"
                   >
                     <div className="min-w-0 flex-1">

@@ -97,6 +97,12 @@ const nextConfig = {
       // page remains in the tree so this is reversible, but nothing links it and the
       // pricing catalog no longer calls it live.
       { source: "/observatory", destination: "/board", permanent: false },
+      // Takeover build: /games/[gameId] was a shallow duplicate of the richer
+      // /room/[gameId] (Game Intelligence Room). /slate/[sport] now links to the room;
+      // this redirect keeps old deep links resolving into the good surface. The page
+      // file stays in the tree as a working fallback if this list is ever trimmed,
+      // mirroring the players-lab alias pattern above.
+      { source: "/games/:gameId", destination: "/room/:gameId", permanent: false },
     ];
   },
   async headers() {
