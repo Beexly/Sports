@@ -119,7 +119,7 @@ describe("Pass List fallback — an absence is never reported as a judgement", (
 
     // The same vocabulary /board/gate uses, deliberately. One distinction, one
     // set of words, across both surfaces.
-    expect(reason.toLowerCase()).toContain("not evaluated");
+    expect(reason.toLowerCase()).toContain("haven't scored");
   });
 
   it("still names a REAL input deficiency when one is observable", async () => {
@@ -128,14 +128,14 @@ describe("Pass List fallback — an absence is never reported as a judgement", (
     gameFindMany.mockResolvedValue([game({ bookmakerCoverageMax: 1 })]);
 
     const result = await loadBoardPasses(NOW);
-    expect(result.data.passes[0]?.reason).toBe("Market depth below publish threshold.");
+    expect(result.data.passes[0]?.reason).toBe("Not enough sportsbooks are pricing this game yet.");
   });
 
   it("names thin evidence health when that is the observable deficiency", async () => {
     gameFindMany.mockResolvedValue([game({ dataQualityScore: 12 })]);
 
     const result = await loadBoardPasses(NOW);
-    expect(result.data.passes[0]?.reason).toBe("Evidence health below publish threshold.");
+    expect(result.data.passes[0]?.reason).toBe("We don't have enough reliable data on this one.");
   });
 });
 
@@ -154,7 +154,7 @@ describe("both /board lanes tell ONE story about a game", () => {
   it("names evidence health when depth is fine but evidence is thin", () => {
     // The exact case the two lanes disagreed on.
     expect(unevaluatedPassReason(8, MIN_DATA_QUALITY_SCORE - 1)).toBe(
-      "Evidence health below publish threshold.",
+      "We don't have enough reliable data on this one.",
     );
   });
 
@@ -162,13 +162,13 @@ describe("both /board lanes tell ONE story about a game", () => {
     // Deterministic precedence: without a fixed order, the same game could be
     // described differently by two callers reading the same row.
     expect(unevaluatedPassReason(MIN_BOOKMAKER_COVERAGE - 1, MIN_DATA_QUALITY_SCORE - 1)).toBe(
-      "Market depth below publish threshold.",
+      "Not enough sportsbooks are pricing this game yet.",
     );
   });
 
-  it("falls through to 'not evaluated' only when both inputs are healthy", () => {
+  it("falls through to unscored only when both inputs are healthy", () => {
     expect(unevaluatedPassReason(MIN_BOOKMAKER_COVERAGE, MIN_DATA_QUALITY_SCORE)).toBe(
-      "Not evaluated: no pick was generated for this game today.",
+      "We haven't scored this game yet.",
     );
   });
 
