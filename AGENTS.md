@@ -1092,7 +1092,7 @@ any founder-only flags.
    - Apply: controlled integration for non-critical content surfaces that reuse existing React components.
    - Recommend: pilot on one non-core page cluster (for example GSN landing variants) with strict boundaries.
    - Non-goal: no uncoupled visual edits on deterministic math, board ranking, or trust proof logic.
-   - Follow-up: **WB-09** (frontend + content), Low/Medium.
+   - Follow-up: **WB-09** (frontend + content), Medium.
 
 10. **Compass/compass** (**unmaintained**)
     - Useful: historical reminder to avoid framework dependence and preprocessor sprawl.
