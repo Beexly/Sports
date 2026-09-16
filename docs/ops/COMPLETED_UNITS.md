@@ -1,6 +1,6 @@
 # COMPLETED UNITS — GSE coding handoff log
 
-**Updated:** 2026-09-16 ~5:00 PM CT  
+**Updated:** 2026-09-16 ~5:10 PM CT  
 **Owner agent:** GSE  
 **Purpose:** When Copilot usage is exhausted, Cloud coding agents read this + `AGENTS.md` THE LOOP and continue the next incomplete unit. Do **not** re-search arXiv.
 
@@ -18,13 +18,13 @@
 | ID | Category | Unit | Status | PR(s) | Notes |
 |----|----------|------|--------|-------|-------|
 | U0 | docs | Research intake + category SoT (C1–C8) | **DONE** | #855, #852 | High 58 (57 PDF verified, 1 withdrawn); Medium 401; P0 order C5→C1→C2→C4→C3→C6→C7→C8 |
-| U-CI | ops | Align stale honesty + checkout analytics tests with current copy | **IN_PROGRESS** | this PR (supersedes empty Copilot #861) | Unblocks Test job for #860/#855; DOB age gate removed 2026-09-14 |
+| U-CI | ops | Align stale honesty + checkout analytics tests with current copy | **CODE LANDED — await CI** | #862 (supersedes empty #861) | Unblocks Test job for #860/#855; DOB age gate removed 2026-09-14 |
 | U1 | C5 | Board edge sort + partial-rank tie clusters + advisory CI flag | **CODE LANDED — await CI** | #860 (supersedes empty #847/#853/#858) | `edge-rank.ts` + signals route; CI red was unrelated honesty/analytics |
 | U2 | C1 | Offline per-sport generative bake-off harness | **CODE LANDED — await CI** | #860 (supersedes empty #857) | `offline-generative-bakeoff.ts`; measurement only |
-| U3 | C2 | Strength/ranking feature bake-off (Elo/BTL/pi vs current) | **CODE LANDED — await CI** | this PR | `offline-strength-feature-bakeoff.ts`; no production swap |
-| U4 | C4 | CLV↔Brier diagnostic (needs line archive) | **NEXT** | — | Soft-blocked on line archive; offline scaffold next |
-| U5 | C3 | Offline CEPT/BMA weight schedule proposal | **NEXT** | — | After C1 baseline exists |
-| U6 | C6 | Lock≠settle lifecycle timestamps | **NEXT** | — | |
+| U3 | C2 | Strength/ranking feature bake-off (Elo/BTL/pi vs current) | **CODE LANDED — await CI** | #862 | `offline-strength-feature-bakeoff.ts`; no production swap |
+| U4 | C4 | CLV↔Brier diagnostic (offline scaffold) | **CODE LANDED — await CI** | #862 | Soft-blocked on live line archive; harness ready |
+| U5 | C3 | Offline CEPT/BMA weight schedule proposal | **CODE LANDED — await CI** | #862 | Softmax BMA proposal only |
+| U6 | C6 | Lock≠settle lifecycle timestamps | **CODE LANDED — await CI** | #862 | Measurement only |
 | U7 | C7 | Source-bias / park-defense feature hygiene | **NEXT** | — | |
 | U8 | C8 | Calibration LRD dashboard / board UX | **NEXT** | — | After C5 |
 | U9 | ops | #822 checkout 503 Stripe PROVEN vs FOUNDING | **FOUNDER-ONLY** | #822 | Do not touch catalogue / PRICING_PHASE |
@@ -50,6 +50,17 @@
 ### U3 — C2 strength features (CODE on this PR)
 - Acceptance: Elo/BTL/pi vs current vs market table; MAE deltas; docs; no production swap without founder OK
 - High anchors: 2405.10247, 2408.08331
+
+### U4 — C4 CLV↔Brier (CODE on #862)
+- Acceptance: mean CLV, beat-close rate, Brier model/open/close; fixture vitest; no publish wiring
+- Anchor: 1710.02824
+
+### U5 — C3 CEPT/BMA (CODE on #862)
+- Acceptance: softmax weights from expert losses; sum≈1; no production write
+- Spirit: BMA / multiplicative weights
+
+### U6 — C6 lock≠settle (CODE on #862)
+- Acceptance: lock vs settle enrichment; invalid-order flags; no ledger writes
 
 ## Copilot → Cloud handoff rule
 
