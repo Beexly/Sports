@@ -1012,6 +1012,210 @@ TCI, SEC) with entry files and acceptance commands. Ledger rows C-80..C-103 and 
   ESPN `limit=1000` truncation, matcher containment on 2-3 letter abbreviations and bare
   club tokens, overdue-only runner slice, backfill date order. Do not re-fix them; land #707.
 
+**UPDATED 2026-09-16 (DESIGN BENCHMARK REVIEW — WEBSITE DESIGN REPOSITORIES).**
+Documentation-only benchmark pass for Galaxy Sports Edge product/design execution. This section
+adds actionable guidance and does **not** change FIELD doctrine, pricing/gates, model version, or
+any founder-only flags.
+
+**Local baseline inspected before benchmarking (source of truth in this repo):**
+- FIELD token triad lives in `apps/web/styles/design-tokens.css`, `apps/web/tailwind.config.ts`,
+  and `apps/web/lib/brand.ts`; keep those in lockstep.
+- Top-level IA stays Board / Players / Fantasy / GSN (`apps/web/components/ui/nav.tsx` and
+  `apps/web/components/ui/mobile-nav.tsx` must mirror each other).
+- Board / picks / calibration / dashboard / fantasy / cockpit surfaces are live App Router routes
+  under `apps/web/app/**` and must stay honest about data state.
+- Guardrails and trust gates remain mandatory (`scripts/guardrails/*`, `npm run guard:trust`,
+  `npm run test:brand-safety`, `npm run guardrails`).
+- Visual regression tooling already exists (`playwright.config.ts`, `scripts/screenshot.mjs`,
+  `scripts/regenerate-launch-snapshots.mjs`, snapshot tests in `apps/web/__tests__/`).
+
+### Per-repository findings (useful patterns, fit, non-goals, follow-ups)
+
+1. **monkeytypegame/monkeytype**
+   - Useful: minimal UI density, mode toggles, tight progress loops, customization without lag.
+   - Apply in GSE: Board filters, fantasy tool defaults, cockpit quick views.
+   - Recommend: add “focus/density presets” (compact, standard) for board + optimizer tables.
+   - Non-goal: do not copy gamer aesthetics or performance metaphors that imply certainty.
+   - Follow-up: **WB-01** (frontend + fantasy owners), Medium.
+
+2. **emilwallner/Screenshot-to-code**
+   - Useful: visual reference → structured token/template pipeline.
+   - Apply: internal design-to-implementation handoff for FIELD comps.
+   - Recommend: codify “reference screenshot → token diff → implementation checklist” workflow in docs.
+   - Non-goal: no generative page synthesis for production copy or product decisions.
+   - Follow-up: **WB-02** (design-tokens + frontend), Low.
+
+3. **designmodo/Flat-UI**
+   - Useful: cohesive primitive catalog and consistent component rhythm.
+   - Apply: unify repeated card, table, badge, and CTA primitives across Board/Fantasy/Cockpit.
+   - Recommend: inventory primitives and map each to canonical FIELD token roles before adding variants.
+   - Non-goal: do not import Flat-UI visual style, Bootstrap dependency model, or legacy look.
+   - Follow-up: **WB-03** (frontend + design-system), High.
+
+4. **webstudio-is/webstudio**
+   - Useful: reusable sections, composition discipline, CMS-aware page modeling.
+   - Apply: GSN / methodology / proof room content blocks that change frequently.
+   - Recommend: define reusable “section contracts” (hero, metric rail, evidence block, FAQ, CTA row).
+   - Non-goal: no external builder takeover of core product routes (`/board`, `/picks`, `/fantasy`).
+   - Follow-up: **WB-04** (GSN/content + frontend), Medium.
+
+5. **nuejs/nue**
+   - Useful: minimal architecture, low overhead, clean content/design separation.
+   - Apply: static-heavy pages (docs, launch, methodology adjunct content).
+   - Recommend: reduce decorative wrapper complexity and keep hydration only where interaction pays.
+   - Non-goal: no framework migration away from Next.js 14 App Router.
+   - Follow-up: **WB-05** (platform + frontend), Medium.
+
+6. **GetPublii/Publii**
+   - Useful: SEO/privacy-first publishing workflows, offline editorial clarity.
+   - Apply: GSN and blog publishing checklists, metadata completeness, canonical hygiene.
+   - Recommend: add an editorial preflight checklist for schema/canonical/disclosure links.
+   - Non-goal: do not fork CMS runtime into desktop app workflows.
+   - Follow-up: **WB-06** (content + SEO), Medium.
+
+7. **uswds/uswds**
+   - Useful: accessibility governance, token theming discipline, responsive component standards.
+   - Apply: nav behavior, focus management, form/table accessibility in cockpit and fantasy tools.
+   - Recommend: add explicit WCAG acceptance criteria per shared component and route template.
+   - Non-goal: no wholesale visual re-skin into federal look-and-feel.
+   - Follow-up: **WB-07** (frontend + QA/accessibility), High.
+
+8. **elementor/elementor**
+   - Useful: reusable section composition, role-based content editing constraints.
+   - Apply: internal page modules for marketing/content while preserving code-owned core logic.
+   - Recommend: define “editable zones” vs “code-owned zones” for each public route family.
+   - Non-goal: no drag-drop authority over pricing, paywall, or performance-truth surfaces.
+   - Follow-up: **WB-08** (content + platform), Medium.
+
+9. **plasmicapp/plasmic**
+   - Useful: design-system integration with code components and strong composition abstractions.
+   - Apply: controlled integration for non-critical content surfaces that reuse existing React components.
+   - Recommend: pilot on one non-core page cluster (for example GSN landing variants) with strict boundaries.
+   - Non-goal: no uncoupled visual edits on deterministic math, board ranking, or trust proof logic.
+   - Follow-up: **WB-09** (frontend + content), Low/Medium.
+
+10. **Compass/compass** (**unmaintained**)
+    - Useful: historical reminder to avoid framework dependence and preprocessor sprawl.
+    - Apply: keep token contracts portable and documented, not tied to a retired toolchain.
+    - Recommend: keep CSS variable + Tailwind token bridge as the canonical compatibility layer.
+    - Non-goal: no Compass/Sass-framework revival.
+    - Follow-up: fold into **WB-03/WB-10** governance docs.
+
+11. **RedSiege/EyeWitness**
+    - Useful: screenshot automation discipline, repeatable capture/report loops.
+    - Apply: visual QA for board, picks, calibration, fantasy, cockpit at key breakpoints.
+    - Recommend: scheduled screenshot sweeps plus route-level diff review in CI artifacts.
+    - Non-goal: no credential/default-password scanning behavior imported into app workflows.
+    - Follow-up: **WB-11** (QA + frontend), High.
+
+12. **CodingTrain/website-archive** (archive-oriented)
+    - Useful: preserving prior site iterations as learning artifacts.
+    - Apply: FIELD iteration history and before/after captures for major IA/copy shifts.
+    - Recommend: maintain curated visual-history snapshots and rationale logs per launch phase.
+    - Non-goal: no reactivation of deprecated nav/copy patterns.
+    - Follow-up: **WB-12** (design + docs), Medium.
+
+13. **SadeghHayeri/GreenTunnel**
+    - Useful: operational resilience patterns (safe restore, fail states, explicit reliability notes).
+    - Apply: cockpit/admin resilience messaging and board outage/suppression truth states.
+    - Recommend: expand “failure-mode UX contracts” for all major data surfaces.
+    - Non-goal: do not import anti-censorship/network-bypass product functionality.
+    - Follow-up: **WB-13** (platform + cockpit), Medium.
+
+14. **puikinsh/Adminator-admin-dashboard**
+    - Useful: token-driven dark mode, coherent admin shell, dense-but-readable dashboard IA.
+    - Apply: cockpit/admin family consistency and shared analytics table/chart patterns.
+    - Recommend: standardize cockpit shell slots (status rail, alerts, action queue, diagnostics table).
+    - Non-goal: do not import dashboard chrome that conflicts with FIELD restraint.
+    - Follow-up: **WB-14** (cockpit + frontend), High.
+
+15. **geist-org/geist-ui** (**archived**)
+    - Useful: component API clarity and consistency lessons; cautionary archive note.
+    - Apply: keep internal component APIs stable and migration-friendly.
+    - Recommend: document deprecation lifecycle for shared GSE UI primitives.
+    - Non-goal: no adoption of archived dependency surface as a new foundation.
+    - Follow-up: **WB-15** (design-system maintainers), Low.
+
+16. **Manavarya09/design-extract**
+    - Useful: automated token extraction, WCAG audits, responsive consistency checks.
+    - Apply: periodic FIELD drift audit against live routes and historical baselines.
+    - Recommend: compare extracted tokens to canonical triad; open issues only on meaningful drift.
+    - Non-goal: no automatic token overwrite of repo source-of-truth files.
+    - Follow-up: **WB-16** (design-system + QA), High.
+
+17. **KyleAMathews/typography.js**
+    - Useful: system-level typography thinking (rhythm, hierarchy, theme consistency).
+    - Apply: calibration/proof/blog readability and dashboard numerics hierarchy.
+    - Recommend: define explicit type scale usage rules (display/body/meta/numeric) per surface type.
+    - Non-goal: no new typography dependency adoption required.
+    - Follow-up: **WB-17** (design-system + content), Medium.
+
+18. **dembrandt/dembrandt**
+    - Useful: CI drift detection for tokens, contrast, and component consistency.
+    - Apply: pre-release visual governance for FIELD consistency and regression detection.
+    - Recommend: trial extraction-only audits in CI comments before any fail-the-build gate.
+    - Non-goal: no third-party style cloning, no rights-unsafe brand reproduction.
+    - Follow-up: **WB-18** (QA + design-system), Medium.
+
+19. **kalcaddle/kodbox**
+    - Useful: information-dense file-manager interactions, keyboard shortcuts, bulk actions.
+    - Apply: cockpit task queues, log explorers, and admin table interactions.
+    - Recommend: extend keyboard/action affordances for cockpit list/table-heavy screens.
+    - Non-goal: do not replicate full file-management product scope.
+    - Follow-up: **WB-19** (cockpit + frontend), Medium.
+
+20. **legions-developer/evilcharts**
+    - Useful: polished chart ergonomics and modern interaction patterns.
+    - Apply: calibration, performance, CLV, and admin analytics surfaces.
+    - Recommend: chart style contract for axes/legends/states/tooltips that stays readable in FIELD.
+    - Non-goal: do not use chart styling that suggests certainty beyond measured intervals.
+    - Follow-up: **WB-20** (analytics UI + frontend), High.
+
+### Prioritized roadmap (cross-cutting)
+
+**Immediate (0-2 sprints)**
+1. **Design-token governance (WB-03, WB-16):** add a triad-drift check workflow comparing
+   `design-tokens.css`, `tailwind.config.ts`, and `brand.ts`; fail only on verified divergence.
+2. **Typography contract (WB-17):** publish route-class typography guidance (marketing vs
+   dense data vs proof surfaces) with numeric readability requirements.
+3. **Nav/IA parity guard (WB-01/WB-07):** add checks ensuring desktop/mobile nav parity and
+   preserving top-level four-door doctrine.
+4. **Visual QA sweep (WB-11):** baseline screenshots for board/picks/calibration/fantasy/cockpit
+   at desktop/mobile widths; attach diffs as CI artifacts.
+5. **Chart readability contract (WB-20):** standardize chart tokens, tooltip language, confidence
+   presentation, and uncertainty labeling for analytics surfaces.
+
+**Next (2-5 sprints)**
+1. **Board/dashboard density controls (WB-01/WB-14):** compact mode, column presets, and
+   user-level table density memory without changing truth semantics.
+2. **Customization without chaos (WB-04/WB-08/WB-09):** reusable section contracts and bounded
+   editable zones for content routes only.
+3. **Accessibility deep pass (WB-07):** focus order, keyboard navigation, landmark hierarchy,
+   table semantics, and contrast audits across all major flows.
+4. **SEO/privacy publishing preflight (WB-06):** metadata/canonical/disclosure checklist for GSN,
+   blog, and editorial updates.
+5. **Cockpit workflow ergonomics (WB-14/WB-19):** keyboard-first action loops, saved views,
+   alert triage patterns, and consistent shell regions.
+
+**Later (5+ sprints)**
+1. **Visual iteration archive (WB-12):** durable before/after snapshot history with rationale and
+   linked commit/PR references.
+2. **Resilience UX contracts (WB-13):** explicit degraded-state copy/components for every
+   data-dependent surface.
+3. **Progressive performance simplification (WB-05):** reduce non-essential interactive overhead
+   on static-heavy routes while preserving App Router architecture.
+4. **Optional design extraction observability (WB-18):** CI-assisted drift reporting cadence for
+   quarterly design-system audits.
+
+### Hard constraints reaffirmed (must survive all follow-up work)
+- Keep FIELD doctrine authoritative (color system, restrained cinematic tone, and current IA).
+- Do **not** restore deprecated top-nav items or banned public copy.
+- Do **not** reintroduce violet/crypto/neon styling language.
+- Do **not** present confidence as win probability.
+- Do **not** add fabricated/sample data to live customer decision surfaces.
+- Do **not** weaken trust/brand/guardrails to make checks pass.
+- Do **not** change pricing/gates/model version/env-flag behavior in design follow-ups.
+
 ```
 1. git fetch origin; open docs/ops/AGENT_LEDGER.md at the latest branch tip
 2. Also check docs/ops/hermes/BUILD-QUEUE-*.md (latest date) if present —
@@ -1151,4 +1355,3 @@ invented number makes every other number suspect.
 **Work continuously. Record everything. Invent nothing. Push nothing.**
 
 ---
-
