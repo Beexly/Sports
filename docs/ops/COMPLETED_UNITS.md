@@ -15,19 +15,19 @@
 
 ## Unit status board
 
-| ID | Category | Unit | Status | PR(s) | Notes |
-|----|----------|------|--------|-------|-------|
-| U0 | docs | Research intake + category SoT (C1–C8) | **DONE** | #855, #852 | High 58 (57 PDF verified, 1 withdrawn); Medium 401; P0 order C5→C1→C2→C4→C3→C6→C7→C8 |
-| U-CI | ops | Align stale honesty + checkout analytics tests with current copy | **CODE LANDED — await CI** | #862 (supersedes empty #861) | Unblocks Test job for #860/#855; DOB age gate removed 2026-09-14 |
-| U1 | C5 | Board edge sort + partial-rank tie clusters + advisory CI flag | **CODE LANDED — await CI** | #860 (supersedes empty #847/#853/#858) | `edge-rank.ts` + signals route; CI red was unrelated honesty/analytics |
-| U2 | C1 | Offline per-sport generative bake-off harness | **CODE LANDED — await CI** | #860 (supersedes empty #857) | `offline-generative-bakeoff.ts`; measurement only |
-| U3 | C2 | Strength/ranking feature bake-off (Elo/BTL/pi vs current) | **CODE LANDED — await CI** | #862 | `offline-strength-feature-bakeoff.ts`; no production swap |
-| U4 | C4 | CLV↔Brier diagnostic (offline scaffold) | **CODE LANDED — await CI** | #862 | Soft-blocked on live line archive; harness ready |
-| U5 | C3 | Offline CEPT/BMA weight schedule proposal | **CODE LANDED — await CI** | #862 | Softmax BMA proposal only |
-| U6 | C6 | Lock≠settle lifecycle timestamps | **CODE LANDED — await CI** | #862 | Measurement only |
-| U7 | C7 | Source-bias / park-defense feature hygiene | **NEXT** | — | |
-| U8 | C8 | Calibration LRD dashboard / board UX | **NEXT** | — | After C5 |
-| U9 | ops | #822 checkout 503 Stripe PROVEN vs FOUNDING | **FOUNDER-ONLY** | #822 | Do not touch catalogue / PRICING_PHASE |
+|| ID | Category | Unit | Status | PR(s) | Notes |
+||----|----------|------|--------|-------|-------|
+|| U0 | docs | Research intake + category SoT (C1–C8) | **DONE** | #855, #852 | High 58 (57 PDF verified, 1 withdrawn); Medium 401; P0 order C5→C1→C2→C4→C3→C6→C7→C8 |
+|| U-CI | ops | Align stale honesty + checkout analytics tests with current copy | **CODE LANDED — await CI** | #862 (supersedes empty #861) | Unblocks Test job for #860/#855; DOB age gate removed 2026-09-14 |
+|| U1 | C5 | Board edge sort + partial-rank tie clusters + advisory CI flag | **CODE LANDED — await CI** | #860 (supersedes empty #847/#853/#858) | CI red was unrelated honesty/analytics |
+|| U2 | C1 | Offline per-sport generative bake-off harness | **CODE LANDED — await CI** | #860 (supersedes empty #857) | `offline-generative-bakeoff.ts`; measurement only |
+|| U3 | C2 | Strength/ranking feature bake-off (Elo/BTL/pi vs current) | **CODE LANDED — await CI** | #862 | `offline-strength-feature-bakeoff.ts`; no production swap |
+|| U4 | C4 | CLV↔Brier diagnostic (offline scaffold) | **CODE LANDED — await CI** | #862 | Soft-blocked on live line archive; harness ready |
+|| U5 | C3 | Offline CEPT/BMA weight schedule proposal | **CODE LANDED — await CI** | #862 | Softmax BMA proposal only |
+|| U6 | C6 | Lock≠settle lifecycle timestamps | **CODE LANDED — await CI** | #862 | Measurement only |
+|| U7 | C7 | Source-bias / park-defense feature hygiene | **CODE LANDED — await CI** | #862 | `offline-source-bias-hygiene.ts`; measurement only |
+|| U8 | C8 | Calibration LRD dashboard / board UX | **CODE LANDED — await CI** | #862 | `offline-reliability-bins.ts`; measurement only |
+|| U9 | ops | #822 checkout 503 Stripe PROVEN vs FOUNDING | **FOUNDER-ONLY** | #822 | Do not touch catalogue / PRICING_PHASE |
 
 ## Completed unit details
 
