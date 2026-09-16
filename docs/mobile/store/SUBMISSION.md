@@ -194,6 +194,21 @@ feedback and we will ship an update rather than argue.
 
 ## 7. Screenshots
 
+> **Assets are generated, not hand-made.** `docs/mobile/store/frames/` holds the
+> six frames at **1290x2796** (App Store Connect size for a 6.9 inch iPhone),
+> produced by `scripts/mobile/appstore_frames.py` from the FIELD tokens.
+>
+> `docs/mobile/store/preview-animatic.mp4` is a 27-second animatic built from the
+> same frames by `scripts/mobile/build_preview_video.sh`.
+>
+> **IT IS NOT SUBMITTABLE AND MUST NOT BE SUBMITTED AS IS.** An App Store preview
+> must show the app running. The app has never been built on the machine these
+> were produced on, so this is an animatic: it proves the caption copy, the
+> ordering and the pacing. When real simulator screenshots exist, drop them into
+> `preview/store/` with the same six filenames and re-run the script.
+>
+> Saying so here is the difference between a placeholder and a misrepresentation.
+
 Required sizes: **6.9"** (iPhone 17 Pro Max class, 1320×2868) and **6.5"** (1242×2688). Optional
 but recommended: iPad 13".
 
