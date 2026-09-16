@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  PONYTAIL_POLICY,
   createRepoAssistantPlan,
   getRepoAssistantProfile,
 } from "../lib/agents/repo-assistants";
@@ -30,9 +31,19 @@ describe("repo assistant integration", () => {
       "Install Ponytail only in the operator coding-agent environment.",
       "Review its lifecycle hooks before enabling them.",
     ]);
+    expect(plan.ponytail?.mode).toBe("full");
+    expect(plan.ponytail?.policy.ladder).toHaveLength(7);
+    expect(plan.ponytail?.policy.protectedConcerns).toContain("tests");
+    expect(plan.ponytail?.deferredMarkerExample).toMatch(/^ponytail:/);
     expect(getRepoAssistantProfile("ponytail").prohibitedUse).toContain(
       "approval gates",
     );
+  });
+
+  it("keeps the minimality ladder after repository understanding", () => {
+    expect(PONYTAIL_POLICY.ladder[0]).toBe("Does this need to exist?");
+    expect(PONYTAIL_POLICY.ladder.at(-1)).toContain("minimum new code");
+    expect(PONYTAIL_POLICY.reviewCommands).toContain("/ponytail-debt");
   });
 
   it("rejects workspaces that could expose production material", () => {

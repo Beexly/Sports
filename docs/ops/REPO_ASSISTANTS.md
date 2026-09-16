@@ -14,7 +14,32 @@ prediction or customer request path.
 
 The planner lives in `apps/web/lib/agents/repo-assistants.ts`. It does not
 install, invoke, or execute either project. It produces a draft-only run
-record and a safe invocation outline for an operator.
+record and a safe invocation outline for an operator. The Ponytail policy is
+available as typed data so future cockpit or agent surfaces can reuse one
+version of its rules instead of copying prompt text.
+
+## Ponytail policy adopted here
+
+After understanding the affected flow, stop at the first rung that works:
+
+1. Does this need to exist?
+2. Reuse code already in Sports.
+3. Prefer the standard library.
+4. Prefer a native platform feature.
+5. Reuse an installed dependency.
+6. Use one line when that is genuinely clear.
+7. Only then add the minimum new code.
+
+This is not permission to golf safety. Validation, error handling, security,
+accessibility, rights checks, tests, and owner approval gates remain mandatory.
+`/ponytail-review` asks for a delete-list, `/ponytail-audit` checks the wider
+repository, and `/ponytail-debt` harvests intentional `ponytail:` deferrals so
+they do not disappear.
+
+The default operator mode is `full`; use `lite` for low-risk edits and `ultra`
+for an explicit over-engineering review. `off` is appropriate when the task
+requires a deliberately larger design and the reason is recorded in the run
+record.
 
 ## Safety boundary
 

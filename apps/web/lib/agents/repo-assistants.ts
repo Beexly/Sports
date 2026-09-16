@@ -17,7 +17,24 @@ export interface RepoAssistantPlan {
   readonly workspace: string;
   readonly task: string;
   readonly commands: readonly string[];
+  readonly ponytail?: PonytailPlan;
   readonly runRecord: AgentRunRecord;
+}
+
+export type PonytailMode = "lite" | "full" | "ultra" | "off";
+
+export interface PonytailPolicy {
+  readonly ladder: readonly string[];
+  readonly protectedConcerns: readonly string[];
+  readonly reviewCommands: readonly string[];
+  readonly deferredMarker: string;
+}
+
+export interface PonytailPlan {
+  readonly mode: Exclude<PonytailMode, "off">;
+  readonly policy: PonytailPolicy;
+  readonly reviewPrompt: string;
+  readonly deferredMarkerExample: string;
 }
 
 const PROFILES: Readonly<Record<RepoAssistantId, RepoAssistantProfile>> = {
@@ -54,6 +71,33 @@ const UNSAFE_WORKSPACE_MARKERS = [
   "secrets",
 ];
 
+export const PONYTAIL_POLICY: PonytailPolicy = {
+  ladder: [
+    "Does this need to exist?",
+    "Already in this codebase? Reuse it.",
+    "Can the standard library do it?",
+    "Can the native platform do it?",
+    "Can an installed dependency do it?",
+    "Can the solution be one line?",
+    "Only then write the minimum new code.",
+  ],
+  protectedConcerns: [
+    "validation",
+    "error handling",
+    "security",
+    "accessibility",
+    "rights checks",
+    "tests",
+    "owner approval gates",
+  ],
+  reviewCommands: [
+    "/ponytail-review",
+    "/ponytail-audit",
+    "/ponytail-debt",
+  ],
+  deferredMarker: "ponytail:",
+};
+
 export function getRepoAssistantProfile(
   id: RepoAssistantId,
 ): RepoAssistantProfile {
@@ -78,6 +122,17 @@ export function createRepoAssistantPlan(
   }
 
   const profile = getRepoAssistantProfile(id);
+  const ponytail =
+    id === "ponytail"
+      ? {
+          mode: "full" as const,
+          policy: PONYTAIL_POLICY,
+          reviewPrompt:
+            "Review the proposed diff for unnecessary code, then return a delete-list. Keep validation, error handling, security, accessibility, rights checks, tests, and owner approval gates.",
+          deferredMarkerExample:
+            "ponytail: revisit after the smallest safe version ships",
+        }
+      : undefined;
   const commands =
     id === "repomaster"
       ? [
@@ -124,6 +179,7 @@ export function createRepoAssistantPlan(
     workspace: normalizedWorkspace,
     task: normalizedTask,
     commands,
+    ponytail,
     runRecord,
   };
 }
