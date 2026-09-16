@@ -21,8 +21,17 @@ export interface CacheEntry<T> {
   value: T;
   /** Epoch ms when the payload was received from the network. */
   storedAt: number;
-  /** Server-supplied version, when one exists. Not an HTTP ETag — see below. */
+  /** Server-supplied version (`asOf`), when the payload carries one. */
   version: string | null;
+  /**
+   * The HTTP ETag, when the server sent one.
+   *
+   * Kept separate from `version` deliberately: `version` is the SERVER's own
+   * notion of the payload's age (`asOf`), which the UI renders, while the ETag is
+   * an opaque validator used for a conditional request. Conflating them would
+   * mean a payload with no `asOf` silently loses conditional revalidation.
+   */
+  etag?: string | null;
 }
 
 export interface CacheRead<T> {
@@ -87,10 +96,35 @@ export class Cache {
     return { entry: parsed, ageMs, stale: ageMs > budgetMs };
   }
 
-  async write<T>(key: string, value: T, version: string | null = null): Promise<void> {
-    const entry: CacheEntry<T> = { value, storedAt: Date.now(), version };
+  async write<T>(
+    key: string,
+    value: T,
+    version: string | null = null,
+    etag: string | null = null,
+  ): Promise<void> {
+    const entry: CacheEntry<T> = { value, storedAt: Date.now(), version, etag };
     await this.storage.set(this.fullKey(key), JSON.stringify(entry));
     await this.enforceCeiling();
+  }
+
+  /**
+   * Mark a cached payload as revalidated.
+   *
+   * Used on a 304: the body is unchanged, but the server has just confirmed it
+   * is current, so `storedAt` moves forward and the UI's age resets. That is the
+   * entire benefit of a conditional request — it saves the body AND proves
+   * freshness, rather than trading one for the other.
+   */
+  async touch(key: string, etag: string | null): Promise<boolean> {
+    const read = await this.read<unknown>(key, Number.POSITIVE_INFINITY);
+    if (!read) return false;
+    const entry: CacheEntry<unknown> = {
+      ...read.entry,
+      storedAt: Date.now(),
+      ...(etag ? { etag } : {}),
+    };
+    await this.storage.set(this.fullKey(key), JSON.stringify(entry));
+    return true;
   }
 
   async invalidate(key: string): Promise<void> {

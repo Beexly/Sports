@@ -212,6 +212,12 @@ export class GseClient {
         };
         if (options.token) headers.Authorization = `Bearer ${options.token}`;
         if (options.body !== undefined) headers["Content-Type"] = "application/json";
+        // Conditional request. Only for GET, and only when a validator is held:
+        // an If-None-Match on a POST or on an entry with no ETag is a header that
+        // can only confuse a cache layer in between.
+        if (cached?.entry.etag && (options.method ?? "GET") === "GET") {
+          headers["If-None-Match"] = cached.entry.etag;
+        }
 
         const response = await this.fetchImpl(this.url(path, options.query), {
           method: options.method ?? "GET",
@@ -298,6 +304,37 @@ export class GseClient {
           break;
         }
 
+        // ── 304 Not Modified ───────────────────────────────────────────────
+        // The body is unchanged AND the server has just confirmed it is current.
+        // This is strictly better than a re-download: it saves the payload and
+        // proves freshness rather than trading one for the other. `touch` moves
+        // `storedAt` forward so the UI's age resets.
+        if (status === 304) {
+          if (!cached) {
+            // A 304 with nothing cached is a server or proxy misbehaving. Treated
+            // as malformed rather than as an empty success.
+            lastFailure = failure(
+              "malformed",
+              FALLBACK_COPY.malformed,
+              `HTTP 304 with no cached entry for ${path}`,
+              304,
+            );
+            this.onEvent?.({ path, status, ms, attempt, outcome: "error" });
+            break;
+          }
+          const freshEtag = response.headers.get("ETag");
+          await this.cache.touch(options.cacheKey as string, freshEtag);
+          this.onEvent?.({ path, status, ms, attempt, outcome: "cached" });
+          return {
+            ok: true,
+            data: cached.entry.value,
+            asOf: cached.entry.version,
+            fromCache: true,
+            cacheAgeMs: 0,
+            status: 304,
+          };
+        }
+
         // ── 2xx ────────────────────────────────────────────────────────────
         const parsed = safeJson(rawText);
         if (parsed === null) {
@@ -350,7 +387,9 @@ export class GseClient {
             : null;
 
         if (options.cacheKey) {
-          await this.cache.write(options.cacheKey, decoded, asOf);
+          // The ETag is captured so the NEXT read can be conditional. A server
+          // that sends none simply means every read is a full one.
+          await this.cache.write(options.cacheKey, decoded, asOf, response.headers.get("ETag"));
         }
 
         this.onEvent?.({ path, status, ms, attempt, outcome: "ok" });

@@ -351,6 +351,93 @@ test("cache clear removes only this namespace", async () => {
   assert.equal(await storage.get("other:a"), "keep me");
 });
 
+/* ── Conditional requests ──────────────────────────────────────────────── */
+
+test("a 200 with an ETag stores it and the NEXT stale read sends If-None-Match", async () => {
+  const cache = new Cache(new MemoryCacheStorage());
+  const { impl, calls } = scripted([
+    jsonResponse({ success: true, v: 1 }, 200, { etag: '"abc123"' }),
+    jsonResponse(null, 304, { etag: '"abc123"' }),
+  ]);
+  const client = new GseClient({ baseUrl: BASE, cache, fetchImpl: impl, maxAttempts: 1 });
+
+  // First read: full body, ETag captured.
+  await client.request("/api/board/state", {
+    decode: identity,
+    cacheKey: "board",
+    budgetMs: 0, // never fresh, so the second read MUST revalidate
+  });
+  assert.equal(calls[0].init.headers["If-None-Match"], undefined);
+
+  // Second read: conditional.
+  await client.request("/api/board/state", {
+    decode: identity,
+    cacheKey: "board",
+    budgetMs: 0,
+  });
+  assert.equal(calls[1].init.headers["If-None-Match"], '"abc123"');
+});
+
+test("a 304 returns the cached body, labelled as cached, with a RESET age", async () => {
+  const cache = new Cache(new MemoryCacheStorage());
+  await cache.write("board", { rows: 7 }, "2026-09-15T00:00:00Z", '"etag-1"');
+  const { impl } = scripted([jsonResponse(null, 304, { etag: '"etag-1"' })]);
+  const client = new GseClient({ baseUrl: BASE, cache, fetchImpl: impl, maxAttempts: 1 });
+
+  const res = await client.request("/api/board/state", {
+    decode: identity,
+    cacheKey: "board",
+    budgetMs: 0,
+  });
+
+  assert.equal(res.ok, true);
+  assert.equal(res.data.rows, 7);
+  assert.equal(res.fromCache, true, "a 304 was returned as a fresh network response");
+  // The whole point of a conditional request: freshness is PROVEN, so the age
+  // resets rather than the body being re-downloaded.
+  assert.equal(res.cacheAgeMs, 0);
+  assert.equal(res.status, 304);
+});
+
+test("a 304 with nothing cached is treated as malformed, not as empty success", async () => {
+  const cache = new Cache(new MemoryCacheStorage());
+  const { impl } = scripted([jsonResponse(null, 304)]);
+  const client = new GseClient({ baseUrl: BASE, cache, fetchImpl: impl, maxAttempts: 1 });
+  const res = await client.request("/api/thing", {
+    decode: identity,
+    cacheKey: "thing",
+    budgetMs: 60_000,
+  });
+  assert.equal(res.ok, false);
+  assert.equal(res.kind, "malformed");
+});
+
+test("no If-None-Match is sent for a non-GET, even with an ETag cached", async () => {
+  const cache = new Cache(new MemoryCacheStorage());
+  await cache.write("watch", { ok: true }, null, '"etag-w"');
+  const { impl, calls } = scripted([jsonResponse({ success: true })]);
+  const client = new GseClient({ baseUrl: BASE, cache, fetchImpl: impl, maxAttempts: 1 });
+
+  await client.request("/api/watchlist/follow", {
+    method: "POST",
+    body: { id: "x" },
+    decode: identity,
+    cacheKey: "watch",
+    budgetMs: 0,
+  });
+  assert.equal(calls[0].init.headers["If-None-Match"], undefined);
+});
+
+test("no If-None-Match is sent when the server never gave an ETag", async () => {
+  const cache = new Cache(new MemoryCacheStorage());
+  await cache.write("plain", { v: 1 }, null, null);
+  const { impl, calls } = scripted([jsonResponse({ success: true, v: 2 })]);
+  const client = new GseClient({ baseUrl: BASE, cache, fetchImpl: impl, maxAttempts: 1 });
+
+  await client.request("/api/thing", { decode: identity, cacheKey: "plain", budgetMs: 0 });
+  assert.equal(calls[0].init.headers["If-None-Match"], undefined);
+});
+
 /* ── Events ────────────────────────────────────────────────────────────── */
 
 test("outcome events distinguish ok / cached / gated / error", async () => {
