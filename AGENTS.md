@@ -9,6 +9,203 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ## THE LOOP
 
+**UPDATED 2026-09-16 (documentation-first benchmark review refresh, with new GitHub search triage).**
+
+Scope: documentation only. No gates, model versions, pricing logic, env flags, or schema touched.
+This section extends the benchmark review request and keeps FIELD doctrine, legal posture, and
+real-data constraints intact.
+
+### Primary benchmark synthesis (authoritative set)
+
+Format per source: lesson -> GSE application -> recommendation -> risk/non-goal -> priority.
+
+1. **Monkeytype (`monkeytypegame/monkeytype`)**  
+   Lesson: deep customization can stay coherent via strict tokens and constrained option sets.  
+   Apply: Fantasy/DFS/Board personalization without visual drift.  
+   Recommendation: keep one semantic token map and expose only bounded presets (density, columns, contrast mode).  
+   Risk/non-goal: avoid per-user raw CSS or unbounded theme editing.  
+   Priority: **P0** for dashboard readability and retention.
+
+2. **Screenshot-to-code (`emilwallner/Screenshot-to-code`)**  
+   Lesson: design intent can be converted into structured, inspectable UI artifacts.  
+   Apply: internal "design diff" and cockpit prototyping flow.  
+   Recommendation: require component-level acceptance checklists before visual changes ship.  
+   Risk/non-goal: not a runtime product feature; no generative authority over production picks UX.  
+   Priority: **P2** process improvement.
+
+3. **Flat-UI (`designmodo/Flat-UI`)**  
+   Lesson: consistent primitives (buttons/forms/cards) reduce UI entropy.  
+   Apply: Board filters, pick cards, fantasy controls.  
+   Recommendation: codify FIELD component primitives and variant limits in one reference.  
+   Risk/non-goal: do not backslide to generic bootstrap-like visual identity.  
+   Priority: **P1**.
+
+4. **Webstudio (`webstudio-is/webstudio`)**  
+   Lesson: composable blocks + content model separation enables controlled flexibility.  
+   Apply: editorial pages, landing modules, campaign pages.  
+   Recommendation: define sanctioned page block library with locked brand-safe defaults.  
+   Risk/non-goal: avoid open-ended builder permissions on trust surfaces.  
+   Priority: **P1**.
+
+5. **Nue (`nuejs/nue`)**  
+   Lesson: lean pipelines and content-first architecture improve speed and maintainability.  
+   Apply: docs/research pages and static explainers.  
+   Recommendation: prefer static-first rendering where interactivity is unnecessary.  
+   Risk/non-goal: no framework migration recommendation.  
+   Priority: **P2**.
+
+6. **Publii (`GetPublii/Publii`)**  
+   Lesson: privacy-aware, SEO-aware publishing can be default behavior.  
+   Apply: GSN/articles, methodology pages, public proof pages.  
+   Recommendation: keep metadata completeness, canonical discipline, and tracker minimization as release gates.  
+   Risk/non-goal: no claim that static-only solves dynamic board requirements.  
+   Priority: **P0** for trust and discoverability.
+
+7. **USWDS (`uswds/uswds`)**  
+   Lesson: accessibility and usability succeed when encoded as system rules, not page-by-page fixes.  
+   Apply: nav patterns, form states, contrast, focus indicators.  
+   Recommendation: maintain WCAG-first acceptance criteria for every new board/cockpit component.  
+   Risk/non-goal: no wholesale restyling to government visual language.  
+   Priority: **P0**.
+
+8. **Elementor (`elementor/elementor`)**  
+   Lesson: extensibility needs guardrails or customization turns into inconsistency debt.  
+   Apply: future operator/campaign editing interfaces.  
+   Recommendation: role-based block permissions and preapproved templates only.  
+   Risk/non-goal: do not expose unrestricted WYSIWYG editing for core trust surfaces.  
+   Priority: **P1**.
+
+9. **Plasmic (`plasmicapp/plasmic`)**  
+   Lesson: visual editing can coexist with code ownership if contracts are explicit.  
+   Apply: shared ownership between design and engineering for non-critical pages.  
+   Recommendation: keep component API contracts and typed props as hard boundaries.  
+   Risk/non-goal: no bypass of review/testing path.  
+   Priority: **P1**.
+
+10. **Compass (`Compass/compass`)**  
+    Lesson: deprecated tooling is a warning about maintainability half-life.  
+    Apply: avoid introducing styling infra with uncertain maintenance runway.  
+    Recommendation: continue modern CSS token governance already in FIELD stack.  
+    Risk/non-goal: no Sass-era tooling expansion.  
+    Priority: **P3** (historical caution).
+
+11. **EyeWitness (`RedSiege/EyeWitness`)**  
+    Lesson: screenshot-at-scale is effective for regression and environment drift detection.  
+    Apply: board, picks, fantasy, cockpit visual smoke checks.  
+    Recommendation: keep scripted snapshot baselines for key routes and breakpoints per release.  
+    Risk/non-goal: screenshots are evidence, not UX judgment by themselves.  
+    Priority: **P0** for release safety.
+
+12. **CodingTrain website archive (`CodingTrain/website-archive`)**  
+    Lesson: preserving historical versions supports learning and rollback clarity.  
+    Apply: FIELD iteration history and major IA transitions.  
+    Recommendation: keep dated docs snapshots for visual-system epochs and rationale.  
+    Risk/non-goal: no nostalgia-driven reintroduction of retired UI patterns.  
+    Priority: **P1**.
+
+13. **GreenTunnel (`SadeghHayeri/GreenTunnel`)**  
+    Lesson: network/privacy constraints must be explicit in architecture and UX expectations.  
+    Apply: resilience and transparency around source availability and regional constraints.  
+    Recommendation: keep fail-closed copy and source-status observability in user-facing data flows.  
+    Risk/non-goal: unrelated anti-censorship behavior is not a product feature target.  
+    Priority: **P2**.
+
+14. **Adminator (`puikinsh/Adminator-admin-dashboard`)**  
+    Lesson: dense admin dashboards need clear hierarchy and stable interaction patterns.  
+    Apply: cockpit and operations pages.  
+    Recommendation: standardize table/card/filter hierarchy and preserve dark-mode readability baselines.  
+    Risk/non-goal: avoid template-like generic admin chrome replacing FIELD identity.  
+    Priority: **P1**.
+
+15. **Geist UI (`geist-org/geist-ui`)**  
+    Lesson: calm component systems scale when spacing/type/state rules are strict.  
+    Apply: cockpit controls, form affordances, modal discipline.  
+    Recommendation: enforce component state consistency (hover/focus/disabled/loading) across surfaces.  
+    Risk/non-goal: do not copy brand style; extract system behavior principles only.  
+    Priority: **P1**.
+
+16. **design-extract (`Manavarya09/design-extract`)**  
+    Lesson: automated token extraction helps detect drift between intended and actual UI.  
+    Apply: FIELD token audits and pre-release drift checks.  
+    Recommendation: add periodic token-drift review to design QA workflow (documentation/process first).  
+    Risk/non-goal: no blind auto-apply of extracted tokens.  
+    Priority: **P1**.
+
+17. **Typography.js (`KyleAMathews/typography.js`)**  
+    Lesson: type scale/rhythm systems improve readability and consistency quickly.  
+    Apply: board card scannability, methodology/editorial readability, mobile hierarchy.  
+    Recommendation: define a documented type scale with semantic mapping for all key surfaces.  
+    Risk/non-goal: no new typography dependency required to apply the principle.  
+    Priority: **P0**.
+
+18. **dembrandt (`dembrandt/dembrandt`)**  
+    Lesson: extraction + tokenization can accelerate design inventory and refactor planning.  
+    Apply: periodic inventory of visual primitives before major redesign passes.  
+    Recommendation: maintain a repeatable "current-state token inventory" checkpoint in redesign docs.  
+    Risk/non-goal: generated inventory is advisory, not source of truth over FIELD token files.  
+    Priority: **P2**.
+
+19. **kodbox (`kalcaddle/kodbox`)**  
+    Lesson: complex, stateful UIs require strong information architecture and permission boundaries.  
+    Apply: future power-user workflows in fantasy tools and cockpit operations.  
+    Recommendation: keep progressive disclosure and role-aware actions in dense tool surfaces.  
+    Risk/non-goal: file-manager metaphors are not directly portable to board UX.  
+    Priority: **P2**.
+
+20. **EvilCharts (`legions-developer/evilcharts`)**  
+    Lesson: chart components need consistent styling contracts and data-state handling.  
+    Apply: calibration/performance charts and analytics panels.  
+    Recommendation: define chart theming + empty/loading/error state standards tied to FIELD tokens.  
+    Risk/non-goal: chart polish must not mask statistical caveats or uncertainty messaging.  
+    Priority: **P0**.
+
+### 2026-09-16 new GitHub search triage (candidate references only)
+
+Keep only repositories with identifiable and transferable lessons. Do not treat low-signal template
+repos as design authorities.
+
+- **Potentially usable (limited signal):**
+  - `servercurio/forge`: documentation + project-site coupling pattern; useful only as a docs-ops example.
+  - `lawnHQ/lawn-and-land-marketing-website`: indicates "locked hero design" governance pattern; weak authority but relevant to preservation/versioning discussion.
+
+- **Low-signal / unrelated / duplicate-template / unsuitable as authorities:**
+  - `abinubala04/ai-website-builder`, `AyushMokal77/williamvoss088.github.io`, `Akilan04A/vui`,
+    `Ardiiiu/website`, `mrevil69/website`, `jd-code76/classic-old-games`,
+    `p56461616-hub/parcydesign.github.io`, `potato68/jubilee-free-online-course-website-template`,
+    `Arckei/Website-CyberGuard`, `rydevs29/RifqyShield`, `businessman-37/Dreamweaver`,
+    `Timileyin20/Heavenly-Website-`, `techibytesmedia/techibytesmedia`, `ma7moud3id/Tempo-Project`,
+    `Rohit681718/vydigitalsolutions`, `haveitdesignke-lab/haveit-design`,
+    `Evantra-Ventures/Acadex`, `gprch/PDWebsite`, `M-TamDre07/tama-design`,
+    `Clyde-Collins-Design/Clyde-Collins-Design.github.io`.
+  - `mendyo-55/Website-X5-Evolution-Full-Version`, `mendyo16/Website-X5-Full-Version`,
+    `greymrgood4/Bluegriffon`, `helldragon-herodot/Microsoft-Expression-Web-Full-Version`,
+    `suicidemorningsun/Wysiwyg-Web-Builder-Full-Version`, `wings814/Zeta-Producer-Full-Version`,
+    `herrydollar18/Anti-Porn-Full-Version`: software-distribution mirrors/full-version packaging patterns,
+    not design-system or product-UX benchmark sources for GSE.
+
+### Synthesized roadmap for GSE (documentation recommendations only)
+
+- **Design-token governance:** freeze semantic token ownership in `design-tokens.css`, tailwind config, and `BRAND_COLORS`; add explicit token-change checklist and drift audit cadence.
+- **Typography:** codify one FIELD type scale for board cards, data tables, and editorial pages; enforce line-length and hierarchy standards at mobile/desktop.
+- **Navigation and IA:** preserve four-door top nav doctrine; keep board/picks/record distinctions explicit with route-level purpose labels.
+- **Board/dashboard density:** add density presets (comfortable/compact) with bounded layouts; prioritize scan order (market, edge rank, reason) before embellishment.
+- **Customization without chaos:** allow preset-based personalization only; role-gate advanced layout controls to avoid fragmentation.
+- **Accessibility:** maintain contrast/focus/keyboard standards as release-blocking checks for all new components; test empty/loading/error states for screen-reader clarity.
+- **Responsive behavior:** define stable breakpoint behavior for board tables/cards; require narrow-width audit for filter controls and ticker legibility.
+- **SEO/privacy:** keep canonical discipline, metadata completeness, and minimal tracker posture; document privacy impact for every new publishing feature.
+- **Visual regression and screenshot QA:** maintain route + breakpoint screenshot baselines (board, picks, fantasy, cockpit) and require evidence in PR validation.
+- **Charts/data visualization:** standardize chart palettes/states with FIELD tokens; require uncertainty/context labels adjacent to chart claims.
+- **Content publishing:** use block templates with governance rather than free-form page authoring on trust surfaces.
+- **Admin/cockpit workflows:** standardize dense admin interaction patterns (filtering, bulk actions, row states) and keep auditability visible.
+- **Preservation/versioning of visual iterations:** add dated visual-epoch notes and before/after references in docs so future redesigns keep rationale and rollback context.
+
+### Priority rollup (next documentation-to-implementation handoff)
+
+- **P0:** accessibility system checks, typography scale standards, chart state standards, screenshot QA baselines, SEO/privacy release gates.
+- **P1:** token-drift governance, admin/dashboard hierarchy standards, controlled customization presets, page-block governance.
+- **P2:** redesign process instrumentation (inventory/extraction/advisory audits), static-first content architecture where fit.
+- **P3:** historical/deprecated-tool caution tracking only.
+
 **UPDATED 2026-09-13 (NFL WEEK 1 LIVE CHECK — three production defects fixed, three
 data outages found, conviction gate built). PR #808, branch
 `claude/nfl-kickoff-live-check-0qwxfm`. Read this before touching the board, the
@@ -1151,4 +1348,3 @@ invented number makes every other number suspect.
 **Work continuously. Record everything. Invent nothing. Push nothing.**
 
 ---
-
