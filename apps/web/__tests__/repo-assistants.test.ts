@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   createRepoAssistantPlan,
   getRepoAssistantProfile,
-} from "@/lib/agents/repo-assistants";
+} from "../lib/agents/repo-assistants";
 
 describe("repo assistant integration", () => {
   it("plans RepoMaster as an isolated repository investigation", () => {
