@@ -14,6 +14,9 @@ describe("computeEdge", () => {
     expect(computeEdge(null, 0.5)).toBeNull();
     expect(computeEdge(0.5, null)).toBeNull();
   });
+  it("null for non-finite", () => {
+    expect(computeEdge(Number.NaN, 0.5)).toBeNull();
+  });
 });
 
 describe("advisoryFlags", () => {
@@ -28,6 +31,9 @@ describe("advisoryFlags", () => {
       crossesHalf: false,
       crossesMarket: false,
     });
+  });
+  it("no flag for zero/negative half-width", () => {
+    expect(advisoryFlags(0.52, 0.48, 0).crossesHalf).toBe(false);
   });
 });
 
@@ -50,10 +56,8 @@ describe("rankByEdge", () => {
       ],
       EDGE_TIE_EPSILON,
     );
-    // c has clear best edge 0.2
     expect(ranked[0]!.id).toBe("c");
     expect(ranked[0]!.tieLabel).toBeNull();
-    // a and b within 0.01 edge of each other
     expect(ranked[1]!.rankCluster).toBe(ranked[2]!.rankCluster);
     expect(ranked[1]!.tieLabel).toBe("too close to call / tied cluster");
     expect(ranked[2]!.tieLabel).toBe("too close to call / tied cluster");
@@ -66,5 +70,21 @@ describe("rankByEdge", () => {
     ]);
     expect(ranked[0]!.id).toBe("has-edge");
     expect(ranked[1]!.id).toBe("no-edge");
+  });
+
+  it("does not label edgeless confidence peers as tied clusters", () => {
+    const ranked = rankByEdge([
+      { id: "x", modelProb: null, marketImplied: null, confidenceScore: 80 },
+      { id: "y", modelProb: null, marketImplied: null, confidenceScore: 80 },
+    ]);
+    expect(ranked.every((r) => r.tieLabel === null)).toBe(true);
+    expect(ranked[0]!.rankCluster).not.toBe(ranked[1]!.rankCluster);
+  });
+
+  it("does not mutate input", () => {
+    const input = [{ id: "a", modelProb: 0.6, marketImplied: 0.5, confidenceScore: 50 }];
+    const copy = structuredClone(input);
+    rankByEdge(input);
+    expect(input).toEqual(copy);
   });
 });
