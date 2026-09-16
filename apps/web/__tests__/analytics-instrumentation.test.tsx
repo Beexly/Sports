@@ -65,9 +65,6 @@ describe("analytics instrumentation (P12-03)", () => {
         />,
       );
       const button = screen.getByRole("button", { name: /subscribe to pro/i });
-      fireEvent.change(screen.getByLabelText(/date of birth/i), {
-        target: { value: "1990-01-15" },
-      });
       fireEvent.click(button);
       await waitFor(() => {
         expect(mocks.track).toHaveBeenCalledWith("upgrade_cta_click", {
@@ -89,9 +86,6 @@ describe("analytics instrumentation (P12-03)", () => {
         />,
       );
       const button = screen.getByRole("button", { name: /subscribe to elite/i });
-      fireEvent.change(screen.getByLabelText(/date of birth/i), {
-        target: { value: "1990-01-15" },
-      });
       fireEvent.click(button);
       await waitFor(() => {
         expect(mocks.track).toHaveBeenCalledWith("checkout_start", {
@@ -111,9 +105,6 @@ describe("analytics instrumentation (P12-03)", () => {
         />,
       );
       const button = screen.getByRole("button", { name: /subscribe to fantasy/i });
-      fireEvent.change(screen.getByLabelText(/date of birth/i), {
-        target: { value: "1990-01-15" },
-      });
       fireEvent.click(button);
       await waitFor(() => {
         const calls = mocks.track.mock.calls;
