@@ -16,6 +16,7 @@ vi.mock("@sports/data-ingestion", () => ({
     { key: "baseball_mlb", name: "MLB" },
     { key: "americanfootball_nfl", name: "NFL" },
   ],
+  isSportInSeason: vi.fn(() => true),
   // The line-integrity lane reads the platform's odds-freshness line from here
   // rather than defining a second "stale odds" of its own (C-287).
   FRESHNESS_THRESHOLD_MS: 4 * 60 * 60 * 1000,
@@ -70,6 +71,7 @@ vi.mock("@/lib/settlement/zero-sit-lane", async () => {
 import { GET } from "@/app/api/cron/settle-picks/route";
 import { settleSport } from "@sports/ingestion-pipeline";
 import { runFreePathSettlement } from "@/lib/data-sources/free-settlement-runner";
+import { isSportInSeason } from "@sports/data-ingestion";
 
 function freeResult(findings: Array<{ sportKey: string; code: string; overdue: boolean }>) {
   return {
@@ -113,6 +115,8 @@ describe("GET /api/cron/settle-picks: paid scores justification (C-109)", () => 
   beforeEach(() => {
     (settleSport as Mock).mockReset();
     (runFreePathSettlement as Mock).mockReset();
+    (isSportInSeason as Mock).mockReset();
+    (isSportInSeason as Mock).mockReturnValue(true);
     (settleSport as Mock).mockImplementation(async (sport: { key: string }) => skippedResult(sport));
     vi.useFakeTimers({ shouldAdvanceTime: true });
   });
@@ -154,5 +158,22 @@ describe("GET /api/cron/settle-picks: paid scores justification (C-109)", () => 
     const options = (settleSport as Mock).mock.calls[0]![4] as { paidScoresJustifiedSports: ReadonlySet<string> };
     expect(options.paidScoresJustifiedSports.size).toBe(0);
     expect(body.paidSupplement?.justifiedSports).toEqual([]);
+  });
+
+  it("skips paid settlement for out-of-season sports", async () => {
+    vi.stubEnv("THE_ODDS_API_KEY", "sk_live_present");
+    (isSportInSeason as Mock).mockImplementation((sportKey: string) => sportKey !== "baseball_mlb");
+    (runFreePathSettlement as Mock).mockResolvedValue(freeResult([]));
+
+    const res = await GET(new Request("http://x/api/cron/settle-picks"));
+    const body = (await res.json()) as Body;
+
+    expect(settleSport).toHaveBeenCalledTimes(1);
+    expect((settleSport as Mock).mock.calls[0]?.[0]).toMatchObject({ key: "americanfootball_nfl" });
+    expect(body.paidSupplement?.results).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ sport: "baseball_mlb", note: "out_of_season" }),
+      ]),
+    );
   });
 });

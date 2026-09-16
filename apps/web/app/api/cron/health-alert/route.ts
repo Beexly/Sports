@@ -30,6 +30,7 @@ import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/perf
 import { db } from "@sports/db";
 import { planAutonomyCycle } from "@/lib/autonomy/operating-kernel";
 import { getReadinessGates } from "@sports/prediction-engine";
+import { loadOddsCreditTruth, type OddsCreditLedgerDb } from "@sports/data-ingestion";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -183,6 +184,10 @@ export async function GET(request: Request): Promise<NextResponse> {
   }
 
   const observedAt = new Date().toISOString();
+  const latestOddsApiQuota = await loadOddsCreditTruth(
+    db as unknown as OddsCreditLedgerDb,
+    new Date(),
+  ).catch(() => null);
   let webhook: WebhookOutcome = {
     configured: false,
     delivered: false,
@@ -223,6 +228,9 @@ export async function GET(request: Request): Promise<NextResponse> {
       checks: probes.checks,
       deploymentSha,
       observedAt,
+      oddsApiRemainingRequests: latestOddsApiQuota?.remaining ?? null,
+      oddsApiUsedRequests: latestOddsApiQuota?.used ?? null,
+      oddsApiHeaderObservedAt: latestOddsApiQuota?.observedAt ?? null,
       healthUrl: "https://www.galaxysportsedge.com/api/health",
       autonomySeverity: autonomy?.severity ?? null,
       autonomyHeadline: autonomy?.headline ?? null,
@@ -272,6 +280,9 @@ export async function GET(request: Request): Promise<NextResponse> {
     webhookPosted: webhook.delivered,
     webhookStatus: webhook.status,
     webhookError: webhook.error,
+    oddsApiRemainingRequests: latestOddsApiQuota?.remaining ?? null,
+    oddsApiUsedRequests: latestOddsApiQuota?.used ?? null,
+    oddsApiHeaderObservedAt: latestOddsApiQuota?.observedAt ?? null,
     // True whenever an alert fired and reached nobody — the single field an
     // external monitor should watch to detect that alerting itself is down.
     alertDeliveryFailed: decision.shouldAlert && !webhook.delivered,
