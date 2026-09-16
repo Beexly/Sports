@@ -43,8 +43,8 @@ verification-integrity audit, then upstream findings.
 | Clopper–Pearson correctness | Published reference values (20/30 → [0.4719, 0.8271]) | Pass |
 | Entitlement parity with the server | Test reads `packages/types/src/index.ts` and compares | Pass |
 | Visual layout at 393pt | Rendered in the harness and looked at | 3 defects found and fixed |
-| Core typecheck (13 pure files) | `scripts/typecheck.js`, which prints its own summary | 0 diagnostics |
-| **Full typecheck — all 42 files, real RN/Expo types** | Same, twice consecutively | **0 diagnostics** |
+| Core typecheck (13 pure files) | `scripts/typecheck.js`, which prints its own summary | 0 diagnostics (completed run) |
+| Full typecheck | Same | **Completed three times with 0 diagnostics, then became unreproducible.** Not counted as a gate. See §2.2. |
 
 ### What is NOT verified, and why
 
@@ -53,7 +53,10 @@ verification-integrity audit, then upstream findings.
    Activity are all **unexecuted code**. They are written carefully and reviewed by eye, and that
    is not the same as running them.
 
-2. **The UI typecheck is UNRELIABLE, not impossible — and it now passes.** Measured: a *one-file*
+2. **The typecheck is UNRELIABLE and is NOT counted as a gate.** It completed several times and
+   reported real errors; it later failed to complete on *every* attempt, including a two-file
+   project, and a killed run exits 0 with empty output. The honest summary: **the type layer is
+   not verified.** What follows is the record of what it found while it worked. Measured: a *one-file*
    project importing `react-native` took **182s** and was killed by the ~180s process cap, exiting 0
    with empty output. That was only discovered because a deliberately broken file was *not*
    reported. On later attempts the same configuration completed and reported real errors.

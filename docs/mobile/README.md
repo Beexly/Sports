@@ -43,15 +43,15 @@ sports-meta/                a sparse checkout of Beexly/Sports, used as the sour
 | App source | **Complete and lint-clean** — 41 files, 0 invariant violations |
 | Pure logic | **Tested** — 105 passing assertions |
 | Core typecheck (13 pure files) | **Passing** — 0 diagnostics |
-| **Full typecheck (all 42 files, real RN/Expo types)** | **Passing** — 0 diagnostics, twice consecutively. Treat it as unreliable rather than absent: the same config once passed while the process was actually dead. A *missing* summary line means a killed run, not a clean one. |
+| Full typecheck | **UNRELIABLE — NOT COUNTED AS A GATE.** It completed three times earlier in the session (0 diagnostics) and later was killed on *every* attempt, including a two-file project. A killed run exits 0 with empty output. `scripts/typecheck.js` prints its own summary line so a killed run is distinguishable from a clean one; last completed run predates the `live-activity` module. |
 | App build / run | **NEVER EXECUTED.** No Xcode, no simulator. |
 | Server patches | **Written, never run.** |
 | Store submission | **Packet complete, not submitted.** Needs the owner's App Store Connect API key. |
 | X transport | **Signer verified (18 tests incl. the RFC 5849 vector); sender not written.** |
 
-**The single next action:** run `npx expo start --ios` on a Mac. The typecheck already passes here
-against the real SDK 57 type surface, so the remaining unknowns are runtime behaviour and the
-native build, not the type layer.
+**The single next action:** run `npx expo start --ios` on a Mac, then `tsc --noEmit`. The type
+layer has NOT been verified on a reliable host, so expect a handful of errors in the same class as
+the four that were caught before the compiler degraded (listed in the audit).
 
 ---
 
@@ -67,9 +67,10 @@ native build, not the type layer.
    attempt to render it with a percent sign.
 
 3. **A check is not trusted until it can demonstrate it fails.** The typechecker silently passed
-   for an hour while it was being killed. Every check in `scripts/verify.sh` therefore has a
-   positive control: the linter self-tests its eight rules against synthetic violations, and the
-   typecheck script prints its own summary line so a killed run is visibly a killed run.
+   for an hour while it was actually being killed by the host. Only the two checks with a positive
+   control are treated as gates: the linter (which self-tests all 9 rules against synthetic
+   violations on every run) and the test suite (which asserts real values). The typecheck is
+   reported but never counted.
 
 ---
 

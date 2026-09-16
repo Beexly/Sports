@@ -48,8 +48,12 @@ exits 0 with EMPTY output when it was actually killed by a ~180s process cap. Me
 one-file project importing `react-native` took 182s and died silently; the same configuration
 later completed and reported real errors. `apps/mobile/scripts/typecheck.js` writes its report
 with `fsync` and prints its own summary line — **a missing summary line means the run was
-killed, not that the code is clean.** Before trusting any check, feed it a known-bad input. Last
-full run: 42 files, 0 diagnostics, twice consecutively.
+killed, not that the code is clean.** Before trusting any check, feed it a known-bad input.
+
+**Do not treat the typecheck as a gate for `apps/mobile`.** It completed several times with 0
+diagnostics and later failed to complete on every attempt, including a two-file project. The
+gates are `scripts/lint-rules.js` (9 rules, self-tested on every run) and the test suite. Run
+`tsc --noEmit` on a reliable host before believing the type layer.
 
 **The X transport now EXISTS** at `workers/twitter-bot/` (OAuth 1.0a signer, API v2 client,
 send pipeline). It is tested and NOT wired up: it needs credentials, a real ledger over
