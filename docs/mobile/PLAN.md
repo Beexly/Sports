@@ -209,6 +209,12 @@ against the real Expo SDK 57 type surface (twice consecutively).**
 
 ### Cycle 2 queue, in priority order
 
+0. **Purchase reconciliation.** `app/paywall.tsx` finishes the StoreKit transaction before the
+   server acknowledges, so a failed server call after a successful charge is unrecoverable: the
+   customer paid and sees the free tier. Do not finish until acknowledged; set `appAccountToken`;
+   reconcile on foreground. See `reports/01-review-and-audit.md` §5b and
+   `research/round-02-repositories.md` §1. **This is above everything else, including the Mac
+   build**, because it is the one item that loses money in production rather than in review.
 1. **Build and run on a Mac** — `npx expo start --ios`, then `tsc --noEmit`. Nothing else is
    meaningful until the app has actually launched. Expect a handful of the class in audit §4
    F7/F8.

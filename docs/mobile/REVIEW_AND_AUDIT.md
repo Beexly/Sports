@@ -187,8 +187,41 @@ cancellation render an error.
 
 ---
 
+## 5b. THE MOST EXPENSIVE GAP, found in research round 2
+
+**A purchase can succeed with the server never hearing about it, and the current code makes it
+unrecoverable.**
+
+`app/paywall.tsx` calls `finishTransaction` inside `onPurchaseSuccess`, immediately after the
+StoreKit success callback. `finishTransaction` tells StoreKit the app has handled the transaction,
+so StoreKit will **never re-deliver it**. If the subsequent server call fails, or the app is
+backgrounded, or the network drops, or the process is killed, then:
+
+- the customer has been charged,
+- the app has told StoreKit "handled",
+- and the server has no record, so the customer sees the free tier.
+
+This is the single most expensive bug class in subscription software, and nothing in the current
+build closes the window. It is the highest-priority item in the app.
+
+The fix, in shape (see `research/round-02-repositories.md` §1 for the reasoning):
+
+1. **Do not finish the transaction until the SERVER acknowledges.** StoreKit re-delivers an
+   unfinished transaction on next launch, which makes client-side retry logic unnecessary — the
+   platform already has a durable queue and it is a mistake to build a second one.
+2. **Set `appAccountToken`** to the app's user id. `expo-iap`'s `PurchaseIOS` exposes it, and it is
+   what makes a purchase made while signed out reconcilable to an account later.
+3. **Reconcile on foreground.** `getAvailablePurchases()` against what the server knows, POST the
+   difference. Idempotent, so it can run on every launch.
+
+Recorded here rather than only in the cycle-2 queue because a reviewer reading this audit should not
+have to reach the end to find the thing most likely to cost real money.
+
+---
+
 ## 6. Remaining gaps, in priority order
 
+0. **Purchase reconciliation (see §5b).** Above everything else on this list.
 1. **Build and run on a Mac.** Nothing else is meaningful until this happens.
 2. **Typecheck the UI layer** (`tsc --noEmit`) on a host with a working compiler. Expect a
    handful of the class described in §4 F7/F8.

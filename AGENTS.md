@@ -105,6 +105,17 @@ unilaterally, because it would override an explicit product decision and break p
 - `expo-iap` v3 renamed `E_USER_CANCELLED` to `ErrorCode.UserCancelled`; comparing against the
   v2 name compiles and makes every user cancellation render a purchase error.
 
+**DO NOT `finishTransaction` BEFORE THE SERVER ACKNOWLEDGES.** `apps/mobile/app/paywall.tsx`
+currently does, and it is the most expensive defect in the client. `finishTransaction` tells
+StoreKit the app has handled the transaction, so StoreKit will never re-deliver it. If the
+subsequent server call fails, the customer has been charged and the server has no record — they
+see the free tier and StoreKit will not help. The fix: finish only after the server confirms, set
+`appAccountToken` on the purchase so a signed-out purchase is still reconcilable to an account,
+and reconcile `getAvailablePurchases()` against the server on every foreground. Full reasoning in
+`docs/mobile/research/round-02-repositories.md`. **Do not build a client-side retry queue for
+this** — StoreKit already has a durable one, and a second queue is how a purchase gets recorded
+twice.
+
 **The mobile client has never been built or run.** There is no Xcode on the host it was written
 on. Treat every runtime claim in `docs/mobile/` as unverified until someone runs
 `npx expo start --ios` on a Mac. The typecheck passes; the build does not exist yet.
