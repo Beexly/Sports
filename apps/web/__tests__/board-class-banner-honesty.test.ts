@@ -12,7 +12,7 @@ describe("board class UI honesty", () => {
     expect(src).toContain('data-testid="board-class-banner"');
     expect(src).toContain("boardClass.publicMessage");
     expect(src).toContain("refusePublicFire");
-    expect(src).toMatch(/No public fires/);
+    expect(src).toContain("Nothing published right now. The board is paused");
   });
 
   it("badge surfaces boardClass state", () => {
@@ -21,7 +21,7 @@ describe("board class UI honesty", () => {
       "utf8",
     );
     expect(src).toContain("boardClass.state");
-    expect(src).toContain("public fire held");
+    expect(src).toContain("publishing paused");
   });
 
   it("LIVE_BOARD off classifier refuses public fire", () => {
