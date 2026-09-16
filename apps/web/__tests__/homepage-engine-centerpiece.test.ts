@@ -63,3 +63,4 @@ describe("homepage engine centerpiece", () => {
     expect(curve).toMatch(/data-testid="homepage-calibration-curve"/);
     expect(curve).toContain("{sampleSize}/30");
   });
+});
