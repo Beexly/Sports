@@ -313,6 +313,32 @@ export function deleteAccount(
   );
 }
 
+/**
+ * POST /api/mobile/v1/receipts — submit a StoreKit transaction for verification.
+ *
+ * The transaction id is the server's idempotency key, which is what lets the
+ * client re-submit everything StoreKit still holds unfinished on every launch
+ * without a "have I done this" check. Idempotency at the server is what makes
+ * the reconciliation sweep safe to run often, and running it often is what makes
+ * a lost response recoverable.
+ */
+export function submitReceipt(
+  ctx: EndpointContext,
+  submission: {
+    productId: string;
+    purchaseToken: string;
+    transactionId: string;
+    appAccountToken: string | null;
+    transactionDate: string;
+    countryCode: string | null;
+  },
+): Promise<ApiResult<unknown>> {
+  return ctx.client.request(
+    "/api/mobile/v1/receipts",
+    opts(ctx, decodePassthrough, { method: "POST", body: submission }),
+  );
+}
+
 /** Register an APNs/Expo push token against the signed-in account. */
 export function registerDevice(
   ctx: EndpointContext,
@@ -361,5 +387,6 @@ export const ENDPOINT_MANIFEST: readonly { path: string; family: "public" | "mob
   { path: "/api/watchlist/unfollow", family: "public", method: "POST" },
   { path: "/api/mobile/v1/bootstrap", family: "mobile", method: "GET" },
   { path: "/api/mobile/v1/devices", family: "mobile", method: "POST" },
+  { path: "/api/mobile/v1/receipts", family: "mobile", method: "POST" },
   { path: "/api/mobile/v1/account/delete", family: "mobile", method: "POST" },
 ] as const;

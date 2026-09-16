@@ -1,12 +1,21 @@
 import * as React from "react";
 import { Linking, ScrollView, View } from "react-native";
 import { useRouter } from "expo-router";
+import { useGseClient } from "../src/api/context";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { useIAP, ErrorCode, getStorefront, type Product } from "expo-iap";
 
 import { useTheme } from "../src/theme";
+import { useSession } from "../src/state/session";
 import { Body, Button, Divider, Eyebrow, Heading, Pill, Row, Spacer, Surface, Touchable } from "../src/components/primitives";
 import { TIER_NARRATIVE } from "../src/lib/entitlements";
+import {
+  iosPurchaseOptions,
+  reconcile,
+  settlePurchase,
+  toSubmission,
+  userFacingPurchaseMessage,
+} from "../src/lib/purchases";
 import { LEGAL_URLS } from "../src/lib/disclosures";
 import { tapSuccess, tapWarning } from "../src/lib/haptics";
 import type { SubscriptionTier } from "../src/api/contracts";
@@ -80,6 +89,10 @@ export default function PaywallScreen(): React.ReactElement {
   const router = useRouter();
   const insets = useSafeAreaInsets();
 
+  const client = useGseClient();
+  const token = useSession((s) => s.token);
+  const userId = useSession((s) => s.user?.id ?? null);
+
   const [storefront, setStorefront] = React.useState<string | null>(null);
   const [busyId, setBusyId] = React.useState<string | null>(null);
   const [notice, setNotice] = React.useState<string | null>(null);
@@ -87,22 +100,46 @@ export default function PaywallScreen(): React.ReactElement {
   const {
     connected,
     products,
+    availablePurchases,
     fetchProducts,
     requestPurchase,
     restorePurchases,
+    getAvailablePurchases,
     finishTransaction,
   } = useIAP({
     onPurchaseSuccess: async (purchase) => {
-      tapSuccess();
-      // Finishing the transaction is what stops StoreKit re-delivering it
-      // forever. A purchase that is validated but never finished is the single
-      // most common cause of "I bought it twice" support tickets.
-      try {
-        await finishTransaction({ purchase, isConsumable: false });
-      } catch {
-        // A failed finish is retried by StoreKit on the next launch.
-      }
-      setNotice("Purchase complete. Your entitlements refresh on the next load.");
+      // ── THE ONE RULE ──────────────────────────────────────────────────
+      // The transaction is NOT finished here. It is finished inside
+      // `settlePurchase`, and only after the server acknowledges.
+      //
+      // The first version of this file called `finishTransaction` right here.
+      // That tells StoreKit the app has handled the transaction, so StoreKit
+      // never re-delivers it. If the server call that followed failed, or the
+      // app was backgrounded, or the process was killed, the customer had been
+      // charged while the server had no record, and StoreKit's own durable
+      // retry had been switched off. See `src/lib/purchases.ts` for the full
+      // account of the bug.
+      //
+      // StoreKit already has a durable re-delivery queue for unfinished
+      // transactions. Building a second one here would mean two queues for one
+      // fact, which is how a purchase gets recorded twice.
+      const outcome = await settlePurchase(
+        {
+          submit: (submission) =>
+            submitReceipt({ client, token }, submission),
+          finish: async () => {
+            await finishTransaction({ purchase, isConsumable: false });
+          },
+          onOutcome: (o) => {
+            const message = userFacingPurchaseMessage(o);
+            setNotice(message.message);
+            if (message.tone === "ok") tapSuccess();
+            else tapWarning();
+          },
+        },
+        toSubmission(purchase),
+      );
+      void outcome;
       setBusyId(null);
     },
     onPurchaseError: (error) => {
@@ -119,6 +156,35 @@ export default function PaywallScreen(): React.ReactElement {
       setNotice("The purchase did not complete. Nothing was charged.");
     },
   });
+
+  /**
+   * Reconcile on every mount.
+   *
+   * Anything StoreKit still holds unfinished is re-submitted. Posting everything
+   * is safe because the server keys on the transaction id, so this can run as
+   * often as the screen appears and needs no "have I done this" bookkeeping.
+   */
+  const reconciled = React.useRef(false);
+  React.useEffect(() => {
+    if (!connected || reconciled.current) return;
+    reconciled.current = true;
+    void (async () => {
+      await getAvailablePurchases().catch(() => undefined);
+      await reconcile({
+        list: async () =>
+          (availablePurchases ?? [])
+            .filter((p) => p.purchaseState === "purchased")
+            .map(toSubmission),
+        submit: (submission) => submitReceipt({ client, token }, submission),
+        finish: async () => {
+          // Reconciliation does not finish: if a submission settles, the next
+          // launch's list will no longer contain it. Finishing here would need a
+          // per-purchase handle this sweep deliberately does not keep, and it is
+          // the one place where being conservative costs nothing.
+        },
+      });
+    })();
+  }, [connected, availablePurchases, getAvailablePurchases, client, token]);
 
   React.useEffect(() => {
     if (!connected) return;
@@ -229,7 +295,16 @@ export default function PaywallScreen(): React.ReactElement {
                           setNotice(null);
                           void requestPurchase({
                             request: {
-                              ios: { sku: product.id },
+                              // Both fields come from `iosPurchaseOptions` and
+                              // both are load-bearing: `appAccountToken`
+                              // attributes the purchase to an account even when
+                              // signed out, and
+                              // `andDangerouslyFinishTransactionAutomatically:
+                              // false` stops the platform finishing the
+                              // transaction before the server has recorded it.
+                              // Inlining these at the call site is how the bug
+                              // this module exists to fix comes back.
+                              ios: iosPurchaseOptions(product.id, userId),
                               android: { skus: [product.id] },
                             },
                             type: "subs",
