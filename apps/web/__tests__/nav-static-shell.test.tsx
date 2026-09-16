@@ -10,6 +10,10 @@ import { render } from "@testing-library/react";
  * stubbed out (via vi.mock of @/components/ui/nav-auth) so jsdom's renderer
  * never hits the async server component through Suspense. The core assertion
  * is that auth() is NEVER called by Nav() itself.
+ *
+ * Field IA (2026-09): top-bar doors are Board, Players, Fantasy, GSN/The Beat.
+ * Calibration (/calibration) lives under the Board mega-menu; Intelligence is
+ * not a top-bar door (homepage still links /intelligence/engines).
  */
 const mocks = vi.hoisted(() => ({
   auth: vi.fn<() => Promise<{ user?: { id?: string; name?: string | null; email?: string | null; image?: string | null } } | null>>(),
@@ -66,10 +70,11 @@ describe("P16-03 — Nav does not block on auth() in the static shell", () => {
     // The static nav links render from the static nav-left, not from auth.
     expect(container.querySelector('a[href="/board"]')).not.toBeNull();
     expect(container.querySelector('a[href="/players"]')).not.toBeNull();
-    expect(container.querySelector('a[href="/calibration"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/fantasy"]')).not.toBeNull();
+    expect(container.querySelector('a[href="/the-beat"]')).not.toBeNull();
   });
 
-  it("Nav() renders all four primary doors + The Lab + Proof as static links", () => {
+  it("Nav() renders Board / Players / Fantasy / GSN as static top-bar doors", () => {
     mocks.auth.mockResolvedValue({
       user: { id: "u1", name: "Test", email: "t@e.com", image: null },
     });
@@ -84,10 +89,8 @@ describe("P16-03 — Nav does not block on auth() in the static shell", () => {
 
     expect(hrefs).toContain("/board");
     expect(hrefs).toContain("/players");
-    expect(hrefs).toContain("/intelligence/engines");
     expect(hrefs).toContain("/fantasy");
     expect(hrefs).toContain("/the-beat");
-    expect(hrefs).toContain("/calibration");
 
     // auth() was NOT called during static shell render.
     expect(mocks.auth).not.toHaveBeenCalled();
