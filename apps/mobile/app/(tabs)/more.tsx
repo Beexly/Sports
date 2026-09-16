@@ -8,6 +8,7 @@ import { usePreferences } from "../../src/state/preferences";
 import { useSession, viewerTier } from "../../src/state/session";
 import { Body, Button, Divider, Eyebrow, Heading, Pill, Row, Spacer, Surface, Touchable } from "../../src/components/primitives";
 import { GalaxyMark } from "../../src/components/brand";
+import { SyncStatus } from "../../src/components/SyncStatus";
 import { tierLabel, tierSatisfies } from "../../src/lib/entitlements";
 import { HELPLINE } from "../../src/lib/disclosures";
 import { SUPPORTED_SPORTS } from "../../src/state/preferences";
@@ -56,7 +57,12 @@ export default function MoreScreen(): React.ReactElement {
           <Divider />
         </View>
 
-        <Spacer size="s4" />
+        {/* Queue state goes first: it is the only thing on this screen that can
+            tell the user something they did has not reached their account. */}
+        <View style={{ paddingHorizontal: t.space.s4 }}>
+          <Spacer size="s4" />
+          <SyncStatus />
+        </View>
 
         {/* ── Account ───────────────────────────────────────────────────── */}
         <Section title="Account">

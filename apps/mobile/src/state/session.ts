@@ -61,6 +61,21 @@ interface SessionState {
   isSignedIn: () => boolean;
 }
 
+/**
+ * Tasks to run on sign-out.
+ *
+ * A registry rather than a direct import, because the queue lives in a higher
+ * layer than the session store and importing it here would invert the
+ * dependency. Everything registered here MUST complete before the session is
+ * cleared: a previous account's queued writes replayed as the next user's would
+ * appear as someone following picks they never chose.
+ */
+const signOutTasks: Array<() => Promise<void>> = [];
+
+export function registerSignOutTask(task: () => Promise<void>): void {
+  signOutTasks.push(task);
+}
+
 export const useSession = create<SessionState>()((set, get) => ({
   token: null,
   expiresAt: null,
@@ -97,6 +112,16 @@ export const useSession = create<SessionState>()((set, get) => ({
   },
 
   signOut: async () => {
+    // Device state first. If a task throws, the token is still cleared — a
+    // failure to clean up must never leave someone signed in who asked not to be.
+    for (const task of signOutTasks) {
+      try {
+        await task();
+      } catch {
+        // Deliberately swallowed per task: one failing cleanup must not block
+        // the others or the sign-out itself.
+      }
+    }
     await clearStoredToken();
     set({ token: null, expiresAt: null, user: null });
   },
