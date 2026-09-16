@@ -26,7 +26,9 @@ import {
   decideHealthAlertStateless,
 } from "@/lib/ops/health-alert-decision";
 import { loadActiveCalibrationDrift } from "@/lib/ops/calibration-eligibility-durable";
+import { loadLineArchiveFreshness } from "@/lib/ops/line-archive-freshness";
 import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
+import { isLineArchiveEnabled } from "@sports/ingestion-pipeline";
 import { db } from "@sports/db";
 import { planAutonomyCycle } from "@/lib/autonomy/operating-kernel";
 import { getReadinessGates } from "@sports/prediction-engine";
@@ -124,10 +126,18 @@ export async function GET(request: Request): Promise<NextResponse> {
   // swallows its own errors and returns null in stub mode; the extra guard keeps
   // a thrown rejection from taking the health cron down with it.
   const calibrationDrift = await loadActiveCalibrationDrift().catch(() => null);
+  // Line-archive freshness (C-393). The loader makes ZERO database calls when
+  // LINE_ARCHIVE_ENABLED is not true, so DISABLED is free and never pages.
+  // STALE/SILENT while enabled is the alarm the 21-day outage never had.
+  const lineArchive = await loadLineArchiveFreshness(db, {
+    enabled: isLineArchiveEnabled(),
+    now: new Date(),
+  }).catch(() => null);
   const snap = classifyHealthAlertSnapshot({
     checks: probes.checks,
     capabilities: probes.capabilities,
     calibrationDrift,
+    lineArchive,
   });
   const decision = decideHealthAlertStateless(snap);
 
@@ -220,6 +230,16 @@ export async function GET(request: Request): Promise<NextResponse> {
             failingFloors: calibrationDrift.failingFloors,
           }
         : null,
+      // C-393: STALE/SILENT while enabled pages; DISABLED is a founder report;
+      // UNKNOWN carries its (sanitised) error into the payload.
+      lineArchive: lineArchive
+        ? {
+            status: lineArchive.status,
+            enabled: lineArchive.enabled,
+            hoursSinceNewest: lineArchive.hoursSinceNewest,
+            error: lineArchive.error ?? null,
+          }
+        : null,
       checks: probes.checks,
       deploymentSha,
       observedAt,
@@ -266,6 +286,14 @@ export async function GET(request: Request): Promise<NextResponse> {
           previousStatus: calibrationDrift.previousStatus,
           currentStatus: calibrationDrift.currentStatus,
           failingFloors: calibrationDrift.failingFloors,
+        }
+      : null,
+    lineArchive: lineArchive
+      ? {
+          status: lineArchive.status,
+          enabled: lineArchive.enabled,
+          hoursSinceNewest: lineArchive.hoursSinceNewest,
+          error: lineArchive.error ?? null,
         }
       : null,
     webhookConfigured: webhook.configured,

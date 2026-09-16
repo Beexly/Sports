@@ -102,8 +102,13 @@ export default function MethodologyPage(): JSX.Element {
             </Reveal>
             <Reveal delay={90}>
               <h1 className="mt-4 max-w-4xl font-display text-display-xl text-balance text-white">
-                Deterministic scoring. Open method. Protected weights.
+                Method
               </h1>
+            </Reveal>
+            <Reveal delay={140}>
+              <p className="mt-3 max-w-4xl font-display text-balance text-ink-200" style={{ fontSize: "clamp(1.25rem, 3vw, 2rem)", lineHeight: 1.15 }}>
+                Deterministic scoring. Open method. Protected weights.
+              </p>
             </Reveal>
             <Reveal delay={180}>
               <p className="mt-6 max-w-2xl text-lg leading-8 text-ink-300">

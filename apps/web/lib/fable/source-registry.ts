@@ -107,6 +107,7 @@ function ownerDecisionNeeded(entry: SourceRightsEntry): boolean {
     entry.status === "permission_required" ||
     entry.status === "manual_research_only" ||
     entry.status === "blocked_technical_controls" ||
+    entry.status === "forbidden" ||
     entry.status === "excluded"
   );
 }

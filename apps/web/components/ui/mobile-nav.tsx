@@ -7,62 +7,24 @@ type NavLink = { label: string; href: string };
 // A section is either a flat list of links (no toggle) or a collapsible group.
 type Section = { heading: string; collapsible?: boolean; links: ReadonlyArray<NavLink> };
 
-// Mirrors the desktop IA exactly: Board, Players (one lab), Intelligence,
-// Fantasy & Daily, plus the standalone Beat and Proof doors. Players' deep
-// views are in-page lenses (not nav items), so they are not duplicated here.
-// Proof is its own door (the /calibration hub gathers every proof surface).
-// Internal surfaces (Studio, Airwave) are not linked.
+// Mirrors the desktop IA exactly (C-360). Labels match page H1s. The nine
+// sample-backed fantasy tools are parked (routes stay; nav drops them).
 const SECTIONS: readonly Section[] = [
   {
-    heading: "Board",
+    heading: "Primary",
     collapsible: true,
     links: [
-      { label: "The board", href: "/board" },
-      { label: "League slates", href: "/slate" },
-      { label: "Today's picks", href: "/picks" },
-      { label: "Our record", href: "/calibration" },
-      { label: "Bankroll", href: "/bankroll" },
-      { label: "NFL hub", href: "/house" },
-    ],
-  },
-  {
-    heading: "Players",
-    links: [{ label: "Player Lab", href: "/players" }],
-  },
-  {
-    heading: "Fantasy & Daily",
-    collapsible: true,
-    links: [
-      { label: "All tools", href: "/fantasy" },
-      { label: "Draft Assistant", href: "/fantasy/draft" },
-      { label: "Start-Sit", href: "/fantasy/lineup" },
-      { label: "Waivers", href: "/fantasy/waivers" },
-      { label: "Trades", href: "/fantasy/trade" },
-      { label: "DFS Optimizer", href: "/fantasy/dfs" },
-      { label: "Pick'em", href: "/fantasy/props" },
-      { label: "Best ball", href: "/fantasy/bestball" },
-      { label: "NBA slate", href: "/fantasy/nba" },
-      { label: "Touchdowns", href: "/fantasy/touchdowns" },
-      { label: "Showdown", href: "/fantasy/showdown" },
-      { label: "Optimizer", href: "/optimizer" },
-      { label: "Connect league", href: "/fantasy/connect" },
-    ],
-  },
-  {
-    heading: "GSN",
-    collapsible: true,
-    links: [
-      { label: "The Beat", href: "/the-beat" },
-    ],
-  },
-  {
-    heading: "More",
-    links: [
-      { label: "Verify a receipt", href: "/verify" },
+      { label: "Board", href: "/board" },
+      { label: "Picks", href: "/picks" },
+      { label: "Record", href: "/performance" },
+      { label: "Method", href: "/methodology" },
+      { label: "Verify", href: "/verify" },
       { label: "Plans", href: "/pricing" },
-      { label: "Free tools", href: "/tools" },
-      { label: "How we make money", href: "/how-we-make-money" },
-      { label: "Sign in", href: "/auth/signin" },
+      { label: "Players", href: "/players" },
+      { label: "DFS", href: "/fantasy/dfs" },
+      { label: "Props", href: "/fantasy/props" },
+      { label: "GSN", href: "/gsn" },
+      { label: "Calibration", href: "/calibration" },
     ],
   },
 ];

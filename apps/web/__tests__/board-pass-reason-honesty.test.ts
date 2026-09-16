@@ -95,6 +95,27 @@ beforeEach(() => {
   gateDecisionFindMany.mockResolvedValue([]);
 });
 
+
+/**
+ * The three shipped pass-reason strings, quoted from lib/board/pass-reason.ts.
+ *
+ * Every assertion below used to pin the OLD wording — "Market depth below
+ * publish threshold.", "Evidence health below publish threshold.", "Not
+ * evaluated: no pick was generated for this game today." The copy doctrine in
+ * AGENTS.md bans all three ("market depth below publish threshold", "not
+ * evaluated", "no pick generated") and prescribes exactly what ships now, so
+ * the code was right and these tests demanded banned copy.
+ *
+ * Named constants rather than inline literals: the same three strings are
+ * asserted in six places, and the last drift left one NEGATIVE assertion
+ * matching a phrase that no longer existed, so it passed while guarding
+ * nothing. One definition each means the next copy change breaks loudly in one
+ * place instead of quietly everywhere.
+ */
+const REASON_THIN_BOOKS = "Not enough sportsbooks are pricing this game yet.";
+const REASON_THIN_EVIDENCE = "We don't have enough reliable data on this one.";
+const REASON_NOT_SCORED = "We haven't scored this game yet.";
+
 describe("Pass List fallback — an absence is never reported as a judgement", () => {
   it("does NOT claim a threshold was missed when inputs were healthy", async () => {
     gameFindMany.mockResolvedValue([game()]);
@@ -119,7 +140,12 @@ describe("Pass List fallback — an absence is never reported as a judgement", (
 
     // The same vocabulary /board/gate uses, deliberately. One distinction, one
     // set of words, across both surfaces.
-    expect(reason.toLowerCase()).toContain("not evaluated");
+    //
+    // This asserted the literal "not evaluated", which the copy doctrine has
+    // since BANNED along with "no pick generated" and the "below publish
+    // threshold" family. The shipped string says the same thing in the words
+    // the doctrine prescribes, so the claim is pinned, not the jargon.
+    expect(reason.toLowerCase()).toContain("haven't scored this game");
   });
 
   it("still names a REAL input deficiency when one is observable", async () => {
@@ -128,14 +154,14 @@ describe("Pass List fallback — an absence is never reported as a judgement", (
     gameFindMany.mockResolvedValue([game({ bookmakerCoverageMax: 1 })]);
 
     const result = await loadBoardPasses(NOW);
-    expect(result.data.passes[0]?.reason).toBe("Market depth below publish threshold.");
+    expect(result.data.passes[0]?.reason).toBe(REASON_THIN_BOOKS);
   });
 
   it("names thin evidence health when that is the observable deficiency", async () => {
     gameFindMany.mockResolvedValue([game({ dataQualityScore: 12 })]);
 
     const result = await loadBoardPasses(NOW);
-    expect(result.data.passes[0]?.reason).toBe("Evidence health below publish threshold.");
+    expect(result.data.passes[0]?.reason).toBe(REASON_THIN_EVIDENCE);
   });
 });
 
@@ -154,7 +180,7 @@ describe("both /board lanes tell ONE story about a game", () => {
   it("names evidence health when depth is fine but evidence is thin", () => {
     // The exact case the two lanes disagreed on.
     expect(unevaluatedPassReason(8, MIN_DATA_QUALITY_SCORE - 1)).toBe(
-      "Evidence health below publish threshold.",
+      REASON_THIN_EVIDENCE,
     );
   });
 
@@ -162,13 +188,13 @@ describe("both /board lanes tell ONE story about a game", () => {
     // Deterministic precedence: without a fixed order, the same game could be
     // described differently by two callers reading the same row.
     expect(unevaluatedPassReason(MIN_BOOKMAKER_COVERAGE - 1, MIN_DATA_QUALITY_SCORE - 1)).toBe(
-      "Market depth below publish threshold.",
+      REASON_THIN_BOOKS,
     );
   });
 
   it("falls through to 'not evaluated' only when both inputs are healthy", () => {
     expect(unevaluatedPassReason(MIN_BOOKMAKER_COVERAGE, MIN_DATA_QUALITY_SCORE)).toBe(
-      "Not evaluated: no pick was generated for this game today.",
+      REASON_NOT_SCORED,
     );
   });
 
@@ -218,7 +244,12 @@ describe("Pass List primary path — a real decision is passed through untouched
 
     const result = await loadBoardPasses(NOW);
     expect(result.data.passes[0]?.reason).toBe("Consensus below publish threshold.");
-    expect(result.data.passes[0]?.reason.toLowerCase()).not.toContain("not evaluated");
+    // This read `.not.toContain("not evaluated")`, which the copy doctrine
+    // retired — so it matched nothing and passed VACUOUSLY, guarding a real
+    // judgement against softening while checking for a phrase the product no
+    // longer says anywhere. It now names the actual fallback it must not be.
+    expect(result.data.passes[0]?.reason).not.toBe(REASON_NOT_SCORED);
+    expect(result.data.passes[0]?.reason.toLowerCase()).not.toContain("haven't scored");
     // And the fallback query must not even run when real decisions exist.
     expect(gameFindMany).not.toHaveBeenCalled();
   });

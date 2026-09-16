@@ -12,6 +12,7 @@
 import { db } from "@sports/db";
 import {
   getReadinessGates,
+  isThreeWayMoneylineSport,
   MODEL_VERSION,
   MIN_PUBLISH_CONFIDENCE,
   PREMIUM_CONFIDENCE_THRESHOLD,
@@ -30,6 +31,7 @@ import {
 } from "./fixture-confirmation.js";
 import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
 import { collapseGameRowsToFixtures } from "./fixture-collapse.js";
+import { isNflPreseasonKickoff, logMintWithhold } from "./mint-withhold.js";
 
 /**
  * Rows read from `games` before the per-fixture collapse. Sized well above the
@@ -330,8 +332,18 @@ export async function generateSignalSlate(opts?: {
     // A two-way moneyline on a three-way market overstates P(win): the blend
     // below normalises home/(home+away) and drops the draw mass, while the pick
     // settles a draw as a loss. The book path refuses to publish these
-    // (scoring.ts isThreeWayMoneylineSport) and so does this one.
-    if (sportKey.toLowerCase().startsWith("soccer")) {
+    // (scoring.ts isThreeWayMoneylineSport) and so does this one. C-353:
+    // assert the engine predicate at this MONEYLINE creation site, not a
+    // hand-rolled soccer prefix that can drift from scoring.ts.
+    if (isThreeWayMoneylineSport(sportKey)) {
+      logMintWithhold(logPrefix, "soccer_moneyline", game.id, "MONEYLINE");
+      picksSkipped += 1;
+      continue;
+    }
+    // C-353: NFL preseason is exhibition product. Withhold-only - this path
+    // never creates or re-prices a preseason row; it only refuses to mint one.
+    if (isNflPreseasonKickoff(sportKey, game.commenceTime)) {
+      logMintWithhold(logPrefix, "nfl_preseason", game.id, "MONEYLINE");
       picksSkipped += 1;
       continue;
     }

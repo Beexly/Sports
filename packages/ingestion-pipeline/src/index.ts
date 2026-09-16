@@ -146,6 +146,9 @@ export {
   PREFIX_MATCH_SPORT_KEYS,
   normalizeGameTeamToken,
   matchTeamSide,
+  planTwinTombstones,
+  applyTwinTombstones,
+  isBetterTwinCanonical,
 } from "./game-identity.js";
 export type {
   GameIdentityDb,
@@ -153,6 +156,9 @@ export type {
   GameTwinCandidate,
   GameTwinMatch,
   CanonicalGameResolution,
+  TwinTombstoneCandidate,
+  TwinTombstonePlan,
+  TwinTombstoneDb,
 } from "./game-identity.js";
 
 export {
@@ -166,6 +172,9 @@ export type { FixtureCollapseRow } from "./fixture-collapse.js";
 // the stale backfill) can stamp the close after a successful grade (C-95).
 export { markClosingSnapshotsIfEnabled } from "./line-archive.js";
 export type { MarkClosingSnapshotsIfEnabledResult } from "./line-archive.js";
+// The flag predicate itself, so a reader (e.g. the ops freshness surface)
+// asks the same question the capture path does instead of restating it.
+export { isLineArchiveEnabled } from "./line-archive.js";
 
 export { seedGamesFromEspn } from "./seed-games-from-espn.js";
 export type { SeedGamesFromEspnResult } from "./seed-games-from-espn.js";
@@ -185,4 +194,48 @@ export type {
 
 export { backfillIndependentTrueProb } from "./backfill-independent-trueprob.js";
 export type { BackfillIndependentResult } from "./backfill-independent-trueprob.js";
+
+// Kalshi NFL exchange tape (C-396, D18a). Double-gated; free PredExon only.
+export {
+  captureExchangeTapeIfEnabled,
+  createExchangeTapeClient,
+  isExchangeTapeEnabled,
+  KALSHI_PREDEXON_BOOK,
+  EXCHANGE_TAPE_SOURCE,
+  EXCHANGE_TAPE_NFL_SERIES,
+  EXCHANGE_TAPE_DROPPED_FIELDS,
+  EXCHANGE_TAPE_CATALOG_ABSENT_FIELDS,
+} from "./exchange-tape-capture.js";
+export type {
+  ExchangeTapeGame,
+  CaptureExchangeTapeArgs,
+  CaptureExchangeTapeResult,
+} from "./exchange-tape-capture.js";
+
+// C-358: first production reader over prop OddsLineSnapshot rows → graded RateSample.
+export {
+  readPropSamples,
+  buildPropSampleLines,
+  buildPlayerIdMap,
+  buildGameSeasonWeekMap,
+  gradePropSide,
+  rateSampleFromWeek,
+  rushAttemptsForProp,
+  PROP_MARKET_STAT_FIELD,
+  attachWeatherToPropLines,
+  logPropSlateWeatherCoverage,
+} from "./prop-sample-reader.js";
+export type {
+  PropSampleLine,
+  PropGradedOutcome,
+  PropSide,
+  PlayerIdentityRow,
+  PlayerIdMap,
+  GameSeasonWeek,
+  ArchivePropRow,
+  PlayerWeekStatRow,
+  SnapCountRow,
+  BuildPropSampleInput,
+  ReadPropSamplesArgs,
+} from "./prop-sample-reader.js";
 

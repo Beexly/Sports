@@ -20,7 +20,6 @@ import {
   type NewsItem,
   type Tier,
 } from "@/lib/news/impact";
-import { DEMO_WIRE } from "@/lib/news/wire";
 import { BRAND_COLORS } from "@/lib/brand";
 
 const TIER_HEX: Record<Tier, string> = {
@@ -37,13 +36,25 @@ const ago = (m: number) => (m < 60 ? `${m}m ago` : `${Math.round(m / 60)}h ago`)
 
 type SortMode = "strongest" | "newest";
 
-export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
-  // Live RSS wire when the owner has whitelisted feeds (NEWS_RSS_FEEDS);
-  // otherwise the clearly-labeled fictional sample. The two states are
-  // visually unmistakable: sample shows the fictional-sources marker, live
-  // shows the real-source attribution instead.
+const EMPTY_WIRE: NewsItem[] = [];
+
+export function TheBeat({
+  liveWire = null,
+  unavailable = false,
+}: {
+  liveWire?: NewsItem[] | null;
+  /**
+   * The stored wire read FAILED. Distinct from an empty store: an empty array
+   * is the honest empty state (nothing classified / nothing landed); a failure
+   * means we could not read the store and must not invent a wire.
+   */
+  unavailable?: boolean;
+}) {
+  // Stored wire (C-416). Empty store is honest empty, never a sample.
+  // EMPTY_WIRE is a stable module constant so useMemo deps stay stable when
+  // nothing is loaded (liveWire === null).
   const isLive = liveWire !== null;
-  const wire = liveWire ?? DEMO_WIRE;
+  const wire = liveWire ?? EMPTY_WIRE;
   const ranked = useMemo(() => rankWireCorroborated(wire), [wire]);
   const [tierFilter, setTierFilter] = useState<Tier | "All">("All");
   const [sort, setSort] = useState<SortMode>("strongest");
@@ -75,10 +86,32 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
     return { total: ranked.length, confirmed, hot, top };
   }, [ranked]);
 
+  // A FAILED store read renders nothing but the failure. This returns BEFORE
+  // the empty-wire path below: a read error is not the same as a quiet wire.
+  if (unavailable) {
+    return (
+      <div className="space-y-5">
+        <span
+          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
+          style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}
+        >
+          Wire offline · store unreadable
+        </span>
+        <div className="surface-card p-8 text-center">
+          <p className="font-display text-xl text-ion-white">Feed unavailable.</p>
+          <p className="mx-auto mt-1 max-w-md text-sm text-ion-2">
+            We could not read the stored wire just now, so there is nothing to
+            show. We will not fill the gap with a sample.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="space-y-5">
-      {/* Provenance marker, unmistakable at the point of display: a sample
-          card is never read as live, and a live card names its feed sources. */}
+      {/* Provenance marker, unmistakable at the point of display: live cards
+          name their feed sources. There is no sample wire (C-416). */}
       {isLive ? (
         <span
           className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
@@ -92,7 +125,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
           className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
           style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}
         >
-          Sample feed · fictional sources
+          Wire · store not loaded
         </span>
       )}
 
@@ -132,7 +165,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
               aria-pressed={active}
               className="rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider transition-colors"
               style={{ background: active ? `${TIER_HEX[t]}22` : "transparent", color: TIER_HEX[t], boxShadow: active ? `inset 0 0 0 1px ${TIER_HEX[t]}` : "none" }}
-              title={`reliability ${Math.round(TIER_WEIGHT[t] * 100)}%`}>
+              title={`source tier ${t}: editorial weight ${TIER_WEIGHT[t].toFixed(2)}, not a measured hit rate`}>
               {t}
             </button>
           );
@@ -243,7 +276,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
                   <span className="rounded-full px-2 py-0.5" style={{ background: "rgba(255,255,255,0.06)", color: "#c8d2dd" }}>{signalLabel(r.item.signal)}</span>
                   <span className="text-ion-2">{isLive ? "Est. fantasy" : "Fantasy"} <strong style={{ color: fav >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{fav >= 0 ? "+" : ""}{fav}</strong></span>
                   <span className="text-ion-2">{isLive ? "Est. market" : "Market"} <strong style={{ color: r.marketDelta >= 0 ? BRAND_COLORS.orbitalCyan : BRAND_COLORS.ionMagenta }}>{r.marketDelta >= 0 ? "+" : ""}{r.marketDelta}</strong></span>
-                  <span className="text-ion-2">Reliability <strong className="text-ion-white">{Math.round(r.reliability * 100)}%</strong></span>
+                  <span className="text-ion-2">Source <strong className="text-ion-white">{r.item.tier}</strong></span>
                 </div>
 
                 {open ? (
@@ -253,7 +286,7 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
                       {r.action}
                     </p>
                     <p className="mt-2 text-[11px] text-ion-3">
-                      Weighted by source reliability {Math.round(r.reliability * 100)}%
+                      Weighted by source tier {r.item.tier}
                       {r.corroboration.confirmed ? `, confirmed across ${r.corroboration.sources} sources` : ", single source"}.
                       Urgency {r.urgency} of 100 after freshness decay.
                     </p>
@@ -267,7 +300,35 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
             </article>
           );
         })}
-        {shown.length === 0 && (
+        {shown.length === 0 && wire.length === 0 && (
+          // The wire itself is empty. Blaming the UI filter here would be a
+          // claim we have not checked, and "loosen it and the wire comes back"
+          // would be false, because there is nothing behind the filter.
+          //
+          // But "nothing is being withheld" was false too: fetchLiveWire drops
+          // headlines upstream (lib/news/rss.ts), so an empty wire can mean
+          // reports arrived and every one was dropped before this component
+          // saw them.
+          //
+          // The replacement then ENUMERATED the drop conditions, which was the
+          // same over-claim one layer down: the feed was truncated to 40
+          // entries BEFORE classification, so a qualifying report could be
+          // dropped by position while the copy blamed the publication bar.
+          // That truncation is fixed in rss.ts. This copy no longer asserts a
+          // complete cause set either way - it states the outcome (nothing
+          // made the wire) and what generally qualifies, which stays true
+          // whatever the drop path.
+          <div className="surface-card p-8 text-center">
+            <p className="font-display text-xl text-ion-white">No fresh reports.</p>
+            <p className="mx-auto mt-1 max-w-md text-sm text-ion-2">
+              The wire is live, and this is not an error. Either nothing
+              arrived, or no recent report with a real publish time and a
+              signal we classify made the wire.
+            </p>
+          </div>
+        )}
+        {shown.length === 0 && wire.length > 0 && (
+          // Genuinely the filter: there ARE items, they are just all excluded.
           <div className="surface-card p-8 text-center">
             <p className="font-display text-xl text-ion-white">The wire is quiet on this frequency.</p>
             <p className="mx-auto mt-1 max-w-md text-sm text-ion-2">Nothing at this tier, team, or heat level right now. That is the filter talking, not the newsroom. Loosen it and the wire comes back.</p>

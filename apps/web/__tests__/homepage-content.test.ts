@@ -27,6 +27,11 @@ const labDoorSource = readFileSync(
 );
 const lower = source.toLowerCase();
 
+/** Source with block and line comments removed — see the fallback test below. */
+function stripComments(src: string): string {
+  return src.replace(/\/\*[\s\S]*?\*\//g, "").replace(/^[ \t]*\/\/.*$/gm, "");
+}
+
 describe("Homepage — Phase 2 trust invariants", () => {
   it("does NOT define a FALLBACK_PICKS array", () => {
     expect(source).not.toMatch(/\bFALLBACK_PICKS\b/);
@@ -68,15 +73,33 @@ describe("Homepage — Phase 2 trust invariants", () => {
   });
 
   it("derives live numbers from real loaders, with honest fallbacks when empty", () => {
-    // Concise home: door stats degrade to honest copy ("Gate holding",
-    // "Intake warming up", "Calibration sample building") when counts are zero,
-    // never to fabricated rows.
+    // Door stats must degrade to honest copy when counts are zero, never to
+    // fabricated rows.
+    //
+    // This assertion used to read `source.toContain("Gate holding")` and
+    // `source.toContain("Intake warming up")` and it PASSED — off a COMMENT.
+    // page.tsx:56 lists those two strings precisely to say the page must NOT
+    // dress an outage in them, so the test was satisfied by the prohibition
+    // against the very copy it claimed to require, and would have gone on
+    // passing if every fallback on the page were deleted. "Intake warming up"
+    // is real, but it lives in the lab-door component, not here.
+    //
+    // Comments are stripped first so that can never happen again.
     expect(source).toMatch(/loadBoardState/);
     expect(source).toMatch(/loadPublicCalibrationReport/);
     expect(labDoorSource).toMatch(/loadNflverseUsagePulse/);
-    expect(source).toContain("Gate holding");
-    expect(source).toContain("Intake warming up");
-    expect(source).toContain("Calibration sample building");
+
+    const pageCode = stripComments(source);
+    const labCode = stripComments(labDoorSource);
+    // Board door, zero counts: a quiet slate, stated as such.
+    expect(pageCode).toContain("Quiet slate. Nothing forced.");
+    // Board door, outage: says unavailable rather than showing a calm zero.
+    expect(pageCode).toContain("Board temporarily unavailable");
+    // Calibration, thin sample: names the gap.
+    expect(pageCode).toContain("Calibration sample building");
+    // Lab door, where the player fallbacks actually live.
+    expect(labCode).toContain("Intake warming up");
+    expect(labCode).toContain("Live player data unavailable");
   });
 
   it("does NOT define fake game objects with hard-coded teams", () => {

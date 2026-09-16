@@ -37,7 +37,11 @@ export default async function GSNPage() {
               <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan">
                 {transmission.illustrative ? null : <span className="live-dot" />}
                 Galaxy Sports Network
-                {transmission.illustrative ? (
+                {transmission.source === "unavailable" ? (
+                  <span className="ml-1 font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
+                    · transmission offline
+                  </span>
+                ) : transmission.illustrative ? (
                   <span className="ml-1 font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
                     · methodology structure
                   </span>
@@ -53,9 +57,14 @@ export default async function GSNPage() {
                 className="mt-5 font-display text-balance text-ion-white"
                 style={{ fontSize: "clamp(2.5rem, 8vw, 5.5rem)", lineHeight: 0.98, letterSpacing: "-0.02em" }}
               >
-                GSN: the{" "}
-                <span className="gse-editorial" style={{ fontSize: "1.08em" }}>transmission</span>, not the blog.
+                GSN
               </h1>
+            </Reveal>
+            <Reveal delay={140}>
+              <p className="mt-3 max-w-2xl font-display text-balance text-ion-1" style={{ fontSize: "clamp(1.5rem, 4vw, 2.5rem)", lineHeight: 1.05 }}>
+                the{" "}
+                <span className="gse-editorial" style={{ fontSize: "1.08em" }}>transmission</span>, not the blog.
+              </p>
             </Reveal>
             <Reveal delay={170}>
               <p className="mt-5 max-w-2xl text-lg text-ion-1">
@@ -74,8 +83,9 @@ export default async function GSNPage() {
             <Reveal>
               <GSNTransmission transmission={transmission} />
               <p className="mt-4 text-center font-mono text-[10px] uppercase tracking-[0.2em] text-ion-2">
-                Source · {transmission.source === "board" ? "board snapshot" : "methodology structure"}
-                {transmission.illustrative ? " · no fabricated track-record numbers" : ""}
+                {transmission.source === "unavailable"
+                  ? "Source · unavailable · zero invented counts"
+                  : `Source · ${transmission.source === "board" ? "board snapshot" : "methodology structure"}${transmission.illustrative ? " · no fabricated track-record numbers" : ""}`}
               </p>
             </Reveal>
           </div>
@@ -89,8 +99,8 @@ export default async function GSNPage() {
                 Daily transmission
               </p>
               <p className="mx-auto mt-4 max-w-2xl text-base leading-relaxed text-ion-1">
-                This transmission is built from the current board state when published reads exist;
-                otherwise it ships the full methodology structure so the product never goes empty.
+                This transmission is built from the current board state when published reads exist.
+                When the board is empty or unreachable, GSN reports offline with zero invented counts.
               </p>
               <div className="mt-7 flex flex-wrap justify-center gap-3">
                 <Link href="/observatory" className="btn btn-primary">

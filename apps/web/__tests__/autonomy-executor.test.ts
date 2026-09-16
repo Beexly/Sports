@@ -40,7 +40,7 @@ function baseObs(over: Partial<AutonomyObservation> = {}): AutonomyObservation {
 }
 
 describe("autonomy executor mapping", () => {
-  it("maps free-spine and settle kinds to cron paths", () => {
+  it("maps free-spine to a cron path but never settle-picks (C-418)", () => {
     const plan = planAutonomyCycle(
       baseObs({
         ingestionOk: false,
@@ -54,18 +54,14 @@ describe("autonomy executor mapping", () => {
     expect(spine && executableTargetFor(spine)).toBe(
       EXECUTABLE_CRON_TARGETS.RUN_FREE_SPINE_HEALTH,
     );
-    expect(settle && executableTargetFor(settle)).toBe(
-      EXECUTABLE_CRON_TARGETS.RUN_FREE_SETTLE,
-    );
-    // The request the executor actually sends takes the FREE branch. Without
-    // the query the route runs the paid branch whenever THE_ODDS_API_KEY is
-    // present, which is why the planner's "free settle" never ran the free
-    // path in production (2026-09-02).
-    expect(settle && executableRequestFor(settle)).toBe("/api/cron/settle-picks?path=free");
+    // C-418: Vercel cron is the only settle-picks scheduler; autonomy skips it.
+    expect(settle).toBeDefined();
+    expect(settle && executableTargetFor(settle)).toBeNull();
+    expect(settle && executableRequestFor(settle)).toBeNull();
     expect(spine && executableRequestFor(spine)).toBe(EXECUTABLE_CRON_TARGETS.RUN_FREE_SPINE_HEALTH);
   });
 
-  it("invokes settle-picks with ?path=free when settlement is behind", async () => {
+  it("does not invoke settle-picks when settlement is behind (C-418)", async () => {
     const urls: string[] = [];
     const fetchImpl = vi.fn(async (input: string) => {
       urls.push(String(input));
@@ -79,7 +75,7 @@ describe("autonomy executor mapping", () => {
         settlementOverdue: 92,
       }),
     );
-    const result = await executeAutonomyCycle({
+    await executeAutonomyCycle({
       plan,
       baseUrl: "https://www.galaxysportsedge.com",
       cronSecret: "test-secret",
@@ -88,9 +84,7 @@ describe("autonomy executor mapping", () => {
       fetchImpl: fetchImpl as unknown as typeof fetch,
     });
     const settleUrl = urls.find((u) => u.includes("/api/cron/settle-picks"));
-    expect(settleUrl).toBeDefined();
-    expect(settleUrl).toContain("/api/cron/settle-picks?path=free");
-    expect(result.acts.some((a) => a.target === "/api/cron/settle-picks?path=free")).toBe(true);
+    expect(settleUrl).toBeUndefined();
   });
 
   it("never maps owner FIX_PATH_MISCONFIG to a cron", () => {
@@ -106,7 +100,7 @@ describe("autonomy executor mapping", () => {
     expect(executableTargetFor(fix!)).toBeNull();
   });
 
-  it("dedupes settle path when Wave A and RUN_FREE_SETTLE both present", () => {
+  it("never maps Wave A or RUN_FREE_SETTLE to settle-picks (C-418)", () => {
     const plan = planAutonomyCycle(
       baseObs({
         settlementBand: "CRITICAL",
@@ -117,9 +111,9 @@ describe("autonomy executor mapping", () => {
     const selected = selectExecutableActions(plan, 3);
     const paths = selected.map((a) => executableTargetFor(a));
     const settleCount = paths.filter(
-      (p) => p === EXECUTABLE_CRON_TARGETS.RUN_FREE_SETTLE,
+      (p) => p === "/api/cron/settle-picks",
     ).length;
-    expect(settleCount).toBe(1);
+    expect(settleCount).toBe(0);
   });
 });
 

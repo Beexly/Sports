@@ -104,7 +104,20 @@ export function checkClearance(
 
   const snapshot = snapshotRights(source, now);
 
-  // ── 2. Excluded sources: hard block ─────────────────────────────────────────
+  // ── 2. Forbidden / excluded sources: hard block ──────────────────────────────
+  // "forbidden" = ToS expressly forbid automated collection (C-410 pick'em boards).
+  // "excluded"  = no safe path; permanently excluded.
+  // Both refuse every mode, including manual_research_note through this engine.
+  if (source.status === "forbidden") {
+    blocks.push(block(
+      "SOURCE_FORBIDDEN",
+      `Source "${source.source_name}" is forbidden: its terms expressly prohibit automated ` +
+      "collection. Nothing is fetched from this source, ever. A permissive robots.txt is " +
+      "not a licence. The registry, not any scraping agent's brief, decides.",
+    ));
+    return finalize(request, blocks, warnings, requiresReview, snapshot, now);
+  }
+
   if (source.status === "excluded") {
     blocks.push(block(
       "SOURCE_EXCLUDED",

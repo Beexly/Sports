@@ -2,13 +2,18 @@ import Link from "next/link";
 import { BrandLockup } from "@/components/brand/brand-lockup";
 import { BRAND_NAME, CLOSING_LINE, GSN_NAME, HELPLINE, SOCIAL } from "@/lib/brand";
 
-/** Condensed footer — five destinations, not a sitemap. */
+/** Condensed footer — the same doors as the top bar (C-360). */
 const FOOTER_LINKS = [
   { label: "Board", href: "/board" },
+  { label: "Picks", href: "/picks" },
   { label: "Record", href: "/performance" },
   { label: "Method", href: "/methodology" },
   { label: "Verify", href: "/verify" },
   { label: "Plans", href: "/pricing" },
+  { label: "Players", href: "/players" },
+  { label: "DFS", href: "/fantasy/dfs" },
+  { label: "Props", href: "/fantasy/props" },
+  { label: "GSN", href: "/gsn" },
 ] as const;
 
 const SOCIAL_LINKS = [

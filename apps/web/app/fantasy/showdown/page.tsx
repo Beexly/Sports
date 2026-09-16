@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description:
     "DraftKings Showdown solved on its own terms: one captain at 1.5x points and salary, five flex slots, and both teams represented. Every lineup is checked against the cap and shown with the exact combinations we searched. Illustrative slate — the math is real, the players are fictional.",
   alternates: { canonical: "/fantasy/showdown" },
+  // Parked sample tool (C-360 / D3): keep the route, drop it from the index.
+  robots: { index: false },
 };
 
 export default function ShowdownPage(): JSX.Element {

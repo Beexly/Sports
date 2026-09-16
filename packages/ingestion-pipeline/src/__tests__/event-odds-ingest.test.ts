@@ -4,6 +4,7 @@ import {
   DEFAULT_EVENT_ODDS_CREDIT_CAP,
   NFL_EVENT_ODDS_MARKETS,
   NBA_EVENT_ODDS_MARKETS,
+  PROP_CLOSE_SWEEP_MINUTES,
   defaultEventOddsMarkets,
   eventOddsCreditCap,
   ingestEventOddsIfEnabled,
@@ -19,21 +20,94 @@ describe("orderEventIdsForCreditCap", () => {
     expect(ids).toEqual(["a", "b", "c"]); // input not mutated
   });
 
-  it("sorts sooner commenceTime first", () => {
+  it("sorts sooner commenceTime first when every event is outside the close window", () => {
+    // now is after all three kickoffs → all past-kickoff, sooner still first.
+    const now = new Date("2026-08-24T00:00:00Z");
     const t1 = new Date("2026-08-23T13:00:00Z");
     const t2 = new Date("2026-08-23T16:00:00Z");
     const t3 = new Date("2026-08-23T20:00:00Z");
     const ids = ["late", "early", "mid"];
     const commence = { late: t3, early: t1, mid: t2 };
-    expect(orderEventIdsForCreditCap(ids, commence)).toEqual(["early", "mid", "late"]);
+    expect(orderEventIdsForCreditCap(ids, commence, now)).toEqual(["early", "mid", "late"]);
+  });
+
+  it("puts the T-15 close window ahead of earlier already-started games (C-357)", () => {
+    // 15:50Z: 13:00Z already kicked off (past), 16:00Z is 10 minutes out (close
+    // window), 20:00Z is still future. The close must win the first credit.
+    const now = new Date("2026-08-23T15:50:00Z");
+    const commence = {
+      started: new Date("2026-08-23T13:00:00Z"),
+      closing: new Date("2026-08-23T16:00:00Z"),
+      late: new Date("2026-08-23T20:00:00Z"),
+    };
+    expect(orderEventIdsForCreditCap(["started", "closing", "late"], commence, now)).toEqual([
+      "closing",
+      "late",
+      "started",
+    ]);
+  });
+
+  it("puts every close-window event before any other prop refresh", () => {
+    const now = new Date("2026-08-23T15:50:00Z");
+    const commence = {
+      closing_1600: new Date("2026-08-23T16:00:00Z"),
+      closing_1605: new Date("2026-08-23T16:05:00Z"),
+      future_2000: new Date("2026-08-23T20:00:00Z"),
+      started_1300: new Date("2026-08-23T13:00:00Z"),
+    };
+    expect(
+      orderEventIdsForCreditCap(
+        ["started_1300", "future_2000", "closing_1605", "closing_1600"],
+        commence,
+        now,
+      ),
+    ).toEqual(["closing_1600", "closing_1605", "future_2000", "started_1300"]);
+  });
+
+  it("treats kickoff exactly at now as still in the close window", () => {
+    const now = new Date("2026-08-23T16:00:00Z");
+    const commence = {
+      at_kickoff: new Date("2026-08-23T16:00:00Z"),
+      started: new Date("2026-08-23T13:00:00Z"),
+      late: new Date("2026-08-23T20:00:00Z"),
+    };
+    expect(orderEventIdsForCreditCap(["started", "late", "at_kickoff"], commence, now)).toEqual([
+      "at_kickoff",
+      "late",
+      "started",
+    ]);
+  });
+
+  it("uses a 15-minute close window", () => {
+    expect(PROP_CLOSE_SWEEP_MINUTES).toBe(15);
+    const now = new Date("2026-08-23T15:45:00Z");
+    // 16:00 is exactly 15 minutes out → close window, outranks a past kickoff.
+    const just_inside = {
+      e: new Date("2026-08-23T16:00:00Z"),
+      p: new Date("2026-08-23T13:00:00Z"),
+    };
+    expect(orderEventIdsForCreditCap(["p", "e"], just_inside, now)).toEqual(["e", "p"]);
+    // 16:00:01 is one second past the window → future bucket; a still-closer
+    // close-window peer (15:55) outranks it.
+    const just_outside = {
+      close: new Date("2026-08-23T15:55:00Z"),
+      e: new Date("2026-08-23T16:00:01Z"),
+      p: new Date("2026-08-23T13:00:00Z"),
+    };
+    expect(orderEventIdsForCreditCap(["p", "e", "close"], just_outside, now)).toEqual([
+      "close",
+      "e",
+      "p",
+    ]);
   });
 
   it("puts events with missing times AFTER all known times (stable)", () => {
+    const now = new Date("2026-08-24T00:00:00Z");
     const t1 = new Date("2026-08-23T13:00:00Z");
     const t2 = new Date("2026-08-23T16:00:00Z");
     const ids = ["known_a", "unknown", "known_b", "also_unknown"];
     const commence = { known_a: t1, known_b: t2 };
-    expect(orderEventIdsForCreditCap(ids, commence)).toEqual([
+    expect(orderEventIdsForCreditCap(ids, commence, now)).toEqual([
       "known_a",
       "known_b",
       "unknown",
@@ -47,12 +121,44 @@ describe("orderEventIdsForCreditCap", () => {
   });
 });
 
-describe("defaultEventOddsMarkets — receptions on NFL, not a mixed NBA key", () => {
-  it("asks for player_receptions on NFL and not on NBA", () => {
+describe("defaultEventOddsMarkets — every props-HB market on NFL, none of them on NBA", () => {
+  it("asks for the full HB market set on NFL and not on NBA", () => {
     expect(defaultEventOddsMarkets("americanfootball_nfl")).toEqual([...NFL_EVENT_ODDS_MARKETS]);
-    expect(NFL_EVENT_ODDS_MARKETS).toContain("player_receptions");
     expect(defaultEventOddsMarkets("basketball_nba")).toEqual([...NBA_EVENT_ODDS_MARKETS]);
     expect(NBA_EVENT_ODDS_MARKETS).not.toContain("player_receptions");
+  });
+
+  it("lists every market the props-HB engine scores (C-357, verified on the Odds API NFL props table)", () => {
+    const required = [
+      "player_pass_tds",
+      "player_pass_yds",
+      "player_pass_completions",
+      "player_pass_interceptions",
+      "player_rush_yds",
+      "player_rush_attempts",
+      "player_rush_tds",
+      "player_receptions",
+      "player_reception_yds",
+      "player_reception_tds",
+      "player_anytime_td",
+      "player_sacks",
+    ] as const;
+    for (const key of required) {
+      expect(NFL_EVENT_ODDS_MARKETS).toContain(key);
+    }
+    expect(NFL_EVENT_ODDS_MARKETS).toHaveLength(required.length);
+  });
+
+  it("does not invent alternate ladders or markets with no HB adapter", () => {
+    for (const key of NFL_EVENT_ODDS_MARKETS) {
+      expect(key).not.toMatch(/_alternate$/);
+      expect(key.startsWith("player_")).toBe(true);
+    }
+  });
+
+  it("leaves the credit cap where C-109 / D15 put it (default 8 calls)", () => {
+    expect(DEFAULT_EVENT_ODDS_CREDIT_CAP).toBe(8);
+    expect(eventOddsCreditCap({})).toBe(DEFAULT_EVENT_ODDS_CREDIT_CAP);
   });
 });
 
@@ -110,6 +216,32 @@ describe("event-odds ingest — default OFF, hard credit cap", () => {
     expect(calls).toEqual(["e1", "e2", "e3"]);
     expect(books[0]).toEqual([...DEFAULT_EVENT_ODDS_BOOKS]);
     expect(marketsSeen[0]).toEqual([...NFL_EVENT_ODDS_MARKETS]);
+  });
+
+  it("spends the first capped calls on the T-15 close, not on already-started games", async () => {
+    const calls: string[] = [];
+    const client = {
+      async getEventOdds(_sport: string, eventId: string) {
+        calls.push(eventId);
+        return { data: { id: eventId } as never, remainingRequests: 10, usedRequests: 1 };
+      },
+    } as EventOddsClient;
+    const now = new Date("2026-08-23T15:50:00Z");
+    const report = await ingestEventOddsIfEnabled({
+      client,
+      sportKey: "americanfootball_nfl",
+      eventIds: ["started", "closing", "late"],
+      commenceByEventId: {
+        started: new Date("2026-08-23T13:00:00Z"),
+        closing: new Date("2026-08-23T16:00:00Z"),
+        late: new Date("2026-08-23T20:00:00Z"),
+      },
+      now,
+      env: { EVENT_ODDS_INGEST_ENABLED: "true", EVENT_ODDS_CREDIT_CAP: "1" },
+    });
+    expect(calls).toEqual(["closing"]);
+    expect(report.fetched).toBe(1);
+    expect(report.skipped).toBe(2);
   });
 
   it("does not throw when a single event fetch fails", async () => {

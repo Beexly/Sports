@@ -89,7 +89,7 @@ export const viewport: Viewport = {
 
 // SITE_URL is the single canonical base (lib/seo/site-url.ts): NEXT_PUBLIC_APP_URL
 // when set, else the www host. metadataBase + per-page canonicals resolve off it.
-const ORG_HANDLE = "@GalaxySportsAI";
+const ORG_HANDLE = "@GalaxySportsHQ";
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),

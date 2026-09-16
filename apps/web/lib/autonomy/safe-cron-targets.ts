@@ -11,7 +11,8 @@
 /** Distinct cron paths the planner may HTTP-invoke when AUTONOMY_EXECUTE=true. */
 export const AUTONOMY_SAFE_CRON_TARGETS = [
   "/api/cron/free-spine-health",
-  "/api/cron/settle-picks",
+  // "/api/cron/settle-picks" removed 2026-09-15 C-418: Vercel cron is the only
+  // settle-picks scheduler. Autonomy must not re-invoke settlement (LAST_PLAN F-30).
   "/api/cron/refresh-odds",
   "/api/cron/generate-drafts",
   "/api/cron/calibration-metrics",
@@ -32,7 +33,7 @@ export const AUTONOMY_MAX_ACTIONS_PER_CYCLE = 4;
 export const AUTONOMY_FREE_SPINE_SLA_MINUTES = 120;
 
 export const AUTONOMY_EXECUTE_HINT_ON =
-  "AUTONOMY_EXECUTE=true — planner may invoke free-spine-health, settle-picks, refresh-odds, generate-drafts, calibration-metrics (autonomousSafe only). Owner-queue + LAWS never auto-run.";
+  "AUTONOMY_EXECUTE=true — planner may invoke free-spine-health, refresh-odds, generate-drafts, calibration-metrics (autonomousSafe only). settle-picks is Vercel-cron only (C-418). Owner-queue + LAWS never auto-run.";
 
 export const AUTONOMY_EXECUTE_HINT_OFF =
   "Default dry-run: autonomy-cycle plans only. Set AUTONOMY_EXECUTE=true (exact string) to close plan→act for allow-listed free-path crons (I9).";

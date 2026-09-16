@@ -9,9 +9,10 @@
  *
  * HOW (legal route, ledger C-104 / registry "predexon"): Kalshi Dev Agreement
  * section 3 makes the native Trade API own-trading-only, so ingestion reads
- * PredExon's captured catalog (`predexon-client.ts`, verdict use-with-caution,
- * default OFF via PREDEXON_INGEST). This module never imports the Kalshi
- * client and never issues a Kalshi request.
+ * PredExon's captured catalog (`predexon-client.ts`, verdict use-with-caution).
+ * D19: ON when PREDEXON_API_KEY is present unless PREDEXON_INGEST is explicitly
+ * false/off. This module never imports the Kalshi client and never issues a
+ * Kalshi request.
  *
  * Law (unchanged from PR #680):
  *  - Never invent the other side: a market contributes only when the listing
@@ -436,8 +437,9 @@ export class PredExonKalshiCatalog implements GalaxySecondBook {
 
 /**
  * The second book for this cycle, or undefined when it is switched off:
- * PREDEXON_INGEST must be on, PREDEXON_API_KEY present, and the "predexon"
- * registry verdict ingestible. Default OFF — the founder flips it (ledger F-34).
+ * D19 — ON when PREDEXON_API_KEY is present (unless PREDEXON_INGEST is
+ * explicitly false/off), and the "predexon" registry verdict ingestible.
+ * No key → undefined. The founder sets the key in Vercel only (§0.2 item 3).
  */
 export function createGalaxySecondBook(
   env: NodeJS.ProcessEnv = process.env,

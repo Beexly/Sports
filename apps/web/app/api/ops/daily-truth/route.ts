@@ -3,8 +3,8 @@
  * loaders that ALREADY exist. No invented fields; every number carries its
  * denominator and an honest `null` + reason when unmeasurable.
  *
- * Gating: Bearer CRON_SECRET via the SAME timing-safe pattern used by
- * apps/web/app/api/ops/public-surface-truth/route.ts (hasOpsAuth).
+ * Gating: Bearer OPS_READ_SECRET (C-420) or CRON_SECRET via the shared
+ * hasOpsAuth helper (lib/ops/ops-auth.ts).
  *
  * NOT wired into vercel.json crons here — the owner wires the cron schedule
  * when prod is back (prepare-not-flip).
@@ -13,7 +13,6 @@
  */
 
 import { NextResponse } from "next/server";
-import { timingSafeEqual } from "node:crypto";
 import { db, isStubMode } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import {
@@ -25,28 +24,10 @@ import { type LoadablePerformanceClient } from "@/lib/performance/public-perform
 import { loadCalibrationOpsSurface } from "@/lib/ops/calibration-eligibility-durable";
 import { assessSchedulerLiveness } from "@/lib/ops/scheduler-liveness";
 import { loadCanonicalSamplePosture } from "@/lib/ops/canonical-sample-posture";
+import { hasOpsAuth } from "@/lib/ops/ops-auth";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
-
-/**
- * Timing-safe Bearer CRON_SECRET check — mirrors hasOpsAuth in
- * public-surface-truth/route.ts exactly. Returns true only when the header
- * is `Authorization: Bearer <CRON_SECRET>` and the two are equal-length.
- */
-function hasOpsAuth(request: Request): boolean {
-  const secret = process.env.CRON_SECRET?.trim();
-  if (!secret) return false;
-  const auth = request.headers.get("authorization") ?? "";
-  const expected = `Bearer ${secret}`;
-  try {
-    const a = Buffer.from(auth);
-    const b = Buffer.from(expected);
-    return a.length === b.length && timingSafeEqual(a, b);
-  } catch {
-    return false;
-  }
-}
 
 /** Canonical, non-seed pick filter shared by the last-24h and lifetime counts. */
 const CANONICAL_NON_SEED = {

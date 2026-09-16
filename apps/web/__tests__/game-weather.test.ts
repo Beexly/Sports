@@ -1,5 +1,11 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
-import { loadNflGameWeather, resetGameWeatherCacheForTests, type NflVenue } from "@/lib/weather/game-weather";
+import {
+  fetchVenueKickoffWeather,
+  loadNflGameWeather,
+  pickPeriodAtKickoff,
+  resetGameWeatherCacheForTests,
+  type NflVenue,
+} from "@/lib/weather/game-weather";
 
 const VENUES: NflVenue[] = [
   { team: "KC", stadium: "Arrowhead", lat: 39.05, lon: -94.48 },
@@ -88,5 +94,98 @@ describe("nfl game weather (NWS)", () => {
     const body = (await response.json()) as Record<string, unknown>;
     expect(response.status).toBe(200);
     expect(body["success"]).toBe(true);
+  });
+});
+
+describe("C-414 kickoff-hour weather", () => {
+  afterEach(() => {
+    vi.unstubAllGlobals();
+    resetGameWeatherCacheForTests();
+  });
+
+  it("pickPeriodAtKickoff selects the period closest to kickoff, not periods[0]", () => {
+    const periods = [
+      { startTime: "2025-11-16T12:00:00-06:00", temperature: 40 },
+      { startTime: "2025-11-16T13:00:00-06:00", temperature: 38 },
+      { startTime: "2025-11-16T14:00:00-06:00", temperature: 36 },
+    ];
+    // Kickoff at 13:00 local → middle period.
+    const hit = pickPeriodAtKickoff(periods, "2025-11-16T19:00:00.000Z") as {
+      temperature?: number;
+    };
+    expect(hit?.temperature).toBe(38);
+    // Empty / invalid kickoff → null (never fabricates a period).
+    expect(pickPeriodAtKickoff([], "2025-11-16T19:00:00.000Z")).toBeNull();
+    expect(pickPeriodAtKickoff(periods, "not-a-date")).toBeNull();
+  });
+
+  it("fetchVenueKickoffWeather returns the kickoff-hour period for an outdoor venue", async () => {
+    const kickoffIso = "2025-11-16T19:00:00.000Z";
+    const fetcher = vi.fn(async (input: string | URL | Request) => {
+      const url = String(input);
+      if (url.includes("/points/")) {
+        return json({
+          properties: {
+            forecastHourly: "https://api.weather.gov/gridpoints/AAA/1,2/forecast/hourly",
+          },
+        });
+      }
+      if (url.includes("/forecast/hourly")) {
+        return json({
+          properties: {
+            periods: [
+              {
+                temperature: 50,
+                windSpeed: "5 mph",
+                windDirection: "S",
+                probabilityOfPrecipitation: { value: 0 },
+                shortForecast: "Sunny",
+                startTime: "2025-11-16T18:00:00Z", // T-1h
+              },
+              {
+                temperature: 34,
+                windSpeed: "18 mph",
+                windDirection: "NW",
+                probabilityOfPrecipitation: { value: 20 },
+                shortForecast: "Windy",
+                startTime: "2025-11-16T19:00:00Z", // kickoff hour
+              },
+              {
+                temperature: 32,
+                windSpeed: "20 mph",
+                windDirection: "N",
+                probabilityOfPrecipitation: { value: 40 },
+                shortForecast: "Cold",
+                startTime: "2025-11-16T20:00:00Z", // T+1h
+              },
+            ],
+          },
+        });
+      }
+      return new Response("missing", { status: 404 });
+    });
+
+    const venue: NflVenue = { team: "GB", stadium: "Lambeau", lat: 44.5, lon: -88.06 };
+    const wx = await fetchVenueKickoffWeather({ venue, kickoffIso, fetcher, timeoutMs: 5000 });
+    expect(wx.status).toBe("ok");
+    // Kickoff-hour period is periods[1] — NOT periods[0] (the /weather page's nowcast).
+    expect(wx.windMph).toBe(18);
+    expect(wx.tempF).toBe(34);
+    expect(wx.precipPct).toBe(20);
+    expect(wx.observedFor).toBe("2025-11-16T19:00:00Z");
+  });
+
+  it("fetchVenueKickoffWeather degrades to an error venue on NWS failure", async () => {
+    const fetcher = vi.fn(async () => new Response("down", { status: 503 }));
+    const venue: NflVenue = { team: "KC", stadium: "Arrowhead", lat: 39.05, lon: -94.48 };
+    const wx = await fetchVenueKickoffWeather({
+      venue,
+      kickoffIso: "2025-11-16T19:00:00.000Z",
+      fetcher,
+      timeoutMs: 5000,
+    });
+    expect(wx.status).toBe("error");
+    expect(wx.windMph).toBeNull();
+    expect(wx.tempF).toBeNull();
   });
 });

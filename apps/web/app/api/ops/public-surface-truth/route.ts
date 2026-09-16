@@ -40,6 +40,9 @@ import { loadStripeWebhookHostsPosture } from "@/lib/ops/stripe-webhook-hosts";
 import { loadWaitlistPosture } from "@/lib/ops/waitlist-posture";
 import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
 import { loadCanonicalSamplePosture } from "@/lib/ops/canonical-sample-posture";
+import { loadLineArchiveFreshness } from "@/lib/ops/line-archive-freshness";
+import { isLineArchiveEnabled } from "@sports/ingestion-pipeline";
+import { loadCheckoutPricePosture } from "@/lib/ops/checkout-price-posture";
 import {
   calibrationDriftPosture,
   loadCalibrationOpsSurface,
@@ -62,7 +65,7 @@ import {
   freeSpineWithinSla,
   resolveBestFreeSpineSnapshot,
 } from "@/lib/data-sources/free-spine-durable";
-import { timingSafeEqual } from "node:crypto";
+import { hasOpsAuth } from "@/lib/ops/ops-auth";
 import {
   oddsApiKeyPresence,
   rundownApiKeyPresence,
@@ -159,24 +162,11 @@ const MAIN_FEATURE_MARKERS = [
   "signal-board-launch-path",
 ] as const;
 
-function hasOpsAuth(request: Request): boolean {
-  const secret = process.env.CRON_SECRET?.trim();
-  if (!secret) return false;
-  const auth = request.headers.get("authorization") ?? "";
-  const expected = `Bearer ${secret}`;
-  try {
-    const a = Buffer.from(auth);
-    const b = Buffer.from(expected);
-    return a.length === b.length && timingSafeEqual(a, b);
-  } catch {
-    return false;
-  }
-}
-
 /**
  * Surface truth snapshot.
  * - Public: gates, storage modes, settlement band counts, deploymentSha, sample.
- * - Bearer CRON_SECRET: bySport + operatorNext (internal remediation).
+ * - Bearer OPS_READ_SECRET (C-420) or CRON_SECRET: bySport + operatorNext
+ *   (internal remediation).
  */
 export async function GET(request: Request) {
   const detailed = hasOpsAuth(request);
@@ -254,6 +244,27 @@ export async function GET(request: Request) {
       sample = null;
     }
   }
+
+  // Line-archive freshness. The archive went quiet on 2026-08-22 and the
+  // outage was found by hand three weeks later, because the capture path
+  // swallows its own errors by design and nothing read the row count. This is
+  // that reader. Closing lines are what CLV is graded from, and CLV is the one
+  // unmet ESTABLISHED requirement, so silence here is not a cosmetic gap.
+  //
+  // The module reports DISABLED without touching the database, so it costs
+  // nothing while the founder's flag is off — and DISABLED vs STALE is exactly
+  // the distinction the repo could not make when diagnosing the outage.
+  let lineArchive: Awaited<ReturnType<typeof loadLineArchiveFreshness>> | null = null;
+  if (!isStubMode()) {
+    lineArchive = await loadLineArchiveFreshness(db, {
+      enabled: isLineArchiveEnabled(),
+      now: new Date(),
+    });
+  }
+
+  // Checkout price-consistency posture (issue #822). No DB, no Stripe network
+  // call — pure config-shape read, safe to compute unconditionally.
+  const checkoutPrice = loadCheckoutPricePosture();
 
   // Kill-switch clock: last SUCCESS with oddsInserted > 0 (not free-spine zeros).
   // Dual-path visibility: keys present + last zero-odds SUCCESS (often quiet/empty provider).
@@ -734,6 +745,25 @@ export async function GET(request: Request) {
        * settle = grade; filter = these counts; publish = eligibility GREEN + policy (AUTO_PUBLISH or PUBLISHED).
        */
       sample,
+      /**
+       * Is the closing-line archive actually being written?
+       * HEALTHY is the only status that means yes. SILENT (on, never written)
+       * and UNKNOWN (unreadable) are deliberately NOT folded into it — that
+       * folding is what made the 2026-08-22 outage invisible for three weeks.
+       * DISABLED means the founder's flag is off, which is a state, not a bug.
+       */
+      lineArchive,
+      /**
+       * Checkout price-consistency posture (issue #822): checkout has been
+       * 503ing since 2026-09-09 and writing nothing — no checkout_attempts
+       * row, no Stripe session, no log anyone reads. This makes the RISK
+       * shape visible (advertised phase, its cents per tier/interval, and
+       * whether an explicit env price id is configured for each slot)
+       * without ever calling Stripe — it cannot confirm a configured price id
+       * actually charges the advertised amount, only that the shape is
+       * there. Fixing a real mismatch is founder-only.
+       */
+      checkoutPrice,
       oddsInserting,
       calibrationEligibility: calibrationEligibility
         ? {

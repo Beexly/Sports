@@ -14,6 +14,10 @@
       "schedule": "*/15 * * * *"
     },
     {
+      "path": "/api/cron/refresh-wire",
+      "schedule": "*/10 * * * *"
+    },
+    {
       "path": "/api/cron/board-fill",
       "schedule": "2,17,32,47 * * * *"
     },

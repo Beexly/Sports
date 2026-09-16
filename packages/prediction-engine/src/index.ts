@@ -1649,6 +1649,34 @@ export {
 } from "./edge-lab/nfl-change-point.js";
 export type { ChangePointFlag, ChangePointOptions, WeeklyPerformance } from "./edge-lab/nfl-change-point.js";
 
+// C-414 — kickoff-hour weather as ONE shared field for totals (A5) and props (A25).
+// Null-safe join; T-6h / T-1h live refresh window; games.csv historical path.
+export {
+  LIVE_WEATHER_WINDOW_START_MS,
+  LIVE_WEATHER_REFRESH_MS,
+  shouldRefreshLiveWeather,
+  liveWeatherRefreshPhase,
+  liveWeatherRefreshDue,
+  kickoffWeatherFromGamesCsv,
+  weatherFieldMapFromGamesCsv,
+  joinLiveWeatherToGames,
+  joinWeatherToSlate,
+  countSources,
+  formatWeatherCoverageLog,
+  liveObservationFromVenueWeather,
+} from "./edge-lab/weather-game-field.js";
+export type {
+  KickoffWeatherField,
+  LiveWeatherObservation,
+  LiveJoinInput,
+  LiveJoinResult,
+  WeatherJoinResult,
+  WeatherSlateCoverage,
+  GamesCsvWeatherRow,
+  LiveRefreshPhase,
+  VenueWeatherLike,
+} from "./edge-lab/weather-game-field.js";
+
 // Ladder + boost scanners: softness map across a market's price ladder.
 // Detects where model p diverges from market q. Does NOT fire live p. priced:false.
 export {

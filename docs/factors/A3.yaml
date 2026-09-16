@@ -1,0 +1,20 @@
+id: A3
+title: Referee and crew tendencies
+hypothesis: Named crews have stable home/under lean (Vinovich under, Hussey home) that the market does not fully price.
+estimand: ATS cover rate and total side rate by referee vs league base rate
+unit: percentage points of cover rate
+data: [nflverse.games.referee, nflverse.officials]
+discover_era: 2009-2019
+validate_era: 2020-2025
+kill_line: "validate-era |effect| <= 0 or Bonferroni-adjusted 95% CI includes 0 across crews"
+mde_80pct_power: 15.1481
+script: scripts/factors/A3.mjs
+status: DEAD
+number: -2.9222
+ci: [-19.5654, 13.721]
+n: 90
+run_sha: "a62e5f378ba947203e709af31e8c041469bf7a55"
+run_at: "2026-09-15T22:29:10.882Z"
+blocked_on: null
+notes: >
+  Best-of-17 was 49.61% uncorrected. Bonferroni over crews is mandatory. officials release (full crew) is catalogued in nflverse; games.csv referee alone is the single-referee split. C-367. C-367 run 2026-09-15: REG, home ATS cover residual (pp) vs league base, Bonferroni over K=24 discover crews (nAts>=30). Discover best |θ| crew Clay Martin: home θ=-15.1493 pp n=30; under θ=12.7421 pp n=30. Validate Clay Martin: home θ=-2.9222 pp n=90 CI_bonf[-19.5654,13.721] z=3.0781 MDE80=15.1481; under θ=-2.6119 pp n=89. Discover best |under| discover Scott Green θ=-17.7788 pp n=64. League base home-cover: discover 48.48%, validate 49.59%. Officials rows loaded=22012. Data: nflverse/nfldata games.csv (+ officials when reachable), CC BY 4.0, local cache only; no DB.

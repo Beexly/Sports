@@ -19,7 +19,14 @@ import {
 } from "@/lib/format/stat";
 import type { PickType, PickTier } from "@sports/types";
 import { wilsonInterval, formatWilsonPct } from "@/lib/performance/wilson-interval";
+import {
+  decodeLaneModelVersion,
+} from "@/lib/performance/build-performance-summaries";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
+
+// Vig break-even on the -110 ladder (/pricing). The verdict is judged here,
+// never at a coin flip (C-352; AGENTS.md 2026-09-14 audit).
+const BREAKEVEN_THRESHOLD = 0.524;
 
 // Reads settled picks and calibration state from the database on every request
 // (.claude/rules/nextjs-caching.md): never let Next memoise this page.
@@ -114,7 +121,7 @@ function BootstrapShell({ children }: { children: React.ReactNode }) {
       <Nav />
       <main id="main-content" className="flex-1 px-4 py-16 sm:px-6 lg:px-8">
         <div className="mx-auto max-w-5xl">
-          <h1 className="sr-only">Performance</h1>
+          <h1 className="sr-only">Record</h1>
           {children}
         </div>
       </main>
@@ -195,10 +202,21 @@ export default async function PerformancePage() {
 
   const allTimeSummaries = summaries.filter((s) => s.period === "all-time");
   const recentSummaries = summaries.filter((s) => s.period !== "all-time");
+  // C-352: split the record into the two lanes the mint actually produces.
+  // book-priced leads the hero; model-signal stays in the record (by-sport,
+  // recent periods) and is never summed into the headline.
+  const allTimeBook = allTimeSummaries.filter(
+    (s) => decodeLaneModelVersion(s.modelVersion).lane === "book-priced",
+  );
+  const allTimeSignal = allTimeSummaries.filter(
+    (s) => decodeLaneModelVersion(s.modelVersion).lane === "model-signal",
+  );
+  const bookOverall = aggregateOverall(allTimeBook);
+  const signalOverall = aggregateOverall(allTimeSignal);
   const overall = aggregateOverall(summaries);
   const bySport = groupBySport(allTimeSummaries);
   const computedAt = latestComputedAt(summaries);
-  const modelVersion = latestModelVersion(summaries);
+  const modelVersion = latestModelVersion(allTimeBook.length > 0 ? allTimeBook : summaries);
 
   // Minimum-sample floor (honesty guard) — mirrors /api/performance. The
   // canExposePerformanceStats gate is a binary "publish stats at all" switch; it
@@ -208,8 +226,11 @@ export default async function PerformancePage() {
   // rate — never fabricate one. Counts stay visible (they're factual); only the
   // derived rate is suppressed, and the renderers already show STAT_PLACEHOLDER
   // for a null rate. Above the floor, behavior is unchanged.
+  // C-352: the floor is measured on the BOOK-PRICED lane — that is the
+  // population the hero publishes. A model-signal sample must not lift the
+  // bettable headline over the floor.
   const minSettledFloor = Math.max(1, gates.minSettledPicksForLearning);
-  const insufficientSample = overall.totalPicks < minSettledFloor;
+  const insufficientSample = bookOverall.totalPicks < minSettledFloor;
   // Floor-aware win-rate: same allow-listed winRatePct helper, withheld below
   // the floor. The raw ratio is never recomputed inline here; winRatePct is the
   // only sanctioned path (this surface is policy-pinned to that helper).
@@ -225,7 +246,17 @@ export default async function PerformancePage() {
     insufficientSample || wins + losses < minSettledFloor ? null : winRatePct(wins, losses);
   // overall.winRate is already winRatePct(overall.wins, overall.losses); withhold
   // it below the floor so the headline never publishes a thin-sample rate.
-  const publishedOverallWinRate = insufficientSample ? null : overall.winRate;
+  const publishedOverallWinRate = insufficientSample ? null : bookOverall.winRate;
+  // Wilson 95% band on the book-priced decided count — beside the 52.4% break-even (D22).
+  const bookWilson =
+    bookOverall.wins + bookOverall.losses > 0
+      ? wilsonInterval(bookOverall.wins, bookOverall.wins + bookOverall.losses)
+      : null;
+  const bookWilsonBand = bookWilson ? formatWilsonPct(bookWilson, 1) : null;
+  // Coverage (C-352): book-priced n of settled N. From the two lane totals
+  // the build already produced — never a second population definition.
+  const settledRecordN = bookOverall.totalPicks + signalOverall.totalPicks;
+  const storedPriceN = bookOverall.totalPicks;
 
   const SPORT_DISPLAY_NAMES: Record<string, string> = {
     nfl: "NFL",
@@ -250,8 +281,11 @@ export default async function PerformancePage() {
               Settled-pick audit trail
             </p>
             <h1 className="mt-3 text-4xl font-black tracking-tight text-ion-white sm:text-5xl">
-              Calibration Report
+              Record
             </h1>
+            <p className="mx-auto mt-2 max-w-xl text-xl font-semibold text-ion-1">
+              Calibration Report
+            </p>
             <p className="mx-auto mt-4 max-w-xl text-ion-1">
               Every finished pick from the live engine is counted, wins and
               losses alike. Picks from our early warm-up period are excluded
@@ -331,12 +365,16 @@ export default async function PerformancePage() {
                 </dl>
               </section>
 
-              <section className="mb-12">
+              <section className="mb-12" data-testid="performance-book-priced-lane">
                 <div className="overflow-hidden rounded-2xl border border-mineral bg-gradient-to-br from-eclipse to-carbon">
                   <div className="border-b border-mineral px-6 py-4">
                     <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
-                      All-Time Overall
+                      All-Time Overall · Book-priced
                     </h2>
+                    <p className="mt-1 text-xs text-ion-2">
+                      Picks with a stored market price — the only lane a
+                      customer could have placed.
+                    </p>
                   </div>
                   <div className="grid grid-cols-2 divide-x divide-mineral/60 sm:grid-cols-4">
                     <OverallStat
@@ -346,7 +384,7 @@ export default async function PerformancePage() {
                           formatPercent(publishedOverallWinRate)
                         ) : (
                           <WithheldStat
-                            settled={overall.totalPicks}
+                            settled={bookOverall.totalPicks}
                             floor={minSettledFloor}
                           />
                         )
@@ -360,17 +398,17 @@ export default async function PerformancePage() {
                     />
                     <OverallStat
                       label="Wins"
-                      value={formatCount(overall.wins)}
+                      value={formatCount(bookOverall.wins)}
                       accent="text-verify"
                     />
                     <OverallStat
                       label="Losses"
-                      value={formatCount(overall.losses)}
+                      value={formatCount(bookOverall.losses)}
                       accent="text-alert"
                     />
                     <OverallStat
                       label="Pushes"
-                      value={formatCount(overall.pushes)}
+                      value={formatCount(bookOverall.pushes)}
                       accent="text-ion-2"
                     />
                   </div>
@@ -378,14 +416,86 @@ export default async function PerformancePage() {
                     <p className="text-xs text-ion-2">
                       Based on{" "}
                       <span className={NUMERIC_TEXT_CLASS}>
-                        {formatCount(overall.totalPicks)}
+                        {formatCount(bookOverall.totalPicks)}
                       </span>{" "}
-                      finished live-engine picks. Win rate excludes pushes.
+                      finished book-priced live-engine picks. Win rate excludes
+                      pushes.
+                      {bookWilsonBand !== null && (
+                        <>
+                          {" "}
+                          Wilson 95%{" "}
+                          <span className={NUMERIC_TEXT_CLASS}>{bookWilsonBand}</span>{" "}
+                          beside the{" "}
+                          <span className={NUMERIC_TEXT_CLASS}>52.4%</span>{" "}
+                          break-even.
+                        </>
+                      )}
                     </p>
                     <VerdictLine
-                      wins={overall.wins}
-                      losses={overall.losses}
+                      wins={bookOverall.wins}
+                      losses={bookOverall.losses}
                       minSample={minSettledFloor}
+                      threshold={BREAKEVEN_THRESHOLD}
+                    />
+                    <p
+                      data-testid="performance-coverage-line"
+                      className="mt-2 text-xs text-ion-2"
+                    >
+                      <span className={NUMERIC_TEXT_CLASS}>
+                        {formatCount(storedPriceN)}
+                      </span>{" "}
+                      of{" "}
+                      <span className={NUMERIC_TEXT_CLASS}>
+                        {formatCount(settledRecordN)}
+                      </span>{" "}
+                      settled rows carry a stored price.
+                    </p>
+                  </div>
+                </div>
+              </section>
+
+              <section
+                className="mb-12"
+                data-testid="performance-model-signal-lane"
+              >
+                <div className="overflow-hidden rounded-2xl border border-mineral/60 bg-eclipse/40">
+                  <div className="border-b border-mineral/60 px-6 py-4">
+                    <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
+                      All-Time · Model signal{" "}
+                      <span className="ml-2 rounded bg-caution/15 px-1.5 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution">
+                        not bettable
+                      </span>
+                    </h2>
+                    <p className="mt-1 text-xs text-ion-2">
+                      Published with no book behind them. They settle and stay
+                      in the record; they are never summed into the headline
+                      above.
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 divide-x divide-mineral/40 sm:grid-cols-4">
+                    <OverallStat
+                      label="Win Rate"
+                      value={
+                        signalOverall.wins + signalOverall.losses > 0
+                          ? formatPercent(winRatePct(signalOverall.wins, signalOverall.losses))
+                          : STAT_PLACEHOLDER
+                      }
+                      accent="text-ion-2"
+                    />
+                    <OverallStat
+                      label="Wins"
+                      value={formatCount(signalOverall.wins)}
+                      accent="text-ion-2"
+                    />
+                    <OverallStat
+                      label="Losses"
+                      value={formatCount(signalOverall.losses)}
+                      accent="text-ion-2"
+                    />
+                    <OverallStat
+                      label="n"
+                      value={formatCount(signalOverall.totalPicks)}
+                      accent="text-ion-2"
                     />
                   </div>
                 </div>
@@ -457,6 +567,7 @@ export default async function PerformancePage() {
                       <tbody>
                         {recentSummaries.slice(0, 30).map((s, i) => {
                           const wr = flooredWinRate(s.wins, s.losses);
+                          const decoded = decodeLaneModelVersion(s.modelVersion);
                           return (
                             <tr
                               key={s.id}
@@ -476,6 +587,11 @@ export default async function PerformancePage() {
                               </td>
                               <td className="px-4 py-3 text-ion-2">
                                 {s.pickType ?? "All"}
+                                {decoded.lane === "model-signal" && (
+                                  <span className="ml-1.5 rounded bg-caution/15 px-1 py-0.5 text-[10px] font-bold uppercase tracking-widest text-caution">
+                                    signal
+                                  </span>
+                                )}
                               </td>
                               <td
                                 className={`px-4 py-3 text-center text-verify ${NUMERIC_TEXT_CLASS}`}

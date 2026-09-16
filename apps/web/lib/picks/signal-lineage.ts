@@ -45,7 +45,12 @@ export interface LineageVerdict {
   readonly violations: readonly string[];
 }
 
-const RIGHTS_BLOCKED: ReadonlySet<string> = new Set(["blocked_technical_controls", "excluded", "permission_required"]);
+const RIGHTS_BLOCKED: ReadonlySet<string> = new Set([
+  "blocked_technical_controls",
+  "excluded",
+  "forbidden",
+  "permission_required",
+]);
 
 /**
  * ADDITIVE to `auditSignalLineage` — does not change `publicSafe` or

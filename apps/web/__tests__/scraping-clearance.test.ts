@@ -109,6 +109,140 @@ describe("Source rights registry — registry shape", () => {
     expect(entry!.unlock_condition).toBeNull();
   });
 
+  // ── C-410: pick'em boards are forbidden. Terms read 2026-09-15. ─────────────
+  // PrizePicks Terms §(l): no robot, spider or automatic means "for any purpose,
+  // including monitoring or copying".
+  // Underdog Terms ix–x: no scraping, no robots-exclusion bypass.
+  // DraftKings Terms of Use: no automated means "to obtain, collect or access any
+  // information".
+  // A permissive robots.txt is NOT a licence. The registry, not any scraping
+  // agent's brief, decides what enters this repo. Nothing is fetched, ever.
+  describe("C-410 pick'em boards are forbidden — checkClearance refuses each", () => {
+    const forbiddenIds = ["prizepicks", "underdog", "dknetwork"] as const;
+
+    it.each(forbiddenIds)("%s is status forbidden with all permission flags false", (id) => {
+      const entry = getSourceRightsEntry(id);
+      expect(entry).toBeDefined();
+      expect(entry!.status).toBe("forbidden");
+      expect(entry!.automation_allowed).toBe(false);
+      expect(entry!.public_logged_off_allowed).toBe(false);
+      expect(entry!.commercial_display_allowed).toBe(false);
+      expect(entry!.storage_allowed).toBe(false);
+      expect(entry!.derived_analytics_allowed).toBe(false);
+      expect(entry!.model_training_allowed).toBe(false);
+      expect(entry!.reviewed_at).toBe("2026-09-15");
+      expect(entry!.terms_url).toBeTruthy();
+      expect(entry!.notes).toMatch(/robots.*not a licence|permissive robots/i);
+      expect(entry!.notes).toMatch(/registry, not any scraping agent/i);
+      expect(entry!.notes).toMatch(/never|Nothing is fetched/i);
+    });
+
+    it("prizepicks records Terms §(l) clause read 2026-09-15", () => {
+      const entry = getSourceRightsEntry("prizepicks")!;
+      expect(entry.notes).toMatch(/§\(l\)/);
+      expect(entry.notes).toMatch(/robot, spider or automatic means/i);
+      expect(entry.notes).toMatch(/monitoring or copying/i);
+    });
+
+    it("underdog records Terms ix–x clause read 2026-09-15", () => {
+      const entry = getSourceRightsEntry("underdog")!;
+      expect(entry.notes).toMatch(/ix–x|ix-x|ix–x/i);
+      expect(entry.notes).toMatch(/no scraping/i);
+      expect(entry.notes).toMatch(/robots-exclusion bypass/i);
+    });
+
+    it("dknetwork records DraftKings automated-means clause read 2026-09-15", () => {
+      const entry = getSourceRightsEntry("dknetwork")!;
+      expect(entry.notes).toMatch(/automated means/i);
+      expect(entry.notes).toMatch(/obtain, collect or access any information/i);
+      expect(entry.terms_url).toContain("draftkings.com");
+    });
+
+    it.each(forbiddenIds)(
+      "%s: checkClearance refuses public_logged_off_fact_extract",
+      (id) => {
+        const result = checkClearance({
+          source_id: id,
+          mode: "public_logged_off_fact_extract",
+          tool_id: "fetch-native",
+          intents: ["storage", "derived_analytics"],
+        });
+        expect(result.allowed).toBe(false);
+        expect(result.blocks.some((b) => b.code === "SOURCE_FORBIDDEN")).toBe(true);
+      },
+    );
+
+    it.each(forbiddenIds)(
+      "%s: checkClearance refuses licensed_api_ingest",
+      (id) => {
+        const result = checkClearance({
+          source_id: id,
+          mode: "licensed_api_ingest",
+          tool_id: "fetch-native",
+          intents: ["storage"],
+        });
+        expect(result.allowed).toBe(false);
+        expect(result.blocks.some((b) => b.code === "SOURCE_FORBIDDEN")).toBe(true);
+      },
+    );
+
+    it.each(forbiddenIds)(
+      "%s: checkClearance refuses permissioned_crawl",
+      (id) => {
+        const result = checkClearance({
+          source_id: id,
+          mode: "permissioned_crawl",
+          tool_id: "crawlee-python",
+          intents: ["storage"],
+        });
+        expect(result.allowed).toBe(false);
+        expect(result.blocks.some((b) => b.code === "SOURCE_FORBIDDEN")).toBe(true);
+      },
+    );
+
+    it("getSourcesByStatus('forbidden') returns all three pick'em boards", () => {
+      const ids = getSourcesByStatus("forbidden").map((s) => s.source_id);
+      expect(ids).toEqual(expect.arrayContaining([...forbiddenIds]));
+    });
+
+    it("getApprovedSources never includes a forbidden board", () => {
+      const approvedIds = getApprovedSources().map((s) => s.source_id);
+      for (const id of forbiddenIds) {
+        expect(approvedIds).not.toContain(id);
+      }
+    });
+  });
+
+  /**
+   * C-410 honest check (run 2026-09-15 from this machine; network available via
+   * site.web.api.espn.com; site.api.espn.com returned 403 here):
+   *   GET https://site.web.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard
+   *     → 16 events; competitions[0] has NO odds field.
+   *   GET .../nfl/summary?event=401872656
+   *     → summary.odds = [] (empty array)
+   *     → pickcenter[0] keys: provider, details, overUnder, spread, overOdds,
+   *       underOdds, awayTeamOdds, homeTeamOdds, links, moneyline, pointSpread,
+   *       total, link, header, footer
+   *   GET https://sports.core.api.espn.com/v2/sports/football/leagues/nfl/events/
+   *       401872656/competitions/401872656/odds
+   *     → items[0] keys: provider, details, overUnder, spread, overOdds,
+   *       underOdds, awayTeamOdds, homeTeamOdds
+   *   No player-prop keys anywhere (no "player", "yards", "passing", "rushing",
+   *   "receiving", "touchdown"; the only "prop" substring is inside "provider").
+   * VERDICT: ESPN public summary/odds payloads do NOT carry player prop lines.
+   * No prop reader is landed. Prop close stays on the existing Odds API plan
+   * (governor-prioritised, C-357).
+   */
+  it("C-410 ESPN prop check: no player-prop keys on public NFL summary/odds — no reader landed", () => {
+    // Evidence is the comment above (live payload keys, 2026-09-15). This test
+    // pins the landing decision: pick'em boards stay forbidden and no ESPN
+    // player-prop adapter is introduced by C-410. Re-run the live key dump
+    // before ever adding such a reader.
+    for (const id of ["prizepicks", "underdog", "dknetwork"] as const) {
+      expect(getSourceRightsEntry(id)!.status).toBe("forbidden");
+    }
+  });
+
   it("getVendorCandidates returns score24-com", () => {
     const candidates = getVendorCandidates();
     const ids = candidates.map((c) => c.source_id);

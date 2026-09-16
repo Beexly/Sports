@@ -24,8 +24,8 @@ export default function PropsPage() {
     <FantasyShell
       eyebrow="Pick'em Edge"
       accent="ultraviolet"
-      title={<>Their line. <span className="gse-editorial" style={{ fontSize: "1.08em" }}>Our number</span>. Your edge.</>}
-      intro="Filter by market or team. Every prop shows the side we'd take, how strongly, and the single alt line where edge times payout pays best. Build a 2-to-6 leg entry and see its real combined odds and expected value before you stake a dollar. We advise on these lines; we don't operate a pick'em product."
+      title="Props"
+      intro="Their line. Our number. Your edge. Filter by market or team. Every prop shows the side we'd take, how strongly, and the single alt line where edge times payout pays best. Build a 2-to-6 leg entry and see its real combined odds and expected value before you stake a dollar. We advise on these lines; we don't operate a pick'em product."
       note={note}
       wide
       // The illustrative badge was suppressed on the ONE page that most needs

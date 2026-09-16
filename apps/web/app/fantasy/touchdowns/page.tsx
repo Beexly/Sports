@@ -10,6 +10,8 @@ export const metadata: Metadata = {
   description:
     "Anytime touchdown probabilities from a published four-factor composite — season TD rate, red-zone volume, goal-line volume, and implied team total — with the weights, the logistic, and every missing input stated in the open. Illustrative pool, educational use; no outcome is promised.",
   alternates: { canonical: "/fantasy/touchdowns" },
+  // Parked sample tool (C-360 / D3): keep the route, drop it from the index.
+  robots: { index: false },
 };
 
 export default function TouchdownsPage(): JSX.Element {

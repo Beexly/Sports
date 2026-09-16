@@ -58,6 +58,11 @@ import {
   buildIndependentFairValues,
   type EloRatingsCache,
 } from "./build-independent-fair-values.js";
+import {
+  bookPricedMintWithholdReason,
+  isNflPreseasonKickoff,
+  logMintWithhold,
+} from "./mint-withhold.js";
 import type { ReadinessGates } from "@sports/prediction-engine";
 
 /** Production SHA-256 HashFn for the proof spine — a weak hash would void the guarantee. */
@@ -76,7 +81,10 @@ import {
   resolveCanonicalGame,
   preferLongerTeamName,
   gameIdentityMergeDisabled,
+  commenceMatchMsFor,
+  applyTwinTombstones,
   type GameIdentityDb,
+  type TwinTombstoneDb,
 } from "./game-identity.js";
 import { notifyOwner } from "./owner-alert.js";
 import { isQuietBoard, quietBoardHorizonHours } from "./quiet-board.js";
@@ -84,6 +92,10 @@ import { captureLineSnapshotsIfEnabled, toLineSnapshotRows } from "./line-archiv
 import { ingestEventOddsIfEnabled, type EventOddsClient } from "./event-odds-ingest.js";
 import { eventOddsId, toPropLineSnapshotRows, type PropEventLike } from "./prop-line-rows.js";
 import { capturePinnacleLineSnapshotsIfEnabled } from "./pinnacle-line-archive.js";
+import {
+  captureExchangeTapeIfEnabled,
+  createExchangeTapeClient,
+} from "./exchange-tape-capture.js";
 import { bookLineDispersion } from "./book-dispersion.js";
 import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
 import {
@@ -381,6 +393,10 @@ export async function processSport(
     const fetchedAt = new Date();
 
     let events: import("@sports/types").OddsApiEvent[] = [];
+    // C-353: externalIds of Odds API preseason feed rows remapped onto
+    // ESPN-seeded NFL games this cycle. Used at mint to withhold exhibition
+    // picks; never used to create or re-price anything.
+    const preseasonExternalIds = new Set<string>();
     // Sentinel used when only free paths are configured (no real Odds key).
     const oddsKeyIsSentinel =
       !apiKey ||
@@ -449,6 +465,7 @@ export async function processSport(
                 preseason.data as OddsApiEvent[],
                 candidates,
               );
+              for (const row of remapped) preseasonExternalIds.add(row.id);
               if (unmatched > 0) {
                 console.warn(
                   `${logPrefix} ${sport.key}: preseason map skipped ${unmatched} unmatched Odds API events`,
@@ -483,8 +500,9 @@ export async function processSport(
       // Never historical. Never throws. Persistence uses OddsLineSnapshot
       // string market/side (no new table) when LINE_ARCHIVE is on.
       if (events.length > 0) {
-        // Kickoff-sorted so the credit cap does not starve late games on a
-        // dense slate (Sunday 16-game). commenceByEventId maps each Odds API
+        // T-15-close first, then kickoff-sorted, so the credit cap spends its
+        // first calls on the close and does not starve late games on a dense
+        // slate (Sunday 16-game). commenceByEventId maps each Odds API
         // event id to its commence_time — events with a missing time sort last.
         const commenceByEventId: Record<string, Date> = {};
         for (const event of events) {
@@ -834,6 +852,49 @@ export async function processSport(
       gameRecords[game.externalId] = record;
     }
 
+    // C-356: Tombstone existing twin duplicates. `resolveCanonicalGame` above
+    // stops a NEW feed row from becoming another duplicate, but rows created
+    // before identity resolution was wired already sit in `games` as live
+    // twins. Sweep the window this cycle's games span, group twins, and stamp
+    // `mergedIntoGameId` on the weaker row (most books / highest dq survives)
+    // so `/api/picks`, `lib/board/state.ts`, and the sitemap exclude it.
+    // Protected: the rows this cycle just wrote — they may only be canonical,
+    // never turned into a tombstone under the children we just attached.
+    // Never blocks ingestion; a failure is a warning, same as identity lookup.
+    if (!gameIdentityMergeDisabled() && normalizedGames.length > 0) {
+      try {
+        const commenceTimes = normalizedGames
+          .map((g) => g.commenceTime.getTime())
+          .filter((t) => Number.isFinite(t));
+        if (commenceTimes.length > 0) {
+          const windowMs = commenceMatchMsFor(sport.key);
+          const minT = Math.min(...commenceTimes);
+          const maxT = Math.max(...commenceTimes);
+          const tombstoned = await applyTwinTombstones(
+            db as unknown as TwinTombstoneDb,
+            {
+              sportId: sportRecord.id,
+              sportKey: sport.key,
+              commenceFrom: new Date(minT - windowMs),
+              commenceTo: new Date(maxT + windowMs),
+              protectedIds: Object.values(gameRecords).map((r) => r.id),
+              logPrefix,
+            },
+          );
+          if (tombstoned > 0) {
+            console.info(
+              `${logPrefix} tombstoned ${tombstoned} twin duplicate game row(s) for ${sport.key}`,
+            );
+          }
+        }
+      } catch (tombstoneErr) {
+        console.warn(
+          `${logPrefix} twin tombstone sweep failed for ${sport.key}: ` +
+            `${tombstoneErr instanceof Error ? tombstoneErr.message : tombstoneErr}`,
+        );
+      }
+    }
+
     // Pinnacle closing-line leg of the Glass Ledger forward line archive
     // (packages/ingestion-pipeline/src/pinnacle-line-archive.ts). DOUBLE-GATED
     // — no-ops (fetchOdds is never invoked, zero DB calls) unless BOTH
@@ -863,6 +924,42 @@ export async function processSport(
       console.warn(
         `${logPrefix} EU Pinnacle line archive failed for ${sport.key}: ${pinnacleResult.error}`
       );
+    }
+
+    // Kalshi NFL exchange tape via PredExon free tier (C-396 / D18a).
+    // Double-gated (LINE_ARCHIVE_ENABLED + PREDEXON_INGEST); default OFF.
+    // Paces ≤1 req/s; never paid tick-history. Writes book=kalshi-predexon
+    // rows into odds_line_snapshots; fields the schema cannot hold are named
+    // in the returned evidence (no migration).
+    if (sport.key === NFL_CANONICAL_SPORT_KEY) {
+      const tapeGames = normalizedGames.flatMap((game) => {
+        const rec = gameRecords[game.externalId];
+        if (!rec) return [];
+        return [
+          {
+            id: rec.id,
+            homeTeamName: rec.homeTeamName,
+            awayTeamName: rec.awayTeamName,
+            commenceTime: game.commenceTime,
+          },
+        ];
+      });
+      const tapeResult = await captureExchangeTapeIfEnabled({
+        db,
+        games: tapeGames,
+        capturedAt: fetchedAt,
+        client: createExchangeTapeClient(),
+      });
+      if (tapeResult.error) {
+        console.warn(`${logPrefix} exchange tape failed: ${tapeResult.error}`);
+      } else if (tapeResult.enabled && tapeResult.persisted > 0) {
+        console.log(
+          `${logPrefix} exchange tape: ${tapeResult.persisted} rows ` +
+            `(${tapeResult.marketsMatched}/${tapeResult.marketsSeen} markets, ` +
+            `${tapeResult.tradesSeen} trades, ${tapeResult.requests} reqs); ` +
+            `dropped=${tapeResult.droppedFields.join(",")}`,
+        );
+      }
     }
 
     // Ingest all odds records
@@ -944,6 +1041,9 @@ export async function processSport(
     let skippedInPlay = 0;
     // Games that passed the guard; the pick loop below refuses any other gameId.
     const confirmedGameIds = new Set<string>();
+    // C-353: gameIds identified as NFL preseason this cycle (remapped feed rows
+    // and/or a July-August kickoff). Mint withhold only - never creates a pick.
+    const preseasonGameIds = new Set<string>();
 
     // Build OddsInputs with full context enrichment
     const oddsInputs: OddsInput[] = [];
@@ -958,6 +1058,14 @@ export async function processSport(
     for (const game of normalizedGames) {
       const gameRecord = gameRecords[game.externalId];
       if (!gameRecord) continue;
+
+      if (
+        sport.key === NFL_CANONICAL_SPORT_KEY &&
+        (preseasonExternalIds.has(game.externalId) ||
+          isNflPreseasonKickoff(sport.key, game.commenceTime))
+      ) {
+        preseasonGameIds.add(gameRecord.id);
+      }
 
       const fixture = fixtureFor(gameRecord.id);
       if (!fixture || fixture.status !== "confirmed") {
@@ -1208,6 +1316,19 @@ export async function processSport(
       // this one line refuses the create, the PENDING refresh of selection /
       // line / confidence / factorBreakdown, AND the receipt mint below.
       if (!confirmedGameIds.has(pick.gameId)) continue;
+      // C-353 book-priced mint withhold (WITHHOLD-ONLY). Can only prevent this
+      // candidate from being created or refreshed - never creates, reorders, or
+      // re-prices. One structured log line per withheld candidate.
+      const withholdReason = bookPricedMintWithholdReason({
+        sportKey: sport.key,
+        pickType: pick.pickType,
+        bookmakerCount: pick.bookmakerCount,
+        isNflPreseasonGame: preseasonGameIds.has(pick.gameId),
+      });
+      if (withholdReason) {
+        logMintWithhold(logPrefix, withholdReason, pick.gameId, pick.pickType);
+        continue;
+      }
       // Fields refreshed on every cycle (confidence, grade, market depth).
       // result, settledAt: intentionally absent — never overwritten by refresh.
       // ingestionRunId: intentionally absent from update — preserves creation run ID.

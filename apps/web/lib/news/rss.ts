@@ -3,6 +3,7 @@ import {
   locationIsInternalTargetLocation,
   validateEndpointUrl,
 } from "@sports/prediction-engine/src/ensemble/remote-model-client";
+import { toCuratedRssFeeds } from "./reporter-roster";
 
 /**
  * SSRF guard for the RSS wire: feed URLs come from operator config (`$NEXT_PUBLIC_...`/env),
@@ -10,6 +11,12 @@ import {
  * literal or a cloud-metadata host — the standard SSRF escape hatch. We also fetch with
  * `redirect: "manual"` and reject any 3xx whose Location points at one of those hosts,
  * closing the redirect-to-internal-IP bypass. Relative redirects (same-origin) are safe.
+ *
+ * SCOPE, stated honestly (issue #820, doc half): the shared validators reject
+ * private/metadata IP *literals* only and never resolve DNS. A hostname that
+ * merely resolves to a private or metadata address therefore passes this guard;
+ * the connect-time address check that would close that hole is the #820
+ * transport half and is not implemented here.
  *
  * Reuses the prediction-engine's exported validators so the guard logic lives in one place
  * and stays tested by the remote-model-client suite.
@@ -56,6 +63,12 @@ export type RssFeedConfig = {
   readonly source: string;
   readonly tier: Tier;
   readonly team: string;
+  /**
+   * GSN's own published feed. Marked so the beat-report gate can never let a
+   * self-sourced item corroborate itself (C-415 / C-417). Absent on every
+   * third-party feed.
+   */
+  readonly selfSourced?: true;
 };
 
 /** Parse the NEWS_RSS_FEEDS env format. Malformed entries are skipped. */
@@ -78,17 +91,19 @@ export function parseFeedConfig(raw: string | undefined): RssFeedConfig[] {
 
 
 /**
- * Curated free sports RSS catalog (sports-skills harvest).
- * Opt-in via NEWS_RSS_USE_CURATED_DEFAULTS=true when NEWS_RSS_FEEDS is empty.
- * Headlines only; never invent signals.
+ * Curated free sports RSS catalog.
+ *
+ * C-415: the NFL reporter roster (`reporter-roster.ts`) — every club official
+ * feed, every primary beat Bluesky/Substack feed, the league insiders, the
+ * working league aggregators, and GSN's own feed marked `selfSourced: true` —
+ * feeds this list. ESPN per-team blog RSS is in the roster for audit but
+ * excluded here because those URLs no longer return RSS (fixtures 2026-09-15).
+ *
+ * The pre-existing non-NFL league feeds are kept so C-415 does not regress
+ * NBA/MLB/Soccer coverage. Opt-in via NEWS_RSS_USE_CURATED_DEFAULTS=true when
+ * NEWS_RSS_FEEDS is empty. Headlines only; never invent signals.
  */
-export const CURATED_SPORTS_NEWS_RSS: readonly RssFeedConfig[] = [
-  {
-    url: "https://www.espn.com/espn/rss/nfl/news",
-    source: "ESPN NFL",
-    tier: "Aggregator",
-    team: "NFL",
-  },
+const NON_NFL_LEAGUE_FEEDS: readonly RssFeedConfig[] = [
   {
     url: "https://www.espn.com/espn/rss/nba/news",
     source: "ESPN NBA",
@@ -119,6 +134,11 @@ export const CURATED_SPORTS_NEWS_RSS: readonly RssFeedConfig[] = [
     tier: "Aggregator",
     team: "Soccer",
   },
+] as const;
+
+export const CURATED_SPORTS_NEWS_RSS: readonly RssFeedConfig[] = [
+  ...toCuratedRssFeeds(),
+  ...NON_NFL_LEAGUE_FEEDS,
 ] as const;
 
 /** Env string form of curated catalog (founder can paste into NEWS_RSS_FEEDS). */
@@ -161,6 +181,12 @@ export function parseRssItems(
  * Keyword classifier into the existing signal taxonomy. Deliberately
  * conservative: no match means the headline is dropped, never guessed.
  */
+/** Most entries we will classify from one feed. A bound on work, not on output. */
+const MAX_SCAN_PER_FEED = 200;
+
+/** Most entries we will keep from one feed, applied AFTER classification. */
+const MAX_ITEMS_PER_FEED = 40;
+
 export function classifySignal(headline: string): SignalType | null {
   const h = headline.toLowerCase();
   if (/\b(out for|ruled out|out indefinitely|placed on (the )?(il|ir)|torn|surgery|fracture|acl|achilles)\b/.test(h))
@@ -204,9 +230,33 @@ function headlineId(source: string, title: string): string {
  * (caller falls back to the labeled sample); returns [] when configured but
  * nothing classifiable arrived (an honest empty wire).
  */
-export async function fetchLiveWire(
+/**
+ * The wire plus its fetch health.
+ *
+ * `items === null` means NO FEEDS ARE CONFIGURED, which is a settled state: the
+ * labelled sample is the honest thing to render. Everything else needs
+ * `reached` to interpret, because an empty array is ambiguous on its own.
+ *
+ * Why `reached` has to exist: almost every failure path inside the per-feed
+ * task RETURNS an empty array rather than throwing (SSRF refusal, a non-ok
+ * response, a redirect we refuse to follow), and Promise.allSettled absorbs the
+ * ones that do throw. So "every configured feed returned HTTP 500" produces a
+ * perfectly fulfilled `[]` that is indistinguishable from "the wire is live and
+ * quiet" unless the count is carried out with it. Calling that a quiet wire is
+ * a confident false statement during a total outage.
+ */
+export interface LiveWireResult {
+  /** null when no feeds are configured. */
+  readonly items: NewsItem[] | null;
+  /** How many feeds were configured for this call. */
+  readonly configured: number;
+  /** How many of them actually returned a response we could read. */
+  readonly reached: number;
+}
+
+export async function fetchLiveWireWithHealth(
   now: Date = new Date(),
-): Promise<NewsItem[] | null> {
+): Promise<LiveWireResult> {
   let feeds = parseFeedConfig(process.env["NEWS_RSS_FEEDS"]);
   if (
     feeds.length === 0 &&
@@ -214,13 +264,13 @@ export async function fetchLiveWire(
   ) {
     feeds = [...CURATED_SPORTS_NEWS_RSS];
   }
-  if (feeds.length === 0) return null;
+  if (feeds.length === 0) return { items: null, configured: 0, reached: 0 };
 
   const results = await Promise.allSettled(
     feeds.map(async (feed) => {
       // SSRF choke point: refuse private/metadata IP literals before issuing.
       const check = validateEndpointUrl(feed.url);
-      if (!check.ok) return [];
+      if (!check.ok) return { ok: false, items: [] as NewsItem[] };
       const res = await fetch(feed.url, {
         headers: { "user-agent": "GSE-wire/1.0 (headlines only; contact: site)" },
         signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
@@ -228,29 +278,60 @@ export async function fetchLiveWire(
         next: { revalidate: 300 },
       });
       // Reject 3xx redirects whose Location points at a private/metadata host
-      // (redirect-to-internal-IP SSRF bypass). Same-origin relative redirects
-      // are safe (skip check); absolute public redirects are re-validated then
-      // followed exactly once, still under redirect:"manual".
+      // (redirect-to-internal-IP SSRF bypass). The redirect is RESOLVED against
+      // the feed URL first, then the resolved absolute URL is validated, and
+      // that is what gets followed — exactly once, still under
+      // redirect:"manual".
+      //
+      // The comment here used to claim "same-origin relative redirects are safe
+      // (skip check)", which the code did not do: validateEndpointUrl calls
+      // `new URL(url)`, which THROWS on a relative location, so a feed issuing
+      // `Location: /feed.xml` was refused outright. Harmless while a refused
+      // feed merely contributed no items — but once `reached` began driving the
+      // "feed unavailable" banner, a perfectly healthy feed could render the
+      // whole wire as offline. (Devin Review, #819.)
+      //
+      // Resolving is also the SAFER reading, not just the working one: a
+      // PROTOCOL-RELATIVE location like `//evil.example/x` looks relative and
+      // resolves to a different origin, so "relative implies same-origin" was
+      // never true. Validating the resolved URL is what actually checks the
+      // host we are about to fetch.
       let xml: string;
       if (res.status >= 300 && res.status < 400) {
         const location = res.headers.get("location");
-        if (!location) return [];
-        if (locationIsInternalTargetLocation(location)) return [];
-        const recheck = validateEndpointUrl(location);
-        if (!recheck.ok) return [];
-        const followed = await fetch(location, {
+        if (!location) return { ok: false, items: [] as NewsItem[] };
+        if (locationIsInternalTargetLocation(location)) return { ok: false, items: [] as NewsItem[] };
+        let resolved: string;
+        try {
+          resolved = new URL(location, feed.url).toString();
+        } catch {
+          return { ok: false, items: [] as NewsItem[] };
+        }
+        const recheck = validateEndpointUrl(resolved);
+        if (!recheck.ok) return { ok: false, items: [] as NewsItem[] };
+        const followed = await fetch(resolved, {
           headers: { "user-agent": "GSE-wire/1.0 (headlines only; contact: site)" },
           signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
           redirect: "manual",
         });
-        if (!followed.ok) return [];
+        if (!followed.ok) return { ok: false, items: [] as NewsItem[] };
         xml = await followed.text();
       } else {
-        if (!res.ok) return [];
+        if (!res.ok) return { ok: false, items: [] as NewsItem[] };
         xml = await res.text();
       }
       const items: NewsItem[] = [];
-      for (const raw of parseRssItems(xml).slice(0, 40)) {
+      // The cap bounds what we KEEP, not what we look at. It used to slice the
+      // parsed entries to 40 BEFORE classification, so a feed that opened with
+      // 40 headlines we do not classify dropped every qualifying report sitting
+      // behind them: the wire read empty while real injury news was in the
+      // feed, and the empty-state copy then blamed the publication bar for an
+      // omission the bar had not made. Classification is one regex per
+      // headline, so the cheap place to bound is the output. MAX_SCAN_PER_FEED
+      // still stops a pathological feed from unbounded work.
+      // (Devin Review, PR #819.)
+      for (const raw of parseRssItems(xml).slice(0, MAX_SCAN_PER_FEED)) {
+        if (items.length >= MAX_ITEMS_PER_FEED) break;
         const signal = classifySignal(raw.title);
         if (!signal) continue; // no guessing
         if (!raw.pubDate) continue; // no fake freshness
@@ -268,14 +349,32 @@ export async function fetchLiveWire(
           minutesAgo,
         });
       }
-      return items;
+      return { ok: true, items };
     }),
   );
 
-  const wire = results
-    .filter((r): r is PromiseFulfilledResult<NewsItem[]> => r.status === "fulfilled")
-    .flatMap((r) => r.value)
+  const settled = results.filter(
+    (r): r is PromiseFulfilledResult<{ ok: boolean; items: NewsItem[] }> =>
+      r.status === "fulfilled",
+  );
+  const wire = settled
+    .flatMap((r) => r.value.items)
     .sort((a, b) => a.minutesAgo - b.minutesAgo)
     .slice(0, 60);
-  return wire;
+  return {
+    items: wire,
+    configured: feeds.length,
+    reached: settled.filter((r) => r.value.ok).length,
+  };
+}
+
+/**
+ * Items only. Kept for callers that cannot act on fetch health; anything that
+ * renders a state to a customer should use fetchLiveWireWithHealth, because
+ * this signature cannot tell a quiet wire from a dead one.
+ */
+export async function fetchLiveWire(
+  now: Date = new Date(),
+): Promise<NewsItem[] | null> {
+  return (await fetchLiveWireWithHealth(now)).items;
 }

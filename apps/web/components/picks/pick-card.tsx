@@ -72,6 +72,20 @@ export function PickCard({
 
   const isFeatured = pick.isFeatured;
 
+  // C-354: card price = publish-time captured price. MONEYLINE reads
+  // `clvLockPrice`, TOTAL reads `clvLockLine`, each falling back to `line`
+  // only when that capture was never written. Zero is treated as "no number"
+  // (same as the previous `pick.line !== 0` guard). Nothing here parses
+  // `selection`.
+  const cardPrice: number | null =
+    pick.pickType === "MONEYLINE"
+      ? (pick.clvLockPrice ?? (pick.line !== 0 ? pick.line : null))
+      : null;
+  const cardLine: number | null =
+    pick.pickType === "TOTAL"
+      ? (pick.clvLockLine ?? (pick.line !== 0 ? pick.line : null))
+      : null;
+
   return (
     <article
       className={[
@@ -129,15 +143,25 @@ export function PickCard({
             {NO_BOOK_PRICE_LABEL}
           </p>
         ) : (
-          /* SPREAD's chosen-side number already lives in `selection` (e.g.
-             "Away Favs -6.0"). `line` is stored in HOME-team perspective for
-             settlement, so rendering it raw here would contradict the selection
-             for away-favored picks. Show the explicit line for TOTAL/MONEYLINE only. */
-          pick.line !== 0 && pick.pickType !== "SPREAD" && (
-            <p className="mt-0.5 text-xs text-ion-1">
-              Line: {pick.line > 0 ? "+" : ""}{pick.line}
+          /* C-354: the card's price/line is the publish-time capture when
+             present — `clvLockPrice` for MONEYLINE, `clvLockLine` for TOTAL.
+             Never a number parsed out of `selection`: the selection string
+             can carry a different American price than the stored capture,
+             and the stored capture is the immutable record. Legacy rows
+             without that capture fall back to `line`; neither path invents
+             a number. SPREAD's chosen-side number already lives in
+             `selection` ("Away Favs -6.0"); `line` is HOME-team perspective
+             for settlement, so rendering it raw would contradict the
+             selection for away-favored picks — no price slot for SPREAD. */
+          cardPrice !== null ? (
+            <p className="mt-0.5 text-xs text-ion-1" data-testid="card-price">
+              Line: {cardPrice > 0 ? "+" : ""}{cardPrice}
             </p>
-          )
+          ) : cardLine !== null ? (
+            <p className="mt-0.5 text-xs text-ion-1" data-testid="card-line">
+              Line: {cardLine > 0 ? "+" : ""}{cardLine}
+            </p>
+          ) : null
         )}
         {pick.lineMovement && (
           <LineMovementChip movement={pick.lineMovement} pickType={pick.pickType} />
@@ -212,6 +236,17 @@ export function PickCard({
       <p className="text-xs leading-relaxed text-ion-1">
         {canSeeFactorBreakdown ? pick.reasoning : pick.reasoningShort}
       </p>
+      {/* T-1 evidence caption (Devin Review, #819): when the text above is a
+          bound bookmaker-consensus claim, the API returns its source count +
+          freshness caption here — the same evidence /preview renders beside
+          a bound claim (bound.claimText + consensusEvidenceCaption(bound)).
+          Absent for an ordinary teaser and for a suppressed (unbound) claim,
+          since nothing renders there to caption. */}
+      {pick.consensusEvidenceCaption && (
+        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
+          {pick.consensusEvidenceCaption}
+        </p>
+      )}
 
       {/* Factor breakdown (PRO+ only) */}
       {canSeeFactorBreakdown && pick.factorBreakdown && (

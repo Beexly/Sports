@@ -18,6 +18,21 @@ export type HealthAlertCalibrationDrift = {
   readonly failingFloors: readonly string[];
 };
 
+/**
+ * Line-archive freshness as the health-alert cron sees it. Structural on
+ * purpose: this module stays pure and free of the freshness loader's DB types.
+ * Mirrors `LineArchiveFreshness` from lib/ops/line-archive-freshness.ts.
+ */
+export type HealthAlertLineArchive = {
+  readonly status: "HEALTHY" | "STALE" | "SILENT" | "DISABLED" | "UNKNOWN";
+  /** The founder's env flag as read. DISABLED is a report, never a defect. */
+  readonly enabled: boolean;
+  /** Null when off, empty, or unreadable — NOT zero. */
+  readonly hoursSinceNewest: number | null;
+  /** Present only on UNKNOWN. Carried into the alert payload. */
+  readonly error?: string;
+};
+
 export type HealthAlertSnapshot = {
   readonly unhealthy: boolean;
   readonly reason: string;
@@ -28,6 +43,11 @@ export type HealthAlertSnapshot = {
    * callers that never load the marker (and older snapshots) keep compiling.
    */
   readonly calibrationDrift?: HealthAlertCalibrationDrift | null;
+  /**
+   * Line-archive freshness, or null/absent when the caller did not load it.
+   * Optional so older callers keep compiling; DISABLED must never alert.
+   */
+  readonly lineArchive?: HealthAlertLineArchive | null;
 };
 
 export type HealthAlertState = {
@@ -76,6 +96,11 @@ export function classifyHealthAlertSnapshot(input: {
   capabilities: ReadonlyArray<{ capabilityId: string; status: string; reason?: string }>;
   /** Open post-publish calibration drift marker; omit or null when none is open. */
   calibrationDrift?: HealthAlertCalibrationDrift | null;
+  /**
+   * Line-archive freshness from `loadLineArchiveFreshness`. Omit or null when
+   * the caller did not load it. DISABLED never contributes to unhealthy.
+   */
+  lineArchive?: HealthAlertLineArchive | null;
 }): HealthAlertSnapshot {
   const checkErrors = Object.entries(input.checks)
     .filter(([, c]) => c.status !== "ok")
@@ -93,11 +118,26 @@ export function classifyHealthAlertSnapshot(input: {
 
   const drift = input.calibrationDrift ?? null;
 
+  // Line archive. C-393: this is the alarm the 21-day outage never had.
+  // STALE or SILENT while the founder's flag is on is an outage; DISABLED is
+  // a report, never a page (law 3); UNKNOWN is not a measurement and is
+  // carried, not treated as proof of health or of failure.
+  const lineArchive = input.lineArchive ?? null;
+  const lineArchiveQuiet =
+    lineArchive !== null &&
+    lineArchive.enabled &&
+    (lineArchive.status === "STALE" || lineArchive.status === "SILENT");
+
   // Unhealthy if any check fails, ingestion > 90m, settlement critically behind,
-  // or a published calibration claim has drifted below its floors.
+  // a published calibration claim has drifted below its floors, or the line
+  // archive is switched on and silent.
   const ingestionStale = ingestionAge !== null && ingestionAge > 90;
   const unhealthy =
-    checkErrors.length > 0 || ingestionStale || settlementUnavailable || drift !== null;
+    checkErrors.length > 0 ||
+    ingestionStale ||
+    settlementUnavailable ||
+    drift !== null ||
+    lineArchiveQuiet;
 
   const parts: string[] = [];
   if (checkErrors.length) parts.push(`checks=[${checkErrors.join("; ")}]`);
@@ -108,6 +148,16 @@ export function classifyHealthAlertSnapshot(input: {
       `calibrationDrift=${drift.previousStatus}->${drift.currentStatus} since ${drift.since} floors=[${drift.failingFloors.join("; ")}]`,
     );
   }
+  if (lineArchiveQuiet) {
+    const hours =
+      lineArchive.hoursSinceNewest === null
+        ? "never"
+        : `${lineArchive.hoursSinceNewest.toFixed(1)}h`;
+    parts.push(`line archive stale: ${hours}`);
+  }
+  if (lineArchive?.status === "UNKNOWN") {
+    parts.push(`line archive unreadable: ${lineArchive.error ?? "query failed"}`);
+  }
 
   return {
     unhealthy,
@@ -115,6 +165,7 @@ export function classifyHealthAlertSnapshot(input: {
     ingestionAgeMinutes: ingestionAge,
     settlementUnavailable,
     calibrationDrift: drift,
+    lineArchive,
   };
 }
 

@@ -132,6 +132,14 @@ export interface FactorBreakdown {
    * Null when the book is degenerate. Display only: no scoring path reads this.
    */
   marketFairShinProb?: number | null;
+  /**
+   * C-359: Kalshi exchange midpoint for the chosen side (0–1), stored as a
+   * vig-free reference beside marketFairProb. Source is the PredExon catalog's
+   * live two-way mid (YES bid/ask mid; NO mid or 1−YES), never last_price.
+   * Null when the Kalshi book is absent for this game/market — honest miss.
+   * Display / calibration reference only: no scoring path reads this.
+   */
+  exchangeMidpointProb?: number | null;
   factors: FactorDetail[];     // human-readable factor list
 }
 
@@ -657,6 +665,19 @@ export interface PublicPick {
    */
   hasBookPrice?: boolean;
   /**
+   * American price captured once at publish (MONEYLINE only; null otherwise).
+   * This — never a number parsed out of `selection` — is the card's price.
+   * A selection like "Away ML (+102)" can disagree with the lock (−135); the
+   * lock is immutable and is what settlement/CLV use.
+   */
+  clvLockPrice?: number | null;
+  /**
+   * Points line captured once at publish (SPREAD/TOTAL; null for MONEYLINE
+   * and for legacy rows that predate the lock columns). Same rule as
+   * `clvLockPrice`: the card's line is this value when present.
+   */
+  clvLockLine?: number | null;
+  /**
    * @deprecated Phase 1 shape, superseded by `winProbability`. Kept so existing
    * consumers do not break; both are resolved from ONE call to
    * `resolveWinProbability` so they can never disagree. New code reads
@@ -717,6 +738,16 @@ export interface PublicPick {
   riskLevel: RiskLevel;
   reasoning: string;                 // full (PRO) or short teaser (FREE)
   reasoningShort: string;
+  /**
+   * "N books · scored Nh ago" — present ONLY when the displayed `reasoning` /
+   * `reasoningShort` text is a bound bookmaker-consensus claim (T-1 tripwire,
+   * lib/claims/public-consensus-claim.ts). A claim that could not bind its
+   * evidence renders as "" already (never reaches the customer), so this is
+   * never populated for a claim without evidence — it is the caption the
+   * still-visible, evidence-backed claim must render beside it. Null for an
+   * ordinary non-consensus teaser.
+   */
+  consensusEvidenceCaption?: string | null;
 
   isFeatured: boolean;
   isAuditAvailable: boolean;          // false for sample/demo rows with no SourceSnapshot chain

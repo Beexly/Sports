@@ -3,9 +3,9 @@ import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { TheBeat } from "@/components/news/the-beat";
 import { GalaxyBroadcast } from "@/components/news/galaxy-broadcast";
-import { buildBroadcast } from "@/lib/fantasy/host";
-import { WIRE_DISCLAIMER, WIRE_LIVE_DISCLAIMER } from "@/lib/news/wire";
-import { fetchLiveWire } from "@/lib/news/rss";
+import { buildBroadcast, NOVA } from "@/lib/fantasy/host";
+import { WIRE_LIVE_DISCLAIMER } from "@/lib/news/wire";
+import { loadWireFromStore } from "@/lib/news/wire-store";
 
 /**
  * The Beat.
@@ -15,6 +15,9 @@ import { fetchLiveWire } from "@/lib/news/rss";
  * This page is the newsroom that scores every story the instant it lands.
  *
  * Not a card list under a header. A full-bleed place you walk into.
+ *
+ * C-416: the ledger renders from the stored wire (cron-polled Signal rows),
+ * never a page-render fetch and never a fictional sample.
  */
 
 export const metadata: Metadata = {
@@ -25,12 +28,12 @@ export const metadata: Metadata = {
 };
 
 export default async function TheBeatPage() {
-  const broadcast = buildBroadcast();
-  // Live RSS wire when NEWS_RSS_FEEDS is configured (headlines only,
-  // source-attributed, classified into the signal taxonomy); null keeps the
-  // clearly-labeled fictional sample. Fails soft: a feed outage falls back
-  // to whatever fetched, never fabricates.
-  const liveWire = await fetchLiveWire().catch(() => null);
+  // Stored wire. Empty store is the honest empty state (rule 1). A failed
+  // store read is `unavailable`, never a sample fallback.
+  const store = await loadWireFromStore();
+  const liveWire = store.failed ? null : store.items;
+  const wireUnavailable = store.failed;
+  const broadcast = buildBroadcast(NOVA, store.failed ? [] : store.items);
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">
@@ -160,10 +163,12 @@ export default async function TheBeatPage() {
                 act before the number moves.
               </p>
             </div>
-            <TheBeat liveWire={liveWire} />
-            <p className="mt-6 text-xs leading-relaxed text-ion-2">
-              {liveWire ? WIRE_LIVE_DISCLAIMER : WIRE_DISCLAIMER}
-            </p>
+            <TheBeat liveWire={liveWire} unavailable={wireUnavailable} />
+            {wireUnavailable ? null : (
+              <p className="mt-6 text-xs leading-relaxed text-ion-2">
+                {WIRE_LIVE_DISCLAIMER}
+              </p>
+            )}
           </div>
         </section>
       </main>

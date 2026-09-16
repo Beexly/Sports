@@ -1,0 +1,20 @@
+id: A14
+title: FTN charting pressure coverage and motion rates as props features
+hypothesis: FTN pressure, coverage and motion rates improve player-prop feature sets beyond box-score usage.
+estimand: out-of-sample ΔBrier of ftn_charting rates added to the props baseline
+unit: ΔBrier on validate era
+data: [nflverse.ftn_charting]
+discover_era: 2022-2023
+validate_era: 2024-2025
+kill_line: "validate-era ΔBrier >= 0 or P(better) < 0.75"
+mde_80pct_power: 0.00114
+script: scripts/factors/A14.mjs
+status: CANDIDATE
+number: -0.00093
+ci: [-0.00173, -0.00013]
+n: 2134
+run_sha: "b17e6530602a26de77dcb0cf72737853a769fb21"
+run_at: "2026-09-15T22:48:42.335Z"
+blocked_on: null
+notes: >
+  Closest thing to tracking we can legally have. A26: NO man/zone column in the public ftn_charting release — proxies are n_defense_box, n_blitzers, n_pass_rushers plus motion/PA/screen/RPO rates. FTN rates are game-context (not a pure defense split) because the projected FTN set lacks a posteam column; attached as opponent prior-season-to-date context. Props shape without a posted line: outcome = receiving_yards >= trailing-3-game median; baseline = trailing mean yards only. C-378. C-378 run 2026-09-15: WR/TE/RB REG 2022–2025. Discover n=4340; Validate n=2134. Brier baseline=0.24765 with-FTN=0.24672. ΔBrier=-0.00093 CI[-0.00173,-0.00013] P(better)=0.992 MDE80=0.00114. Data: nflverse ftn_charting + player_stats + nfldata games.csv (CC BY 4.0); no DB. Big Data Bowl tracking is CC BY-NC-4.0 non-commercial and closed.

@@ -17,6 +17,8 @@ export const metadata: Metadata = {
   description:
     "A fictional NBA DFS slate for optimizer and lineup-validation testing. All players, salaries, and projections are invented — not real contest data.",
   alternates: { canonical: "/fantasy/nba" },
+  // Parked sample tool (C-360 / D3): keep the route, drop it from the index.
+  robots: { index: false },
 };
 
 /**
@@ -72,8 +74,8 @@ export default function NbaFantasyPage() {
 
         <section className="px-4 pb-6 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-5xl">
-            <div className="rounded-xl border border-amber-400/40 bg-amber-400/10 px-4 py-3">
-              <p className="font-mono text-xs uppercase tracking-[0.16em] text-amber-300">
+            <div className="rounded-xl border border-caution/40 bg-caution/[0.08] px-4 py-3">
+              <p className="font-mono text-xs uppercase tracking-[0.16em] text-caution">
                 Fictional slate — not real contest data
               </p>
               <p className="mt-1 text-sm leading-relaxed text-ion-1">

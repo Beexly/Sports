@@ -24,12 +24,24 @@ describe("PredExon / dump registry", () => {
 });
 
 describe("PredExon client fail-closed", () => {
-  it("is off by default and does not fetch", async () => {
+  it("is off when no key and no flag (fail closed)", async () => {
     expect(isPredExonIngestEnabled({})).toBe(false);
     const fetchImpl = vi.fn();
     const client = new PredExonClient({}, fetchImpl as unknown as typeof fetch);
     expect(await client.listKalshiMarkets({ search: "nfl" })).toBeNull();
     expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it("D19: defaults ON when PREDEXON_API_KEY is present", () => {
+    expect(isPredExonIngestEnabled({ PREDEXON_API_KEY: "test-not-a-real-key" })).toBe(true);
+    expect(isPredExonIngestEnabled({ PREDEXON_API_KEY: "test-not-a-real-key", PREDEXON_INGEST: "" })).toBe(true);
+  });
+
+  it("D19: explicit false/off overrides a present key", () => {
+    expect(isPredExonIngestEnabled({ PREDEXON_API_KEY: "k", PREDEXON_INGEST: "false" })).toBe(false);
+    expect(isPredExonIngestEnabled({ PREDEXON_API_KEY: "k", PREDEXON_INGEST: "off" })).toBe(false);
+    expect(isPredExonIngestEnabled({ PREDEXON_API_KEY: "k", PREDEXON_INGEST: "0" })).toBe(false);
+    expect(isPredExonIngestEnabled({ PREDEXON_API_KEY: "k", PREDEXON_INGEST: "no" })).toBe(false);
   });
 
   it("throws without a key and still does not fetch", async () => {

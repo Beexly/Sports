@@ -289,6 +289,22 @@ export async function CalibrationPanel() {
         <p className="text-xs text-ion-2">{brierRead(data.brierScore)}</p>
       </div>
 
+      {/* C-350: in-play rows withheld from every rate above. The count and the
+          shared disclosure sentence sit on the same surface as the numbers the
+          exclusion moved — never silent, never only on the API. */}
+      {data.excludedInPlay > 0 && (
+        <div
+          data-testid="calibration-in-play-exclusion"
+          className="border-t border-titanium px-6 py-3"
+        >
+          <p className={`text-xs font-semibold text-caution ${NUMERIC_TEXT_CLASS}`}>
+            {formatCount(data.excludedInPlay)} in-play{" "}
+            {data.excludedInPlay === 1 ? "row" : "rows"} excluded from this sample
+          </p>
+          <p className="mt-1 text-[11px] leading-snug text-ion-2">{data.inPlayNote}</p>
+        </div>
+      )}
+
       <div className="border-t border-titanium px-6 py-3">
         <p className="text-[11px] leading-relaxed text-ion-2">
           {data.publicMessage} {data.disclaimer}

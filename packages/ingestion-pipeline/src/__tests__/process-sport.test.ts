@@ -150,9 +150,20 @@ vi.mock("@sports/data-ingestion", async () => {
   fetchEspnOddsForSport: vi.fn().mockResolvedValue({ events: [], provider: "espn_public" }),
   // Second book (Kalshi via PredExon) is OFF by default: no catalog, no seam.
   createGalaxySecondBook: mocks.createGalaxySecondBook,
+  // C-396 exchange tape: read gate closed in unit tests (zero PredExon calls).
+  isPredExonIngestEnabled: vi.fn().mockReturnValue(false),
+  PredExonClient: vi.fn(),
+  eventTickerMatchesGame: vi.fn().mockReturnValue(false),
+  parseKalshiSpreadLine: vi.fn().mockReturnValue(null),
+  parseKalshiTotalLine: vi.fn().mockReturnValue(null),
   NFL_PRESEASON_ODDS_KEY: "americanfootball_nfl_preseason",
   NFL_CANONICAL_SPORT_KEY: "americanfootball_nfl",
-  isNflPreseasonFetchWindow: vi.fn().mockReturnValue(false),
+  // Real month check so isNflPreseasonKickoff (C-353) works against a July/August kickoff.
+  isNflPreseasonFetchWindow: vi.fn((date?: Date) => {
+    if (!date) return false;
+    const month = date.getUTCMonth() + 1;
+    return month === 7 || month === 8;
+  }),
   remapPreseasonRows: vi.fn().mockReturnValue({ remapped: [], unmatched: 0 }),
   mergeFeedRowsById: vi.fn((primary: unknown[]) => primary),
   resolveOddsApiKey: vi.fn().mockReturnValue("key"),
@@ -172,6 +183,10 @@ vi.mock("@sports/prediction-engine", async () => {
     scoreGames: mocks.scoreGames,
     buildPickSignalSnapshot: mocks.buildPickSignalSnapshot,
     selectionIsHomeSide: actual.selectionIsHomeSide,
+    // C-353 mint-withhold imports these from the engine; keep them real so the
+    // mint gate is exercised against the same predicates scoring.ts uses.
+    isThreeWayMoneylineSport: actual.isThreeWayMoneylineSport,
+    isBaseballSport: actual.isBaseballSport,
     // Independent fair-value builders — null-safe stubs (network off in unit tests).
     isPoissonValidSport: actual.isPoissonValidSport ?? (() => false),
     poissonIndependentFairValue: vi.fn().mockReturnValue(null),
@@ -420,6 +435,11 @@ describe("processSport", () => {
       // plain-upsert name guard. The board lists the Yankees AND the Mets that
       // day, so a bare "New York" is an ambiguous city the matcher refuses;
       // the stored name confirms. ESPN-shaped TEST FIXTURE, injected fetch.
+      // C-353: this fixture test is about name probing, not market policy —
+      // score a MONEYLINE so the MLB SPREAD/TOTAL mint withhold does not fire.
+      mocks.scoreGames.mockReturnValue([
+        scoredPick({ pickType: "MONEYLINE", selection: "New York Yankees ML (-150)", line: -150 }),
+      ]);
       const MLB = { key: "baseball_mlb", name: "MLB", displayName: "MLB" } as const;
       const kickoff = new Date(T_KICKOFF);
       const runAt = new Date(T_RUN_AT);
@@ -1910,7 +1930,17 @@ describe("processSport", () => {
 
       await processSport(SPORT, "key", gates());
 
-      expect(mocks.gameUpdate).not.toHaveBeenCalled();
+      // The twin REUSE path did not fire — a new row was created via upsert.
+      // (The C-356 tombstone sweep may still call gameUpdate to stamp
+      // mergedIntoGameId on one of the two existing twins; that is a
+      // separate concern covered by its own tests.)
+      const twinReuseCalls = mocks.gameUpdate.mock.calls.filter(
+        (c) => {
+          const data = (c[0] as { data?: Record<string, unknown> }).data;
+          return data && "homeTeamName" in data && !("mergedIntoGameId" in data);
+        },
+      );
+      expect(twinReuseCalls).toHaveLength(0);
       expect(mocks.gameUpsert).toHaveBeenCalledWith(
         expect.objectContaining({ where: { externalId: "odds-api-1" } }),
       );
@@ -1983,6 +2013,154 @@ describe("processSport", () => {
         expect.stringContaining("game identity lookup failed"),
       );
       warnSpy.mockRestore();
+    });
+
+    /**
+     * C-356: two rows already sit in `games` for one fixture. The tombstone
+     * sweep after the upsert loop stamps `mergedIntoGameId` on the weaker
+     * row (most books / highest dq survives) so /api/picks, board/state, and
+     * sitemap exclude it. The richer row is the one this cycle writes to, so
+     * it is protected — it may only be canonical, never tombstoned.
+     */
+    it("tombstones an existing twin duplicate: 2 rows → 1 canonical + 1 alias (C-356)", async () => {
+      const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
+      const RICH = {
+        id: "game-rich",
+        externalId: "odds-api-1",
+        sportId: "sport-1",
+        homeTeamName: "Kansas City Chiefs",
+        awayTeamName: "Buffalo Bills",
+        commenceTime: new Date(T_KICKOFF),
+        mergedIntoGameId: null,
+        bookmakerCoverageMax: 12,
+        dataQualityScore: 85,
+        createdAt: new Date("2026-09-01T00:00:00.000Z"),
+      };
+      const POOR = {
+        ...RICH,
+        id: "game-poor",
+        externalId: "espn:nfl:401872656",
+        bookmakerCoverageMax: 0,
+        dataQualityScore: 0,
+        createdAt: new Date("2026-09-02T00:00:00.000Z"),
+      };
+      // Feed row matches RICH by externalId → plain upsert, no twin update.
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({
+          externalId: "odds-api-1",
+          homeTeam: "Kansas City Chiefs",
+          awayTeam: "Buffalo Bills",
+        }),
+      ]);
+      mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
+        const where = (args as { where?: { externalId?: string; id?: string } }).where;
+        return where?.externalId === "odds-api-1" ? RICH : { id: "game-rich" };
+      });
+      // The tombstone sweep loads both rows in the window.
+      mocks.gameFindMany.mockResolvedValue([RICH, POOR]);
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(result.status).toBe("success");
+      // POOR was tombstoned into RICH.
+      expect(mocks.gameUpdate).toHaveBeenCalledWith(
+        expect.objectContaining({
+          where: { id: "game-poor" },
+          data: { mergedIntoGameId: "game-rich" },
+        }),
+      );
+      // RICH was NOT tombstoned (it is the canonical).
+      const tombstoneCalls = mocks.gameUpdate.mock.calls.filter(
+        (c) => (c[0] as { data?: { mergedIntoGameId?: string } }).data?.mergedIntoGameId !== undefined,
+      );
+      expect(tombstoneCalls).toHaveLength(1);
+      expect(infoSpy.mock.calls.some((c) => /tombstoned 1 twin duplicate/.test(String(c[0])))).toBe(true);
+      infoSpy.mockRestore();
+    });
+
+    it("never tombstones a row this cycle just wrote (protectedIds)", async () => {
+      // The sweep would pick POOR as canonical (more books), but RICH is the
+      // row this cycle wrote to — protected, so the alias write is skipped
+      // and both rows stay live (fail closed).
+      const warnSpy = vi.spyOn(console, "warn").mockImplementation(() => {});
+      const infoSpy = vi.spyOn(console, "info").mockImplementation(() => {});
+      const RICH = {
+        id: "game-rich",
+        externalId: "odds-api-1",
+        sportId: "sport-1",
+        homeTeamName: "Kansas City Chiefs",
+        awayTeamName: "Buffalo Bills",
+        commenceTime: new Date(T_KICKOFF),
+        mergedIntoGameId: null,
+        bookmakerCoverageMax: 0,
+        dataQualityScore: 0,
+        createdAt: new Date("2026-09-01T00:00:00.000Z"),
+      };
+      const POOR = {
+        ...RICH,
+        id: "game-poor",
+        externalId: "espn:nfl:401872656",
+        bookmakerCoverageMax: 12,
+        dataQualityScore: 85,
+      };
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({
+          externalId: "odds-api-1",
+          homeTeam: "Kansas City Chiefs",
+          awayTeam: "Buffalo Bills",
+        }),
+      ]);
+      mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
+        const where = (args as { where?: { externalId?: string; id?: string } }).where;
+        return where?.externalId === "odds-api-1" ? RICH : { id: "game-rich" };
+      });
+      // The upsert returns the row it wrote — id must match RICH so protectedIds works.
+      mocks.gameUpsert.mockResolvedValue({ id: "game-rich", homeTeamName: "Kansas City Chiefs", awayTeamName: "Buffalo Bills" });
+      mocks.gameFindMany.mockResolvedValue([RICH, POOR]);
+
+      await processSport(SPORT, "key", gates());
+
+      // No tombstone write: the only gameUpdate calls are NOT mergedIntoGameId stamps.
+      const tombstoneCalls = mocks.gameUpdate.mock.calls.filter(
+        (c) => (c[0] as { data?: { mergedIntoGameId?: string } }).data?.mergedIntoGameId !== undefined,
+      );
+      expect(tombstoneCalls).toHaveLength(0);
+      infoSpy.mockRestore();
+      warnSpy.mockRestore();
+    });
+
+    it("tombstone sweep is a no-op under the kill switch", async () => {
+      process.env["GAME_IDENTITY_MERGE_DISABLED"] = "true";
+      const RICH = {
+        id: "game-rich",
+        externalId: "odds-api-1",
+        sportId: "sport-1",
+        homeTeamName: "Kansas City Chiefs",
+        awayTeamName: "Buffalo Bills",
+        commenceTime: new Date(T_KICKOFF),
+        mergedIntoGameId: null,
+        bookmakerCoverageMax: 12,
+        dataQualityScore: 85,
+        createdAt: new Date("2026-09-01T00:00:00.000Z"),
+      };
+      const POOR = { ...RICH, id: "game-poor", externalId: "espn:nfl:401872656", bookmakerCoverageMax: 0 };
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ externalId: "odds-api-1", homeTeam: "Kansas City Chiefs", awayTeam: "Buffalo Bills" }),
+      ]);
+      mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
+        const where = (args as { where?: { externalId?: string; id?: string } }).where;
+        return where?.externalId === "odds-api-1" ? RICH : { id: "game-rich" };
+      });
+      mocks.gameFindMany.mockResolvedValue([RICH, POOR]);
+
+      await processSport(SPORT, "key", gates());
+
+      // Kill switch: no twin scan at all (identity) and no tombstone sweep.
+      expect(mocks.gameFindMany).not.toHaveBeenCalled();
+      const tombstoneCalls = mocks.gameUpdate.mock.calls.filter(
+        (c) => (c[0] as { data?: { mergedIntoGameId?: string } }).data?.mergedIntoGameId !== undefined,
+      );
+      expect(tombstoneCalls).toHaveLength(0);
     });
 
     /**
@@ -2069,6 +2247,104 @@ describe("processSport", () => {
       );
     });
   });
+/**
+ * C-353 — book-priced mint withhold (WITHHOLD-ONLY).
+ *
+ * These cases prove the mint loop refuses to create or refresh the gated
+ * candidates and logs one structured line each. Control cases prove the
+ * ungated lanes (regular-season NFL SPREAD, MLB MONEYLINE) still mint.
+ */
+describe("processSport C-353 mint withhold", () => {
+  /** Next July/August 16:00 UTC that is still ahead of the run clock. */
+  function nextPreseasonKickoff(): Date {
+    const now = new Date();
+    const year = now.getUTCMonth() >= 8 ? now.getUTCFullYear() + 1 : now.getUTCFullYear();
+    return new Date(Date.UTC(year, 7, 15, 16, 0, 0));
+  }
+
+  it("withholds MLB SPREAD and TOTAL; MLB MONEYLINE still mints (calibration lane)", async () => {
+    const kickoff = new Date(K_MS);
+    mocks.normalizeGames.mockReturnValue([
+      normalizedGame({ externalId: "ext-1", homeTeam: "Yankees", awayTeam: "Red Sox", commenceTime: kickoff }),
+    ]);
+    mocks.scoreGames.mockReturnValue([
+      scoredPick({ pickType: "SPREAD", selection: "Yankees -1.5", line: -1.5, bookmakerCount: 5 }),
+      scoredPick({ pickType: "TOTAL", selection: "OVER 8.5", line: 8.5, bookmakerCount: 5 }),
+      scoredPick({ pickType: "MONEYLINE", selection: "Yankees ML (-150)", line: -150, bookmakerCount: 5 }),
+    ]);
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const result = await processSport(MLB, "key", gates());
+
+    expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
+    const created = mocks.pickCreate.mock.calls[0]?.[0] as { data: { pickType: string } };
+    expect(created.data.pickType).toBe("MONEYLINE");
+    expect(result).toMatchObject({ status: "success", picks: 1 });
+    expect(warn.mock.calls.some((c) => /withheld: reason=mlb_spread gameId=game-1 pickType=SPREAD/.test(String(c[0])))).toBe(true);
+    expect(warn.mock.calls.some((c) => /withheld: reason=mlb_total gameId=game-1 pickType=TOTAL/.test(String(c[0])))).toBe(true);
+    warn.mockRestore();
+  });
+
+  it("withholds soccer MONEYLINE on the book-priced path", async () => {
+    const SOCCER = { key: "soccer_usa_mls", name: "MLS", displayName: "MLS" } as const;
+    mocks.scoreGames.mockReturnValue([
+      scoredPick({ pickType: "MONEYLINE", selection: "LA Galaxy ML (-150)", line: -150, bookmakerCount: 5 }),
+      scoredPick({ pickType: "SPREAD", selection: "LA Galaxy -0.5", line: -0.5, bookmakerCount: 5 }),
+    ]);
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const result = await processSport(SOCCER, "key", gates());
+
+    expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
+    const created = mocks.pickCreate.mock.calls[0]?.[0] as { data: { pickType: string } };
+    expect(created.data.pickType).toBe("SPREAD");
+    expect(result).toMatchObject({ status: "success", picks: 1 });
+    expect(warn.mock.calls.some((c) => /withheld: reason=soccer_moneyline gameId=game-1 pickType=MONEYLINE/.test(String(c[0])))).toBe(true);
+    warn.mockRestore();
+  });
+
+  it("withholds a 0-book book-priced candidate", async () => {
+    mocks.scoreGames.mockReturnValue([
+      scoredPick({ pickType: "SPREAD", bookmakerCount: 0 }),
+    ]);
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const result = await processSport(SPORT, "key", gates());
+
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
+    expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+    expect(result).toMatchObject({ status: "success", picks: 0 });
+    expect(warn.mock.calls.some((c) => /withheld: reason=zero_books gameId=game-1 pickType=SPREAD/.test(String(c[0])))).toBe(true);
+    warn.mockRestore();
+  });
+
+  it("withholds NFL preseason when the kickoff falls in the July-August window", async () => {
+    const preseasonKickoff = nextPreseasonKickoff();
+    mocks.normalizeGames.mockReturnValue([
+      normalizedGame({ externalId: "ext-1", commenceTime: preseasonKickoff }),
+    ]);
+    mocks.scoreGames.mockReturnValue([
+      scoredPick({ pickType: "SPREAD" }),
+      scoredPick({ pickType: "MONEYLINE", selection: "Chiefs ML (-150)", line: -150 }),
+    ]);
+    const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+    const result = await processSport(SPORT, "key", gates());
+
+    expect(mocks.pickCreate).not.toHaveBeenCalled();
+    expect(result).toMatchObject({ status: "success", picks: 0 });
+    expect(warn.mock.calls.some((c) => /withheld: reason=nfl_preseason gameId=game-1 pickType=SPREAD/.test(String(c[0])))).toBe(true);
+    expect(warn.mock.calls.some((c) => /withheld: reason=nfl_preseason gameId=game-1 pickType=MONEYLINE/.test(String(c[0])))).toBe(true);
+    warn.mockRestore();
+  });
+
+  it("CONTROL: regular-season NFL SPREAD still mints (withhold is not a blanket ban)", async () => {
+    const result = await processSport(SPORT, "key", gates());
+    expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
+    expect(result).toMatchObject({ status: "success", picks: 1 });
+  });
+});
+
 });
 
 describe("pickSelectionSide", () => {

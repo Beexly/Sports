@@ -15,6 +15,10 @@ vi.mock("@/lib/ingestion/snap-counts", () => ({ ingestSnapCounts: vi.fn() }));
 vi.mock("@/lib/ingestion/injuries", () => ({ ingestInjuries: vi.fn() }));
 vi.mock("@/lib/ingestion/depth-charts", () => ({ ingestDepthCharts: vi.fn() }));
 vi.mock("@/lib/ingestion/next-gen-stats", () => ({ ingestNextGenStats: vi.fn() }));
+// C-355: PFR advanced + rush tendencies are satellites. Mocked so this suite
+// never hits the network or the clearance engine.
+vi.mock("@/lib/ingestion/pfr-adv-stats", () => ({ ingestPfrAdvStats: vi.fn() }));
+vi.mock("@/lib/ingestion/rush-tendencies", () => ({ ingestRushTendencies: vi.fn() }));
 // The REG-row probe (C-95) reads the database; here it answers from a list the
 // test controls. Default: no season has rows, which is the pre-probe behaviour
 // (completed floor) every case below was written against.
@@ -33,6 +37,8 @@ import { ingestSnapCounts } from "@/lib/ingestion/snap-counts";
 import { ingestInjuries } from "@/lib/ingestion/injuries";
 import { ingestDepthCharts } from "@/lib/ingestion/depth-charts";
 import { ingestNextGenStats } from "@/lib/ingestion/next-gen-stats";
+import { ingestPfrAdvStats } from "@/lib/ingestion/pfr-adv-stats";
+import { ingestRushTendencies } from "@/lib/ingestion/rush-tendencies";
 import { CRON_MANIFEST } from "@/lib/ops/cron-schedule-manifest";
 import { SATELLITE_DAILY_HOUR_UTC } from "@/lib/ingestion/satellite-window";
 
@@ -65,6 +71,15 @@ describe("GET /api/cron/refresh-player-stats", () => {
     (ingestNextGenStats as Mock).mockImplementation((season: number, statType: string) =>
       Promise.resolve({ status: "ok", season, statType, rowsWritten: 5 }),
     );
+    (ingestPfrAdvStats as Mock).mockReset();
+    (ingestPfrAdvStats as Mock).mockImplementation((season: number, statType: string) =>
+      // Default: rights-gated (permission_required). A scheduled run that
+      // reaches these must still complete; body.success flips false, HTTP
+      // stays 200 on a healthy primary. Individual tests override to "ok".
+      Promise.resolve({ status: "clearance-denied", season, statType, rowsWritten: 0, blocks: ["rights"] }),
+    );
+    (ingestRushTendencies as Mock).mockReset();
+    (ingestRushTendencies as Mock).mockResolvedValue({ status: "ok", season: 2024, rowsWritten: 12 });
     vi.stubEnv("CRON_SECRET", "secret");
     probe.seasonsWithRegRows = [];
   });
@@ -105,6 +120,8 @@ describe("GET /api/cron/refresh-player-stats", () => {
       expect(ingestDepthCharts).not.toHaveBeenCalled();
       expect(ingestSnapCounts).not.toHaveBeenCalled();
       expect(ingestNextGenStats).not.toHaveBeenCalled();
+      expect(ingestPfrAdvStats).not.toHaveBeenCalled();
+      expect(ingestRushTendencies).not.toHaveBeenCalled();
     } finally {
       vi.useRealTimers();
     }
@@ -140,6 +157,13 @@ describe("GET /api/cron/refresh-player-stats", () => {
         "receiving",
         "rushing",
       ]);
+      // C-355: both new ingesters are reachable from the same daily window.
+      expect((ingestPfrAdvStats as Mock).mock.calls.map((c) => c[1]).sort()).toEqual([
+        "pass",
+        "rec",
+        "rush",
+      ]);
+      expect(ingestRushTendencies).toHaveBeenCalled();
     } finally {
       vi.useRealTimers();
     }
@@ -182,6 +206,10 @@ describe("GET /api/cron/refresh-player-stats", () => {
       expect(ingestInjuries).toHaveBeenCalledWith(labelled);
       expect(ingestSnapCounts).toHaveBeenCalledWith(labelled);
       expect(ingestNextGenStats).toHaveBeenCalledWith(labelled, "passing");
+      expect(ingestPfrAdvStats).toHaveBeenCalledWith(labelled, "pass");
+      expect(ingestPfrAdvStats).toHaveBeenCalledWith(labelled, "rec");
+      expect(ingestPfrAdvStats).toHaveBeenCalledWith(labelled, "rush");
+      expect(ingestRushTendencies).toHaveBeenCalledWith(labelled);
       expect(ingestDepthCharts).not.toHaveBeenCalledWith(floor);
       expect(ingestInjuries).not.toHaveBeenCalledWith(floor);
     } finally {
@@ -423,6 +451,12 @@ describe("GET /api/cron/refresh-player-stats", () => {
     (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
       status: "ok", season: 2024, playersUpserted: 2, statsUpserted: 4,
     });
+    // Override the default rights-denied PFR mock so this aggregation case
+    // proves a fully-healthy full path (success=true). Rights denial is
+    // covered by the dedicated C-355 case below.
+    (ingestPfrAdvStats as Mock).mockImplementation((season: number, statType: string) =>
+      Promise.resolve({ status: "ok", season, statType, rowsWritten: 2 }),
+    );
     const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024&mode=full", "Bearer secret"));
     expect(res.status).toBe(200);
     const body = (await res.json()) as {
@@ -431,6 +465,8 @@ describe("GET /api/cron/refresh-player-stats", () => {
       snaps: { rowsWritten: number };
       injuries: { rowsWritten: number };
       depth: { rowsWritten: number };
+      pfrAdv: { pass: { rowsWritten: number }; rec: { rowsWritten: number }; rush: { rowsWritten: number } };
+      rushTendencies: { rowsWritten: number };
     };
     expect(body.success).toBe(true);
     expect(body.stats.statsUpserted).toBe(4);
@@ -445,8 +481,36 @@ describe("GET /api/cron/refresh-player-stats", () => {
     expect(ingestNextGenStats).toHaveBeenCalledWith(2024, "passing");
     expect(ingestNextGenStats).toHaveBeenCalledWith(2024, "receiving");
     expect(ingestNextGenStats).toHaveBeenCalledWith(2024, "rushing");
+    // C-355: PFR advanced (all three variants) + rush tendencies.
+    expect(ingestPfrAdvStats).toHaveBeenCalledWith(2024, "pass");
+    expect(ingestPfrAdvStats).toHaveBeenCalledWith(2024, "rec");
+    expect(ingestPfrAdvStats).toHaveBeenCalledWith(2024, "rush");
+    expect(ingestRushTendencies).toHaveBeenCalledWith(2024);
+    expect(body.pfrAdv.pass.rowsWritten).toBe(2);
+    expect(body.pfrAdv.rush.rowsWritten).toBe(2);
+    expect(body.rushTendencies.rowsWritten).toBe(12);
     const ngsBody = body as unknown as { ngs: { passing: { rowsWritten: number } } };
     expect(ngsBody.ngs.passing.rowsWritten).toBe(5);
+  });
+
+  it("C-355: a PFR rights denial flips body.success but keeps HTTP 200 on a healthy primary", async () => {
+    // pfr-advstats-via-nflverse is permission_required / automation_allowed=false
+    // in source-rights-registry.ts (verdict 2026-07-16). That is a rights stop,
+    // not an outage: primary stays green (health SLA), body.success is false.
+    (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
+      status: "ok", season: 2024, playersUpserted: 2, statsUpserted: 4,
+    });
+    const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024&mode=full", "Bearer secret"));
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as {
+      success: boolean;
+      pfrAdv: { pass: { status: string; blocks?: readonly string[] } };
+      rushTendencies: { status: string };
+    };
+    expect(body.success).toBe(false);
+    expect(body.pfrAdv.pass.status).toBe("clearance-denied");
+    expect(ingestPfrAdvStats).toHaveBeenCalledWith(2024, "pass");
+    expect(ingestRushTendencies).toHaveBeenCalledWith(2024);
   });
 
   it("502s when any ingestion reports a non-ok status", async () => {

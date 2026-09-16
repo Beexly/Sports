@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   classifySignal,
   fetchLiveWire,
+  fetchLiveWireWithHealth,
   parseFeedConfig,
   parseRssItems,
 } from "@/lib/news/rss";
@@ -13,13 +14,27 @@ import {
  * upstream date are dropped (no fake freshness), stale items age out.
  */
 
-const SAVED = process.env["NEWS_RSS_FEEDS"];
+/**
+ * BOTH feed switches are cleared for every test, not just NEWS_RSS_FEEDS.
+ *
+ * rss.ts:243 falls back to a CURATED feed list when NEWS_RSS_FEEDS is empty and
+ * NEWS_RSS_USE_CURATED_DEFAULTS is "true". Clearing only the first left every
+ * "no feeds configured" assertion dependent on ambient environment: with that
+ * flag set, real feeds load, the assertion fails, and a unit test goes to the
+ * network. CodeRabbit (#819) reported it on one test; running with the flag set
+ * showed a SECOND test with the same defect, so the clearing lives here rather
+ * than in either of them. One place, and a third test cannot reintroduce it.
+ */
+const ENV_KEYS = ["NEWS_RSS_FEEDS", "NEWS_RSS_USE_CURATED_DEFAULTS"] as const;
+const SAVED_ENV = ENV_KEYS.map((k) => [k, process.env[k]] as const);
 beforeEach(() => {
-  delete process.env["NEWS_RSS_FEEDS"];
+  for (const k of ENV_KEYS) delete process.env[k];
 });
 afterEach(() => {
-  if (SAVED === undefined) delete process.env["NEWS_RSS_FEEDS"];
-  else process.env["NEWS_RSS_FEEDS"] = SAVED;
+  for (const [k, v] of SAVED_ENV) {
+    if (v === undefined) delete process.env[k];
+    else process.env[k] = v;
+  }
   vi.restoreAllMocks();
 });
 
@@ -112,6 +127,48 @@ describe("fetchLiveWire", () => {
     expect(wire![0]!.tier).toBe("Verified");
   });
 
+  it("the per-feed cap bounds what is KEPT, not what is scanned", async () => {
+    // Devin Review, PR #819. The loop used to run over
+    // `parseRssItems(xml).slice(0, 40)` — truncating BEFORE classification — so
+    // a feed that opened with 40 headlines we do not classify dropped every
+    // qualifying report behind them. The wire read empty while real injury news
+    // sat in the feed, and the empty-state copy then blamed the publication bar
+    // for an omission the bar had not made.
+    process.env["NEWS_RSS_FEEDS"] = "https://feed.example/rss|Wire Test|Verified|NFL";
+    const now = new Date("2026-07-02T12:00:00Z");
+    const filler = Array.from(
+      { length: 45 },
+      (_, i) =>
+        `<item><title>Ten takeaways from Tuesday number ${i}</title>` +
+        `<pubDate>Wed, 02 Jul 2026 11:30:00 GMT</pubDate></item>`,
+    ).join("");
+    const xml = `<rss><channel>${filler}
+      <item><title>Star RB ruled out for Sunday</title><pubDate>Wed, 02 Jul 2026 11:00:00 GMT</pubDate></item>
+    </channel></rss>`;
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(xml, { status: 200 }));
+
+    const wire = await fetchLiveWire(now);
+    // The one qualifying report sits at position 46, past the old cap of 40.
+    expect(wire).toHaveLength(1);
+    expect(wire![0]!.signal).toBe("injury-out");
+  });
+
+  it("still caps the kept items per feed", async () => {
+    // The bound must survive the move. Fifty qualifying reports, cap is 40.
+    process.env["NEWS_RSS_FEEDS"] = "https://feed.example/rss|Wire Test|Verified|NFL";
+    const items = Array.from(
+      { length: 50 },
+      (_, i) =>
+        `<item><title>Star RB number ${i} ruled out for Sunday</title>` +
+        `<pubDate>Wed, 02 Jul 2026 11:00:00 GMT</pubDate></item>`,
+    ).join("");
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(
+      new Response(`<rss><channel>${items}</channel></rss>`, { status: 200 }),
+    );
+    const wire = await fetchLiveWire(new Date("2026-07-02T12:00:00Z"));
+    expect(wire).toHaveLength(40);
+  });
+
   it("fails soft: a feed outage returns what succeeded, never throws", async () => {
     process.env["NEWS_RSS_FEEDS"] =
       "https://down.example/rss|Down|Beat|NFL; https://up.example/rss|Up|Beat|NFL";
@@ -124,5 +181,108 @@ describe("fetchLiveWire", () => {
     const wire = await fetchLiveWire(new Date("2026-07-02T12:00:00Z"));
     expect(wire).toHaveLength(1);
     expect(wire![0]!.source).toBe("Up");
+  });
+});
+
+describe("fetchLiveWireWithHealth — a dead wire is not a quiet wire", () => {
+  /**
+   * The per-feed task RETURNS an empty array for almost every failure (SSRF
+   * refusal, non-ok response, refused redirect) and Promise.allSettled absorbs
+   * the ones that throw. So "every configured feed returned HTTP 500" resolves
+   * as a perfectly fulfilled `[]`, identical in shape to a genuinely quiet
+   * live wire. Only the reached count separates them, and the page renders a
+   * different sentence for each: "no fresh reports" vs "feed unavailable".
+   *
+   * Caught by Devin Review on PR #819 against an earlier version of this fix
+   * that only trapped a throw, which meant a total outage still rendered as
+   * "the wire is live and nothing has landed". (Devin Review, PR #819.)
+   */
+  const ORIGINAL = process.env["NEWS_RSS_FEEDS"];
+  afterEach(() => {
+    if (ORIGINAL === undefined) delete process.env["NEWS_RSS_FEEDS"];
+    else process.env["NEWS_RSS_FEEDS"] = ORIGINAL;
+    vi.restoreAllMocks();
+  });
+
+  it("reports reached 0 when every configured feed answers with an error", async () => {
+    process.env["NEWS_RSS_FEEDS"] =
+      "https://a.example.com/rss|A|Insider|NFL;https://b.example.com/rss|B|Beat|NFL";
+    vi.stubGlobal(
+      "fetch",
+      vi.fn().mockResolvedValue({ ok: false, status: 500, headers: new Headers() }),
+    );
+
+    const health = await fetchLiveWireWithHealth(new Date("2026-09-14T00:00:00Z"));
+    expect(health.items).toEqual([]);
+    expect(health.configured).toBe(2);
+    // The whole point: an empty wire with reached 0 is an OUTAGE, and the page
+    // must be able to tell that from a live wire that simply has no news.
+    expect(health.reached).toBe(0);
+  });
+
+  it("follows a RELATIVE redirect instead of counting a healthy feed as offline", async () => {
+    // `Location: /feed.xml` is resolved against the feed URL. Before this, the
+    // location went straight to validateEndpointUrl, whose `new URL(location)`
+    // throws on a relative string, so the feed was refused and reached stayed
+    // 0 — rendering a reachable feed as "feed unavailable".
+    process.env["NEWS_RSS_FEEDS"] = "https://a.example.com/rss|A|Insider|NFL";
+    const calls: string[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: unknown) => {
+        calls.push(String(url));
+        if (calls.length === 1) {
+          return {
+            ok: false,
+            status: 301,
+            headers: new Headers({ location: "/moved.xml" }),
+          };
+        }
+        return { ok: true, status: 200, headers: new Headers(), text: async () => "<rss></rss>" };
+      }),
+    );
+
+    const health = await fetchLiveWireWithHealth(new Date("2026-09-14T00:00:00Z"));
+    // The redirect was resolved to an absolute same-origin URL and followed.
+    expect(calls[1]).toBe("https://a.example.com/moved.xml");
+    // And the feed counts as reached, so the page does not claim an outage.
+    expect(health.reached).toBe(1);
+  });
+
+  it("refuses a PROTOCOL-RELATIVE redirect that leaves the origin", async () => {
+    // `//other.example/x` looks relative but resolves to a DIFFERENT origin, so
+    // "relative implies same-origin" was never true. The resolved URL is what
+    // gets validated, and an origin hop is not followed blind.
+    process.env["NEWS_RSS_FEEDS"] = "https://a.example.com/rss|A|Insider|NFL";
+    const calls: string[] = [];
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url: unknown) => {
+        calls.push(String(url));
+        return {
+          ok: false,
+          status: 302,
+          headers: new Headers({ location: "//169.254.169.254/latest/meta-data" }),
+        };
+      }),
+    );
+
+    const health = await fetchLiveWireWithHealth(new Date("2026-09-14T00:00:00Z"));
+    // Exactly one call: the feed itself. The metadata host is never fetched.
+    expect(calls).toHaveLength(1);
+    expect(health.reached).toBe(0);
+  });
+
+  it("reports no feeds configured as null, distinct from an outage", async () => {
+    // Both feed switches are cleared by the shared beforeEach; see its comment.
+    const spy = vi.spyOn(globalThis, "fetch");
+    const health = await fetchLiveWireWithHealth();
+    expect(health.items).toBeNull();
+    expect(health.configured).toBe(0);
+    // configured 0 must never be read as an outage — there is nothing to reach.
+    expect(health.reached).toBe(0);
+    // And nothing was fetched. Without this the test could "pass" its counts
+    // while still having gone to the network.
+    expect(spy).not.toHaveBeenCalled();
   });
 });

@@ -93,6 +93,70 @@ export function cronAuthErrorBearerOnly(request: Request): NextResponse | null {
 }
 
 /**
+ * Read-only ops auth (C-420 / F-32).
+ *
+ * A dedicated `OPS_READ_SECRET` authorises the read-only operator surfaces
+ * (`public-surface-truth`, `daily-truth`, `settlement-rca`, the GET half of
+ * `ranking-pause-apply`, and siblings). When `OPS_READ_SECRET` is unset the
+ * check falls back to `CRON_SECRET` / `CRON_SECRET_PREVIOUS` so behaviour is
+ * unchanged until the founder sets the new secret (§0.2 item 3).
+ *
+ * When `OPS_READ_SECRET` IS set, both it and the cron secrets still authorise
+ * reads — the split means a leaked read credential can be rotated without
+ * rotating the mutation secret, and (the security half) mutation routes never
+ * call this helper.
+ *
+ * Mutation crons MUST NOT use this function. They keep `cronAuthError` /
+ * `cronAuthErrorBearerOnly`, which never read `OPS_READ_SECRET`. A leaked
+ * read-only credential must never fire a mutation cron.
+ *
+ * Never accepts the spoofable x-vercel-cron header. Fail-closed when neither
+ * CRON_SECRET nor OPS_READ_SECRET is configured.
+ */
+export function opsReadAuthError(request: Request): NextResponse | null {
+  const provided = extractBearerSecret(request.headers.get("authorization"));
+
+  const primary = process.env["CRON_SECRET"];
+  const previous = process.env["CRON_SECRET_PREVIOUS"];
+  const opsRead = process.env["OPS_READ_SECRET"]?.trim() || undefined;
+
+  // Cron secrets remain valid for reads (fallback when OPS_READ_SECRET unset).
+  const cron = authorizeCronSecret({
+    providedSecret: provided,
+    expectedSecret: primary,
+    previousSecret: previous,
+  });
+  if (cron.ok) return null;
+
+  // Dedicated read secret — accepted only when the founder has configured it.
+  if (opsRead != null && opsRead.length > 0) {
+    const read = authorizeCronSecret({
+      providedSecret: provided,
+      expectedSecret: opsRead,
+    });
+    if (read.ok) return null;
+  }
+
+  const noSecretConfigured =
+    cron.code === "cron_secret_unset" && (opsRead == null || opsRead.length === 0);
+  if (noSecretConfigured) {
+    return NextResponse.json(
+      { error: "CRON_SECRET not configured" },
+      { status: 500 },
+    );
+  }
+  return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+}
+
+/**
+ * Boolean twin of `opsReadAuthError` for routes that gate a `detailed`
+ * operator view rather than refuse the whole request.
+ */
+export function hasOpsReadAuth(request: Request): boolean {
+  return opsReadAuthError(request) === null;
+}
+
+/**
  * Same check as cronAuthError, but returns which secret matched (for telemetry).
  */
 export function authorizeCronRequest(

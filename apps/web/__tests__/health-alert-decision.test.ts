@@ -4,7 +4,16 @@ import {
   decideHealthAlert,
   HEALTH_ALERT_QUIET_MS,
   decideHealthAlertStateless,
+  type HealthAlertLineArchive,
 } from "@/lib/ops/health-alert-decision";
+
+const healthyBase = {
+  checks: {
+    database: { status: "ok" },
+    ingestion: { status: "ok", ageMinutes: 10 },
+  },
+  capabilities: [{ capabilityId: "settlement", status: "healthy" }],
+} as const;
 
 describe("classifyHealthAlertSnapshot", () => {
   it("is healthy when checks ok and settlement fine", () => {
@@ -46,6 +55,86 @@ describe("classifyHealthAlertSnapshot", () => {
     });
     expect(snap.unhealthy).toBe(true);
     expect(snap.settlementUnavailable).toBe(true);
+  });
+});
+
+/**
+ * C-393 — the alarm the 21-day line-archive outage never had.
+ * Each of the four freshness statuses is pinned separately: DISABLED must
+ * never page, STALE/SILENT while enabled must, and UNKNOWN must carry its
+ * error rather than collapse into a silent HEALTHY.
+ */
+describe("classifyHealthAlertSnapshot — lineArchive (C-393)", () => {
+  it("STALE while enabled is unhealthy with reason line archive stale: Nh", () => {
+    const lineArchive: HealthAlertLineArchive = {
+      status: "STALE",
+      enabled: true,
+      hoursSinceNewest: 22.5,
+    };
+    const snap = classifyHealthAlertSnapshot({ ...healthyBase, lineArchive });
+    expect(snap.unhealthy).toBe(true);
+    expect(snap.reason).toContain("line archive stale: 22.5h");
+    expect(snap.lineArchive?.status).toBe("STALE");
+  });
+
+  it("SILENT while enabled is unhealthy (empty archive is never health)", () => {
+    const lineArchive: HealthAlertLineArchive = {
+      status: "SILENT",
+      enabled: true,
+      hoursSinceNewest: null,
+    };
+    const snap = classifyHealthAlertSnapshot({ ...healthyBase, lineArchive });
+    expect(snap.unhealthy).toBe(true);
+    expect(snap.reason).toContain("line archive stale: never");
+    expect(snap.lineArchive?.status).toBe("SILENT");
+  });
+
+  it("DISABLED never alerts — founder flag off is a report, not a page", () => {
+    const lineArchive: HealthAlertLineArchive = {
+      status: "DISABLED",
+      enabled: false,
+      hoursSinceNewest: null,
+    };
+    const snap = classifyHealthAlertSnapshot({ ...healthyBase, lineArchive });
+    expect(snap.unhealthy).toBe(false);
+    expect(snap.reason).toBe("ok");
+    // A DISABLED archive must not suppress an otherwise-valid healthy snapshot
+    // nor invent an unhealthy one.
+    expect(snap.lineArchive?.enabled).toBe(false);
+  });
+
+  it("HEALTHY does not alert", () => {
+    const lineArchive: HealthAlertLineArchive = {
+      status: "HEALTHY",
+      enabled: true,
+      hoursSinceNewest: 0.5,
+    };
+    const snap = classifyHealthAlertSnapshot({ ...healthyBase, lineArchive });
+    expect(snap.unhealthy).toBe(false);
+    expect(snap.reason).toBe("ok");
+  });
+
+  it("UNKNOWN carries its error into the reason/payload and is not HEALTHY", () => {
+    const lineArchive: HealthAlertLineArchive = {
+      status: "UNKNOWN",
+      enabled: true,
+      hoursSinceNewest: null,
+      error: "Archive freshness query failed (see server logs).",
+    };
+    const snap = classifyHealthAlertSnapshot({ ...healthyBase, lineArchive });
+    // UNKNOWN is not proof of health: the error rides the reason so the
+    // webhook/JSON payload carries it. It does not itself set unhealthy —
+    // a failed read is "we do not know", not a measured outage.
+    expect(snap.reason).toContain("line archive unreadable");
+    expect(snap.reason).toContain("Archive freshness query failed");
+    expect(snap.lineArchive?.error).toContain("Archive freshness query failed");
+    expect(snap.lineArchive?.status).toBe("UNKNOWN");
+  });
+
+  it("omitting lineArchive keeps older callers compiling and healthy", () => {
+    const snap = classifyHealthAlertSnapshot(healthyBase);
+    expect(snap.unhealthy).toBe(false);
+    expect(snap.lineArchive).toBeNull();
   });
 });
 

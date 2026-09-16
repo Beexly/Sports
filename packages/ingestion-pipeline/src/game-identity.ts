@@ -530,3 +530,262 @@ export function preferLongerTeamName(existing: string, incoming: string): string
   if (!a) return b;
   return b.length > a.length ? b : a;
 }
+
+// ── C-356: Tombstone existing twin duplicates ──────────────────────────────
+//
+// `resolveCanonicalGame` stops a NEW feed row from becoming a fourth duplicate,
+// but rows created before identity resolution was wired (or by a feed the
+// matcher failed to pair) already sit in `games` as live twins. This section
+// collapses them: the row with more books / higher data-quality survives as
+// canonical, every other member of the group receives `mergedIntoGameId` so
+// `/api/picks`, `lib/board/state.ts`, and the sitemap exclude it.
+//
+// Deliberately LIGHTER than scripts/ops/merge-duplicate-games.ts: this writer
+// only stamps `mergedIntoGameId`. It never re-points odds, snapshots, or
+// signals, and it never touches `picks` (settlement history stays on the
+// alias, same as the owner-run tool). The survivor rule is books + dq rather
+// than the merge script's pick/odds-child counts because those two columns
+// live on the `games` row itself — no child aggregation a package cannot
+// cheaply see — and the row carrying books is the row the odds pipeline
+// already writes to.
+
+/** A `games` row plus the quality fields canonical selection needs. */
+export type TwinTombstoneCandidate = GameTwinCandidate & {
+  readonly bookmakerCoverageMax: number;
+  readonly dataQualityScore: number;
+  readonly createdAt: Date;
+};
+
+/** One duplicate group's outcome: `aliasIds` all receive `mergedIntoGameId = canonicalId`. */
+export type TwinTombstonePlan = {
+  readonly canonicalId: string;
+  readonly aliasIds: readonly string[];
+};
+
+/** Minimal structural view of the Prisma client the tombstone writer needs. */
+export type TwinTombstoneDb = {
+  readonly game: {
+    findMany(args: {
+      where: {
+        sportId: string;
+        commenceTime: { gte: Date; lte: Date };
+      };
+      select: {
+        id: true;
+        externalId: true;
+        sportId: true;
+        homeTeamName: true;
+        awayTeamName: true;
+        commenceTime: true;
+        mergedIntoGameId: true;
+        bookmakerCoverageMax: true;
+        dataQualityScore: true;
+        createdAt: true;
+      };
+    }): Promise<TwinTombstoneCandidate[]>;
+    update(args: {
+      where: { id: string };
+      data: { mergedIntoGameId: string };
+    }): Promise<unknown>;
+  };
+};
+
+const TOMBSTONE_ROW_SELECT = {
+  id: true,
+  externalId: true,
+  sportId: true,
+  homeTeamName: true,
+  awayTeamName: true,
+  commenceTime: true,
+  mergedIntoGameId: true,
+  bookmakerCoverageMax: true,
+  dataQualityScore: true,
+  createdAt: true,
+} as const;
+
+/**
+ * True when `candidate` should replace `held` as the surviving canonical.
+ * C-356's rule: most books, then highest data-quality, then oldest createdAt
+ * (stable). Ties keep `held`, so the result does not flip under input order.
+ * Missing fields default to zero / epoch so a partial row never throws.
+ */
+export function isBetterTwinCanonical(
+  candidate: TwinTombstoneCandidate,
+  held: TwinTombstoneCandidate,
+): boolean {
+  const cBooks = candidate.bookmakerCoverageMax ?? 0;
+  const hBooks = held.bookmakerCoverageMax ?? 0;
+  if (cBooks !== hBooks) return cBooks > hBooks;
+  const cDq = candidate.dataQualityScore ?? 0;
+  const hDq = held.dataQualityScore ?? 0;
+  if (cDq !== hDq) return cDq > hDq;
+  const cAt = candidate.createdAt?.getTime() ?? 0;
+  const hAt = held.createdAt?.getTime() ?? 0;
+  return cAt < hAt;
+}
+
+/**
+ * Pure twin-duplicate planner — no DB, no clock, no env.
+ *
+ * Groups live (non-alias) rows that share a fixture (team pair + sport
+ * window) and, for every group of two or more, picks a canonical by
+ * `isBetterTwinCanonical` (most books, highest dq, oldest createdAt).
+ *
+ * Grouping uses a DIRECT pairwise check rather than `findTwinCandidate`:
+ * the latter fails closed when two candidates tie on commence distance,
+ * which would split a 3-row group at the same kickoff into separate
+ * clusters. Pairwise matching answers the question this planner actually
+ * asks — "are these two rows the same contest?" — without the survivor
+ * selection that `findTwinCandidate` also performs.
+ *
+ * Fail-closed cases that produce NO tombstone for the affected rows:
+ *  - a FLIPPED pair (home/away disagree) never joins a group;
+ *  - a group whose commenceTime span exceeds the sport's twin window is
+ *    refused (chaining guard — the same rule game-merge-plan.ts applies);
+ *  - a row whose commenceTime is unparseable is skipped entirely.
+ *
+ * Already-aliased rows (`mergedIntoGameId` set) are excluded from grouping:
+ * an alias is already tombstoned and must never become a canonical.
+ */
+export function planTwinTombstones(
+  candidates: readonly TwinTombstoneCandidate[],
+  sportKey?: string,
+): TwinTombstonePlan[] {
+  const live = candidates.filter((c) => c.mergedIntoGameId == null);
+  const windowMs = commenceMatchMsFor(sportKey);
+  const allowPrefix = sportKey != null && PREFIX_MATCH_SPORT_KEYS.has(sportKey);
+
+  /** Pairwise twin check: "aligned" | "flipped" | null (not twins). */
+  function pairOrientation(
+    a: TwinTombstoneCandidate,
+    b: TwinTombstoneCandidate,
+  ): "aligned" | "flipped" | null {
+    if (a.sportId !== b.sportId) return null;
+    const delta = Math.abs(a.commenceTime.getTime() - b.commenceTime.getTime());
+    if (delta > windowMs) return null;
+    const pair = matchTeamPair(
+      {
+        sportId: a.sportId,
+        externalId: a.externalId,
+        homeTeamName: a.homeTeamName,
+        awayTeamName: a.awayTeamName,
+        commenceTime: a.commenceTime,
+        sportKey,
+      },
+      b,
+      allowPrefix,
+    );
+    return pair ? pair.orientation : null;
+  }
+
+  const groups: TwinTombstoneCandidate[][] = [];
+
+  for (const row of live) {
+    if (!(row.commenceTime instanceof Date) || !Number.isFinite(row.commenceTime.getTime())) {
+      continue;
+    }
+    let joined = false;
+    for (const group of groups) {
+      // Join the first group containing any aligned twin of this row.
+      const isTwin = group.some((member) => pairOrientation(row, member) === "aligned");
+      if (isTwin) {
+        group.push(row);
+        joined = true;
+        break;
+      }
+    }
+    if (!joined) {
+      groups.push([row]);
+    }
+  }
+
+  const plans: TwinTombstonePlan[] = [];
+  for (const group of groups) {
+    if (group.length < 2) continue;
+    // Chaining guard: A↔B and B↔C can pull three rows into one group even
+    // when A and C are different contests (a doubleheader's two games). If
+    // the group spans more than the twin window, refuse to tombstone anyone.
+    let minMs = Number.POSITIVE_INFINITY;
+    let maxMs = Number.NEGATIVE_INFINITY;
+    for (const row of group) {
+      const t = row.commenceTime.getTime();
+      if (t < minMs) minMs = t;
+      if (t > maxMs) maxMs = t;
+    }
+    if (maxMs - minMs > windowMs) continue;
+
+    const sorted = [...group].sort((a, b) => {
+      const aBooks = a.bookmakerCoverageMax ?? 0;
+      const bBooks = b.bookmakerCoverageMax ?? 0;
+      if (aBooks !== bBooks) return bBooks - aBooks;
+      const aDq = a.dataQualityScore ?? 0;
+      const bDq = b.dataQualityScore ?? 0;
+      if (aDq !== bDq) return bDq - aDq;
+      const at = a.createdAt?.getTime() ?? 0;
+      const bt = b.createdAt?.getTime() ?? 0;
+      if (at !== bt) return at - bt;
+      return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
+    });
+    const canonical = sorted[0]!;
+    const aliasIds = sorted.slice(1).map((r) => r.id);
+    plans.push({ canonicalId: canonical.id, aliasIds });
+  }
+  return plans;
+}
+
+/**
+ * Load live twin duplicates for a sport window, plan tombstones, and write
+ * `mergedIntoGameId` on the losers. Returns the number of rows tombstoned.
+ *
+ * `protectedIds` are rows this cycle just wrote (odds/picks keyed to them).
+ * They may only SURVIVE as canonical — if the plan would tombstone one, that
+ * alias write is skipped so a live row is never turned into a tombstone under
+ * the children we just attached to it.
+ *
+ * Honours the same `GAME_IDENTITY_MERGE_DISABLED` kill switch as
+ * `resolveCanonicalGame`. Never throws for "nothing to do"; DB errors
+ * propagate so the caller can warn and continue.
+ */
+export async function applyTwinTombstones(
+  db: TwinTombstoneDb,
+  options: {
+    readonly sportId: string;
+    readonly sportKey?: string;
+    readonly commenceFrom: Date;
+    readonly commenceTo: Date;
+    readonly protectedIds?: readonly string[];
+    readonly env?: Record<string, string | undefined>;
+    readonly logPrefix?: string;
+  },
+): Promise<number> {
+  if (gameIdentityMergeDisabled(options.env)) return 0;
+
+  const candidates = await db.game.findMany({
+    where: {
+      sportId: options.sportId,
+      commenceTime: { gte: options.commenceFrom, lte: options.commenceTo },
+    },
+    select: TOMBSTONE_ROW_SELECT,
+  });
+
+  const plans = planTwinTombstones(candidates, options.sportKey);
+  const protectedSet = new Set(options.protectedIds ?? []);
+  const prefix = options.logPrefix ?? "[game-identity]";
+  let written = 0;
+
+  for (const plan of plans) {
+    const aliasIds = plan.aliasIds.filter((id) => !protectedSet.has(id));
+    if (aliasIds.length === 0) continue;
+    for (const aliasId of aliasIds) {
+      await db.game.update({
+        where: { id: aliasId },
+        data: { mergedIntoGameId: plan.canonicalId },
+      });
+      written += 1;
+      console.info(
+        `${prefix} tombstoned twin duplicate: alias=${aliasId} → canonical=${plan.canonicalId}`,
+      );
+    }
+  }
+  return written;
+}

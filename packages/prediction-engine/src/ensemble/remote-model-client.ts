@@ -231,7 +231,10 @@ function isPrivateIpLiteral(host: string): boolean {
  * redirect/DNS-poisoning protection in addition to this choke point.
  *
  * This is "defense in depth at the choke point," not a complete SSRF defence —
- * but it closes the literal-IP bypass cheaply and safely.
+ * but it closes the literal-IP bypass cheaply and safely. The connect-time
+ * address check that would also catch hostnames resolving to private/metadata
+ * addresses is tracked as issue #820 (transport half); this function remains
+ * literal-only on purpose.
  */
 export function validateEndpointUrl(url: string): { readonly ok: true } | {
   readonly ok: false;

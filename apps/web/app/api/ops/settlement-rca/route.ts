@@ -21,7 +21,8 @@
  *   WOULD_VOID        postponed/cancelled on the board; the cycle should void it
  *   NO_FREE_SPORT_MAP the sport has no free scores adapter
  *
- * Auth: Bearer CRON_SECRET (lib/ops/ops-auth.ts). Read-only. no-store.
+ * Auth: Bearer OPS_READ_SECRET or CRON_SECRET (lib/ops/ops-auth.ts, C-420).
+ * Read-only. no-store.
  */
 
 import { db } from "@sports/db";

@@ -10,7 +10,7 @@ describe("loadAutonomyPosture", () => {
     expect(p.defaultDryRun).toBe(true);
     expect(p.operatorHint).toMatch(/dry-run/i);
     expect(p.safeCronTargets).toContain("/api/cron/free-spine-health");
-    expect(p.safeCronTargets).toContain("/api/cron/settle-picks");
+    expect(p.safeCronTargets).not.toContain("/api/cron/settle-picks");
     expect(p.safeCronTargets).toContain("/api/cron/refresh-odds");
     expect(p.safeCronTargets).toContain("/api/cron/generate-drafts");
     expect(p.safeCronTargets).toContain("/api/cron/calibration-metrics");

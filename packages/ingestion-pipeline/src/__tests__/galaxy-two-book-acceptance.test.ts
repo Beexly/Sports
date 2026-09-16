@@ -23,6 +23,7 @@ import { MIN_BOOKMAKERS, scoreGames } from "@sports/prediction-engine";
 import type { GameContextInput, OddsInput } from "@sports/types";
 
 const NOW = new Date("2026-09-13T15:00:00.000Z");
+// Must sit inside the ESPN client's -6h..+21d window relative to NOW.
 const KICKOFF = "2026-09-14T17:00:00.000Z"; // Sunday 1pm ET, 26 hours out
 const ENV = { PREDEXON_INGEST: "true", PREDEXON_API_KEY: "test-not-a-real-key" };
 
@@ -131,6 +132,7 @@ async function twoBookPicks(catalogOpts: Parameters<typeof predexonCatalog>[0] =
   const board = await fetchEspnOddsForSport("americanfootball_nfl", {
     fetchImpl: espnFetch as unknown as typeof fetch,
     interEventMs: 0,
+    now: () => NOW,
     secondBook: catalog,
   });
   expect(board.events).toHaveLength(1);
@@ -183,6 +185,29 @@ describe("C-104 acceptance: free two-book NFL board (ESPN inline + Kalshi via Pr
     expect([...hosts].sort()).toEqual(["api.predexon.com", "site.web.api.espn.com"]);
   });
 
+  it("C-359: stores the Kalshi exchange midpoint as a vig-free reference beside marketFairProb", async () => {
+    const { picks } = await twoBookPicks();
+    const byType = new Map(picks.map((p) => [p.pickType, p]));
+    for (const p of picks) {
+      expect(typeof p.marketFairProb).toBe("number");
+      expect(p.marketFairProb).toBeGreaterThan(0);
+      expect(p.marketFairProb).toBeLessThan(1);
+      const mid = p.factorBreakdown.exchangeMidpointProb;
+      // The PredExon catalog's two-way mid for the chosen side, recovered from
+      // the Kalshi book's American price — stored, never used for scoring.
+      expect(typeof mid).toBe("number");
+      expect(mid!).toBeGreaterThan(0);
+      expect(mid!).toBeLessThan(1);
+    }
+    // Recovered from the Kalshi book's American prices on the normalized rows:
+    // ML home −400 → 0.80, spread home −108 → 0.5192, total over −122 → 0.5495.
+    // The mid is the exchange's own two-way quote, not a de-vigged book
+    // average — that is marketFairProb's job.
+    expect(byType.get("MONEYLINE")!.factorBreakdown.exchangeMidpointProb!).toBeCloseTo(0.8, 3);
+    expect(byType.get("SPREAD")!.factorBreakdown.exchangeMidpointProb!).toBeCloseTo(108 / 208, 3);
+    expect(byType.get("TOTAL")!.factorBreakdown.exchangeMidpointProb!).toBeCloseTo(122 / 222, 3);
+  });
+
   it("does not mint a market when the Kalshi side lacks a live quote for it (single book < MIN_BOOKMAKERS)", async () => {
     const noSpread = await twoBookPicks({ spreadQuoted: false });
     expect(noSpread.picks.map((p) => p.pickType).sort()).toEqual(["MONEYLINE", "TOTAL"]);
@@ -203,6 +228,7 @@ describe("C-104 acceptance: free two-book NFL board (ESPN inline + Kalshi via Pr
     const board = await fetchEspnOddsForSport("americanfootball_nfl", {
       fetchImpl: espnFetch as unknown as typeof fetch,
       interEventMs: 0,
+      now: () => NOW,
     });
     const rows = new DataNormalizer().normalizeOdds(board.events, NOW);
     const picks = scoreGames(

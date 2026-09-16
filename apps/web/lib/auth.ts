@@ -107,10 +107,18 @@ const config: NextAuthConfig = {
         token.role = (user as unknown as { role?: UserRole }).role ?? "USER";
         // D-1: first sign-in — stamp emailVerified from Google's email_verified
         // claim (see stampEmailVerifiedFromProfile). `profile` carries the raw
-        // OIDC ID-token claims. Fire-and-forget: a failed write must not break
-        // sign-in; it leaves the column null, which keeps alerts blocked
-        // (fail-closed), never falsely verified.
-        void stampEmailVerifiedFromProfile(
+        // OIDC ID-token claims.
+        //
+        // AWAITED, not fire-and-forget (SEC-02). The catch still means a failed
+        // write cannot break sign-in — it leaves the column null, which keeps
+        // alerts blocked (fail-closed) and never falsely verified, exactly as
+        // before. What changes is that the write actually COMPLETES: this runs
+        // on Vercel's serverless runtime, where the instance can be frozen or
+        // reclaimed as soon as the response is sent, so a promise left dangling
+        // here may never reach the database. The failure mode was silent and in
+        // the safe direction — a genuinely Google-verified user simply never
+        // got stamped, and stayed cut off from alerts forever.
+        await stampEmailVerifiedFromProfile(
           db,
           token.email ?? user.email,
           profile as { email_verified?: unknown } | undefined,
