@@ -25,6 +25,8 @@ vi.mock("@sports/db", () => ({
 
 vi.mock("@/lib/auth", () => ({
   auth: (...a: unknown[]) => authMock(...a),
+  // These outage fixtures are ordinary customers, not allow-listed admins.
+  isAdminEmail: () => false,
 }));
 
 vi.mock("@/lib/api/rate-limit", () => ({
