@@ -18,7 +18,7 @@ describe("data-first public surfaces", () => {
     expect(page).toMatch(/loadPublicCalibrationReport/);
     expect(page).toMatch(/loadNflverseUsagePulse/);
     expect(page).toMatch(/calibration\.sampleSize/);
-    expect(page).toMatch(/Pick the decision you came to make/);
+    expect(page).toMatch(/What are you here to decide\?/);
     expect(page).not.toMatch(/AnnotatedSampleSignal/);
     expect(page).not.toMatch(/sample-data-banner-home/);
     // No fabricated demo arrays defined inline on the front door.

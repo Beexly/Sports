@@ -16,7 +16,9 @@ const src = readFileSync(join(ROOT, "app/house/page.tsx"), "utf8");
 describe("NFL House page", () => {
   it("every door points at a route that exists in the app", () => {
     const hrefs = [...src.matchAll(/href: "([^"]+)"/g)].map((m) => m[1]!);
-    expect(hrefs.length).toBeGreaterThanOrEqual(6);
+    // A-6 (owner 2026-09-14): ONE House, four doors — one per job. Six-room
+    // layouts and staged rooms are gone; four real routes is the floor.
+    expect(hrefs.length).toBeGreaterThanOrEqual(4);
     for (const href of hrefs) {
       const dir = join(ROOT, "app", href.replace(/^\//, ""));
       expect(
@@ -27,14 +29,18 @@ describe("NFL House page", () => {
   });
 
   it("leads with belonging, carries the culture line and the promise triad", () => {
-    expect(src).toContain("Football is better when you have a");
+    // A-55 redesign lead ("One place to land"); the belonging claim now reads
+    // as one front door over the same engine and receipts.
+    expect(src).toContain("place to land");
     expect(src).toContain("We do not force action. We protect decision quality.");
     expect(src).toContain("Understand the game · Read the market · Find your people");
   });
 
   it("stages live community honestly — no fake rooms, no fake counts", () => {
-    expect(src).toContain("Live rooms open when we can protect them.");
-    expect(src).toMatch(/moderation/);
+    // A-6: staged rooms are gone; the honest community story points at The
+    // Beat with its real safeguards named, and no invented member counts.
+    expect(src).toMatch(/human moderation/);
+    expect(src).toContain("The Beat is the open");
     // No invented member/online counts anywhere on the page.
     expect(src).not.toMatch(/\d+[,.]?\d*\s*(members|fans|bettors|online|users)/i);
   });
