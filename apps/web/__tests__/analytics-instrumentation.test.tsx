@@ -65,9 +65,8 @@ describe("analytics instrumentation (P12-03)", () => {
         />,
       );
       const button = screen.getByRole("button", { name: /subscribe to pro/i });
-      fireEvent.change(screen.getByLabelText(/date of birth/i), {
-        target: { value: "1990-01-15" },
-      });
+      // astra-A1 removed the age-21 gate: no DOB field is rendered anymore, so
+      // the click alone carries the intent. (Events/assertions unchanged.)
       fireEvent.click(button);
       await waitFor(() => {
         expect(mocks.track).toHaveBeenCalledWith("upgrade_cta_click", {
@@ -89,9 +88,7 @@ describe("analytics instrumentation (P12-03)", () => {
         />,
       );
       const button = screen.getByRole("button", { name: /subscribe to elite/i });
-      fireEvent.change(screen.getByLabelText(/date of birth/i), {
-        target: { value: "1990-01-15" },
-      });
+      // astra-A1 removed the age-21 DOB field; click alone is the intent.
       fireEvent.click(button);
       await waitFor(() => {
         expect(mocks.track).toHaveBeenCalledWith("checkout_start", {
@@ -111,9 +108,7 @@ describe("analytics instrumentation (P12-03)", () => {
         />,
       );
       const button = screen.getByRole("button", { name: /subscribe to fantasy/i });
-      fireEvent.change(screen.getByLabelText(/date of birth/i), {
-        target: { value: "1990-01-15" },
-      });
+      // astra-A1 removed the age-21 DOB field; click alone is the intent.
       fireEvent.click(button);
       await waitFor(() => {
         const calls = mocks.track.mock.calls;
