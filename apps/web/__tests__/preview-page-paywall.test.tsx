@@ -57,6 +57,9 @@ vi.mock("@sports/db", () => ({
 
 vi.mock("@/lib/auth", () => ({
   auth: mocks.auth,
+  // 34961f326 added the ADMIN allow-list check; these fixtures are customers.
+  // Keep the real entitlement resolver and every paid-value leak assertion.
+  isAdminEmail: () => false,
 }));
 
 vi.mock("@/lib/entitlements", () => ({
