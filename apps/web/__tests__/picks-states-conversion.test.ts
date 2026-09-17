@@ -47,7 +47,7 @@ const gateBlock = between(
   "!fetchError && bootstrapState && picks.length === 0",
   "!fetchError && !bootstrapState",
 );
-const emptyBlock = between(pageSrc, "No signals published for this date", "{/* Picks grid */}");
+const emptyBlock = between(pageSrc, "No picks for this date", "{/* Picks grid */}");
 
 describe("/picks — backend outage is a distinct, honest state (item 3)", () => {
   it("renders a dedicated, testable outage block gated on the fetch-failure branch", () => {
@@ -154,7 +154,7 @@ describe("/picks — empty/gated state fabricates nothing (item 2)", () => {
   });
 
   it("the no-data empty state says nothing was published, not that a pick exists", () => {
-    expect(emptyBlock).toMatch(/No signals published/i);
+    expect(emptyBlock).toMatch(/No (signals )?picks (published )?for this date/i);
     expect(emptyBlock).not.toMatch(/\d{1,3}\s*%/);
   });
 });
