@@ -262,8 +262,8 @@ describe("board gate consumer — excluded candidates are reported, never droppe
     expect(excluded).toHaveLength(1);
     expect(excluded[0]!.rowId).toBe("no-odds-1");
     expect(excluded[0]!.reason).toContain("q (no two-sided odds)");
-    // It must NOT read as a judgement about the game.
-    expect(excluded[0]!.reason).toContain("not a judgement");
+    // It must NOT read as a judgement about the game. (Humanizer copy: astra-A44.)
+    expect(excluded[0]!.reason).toContain("Not a judgment about the game");
   });
 
   it("an excluded candidate never appears as FIRE or as a refusal", () => {
