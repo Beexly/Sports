@@ -376,10 +376,12 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     const tree = await resolveNflverseDoor(await HomePage());
     const text = textOf(tree);
 
-    // Board door + signal-vs-noise say "unavailable", not "Gate holding" / zeros.
-    expect(text).toContain("Live board data unavailable");
-    expect(text).toContain("Live board counts are temporarily unavailable");
+    // be568ac19 (astra-A44) deliberately humanized the copy, not the gates.
+    // Board door + counts still say "unavailable", never quiet-slate / zeros.
+    expect(text).toContain("Board temporarily unavailable");
+    expect(text).toContain("Board counts are temporarily unavailable");
     expect(text).not.toContain("Gate holding");
+    expect(text).not.toContain("Quiet slate. Nothing forced.");
     // Lab door says "unavailable", not the reassuring "Intake warming up".
     expect(text).toContain("Live player data unavailable");
     expect(text).not.toContain("Intake warming up");
@@ -404,8 +406,8 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     const text = textOf(tree);
 
     // Board healthy → its live copy still renders, NOT "unavailable".
-    expect(text).toContain("2 cleared · 1 gated");
-    expect(text).not.toContain("Live board data unavailable");
+    expect(text).toContain("2 picks · 1 passes");
+    expect(text).not.toContain("Board temporarily unavailable");
     // Lab door reflects the nflverse outage honestly.
     expect(text).toContain("Live player data unavailable");
     expect(text).not.toContain("Intake warming up");
@@ -431,10 +433,12 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     const tree = await resolveNflverseDoor(await HomePage());
     const text = textOf(tree);
 
-    expect(text).toContain("Live board data unavailable");
-    expect(text).toContain("Live board counts are temporarily unavailable");
+    expect(text).toContain("Board temporarily unavailable");
+    expect(text).toContain("Board counts are temporarily unavailable");
     expect(text).not.toContain("Gate holding");
+    expect(text).not.toContain("Quiet slate. Nothing forced.");
     expect(text).not.toContain("0 cleared");
+    expect(text).not.toContain("0 picks");
     // nflverse is live, so the Lab door still shows real player rows.
     expect(text).toContain("1,234 live player rows");
     // Suppressed board zeroes the live counts → the whole band is withheld.
@@ -449,10 +453,12 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     const tree = await resolveNflverseDoor(await HomePage());
     const text = textOf(tree);
 
-    expect(text).toContain("Live board data unavailable");
-    expect(text).toContain("Live board counts are temporarily unavailable");
+    expect(text).toContain("Board temporarily unavailable");
+    expect(text).toContain("Board counts are temporarily unavailable");
     expect(text).not.toContain("Gate holding");
+    expect(text).not.toContain("Quiet slate. Nothing forced.");
     expect(text).not.toContain("0 cleared");
+    expect(text).not.toContain("0 picks");
     const methodology = findByType(tree, MethodologySection);
     expect(methodology?.props.metrics).toBeUndefined();
   });
@@ -466,9 +472,9 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     const tree = await resolveNflverseDoor(await HomePage());
     const text = textOf(tree);
 
-    expect(text).toContain("2 cleared · 1 gated");
+    expect(text).toContain("2 picks · 1 passes");
     expect(text).toContain("1,234 live player rows");
-    expect(text).not.toContain("Live board data unavailable");
+    expect(text).not.toContain("Board temporarily unavailable");
     expect(text).not.toContain("Live player data unavailable");
     // Healthy: the ledger band renders with the real operational metrics.
     // playerRows is no longer in the static metrics — it is now rendered
@@ -491,9 +497,9 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     const tree = await resolveNflverseDoor(await HomePage());
     const text = textOf(tree);
 
-    expect(text).toContain("Gate holding. No forced action");
+    expect(text).toContain("Quiet slate. Nothing forced.");
     expect(text).toContain("Intake warming up");
-    expect(text).not.toContain("Live board data unavailable");
+    expect(text).not.toContain("Board temporarily unavailable");
     expect(text).not.toContain("Live player data unavailable");
   });
 });
