@@ -1,0 +1,63 @@
+{
+  "label": "SYNTHETIC: exact math and formula checks, not fitted paper models or empirical edge",
+  "same_rank_probability_different_predictives": {
+    "A": {
+      "rank_superiority_probability": "9/10",
+      "co_cluster_probability": "0",
+      "posterior_predictive_probability": "27/50"
+    },
+    "B": {
+      "rank_superiority_probability": "9/10",
+      "co_cluster_probability": "0",
+      "posterior_predictive_probability": "41/50"
+    }
+  },
+  "high_co_cluster_probability_does_not_force_half": {
+    "rank_superiority_probability": "1/5",
+    "co_cluster_probability": "4/5",
+    "posterior_predictive_probability": "29/50"
+  },
+  "latent_rank_certain_but_event_near_half": {
+    "rank_superiority_probability": "1",
+    "co_cluster_probability": "0",
+    "posterior_predictive_probability": "51/100"
+  },
+  "J4_lambda1_prior_marginal_K": {
+    "K": [
+      1,
+      2,
+      3,
+      4
+    ],
+    "paper_Eq9_per_partition_weights": [
+      "24/133",
+      "12/19",
+      "24/133",
+      "1/133"
+    ],
+    "rRCBTL_generator_K_first": [
+      "24/41",
+      "12/41",
+      "4/41",
+      "1/41"
+    ]
+  },
+  "independent_gamma_strength_ratio_variance": {
+    "1": "1/12",
+    "5": "1/44"
+  },
+  "choice_set_likelihood": {
+    "pairwise": "2/3",
+    "incorrect_top_two": "2/10403"
+  },
+  "zero_mean_log_strength": {
+    "geometric_mean": 1.0,
+    "arithmetic_mean": 1.5430806348152437
+  },
+  "Eq19_integral_against_d_strength_to_cutoff": {
+    "10": 1.4888043637074615,
+    "1000": 5.9097537803142215,
+    "1000000": 12.815512557962773
+  },
+  "checks_passed": true
+}
