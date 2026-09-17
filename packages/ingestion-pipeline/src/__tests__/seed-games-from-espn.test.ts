@@ -1,11 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
- * The ESPN schedule seed writes `espn:<short>:<id>` (espn:mlb:401816772) while
- * espn-odds-client writes `espn:<sportKey>:<id>` (espn:baseball_mlb:401816772)
- * and the paid path writes the Odds API id — three rows, one contest. These
- * tests pin that the seed reuses an existing row when identity proves it is the
- * same game, and creates one exactly as before when it cannot.
+ * The ESPN schedule seed and free ESPN odds path now share
+ * `espn:<short>:<id>` (for example espn:mlb:401816772). The paid path still
+ * writes the Odds API id, so identity collapse remains required where both
+ * feeds see the same contest. These tests pin that the seed reuses an existing
+ * row when identity proves it is the same game, and creates one exactly as
+ * before when it cannot.
  */
 
 const mocks = vi.hoisted(() => ({

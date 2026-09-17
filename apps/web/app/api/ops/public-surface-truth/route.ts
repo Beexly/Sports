@@ -284,6 +284,9 @@ export async function GET(request: Request) {
     lastZeroOddsSuccessAt: string | null;
     lastZeroOddsSport: string | null;
     lastZeroOddsNote: string | null;
+    lastOddsApiHeaderObservedAt: string | null;
+    oddsApiRemainingRequests: number | null;
+    oddsApiUsedRequests: number | null;
     operatorHint: string;
   } = {
     lastSuccessAt: null,
@@ -302,6 +305,9 @@ export async function GET(request: Request) {
     lastZeroOddsSuccessAt: null,
     lastZeroOddsSport: null,
     lastZeroOddsNote: null,
+    lastOddsApiHeaderObservedAt: null,
+    oddsApiRemainingRequests: null,
+    oddsApiUsedRequests: null,
     operatorHint:
       "No odds-inserting SUCCESS found yet. Market board stays dark until oddsInserted>0 within Refresh SLA. Signal board is independent.",
   };
@@ -387,6 +393,9 @@ export async function GET(request: Request) {
     if (credits) {
       oddsInserting = {
         ...oddsInserting,
+        lastOddsApiHeaderObservedAt: credits.observedAt,
+        oddsApiRemainingRequests: credits.remaining,
+        oddsApiUsedRequests: credits.used,
         dualPath: { ...oddsInserting.dualPath, credits },
       };
     }

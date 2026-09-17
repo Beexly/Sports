@@ -31,7 +31,7 @@ import { createHash } from "node:crypto";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { captureError } from "@/lib/observability/sentry";
 import { db } from "@sports/db";
-import { SUPPORTED_SPORTS } from "@sports/data-ingestion";
+import { SUPPORTED_SPORTS, isSportInSeason } from "@sports/data-ingestion";
 import {
   settleSport,
   freezeSlateCommitments,
@@ -319,6 +319,21 @@ async function runPaidSupplement(
   const scheduledWindow = computeScheduledWindow();
 
   for (const sport of sportsToProcess) {
+    if (!isSportInSeason(sport.key)) {
+      results.push({
+        sport: sport.key,
+        ok: true,
+        gamesSettled: 0,
+        picksSettled: 0,
+        observationsRecorded: 0,
+        anomaliesOpened: 0,
+        anomaliesPromoted: 0,
+        anomaliesResolved: 0,
+        outboxAppended: 0,
+        note: "out_of_season",
+      });
+      continue;
+    }
     try {
       const result = await settleSport(sport, apiKey, gates, "[cron:settle-picks:paid]", {
         scheduledWindow,
