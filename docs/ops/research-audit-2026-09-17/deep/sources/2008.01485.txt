@@ -1,0 +1,417 @@
+Title:
+
+Content selection saved. Describe the issue below:
+
+Description:
+
+![](https://arxiv.org/static/base/1.0.1/images/icons/smileybones-small.svg)arXiv is now an independent nonprofit! [Learn more](https://info.arxiv.org/about) ×
+
+[License: arXiv.org perpetual non-exclusive license](https://info.arxiv.org/help/license/index.html#licenses-available)
+
+arXiv:2008.01485v2 \[stat.AP\] 23 Feb 2021
+
+# Wisdom of crowds: much ado about nothing
+
+Sandro M. Reia
+Affiliation: Instituto de Física de São Carlos,
+Universidade de São Paulo,
+Caixa Postal 369, 13560-970 São Carlos, São Paulo, Brazil
+José F. Fontanari
+Affiliation: Instituto de Física de São Carlos,
+Universidade de São Paulo,
+Caixa Postal 369, 13560-970 São Carlos, São Paulo, Brazil
+
+###### Abstract
+
+The puzzling idea that the combination of independent estimates of the magnitude of a quantity results in a very accurate prediction, which is superior to any or, at least, to most of the individual estimates is known as the wisdom of crowds. Here we use the Federal Reserve Bank of Philadelphia’s Survey of Professional Forecasters database to confront the statistical and psychophysical explanations of this phenomenon. Overall we find that the data do not support any of the proposed explanations of the wisdom of crowds. In particular, we find a positive correlation between the variance (or diversity) of the estimates and the crowd error in disagreement with some interpretations of the diversity prediction theorem. In addition, contra the predictions of the psychophysical augmented quincunx model, we find that the skew of the estimates offers no information about the crowd error. More importantly, we find that the crowd beats all individuals in less than 2% of the forecasts and beats most individuals in less than 70% of the forecasts, which means that there is a sporting chance that an individual selected at random will perform better than the crowd. These results contrast starkly with the performance of non-natural crowds composed of unbiased forecasters which beat most individuals in practically all forecasts. The moderate statistical advantage of a real-world crowd over its members does not justify the ado about its wisdom, which is most likely a product of the selective attention fallacy.
+
+## I Introduction
+
+The wisdom of crowds usually refers to the notion that a collection of individuals – the crowd – can solve problems better than most individuals within it, including experts \[ [1](https://arxiv.org/html/2008.01485v2#bib.bib1 "")\]. The idea was brought to light by Galton’s 1907 analysis of a contest to guess the weight of an ox at the West of England Fat Stock and Poultry Exhibition in Plymouth \[ [2](https://arxiv.org/html/2008.01485v2#bib.bib2 ""), [3](https://arxiv.org/html/2008.01485v2#bib.bib3 "")\]. Despite being more than a century old,
+the wisdom of crowds is still a subject of fascination for laypeople and scientists as well.
+This fascination stems from reports of the remarkably accurate appraisal produced by the statistical average of independent estimates of the magnitude of an unknown quantity. For instance, in the ox-weighing contest, the crowd overestimated the weight of the ox by less than 1% of the true weight \[ [2](https://arxiv.org/html/2008.01485v2#bib.bib2 "")\].
+
+There are a few attempts to explain the wisdom of crowds using purely statistical arguments. The first idea that comes to mind is that the individual estimates are unbiased, that is, that the errors spread in equal proportion around the true value of the unknown quantity so that they cancel out when the estimates are combined together \[ [4](https://arxiv.org/html/2008.01485v2#bib.bib4 ""), [5](https://arxiv.org/html/2008.01485v2#bib.bib5 "")\]. Although it is hard to accept the nonexistence of systematic errors on the individual estimates, this explanation is rather popular perhaps because its underlying assumption is difficult to verify \[ [6](https://arxiv.org/html/2008.01485v2#bib.bib6 "")\].
+
+A somewhat more sophisticated explanation for the wisdom of crowds
+is offered by the diversity prediction theorem \[ [7](https://arxiv.org/html/2008.01485v2#bib.bib7 "")\], which asserts that the error of the collective estimate is never greater than the average individual error. Moreover, as hinted by its name, the theorem has a say in the role of the diversity of the individual estimates. In fact, since the theorem asserts that the quadratic collective error equals the average quadratic individual error minus the diversity of the estimates, one is tempted to think that the increase of the diversity would improve the crowd accuracy \[ [7](https://arxiv.org/html/2008.01485v2#bib.bib7 "")\].
+
+In addition to the statistical explanations, there is a psychophysical model of the wisdom of crowds, viz., the augmented quincunx model of probabilistic cue categorization \[ [8](https://arxiv.org/html/2008.01485v2#bib.bib8 "")\], which assumes that there exists a typical value of the estimated quantity that is common knowledge of the population. The real object, say Galton’s ox, is then compared with the prototypical object through a number of perceptible cues that may be categorized incorrectly by the individuals. The main prediction of the model is that information about the collective error can be inferred from the skewness of the distribution of the estimates \[ [8](https://arxiv.org/html/2008.01485v2#bib.bib8 "")\].
+
+In order to test the predictions, as well as the relevance, of the aforementioned explanations for the wisdom of crowds, we use forecasts of economic indicators that are publicly available in the Federal Reserve Bank of Philadelphia’s (FRBP) Survey of Professional Forecasters \[ [9](https://arxiv.org/html/2008.01485v2#bib.bib9 "")\]. As this database offers quarterly projections of the economic indicators, we can tune the difficulty of the forecasts by controlling for the forecast range. We find that the collective error and the diversity of the estimates are affected significantly by that range. Most interestingly, we find that the difficulty of the forecast is typically associated with a large variance and a long left tail of the distribution of estimates.
+
+Overall we find that the data do not support any of the proposed explanations for the wisdom of crowds. First, in opposition to the unfounded interpretation of the diversity prediction theorem, we find a positive correlation between the collective error and the diversity of estimates. Second, we find that, once the range of the forecasts is accounted for, the skewness of the distribution of estimates does not influence significantly the crowd accuracy, in opposition to the predictions of the augmented quincunx model. Third, we find that the unbiased estimates assumption confers on the crowd an enormous advantage over the individuals within it, which is at great variance with the data.
+
+Our main finding, which was obtained using almost 10410^{4} forecast experiments for several economic indicators in the FRBP forecast database, is that only rarely the crowd beats all individuals within it. More precisely, this happens in less than 2% of the forecast experiments that we analyzed. In addition, the crowd beats most individuals within it in less than 70% of our experiments, which means that there is a fair chance that an individual selected at random will perform better than the crowd. Clearly, the purely statistical advantage of the crowd over its members does not justify the high esteem it enjoys, which is most likely a product of the selective attention fallacy.
+
+The rest of this paper is organized as follows. In section [II](https://arxiv.org/html/2008.01485v2#S2 "II Three frameworks for understanding the wisdom of crowds ‣ Wisdom of crowds: much ado about nothing") we offer an outline of the main ideas used to explain the wisdom of crowds, viz., the diversity prediction theorem \[ [7](https://arxiv.org/html/2008.01485v2#bib.bib7 "")\], the augmented quincunx model \[ [8](https://arxiv.org/html/2008.01485v2#bib.bib8 "")\] and the unbiased estimates assumption \[ [4](https://arxiv.org/html/2008.01485v2#bib.bib4 "")\]. In section [III](https://arxiv.org/html/2008.01485v2#S3 "III The FRBP forecast database ‣ Wisdom of crowds: much ado about nothing") we describe briefly the FRBP forecast database \[ [9](https://arxiv.org/html/2008.01485v2#bib.bib9 "")\] from where we have extracted the forecast experiments.
+In section [IV](https://arxiv.org/html/2008.01485v2#S4 "IV Results ‣ Wisdom of crowds: much ado about nothing") we present and analyze the results of those experiments in the light of the known explanations for the wisdom of crowds. In [Appendix A](https://arxiv.org/html/2008.01485v2#Sx1 "Appendix A ‣ Wisdom of crowds: much ado about nothing") we replicate those forecast experiments using virtual unbiased agents so as to verify the predictions of the unbiased estimates assumption. In [Appendix B](https://arxiv.org/html/2008.01485v2#Sx2 "Appendix B ‣ Wisdom of crowds: much ado about nothing") we revisit a few wisdom-of-crowds experiments where the participants are laypeople and show that their results are consistent with the results obtained using the expert forecasters of the FRBP database.
+Finally, section [V](https://arxiv.org/html/2008.01485v2#S5 "V Discussion ‣ Wisdom of crowds: much ado about nothing") is reserved to our concluding remarks.
+
+## II Three frameworks for understanding the wisdom of crowds
+
+Here we describe briefly three frameworks that claim to explain the wisdom of crowds, viz., the diversity prediction theorem, the augmented quincunx model and the unbiased estimates assumption. These proposals make a variety of specific predictions that will be tested using the FRBP forecast database in section [III](https://arxiv.org/html/2008.01485v2#S3 "III The FRBP forecast database ‣ Wisdom of crowds: much ado about nothing").
+
+### II.1 The diversity prediction theorem
+
+The diversity prediction theorem is viewed as a main achievement to those allured by the idea that the performance of groups can be boosted by increasing the diversity of their members \[ [7](https://arxiv.org/html/2008.01485v2#bib.bib7 "")\], although even simple agent-based models indicate that the effects of diversity can be rather unpredictable in nontrivial problem-solving scenarios \[ [10](https://arxiv.org/html/2008.01485v2#bib.bib10 "")\]. This theorem shows that the quadratic collective error is related in a very simple manner to the average quadratic individual error and to a measure of the diversity of the estimates. More pointedly, let us denote by gig\_{i} the estimate of some unknown quantity by individual i=1,…,Ni=1,\\ldots,N, and by GG the true value of the unknown quantity. The collective estimate is defined as the arithmetic mean of the individual estimates, that is,
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | ⟨g⟩=1N​∑i=1Ngi,\\langle g\\rangle=\\frac{1}{N}\\sum\_{i=1}^{N}g\_{i}, |  | (1) |
+
+as usual. We note, however, that Galton used the median of the individual estimates as the crowd estimate in his seminal ox-weighing experiment \[ [2](https://arxiv.org/html/2008.01485v2#bib.bib2 "")\], though the arithmetic mean proved to be a much better estimator in that case \[ [3](https://arxiv.org/html/2008.01485v2#bib.bib3 "")\].
+Thus, the collective error is defined as the signed quantity
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | γ=G−⟨g⟩.\\gamma=G-\\langle g\\rangle. |  | (2) |
+
+In most of this paper, however, we consider the unsigned collective error \|γ\|\|\\gamma\|; the only exception is the discussion of the prediction of the augmented quincunx model that the signs of γ\\gamma and of the skewness of the distribution of estimates are negatively correlated.
+Defining the average quadratic individual error as
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | ϵ=1N​∑i=1N(gi−G)2\\epsilon=\\frac{1}{N}\\sum\_{i=1}^{N}\\left(g\_{i}-G\\right)^{2} |  | (3) |
+
+and the diversity or variance of the estimates as
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | δ=1N​∑i=1N(gi−⟨g⟩)2,\\delta=\\frac{1}{N}\\sum\_{i=1}^{N}\\left(g\_{i}-\\langle g\\rangle\\right)^{2}, |  | (4) |
+
+we have the identity
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | γ2=ϵ−δ,\\gamma^{2}=\\epsilon-\\delta, |  | (5) |
+
+which is Page’s diversity prediction theorem \[ [7](https://arxiv.org/html/2008.01485v2#bib.bib7 "")\]. It asserts that the quadratic collective error equals the average quadratic individual error minus the prediction diversity. This result is sometimes viewed as indication that the increase of the prediction diversity δ\\delta results in the decrease of the quadratic collective error γ2\\gamma^{2}. Of course, since δ\\delta and ϵ\\epsilon cannot be varied independently of each other, this interpretation is not correct. Nevertheless, the relationship, if any, between the diversity of the estimates and the collective error is a very interesting issue that can be investigated using a large number of equivalent forecast experiments, which is the approach we follow in this paper. We note that the diversity of estimates δ\\delta is known in the statistical literature as the precision of the estimates, that is, the closeness of repeated estimates (of the same quantity) to one another \[ [11](https://arxiv.org/html/2008.01485v2#bib.bib11 "")\].
+
+We stress that the diversity prediction theorem guarantees only that the quadratic collective error γ2\\gamma^{2} is never greater than the mean quadratic individual error ϵ\\epsilon. As we will see in section [III](https://arxiv.org/html/2008.01485v2#S3 "III The FRBP forecast database ‣ Wisdom of crowds: much ado about nothing"), this is not a very useful result from the practical perspective since, for instance, it does not imply that the crowd is better than most individuals. In particular, we will report an experiment where the collective estimate is worse than the estimate of about 85% of the individuals. Hence, γ2≤ϵ\\gamma^{2}\\leq\\epsilon does not imply that it is always advantageous to favor the collective estimate over the estimate of a randomly chosen individual in the group.
+
+As an amusing side note, we mention the resemblance between the discussions about the value of the diversity prediction theorem and the arguments about the relevance of the celebrated Price equation for evolutionary biology \[ [12](https://arxiv.org/html/2008.01485v2#bib.bib12 "")\]. We note that Price’s equation, which has a straightforward derivation from the definition of fitness, is considered by many researchers as a mere mathematical tautology that has no predictive value at all \[ [13](https://arxiv.org/html/2008.01485v2#bib.bib13 "")\].
+
+It is not possible to investigate the influence of the diversity of the estimates on the collective error using a single forecast experiment since the values of γ\\gamma, ϵ\\epsilon and δ\\delta are fixed for a particular experiment. The solution is to consider a large ensemble of roughly equivalent experiments and to look at the correlations between those quantities. This can be achieved artificially by selecting random subsamples of the estimates of a single experiment to produce many virtual experiments with fewer estimates than the original one \[ [14](https://arxiv.org/html/2008.01485v2#bib.bib14 "")\]. The problem with that approach is that the resulting virtual experiments are not independent. Here we use the FRBP forecast database to collect the independent forecast experiments necessary for the correlation analysis. We note that since the collective estimate ⟨g⟩\\langle g\\rangle and the true value GG may have different values for different experiments, it is necessary to introduce the dimensionless quantities γ/G\\gamma/G, ϵ1/2/G\\epsilon^{1/2}/G and δ1/2/⟨g⟩\\delta^{1/2}/\\langle g\\rangle to properly compare the experiments.
+
+### II.2 The augmented quincunx model of judgment
+
+The augmented quincunx is a psychophysical model of probabilistic cue categorization \[ [8](https://arxiv.org/html/2008.01485v2#bib.bib8 "")\], whose name was inspired by a probability device invented by Galton in 1873 to demonstrate the central limit theorem \[ [15](https://arxiv.org/html/2008.01485v2#bib.bib15 "")\]. The basic idea behind this model is the assumption that there is a typical value of the unknown quantity that is common knowledge gained through experience. For instance, in the ox-weighing experiment, it is assumed that the population (or at least the participants of the contest) share the knowledge that the typical weight of oxen is G^\\hat{G}. In order to estimate the weight GG of a particular ox, the contestants focus on a number of perceptible cues
+c=1,…,Cc=1,\\ldots,C that are correlated with GG (e.g., the height of the ox or the degree to which its ribs are showing). If a cue cc indicates that the ox is heavier (lighter) than the prototype ox then the typical weight is increased (decreased) by a factor ηc\\eta\_{c}. Hence
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | G=G^+∑c=1Cηc,G=\\hat{G}+\\sum\_{c=1}^{C}\\eta\_{c}, |  | (6) |
+
+where ηc\\eta\_{c} can be positive or negative depending on the correlation between cue cc and the ox weight.
+Stochasticity enters the augmented quincunx model because the contestants can perceive a cue incorrectly. More pointedly, the estimate of contestant ii is
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | gi=G^+∑c=1Cuc​ηc,g\_{i}=\\hat{G}+\\sum\_{c=1}^{C}u\_{c}\\eta\_{c}, |  | (7) |
+
+where ucu\_{c} is a random variable that takes on the value +1+1 with probability pp and the value −1-1 with probability 1−p1-p\[ [8](https://arxiv.org/html/2008.01485v2#bib.bib8 "")\]. This means that a cue is perceived correctly with probability pp and incorrectly with probability 1−p1-p.
+In particular, if individual ii can perceive all cues correctly (i.e., p=1p=1) then its estimate is perfect (i.e., gi=Gg\_{i}=G), despite the fact that G^≠G\\hat{G}\\neq G. For simplicity, the model assumes that all contestants are equivalent, i.e., the cue categorization probability pp is the same for all individuals.
+
+Although G^\\hat{G}, CC and ηc\\eta\_{c} are hard to access quantities, the augmented quincunx model makes some interesting general predictions. For instance, the model predicts that the collective error γ\\gamma can be inferred from the degree and direction of the skewness of the distribution of individual estimates: estimate distributions have greater negative (positive) skew when the mean estimate ⟨g⟩\\langle g\\rangle underestimates (overestimates) the true value GG by greater margin \[ [8](https://arxiv.org/html/2008.01485v2#bib.bib8 "")\].
+This claim means that there is a negative correlation between γ/G\\gamma/G and the skewness μ3\\mu\_{3}. We recall that the skewness μ3\\mu\_{3} of a distribution is a dimensionless measure of its asymmetry, which is defined as
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | μ3=1N​∑i=1N(gi−⟨g⟩δ1/2)3,\\mu\_{3}=\\frac{1}{N}\\sum\_{i=1}^{N}\\left(\\frac{g\_{i}-\\langle g\\rangle}{\\delta^{1/2}}\\right)^{3}, |  | (8) |
+
+where δ\\delta is the sample variance of the estimates defined in equation ( [4](https://arxiv.org/html/2008.01485v2#S2.E4 "In II.1 The diversity prediction theorem ‣ II Three frameworks for understanding the wisdom of crowds ‣ Wisdom of crowds: much ado about nothing")) and ⟨g⟩\\langle g\\rangle is the mean of the estimates defined in equation ( [1](https://arxiv.org/html/2008.01485v2#S2.E1 "In II.1 The diversity prediction theorem ‣ II Three frameworks for understanding the wisdom of crowds ‣ Wisdom of crowds: much ado about nothing")). A negative value of μ3\\mu\_{3} implies that the left tail of the distribution of estimates is longer than the right tail, whereas a positive μ3\\mu\_{3} indicates a right-tailed distribution.
+
+### II.3 The unbiased estimates assumption
+
+A natural explanation for the wisdom of crowds involves the well-known fact that the combination of unbiased and independent
+estimates guarantees the accuracy of the statistical average, provided the number of estimates is large (see, e.g., \[ [4](https://arxiv.org/html/2008.01485v2#bib.bib4 ""), [5](https://arxiv.org/html/2008.01485v2#bib.bib5 "")\]). In other words, if the estimates made by numerous different people scatter symmetrically around the truth, then the collective estimate is likely to be very accurate. Of course, the trouble with this explanation is the assumption that the individual estimates are unbiased, that is, that their means coincide with the true value of the unknown quantity. If correct, this assumption would imply that one could harvest the benefits of the wisdom of crowds by asking a single individual to make several estimates at different times (see, e.g., \[ [16](https://arxiv.org/html/2008.01485v2#bib.bib16 "")\]). The unbiased estimates assumption is the limit of
+the augmented quincunx model where G^=G\\hat{G}=G and p=1/2p=1/2.
+
+In [Appendix A](https://arxiv.org/html/2008.01485v2#Sx1 "Appendix A ‣ Wisdom of crowds: much ado about nothing") we use the unbiased estimates assumption as a null hypothesis and replicate our analysis of the FRBP forecast experiments by replacing the expert economists by virtual unbiased forecasters. We stress, however, that ordinary people are not unbiased forecasters. On the contrary, unbiased forecasters are the ultimate experts because their estimates fluctuate symmetrically (on the average) around the true value of the quantity being estimated, i.e., they somehow ‘know’ its true value. In that sense, an unbiased forecaster is a theoretical construct. As a side comment, we note that the judgment of ordinary people is biased in several ways. For instance, there is the so-called anchor effect, in which mentioning in passing a figure, say 400, to a group of randomly picked individuals who are asked to guess the number of candies in a jar and a different figure, say 800, to another group exposed to the same jar leads to very distinct collective predictions \[ [6](https://arxiv.org/html/2008.01485v2#bib.bib6 "")\]. Accordingly, in [Appendix B](https://arxiv.org/html/2008.01485v2#Sx2 "Appendix B ‣ Wisdom of crowds: much ado about nothing") we analyze the candies-in-a-jar experiment \[ [14](https://arxiv.org/html/2008.01485v2#bib.bib14 "")\]
+and show that the resulting collective estimate obtained from the aggregation of laypeople estimates cannot be explained by the unbiased estimates assumption.
+
+## III The FRBP forecast database
+
+The Federal Reserve Bank of Philadelphia’s (FRBP) Survey of Professional Forecasters offers quarterly projections for five quarters of a variety of economic indicators \[ [9](https://arxiv.org/html/2008.01485v2#bib.bib9 "")\]. In order to lighten the analysis, here we will focus mainly on semestrial forecasts of the nominal gross domestic product (NGDP), as our conclusions apply to the other indicators as well. In particular, we consider the forecast for the
+current quarter, that is, the quarter when the survey was conducted and the forecasts for two and four quarters later. Henceforth we will refer to these forecasts as short-range, medium-range and long-range forecasts.
+We use the NGDP forecasts available in the FRBP database from the fourth quarter of 1968 to the fourth quarter of 2019.
+There are 1+(2019−1969+1)×4=2051+(2019-1969+1)\\times 4=205 quarters in total which equals the number of short-range estimate distributions. In addition, since the medium-range forecasts predict the economic indicators two quarters after the quarter when the survey was conducted, the last two quarters of 2019 are not used for those forecasts and so the number of medium-range estimate distributions is 203. Following this reasoning, the number of long-range estimate distributions should be 201. However, the data for the long-range forecasts are missing in the first, second and third quarters of 1969, in the first quarter of 1970 and in the third quarter of 1974, so that the number of long-range estimate distributions available in the FRBP database is 196.
+All forecasters are select economists and the mean number of forecasters in each experiment is about 37. Figure [1](https://arxiv.org/html/2008.01485v2#S3.F1 "Figure 1 ‣ III The FRBP forecast database ‣ Wisdom of crowds: much ado about nothing") shows the histograms of the number of participants NN in each experiment for the three forecast ranges. The minimum number of participants is N=9N=9 and the maximum is N=87N=87 in any forecast range.
+
+Figure 1: Histograms of the number of participants NN in the 205 short-range forecasts (left panel), in the 203 medium-range forecasts (middle panel) and in the 196 long-range forecasts (right panel) on the nominal gross domestic product of the Federal Reserve Bank of Philadelphia’s Survey of Professional Forecasters. The vertical red lines indicate the average number of participants in each forecast range.
+
+The separation of the experiments on short-range, medium-range and long-range forecasts allows the control of the difficulty of the forecasts and the study of its influence on the distribution of the individual estimates. We note that in Ref. \[ [8](https://arxiv.org/html/2008.01485v2#bib.bib8 "")\] these distinct forecast ranges were clumped together to form a single large forecast database on the NGDP. We think, however, that this procedure is not appropriate as the range of the forecasts has a major effect on the distribution of the estimates, as we will see next.
+
+## IV Results
+
+We begin our analysis with the study of the correlation between the scaled crowd accuracy \|γ\|/G\|\\gamma\|/G and the scaled diversity of the estimates δ1/2/⟨g⟩\\delta^{1/2}/\\langle g\\rangle. Figure [2](https://arxiv.org/html/2008.01485v2#S4.F2 "Figure 2 ‣ IV Results ‣ Wisdom of crowds: much ado about nothing") shows the scatter plots of these quantities for the three different forecast ranges, where each data point represents a particular forecast experiment. As already pointed out, since the number of participants NN as well as the NGDP true value GG may vary in different experiments for the same forecast range (see, e.g., figure [1](https://arxiv.org/html/2008.01485v2#S3.F1 "Figure 1 ‣ III The FRBP forecast database ‣ Wisdom of crowds: much ado about nothing")), it is necessary to consider dimensionless summary statistics to properly compare the outcomes of the experiments. We recall that each experiment produces a distribution of estimates from where we extract the relevant summary statistics. For instance, figure [3](https://arxiv.org/html/2008.01485v2#S4.F3 "Figure 3 ‣ IV Results ‣ Wisdom of crowds: much ado about nothing") illustrates two distributions of estimates for the short-range forecast scenario, which correspond to two different data points in the left panel of figure [2](https://arxiv.org/html/2008.01485v2#S4.F2 "Figure 2 ‣ IV Results ‣ Wisdom of crowds: much ado about nothing"). The individual estimates in the x-axis of figure [3](https://arxiv.org/html/2008.01485v2#S4.F3 "Figure 3 ‣ IV Results ‣ Wisdom of crowds: much ado about nothing") are scaled by the average estimate ⟨g⟩\\langle g\\rangle defined in equation ( [1](https://arxiv.org/html/2008.01485v2#S2.E1 "In II.1 The diversity prediction theorem ‣ II Three frameworks for understanding the wisdom of crowds ‣ Wisdom of crowds: much ado about nothing")), which is by definition the crowd prediction, so that the scaled crowd prediction is ⟨g⟩/⟨g⟩=1\\langle g\\rangle/\\langle g\\rangle=1. Since the scaled true value is G/⟨g⟩G/\\langle g\\rangle, the participants that predict better than the crowd are those whose estimates satisfy ∣gi/⟨g⟩−G/⟨g⟩∣<∣1−G/⟨g⟩∣\\mid g\_{i}/\\langle g\\rangle-G/\\langle g\\rangle\\mid<\\mid 1-G/\\langle g\\rangle\\mid, i.e, are those whose individual errors are smaller than the error of the crowd.
+
+Figure 2: Scatter plots of the scaled diversity δ1/2/⟨g⟩\\delta^{1/2}/\\langle g\\rangle and the scaled collective error \|γ\|/G\|\\gamma\|/G for the short-range (left panel), medium-range (middle panel) and long-range (right panel) NGDP forecasts. The filled symbols and the horizontal and vertical lines indicate the means and the standard deviations.
+
+Figure [2](https://arxiv.org/html/2008.01485v2#S4.F2 "Figure 2 ‣ IV Results ‣ Wisdom of crowds: much ado about nothing") shows that the accuracy \|γ\|/G\|\\gamma\|/G and the dispersion δ1/2/⟨g⟩\\delta^{1/2}/\\langle g\\rangle of the estimates vary considerably as the forecast range increases, indicating that clumping those forecasts together as done in Ref. \[ [8](https://arxiv.org/html/2008.01485v2#bib.bib8 "")\] may not be a judicious choice. In particular, the short-range forecasts are on the average about three times more accurate and four times less disperse than the long-range forecasts. This is somewhat expected since the farther the forecast range, the greater the odds that the predicted indicator will be influenced by unforeseen factors.
+
+Since the two summary statistics displayed in the scatter plots of figure [2](https://arxiv.org/html/2008.01485v2#S4.F2 "Figure 2 ‣ IV Results ‣ Wisdom of crowds: much ado about nothing") (as well as in all scatter plots exhibited in this paper) are probably not linearly dependent, we use the nonparametric Spearman correlation coefficient ρ\\rho to measure correlations rather than the usual Pearson’s coefficient, which is designed to quantify linear correlations. We find, however, that these two correlation coefficients yield very similar values for the quantities considered here. In addition, the statistical significance of the measured correlation coefficients is determined by their pp-values that yield the probability that the same coefficients are obtained if the null hypothesis is true, i.e., if the two summary statistics are uncorrelated. Hence, a very small pp-value means that the observed correlation is very unlikely under the null hypothesis and so that it is statistically different from zero.
+
+The Spearman correlation coefficient between δ1/2/⟨g⟩\\delta^{1/2}/\\langle g\\rangle and \|γ\|/G\|\\gamma\|/G is ρ=0.31\\rho=0.31 with pp-value <10−6<10^{-6} for the short-range, ρ=0.25\\rho=0.25 with pp-value <10−6<10^{-6} for the medium-range and ρ=0.14\\rho=0.14 with pp-value =0.05=0.05 for the long-range forecasts. The unfounded interpretation of the diversity prediction theorem that associates a high prediction diversity to a low collective error implies a negative correlation between δ1/2/⟨g⟩\\delta^{1/2}/\\langle g\\rangle and \|γ\|/G\|\\gamma\|/G, which is clearly not supported by our findings. In fact, given that the forecasters are all expert economists, it is somewhat intuitive to expect that the less disperse their estimates, the closer they are to the true value. For the long-range forecast, their expertise becomes less influential to the success of the predictions and so the (statistically significant) positive correlation between collective error and diversity decreases \[ [17](https://arxiv.org/html/2008.01485v2#bib.bib17 "")\]. We note that this positive correlation is a prediction of the augmented quincunx model \[ [8](https://arxiv.org/html/2008.01485v2#bib.bib8 "")\] and that it holds also for the unbiased estimates assumption, as shown in [Appendix A](https://arxiv.org/html/2008.01485v2#Sx1 "Appendix A ‣ Wisdom of crowds: much ado about nothing"). The reason a positive correlation between the diversity (or variance) of the estimates and the collective error is consistent with the diversity prediction theorem is because the average quadratic individual error increases together with the variance.
+
+Figure 3: Histograms of the relative estimates gi/⟨g⟩g\_{i}/\\langle g\\rangle for two short-range forecasts. The vertical red lines indicate the ratio between the true value of the NGDP indicator and the crowd estimate, i.e., G/⟨g⟩G/\\langle g\\rangle, whereas the vertical green lines at
+gi/⟨g⟩=1g\_{i}/\\langle g\\rangle=1 indicate the scaled crowd estimate. In the left panel there are N=40N=40 participants and none of them predicted better than the crowd, whereas in the right panel
+there are N=63N=63 participants and 43% of them predicted more accurately than the crowd. The gray region highlights the individual estimates that are better than the crowd’s.
+
+An interesting outcome of the augmented quincunx model refers to the role of the skewness μ3\\mu\_{3} of the distribution of estimates. In particular, that model predicts a negative correlation between μ3\\mu\_{3} and the (signed) collective error γ\\gamma. Accordingly, in figure [4](https://arxiv.org/html/2008.01485v2#S4.F4 "Figure 4 ‣ IV Results ‣ Wisdom of crowds: much ado about nothing") we show scatter plots of μ3\\mu\_{3} and γ/G\\gamma/G as well as of μ3\\mu\_{3} and δ1/2/⟨g⟩\\delta^{1/2}/\\langle g\\rangle for the different forecast ranges. The Spearman correlation coefficient between μ3\\mu\_{3} and γ/G\\gamma/G is ρ=0.008\\rho=0.008 with pp-value =0.91=0.91 for the short-range, ρ=−0.03\\rho=-0.03 with pp-value =0.62=0.62 for the medium-range and ρ=−0.12\\rho=-0.12 with pp-value =0.09=0.09 for the long-range forecasts. The low values of these coefficients and their high pp-values point to the
+little relevance of the skewness of the estimate distributions to the crowd prediction, in disagreement with the claims of Ref. \[ [8](https://arxiv.org/html/2008.01485v2#bib.bib8 "")\]. In addition, our results indicate that the skewness is weakly affected by the forecast range. This finding contrasts with the results for the dispersion of the estimates that is strongly affected by that range. In fact, our results suggest that the more difficult the forecasts, in the sense that there is more room for noise to alter the future outcome, the greater the variance of the estimates. The Spearman correlation coefficient between μ3\\mu\_{3} and δ1/2/⟨g⟩\\delta^{1/2}/\\langle g\\rangle is ρ=−0.09\\rho=-0.09 with pp-value =0.19=0.19 for the short-range, ρ=−0.36\\rho=-0.36 with pp-value <10−6<10^{-6} for the medium-range and ρ=−0.46\\rho=-0.46 with pp-value <10−6<10^{-6}
+for the long-range forecasts, which implies that, at least for the medium and long-range forecasts, a large variance is associated with left-tailed estimate distributions. This interesting and statistically significant correlation is not predicted by the augmented quincunx model since the sign of the skewness is not affected by the variance in that model \[ [8](https://arxiv.org/html/2008.01485v2#bib.bib8 "")\]. In addition, we note that the unbiased estimates assumption predicts no significant correlation between μ3\\mu\_{3} and δ1/2/⟨g⟩\\delta^{1/2}/\\langle g\\rangle (see [Appendix A](https://arxiv.org/html/2008.01485v2#Sx1 "Appendix A ‣ Wisdom of crowds: much ado about nothing")), so the negative correlation between these quantities reported here is a genuine effect of the aggregation of real-world biased forecasts.
+
+Figure 4: Scatter plots of the skewness μ3\\mu\_{3} and the scaled collective error γ/G\\gamma/G (upper set of panels) and of μ3\\mu\_{3} and the scaled diversity δ1/2/⟨g⟩\\delta^{1/2}/\\langle g\\rangle (lower set of panels) for short-range (left panels), medium-range (middle panels) and long-range (right panels) NGDP forecasts. The filled symbols and the horizontal and vertical lines indicate the means and the standard deviations.
+
+We conclude our analysis by challenging the common view that the crowd is superior to most of its integrants \[ [1](https://arxiv.org/html/2008.01485v2#bib.bib1 "")\]. In fact, if people believed that an individual selected at random had a fair chance of beating the crowd, the idea of the wisdom of crowds would probably never have taken off. Here we address this issue quantitatively by measuring the fraction of individual estimates that are superior to the collective estimate for each forecast experiment. The results are presented in form of histograms and cumulative distributions in figure [5](https://arxiv.org/html/2008.01485v2#S4.F5 "Figure 5 ‣ IV Results ‣ Wisdom of crowds: much ado about nothing"), where the height of the bars is the proportion of experiments for which that fraction equals ξ∈\[0,1\]\\xi\\in\\left\[0,1\\right\]. There are a few experiments with ξ=0\\xi=0 so that the crowd beats all individuals and one short-range forecast experiment where 85% of the individuals beat the crowd. The fraction of experiments for which the crowd is more accurate than the majority of the participants is 150/205≈0.73150/205\\approx 0.73 for the short-range forecasts, 145/203≈0.71145/203\\approx 0.71 for the medium-range forecasts and 130/196≈0.66130/196\\approx 0.66 for the long-range forecasts. These figures are obtained by evaluating the cumulative distribution function at ξ=0.5\\xi=0.5. Hence, a randomly chosen individual has probability greater than 1/21/2 of beating the crowd in about 30% of the experiments reported here.
+
+Figure 5: Histograms of the proportion of experiments for which a fraction ξ\\xi of the individual estimates are more accurate than the collective estimate for short-range (left panel), medium-range (middle panel) and long-range (right panel) forecasts. The red curves are the cumulative distributions and the horizontal dashed lines indicate the values of the cumulative distributions at ξ=0.5\\xi=0.5.
+
+We stress that finding that 85% of the individuals beat the crowd in a particular forecast experiment does not contradict Page’s diversity prediction theorem, which asserts that the collective error is always less than the average individual error, i.e., \|γ\|≤ϵ1/2\|\\gamma\|\\leq\\epsilon^{1/2}. In fact, that particular experiment involved N=39N=39 participants among which 4 outliers produced completely off the mark estimates resulting in the inflation of the mean individual error. This point betrays the fact that the theorem ( [5](https://arxiv.org/html/2008.01485v2#S2.E5 "In II.1 The diversity prediction theorem ‣ II Three frameworks for understanding the wisdom of crowds ‣ Wisdom of crowds: much ado about nothing")) is largely irrelevant for practical issues concerning the use or not of the crowd as an effective forecaster.
+
+To support these findings, in figure [6](https://arxiv.org/html/2008.01485v2#S4.F6 "Figure 6 ‣ IV Results ‣ Wisdom of crowds: much ado about nothing") we clump together 86508650 experiments of the FRBP forecast database without regard to
+the economic indicator (there are ten distinct indicators) or to the range of the forecast (there are five distinct ranges). We find that the crowd is superior to any individual in only 1.7%1.7\\% of the experiments (viz., those for which ξ=0\\xi=0), whereas it is superior to most individuals in 66.8%66.8\\% of the experiments (viz., those for which ξ≤1/2\\xi\\leq 1/2). Hence the widespread claims about the superiority of the crowd over the individuals \[ [1](https://arxiv.org/html/2008.01485v2#bib.bib1 "")\] is most likely an artifice of selective attention that gives prominence to successful outcomes only. Those claims are legitimate only for unrealistic crowds composed of unbiased forecasters, as shown in [Appendix A](https://arxiv.org/html/2008.01485v2#Sx1 "Appendix A ‣ Wisdom of crowds: much ado about nothing").
+
+Figure 6: Histograms of the proportion of experiments for which a fraction ξ\\xi of the individual estimates are more accurate than the collective estimate. The data comprises the 86508650 experiments of the FRBP forecast database for ten distinct economic indicators and five forecast ranges. The red curve is the cumulative distribution and the horizontal dashed line indicates the value of the cumulative distribution at ξ=0.5\\xi=0.5.
+
+## V Discussion
+
+It is almost a cliché to remark that a group of cooperating individuals can solve problems more efficiently than when those individuals work in isolation \[ [18](https://arxiv.org/html/2008.01485v2#bib.bib18 ""), [19](https://arxiv.org/html/2008.01485v2#bib.bib19 "")\]. Cooperation is, in general, a successful problem solving strategy \[ [20](https://arxiv.org/html/2008.01485v2#bib.bib20 "")\], though it is not clear whether it merely speeds up the time to find the solutions, or whether it alters qualitatively the statistical signature of the search for the solutions \[ [21](https://arxiv.org/html/2008.01485v2#bib.bib21 ""), [22](https://arxiv.org/html/2008.01485v2#bib.bib22 "")\]. Yet, in some cases, cooperation may well lead the group astray resulting in the madness of crowds \[ [23](https://arxiv.org/html/2008.01485v2#bib.bib23 "")\] or, less dramatically, it may simply undermine the benefits of combining independent forecasts \[ [24](https://arxiv.org/html/2008.01485v2#bib.bib24 ""), [25](https://arxiv.org/html/2008.01485v2#bib.bib25 "")\].
+
+A rather peculiar manner to circumvent the potential negative effects of cooperation while still benefiting from the group intelligence is the so-called wisdom of crowds, i.e., the notion that a collection of independently deciding individuals is likely to predict better than individuals or even experts within the group \[ [1](https://arxiv.org/html/2008.01485v2#bib.bib1 "")\], which ironically seems to have become itself a piece of crowd wisdom \[ [26](https://arxiv.org/html/2008.01485v2#bib.bib26 "")\]. The first report of this phenomenon in the literature was probably Galton’s account of the surprisingly accurate estimate of the weight of an ox given by the median of the sample of the individual guesses \[ [2](https://arxiv.org/html/2008.01485v2#bib.bib2 "")\].
+
+Although much of the evidence of the wisdom of crowds is anecdotal (see, e.g., \[ [1](https://arxiv.org/html/2008.01485v2#bib.bib1 ""), [6](https://arxiv.org/html/2008.01485v2#bib.bib6 "")\]), there are a few efforts aiming at explaining this phenomenon either using a purely statistical rationale \[ [5](https://arxiv.org/html/2008.01485v2#bib.bib5 ""), [7](https://arxiv.org/html/2008.01485v2#bib.bib7 "")\] or using psychophysical arguments on the nature of the individual estimates \[ [8](https://arxiv.org/html/2008.01485v2#bib.bib8 "")\]. Typically, these approaches aim at inferring the quality of the crowd estimate using information about the distribution of individual estimates (see, e.g., figure [3](https://arxiv.org/html/2008.01485v2#S4.F3 "Figure 3 ‣ IV Results ‣ Wisdom of crowds: much ado about nothing")), such as the variance and the skew of the estimates.
+Here we address the soundness of those explanations using forecasts of economic indicators from the Federal Reserve Bank of Philadelphia’s (FRBP) Survey of Professional Forecasters database \[ [9](https://arxiv.org/html/2008.01485v2#bib.bib9 "")\]. The difficulty of the forecasts can be tuned by controlling for the forecast range.
+
+A word is in order about the particularity that the FRBP database comprises the predictions of expert economists, whereas the common view of the wisdom of crowds is that it comprises the predictions of ordinary people. In fact, the wisdom of crowds as a method of information aggregation depends on the presence of an expressive number of experts in the crowd since nothing good can come from the aggregation of random information: if every person in France were asked to specify the gross domestic product of India, the average answer would probably be wildly off \[ [6](https://arxiv.org/html/2008.01485v2#bib.bib6 "")\]. The widespread interest in the wisdom of crowds stems from the possibility of combining the forecasts of experts in the hope that many expert minds are better than a few. As a matter of fact, just after the publication of Galton’s paper on the ox-weighing experiment \[ [2](https://arxiv.org/html/2008.01485v2#bib.bib2 "")\], it was pointed out that Galton had not been exposed to Vox Populi but to Vox Expertorum, as the participants of the contest were butchers and farmers whose livelihood depended on their ability to judge the weight of farm animals before trading \[ [27](https://arxiv.org/html/2008.01485v2#bib.bib27 "")\]. Moreover, the 6 pence tickets probably deterred the participation of dilettantes in that celebrated contest.
+
+We stress that the main focus of the research on information aggregation is on the prediction of economic, political and other valuable indicators so that the forecasters are necessarily experts since there is no point in asking ordinary people to predict, say, the NGDP at the end of the current year. Nevertheless, in [Appendix B](https://arxiv.org/html/2008.01485v2#Sx2 "Appendix B ‣ Wisdom of crowds: much ado about nothing") we revisit a few wisdom-of-crowds experiments where the participants are laypeople \[ [14](https://arxiv.org/html/2008.01485v2#bib.bib14 "")\]. The experiments are the estimates of the number of candies in a jar, the length of a paper strip, the number of pages of a book and the weight of a bag of beans. These are the kind of factual questions that make sense asking ordinary people. The results generally agree with our findings using the FRBP database. In particular, the probability that a randomly picked participant outperforms the crowd varies from 15%15\\% for the paper-strip experiment to 38%38\\% for the pages-of-a-book experiment, which support our main point that there is a fair chance that random participant will beat the crowd.
+
+Our results suggest that the difficulty of the forecasts is associated with large variances and with long left tails of the distributions of estimates. In addition, we find that a large variance is associated with a poor crowd accuracy, in disagreement with the interpretation of the diversity prediction theorem that the increase of the diversity of the estimates leads to a decrease of the collective error \[ [7](https://arxiv.org/html/2008.01485v2#bib.bib7 "")\]. Moreover, when controlling for the forecast range, we find no evidence of an association between the skew of the estimates and the collective error, in disagreement with the predictions of the augmented quincunx model \[ [8](https://arxiv.org/html/2008.01485v2#bib.bib8 "")\].
+
+We pay special attention to the unbiased estimates assumption that explains the accuracy of the crowd by conjecturing that the errors of the individual estimates spread in equal proportion around the true value of the unknown quantity so that they cancel out when those estimates are combined together \[ [4](https://arxiv.org/html/2008.01485v2#bib.bib4 "")\]. In [Appendix A](https://arxiv.org/html/2008.01485v2#Sx1 "Appendix A ‣ Wisdom of crowds: much ado about nothing") we replicate the forecast experiments by replacing the economists by (virtual) unbiased forecasters and show that much of the hailed features of the wisdom of crowds are properties of the combination of unbiased forecasts instead. In that appendix, we also offer a statistical test to check if the economists’ forecasts in the FRBP database are in fact biased and find that 85%85\\% of the collective predictions have pp-value less than 0.050.05, which indicates that they are unlikely to be obtained by the aggregation of unbiased forecasts. In addition, in [Appendix B](https://arxiv.org/html/2008.01485v2#Sx2 "Appendix B ‣ Wisdom of crowds: much ado about nothing") we show that the unbiased estimates assumption cannot be rejected in the case the task is such that the participants are likely to deliver accurate estimates, as in the paper-strip experiment. However, it can safely be rejected in the case that the participants deliver far off estimates as in the candies-in-a-jar experiment. These findings support the view that unbiased forecasters are experts.
+
+The wisdom of real crowds is very different from the apocryphal wisdom of crowds of unbiased forecasters. For instance, the crowd beats all individuals in only around 2% of the FRBP forecast experiments and it beats most individuals in about 70% of those experiments, whereas the corresponding figures for the unbiased forecasters are about 16% and 100%, respectively. Hence, since there is a fair chance that a randomly chosen individual will beat the crowd in real-world forecasts, the only explanation that we can find for the popularity of the wisdom of crowds is selective attention (or cherry picking) that gives prominence to outcomes that tally with Galton’s conclusions.
+
+###### Acknowledgements.
+
+The research of JFF was supported in part
+by Grant No. 2020/03041-3, Fundação de Amparo à Pesquisa do Estado de São Paulo
+(FAPESP) and by Grant No. 305058/2017-7, Conselho Nacional de Desenvolvimento
+Científico e Tecnológico (CNPq).
+SMR was supported by the Coordenação de Aperfeiçoamento de Pessoal de Nível Superior - Brasil (CAPES) - Finance Code 001.
+
+## Appendix A
+
+Figure A1:  Scatter plots of the scaled diversity δ1/2/⟨g⟩\\delta^{1/2}/\\langle g\\rangle and the relative collective error \|γ\|/G\|\\gamma\|/G for short-range (left panel), medium-range (middle panel) and long-range (right panel) unbiased forecasts. The filled symbols and the horizontal and vertical lines indicate the means and the standard deviations.
+
+In this appendix we examine the predictions of the unbiased estimates assumption for the forecast experiments considered in the main text. In particular, for each experiment with a given number NN of participants, we calculate the variance of the estimates δ\\delta and use it to produce NN independent unbiased estimates distributed according to a Gaussian of mean GG (the true value of the economic indicator) and variance δ\\delta, i.e.,
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | Pu​(gi)=12​π​δ​exp⁡\[−(gi−G)22​δ\]P\_{u}\\left(g\_{i}\\right)=\\frac{1}{\\sqrt{2\\pi\\delta}}\\exp\\left\[-\\frac{\\left(g\_{i}-G\\right)^{2}}{2\\delta}\\right\] |  | (A1) |
+
+for i=1,…,Ni=1,\\ldots,N. Hence, by construction, the diversity of the virtual unbiased estimates equals the diversity of the economists’ forecasts. Although we split the data in three forecast ranges, as done in the main text, we stress that from the perspective of the unbiased forecasters the only difference between those ranges is the variance δ\\delta of the estimates. In addition, we note that for the values of NN considered here (see, e.g., figure [1](https://arxiv.org/html/2008.01485v2#S3.F1 "Figure 1 ‣ III The FRBP forecast database ‣ Wisdom of crowds: much ado about nothing")), the arithmetic average ⟨g⟩u=∑iNgi/N\\langle g\\rangle\_{u}=\\sum\_{i}^{N}g\_{i}/N is expected to differ from GG. In fact, the prediction of the unbiased crowd ⟨g⟩u\\langle g\\rangle\_{u} is a random variable distributed according to the Gaussian
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | P⁡(⟨g⟩u)=12​π​δ/N​exp⁡\[−(⟨g⟩u−G)22​δ/N\]P\\left(\\langle g\\rangle\_{u}\\right)=\\frac{1}{\\sqrt{2\\pi\\delta/N}}\\exp\\left\[-\\frac{\\left(\\langle g\\rangle\_{u}-G\\right)^{2}}{2\\delta/N}\\right\] |  | (A2) |
+
+since the individual estimates gig\_{i} are statistically independent random variables.
+
+Figure [A1](https://arxiv.org/html/2008.01485v2#Sx1.F1 "Figure A1 ‣ Appendix A ‣ Wisdom of crowds: much ado about nothing") shows the scatter plots of δ1/2/⟨g⟩u\\delta^{1/2}/\\langle g\\rangle\_{u} and \|γ\|/G\|\\gamma\|/G for the unbiased forecasters. As expected, the crowd estimate in this case is about ten times more accurate than in the original forecast experiments. The Spearman correlation coefficient between δ1/2/⟨g⟩u\\delta^{1/2}/\\langle g\\rangle\_{u} and \|γ\|/G\|\\gamma\|/G is ρ=0.39\\rho=0.39 with pp-value <10−6<10^{-6} for the short-range, ρ=0.37\\rho=0.37 with pp-value <10−6<10^{-6} for the medium-range and ρ=0.44\\rho=0.44 with pp-value <10−6<10^{-6} for the long-range forecasts. Hence, the positive and statistically significant correlation between the diversity of the estimates and the crowd accuracy is more pronounced for the unbiased forecasts than for the economists forecasts.
+
+Figure A2: Scatter plots of the skewness μ3\\mu\_{3} and the scaled collective error γ/G\\gamma/G (upper set of panels) and of μ3\\mu\_{3} and the scaled diversity δ1/2/⟨g⟩u\\delta^{1/2}/\\langle g\\rangle\_{u} (lower set of panels) for short-range (left panels), medium-range (middle panels) and long-range (right panels) unbiased forecasts. The filled symbols and the horizontal and vertical lines indicate the means and the standard deviations.
+
+Figure [A2](https://arxiv.org/html/2008.01485v2#Sx1.F2 "Figure A2 ‣ Appendix A ‣ Wisdom of crowds: much ado about nothing") shows the scatter plots of μ3\\mu\_{3} and γ/G\\gamma/G as well as of μ3\\mu\_{3} and δ1/2/⟨g⟩u\\delta^{1/2}/\\langle g\\rangle\_{u} for the unbiased forecasters. The noteworthy aspect here is the small range of variation of the skewness values as compared to the results of figure [4](https://arxiv.org/html/2008.01485v2#S4.F4 "Figure 4 ‣ IV Results ‣ Wisdom of crowds: much ado about nothing"). Of course, the nonzero values of μ3\\mu\_{3} are due to the small number of estimates NN in each experiment, since the expected skewness of a Gaussian is zero. The Spearman correlation coefficient between μ3\\mu\_{3} and γ/G\\gamma/G is ρ=−0.09\\rho=-0.09 with pp-value =0.20=0.20 for the short-range, ρ=0.06\\rho=0.06 with pp-value =0.35=0.35 for the medium-range and ρ=0.02\\rho=0.02 with pp-value =0.73=0.73 for the long-range forecasts. These coefficients are similar to those of the real experiments and their high pp-values indicate that the skewness of the estimates offers no information on the crowd prediction, regardless of the nature of the forecasters.
+An unexpected result of our analysis of the economists’ forecasts is the negative correlation between the diversity and the skewness of the estimates (see lower set of panels in figure [4](https://arxiv.org/html/2008.01485v2#S4.F4 "Figure 4 ‣ IV Results ‣ Wisdom of crowds: much ado about nothing")), which implies that a large variance is associated with a long left tail of the distribution of estimates. The results of the lower set of panels in figure [A2](https://arxiv.org/html/2008.01485v2#Sx1.F2 "Figure A2 ‣ Appendix A ‣ Wisdom of crowds: much ado about nothing") point to a different conclusion. In fact, the Spearman correlation coefficient between these quantities is ρ=−0.11\\rho=-0.11 with pp-value =0.10=0.10 for the short-range, ρ=0.12\\rho=0.12 with pp-value =0.09=0.09 for the medium-range and ρ=−0.03\\rho=-0.03 with pp-value =0.64=0.64 for the long-range forecasts. Again, the low values and the inconsistency of the signs of these coefficients as well as their high pp-values suggest that the skewness plays no role at all on the outcome of unbiased forecasts.
+
+Figure A3: Histograms of the proportion of experiments for which a fraction ξ\\xi of the individual estimates are more accurate than the collective estimate for short-range (left panel), medium-range (middle panel) and long-range (right panel) unbiased forecasts. The red curves are the cumulative distributions. Figure A4: Histograms of the proportion of experiments for which a fraction ξ\\xi of the individual unbiased estimates are more accurate than the collective estimate. The expert forecasts of the 86508650 experiments of the FRBP database were replaced by virtual unbiased forecasters. The red curve is the cumulative distribution.
+
+Although the previous scatter plots show only mild quantitative differences between the economists and the unbiased forecasters, the advantage conferred to the crowd over its members differs starkly between these two types of forecasters. Figure [A3](https://arxiv.org/html/2008.01485v2#Sx1.F3 "Figure A3 ‣ Appendix A ‣ Wisdom of crowds: much ado about nothing"), which shows the histograms and the cumulative distributions of the number of experiments for which a fraction ξ\\xi of individuals beat the crowd, illustrates this point. In fact, the most probable outcome is that the crowd beats all individuals (ξ=0\\xi=0) in the case of unbiased forecasters, in contrasts to our findings for the human experts (figure [5](https://arxiv.org/html/2008.01485v2#S4.F5 "Figure 5 ‣ IV Results ‣ Wisdom of crowds: much ado about nothing")).
+
+Figure A5: Histograms of the pp-values associated with the collective estimates ⟨g⟩\\langle g\\rangle for the 86508650 experiments of the FRBP database. The null hypothesis is the unbiased estimates assumption, equation ( [A2](https://arxiv.org/html/2008.01485v2#Sx1.E2 "In Appendix A ‣ Wisdom of crowds: much ado about nothing")). The red curve is the cumulative distribution and the horizontal dashed line indicates the value of the cumulative distribution at p=0.05p=0.05.
+
+Figure [A4](https://arxiv.org/html/2008.01485v2#Sx1.F4 "Figure A4 ‣ Appendix A ‣ Wisdom of crowds: much ado about nothing") shows the results for the case that all forecasts of the FRBP database are clumped together and replaced by unbiased forecasts. In this case, the crowd is superior to any individual in 16.3%16.3\\% of the experiments (viz., those for which ξ=0\\xi=0), whereas it is superior to most individuals in 99.8%99.8\\% of the experiments (viz., those for which ξ≤1/2\\xi\\leq 1/2). Therefore, a crowd of unbiased forecasters exhibits all the exalted attributes of the wisdom of crowds, but a crowd of human experts does not. Hence our qualms about the generality and usefulness of that phenomenon.
+
+Although the stark difference between figure [6](https://arxiv.org/html/2008.01485v2#S4.F6 "Figure 6 ‣ IV Results ‣ Wisdom of crowds: much ado about nothing") and figure [A4](https://arxiv.org/html/2008.01485v2#Sx1.F4 "Figure A4 ‣ Appendix A ‣ Wisdom of crowds: much ado about nothing") offers evidence that the forecasts in the FRBP database are biased, it is worthwhile to seek a more quantitative confirmation that those forecasts are in fact biased. This can be easily achieved if one considers the null hypothesis as the unbiased estimates assumption for which the collective prediction ⟨g⟩u\\langle g\\rangle\_{u} is drawn from the Gaussian distribution ( [A2](https://arxiv.org/html/2008.01485v2#Sx1.E2 "In Appendix A ‣ Wisdom of crowds: much ado about nothing")). Hence, the probability that the unbiased estimates assumption produces a collective estimate at least as extreme as the collective estimate ⟨g⟩\\langle g\\rangle actually observed in a particular experiment is simply
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | p=1−erf​(∣<g>−G∣2​δ/N),p=1-\\mbox{erf}\\left(\\frac{\\mid<g>-G\\mid}{\\sqrt{2\\delta/N}}\\right), |  | (A3) |
+
+which is the two-tailed pp-value. Since there is a pp-value for each experiment, in figure [A5](https://arxiv.org/html/2008.01485v2#Sx1.F5 "Figure A5 ‣ Appendix A ‣ Wisdom of crowds: much ado about nothing") we present a histogram of the pp-values associated with the observations ⟨g⟩\\langle g\\rangle for the 86508650 experiments of the FRBP forecast database. The results show that 85%85\\% of the experiments have pp-value less than 0.050.05, which confers statistical significance to the claim that a significant fraction of the forecasts in the FRBP database are biased.
+
+## Appendix B
+
+In this appendix, we analyze briefly four wisdom-of-crowds experiments that, in contrast to the experiments discussed in the main text, counted with the participation of laypeople only. The experiments are the estimates of the number of candies in a jar, the length of a paper strip, the number of pages of a book and the weight of a bag of beans. The first three experiments are discussed at length in Ref. \[ [14](https://arxiv.org/html/2008.01485v2#bib.bib14 "")\]. The data of the four experiments are publicly available in \[ [28](https://arxiv.org/html/2008.01485v2#bib.bib28 "")\]. The forecasters are students who have never trained for those kind of guessing tasks and so, in that sense, they can be considered as laypeople. Their skills, however, may vary considerably across the different tasks. Figure [B1](https://arxiv.org/html/2008.01485v2#Sx2.F1 "Figure B1 ‣ Appendix B ‣ Wisdom of crowds: much ado about nothing") shows the histograms of the relative estimates gi/⟨g⟩g\_{i}/\\langle g\\rangle with i=1,…,Ni=1,\\ldots,N for those experiments. The number of participants NN is different for each experiment, as specified below.
+
+We begin our analysis with the popular wisdom of crowds experiment in which people guess the number of candies in a jar. In this particular experiment, N=105N=105 students were asked to guess the number of candies in a transparent jar that held G=636G=636 candies.
+The resulting distribution of individual estimates is shown in the upper left panel of figure [B1](https://arxiv.org/html/2008.01485v2#Sx2.F1 "Figure B1 ‣ Appendix B ‣ Wisdom of crowds: much ado about nothing").
+The collective estimate ⟨g⟩=531\\langle g\\rangle=531 is better than 70% of the individual estimates. The gray region in the histogram indicates the individual estimates that are closer to the true value GG than the collective estimate ⟨g⟩\\langle g\\rangle. The diversity or variance of the estimates is δ=48736\\delta=48736. The scaled quantities introduced in the main text are δ1/2/⟨g⟩=0.42\\delta^{1/2}/\\langle g\\rangle=0.42 and γ1/2/G=0.16\\gamma^{1/2}/G=0.16.
+Using the formulation presented in [Appendix A](https://arxiv.org/html/2008.01485v2#Sx1 "Appendix A ‣ Wisdom of crowds: much ado about nothing"), we find that the probability pp \[see equation ( [A3](https://arxiv.org/html/2008.01485v2#Sx1.E3 "In Appendix A ‣ Wisdom of crowds: much ado about nothing"))\] that a group of N=105N=105 unbiased estimators produces a collective estimate at least as extreme as ⟨g⟩\\langle g\\rangle is less than 10−610^{-6}. Hence, the participants of this experiment are definitely not unbiased estimators.
+
+In the second experiment we discuss here, N=139N=139 students were asked to size up a paper strip of length G=22.4​cmG=22.4~\\mbox{cm}. In contrast to the candies-in-a-jar experiment, we do not expect too far off estimates of the strip length since its true value GG is very close to the span unit (1​span=22.86​cm1~\\mbox{span}=22.86~\\mbox{cm}), which is a natural length standard the students were probably aware of. The distribution of individual estimates is shown in the upper right panel of figure [B1](https://arxiv.org/html/2008.01485v2#Sx2.F1 "Figure B1 ‣ Appendix B ‣ Wisdom of crowds: much ado about nothing").
+The collective estimate is ⟨g⟩=22.0​cm\\langle g\\rangle=22.0~\\mbox{cm} and the variance of the estimates is δ=12.42​cm2\\delta=12.42~\\mbox{cm}^{2}.
+The scaled diversity is δ1/2/⟨g⟩=0.16\\delta^{1/2}/\\langle g\\rangle=0.16 and the scaled collective error is γ1/2/G=0.018\\gamma^{1/2}/G=0.018.
+We note that the collective estimate is better than 85% of the individual estimates and corresponds to a percentage error of only 1.8%1.8\\%.
+In addition, the probability pp that a group of N=139N=139 unbiased estimators produces a collective estimate at least as extreme as ⟨g⟩\\langle g\\rangle is 0.140.14, so we cannot reject the null hypothesis that the forecasts are unbiased. This result supports our point that unbiased forecasters are in fact very skillful estimators.
+
+Figure B1: Histograms of the relative estimates gi/⟨g⟩g\_{i}/\\langle g\\rangle for (a) the number of candies in a jar, (b) the length of a paper strip, (c) the weight of a bag of beans and (d) number of pages of a book. The number of participants NN is different for each experiment. The vertical red lines indicate the ratio between the true value and the crowd estimate, i.e., G/⟨g⟩G/\\langle g\\rangle, whereas the vertical green lines at
+gi/⟨g⟩=1g\_{i}/\\langle g\\rangle=1 indicate the scaled crowd estimate. The gray regions highlight the individual estimates that are better than the crowd’s.
+
+In the third experiment, N=97N=97 students were asked to estimate the weight of a transparent plastic bag containing G=1.75​kgG=1.75~\\mbox{kg} of beans. The distribution of individual estimates is shown in the lower left panel of figure [B1](https://arxiv.org/html/2008.01485v2#Sx2.F1 "Figure B1 ‣ Appendix B ‣ Wisdom of crowds: much ado about nothing").
+The collective estimate is ⟨g⟩=1.91​kg\\langle g\\rangle=1.91~\\mbox{kg} and the variance of the estimates is δ=0.58​kg2\\delta=0.58~\\mbox{kg}^{2}. Hence,
+the scaled diversity is δ1/2/⟨g⟩=0.40\\delta^{1/2}/\\langle g\\rangle=0.40 and the scaled collective error is γ1/2/G=0.091\\gamma^{1/2}/G=0.091.
+The collective estimate is better than 84% of the individual estimates.
+The probability pp that a group of N=97N=97 unbiased estimators produces a collective estimate at least as extreme as ⟨g⟩\\langle g\\rangle is 0.030.03.
+
+Finally, in the fourth experiment, N=140N=140 students were asked to estimate
+the number of pages of a book of G=784G=784 pages. The distribution of individual estimates is shown in the lower right panel of figure [B1](https://arxiv.org/html/2008.01485v2#Sx2.F1 "Figure B1 ‣ Appendix B ‣ Wisdom of crowds: much ado about nothing").
+The collective estimate is ⟨g⟩=560\\langle g\\rangle=560 and the variance of the estimates is δ=40332\\delta=40332.
+The scaled diversity is δ1/2/⟨g⟩=0.36\\delta^{1/2}/\\langle g\\rangle=0.36 and the scaled collective error is γ1/2/G=0.29\\gamma^{1/2}/G=0.29, which corresponds to a percentage error of 29%29\\%.
+The collective estimate is better than 62% of the individual estimates.
+The probability pp that a group of N=140N=140 unbiased estimators produces a collective estimate at least as extreme as ⟨g⟩\\langle g\\rangle is less than 10−610^{-6}. Surprisingly, the students turned out to be very bad estimators of the number of pages in a book, perhaps because physical books are no longer part of their lives.
+
+Although in these four experiments the crowd estimate turned out to be better than the estimates of the majority of the participants, in all them there was a fair chance that a randomly chosen participant beat the crowd.
+For example, in the paper-strip experiment, for which the collective estimate was highly accurate, the crowd was outperformed by 15%15\\% of the individual estimates whereas in the pages-of-a-book experiment it was outperformed by 38%38\\% of the participants. We note that the probability of choosing four experiments at random in the FRBP database such that the crowd beats the majority of the forecasters is (0.7)4≈0.24(0.7)^{4}\\approx 0.24, so the results of this appendix do not oppose those of the main text.
+
+Picking the candies-in-a-jar and the paper-strip experiments as representative of tasks where, by design, the participants have low and high skills, respectively, we reach the unsurprising conclusion that the less skilled the participants are in a given task, the greater the percentage collective error and the variance of their estimates. This accords with our findings in the main text where the difficulty of the task is associated with the range of the forecasts. In addition, the unbiased estimates assumption (i.e., the null hypothesis) cannot be rejected in the case the task is such that the participants are likely to deliver accurate estimates, as in paper-strip experiment. However, it can safely be rejected in the case that the participants deliver far off estimates as in the candies-in-a-jar experiment. Again, these findings agree with the view of unbiased forecasters as ultimate experts.
+
+## References
+
+- \[1\]
+Surowiecki J 2004
+The Wisdom of Crowds: Why the Many Are Smarter than the Few and How Collective Wisdom Shapes Business, Economies, Societies, and Nations
+(New York: Doubleday and Company)
+
+- \[2\]
+Galton F 1907
+Vox Populi Nature75 450
+
+- \[3\]
+Wallis K F 2014
+Revisiting Francis Galton’s Forecasting Competition
+Stat. Sci.29 420
+
+- \[4\]
+Bates J M and Granger C W J 1969
+The combination of forecasts
+Oper. Res. Q.20 451
+
+- \[5\]
+Armstrong J S 2001
+Combining Forecasts in Principles of forecasting: a handbook for researchers and practitioners, edited by
+Armstrong J S
+(Dordrecht: Kluwer Academic Publishing) pp. 417-439
+
+- \[6\]
+Sunstein C 2006
+Infotopia: How Many Minds Produce Knowledge
+(New York: Oxford University Press)
+
+- \[7\]
+Page S E 2007
+The Difference: How the Power of Diversity Creates Better Groups, Firms, Schools, and Societies
+(Princeton, NJ: Princeton University Press)
+
+- \[8\]
+Nash U W 2014
+The Curious Anomaly of Skewed Judgment Distributions and Systematic Error in the Wisdom of Crowds
+PLoS ONE9 e112386
+
+- \[9\]
+https://www.philadelphiafed.org/research-and-data/real-time-center/survey-of-professional-forecasters
+
+- \[10\]
+Fontanari J F 2016
+When more of the same is better
+EPL113 28009
+
+- \[11\]
+Tan P-N, Steinbach M and Kumar V 2014
+Introduction to Data Mining
+(Essex: Pearson Education Limited)
+
+- \[12\]
+Price G R 1970
+Selection and Covariance
+Nature227 520
+
+- \[13\]
+Frank S A 2012
+Natural selection. IV. The Price equation
+J. Evol. Biol.25 1002
+
+- \[14\]
+Nobre D A and Fontanari J F 2020
+Prediction diversity and selective attention in the wisdom of crowds
+arXiv:2001.10039v2
+- \[15\]
+Stigler S M 1989
+Francis Galton’s account of the invention of correlation
+Stat. Sci.4 73
+
+- \[16\]
+Vul E and Pashler H 2008
+Measuring the crowd within: Probabilistic representations within individuals
+Psychol. Sci.19 645
+
+- \[17\]
+Mauboussin M J 2012
+The Success Equation: Untangling Skill and Luck in Business, Sports, and Investing
+(Cambridge, MA: Harvard Business Review Press)
+
+- \[18\]
+Huberman B A 1990
+The performance of cooperative processes
+Physica D42 38
+
+- \[19\]
+Clearwater S H, Huberman B A and Hogg T 1991
+Cooperative Solution of Constraint Satisfaction Problems
+Science254 181
+
+- \[20\]
+Bloom H 2001
+Global Brain: The Evolution of Mass Mind from the Big Bang to the 21st Century
+(New York, Wiley)
+
+- \[21\]
+Reia S M, Amado A C and Fontanari J F 2019
+Agent-based models of collective intelligence
+Phys. Life Rev.31 320
+
+- \[22\]
+Reia S M, Aquino L F and Fontanari J F 2020
+The surprising little effectiveness of cooperative algorithms in parallel problem solving
+Eur. Phys. J. B93 140
+
+- \[23\]
+MacKay C 1841
+Extraordinary Delusions and the Madness of Crowds
+( London: Richard Bentley)
+
+- \[24\]
+King A J, Cheng L, Starke S D and Myatt J P 2011
+Is the true ‘wisdom of the crowd’ to copy successful individuals? Biol. Lett.8 197
+
+- \[25\]
+Lorenz J, Rauhut H, Schweitzer F and Helbing D 2011
+How social influence can undermine the wisdom of crowd effect
+Proc. Natl Acad. Sci. USA108 9020
+
+- \[26\]
+Prelec D, Seung H S and McCoy J 2017
+A solution to the single-question crowd wisdom problem
+Nature541 532
+
+- \[27\]
+Perry-Coste FH 1907
+The ballot-box
+Nature75 509
+
+- \[28\]
+https://github.com/JoseFontanari/Wisdom\_of\_Crowds

@@ -1,0 +1,938 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/1iQLKcYuvgHaz5UatTkT0qTl8VY</id>
+  <title>arXiv Query: search_query=&amp;id_list=2406.12252,2404.04213,2402.07004,2309.05682,2305.18477,2303.16741,2303.13323,2212.12015,2210.06327,2110.04321,2106.00173,2105.01446,2104.05816,2103.09627,2102.07545,2101.05388,2012.04380,2010.15891,2010.12508,2006.04551,2004.08428,2004.06172,2004.04147,2003.12198,1910.12337,1812.05804,1810.12850,1809.02735,1807.09236,1807.07536,1802.00998,1710.06056,1706.02884,1704.04833,1608.03793,1106.4300,1105.0755,1103.1530,1102.5549,2505.09024&amp;start=0&amp;max_results=40</title>
+  <updated>2026-09-17T18:37:16Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=&amp;start=0&amp;max_results=40&amp;id_list=2406.12252,2404.04213,2402.07004,2309.05682,2305.18477,2303.16741,2303.13323,2212.12015,2210.06327,2110.04321,2106.00173,2105.01446,2104.05816,2103.09627,2102.07545,2101.05388,2012.04380,2010.15891,2010.12508,2006.04551,2004.08428,2004.06172,2004.04147,2003.12198,1910.12337,1812.05804,1810.12850,1809.02735,1807.09236,1807.07536,1802.00998,1710.06056,1706.02884,1704.04833,1608.03793,1106.4300,1105.0755,1103.1530,1102.5549,2505.09024" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>40</opensearch:itemsPerPage>
+  <opensearch:totalResults>40</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/1807.09236v1</id>
+    <title>Improving pairwise comparison models using Empirical Bayes shrinkage</title>
+    <updated>2018-07-24T17:12:04Z</updated>
+    <link href="https://arxiv.org/abs/1807.09236v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1807.09236v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Comparison data arises in many important contexts, e.g. shopping, web clicks, or sports competitions. Typically we are given a dataset of comparisons and wish to train a model to make predictions about the outcome of unseen comparisons. In many cases available datasets have relatively few comparisons (e.g. there are only so many NFL games per year) or efficiency is important (e.g. we want to quickly estimate the relative appeal of a product). In such settings it is well known that shrinkage estimators outperform maximum likelihood estimators. A complicating matter is that standard comparison models such as the conditional multinomial logit model are only models of conditional outcomes (who wins) and not of comparisons themselves (who competes). As such, different models of the comparison process lead to different shrinkage estimators. In this work we derive a collection of methods for estimating the pairwise uncertainty of pairwise predictions based on different assumptions about the comparison process. These uncertainty estimates allow us both to examine model uncertainty as well as perform Empirical Bayes shrinkage estimation of the model parameters. We demonstrate that our shrunk estimators outperform standard maximum likelihood methods on real comparison data from online comparison surveys as well as from several sports contexts.</summary>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-07-24T17:12:04Z</published>
+    <arxiv:comment>9 pages</arxiv:comment>
+    <arxiv:primary_category term="stat.ML"/>
+    <author>
+      <name>Stephen Ragain</name>
+    </author>
+    <author>
+      <name>Alexander Peysakhovich</name>
+    </author>
+    <author>
+      <name>Johan Ugander</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2402.07004v1</id>
+    <title>Min-Max transformation for the measurement of sports performance through PIR</title>
+    <updated>2024-02-10T17:54:01Z</updated>
+    <link href="https://arxiv.org/abs/2402.07004v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2402.07004v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The objective of this work is to analyze the usefulness to transform the information to measure sports performance. This analysis is carried out within the field of basketball due to the existing tradition in this sport in data collection, although it is easily adaptable to any other sport. As a result, a modification of the Performance Index Rating (PIR) is proposed to measure sports performance. The results obtained are illustrated from the statistics of Larry Bird, Earvin Johnson, Michael Jordan and Kobe Bryant throughout their careers and can serve to optimize the process of player renewal/firing/hiring in the design of a roster or to aid decision-making in awarding individual awards as best player of a season.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-02-10T17:54:01Z</published>
+    <arxiv:comment>16 pages, working paper (in spanish)</arxiv:comment>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Román Salmerón</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2004.08428v1</id>
+    <title>Renormalizing individual performance metrics for cultural heritage management of sports records</title>
+    <updated>2020-04-17T19:34:34Z</updated>
+    <link href="https://arxiv.org/abs/2004.08428v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2004.08428v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Individual performance metrics are commonly used to compare players from different eras. However, such cross-era comparison is often biased due to significant changes in success factors underlying player achievement rates (e.g. performance enhancing drugs and modern training regimens). Such historical comparison is more than fodder for casual discussion among sports fans, as it is also an issue of critical importance to the multi-billion dollar professional sport industry and the institutions (e.g. Hall of Fame) charged with preserving sports history and the legacy of outstanding players and achievements. To address this cultural heritage management issue, we report an objective statistical method for renormalizing career achievement metrics, one that is particularly tailored for common seasonal performance metrics, which are often aggregated into summary career metrics -- despite the fact that many player careers span different eras. Remarkably, we find that the method applied to comprehensive Major League Baseball and National Basketball Association player data preserves the overall functional form of the distribution of career achievement, both at the season and career level. As such, subsequent re-ranking of the top-50 all-time records in MLB and the NBA using renormalized metrics indicates reordering at the local rank level, as opposed to bulk reordering by era. This local order refinement signals time-independent mechanisms underlying annual and career achievement in professional sports, meaning that appropriately renormalized achievement metrics can be used to compare players from eras with different season lengths, team strategies, rules -- and possibly even different sports.</summary>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.pop-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-04-17T19:34:34Z</published>
+    <arxiv:comment>18 pages: 4 figures and 7 tables</arxiv:comment>
+    <arxiv:primary_category term="physics.soc-ph"/>
+    <arxiv:journal_ref>Chaos, Solitons &amp; Fractals (2020)</arxiv:journal_ref>
+    <author>
+      <name>Alexander M. Petersen</name>
+    </author>
+    <author>
+      <name>Orion Penner</name>
+    </author>
+    <arxiv:doi>10.1016/j.chaos.2020.109821</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.chaos.2020.109821" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2102.07545v2</id>
+    <title>Data-driven Analysis for Understanding Team Sports Behaviors</title>
+    <updated>2021-02-28T07:27:48Z</updated>
+    <link href="https://arxiv.org/abs/2102.07545v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2102.07545v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Understanding the principles of real-world biological multi-agent behaviors is a current challenge in various scientific and engineering fields. The rules regarding the real-world biological multi-agent behaviors such as team sports are often largely unknown due to their inherently higher-order interactions, cognition, and body dynamics. Estimation of the rules from data, i.e., data-driven approaches such as machine learning, provides an effective way for the analysis of such behaviors. Although most data-driven models have non-linear structures and high prediction performances, it is sometimes hard to interpret them. This survey focuses on data-driven analysis for quantitative understanding of invasion team sports behaviors such as basketball and football, and introduces two main approaches for understanding such multi-agent behaviors: (1) extracting easily interpretable features or rules from data and (2) generating and controlling behaviors in visually-understandable ways. The first approach involves the visualization of learned representations and the extraction of mathematical structures behind the behaviors. The second approach can be used to test hypotheses by simulating and controlling future and counterfactual behaviors. Lastly, the potential practical applications of extracted rules, features, and generated behaviors are discussed. These approaches can contribute to a better understanding of multi-agent behaviors in the real world.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-02-15T13:31:45Z</published>
+    <arxiv:comment>9 pages, 2 figures. This is the first draft and the final version will be published in the Journal of Robotics and Mechatronics</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <arxiv:journal_ref>J. Robot. Mechatron., Vol.33, No.3, pp. 505-514, 2021</arxiv:journal_ref>
+    <author>
+      <name>Keisuke Fujii</name>
+    </author>
+    <arxiv:doi>10.20965/jrm.2021.p0505</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.20965/jrm.2021.p0505" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1105.0755v1</id>
+    <title>Using Logistic Regression to Analyze the Balance of a Game: The Case of StarCraft II</title>
+    <updated>2011-05-04T08:15:20Z</updated>
+    <link href="https://arxiv.org/abs/1105.0755v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1105.0755v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Recently, the market size of online game has been increasing astonishingly fast, and so does the importance of good game design. In online games, usually a human user competes with others, so the fairness of the game system to all users is of great importance not to lose interests of users on the game. Furthermore, the emergence and success of electronic sports (e-sports) and professional gaming which specially talented gamers compete with others draws more attention on whether they are competing in the fair environment. No matter how fierce the debates are in the game-design community, it is rarely the case that one employs statistical analysis to answer this question seriously. But considering the fact that we can easily gather large amount of user behavior data on games, it seems potentially beneficial to make use of this data to aid making decisions on design problems of games. Actually, modern games do not aim to perfectly design the game at once: rather, they first release the game, and then monitor users' behavior to better balance the game. In such a scenario, statistical analysis can be particularly helpful. Specifically, we chose to analyze the balance of StarCraft II, which is a very successful recently-released real-time strategy (RTS) game. It is a central icon in current e-Sports and professional gaming community: from April 1st to 15th, there were 18 tournaments of StarCraft II. However, there is endless debate on whether the winner of the tournament is actually superior to others, or it is largely due to certain design flaws of the game. In this paper, we aim to answer such a question using traditional statistical tool, logistic regression.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2011-05-04T08:15:20Z</published>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Hyokun Yun</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1802.00998v2</id>
+    <title>nflWAR: A Reproducible Method for Offensive Player Evaluation in Football</title>
+    <updated>2018-07-12T03:35:13Z</updated>
+    <link href="https://arxiv.org/abs/1802.00998v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1802.00998v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Unlike other major professional sports, American football lacks comprehensive statistical ratings for player evaluation that are both reproducible and easily interpretable in terms of game outcomes. Existing methods for player evaluation in football depend heavily on proprietary data, are not reproducible, and lag behind those of other major sports. We present four contributions to the study of football statistics in order to address these issues. First, we develop the R package nflscrapR to provide easy access to publicly available play-by-play data from the National Football League (NFL) dating back to 2009. Second, we introduce a novel multinomial logistic regression approach for estimating the expected points for each play. Third, we use the expected points as input into a generalized additive model for estimating the win probability for each play. Fourth, we introduce our nflWAR framework, using multilevel models to isolate the contributions of individual offensive skill players, and providing estimates for their individual wins above replacement (WAR). We estimate the uncertainty in each player's WAR through a resampling approach specifically designed for football, and we present these results for the 2017 NFL season. We discuss how our reproducible WAR framework, built entirely on publicly available data, can be easily extended to estimate WAR for players at any position, provided that researchers have access to data specifying which players are on the field during each play. Finally, we discuss the potential implications of this work for NFL teams.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-02-03T17:06:08Z</published>
+    <arxiv:comment>43 pages, 21 figures, presented at NESSIS 2017</arxiv:comment>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Ronald Yurko</name>
+    </author>
+    <author>
+      <name>Samuel Ventura</name>
+    </author>
+    <author>
+      <name>Maksim Horowitz</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2505.09024v1</id>
+    <title>Automated Meta Prompt Engineering for Alignment with the Theory of Mind</title>
+    <updated>2025-05-13T23:42:36Z</updated>
+    <link href="https://arxiv.org/abs/2505.09024v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2505.09024v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We introduce a method of meta-prompting that jointly produces fluent text for complex tasks while optimizing the similarity of neural states between a human's mental expectation and a Large Language Model's (LLM) neural processing. A technique of agentic reinforcement learning is applied, in which an LLM as a Judge (LLMaaJ) teaches another LLM, through in-context learning, how to produce content by interpreting the intended and unintended generated text traits. To measure human mental beliefs around content production, users modify long form AI-generated text articles before publication at the US Open 2024 tennis Grand Slam. Now, an LLMaaJ can solve the Theory of Mind (ToM) alignment problem by anticipating and including human edits within the creation of text from an LLM. Throughout experimentation and by interpreting the results of a live production system, the expectations of human content reviewers had 100% of alignment with AI 53.8% of the time with an average iteration count of 4.38. The geometric interpretation of content traits such as factualness, novelty, repetitiveness, and relevancy over a Hilbert vector space combines spatial volume (all trait importance) with vertices alignment (individual trait relevance) enabled the LLMaaJ to optimize on Human ToM. This resulted in an increase in content quality by extending the coverage of tennis action. Our work that was deployed at the US Open 2024 has been used across other live events within sports and entertainment.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-05-13T23:42:36Z</published>
+    <arxiv:comment>9 pages, 6 figures, 3 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Aaron Baughman</name>
+    </author>
+    <author>
+      <name>Rahul Agarwal</name>
+    </author>
+    <author>
+      <name>Eduardo Morales</name>
+    </author>
+    <author>
+      <name>Gozde Akay</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2012.04380v1</id>
+    <title>Combining Machine Learning and Human Experts to Predict Match Outcomes in Football: A Baseline Model</title>
+    <updated>2020-12-08T11:52:14Z</updated>
+    <link href="https://arxiv.org/abs/2012.04380v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2012.04380v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this paper, we present a new application-focused benchmark dataset and results from a set of baseline Natural Language Processing and Machine Learning models for prediction of match outcomes for games of football (soccer). By doing so we give a baseline for the prediction accuracy that can be achieved exploiting both statistical match data and contextual articles from human sports journalists. Our dataset is focuses on a representative time-period over 6 seasons of the English Premier League, and includes newspaper match previews from The Guardian. The models presented in this paper achieve an accuracy of 63.18% showing a 6.9% boost on the traditional statistical methods.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-12-08T11:52:14Z</published>
+    <arxiv:comment>Pre-print. Accepted at: The Thirty-Third Annual Conference on Innovative Applications of Artificial Intelligence (IAAI-21). 5 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Ryan Beal</name>
+    </author>
+    <author>
+      <name>Stuart E. Middleton</name>
+    </author>
+    <author>
+      <name>Timothy J. Norman</name>
+    </author>
+    <author>
+      <name>Sarvapali D. Ramchurn</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2006.04551v4</id>
+    <title>Cracking the Black Box: Distilling Deep Sports Analytics</title>
+    <updated>2020-06-29T21:33:50Z</updated>
+    <link href="https://arxiv.org/abs/2006.04551v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2006.04551v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper addresses the trade-off between Accuracy and Transparency for deep learning applied to sports analytics. Neural nets achieve great predictive accuracy through deep learning, and are popular in sports analytics. But it is hard to interpret a neural net model and harder still to extract actionable insights from the knowledge implicit in it. Therefore, we built a simple and transparent model that mimics the output of the original deep learning model and represents the learned knowledge in an explicit interpretable way. Our mimic model is a linear model tree, which combines a collection of linear models with a regression-tree structure. The tree version of a neural network achieves high fidelity, explains itself, and produces insights for expert stakeholders such as athletes and coaches. We propose and compare several scalable model tree learning heuristics to address the computational challenge from datasets with millions of data points.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-06-04T01:49:36Z</published>
+    <arxiv:comment>Accepted by the 26th ACM SIGKDD Conference on Knowledge Discovery and Data Mining (KDD 2020); Added the tenth feature to Table 3 for soccer;</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Xiangyu Sun</name>
+    </author>
+    <author>
+      <name>Jack Davis</name>
+    </author>
+    <author>
+      <name>Oliver Schulte</name>
+    </author>
+    <author>
+      <name>Guiliang Liu</name>
+    </author>
+    <arxiv:doi>10.1145/3394486.3403367</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3394486.3403367" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2101.05388v1</id>
+    <title>Evaluating Soccer Player: from Live Camera to Deep Reinforcement Learning</title>
+    <updated>2021-01-13T23:26:17Z</updated>
+    <link href="https://arxiv.org/abs/2101.05388v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2101.05388v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Scientifically evaluating soccer players represents a challenging Machine Learning problem. Unfortunately, most existing answers have very opaque algorithm training procedures; relevant data are scarcely accessible and almost impossible to generate. In this paper, we will introduce a two-part solution: an open-source Player Tracking model and a new approach to evaluate these players based solely on Deep Reinforcement Learning, without human data training nor guidance. Our tracking model was trained in a supervised fashion on datasets we will also release, and our Evaluation Model relies only on simulations of virtual soccer games. Combining those two architectures allows one to evaluate Soccer Players directly from a live camera without large datasets constraints. We term our new approach Expected Discounted Goal (EDG), as it represents the number of goals a team can score or concede from a particular state. This approach leads to more meaningful results than the existing ones that are based on real-world data, and could easily be extended to other sports.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.GT" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-01-13T23:26:17Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Paul Garnier</name>
+    </author>
+    <author>
+      <name>Théophane Gregoir</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2309.05682v1</id>
+    <title>A compendium of data sources for data science, machine learning, and artificial intelligence</title>
+    <updated>2023-09-10T19:15:22Z</updated>
+    <link href="https://arxiv.org/abs/2309.05682v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2309.05682v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Recent advances in data science, machine learning, and artificial intelligence, such as the emergence of large language models, are leading to an increasing demand for data that can be processed by such models. While data sources are application-specific, and it is impossible to produce an exhaustive list of such data sources, it seems that a comprehensive, rather than complete, list would still benefit data scientists and machine learning experts of all levels of seniority. The goal of this publication is to provide just such an (inevitably incomplete) list -- or compendium -- of data sources across multiple areas of applications, including finance and economics, legal (laws and regulations), life sciences (medicine and drug discovery), news sentiment and social media, retail and ecommerce, satellite imagery, and shipping and logistics, and sports.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DB" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-bio.QM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-fin.CP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-09-10T19:15:22Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Paul Bilokon</name>
+    </author>
+    <author>
+      <name>Oleksandr Bilokon</name>
+    </author>
+    <author>
+      <name>Saeed Amen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2404.04213v1</id>
+    <title>Modelling handball outcomes using univariate and bivariate approaches</title>
+    <updated>2024-04-05T16:43:41Z</updated>
+    <link href="https://arxiv.org/abs/2404.04213v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2404.04213v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Handball has received growing interest during the last years, including academic research for many different aspects of the sport. On the other hand modelling the outcome of the game has attracted less interest mainly because of the additional challenges that occur. Data analysis has revealed that the number of goals scored by each team are under-dispersed relative to a Poisson distribution and hence new models are needed for this purpose. Here we propose to circumvent the problem by modelling the score difference. This removes the need for special models since typical models for integer data like the Skellam distribution can provide sufficient fit and thus reveal some of the characteristics of the game. In the present paper we propose some models starting from a Skellam regression model and also considering zero inflated versions as well as other discrete distributions in $\mathbb Z$. Furthermore, we develop some bivariate models using copulas to model the two halves of the game and thus providing insights on the game. Data from German Bundesliga are used to show the potential of the new models.</summary>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-04-05T16:43:41Z</published>
+    <arxiv:primary_category term="stat.ME"/>
+    <author>
+      <name>Dimitris Karlis</name>
+    </author>
+    <author>
+      <name>Rouven Michels</name>
+    </author>
+    <author>
+      <name>Marius Otting</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1106.4300v1</id>
+    <title>Human as Real-Time Sensors of Social and Physical Events: A Case Study of Twitter and Sports Games</title>
+    <updated>2011-06-21T19:35:48Z</updated>
+    <link href="https://arxiv.org/abs/1106.4300v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1106.4300v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this work, we study how Twitter can be used as a sensor to detect frequent and diverse social and physical events in real-time. We devise efficient data collection and event recognition solutions that work despite various limits on free access to Twitter data. We describe a web service implementation of our solution and report our experience with the 2010-2011 US National Football League (NFL) games. The service was able to recognize NFL game events within 40 seconds and with accuracy up to 90%. This capability will be very useful for not only real-time electronic program guide for live broadcast programs but also refined auction of advertisement slots. More importantly, it demonstrates for the first time the feasibility of using Twitter for real-time social and physical event detection for ubiquitous computing.</summary>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2011-06-21T19:35:48Z</published>
+    <arxiv:primary_category term="cs.SI"/>
+    <author>
+      <name>Siqi Zhao</name>
+    </author>
+    <author>
+      <name>Lin Zhong</name>
+    </author>
+    <author>
+      <name>Jehan Wickramasuriya</name>
+    </author>
+    <author>
+      <name>Venu Vasudevan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1102.5549v4</id>
+    <title>Instant Replay: Investigating statistical Analysis in Sports</title>
+    <updated>2011-10-11T04:20:03Z</updated>
+    <link href="https://arxiv.org/abs/1102.5549v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1102.5549v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Technology has had an unquestionable impact on the way people watch sports. Along with this technological evolution has come a higher standard to ensure a good viewing experience for the casual sports fan. It can be argued that the pervasion of statistical analysis in sports serves to satiate the fan's desire for detailed sports statistics. The goal of statistical analysis in sports is a simple one: to eliminate subjective analysis. In this paper, we review previous work that attempts to analyze various aspects in sports by using ideas from Markov Chains, Bayesian Inference and Markov Chain Monte Carlo (MCMC) methods. The unifying goal of these works is to achieve an accurate representation of the player's ability, the sport, or the environmental effects on the player's performance. With the prevalence of cheap computation, it is possible that using techniques in Artificial Intelligence could improve the result of statistical analysis in sport. This is best illustrated when evaluating football using Neuro Dynamic Programming, a Control Theory paradigm heavily based on theory in Stochastic processes. The results from this method suggest that statistical analysis in sports may benefit from using ideas from the area of Control Theory or Machine Learning</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.data-an" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2011-02-27T21:16:56Z</published>
+    <arxiv:comment>13 pages</arxiv:comment>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Gagan Sidhu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2105.01446v1</id>
+    <title>Home advantage and crowd attendance: Evidence from rugby during the Covid 19 pandemic</title>
+    <updated>2021-05-04T12:14:20Z</updated>
+    <link href="https://arxiv.org/abs/2105.01446v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2105.01446v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The COVID-19 pandemic forced almost all professional and amateur sports to be played without attending crowds. Thus, it induced a large-scale natural experiment on the impact of social pressure on decision making and behavior in sports fields. Using a data set of 1027 rugby union matches from 11 tournaments in 10 countries, we find that home teams have won less matches and their points difference decreased during the pandemics, shedding light on the impact of crowd attendance on the {\em home advantage} of sports teams.</summary>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-05-04T12:14:20Z</published>
+    <arxiv:primary_category term="econ.GN"/>
+    <author>
+      <name>Federico Fioravanti</name>
+    </author>
+    <author>
+      <name>Fernando Delbianco</name>
+    </author>
+    <author>
+      <name>Fernando Tohmé</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2010.15891v1</id>
+    <title>Multi-agent Trajectory Prediction with Fuzzy Query Attention</title>
+    <updated>2020-10-29T19:12:12Z</updated>
+    <link href="https://arxiv.org/abs/2010.15891v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2010.15891v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Trajectory prediction for scenes with multiple agents and entities is a challenging problem in numerous domains such as traffic prediction, pedestrian tracking and path planning. We present a general architecture to address this challenge which models the crucial inductive biases of motion, namely, inertia, relative motion, intents and interactions. Specifically, we propose a relational model to flexibly model interactions between agents in diverse environments. Since it is well-known that human decision making is fuzzy by nature, at the core of our model lies a novel attention mechanism which models interactions by making continuous-valued (fuzzy) decisions and learning the corresponding responses. Our architecture demonstrates significant performance gains over existing state-of-the-art predictive models in diverse domains such as human crowd trajectories, US freeway traffic, NBA sports data and physics datasets. We also present ablations and augmentations to understand the decision-making process and the source of gains in our model.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-10-29T19:12:12Z</published>
+    <arxiv:comment>NeurIPS 2020 Camera-ready version. Code: https://github.com/nitinkamra1992/FQA</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Nitin Kamra</name>
+    </author>
+    <author>
+      <name>Hao Zhu</name>
+    </author>
+    <author>
+      <name>Dweep Trivedi</name>
+    </author>
+    <author>
+      <name>Ming Zhang</name>
+    </author>
+    <author>
+      <name>Yan Liu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2003.12198v1</id>
+    <title>Sorting Big Data by Revealed Preference with Application to College Ranking</title>
+    <updated>2020-03-27T01:11:47Z</updated>
+    <link href="https://arxiv.org/abs/2003.12198v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2003.12198v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>When ranking big data observations such as colleges in the United States, diverse consumers reveal heterogeneous preferences. The objective of this paper is to sort out a linear ordering for these observations and to recommend strategies to improve their relative positions in the ranking. A properly sorted solution could help consumers make the right choices, and governments make wise policy decisions. Previous researchers have applied exogenous weighting or multivariate regression approaches to sort big data objects, ignoring their variety and variability. By recognizing the diversity and heterogeneity among both the observations and the consumers, we instead apply endogenous weighting to these contradictory revealed preferences. The outcome is a consistent steady-state solution to the counterbalance equilibrium within these contradictions. The solution takes into consideration the spillover effects of multiple-step interactions among the observations. When information from data is efficiently revealed in preferences, the revealed preferences greatly reduce the volume of the required data in the sorting process. The employed approach can be applied in many other areas, such as sports team ranking, academic journal ranking, voting, and real effective exchange rates.</summary>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-03-27T01:11:47Z</published>
+    <arxiv:comment>43 pages, 1 figure, 5 theorems, and 1 lemma</arxiv:comment>
+    <arxiv:primary_category term="stat.ML"/>
+    <arxiv:journal_ref>Journal of Big Data, 2020</arxiv:journal_ref>
+    <author>
+      <name>Xingwei Hu</name>
+    </author>
+    <arxiv:doi>10.1186/s40537-020-00300-1</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1186/s40537-020-00300-1" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2004.04147v2</id>
+    <title>Slicing and dicing soccer: automatic detection of complex events from spatio-temporal data</title>
+    <updated>2020-04-10T07:30:55Z</updated>
+    <link href="https://arxiv.org/abs/2004.04147v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2004.04147v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The automatic detection of events in sport videos has im-portant applications for data analytics, as well as for broadcasting andmedia companies. This paper presents a comprehensive approach for de-tecting a wide range of complex events in soccer videos starting frompositional data. The event detector is designed as a two-tier system thatdetectsatomicandcomplex events. Atomic events are detected basedon temporal and logical combinations of the detected objects, their rel-ative distances, as well as spatio-temporal features such as velocity andacceleration. Complex events are defined as temporal and logical com-binations of atomic and complex events, and are expressed by meansof a declarative Interval Temporal Logic (ITL). The effectiveness of theproposed approach is demonstrated over 16 different events, includingcomplex situations such as tackles and filtering passes. By formalizingevents based on principled ITL, it is possible to easily perform reason-ing tasks, such as understanding which passes or crosses result in a goalbeing scored. To counterbalance the lack of suitable, annotated publicdatasets, we built on an open source soccer simulation engine to re-lease the synthetic SoccER (Soccer Event Recognition) dataset, whichincludes complete positional data and annotations for more than 1.6 mil-lion atomic events and 9,000 complex events. The dataset and code areavailable at https://gitlab.com/grains2/slicing-and-dicing-soccer</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-04-08T17:57:50Z</published>
+    <arxiv:comment>accepted at 17th International Conference on Image Analysis and Recognition ICIAR 2020</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Lia Morra</name>
+    </author>
+    <author>
+      <name>Francesco Manigrasso</name>
+    </author>
+    <author>
+      <name>Giuseppe Canto</name>
+    </author>
+    <author>
+      <name>Claudio Gianfrate</name>
+    </author>
+    <author>
+      <name>Enrico Guarino</name>
+    </author>
+    <author>
+      <name>Fabrizio Lamberti</name>
+    </author>
+    <arxiv:doi>10.1007/978-3-030-50347-5_11</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/978-3-030-50347-5_11" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2104.05816v1</id>
+    <title>On the Linear Ordering Problem and the Rankability of Data</title>
+    <updated>2021-04-12T21:05:17Z</updated>
+    <link href="https://arxiv.org/abs/2104.05816v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2104.05816v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In 2019, Anderson et al. proposed the concept of rankability, which refers to a dataset's inherent ability to be meaningfully ranked. In this article, we give an expository review of the linear ordering problem (LOP) and then use it to analyze the rankability of data. Specifically, the degree of linearity is used to quantify what percentage of the data aligns with an optimal ranking. In a sports context, this is analogous to the number of games that a ranking can correctly predict in hindsight. In fact, under the appropriate objective function, we show that the optimal rankings computed via the LOP maximize the hindsight accuracy of a ranking. Moreover, we develop a binary program to compute the maximal Kendall tau ranking distance between two optimal rankings, which can be used to measure the diversity among optimal rankings without having to enumerate all optima. Finally, we provide several examples from the world of sports and college rankings to illustrate these concepts and demonstrate our results.</summary>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-04-12T21:05:17Z</published>
+    <arxiv:comment>17 pages, 10 figures, to be published in Foundations of Data Science</arxiv:comment>
+    <arxiv:primary_category term="math.OC"/>
+    <author>
+      <name>Thomas R. Cameron</name>
+    </author>
+    <author>
+      <name>Sebastian Charmot</name>
+    </author>
+    <author>
+      <name>Jonad Pulaj</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1910.12337v1</id>
+    <title>Expected Hypothetical Completion Probability</title>
+    <updated>2019-10-27T20:07:26Z</updated>
+    <link href="https://arxiv.org/abs/1910.12337v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1910.12337v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Using high-resolution player tracking data made available by the National Football League (NFL) for their 2019 Big Data Bowl competition, we introduce the Expected Hypothetical Completion Probability (EHCP), a objective framework for evaluating plays. At the heart of EHCP is the question "on a given passing play, did the quarterback throw the pass to the receiver who was most likely to catch it?" To answer this question, we first built a Bayesian non-parametric catch probability model that automatically accounts for complex interactions between inputs like the receiver's speed and distances to the ball and nearest defender. While building such a model is, in principle, straightforward, using it to reason about a hypothetical pass is challenging because many of the model inputs corresponding to a hypothetical are necessarily unobserved. To wit, it is impossible to observe how close an un-targeted receiver would be to his nearest defender had the pass been thrown to him instead of the receiver who was actually targeted. To overcome this fundamental difficulty, we propose imputing the unobservable inputs and averaging our model predictions across these imputations to derive EHCP. In this way, EHCP can track how the completion probability evolves for each receiver over the course of a play in a way that accounts for the uncertainty about missing inputs.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-10-27T20:07:26Z</published>
+    <arxiv:comment>This paper elaborates on work done for the NFL 2019 Big Data Bowl contest. Manuscript accepted at the Journal of Quantitative Analysis in Sports</arxiv:comment>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Sameer K. Deshpande</name>
+    </author>
+    <author>
+      <name>Katherine Evans</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1706.02884v1</id>
+    <title>Learning to Learn from Noisy Web Videos</title>
+    <updated>2017-06-09T10:25:05Z</updated>
+    <link href="https://arxiv.org/abs/1706.02884v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1706.02884v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Understanding the simultaneously very diverse and intricately fine-grained set of possible human actions is a critical open problem in computer vision. Manually labeling training videos is feasible for some action classes but doesn't scale to the full long-tailed distribution of actions. A promising way to address this is to leverage noisy data from web queries to learn new actions, using semi-supervised or "webly-supervised" approaches. However, these methods typically do not learn domain-specific knowledge, or rely on iterative hand-tuned data labeling policies. In this work, we instead propose a reinforcement learning-based formulation for selecting the right examples for training a classifier from noisy web search results. Our method uses Q-learning to learn a data labeling policy on a small labeled training dataset, and then uses this to automatically label noisy web data for new visual concepts. Experiments on the challenging Sports-1M action recognition benchmark as well as on additional fine-grained and newly emerging action classes demonstrate that our method is able to learn good labeling policies for noisy data and use this to learn accurate visual concept classifiers.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-06-09T10:25:05Z</published>
+    <arxiv:comment>To appear in CVPR 2017</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Serena Yeung</name>
+    </author>
+    <author>
+      <name>Vignesh Ramanathan</name>
+    </author>
+    <author>
+      <name>Olga Russakovsky</name>
+    </author>
+    <author>
+      <name>Liyue Shen</name>
+    </author>
+    <author>
+      <name>Greg Mori</name>
+    </author>
+    <author>
+      <name>Li Fei-Fei</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2303.13323v1</id>
+    <title>Deep Generative Multi-Agent Imitation Model as a Computational Benchmark for Evaluating Human Performance in Complex Interactive Tasks: A Case Study in Football</title>
+    <updated>2023-03-23T15:01:52Z</updated>
+    <link href="https://arxiv.org/abs/2303.13323v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2303.13323v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Evaluating the performance of human is a common need across many applications, such as in engineering and sports. When evaluating human performance in completing complex and interactive tasks, the most common way is to use a metric having been proved efficient for that context, or to use subjective measurement techniques. However, this can be an error prone and unreliable process since static metrics cannot capture all the complex contexts associated with such tasks and biases exist in subjective measurement. The objective of our research is to create data-driven AI agents as computational benchmarks to evaluate human performance in solving difficult tasks involving multiple humans and contextual factors. We demonstrate this within the context of football performance analysis. We train a generative model based on Conditional Variational Recurrent Neural Network (VRNN) Model on a large player and ball tracking dataset. The trained model is used to imitate the interactions between two teams and predict the performance from each team. Then the trained Conditional VRNN Model is used as a benchmark to evaluate team performance. The experimental results on Premier League football dataset demonstrates the usefulness of our method to existing state-of-the-art static metric used in football analytics.</summary>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-03-23T15:01:52Z</published>
+    <arxiv:comment>8 pages, 10 figures</arxiv:comment>
+    <arxiv:primary_category term="stat.ML"/>
+    <author>
+      <name>Chaoyi Gu</name>
+    </author>
+    <author>
+      <name>Varuna De Silva</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2212.12015v2</id>
+    <title>Stochastic analysis of the Elo rating algorithm in round-robin tournaments</title>
+    <updated>2023-11-25T16:54:43Z</updated>
+    <link href="https://arxiv.org/abs/2212.12015v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2212.12015v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The Elo algorithm, renowned for its simplicity, is widely used for rating in sports tournaments and other applications. However, despite its widespread use, a detailed understanding of the convergence characteristics of the Elo algorithm is still lacking. Aiming to fill this gap, this paper presents a comprehensive (stochastic) analysis of the Elo algorithm, considering round-robin tournaments. Specifically, analytical expressions are derived describing the evolution of the skills and performance metrics. Then, taking into account the relationship between the behavior of the algorithm and the step-size value, which is a hyperparameter that can be controlled, design guidelines and discussions about the performance of the algorithm are provided. Experimental results are shown confirming the accuracy of the analysis and illustrating the applicability of the theoretical findings using real-world data obtained from SuperLega, the Italian volleyball league.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-12-22T19:50:00Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Daniel Gomes de Pinho Zanco</name>
+    </author>
+    <author>
+      <name>Leszek Szczecinski</name>
+    </author>
+    <author>
+      <name>Eduardo Vinicius Kuhn</name>
+    </author>
+    <author>
+      <name>Rui Seara</name>
+    </author>
+    <arxiv:doi>10.1016/j.dsp.2023.104313</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.dsp.2023.104313" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2210.06327v3</id>
+    <title>Betting the system: Using lineups to predict football scores</title>
+    <updated>2023-01-17T13:32:55Z</updated>
+    <link href="https://arxiv.org/abs/2210.06327v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2210.06327v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper aims to reduce randomness in football by analysing the role of lineups in final scores using machine learning prediction models we have developed. Football clubs invest millions of dollars on lineups and knowing how individual statistics translate to better outcomes can optimise investments. Moreover, sports betting is growing exponentially and being able to predict the future is profitable and desirable. We use machine learning models and historical player data from English Premier League (2020-2022) to predict scores and to understand how individual performance can improve the outcome of a match. We compared different prediction techniques to maximise the possibility of finding useful models. We created heuristic and machine learning models predicting football scores to compare different techniques. We used different sets of features and shown goalkeepers stats are more important than attackers stats to predict goals scored. We applied a broad evaluation process to assess the efficacy of the models in real world applications. We managed to predict correctly all relegated teams after forecast 100 consecutive matches. We show that Support Vector Regression outperformed other techniques predicting final scores and that lineups do not improve predictions. Finally, our model was profitable (42% return) when emulating a betting system using real world odds data.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-10-12T15:47:42Z</published>
+    <arxiv:comment>8 Page paper submitted for review for SDM23</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>George Peters</name>
+    </author>
+    <author>
+      <name>Diogo Pacheco</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2303.16741v1</id>
+    <title>Who You Play Affects How You Play: Predicting Sports Performance Using Graph Attention Networks With Temporal Convolution</title>
+    <updated>2023-03-29T14:48:51Z</updated>
+    <link href="https://arxiv.org/abs/2303.16741v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2303.16741v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This study presents a novel deep learning method, called GATv2-GCN, for predicting player performance in sports. To construct a dynamic player interaction graph, we leverage player statistics and their interactions during gameplay. We use a graph attention network to capture the attention that each player pays to each other, allowing for more accurate modeling of the dynamic player interactions. To handle the multivariate player statistics time series, we incorporate a temporal convolution layer, which provides the model with temporal predictive power. We evaluate the performance of our model using real-world sports data, demonstrating its effectiveness in predicting player performance. Furthermore, we explore the potential use of our model in a sports betting context, providing insights into profitable strategies that leverage our predictive power. The proposed method has the potential to advance the state-of-the-art in player performance prediction and to provide valuable insights for sports analytics and betting industries.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-03-29T14:48:51Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Rui Luo</name>
+    </author>
+    <author>
+      <name>Vikram Krishnamurthy</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2305.18477v3</id>
+    <title>Beyond the Meta: Leveraging Game Design Parameters for Patch-Agnostic Esport Analytics</title>
+    <updated>2023-08-16T09:23:37Z</updated>
+    <link href="https://arxiv.org/abs/2305.18477v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2305.18477v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Esport games comprise a sizeable fraction of the global games market, and is the fastest growing segment in games. This has given rise to the domain of esports analytics, which uses telemetry data from games to inform players, coaches, broadcasters and other stakeholders. Compared to traditional sports, esport titles change rapidly, in terms of mechanics as well as rules. Due to these frequent changes to the parameters of the game, esport analytics models can have a short life-spam, a problem which is largely ignored within the literature. This paper extracts information from game design (i.e. patch notes) and utilises clustering techniques to propose a new form of character representation. As a case study, a neural network model is trained to predict the number of kills in a Dota 2 match utilising this novel character representation technique. The performance of this model is then evaluated against two distinct baselines, including conventional techniques. Not only did the model significantly outperform the baselines in terms of accuracy (85% AUC), but the model also maintains the accuracy in two newer iterations of the game that introduced one new character and a brand new character type. These changes introduced to the design of the game would typically break conventional techniques that are commonly used within the literature. Therefore, the proposed methodology for representing characters can increase the life-spam of machine learning models as well as contribute to a higher performance when compared to traditional techniques typically employed within the literature.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-05-29T11:05:20Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Alan Pedrassoli Chitayat</name>
+    </author>
+    <author>
+      <name>Florian Block</name>
+    </author>
+    <author>
+      <name>James Walker</name>
+    </author>
+    <author>
+      <name>Anders Drachen</name>
+    </author>
+    <arxiv:doi>10.1609/aiide.v19i1.27507</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1609/aiide.v19i1.27507" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1810.12850v1</id>
+    <title>Computational Intelligence in Sports: A Systematic Literature Review</title>
+    <updated>2018-10-30T16:46:08Z</updated>
+    <link href="https://arxiv.org/abs/1810.12850v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1810.12850v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Recently, data mining studies are being successfully conducted to estimate several parameters in a variety of domains. Data mining techniques have attracted the attention of the information industry and society as a whole, due to a large amount of data and the imminent need to turn it into useful knowledge. However, the effective use of data in some areas is still under development, as is the case in sports, which in recent years, has presented a slight growth; consequently, many sports organizations have begun to see that there is a wealth of unexplored knowledge in the data extracted by them. Therefore, this article presents a systematic review of sports data mining. Regarding years 2010 to 2018, 31 types of research were found in this topic. Based on these studies, we present the current panorama, themes, the database used, proposals, algorithms, and research opportunities. Our findings provide a better understanding of the sports data mining potentials, besides motivating the scientific community to explore this timely and interesting topic.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-10-30T16:46:08Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <arxiv:journal_ref>Advances in Human-Computer Interaction (https://www.hindawi.com/journals/ahci/2018/3426178/)</arxiv:journal_ref>
+    <author>
+      <name>Robson P. Bonidia</name>
+    </author>
+    <author>
+      <name>Luiz A. L. Rodrigues</name>
+    </author>
+    <author>
+      <name>Anderson P. Avila-Santos</name>
+    </author>
+    <author>
+      <name>Danilo S. Sanches</name>
+    </author>
+    <author>
+      <name>Jacques D. Brancher</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1809.02735v1</id>
+    <title>Operations Guided Neural Networks for High Fidelity Data-To-Text Generation</title>
+    <updated>2018-09-08T01:49:03Z</updated>
+    <link href="https://arxiv.org/abs/1809.02735v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1809.02735v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Recent neural models for data-to-text generation are mostly based on data-driven end-to-end training over encoder-decoder networks. Even though the generated texts are mostly fluent and informative, they often generate descriptions that are not consistent with the input structured data. This is a critical issue especially in domains that require inference or calculations over raw data. In this paper, we attempt to improve the fidelity of neural data-to-text generation by utilizing pre-executed symbolic operations. We propose a framework called Operation-guided Attention-based sequence-to-sequence network (OpAtt), with a specifically designed gating mechanism as well as a quantization module for operation results to utilize information from pre-executed operations. Experiments on two sports datasets show our proposed method clearly improves the fidelity of the generated texts to the input structured data.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-09-08T01:49:03Z</published>
+    <arxiv:comment>EMNLP 2018</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Feng Nie</name>
+    </author>
+    <author>
+      <name>Jinpeng Wang</name>
+    </author>
+    <author>
+      <name>Jin-Ge Yao</name>
+    </author>
+    <author>
+      <name>Rong Pan</name>
+    </author>
+    <author>
+      <name>Chin-Yew Lin</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1807.07536v5</id>
+    <title>A Skellam Regression Model for Quantifying Positional Value in Soccer</title>
+    <updated>2020-12-01T04:15:29Z</updated>
+    <link href="https://arxiv.org/abs/1807.07536v5" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1807.07536v5" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Soccer is undeniably the most popular sport world-wide and everyone from general managers and coaching staff to fans and media are interested in evaluating players' performance. Metrics applied successfully in other sports, such as the (adjusted) +/- that allows for division of credit among a basketball team's players, exhibit several challenges when applied to soccer due to severe co-linearities. Recently, a number of player evaluation metrics have been developed utilizing optical tracking data, but they are based on proprietary data. In this work, our objective is to develop an open framework that can estimate the expected contribution of a soccer player to his team's winning chances using publicly available data. In particular, using data from (i) approximately 20,000 games from 11 European leagues over 8 seasons, and, (ii) player ratings from the FIFA video game, we estimate through a Skellam regression model the importance of every line (attackers, midfielders, defenders and goalkeeping) in winning a soccer game. We consequently translate the model to expected league points added above a replacement player (eLPAR). This model can further be used as a guide for allocating a team's salary budget to players based on their expected contributions on the pitch. We showcase similar applications using annual salary data from the English Premier League and identify evidence that in our dataset the market appears to under-value defensive line players relative to goalkeepers.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-07-19T16:57:52Z</published>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Konstantinos Pelechrinis</name>
+    </author>
+    <author>
+      <name>Wayne Winston</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2110.04321v1</id>
+    <title>Computing an Optimal Pitching Strategy in a Baseball At-Bat</title>
+    <updated>2021-10-08T18:09:08Z</updated>
+    <link href="https://arxiv.org/abs/2110.04321v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2110.04321v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The field of quantitative analytics has transformed the world of sports over the last decade. To date, these analytic approaches are statistical at their core, characterizing what is and what was, while using this information to drive decisions about what to do in the future. However, as we often view team sports, such as soccer, hockey, and baseball, as pairwise win-lose encounters, it seems natural to model these as zero-sum games. We propose such a model for one important class of sports encounters: a baseball at-bat, which is a matchup between a pitcher and a batter. Specifically, we propose a novel model of this encounter as a zero-sum stochastic game, in which the goal of the batter is to get on base, an outcome the pitcher aims to prevent. The value of this game is the on-base percentage (i.e., the probability that the batter gets on base). In principle, this stochastic game can be solved using classical approaches. The main technical challenges lie in predicting the distribution of pitch locations as a function of pitcher intention, predicting the distribution of outcomes if the batter decides to swing at a pitch, and characterizing the level of patience of a particular batter. We address these challenges by proposing novel pitcher and batter representations as well as a novel deep neural network architecture for outcome prediction. Our experiments using Kaggle data from the 2015 to 2018 Major League Baseball seasons demonstrate the efficacy of the proposed approach.</summary>
+    <category term="cs.GT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-10-08T18:09:08Z</published>
+    <arxiv:primary_category term="cs.GT"/>
+    <author>
+      <name>Connor Douglas</name>
+    </author>
+    <author>
+      <name>Everett Witt</name>
+    </author>
+    <author>
+      <name>Mia Bendy</name>
+    </author>
+    <author>
+      <name>Yevgeniy Vorobeychik</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2103.09627v3</id>
+    <title>Evaluation of soccer team defense based on prediction models of ball recovery and being attacked: A pilot study</title>
+    <updated>2022-05-07T06:27:09Z</updated>
+    <link href="https://arxiv.org/abs/2103.09627v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2103.09627v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>With the development of measurement technology, data on the movements of actual games in various sports can be obtained and used for planning and evaluating the tactics and strategy. Defense in team sports is generally difficult to be evaluated because of the lack of statistical data. Conventional evaluation methods based on predictions of scores are considered unreliable because they predict rare events throughout the game. Besides, it is difficult to evaluate various plays leading up to a score. In this study, we propose a method to evaluate team defense from a comprehensive perspective related to team performance by predicting ball recovery and being attacked, which occur more frequently than goals, using player actions and positional data of all players and the ball. Using data from 45 soccer matches, we examined the relationship between the proposed index and team performance in actual matches and throughout a season. Results show that the proposed classifiers predicted the true events (mean F1 score $&gt;$ 0.483) better than the existing classifiers which were based on rare events or goals (mean F1 score $&lt;$ 0.201). Also, the proposed index had a moderate correlation with the long-term outcomes of the season ($r =$ 0.397). These results suggest that the proposed index might be a more reliable indicator rather than winning or losing with the inclusion of accidental factors.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-03-17T13:15:41Z</published>
+    <arxiv:comment>15 pages, 5 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <arxiv:journal_ref>PLoS One, 17(1) e0263051, 2022</arxiv:journal_ref>
+    <author>
+      <name>Kosuke Toda</name>
+    </author>
+    <author>
+      <name>Masakiyo Teranishi</name>
+    </author>
+    <author>
+      <name>Keisuke Kushiro</name>
+    </author>
+    <author>
+      <name>Keisuke Fujii</name>
+    </author>
+    <arxiv:doi>10.1371/journal.pone.0263051</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1371/journal.pone.0263051" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2106.00173v1</id>
+    <title>Enhancing Trajectory Prediction using Sparse Outputs: Application to Team Sports</title>
+    <updated>2021-06-01T01:43:19Z</updated>
+    <link href="https://arxiv.org/abs/2106.00173v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2106.00173v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Sophisticated trajectory prediction models that effectively mimic team dynamics have many potential uses for sports coaches, broadcasters and spectators. However, through experiments on soccer data we found that it can be surprisingly challenging to train a deep learning model for player trajectory prediction which outperforms linear extrapolation on average distance between predicted and true future trajectories. We propose and test a novel method for improving training by predicting a sparse trajectory and interpolating using constant acceleration, which improves performance for several models. This interpolation can also be used on models that aren't trained with sparse outputs, and we find that this consistently improves performance for all tested models. Additionally, we find that the accuracy of predicted trajectories for a subset of players can be improved by conditioning on the full trajectories of the other players, and that this is further improved when combined with sparse predictions. We also propose a novel architecture using graph networks and multi-head attention (GraN-MA) which achieves better performance than other tested state-of-the-art models on our dataset and is trivially adapted for both sparse trajectories and full-trajectory conditioned trajectory prediction.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-06-01T01:43:19Z</published>
+    <arxiv:comment>10 pages (not including references), 7 figures. Published in Neural Computing and Applications on 20 March 2021</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Brandon Victor</name>
+    </author>
+    <author>
+      <name>Aiden Nibali</name>
+    </author>
+    <author>
+      <name>Zhen He</name>
+    </author>
+    <author>
+      <name>David L. Carey</name>
+    </author>
+    <arxiv:doi>10.1007/s00521-021-05888-w</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/s00521-021-05888-w" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1710.06056v1</id>
+    <title>Asymptotically Optimal Sequential Design for Rank Aggregation</title>
+    <updated>2017-10-17T02:15:55Z</updated>
+    <link href="https://arxiv.org/abs/1710.06056v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1710.06056v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A sequential design problem for rank aggregation is commonly encountered in psychology, politics, marketing, sports, etc. In this problem, a decision maker is responsible for ranking $K$ items by sequentially collecting pairwise noisy comparison from judges. The decision maker needs to choose a pair of items for comparison in each step, decide when to stop data collection, and make a final decision after stopping, based on a sequential flow of information. Due to the complex ranking structure, existing sequential analysis methods are not suitable.
+  In this paper, we formulate the problem under a Bayesian decision framework and propose sequential procedures that are asymptotically optimal. These procedures achieve asymptotic optimality by seeking for a balance between exploration (i.e. finding the most indistinguishable pair of items) and exploitation (i.e. comparing the most indistinguishable pair based on the current information). New analytical tools are developed for proving the asymptotic results, combining advanced change of measure techniques for handling the level crossing of likelihood ratios and classic large deviation results for martingales, which are of separate theoretical interest in solving complex sequential design problems. A mirror-descent algorithm is developed for the computation of the proposed sequential procedures.</summary>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-10-17T02:15:55Z</published>
+    <arxiv:primary_category term="stat.ME"/>
+    <author>
+      <name>Xi Chen</name>
+    </author>
+    <author>
+      <name>Yunxiao Chen</name>
+    </author>
+    <author>
+      <name>Xiaoou Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1704.04833v1</id>
+    <title>Boosting with Structural Sparsity: A Differential Inclusion Approach</title>
+    <updated>2017-04-16T23:58:18Z</updated>
+    <link href="https://arxiv.org/abs/1704.04833v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1704.04833v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Boosting as gradient descent algorithms is one popular method in machine learning. In this paper a novel Boosting-type algorithm is proposed based on restricted gradient descent with structural sparsity control whose underlying dynamics are governed by differential inclusions. In particular, we present an iterative regularization path with structural sparsity where the parameter is sparse under some linear transforms, based on variable splitting and the Linearized Bregman Iteration. Hence it is called \emph{Split LBI}. Despite its simplicity, Split LBI outperforms the popular generalized Lasso in both theory and experiments. A theory of path consistency is presented that equipped with a proper early stopping, Split LBI may achieve model selection consistency under a family of Irrepresentable Conditions which can be weaker than the necessary and sufficient condition for generalized Lasso. Furthermore, some $\ell_2$ error bounds are also given at the minimax optimal rates. The utility and benefit of the algorithm are illustrated by several applications including image denoising, partial order ranking of sport teams, and world university grouping with crowdsourced ranking data.</summary>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-04-16T23:58:18Z</published>
+    <arxiv:primary_category term="stat.ML"/>
+    <author>
+      <name>Chendi Huang</name>
+    </author>
+    <author>
+      <name>Xinwei Sun</name>
+    </author>
+    <author>
+      <name>Jiechao Xiong</name>
+    </author>
+    <author>
+      <name>Yuan Yao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1812.05804v1</id>
+    <title>Data Provenance for Sport</title>
+    <updated>2018-12-14T07:41:25Z</updated>
+    <link href="https://arxiv.org/abs/1812.05804v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1812.05804v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Data analysts often discover irregularities in their underlying dataset, which need to be traced back to the original source and corrected. Standards for representing data provenance (i.e. the origins of the data), such as the W3C PROV standard, can assist with this process, however require a mapping between abstract provenance concepts and the domain of use in order to apply them effectively. We propose a custom notation for expressing provenance of information in the sport performance analysis domain, and map our notation to concepts in the W3C PROV standard where possible. We evaluate the functionality of W3C PROV (without specialisations) and the VisTrails workflow manager (without extensions), and find that as is, neither are able to fully capture sport performance analysis workflows, notably due to limitations surrounding capture of automated and manual activities respectively. Furthermore, their notations suffer from ineffective use of visual design space, and present potential usability issues as their terminology is unlikely to match that of sport practitioners. Our findings suggest that one-size-fits-all provenance and workflow systems are a poor fit in practice, and that their notation and functionality need to be optimised for the domain of use.</summary>
+    <category term="cs.DB" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-12-14T07:41:25Z</published>
+    <arxiv:comment>12 pages, 6 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.DB"/>
+    <author>
+      <name>Andrew J. Simmons</name>
+    </author>
+    <author>
+      <name>Scott Barnett</name>
+    </author>
+    <author>
+      <name>Simon Vajda</name>
+    </author>
+    <author>
+      <name>Rajesh Vasa</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1103.1530v2</id>
+    <title>A Discrete Evolutionary Model for Chess Players' Ratings</title>
+    <updated>2011-03-30T07:45:53Z</updated>
+    <link href="https://arxiv.org/abs/1103.1530v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1103.1530v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The Elo system for rating chess players, also used in other games and sports, was adopted by the World Chess Federation over four decades ago. Although not without controversy, it is accepted as generally reliable and provides a method for assessing players' strengths and ranking them in official tournaments.
+  It is generally accepted that the distribution of players' rating data is approximately normal but, to date, no stochastic model of how the distribution might have arisen has been proposed. We propose such an evolutionary stochastic model, which models the arrival of players into the rating pool, the games they play against each other, and how the results of these games affect their ratings. Using a continuous approximation to the discrete model, we derive the distribution for players' ratings at time $t$ as a normal distribution, where the variance increases in time as a logarithmic function of $t$. We validate the model using published rating data from 2007 to 2010, showing that the parameters obtained from the data can be recovered through simulations of the stochastic model.
+  The distribution of players' ratings is only approximately normal and has been shown to have a small negative skew. We show how to modify our evolutionary stochastic model to take this skewness into account, and we validate the modified model using the published official rating data.</summary>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2011-03-08T13:51:46Z</published>
+    <arxiv:comment>17 pages, 4 figures</arxiv:comment>
+    <arxiv:primary_category term="physics.soc-ph"/>
+    <author>
+      <name>Trevor Fenner</name>
+    </author>
+    <author>
+      <name>Mark Levene</name>
+    </author>
+    <author>
+      <name>George Loizou</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2010.12508v1</id>
+    <title>Beating the market with a bad predictive model</title>
+    <updated>2020-10-23T16:20:35Z</updated>
+    <link href="https://arxiv.org/abs/2010.12508v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2010.12508v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>It is a common misconception that in order to make consistent profits as a trader, one needs to posses some extra information leading to an asset value estimation more accurate than that reflected by the current market price. While the idea makes intuitive sense and is also well substantiated by the widely popular Kelly criterion, we prove that it is generally possible to make systematic profits with a completely inferior price-predicting model. The key idea is to alter the training objective of the predictive models to explicitly decorrelate them from the market, enabling to exploit inconspicuous biases in market maker's pricing, and profit on the inherent advantage of the market taker. We introduce the problem setting throughout the diverse domains of stock trading and sports betting to provide insights into the common underlying properties of profitable predictive models, their connections to standard portfolio optimization strategies, and the, commonly overlooked, advantage of the market taker. Consequently, we prove desirability of the decorrelation objective across common market distributions, translate the concept into a practical machine learning setting, and demonstrate its viability with real world market data.</summary>
+    <category term="cs.CE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-10-23T16:20:35Z</published>
+    <arxiv:comment>We share our insights on how to beat a market maker (bookmaker) with a predictive (statistical) price-estimation model more easily. Feel free to contact us with questions: souregus@gmail.com</arxiv:comment>
+    <arxiv:primary_category term="cs.CE"/>
+    <author>
+      <name>Ondřej Hubáček</name>
+    </author>
+    <author>
+      <name>Gustav Šír</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2004.06172v1</id>
+    <title>Event detection in coarsely annotated sports videos via parallel multi receptive field 1D convolutions</title>
+    <updated>2020-04-13T19:51:25Z</updated>
+    <link href="https://arxiv.org/abs/2004.06172v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2004.06172v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In problems such as sports video analytics, it is difficult to obtain accurate frame level annotations and exact event duration because of the lengthy videos and sheer volume of video data. This issue is even more pronounced in fast-paced sports such as ice hockey. Obtaining annotations on a coarse scale can be much more practical and time efficient. We propose the task of event detection in coarsely annotated videos. We introduce a multi-tower temporal convolutional network architecture for the proposed task. The network, with the help of multiple receptive fields, processes information at various temporal scales to account for the uncertainty with regard to the exact event location and duration. We demonstrate the effectiveness of the multi-receptive field architecture through appropriate ablation studies. The method is evaluated on two tasks - event detection in coarsely annotated hockey videos in the NHL dataset and event spotting in soccer on the SoccerNet dataset. The two datasets lack frame-level annotations and have very distinct event frequencies. Experimental results demonstrate the effectiveness of the network by obtaining a 55% average F1 score on the NHL dataset and by achieving competitive performance compared to the state of the art on the SoccerNet dataset. We believe our approach will help develop more practical pipelines for event detection in sports video.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-04-13T19:51:25Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Kanav Vats</name>
+    </author>
+    <author>
+      <name>Mehrnaz Fani</name>
+    </author>
+    <author>
+      <name>Pascale Walters</name>
+    </author>
+    <author>
+      <name>David A. Clausi</name>
+    </author>
+    <author>
+      <name>John Zelek</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1608.03793v2</id>
+    <title>Applying Deep Learning to Basketball Trajectories</title>
+    <updated>2016-08-16T18:36:44Z</updated>
+    <link href="https://arxiv.org/abs/1608.03793v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1608.03793v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>One of the emerging trends for sports analytics is the growing use of player and ball tracking data. A parallel development is deep learning predictive approaches that use vast quantities of data with less reliance on feature engineering. This paper applies recurrent neural networks in the form of sequence modeling to predict whether a three-point shot is successful. The models are capable of learning the trajectory of a basketball without any knowledge of physics. For comparison, a baseline static machine learning model with a full set of features, such as angle and velocity, in addition to the positional data is also tested. Using a dataset of over 20,000 three pointers from NBA SportVu data, the models based simply on sequential positional data outperform a static feature rich machine learning model in predicting whether a three-point shot is successful. This suggests deep learning models may offer an improvement to traditional feature based machine learning methods for tracking data.</summary>
+    <category term="cs.NE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2016-08-12T13:50:24Z</published>
+    <arxiv:comment>KDD 2016, Large Scale Sports Analytic Workshop</arxiv:comment>
+    <arxiv:primary_category term="cs.NE"/>
+    <author>
+      <name>Rajiv Shah</name>
+    </author>
+    <author>
+      <name>Rob Romijnders</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2406.12252v1</id>
+    <title>Language and Multimodal Models in Sports: A Survey of Datasets and Applications</title>
+    <updated>2024-06-18T03:59:26Z</updated>
+    <link href="https://arxiv.org/abs/2406.12252v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2406.12252v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Recent integration of Natural Language Processing (NLP) and multimodal models has advanced the field of sports analytics. This survey presents a comprehensive review of the datasets and applications driving these innovations post-2020. We overviewed and categorized datasets into three primary types: language-based, multimodal, and convertible datasets. Language-based and multimodal datasets are for tasks involving text or multimodality (e.g., text, video, audio), respectively. Convertible datasets, initially single-modal (video), can be enriched with additional annotations, such as explanations of actions and video descriptions, to become multimodal, offering future potential for richer and more diverse applications. Our study highlights the contributions of these datasets to various applications, from improving fan experiences to supporting tactical analysis and medical diagnostics. We also discuss the challenges and future directions in dataset development, emphasizing the need for diverse, high-quality data to support real-time processing and personalized user experiences. This survey provides a foundational resource for researchers and practitioners aiming to leverage NLP and multimodal models in sports, offering insights into current trends and future opportunities in the field.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-06-18T03:59:26Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Haotian Xia</name>
+    </author>
+    <author>
+      <name>Zhengbang Yang</name>
+    </author>
+    <author>
+      <name>Yun Zhao</name>
+    </author>
+    <author>
+      <name>Yuqing Wang</name>
+    </author>
+    <author>
+      <name>Jingxi Li</name>
+    </author>
+    <author>
+      <name>Rhys Tracy</name>
+    </author>
+    <author>
+      <name>Zhuangdi Zhu</name>
+    </author>
+    <author>
+      <name>Yuan-fang Wang</name>
+    </author>
+    <author>
+      <name>Hanjie Chen</name>
+    </author>
+    <author>
+      <name>Weining Shen</name>
+    </author>
+  </entry>
+</feed>

@@ -7,6 +7,12 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ---
 
+## Independent research audit checkpoint — 2026-09-17
+
+Branch `hermes/research-audit-2026-09-17`, based on main `2676759b0`. Evidence and open acceptance criteria: `docs/ops/research-audit-2026-09-17/AUDIT_STATUS.md`. Fresh authenticated export captured all four spreadsheet tabs; all 1,343 literal corpus IDs resolved against official arXiv metadata (raw XML retained). This is metadata coverage, NOT 1,343 completed deep reviews. Six source/code reports are present; paper reproductions and remaining topics remain open. Do not trust the input tiers or previous agent completion claims.
+
+Fresh targeted tests on this main-based checkout: 11 ingestion publication/series tests and 8 metric-rights tests PASS after successful npm ci. The older `992424b2c` branch has different source and cannot establish main's failures. Full-suite outcome must be read from the audit's exact-head test log/result; do not infer it from these targeted runs. No production-model, gate, pricing, DB, or publication changes were made. The CLV/probability/outcome local diagnostic is NOT_RUN for lack of joined data, not evidence of no relationship. This checkpoint is deliberately partial.
+
 ## THE LOOP
 
 **UPDATED 2026-09-13 (NFL WEEK 1 LIVE CHECK — three production defects fixed, three

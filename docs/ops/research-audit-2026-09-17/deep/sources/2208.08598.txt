@@ -1,0 +1,1053 @@
+Title:
+
+Content selection saved. Describe the issue below:
+
+Description:
+
+![](https://arxiv.org/static/base/1.0.1/images/icons/smileybones-small.svg)arXiv is now an independent nonprofit! [Learn more](https://info.arxiv.org/about) ×
+
+[License: arXiv.org perpetual non-exclusive license](https://info.arxiv.org/help/license/index.html#licenses-available)
+
+arXiv:2208.08598v1 \[stat.AP\] 18 Aug 2022
+
+# Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments
+
+Chancellor Johnstone
+Affiliation: Air Force Institute of Technology, Department of Mathematics and Statistics
+Dan Nettleton
+Affiliation: Iowa State University, Department of Statistics
+
+August 24, 2026
+
+###### Abstract
+
+The COVID-19 pandemic was responsible for the cancellation of both the men’s and women’s 2020 National Collegiate Athletic Association (NCAA) Division 1 basketball tournaments. Starting from the point at which the Division 1 tournaments and any unfinished conference tournaments were cancelled, we deliver closed-form probabilities for each team of making the Division 1 tournaments, had they not been cancelled, aided by use of conformal predictive distributions. We also deliver probabilities of a team winning March Madness, given a tournament bracket. We then compare single-game win probabilities generated with conformal predictive distributions, aptly named conformal win probabilities, to those generated through linear and logistic regression on seven years of historical college basketball data, specifically from the 2014-2015 season through the 2020-2021 season. Conformal win probabilities are shown to be better calibrated than other methods, resulting in more accurate win probability estimates, while requiring fewer distributional assumptions.
+
+Keywords: Conformal inference, predictive distributions, sports analytics, uncertainty quantification.
+
+## 1 Introduction
+
+Two of the most popular tournaments in the world are the men’s and women’s National Collegiate Athletic Association (NCAA) Division 1 basketball tournaments. In college basketball, teams are grouped into conferences. Over the course of the regular season, teams compete against opponents within their own conference as well as teams outside their conference. Following the regular season, better performing teams within each conference compete in a conference tournament, with the winner of said tournament earning an invitation to play in the Division 1 tournament. The invitation for winning a conference tournament is called an “automatic bid”. Historically, sixty-four teams are selected for the women’s tournament. Thirty-two of the sixty-four teams are automatic bids, corresponding to the thirty-two conference tournament winners. The other thirty-two teams are “at-large bids”, made up of teams failing to win their respective conference tournament. At-large bids are decided by a selection committee, which has guidelines that govern how to choose not only the teams invited to the tournament, but also how to set the tournament bracket, which defines who and where each team will play initially and could play eventually. Teams that earn an automatic bid or an at-large bid are said to have “made the tournament”.
+
+In previous iterations of March Madness, the men’s tournament has differed slightly from the women’s tournament, with the former including a set of games called the First Four. In the First Four, eight teams compete for four spots in the round of 64, also called the First Round. Specifically, the four lowest ranked automatic bids compete for two spots in the First Round, while the four lowest ranking at-large bids compete against each other for the two remaining spots. Thus, the men’s tournament includes thirty-two automatic bids and thirty-six at-large bids. In 2022, the women’s tournament included a First Four for the first time in tournament history, bringing the total number of teams in the tournament up to sixty-eight ( [Binder, 2021](https://arxiv.org/html/2208.08598v1#bib.bib3 "")). Another difference between the men’s and women’s tournaments is that the NCAA has historically referred to the men’s (but not the women’s) tournament as “March Madness” ( [Leiker, 2021](https://arxiv.org/html/2208.08598v1#bib.bib19 "")). In this paper, we use the term to describe both the men’s and women’s tournament.
+
+As a result of the COVID-19 pandemic, the NCAA cancelled both the men’s and women’s 2020 NCAA tournaments. A majority of athletic conferences followed by cancelling their own conference tournaments, leaving many automatic bids for March Madness undecided. Due to these cancellations, natural questions arise with respect to which teams might have made the March Madness field and which teams might have won the tournament, if it had occurred. Using data from the 2019-2020 men’s and women’s collegiate seasons, we deliver probabalistic answers to these questions.
+
+Specifically, we contribute the following: 1) an overall ranking of Division 1 teams, as well as estimates of each team’s strength, based on 2019-2020 regular season data, 2) closed-form calculations for probabilities of teams making the 2019-2020 March Madness field, calculated beginning from the point in time at which each conference tournament was cancelled, under a simplified tournament selection process, 3) closed-form calculations of probabilities of teams winning March Madness, given each of several potential brackets, and 4) a new pair of fully audited data sets with observed margins of victory for both men’s and women’s Division 1 basketball, spanning from the 2014-2015 season through the 2020-2021 season.
+
+The calculation of probabilities for teams making the 2019-2020 March Madness field consider each conference tournament’s unfinished bracket as well as our estimates of Division 1 team strengths, which we fix following the culmination of the regular season. The closed-form nature of the probabilities also reduces the computational load and eliminates error inherent to simulation-based approaches. To our knowledge, this is the first closed-form approach to take into account partially completed conference tournaments when generating probabilities of making the March Madness field.
+
+Estimating March Madness win probabilities prior to the selection of the tournament field and the determination of the March Madness bracket is a difficult problem. If we define all the potential brackets as the set ℬ\\mathcal{B}, we can decompose the probability of a team winning March Madness as
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | ℙ⁡(Wu=1)=∑B∈ℬℙ⁡(Wu=1\|B)​ℙ​(B),\\mathbb{P}(W\_{u}=1)=\\sum\_{B\\in\\mathcal{B}}\\mathbb{P}(W\_{u}=1\|B)\\mathbb{P}(B), |  | (1) |
+
+where {Wu=1}\\{W\_{u}=1\\} represents team uu winning March Madness. However, calculations for all possible brackets are intractable. For a set of, say, 350 teams, there are (35064)\\binom{350}{64} ways to select a field of teams to compete in a 64-team tournament. Given a tournament field of N=2JN=2^{J} teams, where JJ is the number of rounds in the tournament (J=6J=6 for a 64-team tournament), the number of unique brackets for a single-elimination tournament is
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | ∏i=1N/2(2​i2)/2N/2−1,\\prod\_{i=1}^{N/2}\\binom{2i}{2}\\bigg/2^{N/2-1}, |  | (2) |
+
+which grows rapidly as NN increases. An 8-team tournament results in 315 potential brackets, while a 1616-team tournament results in 638,512,875 potential brackets. In the case of March Madness, the size of the set ℬ\\mathcal{B} is enormous.
+
+Of course, some brackets are more likely than others due to the set of constraints used by the selection committee. However, even if the set of plausible brackets for March Madness was small relative to the complete set ℬ\\mathcal{B} when the tournaments were cancelled in 2020, estimating ℙ⁡(B)\\mathbb{P}(B) in ( [1](https://arxiv.org/html/2208.08598v1#S1.E1 "In 1 Introduction ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) for any given bracket BB depends on the complex and, ultimately, subjective decision making process used by the NCAA selection committee. Thus, we make no attempt to estimate ℙ⁡(B)\\mathbb{P}(B) for any bracket BB. Instead, in this paper, we focus on the construction of the marginal probability of each team making the March Madness field. Additionally, using brackets suggested by experts, along with brackets we construct, we compare March Madness win probabilities, ℙ⁡(Wu=1\|B)\\mathbb{P}(W\_{u}=1\|B) for all teams uu, across different brackets BB. We find that the win probabilities for teams most likely to win are relatively stable across brackets. Baylor, South Carolina, and Oregon each had more than a 20% win probability for most of the brackets we considered for the women’s tournament. On the men’s side, Kansas was the most likely to win the tournament regardless of the bracket.
+
+Another contribution of the paper is the novel application of conformal predictive distributions ( [Vovk et al., 2019](https://arxiv.org/html/2208.08598v1#bib.bib43 "")) for the estimation of win probabilities. Conformal predictive distributions allow for the construction of win probability estimates under very mild distributional assumptions, reducing dependence on normality assumptions for our results. We find that conformal predictive distributions provide win probability estimates that are superior to other methods relying on stronger assumptions when compared using seven years of men’s and women’s post-season NCAA basketball data.
+
+Section [2](https://arxiv.org/html/2208.08598v1#S2 "2 Probabilities for March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") provides background on constructing overall win probabilities for single-elimination tournaments and introduces the closed-form calculation of probabilities related to March Madness. Section [3](https://arxiv.org/html/2208.08598v1#S3 "3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") describes three methods for generating win probabilities of individual games, including the construction of win probability estimates through conformal predictive distributions. Section [4](https://arxiv.org/html/2208.08598v1#S4 "4 Application to March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") describes the overall results, to include a ranking of the top teams, conference tournament and March Madness win probabilities associated with the 2019-2020 NCAA Division 1 basketball season and a comparison of three win probability generation methods. Section [5](https://arxiv.org/html/2208.08598v1#S5 "5 Conclusion ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") concludes the paper. All of the R code and data sets used in this research are available at
+
+[https://github.com/chancejohnstone/marchmadnessconformal](https://github.com/chancejohnstone/marchmadnessconformal "").
+
+## 2 Probabilities for March Madness
+
+In the following section, we describe win probability as it relates to single-elimination tournaments like March Madness. We also introduce the probability of a team making the March Madness field, given a collection of conference tournament brackets, team rankings and game-by-game win probabilities. We limit our discussion scope in this section primarily to the women’s tournament, but the general construction reflects the men’s tournament as well.
+
+Throughout this paper, we use the common verbiage that a team is ranked “higher” than another team if the former team is believed to be better than the latter team. Likewise, a “lower” ranking implies a weaker team. We follow the common convention that a team of rank rr has a higher rank than a team of rank r+sr+s for s>0s>0. Teams ranked 1 to 32 are collectively identified as “high-ranked”. Teams ranked below 64 are identified as “low-ranked”. While the colloquial use of the term “bubble teams” is usually reserved to describe a subset of teams near the boundary separating teams in and out of the March Madness field, we use the term to explicitly describe the teams ranked 33 to 64. In Section [3.3](https://arxiv.org/html/2208.08598v1#S3.SS3 "3.3 Application to Win Probability in Sports ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments"), we discuss an approach to rank teams based on observed game outcomes.
+
+### 2.1 Win Probability for Single-Elimination Tournaments
+
+Suppose were are given a game between team uu and team vv with the win probability for team uu defined as pu​vp\_{uv}. While the true value of pu​vp\_{uv} is not known in practice, we describe methods for estimating probabilities for any match-up in Section [3](https://arxiv.org/html/2208.08598v1#S3 "3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments"). Given these probabilities, one method for providing estimates of overall tournament win probability is through simulation. We can simulate the outcome of a game between team uu and team vv by randomly sampling from a standard uniform distribution. A value less than pu​vp\_{uv} corresponds to a victory for team uu, while a value greater than pu​vp\_{uv} represents a victory for team vv. Every game in a tournament can be simulated until we have an overall winner. We can then repeat the entire simulation process multiple times to get a Monte Carlo estimate of each team’s probability of winning said tournament.
+
+While a simulation-based approach is effective at providing estimates of the true tournament win probability for each team, simulation requires excessive computational effort, with each estimate having inherent Monte Carlo error. To eliminate Monte Carlo error, we can generate overall tournament win probabilities through closed-form calculation.
+
+Suppose we have an eight team single-elimination tournament with the bracket shown in Figure [1](https://arxiv.org/html/2208.08598v1#S5.F1 "Figure 1 ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments"). The highest ranking team, team 1, plays the lowest ranking team, team 8, in the first round. Assuming team 1 was victorious in round one, their second round opponent could be team 4 or 5. In the third round, team 1 could play team 3, 6, 2 or 7. After the first round of the tournament, team 8 has the same potential opponents as team 1.
+
+Using the knowledge of a team’s potential opponents in future games, we can calculate win probabilities for any upcoming round and, thus, the entire tournament. Formalized in [Edwards, (1991)](https://arxiv.org/html/2208.08598v1#bib.bib6 ""), the tournament win probability for team uu given a fixed, single-elimination tournament bracket with JJ rounds is
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | qu​J=qu​J−1​\[∑s∈𝒪u​Jpu​s​qs​J−1\],q\_{uJ}=q\_{uJ-1}\\Bigg\[\\sum\_{s\\in\\mathcal{O}\_{uJ}}p\_{us}q\_{sJ-1}\\Bigg\], |  | (3) |
+
+where qu​jq\_{uj} is the probability that team uu wins in round j=1,…,Jj=1,\\ldots,J, and 𝒪u​j\\mathcal{O}\_{uj} is the set of potential opponents team uu could play in round jj. We explicitly set qu​1=pu​𝒪u​1q\_{u1}=p\_{u\\mathcal{O}\_{u1}}, where 𝒪u​1\\mathcal{O}\_{u1} is team uu’s opponent in round one. We can extend ( [3](https://arxiv.org/html/2208.08598v1#S2.E3 "In 2.1 Win Probability for Single-Elimination Tournaments ‣ 2 Probabilities for March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) to single-elimination tournaments of any size or construction as long we are able to determine the set 𝒪u​j\\mathcal{O}\_{uj} for any team uu in any round jj.
+
+### 2.2 Probability for Making the NCAA Tournament
+
+With ( [3](https://arxiv.org/html/2208.08598v1#S2.E3 "In 2.1 Win Probability for Single-Elimination Tournaments ‣ 2 Probabilities for March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) we can generate an overall tournament win probability for each team in a tournament exactly, given a fixed tournament bracket and game-by-game win probabilities. However, following the regular season, but prior to the culmination of all conference tournaments, the field for March Madness is not fully known. Thus, we cannot utilize ( [3](https://arxiv.org/html/2208.08598v1#S2.E3 "In 2.1 Win Probability for Single-Elimination Tournaments ‣ 2 Probabilities for March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) directly for estimating team win probabilities for the 2020 March Madness tournament. We first turn our attention to estimating each women’s team’s probability of making the 2020 March Madness field, made up of thirty-two automatic bids and thirty-two at-large bids. Although the closed-form calculations reflect probabilities related to the 2019-2020 women’s March Madness tournament, which did not include a First Four, only slight changes are required to reflect the inclusion of a First Four for the men’s and future women’s tournaments.
+
+We define FuF\_{u} as the indicator variable for whether or not the uu-th ranked team makes the NCAA tournament field. Knowing that the NCAA tournament is made up of automatic and at-large bids, we define two relevant indicator variables CuC\_{u} and LuL\_{u} associated with a team receiving one of these bids, respectively. CuC\_{u} is one if team uu wins its conference tournament and zero otherwise. We define LuL\_{u} as the number of conference tournaments won by teams ranked below team uu. Then, under the assumption that higher-ranked at-large bids make the March Madness field before lower-ranked at-large bids, for any team uu, the probability of making the NCAA tournament is
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | ℙ(Fu=1)=ℙ({Cu=1}∪{Lu≤tu})=ℙ(Cu=1)+ℙ(Lu≤tu)−ℙ(Cu=1,Lu≤tu),\\mathbb{P}(F\_{u}=1)=\\mathbb{P}(\\{C\_{u}=1\\}\\cup\\{L\_{u}\\leq t\_{u}\\})=\\mathbb{P}(C\_{u}=1)+\\mathbb{P}(L\_{u}\\leq t\_{u})-\\mathbb{P}(C\_{u}=1,L\_{u}\\leq t\_{u}), |  | (4) |
+
+where tu=64−ut\_{u}=64-u is the maximum number of teams ranked below team uu that can receive an automatic bid without preventing team uu from making the NCAA tournament as an at-large bid. Because there are only 32 conference tournaments, LuL\_{u} is less than or equal to 32 with probability one. Thus, with the current construction, teams ranked 32 or higher always make the NCAA tournament. For low-ranked teams, ( [4](https://arxiv.org/html/2208.08598v1#S2.E4 "In 2.2 Probability for Making the NCAA Tournament ‣ 2 Probabilities for March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) reduces to ℙ⁡(Cu=1)\\mathbb{P}(C\_{u}=1), aligning with the fact that weaker teams must win their conference tournament to get an invite to March Madness.
+
+We can decompose the intersection probability of ( [4](https://arxiv.org/html/2208.08598v1#S2.E4 "In 2.2 Probability for Making the NCAA Tournament ‣ 2 Probabilities for March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) into
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | ℙ⁡(Cu=1,Lu≤tu)=ℙ⁡(Lu≤tu\|Cu=1)​ℙ​(Cu=1).\\mathbb{P}(C\_{u}=1,L\_{u}\\leq t\_{u})=\\mathbb{P}(L\_{u}\\leq t\_{u}\|C\_{u}=1)\\mathbb{P}(C\_{u}=1). |  | (5) |
+
+To explicitly describe the probabilities in ( [5](https://arxiv.org/html/2208.08598v1#S2.E5 "In 2.2 Probability for Making the NCAA Tournament ‣ 2 Probabilities for March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")), we split the teams in each conference into two sets, ℋku\\mathcal{H}^{u}\_{k} and ℒku\\mathcal{L}^{u}\_{k}, defining ℋku\\mathcal{H}^{u}\_{k} as the set of teams in conference k=1,…,Kk=1,\\ldots,K ranked higher than or equal to team uu and ℒku\\mathcal{L}^{u}\_{k} as the set of teams in conference kk ranked lower than team uu. We reference lower or higher-ranked teams in the same conference as team uu using k⁡(u)k(u) instead of kk. It is important to emphasize that team uu is included in ℋk⁡(u)u\\mathcal{H}^{u}\_{k(u)}. Let CℋkuC\_{\\mathcal{H}\_{k}^{u}} be one if a team in ℋku\\mathcal{H}\_{k}^{u} wins conference tournament kk and zero otherwise. CℒkuC\_{\\mathcal{L}\_{k}^{u}} is defined in a similar manner.
+
+We assume that the outcome of any conference tournament is independent of the outcome of any other conference tournament. Thus, we can describe LuL\_{u} as a sum of independent, but not identically distributed, Bernoulli random variables,
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | Lu=∑k=1KCℒku.L\_{u}=\\sum\_{k=1}^{K}C\_{\\mathcal{L}^{u}\_{k}}. |  | (6) |
+
+If CℒkuC\_{\\mathcal{L}^{u}\_{k}} were identically distributed for all conferences, then LuL\_{u} would be a binomial random variable. Because this not the case, LuL\_{u} is instead a Poisson-binomial random variable with cumulative distribution function
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | ℙ⁡(Lu≤l)=∑m=0l{∑A∈ℱm∏s∈Aps​∏s∈AC(1−ps)},\\mathbb{P}(L\_{u}\\leq l)=\\sum\_{m=0}^{l}\\Bigg\\{\\sum\_{A\\in\\mathcal{F}\_{m}}\\prod\_{s\\in A}p\_{s}\\prod\_{s\\in A^{C}}(1-p\_{s})\\Bigg\\}, |  | (7) |
+
+where pkp\_{k} is the probability of a team in ℒku\\mathcal{L}^{u}\_{k} winning conference tournament kk, and ℱm\\mathcal{F}\_{m} is the set of all unique mm-tuples of {1,…,32}\\{1,\\ldots,32\\}. With ( [7](https://arxiv.org/html/2208.08598v1#S2.E7 "In 2.2 Probability for Making the NCAA Tournament ‣ 2 Probabilities for March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) known, the conditional portion of ( [5](https://arxiv.org/html/2208.08598v1#S2.E5 "In 2.2 Probability for Making the NCAA Tournament ‣ 2 Probabilities for March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) is a new Poisson-binomial random variable where pk⁡(u)=0p\_{k(u)}=0 because we condition on team uu winning their conference tournament. Thus, the probability of team uu making the tournament is
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | ℙ⁡(Fu=1)=qu​Jk⁡(u)+ℙ⁡(Lu≤tu)−(∑m=0tu{∑A∈ℱm∏s∈Aps′​∏s∈AC(1−ps′)})×qu​Jk⁡(u),\\mathbb{P}(F\_{u}=1)=q\_{uJ\_{k(u)}}+\\mathbb{P}(L\_{u}\\leq t\_{u})-\\Bigg(\\sum\_{m=0}^{t\_{u}}\\Bigg\\{\\sum\_{A\\in\\mathcal{F}\_{m}}\\prod\_{s\\in A}p^{\\prime}\_{s}\\prod\_{s\\in A^{C}}(1-p^{\\prime}\_{s})\\Bigg\\}\\Bigg)\\times q\_{uJ\_{k(u)}}, |  | (8) |
+
+where pk′p^{\\prime}\_{k} is equal to pkp\_{k} when kk is not equal to k⁡(u)k(u) and zero otherwise, and Jk⁡(u)J\_{k(u)} is the number of rounds in the conference tournament for conference k⁡(u)k(u).
+
+While the above derivation provides a closed-form calculation for probabilities of making the March Madness field, it does not describe any team’s probability of winning March Madness. To do this, we must also derive closed-form probability calculations for specific tournament brackets. However, as discussed in Section [1](https://arxiv.org/html/2208.08598v1#S1 "1 Introduction ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments"), it is difficult to explicitly construct calculations for this task due to the inherent subjectivity associated with the seeding of teams. For this reason, we include the derivation of the closed-form marginal probability calculation for a team’s March Madness rank under an adjusted tournament selection process utilizing the S-curve method ( [NCAA, 2021](https://arxiv.org/html/2208.08598v1#bib.bib28 "")) in Supplementary Materials.
+
+## 3 Win Probabilities for Individual Games
+
+Determining win probability in sports primarily began with baseball ( [Lindsey, 1961](https://arxiv.org/html/2208.08598v1#bib.bib21 "")). Since then, win probability has permeated many sports and become a staple for discussion among sports analysts and enthusiasts. Example applications of win probability have been seen in sports such as basketball ( [Stern, 1994](https://arxiv.org/html/2208.08598v1#bib.bib39 ""), [Loeffelholz et al., 2009](https://arxiv.org/html/2208.08598v1#bib.bib24 "")), hockey ( [Gramacy et al., 2013](https://arxiv.org/html/2208.08598v1#bib.bib8 "")), soccer ( [Hill, 1974](https://arxiv.org/html/2208.08598v1#bib.bib12 ""), [Karlis and Ntzoufras, 2008](https://arxiv.org/html/2208.08598v1#bib.bib13 ""), [Robberechts et al., 2019](https://arxiv.org/html/2208.08598v1#bib.bib33 "")), football ( [Stern, 1991](https://arxiv.org/html/2208.08598v1#bib.bib38 ""), [Lock and Nettleton, 2014](https://arxiv.org/html/2208.08598v1#bib.bib23 "")), cycling ( [Moffatt et al., 2014](https://arxiv.org/html/2208.08598v1#bib.bib27 "")), darts ( [Liebscher and Kirschstein, 2017](https://arxiv.org/html/2208.08598v1#bib.bib20 "")), rugby ( [Lee, 1999](https://arxiv.org/html/2208.08598v1#bib.bib17 "")), cricket ( [Asif and McHale, 2016](https://arxiv.org/html/2208.08598v1#bib.bib1 "")), table tennis ( [Liu et al., 2016](https://arxiv.org/html/2208.08598v1#bib.bib22 "")) and even video games ( [Semenov et al., 2016](https://arxiv.org/html/2208.08598v1#bib.bib35 "")).
+
+A majority of these methodologies use some form of parametric regression to capture individual and/or team strengths, offensive and/or defensive capabilities or other related effects. We continue the parametric focus by using a linear model framework to estimate team strengths, but our proposed approach makes only minimal closed-form distributional assumptions.
+
+Initially, suppose that
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | yi=xi′​β+ϵi,y\_{i}=x\_{i}^{\\prime}\\beta+\\epsilon\_{i}, |  | (9) |
+
+where yiy\_{i} represents the response of interest for observation ii, xix\_{i} is a length pp vector of covariates for observation ii, β\\beta is the vector of true parameter values and ϵi\\epsilon\_{i} is a mean-zero error term. We define y=(y1,…,yn)′y=(y\_{1},\\ldots,y\_{n})^{\\prime} and X=(x1,…,xn)′X=(x\_{1},\\ldots,x\_{n})^{\\prime}, where the vector yy and matrix XX make up our nn observations Dn={(xi,yi)}i=1nD\_{n}=\\{(x\_{i},y\_{i})\\}\_{i=1}^{n}. We are interested in both predicting yn+1y\_{n+1} and quantifying uncertainty about yn+1y\_{n+1}, given xn+1x\_{n+1}, for some new observation (xn+1,yn+1)(x\_{n+1},y\_{n+1}). In subsequent sections, the response values in yy will be margins of victory, and the elements of β\\beta will include team strength parameters. However, at this stage a slightly more general treatment is useful.
+
+In the following section, we discuss event probability estimation using three different methods: conformal predictive distributions based on model ( [9](https://arxiv.org/html/2208.08598v1#S3.E9 "In 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")), linear regression with model ( [9](https://arxiv.org/html/2208.08598v1#S3.E9 "In 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) and an added assumption of mean-zero, normally distributed, independent errors, and logistic regression. We then provide specific application to the sports context, extending the aforementioned methods in order to estimate win probabilities in sports.
+
+### 3.1 Event Probability with Conformal Predictive Distributions
+
+Predictive distributions, e.g., those introduced in [Lawless and Fredette, (2005)](https://arxiv.org/html/2208.08598v1#bib.bib16 ""), provide a method for estimating the conditional distribution of a future observation given observed data. Conformal predictive distributions (CPDs) ( [Vovk et al., 2019](https://arxiv.org/html/2208.08598v1#bib.bib43 "")) provide similar results but through the use of a distribution-free approach based on conformal inference ( [Gammerman et al., 1998](https://arxiv.org/html/2208.08598v1#bib.bib7 "")). In the following section we provide a general treatment of conformal inference, followed by an introduction to conformal predictive distributions.
+
+#### 3.1.1 Conformal Inference
+
+The aim of conformal inference is to quantify uncertainty in classification and/or regression tasks under weak distributional assumptions. In a regression context, conformal inference produces conservative prediction intervals for some unobserved response yn+1y\_{n+1} through the repeated inversion of some hypothesis test, say
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | H0:yn+1=yc​ vs. ​Ha:yn+1≠yc,H\_{0}:y\_{n+1}=y\_{c}\\;\\textrm{ vs. }\\;H\_{a}:y\_{n+1}\\neq y\_{c}, |  | (10) |
+
+where yn+1y\_{n+1} is the response value associated with an incoming covariate vector xn+1x\_{n+1}, and ycy\_{c} is a candidate response value ( [Lei et al., 2018](https://arxiv.org/html/2208.08598v1#bib.bib18 "")). The only assumption required to achieve valid prediction intervals is that the data DnD\_{n} combined with the new observation (xn+1,yn+1)(x\_{n+1},y\_{n+1}) comprise an exchangeable set of observations.
+
+The inversion of ( [10](https://arxiv.org/html/2208.08598v1#S3.E10 "In 3.1.1 Conformal Inference ‣ 3.1 Event Probability with Conformal Predictive Distributions ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) is achieved through refitting the model of interest with an augmented data set that includes the data pair (xn+1,yc)(x\_{n+1},y\_{c}). For each candidate value, a set of conformity scores is generated, one for each observation in the augmented data set. A conformity score measures how well a particular data point conforms to the rest of the data set and traditionally utilizes the data pair (xi,yi)(x\_{i},y\_{i}) and the prediction for yiy\_{i}, denoted y^i​(yc)\\hat{y}\_{i}(y\_{c}), as arguments. While the prediction y^i​(yc)\\hat{y}\_{i}(y\_{c}) is dependent on both (xn+1,yc)(x\_{n+1},y\_{c}) and DnD\_{n}, we omit dependence on xn+1x\_{n+1} and DnD\_{n} in our notation. We define
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | π(yc,τ)=1n+1∑i=1n+1\[𝕀{Ri(yc)<Rn+1(yc)}+τ𝕀{Ri(yc)=Rn+1(yc)}\],\\pi(y\_{c},\\tau)=\\frac{1}{n+1}\\sum\_{i=1}^{n+1}\\Big\[\\mathbb{I}\\{R\_{i}(y\_{c})<R\_{n+1}(y\_{c})\\}+\\tau\\mathbb{I}\\{R\_{i}(y\_{c})=R\_{n+1}(y\_{c})\\}\\Big\], |  | (11) |
+
+where, for i=1,…,ni=1,\\ldots,n, Ri​(yc)R\_{i}(y\_{c}) is the conformity score for the data pair (xi,yi)(x\_{i},y\_{i}) as a function of (xn+1,yc)(x\_{n+1},y\_{c}), Rn+1​(yc)R\_{n+1}(y\_{c}) is the conformity score associated with (xn+1,yc)(x\_{n+1},y\_{c}), and τ\\tau is a U⁡(0,1)U(0,1) random variable.
+
+In hypothesis testing we generate a probability associated with an observed test statistic, specifically the probability of a more extreme value than the observed test statistic under the assumption of a specified null hypothesis, also known as a pp-value. With the construction of π⁡(yc,τ)\\pi(y\_{c},\\tau), we generate an estimate of the probability of an observation less extreme than the candidate value ycy\_{c}. Thus, 1−π⁡(yc,τ)1-\\pi(y\_{c},\\tau) provides a pp-value associated with ( [10](https://arxiv.org/html/2208.08598v1#S3.E10 "In 3.1.1 Conformal Inference ‣ 3.1 Event Probability with Conformal Predictive Distributions ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) ( [Shafer and Vovk, 2008](https://arxiv.org/html/2208.08598v1#bib.bib36 ""), [Lei et al., 2018](https://arxiv.org/html/2208.08598v1#bib.bib18 "")). The inclusion of the random variable τ\\tau generates a smoothed conformal predictor ( [Vovk et al., 2005](https://arxiv.org/html/2208.08598v1#bib.bib42 "")).
+
+For a fixed τ\\tau, we can construct a conformal prediction region for the response associated with xn+1x\_{n+1},
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | C1−α,τ​(xn+1)={yc∈ℝ:(n+1)​π​(yc,τ)≤⌈(1−α)​(n+1)⌉},C\_{1-\\alpha,\\tau}(x\_{n+1})=\\{y\_{c}\\in\\mathbb{R}\\;:\\;(n+1)\\pi(y\_{c},\\tau)\\leq\\lceil(1-\\alpha)(n+1)\\rceil\\}, |  | (12) |
+
+where 1−α1-\\alpha is the nominal coverage level. When τ\\tau is one, π⁡(yc,1)\\pi(y\_{c},1) is the proportion of observations in the augmented data set whose conformity score is less than or equal to the conformity score associated with candidate value ycy\_{c}. Regardless of the conformity score, a conformal prediction region with nominal coverage level 1−α1-\\alpha is conservative ( [Vovk et al., 2005](https://arxiv.org/html/2208.08598v1#bib.bib42 "")). Thus, for some new observation (xn+1,yn+1)(x\_{n+1},y\_{n+1}),
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | ℙ⁡(yn+1∈C1−α,τ​(xn+1))≥1−α.\\mathbb{P}\\big(y\_{n+1}\\in C\_{1-\\alpha,\\tau}(x\_{n+1})\\big)\\geq 1-\\alpha. |  | (13) |
+
+#### 3.1.2 Conformal Predictive Distributions
+
+In the previous section we explained conformal inference in general terms. However, we can construct π⁡(yc,τ)\\pi(y\_{c},\\tau) with certain conformity scores to achieve inference for different events associated with yn+1y\_{n+1}. One commonly used conformity score in a regression setting is the absolute residual, \|yi−y^i​(yc)\|\|y\_{i}-\\hat{y}\_{i}(y\_{c})\|, which leads to symmetric prediction intervals for yn+1y\_{n+1} around a value y~\\tilde{y} satisfying y~=y^n+1​(y~)\\tilde{y}=\\hat{y}\_{n+1}(\\tilde{y}). The traditional residual associated with a prediction, yi−y^i​(yc)y\_{i}-\\hat{y}\_{i}(y\_{c}), results in a one-sided prediction interval for yn+1y\_{n+1} of the form (−∞,u⁡(Dn,xn+1))\\big(-\\infty,u(D\_{n},x\_{n+1})\\big). Additionally, the selection of the traditional residual as our conformity score turns π⁡(yc,τ)\\pi(y\_{c},\\tau) into a conformal predictive distribution ( [Vovk et al., 2019](https://arxiv.org/html/2208.08598v1#bib.bib43 "")), which provides more information with respect to the behavior of random variables than, say, prediction intervals. For example, with a CPD, we can provide an estimate of the probability of the event yn+1≤y∗y\_{n+1}\\leq y^{\*}. For the the remainder of this paper we construct π⁡(⋅,τ)\\pi(\\cdot,\\tau) using the conformity score Ri​(yc)=yi−y^i​(yc)R\_{i}(y\_{c})=y\_{i}-\\hat{y}\_{i}(y\_{c}).
+
+As previously stated, 1−π⁡(yc,τ)1-\\pi(y\_{c},\\tau) provides a pp-value associated with ( [10](https://arxiv.org/html/2208.08598v1#S3.E10 "In 3.1.1 Conformal Inference ‣ 3.1 Event Probability with Conformal Predictive Distributions ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")). Thus, 1−π⁡(yc,1/2)1-\\pi(y\_{c},1/2) is analogous to the mid pp-value, which acts a continuity correction for tests involving discrete test statistics. We point the interested reader to [Lancaster, (1949)](https://arxiv.org/html/2208.08598v1#bib.bib14 ""), [Lancaster, (1961)](https://arxiv.org/html/2208.08598v1#bib.bib15 ""), [Barnard, (1989)](https://arxiv.org/html/2208.08598v1#bib.bib2 "") and [Routledge, (1992)](https://arxiv.org/html/2208.08598v1#bib.bib34 "") for additional details on the mid pp-value. We set τ=1/2\\tau=1/2 for the computation of our conformal predictive distributions throughout the remainder of this paper.
+
+While we have generalized conformal predictive probabilities for the event yn+1≤y∗y\_{n+1}\\leq y^{\*}, we focus on the case where y∗y^{\*} is equal to zero in later sections and instead describe probabilities associated with the event yn+1>0y\_{n+1}>0, which represent win probabilities when yn+1y\_{n+1} is a margin of victory.
+
+### 3.2 Other Event Probability Methods
+
+We specifically outline two competing methods to conformal predictive distributions: event probability through linear regression and event probability through logistic regression.
+
+#### 3.2.1 Event Probability Through Linear Regression
+
+We can estimate the expected value of some new observation yn+1y\_{n+1} using ( [9](https://arxiv.org/html/2208.08598v1#S3.E9 "In 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")), but additional assumptions are required to provide event probabilities. In linear regression, the error term ϵi\\epsilon\_{i} is traditionally assumed to be a mean-zero, normally distributed random variable with variance σ2<∞\\sigma^{2}<\\infty. Together, these assumptions with independence among error terms make up a Gauss-Markov model with normal errors (GMMNE).
+
+A least-squares estimate for the expectation of yn+1y\_{n+1}, y^n+1\\hat{y}\_{n+1}, is xn+1′​β^x^{\\prime}\_{n+1}\\hat{\\beta} where β^=(X′​X)−1​X′​y\\hat{\\beta}=(X^{\\prime}X)^{-1}X^{\\prime}y when XX is a full rank n×pn\\times p matrix of covariates. Given the assumption of a GMMNE, y^n+1\\hat{y}\_{n+1} is normally distributed with mean xn+1′​βx^{\\prime}\_{n+1}\\beta and variance σ2​(xn+1′​(X′​X)−1​xn+1)\\sigma^{2}(x^{\\prime}\_{n+1}(X^{\\prime}X)^{-1}x\_{n+1}). The prediction error for observation n+1n+1, rn+1=yn+1−y^n+1r\_{n+1}=y\_{n+1}-\\hat{y}\_{n+1}, is also normally distributed with mean zero and variance σ2​(1+xn+1′​(X′​X)−1​xn+1)\\sigma^{2}(1+x^{\\prime}\_{n+1}(X^{\\prime}X)^{-1}x\_{n+1}). Dividing rn+1r\_{n+1} by its estimated standard error then yields a tt-distributed random variable. Thus, we can describe probabilities for events of the form yn+1>sy\_{n+1}>s using the standard predictive distribution
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | ℙ⁡(yn+1>s)=1−Ft,n−p​(s−y^n+1σ^​1+xn+1′​(X′​X)−​xn+1),\\mathbb{P}(y\_{n+1}>s)=1-F\_{t,n-p}\\Bigg(\\frac{s-\\hat{y}\_{n+1}}{\\hat{\\sigma}\\sqrt{1+x^{\\prime}\_{n+1}(X^{\\prime}X)^{-}x\_{n+1}}}\\Bigg), |  | (14) |
+
+where σ^2=y′​(I−X′​(X′​X)−1​X′​y/(n−p)CLOSE\\hat{\\sigma}^{2}=y^{\\prime}(I-X^{\\prime}(X^{\\prime}X)^{-1}X^{\\prime}y/(n-p) is the usual unbiased estimator of the error variance σ2\\sigma^{2}, and Ft,n−pF\_{t,n-p} is the cumulative distribution function for a tt-distributed random variable with n−pn-p degrees of freedom ( [Wang et al., 2012](https://arxiv.org/html/2208.08598v1#bib.bib44 ""), [Vovk et al., 2019](https://arxiv.org/html/2208.08598v1#bib.bib43 "")).
+
+#### 3.2.2 Event Probability Through Logistic Regression
+
+While linear regression allows for an estimate of ℙ⁡(yn+1>0)\\mathbb{P}(y\_{n+1}>0) based on assumptions related to the random error distribution, we can also generate probability estimates explicitly through logistic regression. Suppose we still have observations DnD\_{n}. We define a new random variable ziz\_{i} such that zi=𝕀{yi>0}z\_{i}=\\mathbb{I}\\{y\_{i}>0\\}. Instead of assumptions related to the distribution of the random error term ϵi\\epsilon\_{i}, we assume a relationship between the expectation of ziz\_{i}, defined as pip\_{i}, and the covariates xix\_{i} such that log⁡(pi1−pi)=xi′​β\\log\\big(\\frac{p\_{i}}{1-p\_{i}}\\big)=x\_{i}^{\\prime}\\beta. Then, we can then derive an estimate for pip\_{i},
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | p^i=exi′​β^1+exi′​β^,\\hat{p}\_{i}=\\frac{e^{x\_{i}^{\\prime}\\hat{\\beta}}}{1+e^{x\_{i}^{\\prime}\\hat{\\beta}}}, |  | (15) |
+
+where β^\\hat{\\beta} is the maximum-likelihood estimate for β\\beta under the assumption that z1,…,znz\_{1},\\ldots,z\_{n} are independent Bernoulli random variables.
+
+### 3.3 Application to Win Probability in Sports
+
+We now extend the methods outlined in Section [3.1](https://arxiv.org/html/2208.08598v1#S3.SS1 "3.1 Event Probability with Conformal Predictive Distributions ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") and Section [3.2](https://arxiv.org/html/2208.08598v1#S3.SS2 "3.2 Other Event Probability Methods ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") to a sports setting for the purpose of generating win probabilities. Specifically, we wish to identify win probabilities for some future game between a home team uu and away team vv.
+
+The method of generating win probabilities in our case are made possible through the estimation of team strengths. One of the earliest methods for estimating relative team strength comes from [Harville, (1977)](https://arxiv.org/html/2208.08598v1#bib.bib10 ""), [Harville, (1980)](https://arxiv.org/html/2208.08598v1#bib.bib11 ""), which uses the margin of victory (MOV) for each game played. We focus on the initial linear model
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | yu​v=μ+θu−θv+ϵu​v,y\_{uv}=\\mu+\\theta\_{u}-\\theta\_{v}+\\epsilon\_{uv}, |  | (16) |
+
+where yu​vy\_{uv} represents the observed MOV in a game between team uu and vv (u≠vu\\neq v), with the the first team at home and the second away, θu\\theta\_{u} represents the relative strength of team uu across a season, μ\\mu can be interpreted as a “home court” advantage parameter, and ϵu​v\\epsilon\_{uv} is a mean-zero error term. We can align ( [16](https://arxiv.org/html/2208.08598v1#S3.E16 "In 3.3 Application to Win Probability in Sports ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) with ( [9](https://arxiv.org/html/2208.08598v1#S3.E9 "In 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) and identify games across different periods, e.g., games happening in a given week, by assuming
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | yu​v​w=xu​v​w′​β+ϵu​v​w,y\_{uvw}=x\_{uvw}^{\\prime}\\beta+\\epsilon\_{uvw}, |  | (17) |
+
+where yu​v​wy\_{uvw} represents the observed MOV in a game between team uu and vv (u≠vu\\neq v) in period ww, β\\beta is the parameter vector (μ,θ1,…,θp−1)′(\\mu,\\theta\_{1},\\ldots,\\theta\_{p-1})^{\\prime}, ϵu​v​w\\epsilon\_{uvw} is a mean-zero error term, and xu​v​wx\_{uvw} is defined as follows. For i=1,…,pi=1,\\ldots,p, let ete\_{t} be the tt-th column of the p×pp\\times p identity matrix, and let ep+1e\_{p+1} be the pp-dimensional zero vector. Then, xu​v​w=e1+eu+1−ev+1x\_{uvw}=e\_{1}+e\_{u+1}-e\_{v+1} for a game played on team uu’s home court or xu​v​w=eu+1−ev+1x\_{uvw}=e\_{u+1}-e\_{v+1} for a game played at a neutral site.
+
+Without loss of generality, we estimate team strengths under model ( [17](https://arxiv.org/html/2208.08598v1#S3.E17 "In 3.3 Application to Win Probability in Sports ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) relative to an arbitrarily chosen baseline team. Let θ^u\\hat{\\theta}\_{u} be element uu \+ 1 of the least squares estimate for β\\beta under model ( [17](https://arxiv.org/html/2208.08598v1#S3.E17 "In 3.3 Application to Win Probability in Sports ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")), and define θ^p=0\\hat{\\theta}\_{p}=0. Then θ^u−θ^v\\hat{\\theta}\_{u}-\\hat{\\theta}\_{v} is the estimated margin of victory for team uu in a neutral-site game against team vv, and θ^1,…,θ^p\\hat{\\theta}\_{1},\\ldots,\\hat{\\theta}\_{p} serve as estimated strengths of teams 1,…,p1,\\ldots,p, respectively. The rank order of these estimated team strengths provides a ranking of the pp teams.
+
+By the definition of yu​v​wy\_{uvw}, the probability that yu​v​wy\_{uvw} is greater than zero is the probability of a positive MOV, representing a win for the home team. Thus, with the assumption of ( [17](https://arxiv.org/html/2208.08598v1#S3.E17 "In 3.3 Application to Win Probability in Sports ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")), we can now describe the event probability methods outlined in Section [3.1](https://arxiv.org/html/2208.08598v1#S3.SS1 "3.1 Event Probability with Conformal Predictive Distributions ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") and Section [3.2](https://arxiv.org/html/2208.08598v1#S3.SS2 "3.2 Other Event Probability Methods ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") as they relate to win (and loss) probabilities in sports.
+
+The different model assumptions do not change the inherent construction of event probability estimates with CPDs. We can align CPDs with model ( [17](https://arxiv.org/html/2208.08598v1#S3.E17 "In 3.3 Application to Win Probability in Sports ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) by defining
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | πw(yc,τ)=1nw+1∑(u,v,w)\[𝕀{Ru​v​w(yc)<Rnw+1(yc)}+τ𝕀{Ru​v​w(yc)=Rnw+1(yc)}\],\\pi\_{w}(y\_{c},\\tau)=\\frac{1}{n\_{w}+1}\\sum\_{(u,v,w)}\\Big\[\\mathbb{I}\\{R\_{uvw}(y\_{c})<R\_{n\_{w}+1}(y\_{c})\\}+\\tau\\mathbb{I}\\{R\_{uvw}(y\_{c})=R\_{n\_{w}+1}(y\_{c})\\}\\Big\], |  | (18) |
+
+where nwn\_{w} is the number of observations up to and including period ww, xnw+1x\_{n\_{w}+1} is the covariate vector associated with our game of interest, Ru​v​w​(yc)R\_{uvw}(y\_{c}) is constructed using the using the prediction y^u​v​w​(yc)\\hat{y}\_{uvw}(y\_{c}) and Rnw+1​(yc)R\_{n\_{w}+1}(y\_{c}) is the conformity score associated with (xnw+1,yc)(x\_{n\_{w}+1},y\_{c}). We call the construction of win probability through CPDs conformal win probability. As discussed in Section [3.1.2](https://arxiv.org/html/2208.08598v1#S3.SS1.SSS2 "3.1.2 Conformal Predictive Distributions ‣ 3.1 Event Probability with Conformal Predictive Distributions ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments"), we use a mid pp-value approach, selecting τ=1/2\\tau=1/2 for our work.
+
+To provide further intuition for the the use of conformal win probability, consider a women’s basketball game between home team Baylor and away team Oregon State, two highly ranked teams during the 2019-2020 season (see Section [4](https://arxiv.org/html/2208.08598v1#S4 "4 Application to March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") for more results related to the top women’s teams). We wish to estimate probabilities associated with margins of victory for this particular game. For a specific margin of victory, e.g., a margin of victory of five, πw​(5,τ)\\pi\_{w}(5,\\tau) is a probability estimate of the event yn+1≤5y\_{n+1}\\leq 5, which represents a margin of victory of less than or equal to five. Additionally, an estimate for the probability that Baylor wins, i.e., the margin of victory is greater than zero, is 1−πw​(0,τ)1-\\pi\_{w}(0,\\tau).
+
+Figure [2](https://arxiv.org/html/2208.08598v1#S5.F2 "Figure 2 ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") shows the conformal predictive distribution for margin of victory in the case of Baylor vs. Oregon State for the 2019-2020 season. Note that the distribution in Figure [2](https://arxiv.org/html/2208.08598v1#S5.F2 "Figure 2 ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") has jumps that are too small to be visible. Thus, the distribution is nearly continuous. It is straightforward to reassign probability so that the support of the conformal predictive distribution lies entirely on non-zero integers to match the margin of victory distribution. However, our reassignment does not effect our win probability estimate, so we omit the details here.
+
+With the additional assumptions of mean-zero, independent, normally distributed error terms under ( [17](https://arxiv.org/html/2208.08598v1#S3.E17 "In 3.3 Application to Win Probability in Sports ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")), the probability construction shown in ( [14](https://arxiv.org/html/2208.08598v1#S3.E14 "In 3.2.1 Event Probability Through Linear Regression ‣ 3.2 Other Event Probability Methods ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) becomes
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | 1−Ft,nw−p​(−y^u​v​wσ^​1+xu​v​w′​(Xw−1′​Xw−1)−1​xu​v​w),1-F\_{t,n\_{w}-p}\\Bigg(\\frac{-\\hat{y}\_{uvw}}{\\hat{\\sigma}\\sqrt{1+x^{\\prime}\_{uvw}(X\_{w-1}^{\\prime}X\_{w-1})^{-1}x\_{uvw}}}\\Bigg), |  | (19) |
+
+where XwX\_{w} is the matrix of covariates up to and including period ww.
+
+For logistic regression, we could instead assume
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | log⁡(pu​v​w1−pu​v​w)=xu​v​w′​β,\\log\\bigg(\\frac{p\_{uvw}}{1-p\_{uvw}}\\bigg)=x\_{uvw}^{\\prime}\\beta, |  | (20) |
+
+where pu​v​wp\_{uvw} is the probability that yu​v​wy\_{uvw} is greater than to zero. Then, pu​v​wp\_{uvw} is the probability that home team uu wins against away team vv in period ww. Similar approaches to ( [20](https://arxiv.org/html/2208.08598v1#S3.E20 "In 3.3 Application to Win Probability in Sports ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) are seen in [Bradley and Terry, (1952)](https://arxiv.org/html/2208.08598v1#bib.bib4 "") and [Lopez and Matthews, (2015)](https://arxiv.org/html/2208.08598v1#bib.bib25 ""). The interpretation for θu−θv\\theta\_{u}-\\theta\_{v} under model ( [20](https://arxiv.org/html/2208.08598v1#S3.E20 "In 3.3 Application to Win Probability in Sports ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) is no longer the strength difference between teams uu and vv in terms of MOV, but rather the log\\log-odds of a home team victory when home team uu plays away team vv at a neutral site. As in linear regression, the rank order of the estimates of the θ\\theta parameters obtained by logistic regression provides a ranking of the teams.
+
+## 4 Application to March Madness
+
+The following section relays the results of the application of conformal win probabilities to the 2019-2020 NCAA Division 1 basketball season. We include estimates of team strengths, probabilities of making the March Madness field, tournament win probabilities, and a comparison of the win probability methods outlined in Section [3](https://arxiv.org/html/2208.08598v1#S3 "3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments").
+
+### 4.1 Overall Team Strengths for 2019-2020 Season
+
+The regular season ranks and estimated team strengths for the top ten women’s and men’s teams are shown in Table [1](https://arxiv.org/html/2208.08598v1#S4.T1 "Table 1 ‣ 4.1 Overall Team Strengths for 2019-2020 Season ‣ 4 Application to March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") and Table [2](https://arxiv.org/html/2208.08598v1#S4.T2 "Table 2 ‣ 4.1 Overall Team Strengths for 2019-2020 Season ‣ 4 Application to March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments"), respectively. We provide additional 2019-2020 rankings from different sources for comparison, including Associated Press (AP), NCAA Evaluation Tool (NET), KenPom (KP), Ratings Percentage Index (RPI), and College Sports Madness (CSM).
+
+Table 1: Top 10 NCAA women’s teams for 2019-2020 season
+
+| Team | Estimated Strength | Rank | AP | RPI | CSM |
+| --- | --- | --- | --- | --- | --- |
+| Baylor | 40.68 | 1 | 3 | 4 | 4 |
+| South Carolina | 40.30 | 2 | 1 | 1 | 1 |
+| Oregon | 39.32 | 3 | 2 | 2 | 2 |
+| Maryland | 37.90 | 4 | 4 | 3 | 6 |
+| Connecticut | 36.17 | 5 | 5 | 4 | 3 |
+| Mississippi St. | 29.07 | 6 | 9 | 10 | 12 |
+| Indiana | 27.91 | 7 | 20 | 14 | 19 |
+| Stanford | 27.82 | 8 | 7 | 6 | 7 |
+| Louisville | 26.36 | 9 | 6 | 7 | 6 |
+| Oregon State | 25.80 | 10 | 14 | 20 | 17 |
+
+Table 2: Top 10 NCAA men’s teams for 2019-2020 season
+
+| Team | Estimated Strength | Rank | AP | NET | KP |
+| --- | --- | --- | --- | --- | --- |
+| Kansas | 25.26 | 1 | 1 | 2 | 1 |
+| Gonzaga | 22.79 | 2 | 2 | 1 | 2 |
+| Duke | 22.31 | 3 | 11 | 6 | 5 |
+| Michigan State | 20.54 | 4 | 9 | 7 | 7 |
+| Baylor | 20.44 | 5 | 5 | 5 | 3 |
+| Arizona | 19.39 | 6 | - | 14 | 19 |
+| San Diego State | 18.65 | 7 | 6 | 4 | 6 |
+| West Virginia | 18.43 | 8 | 24 | 17 | 10 |
+| Ohio State | 18.22 | 9 | 19 | 16 | 8 |
+| Dayton | 18.07 | 10 | 3 | 3 | 4 |
+
+The large difference between strengths for the top men’s and women’s team is due to the difference in team parity between the two leagues, i.e., the gap in strength between the stronger and weaker women’s teams is much larger than the gap between the stronger and weaker men’s teams.
+
+### 4.2 Probabilities of Making March Madness Field for 2019-2020 Season
+
+The cancellation of the 2020 NCAA basketball post-season prevented the completion of a majority of conference tournaments, as well as the release of final March Madness brackets to the public. At the time of cancellation, there were 20 men’s and 18 women’s automatic bids still undecided.
+
+Knowing the results of the (partially) completed conference tournaments allows for estimation of the probabilities of making the March Madness field as outlined in Section [2.2](https://arxiv.org/html/2208.08598v1#S2.SS2 "2.2 Probability for Making the NCAA Tournament ‣ 2 Probabilities for March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments"). We use regular season data as well as conference tournament progress to update every team’s chances of making the tournament at the time of cancellation. Table [3](https://arxiv.org/html/2208.08598v1#S4.T3 "Table 3 ‣ 4.2 Probabilities of Making March Madness Field for 2019-2020 Season ‣ 4 Application to March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") shows the tournament winners of completed conference tournaments for NCAA women’s basketball. These teams have probability 1 of making the March Madness field.
+
+Table 3: Conference champions for 2019-2020 women’s basketball season
+
+| Conference | Winner |
+| --- | --- |
+| Atlantic-10 | Dayton |
+| ACC | North Carolina St. |
+| American | Connecticut |
+| Big East | DePaul |
+| Big Ten | Maryland |
+| Horizon | IUPUI |
+| Ivy League | Princeton∗ |
+| Mountain West | Boise St. |
+| Ohio Valley | Southeast Missouri St. |
+| Pac-12 | Oregon |
+| SEC | South Carolina |
+| Southern | Samford |
+| Summit | South Dakota |
+| WCC | Portland |
+
+While the Ivy League conference tournament was cancelled, Princeton was awarded an automatic bid to the 2019-2020 March Madness tournament based on their regular season performance.
+
+With the additional information provided by the outcomes of the completed conference tournaments, there are five different situations for teams as it relates to making the March Madness tournament:
+
+1. 1.
+
+
+A team has already made the tournament.
+
+2. 2.
+
+
+A team must win their conference tournament or relies on a small number of teams ranked below them winning their respective conference tournament to make the tournament.
+
+3. 3.
+
+
+A team has already been eliminated from their conference tournament and relies on a small number of teams ranked below them winning their respective conference tournament to make the tournament.
+
+4. 4.
+
+
+A team must win their conference tournament to make the tournament.
+
+5. 5.
+
+
+A team cannot make the tournament.
+
+
+Table [4](https://arxiv.org/html/2208.08598v1#S4.T4 "Table 4 ‣ 4.2 Probabilities of Making March Madness Field for 2019-2020 Season ‣ 4 Application to March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") shows the situations for women’s teams ranked from thirty-three to sixty-four.
+
+Table 4: Situations for women’s bubble teams
+
+| Situation | Teams |
+| --- | --- |
+| 1 | Iowa St., Texas, Drake, James Madison, Missouri St., Alabama, TCU, Arizona St., Oklahoma St. |
+| 2 | Kansas St. |
+| 3 | Marquette, LSU, North Carolina |
+| 4 | West Virginia, Oklahoma |
+| 5 | all other bubble teams |
+
+When using the rankings constructed with regular season data and model ( [17](https://arxiv.org/html/2208.08598v1#S3.E17 "In 3.3 Application to Win Probability in Sports ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")), the Big 12 conference tournament was the only undecided tournament involving bubble teams, resulting in Kansas State being the sole team in Situation 2 and West Virginia and Oklahoma as the only two teams in Situation 4. Table [5](https://arxiv.org/html/2208.08598v1#S4.T5 "Table 5 ‣ 4.2 Probabilities of Making March Madness Field for 2019-2020 Season ‣ 4 Application to March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") shows the March Madness tournament field probabilities for teams in Situations 2, 3 and 4, constructed with ( [3](https://arxiv.org/html/2208.08598v1#S2.E3 "In 2.1 Win Probability for Single-Elimination Tournaments ‣ 2 Probabilities for March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) and conformal win probability. Probabilities of making the tournament for the men’s teams in Situations 2, 3, and 4 are shown in Supplementary Materials. While not listed in Table [5](https://arxiv.org/html/2208.08598v1#S4.T5 "Table 5 ‣ 4.2 Probabilities of Making March Madness Field for 2019-2020 Season ‣ 4 Application to March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments"), there is a large number of teams ranked below sixty-four that also fall into Situation 4.
+
+Table 5: Probabilities of making NCAA tournament field for women’s bubble teams for 2019-2020 season.
+
+| Team | Situation | Overall Rank | Probability |
+| --- | --- | --- | --- |
+| Marquette | 3 | 41 | 0.999 |
+| LSU | 3 | 42 | 0.990 |
+| North Carolina | 3 | 43 | 0.874 |
+| Kansas St. | 2 | 44 | 0.471 |
+| West Virginia | 4 | 50 | 0.005 |
+| Oklahoma | 4 | 62 | 0.005 |
+
+### 4.3 March Madness Win Probabilities
+
+Even with the results of the completed conference tournaments, the number of potential tournament brackets remains extremely large. Thus, we forgo the enumeration of all potential brackets and instead focus on three exemplar brackets and three expert brackets to generate March Madness win probabilities. The first two brackets represent two extremes. Bracket 1 maximizes tournament parity, selecting the strongest remaining team from each conference tournament bracket, while Bracket 2 selects the weakest remaining team. Bracket 3 is constructed randomly, selecting teams based on their conference tournament win probabilities. We compare these brackets, and the March Madness win probabilities for the top teams included in these brackets, to those generated by subject matter experts.
+
+For the women, we include brackets from basketball expert Michelle Smith ( [Northam, 2020](https://arxiv.org/html/2208.08598v1#bib.bib29 "")), [College Sports Madness, (2020)](https://arxiv.org/html/2208.08598v1#bib.bib5 "") and [RealTimeRPI.com, (2020)](https://arxiv.org/html/2208.08598v1#bib.bib32 ""). Table [6](https://arxiv.org/html/2208.08598v1#S4.T6 "Table 6 ‣ 4.3 March Madness Win Probabilities ‣ 4 Application to March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") shows the different bracket win probabilities for the top ten women’s teams, ranked using the ranking method outlined in Section [3.3](https://arxiv.org/html/2208.08598v1#S3.SS3 "3.3 Application to Win Probability in Sports ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments"). Exemplar bracket results for the men’s 2019-2020 season are shown in Supplementary Materials, with brackets generated by NCAA basketball experts Andy Katz ( [Staats and Katz, 2020](https://arxiv.org/html/2208.08598v1#bib.bib37 "")), Joe Lunardi ( [Lunardi, 2020](https://arxiv.org/html/2208.08598v1#bib.bib26 "")) and Jerry Palm ( [Palm, 2020](https://arxiv.org/html/2208.08598v1#bib.bib31 "")). Figure [3](https://arxiv.org/html/2208.08598v1#S5.F3 "Figure 3 ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") shows the ranges of win probabilities across all exemplar brackets for the top 25 teams. Figure [4](https://arxiv.org/html/2208.08598v1#S5.F4 "Figure 4 ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") shows a comparison of win probabilities across the expert generated brackets. Figure [5](https://arxiv.org/html/2208.08598v1#S5.F5 "Figure 5 ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") compares cumulative NCAA tournament win probabilities across brackets for the top 25 women’s teams. The cumulative NCAA tournament win probabilities for the top 25 men’s teams are included in Supplementary Materials.
+
+Table 6: March Madness win probabilities given exemplar brackets for top ranked women’s teams.
+
+| Team | Bracket 1 | Bracket 2 | Bracket 3 | Smith | CSM | RTRPI |
+| --- | --- | --- | --- | --- | --- | --- |
+| Baylor | 0.289 | 0.289 | 0.289 | 0.277 | 0.303 | 0.221 |
+| South Carolina | 0.278 | 0.277 | 0.278 | 0.267 | 0.276 | 0.304 |
+| Oregon | 0.212 | 0.212 | 0.212 | 0.220 | 0.195 | 0.208 |
+| Maryland | 0.124 | 0.125 | 0.124 | 0.143 | 0.125 | 0.171 |
+| Connecticut | 0.069 | 0.069 | 0.069 | 0.069 | 0.073 | 0.071 |
+| Mississippi St. | 0.008 | 0.008 | 0.008 | 0.006 | 0.007 | 0.007 |
+| Indiana | 0.005 | 0.005 | 0.005 | 0.003 | 0.004 | 0.002 |
+| Stanford | 0.005 | 0.005 | 0.005 | 0.005 | 0.007 | 0.006 |
+| Louisville | 0.002 | 0.002 | 0.002 | 0.003 | 0.002 | 0.002 |
+| Oregon St. | 0.002 | 0.002 | 0.002 | 0.001 | 0.001 | 0.001 |
+
+In general, tournament probabilities do not change drastically across brackets. However, we do see larger probability ranges associated with the top women’s teams. Specifically, the tournament win probability for Baylor, the highest ranked team with respect to our ranking, drops to 0.221 with the RTRPI expert bracket, as opposed to 0.288 and 0.303 for the Smith and CSM brackets, respectively. Additionally, the overall tournament win probability for South Carolina increases to 0.304 with the RTRPI bracket. Figure [6](https://arxiv.org/html/2208.08598v1#S5.F6 "Figure 6 ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") shows round-by-round win probabilities for Baylor and South Carolina for each of the expert brackets.
+
+We see that Baylor’s RTRPI round-by-round win probability becomes lower than South Carlolina’s after the second round, dropping to 0.856, compared to South Carlolina’s 0.927. The largest decrease occurs during the Elite Eight, where Baylor’s probability of moving on from the Elite Eight (under the RTRPI bracket) is 0.600, compared to South Carolina’s 0.819. This is due to Connecticut’s placement in the same region as Baylor, with each team seeded as the 1-seed and 2-seed, respectively. In the other expert brackets, Connecticut was placed in the same region as Maryland. The other brackets keep the round-by-round win probabilities for these two teams relatively stable.
+
+### 4.4 Win Probability Calibration
+
+In order to assess the win probability estimates generated using the methods outlined in Section [3](https://arxiv.org/html/2208.08598v1#S3 "3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments"), we compare estimates for previous NCAA basketball seasons, including the shortened 2019-2020 season. We use the regular season games to estimate the team strengths and then construct win probabilities for each game of post-season play.
+
+Ideally, the estimated probability for an event occurring should be calibrated. A perfectly calibrated model is one such that
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | Ep^​\[\|P⁡(z^=z\|p^=p)−p\|\]=0,\\textrm{E}\_{\\hat{p}}\\Big\[\\bigg\|P\\Big(\\hat{z}=z\|\\hat{p}=p\\Big)-p\\bigg\|\\Big\]=0, |  | (21) |
+
+where zz is an observed outcome, z^\\hat{z} is the predicted outcome, p^\\hat{p} is a probability estimate for the predicted outcome, and pp is the true outcome probability ( [Guo et al., 2017](https://arxiv.org/html/2208.08598v1#bib.bib9 "")). In the NCAA basketball case ( [21](https://arxiv.org/html/2208.08598v1#S4.E21 "In 4.4 Win Probability Calibration ‣ 4 Application to March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) implies that if we inspect, say, each game with an estimated probability of 40% for home team victory, we should expect a home team victory in 40% of the observed responses. We can assess calibration in practice by grouping similarly valued probability estimates into a single bin and then calculating the relative frequency of home team victories for observations within each bin. For visual comparison of calibration, Figure [7](https://arxiv.org/html/2208.08598v1#S5.F7 "Figure 7 ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") shows a reliability plot for the win probability estimates generated using the methods outlined in Section [3](https://arxiv.org/html/2208.08598v1#S3 "3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") with bin intervals of width 0.025. From Figure [7](https://arxiv.org/html/2208.08598v1#S5.F7 "Figure 7 ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") we can see that while the methods are comparable for higher win probability estimates, the conformal win probability approach is much better calibrated for lower win probability estimates. A majority of observed relative frequencies for conformal win probabilities fall closer to the dotted line, signifying better calibration than the other two methods.
+
+To provide a numerical interpretation of calibration, we compare the three probability estimation approaches mentioned in Section [3](https://arxiv.org/html/2208.08598v1#S3 "3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") using log\\log-loss
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | log⁡L⁡(p^,z)=z​log⁡(p^)+(1−z)​log⁡(1−p^),\\log L(\\hat{p},z)=z\\log(\\hat{p})+(1-z)\\log(1-\\hat{p}), |  | (22) |
+
+which generates loss for each individual win probability estimate rather than a group of binned estimates. log\\log-loss has been shown to have strong empirical and theoretical properties as a loss function ( [Painsky and Wornell, 2018](https://arxiv.org/html/2208.08598v1#bib.bib30 ""), [Vovk, 2015](https://arxiv.org/html/2208.08598v1#bib.bib41 "")). Figure [8](https://arxiv.org/html/2208.08598v1#S5.F8 "Figure 8 ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") shows the relativelog\\log-loss, i.e., the ratio of the log\\log-loss for one method to the minimum log\\log-loss across all methods, broken up by season and league.
+
+We see that for all year-league combinations except for the women’s 2015-2016 season and men’s 2020-2021 season, conformal win probabilities performed better than the other two methods. Additionally, even when conformal win probabilities are not the best performing approach, they still result in a log\\log-loss within one percent of the best performing approach. Table [7](https://arxiv.org/html/2208.08598v1#S4.T7 "Table 7 ‣ 4.4 Win Probability Calibration ‣ 4 Application to March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") shows the results for the entire collection of probability estimates for each league.
+
+Table 7: Relative log\\log-loss for NCAA men’s and women’s basketball win probability estimates by league.
+
+|  | Method |
+| --- | --- |
+| League | Conformal | Linear | Logistic |
+| --- | --- | --- | --- |
+| Women | 1.00 | 1.01 | 1.02 |
+| Men | 1.00 | 1.02 | 1.03 |
+
+## 5 Conclusion
+
+The cancellation of March Madness in 2020 resulted in disappointment for many across the country, fans and athletes alike. We explored win probabilities as they relate to the NCAA tournament, delivering a closed-form calculation for probabilities of making the tournament, given a set of team strengths estimated from game outcomes. We introduced conformal win probabilities and compared to win probabilities derived from logistic regression and linear regression assuming normally distributed, independent, mean-zero errors. Conformal win probabilities were superior to those obtained from the other methods.
+
+For the application in this paper, we limited our discussion to model ( [16](https://arxiv.org/html/2208.08598v1#S3.E16 "In 3.3 Application to Win Probability in Sports ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")). Each of the win probability methods described in Section [3](https://arxiv.org/html/2208.08598v1#S3 "3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments") can be applied to more complex models, so future work could focus on comparing these methods in a more complex setting. One example of a model we could assume is
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | yu​v​w=μ+θu​w−θv​w+ϵu​v​w,y\_{uvw}=\\mu+\\theta\_{uw}-\\theta\_{vw}+\\epsilon\_{uvw}, |  | (23) |
+
+where θu​w\\theta\_{uw} is the strength of team uu during week ww. ( [23](https://arxiv.org/html/2208.08598v1#S5.E23 "In 5 Conclusion ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) is rank deficient, so we could consider a fused lasso approach ( [Tibshirani et al., 2005](https://arxiv.org/html/2208.08598v1#bib.bib40 "")), where the objective function is penalized by λ​∑u∑w=1W−1\|θu​w−θu​w+1\|\\lambda\\sum\_{u}\\sum\_{w=1}^{W-1}\|\\theta\_{uw}-\\theta\_{uw+1}\| to encourage the difference in parameter values from one period to the next to be small for each team. This approach allows for relative team strengths to change across a season, rather than estimating one average strength for each team over the course of the entire season. Additionally, we could incorporate team “match-up” statistics, e.g., the difference between the teams’ offensive or defensive efficiencies, rather than solely estimating a win probability based on the teams playing.
+
+The focus on event probabilities can also be extended to a betting scenario. In this paper, the event probability of interest was a win (or loss) for a specific team. This event corresponds to a “moneyline” bet in sports betting, i.e., betting on a specific team to win a game. Another type of bet is the “spread” bet, which accounts for differences in the strengths of two teams, either through the adjustment of a point spread or the odds associated with a particular team. The spread is chosen by bookmakers so that the total amount of money bet on the spread of the favorite is near that bet against favorite (as opposed to being representative of, say, the expected margin of victory). For example, suppose we have an upcoming contest between two teams, a favorite and an underdog, with a spread of negative three. A bettor taking the spread on the favorite would win the bet if the favorite wins by more than three points, while a bettor taking the spread against the favorite would win the bet if the underdog wins or loses by less than three points. In order to determine whether to bet on the favorite or the underdog in a spread bet, we can utilize conformal win probabilities. Specifically, calculating π⁡(−s,1/2)\\pi(-s,1/2), where ss is the spread for a game of interest, generates an estimate of the probability that the margin of victory (favorite score - underdog score) will be less than or equal to −s-s.
+
+One other major simplification we utilize in this paper is that estimated team strength does not change following the regular season. Thus, we eliminate the potential for teams to receive a higher (or lower) overall rank based on their conference tournament performance. While this simplifies the analysis, allowing for teams to move up or down in rank might more closely match the March Madness selection committee’s actual process.
+
+## References
+
+- Asif and McHale, (2016)
+Asif, M. and McHale, I. G. (2016).
+
+In-play forecasting of win probability in one-day international
+cricket: A dynamic logistic regression model.
+
+International Journal of Forecasting, 32(1):34–43.
+
+- Barnard, (1989)
+Barnard, G. (1989).
+
+On alleged gains in power from lower p-values.
+
+Statistics in Medicine, 8(12):1469–1477.
+
+- Binder, (2021)
+Binder, A. (2021 (accessed November 18, 2021)).
+
+N.C.A.A. Expands Division I Women’s Basketball Tournament.
+
+- Bradley and Terry, (1952)
+Bradley, R. A. and Terry, M. E. (1952).
+
+Rank analysis of incomplete block designs: I. the method of paired
+comparisons.
+
+Biometrika, 39(3/4):324–345.
+
+- College Sports Madness, (2020)
+College Sports Madness (2020 (accessed May 12, 2020)).
+
+Women’s Basketball Bracketology.
+
+- Edwards, (1991)
+Edwards, C. T. (1991).
+
+The combinatorial theory of single-elimination tournaments.
+
+PhD thesis, Montana State University-Bozeman, College of Letters &
+Science.
+
+- Gammerman et al., (1998)
+Gammerman, A., Vovk, V., and Vapnik, V. (1998).
+
+Learning by transduction.
+
+In Proceedings of the Fourteenth conference on Uncertainty in
+artificial intelligence, pages 148–155.
+
+- Gramacy et al., (2013)
+Gramacy, R. B., Jensen, S. T., and Taddy, M. (2013).
+
+Estimating player contribution in hockey with regularized logistic
+regression.
+
+Journal of Quantitative Analysis in Sports, 9(1):97–111.
+
+- Guo et al., (2017)
+Guo, C., Pleiss, G., Sun, Y., and Weinberger, K. Q. (2017).
+
+On calibration of modern neural networks.
+
+In International Conference on Machine Learning, pages
+1321–1330. PMLR.
+
+- Harville, (1977)
+Harville, D. (1977).
+
+The use of linear-model methodology to rate high school or college
+football teams.
+
+Journal of the American Statistical Association,
+72(358):278–289.
+
+- Harville, (1980)
+Harville, D. (1980).
+
+Predictions for national football league games via linear-model
+methodology.
+
+Journal of the American Statistical Association,
+75(371):516–524.
+
+- Hill, (1974)
+Hill, I. (1974).
+
+Association football and statistical inference.
+
+Journal of the Royal Statistical Society: Series C (Applied
+Statistics), 23(2):203–208.
+
+- Karlis and Ntzoufras, (2008)
+Karlis, D. and Ntzoufras, I. (2008).
+
+Bayesian modelling of football outcomes: using the skellam’s
+distribution for the goal difference.
+
+IMA Journal of Management Mathematics, 20(2):133–145.
+
+- Lancaster, (1949)
+Lancaster, H. (1949).
+
+The combination of probabilities arising from data in discrete
+distributions.
+
+Biometrika, 36(3/4):370–382.
+
+- Lancaster, (1961)
+Lancaster, H. O. (1961).
+
+Significance tests in discrete distributions.
+
+Journal of the American Statistical Association,
+56(294):223–234.
+
+- Lawless and Fredette, (2005)
+Lawless, J. and Fredette, M. (2005).
+
+Frequentist prediction intervals and predictive distributions.
+
+Biometrika, 92(3):529–542.
+
+- Lee, (1999)
+Lee, A. (1999).
+
+Applications: Modelling rugby league data via bivariate negative
+binomial regression.
+
+Australian & New Zealand Journal of Statistics,
+41(2):141–152.
+
+- Lei et al., (2018)
+Lei, J., G’Sell, M., Rinaldo, A., Tibshirani, R. J., and Wasserman, L. (2018).
+
+Distribution-free predictive inference for regression.
+
+Journal of the American Statistical Association,
+113(523):1094–1111.
+
+- Leiker, (2021)
+Leiker, E. (2021 (accessed June 10, 2021)).
+
+NCAA considering changes to women’s basketball branding,
+tournament.
+
+- Liebscher and Kirschstein, (2017)
+Liebscher, S. and Kirschstein, T. (2017).
+
+Predicting the outcome of professional darts tournaments.
+
+International Journal of Performance Analysis in Sport,
+17(5):666–683.
+
+- Lindsey, (1961)
+Lindsey, G. R. (1961).
+
+The progress of the score during a baseball game.
+
+Journal of the American Statistical Association,
+56(295):703–728.
+
+- Liu et al., (2016)
+Liu, Q., Zhuang, Y., and Wan, F. (2016).
+
+A new model for analyzing the win probability and strength of the two
+sides of the table tennis match.
+
+In First International Conference on Real Time Intelligent
+Systems, pages 52–59. Springer.
+
+- Lock and Nettleton, (2014)
+Lock, D. and Nettleton, D. (2014).
+
+Using random forests to estimate win probability before each play of
+an nfl game.
+
+Journal of Quantitative Analysis in Sports, 10(2):197–205.
+
+- Loeffelholz et al., (2009)
+Loeffelholz, B., Bednar, E., and Bauer, K. W. (2009).
+
+Predicting nba games using neural networks.
+
+Journal of Quantitative Analysis in Sports, 5(1).
+
+- Lopez and Matthews, (2015)
+Lopez, M. J. and Matthews, G. J. (2015).
+
+Building an ncaa men’s basketball predictive model and quantifying
+its success.
+
+Journal of Quantitative Analysis in Sports, 11(1):5–12.
+
+- Lunardi, (2020)
+Lunardi, J. (2020 (accessed March 18, 2020)).
+
+Bracketology with Joe Lunardi.
+
+- Moffatt et al., (2014)
+Moffatt, J., Scarf, P., Passfield, L., McHale, I. G., and Zhang, K. (2014).
+
+To lead or not to lead: analysis of the sprint in track cycling.
+
+Journal of Quantitative Analysis in Sports, 10(2):161–172.
+
+- NCAA, (2021)
+NCAA (2021 (accessed June 8, 2021)).
+
+How the field of 68 teams is picked for March Madness.
+
+- Northam, (2020)
+Northam, M. (2020 (accessed May 12, 2020)).
+
+The NCAA women’s basketball bracket, projected 6 days from
+selections.
+
+- Painsky and Wornell, (2018)
+Painsky, A. and Wornell, G. (2018).
+
+On the universality of the logistic loss function.
+
+In 2018 IEEE International Symposium on Information Theory
+(ISIT), pages 936–940. IEEE.
+
+- Palm, (2020)
+Palm, J. (2020 (accessed March 21, 2020)).
+
+Bracketology.
+
+- RealTimeRPI.com, (2020)
+RealTimeRPI.com ((accessed 15 Jan, 2022) 2020).
+
+RealTimeRPI.com Bracket Projections - Women’s Basketball
+(2019-2020).
+
+- Robberechts et al., (2019)
+Robberechts, P., Van Haaren, J., and Davis, J. (2019).
+
+Who will win it? an in-game win probability model for football.
+
+arXiv preprint arXiv:1906.05029.
+
+- Routledge, (1992)
+Routledge, R. (1992).
+
+Resolving the conflict over fisher’s exact test.
+
+Canadian Journal of Statistics, 20(2):201–209.
+
+- Semenov et al., (2016)
+Semenov, A., Romov, P., Korolev, S., Yashkov, D., and Neklyudov, K. (2016).
+
+Performance of machine learning algorithms in predicting game outcome
+from drafts in dota 2.
+
+In International Conference on Analysis of Images, Social
+Networks and Texts, pages 26–37. Springer.
+
+- Shafer and Vovk, (2008)
+Shafer, G. and Vovk, V. (2008).
+
+A tutorial on conformal prediction.
+
+Journal of Machine Learning Research, 9(3).
+
+- Staats and Katz, (2020)
+Staats, W. and Katz, A. (2020 (accessed March 22, 2020)).
+
+NCAA predictions: Projections for the 2020 bracket by Andy
+Katz.
+
+- Stern, (1991)
+Stern, H. (1991).
+
+On the probability of winning a football game.
+
+The American Statistician, 45(3):179–183.
+
+- Stern, (1994)
+Stern, H. S. (1994).
+
+A brownian motion model for the progress of sports scores.
+
+Journal of the American Statistical Association,
+89(427):1128–1134.
+
+- Tibshirani et al., (2005)
+Tibshirani, R., Saunders, M., Rosset, S., Zhu, J., and Knight, K. (2005).
+
+Sparsity and smoothness via the fused lasso.
+
+Journal of the Royal Statistical Society: Series B (Statistical
+Methodology), 67(1):91–108.
+
+- Vovk, (2015)
+Vovk, V. (2015).
+
+The fundamental nature of the log loss function.
+
+In Fields of Logic and Computation II, pages 307–318.
+Springer.
+
+- Vovk et al., (2005)
+Vovk, V., Gammerman, A., and Shafer, G. (2005).
+
+Algorithmic learning in a random world.
+
+Springer Science & Business Media.
+
+- Vovk et al., (2019)
+Vovk, V., Shen, J., Manokhin, V., and Min-ge, X. (2019).
+
+Nonparametric predictive distributions based on conformal prediction.
+
+Machine Learning, 108(3):445–474.
+
+- Wang et al., (2012)
+Wang, C.-M., Hannig, J., and Iyer, H. K. (2012).
+
+Fiducial prediction intervals.
+
+Journal of Statistical Planning and Inference,
+142(7):1980–1990.
+
+
+18453627Figure 1: Bracket for eight-team single-elimination tournament.
+
+![Refer to caption](https://arxiv.org/html/2208.08598v1/cpd-baylor.png)
+
+Figure 2: Margin of victory conformal predictive distribution for Baylor vs. Oregon State with τ=1/2\\tau=1/2 using regular season data from 2019-2020 NCAA women’s basketball season. The blue dotted line identifies a margin of victory for Baylor of 5, i.e., Baylor beating Oregon State by five points, with π⁡(5,1/2)=0.148\\pi(5,1/2)=0.148 identified by the red dashed line.
+
+| A | B |
+| --- | --- |
+| ![Refer to caption](https://arxiv.org/html/2208.08598v1/bracket_wp_range_2.png) | ![Refer to caption](https://arxiv.org/html/2208.08598v1/x1.png) |
+
+Figure 3: Range of exemplar bracket win probabilities for top 25 women’s (A) and men’s (B) teams during 2019-2020 season.
+
+![Refer to caption](https://arxiv.org/html/2208.08598v1/bracket_wp_expert_w.png)
+
+Figure 4: Expert bracket win probabilities for top 25 women’s teams.
+
+![Refer to caption](https://arxiv.org/html/2208.08598v1/women-cdf.png)
+
+Figure 5: Cumulative tournament win probabilities for top 25 women’s teams.
+
+![Refer to caption](https://arxiv.org/html/2208.08598v1/rbr-wp-w.png)
+
+Figure 6: Round-by-round win probabilities for Baylor and South Carolina. The values shown indicate the probabilities of a team moving on from a particular round.
+
+![Refer to caption](https://arxiv.org/html/2208.08598v1/calibration-plot-all-byhome.png)
+
+Figure 7: Empirical calibration comparison for NCAA women’s and men’s basketball for 2014-2015 to 2020-2021 post-seasons for methods outlined in Section [3](https://arxiv.org/html/2208.08598v1#S3 "3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments").
+
+![Refer to caption](https://arxiv.org/html/2208.08598v1/log-loss-season-league-byhome-v2.png)
+
+Figure 8: Relative log\\log-loss comparison for NCAA women’s and men’s basketball for win probability estimates associated with 2014-2015 to 2020-2021 post-seasons for methods outlined in Section [3](https://arxiv.org/html/2208.08598v1#S3 "3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments").
+
+![Refer to caption](https://arxiv.org/html/2208.08598v1/men-cdf.png)
+
+Figure S1: Cumulative tournament win probabilities for top 25 men’s teams.
+
+## Supplementary Materials
+
+### S.1 Closed-Form Probability Calculations for March Madness Rank
+
+A team’s probability of winning March Madness is not only dependent on making the tournament, but also on where they are ranked within the tournament. Each team’s rank in the tournament, as well as the selection of the thirty-two at-large bids, are decided by a selection committee. The sixty-four team field is partitioned into four regions, each with sixteen teams. Within a region, each team is assigned a “seed” according to their rank. Stronger teams receive lower seeds, while weaker teams receive higher seeds. Ideally, the strongest team in each region receives a 1-seed, the second strongest a 2-seed, and so on. There are additional constraints related to match-ups between teams in the same conferences as well as location considerations ( [NCAA, 2021](https://arxiv.org/html/2208.08598v1#bib.bib28 "")).
+
+To keep each region equally competitive, each of the four teams at each seed are placed into different regions using the S-curve method. The S-curve method places the teams in regions one through four based on their overall rank according to the order shown in Table [S1](https://arxiv.org/html/2208.08598v1#Sx1.T1 "Table S1 ‣ S.1 Closed-Form Probability Calculations for March Madness Rank ‣ Supplementary Materials ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments"). While a simplification of the actual selection process, we use the S-curve method, combined with estimated teams strengths constructed using the method outlined in Section [3.3](https://arxiv.org/html/2208.08598v1#S3.SS3 "3.3 Application to Win Probability in Sports ‣ 3 Win Probabilities for Individual Games ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments"), as the sole tools for constructing a bracket given a tournament field.
+
+Table S1: Region placement using S-curve method
+
+|  | Region |
+| --- | --- |
+| Seed | 1 | 2 | 3 | 4 |
+| --- | --- | --- | --- | --- |
+| 1 | 1 | 2 | 3 | 4 |
+| 2 | 8 | 7 | 6 | 5 |
+| 3 | 9 | 10 | 11 | 12 |
+| 4 | 16 | 15 | 14 | 13 |
+| 5 | 17 | 18 | 19 | 20 |
+| 6 | 24 | 23 | 22 | 21 |
+| 7 | 25 | 26 | 27 | 28 |
+| 8 | 32 | 31 | 30 | 29 |
+| 9 | 33 | 34 | 35 | 36 |
+| 10 | 40 | 39 | 38 | 37 |
+| 11 | 41 | 42 | 43 | 44 |
+| 12 | 48 | 47 | 46 | 45 |
+| 13 | 49 | 50 | 51 | 52 |
+| 14 | 56 | 55 | 54 | 53 |
+| 15 | 57 | 58 | 59 | 60 |
+| 16 | 64 | 63 | 62 | 61 |
+
+As in Section [2.2](https://arxiv.org/html/2208.08598v1#S2.SS2 "2.2 Probability for Making the NCAA Tournament ‣ 2 Probabilities for March Madness ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments"), let team uu be the team whose overall rank is uu. We define RuR\_{u} as a random variable describing the March Madness tournament rank for team uu. Then, the probability of team uu being ranked rr in the tournament and making the tournament field, can be decomposed into
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | ℙ⁡(Ru=r,Fu=1)=ℙ⁡(Ru=r\|Fu=1)​ℙ​(Fu=1).\\mathbb{P}(R\_{u}=r,F\_{u}=1)=\\mathbb{P}(R\_{u}=r\|F\_{u}=1)\\mathbb{P}(F\_{u}=1). |  | (24) |
+
+The conditional portion of ( [24](https://arxiv.org/html/2208.08598v1#Sx1.E24 "In S.1 Closed-Form Probability Calculations for March Madness Rank ‣ Supplementary Materials ‣ Using Conformal Win Probability to Predict the Winners of the Cancelled 2020 NCAA Basketball Tournaments")) can be further decomposed into
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | ℙ⁡(Ru=r\|Fu=1)={0r>uℙ({Lu≤tr}△{Cu=1})r=uℙ({Lu=tr−1}∩{Cu=1})r<u,\\mathbb{P}(R\_{u}=r\|F\_{u}=1)=\\left\\{\\begin{array}\[\]{c@{}c@{}}0&\\quad r>u\\\<br>\\mathbb{P}(\\{L\_{u}\\leq t\_{r}\\}\\triangle\\{C\_{u}=1\\})&\\quad r=u\\\<br>\\mathbb{P}(\\{L\_{u}=t\_{r-1}\\}\\cap\\{C\_{u}=1\\})&\\quad r<u\\end{array}\\;,\\right. |  | (25) |
+
+where A​△​BA\\triangle B is the symmetric difference between events AA and BB. The symmetric difference between the events {Lu≤tu}\\{L\_{u}\\leq t\_{u}\\} and {Cu=1}\\{C\_{u}=1\\} captures the scenario where team uu either wins their conference tournament or makes the March Madness field as an at-large bid, but not both. With our simplifications, a team cannot be ranked lower in the tournament than their overall rank, so a March Madness tournament rank r>ur>u occurs with probability zero. To receive a rank higher than their overall rank, a team must win their conference tournament, and (any number of) teams ranked ahead of them must be eliminated from field contention.
+
+The only way into the tournament for low-ranked teams is to win their conference tournament. Tournament ranks for these teams are dependent on how many other teams ranked higher than them win their respective conference tournament. The conditional probability of tournament rank rr for low-ranked team uu is
+
+|     |     |     |     |
+| --- | --- | --- | --- |
+|  | ℙ⁡(Ru=r\|Fu=1)=ℙ⁡(∑k=1KCℋku=r−32),\\mathbb{P}(R\_{u}=r\|F\_{u}=1)=\\mathbb{P}\\Bigg(\\sum\_{k=1}^{K}C\_{\\mathcal{H}^{u}\_{k}}=r-32\\Bigg), |  | (26) |
+
+where {Cℋk⁡(u)u=1}\\{C\_{\\mathcal{H}^{u}\_{k(u)}}=1\\} occurs with probability one because we condition on team uu having already won their conference tournament.
+
+### S.2 Additional Tables and Figures
+
+Table S2: Situations for men’s bubble teams
+
+| Situation | Teams |
+| --- | --- |
+| 1 | Utah St., Florida, Auburn |
+| 2 | Indiana, LSU, Arkansas, Oklahoma, Wichita St., Cincinnati |
+| 3 | Stanford |
+| 4 | Alabama, Providence, Syracuse, Mississippi St., Memphis, NC St., Arizona St., Rhode Island, |
+|  | Virginia, USC, Oklahoma St., Tennessee, Notre Dame, Richmond, Yale, Clemson, Connecticut |
+| 5 | all other teams |
+
+Table S3: Probabilities of making NCAA tournament field for men’s bubble teams for 2019-2020 season.
+
+| Team | Situation | Overall Rank | Probability |
+| --- | --- | --- | --- |
+| Oklahoma | 2 | 40 | 0.999 |
+| Wichita St. | 2 | 41 | 0.999 |
+| Cincinnati | 2 | 42 | 0.997 |
+| Xavier | 3 | 43 | 0.970 |
+| St. Mary’s (CA) | 3 | 44 | 0.846 |
+| Alabama | 2 | 45 | 0.575 |
+| Providence | 2 | 46 | 0.231 |
+| Syracuse | 2 | 47 | 0.040 |
+| Mississippi St. | 4 | 48 | 0.082 |
+| Memphis | 4 | 49 | 0.114 |
+| NC St. | 4 | 50 | 0.021 |
+| Arizona St. | 4 | 51 | 0.141 |
+| Rhode Island | 4 | 52 | 0.125 |
+| Virginia | 4 | 53 | 0.041 |
+| USC | 4 | 56 | 0.041 |
+| Oklahoma St. | 4 | 57 | 0.007 |
+| Tennessee | 4 | 58 | 0.026 |
+| Notre Dame | 4 | 60 | 0.033 |
+| Richmond | 4 | 61 | 0.104 |
+| Yale | 4 | 62 | 0.520 |
+| Clemson | 4 | 63 | 0.017 |
+| Connecticut | 4 | 64 | 0.064 |
+| Texas | 4 | 65 | 0.008 |
+| VCU | 4 | 66 | 0.053 |
+| Davidson | 4 | 67 | 0.060 |
+| South Carolina | 4 | 68 | 0.020 |
+
+Table S4: Bracket 1 for women’s tournament and respective seeding
+
+| Seed | Region 1 | Region 2 | Region 3 | Region 4 |
+| --- | --- | --- | --- | --- |
+| 1 | Baylor | Maryland | South Carolina | Oregon |
+| 2 | Stanford | Connecticut | Indiana | Mississippi St. |
+| 3 | Louisville | Arkansas | Oregon St. | South Dakota |
+| 4 | Arizona | Northwestern | NC St. | Princeton |
+| 5 | UCLA | Texas A&M | Iowa | Kentucky |
+| 6 | Gonzaga | Florida St. | Ohio St. | DePaul |
+| 7 | Rutgers | Virginia Tech | Georgia Tech | Tennessee |
+| 8 | Iowa St. | Florida Gulf Coast | Duke | Michigan |
+| 9 | Texas | Missouri St. | Drake | JamesMadison |
+| 10 | Oklahoma St. | Alabama | Arizona St. | TCU |
+| 11 | Marquette | Kansas St. | LSU | North Carolina |
+| 12 | Ohio | IUPUI | Dayton | Montana St. |
+| 13 | Old Dominion | Troy | Bucknell | Marist |
+| 14 | SE Missouri St. | Stephen F. Austin | Portland | Boise St. |
+| 15 | Robert Morris | Stony Brook | UC Davis | Texas Southern |
+| 16 | Norfolk St. | Samford | Kansas City | Campbell |
+
+Table S5: Bracket 2 for women’s tournament and respective seeding
+
+| Seed | Region 1 | Region 2 | Region 3 | Region 4 |
+| --- | --- | --- | --- | --- |
+| 1 | Baylor | Maryland | South Carolina | Oregon |
+| 2 | Stanford | Connecticut | Indiana | Mississippi St. |
+| 3 | Louisville | Arkansas | Oregon St. | South Dakota |
+| 4 | Arizona | Northwestern | NC St. | Princeton |
+| 5 | UCLA | Texas A&M | Iowa | Kentucky |
+| 6 | Gonzaga | Florida St. | Ohio St. | DePaul |
+| 7 | Rutgers | Virginia Tech | Georgia Tech | Tennessee |
+| 8 | Iowa St. | Florida Gulf Coast | Duke | Michigan |
+| 9 | Texas | Missouri St. | Drake | James Madison |
+| 10 | Oklahoma St. | Alabama | Arizona St. | TCU |
+| 11 | IUPUI | Boise St. | Dayton | Kansas |
+| 12 | Idaho | Portland | Liberty | SE Missouri St. |
+| 13 | Toledo | South Alabama | Samford | Boston |
+| 14 | NC Wilmington | Maine | Alabama A&M | Marshall |
+| 15 | Fairfield | Grand Canyon | Indiana St. | Cal Poly SLO |
+| 16 | USC Upstate | Incarnate Word | MD Eastern Shore | Fairleigh Dickinson |
+
+Table S6: Bracket 3 for women’s tournament and respective seeding
+
+| Seed | Region 1 | Region 2 | Region 3 | Region 4 |
+| --- | --- | --- | --- | --- |
+| 1 | Baylor | Maryland | South Carolina | Oregon |
+| 2 | Stanford | Connecticut | Indiana | Mississippi St. |
+| 3 | Louisville | Arkansas | Oregon St. | South Dakota |
+| 4 | Arizona | Northwestern | NC St. | Princeton |
+| 5 | UCLA | Texas A&M | Iowa | Kentucky |
+| 6 | Gonzaga | Florida St. | Ohio St. | DePaul |
+| 7 | Rutgers | Virginia Tech | Georgia Tech | Tennessee |
+| 8 | Iowa St. | Florida Gulf Coast | Duke | Michigan |
+| 9 | Texas | Missouri St. | Drake | James Madison |
+| 10 | Oklahoma St. | Alabama | Arizona St. | TCU |
+| 11 | Marquette | Kansas St. | LSU | North Carolina |
+| 12 | Ohio | IUPUI | Dayton | Montana St. |
+| 13 | Rice | Boise St. | Marist | Coastal Carolina |
+| 14 | Lehigh | Portland | Robert Morris | SE Missouri St. |
+| 15 | Abilene Christian | Maine | Hawaii | Samford |
+| 16 | MD Eastern Shore | Alabama A&M | Seattle | Radford |
+
+Table S7: Bracket 1 for men’s tournament and respective seeding
+
+| Seed | Region 1 | Region 2 | Region 3 | Region 4 |
+| --- | --- | --- | --- | --- |
+| 1 | Kansas | Gonzaga | Duke | Michigan St. |
+| 2 | West Virginia | San Diego St. | Arizona | Baylor |
+| 3 | Ohio St. | Dayton | Maryland | Michigan |
+| 4 | Creighton | Texas Tech | Florida St. | Louisville |
+| 5 | BYU | Oregon | Seton Hall | Villanova |
+| 6 | Marquette | Iowa | Houston | Penn St. |
+| 7 | Colorado | Purdue | Kentucky | Wisconsin |
+| 8 | Butler | Rutgers | Minnesota | Illinois |
+| 9 | Utah St. | Florida | Auburn | Indiana |
+| 10 | Oklahoma | Stanford | Arkansas | LSU |
+| 11 | Wichita St. | Cincinnati | Xavier/Providence | St. Mary’s (CA)/Alabama |
+| 12 | Liberty | North Texas | E. Tennessee St. | Yale |
+| 13 | Vermont | Akron | N Colorado | Belmont |
+| 14 | Bradley | UC Irvine | Stephen F. Austin | Texas St. |
+| 15 | New Mexico St. | Hofstra | Winthrop | North Dakota St. |
+| 16 | Prairie View A&M/Robert Morris | Siena/Norfolk St. | Boston | Northern Kentucky |
+
+Table S8: Bracket 2 for men’s tournament and respective seeding
+
+| Seed | Region 1 | Region 2 | Region 3 | Region 4 |
+| --- | --- | --- | --- | --- |
+| 1 | Kansas | Gonzaga | Duke | Michigan St. |
+| 2 | West Virginia | San Diego St. | Arizona | Baylor |
+| 3 | Ohio St. | Dayton | Maryland | Michigan |
+| 4 | Creighton | Texas Tech | Florida St. | Louisville |
+| 5 | BYU | Oregon | Seton Hall | Villanova |
+| 6 | Marquette | Iowa | Houston | Penn St. |
+| 7 | Colorado | Purdue | Kentucky | Wisconsin |
+| 8 | Butler | Rutgers | Minnesota | Illinois |
+| 9 | Utah St. | Florida | Auburn/Stanford | Indiana |
+| 10 | Liberty | E Tennessee St. | Clemson | LSU/Arkansas |
+| 11 | DePaul | Kansas St. | Belmont | Bradley |
+| 12 | Texas A&M | North Dakota St. | Winthrop | Hofstra |
+| 13 | California | Northern Kentucky | South Alabama | Boston |
+| 14 | Robert Morris | E. Carolina | Florida Atlantic | Princeton |
+| 15 | Fordham | Miami Ohio | Hartford | UT Rio Grande Valley |
+| 16 | Niagara/Northwestern St. | Jackson St./S Carolina St. | Long Beach St. | Idaho St. |
+
+Table S9: Bracket 3 for men’s tournament and respective seeding
+
+| Seed | Region 1 | Region 2 | Region 3 | Region 4 |
+| --- | --- | --- | --- | --- |
+| 1 | Kansas | Gonzaga | Duke | Michigan St. |
+| 2 | West Virginia | San Diego St. | Arizona | Baylor |
+| 3 | Ohio St. | Dayton | Maryland | Michigan |
+| 4 | Creighton | Texas Tech | Florida St. | Louisville |
+| 5 | BYU | Oregon | Seton Hall | Villanova |
+| 6 | Marquette | Iowa | Houston | Penn St. |
+| 7 | Colorado | Purdue | Kentucky | Wisconsin |
+| 8 | Butler | Rutgers | Minnesota | Illinois |
+| 9 | Utah St. | Florida | Auburn | Indiana |
+| 10 | Oklahoma | Stanford | Arkansas | LSU |
+| 11 | Wichita St. | Cincinnati | Xavier/Providence | St. Mary’s (CA)/Alabama |
+| 12 | Liberty | North Texas | E. Tennessee St. | Yale |
+| 13 | Vermont | Belmont | Stephen F. Austin | Bradley |
+| 14 | Winthrop | Eastern Washington | Hofstra | New Mexico St. |
+| 15 | North Dakota St. | Northern Kentucky | South Alabama | Boston |
+| 16 | Norfolk St./CS Fullerton | Robert Morris/Southern | Siena | N. Illinois |
+
+Table S10: March Madness win probabilities given exemplar brackets for top ranked men’s teams.
+
+| Team | Bracket 1 | Bracket 2 | Bracket 3 | Lunardi | Palm | Katz |
+| --- | --- | --- | --- | --- | --- | --- |
+| Kansas | 0.256 | 0.252 | 0.256 | 0.258 | 0.267 | 0.254 |
+| Gonzaga | 0.121 | 0.117 | 0.121 | 0.122 | 0.118 | 0.141 |
+| Duke | 0.116 | 0.115 | 0.116 | 0.117 | 0.106 | 0.108 |
+| Michigan St. | 0.070 | 0.069 | 0.070 | 0.080 | 0.065 | 0.056 |
+| Baylor | 0.065 | 0.064 | 0.065 | 0.067 | 0.065 | 0.067 |
+| Arizona | 0.050 | 0.051 | 0.050 | 0.027 | 0.029 | 0.038 |
+| San Diego St. | 0.030 | 0.032 | 0.030 | 0.023 | 0.032 | 0.030 |
+| West Virginia | 0.024 | 0.025 | 0.024 | 0.019 | 0.016 | 0.020 |
+| Ohio St. | 0.029 | 0.032 | 0.030 | 0.029 | 0.033 | 0.023 |
+| Dayton | 0.024 | 0.025 | 0.025 | 0.029 | 0.031 | 0.021 |

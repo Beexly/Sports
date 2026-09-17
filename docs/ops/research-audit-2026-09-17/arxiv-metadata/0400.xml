@@ -1,0 +1,1028 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/LpuK2FRhDcw6JMyk5MM9phOJ3eg</id>
+  <title>arXiv Query: search_query=&amp;id_list=2607.05845,2606.28570,2605.31529,2605.12799,2603.09896,2602.08996,2510.15983,2509.09314,2506.21944,2506.11786,2506.05866,2506.05763,2505.06828,2505.02754,2504.19612,2504.08764,2502.09460,2412.21181,2410.22288,2410.17785,2410.11375,2406.16987,2406.12084,2404.09807,2403.12385,2309.07361,2309.03808,2308.01028,2307.16000,2307.10411,2305.14612,2304.04220,2302.09276,2302.00911,2301.10052,2212.08116,2211.01201,2210.09295,2209.09861,2209.00202&amp;start=0&amp;max_results=40</title>
+  <updated>2026-09-17T18:37:27Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=&amp;start=0&amp;max_results=40&amp;id_list=2607.05845,2606.28570,2605.31529,2605.12799,2603.09896,2602.08996,2510.15983,2509.09314,2506.21944,2506.11786,2506.05866,2506.05763,2505.06828,2505.02754,2504.19612,2504.08764,2502.09460,2412.21181,2410.22288,2410.17785,2410.11375,2406.16987,2406.12084,2404.09807,2403.12385,2309.07361,2309.03808,2308.01028,2307.16000,2307.10411,2305.14612,2304.04220,2302.09276,2302.00911,2301.10052,2212.08116,2211.01201,2210.09295,2209.09861,2209.00202" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>40</opensearch:itemsPerPage>
+  <opensearch:totalResults>40</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2307.10411v1</id>
+    <title>Stop Simulating! Efficient Computation of Tournament Winning Probabilities</title>
+    <updated>2023-07-19T18:42:34Z</updated>
+    <link href="https://arxiv.org/abs/2307.10411v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2307.10411v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In the run-up to any major sports tournament, winning probabilities of participants are publicized for engagement and betting purposes. These are generally based on simulating the tournament tens of thousands of times by sampling from single-match outcome models. We show that, by virtue of the tournament schedule, exact computation of winning probabilties can be substantially faster than their approximation through simulation. This notably applies to the 2022 and 2023 FIFA World Cup Finals, and is independent of the model used for individual match outcomes.</summary>
+    <category term="stat.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DS" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-07-19T18:42:34Z</published>
+    <arxiv:comment>Working paper; first draft published prior to WWC2023</arxiv:comment>
+    <arxiv:primary_category term="stat.CO"/>
+    <author>
+      <name>Ulrik Brandes</name>
+    </author>
+    <author>
+      <name>Gordana Marmulla</name>
+    </author>
+    <author>
+      <name>Ivana Smokovic</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2309.07361v1</id>
+    <title>Judging a video by its bitstream cover</title>
+    <updated>2023-09-14T00:34:11Z</updated>
+    <link href="https://arxiv.org/abs/2309.07361v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2309.07361v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Classifying videos into distinct categories, such as Sport and Music Video, is crucial for multimedia understanding and retrieval, especially in an age where an immense volume of video content is constantly being generated. Traditional methods require video decompression to extract pixel-level features like color, texture, and motion, thereby increasing computational and storage demands. Moreover, these methods often suffer from performance degradation in low-quality videos. We present a novel approach that examines only the post-compression bitstream of a video to perform classification, eliminating the need for bitstream. We validate our approach using a custom-built data set comprising over 29,000 YouTube video clips, totaling 6,000 hours and spanning 11 distinct categories. Our preliminary evaluations indicate precision, accuracy, and recall rates well over 80%. The algorithm operates approximately 15,000 times faster than real-time for 30fps videos, outperforming traditional Dynamic Time Warping (DTW) algorithm by six orders of magnitude.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-09-14T00:34:11Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Yuxing Han</name>
+    </author>
+    <author>
+      <name>Yunan Ding</name>
+    </author>
+    <author>
+      <name>Jiangtao Wen</name>
+    </author>
+    <author>
+      <name>Chen Ye Gan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2301.10052v1</id>
+    <title>Event Detection in Football using Graph Convolutional Networks</title>
+    <updated>2023-01-24T14:52:54Z</updated>
+    <link href="https://arxiv.org/abs/2301.10052v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2301.10052v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The massive growth of data collection in sports has opened numerous avenues for professional teams and media houses to gain insights from this data. The data collected includes per frame player and ball trajectories, and event annotations such as passes, fouls, cards, goals, etc. Graph Convolutional Networks (GCNs) have recently been employed to process this highly unstructured tracking data which can be otherwise difficult to model because of lack of clarity on how to order players in a sequence and how to handle missing objects of interest. In this thesis, we focus on the goal of automatic event detection from football videos. We show how to model the players and the ball in each frame of the video sequence as a graph, and present the results for graph convolutional layers and pooling methods that can be used to model the temporal context present around each action.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-01-24T14:52:54Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Aditya Sangram Singh Rana</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2307.16000v2</id>
+    <title>Automated Hit-frame Detection for Badminton Match Analysis</title>
+    <updated>2023-08-02T13:17:34Z</updated>
+    <link href="https://arxiv.org/abs/2307.16000v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2307.16000v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Sports professionals constantly under pressure to perform at the highest level can benefit from sports analysis, which allows coaches and players to reduce manual efforts and systematically evaluate their performance using automated tools. This research aims to advance sports analysis in badminton, systematically detecting hit-frames automatically from match videos using modern deep learning techniques. The data included in hit-frames can subsequently be utilized to synthesize players' strokes and on-court movement, as well as for other downstream applications such as analyzing training tasks and competition strategy. The proposed approach in this study comprises several automated procedures like rally-wise video trimming, player and court keypoints detection, shuttlecock flying direction prediction, and hit-frame detection. In the study, we achieved 99% accuracy on shot angle recognition for video trimming, over 92% accuracy for applying player keypoints sequences on shuttlecock flying direction prediction, and reported the evaluation results of rally-wise video trimming and hit-frame detection.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-07-29T15:01:27Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Yu-Hang Chien</name>
+    </author>
+    <author>
+      <name>Fang Yu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2209.09861v1</id>
+    <title>ESTA: An Esports Trajectory and Action Dataset</title>
+    <updated>2022-09-20T17:13:50Z</updated>
+    <link href="https://arxiv.org/abs/2209.09861v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2209.09861v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Sports, due to their global reach and impact-rich prediction tasks, are an exciting domain to deploy machine learning models. However, data from conventional sports is often unsuitable for research use due to its size, veracity, and accessibility. To address these issues, we turn to esports, a growing domain that encompasses video games played in a capacity similar to conventional sports. Since esports data is acquired through server logs rather than peripheral sensors, esports provides a unique opportunity to obtain a massive collection of clean and detailed spatiotemporal data, similar to those collected in conventional sports. To parse esports data, we develop awpy, an open-source esports game log parsing library that can extract player trajectories and actions from game logs. Using awpy, we parse 8.6m actions, 7.9m game frames, and 417k trajectories from 1,558 game logs from professional Counter-Strike tournaments to create the Esports Trajectory and Actions (ESTA) dataset. ESTA is one of the largest and most granular publicly available sports data sets to date. We use ESTA to develop benchmarks for win prediction using player-specific information. The ESTA data is available at https://github.com/pnxenopoulos/esta and awpy is made public through PyPI.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-09-20T17:13:50Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Peter Xenopoulos</name>
+    </author>
+    <author>
+      <name>Claudio Silva</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2302.09276v1</id>
+    <title>Transformer-Based Neural Marked Spatio Temporal Point Process Model for Football Match Events Analysis</title>
+    <updated>2023-02-18T10:02:45Z</updated>
+    <link href="https://arxiv.org/abs/2302.09276v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2302.09276v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>With recently available football match event data that record the details of football matches, analysts and researchers have a great opportunity to develop new performance metrics, gain insight, and evaluate key performance. However, most sports sequential events modeling methods and performance metrics approaches could be incomprehensive in dealing with such large-scale spatiotemporal data (in particular, temporal process), thereby necessitating a more comprehensive spatiotemporal model and a holistic performance metric. To this end, we proposed the Transformer-Based Neural Marked Spatio Temporal Point Process (NMSTPP) model for football event data based on the neural temporal point processes (NTPP) framework. In the experiments, our model outperformed the prediction performance of the baseline models. Furthermore, we proposed the holistic possession utilization score (HPUS) metric for a more comprehensive football possession analysis. For verification, we examined the relationship with football teams' final ranking, average goal score, and average xG over a season. It was observed that the average HPUS showed significant correlations regardless of not using goal and details of shot information. Furthermore, we show HPUS examples in analyzing possessions, matches, and between matches.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-02-18T10:02:45Z</published>
+    <arxiv:comment>36 pages, 25 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Calvin C. K. Yeung</name>
+    </author>
+    <author>
+      <name>Tony Sit</name>
+    </author>
+    <author>
+      <name>Keisuke Fujii</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2305.14612v1</id>
+    <title>Assessment of Anterior Cruciate Ligament Injury Risk Based on Human Key Points Detection Algorithm</title>
+    <updated>2023-05-24T01:22:26Z</updated>
+    <link href="https://arxiv.org/abs/2305.14612v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2305.14612v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper aims to detect the potential injury risk of the anterior cruciate ligament (ACL) by proposing an ACL potential injury risk assessment algorithm based on key points of the human body detected using computer vision technology. To obtain the key points data of the human body in each frame, OpenPose, an open source computer vision algorithm, was employed. The obtained data underwent preprocessing and were then fed into an ACL potential injury feature extraction model based on the Landing Error Evaluation System (LESS). This model extracted several important parameters, including the knee flexion angle, the trunk flexion on the sagittal plane, trunk flexion angle on the frontal plane, the ankle knee horizontal distance, and the ankle shoulder horizontal distance. Each of these features was assigned a threshold interval, and a segmented evaluation function was utilized to score them accordingly. To calculate the final score of the participant, the score values were input into a weighted scoring model designed based on the Analytic Hierarchy Process (AHP). The AHP based model takes into account the relative importance of each feature in the overall assessment. The results demonstrate that the proposed algorithm effectively detects the potential risk of ACL injury. The proposed algorithm demonstrates its effectiveness in detecting ACL injury risk, offering valuable insights for injury prevention and intervention strategies in sports and related fields. Code is available at: https://github.com/ZiyuGong-proj/Assessment-of-ACL-Injury-Risk-Based-on-Openpose</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-05-24T01:22:26Z</published>
+    <arxiv:comment>17 pages,and 6 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Ziyu Gong</name>
+    </author>
+    <author>
+      <name>Xiong Zhao</name>
+    </author>
+    <author>
+      <name>Chen Yang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2406.12084v2</id>
+    <title>When Reasoning Meets Information Aggregation: A Case Study with Sports Narratives</title>
+    <updated>2024-10-04T04:25:07Z</updated>
+    <link href="https://arxiv.org/abs/2406.12084v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2406.12084v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Reasoning is most powerful when an LLM accurately aggregates relevant information. We examine the critical role of information aggregation in reasoning by requiring the LLM to analyze sports narratives. To succeed at this task, an LLM must infer points from actions, identify related entities, attribute points accurately to players and teams, and compile key statistics to draw conclusions. We conduct comprehensive experiments with real NBA basketball data and present SportsGen, a new method to synthesize game narratives. By synthesizing data, we can rigorously evaluate LLMs' reasoning capabilities under complex scenarios with varying narrative lengths and density of information. Our findings show that most models, including GPT-4o, often fail to accurately aggregate basketball scores due to frequent scoring patterns. Open-source models like Llama-3 further suffer from significant score hallucinations. Finally, the effectiveness of reasoning is influenced by narrative complexity, information density, and domain-specific terms, highlighting the challenges in analytical reasoning tasks.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-06-17T20:49:35Z</published>
+    <arxiv:comment>Accepted to Main conference of EMNLP 2024</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Yebowen Hu</name>
+    </author>
+    <author>
+      <name>Kaiqiang Song</name>
+    </author>
+    <author>
+      <name>Sangwoo Cho</name>
+    </author>
+    <author>
+      <name>Xiaoyang Wang</name>
+    </author>
+    <author>
+      <name>Wenlin Yao</name>
+    </author>
+    <author>
+      <name>Hassan Foroosh</name>
+    </author>
+    <author>
+      <name>Dong Yu</name>
+    </author>
+    <author>
+      <name>Fei Liu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2403.12385v2</id>
+    <title>Benchmarking Badminton Action Recognition with a New Fine-Grained Dataset</title>
+    <updated>2024-11-02T02:29:58Z</updated>
+    <link href="https://arxiv.org/abs/2403.12385v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2403.12385v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In the dynamic and evolving field of computer vision, action recognition has become a key focus, especially with the advent of sophisticated methodologies like Convolutional Neural Networks (CNNs), Convolutional 3D, Transformer, and spatial-temporal feature fusion. These technologies have shown promising results on well-established benchmarks but face unique challenges in real-world applications, particularly in sports analysis, where the precise decomposition of activities and the distinction of subtly different actions are crucial. Existing datasets like UCF101, HMDB51, and Kinetics have offered a diverse range of video data for various scenarios. However, there's an increasing need for fine-grained video datasets that capture detailed categorizations and nuances within broader action categories. In this paper, we introduce the VideoBadminton dataset derived from high-quality badminton footage. Through an exhaustive evaluation of leading methodologies on this dataset, this study aims to advance the field of action recognition, particularly in badminton sports. The introduction of VideoBadminton could not only serve for badminton action recognition but also provide a dataset for recognizing fine-grained actions. The insights gained from these evaluations are expected to catalyze further research in action comprehension, especially within sports contexts.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-03-19T02:52:06Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Qi Li</name>
+    </author>
+    <author>
+      <name>Tzu-Chen Chiu</name>
+    </author>
+    <author>
+      <name>Hsiang-Wei Huang</name>
+    </author>
+    <author>
+      <name>Min-Te Sun</name>
+    </author>
+    <author>
+      <name>Wei-Shinn Ku</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2304.04220v1</id>
+    <title>Towards Active Learning for Action Spotting in Association Football Videos</title>
+    <updated>2023-04-09T11:50:41Z</updated>
+    <link href="https://arxiv.org/abs/2304.04220v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2304.04220v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Association football is a complex and dynamic sport, with numerous actions occurring simultaneously in each game. Analyzing football videos is challenging and requires identifying subtle and diverse spatio-temporal patterns. Despite recent advances in computer vision, current algorithms still face significant challenges when learning from limited annotated data, lowering their performance in detecting these patterns. In this paper, we propose an active learning framework that selects the most informative video samples to be annotated next, thus drastically reducing the annotation effort and accelerating the training of action spotting models to reach the highest accuracy at a faster pace. Our approach leverages the notion of uncertainty sampling to select the most challenging video clips to train on next, hastening the learning process of the algorithm. We demonstrate that our proposed active learning framework effectively reduces the required training data for accurate action spotting in football videos. We achieve similar performances for action spotting with NetVLAD++ on SoccerNet-v2, using only one-third of the dataset, indicating significant capabilities for reducing annotation time and improving data efficiency. We further validate our approach on two new datasets that focus on temporally localizing actions of headers and passes, proving its effectiveness across different action semantics in football. We believe our active learning framework for action spotting would support further applications of action spotting algorithms and accelerate annotation campaigns in the sports domain.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-04-09T11:50:41Z</published>
+    <arxiv:comment>Accepted at CVSports'23</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Silvio Giancola</name>
+    </author>
+    <author>
+      <name>Anthony Cioppa</name>
+    </author>
+    <author>
+      <name>Julia Georgieva</name>
+    </author>
+    <author>
+      <name>Johsan Billingham</name>
+    </author>
+    <author>
+      <name>Andreas Serner</name>
+    </author>
+    <author>
+      <name>Kerry Peek</name>
+    </author>
+    <author>
+      <name>Bernard Ghanem</name>
+    </author>
+    <author>
+      <name>Marc Van Droogenbroeck</name>
+    </author>
+    <arxiv:doi>10.1109/cvprw59228.2023.00538</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/cvprw59228.2023.00538" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2505.02754v1</id>
+    <title>Debiased inference in error-in-variable problems with non-Gaussian measurement error</title>
+    <updated>2025-05-05T16:07:28Z</updated>
+    <link href="https://arxiv.org/abs/2505.02754v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2505.02754v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We consider drawing statistical inferences based on data subject to non-Gaussian measurement error. Unlike most existing methods developed under the assumption of Gaussian measurement error, the proposed strategy exploits hypercomplex numbers to reduce bias in naive estimation that ignores non-Gaussian measurement error. We apply this new method to several widely applicable parametric regression models with error-prone covariates, and kernel density estimation using error-contaminated data. The efficacy of this method in bias reduction is demonstrated in simulation studies and a real-life application in sports analytics.</summary>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-05-05T16:07:28Z</published>
+    <arxiv:primary_category term="stat.ME"/>
+    <author>
+      <name>Nicholas W. Woolsey</name>
+    </author>
+    <author>
+      <name>Xianzheng Huang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2412.21181v1</id>
+    <title>Causal Hangover Effects</title>
+    <updated>2024-12-30T18:52:48Z</updated>
+    <link href="https://arxiv.org/abs/2412.21181v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2412.21181v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>It's not unreasonable to think that in-game sporting performance can be affected partly by what takes place off the court. We can't observe what happens between games directly. Instead, we proxy for the possibility of athletes partying by looking at play following games in party cities. We are interested to see if teams exhibit a decline in performance the day following a game in a city with active nightlife; we call this a "hangover effect". Part of the question is determining a reasonable way to measure levels of nightlife, and correspondingly which cities are notorious for it; we colloquially refer to such cities as "party cities". To carry out this study, we exploit data on bookmaker spreads: the expected score differential between two teams after conditioning on observable performance in past games and expectations about the upcoming game. We expect a team to meet the spread half the time, since this is one of the easiest ways for bookmakers to guarantee a profit. We construct a model which attempts to estimate the causal effect of visiting a "party city" on subsequent day performance as measured by the odds of beating the spread. In particular, we only consider the hangover effect on games played back-to-back within 24 hours of each other. To the extent that odds of beating the spread against next day opponent is uncorrelated with playing in a party city the day before, which should be the case under an efficient betting market, we have identification in our variable of interest. We find that visiting a city with active nightlife the day prior to a game does have a statistically significant negative effect on a team's likelihood of meeting bookmakers' expectations for both NBA and MLB.</summary>
+    <category term="econ.EM" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-12-30T18:52:48Z</published>
+    <arxiv:primary_category term="econ.EM"/>
+    <author>
+      <name>Andreas Santucci</name>
+    </author>
+    <author>
+      <name>Eric Lax</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2505.06828v1</id>
+    <title>An Improved Algorithm for a Bipartite Traveling Tournament in Interleague Sports Scheduling</title>
+    <updated>2025-05-11T03:47:25Z</updated>
+    <link href="https://arxiv.org/abs/2505.06828v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2505.06828v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The bipartite traveling tournament problem (BTTP) addresses inter-league sports scheduling, which aims to design a feasible bipartite tournament between two $n$-team leagues under some constraints such that the total traveling distance of all participating teams is minimized. Since its introduction, several methods have been developed to design feasible schedules for NBA, NPB and so on. In terms of solution quality with a theoretical guarantee, previously only a $(2+\varepsilon)$-approximation is known for the case that $n\equiv 0 \pmod 3$. Whether there are similar results for the cases that $n\equiv 1 \pmod 3$ and $n\equiv 2 \pmod 3$ was asked in the literature. In this paper, we answer this question positively by proposing a $(3/2+\varepsilon)$-approximation algorithm for any $n$ and any constant $\varepsilon&gt;0$, which also improves the previous approximation ratio for the case that $n\equiv 0 \pmod 3$.</summary>
+    <category term="cs.DS" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-05-11T03:47:25Z</published>
+    <arxiv:comment>A preliminary version of this article was presented at IJCAI 2024</arxiv:comment>
+    <arxiv:primary_category term="cs.DS"/>
+    <author>
+      <name>Jingyang Zhao</name>
+    </author>
+    <author>
+      <name>Mingyu Xiao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.05866v1</id>
+    <title>Analysis of points outcome in ATP Grand Slam Tennis using big data and machine learning</title>
+    <updated>2025-06-06T08:33:59Z</updated>
+    <link href="https://arxiv.org/abs/2506.05866v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.05866v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Tennis is one of the world's biggest and most popular sports. Multiple researchers have, with limited success, modeled the outcome of matches using probability modelling or machine learning approaches. The approach presented here predicts the outcomes of points in tennis matches. This is based on given a probability of winning a point, based on the prior history of matches, the current match, the player rankings and if the points are started with a first or second. The use of historical public data from the matches and the players' ranking has made this study possible. In addition, we interpret the models in order to reveal important strategic factors for winning points. The historical data are from the years 2016 to 2020 in the two Grand Slam tournaments, Wimbledon and US Open, resulting in a total of 709 matches. Different machine learning methods are applied for this work such as, e.g. logistic regression, Random forest, ADABoost, and XGBoost. These models are compared to a baseline model, namely a traditional statistics measure, in this case the average. An evaluation of the results showed that the models for points proved to be a fraction better than the average. However, with the applied public data and the information level of the data, the approach presented here is not optimal for predicting who wins when the opponents are on the same position on the ranking. This methodology is interesting with respect to examining which factors are important for the outcomes of who wins points in tennis matches. Other higher quality data sets exists from e.g. Hawk Eye, although these data sets are not available for the public.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-06-06T08:33:59Z</published>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Martin Illum</name>
+      <arxiv:affiliation>Department of Applied Mathematics and Computer Science, Technical University of Denmark, Richard Petersens Plads, Denmark</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Hans Christian Bechsøfft Mikkelsen</name>
+      <arxiv:affiliation>Department of Applied Mathematics and Computer Science, Technical University of Denmark, Richard Petersens Plads, Denmark</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Emil Hovad</name>
+      <arxiv:affiliation>Department of Applied Mathematics and Computer Science, Technical University of Denmark, Richard Petersens Plads, Denmark</arxiv:affiliation>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.09896v1</id>
+    <title>Stepping VLMs onto the Court: Benchmarking Spatial Intelligence in Sports</title>
+    <updated>2026-03-10T16:50:32Z</updated>
+    <link href="https://arxiv.org/abs/2603.09896v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.09896v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Sports have long attracted broad attention as they push the limits of human physical and cognitive capabilities. Amid growing interest in spatial intelligence for vision-language models (VLMs), sports provide a natural testbed for understanding high-intensity human motion and dynamic object interactions. To this end, we present CourtSI, the first large-scale spatial intelligence dataset tailored to sports scenarios. CourtSI contains over 1M QA pairs, organized under a holistic taxonomy that systematically covers spatial counting, distance measurement, localization, and relational reasoning, across representative net sports including badminton, tennis, and table tennis. Leveraging well-defined court geometry as metric anchors, we develop a semi-automatic data engine to reconstruct sports scenes, enabling scalable curation of CourtSI. In addition, we introduce CourtSI-Bench, a high-quality evaluation benchmark comprising 3,686 QA pairs with rigorous human verification. We evaluate 25 proprietary and open-source VLMs on CourtSI-Bench, revealing a remaining human-AI performance gap and limited generalization from existing spatial intelligence benchmarks. These findings indicate that sports scenarios expose limitations in spatial intelligence capabilities captured by existing benchmarks. Further, fine-tuning Qwen3-VL-8B on CourtSI improves accuracy on CourtSI-Bench by 23.5 percentage points. The adapted model also generalizes effectively to CourtSI-Ext, an evaluation set built on a similar but unseen sport, and demonstrates enhanced spatial-aware commentary generation. Together, these findings demonstrate that CourtSI provides a scalable pathway toward advancing spatial intelligence of VLMs in sports.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-10T16:50:32Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Yuchen Yang</name>
+    </author>
+    <author>
+      <name>Yuqing Shao</name>
+    </author>
+    <author>
+      <name>Duxiu Huang</name>
+    </author>
+    <author>
+      <name>Linfeng Dong</name>
+    </author>
+    <author>
+      <name>Yifei Liu</name>
+    </author>
+    <author>
+      <name>Suixin Tang</name>
+    </author>
+    <author>
+      <name>Xiang Zhou</name>
+    </author>
+    <author>
+      <name>Yuanyuan Gao</name>
+    </author>
+    <author>
+      <name>Wei Wang</name>
+    </author>
+    <author>
+      <name>Yue Zhou</name>
+    </author>
+    <author>
+      <name>Xue Yang</name>
+    </author>
+    <author>
+      <name>Yanfeng Wang</name>
+    </author>
+    <author>
+      <name>Xiao Sun</name>
+    </author>
+    <author>
+      <name>Zhihang Zhong</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.05763v1</id>
+    <title>Where Is The Ball: 3D Ball Trajectory Estimation From 2D Monocular Tracking</title>
+    <updated>2025-06-06T05:42:05Z</updated>
+    <link href="https://arxiv.org/abs/2506.05763v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.05763v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We present a method for 3D ball trajectory estimation from a 2D tracking sequence. To overcome the ambiguity in 3D from 2D estimation, we design an LSTM-based pipeline that utilizes a novel canonical 3D representation that is independent of the camera's location to handle arbitrary views and a series of intermediate representations that encourage crucial invariance and reprojection consistency. We evaluated our method on four synthetic and three real datasets and conducted extensive ablation studies on our design choices. Despite training solely on simulated data, our method achieves state-of-the-art performance and can generalize to real-world scenarios with multiple trajectories, opening up a range of applications in sport analysis and virtual replay. Please visit our page: https://where-is-the-ball.github.io.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-06-06T05:42:05Z</published>
+    <arxiv:comment>11th International Workshop on Computer Vision in Sports (CVsports) at CVPR 2025</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Puntawat Ponglertnapakorn</name>
+    </author>
+    <author>
+      <name>Supasorn Suwajanakorn</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2302.00911v3</id>
+    <title>Conditional expectation with regularization for missing data imputation</title>
+    <updated>2023-09-11T07:41:52Z</updated>
+    <link href="https://arxiv.org/abs/2302.00911v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2302.00911v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Missing data frequently occurs in datasets across various domains, such as medicine, sports, and finance. In many cases, to enable proper and reliable analyses of such data, the missing values are often imputed, and it is necessary that the method used has a low root mean square error (RMSE) between the imputed and the true values. In addition, for some critical applications, it is also often a requirement that the imputation method is scalable and the logic behind the imputation is explainable, which is especially difficult for complex methods that are, for example, based on deep learning. Based on these considerations, we propose a new algorithm named "conditional Distribution-based Imputation of Missing Values with Regularization" (DIMV). DIMV operates by determining the conditional distribution of a feature that has missing entries, using the information from the fully observed features as a basis. As will be illustrated via experiments in the paper, DIMV (i) gives a low RMSE for the imputed values compared to state-of-the-art methods; (ii) fast and scalable; (iii) is explainable as coefficients in a regression model, allowing reliable and trustable analysis, makes it a suitable choice for critical domains where understanding is important such as in medical fields, finance, etc; (iv) can provide an approximated confidence region for the missing values in a given sample; (v) suitable for both small and large scale data; (vi) in many scenarios, does not require a huge number of parameters as deep learning approaches; (vii) handle multicollinearity in imputation effectively; and (viii) is robust to the normally distributed assumption that its theoretical grounds rely on.</summary>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-02-02T06:59:15Z</published>
+    <arxiv:primary_category term="stat.ML"/>
+    <author>
+      <name>Mai Anh Vu</name>
+    </author>
+    <author>
+      <name>Thu Nguyen</name>
+    </author>
+    <author>
+      <name>Tu T. Do</name>
+    </author>
+    <author>
+      <name>Nhan Phan</name>
+    </author>
+    <author>
+      <name>Nitesh V. Chawla</name>
+    </author>
+    <author>
+      <name>Pål Halvorsen</name>
+    </author>
+    <author>
+      <name>Michael A. Riegler</name>
+    </author>
+    <author>
+      <name>Binh T. Nguyen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2406.16987v1</id>
+    <title>AI for Equitable Tennis Training: Leveraging AI for Equitable and Accurate Classification of Tennis Skill Levels and Training Phases</title>
+    <updated>2024-06-24T03:40:41Z</updated>
+    <link href="https://arxiv.org/abs/2406.16987v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2406.16987v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Numerous studies have demonstrated the manifold benefits of tennis, such as increasing overall physical and mental health. Unfortunately, many children and youth from low-income families are unable to engage in this sport mainly due to financial constraints such as private lesson expenses as well as logistical concerns to and back from such lessons and clinics. While several tennis self-training systems exist, they are often tailored for professionals and are prohibitively expensive. The present study aims to classify tennis players' skill levels and classify tennis strokes into phases characterized by motion attributes for a future development of an AI-based tennis self-training model for affordable and convenient applications running on devices used in daily life such as an iPhone or an Apple Watch for tennis skill improvement. We collected motion data, including Motion Yaw, Roll and Pitch from inertial measurement units (IMUs) worn by participating junior tennis players. For this pilot study, data from twelve participants were processed using Support Vector Machine (SVM) algorithms. The SVM models demonstrated an overall accuracy of 77% in classifying players as beginners or intermediates, with low rates of false positives and false negatives, effectively distinguishing skill levels. Additionally, the tennis swings were successfully classified into five phases based on the collected motion data. These findings indicate that SVM-based classification can be a reliable foundation for developing an equitable and accessible AI-driven tennis training system.</summary>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-06-24T03:40:41Z</published>
+    <arxiv:comment>21 pages, 9 figures, 1 table</arxiv:comment>
+    <arxiv:primary_category term="eess.SP"/>
+    <author>
+      <name>Gyanna Gao</name>
+    </author>
+    <author>
+      <name>Hao-Yu Liao</name>
+    </author>
+    <author>
+      <name>Zhenhong Hu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2410.22288v1</id>
+    <title>Motion Graph Unleashed: A Novel Approach to Video Prediction</title>
+    <updated>2024-10-29T17:39:31Z</updated>
+    <link href="https://arxiv.org/abs/2410.22288v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2410.22288v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We introduce motion graph, a novel approach to the video prediction problem, which predicts future video frames from limited past data. The motion graph transforms patches of video frames into interconnected graph nodes, to comprehensively describe the spatial-temporal relationships among them. This representation overcomes the limitations of existing motion representations such as image differences, optical flow, and motion matrix that either fall short in capturing complex motion patterns or suffer from excessive memory consumption. We further present a video prediction pipeline empowered by motion graph, exhibiting substantial performance improvements and cost reductions. Experiments on various datasets, including UCF Sports, KITTI and Cityscapes, highlight the strong representative ability of motion graph. Especially on UCF Sports, our method matches and outperforms the SOTA methods with a significant reduction in model size by 78% and a substantial decrease in GPU memory utilization by 47%.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-10-29T17:39:31Z</published>
+    <arxiv:comment>Accepted by NeurIPS 2024, 19 pages, 12 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Yiqi Zhong</name>
+    </author>
+    <author>
+      <name>Luming Liang</name>
+    </author>
+    <author>
+      <name>Bohan Tang</name>
+    </author>
+    <author>
+      <name>Ilya Zharkov</name>
+    </author>
+    <author>
+      <name>Ulrich Neumann</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2211.01201v5</id>
+    <title>Human alignment of neural network representations</title>
+    <updated>2025-02-16T16:38:13Z</updated>
+    <link href="https://arxiv.org/abs/2211.01201v5" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2211.01201v5" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Today's computer vision models achieve human or near-human level performance across a wide variety of vision tasks. However, their architectures, data, and learning algorithms differ in numerous ways from those that give rise to human vision. In this paper, we investigate the factors that affect the alignment between the representations learned by neural networks and human mental representations inferred from behavioral responses. We find that model scale and architecture have essentially no effect on the alignment with human behavioral responses, whereas the training dataset and objective function both have a much larger impact. These findings are consistent across three datasets of human similarity judgments collected using two different tasks. Linear transformations of neural network representations learned from behavioral responses from one dataset substantially improve alignment with human similarity judgments on the other two datasets. In addition, we find that some human concepts such as food and animals are well-represented by neural networks whereas others such as royal or sports-related objects are not. Overall, although models trained on larger, more diverse datasets achieve better alignment with humans than models trained on ImageNet alone, our results indicate that scaling alone is unlikely to be sufficient to train neural networks with conceptual representations that match those used by humans.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="q-bio.NC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-11-02T15:23:16Z</published>
+    <arxiv:comment>Accepted for publication at ICLR 2023</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Lukas Muttenthaler</name>
+    </author>
+    <author>
+      <name>Jonas Dippel</name>
+    </author>
+    <author>
+      <name>Lorenz Linhardt</name>
+    </author>
+    <author>
+      <name>Robert A. Vandermeulen</name>
+    </author>
+    <author>
+      <name>Simon Kornblith</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2602.08996v1</id>
+    <title>Generalizing Sports Feedback Generation by Watching Competitions and Reading Books: A Rock Climbing Case Study</title>
+    <updated>2026-02-09T18:41:43Z</updated>
+    <link href="https://arxiv.org/abs/2602.08996v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2602.08996v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>While there is rapid progress in video-LLMs with advanced reasoning capabilities, prior work shows that these models struggle on the challenging task of sports feedback generation and require expensive and difficult-to-collect finetuning feedback data for each sport. This limitation is evident from the poor generalization to sports unseen during finetuning. Furthermore, traditional text generation evaluation metrics (e.g., BLEU-4, METEOR, ROUGE-L, BERTScore), originally developed for machine translation and summarization, fail to capture the unique aspects of sports feedback quality. To address the first problem, using rock climbing as our case study, we propose using auxiliary freely-available web data from the target domain, such as competition videos and coaching manuals, in addition to existing sports feedback from a disjoint, source domain to improve sports feedback generation performance on the target domain. To improve evaluation, we propose two evaluation metrics: (1) specificity and (2) actionability. Together, our approach enables more meaningful and practical generation of sports feedback under limited annotations.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-02-09T18:41:43Z</published>
+    <arxiv:comment>to appear WACV 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Arushi Rai</name>
+    </author>
+    <author>
+      <name>Adriana Kovashka</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2510.15983v1</id>
+    <title>Ontologies in Motion: A BFO-Based Approach to Knowledge Graph Construction for Motor Performance Research Data in Sports Science</title>
+    <updated>2025-10-13T12:21:33Z</updated>
+    <link href="https://arxiv.org/abs/2510.15983v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2510.15983v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>An essential component for evaluating and comparing physical and cognitive capabilities between populations is the testing of various factors related to human performance. As a core part of sports science research, testing motor performance enables the analysis of the physical health of different demographic groups and makes them comparable.
+  The Motor Research (MO|RE) data repository, developed at the Karlsruhe Institute of Technology, is an infrastructure for publishing and archiving research data in sports science, particularly in the field of motor performance research. In this paper, we present our vision for creating a knowledge graph from MO|RE data. With an ontology rooted in the Basic Formal Ontology, our approach centers on formally representing the interrelation of plan specifications, specific processes, and related measurements. Our goal is to transform how motor performance data are modeled and shared across studies, making it standardized and machine-understandable. The idea presented here is developed within the Leibniz Science Campus ``Digital Transformation of Research'' (DiTraRe).</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-10-13T12:21:33Z</published>
+    <arxiv:comment>10 pages, 2 figures. Camera-ready version. Accepted to the 5th International Workshop on Scientific Knowledge: Representation, Discovery, and Assessment; 2 November 2025 - Nara, Japan; co-located with The 24th International Semantic Web Conference, ISWC 2025. To be published in CEUR proceedings</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Sarah Rebecca Ondraszek</name>
+      <arxiv:affiliation>FIZ Karlsruhe - Leibniz Institute for Information Infrastructure, Eggenstein-Leopoldshafen, Germany</arxiv:affiliation>
+      <arxiv:affiliation>Institute of Applied Informatics and Formal Description Methods</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Jörg Waitelonis</name>
+      <arxiv:affiliation>FIZ Karlsruhe - Leibniz Institute for Information Infrastructure, Eggenstein-Leopoldshafen, Germany</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Katja Keller</name>
+      <arxiv:affiliation>Institute of Sports and Sports Science</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Claudia Niessner</name>
+      <arxiv:affiliation>Institute of Sports and Sports Science</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Anna M. Jacyszyn</name>
+      <arxiv:affiliation>FIZ Karlsruhe - Leibniz Institute for Information Infrastructure, Eggenstein-Leopoldshafen, Germany</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Harald Sack</name>
+      <arxiv:affiliation>FIZ Karlsruhe - Leibniz Institute for Information Infrastructure, Eggenstein-Leopoldshafen, Germany</arxiv:affiliation>
+      <arxiv:affiliation>Institute of Applied Informatics and Formal Description Methods</arxiv:affiliation>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2509.09314v1</id>
+    <title>Measuring Implicit Spatial Coordination in Teams: Effects on Collective Intelligence and Performance</title>
+    <updated>2025-09-11T10:00:01Z</updated>
+    <link href="https://arxiv.org/abs/2509.09314v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2509.09314v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Coordinated teamwork is essential in fast-paced decision-making environments that require dynamic adaptation, often without an opportunity for explicit communication. Although implicit coordination has been extensively considered in the existing literature, the majority of work has focused on co-located, synchronous teamwork (such as sports teams) or, in distributed teams, primarily on coordination of knowledge work. However, many teams (firefighters, military, law enforcement, emergency response) must coordinate their movements in physical space without the benefit of visual cues or extensive explicit communication. This paper investigates how three dimensions of spatial coordination, namely exploration diversity, movement specialization, and adaptive spatial proximity, influence team performance in a collaborative online search and rescue task where explicit communication is restricted and team members rely on movement patterns to infer others' intentions and coordinate actions. Our metrics capture the relational aspects of teamwork by measuring spatial proximity, distribution patterns, and alignment of movements within shared environments. We analyze data from 34 four-person teams (136 participants) assigned to specialized roles in a search and rescue task. Results show that spatial specialization positively predicts performance, while adaptive spatial proximity exhibits a marginal inverted U-shaped relationship, suggesting moderate levels of adaptation are optimal. Furthermore, the temporal dynamics of these metrics differentiate high- from low-performing teams over time. These findings provide insights into implicit spatial coordination in role-based teamwork and highlight the importance of balanced adaptive strategies, with implications for training and AI-assisted team support systems.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-09-11T10:00:01Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Thuy Ngoc Nguyen</name>
+    </author>
+    <author>
+      <name>Anita Williams Woolley</name>
+    </author>
+    <author>
+      <name>Cleotilde Gonzalez</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2209.00202v1</id>
+    <title>The Quest for Omnioculars: Embedded Visualization for Augmenting Basketball Game Viewing Experiences</title>
+    <updated>2022-09-01T03:33:38Z</updated>
+    <link href="https://arxiv.org/abs/2209.00202v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2209.00202v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Sports game data is becoming increasingly complex, often consisting of multivariate data such as player performance stats, historical team records, and athletes' positional tracking information. While numerous visual analytics systems have been developed for sports analysts to derive insights, few tools target fans to improve their understanding and engagement of sports data during live games. By presenting extra data in the actual game views, embedded visualization has the potential to enhance fans' game-viewing experience. However, little is known about how to design such kinds of visualizations embedded into live games. In this work, we present a user-centered design study of developing interactive embedded visualizations for basketball fans to improve their live game-watching experiences. We first conducted a formative study to characterize basketball fans' in-game analysis behaviors and tasks. Based on our findings, we propose a design framework to inform the design of embedded visualizations based on specific data-seeking contexts. Following the design framework, we present five novel embedded visualization designs targeting five representative contexts identified by the fans, including shooting, offense, defense, player evaluation, and team comparison. We then developed Omnioculars, an interactive basketball game-viewing prototype that features the proposed embedded visualizations for fans' in-game data analysis. We evaluated Omnioculars in a simulated basketball game with basketball fans. The study results suggest that our design supports personalized in-game data analysis and enhances game understanding and engagement.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-09-01T03:33:38Z</published>
+    <arxiv:comment>To appear in IEEE Transactions on Visualization and Computer Graphics (IEEE VIS), 2022</arxiv:comment>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Tica Lin</name>
+    </author>
+    <author>
+      <name>Zhutian Chen</name>
+    </author>
+    <author>
+      <name>Yalong Yang</name>
+    </author>
+    <author>
+      <name>Daniele Chiappalupi</name>
+    </author>
+    <author>
+      <name>Johanna Beyer</name>
+    </author>
+    <author>
+      <name>Hanspeter Pfister</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2212.08116v1</id>
+    <title>Converting College Football Point Spread Differentials to Probabilities</title>
+    <updated>2022-12-15T20:04:26Z</updated>
+    <link href="https://arxiv.org/abs/2212.08116v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2212.08116v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>For NCAA football, we provide a method for sports bettors to determine if they have a positive expected value bet based on the betting lines available to them and how they believe the game will end. The method we develop modifies probabilities based on a normal distribution using historical data. The result is that more common point differentials are given appropriate weights. We provide a freely available online tool for implementing our technique.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-12-15T20:04:26Z</published>
+    <arxiv:comment>12 pages, 3 tables, 2 figures</arxiv:comment>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Ryan Sides</name>
+    </author>
+    <author>
+      <name>Jane L. Harvill</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2504.19612v1</id>
+    <title>Relative Advantage: Quantifying Performance in Noisy Competitive Settings</title>
+    <updated>2025-04-28T09:19:01Z</updated>
+    <link href="https://arxiv.org/abs/2504.19612v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2504.19612v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Performance measurement in competitive domains is frequently confounded by shared environmental factors that obscure true performance differences. For instance, absolute metrics can be heavily influenced by factors as varied as weather conditions in sports, prevailing economic climates in business evaluations, or the socioeconomic background of student populations in education. This paper develops a unified mathematical framework for relative performance metrics that systematically eliminates shared environmental effects through a principled transformation that will help improve interpretation of performance metrics. We formalise the mechanism of environmental noise cancellation using signal-to-noise ratio analysis and establish theoretical bounds on metric performance. Through comprehensive simulations across diverse parameter configurations, we demonstrate that relative metrics consistently outperform absolute ones under specified conditions, with improvements up to 28\% in classification accuracy when environmental noise dominates individual variations. As an example, we validate the mathematical framework using real-world rugby performance data, confirming that relativised metrics provide substantially better predictive power than their absolute counterparts. Our approach offers both theoretical insights into the conditions governing metric effectiveness and practical guidance for measurement system design across competitive domains from sports analytics to financial performance evaluation and healthcare outcomes research.</summary>
+    <category term="physics.data-an" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-04-28T09:19:01Z</published>
+    <arxiv:comment>32 pages</arxiv:comment>
+    <arxiv:primary_category term="physics.data-an"/>
+    <author>
+      <name>M. R. Brown</name>
+    </author>
+    <author>
+      <name>G. Scott</name>
+    </author>
+    <author>
+      <name>L. Kilduff</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.05845v1</id>
+    <title>A behavioral principle underlying attacker-defender interactions in soccer</title>
+    <updated>2026-07-07T05:06:39Z</updated>
+    <link href="https://arxiv.org/abs/2607.05845v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.05845v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Soccer is widely popular for its simple rules and complex yet coordinated play that unfolds on the pitch. Nevertheless, the fundamental mechanisms governing such play are not well understood: what shapes player interactions on the pitch? What short-term goals guide players' decisions about their movements over the next few seconds? We address these questions by focusing on one-on-one settings in open play, in which the attacker, in possession of the ball and typically dribbling, faces a defender aiming to stop or delay the attacker's actions over a short period. Here we develop a mathematical model of attacker-defender interactions and analyze 306 professional soccer games. Synthesizing the large-scale dataset with an analysis of the model reveals a simple behavioral principle that may underlie these interactions: the defender seeks to minimize their future relative speed to the attacker, whereas the attacker initiates their movements to preempt the defender's objective. This principle, relative-speed minimization, provides a consistent and unified account of the empirical data. Since our framework depends little on soccer-specific details, this principle may govern diverse pursuit-evasion scenarios as well as other invasion team sports.</summary>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-07T05:06:39Z</published>
+    <arxiv:primary_category term="physics.soc-ph"/>
+    <author>
+      <name>Issei Yamazaki</name>
+    </author>
+    <author>
+      <name>Hirotaka Goto</name>
+    </author>
+    <author>
+      <name>Kojiro Otoguro</name>
+    </author>
+    <author>
+      <name>Hiraku Nishimori</name>
+    </author>
+    <author>
+      <name>Masashi Shiraishi</name>
+    </author>
+    <author>
+      <name>Takuma Narizuka</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.31529v2</id>
+    <title>SVI-Bench: A Dynamic Microworld for Strategic Video Intelligence</title>
+    <updated>2026-07-01T03:25:50Z</updated>
+    <link href="https://arxiv.org/abs/2605.31529v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.31529v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>True video intelligence demands more than recognizing what is visible: it requires reasoning about why events unfold, predicting what would change under different conditions, and deciding what to do next. We refer to this progression, from perception through causal reasoning and simulation to strategic planning, as Strategic Video Intelligence (SVI). No existing benchmark evaluates this capability stack: in-the-wild videos lack verifiable ground truth for causal and strategic questions, while synthetic environments sacrifice the complexity of real multi-agent systems. To bridge this gap, we introduce SVI-Bench, a large-scale benchmark that leverages team sports as a dynamic microworld, combining the complexity of real-world multi-agent interaction (10-22 agents making coordinated decisions under adversarial pressure) with the verifiability of explicit rules and definitive outcomes. SVI-Bench comprises approximately 35K hours of broadcast video, 15M annotated actions, 15K hours of expert commentary, 23K game reports, and 103K structured statistical records across basketball, soccer, and hockey, all constructed via a data engine that transforms raw game data into a dense, cross-referenced corpus. We organize evaluation into 9 tasks spanning a progressive four-pillar hierarchy: Dynamic Scene Understanding, Causal Reasoning, Strategic Simulation, and Agentic Synthesis. Evaluating strong multimodal and agentic baselines, we find a capability cliff: models perform competently on perceptual tasks, achieving approximately 74% on fine-grained action QA, but degrade sharply at each successive cognitive level. Agentic tasks prove hardest: the strongest model achieves only 5% accuracy when required to autonomously gather and integrate evidence across a corpus of 1.8M clips.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-29T16:43:06Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Yulu Pan</name>
+    </author>
+    <author>
+      <name>Han Yi</name>
+    </author>
+    <author>
+      <name>Seongsu Ha</name>
+    </author>
+    <author>
+      <name>Md Mohaiminul Islam</name>
+    </author>
+    <author>
+      <name>Benjamin Zhang</name>
+    </author>
+    <author>
+      <name>Lorenzo Torresani</name>
+    </author>
+    <author>
+      <name>Gedas Bertasius</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2210.09295v1</id>
+    <title>Virtual-Reality based Vestibular Ocular Motor Screening for Concussion Detection using Machine-Learning</title>
+    <updated>2022-10-13T02:09:21Z</updated>
+    <link href="https://arxiv.org/abs/2210.09295v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2210.09295v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Sport-related concussion (SRC) depends on sensory information from visual, vestibular, and somatosensory systems. At the same time, the current clinical administration of Vestibular/Ocular Motor Screening (VOMS) is subjective and deviates among administrators. Therefore, for the assessment and management of concussion detection, standardization is required to lower the risk of injury and increase the validation among clinicians. With the advancement of technology, virtual reality (VR) can be utilized to advance the standardization of the VOMS, increasing the accuracy of testing administration and decreasing overall false positive rates. In this paper, we experimented with multiple machine learning methods to detect SRC on VR-generated data using VOMS. In our observation, the data generated from VR for smooth pursuit (SP) and the Visual Motion Sensitivity (VMS) tests are highly reliable for concussion detection. Furthermore, we train and evaluate these models, both qualitatively and quantitatively. Our findings show these models can reach high true-positive-rates of around 99.9 percent of symptom provocation on the VR stimuli-based VOMS vs. current clinical manual VOMS.</summary>
+    <category term="eess.IV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-10-13T02:09:21Z</published>
+    <arxiv:comment>Accepted in 17th International Symposium on Visual Computing,2022</arxiv:comment>
+    <arxiv:primary_category term="eess.IV"/>
+    <author>
+      <name>Khondker Fariha Hossain</name>
+    </author>
+    <author>
+      <name>Sharif Amit Kamran</name>
+    </author>
+    <author>
+      <name>Prithul Sarker</name>
+    </author>
+    <author>
+      <name>Philip Pavilionis</name>
+    </author>
+    <author>
+      <name>Isayas Adhanom</name>
+    </author>
+    <author>
+      <name>Nicholas Murray</name>
+    </author>
+    <author>
+      <name>Alireza Tavakkoli</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2410.17785v2</id>
+    <title>TranSPORTmer: A Holistic Approach to Trajectory Understanding in Multi-Agent Sports</title>
+    <updated>2024-11-09T10:26:38Z</updated>
+    <link href="https://arxiv.org/abs/2410.17785v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2410.17785v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Understanding trajectories in multi-agent scenarios requires addressing various tasks, including predicting future movements, imputing missing observations, inferring the status of unseen agents, and classifying different global states. Traditional data-driven approaches often handle these tasks separately with specialized models. We introduce TranSPORTmer, a unified transformer-based framework capable of addressing all these tasks, showcasing its application to the intricate dynamics of multi-agent sports scenarios like soccer and basketball. Using Set Attention Blocks, TranSPORTmer effectively captures temporal dynamics and social interactions in an equivariant manner. The model's tasks are guided by an input mask that conceals missing or yet-to-be-predicted observations. Additionally, we introduce a CLS extra agent to classify states along soccer trajectories, including passes, possessions, uncontrolled states, and out-of-play intervals, contributing to an enhancement in modeling trajectories. Evaluations on soccer and basketball datasets show that TranSPORTmer outperforms state-of-the-art task-specific models in player forecasting, player forecasting-imputation, ball inference, and ball imputation. https://youtu.be/8VtSRm8oGoE</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-10-23T11:35:44Z</published>
+    <arxiv:comment>Accepted to ACCV 2024</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Guillem Capellera</name>
+    </author>
+    <author>
+      <name>Luis Ferraz</name>
+    </author>
+    <author>
+      <name>Antonio Rubio</name>
+    </author>
+    <author>
+      <name>Antonio Agudo</name>
+    </author>
+    <author>
+      <name>Francesc Moreno-Noguer</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2410.11375v1</id>
+    <title>Statistical Analysis of the Impact of FIA Regulations on Safety, Racing Dynamics, and Spectacle in Formula 1</title>
+    <updated>2024-10-15T08:16:32Z</updated>
+    <link href="https://arxiv.org/abs/2410.11375v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2410.11375v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This study examines the effects of the Fédération Internationale de l'Automobile (FIA) regulations on Formula 1 (F1) from 1990 to 2023, focusing on safety, racing dynamics, and spectacle. By analyzing data on fatalities, overtaking statistics, car weights, and significant regulatory changes, including aerodynamic modifications and the introduction of the Drag Reduction System (DRS), the study assesses whether these regulations have positively influenced safety while negatively impacting racing dynamics and spectacle. The findings reveal that while FIA regulations aim to enhance driver safety, their immediate association with fatalities is not statistically significant due to the rarity of such incidents, delayed safety effects, and methodological constraints. Contrary to initial concerns, regulations have not negatively affected overtaking opportunities. The introduction of DRS has improved overtaking, mitigating some adverse impacts of other regulations on racing excitement. The study concludes that data-driven evaluation and refinement of regulations are necessary to ensure they continue to benefit the sport holistically.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-10-15T08:16:32Z</published>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Abdelghani Belgaid</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2502.09460v1</id>
+    <title>Metamorphic Testing for Pose Estimation Systems</title>
+    <updated>2025-02-13T16:27:23Z</updated>
+    <link href="https://arxiv.org/abs/2502.09460v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2502.09460v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Pose estimation systems are used in a variety of fields, from sports analytics to livestock care. Given their potential impact, it is paramount to systematically test their behaviour and potential for failure. This is a complex task due to the oracle problem and the high cost of manual labelling necessary to build ground truth keypoints. This problem is exacerbated by the fact that different applications require systems to focus on different subjects (e.g., human versus animal) or landmarks (e.g., only extremities versus whole body and face), which makes labelled test data rarely reusable. To combat these problems we propose MET-POSE, a metamorphic testing framework for pose estimation systems that bypasses the need for manual annotation while assessing the performance of these systems under different circumstances. MET-POSE thus allows users of pose estimation systems to assess the systems in conditions that more closely relate to their application without having to label an ad-hoc test dataset or rely only on available datasets, which may not be adapted to their application domain. While we define MET-POSE in general terms, we also present a non-exhaustive list of metamorphic rules that represent common challenges in computer vision applications, as well as a specific way to evaluate these rules. We then experimentally show the effectiveness of MET-POSE by applying it to Mediapipe Holistic, a state of the art human pose estimation system, with the FLIC and PHOENIX datasets. With these experiments, we outline numerous ways in which the outputs of MET-POSE can uncover faults in pose estimation systems at a similar or higher rate than classic testing using hand labelled data, and show that users can tailor the rule set they use to the faults and level of accuracy relevant to their application.</summary>
+    <category term="cs.SE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-02-13T16:27:23Z</published>
+    <arxiv:comment>Accepted for publication at 2025 IEEE Conference on Software Testing, Verification and Validation (ICST)</arxiv:comment>
+    <arxiv:primary_category term="cs.SE"/>
+    <author>
+      <name>Matias Duran</name>
+    </author>
+    <author>
+      <name>Thomas Laurent</name>
+    </author>
+    <author>
+      <name>Ellen Rushe</name>
+    </author>
+    <author>
+      <name>Anthony Ventresque</name>
+    </author>
+    <arxiv:doi>10.1109/ICST62969.2025.10988919</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/ICST62969.2025.10988919" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.28570v1</id>
+    <title>Digitizing Coaching Intelligence: An Agentic Framework for Holistic Athlete Profiling using VLM and RAG</title>
+    <updated>2026-06-26T19:53:26Z</updated>
+    <link href="https://arxiv.org/abs/2606.28570v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.28570v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Athlete assessment is a critical process for tracking physical progress and identifying elite talent. However, during mass recruitment drives, traditional methods rely on manual observation, which is inherently subjective and unscalable, or basic computer vision (CV) systems limited to quantitative repetition counting. These standard approaches lack the "coaching intelligence" required to evaluate qualitative physiological markers such as form degradation, spinal articulation, and fatigue. This paper presents a novel, LLM-based hybrid agentic framework for automated, holistic athlete profiling that strictly aligns with the Sports Authority of India (SAI) assessment protocols. Orchestrated via LangGraph, our dual-pipeline architecture synthesizes the geometric precision of CV (MediaPipe) for kinematic tracking with the semantic reasoning of Vision-Language Models (Llama-4-scout). To overcome the latency and token constraints associated with multimodal video processing, we introduce a 3 X 3 "Smart Grid" temporal chunking strategy, reducing computational overhead by over 88% while preserving critical temporal continuity. To ensure data integrity and mitigate hallucination, the framework pioneers an autonomous "LLM-as-a-Judge" self-correction loop that cross-references quantitative and qualitative metrics before persistence. Finally, we implement a dual-persistence Retrieval-Augmented Generation (RAG) pipeline utilizing a vector search engine (ChromaDB). This enables coaches to bypass rigid SQL databases and perform complex semantic queries (e.g., "Identify athletes with high endurance but poor core rigidity") using natural language. Experimental results demonstrate that this multi-agent approach significantly bridges the gap between raw biometric tracking and actionable coaching insights, offering a scalable, objective solution for national talent identification.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-26T19:53:26Z</published>
+    <arxiv:comment>16 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Deep Ghosal</name>
+    </author>
+    <author>
+      <name>Ishani Sen</name>
+    </author>
+    <author>
+      <name>Wazib Ansar</name>
+    </author>
+    <author>
+      <name>Amlan Chakrabarti</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2309.03808v2</id>
+    <title>Improved theoretical guarantee for rank aggregation via spectral method</title>
+    <updated>2023-09-10T05:25:26Z</updated>
+    <link href="https://arxiv.org/abs/2309.03808v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2309.03808v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Given pairwise comparisons between multiple items, how to rank them so that the ranking matches the observations? This problem, known as rank aggregation, has found many applications in sports, recommendation systems, and other web applications. As it is generally NP-hard to find a global ranking that minimizes the mismatch (known as the Kemeny optimization), we focus on the Erdös-Rényi outliers (ERO) model for this ranking problem. Here, each pairwise comparison is a corrupted copy of the true score difference. We investigate spectral ranking algorithms that are based on unnormalized and normalized data matrices. The key is to understand their performance in recovering the underlying scores of each item from the observed data. This reduces to deriving an entry-wise perturbation error bound between the top eigenvectors of the unnormalized/normalized data matrix and its population counterpart. By using the leave-one-out technique, we provide a sharper $\ell_{\infty}$-norm perturbation bound of the eigenvectors and also derive an error bound on the maximum displacement for each item, with only $Ω(n\log n)$ samples. Our theoretical analysis improves upon the state-of-the-art results in terms of sample complexity, and our numerical experiments confirm these theoretical findings.</summary>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-09-07T16:01:47Z</published>
+    <arxiv:comment>29 pages, 6 figures</arxiv:comment>
+    <arxiv:primary_category term="stat.ML"/>
+    <author>
+      <name>Ziliang Samuel Zhong</name>
+    </author>
+    <author>
+      <name>Shuyang Ling</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2308.01028v2</id>
+    <title>Maximizing Success Rate of Payment Routing using Non-stationary Bandits</title>
+    <updated>2023-10-06T07:53:37Z</updated>
+    <link href="https://arxiv.org/abs/2308.01028v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2308.01028v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper discusses the system architecture design and deployment of non-stationary multi-armed bandit approaches to determine a near-optimal payment routing policy based on the recent history of transactions. We propose a Routing Service architecture using a novel Ray-based implementation for optimally scaling bandit-based payment routing to over 10,000 transactions per second, adhering to the system design requirements and ecosystem constraints with Payment Card Industry Data Security Standard (PCI DSS). We first evaluate the effectiveness of multiple bandit-based payment routing algorithms on a custom simulator to benchmark multiple non-stationary bandit approaches and identify the best hyperparameters. We then conducted live experiments on the payment transaction system on a fantasy sports platform Dream11. In the live experiments, we demonstrated that our non-stationary bandit-based algorithm consistently improves the success rate of transactions by 0.92% compared to the traditional rule-based methods over one month.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-08-02T09:23:16Z</published>
+    <arxiv:comment>7 Pages, 6 Figures</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Aayush Chaudhary</name>
+    </author>
+    <author>
+      <name>Abhinav Rai</name>
+    </author>
+    <author>
+      <name>Abhishek Gupta</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2504.08764v1</id>
+    <title>Evaluation of the phi-3-mini SLM for identification of texts related to medicine, health, and sports injuries</title>
+    <updated>2025-03-31T07:25:59Z</updated>
+    <link href="https://arxiv.org/abs/2504.08764v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2504.08764v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Small Language Models (SLMs) have potential to be used for automatically labelling and identifying aspects of text data for medicine/health-related purposes from documents and the web. As their resource requirements are significantly lower than Large Language Models (LLMs), these can be deployed potentially on more types of devices. SLMs often are benchmarked on health/medicine-related tasks, such as MedQA, although performance on these can vary especially depending on the size of the model in terms of number of parameters. Furthermore, these test results may not necessarily reflect real-world performance regarding the automatic labelling or identification of texts in documents and the web. As a result, we compared topic-relatedness scores from Microsofts phi-3-mini-4k-instruct SLM to the topic-relatedness scores from 7 human evaluators on 1144 samples of medical/health-related texts and 1117 samples of sports injury-related texts. These texts were from a larger dataset of about 9 million news headlines, each of which were processed and assigned scores by phi-3-mini-4k-instruct. Our sample was selected (filtered) based on 1 (low filtering) or more (high filtering) Boolean conditions on the phi-3 SLM scores. We found low-moderate significant correlations between the scores from the SLM and human evaluators for sports injury texts with low filtering (\r{ho} = 0.3413, p &lt; 0.001) and medicine/health texts with high filtering (\r{ho} = 0.3854, p &lt; 0.001), and low significant correlation for medicine/health texts with low filtering (\r{ho} = 0.2255, p &lt; 0.001). There was negligible, insignificant correlation for sports injury-related texts with high filtering (\r{ho} = 0.0318, p = 0.4466).</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-03-31T07:25:59Z</published>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>Chris Brogly</name>
+    </author>
+    <author>
+      <name>Saif Rjaibi</name>
+    </author>
+    <author>
+      <name>Charlotte Liang</name>
+    </author>
+    <author>
+      <name>Erica Lam</name>
+    </author>
+    <author>
+      <name>Edward Wang</name>
+    </author>
+    <author>
+      <name>Adam Levitan</name>
+    </author>
+    <author>
+      <name>Sarah Paleczny</name>
+    </author>
+    <author>
+      <name>Michael Cusimano</name>
+    </author>
+    <arxiv:doi>10.1109/ICMI65310.2025.11141224</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/ICMI65310.2025.11141224" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.21944v1</id>
+    <title>Ranking dynamics in movies and music</title>
+    <updated>2025-06-27T06:35:52Z</updated>
+    <link href="https://arxiv.org/abs/2506.21944v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.21944v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Ranking systems are widely used to simplify and interpret complex data across diverse domains, from economic indicators and sports scores to online content popularity. While previous studies including the Zipf's law have focused on the static, aggregated properties of ranks, in recent years researchers have begun to uncover generic features in their temporal dynamics. In this work, we introduce and study a series of system-level indices that quantify the compositional changes in ranking lists over time, and also characterize the temporal ranking trajectories of individual items' ranking dynamics. We apply our method to analyze ranking dynamics of movies from the over-the-top services, including Netflix, as well as that of music items in Spotify charts. We find that newly released movies or music items influence most the system-level compositional changes of ranking lists; the highest ranks of items are strongly correlated with their lifetimes in the lists more than their first and last ranks. Our findings offer a novel lens to understand collective ranking dynamics and provide a basis for comparing fluctuation patterns across various ordered systems.</summary>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-06-27T06:35:52Z</published>
+    <arxiv:primary_category term="physics.soc-ph"/>
+    <author>
+      <name>Hyun-Woo Lee</name>
+    </author>
+    <author>
+      <name>Gerardo Iñiguez</name>
+    </author>
+    <author>
+      <name>Hang-Hyun Jo</name>
+    </author>
+    <author>
+      <name>Hye Jin Park</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.11786v2</id>
+    <title>SSPINNpose: A Self-Supervised PINN for Inertial Pose and Dynamics Estimation</title>
+    <updated>2026-04-08T13:51:43Z</updated>
+    <link href="https://arxiv.org/abs/2506.11786v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.11786v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Accurate real-time estimation of human movement dynamics, including internal joint moments and muscle forces, is essential for applications in clinical diagnostics and sports performance monitoring. Inertial measurement units (IMUs) provide a minimally intrusive solution for capturing motion data, particularly when used in sparse sensor configurations. However, current real-time methods rely on supervised learning, where a ground truth dataset needs to be measured with laboratory measurement systems, such as optical motion capture. These systems are known to introduce measurement and processing errors and often fail to generalize to real-world or previously unseen movements, necessitating new data collection efforts that are time-consuming and impractical. To overcome these limitations, we propose SSPINNpose, a self-supervised, physics-informed neural network that estimates joint kinematics and kinetics directly from IMU data, without requiring ground truth labels for training. We run the network output through a physics model of the human body to optimize physical plausibility and generate virtual measurement data. Using this virtual sensor data, the network is trained directly on the measured sensor data instead of a ground truth. When compared to optical motion capture, SSPINNpose is able to accurately estimate joint angles and joint moments at an RMSD of 8.7 deg and 4.9 BWBH%, respectively, for walking and running at speeds up to 4.9 m/s at a latency of 3.5 ms. Furthermore, the framework demonstrates robustness across sparse sensor configurations and can infer the anatomical locations of the sensors. These results underscore the potential of SSPINNpose as a scalable and adaptable solution for real-time biomechanical analysis in both laboratory and field environments.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-06-13T13:47:27Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Markus Gambietz</name>
+    </author>
+    <author>
+      <name>Eva Dorschky</name>
+    </author>
+    <author>
+      <name>Altan Akat</name>
+    </author>
+    <author>
+      <name>Marcel Schöckel</name>
+    </author>
+    <author>
+      <name>Jörg Miehling</name>
+    </author>
+    <author>
+      <name>Anne D. Koelewijn</name>
+    </author>
+    <arxiv:doi>10.1145/3806199</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3806199" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2404.09807v1</id>
+    <title>A Universal Protocol to Benchmark Camera Calibration for Sports</title>
+    <updated>2024-04-15T14:03:31Z</updated>
+    <link href="https://arxiv.org/abs/2404.09807v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2404.09807v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Camera calibration is a crucial component in the realm of sports analytics, as it serves as the foundation to extract 3D information out of the broadcast images. Despite the significance of camera calibration research in sports analytics, progress is impeded by outdated benchmarking criteria. Indeed, the annotation data and evaluation metrics provided by most currently available benchmarks strongly favor and incite the development of sports field registration methods, i.e. methods estimating homographies that map the sports field plane to the image plane. However, such homography-based methods are doomed to overlook the broader capabilities of camera calibration in bridging the 3D world to the image. In particular, real-world non-planar sports field elements (such as goals, corner flags, baskets, ...) and image distortion caused by broadcast camera lenses are out of the scope of sports field registration methods. To overcome these limitations, we designed a new benchmarking protocol, named ProCC, based on two principles: (1) the protocol should be agnostic to the camera model chosen for a camera calibration method, and (2) the protocol should fairly evaluate camera calibration methods using the reprojection of arbitrary yet accurately known 3D objects. Indirectly, we also provide insights into the metric used in SoccerNet-calibration, which solely relies on image annotation data of viewed 3D objects as ground truth, thus implementing our protocol. With experiments on the World Cup 2014, CARWC, and SoccerNet datasets, we show that our benchmarking protocol provides fairer evaluations of camera calibration methods. By defining our requirements for proper benchmarking, we hope to pave the way for a new stage in camera calibration for sports applications with high accuracy standards.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-04-15T14:03:31Z</published>
+    <arxiv:comment>12 pages, 5 figures, 4 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Floriane Magera</name>
+    </author>
+    <author>
+      <name>Thomas Hoyoux</name>
+    </author>
+    <author>
+      <name>Olivier Barnich</name>
+    </author>
+    <author>
+      <name>Marc Van Droogenbroeck</name>
+    </author>
+    <arxiv:doi>10.1109/cvprw63382.2024.00338</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/cvprw63382.2024.00338" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.12799v1</id>
+    <title>Synthesizing the Expert: A Validated Multimodal Dataset for Trustworthy AI-Assisted Swimming Coaching</title>
+    <updated>2026-05-12T22:34:33Z</updated>
+    <link href="https://arxiv.org/abs/2605.12799v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.12799v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This research is primarily concerned with the critical problem of synthesizing a structured Retrieval-Augmented Generation (RAG) system for advanced AI applications in the domain of swimming. As the integration of Artificial Intelligence in sports science matures, its applications in swimming have become increasingly diverse, spanning from real-time technical coaching and talent scouting to comprehensive performance profiling and the dynamic personalization of training periodization. Within this landscape, RAG-based systems represent a pivotal advancement in Large Language Model (LLM) enhanced swimming analysis, as they allow for the grounding of generative outputs in authoritative domain knowledge, thereby ensuring the credibility of AI-generated advice, contextually and technically. Despite this potential, building robust RAG systems using only real-world aquatic data presents significant challenges, including ethical constraints regarding athlete biometrics, and the high cost of manual expert labeling. To address these barriers, we propose a novel generative framework that leverages a multimodal knowledge base gathered across four dimensions: physiological data, physiological literature, kinematic sensor data, and unstructured domain expertise. Our proposed framework utilizes a multi-agent LLM architecture to synthesize a high-fidelity dataset of 1,864 validated "Question-Context-Answer" triplets-drawn from 1,914 drafts evaluated against 12 physiological soundness rules. By providing a structured, synthetic ground truth, this work establishes a foundational benchmark for trustworthy AI in aquatics. The outcomes of this research promise to enhance the reliability of automated coaching and open a plethora of future directions in "Meta-Agent" development and athletic profiling, ultimately bridging the gap between raw data engineering and practical sports science application.</summary>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-12T22:34:33Z</published>
+    <arxiv:primary_category term="cs.MA"/>
+    <author>
+      <name>Ahmad Al-Kabbany</name>
+    </author>
+    <author>
+      <name>Esraa Kassem</name>
+    </author>
+  </entry>
+</feed>

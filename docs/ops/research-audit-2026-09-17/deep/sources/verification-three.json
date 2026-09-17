@@ -1,0 +1,53 @@
+{
+  "public_repos": [
+    {
+      "url": "https://api.github.com/repos/bigfour/competitiveness/git/trees/master?recursive=1",
+      "http_status": 200,
+      "sha": "1e8b709c350e646d64733a14e91b5264696240a3",
+      "truncated": false
+    },
+    {
+      "url": "https://api.github.com/repos/chancejohnstone/marchmadnessconformal/git/trees/master?recursive=1",
+      "http_status": 200,
+      "sha": "05d46e1dbb375d03d7d93469546b6cab75a2587e",
+      "truncated": false
+    }
+  ],
+  "raw_url_checks": [
+    {
+      "url": "https://raw.githubusercontent.com/bigfour/competitiveness/master/R/jagsFunction.R2.R",
+      "http_status": 200,
+      "characters": 4513
+    },
+    {
+      "url": "https://raw.githubusercontent.com/bigfour/competitiveness/master/R/jags_model_TeamHFA_R1new.bug",
+      "http_status": 200,
+      "characters": 1545
+    },
+    {
+      "url": "https://raw.githubusercontent.com/chancejohnstone/marchmadnessconformal/master/generate_cpd_ncaa.R",
+      "http_status": 200,
+      "characters": 4012
+    },
+    {
+      "url": "https://raw.githubusercontent.com/chancejohnstone/marchmadnessconformal/master/clean_ncaam_scores_2014_2020_all.csv",
+      "http_status": 200,
+      "characters": 1475422
+    },
+    {
+      "url": "https://raw.githubusercontent.com/chancejohnstone/marchmadnessconformal/master/clean_ncaaw_scores_2014_2020_all.csv",
+      "http_status": 200,
+      "characters": 1722537
+    }
+  ],
+  "cpd_self_tie_reproduction": {
+    "augmented_residuals": [
+      -2.0,
+      0.0,
+      2.0,
+      0.0
+    ],
+    "correct": 0.5,
+    "incorrect_without_self_tie": 0.375
+  }
+}

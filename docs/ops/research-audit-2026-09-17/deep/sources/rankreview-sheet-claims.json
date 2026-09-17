@@ -1,0 +1,129 @@
+{
+  "source_metadata": {
+    "source": "C:\\Users\\Garrett\\Downloads\\gse_research_analysis (1).xlsx",
+    "sha256": "a418ffb72c8d1db341da1b062758028584eae0759aa537a23af75cc909df1e5b",
+    "live_parity": "NOT_VERIFIED"
+  },
+  "claims": [
+    {
+      "sheet": "GSE Research Triage",
+      "row": 95,
+      "cells": {
+        "A95": "2501.02505",
+        "B95": "https://arxiv.org/abs/2501.02505",
+        "C95": "Estimation of partial rankings from sparse, noisy comparisons",
+        "D95": "Develops a nonparametric Bayesian method that infers partial rankings (with ties) from pairwise comparisons only when evidence in the data supports distinguishing items.",
+        "E95": "Bayesian MAP inference via an agglomerative algorithm built on top of any pairwise-comparison model like Bradley-Terry.",
+        "F95": "Strongly relevant \u2014 a principled way to avoid overconfident rankings/probabilities under sparse data, directly addressing GSE's 'bootstrap mode' confidence-capping problem and overconfidence driving poor ECE.",
+        "G95": "Apply partial-ranking inference to team/player power ratings so GSE can honestly display 'statistically tied' teams instead of forcing false precision that hurts calibration.",
+        "H95": "ok"
+      }
+    },
+    {
+      "sheet": "GSE Research Triage",
+      "row": 609,
+      "cells": {
+        "A609": "2406.19563",
+        "B609": "https://arxiv.org/abs/2406.19563",
+        "C609": "Bayesian Rank-Clustering",
+        "D609": "Proposes a Bayesian Rank-Clustered Bradley-Terry-Luce model that lets statistically indistinguishable objects share a rank via a spike-and-slab prior, demonstrated on sports analytics data.",
+        "E609": "Bradley-Terry-Luce ranking model extended with parameter fusion via spike-and-slab priors to identify rank-clusters with quantified uncertainty.",
+        "F609": "Directly relevant: offers a statistically honest way to represent ranking uncertainty (rather than false precision), which is exactly the kind of principled uncertainty quantification GSE's confidence/calibration system needs.",
+        "G609": "Use rank-clustering to let GSE explicitly communicate when two teams/players are 'too close to call' rather than forcing an artificially precise probability, directly supporting more honest calibration and ECE improvement.",
+        "H609": "ok"
+      }
+    },
+    {
+      "sheet": "Ranked by Relevance",
+      "row": 10,
+      "cells": {
+        "A10": "High",
+        "B10": "17.0",
+        "C10": "2501.02505",
+        "D10": "https://arxiv.org/abs/2501.02505",
+        "E10": "Estimation of partial rankings from sparse, noisy comparisons",
+        "F10": "Develops a nonparametric Bayesian method that infers partial rankings (with ties) from pairwise comparisons only when evidence in the data supports distinguishing items.",
+        "G10": "Bayesian MAP inference via an agglomerative algorithm built on top of any pairwise-comparison model like Bradley-Terry.",
+        "H10": "Strongly relevant \u2014 a principled way to avoid overconfident rankings/probabilities under sparse data, directly addressing GSE's 'bootstrap mode' confidence-capping problem and overconfidence driving poor ECE.",
+        "I10": "Apply partial-ranking inference to team/player power ratings so GSE can honestly display 'statistically tied' teams instead of forcing false precision that hurts calibration.",
+        "J10": "ok"
+      }
+    },
+    {
+      "sheet": "Ranked by Relevance",
+      "row": 21,
+      "cells": {
+        "A21": "High",
+        "B21": "16.0",
+        "C21": "2406.19563",
+        "D21": "https://arxiv.org/abs/2406.19563",
+        "E21": "Bayesian Rank-Clustering",
+        "F21": "Proposes a Bayesian Rank-Clustered Bradley-Terry-Luce model that lets statistically indistinguishable objects share a rank via a spike-and-slab prior, demonstrated on sports analytics data.",
+        "G21": "Bradley-Terry-Luce ranking model extended with parameter fusion via spike-and-slab priors to identify rank-clusters with quantified uncertainty.",
+        "H21": "Directly relevant: offers a statistically honest way to represent ranking uncertainty (rather than false precision), which is exactly the kind of principled uncertainty quantification GSE's confidence/calibration system needs.",
+        "I21": "Use rank-clustering to let GSE explicitly communicate when two teams/players are 'too close to call' rather than forcing an artificially precise probability, directly supporting more honest calibration and ECE improvement.",
+        "J21": "ok"
+      }
+    },
+    {
+      "sheet": "Grok 58 Dossiers (Reconciled)",
+      "row": 10,
+      "cells": {
+        "A10": "2501.02505",
+        "B10": "Estimation of partial rankings from sparse, noisy comparisons",
+        "D10": "Nonparametric Bayesian / MAP procedure on top of *any* pairwise model (Bradley-Terry, etc.): only declare \\(i \\succ j\\) when the data support it; otherwise leave a tie. Agglomerative algorithm. Designed for sparse, noisy comparison graphs.",
+        "E10": "Simulations + comparison datasets; reduces false-precision rankings under sparsity. Repo: https://github.com/seb310/partial-rankings",
+        "F10": "**Yes.** https://github.com/seb310/partial-rankings",
+        "G10": "**[C5]** primary replacement for bootstrap mode, plus **[C1]**. Early-season / thin-league: output a partial order and cap published confidence at the posterior separation. If two MLS teams are statistically tied, GSE should not lock a 58% pick.",
+        "H10": "Low-medium. Code exists. Map \u201ccomparison\u201d = game result (or market-implied comparison). Failure: treating market odds as independent comparisons when they share a bookmaker residual.",
+        "I10": "Highly relevant \u2014 directly addresses Bootstrap mode via evidence-threshold merging of indistinguishable ranks.",
+        "J10": "Real/synthetic network datasets. More parsimonious summary than traditional ranking under sparsity.",
+        "K10": "YES \u2014 see \"Next Wave\" deeper cross-referenced section in pass-2 source file"
+      }
+    },
+    {
+      "sheet": "Grok 58 Dossiers (Reconciled)",
+      "row": 21,
+      "cells": {
+        "A21": "2406.19563",
+        "B21": "Bayesian Rank-Clustering",
+        "D21": "Bayesian model that simultaneously ranks *and* clusters items: items in the same cluster are treated as statistically tied. Posterior over partitions + orders, rather than a forced total ranking. Built for comparison data where many pairs are noisy/sparse.",
+        "E21": "Simulations + ranking datasets; recovers clusters when signal cannot separate items. Avoids overconfident total orders.",
+        "F21": "Author site / supplement (Pearce & Erosheva). Confirm before implementing; method is specify-able from the paper.",
+        "G21": "**[C5][C1]**. Publish \u201cthese three teams are in the same tier\u201d instead of fake 51/49 precision. That is a brand-honest move (\u201cmath you can read\u201d) and a calibration move (don\u2019t emit 0.53 when the posterior is a blob).",
+        "H21": "Medium statistics, low data. Needs pairwise or rating-scale inputs GSE already has.",
+        "I21": "Highly relevant \u2014 same problem as 2501.02505 with BTL foundation, directly applicable to pairwise sports comparisons.",
+        "J21": "Demonstrated on simulated/real datasets (surveys, elections, sports). No sport-specific Brier/ECE.",
+        "K21": "YES \u2014 see \"Next Wave\" deeper cross-referenced section in pass-2 source file"
+      }
+    },
+    {
+      "sheet": "Build Plan & Synthesis",
+      "row": 8,
+      "cells": {
+        "A8": "Where the passes agree: 2501.02505 + 2406.19563 (rank-clustering / partial rankings, as the Bootstrap-mode replacement) and 2408.08331 (run the Poisson baseline as a diagnostic before building anything new) appear in the top tier of all three passes \u2014 this is the highest-confidence recommendation in the entire set."
+      }
+    },
+    {
+      "sheet": "Build Plan & Synthesis",
+      "row": 9,
+      "cells": {
+        "A9": "Where they disagree: Pass 1 leads with 1701.05976 (Lopez-Matthews-Baumer hierarchical state-space model) as the architectural foundation, because it is the only paper that simultaneously supplies a per-sport noise model, a generative backbone for the CEPT ensemble, and public JAGS code. Pass 2 (revised) instead leads with 1704.00197 (iWinRNFL) as a fast, low-cost diagnostic. These are not actually in conflict \u2014 1704.00197 is cheap enough to run first as a sanity check (does a 10-feature logistic regression already beat GSE's current model?), and 1701.05976 is the right next step if it does, since it is the more structurally complete answer for a multi-sport platform. Recommended order: 1704.00197 \u2192 2408.08331 \u2192 1701.05976 \u2192 2208.08598 \u2192 2501.02505/2406.19563."
+      }
+    },
+    {
+      "sheet": "Build Plan & Synthesis",
+      "row": 15,
+      "cells": {
+        "A15": "5. 2501.02505 / 2406.19563 (partial rankings / rank-clustered BTL) \u2014 the Bootstrap-mode replacement all three passes converge on."
+      }
+    },
+    {
+      "sheet": "Build Plan & Synthesis",
+      "row": 22,
+      "cells": {
+        "A22": "Converged recommendation: replace the ad-hoc confidence cap with rank-clustering (2501.02505 for general ranking, 2406.19563 for pairwise BTL comparisons). When data is sparse, statistically indistinguishable picks are shown as a tied cluster rather than an arbitrarily capped point estimate. As picks settle and evidence accumulates, clusters split and rankings sharpen \u2014 this maps directly onto the existing pick lifecycle (proposed \u2192 modeled \u2192 published \u2192 graded \u2192 settled) and is more consistent with the \"math you can read\" brand than a numeric cap (\"we can't tell these 5 picks apart yet\" vs. \"confidence: 0.62\")."
+      }
+    }
+  ]
+}

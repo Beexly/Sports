@@ -1,0 +1,964 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api//l9R7q3ohajhfeiFvlx1OPeBQpM</id>
+  <title>arXiv Query: search_query=&amp;id_list=2302.02755,2212.13993,2212.06804,2212.03685,2211.12334,2210.09389,2209.07795,2209.07528,2209.05742,2209.00451,2208.12646,2208.00671,2207.07780,2203.01374,2202.00917,2111.06633,2109.06431,2107.03141,2107.01854,2103.14666,2010.13057,2004.08010,1908.04767,1906.11720,1809.07875,1805.02501,1710.10891,1705.08094,1705.04911,1701.05141,1701.02740,1612.00843,1609.02016,1608.08041,1511.05076,1207.0144,0908.3241,astro-ph/0408498,2602.18246,2506.11934&amp;start=0&amp;max_results=40</title>
+  <updated>2026-09-17T18:38:41Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=&amp;start=0&amp;max_results=40&amp;id_list=2302.02755,2212.13993,2212.06804,2212.03685,2211.12334,2210.09389,2209.07795,2209.07528,2209.05742,2209.00451,2208.12646,2208.00671,2207.07780,2203.01374,2202.00917,2111.06633,2109.06431,2107.03141,2107.01854,2103.14666,2010.13057,2004.08010,1908.04767,1906.11720,1809.07875,1805.02501,1710.10891,1705.08094,1705.04911,1701.05141,1701.02740,1612.00843,1609.02016,1608.08041,1511.05076,1207.0144,0908.3241,astro-ph/0408498,2602.18246,2506.11934" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>40</opensearch:itemsPerPage>
+  <opensearch:totalResults>40</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2010.13057v1</id>
+    <title>Contextualized Word Embeddings Encode Aspects of Human-Like Word Sense Knowledge</title>
+    <updated>2020-10-25T07:56:52Z</updated>
+    <link href="https://arxiv.org/abs/2010.13057v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2010.13057v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Understanding context-dependent variation in word meanings is a key aspect of human language comprehension supported by the lexicon. Lexicographic resources (e.g., WordNet) capture only some of this context-dependent variation; for example, they often do not encode how closely senses, or discretized word meanings, are related to one another. Our work investigates whether recent advances in NLP, specifically contextualized word embeddings, capture human-like distinctions between English word senses, such as polysemy and homonymy. We collect data from a behavioral, web-based experiment, in which participants provide judgments of the relatedness of multiple WordNet senses of a word in a two-dimensional spatial arrangement task. We find that participants' judgments of the relatedness between senses are correlated with distances between senses in the BERT embedding space. Homonymous senses (e.g., bat as mammal vs. bat as sports equipment) are reliably more distant from one another in the embedding space than polysemous ones (e.g., chicken as animal vs. chicken as meat). Our findings point towards the potential utility of continuous-space representations of sense meanings.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-10-25T07:56:52Z</published>
+    <arxiv:comment>To appear in proceedings of the Cognitive Aspects of the Lexicon Workshop at the 28th International Conference on Computational Linguistics (COLING)</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Sathvik Nair</name>
+    </author>
+    <author>
+      <name>Mahesh Srinivasan</name>
+    </author>
+    <author>
+      <name>Stephan Meylan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2209.05742v1</id>
+    <title>A Tale of HodgeRank and Spectral Method: Target Attack Against Rank Aggregation Is the Fixed Point of Adversarial Game</title>
+    <updated>2022-09-13T05:59:02Z</updated>
+    <link href="https://arxiv.org/abs/2209.05742v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2209.05742v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Rank aggregation with pairwise comparisons has shown promising results in elections, sports competitions, recommendations, and information retrieval. However, little attention has been paid to the security issue of such algorithms, in contrast to numerous research work on the computational and statistical characteristics. Driven by huge profits, the potential adversary has strong motivation and incentives to manipulate the ranking list. Meanwhile, the intrinsic vulnerability of the rank aggregation methods is not well studied in the literature. To fully understand the possible risks, we focus on the purposeful adversary who desires to designate the aggregated results by modifying the pairwise data in this paper. From the perspective of the dynamical system, the attack behavior with a target ranking list is a fixed point belonging to the composition of the adversary and the victim. To perform the targeted attack, we formulate the interaction between the adversary and the victim as a game-theoretic framework consisting of two continuous operators while Nash equilibrium is established. Then two procedures against HodgeRank and RankCentrality are constructed to produce the modification of the original data. Furthermore, we prove that the victims will produce the target ranking list once the adversary masters the complete information. It is noteworthy that the proposed methods allow the adversary only to hold incomplete information or imperfect feedback and perform the purposeful attack. The effectiveness of the suggested target attack strategies is demonstrated by a series of toy simulations and several real-world data experiments. These experimental results show that the proposed methods could achieve the attacker's goal in the sense that the leading candidate of the perturbed ranking list is the designated one by the adversary.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.GT" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-09-13T05:59:02Z</published>
+    <arxiv:comment>33 pages, https://github.com/alphaprime/Target_Attack_Rank_Aggregation</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <arxiv:journal_ref>Early Access by TPAMI 2022 (https://ieeexplore.ieee.org/document/9830042)</arxiv:journal_ref>
+    <author>
+      <name>Ke Ma</name>
+    </author>
+    <author>
+      <name>Qianqian Xu</name>
+    </author>
+    <author>
+      <name>Jinshan Zeng</name>
+    </author>
+    <author>
+      <name>Guorong Li</name>
+    </author>
+    <author>
+      <name>Xiaochun Cao</name>
+    </author>
+    <author>
+      <name>Qingming Huang</name>
+    </author>
+    <arxiv:doi>10.1109/TPAMI.2022.3190939</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/TPAMI.2022.3190939" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2207.07780v1</id>
+    <title>Quantifying human performance in chess</title>
+    <updated>2022-07-15T23:13:17Z</updated>
+    <link href="https://arxiv.org/abs/2207.07780v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2207.07780v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>From sports to science, the recent availability of large-scale data has allowed to gain insights on the drivers of human innovation and success in a variety of domains. Here we quantify human performance in the popular game of chess by leveraging a very large dataset comprising of over 120 million games between almost 1 million players. We find that individuals encounter hot streaks of repeated success, longer for beginners than for expert players, and even longer cold streaks of unsatisfying performance. Skilled players can be distinguished from the others based on their gaming behaviour. Differences appear from the very first moves of the game, with experts tending to specialize and repeat the same openings while beginners explore and diversify more. However, experts experience a broader response repertoire, and display a deeper understanding of different variations within the same line. Over time, the opening diversity of a player tends to decrease, hinting at the development of individual playing styles. Nevertheless, we find that players are often not able to recognize their most successful openings. Overall, our work contributes to quantifying human performance in competitive settings, providing a first large-scale quantitative analysis of individual careers in chess, helping unveil the determinants separating elite from beginner performance.</summary>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-07-15T23:13:17Z</published>
+    <arxiv:comment>8 pages, 5 figures</arxiv:comment>
+    <arxiv:primary_category term="physics.soc-ph"/>
+    <author>
+      <name>Sandeep Chowdhary</name>
+    </author>
+    <author>
+      <name>Iacopo Iacopini</name>
+    </author>
+    <author>
+      <name>Federico Battiston</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2212.03685v2</id>
+    <title>Density Approximation for Moving Groups</title>
+    <updated>2023-04-15T09:51:19Z</updated>
+    <link href="https://arxiv.org/abs/2212.03685v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2212.03685v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Sets of moving entities can form groups which travel together for significant amounts of time. Tracking such groups is an important analysis task in a variety of areas, such as wildlife ecology, urban transport, or sports analysis. Correspondingly, recent years have seen a multitude of algorithms to identify and track meaningful groups in sets of moving entities. However, not only the mere existence of one or more groups is an important fact to discover; in many application areas the actual shape of the group carries meaning as well. In this paper we initiate the algorithmic study of the shape of a moving group. We use kernel density estimation to model the density within a group and show how to efficiently maintain an approximation of this density description over time. Furthermore, we track persistent maxima which give a meaningful first idea of the time-varying shape of the group. By combining several approximation techniques, we obtain a kinetic data structure that can approximately track persistent maxima efficiently.</summary>
+    <category term="cs.DS" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-12-07T14:58:18Z</published>
+    <arxiv:primary_category term="cs.DS"/>
+    <author>
+      <name>Max van Mulken</name>
+    </author>
+    <author>
+      <name>Bettina Speckmann</name>
+    </author>
+    <author>
+      <name>Kevin Verbeek</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2209.00451v1</id>
+    <title>Group Activity Recognition in Basketball Tracking Data -- Neural Embeddings in Team Sports (NETS)</title>
+    <updated>2022-08-31T01:22:38Z</updated>
+    <link href="https://arxiv.org/abs/2209.00451v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2209.00451v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Like many team sports, basketball involves two groups of players who engage in collaborative and adversarial activities to win a game. Players and teams are executing various complex strategies to gain an advantage over their opponents. Defining, identifying, and analyzing different types of activities is an important task in sports analytics, as it can lead to better strategies and decisions by the players and coaching staff. The objective of this paper is to automatically recognize basketball group activities from tracking data representing locations of players and the ball during a game. We propose a novel deep learning approach for group activity recognition (GAR) in team sports called NETS. To efficiently model the player relations in team sports, we combined a Transformer-based architecture with LSTM embedding, and a team-wise pooling layer to recognize the group activity. Training such a neural network generally requires a large amount of annotated data, which incurs high labeling cost. To address scarcity of manual labels, we generate weak-labels and pretrain the neural network on a self-supervised trajectory prediction task. We used a large tracking data set from 632 NBA games to evaluate our approach. The results show that NETS is capable of learning group activities with high accuracy, and that self- and weak-supervised training in NETS have a positive impact on GAR accuracy.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-08-31T01:22:38Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Sandro Hauri</name>
+    </author>
+    <author>
+      <name>Slobodan Vucetic</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2209.07795v1</id>
+    <title>KaliCalib: A Framework for Basketball Court Registration</title>
+    <updated>2022-09-16T08:52:29Z</updated>
+    <link href="https://arxiv.org/abs/2209.07795v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2209.07795v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Tracking the players and the ball in team sports is key to analyse the performance or to enhance the game watching experience with augmented reality. When the only sources for this data are broadcast videos, sports-field registration systems are required to estimate the homography and re-project the ball or the players from the image space to the field space. This paper describes a new basketball court registration framework in the context of the MMSports 2022 camera calibration challenge. The method is based on the estimation by an encoder-decoder network of the positions of keypoints sampled with perspective-aware constraints. The regression of the basket positions and heavy data augmentation techniques make the model robust to different arenas. Ablation studies show the positive effects of our contributions on the challenge test set. Our method divides the mean squared error by 4.7 compared to the challenge baseline.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-09-16T08:52:29Z</published>
+    <arxiv:comment>Accepted at ACM MMSports 2022 (5th International ACM Workshop on Multimedia Content Analysis in Sports)</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Adrien Maglo</name>
+    </author>
+    <author>
+      <name>Astrid Orcesi</name>
+    </author>
+    <author>
+      <name>Quoc Cuong Pham</name>
+    </author>
+    <arxiv:doi>10.1145/3552437.3555701</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3552437.3555701" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2302.02755v1</id>
+    <title>Fine-Grained Action Detection with RGB and Pose Information using Two Stream Convolutional Networks</title>
+    <updated>2023-02-06T13:05:55Z</updated>
+    <link href="https://arxiv.org/abs/2302.02755v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2302.02755v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>As participants of the MediaEval 2022 Sport Task, we propose a two-stream network approach for the classification and detection of table tennis strokes. Each stream is a succession of 3D Convolutional Neural Network (CNN) blocks using attention mechanisms. Each stream processes different 4D inputs. Our method utilizes raw RGB data and pose information computed from MMPose toolbox. The pose information is treated as an image by applying the pose either on a black background or on the original RGB frame it has been computed from. Best performance is obtained by feeding raw RGB data to one stream, Pose + RGB (PRGB) information to the other stream and applying late fusion on the features. The approaches were evaluated on the provided TTStroke-21 data sets. We can report an improvement in stroke classification, reaching 87.3% of accuracy, while the detection does not outperform the baseline but still reaches an IoU of 0.349 and mAP of 0.110.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-02-06T13:05:55Z</published>
+    <arxiv:comment>Working note paper of the sport task of MediaEval 2022 in Bergen, Norway, 12-13 Jan 2023</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Leonard Hacker</name>
+    </author>
+    <author>
+      <name>Finn Bartels</name>
+    </author>
+    <author>
+      <name>Pierre-Etienne Martin</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1710.10891v1</id>
+    <title>Open Set Logo Detection and Retrieval</title>
+    <updated>2017-10-30T12:01:32Z</updated>
+    <link href="https://arxiv.org/abs/1710.10891v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1710.10891v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Current logo retrieval research focuses on closed set scenarios. We argue that the logo domain is too large for this strategy and requires an open set approach. To foster research in this direction, a large-scale logo dataset, called Logos in the Wild, is collected and released to the public. A typical open set logo retrieval application is, for example, assessing the effectiveness of advertisement in sports event broadcasts. Given a query sample in shape of a logo image, the task is to find all further occurrences of this logo in a set of images or videos. Currently, common logo retrieval approaches are unsuitable for this task because of their closed world assumption. Thus, an open set logo retrieval method is proposed in this work which allows searching for previously unseen logos by a single query sample. A two stage concept with separate logo detection and comparison is proposed where both modules are based on task specific CNNs. If trained with the Logos in the Wild data, significant performance improvements are observed, especially compared with state-of-the-art closed set approaches.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-10-30T12:01:32Z</published>
+    <arxiv:comment>accepted at VISAPP 2018</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Andras Tüzkö</name>
+    </author>
+    <author>
+      <name>Christian Herrmann</name>
+    </author>
+    <author>
+      <name>Daniel Manger</name>
+    </author>
+    <author>
+      <name>Jürgen Beyerer</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2103.14666v2</id>
+    <title>Autonomous Overtaking in Gran Turismo Sport Using Curriculum Reinforcement Learning</title>
+    <updated>2021-05-09T17:19:03Z</updated>
+    <link href="https://arxiv.org/abs/2103.14666v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2103.14666v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Professional race-car drivers can execute extreme overtaking maneuvers. However, existing algorithms for autonomous overtaking either rely on simplified assumptions about the vehicle dynamics or try to solve expensive trajectory-optimization problems online. When the vehicle approaches its physical limits, existing model-based controllers struggle to handle highly nonlinear dynamics, and cannot leverage the large volume of data generated by simulation or real-world driving. To circumvent these limitations, we propose a new learning-based method to tackle the autonomous overtaking problem. We evaluate our approach in the popular car racing game Gran Turismo Sport, which is known for its detailed modeling of various cars and tracks. By leveraging curriculum learning, our approach leads to faster convergence as well as increased performance compared to vanilla reinforcement learning. As a result, the trained controller outperforms the built-in model-based game AI and achieves comparable overtaking performance with an experienced human driver.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-03-26T18:06:50Z</published>
+    <arxiv:comment>Accepted for publication at the IEEE International Conference on Robotics and Automation (ICRA), Xi An, 2021</arxiv:comment>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Yunlong Song</name>
+    </author>
+    <author>
+      <name>HaoChih Lin</name>
+    </author>
+    <author>
+      <name>Elia Kaufmann</name>
+    </author>
+    <author>
+      <name>Peter Duerr</name>
+    </author>
+    <author>
+      <name>Davide Scaramuzza</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2107.03141v1</id>
+    <title>Hierarchical Text Classification of Urdu News using Deep Neural Network</title>
+    <updated>2021-07-07T11:06:11Z</updated>
+    <link href="https://arxiv.org/abs/2107.03141v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2107.03141v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Digital text is increasing day by day on the internet. It is very challenging to classify a large and heterogeneous collection of data, which require improved information processing methods to organize text. To classify large size of corpus, one common approach is to use hierarchical text classification, which aims to classify textual data in a hierarchical structure. Several approaches have been proposed to tackle classification of text but most of the research has been done on English language. This paper proposes a deep learning model for hierarchical text classification of news in Urdu language - consisting of 51,325 sentences from 8 online news websites belonging to the following genres: Sports; Technology; and Entertainment. The objectives of this paper are twofold: (1) to develop a large human-annotated dataset of news in Urdu language for hierarchical text classification; and (2) to classify Urdu news hierarchically using our proposed model based on LSTM mechanism named as Hierarchical Multi-layer LSTMs (HMLSTM). Our model consists of two modules: Text Representing Layer, for obtaining text representation in which we use Word2vec embedding to transform the words to vector and Urdu Hierarchical LSTM Layer (UHLSTML) an end-to-end fully connected deep LSTMs network to perform automatic feature learning, we train one LSTM layer for each level of the class hierarchy. We have performed extensive experiments on our self created dataset named as Urdu News Dataset for Hierarchical Text Classification (UNDHTC). The result shows that our proposed method is very effective for hierarchical text classification and it outperforms baseline methods significantly and also achieved good results as compare to deep neural model.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-07-07T11:06:11Z</published>
+    <arxiv:comment>22 pages with 16 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Taimoor Ahmed Javed</name>
+    </author>
+    <author>
+      <name>Waseem Shahzad</name>
+    </author>
+    <author>
+      <name>Umair Arshad</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2212.13993v2</id>
+    <title>Metaverse Communications, Networking, Security, and Applications: Research Issues, State-of-the-Art, and Future Directions</title>
+    <updated>2023-01-09T20:15:29Z</updated>
+    <link href="https://arxiv.org/abs/2212.13993v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2212.13993v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Metaverse is an evolving orchestrator of the next-generation Internet architecture that produces an immersive and self-adapting virtual world in which humans perform activities similar to those in the real world, such as playing sports, doing work, and socializing. It is becoming a reality and is driven by ever-evolving advanced technologies such as extended reality, artificial intelligence, and blockchain. In this context, Metaverse will play an essential role in developing smart cities, which becomes more evident in the post COVID 19 pandemic metropolitan setting. However, the new paradigm imposes new challenges, such as developing novel privacy and security threats that can emerge in the digital Metaverse ecosystem. Moreover, it requires the convergence of several media types with the capability to quickly process massive amounts of data to keep the residents safe and well-informed, which can raise issues related to scalability and interoperability. In light of this, this research study aims to review the literature on the state of the art of integrating the Metaverse architecture concepts in smart cities. First, this paper presents the theoretical architecture of Metaverse and discusses international companies interest in this emerging technology. It also examines the notion of Metaverse relevant to virtual reality, identifies the prevalent threats, and determines the importance of communication infrastructure in information gathering for efficient Metaverse operation. Next, the notion of blockchain technologies is discussed regarding privacy preservation and how it can provide tamper-proof content sharing among Metaverse users. Finally, the application of distributed Metaverse for social good is highlighted.</summary>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-12-25T03:37:35Z</published>
+    <arxiv:primary_category term="cs.CR"/>
+    <author>
+      <name>Mansoor Ali</name>
+    </author>
+    <author>
+      <name>Faisal Naeem</name>
+    </author>
+    <author>
+      <name>Georges Kaddoum</name>
+    </author>
+    <author>
+      <name>Ekram Hossain</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2211.12334v1</id>
+    <title>A Graph-Based Method for Soccer Action Spotting Using Unsupervised Player Classification</title>
+    <updated>2022-11-22T15:23:53Z</updated>
+    <link href="https://arxiv.org/abs/2211.12334v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2211.12334v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Action spotting in soccer videos is the task of identifying the specific time when a certain key action of the game occurs. Lately, it has received a large amount of attention and powerful methods have been introduced. Action spotting involves understanding the dynamics of the game, the complexity of events, and the variation of video sequences. Most approaches have focused on the latter, given that their models exploit the global visual features of the sequences. In this work, we focus on the former by (a) identifying and representing the players, referees, and goalkeepers as nodes in a graph, and by (b) modeling their temporal interactions as sequences of graphs. For the player identification, or player classification task, we obtain an accuracy of 97.72% in our annotated benchmark. For the action spotting task, our method obtains an overall performance of 57.83% average-mAP by combining it with other audiovisual modalities. This performance surpasses similar graph-based methods and has competitive results with heavy computing methods. Code and data are available at https://github.com/IPCV/soccer_action_spotting.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-11-22T15:23:53Z</published>
+    <arxiv:comment>Accepted at the 5th International ACM Workshop on Multimedia Content Analysis in Sports (MMSports 2022)</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Alejandro Cartas</name>
+    </author>
+    <author>
+      <name>Coloma Ballester</name>
+    </author>
+    <author>
+      <name>Gloria Haro</name>
+    </author>
+    <arxiv:doi>10.1145/3552437.3555691</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3552437.3555691" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1705.04911v1</id>
+    <title>Spatiotemporal Rate Adaptive Tiled Scheme for 360 Sports Events</title>
+    <updated>2017-05-14T02:46:06Z</updated>
+    <link href="https://arxiv.org/abs/1705.04911v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1705.04911v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The recent rise of interest in Virtual Reality (VR) came with the availability of commodity commercial VR products, such as the Head Mounted Displays (HMD) created by Oculus and other vendors. One of the main applications of virtual reality that has been recently adopted is streaming sports events. For instance, the last olympics held in Rio De Janeiro was streamed over the Internet for users to view on VR headsets or using 360 video players. A big challenge for streaming VR sports events is the users limited bandwidth and the amount of data required to transmit 360 videos. While 360 video demands high bandwidth, at any time instant users are only viewing a small portion of the video according to the HMD field of view (FOV). Many approaches have been proposed in the literature such as proposing new representations (e.g. pyramid and offset-cubemap) and tiling the video and streaming the tiles currently being viewed. In this paper, we propose a tiled streaming framework, where we provide a degrading quality model similar to the state-of-the-art offset-cubemap while minimizing its storage requirements at the server side. We conduct objective studies showing the effectiveness of our approach providing smooth degradation of quality from the user FOV to the back of the 360 space. In addition, we conduct subjective studies showing that users tend to prefer our proposed scheme over offset-cubemap in low bandwidth connections, and they don't feel difference for higher bandwidth connections. That is, we achieve better perceived quality with huge storage savings up to 670%.</summary>
+    <category term="cs.MM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-05-14T02:46:06Z</published>
+    <arxiv:primary_category term="cs.MM"/>
+    <author>
+      <name>Tarek El-Ganainy</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1608.08041v2</id>
+    <title>A short review and primer on electromyography in human computer interaction applications</title>
+    <updated>2016-09-02T17:57:56Z</updated>
+    <link href="https://arxiv.org/abs/1608.08041v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1608.08041v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The application of psychophysiology in human-computer interaction is a growing field with significant potential for future smart personalised systems. Working in this emerging field requires comprehension of an array of physiological signals and analysis techniques.
+  Electromyography (EMG) is a useful signal to estimate the emotional context of individuals, because it is relatively robust, and simple to record and analyze. Common uses are to infer emotional valence in response to a stimulus, and to index some symptoms of stress. However, in order to interpret EMG signals, they must be considered alongside data on physical, social and intentional context. Here we present a short review on the application of EMG in human-computer interaction.
+  This paper aims to serve as a primer for the novice, enabling rapid familiarisation with the latest core concepts. We put special emphasis on everyday human-computer interface applications to distinguish from the more common clinical or sports uses of psychophysiology.
+  This paper is an extract from a comprehensive review of the entire field of ambulatory psychophysiology, including 12 similar chapters, plus application guidelines and systematic review. Thus any citation should be made using the following reference:
+  B. Cowley, M. Filetti, K. Lukander, J. Torniainen, A. Henelius, L. Ahonen, O. Barral, I. Kosunen, T. Valtonen, M. Huotilainen, N. Ravaja, G. Jacucci. The Psychophysiology Primer: a guide to methods and a broad review with a focus on human-computer interaction. Foundations and Trends in Human-Computer Interaction, vol. 9, no. 3-4, pp. 150--307, 2016.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2016-08-29T13:23:59Z</published>
+    <arxiv:comment>8 pages, 2 figures. Part of a journal</arxiv:comment>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Niklas Ravaja</name>
+    </author>
+    <author>
+      <name>Benjamin Cowley</name>
+    </author>
+    <author>
+      <name>Jari Torniainen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1609.02016v1</id>
+    <title>A short review and primer on multimodal psychophysiological applications in work-related human computer interaction</title>
+    <updated>2016-09-07T15:16:26Z</updated>
+    <link href="https://arxiv.org/abs/1609.02016v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1609.02016v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The application of psychophysiology in human-computer interaction is a growing field with significant potential for future smart personalised systems. Working in this emerging field requires comprehension of an array of physiological signals and analysis techniques. This paper focuses on the aggregation of multiple physiological measurements, obtained from one or more sensors. This approach requires the classification of relatively large samples of multidimensional data, which must be associated to specific cognitive or affective states. Researchers generally attempt to solve this problem by utilising machine learning techniques. We present a short review to serve as a primer for the novice, enabling rapid familiarisation with the latest core concepts. We put special emphasis on work-related human-computer interface applications to distinguish from the more common clinical or sports uses of psychophysiology.
+  This paper is an extract from a comprehensive review of the entire field of ambulatory psychophysiology, including 12 similar chapters, plus application guidelines and systematic review. Thus any citation should be made using the following reference:
+  B. Cowley, M. Filetti, K. Lukander, J. Torniainen, A. Henelius, L. Ahonen, O. Barral, I. Kosunen, T. Valtonen, M. Huotilainen, N. Ravaja, G. Jacucci. The Psychophysiology Primer: a guide to methods and a broad review with a focus on human-computer interaction. Foundations and Trends in Human-Computer Interaction, vol. 9, no. 3-4, pp. 150--307, 2016.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2016-09-07T15:16:26Z</published>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Marco Filetti</name>
+    </author>
+    <author>
+      <name>Jari Torniainen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2602.18246v1</id>
+    <title>Graph Colouring: A Visual Tour</title>
+    <updated>2026-02-20T14:29:08Z</updated>
+    <link href="https://arxiv.org/abs/2602.18246v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2602.18246v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Graph colouring is a combinatorial optimisation problem with applications in several important domains, including sports scheduling, cartography, street map navigation, and timetabling. It is also of significant theoretical interest and a standard subject in university-level courses on graph theory, algorithms, and combinatorics. In this paper, we consider the topics of node, edge, and face colouring along with their associated algorithms. Theoretical results are reviewed and brought to life through a collection of detailed, visually engaging figures designed to enhance understanding and appeal.</summary>
+    <category term="math.HO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-02-20T14:29:08Z</published>
+    <arxiv:primary_category term="math.HO"/>
+    <author>
+      <name>Rhyd Lewis</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.11934v1</id>
+    <title>Temporal Dynamics of Emotions in Italian Online Soccer Fandoms</title>
+    <updated>2025-06-13T16:36:44Z</updated>
+    <link href="https://arxiv.org/abs/2506.11934v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.11934v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This study investigates the emotional dynamics of Italian soccer fandoms through computational analysis of user-generated content from official Instagram accounts of 83 teams across Serie A, Serie B, and Lega Pro during the 2023-24 season. By applying sentiment analysis to fan comments, we extract temporal emotional patterns and identify distinct clusters of fan bases with similar preseason expectations. Drawing from complex systems theory, we characterize joy as displaying anti-bursty temporal distributions, while anger is marked by pronounced bursty patterns. Our analysis reveals significant correlations between these emotional signals, preseason expectations, socioeconomic factors, and final league rankings. In particular, the burstiness metric emerges as a meaningful correlate of team performance; statistical models excluding this parameter show a decrease in the coefficient of determination of 32%. These findings offer novel insights into the relationship between fan emotional expression and team outcomes, suggesting potential avenues for research in sports analytics, social media dynamics, and fan engagement studies.</summary>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-06-13T16:36:44Z</published>
+    <arxiv:primary_category term="cs.SI"/>
+    <author>
+      <name>Salvatore Citraro</name>
+    </author>
+    <author>
+      <name>Giovanni Mauro</name>
+    </author>
+    <author>
+      <name>Emanuele Ferragina</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1906.11720v1</id>
+    <title>Detecting and classifying moments in basketball matches using sensor tracked data</title>
+    <updated>2019-06-27T15:06:46Z</updated>
+    <link href="https://arxiv.org/abs/1906.11720v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1906.11720v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Data analytics in sports is crucial to evaluate the performance of single players and the whole team. The literature proposes a number of tools for both offence and defence scenarios. Data coming from tracking location of players, in this respect, may be used to enrich the amount of useful information. In basketball, however, actions are interleaved with inactive periods. This paper describes a methodological approach to automatically identify active periods during a game and to classify them as offensive or defensive. The method is based on the application of thresholds to players kinematic parameters, whose values undergo a tuning strategy similar to Receiver Operating Characteristic curves, using a ground truth extracted from the video of the games.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.OT" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-06-27T15:06:46Z</published>
+    <arxiv:comment>8 pages, 3 figures, Conference: SIS 2019 - Smart Statistics for Smart Applications - Book of short papers, editors: Giuseppe Arbia, Stefano Peluso, Alessia Pini, Giulia Rivellini. ISBN 9788891915108</arxiv:comment>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Tullio Facchinetti</name>
+    </author>
+    <author>
+      <name>Rodolfo Metulini</name>
+    </author>
+    <author>
+      <name>Paola Zuccolotto</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2004.08010v1</id>
+    <title>SportsXR -- Immersive Analytics in Sports</title>
+    <updated>2020-04-17T00:50:59Z</updated>
+    <link href="https://arxiv.org/abs/2004.08010v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2004.08010v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We present our initial investigation of key challenges and potentials of immersive analytics (IA) in sports, which we call SportsXR. Sports are usually highly dynamic and collaborative by nature, which makes real-time decision making ubiquitous. However, there is limited support for athletes and coaches to make informed and clear-sighted decisions in real-time. SportsXR aims to support situational awareness for better and more agile decision making in sports. In this paper, we identify key challenges in SportsXR, including data collection, in-game decision making, situated sport-specific visualization design, and collaborating with domain experts. We then present potential user scenarios in training, coaching, and fan experiences. This position paper aims to inform and inspire future SportsXR research.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-04-17T00:50:59Z</published>
+    <arxiv:comment>7 pages, 5 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.HC"/>
+    <arxiv:journal_ref>4th Workshop on Immersive Analytics: Envisioning Future Productivity for Immersive Analytics at ACM CHI 2020</arxiv:journal_ref>
+    <author>
+      <name>Tica Lin</name>
+    </author>
+    <author>
+      <name>Yalong Yang</name>
+    </author>
+    <author>
+      <name>Johanna Beyer</name>
+    </author>
+    <author>
+      <name>Hanspeter Pfister</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1809.07875v2</id>
+    <title>Can high-density human collective motion be forecasted by spatiotemporal fluctuations?</title>
+    <updated>2018-09-24T14:17:00Z</updated>
+    <link href="https://arxiv.org/abs/1809.07875v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1809.07875v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Concerts, protests, and sporting events are occurring with increasing frequency and magnitude. The extreme physical conditions common to these events are known to cause injuries and loss-of-life due to the emergence of collective motion such as crowd crush, turbulence, and density waves. Mathematical models of human crowds aimed at enhancing crowd safety by understanding these phenomena are developed with input from a variety of disciplines. However, model validation is challenged by a lack of high-quality empirical data and ethical constraints surrounding human crowd research. Consequently, generalized model-based approach for real-time monitoring/risk-assessment of crowd collective motion remains an open problem. Here, we take a model-free approach to crowd analysis and show that emergent collective motion can be forecasted directly from video data. We use mode analysis methods from material science and concepts from non-equilibrium physics to study footage of a human crowd at an Oasis rock concert. We analyze the attendees positional fluctuations during a period of crowd turbulence to predict the spatial patterns of an emergent human density wave. In addition to predicting spatial patterns of collective motion, we also identify and measure temporal patterns that precede the density wave and forecast its appearance by 1~s. Looking ahead, widening this forecasting window beyond 1~s will enable new computer vision technologies for real-time risk-assessment of emergent human collective motion.</summary>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-09-20T21:50:10Z</published>
+    <arxiv:comment>Main Text and Supplementary Information (Combined 20 pages, 12 Figures)</arxiv:comment>
+    <arxiv:primary_category term="physics.soc-ph"/>
+    <author>
+      <name>Arianna Bottinelli</name>
+    </author>
+    <author>
+      <name>Jesse L. Silverberg</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2208.12646v1</id>
+    <title>Automatic detection of faults in race walking from a smartphone camera: a comparison of an Olympic medalist and university athletes</title>
+    <updated>2022-08-24T07:04:36Z</updated>
+    <link href="https://arxiv.org/abs/2208.12646v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2208.12646v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Automatic fault detection is a major challenge in many sports. In race walking, referees visually judge faults according to the rules. Hence, ensuring objectivity and fairness while judging is important. To address this issue, some studies have attempted to use sensors and machine learning to automatically detect faults. However, there are problems associated with sensor attachments and equipment such as a high-speed camera, which conflict with the visual judgement of referees, and the interpretability of the fault detection models. In this study, we proposed a fault detection system for non-contact measurement. We used pose estimation and machine learning models trained based on the judgements of multiple qualified referees to realize fair fault judgement. We verified them using smartphone videos of normal race walking and walking with intentional faults in several athletes including the medalist of the Tokyo Olympics. The validation results show that the proposed system detected faults with an average accuracy of over 90%. We also revealed that the machine learning model detects faults according to the rules of race walking. In addition, the intentional faulty walking movement of the medalist was different from that of university walkers. This finding informs realization of a more general fault detection model. The code and data are available at https://github.com/SZucchini/racewalk-aijudge.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-08-24T07:04:36Z</published>
+    <arxiv:comment>16 pages, 9 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Tomohiro Suzuki</name>
+    </author>
+    <author>
+      <name>Kazuya Takeda</name>
+    </author>
+    <author>
+      <name>Keisuke Fujii</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2208.00671v4</id>
+    <title>RASIPAM: Interactive Pattern Mining of Multivariate Event Sequences in Racket Sports</title>
+    <updated>2022-11-28T08:50:46Z</updated>
+    <link href="https://arxiv.org/abs/2208.00671v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2208.00671v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Experts in racket sports like tennis and badminton use tactical analysis to gain insight into competitors' playing styles. Many data-driven methods apply pattern mining to racket sports data -- which is often recorded as multivariate event sequences -- to uncover sports tactics. However, tactics obtained in this way are often inconsistent with those deduced by experts through their domain knowledge, which can be confusing to those experts. This work introduces RASIPAM, a RAcket-Sports Interactive PAttern Mining system, which allows experts to incorporate their knowledge into data mining algorithms to discover meaningful tactics interactively. RASIPAM consists of a constraint-based pattern mining algorithm that responds to the analysis demands of experts: Experts provide suggestions for finding tactics in intuitive written language, and these suggestions are translated into constraints to run the algorithm. RASIPAM further introduces a tailored visual interface that allows experts to compare the new tactics with the original ones and decide whether to apply a given adjustment. This interactive workflow iteratively progresses until experts are satisfied with all tactics. We conduct a quantitative experiment to show that our algorithm supports real-time interaction. Two case studies in tennis and in badminton respectively, each involving two domain experts, are conducted to show the effectiveness and usefulness of the system.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-08-01T08:04:14Z</published>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Jiang Wu</name>
+    </author>
+    <author>
+      <name>Dongyu Liu</name>
+    </author>
+    <author>
+      <name>Ziyang Guo</name>
+    </author>
+    <author>
+      <name>Yingcai Wu</name>
+    </author>
+    <arxiv:doi>10.1109/TVCG.2022.3209452</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/TVCG.2022.3209452" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1207.0144v1</id>
+    <title>Mining Statistically Significant Substrings using the Chi-Square Statistic</title>
+    <updated>2012-06-30T20:22:30Z</updated>
+    <link href="https://arxiv.org/abs/1207.0144v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1207.0144v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The problem of identification of statistically significant patterns in a sequence of data has been applied to many domains such as intrusion detection systems, financial models, web-click records, automated monitoring systems, computational biology, cryptology, and text analysis. An observed pattern of events is deemed to be statistically significant if it is unlikely to have occurred due to randomness or chance alone. We use the chi-square statistic as a quantitative measure of statistical significance. Given a string of characters generated from a memoryless Bernoulli model, the problem is to identify the substring for which the empirical distribution of single letters deviates the most from the distribution expected from the generative Bernoulli model. This deviation is captured using the chi-square measure. The most significant substring (MSS) of a string is thus defined as the substring having the highest chi-square value. Till date, to the best of our knowledge, there does not exist any algorithm to find the MSS in better than O(n^2) time, where n denotes the length of the string. In this paper, we propose an algorithm to find the most significant substring, whose running time is O(n^{3/2}) with high probability. We also study some variants of this problem such as finding the top-t set, finding all substrings having chi-square greater than a fixed threshold and finding the MSS among substrings greater than a given length. We experimentally demonstrate the asymptotic behavior of the MSS on varying the string size and alphabet size. We also describe some applications of our algorithm on cryptology and real world data from finance and sports. Finally, we compare our technique with the existing heuristics for finding the MSS.</summary>
+    <category term="cs.DB" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2012-06-30T20:22:30Z</published>
+    <arxiv:comment>VLDB2012</arxiv:comment>
+    <arxiv:primary_category term="cs.DB"/>
+    <arxiv:journal_ref>Proceedings of the VLDB Endowment (PVLDB), Vol. 5, No. 10, pp. 1052-1063 (2012)</arxiv:journal_ref>
+    <author>
+      <name>Mayank Sachan</name>
+    </author>
+    <author>
+      <name>Arnab Bhattacharya</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1701.05141v2</id>
+    <title>The Medial Axis of a Multi-Layered Environment and its Application as a Navigation Mesh</title>
+    <updated>2017-07-26T08:01:38Z</updated>
+    <link href="https://arxiv.org/abs/1701.05141v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1701.05141v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Path planning for walking characters in complicated virtual environments is a fundamental task in simulations and games. A navigation mesh is a data structure that allows efficient path planning. The Explicit Corridor Map (ECM) is a navigation mesh based on the medial axis. It enables path planning for disk-shaped characters of any radius.
+  In this paper, we formally extend the medial axis (and therefore the ECM) to 3D environments in which characters are constrained to walkable surfaces. Typical examples of such environments are multi-storey buildings, train stations, and sports stadiums. We give improved definitions of a walkable environment (WE: a description of walkable surfaces in 3D) and a multi-layered environment (MLE: a subdivision of a WE into connected layers). We define the medial axis of such environments based on projected distances on the ground plane. For an MLE with $n$ boundary vertices and $k$ connections, we show that the medial axis has size $O(n)$, and we present an improved algorithm that constructs the medial axis in $O(n \log n \log k)$ time.
+  The medial axis can be annotated with nearest-obstacle information to obtain the ECM navigation mesh. Our implementations show that the ECM can be computed efficiently for large 2D and multi-layered environments, and that it can be used to compute paths within milliseconds. This enables simulations of large virtual crowds of heterogeneous characters in real-time.</summary>
+    <category term="cs.CG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DS" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-01-18T16:46:08Z</published>
+    <arxiv:comment>34 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.CG"/>
+    <author>
+      <name>Wouter van Toll</name>
+    </author>
+    <author>
+      <name>Atlas F. Cook</name>
+    </author>
+    <author>
+      <name>Marc J. van Kreveld</name>
+    </author>
+    <author>
+      <name>Roland Geraerts</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1612.00843v1</id>
+    <title>Universal statistics of selected values</title>
+    <updated>2016-12-02T15:21:47Z</updated>
+    <link href="https://arxiv.org/abs/1612.00843v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1612.00843v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Selection, the tendency of some traits to become more frequent than others in a population under the influence of some (natural or artificial) agency, is a key component of Darwinian evolution and countless other natural and social phenomena. Yet a general theory of selection, analogous to the Fisher-Tippett-Gnedenko theory of extreme events, is lacking. Here we introduce a probabilistic definition of selection and show that selected values are attracted to a universal family of limiting distributions. The universality classes and scaling exponents are determined by the tail thickness of the random variable under selection. Our results are supported by data from molecular biology, agriculture and sport.</summary>
+    <category term="q-bio.PE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.stat-mech" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="math.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2016-12-02T15:21:47Z</published>
+    <arxiv:comment>6 pages, 4 figures</arxiv:comment>
+    <arxiv:primary_category term="q-bio.PE"/>
+    <author>
+      <name>Matteo Smerlak</name>
+    </author>
+    <author>
+      <name>Ahmed Youssef</name>
+    </author>
+    <arxiv:doi>10.1209/0295-5075/117/50003</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1209/0295-5075/117/50003" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2212.06804v1</id>
+    <title>Can a face tell us anything about an NBA prospect? -- A Deep Learning approach</title>
+    <updated>2022-12-13T18:36:29Z</updated>
+    <link href="https://arxiv.org/abs/2212.06804v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2212.06804v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Statistical analysis and modeling is becoming increasingly popular for the world's leading organizations, especially for professional NBA teams. Sophisticated methods and models of sport talent evaluation have been created for this purpose. In this research, we present a different perspective from the dominant tactic of statistical data analysis. Based on a strategy that NBA teams have followed in the past, hiring human professionals, we deploy image analysis and Convolutional Neural Networks in an attempt to predict the career trajectory of newly drafted players from each draft class. We created a database consisting of about 1500 image data from players from every draft since 1990. We then divided the players into five different quality classes based on their expected NBA career. Next, we trained popular pre-trained image classification models in our data and conducted a series of tests in an attempt to create models that give reliable predictions of the rookie players' careers. The results of this study suggest that there is a potential correlation between facial characteristics and athletic talent, worth of further investigation.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-12-13T18:36:29Z</published>
+    <arxiv:comment>9 pages, 2 figures, 4 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Andreas Gavros</name>
+    </author>
+    <author>
+      <name>Foteini Gavrou</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1805.02501v1</id>
+    <title>Players Movements and Team Shooting Performance: a Data Mining approach for Basketball</title>
+    <updated>2018-05-04T09:49:18Z</updated>
+    <link href="https://arxiv.org/abs/1805.02501v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1805.02501v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In the domain of Sport Analytics, Global Positioning Systems devices are intensively used as they permit to retrieve players' movements. Team sports' managers and coaches are interested on the relation between players' patterns of movements and team performance, in order to better manage their team. In this paper we propose a Cluster Analysis and Multidimensional Scaling approach to find and describe separate patterns of players movements. Using real data of multiple professional basketball teams, we find, consistently over different case studies, that in the defensive clusters players are close one to another while the transition cluster are characterized by a large space among them. Moreover, we find the pattern of players' positioning that produce the best shooting performance.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2018-05-04T09:49:18Z</published>
+    <arxiv:comment>10 pages, 2 figures, proceeding of the 49th Scientific meeting of the Italian Statistical Society. arXiv admin note: text overlap with arXiv:1707.00883</arxiv:comment>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Rodolfo Metulini</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2209.07528v1</id>
+    <title>A Survey on the application of Data Science And Analytics in the field of Organised Sports</title>
+    <updated>2022-09-15T02:02:50Z</updated>
+    <link href="https://arxiv.org/abs/2209.07528v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2209.07528v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The application of Data Science and Analytics to optimize or predict outcomes is Ubiquitous in the Modern World. Data Science and Analytics have optimized almost every domain that exists in the market. In our survey, we focus on how the field of Analytics has been adopted in the field of sports, and how it has contributed to the transformation of the game right from the assessment of on-field players and their selection to the prediction of winning team and to the marketing of tickets and business aspects of big sports tournaments. We will present the analytical tools, algorithms, and methodologies adopted in the field of Sports Analytics for different sports and also present our views on the same and we will also compare and contrast these existing approaches. By doing so, we will also present the best tools, algorithms, and analytical methodologies to be considered by anyone who is looking to experiment with sports data and analyze various aspects of the game.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-09-15T02:02:50Z</published>
+    <arxiv:comment>arXiv admin note: substantial text overlap with arXiv:2209.06999</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Sachin Kumar S</name>
+    </author>
+    <author>
+      <name>Prithvi HV</name>
+    </author>
+    <author>
+      <name>C Nandini</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2109.06431v1</id>
+    <title>Exploring the Long Short-Term Dependencies to Infer Shot Influence in Badminton Matches</title>
+    <updated>2021-09-14T04:44:40Z</updated>
+    <link href="https://arxiv.org/abs/2109.06431v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2109.06431v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Identifying significant shots in a rally is important for evaluating players' performance in badminton matches. While there are several studies that have quantified player performance in other sports, analyzing badminton data is remained untouched. In this paper, we introduce a badminton language to fully describe the process of the shot and propose a deep learning model composed of a novel short-term extractor and a long-term encoder for capturing a shot-by-shot sequence in a badminton rally by framing the problem as predicting a rally result. Our model incorporates an attention mechanism to enable the transparency of the action sequence to the rally result, which is essential for badminton experts to gain interpretable predictions. Experimental evaluation based on a real-world dataset demonstrates that our proposed model outperforms the strong baselines. The source code is publicly available at https://github.com/yao0510/Shot-Influence.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-09-14T04:44:40Z</published>
+    <arxiv:comment>6 pages, accepted by ICDM 2021</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Wei-Yao Wang</name>
+    </author>
+    <author>
+      <name>Teng-Fong Chan</name>
+    </author>
+    <author>
+      <name>Hui-Kuo Yang</name>
+    </author>
+    <author>
+      <name>Chih-Chuan Wang</name>
+    </author>
+    <author>
+      <name>Yao-Chung Fan</name>
+    </author>
+    <author>
+      <name>Wen-Chih Peng</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2203.01374v1</id>
+    <title>Personal Data Visualisation on Mobile Devices: A Systematic Literature Review</title>
+    <updated>2022-02-17T12:01:15Z</updated>
+    <link href="https://arxiv.org/abs/2203.01374v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2203.01374v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Personal data cover multiple aspects of our daily life and activities, including health, finance, social, Internet, Etc. Personal data visualisations aim to improve the user experience when exploring these large amounts of personal data and potentially provide insights to assist individuals in their decision making and achieving goals. People with different backgrounds, gender and ages usually need to access their data on their mobile devices. Although there are many personal tracking apps, the user experience when using these apps and visualisations is not evaluated yet. There are publications on personal data visualisation in the literature. Still, no systematic literature review investigated the gaps in this area to assist in developing new personal data visualisation techniques focusing on user experience. In this systematic literature review, we considered studies published between 2010 and 2020 in three online databases. We screened 195 studies and identified 29 papers that met our inclusion criteria. Our key findings are various types of personal data, and users have been addressed well in the found papers, including health, sport, diet, Driving habits, lifelogging, productivity, Etc. The user types range from naive users to expert and developers users based on the experiment's target. However, mobile device capabilities and limitations regarding data visualisation tasks have not been well addressed. There are no studies on the best practices of personal data visualisation on mobile devices, assessment frameworks for data visualisation, or design frameworks for personal data visualisations</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-02-17T12:01:15Z</published>
+    <arxiv:comment>15 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Yasmeen Anjeer Alshehhi</name>
+    </author>
+    <author>
+      <name>Mohamed Abdelrazek</name>
+    </author>
+    <author>
+      <name>Alessio Bonti</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1511.05076v1</id>
+    <title>Latent Dirichlet Allocation Based Organisation of Broadcast Media Archives for Deep Neural Network Adaptation</title>
+    <updated>2015-11-16T18:25:33Z</updated>
+    <link href="https://arxiv.org/abs/1511.05076v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1511.05076v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This paper presents a new method for the discovery of latent domains in diverse speech data, for the use of adaptation of Deep Neural Networks (DNNs) for Automatic Speech Recognition. Our work focuses on transcription of multi-genre broadcast media, which is often only categorised broadly in terms of high level genres such as sports, news, documentary, etc. However, in terms of acoustic modelling these categories are coarse. Instead, it is expected that a mixture of latent domains can better represent the complex and diverse behaviours within a TV show, and therefore lead to better and more robust performance. We propose a new method, whereby these latent domains are discovered with Latent Dirichlet Allocation, in an unsupervised manner. These are used to adapt DNNs using the Unique Binary Code (UBIC) representation for the LDA domains. Experiments conducted on a set of BBC TV broadcasts, with more than 2,000 shows for training and 47 shows for testing, show that the use of LDA-UBIC DNNs reduces the error up to 13% relative compared to the baseline hybrid DNN models.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2015-11-16T18:25:33Z</published>
+    <arxiv:comment>IEEE Automatic Speech Recognition and Understanding Workshop (ASRU 2015), 13-17 Dec 2015, Scottsdale, Arizona, USA</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Mortaza Doulaty</name>
+    </author>
+    <author>
+      <name>Oscar Saz</name>
+    </author>
+    <author>
+      <name>Raymond W. M. Ng</name>
+    </author>
+    <author>
+      <name>Thomas Hain</name>
+    </author>
+    <arxiv:doi>10.1109/ASRU.2015.7404785</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/ASRU.2015.7404785" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1701.02740v1</id>
+    <title>Uncovering the Spatiotemporal Patterns of Collective Social Activity</title>
+    <updated>2017-01-10T19:00:02Z</updated>
+    <link href="https://arxiv.org/abs/1701.02740v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1701.02740v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Social media users and microbloggers post about a wide variety of (off-line) collective social activities as they participate in them, ranging from concerts and sporting events to political rallies and civil protests. In this context, people who take part in the same collective social activity often post closely related content from nearby locations at similar times, resulting in distinctive spatiotemporal patterns. Can we automatically detect these patterns and thus provide insights into the associated activities? In this paper, we propose a modeling framework for clustering streaming spatiotemporal data, the Spatial Dirichlet Hawkes Process (SDHP), which allows us to automatically uncover a wide variety of spatiotemporal patterns of collective social activity from geolocated online traces. Moreover, we develop an efficient, online inference algorithm based on Sequential Monte Carlo that scales to millions of geolocated posts. Experiments on synthetic data and real data gathered from Twitter show that our framework can recover a wide variety of meaningful social activity patterns in terms of both content and spatiotemporal dynamics, that it yields interesting insights about these patterns, and that it can be used to estimate the location from where a tweet was posted.</summary>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.DS" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-01-10T19:00:02Z</published>
+    <arxiv:comment>To appear at the 2017 SIAM International Conference on Data Mining (SIAM SDM)</arxiv:comment>
+    <arxiv:primary_category term="cs.SI"/>
+    <author>
+      <name>Martin Jankowiak</name>
+    </author>
+    <author>
+      <name>Manuel Gomez-Rodriguez</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/0908.3241v2</id>
+    <title>Statistical Properties of Height of Japanese Schoolchildren</title>
+    <updated>2009-10-07T09:25:06Z</updated>
+    <link href="https://arxiv.org/abs/0908.3241v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/0908.3241v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>  We study height distributions of Japanese schoolchildren based on the statictical data which are obtained from the school health survey by the ministry of education, culture, sports, science and technology, Japan . From our analysis, it has been clarified that the distribution of height changes from the lognormal distribution to the normal distribution in the periods of puberty.</summary>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.data-an" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2009-08-22T10:02:32Z</published>
+    <arxiv:comment>2 pages, 2 figures, submitted to J. Phys. Soc. Jpn.; resubmitted to J. Phys. Soc. Jpn. after some revision</arxiv:comment>
+    <arxiv:primary_category term="physics.soc-ph"/>
+    <arxiv:journal_ref>J. Phys. Soc. Jpn 78, 125001 (2009)</arxiv:journal_ref>
+    <author>
+      <name>Hiroto Kuninaka</name>
+    </author>
+    <author>
+      <name>Yu Mitsuhashi</name>
+    </author>
+    <author>
+      <name>Mitsugu Matsushita</name>
+    </author>
+    <arxiv:doi>10.1143/JPSJ.78.125001</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1143/JPSJ.78.125001" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2202.00917v1</id>
+    <title>A quantitative method for benchmarking fair income distribution</title>
+    <updated>2022-02-02T08:45:17Z</updated>
+    <link href="https://arxiv.org/abs/2202.00917v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2202.00917v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Concern about income inequality has become prominent in public discourse around the world. However, studies in behavioral economics and psychology have consistently shown that people prefer not equal but fair income distributions. Thus, finding a benchmark that could be used to measure fair income distribution across countries is a theoretical and practical challenge. Here a method for benchmarking fair income distribution is introduced. The benchmark is constructed based on the concepts of procedural justice, distributive justice, and authority's power in professional sports where it is widely agreed as an international norm that the allocations of athlete's salary are outcomes of fair rules, individual and/or team performance, and luck in line with no-envy principle of fair allocation. Using the World Bank data, this study demonstrates how the benchmark could be used to quantitatively gauge whether, for a given value of the Gini index, the income shares by quintile of a country are the fair shares or not, and if not, what fair income shares by quintile of that country should be. Knowing this could be useful for those involved in setting targets for the Gini index and the fair income shares that are appropriate for the context of each country before formulating policies toward achieving the Sustainable Development Goal 10 and other SDGs.</summary>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="nlin.PS" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-02-02T08:45:17Z</published>
+    <arxiv:comment>version 1, 56 pages, 7 figures, 6 tables</arxiv:comment>
+    <arxiv:primary_category term="econ.GN"/>
+    <arxiv:journal_ref>Heliyon (2022)</arxiv:journal_ref>
+    <author>
+      <name>Thitithep Sitthiyot</name>
+    </author>
+    <author>
+      <name>Kanyarat Holasut</name>
+    </author>
+    <arxiv:doi>10.1016/j.heliyon.2022.e10511</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.heliyon.2022.e10511" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2210.09389v1</id>
+    <title>Potrika: Raw and Balanced Newspaper Datasets in the Bangla Language with Eight Topics and Five Attributes</title>
+    <updated>2022-10-17T19:37:42Z</updated>
+    <link href="https://arxiv.org/abs/2210.09389v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2210.09389v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Knowledge is central to human and scientific developments. Natural Language Processing (NLP) allows automated analysis and creation of knowledge. Data is a crucial NLP and machine learning ingredient. The scarcity of open datasets is a well-known problem in machine and deep learning research. This is very much the case for textual NLP datasets in English and other major world languages. For the Bangla language, the situation is even more challenging and the number of large datasets for NLP research is practically nil. We hereby present Potrika, a large single-label Bangla news article textual dataset curated for NLP research from six popular online news portals in Bangladesh (Jugantor, Jaijaidin, Ittefaq, Kaler Kontho, Inqilab, and Somoyer Alo) for the period 2014-2020. The articles are classified into eight distinct categories (National, Sports, International, Entertainment, Economy, Education, Politics, and Science \&amp; Technology) providing five attributes (News Article, Category, Headline, Publication Date, and Newspaper Source). The raw dataset contains 185.51 million words and 12.57 million sentences contained in 664,880 news articles. Moreover, using NLP augmentation techniques, we create from the raw (unbalanced) dataset another (balanced) dataset comprising 320,000 news articles with 40,000 articles in each of the eight news categories. Potrika contains both the datasets (raw and balanced) to suit a wide range of NLP research. By far, to the best of our knowledge, Potrika is the largest and the most extensive dataset for news classification.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-10-17T19:37:42Z</published>
+    <arxiv:comment>10 pages, 5 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Istiak Ahmad</name>
+    </author>
+    <author>
+      <name>Fahad AlQurashi</name>
+    </author>
+    <author>
+      <name>Rashid Mehmood</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1908.04767v1</id>
+    <title>Deep Learning-Based Quantification of Pulmonary Hemosiderophages in Cytology Slides</title>
+    <updated>2019-08-12T15:16:30Z</updated>
+    <link href="https://arxiv.org/abs/1908.04767v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1908.04767v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Purpose: Exercise-induced pulmonary hemorrhage (EIPH) is a common syndrome in sport horses with negative impact on performance. Cytology of bronchoalveolar lavage fluid by use of a scoring system is considered the most sensitive diagnostic method. Macrophages are classified depending on the degree of cytoplasmic hemosiderin content. The current gold standard is manual grading, which is however monotonous and time-consuming. Methods: We evaluated state-of-the-art deep learning-based methods for single cell macrophage classification and compared them against the performance of nine cytology experts and evaluated inter- and intra-observer variability. Additionally, we evaluated object detection methods on a novel data set of 17 completely annotated cytology whole slide images (WSI) containing 78,047 hemosiderophages. Resultsf: Our deep learning-based approach reached a concordance of 0.85, partially exceeding human expert concordance (0.68 to 0.86, $μ$=0.73, $σ$ =0.04). Intra-observer variability was high (0.68 to 0.88) and inter-observer concordance was moderate (Fleiss kappa = 0.67). Our object detection approach has a mean average precision of 0.66 over the five classes from the whole slide gigapixel image and a computation time of below two minutes. Conclusion: To mitigate the high inter- and intra-rater variability, we propose our automated object detection pipeline, enabling accurate, reproducible and quick EIPH scoring in WSI.</summary>
+    <category term="eess.IV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-08-12T15:16:30Z</published>
+    <arxiv:primary_category term="eess.IV"/>
+    <arxiv:journal_ref>Sci Rep 10, 9795 (2020)</arxiv:journal_ref>
+    <author>
+      <name>Christian Marzahl</name>
+    </author>
+    <author>
+      <name>Marc Aubreville</name>
+    </author>
+    <author>
+      <name>Christof A. Bertram</name>
+    </author>
+    <author>
+      <name>Jason Stayt</name>
+    </author>
+    <author>
+      <name>Anne-Katherine Jasensky</name>
+    </author>
+    <author>
+      <name>Florian Bartenschlager</name>
+    </author>
+    <author>
+      <name>Marco Fragoso-Garcia</name>
+    </author>
+    <author>
+      <name>Ann K. Barton</name>
+    </author>
+    <author>
+      <name>Svenja Elsemann</name>
+    </author>
+    <author>
+      <name>Samir Jabari</name>
+    </author>
+    <author>
+      <name>Jens Krauth</name>
+    </author>
+    <author>
+      <name>Prathmesh Madhu</name>
+    </author>
+    <author>
+      <name>Jörn Voigt</name>
+    </author>
+    <author>
+      <name>Jenny Hill</name>
+    </author>
+    <author>
+      <name>Robert Klopfleisch</name>
+    </author>
+    <author>
+      <name>Andreas Maier</name>
+    </author>
+    <arxiv:doi>10.1038/s41598-020-65958-2</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1038/s41598-020-65958-2" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2107.01854v1</id>
+    <title>Poisoning Attack against Estimating from Pairwise Comparisons</title>
+    <updated>2021-07-05T08:16:01Z</updated>
+    <link href="https://arxiv.org/abs/2107.01854v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2107.01854v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>As pairwise ranking becomes broadly employed for elections, sports competitions, recommendations, and so on, attackers have strong motivation and incentives to manipulate the ranking list. They could inject malicious comparisons into the training data to fool the victim. Such a technique is called poisoning attack in regression and classification tasks. In this paper, to the best of our knowledge, we initiate the first systematic investigation of data poisoning attacks on pairwise ranking algorithms, which can be formalized as the dynamic and static games between the ranker and the attacker and can be modeled as certain kinds of integer programming problems. To break the computational hurdle of the underlying integer programming problems, we reformulate them into the distributionally robust optimization (DRO) problems, which are computationally tractable. Based on such DRO formulations, we propose two efficient poisoning attack algorithms and establish the associated theoretical guarantees. The effectiveness of the suggested poisoning attack strategies is demonstrated by a series of toy simulations and several real data experiments. These experimental results show that the proposed methods can significantly reduce the performance of the ranker in the sense that the correlation between the true ranking list and the aggregated results can be decreased dramatically.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.GT" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-07-05T08:16:01Z</published>
+    <arxiv:comment>31 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Ke Ma</name>
+    </author>
+    <author>
+      <name>Qianqian Xu</name>
+    </author>
+    <author>
+      <name>Jinshan Zeng</name>
+    </author>
+    <author>
+      <name>Xiaochun Cao</name>
+    </author>
+    <author>
+      <name>Qingming Huang</name>
+    </author>
+    <arxiv:doi>10.1109/TPAMI.2021.3087514</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/TPAMI.2021.3087514" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2111.06633v1</id>
+    <title>Employment in Tourism Industries: Are there Subsectors with a Potentially Higher Level of Income?</title>
+    <updated>2021-11-12T10:01:29Z</updated>
+    <link href="https://arxiv.org/abs/2111.06633v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2111.06633v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This work analyzes the tourist sector, the employment generated by the tourism industries, and its relationship with tourism receipts. The hypothesis is that there are tourist subsectors with a potentially higher level of income. The article studies the impact of the distribution of the employed population in the different subsectors of the tourism industry, controlling for the most important economic variables, on the level of income per arrival in 24 OECD countries, using panel data for the period 2008 to 2018. As its main result, the model indicates that the labor force that increases most the receipts per arrival is the 'travel agencies and other reservation services', followed by the 'sports and recreation industry' labor force, while having a large labor force in the 'food and beverage' or 'cultural industry' operates in the opposite direction.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-11-12T10:01:29Z</published>
+    <arxiv:comment>14 pages, 4 figures, 12 tables</arxiv:comment>
+    <arxiv:primary_category term="stat.AP"/>
+    <arxiv:journal_ref>Mathematics 9(22): 2844 (2021)</arxiv:journal_ref>
+    <author>
+      <name>Pablo Dorta-González</name>
+    </author>
+    <author>
+      <name>Sara M. González-Betancor</name>
+    </author>
+    <arxiv:doi>10.3390/math9222844</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.3390/math9222844" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/astro-ph/0408498v1</id>
+    <title>Effects of Thermal Fluctuations in the SPOrt Experiment</title>
+    <updated>2004-08-26T11:45:05Z</updated>
+    <link href="https://arxiv.org/abs/astro-ph/0408498v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/astro-ph/0408498v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>  The role of systematic errors induced by thermal fluctuations is analyzed for the SPOrt experiment with the aim at estimating their impact on the measurement of the Cosmic Microwave Background Polarization (CMBP). The transfer functions of the antenna devices from temperature to data fluctuations are computed, by writing them in terms of both instrument and thermal environment parameters. In addition, the corresponding contamination maps are estimated, along with their polarized power spectra, for different behaviours of the instabilities. The result is that thermal effects are at a negligible level even for fluctuations correlated with the Sun illumination provided their frequency $f_{tf}$ is larger than that of the Sun illumination ($f_{day}$) by a factor $f_{tf} / f_{day} &gt; 30$, which defines a requirement for the statistical properties of the temperature behaviour as well. The analysis with actual SPOrt operative parameters shows that the instrument is only weakly sensitive to temperature instabilities, the main contribution coming from the cryogenic stage. The contamination on the E-mode spectrum does not significantly pollute the CMBP signal and no specific data cleaning seems to be needed.</summary>
+    <category term="astro-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2004-08-26T11:45:05Z</published>
+    <arxiv:comment>12 pages, 11 figures. Accepted for publication in A&amp;A</arxiv:comment>
+    <arxiv:primary_category term="astro-ph"/>
+    <arxiv:journal_ref>Astron.Astrophys. 428 (2004) 781-791</arxiv:journal_ref>
+    <author>
+      <name>E. Carretti</name>
+    </author>
+    <author>
+      <name>M. Zannoni</name>
+    </author>
+    <author>
+      <name>C. Macculi</name>
+    </author>
+    <author>
+      <name>S. Cortiglioni</name>
+    </author>
+    <author>
+      <name>C. Sbarra</name>
+    </author>
+    <arxiv:doi>10.1051/0004-6361:20041182</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1051/0004-6361:20041182" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1705.08094v1</id>
+    <title>TwiInsight: Discovering Topics and Sentiments from Social Media Datasets</title>
+    <updated>2017-05-23T06:49:12Z</updated>
+    <link href="https://arxiv.org/abs/1705.08094v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1705.08094v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Social media platforms contain a great wealth of information which provides opportunities for us to explore hidden patterns or unknown correlations, and understand people's satisfaction with what they are discussing. As one showcase, in this paper, we present a system, TwiInsight which explores the insight of Twitter data. Different from other Twitter analysis systems, TwiInsight automatically extracts the popular topics under different categories (e.g., healthcare, food, technology, sports and transport) discussed in Twitter via topic modeling and also identifies the correlated topics across different categories. Additionally, it also discovers the people's opinions on the tweets and topics via the sentiment analysis. The system also employs an intuitive and informative visualization to show the uncovered insight. Furthermore, we also develop and compare six most popular algorithms - three for sentiment analysis and three for topic modeling.</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-05-23T06:49:12Z</published>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>Zhengkui Wang</name>
+    </author>
+    <author>
+      <name>Guangdong Bai</name>
+    </author>
+    <author>
+      <name>Soumyadeb Chowdhury</name>
+    </author>
+    <author>
+      <name>Quanqing Xu</name>
+    </author>
+    <author>
+      <name>Zhi Lin Seow</name>
+    </author>
+  </entry>
+</feed>

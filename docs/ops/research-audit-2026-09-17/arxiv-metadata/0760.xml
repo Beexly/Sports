@@ -1,0 +1,1078 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/fvG+NrCTvsRVO68ToczJPEmFSkw</id>
+  <title>arXiv Query: search_query=&amp;id_list=2608.25246,2607.12362,2606.31127,2606.08064,2605.30552,2605.25409,2605.23790,2605.05487,2604.16588,1705.09975,2608.05560,2608.02285,2608.01260,2607.21267,2604.10049,2512.19089,2512.12378,2510.10496,2510.03232,2509.06541,2509.00863,2508.19230,2507.22438,2507.02827,2506.16840,2506.04983,2505.22974,2504.19514,2503.19104,2502.02453,2410.19864,2410.07238,2410.05776,2409.06401,2405.12070,2404.04100,2312.06502,2312.00188,2309.00485,2308.01492&amp;start=0&amp;max_results=40</title>
+  <updated>2026-09-17T18:37:59Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=&amp;start=0&amp;max_results=40&amp;id_list=2608.25246,2607.12362,2606.31127,2606.08064,2605.30552,2605.25409,2605.23790,2605.05487,2604.16588,1705.09975,2608.05560,2608.02285,2608.01260,2607.21267,2604.10049,2512.19089,2512.12378,2510.10496,2510.03232,2509.06541,2509.00863,2508.19230,2507.22438,2507.02827,2506.16840,2506.04983,2505.22974,2504.19514,2503.19104,2502.02453,2410.19864,2410.07238,2410.05776,2409.06401,2405.12070,2404.04100,2312.06502,2312.00188,2309.00485,2308.01492" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>40</opensearch:itemsPerPage>
+  <opensearch:totalResults>40</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2410.07238v1</id>
+    <title>vailá: Versatile Anarcho Integrated Liberation Ánalysis in Multimodal Toolbox</title>
+    <updated>2024-10-07T14:24:05Z</updated>
+    <link href="https://arxiv.org/abs/2410.07238v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2410.07238v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Human movement analysis is crucial in health and sports biomechanics for understanding physical performance, guiding rehabilitation, and preventing injuries. However, existing tools are often proprietary, expensive, and function as "black boxes", limiting user control and customization. This paper introduces vailá-Versatile Anarcho Integrated Liberation Ánalysis in Multimodal Toolbox-an open-source, Python-based platform designed to enhance human movement analysis by integrating data from multiple biomechanical systems. vailá supports data from diverse sources, including retroreflective motion capture systems, inertial measurement units (IMUs), markerless video capture technology, electromyography (EMG), force plates, and GPS or GNSS systems, enabling comprehensive analysis of movement patterns. Developed entirely in Python 3.11.9, which offers improved efficiency and long-term support, and featuring a straightforward installation process, vailá is accessible to users without extensive programming experience. In this paper, we also present several workflow examples that demonstrate how vailá allows the rapid processing of large batches of data, independent of the type of collection method. This flexibility is especially valuable in research scenarios where unexpected data collection challenges arise, ensuring no valuable data point is lost. We demonstrate the application of vailá in analyzing sit-to-stand movements in pediatric disability, showcasing its capability to provide deeper insights even with unexpected movement patterns. By fostering a collaborative and open environment, vailá encourages users to innovate, customize, and freely explore their analysis needs, potentially contributing to the advancement of rehabilitation strategies and performance optimization.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-10-07T14:24:05Z</published>
+    <arxiv:comment>21 pages, 13 figures, submitted to arXiv under cs.SE (Software Engineering)</arxiv:comment>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Paulo Roberto Pereira Santiago</name>
+    </author>
+    <author>
+      <name>Abel Gonçalves Chinaglia</name>
+    </author>
+    <author>
+      <name>Kira Flanagan</name>
+    </author>
+    <author>
+      <name>Bruno L. S. Bedo</name>
+    </author>
+    <author>
+      <name>Ligia Yumi Mochida</name>
+    </author>
+    <author>
+      <name>Juan Aceros</name>
+    </author>
+    <author>
+      <name>Aline Bononi</name>
+    </author>
+    <author>
+      <name>Guilherme Manna Cesar</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2410.05776v1</id>
+    <title>Viscoelasticity Estimation of Sports Prosthesis by Energy-minimizing Inverse Kinematics and Its Validation by Forward Dynamics</title>
+    <updated>2024-10-08T07:57:02Z</updated>
+    <link href="https://arxiv.org/abs/2410.05776v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2410.05776v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this study, we present a method for estimating the viscoelasticity of a leaf-spring sports prosthesis using advanced energy minimizing inverse kinematics based on the Piece-wise Constant Strain (PCS) model to reconstruct the three-dimensional dynamic behavior. Dynamic motion analysis of the athlete and prosthesis is important to clarify the effect of prosthesis characteristics on foot function. However, three-dimensional deformation calculations of the prosthesis and viscoelasticity have rarely been investigated. In this letter, we apply the PCS model to a prosthesis deformation, which can calculate flexible deformation with low computational cost and handle kinematics and dynamics. In addition, we propose an inverse kinematics calculation method that is consistent with the material properties of the prosthesis by considering the minimization of elastic energy. Furthermore, we propose a method to estimate the viscoelasticity by solving a quadratic programming based on the measured motion capture data. The calculated strains are more reasonable than the results obtained by conventional inverse kinematics calculation. From the result of the viscoelasticity estimation, we simulate the prosthetic motion by forward dynamics calculation and confirm that this result corresponds to the measured motion. These results indicate that our approach adequately models the dynamic phenomena, including the viscoelasticity of the prosthesis.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-10-08T07:57:02Z</published>
+    <arxiv:primary_category term="cs.RO"/>
+    <arxiv:journal_ref>Advanced Robotics, 2024, 1-13</arxiv:journal_ref>
+    <author>
+      <name>Yuta Shimane</name>
+    </author>
+    <author>
+      <name>Taiki Ishigaki</name>
+    </author>
+    <author>
+      <name>Sunghee Kim</name>
+    </author>
+    <author>
+      <name>Ko Yamamoto</name>
+    </author>
+    <arxiv:doi>10.1080/01691864.2024.2407118</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1080/01691864.2024.2407118" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2410.19864v1</id>
+    <title>Thermostatistical Evaluation of Economic Activity</title>
+    <updated>2024-10-23T13:19:16Z</updated>
+    <link href="https://arxiv.org/abs/2410.19864v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2410.19864v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We present an analysis of Bogot'{a}'s sports sector through thermostatistical models applied to economic systems. The study investigates the cross-price elasticity of income ($λ$) to determine whether sports services in Bogot'{a} are normal or inferior goods. Analyzing data from the Sports Satellite Account of Bogot'{a} (CSDB) from 2018 to 2022, we find that demand for sports services is highly elastic, particularly during economic upturns, indicating they are seen as normal or luxury goods. We also calculate the partition function, entropy, and heat capacity, showing consistency with the Boltzmann Principle, which indicates a strong correlation between microstates and the macroeconomic state, supporting the statistical thermodynamic framework. Furthermore, the study employs geometrothermodynamics to assess system stability using Kretschmann and Ricci scalars to identify economic singularities, especially during the pandemic, highlighting its disruptive impact. This approach provides a nuanced understanding of system stability and the effects of external shocks like COVID-19 on the economic structure. Our analysis demonstrates that Bogot'{a}'s sports sector responds elastically to GDP changes, with stability influenced by various macroeconomic factors. However, a decline in heat capacity as economic temperature rises suggests potential growth limitations, necessitating further research to fully grasp the sector's long-term outlook.</summary>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-10-23T13:19:16Z</published>
+    <arxiv:comment>25 pages, 19 figures</arxiv:comment>
+    <arxiv:primary_category term="physics.soc-ph"/>
+    <author>
+      <name>W. A. Rojas C.</name>
+    </author>
+    <author>
+      <name>A. Zamora</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.04983v1</id>
+    <title>TextVidBench: A Benchmark for Long Video Scene Text Understanding</title>
+    <updated>2025-06-05T12:54:56Z</updated>
+    <link href="https://arxiv.org/abs/2506.04983v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.04983v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Despite recent progress on the short-video Text-Visual Question Answering (ViteVQA) task - largely driven by benchmarks such as M4-ViteVQA - existing datasets still suffer from limited video duration and narrow evaluation scopes, making it difficult to adequately assess the growing capabilities of powerful multimodal large language models (MLLMs). To address these limitations, we introduce TextVidBench, the first benchmark specifically designed for long-video text question answering (&gt;3 minutes). TextVidBench makes three key contributions: 1) Cross-domain long-video coverage: Spanning 9 categories (e.g., news, sports, gaming), with an average video length of 2306 seconds, enabling more realistic evaluation of long-video understanding. 2) A three-stage evaluation framework: "Text Needle-in-Haystack -&gt; Temporal Grounding -&gt; Text Dynamics Captioning". 3) High-quality fine-grained annotations: Containing over 5,000 question-answer pairs with detailed semantic labeling. Furthermore, we propose an efficient paradigm for improving large models through: (i) introducing the IT-Rope mechanism and temporal prompt engineering to enhance temporal perception, (ii) adopting non-uniform positional encoding to better handle long video sequences, and (iii) applying lightweight fine-tuning on video-text data. Extensive experiments on multiple public datasets as well as TextVidBench demonstrate that our new benchmark presents significant challenges to existing models, while our proposed method offers valuable insights into improving long-video scene text understanding capabilities.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-06-05T12:54:56Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Yangyang Zhong</name>
+    </author>
+    <author>
+      <name>Ji Qi</name>
+    </author>
+    <author>
+      <name>Yuan Yao</name>
+    </author>
+    <author>
+      <name>Pengxin Luo</name>
+    </author>
+    <author>
+      <name>Yunfeng Yan</name>
+    </author>
+    <author>
+      <name>Donglian Qi</name>
+    </author>
+    <author>
+      <name>Zhiyuan Liu</name>
+    </author>
+    <author>
+      <name>Tat-Seng Chua</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2502.02453v1</id>
+    <title>Impact of Seismic Activities on the Optical Synchronization System of the European X-ray Free-Electron Laser</title>
+    <updated>2025-02-04T16:19:25Z</updated>
+    <link href="https://arxiv.org/abs/2502.02453v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2502.02453v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This study investigates the influence of seismic activities on the optical synchronization system of the European X-ray Free-Electron Laser. We analyze the controller I/O data of phase-locked-loops in length-stabilized links, focusing on the response to earthquakes, ocean-generated microseism and civilization noise. By comparing the controller data with external data, we were able to identify disturbances and their effects on the control signals. Our results show that seismic events influence the stability of the phase-locked loops. Even earthquakes that are approximately \qty{5000}{\km} away cause remarkable fluctuations in the in-loop control signals. Ocean-generated microseism in particular has an enormous influence on the in-loop control signals due to its constant presence. The optical synchronization system is so highly sensitive that it can even identify vibrations caused by civilization, such as road traffic or major events like concerts or sport events. The phase-locked loops manages to eliminate more than 99% of the existing interference.</summary>
+    <category term="hep-ex" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-02-04T16:19:25Z</published>
+    <arxiv:comment>submitted to Journal High Power Laser Science and Engineering</arxiv:comment>
+    <arxiv:primary_category term="hep-ex"/>
+    <arxiv:journal_ref>High Pow Laser Sci Eng 13 (2025) e40</arxiv:journal_ref>
+    <author>
+      <name>Arne Grünhagen</name>
+    </author>
+    <author>
+      <name>Maximilian Schütte</name>
+    </author>
+    <author>
+      <name>Thorsten Lamb</name>
+    </author>
+    <author>
+      <name>Sebastian Schulz</name>
+    </author>
+    <author>
+      <name>Annika Eichler</name>
+    </author>
+    <author>
+      <name>Marina Tropmann-Frick</name>
+    </author>
+    <author>
+      <name>Görschwin Fey</name>
+    </author>
+    <author>
+      <name>Holger Schlarb</name>
+    </author>
+    <arxiv:doi>10.1017/hpl.2025.23</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1017/hpl.2025.23" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.08064v1</id>
+    <title>Cooperative Long Rope Skipping via Multi-Agent Reinforcement Learning</title>
+    <updated>2026-06-06T09:01:18Z</updated>
+    <link href="https://arxiv.org/abs/2606.08064v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.08064v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Humans exhibit remarkable motor agility, enabling a wide range of dynamic skills such as running and jumping, which highlights the great potential of humanoid robots for athletic locomotion. Among athletic sports, long rope skipping requires two rope turners to cooperatively swing the rope while adapting to a player under different jumping rhythms, making it a meaningful yet challenging task for humanoid robots. Although existing methods for humanoid sports have achieved success in single-agent and interaction-free settings, such as running, dancing, and parkour, task scenarios that require precise coordination among multiple participants remain largely unexplored. To this end, we propose Marope, a multi-agent reinforcement learning (MARL) framework for cooperative long rope skipping with multiple humanoid robots. Specifically, Marope adopts a hierarchical reinforcement learning framework for policy training. At the lower level, it learns decentralized rope manipulation policies through MARL, while at the upper level, a centralized scheduling policy is trained to coordinate the execution of the lower-level policies. To improve generalization across different player behavioral styles, Marope further incorporates diverse jumping policies into cooperative game training. We evaluate our approach on Unitree G1 humanoid robots in both simulation and real-world settings. Experimental results demonstrate that Marope outperforms various baselines, achieving more efficient and stable rope manipulation as well as more robust and adaptable cooperation with varied players.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-06T09:01:18Z</published>
+    <arxiv:primary_category term="cs.RO"/>
+    <author>
+      <name>Zihao Wang</name>
+    </author>
+    <author>
+      <name>Shijie Peng</name>
+    </author>
+    <author>
+      <name>Kerui Wu</name>
+    </author>
+    <author>
+      <name>Yu Huang</name>
+    </author>
+    <author>
+      <name>Ruiqi Xue</name>
+    </author>
+    <author>
+      <name>Dong Liu</name>
+    </author>
+    <author>
+      <name>Tian Xu</name>
+    </author>
+    <author>
+      <name>Lei Yuan</name>
+    </author>
+    <author>
+      <name>Yang Yu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.10049v2</id>
+    <title>The Pareto principle in Sports and Economics in view of Runs Scored by Batters in the Indian Premier League</title>
+    <updated>2026-05-05T16:10:39Z</updated>
+    <link href="https://arxiv.org/abs/2604.10049v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.10049v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The analysis of income and wealth inequality is often constrained by the lack of reliable data. In this work, we introduce a proxy-based approach in which sports performance data are used to mimic economic distributions. In particular, the total runs scored by a batter in a single T20 season are treated as an analogue of annual income, while the cumulative runs scored across all seasons are taken to represent individual wealth. Using run distributions from the Indian Premier League (IPL), we explore how inequality evolves and estimate its upper limits in the absence of policy intervention. Our findings indicate that inequality derived from seasonal runs closely resembles the highest levels of income inequality observed in real-world data. In addition, the distribution of cumulative runs evolves over time and gradually approaches a limiting value consistent with global patterns of wealth inequality, in line with the Pareto principle. Overall, this study shows that proxy systems can capture essential features of economic inequality and offer a useful way to understand its inherent limits.</summary>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-11T06:09:46Z</published>
+    <arxiv:comment>16 Pages, 5 figures</arxiv:comment>
+    <arxiv:primary_category term="physics.soc-ph"/>
+    <author>
+      <name>Soumendra Nath Ruz</name>
+    </author>
+    <author>
+      <name>Asim Ghosh</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.25409v1</id>
+    <title>MTLLFM: Multimodal-Temporal Laughter Localization: UR-FUNNY-Temporal and SMILE-Temporal Benchmarks with an Adaptive Multimodal Fusion Model</title>
+    <updated>2026-05-25T04:21:37Z</updated>
+    <link href="https://arxiv.org/abs/2605.25409v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.25409v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Detecting laughter in video is essential for affective computing and narrative understanding, yet existing approaches treat it as coarse clip-level classification, failing to capture precise temporal boundaries of brief, transient laughter events. We address this gap with two complementary contributions.
+  First, we introduce UR-FUNNY-Temporal and SMILE-Temporal, fully annotated temporal laughter datasets extending two widely-used humor benchmarks. Our annotations cover over 11,053 videos (78.8 hours) and provide precise onset/offset boundaries for each laughter event, along with rich metadata distinguishing speaker vs. audience laughter, modality dominance (acoustic, visual, or both), and intensity levels.
+  Second, we propose a lightweight weakly-supervised framework for temporal laughter localization. Our architecture combines fixed HuBERT and MAE encoders with temporal softmax pooling and adaptive modality gating, learning fine-grained temporal grounding from clip-level labels without requiring frame-level annotations during training. Experiments across three datasets demonstrate that our approach substantially outperforms multimodal foundation models including Gemini 3 Flash, achieving 99% F1 and 68.1% localization precision on sports broadcast data. Ablations validate each architectural component. Furthermore, our precise temporal tags improve downstream laughter reasoning by 227% on CIDEr, enabling GPT-3.5 to outperform GPT-4o. The code, UR-FUNNY-Temporal and SMILE-Temporal datasets are publicly available at https://github.com/WSCSports/MTLLFM-temporal-laughter-localization.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-25T04:21:37Z</published>
+    <arxiv:comment>Accepted to the Workshop on Affective &amp; Behavior Analysis in-the-wild, CVPR 2026</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Eyal Hanania</name>
+    </author>
+    <author>
+      <name>Nadav Kirsch</name>
+    </author>
+    <author>
+      <name>Daniel Arkushin</name>
+    </author>
+    <author>
+      <name>Jonathan Benvenisti</name>
+    </author>
+    <author>
+      <name>Amos Bercovich</name>
+    </author>
+    <author>
+      <name>Elie Zemmour</name>
+    </author>
+    <author>
+      <name>Sahar Froim</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2604.16588v1</id>
+    <title>MambaKick: Early Penalty Direction Prediction from HAR Embeddings</title>
+    <updated>2026-04-17T15:33:56Z</updated>
+    <link href="https://arxiv.org/abs/2604.16588v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2604.16588v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Penalty kicks in soccer are decided under extreme time constraints, where goalkeepers benefit from anticipating shot direction from the kickers motion before or around ball contact. In this paper, MambaKick is presented as a learning-based framework for penalty direction prediction that leverages pretrained human action recognition (HAR) embeddings extracted from contact-centered short video segments and combines them with a lightweight temporal predictor. Rather than relying on explicit kinematic reconstruction or handcrafted biomechanical features, the approach reuses transferable spatiotemporal representations and utilizes selective state-spare models (Mamba) for efficient sequence aggregation. Simple contextual metadata (e.g., field side and footedness) are also considered as complementary cues that may reduce ambiguity in real-world footage. Across a range of HAR backbones, MambaKick consistently improves or matches strong embedding baselines, achieving up to 53.1% accuracy for three classes and 64.5% for two classes under the proposed methodology. Overall, the results indicate that combining pretrained HAR representations with efficient state-space temporal modeling is a practical direction for low-latency intention prediction in real-world sports video. The code will be available at GitHub: https://github.com/hvelesaca/MambaKick/</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-04-17T15:33:56Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Henry O. Velesaca</name>
+    </author>
+    <author>
+      <name>David Freire-Obregon</name>
+    </author>
+    <author>
+      <name>Abel Reyes-Angulo</name>
+    </author>
+    <author>
+      <name>Steven Araujo</name>
+    </author>
+    <author>
+      <name>Angel Sappa</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2507.02827v2</id>
+    <title>USAD: End-to-End Human Activity Recognition via Diffusion Model with Spatiotemporal Attention</title>
+    <updated>2025-07-11T15:13:39Z</updated>
+    <link href="https://arxiv.org/abs/2507.02827v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2507.02827v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The primary objective of human activity recognition (HAR) is to infer ongoing human actions from sensor data, a task that finds broad applications in health monitoring, safety protection, and sports analysis. Despite proliferating research, HAR still faces key challenges, including the scarcity of labeled samples for rare activities, insufficient extraction of high-level features, and suboptimal model performance on lightweight devices. To address these issues, this paper proposes a comprehensive optimization approach centered on multi-attention interaction mechanisms. First, an unsupervised, statistics-guided diffusion model is employed to perform data augmentation, thereby alleviating the problems of labeled data scarcity and severe class imbalance. Second, a multi-branch spatio-temporal interaction network is designed, which captures multi-scale features of sequential data through parallel residual branches with 3*3, 5*5, and 7*7 convolutional kernels. Simultaneously, temporal attention mechanisms are incorporated to identify critical time points, while spatial attention enhances inter-sensor interactions. A cross-branch feature fusion unit is further introduced to improve the overall feature representation capability. Finally, an adaptive multi-loss function fusion strategy is integrated, allowing for dynamic adjustment of loss weights and overall model optimization. Experimental results on three public datasets, WISDM, PAMAP2, and OPPORTUNITY, demonstrate that the proposed unsupervised data augmentation spatio-temporal attention diffusion network (USAD) achieves accuracies of 98.84%, 93.81%, and 80.92% respectively, significantly outperforming existing approaches. Furthermore, practical deployment on embedded devices verifies the efficiency and feasibility of the proposed method.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-07-03T17:38:44Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Hang Xiao</name>
+    </author>
+    <author>
+      <name>Ying Yu</name>
+    </author>
+    <author>
+      <name>Jiarui Li</name>
+    </author>
+    <author>
+      <name>Zhifan Yang</name>
+    </author>
+    <author>
+      <name>Haotian Tang</name>
+    </author>
+    <author>
+      <name>Hanyu Liu</name>
+    </author>
+    <author>
+      <name>Chao Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2510.10496v2</id>
+    <title>Personalized Motion Guidance Framework for Athlete-Centric Coaching</title>
+    <updated>2026-03-18T07:37:38Z</updated>
+    <link href="https://arxiv.org/abs/2510.10496v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2510.10496v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A critical challenge in contemporary sports science lies in filling the gap between group-level insights derived from controlled hypothesis-driven experiments and the real-world need for personalized coaching tailored to individual athletes' unique movement patterns. This study developed a Personalized Motion Guidance Framework (PMGF) to enhance athletic performance by generating individualized motion-refinement guides using generative artificial intelligence techniques. PMGF leverages a vertical autoencoder to encode motion sequences into athlete-specific latent representations, which can then be directly manipulated to generate meaningful guidance motions. Two manipulation strategies were explored: (1) smooth interpolation between the learner's motion and a target (e.g., expert) motion to facilitate observational learning, and (2) shifting the motion pattern in an optimal direction in the latent space using a local optimization technique. The results of the validation experiment with data from 51 baseball pitchers revealed that (1) PMGF successfully generated smooth transitions in motion patterns between individuals across all 1,275 pitcher pairs, and (2) the features significantly altered through PMGF manipulations reflected known performance-enhancing characteristics, such as increased stride length and knee extension associated with higher ball velocity, indicating that PMGF induces biomechanically plausible improvements. We propose a future extension called general-PMGF to enhance the applicability of this framework. This extension incorporates bodily, environmental, and task constraints into the generation process, aiming to provide more realistic and versatile guidance across diverse sports contexts.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-10-12T08:21:19Z</published>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Ryota Takamido</name>
+    </author>
+    <author>
+      <name>Chiharu Suzuki</name>
+    </author>
+    <author>
+      <name>Hiroki Nakamoto</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.12362v1</id>
+    <title>Implicit 4D Gaussian Splatting for Fast Motion with Large Inter-Frame Displacements</title>
+    <updated>2026-07-14T05:33:05Z</updated>
+    <link href="https://arxiv.org/abs/2607.12362v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.12362v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Recent 4D Gaussian Splatting (4DGS) methods often fail under fast motion with large inter-frame displacements, where Gaussian attributes are poorly learned during training, and fast-moving objects are often lost from the reconstruction. In this work, we introduce Spatiotemporal Position Implicit Network for 4DGS, coined SPIN-4DGS, which learns Gaussian attributes from explicitly collected spatiotemporal positions rather than modeling temporal displacements, thereby enabling more faithful splatting under fast motions with large inter-frame displacements. To avoid the heavy memory overhead of explicitly optimizing attributes across all spatiotemporal positions, we instead predict them with a lightweight feed-forward network trained under a rasterization-based reconstruction loss. Consequently, SPIN-4DGS learns shared representations across Gaussians, effectively capturing spatiotemporal consistency and enabling stable high-quality Gaussian splatting even under challenging motions. Across extensive experiments, SPIN-4DGS consistently achieves higher fidelity under large displacements, with clear improvements in PSNR and SSIM on challenging sports scenes from the CMU Panoptic dataset. For example, SPIN-4DGS notably outperforms the strongest baseline, D3DGS, by achieving +1.83 higher PSNR on the Basketball scene.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-14T05:33:05Z</published>
+    <arxiv:comment>Accepted at ICLR 2026. Project page at https://seung-gyeom.github.io/SPIN-4DGS</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Seung-gyeom Kim</name>
+    </author>
+    <author>
+      <name>Areum Kim</name>
+    </author>
+    <author>
+      <name>Yongjae Yoo</name>
+    </author>
+    <author>
+      <name>Sukmin Yun</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2308.01492v1</id>
+    <title>A Virtual Reality Game to Improve Physical and Cognitive Acuity</title>
+    <updated>2023-08-03T01:26:18Z</updated>
+    <link href="https://arxiv.org/abs/2308.01492v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2308.01492v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We present the Virtual Human Benchmark (VHB) game to evaluate and improve physical and cognitive acuity. VHB simulates in 3D the BATAK lightboard game, which is designed to improve physical reaction and hand-eye coordination, on the \textit{Oculus Rift} and \textit{Quest} headsets. The game comprises the \textit{reaction}, \textit{accumulator} and \textit{sequence} modes; \bj{along} with the \textit{reaction} and \textit{accumulator} modes which mimic BATAK functionalities, the \textit{sequence} mode involves the user repeating a sequence of illuminated targets with increasing complexity to train visual memory and cognitive processing. A first version of the game (VHB v1) was evaluated against the real-world BATAK by 20 users, and their feedback was utilized to improve game design and obtain a second version (VHB v2). Another study to evaluate VHB v2 was conducted with 20 users, whose results confirmed that the deign improvements enhanced game usability and user experience in multiple respects. Also, logging and visualization of performance data such as \textit{reaction time}, \textit{speed between targets} and \textit{completed sequence patterns} provides useful data for coaches/therapists monitoring sports/rehabilitation regimens.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-08-03T01:26:18Z</published>
+    <arxiv:comment>5 Figures</arxiv:comment>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Blooma John</name>
+    </author>
+    <author>
+      <name>Ramanathan Subramanian</name>
+    </author>
+    <author>
+      <name>Jayan Chirayath Kurian</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2405.12070v1</id>
+    <title>AutoSoccerPose: Automated 3D posture Analysis of Soccer Shot Movements</title>
+    <updated>2024-05-20T14:40:26Z</updated>
+    <link href="https://arxiv.org/abs/2405.12070v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2405.12070v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Image understanding is a foundational task in computer vision, with recent applications emerging in soccer posture analysis. However, existing publicly available datasets lack comprehensive information, notably in the form of posture sequences and 2D pose annotations. Moreover, current analysis models often rely on interpretable linear models (e.g., PCA and regression), limiting their capacity to capture non-linear spatiotemporal relationships in complex and diverse scenarios. To address these gaps, we introduce the 3D Shot Posture (3DSP) dataset in soccer broadcast videos, which represents the most extensive sports image dataset with 2D pose annotations to our knowledge. Additionally, we present the 3DSP-GRAE (Graph Recurrent AutoEncoder) model, a non-linear approach for embedding pose sequences. Furthermore, we propose AutoSoccerPose, a pipeline aimed at semi-automating 2D and 3D pose estimation and posture analysis. While achieving full automation proved challenging, we provide a foundational baseline, extending its utility beyond the scope of annotated data. We validate AutoSoccerPose on SoccerNet and 3DSP datasets, and present posture analysis results based on 3DSP. The dataset, code, and models are available at: https://github.com/calvinyeungck/3D-Shot-Posture-Dataset.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-05-20T14:40:26Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Calvin Yeung</name>
+    </author>
+    <author>
+      <name>Kenjiro Ide</name>
+    </author>
+    <author>
+      <name>Keisuke Fujii</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2503.19104v1</id>
+    <title>Forward propagation of a push through a row of people</title>
+    <updated>2025-03-24T19:47:00Z</updated>
+    <link href="https://arxiv.org/abs/2503.19104v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2503.19104v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Security plays a crucial role when it comes to planning large events such as concerts, sporting tournaments, pilgrims, or demonstrations. Monitoring and controlling pedestrian dynamics can prevent dangerous situations from occurring. However, little is known about the specific factors that contribute to harmful situations. For example, the individual response of a person to external forces in dense crowds is not well studied. In order to address this gap in knowledge, we conducted a series of experiments to examine how a push propagates through a row of people and how it affects the participants. We recorded 2D head trajectories and 3D motion capturing data. To ensure that different trials can be compared to one another, we measured the force at the impact. We find that that the propagation distance as well as the propagation speed of the push are mainly functions of the strength of the push and in particular the latter depends on the initial arm posture of the pushed participants. Our results can contribute to a deeper understanding of the microscopic causes of macroscopic phenomena in large groups, and can be applied to inform models of pedestrian dynamics or validate them, ultimately improving crowd safety.</summary>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-03-24T19:47:00Z</published>
+    <arxiv:primary_category term="physics.soc-ph"/>
+    <arxiv:journal_ref>Safety Science 164 (2023) 106173</arxiv:journal_ref>
+    <author>
+      <name>Sina Feldmann</name>
+    </author>
+    <author>
+      <name>Juliane Adrian</name>
+    </author>
+    <arxiv:doi>10.1016/j.ssci.2023.106173</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1016/j.ssci.2023.106173" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2509.00863v1</id>
+    <title>Predicting Multi-Type Talented Students in Secondary School Using Semi-Supervised Machine Learning</title>
+    <updated>2025-08-31T14:17:13Z</updated>
+    <link href="https://arxiv.org/abs/2509.00863v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2509.00863v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Talent identification plays a critical role in promoting student development. However, traditional approaches often rely on manual processes or focus narrowly on academic achievement, and typically delaying intervention until the higher education stage. This oversight overlooks diverse non-academic talents and misses opportunities for early intervention. To address this gap, this study introduces TalentPredictor, a novel semi-supervised multi-modal neural network that combines Transformer, LSTM, and ANN architectures. This model is designed to predict seven different talent types--academic, sport, art, leadership, service, technology, and others--in secondary school students within an offline educational setting. Drawing on existing offline educational data from 1,041 local secondary students, TalentPredictor overcomes the limitations of traditional talent identification methods. By clustering various award records into talent categories and extracting features from students' diverse learning behaviors, it achieves high prediction accuracy (0.908 classification accuracy, 0.908 ROCAUC). This demonstrates the potential of machine learning to identify diverse talents early in student development.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-08-31T14:17:13Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Xinzhe Zheng</name>
+    </author>
+    <author>
+      <name>Zhen-Qun Yang</name>
+    </author>
+    <author>
+      <name>Jiannong Cao</name>
+    </author>
+    <author>
+      <name>Jiabei Cheng</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2505.22974v2</id>
+    <title>Learning coordinated badminton skills for legged manipulators</title>
+    <updated>2025-09-23T12:45:55Z</updated>
+    <link href="https://arxiv.org/abs/2505.22974v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2505.22974v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Coordinating the motion between lower and upper limbs and aligning limb control with perception are substantial challenges in robotics, particularly in dynamic environments. To this end, we introduce an approach for enabling legged mobile manipulators to play badminton, a task that requires precise coordination of perception, locomotion, and arm swinging. We propose a unified reinforcement learning-based control policy for whole-body visuomotor skills involving all degrees of freedom to achieve effective shuttlecock tracking and striking. This policy is informed by a perception noise model that utilizes real-world camera data, allowing for consistent perception error levels between simulation and deployment and encouraging learned active perception behaviors. Our method includes a shuttlecock prediction model, constrained reinforcement learning for robust motion control, and integrated system identification techniques to enhance deployment readiness. Extensive experimental results in a variety of environments validate the robot's capability to predict shuttlecock trajectories, navigate the service area effectively, and execute precise strikes against human players, demonstrating the feasibility of using legged mobile manipulators in complex and dynamic sports scenarios.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-05-29T01:26:30Z</published>
+    <arxiv:comment>Science Robotics DOI: 10.1126/scirobotics.adu3922</arxiv:comment>
+    <arxiv:primary_category term="cs.RO"/>
+    <arxiv:journal_ref>Sci. Robot.10,eadu3922(2025)</arxiv:journal_ref>
+    <author>
+      <name>Yuntao Ma</name>
+    </author>
+    <author>
+      <name>Andrei Cramariuc</name>
+    </author>
+    <author>
+      <name>Farbod Farshidian</name>
+    </author>
+    <author>
+      <name>Marco Hutter</name>
+    </author>
+    <arxiv:doi>10.1126/scirobotics.adu3922</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1126/scirobotics.adu3922" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2512.12378v3</id>
+    <title>M4Human: A Large-Scale Multimodal mmWave Radar Benchmark for Human Mesh Reconstruction</title>
+    <updated>2026-03-29T16:14:44Z</updated>
+    <link href="https://arxiv.org/abs/2512.12378v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2512.12378v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Human mesh reconstruction (HMR) provides direct insights into body-environment interaction, which enables various immersive applications. While existing large-scale HMR datasets rely heavily on line-of-sight RGB input, vision-based sensing is limited by occlusion, lighting variation, and privacy concerns. To overcome these limitations, recent efforts have explored radio-frequency (RF) mmWave radar for privacy-preserving indoor human sensing. However, current radar datasets are constrained by sparse skeleton labels, limited scale, and simple in-place actions. To advance the HMR research community, we introduce M4Human, the current largest-scale (661K-frame) ($9\times$ prior largest) multimodal benchmark, featuring high-resolution mmWave radar, RGB, and depth data. M4Human provides both raw radar tensors (RT) and processed radar point clouds (RPC) to enable research across different levels of RF signal granularity. M4Human includes high-quality motion capture (MoCap) annotations with 3D meshes and global trajectories, and spans 20 subjects and 50 diverse actions, including in-place, sit-in-place, and free-space sports or rehabilitation movements. We establish benchmarks on both RT and RPC modalities, as well as multimodal fusion with RGB-D modalities. Extensive results highlight the significance of M4Human for radar-based human modeling while revealing persistent challenges under fast, unconstrained motion. The dataset and code will be released after the paper publication.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-12-13T16:08:59Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Junqiao Fan</name>
+    </author>
+    <author>
+      <name>Yunjiao Zhou</name>
+    </author>
+    <author>
+      <name>Yizhuo Yang</name>
+    </author>
+    <author>
+      <name>Xinyuan Cui</name>
+    </author>
+    <author>
+      <name>Jiarui Zhang</name>
+    </author>
+    <author>
+      <name>Lihua Xie</name>
+    </author>
+    <author>
+      <name>Jianfei Yang</name>
+    </author>
+    <author>
+      <name>Chris Xiaoxuan Lu</name>
+    </author>
+    <author>
+      <name>Fangqiang Ding</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.25246v1</id>
+    <title>ShuttleArena: Interpretable Self-Play in Physics-Based Badminton</title>
+    <updated>2026-08-26T00:07:04Z</updated>
+    <link href="https://arxiv.org/abs/2608.25246v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.25246v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Badminton is a compact but challenging domain for game AI: a player must choose a physically feasible shuttle trajectory, anticipate the opponent's interception, and recover to a court position whose value depends on the opponent's next response. The central challenge is that shot selection and recovery are not separable: the best recovery depends on the shot-induced opponent response, while the value of the shot depends on whether the hitter can cover the reply. This paper presents ShuttleArena, a physics-based singles badminton self-play environment that couples continuous shuttle flight, player interception, structured shot generation, and post-shot recovery. The policy uses role-conditioned outputs: a masked interception choice on receiver turns and a factorized hitter action over shot azimuth, shot elevation, shot speed, and recovery target, enabling interpretable tactical probes. Episodes are single rallies rather than full scored games, and training uses Proximal Policy Optimization (PPO) self-play against a staged checkpoint opponent pool with sparse terminal rally-outcome rewards and a factor-specific recovery update. Evaluation with frozen checkpoint play, controlled tactical probes, recovery ablations, qualitative rollouts, and a human-data sanity check shows competitive improvement together with interpretable opponent-conditioned changes in shot geometry and recovery behavior. The learned policies produce recognizable badminton-like structure while also reflecting the abstractions of the simulator, and the recovery intervention shows that learned recovery behavior is competitively important. These results suggest that physics-based racket sports are a useful testbed for interactive digital entertainment AI because they require agents to coordinate execution, positioning, and opponent-relative tactical value.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-26T00:07:04Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Peize Ding</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2607.21267v1</id>
+    <title>BasketEvent: Understanding Who Did What and When in Basketball Videos</title>
+    <updated>2026-07-23T12:39:56Z</updated>
+    <link href="https://arxiv.org/abs/2607.21267v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2607.21267v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Comprehensive basketball video understanding requires resolving not only what event occurs, but also who is responsible and when the key evidence appears. However, exist- ing methods typically treat spatial perception and semantic recognition as isolated tasks, failing to ground events to individual players or pinpoint their temporal boundaries within complex collective dynamics. To bridge this gap, we introduce BasketEvent, a player- centric basketball event understanding dataset curated from real NBA broadcasts. In BasketEvent, event labels are grounded to the responsible players, and a manually an- notated subset of 1,000 samples with precise event intervals is provided to evaluate tem- poral evidence localization. Based on this data, we propose PlayNet, a player-centric reasoning framework that maps basketball videos to player-level event predictions with temporal evidence. Concretely, PlayNet tracks key entities, associates player identities, and reasons about events by modeling player-player, player-ball, and global court inter- actions, while aggregating sparse temporal evidence via gated pooling. Extensive experi- ments demonstrate that PlayNet significantly outperforms representative video-level and crop-based baselines, proving the superiority of player-centric modeling for fine-grained sports video understanding. Our data, code, and models will be made publicly available.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-07-23T12:39:56Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Yu Zhang</name>
+    </author>
+    <author>
+      <name>Jiayuan Rao</name>
+    </author>
+    <author>
+      <name>Haoning Wu</name>
+    </author>
+    <author>
+      <name>Weidi Xie</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2404.04100v1</id>
+    <title>ChoreoVis: Planning and Assessing Formations in Dance Choreographies</title>
+    <updated>2024-04-05T13:51:26Z</updated>
+    <link href="https://arxiv.org/abs/2404.04100v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2404.04100v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Sports visualization has developed into an active research field over the last decades. Many approaches focus on analyzing movement data recorded from unstructured situations, such as soccer. For the analysis of choreographed activities like formation dancing, however, the goal differs, as dancers follow specific formations in coordinated movement trajectories. To date, little work exists on how visual analytics methods can support such choreographed performances. To fill this gap, we introduce a new visual approach for planning and assessing dance choreographies. In terms of planning choreographies, we contribute a web application with interactive authoring tools and views for the dancers' positions and orientations, movement trajectories, poses, dance floor utilization, and movement distances. For assessing dancers' real-world movement trajectories, extracted by manual bounding box annotations, we developed a timeline showing aggregated trajectory deviations and a dance floor view for detailed trajectory comparison. Our approach was developed and evaluated in collaboration with dance instructors, showing that introducing visual analytics into this domain promises improvements in training efficiency for the future.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-04-05T13:51:26Z</published>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Samuel Beck</name>
+    </author>
+    <author>
+      <name>Nina Doerr</name>
+    </author>
+    <author>
+      <name>Kuno Kurzhals</name>
+    </author>
+    <author>
+      <name>Alexander Riedlinger</name>
+    </author>
+    <author>
+      <name>Fabian Schmierer</name>
+    </author>
+    <author>
+      <name>Michael Sedlmair</name>
+    </author>
+    <author>
+      <name>Steffen Koch</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2409.06401v1</id>
+    <title>Reflections on Visualization in Motion for Fitness Trackers</title>
+    <updated>2024-09-10T10:35:29Z</updated>
+    <link href="https://arxiv.org/abs/2409.06401v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2409.06401v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this paper, we reflect on our past work towards understanding how to design visualizations for fitness trackers that are used in motion. We have coined the term "visualization in motion" for visualizations that are used in the presence of relative motion between a viewer and the visualization. Here, we describe how visualization in motion is relevant to sports scenarios. We also provide new data on current smartwatch visualizations for sports and discuss future challenges for visualizations in motion for fitness tracker.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-09-10T10:35:29Z</published>
+    <arxiv:primary_category term="cs.HC"/>
+    <arxiv:journal_ref>MobileHCI 2022 Workshop on New Trends in HCI and Sports, Sep 2022, Vancouver, Canada</arxiv:journal_ref>
+    <author>
+      <name>Alaul Islam</name>
+    </author>
+    <author>
+      <name>Lijie Yao</name>
+    </author>
+    <author>
+      <name>Anastasia Bezerianos</name>
+    </author>
+    <author>
+      <name>Tanja Blascheck</name>
+    </author>
+    <author>
+      <name>Tingying He</name>
+    </author>
+    <author>
+      <name>Bongshin Lee</name>
+    </author>
+    <author>
+      <name>Romain Vuillemot</name>
+    </author>
+    <author>
+      <name>Petra Isenberg</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2312.00188v1</id>
+    <title>REACT: Recognize Every Action Everywhere All At Once</title>
+    <updated>2023-11-27T20:48:54Z</updated>
+    <link href="https://arxiv.org/abs/2312.00188v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2312.00188v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Group Activity Recognition (GAR) is a fundamental problem in computer vision, with diverse applications in sports video analysis, video surveillance, and social scene understanding. Unlike conventional action recognition, GAR aims to classify the actions of a group of individuals as a whole, requiring a deep understanding of their interactions and spatiotemporal relationships. To address the challenges in GAR, we present REACT (\textbf{R}ecognize \textbf{E}very \textbf{Act}ion Everywhere All At Once), a novel architecture inspired by the transformer encoder-decoder model explicitly designed to model complex contextual relationships within videos, including multi-modality and spatio-temporal features. Our architecture features a cutting-edge Vision-Language Encoder block for integrated temporal, spatial, and multi-modal interaction modeling. This component efficiently encodes spatiotemporal interactions, even with sparsely sampled frames, and recovers essential local information. Our Action Decoder Block refines the joint understanding of text and video data, allowing us to precisely retrieve bounding boxes, enhancing the link between semantics and visual reality. At the core, our Actor Fusion Block orchestrates a fusion of actor-specific data and textual features, striking a balance between specificity and context. Our method outperforms state-of-the-art GAR approaches in extensive experiments, demonstrating superior accuracy in recognizing and understanding group activities. Our architecture's potential extends to diverse real-world applications, offering empirical evidence of its performance gains. This work significantly advances the field of group activity recognition, providing a robust framework for nuanced scene comprehension.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-11-27T20:48:54Z</published>
+    <arxiv:comment>10 pages, 4 figures, 5 tables</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Naga VS Raviteja Chappa</name>
+    </author>
+    <author>
+      <name>Pha Nguyen</name>
+    </author>
+    <author>
+      <name>Page Daniel Dobbs</name>
+    </author>
+    <author>
+      <name>Khoa Luu</name>
+    </author>
+    <arxiv:doi>10.1007/s00138-024-01561-z</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/s00138-024-01561-z" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.31127v1</id>
+    <title>SkillSpotter: Pose-Aware Multi-View Skilled Action Detection and Grading in Ego-Exo Videos</title>
+    <updated>2026-06-30T04:43:03Z</updated>
+    <link href="https://arxiv.org/abs/2606.31127v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.31127v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>To enable personalized, real-time coaching using Augmented Reality glasses or fixed camera setups in domains such as sports, cooking, or music, a system must understand not just what a person does, but how well they execute an activity. In an ego-exo video setting, this requires simultaneously detecting individual skilled actions and classifying each as correct or needing improvement, which Ego-Exo4D's proficiency demonstration benchmark formalized. We first adapt seven state-of-the-art temporal action detection architectures to this task, extend the evaluation protocol to disentangle detection from grading, and show that existing methods grade near-randomly. We then introduce SkillSpotter, a pose-aware multi-view architecture that jointly detects and grades skilled actions through three task-specific modules: (1) adaptive temporal suppression to handle the varying density of skilled actions across diverse activities, (2) gated 3D body pose fusion to leverage body kinematics as a complementary signal to visual features, and (3) bidirectional cross-view attention to combine ego and exo views effectively. SkillSpotter improves class-specific mAP from 12.40 to 21.82 (+76%) and balanced accuracy from 55.99% to 60.40% over the best baseline. SkillSpotter's modules transfer to other temporal action detection models with consistent gains, and our method generalizes beyond Ego-Exo4D to HoloAssist. Code: https://github.com/eth-siplab/SkillSpotter</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-30T04:43:03Z</published>
+    <arxiv:comment>Accepted for publication at European Conference on Computer Vision (ECCV)</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Björn Braun</name>
+    </author>
+    <author>
+      <name>Christian Holz</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.02285v1</id>
+    <title>Sen-Cap: Sensor-Flexible and Noise-Resilient Human Motion Capture via LiDAR-Camera Integration</title>
+    <updated>2026-08-03T14:16:18Z</updated>
+    <link href="https://arxiv.org/abs/2608.02285v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.02285v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We propose Sen-Cap, a Sensor-Flexible and Noise-Resilient 3D human motion Capture framework that integrates multi-modal data from LiDAR and camera. While multi-modal sensors provide richer information than single-modal sensors, existing approaches still suffer from two core challenges. First, multi-modal alignment/matching across arbitrarily deployed sensors is typically handled by explicit calibration, which propagates errors under changing viewpoints and in turn constrains deployment to fixed, highly overlapped layouts. Second, prior methods degrade under severe noise or partial sensor failures, which are common in real-world environments. To address these challenges, Sen-Cap introduces a Unified Across-Sensor Motion Estimator that reconstructs local pose and shape in a human-centric space without calibrations between sensors, supporting a flexible number of sensors, as well as a Noise-Resistant Trajectory Tracker that maintains robustness under severe point cloud noise through iterative refinement. These sensor-flexible and noise-resilient features make Sen-Cap more practical in real-world deployment. Notably, operating in real time, Sen-Cap achieves state-of-the-art performance on major metrics on Human-M3 and FreeMotion, as well as strong cross-domain performance on LiDARHuman26M and RELI11D. This combination of flexibility and robustness opens new opportunities for motion capture in real-world scenarios, e.g. sports analytics, field robotics, and large-scale immersive environments.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-03T14:16:18Z</published>
+    <arxiv:comment>16 pages, 8 figures, 4 tables. Accepted at ECCV 2026. Aoru Xue and Yujing Sun contributed equally. Yuexin Ma is the corresponding author</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Aoru Xue</name>
+      <arxiv:affiliation>ShanghaiTech University, Shanghai, China</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Yujing Sun</name>
+      <arxiv:affiliation>Digital Trust Centre, Nanyang Technological University, Singapore</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Yiming Ren</name>
+      <arxiv:affiliation>ShanghaiTech University, Shanghai, China</arxiv:affiliation>
+      <arxiv:affiliation>Digital Trust Centre, Nanyang Technological University, Singapore</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Kwok-Yan Lam</name>
+      <arxiv:affiliation>Digital Trust Centre, Nanyang Technological University, Singapore</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Mao Ye</name>
+      <arxiv:affiliation>EABOT.AI, China</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Yuexin Ma</name>
+      <arxiv:affiliation>ShanghaiTech University, Shanghai, China</arxiv:affiliation>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.01260v1</id>
+    <title>Auditing Semantic Gains in Sequential Recommendation: A Lightweight Recovery Test</title>
+    <updated>2026-08-02T14:15:50Z</updated>
+    <link href="https://arxiv.org/abs/2608.01260v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.01260v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Recent semantic and generative-retrieval recommenders report substantial improvements over ID-only sequential baselines, but it remains unclear whether these gains arise from language-model reasoning, semantic-ID generation, end-to-end semantic architectures, stronger offline item representations, or complementary semantic and collaborative signals. We investigate this attribution ambiguity through LIME-Rec, a lightweight and auditable recovery test. LIME-Rec combines three independent experts: a SASRec sequential expert, an ItemCF co-occurrence expert, and a semantic expert based on frozen BAAI/bge-base-en-v1.5 item embeddings. Their full-catalog scores are normalized per user and combined through auditable score-level fusion followed by bounded history calibration. The fusion gate and calibration head are fitted on validation data only, require no serving-time language-model inference, and keep each expert contribution separately inspectable. On Amazon Beauty, Toys, and Sports, LIME-Rec achieves R@10 scores of 0.0996, 0.1105, and 0.0593, outperforming the strongest comparison baseline by 7.0%-12.0%. Three-expert fusion without history calibration consistently outperforms calibrated SASRec, showing that calibration alone does not explain the recovery. Randomly permuting item-text embeddings across item IDs reduces R@10 by 13.6%-17.5%, indicating that the gains depend on genuine item-text correspondence rather than additional representation capacity. These results suggest that lightweight recovery from offline item representations and transparent fusion should be ruled out before improvements are attributed to serving-time language modeling, semantic-ID generation, or heavier semantic machinery.</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-02T14:15:50Z</published>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>Kong Wang</name>
+    </author>
+    <author>
+      <name>Zhongke He</name>
+    </author>
+    <author>
+      <name>Xiang Chen</name>
+    </author>
+    <author>
+      <name>Hongwei Zeng</name>
+    </author>
+    <author>
+      <name>Kai Deng</name>
+    </author>
+    <author>
+      <name>Long Wang</name>
+    </author>
+    <author>
+      <name>Kehua Yang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2312.06502v6</id>
+    <title>On enforcing dyadic-type homogeneous binary function product constraints in MatBase</title>
+    <updated>2024-03-21T08:25:08Z</updated>
+    <link href="https://arxiv.org/abs/2312.06502v6" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2312.06502v6" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Homogeneous binary function products are often encountered in the sub-universes modeled by databases, from genealogical trees to sports, from education to healthcare, etc. Their properties must be discovered and enforced by the software applications managing such data to guarantee plausibility. The (Elementary) Mathematical Data Model provides 18 dyadic-type homogeneous binary function product constraint types. MatBase, an intelligent data and knowledge base management system prototype, allows database designers to simply declare them by only clicking corresponding checkboxes and automatically generates code for enforcing them. This paper describes the algorithms that MatBase uses for enforcing all these 18 homogeneous binary function product constraint types, which may also be used by developers not having access to MatBase.</summary>
+    <category term="cs.DB" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-12-11T16:27:04Z</published>
+    <arxiv:comment>submitted on Dec. 7, 2023, to the Journal of Data Science and Intelligent Systems (JDSIS), on Dec. 20, 2023, to the Journal of Computational and Cognitive Engineering, both of Bon View Publishing, Singapore, on Dec. 30 to the Journal of Current Research and Studies, and on Jan. 25, 2024, to the Journal of Computer Science Research, Bilingual Publishing Group, Singapore</arxiv:comment>
+    <arxiv:primary_category term="cs.DB"/>
+    <arxiv:journal_ref>Journal of Computer Science Research | Volume 06 | Issue 01 | January 2024</arxiv:journal_ref>
+    <author>
+      <name>Christian Mancas</name>
+    </author>
+    <arxiv:doi>10.30564/jcsr.v6i1.6227</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.30564/jcsr.v6i1.6227" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2512.19089v1</id>
+    <title>Wireless sEMG-IMU Wearable for Real-Time Squat Kinematics and Muscle Activation</title>
+    <updated>2025-12-22T06:58:05Z</updated>
+    <link href="https://arxiv.org/abs/2512.19089v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2512.19089v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This work presents the design and implementation of a wireless, wearable system that combines surface electromyography (sEMG) and inertial measurement units (IMUs) to analyze a single lower-limb functional task: the free bodyweight squat in a healthy adult. The system records bipolar EMG from one agonist and one antagonist muscle of the dominant leg (vastus lateralis and semitendinosus) while simultaneously estimating knee joint angle, angular velocity, and angular acceleration using two MPU6050 IMUs. A custom dual-channel EMG front end with differential instrumentation preamplification, analog filtering (5-500 Hz band-pass and 60 Hz notch), high final gain, and rectified-integrated output was implemented on a compact 10 cm x 12 cm PCB. Data are digitized by an ESP32 microcontroller and transmitted wirelessly via ESP-NOW to a second ESP32 connected to a PC. A Python-based graphical user interface (GUI) displays EMG and kinematic signals in real time, manages subject metadata, and exports a summary of each session to Excel. The complete system is battery-powered to reduce electrical risk during human use. The resulting prototype demonstrates the feasibility of low-cost, portable EMG-IMU instrumentation for integrated analysis of muscle activation and squat kinematics and provides a platform for future biomechanical applications in sports performance and rehabilitation.</summary>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-12-22T06:58:05Z</published>
+    <arxiv:comment>6 pages, 9 figures. Technical report / preprint (wearable sEMG + IMU system for squat analysis)</arxiv:comment>
+    <arxiv:primary_category term="eess.SP"/>
+    <author>
+      <name>Marie Jose Perez Peralta</name>
+    </author>
+    <author>
+      <name>Daniela Flores Casillas</name>
+    </author>
+    <author>
+      <name>Benjamin Wilson</name>
+    </author>
+    <author>
+      <name>Cristian Aviles Medina</name>
+    </author>
+    <author>
+      <name>Yira Itzae Rendon Hernandez</name>
+    </author>
+    <author>
+      <name>Vladimir Orrante Bracho</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2507.22438v1</id>
+    <title>From Sharp to Blur: Unsupervised Domain Adaptation for 2D Human Pose Estimation Under Extreme Motion Blur Using Event Cameras</title>
+    <updated>2025-07-30T07:30:40Z</updated>
+    <link href="https://arxiv.org/abs/2507.22438v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2507.22438v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Human pose estimation is critical for applications such as rehabilitation, sports analytics, and AR/VR systems. However, rapid motion and low-light conditions often introduce motion blur, significantly degrading pose estimation due to the domain gap between sharp and blurred images. Most datasets assume stable conditions, making models trained on sharp images struggle in blurred environments. To address this, we introduce a novel domain adaptation approach that leverages event cameras, which capture high temporal resolution motion data and are inherently robust to motion blur. Using event-based augmentation, we generate motion-aware blurred images, effectively bridging the domain gap between sharp and blurred domains without requiring paired annotations. Additionally, we develop a student-teacher framework that iteratively refines pseudo-labels, leveraging mutual uncertainty masking to eliminate incorrect labels and enable more effective learning. Experimental results demonstrate that our approach outperforms conventional domain-adaptive human pose estimation methods, achieving robust pose estimation under motion blur without requiring annotations in the target domain. Our findings highlight the potential of event cameras as a scalable and effective solution for domain adaptation in real-world motion blur environments. Our project codes are available at https://github.com/kmax2001/EvSharp2Blur.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-07-30T07:30:40Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Youngho Kim</name>
+    </author>
+    <author>
+      <name>Hoonhee Cho</name>
+    </author>
+    <author>
+      <name>Kuk-Jin Yoon</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2509.06541v1</id>
+    <title>Wireless Low-Latency Synchronization for Body-Worn Multi-Node Systems in Sports</title>
+    <updated>2025-09-08T10:54:43Z</updated>
+    <link href="https://arxiv.org/abs/2509.06541v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2509.06541v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Biomechanical data acquisition in sports demands sub-millisecond synchronization across distributed body-worn sensor nodes. This study evaluates and characterizes the Enhanced ShockBurst (ESB) protocol from Nordic Semiconductor under controlled laboratory conditions for wireless, low-latency command broadcasting, enabling fast event updates in multi-node systems. Through systematic profiling of protocol parameters, including cyclic-redundancy-check modes, bitrate, transmission modes, and payload handling, we achieve a mean Device-to-Device (D2D) latency of 504.99 +- 96.89 us and a network-to-network core latency of 311.78 +- 96.90 us using a one-byte payload with retransmission optimization. This performance significantly outperforms Bluetooth Low Energy (BLE), which is constrained by a 7.5 ms connection interval, by providing deterministic, sub-millisecond synchronization suitable for high-frequency (500 Hz to 1000 Hz) biosignals. These results position ESB as a viable solution for time-critical, multi-node wearable systems in sports, enabling precise event alignment and reliable high-speed data fusion for advanced athlete monitoring and feedback applications.</summary>
+    <category term="eess.SY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-09-08T10:54:43Z</published>
+    <arxiv:primary_category term="eess.SY"/>
+    <author>
+      <name>Nico Krull</name>
+    </author>
+    <author>
+      <name>Lukas Schulthess</name>
+    </author>
+    <author>
+      <name>Michele Magno</name>
+    </author>
+    <author>
+      <name>Luca Benini</name>
+    </author>
+    <author>
+      <name>Christoph Leitner</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2510.03232v1</id>
+    <title>LEAML: Label-Efficient Adaptation to Out-of-Distribution Visual Tasks for Multimodal Large Language Models</title>
+    <updated>2025-10-03T17:59:56Z</updated>
+    <link href="https://arxiv.org/abs/2510.03232v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2510.03232v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Multimodal Large Language Models (MLLMs) have achieved strong performance on general visual benchmarks but struggle with out-of-distribution (OOD) tasks in specialized domains such as medical imaging, where labeled data is limited and expensive. We introduce LEAML, a label-efficient adaptation framework that leverages both scarce labeled VQA samples and abundant unlabeled images. Our approach generates domain-relevant pseudo question-answer pairs for unlabeled data using a QA generator regularized by caption distillation. Importantly, we selectively update only those neurons most relevant to question-answering, enabling the QA Generator to efficiently acquire domain-specific knowledge during distillation. Experiments on gastrointestinal endoscopy and sports VQA demonstrate that LEAML consistently outperforms standard fine-tuning under minimal supervision, highlighting the effectiveness of our proposed LEAML framework.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-10-03T17:59:56Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Ci-Siang Lin</name>
+    </author>
+    <author>
+      <name>Min-Hung Chen</name>
+    </author>
+    <author>
+      <name>Yu-Yang Sheng</name>
+    </author>
+    <author>
+      <name>Yu-Chiang Frank Wang</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2508.19230v1</id>
+    <title>Beyond Competitive Gaming: How Casual Players Evaluate and Respond to Teammate Performance</title>
+    <updated>2025-08-26T17:45:32Z</updated>
+    <link href="https://arxiv.org/abs/2508.19230v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2508.19230v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Teammate performance evaluation fundamentally shapes intervention design in video games. However, our current understanding stems primarily from competitive E-Sports contexts where individual performance directly impacts outcomes. This research addresses whether performance evaluation mechanisms and behavioural responses identified in competitive games generalize to casual cooperative games. We investigated how casual players evaluate teammate competence and respond behaviourally in a controlled between-subjects experiment (N=23). We manipulated confederate performance in Overcooked 2, combining observations, NASA TLX self-reports, and interviews. We present two key findings. (1) Observations revealed frustration behaviours completely absent in self-report data. Thus, these instruments assess fundamentally distinct constructs. (2) Participants consistently evaluated teammate performance through relative comparison rather than absolute metrics. This contradicts task-performance operationalizations dominant in competitive gaming research. Hence, performance evaluation frameworks from competitive contexts cannot be directly applied to casual cooperative games. We provide empirical evidence that performance evaluation in casual games requires a comparative operationalization.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-08-26T17:45:32Z</published>
+    <arxiv:comment>7 pages, 1 figure, CHI Play 2025 Conference</arxiv:comment>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Kaushall Senthil Nathan</name>
+    </author>
+    <author>
+      <name>Jieun Lee</name>
+    </author>
+    <author>
+      <name>Derrick M. Wang</name>
+    </author>
+    <author>
+      <name>Geneva M. Smith</name>
+    </author>
+    <author>
+      <name>Eugene Kukshinov</name>
+    </author>
+    <author>
+      <name>Daniel Harley</name>
+    </author>
+    <author>
+      <name>Lennart E. Nacke</name>
+    </author>
+    <arxiv:doi>10.1145/3744736.3749343</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3744736.3749343" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.30552v1</id>
+    <title>High-Fidelity 3D Simulator for Synthetic fNIRS Data Generation</title>
+    <updated>2026-05-28T20:34:27Z</updated>
+    <link href="https://arxiv.org/abs/2605.30552v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.30552v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Functional near-infrared spectroscopy (fNIRS) provides a noninvasive window into brain activity by measuring task-related changes in oxygenated and deoxygenated hemoglobin in the cortex. A key advantage of fNIRS is its promise of use with mobile participants in complex, real-world environments, such as walking, sports, classroom learning, driving simulations, or social interactions. However, analyzing fNIRS data is challenging because of motion artifacts, physiological noise, and other confounding factors. This challenge is further compounded by the limited availability of annotated datasets, which hinders the development and validation of new analysis pipelines, particularly given the growing use of AI methods. Recognizing these challenges, we introduce a 3D fNIRS simulator that uses mesh-based Monte Carlo simulations to create physiologically realistic, full-head synthetic recordings with high spatiotemporal fidelity. Our simulator combines anatomically accurate sensitivity profiles with parameterized models of hemodynamic responses, systemic physiology, and nonsystematic artifacts. As a result, users can generate virtually unlimited labeled datasets for testing denoising algorithms, data augmentation, mechanistic modeling, or \textit{in silico} experimentation. We validate the simulator using experimental fNIRS data from open-source finger-tapping, pain-assessment, and surgical-skill datasets and provide an open-source implementation to support reproducibility and broad adoption.</summary>
+    <category term="q-bio.NC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-28T20:34:27Z</published>
+    <arxiv:primary_category term="q-bio.NC"/>
+    <author>
+      <name>Condell Eastmond</name>
+    </author>
+    <author>
+      <name>Niels Bracher</name>
+    </author>
+    <author>
+      <name>Xavier Intes</name>
+    </author>
+    <author>
+      <name>Stefan T. Radev</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.23790v1</id>
+    <title>Exploring deep learning for Event-Based Saliency Prediction with a Transformer-based model</title>
+    <updated>2026-05-22T15:52:01Z</updated>
+    <link href="https://arxiv.org/abs/2605.23790v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.23790v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Saliency prediction has been extensively studied in RGB images and videos as a computational model of human visual attention. In contrast, predicting saliency from event-based data remains largely unexplored, despite the biological inspiration and favorable sensing properties of event cameras. Two obstacles have held this direction back: the absence of large-scale event saliency datasets, and the lack of a strong baseline. In this paper, we introduce SEST (Swin Event-based Saliency Transformer), a transformer-based model for saliency prediction from event data, bridging the data scarcity barrier through event-native pretraining and synthetic supervision. SEST leverages a self-supervised pretrained event-based Swin Transformer backbone combined with a lightweight CNN decoder to produce dynamic saliency maps. To address the scarcity of annotated event-based saliency data, we introduce two new benchmark datasets, N-DHF1K and N-UCF Sports, generated from large-scale RGB saliency benchmarks. Experimental results show that SEST clearly outperforms existing event-based saliency methods and narrows the performance gap with state-of-the-art RGB models. Zero-shot evaluation on a real event camera dataset further demonstrates that our model trained on synthetic data remains transferable on real event streams. To the best of our knowledge, this work is the first to apply deep learning to event-based saliency prediction, opening a new research direction at the intersection of event-based vision and neuromorphic visual attention.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-22T15:52:01Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Romaric Mazna</name>
+    </author>
+    <author>
+      <name>Jean Martinet</name>
+    </author>
+    <author>
+      <name>Sai Deepesh Pokala</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1705.09975v1</id>
+    <title>A Deep Multi-View Learning Framework for City Event Extraction from Twitter Data Streams</title>
+    <updated>2017-05-28T18:22:15Z</updated>
+    <link href="https://arxiv.org/abs/1705.09975v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1705.09975v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Cities have been a thriving place for citizens over the centuries due to their complex infrastructure. The emergence of the Cyber-Physical-Social Systems (CPSS) and context-aware technologies boost a growing interest in analysing, extracting and eventually understanding city events which subsequently can be utilised to leverage the citizen observations of their cities. In this paper, we investigate the feasibility of using Twitter textual streams for extracting city events. We propose a hierarchical multi-view deep learning approach to contextualise citizen observations of various city systems and services. Our goal has been to build a flexible architecture that can learn representations useful for tasks, thus avoiding excessive task-specific feature engineering. We apply our approach on a real-world dataset consisting of event reports and tweets of over four months from San Francisco Bay Area dataset and additional datasets collected from London. The results of our evaluations show that our proposed solution outperforms the existing models and can be used for extracting city related events with an averaged accuracy of 81% over all classes. To further evaluate the impact of our Twitter event extraction model, we have used two sources of authorised reports through collecting road traffic disruptions data from Transport for London API, and parsing the Time Out London website for sociocultural events. The analysis showed that 49.5% of the Twitter traffic comments are reported approximately five hours prior to the authorities official records. Moreover, we discovered that amongst the scheduled sociocultural event topics; tweets reporting transportation, cultural and social events are 31.75% more likely to influence the distribution of the Twitter comments than sport, weather and crime topics.</summary>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2017-05-28T18:22:15Z</published>
+    <arxiv:primary_category term="cs.SI"/>
+    <author>
+      <name>Nazli Farajidavar</name>
+    </author>
+    <author>
+      <name>Sefki Kolozali</name>
+    </author>
+    <author>
+      <name>Payam Barnaghi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.16840v2</id>
+    <title>FedFitTech: A Baseline in Federated Learning for Fitness Tracking</title>
+    <updated>2025-09-12T08:35:02Z</updated>
+    <link href="https://arxiv.org/abs/2506.16840v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.16840v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The rapid evolution of sensors and resource-efficient machine learning models has spurred the widespread adoption of wearable fitness tracking devices. Equipped with inertial sensors, such devices can continuously capture physical movements for fitness technology (FitTech), enabling applications from sports optimization to preventive healthcare. Traditional Centralized Learning approaches to detect fitness activities struggle with data privacy concerns, regulatory restrictions, and communication inefficiencies. In contrast, Federated Learning (FL) enables a decentralized model training by communicating model updates rather than potentially private wearable sensor data. Applying FL to FitTech presents unique challenges, such as data imbalance, lack of labeled data, heterogeneous user activities, and trade-offs between personalization and generalization. To simplify research on FitTech in FL, we present the FedFitTech baseline, under the Flower framework, which is publicly available and widely used by both industry and academic researchers. Additionally, to illustrate its usage, this paper presents a case study that implements a system based on the FedFitTech baseline, incorporating a client-side early stopping strategy and comparing the results. For instance, this system allows wearable devices to optimize the trade-off between capturing common fitness activities and preserving individuals' nuances, thereby enhancing both the scalability and efficiency of privacy-aware fitness tracking applications. The results show that this reduces the overall redundant communications by 13%, while maintaining the overall recognition performance at a negligible recognition cost by 1%. Thus, the FedFitTech baseline creates a foundation for a wide range of new research and development opportunities in FitTech, and it is available as open source at: https://github.com/shreyaskorde16/FedFitTech</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-06-20T08:43:39Z</published>
+    <arxiv:comment>This submission includes a total of 7 pages and 6 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Zeyneddin Oz</name>
+    </author>
+    <author>
+      <name>Shreyas Korde</name>
+    </author>
+    <author>
+      <name>Marius Bock</name>
+    </author>
+    <author>
+      <name>Kristof Van Laerhoven</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2309.00485v3</id>
+    <title>Golf Strategy Optimization and the "Drive for show, putt for dough" adage</title>
+    <updated>2025-08-26T13:41:49Z</updated>
+    <link href="https://arxiv.org/abs/2309.00485v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2309.00485v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This study explores strategic decision-making in professional golf's Stroke Play format through a computational lens. We develop a Markov Decision Process (MDP) model-specifically, a stochastic shortest path formulation-to optimize a golfer's strategy on any given course, incorporating both course layout and player skill data. While MDPs have been widely used in sports analytics, applying them to golf presents significant scalability challenges due to the curse of dimensionality. Our primary objective is not to predict player performance with high precision, but rather to demonstrate that an exact, data-driven MDP approach is computationally tractable on full scale, real-world instances. We show that, with careful problem structuring, low-level coding, and efficient memory management, it is possible to solve such large-scale models without resorting to heuristics or Q-learning approximations, as used in existing approaches. To illustrate the model's potential, we show how one can use PGA Tour data and aerial course imagery to simulate strategic outcomes and analyze how different skill profiles influence performance. In particular, we assess the relative impact of driving and putting, challenging the popular adage "Drive for show, putt for dough." These results support the value of our methodology as a robust proof of concept and a foundation for future enhancements. All code and analyses (in R and C++) are made available as open-source resources to support reproducibility and further research.</summary>
+    <category term="math.OC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-09-01T14:23:24Z</published>
+    <arxiv:primary_category term="math.OC"/>
+    <author>
+      <name>Gautier Stauffer</name>
+    </author>
+    <author>
+      <name>Matthieu Guillot</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2504.19514v1</id>
+    <title>FSBench: A Figure Skating Benchmark for Advancing Artistic Sports Understanding</title>
+    <updated>2025-04-28T06:25:04Z</updated>
+    <link href="https://arxiv.org/abs/2504.19514v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2504.19514v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Figure skating, known as the "Art on Ice," is among the most artistic sports, challenging to understand due to its blend of technical elements (like jumps and spins) and overall artistic expression. Existing figure skating datasets mainly focus on single tasks, such as action recognition or scoring, lacking comprehensive annotations for both technical and artistic evaluation. Current sports research is largely centered on ball games, with limited relevance to artistic sports like figure skating. To address this, we introduce FSAnno, a large-scale dataset advancing artistic sports understanding through figure skating. FSAnno includes an open-access training and test dataset, alongside a benchmark dataset, FSBench, for fair model evaluation. FSBench consists of FSBench-Text, with multiple-choice questions and explanations, and FSBench-Motion, containing multimodal data and Question and Answer (QA) pairs, supporting tasks from technical analysis to performance commentary. Initial tests on FSBench reveal significant limitations in existing models' understanding of artistic sports. We hope FSBench will become a key tool for evaluating and enhancing model comprehension of figure skating.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-04-28T06:25:04Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Rong Gao</name>
+    </author>
+    <author>
+      <name>Xin Liu</name>
+    </author>
+    <author>
+      <name>Zhuozhao Hu</name>
+    </author>
+    <author>
+      <name>Bohao Xing</name>
+    </author>
+    <author>
+      <name>Baiqiang Xia</name>
+    </author>
+    <author>
+      <name>Zitong Yu</name>
+    </author>
+    <author>
+      <name>Heikki Kälviäinen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2605.05487v1</id>
+    <title>Cross-individual generalizability of machine learning models for ball speed prediction in baseball pitching</title>
+    <updated>2026-05-06T22:21:29Z</updated>
+    <link href="https://arxiv.org/abs/2605.05487v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2605.05487v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Although machine learning (ML)-based performance outcome prediction is an important topic in contemporary sports science, one important issue is the limited understanding of the cross-individual generalizability of ML models in sports contexts. To address this issue, this study aimed to evaluate the cross-individual generalizability of ML models for predicting ball speed in baseball pitching. A dataset comprising 50 pitchers from various competitive levels was analyzed. Cross-individual generalizability was assessed using leave-one-subject-out cross-validation. Specifically, the effects of expertise level and restrictions on spatiotemporal motion information were examined to identify factors influencing model generalizability. The results revealed that, under cross-individual evaluation, (1) predictive performance was markedly lower than under within-individual evaluation, with R-squared value decreasing from 0.91 to 0.38; (2) the model tended to overestimate the performance of Intermediate pitchers relative to Expert pitchers, with a significant group difference in signed prediction error (p &lt; .05); and (3) the trunk and pivot leg demonstrated relatively high generalization performance, with the pivot leg showing notable generalizability even during the weight-shift initiation phase (R-squared value &gt; 0.25). These findings underscore the importance of cross-individual evaluation in enhancing the practical applicability of ML in sports settings and contribute to a deeper understanding of the biomechanical factors underlying the target movement.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-05-06T22:21:29Z</published>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Ryota Takamido</name>
+    </author>
+    <author>
+      <name>Chiharu Suzuki</name>
+    </author>
+    <author>
+      <name>Hiroki Nakamoto</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2608.05560v1</id>
+    <title>From Sports to Safety: Benchmarking Proactive Risk Inference in MLLMs</title>
+    <updated>2026-08-06T03:25:39Z</updated>
+    <link href="https://arxiv.org/abs/2608.05560v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2608.05560v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Timely anticipation of physical hazards is essential for real-world safety, yet existing MLLM evaluations focus on harmful content or general risks, leaving proactive physical hazard prediction underexplored. Sports provide a well-suited testbed: accident causes span diverse injury dimensions and pre-accident spatiotemporal cues draw on reasoning capabilities shared with broader safety domains such as autonomous driving and fall detection. We introduce SPRINT (Sports Proactive Risk INference Testbed), a benchmark of 2,888 real-world sports videos (2,440 accident, 448 safe controls) spanning 14 sports and 3 environmental settings. Accident videos feature fine-grained annotations of early hazard cues, accident timing, and hierarchical causes; safe videos are manually verified as accident-free and serve to diagnose prompt-induced false alarms. Evaluating state-of-the-art MLLMs under diverse prompts and temporal windows reveals a sharp gap between hazard sensitivity and understanding: the best model exceeds 95% in signaling hazards yet falls below 50% in identifying their causes. Diagnostic experiments further show that explicit danger queries trigger severe false alarms even on hazard-free videos. These findings indicate that current MLLMs exhibit only superficial proactive safety, lacking stable, cause-grounded early warning, and underscore the need for reliable proactive safety in dynamic physical environments. Data and code will be open-sourced upon acceptance.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-08-06T03:25:39Z</published>
+    <arxiv:comment>Preprints</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Jiawei Qiu</name>
+    </author>
+    <author>
+      <name>Yichen Xu</name>
+    </author>
+    <author>
+      <name>Jianzhe Ma</name>
+    </author>
+    <author>
+      <name>Mingyang Yu</name>
+    </author>
+    <author>
+      <name>Wenbin Zhu</name>
+    </author>
+    <author>
+      <name>Yang Han</name>
+    </author>
+    <author>
+      <name>Pinzheng Lv</name>
+    </author>
+    <author>
+      <name>Wenxuan Wang</name>
+    </author>
+  </entry>
+</feed>

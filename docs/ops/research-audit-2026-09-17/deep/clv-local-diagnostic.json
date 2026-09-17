@@ -1,0 +1,371 @@
+{
+  "diagnostic": "Build Plan row 16/27: CLV versus per-pick realized Brier loss",
+  "status": "NOT_RUN",
+  "scope": "repository working-tree docs/ and packages/ only; exclude current audit and dependencies",
+  "inventory_count": 84,
+  "candidate_artifacts": [
+    "docs/ops/calibration/2026-08-19-l9-clv-slices/clv-slices.json",
+    "docs/ops/edge/grouping-loss.l12.json",
+    "docs/ops/GSE_RUNTIME_INVENTORY.json"
+  ],
+  "referenced_raw_export_exists": {
+    "docs/ops/calibration/2026-08-18-clv-census.csv": false,
+    "docs/ops/ops/2026-08-18-clv-census.csv": false,
+    "docs/calibration-proposals/2026-08-19-clv-forensics/raw.json": false,
+    "docs/calibration-proposals/2026-08-19-clv-forensics/ml-and-books.json": false
+  },
+  "usable_joined_observations": 0,
+  "pearson_r": null,
+  "spearman_rho": null,
+  "reason": "Manually reviewed L9 artifact has market/month CLV aggregates and three pick-id line spot checks, but no realized game outcome or model probability. L12 JSON is a recon summary, not row data. Raw census/forensics exports referenced in historical prose are absent. Runtime inventory and claim ledger are not settled picks. Unit-test fixtures are synthetic, not empirical evidence.",
+  "required_columns": [
+    "pick_id",
+    "game_id",
+    "sport",
+    "market",
+    "lock_time",
+    "clv_value",
+    "clv_kind",
+    "model_probability_at_lock",
+    "settled_WIN_or_LOSS"
+  ],
+  "interpretation": "If rows become available, correlate CLV with (p-y)^2 (negative is better), keep point/probability units and markets separate, and report clustered uncertainty. Do not use confidence_pct as a probability or CLV verdict as game outcome.",
+  "inventory": [
+    {
+      "path": "docs/ai/phase0/PR145_COMPLETE_DISPOSITION_2026-07-21.json",
+      "bytes": 19027
+    },
+    {
+      "path": "docs/api/fixtures/API_V1_DURABLE_FIXTURE_REPORT.json",
+      "bytes": 3136
+    },
+    {
+      "path": "docs/calibration-proposals/evidence/2026-09-04-totals-tiebreak-replay-legacy.json",
+      "bytes": 431
+    },
+    {
+      "path": "docs/calibration-proposals/evidence/2026-09-04-totals-tiebreak-replay-strict.json",
+      "bytes": 432
+    },
+    {
+      "path": "docs/fable/aws/fixtures/AWS_LOCAL_FIXTURE_LIBRARY.json",
+      "bytes": 10645
+    },
+    {
+      "path": "docs/fable/aws/governance-os/SHADOW_CONTROL_TOWER_BLUEPRINT.json",
+      "bytes": 6880
+    },
+    {
+      "path": "docs/fable/demo/fixture-public-forensic.json",
+      "bytes": 589
+    },
+    {
+      "path": "docs/fable/evidence/CLAIM_EVIDENCE_LEDGER.json",
+      "bytes": 19829
+    },
+    {
+      "path": "docs/formal/packets/week-202630.json",
+      "bytes": 188
+    },
+    {
+      "path": "docs/ops/_manifest_allowed_copy_plan_2026-05-27.csv",
+      "bytes": 2258
+    },
+    {
+      "path": "docs/ops/_pre_sync_inventory_2026-05-27.csv",
+      "bytes": 9411
+    },
+    {
+      "path": "docs/ops/calibration/2026-08-19-l10-provider-probes/probe-results.json",
+      "bytes": 13012
+    },
+    {
+      "path": "docs/ops/calibration/2026-08-19-l9-clv-slices/clv-slices.json",
+      "bytes": 6917
+    },
+    {
+      "path": "docs/ops/edge/2026-08-19-affiliate-tooling-verification/verification-results.json",
+      "bytes": 11935
+    },
+    {
+      "path": "docs/ops/edge/grouping-loss.l12.json",
+      "bytes": 1468
+    },
+    {
+      "path": "docs/ops/GSE_RUNTIME_INVENTORY.json",
+      "bytes": 28688
+    },
+    {
+      "path": "docs/ops/machina/kalshi-sports-config-live.json",
+      "bytes": 3215
+    },
+    {
+      "path": "docs/ops/machina/kalshi-sports-series-map.json",
+      "bytes": 1537
+    },
+    {
+      "path": "docs/personal/aws/personal-learning-evidence.example.json",
+      "bytes": 2699
+    },
+    {
+      "path": "docs/research/cept/coin-commitments.json",
+      "bytes": 326
+    },
+    {
+      "path": "docs/visual-qa/2026-06-18/_artifacts/.last-run.json",
+      "bytes": 45
+    },
+    {
+      "path": "packages/ai-council/package.json",
+      "bytes": 398
+    },
+    {
+      "path": "packages/ai-council/tsconfig.json",
+      "bytes": 242
+    },
+    {
+      "path": "packages/compliance/package.json",
+      "bytes": 444
+    },
+    {
+      "path": "packages/compliance/tsconfig.json",
+      "bytes": 164
+    },
+    {
+      "path": "packages/crypto/package.json",
+      "bytes": 468
+    },
+    {
+      "path": "packages/crypto/tsconfig.json",
+      "bytes": 164
+    },
+    {
+      "path": "packages/data-ingestion/package.json",
+      "bytes": 507
+    },
+    {
+      "path": "packages/data-ingestion/tsconfig.json",
+      "bytes": 252
+    },
+    {
+      "path": "packages/db/package.json",
+      "bytes": 883
+    },
+    {
+      "path": "packages/db/tsconfig.json",
+      "bytes": 222
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/determinism/task1-run1.json",
+      "bytes": 9622
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/determinism/task1-run1.receipt.json",
+      "bytes": 242
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/determinism/task1-run2.json",
+      "bytes": 9622
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/determinism/task1-run2.receipt.json",
+      "bytes": 242
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/determinism/task2-run1.json",
+      "bytes": 4677
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/determinism/task2-run1.receipt.json",
+      "bytes": 242
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/determinism/task2-run2.json",
+      "bytes": 4677
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/determinism/task2-run2.receipt.json",
+      "bytes": 242
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/determinism/task3-run1.json",
+      "bytes": 10096
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/determinism/task3-run1.receipt.json",
+      "bytes": 242
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/determinism/task3-run2.json",
+      "bytes": 10096
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/determinism/task3-run2.receipt.json",
+      "bytes": 242
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/task1-guard-order.json",
+      "bytes": 9622
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/task1-guard-order.receipt.json",
+      "bytes": 242
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/task2-s3-field-rename.json",
+      "bytes": 4677
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/task2-s3-field-rename.receipt.json",
+      "bytes": 242
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/task3-seed-parse-fix.json",
+      "bytes": 10096
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/evidence/task3-seed-parse-fix.receipt.json",
+      "bytes": 242
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/package-lock.json",
+      "bytes": 62465
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/package.json",
+      "bytes": 683
+    },
+    {
+      "path": "packages/dev-tools/context-compiler/tsconfig.json",
+      "bytes": 608
+    },
+    {
+      "path": "packages/epistemic-twin/package.json",
+      "bytes": 399
+    },
+    {
+      "path": "packages/epistemic-twin/tsconfig.json",
+      "bytes": 164
+    },
+    {
+      "path": "packages/feature-store/package.json",
+      "bytes": 395
+    },
+    {
+      "path": "packages/feature-store/tsconfig.json",
+      "bytes": 162
+    },
+    {
+      "path": "packages/genesis-kernel/package.json",
+      "bytes": 392
+    },
+    {
+      "path": "packages/genesis-kernel/src/fixtures/capability-candidates.example.json",
+      "bytes": 1582
+    },
+    {
+      "path": "packages/genesis-kernel/src/fixtures/internal-brief.contract.json",
+      "bytes": 1114
+    },
+    {
+      "path": "packages/genesis-kernel/tsconfig.json",
+      "bytes": 164
+    },
+    {
+      "path": "packages/governed/package.json",
+      "bytes": 412
+    },
+    {
+      "path": "packages/governed/tsconfig.json",
+      "bytes": 181
+    },
+    {
+      "path": "packages/ingestion-pipeline/package.json",
+      "bytes": 599
+    },
+    {
+      "path": "packages/ingestion-pipeline/tsconfig.json",
+      "bytes": 252
+    },
+    {
+      "path": "packages/ops/package.json",
+      "bytes": 376
+    },
+    {
+      "path": "packages/ops/tsconfig.json",
+      "bytes": 247
+    },
+    {
+      "path": "packages/partner-stack/package.json",
+      "bytes": 384
+    },
+    {
+      "path": "packages/partner-stack/tsconfig.json",
+      "bytes": 247
+    },
+    {
+      "path": "packages/phase-c/package.json",
+      "bytes": 371
+    },
+    {
+      "path": "packages/phase-c/tsconfig.json",
+      "bytes": 247
+    },
+    {
+      "path": "packages/prediction-engine/package.json",
+      "bytes": 504
+    },
+    {
+      "path": "packages/prediction-engine/src/__tests__/fixtures/bivariate-poisson.golden.json",
+      "bytes": 807
+    },
+    {
+      "path": "packages/prediction-engine/src/__tests__/fixtures/devig.golden.json",
+      "bytes": 2593
+    },
+    {
+      "path": "packages/prediction-engine/test/fixtures/bivariate-poisson.golden.json",
+      "bytes": 807
+    },
+    {
+      "path": "packages/prediction-engine/test/fixtures/devig.golden.json",
+      "bytes": 2593
+    },
+    {
+      "path": "packages/prediction-engine/tsconfig.json",
+      "bytes": 222
+    },
+    {
+      "path": "packages/quote-plane/package.json",
+      "bytes": 436
+    },
+    {
+      "path": "packages/quote-plane/tsconfig.json",
+      "bytes": 242
+    },
+    {
+      "path": "packages/stats-api/package.json",
+      "bytes": 451
+    },
+    {
+      "path": "packages/stats-api/tsconfig.json",
+      "bytes": 162
+    },
+    {
+      "path": "packages/types/package.json",
+      "bytes": 382
+    },
+    {
+      "path": "packages/types/tsconfig.json",
+      "bytes": 222
+    },
+    {
+      "path": "packages/util/package.json",
+      "bytes": 369
+    },
+    {
+      "path": "packages/util/tsconfig.json",
+      "bytes": 242
+    }
+  ]
+}

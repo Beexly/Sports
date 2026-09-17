@@ -1,0 +1,1114 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/gHS0xkhvasNn4tW+iXWjTCihfL8</id>
+  <title>arXiv Query: search_query=&amp;id_list=2404.08504,2404.03097,2401.17185,2401.06940,2308.02397,2307.14889,2307.00021,2306.14490,2304.09861,2303.10906,2303.03795,2212.12240,2211.16506,2210.00507,2209.14836,2209.06999,2207.11361,2207.05133,2206.11335,2205.07185,2205.02977,2204.13992,2204.03589,2201.07370,2112.03354,2111.11535,2111.01029,2108.08362,2108.07138,2010.14889,2010.08485,2008.11672,2004.09776,2003.00943,2002.03933,2001.08010,1908.08919,1908.05750,1904.09062,1903.07221&amp;start=0&amp;max_results=40</title>
+  <updated>2026-09-17T18:39:11Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=&amp;start=0&amp;max_results=40&amp;id_list=2404.08504,2404.03097,2401.17185,2401.06940,2308.02397,2307.14889,2307.00021,2306.14490,2304.09861,2303.10906,2303.03795,2212.12240,2211.16506,2210.00507,2209.14836,2209.06999,2207.11361,2207.05133,2206.11335,2205.07185,2205.02977,2204.13992,2204.03589,2201.07370,2112.03354,2111.11535,2111.01029,2108.08362,2108.07138,2010.14889,2010.08485,2008.11672,2004.09776,2003.00943,2002.03933,2001.08010,1908.08919,1908.05750,1904.09062,1903.07221" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>40</opensearch:itemsPerPage>
+  <opensearch:totalResults>40</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2008.11672v3</id>
+    <title>DeepSOCIAL: Social Distancing Monitoring and Infection Risk Assessment in COVID-19 Pandemic</title>
+    <updated>2020-11-28T13:46:27Z</updated>
+    <link href="https://arxiv.org/abs/2008.11672v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2008.11672v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Social distancing is a recommended solution by the World Health Organisation (WHO) to minimise the spread of COVID-19 in public places. The majority of governments and national health authorities have set the 2-meter physical distancing as a mandatory safety measure in shopping centres, schools and other covered areas. In this research, we develop a hybrid Computer Vision and YOLOv4-based Deep Neural Network model for automated people detection in the crowd in indoor and outdoor environments using common CCTV security cameras. The proposed DNN model in combination with an adapted inverse perspective mapping (IPM) technique and SORT tracking algorithm leads to a robust people detection and social distancing monitoring. The model has been trained against two most comprehensive datasets by the time of the research the Microsoft Common Objects in Context (MS COCO) and Google Open Image datasets. The system has been evaluated against the Oxford Town Centre dataset with superior performance compared to three state-of-the-art methods. The evaluation has been conducted in challenging conditions, including occlusion, partial visibility, and under lighting variations with the mean average precision of 99.8% and the real-time speed of 24.1 fps. We also provide an online infection risk assessment scheme by statistical analysis of the Spatio-temporal data from people's moving trajectories and the rate of social distancing violations. The developed model is a generic and accurate people detection and tracking solution that can be applied in many other fields such as autonomous vehicles, human action recognition, anomaly detection, sports, crowd analysis, or any other research areas where the human detection is in the centre of attention.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.IV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.med-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-08-26T16:56:57Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <arxiv:journal_ref>Applied Sciences. 2020, 10, 7514</arxiv:journal_ref>
+    <author>
+      <name>Mahdi Rezaei</name>
+    </author>
+    <author>
+      <name>Mohsen Azarmi</name>
+    </author>
+    <arxiv:doi>10.3390/app10217514</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.3390/app10217514" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2307.14889v1</id>
+    <title>Weakly Supervised Multi-Modal 3D Human Body Pose Estimation for Autonomous Driving</title>
+    <updated>2023-07-27T14:28:50Z</updated>
+    <link href="https://arxiv.org/abs/2307.14889v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2307.14889v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Accurate 3D human pose estimation (3D HPE) is crucial for enabling autonomous vehicles (AVs) to make informed decisions and respond proactively in critical road scenarios. Promising results of 3D HPE have been gained in several domains such as human-computer interaction, robotics, sports and medical analytics, often based on data collected in well-controlled laboratory environments. Nevertheless, the transfer of 3D HPE methods to AVs has received limited research attention, due to the challenges posed by obtaining accurate 3D pose annotations and the limited suitability of data from other domains.
+  We present a simple yet efficient weakly supervised approach for 3D HPE in the AV context by employing a high-level sensor fusion between camera and LiDAR data. The weakly supervised setting enables training on the target datasets without any 2D/3D keypoint labels by using an off-the-shelf 2D joint extractor and pseudo labels generated from LiDAR to image projections. Our approach outperforms state-of-the-art results by up to $\sim$ 13% on the Waymo Open Dataset in the weakly supervised setting and achieves state-of-the-art results in the supervised setting.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-07-27T14:28:50Z</published>
+    <arxiv:comment>7 pages, Accepted at IEEE-IV 2023</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Peter Bauer</name>
+    </author>
+    <author>
+      <name>Arij Bouazizi</name>
+    </author>
+    <author>
+      <name>Ulrich Kressel</name>
+    </author>
+    <author>
+      <name>Fabian B. Flohr</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2207.11361v1</id>
+    <title>Machine Learning Modeling to Evaluate the Value of Football Players</title>
+    <updated>2022-07-22T22:34:52Z</updated>
+    <link href="https://arxiv.org/abs/2207.11361v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2207.11361v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In most sports, especially football, most coaches and analysts search for key performance indicators using notational analysis. This method utilizes a statistical summary of events based on video footage and numerical records of goal scores. Unfortunately, this approach is now obsolete owing to the continuous evolutionary increase in technology that simplifies the analysis of more complex process variables through machine learning (ML). Machine learning, a form of artificial intelligence (AI), uses algorithms to detect meaningful patterns and define a structure based on positional data. This research investigates a new method to evaluate the value of current football players, based on establishing the machine learning models to investigate the relations among the various features of players, the salary of players, and the market value of players. The data of the football players used for this project is from several football websites. The data on the salary of football players will be the proxy for evaluating the value of players, and other features will be used to establish and train the ML model for predicting the suitable salary for the players. The motivation is to explore what are the relations between different features of football players and their salaries - how each feature affects their salaries, or which are the most important features to affect the salary? Although many standards can reflect the value of football players, the salary of the players is one of the most intuitive and crucial indexes, so this study will use the salary of players as the proxy to evaluate their value. Moreover, many features of players can affect the valuation of the football players, but the value of players is mainly decided by three types of factors: basic characteristics, performance on the court, and achievements at the club.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-07-22T22:34:52Z</published>
+    <arxiv:comment>30 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Chenyao Li</name>
+    </author>
+    <author>
+      <name>Stylianos Kampakis</name>
+    </author>
+    <author>
+      <name>Philip Treleaven</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2308.02397v2</id>
+    <title>Design Space Exploration on Efficient and Accurate Human Pose Estimation from Sparse IMU-Sensing</title>
+    <updated>2024-02-12T16:58:42Z</updated>
+    <link href="https://arxiv.org/abs/2308.02397v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2308.02397v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Human Pose Estimation (HPE) to assess human motion in sports, rehabilitation or work safety requires accurate sensing without compromising the sensitive underlying personal data. Therefore, local processing is necessary and the limited energy budget in such systems can be addressed by Inertial Measurement Units (IMU) instead of common camera sensing. The central trade-off between accuracy and efficient use of hardware resources is rarely discussed in research. We address this trade-off by a simulative Design Space Exploration (DSE) of a varying quantity and positioning of IMU-sensors. First, we generate IMU-data from a publicly available body model dataset for different sensor configurations and train a deep learning model with this data. Additionally, we propose a combined metric to assess the accuracy-resource trade-off. We used the DSE as a tool to evaluate sensor configurations and identify beneficial ones for a specific use case. Exemplary, for a system with equal importance of accuracy and resources, we identify an optimal sensor configuration of 4 sensors with a mesh error of 6.03 cm, increasing the accuracy by 32.7% and reducing the hardware effort by two sensors compared to state of the art. Our work can be used to design health applications with well-suited sensor positioning and attention to data privacy and resource-awareness.</summary>
+    <category term="eess.SP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-07-21T13:36:49Z</published>
+    <arxiv:comment>7 pages, 6 figures, 3 tables</arxiv:comment>
+    <arxiv:primary_category term="eess.SP"/>
+    <author>
+      <name>Iris Fürst-Walter</name>
+    </author>
+    <author>
+      <name>Antonio Nappi</name>
+    </author>
+    <author>
+      <name>Tanja Harbaum</name>
+    </author>
+    <author>
+      <name>Jürgen Becker</name>
+    </author>
+    <arxiv:doi>10.1109/IROS55552.2023.10341256</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/IROS55552.2023.10341256" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2207.05133v1</id>
+    <title>Overview of the Shared Task on Fake News Detection in Urdu at FIRE 2021</title>
+    <updated>2022-07-11T18:58:36Z</updated>
+    <link href="https://arxiv.org/abs/2207.05133v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2207.05133v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Automatic detection of fake news is a highly important task in the contemporary world. This study reports the 2nd shared task called UrduFake@FIRE2021 on identifying fake news detection in Urdu. The goal of the shared task is to motivate the community to come up with efficient methods for solving this vital problem, particularly for the Urdu language. The task is posed as a binary classification problem to label a given news article as a real or a fake news article. The organizers provide a dataset comprising news in five domains: (i) Health, (ii) Sports, (iii) Showbiz, (iv) Technology, and (v) Business, split into training and testing sets. The training set contains 1300 annotated news articles -- 750 real news, 550 fake news, while the testing set contains 300 news articles -- 200 real, 100 fake news. 34 teams from 7 different countries (China, Egypt, Israel, India, Mexico, Pakistan, and UAE) registered to participate in the UrduFake@FIRE2021 shared task. Out of those, 18 teams submitted their experimental results, and 11 of those submitted their technical reports, which is substantially higher compared to the UrduFake shared task in 2020 when only 6 teams submitted their technical reports. The technical reports submitted by the participants demonstrated different data representation techniques ranging from count-based BoW features to word vector embeddings as well as the use of numerous machine learning algorithms ranging from traditional SVM to various neural network architectures including Transformers such as BERT and RoBERTa. In this year's competition, the best performing system obtained an F1-macro score of 0.679, which is lower than the past year's best result of 0.907 F1-macro. Admittedly, while training sets from the past and the current years overlap to a large extent, the testing set provided this year is completely different.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-07-11T18:58:36Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Maaz Amjad</name>
+    </author>
+    <author>
+      <name>Sabur Butt</name>
+    </author>
+    <author>
+      <name>Hamza Imam Amjad</name>
+    </author>
+    <author>
+      <name>Alisa Zhila</name>
+    </author>
+    <author>
+      <name>Grigori Sidorov</name>
+    </author>
+    <author>
+      <name>Alexander Gelbukh</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2304.09861v1</id>
+    <title>IoT-based Wearables: A comprehensive Survey</title>
+    <updated>2023-04-12T13:50:06Z</updated>
+    <link href="https://arxiv.org/abs/2304.09861v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2304.09861v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>A substantial amount of growth is being achieved by businesses through IoT-based services. The emergent of small electronic devices capable of computing, which are commonly known as wearables in IoT domain has proven to have huge impact in people's life. Theses wearables are capable of collecting vital information about a person's activities and behaviours regularly. This makes them suitable for many applications in health monitoring, fitness, sports, education and some industry related applications. To this end, in this paper, we aim to provide a general review on IoT-based wearables, the sensors adopted for several categorized wearables, the communication technologies adopted and the most widely adopted data processing techniques for wearables. Furthermore, we present the challenges faced for wide adoption of wearables and the future research directions.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-04-12T13:50:06Z</published>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Yahuza Bello</name>
+    </author>
+    <author>
+      <name>Emanuel Figetakis</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2205.07185v1</id>
+    <title>Nonconvex ${L_ {1/2}} $-Regularized Nonlocal Self-similarity Denoiser for Compressive Sensing based CT Reconstruction</title>
+    <updated>2022-05-15T05:24:48Z</updated>
+    <link href="https://arxiv.org/abs/2205.07185v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2205.07185v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Compressive sensing (CS) based computed tomography (CT) image reconstruction aims at reducing the radiation risk through sparse-view projection data. It is usually challenging to achieve satisfying image quality from incomplete projections. Recently, the nonconvex ${L_ {1/2}} $-norm has achieved promising performance in sparse recovery, while the applications on imaging are unsatisfactory due to its nonconvexity. In this paper, we develop a ${L_ {1/2}} $-regularized nonlocal self-similarity (NSS) denoiser for CT reconstruction problem, which integrates low-rank approximation with group sparse coding (GSC) framework. Concretely, we first split the CT reconstruction problem into two subproblems, and then improve the CT image quality furtherly using our ${L_ {1/2}} $-regularized NSS denoiser. Instead of optimizing the nonconvex problem under the perspective of GSC, we particularly reconstruct CT image via low-rank minimization based on two simple yet essential schemes, which build the equivalent relationship between GSC based denoiser and low-rank minimization. Furtherly, the weighted singular value thresholding (WSVT) operator is utilized to optimize the resulting nonconvex ${L_ {1/2}} $ minimization problem. Following this, our proposed denoiser is integrated with the CT reconstruction problem by alternating direction method of multipliers (ADMM) framework. Extensive experimental results on typical clinical CT images have demonstrated that our approach can further achieve better performance than popular approaches.</summary>
+    <category term="eess.IV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-05-15T05:24:48Z</published>
+    <arxiv:comment>Preprint submitted to Journal of The Franklin Institute. Corresponding Author: yunyili@hnust.edu.cn, guiguan@njupt.edu.cn</arxiv:comment>
+    <arxiv:primary_category term="eess.IV"/>
+    <author>
+      <name>Yunyi Li</name>
+      <arxiv:affiliation>School of Computer Science and Engineering, Hunan University of Science and Technology</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Yiqiu Jiang</name>
+      <arxiv:affiliation>Department of Sports Medicine and Joint Surgery, Nanjing First Hospital, Nanjing Medical University</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Hengmin Zhang</name>
+      <arxiv:affiliation>Department of Computer and Information Science, University of Macau</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Jianxun Liu</name>
+      <arxiv:affiliation>School of Computer Science and Engineering, Hunan University of Science and Technology</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Xiangling Ding</name>
+      <arxiv:affiliation>School of Computer Science and Engineering, Hunan University of Science and Technology</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Guan Gui</name>
+      <arxiv:affiliation>College of Telecommunications and Information Engineering, Nanjing University of Posts and Telecommunications</arxiv:affiliation>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2206.11335v1</id>
+    <title>Video Analytics in Elite Soccer: A Distributed Computing Perspective</title>
+    <updated>2022-06-22T19:25:28Z</updated>
+    <link href="https://arxiv.org/abs/2206.11335v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2206.11335v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Ubiquitous sensors and Internet of Things (IoT) technologies have revolutionized the sports industry, providing new methodologies for planning, effective coordination of training, and match analysis post game. New methods, including machine learning, image and video processing, have been developed for performance evaluation, allowing the analyst to track the performance of a player in real-time. Following FIFA's 2015 approval of electronics performance and tracking system during games, performance data of a single player or the entire team is allowed to be collected using GPS-based wearables. Data from practice sessions outside the sporting arena is being collected in greater numbers than ever before. Realizing the significance of data in professional soccer, this paper presents video analytics, examines recent state-of-the-art literature in elite soccer, and summarizes existing real-time video analytics algorithms. We also discuss real-time crowdsourcing of the obtained data, tactical and technical performance, distributed computing and its importance in video analytics and propose a future research perspective.</summary>
+    <category term="cs.MM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-06-22T19:25:28Z</published>
+    <arxiv:primary_category term="cs.MM"/>
+    <arxiv:journal_ref>published IEEE SAM 2022</arxiv:journal_ref>
+    <author>
+      <name>Debesh Jha</name>
+    </author>
+    <author>
+      <name>Ashish Rauniyar</name>
+    </author>
+    <author>
+      <name>Håvard D. Johansen</name>
+    </author>
+    <author>
+      <name>Dag Johansen</name>
+    </author>
+    <author>
+      <name>Michael A. Riegler</name>
+    </author>
+    <author>
+      <name>Pål Halvorsen</name>
+    </author>
+    <author>
+      <name>Ulas Bagci</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1908.05750v3</id>
+    <title>DeepHuMS: Deep Human Motion Signature for 3D Skeletal Sequences</title>
+    <updated>2019-12-08T04:18:14Z</updated>
+    <link href="https://arxiv.org/abs/1908.05750v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1908.05750v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>3D Human Motion Indexing and Retrieval is an interesting problem due to the rise of several data-driven applications aimed at analyzing and/or re-utilizing 3D human skeletal data, such as data-driven animation, analysis of sports bio-mechanics, human surveillance etc. Spatio-temporal articulations of humans, noisy/missing data, different speeds of the same motion etc. make it challenging and several of the existing state of the art methods use hand-craft features along with optimization based or histogram based comparison in order to perform retrieval. Further, they demonstrate it only for very small datasets and few classes. We make a case for using a learned representation that should recognize the motion as well as enforce a discriminative ranking. To that end, we propose, a 3D human motion descriptor learned using a deep network. Our learned embedding is generalizable and applicable to real-world data - addressing the aforementioned challenges and further enables sub-motion searching in its embedding space using another network. Our model exploits the inter-class similarity using trajectory cues, and performs far superior in a self-supervised setting. State of the art results on all these fronts is shown on two large scale 3D human motion datasets - NTU RGB+D and HDM05.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.IV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-08-15T20:34:22Z</published>
+    <arxiv:comment>Under Review, Conference</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Neeraj Battan</name>
+    </author>
+    <author>
+      <name>Abbhinav Venkat</name>
+    </author>
+    <author>
+      <name>Avinash Sharma</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2003.00943v2</id>
+    <title>Always Look on the Bright Side of the Field: Merging Pose and Contextual Data to Estimate Orientation of Soccer Players</title>
+    <updated>2020-05-18T15:32:43Z</updated>
+    <link href="https://arxiv.org/abs/2003.00943v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2003.00943v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Although orientation has proven to be a key skill of soccer players in order to succeed in a broad spectrum of plays, body orientation is a yet-little-explored area in sports analytics' research. Despite being an inherently ambiguous concept, player orientation can be defined as the projection (2D) of the normal vector placed in the center of the upper-torso of players (3D). This research presents a novel technique to obtain player orientation from monocular video recordings by mapping pose parts (shoulders and hips) in a 2D field by combining OpenPose with a super-resolution network, and merging the obtained estimation with contextual information (ball position). Results have been validated with players-held EPTS devices, obtaining a median error of 27 degrees/player. Moreover, three novel types of orientation maps are proposed in order to make raw orientation data easy to visualize and understand, thus allowing further analysis at team- or player-level.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-03-02T14:42:51Z</published>
+    <arxiv:comment>Article accepted in the International Conference on Image Processing (ICIP 2020); Appendix was not included in the original manuscript</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Adrià Arbués-Sangüesa</name>
+    </author>
+    <author>
+      <name>Adrián Martín</name>
+    </author>
+    <author>
+      <name>Javier Fernández</name>
+    </author>
+    <author>
+      <name>Carlos Rodríguez</name>
+    </author>
+    <author>
+      <name>Gloria Haro</name>
+    </author>
+    <author>
+      <name>Coloma Ballester</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1904.09062v1</id>
+    <title>Semi-Supervised First-Person Activity Recognition in Body-Worn Video</title>
+    <updated>2019-04-19T03:22:10Z</updated>
+    <link href="https://arxiv.org/abs/1904.09062v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1904.09062v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Body-worn cameras are now commonly used for logging daily life, sports, and law enforcement activities, creating a large volume of archived footage. This paper studies the problem of classifying frames of footage according to the activity of the camera-wearer with an emphasis on application to real-world police body-worn video. Real-world datasets pose a different set of challenges from existing egocentric vision datasets: the amount of footage of different activities is unbalanced, the data contains personally identifiable information, and in practice it is difficult to provide substantial training footage for a supervised approach. We address these challenges by extracting features based exclusively on motion information then segmenting the video footage using a semi-supervised classification algorithm. On publicly available datasets, our method achieves results comparable to, if not better than, supervised and/or deep learning methods using a fraction of the training data. It also shows promising results on real-world police body-worn video.</summary>
+    <category term="eess.IV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-04-19T03:22:10Z</published>
+    <arxiv:primary_category term="eess.IV"/>
+    <author>
+      <name>Honglin Chen</name>
+    </author>
+    <author>
+      <name>Hao Li</name>
+    </author>
+    <author>
+      <name>Alexander Song</name>
+    </author>
+    <author>
+      <name>Matt Haberland</name>
+    </author>
+    <author>
+      <name>Osman Akar</name>
+    </author>
+    <author>
+      <name>Adam Dhillon</name>
+    </author>
+    <author>
+      <name>Tiankuang Zhou</name>
+    </author>
+    <author>
+      <name>Andrea L. Bertozzi</name>
+    </author>
+    <author>
+      <name>P. Jeffrey Brantingham</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2001.08010v1</id>
+    <title>ARAACOM: ARAbic Algerian Corpus for Opinion Mining</title>
+    <updated>2020-01-22T13:45:34Z</updated>
+    <link href="https://arxiv.org/abs/2001.08010v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2001.08010v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Nowadays, it is no more needed to do an enormous effort to distribute a lot of forms to thousands of people and collect them, then convert this from into electronic format to track people opinion about some subjects. A lot of web sites can today reach a large spectrum with less effort. The majority of web sites suggest to their visitors to leave backups about their feeling of the site or events. So, this makes for us a lot of data which need powerful mean to exploit. Opinion mining in the web becomes more and more an attracting task, due the increasing need for individuals and societies to track the mood of people against several subjects of daily life (sports, politics, television,...). A lot of works in opinion mining was developed in western languages especially English, such works in Arabic language still very scarce. In this paper, we propose our approach, for opinion mining in Arabic Algerian news paper. CCS CONCEPTS $\bullet$Information systems~Sentiment analysis $\bullet$ Computing methodologies~Natural language processing</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-01-22T13:45:34Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <arxiv:journal_ref>ICCES '17: Proceedings of the International Conference on Computing for Engineering and Sciences, Jul 2017, Istanbul, France. pp.35-39</arxiv:journal_ref>
+    <author>
+      <name>Zitouni Abdelhafid</name>
+      <arxiv:affiliation>LIRE</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Hichem Rahab</name>
+      <arxiv:affiliation>ICOSI, LIRE</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Abdelhafid Zitouni</name>
+      <arxiv:affiliation>LIRE</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Mahieddine Djoudi</name>
+      <arxiv:affiliation>TECHNÉ - EA 6316</arxiv:affiliation>
+    </author>
+    <arxiv:doi>10.1145/3129186.3129193</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1145/3129186.3129193" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1908.08919v3</id>
+    <title>In-bed Pressure-based Pose Estimation using Image Space Representation Learning</title>
+    <updated>2021-05-18T19:15:25Z</updated>
+    <link href="https://arxiv.org/abs/1908.08919v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1908.08919v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Recent advances in deep pose estimation models have proven to be effective in a wide range of applications such as health monitoring, sports, animations, and robotics. However, pose estimation models fail to generalize when facing images acquired from in-bed pressure sensing systems. In this paper, we address this challenge by presenting a novel end-to-end framework capable of accurately locating body parts from vague pressure data. Our method exploits the idea of equipping an off-the-shelf pose estimator with a deep trainable neural network, which pre-processes and prepares the pressure data for subsequent pose estimation. Our model transforms the ambiguous pressure maps to images containing shapes and structures similar to the common input domain of the pre-existing pose estimation methods. As a result, we show that our model is able to reconstruct unclear body parts, which in turn enables pose estimators to accurately and robustly estimate the pose. We train and test our method on a manually annotated public pressure map dataset using a combination of loss functions. Results confirm the effectiveness of our method by the high visual quality in the generated images and the high pose estimation rates achieved.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-08-21T01:52:54Z</published>
+    <arxiv:comment>\c{opyright}2021 IEEE. Personal use of this material is permitted. Permission from IEEE must be obtained for all other uses, in any current or future media, including reprinting/republishing this material for advertising or promotional purposes, creating new collective works, for resale or redistribution to servers or lists, or reuse of any copyrighted component of this work in other works</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <arxiv:journal_ref>2021 IEEE International Conference on Acoustics, Speech and Signal Processing (ICASSP) (pp. 3965-3969). IEEE</arxiv:journal_ref>
+    <author>
+      <name>Vandad Davoodnia</name>
+    </author>
+    <author>
+      <name>Saeed Ghorbani</name>
+    </author>
+    <author>
+      <name>Ali Etemad</name>
+    </author>
+    <arxiv:doi>10.1109/ICASSP39728.2021.9413516</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/ICASSP39728.2021.9413516" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2108.07138v1</id>
+    <title>A Longitudinal Analysis on Instagram Characteristics of Olympic Champions</title>
+    <updated>2021-08-16T15:14:06Z</updated>
+    <link href="https://arxiv.org/abs/2108.07138v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2108.07138v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This study examines Olympic champions characteristics on Instagram to first understand how age and gender affect the characteristics and their interrelations and second to see if the future changes in those characteristics are predictable. We crawled Instagram data of individual gold medalists in Rio2016 Olympic for a period of 4 months and utilized a content analytic method to analyze their photograph posts. The cross-sectional analysis shows as the champions get older, the rate of follower engagement decreases in both genders, but men increase their pure self-presentation posts while women extend their circle of followings. In its approval, the longitudinal analysis shows when the higher rate of engagement is achieved, then men and women champions lose their tendency in increasing self-presenting posts and number of followings respectively. These findings in the light of relative theories and the previous literature contribute to a better understanding of athletes cyber behavior in social media. Moreover, the findings serve as a guide for sport researchers seeking to grasp the ways that aid athletes to better interact with their followers and build the personal brand, which involves sponsorship and other promotional opportunities.</summary>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-08-16T15:14:06Z</published>
+    <arxiv:comment>34 pages, 4 Figures, 3 Tables</arxiv:comment>
+    <arxiv:primary_category term="cs.SI"/>
+    <author>
+      <name>Amirhosein Bodaghi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2111.11535v2</id>
+    <title>Ice hockey player identification via transformers and weakly supervised learning</title>
+    <updated>2022-04-28T18:35:01Z</updated>
+    <link href="https://arxiv.org/abs/2111.11535v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2111.11535v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Identifying players in video is a foundational step in computer vision-based sports analytics. Obtaining player identities is essential for analyzing the game and is used in downstream tasks such as game event recognition. Transformers are the existing standard in Natural Language Processing (NLP) and are swiftly gaining traction in computer vision. Motivated by the increasing success of transformers in computer vision, in this paper, we introduce a transformer network for recognizing players through their jersey numbers in broadcast National Hockey League (NHL) videos. The transformer takes temporal sequences of player frames (also called player tracklets) as input and outputs the probabilities of jersey numbers present in the frames. The proposed network performs better than the previous benchmark on the dataset used. We implement a weakly-supervised training approach by generating approximate frame-level labels for jersey number presence and use the frame-level labels for faster training. We also utilize player shifts available in the NHL play-by-play data by reading the game time using optical character recognition (OCR) to get the players on the ice rink at a certain game time. Using player shifts improved the player identification accuracy by 6%.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-11-22T21:10:26Z</published>
+    <arxiv:comment>CVSports 2022</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Kanav Vats</name>
+    </author>
+    <author>
+      <name>William McNally</name>
+    </author>
+    <author>
+      <name>Pascale Walters</name>
+    </author>
+    <author>
+      <name>David A. Clausi</name>
+    </author>
+    <author>
+      <name>John S. Zelek</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2108.08362v1</id>
+    <title>STAR: Noisy Semi-Supervised Transfer Learning for Visual Classification</title>
+    <updated>2021-08-18T19:35:05Z</updated>
+    <link href="https://arxiv.org/abs/2108.08362v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2108.08362v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Semi-supervised learning (SSL) has proven to be effective at leveraging large-scale unlabeled data to mitigate the dependency on labeled data in order to learn better models for visual recognition and classification tasks. However, recent SSL methods rely on unlabeled image data at a scale of billions to work well. This becomes infeasible for tasks with relatively fewer unlabeled data in terms of runtime, memory and data acquisition. To address this issue, we propose noisy semi-supervised transfer learning, an efficient SSL approach that integrates transfer learning and self-training with noisy student into a single framework, which is tailored for tasks that can leverage unlabeled image data on a scale of thousands. We evaluate our method on both binary and multi-class classification tasks, where the objective is to identify whether an image displays people practicing sports or the type of sport, as well as to identify the pose from a pool of popular yoga poses. Extensive experiments and ablation studies demonstrate that by leveraging unlabeled data, our proposed framework significantly improves visual classification, especially in multi-class classification settings compared to state-of-the-art methods. Moreover, incorporating transfer learning not only improves classification performance, but also requires 6x less compute time and 5x less memory. We also show that our method boosts robustness of visual classification models, even without specifically optimizing for adversarial robustness.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-08-18T19:35:05Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Hasib Zunair</name>
+    </author>
+    <author>
+      <name>Yan Gobeil</name>
+    </author>
+    <author>
+      <name>Samuel Mercier</name>
+    </author>
+    <author>
+      <name>A. Ben Hamza</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/1903.07221v3</id>
+    <title>Multidimensional ground reaction forces and moments from wearable sensor accelerations via deep learning</title>
+    <updated>2020-07-03T22:57:54Z</updated>
+    <link href="https://arxiv.org/abs/1903.07221v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/1903.07221v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Monitoring athlete internal workload exposure, including prevention of catastrophic non-contact knee injuries, relies on the existence of a custom early-warning detection system. This system must be able to estimate accurate, reliable, and valid musculoskeletal joint loads, for sporting maneuvers in near real-time and during match play. However, current methods are constrained to laboratory instrumentation, are labor and cost intensive, and require highly trained specialist knowledge, thereby limiting their ecological validity and wider deployment. An informative next step towards this goal would be a new method to obtain ground kinetics in the field. Here we show that kinematic data obtained from wearable sensor accelerometers, in lieu of embedded force platforms, can leverage recent supervised learning techniques to predict near real-time multidimensional ground reaction forces and moments (GRF/M). Competing convolutional neural network (CNN) deep learning models were trained using laboratory-derived stance phase GRF/M data and simulated sensor accelerations for running and sidestepping maneuvers derived from nearly half a million legacy motion trials. Then, predictions were made from each model driven by five sensor accelerations recorded during independent inter-laboratory data capture sessions. The proposed deep learning workbench achieved correlations to ground truth, by maximum discrete GRF component, of vertical Fz 0.97, anterior Fy 0.96 (both running), and lateral Fx 0.87 (sidestepping), with the strongest mean recorded across GRF components 0.89, and for GRM 0.65 (both sidestepping). These best-case correlations indicate the plausibility of the approach although the range of results was disappointing. The goal to accurately estimate near real-time on-field GRF/M will be improved by the lessons learned in this study [truncated].</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2019-03-18T01:24:08Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>William R. Johnson</name>
+    </author>
+    <author>
+      <name>Ajmal Mian</name>
+    </author>
+    <author>
+      <name>Mark A. Robinson</name>
+    </author>
+    <author>
+      <name>Jasper Verheul</name>
+    </author>
+    <author>
+      <name>David G. Lloyd</name>
+    </author>
+    <author>
+      <name>Jacqueline A. Alderson</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2307.00021v1</id>
+    <title>SAHAAYAK 2023 -- the Multi Domain Bilingual Parallel Corpus of Sanskrit to Hindi for Machine Translation</title>
+    <updated>2023-06-27T11:06:44Z</updated>
+    <link href="https://arxiv.org/abs/2307.00021v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2307.00021v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The data article presents the large bilingual parallel corpus of low-resourced language pair Sanskrit-Hindi, named SAHAAYAK 2023. The corpus contains total of 1.5M sentence pairs between Sanskrit and Hindi. To make the universal usability of the corpus and to make it balanced, data from multiple domain has been incorporated into the corpus that includes, News, Daily conversations, Politics, History, Sport, and Ancient Indian Literature. The multifaceted approach has been adapted to make a sizable multi-domain corpus of low-resourced languages like Sanskrit. Our development approach is spanned from creating a small hand-crafted dataset to applying a wide range of mining, cleaning, and verification. We have used the three-fold process of mining: mining from machine-readable sources, mining from non-machine readable sources, and collation from existing corpora sources. Post mining, the dedicated pipeline for normalization, alignment, and corpus cleaning is developed and applied to the corpus to make it ready to use on machine translation algorithms.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-06-27T11:06:44Z</published>
+    <arxiv:comment>3 Pages, 1 Figure, and 1 Table</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Vishvajitsinh Bakrola</name>
+    </author>
+    <author>
+      <name>Jitendra Nasariwala</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2404.08504v2</id>
+    <title>3D Human Scan With A Moving Event Camera</title>
+    <updated>2024-04-16T10:18:56Z</updated>
+    <link href="https://arxiv.org/abs/2404.08504v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2404.08504v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Capturing a 3D human body is one of the important tasks in computer vision with a wide range of applications such as virtual reality and sports analysis. However, conventional frame cameras are limited by their temporal resolution and dynamic range, which imposes constraints in real-world application setups. Event cameras have the advantages of high temporal resolution and high dynamic range (HDR), but the development of event-based methods is necessary to handle data with different characteristics. This paper proposes a novel event-based method for 3D pose estimation and human mesh recovery. Prior work on event-based human mesh recovery require frames (images) as well as event data. The proposed method solely relies on events; it carves 3D voxels by moving the event camera around a stationary body, reconstructs the human pose and mesh by attenuated rays, and fit statistical body models, preserving high-frequency details. The experimental results show that the proposed method outperforms conventional frame-based methods in the estimation accuracy of both pose and body mesh. We also demonstrate results in challenging situations where a conventional camera has motion blur. This is the first to demonstrate event-only human mesh recovery, and we hope that it is the first step toward achieving robust and accurate 3D human body scanning from vision sensors. https://florpeng.github.io/event-based-human-scan/</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-04-12T14:34:24Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <arxiv:journal_ref>IEEE Conference on Computer Vision and Pattern Recognition (CVPR) Workshop On Computer Vision For Mixed Reality (CV4MR), Seattle, 2024</arxiv:journal_ref>
+    <author>
+      <name>Kai Kohyama</name>
+    </author>
+    <author>
+      <name>Shintaro Shiba</name>
+    </author>
+    <author>
+      <name>Yoshimitsu Aoki</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2401.17185v1</id>
+    <title>Multi-Camera Asynchronous Ball Localization and Trajectory Prediction with Factor Graphs and Human Poses</title>
+    <updated>2024-01-30T17:13:29Z</updated>
+    <link href="https://arxiv.org/abs/2401.17185v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2401.17185v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The rapid and precise localization and prediction of a ball are critical for developing agile robots in ball sports, particularly in sports like tennis characterized by high-speed ball movements and powerful spins. The Magnus effect induced by spin adds complexity to trajectory prediction during flight and bounce dynamics upon contact with the ground. In this study, we introduce an innovative approach that combines a multi-camera system with factor graphs for real-time and asynchronous 3D tennis ball localization. Additionally, we estimate hidden states like velocity and spin for trajectory prediction. Furthermore, to enhance spin inference early in the ball's flight, where limited observations are available, we integrate human pose data using a temporal convolutional network (TCN) to compute spin priors within the factor graph. This refinement provides more accurate spin priors at the beginning of the factor graph, leading to improved early-stage hidden state inference for prediction. Our result shows the trained TCN can predict the spin priors with RMSE of 5.27 Hz. Integrating TCN into the factor graph reduces the prediction error of landing positions by over 63.6% compared to a baseline method that utilized an adaptive extended Kalman filter.</summary>
+    <category term="cs.RO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-01-30T17:13:29Z</published>
+    <arxiv:comment>Accepted by ICRA 2024</arxiv:comment>
+    <arxiv:primary_category term="cs.RO"/>
+    <arxiv:journal_ref>2024 IEEE International Conference on Robotics and Automation (ICRA), Yokohama, Japan, 2024, pp. 13695-13702</arxiv:journal_ref>
+    <author>
+      <name>Qingyu Xiao</name>
+    </author>
+    <author>
+      <name>Zulfiqar Zaidi</name>
+    </author>
+    <author>
+      <name>Matthew Gombolay</name>
+    </author>
+    <arxiv:doi>10.1109/ICRA57147.2024.10610631</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/ICRA57147.2024.10610631" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2002.03933v1</id>
+    <title>RePose: Learning Deep Kinematic Priors for Fast Human Pose Estimation</title>
+    <updated>2020-02-10T16:44:45Z</updated>
+    <link href="https://arxiv.org/abs/2002.03933v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2002.03933v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We propose a novel efficient and lightweight model for human pose estimation from a single image. Our model is designed to achieve competitive results at a fraction of the number of parameters and computational cost of various state-of-the-art methods. To this end, we explicitly incorporate part-based structural and geometric priors in a hierarchical prediction framework. At the coarsest resolution, and in a manner similar to classical part-based approaches, we leverage the kinematic structure of the human body to propagate convolutional feature updates between the keypoints or body parts. Unlike classical approaches, we adopt end-to-end training to learn this geometric prior through feature updates from data. We then propagate the feature representation at the coarsest resolution up the hierarchy to refine the predicted pose in a coarse-to-fine fashion. The final network effectively models the geometric prior and intuition within a lightweight deep neural network, yielding state-of-the-art results for a model of this size on two standard datasets, Leeds Sports Pose and MPII Human Pose.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-02-10T16:44:45Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Hossam Isack</name>
+    </author>
+    <author>
+      <name>Christian Haene</name>
+    </author>
+    <author>
+      <name>Cem Keskin</name>
+    </author>
+    <author>
+      <name>Sofien Bouaziz</name>
+    </author>
+    <author>
+      <name>Yuri Boykov</name>
+    </author>
+    <author>
+      <name>Shahram Izadi</name>
+    </author>
+    <author>
+      <name>Sameh Khamis</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2204.13992v1</id>
+    <title>A Validation Procedure for the Estimation of Reachable Regions in Football</title>
+    <updated>2022-04-07T08:34:19Z</updated>
+    <link href="https://arxiv.org/abs/2204.13992v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2204.13992v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Modelling the trajectorial motion of humans along the ground is a foundational task in the quantitative analysis of sports like association football. Most existing models of football player motion have not been validated yet with respect to actual data. One of the reasons for this lack is that performing such a validation is not straightforward, because models of player motion are usually phrased in a way that emphasises possibly reachable positions rather than expected positions. Since positional data of football players typically contains outliers, this data may misrepresent the range of actually reachable positions.
+  This paper proposes a validation routine for trajectorial motion models that measures and optimises the ability of a motion model to accurately predict all possibly reachable positions by favoring the smallest predicted area of reachable positions that encompasses all observed reached positions up to a manually defined threshold. We demonstrate validation and optimisation on four different motion models, assuming (a) motion with constant speed, (b) motion with constant acceleration, (c) motion with constant acceleration with a speed limit, and (d) motion along two segments with constant speed. Our results show that assuming motion with constant speed or constant acceleration without a limit on the achievable speed is particularly inappropriate for an accurate distinction between reachable and unreachable locations. Motion along two segments of constant speed provides by far the highest accuracy among the tested models and serves as an efficient and accurate approximation of real-world player motion.</summary>
+    <category term="cs.OH" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-04-07T08:34:19Z</published>
+    <arxiv:comment>14 pages, 3 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.OH"/>
+    <author>
+      <name>M. Renkin</name>
+    </author>
+    <author>
+      <name>J. Bischofberger</name>
+    </author>
+    <author>
+      <name>E. Schikuta</name>
+    </author>
+    <author>
+      <name>A. Baca</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2205.02977v1</id>
+    <title>IMU Based Deep Stride Length Estimation With Self-Supervised Learning</title>
+    <updated>2022-05-06T01:48:39Z</updated>
+    <link href="https://arxiv.org/abs/2205.02977v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2205.02977v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Stride length estimation using inertial measurement unit (IMU) sensors is getting popular recently as one representative gait parameter for health care and sports training. The traditional estimation method requires some explicit calibrations and design assumptions. Current deep learning methods suffer from few labeled data problem. To solve above problems, this paper proposes a single convolutional neural network (CNN) model to predict stride length of running and walking and classify the running or walking type per stride. The model trains its pretext task with self-supervised learning on a large unlabeled dataset for feature learning, and its downstream task on the stride length estimation and classification tasks with supervised learning with a small labeled dataset. The proposed model can achieve better average percent error, 4.78\%, on running and walking stride length regression and 99.83\% accuracy on running and walking classification, when compared to the previous approach, 7.44\% on the stride length estimation.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-05-06T01:48:39Z</published>
+    <arxiv:comment>8 pages, 11 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <arxiv:journal_ref>in IEEE Sensors Journal, vol. 21, no. 6, pp. 7380-7387, 15 March, 2021</arxiv:journal_ref>
+    <author>
+      <name>Jien-De Sui</name>
+    </author>
+    <author>
+      <name>Tian-Sheuan Chang</name>
+    </author>
+    <arxiv:doi>10.1109/JSEN.2021.3049523</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/JSEN.2021.3049523" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2209.14836v2</id>
+    <title>Characterizing the Structure of Online Conversations Across Reddit</title>
+    <updated>2024-09-18T00:52:59Z</updated>
+    <link href="https://arxiv.org/abs/2209.14836v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2209.14836v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The proliferation of social media platforms has afforded social scientists unprecedented access to vast troves of data on human interactions, facilitating the study of online behavior at an unparalleled scale. These platforms typically structure conversations as threads, forming tree-like structures known as "discussion trees." This paper examines the structural properties of online discussions on Reddit by analyzing both global (community-level) and local (post-level) attributes of these discussion trees. We conduct a comprehensive statistical analysis of a year's worth of Reddit data, encompassing a quarter of a million posts and several million comments. Our primary objective is to disentangle the relative impacts of global and local properties and evaluate how specific features shape discussion tree structures. The results reveal that both local and global features contribute significantly to explaining structural variation in discussion trees. However, local features, such as post content and sentiment, collectively have a greater impact, accounting for a larger proportion of variation in the width, depth, and size of discussion trees. Our analysis also uncovers considerable heterogeneity in the impact of various features on discussion structures. Notably, certain global features play crucial roles in determining specific discussion tree properties. These features include the subreddit's topic, age, popularity, and content redundancy. For instance, posts in subreddits focused on politics, sports, and current events tend to generate deeper and wider discussion trees. This research enhances our understanding of online conversation dynamics and offers valuable insights for both content creators and platform designers. By elucidating the factors that shape online discussions, our work contributes to ongoing efforts to improve the quality and effectiveness of digital discourse.</summary>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-09-29T14:50:50Z</published>
+    <arxiv:comment>Appearing at CSCW 2024</arxiv:comment>
+    <arxiv:primary_category term="cs.SI"/>
+    <author>
+      <name>Yulin Yu</name>
+    </author>
+    <author>
+      <name>Julie Jiang</name>
+    </author>
+    <author>
+      <name>Paramveer Dhillon</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2211.16506v1</id>
+    <title>Where did you tweet from? Inferring the origin locations of tweets based on contextual information</title>
+    <updated>2022-11-18T01:33:01Z</updated>
+    <link href="https://arxiv.org/abs/2211.16506v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2211.16506v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Public conversations on Twitter comprise many pertinent topics including disasters, protests, politics, propaganda, sports, climate change, epidemics/pandemic outbreaks, etc., that can have both regional and global aspects. Spatial discourse analysis rely on geographical data. However, today less than 1% of tweets are geotagged; in both cases--point location or bounding place information. A major issue with tweets is that Twitter users can be at location A and exchange conversations specific to location B, which we call the Location A/B problem. The problem is considered solved if location entities can be classified as either origin locations (Location As) or non-origin locations (Location Bs). In this work, we propose a simple yet effective framework--the True Origin Model--to address the problem that uses machine-level natural language understanding to identify tweets that conceivably contain their origin location information. The model achieves promising accuracy at country (80%), state (67%), city (58%), county (56%) and district (64%) levels with support from a Location Extraction Model as basic as the CoNLL-2003-based RoBERTa. We employ a tweet contexualizer (locBERT) which is one of the core components of the proposed model, to investigate multiple tweets' distributions for understanding Twitter users' tweeting behavior in terms of mentioning origin and non-origin locations. We also highlight a major concern with the currently regarded gold standard test set (ground truth) methodology, introduce a new data set, and identify further research avenues for advancing the area.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-11-18T01:33:01Z</published>
+    <arxiv:comment>To appear in Proceedings of the IEEE Big Data Conference 2022</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Rabindra Lamsal</name>
+    </author>
+    <author>
+      <name>Aaron Harwood</name>
+    </author>
+    <author>
+      <name>Maria Rodriguez Read</name>
+    </author>
+    <arxiv:doi>10.1109/BigData55660.2022.10020460</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/BigData55660.2022.10020460" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2401.06940v1</id>
+    <title>In-plane Density Gradation of Shoe Midsoles for Optimized Cushioning Performance</title>
+    <updated>2024-01-13T00:36:35Z</updated>
+    <link href="https://arxiv.org/abs/2401.06940v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2401.06940v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Midsoles are important components in footwear as they provide shock absorption and stability, thereby improving comfort and effectively preventing certain foot and ankle injuries. A rationally tailored midsole can potentially mitigate plantar pressure, improving performance and comfort levels. Despite the importance of midsole design, the potential of using in-plane density gradation in midsole has been rarely explored in earlier studies. The present work investigates the effectiveness of in-plane density gradation in shoe midsoles using a new class of polyurea foams as the material candidate. Their excellent cushioning properties justify the use of polyurea foams. Different polyurea foam densities, ranging from 95 to 350 kg/m3 are examined and tested to construct density-dependent correlative mathematical relations required for the optimization process. An optimization framework is then created to allocate foam densities at certain plantar zones based on the required cushioning performance constrained by the local pressures. The interior-point algorithm was used to solve the constrained optimization problem. The optimization algorithm introduces a novel approach, utilizing the maximum specific energy absorption as the objective function. The optimization process identifies specific foam densities at various plantar regions for maximum biomechanical energy dissipation without incurring additional weight penalties. Our results suggest midsole design can benefit from horizontal (in-plane) density gradation, leading to potential weight reduction and localized cushioning improvements. With local plantar peak pressure data analysis, the optimization results indicate low-density polyurea foams (140 kg/m3) for central and lateral phalanges, whereas stiffer foams (185-230 kg/m3) are identified as suitable candidates for metatarsal and arch regions in an in-plane density graded midsole design.</summary>
+    <category term="cond-mat.mtrl-sci" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.other" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.soft" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.app-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-01-13T00:36:35Z</published>
+    <arxiv:comment>31 pages, 6 figures This work is submitted for consideration at the Journal of Sports Engineering and Technology: Part P and currently under peer review process. Data will be available upon request from the corresponding author</arxiv:comment>
+    <arxiv:primary_category term="cond-mat.mtrl-sci"/>
+    <author>
+      <name>Kazi Zahir Uddin</name>
+      <arxiv:affiliation>Department of Mechanical Engineering, Rowan University, NJ, USA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Hai Anh Nguyen</name>
+      <arxiv:affiliation>Department of Mechanical Engineering, Rowan University, NJ, USA</arxiv:affiliation>
+      <arxiv:affiliation>Department of Mathematics, Rowan University, NJ, USA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Thanh T. Nguyen</name>
+      <arxiv:affiliation>Department of Mathematics, Rowan University, NJ, USA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Mitja Trkov</name>
+      <arxiv:affiliation>Department of Mechanical Engineering, Rowan University, NJ, USA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>George Youssef</name>
+      <arxiv:affiliation>Experimental Mechanics Laboratory, Department of Mechanical Engineering, San Diego State University, CA, USA</arxiv:affiliation>
+    </author>
+    <author>
+      <name>Behrad Koohbor</name>
+      <arxiv:affiliation>Department of Mechanical Engineering, Rowan University, NJ, USA</arxiv:affiliation>
+      <arxiv:affiliation>Advanced Materials and Manufacturing Institute, Rowan University, NJ, USA</arxiv:affiliation>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2204.03589v3</id>
+    <title>Collecting, Classifying, Analyzing, and Using Real-World Elections</title>
+    <updated>2023-01-06T13:36:44Z</updated>
+    <link href="https://arxiv.org/abs/2204.03589v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2204.03589v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We present a collection of $7582$ real-world elections divided into $25$ datasets from various sources ranging from sports competitions over music charts to survey- and indicator-based rankings. We provide evidence that the collected elections complement already publicly available data from the PrefLib database, which is currently the biggest and most prominent source containing $701$ real-world elections from $36$ datasets. Using the map of elections framework, we divide the datasets into three categories and conduct an analysis of the nature of our elections. To evaluate the practical applicability of previous theoretical research on (parameterized) algorithms and to gain further insights into the collected elections, we analyze different structural properties of our elections including the level of agreement between voters and election's distances from restricted domains such as single-peakedness. Lastly, we use our diverse set of collected elections to shed some further light on several traditional questions from social choice, for instance, on the number of occurrences of the Condorcet paradox and on the consensus among different voting rules.</summary>
+    <category term="cs.GT" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-04-07T17:09:38Z</published>
+    <arxiv:comment>Accepted to AAMAS '23</arxiv:comment>
+    <arxiv:primary_category term="cs.GT"/>
+    <author>
+      <name>Niclas Boehmer</name>
+    </author>
+    <author>
+      <name>Nathan Schaar</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2306.14490v1</id>
+    <title>TaiChi Action Capture and Performance Analysis with Multi-view RGB Cameras</title>
+    <updated>2023-06-26T08:04:24Z</updated>
+    <link href="https://arxiv.org/abs/2306.14490v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2306.14490v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Recent advances in computer vision and deep learning have influenced the field of sports performance analysis for researchers to track and reconstruct freely moving humans without any marker attachment. However, there are few works for vision-based motion capture and intelligent analysis for professional TaiChi movement. In this paper, we propose a framework for TaiChi performance capture and analysis with multi-view geometry and artificial intelligence technology. The main innovative work is as follows: 1) A multi-camera system suitable for TaiChi motion capture is built and the multi-view TaiChi data is collected and processed; 2) A combination of traditional visual method and implicit neural radiance field is proposed to achieve sparse 3D skeleton fusion and dense 3D surface reconstruction. 3) The normalization modeling of movement sequences is carried out based on motion transfer, so as to realize TaiChi performance analysis for different groups. We have carried out evaluation experiments, and the experimental results have shown the efficiency of our method.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-06-26T08:04:24Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Jianwei Li</name>
+    </author>
+    <author>
+      <name>Siyu Mo</name>
+    </author>
+    <author>
+      <name>Yanfei Shen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2212.12240v1</id>
+    <title>Practical Algorithms with Guaranteed Approximation Ratio for TTP with Maximum Tour Length Two</title>
+    <updated>2022-12-23T10:30:20Z</updated>
+    <link href="https://arxiv.org/abs/2212.12240v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2212.12240v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The Traveling Tournament Problem (TTP) is a hard but interesting sports scheduling problem inspired by Major League Baseball, which is to design a double round-robin schedule such that each pair of teams plays one game in each other's home venue, minimizing the total distance traveled by all $n$ teams ($n$ is even). In this paper, we consider TTP-2, i.e., TTP under the constraint that at most two consecutive home games or away games are allowed for each team. We propose practical algorithms for TTP-2 with improved approximation ratios. Due to the different structural properties of the problem, all known algorithms for TTP-2 are different for $n/2$ being odd and even, and our algorithms are also different for these two cases. For even $n/2$, our approximation ratio is $1+3/n$, improving the previous result of $1+4/n$. For odd $n/2$, our approximation ratio is $1+5/n$, improving the previous result of $3/2+6/n$. In practice, our algorithms are easy to implement. Experiments on well-known benchmark sets show that our algorithms beat previously known solutions for all instances with an average improvement of $5.66\%$.</summary>
+    <category term="cs.DS" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-12-23T10:30:20Z</published>
+    <arxiv:comment>arXiv admin note: substantial text overlap with arXiv:2108.13060</arxiv:comment>
+    <arxiv:primary_category term="cs.DS"/>
+    <author>
+      <name>Jingyang Zhao</name>
+    </author>
+    <author>
+      <name>Mingyu Xiao</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2201.07370v1</id>
+    <title>RunnerDNA: Interpretable indicators and model to characterize human activity pattern and individual difference</title>
+    <updated>2022-01-19T01:09:30Z</updated>
+    <link href="https://arxiv.org/abs/2201.07370v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2201.07370v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Human activity analysis based on sensor data plays a significant role in behavior sensing, human-machine interaction, health care, and so on. The current research focused on recognizing human activity and posture at the activity pattern level, neglecting the effective fusion of multi-sensor data and assessing different movement styles at the individual level, thus introducing the challenge to distinguish individuals in the same movement. In this study, the concept of RunnerDNA, consisting of five interpretable indicators, balance, stride, steering, stability, and amplitude, was proposed to describe human activity at the individual level. We collected smartphone multi-sensor data from 33 volunteers who engaged in physical activities such as walking, running, and bicycling and calculated the data into five indicators of RunnerDNA. The indicators were then used to build random forest models and recognize movement activities and the identity of users. The results show that the proposed model has high accuracy in identifying activities (accuracy of 0.679) and is also effective in predicting the identity of running users. Furthermore, the accuracy of the human activity recognition model has significant improved by combing RunnerDNA and two motion feature indicators, velocity, and acceleration. Results demonstrate that RunnerDNA is an effective way to describe an individual's physical activity and helps us understand individual differences in sports style, and the significant differences in balance and amplitude between men and women were found.</summary>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-01-19T01:09:30Z</published>
+    <arxiv:comment>28 pages, 6 tables, 1 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CY"/>
+    <author>
+      <name>Yao Yao</name>
+    </author>
+    <author>
+      <name>Zhuolun Wang</name>
+    </author>
+    <author>
+      <name>Peng Luo</name>
+    </author>
+    <author>
+      <name>Hanyu Yin</name>
+    </author>
+    <author>
+      <name>Ziqi Liu</name>
+    </author>
+    <author>
+      <name>Jiaqi Zhang</name>
+    </author>
+    <author>
+      <name>Nengjing Guo</name>
+    </author>
+    <author>
+      <name>Qingfeng Guan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2303.10906v2</id>
+    <title>The Economic Value of User Tracking for Publishers</title>
+    <updated>2024-04-18T09:03:40Z</updated>
+    <link href="https://arxiv.org/abs/2303.10906v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2303.10906v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Regulators and browsers increasingly restrict user tracking to protect users' privacy online. In two large-scale empirical studies, we study the economic implications for publishers relying on selling advertising space to finance their content. In our first study, we draw on 42 million ad impressions from 111 publishers covering EU desktop browsing traffic in 2016. In our second study, we use 218 million ad impressions from 10,526 publishers (i.e., apps) covering EU and US mobile in-app browsing traffic in 2023. The two studies differ in the share of trackable users (Study 1: 85%; Study 2: Apple: 17%, Android: 91%). Still, we find similar average ad impression price decreases (Study 1: 18% and Study 2: 23%) when user tracking is unavailable. More than 90% of the publishers realize lower prices when selling ad impressions for untrackable users. Publishers offering content on sports, cars, lifestyle &amp; shopping, and news &amp; information suffer the most. Premium publishers with high-quality edited content and strong reputations, thematic-focused (niche) publishers, and smaller publishers suffer less from the unavailability of user tracking. In contrast, non-premium publishers with non-edited or user-generated content, thematic-broad (general news) publishers, and larger publishers suffer more. The availability of a user ID generates the highest value for publishers, whereas collecting a user's browsing history, perceived as intrusive by most users, generates only a small value for publishers. These results affirm that ensuring user privacy online has substantial costs for online publishers, but those costs differ across publishers and the type of collected data. This article offers suggestions to reduce these costs.</summary>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-03-20T06:50:35Z</published>
+    <arxiv:primary_category term="econ.GN"/>
+    <author>
+      <name>Rene Laub</name>
+    </author>
+    <author>
+      <name>Klaus M. Miller</name>
+    </author>
+    <author>
+      <name>Bernd Skiera</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2303.03795v3</id>
+    <title>Sandpile Universality in Social Inequality: Gini and Kolkata Measures</title>
+    <updated>2023-05-02T10:37:41Z</updated>
+    <link href="https://arxiv.org/abs/2303.03795v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2303.03795v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Social inequalities are ubiquitous and evolve towards a universal limit. Herein, we extensively review the values of inequality measures, namely the Gini ($g$) index and the Kolkata ($k$) index, two standard measures of inequality used in the analysis of various social sectors through data analysis. The Kolkata index, denoted as $k$, indicates the proportion of the `wealth' owned by $(1-k)$ fraction of the `people'. Our findings suggest that both the Gini index and the Kolkata index tend to converge to similar values (around $g=k \approx 0.87$, starting from the point of perfect equality, where $g=0$ and $k=0.5$) as competition increases in different social institutions, such as markets, movies, elections, universities, prize winning, battle fields, sports (Olympics), etc., under conditions of unrestricted competition (no social welfare or support mechanism). In this review, we present the concept of a generalized form of Pareto's 80/20 law ($k=0.80$), where the coincidence of inequality indices is observed. The observation of this coincidence is consistent with the precursor values of the $g$ and $k$ indices for the self-organized critical (SOC) state in self-tuned physical systems such as sand piles. These results provide quantitative support for the view that interacting socioeconomic systems can be understood within the framework of SOC, which has been hypothesized for many years. These findings suggest that the SOC model can be extended to capture the dynamics of complex socioeconomic systems and help us better understand their behavior.</summary>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cond-mat.stat-mech" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-03-07T11:01:38Z</published>
+    <arxiv:comment>30 pages, 15 figures and 13 tables, Invited Review</arxiv:comment>
+    <arxiv:primary_category term="physics.soc-ph"/>
+    <arxiv:journal_ref>Entropy 2023, 25(5), 735 (Special Issue-Entropy-Based Applications in Sociophysics)</arxiv:journal_ref>
+    <author>
+      <name>Suchismita Banerjee</name>
+    </author>
+    <author>
+      <name>Soumyajyoti Biswas</name>
+    </author>
+    <author>
+      <name>Bikas K. Chakrabarti</name>
+    </author>
+    <author>
+      <name>Asim Ghosh</name>
+    </author>
+    <author>
+      <name>Manipushpak Mitra</name>
+    </author>
+    <arxiv:doi>10.3390/e25050735</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.3390/e25050735" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2209.06999v1</id>
+    <title>Data Science Approach to predict the winning Fantasy Cricket Team Dream 11 Fantasy Sports</title>
+    <updated>2022-09-15T01:58:57Z</updated>
+    <link href="https://arxiv.org/abs/2209.06999v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2209.06999v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The evolution of digital technology and the increasing popularity of sports inspired the innovators to take the experience of users with a proclivity towards sports to a whole new different level, by introducing Fantasy Sports Platforms FSPs. The application of Data Science and Analytics is Ubiquitous in the Modern World. Data Science and Analytics open doors to gain a deeper understanding and help in the decision making process. We firmly believed that we could adopt Data Science to predict the winning fantasy cricket team on the FSP, Dream 11. We built a predictive model that predicts the performance of players in a prospective game. We used a combination of Greedy and Knapsack Algorithms to prescribe the combination of 11 players to create a fantasy cricket team that has the most significant statistical odds of finishing as the strongest team thereby giving us a higher chance of winning the pot of bets on the Dream 11 FSP. We used PyCaret Python Library to help us understand and adopt the best Regressor Algorithm for our problem statement to make precise predictions. Further, we used Plotly Python Library to give us visual insights into the team, and players performances by accounting for the statistical, and subjective factors of a prospective game. The interactive plots help us to bolster the recommendations of our predictive model. You either win big, win small, or lose your bet based on the performance of the players selected for your fantasy team in the prospective game, and our model increases the probability of you winning big.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-09-15T01:58:57Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Sachin Kumar S</name>
+    </author>
+    <author>
+      <name>Prithvi HV</name>
+    </author>
+    <author>
+      <name>C Nandini</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2112.03354v2</id>
+    <title>Labeling Out-of-View Objects in Immersive Analytics to Support Situated Visual Searching</title>
+    <updated>2021-12-25T03:11:52Z</updated>
+    <link href="https://arxiv.org/abs/2112.03354v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2112.03354v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Augmented Reality (AR) embeds digital information into objects of the physical world. Data can be shown in-situ, thereby enabling real-time visual comparisons and object search in real-life user tasks, such as comparing products and looking up scores in a sports game. While there have been studies on designing AR interfaces for situated information retrieval, there has only been limited research on AR object labeling for visual search tasks in the spatial environment. In this paper, we identify and categorize different design aspects in AR label design and report on a formal user study on labels for out-of-view objects to support visual search tasks in AR. We design three visualization techniques for out-of-view object labeling in AR, which respectively encode the relative physical position (height-encoded), the rotational direction (angle-encoded), and the label values (value-encoded) of the objects. We further implement two traditional in-view object labeling techniques, where labels are placed either next to the respective objects (situated) or at the edge of the AR FoV (boundary). We evaluate these five different label conditions in three visual search tasks for static objects. Our study shows that out-of-view object labels are beneficial when searching for objects outside the FoV, spatial orientation, and when comparing multiple spatially sparse objects. Angle-encoded labels with directional cues of the surrounding objects have the overall best performance with the highest user satisfaction. We discuss the implications of our findings for future immersive AR interface design.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.GR" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-12-06T20:58:04Z</published>
+    <arxiv:comment>To be published in IEEE Transactions on Visualization and Computer Graphics</arxiv:comment>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Tica Lin</name>
+    </author>
+    <author>
+      <name>Yalong Yang</name>
+    </author>
+    <author>
+      <name>Johanna Beyer</name>
+    </author>
+    <author>
+      <name>Hanspeter Pfister</name>
+    </author>
+    <arxiv:doi>10.1109/TVCG.2021.3133511</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/TVCG.2021.3133511" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2404.03097v1</id>
+    <title>SalFoM: Dynamic Saliency Prediction with Video Foundation Models</title>
+    <updated>2024-04-03T22:38:54Z</updated>
+    <link href="https://arxiv.org/abs/2404.03097v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2404.03097v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Recent advancements in video saliency prediction (VSP) have shown promising performance compared to the human visual system, whose emulation is the primary goal of VSP. However, current state-of-the-art models employ spatio-temporal transformers trained on limited amounts of data, hindering generalizability adaptation to downstream tasks. The benefits of vision foundation models present a potential solution to improve the VSP process. However, adapting image foundation models to the video domain presents significant challenges in modeling scene dynamics and capturing temporal information. To address these challenges, and as the first initiative to design a VSP model based on video foundation models, we introduce SalFoM, a novel encoder-decoder video transformer architecture. Our model employs UnMasked Teacher (UMT) as feature extractor and presents a heterogeneous decoder which features a locality-aware spatio-temporal transformer and integrates local and global spatio-temporal information from various perspectives to produce the final saliency map. Our qualitative and quantitative experiments on the challenging VSP benchmark datasets of DHF1K, Hollywood-2 and UCF-Sports demonstrate the superiority of our proposed model in comparison with the state-of-the-art methods.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-04-03T22:38:54Z</published>
+    <arxiv:comment>15 pages, 4 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Morteza Moradi</name>
+    </author>
+    <author>
+      <name>Mohammad Moradi</name>
+    </author>
+    <author>
+      <name>Francesco Rundo</name>
+    </author>
+    <author>
+      <name>Concetto Spampinato</name>
+    </author>
+    <author>
+      <name>Ali Borji</name>
+    </author>
+    <author>
+      <name>Simone Palazzo</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2010.08485v1</id>
+    <title>A New Open-Access Platform for Measuring and Sharing mTBI Data</title>
+    <updated>2020-10-16T16:37:52Z</updated>
+    <link href="https://arxiv.org/abs/2010.08485v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2010.08485v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Despite numerous research efforts, the precise mechanisms of concussion have yet to be fully uncovered. Clinical studies on high-risk populations, such as contact sports athletes, have become more common and give insight on the link between impact severity and brain injury risk through the use of wearable sensors and neurological testing. However, as the number of institutions operating these studies grows, there is a growing need for a platform to share these data to facilitate our understanding of concussion mechanisms and aid in the development of suitable diagnostic tools. To that end, this paper puts forth two contributions: 1) a centralized, open-source platform for storing and sharing head impact data, in collaboration with the Federal Interagency Traumatic Brain Injury Research informatics system (FITBIR), and 2) a deep learning impact detection algorithm (MiGNet) to differentiate between true head impacts and false positives for the previously biomechanically validated instrumented mouthguard sensor (MiG2.0), all of which easily interfaces with FITBIR. We report 96% accuracy using MiGNet, based on a neural network model, improving on previous work based on Support Vector Machines achieving 91% accuracy, on an out of sample dataset of high school and collegiate football head impacts. The integrated MiG2.0 and FITBIR system serve as a collaborative research tool to be disseminated across multiple institutions towards creating a standardized dataset for furthering the knowledge of concussion biomechanics.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-10-16T16:37:52Z</published>
+    <arxiv:comment>21 pages, 3 figures, 1 table</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <arxiv:journal_ref>Sci Rep 11, 7501 (2021)</arxiv:journal_ref>
+    <author>
+      <name>August G. Domel</name>
+    </author>
+    <author>
+      <name>Samuel J. Raymond</name>
+    </author>
+    <author>
+      <name>Chiara Giordano</name>
+    </author>
+    <author>
+      <name>Yuzhe Liu</name>
+    </author>
+    <author>
+      <name>Seyed Abdolmajid Yousefsani</name>
+    </author>
+    <author>
+      <name>Michael Fanton</name>
+    </author>
+    <author>
+      <name>Ileana Pirozzi</name>
+    </author>
+    <author>
+      <name>Ali Kight</name>
+    </author>
+    <author>
+      <name>Brett Avery</name>
+    </author>
+    <author>
+      <name>Athanasia Boumis</name>
+    </author>
+    <author>
+      <name>Tyler Fetters</name>
+    </author>
+    <author>
+      <name>Simran Jandu</name>
+    </author>
+    <author>
+      <name>William M Mehring</name>
+    </author>
+    <author>
+      <name>Sam Monga</name>
+    </author>
+    <author>
+      <name>Nicole Mouchawar</name>
+    </author>
+    <author>
+      <name>India Rangel</name>
+    </author>
+    <author>
+      <name>Eli Rice</name>
+    </author>
+    <author>
+      <name>Pritha Roy</name>
+    </author>
+    <author>
+      <name>Sohrab Sami</name>
+    </author>
+    <author>
+      <name>Heer Singh</name>
+    </author>
+    <author>
+      <name>Lyndia Wu</name>
+    </author>
+    <author>
+      <name>Calvin Kuo</name>
+    </author>
+    <author>
+      <name>Michael Zeineh</name>
+    </author>
+    <author>
+      <name>Gerald Grant</name>
+    </author>
+    <author>
+      <name>David B. Camarillo</name>
+    </author>
+    <arxiv:doi>10.1038/s41598-021-87085-2</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1038/s41598-021-87085-2" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2010.14889v2</id>
+    <title>Object shape error modelling and simulation during early design stage by morphing Gaussian Random Fields</title>
+    <updated>2021-06-15T19:28:01Z</updated>
+    <link href="https://arxiv.org/abs/2010.14889v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2010.14889v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Geometric and dimensional variations in objects are caused by inevitable uncertainties in manufacturing processes and often lead to product quality issues. Failing to model the effect object shape errors, i.e., geometric and dimensional errors of parts, early during design phase inhibits the ability to predict such quality issues; consequently leading to expensive design changes after freezing of design. State-of-Art methodologies for modelling and simulating object shape error have limited defect fidelity, data versatility, and designer centricity that prevent their effective application during early design phase. Overcoming these limitations a novel Morphing Gaussian Random Field (MGRF) methodology for object shape error modelling and simulation is presented in this paper. The MGRF methodology has (i) high defect fidelity and is capable of simulating various part defects including local and global deformations, and technological patterns; (ii) high data versatility and can effectively simulate non-ideal parts under the constraint of limited data availability and can utilise historical non-ideal part data; (iii) designer centric capabilities such as performing `what if?' analysis of practically relevant defects; and (iv) capability to generate non-ideal parts conforming to statistical form tolerance specification. The aforementioned capabilities enable MGRF methodology to accurately model and simulate the effect of object shape variations on product quality during the early design phase. This is achieved by first, modelling the spatial correlation in the deviations of the part from its design nominal using Gaussian Random Field and then, utilising the modelled spatial correlations to generate non-ideal parts by conditional simulations. Practical applications of developed MGRF methodology and its advantages are demonstrated using sport-utility-vehicle door parts.</summary>
+    <category term="cs.CE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-10-28T11:17:24Z</published>
+    <arxiv:primary_category term="cs.CE"/>
+    <author>
+      <name>Manoj Babu</name>
+    </author>
+    <author>
+      <name>Pasquale Franciosa</name>
+    </author>
+    <author>
+      <name>Prashanth Shekar</name>
+    </author>
+    <author>
+      <name>Darek Ceglarek</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2111.01029v1</id>
+    <title>Render In-between: Motion Guided Video Synthesis for Action Interpolation</title>
+    <updated>2021-11-01T15:32:51Z</updated>
+    <link href="https://arxiv.org/abs/2111.01029v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2111.01029v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Upsampling videos of human activity is an interesting yet challenging task with many potential applications ranging from gaming to entertainment and sports broadcasting. The main difficulty in synthesizing video frames in this setting stems from the highly complex and non-linear nature of human motion and the complex appearance and texture of the body. We propose to address these issues in a motion-guided frame-upsampling framework that is capable of producing realistic human motion and appearance. A novel motion model is trained to inference the non-linear skeletal motion between frames by leveraging a large-scale motion-capture dataset (AMASS). The high-frame-rate pose predictions are then used by a neural rendering pipeline to produce the full-frame output, taking the pose and background consistency into consideration. Our pipeline only requires low-frame-rate videos and unpaired human motion data but does not require high-frame-rate videos for training. Furthermore, we contribute the first evaluation dataset that consists of high-quality and high-frame-rate videos of human activities for this task. Compared with state-of-the-art video interpolation techniques, our method produces in-between frames with better quality and accuracy, which is evident by state-of-the-art results on pixel-level, distributional metrics and comparative user evaluations. Our code and the collected dataset are available at https://git.io/Render-In-Between.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-11-01T15:32:51Z</published>
+    <arxiv:comment>12 pages</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Hsuan-I Ho</name>
+    </author>
+    <author>
+      <name>Xu Chen</name>
+    </author>
+    <author>
+      <name>Jie Song</name>
+    </author>
+    <author>
+      <name>Otmar Hilliges</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2004.09776v2</id>
+    <title>Decoupling Video and Human Motion: Towards Practical Event Detection in Athlete Recordings</title>
+    <updated>2020-04-22T15:52:25Z</updated>
+    <link href="https://arxiv.org/abs/2004.09776v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2004.09776v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this paper we address the problem of motion event detection in athlete recordings from individual sports. In contrast to recent end-to-end approaches, we propose to use 2D human pose sequences as an intermediate representation that decouples human motion from the raw video information. Combined with domain-adapted athlete tracking, we describe two approaches to event detection on pose sequences and evaluate them in complementary domains: swimming and athletics. For swimming, we show how robust decision rules on pose statistics can detect different motion events during swim starts, with a F1 score of over 91% despite limited data. For athletics, we use a convolutional sequence model to infer stride-related events in long and triple jump recordings, leading to highly accurate detections with 96% in F1 score at only +/- 5ms temporal deviation. Our approach is not limited to these domains and shows the flexibility of pose-based motion event detection.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-04-21T07:06:12Z</published>
+    <arxiv:comment>Accepted at 2020 IEEE/CVF Conference on Computer Vision and Pattern Recognition Workshop (CVPRW)</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Moritz Einfalt</name>
+    </author>
+    <author>
+      <name>Rainer Lienhart</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2210.00507v1</id>
+    <title>Fast and Robust Video-Based Exercise Classification via Body Pose Tracking and Scalable Multivariate Time Series Classifiers</title>
+    <updated>2022-10-02T13:03:38Z</updated>
+    <link href="https://arxiv.org/abs/2210.00507v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2210.00507v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Technological advancements have spurred the usage of machine learning based applications in sports science. Physiotherapists, sports coaches and athletes actively look to incorporate the latest technologies in order to further improve performance and avoid injuries. While wearable sensors are very popular, their use is hindered by constraints on battery power and sensor calibration, especially for use cases which require multiple sensors to be placed on the body. Hence, there is renewed interest in video-based data capture and analysis for sports science. In this paper, we present the application of classifying S\&amp;C exercises using video. We focus on the popular Military Press exercise, where the execution is captured with a video-camera using a mobile device, such as a mobile phone, and the goal is to classify the execution into different types. Since video recordings need a lot of storage and computation, this use case requires data reduction, while preserving the classification accuracy and enabling fast prediction. To this end, we propose an approach named BodyMTS to turn video into time series by employing body pose tracking, followed by training and prediction using multivariate time series classifiers. We analyze the accuracy and robustness of BodyMTS and show that it is robust to different types of noise caused by either video quality or pose estimation factors. We compare BodyMTS to state-of-the-art deep learning methods which classify human activity directly from videos and show that BodyMTS achieves similar accuracy, but with reduced running time and model engineering effort. Finally, we discuss some of the practical aspects of employing BodyMTS in this application in terms of accuracy and robustness under reduced data quality and size. We show that BodyMTS achieves an average accuracy of 87\%, which is significantly higher than the accuracy of human domain experts.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-10-02T13:03:38Z</published>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Ashish Singh</name>
+    </author>
+    <author>
+      <name>Antonio Bevilacqua</name>
+    </author>
+    <author>
+      <name>Thach Le Nguyen</name>
+    </author>
+    <author>
+      <name>Feiyan Hu</name>
+    </author>
+    <author>
+      <name>Kevin McGuinness</name>
+    </author>
+    <author>
+      <name>Martin OReilly</name>
+    </author>
+    <author>
+      <name>Darragh Whelan</name>
+    </author>
+    <author>
+      <name>Brian Caulfield</name>
+    </author>
+    <author>
+      <name>Georgiana Ifrim</name>
+    </author>
+  </entry>
+</feed>

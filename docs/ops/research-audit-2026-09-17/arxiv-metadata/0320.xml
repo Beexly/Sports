@@ -1,0 +1,965 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<feed xmlns:opensearch="http://a9.com/-/spec/opensearch/1.1/" xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns="http://www.w3.org/2005/Atom">
+  <id>https://arxiv.org/api/Sklvl9lgYb4Lw+COAhO+fJ8CCIE</id>
+  <title>arXiv Query: search_query=&amp;id_list=2408.02250,2406.11584,2406.04062,2410.01307,2409.13098,2409.00629,2406.12762,2405.19125,2404.00213,2402.12149,2402.11191,2401.06086,2609.11224,2606.21814,2603.26575,2512.00312,2512.00203,2511.00553,2508.12695,2506.07270,2502.02817,2501.05168,2412.08303,2409.06739,2409.01493,2406.17947,2406.01273,2307.11780,2306.14462,2209.13846,2207.01455,2206.11578,2104.04601,2104.00853,2012.14949,2009.00550,2007.10257,2006.05908,2004.10299,2003.10791&amp;start=0&amp;max_results=40</title>
+  <updated>2026-09-17T18:37:20Z</updated>
+  <link href="https://arxiv.org/api/query?search_query=&amp;start=0&amp;max_results=40&amp;id_list=2408.02250,2406.11584,2406.04062,2410.01307,2409.13098,2409.00629,2406.12762,2405.19125,2404.00213,2402.12149,2402.11191,2401.06086,2609.11224,2606.21814,2603.26575,2512.00312,2512.00203,2511.00553,2508.12695,2506.07270,2502.02817,2501.05168,2412.08303,2409.06739,2409.01493,2406.17947,2406.01273,2307.11780,2306.14462,2209.13846,2207.01455,2206.11578,2104.04601,2104.00853,2012.14949,2009.00550,2007.10257,2006.05908,2004.10299,2003.10791" type="application/atom+xml"/>
+  <opensearch:itemsPerPage>40</opensearch:itemsPerPage>
+  <opensearch:totalResults>40</opensearch:totalResults>
+  <opensearch:startIndex>0</opensearch:startIndex>
+  <entry>
+    <id>http://arxiv.org/abs/2402.11191v1</id>
+    <title>Knowledge Graph Assisted Automatic Sports News Writing</title>
+    <updated>2024-02-17T04:54:58Z</updated>
+    <link href="https://arxiv.org/abs/2402.11191v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2402.11191v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In this paper, we present a novel method for automatically generating sports news, which employs a unique algorithm that extracts pivotal moments from live text broadcasts and uses them to create an initial draft of the news. This draft is further refined by incorporating key details and background information from a specially designed sports knowledge graph. This graph contains 5,893 entities, which are classified into three distinct conceptual categories, interconnected through four relationship types, and characterized by 27 unique attributes. In addition, we create a multi-stage learning model by combining convolutional neural networks and a transformer encoder. This model expresses entity-task interactions using convolutional neural networks and enriches entity representations in the query set with the transformer encoder. It also includes a processor to compute matching scores for incomplete triples, addressing few-shot knowledge graph completion problem. The efficiency of this approach has been confirmed through both subjective and objective evaluations of 50 selected test cases, demonstrating its capability in revolutionizing the creation of sports news.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-02-17T04:54:58Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Yang Cao</name>
+    </author>
+    <author>
+      <name>Xinyi Chen</name>
+    </author>
+    <author>
+      <name>Xin Zhang</name>
+    </author>
+    <author>
+      <name>Siying Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2104.04601v1</id>
+    <title>The Effect of Sport in Online Dating: Evidence from Causal Machine Learning</title>
+    <updated>2021-04-07T15:51:55Z</updated>
+    <link href="https://arxiv.org/abs/2104.04601v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2104.04601v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Online dating emerged as a key platform for human mating. Previous research focused on socio-demographic characteristics to explain human mating in online dating environments, neglecting the commonly recognized relevance of sport. This research investigates the effect of sport activity on human mating by exploiting a unique data set from an online dating platform. Thereby, we leverage recent advances in the causal machine learning literature to estimate the causal effect of sport frequency on the contact chances. We find that for male users, doing sport on a weekly basis increases the probability to receive a first message from a woman by 50%, relatively to not doing sport at all. For female users, we do not find evidence for such an effect. In addition, for male users the effect increases with higher income.</summary>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-04-07T15:51:55Z</published>
+    <arxiv:comment>97 pages</arxiv:comment>
+    <arxiv:primary_category term="econ.GN"/>
+    <author>
+      <name>Daniel Boller</name>
+    </author>
+    <author>
+      <name>Michael Lechner</name>
+    </author>
+    <author>
+      <name>Gabriel Okasa</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2412.08303v1</id>
+    <title>Spatial similarity index for scouting in football</title>
+    <updated>2024-12-11T11:32:50Z</updated>
+    <link href="https://arxiv.org/abs/2412.08303v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2412.08303v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Finding players with similar profiles is an important problem in sports such as football. Scouting for new players requires a wealth of information about the available players so that similar profiles to that of a target player can be identified. However, information about the position of the players in the field is seldom used. For this reason, a novel approach based on spatial data analysis is introduced to produce a spatial similarity index that can help to identify similar players. The use of this new spatial similarity index is illustrated to identify similar players using spatial data from the Spanish competition "La Liga", season 2019-2020.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-12-11T11:32:50Z</published>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Virgilio Gómez-Rubio</name>
+    </author>
+    <author>
+      <name>Jesús Lagos</name>
+    </author>
+    <author>
+      <name>Francisco Palmí-Perales</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2408.02250v1</id>
+    <title>Hierarchical Clustering using Reversible Binary Cellular Automata for High-Dimensional Data</title>
+    <updated>2024-08-05T05:48:45Z</updated>
+    <link href="https://arxiv.org/abs/2408.02250v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2408.02250v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This work proposes a hierarchical clustering algorithm for high-dimensional datasets using the cyclic space of reversible finite cellular automata. In cellular automaton (CA) based clustering, if two objects belong to the same cycle, they are closely related and considered as part of the same cluster. However, if a high-dimensional dataset is clustered using the cycles of one CA, closely related objects may belong to different cycles. This paper identifies the relationship between objects in two different cycles based on the median of all elements in each cycle so that they can be grouped in the next stage. Further, to minimize the number of intermediate clusters which in turn reduces the computational cost, a rule selection strategy is taken to find the best rules based on information propagation and cycle structure. After encoding the dataset using frequency-based encoding such that the consecutive data elements maintain a minimum hamming distance in encoded form, our proposed clustering algorithm iterates over three stages to finally cluster the data elements into the desired number of clusters given by user. This algorithm can be applied to various fields, including healthcare, sports, chemical research, agriculture, etc. When verified over standard benchmark datasets with various performance metrics, our algorithm is at par with the existing algorithms with quadratic time complexity.</summary>
+    <category term="cs.FL" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-08-05T05:48:45Z</published>
+    <arxiv:primary_category term="cs.FL"/>
+    <author>
+      <name>Baby C. J.</name>
+    </author>
+    <author>
+      <name>Kamalika Bhattacharjee</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2508.12695v1</id>
+    <title>Neural Rendering for Sensor Adaptation in 3D Object Detection</title>
+    <updated>2025-08-18T07:53:45Z</updated>
+    <link href="https://arxiv.org/abs/2508.12695v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2508.12695v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Autonomous vehicles often have varying camera sensor setups, which is inevitable due to restricted placement options for different vehicle types. Training a perception model on one particular setup and evaluating it on a new, different sensor setup reveals the so-called cross-sensor domain gap, typically leading to a degradation in accuracy. In this paper, we investigate the impact of the cross-sensor domain gap on state-of-the-art 3D object detectors. To this end, we introduce CamShift, a dataset inspired by nuScenes and created in CARLA to specifically simulate the domain gap between subcompact vehicles and sport utility vehicles (SUVs). Using CamShift, we demonstrate significant cross-sensor performance degradation, identify robustness dependencies on model architecture, and propose a data-driven solution to mitigate the effect. On the one hand, we show that model architectures based on a dense Bird's Eye View (BEV) representation with backward projection, such as BEVFormer, are the most robust against varying sensor configurations. On the other hand, we propose a novel data-driven sensor adaptation pipeline based on neural rendering, which can transform entire datasets to match different camera sensor setups. Applying this approach improves performance across all investigated 3D object detectors, mitigating the cross-sensor domain gap by a large margin and reducing the need for new data collection by enabling efficient data reusability across vehicles with different sensor setups. The CamShift dataset and the sensor adaptation benchmark are available at https://dmholtz.github.io/camshift/.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-08-18T07:53:45Z</published>
+    <arxiv:comment>Accepted at IEEE Intelligent Vehicles Symposium (IV) 2025</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <arxiv:journal_ref>IEEE Intelligent Vehicles Symposium (IV) 2025</arxiv:journal_ref>
+    <author>
+      <name>Felix Embacher</name>
+    </author>
+    <author>
+      <name>David Holtz</name>
+    </author>
+    <author>
+      <name>Jonas Uhrig</name>
+    </author>
+    <author>
+      <name>Marius Cordts</name>
+    </author>
+    <author>
+      <name>Markus Enzweiler</name>
+    </author>
+    <arxiv:doi>10.1109/IV64158.2025.11097434</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/IV64158.2025.11097434" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2012.14949v2</id>
+    <title>Estimating the change in soccer's home advantage during the Covid-19 pandemic using bivariate Poisson regression</title>
+    <updated>2021-05-28T21:25:30Z</updated>
+    <link href="https://arxiv.org/abs/2012.14949v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2012.14949v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In wake of the Covid-19 pandemic, 2019-2020 soccer seasons across the world were postponed and eventually made up during the summer months of 2020. Researchers from a variety of disciplines jumped at the opportunity to compare the rescheduled games, played in front of empty stadia, to previous games, played in front of fans. To date, most of this post-Covid soccer research has used linear regression models, or versions thereof, to estimate potential changes to the home advantage. But because soccer outcomes are non-linear, we argue that leveraging the Poisson distribution would be more appropriate. We begin by using simulations to show that bivariate Poisson regression reduces absolute bias when estimating the home advantage benefit in a single season of soccer games, relative to linear regression, by almost 85 percent. Next, with data from 17 professional soccer leagues, we extend bivariate Poisson models estimate the change in home advantage due to games being played without fans. In contrast to current research that overwhelmingly suggests a drop in the home advantage, our findings are mixed; in some leagues, evidence points to a decrease, while in others, the home advantage may have risen. Altogether, this suggests a more complex causal mechanism for the impact of fans on sporting events.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-12-29T21:39:19Z</published>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Luke S. Benz</name>
+    </author>
+    <author>
+      <name>Michael J. Lopez</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2004.10299v1</id>
+    <title>Group Activity Detection from Trajectory and Video Data in Soccer</title>
+    <updated>2020-04-21T21:11:30Z</updated>
+    <link href="https://arxiv.org/abs/2004.10299v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2004.10299v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Group activity detection in soccer can be done by using either video data or player and ball trajectory data. In current soccer activity datasets, activities are labelled as atomic events without a duration. Given that the state-of-the-art activity detection methods are not well-defined for atomic actions, these methods cannot be used. In this work, we evaluated the effectiveness of activity recognition models for detecting such events, by using an intuitive non-maximum suppression process and evaluation metrics. We also considered the problem of explicitly modeling interactions between players and ball. For this, we propose self-attention models to learn and extract relevant information from a group of soccer players for activity detection from both trajectory and video data. We conducted an extensive study on the use of visual features and trajectory data for group activity detection in sports using a large scale soccer dataset provided by Sportlogiq. Our results show that most events can be detected using either vision or trajectory-based approaches with a temporal resolution of less than 0.5 seconds, and that each approach has unique challenges.</summary>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-04-21T21:11:30Z</published>
+    <arxiv:comment>Accepted to the 6th International Workshop on Computer Vision in Sports (CVsports) at CVPR 2020</arxiv:comment>
+    <arxiv:primary_category term="cs.CV"/>
+    <author>
+      <name>Ryan Sanford</name>
+    </author>
+    <author>
+      <name>Siavash Gorji</name>
+    </author>
+    <author>
+      <name>Luiz G. Hafemann</name>
+    </author>
+    <author>
+      <name>Bahareh Pourbabaee</name>
+    </author>
+    <author>
+      <name>Mehrsan Javan</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2104.00853v1</id>
+    <title>Streaming Social Event Detection and Evolution Discovery in Heterogeneous Information Networks</title>
+    <updated>2021-04-02T02:13:10Z</updated>
+    <link href="https://arxiv.org/abs/2104.00853v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2104.00853v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Events are happening in real-world and real-time, which can be planned and organized for occasions, such as social gatherings, festival celebrations, influential meetings or sports activities. Social media platforms generate a lot of real-time text information regarding public events with different topics. However, mining social events is challenging because events typically exhibit heterogeneous texture and metadata are often ambiguous. In this paper, we first design a novel event-based meta-schema to characterize the semantic relatedness of social events and then build an event-based heterogeneous information network (HIN) integrating information from external knowledge base. Second, we propose a novel Pairwise Popularity Graph Convolutional Network, named as PP-GCN, based on weighted meta-path instance similarity and textual semantic representation as inputs, to perform fine-grained social event categorization and learn the optimal weights of meta-paths in different tasks. Third, we propose a streaming social event detection and evolution discovery framework for HINs based on meta-path similarity search, historical information about meta-paths, and heterogeneous DBSCAN clustering method. Comprehensive experiments on real-world streaming social text data are conducted to compare various social event detection and evolution discovery algorithms. Experimental results demonstrate that our proposed framework outperforms other alternative social event detection and evolution discovery techniques.</summary>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2021-04-02T02:13:10Z</published>
+    <arxiv:comment>Accepted by TKDD 2021. arXiv admin note: text overlap with arXiv:1906.04580</arxiv:comment>
+    <arxiv:primary_category term="cs.SI"/>
+    <author>
+      <name>Hao Peng</name>
+    </author>
+    <author>
+      <name>Jianxin Li</name>
+    </author>
+    <author>
+      <name>Yangqiu Song</name>
+    </author>
+    <author>
+      <name>Renyu Yang</name>
+    </author>
+    <author>
+      <name>Rajiv Ranjan</name>
+    </author>
+    <author>
+      <name>Philip S. Yu</name>
+    </author>
+    <author>
+      <name>Lifang He</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2404.00213v2</id>
+    <title>Injecting New Knowledge into Large Language Models via Supervised Fine-Tuning</title>
+    <updated>2024-04-02T20:09:45Z</updated>
+    <link href="https://arxiv.org/abs/2404.00213v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2404.00213v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In recent years, Large Language Models (LLMs) have shown remarkable performance in generating human-like text, proving to be a valuable asset across various applications. However, adapting these models to incorporate new, out-of-domain knowledge remains a challenge, particularly for facts and events that occur after the model's knowledge cutoff date. This paper investigates the effectiveness of Supervised Fine-Tuning (SFT) as a method for knowledge injection in LLMs, specifically focusing on the domain of recent sporting events. We compare different dataset generation strategies -- token-based and fact-based scaling -- to create training data that helps the model learn new information. Our experiments on GPT-4 demonstrate that while token-based scaling can lead to improvements in Q&amp;A accuracy, it may not provide uniform coverage of new knowledge. Fact-based scaling, on the other hand, offers a more systematic approach to ensure even coverage across all facts. We present a novel dataset generation process that leads to more effective knowledge ingestion through SFT, and our results show considerable performance improvements in Q&amp;A tasks related to out-of-domain knowledge. This study contributes to the understanding of domain adaptation for LLMs and highlights the potential of SFT in enhancing the factuality of LLM responses in specific knowledge domains.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-03-30T01:56:07Z</published>
+    <arxiv:comment>16 pages; 7 figures. updated authors list</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Nick Mecklenburg</name>
+    </author>
+    <author>
+      <name>Yiyou Lin</name>
+    </author>
+    <author>
+      <name>Xiaoxiao Li</name>
+    </author>
+    <author>
+      <name>Daniel Holstein</name>
+    </author>
+    <author>
+      <name>Leonardo Nunes</name>
+    </author>
+    <author>
+      <name>Sara Malvar</name>
+    </author>
+    <author>
+      <name>Bruno Silva</name>
+    </author>
+    <author>
+      <name>Ranveer Chandra</name>
+    </author>
+    <author>
+      <name>Vijay Aski</name>
+    </author>
+    <author>
+      <name>Pavan Kumar Reddy Yannam</name>
+    </author>
+    <author>
+      <name>Tolga Aktas</name>
+    </author>
+    <author>
+      <name>Todd Hendry</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2209.13846v2</id>
+    <title>VREN: Volleyball Rally Dataset with Expression Notation Language</title>
+    <updated>2024-05-16T17:38:36Z</updated>
+    <link href="https://arxiv.org/abs/2209.13846v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2209.13846v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This research is intended to accomplish two goals: The first goal is to curate a large and information rich dataset that contains crucial and succinct summaries on the players' actions and positions and the back-and-forth travel patterns of the volleyball in professional and NCAA Div-I indoor volleyball games. While several prior studies have aimed to create similar datasets for other sports (e.g. badminton and soccer), creating such a dataset for indoor volleyball is not yet realized. The second goal is to introduce a volleyball descriptive language to fully describe the rally processes in the games and apply the language to our dataset. Based on the curated dataset and our descriptive sports language, we introduce three tasks for automated volleyball action and tactic analysis using our dataset: (1) Volleyball Rally Prediction, aimed at predicting the outcome of a rally and helping players and coaches improve decision-making in practice, (2) Setting Type and Hitting Type Prediction, to help coaches and players prepare more effectively for the game, and (3) Volleyball Tactics and Attacking Zone Statistics, to provide advanced volleyball statistics and help coaches understand the game and opponent's tactics better. We conducted case studies to show how experimental results can provide insights to the volleyball analysis community. Furthermore, experimental evaluation based on real-world data establishes a baseline for future studies and applications of our dataset and language. This study bridges the gap between the indoor volleyball field and computer science. The dataset is available at: https://github.com/haotianxia/VREN.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-09-28T05:52:35Z</published>
+    <arxiv:comment>ICKG 2022</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Haotian Xia</name>
+    </author>
+    <author>
+      <name>Rhys Tracy</name>
+    </author>
+    <author>
+      <name>Yun Zhao</name>
+    </author>
+    <author>
+      <name>Erwan Fraisse</name>
+    </author>
+    <author>
+      <name>Yuan-Fang Wang</name>
+    </author>
+    <author>
+      <name>Linda Petzold</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2405.19125v1</id>
+    <title>Early Detection of Critical Urban Events using Mobile Phone Network Data</title>
+    <updated>2024-05-29T14:31:39Z</updated>
+    <link href="https://arxiv.org/abs/2405.19125v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2405.19125v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Network Signalling Data (NSD) have the potential to provide continuous spatio-temporal information about the presence, mobility, and usage patterns of cell phone services by individuals. Such information is invaluable for monitoring large urban areas and supporting the implementation of decision-making services. When analyzed in real time, NSD can enable the early detection of critical urban events, including fires, large accidents, stampedes, terrorist attacks, and sports and leisure gatherings, especially if these events significantly impact mobile phone network activity in the affected areas. This paper presents empirical evidence that advanced NSD can detect anomalies in mobile traffic service consumption, attributable to critical urban events, with fine spatial and temporal resolutions. We introduce two methodologies for real-time anomaly detection from multivariate time series extracted from large-scale NSD, utilizing a range of algorithms adapted from the state-of-the-art in unsupervised machine learning techniques for anomaly detection. Our research includes a comprehensive quantitative evaluation of these algorithms on a large-scale dataset of NSD service consumption for the Paris region. The evaluation uses an original dataset of documented critical or unusual urban events. This dataset has been built as a ground truth basis for assessing the algorithms performance. The obtained results demonstrate that our framework can detect unusual events almost instantaneously and locate the affected areas with high precision, largely outperforming random classifiers. This efficiency and effectiveness underline the potential of NSD-based anomaly detection in significantly enhancing emergency response strategies and urban planning.</summary>
+    <category term="cs.CY" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-05-29T14:31:39Z</published>
+    <arxiv:comment>submitted to PLOS ONE journal</arxiv:comment>
+    <arxiv:primary_category term="cs.CY"/>
+    <author>
+      <name>Pierre Lemaire</name>
+    </author>
+    <author>
+      <name>Angelo Furno</name>
+    </author>
+    <author>
+      <name>Stefania Rubrichi</name>
+    </author>
+    <author>
+      <name>Alexis Bondu</name>
+    </author>
+    <author>
+      <name>Zbigniew Smoreda</name>
+    </author>
+    <author>
+      <name>Cezary Ziemlicki</name>
+    </author>
+    <author>
+      <name>Nour-Eddin El Faouzi</name>
+    </author>
+    <author>
+      <name>Eric Gaume</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2502.02817v1</id>
+    <title>A Decade of Action Quality Assessment: Largest Systematic Survey of Trends, Challenges, and Future Directions</title>
+    <updated>2025-02-05T01:33:24Z</updated>
+    <link href="https://arxiv.org/abs/2502.02817v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2502.02817v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Action Quality Assessment (AQA) -- the ability to quantify the quality of human motion, actions, or skill levels and provide feedback -- has far-reaching implications in areas such as low-cost physiotherapy, sports training, and workforce development. As such, it has become a critical field in computer vision &amp; video understanding over the past decade. Significant progress has been made in AQA methodologies, datasets, &amp; applications, yet a pressing need remains for a comprehensive synthesis of this rapidly evolving field. In this paper, we present a thorough survey of the AQA landscape, systematically reviewing over 200 research papers using the preferred reporting items for systematic reviews &amp; meta-analyses (PRISMA) framework. We begin by covering foundational concepts &amp; definitions, then move to general frameworks &amp; performance metrics, &amp; finally discuss the latest advances in methodologies &amp; datasets. This survey provides a detailed analysis of research trends, performance comparisons, challenges, &amp; future directions. Through this work, we aim to offer a valuable resource for both newcomers &amp; experienced researchers, promoting further exploration &amp; progress in AQA. Data are available at https://haoyin116.github.io/Survey_of_AQA/</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-02-05T01:33:24Z</published>
+    <arxiv:comment>36 Pages, 20 Figures, 12 Tables</arxiv:comment>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Hao Yin</name>
+    </author>
+    <author>
+      <name>Paritosh Parmar</name>
+    </author>
+    <author>
+      <name>Daoliang Xu</name>
+    </author>
+    <author>
+      <name>Yang Zhang</name>
+    </author>
+    <author>
+      <name>Tianyou Zheng</name>
+    </author>
+    <author>
+      <name>Weiwei Fu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2606.21814v1</id>
+    <title>Ranking football teams via the higher-order decomposition of performance networks</title>
+    <updated>2026-06-20T00:27:56Z</updated>
+    <link href="https://arxiv.org/abs/2606.21814v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2606.21814v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We propose a unified methodological framework to quantify team performance in elite football by combining event-level performance metrics, higher-order network representations, and algebraic ranking methods. Using data from the 2017--2018 season of the five major European leagues, we construct metric-specific weighted graphs in which teams are connected through relative performance indicators. These graphs are analyzed via Hodge decomposition, and the gradient component is used to derive metric-based team ratings. The resulting rankings are systematically compared with the true league standings using Pearson and Kendall correlation measures, revealing strong metric- and league-dependent effects.
+  Furthermore, by analyzing the ratio between solenoidal and total flow energies, we show that local cyclic dynamics structurally limit the gradient component's capacity to reconstruct the ranking. This topological inconsistency acts as a structural fingerprint of each league's ``competition style'' successfully mapping the studied systems into distinct regimes: highly hierarchical structures (England and Italy), tactical parity driven by generalized loops (Germany), and pockets of localized chaos (France and Spain).
+  Lastly, we introduce a composite rating obtained as a parsimonious linear combination of metric-based ratings, optimized separately for each league. This composite approach significantly improves predictive power and allows the relative importance of different performance indicators to be quantified in a league-specific manner. Our results demonstrate how higher-order network methods provide a flexible and interpretable framework to uncover latent performance structures in football, offering a complementary perspective to outcome-based rankings and a general approach applicable to other oppositional sports.</summary>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="physics.data-an" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-06-20T00:27:56Z</published>
+    <arxiv:primary_category term="physics.soc-ph"/>
+    <author>
+      <name>A. Chacoma</name>
+    </author>
+    <author>
+      <name>J. I. Perotti</name>
+    </author>
+    <author>
+      <name>O. V. Billoni</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2406.11584v3</id>
+    <title>Modeling cyclicality and intransitivity in paired comparisons data</title>
+    <updated>2026-07-01T06:11:57Z</updated>
+    <link href="https://arxiv.org/abs/2406.11584v3" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2406.11584v3" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Paired comparison data arise in ranking problems, decision analysis, sports analytics, recommendation systems, and many other applications in which alternatives are evaluated by comparing two items at a time. Standard models typically impose a transitive preference profile induced by a vector of merits. In many empirical settings, however, preference relations exhibit cyclic and intransitive patterns that cannot be adequately represented by a global ranking. This paper develops a framework for modeling cyclicality and departures from transitivity. The proposed approach decomposes a preference profile into orthogonal transitive and cyclic components and provides a geometric characterization of the associated parameter space. The cyclic component is represented using an overcomplete dictionary of elementary cycles, so that identifying cyclic structure and the intransitivities it may induce becomes a sparse model selection problem. We propose a method for recovering sparse cyclic structure and establish large--sample guarantees for estimation and model recovery. The analysis clarifies the relationship between cyclicality, intransitivity, and several notions of transitivity used in paired comparison theory. By explicitly modeling cyclic structure, the proposed framework can improve estimation, ranking, interpretation, and prediction. The methodology is evaluated through simulations and illustrated with an empirical application.</summary>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-06-17T14:26:06Z</published>
+    <arxiv:comment>49 pages, 5 tables, 3 Figures</arxiv:comment>
+    <arxiv:primary_category term="stat.ME"/>
+    <author>
+      <name>Rahul Singh</name>
+    </author>
+    <author>
+      <name>Ori Davidov</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2306.14462v1</id>
+    <title>Multi-task Item-attribute Graph Pre-training for Strict Cold-start Item Recommendation</title>
+    <updated>2023-06-26T07:04:47Z</updated>
+    <link href="https://arxiv.org/abs/2306.14462v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2306.14462v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Recommendation systems suffer in the strict cold-start (SCS) scenario, where the user-item interactions are entirely unavailable. The ID-based approaches completely fail to work. Cold-start recommenders, on the other hand, leverage item contents to map the new items to the existing ones. However, the existing SCS recommenders explore item contents in coarse-grained manners that introduce noise or information loss. Moreover, informative data sources other than item contents, such as users' purchase sequences and review texts, are ignored. We explore the role of the fine-grained item attributes in bridging the gaps between the existing and the SCS items and pre-train a knowledgeable item-attribute graph for SCS item recommendation. Our proposed framework, ColdGPT, models item-attribute correlations into an item-attribute graph by extracting fine-grained attributes from item contents. ColdGPT then transfers knowledge into the item-attribute graph from various available data sources, i.e., item contents, historical purchase sequences, and review texts of the existing items, via multi-task learning. To facilitate the positive transfer, ColdGPT designs submodules according to the natural forms of the data sources and coordinates the multiple pre-training tasks via unified alignment-and-uniformity losses. Our pre-trained item-attribute graph acts as an implicit, extendable item embedding matrix, which enables the SCS item embeddings to be easily acquired by inserting these items and propagating their attributes' embeddings. We carefully process three public datasets, i.e., Yelp, Amazon-home, and Amazon-sports, to guarantee the SCS setting for evaluation. Extensive experiments show that ColdGPT consistently outperforms the existing SCS recommenders by large margins and even surpasses models that are pre-trained on 75-224 times more, cross-domain data on two out of four datasets.</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-06-26T07:04:47Z</published>
+    <arxiv:comment>This work has been accepted as a FULL paper in RecSys 2023</arxiv:comment>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>Yuwei Cao</name>
+    </author>
+    <author>
+      <name>Liangwei Yang</name>
+    </author>
+    <author>
+      <name>Chen Wang</name>
+    </author>
+    <author>
+      <name>Zhiwei Liu</name>
+    </author>
+    <author>
+      <name>Hao Peng</name>
+    </author>
+    <author>
+      <name>Chenyu You</name>
+    </author>
+    <author>
+      <name>Philip S. Yu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2401.06086v1</id>
+    <title>XGBoost Learning of Dynamic Wager Placement for In-Play Betting on an Agent-Based Model of a Sports Betting Exchange</title>
+    <updated>2024-01-11T18:03:17Z</updated>
+    <link href="https://arxiv.org/abs/2401.06086v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2401.06086v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We present first results from the use of XGBoost, a highly effective machine learning (ML) method, within the Bristol Betting Exchange (BBE), an open-source agent-based model (ABM) designed to simulate a contemporary sports-betting exchange with in-play betting during track-racing events such as horse races. We use the BBE ABM and its array of minimally-simple bettor-agents as a synthetic data generator which feeds into our XGBoost ML system, with the intention that XGBoost discovers profitable dynamic betting strategies by learning from the more profitable bets made by the BBE bettor-agents. After this XGBoost training, which results in one or more decision trees, a bettor-agent with a betting strategy determined by the XGBoost-learned decision tree(s) is added to the BBE ABM and made to bet on a sequence of races under various conditions and betting-market scenarios, with profitability serving as the primary metric of comparison and evaluation. Our initial findings presented here show that XGBoost trained in this way can indeed learn profitable betting strategies, and can generalise to learn strategies that outperform each of the set of strategies used for creation of the training data. To foster further research and enhancements, the complete version of our extended BBE, including the XGBoost integration, has been made freely available as an open-source release on GitHub.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CE" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MA" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-01-11T18:03:17Z</published>
+    <arxiv:comment>Accepted for presentation/publication at the 16th International Conference on Agents and Artificial Intelligence (ICAART2024); Rome, Italy, 24-26 February 2024. 13 pages; 18 figures</arxiv:comment>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Chawin Terawong</name>
+    </author>
+    <author>
+      <name>Dave Cliff</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2207.01455v4</id>
+    <title>Dynamic Ranking and Translation Synchronization</title>
+    <updated>2024-06-05T09:16:43Z</updated>
+    <link href="https://arxiv.org/abs/2207.01455v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2207.01455v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In many applications, such as sport tournaments or recommendation systems, we have at our disposal data consisting of pairwise comparisons between a set of $n$ items (or players). The objective is to use this data to infer the latent strength of each item and/or their ranking. Existing results for this problem predominantly focus on the setting consisting of a single comparison graph $G$. However, there exist scenarios (e.g., sports tournaments) where the the pairwise comparison data evolves with time. Theoretical results for this dynamic setting are relatively limited and is the focus of this paper.
+  We study an extension of the \emph{translation synchronization} problem, to the dynamic setting. In this setup, we are given a sequence of comparison graphs $(G_t)_{t\in \mathcal{T}}$, where $\mathcal{T} \subset [0,1]$ is a grid representing the time domain, and for each item $i$ and time $t\in \mathcal{T}$ there is an associated unknown strength parameter $z^*_{t,i}\in \mathbb{R}$. We aim to recover, for $t\in\mathcal{T}$, the strength vector $z^*_t=(z^*_{t,1},\dots,z^*_{t,n})$ from noisy measurements of $z^*_{t,i}-z^*_{t,j}$, where $\{i,j\}$ is an edge in $G_t$. Assuming that $z^*_t$ evolves smoothly in $t$, we propose two estimators -- one based on a smoothness-penalized least squares approach and the other based on projection onto the low frequency eigenspace of a suitable smoothness operator. For both estimators, we provide finite sample bounds for the $\ell_2$ estimation error under the assumption that $G_t$ is connected for all $t\in \mathcal{T}$, thus proving the consistency of the proposed methods in terms of the grid size $|\mathcal{T}|$. We complement our theoretical findings with experiments on synthetic and real data.</summary>
+    <category term="math.ST" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-07-04T14:45:12Z</published>
+    <arxiv:comment>39 pages, 8 figures, 2 tables. Post publication version. Corrected minor typos in the proofs of Lemmas 2,8,9 and Proposition 1. The term ||L||_2 now appears in statement of Theorem 5</arxiv:comment>
+    <arxiv:primary_category term="math.ST"/>
+    <arxiv:journal_ref>Information and Inference: A Journal of the IMA, 12(3), 2023, 2224-2266</arxiv:journal_ref>
+    <author>
+      <name>Ernesto Araya</name>
+    </author>
+    <author>
+      <name>Eglantine Karlé</name>
+    </author>
+    <author>
+      <name>Hemant Tyagi</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2410.01307v1</id>
+    <title>FanCric : Multi-Agentic Framework for Crafting Fantasy 11 Cricket Teams</title>
+    <updated>2024-10-02T08:01:28Z</updated>
+    <link href="https://arxiv.org/abs/2410.01307v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2410.01307v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Cricket, with its intricate strategies and deep history, increasingly captivates a global audience. The Indian Premier League (IPL), epitomizing Twenty20 cricket, showcases talent in a format that lasts just a few hours as opposed to the longer forms of the game. Renowned for its fusion of technology and fan engagement, the IPL stands as the world's most popular cricket league. This study concentrates on Dream11, India's leading fantasy cricket league for IPL, where participants craft virtual teams based on real player performances to compete internationally. Building a winning fantasy team requires navigating various complex factors including player form and match conditions. Traditionally, this has been approached through operations research and machine learning. This research introduces the FanCric framework, an advanced multi-agent system leveraging Large Language Models (LLMs) and a robust orchestration framework to enhance fantasy team selection in cricket. FanCric employs both structured and unstructured data to surpass traditional methods by incorporating sophisticated AI technologies. The analysis involved scrutinizing approximately 12.7 million unique entries from a Dream11 contest, evaluating FanCric's efficacy against the collective wisdom of crowds and a simpler Prompt Engineering approach. Ablation studies further assessed the impact of generating varying numbers of teams. The exploratory findings are promising, indicating that further investigation into FanCric's capabilities is warranted to fully realize its potential in enhancing strategic decision-making using LLMs in fantasy sports and business in general.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-10-02T08:01:28Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Mohit Bhatnagar</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2409.00629v2</id>
+    <title>Assessing the Impact of Upselling in Online Fantasy Sports</title>
+    <updated>2024-09-09T06:01:24Z</updated>
+    <link href="https://arxiv.org/abs/2409.00629v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2409.00629v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>This study explores the impact of upselling on user engagement. We model users' deposit behaviour on the fantasy sports platform Dream11. Subsequently, we develop an experimental framework to evaluate the effect of upselling using an intensity parameter. Our live experiments on user deposit behaviour reveal decreased user recall with heightened upselling intensity. Our findings indicate that increased upselling intensity improves user deposit metrics and concurrently diminishes user satisfaction and conversion rates. We conduct robust counterfactual analysis and train causal meta-learners to personalise users' upselling intensity levels to reach an optimal trade-off point.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-09-01T06:26:42Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Aayush Chaudhary</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2307.11780v2</id>
+    <title>Beep: Balancing Effectiveness and Efficiency when Finding Multivariate Patterns in Racket Sports</title>
+    <updated>2023-07-26T04:16:05Z</updated>
+    <link href="https://arxiv.org/abs/2307.11780v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2307.11780v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Modeling each hit as a multivariate event in racket sports and conducting sequential analysis aids in assessing player/team performance and identifying successful tactics for coaches and analysts. However, the complex correlations among multiple event attributes require pattern mining algorithms to be highly effective and efficient. This paper proposes Beep to discover meaningful multivariate patterns in racket sports. In particular, Beep introduces a new encoding scheme to discover patterns with correlations among multiple attributes and high-level tolerances of noise. Moreover, Beep applies an algorithm based on LSH (Locality-Sensitive Hashing) to accelerate summarizing patterns. We conducted a case study on a table tennis dataset and quantitative experiments on multi-scaled synthetic datasets to compare Beep with the SOTA multivariate pattern mining algorithm. Results showed that Beep can effectively discover patterns and noises to help analysts gain insights. Moreover, Beep was about five times faster than the SOTA algorithm.</summary>
+    <category term="cs.DB" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2023-07-20T04:55:57Z</published>
+    <arxiv:comment>This work is accepted in the KDD 2023 Workshop on Data Science and AI for Sports</arxiv:comment>
+    <arxiv:primary_category term="cs.DB"/>
+    <author>
+      <name>Jiang Wu</name>
+    </author>
+    <author>
+      <name>Dongyu Liu</name>
+    </author>
+    <author>
+      <name>Ziyang Guo</name>
+    </author>
+    <author>
+      <name>Yingcai Wu</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2409.01493v1</id>
+    <title>Shrouded Sin Taxes</title>
+    <updated>2024-09-02T23:25:12Z</updated>
+    <link href="https://arxiv.org/abs/2409.01493v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2409.01493v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Strategic shrouding of taxes by profit-maximizing firms can impair the effectiveness of corrective taxes. This paper explores tax shrouding and its consequences after the introduction of a digital sin tax designed to discourage harmful overconsumption of online sports betting in Germany. In response to the tax reform, most firms strategically shroud the tax, i.e., exclude tax surcharges from posted prices. Using an extensive novel panel data set on online betting odds, I causally estimate the effect of the tax on consumer betting prices. Consumers bear, on average, 76% of the tax burden. There is considerable and long-lasting heterogeneity in effects conditional on shrouding practices. Firms that shroud taxes can pass 90% of the tax onto consumers, while the pass-through rate is 16% for firms that directly post tax-inclusive prices. To understand the results' underlying mechanisms and policy implications, I propose an optimal corrective taxation model where oligopolistic firms compete on base prices and can shroud additive taxes. Tax shrouding is only attainable in equilibrium if (some) consumers underreact to shrouded attributes. According to the theoretical predictions, the empirically identified heterogeneity suggests that strategic tax shrouding significantly attenuates the positive corrective welfare effects of the tax. The results prompt regulating shrouding practices in the context of corrective taxation.</summary>
+    <category term="econ.GN" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-09-02T23:25:12Z</published>
+    <arxiv:primary_category term="econ.GN"/>
+    <author>
+      <name>Johannes Kasinger</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2406.17947v2</id>
+    <title>Do they mean 'us'? Interpreting Referring Expressions in Intergroup Bias</title>
+    <updated>2024-10-31T17:08:00Z</updated>
+    <link href="https://arxiv.org/abs/2406.17947v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2406.17947v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The variations between in-group and out-group speech (intergroup bias) are subtle and could underlie many social phenomena like stereotype perpetuation and implicit bias. In this paper, we model the intergroup bias as a tagging task on English sports comments from forums dedicated to fandom for NFL teams. We curate a unique dataset of over 6 million game-time comments from opposing perspectives (the teams in the game), each comment grounded in a non-linguistic description of the events that precipitated these comments (live win probabilities for each team). Expert and crowd annotations justify modeling the bias through tagging of implicit and explicit referring expressions and reveal the rich, contextual understanding of language and the world required for this task. For large-scale analysis of intergroup variation, we use LLMs for automated tagging, and discover that some LLMs perform best when prompted with linguistic descriptions of the win probability at the time of the comment, rather than numerical probability. Further, large-scale tagging of comments using LLMs uncovers linear variations in the form of referent across win probabilities that distinguish in-group and out-group utterances. Code and data are available at https://github.com/venkatasg/intergroup-nfl .</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-06-25T21:47:53Z</published>
+    <arxiv:comment>Accepted to Findings@EMNLP 2024</arxiv:comment>
+    <arxiv:primary_category term="cs.CL"/>
+    <arxiv:journal_ref>Findings of the Association for Computational Linguistics: EMNLP 2024</arxiv:journal_ref>
+    <author>
+      <name>Venkata S Govindarajan</name>
+    </author>
+    <author>
+      <name>Matianyu Zang</name>
+    </author>
+    <author>
+      <name>Kyle Mahowald</name>
+    </author>
+    <author>
+      <name>David Beaver</name>
+    </author>
+    <author>
+      <name>Junyi Jessy Li</name>
+    </author>
+    <arxiv:doi>10.18653/v1/2024.findings-emnlp.571</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.18653/v1/2024.findings-emnlp.571" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2406.01273v2</id>
+    <title>SoccerRAG: Multimodal Soccer Information Retrieval via Natural Queries</title>
+    <updated>2024-07-22T06:42:44Z</updated>
+    <link href="https://arxiv.org/abs/2406.01273v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2406.01273v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>The rapid evolution of digital sports media necessitates sophisticated information retrieval systems that can efficiently parse extensive multimodal datasets. This paper introduces SoccerRAG, an innovative framework designed to harness the power of Retrieval Augmented Generation (RAG) and Large Language Models (LLMs) to extract soccer-related information through natural language queries. By leveraging a multimodal dataset, SoccerRAG supports dynamic querying and automatic data validation, enhancing user interaction and accessibility to sports archives. Our evaluations indicate that SoccerRAG effectively handles complex queries, offering significant improvements over traditional retrieval systems in terms of accuracy and user engagement. The results underscore the potential of using RAG and LLMs in sports analytics, paving the way for future advancements in the accessibility and real-time processing of sports data.</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.MM" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-06-03T12:39:04Z</published>
+    <arxiv:comment>accepted to CBMI 2024 as a regular paper; https://github.com/simula/soccer-rag</arxiv:comment>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>Aleksander Theo Strand</name>
+    </author>
+    <author>
+      <name>Sushant Gautam</name>
+    </author>
+    <author>
+      <name>Cise Midoglu</name>
+    </author>
+    <author>
+      <name>Pål Halvorsen</name>
+    </author>
+    <arxiv:doi>10.1109/CBMI62980.2024.10859209</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/CBMI62980.2024.10859209" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2501.05168v1</id>
+    <title>KabaddiPy: A package to enable access to Professional Kabaddi Data</title>
+    <updated>2025-01-09T11:41:20Z</updated>
+    <link href="https://arxiv.org/abs/2501.05168v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2501.05168v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Kabaddi, a contact team sport of Indian origin, has seen a dramatic rise in global popularity, highlighted by the upcoming Kabaddi World Cup in 2025 with over sixteen international teams participating, alongside flourishing national leagues such as the Indian Pro Kabaddi League (230 million viewers) and the British Kabaddi League. We present the first open-source Python module to make Kabaddi statistical data easily accessible from multiple scattered sources across the internet. The module was developed by systematically web-scraping and collecting team-wise, player-wise and match-by-match data. The data has been cleaned, organized, and categorized into team overviews and player metrics, each filterable by season. The players are classified as raiders and defenders, with their best strategies for attacking, counter-attacking, and defending against different teams highlighted. Our module enables continuous monitoring of exponentially growing data streams, aiding researchers to quickly start building upon the data to answer critical questions, such as the impact of player inclusion/exclusion on team performance, scoring patterns against specific teams, and break down opponent gameplay. The data generated from Kabaddi tournaments has been sparsely used, and coaches and players rely heavily on intuition to make decisions and craft strategies. Our module can be utilized to build predictive models, craft uniquely strategic gameplays to target opponents and identify hidden correlations in the data. This open source module has the potential to increase time-efficiency, encourage analytical studies of Kabaddi gameplay and player dynamics and foster reproducible research. The data and code are publicly available: https://github.com/kabaddiPy/kabaddiPy</summary>
+    <category term="cs.CE" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-01-09T11:41:20Z</published>
+    <arxiv:comment>Accepted at CMSAC'24 (Carnegie Mellon Sports Analytics Conference) (https://www.stat.cmu.edu/cmsac/conference/2024/assets/pdf/Lalwani24.pdf)</arxiv:comment>
+    <arxiv:primary_category term="cs.CE"/>
+    <author>
+      <name>Bhaskar Lalwani</name>
+    </author>
+    <author>
+      <name>Aniruddha Mukherjee</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2506.07270v1</id>
+    <title>Question Answering under Temporal Conflict: Evaluating and Organizing Evolving Knowledge with LLMs</title>
+    <updated>2025-06-08T20:13:33Z</updated>
+    <link href="https://arxiv.org/abs/2506.07270v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2506.07270v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Large language models (LLMs) exhibit remarkable capabilities in question answering and reasoning thanks to their extensive parametric memory. However, their knowledge is inherently limited by the scope of their pre-training data, while real-world information evolves continuously. Updating this knowledge typically requires costly and brittle re-training, or in-context learning (ICL), which becomes impractical at scale given the volume and volatility of modern information. Motivated by these limitations, we investigate how LLMs perform when exposed to temporal text corpora, or documents that reflect evolving knowledge over time, such as sports biographies where facts like a player's "current team" change year by year. To this end, we introduce two new benchmarks: Temporal Wiki, which captures factual drift across historical Wikipedia snapshots, and Unified Clark, which aggregates timestamped news articles to simulate real-world information accumulation. Our analysis reveals that LLMs often struggle to reconcile conflicting or outdated facts and can be misled when multiple versions of a fact appear in context. To address these issues, we propose a lightweight, agentic framework that incrementally builds a structured, external memory from source documents without requiring re-training. This knowledge organization strategy enables models to retrieve and reason over temporally filtered, relevant information at inference time. Empirically, our method outperforms ICL and RAG baselines across both benchmarks, especially on questions requiring more complex reasoning or integration of conflicting facts.</summary>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-06-08T20:13:33Z</published>
+    <arxiv:primary_category term="cs.CL"/>
+    <author>
+      <name>Atahan Özer</name>
+    </author>
+    <author>
+      <name>Çağatay Yıldız</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2603.26575v1</id>
+    <title>The Climber's Grip -- Personalized Deep Learning Models for Fear and Muscle Activity in Climbing</title>
+    <updated>2026-03-27T16:34:55Z</updated>
+    <link href="https://arxiv.org/abs/2603.26575v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2603.26575v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Climbing is a multifaceted sport that combines physical demands and emotional and cognitive challenges. Ascent styles differ in fall distance with lead climbing involving larger falls than top rope climbing, which may result in different perceived risk and fear. In this study, we investigated the psychophysiological relationship between perceived fear and muscle activity in climbers using a combination of statistical modeling and deep learning techniques. We conducted an experiment with 19 climbers, collecting electromyography (EMG), electrocardiography (ECG) and arm motion data during lead and top rope climbing. Perceived fear ratings were collected for the different phases of the climb. Using a linear mixed-effects model, we analyzed the relationships between perceived fear and physiological measures. To capture the non-linear dynamics of this relationship, we extended our analysis to deep learning models and integrated random effects for a personalized modeling approach. Our results showed that random effects improved model performance of the mean squared error (MSE), mean absolute error (MAE) and root mean squared error (RMSE). The results showed that muscle fatigue correlates significantly with increased fear during \textit{lead climbing}. This study highlights the potential of combining statistical and deep learning approaches for modeling the interplay between psychological and physiological states during climbing.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-03-27T16:34:55Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Matthias Boeker</name>
+    </author>
+    <author>
+      <name>Dana Swarbrick</name>
+    </author>
+    <author>
+      <name>Ulysse T. A. Côté-Allard</name>
+    </author>
+    <author>
+      <name>Marc T. P. Adam</name>
+    </author>
+    <author>
+      <name>Hugo L. Hammer</name>
+    </author>
+    <author>
+      <name>Pål Halvorsen</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2512.00312v2</id>
+    <title>Kicking for Goal or Touch? An Expected Points Framework for Penalty Decisions in Rugby Union</title>
+    <updated>2026-01-26T18:57:33Z</updated>
+    <link href="https://arxiv.org/abs/2512.00312v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2512.00312v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Following a penalty in rugby union, teams typically choose between attempting a shot at goal or kicking to touch to pursue a try. We develop an Expected Points (EP) framework that quantifies the value of each option as a function of both field location and game context. Using phase-level data from the 2018/19 Premiership Rugby season (35,199 phases across 132 matches) and an angle-distance model of penalty kick success estimated from international records, we construct two surfaces: (i) the expected points of a possession beginning with a lineout, and (ii) the expected points of a kick at goal, taking into account the in-game consequences of made and missed kicks. We then compare these surfaces to produce decision maps that indicate where kicking for goal or kicking to touch maximizes expected return, and we analyze how the boundary shifts with game context and the expected meters gained to touch. Our results provide a unified, data-driven method for evaluating penalty decisions and can be tailored to team-specific kickers and lineout units. This study offers, to our knowledge, the first comprehensive EP-based assessment of penalty strategy in rugby union and outlines extensions to win-probability analysis and richer tracking data.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-29T04:13:29Z</published>
+    <arxiv:comment>20 pages; 9 figures, 8 tables. Submitted to the Journal of Quantitative Analysis in Sports (JQAS). Code &amp; replication package: https://github.com/WhartonSABI/rugby-ep (data from a public source; mirrored in the repo with attribution). Preprint licensed CC BY 4.0</arxiv:comment>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Kenny Watts</name>
+    </author>
+    <author>
+      <name>Jonathan Pipping-Gamón</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2402.12149v2</id>
+    <title>MLFEF: Machine Learning Fusion Model with Empirical Formula to Explore the Momentum in Competitive Sports</title>
+    <updated>2026-03-24T07:54:14Z</updated>
+    <link href="https://arxiv.org/abs/2402.12149v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2402.12149v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Tennis is so popular that coaches and players are curious about factors other than skill, such as momentum. This article will try to define and quantify momentum, providing a basis for real-time analysis of tennis matches. Based on the tennis Grand Slam men's singles match data in recent years, we built two models, one is to build a model based on data-driven, and the other is to build a model based on empirical formulas. For the data-driven model, we first found a large amount of public data including public data on tennis matches in the past five years and personal information data of players. Then the data is preprocessed, and feature engineered, and a fusion model of SVM, Random Forrest algorithm and XGBoost was established. For the mechanism analysis model, important features were selected based on the suggestions of many tennis players and enthusiasts, the sliding window algorithm was used to calculate the weight, and different methods were used to visualize the momentum. For further analysis of the momentum fluctuation, it is based on the popular CUMSUM algorithm in the industry as well as the RUN Test, and the result shows the momentum is not random and the trend might be random. At last, the robustness of the fusion model is analyzed by Monte Carlo simulation.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-02-19T14:02:13Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Ruixin Peng</name>
+    </author>
+    <author>
+      <name>Ziqing Li</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2003.10791v1</id>
+    <title>Predicting play calls in the National Football League using hidden Markov models</title>
+    <updated>2020-03-24T11:48:30Z</updated>
+    <link href="https://arxiv.org/abs/2003.10791v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2003.10791v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>In recent years, data-driven approaches have become a popular tool in a variety of sports to gain an advantage by, e.g., analysing potential strategies of opponents. Whereas the availability of play-by-play or player tracking data in sports such as basketball and baseball has led to an increase of sports analytics studies, equivalent datasets for the National Football League (NFL) were not freely available for a long time. In this contribution, we consider a comprehensive play-by-play NFL dataset provided by www.kaggle.com, comprising 289,191 observations in total, to predict play calls in the NFL using hidden Markov models. The resulting out-of-sample prediction accuracy for the 2018 NFL season is 71.5%, which is substantially higher compared to similar studies on play call predictions in the NFL.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-03-24T11:48:30Z</published>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Marius Ötting</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2009.00550v1</id>
+    <title>Using Social Networks to Improve Group Transition Prediction in Professional Sports</title>
+    <updated>2020-09-01T16:29:23Z</updated>
+    <link href="https://arxiv.org/abs/2009.00550v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2009.00550v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We examine whether social data can be used to predict how members of Major League Baseball (MLB) and members of the National Basketball Association (NBA) transition between teams during their career. We find that incorporating social data into various machine learning algorithms substantially improves the algorithms' ability to correctly determine these transitions. In particular, we measure how player performance, team fitness, and social data individually and collectively contribute to predicting these transitions. Incorporating individual performance and team fitness both improve the predictive accuracy of our algorithms. However, this improvement is dwarfed by the improvement seen when we include social data suggesting that social relationships have a comparatively large effect on player transitions in both MLB and in the NBA.</summary>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-09-01T16:29:23Z</published>
+    <arxiv:primary_category term="cs.SI"/>
+    <author>
+      <name>Emily J. Evans</name>
+    </author>
+    <author>
+      <name>Rebecca Jones</name>
+    </author>
+    <author>
+      <name>Joseph Leung</name>
+    </author>
+    <author>
+      <name>Benjamin Z. Webb</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2006.05908v4</id>
+    <title>Embed2Detect: Temporally Clustered Embedded Words for Event Detection in Social Media</title>
+    <updated>2021-05-25T21:49:41Z</updated>
+    <link href="https://arxiv.org/abs/2006.05908v4" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2006.05908v4" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Social media is becoming a primary medium to discuss what is happening around the world. Therefore, the data generated by social media platforms contain rich information which describes the ongoing events. Further, the timeliness associated with these data is capable of facilitating immediate insights. However, considering the dynamic nature and high volume of data production in social media data streams, it is impractical to filter the events manually and therefore, automated event detection mechanisms are invaluable to the community. Apart from a few notable exceptions, most previous research on automated event detection have focused only on statistical and syntactical features in data and lacked the involvement of underlying semantics which are important for effective information retrieval from text since they represent the connections between words and their meanings. In this paper, we propose a novel method termed Embed2Detect for event detection in social media by combining the characteristics in word embeddings and hierarchical agglomerative clustering. The adoption of word embeddings gives Embed2Detect the capability to incorporate powerful semantical features into event detection and overcome a major limitation inherent in previous approaches. We experimented our method on two recent real social media data sets which represent the sports and political domain and also compared the results to several state-of-the-art methods. The obtained results show that Embed2Detect is capable of effective and efficient event detection and it outperforms the recent event detection methods. For the sports data set, Embed2Detect achieved 27% higher F-measure than the best-performed baseline and for the political data set, it was an increase of 29%.</summary>
+    <category term="cs.IR" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.CL" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-06-10T15:52:52Z</published>
+    <arxiv:comment>This is a preprint of an article published in the Journal of Machine Learning, Springer. The final authenticated version is available online at: https://doi.org/10.1007/s10994-021-05988-7</arxiv:comment>
+    <arxiv:primary_category term="cs.IR"/>
+    <author>
+      <name>Hansi Hettiarachchi</name>
+    </author>
+    <author>
+      <name>Mariam Adedoyin-Olowe</name>
+    </author>
+    <author>
+      <name>Jagdev Bhogal</name>
+    </author>
+    <author>
+      <name>Mohamed Medhat Gaber</name>
+    </author>
+    <arxiv:doi>10.1007/s10994-021-05988-7</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1007/s10994-021-05988-7" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2409.13098v1</id>
+    <title>Predicting soccer matches with complex networks and machine learning</title>
+    <updated>2024-09-19T21:45:25Z</updated>
+    <link href="https://arxiv.org/abs/2409.13098v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2409.13098v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Soccer attracts the attention of many researchers and professionals in the sports industry. Therefore, the incorporation of science into the sport is constantly growing, with increasing investments in performance analysis and sports prediction industries. This study aims to (i) highlight the use of complex networks as an alternative tool for predicting soccer match outcomes, and (ii) show how the combination of structural analysis of passing networks with match statistical data can provide deeper insights into the game patterns and strategies used by teams. In order to do so, complex network metrics and match statistics were used to build machine learning models that predict the wins and losses of soccer teams in different leagues. The results showed that models based on passing networks were as effective as ``traditional'' models, which use general match statistics. Another finding was that by combining both approaches, more accurate models were obtained than when they were used separately, demonstrating that the fusion of such approaches can offer a deeper understanding of game patterns, allowing the comprehension of tactics employed by teams relationships between players, their positions, and interactions during matches. It is worth mentioning that both network metrics and match statistics were important and impactful for the mixed model. Furthermore, the use of networks with a lower granularity of temporal evolution (such as creating a network for each half of the match) performed better than a single network for the entire game.</summary>
+    <category term="cs.SI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ML" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-09-19T21:45:25Z</published>
+    <arxiv:comment>To appear in Journal of Complex Networks</arxiv:comment>
+    <arxiv:primary_category term="cs.SI"/>
+    <author>
+      <name>Eduardo Alves Baratela</name>
+    </author>
+    <author>
+      <name>Felipe Jordão Xavier</name>
+    </author>
+    <author>
+      <name>Thomas Peron</name>
+    </author>
+    <author>
+      <name>Paulino Ribeiro Villas-Boas</name>
+    </author>
+    <author>
+      <name>Francisco Aparecido Rodrigues</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2406.04062v1</id>
+    <title>Online Learning in Betting Markets: Profit versus Prediction</title>
+    <updated>2024-06-06T13:30:42Z</updated>
+    <link href="https://arxiv.org/abs/2406.04062v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2406.04062v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We examine two types of binary betting markets, whose primary goal is for profit (such as sports gambling) or to gain information (such as prediction markets). We articulate the interplay between belief and price-setting to analyse both types of markets, and show that the goals of maximising bookmaker profit and eliciting information are fundamentally incompatible. A key insight is that profit hinges on the deviation between (the distribution of) bettor and true beliefs, and that heavier tails in bettor belief distribution imply higher profit. Our algorithmic contribution is to introduce online learning methods for price-setting. Traditionally bookmakers update their prices rather infrequently, we present two algorithms that guide price updates upon seeing each bet, assuming very little of bettor belief distributions. The online pricing algorithm achieves stochastic regret of $\mathcal{O}(\sqrt{T})$ against the worst local maximum, or $ \mathcal{O}(\sqrt{T \log T}) $ with high probability against the global maximum under fair odds. More broadly, the inherent trade-off between profit and information-seeking in binary betting may inspire new understandings of large-scale multi-agent behaviour.</summary>
+    <category term="cs.GT" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-06-06T13:30:42Z</published>
+    <arxiv:comment>ICML 2024</arxiv:comment>
+    <arxiv:primary_category term="cs.GT"/>
+    <author>
+      <name>Haiqing Zhu</name>
+    </author>
+    <author>
+      <name>Alexander Soen</name>
+    </author>
+    <author>
+      <name>Yun Kuen Cheung</name>
+    </author>
+    <author>
+      <name>Lexing Xie</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2409.06739v1</id>
+    <title>Kramnik vs Nakamura: A Chess Scandal</title>
+    <updated>2024-09-09T20:51:02Z</updated>
+    <link href="https://arxiv.org/abs/2409.06739v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2409.06739v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We provide a statistical analysis of the recent controversy between Vladimir Kramnik (ex chess world champion) and Hikaru Nakamura. Hikaru Nakamura is a chess prodigy and a five-time United States chess champion. Kramnik called into question Nakamura's 45.5 out of 46 win streak in an online blitz contest at chess.com. We assess the weight of evidence using a priori assessment of Viswanathan Anand and the streak evidence. Based on this evidence, we show that Nakamura has a 99.6 percent chance of not cheating. We study the statistical fallacies prevalent in both their analyses. On the one hand Kramnik bases his argument on the probability of such a streak is very small. This falls precisely into the Prosecutor's Fallacy. On the other hand, Nakamura tries to refute the argument using a cherry-picking argument. This violates the likelihood principle. We conclude with a discussion of the relevant statistical literature on the topic of fraud detection and the analysis of streaks in sports data.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-09-09T20:51:02Z</published>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Shiva Maharaj</name>
+    </author>
+    <author>
+      <name>Nick Polson</name>
+    </author>
+    <author>
+      <name>Vadim Sokolov</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2512.00203v2</id>
+    <title>Beyond Expected Goals: A Probabilistic Framework for Shot Occurrences in Soccer</title>
+    <updated>2026-01-26T18:59:43Z</updated>
+    <link href="https://arxiv.org/abs/2512.00203v2" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2512.00203v2" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Expected goals (xG) models estimate the probability that a shot results in a goal from its context (e.g., location, pressure), but they operate only on observed shots. We propose xG+, a possession-level framework that first estimates the probability that a shot occurs within the next second and its corresponding xG if it were to occur. We also introduce ways to aggregate this joint probability estimate over the course of a possession. By jointly modeling shot-taking behavior and shot quality, xG+ remedies the conditioning-on-shots limitation of standard xG. We show that this improves predictive accuracy at the team level and produces a more persistent player skill signal than standard xG models.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="eess.IV" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-28T20:59:29Z</published>
+    <arxiv:comment>18pp main + 3pp appendix; 8 figures, 12 tables. Submitted to the Journal of Quantitative Analysis in Sports (JQAS). Data proprietary to Gradient Sports; we share derived features &amp; scripts (code under MIT/Apache-2.0). Preprint licensed CC BY 4.0</arxiv:comment>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Jonathan Pipping-Gamón</name>
+    </author>
+    <author>
+      <name>Tianshu Feng</name>
+    </author>
+    <author>
+      <name>R. Paul Sabin</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2206.11578v1</id>
+    <title>Doubly-online changepoint detection for monitoring health status during sports activities</title>
+    <updated>2022-06-23T09:49:29Z</updated>
+    <link href="https://arxiv.org/abs/2206.11578v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2206.11578v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>We provide an online framework for analyzing data recorded by smart watches during running activities. In particular, we focus on identifying variations in the behavior of one or more measurements caused by changes in physical condition, such as physical discomfort, periods of prolonged de-training, or even the malfunction of measuring devices. Our framework considers data as a sequence of running activities represented by multivariate time series of physical and biometric data. We combine classical changepoint detection models with an unknown number of components with Gaussian state space models to detect distributional changes between a sequence of activities. The model considers multiple sources of dependence due to the sequential nature of subsequent activities, the autocorrelation structure within each activity, and the contemporaneous dependence between different variables. We provide an online Expectation-Maximization (EM) algorithm involving a sequential Monte Carlo (SMC) approximation of changepoint predicted probabilities. As a byproduct of our model assumptions, our proposed approach processes sequences of multivariate time series in a doubly-online framework. While classical changepoint models detect changes between subsequent activities, the state space framework coupled with the online EM algorithm provides the additional benefit of estimating the real-time probability that a current activity is a changepoint.</summary>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.CO" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.ME" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2022-06-23T09:49:29Z</published>
+    <arxiv:primary_category term="stat.AP"/>
+    <author>
+      <name>Mattia Stival</name>
+    </author>
+    <author>
+      <name>Mauro Bernardi</name>
+    </author>
+    <author>
+      <name>Petros Dellaportas</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2007.10257v1</id>
+    <title>An Autoencoder Based Approach to Simulate Sports Games</title>
+    <updated>2020-07-16T16:10:13Z</updated>
+    <link href="https://arxiv.org/abs/2007.10257v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2007.10257v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Sports data has become widely available in the recent past. With the improvement of machine learning techniques, there have been attempts to use sports data to analyze not only the outcome of individual games but also to improve insights and strategies. The outbreak of COVID-19 has interrupted sports leagues globally, giving rise to increasing questions and speculations about the outcome of this season's leagues. What if the season was not interrupted and concluded normally? Which teams would end up winning trophies? Which players would perform the best? Which team would end their season on a high and which teams would fail to keep up with the pressure? We aim to tackle this problem and develop a solution. In this paper, we proposeUCLData, which is a dataset containing detailed information of UEFA Champions League games played over the past six years. We also propose a novel autoencoder based machine learning pipeline that can come up with a story on how the rest of the season will pan out.</summary>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2020-07-16T16:10:13Z</published>
+    <arxiv:primary_category term="cs.AI"/>
+    <author>
+      <name>Ashwin Vaswani</name>
+    </author>
+    <author>
+      <name>Rijul Ganguly</name>
+    </author>
+    <author>
+      <name>Het Shah</name>
+    </author>
+    <author>
+      <name>Sharan Ranjit S</name>
+    </author>
+    <author>
+      <name>Shrey Pandit</name>
+    </author>
+    <author>
+      <name>Samruddhi Bothara</name>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2511.00553v1</id>
+    <title>Breaking Down the Scoring: Interrater Reliability and National Bias in Olympic Breaking</title>
+    <updated>2025-11-01T13:35:15Z</updated>
+    <link href="https://arxiv.org/abs/2511.00553v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2511.00553v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Introduction: The inclusion of Breaking in the 2024 Paris Olympic Games introduced a distinctive competition format in which two athletes compete head-to-head in battle rounds. Unlike other aesthetic sports, where athletes receive independent scores for their performances, Breaking judges assess the relative performance quality between two competitors across five predefined evaluation aspects. This may considerably increase their cognitive load and warrants a thorough examination of judging reliability and potential national bias, the tendency of judges to favor athletes from their own country. Methods: Official scoring data from the 2024 Olympic Breaking events were analyzed. Interrater reliability was assessed using the Intraclass Correlation Coefficient, while national bias was estimated using mixed-effects modelling based on judges' individual scores. Results: The analyses revealed low to moderate interrater reliability in Breaking, notably lower than levels reported in other aesthetic sports. Moreover, substantial national bias was detected, with judges displaying a systematic tendency to favor athletes from their own country. Discussion: Although the observed national bias, despite its notable magnitude, likely had only a limited effect on final competition outcomes, the relatively low interrater reliability highlights potential weaknesses in the current scoring framework that may warrant refinement. Nonetheless, Breaking's unique system of aggregating judges' scores into discrete votes appears to reduce the influence of individual judges on competition outcomes, thereby enhancing the system's robustness against unilateral score manipulation.</summary>
+    <category term="physics.soc-ph" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="stat.AP" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2025-11-01T13:35:15Z</published>
+    <arxiv:comment>26 pages, 2 figures</arxiv:comment>
+    <arxiv:primary_category term="physics.soc-ph"/>
+    <author>
+      <name>Patrick Alexander Braeunig</name>
+      <arxiv:affiliation>Sportwissenschaftliches Institut, Universität des Saarlandes</arxiv:affiliation>
+    </author>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2406.12762v1</id>
+    <title>Unsupervised explainable activity prediction in competitive Nordic Walking from experimental data</title>
+    <updated>2024-06-18T16:29:07Z</updated>
+    <link href="https://arxiv.org/abs/2406.12762v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2406.12762v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Artificial Intelligence (AI) has found application in Human Activity Recognition (HAR) in competitive sports. To date, most Machine Learning (ML) approaches for HAR have relied on offline (batch) training, imposing higher computational and tagging burdens compared to online processing unsupervised approaches. Additionally, the decisions behind traditional ML predictors are opaque and require human interpretation. In this work, we apply an online processing unsupervised clustering approach based on low-cost wearable Inertial Measurement Units (IMUs). The outcomes generated by the system allow for the automatic expansion of limited tagging available (e.g., by referees) within those clusters, producing pertinent information for the explainable classification stage. Specifically, our work focuses on achieving automatic explainability for predictions related to athletes' activities, distinguishing between correct, incorrect, and cheating practices in Nordic Walking. The proposed solution achieved performance metrics of close to 100 % on average.</summary>
+    <category term="cs.LG" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2024-06-18T16:29:07Z</published>
+    <arxiv:primary_category term="cs.LG"/>
+    <author>
+      <name>Silvia García-Méndez</name>
+    </author>
+    <author>
+      <name>Francisco de Arriba-Pérez</name>
+    </author>
+    <author>
+      <name>Francisco J. González-Castaño</name>
+    </author>
+    <author>
+      <name>Javier Vales-Alonso</name>
+    </author>
+    <arxiv:doi>10.1109/MCE.2024.3387019</arxiv:doi>
+    <link rel="related" href="https://doi.org/10.1109/MCE.2024.3387019" title="doi"/>
+  </entry>
+  <entry>
+    <id>http://arxiv.org/abs/2609.11224v1</id>
+    <title>AI Soccer Analyst: Stage-Aware and Verifiable Human-AI Collaboration for Soccer Data Analysis</title>
+    <updated>2026-09-10T08:25:09Z</updated>
+    <link href="https://arxiv.org/abs/2609.11224v1" rel="alternate" type="text/html"/>
+    <link href="https://arxiv.org/pdf/2609.11224v1" rel="related" type="application/pdf" title="pdf"/>
+    <summary>Sports data analysts translate domain questions into insights by combining computation with sport-specific domain expertise. Large language models ease programming, but prompt-to-report workflows may obscure decisions and evidence. We present AI Soccer Analyst, a mixed-initiative system with revisable stages: Data Understanding, Problem Definition, Structured Planning, Execution, Evidence-Grounded Reporting, and Interaction and Refinement. A formative study with five analysts first informed design goals for automation, verifiability, human control, and accessibility. Subsequently, a task-based evaluation with 16 participants combined system logs, retained artifacts, ratings, and open responses; 33 of 48 tasks met the operational completion criteria. Exploratory tests supported favorable participant perceptions of completed-task output quality, task achievement, reliability, and verifiability after Holm correction. Interaction records showed domain knowledge emerging through clarification, planning, and refinement. These findings position stage-aware human-AI collaboration as a practical approach for producing inspectable, revisable, and verifiable analyses while retaining domain-expert involvement in consequential decisions.</summary>
+    <category term="cs.HC" scheme="http://arxiv.org/schemas/atom"/>
+    <category term="cs.AI" scheme="http://arxiv.org/schemas/atom"/>
+    <published>2026-09-10T08:25:09Z</published>
+    <arxiv:primary_category term="cs.HC"/>
+    <author>
+      <name>Calvin Yeung</name>
+    </author>
+    <author>
+      <name>Keisuke Fujii</name>
+    </author>
+  </entry>
+</feed>
