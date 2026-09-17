@@ -13,6 +13,12 @@ Branch `hermes/research-audit-2026-09-17`, based on main `2676759b0`. Evidence a
 
 Fresh targeted tests on this main-based checkout: 11 ingestion publication/series tests and 8 metric-rights tests PASS after successful npm ci. The older `992424b2c` branch has different source and cannot establish main's failures. Full-suite outcome must be read from the audit's exact-head test log/result; do not infer it from these targeted runs. No production-model, gate, pricing, DB, or publication changes were made. The CLV/probability/outcome local diagnostic is NOT_RUN for lack of joined data, not evidence of no relationship. This checkpoint is deliberately partial.
 
+### Verified conformal correction and full-suite result
+
+Full baseline `npm test` at `449434a76` exited 1 (result JSON in audit directory). Web: 24 failed test files; ingestion: 1 failed test file. This is not a green baseline. Failures require separate diagnosis; do not weaken assertions or gates to clear them.
+
+Subsequent narrow correction: `apps/web/lib/calibration/conformal-calibration.ts` now returns +Infinity when the finite-sample quantile rank exceeds the available calibration scores, rather than clamping to their maximum. Regression test reproduced `expected 0.2 to be Infinity` before the fix (exit 1), then passed (5/5); adjacent calibration suite passed 81 tests across 19 files (exit 0). MODEL_VERSION remains v5.2.7; model-freeze guard passes. No product flag, eligibility threshold or production promotion changed. This fixes a small-sample mathematical primitive, not the whole calibration system, and is not a demonstrated betting improvement. The full suite has not been rerun after this fix.
+
 ## THE LOOP
 
 **UPDATED 2026-09-13 (NFL WEEK 1 LIVE CHECK — three production defects fixed, three

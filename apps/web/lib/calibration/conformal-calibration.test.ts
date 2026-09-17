@@ -27,6 +27,17 @@ describe("conformal methods inventory", () => {
     expect(conformalQuantile([], 0.1)).toBe(Number.POSITIVE_INFINITY);
   });
 
+  it("includes the infinite sentinel when the finite-sample rank exceeds n", () => {
+    // With one exchangeable calibration score, its maximum covers only 1/2,
+    // not the requested 9/10. The missing second order statistic is infinity.
+    expect(conformalQuantile([0.2], 0.1)).toBe(Number.POSITIVE_INFINITY);
+    expect(splitConformalResidualThreshold([0.2], 0.1)).toBe(Number.POSITIVE_INFINITY);
+    expect(conformalQuantile([0.2], 0)).toBe(Number.POSITIVE_INFINITY);
+    expect(conformalQuantile([0.2], 0.5)).toBe(0.2);
+    expect(mondrianResidualThresholds([{ group: "a", residual: 0.2 }], 0.1, 1).a)
+      .toBe(Number.POSITIVE_INFINITY);
+  });
+
   it("residual and Mondrian + alpha clip", () => {
     expect(residualNonconformity(0.8, 0)).toBeCloseTo(0.8);
     expect(clipConformalAlpha(0.001)).toBe(0.02);

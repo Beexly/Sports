@@ -125,7 +125,8 @@ export function residualNonconformity(p: number, y: 0 | 1): number {
 
 /**
  * Finite-sample conformal quantile (split CP):
- * rank = ceil((1-α)(n+1)) − 1, clamped to [0, n−1].
+ * rank = ceil((1-α)(n+1)) − 1 over scores augmented with +Infinity.
+ * Ranks beyond the observed scores must not be clamped to their maximum.
  * Standard inductive conformal formula (Vovk et al.).
  */
 export function conformalQuantile(
@@ -137,7 +138,8 @@ export function conformalQuantile(
   const a = Math.min(1, Math.max(0, alpha));
   const sorted = [...scores].sort((x, y) => x - y);
   const rank = Math.ceil((1 - a) * (n + 1)) - 1;
-  const idx = Math.min(n - 1, Math.max(0, rank));
+  if (rank >= n) return Number.POSITIVE_INFINITY;
+  const idx = Math.max(0, rank);
   return sorted[idx]!;
 }
 
