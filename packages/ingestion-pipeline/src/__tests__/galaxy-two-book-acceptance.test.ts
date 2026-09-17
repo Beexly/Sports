@@ -12,7 +12,7 @@
  * When either side lacks a live quote for a market, that market is not
  * minted.
  */
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   DataNormalizer,
   PredExonClient,
@@ -161,6 +161,14 @@ async function twoBookPicks(catalogOpts: Parameters<typeof predexonCatalog>[0] =
 }
 
 describe("C-104 acceptance: free two-book NFL board (ESPN inline + Kalshi via PredExon)", () => {
+  beforeEach(() => {
+    // ESPN applies its live/upcoming window to the wall clock. Keep it on the
+    // same fixture clock as the catalog and scorer; leave request delays real.
+    vi.useFakeTimers({ toFake: ["Date"] });
+    vi.setSystemTime(NOW);
+  });
+  afterEach(() => vi.useRealTimers());
+
   it("mints MONEYLINE, SPREAD and TOTAL with bookmakerCount 2 and zero paid credits", async () => {
     const { board, rows, picks, espnFetch, predexonFetch } = await twoBookPicks();
 
