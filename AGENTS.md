@@ -2,6 +2,67 @@
 
 Auto-loaded by Grok Build, Codex, and Copilot at workspace root; Claude Code loads it through the `@AGENTS.md` import on line 1 of `CLAUDE.md`. Read this first, every session.
 
+---
+
+**UPDATED 2026-09-13 (Motif — game-day calibration pass + v5.3.0 spec).** Founder ordered a full
+review/rebuild of the prediction engine ("extremely in depth", "trust no claims", ship direct to
+prod — NO shadow period, founder override: "we're way too far behind"). Three agents are building;
+this note keeps them in sync. Read before touching calibration, confidence, Premium, or the
+signal slate.
+
+**The headline finding (measured on live Neon neondb, 2,641 settled picks — do not re-litigate):**
+the two generation paths calibrate COMPLETELY differently.
+- Signal path (`generate-signal-slate.ts`, confidence = blended trueProb): 60–69 → **57.0%** (n=423),
+  70–79 → **66.0%** (n=247), 80–89 → **67.8%** (n=59). Roughly honest, slightly conservative. LEAVE IT ALONE.
+- Book path (heuristic weighted sum in `scoring.ts`): 80–89 → **41.5%** (n=130), 90–99 → **31.2%**
+  (n=32). INVERTED at the top: higher heuristic confidence predicts WORSE results.
+**v5.3.0 calibration targets the book path ONLY. Do not "recalibrate" the signal path's confidence.**
+
+**Build spec (founder's coding agent has it, building now):**
+`~/workspace/your_files/gse-v5.3.0-build-spec.md` (local only, not in repo). Workstreams: 0 data
+correctness → 1 calibrated confidence (per sport×market heads, logistic baseline, pushes as
+3-class) → 2 Premium conjunction gate (confidence+edge+beat+prop+narrative) → 3 beat desk →
+4 prop alignment → 5 context matrix → **5B narrative/incentive factors (founder add: contract
+incentives > record chases > revenge games > birthdays, backtest-or-cut)** → launch direct to
+prod behind `CALIBRATION_ADJUSTMENTS_ENABLED` (kill switch, no shadow). Supporting docs in repo:
+`docs/2026-09-13-confidence-calibration-baseline.md` (label coverage + buckets + trainer notes),
+`docs/calibration-proposals/2026-09-13-beat-desk-prop-alignment-context-matrix-v5.3.0.md`
+(rollout section already updated for no-shadow). Recalibration prototype:
+`~/workspace/gse-discovery/recalibrate_nfl_2026-09-13.py` (NOT in repo).
+
+**Data corrections for whoever builds Workstream 0:**
+- Dupes are FIXTURE-level, not gameId-level (zero dupes on `(gameId,pickType,selection)`; dupes are
+  same matchup on different gameIds). Fix `collapseGameRowsToFixtures`, not a DB unique index.
+- 42 signal-path picks lack `pick_signal_snapshots` rows (0 book-path). Extend the snapshot builder.
+- Snapshots store `hadXSignal` booleans, NOT factor weights — train from `picks.factorBreakdown`
+  (JSONB: weights, rankingP, edgeScore, independentEdge). `eligibleForLearning` flag exists, use it.
+- NFL has only 70 settled picks EVER — NFL calibration head is CLV-only until more games settle.
+- CLV is an auxiliary target, NOT the win-probability label. Primary labels = settled outcomes.
+
+**Factor-breakdown audit of today's 6 NFL picks (read before building the gate):**
+- All 5 signal picks are SINGLE-source Elo (`sources:["elo"]`, `agreement:"SOLO"`) — the
+  "independent blend" collapsed to one model today. Confidence = Elo fair value, no cross-check.
+  The gate should require agreement>=2 or shrink solo-source edges harder.
+- The Steelers ML -285 pick is a gate failure specimen: its own `independentEdge` reads
+  `decision:"PASS"`, rawEdge -0.1629 ("we decline rather than overclaim one") — yet the book
+  path published it anyway at conf 50. **v5.3.0 rule: never publish when independentEdge.decision
+  is PASS, regardless of path.** This one pick is the regression test.
+- Signal picks carry `marketFairProb: null` — they never saw the market. The conjunction gate
+  must compare model p against live de-vigged market p before publishing (today that check
+  would have kept Panthers/Giants and killed Bengals/Eagles/Raiders).
+
+**Verified NFL board 2026-09-13 (model p vs live market, checked 11:08 CT):** Panthers ML +140
+(model 63%, market 41%, edge +16..21) and Giants ML +148 (model 60%, market 40%, edge +17) are
+the plays. Raiders ML -160 no edge. Bengals/Eagles ML negative vs market. Steelers ML -285
+(book-path, conf 50) is a hard NO (history ~51.5% vs 74% needed). Engine passed on 7 of 13 games.
+Chiefs ML is MONDAY 9/14, not today. Narrative tracker is LIVE at
+`docs/narrative-tracker/TRACKER.md` (5 entries): Mayfield has multiple franchise milestones
+within reach TODAY (2 TDs ties Brady, 3 TDs = 200 career) plus a fresh 3yr/$165M extension;
+Chase is chasing the 23-TD single-season record. Note the tension: Mayfield's milestones favor
+BUCS passing, which runs counter to the engine's Bengals ML lean — logged as evidence only,
+zero gate weight until backtested per the 5B rules. Mayfield's revenge game is next week
+(CLE @ TB, 2026-09-20).
+
 Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 **unattended agent** works here.
 
@@ -723,6 +784,8 @@ Ledger rows A-43 through A-54 in `docs/ops/AGENT_LEDGER.md`.
 5. Visual screenshots of every page at desktop + mobile widths (needs a real browser).
 6. Wire Statcast data into the founder-picks factor engine's `underlying` input.
 
+**UPDATED 2026-09-10 (18:20 CT): BRAND + COPY DOCTRINE (Garrett).** New logo/banner supplied by Garrett 2026-09-10, saved under revenue-engine `brand/`: `gse-logo-mark-2026-09-10.jpg` (orbit mark), `gse-banner-nebula-left-2026-09-10.jpg`, `gse-banner-nebula-right-2026-09-10.jpg` (banner tagline: "WE DETECT. YOU DECIDE."). X bio (Garrett picked option C, 2026-09-10): "Welcome to the galaxy. Picks, props and fantasy from real analysts who show their work. Every pick public. Every result posted." REASONING every agent must follow: frame as a HUMAN team (analysts, writers, reporters, engineers) — never hint at AI authorship; "sports intelligence"/"intelligence" branding is BANNED (reads as AI); "sports galaxy" is BANNED (Galaxy Sports Edge said backwards); galaxy wordplay is fine ("Welcome to the galaxy"); sports-wide, not football-only; em dash (—) BANNED in all public copy (commas, periods, colons instead); reply voice is dry humor + light sarcasm, like someone who actually watches the games; sharp, never cheap. Full copy rules: revenue-engine `ops/x-copy-rules.md`. NOTE: bio update blocked 18:17 CT — the X browser session dropped again and a new task grabbed the wrong saved credentials (Signal Origin); Garrett re-signs in via takeover.
+
 **UPDATED 2026-09-10 (17:15 UTC): NFL CLIP OPERATION — "GSE Film Room" on @GalaxySportsHQ (Motif, Muse agent).** Garrett's directive: real clipped sports footage with our data narrative; no synthetic/fake footage; no commercial license; transformative edits only. Full build artifacts live in the revenue-engine workspace under `clips/video-builds/` (not in this repo).
 
 1. **First native clipped video POSTED 2026-09-10:** "How Seattle manufactured THREE fourth-quarter INTs off Drake Maye" (74.7s, 1080x1920, H.264+AAC). Live: https://x.com/GalaxySportsHQ/status/2098095892268273696. Final file `gse-filmroom-seahawks-3int-mayes-meltdown-v2.mp4`; source log `SOURCE-LOG-seahawks-3int.md` carries both official @Seahawks post URLs, exact excerpt timestamps, and every transformation.
@@ -1031,6 +1094,90 @@ The ledger is how you talk to them, and to every other agent working here.
 
 ---
 
+## PROJECT MOVE-37 — MACHINE-DISCOVERY LANE (owner-directed, 2026-09-13; current through REPAIR-03, 2026-09-14)
+
+Inspired by the Sept 2026 claimed Navier-Stokes AI-agent breakthrough: the play is
+the METHOD (machines discovering mathematical structures humans missed), not the
+equation. White space confirmed: no widely-used sports metric was machine-discovered.
+
+**Division of labor (structural, verified 2026-09-13):** DeepSeek has NO code-execution
+environment — its "results" are protocols/predictions, never observations. DeepSeek =
+theorist/protocol engineer; the Motif lab = execution. NOTHING from the theorist is
+published or built on until independently rerun. Every theorist number is SPEC until
+the lab measures it.
+
+**Corpus:** `docs/research/move37/` holds every curated text/code/log — all theorist
+submissions verbatim, lab scripts, run logs, audits, and the Minis retest prompt.
+Read its `README.md` for the submission chain and reading order. The 6 GB raw
+discovery directory (`~/workspace/gse-discovery/`, parquets, venvs) is NOT in the
+repo by design.
+
+### Family status (2026-09-14)
+
+| Family | Status | Notes |
+|--------|--------|-------|
+| IRL (Prelec probability weighting) | QUARANTINED — repair supplied, lab executing | REPAIR-03 script `move37_irl_prelec.py` running in lab; verdict pending |
+| T3 (HMM form regimes) | READY FOR LAB REVIEW | D1–D8 repaired, prior art cited; needs lab's AIC/BIC + shuffle gate |
+| T7 (persistent homology) | READY FOR LAB REVIEW, likely null | Run once with Null A + Null B; do not rescue |
+| T9 (causal forest 4th-down) | READY FOR LAB REVIEW | Y := play-level WPA, punt/FG split, gate 2.5e-5 needs pilot verification |
+| W1 (spectral EPA) | KILLED (own kill line) | Test increment −0.0212, sign reversed |
+| W2 (Wasserstein play-mix) | KILLED (own kill line) | Test r = 0.0112 vs required 0.15 |
+| W3 (Fisher-Rao tempo) | KILLED WITHOUT COMPUTE | Accepted without compute |
+| W4 (adaptive coaching) | KILLED (own kill line) | Test −0.031, 2.6 sd, sign reversed |
+| W5 (Wasserstein barycenter) | NEW — proposed, awaiting lab review | Duel vs rolling-EPA(4), kill < 0.02 R² |
+| W6 (DFA of EPA sequences) | NEW — proposed, awaiting lab review | Duel vs mean-EPA, kill < 0.01 R² |
+| W7 (intrinsic dim of play-call manifold) | NEW — proposed, awaiting lab review | Duel vs distinct play-type count, kill < 0.02 R² |
+| W8 (permutation entropy of drive sequences) | NEW — proposed, theorist's weak bet | Duel vs pass_oe, kill < 0.02 R² |
+
+**All earlier lab-verified falsifications (measured, not argued):** GLI-0.1 claimed
+R² 0.112/0.079 → lab measured 0.0037, REJECTED; Koopman momentum prior 0.35 →
+lab p=0.89, REJECTED; 6 symbolic-regression runs found NO time term (search-space
+limitation confirmed); soft-target (beta 0.9) constant/negative (−0.0300/−0.0207/
+−0.0030) vs log-cosh 0.0157 — SR structurally incapable for this target class;
+play-type residual (pass_indicator − xpass) ceiling 0.0527/0.0375, OLS 0.0400/0.0264 —
+theorist's <0.03 kill prediction FAILED (signal thin, mostly linear).
+
+**IRL arc:** original CRRA design was mathematically broken (utility undefined at 0
+for γ≥1 inside its own predicted range; WP/terminal-domain confusion; 5 citation
+defects incl. one fabricated DOI). REPAIR-01 moved to CARA. Lab Fix-1 run measured:
+train NLL 0.6438, (α̂,β̂) = (−1.70, 22.0), test log-loss 0.6073, accuracy 73.70%
+vs position baseline 79.07% → **NULL**. Theorist accepted: CARA over WP is a
+category error (risk aversion cannot manifest over binary lotteries) — α̂=−1.70
+is a decision-weight recovery, not risk aversion.
+
+**IRL REPAIR-03 (live):** Prelec probability weighting w(p;α) = exp(−(−ln p)^α),
+verified against Prelec (1998) Econometrica 66(3):497–527 primary source. Pre-registered:
+α̂ ∈ [0.5, 0.9] (point 0.7); kill if α̂ ∉ (0,1.5] or |α̂−1| < 0.02. **Known code
+defects in the verbatim script (lab must document, not silently fix):**
+`GradientBoostingRegressor(max_iter=150)` (constructor takes `n_estimators`);
+missed-FG spot `100−yl+8` should be `100−yl−8`; punt `100−yl−40` should be
+`100−yl+40` with touchback handling (verbatim produced negative yardlines in
+Fix-1 — fixed in the lab execution copy, theorist never repaired it in REPAIR-03).
+
+**Calibration (theorist's own, §7 of REPAIR-03):** median |predicted|/|observed|
+≈ 10× overestimate across measured families (predicted sign wrong in 2 of 3
+measurable cases). 8-family calibration-adjusted EVs: IRL 0.03, T3 0.02, T7 0.015,
+T9 0.02, W5 0.012, W6 0.008, W7 0.015, W8 0.018. Honest portfolio: cheapest kill
+tests first, every positive exploratory, majority expected to die.
+
+**Citation audit state:** REPAIR-03 self-audit has 25 rows, 2 unsourced (N-46:
+play-level WPA SD ≈ 0.15; N-47: go-vs-punt WPA effect ≈ 0.02) — lab must
+substitute pilot values before executing T9. Never trust a theorist citation;
+verify against primary sources.
+
+**Minis program:** `docs/research/move37/minis-move37-retest-prompt.md` — Pass 1
+(independently re-run everything, document in AGENTS.md) then Pass 2 (adversarial
+re-test, new tests/theories, document again). Minis prepend their findings as
+their own AGENTS.md sections.
+
+**Standing gates for this lane:** pre-register kill criteria on the same line as
+every prediction; preserve null and negative results; separate observation,
+inference, speculation; never present a theorist SPEC as a lab OBS; dumb-baseline
+duel on the same test set for every family; market duel where claim is predictive.
+
+
+---
+
 ## THE LAWS
 
 Breaking one discards the run.
@@ -1152,3 +1299,1308 @@ invented number makes every other number suspect.
 
 ---
 
+## POSTABLE BOARD (2026-09-13, Motif)
+
+Single canonical pre-post board: `docs/ops/POSTABLE_BOARD.md`. Created after two agents
+derived two different verdicts on the same day (Motif staged Giants ML; companion live
+check killed it as elo-only/HFA wobble). Rule: one writer per refresh, read-before-post,
+provenance checklist (books>=1, consensusPct not pinned, lineGeneratedAt fresh,
+independentEdge != PASS, kickoff in future), dissent-not-unilateral-action. Any agent
+drafting or posting a public pick reads the board first.
+
+---
+
+## FOUNDER PICKS LOG (Garrett's personal calls — 2026-09-13, Motif)
+
+Garrett's own picks, recorded so every agent knows what HE called (separate from
+engine picks and the postable board). Engine DB has no prop market
+(SPREAD/MONEYLINE/TOTAL only), so prop calls are always founder calls, never
+engine picks. Never attach model confidence to a founder pick. Settle each one
+after final and keep the running record honest.
+
+| Date | Pick | Line (posted) | Source | X post | Result |
+|------|------|---------------|--------|--------|--------|
+| 2026-09-13 | Darnell Mooney (NYG) OVER receiving yards | 20.5 | founder (Garrett) | NEVER POSTED — X session expired, kickoff passed | VOID (unposted, ungraded) |
+
+Notes on the Mooney call (2026-09-13): Mooney signed with the Giants Mar 2026
+(1-yr, up to $10M) after the Falcons cut him; listed as Giants WR2 on the Week 1
+depth chart. 2024: 992 yds / 5 TDs; 2025: injury-hit (443 yds). Career 13.0 y/catch,
+4.38 speed. Nabers working back from ACL/meniscus. Dallas breaking in a rebuilt
+secondary under new DC. Posted with "GARRETT'S CALL" graphic badge.
+
+---
+
+## ADVANCED NFL ANALYTICS LANDSCAPE (2026-09-17, Motif)
+
+**Origin:** Garrett shared Ray Carpenter's EPA matchup infographic and directed:
+"search ALL through my galaxy sports x feed to find more metrics like this,
+more advanced data, complex numbers and understanding... there are tons and
+tons of amazing analysts that are blowing our data out of the water — make
+sure that everything is in the agents.md in the sports repo."
+
+**Full dossier (36 verified accounts, 26-metric deep catalog, verification
+log):** `docs/2026-09-17-advanced-analytics-landscape.md` (last verified
+2026-09-17). Companions: `~/workspace/gse-research/advanced-metrics-data-source-catalog.md`
+(26-metric definitions/evidence/limitations/sources), `~/workspace/nfl-analytics-x-dossier.md`
+(account-hunter raw notes).
+
+**Standing caveat:** predicting team quality is NOT predicting covers. Markets
+price public information (open EPA numbers, FPI, PFF grades). These metrics
+enter the engine as feature candidates for spread/total modeling, never as
+free edges. Edge comes from implementation quality (opponent adjustment, luck
+regression, timeliness), not from knowing a metric exists. **The posting gate
+does not change:** posted picks carry the engine's confidence or Garrett's
+called pick, never an analyst's read.
+
+### 1. The analysts (all handles verified via public web search, 2026-09-17)
+
+Handle-correction log (seed forms that changed on verification — never use the
+old forms): @FO_ASchatz -> **@ASchatzNFL** · @RichHribar -> **@LordReebs** ·
+@KevinColePFF -> **@KevinCole___** · @DrewDinsick -> **@whale_capper** ·
+@DianteLeeNFL -> **@DianteLeeFB**.
+
+**Anchor: @csv_enjoyer (Ray Carpenter).** The analyst whose EPA matchup
+infographic started this. Triple-verified (raycarp.com footer, array-carpenter
+GitHub, Pride of Detroit / SI / Sporting News / Musket Fire credits). Builds on
+nflfastR/nflverse, all public at raycarp.com: run-gap EPA charts with league
+ranks; personnel-grouping EPA/play + success-rate tools (down/quarter/week
+filters); RayCarp Rankings (Bayesian, opponent-adjusted); NFL on/off EPA tool
+and player rankings; The Spade weekly newsletter (thespade.substack.com). The
+model of the lane: open data, rigorous definitions, clean viz, cited by major
+outlets. His on/off EPA work is directly relevant to injury-adjustment modeling.
+
+**Data science / decision science**
+
+| Handle | Name | Affiliation | Known for |
+|---|---|---|---|
+| @csv_enjoyer | Ray Carpenter | Independent; raycarp.com, The Spade | EPA, success rate, empirical-Bayes/Markov rankings, on/off EPA |
+| @benbbaldwin | Ben Baldwin | RBSDM creator; nflfastR/nflverse co-creator | EPA, CPOE, success rate, fourth-down WP; the upstream plumbing |
+| @ASchatzNFL | Aaron Schatz | FTN Chief Analytics Officer; DVOA creator | DVOA, DYAR, opponent-adjusted ratings; longest public ratings track record |
+| @bburkeESPN | Brian Burke | ESPN sports data scientist | Win probability, fourth-down recommendations, RBWR/RSWR |
+| @StatsbyLopez | Michael Lopez | NFL Football Data and Analytics | Causal fourth-down research, WP calibration, matching methods |
+| @KeeganAbdoo | Keegan Abdoo | Next Gen Stats research/analytics | Pressure probability, completion/conversion probability from tracking |
+| @SethWalder | Seth Walder | ESPN analytics writer | PRWR/PBWR, Receiver Tracking Metrics, roster value (more active on Bluesky 2026) |
+
+**Independent metrics builders**
+
+| Handle | Name | Affiliation | Known for |
+|---|---|---|---|
+| @KevinCole___ | Kevin Cole | Unexpected Points; ex-PFF | QB EPA/play tiers, draft value above expectation, roster point-differential index |
+| @tejfbanalytics | Tej Seth | Independent | Public RYOE model with blocking context, aging curves, rushing efficiency |
+| @greerreNFL | Robby Greer | Independent; nfelo creator | Open NFL Elo + predictions + Weighted EPA. Direct benchmarking peer for our Elo core; DMs invited |
+| @MathBomb | Kent Lee Platte | RAS.football creator | Relative Athletic Score (0-10 historical athletic composite) |
+
+**Film and scheme**
+
+| Handle | Name | Lane |
+|---|---|---|
+| @BrandonThornNFL | Brandon Thorn | OL tiers, True Sack Rate, trench mismatches; most respected independent OL/DL evaluator |
+| @BaldyNFL | Brian Baldinger | Baldy's Breakdowns: protection schemes, line technique, pass rush (film) |
+| @BenjaminSolak | Benjamin Solak | Tape-driven QB processing, pressure looks, route concepts, scheme evaluation |
+| @Nate_Tice | Nate Tice | Scheme/personnel/trench/draft layered with DVOA + tracking; film-analytics bridge |
+
+**Fantasy and projections**
+
+| Handle | Name | Known for |
+|---|---|---|
+| @MikeClayNFL | Mike Clay | Annual projections, projected standings, SOS, unit grades, WR/CB shadow reports. **Only explicitly reply-friendly analyst in the set** (2026 draft guide invites questions/error reports) |
+| @LordReebs | Rich Hribar | The Worksheet: usage/scoring splits, matchup trends |
+| @ihartitz | Ian Hartitz | Film-backed usage: targets/routes, broken tackles, nullified-scoring analysis |
+| @DwainMcFarland | Dwain McFarland | Snap share, route participation, utilization framework |
+
+**Betting markets**
+
+| Handle | Name | Known for |
+|---|---|---|
+| @RufusPeabody | Rufus Peabody | Opponent adjustment, garbage-time/penalty-noise removal, regression toward market, power ratings |
+| @ClevTA | ClevTA | Matchup/team ratings, blended win probabilities, survivor optimization, transparently tracked ATS/ROI |
+| @whale_capper | Drew Dinsick | Market pricing: sides, totals, futures, props |
+
+**Essential brands (original data/charting, not aggregators)**
+
+| Handle | What they post |
+|---|---|
+| @NextGenStats | Player-tracking viz, completion probability, expected rush yards, separation, WP |
+| @PFF | Play-by-play grades, pressures, blocking grades |
+| @SumerSports | EPA, personnel tendencies, pressure-to-sack analysis, SumerScore (most publicly open charting company) |
+| @SportsInfo_SIS | Original charting; Total Points, routes/coverages/assignments |
+
+**Strong alternates (verified):** @SamHoppen (EPA/play, expected pass prob, WP/EPA
+waterfalls) · @DianteLeeFB (defensive structure/coverage/pressure) ·
+@ChrisRaybon (spreads/totals/props, tracked bets) · @Josh_Insights (contrarian
+betting, sharp-money indicators, line movement) · @TheoAshNFL (QB/scheme/draft
+film) · @notJDaigle (draft strategy, usage, backfields) · @adamlevitan (DFS
+process, props) · @evansilva (team-by-team matchup analysis) ·
+@SharpFootball (situational efficiency, personnel tendencies, schedule
+analysis) · @FezzikSports (power ratings, opening lines, injury adjustments,
+teaser strategy) · @MathBomb (RAS, listed above).
+
+**Unverified — keep out until confirmed:** Timo Riske (PFF data scientist),
+Nathan Jahnke (PFF fantasy) — roles verified, exact handles not confirmable.
+
+### 2. The metrics (traps included — mixing providers corrupts the engine)
+
+Full definitions, predictive evidence, and limitations for 26 metrics:
+`~/workspace/gse-research/advanced-metrics-data-source-catalog.md`.
+
+**Efficiency core (the engine's missing foundation):**
+- **EPA/play (team)** — change in Expected Points per play. Trap: nflfastR vs
+  ESPN EP models differ slightly; filter garbage time and kneels.
+- **Dropback EPA / Rush EPA** — pass plays (incl. sacks/scrambles per convention)
+  vs designed runs. Trap: scramble classification differs by provider.
+- **Success rate** — share of "successful" plays. Trap: THREE competing
+  definitions (nflfastR EPA>0, Football Outsiders 40/60/100, Connelly 50/70/100).
+  Never mix.
+- **DVOA (FTN)** — per-play value vs situational average, opponent-adjusted;
+  0% = average. Proprietary; weekly tables only, no feed.
+- **DAVE** — DVOA blended with preseason forecast, decaying weight. Verified
+  FTN Week 1 2026: 83% prior on offense, 98% on defense/ST. The prior is
+  proprietary; the concept (shrinkage) is what we need.
+- **EPA+CPOE composite** — QB index. Trap: canonical weighting UNVERIFIED;
+  build our own weights, don't borrow.
+
+Key research: passing efficiency explains wins far more than rushing (corr
+~0.53-0.61 vs ~0.13-0.19). 2026 early-season study: passing EPA predicts future
+point differential (r ~ 0.42 at 6 games) better than success rate, though
+success rate stabilizes faster (~r = 0.60 by game 6).
+
+**QB efficiency:** CPOE (completion % over expected; model-dependent —
+nflfastR's CPOE is one specification) · DYAR/DVOA player (cumulative; convert
+to per-play before spreads).
+
+**Trenches and pressure (most predictive matchup lens):**
+- **Pressure rate** — share of pass plays producing hurry/hit/sack. PFF
+  research: pressure CREATION is the stable skill; sacks are the noisy outcome.
+- **PRWR / PBWR (ESPN)** — pass rush win within 2.5s / block sustain 2.5s+.
+  Proprietary, rankings only. 2026 methodology update supersedes legacy
+  descriptions.
+- **RBWR / RSWR (ESPN)** — run block / run stop win rates. Same sourcing
+  problem; run game matters less than pass game.
+- **SIS blown block** — exact glossary wording UNVERIFIED (primary source not
+  located).
+- **Time to throw** — descriptive, not normative; pair with pressure data.
+
+**Explosiveness and finishing:**
+- **Explosive-play rate** — threshold varies (15/10 vs 20-yard conventions);
+  state it.
+- **Havoc rate** — NO NFL standard definition; fix one before computing.
+- **Stuff rate** — boundary (does zero count?) varies.
+- **Red-zone EPA** — conversion is near-noise (Schatz's critique); trip rate is
+  the sticky part.
+- **Late-down efficiency** — 2012 hierarchical-Bayes study: raw 3rd-down
+  conversion "nearly meaningless." Use early-down success / all-downs efficiency
+  (predictive r ~ 0.36).
+
+**The luck layer (where Elo bleeds):**
+- **Turnover margin/luck** — regresses hard to zero. Model the PROCESS
+  (turnover-worthy plays, fumble recovery rates, INT vs expected); never carry
+  raw margin forward.
+- **Special-teams EPA** — small, real, systematically unpriced (Wharton study:
+  +1.9% RMSE improvement). Additive adjustment.
+
+**Game-state and situational:**
+- **Situation-neutral pace** — filter choices change the number; trailing teams
+  hurry (confounds intent).
+- **4th-down aggressiveness** — go-rate vs WP model; correlates with roster
+  quality.
+- **Wind/weather** — nonlinear; interacts with stadium/roof/direction. HIGH for
+  totals, LOW for moneyline. Never a flat "X mph = Y points."
+- **Rest (bye/mini-bye/short week)** — 2024 analysis: bye edge largely VANISHED
+  post-2011 CBA. Tiny coefficients only.
+- **Travel/time zones/altitude** — no verified NFL coefficient; FPI's altitude
+  term has weak evidence nonzero. Experimental only.
+- **Strength of schedule** — forward SOS = market-based (projected win totals);
+  backward = efficiency-based. Never raw prior-season win%.
+
+**Composite ratings (benchmarks, not inputs):**
+- **ESPN FPI** — predictive margin vs average on neutral; EPA/play-based,
+  Vegas-anchored preseason prior. No feed; partially IS the market (limited edge
+  vs close).
+- **PFF grades** — per-play execution, -2 to +2 scaled 0-100. Analyst judgment,
+  assignment ambiguity, paywalled.
+- **SIS Total Points** — EPA distributed across positions via charting.
+  Proprietary; no public download.
+- **Separation / open rate** — three incompatible implementations (NGS SEP,
+  ESPN Open/Catch/YAC, PFF charted). NGS tables free via nflverse.
+- **RYOE** — rush yards over tracking-expected. Best for RB/OL decomposition;
+  rushing weakly predicts wins.
+
+### 3. Gap analysis: what the Elo engine does NOT use (ranked by expected value)
+
+Engine context: v5.2.7 is Elo-based; 2026-09-13 factor audit found all signal
+picks single-source Elo (`sources:["elo"]`, `agreement:"SOLO"`); NFL has ~70
+settled picks ever (calibration head is CLV-only); ESTABLISHED blocker is CLV
+beat-close 23.0% vs 52.4%; v5.3.0 (in build) adds a conjunction gate comparing
+model p against live de-vigged market p, a beat desk, and context/narrative
+factors. The engine already reads nflverse and has a factor-breakdown scaffold.
+
+**Build first (all HIGH):**
+1. **Opponent-adjusted EPA/play team ratings, dropback/rush split.** Elo sees
+   only score margins; it weights a 3-yard run the same as a 30-yard pass in its
+   information set. DVOA-style opponent-adjusted EPA/play (split, since passing
+   predicts at ~0.53-0.61 vs rushing ~0.13-0.19) is the single biggest structural
+   upgrade. Entirely implementable on free nflverse data. Elo becomes one input
+   among several, not the whole model.
+2. **Turnover regression: expected turnover differential.** Raw Elo bakes
+   turnover luck into team strength. Teams with great efficiency but bad turnover
+   records are systematically UNDERVALUED by record-based ratings, and vice
+   versa. "The single biggest upgrade available to an Elo-based engine."
+   Implementable free: fumble rates, recovery rates, INT rates vs expected.
+3. **OL vs DL pressure matchup (pressure rate, PRWR/PBWR-style features).**
+   The engine is blind to the trenches; pressure is the most predictive single
+   matchup lens. Pressure creation is the stable skill; pressure-to-sack
+   conversion is noisy and QB-influenced. FTN charting inside nflverse is free
+   (CC-BY-SA).
+4. **QB efficiency: EPA/dropback + CPOE.** Highest-leverage single position
+   input; the engine has no QB-efficiency term distinct from team Elo. CPOE is
+   free via nflverse and also powers the backup-QB downgrade (injury
+   adjustment) that Elo handles crudely.
+5. **Market-relative calibration: CLV tracking, consensus, line movement.**
+   Attacks the ESTABLISHED 23%-vs-52.4% blocker directly. v5.3.0's conjunction
+   gate compares model p to de-vigged market p at publish; the missing piece is
+   learning FROM the market: closing-line value as a training label, public
+   consensus splits, line-movement features. The market is the best available
+   ensemble of everyone in sections 1-2.
+
+**Next tier:** 6. Explosive-play differential (HIGH, spreads/totals) ·
+7. DAVE-style early-season shrinkage toward a Vegas-anchored prior, decaying
+weight (HIGH early season; directly addresses the "NFL n=70" problem) ·
+8. Situation-neutral pace + stadium-specific wind modeling (HIGH for totals) ·
+9. Special-teams EPA (MEDIUM, ~2% RMSE) · 10. Coaching aggressiveness prior
+(MEDIUM, ~0.5-1.5 pts/game) · 11. Coverage/box-count splits (MEDIUM; already in
+scraping queue; more prop-relevant) · 12. Red-zone trip rate (MEDIUM) ·
+13. PFF grades / SIS charting (MEDIUM, paid) — FIRST paid upgrade worth
+evaluating, only AFTER the free stack is live and measured.
+
+**Explicitly deprioritized (evidence says small or zero):** bye-week
+coefficients (edge vanished post-2011 CBA) · travel/time-zone/altitude (no
+verified coefficient) · raw 3rd-down conversion (TRAP — "nearly meaningless";
+use early-down success) · rush EPA as team-strength driver (predicts at a
+fraction of passing efficiency).
+
+### 4. Data sources: free vs paid vs social-only
+
+**Free (the legal foundation):**
+| Source | What's available | License |
+|---|---|---|
+| nflverse (nflfastR/nflreadR) | Play-by-play 1999+, rosters, schedules, depth charts, injuries, snap counts, participation, NGS tables, PFR advanced mirror, FTN charting subset (2022+) | Code MIT; data CC-BY 4.0 (credit "nflverse"); FTN charting CC-BY-SA 4.0 (share-alike) |
+| RBSDM.com | Public EPA/success/CPOE leaderboards | Public site; underlying data is nflverse |
+| Pro Football Reference (free) | Box scores, splits, game logs, history | Free to read; no scraping/API right in ToS |
+| NFL official / ESPN public endpoints | Scores, schedules, published FPI/win-rate rankings | Public reading only; not a licensed API |
+| Kaggle/GitHub mirrors | Community datasets incl. betting-line archives | Varies; validate against nflverse |
+| The Spade (Ray Carpenter) | Weekly viz newsletter, methods inspiration | Author IP; methods R&D, not a data feed |
+
+**Paid (verified 2026-09-17):** PFF Pro $199.99/yr (Sep 2026 price drop;
+cheapest legitimate path to grade-level data) · FTN NFL Pro $109.99/yr (DVOA is
+FTN IP) · Stathead (historical $8/mo single / $16/mo all, 2020 — verify
+current) · SIS, SumerSports team tier, TruMedia/Stats Perform, Sportradar,
+SportsDataIO — enterprise, pricing not public (budget five-to-six figures and
+verify with sales before planning around them).
+
+**Scraped / social-only:** ESPN published rankings, FTN DVOA tables, X
+charting accounts, Substacks — research inputs, NOT redistribution sources.
+
+**Licensing reality (five rules):**
+1. Facts aren't copyrightable; compiled databases and presentations are.
+   Computing our own EPA from nflverse is clean; republishing PFF's grades
+   table is not.
+2. nflverse is the engine's legal foundation: CC-BY 4.0 (credit "nflverse"),
+   FTN charting CC-BY-SA 4.0. The only source here that affirmatively grants
+   reuse. Build the v1 feature set here.
+3. Public reading is not redistribution (ESPN, PFR free, RBSDM). Scraped tables
+   for internal research are low-risk; publishing or serving them is not.
+4. The NFL owns the tracking data. Summary NGS tables via nflverse are usable;
+   the raw RFID feed is enterprise-only (Sportradar is the NFL's official
+   data-rights partner).
+5. "Pricing not public — enterprise/consulting" is the honest label for SIS,
+   SumerSports (team tier), TruMedia/Stats Perform, Sportradar, Stats Perform.
+
+**HARD RULE: we read and learn from public posts; we never republish anyone's
+proprietary charts as our own.**
+
+### 5. Engagement plan: 10 accounts to follow and reply to first
+
+Selection: high signal, original analysis, reply-accessible where documented,
+relevant to a prediction engine. Rules: reply with substantive observations,
+never pitch; quote-post charts only with our own computed angle and real
+numbers; no engagement pods; replies build analyst relationships that surface
+methods early.
+
+| # | Handle | Why first | Best reply angle |
+|---|---|---|---|
+| 1 | @csv_enjoyer | Anchor analyst; open-data methods we can audit and rebuild | His EPA charts: reply with a computed extension (e.g. our on/off split for the same matchup) |
+| 2 | @benbbaldwin | Builds nflfastR/nflverse; methodology threads | Computation questions: how a number is built |
+| 3 | @ASchatzNFL | DVOA standard-bearer; benchmark to beat | Unit-level DVOA breakdowns; compare our efficiency splits when they diverge |
+| 4 | @MikeClayNFL | Only explicitly reply-friendly analyst; largest public projection baseline | Methodological questions; he invites error reports |
+| 5 | @KeeganAbdoo | NGS tracking research from inside the source | Tracking-data interpretation; what sensors genuinely support |
+| 6 | @SethWalder | ESPN win rates + receiver tracking; roster-value thinking | OL/DL win-rate matchups (note: more active on Bluesky 2026) |
+| 7 | @KevinCole___ | QB EPA tiers; roster-change point-differential modeling | QB efficiency priors; roster-change quantification |
+| 8 | @SharpFootball | Situational efficiency + personnel tendencies; betting-adjacent audience | Situational splits; schedule/personnel-tendency angles |
+| 9 | @RufusPeabody | Noise-removal and opponent-adjustment methodology | Power-rating construction; garbage-time/penalty-noise handling |
+| 10 | @greerreNFL | Open Elo (nfelo); direct benchmarking peer; DMs invited | Head-to-head rating comparisons; Weighted EPA components |
+
+Also follow (broadcast value, low reply expectation): @NextGenStats, @PFF,
+@SumerSports, @SportsInfo_SIS.
+Second wave: @whale_capper, @ClevTA, @LordReebs, @ihartitz, @DwainMcFarland,
+@TheoAshNFL, @bburkeESPN, @StatsbyLopez, @tejfbanalytics, @BrandonThornNFL,
+@ChrisRaybon, @Josh_Insights, @SamHoppen, @FezzikSports, @Nate_Tice,
+@BenjaminSolak, @BaldyNFL, @DianteLeeFB, @notJDaigle, @adamlevitan,
+@evansilva, @MathBomb.
+
+---
+
+## ADVANCED ANALYTICS v2: DEEP PASS (2026-09-17, Motif)
+
+**Origin:** Garrett: "Keep going — deeper, much much deeper." Three worker
+streams, merged into `docs/2026-09-17-advanced-analytics-landscape-v2.md`
+(25KB, zero handle overlap with v1's 36). Companions:
+`~/workspace/gse-research/dossier-v2-accounts.md` (50 accounts, 10 method
+deep-dives, verification logs), `~/workspace/gse-research/dossier-v2-methods.md`
+(7-topic literature review), `~/workspace/gse-research/nfl-2026/`
+(computed CSVs + COMPUTATION_NOTES.md + script), `~/workspace/gse-research/edge-sheet/`
+(the Edge Sheet prototype).
+
+### 1. 50 more verified accounts, 9 lanes (v2 handle corrections)
+
+Corrections applied in v2 — never use the old forms: @PFF_NateJahnke ->
+**@FFNateJahnke** · @jlarkytweets -> **@JohnLaghezza** · @JuMosq -> **@throwthedamball**
+(failed identity claim; Judah Fortgang) · @CirclesOff -> **@CirclesOffHQ** ·
+@DaveCabanFF -> **@davecabanff** (case-insensitive same account).
+
+New lanes: advanced efficiency modeling (7: @throwthedamball, @statsowar*,
+@ESPN_BillC* [SP+], @mrcaseb*, @LeeSharpeNFL*, @Ben_R_Brown_, @ericeager_
+[Sumer BDUE/GCOE]); betting markets (13: @AnthonyDabbundo, @iamrahstradamus,
+@EvanHAbrams, @TheHammerHQ, @RobPizzola, @CirclesOffHQ, @ForwardNFL,
+@PlusEVAnalytics, @gfienberg17, @CircaSports*, @UnabatedSports, @VSiNLive*,
+@beatingthebook**); cap (1: @Jason_OTC*); fantasy quants (14 incl.
+@The_Oddsmaker, @LateRoundQB*, @FriscoJosh*, @HaydenWinks, @FFNateJahnke,
+@arjunmenon100); RotoViz staff (5); draft (3: @MoveTheSticks*, @dpbrugler*,
+@Jordan_Reid); film (@NFL_DougFarrar); official brands (5: @FantasyLabs,
+@FTNFantasy, @ActionNetworkHQ, @FantasyPros, @numberFire*); indie
+(@EstablishTheRun). Freshness caveats: 14 marked * rest on earlier
+candidate-pool verification (need a freshness check before outreach);
+@beatingthebook** rests on one secondary source; @arjunmenon100 needs role
+confirmation. Do-not-use: @JuMosq, @MattFtheOracle, @_TanHo, @capjack2000,
+@PFF_Brad, @PFF_Mike, @TampaBayTre, @RotoVizRadio, @BetTheProcess, @jeffma,
+@PinnacleSports (all stale/unlocatable per v2).
+
+### 2. Method deep-dives: what makes the 10 targets tick
+
+- **Peabody:** treats model AND market as noisy estimates; bias-index
+  framing (market -7, model -3, true near -5.2) is the cleanest public
+  model-vs-market blending articulation. Bets only past the rake; sizes
+  with the edge.
+- **Schatz (FTN 2026):** DAVE blends preseason forecast with observed DVOA;
+  after Week 1 2026 it was 83% forecast for offense, 98% for
+  defense/special teams. 50,000 season sims with dynamic in-sim adjustment
+  (+1.5% DVOA to winners). His own caveat: "A few of them will look strange
+  to you. A few of them look strange to *me*."
+- **Greer (nfelo):** FiveThirtyEight Elo for the NFL, explicitly regressed
+  toward market spreads (team Elo + QB Elo + SRS from win-total futures +
+  nfelounits). Open source, pip-installable, PredictionTracker-tracked.
+  The most transparent market+model blend in public.
+- **Cole (Unexpected Points):** adjusted scores (stable metrics weighted,
+  high-variance downweighted); Bayesian QB rankings; Improvement Index
+  (NBA-style EPA on/off plus-minus; +43 index ≈ 1.3 wins).
+- **Sharp:** situational EPA decomposed by down/quarter/score/personnel/box
+  count; early-down efficiency isolated from garbage time; explosive-pass-defense
+  schedule adjustments.
+- **Walder/FPI:** Bayesian and market-aware — "based substantially on win
+  totals from Caesars Sportsbook and strength of schedule." Only QB moves
+  the rating (predictive QBR, aging curves, injury probability).
+- **Baldwin:** nfl4th (CRAN); @ben_bot_baldwin grades every coach's
+  fourth-down call vs the model in near real time. League went 16.8%
+  (2019) to 26.5% (2021) on toss-up go-for-it: the league moved toward the
+  model.
+- **Clay:** explicitly non-automated ("statistical calculations and
+  subjective inputs"); projections power the ESPN Fantasy game itself.
+- **Abdoo:** sits at the source of tracking data (Next Gen Stats); Pressure
+  Probability from player tracking; open scraping/cleaning tutorials.
+- **Carpenter:** contribution is data-engineering infrastructure —
+  reproducible NFL pipelines (Docker/dbt/Airflow/Kubernetes/DuckDB,
+  medallion architecture, dbt data-quality tests over raw nflfastR CSVs).
+
+### 3. Methods literature: the traps that change implementation
+
+- **EP model is XGBoost now**, not Yurko's logit. Do not describe current
+  nflfastR `ep_model` as Yurko's multinomial logit. Play-level EP inherits
+  drive-level dependence; validate with drive- or game-grouped splits,
+  never random play splits (Brill et al. 2024).
+- **CPOE feature list is UNVERIFIED.** The methodology article could not be
+  fetched; the commonly quoted "throw depth / receiver separation /
+  pressure" list could not be tied to nflfastR from any source read. Rolling
+  mean CPOE with shrinkage toward zero at low attempt counts.
+- **Turnover split = occurrence (partially skill) vs recovery (near-pure
+  noise).** Fumble-recovery year-to-year correlation 0.00/-0.02 (Stuart);
+  pressure-to-sack conversion "luck" R² < 0.005 (PFF). Engine rule: model
+  occurrence; regress recovery to ~50%; count forced fumbles, never
+  recovered fumbles, in team-strength features.
+- **Fourth-down gap is the edge.** Coaches behave as if optimizing low
+  quantiles (Sandholtz et al. 2024); a WP-maximizing model systematically
+  disagrees with observed coaching. Selection bias (Daly-Grafstein 2023,
+  Heckman-style); yardline-rounding inflation (Lopez 2020).
+- **No peer-reviewed EPA forward-validity study exists** (v2's biggest
+  literature gap). Provider/analyst evidence: passing efficiency vs wins
+  0.53-0.61 vs rushing 0.13-0.19; non-scripted EPA far more stable than
+  scripted; EPA variables carried 10x+ model importance over scripted
+  splits. This independently corroborates DAVE's 83%/98% asymmetry: shrink
+  defensive EPA harder early.
+- **Market-aware modeling is the norm.** FPI leans on market win totals;
+  nfelo regresses to spreads; Peabody blends toward the market as a second
+  noisy estimate. Treat the market as a feature, not an enemy.
+- **Proprietary walls:** full DVOA formula and DAVE decay schedule are
+  UNVERIFIED (proprietary). Implement "DVOA-inspired" EPA with iterative
+  opponent adjustment; never label it DVOA.
+
+### 4. Our own lab numbers (computed 2026-09-17, not quoted)
+
+nflverse play-by-play downloaded and computed locally:
+`~/workspace/gse-research/nfl-2026/team_metrics_2025.csv` (29,239 filtered
+REG plays) and `team_metrics_2026.csv` (Week 1 only, 1,673 plays).
+Filters: REG only, pass/run, no kneels/spikes, garbage time excluded
+(4Q, possession WP >0.95 or <0.05), success = EPA > 0. Success-rate
+convention verified empirically (100% match with EPA > 0).
+Sanity checks passed: 2026 Week 1 unadjusted EPA ranked Jacksonville
+first (+0.400), matching FTN's own statement; 2025 Dallas is the textbook
+turnover-regression case (+0.135 off EPA/play vs 7-9-1 record, 4.6 fewer
+defensive INTs than expected). Bills vs Lions 2025 inputs: BUF +0.132
+EPA/play (dropback +0.174, rush +0.078, def +0.032), DET +0.078 (dropback
++0.168, rush -0.055, def +0.008). License: nflverse CC-BY 4.0, FTN
+charting CC-BY-SA 4.0 — attribute, share alike, never republish their
+proprietary charts as ours.
+
+### 5. GSE Edge Sheet (prototype, 2026-09-17)
+
+One-game 1080x1350 portrait data graphic in FIELD colors, built from the
+lab CSVs: TRUE EFFICIENCY (2025 EPA splits), THE LUCK LAYER
+(actual-vs-expected turnovers, LUCKY/NEUTRAL/UNLUCKY), THE READ
+(illustrative fair line vs market, formula printed on the sheet, labeled
+"Simple illustration, not the GSE engine"). Prototype:
+`~/workspace/gse-research/edge-sheet/build_edge_sheet.py` (deterministic;
+all numbers from CSVs, game metadata via CLI flags) + README. Sample:
+`bills-lions-edge-sheet.png`. The sheet is a data product, not a pick: it
+states efficiency, luck, and an illustrative price — never an outcome.
+Copy rules honored: no em dashes, no banned phrasing, attribution footer.
+
+### 6. What v2 changes for the engine benchmark
+
+1. Opponent adjustment remains the gap; DVOA's 50/30/20 prior-year splits
+   and DAVE's 83%/98% early blend are citable starting points — but our lab
+   numbers are still raw EPA.
+2. Turnover decomposition is implementable now (occurrence modeled,
+   recovery regressed to ~50%).
+3. The 0.53-0.61 vs 0.13-0.19 correlation gap is the single most actionable
+   number in the dossier for feature weighting.
+4. Treat the market as a feature (FPI/nfelo/Peabody all do).
+5. Validation discipline: drive- or game-grouped splits; LOSO calibration
+   for probability models.
+
+---
+
+## CONSENSUS PROPS: BILLS-LIONS 2026-09-17 (Motif, research only)
+
+**Origin:** Garrett: "Dig hard for the consensus props too — use our own
+metrics and data." Full report: `~/workspace/gse-research/props-consensus/props-report.md`
+(52 timestamped lines, 29 projections + 7 NULLs, method appendix).
+
+**Props-lab history (do not re-litigate):** H1 (cold/wind x play-action)
+KILLED — sign-flipped vs pre-reg. H2 (revenge games) KILLED — effect ran
+opposite. H3 (hierarchical compounding) KILLED — game-level branch formally
+closed: "compounding is not detectable at NFL game frequencies with public
+pre-kickoff information." L3 (unavailability → props gap) SHELVED,
+data-blocked.
+
+**Verdict: nothing actionable.** 9 agreements with the market, 12
+directional leans all inside our uncertainty bands. Two largest gaps:
+Allen passing yards market 250.5 vs our 201 (UNDER lean, band 135-265
+covers the line; market weights Week 1 form + missing DET safeties, both
+partially unmodeled); LaPorta receiving yards market 46.5 vs our 79
+(OVER lean on role, n=9 active games). Structural pattern: our trailing-script
+model (DET 63% dropback rate) projects more Detroit receiving production
+than FanDuel across the board — model-vs-model, not edge, and our numbers
+are not opponent-adjusted. Sack props deliberately NULL per the pressure
+literature (conversion luck R² < 0.005). A projection that disagrees with
+the market is a hypothesis, not an edge, until validated. **Nothing here is
+a pick.**
+
+**Honest limitations:** nearly all lines single-book FanDuel (no
+Pinnacle/Circa public numbers; no defensive/kicker/first-TD props found) —
+no true cross-book consensus was reachable. Opponent adjustment qualitative
+only. Inactives unconfirmed at write time.
+
+**Roster corrections verified in play-by-play:** David Montgomery is on
+HOUSTON (no Detroit prop exists); DJ Moore is on BUFFALO; Detroit RB2 is
+Sion Vaki (too thin to price); Detroit down two starting OL (Mahogany,
+Miller — ruled out) and both starting safeties (Branch, Joseph — PUP).
+
+**Recommended next step (research, not picks):** backtest the projection
+method against 2025 Weeks 1-18 closing prop lines. If the gaps predict
+line errors out-of-sample, leans graduate to edges.
+
+---
+
+## OWN-AND-DOMINATE: GARRETT'S 8-POST SWEEP (2026-09-17)
+
+Garrett's directive: "we should own and dominate every single one of these
+stats and understandings." 8 posts sent; only 1 post body retrievable
+(X login wall), so accounts characterized from public sources and method
+claims marked UNVERIFIED where unknowable. Full dossier: entries 51-58 in
+`~/workspace/gse-research/dossier-v2-accounts.md`. Full analysis + build
+specs: `~/workspace/gse-research/props-consensus/agents-draft-eight-posts.md`.
+
+**Accounts:** @The_Coach_A (Cody Alexander, Field Vision — Havoc/Threat
+Ratings, proprietary model, exact formula UNVERIFIED); @kylem_ff (Kyle
+Menton, Fantasy Points — trade chart, FPOE = Fantasy Points Over
+Expectation = XFP - FPG on his chart, FP/S = fantasy points per snap,
+buy/shop/sell coding; Gibbs 80.0 #1 RB, Cook 62.5 with -3.1 FPOE =
+sell-high, ARSB 70.0, Allen top QB, Goff 16.4 FPG / 0.23 FP/S);
+@Doug_Analytics (anonymous, 2 posts — QB EPA in/out of pocket, draft-pick
+Monte Carlo; exact sim UNVERIFIED); @tbir_9 (Panthers fan, engagement only);
+@sfdata9ers (49ers EPA — ST EPA/play, penalty EPA; penalty formula theirs,
+UNVERIFIED); @jonboybeats (Jon Jackson, best-ball/survivor EV);
+@threesandtds24 (Panthers fan, engagement only). @NutshellSportz and
+@GridironInfo_ also verified and added (Garrett's chart finds: RB first-down
+quadrants; 4-man rush vs pressure rate — our computed versions match within
+proxy tolerance; FTN 2026 charting now public and joined).
+
+**Ranked build targets for the engine:** 1) FPOE/xFP stack — FULLY
+reproducible from nflverse (air_yards, pass_location, yardline_100,
+position all present); our edge = luck-layer decomposition, bootstrap
+bands, opponent adjustment, same-day refresh, xFP-vs-FPOE quadrants.
+Highest ROI — feeds trade charts, buy-low/sell-high, props. 2) Doug-style
+single-stat charts (splits we own + draft-pick Monte Carlo with our ELO).
+3) Hidden-yardage chart (ST EPA + penalty EPA + field position, league-wide
+weekly — under-charted niche). 4) Open Havoc (involved-play EPA + scheme
+splits, method published, uncertainty bands). 5) Survivor/best-ball EV
+seasonal. 6) Fan accounts = engagement only, no build. NOT built: Field
+Vision's proprietary per-player model (unreproducible; we build the open
+alternative). Learn, don't lift — no republished charts.
+
+**Extended metric library (2026-09-17):** 29 CSVs across 15 families in
+`~/workspace/gse-research/nfl-2026/` (full inventory in the ENGINE BENCHMARK
+lab-inventory block appended 2026-09-17 below) — kicker by distance bucket, defense
+detail (INT forced rate, FF rate, TFL rate, takeaway rate/drive,
+pts/drive), special teams, turnover luck, down splits, EPA distributions,
+weekly trends, unit matchups, metric percentiles, player first-downs, QB
+aggressiveness (aDOT/CPOE), rush/pressure. All documented in
+COMPUTATION_NOTES.md. "What we use" inventory:
+`~/workspace/gse-research/props-consensus/our-metric-stack.md`.
+
+**Tonight's projections (lab data, NOT picks):** BUF 28 [21,36] - DET 25
+[17,33]; total ~53 vs market 54.5 (agreement); margin -3 (drive method) /
+-7 (EPA method) brackets market -5.5 = model uncertainty, not edge.
+Kickers: Bass 6.8 [3,10], Bates 7.2 [4,11]. Team sacks BUF 2.1 / DET 2.2;
+INTs 0.3 / 0.5; takeaways ~1.1 each; points allowed BUF 25 / DET 28. Only
+public kicker/defense line: both teams 2+ FGs +275 (BetMGM). Individual
+sack props NULL (conversion luck R² < 0.005). 12 leans, all inside bands;
+nothing actionable. Unmodeled: DET's two backup linemen vs BUF's top-5
+four-man rush (the game's structural mismatch); DET's missing safeties vs
+Allen. Full: `~/workspace/gse-research/props-consensus/game-projections.md`.
+
+---
+
+## ENGINE BENCHMARK: PLAYER AIR-YARDS TABLE (2026-09-17)
+
+**Source:** screenshot sent by Garrett 2026-09-17 ~15:05 CDT. Originating
+account UNVERIFIED (chart style consistent with the advanced-metrics
+accounts in the sweep above; do not attribute to any account until
+confirmed). Week 1 2026 player air-yards table, ranked by AY TOTALS, with
+decomposition columns: TGT, AY TOTALS, AY RESULT INCOMPLETE, AY CATCHABLE,
+AY NOT CATCHABLE, AY RESULT DROPPED. Screenshot archived:
+`docs/air-yards-week1-2026.png`.
+
+**League avg (Week 1):** 3 TGT, 31 AY, 15 incomplete-result, 22 catchable,
+11 not catchable, 3 dropped.
+
+**Week 1 AY leaders:** Olave 237 (NO), Metcalf 194 (PIT), DJ Moore 149
+(BUF), M. Washington 128 (MIA), Jameson Williams 128 (DET), Coker 127
+(CAR), N. Collins 122 (HST), R. Wilson 121 (PIT), Watson 119 (GB),
+McMillan 117 (CAR), Nacua 115 (LA), Boston 115 (CLV), Higgins 111 (CIN),
+Golden 109 (GB), Pierce 103 (IND), P. Washington 101 (JAX), Nabers 101
+(NYG).
+
+**Tonight-relevant (Bills-Lions TNF):** Jameson Williams (DET) rank 5 — 9
+TGT, 128 AY, 85 incomplete-result, 112 catchable, 16 not catchable, 47
+dropped. The 47 dropped air yards is the standout of the whole table: his
+downfield role is generating catchable targets that are not converting —
+supports the "Jameson over" lean posted 2026-09-17 (XP-20260917-02) on
+role/air-yards rather than box-score production. DJ Moore (BUF) rank 3 — 7
+TGT, 149 AY, 78 incomplete-result, 71 catchable, 78 not catchable, 0
+dropped: big-play role, low catchability.
+
+**Engine gap:** we have raw air_yards from nflverse (already in the
+FPOE/xFP stack plan) but NOT the catchable / not-catchable /
+dropped-result decomposition — that split is charting data. FTN 2026
+charting is now public and joinable (per sweep notes). Build target: join
+FTN charting catchable flags to nflverse air_yards for a weekly "wasted
+air yards" (dropped + uncatchable) vs "bankable air yards" (catchable)
+receiver table. Feeds the props lane directly: catchable air yards should
+predict receiving-yard floors better than raw AY. Strengthens ranked
+build target #1 (FPOE/xFP stack).
+
+---
+
+## ENGINE BENCHMARK: COVERAGE DEFENDER GRADES (2026-09-17)
+
+**Source:** X post by Brian Nemhauser @hawkbledger (verified), "HB
+ANALYTICS", sent by Garrett 2026-09-17 ~17:05 CDT. Screenshot archived:
+`docs/coverage-defenders-week1-2026.png`.
+
+**Metric:** "Yards per route grade" for coverage defenders (CB, S),
+opponent-adjusted, blended: 2026 through Week 1 with 2025 weighted at
+83%, fading out by Week 6. Filters: played in 2026, 150+ reps. Columns:
+GRADE (yards/route vs avg; negative = better), TREND (sign convention
+UNVERIFIED from screenshot — negatives render red, positives green),
+REPS, RECEIVING YARDS allowed, OVER EXP. (yards saved vs expected;
+negative = fewer than expected = better).
+
+**Top 20 (grade):** 1 Woolen -0.64 (DC, PHI) | 2 Surtain -0.55 (DEN) | 3
+E. Stokes -0.54 (LV) | 4 Q. Mitchell -0.50 (PHI) | 5 Rock Ya-Sin -0.44
+(DET) | 6 J. Love -0.42 (S, SEA) | 7 Jobe -0.41 (SEA) | 8 J. Reid -0.39
+(S, NO) | 9 Benford -0.38 (BUF) | 10 Terrell -0.38 (ATL) | 11 Bullard
+-0.38 (S, GB) | 12 D.J. Turner -0.37 (CIN) | 13 Gardner -0.36 (IND) | 14
+Gonzalez -0.35 (NE) | 15 Lenoir -0.34 (SF) | 16 Hamilton -0.34 (S, BAL)
+| 17 Still -0.33 (LAC) | 18 M. Brown -0.30 (JAX) | 19 B. Jones (cut
+off in screenshot). Post notes: Eagles 2 of top 4, Seahawks 3 of top 20.
+
+**Tonight-relevant (Bills-Lions TNF):** Rock Ya-Sin (DET) #5 coverage
+grade (-0.44) and Christian Benford (BUF) #9 (-0.38, trend +0.15) — both
+teams field a top-10 coverage defender by this metric. Notable given
+Detroit is missing both starting safeties (Branch, Joseph — PUP): the
+cornerback play is grading out even so.
+
+**Method worth stealing:** the 83%-prior blend fading to zero by Week 6
+is a third citable early-season stabilization scheme alongside DVOA's
+50/30/20 and DAVE's 83%/98% (see benchmark section above). Directly
+portable to our own efficiency splits while 2026 samples are tiny.
+
+**Engine gap:** we have no player-level coverage grades — no defender
+route counts, no opponent-adjusted yards/route allowed, no
+expected-yards coverage model. nflverse does not carry defender routes
+or coverage alignment; FTN charting may. Build target (ranked with
+target #1, FPOE/xFP stack): coverage-grade pipeline — charting-derived
+routes + targets faced per defender, opponent/receiver adjustment, and
+the 83%-fade blend for early-season stabilization. Feeds matchup edges
+(WR vs specific CB) the engine cannot price today.
+
+---
+
+## BENCHMARK COMPLETENESS AUDIT (2026-09-17)
+
+Full audit: `~/workspace/gse-research/benchmark-audit-2026-09-17.md` (156 items inventoried: 82 covered, 73 missing — all filed below; 1 archived screenshot corrected: coverage-defenders-week1-2026.png was briefly the wrong image, replaced with Garrett's actual screenshot).
+
+## ENGINE BENCHMARK: SP+ AND MIXED-EFFECTS EPA ATTRIBUTION (2026-09-17)
+
+**Source:** @ESPN_BillC (Bill Connelly, SP+ creator) and @statsowar (Parker
+Fleming, Sumer Sports) — verified accounts in
+`~/workspace/gse-research/dossier-v2-accounts.md` (v2 lane 1). Method claims
+per the dossier; independent verification pending.
+
+**Metric:** SP+ = tempo- and opponent-adjusted, forward-facing efficiency;
+priors phase out weekly; résumé SP+ uses capped margin. @statsowar's EPA
+attribution = mixed-effects modeling of EPA separating QB, coaching,
+opponent, supporting cast, and weather/venue controls. Lane-mates: @mrcaseb
+(nflreadr co-author, data infra), @LeeSharpeNFL (EP/pbp modeling),
+@Ben_R_Brown_ (ESPN Bet data science, blowup-performance probability
+models), @ericeager_ (Sumer: BDUE = Bite Distance Under Expected, GCOE =
+Ground Covered Over Expected — linebacker run-flow vs play-action
+susceptibility).
+
+**Engine gap:** we have no mixed-effects attribution (no QB/coaching/
+opponent/supporting-cast decomposition of EPA) and no SP+-style forward
+prior schedule. Build target: hierarchical EPA attribution on nflverse
+(random effects for QB, coach, opponent); weekly-decaying prior à la DAVE.
+
+---
+
+## ENGINE BENCHMARK: VIG-FREE CONSENSUS AND MARKET TOOLING (2026-09-17)
+
+**Source:** @UnabatedSports (Rufus Peabody's shop), @RobPizzola (betstamp
+co-founder), @CirclesOffHQ, @beatingthebook — verified accounts,
+`~/workspace/gse-research/dossier-v2-accounts.md` (v2 lane 2).
+
+**Metric:** vig-free consensus lines (de-juiced), synthetic hold, +EV /
+arbitrage / middle detection across books. betstamp = line-shopping and
+bet-tracking tooling. Circles Off = market-education content.
+
+**Engine gap:** v5.3.0's conjunction gate compares model p to de-vigged
+market p from one source; we have no multi-book vig-free consensus feed,
+no synthetic-hold computation, and no arb/middle scanner. Build target:
+multi-book consensus puller, de-vig (Shin or logit), synthetic-hold alert.
+
+---
+
+## ENGINE BENCHMARK: FITZGERALD-SPIELBERGER DRAFT VALUE CHART (2026-09-17)
+
+**Source:** @Jason_OTC (Jason Fitzgerald, OverTheCap founder) — verified,
+`~/workspace/gse-research/dossier-v2-accounts.md` (v2 lane 3).
+
+**Metric:** draft-pick value chart that prices draft slots by later
+salary/financial outcomes rather than Pro Bowls or games started.
+
+**Engine gap:** our draft Monte Carlo (build target #2) prices picks by
+expected player value; we have no salary-outcome-based pick valuation.
+Build target: fit pick-value curve on second-contract APY by draft slot.
+
+---
+
+## ENGINE BENCHMARK: FANTASY-PROJECTION METHODS (2026-09-17)
+
+**Source:** @davecabanff (Dave Caban, RotoViz — GLSP: Game Level Similarity
+Projections), @FriscoJosh (Josh Hermsmeyer — air-yards/receiver-usage
+pioneer), @LateRoundQB (JJ Zachariason — value-based drafting),
+@The_Oddsmaker (Sean Koerner — FantasyLabs/Action projections, multiple
+FantasyPros accuracy awards), RotoViz staff, @MoveTheSticks / @dpbrugler /
+@Jordan_Reid (draft), @NFL_DougFarrar (film), @EstablishTheRun —
+all verified, `~/workspace/gse-research/dossier-v2-accounts.md` (v2 lanes
+4-7, 9).
+
+**Metric:** GLSP = range-of-outcomes projections from game-level similarity
+matching; air-yards-based receiver usage (Hermsmeyer); value-based
+drafting; Koerner's weekly projection tiers and best-ball stacks.
+
+**Engine gap:** our player-projection framework (props-consensus) uses base
+rates + script adjustment; we have no similarity-based range-of-outcomes
+engine and no air-yards usage model feeding it. Build target: GLSP-style
+nearest-neighbor game matching for prop distributions; air-yards share as
+a leading usage indicator (links to the air-yards benchmark section).
+
+---
+
+## ENGINE BENCHMARK: BAROMETRIC PRESSURE IN TOTALS MODELS (2026-09-17)
+
+**Source:** Rufus Peabody deep dive, `~/workspace/gse-research/dossier-v2-accounts.md`
+entry 9. Method claim per the dossier; early-career signature, not his
+current stack.
+
+**Metric:** NFL/MLB totals models incorporating barometric pressure and
+humidity as weather variables, alongside wind.
+
+**Engine gap:** AGENTS.md's weather entry covers wind (nonlinear,
+stadium-specific) but not pressure/humidity. Our totals inputs have no
+atmospheric-pressure term. Build target: backtest pressure/humidity
+coefficients on historical totals; experimental only until verified.
+
+---
+
+## ENGINE BENCHMARK: PERCENTILE CONVENTION AND EPA DISTRIBUTIONS (2026-09-17)
+
+**Source:** computed 2026-09-17 by Worker A, `~/workspace/gse-research/nfl-2026/COMPUTATION_NOTES.md`.
+Files: `metric_percentiles_2025/2026.csv`, `epa_distributions_2025/2026.csv`.
+
+**Metric:** percentile pct = (rank-1)/(n-1)×100 per season (n=32),
+**100 = best in league, 0 = worst**; lower-is-better metrics inverted
+(def success allowed, explosive allowed, INT/fumble rates, sack/hit
+allowed, stuff rates). Identifier/volume/raw-count columns get no
+percentile. EPA distributions: long format team×season×side×split
+(all/dropback/rush), columns n, mean, p10/p25/median/p75/p90,
+share_neg_epa, share_chunk_epa (EPA > 1.0).
+
+**Engine gap:** AGENTS.md names these files but not the convention — a
+builder reading "84th percentile" cannot know 100 = best without the
+source doc. Append the convention and the distribution columns; the
+distributions (median vs mean, chunk rate) feed underdog/over pricing
+where tail shape matters.
+
+---
+
+## ENGINE BENCHMARK: WEEKLY TRENDS AND UNIT MATCHUPS (2026-09-17)
+
+**Source:** computed 2026-09-17 by Worker A, `~/workspace/gse-research/nfl-2026/COMPUTATION_NOTES.md`.
+Files: `weekly_trends_2025.csv`, `unit_matchups_2025/2026.csv`.
+
+**Metric:** weekly_trends = 544 rows (32 teams × 17 weeks, bye weeks
+absent): weekly EPA/play, EPA/dropback, EPA/rush, success rate, defensive
+splits. Unit matchups = pass_off/rush_off EPA + success vs pass_def/
+rush_def EPA (sign-flipped) + success allowed, stuff_rate and
+stuff_rate_allowed, int_worthy_throw_rate (2025), n_plays, plus _pct ranks.
+BUF@DET 2025 sheet: BUF pass O +0.174 (84th) vs DET pass D +0.014 (61st);
+DET pass O +0.168 (81st) vs BUF pass D +0.108 (94th).
+
+**Engine gap:** no form/trend features in the engine; no unit-level matchup
+matrix (pass O vs pass D, rush O vs rush D). Build target: weekly-trend
+momentum features and unit-matchup differentials as spread/total inputs.
+
+---
+
+## ENGINE BENCHMARK: DRIVE-OUTCOME SYSTEM (2026-09-17)
+
+**Source:** computed 2026-09-17 by Worker A, `~/workspace/gse-research/nfl-2026/COMPUTATION_NOTES.md`.
+Files: `drive_stats_2025/2026.csv`. **Not currently named anywhere in
+AGENTS.md.**
+
+**Metric:** drive = one (game_id, fixed_drive) group, drive != 0; offense =
+majority posteam; points from score differential (captures PATs, 2-pt,
+safeties). Rates: td_rate, fg_rate, punt_rate, three_and_out_rate (exactly
+3 plays AND punt), turnover_drive_rate (Turnover + Opp touchdown —
+pick-sixes count against the offense), downs_rate, avg_drive_start_own.
+Deliberately UNFILTERED REG sample (punts/FGs/garbage drives are real
+drives). League 2025: 2.10 pts/drive, 24.0% TD, 20.4% 3-and-out, 11.1%
+turnover-drive, avg start own 30.4.
+
+**Engine gap:** engine has no drive-level outcome model — the "drive
+method" margin (-3 vs -7 EPA method for BUF-DET) already showed drive
+anatomy moves the number. Build target: drive-outcome distributions as a
+second scoring model alongside EPA; 3-and-out and turnover-drive rates as
+defensive features.
+
+---
+
+## ENGINE BENCHMARK: DOWN SPLITS AND EXTRA METRICS (2026-09-17)
+
+**Source:** computed 2026-09-17 by Worker A, `~/workspace/gse-research/nfl-2026/COMPUTATION_NOTES.md`.
+Files: `down_splits_2025/2026.csv`, `extra_metrics_2025/2026.csv`.
+**Neither file family is named in AGENTS.md.**
+
+**Metric:** down_splits = team×season×side×down_group (early_1_2 /
+late_3_4): n_plays, epa_per_play (defense sign-flipped), success_rate.
+extra_metrics: stuff_rate (designed rushes with yards_gained ≤ 0),
+stuff_rate_allowed, air_epa/yac_epa/air_yards per dropback and allowed,
+late-and-close EPA (4Q, possession-team wp ∈ [0.20, 0.80], ~50-80
+plays/team/season, n_late_close reported).
+
+**Engine gap:** early-vs-late down decomposition (the v2 literature's
+predictive split: early-down success r ~ 0.36 vs 3rd-down "nearly
+meaningless"); air-vs-YAC EPA split (feeds the FPOE/xFP stack and the
+air-yards benchmark); late-and-close EPA (DET's 6th-percentile collapse was
+the edge sheet's sharpest situational story). None recorded in AGENTS.md.
+
+---
+
+## ENGINE BENCHMARK: KICKER METRICS (2026-09-17)
+
+**Source:** computed 2026-09-17 by Worker, `~/workspace/gse-research/nfl-2026/COMPUTATION_NOTES.md`.
+Files: `kicker_metrics_2025/2026.csv`, script
+`compute_kicker_defense_metrics.py`. FULL-game REG record (no garbage
+filter — a garbage-time FG counts on the scoreboard).
+
+**Metric:** FG attempts/make rate by distance bucket (<30, 30-39, 40-49,
+50+; buckets cross-foot to totals), XP make rate, kicking points/game
+(3×FG+XP per team game; 2-pt excluded), FG/XP EPA per attempt (nflverse
+epa, 100% non-null), kicker names (raw kicker_player_name; 2026 W1 confirms
+T.Bass BUF, J.Bates DET). League 2025: FG 85.6%, XP 95.9%, 7.36 kick pts/g.
+DET paradox: Bates 79.4% FG but 7.94 pts/g — volume (34 att) + nine 50+
+attempts at 44.4% → negative FG EPA/att (-0.080); long attempts are
+negative-EPA on average, not an error.
+
+**Engine gap:** AGENTS.md says "kicker by distance bucket" with no columns,
+no file path, no script. Kicker/defense props lane needs these exact
+fields (tonight's published rows: Bass 6.8 [3,10], Bates 7.2 [4,11]).
+
+---
+
+## ENGINE BENCHMARK: DEFENSIVE DETAIL AND TFL COMPUTATION (2026-09-17)
+
+**Source:** computed 2026-09-17 by Worker, `~/workspace/gse-research/nfl-2026/COMPUTATION_NOTES.md`.
+Files: `defense_detail_2025/2026.csv`.
+
+**Metric:** INT forced rate per opponent dropback; forced fumble rate per
+play (opponent fumble==1); opponent fumble recovery share (fumble_lost /
+fumble); **tfl_rate_per_rush is COMPUTED** — no tackle_for_loss column
+exists in nflverse pbp, so every opponent designed rush with
+yards_gained < 0 counts as a TFL (exact by definition, will not match
+charting vendors' counts); takeaway rate per drive (INT or
+fumble+fumble_lost on pass/run); defensive TD rate per drive
+(return_touchdown==1; 2025: 46 — 29 INT-TD + 18 fumble-TD, 1 flagged both);
+points allowed per drive (opponent final scores ÷ defensive drives,
+unfiltered sample).
+
+**Engine gap:** AGENTS.md names the file with column hints but omits the
+computed-TFL convention and the per-drive rate definitions — the exact
+details a builder needs to extend the defensive side (tonight's rows: team
+sacks BUF 2.1 / DET 2.2; INTs 0.3 / 0.5; takeaways ~1.1 each).
+
+---
+
+## ENGINE BENCHMARK: SPECIAL TEAMS METRICS (2026-09-17)
+
+**Source:** computed 2026-09-17 by Worker, `~/workspace/gse-research/nfl-2026/COMPUTATION_NOTES.md`.
+Files: `special_teams_2025/2026.csv`. FULL-game REG record.
+
+**Metric:** kickoff touchback rate (2025 spot = 35-yard line, dynamic
+kickoff confirmed in drive_start_yard_line); opponent avg start after
+kickoffs (excludes 93/2785 where kicking team kept possession — onside
+kicks unidentifiable, no column); kickoff/punt EPA; kick/punt return EPA
+and yards per return — **bundled caveat: nflverse has no per-return EPA
+column, so these are return-INCLUSIVE play EPA, not isolated return
+skill**; FG/punt/XP blocks forced. League 2025: 20.5% touchback, opp avg
+start own 29.8, kickoff EPA -0.257/kick (kicking off is negative-EPA in the
+dynamic-kickoff era), punt EPA -0.127/punt, 23 FG / 9 punt / 12 XP blocks.
+Kickoff bookkeeping verified: posteam = RETURN team on kickoff plays.
+
+**Engine gap:** AGENTS.md names "special teams" with no columns, no
+caveats, no path. The hidden-yardage build target (#3) is specified as
+"ST EPA + penalty EPA + field position" — these are the ST inputs, and the
+bundled-EPA caveat constrains what can honestly be claimed.
+
+---
+
+## ENGINE BENCHMARK: TURNOVER-LUCK OCCURRENCE VS RECOVERY (2026-09-17)
+
+**Source:** computed 2026-09-17 by Worker, `~/workspace/gse-research/nfl-2026/COMPUTATION_NOTES.md`.
+Files: `turnover_luck_2025/2026.csv`.
+
+**Metric:** luck-layer decomposition. Occurrence (partially skill): forced
+fumbles per play vs league-rate expectation (same actual-minus-expected
+construction as the INT luck columns). Recovery (near-pure noise):
+recovery share minus league mean (2025: 46.3%). Literature: recovery
+~0.00 year-to-year; forced-fumble occurrence weakly repeatable. Textbook
+2025 case: DET forced 19 fumbles (+6.5 over expected) but recovered only
+26.3% (-20 pts vs league) — process good, results unlucky, positive
+regression expected. Engine rule already in AGENTS.md §3: model
+occurrence; regress recovery to ~50%; count forced fumbles, never
+recovered fumbles.
+
+**Engine gap:** AGENTS.md names "turnover luck" and states the engine rule,
+but not the file, the 46.3% league baseline, or the DET case numbers —
+the concrete calibration anchors. Append for completeness.
+
+---
+
+## ENGINE BENCHMARK: PLAYER FIRST-DOWNS, QB AGGRESSIVENESS, RUSH/PRESSURE (2026-09-17)
+
+**Source:** computed 2026-09-17 by Worker, `~/workspace/gse-research/nfl-2026/COMPUTATION_NOTES.md`.
+Files: `player_first_downs_2025/2026.csv`, `qb_aggressiveness_2025/2026.csv`,
+`rush_pressure_2025/2026.csv`, script `compute_player_metrics.py`.
+
+**Metric:** player_first_downs — per-player rushing FD rate
+(rusher_player_name, includes QB scrambles on the QB's row) and receiving
+FD rate per reception AND per target; qualifiers 50+ rushes or 30+ targets
+(2025: 225 players; 2026 W1: 8+/8+, 55 players, role-check only); 2025
+extremes: T.Lawrence 52.1% rush FD (scramble-inflated, documented),
+T.McLaurin 88.9% rec FD. qb_aggressiveness — aDOT (Σair_yards ÷ attempts
+with non-null air_yards; sacks excluded), comp%, expected comp% (nflfastR
+cp), CPOE in percentage points; **throwaway handling: cp = NA on all
+2,132 2025 throwaways, so comp/exp/CPOE are computed on the cp-available
+subset only** (early version got this wrong; fixed); qualifiers 100+ att
+(45 QBs); 2025: Maye +10.6 CPOE, Mariota 10.18 aDOT. rush_pressure —
+four_man_rush_rate = share of dropbacks with FTN n_pass_rushers == 4
+(n_pass_rushers==0 excluded as quirk); pressure_proxy_rate = (qb_hit OR
+sack)/dropback — a FLOOR, no hurries in nflverse or FTN; sanity-checked vs
+@GridironInfo_ W1 chart (BUF 64.3%/21.4% vs chart ~65%/~19%; DET
+63.5%/14.3% vs ~60%/~12%; ordinal agreement, proxy runs 2-3 pts high).
+
+**Engine gap:** AGENTS.md names these as "player first-downs, QB
+aggressiveness (aDOT/CPOE), rush/pressure" with no definitions, no
+qualifiers, no throwaway-handling note, no proxy-floor caveat, no script
+path. The props lane's QB rows and the pressure-matchup feature both rest
+on these conventions.
+
+---
+
+## ENGINE BENCHMARK: LAB SCRIPT AND FILE INVENTORY CORRECTION (2026-09-17)
+
+**Source:** `~/workspace/gse-research/nfl-2026/` directory listing,
+2026-09-17.
+
+**Metric:** the lab produced **29 CSVs across 15 families** (2025 + 2026
+each, except weekly_trends_2025 only): team_metrics, metric_percentiles,
+epa_distributions, weekly_trends, unit_matchups, drive_stats, down_splits,
+extra_metrics, kicker_metrics, defense_detail, special_teams,
+turnover_luck, player_first_downs, qb_aggressiveness, rush_pressure — via
+**4 scripts**: `compute_team_metrics.py` (base filters + team metrics),
+`compute_advanced_metrics.py` (percentiles, distributions, trends,
+matchups, drives, downs, extra), `compute_kicker_defense_metrics.py`
+(kicker, defense detail, special teams, turnover luck),
+`compute_player_metrics.py` (player first-downs, QB aggressiveness,
+rush/pressure). All documented in COMPUTATION_NOTES.md.
+
+**Engine gap:** AGENTS.md says "14 new CSVs" and names one script. The
+count is wrong (29), drive_stats and extra_metrics families are unnamed,
+and three of four scripts are unrecorded. Correct the line to the 15-family
+/ 29-file / 4-script inventory so future work doesn't treat the lab output
+as smaller than it is.
+
+---
+
+## ENGINE BENCHMARK: PROJECTION METHOD — GARBAGE-TIME CORRECTION AND SCRIPT MODEL (2026-09-17)
+
+**Source:** `~/workspace/gse-research/props-consensus/projection_methods.md`
+(Workstream 2, 2026-09-17). **Not currently named in AGENTS.md.**
+
+**Metric:** base prior = 2025 full-season per-game means (filtered sample);
+2026 Wk1 = one-game role check only, efficiency never blended (100%
+2025 / 0% Wk1 for rates). **Garbage-time correction:** filtered per-game
+means understate full-game volume (~11% of plays excluded); each volume
+projection is multiplied by the measured unfiltered/filtered per-game
+ratio for that exact stat (Allen att 1.025, yds 1.031; Goff att 1.105,
+yds 1.094; targets 1.042-1.195). Moves Allen 195→201, St. Brown rec
+6.5→8.0 — measured bias correction, not a fudge. **Script-adjusted volume:**
+2025 dropback rates by possession-WP bucket — BUF lead 50.0% / neutral
+57.2% / trail 61.8%; DET 54.2% / 57.1% / 68.2%. Tonight: BUF 53% (leads
+more), DET 63% (trails more); expected plays BUF 56 / DET 55. QB shares:
+Allen 91.0% of team dropbacks, Goff 98.6%. **Split-half stability:**
+receptions projected only where target-share stability was verifiable
+(St. Brown 29.5/27.0, J. Williams 14.1/17.5, Gibbs 12.3/17.5, Cook
+6.4/8.4); Kincaid/LaPorta fail the naive split-half (injury games) →
+projected on when-active share + Wk1 role confirmation. **Efficiency
+baselines:** YPA Allen 7.83 / Goff 8.01; YPC Cook 5.42 / Gibbs 4.82;
+YPT Kincaid 11.42 / J. Williams 11.07 / LaPorta 10.85 / St. Brown 8.29;
+TD means Allen pass 1.375 / rush 0.875, Goff pass 1.706. **Market audit**
+(DK via SI 2026-09-16): Allen 250.5 vs 201 UNDER lean; Gibbs 89.5 vs 95
+no edge; StB 7.5 vs 8.0 mild over. **Nulls:** Montgomery (DET) VOID —
+on HOU; Vaki too thin; longest reception = noise; individual sacks NULL
+(conversion luck); Milano/Bernard tackles = rotational noise.
+
+**Engine gap:** AGENTS.md's CONSENSUS PROPS section carries verdicts and
+roster corrections but none of the load-bearing method. Without this block
+the numbers are unreproducible from the repo record. Also feeds the
+recommended next step: backtest this method vs 2025 Weeks 1-18 closing prop
+lines.
+
+---
+
+## ENGINE BENCHMARK: PROPS-CONSENSUS SOURCE PATHS (2026-09-17)
+
+**Source:** `~/workspace/gse-research/props-consensus/` directory,
+2026-09-17. **None of these four paths are currently named in AGENTS.md.**
+
+**Metric:** `projection_methods.md` (full method, 11 sections — see block
+above); `kicker-defense-props.md` (kicker/defense prop workstream behind
+tonight's rows Bass 6.8 [3,10], Bates 7.2 [4,11], sacks BUF 2.1 / DET 2.2,
+INTs 0.3 / 0.5, takeaways ~1.1 each, both-teams-2+FGs +275 BetMGM);
+`consensus_lines.csv` (market-line capture); `our_projections.csv` (model
+projection capture); `sources_notes.md` (source/verification notes for the
+props workstream).
+
+**Engine gap:** AGENTS.md references props-report.md, game-projections.md,
+our-metric-stack.md, and agents-draft-eight-posts.md but not these four —
+the method doc and the raw line/projection captures are invisible in the
+repo record. Append the paths.
+
+---
+
+## ENGINE BENCHMARK: EDGE SHEET V2 EIGHT-PANEL REBUILD (2026-09-17)
+
+**Source:** `~/workspace/gse-research/edge-sheet/build_edge_sheet_v2.py` +
+updated `README.md`, 2026-09-17. **Not currently named in AGENTS.md**
+(§5 describes the v1 3-panel prototype only).
+
+**Metric:** complete visual rebuild as a metric-dense 1080×1350 graphic,
+eight panels: 1) efficiency map (32-team EPA/play scatter); 2) 10-metric
+percentile faceoff (sorted by BUF/DET split); 3) pass-game shapes
+(dropback EPA KDE; Gaussian KDE on 539 BUF / 562 DET 2025 dropbacks, tail
+share = P(EPA ≥ 1.0)); 4) luck ledger (actual vs expected turnovers);
+5) form lines (4-week rolling 2025 offensive EPA/play, bye weeks as gaps;
+2026 W1 as isolated hollow dots, "one game each, not a rating"); 6)
+situational edges (2×2 small multiples: early/late/late-and-close/ball
+security — DET late-and-close collapse, 6th percentile, was the sharpest
+story; drive-anatomy scatter cut per rotation rule); 7) unit matchups
+(offense vs opposing defense); 8) THE READ footer (market vs model).
+Methodology: fair line = (BUF net EPA − DET net EPA) × 63 plays + 2.0 home
+field — illustrative only, printed on the sheet. Percentiles: pct_rank
+descending, 100 = best, 2025 season. Turnover luck converted at ~4.5
+points per turnover. Data: `dropback_epa_2025_all.csv`. Deps in `.venv-v2`
+(matplotlib, pandas). Run: `./.venv-v2/bin/python build_edge_sheet_v2.py
+[--market -5.5] [--out bills-lions-edge-sheet-v2.png]`.
+Limitations: no opponent adjustment; 2026 W1 one game; no 2026 weekly
+trends or 2026 INT-worthy data; red-zone and pressure splits not in
+grounded data, not fabricated; no weather/injury/rest.
+
+**Engine gap:** the repo record describes the superseded v1. The v2 is the
+current data product — its panels (percentile faceoff, KDE pass-game
+shapes, form lines, situational multiples) are the reusable graphic
+templates for every future game. Update §5 to v2 and record the fair-line
+formula and the rotation rule ("if two panels say the same thing, cut the
+weaker").
+
+---
+
+## ENGINE BENCHMARK: EDGE-SHEET DESIGN DOCS (2026-09-17)
+
+**Source:** `~/workspace/gse-research/edge-sheet/DESIGN_BRIEF.md` and
+`DESIGN_CRITIQUES_V2.md`, 2026-09-17. **Not currently named in AGENTS.md.**
+
+**Metric:** design brief and v2 critique notes behind the Edge Sheet
+rebuild — the FIELD palette rules, panel rotation decisions, and the
+critiques that drove the v1→v2 rebuild.
+
+**Engine gap:** design rationale is part of the build record; without the
+paths, a future rebuild loses the "why" behind panel choices. Append both
+paths alongside the v2 block.
+
+---
+
+## BENCHMARK SWEEP: X FEED 2026-09-17 (12 FINDS, READ-ONLY)
+
+Swept @GalaxySportsHQ For You feed (Sep 15-17 posts), logged in as
+@GalaxySportsHQ, no likes/replies/follows. 12 quality finds below; all
+filed as benchmark blocks. New dedicated chart sources:
+@sfdata9ers (best new find — composite rankings, read distributions,
+CPOE explainers), @tejfbanalytics (Tej Seth, SumerSports), @Doug_Analytics
+(leaderboards/graphics), @csv_enjoyer (Ray Carpenter, data mines),
+@Clevta (survivor modeling), @PattonAnalytics (StatRankings),
+@StevePalazzolo_ (ex-PFF, methodology critiques). Metric-savvy voices
+active in thread: @benbbaldwin, @SamMonsonNFL, @Shauncore, @friscojosh.
+
+---
+
+## ENGINE BENCHMARK: QB READ DISTRIBUTION (2026-09-17)
+
+**Source:** @KyleM_FF (Kyle, verified)
+https://x.com/KyleM_FF/status/2100593548374765973 and @sfdata9ers
+(verified) https://x.com/sfdata9ers/status/2100304209006735785, both Sep
+17 2026. Data charted by @FantasyPtsData charters / FTNFantasy charting.
+
+**Metric:** Week 1 pass attempts split by progression read
+(primary vs secondary reads). Quantifies how often a QB works past his
+first read — Kyle's note: Caleb Williams "did in fact have secondary
+read pass attempts in Week 1." Thread carries a live methodology debate:
+scramble-counting differences between the @sfdata9ers and @FantasyPtsData
+versions change the numbers.
+
+**Engine gap:** we have no read-progression charting (nflverse and the
+FTN-via-nflverse subset do not carry read number). Build target:
+FantasyPtsData/FTN read-progression charting as a QB-processing feature;
+read-distribution stability as a year-two-breakout signal. Track the
+scramble-counting convention before comparing vendors.
+
+---
+
+## ENGINE BENCHMARK: COMPOSITE QB RANKING FORMULA (2026-09-17)
+
+**Source:** @sfdata9ers (verified)
+https://x.com/sfdata9ers/status/2100656850999886294, Sep 17 2026. Thread
+also carries clean definitions of CPOE and Pressure-to-Sack Ratio
+https://x.com/sfdata9ers/status/2100669798732423350.
+
+**Metric:** all-32-QB composite = EPA/Play + Success Rate + CPOE +
+Air Yards per Reception, explicitly defined. Week 1: Caleb Williams #1,
+Trevor Lawrence #2, Jacoby Brissett #3; Bo Nix #31, Cooper Rush #32.
+Author polling on replacing Air Yds/Rec with Success Rate, Turnover Rate,
+or ANY/A — the formula is still being tuned in public. Pressure-to-Sack
+Ratio = times_sacked / times_pressured (QB pocket responsibility split).
+
+**Engine gap:** our QB efficiency work uses aDOT/CPOE (qb_aggressiveness
+CSV) but no composite and no pressure-to-sack attribution. Build target:
+composite QB rating for matchup adjustments; pressure-to-sack ratio as a
+QB-vs-OL blame split (links to ranked target: pressure matchup).
+
+---
+
+## ENGINE BENCHMARK: UNDER-CENTER USAGE X EFFICIENCY (2026-09-17)
+
+**Source:** Tej Seth @tejfbanalytics (verified, data scientist,
+SumerSports) https://x.com/tejfbanalytics/status/2100584016915190263, Sep
+17 2026 (via @PanthersAnalyst quote). Same author: "PFF game level grades
+discourse is not super interesting in big 2026" (Sep 16) — grading
+skepticism thread worth pulling.
+
+**Metric:** quadrant chart — EPA/play vs under-center snap rate (Week 1).
+Merges formation usage with efficiency to find elite vs inefficient
+under-center offenses (Sam Darnold's Seahawks, Daniel Jones highlighted).
+
+**Engine gap:** we have no formation-usage splits (under-center vs
+shotgun/pistol) in any CSV; nflverse carries shotgun/no_huddle flags but
+we never built the splits. Build target: formation-usage × efficiency
+quadrants per team; under-center rate as a play-action/RPO tell feature.
+
+---
+
+## ENGINE BENCHMARK: SURVIVOR WIN-PROBABILITY FUTURES (2026-09-17)
+
+**Source:** Clevta @Clevta (verified, "Sports Analytics")
+https://x.com/Clevta/status/2100344768303595994, Sep 16 2026.
+
+**Metric:** per-week win-probability charts for Circa and Splash survivor
+contests across the season. Week 2 note: zero teams project at 65%+ in
+the Christmas-week Circa window — CHI (vs GB) and Philly (vs HOU) are
+sub-3-point favorites and the highest win % available.
+
+**Engine gap:** ranked build target #5 is survivor/best-ball EV and we
+have no forward win-probability surface to power it. Build target:
+season-long weekly win-probability grid (from engine ratings) feeding
+survivor EV and future-value pick optimization.
+
+---
+
+## ENGINE BENCHMARK: TIME-TO-PRESSURE LEADERBOARD (2026-09-17)
+
+**Source:** @Doug_Analytics (not verified, "NFL Analytics & Graphics",
+13.9K followers) https://x.com/Doug_Analytics/status/2100394279960969451,
+Sep 16 2026. FTN-branded chart.
+
+**Metric:** Time to Pressure leaderboard — OL/DL/pass-rush timing metric
+(how fast pressure arrives), weekly leaderboard format.
+
+**Engine gap:** our pressure work is a sack+hit floor proxy
+(rush_pressure CSV) with no timing dimension. Build target: time-to-
+pressure as the OL-vs-DL matchup feature (links to ranked targets: hidden
+yardage, pressure matchup); FTN charting now public for 2026 — check for
+a timing column.
+
+---
+
+## ENGINE BENCHMARK: EPA/RUSH BY RUN GAP + GAP-LABEL CRITIQUE (2026-09-17)
+
+**Source:** Ray Carpenter @csv_enjoyer (verified, "In the data mines",
+The Predictors, golfastR)
+https://x.com/csv_enjoyer/status/2099826187912478909, Sep 15 2026; quoted
+by @StevePalazzolo_ (ex-PFF founder, verified).
+
+**Metric:** Week 1 EPA/rush charted by designated run gap. The Palazzolo
+quote is the real value: gap labels do not identify the responsible
+lineman, and NFL gamebook gap calls mislabel outside-zone runs ("wide
+right" called but hitting the A-gap) — a charting-validity warning on the
+whole genre.
+
+**Engine gap:** we have rush EPA splits but no gap data and no
+charting-validity notes. Build target: gap-scheme EPA only with the
+Palazzolo caveat attached; never present gap charts without the
+mislabel warning. Palazzolo is a standing methodology-critique follow.
+
+---
+
+## ENGINE BENCHMARK: DFS OWNERSHIP LEVERAGE MODEL (2026-09-17)
+
+**Source:** @StokasticNFL (Stokastic NFL DFS, brand account)
+https://x.com/StokasticNFL/status/2100630887708688410, Sep 17 2026.
+
+**Metric:** ownership leverage % vs optimal-lineup probability for a
+five-game FanDuel slate (Thu-Mon). Ladd McConkey flagged at "40% leverage,
+the widest gap on a five-game slate" — the model says the field is
+mispricing him.
+
+**Engine gap:** we have no ownership or leverage modeling (ranked target
+#5 best-ball EV touches adjacent space). Build target: leverage =
+projected optimal-lineup share minus projected ownership; mispricing
+flags as a content angle for Thursday-slate posts.
+
+---
+
+## ENGINE BENCHMARK: PFF POSITIVE/NEGATIVE PLAY RATES (2026-09-17)
+
+**Source:** Shaun Newkirk @Shauncore (not verified, CFA, sabermetrics)
+https://x.com/Shauncore/status/2100614026963062795, Sep 17 2026.
+
+**Metric:** new PFF QB metric splitting plays into positive vs negative
+categories. Data behind PFF Pro subscription; methodology not yet
+disclosed — watch for the wider release.
+
+**Engine gap:** none actionable yet (paywalled, undisclosed method).
+Watch item: file the methodology if/when PFF publishes it; do not reverse-
+engineer from the paywalled data.
+
+---
+
+## ENGINE BENCHMARK: MISC SWEEP NOTES (2026-09-17)
+
+**Source:** X feed sweep, Sep 15-17 2026.
+
+- @adamlevitan (verified, EstablishTheRun co-founder)
+  https://x.com/adamlevitan/status/2100599744397766825 — viral (775K
+  views) single-diagnostic chart "what's wrong with the Chargers"; model
+  for data-plus-narrative chart posts. Also noted Sep 16: Jameson
+  Williams had the 8th-most expected fantasy points at WR in Week 1
+  (fantasy xFP model — feeds ranked target #1, FPOE/xFP stack).
+- Novig (verified, Sep 15): Bo Nix Week 1 aDOT of 3.86 yards packaged as a
+  betting-model stat — clever stat packaging, mostly marketing; note the
+  packaging technique, not the number.
+- @Carolinakeith_1 (Professor Keith, verified, Sep 16): Rasheed Walker
+  "2nd highest rate LT in the NFL after 1 week" — underlying metric not
+  named in feed text; incomplete, do not file as a metric until sourced.
+- @PattonAnalytics (Steven Patton, verified, StatRankings data scientist)
+  https://x.com/PattonAnalytics/status/2100671054880415886 — time-of-
+  possession vs opponent offensive output chart (keeping a great offense
+  off the field as defensive game plan; Harbaugh/Giants vs 2026 Eagles
+  example). Classic concept, StatRankings framing.
