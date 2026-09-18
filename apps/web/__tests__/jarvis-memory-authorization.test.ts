@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 /**
  * Jarvis Memory Server Actions — authorization gate tests (P13-01).
  *
@@ -17,7 +18,7 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // ─── Mock auth() — controls whether requireAdminActor throws ───────────────────
 const mockAuth = vi.fn();
-vi.mock("@/lib/auth", () => ({
+vi.mock("@/lib/auth", () => authModuleMock({
   auth: () => mockAuth(),
 }));
 

@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 /**
  * Moderation server-action tests — Trusted Actor Model (Phase 1A/1B).
  *
@@ -19,7 +20,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const mockAuth = vi.fn();
-vi.mock("@/lib/auth", () => ({
+vi.mock("@/lib/auth", () => authModuleMock({
   auth: () => mockAuth(),
 }));
 

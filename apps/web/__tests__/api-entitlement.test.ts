@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
@@ -12,7 +13,7 @@ const mocks = vi.hoisted(() => ({
   getUserEntitlements: vi.fn<(id: string) => Promise<unknown>>(),
 }));
 
-vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: mocks.auth }));
 vi.mock("@/lib/entitlements", () => ({ getUserEntitlements: mocks.getUserEntitlements }));
 
 import { requirePremiumApi, requireFantasyApiRateLimited } from "@/lib/api-entitlement";

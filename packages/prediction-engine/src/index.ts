@@ -1994,3 +1994,16 @@ export {
   MIN_SAMPLES_FOR_DISPERSION,
 } from "./dispersion/estimate-phi.js";
 export type { PhiEstimate, DispersionVerdict } from "./dispersion/estimate-phi.js";
+
+// Venn-Abers Interval Width Measurement Harness (VENN-WIDTH-MEASURE)
+export {
+  evaluateVennWidths,
+  computeWidthDistribution,
+  categorizeBookCountTier,
+  type SettledPickRecord,
+  type VennWidthDistribution,
+  type ScoredPickWidth,
+  type StratifiedVennWidthReport,
+  type BookCountTier,
+  type RunVennWidthEvaluationOptions,
+} from "./calibration/venn-width-harness.js";

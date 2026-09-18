@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
@@ -41,7 +42,7 @@ vi.mock("@sports/db", () => ({
   },
 }));
 
-vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: mocks.auth }));
 vi.mock("@/lib/entitlements", () => ({ getUserEntitlements: mocks.getUserEntitlements }));
 
 // Keep the readiness gates permissive (public picks on, kill switch off) so

@@ -44,6 +44,7 @@ vi.mock("@sports/prediction-engine", () => ({
   MODEL_VERSION: "vtest",
   MIN_PUBLISH_CONFIDENCE: 50,
   PREMIUM_CONFIDENCE_THRESHOLD: 70,
+  isThreeWayMoneylineSport: (sportKey: string) => sportKey.toLowerCase().startsWith("soccer"),
 }));
 
 vi.mock("../build-independent-fair-values.js", () => ({

@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
@@ -47,7 +48,7 @@ vi.mock("@sports/db", () => ({
   },
 }));
 
-vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: mocks.auth }));
 vi.mock("@/lib/entitlements", () => ({ getUserEntitlements: mocks.getUserEntitlements }));
 
 // Keep bootstrapGateResponse real so the 503 body shape is the genuine one;

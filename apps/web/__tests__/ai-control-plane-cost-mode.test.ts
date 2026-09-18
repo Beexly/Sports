@@ -1,8 +1,9 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 import { describe, it, expect, vi } from "vitest";
 
 // `@/lib/auth/actor` (the TrustedActor constructors) imports the NextAuth
 // module for session resolution; mock it so importing serviceActor stays pure.
-vi.mock("@/lib/auth", () => ({ auth: vi.fn() }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: vi.fn() }));
 import {
   resolveEnvClass,
   resolveCostMode,

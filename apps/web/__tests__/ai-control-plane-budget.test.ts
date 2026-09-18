@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 /**
  * Directive §10 — budget holds and cap invariants (PR #164).
  *
@@ -30,7 +31,7 @@
  */
 import { describe, it, expect, vi } from "vitest";
 
-vi.mock("@/lib/auth", () => ({ auth: vi.fn() }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: vi.fn() }));
 
 import {
   requiresCashReservation,

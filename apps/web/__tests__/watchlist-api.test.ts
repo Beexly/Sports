@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { getEntitlements, type Entitlements } from "@sports/types";
 
@@ -29,7 +30,7 @@ const mocks = vi.hoisted(() => ({
   teamFindMany: vi.fn(),
 }));
 
-vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: mocks.auth }));
 vi.mock("@/lib/entitlements", () => ({ getUserEntitlements: mocks.getUserEntitlements }));
 vi.mock("@sports/db", () => ({
   db: {

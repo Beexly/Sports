@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 /**
@@ -20,7 +21,7 @@ const mocks = vi.hoisted(() => ({
   consumeRateLimit: vi.fn(() => ({ ok: true, retryAfterSec: 0 })),
 }));
 
-vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: mocks.auth }));
 vi.mock("@/lib/api/rate-limit", () => ({
   consumeRateLimit: mocks.consumeRateLimit,
 }));

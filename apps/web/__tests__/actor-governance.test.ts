@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 /**
  * Service/system actor governance + audit receipts (directive 4.2 / 4.3).
  *
@@ -13,7 +14,7 @@
 import { describe, it, expect, vi, beforeEach } from "vitest";
 
 const mockAuth = vi.fn();
-vi.mock("@/lib/auth", () => ({
+vi.mock("@/lib/auth", () => authModuleMock({
   auth: () => mockAuth(),
 }));
 

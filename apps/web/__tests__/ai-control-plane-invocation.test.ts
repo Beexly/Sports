@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 /**
  * Directive §9 — authoritative claim/idempotency, provider-exact dispatch,
  * durable attempts, blocked decisions, and the observability split.
@@ -20,7 +21,7 @@
  */
 import { describe, it, expect, vi } from "vitest";
 
-vi.mock("@/lib/auth", () => ({ auth: vi.fn() }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: vi.fn() }));
 
 import type {
   AiTaskInvocationRequest,

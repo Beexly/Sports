@@ -1,8 +1,9 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
 // The board/state route checks the session to gate confidence values.
 // These tests exercise the anonymous path, so auth resolves to null.
-vi.mock("@/lib/auth", () => ({ auth: async () => null }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: async () => null }));
 
 async function callRoute(path: string): Promise<{ status: number; body: Record<string, unknown> }> {
   vi.resetModules();

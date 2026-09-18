@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
@@ -35,7 +36,7 @@ const mocks = vi.hoisted(() => ({
   auth: vi.fn<() => Promise<{ user?: { id?: string } } | null>>(),
 }));
 
-vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: mocks.auth }));
 
 import { resetRateLimits } from "@/lib/api/rate-limit";
 import { POST as truthFirePost } from "@/app/api/gse/v1/truth/fire/route";

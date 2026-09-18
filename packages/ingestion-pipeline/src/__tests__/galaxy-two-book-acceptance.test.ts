@@ -1,10 +1,10 @@
 /**
- * C-104 / WP-27 acceptance — the completely free two-book board, end to end
+ * C-104 / WP-27 acceptance: the completely free two-book board, end to end
  * and fixture-driven (no network):
  *
  *   ESPN inline scoreboard (book 1, `espn_public`)
  *     + PredExon Kalshi catalog (book 2, `kalshi`, via PredExonKalshiCatalog)
- *     → fetchEspnOddsForSport → DataNormalizer → scoreGames
+ *     -> fetchEspnOddsForSport -> DataNormalizer -> scoreGames
  *
  * With the paid key absent and PREDEXON_INGEST=true an NFL game gets two
  * cleared bookmakers, so MIN_BOOKMAKERS=2 is satisfied and MONEYLINE, SPREAD
@@ -18,13 +18,15 @@ import {
   PredExonClient,
   PredExonKalshiCatalog,
   fetchEspnOddsForSport,
+  toKalshiDateFragment,
 } from "@sports/data-ingestion";
 import { MIN_BOOKMAKERS, scoreGames } from "@sports/prediction-engine";
 import type { GameContextInput, OddsInput } from "@sports/types";
 
-const NOW = new Date("2026-09-13T15:00:00.000Z");
+const NOW = new Date();
 // Must sit inside the ESPN client's -6h..+21d window relative to NOW.
-const KICKOFF = "2026-09-14T17:00:00.000Z"; // Sunday 1pm ET, 26 hours out
+const KICKOFF = new Date(NOW.getTime() + 26 * 3_600_000).toISOString(); // Sunday 1pm ET, 26 hours out
+const FRAG = toKalshiDateFragment(KICKOFF);
 const ENV = { PREDEXON_INGEST: "true", PREDEXON_API_KEY: "test-not-a-real-key" };
 
 function espnScoreboard() {
@@ -70,7 +72,7 @@ type Market = Record<string, unknown>;
 /**
  * The enrichment context processSport hands the scorer (line movement, rest,
  * ATS form, freshness). Two books alone sit under the engine's thin-market
- * penalty and never reach MIN_PUBLISH_CONFIDENCE — by design; production
+ * penalty and never reach MIN_PUBLISH_CONFIDENCE: by design; production
  * always scores with this context, so the acceptance does too. The context
  * is identical in every case below; only the books change.
  */
@@ -97,14 +99,14 @@ function predexonCatalog(opts: { spreadQuoted?: boolean; totalQuoted?: boolean; 
   const { spreadQuoted = true, totalQuoted = true, moneylineQuoted = true } = opts;
   const bySeries: Record<string, Market[]> = {
     KXNFLGAME: [
-      { ticker: "KXNFLGAME-26SEP14PITBUF-BUF", event_ticker: "KXNFLGAME-26SEP14PITBUF", status: "open", yes_subtitle: "Buffalo", outcomes: moneylineQuoted ? two(0.79, 0.81) : [] },
-      { ticker: "KXNFLGAME-26SEP14PITBUF-PIT", event_ticker: "KXNFLGAME-26SEP14PITBUF", status: "open", yes_subtitle: "Pittsburgh", outcomes: two(0.19, 0.21) },
+      { ticker: `KXNFLGAME-${FRAG}PITBUF-BUF`, event_ticker: `KXNFLGAME-${FRAG}PITBUF`, status: "open", yes_subtitle: "Buffalo", outcomes: moneylineQuoted ? two(0.79, 0.81) : [] },
+      { ticker: `KXNFLGAME-${FRAG}PITBUF-PIT`, event_ticker: `KXNFLGAME-${FRAG}PITBUF`, status: "open", yes_subtitle: "Pittsburgh", outcomes: two(0.19, 0.21) },
     ],
     KXNFLSPREAD: [
-      { ticker: "KXNFLSPREAD-26SEP14PITBUF-BUF9", event_ticker: "KXNFLSPREAD-26SEP14PITBUF", status: "open", title: "Buffalo wins by over 9.5 points?", strike_type: "greater", floor_strike: 9.5, outcomes: spreadQuoted ? two(0.51, 0.53) : [] },
+      { ticker: `KXNFLSPREAD-${FRAG}PITBUF-BUF9`, event_ticker: `KXNFLSPREAD-${FRAG}PITBUF`, status: "open", title: "Buffalo wins by over 9.5 points?", strike_type: "greater", floor_strike: 9.5, outcomes: spreadQuoted ? two(0.51, 0.53) : [] },
     ],
     KXNFLTOTAL: [
-      { ticker: "KXNFLTOTAL-26SEP14PITBUF-47", event_ticker: "KXNFLTOTAL-26SEP14PITBUF", status: "open", title: "Total points scored over 47.5?", strike_type: "greater", floor_strike: 47.5, outcomes: totalQuoted ? two(0.54, 0.56) : [] },
+      { ticker: `KXNFLTOTAL-${FRAG}PITBUF-47`, event_ticker: `KXNFLTOTAL-${FRAG}PITBUF`, status: "open", title: "Total points scored over 47.5?", strike_type: "greater", floor_strike: 47.5, outcomes: totalQuoted ? two(0.54, 0.56) : [] },
     ],
   };
   return vi.fn(async (url: string) => {
@@ -194,15 +196,15 @@ describe("C-104 acceptance: free two-book NFL board (ESPN inline + Kalshi via Pr
       expect(p.marketFairProb).toBeLessThan(1);
       const mid = p.factorBreakdown.exchangeMidpointProb;
       // The PredExon catalog's two-way mid for the chosen side, recovered from
-      // the Kalshi book's American price — stored, never used for scoring.
+      // the Kalshi book's American price: stored, never used for scoring.
       expect(typeof mid).toBe("number");
       expect(mid!).toBeGreaterThan(0);
       expect(mid!).toBeLessThan(1);
     }
     // Recovered from the Kalshi book's American prices on the normalized rows:
-    // ML home −400 → 0.80, spread home −108 → 0.5192, total over −122 → 0.5495.
+    // ML home -400 -> 0.80, spread home -108 -> 0.5192, total over -122 -> 0.5495.
     // The mid is the exchange's own two-way quote, not a de-vigged book
-    // average — that is marketFairProb's job.
+    // average: that is marketFairProb's job.
     expect(byType.get("MONEYLINE")!.factorBreakdown.exchangeMidpointProb!).toBeCloseTo(0.8, 3);
     expect(byType.get("SPREAD")!.factorBreakdown.exchangeMidpointProb!).toBeCloseTo(108 / 208, 3);
     expect(byType.get("TOTAL")!.factorBreakdown.exchangeMidpointProb!).toBeCloseTo(122 / 222, 3);

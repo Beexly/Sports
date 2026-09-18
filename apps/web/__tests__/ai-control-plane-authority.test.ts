@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 /**
  * Directive §8 — authority inversion, sealed dependencies, TrustedActor,
  * complete validation, composable data policy, emergency receipts, and
@@ -16,7 +17,7 @@ import { describe, it, expect, vi } from "vitest";
 
 // The TrustedActor constructors import the NextAuth module; mock it so actor
 // minting stays pure in tests (same pattern as moderation-actions.test.ts).
-vi.mock("@/lib/auth", () => ({ auth: vi.fn() }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: vi.fn() }));
 
 import * as publicSurface from "@/lib/ai-control-plane";
 import {

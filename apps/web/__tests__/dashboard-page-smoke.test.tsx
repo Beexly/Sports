@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { render, waitFor } from "@testing-library/react";
 
@@ -21,7 +22,7 @@ const mocks = vi.hoisted(() => ({
   auth: vi.fn<() => Promise<null>>(),
 }));
 
-vi.mock("@/lib/auth", () => ({
+vi.mock("@/lib/auth", () => authModuleMock({
   auth: mocks.auth,
 }));
 

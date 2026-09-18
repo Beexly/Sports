@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { resolveStatsBillingTier } from "../session-tier.js";
 
@@ -14,7 +15,7 @@ import { resolveStatsBillingTier } from "../session-tier.js";
  */
 
 // Anonymous by default: auth() rejects → no user
-vi.mock("@/lib/auth", () => ({
+vi.mock("@/lib/auth", () => authModuleMock({
   auth: vi.fn().mockResolvedValue(null),
 }));
 

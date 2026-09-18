@@ -1,9 +1,10 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // Route is ADMIN-gated (lib/auth/require-admin). Mock the session so the happy
 // path exercises the readiness body, and assert the gate itself separately.
 const { authMock } = vi.hoisted(() => ({ authMock: vi.fn() }));
-vi.mock("@/lib/auth", () => ({ auth: authMock }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: authMock }));
 
 const ORIGINAL_ENV = { ...process.env };
 

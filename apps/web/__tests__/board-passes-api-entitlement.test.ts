@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 import { describe, expect, it, vi, beforeEach } from "vitest";
 import { NextRequest } from "next/server";
 
@@ -26,7 +27,7 @@ const mocks = vi.hoisted(() => ({
   logEntitlementFailClosed: vi.fn(),
 }));
 
-vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: mocks.auth }));
 vi.mock("@/lib/entitlements", () => ({ getUserEntitlements: mocks.getUserEntitlements }));
 vi.mock("@/lib/board/passes", () => ({ loadBoardPasses: mocks.loadBoardPasses }));
 vi.mock("@/lib/entitlement-observability", () => ({

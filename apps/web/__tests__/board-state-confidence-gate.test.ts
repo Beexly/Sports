@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import type { BoardStatePayload, BoardStateRow } from "@/lib/board/state";
 
@@ -15,7 +16,7 @@ const mocks = vi.hoisted(() => ({
   loadBoardState: vi.fn<() => Promise<BoardStatePayload>>(),
 }));
 
-vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: mocks.auth }));
 vi.mock("@/lib/entitlements", () => ({ getUserEntitlements: mocks.getUserEntitlements }));
 vi.mock("@/lib/board/state", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/lib/board/state")>();

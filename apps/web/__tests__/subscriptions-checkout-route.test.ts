@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 import { paidCheckoutOpen } from "@/lib/billing/paid-checkout";
@@ -26,7 +27,7 @@ const mocks = vi.hoisted(() => ({
   reconcileOpenCheckoutSessions: vi.fn<(customerId: string, priceId: string) => Promise<unknown>>(),
 }));
 
-vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: mocks.auth }));
 vi.mock("@/lib/stripe", () => ({
   resolveCheckoutPriceId: mocks.resolveCheckoutPriceId,
   getOrCreateStripeCustomer: mocks.getOrCreateStripeCustomer,

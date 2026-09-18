@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 /**
@@ -27,7 +28,7 @@ const mocks = vi.hoisted(() => ({
 // limiting runs). Stub the app origin to match what the gate enforces.
 const APP_ORIGIN = "https://sports.example.com";
 
-vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: mocks.auth }));
 vi.mock("@sports/db", () => ({
   db: {
     pushSubscription: {

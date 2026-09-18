@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 /**
  * Council Ledger Tests — pure / source-pin, no live DB.
  *
@@ -44,7 +45,7 @@ const TEST_CREDENTIAL: VerifiedCredentialContext = {
 // ─────────────────────────────────────────────────────────────────────────────
 
 const mockAuth = vi.fn();
-vi.mock("@/lib/auth", () => ({
+vi.mock("@/lib/auth", () => authModuleMock({
   auth: () => mockAuth(),
 }));
 

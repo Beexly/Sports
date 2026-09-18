@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 /**
  * P9-05 rate-limiting tests for three newly-protected anonymous GET routes:
  *  - /api/verify/slate   (DB read + live Merkle root recomputation)
@@ -118,7 +119,7 @@ vi.mock("@/lib/seo/site-url", () => ({
   SITE_URL: seoMocks.SITE_URL,
 }));
 
-vi.mock("@/lib/auth", () => ({
+vi.mock("@/lib/auth", () => authModuleMock({
   auth: authMocks.auth,
 }));
 

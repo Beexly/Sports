@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { NextRequest } from "next/server";
 import { getEntitlements, type Entitlements } from "@sports/types";
@@ -29,7 +30,7 @@ const mocks = vi.hoisted(() => ({
   sourceSnapshotFindMany: vi.fn<(args: unknown) => Promise<unknown[]>>(),
 }));
 
-vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: mocks.auth }));
 vi.mock("@/lib/entitlements", () => ({ getUserEntitlements: mocks.getUserEntitlements }));
 // This file's subject is not rate limiting, and its @sports/db mock has no
 // $queryRawUnsafe / isStubMode surface for the durable limiter. Allow-all so

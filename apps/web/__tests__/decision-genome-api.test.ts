@@ -1,9 +1,10 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 
 // Route is ADMIN-gated (lib/auth/require-admin). Mock the session for the happy path,
 // and assert the gate fires (403) for non-admins.
 const { authMock } = vi.hoisted(() => ({ authMock: vi.fn() }));
-vi.mock("@/lib/auth", () => ({ auth: authMock }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: authMock }));
 
 async function callRoute(): Promise<{ status: number; body: Record<string, unknown> }> {
   vi.resetModules();

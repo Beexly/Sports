@@ -1,3 +1,4 @@
+import { authModuleMock } from '@/lib/testing/auth-mock';
 /**
  * Phase 2 PR-D — credit ADMISSION + atomic AUTHORIZATION (directive §11.2/
  * §11.3), rebuilt on top of NOVA S1's canonical `CreditGrantSnapshot` and
@@ -34,7 +35,7 @@
 
 import { afterAll, beforeAll, beforeEach, describe, expect, it, vi } from "vitest";
 
-vi.mock("@/lib/auth", () => ({ auth: vi.fn() }));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: vi.fn() }));
 
 import {
   admitCreditFunded,
