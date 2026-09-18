@@ -199,7 +199,16 @@ export function compareByOrdering(
   a: RankingCandidateRow,
   b: RankingCandidateRow,
 ): number {
-  return ORDERING_BY_NAME[name](a, b);
+  switch (name) {
+    case "current":
+      return orderingCurrent(a, b);
+    case "edge-first":
+      return orderingEdgeFirst(a, b);
+    case "model-minus-market":
+      return orderingModelMinusMarket(a, b);
+    case "priced-tier-first":
+      return orderingPricedTierFirst(a, b);
+  }
 }
 
 export function sortByOrdering(
