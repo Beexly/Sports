@@ -124,4 +124,33 @@ describe("deriveRankingProbability", () => {
     expect(r.rankingP).toBeCloseTo(0.45, 5);
     expect(r.rankingP).toBeLessThan(0.75);
   });
+
+  it("refuses post_settlement_backfill trueProb rather than ranking on the answer", () => {
+    const r = deriveRankingProbability(
+      70,
+      ie({
+        decision: "LEAN",
+        trueProb: 0.81,
+        trueProbBasis: "post_settlement_backfill",
+      }),
+      { independentWeight: 1 },
+    );
+    expect(r.source).toBe("confidence");
+    expect(r.priced).toBe(false);
+    expect(r.rankingP).toBeCloseTo(0.7, 5);
+  });
+
+  it("still prices as_of_mint trueProb", () => {
+    const r = deriveRankingProbability(
+      50,
+      ie({
+        decision: "LEAN",
+        trueProb: 0.63,
+        trueProbBasis: "as_of_mint",
+      }),
+      { independentWeight: 1 },
+    );
+    expect(r.source).toBe("independent_trueProb");
+    expect(r.rankingP).toBeCloseTo(0.63, 5);
+  });
 });

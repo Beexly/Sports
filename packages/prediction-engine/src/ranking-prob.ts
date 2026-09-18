@@ -59,7 +59,8 @@ export function deriveRankingProbability(
   );
 
   const ie = independentEdge ?? null;
-  const trueProb = ie?.trueProb;
+  const trueProb =
+    ie?.trueProbBasis === "post_settlement_backfill" ? null : ie?.trueProb;
   const decision = ie?.decision;
   const hasModelP =
     trueProb != null &&
