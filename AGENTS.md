@@ -3473,8 +3473,43 @@ sibling DFS suites 72/72 including the CP-SAT oracle-checked optimality tests fo
 three modes with and without stacking. trust-gate OK (2,226 files), em-dash-scan OK,
 tsc clean. No gate, flag, schema, floor or MODEL_VERSION touched.
 
-**Still open, named so nobody re-derives them:** `optimizeOne` returns a lineup with no
-provenance, so a budget-truncated result is indistinguishable from a proven one at the
-call site (`GenResult` already models this for the portfolio via `partial`); and
-`fetchLiveWire` swallows per-feed failures into an empty array, so "every configured
-feed is down" surfaces as live-but-empty rather than as unavailable.
+**Provenance: CLOSED (`450ce0ba7`), and it found something on its first run.**
+`solveExact` returns `{ lineup, optimal, nodes, work }`; `optimizeExact` keeps its
+signature and delegates, so no caller changed. `optimal` is the same word with the same
+meaning as `ExactResult.optimal` in `dfs-exact.ts`, deliberately. It never overstates:
+true with a null lineup means infeasibility was PROVED, false always means a budget
+stopped the search, and a path that refuses before searching at all (a pinned player who
+cannot be placed) reports false, because "we did not look" and "we looked and it is not there" must not
+read the same.
+
+What it caught, measured on the shipped 36-player slate: **cash and leverage have never
+been proved.** Cash stops on its own NODE cap at exactly 400,001 nodes and needs 481,198
+to finish; leverage the same; gpp completes in 73,418. Work was 7.16M against a 16.7M
+work budget, so it is the node cap that binds, not the cost budget. Both truncated modes
+return the CORRECT objective (120.5000 and 259.0030, matching the independent solver to
+six decimals), so nothing user-facing is wrong. They were right and were never proved.
+
+The node cap was NOT raised. It is a one-constant change, and it is now safe in a way it
+was not before, because the cost budget bounds wall clock rather than the node count. It
+can return a better lineup on any slate where the search is currently truncated, so it is
+an output change and wants its own before/after rather than riding inside a plumbing
+commit. Whoever takes it: ~20% more nodes is the measured requirement on this slate.
+
+Knock-on already fixed: `dfs-optimizer-edge`'s cash cross-check asserted only ONE side's
+optimality, so a truncated incumbent that happened to reach the same objective passed for
+the same reason a genuinely agreeing one did. It now asserts at least one side is a
+completed search, written as a disjunction so a later cap raise does not fail it.
+
+**Still open, named so nobody re-derives it:** `fetchLiveWire` swallows per-feed failures
+into an empty array, so "every configured feed is down" surfaces as live-but-empty rather
+than as unavailable. The page-level outage state exists (`c71542292`); this is the
+per-feed half underneath it.
+
+**Em dashes in public copy: three passes done, baseline 97 files / 263 lines down to
+87 / 158** (`c037286f9`, `00e71a6af`, `82cf6c6f2`). Eleven files fully cleared. Two rules
+the rewrites follow, learned by reverting a first attempt wholesale: a dash separating a
+term from its definition becomes a colon, never a comma, or a label reads as a list; and
+a dash joining two independent clauses becomes a period, or you get run-ons. Code comments
+are skipped entirely, since a dash in a comment is not customer copy and churning it is
+diff noise. The ratchet in `apps/web/__tests__/em-dash-public-copy.test.ts` may only go
+down.
