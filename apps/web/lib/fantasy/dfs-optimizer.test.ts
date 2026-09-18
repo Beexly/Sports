@@ -72,7 +72,7 @@ function bruteForceBest(pool: readonly DfsPlayer[], mode: Mode, cap: number, req
 
 /** Assert the exact DP's optimum matches the brute-force optimum exactly (value, and set membership). */
 function assertExactOptimum(pool: readonly DfsPlayer[], mode: Mode, stack = false) {
-  const dp = optimizeOne(base({ mode, stack }), undefined, pool);
+  const dp = optimizeOne(base({ mode, stack }), undefined, undefined, pool);
   const { value: bfValue, lineups: bfLineups } = bruteForceBest(pool, mode, SALARY_CAP, stack);
 
   if (bfLineups.length === 0) {
@@ -138,7 +138,7 @@ describe("dfs optimizer — exact DP correctness proof", () => {
     // stack, and still be value-optimal among exactly those lineups — the
     // brute-force reference enforces the same intersection independently.
     const locks = new Set(["r1"]);
-    const dp = optimizeOne(base({ mode: "gpp", stack: true, locks }), undefined, POOL_CLEAR);
+    const dp = optimizeOne(base({ mode: "gpp", stack: true, locks }), undefined, undefined, POOL_CLEAR);
     const mustHave = [...locks];
     let bestValue = -Infinity;
     let bestKeys: string[] = [];
@@ -175,17 +175,17 @@ describe("dfs optimizer — exact DP correctness proof", () => {
   it("returns null when the pool cannot fill a required slot (no TE at all)", () => {
     const pool = POOL_CLEAR.filter((p) => p.pos !== "TE");
     assertExactOptimum(pool, "gpp"); // brute force also finds no feasible lineup
-    expect(optimizeOne(base({ mode: "gpp" }), undefined, pool)).toBeNull();
+    expect(optimizeOne(base({ mode: "gpp" }), undefined, undefined, pool)).toBeNull();
   });
 
   it("returns null when the cheapest feasible lineup still exceeds the cap", () => {
     const pricey = POOL_CLEAR.map((p) => ({ ...p, salary: p.salary + 100000 }));
-    expect(optimizeOne(base({ mode: "gpp" }), undefined, pricey)).toBeNull();
+    expect(optimizeOne(base({ mode: "gpp" }), undefined, undefined, pricey)).toBeNull();
   });
 
   it("is fully deterministic — identical output across repeated runs", () => {
-    const a = optimizeOne(base({ mode: "leverage" }), undefined, POOL_CLEAR);
-    const b = optimizeOne(base({ mode: "leverage" }), undefined, POOL_CLEAR);
+    const a = optimizeOne(base({ mode: "leverage" }), undefined, undefined, POOL_CLEAR);
+    const b = optimizeOne(base({ mode: "leverage" }), undefined, undefined, POOL_CLEAR);
     expect(a!.map((p) => p.id)).toEqual(b!.map((p) => p.id));
   });
 
@@ -360,7 +360,7 @@ describe("dfs optimizer — 600-player scale (CI-safe timed)", () => {
   it("solves an exact 600-player optimum within 10s (CI-safe)", () => {
     const pool = makeBigPool(600);
     const t0 = Date.now();
-    const lu = optimizeOne(base({ mode: "gpp" }), undefined, pool);
+    const lu = optimizeOne(base({ mode: "gpp" }), undefined, undefined, pool);
     const elapsedMs = Date.now() - t0;
     expect(lu).not.toBeNull();
     expect(lu!.length).toBe(DFS_SLOTS.length);
@@ -371,8 +371,8 @@ describe("dfs optimizer — 600-player scale (CI-safe timed)", () => {
 
   it("is deterministic at 600-player scale too", () => {
     const pool = makeBigPool(600);
-    const a = optimizeOne(base({ mode: "gpp" }), undefined, pool);
-    const b = optimizeOne(base({ mode: "gpp" }), undefined, pool);
+    const a = optimizeOne(base({ mode: "gpp" }), undefined, undefined, pool);
+    const b = optimizeOne(base({ mode: "gpp" }), undefined, undefined, pool);
     expect(a!.map((p) => p.id)).toEqual(b!.map((p) => p.id));
   }, 15000);
 });
