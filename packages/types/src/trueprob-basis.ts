@@ -8,6 +8,15 @@ export type TrueProbBasis = "post_settlement_backfill" | "as_of_mint";
 /** The only basis a trainer may fit on. */
 export const TRAINABLE_TRUE_PROB_BASIS = "as_of_mint" as const;
 
+export type TrainableTrueProbRefusal =
+  | "trueProbBasis_required"
+  | "trueProbBasis_not_trainable"
+  | "trueProb_not_trainable";
+
+export type TrainableTrueProbRead =
+  | { readonly ok: true; readonly trueProb: number }
+  | { readonly ok: false; readonly reason: TrainableTrueProbRefusal };
+
 export function isTrueProbBasis(value: unknown): value is TrueProbBasis {
   return value === "post_settlement_backfill" || value === "as_of_mint";
 }
@@ -38,18 +47,33 @@ function finiteUnitProb(value: unknown): number | null {
 }
 
 /**
+ * Non-throwing trainer admission. Callers that must report a refusal census
+ * (instead of dropping rows silently) use this and count `reason`.
+ */
+export function tryReadTrainableTrueProb(edge: unknown): TrainableTrueProbRead {
+  if (!edge || typeof edge !== "object") {
+    return { ok: false, reason: "trueProbBasis_required" };
+  }
+  const rec = edge as { readonly trueProbBasis?: unknown; readonly trueProb?: unknown };
+  if (!isTrueProbBasis(rec.trueProbBasis)) {
+    return { ok: false, reason: "trueProbBasis_required" };
+  }
+  if (rec.trueProbBasis !== TRAINABLE_TRUE_PROB_BASIS) {
+    return { ok: false, reason: "trueProbBasis_not_trainable" };
+  }
+  const t = finiteUnitProb(rec.trueProb);
+  if (t == null) return { ok: false, reason: "trueProb_not_trainable" };
+  return { ok: true, trueProb: t };
+}
+
+/**
  * Trainable independent trueProb. Throws if the basis is missing or
  * post-settlement, or if the number itself is not a finite (0, 1) probability.
  */
 export function readTrainableTrueProb(edge: unknown): number {
-  if (!edge || typeof edge !== "object") {
-    throw new Error("trueProbBasis_required");
-  }
-  const rec = edge as { readonly trueProbBasis?: unknown; readonly trueProb?: unknown };
-  requireTrainableTrueProbBasis(rec.trueProbBasis);
-  const t = finiteUnitProb(rec.trueProb);
-  if (t == null) throw new Error("trueProb_not_trainable");
-  return t;
+  const read = tryReadTrainableTrueProb(edge);
+  if (!read.ok) throw new Error(read.reason);
+  return read.trueProb;
 }
 
 /**

@@ -5,6 +5,7 @@ import {
   readTrainableTrueProb,
   requireTrainableTrueProbBasis,
   requireTrueProbBasis,
+  tryReadTrainableTrueProb,
 } from "../trueprob-basis";
 
 describe("trueProbBasis", () => {
@@ -46,6 +47,27 @@ describe("trueProbBasis", () => {
     expect(() => readTrainableTrueProb({ rationale: "Retrospective independent blend" })).toThrow(
       "trueProbBasis_required",
     );
+  });
+
+  it("tryReadTrainableTrueProb reports the refusal instead of throwing", () => {
+    expect(tryReadTrainableTrueProb({ trueProbBasis: "as_of_mint", trueProb: 0.62 })).toEqual({
+      ok: true,
+      trueProb: 0.62,
+    });
+    expect(tryReadTrainableTrueProb({ rationale: "Retrospective independent blend" })).toEqual({
+      ok: false,
+      reason: "trueProbBasis_required",
+    });
+    expect(
+      tryReadTrainableTrueProb({
+        trueProbBasis: "post_settlement_backfill",
+        trueProb: 0.81,
+      }),
+    ).toEqual({ ok: false, reason: "trueProbBasis_not_trainable" });
+    expect(tryReadTrainableTrueProb({ trueProbBasis: "as_of_mint", trueProb: null })).toEqual({
+      ok: false,
+      reason: "trueProb_not_trainable",
+    });
   });
 
   it("quarantine strips the trainable column and leaves as_of_mint untouched", () => {

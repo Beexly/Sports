@@ -10,9 +10,14 @@
  *   NEVER use rawEdge / shrunkEdge / edgeScore as ranking p.
  *
  * Does NOT lower floors, flip AUTO_PUBLISH, or apply calibration maps.
+ *
+ * Trainable trueProb only. Untagged historical rows and
+ * post_settlement_backfill are refused (confidence fallback), never ranked
+ * as if they were as-of. Missing basis is refusal, not "not backfill".
  */
 
 import type { IndependentEdgeSummary } from "@sports/types";
+import { tryReadTrainableTrueProb } from "@sports/types";
 
 export type RankingProbSource =
   | "confidence"
@@ -36,8 +41,8 @@ function clamp01(p: number): number {
 /**
  * Derive ranking probability from heuristic confidence + optional independent edge.
  *
- * Finite trueProb → blend (default) or pure independent — even on PASS.
- * Missing / non-finite trueProb → confidence only.
+ * Finite as_of_mint trueProb → blend (default) or pure independent — even on PASS.
+ * Missing / leaked / non-finite trueProb → confidence only.
  */
 export function deriveRankingProbability(
   confidence: number,
@@ -59,14 +64,10 @@ export function deriveRankingProbability(
   );
 
   const ie = independentEdge ?? null;
-  const trueProb =
-    ie?.trueProbBasis === "post_settlement_backfill" ? null : ie?.trueProb;
+  const trainable = ie ? tryReadTrainableTrueProb(ie) : { ok: false as const };
+  const trueProb = trainable.ok ? trainable.trueProb : null;
   const decision = ie?.decision;
-  const hasModelP =
-    trueProb != null &&
-    Number.isFinite(trueProb) &&
-    trueProb > 0 &&
-    trueProb < 1;
+  const hasModelP = trueProb != null;
 
   // Legacy gate (rankOnAnyTrueProb === false): only SPEAK|LEAN.
   const rankOnAny = options?.rankOnAnyTrueProb !== false;

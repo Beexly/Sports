@@ -16,6 +16,7 @@ function ie(
     sources: ["poisson"],
     priced: false,
     rationale: "test",
+    trueProbBasis: "as_of_mint",
     ...partial,
   };
 }
@@ -152,5 +153,20 @@ describe("deriveRankingProbability", () => {
     );
     expect(r.source).toBe("independent_trueProb");
     expect(r.rankingP).toBeCloseTo(0.63, 5);
+  });
+
+  it("refuses untagged historical trueProb (missing basis is not as-of)", () => {
+    const r = deriveRankingProbability(
+      70,
+      ie({
+        decision: "LEAN",
+        trueProb: 0.81,
+        trueProbBasis: undefined,
+      }),
+      { independentWeight: 1 },
+    );
+    expect(r.source).toBe("confidence");
+    expect(r.priced).toBe(false);
+    expect(r.rankingP).toBeCloseTo(0.7, 5);
   });
 });

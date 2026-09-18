@@ -187,6 +187,13 @@ export {
   EVIDENCE_READINESS_FAMILY,
 } from "./evidence-readiness-loader.js";
 export type { EvidenceBundle } from "./evidence-readiness-loader.js";
+export { admitTrainableTrueProbRows } from "./edge-lab/trueprob-admission.js";
+export type {
+  AdmittedTrueProbRow,
+  RefusedTrueProbRow,
+  TrueProbAdmission,
+  TrueProbRefusalReason,
+} from "./edge-lab/trueprob-admission.js";
 // v6 — bankroll math helpers. Exported for future model work; not wired to
 // the public API until price provenance and policy review are complete.
 export {
