@@ -1,5 +1,15 @@
 # GSE Signal Architecture, 2026-09-18
 
+> **SUPERSESSION NOTICE.** Sections 4 through 8 of this document are superseded by
+> `docs/architecture/2026-09-18-parallel-build-plan.md`. The founder rejected this
+> document's serial shape as compressing the business, and he was right: it put the
+> honesty gate at the build boundary when that gate belongs only at the publish
+> boundary. The parallel plan rebuilds the registry and the build order as seven
+> concurrent tracks with 76 work items, 64 of 81 registry rows active immediately, and
+> 10 genuinely blocked. Sections 1, 2, 3 and 9 through 12 below still stand: the
+> inventory, the layer invariants, the founder actions, the do-not list and the
+> verification record are unchanged and are the input the parallel plan builds on.
+
 Author: Fable (architect session). Status: PROPOSED. Supersedes nothing; it sequences
 what already exists.
 
