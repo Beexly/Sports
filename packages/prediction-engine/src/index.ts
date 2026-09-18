@@ -178,6 +178,15 @@ export type {
   EvidenceReadinessMatrix,
   FailureHorizon,
 } from "./evidence-readiness-matrix.js";
+export {
+  evaluateFactorReadiness,
+  reportAllFactorReadiness,
+  rung2EligibleFactorKeys,
+  recordEvidenceReadinessTrial,
+  EVIDENCE_FACTOR_KEYS,
+  EVIDENCE_READINESS_FAMILY,
+} from "./evidence-readiness-loader.js";
+export type { EvidenceBundle } from "./evidence-readiness-loader.js";
 // v6 — bankroll math helpers. Exported for future model work; not wired to
 // the public API until price provenance and policy review are complete.
 export {
