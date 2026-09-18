@@ -615,10 +615,16 @@ Every row in the corpus, re-adjudicated against the verdict vocabulary in sectio
 The prior revision of this table parked most of these behind three measurement fixes.
 That is the shape the founder rejected and it is gone.
 
-**The count is the argument.** Of 81 rows: **62 are BUILDING-NOW**, 7 are CAPTURING-NOW,
-2 are SHADOW-NOW, 3 are FOUNDER-BLOCKED and 7 are KILLED by a recorded measurement.
-**64 of 81 begin capturing today.** Seventy-one rows are active work this week, and the
-only three a founder decision gates are two environment flags and one rights ruling.
+**The count is the argument.** Of 98 rows: **77 are BUILDING-NOW**, 8 are CAPTURING-NOW,
+3 are SHADOW-NOW, **only 2 are FOUNDER-BLOCKED** and 8 are KILLED by a recorded
+measurement. **81 of 98 begin capturing today.** Eighty-eight rows are active work this
+week, and the only two a founder decision gates are the exchange-price rights ruling and
+the unset power-index licence flag.
+
+The table grew during assembly rather than shrinking, and that is the point. It opened at
+81 rows; an adversarial compression pass (section 5.2) found eleven capabilities named in
+the founder's own benchmark notes that had no row at all, and one row that had compressed
+a twelve-family research programme into a single dead line.
 
 Columns: the original nine, plus Verdict, Track and Capture. `Capture` reads `now` when
 the row's as-of log starts today whatever else is true of it, which is the whole point of
@@ -649,7 +655,7 @@ them is used as a baseline.
 | ClubElo | BUILDING-NOW | E | n/a | independent | feature | T1 | package says use-with-caution, app says permission required | `build-independent-fair-values.ts:258` | none | Reconcile to one registry entry, fail-closed to permission-required until ClubElo's terms are actually read; once cleared, a 95 percent CI crossing 0 over market plus Elo plus EPA drops it. | founder |
 | Own expected points, win probability, completion, rush yards, YAC | BUILDING-NOW | E | now | independent component | feature | T1 | nflverse CC-BY 4.0 | `expected-metrics/*` | validated against tracking aggregates; wired to one route | No standalone test: this substrate dies automatically if EPA v2 and the quarterback feature both drop it; if ever used standalone, a 95 percent CI crossing 0 drops it. | prediction-engine |
 | Cross-Venn-Abers interval and selective fire | BUILDING-NOW | D | now | method | gate-veto | T1 | head out-of-fold rows | `edge-lab/selective-gate.ts`, `calibration/cvap.ts` | both candidate width thresholds are un-derived | Any positive excess of debiased out-of-fold miscalibration over the point estimate's own, greater than 0, fails the interval and reverts to the point estimate alone. | prediction-engine |
-| Conformalized quantile regression | BUILDING-NOW | F | now | method | width-input | T1 | head residuals | `apps/web/lib/calibration/cqr.ts:12-15` | at n 5 and alpha 0.1 the clamp claims 90 and delivers 83.33 | Required rank exceeds n: refuse, 0 tolerance for a clamp. At n 5, alpha 0.1 that means refusing rather than the 83.33 percent the current clamp delivers against a claimed 90 percent. | prediction-engine |
+| Conformalized quantile regression | BUILDING-NOW | E | now | method | width-input | T1 | head residuals | `apps/web/lib/calibration/cqr.ts:12-15` | at n 5 and alpha 0.1 the clamp claims 90 and delivers 83.33 | Required rank exceeds n: refuse, 0 tolerance for a clamp. At n 5, alpha 0.1 that means refusing rather than the 83.33 percent the current clamp delivers against a claimed 90 percent. | prediction-engine |
 | Rest, back-to-back, seven-day density | BUILDING-NOW | B feature store | now | schedule | feature | T1 | game columns | `game-context.ts:129-176`; `apps/web/lib/nba/rest.ts` ORPHAN | the bye-week edge vanished after the 2011 agreement; schedule-derived reference features returned FIRE_NOTHING in this repo's own harness | NFL bundle already killed: MI probe p equals 0.060 (not below 0.05) and the logit-pool beta 95 percent CI spans 0, per edge-lab/features/nfl-team-form.ts:1-11 citing schedule-features.ts's SCHEDULE_FEATURE_KEYS run (rolling_wr_diff, rolling_pd_diff, sched:rest_diff), verdict FIRE_NOTHING. For NBA and MLB: kill if the out-of-fold log-loss lower bound over the market-only baseline is not above zero at n greater than or equal to 100 fixture-clustered rows per sport, or an MI probe returns p greater than or equal to 0.05. | prediction-engine |
 | Travel, time zones, altitude | BUILDING-NOW | D gate | now | schedule | gate-veto | T1-capture | static table | `conviction/signals/rest-travel.ts` | no verified coefficient; cannot discriminate in week 1 because every prior game is preseason | Gate: kill, demote to display, if the withheld set is not worse than the kept set over at least 100 fixture-clustered decisions (section 4 promotion path). Feature: no in-repo test has run, so no kill exists yet; a future test kills it if the coefficient's 95 percent CI includes 0 at n greater than or equal to 100. | prediction-engine |
 | Against-the-spread form, head to head, venue | BUILDING-NOW | F trainer | n/a | schedule | feature | T1 | `TeamGameLog` | `game-context.ts:195-224` | flag state unknown | Kill if the coefficient's out-of-fold log-loss lower bound over the market-only baseline is not above zero at n greater than or equal to 100 fixture-clustered rows, or if the leakage check finds any row whose own scored game leaked into its form window. | prediction-engine |
@@ -702,14 +708,32 @@ them is used as a baseline.
 | Shadow team-strength posterior, steam, information bits | SHADOW-NOW | E | now | independent | feature | T1 | `ShadowSignal` | `pipeline/live-orchestrator.ts` | never read by anything | After at least 100 rows per stratum, a lower bound at or below 0 on paired Brier against the current head retires the shadow pass. | prediction-engine |
 | Exchange prices (Kalshi, Polymarket) | FOUNDER-BLOCKED | A | n/a | market | feature | REJECTED | see registries | `polymarket-independent-client.ts` | direct Kalshi path can never fire under current rights | Stays closed at 0 until a rights ruling reopens it; the legal PredExon-mediated route is a different source, tracked at the second-cleared-book row, not this row. | founder |
 | ESPN Power Index | FOUNDER-BLOCKED | E | n/a | independent | feature | T1 | licence flag default closed | `espn-powerindex.ts` | market-anchored prior, so partly the market | Stays inert at 0 until ESPN_POWERINDEX_LICENSED is set; once licensed, a display, or a feature only if divergence from the market is material and a 95 percent CI excludes 0. | founder |
-| Prop alignment | FOUNDER-BLOCKED | D gate | n/a | gate | gate-veto | T1-capture | prop rows in the archive | `conviction/signals/prop-alignment.ts` | the wired fantasy props surface carries a fictional pool | No kill line can run before EVENT_ODDS_INGEST_ENABLED and LINE_ARCHIVE_ENABLED are both true and at least 100 games of real, non-illustrative prop lines exist in OddsLineSnapshot. Once that sample exists: kill if the withheld set is not worse than the kept set over it. | data-ingestion |
+| Prop alignment | BUILDING-NOW | D gate | now | gate | gate-veto | T1-capture | prop rows in the archive | `conviction/signals/prop-alignment.ts` | the wired fantasy props surface carries a fictional pool | No kill line can run before EVENT_ODDS_INGEST_ENABLED and LINE_ARCHIVE_ENABLED are both true and at least 100 games of real, non-illustrative prop lines exist in OddsLineSnapshot. Once that sample exists: kill if the withheld set is not worse than the kept set over it. | data-ingestion |
 | Market-regressed Elo (public nfelo style) | KILLED | E | n/a | independent | display | REJECTED | open source | NONE | regressed toward market spreads by construction | 0 additional evidence required: regressed toward market spreads by construction, so it cannot serve as a market-blind referee, a structural disqualification, not a data test. | prediction-engine |
 | Legacy composite confidence | KILLED | C | n/a | legacy | display | REJECTED | `picks.confidence` | `scoring.ts` three sums | at 80 and above, n 235, claims .8663 and realizes .5191, z -10.7; peaks at 75-79 (.6146) and falls to .4643 at 90-94 | Already crossed: z equals negative 10.7 at confidence 80 and above, n 235; realized win rate falls from 0.6146 at 75 to 79 to 0.4643 at 90 to 94, an inversion at the top. | founder (bump) |
 | Isotonic calibrator on confidence | KILLED | F | n/a | legacy | display | REJECTED | settled picks | `calibration-apply.ts` | pooled-adjacent-violators is monotone; the score is inverted at the top | 0, structural: pooled-adjacent-violators regression is monotone non-decreasing by construction, and the input score is inverted at the top, so it cannot repair what it is given. No amount of additional data changes this. | founder (flag stays off) |
 | Logistic head on the confidence vector (v5.3.0 prototype) | KILLED | F | n/a | legacy | feature | REJECTED | `factorBreakdown` | NONE in repo | test log-loss 0.6678 against 0.7608 for identity, never compared against the market on the same rows | 0: structurally rejected by this document's own section 1 plan changes, which reject confidence becoming the calibrated probability inside the composite. Its only input, Legacy composite confidence, already measures z equals negative 10.7. | prediction-engine |
 | Kelly and stake sizing | KILLED | G | n/a | method | content-only | REJECTED | n/a | `kelly.ts`, `robust-kelly.ts` | n/a | 0: permanently zero public surfaces. A policy kill matching the product's standing responsible-gambling posture, not a data test that could someday pass. | founder |
-| Move-37 families | KILLED | E | n/a | method | content-only | REJECTED | corpus on an unmerged branch | NONE on main | the overnight battery returned no survivor; the inverse-reinforcement family measured 73.70 percent against a 79.07 percent positional baseline | Four sub-families already crossed their own pre-registered line: IRL 73.70 percent accuracy against a 79.07 percent position baseline, NULL; W1 test increment negative 0.0212, sign reversed; W2 test r 0.0112 against a required 0.15; W4 test negative 0.031 at 2.6 standard deviations, sign reversed. | founder |
+| Move-37: W1 spectral EPA, W2 Wasserstein play-mix, W4 adaptive coaching | KILLED | F | n/a | research | feature | REJECTED | nflverse play-by-play, lab-computed | `docs/research/move37/` (BRANCH) | each crossed its own pre-registered kill line: W1 test increment -0.0212 sign reversed, W2 test r 0.0112 against a required 0.15, W4 test -0.031 at 2.6 sd sign reversed | Already crossed. Re-admission needs a new pre-registration naming the prior kill | prediction-engine |
+| Move-37: W3 Fisher-Rao tempo | KILLED | F | n/a | research | feature | REJECTED | nflverse play-by-play | `docs/research/move37/` (BRANCH) | accepted as killed WITHOUT COMPUTE, per the family table | Re-run once before the kill is treated as measured. A kill without compute is a decision, not a measurement | prediction-engine |
+| Move-37: IRL Prelec probability weighting | SHADOW-NOW | F | now | research | feature | T2 | nflverse play-by-play, lab | `docs/research/move37/` (BRANCH), REPAIR-03 `move37_irl_prelec.py` | QUARANTINED, repair supplied, lab executing; the prior CARA design returned 73.70 percent accuracy against a 79.07 percent position baseline, NULL | Pre-registered: alpha in [0.5, 0.9]; kill if alpha outside (0, 1.5] or absolute alpha minus 1 below 0.02 | prediction-engine |
+| Move-37: T3 HMM form regimes | BUILDING-NOW | F | now | research | feature | T2 | nflverse play-by-play | `docs/research/move37/` (BRANCH) | READY FOR LAB REVIEW; D1 to D8 repaired, prior art cited | Lab AIC/BIC plus a shuffle gate. Dies if it fails either | prediction-engine |
+| Move-37: T7 persistent homology | BUILDING-NOW | F | now | research | feature | T2 | nflverse play-by-play | `docs/research/move37/` (BRANCH) | READY FOR LAB REVIEW, likely null by the theorist's own estimate | Run once with Null A and Null B. Do not rescue | prediction-engine |
+| Move-37: T9 causal forest fourth-down | BUILDING-NOW | F | now | research | feature | T2 | nflverse play-by-play | `docs/research/move37/` (BRANCH) | READY FOR LAB REVIEW; Y is play-level WPA, punt and FG split | Gate 2.5e-5, which needs pilot verification first because N-46 and N-47 are unsourced | prediction-engine |
+| Move-37: W5 Wasserstein barycenter, W6 DFA, W7 intrinsic dimension, W8 permutation entropy | BUILDING-NOW | F | now | research | feature | T3 | nflverse play-by-play | `docs/research/move37/` (BRANCH) | NEW, proposed, awaiting lab review; W8 is the theorist's own weak bet | Each carries its own pre-registered duel and kill: W5 below 0.02 R2 vs rolling-EPA(4), W6 below 0.01 vs mean-EPA, W7 below 0.02 vs distinct play-type count, W8 below 0.02 vs pass_oe | prediction-engine |
 | Pressure-to-sack conversion, individual sack props | KILLED | D gate | n/a | trenches | gate-veto | REJECTED | charting | NONE | conversion luck explains under half a percent of variance | R squared below 0.005 (PFF measurement, cited repeatedly in AGENTS.md). Re-admission requires a new pre-registration naming this kill and citing a different measured R squared at or above 0.05. | n/a |
+
+| Mixed-effects EPA attribution (QB, coaching, opponent, supporting cast) | BUILDING-NOW | C | now | efficiency | feature | T1 | nflverse play-by-play, CC-BY-4.0, model training allowed | NEW `packages/prediction-engine/src/nfl/epa-attribution.ts` | named in AGENTS.md ENGINE BENCHMARK: SP+ AND MIXED-EFFECTS EPA ATTRIBUTION; no decomposition exists in the engine today | Random-effect variance for the QB term indistinguishable from zero, or no out-of-fold log-loss gain over team EPA alone | prediction-engine |
+| SP+ style forward rating with weekly-decaying preseason prior | BUILDING-NOW | C | now | efficiency | feature | T1 | nflverse, plus a market-derived preseason prior | NEW | tempo and opponent adjusted, priors phase out weekly; three citable early-season schemes exist (DVOA 50/30/20, DAVE 83/98, the coverage 83 percent fade) | Prior schedule that beats none of the three on out-of-fold log-loss dies | prediction-engine |
+| Coverage-defender grades: opponent-adjusted yards per route allowed | BUILDING-NOW | C | now | coverage | feature | T1 | FTN charting via nflverse, CC-BY-SA-4.0; internal modeling with attribution is CLEAN per registry :143-146 | NEW `packages/prediction-engine/src/nfl/coverage-grades.ts` | AGENTS.md ENGINE BENCHMARK: COVERAGE DEFENDER GRADES; engine has no defender route counts and no expected-yards coverage model | Coefficient interval crosses zero on the first refit, or per-defender reps below the stated floor | prediction-engine |
+| Coverage and box-count matchup features (WR vs CB, RB vs front) | BUILDING-NOW | C | now | coverage | feature | T1 | FTN charting via nflverse, internal modeling clean | NEW | the gate-veto row of the same name is withhold-only; this is its FEATURE companion, which the prior version omitted entirely | Coefficient interval crosses zero, or plays per matchup cell below the stated floor | prediction-engine |
+| Time to pressure, as an OL versus DL timing feature | BUILDING-NOW | C | now | trenches | feature | T1 | FTN charting via nflverse, internal modeling clean | NEW | AGENTS.md ENGINE BENCHMARK: TIME-TO-PRESSURE LEADERBOARD; our only pressure measure is a sack-and-hit floor proxy with no timing dimension | No out-of-fold gain over the existing pressure proxy | prediction-engine |
+| QB read progression, primary versus secondary reads | CAPTURING-NOW | A | now | quarterback | feature | T1-capture | FTN or FantasyPoints charting; read number is NOT in nflverse | NEW capture only | AGENTS.md ENGINE BENCHMARK: QB READ DISTRIBUTION; the scramble-counting convention differs between vendors and must be pinned before any comparison | Log first, test when n arrives. Dies if the coefficient interval crosses zero at the stated n | data-ingestion |
+| Formation usage by efficiency (under centre versus shotgun and pistol) | BUILDING-NOW | C | now | efficiency | feature | T1 | nflverse carries shotgun and no_huddle flags today | NEW | AGENTS.md ENGINE BENCHMARK: UNDER-CENTER USAGE X EFFICIENCY; the splits were never built although the flags exist | Coefficient interval crosses zero on the first refit | prediction-engine |
+| Multi-book vig-free consensus, synthetic hold, arbitrage and middle scanner | BUILDING-NOW | E | now | market | width-input and display | T1 | the odds table, already persisted per book | NEW | AGENTS.md ENGINE BENCHMARK: VIG-FREE CONSENSUS AND MARKET TOOLING; the conjunction gate compares against ONE de-vigged source and there is no multi-book consensus feed | Not a probability, so no kill line applies; it dies if synthetic hold cannot be computed per book | prediction-engine |
+| Draft-pick value priced by second-contract salary outcomes | BUILDING-NOW | C | now | roster | content-only | T3 | OverTheCap style public salary data, rights unread | NEW | AGENTS.md ENGINE BENCHMARK: FITZGERALD-SPIELBERGER DRAFT VALUE CHART; never touches a pick | Content only. Dies if the salary source has no clearance | content-publishing |
+| Survivor and best-ball expected value from a weekly win-probability grid | BUILDING-NOW | G | now | product | display | T1 | our own ratings | NEW | AGENTS.md ranked build target 5; we have no forward win-probability surface to power it | Display only, carries its own n; never presented as a certified probability | frontend-app |
+| DFS ownership leverage (projected optimal share minus projected ownership) | BUILDING-NOW | G | now | product | display | T2 | our own projections plus a public ownership source, rights unread | NEW | AGENTS.md ENGINE BENCHMARK: DFS OWNERSHIP LEVERAGE MODEL; we have no ownership modelling at all | Display only. Dies if no cleared ownership source exists, in which case the factor does not fire | frontend-app |
 
 ### 5.1 Every blocked and killed row, with its blocker named
 
@@ -729,7 +753,64 @@ row without an entry in this list, that revision is wrong.
 - Prop alignment: founder env flag. EVENT_ODDS_INGEST_ENABLED and LINE_ARCHIVE_ENABLED are both unset in Vercel Production, named as still-open founder actions in AGENTS.md. apps/web/lib/conviction/signals/prop-alignment.ts returns null on every candidate and cannot hold or publish anything until both flip and a caller constructs it with live:true. Code, contract and tests are otherwise complete, confirmed by reading the file.
 - Pressure-to-sack conversion, individual sack props: a recorded measurement kill. PFF's measurement shows pressure-to-sack conversion luck explains under 0.5 percent of variance (R squared below 0.005), cited repeatedly in AGENTS.md, so it is retained only as a veto rule against individual sack props and never as a predictive signal; re-admission requires a new pre-registration naming this kill and citing a different measured R squared at or above a stated floor.
 
-### 5.2 Correction applied at assembly: the FTN share-alike ruling was read too broadly
+### 5.2 What an adversarial compression pass found, and what it changed
+
+One of three lenses run against this plan asked a single question: is it still too narrow.
+It was. Its findings are applied above, and recorded here because the failure mode it
+catches is the one that produced ten months of non-compounding work.
+
+**Blocker, fixed.** The registry carried `Move-37 families` as ONE row, verdict KILLED. The
+founder's own family table in AGENTS.md, dated 2026-09-14, shows twelve sub-families of
+which only four are killed: W1, W2 and W4 crossed their own pre-registered kill lines and
+W3 was accepted as killed WITHOUT COMPUTE. IRL is quarantined with a repair executing, T3,
+T7 and T9 are ready for lab review, and W5 through W8 are proposed. Killing a live
+twelve-family programme with one line is exactly the compression this rebuild exists to
+undo. Split into seven rows carrying each family's real status and its own kill line,
+including W3 flagged as a kill that was never actually computed.
+
+**Prop alignment was blocked on flags that are already on.** The row named
+`EVENT_ODDS_INGEST_ENABLED` and `LINE_ARCHIVE_ENABLED` as its blockers. AGENTS.md:776-777
+records both as ON, the first founder-confirmed by screenshot on 2026-09-12 and the second
+under C-62. AGENTS.md:437 separately says prop alignment is "inert pending
+`EVENT_ODDS_INGEST_ENABLED`", so the standing notes contradict themselves. Under the rule
+that a row is only parked when a blocker can be named, and the flags are recorded as set,
+the row is BUILDING-NOW behind its own n floor of 100 games of real, non-illustrative prop
+lines. One founder sentence settles the contradiction either way, and the capture costs
+nothing if the answer is that the flags are off.
+
+**Eleven capabilities had no row at all.** Every one is named in the founder's own
+ENGINE BENCHMARK notes and none had reached this registry: mixed-effects EPA attribution
+separating quarterback, coaching, opponent and supporting cast; an SP+ style forward rating
+with a weekly-decaying prior; coverage-defender grades as opponent-adjusted yards per route
+allowed; coverage and box-count MATCHUP FEATURES as distinct from the withhold-only gate of
+the same name; time to pressure as a timing feature distinct from our sack-and-hit floor
+proxy; quarterback read progression; formation usage by efficiency, which is buildable
+today because nflverse already carries the shotgun flag; multi-book vig-free consensus with
+synthetic hold and a middle scanner; salary-outcome draft-pick valuation; survivor and
+best-ball expected value; and DFS ownership leverage. Added with roles, tiers, sources and
+kill lines.
+
+**The coverage family is a feature family, not only a veto.** The registry had coverage and
+box counts as gate-veto only. Combined with the FTN rights correction in 5.3, which
+establishes that internal modeling on share-alike charting is clean and is the named
+approved route for exactly these signals, the feature companion is buildable now. That
+single pairing is the largest capability unlock in this revision.
+
+**Smaller, applied:** conformalized quantile regression was tagged to the trainer track
+although the fix belongs to the rulers track and the display to surfaces, so it is retagged
+to E. The Kelly row's justification read "policy, not a data test", which is not one of the
+four sanctioned parking reasons; it is a founder product-policy ruling and is labelled as
+one.
+
+**Not yet applied, and named rather than hidden.** The lens observed that this document has
+still never been crossed line by line against the founder's own benchmark completeness
+audit of 2026-09-17, which counted 73 missing items. Eleven of them are now rows. The
+remainder is a real open task and belongs in section 11 rather than in a claim that the
+registry is complete. Two other rows, ClubElo and public money splits, are marked
+BUILDING-NOW without an owning workstream naming them; each needs either a workstream or an
+explicit statement that no cleared source exists yet.
+
+### 5.3 Correction applied at assembly: the FTN share-alike ruling was read too broadly
 
 The committed document says FTN charting-derived columns are "model-ineligible by
 construction until the founder rules." Verified against the app rights registry this
@@ -774,7 +855,7 @@ The blanket nflverse entry itself is CC-BY-4.0 with `model_training_allowed: tru
 required in all outputs, no share-alike (`:120-126`).
 
 
-### 5.3 Correction applied at assembly: Track C's C10 (remote ETKF ensemble)
+### 5.4 Correction applied at assembly: Track C's C10 (remote ETKF ensemble)
 
 Track C marks C10 founder-only, which is the right column, for the wrong reason. Verified
 this session:
