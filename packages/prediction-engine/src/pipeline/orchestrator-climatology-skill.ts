@@ -24,6 +24,7 @@ import {
   brierSkillScore,
   type BinaryOutcome,
 } from "../edge-lab/grouped-climatology.js";
+import type { TrialEntry, TrialOutcome, TrialsRegistry } from "../edge-lab/trials-registry.js";
 
 export const ORCHESTRATOR_CLIMATOLOGY_METHOD_TAG = "orchestrator_climatology_v1" as const;
 
@@ -147,4 +148,48 @@ export function measureOrchestratorVsClimatology(
     orch.settleGame(game.gameId, game.homeTeamIdx, game.awayTeamIdx, game.y);
   }
   return scoreVsExpandingHomeClimatology(pModel, y);
+}
+
+export const ORCHESTRATOR_CLIMATOLOGY_FAMILY = "rung2_orchestrator_climatology";
+
+function outcomeFromVerdict(verdict: OrchestratorClimVerdict): TrialOutcome {
+  if (verdict === "survive") return "admitted";
+  if (verdict === "kill") return "rejected";
+  return "recorded";
+}
+
+/**
+ * Hash-chain the scorecard. Kill line constants are already in this module;
+ * this function records what happened, it does not pick a new threshold.
+ * pValue is null: BSS is not a p-value and will not be faked as one.
+ */
+export function recordOrchestratorClimatologyTrial(args: {
+  readonly registry: TrialsRegistry;
+  readonly scorecard: OrchestratorClimScorecard;
+  readonly recordedAt: string;
+  readonly runId: string;
+}): TrialEntry {
+  if (!args.runId) throw new RangeError("recordOrchestratorClimatologyTrial: runId is required");
+  return args.registry.append({
+    trialId: `${ORCHESTRATOR_CLIMATOLOGY_FAMILY}:${args.runId}`,
+    family: ORCHESTRATOR_CLIMATOLOGY_FAMILY,
+    kind: "model_admission",
+    recordedAt: args.recordedAt,
+    params: {
+      methodTag: args.scorecard.methodTag,
+      baselineP: ORCHESTRATOR_CLIMATOLOGY_BASELINE_P,
+      minN: ORCHESTRATOR_CLIMATOLOGY_MIN_N,
+      killBss: ORCHESTRATOR_CLIMATOLOGY_KILL_BSS,
+      n: args.scorecard.n,
+      modelBrier: args.scorecard.modelBrier,
+      climBrier: args.scorecard.climBrier,
+      expandingClimBrier: args.scorecard.expandingClimBrier,
+      bss: args.scorecard.bss,
+      bssExpanding: args.scorecard.bssExpanding,
+      verdict: args.scorecard.verdict,
+    },
+    pValue: null,
+    statistic: args.scorecard.bss,
+    outcome: outcomeFromVerdict(args.scorecard.verdict),
+  });
 }

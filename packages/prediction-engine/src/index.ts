@@ -1906,10 +1906,12 @@ export type {
 export {
   measureOrchestratorVsClimatology,
   scoreVsExpandingHomeClimatology,
+  recordOrchestratorClimatologyTrial,
   ORCHESTRATOR_CLIMATOLOGY_METHOD_TAG,
   ORCHESTRATOR_CLIMATOLOGY_MIN_N,
   ORCHESTRATOR_CLIMATOLOGY_KILL_BSS,
   ORCHESTRATOR_CLIMATOLOGY_BASELINE_P,
+  ORCHESTRATOR_CLIMATOLOGY_FAMILY,
 } from "./pipeline/orchestrator-climatology-skill.js";
 export type {
   OrchestratorClimGame,

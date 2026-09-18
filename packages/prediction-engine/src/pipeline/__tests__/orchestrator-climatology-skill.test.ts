@@ -3,10 +3,13 @@ import {
   ORCHESTRATOR_CLIMATOLOGY_KILL_BSS,
   ORCHESTRATOR_CLIMATOLOGY_METHOD_TAG,
   ORCHESTRATOR_CLIMATOLOGY_MIN_N,
+  ORCHESTRATOR_CLIMATOLOGY_FAMILY,
   measureOrchestratorVsClimatology,
+  recordOrchestratorClimatologyTrial,
   scoreVsExpandingHomeClimatology,
   type OrchestratorClimGame,
 } from "../orchestrator-climatology-skill.js";
+import { createTrialsRegistry, verifyTrialEntries } from "../../edge-lab/trials-registry.js";
 
 function mulberry32(seed: number): () => number {
   let a = seed >>> 0;
@@ -163,5 +166,55 @@ describe("measureOrchestratorVsClimatology", () => {
     expect(dummy.verdict).toBe("kill");
     // Relative ranking, not a live-skill claim: the filter must beat the dummy.
     expect(measured.modelBrier).toBeLessThan(dummy.modelBrier);
+  });
+});
+
+describe("recordOrchestratorClimatologyTrial", () => {
+  it("hash-chains the scorecard with a null p-value and the pre-registered kill line", () => {
+    const y = Array.from({ length: ORCHESTRATOR_CLIMATOLOGY_MIN_N }, (_, i) => (i % 5 === 0 ? 0 : 1) as 0 | 1);
+    const killed = scoreVsExpandingHomeClimatology(y.map(() => 0.5), y);
+    const oracle = scoreVsExpandingHomeClimatology(
+      y.map(() => 0.8),
+      y,
+    );
+    const short = scoreVsExpandingHomeClimatology([0.9], [1]);
+
+    const reg = createTrialsRegistry();
+    const a = recordOrchestratorClimatologyTrial({
+      registry: reg,
+      scorecard: killed,
+      recordedAt: "2026-09-18T19:20:00.000Z",
+      runId: "dummy-05",
+    });
+    const b = recordOrchestratorClimatologyTrial({
+      registry: reg,
+      scorecard: oracle,
+      recordedAt: "2026-09-18T19:20:01.000Z",
+      runId: "oracle-08",
+    });
+    const c = recordOrchestratorClimatologyTrial({
+      registry: reg,
+      scorecard: short,
+      recordedAt: "2026-09-18T19:20:02.000Z",
+      runId: "short",
+    });
+
+    expect(a.kind).toBe("model_admission");
+    expect(a.family).toBe(ORCHESTRATOR_CLIMATOLOGY_FAMILY);
+    expect(a.pValue).toBeNull();
+    expect(a.outcome).toBe("rejected");
+    expect(b.outcome).toBe("admitted");
+    expect(c.outcome).toBe("recorded");
+    expect(a.hash).not.toBe(b.hash);
+    expect(b.prevHash).toBe(a.hash);
+    expect(verifyTrialEntries(reg.entries()).valid).toBe(true);
+    expect(() =>
+      recordOrchestratorClimatologyTrial({
+        registry: reg,
+        scorecard: killed,
+        recordedAt: "2026-09-18T19:20:03.000Z",
+        runId: "dummy-05",
+      }),
+    ).toThrow(/duplicate/);
   });
 });
