@@ -3040,7 +3040,7 @@ take argmax. 1 forward pass for all fields instead of 150-500 sequential
 autoregressive passes; JSON schema always valid by construction. Uses
 Qwen 2.5 as the decoder example. NOT an NFL metric — filed under the
 standing rule as an ML-infra technique. Possible GSE relevance: fast
-guaranteed-valid structured outputs from models (e.g. pick cards, graded
+schema-valid structured outputs from models (e.g. pick cards, graded
 outputs) without autoregressive latency; verify licensing/attribution
 if building on it. Author/origin of the diagram not verified.
 
@@ -3061,7 +3061,7 @@ Source: public site analysis by Motif (client-side code, sitemap, robots.txt, /m
 - Ruby on Rails + Hotwire (Turbo + Stimulus); 90+ Stimulus controllers; importmap archived at docs/research/2026-09-18/statrankings/js/importmap.json (102 entries).
 - CloudFront CDN; Google Analytics G-7D5HCZG0GX; Rewardful referrals; Avo Rails admin panel.
 - Stripe payments.
-- Separate Python service "odds-engine" with api_server.py: odds sync has a "fast lane" + "full sweep" (~50 leagues), server-side lock, WatermarkBroadcast via Turbo Streams; see RAILS_TRIGGER.md (internal doc referenced in JS comments, not public).
+- Separate Python service "odds-engine" with api_server.py: odds sync has a "fast lane" + "full sweep" (~50 leagues), server-side mutex, WatermarkBroadcast via Turbo Streams; see RAILS_TRIGGER.md (internal doc referenced in JS comments, not public).
 - Server-side namespaces visible in JS comments: Odds::ImpliedProbability (app/services/odds/implied_probability.rb), Odds::Board, Odds::BoardTable, Odds::CustomizePanel, LiveOddsController#sync/#poll, Views::Admin::NFL::ProjectionReviews::Sidebar (admin projection review spreadsheet with manual overrides, server-side recompute).
 - Survivor Map grid model ported from internal mockups/nfl-survivor-map/index.html; "Best Path optimizer" feature removed.
 - No public API, no public code repo found. No /api/ docs.
@@ -3146,7 +3146,7 @@ Bio: "Founder, @StatRankings, Guru Elite, & FTN Fantasy/Data. '22. @Techstars in
 ### JS codebase intel (2026-09-18, full 102-file mine)
 - Infra: AWS Cognito auth (min 8 chars, upper/lower/number/symbol), CloudFront CDN, Stripe hosted checkout, Rewardful referrals (?via= -> client_reference_id), Google One Tap, Avo admin, GA4. No secrets/keys in client code.
 - Internal docs referenced in comments (not public): RAILS_TRIGGER.md (odds-engine trigger), docs/STAT_NUMERIC_IDS.md (StatBuilder stat key -> numeric_id), docs/FANTASY_RANKINGS_URLS.md, SEO.md rules RDM-01..06 (crawl-space discipline: ?return_to= caused "tens of thousands of junk URLs", 32,852 ?sort_field=/?sort_order= variants found by crawlers -> sort headers are buttons not anchors), SPEC.md (Survivor Map; RE-SCOPE 2026-09-01: contest-entries is the ONLY premium-gated surface on Survivor page).
-- odds-engine (Python, api_server.py): "Sync odds now" fast lane + "Full sweep" ~50 leagues, one server-side lock, 90s client backstop. Live board: Postgres trigger -> Turbo Streams WatermarkBroadcast, min interval 5s, price flash on >=0.05 relative implied-probability move (green=better for bettor, red=worse).
+- odds-engine (Python, api_server.py): "Sync odds now" fast lane + "Full sweep" ~50 leagues, one server-side mutex, 90s client backstop. Live board: Postgres trigger -> Turbo Streams WatermarkBroadcast, min interval 5s, price flash on >=0.05 relative implied-probability move (green=better for bettor, red=worse).
 - Ruby internals named: Odds::ImpliedProbability (app/services/odds/implied_probability.rb), Odds::Board/BoardTable/CustomizePanel, LiveOddsController#sync/#poll/#update_preferences, Admin::NFL::ProjectionOverridesController#batch (single PATCH, one transaction, recompute each team once), Views::Admin::NFL::ProjectionReviews::Sidebar/Show (admin projection review spreadsheet), Polymarket::PageData#query, NFL::CoverageIntelligenceQuery::ALL_COVERAGES, Payments::PackagePricing (integer cents, server-side).
 - Formulas: implied probability = price>0 ? 100/(price+100) : -price/(-price+100), rounded to 0.1%. Survivor favored = winPct >= 58; FAV LEFT = remaining favored non-bye weeks; bands >=75/>=60/>=50. Admin projection review: >10% off baseline tints cell (DISCREPANCY_THRESHOLD), >20% off market line = edge flag (over/under); passing/receiving reconciliation ("every passing yard or touchdown is also a receiving yard or touchdown for the same team").
 - Free/gated boundaries (client-verified): free presets = All Games, Last 1, Last 3 only; Last 5/10, Home/Away, specific weeks, Custom Split column gated. Coverage shells: Man = 0,1,2M; Zone = 2,3,4,6,9 (order 0,1,2,2M,3,4,6,9). Odds board up to ~82 sportsbooks; price formats American/%/Cents. PredictionMarkets+ paginates at 50 rows. Archive builder params: archive_download[categories][][registry|category], [seasons][].
