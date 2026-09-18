@@ -1,14 +1,14 @@
 # GSE Signal Architecture, 2026-09-18
 
-> **SUPERSESSION NOTICE.** Sections 4 through 8 of this document are superseded by
-> `docs/architecture/2026-09-18-parallel-build-plan.md`. The founder rejected this
-> document's serial shape as compressing the business, and he was right: it put the
-> honesty gate at the build boundary when that gate belongs only at the publish
-> boundary. The parallel plan rebuilds the registry and the build order as seven
-> concurrent tracks with 76 work items, 64 of 81 registry rows active immediately, and
-> 10 genuinely blocked. Sections 1, 2, 3 and 9 through 12 below still stand: the
-> inventory, the layer invariants, the founder actions, the do-not list and the
-> verification record are unchanged and are the input the parallel plan builds on.
+> **STATUS, 2026-09-18.** Sections 3 through 8 of this document were rebuilt in place on
+> the parallel frame and are current. An earlier notice here said they were superseded by
+> `docs/architecture/2026-09-18-parallel-build-plan.md`; that was written by a concurrent
+> session before this rebuild landed and is no longer accurate. The parallel build plan is
+> a COMPANION that states the seven tracks compactly. This document carries them at full
+> width, with all 99 registry rows re-adjudicated in the main table: 78 BUILDING-NOW,
+> 8 CAPTURING-NOW, 3 SHADOW-NOW, 2 FOUNDER-BLOCKED, 8 KILLED. Sections 1, 2 and 9 through
+> 12 stand unchanged: the verdict, the inventory, the founder actions, the do-not list and
+> the verification record.
 
 Author: Fable (architect session). Status: PROPOSED. Supersedes nothing; it sequences
 what already exists.
@@ -864,6 +864,27 @@ The registry rows are corrected accordingly: the box-count and personnel half is
 BUILDING-NOW, and the coverage-grade, time-to-pressure and receiver-versus-defender rows
 are FOUNDER-BLOCKED under "genuinely absent source" rather than being quietly sourced to a
 dataset that does not contain them.
+
+**The constants were measured against our own data and they fail.** The external build
+published its timing profile as deep 2.5s, short 3.0s, intermediate 4.0s. This repository
+carries real `avg_time_to_throw` values in
+`packages/data-ingestion/src/__tests__/nflverse-ngs.test.ts`, whose header records that
+they were verified live against the source to the decimal on 2026-07-03. Two quarterbacks
+at 9.1 average intended air yards, which is intermediate depth, read 2.799s and 2.970s.
+
+- **Scale.** The claimed intermediate value of 4.0s is 35 to 43 percent above the measured
+  band at that depth. It is not a rounding difference, it is outside the distribution.
+- **Ordering.** The profile puts deep (2.5s) BELOW short (3.0s). Deeper routes take longer
+  to develop, so time to throw rises with depth. The profile is inverted, and it is also
+  non-monotone, with intermediate above both.
+- **Definition.** The profile describes the interval as occurring "before snap". Time to
+  throw and time to pressure are both measured from the snap forward. Nothing about either
+  happens before it.
+
+This is what the rule above is for. A constant cannot be wrong in a way anyone notices
+until someone measures it, and by then it has been inside a model for weeks. Here it took
+one comparison against a fixture this repository already pins.
+
 
 **I was wrong to block these three rows, and the research the founder asked for found it.**
 An earlier revision of this section marked coverage grades, time to pressure and receiver
