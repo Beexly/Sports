@@ -2296,3 +2296,75 @@ independent blend carries no information beyond the market, sections 3 through 8
 plan to publish market reads honestly rather than a plan to publish an edge, and that is a
 materially different product. The architecture is built so that finding out costs one
 script and one run, not a quarter.
+
+---
+
+## 13. Verification record for the rebuild
+
+Section 12 records what was verified for the ORIGINAL document and is left byte-identical.
+It does not cover the rebuild of sections 3 through 8, which needs its own record. Law 4
+requires stating what was run and what was not, so both lists are below.
+
+**Ran and passed.**
+
+- A thirteen-agent workflow completed with zero errors: seven concurrent track designers,
+  three registry re-adjudicators, and three adversarial lenses (honesty and law compliance,
+  compression, buildability). Every lens finding is applied and marked in place.
+- Guardrails, re-run after every edit that touched this file: 26 of 26 green, every time.
+- Em dashes: zero, checked programmatically on each commit.
+- Path audit of the rebuilt sections: 260 distinct cited paths, brace-expanded, of which
+  206 resolve on `main`. The remaining 54 are the files these rows create, plus the
+  `nfl-adv/*` modules which are BRANCH. Section 8 states that convention with the count.
+- Preservation, asserted rather than eyeballed, on every commit: section 12 byte-identical
+  at 45 lines, the header and section 1 verdict byte-identical, and section 2 changed by
+  exactly the two lines of the corrected season citation described below.
+- Ledger guard: one violation, M-1's owner, which is founder-only. Reproduced locally as
+  `agent-ledger.test.ts:57`, 1 failed and 35 passed.
+- Roughly twenty repository facts spot-checked directly rather than taken from the handoff,
+  including the post-settlement rewrite, the unpenalized intercept, walk-forward having no
+  group key at all, `ClosingOddsRow` carrying no book identifier, the cqr clamp, the
+  null-clock hole, `isBootstrap` defaulting true, zero conviction-gate importers, the
+  evidence matrix having no runtime caller, `GameSignal`'s single two-key writer, and both
+  `Signal` and `GateDecision` having no writer.
+- A falsification, measured: the external build's timing profile of deep 2.5s, short 3.0s,
+  intermediate 4.0s, against `avg_time_to_throw` values this repository pins as verified
+  live to the decimal. Intermediate is 35 to 43 percent above the observed band, the depth
+  ordering is inverted, and the stated interval is defined against the wrong side of the
+  snap.
+- The completeness cross-check against the founder's benchmark audit: 15 of 15
+  signal-bearing items in its section 2B have a registry row, matched programmatically.
+
+**Did not run, and the gaps matter.**
+
+- **No database, at any point.** No query, no probe, not even read-only. Every production
+  number in this document comes from a repository document or a prior recorded measurement
+  and carries that provenance.
+- **The three lenses reviewed the track digests, not this assembled text.** They saw each
+  track's charter, workstreams, invariants and the registry verdicts. They did not review
+  the final prose. So the document as it now reads has not itself been adversarially
+  reviewed end to end, and a defect introduced during assembly would not have been caught
+  by them. Two such defects were in fact caught, one by a lens and one by an assertion,
+  which is evidence the risk is real rather than theoretical.
+- **FTN's actual column list was never confirmed against the real file.** This repo's
+  dataset description and the 2026-07-16 rights verdict disagree about whether man and zone
+  coverage is charted. Section 5.3 marks that row verify-before-building rather than
+  resolving it from two conflicting secondary sources.
+- **No full test suite run.** Dependencies are installed and targeted tests plus the
+  guardrail suite were run; the whole workspace suite was not, because this change is a
+  document and no code path changed.
+- **`ever-co/ever-gauzy` was read only for the two scoped questions.** Its plugin
+  architecture, desktop packages, MCP server, authorization model, migrations and tests
+  were not sampled.
+
+**One deliberate departure from the brief.** The instruction was to keep section 2 intact.
+Its season-resolution row cited `nflverse-season.ts:486-492, 533-540`, and that file is 178
+lines, so the citation could not resolve. Leaving a false line number violates law 4 and
+correcting it departs from the instruction. Truth was chosen and the departure is recorded
+here rather than left silent. It is two lines and it is trivially revertible if the founder
+prefers the inventory frozen.
+
+**What would most change the rebuild.** The same thing as before: the step-0 probe and
+Question Zero. Nothing in this rebuild makes the engine's edge more likely to exist; it
+makes finding out cheaper, and it makes the capture that precedes finding out start today
+rather than after the answer.
+
