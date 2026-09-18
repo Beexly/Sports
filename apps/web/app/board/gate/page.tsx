@@ -120,7 +120,7 @@ function inputClaim(mode: GateMode): { badge: string; body: JSX.Element } {
           , read from the database when you loaded this page. Prices are the
           captured quotes for each pick&apos;s own market, de-vigged from both
           sides. Calibration comes only from settled picks whose provenance
-          proves they were eligible to learn from — a pick without that proof is
+          proves they were eligible to learn from, a pick without that proof is
           excluded rather than assumed good.
         </>
       ),
@@ -132,11 +132,11 @@ function inputClaim(mode: GateMode): { badge: string; body: JSX.Element } {
       <>
         <strong className="text-ion-white">The decision logic is production code.</strong>{" "}
         Nothing here is mocked or written to produce a pleasing answer.{" "}
-        <strong className="text-ion-white">The input rows are illustrative</strong> — they
+        <strong className="text-ion-white">The input rows are illustrative</strong>: they
         are not today&apos;s slate. Feeding live picks in requires a data join
         whose behaviour we have not yet verified against real rows, and shipping
         an unverified join on a page about honesty would be the exact failure
-        this page argues against. Real gate, labelled inputs — never the reverse.
+        this page argues against. Real gate, labelled inputs, never the reverse.
       </>
     ),
   };
@@ -147,7 +147,7 @@ function nonClaims(mode: GateMode): string[] {
   const shared = [
     "No win rate, ROI, or performance result is asserted anywhere on this page.",
     "A fired decision here is a demonstration of the rule, not a recommendation.",
-    "Nothing here is persisted to the ledger — no receipt is created by loading this page.",
+    "Nothing here is persisted to the ledger, no receipt is created by loading this page.",
   ];
   if (mode === "live") {
     return [
@@ -253,7 +253,7 @@ export default async function GatePage(): Promise<JSX.Element> {
           <p className="mt-4 text-base leading-7 text-ion-1">
             Everything below was decided by the product&apos;s real selective-gate
             code, run when you loaded this page. The reasons are the gate&apos;s
-            own — not copy written to sound careful. It does not yet decide the
+            own, not copy written to sound careful. It does not yet decide the
             published board; those refusals still come from a separate stored
             path, and saying otherwise would overstate where this is wired.
           </p>
@@ -335,18 +335,18 @@ export default async function GatePage(): Promise<JSX.Element> {
           </h2>
           <ul className="flex flex-col gap-3 text-sm leading-6 text-ion-1">
             <li>
-              <strong className="text-ion-white">No bet</strong> — we evaluated this against
+              <strong className="text-ion-white">No bet</strong>: we evaluated this against
               real settled history and the lower bound did not clear the price
               after vig. A judgement.
             </li>
             <li>
-              <strong className="text-ion-white">Not judged</strong> — this category does not
+              <strong className="text-ion-white">Not judged</strong>: this category does not
               have enough settled history to calibrate against yet, so the model
               was never asked. Not a judgement, and we will not dress it up as
               one.
             </li>
             <li>
-              <strong className="text-ion-white">Not evaluated</strong> — an input was
+              <strong className="text-ion-white">Not evaluated</strong>: an input was
               missing, so nothing reached the model. Says nothing about the game.
             </li>
           </ul>
@@ -371,11 +371,11 @@ export default async function GatePage(): Promise<JSX.Element> {
             ))}
           </ul>
           <p className="mt-5 text-sm text-ion-2">
-            The governance side of this —{" "}
+            The governance side of this,{" "}
             <Link href="/integrity" className="underline hover:text-orbital-cyan">
               how our agents are governed
-            </Link>{" "}
-            — is a separate claim about a separate subject.
+            </Link>
+            , is a separate claim about a separate subject.
           </p>
         </section>
       </main>

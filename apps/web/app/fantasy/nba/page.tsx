@@ -13,9 +13,9 @@ import {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Fictional NBA DFS Slate — Validator Demo",
+  title: "Fictional NBA DFS Slate: Validator Demo",
   description:
-    "A fictional NBA DFS slate for optimizer and lineup-validation testing. All players, salaries, and projections are invented — not real contest data.",
+    "A fictional NBA DFS slate for optimizer and lineup-validation testing. All players, salaries, and projections are invented, not real contest data.",
   alternates: { canonical: "/fantasy/nba" },
 };
 
@@ -65,7 +65,7 @@ export default function NbaFantasyPage() {
             </h1>
             <p className="mt-5 max-w-2xl text-lg text-ion-1">
               Every player, salary, and projection below is invented for
-              optimizer and validation testing — not real contest data.
+              optimizer and validation testing, not real contest data.
             </p>
           </div>
         </section>
@@ -134,7 +134,7 @@ export default function NbaFantasyPage() {
               <p className="mt-1 text-sm leading-relaxed text-ion-1">
                 An 8-man fictional lineup run through{" "}
                 <span className="font-mono text-[13px]">validateNbaLineup</span> at
-                render time — the verdict below is the validator&apos;s output.
+                render time. The verdict below is the validator&apos;s output.
               </p>
               <ul className="mt-4 grid gap-2 sm:grid-cols-2">
                 {demoLineup.map((p) => (
