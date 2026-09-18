@@ -138,6 +138,57 @@ power.
 
 ---
 
+## 1b. One writer per artifact TYPE, because per-artifact was not enough
+
+Measured on the first hour of three-model operation, 2026-09-18. Two models independently
+wrote the same four things: this charter, the ARCH-13 correction, a clock-rot guard, and the
+Flash brief. Roughly half the hour's output was duplicated or invisible.
+
+The reason is worth stating plainly, because it indicts the rule rather than the models: the
+document carrying "one writer per artifact" was unreadable by both of them at the moment they
+both wrote it, blocked on one side and unpushed on the other. **A rule nobody can read is not
+a rule.** Splitting by architecture track was also not enough, because different tracks still
+converge on the same shared coordination documents.
+
+So the split is by artifact TYPE, with an owner named for each:
+
+| Writer | Owns, exclusively |
+|---|---|
+| Domain 1 | code and tests under `packages/**` for tracks D, E, F |
+| Domain 2 | code and tests for tracks A, B, C |
+| Domain 3 | **every shared coordination document**: `docs/architecture/**`, `docs/ops/hermes/**`, and the verification lane |
+| shared | `docs/ops/AGENT_LEDGER.md` alone, because it is the comms channel and its guard already enforces per-row ownership |
+
+Domains 1 and 2 never write a coordination document again. They file findings as ledger rows
+and Domain 3 folds them in. That removes the entire collision class above.
+
+**And the claim is a lock, not a receipt.** Write the ledger row, PUSH IT, then start. A claim
+that has not been pushed does not exist to the other two, which is exactly how four artifacts
+got written twice.
+
+## 1c. What actually blocks work reaching a common tree, measured
+
+Three things, none of them CI and none of them intelligence:
+
+1. **Nothing enforces a merge, and nothing ever has.** `main` carries no branch protection
+   (`gh api .../branches/main/protection` returns 404 "Branch not protected"), no rulesets, no
+   CODEOWNERS, no merge queue, no auto-merge, and no required status check. The repository's
+   own merge-train note from 2026-09-04 records the real cause verbatim: "all of today's PRs
+   are drafts, which is why none merged. That, not any failing test, is what stands between
+   the repo and launch." **Drafts are the gate.** Promote and land.
+2. **`UNPUSHED` is a chronic state, not an exception.** The ledger's own rules section notes
+   rows sitting in it where "every one of them exists on exactly one laptop". Law 1 was
+   written for one unattended agent whose owner reviews before anything lands; with three
+   agents it converts two of them into write-only-to-local-disk. Lifting it per session, per
+   named branch, is a founder act.
+3. **A blocked write is a permission surface, not a repository rule.** `docs/ops/hermes/**`
+   appears in neither law 2 nor the settings deny list, and the PreToolUse hook matches `Bash`
+   only, never `Write` or `Edit`. But the settings allow-list contains no `Write` or `Edit`
+   entry at all under the default permission mode, so in a headless session a Write of a NEW
+   file prompts and resolves as denied while an Edit of an already-approved file succeeds.
+   That asymmetry matches the observed failure exactly: a ledger edit landed, four new files
+   did not.
+
 ## 2. The contract between the three
 
 Four rules. Each was earned by a failure already observed here.
