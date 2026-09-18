@@ -1100,6 +1100,36 @@ by the model-minus-market difference, then by recency. Rows without one trail as
 Confidence is never a sort key at any level, including the final fallback branch that
 exists today.
 
+**That sentence is currently false in code, and an adversarial honesty pass caught the
+plan asserting it while leaving the mechanism in place. Stating the mechanism exactly,
+because it is worse than "a fallback branch".** Confidence reaches the ordering by three
+separate routes today:
+
+1. **Always, as 30 percent of `rankingP`.** `ranking-prob.ts` blends
+   `0.7 * trueProb + 0.3 * (confidence / 100)` by default (`independentWeight` 0.7,
+   v5.2.1). `sort-key.ts` returns `rankingP` as its primary key, so every ordered row is
+   ordered partly on confidence.
+2. **Entirely, when `trueProb` is missing.** `ranking-prob.ts:40` states it: "Missing or
+   non-finite trueProb goes to confidence only." Those rows are ranked on nothing but
+   confidence.
+3. **Twice as a terminal fallback in `sort-key.ts`**, once when a row carries no factor
+   breakdown at all and once when neither `rankingP` nor `rankingScore` is finite.
+
+Confidence is the score measured anti-predictive at the top: at 80 and above, n 235, it
+claims 0.8663 and realizes 0.5191, z of -10.7. So the board is today ordered, in part and
+sometimes entirely, on a number that is inverted where it matters most.
+
+**The resolution, and it is a choice the founder makes, not an agent.** Either
+`sort-key.ts` stops reading `rankingP` and orders directly on `expectedClv`, or on
+`trueProb` against `marketFairProb`, with rows lacking both trailing as a block; or
+`rankingP` is refitted with `independentWeight` at 1.0 so the confidence term is zero.
+The first is cleaner and is this document's recommendation. Both change what a paying
+customer sees, so both are founder-gated, and until one lands the registry row
+"Ranking blend" stays a selective-delta input rather than being treated as retired. What
+an agent may do today without any decision: pin the current behaviour in a test that
+states it plainly, so the gap between this document's invariant and the code is visible
+rather than asserted away.
+
 Stated caveat, and it is load-bearing: the expected closing value is a shrunk edge
 computed with hand-set thresholds whose magnitude has never been measured. Ranking on it
 is better than ranking on a number measured anti-predictive, and it is still an unmeasured
@@ -1260,7 +1290,42 @@ Smaller, and load-bearing:
   it notes the drift, and the guard enumerates the files rather than asserting a number.
 
 
-### 8.5 The seven tracks
+### 8.5 What the honesty lens found
+
+A second adversarial lens asked one question: does anything here let an uncertified
+probability reach a customer, or break a law. It sampled roughly 25 of this document's
+path and line citations against the tree and reported that every one resolved exactly as
+claimed, several to the exact line number. That is the credibility check, and it passed.
+It found three defects.
+
+1. **BLOCKER, applied in section 7.** The plan asserted that confidence never enters the
+   sort key while leaving intact the mechanism by which it does, through `rankingP`.
+   Section 7 now states all three routes and names the founder choice that closes it.
+2. **MAJOR, applied here.** Any workstream that corrects a promotion or gate bound is
+   doing the thing law 3's 2026-09-09 amendment governs, and must therefore carry the
+   amendment's full conditions in its acceptance criteria: the correction is derived,
+   documented and tested; every floor value stays byte-identical; **the raw number is
+   reported beside the corrected one**; and the change is recorded as a ledger row citing
+   the amendment. The rulers track already holds itself to this. Every promotion-evaluator
+   workstream on the gate and trainer tracks now does too. A bound quietly replaced by a
+   better bound, with no raw number beside it, is indistinguishable from moving a floor.
+3. **MINOR, applied here.** The registry conditions any wiring of the founder factor
+   engine on first fixing its consensus term, which boosts in both directions
+   (`apps/web/lib/founder-picks/factors.ts:222`). That condition had no workstream that
+   would do it. It gets one, with a sign-convention regression test, and that fix is a
+   stated dependency of the backtest gate rather than a note attached to a row.
+
+Two omissions it named, recorded rather than resolved, because both are real work:
+
+- No workstream runs a single repo-wide enumerating sweep over every customer-facing
+  surface (the picks route, board state, exports, cockpit views) asserting that no
+  uncertified number is rendered as a percentage. The invariant is stated in several
+  places and enforced in none by a test that would catch a new surface.
+- The plan never says whether retuning `ranking-prob.ts`'s `independentWeight` inside its
+  existing range counts as a scoring change needing a version bump. It should, because it
+  changes a published ordering, and section 7 now treats it as founder-gated.
+
+### 8.6 The seven tracks
 
 **Path convention in the tables below, stated once and measured.** The rebuilt sections
 cite 260 distinct file paths. **206 of them resolve on `main` today.** The other 54 do not
