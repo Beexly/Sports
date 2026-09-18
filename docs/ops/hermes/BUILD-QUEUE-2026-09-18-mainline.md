@@ -164,9 +164,20 @@ reserved for a sample backfill you will never perform.
 `game`, since 2015, one all-time file. Nothing has ever persisted it.
 
 Write one `GameSignal` row per game under an officials source category, resolving the
-nflverse game id to this platform's `Game.id` by season, week and team abbreviation. That
-join already exists in `packages/data-ingestion/src/context-enrichment.ts`; copy it, do not
-invent a second one.
+nflverse game id to this platform's `Game.id` by season, week and team abbreviation.
+
+**Correction, verified.** An earlier draft said that join "already exists in
+`context-enrichment.ts`; copy it". It does not; that module's only lookup is a
+`teamGameLog.findFirst` at `:116`. The closest real precedent is
+`packages/data-ingestion/src/nfl-preseason-map.ts`, which remaps feed rows onto existing
+games **by team pair plus commence time** using `normalizeComparableText` from
+`team-text-match.js`, and `packages/data-ingestion/src/nflverse-id-crosswalk.ts`, which is
+the season-matched identity crosswalk for PLAYERS and carries the law "never invent an id".
+
+Neither is the same key shape you need, so you are writing this join, not copying one. Reuse
+`normalizeComparableText` for team-name comparison rather than writing a third
+normalization, apply the crosswalk's law (never invent an id, refuse and count instead), and
+say in your ledger evidence that the join is new.
 
 **Definition of done.** Unit test with a fixture covering: a matched game writes one row
 with `isBootstrap: false`; an unmatched game writes nothing and is counted; a re-run is
@@ -191,8 +202,9 @@ same lead time is idempotent; a fetch failure writes nothing and throws nothing.
 ### Task 6. Put the three orphan persisters on a cron
 
 `apps/web/lib/ingestion/pfr-adv-stats.ts`, `team-week-stats.ts` and `rush-tendencies.ts`
-exist, compile, and already call `checkClearance`. Nothing calls them, so `PfrAdvStat` and
-`TeamWeekStat` are never written.
+exist, compile, and are already clearance-gated (two through the shared nflverse ingestion
+gate wrapper, one directly). Nothing calls them, so `PfrAdvStat` and `TeamWeekStat` are
+never written.
 
 Add them to an existing cron route following the satellite pattern in
 `apps/web/app/api/cron/refresh-player-stats/route.ts`. Do not add a new `vercel.json`
@@ -216,7 +228,15 @@ validation possible.
 
 Same constraint as task 6: attach to an existing route rather than adding a schedule.
 
-**Definition of done.** Unit test that the route is reachable and idempotent on a re-run.
+**Gate it, or it fires every cycle.** `ingestHistoricalGames` replaces a whole table from a
+single all-seasons asset. Attached naively to a route that runs every fifteen minutes it
+would do that replace every fifteen minutes. Put it behind a low-frequency predicate
+modelled on `apps/web/lib/ingestion/satellite-window.ts`, which already expresses
+"once per day in a stated window" against the labelled season. Weekly is enough for an
+archive that changes weekly.
+
+**Definition of done.** Unit test that the route is reachable, that the frequency gate
+refuses outside its window, and that a re-run inside the window is idempotent.
 
 ### Task 8. Alarm on capture staleness
 
@@ -232,6 +252,23 @@ fake and your session never touches a database.
 
 **Definition of done.** Unit test covering fresh, stale, and not-expected-to-be-writing.
 The reading appears on the ops truth surface that already renders reliability output.
+
+---
+
+### A wiring requirement that applies to tasks 4 and 5
+
+Tasks 6 and 7 say explicitly to attach their writers to an existing cron route. Tasks 4 and
+5 did not, and a writer nobody calls captures nothing. Since this wave's whole argument is
+that every day not logging is sample that never exists, a task that builds a writer and
+leaves it unreachable fails its own purpose while looking complete.
+
+So: tasks 4 and 5 each attach their writer to an existing route, the same way tasks 6 and 7
+do, with no new `vercel.json` entry. If you cannot find a suitable route, do NOT add a
+schedule; mark the task BLOCKED and say which route you considered and why it did not fit.
+
+And when you write the run's closing ledger evidence, only claim as "now capturing" what is
+actually reachable from a scheduled route. A writer that exists but is called by nothing is
+reported as built-not-wired, plainly.
 
 ---
 
@@ -330,10 +367,22 @@ Walk the import graph and assert the set of violations is empty, naming any it f
 
 ### Task 15. The partial-mock list is enumerated, never counted
 
-Replace any assertion about the NUMBER of files partially mocking
-`@sports/prediction-engine` with an enumeration of the files themselves, and assert that
-`apps/web/lib/board/state.ts` and `apps/web/app/api/picks/route.ts` import nothing from the
-engine barrel.
+Create an enumerating assertion over the files that partially mock
+`@sports/prediction-engine`, listing the files themselves rather than counting them. If no
+count-based assertion exists to replace, create the enumeration fresh; do not stall looking
+for one.
+
+**Correction, verified, and an earlier draft of this task was flatly wrong.** It said to
+assert that `apps/web/lib/board/state.ts` and `apps/web/app/api/picks/route.ts` "import
+nothing from the engine barrel". They both DO today: `state.ts:2` imports
+`{ getReadinessGates, MODEL_VERSION, toEdgeIndex }` and `route.ts:6` imports
+`{ getReadinessGates, bootstrapGateResponse }`. That assertion would fail on its first
+commit and turn the build red, which breaks this queue's own acceptance test.
+
+The hazard is a NEW import, not the existing ones, exactly as wave 1 frames it. So pin the
+CURRENT symbol set per file and fail when it GROWS. An added symbol is the thing that
+resolves to `undefined` under the partial mocks; the symbols already there are load-bearing
+and tested.
 
 ---
 
