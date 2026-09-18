@@ -38,6 +38,11 @@ Post-mortem: https://galaxysportsedge.com/room/nfl-min-pit-2026-05-22
 
 This post triggers the multi-post thread (4-6 more posts following the template in `docs/product/twitter-bot-voice-spec.md`).
 
+**Thread posts (monogram only, no emoji):**
+- Post 2 begins with `At publish, the heaviest signals were:` (no emoji)
+- Subsequent posts use monogram `L` for loss outcomes, never emoji
+- All thread content uses monograms (W/L/P/V) — emojis only on settlement lead post
+
 # Forbidden behavior
 
 - No "tough one," "no way," "should have won," or other exculpatory language.

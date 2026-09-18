@@ -25,13 +25,13 @@ The bot has been triggered to publish the corresponding tweet.
 The post follows the publication template:
 
 ```
-Published BOS -3.5 at 73% confidence (SOLID_PLAY).
+Published BOS -3.5 at 73/100 confidence score (SOLID_PLAY).
 
 Factor breakdown: https://galaxysportsedge.com/room/nba-bos-nyk-2026-05-22
 ```
 
 - Past tense verb: "Published"
-- Confidence shown as integer percent
+- Confidence shown as integer score out of 100 (never a percent)
 - Pick grade in parens, from PICK_GRADE_LABELS
 - Single link to Game Room
 - No commentary, no emojis (except settlement emojis which don't apply here)
@@ -55,5 +55,5 @@ Factor breakdown: https://galaxysportsedge.com/room/nba-bos-nyk-2026-05-22
 4. Output does NOT match `/\b(tail|fade|lock|hammer|VIP|members only)\b/i`.
 5. Output does NOT match `/\b(I think|I see|I stay)\b/`.
 6. Output does NOT contain any of the platform-wide banned vocabulary from `docs/positioning.md`.
-7. Confidence number rendered as integer (no decimal).
+7. Confidence rendered as integer score out of 100 (e.g., "72/100"), never as a percent.
 8. Pick grade matches the configured `PICK_GRADE_LABELS` enum value.

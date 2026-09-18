@@ -4,7 +4,7 @@
  * Spec: docs/product/twitter-bot-voice-spec.md section "Free pick publications"
  *
  * Format:
- *   Published BOS -3.5 at 73% confidence (SOLID_PLAY).
+ *   Published BOS -3.5 at 72/100 confidence score (SOLID_PLAY).
  *
  *   Factor breakdown: https://galaxysportsedge.com/room/<gameId>
  */
@@ -37,7 +37,7 @@ export function buildPickPublicationTweet(
   const hashtag = SPORT_HASHTAGS[input.sport];
 
   const text = [
-    `Published ${pickLine} at ${confidence}% confidence (${gradeLabel}).`,
+    `Published ${pickLine} at ${confidence}/100 confidence score (${gradeLabel}).`,
     "",
     `Factor breakdown: ${linkUrl}`,
     hashtag ? `\n#${hashtag}` : "",

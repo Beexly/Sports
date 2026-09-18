@@ -1,7 +1,23 @@
 /**
  * Twitter bot template: settlement (win/loss/push).
  *
- * Spec: docs/product/twitter-bot-voice-spec.md section "Free pick settlements"
+ * Spec: docs/product/twitter-bot-voice-spec-spec.md section "Free pick settlements"
+ *
+ * Settlement glyphs (✅/❌/⚖️) are a documented exception on X where monograms
+ * are invisible at timeline scale and the platform's own convention carries meaning.
+ * They appear ONLY on the settlement lead post. Every other post uses monograms
+ * (W/L/P/V).
+ *
+ * Format (WIN):
+ *   Settled CLE -7 ✅ WIN — schedule stress signal was the heaviest contributor.
+ *
+ * Format (LOSS):
+ *   Settled MIN +6 ❌ LOSS — rest advantage signal misread. MIN was more fatigued than projected.
+ *
+ * Format (PUSH):
+ *   Settled LAL -5.5 ⚖️ PUSH — line landed on the number.
+ *
+ *   Full snapshot: https://galaxysportsedge.com/room/<gameId>
  */
 
 import type { SettlementInput, TweetOutput, FactorKey } from "./types";
@@ -66,7 +82,7 @@ export function buildSettlementTweet(
   }
 
   const text = [
-    `Settled ${input.pickLine} ${outcomeSymbol} ${outcomeLabel} - ${bodyLine}`,
+    `Settled ${input.pickLine} ${outcomeSymbol} ${outcomeLabel} — ${bodyLine}`,
     "",
     `${linkLabel}: ${linkUrl}`,
     hashtag ? `#${hashtag}` : "",
