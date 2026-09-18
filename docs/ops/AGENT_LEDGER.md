@@ -533,7 +533,7 @@ the only copy, and nobody else can verify or build on it.
 | CHARTER-1 | Three-domain autonomy charter written to the repo | hermes | CANCELLED | Superseded by ARCH-14 on 47be639a. Duplicate write this hour; Opus owns docs/ops/hermes/**. |
 | DOM-1 | Domain 1 ownership: rulers and learning loop | hermes | CLAIMED | origin/hermes/2026-09-18-queues @ 144d0f24 plus merge of main 47be639a. Do not reassign. |
 | DOM-2 | Domain 2 ownership: signal plane (Tracks A, B, C) | — | OPEN | CONFIRMED 2026-09-18 founder: Flash (Hermes CLI / Gemini 3.7 Flash) owns capture/feature-store/estimators. C-104 clock-rot test fix is a Domain-1 exception under founder push grant so main can go green; Flash still owns the rest of the lane. Read FLASH-BRIEF-C-104-CLOCK-ROT.md. |
-| F-GROK-PUSH | Authorize Grok one-time push of hermes/2026-09-18-queues plus C-104 clock-rot to unblock main | founder | DONE | Approved 2026-09-18 in chat. Grant spent on origin push. |
+| F-GROK-PUSH | Authorize Grok one-time push of hermes/2026-09-18-queues plus C-104 clock-rot to unblock main | founder | DONE | Approved 2026-09-18 in chat. Grant spent on origin push of 144d0f24 (#865). |
 | DOM-3 | Domain 3 ownership: adversary and customer surface (Track G) | — | OPEN | Assigned to Opus 5. Enumerating guards, not counting ones. Clock-rot pin list started in scripts/ops/clock-rot-pins.test.ts. |
 | C104-FIX | C-104 clock-rot test: relative kickoff + toKalshiDateFragment | hermes | DONE | 9b7c02d61 via #864. First test still asserts espn_public+kalshi. Zero production change. |
 <!-- LEDGER:END -->
