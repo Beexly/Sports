@@ -37,11 +37,27 @@ const ago = (m: number) => (m < 60 ? `${m}m ago` : `${Math.round(m / 60)}h ago`)
 
 type SortMode = "strongest" | "newest";
 
-export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
-  // Live RSS wire when the owner has whitelisted feeds (NEWS_RSS_FEEDS);
-  // otherwise the clearly-labeled fictional sample. The two states are
-  // visually unmistakable: sample shows the fictional-sources marker, live
-  // shows the real-source attribution instead.
+export function TheBeat({
+  liveWire = null,
+  unavailable = false,
+}: {
+  liveWire?: NewsItem[] | null;
+  unavailable?: boolean;
+}) {
+  // THREE states, because they are three different facts and a customer acts
+  // on each one differently:
+  //   unavailable  we tried to reach the wire and could not
+  //   live         feeds are configured and answered (possibly with nothing)
+  //   sample       no feeds are configured, so this is the labeled fiction
+  //
+  // They used to be two. A failed fetch reached this component as `null`,
+  // which is the same value as "no feeds configured", so an outage rendered
+  // the fictional sample. The page's own comment said "never fabricates"
+  // while `.catch(() => null)` did exactly that. The customer-truth test has
+  // asked for the third state since it was written; this is it.
+  //
+  // Live and sample stay visually unmistakable: sample shows the
+  // fictional-sources marker, live shows the real-source attribution.
   const isLive = liveWire !== null;
   const wire = liveWire ?? DEMO_WIRE;
   const ranked = useMemo(() => rankWireCorroborated(wire), [wire]);
@@ -74,6 +90,51 @@ export function TheBeat({ liveWire = null }: { liveWire?: NewsItem[] | null }) {
     const top = ranked[0];
     return { total: ranked.length, confirmed, hot, top };
   }, [ranked]);
+
+  // Both blocks below sit AFTER every hook, so the hook order is unconditional.
+
+  // Could not reach the wire. Show that, and show nothing else: a stand-in
+  // here would be read as news, and there is no honest stand-in for news.
+  if (unavailable) {
+    return (
+      <div className="space-y-5">
+        <span
+          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
+          style={{ background: `${BRAND_COLORS.softUltraviolet}1c`, color: BRAND_COLORS.softUltraviolet }}
+        >
+          Feed unavailable
+        </span>
+        <div className="surface-card p-8 text-center">
+          <p className="font-display text-xl text-ion-white">We could not reach the wire.</p>
+          <p className="mx-auto mt-1 max-w-md text-sm text-ion-2">
+            The sources are not answering right now. We would rather show you nothing than
+            show you a stand-in. Check back in a minute.
+          </p>
+        </div>
+      </div>
+    );
+  }
+
+  // Wire is connected and answered with nothing in the window. That is a real
+  // reading, not a failure, and not the filter talking either.
+  if (isLive && wire.length === 0) {
+    return (
+      <div className="space-y-5">
+        <span
+          className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-bold uppercase tracking-wider"
+          style={{ background: `${BRAND_COLORS.orbitalCyan}1c`, color: BRAND_COLORS.orbitalCyan }}
+        >
+          Live wire · headlines via public feeds
+        </span>
+        <div className="surface-card p-8 text-center">
+          <p className="font-display text-xl text-ion-white">No fresh reports.</p>
+          <p className="mx-auto mt-1 max-w-md text-sm text-ion-2">
+            The wire is up and quiet. Nothing new from these sources in the window we watch.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-5">
