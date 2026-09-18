@@ -998,8 +998,13 @@ recency.
 ### Display
 
 The market probability already renders to every tier on two-way moneyline rows with at
-least two books; extend it to spreads and totals where a receipt carries a cover
-probability. The head probability with its interval renders only on rows from certified
+least two books. **Extending it to spreads and totals is NOT an agent task, and an
+earlier draft of this section was wrong to imply it was.** `market-implied-display.ts:14-15`
+records the moneyline-only scope as a shipped design decision, because spreads and totals
+carry cover probabilities near 0.5 and deliberately show no percentage, and `:20` records
+that removing the gate is the founder's call on the proposal. The founder either overturns
+that decision or scopes the extension to rows whose cover probability sits far enough from
+even money to be worth showing. Until then the moneyline scope stands. The head probability with its interval renders only on rows from certified
 heads. The score badge is removed at the bump; until then it keeps its existing framing
 that it is not a win probability. The calibration page buckets new rows on the head
 probability and old rows on their own basis, partitioned by model version, and stops
@@ -1081,7 +1086,66 @@ crank. Track F turns it, and the single most consequential line in this document
 the trainer runs inside a cron or an owner route, never from an agent shell, because the
 edge-lab harness has existed for months and has never run for exactly that reason.
 
-### 8.4 The seven tracks
+### 8.4 Corrections a concurrent adversarial pass forced on these tracks
+
+A second architect session ran its own three lenses over the same seven tracks and found
+real defects. Its companion document is `docs/architecture/2026-09-18-parallel-build-plan.md`
+(ledger ARCH-5). Its findings are folded in here rather than left in a side file, because
+a correction nobody reads is not a correction. Each was checked against the tree before
+being written down.
+
+1. **Three tracks proposed one weather capability.** Two tracks specified near-identical
+   new file paths for weather and officials, and a third proposed a different host for
+   weather again. Three parallel paths to one capability is not concurrency, it is a merge
+   conflict with extra steps. Collapse to one owner, hosted on the board filler that
+   already runs four times an hour, rather than a new cron entry that needs founder review
+   anyway.
+2. **The officials work assumed a module that does not exist.** Both designs referred to
+   "the existing officials mapper." There is none: `nflverse-source.ts:160-164` registers a
+   bare `officials` dataset key with no caller. The real prerequisite is the game-id
+   crosswalk, which also does not exist, so the officials row is sequenced after it rather
+   than beside it.
+3. **One surface item would have reversed a founder decision.** Extending the
+   market-implied display to spreads and totals was framed as filling a gap. It is not a
+   gap. `apps/web/lib/picks/market-implied-display.ts:14-15` records moneyline-only as a
+   shipped decision, because spreads and totals carry cover probabilities near 0.5 and
+   deliberately show no percentage, and `:20` records that lifting the gate is the
+   founder's call. Section 7 is corrected accordingly.
+4. **The signal assembly's host is not interchangeable.** The odds-refresh path and the
+   board filler are not equivalent: the board filler's slate path is deliberately
+   market-free by design, while the odds-refresh path carries the market. A signal
+   assembly that needs the market names the odds-refresh path as its sole host.
+5. **The admission block cannot be assumed to fit.** The calibration cron it would join
+   already runs many stages inside a 300 second platform limit. Measuring that route's
+   current wall-clock cost is part of the work and must be run, never assumed.
+6. **The pass-decision withhold could not reach one market.** The totals scorer has no
+   adverse-price call site at all, so an instruction to apply the new predicate "at every
+   existing call site" would have left totals silently exempt. The totals path gets an
+   explicit new call site and the regression test carries a totals fixture.
+7. **The narrative family is two rows, not one.** Contract incentives genuinely have no
+   source and stay founder-blocked. Milestones and record chases are buildable now from
+   season statistics plus a citation-gated table of publicly documented thresholds.
+   Parking all three together was exactly the confusion between "we cannot serve this" and
+   "we cannot build this" that this rebuild exists to remove.
+
+Smaller, and load-bearing:
+
+- The shadow probability slot is a single field under one key per game and model version.
+  Several track items proposed writing to it independently, which would clobber. A
+  read-merge-write helper lands before any second writer ships.
+- The `Signal` table carries no source name, trust level or bootstrap flag. Those live on
+  `GameSignal` only. Any adapter must define how entity-level rows map into trust
+  semantics rather than assuming fields that are not there.
+- The book-depth term is not a constant. It scales with book count and saturates only
+  above the ideal-book threshold, so the shadow experiment tests the saturating regime
+  against the low-count regime rather than dropping the term.
+- Several tracks edit the mint orchestrator. That file goes on a shared concurrent-edit
+  list so the pull requests are sequenced deliberately instead of colliding at merge.
+- The partial-mock count is 22 today and the standing note says nineteen. Any item citing
+  it notes the drift, and the guard enumerates the files rather than asserting a number.
+
+
+### 8.5 The seven tracks
 
 **Path convention in the tables below, stated once and measured.** The rebuilt sections
 cite 260 distinct file paths. **206 of them resolve on `main` today.** The other 54 do not
