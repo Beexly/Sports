@@ -725,10 +725,10 @@ them is used as a baseline.
 
 | Mixed-effects EPA attribution (QB, coaching, opponent, supporting cast) | BUILDING-NOW | C | now | efficiency | feature | T1 | nflverse play-by-play, CC-BY-4.0, model training allowed | NEW `packages/prediction-engine/src/nfl/epa-attribution.ts` | named in AGENTS.md ENGINE BENCHMARK: SP+ AND MIXED-EFFECTS EPA ATTRIBUTION; no decomposition exists in the engine today | Random-effect variance for the QB term indistinguishable from zero, or no out-of-fold log-loss gain over team EPA alone | prediction-engine |
 | SP+ style forward rating with weekly-decaying preseason prior | BUILDING-NOW | C | now | efficiency | feature | T1 | nflverse, plus a market-derived preseason prior | NEW | tempo and opponent adjusted, priors phase out weekly; three citable early-season schemes exist (DVOA 50/30/20, DAVE 83/98, the coverage 83 percent fade) | Prior schedule that beats none of the three on out-of-fold log-loss dies | prediction-engine |
-| Coverage-defender grades: opponent-adjusted yards per route allowed | FOUNDER-BLOCKED | C | n/a | coverage | feature | T3 | GENUINELY ABSENT. Needs per-defender route counts and targets faced. nflverse does not carry defender routes, and FTN charting is play-grain (play action, RPO, screen, motion, defenders in box), not defender-route grain | NONE | AGENTS.md ENGINE BENCHMARK: COVERAGE DEFENDER GRADES describes a third-party product, not a dataset we hold | Cannot be tested. Unblocks only if a cleared source carrying defender routes is found; the 83 percent early-season fade blend is portable to our own splits regardless | data-ingestion |
+| Coverage exposure and separation features (cushion, separation, YAC over expected) | BUILDING-NOW | C | now | coverage | feature | T3 | `NextGenStat`, a migrated table persisted DAILY by `refresh-player-stats` via `ingestNextGenStats`. Carries avgCushion (defender pre-snap depth), avgSeparation, avgYacAboveExpectation, avgExpectedYac. Player-week grain. Per-NAMED-defender attribution is still absent; coverage MEASUREMENT is not | NONE | AGENTS.md ENGINE BENCHMARK: COVERAGE DEFENDER GRADES describes a third-party product, not a dataset we hold | Coefficient interval crosses zero on the first refit, or player-week rows below the stated floor. The 83 percent early-season fade blend is portable to these splits | data-ingestion |
 | Box-count and personnel matchup features (RB vs front, pass rate vs box) | BUILDING-NOW | C | now | trenches | feature | T1 | FTN charting and pbp_participation via nflverse, CC-BY-SA-4.0, internal modeling clean per the 2026-07-16 verdict | NEW | defenders in box and personnel are CONFIRMED columns of both datasets; this is the half of the old combined row that the data actually supports | Coefficient interval crosses zero on the first refit, or plays per matchup cell below the stated floor | prediction-engine |
-| Receiver versus defender matchup features (WR vs CB) | FOUNDER-BLOCKED | C | n/a | coverage | feature | T3 | GENUINELY ABSENT. Needs per-defender route and coverage assignment data that neither nflverse nor the FTN subset carries | NONE | separated from the box-count row above, which IS buildable; combining them hid the fact that only one half has data | Cannot be tested until a cleared assignment-level source exists | data-ingestion |
-| Time to pressure, as an OL versus DL timing feature | FOUNDER-BLOCKED | C | n/a | trenches | feature | T3 | GENUINELY ABSENT. Requires snap-to-pressure timing. AGENTS.md:2277-2279 records that there are NO hurries in nflverse or FTN, so our pressure measure is a sack-and-hit FLOOR proxy with no timing dimension | NONE | the FTN-branded leaderboard in the benchmark notes is a vendor product we cannot reproduce from the data we hold | Cannot be tested. Unblocks only with a cleared timing source | data-ingestion |
+| Receiver versus coverage matchup features (separation vs opponent coverage aggregate) | BUILDING-NOW | C | now | coverage | feature | T3 | `NextGenStat` avgSeparation and avgCushion against an opponent coverage aggregate, both persisted daily. The named-defender ASSIGNMENT is absent; the matchup measurement is not | NONE | separated from the box-count row above, which IS buildable; combining them hid the fact that only one half has data | Coefficient interval crosses zero on the first refit. Must never be labelled a per-defender matchup, because the assignment is not observed | data-ingestion |
+| Pressure timing proxy (time to throw, time to line of scrimmage, sack and hit rate) | BUILDING-NOW | C | now | trenches | feature | T3 | `NextGenStat.avgTimeToThrow` and `.avgTimeToLos`, persisted daily. Snap-to-PRESSURE timing is absent and hurries genuinely are not in nflverse or FTN (AGENTS.md:2277-2279), but timing is NOT absent, and a proxy combining time to throw with the sack and hit floor is buildable today | NONE | the FTN-branded leaderboard in the benchmark notes is a vendor product we cannot reproduce from the data we hold | No out-of-fold gain over the existing sack-and-hit floor proxy. Must be labelled a timing PROXY, never reported as time to pressure | data-ingestion |
 | QB read progression, primary versus secondary reads | CAPTURING-NOW | A | now | quarterback | feature | T1-capture | FTN or FantasyPoints charting; read number is NOT in nflverse | NEW capture only | AGENTS.md ENGINE BENCHMARK: QB READ DISTRIBUTION; the scramble-counting convention differs between vendors and must be pinned before any comparison | Log first, test when n arrives. Dies if the coefficient interval crosses zero at the stated n | data-ingestion |
 | Formation usage by efficiency (under centre versus shotgun and pistol) | BUILDING-NOW | C | now | efficiency | feature | T1 | nflverse carries shotgun and no_huddle flags today | NEW | AGENTS.md ENGINE BENCHMARK: UNDER-CENTER USAGE X EFFICIENCY; the splits were never built although the flags exist | Coefficient interval crosses zero on the first refit | prediction-engine |
 | Multi-book vig-free consensus, synthetic hold, arbitrage and middle scanner | BUILDING-NOW | E | now | market | width-input and display | T1 | the odds table, already persisted per book | NEW | AGENTS.md ENGINE BENCHMARK: VIG-FREE CONSENSUS AND MARKET TOOLING; the conjunction gate compares against ONE de-vigged source and there is no multi-book consensus feed | Not a probability, so no kill line applies; it dies if synthetic hold cannot be computed per book | prediction-engine |
@@ -864,6 +864,47 @@ The registry rows are corrected accordingly: the box-count and personnel half is
 BUILDING-NOW, and the coverage-grade, time-to-pressure and receiver-versus-defender rows
 are FOUNDER-BLOCKED under "genuinely absent source" rather than being quietly sourced to a
 dataset that does not contain them.
+
+**I was wrong to block these three rows, and the research the founder asked for found it.**
+An earlier revision of this section marked coverage grades, time to pressure and receiver
+versus defender matchups FOUNDER-BLOCKED under "genuinely absent source", reasoning from
+the FTN dataset description alone. That reasoning skipped a table this platform already
+writes. Verified this session, directly in the tree:
+
+`NextGenStat` (`schema.prisma`) is a migrated table, written DAILY by
+`apps/web/app/api/cron/refresh-player-stats/route.ts:144-145` through
+`ingestNextGenStats` for passing, receiving and rushing, unique on
+`(gsisId, season, week, seasonType, statType)`. Its real columns, pinned by this repo's
+own fixtures at `packages/data-ingestion/src/__tests__/nflverse-ngs.test.ts:15,24`,
+include:
+
+| Column | What it measures |
+|---|---|
+| `avgCushion` | how far off the defender lines up, a DEFENDER behaviour measurement |
+| `avgSeparation` | receiver separation, the receiver-versus-coverage measurement |
+| `avgTimeToThrow` | a real timing dimension |
+| `avgTimeToLos` | rusher timing |
+| `pctAttemptsGte8Defenders` | box-count exposure |
+| `avgExpectedYac`, `avgYacAboveExpectation` | expected versus actual, already model-relative |
+| `cpoe`, `expectedCompletionPct` | completion over expected |
+
+So "no timing dimension at all" was false: time to THROW is persisted daily, and only time
+to PRESSURE is absent. "Coverage measurement absent" was false: cushion and separation are
+persisted daily, and only per-NAMED-defender attribution is absent. The three rows are
+BUILDING-NOW, with their kill lines rewritten and an explicit labelling rule that a proxy
+is never reported under the name of the measurement it approximates.
+
+What remains genuinely absent is narrower and worth stating exactly: **the assignment**,
+meaning which defender covered which receiver on which route. Everything the platform
+needs to build an exposure-weighted matchup feature without that attribution is already in
+a table, on a cron, today.
+
+Two caveats that survive the correction. The grain is player-week, not per play, so these
+support weekly matchup features and never per-play kinematics. And `nextgen_stats` via
+nflverse is flagged in the 2026-07-16 verdict as "equally third-party-sourced with no
+explicit grant, not a safe substitute", so its use is a live rights question for the
+founder even though the platform already persists it with a `rightsSnapshot` column on
+every row.
 
 **A named anti-pattern, because an external build hit these exact three rows and
 "resolved" all three by inventing constants.** On 2026-09-18 an outside system reported
