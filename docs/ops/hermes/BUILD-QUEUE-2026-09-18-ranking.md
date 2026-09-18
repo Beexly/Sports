@@ -32,6 +32,49 @@ The consequence, measured on a real slate: confidence 91 carried `expectedClv` +
 SMALLEST positive edge on the board, while confidence 85 carried +0.2257, the largest. The
 top-ranked pick had the worst edge that clears zero.
 
+### The mechanism, and what each lever actually costs
+
+The founder named the two obvious levers on 2026-09-18. Both were traced to their call
+sites before this queue was updated. Neither one is the cheap fix, and one of them is not a
+fix at all.
+
+**Lever 1, "`sort-key.ts` stops reading `rankingP`", is a no-op that trends worse.** The
+next link in the chain is `rankingScore` (`sort-key.ts:24-27`), and `rankingScore` is
+`Math.round(rankingP * 100)` (`ranking-prob.ts:104`): the same number, coarsened to two
+decimal places. The link after THAT is raw `confidence`, the anti-predictive one. Removing
+the `rankingP` branch changes nothing on any row carrying `rankingScore`, and degrades the
+rest.
+
+**Lever 2, `independentWeight` to 1.0, is the right arithmetic, is the expensive lever, and
+does not finish the job.** The weight is passed at exactly two places, both in the mint
+path: `packages/prediction-engine/src/scoring.ts:607` and `:1211`. That makes it a
+generation change rather than a display change. `constants.ts:18` names `independentWeight
+0.7` as part of the deployed version's contract, so it sits behind a `MODEL_VERSION` bump
+and law 3, and it is forward-only: every row already minted keeps its 0.7 blend in
+`factorBreakdown.rankingP` forever. Then, after all of that, confidence still orders the
+board, because when `trueProb` is absent or non-finite `deriveRankingProbability` returns
+`confP` and stamps `source: "confidence"` (`ranking-prob.ts:76-83`), on the same 0 to 1
+scale as every priced row.
+
+**That last sentence is the actual mechanism.** The defect is not only that confidence sits
+inside the blend at 30 percent. It is that a PRICED row and an UNPRICED row are compared on
+one scalar, so a confidence 91 row no independent model ever looked at outranks a `trueProb`
+0.62 row that one did. The measured inversion above is that collision, stated structurally.
+
+**The discriminator is already persisted, at zero cost.** `scoring.ts:706` and `:1300` write
+`rankingSource` into the factor breakdown beside `rankingP`, one of `confidence`,
+`independent_trueProb` or `blend_indep_conf`, and `:611` and `:1215` write
+`independentEdge.priced`. A comparator reading `rankingSource` separates the two populations
+with no engine edit, no `MODEL_VERSION` bump, no new capture and no backfill. `sort-key.ts`
+is display only: eight read call sites (`api/picks`, `lib/board/state.ts`,
+`api/v1/probabilities`, `api/admin/dashboard`, `cockpit`, `cockpit/brief`, `dashboard`,
+`preview`), zero mint sites. Task 2 carries it as a fourth candidate ordering.
+
+Two unpriced populations this catches that no weight change can reach: the TOTAL path never
+calls `deriveRankingProbability` and hardcodes `rankingP` to `confidence / 100`
+(`scoring.ts:950`, `:966`), and any row minted before v5.2.1 carries no `rankingSource` at
+all. Both interleave with priced rows today.
+
 ## 1. Why this queue exists instead of a decision
 
 Changing the ordering changes what a paying customer sees, so it is founder-gated and no
@@ -111,6 +154,14 @@ Three orderings, each a comparator over a minimal row shape carrying `expectedCl
   positive `expectedClv` trail as a block, in their current relative order.**
 - `orderingModelMinusMarket`: descending `trueProb` minus `marketFairProb`; same trailing
   rule.
+- `orderingPricedTierFirst`: a two-tier sort that never compares a priced row against an
+  unpriced one. Tier 1 is every row whose `rankingSource` is `independent_trueProb` or
+  `blend_indep_conf`, ordered among themselves by `rankingP` descending. Tier 2 is every
+  other row, meaning `rankingSource` of `confidence`, absent, or unparseable, held in their
+  current relative order. Tier 1 always precedes tier 2. Add `rankingSource` to the row
+  shape for it. **Report this one first in task 3**, because it is the only candidate that
+  needs no engine edit and no `MODEL_VERSION` bump, so it is the only one the founder can
+  act on the same day.
 
 Every one is total and stable: equal rows keep their input order, so a comparison never
 reports a difference that is really just sort instability.
@@ -124,8 +175,10 @@ because it imports the file directly. Add `export * from "./ranking-candidates.j
 **Definition of done.** `packages/types/src/__tests__/ranking-candidates.test.ts` proving
 each comparator is total, stable and antisymmetric; a test that the symbols are reachable
 through the package barrel, not only by direct path; that `orderingCurrent` reproduces
-`sort-key.ts` on a fixture set including every fallback case; and that a row with a null
-`expectedClv` trails rather than sorting as zero.
+`sort-key.ts` on a fixture set including every fallback case; that a row with a null
+`expectedClv` trails rather than sorting as zero; and that `orderingPricedTierFirst` never
+places an unpriced row above a priced one on a fixture where the unpriced row carries the
+highest `confidence` on the board, which is the live inversion in section 0.
 
 ### Task 3. The shadow comparison report
 

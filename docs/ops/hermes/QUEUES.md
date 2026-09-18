@@ -5,9 +5,9 @@ same acceptance test.
 
 | Order | Queue | Tasks | What it does |
 |---|---|---|---|
-| 1 | `BUILD-QUEUE-2026-09-18-props.md` | 6 | Props went live and credits are being spent. Makes a silent join failure observable before anything else. |
-| 2 | `BUILD-QUEUE-2026-09-18-mainline.md` | 15 | Three diagnosed defects, five capture tasks, four loop-closing tasks, three enumerating guards. |
-| 3 | `BUILD-QUEUE-2026-09-18-ranking.md` | 4 | Builds the measurement that shows what reordering the board would do. Changes no ordering. |
+| 1 | `BUILD-QUEUE-2026-09-18-ranking.md` | 4 | Builds the measurement that shows what reordering the board would do. Changes no ordering. Founder named this the highest-value item, 2026-09-18. |
+| 2 | `BUILD-QUEUE-2026-09-18-props.md` | 6 | Props went live and credits are being spent. Makes a silent join failure observable. |
+| 3 | `BUILD-QUEUE-2026-09-18-mainline.md` | 15 | Three diagnosed defects, five capture tasks, four loop-closing tasks, three enumerating guards. |
 | 4 | `BUILD-QUEUE-2026-09-18-head-serve.md` | 6 | Somewhere for a fitted head to go, and a gate with something to gate. Registry ships empty. |
 | 5 | `BUILD-QUEUE-2026-09-18-tenancy.md` | 6 | The multi-tenancy foundation, while every row still belongs to one tenant by definition. |
 
@@ -21,12 +21,15 @@ published number, an ordering or a gate result on merge, that task is wrong.
 
 ## Why this order
 
-Props first because credits are being spent right now with no proof anything lands.
-Mainline second because its wave 1 fixes defects every later queue reports through, and its
+Ranking first by founder direction on 2026-09-18: it is four tasks, it produces the
+evidence for the single highest-value decision open, and its section 0 now prices both
+levers the founder named. It shares no file with the props queue, so the order between the
+first two is about attention rather than dependency and a parallel runner can take both.
+Props second because credits are being spent right now with no proof anything lands.
+Mainline third because its wave 1 fixes defects every later queue reports through, and its
 wave 2 capture accrues sample in wall-clock time, so every day deferred is sample that
-never exists. Ranking third because it is small and it produces the evidence for the single
-highest-value founder decision open. Head-serve fourth because it is the largest build and
-depends on mainline task 10's offset capability. Tenancy last because it is the only one
+never exists. Head-serve fourth because it is the largest build and depends on mainline
+task 10's offset capability. Tenancy last because it is the only one
 whose value depends on a product decision not yet made, and it costs nothing sitting on the
 shelf.
 
