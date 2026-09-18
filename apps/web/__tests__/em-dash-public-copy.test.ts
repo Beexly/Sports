@@ -71,7 +71,6 @@ const BASELINE: Readonly<Record<string, number>> = {
   "apps/web/app/faq/page.tsx": 3,
   "apps/web/app/founder-picks/page.tsx": 3,
   "apps/web/app/games/[gameId]/page.tsx": 1,
-  "apps/web/app/house/page.tsx": 4,
   "apps/web/app/how-we-make-money/page.tsx": 3,
   "apps/web/app/integrity/page.tsx": 20,
   "apps/web/app/intelligence/engines/registry.tsx": 3,
