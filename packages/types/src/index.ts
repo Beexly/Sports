@@ -19,6 +19,9 @@ export type RiskLevel =
 
 export * from "./ladder.js";
 export * from "./heartbeat.js";
+export * from "./ranking-candidates.js";
+export * from "./calibration-floors.js";
+export * from "./trueprob-basis.js";
 
 // ============================================================
 // Factor Breakdown — structured scoring factors per pick

@@ -49,9 +49,10 @@
  */
 
 import type { CalibrationSample } from "../../probability-calibration.js";
+import { DEFAULT_MIN_CALIBRATION_SAMPLE } from "@sports/types";
 
 /** Default minimum settled samples before the calibrator is active. */
-export const DEFAULT_MIN_CALIBRATION_SAMPLE = 100;
+export { DEFAULT_MIN_CALIBRATION_SAMPLE };
 
 /** Default strength of the empirical-Bayes prior (Jeffreys-equivalent). */
 export const DEFAULT_PRIOR_STRENGTH = 2;

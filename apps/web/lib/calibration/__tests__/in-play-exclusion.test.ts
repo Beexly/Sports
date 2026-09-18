@@ -3,6 +3,7 @@ import {
   inPlayExclusionNote,
   isInPlayGenerated,
   partitionInPlay,
+  partitionInPlayForTraining,
 } from "@/lib/calibration/in-play-exclusion";
 
 /**
@@ -31,8 +32,6 @@ describe("isInPlayGenerated — the boundary", () => {
   });
 
   it("keeps the row when either clock is absent or unreadable — absent means CANNOT TELL", () => {
-    // Dropping on a missing timestamp would shrink every published denominator by
-    // however much the data happened to be missing, which is a different lie.
     expect(isInPlayGenerated(null, KICKOFF)).toBe(false);
     expect(isInPlayGenerated(KICKOFF, null)).toBe(false);
     expect(isInPlayGenerated(undefined, undefined)).toBe(false);
@@ -41,11 +40,6 @@ describe("isInPlayGenerated — the boundary", () => {
   });
 
   it("reads a string clock instead of ignoring it, and never throws on one", () => {
-    // A JSON round-trip, a raw-SQL row or a serialized payload can hand in an ISO
-    // string. The first version of this function threw
-    // `generatedAt?.getTime is not a function` here — a public surface would have
-    // gone DOWN rather than degraded, which is why this case is pinned. A string is
-    // now parsed, so an in-play row is still excluded rather than wrongly kept.
     expect(isInPlayGenerated("2026-09-10T23:30:00Z", KICKOFF)).toBe(true);
     expect(isInPlayGenerated("2026-09-10T09:00:00Z", KICKOFF)).toBe(false);
     expect(isInPlayGenerated(KICKOFF.toISOString(), KICKOFF.toISOString())).toBe(true);
@@ -61,11 +55,6 @@ describe("isInPlayGenerated — the boundary", () => {
 
 describe("partitionInPlay — partition invariants and scale", () => {
   it("loses none and invents none: 100k rows straddling kickoff, exactly half withheld", () => {
-    // Offsets run -100..+99 minutes around kickoff, so the population genuinely
-    // straddles it. My first version of this test generated every row AT OR AFTER
-    // kickoff and asserted 500 excluded; the code correctly excluded all 100,000 and
-    // the test was the thing that was wrong. Kept as a straddle so the assertion has
-    // to earn itself.
     const rows = Array.from({ length: 100_000 }, (_, i) => ({
       id: i,
       offsetMinutes: (i % 200) - 100,
@@ -78,14 +67,10 @@ describe("partitionInPlay — partition invariants and scale", () => {
     const elapsedMs = performance.now() - started;
 
     expect(scored.length + excludedInPlay.length).toBe(100_000);
-    // offset >= 0 is in-play: i % 200 in [100, 199], which is exactly half.
     expect(excludedInPlay.length).toBe(50_000);
     expect(scored.length).toBe(50_000);
-    // The boundary set (offset exactly 0, i % 200 === 100) must land on the excluded
-    // side at scale, not just in the single-row case above: 100k / 200 = 500 rows.
     expect(excludedInPlay.filter((r) => r.offsetMinutes === 0).length).toBe(500);
     expect(scored.some((r) => r.offsetMinutes === 0)).toBe(false);
-    // Order is preserved on both sides, so a caller's `orderBy` still means something.
     expect(scored[0]?.offsetMinutes).toBe(-100);
     expect(excludedInPlay[0]?.offsetMinutes).toBe(0);
     expect(elapsedMs).toBeLessThan(2_000);
@@ -98,6 +83,39 @@ describe("partitionInPlay — partition invariants and scale", () => {
     }));
     expect(scored).toEqual([]);
     expect(excludedInPlay).toEqual([]);
+  });
+});
+
+describe("training vs eligibility clock asymmetry (deliberate)", () => {
+  const nullClockRow = {
+    id: "null-clock",
+    generatedAt: null as Date | null,
+    commenceTime: KICKOFF,
+  };
+  const readablePreGame = {
+    id: "pre",
+    generatedAt: new Date(KICKOFF.getTime() - 60_000),
+    commenceTime: KICKOFF,
+  };
+
+  it("partitionInPlay KEEPS a null-clock row (eligibility sample, unchanged)", () => {
+    const { scored, excludedInPlay } = partitionInPlay(
+      [nullClockRow, readablePreGame],
+      (r) => r,
+    );
+    expect(scored.map((r) => r.id)).toEqual(["null-clock", "pre"]);
+    expect(excludedInPlay).toEqual([]);
+  });
+
+  it("partitionInPlayForTraining EXCLUDES a null-clock row and tags the reason", () => {
+    const { kept, excluded } = partitionInPlayForTraining(
+      [nullClockRow, readablePreGame],
+      (r) => r,
+    );
+    expect(kept.map((r) => r.id)).toEqual(["pre"]);
+    expect(excluded).toHaveLength(1);
+    expect(excluded[0]?.row.id).toBe("null-clock");
+    expect(excluded[0]?.reason).toBe("unreadable_generated_at");
   });
 });
 

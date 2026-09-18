@@ -28,9 +28,9 @@ import {
   type CalibrationSample,
   type IsotonicModel,
 } from "./probability-calibration.js";
+import { DEFAULT_MIN_CALIBRATION_SAMPLE } from "@sports/types";
 
-/** Minimum settled sample before a calibration map may be applied. */
-export const DEFAULT_MIN_CALIBRATION_SAMPLE = 100;
+export { DEFAULT_MIN_CALIBRATION_SAMPLE };
 
 export interface CalibratedProbability {
   /** Win probability in [0,1]. */

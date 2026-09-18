@@ -246,6 +246,7 @@ export async function backfillIndependentTrueProb(opts?: {
       conviction: Math.min(100, Math.round(trueProb * 100)),
       sources,
       priced: true,
+      trueProbBasis: "post_settlement_backfill",
       rationale:
         `Retrospective independent blend (${sources.join(", ")}) prices published team side ` +
         `"${side}" at ${(trueProb * 100).toFixed(1)}% team-win trueProb` +
