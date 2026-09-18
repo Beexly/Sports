@@ -3513,3 +3513,59 @@ a dash joining two independent clauses becomes a period, or you get run-ons. Cod
 are skipped entirely, since a dash in a comment is not customer copy and churning it is
 diff noise. The ratchet in `apps/web/__tests__/em-dash-public-copy.test.ts` may only go
 down.
+
+---
+
+## THE BOARD DOES NOT SORT ON CONFIDENCE (2026-09-18, Opus, `a38fa96db`)
+
+**Correction to the RANKING half named as still open above. Read this before building
+anything on the claim that the board is ordered by an anti-predictive score.**
+
+That claim is half right, and the wrong half shrinks the task. `rankingSortKey`
+(`apps/web/lib/ranking/sort-key.ts`) prefers `factorBreakdown.rankingP` when finite,
+falls back to `rankingScore/100`, and reaches `confidence/100` only when BOTH are
+absent. Those are different animals in this file's own measurements: `rankingP`
+(n 1,390) is monotone, over-confident in the upper middle but never inverted;
+`confidence` (n 2,385) is the non-monotone one. So an inverted score drives the order
+only on rows that fall all the way through the cascade, **and nobody has ever measured
+what share of rows that is.** That number decides whether this is a narrow fallback
+defect or the original framing, and it comes first.
+
+`readRankingKey` now returns `{ basis, key }` and is the ONLY place the cascade is
+written; `rankingSortKey` is a thin wrapper over it. That shape is load bearing. A
+second copy of the branch logic is how a census drifts from the comparator it claims to
+describe and then reports a reassuring number about code that does something else. A
+test asserts key equality with `rankingSortKey` on all 15 cases, rejection reasons
+included, so reporting the basis provably moved none of the eight surfaces this orders
+(picks API, board state, cockpit, cockpit brief, dashboard, admin dashboard, preview,
+v1 probabilities).
+
+`rankingBasisCensus` counts the three branches over a set of rows. It reads, never
+filters, writes nothing, and an empty board is a real answer (all zeros) rather than a
+throw, so it still runs on a quiet slate. `rankingP` of zero is pinned as a VALUE, not
+absence: a row the independent model priced at zero is priced, and if it fell through,
+the rows the model rated worst would be exactly the ones ordered by the score measured
+to be anti-predictive at the top.
+
+**Still to do, in order.** 1) Run the census over published rows, split by sport and
+book count, and report the fallback share with an honest bound. 2) A realized-outcome
+metric per candidate ordering on settled history (top-N realized win rate at several N,
+plus rank correlation between position and outcome), reusing the existing
+push/bootstrap/in-play exclusions rather than inventing a sample. 3) State the
+uncertainty or do not state the result: four orderings on one sample is four chances to
+find a winner by noise, so pre-register, report an interval per ordering, and if the
+intervals overlap say so instead of naming a winner. Steps 1 and 2 need settled rows
+from the database, which law 7 puts outside an agent session; until an operator runs
+them they are NOT RUN, and no agent estimates the answer.
+
+**Coordination.** This lane overlaps `hermes/2026-09-18-queues`, which landed four
+total and stable candidate comparators in `packages/types/src/ranking-candidates.ts`
+plus `RANKING_ORDERING_SWITCH`, founder only and deliberately not an env flag. Do not
+rebuild those and do not move that switch. The division is that branch owns the
+comparators and the switch, this owns the outcome measurement. Two agents already built
+toward one task here without either knowing.
+
+**Verified:** ranking-sort-key 12/12 (was 6), adverse-edge-suppression 15/15, 74
+board/picks/cockpit/dashboard/preview files at 723/723 with no zero-collection files,
+typecheck 0, lint 0, guardrails 26/26. No gate, flag, floor, schema or MODEL_VERSION
+touched.
