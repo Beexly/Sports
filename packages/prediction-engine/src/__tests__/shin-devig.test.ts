@@ -45,6 +45,44 @@ describe("shinDevig", () => {
     const { probabilities } = shinDevig(raw);
     expect(probabilities[0]!).not.toBeCloseTo(proportional[0]!, 4);
   });
+
+  it("American two-way table: Shin pulls mass ONTO the favourite, away from the midpoint", () => {
+    // Independent conversion (same identity as scoring.americanToImpliedProbability).
+    const implied = (american: number): number =>
+      american > 0 ? 100 / (american + 100) : Math.abs(american) / (Math.abs(american) + 100);
+
+    const books: readonly {
+      readonly fav: number;
+      readonly dog: number;
+      readonly propMinusShinFav: number;
+    }[] = [
+      { fav: -110, dog: -110, propMinusShinFav: 0 },
+      { fav: -160, dog: 140, propMinusShinFav: -0.0031 },
+      { fav: -300, dog: 240, propMinusShinFav: -0.0096 },
+      { fav: -600, dog: 450, propMinusShinFav: -0.0127 },
+      { fav: -1500, dog: 850, propMinusShinFav: -0.0171 },
+    ];
+
+    let prevAbs = -1;
+    for (const row of books) {
+      const raw = [implied(row.fav), implied(row.dog)];
+      const booksum = sum(raw);
+      const propFav = raw[0]! / booksum;
+      const shin = shinDevig(raw);
+      const delta = propFav - shin.probabilities[0]!;
+      expect(delta).toBeCloseTo(row.propMinusShinFav, 3);
+      // Shin does not shade toward 0.5: favourite mass vs proportional is ≥.
+      expect(shin.probabilities[0]!).toBeGreaterThanOrEqual(propFav - 1e-12);
+      expect(Math.abs(shin.probabilities[0]! - 0.5)).toBeGreaterThanOrEqual(
+        Math.abs(propFav - 0.5) - 1e-12,
+      );
+      expect(shin.z).toBeGreaterThanOrEqual(0);
+      expect(shin.z).toBeLessThan(0.05);
+      const abs = Math.abs(delta);
+      expect(abs).toBeGreaterThanOrEqual(prevAbs - 1e-6);
+      prevAbs = abs;
+    }
+  });
 });
 
 describe("gotoConversion", () => {

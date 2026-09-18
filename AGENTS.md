@@ -3402,3 +3402,15 @@ Data sources as stated on charts: nflverse (nflreadpy)/(nflreadr) footers; FTN C
 - SIMILARITY FINDER (new tool): Parker Washington (Week 1 2026) vs 50 historical WR season comps, top 10 shown — SIM score (Hill 2023 42.4, Nacua 2025 40.4, JSN 2025 37.2...), FP/G, XFP/G (expected fantasy points/game), RTE%, TGT%, TPRR, YPRR, ADOT, 1st-read%, 1st-downs/route. Same-position-only comps; 9 of 144 usage stats weighted. Innovation kernel: historical similarity scoring on usage/efficiency shape for one-game samples.
 - BELLCOW REPORT (new): each RB's share of his team's backfield XFP — Achane 95%, Javonte Williams 95%, Gibbs/Cook/Taylor 93%. Innovation kernel: backfield dominance measured via expected fantasy points rather than touches.
 - DEFENSIVE TARGETS BY POSITION (Week 1 stacked bars): only text-attributed standouts are exact (Buccaneers 26% RB target share — one of highest; Packers 36% TE share — highest, Hockenson/Oliver 4 each); other team shares were approximate and not transcribed.
+
+## 2026-09-18 ~18:20 CDT — TRAP: a test for credential HANDLING must never contain a credential SHAPE
+
+GitGuardian incident 37443000 + the repo Secret scan (full tree) both failed at b71d9c04 on `packages/prediction-engine/src/edge-lab/__tests__/psql-readonly.test.ts`.
+
+OBSERVATION. The string was a synthetic fixture, not a live DSN. Host was a cartoon Neon hostname (no region, no aws). User was named after the agent branch. Password was 12-character leetspeak. Database was Neon default. Do not rotate. Do not rewrite history for a fixture. I will not print the string.
+
+WHAT HAPPENED. `psql-readonly.ts` was the right CWE-214 fix (PG* env, argv is flags+SQL). The test that proved the credential no longer travels through argv put a credential-shaped URL in the repository. The remediation reintroduced the class of problem it was remediating, one layer over.
+
+RULE. A test for credential HANDLING must never contain a credential SHAPE a scanner can match. Assemble from parts at runtime. Use a sentinel such as NOT-A-REAL-DSN. Assert the sentinel never appears in spawn args. That is a stronger test than a realistic URL, because it fails loudly if the helper ever leaks. Do not whitelist the file. Do not use a plausible-looking fake.
+
+Fixed on this branch after b71d9c04. Founder call on whether to purge the historical commit; I did not rewrite it.

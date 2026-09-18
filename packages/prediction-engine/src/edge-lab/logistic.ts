@@ -10,6 +10,10 @@
  * applied to test rows) — test-fold statistics never touch training, which
  * is itself a leak class. Missing feature values (absent key) impute to the
  * training mean (i.e. 0 after standardization).
+ *
+ * Optional per-row `offset` is added to the linear predictor with its
+ * coefficient pinned at 1: never updated, never ridge-penalized. Existing
+ * callers that pass no offset stay byte-identical (offset defaults to 0).
  */
 
 export interface LabeledExample {
@@ -17,9 +21,14 @@ export interface LabeledExample {
   readonly features: ReadonlyMap<string, number>;
   /** Binary outcome (1 = modeled side won). */
   readonly y: 0 | 1;
+  /**
+   * Fixed offset on the logit (e.g. market logit). Coefficient pinned at 1.
+   * Absent / non-finite → 0, which is the historical predictor.
+   */
+  readonly offset?: number;
 }
 
-export type Predictor = (features: ReadonlyMap<string, number>) => number;
+export type Predictor = (features: ReadonlyMap<string, number>, offset?: number) => number;
 
 export interface Trainer {
   (train: readonly LabeledExample[]): Predictor;
@@ -41,6 +50,10 @@ function sigmoid(z: number): number {
   return e / (1 + e);
 }
 
+function readOffset(ex: { readonly offset?: number }): number {
+  return typeof ex.offset === "number" && Number.isFinite(ex.offset) ? ex.offset : 0;
+}
+
 /** Build a deterministic ridge-logistic trainer over the given feature keys. */
 export function logisticTrainer(opts: LogisticOptions): Trainer {
   const lambda = opts.lambda ?? 1e-2;
@@ -50,7 +63,12 @@ export function logisticTrainer(opts: LogisticOptions): Trainer {
 
   return (train: readonly LabeledExample[]): Predictor => {
     const n = train.length;
-    if (n === 0) return () => 0.5;
+    if (n === 0) {
+      // No coefficients to fit. The offset is still a coefficient of 1, so an
+      // empty fold must return sigmoid(offset), not a coin flip. Absent offset
+      // stays 0.5 — byte-identical to the previous constant return.
+      return (_features, offset) => sigmoid(readOffset({ offset }));
+    }
 
     // Standardization constants from the TRAINING fold only.
     const mean = new Array(keys.length).fill(0);
@@ -78,20 +96,22 @@ export function logisticTrainer(opts: LogisticOptions): Trainer {
     keys.forEach((_, j) => {
       const c = count[j] ?? 0;
       sd[j] = c > 1 ? Math.sqrt((sd[j] ?? 0) / (c - 1)) : 1;
-      if (!((sd[j] ?? 0) > 1e-12)) sd[j] = 1; // constant feature -> no scale
+      if (!((sd[j] ?? 0) > 1e-12)) sd[j] = 1;
     });
 
     const encode = (features: ReadonlyMap<string, number>): number[] =>
       keys.map((k, j) => {
         const v = features.get(k);
-        if (v === undefined || !Number.isFinite(v)) return 0; // = training mean
+        if (v === undefined || !Number.isFinite(v)) return 0;
         return (v - (mean[j] ?? 0)) / (sd[j] ?? 1);
       });
 
     const X = train.map((ex) => encode(ex.features));
     const Y = train.map((ex) => ex.y);
+    const O = train.map((ex) => readOffset(ex));
 
     // Batch gradient descent on ridge-penalized log-loss (intercept unpenalized).
+    // Offset term is added to z with coefficient 1 and is not a parameter.
     let b0 = 0;
     const w = new Array(keys.length).fill(0);
     for (let it = 0; it < iters; it++) {
@@ -99,7 +119,7 @@ export function logisticTrainer(opts: LogisticOptions): Trainer {
       const g = new Array(keys.length).fill(0);
       for (let i = 0; i < n; i++) {
         const xi = X[i]!;
-        const z = b0 + xi.reduce((acc, x, j) => acc + x * (w[j] ?? 0), 0);
+        const z = O[i]! + b0 + xi.reduce((acc, x, j) => acc + x * (w[j] ?? 0), 0);
         const err = sigmoid(z) - (Y[i] ?? 0);
         g0 += err;
         for (let j = 0; j < keys.length; j++) g[j] = (g[j] ?? 0) + err * (xi[j] ?? 0);
@@ -110,9 +130,10 @@ export function logisticTrainer(opts: LogisticOptions): Trainer {
       }
     }
 
-    return (features: ReadonlyMap<string, number>): number => {
+    return (features: ReadonlyMap<string, number>, offset?: number): number => {
       const x = encode(features);
-      const z = b0 + x.reduce((acc, xi, j) => acc + xi * (w[j] ?? 0), 0);
+      const off = typeof offset === "number" && Number.isFinite(offset) ? offset : 0;
+      const z = off + b0 + x.reduce((acc, xi, j) => acc + xi * (w[j] ?? 0), 0);
       return sigmoid(z);
     };
   };

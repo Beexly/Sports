@@ -80,6 +80,69 @@ export function partitionInPlay<T>(
 }
 
 /**
+ * Training-set clock reasons. Eligibility (`partitionInPlay`) keeps a row
+ * when either clock is unreadable. Training does not: an unread clock is
+ * not evidence, and mixing it into a fit silently inflates n. The split
+ * is the architecture — training is stricter than eligibility, out loud.
+ */
+export type TrainingClockExcludeReason =
+  | "in_play"
+  | "unreadable_generated_at"
+  | "unreadable_commence_time"
+  | "unreadable_both_clocks";
+
+export interface TrainingClockExclusion<T> {
+  readonly row: T;
+  readonly reason: TrainingClockExcludeReason;
+}
+
+export interface TrainingClockPartition<T> {
+  readonly kept: readonly T[];
+  readonly excluded: readonly TrainingClockExclusion<T>[];
+}
+
+function clockReadable(value: ClockInput): boolean {
+  return Number.isFinite(clockMs(value));
+}
+
+/**
+ * Stricter partition for TRAINING only. Excludes a row when either clock
+ * is unreadable, and tags every exclusion with a reason the caller can
+ * count. Does not change `partitionInPlay` — that function is the
+ * eligibility sample and is founder-only under law 3.
+ */
+export function partitionInPlayForTraining<T>(
+  rows: readonly T[],
+  read: (row: T) => InPlayCandidate,
+): TrainingClockPartition<T> {
+  const kept: T[] = [];
+  const excluded: TrainingClockExclusion<T>[] = [];
+  for (const row of rows) {
+    const { generatedAt, commenceTime } = read(row);
+    const gOk = clockReadable(generatedAt);
+    const cOk = clockReadable(commenceTime);
+    if (!gOk && !cOk) {
+      excluded.push({ row, reason: "unreadable_both_clocks" });
+      continue;
+    }
+    if (!gOk) {
+      excluded.push({ row, reason: "unreadable_generated_at" });
+      continue;
+    }
+    if (!cOk) {
+      excluded.push({ row, reason: "unreadable_commence_time" });
+      continue;
+    }
+    if (isInPlayGenerated(generatedAt, commenceTime)) {
+      excluded.push({ row, reason: "in_play" });
+      continue;
+    }
+    kept.push(row);
+  }
+  return { kept, excluded };
+}
+
+/**
  * The one sentence every surface carrying this exclusion prints. Written once so
  * the sample, the panel and the tail monitor cannot describe the same exclusion
  * three different ways — and so the number is always stated WITH its denominator.

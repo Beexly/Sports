@@ -458,6 +458,7 @@ export async function generateSignalSlate(opts?: {
       conviction: Math.min(100, Math.round(trueProb * 100)),
       sources: [...sources],
       priced: true,
+      trueProbBasis: "as_of_mint",
       rationale: `Independent blend (${sourcesLabel}): model estimate ${(trueProb * 100).toFixed(1)}% for ${chosenTeam}, uncalibrated and not a book price. Model signal only.`,
     };
 

@@ -9,9 +9,10 @@
  *
  * Honesty:
  *   - n < MIN_SAMPLES_MARGIN_SET → status insufficient_sample, empty set.
- *   - Quantile is the split-conformal ceil((n+1)(1−α)) order statistic
- *     (same correction as conformal-intervals.ts). Without it, small-n
- *     sets undercover.
+ *   - Quantile is the split-conformal ceil((n+1)(1−α)) order statistic.
+ *     Rank > n returns +∞ (fail-closed). Clamping to the max residual is
+ *     fake tightness. An infinite quantile is status unlicensed_quantile,
+ *     not an enumerated integer set over ℝ.
  *   - Mondrian by sportKey so NHL residuals never price an NFL spread.
  *   - Pure. No I/O. Not a live pick input.
  *
@@ -38,7 +39,7 @@ export interface MarginPredictionSet {
   readonly integers: readonly number[];
   readonly alpha: number;
   readonly n: number;
-  readonly status: "ok" | "insufficient_sample";
+  readonly status: "ok" | "insufficient_sample" | "unlicensed_quantile";
 }
 
 function round4(value: number): number {
@@ -47,19 +48,18 @@ function round4(value: number): number {
 
 /**
  * Split-conformal finite-sample quantile: ceil((n+1) * p)-th order statistic,
- * 1-indexed, clamped to the sample. Matches conformal-intervals.ts.
+ * 1-indexed. Fail-closed: empty or rank > n returns +∞. Never clamped.
  */
 export function splitConformalQuantile(values: readonly number[], probability: number): number {
-  if (values.length === 0) return 0;
-  if (!Number.isFinite(probability) || probability <= 0) return values[0] ?? 0;
-  if (probability >= 1) {
-    const sortedAll = [...values].sort((a, b) => a - b);
-    return sortedAll[sortedAll.length - 1] ?? 0;
+  if (values.length === 0) return Number.POSITIVE_INFINITY;
+  if (!(probability >= 0 && probability <= 1) || !Number.isFinite(probability)) {
+    return Number.POSITIVE_INFINITY;
   }
   const sorted = [...values].sort((a, b) => a - b);
   const rank = Math.ceil((sorted.length + 1) * probability);
-  const index = Math.min(sorted.length - 1, Math.max(0, rank - 1));
-  return sorted[index]!;
+  if (rank > sorted.length) return Number.POSITIVE_INFINITY;
+  if (rank < 1) return Number.NEGATIVE_INFINITY;
+  return sorted[rank - 1]!;
 }
 
 function integersInClosedInterval(lower: number, upper: number): number[] {
@@ -104,6 +104,19 @@ export function conformalMarginSet(args: {
 
   const residuals = rows.map((row) => Math.abs(row.actualMargin - row.predictedMean));
   const halfWidth = splitConformalQuantile(residuals, 1 - alpha);
+  if (!Number.isFinite(halfWidth)) {
+    return {
+      predictedMean: args.predictedMean,
+      sportKey: args.sportKey,
+      halfWidth: Number.POSITIVE_INFINITY,
+      lower: Number.NEGATIVE_INFINITY,
+      upper: Number.POSITIVE_INFINITY,
+      integers: [],
+      alpha,
+      n: rows.length,
+      status: "unlicensed_quantile",
+    };
+  }
   const lower = round4(args.predictedMean - halfWidth);
   const upper = round4(args.predictedMean + halfWidth);
 

@@ -236,6 +236,7 @@ function assessIndependentEdge(
     conviction: a.conviction,
     sources: independents.map((e) => e.source),
     priced: false, // surfaced in the glass box; not yet in the confidence math
+    trueProbBasis: "as_of_mint",
     rationale: a.rationale,
   };
 }

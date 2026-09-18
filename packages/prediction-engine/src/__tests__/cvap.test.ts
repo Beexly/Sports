@@ -13,11 +13,12 @@ function separableCalibration(n = 60): IvapCalibrationPoint[] {
 }
 
 describe("cvapPredict", () => {
-  it("empty calibration set returns the uninformative 0.5/0.5 point with 0 folds used", () => {
+  it("empty calibration set returns the uninformative [0, 1] interval with 0 folds used", () => {
     const pred = cvapPredict([], 0.5);
-    expect(pred.p0).toBe(0.5);
-    expect(pred.p1).toBe(0.5);
-    expect(pred.width).toBe(0);
+    expect(pred.p0).toBe(0);
+    expect(pred.p1).toBe(1);
+    expect(pred.width).toBe(1);
+    expect(pred.midpoint).toBe(0.5);
     expect(pred.foldsUsed).toBe(0);
     expect(pred.foldPredictions).toEqual([]);
   });

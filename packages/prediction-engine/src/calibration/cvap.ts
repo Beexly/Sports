@@ -84,10 +84,10 @@ export function cvapPredict(
   const n = calibration.length;
   if (n === 0) {
     return {
-      p0: 0.5,
-      p1: 0.5,
+      p0: 0,
+      p1: 1,
       midpoint: 0.5,
-      width: 0,
+      width: 1,
       foldPredictions: [],
       aggregation: options.aggregation ?? "geometric",
       foldsUsed: 0,
@@ -137,8 +137,9 @@ export function cvapPredict(
     }
     // Unreachable under the K <= n clamp + every-fold-nonempty guarantee, but
     // if it ever fires the honest answer is stated ignorance (empty-set IVAP
-    // -> 0.5/0.5), NEVER a silent full-set fit — that would turn "leave this
-    // fold out" into "leave nothing out" and mislabel it as a clean fold.
+    // -> [0, 1] width 1), NEVER a silent full-set fit — that would turn
+    // "leave this fold out" into "leave nothing out" and mislabel it as a
+    // clean fold.
     const ivap = new InductiveVennAbers(train);
     const pred = ivap.predict(testScore);
     foldPredictions.push({ p0: pred.p0, p1: pred.p1 });

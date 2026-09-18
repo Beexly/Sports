@@ -56,7 +56,10 @@ export class InductiveVennAbers {
    */
   predict(testScore: number): IvapPrediction {
     if (this.sorted.length === 0) {
-      return { p0: 0.5, p1: 0.5, pMid: 0.5, width: 0 };
+      // Empty calibration is total ignorance: [0, 1], width 1.
+      // Returning {0.5, 0.5, width 0} looks like a tight, confident interval
+      // and would pass a Δp > 0.20 veto. That is fake tightness.
+      return { p0: 0, p1: 1, pMid: 0.5, width: 1 };
     }
 
     // Insert the test point into the ordered sequence (we will force its label twice)

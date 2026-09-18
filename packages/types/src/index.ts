@@ -2,6 +2,8 @@
 // Shared Platform Types
 // ============================================================
 
+import type { TrueProbBasis } from "./trueprob-basis.js";
+
 export type SubscriptionTier = "FREE" | "FANTASY" | "PRO" | "ELITE";
 
 export type PickType = "SPREAD" | "MONEYLINE" | "TOTAL";
@@ -19,7 +21,9 @@ export type RiskLevel =
 
 export * from "./ladder.js";
 export * from "./heartbeat.js";
-
+export * from "./ranking-candidates.js";
+export * from "./calibration-floors.js";
+export * from "./trueprob-basis.js";
 // ============================================================
 // Factor Breakdown — structured scoring factors per pick
 // ============================================================
@@ -57,6 +61,14 @@ export interface IndependentEdgeSummary {
   sources: string[];            // independent estimators used, e.g. ["kalshi"]
   priced: boolean;              // true = drove ranking path (finite trueProb, incl. PASS)
   rationale: string;            // plain-language "why"
+  /**
+   * Which clock `trueProb` was computed against. Required on every new write.
+   * Trainers admit only as_of_mint. Production ranking (ranking-prob.ts) and
+   * the admission mill (trueprob-admission.ts) read via tryReadTrainableTrueProb
+   * so refusals can be counted. requireTrainableTrueProbBasis is the throwing
+   * type-level contract; no trainer calls it as of 936be9c.
+   */
+  trueProbBasis?: TrueProbBasis;
 }
 
 /**

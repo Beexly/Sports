@@ -2,29 +2,28 @@ import { describe, expect, it } from "vitest";
 import { conformalQuantile, cqrInterval, CQR_PRODUCT_NOTES } from "@/lib/calibration/cqr";
 
 describe("CQR", () => {
-  it("conformal quantile finite-sample", () => {
+  it("n=5 α=0.1 cannot support the quantile — Inf, not a clamp onto 0.8", () => {
     const s = [0.1, 0.2, 0.3, 0.5, 0.8];
-    const q = conformalQuantile(s, 0.1);
-    expect(q).toBeGreaterThan(0);
-    expect(q).toBeLessThanOrEqual(0.8);
+    expect(conformalQuantile(s, 0.1)).toBe(Number.POSITIVE_INFINITY);
   });
 
-  it("expands intervals by qhat", () => {
+  it("empty calibration is unlicensed ±∞, never qhat 0", () => {
+    const { lo, hi, qhat, licensed } = cqrInterval([10], [12], [], [], [], 0.1);
+    expect(licensed).toBe(false);
+    expect(qhat).toBe(Number.POSITIVE_INFINITY);
+    expect(lo[0]).toBe(Number.NEGATIVE_INFINITY);
+    expect(hi[0]).toBe(Number.POSITIVE_INFINITY);
+  });
+
+  it("expands intervals by qhat when n supports the quantile", () => {
     // Fixture: every y sits 0.5 inside [q_lo, q_hi].
-    // s_i = max(q_lo_i - y_i, y_i - q_hi_i) = max(-0.5, -0.5) = -0.5
-    // n=5, alpha=0.1 → rank = ceil(0.9*(5+1))-1 = 5, clamped to n-1 = 4
-    // qhat = sorted(s)[4] = -0.5
-    // Negative qhat is valid CQR: calibration residuals are all negative
-    // (intervals were too wide), so test intervals shrink:
-    //   lo = q_lo - (-0.5) = q_lo + 0.5
-    //   hi = q_hi + (-0.5) = q_hi - 0.5
-    // Implementation matches Romano, Patterson, Candès 2019 and its own
-    // docstring. This is not a PAVA-style math bug. Do not clip qhat to 0
-    // without a product decision.
-    const yCal = [1, 2, 3, 4, 5];
-    const qLoCal = [0.5, 1.5, 2.5, 3.5, 4.5];
-    const qHiCal = [1.5, 2.5, 3.5, 4.5, 5.5];
-    const { lo, hi, qhat } = cqrInterval(
+    // s_i = max(q_lo_i - y_i, y_i - q_hi_i) = -0.5
+    // n=20, alpha=0.1 → rank = ceil(0.9*21)-1 = 18 ≤ 19, finite
+    // qhat = -0.5. Negative qhat is valid CQR (Romano, Patterson, Candès 2019).
+    const yCal = Array.from({ length: 20 }, (_, i) => i + 1);
+    const qLoCal = yCal.map((y) => y - 0.5);
+    const qHiCal = yCal.map((y) => y + 0.5);
+    const { lo, hi, qhat, licensed } = cqrInterval(
       [10, 20],
       [12, 22],
       yCal,
@@ -32,6 +31,7 @@ describe("CQR", () => {
       qHiCal,
       0.1,
     );
+    expect(licensed).toBe(true);
     expect(qhat).toBe(-0.5);
     expect(lo[0]!).toBe(10.5);
     expect(hi[0]!).toBe(11.5);

@@ -168,11 +168,12 @@ describe("generateSignalSlate never overwrites a book-priced pick", () => {
     const out = await runSlate();
     expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
     expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
-    const args = mocks.pickCreate.mock.calls[0]?.[0] as { data: { gameId: string; pickType: string; bookmakerCount: number; selection: string; reasoning: string; factorBreakdown: { independentEdge: { rationale: string } } } };
+    const args = mocks.pickCreate.mock.calls[0]?.[0] as { data: { gameId: string; pickType: string; bookmakerCount: number; selection: string; reasoning: string; factorBreakdown: { independentEdge: { rationale: string; trueProbBasis?: string } } } };
     expect(args.data.gameId).toBe("game-1");
     expect(args.data.pickType).toBe("MONEYLINE");
     expect(args.data.bookmakerCount).toBe(0);
     expect(isSignalSlateRow(args.data)).toBe(true);
+    expect(args.data.factorBreakdown.independentEdge.trueProbBasis).toBe("as_of_mint");
     expect(out.picksUpserted).toBe(1);
     // Paid viewers read `reasoning` verbatim: an estimate with its status, and
     // no operator vocabulary or "priced at" language (a price needs a book).

@@ -11,7 +11,7 @@
  * displayed probability:
  *   PAV : output non-decreasing; weighted mean preserved; idempotent;
  *         bounded by input range; total on empty.
- *   IVAP: p0 <= p1; width >= 0; both in [0,1]; empty calibration -> 0.5/0.5;
+ *   IVAP: p0 <= p1; width >= 0; both in [0,1]; empty calibration -> [0, 1];
  *         finite for ANY finite test score.
  *   CVAP: same interval sanity; deterministic under a fixed seed; total on
  *         degenerate label sets (all-0s / all-1s); folds clamped to n.
@@ -146,12 +146,13 @@ describe("IVAP — interval invariants under fuzz", () => {
     );
   });
 
-  it("empty calibration answers 0.5/0.5 — ignorance is stated, not guessed", () => {
+  it("empty calibration answers [0, 1] — ignorance is wide, not a fake-tight 0.5", () => {
     fc.assert(
       fc.property(score, (s) => {
         const p = ivapPredict([], s);
-        expect(p.p0).toBe(0.5);
-        expect(p.p1).toBe(0.5);
+        expect(p.p0).toBe(0);
+        expect(p.p1).toBe(1);
+        expect(p.width).toBe(1);
       }),
       { numRuns: 50 },
     );

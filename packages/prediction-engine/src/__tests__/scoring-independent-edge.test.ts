@@ -61,6 +61,7 @@ describe("scoreMoneylinePick — independent-edge wire-in (honest, additive)", (
     expect(ie!.rawEdge).toBeGreaterThan(0.05);
     expect(ie!.expectedClv).toBeGreaterThan(0);
     expect(ie!.sources).toEqual(["kalshi", "poisson"]);
+    expect(ie!.trueProbBasis).toBe("as_of_mint");
 
     // MODEL_VERSION v5.2.1: ranking path priced; heuristic confidence unchanged.
     expect(ie!.priced).toBe(true);

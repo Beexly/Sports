@@ -7,7 +7,17 @@
  *
  * Used so display order matches generation sort + selective path, instead of
  * re-ordering purely by market-echo confidence after load.
+ *
+ * RANKING-QUEUE TASK 4: this file CONSULTS SORT_KEY_ORDERING. The committed
+ * value is "current", so comparePicksByRanking is byte-identical to the
+ * pre-queue body. The named constant in @sports/types (RANKING_ORDERING_SWITCH)
+ * is the same value; this file does not import @sports/types because two
+ * tests mock that package with no importActual. Other orderings live in
+ * packages/types/src/ranking-candidates.ts and are not reached from here
+ * until a founder commit moves both constants together.
  */
+export const SORT_KEY_ORDERING = "current" as const;
+
 export function rankingSortKey(pick: {
   readonly confidence: number;
   readonly factorBreakdown?: unknown;
@@ -43,6 +53,11 @@ export function comparePicksByRanking(
     readonly generatedAt?: Date | string | null;
   },
 ): number {
+  if (SORT_KEY_ORDERING !== "current") {
+    throw new Error(
+      `SORT_KEY_ORDERING=${SORT_KEY_ORDERING} is not the committed current branch`,
+    );
+  }
   const fa = a.isFeatured ? 1 : 0;
   const fb = b.isFeatured ? 1 : 0;
   if (fa !== fb) return fb - fa;

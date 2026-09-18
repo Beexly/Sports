@@ -57,15 +57,15 @@ function projectionSample(
 
 describe("Conformal Uncertainty Width", () => {
   it("wraps rolling Mondrian conformal reports without returning probability", () => {
-    const samples = Array.from({ length: 10 }, (_value, index) => {
+    const samples = Array.from({ length: 16 }, (_value, index) => {
       const week = index + 1;
       return [
-        projectionSample(week, "WR", week < 6 ? 15 : 14),
-        projectionSample(week, "RB", week < 6 ? 11 : 11),
+        projectionSample(week, "WR", 12 + (week % 3)),
+        projectionSample(week, "RB", 9 + (week % 2)),
       ];
     }).flat();
     const report = runRollingMondrianConformal(samples, {
-      calibrationWeeks: 2,
+      calibrationWeeks: 6,
       fitWeeks: 3,
       targetCoverage: 0.8,
     });
@@ -87,6 +87,7 @@ describe("Conformal Uncertainty Width", () => {
     expect(result.birthCertificate.metricId).toBe("conformal-uncertainty-width");
     expect(result.sourcePosture).toBe("CLEAN");
     expect(result.meanWidth).toBeGreaterThan(0);
+    expect(Number.isFinite(result.meanWidth)).toBe(true);
   });
 
   it("raises width pressure as interval width expands", () => {

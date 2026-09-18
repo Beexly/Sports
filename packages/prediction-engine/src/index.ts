@@ -178,6 +178,23 @@ export type {
   EvidenceReadinessMatrix,
   FailureHorizon,
 } from "./evidence-readiness-matrix.js";
+export {
+  evaluateFactorReadiness,
+  reportAllFactorReadiness,
+  rung2EligibleFactorKeys,
+  recordEvidenceReadinessTrial,
+  EVIDENCE_FACTOR_KEYS,
+  EVIDENCE_READINESS_FAMILY,
+} from "./evidence-readiness-loader.js";
+export type { EvidenceBundle } from "./evidence-readiness-loader.js";
+export { admitTrainableTrueProbRows, censusTrueProbRows, summarizeTrueProbAdmission } from "./edge-lab/trueprob-admission.js";
+export type {
+  AdmittedTrueProbRow,
+  RefusedTrueProbRow,
+  RefusalCensusReport,
+  TrueProbAdmission,
+  TrueProbRefusalReason,
+} from "./edge-lab/trueprob-admission.js";
 // v6 — bankroll math helpers. Exported for future model work; not wired to
 // the public API until price provenance and policy review are complete.
 export {
@@ -1903,6 +1920,23 @@ export type {
   OrchestratorSettlementResult,
 } from "./pipeline/live-orchestrator.js";
 
+export {
+  measureOrchestratorVsClimatology,
+  scoreVsExpandingHomeClimatology,
+  recordOrchestratorClimatologyTrial,
+  ORCHESTRATOR_CLIMATOLOGY_METHOD_TAG,
+  ORCHESTRATOR_CLIMATOLOGY_MIN_N,
+  ORCHESTRATOR_CLIMATOLOGY_KILL_BSS,
+  ORCHESTRATOR_CLIMATOLOGY_BASELINE_P,
+  ORCHESTRATOR_CLIMATOLOGY_FAMILY,
+} from "./pipeline/orchestrator-climatology-skill.js";
+export type {
+  OrchestratorClimGame,
+  OrchestratorClimVerdict,
+  OrchestratorClimScorecard,
+  OrchestratorClimOptions,
+} from "./pipeline/orchestrator-climatology-skill.js";
+
 // BAEE — shadow-mode-only ensemble weight learner. Not wired for blending.
 export { BAEEEnsemble } from "./ensemble/baee-ensemble.js";
 
@@ -1966,3 +2000,119 @@ export {
   MIN_SAMPLES_FOR_DISPERSION,
 } from "./dispersion/estimate-phi.js";
 export type { PhiEstimate, DispersionVerdict } from "./dispersion/estimate-phi.js";
+
+// Domain-1 math corrections (shadow). CRPS kill, Jackknife+ 1−2α floor,
+// live-legal steam baselines. Do not publish, do not bump MODEL_VERSION.
+export {
+  CRPS_KILL_MIN_N,
+  CRPS_KILL_MIN_IMPROVEMENT,
+  PAPER_CRPS_IMPROVEMENT_MAX,
+  crpsDiscrete,
+  crpsEmpirical,
+  crpsGaussian,
+  evaluateCrpsGate,
+  expectedGaussianCrps,
+} from "./edge-lab/kernel/slots/crps.js";
+export type { CrpsGateResult, CrpsGateVerdict } from "./edge-lab/kernel/slots/crps.js";
+export {
+  JACKKNIFE_PLUS_TWO_ALPHA_REASON,
+  boundedDriftCoverageGap,
+  changepointCoverageGap,
+  compareRecipesAtNflScale,
+  constantMeanLoo,
+  coverageFloor,
+  cvPlusInterval,
+  exponentialDecayWeights,
+  finiteIntervalMinN,
+  jackknifeMinmaxInterval,
+  jackknifePlusInterval,
+  naiveJackknifeInterval,
+  nexJackknifePlusInterval,
+  nflScaleWidthDiagnostic,
+  olsLoo,
+  simulateJackknifePlusCoverage,
+  splitConformalCoverage,
+  splitConformalInterval,
+  UNCONDITIONAL_JACKKNIFE_PLUS_FLOOR_REASON,
+  jackknifeCensusFlags,
+} from "./calibration/jackknife-plus.js";
+export type {
+  CoverageKind,
+  ConformalRecipe,
+  JackknifeRefusedBound,
+  PredictionInterval,
+} from "./calibration/jackknife-plus.js";
+export {
+  absDeltaVelocity,
+  evaluateSteamKill,
+  forwardKalmanFilter,
+  lookaheadDeltaAt,
+  scoreSteamBaselines,
+  signedDeceleration,
+  syntheticSteamPath,
+} from "./edge-lab/steam-baselines.js";
+
+export {
+  MARKET_CALIBRATION_BINS,
+  MARKET_CALIBRATION_ESTIMAND,
+  MARKET_CALIBRATION_MATTERS_WHEN,
+  MARKET_CALIBRATION_MIN_BIN_N,
+  MARKET_CALIBRATION_PRODUCTION_NEEDS,
+  MARKET_CALIBRATION_PRODUCTION_NUMBER,
+  MARKET_CALIBRATION_SQL,
+  MARKET_CALIBRATION_VIOLATION_PP,
+  measureMarketCalibrationViolation,
+} from "./edge-lab/market-calibration-violation.js";
+export type {
+  MarketCalibReport,
+  MarketCalibRow,
+  MarketCalibSportCard,
+} from "./edge-lab/market-calibration-violation.js";
+export {
+  FLASH_VENN_WIDTH_MEASURE,
+  VENN_WIDTH_MIN_N,
+  measureVennWidthBySport,
+} from "./edge-lab/venn-width-by-sport.js";
+export type { VennWidthReport, VennWidthRow, VennWidthSportCard } from "./edge-lab/venn-width-by-sport.js";
+export {
+  censusRefusals,
+  eventsFromPickRow,
+  REFUSAL_CENSUS_SQL,
+  REFUSAL_CENSUS_REQUIRED_COLUMNS,
+  REFUSAL_CENSUS_REPLICA_FAMILIES,
+  REFUSAL_CENSUS_UNPERSISTED_FAMILIES,
+  REFUSAL_CENSUS_PRODUCTION_NEEDS,
+} from "./edge-lab/refusal-census.js";
+export type {
+  CensusCell,
+  CensusEvent,
+  CensusInputCoverage,
+  ProductionPickRow,
+  RefusalCensusTable,
+  RefusalFamily,
+} from "./edge-lab/refusal-census.js";
+
+export {
+  compareCrpsRankings,
+  compareNflKeyNumberVsGaussian,
+  discretizedGaussian,
+  distFromPmf,
+  nflKeyNumberMixture,
+  pairedDiscreteVsGaussianSyntheticNfl,
+  pairedDiscreteVsWidenedGaussian,
+  integerMarginsFromScores,
+  DISCRETE_VS_GAUSSIAN_ESTIMAND,
+  DISCRETE_VS_GAUSSIAN_KILL_DELTA,
+  DISCRETE_VS_GAUSSIAN_KILL_N,
+  DISCRETE_VS_GAUSSIAN_MISSING_INPUT,
+  FLASH_NFLVERSE_CRPS_PAIRED,
+  TEAM_GAME_LOG_MARGINS_SQL,
+} from "./edge-lab/kernel/crps-compare.js";
+export type {
+  CrpsCompareReport,
+  CrpsRanking,
+  CrpsSampleKind,
+  PairedCrpsReport,
+  PairedCrpsVerdict,
+  SyntheticCrpsCompare,
+} from "./edge-lab/kernel/crps-compare.js";
