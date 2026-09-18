@@ -725,9 +725,10 @@ them is used as a baseline.
 
 | Mixed-effects EPA attribution (QB, coaching, opponent, supporting cast) | BUILDING-NOW | C | now | efficiency | feature | T1 | nflverse play-by-play, CC-BY-4.0, model training allowed | NEW `packages/prediction-engine/src/nfl/epa-attribution.ts` | named in AGENTS.md ENGINE BENCHMARK: SP+ AND MIXED-EFFECTS EPA ATTRIBUTION; no decomposition exists in the engine today | Random-effect variance for the QB term indistinguishable from zero, or no out-of-fold log-loss gain over team EPA alone | prediction-engine |
 | SP+ style forward rating with weekly-decaying preseason prior | BUILDING-NOW | C | now | efficiency | feature | T1 | nflverse, plus a market-derived preseason prior | NEW | tempo and opponent adjusted, priors phase out weekly; three citable early-season schemes exist (DVOA 50/30/20, DAVE 83/98, the coverage 83 percent fade) | Prior schedule that beats none of the three on out-of-fold log-loss dies | prediction-engine |
-| Coverage-defender grades: opponent-adjusted yards per route allowed | BUILDING-NOW | C | now | coverage | feature | T1 | FTN charting via nflverse, CC-BY-SA-4.0; internal modeling with attribution is CLEAN per registry :143-146 | NEW `packages/prediction-engine/src/nfl/coverage-grades.ts` | AGENTS.md ENGINE BENCHMARK: COVERAGE DEFENDER GRADES; engine has no defender route counts and no expected-yards coverage model | Coefficient interval crosses zero on the first refit, or per-defender reps below the stated floor | prediction-engine |
-| Coverage and box-count matchup features (WR vs CB, RB vs front) | BUILDING-NOW | C | now | coverage | feature | T1 | FTN charting via nflverse, internal modeling clean | NEW | the gate-veto row of the same name is withhold-only; this is its FEATURE companion, which the prior version omitted entirely | Coefficient interval crosses zero, or plays per matchup cell below the stated floor | prediction-engine |
-| Time to pressure, as an OL versus DL timing feature | BUILDING-NOW | C | now | trenches | feature | T1 | FTN charting via nflverse, internal modeling clean | NEW | AGENTS.md ENGINE BENCHMARK: TIME-TO-PRESSURE LEADERBOARD; our only pressure measure is a sack-and-hit floor proxy with no timing dimension | No out-of-fold gain over the existing pressure proxy | prediction-engine |
+| Coverage-defender grades: opponent-adjusted yards per route allowed | FOUNDER-BLOCKED | C | n/a | coverage | feature | T3 | GENUINELY ABSENT. Needs per-defender route counts and targets faced. nflverse does not carry defender routes, and FTN charting is play-grain (play action, RPO, screen, motion, defenders in box), not defender-route grain | NONE | AGENTS.md ENGINE BENCHMARK: COVERAGE DEFENDER GRADES describes a third-party product, not a dataset we hold | Cannot be tested. Unblocks only if a cleared source carrying defender routes is found; the 83 percent early-season fade blend is portable to our own splits regardless | data-ingestion |
+| Box-count and personnel matchup features (RB vs front, pass rate vs box) | BUILDING-NOW | C | now | trenches | feature | T1 | FTN charting and pbp_participation via nflverse, CC-BY-SA-4.0, internal modeling clean per the 2026-07-16 verdict | NEW | defenders in box and personnel are CONFIRMED columns of both datasets; this is the half of the old combined row that the data actually supports | Coefficient interval crosses zero on the first refit, or plays per matchup cell below the stated floor | prediction-engine |
+| Receiver versus defender matchup features (WR vs CB) | FOUNDER-BLOCKED | C | n/a | coverage | feature | T3 | GENUINELY ABSENT. Needs per-defender route and coverage assignment data that neither nflverse nor the FTN subset carries | NONE | separated from the box-count row above, which IS buildable; combining them hid the fact that only one half has data | Cannot be tested until a cleared assignment-level source exists | data-ingestion |
+| Time to pressure, as an OL versus DL timing feature | FOUNDER-BLOCKED | C | n/a | trenches | feature | T3 | GENUINELY ABSENT. Requires snap-to-pressure timing. AGENTS.md:2277-2279 records that there are NO hurries in nflverse or FTN, so our pressure measure is a sack-and-hit FLOOR proxy with no timing dimension | NONE | the FTN-branded leaderboard in the benchmark notes is a vendor product we cannot reproduce from the data we hold | Cannot be tested. Unblocks only with a cleared timing source | data-ingestion |
 | QB read progression, primary versus secondary reads | CAPTURING-NOW | A | now | quarterback | feature | T1-capture | FTN or FantasyPoints charting; read number is NOT in nflverse | NEW capture only | AGENTS.md ENGINE BENCHMARK: QB READ DISTRIBUTION; the scramble-counting convention differs between vendors and must be pinned before any comparison | Log first, test when n arrives. Dies if the coefficient interval crosses zero at the stated n | data-ingestion |
 | Formation usage by efficiency (under centre versus shotgun and pistol) | BUILDING-NOW | C | now | efficiency | feature | T1 | nflverse carries shotgun and no_huddle flags today | NEW | AGENTS.md ENGINE BENCHMARK: UNDER-CENTER USAGE X EFFICIENCY; the splits were never built although the flags exist | Coefficient interval crosses zero on the first refit | prediction-engine |
 | Multi-book vig-free consensus, synthetic hold, arbitrage and middle scanner | BUILDING-NOW | E | now | market | width-input and display | T1 | the odds table, already persisted per book | NEW | AGENTS.md ENGINE BENCHMARK: VIG-FREE CONSENSUS AND MARKET TOOLING; the conjunction gate compares against ONE de-vigged source and there is no multi-book consensus feed | Not a probability, so no kill line applies; it dies if synthetic hold cannot be computed per book | prediction-engine |
@@ -810,50 +811,65 @@ registry is complete. Two other rows, ClubElo and public money splits, are marke
 BUILDING-NOW without an owning workstream naming them; each needs either a workstream or an
 explicit statement that no cleared source exists yet.
 
-### 5.3 Correction applied at assembly: the FTN share-alike ruling was read too broadly
+### 5.3 The FTN share-alike ruling, read against the primary source
 
-The committed document says FTN charting-derived columns are "model-ineligible by
-construction until the founder rules." Verified against the app rights registry this
-session, that is wrong as stated, and it is wrong in the same direction the founder
-rejected: it generalized a DISPLAY restriction into a BUILD restriction.
+The committed document said FTN charting-derived columns are "model-ineligible by
+construction until the founder rules." That is wrong, but an earlier draft of this section
+then over-corrected in the other direction and claimed the whole trench and coverage
+family was unblocked. Both readings are replaced here by the primary source, which is
+`reports/rights/pfr-advstats-verdict-2026-07-16.md`, the verdict the registry itself cites.
 
-`apps/web/lib/scraping/source-rights-registry.ts:143-146`, in the nflverse entry's
-scope carve-outs (verdict 2026-07-16, evidence
-`reports/rights/pfr-advstats-verdict-2026-07-16.md`), reads:
+**What the verdict actually says.** Its headline is "YELLOW (internal modeling) / RED
+(public commercial display)" and it names the route explicitly:
 
-> FTN charting/participation, CC-BY-SA-4.0 with attribution to FTN Data via nflverse
-> (share-alike scope for PUBLIC display of derived metrics needs the same legal review
-> as ffverse; **internal modeling with attribution is clean and is the approved route
-> for trench/coverage signals**).
+> Approved route for trench/coverage signals: FTN charting via `load_ftn_charting()`
+> (2022+), explicit CC-BY-SA-4.0 from the rights holder, attribution "FTN Data via
+> nflverse". Internal modeling with attribution is clean now; PUBLIC display of derived
+> metrics inherits the same share-alike legal review already open for ffverse.
+> Participation data (personnel/box counts) is the same clean CC-BY-SA lineage.
 
-So the correct split is:
+So the split is real, and it is narrower than "the trench and coverage family":
 
-| Use | Status |
-|---|---|
-| Internal modeling on FTN charting, with attribution | **Clean, and named the approved route.** Not founder-blocked. |
-| Public display of FTN-derived metrics | Founder legal review, same as ffverse. |
+| Capability | Data we actually hold | Status |
+|---|---|---|
+| Defenders in box, box counts | `ftn_charting` and `pbp_participation`, both confirmed columns | Buildable now as a feature |
+| Personnel groupings | `pbp_participation` | Buildable now as a feature |
+| Play action, RPO, screen, motion | `ftn_charting` | Buildable now as a feature |
+| Four-man rush rate | `ftn_charting` `n_pass_rushers`, already computed in the lab | Buildable now as a feature |
+| Man versus zone coverage | Claimed by the verdict, NOT listed in this repo's own dataset description | Verify against the real file before building |
+| True pressure rate with hurries | **Absent.** AGENTS.md:2277-2279 records no hurries in nflverse or FTN; our measure is a sack-and-hit FLOOR proxy | Not available |
+| Time to pressure | **Absent.** Needs snap-to-pressure timing nobody here holds | Not available |
+| Coverage-defender grades, yards per route allowed | **Absent.** Needs per-defender routes and targets faced; FTN is play-grain, not defender-route grain | Not available |
+| Receiver versus defender matchups | **Absent.** Same missing assignment-level data | Not available |
 
-This moves the whole trench and coverage family off the blocked list as FEATURES while
-keeping their public display gated: pressure rate, four-man rush rate, time to pressure,
-coverage grades, catchable air yards, read progression, and the participation-derived
-splits. They are BUILDING-NOW for the head and FOUNDER-BLOCKED only for display.
+The registry rows are corrected accordingly: the box-count and personnel half is
+BUILDING-NOW, and the coverage-grade, time-to-pressure and receiver-versus-defender rows
+are FOUNDER-BLOCKED under "genuinely absent source" rather than being quietly sourced to a
+dataset that does not contain them.
 
-Two neighbours in the same carve-out, stated precisely so nobody over-corrects:
+**Two neighbours, stated precisely, because one is worse than a display restriction.**
 
-- `pfr_advstats` via nflverse is a dedicated entry with status `permission_required`,
-  `automation_allowed: false`, `commercial_display_allowed: false`
-  (`source-rights-registry.ts:150-160`). It is genuinely blocked. Cronning
-  `apps/web/lib/ingestion/pfr-adv-stats.ts` is still correct work, because the module
-  already calls `checkClearance` and therefore fails closed and writes zero rows, but
-  the document must say that it writes zero rows until a founder ruling rather than
-  implying the data flows.
-- `nextgen_stats` via nflverse carries "use with the same caution", which is a caution,
-  not a denial. It is not blocked.
+- `pfr_advstats` is not merely display-restricted. Sports Reference LLC Terms of Use
+  section 5(j) **explicitly bans using site statistics "for ... supporting machine learning
+  methods used to predict, classify, label, or score", with no internal-use carve-out.**
+  That is a MODELING ban. The registry entry is `permission_required` with
+  `automation_allowed: false`, and the unlock named in the verdict is written confirmation
+  from Sports Reference LLC covering both redistribution and the 5(j) restriction, and
+  explicitly **not** from nflverse maintainers. Cronning
+  `apps/web/lib/ingestion/pfr-adv-stats.ts` remains correct work because it already calls
+  `checkClearance` and therefore fails closed and writes zero rows, and the document must
+  say it writes zero rows rather than implying the data flows.
+- `nextgen_stats` via nflverse is called out in the same verdict as "equally
+  third-party-sourced with no explicit grant, not a safe substitute". Treat it as
+  cautioned, not cleared, and never as the replacement for pfr_advstats.
 
-The blanket nflverse entry itself is CC-BY-4.0 with `model_training_allowed: true`,
-`derived_analytics_allowed: true`, `commercial_display_allowed: true`, attribution
-required in all outputs, no share-alike (`:120-126`).
-
+**What is still the founder's, and what is not.** Internal modeling on FTN and
+participation with attribution needs no new ruling; the verdict already grants it. What
+remains open is PUBLIC display of derived share-alike metrics, which inherits the ffverse
+legal review. A founder instruction to proceed is recorded as covering the internal
+modeling route, which was already clean, and the display question stays open until that
+review closes. Every output built on this lineage carries the attribution string
+"FTN Data via nflverse".
 
 ### 5.4 Correction applied at assembly: Track C's C10 (remote ETKF ensemble)
 
