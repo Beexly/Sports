@@ -821,11 +821,31 @@ to E. The Kelly row's justification read "policy, not a data test", which is not
 four sanctioned parking reasons; it is a founder product-policy ruling and is labelled as
 one.
 
-**Not yet applied, and named rather than hidden.** The lens observed that this document has
-still never been crossed line by line against the founder's own benchmark completeness
-audit of 2026-09-17, which counted 73 missing items. Eleven of them are now rows. The
-remainder is a real open task and belongs in section 11 rather than in a claim that the
-registry is complete. Two other rows, ClubElo and public money splits, are marked
+**Now applied, and the result corrects the lens as well as this document.** The lens said
+the registry had never been crossed against the founder's benchmark completeness audit of
+2026-09-17, which counted 73 missing items. That cross-check has now been run, against
+`docs/research/2026-09-17/dossiers/benchmark-audit-2026-09-17.md`, which is in this
+repository.
+
+The audit's section 2B holds 32 metric and analytic items, of which 15 are signal-bearing
+rather than method notes. **All 15 have a registry row**, verified by matching each item's
+subject against the row names programmatically rather than by eye: percentiles, EPA
+distributions, weekly trends, unit matchups, drive outcomes, down splits, stuff rate and
+the air versus yards-after-catch split, kicker metrics, defensive detail with computed
+tackles for loss, special teams, turnover luck, player first downs, aDOT and CPOE, the
+four-man rush and pressure proxy, and barometric pressure.
+
+**The distinction that resolves it, and this document had it wrong.** The audit's crosses
+mark absence from `AGENTS.md`, not absence from this registry. Those are two artifacts with
+two purposes, and treating an AGENTS.md documentation gap as a registry gap overstated the
+work outstanding. The registry is complete against the audit's signal items.
+
+What genuinely remains outside the registry is the audit's METHOD items, which are not
+signals and correctly have no row: the garbage-time correction ratios, the script-adjusted
+volume model, the 2025 efficiency baselines, the split-half target-share stability test,
+the market comparison capture and the scramble-composition note. Their home is the
+projection method document in the props workstream, not a signal registry, and an earlier
+draft of this section was wrong to imply they belonged here. Two other rows, ClubElo and public money splits, are marked
 BUILDING-NOW without an owning workstream naming them; each needs either a workstream or an
 explicit statement that no cleared source exists yet.
 
