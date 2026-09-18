@@ -18,12 +18,16 @@ import {
   PredExonClient,
   PredExonKalshiCatalog,
   fetchEspnOddsForSport,
+  toKalshiDateFragment,
 } from "@sports/data-ingestion";
 import { MIN_BOOKMAKERS, scoreGames } from "@sports/prediction-engine";
 import type { GameContextInput, OddsInput } from "@sports/types";
 
-const NOW = new Date("2026-09-13T15:00:00.000Z");
-const KICKOFF = "2026-09-14T17:00:00.000Z"; // Sunday 1pm ET, 26 hours out
+// Relative to wall clock: espn-odds-client filters -6h..+21d against Date.now()
+// with no injection. Absolute pins (2026-09-14) aged out on 2026-09-14T23:00Z.
+const NOW = new Date();
+const KICKOFF = new Date(NOW.getTime() + 26 * 3_600_000).toISOString();
+const FRAG = toKalshiDateFragment(KICKOFF);
 const ENV = { PREDEXON_INGEST: "true", PREDEXON_API_KEY: "test-not-a-real-key" };
 
 function espnScoreboard() {
@@ -96,14 +100,14 @@ function predexonCatalog(opts: { spreadQuoted?: boolean; totalQuoted?: boolean; 
   const { spreadQuoted = true, totalQuoted = true, moneylineQuoted = true } = opts;
   const bySeries: Record<string, Market[]> = {
     KXNFLGAME: [
-      { ticker: "KXNFLGAME-26SEP14PITBUF-BUF", event_ticker: "KXNFLGAME-26SEP14PITBUF", status: "open", yes_subtitle: "Buffalo", outcomes: moneylineQuoted ? two(0.79, 0.81) : [] },
-      { ticker: "KXNFLGAME-26SEP14PITBUF-PIT", event_ticker: "KXNFLGAME-26SEP14PITBUF", status: "open", yes_subtitle: "Pittsburgh", outcomes: two(0.19, 0.21) },
+      { ticker: `KXNFLGAME-${FRAG}PITBUF-BUF`, event_ticker: `KXNFLGAME-${FRAG}PITBUF`, status: "open", yes_subtitle: "Buffalo", outcomes: moneylineQuoted ? two(0.79, 0.81) : [] },
+      { ticker: `KXNFLGAME-${FRAG}PITBUF-PIT`, event_ticker: `KXNFLGAME-${FRAG}PITBUF`, status: "open", yes_subtitle: "Pittsburgh", outcomes: two(0.19, 0.21) },
     ],
     KXNFLSPREAD: [
-      { ticker: "KXNFLSPREAD-26SEP14PITBUF-BUF9", event_ticker: "KXNFLSPREAD-26SEP14PITBUF", status: "open", title: "Buffalo wins by over 9.5 points?", strike_type: "greater", floor_strike: 9.5, outcomes: spreadQuoted ? two(0.51, 0.53) : [] },
+      { ticker: `KXNFLSPREAD-${FRAG}PITBUF-BUF9`, event_ticker: `KXNFLSPREAD-${FRAG}PITBUF`, status: "open", title: "Buffalo wins by over 9.5 points?", strike_type: "greater", floor_strike: 9.5, outcomes: spreadQuoted ? two(0.51, 0.53) : [] },
     ],
     KXNFLTOTAL: [
-      { ticker: "KXNFLTOTAL-26SEP14PITBUF-47", event_ticker: "KXNFLTOTAL-26SEP14PITBUF", status: "open", title: "Total points scored over 47.5?", strike_type: "greater", floor_strike: 47.5, outcomes: totalQuoted ? two(0.54, 0.56) : [] },
+      { ticker: `KXNFLTOTAL-${FRAG}PITBUF-47`, event_ticker: `KXNFLTOTAL-${FRAG}PITBUF`, status: "open", title: "Total points scored over 47.5?", strike_type: "greater", floor_strike: 47.5, outcomes: totalQuoted ? two(0.54, 0.56) : [] },
     ],
   };
   return vi.fn(async (url: string) => {
