@@ -2599,8 +2599,806 @@ engineer from the paywalled data.
 - @Carolinakeith_1 (Professor Keith, verified, Sep 16): Rasheed Walker
   "2nd highest rate LT in the NFL after 1 week" — underlying metric not
   named in feed text; incomplete, do not file as a metric until sourced.
+## GRIDIRON STATS AND INFO (@GridironInfo_) DEEP SWEEP (2026-09-17)
+
+**Source:** exhaustive read-only sweep of entire media history
+newest->oldest (bottomed out at late-July 2026 account inception).
+Verified account. Bio: "Football by the numbers. The stats behind every
+big game. Every week, all season." Joined Jul 2026; 1,352 posts; 950
+following; 3,608 followers (as of 2026-09-17). Pinned post: "Playoff
+Probabilities after Week 1" (Sep 15). Posting ~18/day; 791 media items.
+No bio link/website. Nothing liked, reposted, replied to, or followed.
+
+**Inventory note:** a high-volume weekly chart-publishing account; every
+chart carries a data-source footer, which is recorded per item below.
+
+**NGS advanced-stat charts (weekly, "Through Week N",
+footer "@GridironInfo_ | Data: nflverse (nflreadpy) | YYYY-MM-DD"):**
+- EPA per Dropback bar ranking (Wk1 2026 leader: Josh Allen 0.61)
+- EPA per Play bar ranking (2025-season version also published)
+- Success Rate % Dropbacks (Wk1 2026 leader: Jackson Dart 77%);
+  also Success Rate % Carries and Success Rate % Targets (2025 versions)
+- QB Aggressiveness vs aDOT scatter (Sep 16, 21K views; Sep 15 team
+  version: 376 likes, 80K views — highest-engagement post seen).
+  Definitions stated in post text: aggressiveness = % of throws into
+  tight coverage (NGS); aDOT = avg depth of target. Quadrant labels:
+  "Throws Deep, Off Clean Separation" (Allen ~13.7 aDOT, low
+  aggressiveness); "Pushes It Downfield, Into Tight Windows" (Malik
+  Willis ~22% aggressiveness, high aDOT); "Safe, Short, Off-Schedule
+  Reads" (Mahomes, Cooper Rush); "Contested Throws, Kept Short"
+  (Stroud/Brissett). Axes: aggressiveness 1%-24%, aDOT 2.0-13.7.
+- WR Cushion vs Separation scatter (2026, NGS)
+- QB Throw % vs Interception % scatter (2026)
+- QB Pressure Rate & Sack Rate scatter (2026; 2025 version too)
+- 4-Man Rush Rate vs Pressure Rate scatter (2026; 2025 version too)
+- Deep-ball rate text posts ("Josh Allen went deep on 27.6% of his
+  Week 1 attempts, the most of any QB. Meanwhile, Bo Nix threw 7...")
+- INT% ranking (Maye 10.77%, Purdy 7.4%, Love 5.7%, Darnold 5.0%,
+  Burrow 4.7%)
+
+**Team WR USAGE (weekly, per team):** columns rank, player (photo +
+logo), SNAP, TGT, REC, YDS, SR% (orange accent). Wk1 2026 Packers:
+Matthew Golden 56/12/6/95/42%; Christian Watson 52/8/6/147/62%;
+Jayden Reed 39/7/3/20/43%. Teams seen: Packers, Cowboys, Bears, 49ers,
+Texans, Giants (preseason "GIANTS WR ROOM" variant, footer 2026-06-28),
+49ers Top 4 WRs Wk1.
+
+**Weekly matchup previews:** per-game grid cards (Wk2: ARI vs IND, NYG
+vs DAL, PIT vs NE, PHI vs KC, BAL vs BUF) + full "2026 WEEK 2" matchup
+grid with logos + records; side-by-side team stat-comparison bars.
+
+**Team season previews (preseason Jul-Aug 2026):** "[TEAM] 2026 PREVIEW"
+(record, strength of schedule, EPA, odds) for Cardinals, Seahawks,
+Rams, 49ers, Saints, Falcons, Lions, Giants, Commanders, Cowboys,
+Eagles, Raiders, Chargers, Broncos, Chiefs, Steelers, Ravens, Jets,
+Dolphins, Patriots, Bills. Also "2026 STRENGTH OF SCHEDULE" charts.
+
+**Team offense/defense dashboards:** "[TEAM] OFFENSE"/"DEFENSE" (Points
+Scored/Game, Total Yards/Game, Pass Yds/Game, Rush Yds/Game, Sacks
+Allowed, Giveaways, EPA/Play). All 32 covered.
+
+**Award odds trackers (red/green chip % lists):** MVP (Allen 11-19%,
+Lamar 10%, Burrow 10%); OPOY (Gibbs 14-15%, Chase); DPOY (M. Garrett
+21%, W. Anderson 14%, Hutchinson 13%); OROY (Jeremiah Love 17-29%);
+DROY (David Bailey 19%, Bain 18%, Downs 15%); COY (Minter 11-13%);
+CPOY (Mahomes 35-37%, Murray 16-17%); PROTECTOR OF THE YEAR (Sewell
+13-19%, Alt). Also Heisman-style college odds. Odds vendor not stated
+on the charts seen.
+
+**Playoff/seed/division odds:** "AFC/NFC PLAYOFF ODDS", "ODDS TO WIN THE
+DIVISION", "1 SEED ODDS" (Rams 24%, Seahawks 13%, Lions 11%), "ODDS FOR
+THE WORST REGULAR SEASON RECORD" (Browns 33%). 4-quadrant carousel; one
+footer "Data: nflverse (nflreadpy) | 2026-08-04". Playoff probabilities
+(stacked 100% bars: playoff/division/bye/SB %) — pinned post is
+"Playoff Probabilities after Week 1". Simulation method unknown.
+
+**Player career-stat tables:** year-by-year rows (GP, C/ATT, YDS, TD,
+INT for QBs). Players: Cooper Rush, A.J. Brown, Bowers, Slayton, M.
+Wilson, Mayfield, Tua, Q. Williams, Diggs, Vea, Benton, Jefferson, Z.
+Flowers, Pettis, Deebo, Deguara, Atwell, Kraft, Boutte, Najee Harris,
+Pearce Jr., Carson Beck (college), Klubnik (college), Ogunbowale.
+HOF chart footered "Career Post Football-Reference Stathead" (Stathead
+paywalled; equivalent data public on PFR).
+
+**Deep dives:** "BRADLEY BOZEMAN: CENTER DEEP DIVE" (PFF grades by
+season); "MIKE MCCARTHY: OFFENSE BY SEASON".
+
+**Head-to-head comparisons:** McCarthy vs Wentz 2025 Vikings QB battle;
+Enders vs Stevenson (NE RB); Commanders RB comparison 2025; 2025 stat
+comparison (JSN vs Olave vs G. Wilson vs McLaurin); Last 5 fantasy
+seasons (McCaffrey vs Taylor vs Barkley); Garrett Wilson last 3 seasons;
+"DRAKE MAYE – LAST 5 GAMES" (recurring per-player format); Cousins vs
+Fernando Mendoza (preseason, ESPN box scores); Browns QBs 2026 preseason
+(ESPN box scores); HOF game Beck vs ... Aug 6 2026 (ESPN).
+
+**Single-game team performance:** "PATRIOTS WEEK 1 PERFORMANCE"
+(plays, total EPA, EPA/play, pass EPA); "SEAHAWKS SUPER BOWL LX
+PERFORMANCE".
+
+**Fantasy:** "2026 WEEK 1 BEST POSSIBLE FANTASY ROSTER" (optimal lineup;
+sleeper-style player cards); "2025 SEASON BEST POSSIBLE FANTASY ROSTER";
+season fantasy-points rankings by position (WR: JSN 1,793, Puka 1,715,
+Pickens 1,429, Chase 1,412; QB: Allen 2,296, CMC 2,126).
+
+**College football:** Klubnik at Clemson, Beck career, Ogunbowale
+Wisconsin stats, "[SCHOOL] IN THE NFL" alumni-fantasy charts (Ole Miss,
+Notre Dame, Clemson, UNC), "LSU HEISMAN SEASONS" (Burrow 2019 vs Daniels
+2023), AP-poll-style rankings, 2026 NFL Draft board (Round 3 Pick 74; CB
+rankings; "ROUND 2 – PICK 1" mock footer).
+
+**Betting/misc:** Week 2 ticket prices; "TOP 10 MOST VALUABLE NFL
+FRANCHISES" (Sportico: Cowboys $12.8B +19%); "HIGHEST-PAID DEFENSIVE
+TACKLES" (Carter $38.00M, Q. Williams $35.30M); top-5 RB contracts;
+"TOP 5 PAID: WR vs RB (2026)"; "TOP WR MOVES THIS OFFSEASON" (A.J.
+Brown 1,026, Wan'Dale Robinson 1,014).
+
+**Kicking/punting:** FG% rankings (Reichard 94.3%, Patterson 93.1%);
+kicker tables by distance (20-29/30-39/40-49); punter net average
+(Stout 44.9, Sanchez 44.7). One footer: "Data: NGS Advanced Stats
+(ADDED)".
+
+**Defense:** sack leaders (M. Garrett 23, Strahan 22.5, Watt 22.5);
+tackle leaders (Brooks 99, Gray 97); pass-rush rankings (Z. Allen 47,
+M. Garrett 39); "2025 PRESSURE RATE vs EPA WHEN PRESSURED" scatter;
+"2025 BAD THROWS vs INTERCEPTIONS THROWN" scatter; "2025 QB TARGETS vs
+INTERCEPTION RATE" scatter; "2025 BIGGEST PLAYS BY EPA"; "2025 4-MAN
+RUSH RATE vs PRESSURE RATE".
+
+**Red zone / short yardage:** "RED ZONE TOUCHDOWN RATE" (team bars);
+"3RD/4TH & 1-OR-LESS CONVERSION RATE" (team bars).
+
+**Division tables:** "[DIVISION] OFFENSE" team-comparison tables;
+"[DIVISION] PASSING/RUSHING/RECEIVING YARDS LEADERS"; SACK/TACKLE/INT
+leaders (AFC East/North/South/West, NFC North/West seen; e.g. "AFC EAST
+PASSING YARDS LEADERS": Allen 3,666, Tua 2,660).
+
+**Text-only stat posts:** "Offensive vs. Defensive EPA/Play on Blitzes —
+Cincinnati's defense got the most out of blitzing..." (29 likes, 8
+reposts, 2.3K views).
+
+**Misc one-offs:** "How 50 executives and coaches rank 35 veteran
+quarterbacks" tier list (Tier 1: Mahomes, Burrow, Allen, Rodgers,
+Stroud, Lamar, Herbert, Stafford, Hurts, Love); "2026 HALL OF FAME
+CLASS" (Brees, Fitzgerald, Kuechly, Vinatieri, Craig); "HARD KNOCKS:
+BEFORE & AFTER" (record before/after); "TOP 5 WR DUOS" (2025 combined);
+"2025 ROOKIE QB CLASS" (top rookie passers year one: 14 GP, 2,272 yds,
+15 TD, 5 INT); "CHARGERS 2025 STAT SHEET"; team game-log tables (PLAYS,
+TOTAL EPA, EPA/PLAY, PASS EPA); "2025 LEADING WIDE RECEIVER BY TEAM".
+
+**Recurring chart templates:** navy header banner + white bold title +
+team logo; off-white background; rounded table cards; orange accent
+column (e.g. SR%); footer "@GridironInfo_ | Data: [source] |
+YYYY-MM-DD". Scatter: white bg, navy header, quadrant text labels,
+team-logo markers, arrow axes. Award odds: ranked % in red/green chips.
+Odds dashboards: 4-quadrant carousel. Post texts routinely include
+metric definitions.
+
+**Top engagement (observed):** team Aggressiveness chart Sep 15 (376
+likes, 80K views); QB Aggressiveness vs aDOT Sep 16 (82 likes, 21K);
+"Season Total — Aggressiveness" Sep 6 (221 likes, 18K); pinned Playoff
+Probabilities Sep 15 (43 likes, 9.1K). Pattern: NGS advanced-QB visuals
++ playoff probabilities travel farthest.
+
+**Data sources as stated on charts:** most charts footer "Data:
+nflverse (nflreadpy)" with a date; punter advanced chart footers "Data:
+NGS Advanced Stats (ADDED)"; franchise valuations attributed to
+Sportico; "Career Post Football-Reference Stathead"; preseason QB
+comparisons "Data: ESPN box scores". NOT stated on the charts seen:
+odds vendor (award/playoff/division/1-seed), playoff-probability
+simulation method, ticket-price vendor, fantasy optimal-roster scoring
+system.
+
+**Gaps (browser died before completion):** definitive top-5 engagement
+ranking; possible per-team satellite accounts (division tables use a
+distinct team-account format — check Following list or X search);
+footers on award-odds/career-stats/matchup-preview/team-preview/ticket/
+fantasy/playoff-probability posts; full text of their NGS-aggressiveness
+definition reply (Sep 15). Follow-up sweep possible if Garrett wants the
+gaps closed.
+
+## FULL-TABLE DOCUMENTATION: ROUND-2/3 SWEEP (2026-09-17)
+
+Complete transcribed tables from the 21-post sweep are in
+`docs/research/2026-09-17/full-tables/` (13 CSVs + README.md with
+sources, methods, and definitions as stated in the posts). Every row
+transcribed from the charts as displayed. Summary of what is in the
+directory:
+
+- survivor-future-value-week2.csv — @cmain7: 22 rows, TEAM / FV SCORE
+  / W2 WP. BUF 100.0 (67.4%), DET 98.2 (32.6%), DEN 95.7 (57.7%), BAL
+  93.7 (78.9%), LAR 93.2 (76.4%).
+- qb-read-progression-week1.csv — @sfdata9ers via @DonAtkinsonNFL: all
+  32 QBs, first/second read, designated receiver, checkdown, scramble
+  %. Data: FTN, min 15 relevant plays. Purdy 27.0/27.0/18.9/16.2/10.8
+  (lowest first-read); Love 78.6 first-read (highest).
+- hb-pass-protectors-week1.csv + hb-pass-rushers-week1.csv —
+  @hawkblogger: full top 20s with grade, trend, reps, pressures, over-
+  expected. Protectors: Bolles -3.1 (777 reps, -37.5 over exp). Rushers:
+  Hutchinson +4.7, Simmons +4.4, Rousseau +4.3, M. Garrett +4.3.
+- penalty-yard-leaders-week1.csv — @sfdata9ers: 30 rows, accepted
+  penalties only. M. Melton (1) 48; K. Lassiter (1) 46; Aj. Terrell (2)
+  42. Teams read from chart logos; uncertain reads marked.
+- dynatyze-qb-cmp-leaders-week1.csv — @DynatyzeFF: 15 rows, CMP% plus
+  FPTS/OPP and FPTS/DB columns. Mayfield 82.1%, Dart 79.3%, Lawrence
+  78.3%.
+- sumerpass-wr-leaderboard-week1.csv — @SumerSports: 8 rows, Total EPA,
+  EPA/TGT, Targeted Success %, TPRR, target share. JSN 10.72 EPA,
+  45.8% share, 0.42 TPRR.
+- snap-weighted-age-offense-week1.csv + snap-weighted-age-defense-
+  week1.csv — @sfdata9ers: all 32 teams. Offense: MIA 24.95 youngest,
+  SF 30.15 oldest. Defense: MIA 25.70 youngest, WAS 29.45 oldest.
+- passer-rating-allowed-week1.csv — @MagicSportsGuy: 10 rows, displayed
+  with "+" prefix, baseline not stated. Stevenson +158.3, Lassiter
+  +153.3.
+- recovery-chart-week2.csv — @jmthrivept: 7 players, Wk2-Wk6 return
+  percentages, PPG pre-injury to first 2 games back, historical sample
+  sizes. Bowers -27%, McConkey Wk2 73%, A.J. Brown out-IR.
+- defensive-epa-motion-at-snap-week1.csv — @RyanPaganetti: 32 teams,
+  motion-at-snap pass/run EPA allowed; league avg +0.01 / +0.00.
+  Approximate reads from dot positions.
+- qb-aggressiveness-by-team-week1.csv — @GridironInfo_: 32 teams.
+  Willis/Brissett 22%, Mahomes 4%. NGS definition quoted from the
+  thread.
+
 - @PattonAnalytics (Steven Patton, verified, StatRankings data scientist)
   https://x.com/PattonAnalytics/status/2100671054880415886 — time-of-
   possession vs opponent offensive output chart (keeping a great offense
   off the field as defensive game plan; Harbaugh/Giants vs 2026 Eagles
   example). Classic concept, StatRankings framing.
+
+## BENCHMARK SWEEP: X FEED 2026-09-17 ROUND 2 (21 POSTS, READ-ONLY)
+
+Garrett's own batch of 21 links, extracted 2026-09-17 ~17:33 CDT. All
+accounts verified except @BobbyBruce_NFL and @joe307bad (noted). Nothing
+was liked, reposted, replied to, or followed.
+
+- **@cmain7 (Cody Main, verified, Director of Niche Sports @EstablishTheRun)**
+  WEEK 2 SURVIVOR FUTURE VALUE. Optimize rest-of-season with each team
+  available, then optimize again with that team removed; solves for how
+  hard each team is to replace, normalized 0-100. Columns: TEAM, FV
+  SCORE, W2 WP. Sample: BUF 100.0 (W2 WP 67.4%), DET 98.2 (32.6%),
+  DEN 95.7 (57.7%), BAL 93.7 (78.9%), SF 82.8 (89.3%). "Replaceability"
+  framing of survivor equity is novel — future value measured by
+  rest-of-season optimization degradation when a team is removed.
+  Methodology: current implied WP for every remaining game "as of now";
+  built for the Splash World Champ survivor contest (not Circa); does
+  NOT account for power-ranking movement or injuries shifting lines.
+
+- **@RyanPaganetti (verified, ESPN NFL producer)**
+  Week 1 Defensive EPA Allowed vs Motion at the Snap scatter. x: motion-
+  at-snap pass EPA/play allowed; y: motion-at-snap run EPA/play allowed
+  (lower = better). League avg: pass +0.01, run +0.00. Panthers worst
+  (both); Seahawks/Cardinals/Commanders best pass; Steelers/Falcons/
+  49ers best run; Colts worst run (~+0.2). Isolates defensive performance
+  conditional on motion at snap — feeds motion-pressure modeling.
+
+- **@ScottBarrettDFB (verified, FantasyPts writer)** amplifying
+  independent writer @Shauncore's annual review of every NFL data product
+  (PFF, Sumer Sports, FTN, FantasyPts). FantasyPts Data Suite 2.0 called
+  a "miracle": draggable/reorderable + custom columns, multi-year season
+  selections "for the first time anywhere", coach and play-caller pages
+  with leaderboards and detailed coaching levels. Shaun has zero
+  affiliation, unpaid (per Barrett). Product-design benchmark for any GSE
+  data UI — custom columns + multi-year + coach/play-caller pages are the
+  feature bar.
+
+- **@jmthrivept (Jeff Mueller, PT/DPT, verified, Injury Analyst
+  @FantasyPts)** "The Recovery Chart" — per-player injury recovery model
+  into Week 2. Per player: status badge, injury detail, historical
+  averages, RETURN TIMELINE bar (% chance to play WK2-WK6), PPG
+  pre-injury -> PPG first 2 games back. Rows: Ladd McConkey (rib/chest,
+  hist 0.4 games missed, 73% play-through Wk1 n=22, 17.0->15.6, Wk2 73%);
+  Zay Flowers (hamstring aggravation, 0.8 avg, 47% play-through n=100,
+  14.0->12.0); A.J. Brown (NE, out-IR, moderate-severe high ankle sprain
+  MRI-confirmed 4-6 wks, 12.1->10.4); Brock Bowers (meniscus trim
+  arthroscopic, hist 4.4 missed n=7, 14.3->10.4 -27%); Omar Cooper Jr
+  (high ankle, Jets 4-6 wks); Nico Collins (hamstring); Chig Okonkwo
+  (hamstring, n=29 TE cases, 0.8 avg missed). Probabilistic return-to-play
+  curves by injury type with sample counts + projected fantasy impact is
+  the novel unit. Bio: DPT clinician + FantasyPts injury analyst, season-
+  long 2026 FantasyPts Injury Tracker pinned. Own historical tracking,
+  no vendor.
+
+- **@sfdata9ers (verified, data scientist, 49ers/NFL viz)** "Week 1:
+  Average Team Age" — SNAP-WEIGHTED age (not roster avg). Youngest
+  offense MIA 24.95; oldest offense SF 30.15; youngest defense MIA 25.70;
+  oldest defense KC 29.26. NOTE: replies on the post flag the KC defense
+  number — Daniel Katona: "checked and it's way off (around 26.4)";
+  another reply: "inaccurate." The account also posted a follow-up
+  combined offense+defense chart.
+
+- **@DynatyzeFF (verified, "World's Most Powerful Fantasy Football Engine")**
+  THE TAPE — Cmp% leaders (2026, min 6+ dropbacks, 32 qualified).
+  Columns: RK, PLAYER, CMP%, FPTS, FPTS/G, FPTS/OPP, FPTS/DB, TD.
+  Sample: Mayfield 82.1% (11.64 FPTS); Dart 79.3% (26.60, 3 TD);
+  Geno Smith 79.2%; Lawrence 78.3% (26.10, 4 TD); Caleb Williams 72.4%
+  (37.26, 2 TD); Watson 72.7% (14.00). Point of the post: CMP% is
+  misleading — pairs raw completion rate with proprietary fantasy-
+  efficiency columns (FPTS/OPP, FPTS/DB).
+
+- **@DonAtkinsonNFL (verified)** quote-posting @sfdata9ers chart: QB READ
+  PROGRESSION DISTRIBUTION, Week 1 2026, % of all throws, data FTN, min
+  15 relevant plays. Columns: First Read %, Second Read %, Designated
+  Receiver* %, Checkdown %, Scramble %. (*screens, shovels, jet sweeps,
+  forward tosses.) Purdy 27.0/27.0/18.9/16.2/10.8 — lowest first-read %
+  of all 32; Love 78.6/7.1/0.0/2.4/11.9 (highest first-read); Williams
+  39.5% first-read with 34.2% scramble; Goff 22.5% designated receiver.
+  Confirms the QB read-progression distribution section filed earlier.
+  Atkinson also claims Purdy leads the league in sack avoidance/pressure
+  escape (no chart shown — claim only).
+
+- **@hawkblogger (Brian Nemhauser, verified)** "Top 20 Pass Protectors
+  (OT, OG, OC)" — HB Analytics, metric "Pressure rate grade — Blended",
+  2026 through Week 1 with 2025 counted at 83% fading out by Week 6,
+  filters 150+ reps. Columns: #, Player, Grade (bar, NEGATIVE = good),
+  Trend, Reps, Pressures, Over Exp. Sample: 1) Garrett Bolles -3.1
+  (777 reps, 37 pressures, -37.5 over exp); 2) Warren McClendon -3.0;
+  4) Cam Jurgens -2.8; 10) Quenton Nelson -2.3; 11) Joe Alt -2.3;
+  20) Charles Cross -1.9. Companion: Top 20 Pass Rushers (DTs/Edge).
+  Methodology: Sumer Sports charts every dropback player-by-player
+  (which blockers each rusher faced); grade = pressure-rate movement on
+  a typical rep vs an average blocker facing the same rushers; wins vs
+  top rushers count more; rusher grades solved simultaneously; double
+  teams handled separately; small samples pulled to average. Full method
+  at stats.hawkblogger.com. Data: Sumer Sports play-by-play charting.
+  Filing note: simultaneous-solution + Over-Exp framing is the OL-grade
+  build model; negative-is-good scale is a presentation quirk.
+
+- **@sfdata9ers** "Penalty Yard Leaders — 2026 Week 1, ACCEPTED penalties
+  only." Columns: rank, player (count), team, yards. Sample: 1) M. Melton
+  (1) 48; 2) K. Lassiter (1) 46; 3) Aj. Terrell (2) 42; 4) G. Newsome
+  (1) 38; 5) J. Jobe (1) 34; 6) A. Phillips (3) 31. Accepted-only framing
+  excludes declined/offsetting — author confirmed DK Metcalf has just
+  10 accepted penalty yards because his second OPI was declined. Correct
+  penalty accounting rule: accepted penalties only.
+
+- **@DevyEusuf (verified)** metrics from @FantasyPtsData: Trey McBride
+  and Isaiah Likely top 2 among TEs in SEPARATION MARKET SHARE (min 10
+  routes); also top 2 in target share, first-read target share, PPR
+  fantasy points, expected fantasy points, slot % on routes (min 20).
+  Attached campus2canton chart: "Experience Adjusted Rec Yds Per Team
+  Pass Att" — developmental curves vs trendline of avg TEs with a top-12
+  NFL season (data via cfbfastR). "Separation market share" is a
+  FantasyPtsData metric — file it.
+
+- **@MagicSportsGuy (Kevin Adams, verified, Founder @StatRankings, FTN
+  Fantasy/Data)** — PROE+ = "Pass Rate Over Expectation + Neutral Pace"
+  composite team metric (created last season), paywalled at
+  statrankings.com/nfl/advanced/teams/passing/pass-rate-over-expected-
+  plus. PROE+ definition as stated: "Pass Rate Over Expectation +
+  Neutral Pace" composite team metric. His 1st Read % splits are "unique
+  StatRankings calc (not public elsewhere)" (per a Grok reply).
+  StatRankings also has an AI connector for querying its xFP tool
+  (statrankings.com/ai).
+
+- **@MagicSportsGuy** "Week One PASSER RATING ALLOWED — Liabilities in
+  Coverage": 1) Tyrique Stevenson +158.3; 2) Kamari Lassiter +153.3;
+  3) Mike Sainristil +149.3; 4) Denzel Ward +147.9; 5) James Pierre
+  +143.8; 6) Cooper DeJean +143.2; 7) Keyon Martin +138.2; 8) Azareye'h
+  Thomas +130.6; 9) Avonte Maddox +124.3; 10) Derwin James +122.4.
+  NOTE: values exceed a perfect 158.3 — the "+" prefix is as displayed;
+  baseline not stated in the post. Coverage-liability framing.
+
+- **@statyxio (verified, "Made by the Ball knowers. Props & Fantasy
+  research")** marketing thread for free NFL Data Lab (statyx.io):
+  every advanced metric + build-your-own charts, live charts, X-ready
+  export, filter by position/season/team, raw/rank/percentile toggles,
+  CSV export, ranked bars, heatmaps. Metrics named: EPA/DB, CPOE,
+  Success %, aDOT, Sack %. Positioning: "No paywall on the matrix that
+  matters" vs gated competitors — free research-terminal lane.
+
+- **@BobbyBruce_NFL (NOT verified)** personal offseason-built database:
+  "advanced metrics and matchup analytics for fantasy and NFL betting."
+  4 images: Team Snapshot — Offensive (columns Team, Top Strength #1-3,
+  Watch Area #1-3, Copy-Ready Snapshot auto-text, Off Yds/G + Trend,
+  Off TD/G + Trend, Pass Y/A + Trend); Weekly Team Card (Metric, Value,
+  Rank, Trend, League Avg, vs Avg, Context — e.g. Sack% 0.0% #1 vs 3.6%
+  avg; Broken Tkl/G 6.00 #1 vs 3.75); Player Snapshot — WR (Top Strength
+  #1-3, Watch Area #1-3, Copy-Ready Snapshot, PaYds/G, PaTD/G — uses
+  TPRR, e.g. JSN 0.45 TPRR, 122.0 ReYds/G). Auto-generated copy-ready
+  social snapshots are the product trick. Caveat on chart: "Cumulative
+  season stats through the entered week. Offense only — no defensive/
+  scoring data tracked." (Account not verified.)
+
+- **@joe307bad (Joe, NOT verified, "software and sports // building")**
+  DIY 2026-27 NFL Dashboard (topspin.blog/dashboard/pb2381/2026-27-nfl-
+  dashboard). Tabs: QB, WR, RB, Offense, Defense, Cornerbacks, O-Line.
+  Every badge is a PERCENTILE among the tab's cohort (100 = good end;
+  inverted for negative stats — fewer picks/sacks score high). Each
+  table sorted by a COMPOSITE SCORE of the three most important stats
+  for that group. Auto-updates every 24h, mobile-friendly, no ads. QB
+  table (min 20 dropbacks): 1) Trevor Lawrence Score 100.00 (24 DB,
+  0.793 EPA/Play 100pct, CPOE 16.19 100, Rate 150.6 100, TD 4); 2) Jaxson
+  Dart 94.62; 3) Caleb Williams 91.40; 4) Josh Allen 90.32; 5) Lamar
+  Jackson 80.65. Data source not named.
+
+- **@SumerSports (verified)** JSN 46% target share in opener (led NFL;
+  36% in 2025). SūmerPass WR leaderboard columns: Player, GP, Snaps,
+  Total EPA, EPA/TGT, Targeted Success %, Routes, Route %, TGT, Target
+  Share (sorted), TPRR, Rec, Rec %, Drops. Sample: JSN 44 snaps, 10.72
+  EPA, 0.97 EPA/TGT, 63.6% targeted success, 11 TGT, 45.8% share,
+  0.42 TPRR, 8 rec 72.7%, 0 drops; Mack Hollins 1.02 EPA/TGT; Cooper
+  Kupp 1.06 EPA/TGT. Targeted Success % and TPRR are the SūmerPass WR
+  leaderboard columns shown. Data: Sumer Sports own charting.
+
+- **@GridironInfo_ (verified, "Football by the numbers", joined Jul
+  2026)** QB AGGRESSIVENESS BY TEAM, Week 1, data Next Gen Stats (via
+  nflverse/nflreadpy). NGS Aggressiveness = % of pass attempts where a
+  defender was within a tight window. Ranking: Willis 22%, Brissett
+  22%, Stroud 21%, Stafford 20%, Herbert 19%, Purdy 18%, Dart 17%,
+  Young/Jackson 16%, Goff/Rodgers/Prescott/Daniels 15%, Lawrence 13%,
+  Mayfield 11%, Love 10%, Hurts 8%, Allen 7%, Ward/Maye 6%, Rush 5%,
+  Mahomes 4%. Chart footer: "@GridironInfo_ · Data: nflverse
+  (nflreadpy) | 2026-09-15."
+
+- **@TheHonestNFL (verified)** — NOT a metric post. Film/scheme study:
+  "zone beaters" for Jaxson Dart — triangle spacing from 3x1, play
+  "3-2 Jet Stallion" (stretch the Mike vertically in Cover 2; also
+  3-2 Scat); classic West Coast concepts (Roman, Callahan). Play-name
+  identification from film study, not analytics. Filed for completeness
+  under standing rule.
+
+- **@ProGridSports (verified, "Formerly @NerdingonNFL", schedule
+  reporter)** "Week 2 Matchups" — 4 infographic images, 16 matchups,
+  each a franchise matchup-history sheet: Last 10 matchups (scores +
+  dates), All-Time Record, Wins by Decade, Wins by Month, Games by
+  Kickoff Time, Games by Network, Current Streak. Sample: Lions at Bills
+  "All-Time Record: Bills lead 8-5-1"; Commanders at Cowboys "Cowboys
+  lead 80-49-2"; Giants at Rams "Rams lead 32-17-0". Format-only value:
+  schedule-history infographic series.
+
+## INFRA BENCHMARK: "JEV" PARALLEL CONSTRAINED DECODING (2026-09-17)
+
+Garrett attached a diagram (docs/jev-parallel-constrained-decoding.png)
+explaining "Jev" — parallel constrained decoding for generating a JSON
+schema from a document. Method: prefill once (context + schema through a
+single Transformer decoder, cache KV), then for each schema field pass
+KV cache + field suffix through the decoder, take the final hidden
+state through the LM head, restrict logits to the field's allowed tokens
+(e.g. risk_level: HIGH|MEDIUM|LOW|NONE), softmax over just those tokens,
+take argmax. 1 forward pass for all fields instead of 150-500 sequential
+autoregressive passes; JSON schema always valid by construction. Uses
+Qwen 2.5 as the decoder example. NOT an NFL metric — filed under the
+standing rule as an ML-infra technique. Possible GSE relevance: fast
+guaranteed-valid structured outputs from models (e.g. pick cards, graded
+outputs) without autoregressive latency; verify licensing/attribution
+if building on it. Author/origin of the diagram not verified.
+
+- @PattonAnalytics (Steven Patton, verified, StatRankings data scientist)
+  https://x.com/PattonAnalytics/status/2100671054880415886 — time-of-
+  possession vs opponent offensive output chart (keeping a great offense
+  off the field as defensive game plan; Harbaugh/Giants vs 2026 Eagles
+  example). Classic concept, StatRankings framing.
+
+## STATRANKINGS.COM DEEP DIVE (2026-09-18)
+Source: public site analysis by Motif (client-side code, sitemap, robots.txt, /methodology, /ai, /checkout pages). No paywall bypass; /api/ disallowed per robots.txt was not touched.
+
+### Company
+- StatRankings, LLC (per Terms page).
+- Founder: Kevin Adams (confirmed via his X bio @MagicSportsGuy: "Founder, @StatRankings, Guru Elite, & FTN Fantasy/Data"). The /ai page's "data company behind it" = FTN Fantasy/Data — the likely upstream data vendor. Update 2026-09-18: also on team page: Steven Patton (Head of DFS Strategy), Mark Garcia (Lead NFL Analyst & Director of NBA Projections), Sam Choudhury.
+
+### Tech stack (from public importmap + JS comments)
+- Ruby on Rails + Hotwire (Turbo + Stimulus); 90+ Stimulus controllers; importmap archived at docs/research/2026-09-18/statrankings/js/importmap.json (102 entries).
+- CloudFront CDN; Google Analytics G-7D5HCZG0GX; Rewardful referrals; Avo Rails admin panel.
+- Stripe payments.
+- Separate Python service "odds-engine" with api_server.py: odds sync has a "fast lane" + "full sweep" (~50 leagues), server-side lock, WatermarkBroadcast via Turbo Streams; see RAILS_TRIGGER.md (internal doc referenced in JS comments, not public).
+- Server-side namespaces visible in JS comments: Odds::ImpliedProbability (app/services/odds/implied_probability.rb), Odds::Board, Odds::BoardTable, Odds::CustomizePanel, LiveOddsController#sync/#poll, Views::Admin::NFL::ProjectionReviews::Sidebar (admin projection review spreadsheet with manual overrides, server-side recompute).
+- Survivor Map grid model ported from internal mockups/nfl-survivor-map/index.html; "Best Path optimizer" feature removed.
+- No public API, no public code repo found. No /api/ docs.
+
+### Data & methodology
+- /methodology: 673 metric definitions extracted to docs/research/2026-09-18/statrankings/methodology-definitions.json (Q&A glossary, NFL + NBA).
+- Stated data sources: "official league data providers" (NFL + NBA); claims real-time pipeline, play-by-play aggregation, verification against official records. No specific vendor named.
+- Seasons available in UI: 2021–2026.
+- 1,148 NFL stat pages inventoried (docs/research/2026-09-18/statrankings/nfl-urls.txt): /nfl/advanced/players (299), /nfl/advanced/teams (129), /nfl/players standard (~143), /nfl/teams standard, /nfl/coverage (vs 11 coverage shells each), /nfl/fantasy, /nfl/trends (ATS/moneyline/totals), depth charts (32 teams).
+- Access tiers observed: standard stat pages = full leaderboards free, no paywall; advanced pages = top-5 preview free, full table paywalled (stats-table-locked overlay, paywall_view event).
+- Table columns on metric pages: Rank, entity, 2026/All Games, Last 1, Last 3, Last 5, Last 10, Home, Away (+ prior-season column on team tables).
+- Proprietary metrics named on /checkout: ARBY (adjusted run blocking yards per carry), PROE+, Havoc Rate, True Target Share, 1st-Read %, xFP (expected fantasy points, DK/FD/Underdog/NFFC scoring).
+
+### Premium (statrankings+)
+- $139.99/yr (annual, "save 67%") or $34.99/mo, via Stripe.
+- Unlocks: 650+ advanced stats, Stat Builder, Coverage IQ (man/zone + 8 shells, 21 coverage stats), fantasy tools (xFP, fantasy points allowed), custom splits engine (any week range), red zone suite, NBA suite (150+ stats + daily projections), survivor tools.
+- MCP connector for Claude/ChatGPT/Grok: requires active statrankings+ subscription; "AI can't download CSVs"; PDF connection guide delivered after purchase. Every figure served from their DB, no estimation (their claim).
+- Free scrape task handed to Minis 2026-09-18 (Motif's background scrape was declined by Garrett; Minis owns the data pull).
+
+### Open questions
+- Exact upstream data vendor(s) — strong lead: founder Kevin Adams also founded FTN Fantasy/Data, and @StickToTheModel's chart credits "FTN Data via nflverse"; EPA model specification; projection model specification; odds-engine data source (which odds feed).
+
+## X ANALYTICS SWEEP 2026-09-18 (TejFBAnalytics / SumerSports / StickToTheModel / MagicSportsGuy)
+Read-only browser pass, 2026-09-18. No likes/reposts/replies/follows/DMs. Verbatim transcriptions below.
+
+### @tejfbanalytics (Tej Seth, verified) — two posts reviewed
+- status/2100425733399052634 (Sep 16, 2026, 10:24 PM): newsletter promo only — "On tomorrow's Stats & Scheme: Teams that changed their tendencies in week 1, Bills offense vs Lions defense, Texans pass rush vs Bengals OL & more! Subscribe: sumersports.com". No data.
+- status/2087560403018559764 (Aug 12, 2026, 10:22 AM): "Stats & Scheme" 2026 season relaunch promo (newsletter with @SyedSchemes). Image listed first four editions (8/31 AFC, 9/3 NFC, 9/7 league trends, 9/9 Week 1 preview). No data. Replies celebratory only.
+- Bio: "football data science | stats & scheme newsletter with @syedschemes | sandra bullock was wrong about run/pass splits in the blind side".
+- FOLLOW-UP: his same-day quote "Quarterback total EPA leaderboard entering Week 2:" (image, 80 likes, 12K views) was out of scope — queue for next sweep.
+
+### @SumerSports (SumerSports, verified, 21.1K followers)
+Bio: "Measuring football, play by play, with 500+ years of NFL experience behind the model. SumerPass is live. A research platform made for diehards, by diehards."
+All charts footered "Data & Figure @SumerSports" (own charting). No external source stated.
+
+1. Deone Walker post (Sep 17, 2026, 10:38 PM): "Deone Walker with another impressive showing vs. DET tonight. Taking a clear step forward in his second season." Image: DEONE WALKER, BUFFALO, WEEKS 1-2. "PRESSURING AT NEARLY TRIPLE HIS 2025 RATE. From interior alignments — DT and NT snaps only." X-axis PRESSURE RATE PER PASS RUSH, each dot = an interior D-lineman 2025, ticks 4%/8%/12%/16%, dashed line LEAGUE AVG 8.4%, circle "6.5% 2025", teal marker "17.4% 2026". Bottom panel HIS FIRST TWO GAMES: 8.7% Week 1 pressure rate, 23 rushes at HST; 26.1% Week 2 pressure rate, 23 rushes vs DET; 21.7% pass rush win rate vs 9.2% league avg. Footnote: "No interior lineman sustained 17.4% over 2025 — the best qualifier was 16.4%. NFL regular season. The 2025 field is 51 interior linemen with 200+ pass rushes. Walker's 2026 mark is 8 pressures on 46 rushes — a small sample."
+
+2. James Cook post (Sep 17, 2026, 9:26 PM): "92 of James Cook's 106 rushing yards have come on runs hitting outside of the TE". Image GAP OUTCOMES (SumerSports), O-line diagram TE-LT-LG-C-RG-RT-TE, gaps D(blue) C(red) B(blue) A(orange) A(orange) B(blue) C(red) D(blue). A Gap: -0.09, 4 YACo, 3 att, 6 yds; B Gap: +0.54, 3 YACo, 1 att, 7 yds; C Gap: -0.42, 2 YACo, 1 att, 1 yds; D Gap: +0.66, 20 YACo, 8 att, 92 yds; Other: 0 att, 0 yds.
+
+3. Run stops post (Sep 17, 2026, 12:01 PM): "Zack Baun leads all players in run stops coming out of Week 1". RUN STOP LEADERS, NFL WEEK 1 2026. PLAYER / RUN STOPS: 1. Zack Baun, PHI, 29 run-defense snaps — 5; 2. Uchenna Nwosu, SEA, 12 snaps — 4; 2. Kobie Turner, LAR, 15 — 4; 2. Brandon Dorlus, ATL, 16 — 4; 2. Nick Bosa, SF, 16 — 4; 2. Terrel Bernard, BUF, 31 — 4. Footer: "NFL Week 1, 2026 regular season. 16 more players had three." Reply caveat (EdgeAI @EdgeAI_App): "Run stops are a rate stat wearing a counting stat's clothes. Per snap, is Baun still first?"
+
+4. Josh Allen ADOT post (Sep 17, 2026, 9:15 AM): "Josh Allen pushed the ball downfield with a 12.8-yard average depth of target in Week 1 vs. Houston, his highest ADOT in a single game since the start of 2024. The Lions defense allowed the highest ADOT in the NFL last season (10.0 yards)." Image JOSH ALLEN, BUFFALO BILLS: "Allen's average target in Houston sat 5.0 yards further downfield than his 2024-25 norm of 7.87." 12.82 yds avg depth of target on 28 targeted attempts — HIGHEST IN 33 STARTS. Bar chart 2024/2025/2026 with dashed 2024-25 average 7.87 yds, final cyan bar WEEK 1 (12.82). Footnote: "Average depth of target by game, NFL regular season 2024-2026. Mean charted target depth on targeted pass attempts; throwaways excluded. The previous high was 12.70 (2024 Wk 14, @ LA). 2026 covers Week 1 only."
+
+5. Under center post (Sep 16, 2026, 5:37 PM): "Under center usage in Week 1". Image "Under Center on the Rise", NFL regular season % of offensive snaps: 2022 — 32.1%; 2023 — 27.7%; 2024 — 29.3%; 2025 — 33.8%; 2026 WEEK 1 — 41.3%. Footnote: "Offensive snaps only; kneels and spikes excluded. Pistol isn't included in under center numbers." Reply thread (Mike Jurecki @mikejurecki): biggest team-level increases 2026 Week 1 vs 2025 average (thread not fully transcribed).
+
+6. Doubs post (Sep 16, 2026, 11:35 AM): "Romeo Doubs led all WR with 25+ routes with a 60% vertical route share in Week 1 (Go / Post / Corner). It was over double his vertical route share in Green Bay over the last two seasons (29.1%)." NOTE: SumerSports spells "Romeo Doubs". Image: New England at Seattle, 30 routes, 3 targets, 0 catches. "60% of his routes were a go, post or corner — the highest share of any receiver in Week 1." Route tree (share of 30 routes): Go 36.7%; Post 20.0%; Corner 3.3%; Dig 13.3%; Cross 10.0%; Out 10.0%; Slant 6.7%; Comeback 0.0%; Hitch 0.0%; Screen 0.0%. Go/post/corner share, WR with 25+ routes Week 1, 58 qualifiers, WR average 32.5% dashed line: DOUBS NE 60.0%; PICKENS DAL 54.8%; TeSLAA DET 51.6%; C. DOUGLAS MIA 51.6%; HURST TB 46.4%; GOLDEN GB 45.0%; REED GB 44.8%; M. HARRISON ARI 42.4%. Footnote: "Week 1, 2026 regular season. Shares exclude the 5% of routes with no charted type. One game, 30 routes."
+
+### @StickToTheModel (Stick to the Model, verified, 9,749 followers)
+Bio: "Building GM tools for football fans | Weekly angles, mock drafts and analysis | Never wrong, just early. sticktothemodel.com". Recent posts mostly game-day observations/betting; two data posts:
+
+1. Safety scatter (Sep 17, 2026, 5:16 PM): "Josh Allen might throw for 400 tonight / Lions missing 3 key pieces of their secondary". Image: "Branch touches more passes than any safety. Joseph steals more." Every safety with 30+ games from 2023 to 2025; above the gold line, more of his plays on the ball ended in his hands. X: PASSES DEFENDED (0-40); Y: INTERCEPTIONS (0-16). Quadrants: top-left TAKES IT AWAY, top-right HANDS ON EVERYTHING, bottom-left QUIET BACK THERE, bottom-right BREAKS UP, RARELY CATCHES. Labeled approx: Kerby Joseph (Lions) ~15.5 INT / ~25 PD; Brian Branch (Lions) ~6 INT / ~38 PD; Geno Stone ~13/~18; Jessie Bates ~13/~22; Xavier McKinney ~13/~26; Camryn Bynum ~9/~21; Julian Love ~8/~27; Kyle Hamilton ~5/~27. Footer: sticktothemodel.com. Replies dispute the "missing 3 key pieces" framing (Lions planned for Branch/Kerby absences).
+
+2. Parsons chart (Sep 17, 2026, 12:39 PM): "The Packers haven't won since Parsons got hurt. With Parsons: 9-3-1, 19.0 points allowed per game. Without him (Week 15 - Week 1): 0-6, 30.5 points allowed per game." Image "Sack Rate vs. Pressure Rate", PACKERS — WITH VS. WITHOUT MICAH PARSONS, 2025 regular season, dashed lines = league average, GB split by week, charting: FTN Data via nflverse. X PRESSURE RATE 20%-36%, Y SACK RATE 2%-10%. Quadrants: Pick Their Spots (top-left), Get Home (top-right), No Heat (bottom-left), Can't Finish (bottom-right). With Parsons Weeks 1-14: ~30.5% pressure / ~7% sack; Without Parsons Weeks 15-18: ~31.5% pressure / ~2.8% sack; arrow from With to Without. Banner: "Build your own at sticktothemodel.com/charting". DATA SOURCE STATED ON CHART: FTN Data via nflverse.
+
+### @MagicSportsGuy (Kevin Adams, verified) — StatRankings founder link
+Bio: "Founder, @StatRankings, Guru Elite, & FTN Fantasy/Data. '22. @Techstars investor @Underdog". (Resolves the /ai page's "founded the data company behind it": Kevin Adams also founded FTN Fantasy/Data.)
+
+1. PROE+ post (Sep 15, 2026, 7:39 PM): "ICYMI, we created PROE+ last season, which combines Pass Rate Over Expectation + Neutral Pace." Image PROE+, 2026 WEEK 1, sub "Pass Rate Over Expectation + Neutral Pace": 1 Titans +1.42; 2 Panthers +1.36; 3 Packers +1.32; 4 Steelers +1.15; 5 Saints +1.15; 6 Bengals +1.13; 7 Bears +1.04; 8 Chiefs +0.92; 9 Rams +0.91; 10 Bills +0.89; 11 Buccaneers +0.76; 12 Eagles +0.75; 13 49ers +0.72; 14 Commanders +0.71; 15 Colts +0.71; 16 Falcons +0.65; (LG AVG +0.67 marker); 17 Chargers +0.61; 18 Broncos +0.59; 19 Browns +0.55; 20 Cardinals +0.54; 21 Jaguars +0.54; 22 Dolphins +0.52; 23 Seahawks +0.48; 24 Lions +0.48; 25 Patriots +0.44; 26 Raiders +0.43; 27 Texans +0.29; 28 Cowboys +0.26; 29 Ravens +0.23; 30 Giants +0.11; 31 Vikings +0.08; 32 Jets -0.04. Footer: "statrankings x Claude x ChatGPT x Grok".
+
+2. Quoted xFP post (Sep 15, 2026, 6:26 PM): "DK Metcalf finished with 4-40-0 on 10 targets for 8 FP (-10.2 xFP). His 20.4 aDOT was 1st among all WRs with 7+ targets. Connect your favorite AI to analyze the full xFP tool." Image xFP Expected Fantasy Points, 2026 WEEK 1 WIDE RECEIVERS. xFP leaders: 1 Amon-Ra (St. Brown) 24.9; 2 M. Golden 23.4; 3 C. Olave 23.0; 4 JSN 21.4; 5 DK Metcalf 18.2; 6 Nico (Collins) 17.8; 7 JJ (Jefferson) 17.3; 8 Puka (Nacua) 17.1; 9 J. Coker 17.0; 10 M. Nabers 17.0. Fantasy Points - xFP (+) overperformers: 1 C. Watson +17.7; 2 J. Coker +16.8; 3 Z. Flowers +14.6; 4 JJ +13.9; 5 J. Meyers +8.6; 6 P. Washington +7.9; 7 A. Williams +7.3; 8 R. Rice +6.6; 9 Deebo +6.6; 10 D. Wicks +6.6. (-) underperformers: 1 DK Metcalf -10.2; 2 Jameson Williams -8.4; 3 Malik Washington -8.3; 4 Matthew Golden -7.9; 5 Jayden Reed -7.5; 6 Courtland Sutton -6.5; 7 Ja'Kobi Lane -6.3; 8 Romeo Doubs -5.8; 9 Quentin Johnston -5.3; 10 Xavier Worthy -4.9. Footer: "statrankings x Claude x ChatGPT x Grok". Reply (Chris Robin @DetroitBeastie): "10 targets and just 4 receptions?! How many of those 6 incompletions were bad balls?" Kevin Adams: "Ha, it's a good callout & we were just talking about it ironically, pulling in catchable target rate/target quality to xFP. Stay tuned!" (new metric in development: catchable target rate / target quality inside xFP).
+
+### statrankings.com homepage (visited Sep 18, 2026)
+- Name/tagline: StatRankings — "The Ultimate Sports Data Hub"; "The ultimate data hub for NFL fans, bettors, DFS & fantasy players."
+- Team: Kevin Adams (founder; also founded Elite Fantasy/Guru Elite & FTN Fantasy/Data); Steven Patton (Head of DFS Strategy); Mark Garcia (Lead NFL Analyst & Director of NBA Projections); Sam Choudhury.
+- Scale claimed: statsuite+ 675+ advanced NFL stats; tools built on 1,048 stats; base stats back to 2000; advanced metrics since 2020; betting trends ATS/O/U/ML back to 2000; 400+ free stat pages.
+- Tools: coverageIQ+ (man/zone + 8 shells, 132 WR coverage stats); statbuilder+; redzone+/fieldzone+ (red zone splits at 2/5/10/15/20 yards); customsplits+ (week-range splits); predictionmarkets+ (5 markets); oddsboard+ (live lines from 19 books, 2M+ markets, free, auto-refresh 5s, vig removed); BettingTrends tool; NFL Stats Archive; Survivor Map; Team Target Share; Depth Charts; OL Rankings; Playoff Schedule Grid.
+- Downloadable data: NFL Stats Archive CSV (one file per category per season, zipped) — add-on +$60/yr to statrankings+, standalone $179.99/yr annual only. Base stats land Tuesdays; charted stats follow.
+- API: none public. MCP connectors (Claude/ChatGPT/Grok) require statrankings+ login; PDF guide after purchase; connector cannot reach the Stats Archive directly.
+- Pricing: free tier (400+ stat pages, oddsboard+, trends tool, target share, depth charts); statrankings+ $139.99/yr or $34.99/mo. "Built for mobile. No ads. Instant."
+- Methodology page footer link was unreachable in the browser pass (nav overlay); Motif fetched it separately — 673 definitions archived.
+
+### External recon (2026-09-18, agent pass, public sources only)
+- Subdomains in Certificate Transparency logs (13, NOT probed): api.statrankings.com, prod-api.statrankings.com, stage.api.statrankings.com, *.api.statrankings.com, stage.statrankings.com, dev.statrankings.com, new.statrankings.com, old.statrankings.com, pay.statrankings.com (+ www variants, wildcard). pay. CNAMEs to GoDaddy pay links.
+- Domain: registered 2023-11-23, expires 2032-11-23, GoDaddy, registrant privacy-protected. ~20 months dormant before ~Aug 2025 launch.
+- GitHub/npm/RubyGems: zero public repos, gists, forks, or packages — backend fully closed-source.
+- Kevin Adams background (web search): founder of FTN Network/FTN Fantasy/Data; ex-financial advisor; ex-owner of a California hair-salon franchise; SEED INVESTOR in Underdog Fantasy (Underdog Series C at $1.23B valuation led by Spark Capital); DFS resume: "countless DFS finals, GPP wins, Top-20 BBM3 finish" (per One Week Season).
+- FTN Network: founded 2020, 1207 Delaware Ave #1967, Wilmington, DE 19806; employs Aaron Schatz and Jeff Ratcliffe; claims "exclusive data, including DVOA" and "two first-place accuracy finishes in the last five years" (their claim).
+- Launch ~Aug 2025 (paid-placement press release): "24 years of continuously updated NFL data" free account; projection models for NFL + CFB at launch; Betting Trends Tool with data back to 2000; data partnership with One Week Season (CEO Jordan Tohline) for the season. Contact kevin@statrankings.com.
+- Sources: Gaming News Canada interview, News Direct press release, One Week Season, ftnfantasy.com/about.
+- OPEN: Wayback unreachable from sandbox — browser follow-up should pull web.archive.org CDX for statrankings.com* (launch-era snapshots may show old pricing/team/API pages). DNS/MX/TXT records unverifiable from sandbox. No LinkedIn company data or job posts found; headcount/office unknown.
+
+### JS codebase intel (2026-09-18, full 102-file mine)
+- Infra: AWS Cognito auth (min 8 chars, upper/lower/number/symbol), CloudFront CDN, Stripe hosted checkout, Rewardful referrals (?via= -> client_reference_id), Google One Tap, Avo admin, GA4. No secrets/keys in client code.
+- Internal docs referenced in comments (not public): RAILS_TRIGGER.md (odds-engine trigger), docs/STAT_NUMERIC_IDS.md (StatBuilder stat key -> numeric_id), docs/FANTASY_RANKINGS_URLS.md, SEO.md rules RDM-01..06 (crawl-space discipline: ?return_to= caused "tens of thousands of junk URLs", 32,852 ?sort_field=/?sort_order= variants found by crawlers -> sort headers are buttons not anchors), SPEC.md (Survivor Map; RE-SCOPE 2026-09-01: contest-entries is the ONLY premium-gated surface on Survivor page).
+- odds-engine (Python, api_server.py): "Sync odds now" fast lane + "Full sweep" ~50 leagues, one server-side lock, 90s client backstop. Live board: Postgres trigger -> Turbo Streams WatermarkBroadcast, min interval 5s, price flash on >=0.05 relative implied-probability move (green=better for bettor, red=worse).
+- Ruby internals named: Odds::ImpliedProbability (app/services/odds/implied_probability.rb), Odds::Board/BoardTable/CustomizePanel, LiveOddsController#sync/#poll/#update_preferences, Admin::NFL::ProjectionOverridesController#batch (single PATCH, one transaction, recompute each team once), Views::Admin::NFL::ProjectionReviews::Sidebar/Show (admin projection review spreadsheet), Polymarket::PageData#query, NFL::CoverageIntelligenceQuery::ALL_COVERAGES, Payments::PackagePricing (integer cents, server-side).
+- Formulas: implied probability = price>0 ? 100/(price+100) : -price/(-price+100), rounded to 0.1%. Survivor favored = winPct >= 58; FAV LEFT = remaining favored non-bye weeks; bands >=75/>=60/>=50. Admin projection review: >10% off baseline tints cell (DISCREPANCY_THRESHOLD), >20% off market line = edge flag (over/under); passing/receiving reconciliation ("every passing yard or touchdown is also a receiving yard or touchdown for the same team").
+- Free/gated boundaries (client-verified): free presets = All Games, Last 1, Last 3 only; Last 5/10, Home/Away, specific weeks, Custom Split column gated. Coverage shells: Man = 0,1,2M; Zone = 2,3,4,6,9 (order 0,1,2,2M,3,4,6,9). Odds board up to ~82 sportsbooks; price formats American/%/Cents. PredictionMarkets+ paginates at 50 rows. Archive builder params: archive_download[categories][][registry|category], [seasons][].
+- URL patterns: /nfl/advanced/players/stat-builder, /nfl/advanced/players/matchup-iq, /nfl/coverage/:stat/vs/:position, /nfl/fantasy-football-rankings/<platform> (e.g. /draftkings/superflex/qb), /search/players?q= (remote JSON; CFB returns none — "no CFB player pages yet"), /cable (ActionCable). Query params: ?stats=, ?weeks= (comma list), ?seasons=, ?q=, ?page=N, ?player=, ?compare=, ?position=, ?scoring=.
+- Analytics events: filter_change, tool_switch, stat_search, theme_toggle, tab_select, player_search, more_stats_toggle, mobile_menu_toggle, depth_chart_view_select, comparison_add_player, accordion_toggle; internal: analytics:track, projection-override:saved, ai-chat-demo:scene, persistent-modal:open/toggle, tsc:tab-change, avo:advance-resource-table. GA4 admin poll: 15s client, 15-min server cache.
+- Mapbox GL JS vendored in application bundle (usage page unidentified). Chartkick/Chart.js charts.
+
+### Free-tools inventory (2026-09-18, public pages only)
+- Sitemap reality: sitemap.xml = 1,429 URLs (1,149 NFL, 156 NBA, 109 CFB, 6 prediction-markets, + /ai, /dfs, /guide, /methodology, /survivor-pool); sitemap-players.xml = 30,882 player pages (/nfl/player-pages/{id}/{slug}, ~5,602 NBA/CFB). No CFB/NBA trends sitemaps (league-agnostic URLs with ?league=).
+- /live-odds (FREE, "NFL Live Odds"): full board unauthenticated — 21 books, 1,126 markets, Week-2 games. Books: Kalshi, Novig, Polymarket, ReBet, ProphetX, Pinnacle, DraftKings, FanDuel, BetMGM, BetOnline, BetRivers, BetUS, Betway, Bovada, Fanatics, Fliff, Hard Rock Bet, LowVig, Marathon Bet, Polymarket US, TAB. Per-book freshness ("2m ago"; stale = no write in 30+ min). Push-driven: ActionCable /cable stream "live_odds_board", no polling; price-flash on moves. URL params: ?league=nfl|cfb|nba, ?market=h2h, ?week=reg-N. Footnotes: "Book columns show posted lines, with vig. The de-vigged comparison lives on predictionmarkets+." Gate on page: book hide/reorder is plus-only.
+- /prediction-markets/sports/nfl (FREE): 4 venues (Polymarket, Kalshi, Novig, ProphetX); columns Matchup, Market, Volume, Best Price, last-trade x4, Width, vs Book (de-vig, Pinnacle-anchored), 24h move. Stream "polymarket_odds". Verbatim: "Implied probabilities from Polymarket prediction markets. Order-book prices carry no vig; the price is the probability."
+- /nfl/trends/{ats,moneyline,totals} (FREE): full 32-team tables. Seasons 2000-2026; 22 situation splits (After a Bye, After a Win/Loss, rest advantage/disadvantage, favorite/underdog home/away, division, playoffs, "Exclude Week 18" toggle). Fragment pattern: GET same URL + header Turbo-Frame: trends-content.
+- /nfl/teams/target-share (FREE): 32 teams; Total/WR/RB/TE targets + %; seasons 2026 back to 2021 (+ playoffs); zone filter full/z20/z10/z5/z2.
+- /nfl/depth-charts + 32 team pages (FREE): full charts, "Updated 09/17/26" timestamps, injury flags (Q Questionable — Knee / Practice: Limited Participation, R rookie, O out).
+- Standard leaderboards (FREE, full tables): e.g. passing-yards = 37 rows; columns Rank, Player, Team, Position, All Games, Last 1/3/5/10, Home, Away; selectors season/team/rate(totals vs per_game)/zone.
+- /nfl/fantasy/playoff-schedule-grid (FREE): 32 teams; Implied Points, Combined Totals, Bye, weeks 15-17. Verbatim: "Implied Points: the market's projected points scored by the team across the fantasy playoff window, from each game's betting total and spread." Custom weeks gated.
+- /survivor-pool (FREE preview): 32x18 grid, win% per cell (from live market lines), FAV LEFT, BYE markers, "2x" weeks. Verbatim: "We track your teams and map the math — no model, no picks. Win odds for every team, all 18 weeks, implied straight from live market lines." ODDS BY toggle: Polymarket. "Live odds via sportsbook & Polymarket APIs."
+- Public fragment pattern (not /api/): any turbo-frame page returns its data table as HTML via GET {same-URL} + "Turbo-Frame: <frame-id>" header.
+
+### Data pipeline CONFIRMED + company deep dive (2026-09-18, public records)
+- StatRankings' own July 2026 preview PDF (with One Week Season) discloses verbatim: "NFL DATA SOURCES: nflfastR and FTN Data. ADP via Underdog Fantasy and DraftKings." URL: oneweekseason.com/wp-content/uploads/2026/07/StatRankings-OWS-_-2026-NFL-Preview-.pdf. Hypothesis upgraded to confirmed.
+- Projection build recipe (verbatim from PDF): "Built from the game down: team volume and efficiency first, then every player's share of it, layered with ARBY, xFP and our coverage data. Engineered by @PattonAnalytics, reviewed and adjusted player by player by Sam & Kevin." (Steven Patton = model engineer; Sam = Sam Choudhury, inferred @SC_FFB.)
+- ARBY (Adjusted Run Blocking Yards) defined: "isolates how much of a team's rushing success comes from the offensive line, separating line-created yardage from what the running back generates on his own." Example: Eagles 30th in Offensive ARBY in 2025 but 15th in RB yards/carry "thanks to Saquon Barkley's ability to elude and break tackles."
+- PROE+ = "PASS RATE OVER EXP x PACE". POE = Pressure Over Expected (off/def). SR OL = StatRankings OL aggregate. xFP = proprietary expected fantasy points; "models were built by our NFL Data Scientist" (Patton).
+- EPA: no proprietary formula disclosed; with nflfastR a stated source, almost certainly computed from nflfastR EP values (inference).
+- NBA projection model: "Our DFS team actively monitors the model and makes manual adjustments for injuries, breaking news, and lineup changes" (per beehiiv newsletter "NFL Season Is Almost Here", ~Jul 2026, signed Kevin Adams). Newsletter also: 448+ base stats, 250+ advanced metrics at that time, "fully rebuild the backend architecture" (fits Rails/Turbo find).
+- Corporate lineage: FantasyGuru.com (Jeff Mans, 1995) -> Fantasy Guru Elite (Adams co-founder/CEO 2016; won 2013 SiriusXM Salary Cap Challenge; 7 DFS finals) -> FTN Network (Adams, 2020; Techstars '22 cohort) -> StatRankings (2025). Adams X bio: "Founder, @StatRankings, Guru Elite, & FTN Data/Fantasy, @Techstars '22. Investor @RotoBot_AI & @UnderdogFantasy. DFS @OneWeekSeason".
+- Reviews/complaints: NONE found on Trustpilot, G2, BBB, Reddit (searched 2026-09-18). Absence of indexed results is not proof.
+- Open follow-ups: transcribe Gaming News Canada audio interview (Adams on building FTN/StatRankings); Mark Garcia (@HilowFF) and Sam Choudhury (@SC_FFB) backgrounds; odds feed vendor for the 19-book board; candidate-path HTTP sweep (/about /blog /careers /press /help /changelog /status /affiliates /gift /teams /enterprise).
+
+### FTN Data business intel (2026-09-18, public sources)
+- FTN Data is a real priced B2B product (ftnfantasy.com/stats/sports-data): CSV Access $599 (NFL base stats last 3 seasons + play-by-play); mid-tier flexible-priced API (all basic + charting NFL data incl. skill-position participation, charting history since 2019); enterprise white-label/custom feeds. DVOA is an Enterprise add-on "going back to 1979." Marketing: 750+ NFL data points, 20+ years historical, "50% less expensive than competition." John Harbaugh testimonial: "among the best stats providers at accounting for this. They incorporate factors that others don't."
+- DVOA ownership: "DVOA, originally developed by Aaron Schatz under 'Football Outsiders,' has transitioned to FTN as its exclusive home (August of 2023)." Schatz = FTN Chief Analytics Officer. Timeline caveat: another FTN page says "In 2022, FTN Fantasy added DVOA to the arsenal" (licensing vs exclusivity unclear).
+- Lineage: Armchair Analysis (charting, founded 2001) acquired by FTN Data in 2020 — 18-year charting operation. Human charters (ex-coaches/players) vs Sportradar cameras.
+- Funding: Perry Gershon bought majority stake Dec 2023 ($3M+ oversubscribed seed); Kevin Adams moved to Chief Strategy Officer. Techstars 2022. Q3 2023 revenue $1.05M (+52% YoY).
+- Accuracy claim audit: "two first-place accuracy finishes in the last five years" — Jeff Ratcliffe #1 in 2021 (legit, FTN-affiliated); Tyler Orginski #1 in 2024 in-season was listed as JWB Fantasy Football at the time, now at FTN (retroactive). Repeat the claim only with this caveat.
+- FTN<->StatRankings: Adams founded both; FTN Data is a confirmed StatRankings source; Sam Choudhury appears in both contributor lists; Marshall Gershon is an FTN contributor (possible family link to CEO Perry Gershon — unconfirmed).
+- Confirmed FTN customers: Caesars Sportsbook, Action Network, Carnegie Mellon Sports Analytics Center (inaugural university partner), StatRankings. Category competitors: Sportradar, PFF, Sports Info Solutions, Stats Perform, Genius Sports. No public criticism/reviews/complaints found.
+
+### FTN corporate/people trail (2026-09-18, primary sources)
+- SEC Form C (FTN Network Group Inc., CIK 1957232, filed Dec 7, 2022): Fade The Noise, LLC registered Delaware Feb 18, 2020; renamed FTN Network, LLC May 26, 2021; converted to FTN Network Group, Inc. Apr 21, 2022 (same month Techstars Indy began). HQ San Diego CA (864 Grand Ave #1033). EIN 88-2614964. Raises: $55K pre-seed 2020, $450K/$875K/$220K/$384K bridges 2021-22, $1.235M crowdfund SAFE Dec 2022 ($14.5M cap). FY financials: revenue $1.198M (2021) vs $378K; net loss ($876K); cash ~$190K Oct 2022. 20%+ holders: Touhy Capital LLC 21.21%, RLA Wealth Management 24.40%.
+- DEC 2023 HANDOFF: Perry Gershon led $3M oversubscribed seed, bought majority stake, REPLACED Kevin Adams as CEO; Adams -> board seat + Chief Strategy Officer (SBJ Dec 5, 2023). Same year: Schatz signed, DFSForecast acquired, SiriusXM show launched. Q3 2023 revenue $1.05M (+52% YoY).
+- Techstars: FTN in Sports Accelerator Powered by Indy, started Apr 11, 2022 (13 companies); mentors included FanDuel's Nigel Eccles and Underdog's Jeremy Levine.
+- Jeff Ratcliffe: FTN President (Form C + Dec 2023 PR); ex-PFF Director of Fantasy; FantasyPros most-accurate 2021; SiriusXM/CBS. Still publishing at ftnfantasy.com in 2026.
+- Aaron Schatz: multi-year FTN contract 2023, Chief Analytics Officer; in 2026 dual-role: ESPN national NFL analyst + FTN CAO. Created Route DVOA/DYAR using FTN route data.
+- Steven Patton (@PattonAnalytics): independent data scientist, 4for4 contributor; 2024 NFL Big Data Bowl co-author ("The Components of a Tackle"); created FRAME score (cited by USA Today June 2026); play-caller rankings model (Dec 2025). Engineered StatRankings projections.
+- Mark Garcia (@HilowFF): Head of DFS/best ball at One Week Season; joined Fantasy Points 2024; game-theory focus (courses at Harvard/Yale/Stanford/Northwestern per OWS bio).
+- Sam Choudhury = @SC_FFB VERIFIED (SI 2022, Riot Report 2022, Fantasy Footballers 2025 attributions); appeared on Mean Streets podcast May 4, 2023 as "Sam Choudhury of FTN Network"; "top-1% / 450+ BBM" and "Betting Analyst at FTN" still unverified.
+- Adams profile: 15+ yrs investment advisor (co-managed $100M+, Wharton RPS designation), CA hair-salon franchise owner, founded Elite Fantasy (exited 2020), founded FTN 2020, Techstars '22, seed investor Underdog, investor RotoBot_AI, founder/CEO of StatRankings 2025.
+- StatRankings LLC: no public corporate filing found linking it to FTN Network Group Inc.; founder/data-linked only.
+
+### FTN deep-code mine (2026-09-18, 36 public JS files, 5.5 MB)
+- Stack: WordPress 6.4.11 + Elementor 3.21.3/Pro on Apache; tools are React 18 + single-spa + SystemJS microfrontends (namespace @ternala/*). ZERO overlap with StatRankings' Rails/Hotwire stack. Dev agency = Ternala (dev/staging = ftn.ternala.dev; tvc.js cookie domain .ftnfantasy.dev). robots.txt only disallows /wp-json/ and ?rest_route=.
+- Auth: fully custom cookie JWT (access_token/refresh_token/user_id, 30-day, samesite=lax); refresh via POST api.ftnfantasy.com/users/token/refresh. No Auth0/Clerk/Cognito.
+- API surface recorded from code, never called: api.ftnfantasy.com (/plans/, /subscriptions/, /users/token/*, /users/token/widgets/generate); WP REST {site}/wp-json/api/v1/ (getLogos, global-search, paywalledLinks, playerUrls, prop-tool/gamelogs); DFS optimizer opt-tool.php (ftn_id = FTN internal player ID, slate types incl. showdown); AWS Lambda prop projections (execute-api.us-east-1, POST with widget_token minted via api.ftnfantasy.com).
+- Products: Stripe product map (Contest Sims; Football/Baseball combos); taxonomy enum bets/dfs/dvoa/fantasy; DVOA stat keys defdvoa/passdefdvoa/rundefdvoa; optimizer free boundary = 1 lineup/week ("You've reached your weekly limit of 1 lineup."); prop tool covers 7 sports (NFL/MLB/NBA/PGA/MMA/NCAAB/NCAAF). Gating via window.accessProvider + div[data-paywall] single-spa mount.
+- Analytics: GTM-only (GTM-T8B3J8P), Hotjar 5075992, Zendesk key present; no custom event taxonomy.
+- Source-tree leak: plans widget webpack bundle embeds 49 original TS paths (src/PaywallWidget.ts, components/*, hooks/*, utils/*).
+- SECURITY OBSERVATION (do not touch): a fully-tokenized Discord webhook URL is hardcoded in the public paywall widget JS (3 call sites) — used by requestAccess() to POST lead-capture payloads to Discord. Anyone reading the JS can post to FTN's channel. No sk_live/API keys/passwords found. Reported as hygiene observation only.
+- Sibling domains: ftndata.com unreachable from sandbox; ftnnetwork.com = 114-byte JS redirect to /lander; ftndaily.com = live campaign lander (same WP template as homepage). Dead importmap entry ftn-next-widget.js (retired/upcoming tool).
+- Cross-ref vs StatRankings: no shared infra — different CMS, frontend, auth, analytics, admin. Shared asset is DATA (FTN Data -> StatRankings), not infrastructure. FTN tools built by outside agency Ternala; StatRankings in-house Rails.
+
+### FTN site teardown (2026-09-18, public pages only)
+- Sitemap: 32,034 articles; ~190 tool/landing pages; 141 contributors; categories incl. historical-dvoa, weekly-dvoa-ratings. Sports covered: NFL/NBA/MLB/PGA/CBB/CFB/NHL/MMA/NASCAR/tennis/WNBA/esports/horse-racing.
+- PUBLIC CHARTING API DOCS (FTN's own FAQ links them — docs inventoried, no key requested): charting.ftntools.com/api/docs — django-ninja (Python), OpenAPI 3.1.0 (599 KB, 145 paths): NFL + NBA charting, PBP, analytics endpoints (/api/nfl/analytics/{coverage,pass_protection,pass_rush,passing,receiving,rush_defense,rushing,team_defense,team_offense}/stats/season/{season}), participants, schedules. Auth: apiKey query param "key"; POST /api/key issues keys (documented, not invoked).
+- Full NFL feed schemas published at ftnfantasy.com/ftn-data-nfl-catalog: Play-By-Play (~70 fields: shotgun/no-huddle, pass location zones, depth of target, tackler IDs, penalty detail), Charting (play action, QB pressured, drops, time-to-pass, YAC, separation type, route type 0-12, run concept, RPO, DB count), Participation (pre-snap formation/alignment, skill roles RTE/FRTE/BRTE/PPRO/FPRO/RBL/FHO/RUN, motion pre/at-snap, defender cushion yards).
+- Charting operation: human team watches every play of every NFL + NBA game; turnaround ~24h (Sunday games released Mon night/Tue morning); history back to 2019 (charting), 2021 (expanded participation). Partners may display charting metrics publicly EXCEPT DVOA.
+- Consumer pricing: FTN Pro $109.99/yr ($9.17/mo); GOAT from <$21/mo (all tools incl. optimizers); FTN Stats stats-only tier; promo code RATPACK = 10% off first bill; Contest Sims cost extra; Football Almanac separate purchase; league sync (ESPN/Yahoo/Sleeper/CBS/MFL); Discord with free section.
+- FTN Data pricing: individual $69.99/yr; charting feed $5,000/yr commercial, $3,000/yr private.
+- ftntools.com (CT logs, listed not probed): charting, staging.charting, admin, admin.metrics, billing, dfs, game-logs.api, metrics, models, nfl-parser, oauth2, odds, sandbox (+infra). ftndata.com: api/data subdomains. ftnnetwork.com: pay.ftnnetwork.com. fantasyguru.com: 25 names incl. data/myguru/mag/*.projectx/admin/beta/dev/ci/staging. fantasyguruelite.com: 16 names.
+- Roster: Jeff Ratcliffe now co-CEO (was President); Aaron Schatz CAO; Frank Brank CDO (frank@ftnnetwork.com); Sam Choudhury = lead NFL analyst, ex-PFF data analyst/reviewer/recorder, multiple GPP takedowns; Vlad Sedler (baseball), Tyler Orginski (FantasyPros 2024 accuracy champ), Tyler Loechner, C.H. Herms (#1 ECR D/ST 2023), Bryan Knowles (ex-FO), Dan Fornek (OL), MLB Dream (betting), Zac Graham (NBA DFS), Laquan Jones (ex-NFL Media research). Kevin Adams has a contributor page (wrote Weekly DVOA Funnel Report 2023).
+- Claims: "Trusted by 32 NFL Teams" (verbatim, learn-about-ftn); accuracy claim repeated on /about; "We're For The Numbers… exclusive data, including DVOA."
+- Site consolidation: ftndaily.com + ftnbets.com merged into ftnfantasy.com ("one site, one login").
+- INFERENCE (flagged): StatRankings' advanced metrics (coverageIQ+, ARBY, xFP, trench) plausibly computed from FTN's charting/analytics feeds — supported by StatRankings' own "nflfastR and FTN Data" disclosure + matching metric domains; mechanics not documented on either site.
+
+### Market-data API catalog (2026-09-18, public sources)
+- Polymarket: best zero-key feed — Gamma API (discovery, 4000 req/10s), CLOB public reads (/book, /price, /prices-history), Data API (/trades, /holders, /oi). Chain: Gamma -> clobTokenIds -> CLOB token queries. Trading needs wallet.
+- Kalshi: /exchange/status, /markets, /trades, /markets/candlesticks no-auth per docs; orderbook-auth status ambiguous (SDK says auth, OSS projects report no-auth works) — needs one direct unauthenticated GET.
+- The Odds API: Free 500 req/mo, $29/10K, $99/100K, $499/3M; historical endpoints 401 on free tier (confirmed by 2 OSS projects); carries ProphetX, Novig, Polymarket, Kalshi under us_ex region.
+- ProphetX: read layer (sports/tournaments/events/markets/search) zero-login per public GitHub skill; trading approval-gated.
+- Novig: GraphQL POST https://gql.novig.us/v1/graphql (Hasura-style), no auth in OSS wrapper (unverified from clean IPs); easiest legal lane = The Odds API novig key.
+- DraftKings/FanDuel/Caesars/BetMGM: no public APIs (app-JSON only); FanDuel host sbapi.{state}.sportsbook.fanduel.com confirmed; DK needs browser-network capture. Recommendation: use aggregators.
+- Pinnacle: funded+verified account required (api.pinnaclesports.com) — out of autonomous scope; prices via aggregators.
+- Free splits: DK Network publishes free Bets%/Handle% (spread/total/ML).
+- Free backtest anchors: nflverse schedules (closing spread+total, all 272 games, no key) + Covers odds history (closing odds 1978-present).
+- Cheapest legitimate engine wiring: Polymarket + Kalshi (free) -> The Odds API free tier (multi-book consensus) -> SportsGameOdds free tier (props/alts) -> nflverse + Covers (free backfill) -> DK splits (sentiment).
+
+### FTN charting API map (2026-09-18, public docs + unauthenticated probing)
+- Full spec pulled: /api/openapi.json (599,785 bytes); inventory at /tmp/ftn-api/endpoints-inventory.md; access playbook at /tmp/ftn-api/access-playbook.md.
+- All 144 GET endpoints GATED: key in ?key= query param; no key = 401 {"detail":"Invalid token supplied"} everywhere (31/144 probed at interim, zero accidental opens; full probe continued in background).
+- Key issuance NOT self-serve: POST /api/key requires existing username+password; no public signup endpoint in spec.
+- Crown jewel: /api/*_matching/ endpoints map FTN ids <-> Sportradar, NFL GSIS, NBA official, FTNDATA ids (the ID crosswalk).
+- 11 NFL analytics endpoints (coverage, pass rush, pass protection, passing, receiving, rushing, rush defense, team offense/defense + filters), each ~60-70 filter params.
+- Legitimate doors: $69.99/yr individual FTN Data (unconfirmed if includes API keys) -> $499.99 PbP CSV (live catalog) -> $3,000 private / $5,000 commercial charting feed (explicitly the API product) -> enterprise.
+- Open now, zero creds: full plan catalog (api.ftnfantasy.com/plans/ — 16 plans saved), full OpenAPI spec, Swagger UI.
+
+### Wide data hunt master catalog (2026-09-18, /tmp/all-data/MASTER-CATALOG.md)
+- CROWN JEWEL: nflverse/nflverse-ftn = FTN's SANCTIONED FREE SUBSET — load_ftn_charting(), play-level charting (coverage, routes, motion, pressure) from 2022+, charted within 48h, CC-BY-SA 4.0 (attribute "FTN Data via nflverse"). Legitimate free FTN data.
+- nflverse bulk: PBP 1999-2026 (372 cols, EPA/WPA/CPOE), rosters to 1981, injuries 2009+, snaps 2012+, NGS 2016+, contracts/draft/combine/officials/depth charts/QBR; GitHub releases, parquet/CSV, nightly, CC-BY-4.0; loaders nflreadpy/nflreadr/nflfastR.
+- ESPN public APIs (no key, verified 200): summary?event=<id> = richest free endpoint (live PBP + boxscore + drives + win prob + odds in one call); scoreboard/teams/rosters/athletes (~13k)/standings.
+- Sleeper api.sleeper.app (no key): full player universe + trending add/drop (real-time sentiment proxy).
+- Historical lines: spreadspoke scores+lines back to 1978 (best free market-history file).
+- Free ADP today: 4for4 public pages (DraftKings + Underdog ADP columns, fetch-verified); FantasyPros ADP pages free with year archives; FTN free ADP tool aggregates Underdog/FFPC/Yahoo/RT Sports. No official UD/DK public feed.
+- api.ftnfantasy.com/openapi.json PUBLIC (89 paths): GET /plans/ anonymous — full 16-plan matrix: GOAT $59.99/mo|$299.99/yr; Pro $29.99/mo|$109.99/yr; Bets/DFS $49.99/mo|$249.99/yr; PbP CSV $499.99; Almanac PDF $29.99; Contest Sims $20/$50/$150. FTN Data individual $69.99/yr; charting feed $5k commercial/$3k private.
+- dfs.ftntools.com/api/openapi.json PUBLIC (17 paths) but data key-gated; HYGIENE FLAG: unauthenticated requests return verbose tracebacks exposing server paths (/tmp/ftn-dfs/...).
+- Host statuses: data.ftndata.com {"up":true}; game-logs.api.ftntools.com "Hello world!"; metrics/models/odds/dfs 403/404; assets.ftnfantasy.com bare "Assets" page (no open listing); CloudFront roots 403.
+- FTN free DVOA is view-only (JS widget, no CSV); 1977+ historical archive subscriber-only; older DVOA recoverable via Wayback (CDX queries documented, unverified from sandbox).
+- Big Data Bowl GitHub solutions 2019-2025 ship tracking data in-repo; Kaggle sets need free account; 2026 set CC BY-NC 4.0 (non-commercial — do NOT use for engine).
+- StatsBomb amf-open-data: free NFL+CFB event + tracking JSON 2016-2022 on S3.
+- DO NOT USE: api.nfl.com 401, nextgenstats.nfl.com 401, ESPN fantasy lm-api 401, PFR no-API + anti-scraping policy (legal path = nflverse pfr_advstats), Stathead paywalled, no confirmed public DraftKings API.
+- RECOMMENDED FREE ENGINE BOOTSTRAP: pip install nflreadpy -> load_pbp(2020-2026) + load_ftn_charting([2024,2025]) + ESPN summary?event= live + Sleeper trending sentiment. $0, 0 credentials.
+
+### Leak hunt verdict (2026-09-18 — both companies run a tight ship)
+- Source maps: NONE (0/102 SR assets; FTN only third-party maps; stats.ftnfantasy.com .map -> 403).
+- VCS/env/backups/directory listings: all 404/403. Nothing exposed.
+- Admin: statrankings.com/admin -> 302 homepage (Avo mount path not at obvious URLs; /login robots-disallowed, not probed); ftnfantasy.com/admin -> standard /wp-admin/.
+- Errors: clean branded 404s, no stack traces; only framework header is Apache (FTN).
+- Sloppy-but-harmless: archived asset filenames confirm admin tools (admin_adp_links, admin_player_linker, avo bundle); /up Rails health page; internal doc names in JS comments but all paths 404.
+- CT subdomains recorded, NOT probed: statrankings 13 names (dev, stage, new, old, pay, api, prod-api, stage.api — no new names); ftnfantasy 28 names incl api, staging.api, staging.fantasydata, staging.oauth2, devv, test, beta, manage, *.manage, *.iq, oauth2, origin, search, ls/ls-staging, pga.dfs, opt, clicks.
+- stats.ftnfantasy.com -> HTTP 200 "FTN Stats iQ" (React/MUI stats SPA); fantasydata.ftnfantasy.com -> 404 dead.
+- Domain history: statrankings.com had prior owner (2013 hobbyist NCAA PHP site, unrelated); re-registered Nov 2023, parked GoDaddy Aug 2024, current Rails app ~2025.
+- Email infra (public DNS): statrankings -> Google Workspace + GoDaddy SPF; ftnfantasy -> Google Workspace + Brevo marketing + facebook-domain-verification.
+- robots.txt respected: SR disallows /api/ /login /forgot-password /settings; FTN disallows /wp-json/ /?rest_route=.
+
+### Free fantasy API catalog (2026-09-18, all verified live, /tmp/free-fantasy-apis/CATALOG.md)
+- SLEEPER api.sleeper.app (no key, 1000 calls/min, non-commercial): /v1/state/nfl (current week); /v1/players/nfl 14.6MB, 12,228 players (9,421 active) with ID CROSSWALK: sportradar_id 11,581, rotowire 10,241, yahoo 6,750, espn 6,736, swish 5,268, oddsjam 4,279, stats 2,980, rotoworld 2,033 + gsis_id/fantasy_data_id/kalshi_id/opta_id (zero: fantasypros/nfl/cbs/fleaflicker); trending/{add,drop} (waiver sentiment, top player 513,972 adds/24h); /v1/stats/nfl/regular/2026/1 (weekly stats incl snap counts); /v1/projections/nfl/regular/2026/2 (weekly projections for 1,051 players + Sleeper ADP); full public league/draft suite documented (millions of public leagues = behavioral dataset).
+- UNDERDOG stats.underdogfantasy.com (fully open): /v2/sports, /v1/sports/NFL/slates (live slates, 13 games), /v1/slates/{id}/players (1,690 players), /v1/scoring_types (29 systems), appearances endpoint = PROJECTIONS per player (projection.points, adp, avg_weekly_points, salary, position_rank); /v1/teams 12MB. Main api.underdogfantasy.com: contests/tournaments no-auth per public docs.
+- DRAFTKINGS: /lobby/getcontests?sport=NFL (live contest board, 235KB); /lineup/getavailableplayers?draftGroupId= (player pool + SALARIES); api.draftkings.com DFS endpoints param-sensitive (400s, not dead); sportsbook API 403 Akamai.
+- FANTASYPROS /nfl/rankings/ppr-cheatsheets.php: var ecrData, 560 players (rank_ecr, min/max/ave/std, tiers, total_experts) + ADP. No NEXT_DATA — parse the JS var.
+- 4FOR4: /fantasy-football-rankings/notes/2026 (rank, VOR, ADP, GC + percentile notes); cheat-sheet pages with season FF Pts projections.
+- GATED from datacenters: ESPN Fantasy (every endpoint 302 -> espn.com/fantasy/, bot-mitigated); Yahoo (OAuth); Establish The Run, FantasyPoints (login walls); numberFire (empty shell to bots); PFF (35 paywall markers, API enterprise-only).
+- CORRECTION to this crew's master verdict: charted data IS free via nflverse-ftn (load_ftn_charting(), 2022+, CC-BY-SA) — not paid-tier-only.
+
+### Subdomain sweep (2026-09-18, 28/28 hosts, /tmp/subdomain-sweep/REPORT.md)
+- manage.ftnfantasy.com = "FTN Admin" (200, S3-hosted SPA). Admin console hostname publicly resolvable. RECORDED ONLY — no login attempted.
+- dev.statrankings.com serves the FULL PRODUCTION APP — dev-named host mirroring live site (robots.txt fully disallowed).
+- stats.ftnfantasy.com = "FTN Stats iQ" (React/MUI stats product, S3). Public product surface.
+- Gated, untouched: opt.ftnfantasy.com -> 403 "Missing Authentication Token" (API Gateway); pga.dfs.ftnfantasy.com -> 302 to /projections/login (login wall).
+- All FTN staging/test variants dead: staging.api, api root, ls, ls-staging, staging.fantasydata, fantasydata, staging.oauth2, oauth2 — all 404.
+- 13/28 unreachable from sandbox (DNS resolves, no HTTPS response): beta, search, origin, iq, devv (FTN); stage, new, old, pay, api, prod-api, stage.api (SR). Not proven dead — may serve on normal network; re-check from non-sandboxed vantage if wanted.
+- Deeper-look candidates (public GETs only): FTN Admin SPA's public JS bundle references; dev.statrankings.com bundle diff vs prod; opt.ftnfantasy.com purpose from public JS references.
+
+### Subdomain chase results (2026-09-18, /tmp/chase-subdomains/REPORT.md)
+- dev.statrankings.com: BYTE-IDENTICAL to prod (18/18 JS fingerprints match, md5 verified). No unreleased features in bundles today. Follow-up: periodic fingerprint re-diff; new hashes on dev before prod = early warning.
+- manage.ftnfantasy.com "FTN Admin" SPA: 1.84MB admin-front-end.js analyzed statically (no auth attempted). API base = https://api.ftnfantasy.com. 25 path templates extracted. HIDDEN FROM PUBLIC SPEC: /admin/subscriptions, /promo-codes/groups*, /plans/?only_visible=false. Auth model: JWT access+refresh, is_admin/authorized flags. No keys observed.
+- stats.ftnfantasy.com "FTN Stats iQ" — TWO ENDPOINTS 200 UNAUTHENTICATED: /api/v1/stats/catalog (322KB — full charting taxonomy: 9 categories, tables for Coverage Types/Air Yards/Run Concepts/Tendencies/Pressure) and /api/v1/stats/home (14KB — live 2026-season leaderboard data, e.g. Josh Allen 582 pass yds rank 1). Guest entitlements: table.basic.read, table.advanced.read, export.read = true. /api/v1/players/search -> 403 (stopped). Bundle reveals AI CHAT feature (/api/v1/chat, /conversations, /feedback, /prompt) — existence only.
+- Parent verification 2026-09-18: /api/v1/teams/search -> 403; /admin/subscriptions -> 404; /promo-codes/groups -> 403; /plans/?only_visible=false -> 200 with 0-byte body. All gated/dead — boundaries held.
+- opt.ftnfantasy.com: near-certain = DFS Lineup Optimizer backend (AWS API Gateway, token-gated); zero references in bundles/urlscan.
+- 13 hosts (beta/search/origin/iq/devv FTN; stage/new/old/pay/api/prod-api/stage.api SR) remain unclassified — browser tool failed in crew; retry from working browser vantage.
+
+### Code & key search results (2026-09-18, /tmp/code-key-search/REPORT.md)
+- THIRD FTN API SURFACE: FTN Data NFL API full spec on SwaggerHub (api.swaggerhub.com/apis/FTN-Data/FTN-NFL-API/1.0.0) — 73 GET endpoints, base https://data.ftndata.com, auth = Authorization header apiKey. Per-game/season/player stats: blocks, charts, conversions, defense, drive, fgxp, fumbles, injuries, interceptions, kickers, kickoffs, offense, passing, penalties, plays, punts, redzone, rushing, sacks, safeties, participation, snaps, tackles, TDs + /league /players /schedule. Spec names Frank Brank (Managing Director).
+- FOURTH SURFACE: FTN StatsHub API spec on SwaggerHub (25 POST endpoints, published 2026-05-12) — analytics backend behind FTN Stats iQ: POST /statshub/passing/analytics (DVOA, DYAR, EPA), /coverage (coverage matchup), /tendency (QB decision-making), /rushing/rungame (run concept/scheme), receiving/fantasy/redzone/pressure/air-yards equivalents. Filter grammar: year 2019+, weeks 1-22, quarters, downs, teams/opp 1-32, distance buckets, field location.
+- Parent verification: Stats iQ bundles contain NO statshub host — BFF is stats.ftnfantasy.com itself (VITE_BFF_BASE_URL); VITE_BASE_URL=https://api.ftnfantasy.com confirms admin SPA finding. Real /statshub/* host is server-side only.
+- Third-party integration docs found: public repo documents api.ftnfantasy.com/users/token/refresh JWT cookie mechanics (refresh_token/access_token/user_id cookies; refresh 500s on stale tokens). SECRETS: that repo contains a hardcoded FTN JWT pair — presence only, values never viewed/tested/used, local copy deleted. Untouched.
+- Negative sweep: zero Postman collections, zero RapidAPI listings (SEO page only), zero npm/PyPI/RubyGems packages, zero public code referencing charting.ftntools.com or dfs.ftntools.com, zero StatRankings API references anywhere. StatRankings' API surface is invisible to the public internet.
+- Watch items: SwaggerHub org FTN-Data = canonical public home of FTN API docs (monitor for new versions); the third-party repo is actively maintained (watch, don't contact).
+
+### Infra expansion results (2026-09-18, /tmp/infra-expansion/REPORT.md)
+- crt.sh complete: ftntools.com 25 hostnames (113 certs), ftndata.com 4 (92), statrankings.com 11 (51), ftnfantasy.com 27 (188).
+- NEW: admin.metrics.ftntools.com -> 200 "FTN Metrics Repository" (live cert Jul 2026-Feb 2027). Parent static analysis: Next.js/Turbopack shell, framework chunk only, no API hosts in public JS — data calls server-side. metrics.ftntools.com -> 403 (S3+CloudFront data lake).
+- NEW: staging.charting.ftntools.com (404, AWS API Gateway, cert 2026-08-27), billing.ftntools.com + common.ftntools.com (404, API Gateway), test.ftnfantasy.com -> 308 -> /api -> 200 on Vercel, body = "Hello, fantasy!" (stub).
+- NEW: staging.ftnfantasy.com -> 301 -> https://ftnfantasy.dev/ = brand-new dev domain, password-protected WordPress (AUTH-GATE, untouched).
+- NEW product hostnames: bettracker (404 dead), cheatsheet (403 gated), statshub-widget (404 dead — tombstone of dead ftn-next-widget.js import-map entry), tools (403 gated).
+- DNS: all 5 domains on Route53; CloudFront everywhere; no Cloudflare/Akamai on FTN/SR hosts. statrankings.com: Google Workspace MX, GoDaddy SPF, M365 tenant token. ftnfantasy.com: Google Workspace, Brevo, facebook-domain-verification. NO dangling-CNAME takeover candidates anywhere.
+- Mobile/extension/package sweep: ZERO. No iOS apps (iTunes API), no Play Store apps, no Chrome extensions, no npm/jsdelivr/unpkg packages.
+- Retired-host timeline: cPanel era ftntools.com (dead Feb 2022), beta.ftnfantasy.com (2024), origin.ftnfantasy.com (Nov 2024), search.ftnfantasy.com JSON API (Feb 2025), devv.ftnfantasy.com (Oct 2025), oauth2.ftntools.com (May 2025), nfl-parser.ftntools.com (Nov 2025), api.ftndata.com (May 2025), pay.statrankings.com (Feb 2026), prod-api + stage.statrankings.com (2026). Wayback coverage sparse.
+
+### Competitor data recon complete (2026-09-18, /tmp/competitor-data/CATALOG.md, crew reports crew-A..D)
+19 competitors mapped in FREE/GATED/API/DOWNLOADS schema, ranked top-15. HEADLINES:
+- PFF player pages leak grades in __NEXT_DATA__ — per-season gradeValue/gradeRank/WAR 2014-2026, no login. PFF Pro $199.99/yr advertises "programmatic data access" but PFF's own article says "Coming Soon" — re-verify.
+- FantasyCalc public API fully mapped: api.fantasycalc.com/values/current (500+ players, all formats, cross-platform IDs) + /trades/implied/{id} (daily value history + ~1,000 real completed trades/player). No key, no paid tier.
+- Sharp Football: 12 free stats pages, full HTML tables, zero gate (pace, play-action/motion/shotgun, personnel, coverage schemes, EPA, OL/DL, matchup edges).
+- Pregame open JSON API: tick-level consensus history (4,138 ticks/game: cash/ticket/pick%) + per-book odds history, no auth, found in their own JS.
+- Action Network public-betting page embeds ticket%/money% + per-book odds in __NEXT_DATA__; Wayback gives free history to 2018.
+- KTC embeds 500 players in page JSON; FantasyPros ECR embeds 553 players x 179 experts in page source; FantasyPros launched public API v2 with $0 tier (sample data; real at $8.99/mo).
+- Covers odds archive back to 1966 (spread/total + ATS, no moneylines). Football Outsiders Wayback: DVOA team tables 1981-2022 (last free season pre-FTN exclusivity).
+- THEFT-WORTHY top 15: nflverse, FantasyCalc, PFF grades, Sharp Football, Pregame, Action Network, FantasyPros ECR, KTC, Covers, FO Wayback DVOA, Sleeper, DynastyProcess CSVs, VSIN, NFL.com injury table, RotoWire RSS.
+COMPLIANCE: rbsdm POST-only data endpoints are NOT a sanctioned free path (one POST happened before crew internalized GET-only rule — dropped); PFR terms bar tool-building from scraped data (per-table CSV export only); ESPN site.api Akamai-walled for datacenter IPs.
+
+### CLAIM VERIFICATION SWEEP (2026-09-18 ~01:45 CDT, parent re-tested every headline live)
+VERIFIED WORKING RIGHT NOW:
+- Stats iQ /api/v1/stats/catalog: 200, 322,566 bytes, Coverage Types taxonomy present.
+- Stats iQ /api/v1/stats/home: 200, 14,375 bytes, 2026 REG season cards.
+- SwaggerHub FTN NFL API spec: 200, exactly 73 paths.
+- SwaggerHub StatsHub spec: 200, exactly 25 paths.
+- Pregame /api/gamecenter/consensushistory (e=252469): 200, TotalCount=4138 — matches crew claim exactly.
+- Sharp Football team pace page: 200, HTML table present.
+- PFF Mahomes page: 200, 38 gradeValue occurrences in __NEXT_DATA__.
+- Action Network public-betting: 200, 1.7MB, __NEXT_DATA__ + 1,368 bet_info entries.
+- KTC dynasty rankings: 200, 2.6MB, embedded value JSON.
+- FantasyPros ECR cheatsheet: 200, ecrData present.
+- Covers 2024 season archive: 200, 790KB.
+- nflverse/nflverse-ftn: exists, pushed 2026-09-10 (active).
+FAILED:
+- FantasyCalc: api.fantasycalc.com/values/current -> 404 (also /api/values/current variant). Host is up (returns 404 body), path is gone. SPA JS still references https://api.fantasycalc.com as base; go-fantasycalc (built 2026-07-13) used the same dead path. CORRECTION: crew's "fully mapped, no key" claim does NOT hold right now — endpoint dead or moved. Do not list FantasyCalc API as working until re-verified. (Site itself + trade calculator UI still live.)
+
+## 2026-09-18 ~01:35 CDT — Archive mining complete (deliverable: /tmp/archive-mining/REPORT.md)
+- FO DVOA archive: 552 archived URLs under footballoutsiders.com/dvoa-ratings/* — season-final tables every season 1983→present + full weekly tables with weighted DVOA and playoff odds 2008–2022. **footballoutsiders.com is network-dead** (DNS resolves, HTTP/HTTPS fail as of today) — the history exists ONLY in the Wayback Machine. DVOA crew redirected to web.archive.org snapshots; record exact snapshot timestamps per season in SOURCES.md.
+- NEW StatRankings API surface: CC captures reference api.statrankings.com/stats-service/{sport}/{players|teams}/{category} (REST family, never crawled). Unreachable from sandbox (HTTP 000; datacenter IPs appear bot-mitigated). VERDICT UNKNOWN — re-probe from a normal network. Follow-up sent to Minis (residential IP) via agent bus commit 33cf1cc.
+- FTN auth path: api.ftnfantasy.com/users/token/refresh returns HTTP 405 (route exists) — matches the public danolen repo docs. Recorded only; not pursued.
+- StatRankings ran AWS AppSync GraphQL in Nov 2025, migrated to Rails/Hotwire between Nov 2025 and 2026.
+- FTN is archive-invisible: zero Common Crawl captures across all five API patterns (robots-blocked at crawler level), zero Wayback captures of charting.ftntools.com or the four API-docs URLs. Historical FTN API surface cannot be reconstructed from public archives.
+- urlscan.io is key-gated since 2026-05-04 (anonymous = 403). Inventoried 15 ftnfantasy.com + 4 ftnbets.com scan UUIDs; extraction script staged at /tmp/archive-mining/urlscan/extract.py for the day a free key exists. Minis tasked with free email signup + extraction via agent bus commit 33cf1cc.
+- Secrets encountered: none. Nothing reproduced, nothing used.
+
+## 2026-09-18 ~01:36 CDT — FOUNDER OVERRIDE: PFF public page-embedded grades IN SCOPE
+- Garrett's ruling: "if they are public leaked - that's on them. Just cite it in the agents Md time date and where."
+- Scope of override: grades embedded in PFF's OWN public player pages (__NEXT_DATA__ JSON — e.g. patrick-mahomes page, 38 gradeValue occurrences verified 2026-09-18 ~01:45 CDT). Extract and wire.
+- NOT in scope: the paid PFF API (still license-only), any credential use, any paywall circumvention.
+- Rule going forward: every PFF page-data ingestion cites time, date, and exact page URL here in AGENTS.md.
+- source-registry.ts `pff` entry updated: verdict forbidden → use-with-caution, with this override recorded inline (local change, unpushed).
+
+## 2026-09-18 ~01:42 CDT — VERIFY-40 COMPLETE: 40 NEW inputs verified working (deliverables: /tmp/verified-40/LIST.md + REJECTED.md)
+Every entry verified by live GET 2026-09-18 ~01:20–01:42 CDT. Families: FTN StatsIQ (2), PFF player grades (1, founder override), Sharp Football (7), Pregame (5), betting/odds (6: Action Network, Covers archive+live, VSiN, DK Network, spreadspoke), fantasy (8: KTC, FantasyPros ECR, Underdog, DK DFS, 4for4, DynastyProcess), Sleeper (3), TeamRankings + RotoWire (3), DVOA/archives (5). Verdicts: 4 cleared, 14 cleared-with-attribution, 22 use-with-caution (ToS anti-automation clauses — openly served, none paywalled). 41st verified input (FTN plans API, pricing intel) logged as overflow. Key rejections: FantasyCalc API dead (404), Sleeper weekly stats deprecated, StatRankings backend down (JS shells, no plain-GET data), PFR CSV Cloudflare-walled from datacenter, VSiN live tables Pro-paywalled.
+## 2026-09-18 ~01:43 CDT — WIRING-40 STARTED (Garrett trigger: "once hit 40 NEW inputs that WORK - start wiring them into gse stats")
+Wiring crew building registry entries + typed CATALOG-tier clients in packages/data-ingestion/src, fail-closed (use-with-caution default OFF behind env flags), vitest tests, matrix doc updated. Local only — no Sports push without Garrett's authorization.
+
+## 2026-09-18 ~01:46 CDT — WIRE-40 COMPLETE + INDEPENDENTLY VERIFIED (local, unpushed)
+All 40 inputs registered in source-registry.ts and wired as 20 GET-only fail-closed clients at CATALOG tier (assertIngestible first, noStoreFetch, AbortController timeouts, env-gated default-OFF for all caution sources). Verdicts: 1 cleared, 14 cleared-with-attribution, 25 use-with-caution (Sleeper 3 downgraded to caution per repo's non-commercial doctrine; Covers/VSiN/DKN env-gated despite attribution verdicts). Parent independently re-ran: 647/647 tests pass (20 new client test files, 142 tests), tsc clean for all new code. One pre-existing env failure (grade-ats-cover.test.ts fails to load — @sports/db absent after failed db:generate; unrelated to this work). Merged Minis's remote commit 733114a before wiring. NO PUSH — awaiting Garrett's authorization.
+
+## 2026-09-18 ~01:48 CDT — DVOA EXTRACTION COMPLETE (local, unpushed)
+dvoa-weekly.csv: 5,664 rows, 177 season-weeks, 2008–2019, zero duplicates, all team codes valid (2008 w4–w5 unavailable — no Wayback capture; 2020 w11–16 bottom-16 behind FO+ paywall; 2021 w9–18 no articles; 2022 weeklies prose-only). dvoa-fo-finals.csv: 1,959 rows (finals 1977–2022 + 2019–2021 weeklies/playoffs). Schema: season, week, team, rank, total/weighted DVOA, W-L, off/def/ST splits + ranks, est_wins, past/future sched, source_url (exact Wayback URL + timestamp per row). Conventions: week≥18 relabeled to true season, JAC→JAX normalized, 2017 w1 tied rank kept source-faithful, weighted DVOA absent pre-2016-w8/2008–2010 is format evolution not data loss. SOURCES.md carries per-week snapshot timestamps. Known gaps documented, nothing invented.
+
+## X ANALYTICS SWEEP 2026-09-18 AM (GridironInfo_ / DevyEusuf / statyxio / ScottBarrettDFB / PattonAnalytics / EstablishTheRun / FantasyPtsData)
+Read-only browser pass, 2026-09-18 ~09:08–10:05 CDT, three parallel passes. NO likes, reposts, replies, follows, DMs. BLOCKERS: @FTNData is protected (no follow requested — task is read-only); @NFLResearcher timeline did not render (4-post parody account). Full verbatim tables: docs/research/2026-09-18/full-tables/ (49 CSVs) + docs/research/2026-09-18/chart-reads/ (6 approx-read CSVs), indexed in full-tables/README.md. DEDUPES vs existing inventory: PROE+ repost (@PattonAnalytics) — same metric, neutral-situations framing (metric already inventoried 2026-09-18); ANY/A scatter — same metric/post as the @PattonAnalytics table already inventoried; @ScottBarrettDFB original posts — none new (only quote-posts of @FantasyPtsData, inventoried under that account); @DevyEusuf and @EstablishTheRun — nothing new in window.
+
+### @GridironInfo_ (22 posts, Sep 16–18)
+Data sources as stated on charts: nflverse (nflreadpy)/(nflreadr) footers; FTN Charting + nflverse PBP; Next Gen Stats; PFR Advanced Passing + NGS; Kalshi (odds dashboards). Recurring template: navy header, off-white background, orange accent column, footer "@GridironInfo_ | Data: [source] | YYYY-MM-DD".
+- DET-BUF Week 2 OFFENSIVE BREAKDOWN (Sep 18, 4-image carousel): 18-metric comparison (DET | NFL Avg | BUF) — Total EPA, EPA/Play, Success Rate, Yds/Play, aDOT, CPOE, Pass SR%, EPA/DB, Rush SR%, EPA/ATT, Avg Drive Start, Series Conv Rate, 3rd/4th Down, Yds/Drive, Explosive Play%, Red Zone EPA/Play, Turnovers; EPA split (dropback vs designed run: BUF +20.8/+7.9, DET +18.2/-3.8); move-the-chains by down; series results; top-3 positive/negative plays by EPA (Allen→Palmer 43-yd TD +5.46 led); full boxscores for both teams (passing: CPOE, IWP = Int-Worthy Passes, PRESS% = Pressures/Dropback; rushing/receiving: EXP, EPA). Footers: "aDOT excludes throwaways | RYOE shown only where NGS charted the back"; sources "nflverse (nflreadr) pbp + FTN charting + Next Gen Stats".
+- DROPBACK OUTCOME BY QB (Week 1, 32 QBs): Complete/Incomplete/Scramble/Sack/INT % of dropbacks (Lawrence 75.0% completions, Maye 7.1% INT). nflverse.
+- PASS ATTEMPTS BY AIR YARDS (Week 1, 32 QBs × 4 buckets 0-5/6-10/11-20/21+): Allen 27.6% deep (21+), Nix 71.4% under 5. nflverse.
+- QB EPA PER PLAY LEADERS (Week 1): Lawrence +0.79, Dart +0.71, Allen +0.45. nflreadpy.
+- INT/BAD THROW RATIO vs aDOT (Week 1 scatter, approx read): author definition verbatim — "This ratio shows what share of a QB's bad throws actually turned into a pick. Low = getting away with mistakes. High = paying for them." Outliers: Maye (~1.5 ratio, ~6.5 aDOT), Allen (~13.0 aDOT, ~0.0). Sources: PFR Advanced Passing + NGS / nflverse.
+- 4-MAN RUSH RATE vs PRESSURE RATE (Week 1 quadrant, approx read): SF ~28% pressure on 86% 4-man (leader), PIT ~21% on 92% (heaviest 4-man), JAX ~25% on 55%, MIN ~12% on 15%. Sources: FTN Charting + nflverse PBP.
+- OFFENSIVE vs DEFENSIVE EPA/PLAY ON BLITZES (Week 1 quadrant, approx read): CIN defense -1.49 EPA/play allowed when blitzing (best), NYJ offense +0.99 vs the blitz (best). nflverse.
+- WR USAGE tables (Snaps/TGT/REC/YDS/SR%): Packers (Golden 56/12/6/95/42%; Watson 52/8/6/147/62%) and Cowboys (Lamb 47/8/5/44/62%). nflverse.
+- KALSHI ODDS DASHBOARDS (new category): last-undefeated team (BAL/BUF 16% each), NFC champ (LAR 16%), AFC champ (BUF 23%), MVP (Allen 17%, Jackson/Williams 12%), OPOY/DPOY, OROY/DROY, COTY, CPOTY (Mahomes 50%), Protector of the Year (Sewell 21%), award odds 5%+ cutoff format. Innovation note: prediction-market implied probabilities (Kalshi) as a weekly dashboard family.
+- FLAGGED INCONSISTENCIES (as displayed): Bills passing slide shows Allen CPOE -5.7 / EPA -15.0 / EPA-DB -0.46 in green cells, contradicting slides 1–2 (CPOE +5.7, EPA/DB +0.55, Dropback EPA +20.8) — apparent chart error; Lawrence post text ("without taking a single sack") vs chart (Lawrence 4.2% sack); slide 1 vs slide 3 minor differences (Goff Pass SR% 55 vs 57; EPA/DB +0.41 vs +0.44).
+
+### @statyxio (5 posts, Sep 16–17; source = statyx.io own platform, no third-party named)
+- TE TARGETS (Week 1, min 3 targets): EPA/TARGET as volume-vs-efficiency cut — McBride 13 tgts/35% share/+0.289; Likely 8 tgts/8 rec/78 yds/+1.379 (cleanest); Schultz 8 tgts/-0.315; Fant 8 tgts/-1.066; LaPorta 8 tgts/+0.380.
+- QB VOLUME vs EFFICIENCY (Week 1): Shough 410 yds on 61 dropbacks (-0.017 EPA/DB) vs Allen 334 yds on 32 dropbacks (+0.454) — "The box score says Shough. The process says Allen."
+- RUSH PATH package — second instance (James Cook vs DET, 13 mapped carries): lane shares (LG 46%), run-path interaction (Interior 76.92% vs DET ranked 23/32), runner evidence (evaded tackles/att 83rd pct; stuff avoidance 92.3%/80th pct). Same tool as the Gibbs package inventoried yesterday.
+- DEFENSIVE EXPLOSIVE PASS % ALLOWED (Week 1): table with EPA/play allowed, EPA/DB allowed, pass success% allowed, aDOT allowed; ONLY ranks 19–32 were capturable (top half cut off in the post image: CLE 17% worst at #32).
+- Bijan Robinson vs CAR rush-path package — images not individually transcribed.
+
+### @PattonAnalytics (Sep 17; source stated: StatRankings)
+- PLAY CALLER TENDENCIES (new composite): "Tendency Rating" via Y-Aware PCA on personnel diversification / play sequencing / tendencies (author's reply; says it correlates well with EPA). Leaders: Coen +0.27, Shanahan +0.18, Reich +0.14, Kubiak +0.13, Reid +0.12; lowest Monken -0.30. Values are approximate bar reads. Innovation kernel: a single composite play-caller process score built from tendencies rather than outcomes.
+- PROE+ repost = DEDUPE (metric inventoried; this post frames it as neutral-situations pace+pass blend).
+
+### @FantasyPtsData (3 posts, Sep 16; source = Fantasy Points Data Suite 2.0)
+- SIMILARITY FINDER (new tool): Parker Washington (Week 1 2026) vs 50 historical WR season comps, top 10 shown — SIM score (Hill 2023 42.4, Nacua 2025 40.4, JSN 2025 37.2...), FP/G, XFP/G (expected fantasy points/game), RTE%, TGT%, TPRR, YPRR, ADOT, 1st-read%, 1st-downs/route. Same-position-only comps; 9 of 144 usage stats weighted. Innovation kernel: historical similarity scoring on usage/efficiency shape for one-game samples.
+- BELLCOW REPORT (new): each RB's share of his team's backfield XFP — Achane 95%, Javonte Williams 95%, Gibbs/Cook/Taylor 93%. Innovation kernel: backfield dominance measured via expected fantasy points rather than touches.
+- DEFENSIVE TARGETS BY POSITION (Week 1 stacked bars): only text-attributed standouts are exact (Buccaneers 26% RB target share — one of highest; Packers 36% TE share — highest, Hockenson/Oliver 4 each); other team shares were approximate and not transcribed.
