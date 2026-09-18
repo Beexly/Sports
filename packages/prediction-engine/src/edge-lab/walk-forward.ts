@@ -191,6 +191,13 @@ export function walkForwardSplits<R extends TimedRow>(
 
   type GroupRow = TimedRow & { readonly members: R[] };
   const groupRows: GroupRow[] = groups.map((g) => {
+    for (const r of g.members) {
+      const d = ms(r.decisionAt, "decisionAt");
+      const e = ms(r.eventEndAt, "eventEndAt");
+      if (e < d) {
+        throw new RangeError(`row ${r.id}: eventEndAt precedes decisionAt`);
+      }
+    }
     const first = g.members[0]!;
     const lastEnd = g.members.reduce(
       (acc, r) => Math.max(acc, ms(r.eventEndAt, "eventEndAt")),

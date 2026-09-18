@@ -190,4 +190,28 @@ describe("walk-forward fixture grouping", () => {
         .sort(),
     ).toEqual(["leak-early", "leak-late"]);
   });
+
+  it("refuses a group member whose own eventEndAt precedes its own decisionAt (not hidden by collapse)", () => {
+    const rows: MarketRow[] = [
+      row("ok-a", "G", 1),
+      {
+        id: "bad-b",
+        fixtureId: "G",
+        decisionAt: iso(4),
+        eventEndAt: iso(2),
+      },
+      row("g2-ml", "g2", 2),
+      row("g3-ml", "g3", 3),
+      row("g4-ml", "g4", 4),
+      row("g5-ml", "g5", 5),
+    ];
+    expect(() =>
+      walkForwardSplits(rows, {
+        folds: 2,
+        minTrainFraction: 0.4,
+        embargoMs: 0,
+        groupKey: (r) => r.fixtureId,
+      }),
+    ).toThrow(/bad-b.*eventEndAt precedes decisionAt/);
+  });
 });

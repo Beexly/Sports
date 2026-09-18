@@ -33,6 +33,11 @@ export interface MondrianConformalInterval {
   readonly residualQuantile: number;
   readonly alpha: number;
   readonly covered: boolean;
+  /**
+   * False when the conformal quantile does not exist (empty residuals or
+   * ceil((n+1)(1-α)) > n). Infinite intervals are not coverage.
+   */
+  readonly licensed: boolean;
 }
 
 export interface PositionCoverage {
@@ -48,6 +53,8 @@ export interface RollingConformalReport {
   readonly intervals: readonly MondrianConformalInterval[];
   readonly coverage: number;
   readonly coverageByPosition: readonly PositionCoverage[];
+  readonly licensedCount: number;
+  readonly unlicensedCount: number;
   readonly fitCalibrationOverlapViolationCount: number;
   readonly priced: false;
   readonly status: "shadow";
@@ -61,17 +68,43 @@ function weekKey(sample: Pick<ConformalProjectionSample, "season" | "week">): st
   return `${sample.season}-W${String(sample.week).padStart(2, "0")}`;
 }
 
-function quantile(values: readonly number[], probability: number): number {
-  if (values.length === 0) return 0;
+/**
+ * Split-conformal finite-sample quantile: the ceil((n+1) * p)-th order
+ * statistic. Fail-closed: empty input or rank > n returns +∞. Clamping the
+ * rank to n is fake tightness (the CQR hole).
+ */
+export function splitConformalQuantile(values: readonly number[], probability: number): number {
+  if (values.length === 0) return Number.POSITIVE_INFINITY;
+  if (!(probability >= 0 && probability <= 1) || !Number.isFinite(probability)) {
+    return Number.POSITIVE_INFINITY;
+  }
   const sorted = [...values].sort((a, b) => a - b);
-  // Split-conformal finite-sample quantile: use the ceil((n+1) * p)-th order statistic
-  // (the (n+1) correction). Without it the residual quantile is systematically too small
-  // on small per-position samples, so "calibrated" intervals run narrower than the target
-  // coverage. ACI adapts alpha online and partly compensates, but the correction makes the
-  // small-sample behavior honest. ceil((n+1)*p) >= ceil(n*p), so intervals only widen.
   const rank = Math.ceil((sorted.length + 1) * probability);
-  const index = Math.min(sorted.length - 1, Math.max(0, rank - 1));
-  return sorted[index]!;
+  if (rank > sorted.length) return Number.POSITIVE_INFINITY;
+  if (rank < 1) return Number.NEGATIVE_INFINITY;
+  return sorted[rank - 1]!;
+}
+
+function quantile(values: readonly number[], probability: number): number {
+  return splitConformalQuantile(values, probability);
+}
+
+function intervalFromQuantile(
+  predictedMean: number,
+  residualQuantile: number,
+): { readonly lower: number; readonly upper: number; readonly licensed: boolean } {
+  if (!Number.isFinite(residualQuantile)) {
+    return {
+      lower: Number.NEGATIVE_INFINITY,
+      upper: Number.POSITIVE_INFINITY,
+      licensed: false,
+    };
+  }
+  return {
+    lower: Math.max(0, predictedMean - residualQuantile),
+    upper: predictedMean + residualQuantile,
+    licensed: true,
+  };
 }
 
 function coverage(samples: readonly { readonly covered: boolean }[]): number {
@@ -89,11 +122,16 @@ function stateAfterCalibration(
   for (const sample of samples) {
     const current = state.get(sample.position) ?? { alpha: targetError, residuals: [] };
     const residualQuantile = quantile(current.residuals, 1 - current.alpha);
-    const lower = Math.max(0, sample.predictedMean - residualQuantile);
-    const upper = sample.predictedMean + residualQuantile;
-    const covered = sample.actualFantasyPoints >= lower && sample.actualFantasyPoints <= upper;
+    const { lower, upper, licensed } = intervalFromQuantile(sample.predictedMean, residualQuantile);
+    const covered =
+      licensed && sample.actualFantasyPoints >= lower && sample.actualFantasyPoints <= upper;
+    // Unlicensed (infinite) intervals are not a coverage observation. Adapting
+    // alpha as a miss drives it toward 0.02, which makes 1-α → 0.98 and the
+    // quantile even less likely to exist. Hold alpha until the quantile is finite.
     const miss = covered ? 0 : 1;
-    const alpha = Math.min(0.5, Math.max(0.02, current.alpha + learningRate * (targetError - miss)));
+    const alpha = licensed
+      ? Math.min(0.5, Math.max(0.02, current.alpha + learningRate * (targetError - miss)))
+      : current.alpha;
     state.set(sample.position, {
       alpha,
       residuals: [...current.residuals, Math.abs(sample.actualFantasyPoints - sample.predictedMean)],
@@ -141,18 +179,20 @@ export function runRollingMondrianConformal(
     return window.testSamples.map((sample) => {
       const current = state.get(sample.position) ?? { alpha: 1 - targetCoverage, residuals: [] };
       const residualQuantile = quantile(current.residuals, 1 - current.alpha);
-      const lower = Math.max(0, sample.predictedMean - residualQuantile);
-      const upper = sample.predictedMean + residualQuantile;
+      const { lower, upper, licensed } = intervalFromQuantile(sample.predictedMean, residualQuantile);
+      const covered =
+        licensed && sample.actualFantasyPoints >= lower && sample.actualFantasyPoints <= upper;
       return {
         sampleId: sample.sampleId,
         position: sample.position,
         weekKey: weekKey(sample),
         predictedMean: sample.predictedMean,
-        lower: round4(lower),
-        upper: round4(upper),
-        residualQuantile: round4(residualQuantile),
+        lower: licensed ? round4(lower) : Number.NEGATIVE_INFINITY,
+        upper: licensed ? round4(upper) : Number.POSITIVE_INFINITY,
+        residualQuantile: licensed ? round4(residualQuantile) : Number.POSITIVE_INFINITY,
         alpha: round4(current.alpha),
-        covered: sample.actualFantasyPoints >= lower && sample.actualFantasyPoints <= upper,
+        covered,
+        licensed,
       };
     });
   });
@@ -172,6 +212,8 @@ export function runRollingMondrianConformal(
       const positionIntervals = intervals.filter((interval) => interval.position === position);
       return { position, sampleSize: positionIntervals.length, coverage: coverage(positionIntervals) };
     }),
+    licensedCount: intervals.filter((interval) => interval.licensed).length,
+    unlicensedCount: intervals.filter((interval) => !interval.licensed).length,
     fitCalibrationOverlapViolationCount,
     priced: false,
     status: "shadow",

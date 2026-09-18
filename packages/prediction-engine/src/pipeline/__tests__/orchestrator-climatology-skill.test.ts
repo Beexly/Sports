@@ -99,6 +99,25 @@ describe("scoreVsExpandingHomeClimatology", () => {
     const card = scoreVsExpandingHomeClimatology([0.9, 0.9, 0.9], [1, 1, 1]);
     expect(card.n).toBe(3);
     expect(card.verdict).toBe("underpowered");
+    expect(card.frozenPriorBrier).toBeNull();
+    expect(card.bssFrozenPrior).toBeNull();
+  });
+
+  it("scores a caller-supplied frozen prior as a diagnostic, never as the kill, and does not invent 0.56", () => {
+    const y = Array.from({ length: ORCHESTRATOR_CLIMATOLOGY_MIN_N }, (_, i) => (i % 5 === 0 ? 0 : 1) as 0 | 1);
+    const p = y.map(() => 0.5);
+    const card = scoreVsExpandingHomeClimatology(p, y, { frozenPriorHomeWinP: 0.56 });
+    expect(card.frozenPriorBrier).not.toBeNull();
+    expect(card.bssFrozenPrior).not.toBeNull();
+    // Kill is still vs 0.5, even if the caller passed a prior-season rate.
+    expect(card.verdict).toBe("kill");
+    expect(card.bss).toBeCloseTo(0, 12);
+  });
+
+  it("refuses a fabricated frozen prior outside (0,1)", () => {
+    expect(() => scoreVsExpandingHomeClimatology([0.6], [1], { frozenPriorHomeWinP: 0 })).toThrow(
+      /frozenPriorHomeWinP/,
+    );
   });
 });
 

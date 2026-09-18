@@ -130,11 +130,12 @@ describe("aggregation", () => {
 });
 
 describe("InductiveVennAbers (IVAP)", () => {
-  it("empty calibration returns 0.5", () => {
+  it("empty calibration returns [0, 1] (ignorance, not fake-tight 0.5)", () => {
     const pred = ivapPredict([], 0.5);
-    expect(pred.p0).toBe(0.5);
-    expect(pred.p1).toBe(0.5);
-    expect(pred.width).toBe(0);
+    expect(pred.p0).toBe(0);
+    expect(pred.p1).toBe(1);
+    expect(pred.width).toBe(1);
+    expect(pred.pMid).toBe(0.5);
   });
 
   it("p0 ≤ p1 and width ≥ 0 (property)", () => {

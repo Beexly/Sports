@@ -24,8 +24,13 @@ describe("splitConformalQuantile", () => {
     expect(splitConformalQuantile(values, 0.5)).toBe(3);
   });
 
-  it("returns 0 on empty input", () => {
-    expect(splitConformalQuantile([], 0.9)).toBe(0);
+  it("fails closed to +∞ on empty input (does not return 0, which looks tight)", () => {
+    expect(splitConformalQuantile([], 0.9)).toBe(Number.POSITIVE_INFINITY);
+  });
+
+  it("does not clamp when rank exceeds n", () => {
+    // n=5, p=0.9 → ceil(6*0.9)=6 > 5
+    expect(splitConformalQuantile([1, 2, 3, 4, 5], 0.9)).toBe(Number.POSITIVE_INFINITY);
   });
 });
 
@@ -89,5 +94,18 @@ describe("conformalMarginSet", () => {
     expect(set.status).toBe("ok");
     expect(set.halfWidth).toBe(0);
     expect(set.integers).toEqual([2]);
+  });
+
+  it("refuses to enumerate ℝ when the conformal quantile does not exist", () => {
+    const set = conformalMarginSet({
+      predictedMean: 3,
+      sportKey: "americanfootball_nfl",
+      calibration: rows(MIN_SAMPLES_MARGIN_SET, "americanfootball_nfl", 3, 7),
+      alpha: 0.01,
+    });
+    expect(set.status).toBe("unlicensed_quantile");
+    expect(set.integers).toEqual([]);
+    expect(marginSetCovers(set, 3)).toBe(false);
+    expect(set.halfWidth).toBe(Number.POSITIVE_INFINITY);
   });
 });

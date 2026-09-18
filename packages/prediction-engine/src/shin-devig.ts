@@ -4,8 +4,13 @@
  * Naive de-vig splits the over-round proportionally. Shin's method instead models
  * a proportion `z` of informed ("insider") money and recovers fair outcome
  * probabilities that correct the favourite–longshot bias proportional de-vig
- * leaves behind — often a sharper fair-value estimate, which sharpens the edge
- * engine's benchmark (edge = independent estimate − market-fair price).
+ * leaves behind — pulling mass OFF longshots and ONTO favourites relative to
+ * the proportional split (the opposite of "shading toward the midpoint").
+ *
+ * NOT the receipt default. Measured 2026-09-13 on 621 settled book-priced
+ * picks (pick-proof-receipt.ts): paired Brier +0.0022 (t=1.80, n.s.); excluding
+ * 11 pathological books Shin is slightly worse (t=-1.13). Switching breaks
+ * CLV continuity (`sameMethodOrRefuse`). Founder-only if ever revisited.
  *
  * Reference: H.S. Shin (1992/1993); cf. mberk/shin, goto_conversion. Pure, no I/O.
  *

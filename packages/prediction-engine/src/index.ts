@@ -1999,3 +1999,51 @@ export {
   MIN_SAMPLES_FOR_DISPERSION,
 } from "./dispersion/estimate-phi.js";
 export type { PhiEstimate, DispersionVerdict } from "./dispersion/estimate-phi.js";
+
+// Domain-1 math corrections (shadow). CRPS kill, Jackknife+ 1−2α floor,
+// live-legal steam baselines. Do not publish, do not bump MODEL_VERSION.
+export {
+  CRPS_KILL_MIN_N,
+  CRPS_KILL_MIN_IMPROVEMENT,
+  PAPER_CRPS_IMPROVEMENT_MAX,
+  crpsDiscrete,
+  crpsEmpirical,
+  crpsGaussian,
+  evaluateCrpsGate,
+  expectedGaussianCrps,
+} from "./edge-lab/kernel/slots/crps.js";
+export type { CrpsGateResult, CrpsGateVerdict } from "./edge-lab/kernel/slots/crps.js";
+export {
+  JACKKNIFE_PLUS_TWO_ALPHA_REASON,
+  boundedDriftCoverageGap,
+  changepointCoverageGap,
+  compareRecipesAtNflScale,
+  constantMeanLoo,
+  coverageFloor,
+  cvPlusInterval,
+  exponentialDecayWeights,
+  finiteIntervalMinN,
+  jackknifeMinmaxInterval,
+  jackknifePlusInterval,
+  naiveJackknifeInterval,
+  nexJackknifePlusInterval,
+  nflScaleWidthDiagnostic,
+  olsLoo,
+  simulateJackknifePlusCoverage,
+  splitConformalCoverage,
+  splitConformalInterval,
+} from "./calibration/jackknife-plus.js";
+export type {
+  CoverageKind,
+  ConformalRecipe,
+  PredictionInterval,
+} from "./calibration/jackknife-plus.js";
+export {
+  absDeltaVelocity,
+  evaluateSteamKill,
+  forwardKalmanFilter,
+  lookaheadDeltaAt,
+  scoreSteamBaselines,
+  signedDeceleration,
+  syntheticSteamPath,
+} from "./edge-lab/steam-baselines.js";

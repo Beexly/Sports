@@ -10,16 +10,16 @@
  *    book itself is the estimate of fair value and no further correction is
  *    warranted.
  *
- *  - SHIN (1992) corrects the FAVOURITE-LONGSHOT BIAS that proportional
+ *  - SHIN (1992/1993) corrects the FAVOURITE-LONGSHOT BIAS that proportional
  *    de-vig leaves behind. Shin's model attributes the overround to a
  *    proportion `z` of informed ("insider") money rather than spreading it
  *    evenly across outcomes; solving for `z` and re-deriving probabilities
  *    from it pulls probability mass OFF longshots and onto favourites
- *    relative to the proportional split. It matters most exactly where
- *    proportional de-vig is weakest: longshots, where bookmakers price in
- *    more margin because mispriced longshots are the ones informed bettors
- *    exploit. On a genuinely vig-free book (overround == 1) both routines
- *    agree and Shin fits z ~ 0.
+ *    relative to the proportional split. It does NOT shade probabilities
+ *    toward the midpoint. Receipts stay proportional (`proportional_devig_v1`):
+ *    measured 2026-09-13 on 621 settled picks, Shin did not win a paired
+ *    Brier test once pathological books were excluded (t = -1.13). A basis
+ *    change restarts the PROVEN streak and trips `sameMethodOrRefuse`.
  *
  * Guard philosophy mirrors the repo's existing sub-vig guard
  * (edge-engine.ts / scoring.ts computeEdgeScore): a market whose implied

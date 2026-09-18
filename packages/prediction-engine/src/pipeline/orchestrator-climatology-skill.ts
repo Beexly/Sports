@@ -54,8 +54,15 @@ export type OrchestratorClimScorecard = {
   readonly climBrier: number;
   /** Brier of expanding-window home-win rate (diagnostic, not the kill). */
   readonly expandingClimBrier: number;
+  /**
+   * Brier vs a CALLER-supplied frozen prior-season home-win rate.
+   * Null when the caller did not pass one. We do not invent 0.56.
+   * Diagnostic, not the kill line.
+   */
+  readonly frozenPriorBrier: number | null;
   readonly bss: number | null;
   readonly bssExpanding: number | null;
+  readonly bssFrozenPrior: number | null;
   readonly verdict: OrchestratorClimVerdict;
   readonly priced: false;
   readonly status: "shadow";
@@ -85,10 +92,17 @@ function verdictFor(n: number, bss: number | null): OrchestratorClimVerdict {
 export function scoreVsExpandingHomeClimatology(
   pModel: readonly number[],
   y: readonly BinaryOutcome[],
+  opts?: { readonly frozenPriorHomeWinP?: number },
 ): OrchestratorClimScorecard {
   if (pModel.length === 0 || pModel.length !== y.length) {
     throw new RangeError(
       `scoreVsExpandingHomeClimatology: pModel and y must be non-empty and aligned (got ${pModel.length}/${y.length})`,
+    );
+  }
+  const frozen = opts?.frozenPriorHomeWinP;
+  if (frozen !== undefined && (!(frozen > 0 && frozen < 1) || !Number.isFinite(frozen))) {
+    throw new RangeError(
+      `scoreVsExpandingHomeClimatology: frozenPriorHomeWinP must be in (0,1) when supplied, got ${frozen}`,
     );
   }
   const expanding: number[] = [];
@@ -103,16 +117,21 @@ export function scoreVsExpandingHomeClimatology(
   const modelBrier = brierMean(modelPairs);
   const climBrier = brierMean(dummyPairs);
   const expandingClimBrier = brierMean(expandingPairs);
+  const frozenPriorBrier = frozen === undefined ? null : brierMean(y.map((yi) => ({ p: frozen, y: yi })));
   const bss = brierSkillScore(modelBrier, climBrier);
   const bssExpanding = brierSkillScore(modelBrier, expandingClimBrier);
+  const bssFrozenPrior =
+    frozenPriorBrier == null ? null : brierSkillScore(modelBrier, frozenPriorBrier);
   return {
     methodTag: ORCHESTRATOR_CLIMATOLOGY_METHOD_TAG,
     n: y.length,
     modelBrier,
     climBrier,
     expandingClimBrier,
+    frozenPriorBrier,
     bss,
     bssExpanding,
+    bssFrozenPrior,
     verdict: verdictFor(y.length, bss),
     priced: false,
     status: "shadow",
@@ -184,8 +203,10 @@ export function recordOrchestratorClimatologyTrial(args: {
       modelBrier: args.scorecard.modelBrier,
       climBrier: args.scorecard.climBrier,
       expandingClimBrier: args.scorecard.expandingClimBrier,
+      frozenPriorBrier: args.scorecard.frozenPriorBrier,
       bss: args.scorecard.bss,
       bssExpanding: args.scorecard.bssExpanding,
+      bssFrozenPrior: args.scorecard.bssFrozenPrior,
       verdict: args.scorecard.verdict,
     },
     pValue: null,

@@ -18,9 +18,9 @@ function separableCalibration(n = 40): IvapCalibrationPoint[] {
 }
 
 describe("InductiveVennAbers", () => {
-  it("empty calibration set returns the uninformative 0.5/0.5 point", () => {
+  it("empty calibration set returns the uninformative [0, 1] interval (width 1, not fake-tight 0)", () => {
     const pred = new InductiveVennAbers([]).predict(0.7);
-    expect(pred).toEqual({ p0: 0.5, p1: 0.5, pMid: 0.5, width: 0 });
+    expect(pred).toEqual({ p0: 0, p1: 1, pMid: 0.5, width: 1 });
   });
 
   it("always returns p0 <= p1 (ordered interval), for varied scores", () => {
