@@ -26,7 +26,7 @@ export function buildPostMortemThread(
 ): string[] {
   const linkUrl = `${publicUrl}/room/${input.gameId}`;
 
-  const post1 = `Settled ${input.pickLine} \u274C LOSS. Here's what the model saw and what it missed.`;
+  const post1 = `Settled ${input.pickLine} L LOSS. Here's what the model saw and what it missed.`;
 
   const topFactorsLines = input.topFactorsAtPublish
     .slice(0, 3)
