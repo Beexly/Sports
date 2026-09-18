@@ -279,7 +279,7 @@ production scorer. It is a library capability this run, nothing more.
 
 `packages/prediction-engine/src/evidence-readiness-matrix.ts` defines 13 factor keys with
 per-factor trust, sample and age floors at `:18-31` and `:82-252`. It is exported from the
-barrel at `index.ts:168` and called by NOTHING at runtime. It is the registry contract this
+barrel at `packages/prediction-engine/src/index.ts:168` and called by NOTHING at runtime. It is the registry contract this
 architecture needs and we wire it rather than inventing a second one.
 
 Build a loader that takes a factor key and an evidence bundle and returns the matrix's
