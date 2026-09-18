@@ -1966,3 +1966,28 @@ export {
   MIN_SAMPLES_FOR_DISPERSION,
 } from "./dispersion/estimate-phi.js";
 export type { PhiEstimate, DispersionVerdict } from "./dispersion/estimate-phi.js";
+
+// NFL advanced metrics from the 2026-09-17 X-feed / Gridiron inventory.
+// Fail-closed. PFF/read-charting/time-to-pressure have no success path.
+export {
+  CHARTING_REFUSED_METHOD_TAG,
+  COMPOSITE_QB_METHOD_TAG,
+  DFS_LEVERAGE_METHOD_TAG,
+  EPA_RUSH_GAP_METHOD_TAG,
+  FIRST_DOWN_QUADRANT_METHOD_TAG,
+  FORMATION_USAGE_METHOD_TAG,
+  PALAZZOLO_RUN_GAP_CAVEAT,
+  PRESSURE_TO_SACK_METHOD_TAG,
+  SURVIVOR_EV_METHOD_TAG,
+  dfsOwnershipLeverage,
+  epaRushByGap,
+  firstDownQuadrants,
+  formationUsage,
+  inLabSample,
+  isLabSuccess,
+  leaguePercentile,
+  pressureToSack,
+  rankCompositeQbs,
+  rankSurvivorPicks,
+  refuseChartingMetric,
+} from "./nfl-adv/index.js";

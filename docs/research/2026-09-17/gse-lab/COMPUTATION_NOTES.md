@@ -451,3 +451,17 @@ therefore reproducible from our stack.
 - Passes defensed, true pressure rate, isolated return EPA, and onside-kick
   identification remain unsupported by the data (documented above, not
   proxied).
+
+## X-feed / Gridiron code (2026-09-17, engine)
+
+Pure TypeScript in `packages/prediction-engine/src/nfl-adv/` (lab filters,
+composite QB z4, formation usage, pressure-to-sack refuse/proxy, EPA/rush by
+gap with Palazzolo caveat, first-down quadrants, DFS leverage, survivor
+log-survival). Recompute from PBP with `compute_xfeed_metrics.py` when
+`NFLVERSE_PBP_DIR` is set; missing PBP exits 2, never fabricates.
+
+Named AGENTS.md sections "BENCHMARK SWEEP: X FEED 2026-09-17 ROUND 2",
+"GRIDIRON STATS AND INFO DEEP SWEEP", and "FULL-TABLE DOCUMENTATION:
+ROUND-2/3 SWEEP", plus `docs/research/2026-09-17/full-tables/`, were not
+present on origin/main `ac299ab07`. Code follows the X-feed round-1
+benchmark blocks and this file's conventions instead.
