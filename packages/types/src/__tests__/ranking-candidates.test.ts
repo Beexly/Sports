@@ -1,6 +1,3 @@
-import { readFileSync } from "node:fs";
-import { dirname, join } from "node:path";
-import { fileURLToPath } from "node:url";
 import { describe, expect, it } from "vitest";
 import {
   currentRankingScalar,
@@ -40,9 +37,6 @@ describe("ranking-candidates — barrel + switch", () => {
     expect(barrelCurrent).toBe(orderingCurrent);
     expect(barrelSwitch).toBe("current");
     expect(RANKING_ORDERING_SWITCH).toBe("current");
-    const here = dirname(fileURLToPath(import.meta.url));
-    const src = readFileSync(join(here, "../index.ts"), "utf8");
-    expect(src).toContain('export * from "./ranking-candidates.js"');
   });
 });
 

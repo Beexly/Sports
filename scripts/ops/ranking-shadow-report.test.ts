@@ -142,6 +142,21 @@ describe("ranking shadow report", () => {
     expect(slice.wins + slice.losses).toBe(20);
   });
 
+  it("PENDING is counted separately and is not a void", async () => {
+    const rows = [
+      row({ id: "w", inputIndex: 0, slateId: "s1", result: "WIN", rankingP: 0.9 }),
+      row({ id: "p", inputIndex: 1, slateId: "s1", result: "PENDING", rankingP: 0.8 }),
+      row({ id: "v", inputIndex: 2, slateId: "s1", result: "VOID", rankingP: 0.7 }),
+    ];
+    const report = await buildRankingShadowReport(() => rows, [3]);
+    const slice = report.slices.find((s) => s.ordering === "current" && s.n === 3)!;
+    expect(slice.pending).toBe(1);
+    expect(slice.voids).toBe(1);
+    expect(slice.wins).toBe(1);
+    expect(slice.losses).toBe(0);
+    expect(slice.winRate).toBeNull();
+  });
+
   it("does not export ranking weight constants", () => {
     expect("RANKING_P_WEIGHT" in shadow).toBe(false);
     expect("CONFIDENCE_WEIGHT" in shadow).toBe(false);

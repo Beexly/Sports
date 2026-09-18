@@ -153,4 +153,41 @@ describe("walk-forward fixture grouping", () => {
     expect(grouped.leaked).toBe(0);
     expect(ungrouped.leaked).toBeGreaterThan(0);
   });
+
+  it("embargo classifies every group member, not only the earliest decisionAt", () => {
+    const T0 = Date.parse("2024-01-01T00:00:00.000Z");
+    const DAY = 86_400_000;
+    const at = (days: number) => new Date(T0 + days * DAY).toISOString();
+    const instant = (id: string, fixtureId: string, days: number): MarketRow => ({
+      id,
+      fixtureId,
+      decisionAt: at(days),
+      eventEndAt: at(days),
+    });
+
+    const rows: MarketRow[] = [];
+    for (let i = 0; i < 8; i++) rows.push(instant(`solo-${i}`, `solo-${i}`, i));
+    // Earliest member is in the first training window. Later member sits in
+    // the gap (fold-0 testEnd, fold-1 testStart] which is fold-0's embargo
+    // once embargoMs covers that gap. Classification on first.decisionAt
+    // alone would put both members in fold-1 train.
+    rows.push(instant("leak-early", "LEAK", 1));
+    rows.push(instant("leak-late", "LEAK", 4.5));
+
+    const folds = walkForwardSplits(rows, {
+      folds: 2,
+      minTrainFraction: 0.5,
+      embargoMs: 2 * DAY,
+      groupKey: (r) => r.fixtureId,
+    });
+    expect(folds.length).toBe(2);
+    const later = folds[1]!;
+    expect(later.train.filter((r) => r.fixtureId === "LEAK")).toEqual([]);
+    expect(
+      later.embargoed
+        .filter((r) => r.fixtureId === "LEAK")
+        .map((r) => r.id)
+        .sort(),
+    ).toEqual(["leak-early", "leak-late"]);
+  });
 });

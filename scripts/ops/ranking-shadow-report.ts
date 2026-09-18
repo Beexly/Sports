@@ -33,6 +33,8 @@ export interface OrderingSlice {
   readonly losses: number;
   readonly pushes: number;
   readonly voids: number;
+  /** Settled-not-yet. Not a void. Excluded from win rates. */
+  readonly pending: number;
   /** Null when nWinLoss < WIN_RATE_SAMPLE_FLOOR. */
   readonly winRate: number | null;
   readonly winRateWithheldReason: string | null;
@@ -81,12 +83,14 @@ function sliceFor(
   let losses = 0;
   let pushes = 0;
   let voids = 0;
+  let pending = 0;
   const clvs: number[] = [];
   for (const r of top) {
     if (r.result === "WIN") wins += 1;
     else if (r.result === "LOSS") losses += 1;
     else if (r.result === "PUSH") pushes += 1;
-    else voids += 1;
+    else if (r.result === "VOID") voids += 1;
+    else if (r.result === "PENDING") pending += 1;
     if (typeof r.expectedClv === "number" && Number.isFinite(r.expectedClv)) {
       clvs.push(r.expectedClv);
     }
@@ -101,6 +105,7 @@ function sliceFor(
     losses,
     pushes,
     voids,
+    pending,
     winRate: belowFloor ? null : wins / nWinLoss,
     winRateWithheldReason: belowFloor
       ? `n=${nWinLoss} graded (pushes excluded) is below floor ${WIN_RATE_SAMPLE_FLOOR}`
@@ -186,4 +191,38 @@ export async function buildRankingShadowReport(
     grainNote:
       "Figures are row-level. One fixture can contribute several markets whose outcomes move together, so these bounds overstate confidence relative to fixture-clustered ones.",
   };
+}
+
+function invokedAsCli(): boolean {
+  const arg = process.argv[1];
+  if (!arg) return false;
+  const base = arg.replace(/\\/g, "/").split("/").pop() ?? "";
+  return base === "ranking-shadow-report.ts" || base === "ranking-shadow-report.js";
+}
+
+async function runCli(argv: string[]): Promise<void> {
+  const positional = argv.filter((a) => a !== "--" && !a.startsWith("-"));
+  if (argv.includes("--help") || positional.length === 0) {
+    process.stderr.write(
+      "usage: npm run ops:ranking-shadow -- <settled-rows.json>\n" +
+        "Reads SettledShadowRow[] from disk (injected loader). Prints JSON.\n" +
+        "No database. No fabricated rows.\n",
+    );
+    process.exit(argv.includes("--help") ? 0 : 2);
+  }
+  const file = positional[0]!;
+  const { readFileSync } = await import("node:fs");
+  const parsed: unknown = JSON.parse(readFileSync(file, "utf8"));
+  if (!Array.isArray(parsed)) {
+    throw new Error(`${file} must be a JSON array of SettledShadowRow`);
+  }
+  const report = await buildRankingShadowReport(() => parsed as SettledShadowRow[]);
+  process.stdout.write(`${JSON.stringify(report, null, 2)}\n`);
+}
+
+if (invokedAsCli()) {
+  runCli(process.argv.slice(2)).catch((err: unknown) => {
+    process.stderr.write(`${err instanceof Error ? err.message : String(err)}\n`);
+    process.exit(1);
+  });
 }

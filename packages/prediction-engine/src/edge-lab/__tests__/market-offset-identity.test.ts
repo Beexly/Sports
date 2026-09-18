@@ -46,4 +46,11 @@ describe("market offset identity", () => {
     const probe = new Map([["x", 0.25]]);
     expect(a(probe)).toBe(b(probe, 0));
   });
+
+  it("empty train keeps the market offset rather than returning a coin flip", () => {
+    const predict = logisticTrainer({ featureKeys: ["x"] })([]);
+    const market = logit(0.41);
+    expect(predict(new Map([["x", 1]]), market)).toBeCloseTo(0.41, 12);
+    expect(predict(new Map())).toBe(0.5);
+  });
 });

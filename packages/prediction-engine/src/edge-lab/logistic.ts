@@ -63,7 +63,12 @@ export function logisticTrainer(opts: LogisticOptions): Trainer {
 
   return (train: readonly LabeledExample[]): Predictor => {
     const n = train.length;
-    if (n === 0) return () => 0.5;
+    if (n === 0) {
+      // No coefficients to fit. The offset is still a coefficient of 1, so an
+      // empty fold must return sigmoid(offset), not a coin flip. Absent offset
+      // stays 0.5 — byte-identical to the previous constant return.
+      return (_features, offset) => sigmoid(readOffset({ offset }));
+    }
 
     // Standardization constants from the TRAINING fold only.
     const mean = new Array(keys.length).fill(0);

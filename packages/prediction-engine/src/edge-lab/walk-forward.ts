@@ -70,6 +70,13 @@ function ms(iso: string, label: string): number {
 function cutFoldsFromSorted<R extends TimedRow>(
   sorted: readonly R[],
   opts: WalkForwardOptions<R>,
+  /**
+   * Decision instants used for train-skip and embargo classification.
+   * Ordering and test-window edges still use `row.decisionAt` (earliest).
+   * Grouped folds pass every member's decisionAt so a later member inside
+   * an embargo cannot ride in on the earliest member's timestamp.
+   */
+  classificationAts: (row: R) => readonly string[] = (row) => [row.decisionAt],
 ): WalkForwardFold<R>[] {
   const firstTestIdx = Math.max(1, Math.floor(sorted.length * opts.minTrainFraction));
   const testable = sorted.length - firstTestIdx;
@@ -91,15 +98,24 @@ function cutFoldsFromSorted<R extends TimedRow>(
     const embargoed: R[] = [];
     const train: R[] = [];
     for (const row of sorted) {
-      const d = ms(row.decisionAt, "decisionAt");
-      if (d >= testStartMs) continue;
+      const instants = classificationAts(row).map((iso) => ms(iso, "decisionAt"));
+      if (instants.length === 0) {
+        throw new RangeError(`row ${row.id}: no decision instants for classification`);
+      }
+      // Any member at or after testStart is future relative to this fold.
+      if (instants.some((d) => d >= testStartMs)) continue;
       const e = ms(row.eventEndAt, "eventEndAt");
-      if (e < d) throw new RangeError(`row ${row.id}: eventEndAt precedes decisionAt`);
+      const dMin = Math.min(...instants);
+      if (e < dMin) throw new RangeError(`row ${row.id}: eventEndAt precedes decisionAt`);
       if (e >= testStartMs) {
         purged.push(row);
         continue;
       }
-      if (earlierTestEnds.some((endMs) => d > endMs && d <= endMs + opts.embargoMs)) {
+      if (
+        earlierTestEnds.some((endMs) =>
+          instants.some((d) => d > endMs && d <= endMs + opts.embargoMs),
+        )
+      ) {
         embargoed.push(row);
         continue;
       }
@@ -129,12 +145,16 @@ function cutFoldsFromSorted<R extends TimedRow>(
  *     - purged: train rows whose [decisionAt, eventEndAt] overlaps
  *       [testStart, testEnd], MINUS
  *     - embargoed: rows whose decisionAt falls within embargoMs after
- *       ANY EARLIER test window's end.
+ *       ANY EARLIER test window's end (grouped folds: ANY member).
  *   test = rows with decisionAt in [testStart, testEnd).
  *
  * When `groupKey` is supplied the same arithmetic runs over groups
  * ordered by each group's earliest decisionAt, then expanded back to
- * rows, so a fixture cannot sit on both sides of a fold.
+ * rows, so a fixture cannot sit on both sides of a fold. Purge uses
+ * the group's latest eventEndAt; embargo and train-skip classify on
+ * every member's decisionAt. A later member inside an embargo window
+ * embargoes the whole group rather than riding into train on the
+ * earliest timestamp.
  */
 export function walkForwardSplits<R extends TimedRow>(
   rows: readonly R[],
@@ -176,6 +196,9 @@ export function walkForwardSplits<R extends TimedRow>(
       (acc, r) => Math.max(acc, ms(r.eventEndAt, "eventEndAt")),
       ms(first.eventEndAt, "eventEndAt"),
     );
+    // decisionAt stays the earliest member: that is the ORDERING key.
+    // Embargo/train classification is passed separately and inspects every
+    // member so a later timestamp cannot hide inside the earliest one.
     return {
       id: g.key,
       decisionAt: first.decisionAt,
@@ -184,11 +207,15 @@ export function walkForwardSplits<R extends TimedRow>(
     };
   });
 
-  const groupFolds = cutFoldsFromSorted(groupRows, {
-    folds: opts.folds,
-    minTrainFraction: opts.minTrainFraction,
-    embargoMs: opts.embargoMs,
-  });
+  const groupFolds = cutFoldsFromSorted(
+    groupRows,
+    {
+      folds: opts.folds,
+      minTrainFraction: opts.minTrainFraction,
+      embargoMs: opts.embargoMs,
+    },
+    (g) => g.members.map((m) => m.decisionAt),
+  );
 
   return groupFolds.map((fold) => ({
     fold: fold.fold,

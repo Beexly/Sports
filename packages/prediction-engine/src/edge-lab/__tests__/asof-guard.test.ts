@@ -37,4 +37,24 @@ describe("assertObservedAtOrBefore", () => {
       }),
     ).not.toThrow();
   });
+
+  it("rejects an unreadable observedAt instead of passing NaN > NaN", () => {
+    expect(() =>
+      assertObservedAtOrBefore({
+        source: "dated_source",
+        decisionAt: decision,
+        observedAt: new Date("not-a-date"),
+      }),
+    ).toThrow(SourceCannotSpeakAsOfError);
+  });
+
+  it("rejects an unreadable decisionAt instead of passing NaN > NaN", () => {
+    expect(() =>
+      assertObservedAtOrBefore({
+        source: "dated_source",
+        decisionAt: new Date("not-a-date"),
+        observedAt: new Date("2026-09-17T00:00:00.000Z"),
+      }),
+    ).toThrow(SourceCannotSpeakAsOfError);
+  });
 });

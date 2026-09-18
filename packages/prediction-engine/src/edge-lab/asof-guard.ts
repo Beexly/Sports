@@ -39,7 +39,12 @@ export function assertObservedAtOrBefore(args: {
   if (observedAt == null) {
     throw new SourceCannotSpeakAsOfError(source);
   }
-  if (observedAt.getTime() > decisionAt.getTime()) {
+  const observedMs = observedAt.getTime();
+  const decisionMs = decisionAt.getTime();
+  if (!Number.isFinite(observedMs) || !Number.isFinite(decisionMs)) {
+    throw new SourceCannotSpeakAsOfError(source);
+  }
+  if (observedMs > decisionMs) {
     throw new ObservedAfterDecisionError(source, observedAt, decisionAt);
   }
 }
