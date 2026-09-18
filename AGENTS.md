@@ -3402,3 +3402,79 @@ Data sources as stated on charts: nflverse (nflreadpy)/(nflreadr) footers; FTN C
 - SIMILARITY FINDER (new tool): Parker Washington (Week 1 2026) vs 50 historical WR season comps, top 10 shown — SIM score (Hill 2023 42.4, Nacua 2025 40.4, JSN 2025 37.2...), FP/G, XFP/G (expected fantasy points/game), RTE%, TGT%, TPRR, YPRR, ADOT, 1st-read%, 1st-downs/route. Same-position-only comps; 9 of 144 usage stats weighted. Innovation kernel: historical similarity scoring on usage/efficiency shape for one-game samples.
 - BELLCOW REPORT (new): each RB's share of his team's backfield XFP — Achane 95%, Javonte Williams 95%, Gibbs/Cook/Taylor 93%. Innovation kernel: backfield dominance measured via expected fantasy points rather than touches.
 - DEFENSIVE TARGETS BY POSITION (Week 1 stacked bars): only text-attributed standouts are exact (Buccaneers 26% RB target share — one of highest; Packers 36% TE share — highest, Hockenson/Oliver 4 each); other team shares were approximate and not transcribed.
+
+---
+
+## GUARDS THAT WERE NOT GUARDING (2026-09-18, Opus)
+
+Four defects found in one pass, on branch `claude/signal-architecture-rebuild-bq7l8i`
+(`57d60c393`, `c71542292`, `96bc392d3`, `a8d8751db`). They are listed together because
+the failure mode is identical in all four and it is not a coding mistake, it is a
+process one: **a guard existed, and it was red, vacuous, or measuring the wrong unit,
+and the suite never got far enough to say so.**
+
+**1. The DFS solver was not deterministic, and its own guard had never passed.**
+`dfs-optimizer.ts` drew its heuristic restarts from the platform's unseeded random, so
+`optimizeOne` was a different function on every process. Measured on the shipped
+36-player slate in cash mode: identical inputs, identical node count (400,001) and
+identical best value, but 7,163,409 candidate iterations on one run and 7,081,041 on
+the next. The file's own test greps the source for that call and has been RED since the
+module's first commit (`54408730b`, 2026-06-04); the assertion was added later in #120
+and never once passed. Fixed the code (seeded mulberry32), never the guard. Every
+objective value is byte-identical, and now identical across processes too.
+
+**2. A node budget does not bound time.** The same solver capped recursion at 400k
+nodes, but a node's cost is its slot's candidate list plus a rescan for the admissible
+bound, so per-node cost grows with the pool. Measured, all four stopping on the SAME
+400k nodes: 50 players 2.3s, 100 players 10.6s, 150 players 24.1s, 200 players 43.8s.
+Nineteen times the wall clock at an identical node count. Added a cost budget in
+work x pool size (the unit that actually tracks time), default 600M: now 1.3 to 2.0
+seconds at every pool size from 50 to 600, with the best value IDENTICAL to the
+unbounded run at every size measured. **Generalise this one.** Any budget, anywhere,
+has to be denominated in the thing whose growth you are afraid of. Ours counted the
+cheap thing and let the expensive thing run free for months.
+
+**3. The Beat served fiction during an outage.** `app/the-beat/page.tsx` read
+`.catch(() => null)` under a comment saying it "never fabricates". `null` is the exact
+value `TheBeat` reads as "no feeds configured, show the labeled fictional sample", so a
+failed fetch rendered ten invented headlines. Three states now (unavailable / live /
+sample), and an outage shows nothing rather than a stand-in. There is no honest
+stand-in for news.
+
+**4. A copy edit silently switched off sixteen assertions.**
+`picks-states-conversion.test.ts` slices `/picks` into its dark-board states at MODULE
+scope, anchored on a sentence. The humanizer pass rewrote that sentence, the slice threw
+before any `describe` registered, and vitest reported the file as `(0 test)`. Sixteen
+assertions about the primary conversion surface stopped running and the suite said
+almost nothing. Anchor block slices on a `data-testid` or a branch condition. A testid
+is a contract; copy is supposed to keep changing.
+
+**Rules this pass earned, for every agent:**
+- A green suite that never ran the assertion is worth LESS than no assertion, because it
+  buys false confidence. When you claim a unit, run the file and read the test NAMES and
+  the collected COUNT, not the pass total. `(0 test)` is a failure, not a pass.
+- A test that fails against correct, deliberate product behaviour is still the thing to
+  fix, but fix it by repointing it at the CONTRACT, not by deleting the assertion. Where
+  a count floor was pinning a retired IA (House doors, ">= 6" against a deliberate four),
+  the replacement is the exact set, which is stronger than the floor it replaced, not
+  weaker.
+- Describing a banned token in a comment reproduces it. The determinism guard greps its
+  own subject file, so a comment naming the call trips it, exactly as a note quoting
+  banned copy trips the copy scanners. Describe, never spell.
+- `scripts/guardrails/em-dash-scan.mjs` covers NINE files. The wide scan
+  (`apps/web/__tests__/em-dash-public-copy.test.ts`, 229 public files) carries the rest
+  as a ratcheting baseline. Three live dashes on `/house` (including the meta
+  description, which search results render) were found that way. Lower the baseline when
+  you are already in one of those files; never raise it.
+
+**Verified:** apps/web 1,024 files / 13,939 tests passing. dfs-optimizer 28/28 (was 26
+with the determinism guard failing and the suite hanging before it reported). Seven
+sibling DFS suites 72/72 including the CP-SAT oracle-checked optimality tests for all
+three modes with and without stacking. trust-gate OK (2,226 files), em-dash-scan OK,
+tsc clean. No gate, flag, schema, floor or MODEL_VERSION touched.
+
+**Still open, named so nobody re-derives them:** `optimizeOne` returns a lineup with no
+provenance, so a budget-truncated result is indistinguishable from a proven one at the
+call site (`GenResult` already models this for the portfolio via `partial`); and
+`fetchLiveWire` swallows per-feed failures into an empty array, so "every configured
+feed is down" surfaces as live-but-empty rather than as unavailable.
