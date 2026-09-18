@@ -210,7 +210,8 @@ export type Predictive = DiscreteDistribution | ContinuousDistribution;
 
 /**
  * CRPS for a discrete predictive against an observed integer:
- *   CRPS = Σ_k ( F(k) − 1{k >= y} )²   over the (truncated) support.
+ *   CRPS = Σ_k ( F(k) − 1{k >= y} )²   over the support, plus the O(1)
+ *   gap when y lies outside it. Point mass identity: CRPS(δ_x, y) = |x − y|.
  * Lower is better; units are outcome-units. Truncate an unbounded support where
  * the remaining tail mass is < 1e-12 and document the truncation.
  */

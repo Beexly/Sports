@@ -108,6 +108,21 @@ describe("refusal census mill", () => {
     );
   });
 
+  it("does not count an edge without finite expectedClv as adverse_edge coverage", () => {
+    const table = censusRefusals([
+      row({
+        id: "silent-clv",
+        factorBreakdown: {
+          independentEdge: edge({ decision: "SPEAK", expectedClv: Number.NaN }),
+        },
+      }),
+    ]);
+    expect(table.inputCoverage.observed.adverse_edge).toBe(0);
+    expect(table.byFamily.adverse_edge).toBe(0);
+    expect(table.inputCoverage.observed.independent_edge_pass).toBe(1);
+    expect(table.inputCoverage.unobservedFamilies).toContain("adverse_edge");
+  });
+
   it("counts shadow unlicensed math when the caller attached the flags", () => {
     const ev = eventsFromPickRow(
       row({

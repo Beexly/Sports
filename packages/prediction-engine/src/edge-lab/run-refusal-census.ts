@@ -8,6 +8,8 @@
  *   npx tsx src/edge-lab/run-refusal-census.ts --rows fixture.json
  *   READONLY_DATABASE_URL=postgres://...@replica/neondb npx tsx src/edge-lab/run-refusal-census.ts
  *
+ * The DSN is passed to psql via PG* env vars, never argv (CWE-214).
+ *
  * Exit 0: census printed. Exit 2: missing input, named. Exit 1: failure.
  */
 import { readFileSync, existsSync } from "node:fs";
@@ -19,6 +21,7 @@ import {
   censusRefusals,
   type ProductionPickRow,
 } from "./refusal-census.js";
+import { readonlyPsqlLaunch } from "./psql-readonly.js";
 
 function usage(): string {
   return `refusal-census — count fail-closed paths. Does not invent a 0% rate.
@@ -59,8 +62,16 @@ function parseRows(text: string, source: string): ProductionPickRow[] {
 }
 
 function fromDsn(url: string): ProductionPickRow[] {
-  const psql = spawnSync("psql", [url, "-v", "ON_ERROR_STOP=1", "-At", "-c", REFUSAL_CENSUS_SQL], {
+  let launch: ReturnType<typeof readonlyPsqlLaunch>;
+  try {
+    launch = readonlyPsqlLaunch(url, REFUSAL_CENSUS_SQL);
+  } catch (err) {
+    process.stderr.write(`${(err as Error).message}\n`);
+    process.exit(2);
+  }
+  const psql = spawnSync("psql", [...launch.argv], {
     encoding: "utf8",
+    env: launch.env,
   });
   if (psql.error && (psql.error as NodeJS.ErrnoException).code === "ENOENT") {
     process.stderr.write(

@@ -252,12 +252,14 @@ function emptyFamilyCounts(): Record<RefusalFamily, number> {
 function inputCoverageOf(rows: readonly ProductionPickRow[]): CensusInputCoverage {
   const observed = emptyFamilyCounts();
   for (const row of rows) {
-    const hasEdge = readIndependentEdge(row.factorBreakdown) != null;
-    if (hasEdge) {
+    const edge = readIndependentEdge(row.factorBreakdown);
+    if (edge) {
       observed.trueprob_basis += 1;
-      observed.independent_edge_pass += 1;
-      observed.adverse_edge += 1;
-      if (row.isPublished !== undefined) observed.published_pass += 1;
+      if (typeof edge.decision === "string") {
+        observed.independent_edge_pass += 1;
+        if (row.isPublished !== undefined) observed.published_pass += 1;
+      }
+      if (Number.isFinite(edge.expectedClv)) observed.adverse_edge += 1;
     }
     if (row.gateStatus !== undefined) observed.gate_gated += 1;
     if (row.cqrLicensed !== undefined) observed.cqr_unlicensed += 1;

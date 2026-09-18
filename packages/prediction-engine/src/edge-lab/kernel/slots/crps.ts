@@ -11,6 +11,10 @@
  * model. Empirical CRPS is for simulation ensembles.
  *
  * Gneiting & Raftery 2007; Hersbach 2000 for the sorted-sample identity.
+ * Point-mass identity: CRPS(δ_x, y) = |x − y|. Summing only over the
+ * distribution's support silently understates error when y is outside it
+ * (verified: δ_3 vs y=1 returned 0 instead of 2). The loop covers the
+ * support; the gap to y is added in O(1).
  */
 import {
   KernelError,
@@ -51,8 +55,10 @@ function truncatedUpper(dist: DiscreteDistribution): number {
 }
 
 /**
- * CRPS = Σ_k (F(k) − 1{k ≥ y})² over the (truncated) integer support.
- * Point mass at y ⇒ 0. Lower is better.
+ * CRPS = Σ_k (F(k) − 1{k ≥ y})² over the integers that can contribute.
+ * Compact support [L, R]: sum the support, then add |gap| to y in O(1)
+ * so an observation outside the support is not scored as a perfect hit.
+ * Point mass at y ⇒ 0. Point mass at x vs y ⇒ |x − y|. Lower is better.
  */
 export const crpsDiscrete: CrpsDiscreteFn = (dist, observed) => {
   assertFinite(observed, "observed");
@@ -60,14 +66,21 @@ export const crpsDiscrete: CrpsDiscreteFn = (dist, observed) => {
     throw new KernelError("DOMAIN", `crpsDiscrete requires an integer observation, got ${observed}`);
   }
   const s = dist.support();
+  const lo = s.min;
   const hi = truncatedUpper(dist);
+  if (!Number.isFinite(lo) || !Number.isFinite(hi) || hi < lo) {
+    throw new KernelError("DOMAIN", "crpsDiscrete: support bounds must be finite lo ≤ hi");
+  }
   let sum = 0;
-  for (let k = s.min; k <= hi; k += 1) {
+  for (let k = lo; k <= hi; k += 1) {
     const F = dist.cdf(k);
     const indicator = k >= observed ? 1 : 0;
     const d = F - indicator;
     sum += d * d;
   }
+  // Integers strictly between the support and y, where F is 0 (left) or 1 (right).
+  if (observed < lo) sum += lo - observed;
+  if (observed > hi) sum += observed - hi - 1;
   return sum;
 };
 
@@ -142,6 +155,10 @@ export type CrpsGateResult = {
  * Kill line. Direction: LOWER CRPS is better. Survive iff n ≥ MIN_N and
  * (baseline − model) ≥ MIN_IMPROVEMENT. A model that equals the baseline
  * is killed. Underpowered is not a pass.
+ *
+ * Caller-supplied minN / minImprovement must be finite and non-negative.
+ * NaN comparisons are all false in JS, so an unvalidated NaN threshold
+ * used to fail OPEN (verdict survive). That is refused.
  */
 export function evaluateCrpsGate(
   modelCrps: number,
@@ -156,6 +173,15 @@ export function evaluateCrpsGate(
   }
   const minN = opts?.minN ?? CRPS_KILL_MIN_N;
   const minImprovement = opts?.minImprovement ?? CRPS_KILL_MIN_IMPROVEMENT;
+  if (!Number.isInteger(minN) || minN < 1 || !Number.isFinite(minN)) {
+    throw new KernelError("DOMAIN", `evaluateCrpsGate: minN must be an integer ≥ 1, got ${minN}`);
+  }
+  if (!(minImprovement >= 0) || !Number.isFinite(minImprovement)) {
+    throw new KernelError(
+      "DOMAIN",
+      `evaluateCrpsGate: minImprovement must be finite ≥ 0, got ${minImprovement}`,
+    );
+  }
   const improvement = baselineCrps - modelCrps;
   const invertedPaperWouldGraduate =
     improvement > 0 && improvement < PAPER_CRPS_IMPROVEMENT_MAX;
