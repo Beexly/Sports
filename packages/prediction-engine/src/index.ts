@@ -2033,10 +2033,12 @@ export {
   simulateJackknifePlusCoverage,
   splitConformalCoverage,
   splitConformalInterval,
+  UNCONDITIONAL_JACKKNIFE_PLUS_FLOOR_REASON,
 } from "./calibration/jackknife-plus.js";
 export type {
   CoverageKind,
   ConformalRecipe,
+  JackknifeRefusedBound,
   PredictionInterval,
 } from "./calibration/jackknife-plus.js";
 export {
@@ -2084,7 +2086,6 @@ export type {
   CensusCell,
   CensusEvent,
   CensusInputCoverage,
-  JackknifeRefusedBound,
   ProductionPickRow,
   RefusalCensusTable,
   RefusalFamily,

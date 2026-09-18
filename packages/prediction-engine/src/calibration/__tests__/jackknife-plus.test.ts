@@ -23,6 +23,7 @@ import {
   splitConformalInterval,
   upperOrderStat,
   weightedUpperOrderStat,
+  UNCONDITIONAL_JACKKNIFE_PLUS_FLOOR_REASON,
 } from "../jackknife-plus.js";
 
 describe("coverageFloor", () => {
@@ -76,7 +77,19 @@ describe("jackknifePlusInterval", () => {
     expect(iv.exchangeabilityRequired).toBe(true);
     expect(iv.recipe).toBe("jackknife-plus");
     expect(iv.priced).toBe(false);
+    expect(iv.refusedBound).toBe("none");
+    expect(iv.minimumNForFiniteInterval).toBe(9);
     expect(Object.prototype.hasOwnProperty.call(iv, "guaranteedCoverage")).toBe(false);
+  });
+
+  it("n too small for this alpha refuses both bounds and names the n it needs", () => {
+    const y = [1, 2, 3, 4, 5];
+    const iv = jackknifePlusInterval(constantMeanLoo(y, 0), 0.1);
+    expect(iv.licensed).toBe(false);
+    expect(iv.refusedBound).toBe("both");
+    expect(iv.lower).toBe(Number.NEGATIVE_INFINITY);
+    expect(iv.upper).toBe(Number.POSITIVE_INFINITY);
+    expect(iv.minimumNForFiniteInterval).toBe(9);
   });
 
   it("minmax contains plus (nested, not just wider)", () => {
@@ -191,6 +204,8 @@ describe("non-exchangeable Jackknife+", () => {
     expect(Number.isNaN(iv.coverageFloor)).toBe(true);
     expect(iv.exchangeabilityRequired).toBe(false);
     expect(Object.prototype.hasOwnProperty.call(iv, "guaranteedCoverage")).toBe(false);
+    expect(UNCONDITIONAL_JACKKNIFE_PLUS_FLOOR_REASON).toMatch(/Omitting d_TV is not d_TV=0/);
+    expect(UNCONDITIONAL_JACKKNIFE_PLUS_FLOOR_REASON).toMatch(/Nex Thm 5/);
   });
 
   it("supplied d_i degrade the floor by Σ ŵ_i d_i", () => {

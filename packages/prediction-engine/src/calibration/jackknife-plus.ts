@@ -31,7 +31,17 @@
  *
  * Quantile indices that exceed n return ±∞ (fail-closed). Clamping the
  * index to n is the same fake tightness CQR had. Smallest n for a finite
- * interval is ceil(1/α − 1): n=9 at α=0.10, n=4 at α=0.20.
+ * interval is ceil(1/α − 1): n=9 at α=0.10, n=4 at α=0.20. The result
+ * carries `refusedBound` ('none' | 'lower' | 'upper' | 'both') and
+ * `minimumNForFiniteInterval` so a caller staring at an infinity can tell
+ * WHICH rank overflowed and how many more settled rows it needs.
+ *
+ * Unconditional Jackknife+ reports coverageFloor = 1−2α. That is the
+ * honest number when d_TV is omitted: omitting d_i is not d_i = 0, and
+ * inventing an NFL weekly ε would launder a hunch into a tighter-looking
+ * bound. Nex 2023 Thm 5 (nexJackknifePlusInterval) subtracts Σ ŵ_i d_i
+ * only when the caller supplies d_i; otherwise coverageFloor is NaN on
+ * the weighted path.
  *
  * SHADOW. Does not publish. Does not bump MODEL_VERSION.
  */
@@ -51,6 +61,9 @@ export type CoverageKind =
 
 export type CoverageScope = "marginal";
 
+/** Which conformal rank overflowed n. Actionable for the refusal census. */
+export type JackknifeRefusedBound = "none" | "lower" | "upper" | "both";
+
 export type PredictionInterval = {
   readonly lower: number;
   readonly upper: number;
@@ -62,6 +75,9 @@ export type PredictionInterval = {
   readonly coverageScope: CoverageScope;
   readonly exchangeabilityRequired: boolean;
   readonly licensed: boolean;
+  readonly refusedBound: JackknifeRefusedBound;
+  /** Smallest n at this α for which the (1−α) quantile is a finite order statistic. */
+  readonly minimumNForFiniteInterval: number;
   readonly priced: false;
   readonly status: "shadow";
 };
@@ -116,6 +132,14 @@ export const JACKKNIFE_PLUS_TWO_ALPHA_REASON =
   "comparison of n+1 leave-one-out residual scores, not two Gaussian tails" as const;
 
 /**
+ * Why the unconditional floor is 1−2α, not 1−2α minus an invented TV term.
+ * Nex 2023 Thm 5 is real; this module carries it. The caller supplies d_TV.
+ * Silence on d_i is not a licence to print d_i = 0.
+ */
+export const UNCONDITIONAL_JACKKNIFE_PLUS_FLOOR_REASON =
+  "Omitting d_TV is not d_TV=0. Unconditional Jackknife+ reports coverageFloor=1−2α under exchangeability. Nex Thm 5 subtracts Σ ŵ_i d_i only when the caller supplies d_i; otherwise the weighted path's coverageFloor is NaN. Inventing an NFL weekly ε would launder a hunch into a tighter-looking bound." as const;
+
+/**
  * [(1−α)(n+1)]-th smallest of v, or +∞ if that index exceeds n.
  * 1-based order statistic. Fail-closed, never clamped.
  */
@@ -133,6 +157,15 @@ export function upperOrderStat(values: readonly number[], alpha: number): number
 export function lowerOrderStat(values: readonly number[], alpha: number): number {
   const flipped = values.map((v) => -v);
   return -upperOrderStat(flipped, alpha);
+}
+
+function refusedBoundOf(lower: number, upper: number): JackknifeRefusedBound {
+  const loInf = !Number.isFinite(lower);
+  const hiInf = !Number.isFinite(upper);
+  if (loInf && hiInf) return "both";
+  if (loInf) return "lower";
+  if (hiInf) return "upper";
+  return "none";
 }
 
 function interval(
@@ -157,6 +190,8 @@ function interval(
     coverageScope: "marginal",
     exchangeabilityRequired,
     licensed,
+    refusedBound: refusedBoundOf(lower, upper),
+    minimumNForFiniteInterval: finiteIntervalMinN(alpha),
     priced: false,
     status: "shadow",
   };

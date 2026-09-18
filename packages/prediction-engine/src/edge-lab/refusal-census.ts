@@ -22,6 +22,9 @@ import {
   tryReadTrainableTrueProb,
   type IndependentEdgeSummary,
 } from "@sports/types";
+import type { JackknifeRefusedBound } from "../calibration/jackknife-plus.js";
+
+export type { JackknifeRefusedBound };
 
 export type RefusalFamily =
   | "trueprob_basis"
@@ -34,8 +37,6 @@ export type RefusalFamily =
   | "ivap_empty"
   | "conformal_unlicensed"
   | "devig_refused";
-
-export type JackknifeRefusedBound = "none" | "lower" | "upper" | "both";
 
 export type CensusEvent = {
   readonly id: string;
