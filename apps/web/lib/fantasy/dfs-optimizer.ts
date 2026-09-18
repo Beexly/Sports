@@ -264,7 +264,45 @@ const slotAccepts = (slot: DfsPos | "FLEX", p: DfsPlayer): boolean => eligible(p
  * Both budgets are deterministic functions of the input — never a clock — so
  * an identical call returns an identical lineup on any machine.
  */
-export function optimizeExact(
+/**
+ * A search result WITH its provenance.
+ *
+ * WHY THIS EXISTS. `optimizeExact` returns a lineup and nothing else, so a
+ * result the budget cut short is indistinguishable from a proven optimum at
+ * the call site. That ambiguity has a concrete cost one caller down:
+ * `dfs-optimizer-edge.ts` cross-checks this solver against the independently
+ * written one in `dfs-exact.ts` and prints `objectiveGapVsIncumbent`. The
+ * exact side reports `optimal`; the incumbent side could not, so a non-zero
+ * gap read the same whether the two solvers genuinely DISAGREED (the bug that
+ * cross-check exists to catch) or this one simply ran out of budget. A
+ * cross-check that cannot tell a disagreement from a timeout is not one.
+ *
+ * `optimal` is the same word, with the same meaning, as `ExactResult.optimal`
+ * in `dfs-exact.ts`, deliberately: two flags in one directory spelling one
+ * concept two ways is how they drift.
+ */
+export type SolveResult = {
+  readonly lineup: DfsPlayer[] | null;
+  /**
+   * The search COMPLETED: no budget stopped it.
+   *
+   * True with a lineup means that lineup is optimal for this objective under
+   * these constraints. True with `lineup: null` means the search PROVED no
+   * feasible lineup exists. False always means a budget stopped the search, so
+   * a lineup here is the incumbent, never a proof.
+   *
+   * The flag never overstates. Paths that refuse before searching at all (an
+   * unplaceable lock) report false, because "we did not look" and "we looked
+   * and it is not there" must not read the same.
+   */
+  readonly optimal: boolean;
+  /** Nodes entered. Zero when the answer needed no search. */
+  readonly nodes: number;
+  /** Candidate iterations: the currency `costBudget` actually bounds. */
+  readonly work: number;
+};
+
+export function solveExact(
   opts: OptOpts,
   pen: (p: DfsPlayer) => number = () => 0,
   restarts = 60,
@@ -272,9 +310,10 @@ export function optimizeExact(
   nodeBudget = 400_000,
   cap = SALARY_CAP,
   costBudget = DEFAULT_COST_BUDGET,
-): DfsPlayer[] | null {
+): SolveResult {
   const cand = slate.filter((p) => !opts.excludes.has(p.id));
-  if (!cand.length) return null;
+  // Nothing to search. The answer "no feasible lineup" is PROVEN, not guessed.
+  if (!cand.length) return { lineup: null, optimal: true, nodes: 0, work: 0 };
 
   const byId = new Map(cand.map((p) => [p.id, p]));
   const used = new Set<string>();
@@ -291,14 +330,17 @@ export function optimizeExact(
   const lockIds = [...opts.locks];
   for (const id of lockIds) {
     const p = byId.get(id);
-    if (!p) return seed ?? null; // unknown pinned player (not on slate) — do not invent a lineup
+    // Unknown pinned player (not on slate): do not invent a lineup. The search
+    // never ran, so this is neither a proof nor a budget stop — `optimal` false
+    // is the safe direction, because it only ever understates what we know.
+    if (!p) return { lineup: seed ?? null, optimal: false, nodes: 0, work: 0 };
     let placed = false;
     for (let i = 0; i < DFS_SLOTS.length; i++) {
       if (chosen[i] === undefined && slotAccepts(DFS_SLOTS[i]!, p)) {
         chosen[i] = p; used.add(id); placed = true; break;
       }
     }
-    if (!placed) return seed ?? null;
+    if (!placed) return { lineup: seed ?? null, optimal: false, nodes: 0, work: 0 };
   }
 
   // The heuristic seed is only a valid incumbent when it satisfies the stack
@@ -337,7 +379,10 @@ export function optimizeExact(
   for (let i = 0; i < DFS_SLOTS.length; i++) if (chosen[i] === undefined) free.push(i);
   // most-constrained-first: fewer candidates searched earlier = earlier pruning
   free.sort((a, b) => lists[a]!.length - lists[b]!.length);
-  if (free.some((i) => lists[i]!.length === 0)) return best ?? fallback;
+  // A slot no candidate can fill: proven infeasible without searching a node.
+  if (free.some((i) => lists[i]!.length === 0)) {
+    return { lineup: best ?? fallback, optimal: true, nodes: 0, work: 0 };
+  }
 
   // per-slot pool, and suffix counts of the pools still to be filled — so a node
   // reads its remaining quotas in O(1) instead of walking the slot list
@@ -476,7 +521,23 @@ export function optimizeExact(
   if (process.env.DFS_SEARCH_DEBUG) {
     console.error(`[dfs-exact] nodes=${nodes}/${nodeBudget} work=${work}/${workBudget} exhausted=${exhausted} best=${bestVal} mode=${opts.mode} stack=${opts.stack}`);
   }
-  return best ?? fallback;
+  return { lineup: best ?? fallback, optimal: !exhausted, nodes, work };
+}
+
+/**
+ * The lineup alone, for callers that do not inspect provenance. Identical
+ * search, identical result; `solveExact` is the same call with the flag.
+ */
+export function optimizeExact(
+  opts: OptOpts,
+  pen: (p: DfsPlayer) => number = () => 0,
+  restarts = 60,
+  slate: readonly DfsPlayer[] = activeDfsSlate(),
+  nodeBudget = 400_000,
+  cap = SALARY_CAP,
+  costBudget = DEFAULT_COST_BUDGET,
+): DfsPlayer[] | null {
+  return solveExact(opts, pen, restarts, slate, nodeBudget, cap, costBudget).lineup;
 }
 
 /**

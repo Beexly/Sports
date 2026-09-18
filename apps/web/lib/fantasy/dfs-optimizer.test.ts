@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { optimizeOne, optimizeHeuristic, generateLineups, metrics, DEFAULT_COST_BUDGET, type OptOpts, type Mode } from "./dfs-optimizer";
+import { optimizeOne, optimizeExact, solveExact, optimizeHeuristic, generateLineups, metrics, DEFAULT_COST_BUDGET, type OptOpts, type Mode } from "./dfs-optimizer";
 import { DFS_SLOTS, SALARY_CAP, DFS_SLATE, leverage, type DfsPlayer, type DfsPos } from "./dfs-slate";
 
 const base = (over: Partial<OptOpts> = {}): OptOpts => ({
@@ -435,4 +435,67 @@ describe("dfs optimizer — 600-player scale (CI-safe timed)", () => {
     const b = optimizeOne(base({ mode: "gpp" }), undefined, undefined, pool);
     expect(a!.map((p) => p.id)).toEqual(b!.map((p) => p.id));
   }, 15000);
+
+  it("says so when the budget cut the search short, and still returns the incumbent", () => {
+    // The test above asserts the 600-player search "is always budget-truncated".
+    // Until solveExact existed that was a claim in a comment: the return value
+    // could not express it, so nothing checked it. Now it can be read.
+    const pool = makeBigPool(600);
+    const cut = solveExact(base({ mode: "gpp" }), undefined, undefined, pool);
+    expect(cut.optimal).toBe(false);
+    // Truncated is not empty. A budget stop returns the best lineup reached,
+    // which is what the caller ships; the flag is the only thing that changes.
+    expect(cut.lineup).not.toBeNull();
+    expect(slotsValid(cut.lineup!)).toBe(true);
+    expect(metrics(cut.lineup!).salary).toBeLessThanOrEqual(SALARY_CAP);
+    expect(cut.work).toBeGreaterThan(0);
+    // And the wrapper is the same search, not a second one.
+    expect(optimizeExact(base({ mode: "gpp" }), undefined, undefined, pool)!.map((p) => p.id))
+      .toEqual(cut.lineup!.map((p) => p.id));
+  }, 30000);
+});
+
+describe("dfs optimizer — search provenance", () => {
+  /**
+   * `optimal` must never overstate. These pin both directions: a completed
+   * search reports true, and every way of NOT completing reports false.
+   */
+  it("reports a completed search on a slate it can exhaust", () => {
+    const done = solveExact(base({ mode: "cash" }), undefined, undefined, POOL_CLEAR);
+    expect(done.optimal).toBe(true);
+    expect(done.lineup).not.toBeNull();
+    expect(done.nodes).toBeGreaterThan(0);
+  });
+
+  it("proves infeasibility rather than guessing at it", () => {
+    // No candidates at all: "no lineup exists" here is a fact about the slate,
+    // not a search that gave up, so the flag is true WITH a null lineup.
+    const none = solveExact(base({ mode: "gpp" }), undefined, undefined, []);
+    expect(none.lineup).toBeNull();
+    expect(none.optimal).toBe(true);
+    expect(none.nodes).toBe(0);
+  });
+
+  it("never claims a proof for a search it refused to start", () => {
+    // An unplaceable lock returns before a single node. "We did not look" and
+    // "we looked and it is not there" must not read the same to a caller.
+    const refused = solveExact(
+      base({ mode: "cash", locks: new Set(["no-such-player"]) }),
+      undefined,
+      undefined,
+      POOL_CLEAR,
+    );
+    expect(refused.optimal).toBe(false);
+  });
+
+  it("agrees with the lineup-only wrapper on every field it shares", () => {
+    for (const mode of ["cash", "gpp", "leverage"] as Mode[]) {
+      const viaResult = solveExact(base({ mode }), undefined, undefined, POOL_CLEAR);
+      const viaLineup = optimizeExact(base({ mode }), undefined, undefined, POOL_CLEAR);
+      expect(viaLineup?.map((p) => p.id) ?? null).toEqual(viaResult.lineup?.map((p) => p.id) ?? null);
+      // optimizeOne is the same search at the default cap.
+      const one = optimizeOne(base({ mode }), undefined, undefined, POOL_CLEAR);
+      expect(one?.map((p) => p.id) ?? null).toEqual(viaResult.lineup?.map((p) => p.id) ?? null);
+    }
+  });
 });
