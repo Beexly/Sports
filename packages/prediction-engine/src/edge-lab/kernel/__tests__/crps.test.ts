@@ -47,6 +47,14 @@ describe("crpsDiscrete", () => {
     expect(crpsDiscrete(pointMass(3), 3)).toBeCloseTo(0, 12);
   });
 
+  it("point mass vs y outside support is |x − y|, not a silent 0", () => {
+    expect(crpsDiscrete(pointMass(3), 1)).toBeCloseTo(2, 12);
+    expect(crpsDiscrete(pointMass(3), 5)).toBeCloseTo(2, 12);
+    expect(crpsDiscrete(pointMass(3), 4)).toBeCloseTo(1, 12);
+    expect(crpsEmpirical([3], 1)).toBeCloseTo(2, 12);
+    expect(crpsEmpirical([3], 5)).toBeCloseTo(2, 12);
+  });
+
   it("two-point mass is strictly positive away from both atoms", () => {
     const d = twoPoint(0, 2, 0.8);
     expect(crpsDiscrete(d, 1)).toBeGreaterThan(0);
@@ -138,5 +146,16 @@ describe("evaluateCrpsGate", () => {
     expect(g.verdict).toBe("kill");
     expect(g.improvement).toBeLessThan(0);
     expect(g.invertedPaperWouldGraduate).toBe(false);
+  });
+
+  it("refuses NaN / negative caller thresholds instead of failing open", () => {
+    expect(() => evaluateCrpsGate(1, 8, CRPS_KILL_MIN_N, { minImprovement: Number.NaN })).toThrow(
+      /minImprovement/,
+    );
+    expect(() => evaluateCrpsGate(1, 8, CRPS_KILL_MIN_N, { minImprovement: -1 })).toThrow(
+      /minImprovement/,
+    );
+    expect(() => evaluateCrpsGate(1, 8, CRPS_KILL_MIN_N, { minN: Number.NaN })).toThrow(/minN/);
+    expect(() => evaluateCrpsGate(1, 8, CRPS_KILL_MIN_N, { minN: 0 })).toThrow(/minN/);
   });
 });

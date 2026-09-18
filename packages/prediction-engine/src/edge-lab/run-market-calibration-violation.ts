@@ -7,6 +7,8 @@
  *   npx tsx src/edge-lab/run-market-calibration-violation.ts --needs
  *   npx tsx src/edge-lab/run-market-calibration-violation.ts --rows fixture.json
  *
+ * The DSN is passed to psql via PG* env vars, never argv (CWE-214).
+ *
  * Exit 0: report printed. Exit 2: missing input, named. Exit 1: failure.
  * A missing replica is NOT_RUN, never a 0% violation rate.
  */
@@ -18,6 +20,7 @@ import {
   measureMarketCalibrationViolation,
   type MarketCalibRow,
 } from "./market-calibration-violation.js";
+import { readonlyPsqlLaunch } from "./psql-readonly.js";
 
 function usage(): string {
   return `market-calibration-violation — 5pp threshold mill. Does not invent a 5% market error.
@@ -58,8 +61,16 @@ function parseRows(text: string, source: string): MarketCalibRow[] {
 }
 
 function fromDsn(url: string): MarketCalibRow[] {
-  const psql = spawnSync("psql", [url, "-v", "ON_ERROR_STOP=1", "-At", "-c", MARKET_CALIBRATION_SQL], {
+  let launch: ReturnType<typeof readonlyPsqlLaunch>;
+  try {
+    launch = readonlyPsqlLaunch(url, MARKET_CALIBRATION_SQL);
+  } catch (err) {
+    process.stderr.write(`${(err as Error).message}\n`);
+    process.exit(2);
+  }
+  const psql = spawnSync("psql", [...launch.argv], {
     encoding: "utf8",
+    env: launch.env,
   });
   if (psql.error && (psql.error as NodeJS.ErrnoException).code === "ENOENT") {
     process.stderr.write(
