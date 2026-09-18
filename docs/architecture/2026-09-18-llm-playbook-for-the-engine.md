@@ -22,6 +22,72 @@ available here and none is built.
 
 ---
 
+## 0. Train on OUR signals, not on the market, and why that is a loss-function question
+
+Founder directive, and it is the correct diagnosis: if we keep testing against market data we
+end up where we have been for ten months.
+
+**The trap has a precise shape.** Our calibration basis is `market_anchored_v4`. A forecaster
+whose probability IS the de-vigged market probability scores **perfectly calibrated and has
+exactly zero edge**. Calibration against the market measures whether we reproduce the market,
+not whether we beat it. Ten months of honest calibration work can therefore coexist with no
+edge at all, and that is not a contradiction; it is what the metric was measuring.
+
+The engine's current state makes this concrete rather than theoretical. The 2026-09-13 factor
+audit found every signal pick carrying `sources:["elo"]` and `agreement:"SOLO"`: the
+independent blend had collapsed to a single model, so the board was running on one signal plus
+the market.
+
+**The fix is structural, not a policy.** In the per-stratum head, the market logit enters as a
+**fixed offset**: coefficient pinned at 1, unpenalized, never fitted. The model is then
+mathematically forbidden from earning credit for reproducing the market, because the market's
+contribution is already accounted for before the model gets a single coefficient. Every
+parameter it fits can only be paid for by information the market does not already contain.
+
+That is what "trained on our signals" means in code rather than in intention. Without the
+offset, a penalized logistic shrinks toward the base rate and quietly relearns the market from
+scratch; with it, the only thing left to learn is the residual, which is the edge.
+
+## 0b. "Millions of tests on all our signals": the right ambition, and the method that kills it
+
+We have **2,641 settled picks**. Run a million hypotheses against them at the conventional
+threshold and roughly **fifty thousand will clear it by chance alone**. That is not a caution,
+it is arithmetic, and it is how essentially every sports model in history has died: it
+backtests beautifully and loses money, because the backtest was a search over noise.
+
+**Three things make the volume safe, and the first is already built and has never run.**
+
+1. **False-discovery control, which exists in this repository today.**
+   `edge-lab/trials-registry.ts` implements Benjamini-Hochberg step-up at `:170` and
+   family-level admission at `:289`, over a registered family key so the correction sees every
+   sibling trial. It is reachable only from `scripts/edge-lab/feature-admission.ts`, which
+   nothing schedules. **Turning it on is what converts a million tests from a liability into an
+   asset.** With it, "we tested a million things" is a defensible claim. Without it, it is the
+   confession.
+
+2. **More labels, because the honest number of tests is bounded by labels, not by signals.**
+   No amount of signal breadth raises how many independent hypotheses 2,641 outcomes can
+   adjudicate. Closing-line value gives a label on every pick within hours and line movement
+   gives one per tick, which is one to two orders of magnitude more supervision. That is the
+   only lever that genuinely raises the ceiling on how much we can test.
+
+3. **Joint training instead of a million univariate tests, which is the deepest correction.**
+   Language models do not run a million separate feature experiments. They train **one model on
+   everything at once**. Fitting one regularized model over five hundred signals is
+   statistically far safer than running five hundred separate tests, because strength is shared
+   across correlated signals and the effective degrees of freedom are controlled by the penalty
+   rather than by a multiplicity correction applied after the fact.
+
+   So the goal restates cleanly: **not "test every signal separately a million times", but
+   "train on every signal jointly, continuously, with the market as an offset and
+   false-discovery control on anything promoted to a named feature".** That is both more
+   ambitious and more defensible than the univariate version.
+
+**The order that follows from this.** Signal breadth is necessary and is not sufficient, and
+adding breadth before the offset and the FDR gate are live is the specific way this engine
+would spend another ten months producing confident numbers that do not survive contact with a
+sportsbook.
+
 ## 1. Self-supervised pretraining on unlabelled sequence
 
 **The LLM fact.** The decisive move in language modelling was not a better classifier. It was
