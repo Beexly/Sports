@@ -197,6 +197,17 @@ function interval(
   };
 }
 
+/** Census-ready flags. 'we refused' vs 'we refused the upper bound because n was too small'. */
+export function jackknifeCensusFlags(iv: PredictionInterval): {
+  readonly jackknifeLicensed: boolean;
+  readonly jackknifeRefusedBound: JackknifeRefusedBound;
+} {
+  return {
+    jackknifeLicensed: iv.licensed,
+    jackknifeRefusedBound: iv.refusedBound,
+  };
+}
+
 /**
  * Constant-mean leave-one-out. Analytic: μ_{-i} = (nȳ − y_i)/(n−1).
  * The query x is ignored — this is the intercept-only predictor used to

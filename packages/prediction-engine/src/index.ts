@@ -2034,6 +2034,7 @@ export {
   splitConformalCoverage,
   splitConformalInterval,
   UNCONDITIONAL_JACKKNIFE_PLUS_FLOOR_REASON,
+  jackknifeCensusFlags,
 } from "./calibration/jackknife-plus.js";
 export type {
   CoverageKind,
@@ -2099,10 +2100,13 @@ export {
   nflKeyNumberMixture,
   pairedDiscreteVsGaussianSyntheticNfl,
   pairedDiscreteVsWidenedGaussian,
+  integerMarginsFromScores,
   DISCRETE_VS_GAUSSIAN_ESTIMAND,
   DISCRETE_VS_GAUSSIAN_KILL_DELTA,
   DISCRETE_VS_GAUSSIAN_KILL_N,
   DISCRETE_VS_GAUSSIAN_MISSING_INPUT,
+  FLASH_NFLVERSE_CRPS_PAIRED,
+  TEAM_GAME_LOG_MARGINS_SQL,
 } from "./edge-lab/kernel/crps-compare.js";
 export type {
   CrpsCompareReport,

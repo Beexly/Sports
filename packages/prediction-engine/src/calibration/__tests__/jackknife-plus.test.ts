@@ -11,6 +11,7 @@ import {
   finiteIntervalMinN,
   jackknifeMinmaxInterval,
   jackknifePlusInterval,
+  jackknifeCensusFlags,
   lowerOrderStat,
   naiveJackknifeInterval,
   nexCoverageFloor,
@@ -90,6 +91,16 @@ describe("jackknifePlusInterval", () => {
     expect(iv.lower).toBe(Number.NEGATIVE_INFINITY);
     expect(iv.upper).toBe(Number.POSITIVE_INFINITY);
     expect(iv.minimumNForFiniteInterval).toBe(9);
+  });
+
+  it("jackknifeCensusFlags distinguishes a licensed interval from a both-bound refuse", () => {
+    const ok = jackknifePlusInterval(constantMeanLoo([1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12], 0), 0.1);
+    expect(jackknifeCensusFlags(ok)).toEqual({ jackknifeLicensed: true, jackknifeRefusedBound: "none" });
+    const small = jackknifePlusInterval(constantMeanLoo([1, 2, 3, 4, 5], 0), 0.1);
+    expect(jackknifeCensusFlags(small)).toEqual({
+      jackknifeLicensed: false,
+      jackknifeRefusedBound: "both",
+    });
   });
 
   it("minmax contains plus (nested, not just wider)", () => {

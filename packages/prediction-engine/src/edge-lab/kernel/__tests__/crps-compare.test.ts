@@ -1,3 +1,5 @@
+import { spawnSync } from "node:child_process";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   compareNflKeyNumberVsGaussian,
@@ -8,8 +10,15 @@ import {
   DISCRETE_VS_GAUSSIAN_KILL_DELTA,
   DISCRETE_VS_GAUSSIAN_KILL_N,
   DISCRETE_VS_GAUSSIAN_MISSING_INPUT,
+  FLASH_NFLVERSE_CRPS_PAIRED,
+  TEAM_GAME_LOG_MARGINS_SQL,
+  integerMarginsFromScores,
 } from "../crps-compare.js";
 import { crpsDiscrete, crpsGaussian, CRPS_KILL_MIN_IMPROVEMENT, CRPS_KILL_MIN_N } from "../slots/crps.js";
+
+const pkgRoot = join(__dirname, "../../../.."); // CommonJS: import.meta is not allowed under this package's tsconfig.
+const tsxBin = join(pkgRoot, "../../node_modules/.bin/tsx");
+const runner = "src/edge-lab/run-paired-crps.ts";
 
 describe("distFromPmf", () => {
   it("point mass CRPS is 0 at the atom", () => {
@@ -78,7 +87,7 @@ describe("pairedDiscreteVsWidenedGaussian", () => {
     expect(report.meanD).toBeGreaterThan(-0.1);
     expect(report.seD).toBeGreaterThan(0);
     expect(report.sampleKind).toBe("synthetic-nfl-shaped");
-    expect(report.missingInput).toMatch(/does not hold those rows/);
+    expect(report.missingInput).toMatch(/TeamGameLog/);
   });
 
   it("hand-checks LOO pairing on three integer margins", () => {
@@ -111,5 +120,45 @@ describe("pairedDiscreteVsWidenedGaussian", () => {
     expect(() =>
       pairedDiscreteVsWidenedGaussian({ y: [], sampleKind: "caller-supplied" }),
     ).toThrow(/requires observations/);
+  });
+
+  it("three real nflverse fixture games are underpowered — n too small is the finding", () => {
+    const y = integerMarginsFromScores([
+      { homeScore: 52, awayScore: 7 },
+      { homeScore: 34, awayScore: 27 },
+      { homeScore: 27, awayScore: 20 },
+    ]);
+    expect(y).toEqual([45, 7, 7]);
+    const report = pairedDiscreteVsWidenedGaussian({ y, sampleKind: "nflverse-schedules" });
+    expect(report.n).toBe(3);
+    expect(report.verdict).toBe("underpowered");
+    expect(report.killFired).toBe(false);
+  });
+
+  it("FLASH nflverse REG measurement: Gaussian detectably worse, not killed at 0.5", () => {
+    expect(FLASH_NFLVERSE_CRPS_PAIRED.n).toBeGreaterThanOrEqual(272);
+    expect(FLASH_NFLVERSE_CRPS_PAIRED.meanD).toBeLessThan(FLASH_NFLVERSE_CRPS_PAIRED.killDelta);
+    expect(FLASH_NFLVERSE_CRPS_PAIRED.z).toBeGreaterThan(5);
+    expect(FLASH_NFLVERSE_CRPS_PAIRED.verdict).toBe("gaussian_not_killed");
+    expect(FLASH_NFLVERSE_CRPS_PAIRED.attribution).toMatch(/CC BY 4\.0/);
+    expect(TEAM_GAME_LOG_MARGINS_SQL).toContain("team_game_logs");
+    expect(TEAM_GAME_LOG_MARGINS_SQL).toContain('"isHome" = true');
+  });
+});
+
+describe("paired-crps runner", () => {
+  it("--needs names the nflverse flash measurement and TeamGameLog SQL", () => {
+    const r = spawnSync(tsxBin, [runner, "--needs"], { cwd: pkgRoot, encoding: "utf8" });
+    expect(r.status, r.stderr).toBe(0);
+    const body = JSON.parse(r.stdout);
+    expect(body.flash.n).toBe(6984);
+    expect(body.flash.verdict).toBe("gaussian_not_killed");
+    expect(body.missingInput).toMatch(/TeamGameLog/);
+  });
+
+  it("--print-sql prints the TeamGameLog extract", () => {
+    const r = spawnSync(tsxBin, [runner, "--print-sql"], { cwd: pkgRoot, encoding: "utf8" });
+    expect(r.status, r.stderr).toBe(0);
+    expect(r.stdout).toContain("team_game_logs");
   });
 });

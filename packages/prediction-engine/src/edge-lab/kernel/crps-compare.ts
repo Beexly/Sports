@@ -12,8 +12,10 @@
  * Report the paired mean and its SE, not two unpaired means. n < 272 is
  * underpowered — that is the finding, not a pass.
  *
- * No production TeamGameLog in this sandbox. Synthetic NFL-shaped draws
- * are labelled synthetic-nfl-shaped. Missing input is named.
+ * TeamGameLog is still not in this sandbox. The route around that wall is
+ * nflverse/nfldata games.csv (CC-BY-4.0), already an allowed source: REG
+ * home−away margins. That extract is labelled nflverse-schedules, not
+ * TeamGameLog. FLASH_NFLVERSE_CRPS_PAIRED is the 2026-09-18 measurement.
  *
  * SHADOW. priced false.
  */
@@ -248,9 +250,45 @@ export const DISCRETE_VS_GAUSSIAN_KILL_DELTA = CRPS_KILL_MIN_IMPROVEMENT;
 export const DISCRETE_VS_GAUSSIAN_KILL_N = CRPS_KILL_MIN_N;
 
 export const DISCRETE_VS_GAUSSIAN_MISSING_INPUT =
-  "TeamGameLog.teamScore / opponentScore (or nflverse games.csv home/away scores) via marginsFromTeamGameRecords. This sandbox does not hold those rows. Synthetic NFL-shaped draws are labelled synthetic-nfl-shaped and are not a production number." as const;
+  "Neon TeamGameLog.teamScore/opponentScore is still missing here (TEAM_GAME_LOG_MARGINS_SQL). nflverse/nfldata games.csv REG margins were scored 2026-09-18 as nflverse-schedules (CC-BY-4.0). Synthetic draws are labelled synthetic-nfl-shaped." as const;
 
-export type CrpsSampleKind = "synthetic-nfl-shaped" | "caller-supplied";
+export type CrpsSampleKind = "synthetic-nfl-shaped" | "caller-supplied" | "nflverse-schedules";
+
+/**
+ * 2026-09-18 extract of nflverse/nfldata games.csv REG home−away margins.
+ * Data via nflverse (nflverse/nfldata), licensed CC BY 4.0.
+ * Kill was pre-registered at Δ≥0.5 / n≥272 before this sample was scored.
+ * Gaussian is detectably worse (z≈7) and not wrong enough to matter.
+ */
+export const FLASH_NFLVERSE_CRPS_PAIRED = {
+  recordedAt: "2026-09-18",
+  source: "https://raw.githubusercontent.com/nflverse/nfldata/master/data/games.csv",
+  attribution: "Data via nflverse (nflverse/nfldata), licensed CC BY 4.0.",
+  gameType: "REG",
+  n: 6984,
+  meanD: 0.01811,
+  seD: 0.00247,
+  z: 7.33,
+  meanDiscrete: 8.169,
+  meanGaussian: 8.187,
+  verdict: "gaussian_not_killed",
+  killDelta: 0.5,
+  killN: 272,
+  sampleKind: "nflverse-schedules",
+} as const;
+
+/** Replica extract for our Neon TeamGameLog. isHome=true so a game is not double-counted. */
+export const TEAM_GAME_LOG_MARGINS_SQL = `
+SELECT json_agg(t.margin)
+FROM (
+  SELECT (l."teamScore" - l."opponentScore") AS margin
+  FROM team_game_logs l
+  WHERE l."isHome" = true
+    AND l."teamScore" IS NOT NULL
+    AND l."opponentScore" IS NOT NULL
+    AND l.sport IN ('americanfootball_nfl', 'NFL', 'nfl')
+) t
+`.trim();
 
 export type PairedCrpsVerdict =
   | "underpowered"
@@ -401,4 +439,20 @@ export function pairedDiscreteVsGaussianSyntheticNfl(opts?: {
   for (let i = 0; i < n; i += 1) y.push(mixture.sample(rng));
   return pairedDiscreteVsWidenedGaussian({ y, sampleKind: "synthetic-nfl-shaped" });
 }
+
+/** Integer home−away margins. Non-finite or non-integer scores are dropped, not invented. */
+export function integerMarginsFromScores(
+  rows: readonly { readonly homeScore: number | null; readonly awayScore: number | null }[],
+): number[] {
+  const out: number[] = [];
+  for (const row of rows) {
+    const h = row.homeScore;
+    const a = row.awayScore;
+    if (h == null || a == null) continue;
+    if (!Number.isInteger(h) || !Number.isInteger(a)) continue;
+    out.push(h - a);
+  }
+  return out;
+}
+
 
