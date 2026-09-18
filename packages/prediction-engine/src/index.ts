@@ -2096,5 +2096,18 @@ export {
   discretizedGaussian,
   distFromPmf,
   nflKeyNumberMixture,
+  pairedDiscreteVsGaussianSyntheticNfl,
+  pairedDiscreteVsWidenedGaussian,
+  DISCRETE_VS_GAUSSIAN_ESTIMAND,
+  DISCRETE_VS_GAUSSIAN_KILL_DELTA,
+  DISCRETE_VS_GAUSSIAN_KILL_N,
+  DISCRETE_VS_GAUSSIAN_MISSING_INPUT,
 } from "./edge-lab/kernel/crps-compare.js";
-export type { CrpsCompareReport, CrpsRanking, SyntheticCrpsCompare } from "./edge-lab/kernel/crps-compare.js";
+export type {
+  CrpsCompareReport,
+  CrpsRanking,
+  CrpsSampleKind,
+  PairedCrpsReport,
+  PairedCrpsVerdict,
+  SyntheticCrpsCompare,
+} from "./edge-lab/kernel/crps-compare.js";

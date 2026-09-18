@@ -3,18 +3,24 @@
  *
  * Discrete CRPS is the primary for integer scores (margins, totals, props).
  * Gaussian closed form is a diagnostic. This mill asks whether the
- * diagnostic ranks two models the same way the primary does. If they
- * disagree, the Gaussian number is not a licensed kill instrument.
+ * diagnostic ranks two models the same way the primary does, AND whether
+ * the Gaussian is wrong enough on paired per-row scores to matter at our n.
  *
- * No production rows. Synthetic integer y only. A caller with real
- * nflverse margins can pass them through `compareCrpsRankings`.
+ * PAIRED KILL (pre-registered, before looking): Gaussian is killed as a
+ * substitute for discrete CRPS iff nLicensed ≥ 272 and
+ * mean_i [CRPS_N(μ_{-i},σ_{-i})(y_i) − CRPS_{empirical LOO}(y_i)] ≥ 0.5.
+ * Report the paired mean and its SE, not two unpaired means. n < 272 is
+ * underpowered — that is the finding, not a pass.
+ *
+ * No production TeamGameLog in this sandbox. Synthetic NFL-shaped draws
+ * are labelled synthetic-nfl-shaped. Missing input is named.
  *
  * SHADOW. priced false.
  */
 
 import type { DiscreteDistribution, Rng } from "./contract.js";
 import { KernelError, assertFinite, makeRng } from "./contract.js";
-import { crpsDiscrete, crpsGaussian, evaluateCrpsGate, type CrpsGateResult } from "./slots/crps.js";
+import { crpsDiscrete, crpsGaussian, evaluateCrpsGate, CRPS_KILL_MIN_N, CRPS_KILL_MIN_IMPROVEMENT, type CrpsGateResult } from "./slots/crps.js";
 
 export type CrpsCompareRow = {
   readonly y: number;
@@ -228,3 +234,171 @@ export function compareNflKeyNumberVsGaussian(opts?: {
     gaussianGate: evaluateCrpsGate(report.meanGaussianA, report.meanGaussianB, n),
   };
 }
+
+/**
+ * ESTIMAND (one line, before any number): leave-one-out paired mean of
+ * CRPS_N(μ_{-i},σ_{-i})(y_i) − CRPS_{empirical LOO}(y_i) on integer margins.
+ * Positive ⇒ the widened Gaussian is worse (higher CRPS) than the discrete
+ * empirical on the same row.
+ */
+export const DISCRETE_VS_GAUSSIAN_ESTIMAND =
+  "LOO paired mean_i [CRPS_N(μ_{-i},σ_{-i})(y_i) − CRPS_empiricalLOO(y_i)] on integer margins. Positive ⇒ Gaussian worse. Kill as substitute iff nLicensed≥272 and mean(d)≥0.5." as const;
+
+export const DISCRETE_VS_GAUSSIAN_KILL_DELTA = CRPS_KILL_MIN_IMPROVEMENT;
+export const DISCRETE_VS_GAUSSIAN_KILL_N = CRPS_KILL_MIN_N;
+
+export const DISCRETE_VS_GAUSSIAN_MISSING_INPUT =
+  "TeamGameLog.teamScore / opponentScore (or nflverse games.csv home/away scores) via marginsFromTeamGameRecords. This sandbox does not hold those rows. Synthetic NFL-shaped draws are labelled synthetic-nfl-shaped and are not a production number." as const;
+
+export type CrpsSampleKind = "synthetic-nfl-shaped" | "caller-supplied";
+
+export type PairedCrpsVerdict =
+  | "underpowered"
+  | "gaussian_killed_as_substitute"
+  | "gaussian_not_killed";
+
+export type PairedCrpsReport = {
+  readonly n: number;
+  readonly nLicensed: number;
+  readonly meanDiscrete: number;
+  readonly meanGaussian: number;
+  /** gaussian − discrete. Positive ⇒ Gaussian is worse on the same rows. */
+  readonly meanD: number;
+  readonly sdD: number;
+  readonly seD: number;
+  readonly killDelta: typeof DISCRETE_VS_GAUSSIAN_KILL_DELTA;
+  readonly killN: typeof DISCRETE_VS_GAUSSIAN_KILL_N;
+  readonly killFired: boolean;
+  readonly verdict: PairedCrpsVerdict;
+  readonly sampleKind: CrpsSampleKind;
+  readonly missingInput: typeof DISCRETE_VS_GAUSSIAN_MISSING_INPUT;
+  readonly estimand: typeof DISCRETE_VS_GAUSSIAN_ESTIMAND;
+  /** The Gaussian number is never a licensed model-vs-model kill. */
+  readonly gaussianLicensedAsKill: false;
+  readonly priced: false;
+  readonly status: "shadow";
+  readonly dbQueried: false;
+};
+
+function looMeanSd(
+  n: number,
+  mean: number,
+  m2: number,
+  yi: number,
+): { mean: number; sd: number } | null {
+  if (n < 3) return null;
+  const mu = (n * mean - yi) / (n - 1);
+  // (n-2) s²_{-i} = (n-1) s² − n/(n-1) (y_i − mean)², s² = m2/(n-1), m2 = Σ(y-mean)²
+  const sampleVar = m2 / (n - 1);
+  const leftOutVar = ((n - 1) * sampleVar - (n / (n - 1)) * (yi - mean) * (yi - mean)) / (n - 2);
+  if (!(leftOutVar > 0) || !Number.isFinite(leftOutVar)) return null;
+  return { mean: mu, sd: Math.sqrt(leftOutVar) };
+}
+
+/**
+ * Paired discrete vs widened-Gaussian CRPS. One d_i per row. Never two
+ * unpaired means. Empty / non-integer throws. n < 272 is underpowered.
+ */
+export function pairedDiscreteVsWidenedGaussian(args: {
+  readonly y: readonly number[];
+  readonly sampleKind: CrpsSampleKind;
+}): PairedCrpsReport {
+  const y = args.y;
+  if (y.length === 0) {
+    throw new KernelError("EMPTY", "pairedDiscreteVsWidenedGaussian requires observations");
+  }
+  let sum = 0;
+  const counts = new Map<number, number>();
+  for (const yi of y) {
+    assertFinite(yi, "y");
+    if (!Number.isInteger(yi)) {
+      throw new KernelError("DOMAIN", `pairedDiscreteVsWidenedGaussian requires integer y, got ${yi}`);
+    }
+    sum += yi;
+    counts.set(yi, (counts.get(yi) ?? 0) + 1);
+  }
+  const n = y.length;
+  const mean = sum / n;
+  let m2 = 0;
+  for (const yi of y) m2 += (yi - mean) * (yi - mean);
+
+  const d: number[] = [];
+  let sumDisc = 0;
+  let sumGauss = 0;
+  for (const yi of y) {
+    const c = counts.get(yi)!;
+    if (c === 1) counts.delete(yi);
+    else counts.set(yi, c - 1);
+    const gauss = looMeanSd(n, mean, m2, yi);
+    if (gauss != null && counts.size > 0) {
+      const discrete = crpsDiscrete(distFromPmf(counts), yi);
+      const gaussian = crpsGaussian(gauss.mean, gauss.sd, yi);
+      d.push(gaussian - discrete);
+      sumDisc += discrete;
+      sumGauss += gaussian;
+    }
+    counts.set(yi, (counts.get(yi) ?? 0) + 1);
+  }
+
+  const nLicensed = d.length;
+  const meanD = nLicensed > 0 ? d.reduce((a, b) => a + b, 0) / nLicensed : Number.NaN;
+  let sdD = Number.NaN;
+  if (nLicensed >= 2) {
+    let ss = 0;
+    for (const di of d) ss += (di - meanD) * (di - meanD);
+    sdD = Math.sqrt(ss / (nLicensed - 1));
+  }
+  const seD = nLicensed > 0 && Number.isFinite(sdD) ? sdD / Math.sqrt(nLicensed) : Number.NaN;
+  const killFired =
+    nLicensed >= DISCRETE_VS_GAUSSIAN_KILL_N &&
+    Number.isFinite(meanD) &&
+    meanD >= DISCRETE_VS_GAUSSIAN_KILL_DELTA;
+  let verdict: PairedCrpsVerdict;
+  if (nLicensed < DISCRETE_VS_GAUSSIAN_KILL_N) verdict = "underpowered";
+  else if (killFired) verdict = "gaussian_killed_as_substitute";
+  else verdict = "gaussian_not_killed";
+
+  return {
+    n,
+    nLicensed,
+    meanDiscrete: nLicensed > 0 ? sumDisc / nLicensed : Number.NaN,
+    meanGaussian: nLicensed > 0 ? sumGauss / nLicensed : Number.NaN,
+    meanD,
+    sdD,
+    seD,
+    killDelta: DISCRETE_VS_GAUSSIAN_KILL_DELTA,
+    killN: DISCRETE_VS_GAUSSIAN_KILL_N,
+    killFired,
+    verdict,
+    sampleKind: args.sampleKind,
+    missingInput: DISCRETE_VS_GAUSSIAN_MISSING_INPUT,
+    estimand: DISCRETE_VS_GAUSSIAN_ESTIMAND,
+    gaussianLicensedAsKill: false,
+    priced: false,
+    status: "shadow",
+    dbQueried: false,
+  };
+}
+
+/**
+ * SYNTHETIC NFL-shaped margins drawn from nflKeyNumberMixture. Not
+ * TeamGameLog. sampleKind is synthetic-nfl-shaped. Production number
+ * requires the missing input named on the report.
+ */
+export function pairedDiscreteVsGaussianSyntheticNfl(opts?: {
+  readonly n?: number;
+  readonly sd?: number;
+  readonly seed?: number;
+}): PairedCrpsReport {
+  const n = opts?.n ?? 400;
+  const sd = opts?.sd ?? 14;
+  if (!Number.isInteger(n) || n < 1) {
+    throw new KernelError("DOMAIN", `pairedDiscreteVsGaussianSyntheticNfl n integer ≥ 1, got ${n}`);
+  }
+  const mixture = nflKeyNumberMixture(sd);
+  const rng = makeRng(opts?.seed ?? 17);
+  const y: number[] = [];
+  for (let i = 0; i < n; i += 1) y.push(mixture.sample(rng));
+  return pairedDiscreteVsWidenedGaussian({ y, sampleKind: "synthetic-nfl-shaped" });
+}
+
