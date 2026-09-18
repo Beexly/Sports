@@ -34,8 +34,12 @@ writing the tenant into a where clause literally. One forgotten predicate is a c
 read. That design **fails open**.
 
 We are not in that position, and the reason is a single measured fact: this repository
-exports ONE database client, `export const db` at `packages/db/src/index.ts:250`, and 308
-files import `@sports/db`. One chokepoint, not 308. That means tenant scoping can be
+exports ONE database client, `export const db` at `packages/db/src/index.ts:250`, and 240
+files import it (221 outside test files; a looser textual match returns 363). Measured with
+`grep -rlE "^[^/]*(import|require|from)[^;]*['\"]@sports/db['\"]"` over ts/tsx/mjs/cjs/js
+from the repository root, excluding `node_modules`, `dist` and `.next`. An earlier draft of
+this queue said 308, which no definition of the count reproduces. One chokepoint, not 240.
+That means tenant scoping can be
 enforced centrally, in two layers that both fail CLOSED:
 
 1. **Postgres row-level security.** The database refuses to return rows outside the current
@@ -53,9 +57,13 @@ serverless driver is on, and a plain `PrismaClient` otherwise. Both pool connect
 **Therefore a session-level `SET app.current_tenant` is forbidden.** A pooled connection is
 reused by the next request, so a session-level setting leaks the previous request's tenant
 into the next one, which is the exact vulnerability this work exists to prevent. Every
-tenant assignment is `SET LOCAL` inside an explicit transaction, so it dies with the
-transaction. There are 67 non-test `$transaction` call sites today, so the pattern already
-exists here.
+tenant assignment is transaction-local, inside an explicit transaction, so it dies with the
+transaction. Task 2 carries the reason the statement is
+`SELECT set_config('app.current_tenant', $1, true)` and not `SET LOCAL`: identical lifetime,
+but only `set_config` can take the tenant as a bind parameter. There are 33 non-test
+`$transaction` call sites today (measured with `grep -rnE "\.\$transaction\("` over ts/tsx,
+excluding `node_modules`, `dist`, `.next` and test files), so the pattern already exists
+here.
 
 Any task that proposes a session-level set is wrong and must be marked BLOCKED.
 
@@ -74,7 +82,7 @@ Everything in section 0 is design. Here is what you may and may not touch.
 - **You may NOT enable enforcement.** Nothing you build turns RLS on, and nothing you build
   changes what any existing query returns. The default for every switch in this queue is
   OFF, and flipping it is founder-only under law 3.
-- **You may NOT change the 308 call sites.** If your design requires editing call sites,
+- **You may NOT change the 240 call sites.** If your design requires editing call sites,
   the design is wrong and you have reproduced Gauzy's failure mode. Mark it BLOCKED.
 - Standard bans still apply: no env flag, no package install, no guardrail script, no
   published number, no fabricated value, no `MODEL_VERSION` change, no push unless the
@@ -137,26 +145,41 @@ the union is exhaustive.
 
 ### Task 2. The client extension, wired but inert
 
-Build the Prisma client extension that will eventually set the tenant per transaction.
-Prisma is `^5.22.0`, which supports `$extends`, and `packages/db/src/index.ts:157` already
-references it.
+Build the Prisma client extension that will eventually set the tenant per transaction, at
+`packages/db/src/tenant-scope-extension.ts`. Prisma is `^5.22.0`, which supports `$extends`,
+and `packages/db/src/index.ts:157` already references it.
 
 Requirements:
 
 - It takes a `TenantContext` and, inside an EXPLICIT transaction, issues
-  `SET LOCAL app.current_tenant = $1` before the callee's work.
-- **`SET LOCAL` only.** A session-level set is forbidden for the pooling reason in section
-  0. A test must assert that the emitted statement contains `SET LOCAL` and does not
-  contain a bare `SET app.current_tenant`.
+  `SELECT set_config('app.current_tenant', $1, true)` before the callee's work.
+- **Transaction-local only, and spelled `set_config`, not `SET LOCAL`.** Two requirements
+  pull against each other here, so read this before you write the statement. A session-level
+  set is forbidden for the pooling reason in section 0, and `set_config`'s third argument is
+  exactly that switch: `true` is transaction-local, the same lifetime `SET LOCAL` gives, and
+  `false` is session-level, which is the leak. So the third argument is `true`, always, and a
+  test asserts it. The reason it cannot be written `SET LOCAL app.current_tenant = $1` is
+  PostgreSQL grammar: `SET` and `SET LOCAL` take a literal, an identifier or `DEFAULT` as the
+  value and do not accept a bind parameter, so a parameterized `SET LOCAL ... = $1` fails at
+  prepare time. Interpolating the tenant into the SQL text instead would satisfy the grammar
+  and reintroduce injection, which the next requirement forbids. `set_config` is an ordinary
+  function, so its arguments bind normally and both properties hold at once.
+  **NOT VERIFIED against a live database.** Law 7 bars touching one and none is reachable
+  from an agent session, so this is derived from the documented grammar of `SET`, not from an
+  executed query. If you find a counterexample, mark the task BLOCKED with the exact error
+  text. Do not resolve it by interpolating the tenant.
 - It is **not applied to the exported `db` singleton in this task.** Build it, export it,
   test it, leave it unattached. Attaching it is a later, founder-gated step.
 - It must be a no-op when the scope is `single`, so attaching it later changes nothing
   until the founder flips the scope.
 
-**Definition of done.** Unit tests against a fake transaction client proving: the statement
-is `SET LOCAL`; the tenant is parameterized, never interpolated into SQL text; scope
-`single` emits nothing at all; an absent tenant under scope `scoped` throws rather than
-proceeding unscoped.
+**Definition of done.** `packages/db/src/tenant-scope-extension.ts` and
+`packages/db/src/__tests__/tenant-scope-extension.test.ts` exist, with unit tests against a
+fake transaction client proving: the emitted statement calls `set_config` with its third
+argument `true` and never `false`; it emits no bare `SET app.current_tenant` in any form; the
+tenant is passed as a bound argument, never interpolated into SQL text; scope `single` emits
+nothing at all; an absent tenant under scope `scoped` throws rather than proceeding
+unscoped.
 
 ### Task 3. The proposal SQL, phase one: columns and backfill, no enforcement
 
@@ -209,7 +232,8 @@ test asserts the policy text denies on a NULL setting rather than permitting.
 
 ### Task 5. The guard that makes a missing key visible
 
-An enumerating test, not a guardrail script, since `scripts/guardrails/**` is frozen.
+An enumerating test at `packages/db/src/__tests__/tenant-scoping-guard.test.ts`, not a
+guardrail script, since `scripts/guardrails/**` is frozen.
 
 It reads `schema.prisma`, applies the same classification as task 3, and asserts that every
 model classified tenant-scoped either carries a `tenantId` field or appears on an explicit,
@@ -221,8 +245,9 @@ Before phase one is applied this test will fail, loudly, for every tenant-scoped
 unskips it, rather than weakening the assertion. A skipped test with a named unskip
 condition is honest; a weakened assertion is not.
 
-**Definition of done.** The test exists, the exceptions list exists and is empty, and the
-skip carries its unskip condition in a comment.
+**Definition of done.** `packages/db/src/__tests__/tenant-scoping-guard.test.ts` exists, its
+exceptions list exists at `packages/db/src/tenant-scoping-exceptions.ts` and is empty, and
+the skip carries its unskip condition in a comment.
 
 ### Task 6. The cutover runbook
 
@@ -254,8 +279,9 @@ execute the cutover from it alone.
 - Anything that would change what an existing query returns.
 - Any temptation to apply SQL, enable a policy, or attach the extension to the live `db`.
 - Whether `partner-stack` should drive the tenant boundary. It exists
-  (`assessPartner`, `grantCredits`, `allowedRevenueStreams`) with exactly one importer, so
-  it is scaffolded rather than live, and whether a partner is a tenant is a product decision.
+  (`assessPartner`, `grantCredits`, `allowedRevenueStreams`) with zero importers outside its
+  own package, so it is scaffolded rather than live, and whether a partner is a tenant is a
+  product decision.
 
 ---
 

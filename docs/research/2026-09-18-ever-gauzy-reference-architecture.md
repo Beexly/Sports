@@ -76,7 +76,7 @@ and the earlier recommendation failed to apply it.
 
 **Our position is much better than theirs, and one measured fact is why.** This repository
 exports ONE database client, `export const db` at `packages/db/src/index.ts:250`, imported
-by 308 files. Gauzy threads tenant context by hand through 196 files because it has no such
+by 240 files (221 outside test files). Gauzy threads tenant context by hand through 196 files because it has no such
 chokepoint. We can enforce centrally in two layers that both fail CLOSED: Postgres
 row-level security so the database refuses cross-tenant rows, and a Prisma client extension
 at the single `db` export so the policies have a tenant to read. Neither depends on a
@@ -87,8 +87,11 @@ implementation.
 `Pool`, and the fallback client pools too. A pooled connection is reused by the next
 request, so a session-level `SET app.current_tenant` leaks the previous request's tenant
 into the next one, which is precisely the vulnerability the work exists to prevent. Every
-assignment must be `SET LOCAL` inside an explicit transaction. There are 67 non-test
-`$transaction` call sites already, so the pattern exists here.
+assignment must be transaction-local, inside an explicit transaction, issued as
+`SELECT set_config('app.current_tenant', $1, true)`: `SET LOCAL` has the same lifetime but
+PostgreSQL's `SET` grammar takes no bind parameter, so only `set_config` can carry the tenant
+as a bound argument rather than interpolated SQL text. There are 33 non-test `$transaction`
+call sites already, so the pattern exists here.
 
 **What is queued.** `docs/ops/hermes/BUILD-QUEUE-2026-09-18-tenancy.md`, six tasks, with
 the property that merged and deployed with no founder action, nothing behaves differently:
