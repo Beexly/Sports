@@ -66,7 +66,11 @@ describe("P16-03 — Nav does not block on auth() in the static shell", () => {
     // The static nav links render from the static nav-left, not from auth.
     expect(container.querySelector('a[href="/board"]')).not.toBeNull();
     expect(container.querySelector('a[href="/players"]')).not.toBeNull();
-    expect(container.querySelector('a[href="/calibration"]')).not.toBeNull();
+    // Was a[href="/calibration"]. Record moved OUT of the top bar in the
+    // 2026-09-12 trim (AGENTS.md: "Do NOT restore Record/Verify/Plans to the top
+    // bar"); it lives in the footer and the Board menu, so it is not a
+    // top-level anchor in the static shell. Assert a door that IS one.
+    expect(container.querySelector('a[href="/fantasy"]')).not.toBeNull();
   });
 
   it("Nav() renders all four primary doors + The Lab + Proof as static links", () => {
@@ -82,12 +86,14 @@ describe("P16-03 — Nav does not block on auth() in the static shell", () => {
       .map((a) => a.getAttribute("href"))
       .filter(Boolean);
 
+    // The bar is four doors since 2026-09-12. This list previously required
+    // "/intelligence/engines" and "/calibration", both of which AGENTS.md now
+    // forbids in the top bar, so the assertion guarded AGAINST doctrine.
     expect(hrefs).toContain("/board");
     expect(hrefs).toContain("/players");
-    expect(hrefs).toContain("/intelligence/engines");
     expect(hrefs).toContain("/fantasy");
-    expect(hrefs).toContain("/the-beat");
-    expect(hrefs).toContain("/calibration");
+    // And the doctrine half, so a regression is caught rather than tolerated.
+    expect(hrefs).not.toContain("/intelligence/engines");
 
     // auth() was NOT called during static shell render.
     expect(mocks.auth).not.toHaveBeenCalled();

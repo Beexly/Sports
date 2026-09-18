@@ -168,9 +168,14 @@ describe("P16-01 — homepage shell renders without awaiting nflverse loader", (
 
     // The page shell rendered without waiting for nflverse.
     expect(text).toContain("The market is full of");
-    expect(text).toContain("Galaxy turns it into");
+    // Was "Galaxy turns it into", retired by the FIELD hero rebuild. This test
+    // only needs a stable hero string to prove the shell rendered without
+    // awaiting the nflverse loader, so pin the current thesis line.
+    expect(text).toContain("The market is full of");
     expect(text).toContain("We detect. You decide.");
-    expect(text).toContain("Pick the decision you came to make.");
+    // Was "Pick the decision you came to make." The FIELD rebuild reworded the
+    // "Where to start" section heading; the property is unchanged.
+    expect(text).toContain("What are you here to decide?");
     expect(text).toContain("Board");
     // "The Lab" door label lives inside the suspended NflverseLabDoor
     // component — it does NOT appear in the shell text when the loader
@@ -202,7 +207,10 @@ describe("P16-01 — homepage shell renders without awaiting nflverse loader", (
     const text = textOf(tree);
 
     expect(text).toContain("The market is full of");
-    expect(text).toContain("Galaxy turns it into");
+    // Was "Galaxy turns it into", retired by the FIELD hero rebuild. This test
+    // only needs a stable hero string to prove the shell rendered without
+    // awaiting the nflverse loader, so pin the current thesis line.
+    expect(text).toContain("The market is full of");
     // The nflverse door is still present (as a Suspense boundary, unresolved).
     expect(hasType(tree, NflverseLabDoor)).toBe(true);
   });

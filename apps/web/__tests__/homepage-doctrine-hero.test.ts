@@ -85,7 +85,14 @@ describe("homepage doctrine hero", () => {
 
   it("uses the noise-to-signal thesis headline, one cold-open, no legacy hero", () => {
     expect(page).toContain("The market is full of");
-    expect(page).toContain("Galaxy turns it into");
+    // Was "Galaxy turns it into". The FIELD rebuild rewrote the second half of
+    // the thesis to "We find the signal", which is the SAME noise-to-signal
+    // structure this test is named for and matches AGENTS.md's stated hero
+    // thesis (Noise. / Signal. Closer: We detect. You decide.). Pin the thesis,
+    // not the retired clause.
+    expect(page).toContain("We find the");
+    expect(page).toMatch(/>noise</);
+    expect(page).toMatch(/>signal</);
     expect(page).toContain("We detect. You decide.");
     // ONE cold-open: the Field intro replaced the montage (96e505471 hero,
     // 417fa6ae3 strip) with a lighter canvas sting that downloads no video
