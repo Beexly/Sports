@@ -1,7 +1,7 @@
 import { describe, it, expect } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { optimizeOne, generateLineups, metrics, type OptOpts, type Mode } from "./dfs-optimizer";
+import { optimizeOne, optimizeHeuristic, generateLineups, metrics, DEFAULT_COST_BUDGET, type OptOpts, type Mode } from "./dfs-optimizer";
 import { DFS_SLOTS, SALARY_CAP, DFS_SLATE, leverage, type DfsPlayer, type DfsPos } from "./dfs-slate";
 
 const base = (over: Partial<OptOpts> = {}): OptOpts => ({
@@ -320,9 +320,26 @@ describe("dfs optimizer", () => {
     expect(res.partial).toBe(true);
   });
 
-  it("contains no Math.random anywhere — the solver is fully deterministic", () => {
+  it("contains no unseeded platform randomness — the solver is fully deterministic", () => {
+    // This scan is the only cross-PROCESS determinism guard there is: the
+    // comparison tests below run two calls in one process, and an unseeded
+    // source can still agree with itself there whenever the exact search
+    // completes and the optimum is unique. It was red from the module's first
+    // commit until 2026-09-18. Keep it a file scan, and never spell the call
+    // in a comment here either — the scan reads its own test file's subject,
+    // not this file, but the sibling rule in the source applies.
     const src = readFileSync(join(__dirname, "dfs-optimizer.ts"), "utf8");
     expect(src).not.toMatch(/Math\.random/);
+  });
+
+  it("the HEURISTIC layer alone is reproducible — the seeded restarts replay in order", () => {
+    // optimizeOne can agree with itself while the layer underneath does not,
+    // because a completed exact search lands on the optimum whatever the seed.
+    // Assert the seeding directly, on the layer that actually draws.
+    const a = optimizeHeuristic(base({ mode: "gpp", stack: true }), undefined, 60, DFS_SLATE);
+    const b = optimizeHeuristic(base({ mode: "gpp", stack: true }), undefined, 60, DFS_SLATE);
+    expect(a).not.toBeNull();
+    expect(a!.map((p) => p.id)).toEqual(b!.map((p) => p.id));
   });
 });
 
@@ -357,7 +374,23 @@ describe("dfs optimizer — 600-player scale (CI-safe timed)", () => {
     return pool;
   }
 
-  it("solves an exact 600-player optimum within 10s (CI-safe)", () => {
+  it("returns a legal 600-player lineup within 10s — bounded, and NOT claimed optimal", () => {
+    // This test asserted "exact ... optimum" and proved neither, for two
+    // reasons, both fixed 2026-09-18.
+    //
+    // 1. It never saw 600 players. The call read
+    //    `optimizeOne(opts, undefined, pool)`, which puts the pool in the
+    //    `restarts` slot, so `slate` fell back to the 36-player sample and the
+    //    whole block finished in ~240ms measuring the wrong thing.
+    // 2. "Optimum" was never true at this scale anyway. Wired correctly, the
+    //    search stops on a budget every time (measured: 400,001 nodes at every
+    //    pool size from 50 to 200), so what comes back is the best lineup found
+    //    inside the budget, not a proven optimum. The exactness claim lives in
+    //    the brute-force block at the top of this file, where the pools are
+    //    small enough that the search genuinely completes.
+    //
+    // What is asserted here is the contract that actually holds and the one
+    // the browser depends on: a legal, cap-valid lineup, bounded wall clock.
     const pool = makeBigPool(600);
     const t0 = Date.now();
     const lu = optimizeOne(base({ mode: "gpp" }), undefined, undefined, pool);
@@ -366,10 +399,37 @@ describe("dfs optimizer — 600-player scale (CI-safe timed)", () => {
     expect(lu!.length).toBe(DFS_SLOTS.length);
     expect(slotsValid(lu!)).toBe(true);
     expect(metrics(lu!).salary).toBeLessThanOrEqual(SALARY_CAP);
+    // Measured 1.65s on this container; the bar keeps ~6x of headroom for CI.
+    // Before the cost budget this same call ran for minutes.
     expect(elapsedMs).toBeLessThan(10000);
   }, 15000);
 
+  it("the cost budget, not the node budget, is what bounds the search", () => {
+    // The node budget cannot bound wall clock: a node's cost is its slot's
+    // candidate list plus a rescan for the admissible bound, so it grows with
+    // the pool. Measured on this fixture, all four stopping on the SAME 400k
+    // nodes: 50 players 2.3s, 100 10.6s, 150 24.1s, 200 43.8s.
+    //
+    // Pin the mechanism rather than the timing: on one pool, shrinking ONLY
+    // the cost budget must cut the search short. If someone re-bounds this on
+    // nodes again, the two searches below become identical and this fails.
+    const pool = makeBigPool(200);
+    const t0 = Date.now();
+    const tight = optimizeOne(base({ mode: "gpp" }), undefined, undefined, pool, 400_000, 20_000_000);
+    const tightMs = Date.now() - t0;
+    expect(tight).not.toBeNull();
+    expect(slotsValid(tight!)).toBe(true);
+    expect(metrics(tight!).salary).toBeLessThanOrEqual(SALARY_CAP);
+    // 1/30th of the default budget on the same pool and the same node cap.
+    expect(tightMs).toBeLessThan(5000);
+    expect(DEFAULT_COST_BUDGET).toBeGreaterThan(20_000_000);
+  }, 15000);
+
   it("is deterministic at 600-player scale too", () => {
+    // Load-bearing now in a way it was not before: at this scale the search is
+    // always budget-truncated, so the lineup returned IS the one the seeding
+    // happened to reach. A truncated search with an unseeded start would ship
+    // a different lineup on every run.
     const pool = makeBigPool(600);
     const a = optimizeOne(base({ mode: "gpp" }), undefined, undefined, pool);
     const b = optimizeOne(base({ mode: "gpp" }), undefined, undefined, pool);
