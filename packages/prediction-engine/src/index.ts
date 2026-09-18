@@ -2067,6 +2067,25 @@ export {
 } from "./edge-lab/venn-width-by-sport.js";
 export type { VennWidthReport, VennWidthRow, VennWidthSportCard } from "./edge-lab/venn-width-by-sport.js";
 export {
+  censusRefusals,
+  eventsFromPickRow,
+  REFUSAL_CENSUS_SQL,
+  REFUSAL_CENSUS_REQUIRED_COLUMNS,
+  REFUSAL_CENSUS_REPLICA_FAMILIES,
+  REFUSAL_CENSUS_UNPERSISTED_FAMILIES,
+  REFUSAL_CENSUS_PRODUCTION_NEEDS,
+} from "./edge-lab/refusal-census.js";
+export type {
+  CensusCell,
+  CensusEvent,
+  CensusInputCoverage,
+  JackknifeRefusedBound,
+  ProductionPickRow,
+  RefusalCensusTable,
+  RefusalFamily,
+} from "./edge-lab/refusal-census.js";
+
+export {
   compareCrpsRankings,
   compareNflKeyNumberVsGaussian,
   discretizedGaussian,

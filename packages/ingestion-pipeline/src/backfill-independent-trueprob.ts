@@ -6,8 +6,10 @@
  * - Never put a post-settlement number in independentEdge.trueProb — that is
  *   the column trainers read. The leaked value, if any, moves to
  *   postSettlementTrueProb (audit only).
- * - Trainers refuse post_settlement_backfill via requireTrainableTrueProbBasis,
- *   never by grepping rationale prose.
+ * - Trainers refuse post_settlement_backfill via tryReadTrainableTrueProb
+ *   (ranking-prob.ts, trueprob-admission.ts), never by grepping rationale
+ *   prose. requireTrainableTrueProbBasis is the throwing type-level
+ *   contract and is not a trainer caller as of 936be9c.
  * - Does not flip PERFORMANCE_STATS / PROVEN / publish policy.
  */
 

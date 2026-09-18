@@ -1,12 +1,14 @@
 /**
  * Pure quarantine for the backfill writer's own post-settlement trueProb
- * writes. Trainers must still refuse via requireTrainableTrueProbBasis in
- * @sports/types — this module only recognizes the writer's fingerprints.
+ * writes. Trainers refuse via tryReadTrainableTrueProb in ranking-prob.ts
+ * and trueprob-admission.ts — this module only recognizes the writer's
+ * fingerprints. requireTrainableTrueProbBasis is the throwing type-level
+ * contract; it is not a trainer caller as of 936be9c.
  *
  * The prose prefix "Retrospective independent blend" is a CLEANUP
  * fingerprint for LEGACY UNTAGGED rows this writer used to emit, not an
  * admission contract. Trainers must never grep this string; they use
- * requireTrainableTrueProbBasis. Deleting the prefix check would silently
+ * tryReadTrainableTrueProb. Deleting the prefix check would silently
  * skip every untagged legacy row on cleanup.
  */
 

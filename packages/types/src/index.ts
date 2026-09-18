@@ -63,7 +63,10 @@ export interface IndependentEdgeSummary {
   rationale: string;            // plain-language "why"
   /**
    * Which clock `trueProb` was computed against. Required on every new write.
-   * Trainers admit only as_of_mint via requireTrainableTrueProbBasis.
+   * Trainers admit only as_of_mint. Production ranking (ranking-prob.ts) and
+   * the admission mill (trueprob-admission.ts) read via tryReadTrainableTrueProb
+   * so refusals can be counted. requireTrainableTrueProbBasis is the throwing
+   * type-level contract; no trainer calls it as of 936be9c.
    */
   trueProbBasis?: TrueProbBasis;
 }
