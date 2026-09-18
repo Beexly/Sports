@@ -76,13 +76,25 @@ commit, staged by name, tagged `[hermes-head-N]`.
 Every later task needs one canonical way to say which slice a head covers, and if two files
 spell it differently the registry silently misses.
 
-Build `packages/types/src/stratum.ts`: a `StratumKey` built from sport, market and side
+**Read this first: a stratum key ALREADY EXISTS and an earlier draft of this task missed
+it.** `packages/prediction-engine/src/certificate/stratum-coverage.ts` defines
+`StratumParts { sport, pickType, modelVersion }` at `:6`, `stratumKey()` at `:12` and
+`parseStratumKey()` at `:16`. Building a second one from scratch is the exact
+rebuild-what-exists failure this repository keeps paying for.
+
+So the task is to EXTEND and RELOCATE, not to invent. Move that concept into
+`@sports/types`, add the `side` dimension and `parentOf`, and have
+`stratum-coverage.ts` import from the new home rather than keep its own copy. If relocation
+turns out to break something, do not fork: mark the task BLOCKED and say what broke.
+
+The relocated module at `packages/types/src/stratum.ts` provides: a `StratumKey` built from sport, market and side
 where side applies, with one `formatStratum` and one `parseStratum` that round-trip, plus a
 `parentOf` returning the shrinkage parent (sport-by-market shrinks to sport, sport shrinks
 to global) and `null` at the root.
 
-**Definition of done.** Round-trip test over a fixture of every sport and market this repo
-mints, a test that `parentOf` terminates at the root from every leaf, and a test that two
+**Definition of done.** Round-trip test over a fixture of sports and markets written as
+literal strings in the test. There is no single canonical enumeration in this repo to import
+from, so do not go looking for one; hardcode the fixture and say so in a comment. a test that `parentOf` terminates at the root from every leaf, and a test that two
 differently-cased or differently-ordered inputs produce the SAME key or are rejected, never
 silently different.
 
@@ -102,10 +114,12 @@ The validator is pure and REFUSES rather than coercing: an unknown version, a co
 count not matching the feature names, a missing offset declaration, or a status of
 `certified` whose report does not clear the four floors is an error, not a warning.
 
-**The floors are byte-identical and you do not restate them.** Import them from where the
-eligibility gate reads them (`apps/web/lib/ops/calibration-eligibility.ts:131-136`) or, if
-that import would cross the forbidden direction, move the CONSTANTS into `@sports/types`
-and have both read the same source. Two files spelling one floor two ways is how they
+**The floors are byte-identical and you do not restate them.** Do not choose between two
+options here; an earlier draft left this conditional and a conditional is a decision, which
+is not yours. The floors move to `packages/types/src/calibration-floors.ts`, and
+`apps/web/lib/ops/calibration-eligibility.ts` is edited to import them from there and
+re-export them so its own callers are unchanged. The VALUES are byte-identical and you do
+not touch them; only their home moves. Two files spelling one floor two ways is how they
 drift, and a drift here publishes an uncertified number.
 
 **Definition of done.** Tests proving every refusal branch fires, that a `certified`
@@ -152,9 +166,14 @@ before the registry can return it.
 Build the display contract in `@sports/types`, and a rendering helper the web app can use
 later. Do NOT wire it into any component in this run.
 
+**The width limit has to come from somewhere, and an earlier draft never said where.**
+Add a `maxIntervalWidth` field to the head artifact in task 2, so the limit travels with the
+head that was certified under it rather than living as a free-floating constant a later
+edit could drift. A head whose artifact omits it is refused by task 2's validator.
+
 Rules the contract enforces by type where possible and by test otherwise: a probability is
-never rendered without its interval; an interval wider than the stratum's stated limit
-suppresses the row rather than showing a wide number; the market probability keeps its own
+never rendered without its interval; an interval wider than its artifact's
+`maxIntervalWidth` suppresses the row rather than showing a wide number; the market probability keeps its own
 label and is never merged with a head probability into one unlabelled figure; and a refusal
 renders the existing display, never a blank or a zero.
 

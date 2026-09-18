@@ -135,6 +135,9 @@ as a terminal fallback inside `sort-key.ts`.
 is founder-gated. You are PINNING it, so the gap between the document's invariant and the
 code is a failing-or-passing test rather than a paragraph.
 
+**Deduplicated:** the ranking queue's task 1 is the same file. If that queue got there
+first, mark this row DONE citing its SHA and move on. Do not build it twice.
+
 **Definition of done.** `apps/web/lib/ranking/__tests__/sort-key-confidence-paths.test.ts`
 with one case per route, each asserting the CURRENT behaviour and carrying a comment naming
 it as current-not-desired, plus a reference to the founder decision in architecture

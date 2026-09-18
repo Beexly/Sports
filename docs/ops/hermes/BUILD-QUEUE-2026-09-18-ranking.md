@@ -51,9 +51,14 @@ for byte. If you cannot say that of your own work, say so in your ledger evidenc
 
 ## 2. Hard boundaries
 
-- **Do not change `sort-key.ts` or `ranking-prob.ts` behaviour.** Not the default weight,
-  not the fallback chain, not the key order. You may ADD an exported pure function beside
-  them; you may not alter what the existing ones return.
+- **Do not change `sort-key.ts` or `ranking-prob.ts` BEHAVIOUR.** Not the default weight,
+  not the fallback chain, not the key order.
+- **Task 4 is the sole exception to editing those files at all**, and it exists so the
+  switch has somewhere to live. It may edit `sort-key.ts` source to consult the switch,
+  provided every existing call site's return value is byte-identical while the switch reads
+  `current`. An earlier draft of this section forbade touching the file outright, which
+  contradicted task 4 and would have sent a literal-minded runner to BLOCKED on its own
+  queue. Behaviour is frozen; the file is not.
 - **Do not touch a database.** Law 7. The report runs from a loader that is INJECTED, and
   your tests supply a fake. The founder runs it against real data, not you.
 - **No env flag, no gate, no schema, no published number, no `MODEL_VERSION`.** The switch
@@ -62,6 +67,11 @@ for byte. If you cannot say that of your own work, say so in your ledger evidenc
   there. A new import from `@sports/prediction-engine` into `apps/web/lib/board/state.ts`
   or the picks route resolves to `undefined` under the 22 partial mocks and collapses the
   board.
+- **Caveat, measured, because this document has repeated the claim too confidently:**
+  `@sports/types` is crossed intact almost everywhere, but TWO test files partially mock it
+  with a bespoke factory and no `importActual`, `apps/web/__tests__/api-p9-05-rate-limit.test.ts`
+  and `apps/web/lib/gse-stats/__tests__/session-tier.test.ts`. After task 4 lands, run those
+  two specifically as well as the engine-mock list.
 - Two attempts per task, then revert and mark BLOCKED with the exact error.
 
 ---
@@ -79,7 +89,8 @@ asserts the CURRENT value and carries a comment naming it current-not-desired wi
 pointer to architecture section 7.
 
 This task is duplicated as task 3 of the mainline queue. If you have already done it there,
-mark this row DONE citing that SHA and move on. Do not do it twice.
+mark this row DONE citing that SHA and move on. Do not do it twice. The reciprocal note
+belongs on mainline task 3 as well: if the ranking queue got there first, cite its SHA.
 
 **Definition of done.** Four cases, all green against today's code.
 
@@ -90,8 +101,11 @@ Build `packages/types/src/ranking-candidates.ts`. Pure, no I/O, no database.
 Three orderings, each a comparator over a minimal row shape carrying `expectedClv`,
 `trueProb`, `marketFairProb`, `rankingP`, `confidence` and a recency stamp:
 
-- `orderingCurrent`: reproduces today's behaviour exactly, including every fallback. It
-  exists so the comparison has an honest baseline computed the same way as the others.
+- `orderingCurrent`: reproduces today's fallback chain exactly. **Include `isFeatured` in
+  the row shape and apply the pin-first rule**, because the live comparator sorts featured
+  rows ahead of everything else (`sort-key.ts:36,42,46`) and a baseline missing that is not
+  the current ordering. If you deliberately scope it to the fallback chain only, say so in
+  the function's doc comment rather than claiming exact reproduction.
 - `orderingEdgeFirst`: descending `expectedClv` among rows with a finite positive value;
   ties broken by `trueProb` minus `marketFairProb`, then recency. **Rows without a finite
   positive `expectedClv` trail as a block, in their current relative order.**
@@ -101,15 +115,24 @@ Three orderings, each a comparator over a minimal row shape carrying `expectedCl
 Every one is total and stable: equal rows keep their input order, so a comparison never
 reports a difference that is really just sort instability.
 
+**Also export it from the barrel, in this same commit.** `packages/types`'s `main` is
+`./src/index.ts` and everything crossing the boundary goes through it. A module that is not
+re-exported there is unreachable from `apps/web`, and this task's own test would still pass
+because it imports the file directly. Add `export * from "./ranking-candidates.js";` to
+`packages/types/src/index.ts`.
+
 **Definition of done.** `packages/types/src/__tests__/ranking-candidates.test.ts` proving
-each comparator is total, stable and antisymmetric; that `orderingCurrent` reproduces
+each comparator is total, stable and antisymmetric; a test that the symbols are reachable
+through the package barrel, not only by direct path; that `orderingCurrent` reproduces
 `sort-key.ts` on a fixture set including every fallback case; and that a row with a null
 `expectedClv` trails rather than sorting as zero.
 
 ### Task 3. The shadow comparison report
 
-Build a report that takes settled rows through an INJECTED loader and, per slate, computes
-each ordering, then reports:
+Build `scripts/ops/ranking-shadow-report.ts`, with its test beside it and an
+`ops:ranking-shadow` entry in the root `package.json` scripts, matching the convention of
+the existing tools in `scripts/ops/`. It takes settled rows through an INJECTED loader and,
+per slate, computes each ordering, then reports:
 
 - Rank correlation between each candidate and the current ordering.
 - For the top K rows under each ordering, with K at 3, 5 and 10: realized win rate, count,
