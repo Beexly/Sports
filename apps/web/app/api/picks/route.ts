@@ -15,6 +15,7 @@ import {
 import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-publish-runtime";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
 import { teaserForViewer } from "@/lib/picks/teaser-text";
+import { gateConsensusClaim, gateConsensusClaimText } from "@/lib/claims/public-consensus-claim";
 import { displaySelection } from "@/lib/picks/display-selection";
 import { resolveMarketImplied, resolveWinProbability } from "@/lib/picks/market-implied-display";
 import { publicEdgeScore } from "@/lib/picks/public-edge-score";
@@ -156,17 +157,34 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         // shown in that label.
         signalSnapshot: { select: { bookmakerCount: true } },
       },
+      // NEVER order this pool by confidence. The app-level rank key is
+      // rankingP (lib/ranking/sort-key.ts); confidence is a different number
+      // and, measured 2026-09-13 over 2,385 settled rows, an ANTI-predictive
+      // one at the top (conf 80+ claims 0.8663, realizes 0.5191). Ordering the
+      // fetch by it and then re-ranking in app code does not undo the damage:
+      // truncation happens in the database, so a high-rankingP row that sits
+      // low on confidence is discarded before the re-rank can ever see it.
+      // lib/board/state.ts already fetches on generatedAt for this exact
+      // reason ("high-conf market-echo does not monopolize the take"); this is
+      // the same fix on the picks API. isFeatured stays because
+      // comparePicksByRanking pins featured first too, so it is the one key
+      // the two orderings agree on.
       orderBy: [
         { isFeatured: "desc" },
-        { confidence: "desc" },
         { generatedAt: "desc" },
       ],
-      // Over-fetch a bounded pool when the viewer has a daily limit: the
-      // selective-publish filter below can only REMOVE rows, so taking exactly
-      // the limit here meant a FREE user (limit 2) could receive 0-1 picks
-      // whenever fetched rows failed the filter. The real cap is applied
-      // AFTER filter + ranking (see limitedPicks).
-      take: entitlements.dailyPickLimit != null ? 48 : 200,
+      // Over-fetch a bounded pool: the selective-publish filter below can only
+      // REMOVE rows, so taking exactly the limit meant a FREE user (limit 2)
+      // could receive 0-1 picks whenever fetched rows failed the filter. The
+      // real cap is applied AFTER filter + ranking (see limitedPicks).
+      //
+      // The pool is the SAME SIZE for every viewer. It used to be 48 for a
+      // capped viewer and 200 otherwise, which made a FREE viewer's two picks
+      // the best of a quarter of the slate while a PRO viewer ranked over all
+      // of it — the viewer with the least to spend got the worst-informed
+      // choice. One day's slate is bounded by gameInSlateWindow, so 200 is
+      // expected to cover it whole and make the truncation a no-op.
+      take: 200,
     })
     .catch(() => null);
   if (picks === null) {
@@ -291,6 +309,18 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     const marketImplied = resolveMarketImplied(marketImpliedInput);
     const winProbability = resolveWinProbability(marketImpliedInput);
 
+    // T-1 gate applied to whichever text this viewer will actually see, so
+    // the evidence caption returned below always matches the visible claim
+    // (see the reasoning/reasoningShort assignment for why this mirrors that
+    // branch selection).
+    const gatedDisplayedText = gateConsensusClaim(
+      entitlements.canSeeFactorBreakdown
+        ? pick.reasoning
+        : pick.reasoningShort || pick.reasoning.split(".")[0] + ".",
+      pick,
+      now,
+    );
+
     return {
       id: pick.id,
       game: {
@@ -345,10 +375,30 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       // free the premium reasoning trail. FREE gets the short teaser.
       // A viewer who cannot see confidence must not read it back as a percentage
       // inside the teaser (lib/picks/teaser-text.ts).
+      //
+      // T-1 tripwire (Devin, #819): a quantified "bookmaker consensus" claim
+      // must carry its own evidence (book count >= 2, freshness stamp,
+      // consensusPct in (0,1]) or it must not render at all — gated here,
+      // server-side, against the SAME Prisma row's evidence columns, since
+      // PublicPick does not carry consensusPct/bookmakerCount to gate on
+      // client-side. reasoningShort is frozen write-once; this only decides
+      // what the API echoes back, never what is stored.
+      //
+      // A bound claim must render its evidence CAPTION beside it too (Devin
+      // Review, #819) — the pass/suppress decision alone is not the whole
+      // contract; /preview already renders bound.claimText AND
+      // consensusEvidenceCaption(bound) together. `gatedDisplayedText` is
+      // gated against whichever of reasoning/reasoningShort this viewer
+      // actually sees (the same branch selection below), so the one caption
+      // field on the DTO always matches the text it is captioned for.
       reasoning: entitlements.canSeeFactorBreakdown
-        ? pick.reasoning
-        : teaserForViewer(pick.reasoningShort || pick.reasoning.split(".")[0] + ".", entitlements.canSeeConfidence),
-      reasoningShort: teaserForViewer(pick.reasoningShort, entitlements.canSeeConfidence),
+        ? gatedDisplayedText.text
+        : teaserForViewer(gatedDisplayedText.text, entitlements.canSeeConfidence),
+      reasoningShort: teaserForViewer(
+        gateConsensusClaimText(pick.reasoningShort, pick, now),
+        entitlements.canSeeConfidence,
+      ),
+      consensusEvidenceCaption: gatedDisplayedText.evidenceCaption,
       isFeatured: pick.isFeatured,
       isAuditAvailable:
         !pick.id.startsWith("sample-pick-") &&

@@ -18,7 +18,10 @@ describe("data-first public surfaces", () => {
     expect(page).toMatch(/loadPublicCalibrationReport/);
     expect(page).toMatch(/loadNflverseUsagePulse/);
     expect(page).toMatch(/calibration\.sampleSize/);
-    expect(page).toMatch(/Pick the decision you came to make/);
+    // FIELD reworded the doors heading from "Pick the decision you came to
+    // make." to a question. The invariant is that the front door routes to a
+    // decision, not the sentence it uses to say so.
+    expect(page).toMatch(/What are you here to decide\?/);
     expect(page).not.toMatch(/AnnotatedSampleSignal/);
     expect(page).not.toMatch(/sample-data-banner-home/);
     // No fabricated demo arrays defined inline on the front door.

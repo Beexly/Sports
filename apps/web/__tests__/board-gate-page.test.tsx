@@ -36,6 +36,7 @@ vi.mock("@/lib/board/load-gate-slate", () => ({
 
 import GatePage, { generateMetadata } from "@/app/board/gate/page";
 import { buildCalibrationRows, buildCandidateRows, type RawPickRow } from "@/lib/board/gate-rows";
+import { REASONS } from "@/lib/board/gate-consumer";
 
 const DIGIT_PERCENT = /\d+(\.\d+)?%/;
 
@@ -76,8 +77,15 @@ describe("/board/gate — illustrative mode (the default)", () => {
 
     // These strings live in gate-consumer.ts. If the page ever stops calling
     // the real consumer, they disappear and this fails.
-    expect(text).toContain("not enough settled history");
-    expect(text).toContain("not a judgement about the game");
+    //
+    // They are now IMPORTED from the consumer rather than copied here. The copy
+    // was duplicated as literals ("not enough settled history", "not a
+    // judgement about the game"); when the humanizer pass reworded the
+    // consumer, the wiring was perfectly intact and this test failed anyway —
+    // it pinned the words, not the wiring it describes. An imported constant
+    // cannot drift from its source.
+    expect(text).toContain(REASONS.INSUFFICIENT_CALIBRATION);
+    expect(text).toContain(REASONS.NOT_EVALUATED_MISSING_INPUTS);
   });
 
   it("states plainly that the inputs are illustrative and the logic is real", async () => {

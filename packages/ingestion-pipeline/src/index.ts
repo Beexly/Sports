@@ -166,6 +166,9 @@ export type { FixtureCollapseRow } from "./fixture-collapse.js";
 // the stale backfill) can stamp the close after a successful grade (C-95).
 export { markClosingSnapshotsIfEnabled } from "./line-archive.js";
 export type { MarkClosingSnapshotsIfEnabledResult } from "./line-archive.js";
+// The flag predicate itself, so a reader (e.g. the ops freshness surface)
+// asks the same question the capture path does instead of restating it.
+export { isLineArchiveEnabled } from "./line-archive.js";
 
 export { seedGamesFromEspn } from "./seed-games-from-espn.js";
 export type { SeedGamesFromEspnResult } from "./seed-games-from-espn.js";

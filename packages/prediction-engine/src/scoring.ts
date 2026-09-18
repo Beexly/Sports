@@ -675,15 +675,127 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     ? ` Context: ${contextClauses.join(", ")}.`
     : "";
 
+  // WHAT consensusPct MEASURES ON A SPREAD, and why the old copy misdescribed it.
+  //
+  // It is `spreads.filter((s) => s < 0).length / spreads.length` (see above):
+  // the share of books whose spread SIGN puts the same team in front. It is
+  // agreement about WHICH TEAM IS FAVOURED, not about the number, and not about
+  // which side holds value. Books essentially never disagree about who is
+  // favoured, so it is pinned at 1.0 in practice: measured on production
+  // 2026-09-13, all 48 published SPREAD picks across NFL (30), MLB (9),
+  // NCAAF (5) and MLS (4) read exactly 1.0000.
+  //
+  // The old strings rendered that as "backed by 100% of 11 bookmakers" and
+  // "100% bookmaker consensus on Chicago Bears -3.0", which a customer reads as
+  // "every book likes the Bears to cover -3". No book was asked that question.
+  // The T-1 evidence binder then attaches a book count and a freshness stamp to
+  // the claim (lib/claims/public-consensus-claim.ts), so it renders looking
+  // audited.
+  //
+  // This is a COPY fix. consensusPct itself is unchanged, still feeds
+  // consensusScore (up to CONSENSUS_COMPONENT_MAX = 30 points) and still sets
+  // LOW_RISK — recomputing it as a side-agreement or price-agreement figure is
+  // a scoring change, needs a MODEL_VERSION bump and a calibration pass, and
+  // does not belong in a string edit.
+  //
+  // THE COUNT IS OVER `pricedOdds`, NOT `spreads`, and that is the whole point
+  // (Devin Review + CodeRabbit on PR #819, agreeing independently; both were
+  // right and the first draft of this clause was wrong).
+  //
+  // `spreadOdds` is every row carrying a spread; `pricedOdds` is the subset
+  // that also carries both prices, and `bookmakerCount: pricedOdds.length` is
+  // what the pick publishes as its evidence count. Counting over the wider
+  // array let the card read "11 of 14 books pricing this game have X favoured"
+  // beside an evidence caption reading "11 books" — the claim disagreeing with
+  // the very number offered to support it, which is the failure the T-1
+  // tripwire exists to prevent. The clause says "pricing", so it counts rows
+  // that are priced.
+  //
+  // STRICT sign checks, both directions. `consensusPct` is derived from
+  // `spreads.filter((s) => s < 0)`, so a PICK'EM row (spread exactly 0) is not
+  // home-favoured — and for an away pick `1 - homeFavoredPct` then counts it as
+  // away-favoured, which it is not either. A zero spread means the books name
+  // no favourite and it belongs in neither count. (The all-zero board is
+  // already refused above; a MIXED board reaches here.)
+  //
+  // `consensusPct` itself is UNCHANGED and still feeds consensusScore and
+  // LOW_RISK. This is display arithmetic only.
+  const favouredCount = pricedOdds.filter((o) =>
+    homeIsChosen ? (o.spread as number) < 0 : (o.spread as number) > 0,
+  ).length;
+
+  // NO RAW COUNT IN THE FROZEN TEXT. This clause is persisted into
+  // `reasoning`/`reasoningShort`, which are frozen write-once at creation
+  // (process-sport.ts), while `bookmakerCount` and `dataFreshnessAt` are
+  // REFRESHED every ingestion cycle — and the T-1 evidence caption is built
+  // from those live columns. Embedding "7 of 8" in text that never changes,
+  // beside a caption that does, means the claim contradicts its own evidence.
+  //
+  // Measured 2026-09-13 over the 1,076 published SPREAD picks that carry a
+  // mint-time signal snapshot: 772 of them (72%) already have a live
+  // bookmakerCount different from their snapshot, mean absolute drift 2.70
+  // books, max 9. So this is the common case, not an edge (Devin Review, #819 —
+  // the first draft of this clause did embed the pair).
+  //
+  // The unanimous wording is SCALE-FREE and survives that drift: if the set
+  // grows from 8 books to 10 and all 10 still make the same team the
+  // favourite, "every book" is still true. The split wording says the books
+  // disagree without pinning a ratio that will go stale. Neither can contradict
+  // the caption's live count.
+  //
+  // Nothing is lost in practice: a spread's favourite is near-unanimous by
+  // construction (that is the whole finding this copy exists to correct —
+  // consensusPct reads exactly 1.0000 on all 48 published spread picks across
+  // four sports), so the split branch is the rare case and the exact ratio was
+  // never the information the reader needed.
+  // THREE outcomes, not two. The binary form said "Most books ... favoured" for
+  // ANY non-unanimous slate, and because a pick'em row (spread 0) counts for
+  // neither side, favouredCount can be a MINORITY or even zero while the clause
+  // still claims most: one book at +3 beside seven pick'ems reads "Most books
+  // pricing this game have X favoured" at 1 of 8. That is a false statement
+  // about bookmaker agreement, frozen write-once into the published reasoning.
+  // (CodeRabbit, #819.)
+  //
+  // Still scale-free: none of the three states a raw count, because the caption
+  // beside them is rebuilt from live columns that drift from the mint-time
+  // snapshot on 72% of published spread picks.
+  //
+  // And all three are PAST TENSE, scoped to publication. Scale-free was not
+  // enough: `reasoning` is frozen write-once while `bookmakerCount`,
+  // `consensusPct` and `dataFreshnessAt` refresh every cycle, so a present-tense
+  // "Every book ... has X favoured" keeps asserting current unanimity while the
+  // caption beside it moves. A ninth book posting a pick'em makes the frozen
+  // sentence false. That is not hypothetical: measured 2026-09-14 over all 1,076
+  // published book-priced spread picks, 64 of them (5.9%) read consensusPct
+  // below 1.0 today, as low as 0.5556.
+  //
+  // Past tense makes each clause a statement about a moment that has already
+  // happened, so it cannot be falsified by a later refresh. It is the same fix
+  // as dropping the raw count, one level up: say the durable thing.
+  //
+  // EVERY verb, including the embedded one. The first pass at this converted
+  // the outer verb and left the minority branch reading "were not unanimous
+  // that X IS favoured" -- half past, half present, so the branch it was
+  // supposed to fix still asserted a current market state. Caught by Devin on
+  // the very next round. If a fourth form is ever added, check the whole
+  // sentence, not just its main clause.
+  // (Devin Review, #819, third and fourth rounds on this clause.)
+  const favouredClause =
+    favouredCount === pricedOdds.length
+      ? `When we published, every book pricing this game had ${chosenTeam} favoured`
+      : favouredCount * 2 > pricedOdds.length
+        ? `When we published, most books pricing this game had ${chosenTeam} favoured, though not every book did`
+        : `When we published, books pricing this game were not unanimous that ${chosenTeam} was favoured`;
+
   const reasoning =
-    `${chosenTeam} ${spreadDisplay} backed by ${Math.round(consensusPct * 100)}% of ${pricedOdds.length} ` +
-    `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
+    `${favouredClause}. We are on ${chosenTeam} ${spreadDisplay}. ` +
+    `Fair value: ${Math.round(fairProb * 100)}%. ` +
     `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
     contextNote +
     ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
 
   const reasoningShort =
-    `${Math.round(consensusPct * 100)}% bookmaker consensus on ${chosenTeam} ${spreadDisplay}.` +
+    `${favouredClause}. We are on ${chosenTeam} ${spreadDisplay}.` +
     (contextClauses.length > 0 ? ` ${contextClauses[0]!.charAt(0).toUpperCase() + contextClauses[0]!.slice(1)} noted.` : "");
 
   const factorBreakdown: FactorBreakdown = {

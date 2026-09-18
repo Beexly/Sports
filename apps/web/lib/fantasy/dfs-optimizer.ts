@@ -50,7 +50,43 @@ function qbStackCount(lu: Lineup): { team: string | null; stacked: number } {
   return { team: qb.team, stacked };
 }
 
-function buildRandom(pool: readonly DfsPlayer[], opts: OptOpts, pen: (p: DfsPlayer) => number): DfsPlayer[] | null {
+/**
+ * Deterministic PRNG (mulberry32) replacing `Math.random()` in the multi-start
+ * seeder.
+ *
+ * `Math.random()` made this solver return DIFFERENT LINEUPS FOR IDENTICAL
+ * INPUTS. Two back-to-back `optimizeOne` calls on the same pool came back with
+ * the same nine players assigned to different slots — r1/r2 and w1/w3 swapped —
+ * because the seeder picked from the top-k options at random and the exact
+ * search inherited that arrangement wherever values tie.
+ *
+ * This file has ALWAYS carried a test demanding it not be there ("contains no
+ * Math.random anywhere — the solver is fully deterministic"), and that test has
+ * been failing. The companion test ("identical output across repeated runs")
+ * passed only by luck of scale: on the full slate the optimum is unique, so
+ * every seed converges to it and the randomness is invisible. It becomes
+ * visible the moment a small pool with ties is passed, which is what the
+ * correctness fixtures do.
+ *
+ * It is not a cosmetic guarantee. CLAUDE.md's engine rule is deterministic
+ * scoring, and a customer who regenerates the same lineup and gets a different
+ * answer has been shown that the "math you can read" is not reproducible.
+ *
+ * The seed is the restart index alone, so the sequence is identical on every
+ * call, in every process, forever. Restarts still diversify — r = 0..n each
+ * explore a different corner — but they explore the SAME corners every time.
+ */
+function mulberry32(seed: number): () => number {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function buildRandom(pool: readonly DfsPlayer[], opts: OptOpts, pen: (p: DfsPlayer) => number, rand: () => number): DfsPlayer[] | null {
   const cand = pool.filter((p) => !opts.excludes.has(p.id));
   if (!cand.length) return null;
   const minSal = Math.min(...cand.map((p) => p.salary));
@@ -76,7 +112,7 @@ function buildRandom(pool: readonly DfsPlayer[], opts: OptOpts, pen: (p: DfsPlay
       .sort((a, b) => objVal(b, opts.mode) - pen(b) - (objVal(a, opts.mode) - pen(a)));
     if (!options.length) return null;
     const k = Math.min(5, options.length);
-    const pick = options[Math.floor(Math.random() * k)]!;
+    const pick = options[Math.floor(rand() * k)]!;
     lineup[i] = pick; used.add(pick.id);
   }
   return lineup as DfsPlayer[];
@@ -161,11 +197,21 @@ function enforceStack(lu: DfsPlayer[], pool: readonly DfsPlayer[], opts: OptOpts
  * SEED the exact search below — on its own it has no optimality guarantee
  * (`scripts/dfs/oracle.py` measures the regret, and finds it).
  */
-export function optimizeHeuristic(opts: OptOpts, pen: (p: DfsPlayer) => number = () => 0, restarts = 60, slate: readonly DfsPlayer[] = activeDfsSlate()): DfsPlayer[] | null {
+export function optimizeHeuristic(opts: OptOpts, pen: (p: DfsPlayer) => number = () => 0, restarts = 60, slate: readonly DfsPlayer[] = activeDfsSlate(), seedOffset = 0): DfsPlayer[] | null {
   let best: DfsPlayer[] | null = null;
   let bestObj = -Infinity;
   for (let r = 0; r < restarts; r++) {
-    let lu = buildRandom(slate, opts, pen);
+    // Seeded by (seedOffset, restart index): the same call with the same offset
+    // explores the same corners in the same order, so the result is
+    // byte-identical — while a DIFFERENT offset explores different corners.
+    //
+    // Both halves are load-bearing. Determinism is the product claim. The
+    // offset is what lets generateLineups ask for a genuinely different lineup
+    // after a collision: without it every retry re-ran the identical search,
+    // the dedupe loop could never escape, and the portfolio took a duplicate as
+    // a last resort (Devin Review, PR #819). Math.random() used to supply that
+    // variation as a side effect of being wrong.
+    let lu = buildRandom(slate, opts, pen, mulberry32(seedOffset * 1_000_003 + r + 1));
     if (!lu) continue;
     lu = hillClimb(lu, slate, opts);
     if (opts.stack) lu = enforceStack(lu, slate, opts);
@@ -205,6 +251,7 @@ export function optimizeExact(
   slate: readonly DfsPlayer[] = activeDfsSlate(),
   nodeBudget = 400_000,
   cap = SALARY_CAP,
+  seedOffset = 0,
 ): DfsPlayer[] | null {
   const cand = slate.filter((p) => !opts.excludes.has(p.id));
   if (!cand.length) return null;
@@ -218,7 +265,7 @@ export function optimizeExact(
     return qbStackCount(filled).stacked >= 1;
   };
 
-  const seed = optimizeHeuristic(opts, pen, restarts, slate);
+  const seed = optimizeHeuristic(opts, pen, restarts, slate, seedOffset);
 
   // 1) locks are hard: place each locked player in a distinct legal slot first.
   const lockIds = [...opts.locks];
@@ -409,8 +456,12 @@ export function optimizeExact(
  * within the node budget (the search returns its incumbent in that case, so the
  * result is never worse than the heuristic would have been).
  */
-export function optimizeOne(opts: OptOpts, pen: (p: DfsPlayer) => number = () => 0, restarts = 60, slate: readonly DfsPlayer[] = activeDfsSlate(), nodeBudget = 400_000): DfsPlayer[] | null {
-  return optimizeExact(opts, pen, restarts, slate, nodeBudget);
+export function optimizeOne(opts: OptOpts, pen: (p: DfsPlayer) => number = () => 0, restarts = 60, slate: readonly DfsPlayer[] = activeDfsSlate(), nodeBudget = 400_000, seedOffset = 0): DfsPlayer[] | null {
+  // NOTE the explicit SALARY_CAP: optimizeExact takes `cap` as its sixth
+  // parameter and `seedOffset` as its seventh. Passing seedOffset positionally
+  // without naming cap would put the seed in the salary cap — the same slot
+  // error this file's tests carried for months. Spelled out on purpose.
+  return optimizeExact(opts, pen, restarts, slate, nodeBudget, SALARY_CAP, seedOffset);
 }
 
 
@@ -479,10 +530,21 @@ export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6,
     for (let tries = 0; tries < 6; tries++) {
       // smaller node budget here: this loop runs per lineup and its job is
       // diversity, not single-lineup optimality (which /optimizer calls direct).
-      const c = optimizeOne(dynOpts, pen, 40, slate, 20_000);
+      //
+      // EVERY ATTEMPT GETS ITS OWN SEED OFFSET, derived only from the lineup
+      // index and the attempt index, so the portfolio is reproducible while the
+      // retries genuinely differ. Without this the six attempts were the same
+      // seeded search repeated, so a collision could never be escaped.
+      const c = optimizeOne(dynOpts, pen, 40, slate, 20_000, n * 6 + tries + 1);
       if (c && !seen.has(key(c))) { lu = c; break; }
-      if (c && tries === 5) lu = c; // accept dup as last resort
     }
+    // NO DUPLICATE AS A LAST RESORT. A portfolio of contest entries containing
+    // the same lineup twice is not a portfolio, and `generateLineups` promises
+    // unique lineups. When the deterministic alternatives are exhausted the
+    // honest answer is a SHORTER portfolio, which GenResult already models as
+    // `partial` — "reports short portfolios as partial, never as proven
+    // exhaustion" is an existing test in this file, and this is the case it
+    // describes.
     if (!lu) break;
     seen.add(key(lu));
     lineups.push({ players: lu, metrics: metrics(lu) });

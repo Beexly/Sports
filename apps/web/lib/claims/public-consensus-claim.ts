@@ -11,8 +11,35 @@
  * sit next to it.
  */
 
+/**
+ * A teaser asserts a quantified claim ABOUT BOOKS when it matches either arm.
+ *
+ * Arm 1, LEGACY: "100% bookmaker consensus on Chicago Bears -3.0." Minted until
+ * 2026-09-13. Published bet terms are frozen write-once at creation
+ * (process-sport.ts), so every pick already in the table keeps this wording
+ * forever and the tripwire must keep recognising it.
+ *
+ * Arm 2, CURRENT: "Every book pricing this game has Chicago Bears favoured" /
+ * "Most books pricing this game have Chicago Bears favoured, though they are
+ * split". Both forms are deliberately SCALE-FREE — no raw count is embedded,
+ * because reasoning text is frozen write-once while the evidence caption is
+ * rebuilt from live columns that drift (772 of 1,076 published spread picks
+ * already differ from their mint-time book count). An earlier draft did embed
+ * "N of M" and had to be withdrawn; if that wording ever returns, this arm must
+ * cover it too or the claim renders ungated. The spread
+ * copy was corrected because `consensusPct` measures agreement about WHICH TEAM
+ * IS FAVOURED, not about the line or the side's value, and it is pinned at
+ * 1.0 in practice (all 48 published SPREAD picks on 2026-09-13 read exactly
+ * 1.0000, across four sports).
+ *
+ * The second arm exists so the correction could not walk the claim out from
+ * under its own guard. The new wording still asserts a fact about how many
+ * books did something, so it still has to carry the book count and the
+ * freshness stamp. Narrowing this regex to only the legacy arm would silently
+ * un-gate every teaser minted from now on.
+ */
 export const CONSENSUS_CLAIM_RE =
-  /\b(\d{1,3})%\s+bookmaker consensus\b/i;
+  /\b(\d{1,3})%\s+bookmaker consensus\b|\b(?:every book|most books|\d{1,3}\s+of\s+\d{1,3}\s+books)\s+pricing this game\b|\bbooks pricing this game (?:are|were) not unanimous\b/i;
 
 export type PublicConsensusEvidence = {
   /** Unmodified teaser text from the pick (no rewrite). */
@@ -75,6 +102,65 @@ export function bindPublicConsensusClaim(
     dataFreshnessAt: fresh.toISOString(),
     ageHours,
   };
+}
+
+/** The evidence a pick row carries, independent of which text field is being gated. */
+export type ConsensusEvidenceSource = {
+  readonly consensusPct?: number | null;
+  readonly bookmakerCount?: number | null;
+  readonly dataFreshnessAt?: Date | string | null;
+};
+
+export type GatedConsensusClaim = {
+  /** The (possibly suppressed) render-time text. Never a rewrite of the input. */
+  readonly text: string;
+  /**
+   * Pre-formatted "N books · scored Nh ago" caption, present ONLY when `text`
+   * is a bound claim. Null for a non-claim string and for a suppressed claim
+   * (nothing renders either way, so there is nothing to caption).
+   */
+  readonly evidenceCaption: string | null;
+};
+
+/**
+ * Gate a render-time reasoning string against the T-1 tripwire, and return
+ * the evidence caption that must render beside it when it does.
+ *
+ * `bindPublicConsensusClaim` is keyed on `reasoningShort` specifically, but
+ * the same unquantified "every book pricing this game had X favoured" clause
+ * is also the LEAD SENTENCE of the full `reasoning` string for SPREAD picks
+ * (same generator, `scoring.ts`), so both fields need the same gate. Never
+ * rewrites or truncates the stored string — a non-claim string, or a claim
+ * that binds, passes through untouched; a claim that fails to bind renders as
+ * "" (nothing), the same "must not render" outcome the /preview page already
+ * gives a claim it cannot bind. Suppressing to an empty string, rather than
+ * composing a replacement sentence, is deliberate: new customer-facing copy
+ * for the suppressed case is a founder decision, not one this gate makes.
+ *
+ * A bound claim without its evidence displayed alongside it is still the
+ * contract this module exists to enforce (Devin Review, #819): `/preview`
+ * renders `bound.claimText` AND `consensusEvidenceCaption(bound)` together,
+ * so the API-side gate must hand back the same caption for `/picks` to do
+ * the same, not just decide the pass/suppress question.
+ */
+export function gateConsensusClaim(
+  text: string,
+  evidence: ConsensusEvidenceSource,
+  now: Date = new Date(),
+): GatedConsensusClaim {
+  if (!isBookmakerConsensusClaim(text)) return { text, evidenceCaption: null };
+  const bound = bindPublicConsensusClaim({ reasoningShort: text, ...evidence }, now);
+  if (!bound) return { text: "", evidenceCaption: null };
+  return { text, evidenceCaption: consensusEvidenceCaption(bound) };
+}
+
+/** @deprecated Use `gateConsensusClaim` — this discards the evidence caption it must render beside a bound claim. */
+export function gateConsensusClaimText(
+  text: string,
+  evidence: ConsensusEvidenceSource,
+  now: Date = new Date(),
+): string {
+  return gateConsensusClaim(text, evidence, now).text;
 }
 
 /**

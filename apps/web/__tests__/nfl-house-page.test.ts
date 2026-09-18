@@ -16,7 +16,13 @@ const src = readFileSync(join(ROOT, "app/house/page.tsx"), "utf8");
 describe("NFL House page", () => {
   it("every door points at a route that exists in the app", () => {
     const hrefs = [...src.matchAll(/href: "([^"]+)"/g)].map((m) => m[1]!);
-    expect(hrefs.length).toBeGreaterThanOrEqual(6);
+    // ASTRA A-6 collapsed House to FOUR doors — the dead Observatory door and
+    // the staged Sunday Couch room are gone, and the page's own header quotes
+    // the owner decision ("ONE House, not six rooms"). This asserted >= 6, so
+    // it was holding the page to the layout that decision removed. Four is the
+    // shipped shape; the loop below is the invariant that actually matters
+    // (every door resolves to a real route — no dead links).
+    expect(hrefs).toHaveLength(4);
     for (const href of hrefs) {
       const dir = join(ROOT, "app", href.replace(/^\//, ""));
       expect(
@@ -27,13 +33,21 @@ describe("NFL House page", () => {
   });
 
   it("leads with belonging, carries the culture line and the promise triad", () => {
-    expect(src).toContain("Football is better when you have a");
+    // The belonging line is the h1, which FIELD rewrote to "One House. One
+    // place to land." It is split across JSX spans in the source, so both
+    // fragments are matched rather than one contiguous string.
+    expect(src).toContain("One House.");
+    expect(src).toContain("place to land.");
     expect(src).toContain("We do not force action. We protect decision quality.");
     expect(src).toContain("Understand the game · Read the market · Find your people");
   });
 
   it("stages live community honestly — no fake rooms, no fake counts", () => {
-    expect(src).toContain("Live rooms open when we can protect them.");
+    // Was "Live rooms open when we can protect them." — PLURAL. ASTRA A-6 made
+    // this singular on purpose ("we need to have ONE SINGLE CHAT... our
+    // engagement is nowhere near to where we can have multiple rooms"), so the
+    // retired wording asserted the opposite of the shipped decision.
+    expect(src).toContain("One room, when we can keep it safe.");
     expect(src).toMatch(/moderation/);
     // No invented member/online counts anywhere on the page.
     expect(src).not.toMatch(/\d+[,.]?\d*\s*(members|fans|bettors|online|users)/i);
