@@ -33,6 +33,43 @@ task 10's offset capability. Tenancy last because it is the only one
 whose value depends on a product decision not yet made, and it costs nothing sitting on the
 shelf.
 
+## What tonight does NOT cover
+
+Cross-checked against the architecture's own 7 tracks and 69 workstreams. Tonight's 37 tasks
+are a deliberately narrow slice, and two absences matter enough that "ran the queues" must
+not be read as having closed them:
+
+- **Track D, the veto lane and the `gate_decisions` writer: 0 of 7 workstreams.** That is the
+  direct fix for the defect AGENTS.md documents at length, that the table has had no writer
+  in 94 days while three files read it on fallback paths. Nothing tonight touches it.
+- **Track E's CLV attribution, E1 same-book closing value and E7 the attribution test: not
+  addressed** beyond two plumbing fixes shared with other tracks. That is the direct attack
+  on the 23.0 percent against 52.4 percent ESTABLISHED blocker. It does not move tonight.
+
+Also unaddressed by design: Track G's ranking rewrite (G3). The ranking queue is its
+measurement-only precursor and changes no ordering, which is the point.
+
+The rest maps to Track A capture (A2, A3, A4, A9, A12), one Track B item (B7), one Track C
+item (C1), and the display-adjacent half of Tracks E and F.
+
+## Two shared artifacts, and the handshake that keeps them single
+
+Found by a cross-queue review, not visible to a reviewer reading any one queue. Both are
+resolved by explicit cross-reference rather than by resequencing, so the run order above
+still holds:
+
+- **The pre-registration shape** is written by props task 5 and read by mainline task 12.
+  Props runs first, so props task 5 now states the full EIGHT-field shape fixed by
+  architecture Track F item F8, including the false-discovery level it previously omitted.
+  A seven-field file committed first would force mainline's loader either to refuse a file a
+  pre-registration may not edit after commit, or to be loosened, which is the registry
+  integrity failure the mechanism exists to prevent.
+- **The capture-freshness monitor** is one workstream, Track A item A12, whose named file is
+  `apps/web/lib/data-reliability/capture-freshness-manifest.ts`. Mainline task 8 builds it
+  under that exact name; props task 6 registers prop rows as one family inside it if it
+  exists, and otherwise flags itself for absorption. Two files spelling one thing
+  differently is how the line archive died unnoticed for three weeks.
+
 ## What binds every queue
 
 No database. No env flag. No gate. No schema, ever; proposal SQL goes under

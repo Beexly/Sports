@@ -143,6 +143,15 @@ permitted in a test asserting a type error, which is not the same as suppressing
 source), that `requireTenant` throws on absence rather than returning a default, and that
 the union is exhaustive.
 
+**Export it from the barrel, in this same commit.** `packages/types`'s `package.json` has no
+`exports` map: `main` and `types` both point at `./src/index.ts`, and that barrel today
+re-exports exactly two sibling files. A new file under `packages/types/src/` is therefore
+UNREACHABLE from any other package until `export * from "./tenancy.js";` is added to
+`packages/types/src/index.ts`. This task's own test is a same-package relative import, so it
+passes either way and hides the gap; the failure surfaces later, as a typecheck error in the
+cross-package consumer named above. Add the line and add a test that the symbols resolve
+through the package barrel, not only by direct path.
+
 ### Task 2. The client extension, wired but inert
 
 Build the Prisma client extension that will eventually set the tenant per transaction, at

@@ -98,6 +98,15 @@ from, so do not go looking for one; hardcode the fixture and say so in a comment
 differently-cased or differently-ordered inputs produce the SAME key or are rejected, never
 silently different.
 
+**Export it from the barrel, in this same commit.** `packages/types`'s `package.json` has no
+`exports` map: `main` and `types` both point at `./src/index.ts`, and that barrel today
+re-exports exactly two sibling files. A new file under `packages/types/src/` is therefore
+UNREACHABLE from any other package until `export * from "./stratum.js";` is added to
+`packages/types/src/index.ts`. This task's own test is a same-package relative import, so it
+passes either way and hides the gap; the failure surfaces later, as a typecheck error in the
+cross-package consumer named above. Add the line and add a test that the symbols resolve
+through the package barrel, not only by direct path.
+
 ### Task 2. The head artifact format
 
 Build `packages/prediction-engine/src/heads/artifact.ts`. A versioned, serializable
@@ -125,6 +134,15 @@ drift, and a drift here publishes an uncertified number.
 **Definition of done.** Tests proving every refusal branch fires, that a `certified`
 artifact failing any one floor is rejected, and that the floor values are read from a
 single source rather than duplicated.
+
+**Export it from the barrel, in this same commit.** `packages/types`'s `package.json` has no
+`exports` map: `main` and `types` both point at `./src/index.ts`, and that barrel today
+re-exports exactly two sibling files. A new file under `packages/types/src/` is therefore
+UNREACHABLE from any other package until `export * from "./calibration-floors.js";` is added to
+`packages/types/src/index.ts`. This task's own test is a same-package relative import, so it
+passes either way and hides the gap; the failure surfaces later, as a typecheck error in the
+cross-package consumer named above. Add the line and add a test that the symbols resolve
+through the package barrel, not only by direct path.
 
 ### Task 3. The serve function
 

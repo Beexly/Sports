@@ -247,11 +247,19 @@ Nothing in this repository monitors `odds_line_snapshots` freshness. That is how
 archive died silently for three weeks in August: the failure was swallowed into a row count
 and no alarm existed to trip.
 
-Extend `apps/web/lib/data-reliability/` with a generalized capture-freshness reading: last
-row timestamp per capture family, and an alarm predicate when it exceeds a stated threshold
-while that family is expected to be writing. Follow the existing monitor pattern. It reads,
-never writes, never throws into its caller. The loader is INJECTED so your test supplies a
-fake and your session never touches a database.
+Build `apps/web/lib/data-reliability/capture-freshness-manifest.ts`, the file architecture
+Track A item A12 names: a generalized capture-freshness reading, one entry per capture
+family, last row timestamp per family, and an alarm predicate when it exceeds a stated
+threshold while that family is expected to be writing. Generalize the proven
+`classifyGlobalMaxFetchedAt` pattern rather than inventing a new one. It reads, never
+writes, never throws into its caller. The loader is INJECTED so your test supplies a fake
+and your session never touches a database.
+
+**Use that exact filename.** The props queue's task 6 is the same mechanism scoped to prop
+rows, and it is now instructed to register prop-market rows as one family inside THIS file
+if it exists, or to flag itself for absorption into it if it does not. If you name the file
+something else, that handshake silently fails and the repository gets two freshness monitors
+instead of one.
 
 **Definition of done.** Unit test covering fresh, stale, and not-expected-to-be-writing.
 The reading appears on the ops truth surface that already renders reliability output.

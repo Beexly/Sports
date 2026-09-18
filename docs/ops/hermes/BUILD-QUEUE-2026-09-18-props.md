@@ -271,13 +271,22 @@ An earlier draft of this task said it did. Its `TrialInput` (`:35-47`) carries o
 `params` is exactly the untyped slot they would occupy. You are DEFINING a shape, not
 conforming to one.
 
-**Sequencing:** mainline queue task 12 builds `preregistration.ts`, the loader that reads
-these files and refuses an uncommitted one. If you have done it, use its schema here. If
-not, define the shape here and make mainline task 12 read THIS definition. Two schemas for
-one artifact is the drift this repo keeps paying for. Each must carry: the hypothesis in
-one sentence, the exact feature definition, the code hash, the stratum list, the
-kill line as a NUMBER with its confidence level and its n floor, the family id
-for multiple-comparison control, and the placebo spec.
+**The shape is FIXED ELSEWHERE. Do not define it here.** It is architecture section 8.6
+Track F item F8 in `docs/architecture/2026-09-18-signal-architecture.md`, and mainline queue
+task 12 builds `preregistration.ts`, the loader that reads these files and refuses an
+uncommitted one, against that same list. **Eight fields, not seven:** the hypothesis in one
+sentence, the exact feature definition, the code hash, the stratum list, the kill line as a
+NUMBER with its confidence level and its n floor, the family id for multiple-comparison
+control, the **false-discovery level**, and the placebo spec.
+
+An earlier draft of this task listed seven, omitting the false-discovery level, and told you
+to define the shape here if mainline task 12 had not landed yet. That was wrong in a way
+worth naming, because it is the failure mode this mechanism exists to prevent. Props runs
+before mainline in the queue order, so the seven-field shape would have been committed
+first, and then mainline's loader either refuses files that a pre-registration is by
+definition not allowed to edit after commit, or someone loosens the validator to accept
+them, silently dropping the field that controls multiple comparisons. Write all eight,
+whether or not `preregistration.ts` exists yet.
 
 Start with `player_receptions` and `player_pass_tds` for NFL only, because those
 are the two markets the ingest actually fetches.
@@ -296,11 +305,23 @@ swallowed the failure and the only signal was a row count. Nothing monitors
 `odds_line_snapshots` freshness to this day. We are now writing a new row family
 into the same table with the same failure mode, and paying for it.
 
-**Build.** Extend the existing reliability surface under
-`apps/web/lib/data-reliability/` with a prop-capture freshness reading: last
-prop-market row timestamp per sport, and an alarm predicate when it exceeds a
-stated threshold while the flag is on. Follow the pattern of the existing
-monitors. It reads; it never writes; it never throws into the caller.
+**Build.** A prop-capture freshness reading: last prop-market row timestamp per sport, and
+an alarm predicate when it exceeds a stated threshold while the flag is on. It reads; it
+never writes; it never throws into the caller.
+
+**Where it goes, and this matters more than the reading itself.** The architecture treats
+this as ONE workstream, Track A item A12, whose named file is
+`apps/web/lib/data-reliability/capture-freshness-manifest.ts`, one entry per capture family,
+generalizing the proven `classifyGlobalMaxFetchedAt` pattern. Mainline queue task 8 builds
+that generalized manifest. So: **if `capture-freshness-manifest.ts` exists when you get
+here, add prop-market rows as ONE MORE FAMILY inside it and add no new file.** If it does
+not exist yet, build the narrow version, name `capture-freshness-manifest.ts` in your ledger
+evidence as the file that must absorb it, and say so in the module's header comment.
+
+Building a second, parallel monitor is the specific outcome to avoid. Two files spelling one
+thing differently is exactly the drift that let the line archive die for three weeks, and
+the eight single-purpose monitors already in that directory make it the path of least
+resistance.
 
 **Definition of done.** Unit test covering fresh, stale and flag-off. The reading
 appears on the truth surface the ops route already renders. No database call from
