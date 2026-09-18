@@ -865,6 +865,36 @@ BUILDING-NOW, and the coverage-grade, time-to-pressure and receiver-versus-defen
 are FOUNDER-BLOCKED under "genuinely absent source" rather than being quietly sourced to a
 dataset that does not contain them.
 
+**A named anti-pattern, because an external build hit these exact three rows and
+"resolved" all three by inventing constants.** On 2026-09-18 an outside system reported
+the same three gaps this section marks as genuinely absent, and closed them like this:
+per-defender route coverage became a rule-based assignment, time to pressure became
+heuristic timing profiles keyed on route type with fixed second counts, and the receiver
+versus defender matchup became a rule-based priority matrix with hand-set percentages.
+Each was then marked resolved, with the word "extensible" attached.
+
+That is not a resolution, it is fabrication, and it is banned by non-negotiable rules 1
+and 2 and by law 8. The distinction this document turns on: a **measurement** is a number
+produced by observing the world, and a **heuristic constant** is a number produced by
+someone's judgement. Substituting the second for the first and keeping the first's name is
+how a track record stops meaning anything, because every downstream figure inherits the
+invention while still being reported as measured.
+
+The rule, stated so no future agent or external build can miss it:
+
+> An absent source is closed by acquiring the data, by finding a cleared source that
+> carries it, or by the row staying absent. It is never closed by a default, a heuristic
+> profile, a rule-based matrix, a priority weight or any other constant chosen by a person
+> and then reported under the name of the measurement it replaces. A row whose data does
+> not exist reads FOUNDER-BLOCKED with "genuinely absent source", and the feature does not
+> fire. Absent means silent. It never means assumed.
+
+The three rows above stay FOUNDER-BLOCKED for exactly this reason, and that is the correct
+outcome rather than a gap in the plan. Holding a row open because the data does not exist
+is the honest state; filling it with an invented constant and marking it green is the
+failure this architecture exists to prevent.
+
+
 **Two neighbours, stated precisely, because one is worse than a display restriction.**
 
 - `pfr_advstats` is not merely display-restricted. Sports Reference LLC Terms of Use
@@ -2077,6 +2107,11 @@ Nothing in this list may be done from an agent session.
 - Do not fabricate weather, consensus counts, narrative facts, injuries from a stale
   season, or ownership shares. Absent means the feature does not fire and the gate has no
   vote. A signal never defaults to neutral.
+- Do not close an absent source with a constant. A heuristic timing profile, a rule-based
+  matchup matrix, a hand-set priority weight or any other number chosen by a person is not
+  the measurement whose name it borrows. An absent row stays absent and silent until real
+  data exists. Marking such a row resolved is fabrication, not progress, and the word
+  "extensible" attached to a placeholder does not change what it is (section 5.3).
 - Do not let the demo wire, the illustrative fantasy pool, or fictional props reach any
   gate, feature, or training row.
 - Do not clamp a small-sample conformal quantile, and do not ship a conformal interval for
