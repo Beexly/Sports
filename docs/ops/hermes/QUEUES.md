@@ -12,6 +12,13 @@ same acceptance test, with one disclosed exception named in the ruler queue's ta
 | 5 | `BUILD-QUEUE-2026-09-18-head-serve.md` | 6 | Somewhere for a fitted head to go, and a gate with something to gate. Registry ships empty. |
 | 6 | `BUILD-QUEUE-2026-09-18-tenancy.md` | 6 | The multi-tenancy foundation, while every row still belongs to one tenant by definition. |
 
+## Who owns what
+
+The six queues are entry points for three owned domains, not a single worklist. Read
+`AGENT-CHARTERS.md` before claiming anything: it says what each domain owns, what it may
+decide alone, what it may never do, and the four rules that hold between them. A queue is a
+domain's floor, not its ceiling.
+
 ## The acceptance test every queue shares
 
 **Merged and deployed with no founder action, nothing behaves differently.**
