@@ -769,15 +769,33 @@ twelve-family programme with one line is exactly the compression this rebuild ex
 undo. Split into seven rows carrying each family's real status and its own kill line,
 including W3 flagged as a kill that was never actually computed.
 
-**Prop alignment was blocked on flags that are already on.** The row named
-`EVENT_ODDS_INGEST_ENABLED` and `LINE_ARCHIVE_ENABLED` as its blockers. AGENTS.md:776-777
-records both as ON, the first founder-confirmed by screenshot on 2026-09-12 and the second
-under C-62. AGENTS.md:437 separately says prop alignment is "inert pending
-`EVENT_ODDS_INGEST_ENABLED`", so the standing notes contradict themselves. Under the rule
-that a row is only parked when a blocker can be named, and the flags are recorded as set,
-the row is BUILDING-NOW behind its own n floor of 100 games of real, non-illustrative prop
-lines. One founder sentence settles the contradiction either way, and the capture costs
-nothing if the answer is that the flags are off.
+**Prop alignment was blocked on flags that are already on. SETTLED 2026-09-18: the
+founder confirmed props are ON.** The row had named `EVENT_ODDS_INGEST_ENABLED` and
+`LINE_ARCHIVE_ENABLED` as its blockers. AGENTS.md:776-777 recorded both as on while
+AGENTS.md:437 said prop alignment was inert pending the same flag, so the standing notes
+contradicted themselves. The founder settled it: both flags are set in Production. Treat
+AGENTS.md:437 as stale. The row is BUILDING-NOW behind its own n floor.
+
+This turns the props lane live and starts spending paid Odds API credits every cycle, so
+it carries a verification obligation the architecture must state. The chain is complete in
+code and was traced end to end this session: `event-odds-ingest.ts` FETCHES ONLY, and says
+so in its own header; `process-sport.ts:84` imports it and `:495` calls it, credit-capped
+at 8 per cycle and kickoff-sorted so the cap cannot starve late games; persistence happens
+separately at `process-sport.ts:1032-1038`, which converts with `toPropLineSnapshotRows`
+and passes the rows into `captureLineSnapshotsIfEnabled`. Props land in `OddsLineSnapshot`
+with **no schema change**, because `market` is a free string and props use the form
+`player_receptions|justin_jefferson` (`line-archive.ts:36-45`).
+
+**The hazard, and it is silent.** `process-sport.ts:1032` joins on `game.externalId`,
+while the fetched snapshots are keyed by the Odds API event id. Fixture triplication means
+one NFL fixture exists as three `games` rows, one carrying the odds-api id and two
+carrying ESPN-shaped ids. On an ESPN-keyed row that lookup returns undefined, the prop row
+set is empty, and the cycle persists nothing **after having paid for the fetch**. There is
+no error, no log line and no counter that would reveal it. Making that failure observable
+is the first task of the props build queue
+(`docs/ops/hermes/BUILD-QUEUE-2026-09-18-props.md`), deliberately as a measurement-only
+change, because altering the join and measuring it in one commit destroys the ability to
+attribute either.
 
 **Eleven capabilities had no row at all.** Every one is named in the founder's own
 ENGINE BENCHMARK notes and none had reached this registry: mixed-effects EPA attribution
