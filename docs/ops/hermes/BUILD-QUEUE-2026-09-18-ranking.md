@@ -156,12 +156,23 @@ Three orderings, each a comparator over a minimal row shape carrying `expectedCl
   rule.
 - `orderingPricedTierFirst`: a two-tier sort that never compares a priced row against an
   unpriced one. Tier 1 is every row whose `rankingSource` is `independent_trueProb` or
-  `blend_indep_conf`, ordered among themselves by `rankingP` descending. Tier 2 is every
-  other row, meaning `rankingSource` of `confidence`, absent, or unparseable, held in their
-  current relative order. Tier 1 always precedes tier 2. Add `rankingSource` to the row
-  shape for it. **Report this one first in task 3**, because it is the only candidate that
-  needs no engine edit and no `MODEL_VERSION` bump, so it is the only one the founder can
-  act on the same day.
+  `blend_indep_conf`. Tier 2 is every other row, meaning `rankingSource` of `confidence`,
+  absent, or unparseable, held in their current relative order. Tier 1 always precedes tier
+  2. Add `rankingSource` to the row shape for it.
+  **Within tier 1, order by EDGE, not by `rankingP`. Founder call, 2026-09-18.** Use the
+  same key `orderingEdgeFirst` uses: descending `expectedClv`, ties broken by `trueProb`
+  minus `marketFairProb`, then recency, and a tier-1 row carrying no finite `expectedClv`
+  trails inside tier 1 rather than sorting as zero. Two facts make that trailing rule load
+  bearing rather than defensive: a CONTRADICTS row carries `expectedClv` 0.0 by
+  construction, so zero is a real value that must not absorb absent ones, and
+  `adverse-edge-suppression.ts` has already removed the negative rows from both read
+  surfaces before this comparator ever sees them, so tier 1 is mostly non-negative and an
+  absent value sorting as zero would land it mid-pack instead of last.
+  **Report this one first in task 3**, because it is the only candidate that needs no engine
+  edit and no `MODEL_VERSION` bump, so it is the only one the founder can act on the same
+  day. Task 3 still reports all four side by side: the founder's call was made on the
+  mechanism, and the report is what confirms it against settled slates before the task 4
+  switch is ever moved off `current`.
 
 Every one is total and stable: equal rows keep their input order, so a comparison never
 reports a difference that is really just sort instability.
