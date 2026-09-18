@@ -187,10 +187,11 @@ export {
   EVIDENCE_READINESS_FAMILY,
 } from "./evidence-readiness-loader.js";
 export type { EvidenceBundle } from "./evidence-readiness-loader.js";
-export { admitTrainableTrueProbRows } from "./edge-lab/trueprob-admission.js";
+export { admitTrainableTrueProbRows, censusTrueProbRows, summarizeTrueProbAdmission } from "./edge-lab/trueprob-admission.js";
 export type {
   AdmittedTrueProbRow,
   RefusedTrueProbRow,
+  RefusalCensusReport,
   TrueProbAdmission,
   TrueProbRefusalReason,
 } from "./edge-lab/trueprob-admission.js";
@@ -2047,3 +2048,29 @@ export {
   signedDeceleration,
   syntheticSteamPath,
 } from "./edge-lab/steam-baselines.js";
+
+export {
+  MARKET_CALIBRATION_BINS,
+  MARKET_CALIBRATION_MIN_BIN_N,
+  MARKET_CALIBRATION_VIOLATION_PP,
+  measureMarketCalibrationViolation,
+} from "./edge-lab/market-calibration-violation.js";
+export type {
+  MarketCalibReport,
+  MarketCalibRow,
+  MarketCalibSportCard,
+} from "./edge-lab/market-calibration-violation.js";
+export {
+  FLASH_VENN_WIDTH_MEASURE,
+  VENN_WIDTH_MIN_N,
+  measureVennWidthBySport,
+} from "./edge-lab/venn-width-by-sport.js";
+export type { VennWidthReport, VennWidthRow, VennWidthSportCard } from "./edge-lab/venn-width-by-sport.js";
+export {
+  compareCrpsRankings,
+  compareNflKeyNumberVsGaussian,
+  discretizedGaussian,
+  distFromPmf,
+  nflKeyNumberMixture,
+} from "./edge-lab/kernel/crps-compare.js";
+export type { CrpsCompareReport, CrpsRanking, SyntheticCrpsCompare } from "./edge-lab/kernel/crps-compare.js";

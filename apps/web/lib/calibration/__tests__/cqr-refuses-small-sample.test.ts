@@ -32,6 +32,17 @@ describe("conformalQuantile refuses when the finite-sample rank exceeds n-1", ()
       result = cqrInterval([10, 20], [12, 22], yCal, qLoCal, qHiCal, 0.1);
     }).not.toThrow();
     expect(result?.qhat).toBe(Number.POSITIVE_INFINITY);
+    expect(result?.licensed).toBe(false);
+    expect(result?.lo[0]).toBe(Number.NEGATIVE_INFINITY);
+    expect(result?.hi[0]).toBe(Number.POSITIVE_INFINITY);
+  });
+
+  it("empty calibration is unlicensed, not qhat 0", () => {
+    const result = cqrInterval([3], [5], [], [], []);
+    expect(result.licensed).toBe(false);
+    expect(result.qhat).toBe(Number.POSITIVE_INFINITY);
+    expect(result.lo).not.toEqual([3]);
+    expect(result.hi).not.toEqual([5]);
   });
 
   it("each stratum carries its own quantile (existing 3-part stratumKey format)", () => {

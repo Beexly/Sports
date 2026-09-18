@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { admitTrainableTrueProbRows } from "../trueprob-admission.js";
+import { admitTrainableTrueProbRows, censusTrueProbRows, summarizeTrueProbAdmission } from "../trueprob-admission.js";
 
 describe("admitTrainableTrueProbRows", () => {
   it("admits as_of_mint and reports every refusal reason instead of dropping silently", () => {
@@ -29,5 +29,20 @@ describe("admitTrainableTrueProbRows", () => {
     const out = admitTrainableTrueProbRows([{ trueProb: 0.91 }]);
     expect(out.admittedCount).toBe(0);
     expect(out.refusalCounts.trueProbBasis_required).toBe(1);
+  });
+
+  it("summarise throws on empty rather than printing a 0% refusal rate", () => {
+    expect(() => summarizeTrueProbAdmission(admitTrainableTrueProbRows([]))).toThrow(/empty census/);
+  });
+
+  it("census reports refusal rate and never claims a DB query", () => {
+    const report = censusTrueProbRows([
+      { trueProbBasis: "as_of_mint" as const, trueProb: 0.6 },
+      { trueProbBasis: "post_settlement_backfill" as const, trueProb: 0.9 },
+    ]);
+    expect(report.refusalRate).toBeCloseTo(0.5, 12);
+    expect(report.dbQueried).toBe(false);
+    expect(report.priced).toBe(false);
+    expect(report.status).toBe("shadow");
   });
 });
