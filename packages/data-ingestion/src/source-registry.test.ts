@@ -79,13 +79,21 @@ describe("legal source registry", () => {
   });
 
   it("refuses scrape-/non-commercial sources from the source dumps", () => {
-    for (const id of ["sports-reference", "fangraphs", "pff", "statsbomb-free", "ergast", "understat"]) {
+    // NOTE: "pff" is deliberately NOT in this refuse-list. Founder override
+    // 2026-09-18 (Garrett): grades embedded in PFF's own PUBLIC player pages
+    // (__NEXT_DATA__) are ingestible with per-ingestion citation (time/date/URL);
+    // only the paid PFF API stays off-limits. See the pff registry entry.
+    for (const id of ["sports-reference", "fangraphs", "statsbomb-free", "ergast", "understat"]) {
       expect(isIngestible(id)).toBe(false);
       expect(() => assertIngestible(id)).toThrow();
     }
     // The famous "free" traps are correctly non-commercial / forbidden.
     expect(getSource("statsbomb-free")?.commercialUse).toBe(false);
     expect(getSource("ergast")?.license.spdx).toBe("CC-BY-NC-4.0");
+    // PFF public page-embedded grades: caution-gated, attribution-required, non-commercial.
+    expect(getSource("pff")?.verdict).toBe("use-with-caution");
+    expect(getSource("pff")?.commercialUse).toBe(false);
+    expect(getSource("pff")?.attributionRequired).toBe(true);
   });
 
   it("partitions the registry into cleared vs forbidden/paid", () => {
