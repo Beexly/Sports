@@ -114,7 +114,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
                     Temporarily stale
                   </span>
                   <span className="break-words sm:ml-3">
-                    Board is temporarily stale — awaiting fresh data. The board
+                    Board is temporarily stale, awaiting fresh data. The board
                     reopens on the next real ingestion. Methodology and pricing
                     stay available while it refreshes.
                   </span>
@@ -126,7 +126,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
                   </span>
                   <span className="break-words sm:ml-3">
                     Model signals are quiet (no fresh published slate). This is
-                    restraint, not an outage — free tools and methodology stay
+                    restraint, not an outage. Free tools and methodology stay
                     open. Counts read zero until the next signal generation lands.
                   </span>
                 </>
@@ -147,7 +147,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
 
         {/* Non-suppressed stale detection: kill switch is OFF but the board
             loaded zero rows while data age exceeds the Refresh SLA. Surface a
-            truthful "temporarily stale, refreshing" message — NOT "quiet board"
+            truthful "temporarily stale, refreshing" message. NOT "quiet board"
             which would imply an intentional empty slate. (CLAUDE.md honesty
             rule: an outage must never wear the empty state's copy.) */
           stateResult.meta.degradationCharacter === "stale_refreshing" &&
@@ -160,7 +160,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
                 Temporarily stale
               </span>
               <span className="break-words sm:ml-3">
-                Board is temporarily stale — awaiting fresh data. The board
+                Board is temporarily stale, awaiting fresh data. The board
                 reopens on the next real ingestion. Methodology and pricing
                 stay available while it refreshes.
               </span>
@@ -362,7 +362,7 @@ export default async function BoardPage(): Promise<JSX.Element> {
                   governed headline slot behind evaluatePublicPerformancePolicy
                   (min sample, bootstrap exclusion, CLV-first) and is
                   deliberately never a type this page can construct on its
-                  own — "it can never silently fall back to a win-rate
+                  own. "it can never silently fall back to a win-rate
                   number." A settled-picks count is a fact, not a
                   performance claim, so it carries no such gate. */}
               <Metric label="Decided" value={String(calibration.population.decided)} />
@@ -457,7 +457,7 @@ function PassListItem({ row }: { row: PassListRow }): JSX.Element {
           </Link>
         </span>
         <span className="font-mono text-xs text-orbital-cyan">{row.edgeIndex === null ? "EI N/A" : `EI ${row.edgeIndex}`}</span>
-        {/* The refusal and its plain-language reason are UNCONDITIONAL — no
+        {/* The refusal and its plain-language reason are UNCONDITIONAL, no
             entitlement check wraps this. Declining to bet is the credibility
             claim; gating it would sell volume instead of judgement. */}
         <span className="text-sm text-ion-2 sm:text-right">{row.reason}</span>

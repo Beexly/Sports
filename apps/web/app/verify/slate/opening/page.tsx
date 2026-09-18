@@ -30,7 +30,7 @@ import { Footer } from "@/components/ui/footer";
 export const metadata: Metadata = {
   title: "Opening a Slate Commitment · Binding Check on the Record",
   description:
-    "Every slate's aggregate commitment is published as a compressed hex before the first kickoff. After the slate fully settles, the opening can be disclosed so anyone can recompute the commitment on secp256k1 and confirm it matches. A binding check on the record — not a claim about whether the picks won.",
+    "Every slate's aggregate commitment is published as a compressed hex before the first kickoff. After the slate fully settles, the opening can be disclosed so anyone can recompute the commitment on secp256k1 and confirm it matches. A binding check on the record, not a claim about whether the picks won.",
   alternates: { canonical: "/verify/slate/opening" },
 };
 
@@ -64,10 +64,10 @@ export default function SlateOpeningExplainerPage(): JSX.Element {
           before any result is known and is never rewritten.
         </p>
         <p className="mt-3 text-sm leading-6 text-ion-1">
-          A commitment nobody can open proves nothing on its own — it is a
+          A commitment nobody can open proves nothing on its own. It is a
           number no one has been shown how to check. Once every covered pick
           on that slate has a final result, the two numbers behind the hex —
-          the total and the blinding sum added to it — can be disclosed. That
+          the total and the blinding sum added to it, can be disclosed. That
           is what turns the hex from plumbing into evidence.
         </p>
 
@@ -89,7 +89,7 @@ export default function SlateOpeningExplainerPage(): JSX.Element {
             <code className="rounded bg-obsidian/60 px-1.5 py-0.5 font-mono text-xs text-orbital-cyan">
               GSE-pedersen-h-secp256k1-v1
             </code>{" "}
-            by hash-and-increment — anyone can regenerate H from that seed
+            by hash-and-increment, anyone can regenerate H from that seed
             without trusting us for it. If the compressed hex of the
             recomputed C equals the string published before the slate&apos;s
             first kickoff, the disclosure checks out.
@@ -113,7 +113,7 @@ export default function SlateOpeningExplainerPage(): JSX.Element {
                 <span aria-hidden className="mt-2 inline-block h-1.5 w-1.5 shrink-0 rounded-full bg-orbital-cyan" />
                 <span>
                   That total was fixed in advance and has not been edited
-                  since — a binding check on the record.
+                  since. A binding check on the record.
                 </span>
               </li>
             </ul>
@@ -192,7 +192,7 @@ export default function SlateOpeningExplainerPage(): JSX.Element {
           )}
           <p className="mt-3 text-xs leading-5 text-ion-2">
             The same off-by-default state is enforced at the machine level,
-            not just in this copy — query{" "}
+            not just in this copy, query{" "}
             <Link href="/api/verify/slate/opening" className="underline hover:text-orbital-cyan">
               /api/verify/slate/opening
             </Link>{" "}
