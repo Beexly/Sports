@@ -60,22 +60,48 @@ The one signal toward a future need is `packages/partner-stack` (`assessPartner`
 has exactly one importer outside its own directory,
 `apps/web/lib/gse-stats/session-tier.ts`. Partner revenue is scaffolded, not live.
 
-## 4. Recommendation
+## 4. Recommendation, corrected
 
-**Do not build multi-tenancy now.** It is only worth it if the white-label or partner path
-becomes real, and retrofitting a tenant key means touching every table, every query and
-every cron. That is a large founder-gated migration competing directly with work already
-queued.
+An earlier revision of this section said "do not build multi-tenancy now". That was wrong,
+and it was wrong in the specific direction this project keeps having to correct: it treated
+a product decision that is not yet made as a reason to defer foundational work whose cost
+only rises with time.
 
-**When it does become real, do not copy this pattern.** Use Postgres row-level security so
-the database enforces isolation and a forgotten predicate fails closed rather than leaking.
-Manual context threading fails open, which is the wrong direction for a defect nobody sees
-until it has already happened. Row-level security is strictly safer and we would be
-adopting it fresh instead of inheriting someone else's debt.
+**Build the foundation now. Gate the product decision separately.** Retrofitting a tenant
+key is a function of how much data and how many customers exist when you do it. Today every
+row belongs to one tenant by definition, so the backfill is a constant and every migration
+is reversible. After white-label revenue exists it is surgery under load. This is the same
+wall-clock asymmetry that governs the capture plane, applied to schema rather than sample,
+and the earlier recommendation failed to apply it.
 
-**The decision that unblocks this:** is partner or white-label revenue a this-quarter path
-or a someday path? A someday answer means this document is the whole deliverable and the
-row stays closed.
+**Our position is much better than theirs, and one measured fact is why.** This repository
+exports ONE database client, `export const db` at `packages/db/src/index.ts:250`, imported
+by 308 files. Gauzy threads tenant context by hand through 196 files because it has no such
+chokepoint. We can enforce centrally in two layers that both fail CLOSED: Postgres
+row-level security so the database refuses cross-tenant rows, and a Prisma client extension
+at the single `db` export so the policies have a tenant to read. Neither depends on a
+developer remembering anything, which is the whole difference from the reference
+implementation.
+
+**The hazard that decides the design.** `packages/db/src/index.ts:225-233` builds a Neon
+`Pool`, and the fallback client pools too. A pooled connection is reused by the next
+request, so a session-level `SET app.current_tenant` leaks the previous request's tenant
+into the next one, which is precisely the vulnerability the work exists to prevent. Every
+assignment must be `SET LOCAL` inside an explicit transaction. There are 67 non-test
+`$transaction` call sites already, so the pattern exists here.
+
+**What is queued.** `docs/ops/hermes/BUILD-QUEUE-2026-09-18-tenancy.md`, six tasks, with
+the property that merged and deployed with no founder action, nothing behaves differently:
+a pure tenancy library in `@sports/types`, a tested client extension attached to nothing,
+two SQL proposals the founder applies on his own schedule, an enumerating guard committed
+skipped with a named unskip condition, and a cutover runbook.
+
+**The founder decision that remains, and it is narrower than before:** not whether to build
+the foundation, but which tables are tenant-scoped. The queue classifies each of the 102
+models three ways and escalates the ambiguous set rather than resolving it, because a wrong
+call leaks in one direction and needlessly scopes global reference data in the other. If
+the answer turns out to be that white-label is never a path, phase one simply is not
+applied and the foundation sits on the shelf at zero running cost.
 
 ## 5. What was not examined
 
