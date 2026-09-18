@@ -143,8 +143,10 @@ success. A third attempt is not.
 **Why.** Described in section 0. A join miss costs paid credits and produces
 nothing, with no signal anywhere.
 
-**Build.** In `packages/ingestion-pipeline/src/`, extend the event-odds report
-path so every cycle records, per sport:
+**Build.** The counters live in `process-sport.ts`'s per-game loop, NOT inside
+`event-odds-ingest.ts`, which is fetch-only by design and has no visibility into the
+per-game join that is the thing being measured. Extend the reporting so every cycle
+records, per sport:
 
 - `eventsFetched`: how many event-odds responses came back
 - `snapshotsKeyed`: how many went into the map
@@ -181,9 +183,12 @@ problem now, from code, with no database.
 `scripts/ops/report-prop-join-coverage.mjs` that takes a JSON fixture file of
 `{ externalId, sportKey }` rows (so it needs no database) and reports how many
 external ids look like Odds API event ids versus ESPN-shaped ids
-(`espn:*`), grouped by sport. Derive the shape predicates from the real id
-formats already handled in `packages/ingestion-pipeline/src/fixture-confirmation.ts`
-and the twin-candidate logic; do not invent a new format guess.
+(`espn:*`), grouped by sport. Derive the shape predicates from the code that
+already holds them: `packages/ingestion-pipeline/src/fixture-collapse.ts:65` defines
+`isEspnExternalId` and uses it at `:90-91`, and
+`packages/ingestion-pipeline/src/game-identity.ts` carries the identity rules. **Do not use
+`fixture-confirmation.ts`;** an earlier draft named it and that was wrong, it is the ledger
+C-111 schedule guard and holds no id-shape logic. Do not invent a new format guess.
 
 **Definition of done.** The script runs against a committed sample fixture in
 `scripts/ops/__fixtures__/` and prints a table. A unit test pins the classifier
@@ -194,13 +199,26 @@ run it against a database.
 
 **Why.** `prop-alignment.ts` warns about it in prose. Prose is not a guard.
 
-**Build.** A test, not a refactor:
-`apps/web/lib/conviction/signals/__tests__/prop-alignment-no-demo-pool.test.ts`.
-It must fail if any production (non-test) module imports the demo or sample prop
-pool, and it must enumerate the importers rather than assert a count, because
-counts drift. Use the same enumerating pattern the repo already uses for the
-partial-mock guard: find the files, assert the set is empty, and print the
-offenders in the failure message.
+**Build.** A test, not a refactor, co-located with its siblings as
+`apps/web/lib/conviction/signals/prop-alignment-no-demo-pool.test.ts`. Every existing test
+in that directory is co-located rather than in a `__tests__` subdirectory.
+
+**Scope it to the conviction call chain, NOT to all of `apps/web`.** This is measured.
+`apps/web/lib/fantasy/props.ts` is the fictional pool ("Silas Hart" at `:169`), and three
+production modules import it today: `components/fantasy/props-edge.tsx`,
+`components/fantasy/pickem-ranker.tsx` and `app/fantasy/props/page.tsx`. Those are fantasy
+UI surfaces rendering sample data behind the honesty badge this repo already ships. They
+are not this guard's business, and a guard scoped to every production module would fire on
+all three and send you to BLOCKED over something known and labelled.
+
+**Also verified, so you do not go hunting:** `prop-alignment.ts` does NOT import the
+fictional pool. Its only import is `../gate-contract`; the mention at `:28` is a comment
+warning against it. The conviction gate still has zero importers outside its own directory,
+so no fictional row can reach a pick today. This guard exists to keep it that way.
+
+Assert that nothing under `apps/web/lib/conviction/**` imports `lib/fantasy/props` or any
+other sample pool, transitively. Enumerate offenders rather than assert a count, and print
+them in the failure message.
 
 Also assert that `prop-alignment` returns `null`, never a neutral or zero vote,
 when it is handed an empty or absent prop set. A null is not a vote. A neutral
@@ -244,8 +262,19 @@ kill line written first. Props are not exempt, and being excited about a live
 feed is exactly when that discipline gets skipped.
 
 **Build.** One JSON pre-registration per candidate prop market under
-`docs/calibration-proposals/feature-trials/`, following the shape
-`edge-lab/trials-registry.ts` already expects. Each must carry: the hypothesis in
+`docs/calibration-proposals/feature-trials/`.
+
+**Correction, verified: `edge-lab/trials-registry.ts` does NOT already define this shape.**
+An earlier draft of this task said it did. Its `TrialInput` (`:35-47`) carries only
+`trialId`, `family`, `kind`, `recordedAt`, `params` as a free-form `Canonical` blob,
+`pValue` and an optional statistic. None of the pre-registration fields exist there, and
+`params` is exactly the untyped slot they would occupy. You are DEFINING a shape, not
+conforming to one.
+
+**Sequencing:** mainline queue task 12 builds `preregistration.ts`, the loader that reads
+these files and refuses an uncommitted one. If you have done it, use its schema here. If
+not, define the shape here and make mainline task 12 read THIS definition. Two schemas for
+one artifact is the drift this repo keeps paying for. Each must carry: the hypothesis in
 one sentence, the exact feature definition, the code hash, the stratum list, the
 kill line as a NUMBER with its confidence level and its n floor, the family id
 for multiple-comparison control, and the placebo spec.
