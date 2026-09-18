@@ -26,7 +26,6 @@ const SCAN_ROOTS = [
 
 /** Known remaining absolute pins in the rot class. Shrink; do not grow silently. */
 const KNOWN_ABSOLUTE_CLOCK_PINS: readonly string[] = [
-  "packages/ingestion-pipeline/src/__tests__/galaxy-two-book-acceptance.test.ts",
   "packages/stats-api/src/__tests__/realtime-truth.test.ts",
 ];
 
