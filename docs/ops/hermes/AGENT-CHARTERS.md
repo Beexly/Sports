@@ -189,6 +189,39 @@ Three things, none of them CI and none of them intelligence:
    That asymmetry matches the observed failure exactly: a ledger edit landed, four new files
    did not.
 
+## 1d. The ledger is not safe for three claimants yet, and here is the measurement
+
+Run `node scripts/ops/check-agent-ledger.mjs` and it exits 0 with **38 SLA warnings**. The
+guard is doing its job; the warnings are the finding. Two populations, both of which will
+bite an agent that claims work without reading them first.
+
+**Eleven UNPUSHED rows, every one owned by `hermes`, and they are not small.** H-E, C-336
+through C-345: the launch sequence L1 through L9 plus a CLV census and a session audit. The
+DFS optimizer no longer presenting a fictional sample slate as generated advice. The Beat
+showing unavailable and empty honestly. Board and Picks differentiated. Record and Verify
+sharing one room. An independent DFS lineup validator. An honest exposure target.
+
+**That is nine launch items, complete, existing on exactly one laptop.** The ledger's own
+rules section already says what this state means: "If you cannot push, you are `UNPUSHED`,
+not `DONE`. Record the local branch and SHA so the work can be recovered." Recovery has not
+happened. This is the single largest block of stranded capacity in the repository, and it is
+a founder act to unblock: authorize the push.
+
+**Thirty-six rows are OPEN, carry evidence, and have no owner.** S-1, C-18 through C-41,
+C-85 through C-112, C-184, C-225, C-262, C-263, C-271, C-295, C-296, C-302, ARCH-13. Evidence
+on an OPEN row means **work was started**. So each of these is a partially-completed unit with
+nobody accountable for it.
+
+**The rule for all three domains: on an orphaned row, read the evidence before you claim.**
+It records what was already done. Claiming one and starting from zero is how the same work
+gets done twice, which is the failure this charter exists to prevent, one level down.
+
+**A gap in the guard worth knowing, because one of those rows is deliberate.** ARCH-13 is
+unowned ON PURPOSE: it was diagnosed by Domain 3 and handed to the domain that owns the file,
+and leaving it unowned is the honest state until that domain claims it. The guard cannot tell
+a deliberate handoff from neglect, so it flags both. Do not read the warning as an accusation;
+read the row.
+
 ## 2. The contract between the three
 
 Four rules. Each was earned by a failure already observed here.
