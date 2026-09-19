@@ -1,7 +1,6 @@
 import { describe, it, expect } from "vitest";
-import fs from "node:fs";
-import path from "node:path";
-import { fileURLToPath } from "node:url";
+import { existsSync, readFileSync } from "node:fs";
+import { dirname, resolve } from "node:path";
 import {
   computeTurnoverLuck,
   DEFAULT_LEAGUE_BASELINE,
@@ -198,13 +197,30 @@ describe("computeTurnoverLuck -- determinism and purity", () => {
  * cannot pass again.
  */
 describe("league baseline provenance", () => {
-  const labCsv = path.resolve(
-    path.dirname(fileURLToPath(import.meta.url)),
-    "../../../../../docs/research/2026-09-17/gse-lab/defense_detail_2025.csv",
+  // Repo root by walking up to the unique marker tsconfig.base.json, the
+  // pattern already used by metric-evidence-report-markdown.test.ts in this
+  // package. Two reasons over the obvious alternatives: `import.meta.url` does
+  // not compile here (this package is module: CommonJS, TS1343), and a fixed
+  // ../../../../../ climb silently resolves to the wrong place the moment this
+  // file moves a directory.
+  function findRepoRoot(): string {
+    let dir = typeof __dirname === "string" ? __dirname : process.cwd();
+    for (let depth = 0; depth < 20; depth += 1) {
+      if (existsSync(resolve(dir, "tsconfig.base.json"))) return dir;
+      const parent = dirname(dir);
+      if (parent === dir) break;
+      dir = parent;
+    }
+    throw new Error("repo root not found: no ancestor contains tsconfig.base.json");
+  }
+
+  const labCsv = resolve(
+    findRepoRoot(),
+    "docs/research/2026-09-17/gse-lab/defense_detail_2025.csv",
   );
 
   function pooled(): { ff: number; int: number; teams: number } {
-    const lines = fs.readFileSync(labCsv, "utf8").trim().split("\n");
+    const lines = readFileSync(labCsv, "utf8").trim().split("\n");
     const header = lines[0]!.split(",");
     const col = (name: string): number => {
       const i = header.indexOf(name);
