@@ -24,6 +24,11 @@ const dbMock = vi.hoisted(() => ({
   // C-109 credit ledger rows (odds-credit-ledger.ts reads JarvisMemoryEvent);
   // the real ledger read runs against this mock.
   jarvisMemoryEvent: { findFirst: vi.fn(), findMany: vi.fn() },
+  // odds_line_snapshots freshness (2026-09-19): the route calls the REAL
+  // readOddsLineArchiveFreshnessInput + assessOddsLineArchiveFreshness
+  // against this delegate, unmocked, so the test below exercises the actual
+  // wiring rather than a stand-in for it.
+  oddsLineSnapshot: { findFirst: vi.fn(), count: vi.fn() },
 }));
 
 const predictionEngineMocks = vi.hoisted(() => ({
@@ -618,5 +623,83 @@ describe("/api/ops/public-surface-truth — P13-03 rate limiting + Stripe gating
     expect(lineIntegrityMocks.surveyLineIntegrity).toHaveBeenCalledTimes(1);
     expect(body.detail).toBe("operator");
     expect(body.lineIntegrity).toEqual({ surveyed: true });
+  });
+
+  // ── odds_line_snapshots writer freshness (2026-09-19) ───────────────────
+  //
+  // The odds_line_snapshots writer died silently for three weeks in 2026-08
+  // and nothing watched it (see AGENTS.md). This route now wires in
+  // lib/ops/odds-line-archive-freshness.ts to report that state. These tests
+  // run the REAL reader and assessor against the db mock's oddsLineSnapshot
+  // delegate, unmocked, so they exercise the actual wiring rather than a
+  // stand-in that could drift from it, and they prove the reported verdict
+  // tracks the underlying data instead of asserting only that the field is
+  // present.
+  describe("oddsLineArchiveFreshness", () => {
+    it("invokes the real reader against oddsLineSnapshot and reports healthy on a fresh row", async () => {
+      const fresh = new Date(Date.now() - 5 * 60_000); // 5 minutes old
+      dbMock.oddsLineSnapshot.findFirst.mockResolvedValue({ capturedAt: fresh });
+      dbMock.oddsLineSnapshot.count.mockResolvedValue(3);
+
+      delete process.env.CRON_SECRET;
+      const mod = await import("@/app/api/ops/public-surface-truth/route");
+      const req = makeRequest("http://localhost/api/ops/public-surface-truth");
+      const body = await mod.GET(req).then((r) => r.json());
+
+      expect(dbMock.oddsLineSnapshot.findFirst).toHaveBeenCalledWith({
+        orderBy: { capturedAt: "desc" },
+        select: { capturedAt: true },
+      });
+      expect(dbMock.oddsLineSnapshot.count).toHaveBeenCalled();
+      expect(body.oddsLineArchiveFreshness.verdict).toBe("healthy");
+      expect(body.oddsLineArchiveFreshness.ageMinutes).toBe(5);
+      expect(body.oddsLineArchiveFreshness.thresholds).toEqual({
+        degradedAfterMinutes: 60,
+        staleAfterMinutes: 360,
+      });
+    });
+
+    it("reports stale, never healthy, on the identical route call when the underlying row is three weeks old, proving the value tracks the input", async () => {
+      const old = new Date(Date.now() - 21 * 24 * 60 * 60_000); // three weeks old
+      dbMock.oddsLineSnapshot.findFirst.mockResolvedValue({ capturedAt: old });
+      dbMock.oddsLineSnapshot.count.mockResolvedValue(0);
+
+      delete process.env.CRON_SECRET;
+      const mod = await import("@/app/api/ops/public-surface-truth/route");
+      const req = makeRequest("http://localhost/api/ops/public-surface-truth");
+      const body = await mod.GET(req).then((r) => r.json());
+
+      expect(body.oddsLineArchiveFreshness.verdict).toBe("stale");
+      expect(body.oddsLineArchiveFreshness.verdict).not.toBe("healthy");
+    });
+
+    it("fails closed to stale, never healthy, when the db read throws", async () => {
+      dbMock.oddsLineSnapshot.findFirst.mockRejectedValue(new Error("connection terminated"));
+      dbMock.oddsLineSnapshot.count.mockResolvedValue(0);
+
+      delete process.env.CRON_SECRET;
+      const mod = await import("@/app/api/ops/public-surface-truth/route");
+      const req = makeRequest("http://localhost/api/ops/public-surface-truth");
+      const body = await mod.GET(req).then((r) => r.json());
+
+      expect(body.oddsLineArchiveFreshness.verdict).toBe("stale");
+      expect(body.oddsLineArchiveFreshness.verdict).not.toBe("healthy");
+      expect(body.oddsLineArchiveFreshness.mostRecentCapturedAt).toBeNull();
+    });
+
+    it("is additive: existing fields and the public/operator detail split are unchanged", async () => {
+      dbMock.oddsLineSnapshot.findFirst.mockResolvedValue({ capturedAt: new Date() });
+      dbMock.oddsLineSnapshot.count.mockResolvedValue(1);
+
+      delete process.env.CRON_SECRET;
+      const mod = await import("@/app/api/ops/public-surface-truth/route");
+      const req = makeRequest("http://localhost/api/ops/public-surface-truth");
+      const body = await mod.GET(req).then((r) => r.json());
+
+      expect(body.detail).toBe("public");
+      expect(body).toHaveProperty("oddsInserting");
+      expect(body).toHaveProperty("lineIntegrity");
+      expect(body).toHaveProperty("oddsLineArchiveFreshness");
+    });
   });
 });
