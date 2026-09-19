@@ -228,7 +228,58 @@ Also note the one-season validation limit in "Honest limits" still stands: a
 multi-season repeat (2023/2024) was attempted and ABANDONED mid-run on a home/away
 orientation bug in the extension script (test scores built without home/away flipped
 roughly half the signs; its "0/3 seasons" output is invalid and must not be quoted).
-Fixing and rerunning that extension is the top queued follow-up.
+
+## Multi-season repeat (2026-09-19 late run — supersedes the single-season verdicts)
+
+The extension was fixed (home/away now joined from the schedule; a pandas `&`-precedence
+mask bug that leaked in-sample weeks into the first corrected run was also caught and
+fixed) and rerun on 2023/2024/2025 own-aggregated data, plus the turnover persistence
+test rebuilt to mirror the original method exactly. Tables in
+`data/validation_multi_season_v2.csv` and `data/turnover_persistence_multi_season.csv`;
+scripts `scripts/extend_validation_v2.py`, `scripts/turnovers_multi_season.py`.
+
+**Opponent-adjusted EPA, ADJ vs RAW on weeks 9-18 (pre-registered: ADJ needs >= 0.2
+RMSE gain AND tie-or-better Spearman):**
+
+| season | raw RMSE/SP | adj RMSE/SP | verdict |
+|---|---|---|---|
+| 2023 | 13.07 / 0.354 | 13.64 / 0.313 | NULL (adj worse) |
+| 2024 | 13.22 / 0.432 | 13.28 / 0.440 | NULL |
+| 2025 (own-agg) | 13.85 / 0.275 | 13.86 / 0.299 | NULL |
+| market | 11.69-12.53 | | ahead in every season |
+
+**Turnover occurrence model vs naive persistence (pre-registered: beat on BOTH metrics):**
+
+| season | naive SP/RMSE | expected SP/RMSE | verdict |
+|---|---|---|---|
+| 2023 | 0.170 / 6.94 | -0.051 / 6.01 | NULL |
+| 2024 | 0.328 / 7.04 | 0.238 / 6.08 | NULL |
+| 2025 | 0.353 / 5.76 | 0.276 / 5.25 | NULL |
+
+**Revised conclusions (these supersede the single-season claims above and in the
+AGENTS.md block of the same date):**
+
+1. The single-season prod-table results were the favorable end of the distribution, not
+   a robust effect. The EPA adjustment is NOT established out of sample; the turnover
+   occurrence model improves RMSE in 3/3 seasons (consistent direction: variance
+   compression toward the mean) but its rank-ordering edge does not replicate.
+2. What survives everywhere, again, is the standing doctrine: the market spread beats
+   every model variant in every season tested. Model-side structure helps the
+   explainability and the factor trail; it has not been shown to beat the market.
+3. Therefore the operative experiment is the LIVE one: when `nfl_epa_adj` activates in
+   Week 5, measure its realized calibration on published picks with the same decision-
+   tier harness (n and Wilson intervals, per sport) before it is granted any weight.
+   The `forceReprice` backfill stays worthwhile purely because it enriches the
+   calibration sample; it is NOT evidence the source improves predictions. The
+   prior-bridge / MIN_GAMES-lowering change stays parked unless the live measurement
+   earns it.
+4. Process note for anyone re-running: the first "corrected" multi-season run was
+   itself invalid (unparenthesized pandas mask: `&` binds tighter than `<=`, which
+   leaked in-sample weeks into the test set and produced n=272 with a negative market
+   correlation). Both bugs were found by sanity anchors (impossible market numbers,
+   implausible n) before anything was reported. Anchor every evaluation output against
+   a known quantity before trusting it.
+
 
 ## Reproduction
 
