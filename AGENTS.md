@@ -4048,3 +4048,72 @@ behind a named acquisition task and owner, against a small orthogonal set
 carrying weight. But 17 is a number from a design document, not a measurement.
 Whether the right ceiling is 17 or 70 is an empirical question, and the
 historical backtest corpus is what answers it. Do not treat 17 as settled.
+
+---
+
+## THE LINE ARCHIVE RECOVERED ON 2026-09-13, AND THE FIX IS NOW CONFIRMED IN PRODUCTION (2026-09-19, Opus, read-only SELECT)
+
+Measured against live production (Neon project gse-postgres, SELECT only, nothing
+written). This CLOSES a question this file left open, and it corrects a premise
+that reached me as an instruction.
+
+Day by day over the whole table, 1,411,528 rows:
+
+```
+2026-08-19    24,172
+2026-08-20   107,944
+2026-08-21    74,160
+2026-08-22   478,222
+2026-08-23 .. 2026-09-12   ZERO ROWS, 21 days, no rows on any day
+2026-09-13     4,187
+2026-09-14    81,565
+2026-09-15   182,083
+2026-09-16   141,495
+2026-09-17   146,640
+2026-09-18   146,722
+2026-09-19    24,338 (partial day)
+```
+
+**The archive is HEALTHY RIGHT NOW.** Newest row 7 minutes old at the time of the
+read, 38,506 rows in the last 6 hours, 152,086 in the last 24. The writer works.
+
+**The 21-day hole is real and is exactly the window this file already recorded:**
+2026-08-23 through 2026-09-12 inclusive, zero rows on every one of those days.
+
+**What this settles.** The earlier note says the argument-shape fix in
+`line-archive.ts` is correct by Prisma's contract but was NOT VERIFIED against a
+live database, and it names a competing hypothesis that could not be eliminated
+from the repo: that `LINE_ARCHIVE_ENABLED` was simply switched off on 08-22.
+Writing resumed on 2026-09-13, the day the fix landed, and has continued every
+day since. That is production evidence for the fix hypothesis. State it at its
+real strength: it is one coincidence of dates, not a controlled experiment, and
+a flag flipped back on the same day would produce the same picture. Nobody should
+now write that the cause is proven; what is proven is that the archive works
+today and started working when the fix shipped.
+
+**A correction to an instruction, recorded so it is not repeated.** A brief
+reached this session asking the freshness monitor to flag the 08-23 to 09-12 hole
+as an ACTIVE_OUTAGE. It should not, and a monitor that did would be wrong. A
+FRESHNESS monitor answers "are we writing now", and the honest answer today is
+yes. Whether a past window has gaps is a COVERAGE question, a different function
+with a different query, and worth building separately since the hole means CLV
+cannot be graded on any pick generated inside it. Conflating the two produces a
+monitor that cries outage forever over a wound that already healed, which is how
+an alarm gets ignored.
+
+**The monitor was run against these real numbers** (pure assessor, real values
+from the SELECT above, no database access from the module):
+
+```
+newest row 7 min old, 38,506 rows in 6h, judged 2026-09-19   -> healthy
+newest row 08-22, zero recent rows, judged 2026-09-12        -> stale
+newest row 08-22, zero recent rows, judged 2026-08-23 08:00  -> stale
+```
+
+That third line is the point of the whole exercise. **On the morning after the
+writes stopped, the monitor reads stale.** The outage would have been caught on
+day one instead of three weeks later.
+
+**Still NOT RUN:** the monitor's own DB reader has never executed against a live
+database. Only its pure assessor was exercised, on values obtained by a
+read-only SELECT. Law 7 keeps the reader out of an agent session.
