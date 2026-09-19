@@ -476,3 +476,73 @@ already failed it as a candidate).
 versus the fleet's locked numbers is the main reconciler risk; every table above is
 reproducible from the scripts in this directory, and the CRPS machinery was
 sanity-anchored on the market before the model was read.
+
+## All-seats night pass: wind/cold/roof/tensor/sigma mills + PASS census + dual CLV (read-only)
+
+**SEAT 3/5 MILLS (2019-2025 corpus, scripts/allseat_mills*.py, data/allseat_mills*.json):**
+
+- **WIND (props-only; spread/total addends stay BLOCKED):** completion rate 64.56%
+  (0-14 mph, n=66,528) vs 63.06% (15-19, n=6,928) vs 62.25% (>=20, n=1,796).
+  The 15-19 completion deficit GRADUATES its Wilson non-overlap test; the >=20 bin
+  does NOT (n too small). Yards/attempt: -2.9% at 15-19, only -1.3% at >=20 - the
+  pasted "-4.5% / -8.5%" magnitudes DO NOT reproduce. EPA/dropback swing at 15-19 is
+  -0.065 (claimed -0.028): direction real, magnitude ~2.3x claimed. aDOT>20 share
+  declines 10.4% -> 10.0% -> 9.0% (direction real). Registry verdict: a wind props
+  factor may carry the 15-19 completion effect with weight 0.00 until Rung-2;
+  Gemini's -8.5% deep-yard number dies in public.
+- **COLD (A29):** 29 cold games - below the pre-registered 150-game floor. NOT_RUN
+  (descriptive only: EPA/dropback -0.053 cold vs +0.033 mid; completion -1.2pp).
+- **RAIN/SNOW fumbles (A31):** no precipitation column in the schedule extract.
+  NOT_RUN.
+- **ROOF (A30):** outdoors mean total 43.22 (sd 14.13, n=5,115) vs closed 46.83
+  (sd 13.40, n=591) vs open-roof 46.73 (n=128). Dome scoring premium ~+3.6 points,
+  sd slightly LOWER indoors. Descriptive capture only.
+- **RZ TENSOR (snap basis, pass/run plays):** 43.4% / 34.2% / 19.7% / 10.9% / 7.2%
+  TD rate for bins 1-2 / 3-5 / 6-10 / 11-15 / 16-20 (n = 4,968 / 4,948 / 7,905 /
+  8,989 / 9,127). This REPRODUCES the pasted lookup (44.0 / 34.6 / 20.5 / 11.6 /
+  7.6) within ~1pp on every cell once definitions are clean (pass/run snaps, FG
+  attempts excluded). GRADUATES as descriptive capture. Drive-basis variant:
+  NOT_RUN (derivation). First pass of this mill was invalid (FG plays deflated the
+  11-15 bin to 5.3% and produced a false anomaly) - definition hygiene caught it.
+- **4TH-DOWN TABLE: the pasted lookup DIES.** Attempts-basis (pass/run only, TD
+  counts as conversion): 4th&1 67.0% (n=2,081), 4th&2-3 56.2% (n=1,257), 4th&4-6
+  47.5% (n=889), 4th&7+ 28.0% (n=988) - versus pasted 53.0 / 41.8 / 33.2 / 24.9.
+  The pasted numbers do not reproduce on our corpus; the registry table must use
+  OURS (selection bias caveat: teams attempt where they expect to convert).
+- **SIGMA LADDER (Opus item): claim FAILS verification.** Signed margin sd, weeks
+  1-4 vs 5-18, 2019-2025: 14.36 vs 14.69 (n=1,686/5,298). The claimed 13.8 vs 13.2
+  is wrong in BOTH level and direction on this corpus (early-season margins are
+  marginally TIGHTER, not wider). Any spread-conversion that widens September
+  variance is building on the wrong ladder.
+
+**SEAT 2 CENSUS (read-only Neon, scripts/seat2_db.py, data CSVs):**
+
+- **PASS-VETO CENSUS: 3 live violations.** 50 published PENDING rows carry
+  independentEdge; 3 have decision == 'PASS', all three are the Chicago White Sox
+  -1.5 fixture-triplet: cmu7p61u2022wackfkdupcliu, cmu7rbzjc01vrno23y53tptux,
+  cmu7bpw9t01dtvxyvpvt2j5cs. expectedClv < 0 violations: ZERO (the display gate that
+  keys on the signed number is doing its job; these three slip through because the
+  gate deliberately ignores the decision label). Founder action available: unpublish
+  or display-suppress those three ids; the systemic fix (a decision-label gate) is
+  withhold-only and needs no version bump, but is a founder call.
+- **DUAL-DENOMINATOR CLV (Law 10): the locked 23.2% is a pooled artifact.** MLB
+  TOTALS: CLV_strict 57.76% (253 BEAT / 185 LOST, n=438; Wilson ~[0.531, 0.624]) -
+  the engine HAS been beating the closing total, consistently. MLB SPREAD 24.56%
+  strict (421 of 592 rows are MATCHED pushes - the line barely moves). MLB ML 7.32%.
+  NFL cells are tiny (totals 14 graded rows at 71.4%; spread 11 at 18.2%; ML 3 at
+  66.7% - none interpretable alone). CLV_all vs CLV_strict diverges enormously on
+  MLB spreads (7.1% vs 24.6%) because of the matched volume - Law 10's
+  dual-denominator rule is vindicated by construction. INFERENCE: the closing-line
+  edge is concentrated in MLB totals; any future CLV claims must be per-market,
+  never pooled.
+
+**SEAT 4 STATUS (referee items runnable from this tree):** model freeze untouched
+(MODEL_VERSION v5.2.7 throughout this branch); zero `as any` in the new modules
+(strict tsc clean); line-archive fix shape verified present
+(`{ in: markets }` filter form), monitor remains TESTED-AND-UNWIRED as recorded in
+AGENTS.md - wiring it into public-surface-truth is still a founder-call item.
+Customer-copy audit and the archive-watchdog wiring remain with Opus's tree.
+
+**NOT_RUN:** drive-basis RZ (derivation); rain/snow fumbles (no column); cold
+graduation (29 games < 150 floor); totals-CRPS Poisson baseline (queued next shift);
+QB Mondrian-k (locked, kill already failed).
