@@ -1,0 +1,54 @@
+[
+ {
+  "family": "W5",
+  "description": "Wasserstein play-mix distance to next opponent",
+  "target": "next-game offensive EPA/play",
+  "split": "train 2019-2023 / test 2024-2025",
+  "n_train": 2126,
+  "n_test": 839,
+  "family_r2": -0.0088,
+  "baseline_r2": 0.074,
+  "baseline_name": "rolling-EPA(4)",
+  "kill_line": 0.02,
+  "verdict": "KILLED"
+ },
+ {
+  "family": "W6",
+  "description": "DFA exponent of EPA sequence",
+  "target": "next-game offensive EPA/play",
+  "split": "train 2019-2023 / test 2024-2025",
+  "n_train": 2299,
+  "n_test": 912,
+  "family_r2": -0.0035,
+  "baseline_r2": 0.0979,
+  "baseline_name": "season-to-date mean EPA",
+  "kill_line": 0.01,
+  "verdict": "KILLED"
+ },
+ {
+  "family": "W7",
+  "description": "intrinsic dim of play-call manifold (Levina-Bickel)",
+  "target": "next-game offensive EPA/play",
+  "split": "train 2019-2023 / test 2024-2025",
+  "n_train": 2299,
+  "n_test": 912,
+  "family_r2": 0.0034,
+  "baseline_r2": -0.0076,
+  "baseline_name": "distinct play-type count",
+  "kill_line": 0.02,
+  "verdict": "KILLED"
+ },
+ {
+  "family": "W8",
+  "description": "permutation entropy of EPA sequence",
+  "target": "next-game offensive EPA/play",
+  "split": "train 2019-2023 / test 2024-2025",
+  "n_train": 2299,
+  "n_test": 912,
+  "family_r2": -0.0037,
+  "baseline_r2": -0.0035,
+  "baseline_name": "dropback rate (pass_oe proxy)",
+  "kill_line": 0.02,
+  "verdict": "KILLED"
+ }
+]

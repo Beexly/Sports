@@ -4,6 +4,18 @@ Auto-loaded by Grok Build, Codex, and Copilot at workspace root; Claude Code loa
 
 ---
 
+**UPDATED 2026-09-19 (Hermes overnight, founder direction "path from 38": the opponent-adjusted EPA path is ALIVE, validated out of sample, and self-activates in Week 5. Full evidence + artifacts + scripts: `docs/research/2026-09-19-opp-adj-epa-path/README.md`. Three findings change what gets built next.)**
+
+1. **The EPA source is wired end to end and is not dead code; it is cold-start gated.** `team_game_efficiency` is populated (2025 REG 544 rows through week 18; 2026 through W1 plus partial W2, last fetch 2026-09-18). `buildIndependentFairValues` step 9 would emit `nfl_epa_adj`, but `NFL_EPA_MIN_GAMES = 4` (`packages/prediction-engine/src/nfl-epa-fair-value.ts:29`) refuses until each team has 4 games, so the first game it can price is Week 5 (2026-10-08+). Zero of 1,582 rows carrying `independentEdge` have the source because every settled row was priced before the table filled and `forceReprice` has never run. ONE operator run of `backfill-independent-trueprob` with `forceReprice: true` backfills 2025-settled history with the source for calibration training; Week 5 onward it fires automatically on both live paths (`generate-signal-slate.ts:411`, `process-sport.ts:1230`). No code change required for activation.
+
+2. **CORRECTED by the same-night multi-season repeat: the single-season kill-line passes did NOT replicate.** On 2023/2024/2025 own-aggregated data (home/away joined from the schedule, garbage-time filtered), the EPA adjustment misses the pre-registered bar in all three seasons (helps marginally in 2024/2025, hurts in 2023), and the turnover occurrence model beats naive persistence on RMSE in 3/3 seasons but its Spearman edge does not replicate (0/3 on the both-metrics kill line). Full tables and revised conclusions: `docs/research/2026-09-19-opp-adj-epa-path/README.md`, section "Multi-season repeat" (supersedes this block's original point 2). What survives: the market spread beats every model variant in every season tested; the operative experiment is the LIVE Week 5 activation of `nfl_epa_adj` measured with the per-sport decision-tier harness before it is granted any weight. The fitted conversion (~45.4 points per EPA/play net diff, ~2.1 points effective home field vs repo constants scale 0.12 / HFA 0.025 EPA) still stands as a founder-gated scoring check.
+
+3. **NEW measured defect for the conjunction-gate design: the independent blend's own decision tiers are miscalibrated on MLB.** Published decided rows carrying `independentEdge`: MLB SPEAK (the strongest tier) realizes 0.400 on n=90 (Wilson 0.305-0.503) against stated 0.592; MLB LEAN realizes 0.573 vs stated 0.688 on n=689; MLB PASS rows (no-opinion underdogs) realize 0.505 vs stated 0.404 on n=273. NCAAF LEAN is the only conservative stratum (0.782 vs 0.720, n=206). NFL remains too thin (LEAN n=45). The PASS-veto framing for the founder is an honesty call about the factor trail, not a record improvement: PASS rows realize roughly breakeven. Per-sport table: `docs/research/2026-09-19-opp-adj-epa-path/data/decision_tier_calibration_by_sport.csv`. Do not trust trueProb tier ordering on MLB inside the gate until the composite refit; the market-p comparison stays the binding check.
+
+4. **W5 activation hazard, measured: the repo's EPA-to-probability constants are badly overconfident on held-out data.** On 2025 W1-8-adjusted ratings predicting W9-18 winners (n=151), the shipped `NFL_EPA_MARGIN_SCALE = 0.12` (with `NFL_EPA_HFA = 0.025`) scores Brier 0.3035 — worse than a coin flip's 0.25 — while a 1-parameter fitted scale (0.204, same HFA) scores 0.2694 with log-loss 0.764 vs 0.957. If Week 5 arrives unchanged, `nfl_epa_adj` injects overconfident probabilities into `independentEdge.trueProb` and degrades the already-miscalibrated decision tiers. Founder-gated fix is one constant pair (`NFL_EPA_MARGIN_SCALE` ~0.20, `NFL_EPA_HFA` ~0.046 EPA) with the held-out table in `docs/research/2026-09-19-opp-adj-epa-path/README.md` as evidence; otherwise measure the live source at W5 and fix on live evidence. Separately, the passing-vs-rushing asymmetry reproduces in our own pipeline at a stable ~2:1 ratio in all three seasons (pass-EPA diff ~0.85 same-game correlation with margin vs ~0.39 rush), which is the quantified basis for weighting dropback EPA far above rush EPA in v5.3.0 factor design.
+
+---
+
 **UPDATED 2026-09-13 (Motif — game-day calibration pass + v5.3.0 spec).** Founder ordered a full
 review/rebuild of the prediction engine ("extremely in depth", "trust no claims", ship direct to
 prod — NO shadow period, founder override: "we're way too far behind"). Three agents are building;
@@ -1124,10 +1136,10 @@ repo by design.
 | W2 (Wasserstein play-mix) | KILLED (own kill line) | Test r = 0.0112 vs required 0.15 |
 | W3 (Fisher-Rao tempo) | KILLED WITHOUT COMPUTE | Accepted without compute |
 | W4 (adaptive coaching) | KILLED (own kill line) | Test −0.031, 2.6 sd, sign reversed |
-| W5 (Wasserstein barycenter) | NEW — proposed, awaiting lab review | Duel vs rolling-EPA(4), kill < 0.02 R² |
-| W6 (DFA of EPA sequences) | NEW — proposed, awaiting lab review | Duel vs mean-EPA, kill < 0.01 R² |
-| W7 (intrinsic dim of play-call manifold) | NEW — proposed, awaiting lab review | Duel vs distinct play-type count, kill < 0.02 R² |
-| W8 (permutation entropy of drive sequences) | NEW — proposed, theorist's weak bet | Duel vs pass_oe, kill < 0.02 R² |
+| W5 (Wasserstein play-mix distance) | KILLED (lab 2026-09-19) | family R² −0.0088 vs rolling-EPA(4) 0.0740, n_test 839 |
+| W6 (DFA of EPA sequences) | KILLED (lab 2026-09-19) | family R² −0.0035 vs mean-EPA 0.0979, n_test 912 |
+| W7 (intrinsic dim of play-call manifold) | KILLED (lab 2026-09-19, beat its baseline but under the kill line) | family R² 0.0034 vs distinct-play-type −0.0076, n_test 912 |
+| W8 (permutation entropy of EPA sequence) | KILLED (lab 2026-09-19) | family R² −0.0037 vs dropback rate −0.0035, n_test 912 |
 
 **All earlier lab-verified falsifications (measured, not argued):** GLI-0.1 claimed
 R² 0.112/0.079 → lab measured 0.0037, REJECTED; Koopman momentum prior 0.35 →
@@ -3040,7 +3052,7 @@ take argmax. 1 forward pass for all fields instead of 150-500 sequential
 autoregressive passes; JSON schema always valid by construction. Uses
 Qwen 2.5 as the decoder example. NOT an NFL metric — filed under the
 standing rule as an ML-infra technique. Possible GSE relevance: fast
-guaranteed-valid structured outputs from models (e.g. pick cards, graded
+schema-valid structured outputs from models (e.g. pick cards, graded
 outputs) without autoregressive latency; verify licensing/attribution
 if building on it. Author/origin of the diagram not verified.
 
@@ -3061,7 +3073,7 @@ Source: public site analysis by Motif (client-side code, sitemap, robots.txt, /m
 - Ruby on Rails + Hotwire (Turbo + Stimulus); 90+ Stimulus controllers; importmap archived at docs/research/2026-09-18/statrankings/js/importmap.json (102 entries).
 - CloudFront CDN; Google Analytics G-7D5HCZG0GX; Rewardful referrals; Avo Rails admin panel.
 - Stripe payments.
-- Separate Python service "odds-engine" with api_server.py: odds sync has a "fast lane" + "full sweep" (~50 leagues), server-side lock, WatermarkBroadcast via Turbo Streams; see RAILS_TRIGGER.md (internal doc referenced in JS comments, not public).
+- Separate Python service "odds-engine" with api_server.py: odds sync has a "fast lane" + "full sweep" (~50 leagues), one server-side mutual-exclusion guard, WatermarkBroadcast via Turbo Streams; see RAILS_TRIGGER.md (internal doc referenced in JS comments, not public).
 - Server-side namespaces visible in JS comments: Odds::ImpliedProbability (app/services/odds/implied_probability.rb), Odds::Board, Odds::BoardTable, Odds::CustomizePanel, LiveOddsController#sync/#poll, Views::Admin::NFL::ProjectionReviews::Sidebar (admin projection review spreadsheet with manual overrides, server-side recompute).
 - Survivor Map grid model ported from internal mockups/nfl-survivor-map/index.html; "Best Path optimizer" feature removed.
 - No public API, no public code repo found. No /api/ docs.
@@ -3146,7 +3158,7 @@ Bio: "Founder, @StatRankings, Guru Elite, & FTN Fantasy/Data. '22. @Techstars in
 ### JS codebase intel (2026-09-18, full 102-file mine)
 - Infra: AWS Cognito auth (min 8 chars, upper/lower/number/symbol), CloudFront CDN, Stripe hosted checkout, Rewardful referrals (?via= -> client_reference_id), Google One Tap, Avo admin, GA4. No secrets/keys in client code.
 - Internal docs referenced in comments (not public): RAILS_TRIGGER.md (odds-engine trigger), docs/STAT_NUMERIC_IDS.md (StatBuilder stat key -> numeric_id), docs/FANTASY_RANKINGS_URLS.md, SEO.md rules RDM-01..06 (crawl-space discipline: ?return_to= caused "tens of thousands of junk URLs", 32,852 ?sort_field=/?sort_order= variants found by crawlers -> sort headers are buttons not anchors), SPEC.md (Survivor Map; RE-SCOPE 2026-09-01: contest-entries is the ONLY premium-gated surface on Survivor page).
-- odds-engine (Python, api_server.py): "Sync odds now" fast lane + "Full sweep" ~50 leagues, one server-side lock, 90s client backstop. Live board: Postgres trigger -> Turbo Streams WatermarkBroadcast, min interval 5s, price flash on >=0.05 relative implied-probability move (green=better for bettor, red=worse).
+- odds-engine (Python, api_server.py): "Sync odds now" fast lane + "Full sweep" ~50 leagues, one server-side mutual-exclusion guard, 90s client backstop. Live board: Postgres trigger -> Turbo Streams WatermarkBroadcast, min interval 5s, price flash on >=0.05 relative implied-probability move (green=better for bettor, red=worse).
 - Ruby internals named: Odds::ImpliedProbability (app/services/odds/implied_probability.rb), Odds::Board/BoardTable/CustomizePanel, LiveOddsController#sync/#poll/#update_preferences, Admin::NFL::ProjectionOverridesController#batch (single PATCH, one transaction, recompute each team once), Views::Admin::NFL::ProjectionReviews::Sidebar/Show (admin projection review spreadsheet), Polymarket::PageData#query, NFL::CoverageIntelligenceQuery::ALL_COVERAGES, Payments::PackagePricing (integer cents, server-side).
 - Formulas: implied probability = price>0 ? 100/(price+100) : -price/(-price+100), rounded to 0.1%. Survivor favored = winPct >= 58; FAV LEFT = remaining favored non-bye weeks; bands >=75/>=60/>=50. Admin projection review: >10% off baseline tints cell (DISCREPANCY_THRESHOLD), >20% off market line = edge flag (over/under); passing/receiving reconciliation ("every passing yard or touchdown is also a receiving yard or touchdown for the same team").
 - Free/gated boundaries (client-verified): free presets = All Games, Last 1, Last 3 only; Last 5/10, Home/Away, specific weeks, Custom Split column gated. Coverage shells: Man = 0,1,2M; Zone = 2,3,4,6,9 (order 0,1,2,2M,3,4,6,9). Odds board up to ~82 sportsbooks; price formats American/%/Cents. PredictionMarkets+ paginates at 50 rows. Archive builder params: archive_download[categories][][registry|category], [seasons][].
@@ -3480,3 +3492,19 @@ Read-only browser pass, 2026-09-18 ~21:08–21:35 CDT, three parallel passes (ac
 - Official NFL play-by-play description: @sfdata9ers passing chart ("All QB plays considered for Total EPA & EPA/Play").
 - StatRankings: all @MagicSportsGuy data; statrankings.com/ai prompt PDF lets subscribers self-generate matchup reports; StatRankings+ subscription connects to Claude/ChatGPT per pinned post.
 - @sfdata9ers method (own reply): "NFL data + having fun with Python". No post revealed an API, scraping target, or non-public pipeline beyond these.
+
+**SEAT-1 ADDENDUM, same night (compact - full detail in the research dir):** all-seat
+mills landed: wind 15-19 completion + deep-ball penalties GRADUATE as measured props
+factors (>=20 mph not established; spread/total wind addends stay BLOCKED); RZ
+snap-tensor REPRODUCES the pasted lookup; the pasted 4th-down table DIES (measured
+attempts-basis 67.0/56.2/47.5/28.0, TD counts as conversion); sigma ladder claim
+FAILS (14.36 vs 14.69, direction opposite); turnover occurrence model FAILS its
+0.30 kill (stays Rung-1 descriptive; evaluator baseline is kept-share 0.5488, the
+locked 46.3% is the defense-side complement). PASS census: 3 live PASS-decision
+violations on published PENDING rows (White Sox -1.5 triplet, ids in the research
+README). Dual-denominator CLV: MLB TOTALS 57.76% strict (n=438), stable across
+season halves (62.4%/56.1%) - per-market claims only, never pooled. New modules:
+signals/luck/turnover-luck.ts, signals/environmental/high-wind-prop-decay.ts,
+signals/tactical/down-distance-conversion-tensor.ts - all Rung 1, weight 0.00,
+engine suite 283 files / 3,168 tests / 0 failures. The skeptic one-pager (why
+nothing beats the close on mainlines, where edges live) is in the research README.
