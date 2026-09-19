@@ -39,7 +39,15 @@ export type SignalFamily =
 export type SignalOutputKind =
   | "2WAY_PROBABILITY"
   | "3WAY_PROBABILITY"
-  | "SPREAD_COVER_PROBABILITY";
+  | "SPREAD_COVER_PROBABILITY"
+  // A signal emitting a scalar the blend must NOT read as a win probability:
+  // a wind passing-yards multiplier, a coaching-tendency rate. Widening the
+  // union is the conservative direction, the same argument SignalFamily makes
+  // above. The dangerous direction is relabelling such a signal as one of the
+  // three probability kinds to satisfy the compiler, because the next edit
+  // then renames `value` to `homeFairProb` and a 0.92 yards multiplier
+  // publishes as a 92% home win probability on a customer-facing board.
+  | "CONTINUOUS_VALUE";
 
 export interface SignalKillLine {
   /** Maximum acceptable Brier score vs de-vigged market consensus (Default: 0.250). */
@@ -78,9 +86,50 @@ export interface SignalValue {
   readonly metadata?: Record<string, unknown>;
 }
 
+/**
+ * What a CONTINUOUS_VALUE signal returns. It deliberately carries NO
+ * probability field, so a scalar cannot reach a probability consumer by
+ * structural typing: the compiler, not a reviewer, is what stops it.
+ */
+export interface SignalContinuousValue {
+  /** Domain-specific scalar. Never a probability, never blended as one. */
+  readonly value: number;
+  /** ISO timestamp of data freshness used for CLV as-of indexing. */
+  readonly capturedAt: string;
+  /** Optional signal metadata for the factor breakdown payload. */
+  readonly metadata?: Record<string, unknown>;
+}
+
 export type SignalEvaluator = (
   ctx: SignalEvaluationContext
-) => Promise<SignalValue | null> | SignalValue | null;
+) =>
+  | Promise<SignalValue | SignalContinuousValue | null>
+  | SignalValue
+  | SignalContinuousValue
+  | null;
+
+/**
+ * The ONE place the "may this be blended as a win probability" rule is
+ * written. `signal-registry-runner.ts` imports it rather than restating the
+ * checks: two gates spelling one rule two ways is how they drift, and a drift
+ * in this direction blends a scalar into a published win probability. It lives
+ * in @sports/types rather than the engine for the same reason
+ * `pricesWorseThanMarket` does: many web test files replace
+ * @sports/prediction-engine with a partial `vi.mock` factory, so an import
+ * from there resolves to undefined under those mocks.
+ *
+ * Absence is REFUSAL, never a default. A missing, non-finite or out-of-range
+ * probability returns false and the signal abstains; it is never coerced.
+ */
+export function isSignalProbabilityValue(
+  value: SignalValue | SignalContinuousValue | null | undefined
+): value is SignalValue {
+  if (value === null || value === undefined) return false;
+  if (!("homeFairProb" in value) || !("awayFairProb" in value)) return false;
+  const { homeFairProb, awayFairProb } = value;
+  if (!Number.isFinite(homeFairProb) || !Number.isFinite(awayFairProb)) return false;
+  return homeFairProb >= 0 && homeFairProb <= 1 && awayFairProb >= 0 && awayFairProb <= 1;
+}
 
 export interface SignalDefinition {
   /** Unique, immutable snake_case identifier (e.g. "nfl_epa_opponent_adjusted"). */

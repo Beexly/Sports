@@ -9,6 +9,7 @@
  */
 
 import type { IndependentMarketFairValue } from "@sports/types";
+import { isSignalProbabilityValue } from "@sports/types";
 import type { IndependentFairValueBuildInput } from "./build-independent-fair-values.js";
 import { SIGNAL_REGISTRY } from "./signal-registry-definitions.js";
 
@@ -53,15 +54,15 @@ export async function runSignalRegistry(
 
     try {
       const val = await signal.evaluate(ctx);
-      if (
-        val &&
-        Number.isFinite(val.homeFairProb) &&
-        Number.isFinite(val.awayFairProb) &&
-        val.homeFairProb >= 0 &&
-        val.homeFairProb <= 1 &&
-        val.awayFairProb >= 0 &&
-        val.awayFairProb <= 1
-      ) {
+      // Imports the predicate rather than restating it, so the rule for "may
+      // this be blended as a win probability" has exactly one spelling. The
+      // conditions are unchanged; only their home moved.
+      //
+      // A CONTINUOUS_VALUE signal returns a scalar and is dropped here rather
+      // than blended. That drop is load-bearing, and it is also why an ACTIVE
+      // continuous signal contributes nothing today: read the registry note
+      // before changing either side.
+      if (isSignalProbabilityValue(val)) {
         const source = (val.metadata?.source as string) ?? signal.id;
         out.push({
           source,
