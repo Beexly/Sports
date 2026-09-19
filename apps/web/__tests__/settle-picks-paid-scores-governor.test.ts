@@ -20,9 +20,13 @@ vi.mock("@sports/data-ingestion", () => ({
   // rather than defining a second "stale odds" of its own (C-287).
   FRESHNESS_THRESHOLD_MS: 4 * 60 * 60 * 1000,
 }));
-vi.mock("@sports/prediction-engine", () => ({
-  getReadinessGates: () => ({ isBootstrapMode: false }),
-}));
+vi.mock("@sports/prediction-engine", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@sports/prediction-engine")>();
+  return {
+    ...actual,
+    getReadinessGates: () => ({ isBootstrapMode: false }),
+  };
+});
 vi.mock("@sports/ingestion-pipeline", () => ({
   settleSport: vi.fn(),
   freezeSlateCommitments: vi.fn(async () => []),

@@ -74,9 +74,13 @@ function mockGameFindManyImpl(args: { where?: Record<string, unknown>; include?:
 }
 
 // --- Prediction engine: force the readiness gate OPEN ---
-vi.mock("@sports/prediction-engine", () => ({
-  getReadinessGates: () => ({ canExposePublicPicks: true }),
-}));
+vi.mock("@sports/prediction-engine", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@sports/prediction-engine")>();
+  return {
+    ...actual,
+    getReadinessGates: () => ({ canExposePublicPicks: true }),
+  };
+});
 
 // --- DB: only game.findMany is exercised by buildLiveSlate ---
 vi.mock("@sports/db", () => ({
