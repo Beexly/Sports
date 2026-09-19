@@ -528,8 +528,42 @@ function resolveCallableLocal(
   return null;
 }
 
+/**
+ * The specifier of a dynamic `import("...")`, unwrapping `await` and parens, or
+ * null if this expression is not one. Used to bind `const mod = await
+ * import("@/app/api/.../route")` as a NAMESPACE of that module.
+ *
+ * This is the precise fix for the blind spot documented above, and it is
+ * deliberately not the aggressive one. Seeding every export of the imported
+ * module was tried and reverted: it walked paths no test executes and produced a
+ * false positive on health-route. Binding the variable instead gives dynamic
+ * imports exactly the precision static namespace imports already have, because
+ * the tracer then follows only the members the test actually reads (`mod.GET`),
+ * never the whole surface.
+ */
+function dynamicImportSpecifier(expr: ts.Expression): string | null {
+  let inner = unwrapParens(expr);
+  if (ts.isAwaitExpression(inner)) inner = unwrapParens(inner.expression);
+  if (!ts.isCallExpression(inner)) return null;
+  if (inner.expression.kind !== ts.SyntaxKind.ImportKeyword) return null;
+  const arg = inner.arguments[0];
+  return arg && ts.isStringLiteralLike(arg) ? arg.text : null;
+}
+
 function traceUsage(node: ts.Node, ctx: TraceCtx): void {
   if (ts.isTypeNode(node)) return; // never chase type-only positions
+
+  // `const mod = await import("...")` binds `mod` as a namespace of that
+  // module, so the existing namespace handling below resolves `mod.GET`
+  // exactly as it resolves a static `import * as mod`. Registered on the way
+  // down, and the walk is in source order, so reads after the declaration see
+  // it. This is what makes dynamically-loaded route subjects visible at all:
+  // measured, 14 of the 123 files mocking a guarded target reach their subject
+  // ONLY this way.
+  if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.initializer) {
+    const dynSpec = dynamicImportSpecifier(node.initializer);
+    if (dynSpec !== null) ctx.bindings.namespaces.set(node.name.text, dynSpec);
+  }
 
   if (ts.isIdentifier(node) && isReferencePosition(node)) {
     const binding = resolveCallableLocal(node.text, ctx.bindings);
