@@ -280,21 +280,66 @@ function mlPick(overrides: Partial<PickForLiveCal> & { readonly id: string; read
 }
 
 type FindManyArgs = Parameters<OddsTableDb["odds"]["findMany"]>[0];
+type GroupByArgs = Parameters<OddsTableDb["odds"]["groupBy"]>[0];
 
-function mockOddsDb(rows: readonly OddsRowForMarketP[]) {
-  const findMany = vi.fn(async (args: FindManyArgs) =>
-    rows.filter(
-      (r) =>
-        args.where.gameId.in.includes(r.gameId) &&
-        args.where.market === "H2H" &&
-        r.fetchedAt.getTime() <= args.where.fetchedAt.lte.getTime(),
-    ),
+function isUsableQuote(r: OddsRowForMarketP): boolean {
+  return (
+    isRealBookmakerKey(r.bookmaker) &&
+    r.homePrice != null && Number.isFinite(r.homePrice) && r.homePrice !== 0 &&
+    r.awayPrice != null && Number.isFinite(r.awayPrice) && r.awayPrice !== 0
   );
-  const db: OddsTableDb = { odds: { findMany } };
-  return { db, findMany };
 }
 
-describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () => {
+/**
+ * A faithful in-memory mock of the two-phase odds-table contract: groupBy
+ * reduces each window arm to the latest usable quote per (game, book), and
+ * findMany returns exactly those winning rows, capped at the requested take.
+ */
+function mockOddsDb(rows: readonly OddsRowForMarketP[]) {
+  const groupBy = vi.fn(async (args: GroupByArgs) => {
+    const latest = new Map<string, { gameId: string; bookmaker: string; fetchedAt: Date }>();
+    for (const arm of args.where.OR) {
+      if (arm.market !== "H2H") continue;
+      const lo = arm.fetchedAt.gte.getTime();
+      const hi = arm.fetchedAt.lte.getTime();
+      for (const r of rows) {
+        if (r.gameId !== arm.gameId) continue;
+        if (!isUsableQuote(r)) continue;
+        const t = r.fetchedAt.getTime();
+        if (t < lo || t > hi) continue;
+        const key = `${r.gameId}\u0000${r.bookmaker}`;
+        const cur = latest.get(key);
+        if (!cur || t > cur.fetchedAt.getTime()) {
+          latest.set(key, { gameId: r.gameId, bookmaker: r.bookmaker, fetchedAt: r.fetchedAt });
+        }
+      }
+    }
+    return [...latest.values()].map((r) => ({
+      gameId: r.gameId,
+      bookmaker: r.bookmaker,
+      _max: { fetchedAt: r.fetchedAt },
+    }));
+  });
+  const findMany = vi.fn(async (args: FindManyArgs) => {
+    const out: OddsRowForMarketP[] = [];
+    for (const arm of args.where.OR) {
+      if (arm.market !== "H2H") continue;
+      const lo = arm.fetchedAt.gte.getTime();
+      const hi = arm.fetchedAt.lte.getTime();
+      for (const r of rows) {
+        if (r.gameId !== arm.gameId || r.bookmaker !== arm.bookmaker) continue;
+        const t = r.fetchedAt.getTime();
+        if (t < lo || t > hi) continue;
+        out.push(r);
+      }
+    }
+    return out.slice(0, args.take);
+  });
+  const db: OddsTableDb = { odds: { groupBy, findMany } };
+  return { db, groupBy, findMany };
+}
+
+describe("loadPublishTimeMarketPResolver: bounded two-phase reads for N picks", () => {
   it("a soccer moneyline is never a candidate and is never resolved from the odds table", async () => {
     const soccer = mlPick({ id: "s1", gameId: "gs", sportKey: "soccer_usa_mls" });
     expect(oddsTableCandidate(soccer)).toBeNull();
@@ -310,7 +355,7 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
     expect(built.excluded).toEqual({ three_way_market: 1, no_market_probability: 0, non_moneyline_market: 0, in_play: 0, unverifiable_market_p: 0 });
   });
 
-  it("issues exactly one odds query for N picks, bounded by their gameIds and latest generatedAt", async () => {
+  it("issues two bounded queries per window chunk: the latest usable quote per book, never all history", async () => {
     const later = new Date(GENERATED_AT.getTime() + 3_600_000);
     const picks: PickForLiveCal[] = [
       mlPick({ id: "a", gameId: "g1" }),
@@ -324,25 +369,41 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
       mlPick({ id: "f", gameId: "g7", selection: null }),
     ];
     const rows = [...threeBooks("g1"), ...threeBooks("g2"), ...threeBooks("g9"), row("g2", "betmgm", -170, 150, T_LATE)];
-    const { db, findMany } = mockOddsDb(rows);
+    const { db, groupBy, findMany } = mockOddsDb(rows);
 
     const load = await loadPublishTimeMarketPResolver(db, picks);
 
+    // Three distinct windows (g1 shared by picks a and c), one chunk: one
+    // groupBy to reduce, one findMany to fetch exactly the winners.
+    expect(groupBy).toHaveBeenCalledTimes(1);
     expect(findMany).toHaveBeenCalledTimes(1);
-    const args = findMany.mock.calls[0]![0];
-    expect(args.where.gameId.in).toEqual(["g1", "g2", "g9"]);
-    expect(args.where.market).toBe("H2H");
-    expect(args.where.fetchedAt.lte.getTime()).toBe(later.getTime());
-    expect(args.select).toEqual({ gameId: true, bookmaker: true, homePrice: true, awayPrice: true, fetchedAt: true });
+    const groupArgs = groupBy.mock.calls[0]![0];
+    const armGames = groupArgs.where.OR.map((a) => a.gameId).sort();
+    expect(armGames).toEqual(["g1", "g2", "g9"]);
+    for (const arm of groupArgs.where.OR) {
+      expect(arm.market).toBe("H2H");
+      expect(arm.fetchedAt.lte.getTime()).toBe(arm.gameId === "g2" ? later.getTime() : GENERATED_AT.getTime());
+      // The 48h floor: no unbounded history pull.
+      expect(arm.fetchedAt.gte.getTime()).toBe(arm.fetchedAt.lte.getTime() - 48 * 3_600_000);
+    }
+    const fetchArgs = findMany.mock.calls[0]![0];
+    expect(fetchArgs.select).toEqual({ gameId: true, bookmaker: true, homePrice: true, awayPrice: true, fetchedAt: true });
+    // Phase B fetches only the winning (game, book, fetchedAt) rows, never a range.
+    for (const arm of fetchArgs.where.OR) {
+      expect(arm.fetchedAt.gte.getTime()).toBe(arm.fetchedAt.lte.getTime());
+    }
 
     expect(load.stats.candidates).toBe(4);
     expect(load.stats.gamesQueried).toBe(3);
-    expect(load.stats.queries).toBe(1);
+    expect(load.stats.queries).toBe(2);
     expect(load.stats.oddsRows).toBe(10);
     expect(load.stats.resolved).toBe(4);
     expect(load.stats.resolvedSingleBook).toBe(0);
     expect(load.stats.unresolved).toEqual({ no_rows: 0, no_usable_book: 0, insufficient_books: 0, no_side: 0 });
     expect(load.stats.note).toBeNull();
+    expect(load.stats.staleWindowHours).toBe(48);
+    expect(load.stats.rowsAfterReduction).toBe(10);
+    expect(load.stats.rowsCapped).toBe(false);
 
     expect(load.resolveMarketP(picks[0]!)).toEqual({ p: 0.579712, source: "resolver" });
     expect(load.resolveMarketP(picks[2]!)).toEqual({ p: 0.579712, source: "resolver" });
@@ -383,29 +444,90 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
       mlPick({ id: "b", gameId: "g2" }),
       mlPick({ id: "c", gameId: "g3", selection: "Somebody Else ML (-110)" }),
     ];
-    // g1: only a non-book row (no usable book); g2: nothing stored; g3: books but no side.
+    // g1: only a non-book row — the SQL pre-filter never fetches it, so it
+    // counts as no_rows at the loader (the resolver's no_usable_book reason
+    // needs the row present, and the bounded fetch declines to carry rows the
+    // resolver would only reject); g2: nothing stored; g3: books but no side.
     const rows = [row("g1", "rundown_default", -150, 130, T0), ...threeBooks("g3")];
-    const { db, findMany } = mockOddsDb(rows);
+    const { db } = mockOddsDb(rows);
     const load = await loadPublishTimeMarketPResolver(db, picks);
-    expect(findMany).toHaveBeenCalledTimes(1);
     expect(load.stats.resolved).toBe(0);
     expect(load.stats.resolvedSingleBook).toBe(0);
     // insufficient_books is retired (a lone book resolves) and stays 0 for readers of older artifacts.
-    expect(load.stats.unresolved).toEqual({ no_rows: 1, no_usable_book: 1, insufficient_books: 0, no_side: 1 });
+    expect(load.stats.unresolved).toEqual({ no_rows: 2, no_usable_book: 0, insufficient_books: 0, no_side: 1 });
     for (const p of picks) expect(load.resolveMarketP(p)).toBeNull();
     expect(oddsTableStatsNote(load.stats)).toContain("resolved 0");
-    expect(oddsTableStatsNote(load.stats)).toContain("no_usable_book 1");
+    expect(oddsTableStatsNote(load.stats)).toContain("no_rows 2");
     expect(oddsTableStatsNote(load.stats)).toContain("insufficient_books 0");
   });
 
+  it("refuses to price from quotes older than the 48h stale window: unresolved, not invented", async () => {
+    // The only stored quotes for g1 are 49h before the pick was generated.
+    // Before the OOM fix the loader fetched all history and the pick "priced"
+    // from a two-day-old line; now it does not resolve at all.
+    const stale = new Date(GENERATED_AT.getTime() - 49 * 3_600_000);
+    const picks = [mlPick({ id: "a", gameId: "g1" })];
+    const rows = [row("g1", "draftkings", -150, 130, stale), row("g1", "fanduel", -145, 125, stale)];
+    const { db, findMany } = mockOddsDb(rows);
+    const load = await loadPublishTimeMarketPResolver(db, picks);
+    // Phase A still ran (the window covers [gen-48h, gen]; the stale rows fall
+    // outside it), found no winners, and Phase B never had anything to fetch.
+    expect(findMany).toHaveBeenCalledTimes(0);
+    expect(load.stats.resolved).toBe(0);
+    expect(load.stats.unresolved.no_rows).toBe(1);
+    expect(load.resolveMarketP(picks[0]!)).toBeNull();
+    // A quote INSIDE the window still resolves, from the latest row only.
+    const fresh = new Date(GENERATED_AT.getTime() - 2 * 3_600_000);
+    const rows2 = [
+      row("g2", "draftkings", -150, 130, stale),
+      row("g2", "draftkings", -120, 100, fresh),
+    ];
+    const { db: db2 } = mockOddsDb(rows2);
+    const load2 = await loadPublishTimeMarketPResolver(db2, [mlPick({ id: "b", gameId: "g2" })]);
+    // The LATEST row (-120/+100) is the one that must win: home implied
+    // 120/220 = 0.545455, away 100/200 = 0.5, proportional de-vig home
+    // 0.545455/1.045455 = 0.521739 (single book, C-110 arithmetic).
+    expect(load2.resolveMarketP(mlPick({ id: "b", gameId: "g2" }))).toEqual({
+      p: 0.521739,
+      source: "resolver_single_book",
+    });
+    expect(load2.stats.oddsRows).toBe(1);
+    expect(load2.stats.rowsAfterReduction).toBe(1);
+  });
+
+  it("marks rowsCapped when the Phase B circuit breaker truncates a reply", async () => {
+    // Build one book whose winning row is returned alongside take-sized filler
+    // so the fetch returns exactly the cap.
+    const picks = [mlPick({ id: "a", gameId: "g1" })];
+    const rows = [...threeBooks("g1")];
+    const { db, groupBy, findMany } = mockOddsDb(rows);
+    const realFindMany = findMany.getMockImplementation()!;
+    findMany.mockImplementation(async (args: FindManyArgs) => {
+      const real = await realFindMany(args);
+      const filler = Array.from({ length: args.take - real.length }, (_, i) => ({
+        gameId: `filler${i}`,
+        bookmaker: "draftkings",
+        market: "H2H",
+        homePrice: -100,
+        awayPrice: 100,
+        fetchedAt: T0,
+      }));
+      return [...real, ...filler];
+    });
+    void groupBy;
+    const load = await loadPublishTimeMarketPResolver(db, picks);
+    expect(load.stats.rowsCapped).toBe(true);
+    expect(oddsTableStatsNote(load.stats)).toContain("REPLY TRUNCATED");
+  });
+
   it("fails soft when the odds table cannot be read: null resolver, note set, no throw", async () => {
-    const findMany = vi.fn(async (_args: FindManyArgs): Promise<OddsRowForMarketP[]> => {
+    const groupBy = vi.fn(async (_args: GroupByArgs): Promise<ReturnType<OddsTableDb["odds"]["groupBy"]>> => {
       throw new Error("connection refused");
     });
-    const db: OddsTableDb = { odds: { findMany } };
+    const findMany = vi.fn(async (_args: FindManyArgs): Promise<OddsRowForMarketP[]> => []);
+    const db: OddsTableDb = { odds: { groupBy, findMany } };
     const pick = mlPick({ id: "a", gameId: "g1" });
     const load = await loadPublishTimeMarketPResolver(db, [pick]);
-    expect(findMany).toHaveBeenCalledTimes(1);
     expect(load.resolveMarketP(pick)).toBeNull();
     expect(load.stats.note).toBe("odds table unavailable: connection refused");
     expect(load.stats.resolved).toBe(0);
@@ -488,11 +610,11 @@ describe("loadPublishTimeMarketPResolver: one read-only query for N picks", () =
       settledTo: built.settledTo,
     });
     // C-110 changed the sample definition, so the streak basis tag moved to v2.
-    expect(MARKET_ANCHORED_P_BASIS).toBe("market_anchored_v4");
-    expect(payload.pBasis).toBe("market_anchored_v4");
+    expect(MARKET_ANCHORED_P_BASIS).toBe("market_anchored_v5");
+    expect(payload.pBasis).toBe("market_anchored_v5");
     expect(payload.pSources).toEqual({ factor_breakdown: 0, proof_receipt: 1, market_p_from_odds_table: 1, market_p_single_book: 1 });
     expect(payload.marketPFromOddsTable).toEqual(load.stats);
-    expect(payload.marketPFromOddsTable?.queries).toBe(1);
+    expect(payload.marketPFromOddsTable?.queries).toBe(2);
     expect(payload.marketPFromOddsTable?.resolvedSingleBook).toBe(1);
     expect(payload.marketPFromOddsTable?.unresolved.no_rows).toBe(2);
     expect(payload.marketPFromOddsTable?.unresolved.insufficient_books).toBe(0);
