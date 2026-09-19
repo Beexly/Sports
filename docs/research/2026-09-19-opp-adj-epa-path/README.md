@@ -319,7 +319,56 @@ calibration at W5, fix with live evidence. Do not let W5 arrive with the overcon
 constants AND treat the resulting tiers as meaningful.
 
 
-## Reproduction
+## Agent-directive shift (2026-09-19 late): luck signal, forceReprice boundary, split weighting
+
+**Task 1 - turnover-luck signal landed.** `packages/prediction-engine/src/signals/luck/turnover-luck.ts`
++ `src/__tests__/turnover-luck.test.ts`: pure shrunk-recovery evaluator (K_FF = 200
+pseudo-fumbles, baseline 0.50, K_INT = 150 exported for the companion occurrence
+evaluator). Fixtures carry the MEASURED 2026 W1-2 counts. Honesty correction to the
+directive's framing: BAL (1 fumble), CAR (1) and NYJ (1) sit at 0%/100% on n=1 - the
+directive called them extremes; the module correctly floors them at NEUTRAL +
+lowSample (MIN_FUMBLES_FOR_VERDICT = 2). True extremes: TB/CHI/HOU unlucky, KC/BUF/ATL
+lucky. Registry/index wiring is the Gemini batch lane's; this module is standalone.
+
+**Task 2 - split into measurable half + operator action.** The DAVE-vs-market
+out-of-sample numbers under our conventions (production-table, 2025 W1-8 fit, W9-18
+test, n=151): ADJ RMSE 13.322 vs market 12.245; Brier 0.2368 vs 0.2200. The FULL
+rolling-origin walk-forward (every week scored from prior-week fits only, W1 excluded
+as cold start, per-week fitted logistic scales for both sides, 256/272 games) is
+materially worse for the model: ADJ Brier 0.2512 / log-loss 0.6958 / acc 0.535 vs
+market 0.2044 / 0.5902 / 0.645. The single-split window was the favorable end; over a
+real season the DAVE model is nowhere near market level, which is the quantitative
+case for treating `nfl_epa_adj` as a weak Rung-2 prior in the blend - and it raises
+the priority of the constants hazard below. On the fitted
+conversion scale: our two fits read 42.54 pts/EPA (train window) and 45.42 pts/EPA
+(full-season own-agg). A circulating 36.6 pts/EPA figure matches neither and implies a
+~16% steeper probability conversion - whoever produced it needs to publish the filter
+set before anyone uses it. The forceReprice run itself was NOT executed: it writes
+`picks.factorBreakdown` in production, which law 7 (no database writes from an agent
+session) forbids. Operator instructions: trigger
+`/api/cron/backfill-independent-trueprob` with `forceReprice: true` once, from the
+founder's cron path with the real secret; expected effect is re-pricing ~1.5k settled
+rows to add `nfl_epa_adj` where both teams have >= 4 games (2025 season fully
+qualifies); verify by re-running the sources-distribution SQL and confirming non-zero
+counts, and by the cron response fields (scanned/updated/skippedNonMl/errors).
+
+**Task 3 - split weighting kill line FIRED (report honestly).** Pre-registered:
+w = 0.75 must beat pooled (w = 0.5) Spearman on BOTH 2024 and 2025 holdouts
+(W1-8-adjusted split ratings, W9-18 test, in-train scale fit). Result (n=149/151):
+
+| season | pooled(0.5) RMSE/SP | weighted(0.75) RMSE/SP | pass-only(1.0) RMSE/SP |
+|---|---|---|---|
+| 2024 | 13.129 / 0.446 | 13.274 / 0.429 | 13.407 / 0.407 |
+| 2025 | 13.858 / 0.295 | 13.694 / 0.322 | 13.623 / 0.340 |
+
+2024 and 2025 pull in opposite directions monotonically in w: the optimal dropback
+weight is season-dependent at n=2 seasons, so a FIXED 0.75/0.25 prediction weight is
+NOT established. The descriptive asymmetry (pass diff correlates ~2:1 vs rush diff)
+stands; using it as a prediction reweighting does not. The asymmetry may still inform
+FACTOR design (which inputs deserve capture/weight in the composite refit), which is a
+different mechanism from margin arithmetic.
+
+
 
 Python 3.11 + pandas + scipy + psycopg. From this directory:
 
