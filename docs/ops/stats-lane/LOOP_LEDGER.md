@@ -1,5 +1,38 @@
 # MIMO self-audit loop ledger
 
+- **2026-09-19T07:40:18Z** suite ok kills=1 K3 0.7705; IMPLEMENT sigma ladder + totals e-process + hex32 residual
+  - **A Sigma ladder** (`out/loop_implement_0739_sigma_eprocess.json`) on nflverse REG n=6967:
+    - Weeks 1–4: **σ=14.36** n=1669 · home cover ex-push **0.482**
+    - Weeks 5–18: **σ=14.69** n=5298 · home cover **0.492**
+    - Fleet external claim (σ 13.8 early / 13.2 late) **NOT reproduced** on this file — Mimo OBS takes precedence
+    - |Δσ|=**0.32 &lt; 0.5** → single residual σ still OK for UQ captions; market remains ranking authority
+  - **B Totals e-process refresh:** n=236 with p/m/y · best ε=0.25 **M_max=5.01** · all eps **INSUFFICIENT_no_reject** · **skill_claim REJECTED_not_yet** (Ville threshold 20). Logit-pool TOTALS **MODEL_ADDS_INFORMATION** remains spine.
+  - **C Hex32 residual:** resolved **2065/2087 = 0.9895** · newly +25 · **unresolved_total 22** visible
+  - Suite re-run True.
+
+- **2026-09-19T07:29Z FLEET DIRECTIVE SHIFT — Mimo Tasks 1–3 complete**
+  - **T1 PASS-veto census v3** (`pass_veto_census_v3.py` → `out/pass_veto_census_v3.json`):
+    - Export n=3261 · published pending **220** · **export_has_edge_fields=false**
+    - Verdict **EXPORT_STALE_CENSUS_INCOMPLETE** — **cannot claim 100% clear**
+    - Proxy pending trueProb &lt; mfp **n=3** (not a substitute for decision/expectedClv)
+    - Ops: re-export board-export v3 then re-run census. Product rule still never-mint PASS / expectedClv&lt;0.
+  - **T2 Dual-denominator CLV** (`clv_evaluation.py` → `out/clv_evaluation.json`), break-even 0.524:
+    | Cell | CLV_strict n | CLV_all n | MATCHED |
+    |---|---:|---:|---:|
+    | ALL export | **0.406** (911) | 0.229 (1616) | 705 |
+    | TOTALS first | **0.567** (473) | 0.424 (632) | 159 |
+    | MLB_TOTAL | **0.599** (372) | 0.442 (505) | 133 |
+    | NFL_TOTAL | 0.727 (11) **thin** | 0.667 (12) | 1 |
+    | type SPREAD | 0.302 (248) | 0.101 (739) | 491 |
+    | type ML | **0.142** (190) | 0.110 (245) | 55 |
+    - **Strict ≥0.524 n≥30:** TOTALS_first, MLB_TOTAL, type:TOTAL only. **ALL-denom clears: none.**
+    - Law 10 surfaces written; **no engine-wide CLV skill claim**. Totals-first product narrative stands.
+  - **T3 Composite refit spec finalized** `docs/ops/stats-lane/composite_refit_v530_design.json`:
+    - consensusScore **0**, marketDepthScore **0**, confidence **0** for public ranking
+    - Primary key **marketFairProb** when books≥2; fallback de-vigged market p
+    - `CALIBRATION_ADJUSTMENTS_ENABLED=false` until founder; MODEL_VERSION **v5.2.7 frozen**
+  - Suite re-run True. Commit + bus this shift.
+
 - **2026-09-19T07:20:43Z** suite ok kills=1 K3 0.7705; IMPLEMENT totals path + cold-start Brier + coach registration
   - **A Totals CRPS density:** n=683 settled TOTAL rows on export; **predictedMeanMargin = 0/683** → model-residual CRPS **NOT RUN** (export gap). Baseline residual CRPS on actualMargin **2.59**. Kill not evaluable until export carries predicted total. **Positive path:** `out/totals_binary_mfp_score.json` — TOTALS decided with marketFairProb scored on binary Brier/bits; logit-pool **MODEL_ADDS_INFORMATION** stands; e-process M_max **4.43&lt;20** → **no Ville skill language**.
   - **B Cold-start prior vs market ML:** paired n=**543**; prior-EPA p Brier **0.247** vs market ML **0.207** → **PRIOR_LOSES_TO_MARKET_ML**. Law-11 baseline **0.211** stands (this subset market even tighter). Kill **not** met — independent fair p stays research.
@@ -163,6 +196,14 @@
   - NEXT weather Mondrian all bins OOT>=0.85 → promote weather/roof residual bands as NFL margin UQ replacement
   - NEXT totals e-process M_max=4.430387116702636 < 20 → accumulate more settled totals + shrinkage eps sweep; formal Ville test — do not claim skill yet
 - **2026-09-19T07:20:43.929775+00:00** suite exits=[0, 0, 0, 0, 0, 0] kills=1 actions=6 score={"k3_best_cov": 0.7704918032786885, "hex32_resolve_rate": 0.97747963584092, "ml_clv_nonpush": 0.14210526315789473, "logit_pool_totals": "MODEL_ADDS_INFORMATION", "logit_pool_ml": "FIRE_NOTHING", "weather_bins_ge_085": "6/6", "eprocess_totals_Mmax": 4.430387116702636}
+  - KILL {'metric': 'K3_margin_band', 'value': 0.7704918032786885, 'line': 0.85, 'verdict': 'KILL_band_model'}
+  - NEXT K3 OOT < 0.85 → use weather/roof Mondrian + sport margin densities; No-band label on K3 product-market residuals
+  - NEXT hex32 resolve 0.9775 < 1.0 → retry remaining UNRESOLVED_NO_SCOREBOARD_MATCH via date±2 and name aliases
+  - NEXT ML CLV 0.142 < 0.50 → e-process + logit-pool gates; totals-first product; no ML beat-close claim
+  - NEXT totals add info vs market (logit-pool) → advance totals density/CRPS path + e-process accumulation; keep kill lines
+  - NEXT weather Mondrian all bins OOT>=0.85 → promote weather/roof residual bands as NFL margin UQ replacement
+  - NEXT totals e-process M_max=4.430387116702636 < 20 → accumulate more settled totals + shrinkage eps sweep; formal Ville test — do not claim skill yet
+- **2026-09-19T07:40:18.003182+00:00** suite exits=[0, 0, 0, 0, 0, 0] kills=1 actions=6 score={"k3_best_cov": 0.7704918032786885, "hex32_resolve_rate": 0.97747963584092, "ml_clv_nonpush": 0.14210526315789473, "logit_pool_totals": "MODEL_ADDS_INFORMATION", "logit_pool_ml": "FIRE_NOTHING", "weather_bins_ge_085": "6/6", "eprocess_totals_Mmax": 4.430387116702636}
   - KILL {'metric': 'K3_margin_band', 'value': 0.7704918032786885, 'line': 0.85, 'verdict': 'KILL_band_model'}
   - NEXT K3 OOT < 0.85 → use weather/roof Mondrian + sport margin densities; No-band label on K3 product-market residuals
   - NEXT hex32 resolve 0.9775 < 1.0 → retry remaining UNRESOLVED_NO_SCOREBOARD_MATCH via date±2 and name aliases
