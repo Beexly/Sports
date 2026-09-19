@@ -91,11 +91,23 @@ try {
   for (const r of rows) {
     const fb = r.factorBreakdown && typeof r.factorBreakdown === "object" ? r.factorBreakdown : null;
     const g = r.game || {};
+    // Prefer a human sport key; fall back to ESPN id parse; never ship a raw CUID.
     const sportKey =
-      g.sport ||
-      g.sportId ||
-      (typeof g.sport === "string" ? g.sport : null) ||
+      (typeof g.sport === "string" && g.sport.length <= 12 ? g.sport : null) ||
+      (typeof g.sportId === "string" && g.sportId.length <= 12 ? g.sportId : null) ||
       null;
+    const espnEventId = g.espnEventId ?? null;
+    let sport = sportKey;
+    if (!sport || sport.length > 20) {
+      const e = String(espnEventId || "").toLowerCase();
+      if (e.includes("nfl")) sport = "NFL";
+      else if (e.includes("ncaaf") || e.includes("college-football")) sport = "NCAAF";
+      else if (e.includes("mlb") || e.includes("baseball")) sport = "MLB";
+      else if (e.includes("nba") || e.includes("basketball")) sport = "NBA";
+      else if (e.includes("nhl") || e.includes("hockey")) sport = "NHL";
+      else if (e.includes("mls") || e.includes("soccer")) sport = "MLS";
+      else sport = null; // stats-lane sport_resolve will handle
+    }
     const homeScore = typeof g.homeScore === "number" ? g.homeScore : null;
     const awayScore = typeof g.awayScore === "number" ? g.awayScore : null;
     const actualMargin =
@@ -115,7 +127,8 @@ try {
     const rec = {
       pickId: r.id,
       gameId: r.gameId,
-      sport: sportKey,
+      sport,
+      sportIdRaw: typeof g.sport === "string" ? g.sport : (g.sportId ?? null),
       pickType,
       selection: r.selection,
       line: typeof r.line === "number" ? r.line : null,
@@ -145,6 +158,11 @@ try {
       espnEventId: g.espnEventId ?? null,
       marginKind: pickType === "SPREAD" ? "HOME_MARGIN" : pickType === "TOTAL" ? "TOTAL_POINTS" : null,
       publicMlImpliedProb: null, // optional join later for NCAAF K1
+      clvVerdict: r.clvVerdict ?? null,
+      clvValue: r.clvValue ?? null,
+      clvKind: r.clvKind ?? null,
+      clvLockLine: r.clvLockLine ?? null,
+      clvCloseLine: r.clvCloseLine ?? null,
       exportedAt: new Date().toISOString(),
       purpose: "mimo_stats_lane_books_ordering_jackknife",
     };
