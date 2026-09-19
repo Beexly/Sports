@@ -16,6 +16,8 @@ commits: f67631363..<HEAD>
 
 **Journey log** — Receipts cannot refute/confirm the books prediction; the field must join via settled-picks export. In-sample Mondrian coverage is not a product guarantee; coupling must be read on OOT/stratified tables when export lands. NCAAF high ML hit is H_artifact by default until K1–K4 pass against public implied p. Pooled board win rate refused without market×books×pre-game splits.
 
+**Review (general-1, 2026-09-18)** — **Status success.** T1–T5 PASS vs S2.1–S2.4; T6/T7 correctly DATA_BLOCKED on `incoming/board-export.jsonl`. No critical findings. Non-critical items addressed in follow-up commit: sport×books crosses + ML 0-book composition (`k2_flag`) added to `books_mondrian.py`; `PRE-REG-ordering-comparison-2026-09-18.yaml` copied onto this branch; dead `kick` assignment removed. Residual note: kill-line 2 remains an interpretive flag on export inputs; K1 public-price test still required for H_edge.
+
 ## [S1] Problem
 
 STATISTICS lane follow-ups after books prediction was refuted:

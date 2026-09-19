@@ -1,0 +1,72 @@
+# Pre-registration — board ordering comparison (STATISTICS lane)
+# Written BEFORE any production export is scored. Status: NOT RUN until export exists.
+# Do not edit kill lines after seeing results; open a new row instead.
+
+id: ORDERING-P-2026-09-18
+lane: STATISTICS
+depends_on_export: verifier/picks-h1.json | .gse-local/calibration/picks-h1.json | calibration-metrics export
+status: PRE_REGISTERED_NOT_RUN
+supersedes: mixed-sample ordering duel on settled published board (REFUSED — basis collinear with MODEL_VERSION; in-play kill TRIGGERED on receipts 2026-09-18)
+
+sample_primary:
+  id: P
+  definition: >
+    settled, published, non-founder, pre-game only (generatedAt < commenceTime;
+    unknown clock in sensitivity cell only), eligibility exclusions counted
+    (in_play, three_way_market, no_market_probability, unverifiable_market_p),
+    modelVersion in [v5.2.2, v5.2.3, v5.2.4, v5.2.5, v5.2.6, v5.2.7],
+    finite confidence AND finite rankingP AND finite marketFairProb
+    (odds-table resolution order, not receipt-first)
+  reason: >
+    Only this cohort stores both scores on the same rows, so ordering is
+    identifiable without crossing model versions.
+
+sample_secondary:
+  id: H
+  definition: >
+    pre-v5.2.2 settled pre-game eligibility-clean rows with finite confidence
+    and finite marketFairProb; rankingP structurally missing
+  rankingP_status: NOT_RUN_absent_not_zero
+
+orderings:
+  O1: confidence descending
+  O2: rankingP descending
+  O3: marketFairProb descending
+  O4_dumb: time order (generatedAt) or seeded shuffle — must be beaten
+
+metrics_per_ordering:
+  - decile_realized_hit_rate
+  - decile_inversion_count
+  - decile_brier
+  - top_decile_hit_rate_with_wilson95
+  - kendall_tau_score_vs_outcome
+  - dumb_baseline_duel_same_rows
+
+intervals:
+  unit: slate_or_day_bootstrap (never row bootstrap)
+  report: one interval per ordering
+  rule: if intervals overlap, write "intervals overlap" — do not name a winner
+  multiplicity: four orderings — report raw + Holm on pairwise decile tests
+
+split:
+  type: time_ordered
+  discover: older slates only
+  validate: strictly later slates
+  reason: non-stationarity + correlated same-day model runs
+
+kill_lines:
+  - prediction: rankingP deciles more monotone than confidence on sample P
+    kill_if: inversion_count_O2 >= inversion_count_O1
+  - prediction: rankingP top-decile product claim stronger than confidence
+    kill_if: Wilson intervals for O2 and O1 top-decile overlap — product claim dies; defect claim on confidence may stand
+  - prediction: model orderings beat marketFairProb
+    kill_if: O1 or O2 decile Brier not better than O3 on validate era
+  - prediction: historical confidence board was a useful ranker
+    kill_if: on sample H, top-decile hit not monotonically above bottom-decile (expected fail)
+  - mixed_sample_ordering:
+    status: REFUSED
+    reason: pre_game vs in_play hit gap +21.72pp on receipts 2026-09-18 (kill triggered)
+
+mondrian_constraint:
+  warning: MONDRIAN PARTITIONS A SCORE, IT DOES NOT FIX AN INVERTED ONE
+  books_bucket: NOT_RUN until bookmakerCount joins export; n < 9 => +Inf never clamp

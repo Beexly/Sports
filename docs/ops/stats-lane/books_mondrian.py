@@ -93,8 +93,6 @@ def coerce_row(raw: dict[str, Any]) -> dict[str, Any] | None:
     if y is None:
         return None
     gen = parse_iso(raw.get("generatedAt"))
-    kick = parse_iso(raw.get("commenceTime") or (raw.get("game") or {}).get("startTime") if isinstance(raw.get("game"), dict) else raw.get("commenceTime"))
-    # prefer explicit commenceTime
     kick = parse_iso(raw.get("commenceTime"))
     if gen and kick and gen >= kick:
         timing = "in_play"
@@ -347,6 +345,77 @@ def main() -> int:
         if ratios
         else "NOT_RUN_insufficient_pickType_bins"
     )
+
+    # sport × books crosses (S2.1)
+    by_sport_books = []
+    for sp in sorted({r["sport"] for r in pre}):
+        for b in BOOK_BUCKETS:
+            sub = [r for r in pre if r["sport"] == sp and r["books"] == b]
+            if not sub:
+                continue
+            by_sport_books.append(
+                {
+                    "sport": sp,
+                    "books": b,
+                    **bin_stats(sub, "res_mfp"),
+                    "hit_rate": sum(r["y"] for r in sub) / len(sub),
+                }
+            )
+    report["by_sport_books_mfp"] = by_sport_books
+    sport_ratios = []
+    for sp in {x["sport"] for x in by_sport_books}:
+        qs = [x["qhat"] for x in by_sport_books if x["sport"] == sp and x.get("qhat") is not None]
+        if len(qs) >= 2 and min(qs) > 0:
+            sport_ratios.append({"sport": sp, "qhat_ratio": max(qs) / min(qs)})
+    report["sport_stratified_qhat_ratios"] = sport_ratios
+
+    # K2-style composition flag on MONEYLINE 0-book vs 10+ (inputs; not an edge claim)
+    ml0 = [r for r in pre if r["pickType"] == "MONEYLINE" and r["books"] == "0"]
+    ml10 = [r for r in pre if r["pickType"] == "MONEYLINE" and r["books"] == "10+"]
+    hit0 = sum(r["y"] for r in ml0) / len(ml0) if ml0 else None
+    hit10 = sum(r["y"] for r in ml10) / len(ml10) if ml10 else None
+    null_mfp_share0 = (
+        sum(1 for r in ml0 if r["mfp"] is None) / len(ml0) if ml0 else None
+    )
+    mean_conf0 = (
+        mean([r["p_conf"] for r in ml0 if r["p_conf"] is not None]) if ml0 else None
+    )
+    q0 = bin_stats(ml0, "res_mfp").get("qhat") if ml0 else None
+    q10 = bin_stats(ml10, "res_mfp").get("qhat") if ml10 else None
+    wider_0 = None
+    if q0 is not None and q10 is not None:
+        wider_0 = q0 > q10
+    k2 = "NOT_RUN"
+    if hit0 is not None and hit10 is not None:
+        gap_pp = 100 * (hit0 - hit10)
+        sel = (
+            (null_mfp_share0 or 0) >= 0.80
+            and (mean_conf0 or 0) >= 0.75
+            and gap_pp <= 5.0
+        )
+        edgeish = gap_pp > 10.0 and wider_0 is False
+        if edgeish:
+            k2 = "INPUTS_SUGGEST_edge_language_may_still_need_K1_public_price"
+        elif sel or (gap_pp > 10.0 and wider_0 is False):
+            k2 = "K2_selection_or_not_wider_residual"
+        elif gap_pp > 10.0 and wider_0 is True:
+            k2 = "0book_high_hit_AND_wider_residuals_needs_K1"
+        else:
+            k2 = "NO_extreme_gap_or_insufficient_ml_bins"
+    report["ml_zero_book_composition"] = {
+        "n_0book": len(ml0),
+        "n_10plus": len(ml10),
+        "hit_0book": hit0,
+        "hit_10plus": hit10,
+        "gap_pp": (100 * (hit0 - hit10)) if hit0 is not None and hit10 is not None else None,
+        "null_mfp_share_0book": null_mfp_share0,
+        "mean_conf_100_0book": mean_conf0,
+        "qhat_0book_mfp": q0,
+        "qhat_10plus_mfp": q10,
+        "residual_wider_on_0book": wider_0,
+        "k2_flag": k2,
+        "note": "Composition inputs only — H_edge still requires public implied p (K1) in NCAAF_ML_ZERO_BOOK_TEST.",
+    }
 
     out = Path(args.out)
     out.parent.mkdir(parents=True, exist_ok=True)
