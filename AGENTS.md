@@ -3860,3 +3860,75 @@ pre-registration and the strict runner live under `docs/ops/stats-lane/` in the
 statistics lane's own workspace and are NOT in this repository tree yet. They
 need to land here before any of the numbers above can be reproduced from the
 repo.
+
+---
+
+## BOOK DEPTH IS ANTI-PREDICTIVE ON MLB SPREADS, AND THE TIMING GAP CONFIRMS AT 2.2x SAMPLE (2026-09-19, Opus, read-only production SQL)
+
+Measured against live production (Neon project gse-postgres, SELECT only, nothing
+written). Sample: published, non-bootstrap, settled picks.
+
+**1. The timing kill CONFIRMS on the full board.** The statistics lane measured a
+21.72 point pre-game versus in-play gap on a receipts snapshot of 1,087 scored
+rows. On the full published non-bootstrap settled set:
+
+| timing | n | wins | losses | pushes | hit (decided) |
+|---|---|---|---|---|---|
+| pre_game | 2379 | 1268 | 1103 | 8 | 0.5348 |
+| in_play | 171 | 125 | 45 | 1 | 0.7353 |
+
+**+20.05 points**, on 2.2x the sample, from an independent query. The level
+differs from the receipts snapshot (0.5348 against 0.4802) because the
+denominators differ, but the GAP is the robust finding and it reproduces. In-play
+rows are priced off a line that already encodes part of the outcome, and they hit
+20 points higher. Any study mixing the two strata is measuring the mix.
+
+**2. BOOK DEPTH IS ANTI-PREDICTIVE ON MLB SPREADS.** Pre-game only, bucketed by
+`picks.bookmakerCount`, bins with n >= 9:
+
+| sport | market | books | n | hit (decided) |
+|---|---|---|---|---|
+| MLB | SPREAD | 3-9 | 409 | 0.5061 |
+| MLB | SPREAD | **10+** | 188 | **0.3723** |
+| MLB | TOTAL | 3-9 | 345 | 0.4564 |
+| MLB | TOTAL | 10+ | 185 | 0.4693 |
+| MLB | MONEYLINE | 0 (model signal) | 550 | 0.5764 |
+| NCAAF | MONEYLINE | 0 | 109 | 0.8716 |
+| NCAAF | SPREAD | 3-9 | 67 | 0.6269 |
+| MLS | MONEYLINE | 0 | 88 | 0.5909 |
+
+Wilson 95% on the two MLB spread rows: roughly [0.458, 0.554] against
+[0.303, 0.441]. **They do not overlap.** On the largest stratum on the board,
+more bookmaker coverage selects WORSE spots, not better ones.
+
+**Why this matters more than any single bin.** The scorer awards `consensusScore`
+30 plus `marketDepthScore` 20. **Fifty of the confidence points reward book
+depth**, and book depth measures anti-predictive where there is most data. Read
+this together with the two facts this file already records: `consensusPct` is
+structurally pinned at 1.0000 on MLB run lines, so the consensus term carries no
+information there either. The composite is rewarding a property that does not
+predict, on the market where most of the sample lives.
+
+Do NOT act on this by suppressing the number or by editing a weight. Reweighting
+the composite is a scoring change, needs a MODEL_VERSION bump and a calibration
+pass, and is founder-only. What this licenses today is measurement and design,
+not a silent weight edit.
+
+**3. This REFUTES a pre-registered prediction, which is the system working.** The
+statistics lane predicted "thin-book q-hat wider than 10+ books; kill if not",
+i.e. that thin-book rows would be the noisier ones. On realized hit rate the
+ordering is the opposite. Note carefully that residual SCALE and hit RATE are
+different claims and the refutation is on the second; re-running the Mondrian
+bins with this field is the open item.
+
+**Honest limits.** These are realized hit rates on decided rows, not calibration.
+Bins are unadjusted for favourite/underdog, line magnitude, month or model
+version, so the books gap could still be confounded. That decomposition is
+assigned and NOT RUN. NCAAF moneyline at 0 books reading 0.8716 on n 109 is
+flagged as either a real edge or a selection artifact, and is NOT to be quoted as
+a track record until that is settled.
+
+**Method note.** `sport` is NOT a column on `picks` or `games`; it is
+`games."sportId"` joined to `sports`. `bookmakerCount` IS on `picks`, so the
+bookmaker bucket the statistics lane reported as unavailable is available from
+the database even though it is absent from the receipts export.
