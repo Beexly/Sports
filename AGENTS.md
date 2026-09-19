@@ -3598,3 +3598,81 @@ toward one task here without either knowing.
 board/picks/cockpit/dashboard/preview files at 723/723 with no zero-collection files,
 typecheck 0, lint 0, guardrails 26/26. No gate, flag, floor, schema or MODEL_VERSION
 touched.
+
+---
+
+## THE CENSUS RAN. THE CONFIDENCE BRANCH IS A LEGACY COHORT, AND IT CONFOUNDS THE OUTCOME METRIC (2026-09-19, Opus)
+
+**Measured against live production (Neon project `gse-postgres`, read-only SELECT, nothing
+written). This answers step 1 of the ranking plan and it changes step 2 from "run the
+comparison" to "the comparison as designed cannot answer the question".**
+
+Over 3,257 published picks, the branch that actually produced each ordering key:
+
+    basis           rows     share
+    rankingP        1775     54.50%
+    confidence      1482     45.50%
+    rankingScore       0      0.00%
+
+Wilson 95% on the confidence share: **0.438 to 0.472**. The pre-registered kill line was a
+Wilson upper bound under 0.05, so this is not close to the "narrow fallback defect" reading.
+**`rankingScore` never fires at all**, so the documented three-way cascade is a two-way
+split in practice and its middle branch is dead code on every row ever published.
+
+**But the live board is NOT affected, and saying "45% of the board" would be wrong.** Split
+by settlement:
+
+    basis        settled  isBootstrap   rows
+    rankingP     true     false         1541
+    confidence   true     false         1482
+    rankingP     false    false          234
+
+Every confidence-basis row is settled history. **All 234 published PENDING rows are
+rankingP**, so today's board is ordered entirely by the monotone score. The last
+confidence-basis row was generated **2026-07-25**; rankingP runs 2026-05-22 through today.
+
+**The finding that matters: basis is PERFECTLY COLLINEAR with MODEL_VERSION.**
+
+    v5.0.0     887 rows   all confidence
+    v5.1.0     595 rows   all confidence
+    v5.2.2       2 rows   all rankingP
+    v5.2.4       1 row    all rankingP
+    v5.2.5       1 row    all rankingP
+    v5.2.6     297 rows   all rankingP
+    v5.2.7    1474 rows   all rankingP
+
+887 + 595 = 1482 exactly; 2 + 1 + 1 + 297 + 1474 = 1775 exactly. Zero overlap, both ways.
+Basis is a deterministic function of model version.
+
+**So the realized-outcome comparison as pre-registered CANNOT be run on this sample.** Any
+result of the form "ordering A beats ordering B on settled history" is really "v5.0.0 and
+v5.1.0 versus v5.2.x", because the rows that differ in basis are exactly the rows that
+differ in engine version. The orderings are not being compared on common ground, and an
+interval computed on that sample would be confidently reporting a version effect under an
+ordering label. Do not run it and do not report it.
+
+What CAN be answered, and whoever takes it should pre-register which:
+- Restrict to a single model version and compare orderings within it. That is the only
+  unconfounded comparison available, and it costs the confidence cohort entirely, since no
+  version contains both bases.
+- Or treat this as closed on the live surface and re-scope: the ordering defect reaches no
+  row minted since v5.2.2, so the open question is about the historical record, not the
+  product.
+
+**Consequence for calibration, which is the larger issue.** The settled non-bootstrap sample
+is 49.0% confidence-basis rows (1482 of 3023), and those are entirely v5.0.0 and v5.1.0.
+Any pooled measurement over settled history is weighting two retired engine versions at
+roughly half. That is the same pooled-versus-stratum hazard this file already records for
+ECE, arriving from a second direction.
+
+**Method note, recorded because it nearly produced a wrong table.** A crosstab written with
+`jsonb_typeof(fb->'rankingP') <> 'number' OR fb IS NULL` reported ZERO confidence rows on
+every version. The v5.0.0 and v5.1.0 rows carry a non-null `factorBreakdown` that simply
+lacks the key, so `jsonb_typeof(NULL)` is NULL, `NULL <> 'number'` is NULL rather than true,
+and the IS NULL clause does not fire either. The row counts only added up because the total
+column was carried alongside. In three-valued logic, absence of a key is not inequality:
+test the positive branch and take the complement, never the negated branch.
+
+**Verified:** SELECT-only against production, four queries, no write of any kind, no schema,
+gate, flag, floor or MODEL_VERSION touched. The connection string was used in process only,
+never written into the repository, and was destroyed after the run.
