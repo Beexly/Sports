@@ -1234,6 +1234,19 @@ Breaking one discards the run.
    forbidden-copy list, never loosen an assertion's intent, never change a guardrail's
    threshold. If a guard is red, either the code is wrong or the guard needs *narrower*
    context — never less power.
+10. **NEVER report a rate under one denominator.** (Founder, 2026-09-19.) Every
+   closing-line-value and win-rate figure is reported under BOTH denominators, side by
+   side: all-graded rows with the tolerance-band cell included, and decided-only rows with
+   it excluded. One denominator alone is how a cell that reads 0.567 on the narrow
+   denominator gets quoted against a threshold defined on the wide one. Pooled R1 reads
+   0.229 and still fails; MLB TOTAL R4 reads 0.567 on the narrow denominator only. Neither
+   number travels without the other beside it.
+11. **NEVER make a moneyline claim without clearing the frozen market baseline.** (Founder,
+   2026-09-19.) That baseline is **market moneyline Brier 0.211 at n 5,051**, and it is
+   frozen. Elo reads 0.233 on the same rows and loses. The earlier "Elo beats market"
+   reading came from scoring the market as a normal CDF of the spread over an assumed
+   sigma, which is a misspecified market probability, not the market's own price. Score
+   the market off its own posted moneyline or do not score it.
 
 ---
 
@@ -4543,9 +4556,123 @@ Elo's deficit is not a staleness problem that current-season data repairs.
 5. The PASS veto. 373 of 374 PASS rows are published; 3 were live pre-kickoff when
    measured at 05:14Z on 2026-09-19.
 
-**Also recorded from the same message, and it is a change of method rather than a display
-edit:** Shin becomes the published probability. Receipts today carry a mean-implied
-proportional de-vig and the record already says so, so swapping the de-vig moves every
-published number and wants its own before-and-after on the same rows rather than riding
-inside another change. The founder's message was truncated after that line; nothing
-further is recorded from it.
+**Shin as the published probability: PROPOSED, MEASURED, AND WITHDRAWN WITHIN A DAY. Do
+not implement it.** It was handed over as a decision ("Shin is the published probability"),
+flagged here as a change of de-vig method rather than a display edit and therefore owing
+its own before-and-after on the same rows, and then measured: **delta Brier about 2e-5
+against the proportional de-vig the product already uses.** The founder's ruling is keep
+the product formula. Two numerically indistinguishable de-vigs are not a choice worth
+making, and re-opening it costs a full re-publication of every stated probability for
+nothing. The earlier wording in this paragraph said Shin "becomes" the published
+probability; that instruction is dead and is left visible here only so nobody implements a
+half-read version of it.
+
+### Round 2, same night: four more licenses, seven more refusals, two self-corrections
+
+The founder's second batch. **Provenance, stated plainly because it constrains what anyone
+may do with these numbers:** commit `87d7edbab` on `stats/books-ordering-2026-09-18` is
+unpushed and is NOT a valid object in this repository; `docs/ops/stats-lane/` does not exist
+in this tree, so `SOLUTIONS_BATTERY_MASTER.md` and `LOOP_IMPLEMENT_2026-09-19.md` are not
+reachable here. Every figure below is RECORDED AS REPORTED and was NOT verified against a
+primary source from this session. That is now the second batch of load-bearing measurement
+living only outside the repository; landing those documents is the fix and it is ops work.
+
+The two self-corrections became **Laws 10 and 11**, in THE LAWS above: report every rate
+under both denominators, and clear the frozen market moneyline Brier 0.211 (n 5,051) before
+making any moneyline claim. Both corrections were the founder catching his own earlier
+claims, which is the ledger working in the direction that matters most.
+
+**New licenses.** The total close (CRPS 7.363 against a league-mean total 7.780, n 1,960);
+red-zone touchdown rate by yardline (n 54,511, base 19.6%); 4th and 7-or-more converting
+24.9% [19.3, 31.4] against 4th and 1 at 53%; and neutral site is not a home site.
+
+| red zone, yardline | TD rate |
+|---|---|
+| 1 to 2 | 44.0% |
+| 3 to 5 | 34.6% |
+| 6 to 10 | 20.5% |
+| 11 to 15 | 11.6% |
+| 16 to 20 | 7.6% |
+
+**New refusals.** Cover-by-line fade (every Wilson across the 0 to 2.5, 3 to 6.5, 7 to
+10.5 and 11-plus buckets covers 0.50, so fading a large favorite is superstition),
+short-rest over, grass and turf over, Hawkes tempo, soccer Dixon-Coles transplanted to the
+NFL, and 10Hz tracking in the pregame number.
+
+**Shipped and measured alongside them:** marketFairProb is the only positive realised-bits
+source at +0.075 bits (n 741) against confidence/100 at -0.081, so rank and display market
+p on any row books priced and leave confidence as an index; book depth is dead as a ranker
+(bookmakerCount Spearman -0.80 against marketFairProb +0.90) and is display-only;
+weather/roof Mondrian promoted 6 of 6 out of time, replacing the killed K3 bands; coach
+fourth-down go-rate is a CANDIDATE on stickiness r 0.428 and is NOT wired until it clears a
+holdout Brier; fail-closed conformal shipped with positive infinity when k exceeds n.
+
+### THE FOUR LOOKUP TABLES ARE ONE SURFACE, AND THEY SHARE ONE SHAPE
+
+3rd and X, red zone by yardline, 4th and X, and Lopez 2nd and 10 are not four findings. They
+are one situational conversion surface indexed by down, distance and yardline, and the same
+thing is wrong in every one of them:
+
+| table | aggregate | near cell | far cell |
+|---|---|---|---|
+| 3rd and X | 36.0% | 54.6% (1.52x) | 14.8% (0.41x) |
+| red zone | 19.6% | 44.0% (2.24x) | 7.6% (0.39x) |
+| 4th and X | 53% at 1 | | 24.9% (0.47x of the short rate) |
+| 2nd and 10 | naive 27.4% | 37.7% (1.38x) | |
+
+Four independent samples, one shape: the far cell lands between 0.39 and 0.47 of the
+aggregate and the near cell between 1.4 and 2.2 times it. **The rule that falls out is worth
+more than the tables.** Any aggregate rate this product quotes on a customer surface should
+be checked for whether its extreme cells fall outside half to double the aggregate, because
+that is where the copy is wrong by more than the entire edge anyone is claiming. Enumerating
+the aggregate rates currently rendered is cheap and nobody has done it.
+
+### THREE FLAGS ON THIS BATCH, RAISED BEFORE ANYTHING IS BUILT ON IT
+
+**1. ATS by over at lift 1.011 cannot be an edge, and belongs in the ledger as a pricing
+correction instead.** The assumption-free argument first: a two-leg parlay with both legs
+near even money carries roughly 4.5% or more in hold. A dependence of 1.1% does not cover
+the rake, so even a perfectly measured lift of 1.011 can never fund a bet. It is only ever a
+reason not to price a correlated pair as independent. Separately, and this is what makes the
+interval computable, the SAME batch measures ATS marginals as coins in every line bucket, so
+take both marginals at 0.5: the joint cell sits at 0.25275, its standard error is about
+0.4346 over the square root of n, and the lift's is about 1.7384 over the square root of n.
+For a 95% interval on 1.011 to exclude independence needs **n above roughly 96,000
+co-observed pairs**, which is hundreds of NFL seasons. Estimating the marginals from the
+same sample shrinks that somewhat, not by an order of magnitude. So: state n and an interval,
+or move it out of the edge column. It currently sits in USE on the same page as the finding
+that kills it.
+
+**2. "Weeks 1 to 4 close even harder" contradicts the numbers already on record, and Law 11
+may have moved all of them.** Recorded: full season market 7.117 against Elo 7.593, a margin
+of 0.476; weeks 1 to 4 (n 446) market 7.019 against Elo 7.373, a margin of 0.354. The margin
+is 0.122 SMALLER in September, not larger, so "even harder" is the reverse of the arithmetic
+unless a new measurement exists that was not reported. Worse, Law 11 has just condemned
+scoring the market as a normal CDF of the spread over an assumed sigma, and that is the
+natural construction for the MARKET ARM of every close-against-Elo CRPS figure on record,
+including the four arms of the EPA walk-forward. Nobody has said the CRPS ladder was
+recomputed after that correction. If it was not, sigma is a free parameter that plausibly
+differs by slice, and the 0.122 September gap could be a sigma artifact rather than a
+property of September. The direction of that error probably FAVOURS the close (a wrong sigma
+inflates the market arm's CRPS), so "use the close" survives and may strengthen. What does
+not survive is the slice comparison. Resolve it by recomputing the ladder, not by rewording.
+
+**3. The totals license rests on beating a constant, not a model, so do not quote its delta
+beside the spread's.** Spread: close 7.117 against Elo 7.593, a fitted model. Totals: close
+7.363 against a league-mean total 7.780, a constant. The deltas look alike (0.476 and 0.417)
+and the evidence is not the same class. This repository has already been burned by exactly
+this: the Brier floor of 0.22 is cleared by a constant base-rate forecast with no skill at
+all, uncertainty alone reading 0.2139, and that is recorded above. Beating a constant
+demonstrates that total_line carries information, which is the license and is enough to build
+the totals card off it. It does not demonstrate the close beats a totals model, because no
+totals model was tested. The cheap repair is to score the close against any fitted non-market
+totals baseline; until then the two deltas are not comparable and should not be printed
+adjacent.
+
+### Still owed, and not by an agent
+
+The PASS-veto census is blocked on a stale disk export, not on code: the runner emits
+`independentEdgeDecision`, `expectedClv` and `trueProb` plus `passVeto`, and the current
+export carries an empty decisions map with passVeto_n at 0. Ops re-exports board-export v3,
+then the census runs. Law 7 keeps the database out of an agent session, so until that
+re-export lands the census is NOT RUN and no agent estimates its answer.
