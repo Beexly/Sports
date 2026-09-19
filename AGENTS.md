@@ -7,6 +7,65 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ---
 
+## MIMO 2026-09-18: PROJECTIONS PROGRAM UNITS 1-3
+
+Worktree: C:\Users\Garrett\Sports-worktrees\mimo-xfp-2026-09-18
+Branch: mimo/mimo-xfp-2026-09-18 (local only, not pushed)
+Commits: 735cb6f5d (Unit 1), then Unit 2 follow-up
+Kill lines pre-registered BEFORE holdout runs. MODEL_VERSION untouched.
+Attribution: Data via nflverse (nflverse-data), CC BY 4.0.
+FTN charting: FTN Data via nflverse, CC BY-SA 4.0.
+
+### UNIT 1 xFP/FPOE: FAIL (exit 2)
+
+Holdout 2020-2025, train opportunity rates 2009-2019, n_pairs=6022,
+min 8 opportunities both consecutive weeks, week bootstrap 2000.
+
+OBSERVATION:
+- spearman_xfp 0.210119
+- spearman_naive (raw prior-week PPR) 0.226608
+- delta_rho -0.016489
+- CI on delta [-0.039590, 0.008622]
+- rmse_xfp 8.696999 vs rmse_naive 10.271886 (secondary, not the kill metric)
+
+VERDICT: FAIL. xFP did not beat naive raw fantasy points on the pre-registered
+Spearman. No FPOE buy/sell edge language from this stack.
+Artifact: scripts/research/mimo-xfp/results/unit1_holdout.json
+
+### UNIT 2 catchable vs raw air yards: INCONCLUSIVE (exit 2)
+
+FTN play flags joined to nflverse PBP air yards. Train 2022-2023, holdout
+2024-2025, WR/TE targets>=4 both weeks, n_holdout_pairs=983.
+
+OBSERVATION:
+- spearman_catchable 0.111301
+- spearman_raw 0.076337
+- delta_rho +0.034964
+- CI [-0.021572, 0.090841] includes 0
+- mae_catchable_map 27.271998 vs mae_raw_map 27.404233 (secondary)
+
+VERDICT: INCONCLUSIVE. Point estimate favors catchable air yards; CI includes 0.
+Not an edge under the kill line.
+Artifact: scripts/research/mimo-xfp/results/unit2_holdout.json
+
+### UNIT 3 props backtest: BLOCKED
+
+Pre-registered in PREREGISTRATION_UNIT3.md. Requires 2025 Weeks 1-18 closing
+player-prop lines. Not present as a free/local export. Production DB and
+credentials are out of scope for this lane. NOT RUN. See RESULT_UNIT3_BLOCKED.md.
+
+### UNIT 4 coverage grades: NOT STARTED
+
+Correct. Unit 3 has no verdict. Program stays stopped.
+
+### Bus
+
+agent-bus roster on origin does not include mimo (known: opus, grok, flash,
+gemini, garrett). Post attempts return Unknown agent. This AGENTS section and
+scripts/research/mimo-xfp/* are the record until roster merge.
+
+---
+
 ## CURRENT STATE
 
 Plan: `docs/ops/LAST_PLAN_2026-09-15.md` · branch `hermes/last-plan-2026-09-15` · head `909925139` · Phase 2 · rows: Phase 0+1 DONE/UNPUSHED. Phase 2: C-362-379, C-394-409, C-397 UNPUSHED (A1-A28 all scored/BLOCKED; INDEX.md current; v5.3.0 candidate assembled, duel run on fixture, PROPOSED — see below). Next: C-380 (retire gate_decisions readers), then Phase 3. Branch pushed 2026-09-15, PR #830 open (draft).
