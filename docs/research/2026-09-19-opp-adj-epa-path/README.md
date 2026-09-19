@@ -546,3 +546,44 @@ Customer-copy audit and the archive-watchdog wiring remain with Opus's tree.
 **NOT_RUN:** drive-basis RZ (derivation); rain/snow fumbles (no column); cold
 graduation (29 games < 150 floor); totals-CRPS Poisson baseline (queued next shift);
 QB Mondrian-k (locked, kill already failed).
+
+## Why nothing beats the close on game margins - the one-page skeptic sign-off
+
+Every mill this repo ran tonight and every locked result agree. The question is not
+whether we can beat the closing line on game-level spreads and moneylines with public
+play-by-play. We cannot, and here is the mechanism, not just the score.
+
+1. THE SCOREBOARD (all measured on this corpus, 2019-2025): margins - best model RMSE
+   13.32 vs market 12.25 (single-split; worse rolling); probabilities - model Brier
+   0.2368 split / 0.2512 walk-forward vs market 0.2200 / 0.2044; totals - model CRPS
+   8.167 vs close 7.303; CRPS margins - locked DAVE 7.500 vs close 7.109 on n~1,871.
+   Every model family tried (Elo, play-pooled EPA, opponent-adjusted EPA, DAVE k=8,
+   Fay-Herriot k-hat, split-weighted, Poisson totals) loses. Opponent adjustment and
+   prior bridging move the model column by hundredths; the gap to the market is
+   four-tenths of a CRPS point. No amount of the same information closes that.
+
+2. THE MECHANISM: the close is a weighted consensus of price-setters with information
+   we do not have (injury granularity, practice reports, sharp flow) plus everything
+   public. EPA-family ratings are DERIVED from public play outcomes - they are a
+   lossy summary of exactly the information the market already prices. A model built
+   from a public aggregation cannot systematically beat the aggregation of that
+   aggregation plus private information. Shrinkage estimators (DAVE, FH) reduce
+   variance, they do not add information; that is why they converge toward the
+   market from below and never through it.
+
+3. WHERE AN EDGE CAN STILL LIVE (measured tonight): MLB TOTALS closing-line value -
+   CLV_strict 57.76% on 438 graded rows (Wilson [0.531, 0.624]). The one market
+   family where this engine has demonstrably beaten the close, hidden for months
+   inside a pooled 23.2% figure that mixed it with moneylines and spreads. The
+   generalizable claim: edges live in THIN markets (totals, props, derivative
+   markets), not in the efficiently-priced game-margin mainlines.
+
+4. THEREFORE, THE STRATEGY THE NUMBERS SUPPORT: stop trying to out-predict the close
+   on mainlines (order the board on marketFairProb, use EPA/DAVE as Rung-2
+   descriptive priors with weight 0.00 until one beats a close-matched backtest);
+   point the signal factory at thin markets where the 57.8% live; and treat every
+   future factor the way tonight treated wind and fourth downs - milled or it does
+   not exist.
+
+Signed against the numbers: every figure above traces to a command in this directory
+or an AGENTS.md-locked measurement; re-run scripts/ to dispute any line.
