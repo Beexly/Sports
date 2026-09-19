@@ -124,7 +124,7 @@ const REASONS: Record<GateOutcomeCode, string> = {
   INSUFFICIENT_CALIBRATION:
     "We passed. Not enough history in this category yet to trust our number.",
   NOT_EVALUATED_MISSING_INPUTS:
-    "We couldn't score this one — a key piece of data was missing. Not a judgment about the game.",
+    "We couldn't score this one. A key piece of data was missing, so this is not a judgment about the game.",
 };
 
 /**

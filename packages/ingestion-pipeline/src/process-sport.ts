@@ -71,6 +71,7 @@ import type {
   SignalCategory,
   OddsApiEvent,
 } from "@sports/types";
+import { CANONICAL_MODEL_VERSION } from "@sports/types";
 import { recordSourceSnapshot } from "./source-snapshot.js";
 import {
   resolveCanonicalGame,
@@ -100,6 +101,7 @@ import {
   type FixtureConfirmation,
   type FixtureProbe,
 } from "./fixture-confirmation.js";
+import { persistGateDecisions, type GateDecisionInput } from "./gate-decision-sink.js";
 
 /**
  * Spend guard (GSE-SEC-039).
@@ -944,6 +946,7 @@ export async function processSport(
     let skippedInPlay = 0;
     // Games that passed the guard; the pick loop below refuses any other gameId.
     const confirmedGameIds = new Set<string>();
+    const gateDecisionsToPersist: GateDecisionInput[] = [];
 
     // Build OddsInputs with full context enrichment
     const oddsInputs: OddsInput[] = [];
@@ -962,6 +965,16 @@ export async function processSport(
       const fixture = fixtureFor(gameRecord.id);
       if (!fixture || fixture.status !== "confirmed") {
         fixtureUnconfirmed += 1;
+        gateDecisionsToPersist.push({
+          gameId: gameRecord.id,
+          pickId: null,
+          status: "GATED",
+          reasonCode: "UNCONFIRMED_FIXTURE",
+          reason: "Fixture unconfirmed on official ESPN scoreboard schedule",
+          modelVersion: CANONICAL_MODEL_VERSION,
+          isBootstrap,
+          evaluatedAt: fetchedAt,
+        });
         if (fixtureBatch.status === "ok") {
           const line = formatFixtureLine({
             id: gameRecord.id,
@@ -1018,6 +1031,16 @@ export async function processSport(
       if (hasKickedOff(kickoff, fetchedAt)) {
         skippedInPlay += 1;
         console.warn(`${logPrefix} ${sport.key}: ${inPlaySkipLine(gameRecord.id, kickoff, fetchedAt)}`);
+        gateDecisionsToPersist.push({
+          gameId: gameRecord.id,
+          pickId: null,
+          status: "GATED",
+          reasonCode: "IN_PLAY",
+          reason: "Game already underway or completed; pre-game scoring locked",
+          modelVersion: CANONICAL_MODEL_VERSION,
+          isBootstrap,
+          evaluatedAt: fetchedAt,
+        });
         continue;
       }
       confirmedGameIds.add(gameRecord.id);
@@ -1199,6 +1222,7 @@ export async function processSport(
 
     const scoredPicks = scoreGames(oddsInputs, fetchedAt);
     let picksGenerated = 0;
+    const publishedGameIds = new Set<string>();
 
     for (const pick of scoredPicks) {
       // Fixture guard (C-111): no pick is created or refreshed for a game the
@@ -1375,6 +1399,26 @@ export async function processSport(
         }
       }
       picksGenerated++;
+      publishedGameIds.add(pick.gameId);
+      gateDecisionsToPersist.push({
+        gameId: pick.gameId,
+        pickId: upsertedPick.id,
+        status: "PUBLISHED",
+        reasonCode: "PUBLISHED",
+        reason: `Published ${pick.pickType} pick (${pick.selection} ${pick.line > 0 ? `+${pick.line}` : pick.line}) with confidence ${pick.confidence}`,
+        confidence: pick.confidence,
+        edgeIndex: pick.edgeScore,
+        modelVersion: pick.modelVersion,
+        isBootstrap,
+        evaluatedAt: fetchedAt,
+        evidenceRefs: {
+          pickType: pick.pickType,
+          selection: pick.selection,
+          line: pick.line,
+          bookmakerCount: pick.bookmakerCount,
+          pickGrade: pick.pickGrade,
+        },
+      });
 
       // Capture PickSignalSnapshot — immutable record of signal state at prediction time.
       // Created ONCE (update:{} ensures existing snapshots are never overwritten).
@@ -1475,6 +1519,34 @@ export async function processSport(
         );
       }
     }
+
+    // Record audit decisions for games evaluated in oddsInputs that produced no published pick
+    for (const input of oddsInputs) {
+      if (!publishedGameIds.has(input.gameId)) {
+        const isThin = (input.bookmakerOdds?.length ?? 0) < 2;
+        gateDecisionsToPersist.push({
+          gameId: input.gameId,
+          pickId: null,
+          status: "GATED",
+          reasonCode: isThin ? "INSUFFICIENT_BOOKMAKERS" : "NO_CONVICTION_EDGE",
+          reason: isThin
+            ? "Market depth insufficient: fewer than 2 distinct bookmakers quoting line"
+            : "Line within market efficiency band; model conviction below publishing threshold",
+          confidence: null,
+          edgeIndex: null,
+          modelVersion: CANONICAL_MODEL_VERSION,
+          isBootstrap,
+          evaluatedAt: fetchedAt,
+          evidenceRefs: {
+            bookmakerCount: input.bookmakerOdds?.length ?? 0,
+            markets: Array.from(new Set(input.bookmakerOdds?.map((o) => o.market) ?? [])),
+          },
+        });
+      }
+    }
+
+    // Persist immutable gate decisions audit trail (GSE-GATE-094 recovery)
+    await persistGateDecisions(gateDecisionsToPersist);
 
     await db.ingestionRun.update({
       where: { id: run.id },

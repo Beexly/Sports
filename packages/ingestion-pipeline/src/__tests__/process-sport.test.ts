@@ -88,6 +88,7 @@ vi.mock("@sports/db", () => ({
     odds: { createMany: mocks.oddsCreateMany },
     pick: { upsert: mocks.pickUpsert, findUnique: mocks.pickFindUnique, updateMany: mocks.pickUpdateMany, create: mocks.pickCreate },
     pickSignalSnapshot: { upsert: mocks.snapshotUpsert },
+    gateDecision: { createMany: vi.fn().mockResolvedValue({ count: 1 }) },
   },
 }));
 

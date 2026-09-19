@@ -157,7 +157,7 @@ export default function MethodologyPage(): JSX.Element {
 
         <MethodologySection />
 
-        {/* Line freshness — the discipline competitors can't fake */}
+        {/* Line freshness, the discipline competitors can't fake */}
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <Reveal>
@@ -210,7 +210,7 @@ export default function MethodologyPage(): JSX.Element {
           </div>
         </section>
 
-        {/* Reading the market — and grading ourselves */}
+        {/* Reading the market, and grading ourselves */}
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <Reveal>
@@ -259,7 +259,7 @@ export default function MethodologyPage(): JSX.Element {
                 Ranking probability, confidence, and edge are not the same thing.
               </h2>
               <p className="mt-4 max-w-2xl text-sm leading-6 text-ink-300">
-                Calibration and board ranking use a win probability — never a signed
+                Calibration and board ranking use a win probability, never a signed
                 edge gap dressed up as a probability. While live floors are still red,
                 we do not claim PROVEN performance or ROI.
               </p>
@@ -278,7 +278,7 @@ export default function MethodologyPage(): JSX.Element {
                 <p className="mt-2 text-sm leading-6 text-ink-300">
                   The probability used for sort, selective publish, and calibration
                   bake-offs. When independent estimators yield a finite true probability,
-                  ranking uses that (or a blend with confidence) — including when the
+                  ranking uses that (or a blend with confidence), including when the
                   edge claim is PASS. SPEAK/LEAN is the glass-box edge claim, not the
                   ranking gate. Without independents, ranking falls back to confidence
                   on the 0–1 scale.
@@ -288,7 +288,7 @@ export default function MethodologyPage(): JSX.Element {
                 <h3 className="text-lg font-semibold text-white">Edge is not a probability</h3>
                 <p className="mt-2 text-sm leading-6 text-ink-300">
                   Edge is the gap between an independent true probability and the
-                  market's fair price — a signed difference, not P(side wins). Edge
+                  market's fair price, a signed difference, not P(side wins). Edge
                   can filter and explain; it is never scored as if it were a win probability.
                 </p>
               </article>
@@ -347,7 +347,7 @@ export default function MethodologyPage(): JSX.Element {
         </section>
       </main>
       <Footer />
-      {/* Glass Box Cipher — shard 02 hides here; console nudge */}
+      {/* Glass Box Cipher, shard 02 hides here; console nudge */}
       <CipherShard page="methodology" />
       <CipherConsoleMount />
     </div>

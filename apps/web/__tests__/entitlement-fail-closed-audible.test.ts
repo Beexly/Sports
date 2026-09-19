@@ -19,13 +19,13 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const findFirstMock = vi.fn();
 const authMock = vi.fn();
 
+import { authModuleMock } from "./helpers/auth-mock";
+
 vi.mock("@sports/db", () => ({
   db: { subscription: { findFirst: (...a: unknown[]) => findFirstMock(...a) } },
 }));
 
-vi.mock("@/lib/auth", () => ({
-  auth: (...a: unknown[]) => authMock(...a),
-}));
+vi.mock("@/lib/auth", () => authModuleMock({ auth: (...a: unknown[]) => authMock(...a) }));
 
 vi.mock("@/lib/api/rate-limit", () => ({
   consumeRateLimit: () => ({ ok: true, retryAfterSec: 0 }),

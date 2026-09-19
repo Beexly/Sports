@@ -28,6 +28,16 @@ export type OptOpts = {
   readonly excludes: ReadonlySet<string>;
 };
 
+/**
+ * Search-cost ceiling for `optimizeExact`, in (candidate iterations x pool
+ * size) — the unit that tracks wall clock, derived and measured in that
+ * function's header. 600M is roughly two seconds at every pool size tested
+ * (50 to 600 players) and sits ~10x above the largest search that completes
+ * on its own today. Exported so a caller that can afford to wait, or a test
+ * that needs the bound to bite, can name its own number.
+ */
+export const DEFAULT_COST_BUDGET = 600_000_000;
+
 const FLEX_POS: DfsPos[] = ["RB", "WR", "TE"];
 export const eligible = (p: DfsPlayer, slot: DfsPos | "FLEX"): boolean =>
   slot === "FLEX" ? FLEX_POS.includes(p.pos) : p.pos === slot;
@@ -50,7 +60,34 @@ function qbStackCount(lu: Lineup): { team: string | null; stacked: number } {
   return { team: qb.team, stacked };
 }
 
-function buildRandom(pool: readonly DfsPlayer[], opts: OptOpts, pen: (p: DfsPlayer) => number): DfsPlayer[] | null {
+/**
+ * Deterministic 32-bit PRNG (mulberry32), because the multi-start heuristic
+ * needs a SPREAD of starting points, not unpredictability.
+ *
+ * It used to call the platform's unseeded random, which made `optimizeOne` a
+ * different function on every process. Measured 2026-09-18 on the shipped 36-player slate in cash
+ * mode: identical inputs, identical node count (400,001) and identical best
+ * value, but the search did 7,163,409 candidate iterations on one run and
+ * 7,081,041 on the next, because a different seed lineup set a different
+ * incumbent and therefore pruned differently. That is survivable only while
+ * the search runs to completion and the optimum is unique; the moment a budget
+ * truncates it, the lineup we ship depends on the roll. The file's own test
+ * scans this source for that call and has been red since the module was
+ * written; this is the fix it was asking for, not a relaxation of it. Note the
+ * test greps the FILE, so a comment naming the call trips it too: describe it,
+ * never spell it.
+ */
+function rng32(seed: number): () => number {
+  let a = seed >>> 0;
+  return () => {
+    a = (a + 0x6d2b79f5) >>> 0;
+    let t = Math.imul(a ^ (a >>> 15), 1 | a);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
+}
+
+function buildRandom(pool: readonly DfsPlayer[], opts: OptOpts, pen: (p: DfsPlayer) => number, rand: () => number): DfsPlayer[] | null {
   const cand = pool.filter((p) => !opts.excludes.has(p.id));
   if (!cand.length) return null;
   const minSal = Math.min(...cand.map((p) => p.salary));
@@ -76,7 +113,7 @@ function buildRandom(pool: readonly DfsPlayer[], opts: OptOpts, pen: (p: DfsPlay
       .sort((a, b) => objVal(b, opts.mode) - pen(b) - (objVal(a, opts.mode) - pen(a)));
     if (!options.length) return null;
     const k = Math.min(5, options.length);
-    const pick = options[Math.floor(Math.random() * k)]!;
+    const pick = options[Math.floor(rand() * k)]!;
     lineup[i] = pick; used.add(pick.id);
   }
   return lineup as DfsPlayer[];
@@ -164,8 +201,11 @@ function enforceStack(lu: DfsPlayer[], pool: readonly DfsPlayer[], opts: OptOpts
 export function optimizeHeuristic(opts: OptOpts, pen: (p: DfsPlayer) => number = () => 0, restarts = 60, slate: readonly DfsPlayer[] = activeDfsSlate()): DfsPlayer[] | null {
   let best: DfsPlayer[] | null = null;
   let bestObj = -Infinity;
+  // Seeded once per call, never from a clock or a module-level counter: the
+  // same arguments replay the same restarts in the same order, in any process.
+  const rand = rng32(0x9e3779b9);
   for (let r = 0; r < restarts; r++) {
-    let lu = buildRandom(slate, opts, pen);
+    let lu = buildRandom(slate, opts, pen, rand);
     if (!lu) continue;
     lu = hillClimb(lu, slate, opts);
     if (opts.stack) lu = enforceStack(lu, slate, opts);
@@ -193,21 +233,87 @@ const slotAccepts = (slot: DfsPos | "FLEX", p: DfsPlayer): boolean => eligible(p
  * Correctness: pruning only ever discards branches whose admissible bound (the
  * fractional-knapsack relaxation of the remaining slots, respecting
  * distinctness and the salary cap) cannot beat the incumbent, so the result is
- * optimal *if* the node budget was not exhausted — and never worse than the
+ * optimal *if* neither budget was exhausted — and never worse than the
  * heuristic seed that starts it. When `stack: true` is asked for, the seed only
  * counts as an incumbent if it actually stacks, so a stack-constrained result
  * can score below an unstacked seed: the hard constraint wins over the number.
+ *
+ * TWO budgets, because one of them does not bound time. `nodeBudget` counts
+ * entries into `dfs`, but the work a single node does is proportional to its
+ * slot's candidate list, and the admissible bound rescans the value/salary
+ * order, so per-node cost grows with the pool. Measured 2026-09-18 on the
+ * `makeBigPool` fixture, all four runs stopping on the SAME 400k nodes:
+ *
+ *     pool    work (candidate iterations)    wall clock
+ *       50            13.8M                     2.3s
+ *      100            30.9M                    10.6s
+ *      150            47.5M                    24.1s
+ *      200            63.3M                    43.8s
+ *
+ * Same node count, 19x the time. Cost per candidate iteration is close to
+ * linear in pool size (0.12 microseconds at 36, 0.69 at 200), so the currency
+ * that tracks wall clock is work x pool size, and that is what `costBudget`
+ * bounds. 600M holds every pool size to roughly two seconds, and sits far
+ * above every search that completes today: the 14-16 player correctness
+ * fixtures finish in 6.8k-78.6k work (~1M cost) and the 36-player shipped
+ * slate proves gpp in 1.62M work (58M cost). Raising it buys optimality on
+ * big pools at the cost of freezing the caller; this runs in the browser on
+ * the user's main thread (`components/fantasy/dfs-optimizer.tsx`), so it is
+ * bounded on purpose.
+ *
+ * Both budgets are deterministic functions of the input — never a clock — so
+ * an identical call returns an identical lineup on any machine.
  */
-export function optimizeExact(
+/**
+ * A search result WITH its provenance.
+ *
+ * WHY THIS EXISTS. `optimizeExact` returns a lineup and nothing else, so a
+ * result the budget cut short is indistinguishable from a proven optimum at
+ * the call site. That ambiguity has a concrete cost one caller down:
+ * `dfs-optimizer-edge.ts` cross-checks this solver against the independently
+ * written one in `dfs-exact.ts` and prints `objectiveGapVsIncumbent`. The
+ * exact side reports `optimal`; the incumbent side could not, so a non-zero
+ * gap read the same whether the two solvers genuinely DISAGREED (the bug that
+ * cross-check exists to catch) or this one simply ran out of budget. A
+ * cross-check that cannot tell a disagreement from a timeout is not one.
+ *
+ * `optimal` is the same word, with the same meaning, as `ExactResult.optimal`
+ * in `dfs-exact.ts`, deliberately: two flags in one directory spelling one
+ * concept two ways is how they drift.
+ */
+export type SolveResult = {
+  readonly lineup: DfsPlayer[] | null;
+  /**
+   * The search COMPLETED: no budget stopped it.
+   *
+   * True with a lineup means that lineup is optimal for this objective under
+   * these constraints. True with `lineup: null` means the search PROVED no
+   * feasible lineup exists. False always means a budget stopped the search, so
+   * a lineup here is the incumbent, never a proof.
+   *
+   * The flag never overstates. Paths that refuse before searching at all (an
+   * unplaceable lock) report false, because "we did not look" and "we looked
+   * and it is not there" must not read the same.
+   */
+  readonly optimal: boolean;
+  /** Nodes entered. Zero when the answer needed no search. */
+  readonly nodes: number;
+  /** Candidate iterations: the currency `costBudget` actually bounds. */
+  readonly work: number;
+};
+
+export function solveExact(
   opts: OptOpts,
   pen: (p: DfsPlayer) => number = () => 0,
   restarts = 60,
   slate: readonly DfsPlayer[] = activeDfsSlate(),
   nodeBudget = 400_000,
   cap = SALARY_CAP,
-): DfsPlayer[] | null {
+  costBudget = DEFAULT_COST_BUDGET,
+): SolveResult {
   const cand = slate.filter((p) => !opts.excludes.has(p.id));
-  if (!cand.length) return null;
+  // Nothing to search. The answer "no feasible lineup" is PROVEN, not guessed.
+  if (!cand.length) return { lineup: null, optimal: true, nodes: 0, work: 0 };
 
   const byId = new Map(cand.map((p) => [p.id, p]));
   const used = new Set<string>();
@@ -224,14 +330,17 @@ export function optimizeExact(
   const lockIds = [...opts.locks];
   for (const id of lockIds) {
     const p = byId.get(id);
-    if (!p) return seed ?? null; // unknown pinned player (not on slate) — do not invent a lineup
+    // Unknown pinned player (not on slate): do not invent a lineup. The search
+    // never ran, so this is neither a proof nor a budget stop — `optimal` false
+    // is the safe direction, because it only ever understates what we know.
+    if (!p) return { lineup: seed ?? null, optimal: false, nodes: 0, work: 0 };
     let placed = false;
     for (let i = 0; i < DFS_SLOTS.length; i++) {
       if (chosen[i] === undefined && slotAccepts(DFS_SLOTS[i]!, p)) {
         chosen[i] = p; used.add(id); placed = true; break;
       }
     }
-    if (!placed) return seed ?? null;
+    if (!placed) return { lineup: seed ?? null, optimal: false, nodes: 0, work: 0 };
   }
 
   // The heuristic seed is only a valid incumbent when it satisfies the stack
@@ -270,7 +379,10 @@ export function optimizeExact(
   for (let i = 0; i < DFS_SLOTS.length; i++) if (chosen[i] === undefined) free.push(i);
   // most-constrained-first: fewer candidates searched earlier = earlier pruning
   free.sort((a, b) => lists[a]!.length - lists[b]!.length);
-  if (free.some((i) => lists[i]!.length === 0)) return best ?? fallback;
+  // A slot no candidate can fill: proven infeasible without searching a node.
+  if (free.some((i) => lists[i]!.length === 0)) {
+    return { lineup: best ?? fallback, optimal: true, nodes: 0, work: 0 };
+  }
 
   // per-slot pool, and suffix counts of the pools still to be filled — so a node
   // reads its remaining quotas in O(1) instead of walking the slot list
@@ -309,7 +421,12 @@ export function optimizeExact(
   let salary = chosen.reduce((s, p) => s + (p ? p.salary : 0), 0);
   let val = chosen.reduce((s, p) => s + (p ? searchValue(p, opts.mode, pen) : 0), 0);
   let nodes = 0;
+  let work = 0;
   let exhausted = false;
+  // cost = work x pool size (see the header). Deriving the work ceiling once,
+  // from the pool size, keeps the comparison in the hot loop a single integer
+  // test while still bounding wall clock rather than recursion depth.
+  const workBudget = Math.max(1, Math.floor(costBudget / n));
 
   const dfs = (depth: number): void => {
     if (exhausted) return;
@@ -330,6 +447,10 @@ export function optimizeExact(
     const kDST = remDST[depth + 1]!;
 
     for (const ci of lists[slotIdx]!) {
+      // Checked BEFORE any mutation for this candidate, so returning here
+      // leaves `chosen`, `salary`, `val` and `usedIdx` exactly as the parent
+      // frame left them; its own unwind then runs as normal.
+      if (++work > workBudget) { exhausted = true; return; }
       if (usedIdx[ci]) continue;
       const nextSalary = salary + SALARY[ci]!;
 
@@ -398,9 +519,25 @@ export function optimizeExact(
 
   dfs(0);
   if (process.env.DFS_SEARCH_DEBUG) {
-    console.error(`[dfs-exact] nodes=${nodes} exhausted=${exhausted} budget=${nodeBudget} best=${bestVal} mode=${opts.mode} stack=${opts.stack}`);
+    console.error(`[dfs-exact] nodes=${nodes}/${nodeBudget} work=${work}/${workBudget} exhausted=${exhausted} best=${bestVal} mode=${opts.mode} stack=${opts.stack}`);
   }
-  return best ?? fallback;
+  return { lineup: best ?? fallback, optimal: !exhausted, nodes, work };
+}
+
+/**
+ * The lineup alone, for callers that do not inspect provenance. Identical
+ * search, identical result; `solveExact` is the same call with the flag.
+ */
+export function optimizeExact(
+  opts: OptOpts,
+  pen: (p: DfsPlayer) => number = () => 0,
+  restarts = 60,
+  slate: readonly DfsPlayer[] = activeDfsSlate(),
+  nodeBudget = 400_000,
+  cap = SALARY_CAP,
+  costBudget = DEFAULT_COST_BUDGET,
+): DfsPlayer[] | null {
+  return solveExact(opts, pen, restarts, slate, nodeBudget, cap, costBudget).lineup;
 }
 
 /**
@@ -409,8 +546,8 @@ export function optimizeExact(
  * within the node budget (the search returns its incumbent in that case, so the
  * result is never worse than the heuristic would have been).
  */
-export function optimizeOne(opts: OptOpts, pen: (p: DfsPlayer) => number = () => 0, restarts = 60, slate: readonly DfsPlayer[] = activeDfsSlate(), nodeBudget = 400_000): DfsPlayer[] | null {
-  return optimizeExact(opts, pen, restarts, slate, nodeBudget);
+export function optimizeOne(opts: OptOpts, pen: (p: DfsPlayer) => number = () => 0, restarts = 60, slate: readonly DfsPlayer[] = activeDfsSlate(), nodeBudget = 400_000, costBudget = DEFAULT_COST_BUDGET): DfsPlayer[] | null {
+  return optimizeExact(opts, pen, restarts, slate, nodeBudget, SALARY_CAP, costBudget);
 }
 
 

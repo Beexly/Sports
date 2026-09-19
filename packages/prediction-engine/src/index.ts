@@ -1966,3 +1966,102 @@ export {
   MIN_SAMPLES_FOR_DISPERSION,
 } from "./dispersion/estimate-phi.js";
 export type { PhiEstimate, DispersionVerdict } from "./dispersion/estimate-phi.js";
+
+// Domain Signals: Research-grounded extractors (wind, coaching, injury, red zone)
+export { calculateWindElasticity } from "./signals/environment/wind-elasticity.js";
+export type { WindElasticityInput, WindElasticityResult, WindDirection } from "./signals/environment/wind-elasticity.js";
+
+export { evaluateCoachingTendencies } from "./signals/situational/coaching-tendencies.js";
+export type { PlayCallingContext, CoachingTendencyEdge, PlayType } from "./signals/situational/coaching-tendencies.js";
+
+export { analyzeInjuryTrajectory } from "./signals/bio/injury-trajectory.js";
+export type { InjuryPracticeReport, InjuryTrajectoryAnalysis, OfficialGameStatus, PlayerPositionTier } from "./signals/bio/injury-trajectory.js";
+
+export { evaluateRedZoneTeLeverage } from "./signals/efficiency/redzone-te-leverage.js";
+export type { RedZoneEfficiencyContext, RedZoneTeLeverageResult } from "./signals/efficiency/redzone-te-leverage.js";
+
+export { evaluateOffensiveLineTrench } from "./signals/trench/offensive-line-continuity.js";
+export type { OffensiveLineTrenchInput, OffensiveLineTrenchResult } from "./signals/trench/offensive-line-continuity.js";
+
+export { evaluateRefereeCrewTendencies } from "./signals/situational/referee-crew-tendencies.js";
+export type { RefereeCrewContext, RefereeCrewTendencyResult } from "./signals/situational/referee-crew-tendencies.js";
+
+export { evaluateCircadianTravelFatigue } from "./signals/situational/circadian-travel-fatigue.js";
+export type { CircadianTravelInput, CircadianTravelResult } from "./signals/situational/circadian-travel-fatigue.js";
+
+export { evaluateContractMilestones } from "./signals/narrative/contract-incentives-milestones.js";
+export type { ContractMilestoneContext, ContractMilestoneResult } from "./signals/narrative/contract-incentives-milestones.js";
+
+export { evaluateWr1OutRedistribution } from "./signals/efficiency/wr1-out-target-redistribution.js";
+export type { Wr1OutContext, Wr1OutRedistributionResult } from "./signals/efficiency/wr1-out-target-redistribution.js";
+
+export { evaluateLinearWindPassImpact } from "./signals/environmental/linear-wind-pass-impact.js";
+export type { WindPassImpactContext, WindPassImpactResult } from "./signals/environmental/linear-wind-pass-impact.js";
+
+export { evaluateLopezSecondAndTenTendency } from "./signals/situational/lopez-second-and-ten-tendency.js";
+export type { LopezSecondAndTenContext, LopezSecondAndTenResult } from "./signals/situational/lopez-second-and-ten-tendency.js";
+
+export { evaluateNegativeBinomialRedzoneTd } from "./signals/props/negative-binomial-redzone-td.js";
+export type { NegativeBinomialTdContext, NegativeBinomialTdResult } from "./signals/props/negative-binomial-redzone-td.js";
+
+export { evaluateQbReceiverContinuity } from "./signals/chemistry/qb-receiver-continuity.js";
+export type { QbReceiverContinuityContext, QbReceiverContinuityResult } from "./signals/chemistry/qb-receiver-continuity.js";
+
+export { evaluateManZoneReceiverArchetype } from "./signals/efficiency/man-zone-receiver-archetype.js";
+export type { ManZoneCoverageContext, ManZoneCoverageResult } from "./signals/efficiency/man-zone-receiver-archetype.js";
+
+export { evaluateAgeConditionedRest } from "./signals/situational/age-conditioned-rest.js";
+export type { AgeConditionedRestContext, AgeConditionedRestResult } from "./signals/situational/age-conditioned-rest.js";
+
+export { evaluatePrimetimeTargetConcentration } from "./signals/situational/primetime-target-concentration.js";
+export type { PrimetimeContext, PrimetimeResult } from "./signals/situational/primetime-target-concentration.js";
+
+export { evaluateBackupQbTargetDistribution } from "./signals/efficiency/backup-qb-target-distribution.js";
+export type { BackupQbContext, BackupQbResult } from "./signals/efficiency/backup-qb-target-distribution.js";
+
+export { evaluateRedZoneOpportunityConversion } from "./signals/props/redzone-opportunity-conversion.js";
+export type { RedZoneOpportunityContext, RedZoneOpportunityResult } from "./signals/props/redzone-opportunity-conversion.js";
+
+export { evaluateTemperaturePrecipitationDecay } from "./signals/environmental/temperature-precipitation-decay.js";
+export type { WeatherConditionContext, WeatherConditionResult } from "./signals/environmental/temperature-precipitation-decay.js";
+
+export { evaluateRookieBreakoutCohort } from "./signals/narrative/rookie-breakout-cohort.js";
+export type { RookieBreakoutContext, RookieBreakoutResult } from "./signals/narrative/rookie-breakout-cohort.js";
+
+export { evaluateFourthDownCoachingAggressiveness } from "./signals/situational/fourth-down-coaching-aggressiveness.js";
+export type { FourthDownCoachingContext, FourthDownCoachingResult } from "./signals/situational/fourth-down-coaching-aggressiveness.js";
+
+export { evaluatePenaltyDifferentialMomentum } from "./signals/discipline/penalty-differential-momentum.js";
+export type { PenaltyDifferentialContext, PenaltyDifferentialResult } from "./signals/discipline/penalty-differential-momentum.js";
+
+export { evaluateByeWeekDefensiveInstallation } from "./signals/schematic/bye-week-defensive-installation.js";
+export type { ByeWeekDefensiveContext, ByeWeekDefensiveResult } from "./signals/schematic/bye-week-defensive-installation.js";
+
+export { evaluateRedZonePersonnelGrouping } from "./signals/tactical/redzone-personnel-grouping.js";
+export type { RedZonePersonnelContext, RedZonePersonnelResult } from "./signals/tactical/redzone-personnel-grouping.js";
+
+export { evaluateTurfSurfaceFatigue } from "./signals/biomechanical/turf-surface-fatigue.js";
+export type { SurfaceFatigueContext, SurfaceFatigueResult } from "./signals/biomechanical/turf-surface-fatigue.js";
+
+export { evaluateShortWeekRoadDeficit } from "./signals/situational/short-week-road-deficit.js";
+export type { ShortWeekRoadContext, ShortWeekRoadResult } from "./signals/situational/short-week-road-deficit.js";
+
+export { evaluateHighAltitudeFatigueDecay } from "./signals/environmental/high-altitude-fatigue-decay.js";
+export type { HighAltitudeContext, HighAltitudeResult } from "./signals/environmental/high-altitude-fatigue-decay.js";
+
+export { evaluateQbTwpRegression } from "./signals/efficiency/qb-turnover-worthy-play-regression.js";
+export type { QbTwpContext, QbTwpResult } from "./signals/efficiency/qb-turnover-worthy-play-regression.js";
+
+export { evaluateEarlyDownProeMomentum } from "./signals/tactical/early-down-pass-rate-momentum.js";
+export type { EarlyDownProeContext, EarlyDownProeResult } from "./signals/tactical/early-down-pass-rate-momentum.js";
+
+export { evaluateTwoMinuteHurryUpEfficiency } from "./signals/tactical/two-minute-hurry-up-efficiency.js";
+export type { TwoMinuteHurryUpContext, TwoMinuteHurryUpResult } from "./signals/tactical/two-minute-hurry-up-efficiency.js";
+
+// Hierarchical Bayesian Pooling across 8 Signal Families
+export { poolSignalsHierarchically } from "./hierarchical-pool.js";
+export type { IndividualSignalInput, FamilyAggregation, HierarchicalPoolResult } from "./hierarchical-pool.js";
+
+// Canonical model version (frozen at v5.2.7 per founder invariant)
+export { MODEL_VERSION } from "./constants.js";
+

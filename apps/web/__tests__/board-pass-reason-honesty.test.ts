@@ -33,10 +33,14 @@ vi.mock("@sports/db", () => ({
   isDemoPicksEnabled: () => false,
 }));
 
-vi.mock("@sports/prediction-engine", () => ({
-  getReadinessGates: () => ({ forceNoBetIfStale: false }),
-  toEdgeIndex: (v: number | null) => v,
-}));
+vi.mock("@sports/prediction-engine", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@sports/prediction-engine")>();
+  return {
+    ...actual,
+    getReadinessGates: () => ({ forceNoBetIfStale: false }),
+    toEdgeIndex: (v: number | null) => v,
+  };
+});
 
 vi.mock("@/lib/data-reliability/public-freshness-gate", () => ({
   isPublicPicksSurfaceStale: async () => false,
@@ -111,15 +115,21 @@ describe("Pass List fallback — an absence is never reported as a judgement", (
     }
   });
 
-  it("says plainly that the game was not evaluated", async () => {
+  it("says plainly that the game was never scored, claiming no judgement", async () => {
     gameFindMany.mockResolvedValue([game()]);
 
     const result = await loadBoardPasses(NOW);
     const reason = result.data.passes[0]?.reason ?? "";
 
-    // The same vocabulary /board/gate uses, deliberately. One distinction, one
-    // set of words, across both surfaces.
-    expect(reason.toLowerCase()).toContain("not evaluated");
+    // This assertion used to read toContain("not evaluated"). That phrase is now
+    // banned customer copy (AGENTS.md copy doctrine), and the humanizer pass
+    // replaced it with plain English that carries the SAME distinction: nothing
+    // reached the model, as opposed to something judged the game and declined.
+    // The intent of the guard is unchanged and is pinned three ways below.
+    expect(reason).toBe("We haven't scored this game yet.");
+    // The load-bearing property: an absence must never read as a decision.
+    expect(reason.toLowerCase()).not.toContain("declin");
+    expect(reason.toLowerCase()).not.toContain("threshold");
   });
 
   it("still names a REAL input deficiency when one is observable", async () => {
@@ -128,14 +138,14 @@ describe("Pass List fallback — an absence is never reported as a judgement", (
     gameFindMany.mockResolvedValue([game({ bookmakerCoverageMax: 1 })]);
 
     const result = await loadBoardPasses(NOW);
-    expect(result.data.passes[0]?.reason).toBe("Market depth below publish threshold.");
+    expect(result.data.passes[0]?.reason).toBe("Not enough sportsbooks are pricing this game yet.");
   });
 
   it("names thin evidence health when that is the observable deficiency", async () => {
     gameFindMany.mockResolvedValue([game({ dataQualityScore: 12 })]);
 
     const result = await loadBoardPasses(NOW);
-    expect(result.data.passes[0]?.reason).toBe("Evidence health below publish threshold.");
+    expect(result.data.passes[0]?.reason).toBe("We don't have enough reliable data on this one.");
   });
 });
 
@@ -154,7 +164,7 @@ describe("both /board lanes tell ONE story about a game", () => {
   it("names evidence health when depth is fine but evidence is thin", () => {
     // The exact case the two lanes disagreed on.
     expect(unevaluatedPassReason(8, MIN_DATA_QUALITY_SCORE - 1)).toBe(
-      "Evidence health below publish threshold.",
+      "We don't have enough reliable data on this one.",
     );
   });
 
@@ -162,13 +172,13 @@ describe("both /board lanes tell ONE story about a game", () => {
     // Deterministic precedence: without a fixed order, the same game could be
     // described differently by two callers reading the same row.
     expect(unevaluatedPassReason(MIN_BOOKMAKER_COVERAGE - 1, MIN_DATA_QUALITY_SCORE - 1)).toBe(
-      "Market depth below publish threshold.",
+      "Not enough sportsbooks are pricing this game yet.",
     );
   });
 
-  it("falls through to 'not evaluated' only when both inputs are healthy", () => {
+  it("falls through to the never-scored reason only when both inputs are healthy", () => {
     expect(unevaluatedPassReason(MIN_BOOKMAKER_COVERAGE, MIN_DATA_QUALITY_SCORE)).toBe(
-      "Not evaluated: no pick was generated for this game today.",
+      "We haven't scored this game yet.",
     );
   });
 
@@ -218,7 +228,11 @@ describe("Pass List primary path — a real decision is passed through untouched
 
     const result = await loadBoardPasses(NOW);
     expect(result.data.passes[0]?.reason).toBe("Consensus below publish threshold.");
-    expect(result.data.passes[0]?.reason.toLowerCase()).not.toContain("not evaluated");
+    // Was not.toContain("not evaluated"). That phrase no longer exists anywhere,
+    // so the assertion had become vacuous - it would pass even if a real refusal
+    // WERE softened. Guard the string a softening would actually produce today.
+    expect(result.data.passes[0]?.reason).not.toBe("We haven't scored this game yet.");
+    expect(result.data.passes[0]?.reason.toLowerCase()).not.toContain("haven't scored");
     // And the fallback query must not even run when real decisions exist.
     expect(gameFindMany).not.toHaveBeenCalled();
   });

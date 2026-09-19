@@ -149,6 +149,99 @@ export function evaluatePublicClvPolicy(
   };
 }
 
+// ───────────────────────── CLV push doctrine (additive; no gate reads this) ─────────────────────────
+//
+// This repo's doctrine (AGENTS.md) is that a push is never averaged into a
+// published rate. MATCHED_CLOSE is the CLV analogue of a push: it is neither
+// a win nor a loss against the closing line. Whether beatCloseRatePct above
+// (computed as beatCloseCount / gradedSampleSize) should exclude
+// MATCHED_CLOSE the way a push is excluded from a win rate has never been
+// decided anywhere in this codebase. Separately, the ESTABLISHED gate's
+// 0.524 threshold is the break-even win rate at -110 odds, a DECIDED-only
+// quantity, so a rate computed one way may be getting compared against a
+// threshold defined the other way. Nobody has established which one the
+// gate means.
+//
+// The type and function below do not decide that question and never will.
+// They surface all three readings side by side, each with its own explicit
+// denominator, so a reader sees the ambiguity instead of one silently-chosen
+// number:
+//
+//   decidedClvBeatRate   = BEAT_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE)
+//   allGradedClvBeatRate = BEAT_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE + MATCHED_CLOSE)
+//   clvPushRate          = MATCHED_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE + MATCHED_CLOSE)
+//
+// allGradedClvBeatRate is the identical computation as beatCloseRatePct
+// above, restated here under an explicit name next to the other two
+// readings, so nobody mistakes it for the only possible denominator.
+//
+// Purely additive reporting. Nothing here reads or writes canExposeClv, any
+// blocker, or any threshold: evaluatePublicClvPolicy above is untouched and
+// never calls this.
+
+export interface ClvVerdictCounts {
+  readonly beatCloseCount: number;
+  readonly lostToCloseCount: number;
+  readonly matchedCloseCount: number;
+}
+
+export interface ClvPushDoctrineRates {
+  /**
+   * BEAT_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE). MATCHED_CLOSE, the push, is
+   * excluded from both the numerator and the denominator, mirroring the
+   * push-never-averaged doctrine. Null when there are zero decided rows: a
+   * real state, never coerced to 0.
+   */
+  readonly decidedClvBeatRate: number | null;
+  readonly decidedClvBeatDenominator: number;
+  /**
+   * BEAT_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE + MATCHED_CLOSE). The push is
+   * counted in the denominator, not the numerator. Null when there are zero
+   * graded rows.
+   */
+  readonly allGradedClvBeatRate: number | null;
+  readonly allGradedClvBeatDenominator: number;
+  /**
+   * MATCHED_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE + MATCHED_CLOSE). The CLV
+   * analogue of a push rate. Null when there are zero graded rows.
+   */
+  readonly clvPushRate: number | null;
+  readonly clvPushRateDenominator: number;
+}
+
+/**
+ * Pure. Computes the three ClvPushDoctrineRates readings from the same three
+ * verdict counts this module already gates on elsewhere in this file.
+ * Negative or non-finite counts are floored to 0 defensively, so a count is
+ * always a count.
+ */
+export function computeClvPushDoctrineRates(counts: ClvVerdictCounts): ClvPushDoctrineRates {
+  const beat = nonNegativeCount(counts.beatCloseCount);
+  const lost = nonNegativeCount(counts.lostToCloseCount);
+  const matched = nonNegativeCount(counts.matchedCloseCount);
+
+  const decidedDenominator = beat + lost;
+  const gradedDenominator = beat + lost + matched;
+
+  return {
+    decidedClvBeatRate: decidedDenominator > 0 ? round(beat / decidedDenominator, 4) : null,
+    decidedClvBeatDenominator: decidedDenominator,
+    allGradedClvBeatRate: gradedDenominator > 0 ? round(beat / gradedDenominator, 4) : null,
+    allGradedClvBeatDenominator: gradedDenominator,
+    clvPushRate: gradedDenominator > 0 ? round(matched / gradedDenominator, 4) : null,
+    clvPushRateDenominator: gradedDenominator,
+  };
+}
+
+function nonNegativeCount(value: number): number {
+  return Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0;
+}
+
+function round(value: number, decimals: number): number {
+  const f = 10 ** decimals;
+  return Math.round(value * f) / f;
+}
+
 export interface LoadableClvClient {
   pick: {
     count: (args: { where: Record<string, unknown> }) => Promise<number>;

@@ -121,7 +121,10 @@ describe("/picks — empty board is honest about the paywall", () => {
 
 describe("/picks — the true-empty state fabricates nothing", () => {
   it("reflects the active sport filter rather than always blaming the date", () => {
-    expect(picksSrc).toMatch(/activeSportLabel\s*\?\s*`No \$\{activeSportLabel\} signals published for this date`/);
+    // Was "signals published for this date". The humanizer pass replaced
+    // "signals" with "picks" in customer copy; the PROPERTY this guards is that
+    // an empty board blames the active SPORT filter rather than the date.
+    expect(picksSrc).toMatch(/activeSportLabel\s*\?\s*`No \$\{activeSportLabel\} picks for this date`/);
     expect(picksSrc).toMatch(
       /activeSportLabel\s*=\s*sport[\s\S]{0,80}SPORTS\.find\([\s\S]{0,80}\?\?\s*null/
     );

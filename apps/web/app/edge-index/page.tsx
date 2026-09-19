@@ -7,9 +7,9 @@ import { buildEmbedSnippet } from "@/lib/embed/edge-index";
 import { MODEL_VERSION } from "@sports/prediction-engine";
 
 export const metadata: Metadata = {
-  title: "Edge Index — Free Public Badge",
+  title: "Edge Index: Free Public Badge",
   description:
-    "Galaxy Edge Index is a free public composite read on a game. Embed the badge anywhere — no auth, no confidence leak.",
+    "Galaxy Edge Index is a free public composite read on a game. Embed the badge anywhere, no auth, no confidence leak.",
   alternates: { canonical: "/edge-index" },
 };
 
@@ -33,7 +33,7 @@ export default function EdgeIndexMarketingPage(): JSX.Element {
           </h1>
           <p className="mt-5 text-lg text-ion-1">
             A public, free composite score for a game. Media sites and partners can embed the badge
-            with no API key. Confidence and factor trails stay paid — this badge never includes them.
+            with no API key. Confidence and factor trails stay paid. This badge never includes them.
           </p>
 
           <section className="mt-10 rounded-2xl border border-mineral bg-eclipse/60 p-6">
@@ -42,7 +42,7 @@ export default function EdgeIndexMarketingPage(): JSX.Element {
             </h2>
             <ul className="mt-4 list-disc space-y-2 pl-5 text-sm text-ion-1">
               <li>Free for every visitor and every iframe host</li>
-              <li>Edge Index only — never confidence or pre-mortem factors</li>
+              <li>Edge Index only, never confidence or pre-mortem factors</li>
               <li>Honest empty when bootstrap-gated or game missing</li>
               <li>Always branded with link to galaxysportsedge.com</li>
               <li>Model version stamped ({MODEL_VERSION})</li>

@@ -20,6 +20,12 @@ import {
 } from "@/lib/board/stale-pick-policy";
 import { loadMarketCoverage } from "@/lib/board/market-coverage";
 import { loadConfidenceTail } from "@/lib/calibration/confidence-tail";
+import {
+  assessOddsLineArchiveFreshness,
+  readOddsLineArchiveFreshnessInput,
+  type OddsLineArchiveFreshnessResult,
+  type OddsLineArchiveFreshnessThresholds,
+} from "@/lib/ops/odds-line-archive-freshness";
 
 /** A read-only posture field must never take the whole truth surface down: any
  *  throw (including a synchronous one from a partial client) reads as null. */
@@ -170,6 +176,54 @@ function hasOpsAuth(request: Request): boolean {
     return a.length === b.length && timingSafeEqual(a, b);
   } catch {
     return false;
+  }
+}
+
+/**
+ * 2026-09-19: read-only observability field. odds_line_snapshots silently
+ * stopped being written for three weeks (2026-08-22 to 2026-09-13, see
+ * AGENTS.md), and nothing here would have caught it: a grep proves nothing
+ * in the repo calls lib/ops/odds-line-archive-freshness.ts. This wires it in.
+ *
+ * ADDITIVE ONLY: this field reports a state, it never gates
+ * PUBLIC_PICKS / STATS_PUBLIC / LIVE_BOARD / PERFORMANCE_STATS or any other
+ * existing gate, floor, or published number on this surface.
+ *
+ * Thresholds are THIS CALL SITE'S OWN CHOICE, not a library default. The
+ * assessor deliberately refuses to default them (see that module's header).
+ * degradedAfterMinutes: 60, staleAfterMinutes: 360 (6h) are stated here.
+ */
+const ODDS_LINE_ARCHIVE_FRESHNESS_THRESHOLDS: OddsLineArchiveFreshnessThresholds = {
+  degradedAfterMinutes: 60,
+  staleAfterMinutes: 360,
+};
+
+/**
+ * Fail-closed read: stub mode (no live DB to read), a DB error inside the
+ * reader, or any unexpected synchronous throw all resolve to the same
+ * "absent" input, which the assessor's own rule 3 judges STALE, never
+ * healthy. Mirrors the `isMarketBoardOddsStale().catch(() => true)` pattern
+ * already used on this route: an absent reading must never render as
+ * "everything is fine".
+ */
+async function readOddsLineArchiveFreshnessSafely(): Promise<OddsLineArchiveFreshnessResult> {
+  if (isStubMode()) {
+    return assessOddsLineArchiveFreshness(
+      { mostRecentCapturedAt: null },
+      ODDS_LINE_ARCHIVE_FRESHNESS_THRESHOLDS,
+    );
+  }
+  try {
+    const read = await readOddsLineArchiveFreshnessInput({
+      db,
+      recentWindowMinutes: ODDS_LINE_ARCHIVE_FRESHNESS_THRESHOLDS.degradedAfterMinutes,
+    });
+    return assessOddsLineArchiveFreshness(read.input, ODDS_LINE_ARCHIVE_FRESHNESS_THRESHOLDS);
+  } catch {
+    return assessOddsLineArchiveFreshness(
+      { mostRecentCapturedAt: null },
+      ODDS_LINE_ARCHIVE_FRESHNESS_THRESHOLDS,
+    );
   }
 }
 
@@ -645,6 +699,10 @@ export async function GET(request: Request) {
   const marketCoverage = isStubMode() ? null : await safeRead(() => loadMarketCoverage(db as never));
   const confidenceTail = isStubMode() ? null : await safeRead(() => loadConfidenceTail(db as never));
 
+  // Line-archive freshness (see readOddsLineArchiveFreshnessSafely above).
+  // Read-only, fail-closed, never gates anything on this surface.
+  const oddsLineArchiveFreshness = await readOddsLineArchiveFreshnessSafely();
+
   // Line integrity (C-283; ledger C-197/C-281/C-282): how many published picks
   // carry a `line` no bookmaker quoted. Read-only, writes nothing.
   //
@@ -959,6 +1017,13 @@ export async function GET(request: Request) {
       },
       marketCoverage,
       confidenceTail,
+      /**
+       * odds_line_snapshots writer freshness (2026-09-19). Additive
+       * observability only: see readOddsLineArchiveFreshnessSafely above.
+       * verdict is "healthy" | "degraded" | "stale"; fail-closed on any
+       * error, stub mode, or absent data (never "healthy" by default).
+       */
+      oddsLineArchiveFreshness,
       lineIntegrity,
       ...(detailed ? { mainFeatureMarkers: MAIN_FEATURE_MARKERS } : {}),
       /**

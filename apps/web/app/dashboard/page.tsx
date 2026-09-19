@@ -269,8 +269,8 @@ export default async function DashboardPage({
 
           {/* Purchase-success moment: Stripe checkout returns to
               /dashboard?upgraded=true. One-time (URL-param-driven) banner that
-              confirms the locked founding rate and points at what just unlocked
-              — first-session activation is the strongest churn lever. */}
+              confirms the locked founding rate and points at what just unlocked.
+              First-session activation is the strongest churn lever. */}
           {/* The success banner is gated on the RESOLVED entitlement, not the URL
               param: a buyer whose webhook is still retrying (or who typed the URL)
               must never be told access is live when the board will show the free
@@ -302,7 +302,7 @@ export default async function DashboardPage({
                 Subscription active
               </p>
               <p className="mt-2 text-sm font-semibold text-ion-white">
-                You&apos;re in — at the {phaseName} rate, locked for the life of your
+                You&apos;re in, at the {phaseName} rate, locked for the life of your
                 subscription.
               </p>
               <p className="mt-1 text-xs leading-relaxed text-ion-1">
@@ -310,7 +310,7 @@ export default async function DashboardPage({
                   ? "The fantasy suite is now live on your account."
                   : "Confidence scores, the full factor trail, and line movement are now live on every pick."}
                 {entitlements.tier === "ELITE"
-                  ? " Email and push alerts on your followed picks — delivered when they grade — are included with Elite."
+                  ? " Email and push alerts on your followed picks, delivered when they grade, are included with Elite."
                   : ""}
               </p>
               <Link
@@ -386,7 +386,7 @@ export default async function DashboardPage({
             </p>
           )}
 
-          {/* Today's picks list — the focal region: what matters now. */}
+          {/* Today's picks list, the focal region: what matters now. */}
           <section className="mb-6 rounded-2xl border border-mineral-hi bg-carbon/80 p-6">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
@@ -402,7 +402,7 @@ export default async function DashboardPage({
             {todayPicks.length === 0 ? (
               <p className="py-6 text-center text-sm text-ion-2">
                 No picks published yet today. The board fills in as games clear
-                the model — check back closer to game time.
+                the model. Check back closer to game time.
               </p>
             ) : (
               <ul className="divide-y divide-mineral/60">

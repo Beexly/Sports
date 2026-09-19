@@ -141,7 +141,7 @@ export function TdBoard({ live }: { live?: boolean }) {
 
         {grades.length === 0 ? (
           <p className="px-4 py-8 text-sm text-ion-2">
-            The goal line is empty on this frequency — no eligible players on the slate.
+            The goal line is empty on this frequency. No eligible players on the slate.
           </p>
         ) : (
           <div className="mt-3 divide-y divide-ion-1/10">
@@ -173,7 +173,7 @@ export function TdBoard({ live }: { live?: boolean }) {
                 {g.partial && (
                   <span
                     data-testid="td-board-missing"
-                    title={`Missing inputs: ${g.missing.join(", ")} — weight renormalized, not backfilled`}
+                    title={`Missing inputs: ${g.missing.join(", ")}. Weight renormalized, not backfilled`}
                     className="rounded border border-caution/40 px-1.5 py-0.5 text-[10px] text-caution"
                   >
                     {g.missing.length} missing
@@ -186,7 +186,7 @@ export function TdBoard({ live }: { live?: boolean }) {
 
         <p className="px-4 py-3 text-[11px] text-ion-3">
           Edge is model probability minus the vig-stripped market probability. Rows without a
-          market price show an em-dash — an unpriceable board is reported, never dressed up.
+          market price show an em-dash. An unpriceable board is reported, never dressed up.
         </p>
       </section>
     </div>

@@ -13,6 +13,8 @@ import {
   validateFounderPick,
   type FounderPickInput,
 } from "./types";
+import { loadStatcastUnderlyingFactor, statcastUnderlyingFactorOrNull } from "./statcast-underlying";
+import type { FounderUnderlyingFactor } from "./factors";
 
 export type CreateFounderPickResult =
   | { ok: true; pickId: string; action: "created" | "overridden" }
@@ -30,6 +32,7 @@ export async function createFounderPick(
         homeTeamName: true,
         awayTeamName: true,
         status: true,
+        sport: { select: { name: true } },
       },
     })
     .catch(() => null);
@@ -58,6 +61,22 @@ export async function createFounderPick(
     };
   }
 
+  // Statcast underlying (MLB only, and only when the caller asked for one).
+  // Best-effort: any failure (source unreachable, player not found, sample
+  // too small) leaves `underlying` null and the pick is created exactly as
+  // it would be without this field — a lookup problem never blocks a
+  // founder pick. See ./statcast-underlying for the full absence contract.
+  let underlying: FounderUnderlyingFactor | null = null;
+  if (input.statcastLookup && game.sport.name === "MLB") {
+    try {
+      const result = await loadStatcastUnderlyingFactor(input.statcastLookup);
+      underlying = statcastUnderlyingFactorOrNull(result);
+    } catch {
+      // Never let a Statcast failure block a founder pick.
+      underlying = null;
+    }
+  }
+
   const data = {
     gameId: input.gameId,
     pickType: input.pickType,
@@ -79,7 +98,7 @@ export async function createFounderPick(
     riskLevel: "MODERATE" as const,
     reasoning: input.reasoning.trim(),
     reasoningShort: input.reasoning.trim().slice(0, 160),
-    factorBreakdown: JSON.parse(JSON.stringify(founderFactorBreakdown(input))),
+    factorBreakdown: JSON.parse(JSON.stringify(founderFactorBreakdown(input, underlying))),
     modelVersion: FOUNDER_MODEL_VERSION,
     isBootstrap: false,
     isPublished: true,

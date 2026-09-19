@@ -76,8 +76,8 @@ describe("/board/gate — illustrative mode (the default)", () => {
 
     // These strings live in gate-consumer.ts. If the page ever stops calling
     // the real consumer, they disappear and this fails.
-    expect(text).toContain("not enough settled history");
-    expect(text).toContain("not a judgement about the game");
+    expect(text).toContain("enough settled history to calibrate against");
+    expect(text).toContain("not a judgment about the game");
   });
 
   it("states plainly that the inputs are illustrative and the logic is real", async () => {

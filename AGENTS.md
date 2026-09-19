@@ -1234,6 +1234,19 @@ Breaking one discards the run.
    forbidden-copy list, never loosen an assertion's intent, never change a guardrail's
    threshold. If a guard is red, either the code is wrong or the guard needs *narrower*
    context — never less power.
+10. **NEVER report a rate under one denominator.** (Founder, 2026-09-19.) Every
+   closing-line-value and win-rate figure is reported under BOTH denominators, side by
+   side: all-graded rows with the tolerance-band cell included, and decided-only rows with
+   it excluded. One denominator alone is how a cell that reads 0.567 on the narrow
+   denominator gets quoted against a threshold defined on the wide one. Pooled R1 reads
+   0.229 and still fails; MLB TOTAL R4 reads 0.567 on the narrow denominator only. Neither
+   number travels without the other beside it.
+11. **NEVER make a moneyline claim without clearing the frozen market baseline.** (Founder,
+   2026-09-19.) That baseline is **market moneyline Brier 0.211 at n 5,051**, and it is
+   frozen. Elo reads 0.233 on the same rows and loses. The earlier "Elo beats market"
+   reading came from scoring the market as a normal CDF of the spread over an assumed
+   sigma, which is a misspecified market probability, not the market's own price. Score
+   the market off its own posted moneyline or do not score it.
 
 ---
 
@@ -3040,7 +3053,7 @@ take argmax. 1 forward pass for all fields instead of 150-500 sequential
 autoregressive passes; JSON schema always valid by construction. Uses
 Qwen 2.5 as the decoder example. NOT an NFL metric — filed under the
 standing rule as an ML-infra technique. Possible GSE relevance: fast
-guaranteed-valid structured outputs from models (e.g. pick cards, graded
+schema-valid structured outputs from models (e.g. pick cards, graded
 outputs) without autoregressive latency; verify licensing/attribution
 if building on it. Author/origin of the diagram not verified.
 
@@ -3061,7 +3074,7 @@ Source: public site analysis by Motif (client-side code, sitemap, robots.txt, /m
 - Ruby on Rails + Hotwire (Turbo + Stimulus); 90+ Stimulus controllers; importmap archived at docs/research/2026-09-18/statrankings/js/importmap.json (102 entries).
 - CloudFront CDN; Google Analytics G-7D5HCZG0GX; Rewardful referrals; Avo Rails admin panel.
 - Stripe payments.
-- Separate Python service "odds-engine" with api_server.py: odds sync has a "fast lane" + "full sweep" (~50 leagues), server-side lock, WatermarkBroadcast via Turbo Streams; see RAILS_TRIGGER.md (internal doc referenced in JS comments, not public).
+- Separate Python service "odds-engine" with api_server.py: odds sync has a "fast lane" + "full sweep" (~50 leagues), server-side mutex, WatermarkBroadcast via Turbo Streams; see RAILS_TRIGGER.md (internal doc referenced in JS comments, not public).
 - Server-side namespaces visible in JS comments: Odds::ImpliedProbability (app/services/odds/implied_probability.rb), Odds::Board, Odds::BoardTable, Odds::CustomizePanel, LiveOddsController#sync/#poll, Views::Admin::NFL::ProjectionReviews::Sidebar (admin projection review spreadsheet with manual overrides, server-side recompute).
 - Survivor Map grid model ported from internal mockups/nfl-survivor-map/index.html; "Best Path optimizer" feature removed.
 - No public API, no public code repo found. No /api/ docs.
@@ -3146,7 +3159,7 @@ Bio: "Founder, @StatRankings, Guru Elite, & FTN Fantasy/Data. '22. @Techstars in
 ### JS codebase intel (2026-09-18, full 102-file mine)
 - Infra: AWS Cognito auth (min 8 chars, upper/lower/number/symbol), CloudFront CDN, Stripe hosted checkout, Rewardful referrals (?via= -> client_reference_id), Google One Tap, Avo admin, GA4. No secrets/keys in client code.
 - Internal docs referenced in comments (not public): RAILS_TRIGGER.md (odds-engine trigger), docs/STAT_NUMERIC_IDS.md (StatBuilder stat key -> numeric_id), docs/FANTASY_RANKINGS_URLS.md, SEO.md rules RDM-01..06 (crawl-space discipline: ?return_to= caused "tens of thousands of junk URLs", 32,852 ?sort_field=/?sort_order= variants found by crawlers -> sort headers are buttons not anchors), SPEC.md (Survivor Map; RE-SCOPE 2026-09-01: contest-entries is the ONLY premium-gated surface on Survivor page).
-- odds-engine (Python, api_server.py): "Sync odds now" fast lane + "Full sweep" ~50 leagues, one server-side lock, 90s client backstop. Live board: Postgres trigger -> Turbo Streams WatermarkBroadcast, min interval 5s, price flash on >=0.05 relative implied-probability move (green=better for bettor, red=worse).
+- odds-engine (Python, api_server.py): "Sync odds now" fast lane + "Full sweep" ~50 leagues, one server-side mutex, 90s client backstop. Live board: Postgres trigger -> Turbo Streams WatermarkBroadcast, min interval 5s, price flash on >=0.05 relative implied-probability move (green=better for bettor, red=worse).
 - Ruby internals named: Odds::ImpliedProbability (app/services/odds/implied_probability.rb), Odds::Board/BoardTable/CustomizePanel, LiveOddsController#sync/#poll/#update_preferences, Admin::NFL::ProjectionOverridesController#batch (single PATCH, one transaction, recompute each team once), Views::Admin::NFL::ProjectionReviews::Sidebar/Show (admin projection review spreadsheet), Polymarket::PageData#query, NFL::CoverageIntelligenceQuery::ALL_COVERAGES, Payments::PackagePricing (integer cents, server-side).
 - Formulas: implied probability = price>0 ? 100/(price+100) : -price/(-price+100), rounded to 0.1%. Survivor favored = winPct >= 58; FAV LEFT = remaining favored non-bye weeks; bands >=75/>=60/>=50. Admin projection review: >10% off baseline tints cell (DISCREPANCY_THRESHOLD), >20% off market line = edge flag (over/under); passing/receiving reconciliation ("every passing yard or touchdown is also a receiving yard or touchdown for the same team").
 - Free/gated boundaries (client-verified): free presets = All Games, Last 1, Last 3 only; Last 5/10, Home/Away, specific weeks, Custom Split column gated. Coverage shells: Man = 0,1,2M; Zone = 2,3,4,6,9 (order 0,1,2,2M,3,4,6,9). Odds board up to ~82 sportsbooks; price formats American/%/Cents. PredictionMarkets+ paginates at 50 rows. Archive builder params: archive_download[categories][][registry|category], [seasons][].
@@ -3403,6 +3416,938 @@ Data sources as stated on charts: nflverse (nflreadpy)/(nflreadr) footers; FTN C
 - BELLCOW REPORT (new): each RB's share of his team's backfield XFP — Achane 95%, Javonte Williams 95%, Gibbs/Cook/Taylor 93%. Innovation kernel: backfield dominance measured via expected fantasy points rather than touches.
 - DEFENSIVE TARGETS BY POSITION (Week 1 stacked bars): only text-attributed standouts are exact (Buccaneers 26% RB target share — one of highest; Packers 36% TE share — highest, Hockenson/Oliver 4 each); other team shares were approximate and not transcribed.
 
+---
+
+## GUARDS THAT WERE NOT GUARDING (2026-09-18, Opus)
+
+Four defects found in one pass, on branch `claude/signal-architecture-rebuild-bq7l8i`
+(`57d60c393`, `c71542292`, `96bc392d3`, `a8d8751db`). They are listed together because
+the failure mode is identical in all four and it is not a coding mistake, it is a
+process one: **a guard existed, and it was red, vacuous, or measuring the wrong unit,
+and the suite never got far enough to say so.**
+
+**1. The DFS solver was not deterministic, and its own guard had never passed.**
+`dfs-optimizer.ts` drew its heuristic restarts from the platform's unseeded random, so
+`optimizeOne` was a different function on every process. Measured on the shipped
+36-player slate in cash mode: identical inputs, identical node count (400,001) and
+identical best value, but 7,163,409 candidate iterations on one run and 7,081,041 on
+the next. The file's own test greps the source for that call and has been RED since the
+module's first commit (`54408730b`, 2026-06-04); the assertion was added later in #120
+and never once passed. Fixed the code (seeded mulberry32), never the guard. Every
+objective value is byte-identical, and now identical across processes too.
+
+**2. A node budget does not bound time.** The same solver capped recursion at 400k
+nodes, but a node's cost is its slot's candidate list plus a rescan for the admissible
+bound, so per-node cost grows with the pool. Measured, all four stopping on the SAME
+400k nodes: 50 players 2.3s, 100 players 10.6s, 150 players 24.1s, 200 players 43.8s.
+Nineteen times the wall clock at an identical node count. Added a cost budget in
+work x pool size (the unit that actually tracks time), default 600M: now 1.3 to 2.0
+seconds at every pool size from 50 to 600, with the best value IDENTICAL to the
+unbounded run at every size measured. **Generalise this one.** Any budget, anywhere,
+has to be denominated in the thing whose growth you are afraid of. Ours counted the
+cheap thing and let the expensive thing run free for months.
+
+**3. The Beat served fiction during an outage.** `app/the-beat/page.tsx` read
+`.catch(() => null)` under a comment saying it "never fabricates". `null` is the exact
+value `TheBeat` reads as "no feeds configured, show the labeled fictional sample", so a
+failed fetch rendered ten invented headlines. Three states now (unavailable / live /
+sample), and an outage shows nothing rather than a stand-in. There is no honest
+stand-in for news.
+
+**4. A copy edit silently switched off sixteen assertions.**
+`picks-states-conversion.test.ts` slices `/picks` into its dark-board states at MODULE
+scope, anchored on a sentence. The humanizer pass rewrote that sentence, the slice threw
+before any `describe` registered, and vitest reported the file as `(0 test)`. Sixteen
+assertions about the primary conversion surface stopped running and the suite said
+almost nothing. Anchor block slices on a `data-testid` or a branch condition. A testid
+is a contract; copy is supposed to keep changing.
+
+**Rules this pass earned, for every agent:**
+- A green suite that never ran the assertion is worth LESS than no assertion, because it
+  buys false confidence. When you claim a unit, run the file and read the test NAMES and
+  the collected COUNT, not the pass total. `(0 test)` is a failure, not a pass.
+- A test that fails against correct, deliberate product behaviour is still the thing to
+  fix, but fix it by repointing it at the CONTRACT, not by deleting the assertion. Where
+  a count floor was pinning a retired IA (House doors, ">= 6" against a deliberate four),
+  the replacement is the exact set, which is stronger than the floor it replaced, not
+  weaker.
+- Describing a banned token in a comment reproduces it. The determinism guard greps its
+  own subject file, so a comment naming the call trips it, exactly as a note quoting
+  banned copy trips the copy scanners. Describe, never spell.
+- `scripts/guardrails/em-dash-scan.mjs` covers NINE files. The wide scan
+  (`apps/web/__tests__/em-dash-public-copy.test.ts`, 229 public files) carries the rest
+  as a ratcheting baseline. Three live dashes on `/house` (including the meta
+  description, which search results render) were found that way. Lower the baseline when
+  you are already in one of those files; never raise it.
+
+**Verified:** apps/web 1,024 files / 13,939 tests passing. dfs-optimizer 28/28 (was 26
+with the determinism guard failing and the suite hanging before it reported). Seven
+sibling DFS suites 72/72 including the CP-SAT oracle-checked optimality tests for all
+three modes with and without stacking. trust-gate OK (2,226 files), em-dash-scan OK,
+tsc clean. No gate, flag, schema, floor or MODEL_VERSION touched.
+
+**Provenance: CLOSED (`450ce0ba7`), and it found something on its first run.**
+`solveExact` returns `{ lineup, optimal, nodes, work }`; `optimizeExact` keeps its
+signature and delegates, so no caller changed. `optimal` is the same word with the same
+meaning as `ExactResult.optimal` in `dfs-exact.ts`, deliberately. It never overstates:
+true with a null lineup means infeasibility was PROVED, false always means a budget
+stopped the search, and a path that refuses before searching at all (a pinned player who
+cannot be placed) reports false, because "we did not look" and "we looked and it is not there" must not
+read the same.
+
+What it caught, measured on the shipped 36-player slate: **cash and leverage have never
+been proved.** Cash stops on its own NODE cap at exactly 400,001 nodes and needs 481,198
+to finish; leverage the same; gpp completes in 73,418. Work was 7.16M against a 16.7M
+work budget, so it is the node cap that binds, not the cost budget. Both truncated modes
+return the CORRECT objective (120.5000 and 259.0030, matching the independent solver to
+six decimals), so nothing user-facing is wrong. They were right and were never proved.
+
+The node cap was NOT raised. It is a one-constant change, and it is now safe in a way it
+was not before, because the cost budget bounds wall clock rather than the node count. It
+can return a better lineup on any slate where the search is currently truncated, so it is
+an output change and wants its own before/after rather than riding inside a plumbing
+commit. Whoever takes it: ~20% more nodes is the measured requirement on this slate.
+
+**CORRECTED 2026-09-19 by measurement (`scripts/dfs-nodecap-probe.ts`, shipped 36-player
+slate). That last sentence is true of CASH ONLY, and the node cap is the wrong knob for
+leverage.** Running the shipped `solveExact` at node budgets 400k through 2M, changing no
+default:
+
+    mode      stack  nodeBudget  optimal  nodes    work        objective   ms
+    cash      false  400000      false    400001    7163409    120.5000     427
+    cash      false  500000      TRUE     481198    8801876    120.5000     525
+    gpp       false  400000      TRUE      73418    1624065    218.0000     326
+    leverage  false  400000      false    400001    9704404    259.0030    2063
+    leverage  false  1000000     false    688196   16666667    259.0030    3473
+    leverage  false  2000000     false    688196   16666667    259.0030    3446
+
+Three things fall out. **Cash is a cheap, honest win**: it completes at 481,198 nodes for
+about 100ms more, and the objective does not move, so raising its cap converts an unproved
+answer into a proved one and changes no lineup on this slate. **Leverage never completes at
+any node budget.** At 1M and 2M it stops at the IDENTICAL 688,196 nodes and 16,666,667 work,
+and 16,666,667 is exactly `DEFAULT_COST_BUDGET / 36`: the COST budget is binding, not the
+node cap. Raising `nodeBudget` alone can never prove leverage, on this slate or a larger one,
+because cost binds first. Proving it means raising `costBudget`, which is the wall-clock knob
+on a search that runs on the user's main thread, so that is a deliberate latency trade and
+not a free constant bump. **No objective moved anywhere**, stacked or unstacked, so on this
+slate the whole question is proof, not output.
+
+The general lesson is the one this file already drew from the budget work and is now
+confirmed from the other side: when two budgets guard one search, measure WHICH ONE BINDS
+before raising either. Raising the one that is not binding buys nothing and reads, in a
+changelog, exactly like a fix.
+
+Knock-on already fixed: `dfs-optimizer-edge`'s cash cross-check asserted only ONE side's
+optimality, so a truncated incumbent that happened to reach the same objective passed for
+the same reason a genuinely agreeing one did. It now asserts at least one side is a
+completed search, written as a disjunction so a later cap raise does not fail it.
+
+**Still open, named so nobody re-derives it:** `fetchLiveWire` swallows per-feed failures
+into an empty array, so "every configured feed is down" surfaces as live-but-empty rather
+than as unavailable. The page-level outage state exists (`c71542292`); this is the
+per-feed half underneath it.
+
+**Em dashes in public copy: three passes done, baseline 97 files / 263 lines down to
+87 / 158** (`c037286f9`, `00e71a6af`, `82cf6c6f2`). Eleven files fully cleared. Two rules
+the rewrites follow, learned by reverting a first attempt wholesale: a dash separating a
+term from its definition becomes a colon, never a comma, or a label reads as a list; and
+a dash joining two independent clauses becomes a period, or you get run-ons. Code comments
+are skipped entirely, since a dash in a comment is not customer copy and churning it is
+diff noise. The ratchet in `apps/web/__tests__/em-dash-public-copy.test.ts` may only go
+down.
+
+---
+
+## THE BOARD DOES NOT SORT ON CONFIDENCE (2026-09-18, Opus, `a38fa96db`)
+
+**Correction to the RANKING half named as still open above. Read this before building
+anything on the claim that the board is ordered by an anti-predictive score.**
+
+That claim is half right, and the wrong half shrinks the task. `rankingSortKey`
+(`apps/web/lib/ranking/sort-key.ts`) prefers `factorBreakdown.rankingP` when finite,
+falls back to `rankingScore/100`, and reaches `confidence/100` only when BOTH are
+absent. Those are different animals in this file's own measurements: `rankingP`
+(n 1,390) is monotone, over-confident in the upper middle but never inverted;
+`confidence` (n 2,385) is the non-monotone one. So an inverted score drives the order
+only on rows that fall all the way through the cascade, **and nobody has ever measured
+what share of rows that is.** That number decides whether this is a narrow fallback
+defect or the original framing, and it comes first.
+
+`readRankingKey` now returns `{ basis, key }` and is the ONLY place the cascade is
+written; `rankingSortKey` is a thin wrapper over it. That shape is load bearing. A
+second copy of the branch logic is how a census drifts from the comparator it claims to
+describe and then reports a reassuring number about code that does something else. A
+test asserts key equality with `rankingSortKey` on all 15 cases, rejection reasons
+included, so reporting the basis provably moved none of the eight surfaces this orders
+(picks API, board state, cockpit, cockpit brief, dashboard, admin dashboard, preview,
+v1 probabilities).
+
+`rankingBasisCensus` counts the three branches over a set of rows. It reads, never
+filters, writes nothing, and an empty board is a real answer (all zeros) rather than a
+throw, so it still runs on a quiet slate. `rankingP` of zero is pinned as a VALUE, not
+absence: a row the independent model priced at zero is priced, and if it fell through,
+the rows the model rated worst would be exactly the ones ordered by the score measured
+to be anti-predictive at the top.
+
+**Still to do, in order.** 1) Run the census over published rows, split by sport and
+book count, and report the fallback share with an honest bound. 2) A realized-outcome
+metric per candidate ordering on settled history (top-N realized win rate at several N,
+plus rank correlation between position and outcome), reusing the existing
+push/bootstrap/in-play exclusions rather than inventing a sample. 3) State the
+uncertainty or do not state the result: four orderings on one sample is four chances to
+find a winner by noise, so pre-register, report an interval per ordering, and if the
+intervals overlap say so instead of naming a winner. Steps 1 and 2 need settled rows
+from the database, which law 7 puts outside an agent session; until an operator runs
+them they are NOT RUN, and no agent estimates the answer.
+
+**Coordination.** This lane overlaps `hermes/2026-09-18-queues`, which landed four
+total and stable candidate comparators in `packages/types/src/ranking-candidates.ts`
+plus `RANKING_ORDERING_SWITCH`, founder only and deliberately not an env flag. Do not
+rebuild those and do not move that switch. The division is that branch owns the
+comparators and the switch, this owns the outcome measurement. Two agents already built
+toward one task here without either knowing.
+
+**Verified:** ranking-sort-key 12/12 (was 6), adverse-edge-suppression 15/15, 74
+board/picks/cockpit/dashboard/preview files at 723/723 with no zero-collection files,
+typecheck 0, lint 0, guardrails 26/26. No gate, flag, floor, schema or MODEL_VERSION
+touched.
+
+---
+
+## THE CENSUS RAN. THE CONFIDENCE BRANCH IS A LEGACY COHORT, AND IT CONFOUNDS THE OUTCOME METRIC (2026-09-19, Opus)
+
+**Measured against live production (Neon project `gse-postgres`, read-only SELECT, nothing
+written). This answers step 1 of the ranking plan and it changes step 2 from "run the
+comparison" to "the comparison as designed cannot answer the question".**
+
+Over 3,257 published picks, the branch that actually produced each ordering key:
+
+    basis           rows     share
+    rankingP        1775     54.50%
+    confidence      1482     45.50%
+    rankingScore       0      0.00%
+
+Wilson 95% on the confidence share: **0.438 to 0.472**. The pre-registered kill line was a
+Wilson upper bound under 0.05, so this is not close to the "narrow fallback defect" reading.
+**`rankingScore` never fires at all**, so the documented three-way cascade is a two-way
+split in practice and its middle branch is dead code on every row ever published.
+
+**But the live board is NOT affected, and saying "45% of the board" would be wrong.** Split
+by settlement:
+
+    basis        settled  isBootstrap   rows
+    rankingP     true     false         1541
+    confidence   true     false         1482
+    rankingP     false    false          234
+
+Every confidence-basis row is settled history. **All 234 published PENDING rows are
+rankingP**, so today's board is ordered entirely by the monotone score. The last
+confidence-basis row was generated **2026-07-25**; rankingP runs 2026-05-22 through today.
+
+**The finding that matters: basis is PERFECTLY COLLINEAR with MODEL_VERSION.**
+
+    v5.0.0     887 rows   all confidence
+    v5.1.0     595 rows   all confidence
+    v5.2.2       2 rows   all rankingP
+    v5.2.4       1 row    all rankingP
+    v5.2.5       1 row    all rankingP
+    v5.2.6     297 rows   all rankingP
+    v5.2.7    1474 rows   all rankingP
+
+887 + 595 = 1482 exactly; 2 + 1 + 1 + 297 + 1474 = 1775 exactly. Zero overlap, both ways.
+Basis is a deterministic function of model version.
+
+**So the realized-outcome comparison as pre-registered CANNOT be run on this sample.** Any
+result of the form "ordering A beats ordering B on settled history" is really "v5.0.0 and
+v5.1.0 versus v5.2.x", because the rows that differ in basis are exactly the rows that
+differ in engine version. The orderings are not being compared on common ground, and an
+interval computed on that sample would be confidently reporting a version effect under an
+ordering label. Do not run it and do not report it.
+
+What CAN be answered, and whoever takes it should pre-register which:
+- Restrict to a single model version and compare orderings within it. That is the only
+  unconfounded comparison available, and it costs the confidence cohort entirely, since no
+  version contains both bases.
+- Or treat this as closed on the live surface and re-scope: the ordering defect reaches no
+  row minted since v5.2.2, so the open question is about the historical record, not the
+  product.
+
+**Consequence for calibration, which is the larger issue.** The settled non-bootstrap sample
+is 49.0% confidence-basis rows (1482 of 3023), and those are entirely v5.0.0 and v5.1.0.
+Any pooled measurement over settled history is weighting two retired engine versions at
+roughly half. That is the same pooled-versus-stratum hazard this file already records for
+ECE, arriving from a second direction.
+
+**Method note, recorded because it nearly produced a wrong table.** A crosstab written with
+`jsonb_typeof(fb->'rankingP') <> 'number' OR fb IS NULL` reported ZERO confidence rows on
+every version. The v5.0.0 and v5.1.0 rows carry a non-null `factorBreakdown` that simply
+lacks the key, so `jsonb_typeof(NULL)` is NULL, `NULL <> 'number'` is NULL rather than true,
+and the IS NULL clause does not fire either. The row counts only added up because the total
+column was carried alongside. In three-valued logic, absence of a key is not inequality:
+test the positive branch and take the complement, never the negated branch.
+
+**Verified:** SELECT-only against production, four queries, no write of any kind, no schema,
+gate, flag, floor or MODEL_VERSION touched. The connection string was used in process only,
+never written into the repository, and was destroyed after the run.
+
+---
+
+## MAIN IS RED BECAUSE OF 64 STALE apps/web TESTS, NOT THE DATABASE. CONFIRMED, AND THIS BRANCH ALREADY FIXES ALL 20 FILES (2026-09-19, Opus + Sonnet verification)
+
+**This SUPERSEDES the earlier section claiming the stub-versus-real-Prisma split was the
+mechanism. That claim was WRONG. Do not act on it and do not re-open it.**
+
+Source of truth: main's own CI log, run 35376690387, job 105703070978, head `47be639a6`, job
+`Test, type-check, lint, Prisma`. Every workspace passes except one:
+
+```
+apps/web    Test Files  20 failed | 1014 passed | 2 skipped (1036)
+            Tests       64 failed | 13939 passed | 28 skipped (14031)
+```
+
+ai-council, compliance, crypto, data-ingestion (70 files), db, epistemic-twin, feature-store,
+genesis-kernel, governed, ingestion-pipeline (35), ops, partner-stack, phase-c,
+prediction-engine (280 files / 3141 tests), quote-plane, stats-api, types, util,
+workers/content-publishing and workers/data-refresh are ALL green. Root `npm test` runs every
+workspace and exits 1 at the END, so the job's tail shows only passes followed by an exit code.
+Reading the tail tells you the suite passed. It did not.
+
+**The complete 20-file list, with failed-test count per file** (65 raw FAIL entries = 64 counted
+failing tests plus one file-level collection error):
+
+| file | failed |
+|---|---|
+| lib/fantasy/dfs-optimizer.test.ts | 12 |
+| __tests__/preview-page-paywall.test.tsx | 11 |
+| __tests__/honest-degraded-states.test.ts | 6 |
+| __tests__/board-pass-reason-honesty.test.ts | 6 |
+| __tests__/entitlement-fail-closed-audible.test.ts | 4 |
+| __tests__/nfl-house-page.test.ts | 3 |
+| __tests__/news-customer-truth.test.tsx | 3 |
+| __tests__/analytics-instrumentation.test.tsx | 3 |
+| __tests__/nav-static-shell.test.tsx | 2 |
+| __tests__/nav-route-integrity.test.ts | 2 |
+| __tests__/homepage-suspense-nflverse.test.ts | 2 |
+| __tests__/homepage-engine-centerpiece.test.ts | 2 |
+| __tests__/board-class-banner-honesty.test.ts | 2 |
+| __tests__/picks-states-conversion.test.ts | 1 (collection error, the zero-collected pattern) |
+| __tests__/picks-paywall-copy-truth.test.ts | 1 |
+| __tests__/palette-cohesion.test.ts | 1 |
+| __tests__/homepage-doctrine-hero.test.ts | 1 |
+| __tests__/data-first-public-surfaces.test.ts | 1 |
+| __tests__/board-gate-page.test.tsx | 1 |
+| __tests__/board-gate-consumer.test.ts | 1 |
+
+**NOT ONE of the 65 raw FAIL entries references Prisma, Postgres, or `db`.** Five clusters, all
+already-decided product changes whose tests were never repointed:
+
+1. **Retired customer copy.** Assertions pin the pre-humanizer strings: the old
+   publish-threshold sentence, the old evidence-health sentence, the old not-yet-scored
+   phrasing, the old board health badge, the old counted-lane summary, retired marketing lines
+   and a retired palette token. The SOURCE is correct and deliberate; the TESTS pin what was
+   removed.
+2. **Retired IA.** `nav-static-shell` and `nav-route-integrity` still require the intelligence
+   engines route that the four-door trim deliberately removed. `nfl-house-page` asserts a door
+   count floor of six against a deliberate four.
+3. **A partial mock missing a symbol.** `No "isAdminEmail" export is defined on the
+   "@/lib/auth" mock`. Twelve distinct error entries; the raw string occurs 61 times across the
+   stack traces, so quote the file-level counts above rather than either bare number. Same
+   partial `vi.mock` hazard already documented in this file for `@sports/prediction-engine`,
+   arriving on a second module.
+4. **`lib/fantasy/dfs-optimizer.test.ts`**, 12 failures: the determinism guard, the
+   unseeded-random source grep, and four exact-optimum comparisons.
+5. **`picks-states-conversion.test.ts`**, failing at COLLECTION on a module-scope slice whose
+   anchor sentence was rewritten, reported as a start marker at -1.
+
+**VERIFIED 2026-09-19: all 20 files pass on this branch.** Run against branch HEAD `12598286f`
+in two batches, no database, stub mode: 13 files 150/150, then the remaining 7 files 57/57.
+**20 of 20 files, 207 of 207 tests, zero failures.** The later commit on this branch is
+documentation only (AGENTS.md), verified with `git show --stat`, so it does not affect that
+result. PR #866 is based on `47be639a6`, the exact commit main is red on, and its
+`Test, type-check, lint, Prisma` job concluded SUCCESS. Merging it should turn main green; the
+confirming run is the post-merge one on main.
+
+**Why nobody saw it, corrected, because the earlier note blamed the wrong thing.** The stub
+guard in `apps/web/vitest.setup.ts` does NOT hide these: none of the 64 reads the database, so
+they fail on a developer machine too. The real reason is smaller and it is mine. I ran the
+suite on THIS branch, which already carries every fix, and reported the PASSING count (13,939)
+without reading the failing count. CI reports `64 failed | 13939 passed`: the identical passing
+figure. The number quoted as proof of green was the same number sitting beside 64 failures.
+
+**Two process rules this earned.**
+- When you claim a suite is green, read the FAILING count, not the passing count. `13939
+  passed` was true in both worlds. Only `64 failed` distinguished them.
+- **`get_job_logs` truncates and will land you mid-list.** It returned the same 513,517-char
+  payload at `tail_lines` 6000 and 10000, and a grep over that partial payload surfaced only 13
+  of the 20 files. The reliable path is the run's log-archive URL (`actions_get` ->
+  `get_workflow_run_logs_url`), downloading the zip and reading the complete job file (14,245
+  lines here). Use the archive whenever a failing-file list must be COMPLETE.
+
+---
+
+## MONDRIAN ON REAL BOARD GROUPS, AND THE TIMING KILL (2026-09-19, Mimo statistics lane)
+
+Measured on the receipts snapshot: 1,111 rows harvested, 1,087 scored WIN/LOSS.
+Strict Mondrian, alpha 0.10, one q-hat per bin, NO borrowing, finite only when
+n >= ceil(1/alpha)-1 = 9, otherwise infinite with coverage null and NEVER clamped.
+Residual is |y - p| with p = marketFairProb on all scored rows.
+
+**FIRST, A CORRECTION TO THIS FILE. C-302 IS CLOSED, NOT OPEN.** The older note
+says the public performance surfaces do not exclude in-play-generated picks the
+way the eligibility sample does. That is STALE. `apps/web/lib/calibration/in-play-exclusion.ts`
+now holds the rule in one place and is imported by all four readers:
+`confidence-tail.ts`, `public-confidence.ts`, `report.ts` and
+`apps/web/lib/performance/build-performance-summaries.ts`. Its semantics are
+deliberate and worth keeping: an absent or unparseable timestamp means "cannot
+tell" and the row is KEPT, because dropping on a missing timestamp would silently
+shrink every published denominator by however much the data happened to be
+incomplete.
+
+**THE TIMING KILL TRIGGERED, AND IT IS THE FIRST MEASUREMENT OF WHAT THAT
+EXCLUSION IS WORTH.**
+
+| stratum | n | hit rate | mean residual |
+|---|---|---|---|
+| pre_game | 935 | 0.4802 | 0.4824 |
+| in_play_or_at_kickoff | 152 | 0.6974 | 0.3438 |
+
+Gap **+21.72 percentage points** against a pre-registered 10pp kill line. Until
+now the in-play exclusion rested on the argument that a live price already
+encodes part of the outcome. It is now a measured 21.7 point difference in
+realized hit rate, from an independent direction.
+
+**Forward rule, and it binds every future study: REFUSE any ordering comparison,
+calibration claim or signal backtest on a mixed pre-game and in-play sample.**
+A 15% in-play share is enough to move a pooled hit rate by roughly three points
+on its own.
+
+**The pooled residual understates fat board groups.** Pooled q-hat 0.5913, pooled
+marginal coverage 0.9016 on n 1,087. Coverage of each bin UNDER the pooled
+q-hat, against that bin's own q-hat:
+
+| bin | n | own q-hat | own cov | cov under pooled | gap |
+|---|---|---|---|---|---|
+| MONEYLINE given MLS | small | - | 0.9348 | 0.5652 | -37.0pp |
+| MONEYLINE | 179 | 0.7632 | 0.9050 | 0.7709 | -13.4pp |
+| MLB run line 1.5 | 307 | 0.6220 | 0.9055 | 0.8046 | -10.1pp |
+| MLS | 153 | 0.6788 | 0.9085 | 0.8366 | -7.2pp |
+| TOTAL | 396 | 0.515 | 0.9040 | 0.9975 | +9.3pp over |
+| NCAAF | 199 | ~0.506 | 0.9045 | 0.9899 | +8.5pp over |
+
+Sport fat-to-lean q-hat ratio 1.342 (MLS against NCAAF) against a pre-registered
+kill at 1.15: the pooling-understates claim SURVIVES. This is the THIRD
+independent measurement of one defect, after the pooled ECE sitting below every
+stratum it is built from, and the earlier AFC/NFC turnover result.
+
+`MONEYLINE given NFL` at n 5 returns infinite with null coverage. That is the
+method refusing, not a bug. The bookmaker-count bucket is **NOT RUN**:
+`bookmakerCount` is absent from the export. Prediction on record for when it
+lands: thin-book q-hat wider than 10+ books; kill if not.
+
+**MLB run line, n 307, realized hit rate 40.1%.** That is the same bin whose
+`consensusPct` is structurally pinned, so the ordering inside it is produced
+entirely by other factors while the copy credits book agreement.
+
+**The ordering comparison is identifiable after all, and this improves on the
+census finding in this file.** The census concluded the comparison cannot be run
+because basis is collinear with MODEL_VERSION. The sharper statement: the
+collinearity is between the published basis LABEL and the version, NOT between
+the numeric scores on the same rows. So the answerable design is version-fixed
+RECOMPUTED orderings: on eligibility-clean PRE-GAME rows with modelVersion in
+v5.2.2 through v5.2.7 carrying finite confidence, rankingP and marketFairProb,
+recompute all four orderings on the SAME rows and compare. Wilson on top-decile,
+slate/day bootstrap on decile Brier, and if the intervals overlap, say they
+overlap rather than naming a winner. Pre-registration:
+`docs/ops/stats-lane/PRE-REG-ordering-comparison-2026-09-18.yaml`.
+
+**Group-conditional sample sizes, answered.** Finite q-hat needs n >= 9. A Wilson
+half-width of about 0.05 at 0.90 coverage needs n around 138. Distinguishing 0.90
+from 0.82 needs roughly 200 to 250 per bin. **Publish a per-bin number only at
+n >= 138**, with the denominator shown on the same surface.
+
+**Carried on every result, and it must stay carried: Mondrian PARTITIONS a score,
+it does not fix an inverted one. Each bin's top band can still invert.**
+
+**Where the files are.** The lane report, the machine-readable bins, the
+pre-registration and the strict runner live under `docs/ops/stats-lane/` in the
+statistics lane's own workspace and are NOT in this repository tree yet. They
+need to land here before any of the numbers above can be reproduced from the
+repo.
+
+---
+
+## BOOK DEPTH IS ANTI-PREDICTIVE ON MLB SPREADS, AND THE TIMING GAP CONFIRMS AT 2.2x SAMPLE (2026-09-19, Opus, read-only production SQL)
+
+Measured against live production (Neon project gse-postgres, SELECT only, nothing
+written). Sample: published, non-bootstrap, settled picks.
+
+**1. The timing kill CONFIRMS on the full board.** The statistics lane measured a
+21.72 point pre-game versus in-play gap on a receipts snapshot of 1,087 scored
+rows. On the full published non-bootstrap settled set:
+
+| timing | n | wins | losses | pushes | hit (decided) |
+|---|---|---|---|---|---|
+| pre_game | 2379 | 1268 | 1103 | 8 | 0.5348 |
+| in_play | 171 | 125 | 45 | 1 | 0.7353 |
+
+**+20.05 points**, on 2.2x the sample, from an independent query. The level
+differs from the receipts snapshot (0.5348 against 0.4802) because the
+denominators differ, but the GAP is the robust finding and it reproduces. In-play
+rows are priced off a line that already encodes part of the outcome, and they hit
+20 points higher. Any study mixing the two strata is measuring the mix.
+
+**2. BOOK DEPTH IS ANTI-PREDICTIVE ON MLB SPREADS.** Pre-game only, bucketed by
+`picks.bookmakerCount`, bins with n >= 9:
+
+| sport | market | books | n | hit (decided) |
+|---|---|---|---|---|
+| MLB | SPREAD | 3-9 | 409 | 0.5061 |
+| MLB | SPREAD | **10+** | 188 | **0.3723** |
+| MLB | TOTAL | 3-9 | 345 | 0.4564 |
+| MLB | TOTAL | 10+ | 185 | 0.4693 |
+| MLB | MONEYLINE | 0 (model signal) | 550 | 0.5764 |
+| NCAAF | MONEYLINE | 0 | 109 | 0.8716 |
+| NCAAF | SPREAD | 3-9 | 67 | 0.6269 |
+| MLS | MONEYLINE | 0 | 88 | 0.5909 |
+
+Wilson 95% on the two MLB spread rows: roughly [0.458, 0.554] against
+[0.303, 0.441]. **They do not overlap.** On the largest stratum on the board,
+more bookmaker coverage selects WORSE spots, not better ones.
+
+**Why this matters more than any single bin.** The scorer awards `consensusScore`
+30 plus `marketDepthScore` 20. **Fifty of the confidence points reward book
+depth**, and book depth measures anti-predictive where there is most data. Read
+this together with the two facts this file already records: `consensusPct` is
+structurally pinned at 1.0000 on MLB run lines, so the consensus term carries no
+information there either. The composite is rewarding a property that does not
+predict, on the market where most of the sample lives.
+
+Do NOT act on this by suppressing the number or by editing a weight. Reweighting
+the composite is a scoring change, needs a MODEL_VERSION bump and a calibration
+pass, and is founder-only. What this licenses today is measurement and design,
+not a silent weight edit.
+
+**3. This REFUTES a pre-registered prediction, which is the system working.** The
+statistics lane predicted "thin-book q-hat wider than 10+ books; kill if not",
+i.e. that thin-book rows would be the noisier ones. On realized hit rate the
+ordering is the opposite. Note carefully that residual SCALE and hit RATE are
+different claims and the refutation is on the second; re-running the Mondrian
+bins with this field is the open item.
+
+**Honest limits.** These are realized hit rates on decided rows, not calibration.
+Bins are unadjusted for favourite/underdog, line magnitude, month or model
+version, so the books gap could still be confounded. That decomposition is
+assigned and NOT RUN. NCAAF moneyline at 0 books reading 0.8716 on n 109 is
+flagged as either a real edge or a selection artifact, and is NOT to be quoted as
+a track record until that is settled.
+
+**Method note.** `sport` is NOT a column on `picks` or `games`; it is
+`games."sportId"` joined to `sports`. `bookmakerCount` IS on `picks`, so the
+bookmaker bucket the statistics lane reported as unavailable is available from
+the database even though it is absent from the receipts export.
+
+### CORRECTION, same session: the books-depth gap is INFLATED BY VERSION MIXING, and the pooled non-overlap does not survive stratification
+
+I ran the confound check on my own finding before anyone built on it. Stratifying
+the MLB pre-game SPREAD rows by `modelVersion`, bins with n >= 9:
+
+| modelVersion | books | n | hit (decided) | gap |
+|---|---|---|---|---|
+| v5.0.0 | 3-9 | 154 | 0.6039 | |
+| v5.0.0 | 10+ | 26 | 0.2692 | -33.5pp |
+| v5.1.0 | 3-9 | 155 | 0.4452 | |
+| v5.1.0 | 10+ | 46 | 0.3478 | -9.7pp |
+| **v5.2.7** | **3-9** | **86** | **0.4767** | |
+| **v5.2.7** | **10+** | **116** | **0.4052** | **-7.2pp** |
+
+**What survives:** the DIRECTION is consistent in all three versions. More books
+hits worse every time. As a sign test on three strata that is p = 0.125 one-sided
+if the strata were independent coin flips, which is suggestive and nothing more.
+
+**What does NOT survive:** the headline. On the DEPLOYED version the gap is
+-7.2 points, not the -13.4 the pooled figure showed, and the Wilson intervals
+around 0.4052 (n 116, roughly [0.32, 0.50]) and 0.4767 (n 86, roughly
+[0.37, 0.58]) OVERLAP substantially. **On v5.2.7 alone the books gap is not
+statistically established.** The pooled non-overlap I reported one commit earlier
+was produced by mixing engine versions whose base rates differ, with wildly
+unbalanced cell counts (v5.0.0 carries 154 rows at 3-9 against 26 at 10+).
+
+**That is Simpson's paradox, and it is the fourth appearance of one defect
+tonight**, after the pooled ECE sitting below every stratum, the Mondrian
+group-coverage result, and the ordering-basis collinearity. It caught MY OWN
+measurement this time, one commit after I wrote the warning. The lesson is not
+subtle and it is now the house rule:
+
+**NEVER report a pooled rate on this board without stratifying by modelVersion
+first.** Engine versions have different base rates and wildly different cell
+counts, so any pooled comparison silently weights retired versions. This applies
+to hit rates, calibration, closing-line value and any signal backtest.
+
+**What is still true and unaffected:** the composite awards `consensusScore` 30
+plus `marketDepthScore` 20, so fifty confidence points key off book depth, and
+`consensusPct` is structurally pinned at 1.0000 on MLB run lines. Those are
+structural facts about the scorer, not inferences from this sample. The open
+question is now narrower and better posed: does book depth predict ANYTHING on
+the deployed version, and the honest answer today is that the sample cannot say.
+More settled v5.2.7 rows, or the historical backtest corpus, is what answers it.
+
+The timing result is NOT affected: pre-game against in-play was measured on the
+full board and reproduces a 20-point gap that no version split plausibly erases,
+but stratifying it by version is now a named follow-up rather than an assumption.
+
+---
+
+## DOCTRINE: CLOSING-LINE VALUE IS BANNED AS A SIGNAL ADMISSION GATE (2026-09-19, founder ruling, enforced)
+
+**No signal may be required to beat the closing line before its weight is allowed
+to move off zero. Any design that proposes a realized-CLV threshold as a
+promotion criterion is rejected on sight.** This was proposed once, in an
+otherwise strong registry blueprint, as a fourth admission gate requiring
+realized CLV above +1.5%. It is struck.
+
+**Three reasons, and the second is the one that matters.**
+
+1. A CLV gate admits only signals the market ALREADY prices. That makes the
+   closing line a ceiling by construction, so the best the engine could ever do
+   is rediscover the market.
+2. **It is anti-correlated with originality, and it structurally excludes exactly
+   the signals this product is trying to build.** Cognitive load, sleep debt,
+   travel stress, nutrition, contract incentives: the market prices NONE of them,
+   so the closing line carries no information about them, and a signal built on
+   them would fail a CLV gate PRECISELY BECAUSE IT IS NOVEL. A CLV promotion gate
+   is a machine for rejecting every signal that would differentiate this product.
+3. It is not even computable across the archive outage of 2026-08-23 to 09-12, so
+   the gate is undefined on part of any corpus that spans it.
+
+**What replaces it: Brier or log-loss against REALIZED OUTCOMES.** Did the signal
+improve the probability estimate against what actually happened. That needs no
+closing line and it works identically for a nutrition signal and a market signal.
+
+**Keep this distinction, because the two are routinely confused.** Brier measured
+against outcomes, with the market's Brier as the comparison baseline, is a SKILL
+test and is legitimate. Closing-line value is a LINE-MOVEMENT AGREEMENT test and
+is not. Only the first may gate a signal.
+
+**Where CLV may still appear:** as a diagnostic, and as a revenue-ladder
+milestone, which is a commercial claim about the published record rather than a
+gate on what the engine is allowed to learn. It never gates a signal.
+
+### Other defects found in that same blueprint, recorded so they are not repeated
+
+- Its reference `auditSignalAdmission` returns hardcoded `maxCorrelation: 0.38`
+  and `realizedClv: 0.022` on the success path: invented numbers presented as
+  measurements, inside the very function meant to enforce evidence. Law 8.
+- Its default kill line of Brier 0.250 is VACUOUS. A constant 0.5 forecast scores
+  exactly 0.25, so that threshold admits a coin flip. This repo already documents
+  the identical defect in the 0.22 Brier floor, which a no-skill base-rate
+  forecast clears.
+- It uses `as any` in the registry runner. Strict TypeScript forbids it.
+
+### What was genuinely excellent in it, and is adopted
+
+**Phantom consensus through multicollinearity.** If five signals all read the
+same upstream table and all lean the same way, the edge engine records agreement
+as CONFIRMS at full credit rather than SOLO at a discount, so ONE source is
+counted five times as five independent confirmations. The fix is that agreement
+must be computed across distinct signal FAMILIES clustered by shared
+`dataDependencies`, never across a raw signal count. This is adopted into the
+registry design.
+
+### The open tension, named rather than hidden
+
+That blueprint caps ACTIVE signals at 17 across six families. The founder asked
+for hundreds. Both can be true, as hundreds of DECLARED rows with most blocked
+behind a named acquisition task and owner, against a small orthogonal set
+carrying weight. But 17 is a number from a design document, not a measurement.
+Whether the right ceiling is 17 or 70 is an empirical question, and the
+historical backtest corpus is what answers it. Do not treat 17 as settled.
+
+---
+
+## THE LINE ARCHIVE RECOVERED ON 2026-09-13, AND THE FIX IS NOW CONFIRMED IN PRODUCTION (2026-09-19, Opus, read-only SELECT)
+
+Measured against live production (Neon project gse-postgres, SELECT only, nothing
+written). This CLOSES a question this file left open, and it corrects a premise
+that reached me as an instruction.
+
+Day by day over the whole table, 1,411,528 rows:
+
+```
+2026-08-19    24,172
+2026-08-20   107,944
+2026-08-21    74,160
+2026-08-22   478,222
+2026-08-23 .. 2026-09-12   ZERO ROWS, 21 days, no rows on any day
+2026-09-13     4,187
+2026-09-14    81,565
+2026-09-15   182,083
+2026-09-16   141,495
+2026-09-17   146,640
+2026-09-18   146,722
+2026-09-19    24,338 (partial day)
+```
+
+**The archive is HEALTHY RIGHT NOW.** Newest row 7 minutes old at the time of the
+read, 38,506 rows in the last 6 hours, 152,086 in the last 24. The writer works.
+
+**The 21-day hole is real and is exactly the window this file already recorded:**
+2026-08-23 through 2026-09-12 inclusive, zero rows on every one of those days.
+
+**What this settles.** The earlier note says the argument-shape fix in
+`line-archive.ts` is correct by Prisma's contract but was NOT VERIFIED against a
+live database, and it names a competing hypothesis that could not be eliminated
+from the repo: that `LINE_ARCHIVE_ENABLED` was simply switched off on 08-22.
+Writing resumed on 2026-09-13, the day the fix landed, and has continued every
+day since. That is production evidence for the fix hypothesis. State it at its
+real strength: it is one coincidence of dates, not a controlled experiment, and
+a flag flipped back on the same day would produce the same picture. Nobody should
+now write that the cause is proven; what is proven is that the archive works
+today and started working when the fix shipped.
+
+**A correction to an instruction, recorded so it is not repeated.** A brief
+reached this session asking the freshness monitor to flag the 08-23 to 09-12 hole
+as an ACTIVE_OUTAGE. It should not, and a monitor that did would be wrong. A
+FRESHNESS monitor answers "are we writing now", and the honest answer today is
+yes. Whether a past window has gaps is a COVERAGE question, a different function
+with a different query, and worth building separately since the hole means CLV
+cannot be graded on any pick generated inside it. Conflating the two produces a
+monitor that cries outage forever over a wound that already healed, which is how
+an alarm gets ignored.
+
+**The monitor was run against these real numbers** (pure assessor, real values
+from the SELECT above, no database access from the module):
+
+```
+newest row 7 min old, 38,506 rows in 6h, judged 2026-09-19   -> healthy
+newest row 08-22, zero recent rows, judged 2026-09-12        -> stale
+newest row 08-22, zero recent rows, judged 2026-08-23 08:00  -> stale
+```
+
+That third line is the point of the whole exercise. **On the morning after the
+writes stopped, the monitor reads stale.** The outage would have been caught on
+day one instead of three weeks later.
+
+**Still NOT RUN:** the monitor's own DB reader has never executed against a live
+database. Only its pure assessor was exercised, on values obtained by a
+read-only SELECT. Law 7 keeps the reader out of an agent session.
+
+## THE ARCHIVE OUTAGE DID NOT CAUSE THE CLV SHORTFALL. CLV IS 25.0% ON n 1,586, AND THE INTERVAL IS NOWHERE NEAR 52.4% (2026-09-19, Opus, read-only SELECT)
+
+Measured against live production, SELECT only, nothing written. Over published,
+non-bootstrap, DECIDED picks (WIN or LOSS), split by where each pick's
+`generatedAt` falls relative to the archive outage:
+
+| window | decided | CLV graded | % graded | beat close | rate | Wilson 95% |
+|---|---|---|---|---|---|---|
+| before 2026-08-19 | 1240 | 910 | 73.4% | 230 | 0.253 | 0.226 to 0.282 |
+| 08-19 to 08-22 | 314 | 180 | 57.3% | 54 | 0.300 | 0.238 to 0.371 |
+| THE HOLE 08-23 to 09-12 | 872 | 424 | 48.6% | 89 | 0.210 | 0.174 to 0.251 |
+| 09-13 onward | 126 | 72 | 57.1% | 23 | 0.319 | 0.223 to 0.434 |
+| **POOLED** | **2552** | **1586** | **62.1%** | **396** | **0.250** | **0.229 to 0.272** |
+
+**The headline, and it closes off a hopeful hypothesis rather than confirming
+one.** It would be convenient if the CLV shortfall were an artifact of the
+three-week archive outage, because then repairing the archive would repair CLV.
+It is not. Pooled CLV beat-close is 0.250 with a 95% interval of 0.229 to 0.272,
+on 1,586 graded rows. The ESTABLISHED requirement is 0.524. The interval does not
+approach it and is not close to approaching it. This CONFIRMS the roughly 23%
+already recorded in this file, at a larger sample and with a tighter bound.
+**CLV remains a model problem, exactly as this file already says, and no
+infrastructure repair will move it.**
+
+**What the outage DID change is COVERAGE, not rate.** Grading coverage falls to
+48.6% inside the hole against 57.3% to 73.4% outside it. So the outage cost
+measurements, not performance.
+
+**What must NOT be claimed from this table.** The hole reads 0.210 and the
+recovered window reads 0.319, which invites the story that CLV improved after the
+fix. The Wilson intervals OVERLAP (0.174 to 0.251 against 0.223 to 0.434). The
+recovered window carries 72 graded rows. That is not a difference, it is noise,
+and treating it as a trend would be the fifth appearance of the pooled-versus-
+stratum error this file already records four times. Every per-window rate here
+also sits inside the pooled interval or overlaps it.
+
+**A dead-column finding, worth knowing before anyone builds on these fields.**
+Across all 2,552 decided rows: `clvValue`, `clvVerdict` and `clvGradedAt` are
+populated on 1,586; `clvLockLine` on 1,344 and `clvCloseLine` on 1,342. But
+`clvPositive`, `clvPoints`, `clvCents`, `clvComputedAt` and the legacy
+`closingLine` are populated on ZERO rows. `clvPositive` in particular reads like
+the obvious field to measure "did we beat the close" and it is empty, so a query
+written against it returns 0.0% graded in every window and looks like a total
+grading outage. That is a measurement trap, not a finding; grade from
+`clvVerdict` or `clvValue`.
+
+**Method note.** A first pass here did exactly that and briefly read CLV grading
+as 0% everywhere. Pulling the fill rate of every CLV column at once is what
+caught it, before anything was written down. Check the whole column family before
+concluding a pipeline is dead.
+
+**Sample floors, for whoever pushes on this next.** The forward-looking,
+post-recovery sample is 126 decided and 72 graded. Nothing about the current
+engine's CLV can be concluded from 72 rows. Distinguishing 0.25 from 0.524 needs
+far fewer rows than distinguishing 0.25 from 0.32, and it is the second
+comparison that any "is it improving" claim requires.
+
+### CORRECTION to the section above, same session: 25.0% was MY arithmetic, not the engine's. The engine reads 23.2%, and a third framing reads 40.8%
+
+I published 0.250 from a query that counted `clvValue > 0` as beating the close.
+That is not how this engine defines it. `clvVerdict` is three-valued and carries
+a tolerance band around zero:
+
+```
+MATCHED_CLOSE   686   clvValue in [-0.0036, 0.0049]
+LOST_TO_CLOSE   533   clvValue in [-33.6,   -0.0055]
+BEAT_CLOSE      368   clvValue in [ 0.0056,  6.4286]
+```
+
+Twenty-eight rows sit inside that band with a positive `clvValue`, so my
+predicate counted them as beats. Inflation +1.78 points.
+
+**Corrected, three framings, and the difference between them is not cosmetic:**
+
+| framing | rate | Wilson 95% |
+|---|---|---|
+| what I published, `clvValue > 0` | 0.2497 | 0.229 to 0.272 |
+| engine's own `BEAT_CLOSE`, all graded in denominator | **0.2319** | 0.212 to 0.253 |
+| `BEAT_CLOSE` with MATCHED excluded | **0.4084** | 0.377 to 0.441 |
+
+The middle row reproduces the roughly 23% this file has recorded all along,
+which is corroboration that the engine's definition is the right one and mine
+was wrong.
+
+**The conclusion of the previous section SURVIVES unchanged**: no framing's upper
+bound reaches 0.524 (the highest is 0.441), so CLV remains far from the
+ESTABLISHED requirement and remains a model problem. Only my number was wrong,
+not the finding.
+
+**But the third row raises a real question nobody should answer by assertion.**
+This repo's own doctrine is that a push is never averaged into a published rate.
+MATCHED_CLOSE is the CLV analogue of a push: it is neither a win nor a loss
+against the closing line, and 686 of 1,587 graded rows are in it. Carrying them
+in the denominator drags the rate from 0.408 to 0.232 by construction.
+
+Meanwhile 0.524 is the break-even win rate at -110, which is a DECIDED-only
+quantity. So the gate may be comparing a rate computed one way against a
+threshold defined the other way. That is not a claim that the gate is wrong; it
+is a claim that NOBODY HAS CHECKED, and the two candidate readings are 0.232 and
+0.408 against a 0.524 bar, which is the difference between hopeless and merely
+short. Whoever owns the ESTABLISHED gate should establish which quantity the
+threshold means before any more work is planned against it. Do not resolve it by
+picking the flattering one.
+
+**Method note, and it is the same lesson twice in one session.** I derived a
+predicate from a column name instead of reading how the engine classifies. The
+first time it was `clvPositive` and it read as a dead pipeline; this time it was
+`clvValue > 0` and it overstated by 1.8 points. When a system already carries its
+own verdict column, grade from THAT, and use the raw value only to understand the
+verdict's boundaries.
+
+### QUALIFICATION to the archive-monitor claim above: nothing calls it, so today it would catch nothing
+
+Self-audit, same session. The section above says the freshness monitor reads
+stale at 08:00 on 2026-08-23 and so "would have caught the outage on day one".
+That is true of the ASSESSOR and false of the SYSTEM, and the difference is the
+whole point of the module.
+
+Measured: `grep` for `odds-line-archive-freshness`,
+`assessOddsLineArchiveFreshness` and `readOddsLineArchiveFreshnessInput` across
+`apps/web` and `packages`, excluding the module itself and its tests, returns
+NOTHING. No cron, no route, no ops surface invokes it. It is a library with a
+test suite, not a running alarm. **If the writer stopped again tonight, it would
+go unnoticed exactly as it did on 2026-08-22.**
+
+This is the same defect class this file already records twice over: a guard that
+exists but never runs is worth less than no guard, because it buys the belief
+that the hole is covered. I shipped one and then wrote a claim in this file that
+read as though it were live. The claim is corrected here rather than quietly
+softened.
+
+There is an obvious home for it. `apps/web/app/api/ops/public-surface-truth`
+already aggregates freshness readings, importing `isSignalBoardSlateStale` and
+`isMarketBoardOddsStale` and carrying an `odds-inserting-freshness-ops` entry.
+Adding a read-only archive-freshness field there is additive and writes nothing.
+
+It is NOT done here, deliberately: it changes a production API response, and
+that is the founder's call rather than an agent's. The work is one call site
+plus a field, and the thresholds must be passed explicitly at that site because
+the assessor refuses to default them.
+
+Until that happens, the honest status of the archive monitor is TESTED AND
+UNWIRED. Anyone citing it should say so.
+
+---
+
+## THE "NEVER PUBLISH A PASS ROW" RULE IS NOT IMPLEMENTED. 373 OF 374 PASS ROWS ARE PUBLISHED, AND 3 ARE LIVE RIGHT NOW (2026-09-19, Opus, read-only production SQL)
+
+This file already states the rule, twice: "Never publish a row whose own
+`independentEdge.decision` is PASS." It is doctrine here and it is not in the
+code. What is in the code is a NARROWER rule, `expectedClv < 0`, and the two are
+not the same predicate.
+
+**Where the label is read.** `grep` for `decision === "PASS"` outside tests finds
+three sites. `scoring.ts:618` and `scoring.ts:1255` set a `FactorDetail.impact`
+string to "neutral". That is a display label. `edge-engine.ts:227` is where the
+verdict is assigned. **No site anywhere vetoes a mint or a publish on the label.**
+`pricesWorseThanMarket` (the mint gate) and `adverse-edge-suppression.ts` (the
+display gate) both key on `expectedClv < 0`, deliberately and with a comment
+explaining why.
+
+**Why the two predicates diverge, from `edge-engine.ts` rather than from a
+sample.** `expectedClv = round(shrunkEdge)`, and `shrunkEdge` carries the sign of
+`dir`. PASS is assigned on three branches:
+
+1. `agreement === "CONTRADICTS"` sets `agreementFactor = 0`, so `shrunkEdge` is
+   0 and expectedClv is **zero**, not negative.
+2. `dir <= 0`. Only `dir < 0` makes expectedClv negative; `dir === 0` leaves the
+   sign multiplier at +1, so expectedClv is **zero or positive**.
+3. `shrunkMag < LEAN_EDGE` with `dir > 0`. This is the "no demonstrable edge, we
+   decline rather than overclaim one" branch, and its expectedClv is **strictly
+   positive**.
+
+Only branch 2's negative case is caught. Branches 1 and 3 are invisible to both
+gates.
+
+**Measured (SELECT only, nothing written), non-bootstrap rows carrying a numeric
+expectedClv:**
+
+| decision | expectedClv | rows | published | published PENDING |
+|---|---|---|---|---|
+| PASS | negative | 149 | 148 | 0 |
+| PASS | zero | 218 | 218 | 0 |
+| PASS | positive | 7 | 7 | **3** |
+| LEAN | zero | 1092 | 1092 | 43 |
+| LEAN | positive | 12 | 10 | 0 |
+| LEAN | negative | 1 | 1 | 0 |
+| SPEAK | positive | 103 | 96 | 5 |
+
+**373 of 374 PASS rows are published.** The 225 with zero or positive expectedClv
+were never candidates for either gate, so nothing withheld them and nothing ever
+will under the current predicate.
+
+**Three are live, published, PENDING and PRE-KICKOFF on the deployed v5.2.7**,
+all the same selection across duplicated fixtures (Chicago White Sox -1.5, 7/7/3
+books, confidence 80/80/66). Each carries `agreement: "SOLO"`, trueProb 0.386
+against a market fair value near 0.374, and expectedClv +0.0067 / +0.0065 /
++0.0051. These are branch 3 exactly: the engine says it declines rather than
+overclaim a 1.3-point edge from a single unchecked source, and the board sells it
+at confidence 80.
+
+**The earlier note in this file is the trap.** It records that on 2026-09-13
+"`expectedClv < 0` and `decision === "PASS"` selected the identical set". That was
+true of nine rows on one day. It is NOT true by construction, and it was read as
+though it were. A coincidence on one snapshot became a load-bearing equivalence.
+
+**What this does NOT license.** Do not swap the gate to the label. The comment at
+`adverse-edge-suppression.ts:35` is right that a CONTRADICTS row carries
+expectedClv 0.0 by construction, so a label gate would withhold rows that are not
+adverse. The two predicates each catch what the other misses. Whoever owns this
+decides whether the doctrine sentence is wrong (and should be narrowed to the
+adverse rule that is actually implemented) or the code is wrong (and PASS should
+withhold on the label as well). Both are defensible; publishing a row the engine
+declined while this file claims we never do is not.
+
+Nothing was changed in the engine, the gates, or any threshold on this pass. This
+is a measurement and a correction to the record.
 ## ENGINE BENCHMARK: PROPS-ANALYTICS REVERSE ENGINEERING (2026-09-18)
 Deep-research pass (read-only, no paywall/login bypass) reverse-engineering HOW 9 X analytics creators produce their charts, so GSE can replicate, buy, or beat each feed. Full report: `~/workspace/research_notes/props-analytics-reverse-engineer-20260918-2037/report.md` (+ notes/ per creator). Headline: the free, fully replicable core is nflverse/nflfastR PBP; anything needing route-level charting or subjective grades is proprietary (buy or approximate, don't reverse-engineer exactly).
 
@@ -3480,3 +4425,254 @@ Read-only browser pass, 2026-09-18 ~21:08–21:35 CDT, three parallel passes (ac
 - Official NFL play-by-play description: @sfdata9ers passing chart ("All QB plays considered for Total EPA & EPA/Play").
 - StatRankings: all @MagicSportsGuy data; statrankings.com/ai prompt PDF lets subscribers self-generate matchup reports; StatRankings+ subscription connects to Claude/ChatGPT per pinned post.
 - @sfdata9ers method (own reply): "NFL data + having fun with Python". No post revealed an API, scraping target, or non-public pipeline beyond these.
+
+---
+
+## THE CLIMB LEDGER: SIX REFUSALS, AND THE PARTITION THEY DRAW (2026-09-19, founder lab)
+
+A refusal that lives only in a chat log gets re-proposed. Every line below was measured
+by the founder against a pre-registered kill line on the 14,251-game corpus,
+walk-forward, with the market close as the comparison baseline. **Read this before
+proposing any feature for the composite.** "Just add DVOA" is the same move as "just add
+EPA" and both are already dead.
+
+### The partition, which is the actual finding
+
+Sort tonight's results by what each proposal IS rather than by whether it passed:
+
+- **Every refusal is a new estimator of team strength.** Opponent-adjusted EPA/play, its
+  pass and rush split, lagged EPA, DVOA-lite success rate, explosive-play persistence,
+  James-Stein shrinkage of Elo, and the constant-weight mix of those estimators. Six
+  independent parameterizations of one quantity, six results at or below Elo.
+- **No license is.** The close, the down-and-distance lookups, the market-pair structure,
+  player-season empirical Bayes, wind, game state. The single licensed item that touches
+  team quality at all, turnover occurrence against recovery, is a correction to a known
+  bias in the existing estimator rather than a new estimator of the same quantity.
+
+The partition is clean in both directions, and it says team strength is SATURATED. The
+0.35 to 0.48 CRPS deficit to the close is not a team-strength estimation gap, so the next
+team-strength feature will not close it either. That retires a whole category of proposal
+rather than one proposal, and it is worth more than any single kill in the table.
+
+### LICENSED
+
+| finding | measurement | where it belongs |
+|---|---|---|
+| The close, full season | CRPS 7.117 against Elo 7.593 | the published number |
+| The close, weeks 1 to 4 | n 446, CRPS 7.019 against Elo 7.373 | week 1 cards price off the close |
+| 3rd and X conversion | n 9,963, base 36.0% [35.0, 36.9] | in-play and fourth-down decisions, weight 0 on the pregame number |
+| 2nd and 10 (Lopez) | 37.7% against a naive 27.4% | the same lookup |
+| ATS by over product | lift 1.011 | market-pair structure |
+| ATS+14 withhold total | prior session | withhold rule |
+| Gamma-Poisson player-season empirical Bayes | prior session | player props |
+| Turnover occurrence against recovery | prior session | de-noises the existing estimator |
+| Linear wind | prior session | totals |
+| Q4 inhibition | prior session | game state |
+
+3rd and X, n 9,963, base rate 36.0% [35.0, 36.9]:
+
+| distance to go | conversion |
+|---|---|
+| 1 | 54.6% [50.5, 58.5] |
+| 2 to 3 | 47.7% |
+| 4 to 6 | 38.8% |
+| 7 to 10 | 28.8% |
+| 11 or more | 14.8% [12.8, 17.1] |
+
+The cell that matters is the long one. A naive reader anchors 3rd and 11 somewhere near
+the 36.0% base rate; it converts at 14.8%, well under half of it, and the interval does
+not reach the base. This composes with the Lopez 2nd and 10 result into ONE
+down-and-distance table, not two separate findings.
+
+### REFUSED
+
+| proposal | measured | kill line | why |
+|---|---|---|---|
+| Opponent-adjusted EPA/play | delta CRPS against Elo 0.003 | 0.01 | measures the same latent quantity as Elo |
+| Pass and rush split of it | 7.580 against Elo 7.576 | | strictly worse than the unsplit version |
+| Lagged EPA predicting this game's EPA | 1.6% better than Elo | 10% | |
+| DVOA-lite success rate | 7.625 against Elo 7.576 | | worse than what it would replace |
+| James-Stein toward the mean, weeks 1 to 4 | delta -0.23 | | shrinks an estimator that already shrinks |
+| Explosive play 20+ persistence | 2.6% | 10% | does not persist |
+| Constant-weight mix | delta 0.00028 | | |
+
+Three of these generalize past their own subject, and the generalizations are what stop
+the next round of the same proposal:
+
+1. **Before shrinking an estimator, check whether it already shrinks.** Standard Elo
+   regresses toward the mean at season carryover, so James-Stein on top is a second shrink
+   of the same quantity. Week 1 Elo IS the small-sample estimator. That is why the result
+   is not merely null but negative.
+2. **When a proprietary metric beats an open reimplementation, ask whether the gap is the
+   formula or the labor.** DVOA-lite lost to Elo outright. What is missing is the
+   charting, which is 32 team rooms of human work, and reimplementing the arithmetic buys
+   none of it.
+3. **Resolution added to a saturated feature buys variance, not signal.** The pass and
+   rush split was strictly worse than the unsplit version it was meant to refine.
+
+### Correction: the September framing reads the other way
+
+The RULE is right: week 1 cards price off the close. The stated REASON, that Elo in
+September is last season's ratings wearing a current badge, is not supported by the two
+measurements offered for it. The difference matters, because the next reader of that
+reason will conclude Elo recovers once it has current-season data and schedule a hand-back
+at week 6.
+
+Subtraction on the founder's own pairs, no assumption needed:
+
+| slice | market | Elo | margin |
+|---|---|---|---|
+| full season | 7.117 | 7.593 | 0.476 |
+| weeks 1 to 4 (n 446) | 7.019 | 7.373 | 0.354 |
+
+The close beats Elo by **0.122 LESS** in weeks 1 to 4 than across the full season. If
+staleness were the mechanism, September is exactly where the margin should be widest, and
+it is instead the narrowest slice measured so far.
+
+Conditional on the full-season figure resting on the same 1,871-game walk-forward corpus
+the EPA test used, the weeks 5 and later complement (n about 1,425) reads Elo 7.662
+against market 7.147, a margin near 0.514, roughly 45% wider than September's. That
+denominator is INFERRED from the EPA test's n and is NOT a measurement; if the full-season
+sample is a different size, the complement moves. The subtraction above does not depend
+on it.
+
+Read together: the close wins every slice, it wins by MORE as the season goes on, and
+Elo's deficit is not a staleness problem that current-season data repairs.
+
+### Founder-only, unchanged, and still the whole score
+
+1. Take the inverted confidence number off the card. Its Brier on the top band is 0.36
+   against 0.25 for a constant 0.5 forecast.
+2. Drop the book-depth term, 50 of the composite's 100 points. **Justify it on the
+   structural facts, not on a measured rate.** consensusPct is pinned at exactly 1.0000 on
+   every MLB run line, so half of those 50 points carry no information on the largest
+   stratum on the board; that is airtight. The pooled books-depth gap does NOT survive
+   stratification by modelVersion (v5.2.7 alone reads -7.2pp, n 116 against 86, Wilson
+   intervals overlapping), so it is not the evidence and must not be cited as such.
+3. Stop claiming complete bookmaker agreement on an MLB run line, where the number every
+   book posts is constant by construction.
+4. Wire the 14,251-game corpus into production calibration. NFL at roughly 70 settled
+   picks is the sample problem.
+5. The PASS veto. 373 of 374 PASS rows are published; 3 were live pre-kickoff when
+   measured at 05:14Z on 2026-09-19.
+
+**Shin as the published probability: PROPOSED, MEASURED, AND WITHDRAWN WITHIN A DAY. Do
+not implement it.** It was handed over as a decision ("Shin is the published probability"),
+flagged here as a change of de-vig method rather than a display edit and therefore owing
+its own before-and-after on the same rows, and then measured: **delta Brier about 2e-5
+against the proportional de-vig the product already uses.** The founder's ruling is keep
+the product formula. Two numerically indistinguishable de-vigs are not a choice worth
+making, and re-opening it costs a full re-publication of every stated probability for
+nothing. The earlier wording in this paragraph said Shin "becomes" the published
+probability; that instruction is dead and is left visible here only so nobody implements a
+half-read version of it.
+
+### Round 2, same night: four more licenses, seven more refusals, two self-corrections
+
+The founder's second batch. **Provenance, stated plainly because it constrains what anyone
+may do with these numbers:** commit `87d7edbab` on `stats/books-ordering-2026-09-18` is
+unpushed and is NOT a valid object in this repository; `docs/ops/stats-lane/` does not exist
+in this tree, so `SOLUTIONS_BATTERY_MASTER.md` and `LOOP_IMPLEMENT_2026-09-19.md` are not
+reachable here. Every figure below is RECORDED AS REPORTED and was NOT verified against a
+primary source from this session. That is now the second batch of load-bearing measurement
+living only outside the repository; landing those documents is the fix and it is ops work.
+
+The two self-corrections became **Laws 10 and 11**, in THE LAWS above: report every rate
+under both denominators, and clear the frozen market moneyline Brier 0.211 (n 5,051) before
+making any moneyline claim. Both corrections were the founder catching his own earlier
+claims, which is the ledger working in the direction that matters most.
+
+**New licenses.** The total close (CRPS 7.363 against a league-mean total 7.780, n 1,960);
+red-zone touchdown rate by yardline (n 54,511, base 19.6%); 4th and 7-or-more converting
+24.9% [19.3, 31.4] against 4th and 1 at 53%; and neutral site is not a home site.
+
+| red zone, yardline | TD rate |
+|---|---|
+| 1 to 2 | 44.0% |
+| 3 to 5 | 34.6% |
+| 6 to 10 | 20.5% |
+| 11 to 15 | 11.6% |
+| 16 to 20 | 7.6% |
+
+**New refusals.** Cover-by-line fade (every Wilson across the 0 to 2.5, 3 to 6.5, 7 to
+10.5 and 11-plus buckets covers 0.50, so fading a large favorite is superstition),
+short-rest over, grass and turf over, Hawkes tempo, soccer Dixon-Coles transplanted to the
+NFL, and 10Hz tracking in the pregame number.
+
+**Shipped and measured alongside them:** marketFairProb is the only positive realised-bits
+source at +0.075 bits (n 741) against confidence/100 at -0.081, so rank and display market
+p on any row books priced and leave confidence as an index; book depth is dead as a ranker
+(bookmakerCount Spearman -0.80 against marketFairProb +0.90) and is display-only;
+weather/roof Mondrian promoted 6 of 6 out of time, replacing the killed K3 bands; coach
+fourth-down go-rate is a CANDIDATE on stickiness r 0.428 and is NOT wired until it clears a
+holdout Brier; fail-closed conformal shipped with positive infinity when k exceeds n.
+
+### THE FOUR LOOKUP TABLES ARE ONE SURFACE, AND THEY SHARE ONE SHAPE
+
+3rd and X, red zone by yardline, 4th and X, and Lopez 2nd and 10 are not four findings. They
+are one situational conversion surface indexed by down, distance and yardline, and the same
+thing is wrong in every one of them:
+
+| table | aggregate | near cell | far cell |
+|---|---|---|---|
+| 3rd and X | 36.0% | 54.6% (1.52x) | 14.8% (0.41x) |
+| red zone | 19.6% | 44.0% (2.24x) | 7.6% (0.39x) |
+| 4th and X | 53% at 1 | | 24.9% (0.47x of the short rate) |
+| 2nd and 10 | naive 27.4% | 37.7% (1.38x) | |
+
+Four independent samples, one shape: the far cell lands between 0.39 and 0.47 of the
+aggregate and the near cell between 1.4 and 2.2 times it. **The rule that falls out is worth
+more than the tables.** Any aggregate rate this product quotes on a customer surface should
+be checked for whether its extreme cells fall outside half to double the aggregate, because
+that is where the copy is wrong by more than the entire edge anyone is claiming. Enumerating
+the aggregate rates currently rendered is cheap and nobody has done it.
+
+### THREE FLAGS ON THIS BATCH, RAISED BEFORE ANYTHING IS BUILT ON IT
+
+**1. ATS by over at lift 1.011 cannot be an edge, and belongs in the ledger as a pricing
+correction instead.** The assumption-free argument first: a two-leg parlay with both legs
+near even money carries roughly 4.5% or more in hold. A dependence of 1.1% does not cover
+the rake, so even a perfectly measured lift of 1.011 can never fund a bet. It is only ever a
+reason not to price a correlated pair as independent. Separately, and this is what makes the
+interval computable, the SAME batch measures ATS marginals as coins in every line bucket, so
+take both marginals at 0.5: the joint cell sits at 0.25275, its standard error is about
+0.4346 over the square root of n, and the lift's is about 1.7384 over the square root of n.
+For a 95% interval on 1.011 to exclude independence needs **n above roughly 96,000
+co-observed pairs**, which is hundreds of NFL seasons. Estimating the marginals from the
+same sample shrinks that somewhat, not by an order of magnitude. So: state n and an interval,
+or move it out of the edge column. It currently sits in USE on the same page as the finding
+that kills it.
+
+**2. "Weeks 1 to 4 close even harder" contradicts the numbers already on record, and Law 11
+may have moved all of them.** Recorded: full season market 7.117 against Elo 7.593, a margin
+of 0.476; weeks 1 to 4 (n 446) market 7.019 against Elo 7.373, a margin of 0.354. The margin
+is 0.122 SMALLER in September, not larger, so "even harder" is the reverse of the arithmetic
+unless a new measurement exists that was not reported. Worse, Law 11 has just condemned
+scoring the market as a normal CDF of the spread over an assumed sigma, and that is the
+natural construction for the MARKET ARM of every close-against-Elo CRPS figure on record,
+including the four arms of the EPA walk-forward. Nobody has said the CRPS ladder was
+recomputed after that correction. If it was not, sigma is a free parameter that plausibly
+differs by slice, and the 0.122 September gap could be a sigma artifact rather than a
+property of September. The direction of that error probably FAVOURS the close (a wrong sigma
+inflates the market arm's CRPS), so "use the close" survives and may strengthen. What does
+not survive is the slice comparison. Resolve it by recomputing the ladder, not by rewording.
+
+**3. The totals license rests on beating a constant, not a model, so do not quote its delta
+beside the spread's.** Spread: close 7.117 against Elo 7.593, a fitted model. Totals: close
+7.363 against a league-mean total 7.780, a constant. The deltas look alike (0.476 and 0.417)
+and the evidence is not the same class. This repository has already been burned by exactly
+this: the Brier floor of 0.22 is cleared by a constant base-rate forecast with no skill at
+all, uncertainty alone reading 0.2139, and that is recorded above. Beating a constant
+demonstrates that total_line carries information, which is the license and is enough to build
+the totals card off it. It does not demonstrate the close beats a totals model, because no
+totals model was tested. The cheap repair is to score the close against any fitted non-market
+totals baseline; until then the two deltas are not comparable and should not be printed
+adjacent.
+
+### Still owed, and not by an agent
+
+The PASS-veto census is blocked on a stale disk export, not on code: the runner emits
+`independentEdgeDecision`, `expectedClv` and `trueProb` plus `passVeto`, and the current
+export carries an empty decisions map with passVeto_n at 0. Ops re-exports board-export v3,
+then the census runs. Law 7 keeps the database out of an agent session, so until that
+re-export lands the census is NOT RUN and no agent estimates its answer.

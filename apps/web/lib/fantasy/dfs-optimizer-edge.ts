@@ -22,7 +22,7 @@
  */
 
 import {
-  optimizeOne,
+  solveExact,
   metrics,
   objOf,
   type Lineup,
@@ -112,7 +112,14 @@ export type Benchmark = {
     readonly exactOptimal: boolean;
     readonly exactNodes: number;
     readonly incumbentObjective: number; // dfs-optimizer's own exact solver, cross-checked
-    readonly objectiveGapVsIncumbent: number; // should be ~0 — both solvers are exact
+    /**
+     * Whether the incumbent's search COMPLETED. Read this before reading the
+     * gap: with both sides optimal, a non-zero gap is two exact solvers
+     * disagreeing, which is a real defect. With this false, the incumbent hit
+     * a budget and the gap says nothing about either solver's correctness.
+     */
+    readonly incumbentOptimal: boolean;
+    readonly objectiveGapVsIncumbent: number; // meaningful only when BOTH sides are optimal
   };
   readonly gpp: {
     readonly naiveCeilingSum: number; // Σceiling of the point-sum-optimal lineup
@@ -135,7 +142,10 @@ export function benchmark(slate: readonly DfsPlayer[] = activeDfsSlate(), seed =
   // Arg order is (opts, pen, restarts, slate): passing `slate` third fed the
   // player array in as the restart COUNT and left the solver on the default
   // slate, so the "incumbent" was never run against the caller's pool.
-  const incumbentLu = optimizeOne({ mode: "cash", stack: false, locks: new Set(), excludes: new Set() }, undefined, 60, slate);
+  // solveExact, not optimizeOne: the flag is the point. A gap between two exact
+  // solvers is only evidence of a disagreement when neither one was cut short.
+  const incumbent = solveExact({ mode: "cash", stack: false, locks: new Set(), excludes: new Set() }, undefined, 60, slate);
+  const incumbentLu = incumbent.lineup;
   const incumbentObjective = incumbentLu ? objOf(incumbentLu, "cash") : 0;
 
   // ── GPP: point-sum-optimal lineup vs correlation-aware SELECTION ──
@@ -160,6 +170,7 @@ export function benchmark(slate: readonly DfsPlayer[] = activeDfsSlate(), seed =
       exactOptimal: exactCash.optimal,
       exactNodes: exactCash.nodes,
       incumbentObjective: round1(incumbentObjective),
+      incumbentOptimal: incumbent.optimal,
       objectiveGapVsIncumbent: round1(exactCash.objective - incumbentObjective),
     },
     gpp: {
