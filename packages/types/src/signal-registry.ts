@@ -16,7 +16,25 @@ export type SignalFamily =
   | "TRENCHES"
   | "LUCK"
   | "SITUATIONAL"
-  | "NARRATIVE";
+  | "NARRATIVE"
+  // MICROCLIMATE and MARKET_MICROSTRUCTURE were in use across three packages
+  // before they existed here, which is what produced 106 TS2322 errors on the
+  // merged tree. They are added from the authoritative source rather than
+  // guessed: hierarchical-pool.ts declares DEFAULT_FAMILY_PRIOR_WEIGHTS as
+  // Record<SignalFamily, number> and supplies exactly eight keys whose weights
+  // sum to 1.00 (MARKET .28, EFFICIENCY .22, TRENCHES .14, SITUATIONAL .12,
+  // MICROCLIMATE .08, MARKET_MICROSTRUCTURE .06, LUCK .05, NARRATIVE .05). A
+  // Record over this union is exhaustive by construction, so the pooling code
+  // could not compile until the union matched its own prior.
+  //
+  // This is not cosmetic. Family is what the agreement computation clusters on,
+  // so two signals in DIFFERENT families count as independent corroboration
+  // while two in the same family do not. Collapsing MICROCLIMATE into
+  // SITUATIONAL, or MARKET_MICROSTRUCTURE into MARKET, would have manufactured
+  // phantom consensus: one source counted twice. Widening the union is the
+  // conservative direction; merging families is the dangerous one.
+  | "MICROCLIMATE"
+  | "MARKET_MICROSTRUCTURE";
 
 export type SignalOutputKind =
   | "2WAY_PROBABILITY"
