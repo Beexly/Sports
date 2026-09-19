@@ -1975,7 +1975,7 @@ export { evaluateCoachingTendencies } from "./signals/situational/coaching-tende
 export type { PlayCallingContext, CoachingTendencyEdge, PlayType } from "./signals/situational/coaching-tendencies.js";
 
 export { analyzeInjuryTrajectory } from "./signals/bio/injury-trajectory.js";
-export type { InjuryPracticeReport, InjuryTrajectoryAnalysis, PracticeStatus, OfficialGameStatus, PlayerPositionTier } from "./signals/bio/injury-trajectory.js";
+export type { InjuryPracticeReport, InjuryTrajectoryAnalysis, OfficialGameStatus, PlayerPositionTier } from "./signals/bio/injury-trajectory.js";
 
 export { evaluateRedZoneTeLeverage } from "./signals/efficiency/redzone-te-leverage.js";
 export type { RedZoneEfficiencyContext, RedZoneTeLeverageResult } from "./signals/efficiency/redzone-te-leverage.js";
