@@ -66,9 +66,15 @@ describe("adaptiveConformalIntervals — per-position independence", () => {
     }
 
     const qb = adaptiveConformalIntervals(mixed).filter((row) => row.position === "QB");
-    expect(qb.some((row) => row.residualQuantile !== wrFromMixed[wrFromMixed.length - 1]?.residualQuantile)).toBe(
-      true,
-    );
+    const wrLast = wrFromMixed[wrFromMixed.length - 1];
+    expect(
+      qb.some(
+        (row) =>
+          row.residualQuantile !== wrLast?.residualQuantile ||
+          row.status !== wrLast?.status ||
+          row.alpha !== wrLast?.alpha,
+      ),
+    ).toBe(true);
   });
 });
 
@@ -92,8 +98,28 @@ describe("adaptiveConformalIntervals — finite-sample quantile", () => {
     const naive = naiveNpQuantile(residuals, p);
     expect(corrected).not.toBe(naive);
     expect(corrected).toBeGreaterThan(naive);
+    expect(probe?.status).toBe("ok");
+    expect(probe?.qhatInfinite).toBe(false);
     expect(probe?.residualQuantile).toBeCloseTo(round4(corrected), 4);
     expect(probe?.residualQuantile).not.toBeCloseTo(round4(naive), 4);
+  });
+
+  it("FAIL CLOSED when ceil((n+1)p) > n — never clamp rank to n", () => {
+    // n=4 residuals after seeds; force p high via targetCoverage=0.95 → alpha=0.05, p=0.95
+    // After 4 seeds: k=ceil(5*0.95)=5 > 4 → +Infinity, status fail_closed_insufficient_n
+    const residuals = [1, 2, 3, 4];
+    const seeded: AciObservation[] = residuals.map((residual, index) =>
+      obs(`seed-${index}`, "RB", 10, 10 + residual),
+    );
+    seeded.push(obs("probe", "RB", 10, 10));
+    const intervals = adaptiveConformalIntervals(seeded, 0.95, 0);
+    const probe = intervals[intervals.length - 1];
+    expect(probe?.qhatInfinite).toBe(true);
+    expect(probe?.status).toBe("fail_closed_insufficient_n");
+    expect(probe?.residualQuantile).toBe(Number.POSITIVE_INFINITY);
+    expect(probe?.upper).toBe(Number.POSITIVE_INFINITY);
+    // Fail-closed is not a certified cover — ACI must still see a miss.
+    expect(probe?.covered).toBe(false);
   });
 });
 
@@ -125,17 +151,27 @@ describe("adaptiveConformalIntervals — alpha adaptation", () => {
     expect(miss[1]?.alpha).toBeLessThan(miss[0]?.alpha ?? 0);
   });
 
-  it("raises alpha on repeated hits and clamps at 0.5", () => {
-    const hits = Array.from({ length: 40 }, (_, i) => obs(`h-${i}`, "WR", 15, 15));
+  it("raises alpha on hits once qhat is finite; fail-closed warmup may lower alpha (honest)", () => {
+    // 80 exact hits: after alpha floors at 0.02, p=0.98 needs n≥49 before k≤n.
+    const hits = Array.from({ length: 80 }, (_, i) => obs(`h-${i}`, "WR", 15, 15));
     const intervals = adaptiveConformalIntervals(hits, 0.8, 0.05);
 
     expect(intervals[0]?.alpha).toBeCloseTo(0.2, 4);
-    for (let i = 1; i < intervals.length; i++) {
-      expect(intervals[i]?.alpha).toBeGreaterThanOrEqual(intervals[i - 1]?.alpha ?? 0);
-      expect(intervals[i]?.alpha).toBeGreaterThanOrEqual(0.02);
-      expect(intervals[i]?.alpha).toBeLessThanOrEqual(0.5);
+    expect(intervals[0]?.status).toBe("warmup_point_band");
+    let firstFiniteIdx = -1;
+    for (let i = 0; i < intervals.length; i++) {
+      const row = intervals[i]!;
+      expect(row.alpha).toBeGreaterThanOrEqual(0.02);
+      expect(row.alpha).toBeLessThanOrEqual(0.5);
+      if (firstFiniteIdx < 0 && row.status === "ok" && !row.qhatInfinite) firstFiniteIdx = i;
     }
-    expect(intervals[intervals.length - 1]?.alpha).toBeCloseTo(0.5, 4);
+    expect(firstFiniteIdx).toBeGreaterThan(0);
+    const last = intervals[intervals.length - 1]!;
+    expect(last.status).toBe("ok");
+    expect(last.qhatInfinite).toBe(false);
+    expect(last.residualQuantile).toBeCloseTo(0, 4);
+    // Once certified, exact hits are covered and alpha rises from the floor.
+    expect(last.alpha).toBeGreaterThan(0.02);
   });
 
   it("lowers alpha on repeated misses and clamps at 0.02", () => {

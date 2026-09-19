@@ -24,6 +24,10 @@ export interface CalibrationPickInput {
   readonly riskLevel?: string | null;
   readonly dataQualityScore?: number | null;
   readonly factorKeys?: readonly string[];
+  /** Publish-time market fair p when books priced the row. Additive dual score only. */
+  readonly marketFairProb?: number | null;
+  /** Independent trueProb when present. Additive dual score only. */
+  readonly independentTrueProb?: number | null;
 }
 
 export interface CalibrationProposal {
@@ -122,6 +126,8 @@ export interface CalibrationReport {
    * future founder-approved gate) can see whether the model beats no-skill.
    */
   readonly skill: SkillMetrics | null;
+  /** Additive: market-anchored dual Brier/bits when market p present. Never a gate flip. */
+  readonly marketAnchoredDual: MarketAnchoredDualScore | null;
   readonly note: string;
   readonly disclaimer: string;
 }
@@ -259,6 +265,102 @@ function finiteNumber(value: number | null | undefined): value is number {
 
 function expectedFromConfidence(confidence: number): number {
   return Math.max(0.01, Math.min(0.99, confidence / 100));
+}
+
+function clamp01(p: number): number {
+  return Math.max(0.01, Math.min(0.99, p));
+}
+
+/**
+ * Forecast for the ADDITIVE market-anchored dual score (never the confidence
+ * ordinal path). Order: marketFairProb when finite in (0,1), else
+ * independentTrueProb when finite, else null (row excluded and counted).
+ * confidence/100 is NEVER a fallback here — H3 realised-bits on export
+ * 2026-09-19: marketFairProb +0.075 bits; confidence/100 −0.081.
+ */
+function expectedFromMarketAnchored(pick: CalibrationPickInput): number | null {
+  const mfp = pick.marketFairProb;
+  if (finiteNumber(mfp) && mfp > 0 && mfp < 1) return clamp01(mfp);
+  const ind = pick.independentTrueProb;
+  if (finiteNumber(ind) && ind > 0 && ind < 1) return clamp01(ind);
+  return null;
+}
+
+export interface MarketAnchoredDualScore {
+  /** Population with a finite market/independent p. */
+  readonly n: number;
+  readonly nExcludedNoMarketP: number;
+  readonly brierMarketAnchored: number | null;
+  readonly brierConfidenceOrdinal: number | null;
+  /** Positive ⇒ market-anchored p beats confidence/100 on the same settled rows. */
+  readonly deltaBrierConfidenceMinusMarket: number | null;
+  readonly realisedBitsMarket: number | null;
+  readonly realisedBitsConfidence: number | null;
+  readonly note: string;
+}
+
+function entropyBits(p: number): number {
+  const q = Math.min(1 - 1e-6, Math.max(1e-6, p));
+  return -(q * Math.log2(q) + (1 - q) * Math.log2(1 - q));
+}
+
+function realisedBits(pairs: readonly { p: number; y: number }[]): number | null {
+  if (pairs.length < 30) return null;
+  const base = pairs.reduce((s, r) => s + r.y, 0) / pairs.length;
+  const ce = pairs.reduce((s, r) => {
+    const q = Math.min(1 - 1e-6, Math.max(1e-6, r.p));
+    return s + -(r.y * Math.log2(q) + (1 - r.y) * Math.log2(1 - q));
+  }, 0) / pairs.length;
+  return entropyBits(base) - ce;
+}
+
+export function computeMarketAnchoredDualScore(
+  input: readonly CalibrationPickInput[] = [],
+): MarketAnchoredDualScore {
+  const settled = input.filter((p) => p.result === "WIN" || p.result === "LOSS");
+  const paired: { pMkt: number; pConf: number; y: number }[] = [];
+  let excluded = 0;
+  for (const pick of settled) {
+    const pMkt = expectedFromMarketAnchored(pick);
+    if (pMkt === null) {
+      excluded += 1;
+      continue;
+    }
+    paired.push({
+      pMkt,
+      pConf: expectedFromConfidence(pick.confidence),
+      y: pick.result === "WIN" ? 1 : 0,
+    });
+  }
+  const n = paired.length;
+  if (n === 0) {
+    return {
+      n: 0,
+      nExcludedNoMarketP: excluded,
+      brierMarketAnchored: null,
+      brierConfidenceOrdinal: null,
+      deltaBrierConfidenceMinusMarket: null,
+      realisedBitsMarket: null,
+      realisedBitsConfidence: null,
+      note:
+        "No settled rows carried marketFairProb/independentTrueProb. Dual score NOT RUN. " +
+        "Export v3 + odds-table join required. confidence/100 is never substituted.",
+    };
+  }
+  const bM = paired.reduce((s, r) => s + (r.pMkt - r.y) ** 2, 0) / n;
+  const bC = paired.reduce((s, r) => s + (r.pConf - r.y) ** 2, 0) / n;
+  return {
+    n,
+    nExcludedNoMarketP: excluded,
+    brierMarketAnchored: round(bM, 4),
+    brierConfidenceOrdinal: round(bC, 4),
+    deltaBrierConfidenceMinusMarket: round(bC - bM, 4),
+    realisedBitsMarket: round(realisedBits(paired.map((r) => ({ p: r.pMkt, y: r.y }))) ?? NaN, 4),
+    realisedBitsConfidence: round(realisedBits(paired.map((r) => ({ p: r.pConf, y: r.y }))) ?? NaN, 4),
+    note:
+      "Additive dual score on the SAME settled rows. Public eligibility floors stay market-anchored " +
+      "(compute-live-calibration-metrics). Confidence remains Edge Index ordinal — never a win probability.",
+  };
 }
 
 /**
@@ -473,6 +575,7 @@ export function computeCalibration(input: readonly CalibrationPickInput[] = []):
     brierScore,
     discrimination,
     skill,
+    marketAnchoredDual: computeMarketAnchoredDualScore(input),
     note:
       settled.length === 0
         ? "No settled canonical picks were provided. Calibration remains collecting."
