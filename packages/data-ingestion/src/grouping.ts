@@ -4,7 +4,11 @@
  * (season, week, team, etc.) for downstream processing.
  */
 
-import { Game } from '../models/Game';
+export interface Game {
+  readonly season: number;
+  readonly week: number;
+  readonly teamAbbreviation: string;
+}
 
 /**
  * Groups games by season and week.
