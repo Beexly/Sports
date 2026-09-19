@@ -62,16 +62,14 @@ function weekKey(sample: Pick<ConformalProjectionSample, "season" | "week">): st
 }
 
 function quantile(values: readonly number[], probability: number): number {
-  if (values.length === 0) return 0;
+  if (values.length === 0) return Number.POSITIVE_INFINITY;
   const sorted = [...values].sort((a, b) => a - b);
-  // Split-conformal finite-sample quantile: use the ceil((n+1) * p)-th order statistic
-  // (the (n+1) correction). Without it the residual quantile is systematically too small
-  // on small per-position samples, so "calibrated" intervals run narrower than the target
-  // coverage. ACI adapts alpha online and partly compensates, but the correction makes the
-  // small-sample behavior honest. ceil((n+1)*p) >= ceil(n*p), so intervals only widen.
-  const rank = Math.ceil((sorted.length + 1) * probability);
-  const index = Math.min(sorted.length - 1, Math.max(0, rank - 1));
-  return sorted[index]!;
+  const n = sorted.length;
+  // Split-conformal (n+1) correction — FAIL CLOSED when rank exceeds n.
+  // Clamping delivers n/(n+1) coverage while labeling (1-α) — fake tightness.
+  const k = Math.ceil((n + 1) * probability);
+  if (k > n || k < 1) return Number.POSITIVE_INFINITY;
+  return sorted[k - 1]!;
 }
 
 function coverage(samples: readonly { readonly covered: boolean }[]): number {

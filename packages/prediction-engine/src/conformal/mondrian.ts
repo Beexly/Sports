@@ -29,20 +29,19 @@ export interface QuantileLookupResult {
 }
 
 function finiteSampleQuantile(values: readonly number[], probability: number): number {
-  if (values.length === 0) return 0;
-  // A non-finite probability must be rejected BEFORE it reaches the index
-  // arithmetic. NaN propagates through Math.ceil and survives both Math.max
-  // and Math.min (every comparison against NaN is false), so `index` becomes
-  // NaN, `sorted[NaN]` is `undefined`, and this function returns `undefined`
-  // through a signature that promises `number` — the non-obvious failure the
-  // rest of this module's guards exist to prevent. Finite-but-out-of-range
-  // probabilities are fine: the clamp below already handles them.
-  if (!Number.isFinite(probability)) return 0;
+  if (values.length === 0) return Number.POSITIVE_INFINITY;
+  if (!Number.isFinite(probability) || probability <= 0 || probability >= 1) {
+    return Number.POSITIVE_INFINITY;
+  }
   const sorted = [...values].sort((a, b) => a - b);
-  // Split-conformal (n+1) correction for honesty on small samples
-  const rank = Math.ceil((sorted.length + 1) * probability);
-  const index = Math.min(sorted.length - 1, Math.max(0, rank - 1));
-  return sorted[index]!;
+  const n = sorted.length;
+  // k is the 1-indexed split-conformal order statistic ceil((n+1)*p).
+  // If k > n the empirical quantile cannot certify nominal coverage — FAIL CLOSED
+  // to +Infinity (fake tightness if we clamp to max residual, which delivers
+  // n/(n+1) while labeling p). See conformal audit + cqr.ts.
+  const k = Math.ceil((n + 1) * probability);
+  if (k > n || k < 1) return Number.POSITIVE_INFINITY;
+  return sorted[k - 1]!;
 }
 
 /**
