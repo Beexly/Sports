@@ -280,6 +280,44 @@ AGENTS.md block of the same date):**
    implausible n) before anything was reported. Anchor every evaluation output against
    a known quantity before trusting it.
 
+## Split asymmetry + repo-constant calibration (2026-09-19 late run)
+
+Scripts `scripts/splits_and_constants.py`; both checks hold regardless of the
+adjustment verdicts above.
+
+**1. Passing-vs-rushing asymmetry reproduces in our pipeline.** Same-game EPA
+differential vs actual margin, full-season team-games (n=544/season):
+
+| season | pass SP/PE | rush SP/PE |
+|---|---|---|
+| 2023 | 0.858 / 0.865 | 0.356 / 0.408 |
+| 2024 | 0.826 / 0.850 | 0.406 / 0.434 |
+| 2025 | 0.845 / 0.850 | 0.353 / 0.389 |
+
+Same-game construction inflates absolute magnitudes versus the literature's team-level
+numbers; the stable ~2:1 ratio across all three seasons is the signal, and it is the
+quantified basis for weighting dropback EPA far above rush EPA in any v5.3.0 factor
+design.
+
+**2. The repo's EPA-to-probability constants are badly overconfident on held-out data.**
+2025 W1-8-adjusted ratings, W9-18 win probabilities (n=151):
+
+| conversion | Brier | log-loss |
+|---|---|---|
+| repo constants: sigmoid((net + 0.025 EPA)/0.12) | 0.3035 | 0.957 |
+| fitted scale 0.204 (same HFA, 1-param fit on train) | 0.2694 | 0.764 |
+
+Scale 0.12 scores WORSE THAN A COIN FLIP on Brier (0.25). It treats a 0.12 EPA/play net
+differential as ~73% win probability where the data says ~57%. **W5 activation hazard:**
+`nfl_epa_adj` will fire with these constants and inject overconfident probabilities into
+`independentEdge.trueProb`, degrading the very decision tiers this repo already measured
+as miscalibrated. Recommended founder-gated change before Week 5: `NFL_EPA_MARGIN_SCALE`
+0.12 to ~0.20 and `NFL_EPA_HFA` 0.025 to ~0.046 EPA (the fitted ~2.1 points at ~45.4
+points per EPA/play), landed with this table as the evidence and a test pinning the
+held-out Brier improvement. Alternative: leave constants, measure the live source's
+calibration at W5, fix with live evidence. Do not let W5 arrive with the overconfident
+constants AND treat the resulting tiers as meaningful.
+
 
 ## Reproduction
 
