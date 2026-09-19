@@ -23,6 +23,7 @@ from statistics import mean
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from stats_json import dumps_report, write_report  # noqa: E402
+from sport_resolve import resolve_sport  # noqa: E402
 
 VERSIONS_P = {f"v5.2.{i}" for i in range(2, 8)}
 
@@ -98,7 +99,7 @@ def coerce(raw):
         "rankingP": rank,
         "marketFairProb": mfp,
         "pickType": str(raw.get("pickType") or "UNK").upper(),
-        "sport": str(raw.get("sport") or "UNK").upper(),
+        "sport": resolve_sport(raw.get("sport"), raw.get("espnEventId"), raw.get("selection")),
         "gen_ts": gen.timestamp() if gen else 0.0,
         "bookmakerCount": fnum(raw.get("bookmakerCount")),
         "rankingSource": raw.get("rankingSource"),

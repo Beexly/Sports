@@ -18,6 +18,7 @@ from datetime import datetime
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from stats_json import dumps_report, write_report  # noqa: E402
+from sport_resolve import resolve_sport  # noqa: E402
 
 
 def wilson(p: float, n: int, z: float = 1.96):
@@ -57,7 +58,8 @@ def coerce(raw):
         return None
     if str(raw.get("isFounder", "false")).lower() in {"true", "1"}:
         return None
-    if str(raw.get("sport") or "").upper() not in {"NCAAF", "CFB"}:
+    sport = resolve_sport(raw.get("sport"), raw.get("espnEventId"), raw.get("selection"))
+    if sport not in {"NCAAF", "CFB"}:
         return None
     if str(raw.get("pickType") or "").upper() != "MONEYLINE":
         return None
@@ -81,13 +83,13 @@ def coerce(raw):
     if res not in {"WIN", "LOSS"}:
         return None
     y = 1 if res == "WIN" else 0
+    conf = fnum(raw.get("confidence"))
     return {
         "y": y,
         "mfp": fnum(raw.get("marketFairProb")),
-        "p_conf": (fnum(raw.get("confidence")) or 0) / 100.0 if fnum(raw.get("confidence")) else None,
-        "publicImplied": fnum(raw.get("publicMlImpliedProb"))
-        or fnum(raw.get("publicMlAmerican") and None),
-        "confidence": fnum(raw.get("confidence")),
+        "p_conf": (conf / 100.0) if conf is not None else None,
+        "publicImplied": fnum(raw.get("publicMlImpliedProb")),
+        "confidence": conf,
         "pickId": raw.get("pickId") or raw.get("id"),
         "espnEventId": raw.get("espnEventId"),
         "selection": raw.get("selection"),
@@ -113,7 +115,8 @@ def main():
     hit = wins / n if n else None
     lo, hi = wilson(hit, n) if n else (None, None)
     null_mfp = sum(1 for r in rows if r["mfp"] is None) / n if n else None
-    mean_conf = mean([r["confidence"] for r in rows if r["confidence"] is not None]) or None
+    confs = [r["confidence"] for r in rows if r["confidence"] is not None]
+    mean_conf = mean(confs) if confs else None
     implied = [r["publicImplied"] for r in rows if r["publicImplied"] is not None]
     mean_imp = mean(implied) if implied else None
     slate_share = sum(1 for r in rows if r["signalSlate"]) / n if n else None

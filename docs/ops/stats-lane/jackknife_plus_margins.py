@@ -44,6 +44,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from stats_json import dumps_report, write_report  # noqa: E402
+from sport_resolve import resolve_sport  # noqa: E402
 
 ALPHA = 0.10
 MIN_N = 64  # matches packages/prediction-engine/src/conformal-margin-set.ts
@@ -111,10 +112,10 @@ def coerce(raw: dict[str, Any]) -> dict[str, Any] | None:
                 pred = None
     if actual is None:
         return None
-    sport = raw.get("sport") or "UNK"
+    sport = resolve_sport(raw.get("sport"), raw.get("espnEventId"), raw.get("selection"))
     return {
         "pickId": raw.get("pickId") or raw.get("id"),
-        "sport": str(sport).upper(),
+        "sport": sport,
         "pickType": str(raw.get("pickType") or "").upper(),
         "actual": actual,
         "pred": pred,

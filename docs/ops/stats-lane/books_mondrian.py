@@ -27,6 +27,7 @@ from typing import Any
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from stats_json import dumps_report, write_report  # noqa: E402
+from sport_resolve import resolve_sport  # noqa: E402
 
 ALPHA = 0.10
 MIN_N = math.ceil(1.0 / ALPHA) - 1  # 9
@@ -125,6 +126,7 @@ def coerce_row(raw: dict[str, Any]) -> dict[str, Any] | None:
     sport = (raw.get("sport") or (raw.get("game") or {}).get("sport") if isinstance(raw.get("game"), dict) else raw.get("sport") or "UNK")
     if isinstance(raw.get("game"), dict) and not raw.get("sport"):
         sport = raw["game"].get("sport") or "UNK"
+    sport = resolve_sport(sport, raw.get("espnEventId"), raw.get("selection"))
     pt = raw.get("pickType") or "UNK"
     return {
         "pickId": raw.get("pickId") or raw.get("id"),
@@ -133,7 +135,7 @@ def coerce_row(raw: dict[str, Any]) -> dict[str, Any] | None:
         "p_conf": p_conf,
         "bookmakerCount": bc_i,
         "books": books_bucket(bc_i),
-        "sport": str(sport).upper(),
+        "sport": sport,
         "pickType": str(pt).upper(),
         "modelVersion": raw.get("modelVersion"),
         "timing": timing,
