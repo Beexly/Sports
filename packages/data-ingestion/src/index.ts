@@ -671,3 +671,15 @@ export {
   isFtnChartingSpecIngestEnabled,
   FtnChartingSpecClient,
 } from "./ftn-charting-spec-client.js";
+
+// Source Atlas Harvester — Access 1,500+ sources by league, team, and signal family
+export {
+  loadSourceAtlas,
+  getSourcesByLeague,
+  getSourcesByTeam,
+  getSourcesByFamily,
+  mapSourceToSignalFamily,
+  type SourceAtlasEntry,
+  type SourceAtlasRegistryData,
+} from "./source-atlas-harvester.js";
+

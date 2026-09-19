@@ -186,3 +186,17 @@ export type {
 export { backfillIndependentTrueProb } from "./backfill-independent-trueprob.js";
 export type { BackfillIndependentResult } from "./backfill-independent-trueprob.js";
 
+export {
+  SIGNAL_REGISTRY,
+  buildMissingContextEvidenceFromRegistry,
+} from "./signal-registry-definitions.js";
+export { runSignalRegistry } from "./signal-registry-runner.js";
+export {
+  checkArchiveStaleness,
+  DEFAULT_STALENESS_WINDOW_HOURS,
+} from "./archive-staleness-monitor.js";
+export type {
+  ArchiveStalenessCheckArgs,
+  ArchiveStalenessReport,
+} from "./archive-staleness-monitor.js";
+
