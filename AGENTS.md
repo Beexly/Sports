@@ -1136,10 +1136,10 @@ repo by design.
 | W2 (Wasserstein play-mix) | KILLED (own kill line) | Test r = 0.0112 vs required 0.15 |
 | W3 (Fisher-Rao tempo) | KILLED WITHOUT COMPUTE | Accepted without compute |
 | W4 (adaptive coaching) | KILLED (own kill line) | Test −0.031, 2.6 sd, sign reversed |
-| W5 (Wasserstein barycenter) | NEW — proposed, awaiting lab review | Duel vs rolling-EPA(4), kill < 0.02 R² |
-| W6 (DFA of EPA sequences) | NEW — proposed, awaiting lab review | Duel vs mean-EPA, kill < 0.01 R² |
-| W7 (intrinsic dim of play-call manifold) | NEW — proposed, awaiting lab review | Duel vs distinct play-type count, kill < 0.02 R² |
-| W8 (permutation entropy of drive sequences) | NEW — proposed, theorist's weak bet | Duel vs pass_oe, kill < 0.02 R² |
+| W5 (Wasserstein play-mix distance) | KILLED (lab 2026-09-19) | family R² −0.0088 vs rolling-EPA(4) 0.0740, n_test 839 |
+| W6 (DFA of EPA sequences) | KILLED (lab 2026-09-19) | family R² −0.0035 vs mean-EPA 0.0979, n_test 912 |
+| W7 (intrinsic dim of play-call manifold) | KILLED (lab 2026-09-19, beat its baseline but under the kill line) | family R² 0.0034 vs distinct-play-type −0.0076, n_test 912 |
+| W8 (permutation entropy of EPA sequence) | KILLED (lab 2026-09-19) | family R² −0.0037 vs dropback rate −0.0035, n_test 912 |
 
 **All earlier lab-verified falsifications (measured, not argued):** GLI-0.1 claimed
 R² 0.112/0.079 → lab measured 0.0037, REJECTED; Koopman momentum prior 0.35 →
