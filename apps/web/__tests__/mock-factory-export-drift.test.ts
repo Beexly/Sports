@@ -5,17 +5,19 @@
  * THE DEFECT THIS PREVENTS (measured on this branch, 2026-09-19):
  *
  *   `vi.mock(path, factory)` REPLACES the real module wholesale. Anything the
- *   factory's returned object omits is `undefined` at the call site, and
- *   calling it throws `No "<name>" export is defined on the "<path>" mock`.
- *   `apps/web/__tests__/helpers/auth-mock.ts` already documents one instance
- *   of this (`isAdminEmail` added to `@/lib/auth`, 35 mocks did not carry it,
- *   3 of them broke). AGENTS.md documents a second instance on
+ *   factory's returned object omits is `undefined` at the call site — and
+ *   reading that property, not merely importing it, is what throws
+ *   `[vitest] No "<name>" export is defined on the "<path>" mock` (verified
+ *   empirically below; see "WHY CALL-GRAPH TRACING, NOT IMPORT-GRAPH
+ *   TRACING"). `apps/web/__tests__/helpers/auth-mock.ts` already documents
+ *   one instance of this (`isAdminEmail` added to `@/lib/auth`, 35 mocks did
+ *   not carry it, 3 of them broke). AGENTS.md documents a second instance on
  *   `@sports/prediction-engine` (the board's published lane collapsed to
  *   zero rows because a cross-package import resolved to `undefined` under a
  *   partial factory). Both are the SAME failure class on two different
  *   modules: a mock factory silently drifts from the real module's export
  *   surface as the real module grows, and nothing catches it until the code
- *   path that reaches the missing export actually runs.
+ *   path that reads the missing export actually runs.
  *
  * SURVEY (this file computes and reports the live count every run; measured
  * 2026-09-19 on this branch by direct grep, cross-checked against this
@@ -26,15 +28,50 @@
  * is the corrected one, and the survey test below prints the live number so
  * this comment cannot itself go stale silently.
  *
- * DESIGN — why AST, not a brittle string match on `vi.mock("...")`. Repo
- * precedent (`scripts/guardrails/ai-transport-import-boundary.mjs`) already
- * states the reason: a regex over source text misses re-exports, aliased
- * named imports, multi-line import lists, and `import type`. The same is
- * true here, in both directions this guard needs: (1) reading what a mock
- * factory actually returns, and (2) reading what a piece of real code
- * actually imports from the mocked module. Both are done by parsing the real
- * TypeScript AST (`typescript`, already a devDependency of this workspace)
- * rather than by scanning text.
+ * WHY AST, NOT A STRING/REGEX SCAN OF `vi.mock("...")`. Repo precedent
+ * (`scripts/guardrails/ai-transport-import-boundary.mjs`) already states the
+ * reason for this codebase: a regex over source text misses re-exports,
+ * aliased named imports, multi-line import lists, and `import type`. The
+ * same applies here in both directions this guard needs — reading what a
+ * mock factory returns, and reading what real code actually reads from the
+ * mocked module — so both are done by parsing the real TypeScript AST
+ * (`typescript`, already a devDependency of this workspace), not by
+ * pattern-matching source text.
+ *
+ * WHY CALL-GRAPH TRACING, NOT IMPORT-GRAPH TRACING. The first version of
+ * this guard treated "reachable" as "any name any file imports from the
+ * target, anywhere in the transitive IMPORT graph starting from the test
+ * file's own imports." That over-fired: verified empirically (see the probe
+ * below) that reading a missing property on a mocked module throws — even
+ * without calling it — but MERELY IMPORTING a file that itself statically
+ * imports a name from the target does NOT throw if that name is never
+ * actually referenced by code that runs. A transitive import graph does not
+ * know which of a file's own exported functions the test's code path
+ * actually calls, so it flagged real files (e.g. `board-gate-decisions.
+ * test.ts`) for exports (`scoreGames`, `buildPickProofReceipt`, ...) that
+ * live two hops away in sibling helper files the exercised functions never
+ * call — a false positive that would have broken passing test files this
+ * guard has no license to edit. Measured directly, disabling the mock and
+ * running that scenario for real:
+ *
+ *     vi.mock("@sports/prediction-engine", () => ({ getReadinessGates: ... }));
+ *     const mod = await import("@sports/prediction-engine");
+ *     mod.scoreGames;
+ *     // -> throws: [vitest] No "scoreGames" export is defined on the
+ *     //    "@sports/prediction-engine" mock.
+ *     const stateMod = await import("@/lib/board/state"); // imports scoreGames-less names only
+ *     // -> resolves fine; nothing in state.ts's own executed top level reads it
+ *
+ * So this guard instead walks a CALL graph, seeded from the test file's own
+ * top-level code (its `describe`/`it`/`beforeEach` bodies included, since
+ * those genuinely run): any IDENTIFIER REFERENCE to a name bound to the
+ * target module — call or not, since a bare property read already throws —
+ * is recorded as reached; any CALL to a name bound to a different internal
+ * (non-target, non-external) file propagates the trace into THAT function's
+ * own body, so the analysis only descends into a sibling file's code when
+ * something in the currently-traced code path genuinely calls into it. This
+ * is a closer static approximation of "reaches for," in the sense the task
+ * asked for, than "imports the file that happens to also import it."
  *
  * WHAT THE GUARD ACTUALLY PROVES, PER FILE:
  *
@@ -47,17 +84,13 @@
  *      importOriginal()/importActual()`) or the shared `authModuleMock()`
  *      complete-defaults helper — the WHOLE real export surface at once.
  *      `authModuleMock`'s own completeness against the live `@/lib/auth`
- *      module is verified by this guard too (see the third `describe`
- *      below), so trusting it is not begging the question: if the real
- *      module ever outgrows the helper's `DEFAULTS`, THAT assertion is what
- *      goes red, naming the helper file.
- *   3. It statically determines what the SAME test file's own code path
- *      REACHES FOR: starting from that test file's own `import` statements,
- *      it walks the real (non-test, non-node_modules) import graph of this
- *      workspace and collects every name any reachable file imports from the
- *      target module. This is the literal question "does the code under
- *      test reach for an export the factory omitted" — answered by tracing
- *      what is actually imported, not by guessing.
+ *      module is verified separately (see the second `describe` below), so
+ *      trusting it is not begging the question: if the real module ever
+ *      outgrows the helper's `DEFAULTS`, THAT assertion is what goes red,
+ *      naming the helper file.
+ *   3. It statically traces, starting from the SAME test file, what its own
+ *      code path calls into and, transitively, what THOSE functions read
+ *      from the target module (see "WHY CALL-GRAPH TRACING" above).
  *   4. If REACHED is not a subset of PROVIDED, and the factory is not marked
  *      complete, this guard fails LOUDLY, naming the exact file and the
  *      exact missing export name(s) — the fix is spelled out in the failure
@@ -66,37 +99,36 @@
  *
  * WHY THIS CANNOT BE SATISFIED BY WEAKENING A MOCK. The guard never asks a
  * factory to supply less; it can only ever demand MORE keys, and only the
- * ones a real, resolvable import statement in this workspace actually reads.
- * There is no threshold, allowlist entry, or count this guard reads that a
- * developer could relax to make a real omission pass — the only way to
- * satisfy a genuine finding is to add the missing key (or make the factory
- * provably complete by spreading the real module).
+ * ones a real, traced call path in this workspace actually reads. There is
+ * no threshold, allowlist entry, or count this guard reads that a developer
+ * could relax to make a real omission pass — the only way to satisfy a
+ * genuine finding is to add the missing key (or make the factory provably
+ * complete by spreading the real module).
  *
- * WHERE IT IS DELIBERATELY CONSERVATIVE (documented, not hidden): if a
- * factory spreads an identifier this guard cannot resolve to either the real
- * module, the complete-defaults helper, or a same-file object literal, it
- * cannot prove the factory is missing anything, so it does NOT fail that
- * factory — it only records it under `unresolvedSpreadWarnings`, surfaced by
- * the survey test. The same applies to a factory whose returned shape this
- * guard cannot parse at all (`unresolvableFactories`), and to a bare
- * `export * from "<target>"` re-export encountered while walking the graph
- * (`wildcardWarnings` — the guard cannot enumerate names re-exported through
- * a wildcard). This bias is deliberate: a false PASS on an unprovable case is
- * a gap to close by hand; a false FAIL on a file outside this guard's own
- * scope would be exactly the "guard theatre" this task warns against, and
- * would train people to stop trusting — or to weaken — the guard. Measured
- * on this branch today: zero files hit any of these three escape hatches for
- * either target module (see the survey test's assertions), so today the
- * guard is exhaustive in practice, not just in the safe cases.
+ * WHERE IT IS DELIBERATELY CONSERVATIVE (documented, not hidden):
+ *   - If a factory spreads an identifier this guard cannot resolve to either
+ *     the real module, the complete-defaults helper, or a same-file object
+ *     literal, it cannot prove the factory is missing anything, so it does
+ *     NOT fail that factory — it only records it under
+ *     `unresolvedSpreadWarnings`, surfaced by the survey test.
+ *   - A factory whose returned shape this guard cannot parse at all is
+ *     recorded under `unresolvableFactories`, never failed.
+ *   - The call-graph trace only propagates into another file on a direct
+ *     `name(...)` or `ns.name(...)` call site it can resolve; it does not
+ *     follow a function passed by reference as a callback (`arr.map(fn)`)
+ *     without a direct call, and it does not resolve re-exports made by
+ *     `export * from "..."` (a repo-wide check below confirms zero such
+ *     wildcard re-exports of either target module exist today).
+ *   This bias is deliberate: a false PASS on an unprovable case is a gap to
+ *   close by hand; a false FAIL on a file outside this guard's own scope
+ *   would be exactly the "guard theatre" this task warns against, training
+ *   people to stop trusting — or to weaken — the guard.
  *
  * PROOF THE DETECTOR WORKS: the last `describe` block below feeds two
  * hand-written FIXTURE source snippets (never a real `vi.mock` call in this
  * file — see its own comment) through the exact same parsing/analysis
  * functions the real scan uses, and asserts the incomplete one is caught and
- * the complete one is not. That is the "demonstrate it catches a
- * deliberately incomplete factory" requirement, without this file mocking a
- * real module itself (which would fight the tests around it in the same
- * suite).
+ * the complete one is not.
  */
 import { beforeAll, describe, expect, it } from "vitest";
 import * as fs from "node:fs";
@@ -131,8 +163,7 @@ const PREDICTION_ENGINE_TARGET: TargetModule = {
 const TARGETS: readonly TargetModule[] = [AUTH_TARGET, PREDICTION_ENGINE_TARGET];
 
 // ---------------------------------------------------------------------------
-// Filesystem helpers (cached — this guard parses a bounded subgraph per test
-// file, not the whole repo, but many test files share the same subgraph)
+// Filesystem + module-specifier resolution (cached)
 // ---------------------------------------------------------------------------
 
 const fileExistsCache = new Map<string, boolean>();
@@ -209,7 +240,7 @@ function resolveWorkspacePackage(pkgName: string, subpath: string): string | nul
 
 /** Resolves an import/export specifier as written in `fromAbsFile` to an
  * absolute workspace source file, or `null` for anything external (bare
- * package specifiers, Node builtins) — external specifiers are graph leaves;
+ * package specifiers, Node builtins) — external specifiers are trace leaves;
  * this guard never reads into `node_modules`. */
 function resolveSpecifier(fromAbsFile: string, spec: string): string | null {
   if (spec.startsWith(".")) {
@@ -226,6 +257,10 @@ function resolveSpecifier(fromAbsFile: string, spec: string): string | null {
     return resolveWorkspacePackage(pkgName, subpath);
   }
   return null;
+}
+
+function isNodeModulesPath(absPath: string): boolean {
+  return absPath.includes(`${path.sep}node_modules${path.sep}`);
 }
 
 function walkTestFiles(dir: string, acc: string[] = []): string[] {
@@ -248,66 +283,12 @@ function walkTestFiles(dir: string, acc: string[] = []): string[] {
 }
 
 // ---------------------------------------------------------------------------
-// AST: parsing + import-edge extraction
+// AST parsing (cached)
 // ---------------------------------------------------------------------------
-
-interface ImportEdge {
-  /** Module specifier exactly as written. */
-  spec: string;
-  /** Runtime (non-`type`) named imports/re-exports pulled FROM `spec`. */
-  names: string[];
-  /** Local binding for `import * as X from spec`, if any. */
-  nsLocal: string | null;
-  /** `export * from spec` — names cannot be statically enumerated. */
-  wildcard: boolean;
-}
 
 interface ParsedFile {
   text: string;
   sf: ts.SourceFile;
-  edges: ImportEdge[];
-}
-
-function extractEdges(sf: ts.SourceFile): ImportEdge[] {
-  const edges: ImportEdge[] = [];
-  for (const stmt of sf.statements) {
-    if (ts.isImportDeclaration(stmt)) {
-      if (stmt.importClause?.isTypeOnly) continue;
-      const moduleSpecifier = stmt.moduleSpecifier;
-      if (!ts.isStringLiteralLike(moduleSpecifier)) continue;
-      const names: string[] = [];
-      let nsLocal: string | null = null;
-      const bindings = stmt.importClause?.namedBindings;
-      if (bindings && ts.isNamedImports(bindings)) {
-        for (const el of bindings.elements) {
-          if (el.isTypeOnly) continue;
-          names.push((el.propertyName ?? el.name).text);
-        }
-      } else if (bindings && ts.isNamespaceImport(bindings)) {
-        nsLocal = bindings.name.text;
-      }
-      edges.push({ spec: moduleSpecifier.text, names, nsLocal, wildcard: false });
-    } else if (ts.isExportDeclaration(stmt)) {
-      if (stmt.isTypeOnly) continue;
-      const moduleSpecifier = stmt.moduleSpecifier;
-      if (!moduleSpecifier || !ts.isStringLiteralLike(moduleSpecifier)) continue;
-      const names: string[] = [];
-      let wildcard = false;
-      const clause = stmt.exportClause;
-      if (!clause) {
-        wildcard = true; // export * from "spec"
-      } else if (ts.isNamedExports(clause)) {
-        for (const el of clause.elements) {
-          if (el.isTypeOnly) continue;
-          names.push((el.propertyName ?? el.name).text);
-        }
-      } else if (ts.isNamespaceExport(clause)) {
-        wildcard = true; // export * as ns from "spec"
-      }
-      edges.push({ spec: moduleSpecifier.text, names, nsLocal: null, wildcard });
-    }
-  }
-  return edges;
 }
 
 const fileCache = new Map<string, ParsedFile | null>();
@@ -330,74 +311,274 @@ function loadFile(absPath: string): ParsedFile | null {
     true,
     isTsx ? ts.ScriptKind.TSX : ts.ScriptKind.TS,
   );
-  const parsed: ParsedFile = { text, sf, edges: extractEdges(sf) };
+  const parsed: ParsedFile = { text, sf };
   fileCache.set(absPath, parsed);
   return parsed;
 }
 
-function collectNamespaceUsage(sf: ts.SourceFile, nsLocal: string): Set<string> {
-  const used = new Set<string>();
-  const visit = (node: ts.Node): void => {
-    if (
-      ts.isPropertyAccessExpression(node) &&
-      ts.isIdentifier(node.expression) &&
-      node.expression.text === nsLocal
-    ) {
-      used.add(node.name.text);
-    }
-    ts.forEachChild(node, visit);
-  };
-  visit(sf);
-  return used;
-}
-
 // ---------------------------------------------------------------------------
-// Reachability: what does this test file's own code path import FROM target?
+// Per-file bindings: what does a local name resolve to, for call-graph
+// propagation? (imports, local function/const/class decls, re-exports,
+// namespace imports, and local `export { a as b };` aliases)
 // ---------------------------------------------------------------------------
 
-interface ReachResult {
-  reached: Set<string>;
-  wildcardWarnings: string[];
+interface ImportBinding {
+  spec: string;
+  importedName: string;
 }
 
-const REACH_NODE_CAP = 6000;
+interface FileBindings {
+  /** local name -> where it was imported from (named imports only; type-only excluded) */
+  imports: Map<string, ImportBinding>;
+  /** local namespace-import name -> module specifier (`import * as X from "spec"`) */
+  namespaces: Map<string, string>;
+  /** local export name -> where it re-exports from (`export { a as b } from "spec"`) */
+  reexports: Map<string, ImportBinding>;
+  /** local export name -> the local name it aliases (`export { helper as Public };`, no `from`) */
+  localAliases: Map<string, string>;
+  /** every top-level function/const/class declaration by name, exported or not —
+   * needed to follow same-file calls during tracing. */
+  locals: Map<string, ts.Node>;
+}
 
-function computeReachedExports(startAbsFile: string, target: TargetModule): ReachResult {
-  const reached = new Set<string>();
-  const wildcardWarnings: string[] = [];
-  const visited = new Set<string>([startAbsFile]);
-  const queue: string[] = [startAbsFile];
-  let visitedCount = 0;
+const bindingsCache = new Map<string, FileBindings>();
 
-  while (queue.length > 0 && visitedCount < REACH_NODE_CAP) {
-    const current = queue.shift() as string;
-    visitedCount += 1;
-    const file = loadFile(current);
-    if (!file) continue;
-    for (const edge of file.edges) {
-      const resolved = resolveSpecifier(current, edge.spec);
-      if (!resolved) continue; // external package / Node builtin — leaf, no further edges to find
-      if (resolved === target.realFile) {
-        for (const name of edge.names) reached.add(name);
-        if (edge.nsLocal) {
-          for (const name of collectNamespaceUsage(file.sf, edge.nsLocal)) reached.add(name);
+function extractBindings(sf: ts.SourceFile): FileBindings {
+  const imports = new Map<string, ImportBinding>();
+  const namespaces = new Map<string, string>();
+  const reexports = new Map<string, ImportBinding>();
+  const localAliases = new Map<string, string>();
+  const locals = new Map<string, ts.Node>();
+
+  for (const stmt of sf.statements) {
+    if (ts.isImportDeclaration(stmt)) {
+      if (stmt.importClause?.isTypeOnly) continue;
+      if (!ts.isStringLiteralLike(stmt.moduleSpecifier)) continue;
+      const spec = stmt.moduleSpecifier.text;
+      const bindings = stmt.importClause?.namedBindings;
+      if (bindings && ts.isNamedImports(bindings)) {
+        for (const el of bindings.elements) {
+          if (el.isTypeOnly) continue;
+          imports.set(el.name.text, { spec, importedName: (el.propertyName ?? el.name).text });
         }
-        if (edge.wildcard) {
-          wildcardWarnings.push(
-            `${path.relative(REPO_ROOT, current)} does \`export * from "${target.specifier}"\` — ` +
-              `this guard cannot enumerate which names that re-export makes reachable.`,
-          );
-        }
-        continue; // never descend into the target's own implementation
+      } else if (bindings && ts.isNamespaceImport(bindings)) {
+        namespaces.set(bindings.name.text, spec);
       }
-      if (resolved.includes(`${path.sep}node_modules${path.sep}`)) continue;
-      if (!visited.has(resolved)) {
-        visited.add(resolved);
-        queue.push(resolved);
+    } else if (ts.isExportDeclaration(stmt)) {
+      if (stmt.isTypeOnly) continue;
+      const hasSpec = stmt.moduleSpecifier && ts.isStringLiteralLike(stmt.moduleSpecifier);
+      const spec = hasSpec ? (stmt.moduleSpecifier as ts.StringLiteralLike).text : null;
+      if (stmt.exportClause && ts.isNamedExports(stmt.exportClause)) {
+        for (const el of stmt.exportClause.elements) {
+          if (el.isTypeOnly) continue;
+          const originalName = (el.propertyName ?? el.name).text;
+          if (spec) {
+            reexports.set(el.name.text, { spec, importedName: originalName });
+          } else {
+            localAliases.set(el.name.text, originalName);
+          }
+        }
+      }
+    } else if (ts.isFunctionDeclaration(stmt) && stmt.name) {
+      locals.set(stmt.name.text, stmt);
+    } else if (ts.isClassDeclaration(stmt) && stmt.name) {
+      locals.set(stmt.name.text, stmt);
+    } else if (ts.isVariableStatement(stmt)) {
+      for (const decl of stmt.declarationList.declarations) {
+        if (ts.isIdentifier(decl.name) && decl.initializer) {
+          locals.set(decl.name.text, decl.initializer);
+        }
       }
     }
   }
-  return { reached, wildcardWarnings };
+  return { imports, namespaces, reexports, localAliases, locals };
+}
+
+function getFileBindings(absPath: string, parsed: ParsedFile): FileBindings {
+  const cached = bindingsCache.get(absPath);
+  if (cached) return cached;
+  const bindings = extractBindings(parsed.sf);
+  bindingsCache.set(absPath, bindings);
+  return bindings;
+}
+
+// ---------------------------------------------------------------------------
+// Call-graph tracing: what does a piece of real code actually read from /
+// call into? (see the module doc comment, "WHY CALL-GRAPH TRACING")
+// ---------------------------------------------------------------------------
+
+interface TraceWorkItem {
+  file: string;
+  name: string;
+}
+
+interface TraceCtx {
+  filePath: string;
+  bindings: FileBindings;
+  target: TargetModule;
+  reached: Set<string>;
+  push: (file: string, name: string) => void;
+}
+
+function unwrapParens(node: ts.Expression): ts.Expression {
+  let current = node;
+  while (ts.isParenthesizedExpression(current)) current = current.expression;
+  return current;
+}
+
+/** True for an Identifier node that is a VALUE REFERENCE — false for one that
+ * is itself a declaration site or a property-name/label position, so `{ x }`
+ * (object key), `function x()`, and `import { x }` don't get misread as uses
+ * of an outer binding named `x`. Not full scope/shadowing analysis — a
+ * pragmatic, per-file flat approximation (see module doc comment). */
+function isReferencePosition(node: ts.Identifier): boolean {
+  const parent = node.parent;
+  if (!parent) return true;
+  if (ts.isVariableDeclaration(parent) && parent.name === node) return false;
+  if (ts.isParameter(parent) && parent.name === node) return false;
+  if (ts.isFunctionDeclaration(parent) && parent.name === node) return false;
+  if (ts.isFunctionExpression(parent) && parent.name === node) return false;
+  if (ts.isClassDeclaration(parent) && parent.name === node) return false;
+  if (ts.isMethodDeclaration(parent) && parent.name === node) return false;
+  if (ts.isPropertyAssignment(parent) && parent.name === node) return false;
+  if (ts.isPropertyAccessExpression(parent) && parent.name === node) return false;
+  if (ts.isBindingElement(parent) && parent.name === node) return false;
+  if (ts.isImportSpecifier(parent)) return false;
+  if (ts.isExportSpecifier(parent)) return false;
+  if (ts.isLabeledStatement(parent) && parent.label === node) return false;
+  return true;
+}
+
+function resolveCallableLocal(
+  name: string,
+  bindings: FileBindings,
+): { kind: "import"; spec: string; importedName: string } | { kind: "local" } | null {
+  const imp = bindings.imports.get(name);
+  if (imp) return { kind: "import", spec: imp.spec, importedName: imp.importedName };
+  if (bindings.locals.has(name)) return { kind: "local" };
+  return null;
+}
+
+function traceUsage(node: ts.Node, ctx: TraceCtx): void {
+  if (ts.isTypeNode(node)) return; // never chase type-only positions
+
+  if (ts.isIdentifier(node) && isReferencePosition(node)) {
+    const binding = resolveCallableLocal(node.text, ctx.bindings);
+    if (binding?.kind === "import") {
+      const resolved = resolveSpecifier(ctx.filePath, binding.spec);
+      if (resolved === ctx.target.realFile) {
+        // A bare reference already reads the mocked property — this is the
+        // exact operation that throws, called or not (see module doc comment).
+        ctx.reached.add(binding.importedName);
+      }
+    }
+  }
+
+  if (ts.isCallExpression(node)) {
+    const callee = node.expression;
+    if (ts.isIdentifier(callee)) {
+      const binding = resolveCallableLocal(callee.text, ctx.bindings);
+      if (binding?.kind === "import") {
+        const resolved = resolveSpecifier(ctx.filePath, binding.spec);
+        if (resolved && resolved !== ctx.target.realFile && !isNodeModulesPath(resolved)) {
+          ctx.push(resolved, binding.importedName);
+        }
+      } else if (binding?.kind === "local") {
+        ctx.push(ctx.filePath, callee.text);
+      }
+    } else if (ts.isPropertyAccessExpression(callee) && ts.isIdentifier(callee.expression)) {
+      const nsSpec = ctx.bindings.namespaces.get(callee.expression.text);
+      if (nsSpec) {
+        const resolved = resolveSpecifier(ctx.filePath, nsSpec);
+        if (resolved === ctx.target.realFile) {
+          ctx.reached.add(callee.name.text);
+        } else if (resolved && !isNodeModulesPath(resolved)) {
+          ctx.push(resolved, callee.name.text);
+        }
+      }
+    }
+  } else if (ts.isPropertyAccessExpression(node) && ts.isIdentifier(node.expression)) {
+    // Namespace member read without a call (`ns.someExport`, not `ns.someExport()`) —
+    // still a property read on the mocked module if `ns` is a namespace import
+    // of the target.
+    const nsSpec = ctx.bindings.namespaces.get(node.expression.text);
+    if (nsSpec) {
+      const resolved = resolveSpecifier(ctx.filePath, nsSpec);
+      if (resolved === ctx.target.realFile) ctx.reached.add(node.name.text);
+    }
+  }
+
+  ts.forEachChild(node, (child) => traceUsage(child, ctx));
+}
+
+/** Given a local declaration node (function/const-initializer/class), returns
+ * the node whose body should actually be traced. */
+function getTraceBody(node: ts.Node): ts.Node {
+  if (ts.isFunctionDeclaration(node)) return node.body ?? node;
+  if (ts.isClassDeclaration(node)) return node;
+  if (ts.isExpression(node)) {
+    const unwrapped = unwrapParens(node);
+    if (ts.isArrowFunction(unwrapped) || ts.isFunctionExpression(unwrapped)) {
+      return unwrapped.body;
+    }
+    return unwrapped;
+  }
+  return node;
+}
+
+const TRACE_NODE_CAP = 8000;
+
+/** Traces what the given TEST FILE's own executed code (its top-level body,
+ * including every `describe`/`it`/`beforeEach` callback — those run) reads
+ * from `target`, following calls into sibling internal files transitively. */
+function computeReachedExports(testFile: string, target: TargetModule): Set<string> {
+  const reached = new Set<string>();
+  const visited = new Set<string>();
+  const queue: TraceWorkItem[] = [];
+  let processed = 0;
+
+  const push = (file: string, name: string): void => {
+    queue.push({ file, name });
+  };
+
+  const testParsed = loadFile(testFile);
+  if (testParsed) {
+    const testBindings = getFileBindings(testFile, testParsed);
+    traceUsage(testParsed.sf, { filePath: testFile, bindings: testBindings, target, reached, push });
+  }
+
+  while (queue.length > 0 && processed < TRACE_NODE_CAP) {
+    const item = queue.shift() as TraceWorkItem;
+    const key = `${item.file}::${item.name}`;
+    if (visited.has(key)) continue;
+    visited.add(key);
+    processed += 1;
+
+    const parsed = loadFile(item.file);
+    if (!parsed) continue;
+    const bindings = getFileBindings(item.file, parsed);
+
+    const imp = bindings.imports.get(item.name) ?? bindings.reexports.get(item.name);
+    if (imp) {
+      const resolved = resolveSpecifier(item.file, imp.spec);
+      if (resolved === target.realFile) {
+        reached.add(imp.importedName);
+      } else if (resolved && !isNodeModulesPath(resolved)) {
+        push(resolved, imp.importedName);
+      }
+      continue;
+    }
+    const alias = bindings.localAliases.get(item.name);
+    if (alias) {
+      push(item.file, alias);
+      continue;
+    }
+    const localNode = bindings.locals.get(item.name);
+    if (!localNode) continue; // unresolved — see module doc comment on conservatism
+    traceUsage(getTraceBody(localNode), { filePath: item.file, bindings, target, reached, push });
+  }
+
+  return reached;
 }
 
 // ---------------------------------------------------------------------------
@@ -423,12 +604,6 @@ function findMockCalls(sf: ts.SourceFile, targetSpecifier: string): ts.CallExpre
   };
   visit(sf);
   return calls;
-}
-
-function unwrapParens(node: ts.Expression): ts.Expression {
-  let current = node;
-  while (ts.isParenthesizedExpression(current)) current = current.expression;
-  return current;
 }
 
 /** The single expression a `vi.mock(target, factory)` factory evaluates to —
@@ -473,24 +648,19 @@ function resolveObjectLiteral(init: ts.Expression): ts.ObjectLiteralExpression |
     ts.isIdentifier(unwrapped.expression.expression) &&
     unwrapped.expression.expression.text === "vi"
   ) {
-    return getObjectLiteralFromFactory(unwrapped.arguments[0]);
+    const expr = getFactoryReturnedExpression(unwrapped.arguments[0]);
+    return expr && ts.isObjectLiteralExpression(expr) ? expr : null;
   }
   return null;
 }
 
-function getObjectLiteralFromFactory(factory: ts.Expression | undefined): ts.ObjectLiteralExpression | null {
-  const expr = getFactoryReturnedExpression(factory);
-  return expr && ts.isObjectLiteralExpression(expr) ? expr : null;
-}
-
 interface AnalysisCtx {
-  sf: ts.SourceFile;
+  varDecls: Map<string, ts.Expression>;
+  authHelperComplete: boolean;
   /** Source text of the FACTORY CALL ONLY (not the whole file), so a
    * same-named `const actual = await importOriginal(...)` for a DIFFERENT
    * `vi.mock` call elsewhere in the file cannot be mistaken for this one's. */
   factoryText: string;
-  varDecls: Map<string, ts.Expression>;
-  authHelperComplete: boolean;
 }
 
 interface FactoryAnalysis {
@@ -519,11 +689,8 @@ function analyzeObjectLiteral(obj: ts.ObjectLiteralExpression, ctx: AnalysisCtx)
   for (const prop of obj.properties) {
     if (ts.isPropertyAssignment(prop) || ts.isShorthandPropertyAssignment(prop)) {
       const name = prop.name;
-      if (ts.isIdentifier(name) || ts.isStringLiteral(name)) {
-        keys.add(name.text);
-      } else {
-        unresolvedSpreads.push("computed property name");
-      }
+      if (ts.isIdentifier(name) || ts.isStringLiteral(name)) keys.add(name.text);
+      else unresolvedSpreads.push("computed property name");
     } else if (ts.isMethodDeclaration(prop)) {
       const name = prop.name;
       if (ts.isIdentifier(name) || ts.isStringLiteral(name)) keys.add(name.text);
@@ -563,24 +730,71 @@ function analyzeObjectLiteral(obj: ts.ObjectLiteralExpression, ctx: AnalysisCtx)
   return { complete, keys, unresolvedSpreads, unresolvable: false };
 }
 
-function analyzeFactory(factory: ts.Expression | undefined, ctx: Omit<AnalysisCtx, "factoryText">, factoryText: string): FactoryAnalysis {
+function analyzeFactory(factory: ts.Expression | undefined, ctx: AnalysisCtx): FactoryAnalysis {
   const expr = getFactoryReturnedExpression(factory);
   if (!expr) return { complete: false, keys: new Set(), unresolvedSpreads: [], unresolvable: true };
 
-  const fullCtx: AnalysisCtx = { ...ctx, factoryText };
-
-  if (ts.isObjectLiteralExpression(expr)) {
-    return analyzeObjectLiteral(expr, fullCtx);
-  }
+  if (ts.isObjectLiteralExpression(expr)) return analyzeObjectLiteral(expr, ctx);
   if (ts.isCallExpression(expr) && ts.isIdentifier(expr.expression) && expr.expression.text === "authModuleMock") {
     return {
-      complete: fullCtx.authHelperComplete,
+      complete: ctx.authHelperComplete,
       keys: new Set(),
-      unresolvedSpreads: fullCtx.authHelperComplete ? [] : ["authModuleMock(...) — helper completeness unverified"],
+      unresolvedSpreads: ctx.authHelperComplete ? [] : ["authModuleMock(...) — helper completeness unverified"],
       unresolvable: false,
     };
   }
   return { complete: false, keys: new Set(), unresolvedSpreads: [], unresolvable: true };
+}
+
+// ---------------------------------------------------------------------------
+// Repo-wide blind-spot check: a bare `export * from "<target>"` anywhere
+// would make a name reachable through a path this guard's binding table
+// cannot enumerate (see module doc comment). Regex-only and separate from
+// the hard-failing scan on purpose — this is a coarse tripwire, not the
+// guard's core claim.
+// ---------------------------------------------------------------------------
+
+function walkAllSourceFiles(dir: string, acc: string[] = []): string[] {
+  let entries: fs.Dirent[];
+  try {
+    entries = fs.readdirSync(dir, { withFileTypes: true });
+  } catch {
+    return acc;
+  }
+  for (const entry of entries) {
+    if (
+      entry.name === "node_modules" ||
+      entry.name === ".next" ||
+      entry.name === "dist" ||
+      entry.name.startsWith(".")
+    ) {
+      continue;
+    }
+    const full = path.join(dir, entry.name);
+    if (entry.isDirectory()) {
+      walkAllSourceFiles(full, acc);
+    } else if (entry.isFile() && (entry.name.endsWith(".ts") || entry.name.endsWith(".tsx"))) {
+      acc.push(full);
+    }
+  }
+  return acc;
+}
+
+function findWildcardReexportsOfTargets(): string[] {
+  const hits: string[] = [];
+  for (const dir of [APPS_WEB_ROOT, PACKAGES_ROOT]) {
+    for (const file of walkAllSourceFiles(dir)) {
+      const parsed = loadFile(file);
+      if (!parsed) continue;
+      for (const target of TARGETS) {
+        const re = new RegExp(`export\\s+\\*(?:\\s+as\\s+[A-Za-z_$][\\w$]*)?\\s+from\\s*["']${target.specifier.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}["']`);
+        if (re.test(parsed.text)) {
+          hits.push(`${path.relative(REPO_ROOT, file)} wildcard re-exports ${target.specifier}`);
+        }
+      }
+    }
+  }
+  return hits;
 }
 
 // ---------------------------------------------------------------------------
@@ -590,7 +804,6 @@ function analyzeFactory(factory: ts.Expression | undefined, ctx: Omit<AnalysisCt
 interface SurveyRow {
   target: string;
   fileCount: number;
-  files: string[];
 }
 
 interface DriftFailure {
@@ -604,7 +817,7 @@ interface GuardRunResult {
   failures: DriftFailure[];
   unresolvableFactories: Array<{ file: string; target: string }>;
   unresolvedSpreadWarnings: Array<{ file: string; target: string; spreads: string[] }>;
-  wildcardWarnings: string[];
+  wildcardReexports: string[];
   authRealKeys: string[];
   authHelperKeys: string[];
 }
@@ -622,9 +835,9 @@ function discoverMockFiles(allTestFiles: readonly string[], target: TargetModule
 async function runGuard(): Promise<GuardRunResult> {
   const allTestFiles = walkTestFiles(APPS_WEB_ROOT);
 
-  // Meta-check: is the shared complete-defaults helper actually complete
-  // against the live module? Both are REAL imports (this file mocks
-  // neither), so this reads the genuine current export surfaces.
+  // Meta-check inputs: is the shared complete-defaults helper actually
+  // complete against the live module? Both are REAL imports (this file
+  // mocks neither), so this reads the genuine current export surfaces.
   const authRealModule = (await import("@/lib/auth")) as Record<string, unknown>;
   const authRealKeys = Object.keys(authRealModule).sort();
   const authHelperModule = (await import("./helpers/auth-mock")) as {
@@ -637,15 +850,10 @@ async function runGuard(): Promise<GuardRunResult> {
   const failures: DriftFailure[] = [];
   const unresolvableFactories: Array<{ file: string; target: string }> = [];
   const unresolvedSpreadWarnings: Array<{ file: string; target: string; spreads: string[] }> = [];
-  const wildcardWarnings: string[] = [];
 
   for (const target of TARGETS) {
     const mockFiles = discoverMockFiles(allTestFiles, target);
-    survey.push({
-      target: target.specifier,
-      fileCount: mockFiles.length,
-      files: mockFiles.map((f) => path.relative(REPO_ROOT, f)).sort(),
-    });
+    survey.push({ target: target.specifier, fileCount: mockFiles.length });
 
     for (const absFile of mockFiles) {
       const parsed = loadFile(absFile);
@@ -654,14 +862,20 @@ async function runGuard(): Promise<GuardRunResult> {
       const varDecls = collectVarInitializers(parsed.sf);
       const calls = findMockCalls(parsed.sf, target.specifier);
 
+      // A file can call vi.mock(target, ...) more than once (rare); analyze
+      // each call, but only pay for the (more expensive) call-graph trace
+      // once per file, lazily, the first time it's actually needed.
+      let reached: Set<string> | null = null;
+
       for (const call of calls) {
         const factory = call.arguments[1];
+        if (!factory) {
+          // `vi.mock(target)` with no second argument at all — nothing to analyze.
+          unresolvableFactories.push({ file: relFile, target: target.specifier });
+          continue;
+        }
         const factoryText = parsed.text.slice(factory.getStart(parsed.sf), factory.getEnd());
-        const analysis = analyzeFactory(
-          factory,
-          { sf: parsed.sf, varDecls, authHelperComplete },
-          factoryText,
-        );
+        const analysis = analyzeFactory(factory, { varDecls, authHelperComplete, factoryText });
 
         if (analysis.unresolvable) {
           unresolvableFactories.push({ file: relFile, target: target.specifier });
@@ -678,9 +892,7 @@ async function runGuard(): Promise<GuardRunResult> {
           continue; // cannot prove this one is missing anything — see module doc comment
         }
 
-        const { reached, wildcardWarnings: fileWildcards } = computeReachedExports(absFile, target);
-        wildcardWarnings.push(...fileWildcards);
-
+        if (!reached) reached = computeReachedExports(absFile, target);
         const missing = [...reached].filter((name) => !analysis.keys.has(name)).sort();
         if (missing.length > 0) {
           failures.push({ file: relFile, target: target.specifier, missing });
@@ -694,7 +906,7 @@ async function runGuard(): Promise<GuardRunResult> {
     failures,
     unresolvableFactories,
     unresolvedSpreadWarnings,
-    wildcardWarnings,
+    wildcardReexports: findWildcardReexportsOfTargets(),
     authRealKeys,
     authHelperKeys,
   };
@@ -729,19 +941,15 @@ describe("partial vi.mock factory survey (@/lib/auth, @sports/prediction-engine)
   });
 
   it("reports every escape hatch this guard took (today: none, for either target)", () => {
-    // These three lists are the guard's own honesty channel: any case it
-    // could not resolve with certainty is named here, not silently absorbed
-    // into a pass. Today's zero counts are a measured fact about the current
-    // tree, not a hard invariant this guard enforces — if a future file adds
-    // an unresolvable spread, this test documents it as a visible warning
-    // (via the console output above/below) rather than failing the build for
-    // something this guard cannot actually prove is broken.
+    // These lists are the guard's own honesty channel: any case it could not
+    // resolve with certainty is named here, not silently absorbed into a
+    // pass. Today's empty lists are a measured fact about the current tree,
+    // not a hard invariant this guard enforces — a future file that adds an
+    // unresolvable spread shows up here as a visible warning, not a build
+    // failure for something this guard cannot actually prove is broken.
     // eslint-disable-next-line no-console
     if (result.unresolvableFactories.length > 0) {
-      console.log(
-        "[mock-factory-export-drift] unresolvable factory shapes:",
-        result.unresolvableFactories,
-      );
+      console.log("[mock-factory-export-drift] unresolvable factory shapes:", result.unresolvableFactories);
     }
     // eslint-disable-next-line no-console
     if (result.unresolvedSpreadWarnings.length > 0) {
@@ -751,8 +959,8 @@ describe("partial vi.mock factory survey (@/lib/auth, @sports/prediction-engine)
       );
     }
     // eslint-disable-next-line no-console
-    if (result.wildcardWarnings.length > 0) {
-      console.log("[mock-factory-export-drift] wildcard re-exports of a target:", result.wildcardWarnings);
+    if (result.wildcardReexports.length > 0) {
+      console.log("[mock-factory-export-drift] wildcard re-exports of a target module:", result.wildcardReexports);
     }
     expect(Array.isArray(result.unresolvableFactories)).toBe(true);
   });
@@ -781,16 +989,13 @@ describe("no vi.mock factory omits an export its own code under test reaches for
       const lines = result.failures.map(
         (f) =>
           `  - ${f.file}: vi.mock("${f.target}", ...) is missing [${f.missing.join(", ")}] — ` +
-          `some module this test file's code under test imports (traced through this ` +
-          `workspace's real import graph) reaches for ${f.missing.length === 1 ? "that export" : "those exports"} ` +
+          `this test's own traced call path reaches for ${f.missing.length === 1 ? "that export" : "those exports"} ` +
           `from "${f.target}", and the mock factory never defines it. Fix: add the missing ` +
           `key(s) to the factory's returned object (or replace the factory with one that ` +
           `spreads the real module via \`await importOriginal()\`/\`importActual()\`, or — for ` +
           `@/lib/auth — spread \`authModuleMock({...overrides})\` from ./helpers/auth-mock).`,
       );
-      throw new Error(
-        `${result.failures.length} mock factory export-drift violation(s):\n${lines.join("\n")}`,
-      );
+      throw new Error(`${result.failures.length} mock factory export-drift violation(s):\n${lines.join("\n")}`);
     }
     expect(result.failures).toEqual([]);
   });
@@ -810,21 +1015,16 @@ describe("detection sanity (FIXTURE source text, not a real vi.mock call in this
       "  // isAdminEmail deliberately omitted for this fixture",
       "}));",
     ].join("\n");
-    const FIXTURE_COMPLETE_SOURCE = [
-      'vi.mock("@/lib/auth", () => authModuleMock({ auth: vi.fn() }));',
-    ].join("\n");
+    const FIXTURE_COMPLETE_SOURCE = ['vi.mock("@/lib/auth", () => authModuleMock({ auth: vi.fn() }));'].join("\n");
 
     function analyzeFixture(source: string): FactoryAnalysis {
       const sf = ts.createSourceFile("fixture.ts", source, ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
       const [call] = findMockCalls(sf, "@/lib/auth");
-      expect(call).toBeDefined();
+      if (!call) throw new Error("fixture source did not parse a vi.mock call — fixture is broken");
       const factory = call.arguments[1];
+      if (!factory) throw new Error("fixture source's vi.mock call had no factory argument — fixture is broken");
       const factoryText = source.slice(factory.getStart(sf), factory.getEnd());
-      return analyzeFactory(
-        factory,
-        { sf, varDecls: collectVarInitializers(sf), authHelperComplete: true },
-        factoryText,
-      );
+      return analyzeFactory(factory, { varDecls: collectVarInitializers(sf), authHelperComplete: true, factoryText });
     }
 
     const incomplete = analyzeFixture(FIXTURE_INCOMPLETE_SOURCE);
