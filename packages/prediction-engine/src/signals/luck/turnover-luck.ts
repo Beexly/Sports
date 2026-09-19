@@ -24,7 +24,16 @@
  */
 
 export const TURNOVER_LUCK_METHOD_TAG = "turnover_luck_v1" as const;
-export const RECOVERY_BASELINE = 0.5;
+/**
+ * League fumble-KEPT baseline (offense recovers its own fumble), pooled 2019-2025
+ * REG: 3,817 kept / 6,958 fumbles = 0.5488. NOTE: the locked 46.3% figure is the
+ * COMPLEMENT quantity - the DEFENSE-side recovery share of forced fumbles (2025
+ * lost-share 0.4662). This evaluator models the fumbling team's kept share, so its
+ * baseline is the kept-side value; RECOVERY_LOST_BASELINE is exported for callers
+ * thinking in lost/defense terms.
+ */
+export const RECOVERY_BASELINE = 0.5488;
+export const RECOVERY_LOST_BASELINE = 1 - RECOVERY_BASELINE;
 export const TURNOVER_LUCK_K_FF = 200;
 /** Reserved for the occurrence-side (INT per dropback) evaluator. */
 export const TURNOVER_LUCK_K_INT = 150;
@@ -83,7 +92,8 @@ export function evaluateTurnoverLuckOne(
   const recoveredShare = fumbles === 0 ? null : (fumbles - fumblesLost) / fumbles;
   // Beta-binomial posterior mean: (kept + K * baseline) / (fumbles + K).
   const kept = fumbles - fumblesLost;
-  const shrunk = (kept + TURNOVER_LUCK_K_FF * RECOVERY_BASELINE) / (fumbles + TURNOVER_LUCK_K_FF);
+  const shrunkKept = (kept + TURNOVER_LUCK_K_FF * RECOVERY_BASELINE) / (fumbles + TURNOVER_LUCK_K_FF);
+  const shrunkKept4 = Math.round(shrunkKept * 1e4) / 1e4;
 
   const lowSample = fumbles < MIN_FUMBLES_FOR_VERDICT;
   let verdict: TurnoverLuckVerdict = "NEUTRAL";
@@ -98,8 +108,9 @@ export function evaluateTurnoverLuckOne(
     fumbles,
     fumblesLost,
     recoveredShare,
-    shrunkRecoveryShare: Math.round(shrunk * 1e4) / 1e4,
-    expectedLostShare: Math.round(shrunk * 1e4) / 1e4,
+    shrunkRecoveryShare: shrunkKept4,
+    /** Expected fumbles LOST per future fumble = 1 - shrunk kept share. */
+    expectedLostShare: Math.round((1 - shrunkKept) * 1e4) / 1e4,
     verdict,
     lowSample,
   };

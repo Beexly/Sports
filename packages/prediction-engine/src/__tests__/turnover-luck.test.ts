@@ -4,6 +4,7 @@ import {
   TURNOVER_LUCK_K_FF,
   TURNOVER_LUCK_K_INT,
   RECOVERY_BASELINE,
+  RECOVERY_LOST_BASELINE,
   MIN_FUMBLES_FOR_VERDICT,
   evaluateTurnoverLuck,
   evaluateTurnoverLuckOne,
@@ -21,24 +22,28 @@ describe("turnover-luck method tag and constants", () => {
     expect(TURNOVER_LUCK_METHOD_TAG).toBe("turnover_luck_v1");
     expect(TURNOVER_LUCK_K_FF).toBe(200);
     expect(TURNOVER_LUCK_K_INT).toBe(150);
-    expect(RECOVERY_BASELINE).toBe(0.5);
+    // kept-share league baseline, pooled 2019-2025 REG (3,817/6,958); the locked
+    // 46.3% is the defense-side complement and is exported as RECOVERY_LOST_BASELINE.
+    expect(RECOVERY_BASELINE).toBeCloseTo(0.5488, 4);
+    expect(RECOVERY_LOST_BASELINE).toBeCloseTo(0.4512, 4);
     expect(MIN_FUMBLES_FOR_VERDICT).toBe(2);
   });
 });
 
 describe("turnover-luck shrinkage math", () => {
-  it("shrinks a 0% recovery share on 4 fumbles to (0 + 100) / 204", () => {
+  it("shrinks a 0% recovery share on 4 fumbles toward the kept baseline", () => {
     const r = evaluateTurnoverLuckOne(obs("TB", 4, 4));
     expect(r.recoveredShare).toBe(0);
-    expect(r.shrunkRecoveryShare).toBeCloseTo(100 / 204, 4);
+    expect(r.shrunkRecoveryShare).toBeCloseTo((200 * RECOVERY_BASELINE) / 204, 4);
+    expect(r.expectedLostShare).toBeCloseTo(1 - (200 * RECOVERY_BASELINE) / 204, 4);
     expect(r.verdict).toBe("UNLUCKY");
     expect(r.lowSample).toBe(false);
   });
 
-  it("shrinks a 100% recovery share on 2 fumbles to (2 + 100) / 202", () => {
+  it("shrinks a 100% recovery share on 2 fumbles toward the kept baseline", () => {
     const r = evaluateTurnoverLuckOne(obs("KC", 2, 0));
     expect(r.recoveredShare).toBe(1);
-    expect(r.shrunkRecoveryShare).toBeCloseTo(102 / 202, 4);
+    expect(r.shrunkRecoveryShare).toBeCloseTo((2 + 200 * RECOVERY_BASELINE) / 202, 4);
     expect(r.verdict).toBe("LUCKY");
   });
 
@@ -47,7 +52,7 @@ describe("turnover-luck shrinkage math", () => {
     const two = evaluateTurnoverLuckOne(obs("A", 2, 2)).shrunkRecoveryShare;
     const four = evaluateTurnoverLuckOne(obs("B", 4, 4)).shrunkRecoveryShare;
     expect(four).toBeLessThan(two);
-    expect(two).toBeLessThan(0.5);
+    expect(two).toBeLessThan(RECOVERY_BASELINE);
   });
 
   it("keeps the shrunk share on the correct side of the baseline for both extremes", () => {
@@ -79,8 +84,8 @@ describe("turnover-luck verdicts and the low-sample floor", () => {
   it("treats zero fumbles as no information (null share, baseline expectation)", () => {
     const r = evaluateTurnoverLuckOne(obs("Z", 0, 0));
     expect(r.recoveredShare).toBeNull();
-    expect(r.shrunkRecoveryShare).toBe(RECOVERY_BASELINE);
-    expect(r.expectedLostShare).toBe(RECOVERY_BASELINE);
+    expect(r.shrunkRecoveryShare).toBeCloseTo(RECOVERY_BASELINE, 4);
+    expect(r.expectedLostShare).toBeCloseTo(RECOVERY_LOST_BASELINE, 4);
     expect(r.verdict).toBe("NEUTRAL");
     expect(r.lowSample).toBe(true);
   });
