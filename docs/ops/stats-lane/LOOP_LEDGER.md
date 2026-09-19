@@ -1,5 +1,21 @@
 # MIMO self-audit loop ledger
 
+- **2026-09-19T08:00:10Z** overnight loop · suite ok kills=1 K3 · L11 scorecard harness shipped
+  - **`v530_l11_scorecard_harness.py` → `out/v530_l11_scorecard_draft.json`** (DRAFT only — not a bump):
+    | Arm | n | Brier | realised bits | ECE10 |
+    |---|---:|---:|---:|---:|
+    | **marketFairProb** | 741 | **0.225** | **+0.075** | **0.024** |
+    | v530 candidate mfp→indep→rp | 1826 | 0.236 | +0.031 | 0.049 |
+    | independentTrueProb | 1507 | 0.246 | −0.016 | 0.073 |
+    | rankingP | 1535 | 0.250 | −0.021 | 0.076 |
+    | confidence/100 | 2550 | 0.267 | **−0.081** | 0.102 |
+    - Paired mfp vs conf on same rows: Brier **0.225 vs 0.275**, Δ(conf−mfp)=**+0.049**
+    - Law 11 ML baseline **0.211** remains the independent-ML bar; this export is board-path evidence only
+    - **Keep rule:** founder L11 on PICKS-H1 + MODEL_VERSION path for scoring weight zeros; display/rank on mfp is withhold-only-safe
+  - PASS census refresh: still **EXPORT_STALE_CENSUS_INCOMPLETE**
+  - CLV refresh: strict clears still **TOTALS_first / MLB_TOTAL / type:TOTAL** only; all-denom none
+  - Suite True. Push + bus this tick (founder authorized overnight push).
+
 - **2026-09-19T07:40:18Z** suite ok kills=1 K3 0.7705; IMPLEMENT sigma ladder + totals e-process + hex32 residual
   - **A Sigma ladder** (`out/loop_implement_0739_sigma_eprocess.json`) on nflverse REG n=6967:
     - Weeks 1–4: **σ=14.36** n=1669 · home cover ex-push **0.482**
@@ -204,6 +220,14 @@
   - NEXT weather Mondrian all bins OOT>=0.85 → promote weather/roof residual bands as NFL margin UQ replacement
   - NEXT totals e-process M_max=4.430387116702636 < 20 → accumulate more settled totals + shrinkage eps sweep; formal Ville test — do not claim skill yet
 - **2026-09-19T07:40:18.003182+00:00** suite exits=[0, 0, 0, 0, 0, 0] kills=1 actions=6 score={"k3_best_cov": 0.7704918032786885, "hex32_resolve_rate": 0.97747963584092, "ml_clv_nonpush": 0.14210526315789473, "logit_pool_totals": "MODEL_ADDS_INFORMATION", "logit_pool_ml": "FIRE_NOTHING", "weather_bins_ge_085": "6/6", "eprocess_totals_Mmax": 4.430387116702636}
+  - KILL {'metric': 'K3_margin_band', 'value': 0.7704918032786885, 'line': 0.85, 'verdict': 'KILL_band_model'}
+  - NEXT K3 OOT < 0.85 → use weather/roof Mondrian + sport margin densities; No-band label on K3 product-market residuals
+  - NEXT hex32 resolve 0.9775 < 1.0 → retry remaining UNRESOLVED_NO_SCOREBOARD_MATCH via date±2 and name aliases
+  - NEXT ML CLV 0.142 < 0.50 → e-process + logit-pool gates; totals-first product; no ML beat-close claim
+  - NEXT totals add info vs market (logit-pool) → advance totals density/CRPS path + e-process accumulation; keep kill lines
+  - NEXT weather Mondrian all bins OOT>=0.85 → promote weather/roof residual bands as NFL margin UQ replacement
+  - NEXT totals e-process M_max=4.430387116702636 < 20 → accumulate more settled totals + shrinkage eps sweep; formal Ville test — do not claim skill yet
+- **2026-09-19T08:00:10.651744+00:00** suite exits=[0, 0, 0, 0, 0, 0] kills=1 actions=6 score={"k3_best_cov": 0.7704918032786885, "hex32_resolve_rate": 0.97747963584092, "ml_clv_nonpush": 0.14210526315789473, "logit_pool_totals": "MODEL_ADDS_INFORMATION", "logit_pool_ml": "FIRE_NOTHING", "weather_bins_ge_085": "6/6", "eprocess_totals_Mmax": 4.430387116702636}
   - KILL {'metric': 'K3_margin_band', 'value': 0.7704918032786885, 'line': 0.85, 'verdict': 'KILL_band_model'}
   - NEXT K3 OOT < 0.85 → use weather/roof Mondrian + sport margin densities; No-band label on K3 product-market residuals
   - NEXT hex32 resolve 0.9775 < 1.0 → retry remaining UNRESOLVED_NO_SCOREBOARD_MATCH via date±2 and name aliases
