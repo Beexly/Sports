@@ -1,5 +1,16 @@
 # MIMO self-audit loop ledger
 
+- **2026-09-19T06:51:37Z** suite ok kills=1 K3 0.77; GLM5.3 fleet plan integrated without fabricating Neon:
+  - **Top replacement re-affirmed:** weather/roof/rest Mondrian UQ + K3 No-band + marketFairProb public p + Law-11 market ML Brier 0.211
+  - **NEW instrument `epa_prior_bridge_turnover.py`** (Mimo independent on nflverse):
+    - Prior-season net EPA as cold-start (N=0) margin path: RMSE **15.13** vs market −spread RMSE **18.32** on **n=544** paired REG games with prior ratings — **PRIORITY_CANDIDATE_FOR_ASOF_REPLAY** on this selected sample
+    - **Honest gap:** full-season PBP snapshot cannot be a mid-season as-of current input; oracle bridge labeled LEAKY upper bound only; production `nfl-epa-fair-value` scale 0.12/HFA 0.025 not re-fit here
+    - Turnover: team_week regressed occurrence shipped; external oppadj `turnover_luck_2026.csv` 32 rows ingested as **fleet artifact** (TB/KC/BUF flags = EXTERNAL_CLAIM_UNVERIFIED_BY_MIMO — we did not query Neon)
+    - Week 3 slate CSV copied as research artifact — **not a pick card**
+    - Decision-tier CSV (NFL LEAN 60% n=45 vs PASS 45% n=20; NCAAF LEAN 78.2% n=206; MLB SPEAK 0.400 n=90) = **EXTERNAL_CLAIM_FLEET_DB**; Law 7 no DB from Mimo; product rule still never-mint PASS + await board-export census
+  - Suite re-run True; loop_implement artifacts refreshed
+  - **Ops still owed:** board-export v3 for passVeto census
+
 - **2026-09-19T06:24:27Z** suite ok kills=1 K3 0.77; IMPLEMENT battery multi-path (user: SOLUTIONS not one):
   - H1 CORRECTED: Elo 0.233 loses to market ML 0.211 (Phi(spread) misspecified — never treat as market)
   - H3: marketFairProb realised bits +0.075 ONLY positive; confidence/100 −0.081
@@ -81,6 +92,14 @@
   - NEXT weather Mondrian all bins OOT>=0.85 → promote weather/roof residual bands as NFL margin UQ replacement
   - NEXT totals e-process M_max=4.430387116702636 < 20 → accumulate more settled totals + shrinkage eps sweep; formal Ville test — do not claim skill yet
 - **2026-09-19T06:24:27.993885+00:00** suite exits=[0, 0, 0, 0, 0, 0] kills=1 actions=6 score={"k3_best_cov": 0.7704918032786885, "hex32_resolve_rate": 0.97747963584092, "ml_clv_nonpush": 0.14210526315789473, "logit_pool_totals": "MODEL_ADDS_INFORMATION", "logit_pool_ml": "FIRE_NOTHING", "weather_bins_ge_085": "6/6", "eprocess_totals_Mmax": 4.430387116702636}
+  - KILL {'metric': 'K3_margin_band', 'value': 0.7704918032786885, 'line': 0.85, 'verdict': 'KILL_band_model'}
+  - NEXT K3 OOT < 0.85 → use weather/roof Mondrian + sport margin densities; No-band label on K3 product-market residuals
+  - NEXT hex32 resolve 0.9775 < 1.0 → retry remaining UNRESOLVED_NO_SCOREBOARD_MATCH via date±2 and name aliases
+  - NEXT ML CLV 0.142 < 0.50 → e-process + logit-pool gates; totals-first product; no ML beat-close claim
+  - NEXT totals add info vs market (logit-pool) → advance totals density/CRPS path + e-process accumulation; keep kill lines
+  - NEXT weather Mondrian all bins OOT>=0.85 → promote weather/roof residual bands as NFL margin UQ replacement
+  - NEXT totals e-process M_max=4.430387116702636 < 20 → accumulate more settled totals + shrinkage eps sweep; formal Ville test — do not claim skill yet
+- **2026-09-19T06:51:37.078988+00:00** suite exits=[0, 0, 0, 0, 0, 0] kills=1 actions=6 score={"k3_best_cov": 0.7704918032786885, "hex32_resolve_rate": 0.97747963584092, "ml_clv_nonpush": 0.14210526315789473, "logit_pool_totals": "MODEL_ADDS_INFORMATION", "logit_pool_ml": "FIRE_NOTHING", "weather_bins_ge_085": "6/6", "eprocess_totals_Mmax": 4.430387116702636}
   - KILL {'metric': 'K3_margin_band', 'value': 0.7704918032786885, 'line': 0.85, 'verdict': 'KILL_band_model'}
   - NEXT K3 OOT < 0.85 → use weather/roof Mondrian + sport margin densities; No-band label on K3 product-market residuals
   - NEXT hex32 resolve 0.9775 < 1.0 → retry remaining UNRESOLVED_NO_SCOREBOARD_MATCH via date±2 and name aliases
