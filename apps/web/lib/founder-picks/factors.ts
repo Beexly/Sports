@@ -72,6 +72,15 @@ export interface FounderPickContext {
   } | null;
 }
 
+/**
+ * Shape of the underlying-quality-metric factor input, pulled out of
+ * FounderPickContext so an adapter that PRODUCES it (e.g. the Statcast
+ * wiring in ./statcast-underlying) can type against it without duplicating
+ * the shape or importing fetch code into this pure module. This module still
+ * never fetches — it only reads whatever the caller already resolved.
+ */
+export type FounderUnderlyingFactor = NonNullable<FounderPickContext["underlying"]>;
+
 export interface FounderPickRead {
   readonly factors: readonly FounderFactor[];
   /** −100..+100. Positive = factors favor the OVER / the side our number implies. */

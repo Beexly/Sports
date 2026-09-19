@@ -14,6 +14,9 @@
  * No schema change. No flag flip. No floor change.
  */
 
+import type { FounderUnderlyingFactor } from "./factors";
+import type { StatcastUnderlyingRequest } from "./statcast-underlying";
+
 export const FOUNDER_MODEL_VERSION = "founder-v1";
 
 export type FounderPickType = "MONEYLINE" | "SPREAD" | "TOTAL";
@@ -36,6 +39,15 @@ export interface FounderPickInput {
     readonly source: string;
     readonly lean: string;
   }[];
+  /**
+   * Optional: pull one real Statcast underlying-quality data point into the
+   * factor trail (MLB player props only — createFounderPick only attempts
+   * this when the pick's game is MLB). Informational only: it never scores,
+   * ranks, or sizes the pick, and a lookup failure never blocks creation —
+   * it just means the factor trail carries one fewer entry. Absence in,
+   * absence out; never a fabricated stand-in. See ./statcast-underlying.
+   */
+  readonly statcastLookup?: StatcastUnderlyingRequest | null;
 }
 
 export interface FounderPickRecord {
@@ -113,21 +125,44 @@ export function validateFounderPick(
 /**
  * factorBreakdown payload for a founder pick. Carries provenance so the
  * record can show owner intent without inventing engine factors.
+ *
+ * `underlying`, when supplied, is a real data point already resolved by the
+ * caller (typically via loadStatcastUnderlyingFactor +
+ * statcastUnderlyingFactorOrNull — see ./statcast-underlying) — this
+ * function never fetches. It is recorded as a second, purely informational
+ * factor entry (weight 0, same as "Owner call"): it documents what the
+ * underlying number showed, it never scores, ranks, or sizes the pick.
  */
-export function founderFactorBreakdown(input: FounderPickInput): Record<string, unknown> {
+export function founderFactorBreakdown(
+  input: FounderPickInput,
+  underlying?: FounderUnderlyingFactor | null,
+): Record<string, unknown> {
+  const factors: Record<string, unknown>[] = [
+    {
+      name: "Owner call",
+      impact: "neutral" as const,
+      description: input.reasoning.slice(0, 280),
+      weight: 0,
+    },
+  ];
+  if (underlying) {
+    const better = underlying.higherIsBetter
+      ? underlying.value > underlying.leagueAvg
+      : underlying.value < underlying.leagueAvg;
+    const impact: "positive" | "negative" = better ? "positive" : "negative";
+    factors.push({
+      name: underlying.label,
+      impact,
+      description: `${underlying.label}: ${underlying.value.toFixed(3)} vs league ${underlying.leagueAvg.toFixed(3)}. Informational only, never scores or ranks a founder pick.`,
+      weight: 0,
+    });
+  }
   return {
     source: "founder",
     founderModelVersion: FOUNDER_MODEL_VERSION,
     override: input.override ?? "engine_hold",
     consensusNotes: input.consensusNotes ?? [],
-    factors: [
-      {
-        name: "Owner call",
-        impact: "neutral" as const,
-        description: input.reasoning.slice(0, 280),
-        weight: 0,
-      },
-    ],
+    factors,
     // Explicit: a founder pick carries no engine factor scores. The confidence
     // is the owner's stated conviction, not a model output.
     rankingP: null,

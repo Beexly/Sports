@@ -15,12 +15,24 @@ const slate = activeDfsSlate();
 const MODES: Mode[] = ["cash", "gpp", "leverage"];
 const BUDGETS = [400_000, 500_000, 600_000, 1_000_000, 2_000_000];
 
+/**
+ * Header text and column width declared together. Two parallel arrays indexed
+ * by position drift the moment a column is added, and under
+ * noUncheckedIndexedAccess the width lookup is `number | undefined` anyway.
+ */
+const COLUMNS: readonly { readonly head: string; readonly width: number }[] = [
+  { head: "mode", width: 10 },
+  { head: "stack", width: 6 },
+  { head: "nodeBudget", width: 11 },
+  { head: "optimal", width: 8 },
+  { head: "nodes", width: 10 },
+  { head: "work", width: 12 },
+  { head: "objective", width: 12 },
+  { head: "ms", width: 8 },
+];
+
 console.log(`slate size: ${slate.length}`);
-console.log(
-  ["mode", "stack", "nodeBudget", "optimal", "nodes", "work", "objective", "ms"]
-    .map((h, i) => h.padEnd([10, 6, 11, 8, 10, 12, 12, 8][i]))
-    .join(""),
-);
+console.log(COLUMNS.map((c) => c.head.padEnd(c.width)).join(""));
 
 for (const stack of [false, true]) {
   for (const mode of MODES) {
@@ -34,14 +46,16 @@ for (const stack of [false, true]) {
       const moved = prevObj !== null && Math.abs(obj - prevObj) > 1e-9 ? "  <-- OBJECTIVE MOVED" : "";
       console.log(
         [
-          mode.padEnd(10),
-          String(stack).padEnd(6),
-          String(nodeBudget).padEnd(11),
-          String(r.optimal).padEnd(8),
-          String(r.nodes).padEnd(10),
-          String(r.work).padEnd(12),
-          obj.toFixed(4).padEnd(12),
-          ms.toFixed(0).padEnd(8),
+          ...[
+            mode,
+            String(stack),
+            String(nodeBudget),
+            String(r.optimal),
+            String(r.nodes),
+            String(r.work),
+            obj.toFixed(4),
+            ms.toFixed(0),
+          ].map((cell, i) => cell.padEnd(COLUMNS[i]?.width ?? 10)),
           moved,
         ].join(""),
       );
