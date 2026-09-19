@@ -3679,65 +3679,61 @@ never written into the repository, and was destroyed after the run.
 
 ---
 
-## WHY MAIN'S TEST SUITE IS RED AND NO DEVELOPER CAN SEE IT (2026-09-19, Opus)
+## MAIN IS RED BECAUSE OF 64 STALE apps/web TESTS, NOT BECAUSE OF THE DATABASE (2026-09-19, Opus)
 
-**Partially diagnosed. The mechanism is certain; the specific failing test is NOT yet
-identified and is written here as NOT RUN.**
+**This SUPERSEDES the previous section of this file, which claimed the stub-versus-real-Prisma
+split was the mechanism. That claim was WRONG. Read this instead; do not act on the old one.**
 
-`main` has concluded `failure` on every `ci.yml` run since at least 2026-09-12. On
-`47be639a6`, 11 of 12 jobs pass: lint, typecheck, Prisma validate, `migrate deploy` and
-the drift check are all green. The single failing step is `Run tests (all workspaces)`,
-after which `Build` is skipped, so main produces no build artifact either. This exact
-failure is recorded in this file from 2026-09-13 and has never been fixed.
+Measured from main's own CI log (run 35376690387, job 105703070978, head `47be639a6`, the
+`Test, type-check, lint, Prisma` job). Every workspace passes except one:
 
-**The mechanism, and it is the reason it survived a week.** `apps/web/vitest.setup.ts`:
+```
+apps/web    Test Files  20 failed | 1014 passed | 2 skipped (1036)
+            Tests       64 failed | 13939 passed | 28 skipped (14031)
+```
 
-    if (!process.env["CI"] && process.env["FORCE_REAL_PRISMA"] !== "true") {
-      process.env["DATABASE_URL"] = "stub";
-    }
+ai-council, compliance, crypto, data-ingestion (70 files), db, epistemic-twin, feature-store,
+genesis-kernel, governed, ingestion-pipeline (35), ops, partner-stack, phase-c,
+prediction-engine (280 files / 3141 tests), quote-plane, stats-api, types, util,
+workers/content-publishing and workers/data-refresh are ALL green. The root `npm test` runs
+every workspace and exits 1 at the end, which is why the job's tail shows only passes and then
+an exit code. Anyone reading the tail concludes the suite passed. It did not.
 
-That guard is correct and should stay: it stops a developer who has a real Neon URL
-exported from having the suite write to it. But its consequence is that **the entire
-apps/web suite runs against the stub Prisma client on every developer machine and against
-a real Postgres in CI**, because CI sets `CI=true` and points `DATABASE_URL` at a
-`postgres:15-alpine` service container. Measured locally with no database: 1,026 files
-and 13,976 tests pass, 97 skip, exit 0. The suite is green on every machine where anyone
-would look, and red only where nobody reads the log.
+**None of the 64 failures touches Prisma.** They are five clusters, and all five are
+already-known, already-decided product changes whose tests were never repointed:
 
-**A hypothesis that was tested and is WRONG, recorded so nobody repeats it.** The obvious
-suspect was the Postgres-gated integration files, the ones that skip without a database.
-Ten of them are enabled by CI's env (nine on `DATABASE_URL`, one on `AI_BUDGET_PG_URL`;
-`ai-control-plane-claim-pg` stays skipped even in CI because `AI_CLAIM_PG_URL` is never
-set). Reproduced against a local PostgreSQL 16 cluster with `CI=true`:
+1. **Retired customer copy.** Assertions still pin the pre-humanizer strings: the old
+   publish-threshold sentence, the old evidence-health sentence, the old not-yet-scored
+   phrasing, the old board health badge, the old counted-lane summary, and two retired
+   marketing lines. The SOURCE is correct and deliberate; the TESTS pin what was removed.
+2. **Retired IA.** `nav-static-shell` and `nav-route-integrity` still require the
+   intelligence engines route in the top bar, which the four-door trim deliberately removed.
+   `nfl-house-page` asserts a door count floor of six against a deliberate four.
+3. **A partial mock missing a symbol.** Twelve failures read
+   `No "isAdminEmail" export is defined on the "@/lib/auth" mock`. This is the exact partial
+   `vi.mock` hazard this file already documents for `@sports/prediction-engine`, arriving on a
+   second module.
+4. **`lib/fantasy/dfs-optimizer.test.ts`.** The determinism guard, the unseeded-random grep,
+   and four exact-optimum comparisons. This is the defect fixed by seeding the solver.
+5. **`picks-states-conversion.test.ts`.** The module-scope slice throwing on a rewritten
+   anchor sentence, reported as a start marker at -1.
 
-    ai-control-plane-event-ledger-pg, budget-pg, formal-incident-pg,
-    budget-alpha-witness-pg, shadow-metrics-pg, ablation-counters-pg   6 files, 43/43 PASS
-    cash-os-pg, governed-gate-pg                                        9/9 PASS
-    compliance-store-pg                                                 3 FAIL
+**Why nobody saw it, corrected.** The previous note said the stub guard in
+`apps/web/vitest.setup.ts` hides these locally. It does not: not one of the 64 reads the
+database, so they fail on a developer machine too. The real reason is smaller and is mine. I
+ran the suite on THIS branch, which already carries the fixes for clusters 3, 4 and 5 and the
+copy repointing for 1 and 2, and I reported the passing count (13,939) without reading the
+failing count. CI reports `64 failed | 13939 passed`: the identical passing figure. The number
+I quoted as proof of green was the same number sitting beside 64 failures.
 
-and the only failures are `The table public.compliance_check_run does not exist`, which is
-an artifact of this reproduction lacking the Prisma migrations, not of the test. CI applies
-all three migrations successfully. **So the PG-gated files are not the cause.**
+The stub guard is still real and still worth knowing about. It is simply not why main is red,
+and no migration is needed to diagnose this.
 
-Most of those suites create their own schema with `CREATE SCHEMA` over a raw `pg` pool, so
-they need no migration at all. That is why they could be run here.
+**PR #866 already fixes it.** That PR is based on `47be639a6`, the exact commit main is red on,
+and its `Test, type-check, lint, Prisma` job concluded SUCCESS at 2026-09-19T01:08:46Z, with all
+20 of its checks green and `mergeable_state: clean`. Merging it should turn main green. That is
+an inference from two CI runs on the same base, not a merge that has been performed; the
+confirming run is the post-merge one on main.
 
-**What remains, and it is a much larger surface than ten files.** Because the stub is off in
-CI, every test in the suite that touches `db` exercises a real Prisma client there and an
-empty-result stub here. Any test written against stub behaviour ("all reads return empty
-results") can pass locally and fail in CI without being marked as a database test at all.
-Finding it needs the full suite run with `CI=true` against a migrated database.
-
-**Blocked on exactly one thing.** `npx prisma migrate deploy` is refused by this session's
-tool-permission classifier, which is law 7 working as designed. Feeding the migration SQL
-to `psql` would defeat the intent rather than satisfy it, so it was not attempted. Whoever
-has that permission runs:
-
-    CI=true DATABASE_URL=<disposable pg> npx prisma migrate deploy --schema packages/db/prisma/schema.prisma
-    CI=true DATABASE_URL=<same> npm test
-
-and the failing test names fall out of the second command.
-
-**Note for whoever fixes it:** most of the DB-touching suites cover
-`apps/web/lib/ai-control-plane/**`, which law 2 freezes for agents. If the defect is in that
-library rather than in a fixture, it is a founder-authorized change, not an agent one.
+**Rule this earned.** When you claim a suite is green, read the FAILING count, not the passing
+count. `13939 passed` was true in both worlds. Only `64 failed` distinguished them.
