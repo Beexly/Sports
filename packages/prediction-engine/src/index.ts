@@ -2028,6 +2028,21 @@ export type { WeatherConditionContext, WeatherConditionResult } from "./signals/
 export { evaluateRookieBreakoutCohort } from "./signals/narrative/rookie-breakout-cohort.js";
 export type { RookieBreakoutContext, RookieBreakoutResult } from "./signals/narrative/rookie-breakout-cohort.js";
 
+export { evaluateFourthDownCoachingAggressiveness } from "./signals/situational/fourth-down-coaching-aggressiveness.js";
+export type { FourthDownCoachingContext, FourthDownCoachingResult } from "./signals/situational/fourth-down-coaching-aggressiveness.js";
+
+export { evaluatePenaltyDifferentialMomentum } from "./signals/discipline/penalty-differential-momentum.js";
+export type { PenaltyDifferentialContext, PenaltyDifferentialResult } from "./signals/discipline/penalty-differential-momentum.js";
+
+export { evaluateByeWeekDefensiveInstallation } from "./signals/schematic/bye-week-defensive-installation.js";
+export type { ByeWeekDefensiveContext, ByeWeekDefensiveResult } from "./signals/schematic/bye-week-defensive-installation.js";
+
+export { evaluateRedZonePersonnelGrouping } from "./signals/tactical/redzone-personnel-grouping.js";
+export type { RedZonePersonnelContext, RedZonePersonnelResult } from "./signals/tactical/redzone-personnel-grouping.js";
+
+export { evaluateTurfSurfaceFatigue } from "./signals/biomechanical/turf-surface-fatigue.js";
+export type { SurfaceFatigueContext, SurfaceFatigueResult } from "./signals/biomechanical/turf-surface-fatigue.js";
+
 // Hierarchical Bayesian Pooling across 8 Signal Families
 export { poolSignalsHierarchically } from "./hierarchical-pool.js";
 export type { IndividualSignalInput, FamilyAggregation, HierarchicalPoolResult } from "./hierarchical-pool.js";
