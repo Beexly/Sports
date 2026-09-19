@@ -749,3 +749,40 @@ Standing rule (broadcast to the fleet): grep the local archive BEFORE registerin
 killing any factor - two archive claims vindicated, one edge recovered (wind totals),
 one archive claim killed (altitude), one module found already-adopted. The archive is
 prior art, not decoration.
+
+## BLUEPRINT DOC (Architectural Blueprint docx) - doctrine origins confirmed, one divergence TESTED
+
+The Blueprint docx is the origin of several fleet doctrines, now verified as implemented:
+CRPS as the primary margin metric with the >=0.01 / n>=150 kill (encoded in the
+standing loop); conformal quantile clamping BANNED with infinite intervals
+(Mondrian lane: "never clamped" - adopted); Jackknife+ 1-2alpha honesty for n~70;
+Venn-Abers with Delta-p > 0.20 fail-closed (width harness landed on main);
+fixture triplication, pinned consensus at 1.0000, and SourceCannotSpeakAsOf all
+pre-described - and all later found live in production exactly as predicted.
+NEW warning worth archiving: wind DIRECTION is a circular-statistics trap (0 deg /
+359 deg naive averaging flips the heading) - our wind factor is speed-only and safe.
+
+**TESTED: Shin vs proportional devig (the one live doctrine divergence).** The
+Blueprint mandates Shin ("proportional overweights favorites at extreme lines");
+the production receipts deliberately use mean-implied proportional. Mill
+(scripts/devig_mill.py, 6,617 two-way NFL closes): Brier proportional 0.2110 vs
+Shin 0.2111; logloss 0.6093 vs 0.6092 - a TIE at this market type. Nuance: Shin's
+top-bin implied (0.9028) sits closer to realized (0.9178) than proportional's
+(0.8810), and Shin worsens the mid-bins - the differences wash. VERDICT: devig
+choice is immaterial on balanced two-way NFL closes; the Blueprint's Shin advantage
+applies to extreme/asymmetric markets (props, futures) which we do not price yet.
+Receipts keep proportional; revisit only if the props lane opens.
+
+**WIND-FG AND DOME (archive file cross-checked):** the archive's "20+ mph FG
+shortfall -11.8pp" DIES on this corpus - attempted FGs run 86.0% at 20+ mph
+(n=100), and distance-controlled 40-49 shows no penalty (78.3% vs 77.2% calm):
+selection dominates (coaches shrink attempt distance in wind, as the archive
+itself notes). The dome 50+ boost VINDICATES: closed roofs 68.8% vs outdoors
+64.2% (claimed +7pp, measured +4.6pp, n=260/904).
+
+**STILL UNREAD (honest, queued):** World-Class Corpus Audit (3MB docx), Galaxy
+Sports Edge Research Audit, Auditing Conformal Prediction (1)/(2), CQR Research,
+Institutional Integration of 10Hz Tracking, Blueprint tail (lines 121-256), root
+C:/Users/Garrett/AGENTS.md middle beyond truncation. The docx-extraction subagent
+died twice on a retired pinned model (stealth/union-alpha, HTTP 404) - fix the
+delegation model config, or extraction continues manually next session.
