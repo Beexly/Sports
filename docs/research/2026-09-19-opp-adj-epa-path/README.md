@@ -389,3 +389,90 @@ Source files cited: `packages/ingestion-pipeline/src/build-independent-fair-valu
 (step 9, `tryNflEpaFairValue`), `packages/prediction-engine/src/nfl-epa-fair-value.ts`
 (`NFL_EPA_MIN_GAMES = 4`), `packages/ingestion-pipeline/src/backfill-independent-trueprob.ts`
 (`forceReprice`), `apps/web/lib/ops/cron-schedule-manifest.ts:163-165`.
+
+## SPEC (do not ship): NFL_EPA_MIN_GAMES stays 4, and the cold-start story is the wrong frame
+
+Locked invariant: `NFL_EPA_MIN_GAMES = 4` is not bypassed because a prior exists.
+This spec documents what a gate-drop WOULD do, so the founder can decide in two
+minutes, and it corrects the framing the fleet has been using.
+
+**What DAVE would fill in weeks 1-3 if the gate were dropped in v5.3.0:** a shrunk
+rating = w * (1-2 games of 2026 observation) + (1-w) * 2025 final adjusted EPA,
+w = N/(N+8) - at week 1 roughly 89% prior, week 2 ~80%, week 3 ~71%. The source
+would emit `nfl_epa_adj` for essentially every game, adding a fifth/sixth voice to
+`independentEdge` blends during the first three weeks.
+
+**Why that is not the win it sounds like (OBSERVATION, locked):** Grok's walk-forward
+measured DAVE at 7.285 CRPS on weeks 1-4 against play-pooled EPA at 7.283 - a tie
+within noise. The early-season DAVE reading carries almost exactly the same
+information as the play-pooled alternative the engine already has. **INFERENCE:** the
+gate is not suppressing an edge; it is declining to add a redundant voice during the
+window where its observations are one to three games old. Dropping MIN_GAMES buys
+~0.002 CRPS (nothing) and costs blend cleanliness during the noisiest window. The
+cold-start gate is not the weeks-1-3 bottleneck, and "fix the cold start" is the
+wrong frame for the EPA path entirely.
+
+**The two founder levers that DO matter, in order:** (1) the constants hazard
+(`NFL_EPA_MARGIN_SCALE` 0.12 scores holdout Brier 0.3035, worse than a coin flip;
+fitted 0.204 scores 0.2694 - fix or measure before Week 5, 2026-10-08); (2) the W5+
+live calibration measurement of the source with the per-sport decision-tier harness.
+The gate stays 4. CALIBRATION_ADJUSTMENTS_ENABLED stays false. MODEL_VERSION stays
+v5.2.7.
+
+## Seat-1 shift results (late): baseline reconciliation and three kill-line verdicts
+
+**OBSERVATION - league recovery baseline.** Pooled 2019-2025 REG: 3,817 kept of 6,958
+fumbles = 54.88% kept-share (2025 alone: 53.38%). The locked 46.3% is the COMPLEMENT
+quantity: the defense-side recovery share of forced fumbles (2025 lost-share 46.62%).
+The evaluator models the fumbling team's kept share, so `RECOVERY_BASELINE` = 0.5488
+and `RECOVERY_LOST_BASELINE` = 0.4512; `expectedLostShare` now returns the lost share
+(it previously returned the kept share - a naming/semantics bug, fixed with tests).
+MoM-K on 2019-2023 team-season dispersion: tau-squared collapses to ~0, K-hat -> very
+large (247,618 from the moment equation). Recovery carries NO measurable team signal;
+that is the pure-luck confirmation in one number. K_FF = 200 stays the named
+production constant (the K choice is inert once the predictive claim dies).
+
+**KILL 1 - occurrence model FAILS (pre-registered: Spearman >= 0.30, n=32).** Clean,
+leak-free persistence (occurrence rates from W1-8 only, test volumes league-average,
+full-credit actuals = INTs forced + opponent fumbles lost): 2023 +0.094, 2024
+-0.222, 2025 -0.020; mean -0.049 vs naive -0.045. The occurrence model does not beat
+naive persistence and sits nowhere near the kill line. The evaluator stays Rung-1
+DESCRIPTIVE (luck flags, buy-low/sell-high capture) and does NOT graduate to a
+predictive factor. The earlier single-season 0.375 and the half-credit-actual variant
+were softer targets that flattered the model; the honest definition kills it.
+
+**KILL 2 - dropback/rush split weighting FAILS under the strong design.** Pre-registered:
+fit w on 2019-2023 walk-forward folds, freeze, test on 2024-2025 pooled, kill
+if lift < +0.05 Spearman vs pooled (w=0.5). Train-fold curve is flat (mean SP 0.307-0.316
+across w 0.45-0.65, optimum w* = 0.55). Frozen test: 2024 lift -0.003, 2025 lift +0.010,
+POOLED lift +0.0008. FAIL. Three independent designs have now failed (same-season
+0.75, season-internal 0.55, cross-season frozen 0.55). Keep pooled EPA. The ~2:1
+descriptive asymmetry stands as decomposition knowledge; it does not convert into
+margin-prediction lift.
+
+**KILL 3 - walk-forward CRPS confirms Rung-2 status (prediction: FAIL, confirmed).**
+2025 rolling origin (W2-18, every week scored from prior-week fits only, per-week
+in-train scales and residual sds, n=256 games): DAVE CRPS 8.239 (mean sd 10.36) vs
+close 7.195 (mean sd 11.82). My close number lands near the locked 7.109 (different
+season, same machinery) - sanity check passed. My DAVE number is same-season-only
+(no prior-season bridge) and therefore strictly weaker than the fleet's bridged 7.500
+on 7 seasons; the direction is consistent: DAVE never approaches the close. The
+scale reconciliation stands: my fits read 42.54 (train-window, prod conventions) and
+45.42 (full-season own-agg) pts/EPA; the circulating 36.61 (Grok, n=1,871) remains
+unreconciled to my filter set and is treated as the locked blend-scale, not re-derived.
+
+**INFERENCE (what this licenses):** the turnover-luck evaluator ships as descriptive
+capture only; DAVE stays a Rung-2 prior and never a spread mu addend; pooled EPA is
+the split of record; the one founder lever that matters before Week 5 remains the
+constants hazard (Brier 0.3035 vs 0.2694, decision by 2026-10-08).
+
+**NOT_RUN:** into-wind vs with-wind splits (no wind-direction column in the slim
+extract used); cleat counts; 10Hz tracking (not in public nflverse); Mondrian-k
+QB-change variant (locked from GROK-16, not re-derived - Var ratio 1.379 < 1.5 kill
+already failed it as a candidate).
+
+**REMAINING RISK:** all three mills run on 2019-2025 public pbp with my filter set
+(REG, pass/run, no-kneel/no-spike, garbage excluded where noted). Filter-set drift
+versus the fleet's locked numbers is the main reconciler risk; every table above is
+reproducible from the scripts in this directory, and the CRPS machinery was
+sanity-anchored on the market before the model was read.
