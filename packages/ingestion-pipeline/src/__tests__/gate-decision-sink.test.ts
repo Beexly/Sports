@@ -2,6 +2,28 @@ import { describe, expect, it, vi, beforeEach } from "vitest";
 import { persistGateDecisions, type GateDecisionInput } from "../gate-decision-sink.js";
 import { db } from "@sports/db";
 
+/**
+ * The rows handed to createMany, read without `as any` (forbidden by AGENTS.md)
+ * and without unchecked indexing. A mock call that never happened is a test
+ * failure, not an undefined to propagate, so this throws with a clear message
+ * instead of letting the assertion below fail on a confusing property read.
+ */
+interface PersistedGateDecisionRow {
+  readonly gameId: string;
+  readonly status: string;
+  readonly reasonCode: string;
+  readonly reason: string;
+}
+
+function persistedRows(mock: { mock: { calls: unknown[][] } }): readonly PersistedGateDecisionRow[] {
+  const firstCall = mock.mock.calls[0];
+  if (firstCall === undefined) throw new Error("createMany was never called");
+  const arg = firstCall[0] as { data?: readonly PersistedGateDecisionRow[] } | undefined;
+  if (arg?.data === undefined) throw new Error("createMany was called without a data array");
+  return arg.data;
+}
+
+
 vi.mock("@sports/db", () => ({
   db: {
     gateDecision: {
@@ -64,12 +86,12 @@ describe("gate-decision-sink", () => {
     expect(res.persisted).toBe(2);
     expect(mockCreateMany).toHaveBeenCalledTimes(1);
 
-    const callArg = mockCreateMany.mock.calls[0][0];
-    expect(callArg.data).toHaveLength(2);
-    expect((callArg.data as any)[0].gameId).toBe("game-1");
-    expect((callArg.data as any)[0].status).toBe("PUBLISHED");
-    expect((callArg.data as any)[1].gameId).toBe("game-2");
-    expect((callArg.data as any)[1].reasonCode).toBe("INSUFFICIENT_BOOKMAKERS");
+    const rows = persistedRows(mockCreateMany);
+    expect(rows).toHaveLength(2);
+    expect(rows[0]?.gameId).toBe("game-1");
+    expect(rows[0]?.status).toBe("PUBLISHED");
+    expect(rows[1]?.gameId).toBe("game-2");
+    expect(rows[1]?.reasonCode).toBe("INSUFFICIENT_BOOKMAKERS");
   });
 
   it("truncates reason to 240 chars and reasonCode to 80 chars to conform to schema bounds", async () => {
@@ -92,9 +114,9 @@ describe("gate-decision-sink", () => {
     ]);
 
     expect(res.persisted).toBe(1);
-    const persistedRow = (mockCreateMany.mock.calls[0][0].data as any)[0];
-    expect(persistedRow.reason.length).toBe(240);
-    expect(persistedRow.reasonCode.length).toBe(80);
+    const persistedRow = persistedRows(mockCreateMany)[0];
+    expect(persistedRow?.reason.length).toBe(240);
+    expect(persistedRow?.reasonCode.length).toBe(80);
   });
 
   it("fails safely when db.gateDecision.createMany throws, returning error without throwing", async () => {

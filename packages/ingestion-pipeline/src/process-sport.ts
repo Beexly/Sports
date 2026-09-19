@@ -1523,7 +1523,7 @@ export async function processSport(
     // Record audit decisions for games evaluated in oddsInputs that produced no published pick
     for (const input of oddsInputs) {
       if (!publishedGameIds.has(input.gameId)) {
-        const isThin = (input.odds?.length ?? 0) < 2;
+        const isThin = (input.bookmakerOdds?.length ?? 0) < 2;
         gateDecisionsToPersist.push({
           gameId: input.gameId,
           pickId: null,
@@ -1538,8 +1538,8 @@ export async function processSport(
           isBootstrap,
           evaluatedAt: fetchedAt,
           evidenceRefs: {
-            bookmakerCount: input.odds?.length ?? 0,
-            markets: Array.from(new Set(input.odds?.map((o) => o.market) ?? [])),
+            bookmakerCount: input.bookmakerOdds?.length ?? 0,
+            markets: Array.from(new Set(input.bookmakerOdds?.map((o) => o.market) ?? [])),
           },
         });
       }

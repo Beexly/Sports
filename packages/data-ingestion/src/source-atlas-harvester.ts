@@ -48,7 +48,15 @@ function resolveAtlasPath(customPath?: string): string {
   for (const c of candidates) {
     if (fs.existsSync(c)) return c;
   }
-  return candidates[0];
+  // No candidate exists on disk. Return the first as the reported path so the
+  // caller's error names a concrete location rather than undefined. Indexing is
+  // checked because noUncheckedIndexedAccess widens it to string | undefined,
+  // and a silent undefined here would surface later as an unreadable path.
+  const [firstCandidate] = candidates;
+  if (firstCandidate === undefined) {
+    throw new Error("source-atlas: no registry path candidates were configured");
+  }
+  return firstCandidate;
 }
 
 /**
