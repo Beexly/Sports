@@ -4261,3 +4261,77 @@ the assessor refuses to default them.
 
 Until that happens, the honest status of the archive monitor is TESTED AND
 UNWIRED. Anyone citing it should say so.
+
+---
+
+## THE "NEVER PUBLISH A PASS ROW" RULE IS NOT IMPLEMENTED. 373 OF 374 PASS ROWS ARE PUBLISHED, AND 3 ARE LIVE RIGHT NOW (2026-09-19, Opus, read-only production SQL)
+
+This file already states the rule, twice: "Never publish a row whose own
+`independentEdge.decision` is PASS." It is doctrine here and it is not in the
+code. What is in the code is a NARROWER rule, `expectedClv < 0`, and the two are
+not the same predicate.
+
+**Where the label is read.** `grep` for `decision === "PASS"` outside tests finds
+three sites. `scoring.ts:618` and `scoring.ts:1255` set a `FactorDetail.impact`
+string to "neutral". That is a display label. `edge-engine.ts:227` is where the
+verdict is assigned. **No site anywhere vetoes a mint or a publish on the label.**
+`pricesWorseThanMarket` (the mint gate) and `adverse-edge-suppression.ts` (the
+display gate) both key on `expectedClv < 0`, deliberately and with a comment
+explaining why.
+
+**Why the two predicates diverge, from `edge-engine.ts` rather than from a
+sample.** `expectedClv = round(shrunkEdge)`, and `shrunkEdge` carries the sign of
+`dir`. PASS is assigned on three branches:
+
+1. `agreement === "CONTRADICTS"` sets `agreementFactor = 0`, so `shrunkEdge` is
+   0 and expectedClv is **zero**, not negative.
+2. `dir <= 0`. Only `dir < 0` makes expectedClv negative; `dir === 0` leaves the
+   sign multiplier at +1, so expectedClv is **zero or positive**.
+3. `shrunkMag < LEAN_EDGE` with `dir > 0`. This is the "no demonstrable edge, we
+   decline rather than overclaim one" branch, and its expectedClv is **strictly
+   positive**.
+
+Only branch 2's negative case is caught. Branches 1 and 3 are invisible to both
+gates.
+
+**Measured (SELECT only, nothing written), non-bootstrap rows carrying a numeric
+expectedClv:**
+
+| decision | expectedClv | rows | published | published PENDING |
+|---|---|---|---|---|
+| PASS | negative | 149 | 148 | 0 |
+| PASS | zero | 218 | 218 | 0 |
+| PASS | positive | 7 | 7 | **3** |
+| LEAN | zero | 1092 | 1092 | 43 |
+| LEAN | positive | 12 | 10 | 0 |
+| LEAN | negative | 1 | 1 | 0 |
+| SPEAK | positive | 103 | 96 | 5 |
+
+**373 of 374 PASS rows are published.** The 225 with zero or positive expectedClv
+were never candidates for either gate, so nothing withheld them and nothing ever
+will under the current predicate.
+
+**Three are live, published, PENDING and PRE-KICKOFF on the deployed v5.2.7**,
+all the same selection across duplicated fixtures (Chicago White Sox -1.5, 7/7/3
+books, confidence 80/80/66). Each carries `agreement: "SOLO"`, trueProb 0.386
+against a market fair value near 0.374, and expectedClv +0.0067 / +0.0065 /
++0.0051. These are branch 3 exactly: the engine says it declines rather than
+overclaim a 1.3-point edge from a single unchecked source, and the board sells it
+at confidence 80.
+
+**The earlier note in this file is the trap.** It records that on 2026-09-13
+"`expectedClv < 0` and `decision === "PASS"` selected the identical set". That was
+true of nine rows on one day. It is NOT true by construction, and it was read as
+though it were. A coincidence on one snapshot became a load-bearing equivalence.
+
+**What this does NOT license.** Do not swap the gate to the label. The comment at
+`adverse-edge-suppression.ts:35` is right that a CONTRADICTS row carries
+expectedClv 0.0 by construction, so a label gate would withhold rows that are not
+adverse. The two predicates each catch what the other misses. Whoever owns this
+decides whether the doctrine sentence is wrong (and should be narrowed to the
+adverse rule that is actually implemented) or the code is wrong (and PASS should
+withhold on the label as well). Both are defensible; publishing a row the engine
+declined while this file claims we never do is not.
+
+Nothing was changed in the engine, the gates, or any threshold on this pass. This
+is a measurement and a correction to the record.
