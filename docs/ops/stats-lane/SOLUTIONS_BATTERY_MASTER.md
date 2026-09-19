@@ -88,6 +88,19 @@ npx vitest run apps/web/__tests__/cqr.test.ts
 
 ---
 
+## Fleet synthesis bindings (2026-09-19 — Grok + Hermes)
+
+| Item | Fleet claim | Mimo status |
+|---|---|---|
+| DAVE k=8 walk-forward CRPS 2019–25 | market 7.109 < DAVE 7.500 < play-pooled 7.573 < Elo 7.576 | **EXTERNAL**; Mimo independent RMSE on n=6967 REG: market **13.19** best; DAVE-or-prior **14.08** ≤ Elo proxy **14.16** — same ordering direction |
+| DAVE role | Rung-2 prior; **not** spread addend | **LOCKED** |
+| `NFL_EPA_MIN_GAMES=4` | stays until founder v5.3.0 | **LOCKED** — no auto-bypass |
+| PASS veto | honesty (never mint PASS / expectedClv<0), not win-rate lift | **LOCKED** |
+| MLB SPEAK 0.400 n=90 | inverted — untrusted until composite refit | **FLAGGED** |
+| Multi-season script orientation bug | quarantined | **DO NOT REUSE** |
+
+---
+
 ## POSITIVE PATH FORWARD (ordered — multiple, not exclusive)
 
 1. **Display + rank book-priced rows on marketFairProb** — only source with **positive realised bits** tonight.  

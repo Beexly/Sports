@@ -1,5 +1,41 @@
 # MIMO self-audit loop ledger
 
+- **2026-09-19T07:20Z FLEET SYNTHESIS INTAKE (Grok walk-forward + Hermes README)**
+  - **EXTERNAL claims recorded, not Mimo OBS** (`fleet_synthesis_intake.py` → `out/fleet_synthesis_mimo_2026-09-19.json`):
+    - Grok 2019–2025 CRPS: market close **7.109** · DAVE k=8 **7.500** · play-pooled EPA **7.573** · Elo **7.576** · last-year **7.778**; DAVE ρ **0.349** vs play-pooled **0.323**
+    - **Boundary A (Grok):** DAVE beats Elo/play-pooled but **loses to market** → **Rung-2 team-strength prior only; NOT a spread μ addend**
+    - **Boundary B (Hermes):** `NFL_EPA_MIN_GAMES=4` still returns null until ≥4 games; bridge **does not auto-bypass** — founder-gated v5.3.0 only
+    - **PASS veto = honesty standard** (never mint `decision:PASS` / `expectedClv<0`), **not** a win-rate booster; NFL PASS n=20 CI wide — no rate inflation claim
+    - **MLB SPEAK 0.400 n=90 inverted** (Neon census) — conjunction gates / product **do not trust MLB decision tiers** until composite refit
+    - Quarantined multi-season script (home/away orientation bug) — **do not reuse**
+  - **Mimo independent walk-forward on owned games.csv** (REG, n=**6967** with spread; point RMSE/MAE, **not** relabeled as CRPS):
+    - **Market +spread_line** RMSE **13.19** Spearman **0.429** — **efficient benchmark (wins)**
+    - DAVE-or-prior RMSE **14.08** ρ **0.317** · Elo margin-proxy RMSE **14.16** ρ **0.308** · prior-EPA RMSE **14.27** ρ **0.281**
+    - Ordering: **market < dave_or_prior < elo_proxy < prior_epa** — directionally matches Grok (market best; DAVE ≥ Elo as research prior)
+    - Leak note: full-season current PBP in DAVE blend labeled **LEAKY** when used mid-season; cold-start path = prior-only
+  - **Boundaries locked into stats-lane doctrine (no gate flips):**
+    1. Public/rank p stays **marketFairProb** when priced (H3 bits +0.075)
+    2. Law 11 baseline **market ML Brier 0.211** n=5051
+    3. DAVE/adj-EPA/Elo = research until as-of Brier beats market ML −0.002 n≥272
+    4. PASS never mint; export v3 census still owed by ops
+    5. Confidence display-only; depth display-only; K3 product No-band; weather/rest UQ captions OK where OOT≥0.85
+
+- **2026-09-19T07:02:03Z** suite ok kills=1 K3 0.7705; IMPLEMENT ranking shadow + rest/weather UQ + hex32 retry
+  - **Ranking shadow (same-row, no MODEL_VERSION bump)** `out/ranking_shadow_duel.json`:
+    - marketFairProb top-decile hit **0.912** [~0.84,0.95] n=689 · spread top−bottom **0.588**
+    - rankingP top **0.696** n=1483 · confidence/100 top **0.517** n=2380 (spread 0.088)
+    - trueProb−mfp top **0.421** n=389 (negative spread — not a board key)
+    - **Winner by top-decile hit (n≥100): marketFairProb.** Positive path: sort cascade mfp → rankingP independent → confidence display-only. Depth stays display-only (I1 kill −0.80 Spearman).
+  - **Rest/weather K3 replacement** `out/rest_weather_k3_replacement.json`:
+    - **16/16 cells OOT≥0.85** (60/40 split, fail-closed qhat) on nflverse REG: roof dome/outdoor, wind lt5/5–15/ge15, rest home+3/bal/away+3, totals cells — coverage **0.887–0.955**
+    - Label these **market-residual UQ bands** (|actual − +spread_line| / total_line), **not** engine edge. **K3 product stays NO_BAND.**
+    - Replaces killed K3 product bands as the honest NFL margin/total UQ caption path.
+  - **Hex32 retry** `resolve_hex32_retry.mjs`: newly **+25**, resolved **2065/2087 = 0.9895** (was 0.9775); **22** UNRESOLVED_AFTER_RETRY remain.
+  - Weather props e-process: n_games 7276, pool FIRE_NOTHING, Mmax 1.01 — no skill claim.
+  - MIMO-6 re-run: NFL still UNDERPOWERED on board; MLB/NCAAF BLOCK_market_fixed_offset; rolling coverage 0.495 fail-closed note stands.
+  - Standing OOT: alerts=6, books_cells=4.
+  - Suite re-run True. Ops still owed: board-export v3 for passVeto census.
+
 - **2026-09-19T07:00Z ERRATA + re-measure (spread sign)**
   - Measured nflverse `games.csv` convention: spearman(home_margin, spread_line)=**+0.43**; home wins **~68%** when spread_line>0 ⇒ **positive = home favored**. First-pass used −spread and inverted the market (market Brier artifact ~0.35, market RMSE artifact 18.3).
   - Corrected market: Phi(+spread/σ) Brier **~0.212** (n=6,952); market margin RMSE **12.44** on prior-duel sample.
