@@ -4117,3 +4117,60 @@ day one instead of three weeks later.
 **Still NOT RUN:** the monitor's own DB reader has never executed against a live
 database. Only its pure assessor was exercised, on values obtained by a
 read-only SELECT. Law 7 keeps the reader out of an agent session.
+
+## THE ARCHIVE OUTAGE DID NOT CAUSE THE CLV SHORTFALL. CLV IS 25.0% ON n 1,586, AND THE INTERVAL IS NOWHERE NEAR 52.4% (2026-09-19, Opus, read-only SELECT)
+
+Measured against live production, SELECT only, nothing written. Over published,
+non-bootstrap, DECIDED picks (WIN or LOSS), split by where each pick's
+`generatedAt` falls relative to the archive outage:
+
+| window | decided | CLV graded | % graded | beat close | rate | Wilson 95% |
+|---|---|---|---|---|---|---|
+| before 2026-08-19 | 1240 | 910 | 73.4% | 230 | 0.253 | 0.226 to 0.282 |
+| 08-19 to 08-22 | 314 | 180 | 57.3% | 54 | 0.300 | 0.238 to 0.371 |
+| THE HOLE 08-23 to 09-12 | 872 | 424 | 48.6% | 89 | 0.210 | 0.174 to 0.251 |
+| 09-13 onward | 126 | 72 | 57.1% | 23 | 0.319 | 0.223 to 0.434 |
+| **POOLED** | **2552** | **1586** | **62.1%** | **396** | **0.250** | **0.229 to 0.272** |
+
+**The headline, and it closes off a hopeful hypothesis rather than confirming
+one.** It would be convenient if the CLV shortfall were an artifact of the
+three-week archive outage, because then repairing the archive would repair CLV.
+It is not. Pooled CLV beat-close is 0.250 with a 95% interval of 0.229 to 0.272,
+on 1,586 graded rows. The ESTABLISHED requirement is 0.524. The interval does not
+approach it and is not close to approaching it. This CONFIRMS the roughly 23%
+already recorded in this file, at a larger sample and with a tighter bound.
+**CLV remains a model problem, exactly as this file already says, and no
+infrastructure repair will move it.**
+
+**What the outage DID change is COVERAGE, not rate.** Grading coverage falls to
+48.6% inside the hole against 57.3% to 73.4% outside it. So the outage cost
+measurements, not performance.
+
+**What must NOT be claimed from this table.** The hole reads 0.210 and the
+recovered window reads 0.319, which invites the story that CLV improved after the
+fix. The Wilson intervals OVERLAP (0.174 to 0.251 against 0.223 to 0.434). The
+recovered window carries 72 graded rows. That is not a difference, it is noise,
+and treating it as a trend would be the fifth appearance of the pooled-versus-
+stratum error this file already records four times. Every per-window rate here
+also sits inside the pooled interval or overlaps it.
+
+**A dead-column finding, worth knowing before anyone builds on these fields.**
+Across all 2,552 decided rows: `clvValue`, `clvVerdict` and `clvGradedAt` are
+populated on 1,586; `clvLockLine` on 1,344 and `clvCloseLine` on 1,342. But
+`clvPositive`, `clvPoints`, `clvCents`, `clvComputedAt` and the legacy
+`closingLine` are populated on ZERO rows. `clvPositive` in particular reads like
+the obvious field to measure "did we beat the close" and it is empty, so a query
+written against it returns 0.0% graded in every window and looks like a total
+grading outage. That is a measurement trap, not a finding; grade from
+`clvVerdict` or `clvValue`.
+
+**Method note.** A first pass here did exactly that and briefly read CLV grading
+as 0% everywhere. Pulling the fill rate of every CLV column at once is what
+caught it, before anything was written down. Check the whole column family before
+concluding a pipeline is dead.
+
+**Sample floors, for whoever pushes on this next.** The forward-looking,
+post-recovery sample is 126 decided and 72 graded. Nothing about the current
+engine's CLV can be concluded from 72 rows. Distinguishing 0.25 from 0.524 needs
+far fewer rows than distinguishing 0.25 from 0.32, and it is the second
+comparison that any "is it improving" claim requires.
