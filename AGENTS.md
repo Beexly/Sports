@@ -3492,3 +3492,19 @@ Read-only browser pass, 2026-09-18 ~21:08–21:35 CDT, three parallel passes (ac
 - Official NFL play-by-play description: @sfdata9ers passing chart ("All QB plays considered for Total EPA & EPA/Play").
 - StatRankings: all @MagicSportsGuy data; statrankings.com/ai prompt PDF lets subscribers self-generate matchup reports; StatRankings+ subscription connects to Claude/ChatGPT per pinned post.
 - @sfdata9ers method (own reply): "NFL data + having fun with Python". No post revealed an API, scraping target, or non-public pipeline beyond these.
+
+**SEAT-1 ADDENDUM, same night (compact - full detail in the research dir):** all-seat
+mills landed: wind 15-19 completion + deep-ball penalties GRADUATE as measured props
+factors (>=20 mph not established; spread/total wind addends stay BLOCKED); RZ
+snap-tensor REPRODUCES the pasted lookup; the pasted 4th-down table DIES (measured
+attempts-basis 67.0/56.2/47.5/28.0, TD counts as conversion); sigma ladder claim
+FAILS (14.36 vs 14.69, direction opposite); turnover occurrence model FAILS its
+0.30 kill (stays Rung-1 descriptive; evaluator baseline is kept-share 0.5488, the
+locked 46.3% is the defense-side complement). PASS census: 3 live PASS-decision
+violations on published PENDING rows (White Sox -1.5 triplet, ids in the research
+README). Dual-denominator CLV: MLB TOTALS 57.76% strict (n=438), stable across
+season halves (62.4%/56.1%) - per-market claims only, never pooled. New modules:
+signals/luck/turnover-luck.ts, signals/environmental/high-wind-prop-decay.ts,
+signals/tactical/down-distance-conversion-tensor.ts - all Rung 1, weight 0.00,
+engine suite 283 files / 3,168 tests / 0 failures. The skeptic one-pager (why
+nothing beats the close on mainlines, where edges live) is in the research README.

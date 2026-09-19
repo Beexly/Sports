@@ -587,3 +587,41 @@ play-by-play. We cannot, and here is the mechanism, not just the score.
 
 Signed against the numbers: every figure above traces to a command in this directory
 or an AGENTS.md-locked measurement; re-run scripts/ to dispute any line.
+
+## Gap-sweep pass: signal modules landed, CLV stability, W3 artifact corrected
+
+**SIGNAL MODULES (code, weight 0.00, Rung 1):** the mills are now consumable modules,
+not comments:
+- `packages/prediction-engine/src/signals/environmental/high-wind-prop-decay.ts` +
+  7 tests: MEASURED table only (15-19 mph completion -1.5pp / YPA -0.318 / deep-target
+  -16.6% rel; >=20 mph returns neutral+notEstablished). THROWS on spread/ML/total
+  contexts (wind addends BLOCKED). Replaces the dead pasted lookup at the path
+  Gemini's Batch 8 would have used - merge resolves to the measured version.
+- `packages/prediction-engine/src/signals/tactical/down-distance-conversion-tensor.ts`
+  + 7 tests: RZ snap tensor (43.4/34.2/19.7/10.9/7.2) + 4th-down attempts table
+  (67.0/56.2/47.5/28.0) + 4th&1 run/pass split (71.2/54.6) with selection-bias
+  caveat. The pasted 53.0/41.8/33.2/24.9 does not exist in this file.
+- Full engine suite WITH these modules: 283 files / 3,168 tests / 0 failures;
+  engine tsc clean; 0 `as any`.
+
+**W3 SLATE ARTIFACT CORRECTED:** the first CSV shipped a sign-broken edge column
+(model - market across differing conventions). Regenerated
+(`scripts/w3_slate_v2.py`, conventions stated in-script: spread_line positive = home
+favored, verified empirically; edge_home_view = model - market, positive = model
+likes the home side more). Largest divergences: SEA@WAS -10.5 (model likes the
+home side less), CIN@PIT +9.7, NYJ@DET +8.1. Hypotheses for Tuesday's scoring,
+not picks.
+
+**MLB TOTALS CLV STABILITY (pre-stated kill: strict < 52% in either season half ->
+unstable):** Apr-Jun commence 62.39% (n=117); Jul+ 56.07% (n=321). BOTH halves clear
+52% - the edge PERSISTS across the season, larger sample still strong. Honest
+caveats: fills are near-single-book (FanDuel-heavy), CLV grading coverage begins
+June (settled<Jun window is empty by coverage, not by absence of edge), early-half
+n=117. VERDICT: observed and persistent within coverage - the strongest per-market
+signal this repo has measured, and the primary target for the thin-market strategy.
+Data: `data/mlb_totals_clv_stability.csv` (needs NEON_RO), script
+`scripts/mlb_totals_stability.py`.
+
+**DELIBERATE SKIP:** books-depth replica re-query - the v5.2.7 stratum was measured
+hours ago (n=86/116, not established); no new settled rows have landed since. A
+redundant query would be theater, not diligence.
