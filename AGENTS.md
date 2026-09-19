@@ -3932,3 +3932,52 @@ a track record until that is settled.
 `games."sportId"` joined to `sports`. `bookmakerCount` IS on `picks`, so the
 bookmaker bucket the statistics lane reported as unavailable is available from
 the database even though it is absent from the receipts export.
+
+### CORRECTION, same session: the books-depth gap is INFLATED BY VERSION MIXING, and the pooled non-overlap does not survive stratification
+
+I ran the confound check on my own finding before anyone built on it. Stratifying
+the MLB pre-game SPREAD rows by `modelVersion`, bins with n >= 9:
+
+| modelVersion | books | n | hit (decided) | gap |
+|---|---|---|---|---|
+| v5.0.0 | 3-9 | 154 | 0.6039 | |
+| v5.0.0 | 10+ | 26 | 0.2692 | -33.5pp |
+| v5.1.0 | 3-9 | 155 | 0.4452 | |
+| v5.1.0 | 10+ | 46 | 0.3478 | -9.7pp |
+| **v5.2.7** | **3-9** | **86** | **0.4767** | |
+| **v5.2.7** | **10+** | **116** | **0.4052** | **-7.2pp** |
+
+**What survives:** the DIRECTION is consistent in all three versions. More books
+hits worse every time. As a sign test on three strata that is p = 0.125 one-sided
+if the strata were independent coin flips, which is suggestive and nothing more.
+
+**What does NOT survive:** the headline. On the DEPLOYED version the gap is
+-7.2 points, not the -13.4 the pooled figure showed, and the Wilson intervals
+around 0.4052 (n 116, roughly [0.32, 0.50]) and 0.4767 (n 86, roughly
+[0.37, 0.58]) OVERLAP substantially. **On v5.2.7 alone the books gap is not
+statistically established.** The pooled non-overlap I reported one commit earlier
+was produced by mixing engine versions whose base rates differ, with wildly
+unbalanced cell counts (v5.0.0 carries 154 rows at 3-9 against 26 at 10+).
+
+**That is Simpson's paradox, and it is the fourth appearance of one defect
+tonight**, after the pooled ECE sitting below every stratum, the Mondrian
+group-coverage result, and the ordering-basis collinearity. It caught MY OWN
+measurement this time, one commit after I wrote the warning. The lesson is not
+subtle and it is now the house rule:
+
+**NEVER report a pooled rate on this board without stratifying by modelVersion
+first.** Engine versions have different base rates and wildly different cell
+counts, so any pooled comparison silently weights retired versions. This applies
+to hit rates, calibration, closing-line value and any signal backtest.
+
+**What is still true and unaffected:** the composite awards `consensusScore` 30
+plus `marketDepthScore` 20, so fifty confidence points key off book depth, and
+`consensusPct` is structurally pinned at 1.0000 on MLB run lines. Those are
+structural facts about the scorer, not inferences from this sample. The open
+question is now narrower and better posed: does book depth predict ANYTHING on
+the deployed version, and the honest answer today is that the sample cannot say.
+More settled v5.2.7 rows, or the historical backtest corpus, is what answers it.
+
+The timing result is NOT affected: pre-game against in-play was measured on the
+full board and reproduces a 20-point gap that no version split plausibly erases,
+but stratifying it by version is now a named follow-up rather than an assumption.
