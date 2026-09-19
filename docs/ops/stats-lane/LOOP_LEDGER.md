@@ -1,5 +1,11 @@
 # MIMO self-audit loop ledger
 
+- **2026-09-19T07:20:43Z** suite ok kills=1 K3 0.7705; IMPLEMENT totals path + cold-start Brier + coach registration
+  - **A Totals CRPS density:** n=683 settled TOTAL rows on export; **predictedMeanMargin = 0/683** → model-residual CRPS **NOT RUN** (export gap). Baseline residual CRPS on actualMargin **2.59**. Kill not evaluable until export carries predicted total. **Positive path:** `out/totals_binary_mfp_score.json` — TOTALS decided with marketFairProb scored on binary Brier/bits; logit-pool **MODEL_ADDS_INFORMATION** stands; e-process M_max **4.43&lt;20** → **no Ville skill language**.
+  - **B Cold-start prior vs market ML:** paired n=**543**; prior-EPA p Brier **0.247** vs market ML **0.207** → **PRIOR_LOSES_TO_MARKET_ML**. Law-11 baseline **0.211** stands (this subset market even tighter). Kill **not** met — independent fair p stays research.
+  - **C Coach go-rate:** **CANDIDATE_REGISTERED_NOT_WIRED** mean Spearman **0.428**; wire only after holdout Brier ≥0.002 n≥272 + factors YAML order gate.
+  - Suite re-run **True**. Ops still owed: board-export v3 (passVeto + **predictedTotal** for CRPS path).
+
 - **2026-09-19T07:20Z FLEET SYNTHESIS INTAKE (Grok walk-forward + Hermes README)**
   - **EXTERNAL claims recorded, not Mimo OBS** (`fleet_synthesis_intake.py` → `out/fleet_synthesis_mimo_2026-09-19.json`):
     - Grok 2019–2025 CRPS: market close **7.109** · DAVE k=8 **7.500** · play-pooled EPA **7.573** · Elo **7.576** · last-year **7.778**; DAVE ρ **0.349** vs play-pooled **0.323**
@@ -149,6 +155,14 @@
   - NEXT weather Mondrian all bins OOT>=0.85 → promote weather/roof residual bands as NFL margin UQ replacement
   - NEXT totals e-process M_max=4.430387116702636 < 20 → accumulate more settled totals + shrinkage eps sweep; formal Ville test — do not claim skill yet
 - **2026-09-19T07:02:03.492904+00:00** suite exits=[0, 0, 0, 0, 0, 0] kills=1 actions=6 score={"k3_best_cov": 0.7704918032786885, "hex32_resolve_rate": 0.97747963584092, "ml_clv_nonpush": 0.14210526315789473, "logit_pool_totals": "MODEL_ADDS_INFORMATION", "logit_pool_ml": "FIRE_NOTHING", "weather_bins_ge_085": "6/6", "eprocess_totals_Mmax": 4.430387116702636}
+  - KILL {'metric': 'K3_margin_band', 'value': 0.7704918032786885, 'line': 0.85, 'verdict': 'KILL_band_model'}
+  - NEXT K3 OOT < 0.85 → use weather/roof Mondrian + sport margin densities; No-band label on K3 product-market residuals
+  - NEXT hex32 resolve 0.9775 < 1.0 → retry remaining UNRESOLVED_NO_SCOREBOARD_MATCH via date±2 and name aliases
+  - NEXT ML CLV 0.142 < 0.50 → e-process + logit-pool gates; totals-first product; no ML beat-close claim
+  - NEXT totals add info vs market (logit-pool) → advance totals density/CRPS path + e-process accumulation; keep kill lines
+  - NEXT weather Mondrian all bins OOT>=0.85 → promote weather/roof residual bands as NFL margin UQ replacement
+  - NEXT totals e-process M_max=4.430387116702636 < 20 → accumulate more settled totals + shrinkage eps sweep; formal Ville test — do not claim skill yet
+- **2026-09-19T07:20:43.929775+00:00** suite exits=[0, 0, 0, 0, 0, 0] kills=1 actions=6 score={"k3_best_cov": 0.7704918032786885, "hex32_resolve_rate": 0.97747963584092, "ml_clv_nonpush": 0.14210526315789473, "logit_pool_totals": "MODEL_ADDS_INFORMATION", "logit_pool_ml": "FIRE_NOTHING", "weather_bins_ge_085": "6/6", "eprocess_totals_Mmax": 4.430387116702636}
   - KILL {'metric': 'K3_margin_band', 'value': 0.7704918032786885, 'line': 0.85, 'verdict': 'KILL_band_model'}
   - NEXT K3 OOT < 0.85 → use weather/roof Mondrian + sport margin densities; No-band label on K3 product-market residuals
   - NEXT hex32 resolve 0.9775 < 1.0 → retry remaining UNRESOLVED_NO_SCOREBOARD_MATCH via date±2 and name aliases
