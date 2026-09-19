@@ -85,6 +85,11 @@ vi.mock("@sports/prediction-engine", async (importOriginal) => {
 // --- DB: only game.findMany is exercised by buildLiveSlate ---
 vi.mock("@sports/db", () => ({
   db: { game: { findMany: mocks.gameFindMany } },
+  // `isStubMode` is read on the path to this handler; an omitted export makes
+  // every read throw, and callers that absorb it serve a fallback while the
+  // file still reports green. Production default: a real DB is not stubbed.
+  isStubMode: () => false,
+  isDemoPicksEnabled: () => false,
 }));
 
 // --- Board state: returns null (no published rows cross-ref) ---

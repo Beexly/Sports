@@ -17,7 +17,13 @@ const calls: string[] = [];
 
 vi.mock("@/lib/cron/authorize", () => ({ cronAuthError: () => null }));
 vi.mock("@/lib/observability/sentry", () => ({ captureError: vi.fn() }));
-vi.mock("@sports/db", () => ({ db: {} }));
+vi.mock("@sports/db", () => ({
+  db: {},
+  // `isStubMode` is read on the path to this handler; an omitted export makes
+  // every read throw, and callers that absorb it serve a fallback while the
+  // file still reports green. Production default: a real DB is not stubbed.
+  isStubMode: () => false,
+}));
 vi.mock("@sports/data-ingestion", () => ({
   SUPPORTED_SPORTS: [
     { key: "baseball_mlb", name: "MLB" },

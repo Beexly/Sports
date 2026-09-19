@@ -160,7 +160,25 @@ const PREDICTION_ENGINE_TARGET: TargetModule = {
   realFile: path.join(PACKAGES_ROOT, "prediction-engine", "src", "index.ts"),
 };
 
-const TARGETS: readonly TargetModule[] = [AUTH_TARGET, PREDICTION_ENGINE_TARGET];
+/**
+ * Third target, added after a live instance on a THIRD module: a partial
+ * `@sports/db` factory in `picks-prod-seed-exclusion.test.ts` omitted
+ * `isStubMode`, which the durable proven-path and ranking-pause readers both
+ * read on the way to the handler under test. Every read threw, both callers
+ * absorbed it as UNAVAILABLE and served a fallback, and the file still reported
+ * 4/4 green -- the defect was visible only as stderr nobody reads.
+ *
+ * `@sports/db` re-exports `@prisma/client` wholesale (`export *`). That does not
+ * enlarge this guard's work, because the assertion is driven by the names a
+ * test's own call graph READS, not by the target's full surface: a Prisma name
+ * is only ever checked if some reachable line actually reads it.
+ */
+const DB_TARGET: TargetModule = {
+  specifier: "@sports/db",
+  realFile: path.join(PACKAGES_ROOT, "db", "src", "index.ts"),
+};
+
+const TARGETS: readonly TargetModule[] = [AUTH_TARGET, PREDICTION_ENGINE_TARGET, DB_TARGET];
 
 // ---------------------------------------------------------------------------
 // Filesystem + module-specifier resolution (cached)
@@ -950,7 +968,7 @@ beforeAll(async () => {
   result = await runGuard();
 }, 30_000);
 
-describe("partial vi.mock factory survey (@/lib/auth, @sports/prediction-engine)", () => {
+describe("partial vi.mock factory survey (@/lib/auth, @sports/prediction-engine, @sports/db)", () => {
   it("finds a nonzero, reported count of mocking files for each target", () => {
     for (const row of result.survey) {
       // eslint-disable-next-line no-console
@@ -1012,7 +1030,7 @@ describe("authModuleMock() defaults stay in sync with the real @/lib/auth export
 });
 
 describe("no vi.mock factory omits an export its own code under test reaches for", () => {
-  it("has zero missing-export drift across every @/lib/auth and @sports/prediction-engine mock", () => {
+  it("has zero missing-export drift across every @/lib/auth, @sports/prediction-engine and @sports/db mock", () => {
     if (result.failures.length > 0) {
       const lines = result.failures.map(
         (f) =>
