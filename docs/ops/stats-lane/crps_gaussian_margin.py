@@ -113,9 +113,38 @@ def main() -> int:
     mean_y = mean(r["y"] for r in rows)
     crps_mean = mean_crps([(mean_y, max(sigma_pool, 1e-6), r["y"]) for r in rows])
 
-    # Kill line: candidate density must beat widened-Gaussian *market/point* baseline by >=0.01
-    # Here baseline IS widened-Gaussian on model point μ — so a better density model
-    # must report CRPS < crps_base - 0.01. Without a second density, status is BASELINE_ONLY.
+    # CRPS by sport / books bucket (R2 research)
+    from collections import Counter
+
+    def crps_group(pred_fn, label):
+        buckets = defaultdict(list)
+        for r in rows:
+            buckets[pred_fn(r)].append(r)
+        out = []
+        for k, sub in sorted(buckets.items(), key=lambda kv: -len(kv[1])):
+            if len(sub) < 30:
+                out.append({"group": k, "n": len(sub), "crps": None, "status": "THIN_n<30"})
+                continue
+            if args.sigma_source == "sport_residual_std":
+                sig = max(sigma_by_sport.get(sub[0]["sport"], sigma_pool), 1e-6)
+            else:
+                sig = max(sigma_pool, 1e-6)
+            # per-group sigma option
+            res = [r["y"] - r["mu"] for r in sub]
+            sig_g = max(pstdev(res), 1e-6) if len(res) > 1 else sig
+            crps_g = mean_crps([(r["mu"], sig_g, r["y"]) for r in sub])
+            out.append(
+                {
+                    "group": k,
+                    "n": len(sub),
+                    "sigma_group": sig_g,
+                    "crps": crps_g,
+                    "mae": mean(abs(x) for x in res),
+                    "status": "ok",
+                }
+            )
+        return {"axis": label, "groups": out}
+
     report = {
         "ok": True,
         "n": len(rows),
@@ -125,8 +154,9 @@ def main() -> int:
         "mae_point": mae,
         "crps_widened_gaussian_on_model_mu": crps_base,
         "crps_mean_y_gaussian": crps_mean,
+        "crps_by_sport": crps_group(lambda r: r["sport"], "sport"),
         "kill_line": "Advance density model only if CRPS < crps_widened_gaussian_on_model_mu - 0.01 on n>=150",
-        "status": "BASELINE_ONLY_no_second_density_model",
+        "status": "BASELINE_PLUS_STRATIFIED",
         "note": "Replacement for Brier/MAE on continuous margins (blueprint Rung 2).",
         "attribution": "Gaussian CRPS closed form; nflverse-style residuals if export joined",
     }
