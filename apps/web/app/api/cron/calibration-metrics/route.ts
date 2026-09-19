@@ -174,7 +174,7 @@ async function loadSettledCalibrationSamples(): Promise<{
     // picks; their publish-time market probability is recomputed with the
     // receipt's own de-vig and reported as market_p_from_odds_table (two or
     // more books) or market_p_single_book (one book, C-110).
-    const oddsTable = await loadPublishTimeMarketPResolver(db, rows);
+    const oddsTable = await loadPublishTimeMarketPResolver(db as never, rows);
 
     // Eligibility sample: market-anchored p only; three-way moneylines and
     // picks with no market probability are counted in `excluded`, never scored.
