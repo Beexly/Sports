@@ -3981,3 +3981,70 @@ More settled v5.2.7 rows, or the historical backtest corpus, is what answers it.
 The timing result is NOT affected: pre-game against in-play was measured on the
 full board and reproduces a 20-point gap that no version split plausibly erases,
 but stratifying it by version is now a named follow-up rather than an assumption.
+
+---
+
+## DOCTRINE: CLOSING-LINE VALUE IS BANNED AS A SIGNAL ADMISSION GATE (2026-09-19, founder ruling, enforced)
+
+**No signal may be required to beat the closing line before its weight is allowed
+to move off zero. Any design that proposes a realized-CLV threshold as a
+promotion criterion is rejected on sight.** This was proposed once, in an
+otherwise strong registry blueprint, as a fourth admission gate requiring
+realized CLV above +1.5%. It is struck.
+
+**Three reasons, and the second is the one that matters.**
+
+1. A CLV gate admits only signals the market ALREADY prices. That makes the
+   closing line a ceiling by construction, so the best the engine could ever do
+   is rediscover the market.
+2. **It is anti-correlated with originality, and it structurally excludes exactly
+   the signals this product is trying to build.** Cognitive load, sleep debt,
+   travel stress, nutrition, contract incentives: the market prices NONE of them,
+   so the closing line carries no information about them, and a signal built on
+   them would fail a CLV gate PRECISELY BECAUSE IT IS NOVEL. A CLV promotion gate
+   is a machine for rejecting every signal that would differentiate this product.
+3. It is not even computable across the archive outage of 2026-08-23 to 09-12, so
+   the gate is undefined on part of any corpus that spans it.
+
+**What replaces it: Brier or log-loss against REALIZED OUTCOMES.** Did the signal
+improve the probability estimate against what actually happened. That needs no
+closing line and it works identically for a nutrition signal and a market signal.
+
+**Keep this distinction, because the two are routinely confused.** Brier measured
+against outcomes, with the market's Brier as the comparison baseline, is a SKILL
+test and is legitimate. Closing-line value is a LINE-MOVEMENT AGREEMENT test and
+is not. Only the first may gate a signal.
+
+**Where CLV may still appear:** as a diagnostic, and as a revenue-ladder
+milestone, which is a commercial claim about the published record rather than a
+gate on what the engine is allowed to learn. It never gates a signal.
+
+### Other defects found in that same blueprint, recorded so they are not repeated
+
+- Its reference `auditSignalAdmission` returns hardcoded `maxCorrelation: 0.38`
+  and `realizedClv: 0.022` on the success path: invented numbers presented as
+  measurements, inside the very function meant to enforce evidence. Law 8.
+- Its default kill line of Brier 0.250 is VACUOUS. A constant 0.5 forecast scores
+  exactly 0.25, so that threshold admits a coin flip. This repo already documents
+  the identical defect in the 0.22 Brier floor, which a no-skill base-rate
+  forecast clears.
+- It uses `as any` in the registry runner. Strict TypeScript forbids it.
+
+### What was genuinely excellent in it, and is adopted
+
+**Phantom consensus through multicollinearity.** If five signals all read the
+same upstream table and all lean the same way, the edge engine records agreement
+as CONFIRMS at full credit rather than SOLO at a discount, so ONE source is
+counted five times as five independent confirmations. The fix is that agreement
+must be computed across distinct signal FAMILIES clustered by shared
+`dataDependencies`, never across a raw signal count. This is adopted into the
+registry design.
+
+### The open tension, named rather than hidden
+
+That blueprint caps ACTIVE signals at 17 across six families. The founder asked
+for hundreds. Both can be true, as hundreds of DECLARED rows with most blocked
+behind a named acquisition task and owner, against a small orthogonal set
+carrying weight. But 17 is a number from a design document, not a measurement.
+Whether the right ceiling is 17 or 70 is an empirical question, and the
+historical backtest corpus is what answers it. Do not treat 17 as settled.
