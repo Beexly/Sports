@@ -15,18 +15,26 @@
  * predicate's own boundaries, and the runner's behaviour through it.
  */
 import { describe, expect, it, vi } from "vitest";
-import { isSignalProbabilityValue, type SignalDefinition } from "@sports/types";
+import { isSignalProbabilityValue } from "@sports/types";
+// vitest hoists vi.mock above imports, so the mocked registry below is in
+// place before this module is evaluated. A top-level await import was used
+// first and does not compile under this package's module target.
+import { runSignalRegistry } from "../signal-registry-runner.js";
 
-const DEFAULT_KILL_LINE = {
-  maxBrierScoreVsMarket: 0.25,
-  minSettledSample: 100,
-  maxDivergenceZScore: 3,
-  maxAgeMinutes: 360,
-} as const;
+const CAPTURED_AT = "2026-09-19T00:00:00.000Z";
 
-function signal(over: Partial<SignalDefinition> & Pick<SignalDefinition, "id">): SignalDefinition {
-  return {
-    label: over.id,
+// The factory is hoisted above every module-scope declaration in this file, so
+// it must not close over a local helper. An earlier draft built these rows with
+// a `signal()` helper and the file collected ZERO tests, which vitest reports as
+// a passing run of nothing. Everything the factory needs is inline.
+vi.mock("../signal-registry-definitions.js", () => {
+  const killLine = {
+    maxBrierScoreVsMarket: 0.25,
+    minSettledSample: 100,
+    maxDivergenceZScore: 3,
+    maxAgeMinutes: 360,
+  };
+  const base = {
     category: "TEAM_RATES",
     family: "EFFICIENCY",
     outputKind: "2WAY_PROBABILITY",
@@ -35,32 +43,34 @@ function signal(over: Partial<SignalDefinition> & Pick<SignalDefinition, "id">):
     dataDependencies: [],
     activationStatus: "ACTIVE",
     trustWeight: 0.5,
-    killLine: DEFAULT_KILL_LINE,
+    killLine,
     isRightsCleared: () => true,
     acquisitionTask: null,
     blockedReason: null,
-    ...over,
-  } as SignalDefinition;
-}
-
-const CAPTURED_AT = "2026-09-19T00:00:00.000Z";
-
-vi.mock("../signal-registry-definitions.js", () => ({
-  SIGNAL_REGISTRY: [
-    signal({
-      id: "probability_signal",
-      evaluate: () => ({ homeFairProb: 0.61, awayFairProb: 0.39, capturedAt: CAPTURED_AT }),
-    }),
-    signal({
-      id: "continuous_signal",
-      outputKind: "CONTINUOUS_VALUE",
-      // The exact shape nflWindElasticitySignal returns today.
-      evaluate: () => ({ value: 0.92, capturedAt: CAPTURED_AT }),
-    }),
-  ],
-}));
-
-const { runSignalRegistry } = await import("../signal-registry-runner.js");
+  };
+  return {
+    SIGNAL_REGISTRY: [
+      {
+        ...base,
+        id: "probability_signal",
+        label: "probability_signal",
+        evaluate: () => ({
+          homeFairProb: 0.61,
+          awayFairProb: 0.39,
+          capturedAt: "2026-09-19T00:00:00.000Z",
+        }),
+      },
+      {
+        ...base,
+        id: "continuous_signal",
+        label: "continuous_signal",
+        outputKind: "CONTINUOUS_VALUE",
+        // The exact shape nflWindElasticitySignal returns today.
+        evaluate: () => ({ value: 0.92, capturedAt: "2026-09-19T00:00:00.000Z" }),
+      },
+    ],
+  };
+});
 
 const CTX = {
   sportKey: "americanfootball_nfl",

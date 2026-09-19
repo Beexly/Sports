@@ -265,6 +265,20 @@ export const rateModelSignal: SignalDefinition = {
       ]);
       if (leagueAvg == null || leagueAvg <= 0) return null;
 
+      // Both estimators already return homeFairProb/awayFairProb alongside
+      // their lambdas, so the probabilities are READ from whichever one fired
+      // rather than recomputed from the lambdas. The previous draft called a
+      // `poissonFairValueFromLambdas` helper that does not exist anywhere in
+      // the repo, so this evaluator never compiled.
+      //
+      // Source tagging mirrors build-independent-fair-values.ts exactly:
+      // legacy emits "dixon_coles" or "poisson" depending on which estimator
+      // produced the number, never the combined signal id. This file's own
+      // docblock requires ACTIVE signals to be byte-identical to the legacy
+      // procedural branches, and the source key is part of that output.
+      let fair:
+        | { homeFairProb: number; awayFairProb: number; source: string }
+        | null = null;
       if (isDixonColesValidSport(ctx.sportKey)) {
         const dc = dixonColesIndependentFairValue({
           sportKey: ctx.sportKey,
@@ -272,30 +286,36 @@ export const rateModelSignal: SignalDefinition = {
           awayRecords,
           leagueAvgScored: leagueAvg,
         });
-        if (dc && dc.homeFairProb != null && dc.awayFairProb != null) {
-          return {
+        if (dc) {
+          fair = {
             homeFairProb: dc.homeFairProb,
             awayFairProb: dc.awayFairProb,
-            capturedAt: ctx.now().toISOString(),
-            metadata: { source: "dixon_coles", lambdaHome: dc.lambdaHome, lambdaAway: dc.lambdaAway },
+            source: "dixon_coles",
           };
         }
       }
-
-      const poisson = poissonIndependentFairValue({
-        sportKey: ctx.sportKey,
-        homeRecords,
-        awayRecords,
-        leagueAvgScored: leagueAvg,
-      });
-      if (poisson && poisson.homeFairProb != null && poisson.awayFairProb != null) {
-        return {
-          homeFairProb: poisson.homeFairProb,
-          awayFairProb: poisson.awayFairProb,
-          capturedAt: ctx.now().toISOString(),
-          metadata: { source: "poisson", lambdaHome: poisson.lambdaHome, lambdaAway: poisson.lambdaAway },
-        };
+      if (!fair) {
+        const p = poissonIndependentFairValue({
+          sportKey: ctx.sportKey,
+          homeRecords,
+          awayRecords,
+          leagueAvgScored: leagueAvg,
+        });
+        if (p) {
+          fair = {
+            homeFairProb: p.homeFairProb,
+            awayFairProb: p.awayFairProb,
+            source: "poisson",
+          };
+        }
       }
+      if (!fair) return null;
+      return {
+        homeFairProb: fair.homeFairProb,
+        awayFairProb: fair.awayFairProb,
+        capturedAt: ctx.now().toISOString(),
+        metadata: { source: fair.source },
+      };
     } catch {
       return null;
     }
@@ -304,11 +324,11 @@ export const rateModelSignal: SignalDefinition = {
 };
 
 /**
- * 5b) Skellam ATS Cover from Scoring Rate Lambdas
+ * 5b) Skellam Cover Model (Spread Fair Value from Team Lambdas)
  */
 export const skellamCoverSignal: SignalDefinition = {
   id: SKELLAM_COVER_SOURCE,
-  label: "Skellam ATS Spread Cover Probability",
+  label: "Skellam Cover Spread Fair Value",
   category: "TEAM_RATES",
   family: "EFFICIENCY",
   outputKind: "SPREAD_COVER_PROBABILITY",
@@ -520,7 +540,7 @@ export const polymarketGammaSignal: SignalDefinition = {
 export const nflOpponentAdjustedEpaSignal: SignalDefinition = {
   id: "nfl_epa_adj",
   label: "NFL Opponent-Adjusted EPA/Play (nflverse)",
-  category: "TEAM_RATES",
+  category: "RATINGS",
   family: "EFFICIENCY",
   outputKind: "2WAY_PROBABILITY",
   validSports: ["americanfootball_nfl"],
@@ -682,7 +702,7 @@ export const nflWindElasticitySignal: SignalDefinition = {
 export const nflCoachingTendenciesSignal: SignalDefinition = {
   id: "nfl_coaching_tendencies",
   label: "NFL Coaching 2nd-Down Run Alternation & 4th Down Conservatism",
-  category: "TEAM_RATES",
+  category: "PACE",
   family: "SITUATIONAL",
   outputKind: "CONTINUOUS_VALUE",
   validSports: ["americanfootball_nfl"],
@@ -754,7 +774,7 @@ export const nflRedzoneTeLeverageSignal: SignalDefinition = {
 export const nflOffensiveLineTrenchSignal: SignalDefinition = {
   id: "nfl_offensive_line_trench",
   label: "NFL Offensive Line Continuity & PBWR Trench Edge",
-  category: "PLAYER_AVAILABILITY",
+  category: "TEAM_RATES",
   family: "TRENCHES",
   outputKind: "CONTINUOUS_VALUE",
   validSports: ["americanfootball_nfl"],

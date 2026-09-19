@@ -47,7 +47,8 @@ export type SignalOutputKind =
   // three probability kinds to satisfy the compiler, because the next edit
   // then renames `value` to `homeFairProb` and a 0.92 yards multiplier
   // publishes as a 92% home win probability on a customer-facing board.
-  | "CONTINUOUS_VALUE";
+  | "CONTINUOUS_VALUE"
+  | "MULTIPLIER";
 
 export interface SignalKillLine {
   /** Maximum acceptable Brier score vs de-vigged market consensus (Default: 0.250). */
