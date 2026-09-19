@@ -675,16 +675,48 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     ? ` Context: ${contextClauses.join(", ")}.`
     : "";
 
-  const reasoning =
-    `${chosenTeam} ${spreadDisplay} backed by ${Math.round(consensusPct * 100)}% of ${pricedOdds.length} ` +
-    `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
-    `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
-    contextNote +
-    ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
+  const firstContextClause = contextClauses.length > 0
+    ? ` ${contextClauses[0]!.charAt(0).toUpperCase() + contextClauses[0]!.slice(1)} noted.`
+    : "";
 
-  const reasoningShort =
-    `${Math.round(consensusPct * 100)}% bookmaker consensus on ${chosenTeam} ${spreadDisplay}.` +
-    (contextClauses.length > 0 ? ` ${contextClauses[0]!.charAt(0).toUpperCase() + contextClauses[0]!.slice(1)} noted.` : "");
+  // Baseball's run line is a FIXED ladder (isPublishableSpreadLine above:
+  // 1.5 standard, 2.5/3.5 alternates only). Every book that prices this
+  // market posts one of those three numbers, so "N% bookmaker consensus"
+  // reads to a customer as independent books agreeing this side is the
+  // better bet, when what it actually measures — on this market only — is
+  // that the number itself has almost no room to differ. Measured on
+  // production 2026-09-13: all 14 published MLB SPREAD picks that day read
+  // consensusPct exactly 1.0000, while TOTAL (0.6364-1.0000) and MONEYLINE
+  // picks on the same board varied — the claim is honest for those markets
+  // and structurally hollow for this one (AGENTS.md, "consensusPct carries
+  // no information on MLB run lines").
+  //
+  // This changes ONLY the prose. `consensusPct`, `consensusScore` and every
+  // number that feeds `confidence` are untouched below — reweighting what
+  // book agreement is worth for a fixed-ladder market is a scoring change
+  // and needs its own MODEL_VERSION bump, not a copy fix. The raw number
+  // still ships on the pick (`consensusPct` field, `factorBreakdown`) —
+  // this only stops the SENTENCE from overclaiming what it means.
+  const isFixedLadderSpreadMarket = isBaseballSport(input.sport);
+
+  const reasoning = isFixedLadderSpreadMarket
+    ? `${chosenTeam} ${spreadDisplay}, the run line priced by ${pricedOdds.length} ` +
+      `bookmaker${pricedOdds.length === 1 ? "" : "s"}. The run line is a fixed number, so book ` +
+      `agreement on it is expected and not read as a signal here. Fair value: ${Math.round(fairProb * 100)}%. ` +
+      `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
+      contextNote +
+      ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`
+    : `${chosenTeam} ${spreadDisplay} backed by ${Math.round(consensusPct * 100)}% of ${pricedOdds.length} ` +
+      `bookmakers. Fair value: ${Math.round(fairProb * 100)}%. ` +
+      `Edge: ${rawEdge > 0 ? "+" : ""}${Math.round(rawEdge * 100 * 10) / 10}%.` +
+      contextNote +
+      ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
+
+  const reasoningShort = isFixedLadderSpreadMarket
+    ? `${pricedOdds.length} bookmaker${pricedOdds.length === 1 ? "" : "s"} price ${chosenTeam} ${spreadDisplay} ` +
+      `on the fixed run line.` + firstContextClause
+    : `${Math.round(consensusPct * 100)}% bookmaker consensus on ${chosenTeam} ${spreadDisplay}.` +
+      firstContextClause;
 
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
