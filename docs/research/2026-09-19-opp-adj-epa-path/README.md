@@ -625,3 +625,55 @@ Data: `data/mlb_totals_clv_stability.csv` (needs NEON_RO), script
 **DELIBERATE SKIP:** books-depth replica re-query - the v5.2.7 stratum was measured
 hours ago (n=86/116, not established); no new settled rows have landed since. A
 redundant query would be theater, not diligence.
+
+## NEW AREAS (unmilled until now): market self-calibration, referees, rest, surface, primetime, division, penalties
+
+**1. MARKET SELF-CALIBRATION - the benchmark, measured directly for the first time.**
+De-vigged closing moneylines vs outcomes, 2019-2025 (6,617 home-side observations):
+Brier 0.2110, log-loss 0.6093, mean overround 1.0273. Calibration by implied bin:
+mid-favorites run slightly under implied (0.55 implied -> 53.2% realized; 0.65 ->
+61.7%), heavy favorites run OVER implied (0.88 -> 91.8%). Mild favorite-longshot
+shape, exactly as betting literature predicts. CONSEQUENCE: this is the bar every
+model column is measured against, now on our own corpus instead of folklore - and
+the wedge is in the tails (heavy favorites, big dogs), not the middle.
+
+**2. REFEREE CREWS - NEW thin-market angle, flags Rung-2.** 20 crews with n>=30
+games: crew mean penalty-yards/game spans 88.2 (Vinovich) to 109.5 (Hochuli) -
+spread 21.3 yds/game, ABOVE the pre-stated 15-yd flag. Crew assignment is public
+and moves expected penalty volume by roughly 1.5-2 points of expected scoring.
+Totals angle, descriptive until Rung-2. (Correlation-not-causation caveat: crews
+are assigned by league grade, so crew may proxy game type.)
+
+**3. PENALTY PERSISTENCE - STRONGEST FACTOR CANDIDATE OF THE NIGHT.** Team-game
+penalty yards W1-8 -> W9-18 Spearman 0.523 (n=32; league mean 50.6 yds/team-game).
+Pre-registered bar 0.15: CANDIDATE by 3.5x. Compare turnover occurrence (~0) -
+penalty discipline is a genuinely sticky team skill and a legitimate factor input
+candidate for the next scored version. Weight 0.00 until Rung-2 + refit.
+
+**4. REST DIFFERENTIAL: doctrine CONFIRMED.** Slope +0.167 pts per rest-day
+differential (home +2..+4 bucket +1.3 pts vs equal-rest baseline; +5+ regresses
+to +0.7). The locked "tiny coefficient" reading survives on 2019-2025.
+
+**5. SURFACE (A27 scoring version): artificial turf +2.55 points/game**
+(45.71 vs 43.16 mean total; n=2,790/4,194). Injury effects NOT_RUN (no column).
+
+**6. PRIMETIME: negligible.** +1.0 point of total, |margin| sd unchanged.
+
+**7. DIVISION GAMES: folk wisdom mildly confirmed.** Abs margin 11.36 vs 11.66;
+total -1.5 points vs non-division.
+
+**SEAT-3 CLOSE-OUT (from seat3_finish):** totals rolling-Poisson CRPS 8.167 vs
+close 7.303 (n=240) - FAIL as pre-registered, the close stays the totals mu.
+aDOT>20 deep-ball penalty at 15-19 mph GRADUATES (8.65% [0.0761,0.0983] vs base
+[0.1016,0.1087], -16.6% relative). 4th&1 split: run 71.2% / pass 54.6% - the
+pasted 53.0% matches neither.
+
+**MLB TOTALS CLV STABILITY (kill: < 52% in either half -> unstable):**
+Apr-Jun commence 62.39% (n=117); Jul+ 56.07% (n=321). BOTH clear - the edge
+persists across the season. Caveats: near-single-book fills; grading coverage
+begins June. This is the repo's strongest per-market finding and the anchor of the
+thin-market strategy.
+
+**DELIBERATE SKIPS:** books-depth re-query (no new settled rows since the hours-ago
+measurement); drive-basis RZ tensor (derivation); true Skellam/NB2 totals baseline
+(Normal-approx used; stricter variant queued for any dispute).
