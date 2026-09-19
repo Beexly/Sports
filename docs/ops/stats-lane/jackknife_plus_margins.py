@@ -253,10 +253,17 @@ def main() -> int:
         "min_n_oot_total_per_sport": MIN_N_OOT_TOTAL,
         "method": "Jackknife+ LOO mean, sport Mondrian, no borrowing",
         "warning": "Mondrian/J+ partition residuals; they do not fix inverted ranking scores.",
+        "jackknife_plus_theorem_coverage": max(0.0, 1 - 2 * args.alpha),
+        "split_conformal_nominal_coverage": 1 - args.alpha,
+        "coverage_label_rule": (
+            "J+ guarantee is 1-2α (0.80 at α=0.10), NOT 1-α. "
+            "Compare J+ coverage to 1-2α; compare split to 1-α. "
+            "Do not call J+ 'undercover vs 90%' when it meets 1-2α."
+        ),
         "by_sport": {},
         "kill_line": (
-            "Kill J+ preference if OOT coverage_J+ < coverage_split - 0.03 "
-            "and width_J+ > 0.90 * width_split"
+            "Kill J+ preference if OOT coverage_J+ < (1-2α) OR "
+            "(coverage_J+ < coverage_split - 0.03 AND width_J+ > 0.90 * width_split)"
         ),
     }
 

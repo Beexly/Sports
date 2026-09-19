@@ -124,9 +124,9 @@ export function residualNonconformity(p: number, y: 0 | 1): number {
 }
 
 /**
- * Finite-sample conformal quantile (split CP):
- * rank = ceil((1-α)(n+1)) − 1, clamped to [0, n−1].
- * Standard inductive conformal formula (Vovk et al.).
+ * Finite-sample conformal quantile (split CP) — FAIL-CLOSED.
+ * k = ceil((1-α)(n+1)) 1-indexed; if k > n return +Infinity (no clamp).
+ * Clamping k to n yields coverage n/(n+1) while labeling 1-α (fake tightness).
  */
 export function conformalQuantile(
   scores: readonly number[],
@@ -135,10 +135,11 @@ export function conformalQuantile(
   const n = scores.length;
   if (n === 0) return Number.POSITIVE_INFINITY;
   const a = Math.min(1, Math.max(0, alpha));
+  if (!(a > 0 && a < 1)) return Number.POSITIVE_INFINITY;
   const sorted = [...scores].sort((x, y) => x - y);
-  const rank = Math.ceil((1 - a) * (n + 1)) - 1;
-  const idx = Math.min(n - 1, Math.max(0, rank));
-  return sorted[idx]!;
+  const k = Math.ceil((1 - a) * (n + 1));
+  if (k > n || k < 1) return Number.POSITIVE_INFINITY;
+  return sorted[k - 1]!;
 }
 
 /**

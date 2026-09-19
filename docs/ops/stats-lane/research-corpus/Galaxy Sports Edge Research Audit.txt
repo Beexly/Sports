@@ -1,0 +1,258 @@
+﻿Audit of Sports Probability Modeling, Conformal Calibration, and Market Efficiency Literature for Galaxy Sports Edge
+Literature Taxonomy: Methodological Clusters, Conflicts, and Consensus
+An audit of the triaged arXiv repository comprising over 1,300 rows, 58 dossiers, and the reconciled build plan reveals that prior automated triaging agents conflated foundational statistical literature, domain-specific fringe studies, and outdated programming tutorials under high relevance scores [1]. When evaluated against the operational requirements of live sports probability estimation, numeric line generation, calibration, and betting market efficiency, the literature segregates into seven distinct methodological clusters [1].                                    +-------------------------------------------------------+
+                                    |                GSE RESEARCH CORPUS                    |
+                                    |         (1,300+ arXiv Rows / 58 Dossiers)             |
+                                    +---------------------------+---------------------------+
+                                                                |
+         +-------------------+-------------------+--------------+--------------+-------------------+-------------------+
+         |                   |                   |                             |                   |                   |
++--------v--------+ +--------v--------+ +--------v--------+           +--------v--------+ +--------v--------+ +--------v--------+
+|  1. State-Space | |  2. Sequential  | |  3. Calibration |           |   4. Ranking    | |  5. Zero-Inflated| |   6. Tracking   |
+|   & Hierarchical| |   Inference &   | |   & Conformal   |           |  & Pairwise BTL | |    Rare Events  | |   & Spatial TDA |
+|   Generative    | |  Win-Martingale | |   Wrappers      |           |  Extensions     | |   Frameworks    | |   Feature Bloat |
+| (1701.05976, etc| |   (2608.12291)  | | (2208.08598, etc|           | (2501.02505, etc| |   (2501.17711)  | | (2607.27838, etc|
++-----------------+ +-----------------+ +-----------------+           +-----------------+ +-----------------+ +-----------------+
+                                                                               |
+                                                                               |
+                                                                      +--------v--------+
+                                                                      |  7. Diagnostic  |
+                                                                      |    Baselines    |
+                                                                      | (2408.08331, etc|
+                                                                      +-----------------+
+Literature Clusters
+Bayesian State-Space and Hierarchical Generative Models: This cluster represents the structural backbone for multi-sport probability modeling [1]. Its central premise is that latent team or player strength evolves temporally as a stochastic process, with sport-specific noise parameters (sigma_game) and likelihood functions that explicitly model the scoring rules and constraints of each sport [1]. Key literature includes paper 1701.05976 (a unified state-space model across Big Four North American leagues), paper 1911.01815 (a two-level hierarchical set and point model for volleyball), and paper 1607.00379 (a hierarchical Poisson rugby model) [1].
+Sequential Inference, Win-Martingales, and Free Boundaries: This cluster treats live, market-implied win probabilities as continuous-time diffusions or martingales [1]. Its premise is to solve optimal stopping and free-boundary problems to decide when to lock picks or execute trades before a game reaches its fixed horizon [1]. A representative paper is 2608.12291 (Sequential Inference for win-martingales), which is evaluated strictly via abstract metadata and designated as UNREAD due to the absence of accessible full text [1].
+Calibration Wrappers, Distributional Forecasting, and Conformal Prediction: This cluster focuses on post-processing point estimates or conditional quantiles using non-parametric wrappers to guarantee distribution-free coverage or quantify epistemic uncertainty on numeric lines and win probabilities [1, 2]. Essential references include paper 2208.08598 (Conformal Win Probability Calibration), Romano et al. (2019, arXiv:1905.03222 on Conformalized Quantile Regression), Barber et al. (2019, arXiv:1905.02928 on Jackknife+), and van der Laan & Alaa (2025, arXiv:2502.05676 on Generalized Venn-Abers bounds) [1, 2].
+Ranking Models and Ordinal Pairwise Extensions: This cluster derives win probabilities from partial rankings or ordinal outcome data rather than continuous score margins [1, 2]. It extends Bradley-Terry-Luce (BTL) and Elo frameworks using partial rankings and rank-clustered structures [1]. Key references include papers 2501.02505 and 2406.19563 (rank-clustered BTL models) and paper 2405.10247 (Bayesian Bradley-Terry-Davidson variants) [1].
+Rare Event and Zero-Inflated Outcome Heads: This cluster addresses zero-inflated or heavy-tailed outcome distributions, such as shutout props, exact goal counts, or low-frequency player props, by separating zero-generating processes from primary probability engines [1]. A primary example is paper 2501.17711 (Zero-Inflated Compound Poisson framework) [1].
+Feature Engineering Bloat: Spatio-Temporal Tracking and Topology: This cluster applies spatial tracking data, velocity vector fields, or persistent homology from Topological Data Analysis (TDA) to specific sports [1]. Representative examples include paper 2607.27838 (Vector field theory in soccer dynamics, marked UNREAD) and paper 2607.23509 (Topological Data Analysis for Tennis, marked UNREAD) [1].
+Diagnostic Baselines and Sequence Null-Hypotheses: This cluster establishes simple stochastic baselines (such as independent Poisson processes or record-gap distributions) as diagnostic benchmarks before deploying complex predictive pipelines [1]. Core literature includes paper 2408.08331 (ML versus Poisson baselines), paper 1704.00197 (iWinRNFL diagnostics), and paper 2608.01882 (Gap distributions in cricket, marked UNREAD) [1].
+Fights and Consensus in the Literature
+A major structural disagreement in the literature centers on whether a global calibration layer can be applied across all sports versus fitting per-sport noise scales (sigma_game) [1]. The literature firmly establishes that global calibrators are mathematically flawed because signal-to-noise ratios vary wildly by domain [1]. In the NBA, talent dispersion and home advantage dominate game outcomes, whereas in MLB and NHL, inherent game-level randomness dominates, keeping outcomes close to coin-flips even between teams of mismatched skill [1].
+A second methodological consensus involves the relationship between point-estimate calibration and conformal prediction intervals [1]. Conformal prediction guarantees interval coverage under sample exchangeability, but it cannot repair point-estimate bias [1]. If an underlying base model is severely miscalibrated, conformal wrappers yield prediction intervals that are unnecessarily wide or offset from the true conditional mean [1]. Consequently, base model specification and point calibration (such as optimizing directly under Brier loss) must precede conformal wrapping [1].
+A third critical conflict concerns feature engineering and target leakage [2]. Incorporating closing betting lines directly as input features into team strength models leaks market efficiency into historical training sets, destroying the model's ability to measure true Closing Line Value (CLV) [2]. The literature establishes that pure performance forecasting models—trained on play-by-play, box scores, and efficiency metrics—must remain strictly decoupled from market pricing models designed to track odds movement and sharp liquidity [1, 2].
+Spreadsheet Audit: Accuracy, Inflation, Thinness, and False Positives
+An examination of the 1,300+ triaged arXiv rows and 58 "high" dossiers demonstrates significant scoring distortion by previous automated agents [1]. The table below summarizes the audit status and operational calls for key dossiers [1].
+Paper ID
+Assigned Triage Rank
+Audit Status
+Claimed Utility in Triaged Sheet
+Actual Audit Findings & Operational Verdict
+1701.05976
+High (Top Tier)
+READ [cite: 1]
+Core multi-sport architecture for win probabilities [1].
+Accurate. Primary structural anchor. Proves distinct noise scales (sigma_game) across Big Four sports [1].
+2408.08331
+High
+READ [cite: 1]
+ML vs. Poisson baseline diagnostic [1].
+Accurate. Critical cheap diagnostic baseline to verify model skill prior to deploying complex ML architectures [1].
+1704.00197
+High
+READ [cite: 1]
+iWinRNFL NFL diagnostic tool [1].
+Accurate. Low-cost, essential diagnostic baseline for evaluating NFL probability models [1].
+2501.17711
+High (Score 19)
+READ [cite: 1]
+Olympic Medal STGCN-LSTM prediction [1].
+Heavily Inflated. Spatial-Temporal Graph Convolutional Network for Olympic country medal counts is feature bloat [1]. The Zero-Inflated Compound Poisson head is useful for props, but the core network should be skipped [1].
+1607.00379
+High (Score 20)
+READ [cite: 1]
+Production blueprint for PyMC3 hierarchical rugby model [1].
+Heavily Inflated. Basic 2014 tutorial using frozen PyMC3 code on a 6-nation dataset [1]. Useful only as an introductory conceptual reference, not a production model [1].
+2607.27838
+High
+UNREAD [cite: 1]
+Soccer vector field potential gradients for game models [1].
+Inflated / Feature Bloat. High-complexity spatio-temporal tracking theory [1]. Deprioritize until baseline point-estimate calibration is resolved [1].
+2607.23509
+High
+UNREAD [cite: 1]
+Topological Data Analysis (TDA) for ATP Tennis [1].
+Inflated / Feature Bloat. TDA persistent homology applied to tennis [1]. Unnecessary complexity compared to simple BTL ranking baselines [1].
+1911.01815
+High
+READ [cite: 1]
+Unified Bayesian volleyball set/point model [1].
+Thin on Metrics. High-quality rules-aware likelihood structure, but reports zero Brier scores or ECE metrics on betting lines [1].
+Detailed Evaluation of Triaged Claims
+The spreadsheet was correct in elevating paper 1701.05976 as the architectural anchor [1]. By framing observation models around betting-market point spreads and totals-implied margins rather than raw points, the paper establishes a standardized framework across sports with different scoring mechanisms [1]. The sheet was also correct in prioritizing cheap diagnostic baselines—such as Poisson goal models (2408.08331) and iWinRNFL (1704.00197)—before building deep neural architectures [1].
+However, relevance scoring suffered from severe keyword inflation [1]. Paper 2501.17711 was ranked "High" (Relevance Score 19) despite focusing on Olympic country medal counts using Spatial-Temporal Graph Convolutional Networks (STGCN-LSTM), representing premature feature bloat for live sports betting [1]. Paper 1607.00379 received a top relevance score of 20, despite being a 2014 tutorial using frozen PyMC3 code (https://github.com/springcoil/TutorialPyMCRugby) on a Six Nations rugby dataset [1]. Furthermore, pushing topological data analysis (2607.23509) and soccer vector potential fields (2607.27838) when core probability engines struggle against simple mean absolute error (MAE) baselines reflects flawed engineering prioritization [1].
+The sheet was thin regarding empirical verification [1]. Most papers in the dossier (such as 1911.01815) present log-score fits on niche leagues (e.g., Italian Superlega volleyball) but report zero Brier scores or Expected Calibration Error (ECE) metrics evaluated against liquid betting markets [1]. Additionally, while paper 1701.05976 covers NFL, NBA, MLB, and NHL, the triaged sheet failed to observe that Major League Soccer (MLS) parameters were completely omitted and require independent parameter estimation [1].
+Dead Domain Exclusions
+The spreadsheet contained numerous false positives from irrelevant domains that matched generic keywords [2]. These papers must be excluded from sports modeling pipelines, as detailed in the table below [2].
+Paper ID
+Original Title / Domain
+Relevance Evaluation
+Portability Line
+2012.10006
+Brain strain criteria in head impact biomechanics [2]
+Dead Domain [cite: 2]
+Pure biomechanical engineering; non-portable to statistical forecasting [2].
+2405.19125
+Mobile network urban anomaly detection framework [2]
+Dead Domain [cite: 2]
+Spatio-temporal telecom signaling; non-portable network optimization [2].
+2306.14462
+Item attribute graph recommendation system [2]
+Dead Domain [cite: 2]
+E-commerce recommendation filtering; non-portable [2].
+2207.13770
+Interactive UI reliability visualization tool [2]
+Dead Domain [cite: 2]
+Software interface usability study; non-portable [2].
+2608.06604
+Stellar activity and Kepler star rotation [2]
+Dead Domain [cite: 2]
+Astrophysics time series; non-portable domain [2].
+2607.17297
+Automotive aerodynamic fluid dynamics [2]
+Dead Domain [cite: 2]
+Computational fluid dynamics; non-portable [2].
+2601.17437
+Soft material stress-strain constitutive tensors [2]
+Dead Domain [cite: 2]
+Materials science tensor mechanics; non-portable [2].
+2601.13236
+Parallel MRI image reconstruction [2]
+Dead Domain [cite: 2]
+Medical image processing; non-portable [2].
+2604.21039
+Neutron star equation of state in nuclear physics [2]
+Dead Domain [cite: 2]
+Subatomic nuclear physics; non-portable [2].
+2603.06712
+Solar flare regression uncertainty quantification [2]
+Dead Domain [cite: 2]
+Heliophysics flare modeling; non-portable [2].
+Core Methodological Disagreements and Mind-Shifts for Operators
+Disagreement 1: Independent Per-Sport Models versus Shared Global Calibrators
+Attempting to pass all sports through a single global calibration architecture is mathematically unsound [1]. In paper 1701.05976, the authors state:"Bayesian state-space model on betting-market point spreads / totals-implied margins, not raw scores, so the observation model is comparable across NFL/NBA/NHL/MLB. Team strength theta_{i,s,w} evolves: between seasons: AR(1) with variance sigma^2_between; within season: random walk with variance sigma^2_within." [1]
+The empirical findings of 1701.05976 demonstrate that the NBA exhibits the largest talent dispersion and strongest home-court advantage, whereas MLB and NHL outcomes remain close to coin-flips given equal talent [1]. Because game-level noise (sigma_game) varies substantially between sports, each sport requires its own state-space parameterization and sport-specific calibration layer [1].
+Disagreement 2: Decoupling Pure Performance Forecasting from Market Pricing Models
+Fitting team strength models directly on market spreads or totals leaks market pricing efficiency into the performance feature space [1, 2]. To isolate Closing Line Value (CLV), operators must decouple the pure performance prediction engine (trained strictly on play-by-play, box scores, and drive efficiency) from the market pricing engine [1, 2]. Performance models evaluate underlying game dynamics, while market pricing models evaluate line movement and liquidity [1, 2].
+Disagreement 3: Rules-Aware Generative Likelihoods versus Generic Machine Learning Heads
+Fitting generic black-box classifiers (e.g., XGBoost, generic neural networks) directly to binary win/loss labels discards structural domain information [1]. In paper 1911.01815, the authors establish a rules-aware likelihood for volleyball:"Two-level hierarchical Bayesian model tailored to volleyball scoring rules. Level 1: logistic for set winner (team abilities + HA). Level 2, conditional on set winner: truncated negative binomial for loser's points; plus a Poisson inflation for extra points when the set goes beyond the 25/15..." [1]
+Similarly, paper 1607.00379 models rugby scores via a log-linear Poisson likelihood capturing attack, defense, and home advantage parameters [1]. Incorporating sport-specific scoring rules directly into the likelihood function generates superior probability distributions compared to unconstrained classification heads [1].
+Contradiction 1: Linear Quantile Regression Under-Coverage versus Conformal Validity
+A fundamental contradiction exists between raw quantile regression outputs and conformalized bounds [2]. In Understanding the Under-Coverage Bias in Uncertainty Estimation (Lin, Trivedi, & Sun, 2021, arXiv:2106.05515), the authors prove:"We prove that linear quantile regression suffers from an inherent under-coverage bias... For alpha > 0.5 and small d/n, the alpha-quantile learned by quantile regression roughly achieves coverage alpha - (alpha - 0.5) * d/n regardless of the noise distribution." [2]
+Un-conformalized quantile regression systematically under-covers in finite samples due to parameter estimation error proportional to d/n [2]. Conversely, Romano, Patterson, and Candes (2019, arXiv:1905.03222) demonstrate in Conformalized Quantile Regression (CQR):"The conformity score on the calibration set is E_i = max(q_{alpha_lo}(X_i) - Y_i, Y_i - q_{alpha_hi}(X_i))... Conformalized quantile regression (CQR)... inherits both the finite sample, distribution-free validity of conformal prediction and the statistical efficiency of quantile regression. Under exchangeability, P(Y_{n+1} in C(X_{n+1})) >= 1 - alpha in finite samples." [2]
+Operators must treat raw quantile outputs from neural networks or boosted trees as uncalibrated proposal distributions [2]. Every numeric line prediction must be processed through a conformal calibration step to guarantee valid finite-sample coverage [2].
+Contradiction 2: Fail-Closed Refusal versus Quantile Clamping (Fake Tightness)
+In small-sample calibration scenarios, theoretical guarantees conflict with heuristic production adjustments [2]. Angelopoulos and Bates (2021, arXiv:2107.07511) and Dietterich & Hostetler (2206.04860) state:"Compute q_hat as the ceil((n + 1)(1 - alpha)) / n empirical quantile of the calibration scores... The value of delta must be >= 1/(n+1) to ensure that ceil((1-delta)(n+1)) <= n... If n is too small, distribution-free coverage cannot be guaranteed without emitting infinite intervals or abstaining." [2]
+In contrast, practical selective regression literature (e.g., Schröder et al., 2024, arXiv:2402.16300) suggests truncating or clamping quantiles to empirical maximums to keep systems operational [2]. Clamping quantiles under small sample sizes (n < ceil(1/alpha) - 1) violates distribution-free coverage proofs, generating under-coverage and "fake tightness" [2]. When calibration sample sizes are insufficient, automated systems must fail-closed by issuing a "No-Bet" or abstention decision rather than truncating intervals to force execution [2].
+Contradiction 3: Binary Point Calibration Limits versus Venn-Abers Interval Bounds
+In binary side markets (win probabilities), point-estimate calibration faces severe theoretical limits [2]. Barber, Candes, Ramdas, and Tibshirani (2020, Electronic Journal of Statistics) prove:"In the binary regression setting, any algorithm providing distribution-free coverage of the conditional label probability pi(X) = P(Y=1|X) must necessarily also cover the binary label Y... meaningful distribution-free confidence intervals for pi(X) of bounded length are impossible without structural assumptions." [2]
+To address this limitation without introducing unverified assumptions, van der Laan and Alaa (2025, arXiv:2502.05676) propose Generalized Venn-Abers calibration:"Generalized Venn-Abers calibration extends Vovk's approach... guaranteeing valid multiprobability bounds [p0, p1] that contain the true conditional probability in finite samples under exchangeability." [2]
+Operators should avoid presenting single binary point probabilities as guaranteed truths [2]. Instead, systems should utilize Venn-Abers multiprobability bounds [p0, p1], using the interval width (p1 - p0) to measure epistemic uncertainty for expected value (EV) calculations and selective gating [2].
+Comprehensive Literature Register: Deep Evaluation and Quotes
+1701.05976: How often does the best team win? A unified approach to understanding randomness in North American sport
+Status: READ (Full Dossier & Reconciled Data Verified) [1]
+Method Assertion: Uses a Bayesian state-space model on betting-market point spreads and totals-implied margins rather than raw scores, making observation models comparable across NFL, NBA, NHL, and MLB [1]. Team strength theta_{i,s,w} evolves between seasons via an AR(1) process with variance sigma^2_between, and within seasons as a random walk with variance sigma^2_within [1].
+Reported Results: Analyzed a decade of Big Four data [1]. The NBA exhibits the largest talent dispersion and home advantage [1]. MLB and NHL outcomes remain closest to coin-flips given equal talent [1]. Market implied probability reliability is verified as high [1].
+Code Repository: https://github.com/bigfour/competitiveness (JAGS code + historical market lines) [1].
+Audit Call: Primary structural backbone [1]. Proves that independent per-sport noise scales (sigma_game) are mandatory [1].
+1911.01815: A Bayesian Quest for Finding a Unified Model for Predicting Volleyball Games
+Status: READ (Full Dossier & Reconciled Data Verified) [1]
+Method Assertion: Two-level hierarchical Bayesian model tailored to volleyball scoring rules [1]. Level 1 applies logistic regression for the set winner based on team abilities and home advantage [1]. Level 2 applies a truncated negative binomial distribution for the loser's points conditional on the set winner, plus Poisson inflation for extra points beyond 25 or 15 [1].
+Reported Results: Tested on Italian Superlega 2017/2018 data [1]. Demonstrates high reproducibility and fit, but omits Brier score and ECE metrics on betting markets [1].
+Audit Call: Important structural reference for rules-aware likelihood design, though implementation costs are high relative to core sports markets [1].
+1607.00379: Probabilistic Programming and PyMC3
+Status: READ (Full Dossier Verified) [1]
+Method Assertion: Demonstrates a hierarchical Poisson rugby model in PyMC3 (Baio-Blangiardo style) [1]. Home and away score lines follow Poisson distributions with log-linear attack, defense, and home advantage terms, incorporating partial pooling of team strengths [1].
+Reported Results: Illustrated on 2014 Six Nations data [1]. Serves as a tutorial rather than a competitive benchmark [1].
+Code Repository: https://github.com/springcoil/TutorialPyMCRugby (PyMC3 code; requires migration to PyMC v5) [1].
+Audit Call: Downgraded from High to Low relevance [1]. Useful strictly as an introductory onboarding guide for probabilistic programming [1].
+2501.17711: STGCN-LSTM for Olympic Medal Prediction
+Status: READ (Full Dossier Verified) [1]
+Method Assertion: Combines a Spatial-Temporal Graph Convolutional Network with an LSTM over a country-sport graph, generating Zero-Inflated Compound Poisson medal counts [1].
+Reported Results: Evaluated on Olympic medal forecasts, using zero-inflation to handle structural zeros [1].
+Audit Call: Heavily inflated in original triaging [1]. The STGCN-LSTM graph core should be skipped as feature bloat, but the Zero-Inflated Compound Poisson output head is directly applicable to rare prop bets [1].
+2607.06495: Pitwall: Faithful Natural-Language Race-Strategy Briefings from a Calibrated Real-Time Monte Carlo Engine
+Status: READ (External Literature Search) [1]
+Method Assertion: Runs a vectorized Monte Carlo engine (2,000 per-lap continuations) calibrated on historical races [1]. Decomposes generated natural language into typed factual claims that are verified against simulation state, gating fine-tuning data on verifiability [1].
+Reported Results: Achieves a held-out Brier score of 0.0745 on Formula 1 race forecasts [1].
+Audit Call: Essential blueprint for automated media and content pipelines [1]. Demonstrates how to couple calibrated simulation engines with hallucination-free text generation [1].
+2502.07491: Exploring Patterns Behind Sports
+Status: READ (External Literature Search) [1]
+Method Assertion: Combines linear (ARIMA) and non-linear (LSTM) components with PCA dimensionality reduction, SHAP feature attributions, and KNN-derived prediction intervals for time-series forecasting [1].
+Reported Results: Yields interpretable feature attributions alongside explicit uncertainty intervals [1].
+Audit Call: Strong candidate architecture for replacing underperforming point-forecasters while generating calibrated uncertainty bands [1].
+2601.21981: VERSA: Verified Event Data Format for Reliable Soccer Analytics
+Status: READ (External Literature Search) [1]
+Method Assertion: Employs a state-transition verification framework to detect and correct logically inconsistent soccer event data [1].
+Reported Results: Identified that 18.81% of ingested K-League event logs contained state-transition inconsistencies, and correcting them improved downstream player-valuation (VAEP) models [1].
+Audit Call: Directly applicable to data pipeline quality control [1]. Implementing state-transition verification prevents corrupt event sequences from degrading downstream models [1].
+2601.15000: Lineup Regularized Adjusted Plus-Minus (L-RAPM)
+Status: READ (External Literature Search) [1]
+Method Assertion: Enhances NBA 5-man lineup ratings by combining regularized adjusted plus-minus regression with informed priors derived from individual player metrics [1].
+Reported Results: Successfully stabilizes noisy small-sample lineup estimates in sparse regimes (25 to 30 possessions per lineup) [1].
+Audit Call: Directly applicable to thin-data leagues and early-season bootstrap modes, shrinking noisy team/lineup estimates toward player-level priors [1].
+2508.02725: Forecasting NCAA Basketball Outcomes with Deep Learning
+Status: READ (External Literature Search) [1]
+Method Assertion: Evaluates sequence models (LSTM vs. Transformer) across loss functions (Binary Cross-Entropy vs. Brier Loss) using GLM team quality metrics, Elo, and seed differences [1].
+Reported Results: Transformer models trained with BCE achieved the highest AUC (0.847), but LSTM models trained directly under Brier loss achieved superior probability calibration (Brier score 0.159) [1].
+Audit Call: Proves that training directly under Brier loss optimizes calibration, demonstrating a practical method for resolving point-estimate bias [1].
+Unread Literature Register and Tactical Integration Roadmap
+Unread Literature Register
+The papers listed below lack accessible full text or complete PDF dossiers in the workspace and are classified as UNREAD [1]. Evaluation is restricted strictly to abstract metadata [1].+----------------------------------------------------------------------------------------------------+
+|                                    UNREAD LITERATURE REGISTER                                      |
++--------------+-----------------------------------------------------+-------------------------------+
+| Paper ID     | Title                                               | Metadata Method Summary       |
++--------------+-----------------------------------------------------+-------------------------------+
+| 2608.12291   | Sequential Inference for win-martingales            | Optimal stopping diffusions   |
+| 2608.01882   | Gap distributions in cricket personal bests         | Truncated power-law gaps      |
+| 2607.27838   | Vector field theory in soccer dynamics              | Velocity pitch potentials     |
+| 2607.23509   | Topological Data Analysis for Tennis Match          | Persistent homology networks  |
++--------------+-----------------------------------------------------+-------------------------------+
+2608.12291: When should one stop the most exciting game? Sequential Inference for win-martingales. Abstract describes optimal stopping theory for live win probabilities modeled as diffusions, solving Bayes-risk free-boundary problems [1].
+2608.01882: Gap distributions between successive personal bests in cricket: Data and Models. Abstract describes fitting truncated power-law models to inter-record gaps, using shuffled-career bootstrap baselines to isolate temporal order effects [1].
+2607.27838: Vector field theory in motion: Revealing latent potentials in soccer dynamics. Abstract describes reconstructing velocity vector fields over pitch tracking data to derive scalar potential gradients [1].
+2607.23509: Topological Data Analysis and Graph-Theoretic Approaches for Tennis Match Prediction. Abstract describes persistent homology and Katz centrality on competitive networks, reporting 66.2% ATP outcome accuracy [1].
+Tactical Integration Roadmap for Operators
++----------------------------------------------------------------------------------------------------+
+|                                OPERATOR TACTICAL INTEGRATION ROADMAP                               |
++----------------------------------------------------------------------------------------------------+
+| PHASE 1: FOUNDATION & DIAGNOSTICS                                                                  |
+|   - Implement per-sport state-space models with market-implied margins (1701.05976)                 |
+|   - Run cheap Poisson (2408.08331) and iWinRNFL (1704.00197) baselines                              |
+|   - Deploy state-transition pre-ingestion gates (VERSA, 2601.21981)                                |
++----------------------------------------------------------------------------------------------------+
+                                                 |
+                                                 v
++----------------------------------------------------------------------------------------------------+
+| PHASE 2: CALIBRATION & POINT ESTIMATION                                                            |
+|   - Transition model loss functions from BCE to Brier loss optimization (2508.02725)               |
+|   - Decouple performance prediction engines from market pricing features                           |
+|   - Apply L-RAPM shrinkage (2601.15000) and rank-clustered BTL (2501.02505) in bootstrap mode      |
++----------------------------------------------------------------------------------------------------+
+                                                 |
+                                                 v
++----------------------------------------------------------------------------------------------------+
+| PHASE 3: CONFORMAL WRAPPING & UNCERTAINTY                                                          |
+|   - Wrap numeric line models in Conformalized Quantile Regression (CQR, arXiv:1905.03222)          |
+|   - Enforce fail-closed refusal when sample size n < ceil(1/alpha) - 1                            |
+|   - Deploy Generalized Venn-Abers bounds [p0, p1] (arXiv:2502.05676) for side probabilities       |
++----------------------------------------------------------------------------------------------------+
+                                                 |
+                                                 v
++----------------------------------------------------------------------------------------------------+
+| PHASE 4: MARKET MONITORING & CONTENT VERIFICATION                                                 |
+|   - Deploy state-space volume/odds anomaly detection (2605.30209) on live feeds                    |
+|   - Implement claim-level text verification (Pitwall, 2607.06495) for automated content             |
++----------------------------------------------------------------------------------------------------+
+Phase 1: Foundation and Diagnostic Baselines
+Deploy independent per-sport state-space models using betting-market implied margins (1701.05976), explicitly estimating sport-specific noise parameters (sigma_game) [1]. Parameters for unmodeled leagues (such as MLS) must be estimated independently [1]. Establish mandatory diagnostic baselines—specifically Poisson models (2408.08331) and iWinRNFL (1704.00197)—to verify model skill prior to deploying complex architectures [1]. Implement state-transition validators (VERSA, 2601.21981) across data pipelines to filter out event-ordering errors before model ingestion [1].
+Phase 2: Calibration and Point-Estimate Optimization
+Transition model loss functions from binary cross-entropy (BCE) to Brier loss optimization (2508.02725) to fix base point-estimate calibration [1]. Decouple performance prediction models (trained on game play-by-play) from market pricing models to prevent target leakage and isolate Closing Line Value (CLV) [1, 2]. In sparse-data regimes (early season or minor leagues), integrate regularized adjusted plus-minus shrinkage (L-RAPM, 2601.15000) and rank-clustered BTL models (2501.02505) to pull noisy estimates toward player-level priors [1].
+Phase 3: Conformal Prediction and Uncertainty Quantification
+Wrap continuous numeric line models (player props, totals) in Conformalized Quantile Regression (CQR, arXiv:1905.03222) to guarantee valid finite-sample coverage [2]. Enforce strict fail-closed refusal rules: when calibration sample sizes are inadequate (n < ceil(1/alpha) - 1), issue automated "No-Bet" decisions rather than applying arbitrary quantile clamping [2]. For binary win probabilities, adopt Generalized Venn-Abers calibration (arXiv:2502.05676) to output multiprobability bounds [p0, p1], utilizing bound width (p1 - p0) to measure epistemic uncertainty for execution gating [2].
+Phase 4: Market Monitoring and Content Verification
+Integrate state-space market dynamic monitoring (2605.30209) on live odds streams to detect abnormal line movements or integrity anomalies in real time [1]. Adopt claim-level verification architectures (Pitwall, 2607.06495) for automated content generation, decomposing text into factual assertions checked directly against live probabilistic engine states [1].
+Sources
+gse_research_analysis_2.xlsx
+Auditing Conformal Prediction, Small-Sample Calibration, and Sports Market Probabilities for GSE

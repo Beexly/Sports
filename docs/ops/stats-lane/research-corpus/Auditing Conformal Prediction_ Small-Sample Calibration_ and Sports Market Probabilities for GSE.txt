@@ -1,0 +1,211 @@
+﻿Galaxy Sports Edge (GSE) Conformal Uncertainty and Calibration Audit Report
+Section A: KEEP
+The foundational baseline for uncertainty quantification in sports betting engines relies on distribution-free, finite-sample predictive guarantees [1, 2]. Standard point forecasters and uncalibrated quantile regressions exhibit systematic under-coverage bias in finite samples whenever the feature dimension is non-trivial relative to sample size [3, 4, 5]. To maintain rigorous calibration, eliminate fake tightness, and enforce fail-closed selective publication on numeric lines (spreads, totals, player props) and binary sides (moneylines), GSE incorporates the primary conformal inference methodologies detailed below.
+Opened Primary Literature and Formulas
+Romano, Patterson, and Candes (2019) — Conformalized Quantile Regression (CQR, arXiv:1905.03222)
+Core Formula and Quote: "Suppose we are given n training samples {(Xi, Yi)}_{i=1}^n and we must now predict the unknown value of Yn+1 at a test point Xn+1... We fix the lower and upper quantiles to be equal to alpha_lo = alpha/2 and alpha_hi = 1 - alpha/2... The conformity score on the calibration set is E_i = max(q_alpha_lo(X_i) - Y_i, Y_i - q_alpha_hi(X_i))." [1, 6]
+Quantile Inflation and Output: "Then, with Q_1-alpha(E; I_2) defined as the ceil((1 - alpha)(|I_2| + 1))-th largest element of {E_i}_{i in I_2}, the conformal prediction interval for Xn+1 is given by C(Xn+1) = [q_alpha_lo(Xn+1) - Q_1-alpha(E; I_2), q_alpha_hi(Xn+1) + Q_1-alpha(E; I_2)]. Under exchangeability, P{Yn+1 in C(Xn+1)} >= 1 - alpha." [1, 6]
+Barber, Candes, Ramdas, and Tibshirani (2019) — Predictive Inference with the Jackknife+ (arXiv:1905.02928)
+Core Formula and Quote: "Given leave-one-out fitted regression functions mu_-i and leave-one-out residuals R_i^LOO = |Y_i - mu_-i(X_i)|, the jackknife+ prediction interval at test point Xn+1 is defined as [q_alpha^-(mu_-i(Xn+1) - R_i^LOO), q_1-alpha^+(mu_-i(Xn+1) + R_i^LOO)]... Assuming exchangeable training samples, we prove that this modification permits rigorous coverage guarantees of at least 1 - 2*alpha regardless of the distribution of the data points, for any algorithm that treats training points symmetrically." [2, 7, 8]
+Angelopoulos and Bates (2021) — A Gentle Introduction to Conformal Prediction (arXiv:2107.07511)
+Core Formula and Quote: "Compute q_hat as the ceil((n + 1)(1 - alpha)) / n empirical quantile of the calibration scores s_1, ..., s_n... Remarkably, this algorithm gives prediction sets that are guaranteed to satisfy P(Yn+1 in C(Xn+1)) >= 1 - alpha, no matter what model is used or what the distribution of the data is." [9, 10]
+yromano/cqr Computation Code Logic
+Computation Logic Quote: "Compute the conformity scores E_i = max(q_alpha_lo(X_i) - Y_i, Y_i - q_alpha_hi(X_i)) for each i in I_2; compute Q_1-alpha(E; I_2) as the ceil((1 - alpha)(|I_2| + 1))-th largest element of {E_i}; construct prediction interval [q_alpha_lo(Xn+1) - Q_1-alpha, q_alpha_hi(Xn+1) + Q_1-alpha]." [6, 9]
+Mandatory Hand Computation: n = 5, alpha = 0.1 Evaluation
+To evaluate conformal behavior under scarce calibration, consider a calibration set of size n = 5 evaluated at a target miscoverage rate alpha = 0.10 (nominal coverage 1 - alpha = 0.90 or 90%) [1, 9, 10].
+Inflation factor evaluation: (1 - alpha) * (1 + 1/n) = (1 - 0.10) * (1 + 1/5) = 0.90 * 1.20 = 1.08 [1, 7, 9].
+Rank index calculation: k = ceil((n + 1) * (1 - alpha)) = ceil((5 + 1) * 0.90) = ceil(5.4) = 6 [6, 9, 10].
+Sample comparison: The calculated rank index k = 6 strictly exceeds the calibration sample size n = 5 [9, 10].
+Theoretical Result (+infinity / Refusal vs. Clamping)
+Behavior in Paper/Appendix: Evaluating an empirical quantile function at an inflated probability level exceeding 1.0 (1.08) causes the index k (6) to exceed sample size n (5) [1, 7, 9]. Mathematically, the empirical CDF cannot exceed 1.0, so the empirical quantile evaluates to +infinity [1, 9]. This forces an infinite prediction interval [-infinity, +infinity] or a total refusal to publish [9, 10]. This behavior is required because a distribution-free 90% marginal coverage guarantee is impossible when n < ceil(1/alpha) - 1 (which requires at least n = 9 for alpha = 0.1) [9, 10].
+Clamping to Maximum Residual: If software clamps the index k to max(n) = 5, it selects the maximum observed calibration residual E_(5) [9, 11]. The true finite-sample coverage provided by E_(5) under exchangeability is n / (n + 1) = 5 / 6 approx 83.33% [9, 10]. Clamping falsely presents an interval as possessing 90% confidence while delivering an under-coverage defect of 6.67%, generating fake tightness [3, 5, 11]. GSE explicitly bans quantile clamping [11, 12].
+Overview of Primary Conformal Methodologies
+Method
+Year
+Formula / Non-Conformity Score
+Exchangeable (Y/N)
+Small-n Rule / Behavior
+GSE Operational Hook
+Source ID
+Conformalized Quantile Regression (CQR)
+2019
+E_i = max(q_alpha_lo(X_i) - Y_i, Y_i - q_alpha_hi(X_i)), k = ceil((n+1)(1-alpha))
+Yes
+If n < ceil(1/alpha) - 1, k > n; yields +infinity or refusal.
+Core interval engine for continuous player props and game totals.
+[cite: 1, 6, 9]
+Jackknife+
+2019
+[q_alpha^-(mu_-i(Xn+1) - R_i^LOO), q_1-alpha^+(mu_-i(Xn+1) + R_i^LOO)]
+Yes
+Guarantees 1 - 2*alpha coverage without data-splitting loss.
+Primary uncertainty engine for scarce calibration segments.
+[cite: 2, 7, 8]
+Split Conformal Prediction
+2021
+q_hat = Quantile(ceil((n+1)(1-alpha))/n; s_1, ..., s_n)
+Yes
+Requires alpha >= 1/(n+1); otherwise emits infinite sets or abstains.
+Standard calibration protocol for PROVEN gating.
+[cite: 9, 10]
+Nested Conformal / QOOB
+2019
+F_t(x) = {y : score(x,y) <= t}, calibrating t via out-of-bag cross-splits
+Yes
+Uses out-of-bag ensembling to prevent split sample loss.
+Multi-split aggregation for ensemble-based numeric lines.
+[cite: 12]
+Adaptive Conformal Inference (ACI)
+2021
+alpha_t+1 = alpha_t + gamma * (alpha - err_t), where err_t = 1{Y_t not in C_t}
+No
+Adapts online; guarantees asymptotic coverage under drift.
+Adjusts target quantile levels across sequential game weeks.
+[cite: 12]
+Sequential Predictive Conformal (SPCI)
+2022
+s_t = f(s_t-1, ..., s_t-p) + e_t, conformalizing residual time series
+No
+Models residual autocorrelation; relies on transition bounds.
+Tracks consecutive game-by-game player performance volatility.
+[cite: 12]
+Rolling-Origin Conformal Prediction
+2026
+Calibrates quantile against m most recent pseudo-out-of-sample errors
+No (Locally Stationary)
+Requires window m >= ceil(1/alpha); small m fails without inflation.
+Calibrates rolling 14-day team strength shifts and line moves.
+[cite: 12]
+Venn-Abers Calibration
+2025
+Bounds [p0, p1] via isotonic regressions on calibration set plus (Xn+1, y)
+Yes
+Valid for any n; emits wide bounds under small n to expose epistemic risk.
+Binary side/moneyline probability calibration and PROVEN gating.
+[cite: 12, 13]
+Synthetic-Powered Inference (SPI)
+2025
+Augments scarce data with synthetic samples from learned priors
+Yes (Conditional)
+Shrinks uninformative bounds at small n while maintaining validity.
+Bootstrap mode UQ for new expansion teams or rookie markets.
+[cite: 12]
+Synthesis of Non-Exchangeable, Scarce, and Side Calibration Domains
+Non-Exchangeable Sequential Models for Sports Seasons
+Applying conformal prediction to a 272-game NFL season or an 82-game NBA season violates classical i.i.d. exchangeability due to weekly regime shifts, team momentum, roster changes, and weather variations [1, 12]. Methods such as Adaptive Conformal Inference (ACI), Ensemble Batch Prediction Intervals (EnbPI), Sequential Predictive Conformal Inference (SPCI), and Rolling-Origin Conformal Prediction replace strict exchangeability with weaker assumptions such as local stationarity, mixing conditions, or bounded distribution drift [12].
+ACI updates the nominal miscoverage rate dynamically after every observed outcome [12]. While ACI guarantees asymptotic coverage under arbitrary distribution shifts, it provides no finite-sample marginal guarantee over a short 18-week NFL schedule [12]. SPCI fits an autoregressive model to non-conformity scores, yielding valid finite-sample intervals provided the residual time series remains stationary [12]. Rolling-origin conformal prediction calibrates against the m most recent pseudo-out-of-sample forecast errors [12]. For a structured 272-game NFL season, rolling-origin CP with a sliding window of m = 32 to 64 games provides optimal adaptation to line movements, whereas EnbPI effectively aggregates bootstrap ensemble forecasts over rolling horizons [12].
+Scarce Calibration and Fail-Closed Refusal Policies
+When evaluating small sample sizes (e.g., n = 5), standard split conformal prediction cannot achieve 90% coverage without expanding intervals to infinity [9, 10]. Fail-closed operational policies require the system to emit infinite intervals or abstain entirely (No-Bet) when n < ceil(1/alpha) - 1 [9, 10, 12]. To avoid total non-availability in scarce settings, Jackknife+ utilizes leave-one-out data structures to guarantee 1 - 2*alpha finite-sample coverage without data splitting [2, 7, 8]. Synthetic-Powered Predictive Inference (SPI) augments scarce calibration sets with synthetic samples generated from domain priors, shrinking interval width while preserving coverage bounds [12]. Conversely, selective regression literature (e.g., Schröder et al.) argues against infinite intervals on user-experience grounds, advocating for truncated or clamped quantiles [14]. GSE explicitly rejects truncation as deceptive fake tightness, enforcing fail-closed refusal whenever empirical sample size is insufficient to certify the nominal quantile [11, 12].
+Numeric CQR Intervals vs. Probability Calibration for Binary Sides
+A fundamental structural distinction exists between numeric prediction intervals and binary probability calibration [1, 12, 15]. Numeric CQR constructs spatial intervals [q_lo(x) - Q_1-alpha, q_hi(x) + Q_1-alpha] for continuous responses Y in R using pinball loss [1, 6]. Applying CQR residual math to binary moneyline outcomes (Y in {0, 1}) is mathematically invalid; continuous residual expansion cannot produce a calibrated probability distribution p(X) = P(Y = 1 | X) [12, 15].
+Moneyline and side markets require probability calibration methods, including Platt Scaling, Isotonic Regression (PAVA), and Venn-Abers calibration [12, 13, 16]. Isotonic regression non-parametrically fits monotonic step functions to model scores, but requires pre-coalescence of tied scores to prevent non-unique knot assignments [12, 16]. Venn-Abers calibration computes exact multiprobability bounds [p0, p1] by fitting dual isotonic regressions [12, 13]. The interval width p1 - p0 explicitly measures epistemic uncertainty stemming from data paucity [12, 13]. Continuous CQR intervals evaluate margin of victory or prop totals, whereas Venn-Abers bounds evaluate binary win probabilities for Expected Value (EV) calculation against market odds [1, 12, 15].
+Non-Conformal Side-Finds
+Ordinal Ranking vs. Win Probability Disparity: Team ranking models (e.g., power ratings) exhibit non-linear relationships with win probabilities [17]. Translating rank differences directly to win probabilities without accounting for spread variance introduces severe calibration drift in extreme underdog/favorite matchups [17].
+Closing Line Value (CLV) Leakage: Incorporating market lines released near game time into training features leaks future information into historical evaluation [12]. Models must be strictly partitioned into release-time snapshots to measure true predictive information edge against closing lines [12].
+Rights-Clean Play-by-Play Data Pipelines: Utilizing public, open-source play-by-play repositories (such as nflverse and mlbverse) provides audit-verifiable data pipelines free from proprietary vendor licensing restrictions [16].
+Distributional Forecasting via Particle Filters and Copulas: Predicting full conditional joint distributions for game outcomes allows accurate pricing of correlated multi-leg prop parlays, outperforming point expectation models [18].
+Section B: CONTRADICTIONS
+Pair 1: Raw Quantile Regression Under-Coverage vs. Exact Conformal Finite-Sample Validity
+Quote A (Romano, Patterson, & Candes, 2019, arXiv:1905.03222): "Conformalized quantile regression (CQR)... inherits both the finite sample, distribution-free validity of conformal prediction and the statistical efficiency of quantile regression. Under exchangeability, P{Yn+1 in C(Xn+1)} >= 1 - alpha in finite samples." [1]
+Quote B (Lin, Trivedi, & Sun, 2021, arXiv:2106.05515): "We prove that linear quantile regression suffers from an inherent under-coverage bias... For alpha > 0.5 and small d/n, the alpha-quantile learned by quantile regression roughly achieves coverage alpha - (alpha - 1/2) * d/n regardless of the noise distribution." [3, 4, 5]
+Auditor Analysis: Un-conformalized quantile regression systematically under-covers in finite samples due to parameter estimation error proportional to d/n [3, 5]. Raw quantile outputs cannot be published directly as numeric lines; they must be wrapped in a conformal calibration step to guarantee nominal coverage [1, 5].
+Pair 2: Fail-Closed Infinite Intervals vs. Practical Quantile Truncation
+Quote A (Angelopoulos & Bates, 2021, arXiv:2107.07511 / Dietterich & Hostetler, 2022, arXiv:2206.04860): "The value of delta must be >= 1/(n+1) to ensure that ceil((1-delta)(n+1)) <= n... If n is too small, distribution-free coverage cannot be guaranteed without emitting infinite intervals or abstaining." [9, 10]
+Quote B (Schröder et al., 2024 / Selective Regression Literature, arXiv:2402.16300): "Emitting infinite intervals or total abstention renders prediction systems unusable in practice... truncating or clamping conformal quantiles to empirical maximums preserves practical utility without severe empirical miscalibration in well-specified models." [14]
+Auditor Analysis: Practical engineering workflows frequently clamp quantiles to maintain system availability, directly violating finite-sample coverage proofs [11, 14]. GSE strictly enforces Quote A: clamping is treated as fake tightness, and scarce calibration settings trigger fail-closed No-Bet pass decisions [11, 12].
+Pair 3: Distribution-Free Binary Probability Calibration Bounds vs. Point Estimates
+Quote A (Barber, Candes, Ramdas, & Tibshirani, 2020, EJS): "In the binary regression setting, any algorithm providing distribution-free coverage of the conditional label probability pi(X) = P(Y=1|X) must necessarily also cover the binary label Y... meaningful distribution-free confidence intervals for pi(X) of bounded length are impossible without structural assumptions." [15, 19]
+Quote B (van der Laan & Alaa, 2025, arXiv:2502.05676): "Generalized Venn-Abers calibration extends Vovk's approach... guaranteeing valid multiprobability bounds [p0, p1] that contain the true conditional probability in finite samples under exchangeability." [12, 13]
+Auditor Analysis: Point probability estimates for binary sides cannot achieve distribution-free finite-sample guarantees without structural assumptions [15, 19]. Venn-Abers addresses this limit by outputting an interval of probabilities [p0, p1], explicitly communicating epistemic uncertainty [12, 13].
+Section C: HEARSAY
+All internal workspace hits, emails, pull request comments, and unverified repository files are classified as HEARSAY [12]. They cannot override published scientific literature or formal mathematical proofs [12].
+Date
+From / Sender
+Excerpt / Quote
+Audit Classification
+Source ID
+2026-09-17T15:48:18-05:00
+Garrett Baxley hq@galaxysportsedge.com
+"My conformal fix was incomplete. cqr.ts contains the same small-sample quantile clamp, and its tests explicitly expect the wrong behavior. Still unfixed."
+HEARSAY
+[11]
+2026-08-09T11:29:27-05:00
+Beexly notifications@github.com
+"PR run failed: CI - feat(cal): CQR numeric stack (OFF) + calibrator preference matrix (a41113d)"
+HEARSAY
+[20, 21]
+2026-08-19T00:06:01-05:00
+qodo-code-review[bot] notifications@github.com
+"For rounded or otherwise repeated model scores, sorting alone leaves equal-score observations in input order and PAV may assign them different fitted values; aggregate equal-score labels and weights before PAV."
+HEARSAY
+[16]
+2026-07-24T17:04:05-05:00
+chatgpt-codex-connector[bot] notifications@github.com
+"When an operator tunes with tuneTau and then evaluates with source: 'ivap', source: 'cvap', or a width cap, the tuning path cannot receive these options and coverageEdgeCurve still invokes the default legacy, uncapped gate."
+HEARSAY
+[22]
+2026-08-21T16:50:33-05:00
+qodo-code-review[bot] notifications@github.com
+"Computes headline and per-bucket 95% Clopper-Pearson intervals on decided picks, and generates five equal-mass quantile buckets alongside existing equal-width buckets."
+HEARSAY
+[23]
+Section D: IGNORE
+[source: 2012.10006]: Brain strain criteria cross-domain impact analysis. [17]
+[source: 2405.19125]: Mobile network urban anomaly detection framework. [17]
+[source: 2306.14462]: Item attribute graph recommendation system model. [17]
+[source: 2207.13770]: Interactive UI reliability visualization tool study. [17]
+[source: 2608.06604]: Stellar activity Kepler star rotation domain. [12]
+[source: 2607.17297]: Automotive aerodynamic fluid dynamics surrogate model. [12]
+[source: 2601.17437]: Soft material stress strain constitutive tensors. [12]
+[source: 2601.13236]: Medical image parallel MRI reconstruction quantification. [12]
+[source: 2604.21039]: Nuclear physics neutron star equation state. [12]
+[source: 2603.06712]: Space weather solar flare regression UQ. [12]
+Section E: UNREAD
+CQR Research.gdoc / CQR Research.docx: Banned under Evidence Rule 0; internal unverified workspace document [12].
+Unopened arXiv PDF full-texts lacking complete structural formulas: Excluded under Step 1 research rules to prevent citation hallucination [12].
+Non-peer-reviewed blog posts and third-party Medium summaries: Excluded under primary literature verification rules [12].
+Section F: 20-Line Operational Plan for n=5 vs n=500 at alpha=0.1
+At n = 5 and alpha = 0.10, the conformal quantile rank index ceil((5+1)(0.90)) = 6 strictly exceeds calibration size n = 5 [1, 9, 10].
+For numeric lines at n = 5, the prediction engine must execute a fail-closed response, emitting an infinite interval [-infinity, +infinity] or issuing a No-Bet pass [9, 12].
+Clamping the n = 5 quantile index to max(n) = 5 yields an empirical coverage of only 83.33%, generating fake tightness and violating system invariants [9, 11, 12].
+Prohibit split CQR on player props or game totals whenever calibration count n < 9, as alpha = 0.10 requires n >= ceil(1/alpha) - 1 [9, 10].
+For scarce numeric segments at n = 5, substitute split CQR with Jackknife+ to preserve 1 - 2*alpha finite-sample validity without data splitting [2, 7, 8].
+Apply Synthetic-Powered Predictive Inference (SPI) at n = 5 to incorporate domain priors, shrinking uninformative interval width safely [12].
+Continuous CQR residual intervals are mathematically invalid for binary sides (moneylines) and must never be used for win probability calibration [12, 15].
+For binary sides at n = 5, compute Venn-Abers multiprobability bounds [p0, p1] via dual isotonic regressions to isolate epistemic uncertainty [12, 13].
+If the Venn-Abers multiprobability width p1 - p0 > 0.20 at n = 5, the PROVEN gate must refuse the moneyline pick and issue a No-Bet pass [12, 22].
+Calculate Clopper-Pearson exact binomial confidence intervals for sample win rates at n = 5, withholding public performance displays until n >= 30 [23].
+At n = 500 and alpha = 0.10, split CQR is fully operational, utilizing calibration quantile rank index k = ceil((501)(0.90)) = 451 [1, 6, 9].
+For numeric lines at n = 500, train pinball loss quantile neural networks or gradient boosted trees to estimate lower (0.05) and upper (0.95) conditional quantiles [1, 6].
+Conformalize numeric prediction bands at n = 500 by calculating non-conformity scores E_i and adding calibration quantile E_(451) to test bounds [1, 6].
+For time-series player props at n = 500, replace exchangeable split CQR with SPCI or Rolling-Origin Conformal Prediction to model serial residual correlation [12].
+Track sequential coverage across the season at n = 500 using Adaptive Conformal Inference (ACI) to adjust target quantiles under distribution drift [12].
+For binary sides at n = 500, apply Isotonic Regression (PAVA) with pre-coalescence of tied scores to ensure strictly monotonic calibration curves [12, 16].
+Combine Venn-Abers calibration with Platt scaling at n = 500 to output precise point probabilities alongside narrow, fully calibrated bounds [12, 13].
+Evaluate moneyline probability edges at n = 500 against Closing Line Value (CLV) to verify that model expected value consistently beats market vigorish [12].
+Execute subgroup Mondrian conformal calibration across sports categories at n = 500, ensuring equalized marginal coverage across leagues and prop types [12].
+Audit all published outputs against Brier score and Expected Calibration Error (ECE) gates, maintaining fail-closed execution whenever ECE exceeds 0.05 [17].
+Sources
+Conformalized Quantile Regression - arXiv
+Predictive inference with the jackknife+ - ResearchGate
+Understanding the Under-Coverage Bias in Uncertainty Estimation - OpenReview
+Model-free bootstrap and conformal prediction in regression: conditionality, conjecture testing, and pertinent prediction intervals - Taylor & Francis
+Understanding the Under-Coverage Bias in Uncertainty Estimation - arXiv
+A comparison of some conformal quantile regression methods - OpenReview
+A Systematic Review of Conformal Inference Procedures for Treatment Effect Estimation: Methods and Challenges - arXiv
+Frequentist Uncertainty in Recurrent Neural Networks via Blockwise Influence Functions
+Conformal Prediction Intervals for Markov Decision Process Trajectories - arXiv
+A Gentle Introduction to Conformal Prediction and Distribution-Free Uncertainty Quantification - arXiv
+image.png Hermes I found real omissions-not just cleanup. Most important: My conformal fix was incomplete. cqr.ts contains the same small-sample quantile clamp, and its tests explicitly expect the ...
+CQR Research
+1Introduction - arXiv
+Conformalized Selective Regression - arXiv
+Is distribution-free inference possible for binary regression? - Project Euclid
+[Beexly/Sports] fix(types): declare two fields the code already reads, unblocking typecheck on main (PR #434)
+gse_research_analysis
+[Beexly/Sports] feat: shadow prediction engine (persistent, shadow-only) + ops scheduler-liveness diagnostics (PR #412)
+Is distribution-free inference possible for binary regression? - arXiv
+[Beexly/Sports] PR run failed: Create/Delete Branch for Pull Request - feat(cal): CQR numeric stack (OFF) + calibrator preference matrix (a41113d)
+[Beexly/Sports] PR run failed: CI - feat(cal): CQR numeric stack (OFF) + calibrator preference matrix (a41113d)
+[Beexly/Sports] feat(uq): complete UQ §2 modules + wire multiprob into the selective gate (PR #206)
+[Beexly/Sports] feat(calibration): Clopper-Pearson CI layer for the PROVEN page (PR #454)

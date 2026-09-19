@@ -121,13 +121,17 @@ def walk_forward_jackknife(rows, min_season=1999, n_folds=5):
     mean_w_s = mean([f["split_mean_width"] for f in valid if f["split_mean_width"] is not None]) if valid else None
     width_ratio = (mean_w_j / mean_w_s) if mean_w_j and mean_w_s else None
 
-    # Mission kill line: J+ strictly beats split coverage without widening >10%
+    # Dual labels: J+ theorem is 1-2α; split nominal is 1-α
+    j_theorem = 1 - 2 * ALPHA
+    s_nominal = 1 - ALPHA
     if mean_cov_j is None or mean_cov_s is None:
         mission = "NOT_RUN"
+    elif mean_cov_j < j_theorem:
+        mission = "MISSION_FAIL_J+_below_theorem_1-2alpha"
     elif mean_cov_j > mean_cov_s and width_ratio is not None and width_ratio <= 1.10:
-        mission = "MISSION_PASS_J+_higher_cov_width_ok"
-    elif mean_cov_j >= mean_cov_s - 0.03 and width_ratio is not None and width_ratio <= 1.10:
-        mission = "J+_acceptable_not_strictly_better"
+        mission = "MISSION_PASS_J+_higher_cov_than_split_width_ok"
+    elif mean_cov_j >= j_theorem and width_ratio is not None and width_ratio <= 1.10:
+        mission = "J+_meets_1-2alpha_not_strictly_better_than_split_1-alpha"
     else:
         mission = "MISSION_FAIL_or_width_blowup"
 
@@ -139,14 +143,20 @@ def walk_forward_jackknife(rows, min_season=1999, n_folds=5):
         "folds": folds,
         "mean_coverage_jplus": mean_cov_j,
         "mean_coverage_split": mean_cov_s,
+        "jplus_theorem_coverage_1_minus_2alpha": j_theorem,
+        "split_nominal_coverage_1_minus_alpha": s_nominal,
         "mean_width_jplus": mean_w_j,
         "mean_width_split": mean_w_s,
         "width_ratio_j_over_split": width_ratio,
         "mission": mission,
-        "kill_line": "J+ must beat split coverage and width_J+ <= 1.10 * width_split",
+        "kill_line": "J+ must meet 1-2α; strict beat of split is optional; width_J+ <= 1.10 * width_split",
         "attribution": ATTRIBUTION,
         "convention": "predicted home margin = -nflverse spread_line; actual = home_score - away_score",
         "filter": "rows with numeric scores and spread_line",
+        "correction": (
+            "Earlier mission compared J+ (guarantee 1-2α) to split (1-α) as if both were 90%. "
+            "That was an unfair label. Dual-report both floors."
+        ),
     }
 
 
