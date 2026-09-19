@@ -197,6 +197,39 @@ Readings that matter for the v5.3.0 conjunction gate:
 - Production extracts were pulled with the read-only `hermes_ro` role; the connection
   string was used in-process only and never written to any file in this repo.
 
+## Corrections to the circulating fleet master plan (2026-09-19)
+
+A plan titled "all_night_autonomous_agent_fleet_master_plan.md" citing this work is
+circulating outside this repo. Its numbers are real and trace to this directory
+(commits 4af1986ef / bf02f0ee6), but two of its conclusions are wrong and must not be
+built on:
+
+1. **"Adverse-edge pass suppression is mathematically validated on live settled data"
+   is an overreach.** NFL PASS is n=20 (Wilson [0.258, 0.658]); that interval supports
+   no validation. League-wide, PASS-decision rows are no-opinion underdogs realizing
+   ~49.5-50.5% against a STATED 0.404-0.479: roughly breakeven, i.e. the model
+   UNDERPRICES those sides. The measured framing, and the only defensible one: the
+   PASS veto is an honesty call about the factor trail (never publish a row the engine
+   declines to price), not a record improvement.
+
+2. **"The DAVE-style w = N/(N+8) prior bridge solves the NFL_EPA_MIN_GAMES = 4
+   cold start" does not follow.** The bridge changes what the RATINGS contain; the gate
+   in `nflEpaToWinProbs` still returns null until both teams have >= 4 OBSERVED games.
+   Ship the bridge alone and the source emits nothing until Week 5 and the wiring will
+   look broken. The bridge justifies LOWERING the effective gate on prior-backed teams,
+   which is a code change in `packages/prediction-engine/src/nfl-epa-fair-value.ts` and
+   belongs to the founder-gated v5.3.0 scoring pass. What needs no code today: one
+   `forceReprice: true` run of `backfill-independent-trueprob`, then automatic
+   activation at Week 5 (2026-10-08+).
+
+Minor: the plan quotes 42.54 pts per net EPA/play, which is the W1-8 TRAIN-window fit;
+the full-2025 forward fit is 45.42 with ~2.1 points effective home field (table above).
+Also note the one-season validation limit in "Honest limits" still stands: a
+multi-season repeat (2023/2024) was attempted and ABANDONED mid-run on a home/away
+orientation bug in the extension script (test scores built without home/away flipped
+roughly half the signs; its "0/3 seasons" output is invalid and must not be quoted).
+Fixing and rerunning that extension is the top queued follow-up.
+
 ## Reproduction
 
 Python 3.11 + pandas + scipy + psycopg. From this directory:
