@@ -3676,3 +3676,68 @@ test the positive branch and take the complement, never the negated branch.
 **Verified:** SELECT-only against production, four queries, no write of any kind, no schema,
 gate, flag, floor or MODEL_VERSION touched. The connection string was used in process only,
 never written into the repository, and was destroyed after the run.
+
+---
+
+## WHY MAIN'S TEST SUITE IS RED AND NO DEVELOPER CAN SEE IT (2026-09-19, Opus)
+
+**Partially diagnosed. The mechanism is certain; the specific failing test is NOT yet
+identified and is written here as NOT RUN.**
+
+`main` has concluded `failure` on every `ci.yml` run since at least 2026-09-12. On
+`47be639a6`, 11 of 12 jobs pass: lint, typecheck, Prisma validate, `migrate deploy` and
+the drift check are all green. The single failing step is `Run tests (all workspaces)`,
+after which `Build` is skipped, so main produces no build artifact either. This exact
+failure is recorded in this file from 2026-09-13 and has never been fixed.
+
+**The mechanism, and it is the reason it survived a week.** `apps/web/vitest.setup.ts`:
+
+    if (!process.env["CI"] && process.env["FORCE_REAL_PRISMA"] !== "true") {
+      process.env["DATABASE_URL"] = "stub";
+    }
+
+That guard is correct and should stay: it stops a developer who has a real Neon URL
+exported from having the suite write to it. But its consequence is that **the entire
+apps/web suite runs against the stub Prisma client on every developer machine and against
+a real Postgres in CI**, because CI sets `CI=true` and points `DATABASE_URL` at a
+`postgres:15-alpine` service container. Measured locally with no database: 1,026 files
+and 13,976 tests pass, 97 skip, exit 0. The suite is green on every machine where anyone
+would look, and red only where nobody reads the log.
+
+**A hypothesis that was tested and is WRONG, recorded so nobody repeats it.** The obvious
+suspect was the Postgres-gated integration files, the ones that skip without a database.
+Ten of them are enabled by CI's env (nine on `DATABASE_URL`, one on `AI_BUDGET_PG_URL`;
+`ai-control-plane-claim-pg` stays skipped even in CI because `AI_CLAIM_PG_URL` is never
+set). Reproduced against a local PostgreSQL 16 cluster with `CI=true`:
+
+    ai-control-plane-event-ledger-pg, budget-pg, formal-incident-pg,
+    budget-alpha-witness-pg, shadow-metrics-pg, ablation-counters-pg   6 files, 43/43 PASS
+    cash-os-pg, governed-gate-pg                                        9/9 PASS
+    compliance-store-pg                                                 3 FAIL
+
+and the only failures are `The table public.compliance_check_run does not exist`, which is
+an artifact of this reproduction lacking the Prisma migrations, not of the test. CI applies
+all three migrations successfully. **So the PG-gated files are not the cause.**
+
+Most of those suites create their own schema with `CREATE SCHEMA` over a raw `pg` pool, so
+they need no migration at all. That is why they could be run here.
+
+**What remains, and it is a much larger surface than ten files.** Because the stub is off in
+CI, every test in the suite that touches `db` exercises a real Prisma client there and an
+empty-result stub here. Any test written against stub behaviour ("all reads return empty
+results") can pass locally and fail in CI without being marked as a database test at all.
+Finding it needs the full suite run with `CI=true` against a migrated database.
+
+**Blocked on exactly one thing.** `npx prisma migrate deploy` is refused by this session's
+tool-permission classifier, which is law 7 working as designed. Feeding the migration SQL
+to `psql` would defeat the intent rather than satisfy it, so it was not attempted. Whoever
+has that permission runs:
+
+    CI=true DATABASE_URL=<disposable pg> npx prisma migrate deploy --schema packages/db/prisma/schema.prisma
+    CI=true DATABASE_URL=<same> npm test
+
+and the failing test names fall out of the second command.
+
+**Note for whoever fixes it:** most of the DB-touching suites cover
+`apps/web/lib/ai-control-plane/**`, which law 2 freezes for agents. If the defect is in that
+library rather than in a fixture, it is a founder-authorized change, not an agent one.
