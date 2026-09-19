@@ -4228,3 +4228,36 @@ first time it was `clvPositive` and it read as a dead pipeline; this time it was
 `clvValue > 0` and it overstated by 1.8 points. When a system already carries its
 own verdict column, grade from THAT, and use the raw value only to understand the
 verdict's boundaries.
+
+### QUALIFICATION to the archive-monitor claim above: nothing calls it, so today it would catch nothing
+
+Self-audit, same session. The section above says the freshness monitor reads
+stale at 08:00 on 2026-08-23 and so "would have caught the outage on day one".
+That is true of the ASSESSOR and false of the SYSTEM, and the difference is the
+whole point of the module.
+
+Measured: `grep` for `odds-line-archive-freshness`,
+`assessOddsLineArchiveFreshness` and `readOddsLineArchiveFreshnessInput` across
+`apps/web` and `packages`, excluding the module itself and its tests, returns
+NOTHING. No cron, no route, no ops surface invokes it. It is a library with a
+test suite, not a running alarm. **If the writer stopped again tonight, it would
+go unnoticed exactly as it did on 2026-08-22.**
+
+This is the same defect class this file already records twice over: a guard that
+exists but never runs is worth less than no guard, because it buys the belief
+that the hole is covered. I shipped one and then wrote a claim in this file that
+read as though it were live. The claim is corrected here rather than quietly
+softened.
+
+There is an obvious home for it. `apps/web/app/api/ops/public-surface-truth`
+already aggregates freshness readings, importing `isSignalBoardSlateStale` and
+`isMarketBoardOddsStale` and carrying an `odds-inserting-freshness-ops` entry.
+Adding a read-only archive-freshness field there is additive and writes nothing.
+
+It is NOT done here, deliberately: it changes a production API response, and
+that is the founder's call rather than an agent's. The work is one call site
+plus a field, and the thresholds must be passed explicitly at that site because
+the assessor refuses to default them.
+
+Until that happens, the honest status of the archive monitor is TESTED AND
+UNWIRED. Anyone citing it should say so.
