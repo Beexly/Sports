@@ -134,9 +134,10 @@ def h1_asof_elo_vs_market():
 
         mkt_p = None
         if r["spread"] is not None:
-            # market home win prob: normal CDF of (-spread - 0) / sigma
-            # spread_line is home-perspective (negative = home favored)
-            mkt_p = norm_cdf((-r["spread"]) / sigma_margin)
+            # MEASURED on this nflverse games.csv: spearman(margin, spread_line)=+0.43
+            # and home wins ~68% when spread_line>0 => positive = home favored.
+            # p_home = Phi(+spread / sigma). (First pass used -spread and inverted the market.)
+            mkt_p = norm_cdf(r["spread"] / sigma_margin)
 
         if y is not None:
             p_elo.append(elo_p)
@@ -145,9 +146,10 @@ def h1_asof_elo_vs_market():
             p_base.append(0.5)
             y_win.append(y)
             if r["spread"] is not None:
-                # cover: home covers if margin > -spread (home favored negative)
-                home_cover = 1 if r["margin"] > -r["spread"] else 0
-                push = abs(r["margin"] + r["spread"]) < 0.01  # rare with .5 lines
+                # cover: home covers if margin > spread when positive=home fav
+                # home_fav_line = spread_line (positive = home favored, measured 2026-09-19)
+                home_cover = 1 if r["margin"] > r["spread"] else 0
+                push = abs(r["margin"] - r["spread"]) < 0.01
                 if not push:
                     cover_home.append(home_cover)
                     if season not in trail_margin:

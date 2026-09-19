@@ -234,8 +234,10 @@ def epa_prior_bridge_validation():
             bridge_rows.append((pred_oracle, y))
             raw_cur_rows.append((SCALE * (ch - ca) + HFA, y))
         if g["spread"] is not None:
-            # market home margin ≈ -spread_line (home-perspective)
-            market_rows.append((-g["spread"], y))
+            # MEASURED convention on this games.csv (2026-09-19):
+            # spearman(home_margin, spread_line) = +0.43; home wins ~68% when spread_line>0.
+            # => positive spread_line = home favored. Predicted home margin = +spread_line.
+            market_rows.append((g["spread"], y))
         played[(s, h)] += 1
         played[(s, a)] += 1
 
