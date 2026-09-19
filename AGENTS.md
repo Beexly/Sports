@@ -3495,6 +3495,35 @@ can return a better lineup on any slate where the search is currently truncated,
 an output change and wants its own before/after rather than riding inside a plumbing
 commit. Whoever takes it: ~20% more nodes is the measured requirement on this slate.
 
+**CORRECTED 2026-09-19 by measurement (`scripts/dfs-nodecap-probe.ts`, shipped 36-player
+slate). That last sentence is true of CASH ONLY, and the node cap is the wrong knob for
+leverage.** Running the shipped `solveExact` at node budgets 400k through 2M, changing no
+default:
+
+    mode      stack  nodeBudget  optimal  nodes    work        objective   ms
+    cash      false  400000      false    400001    7163409    120.5000     427
+    cash      false  500000      TRUE     481198    8801876    120.5000     525
+    gpp       false  400000      TRUE      73418    1624065    218.0000     326
+    leverage  false  400000      false    400001    9704404    259.0030    2063
+    leverage  false  1000000     false    688196   16666667    259.0030    3473
+    leverage  false  2000000     false    688196   16666667    259.0030    3446
+
+Three things fall out. **Cash is a cheap, honest win**: it completes at 481,198 nodes for
+about 100ms more, and the objective does not move, so raising its cap converts an unproved
+answer into a proved one and changes no lineup on this slate. **Leverage never completes at
+any node budget.** At 1M and 2M it stops at the IDENTICAL 688,196 nodes and 16,666,667 work,
+and 16,666,667 is exactly `DEFAULT_COST_BUDGET / 36`: the COST budget is binding, not the
+node cap. Raising `nodeBudget` alone can never prove leverage, on this slate or a larger one,
+because cost binds first. Proving it means raising `costBudget`, which is the wall-clock knob
+on a search that runs on the user's main thread, so that is a deliberate latency trade and
+not a free constant bump. **No objective moved anywhere**, stacked or unstacked, so on this
+slate the whole question is proof, not output.
+
+The general lesson is the one this file already drew from the budget work and is now
+confirmed from the other side: when two budgets guard one search, measure WHICH ONE BINDS
+before raising either. Raising the one that is not binding buys nothing and reads, in a
+changelog, exactly like a fix.
+
 Knock-on already fixed: `dfs-optimizer-edge`'s cash cross-check asserted only ONE side's
 optimality, so a truncated incumbent that happened to reach the same objective passed for
 the same reason a genuinely agreeing one did. It now asserts at least one side is a
