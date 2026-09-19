@@ -677,3 +677,43 @@ thin-market strategy.
 **DELIBERATE SKIPS:** books-depth re-query (no new settled rows since the hours-ago
 measurement); drive-basis RZ tensor (derivation); true Skellam/NB2 totals baseline
 (Normal-approx used; stricter variant queued for any dispute).
+
+## LOCAL-ARCHIVE CROSS-REFERENCE (GSE2 corpus, 116 files): nothing lost, one edge recovered
+
+Swept the founder's local research archive against tonight's mills. Reconciliation:
+
+| archive claim | tonight's mill | verdict |
+|---|---|---|
+| 4th&1 ~70% league-wide, 4th&2 55-60% (Wharton 2024, coaching doc) | measured 67.0% (run 71.2/pass 54.6), 4th&2-3 56.2% | ARCHIVE VINDICATED - the pasted Gemini table (53.0/41.8) was the corrupted copy; the archive had it right |
+| wind 15-20 mph: completion -1.6pp vs calm | measured -1.5pp (64.56->63.06, Wilson non-overlap) | VINDICATED to the decimal |
+| "totals under-adjusted by market at 15-20 mph" (NFLWindPropAdjustmentMapping.md:33) | NEW MILL (wind_totals_mill.py) | **CONFIRMED: z = -4.08** |
+| per-mph elasticity -0.7 to -0.9% pass yds/mph; -12-18 yds at 15 mph | measured YPA -2.9% at 15-19 (~-7 yds on 232-yd base) | DIRECTION CONFIRMED; magnitude at the low end - bin dilution + era differences |
+| 20-25 mph: -5.65pp completion, -30-50 yds | my >=20 bin: -2.3pp, YPA -1.3% | NOT REPRODUCED at my bin width - my >=20 is dilute (n=1,796 incl. 20-21 mph games); the archive's 25+ tier claims remain untested at that granularity |
+
+**THE WIND-TOTALS EDGE (new, measured, the archive's "under-adjusted" claim CONFIRMED):**
+actual total minus closing total_line, 2019-2025: calm (<=8 mph) +1.10 pts (n=2,863);
+9-14 mph +0.27 (n=1,480); **wind >=15 mph -1.30 pts (n=649)**. Gap windy-vs-calm
+**-2.43 points, z = -4.08** - decisively past the pre-stated 1.5-pt bar. Fine bins:
+15-19 = -1.42; 20-24 = +1.33 (n=135, reversal, small n); 25+ = -8.07 (n=42, tiny).
+**READING: in 15+ mph games the closing total has historically run ~1.3 points hot.**
+This is the first measured game-level market inefficiency on this corpus, and it came
+from the founder's archive, not from a fresh idea. Caveats: single total_line source,
+wind = scheduled forecast not observed-at-kick, spans the 2019-2025 offense shift.
+Rung-2 candidate for a totals prop/lean factor (never a spread addend).
+
+**QUEUED FROM THE ARCHIVE (testable, not yet run):**
+- Simon (2024/2025) line-move negative autocorrelation: needs multi-snapshot lines -
+  production `odds_line_snapshots` has them post-recovery (SELECT-only, operator-adjacent).
+- SGP uncorrelated-leg mispricing (receiver under-receptions + over-yards combo):
+  props-pricing lane, needs a joint-distribution simulator.
+- FG% by wind tier (archive claims 83% -> 77% at 20-25): one pbp pass, queued.
+- Coach-subjectivity gap (4th-and-5: coaches 33-37% vs actual 42.7%): my attempts-basis
+  4th&4-6 reads 47.5% - same direction as Wharton; a go-for-it EV table can be built
+  from the measured tensor now.
+
+**FILES SWEPT:** NFLWindPropAdjustmentMapping.md, NFL-coaching-tendencies-prop-edges.md,
+NFL_BETTING_EDGES.md (headers + Simon section), SWARM_BOARD.md, EDGE_LEDGER.md,
+gse-discovery-A.md, opponent-adjusted.ts. **STILL UNREAD (honest):** the five docx
+audits, gse-discovery-B/C, git_research_report.md, model-limitations.ts,
+narrative-signal.ts, depth-chart/snap-count and injury-timing docs, root
+C:/Users/Garrett/AGENTS.md tail beyond the loaded truncation.
