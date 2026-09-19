@@ -135,13 +135,17 @@ vi.mock("@sports/db", () => ({
   isDemoPicksEnabled: dataMocks.isDemoPicksEnabled,
 }));
 
-vi.mock("@sports/prediction-engine", () => ({
-  getReadinessGates: predictionEngineMocks.getReadinessGates,
-  // The route reports the stale-data kill switch (gates.forceNoBetIfStale);
-  // this suite only exercises rate limiting and Stripe gating, so the
-  // switch is simply off here.
-  getPlatformConfig: () => ({ forceNoBetIfStale: false }),
-}));
+vi.mock("@sports/prediction-engine", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@sports/prediction-engine")>();
+  return {
+    ...actual,
+    getReadinessGates: predictionEngineMocks.getReadinessGates,
+    // The route reports the stale-data kill switch (gates.forceNoBetIfStale);
+    // this suite only exercises rate limiting and Stripe gating, so the
+    // switch is simply off here.
+    getPlatformConfig: () => ({ forceNoBetIfStale: false }),
+  };
+});
 
 vi.mock("@sports/data-ingestion", async () => {
   // C-109: the route also reads the credit-governor truth block through the

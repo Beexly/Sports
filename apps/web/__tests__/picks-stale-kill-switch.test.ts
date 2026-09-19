@@ -45,6 +45,7 @@ vi.mock("@sports/db", () => ({
     pick: { findMany: mocks.pickFindMany, count: mocks.pickCount, findFirst: mocks.pickFindFirst },
     ingestionRun: { findFirst: mocks.ingestionRunFindFirst },
   },
+  isStubMode: () => false,
 }));
 
 vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));

@@ -85,9 +85,13 @@ vi.mock("@sports/db", () => ({
   isStubMode: dataMocks.isStubMode,
 }));
 
-vi.mock("@sports/prediction-engine", () => ({
-  getReadinessGates: predictionEngineMocks.getReadinessGates,
-}));
+vi.mock("@sports/prediction-engine", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@sports/prediction-engine")>();
+  return {
+    ...actual,
+    getReadinessGates: predictionEngineMocks.getReadinessGates,
+  };
+});
 
 vi.mock("@/lib/performance/settlement-health", () => ({
   loadSettlementHealth: settlementHealthMocks.loadSettlementHealth,
