@@ -2043,6 +2043,21 @@ export type { RedZonePersonnelContext, RedZonePersonnelResult } from "./signals/
 export { evaluateTurfSurfaceFatigue } from "./signals/biomechanical/turf-surface-fatigue.js";
 export type { SurfaceFatigueContext, SurfaceFatigueResult } from "./signals/biomechanical/turf-surface-fatigue.js";
 
+export { evaluateShortWeekRoadDeficit } from "./signals/situational/short-week-road-deficit.js";
+export type { ShortWeekRoadContext, ShortWeekRoadResult } from "./signals/situational/short-week-road-deficit.js";
+
+export { evaluateHighAltitudeFatigueDecay } from "./signals/environmental/high-altitude-fatigue-decay.js";
+export type { HighAltitudeContext, HighAltitudeResult } from "./signals/environmental/high-altitude-fatigue-decay.js";
+
+export { evaluateQbTwpRegression } from "./signals/efficiency/qb-turnover-worthy-play-regression.js";
+export type { QbTwpContext, QbTwpResult } from "./signals/efficiency/qb-turnover-worthy-play-regression.js";
+
+export { evaluateEarlyDownProeMomentum } from "./signals/tactical/early-down-pass-rate-momentum.js";
+export type { EarlyDownProeContext, EarlyDownProeResult } from "./signals/tactical/early-down-pass-rate-momentum.js";
+
+export { evaluateTwoMinuteHurryUpEfficiency } from "./signals/tactical/two-minute-hurry-up-efficiency.js";
+export type { TwoMinuteHurryUpContext, TwoMinuteHurryUpResult } from "./signals/tactical/two-minute-hurry-up-efficiency.js";
+
 // Hierarchical Bayesian Pooling across 8 Signal Families
 export { poolSignalsHierarchically } from "./hierarchical-pool.js";
 export type { IndividualSignalInput, FamilyAggregation, HierarchicalPoolResult } from "./hierarchical-pool.js";
