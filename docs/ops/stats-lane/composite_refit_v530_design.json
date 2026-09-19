@@ -1,0 +1,22 @@
+{
+  "ok": true,
+  "model_version": "v5.3.0_PROPOSED",
+  "founder_gate": "L11 scorecard required; agents do not bump",
+  "ranking": {
+    "primary": "marketFairProb when finite",
+    "independent": "nfl_epa_adj / trueProb when quality gates pass",
+    "confidence": "display-only Edge Index; never win probability",
+    "consensusScore_rank_weight": 0,
+    "marketDepth_rank_weight": 0
+  },
+  "publish_veto": "independentEdge.decision PASS => never mint",
+  "evidence": {
+    "v527_top_decile_mfp_vs_rankingP_confidence_source": "88.9% vs 53.3% intervals SEPARATE",
+    "logit_pool_totals": "MODEL_ADDS_INFORMATION beta=1.42",
+    "adj_epa_2024_top": "BAL+0.282 DET+0.257 CAR-0.242"
+  },
+  "kill_lines": [
+    "No MODEL_VERSION bump without PICKS-H1 duel vs market",
+    "Adj-EPA wire only if Brier improvement >=0.002 n>=272"
+  ]
+}
