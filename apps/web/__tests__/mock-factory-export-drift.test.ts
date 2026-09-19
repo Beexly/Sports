@@ -137,6 +137,37 @@ import ts from "typescript";
 
 // ---------------------------------------------------------------------------
 // Paths
+// KNOWN LIMITATION, measured 2026-09-19. Read this before trusting a green run.
+//
+// The tracer follows STATIC imports. It does NOT follow a dynamic
+// `const mod = await import("@/app/api/.../route")`, which is how this repo's
+// route tests load their subject AFTER `vi.mock` is registered. Measured
+// against the four targets: 123 test files partial-mock a guarded module, 30 of
+// them use `await import(`, and 14 reach their subject ONLY that way. Those 14
+// are invisible to this guard. A green run says nothing about them.
+//
+// Demonstrated, not assumed: deleting `isStubMode` from
+// picks-prod-seed-exclusion.test.ts (a real defect, fixed in this same branch)
+// leaves this guard GREEN, while deleting it from audit-route-paywall.test.ts,
+// which imports its route statically, fails immediately. Same defect, opposite
+// verdicts, decided purely by import style.
+//
+// The obvious fix was implemented and REVERTED, and the reason is worth keeping.
+// Seeding every exported value of a dynamically imported module surfaced 8 new
+// violations, and the first one checked was false: health-route.test.ts was
+// reported as reaching `isStubMode`, but the route never reads it and the test
+// runs clean with no missing-export error. The asymmetry is the bug: for a
+// static import this guard seeds only the name actually imported, so seeding
+// ALL exports for a dynamic one explores paths no test executes. An
+// over-flagging guard gets allowlisted, and an allowlisted guard is off.
+//
+// A correct fix is narrower: bind `mod` to the module and treat `mod.GET` as a
+// namespace access, which is the precision the static path already has. That
+// needs binding tracking inside function bodies, since the dynamic import sits
+// in a helper rather than at top level. Until someone builds it, the honest
+// statement is that this guard covers 109 of 123 files and the gap is listed
+// above rather than hidden.
+
 // ---------------------------------------------------------------------------
 
 const REPO_ROOT = path.resolve(__dirname, "..", "..", "..");
@@ -178,7 +209,27 @@ const DB_TARGET: TargetModule = {
   realFile: path.join(PACKAGES_ROOT, "db", "src", "index.ts"),
 };
 
-const TARGETS: readonly TargetModule[] = [AUTH_TARGET, PREDICTION_ENGINE_TARGET, DB_TARGET];
+/**
+ * Fourth target. `@sports/types` is load bearing in a way the other three are
+ * not: AGENTS.md records that `pricesWorseThanMarket` was deliberately placed
+ * here, NOT in the engine, because nineteen web tests partial-mock
+ * `@sports/prediction-engine` and importing it from there resolved to
+ * `undefined` under those mocks and collapsed the board's published lane to
+ * zero rows. `@sports/types` is described there as "the boundary both sides
+ * already cross intact". That claim deserves a guard rather than trust: two
+ * files partial-mock this module today and neither spreads the real one.
+ */
+const TYPES_TARGET: TargetModule = {
+  specifier: "@sports/types",
+  realFile: path.join(PACKAGES_ROOT, "types", "src", "index.ts"),
+};
+
+const TARGETS: readonly TargetModule[] = [
+  AUTH_TARGET,
+  PREDICTION_ENGINE_TARGET,
+  DB_TARGET,
+  TYPES_TARGET,
+];
 
 // ---------------------------------------------------------------------------
 // Filesystem + module-specifier resolution (cached)
