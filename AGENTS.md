@@ -4174,3 +4174,57 @@ post-recovery sample is 126 decided and 72 graded. Nothing about the current
 engine's CLV can be concluded from 72 rows. Distinguishing 0.25 from 0.524 needs
 far fewer rows than distinguishing 0.25 from 0.32, and it is the second
 comparison that any "is it improving" claim requires.
+
+### CORRECTION to the section above, same session: 25.0% was MY arithmetic, not the engine's. The engine reads 23.2%, and a third framing reads 40.8%
+
+I published 0.250 from a query that counted `clvValue > 0` as beating the close.
+That is not how this engine defines it. `clvVerdict` is three-valued and carries
+a tolerance band around zero:
+
+```
+MATCHED_CLOSE   686   clvValue in [-0.0036, 0.0049]
+LOST_TO_CLOSE   533   clvValue in [-33.6,   -0.0055]
+BEAT_CLOSE      368   clvValue in [ 0.0056,  6.4286]
+```
+
+Twenty-eight rows sit inside that band with a positive `clvValue`, so my
+predicate counted them as beats. Inflation +1.78 points.
+
+**Corrected, three framings, and the difference between them is not cosmetic:**
+
+| framing | rate | Wilson 95% |
+|---|---|---|
+| what I published, `clvValue > 0` | 0.2497 | 0.229 to 0.272 |
+| engine's own `BEAT_CLOSE`, all graded in denominator | **0.2319** | 0.212 to 0.253 |
+| `BEAT_CLOSE` with MATCHED excluded | **0.4084** | 0.377 to 0.441 |
+
+The middle row reproduces the roughly 23% this file has recorded all along,
+which is corroboration that the engine's definition is the right one and mine
+was wrong.
+
+**The conclusion of the previous section SURVIVES unchanged**: no framing's upper
+bound reaches 0.524 (the highest is 0.441), so CLV remains far from the
+ESTABLISHED requirement and remains a model problem. Only my number was wrong,
+not the finding.
+
+**But the third row raises a real question nobody should answer by assertion.**
+This repo's own doctrine is that a push is never averaged into a published rate.
+MATCHED_CLOSE is the CLV analogue of a push: it is neither a win nor a loss
+against the closing line, and 686 of 1,587 graded rows are in it. Carrying them
+in the denominator drags the rate from 0.408 to 0.232 by construction.
+
+Meanwhile 0.524 is the break-even win rate at -110, which is a DECIDED-only
+quantity. So the gate may be comparing a rate computed one way against a
+threshold defined the other way. That is not a claim that the gate is wrong; it
+is a claim that NOBODY HAS CHECKED, and the two candidate readings are 0.232 and
+0.408 against a 0.524 bar, which is the difference between hopeless and merely
+short. Whoever owns the ESTABLISHED gate should establish which quantity the
+threshold means before any more work is planned against it. Do not resolve it by
+picking the flattering one.
+
+**Method note, and it is the same lesson twice in one session.** I derived a
+predicate from a column name instead of reading how the engine classifies. The
+first time it was `clvPositive` and it read as a dead pipeline; this time it was
+`clvValue > 0` and it overstated by 1.8 points. When a system already carries its
+own verdict column, grade from THAT, and use the raw value only to understand the
+verdict's boundaries.
