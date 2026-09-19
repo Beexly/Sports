@@ -158,6 +158,14 @@ try {
       espnEventId: g.espnEventId ?? null,
       marginKind: pickType === "SPREAD" ? "HOME_MARGIN" : pickType === "TOTAL" ? "TOTAL_POINTS" : null,
       publicMlImpliedProb: null, // optional join later for NCAAF K1
+      independentEdgeDecision: fb?.independentEdge?.decision ?? null,
+      independentEdgeExpectedClv: fb?.independentEdge?.expectedClv ?? null,
+      independentEdgeTrueProb: fbNum(fb?.independentEdge, "trueProb"),
+      passVeto:
+        fb?.independentEdge?.decision === "PASS" ||
+        (typeof fb?.independentEdge?.expectedClv === "number" &&
+          fb.independentEdge.expectedClv < 0) ||
+        false,
       clvVerdict: r.clvVerdict ?? null,
       clvValue: r.clvValue ?? null,
       clvKind: r.clvKind ?? null,
