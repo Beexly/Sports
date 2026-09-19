@@ -121,6 +121,105 @@ inventory.
   standouts (TB 26% RB share, GB 36% TE share) are exact — the rest were
   approximate stacked-bar reads and were NOT transcribed.
 
+### Evening sweep additions (2026-09-18 PM; window: posts since 10:00 CDT)
+- **devyeusuf-separation-score-2ndyear-wr-2026.csv** — @DevyEusuf, 2026-09-18
+  6:59 PM CDT. "Separation Score — 2nd-year WRs · 2026 · min 10 routes":
+  Sep Score, YPRR, TPRR, Win Rate, Sep Market Share (Sep MS), ADOR, TGT%.
+  Source (footer): exported from Fantasy Points Data Suite 2.0.
+- **scottbarrett-yprr-elite-2025-26.csv** — @ScottBarrettDFB, 2026-09-18
+  6:22 PM CDT. Advanced Receiving table (2025+2026, WR/TE): league avg +
+  ranks 1–16 (Nacua 3.84, JSN 3.79, Kincaid 3.54); rows 17+ cut off in the
+  screenshot, marked in-file. Source: Fantasy Points Data Suite 2.0.
+- **statyx-irving-lane-usage-week2.csv /
+  statyx-irving-run-path-interaction-week2.csv /
+  statyx-irving-runner-evidence-week2.csv** — @statyxio, 2026-09-18 11:48 AM
+  CDT. Bucky Irving vs CLE rush-path package (third instance of the same
+  statyx tool after Gibbs and Cook): lane usage + CLE lane ranks, interior/
+  left/right run-path interaction, Runner Evidence percentiles (3.88 YAC/att
+  76th; 0.63 evaded tackles/att 99th; 62.5% rush success 99th). Source stated:
+  statyx.io.
+- **benbbaldwin-objective-ratings-v2-2026-09-18.csv** — @benbbaldwin
+  (Computer Cowboy), 2026-09-18 12:18 PM CDT. UPDATED "objective ratings"
+  composite: "Market-implied win% vs. a league-average team on a neutral
+  field" — 32 teams in 5 tiers (LAR 72.8 favorite; Ravens 68.4 … Dolphins
+  24.2). Author's description: lines as starting point, then solves for the
+  rating that best reproduces chances of winning division/conference/etc.
+  Footer: "Blends near-term game lines with division/conference/Super Bowl/
+  playoff/#1 seed futures (DraftKings). Date: 2026-09-18". Author confirmed
+  in replies the source is DraftKings sportsbook lines/futures.
+- **benbbaldwin-remaining-sos-2026-09-18.csv** — @benbbaldwin, 2026-09-18
+  12:29 PM CDT. Remaining strength of schedule: site-adjusted average
+  remaining-opponent win% vs a league-average team (Cardinals 55.6 hardest …
+  Saints 43.4 easiest).
+- **cmain7-schedule-adjusted-ev-survivor-week3.csv** — @cmain7, 2026-09-18
+  6:07 PM CDT. "Current Entry EV by Week 1 Team Used": schedule-adjusted EV
+  per surviving entry vs $1,341 flat equity (Raiders/Cardinals/Jets $1,559 …
+  Lions $1,114). No source stated.
+- **sfdata9ers-buf-rushing-summary-week2.csv** — @sfdata9ers, 2026-09-18
+  3:51 PM CDT. BUF rushing summary vs DET: carries, 1st downs, carry
+  distribution, success rate, rush EPA, EPA/rush, most common run direction
+  (Allen 11 car/72 yds/2 TD/8 1stD, 0.87 EPA/rush). Historical 2012–2022
+  EPA/rush percentile bars noted.
+- **sfdata9ers-allen-passing-efficiency-grid-week2.csv** — @sfdata9ers,
+  2026-09-18 3:17 PM CDT. Josh Allen passing efficiency grid vs DET (air-yards
+  bucket × left/middle/right): comp/att, yards, EPA/att per cell + summary
+  (20/31, 248 yds, total EPA 25.4, EPA/play 0.53, CPOE -2.6%). Footer: "Data
+  from official NFL play-by-play description."
+- **sfdata9ers-allen-career-epa-play-heatmap.csv** — @sfdata9ers, 2026-09-18
+  12:35 PM CDT. Josh Allen career EPA/play heatmap, Weeks 1–21 × 2018–2026,
+  per-game opponent + EPA/play (min 20 relevant plays); "—" = no game or
+  below minimum. Colors = QB EPA/Play percentiles vs NFL average.
+- **sfdata9ers-sf-mia-last8-games.csv** — @sfdata9ers, 2026-09-18 12:57 PM
+  CDT. SF vs MIA last 8 meetings (2001–2024): season, week, stadium, QBs,
+  result. Basic table, retained for the file's stated matchup context.
+- **sfdata9ers-playcalling-tendencies-week1.csv** — @sfdata9ers, 2026-09-18
+  11:57 AM CDT. Week 1 offensive playcalling tendencies, 32 teams + NFL avg:
+  Motion / Screen / Play Action / No Huddle / RPO % of all rush+pass plays.
+  Header: "Data: FTN". Author correction in thread: actual motion leader is
+  LAC (84.3%), not SF (78.1%) as the post text claimed; tags can co-occur
+  (197 times in Week 1) so columns do not sum to 100%.
+- **hawkblogger-pressure-rates-generated-allowed-2026.csv** — @hawkblogger,
+  2026-09-18 9:22 PM CDT. Pressure rate generated × pressure rate allowed,
+  32 teams, ranked table (KC 56.3% generated / 39.4% allowed … MIA 6.5% /
+  40.5%). Footer: "hawkblogger.com · Source: FTN charting · 2026 regular
+  season".
+- **magicsportsguy-nyg-lar-cb-assignments-week1.csv /
+  magicsportsguy-nyg-receiver-alignment-week1.csv** — @MagicSportsGuy,
+  2026-09-18 12:05 PM CDT. StatRankings AI "Cornerback / Receiver Matchup
+  Report" (NYG @ LAR, Week 2): LA coverage assignment map (Watson 80.8% left;
+  McDuffie 80.8% right; both 14.7% man / 85.3% zone) and NYG receiver
+  alignment (Nabers 79.2% perimeter; Fields 68.4% perimeter; Mooney 58.3%
+  slot). Peer-group percentile ranks in parentheses. Source stated:
+  StatRankings (Player Alignment+, CB Metrics+ tools).
+- **magicsportsguy-mooney-man-zone-splits-2025.csv** — same post/report.
+  Darnell Mooney 2025 man/zone splits (CoverageIQ+): routes, target share,
+  1st-read%, TPRR, YPRR, FP/RR vs man and zone.
+- **magicsportsguy-nyg-lar-cb-2025-context.csv** — same post/report. 2025
+  larger-sample context: Watson / McDuffie / Lake routes defended, FP/RR
+  allowed, target rate allowed.
+- **magicsportsguy-target-distribution-position.csv** — same post/report.
+  Team Target Share and Team Target Share Allowed by position (WR/RB/TE),
+  offense + defense, NYG and LAR, 2025 vs Week 1 2026 (never blended).
+- **magicsportsguy-coverage-shell-splits-2025.csv** — same post/report.
+  Coverage shell splits (CoverageIQ+, 2025): Puka Nacua vs Cover 1/3/4 and
+  Davante Adams vs Cover 1/3 (routes, target share, 1st-read%, TPRR, YPRR,
+  FP/RR with percentile ranks).
+- **pff-defensive-grades-single-game-2026.csv** — @PFF, 2026-09-18 12:19 PM
+  CDT. "Highest defensive grade in a game this season (min 20 snaps)": Deone
+  Walker 93.0 (Week 2), Ventrell Miller 92.4, T.J. Watt 92.3, Dante Trader Jr
+  91.8, Vernon Broughton 91.8. Source: PFF's own grades (implied, not
+  footered); image was a player photo, not a chart.
+- **jmac-bills-target-distribution-week2.csv** — @JMac_FF, 2026-09-18 11:51
+  AM CDT (found via TPRR search). Bills target distribution with target share
+  + TPRR side-by-side (Kincaid 28.5%/30.7%, Coleman 21.4%/21.4%, Shakir
+  21.4%/28.6%, Palmer 10.7%/17.6%); LaPorta row truncated in source, marked
+  in-file. No source stated.
+- **rjanalytics-lawrence-depth-buckets-week1.csv** — @rjanalytics7002
+  (Ryan Joseph), 2026-09-18 10:52 AM CDT (found via CPOE search). Trevor
+  Lawrence Week 1 throws by depth bucket: attempts, comp%, average receiver
+  separation, average time to throw. Post states Lawrence "led the NFL in
+  CPOE in week 1 according to @NextGenStats"; no footer on the table image.
+
 ../chart-reads/ (approximate scatter/quadrant reads, not full tables):
 - **sfdata9ers-cpoe-vs-ttt-week1.csv** — @sfdata9ers, 2026-09-17. CPOE vs
   time-to-throw scatter; approximate positions. Source stated: Next Gen Stats.

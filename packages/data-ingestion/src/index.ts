@@ -203,6 +203,10 @@ export {
   type OddsQuoteProvider,
   type TheOddsApiOddsProviderOptions,
   type CreateOddsQuoteProviderOptions,
+  OddsPapiOddsProvider,
+  createSecondaryOddsProvider,
+  fetchDualProviderOdds,
+  type OddsPapiOddsProviderOptions,
 } from "./odds-provider-adapter.js";
 export {
   fetchWithFailover,
@@ -304,6 +308,74 @@ export {
 } from "./odds-api-key.js";
 export type { OddsApiKeyEnvName } from "./odds-api-key.js";
 
+export {
+  resolveOddsPapiKey,
+  oddsPapiKeyPresence,
+  ODDSPAPI_KEY_ENV_NAMES,
+} from "./oddspapi-key.js";
+export type { OddsPapiKeyEnvName } from "./oddspapi-key.js";
+
+export {
+  OddsPapiClient,
+  OddsPapiError,
+  ODDSPAPI_BASE_URL,
+  ODDSPAPI_TIMEOUT_MS,
+  ODDSPAPI_NFL_SPORT_ID,
+  ODDSPAPI_NFL_TOURNAMENT_ID,
+  ODDSPAPI_NCAA_TOURNAMENT_ID,
+  ODDSPAPI_NFL_PROP_FAMILIES,
+  ODDSPAPI_COOLDOWNS_MS,
+  parseRetryMs,
+  parseAmericanPrice,
+  dedupeHeartbeatSnapshots,
+  deriveClosingSnapshot,
+  resolveMarketIdsByName,
+  classifyGameLineMarket,
+} from "./oddspapi-client.js";
+export type {
+  OddsPapiFetchResult,
+  OddsPapiFixture,
+  OddsPapiPrice,
+  OddsPapiMarket,
+  OddsPapiOutcome,
+  OddsPapiBookmakerOdds,
+  OddsPapiOddsResponse,
+  OddsPapiHistoricalSnapshot,
+  OddsPapiHistoricalResponse,
+  OddsPapiSettlement,
+  OddsPapiSettlementResult,
+  OddsPapiMarketCatalogEntry,
+  OddsPapiAccount,
+  OddsPapiFixturesParams,
+  OddsPapiOddsParams,
+  OddsPapiHistoricalParams,
+  OddsPapiSettlementsParams,
+} from "./oddspapi-client.js";
+
+export {
+  normalizeOddsPapiOdds,
+  buildOddsPapiCatalog,
+  resolveOutcomeSide,
+  isInternalOddsPapiFeed,
+} from "./oddspapi-normalizer.js";
+export type { OddsPapiCatalog, OutcomeSide } from "./oddspapi-normalizer.js";
+
+export {
+  decideOddsPapiCall,
+  hoursToOddsPapiMonthEnd,
+  oddsPapiReservePaceOk,
+  oddsPapiZeroObservationIsStale,
+  ODDSPAPI_MONTHLY_CREDITS,
+  ODDSPAPI_DAILY_BUDGET,
+  ODDSPAPI_HOURLY_BUDGET,
+  ODDSPAPI_BILLABLE_MIN_INTERVAL_MS,
+} from "./oddspapi-credit-governor.js";
+export type {
+  OddsPapiCallPurpose,
+  OddsPapiCallDecisionInput,
+  OddsPapiCallDecision,
+} from "./oddspapi-credit-governor.js";
+
 export { americanToDecimal, deVigFairProbs } from "./galaxy-devig.js";
 export {
   KALSHI_BOOK_KEY,
@@ -373,6 +445,23 @@ export {
   fetchMlbRecentCompletedGames,
 } from "./mlb-statsapi-client.js";
 export type { MlbStandingRow, MlbCompletedGame } from "./mlb-statsapi-client.js";
+
+export {
+  SPORTSDB_NFL_LEAGUE_ID,
+  fetchSportsDbNflTeams,
+  fetchSportsDbNflSeasonEvents,
+  fetchSportsDbTeamPlayers,
+  buildSportsDbTeamLookup,
+  lookupSportsDbTeam,
+  currentSportsDbSeason,
+  resetSportsDbThrottleForTests,
+} from "./thesportsdb-client.js";
+export type {
+  SportsDbTeam,
+  SportsDbEvent,
+  SportsDbPlayer,
+  SportsDbOptions,
+} from "./thesportsdb-client.js";
 
 export {
   MONTHLY_CREDITS,
