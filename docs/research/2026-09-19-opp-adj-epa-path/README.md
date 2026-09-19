@@ -717,3 +717,35 @@ gse-discovery-A.md, opponent-adjusted.ts. **STILL UNREAD (honest):** the five do
 audits, gse-discovery-B/C, git_research_report.md, model-limitations.ts,
 narrative-signal.ts, depth-chart/snap-count and injury-timing docs, root
 C:/Users/Garrett/AGENTS.md tail beyond the loaded truncation.
+
+## ARCHIVE CLAIM LEDGER (extended sweep: weather/coaching/props/limits/injury/timing files)
+
+- **model-limitations.ts (uncertainty disclosure): ALREADY ADOPTED.** wilsonInterval /
+  assessUncertainty live in apps/web (clv page, performance page, honest-band). The
+  archive copy is not lost work.
+- **Altitude FG penalty: DIES on 2019-2025.** Denver home FG rates vs all other
+  venues by distance: 18-29 yds -1.6pp (n=55), 30-39 +1.3pp (n=71), 40-49 -1.8pp
+  (n=65), **50+ +4.4pp (n=59, better than league)**. No Mile-High disadvantage
+  survives; plausible mechanism is kicker selection/adaptation. The archive's drag
+  tables were era-specific.
+- **Snap-share injury signals (95% baseline, <80% benching, backup-OL RB drop
+  20-30%): QUEUED** - needs the nflverse pbp_participation release asset
+  (identified in the local nfl_data_py source, line 148).
+- **QUESTIONABLE play rate ~70-75% historical ("market overprices absences"):
+  QUEUED** - needs the nflverse injuries dataset (one small download), then a
+  direct play-rate mill vs the archived claim.
+- **Pressure-vs-sack divergence (QB hits OVER angle): CONSISTENT** with the locked
+  doctrine (sack-conversion luck, R^2 < 0.005) - sack props stay NULL, QB-hit
+  over-angles are the props-lane descendant.
+- **IR/PUP return-timing calendar (4-game minimum, 21-day windows): descriptive
+  reference** for a future transaction-timing factor; no mill without transaction
+  data.
+- **TE RZ leverage (20-30% of RZ targets): context** for the RZ tensor; player-level
+  RZ target shares are a props-lane candidate.
+- **SGP uncorrelated-leg mispricing, Simon line-move autocorrelation: QUEUED**
+  (props-pricing lane / odds_line_snapshots SELECT).
+
+Standing rule (broadcast to the fleet): grep the local archive BEFORE registering or
+killing any factor - two archive claims vindicated, one edge recovered (wind totals),
+one archive claim killed (altitude), one module found already-adopted. The archive is
+prior art, not decoration.
