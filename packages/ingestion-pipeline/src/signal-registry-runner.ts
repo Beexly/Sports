@@ -53,8 +53,11 @@ export async function runSignalRegistry(
 
     try {
       const val = await signal.evaluate(ctx);
+      if (!val) continue;
+      // CONTINUOUS_VALUE / MULTIPLIER evaluators return {value,capturedAt} —
+      // they are not win probabilities and must not enter the fair-value list.
+      if (!("homeFairProb" in val)) continue;
       if (
-        val &&
         Number.isFinite(val.homeFairProb) &&
         Number.isFinite(val.awayFairProb) &&
         val.homeFairProb >= 0 &&

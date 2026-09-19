@@ -45,6 +45,25 @@ import {
   evaluateWr1OutRedistribution,
 } from "@sports/prediction-engine";
 
+/**
+ * Fair home/away win probs from Poisson lambdas via the Skellam margin model.
+ * Replacement for the missing `poissonFairValueFromLambdas` helper named in this
+ * file — implemented from already-imported `skellamCoverFairValue`, not a new
+ * estimator. Fail-closed: null when lambdas or fair two-way mass are unusable.
+ */
+function poissonFairValueFromLambdas(
+  lambdaHome: number,
+  lambdaAway: number,
+  opts?: { now?: () => Date },
+): { homeFairProb: number; awayFairProb: number; capturedAt: string } | null {
+  if (!Number.isFinite(lambdaHome) || !Number.isFinite(lambdaAway)) return null;
+  if (lambdaHome <= 0 || lambdaAway <= 0) return null;
+  const fv = skellamCoverFairValue({ lambdaHome, lambdaAway, spreadHome: 0 });
+  if (!fv || fv.homeFairProb == null || fv.awayFairProb == null) return null;
+  const capturedAt = (opts?.now ?? (() => new Date()))().toISOString();
+  return { homeFairProb: fv.homeFairProb, awayFairProb: fv.awayFairProb, capturedAt };
+}
+
 export const DEFAULT_KILL_LINE = {
   maxBrierScoreVsMarket: 0.250,
   minSettledSample: 100,

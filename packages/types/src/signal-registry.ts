@@ -80,9 +80,29 @@ export interface SignalValue {
   readonly metadata?: Record<string, unknown>;
 }
 
+/** Numeric signal output (outputKind CONTINUOUS_VALUE) — not a win probability. */
+export interface ContinuousSignalValue {
+  readonly value: number;
+  readonly capturedAt: string;
+  readonly metadata?: Record<string, unknown>;
+}
+
+/** Multiplier signal output (outputKind MULTIPLIER) — e.g. weather yards factor. */
+export interface MultiplierSignalValue {
+  readonly value: number;
+  readonly capturedAt: string;
+  readonly metadata?: Record<string, unknown>;
+}
+
+export type SignalResult =
+  | SignalValue
+  | ContinuousSignalValue
+  | MultiplierSignalValue
+  | null;
+
 export type SignalEvaluator = (
   ctx: SignalEvaluationContext
-) => Promise<SignalValue | null> | SignalValue | null;
+) => Promise<SignalResult> | SignalResult;
 
 export interface SignalDefinition {
   /** Unique, immutable snake_case identifier (e.g. "nfl_epa_opponent_adjusted"). */
