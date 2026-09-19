@@ -1,0 +1,311 @@
+# NFL Betting Repos — Code Deep-Dive (Agent 13)
+
+**Purpose:** complement `NFL_BETTING_EDGES.md` (H0, top-down behavioral/market edges) with a
+bottom-up extraction of the **actual edge methodologies, data pipelines, and reusable code**
+inside the four cited GitHub repos. H0 cites these as tooling sources; this report opens the
+black box so the parent project can steal reproducible pieces directly.
+
+| Repo | Stars/Status | Language | Primary value for parent project |
+|------|------|------|------|
+| `mattleonard16/nflalgorithm` | Production-validation | Python | End-to-end *value-betting* pipeline: ingest → project → no-vig prob → Kelly → confidence tiers → correlation-aware risk → live-odds steam agent |
+| `nflverse/nfl_data_py` | 434★ **archived Sep 2025** | Python | Canonical NFL data-access layer (parquet/CSV) + caching + name-cleaning; superseded by `nflreadpy` |
+| `hueyfreemancodes/LuckyLinesV1` | Production-ready | Python | Prop projection *modeling* stack: XGBoost/LightGBM/LSTM ensemble, feature store, OR-Tools DFS optimizer, EV engine |
+| `yzRobo/draftkings_api_explorer` | Production 0.2.0 | Python/Tkinter | Robust DraftKings feed scraper: browser-impersonated HTTP, dynamic structure analyzer, main-line detection, SHA-256 verified updater |
+
+---
+
+## 1. nflalgorithm (mattleonard16) — the value-betting engine
+
+Repo cloned to `/workspace/repos/nflalgorithm`. Architecture doc: `docs/ARCHITECTURE.md`.
+
+### 1.1 Edge methodology (the "betting math")
+Core lives in `confidence_engine.py`, `risk_manager.py`, `nba_value_engine.py` (the NFL value
+engine is referenced as its sibling — `nba_value_engine.py` docstring: *"Modeled after the NFL
+value_betting_engine.py but adapted for NFL markets"*).
+
+**No-vig probability + Kelly.** `nba_value_engine.py` (lines ~100-140):
+```python
+def implied_probability(odds: int) -> float:          # American -> raw prob
+    return abs(odds)/(abs(odds)+100) if odds<0 else 100/(odds+100)
+def implied_probability_no_vig(over_odds, under_odds) -> (p_over,p_under):  # normalize to sum=1
+    total = implied_probability(over_odds)+implied_probability(under_odds)
+    return raw/total, raw/total
+def prob_over(mu, sigma, line) -> float:             # P(stat > line) via normal CDF
+    z = (line - mu)/sigma; return 1.0 - norm_cdf(z)
+```
+`norm_cdf` uses the **Abramowitz & Stegun polynomial approximation** (max abs err < 7.5e-8) —
+no SciPy dependency, drop-in portable. Edge = `model_prob − market_implied_prob`.
+
+**Confidence tiers** (`confidence_engine.py`). A 0–100 score from four components, each
+min-maxed to 100:
+- `_score_edge`: edge 0→0, edge 0.25→100 (linear).
+- `_score_stability`: CV = sigma/mu; CV 0→100, CV≥1→0.
+- `_score_volume`: target_share 0→0, 0.30→100.
+- `_score_volatility`: converts a 0–100 "badness" volatility into a confidence component.
+Tiers: **Premium 90–100, Strong 75–89, Marginal 60–74, Pass <60.** Kelly fraction is scaled
+by tier/confidence (not shown in snippet but referenced in README) — the practical,
+reusable bit: tie bet *size* to a multi-factor confidence score, not just edge.
+
+**Correlation-aware risk** (`risk_manager.py`). This is the concrete implementation of H0's
+"prop correlation mispricing" edge (Edge 1):
+- `POSITIVE_CORRELATIONS`: e.g. (passing_yards, receiving_yards), (passing_yards, receptions).
+- `NEGATIVE_CORRELATIONS`: (rushing_yards, passing_yards).
+- `detect_correlations(df)`: groups same-game props into `correlation_group` via
+  `_same_game` (shared `event_id` or team) + `_classify_pair`. Then `per_team_exposure`,
+  `per_game_exposure`, `per_player_exposure` caps + Monte Carlo drawdown via
+  `risk_adjusted_kelly` (`utils/risk_utils.py`). **Bet sizing accounts for the joint
+  distribution of correlated legs.**
+
+**Post-game attribution / learning** (`learning_loop.py`):
+- `model_error = |mu − actual| / sigma` (z-score of the miss) → labels `model_accurate` (≤1σ),
+  `model_miss` (≤2σ), `high_variance` (>2σ).
+- `line_value = actual − line` (**CLV** — beating the closing line).
+- Bayesian threshold tuning of confidence cutoffs from historical results.
+
+### 1.2 Data pipeline
+`scripts/ingest_real_nfl_data.py` is the canonical NFL data pipeline. It calls **nflreadpy**
+(now the maintained fork; nfl_data_py is archived) and ingests the full feature set:
+```
+nfl.get_current_season; nfl.load_player_stats; nfl.load_snap_counts;
+nfl.load_rosters; nfl.load_rosters_weekly; nfl.load_depth_charts;
+nfl.load_injuries; nfl.load_schedules; nfl.load_pbp
+```
+Data quality scaffolding (the "reusable boring bits"):
+- `ROLE_PRIORS` — positional priors (QB 28 att/75% snap, RB 8 att/38%, WR 4.5 tgt/55%, …).
+- `NFL_TEAM_COUNT = 32` + `MIN_PLAYERS_PER_TEAM_FOR_AUTHORITATIVE_ROSTER = 40` — flag when a
+  roster snapshot is complete enough to drop absent players (avoids false injury drops).
+- `MARKET_MIN_EXPECTED_VOLUME` (`sports/nfl.py`) — volume floors: rushing ≤3.0 att,
+  receiving ≤2.0 tgt, passing ≤12.0 att — before a player is trained/projected.
+- Player matching 3-tier: exact `player_id` → name+team canonicalization → fuzzy
+  (`utils/player_id_utils.py`: 32-team set, `TEAM_ALIASES`, `TEAM_TYPO_FIXES`).
+
+**Market model** (`sports/markets.py`): sport-neutral registry mapping each prop market to a
+stat column + eligible positions:
+```
+NFL markets: rushing_yards(yards, RB/QB/WR/TE), receiving_yards(…,WR/TE/RB),
+passing_yards(QB only), receptions, targets  →  MARKET_TO_STAT
+```
+`utils/nfl_markets.py:melt_actuals` unpivots player-week actuals to one row per market.
+
+**Odds ingestion & line normalization** (`scripts/prop_line_scraper.py`): pulls from
+**The Odds API** (`/v4`), not DraftKings directly; `utils/two_sided_odds.py:
+pair_two_sided_prices` is a key reusable gem — it pairs Over/Under **only on matching
+player *and* line** (with float tolerance), preventing the classic bug of pairing an Over at
+55.5 with an Under at 70.5 across alternate lines. `utils/event_keys.py:
+resolve_event_id` resolves NFL game keys with an `UnresolvableEventError`.
+
+**Pipeline orchestration** (`pipelines/orchestrator.py` + `pipelines/nfl_contract.py`):
+sport-neutral, **fail-closed** sequential runner. `NFL_STAGE_NAMES =
+("prepare_week","odds","value_ranking","risk_assessment","agents","materialize")`;
+idempotent, lease-based worker claiming + cooperative cancellation in orchestrator.py.
+Retry-safe stage set excludes `value_ranking` (side effects not yet proven idem­potent) =
+"only retry stages whose effects are provably retry-safe; terminal/unproven failures need
+explicit operator retry."
+
+### 1.3 Reusable code (take this verbatim)
+- `nba_value_engine.py` implied-prob / no-vig / normal-CDF-Kelly math (port the CDF to any
+  language; no SciPy).
+- `two_sided_odds.py` line-paired matching (fixes alternate-line pairing bugs).
+- `confidence_engine.py` component scoring → tiered confidence (not raw edge).
+- `risk_manager.py` correlation-group + exposure-cap model.
+- `pipelines/orchestrator.py` fail-closed stage runner with lease/cancel/retry contracts.
+- `utils/player_id_utils.py` team alias + typo normalization (production-hardened, 32-team).
+
+---
+
+## 2. nfl_data_py (nflverse) — the data-access layer
+
+Repo at `/workspace/repos/nfl_data_py`. **NB: archived Sep 2025 → migrate upstream to
+`nflreadpy`.** The API surface here is the *contract* to preserve.
+
+### 2.1 Edge methodology
+Pure data plumbing — but the *data choices* define the edge surface. Functions:
+`import_pbp_data`, `import_weekly_data`, `import_seasonal_data`, `import_snap_counts`,
+`import_ngs_data`, `import_qbr` (NFL+college), `import_seasonal_pfr` / `import_weekly_pfr`,
+`import_officials`, `import_schedules`, `import_seasonal_rosters`,
+`import_weekly_rosters`, `import_players`, `import_depth_charts`, `import_injuries`,
+`import_ids`, `import_contracts`, `import_win_totals`, `import_sc_lines`, `import_draft_picks`,
+`import_draft_values`, `import_combine_data`, `import_ftn_data`, plus `clean_nfl_data`
+(aligns name diffs for merges) and `cache_pbp`.
+
+### 2.2 Data pipeline — source endpoints (parquet/CSV directly from nflverse releases)
+| Dataset | Source URL (template) | Notes |
+|---|---|---|
+| play-by-play | `nflverse-data/releases/.../pbp/play_by_play_{year}.parquet` (1999+) | also participation `pbp_participation_{year}.parquet` |
+| weekly player | `nflverse-data/.../player_stats/player_stats_{year}.parquet` | incl. target share, air-yards, dominator |
+| players / teams | `.../players/players.parquet`; `nflfastR-data/.../teams_colors_logos.csv` | canonical IDs, team colors/logos |
+| weekly rosters | `nflverse-data/.../rosters/roster_{year}.parquet` (via import_weekly_rosters) | in-season updates |
+| depth charts | `.../depth_charts_{year}.parquet` | starter identification |
+| injuries | `.../injuries_{year}.parquet` | game-time decision flags |
+| NGS (speed) | `.../ngs_{year}.parquet` | YAC, air yards, route data |
+| PFR adv stats | `advstats_season_{s_type}.parquet`; `advstats_week_{year}_{wk}.parquet` | DVOA proxies |
+| snap counts | `.../snap_counts_{year}.parquet` | volume confirmation |
+| schedules | `http://www.habitatring.com/games.csv` (all years, filter in-memory) |
+| odds / lines | `mrcaseb/nfl-data/.../nfl_lines_odds.csv.gz` | closing lines, win totals |
+| sc_lines | `nfldata/.../sc_lines.csv` | |
+| win totals | `.../win_totals` (see warning) | data source currently broken per code |
+| QBR | `espnscrapeR-data/.../qbr-{year}-{season_type}.csv` | |
+| player-id map | `dynastyprocess/data/.../db_playerids.csv` | cross-site ID resolution |
+| draft picks/values | `.../draft_picks.parquet`, `.../draft_values.csv` | |
+| combine | `.../combine.parquet` | |
+| FTN charting | `.../ftn_charting_{year}.parquet` | route-level detail |
+| officials | `nfldata/.../officials.csv` | |
+
+Patterns (all importers): single-threaded `pandas.read_parquet/csv` per year; optional
+`cache=True` via `appdirs.user_cache_dir('nfl_data_py','cooper_dff')`; `thread_requests=True`
+switches some to `ThreadPoolExecutor`. `downcast=True` converts float64→float32 (memory).
+`clean_nfl_data` aligns name diffs so weekly↔pbp↔pfr joins are consistent.
+
+### 2.3 Reusable code
+- The full endpoint template list + caching pattern (copy into any re-implementation).
+- `clean_nfl_data` name-alignment for cross-source joins.
+- Replace `import_*` → `nflreadpy.load_*` when migrating (same nflverse backends; Polars by
+  default, `.to_pandas()` available).
+
+---
+
+## 3. LuckyLinesV1 (hueyfreemancodes) — the projection/modeling stack
+
+Repo at `/workspace/repos/LuckyLinesV1`. FastAPI + PostgreSQL.
+
+### 3.1 Edge methodology
+**Ensemble modeling** (`app/models/projections/`): XGBoost + LightGBM + LSTM stack; each market
+has a prop-specific model. README claims MAEs: passing_yards **26.5**, rushing_yards **17.8**,
+receiving_yards **18.6** (verify against training logs in `scripts/train_prop_models.py`).
+
+**Feature store** (`app/services/feature_engineering.py`):
+- `add_emas` (span=4), `add_lags` (lag=1), `calc_streak` (short/long EMA ratio >1 = hot),
+  `calc_velocity` (short−long EMA delta), `add_xfp` (expected fantasy points).
+- `add_team_shares` / `add_rz_share` / `add_opp_share` — target-share, red-zone share,
+  opportunity share vs. team.
+- `add_vegas_implied`, `add_def_features` (opponent dvoa/ypa/turnover proxies),
+  `add_game_script_features` (spread interactions), `add_weather_impact`
+  (wind-passing-penalty, wind-rushing-boost, temp-extreme, humidity).
+- `opponent_defense_features.py`: 4-game rolling **points/yards/sacks/turnovers allowed per
+  game** → `opp_def_strength_score`.
+
+**EV engine** (`app/services/ev_calculator.py`): `EV% = WinProb·Profit − LossProb·Wager / Wager`,
+with market-specific `STD_DEV_MAP = {pass=35.0, rush=15.0, rec=15.0}` (hardcoded; a tuning
+target). Win prob via normal CDF: `z=(line−proj)/std`; Over→`1−norm.cdf(z)`, Under→`norm.cdf(z)`.
+
+**DFS optimization** (`app/optimization/optimizer.py`): **OR-Tools CP-SAT** lineup optimizer —
+bool var per player; constraints: salary_cap, roster_size, per-position counts, FLEX
+(RB/WR/TE pool math), **QB+WR/TE same-team stacking rules**, per-player **exposure limits**,
+**min_diversity** between lineups. Objective: maximize Σ(projected_points×100).
+(`app/optimization/simulator.py` does the Monte Carlo payout sim.)
+
+### 3.2 Data pipeline
+`app/ingestion/` has `DraftKingsIngestion` (live slates/salaries via DK draftgroups API), a
+base class `base.py`, and presumably OddsApi/other sources. DB models in
+`app/models/models.py` (`BettingLine`, `Projection`, `Player`, `PlayerSeasonStats`).
+Backtest flow: `scripts/backtest_2024.py` iterates weeks 2–18, calls
+`ProjectionsService.generate_projections(season, week)`, joins to actuals, reports
+`mean_absolute_error`, `r2_score` per market — this is the reproducible backtest harness.
+
+### 3.3 Reusable code
+- `feature_engineering.py` static methods (EMA/lag/streak/velocity + vegas + defense + weather + game-script) — bolt onto any projection model.
+- `optimizer.py` CP-SAT skeleton (salary cap, roster, FLEX, stacking, exposure) — generic DFS optimizer.
+- `ev_calculator.py` normal-CDF win-prob + EV% formula (mirrors nflalgorithm; cross-check the two).
+- `opponent_defense_features.py` 4-game rolling-defensive-strength scorer.
+
+---
+
+## 4. draftkings_api_explorer (yzRobo) — the DK feed scraper
+
+Repo at `/workspace/repos/draftkings_api_explorer`. The most polished, defensive scraper of the
+four. Single-file `dk_api_gui_explorer.py` (62KB).
+
+### 4.1 Edge methodology
+- **Main-line detection** (`apply_smart_formatting`): DK returns *every* alternate line as a
+  separate Over/Under selection. The code pivots Over/Under into one row per participant per
+  line, then for each participant selects the **main line via DK's own `main` flag**, falling
+  back to a `cost = |OverOdds|+|UnderOdds|` minimum (closest to -110) when the flag is absent.
+  Comment: *"the cost heuristic is only a fallback ... it does get the line wrong when an
+  adjacent alternate happens to be priced marginally tighter than the real line."* → use `main`
+  flag, not cost, as authoritative.
+- **"Uncorrelated parlay edge" data** (H0 Edge 1): the explorer pivots player props so
+  `Subject/Line/Over Odds/Under Odds` are directly joinable with internal projection
+  distributions to compute true joint probabilities vs. SGP payouts.
+
+### 4.2 Data pipeline
+```python
+DEFAULT_API_BASE = "https://sportsbook-nash.draftkings.com/api/sportscontent/dkusoh/v1"
+DEFAULT_LEAGUE_ID = "88808"   # NFL
+build_api_url(league_id, category_id, subcategory_id)   # /leagues/{id}/categories/{c}[/subcategories/{s}]
+fetch_dk_feed(...) -> cffi_requests.get(..., impersonate="chrome110", timeout=30)
+```
+Key defensive choices:
+- Uses **`curl_cffi.requests`** with `impersonate="chrome110"` — browser TLS/UA impersonation to
+  bypass DK bot detection (far more reliable than `requests`).
+- `StructureAnalyzer` + `EnhancedDynamicParser` — analyzes unknown feed shapes dynamically
+  (market/selection field patterns, label patterns, participant-extraction from market names via
+  regex). Market-type auto-detected by label ratios: if >80% Over/Under → `over_under`/`player_props`
+  (category 1759 = player_props); ordinals 1st-4th → `division_standings` (820); labels ending `+`
+  → `threshold` (1801 = rookie props).
+- Feed normalization: `normalize_market_name` strips DK's `"NFL 2026/27 - "` prefix;
+  `resolve_outcome` handles the combined `"Over 3949.5"` label vs. separate `points` field.
+- `id_reference.json` — **bundled NFL category/subcategory ID reference** (15 futures groups:
+  WIN(1286), FUTURES(529), AWARDS(787), MOST DRAFT..., plus REGION 49808 = NFL; category 1759 =
+  Player Props, 1801 = Rookie/Total Props, 820 = Division Standings).
+- SHA-256 verified auto-updater: fetches latest GitHub release, verifies asset `digest` starts
+  with `sha256:`, size + hash match, atomic same-volume rename (Windows can't overwrite running
+  .exe → moves current to `.old`, deleted next launch).
+- Threading: scrape runs in a worker thread; `queue.Queue` for log + UI updates; `root.after` poller.
+
+### 4.3 Reusable code
+- `curl_cffi` + `impersonate="chrome110"` HTTP pattern (anti-bot bypass) — **the single most
+  portable win**.
+- `build_api_url` / `fetch_dk_feed` minimal DK feed client (~15 lines, no GUI).
+- `StructureAnalyzer` + `EnhancedDynamicParser` + `apply_smart_formatting` — generic
+  "analyze-then-parse unknown sportsbook feed" pattern.
+- `normalize_market_name` / `resolve_outcome` regexes (handle prefix + embedded-line labels).
+- Main-line selection logic (prefer `main` flag; cost heuristic fallback).
+- Verified-update pattern (SHA-256 + size check + atomic rename).
+
+---
+
+## Cross-repo capability matrix
+
+| Capability | nflalgorithm | nfl_data_py | LuckyLines | DK Explorer |
+|---|---|---|---|---|
+| **Data ingestion** | nflreadpy (full feature set) | nflverse parquet/CSV (raw) | DK + OddsAPI/SQL | DK feed only |
+| **Projection model** | position-specific ML (separate) | none (data only) | XGBoost/LGBM/LSTM ensemble | none |
+| **Odds source** | The Odds API | nfl_lines_odds.csv (closing) | DK + OddsAPI | DK live feed (main-line aware) |
+| **Value math** | no-vig + Kelly + normal CDF | none | EV% via normal CDF | none (data layer) |
+| **Confidence sizing** | 4-tier 0-100 multi-factor | none | none | none |
+| **Correlation/risk** | corr-group + Monte Carlo Kelly | none | DFS stacking (QB-WR) | none |
+| **Optimization** | none | none | OR-Tools DFS optimizer | none |
+| **Steam/momentum agent** | `odds_agent` (line movement) | none | none | provides raw line snapshots |
+| **Reusable scraper** | — | — | — | yes (best quality) |
+
+### Recommended integration path (parent project)
+1. Take the **DK Explorer's `fetch_dk_feed` + main-line pivot** as the live odds feed
+   (replace LuckyLines' DK ingestion and nflalgorithm's Odds-API-only props).
+2. Use **nfl_data_py's endpoint list** (migrated to `nflreadpy`) as the *data backbone* for
+   training features; bolt on LuckyLines' **feature_engineering.py** (EMA/lag/streak/vegas/defense/weather) for the X.
+3. Compute value with the **shared no-vig + normal-CDF + Kelly** logic (cross-check
+   nflalgorithm vs. LuckyLines STD_DEV per market).
+4. Size via nflalgorithm's **confidence tiers** + **correlation-aware Kelly**; run LuckyLines'
+   **OR-Tools optimizer** for DFS construction.
+5. Add nflalgorithm's **`odds_agent` + `market_bias_agent`** as live-monitoring/edge triggers.
+
+---
+
+## Issues / blockers encountered
+- **nfl_data_py is archived** (Sep 2025); upstream is `nflverse/nflreadpy` (Polars-native).
+  `nfl_data_py` has **no model code** — only `import_*` data accessors + bundled `data/` CSVs
+  (schedules 1999-2021, coaching_history, combine, drafts, qbr). Treat as a **data contract**,
+  not a repo to fork.
+- nflalgorithm README references `data_pipeline.py` and `value_betting_engine.py` that are
+  **not in the tree** — the NFL value engine lives in `nba_value_engine.py` (sibling, per its
+  docstring); the NFL pipeline is split across top-level modules + `pipelines/`.
+- nflalgorithm's **value engine itself is NBA-named**; the documented NFL equivalent is implied
+  but the actual NFL value module is not present verbatim (mirror nba_value_engine's math — it's
+  sport-parameterized).
+- LuckyLines `ev_calculator._project_stat` hard-codes `target_season=2023, target_week=1` and
+  calls full-projection generation per player (noted as inefficient) — replace with batched
+  generation before reuse.
+- DK Explorer config.json only overrides nothing unusual; league/category IDs live in
+  `id_reference.json` as a list of `{category_name, subcategories[...]}`.
+- Environment note: the sandbox's bash `terminal` mounts a **different `/workspace`** than the
+  Python/`read_file` tools; all file reads here used `execute_code` (Python) + `read_file`.

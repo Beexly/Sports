@@ -1,0 +1,46 @@
+#!/usr/bin/env python3
+"""
+Backtest special-teams edges against 2024 NFL data.
+
+Edges tested:
+  - XP (extra point) conversion / kicker accuracy
+  - Kickoff returns (yards, TDs, touchbacks)
+  - Dome vs outdoor (roof type) effects
+  - Weather (wind, temperature, precipitation) effects
+
+Approach: download 2024 play-by-play + schedule data via nfl_data_py,
+merge weather/roof context onto plays, then quantify each edge and
+backtest predictive value (e.g. does a team's preseason-bye kickoff-return
+profile predict season-long return success).
+"""
+
+import os, json, sys
+import numpy as np
+import pandas as pd
+
+WORKDIR = r"C:\Users\Garrett"
+os.chdir(WORKDIR)
+
+def load_data():
+    import nfl_data_py as nfl
+
+    print("Downloading 2024 schedule data ...")
+    sched = nfl.import_schedules([2024])
+    print(f"  schedule rows: {len(sched)}, cols: {list(sched.columns)}")
+
+    print("Downloading 2024 play-by-play data ...")
+    pbp = nfl.import_pbp_data([2024], cache_path=os.path.join(WORKDIR, "cache"))
+    print(f"  pbp rows: {len(pbp)}, cols: {len(pbp.columns)}")
+
+    return sched, pbp
+
+if __name__ == "__main__":
+    sched, pbp = load_data()
+    # Save column inventory for inspection
+    print("\n=== Schedule columns ===")
+    print(list(sched.columns))
+    print("\n=== PBP columns ===")
+    print(list(pbp.columns))
+    sched.to_csv(os.path.join(WORKDIR, "nfl_2024_schedule.csv"), index=False)
+    pbp.to_csv(os.path.join(WORKDIR, "nfl_2024_pbp.csv"), index=False)
+    print("\nSaved full data.")

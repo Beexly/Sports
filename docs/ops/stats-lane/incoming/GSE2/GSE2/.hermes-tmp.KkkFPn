@@ -1,0 +1,180 @@
+# NFL Roster Transaction Timing & Prop-Market Adjustment Lags
+*Research Agent 17 deliverable. Sources: NFL Football Operations, ESPN, Action Network,
+Tech Insider, OddsIndex, Rotowire, NFL Contract Language. Compiled from live web research.*
+
+All 2024+ CBA rules apply to the **2026 season** (cut-down day is a single date; 17-player
+practice squads; IR returns after 4 games; no per-season DTR cap — see notes).
+
+---
+
+## 1. 2026 TRANSACTION CALENDAR (key dates, all ET) — source: NFL Football Operations
+
+| Date | Deadline / window | What moves |
+|---|---|---|
+| **Aug 30** | **6:00 PM** | 53-man roster cutdown. Single cutdown date (since 2024 CBA). PUP/NFI players simultaneously: place on Reserve/PUP or Reserve/NFI **or** terminate/trade/waive/fail-physical. |
+| **Aug 30 (business day)** | cutdown day | Teams may designate for return **max 2** players placed on a Reserve List this business day (these count against the 8 regular-season IR return slots). |
+| **Aug 31** | 1:00 PM | Waiver claims from cut-down expire. Clubs may **establish practice squad (17 players; 1 Intl Pathway; ≤6 vets, 10 rookies/2nd-years)**. |
+| **Sep 6** | end | Training camp ends for all clubs. |
+| **Oct 2 day-after 4th game & Oct 5–6** | 4:00 PM | Earliest a player on Reserve/PUP or Reserve/NFI may be **activated** (must have served minimum 4 games). |
+| **Nov 10** | **4:00 PM** | **Trade deadline — all trading ends for 2026.** |
+| **Nov 11** | — | Players with ≥4 accrued seasons become subject to **waiver system** for remainder of season. |
+| **Weekly (reg. season)** | Wed / Fri 4PM / Sat | Injury reports; **Inactives** announced Fri–Sat for Sunday games. Thu/Fri reports for Wed games. |
+
+> Note on date drift: cut-down day was Tue Aug 26 (2024/25), Sun Aug 30 (2026). It is **always
+> late August, 6:00 PM ET**, always a single cut-down date. The trade deadline is **always Week 9
+> Tuesday**, 4:00 PM ET (Nov 4 in 2025 → Nov 10 in 2026).
+
+---
+
+## 2. TRANSACTION TYPES & THEIR MECHANICS (the timing rules you trade against)
+
+### CUTS (53-man reduction) — Aug 30, 6:00 PM ET
+- Teams carry 90 in camp; must submit final 53 to the league by the deadline.
+- **Process lag**: transactions are submitted electronically → processed via a league
+  *Personnel Notice*; the binding roster is the one at 6:00 PM. Teams tip moves in the 24–48 h
+  before the deadline ("cut-down Thursday/Friday" news cycle), but **rosters aren't final until
+  the stroke of 6 PM** — so depth-chart / snap-share assumptions can be stale for ~1 day.
+- Waiver claims run Aug 31, 1:00 PM (claims processed overnight; claiming priority by draft order
+  through Week 3, then by current standings). → **claims aren't resolved until the next calendar
+  day**, so who actually sticks on a roster isn't known until Aug 31 afternoon.
+- Practice squad is set Aug 31 onward — final 53 + practice-squad picture solid by Aug 31 1 PM.
+
+### TRADES
+- **In-season**: any time except the Nov 10 (4 PM) deadline. A deal can be agreed/leaked **before**
+  the deadline and still collapse, or be reported **after** the fact — settlement risk window.
+- **Off-season**: trading period opens **March 11, 4:00 PM ET** (after all contracts expire that
+  league year).
+- **Post-deadline processing**: Nov 11 onward, transactions are published in a daily batch
+  *Personnel Notice* covering ~4:00–10:00 PM ET (the "portal" window). → a trade agreed at 6 PM
+  on a Tuesday may not be *official* until the next morning's notice cycle.
+
+### INJURED RESERVE (IR) PLACEMENT + RETURN
+- **During final cut-down (Aug 30)**: teams may place up to 2 players on IR and designate them for
+  return simultaneously; those 2 count against the season's return slots.
+- **During the season**: any player can be placed on IR mid-season.
+- **Return rule (since 2022 CBA)**: a player placed on IR must miss a **minimum of 4 games**
+  before being designated for return; there is **no longer a 2-DTR cap** — but each team has
+  **up to 8 return activations per season** (source: ESPN / NFL). Per player, max 2 returns.
+- **Activation window**: once designated for return, the player has **21 days** to be moved to
+  the active roster; must clear physical/progressively ramping practice.
+- **Edge**: the *moment* a player is ruled out for the season (IR placement) → market reacts in
+  seconds on the primary prop, but the *return timeline* and "next man up" role props lag.
+
+### PUP / NFI
+- Placed at cut-down (Aug 30) simultaneously with 53-man reduction.
+- **Activation window**: may not return until after serving **minimum 4 games**
+  (eligible Oct 2 day-after / Oct 5–6, 4 PM ET). → a player on PUP is **out for Weeks 1–4**,
+  a known fixed window that markets price early but role-benefit to backups lags.
+
+### PRACTICE SQUAD → ACTIVE ROSTER (Elevations / Call-ups)
+- **Standard Elevation Addendum**: a team may elevate **up to 2 practice-squad players per game**;
+  each player can be elevated **max 3 times per season** before the team must sign them to the
+  53 (4th elevation = roster move + waivers). (Source: NFL contract language / ESPN)
+- Elevations are typically submitted **Friday–Saturday** for a Sunday game (or Saturday for a
+  Monday game); processed via the league notice cycle. → the elevated player's snap-count prop
+  may not appear or be adjusted for **hours** after elevation.
+- Practice squad = **17 players** (2025+), incl. 1 International Pathway slot.
+
+---
+
+## 3. REPORTING / PROCESSING SPEED (the "wire lag")
+
+| Step | Speed |
+|---|---|
+| Team announces via official X/social account → | **seconds** |
+| Sportsbook auto "circles" game (odds-scrape for "out / torn / indefinitely") | **seconds to ~2 min** |
+| Primary player prop + spread + total re-price | **minutes (≈2–10 min)** |
+| Secondary / "next-man-up" teammate props re-price | **hours (often 2–12 h unsteady)** |
+| League *Personnel Notice* (officially binds move) | next daily batch (**4–10 PM ET portal** window, or overnight for cut-down claims) |
+| Waiver claims resolve (cut-down) | **next calendar day** (Aug 31, 1 PM ET deadline → results overnight) |
+
+> The market reacts far faster than the league's official processing. A player can be *ruled
+> out* on a team's social feed at 9 AM and the books reprice in minutes, while the league
+> notice that formally places him on IR / terminates the contract may not drop until the
+> evening batch.
+
+---
+
+## 4. WEEKLY PROP-MARKET CYCLE (the windows you trade against)
+*Sources: Tech Insider "NFL Betting Guide", Action Network, BetrQL day-by-day, Rotowire.*
+
+| Period | Market state | Edge / risk |
+|---|---|---|
+| **Mon–Tue** | Next week's props **open**. Opener carries largest hold, lowest limits. | Early value if model sees a number; lines volatile. |
+| **Wed** | Injury Report #1 (practice participation). | Base-game line near peak efficiency; **prop boards widest** here. |
+| **Wed close** | Line at ~peak "sharp" efficiency (Mon–Wed = sharp-money window). | Cleanest baseline; retail money hasn't flowed yet. |
+| **Thu–Fri** | Retail money flows in; **final injury report due Fri 4 PM ET** for Sunday games. | Line drifts on public money; **biggest prop mis-pricing window** as role changes aren't fully priced. |
+| **Fri–Sat** | **Inactives** announced for Sunday games (league requires submission ~10 AM ET Sunday; teams tip Fri/Sat). | Primary prop adjusts in minutes; secondary/teammate props lag **hours** — core edge window. |
+| **≤4 h pre-kickoff** | Largest line movements of the week on news flow. | Props begin locking; some books pull markets on breaking news. |
+| **10–30 min pre-kickoff** | Props lock (varies by book; spread/total often locked earlier). | Late inactives can't be bet, but earlier role-bets may settle. |
+
+---
+
+## 5. THE EDGE WINDOWS (transaction → prop lag) — the deliverable
+
+### EDGE WINDOW A — "Seconds" circle, "Hours" to stabilize (headline news)
+- When credible injury/transaction news hits, books **circle** the game within seconds and
+  reopen minutes later with primary player + spread + total re-priced (often over-adjusted,
+  then reined in by sharp money during "price discovery").
+- Source: Action Network — *"the gap between 'news' and 'market adjustment' is measured in
+  **seconds**, not minutes"*; books scrape social/news for "out/torn/indefinitely."
+
+### EDGE WINDOW B — Secondary/"next man up" props lag **HOURS**  *(biggest, most reliable edge)*
+- *"A player's prop line might not move for **hours** after news breaks that a key teammate is
+  out, even though that absence directly affects the player's expected [output]."* — OddsIndex.
+- When a starter is ruled out → his backup's snap/share/role **doesn't fully reprice for 2–12 h**.
+- Action Network: target the **Over** on the secondary option's usage/share prop right after the
+  primary goes down, before the book adjusts the secondary line.
+
+### EDGE WINDOW C — Cut-down week (Aug 28–31) fixed-window lag
+- Rosters final Wed night/Thu (6 PM Aug 30); waiver claims + practice squads settle the
+  **next calendar day** (Aug 31). Teams' depth-chart/SnapShare decisions made at **6:00 PM Aug 30**
+  → weekly props (Week 1+) may price before that picture is locked → **~24 h stale role props**.
+- Best exploited: week-before-next week's snap-count / target-share props on players whose
+  roster fate was only sealed at the Aug 30 deadline.
+
+### EDGE WINDOW D — Practice-squad elevation lag (Fri–Sat → Sunday)
+- Elevations submitted Fri–Sat don't fully reprice the elevated player's snap-count prop or the
+  displaced incumbent's prop for **hours** after elevation is processed.
+- Each player max **3 elevations/season**; 2 elevations **per game** — so a team cycling
+  rookies creates recurring weekly mis-pricings.
+
+### EDGE WINDOW D2 — PUP/NFI fixed absence (Weeks 1–4)
+- Player on PUP at cut-down = **out Weeks 1–4**, activation eligible only Oct 5 (4 PM).
+  Markets price the long absence early; the beneficiary role props adjust slowly.
+
+### EDGE WINDOW E — Trade deadline (Nov 10, 4 PM) settlement gap
+- Trades agreed/leaked before 4 PM can collapse; trades reported after the deadline may
+  already be priced. Books may remove markets on breaking trade news and reopen with **reduced
+  limits** → thin-liquidity edge window (sharps first in).
+
+### EDGE WINDOW F — IR-return timeline vs. activation window
+- IR placement → market reacts instantly. But **return** is gated: min 4 games missed, then 21-day
+  window to activate. The *value* of the returning player's prop vs. the incumbent who's been
+  playing is mis-priced until the **designation-for-return** moment (the 21-day countdown window).
+
+---
+
+## 6. KEY CAVEAT — NFL prop-market clampdown (2025–2026)
+- The NFL has issued **memos to teams limiting prop-bet info** shared with betting partners and is
+  working with state regulators to restrict certain player props (esp. around injury/news timing).
+  Books increasingly **pull markets preemptively** on breaking transaction news and reopen with
+  reduced limits, which *shortens* some edge windows and widens the bid-ask spread.
+- Source: NYT Athletic (Nov 2025), ESPN.
+
+---
+
+## Sources (primary / authoritative)
+1. NFL Football Operations — "NFL Important Dates" (operations.nfl.com/calendar-events/nfl-important-dates) — cut-down Aug 30 6 PM ET; trade deadline Nov 10 4 PM ET; PUP activation Oct 5–6; waiver claims Aug 31 1 PM.
+2. NFL Football Operations — "Contract Language" (standard elevation addendum: 3 elevations/player/season; 2/game).
+3. ESPN — IR return rules (4-game min, 8 return slots/team/season, 21-day activation window).
+4. Action Network — "How Injuries Affect Betting Lines" (seconds-to-circle; price discovery dominated by sharps; next-man-up value).
+5. Tech Insider — "NFL Betting Guide 2026" (weekly cycle: Mon–Wed sharp, Thu–Fri retail, <=4h pre-kickoff news moves; opener Sunday night/Mon).
+6. OddsIndex best-time-to-bet guide ("prop line might not move for hours after news breaks").
+7. Rotowire — injury reports Wed/Fri-by-4PM/Sat; inactives Fri–Sat.
+8. Unabated / ESPN / SI — practice squad = 17 (1 Intl), 2 elevations/game, 3/player/season; trade deadline Week 9 Tuesday.
+9. Covers — line movement continues up to kickoff; late inactives matter.
+
+> Date reconciliation note: sources straddle 2025 (Aug 26, Nov 4) and 2026 (Aug 30, Nov 10)
+> seasons. The **2026** numbers above are used throughout, sourced from NFL Football Operations'
+> current "2026 Important Dates" page.

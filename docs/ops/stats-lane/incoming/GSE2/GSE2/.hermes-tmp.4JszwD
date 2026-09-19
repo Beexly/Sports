@@ -1,0 +1,123 @@
+# Research Notes: NFL Injury-Report -> Line-Move Timing
+
+Agent 15 - designation impact on market prices & optimal scrape timing
+Sources: OddsIndex, Action Network, LSports, BestOdds, WagerBird, CBS Sports,
+NFL.com, Rotowire, Ravens.com injury report legend. (Aug 2025-Aug 2026 cycle.)
+
+## 1. The designations (official vs. the task's "MP")
+
+Official NFL injury-report legend (confirmed via ravens.com/nfl.com):
+
+Practice report (Wed/Thu/Fri cadence):
+- FP  Full participation - 100% of normal reps
+- LP  Limited participation - <100% of reps
+- DNP Did not participate
+- DNP-NIR / DNP-NI - did not participate, non-injury (rest)
+- MP  NOT an official NFL designation. Aggregator code for "Mock Practice" /
+      walkthrough-only (present, contact drills only, below LP). Treat as weak LP.
+
+Game status (Fri designation for Sun games; Sat for Mon games):
+- OUT      - will not play
+- DOUBTFUL - unlikely to play (~25% historical play rate)
+- QUESTIONABLE - uncertain (~50/50 official; ~70-75% actually play historically)
+- (PROBABLE removed by the NFL in 2017.)
+
+## 2. Which designations actually move lines
+
+| Designation | Market impact | Notes |
+|---|---|---|
+| OUT (incl. 90-min inactives) | LARGE / sharp | Confirmed inactive = max repricing; biggest single driver. |
+| DOUBTFUL | Moderate-to-large | Backups' value rises; reacts but w/ uncertainty. |
+| QUESTIONABLE | Moderate (often mispriced) | ~70-75% play historically => market often OVERPRICES absence. Fade/public trap. |
+| FP | Confirmational | Locks in availability; removes doubt. |
+| LP | Small / provisional | Early signal; market prices the trajectory, not the snapshot. |
+| DNP | Depends on trajectory | DNP x3 => near-certain inactive => large eventual move. |
+| MP (mock/walkthrough) | Small / provisional | Weak-LP tier; early signal, not a line-driver. |
+
+Positional spread impact for a confirmed-out starter:
+- Starting QB ............ 3-7 pts (avg ~4-5; backup quality dependent)
+- Elite WR1 .............. 1.5-3 pts
+- Bell-cow RB (run-heavy).. 1-2.5 pts
+- Starting LT (w/ good rush).. 1-3 pts
+- Shutdown CB (vs pass-heavy).. 1-2 pts
+- OL / most other starters .. 0.25-1 pt
+(Totals: offensive star out => total drops; D star out => total may rise.)
+
+Confirmed: QB absence is the lever. Everything else is noise unless it's a
+true positional anchor (LT, elite pass rusher) AND depth behind them is thin.
+
+## 3. Reporting + market-adjustment cadence
+
+- Wednesday   1st practice report (late afternoon ET). First signals.
+- Thursday    2nd practice report (late afternoon ET). Trend confirmation.
+- Friday      3rd practice report (~4-6pm ET) + game status for Sun games.
+               MOST SPREAD ADJUSTMENTS HAPPEN FRIDAY EVENING.
+- Saturday    game status for Monday games (~4-5pm ET).
+- Sunday     90 min pre-kickoff - official INACTIVE LIST.
+             Single most active line-movement window of the week. Sharps watch live.
+- Daily       reporter-sourced alerts (Schefter/Rapoport/Pelissero/Garafolo/
+             Fowler) can move lines AHEAD of the Wed report (Tue "unlikely to play"
+             beats Wed filing).
+
+## 4. Market reaction speed (the edge window)
+
+- Books react to CONFIRMED injury news within 2-3 minutes (LSports, Action Network).
+- Process = Circle -> Re-open -> Price discovery:
+  1. Circle: game off the board briefly (~1-2 min); books recalibrate, no bets.
+  2. Re-open: new line posted (often over-corrects on star names).
+  3. Price discovery: sharp money shifts line to true equilibrium.
+- Unconfirmed news (early-signal stage) => little/no move, just widened risk tolerance.
+- Reporter-sourced > official report for timing: a beat writer "unlikely to play"
+  moves the line before the Friday designation. Walk-back risk exists.
+
+## 5. Optimal scrape timing (vs. market adjustment)
+
+Edge = ingest signal BEFORE the market adjusts, then capture value or confirm.
+
+| Window | What to scrape | Market phase |
+|---|---|---|
+| Wed 5-7pm ET (Day -3/-2) | Wed practice report | Early-signal / widening |
+| Thu 5-7pm ET (Day -2) | Thu practice report | Building concern; 2nd-day pattern is first real move trigger |
+| Fri 4-7pm ET (Day -1) | Fri practice + game status | Primary reaction - scrape AS reports drop, not after |
+| Fri 7-9pm ET | line ohlcv snapshot | Capture open vs close of Friday adjustment |
+| Sat 4-6pm ET (Mon-game only) | Sat game status | Late scratch window for MNF |
+| Sun 11:30am ET (gameday -90min) | 90-min inactives | Confirmed-status shock; sharpest, fastest move |
+
+**Decision framework:**
+- Early week (Wed/Thu): scrape for trajectory. DNP->LP->FP (up) = line baked in
+  Friday; FP->LP->DNP (down) + reporter "out" => front-run Thursday move.
+- Friday: scrape game-status + post-report line together. Questionable(75% play)
+  => market overprices absence; if quality backup, line too far. Doubtful(25%) => lean with market.
+- Sunday 90-min: scrape inactives vs last Friday line. Questionable->inactive =
+  sharpest late move; act inside the 2-3 min window or it's gone.
+
+**Pitfall:** Scraping ONLY the Friday game-status report puts you ~2-3 minutes
+behind the sharpest books => post-price-discovery (re-priced) number, no value.
+Real-time reporter alerts + Wed/Thu trajectory scraping beat "scrape Friday only."
+
+## 6. Position groups that matter (scrape priority)
+
+1. QB (starter vs backup quality)
+2. Elite WR1 / TE / Bell-cow RB
+3. LT / pass rush (matchup-dependent)
+4. Secondary anchors vs pass-heavy offenses
+5. Everything else = marginal
+
+## 7. Source-of-truth & data providers
+
+- Official: nfl.com/injuries; team injury-report pages; Rotowire
+  practice-report.php; ESPN injuries endpoint.
+- Real-time reporter alerts (beat official report): Schefter, Rapoport,
+  Pelissero, Garafolo, Fowler - scrape their X/Twitter or a wire feed.
+- Line + market-reaction timing: sportsbook APIs / LSports Scouts Feed /
+  SpankOdds injury alerts.
+
+## 8. Caveats / issues encountered
+
+- "MP" is NOT an official NFL designation - do not expect it on the official
+  Ravens/NFL legends. It is an aggregator/walkthrough code; map it to "weak LP."
+- No single public source publishes exact second-level scrape-vs-line-move data;
+  "2-3 min" and "Friday evening" figures are industry-reported estimates.
+- "Questionable" play-rate (~70-75% actually play) is the highest-leverage stat:
+  it's why the market MOVES on Friday but often OVERREACTS, which the scraper
+  front-runs.

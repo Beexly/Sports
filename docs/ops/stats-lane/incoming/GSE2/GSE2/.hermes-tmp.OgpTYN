@@ -1,0 +1,149 @@
+# Sports Reference (NFL) API Research — Free vs. Paid & Prop-Edge Data Sources
+
+**Scope:** Pro-Football-Reference / sports-reference.com (NFL).
+**Bottom line:** Sports Reference has **no official public API**. NFL data is accessed either
+**free** (self-scraping under published rate limits, or the free `sportsreference` PyPI package)
+or via **paid** gatekeepers (Stathead subscription, third-party API wrappers, or custom data dumps).
+Sports Reference does **NOT** provide live player-prop odds; it provides only **historical closing
+game lines/totals (Vegas lines)** and deep *historical* boxscore/player stats — which are the
+*fuel* for building your own projections, not the live prop prices you compare them against.
+
+---
+
+## 1. Key ground truth
+
+- **No first-party API.** Sports Reference is a web publisher; most data is licensed from third
+  parties and cannot be bulk-downloaded/redistributed without purchase. Direct scraping is the
+  "free" path, governed by an explicit bot-traffic/rate-limit policy.
+- **Rate limit (self-scrape):** 20 requests/minute max for `.com` sites
+  (pro-football-reference.com); 10 req/min for fbref.com & stathead.com. Exceeding → HTTP 429
+  and IP "jailed" (~24h). Sources: `sports-reference.com/bot-traffic.html`, `/429.html`.
+- **Free, zero-card wrappers exist:** `parse.bot` free plan (200 credits, 5 req/min, no card) and
+  the `sportsreference` PyPI package (purely free; you manage rate limiting).
+
+---
+
+## 2. Free NFL data sources (no API key cost)
+
+### 2a. `sportsreference` PyPI package (free, Python)
+- PyPI name `sportsreference` (v0.5.2); GitHub repo `roclark/sportsipy` (renamed to avoid
+  confusion — **not** official). No key, no card.
+- **NFL modules** (confirmed from repo `sportsipy/nfl/`): `__init__`, `boxscore`, `constants`,
+  `nfl_utils`, `schedule`, `teams`.
+  - `nfl.boxscore` — `Boxscore(uri)` & `Boxscores(date)`: per-game stats incl. team metrics
+    (points, passing/rushing/net yards, first downs, turnovers, penalties, sacks, ToP), game
+    metadata (date/time/location/result/duration/attendance) + **weather** + Pandas `dataframe`;
+    player-level stat tables present.
+  - `nfl.teams` — `Teams(year)`/`Team`: full-season team stats + roster/standings per season
+    (Pandas DataFrames).
+  - `nfl.schedule` — `Schedule()`: a team's games — date, score, result, opponent.
+  - `nfl.constants`, `nfl.nfl_utils` — team/player reference + helpers.
+- **Free here:** all historical + current boxscores, team season stats, schedules, rosters.
+- **Prop-edge gap:** no Vegas lines, no player props, no live odds (use for projections only).
+
+### 2b. `parse.bot` free plan (200 credits, 5 req/min, no card)
+- Wraps Sports Reference/PFR via managed scraping (handles anti-bot + rate limits).
+- **Pro-Football-Reference API** (7 endpoints):
+  1. `get_season_schedule` — season schedule (date, teams, venue).
+  2. `get_season_stats` — team & individual season stats.
+  3. `get_season_team_standings` — final standings / W-L / division.
+  4. `get_game_boxscore` — boxscore w/ **player-level offensive & defensive stats** + metadata
+     incl. **weather, attendance, Vegas lines** (`vegas_line`).
+  5. `get_game_details` — play-by-play / game detail.
+  6. `get_player_profile` — player bio + career stat tables.
+  7. `search_players` — player lookup.
+  - Credit cost: 1 credit for light reads (stats, standings, search); 5 credits for heavy
+    (schedule, boxscore, details, profile). → ~40 boxscore calls or ~200 stats calls/month free.
+- **Stathead NFL API** (parse.bot, 1 endpoint):
+  - `football_player_game_finder` — player game-by-game logs (passing, rushing, receiving,
+    fumbles, snap counts); filter by name or PFR ID, year, regular/playoff, stat thresholds.
+    **1 credit/call.** Free Stathead-like querying.
+- **Free here:** schedules, standings, full boxscores + player stats, play-by-play, player career
+  logs, AND historical closing game spread/total (`vegas_line`).
+
+### 2c. Direct HTML scrape (free, self-managed)
+- Honors the 20 req/min PFR rate limit; implement retries/backoff + sensible UA.
+
+### 2d. Historical Vegas lines already in PFR
+- PFR boxscore/scoreboard pages carry a **"Vegas Line"** (closing point spread) and
+  **"Over/Under"** (closing total) per game. Covers.com credits PFR as source for closing odds
+  **1978→present**. parse.bot `get_game_boxscore` exposes this as `vegas_line`.
+- → **Historical closing game lines/totals are free** (free wrapper or direct). Post-game/closing,
+  **not live**.
+
+---
+
+## 3. Paid Sports Reference access (NFL)
+
+| Tier | Price | Unlocks | Provider |
+|---|---|---|---|
+| **Stathead** (1 sport) | $9/mo (50% off students) | Ad-free UI + **advanced query tools**: filter/query the full SR DB, custom leaderboards, no rate limits | Sports Reference (official sub). 1-mo free trial. |
+| **Stathead** (all sports) | $16/mo | Same, all SR sites | Sports Reference |
+| **parse.bot** Hobby | $30/mo, 1,000 credits, 20 req/min | 5× free credits + 4× rate | parse.bot (unofficial) |
+| **parse.bot** Developer | $100/mo, 5,000 credits, 100 req/min | production volume | parse.bot |
+| **parse.bot** Team / Company | $300–$1000/mo | 20K–100K credits, higher rps, workspace, Slack/SLA | parse.bot |
+| **Custom data dump** | ≥ $5,000 (no student exception) | Bulk licensed data | Sports Reference feeds |
+
+- **parse.bot overages:** top-up credits anytime on paid plans; free plan hard-capped at 200/mo.
+- Stathead is a *human* query UI, not a raw API; parse.bot's Stathead NFL API is the programmatic
+  proxy (game-finder).
+
+---
+
+## 4. Sports Reference vs. what "prop edge" requires
+
+| Prop-edge need | Sports Reference source | Free? |
+|---|---|---|
+| Your own player projection model | boxscore/player career logs (§2a/2b) | ✅ Yes |
+| Historical closing game spread + total (Vegas line) | PFR `vegas_line` (1978–present) | ✅ Yes (free wrapper or direct) |
+| **Live** point spread / over-under | ❌ Not in SR (only closing/historical) | ❌ No |
+| **Live player prop lines** (e.g., Mahomes o/u 290.5 pass yds) | ❌ Not anywhere on SR/PFR | ❌ No |
+| Live prop lines from bookmakers | **odds API** (§5) | ✅ Free tiers exist |
+
+**Edge workflow:** Use Sports Reference for free historical/player stats → build your projection →
+source **live** prop prices elsewhere → compare. SR alone cannot yield live prop odds.
+
+---
+
+## 5. Free prop-edge data sources (live lines) — complements SR
+
+To find prop edge you need (a) a projection [Sports Reference, free] AND (b) **live** bookmaker
+prices [Sports Reference has none]. Free tiers that do:
+
+| Service | Free tier | NFL player props? | Notes |
+|---|---|---|---|
+| **The Odds API** | 500 credits/mo | ✅ Yes — `player_pass_yds`, `player_rush_yds`, `player_pass_tds`, etc. via per-event odds endpoint; sport_key `americanfootball_nfl` | 1 req = markets×regions credits; live props for US/AU books (DraftKings, FanDuel,…). Free tier excludes historical odds. |
+| **NFL.com / Sleeper APIs** | Free | ❌ No odds/props | Free schedules/scores/rosters/injury/live scores but **no odds** (NFL shuttered public JSON odds). Context only. |
+| **Free scrapers (Apify, etc.)** | Free tier | ⚠️ Indirect | Scrape public sportsbook pages directly — no official prop feeds, at your own risk. |
+
+Paid (higher-fidelity) options: **Sportradar** (OC Player Props — market IDs `sr:market:914` total
+passing yards, `sr:market:6002` longest completion, etc.), **sportsgameodds.com**, **WinWithOdds**,
+**OddsJam** — native NFL player-prop markets, paid.
+
+---
+
+## 6. Quick reference — endpoints & rate limits
+
+**Free (no card):**
+- `sportsreference` PyPI — unlimited local use; **you** honor 20 req/min PFR limit.
+- `parse.bot` Free — 200 credits/mo, **5 req/min**; endpoints 1 credit (stats/standings/
+  search/game_finder) or 5 (schedule/boxscore/details/profile); 1-mo free trial on paid plans.
+
+**Paid:**
+- Stathead: $9–$16/mo (official query tools).
+- parse.bot Hobby $30 / Developer $100 / Team $300 / Company $1000.
+- Custom Sports Reference dumps ≥ $5,000.
+- The Odds API: 500 credits free; paid plans above.
+
+---
+
+## 7. Sources
+
+- `sports-reference.com/bot-traffic.html` — rate-limit policy (20 req/min `.com`, 10 req/min fbref/stathead).
+- `sports-reference.com/data_use.html` — data use; custom feeds ≥ $5k; partners SI/Sports Info.
+- `sports-reference.com/stathead/` — Stathead pricing ($9/$16, student 50%, 1-mo free trial).
+- `parse.bot` marketplace: `pro-football-reference-com-api` (7 endpoints) & `stathead-com-api`
+  (`football_player_game_finder`); pricing at `parse.bot/pricing`.
+- `pypi.org/project/sportsreference` + GitHub `roclark/sportsipy` (`sportsipy/nfl/`).
+- `covers.com/sportsoddshistory/nfl-game-odds` — PFR = source of closing odds 1978→present.
+- `the-odds-api.com` — NFL odds (`americanfootball_nfl`), player props US/AU books, 500-credit free.

@@ -1,0 +1,221 @@
+# NFL Altitude Effects on Kickoff/Punt/FG Props: DEN vs Sea-Level vs Domes
+
+## Research Summary
+
+Research agent task: Compile quantitative data on how altitude (Denver/Mile High), sea-level outdoor stadiums, and indoor domes affect NFL kicking plays (kickoffs, punts, field goals) for prop-betting purposes.
+
+---
+
+## 1. PHYSICS OF ALTITUDE
+
+### Air Density & Drag
+- **Denver elevation**: 5,280 ft (1,609 m) — exactly 1 mile above sea level
+- **Air density at Denver**: ~82% of sea level (0.0627 lb/ft³ vs 0.0764 lb/ft³ at 70°F sea level)
+- **17% less oxygen per cubic foot** at elevation (visible at mile-high markers throughout stadium)
+- **Drag reduction**: ~18% less air drag at Denver's elevation
+- **Gravity effect**: negligible — ~0.09% reduction at 5,280 ft (not a factor)
+- **Primary mechanism**: Drag force on football is proportional to air density (F_drag ∝ ρ). Reduced density → less drag → ball travels farther and maintains velocity longer. Drag >> lift >> gravity for distance effects.
+
+### Stadium Elevations (NFL Top 5)
+| Rank | Team | Stadium | Elevation |
+|------|------|---------|-----------|
+| 1 | Denver Broncos | Empower Field at Mile High | 5,280 ft (1,610m) |
+| 2 | Las Vegas Raiders | Allegiant Stadium | 2,000 ft (610m) |
+| 3 | Arizona Cardinals | State Farm Stadium | ~1,000 ft (304m) |
+| — | (next tier) | | ~500-600 ft |
+| Lowest | NY Jets/Giants | MetLife Stadium | 3 ft |
+
+- **Denver's elevation is higher than the combined altitude of every other NFL stadium** (Reddit r/NFL)
+- **8 indoor/dome stadiums** (all at or near sea level)
+
+### Temperature Counter-Effect
+- Cold weather **increases** air density (ρ ∝ 1/T), partially offsetting altitude benefits
+- A **30°F (17°C) temperature differential ≈ 5 yards** of kicking distance
+- Per AFD temperature study: Below 39.2°F (4°C): FG accuracy drops 1.7%, punt length decreases ~1 yard
+- Temperature was **NOT** statistically significant as a standalone distance factor (ANOVA: F=4884 for stadium with near-zero p, temperature non-significant)
+
+---
+
+## 2. FIELD GOAL EFFECTS
+
+### Range Increase
+- **Denver adds ~5 yards** to effective FG range vs sea-level stadiums (consistent across HowStuffWorks, Yahoo Sports, ESPN, AFD, Reddit r/answers)
+- Theoretical physics: at 1,600m elevation, range = 66.7 yards vs 62 yards at sea level (~4.7 yard difference) — WIRED/Professor Tim Gay analysis
+- Empirical: Denver has the **highest average FG attempt distance** of any stadium at **39.48 yards** (Reddit r/sports)
+
+### Denver FG Success Rates by Distance (AFD Data)
+| Distance | Attempts | Misses | Success Rate |
+|----------|----------|--------|--------------|
+| 40-44 yds | 39 | 8 | 79% |
+| 45-49 yds | 29 | 10 | 65% |
+| 50+ yds | (implied higher) | | |
+
+### Matt Prater (Broncos Era Home vs Road)
+- **In Denver**: 62-76 = 81.6%
+- **On the road**: 54-68 = 79.4%
+- Despite attempting longer FGs (highest avg. attempt distance in NFL), Denver ranks ~17th in overall FG% made — altitude compensates for longer attempt distances
+
+### NFL Record Holders — 3 of 5 Longest FGs Ever in Denver
+| Kicker | Distance | Year | Location |
+|--------|----------|------|----------|
+| Jason Elam | 63 yds | 1998 | Denver |
+| Sebastian Janikowski | 63 yds | 2011 | Denver (OAK @ DEN) |
+| Matt Prater | 64 yds | 2013 | Denver |
+| Justin Tucker | 66 yds | 2021 | Baltimore (sea level) |
+| Cam Little | 68 yds | 2025 | Jacksonville (sea level) |
+
+### 2025 NFL-Wide FG Accuracy (Historical Best Season)
+| Distance | 2025 Success Rate | Previous High |
+|----------|-------------------|---------------|
+| 20-29 yds | 100% | 100% |
+| 30-39 yds | 98% | 98% |
+| 40-49 yds | 93% | 83% (2013) |
+| 50+ yds | 69% | 69% |
+| 60+ yds | 55% | 27% (2024) |
+| Overall FG% | 85.60% | 83.60% (2024) |
+| XP% | 96% | — |
+
+### Longest FG Inside a Dome
+- **61 yards** was the previous dome record — suggesting FGs beyond that need wind and/or low air density (altitude) (Reddit r/NFL)
+
+---
+
+## 3. KICKOFF EFFECTS
+
+### Professor Timothy Gay Study (Visiting kickers, 2001-2002)
+| Location | Avg. Kickoff Distance |
+|----------|----------------------|
+| Visiting kickers at home (sea level) | 62.8 yards |
+| Same kickers at Denver (5,280 ft) | 70.1 yards |
+| **Gain at altitude** | **+7.3 yards (~11.6% increase)** |
+
+### Brandon McManus (Mile High Report Data)
+| Location | Kickoffs | Touchbacks | TB Rate |
+|----------|----------|------------|---------|
+| Denver (home) | 279 | 221 | **79.2%** |
+| Road (sea level) | 259 | 145 | **56.0%** |
+| Career (combined) | 540 | 366 | 67.8% |
+
+### 2025 Dynamic Kickoff Rule Impact
+- Touchback rate dropped from **66% (2024)** → **21% (2025)**
+- Ball spot on touchbacks moved to **35-yard line**
+- Kickoff returns surged: **2,076 returns (2025)** vs 920 (2024) — more than doubled
+- Average return length: **25 yards (2025)** vs 27 yards (2024)
+- Return rate: **74.5% (2025)** vs 32.8% (2024)
+- Starting field position: **26-yard line average** (same as 29 for returned kicks)
+
+### Indoor Kickoff Touchback Rate
+- **>40% touchback rate** in dry/no-precipitation conditions (The Spax analysis)
+- Drops to **<25%** in snow/precipitation
+
+---
+
+## 4. PUNT EFFECTS
+
+### Mike Priefer (Former Vikings/Browns ST Coordinator)
+- **~5 yards extra distance** for punts at Denver altitude
+- **~0.5 seconds extra hang time** at altitude
+
+### Johnny Hekker (Panthers vs Broncos, 2023)
+| Location | Avg. Hang Time |
+|----------|---------------|
+| Normal (season avg) | 4.3s |
+| In Denver | **4.69s** |
+| **Gain** | **+0.39s** |
+
+### Daniel Whelan (Packers Punter)
+- Season avg hang time: 4.6s
+- Advice at Denver altitude: **"Don't over kick"** — ball flies farther than expected
+- Ball "floats longer and goes a little further" at Mile High
+
+### Weather Effects on Punts (The Spax)
+- Punt distance decreases with precipitation and high wind
+- Less consistent data than FGs; trend exists but with more variance
+
+---
+
+## 5. INDOOR (DOME) vs OUTDOOR EFFECTS
+
+### Indoor FG Accuracy (RPubs by Jacob Martin, 2019-2024, n=5,503)
+| Metric | Indoor | Outdoor | Difference |
+|--------|--------|---------|------------|
+| Overall FG% | **85.4%** | **84.2%** | +1.2% |
+| 50+ yard attempts | ~75% | ~68% | +7% |
+
+### Per-Kicker Indoor Advantage (Consistent Across Kickers)
+| Kicker | Indoor % | Outdoor % | Indoor Edge |
+|--------|----------|-----------|-------------|
+| B.McManus | 85.3% (29/34) | 81.2% (117/144) | +4.1% |
+| C.Boswell | 95.8% (23/24) | 89.1% (139/156) | +6.7% |
+| C.McLaughlin | 91.1% (41/45) | 80.7% (71/88) | +10.4% |
+| D.Carlson | 92.5% (99/107) | 84.5% (71/84) | +8.0% |
+
+### Distance-Dependent Indoor Advantage
+- **<20 yards**: No significant difference (both ~100%)
+- **20-29 yards**: Significant (p=0.006)
+- **30-39 yards**: Significant (p=0.003)
+- **40-49 yards**: Significant (p=0.001) — largest gap
+- **50+ yards**: Significant (p=0.01)
+- Beyond 35-40 yards: **roughly constant advantage**
+- 95% CI: indoor kicks have **11% to 59% higher odds** of success vs outdoor
+
+### Wind Effects (Primary Driver of Indoor Advantage)
+- **<10 mph wind**: FG% = 83.8% (league average)
+- **20+ mph wind**: Expected FG% = 88.8%, **Actual = 77.0%** → **11.8% gap** (massive wind penalty)
+- Wind causes coaches to attempt FGs from **~7 yards closer** on average
+- Wind also dramatically reduces kickoff touchback rates (>40% dry → <25% in snow)
+
+### Indoor Game Environment
+- **Indoor games average more points**: 46.9 vs 44.7 for calm-air outdoor games (Harvard Sports Analysis, 2009)
+- The indoor advantage is primarily from **wind elimination**, NOT altitude (domes are at sea level)
+
+---
+
+## 6. SYNTHESIS: COMPARISON TABLE
+
+| Kick Type | Denver (Mile High) | Sea-Level Outdoor | Indoor Dome |
+|-----------|-------------------|-------------------|-------------|
+| **FG Range** | +5 yards (theoretical & empirical) | Baseline | +1-2 yards (wind elimination, ~7% boost on 50+ yds) |
+| **FG Accuracy (50+ yds)** | ~5% boost vs sea level | Baseline (84.2% overall) | ~7% boost vs outdoor (75% vs 68%) |
+| **FG Accuracy (<30 yds)** | Negligible boost | ~95-100% | Negligible (same ~100%) |
+| **Kickoff Distance** | +7.3 yards (~11.6% increase) | Baseline (62.8 yds avg) | No altitude boost |
+| **Kickoff TB Rate** | 79.2% (DEN) vs 56.0% (road) | ~50-60% (pre-2025: ~66%) | Variable (wind-driven) |
+| **Punt Distance** | +5 yards extra | Baseline | No altitude boost |
+| **Punt Hang Time** | +0.5 seconds | Baseline | No altitude boost |
+
+---
+
+## 7. BETTING IMPLICATIONS (Props)
+
+### FG Made / FG Attempt Props
+- **Altitude kicker (DEN home)**: Model ~5 extra yards of range. A kicker who makes 85% from 40-44 at sea level may attempt 45-49 in Denver with similar success.
+- **Indoor (dome)**: ~1.2% overall FG% boost, ~7% boost for 50+ yarders. Wind elimination makes long attempts safer.
+- **Wind exposure outdoors**: >20 mph winds create an 11.8% gap between expected and actual FG%. Coaches shorten attempts by ~7 yards.
+- **Temperature**: Below 39°F (~4°C), FG accuracy drops ~1.7%. Snow has a massive effect (similar to wind).
+
+### Kickoff Props (2025 Dynamic Rules)
+- **Altitude**: Higher touchback distance potential (+7+ yards), but 2025 rule changes have drastically reduced touchback rates (21% in 2025 vs 66% in 2024).
+- **Dome vs Outdoor**: Weather (wind/snow) is the primary differentiator, not altitude (domes are sea-level).
+- **Return rates**: 74.5% in 2025 (dynamic kickoff) vs 32.8% in 2024 — expect returns, not touchbacks.
+
+### Punt Props
+- **At DEN**: Expect ~5 extra yards and ~0.5s extra hang time. Kickers/punters should be cautious about "over kicking."
+- **Hang time props**: +0.39-0.5s advantage at altitude
+- **Distance props**: Indoor/dome doesn't affect punt distance (no altitude boost indoors)
+
+---
+
+## 8. KEY SOURCES
+1. **Advanced Football Analytics** (Brian Burke): "Altitude and Field Goals" (2013), "Temperature and Field Goals" (2012)
+2. **Professor Timothy Gay / WIRED**: Physics-based FG trajectory analysis at altitude
+3. **HowStuffWorks**: "Physics and Football: How Denver's Altitude Affects Field Goals"
+4. **University of Illinois**: "Baseball At High Altitude" (air density data)
+5. **Mile High Report**: McManus kickoff splits, 2025 placekicking analysis
+6. **RPubs (Jacob Martin)**: "Is it easier to kick field goals in indoor stadiums in the NFL?"
+7. **Harvard Sports Analysis**: "Splitting the Uprights: Easier Indoors?" (2009)
+8. **The Spax**: "Analyzing the Effect of Weather in the NFL"
+9. **ESPN**: "Toughest venues: Altitude adjustment"
+10. **Reddit r/nfl, r/sports**: Stadium elevation data, AFD analysis findings
+11. **NFL.com/StatRankings**: Touchback percentage and kickoff stats
+12. **Sports Info Solutions**: Kickoff rule change impact study
+13. **Substack (Ariel Calista)**: "Physics-Based Synopsis of the Limits of NFL Field Goal Kicking"

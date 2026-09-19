@@ -1,0 +1,174 @@
+#!/usr/bin/env python3
+"""Append remaining parts of NFL weather research to markdown file."""
+
+p2 = """## Part 2: Weather Impact — Quantitative Summary
+
+### 2.1 Wind Impact
+
+| Wind Speed | Passing Impact | Rushing Impact | Kicking Impact |
+|------------|----------------|----------------|----------------|
+| 0-7 mph | Baseline (no effect) | Baseline | FG% ~83%, standard distances |
+| 7-10 mph | Slight decrease in production/efficiency | Negligible | Minimal impact on rates |
+| 10-15 mph | Noticeable decline in stats | Rush % up ~2.7%, rush yards up ~4.5% per 10mph | FG% ~83%, shorter avg attempts begin |
+| 15-20 mph | Further drop; cumulative decline | Rush attempts up ~3.2%, rush yards up ~4.5% | FG% ~80%, avg distance shorter |
+| 20+ mph | **Major drop** (1.5-2.0x worse than 15-20 tier) | Rush yards +10.2% per team | Avg FG distance drops ~7 yds; expected 89% make but actual only 77% |
+
+**Passing prop specifics (OLS regressions, Zipperman 2014, 3,133 games 2002-2013):**
+- 10 mph wind -> visitor pass yards down 6.8-9% (1% sig), completion % down 2.4-3% (1% sig)
+- 10 mph wind -> QBR down 1.7 pts (Table 5); visitor QBR down 0.459/mph; home down 0.217/mph
+- 20+ mph wind -> ~20 fewer passing yards per team; completion % drops 2-3% per 5 mph above 15 mph
+- Home teams are ~50% less sensitive to wind than visitors
+- Teams run more as wind rises: rush share up 4.6% per 10 mph (visitors); +1.2-1.8 rush attempts/game
+
+**Kicking specifics (Jacob Long model + Covers.com):**
+- 10 mph wind -> FG% down 3% (Table 5)
+- 15-20 mph -> FG% ~80%, coaches shorten distance
+- 20+ mph -> expected 89% make rate on shorter avg distance, but actual only 77% (massive gap)
+- Wind direction matters more than speed; crosswind (15 mph) harder than headwind (25 mph)
+- Wind shear at 15+ mph can deflect ball 10+ yards off course (WIVB)
+"""
+
+p3 = """### 2.2 Precipitation Impact
+
+| Condition | Passing Impact | Kicking Impact |
+|-----------|----------------|----------------|
+| No precipitation | Baseline | FG% ~83%, aligned with expected |
+| Light/Moderate/Heavy Rain (grouped) | Passing production down ~12% (any intensity same) | FG% ~85% due to shorter attempts, but ~2% below expected for distance |
+| Light snow | Passing production down ~2% | Close to normal conversion rates |
+| Heavy snow | Passing production down ~25% | FG% drops to ~76% (~12% below expected given shorter attempts) |
+
+**Specific kicker stats (Jacob Long, 2009-2019):**
+- Rain: 40-yd FG 86% -> 82%; 50-yd FG 71% -> 65%
+- Snow: ~same magnitude as rain but less model certainty (few observations)
+- Rain effect = ~67% of replacement-kicker effect; meaningful but secondary to distance
+
+**Rushing & precipitation:** Temperature and precipitation are NOT statistically significant predictors of rushing yards, YAC, or broken/missed tackle rate (Sports Info Solutions, 11,500+ carries). Cold weather IS statistically significant for rushing Positive% (slight cold-weather boost) but effect is small even in extreme cases.
+
+### 2.3 Temperature Impact
+
+| Temperature Range | Passing Impact | Rushing Impact | Kicking Impact | Prop Adjustment |
+|-------------------|----------------|----------------|----------------|-----------------|
+| 55-85 F | Ideal, no significant effect | Ideal | Ideal | Baseline |
+| 25-55 F | Down ~5% passing production | Slight benefit (Positive% boost) | Minimal | Slight passer downgrade |
+| <25 F | Down ~8% scoring, ~8% passing | Cold favors run efficiency slightly | Football denser/harder; long FGs harder | Downgrade passer/WR/K; slight RB benefit |
+| >85 F | Down ~8% scoring; visitors: pass yards down 6.5%, comp% down 3.9% | Slight dip late (fatigue) | Minimal direct | Downgrade visiting QB; RB may dip |
+
+**Per 10-degree decrease (Zipperman):**
+- Visitor pass yards down 2.22% (1% sig), completion % down 0.8%, QBR down 0.8 pts
+- Home team pass yards down 1.62%
+- Home teams: per 10F increase -> rush attempts down 1.5%, rush yards down 3.9%
+
+### 2.4 Dome vs. Outdoor
+
+| Factor | Dome | Outdoor |
+|--------|------|---------|
+| Points Scored | ~4 more points/game | Variable |
+| Total line O/U performance | +1.6 points avg | +0.7 points avg |
+| Home-field advantage | Documented (climate + crowd) | Weather-dependent |
+| Weather effects | None (temp=72, wind=0) | Full exposure |
+- 20 of 32 NFL stadiums are outdoor. 7 have fixed/retractable roofs. 5 have open/retractable configurations.
+"""
+
+p4 = """## Part 3: Prop Impact Mapping
+
+### 3.1 Kicking Props (FG attempts, FG%, XPs, kicker points)
+
+**Primary weather drivers (ranked):** 1) Wind speed (20+ mph = severe) 2) Precipitation type (snow > rain) 3) Wind direction 4) Temperature (cold)
+
+**Adjustment guide:**
+- Wind 0-7 mph: Baseline projections
+- Wind 10-15 mph: Downgrade kicks >45 yds ~2-3%
+- Wind 15-20 mph: Downgrade kicks >40 yds ~5%; avg FG distance drops 2-3 yds
+- Wind 20+ mph: Downgrade kicks >35 yds ~12-15%; avg FG distance drops ~7 yds
+- Rain: Downgrade kicks >45 yds ~4-5% (40-yd: 86->82%; 50-yd: 71->65%)
+- Snow: Downgrade ALL kicks ~7-12% (FG% drops to 76%)
+- Temp <25F: Reduce kickable range 3-5 yds; FG% drops 2-4% on long attempts
+- Crosswind vs headwind: Extra 5-8% penalty for crosswinds at 15+ mph
+
+**Strategy notes:**
+- Coaches shorten FG range in adverse weather (selection bias to account for)
+- Long FGs (>50 yds) are most weather-sensitive prop
+- XPs generally safe unless extreme wind (>20 mph) + snow
+
+### 3.2 Passing Props (QB yards/completions/TDs, WR rec yards/receptions, TE yards)
+
+**Primary weather drivers (ranked):** 1) Wind speed (20+ mph = cascade threshold) 2) Precipitation 3) Temperature 4) Dome vs outdoor
+
+**Adjustment guide:**
+- Wind 10-15 mph: QB pass yards down ~5-8%; deep WR routes down ~5%
+- Wind 15-20 mph: QB pass yards down ~10-15%; completion % down ~3%
+- Wind 20+ mph: QB pass yards down ~15-20% (~20 yds/team); completion % down 2-3% per 5 mph above 15
+- Rain: Downgrade ALL pass props ~12%; completion % down 12%
+- Light snow: Minimal (~2% drop)
+- Heavy snow: Downgrade pass props ~25%; high INT/fumble risk
+- Temp <25F: Downgrade passer/WR ~8%; grip issues
+- Temp >85F: Downgrade visiting QB ~7%; comp% down 3.9%
+- Visitor from warm/dome climate in freezing: Extra 3-4% passing reduction (acclimation disadvantage)
+- Home teams: ~50% less affected by wind/temp than visitors
+
+**Position notes:**
+- Deep-ball WRs (20+ yd targets): Most vulnerable
+- Slot WRs / checkdown backs: Relatively insulated (shorter air time)
+- TE: Mixed — may see volume uptick (safe option) but less YAC in precip
+- RB receptions: May see volume increase (dink-and-dunk game plan)
+
+### 3.3 Rushing Props (RB rush yards/attempts, rushing TDs)
+
+**Key finding:** Weather has LIMITED direct impact on rushing. Temperature and precipitation are NOT statistically significant for rushing yards, YAC, or broken/missed tackles (Sports Info Solutions). Temperature IS significant for rushing Positive% (cold = tiny boost) but effect is small.
+
+**Primary weather drivers (ranked):** 1) Wind (strategic driver - teams shift to run) 2) Surface type (grass vs turf) 3) Temperature (cold = slight efficiency boost)
+
+**Adjustment guide:**
+- Wind 10-15 mph: Minor rush upgrade (~3% more attempts)
+- Wind 15-20 mph: Rush volume up 5-6%; rush yards up 4.5% per 10 mph
+- Wind 20+ mph: Rush yards up 10%+ per team; rush share of plays increases
+- Cold (<32F): Slight efficiency boost (Positive% marginally higher)
+- Heavy snow: Relative RB upgrade; power runners favored; broken tackles increase on slippery surfaces
+- Rain/any precip: No direct performance hit, but run volume increases
+- Hot (>85F): Slight negative — fatigue may dip rushing late
+- Grass vs turf: Broken/missed tackles easier on grass (+small YAC/rush efficiency boost)
+
+**Position notes:**
+- Power RBs / goal-line backs: Strong upgrade in wind/precip/snow (volume-based)
+- Pass-catching RBs: Mixed — short passes gain value in wind
+- Elusive RBs: Grass surface boosts broken-tackle opportunities
+
+### 3.4 Combined/Cascading Effects
+- Wind + rain: Short, inaccurate passes; rushing volume up up
+- Snow + wind: Worst case — passing down 25%, FGs down 12%, rushing relative up
+- Cold + wind: Wind chill amplifies; -27F wind chill recorded in NFL playoff games (Jan 2024)
+- Wind + hot: Fatigue compounds; late-game performance drops
+
+### 3.5 Strategic Takeaways for Prop Betting
+1. Wind is most predictive/reliable factor — check sustained speed AND gusts
+2. 20+ mph wind = cascade threshold (1.5-2.0x worse than 15-20 mph tier)
+3. Wind direction matters for kickers — crosswinds disproportionately punishing
+4. Visitor acclimation — warm/dome teams hit hardest by cold/wind
+5. Coaches shorten FG range — don't overvalue long FG props
+6. Dome games add ~4 points — push overs on dome games
+7. Rain intensity doesn't matter (light=heavy); snow severity DOES (light vs heavy = 2% vs 25% passing drop)
+8. Sportsbooks price in weather — move fast on lines pre-adjustment
+9. Surface type (grass vs turf) is real but small factor for rushing YAC/tackles
+"""
+
+p5 = """## Part 4: Sources Cited
+
+1. **Zipperman, M.A.** "Quantifying The Impact Of Temperature And Wind On NFL Passing And Rushing Performance" (2014, Claremont McKenna College) — OLS regressions on 3,133 games (2002-2013). Primary source for wind/temperature regression coefficients.
+2. **Covers.com** — "How Weather Actually Impacts NFL Betting" (Updated Sep 2025). Empirical wind/precipitation/temperature impact tables for passing and kicking.
+3. **Sharp Football Analysis** — "Weather Impact on NFL Betting Outcomes" (Aug 2025). Betting-focused summary with prop adjustments.
+4. **Jacob Long** — "A better way to evaluate NFL kickers" (Dec 2019). Multilevel logistic model of FG success (2009-2019). Quantifies rain/snow/wind effects on field goals.
+5. **Sports Info Solutions** — "Does weather impact the running game in the NFL?" (Jul 2020). 11,500+ rushing attempt analysis. Key finding: weather NOT significant for rushing yards/YAC/tackles; significant only for Positive% (small effect).
+6. **nflreadr / nflfastR** (NFLverse) — Official data dictionaries for load_schedules() and fast_scraper() weather fields.
+7. **NFLWeather.com** — Real-time forecasts and historical database. Primary weather intelligence source.
+8. **Meteostat API** (v2) — Weather station data used by ThompsonJamesBliss/WeatherData project.
+9. **WIVB News** — "The physics of a field goal: How wind plays a role" (Nov 2025). Wind shear effects on FG trajectory.
+10. **mySportsWeather.com** (Kevin Roth) — "How Weather Affects NFL Games". Wind direction effects, kicker sensitivity, dome vs. outdoor.
+"""
+
+# Append parts 2-5 to the file
+with open(r'C:\Users/Garrett/nfl_weather_research.md', 'a', encoding='utf-8') as f:
+    f.write(p2)
+    f.write(p3)
+    f.write(p4)
+    f.write(p5)
+print("Parts 2-5 appended successfully")
