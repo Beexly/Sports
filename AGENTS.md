@@ -4412,3 +4412,140 @@ Read-only browser pass, 2026-09-18 ~21:08–21:35 CDT, three parallel passes (ac
 - Official NFL play-by-play description: @sfdata9ers passing chart ("All QB plays considered for Total EPA & EPA/Play").
 - StatRankings: all @MagicSportsGuy data; statrankings.com/ai prompt PDF lets subscribers self-generate matchup reports; StatRankings+ subscription connects to Claude/ChatGPT per pinned post.
 - @sfdata9ers method (own reply): "NFL data + having fun with Python". No post revealed an API, scraping target, or non-public pipeline beyond these.
+
+---
+
+## THE CLIMB LEDGER: SIX REFUSALS, AND THE PARTITION THEY DRAW (2026-09-19, founder lab)
+
+A refusal that lives only in a chat log gets re-proposed. Every line below was measured
+by the founder against a pre-registered kill line on the 14,251-game corpus,
+walk-forward, with the market close as the comparison baseline. **Read this before
+proposing any feature for the composite.** "Just add DVOA" is the same move as "just add
+EPA" and both are already dead.
+
+### The partition, which is the actual finding
+
+Sort tonight's results by what each proposal IS rather than by whether it passed:
+
+- **Every refusal is a new estimator of team strength.** Opponent-adjusted EPA/play, its
+  pass and rush split, lagged EPA, DVOA-lite success rate, explosive-play persistence,
+  James-Stein shrinkage of Elo, and the constant-weight mix of those estimators. Six
+  independent parameterizations of one quantity, six results at or below Elo.
+- **No license is.** The close, the down-and-distance lookups, the market-pair structure,
+  player-season empirical Bayes, wind, game state. The single licensed item that touches
+  team quality at all, turnover occurrence against recovery, is a correction to a known
+  bias in the existing estimator rather than a new estimator of the same quantity.
+
+The partition is clean in both directions, and it says team strength is SATURATED. The
+0.35 to 0.48 CRPS deficit to the close is not a team-strength estimation gap, so the next
+team-strength feature will not close it either. That retires a whole category of proposal
+rather than one proposal, and it is worth more than any single kill in the table.
+
+### LICENSED
+
+| finding | measurement | where it belongs |
+|---|---|---|
+| The close, full season | CRPS 7.117 against Elo 7.593 | the published number |
+| The close, weeks 1 to 4 | n 446, CRPS 7.019 against Elo 7.373 | week 1 cards price off the close |
+| 3rd and X conversion | n 9,963, base 36.0% [35.0, 36.9] | in-play and fourth-down decisions, weight 0 on the pregame number |
+| 2nd and 10 (Lopez) | 37.7% against a naive 27.4% | the same lookup |
+| ATS by over product | lift 1.011 | market-pair structure |
+| ATS+14 withhold total | prior session | withhold rule |
+| Gamma-Poisson player-season empirical Bayes | prior session | player props |
+| Turnover occurrence against recovery | prior session | de-noises the existing estimator |
+| Linear wind | prior session | totals |
+| Q4 inhibition | prior session | game state |
+
+3rd and X, n 9,963, base rate 36.0% [35.0, 36.9]:
+
+| distance to go | conversion |
+|---|---|
+| 1 | 54.6% [50.5, 58.5] |
+| 2 to 3 | 47.7% |
+| 4 to 6 | 38.8% |
+| 7 to 10 | 28.8% |
+| 11 or more | 14.8% [12.8, 17.1] |
+
+The cell that matters is the long one. A naive reader anchors 3rd and 11 somewhere near
+the 36.0% base rate; it converts at 14.8%, well under half of it, and the interval does
+not reach the base. This composes with the Lopez 2nd and 10 result into ONE
+down-and-distance table, not two separate findings.
+
+### REFUSED
+
+| proposal | measured | kill line | why |
+|---|---|---|---|
+| Opponent-adjusted EPA/play | delta CRPS against Elo 0.003 | 0.01 | measures the same latent quantity as Elo |
+| Pass and rush split of it | 7.580 against Elo 7.576 | | strictly worse than the unsplit version |
+| Lagged EPA predicting this game's EPA | 1.6% better than Elo | 10% | |
+| DVOA-lite success rate | 7.625 against Elo 7.576 | | worse than what it would replace |
+| James-Stein toward the mean, weeks 1 to 4 | delta -0.23 | | shrinks an estimator that already shrinks |
+| Explosive play 20+ persistence | 2.6% | 10% | does not persist |
+| Constant-weight mix | delta 0.00028 | | |
+
+Three of these generalize past their own subject, and the generalizations are what stop
+the next round of the same proposal:
+
+1. **Before shrinking an estimator, check whether it already shrinks.** Standard Elo
+   regresses toward the mean at season carryover, so James-Stein on top is a second shrink
+   of the same quantity. Week 1 Elo IS the small-sample estimator. That is why the result
+   is not merely null but negative.
+2. **When a proprietary metric beats an open reimplementation, ask whether the gap is the
+   formula or the labor.** DVOA-lite lost to Elo outright. What is missing is the
+   charting, which is 32 team rooms of human work, and reimplementing the arithmetic buys
+   none of it.
+3. **Resolution added to a saturated feature buys variance, not signal.** The pass and
+   rush split was strictly worse than the unsplit version it was meant to refine.
+
+### Correction: the September framing reads the other way
+
+The RULE is right: week 1 cards price off the close. The stated REASON, that Elo in
+September is last season's ratings wearing a current badge, is not supported by the two
+measurements offered for it. The difference matters, because the next reader of that
+reason will conclude Elo recovers once it has current-season data and schedule a hand-back
+at week 6.
+
+Subtraction on the founder's own pairs, no assumption needed:
+
+| slice | market | Elo | margin |
+|---|---|---|---|
+| full season | 7.117 | 7.593 | 0.476 |
+| weeks 1 to 4 (n 446) | 7.019 | 7.373 | 0.354 |
+
+The close beats Elo by **0.122 LESS** in weeks 1 to 4 than across the full season. If
+staleness were the mechanism, September is exactly where the margin should be widest, and
+it is instead the narrowest slice measured so far.
+
+Conditional on the full-season figure resting on the same 1,871-game walk-forward corpus
+the EPA test used, the weeks 5 and later complement (n about 1,425) reads Elo 7.662
+against market 7.147, a margin near 0.514, roughly 45% wider than September's. That
+denominator is INFERRED from the EPA test's n and is NOT a measurement; if the full-season
+sample is a different size, the complement moves. The subtraction above does not depend
+on it.
+
+Read together: the close wins every slice, it wins by MORE as the season goes on, and
+Elo's deficit is not a staleness problem that current-season data repairs.
+
+### Founder-only, unchanged, and still the whole score
+
+1. Take the inverted confidence number off the card. Its Brier on the top band is 0.36
+   against 0.25 for a constant 0.5 forecast.
+2. Drop the book-depth term, 50 of the composite's 100 points. **Justify it on the
+   structural facts, not on a measured rate.** consensusPct is pinned at exactly 1.0000 on
+   every MLB run line, so half of those 50 points carry no information on the largest
+   stratum on the board; that is airtight. The pooled books-depth gap does NOT survive
+   stratification by modelVersion (v5.2.7 alone reads -7.2pp, n 116 against 86, Wilson
+   intervals overlapping), so it is not the evidence and must not be cited as such.
+3. Stop claiming complete bookmaker agreement on an MLB run line, where the number every
+   book posts is constant by construction.
+4. Wire the 14,251-game corpus into production calibration. NFL at roughly 70 settled
+   picks is the sample problem.
+5. The PASS veto. 373 of 374 PASS rows are published; 3 were live pre-kickoff when
+   measured at 05:14Z on 2026-09-19.
+
+**Also recorded from the same message, and it is a change of method rather than a display
+edit:** Shin becomes the published probability. Receipts today carry a mean-implied
+proportional de-vig and the record already says so, so swapping the de-vig moves every
+published number and wants its own before-and-after on the same rows rather than riding
+inside another change. The founder's message was truncated after that line; nothing
+further is recorded from it.
