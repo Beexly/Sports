@@ -39,7 +39,9 @@ export type SignalFamily =
 export type SignalOutputKind =
   | "2WAY_PROBABILITY"
   | "3WAY_PROBABILITY"
-  | "SPREAD_COVER_PROBABILITY";
+  | "SPREAD_COVER_PROBABILITY"
+  | "CONTINUOUS_VALUE"
+  | "MULTIPLIER";
 
 export interface SignalKillLine {
   /** Maximum acceptable Brier score vs de-vigged market consensus (Default: 0.250). */

@@ -135,7 +135,7 @@ export const kalshiLiveSignal: SignalDefinition = {
 export const espnPowerIndexSignal: SignalDefinition = {
   id: "espn_powerindex",
   label: "ESPN Football Power Index (FPI) Logistic",
-  category: "MODEL_SIGNAL",
+  category: "RATINGS",
   family: "EFFICIENCY",
   outputKind: "2WAY_PROBABILITY",
   validSports: [
@@ -183,7 +183,7 @@ export const espnPowerIndexSignal: SignalDefinition = {
 export const clubEloSignal: SignalDefinition = {
   id: "clubelo",
   label: "ClubElo European Football Ratings",
-  category: "MODEL_SIGNAL",
+  category: "RATINGS",
   family: "EFFICIENCY",
   outputKind: "2WAY_PROBABILITY",
   validSports: ["soccer_epl", "soccer_usa_mls"],
@@ -226,7 +226,7 @@ export const clubEloSignal: SignalDefinition = {
 export const rateModelSignal: SignalDefinition = {
   id: "poisson_dixon_coles",
   label: "Team Rate Scoring Model (Dixon-Coles / Poisson)",
-  category: "MODEL_SIGNAL",
+  category: "TEAM_RATES",
   family: "EFFICIENCY",
   outputKind: "2WAY_PROBABILITY",
   validSports: ["soccer_epl", "soccer_usa_mls", "icehockey_nhl", "baseball_mlb"],
@@ -253,6 +253,7 @@ export const rateModelSignal: SignalDefinition = {
       ]);
       if (leagueAvg == null || leagueAvg <= 0) return null;
 
+      let lambdas: { lambdaHome: number; lambdaAway: number } | null = null;
       if (isDixonColesValidSport(ctx.sportKey)) {
         const dc = dixonColesIndependentFairValue({
           sportKey: ctx.sportKey,
@@ -260,28 +261,29 @@ export const rateModelSignal: SignalDefinition = {
           awayRecords,
           leagueAvgScored: leagueAvg,
         });
-        if (dc && dc.homeFairProb != null && dc.awayFairProb != null) {
-          return {
-            homeFairProb: dc.homeFairProb,
-            awayFairProb: dc.awayFairProb,
-            capturedAt: ctx.now().toISOString(),
-            metadata: { source: "dixon_coles", lambdaHome: dc.lambdaHome, lambdaAway: dc.lambdaAway },
-          };
-        }
+        if (dc) lambdas = { lambdaHome: dc.lambdaHome, lambdaAway: dc.lambdaAway };
       }
+      if (!lambdas) {
+        const p = poissonIndependentFairValue({
+          sportKey: ctx.sportKey,
+          homeRecords,
+          awayRecords,
+          leagueAvgScored: leagueAvg,
+        });
+        if (p) lambdas = { lambdaHome: p.lambdaHome, lambdaAway: p.lambdaAway };
+      }
+      if (!lambdas) return null;
 
-      const poisson = poissonIndependentFairValue({
-        sportKey: ctx.sportKey,
-        homeRecords,
-        awayRecords,
-        leagueAvgScored: leagueAvg,
-      });
-      if (poisson && poisson.homeFairProb != null && poisson.awayFairProb != null) {
+      const fv = poissonFairValueFromLambdas(
+        lambdas.lambdaHome,
+        lambdas.lambdaAway,
+        { now: ctx.now },
+      );
+      if (fv && fv.homeFairProb != null && fv.awayFairProb != null) {
         return {
-          homeFairProb: poisson.homeFairProb,
-          awayFairProb: poisson.awayFairProb,
-          capturedAt: ctx.now().toISOString(),
-          metadata: { source: "poisson", lambdaHome: poisson.lambdaHome, lambdaAway: poisson.lambdaAway },
+          homeFairProb: fv.homeFairProb,
+          awayFairProb: fv.awayFairProb,
+          capturedAt: fv.capturedAt ?? ctx.now().toISOString(),
         };
       }
     } catch {
@@ -292,12 +294,12 @@ export const rateModelSignal: SignalDefinition = {
 };
 
 /**
- * 5b) Skellam ATS Cover from Scoring Rate Lambdas
+ * 5b) Skellam Cover Model (Spread Fair Value from Team Lambdas)
  */
 export const skellamCoverSignal: SignalDefinition = {
   id: SKELLAM_COVER_SOURCE,
-  label: "Skellam ATS Spread Cover Probability",
-  category: "MODEL_SIGNAL",
+  label: "Skellam Cover Spread Fair Value",
+  category: "TEAM_RATES",
   family: "EFFICIENCY",
   outputKind: "SPREAD_COVER_PROBABILITY",
   validSports: ["soccer_epl", "soccer_usa_mls", "icehockey_nhl", "baseball_mlb"],
@@ -373,7 +375,7 @@ export const skellamCoverSignal: SignalDefinition = {
 export const mlbStandingsSignal: SignalDefinition = {
   id: "mlb_standings",
   label: "MLB Official Standings Win% Logistic",
-  category: "MODEL_SIGNAL",
+  category: "STANDINGS",
   family: "EFFICIENCY",
   outputKind: "2WAY_PROBABILITY",
   validSports: ["baseball_mlb"],
@@ -415,7 +417,7 @@ export const mlbStandingsSignal: SignalDefinition = {
 export const chronologicalEloSignal: SignalDefinition = {
   id: "elo",
   label: "Chronological Team Results Elo",
-  category: "MODEL_SIGNAL",
+  category: "RATINGS",
   family: "EFFICIENCY",
   outputKind: "2WAY_PROBABILITY",
   validSports: [],
@@ -508,7 +510,7 @@ export const polymarketGammaSignal: SignalDefinition = {
 export const nflOpponentAdjustedEpaSignal: SignalDefinition = {
   id: "nfl_epa_adj",
   label: "NFL Opponent-Adjusted EPA/Play (nflverse)",
-  category: "MODEL_SIGNAL",
+  category: "RATINGS",
   family: "EFFICIENCY",
   outputKind: "2WAY_PROBABILITY",
   validSports: ["americanfootball_nfl"],
@@ -551,7 +553,7 @@ export const BLOCKED_SIGNALS: readonly SignalDefinition[] = [
   {
     id: "nfl_contract_incentives",
     label: "NFL Player Contract Incentives & Milestones",
-    category: "NARRATIVE",
+    category: "MILESTONES",
     family: "NARRATIVE",
     outputKind: "2WAY_PROBABILITY",
     validSports: ["americanfootball_nfl"],
@@ -567,7 +569,7 @@ export const BLOCKED_SIGNALS: readonly SignalDefinition[] = [
   {
     id: "nfl_cognitive_load_fatigue",
     label: "NFL Cognitive Load & Thursday Night Travel Stress",
-    category: "SITUATIONAL",
+    category: "SCHEDULE",
     family: "SITUATIONAL",
     outputKind: "2WAY_PROBABILITY",
     validSports: ["americanfootball_nfl"],
@@ -583,7 +585,7 @@ export const BLOCKED_SIGNALS: readonly SignalDefinition[] = [
   {
     id: "nfl_beat_desk_corroboration",
     label: "NFL Beat Reporter Injury & Depth Chart Insights",
-    category: "NEWS",
+    category: "PLAYER_AVAILABILITY",
     family: "NARRATIVE",
     outputKind: "2WAY_PROBABILITY",
     validSports: ["americanfootball_nfl"],
@@ -599,7 +601,7 @@ export const BLOCKED_SIGNALS: readonly SignalDefinition[] = [
   {
     id: "nfl_trench_pass_block_win_rate",
     label: "NFL Offensive vs Defensive Line Pass Block Win Rate (PBWR)",
-    category: "TRENCHES",
+    category: "TEAM_RATES",
     family: "TRENCHES",
     outputKind: "2WAY_PROBABILITY",
     validSports: ["americanfootball_nfl"],
@@ -615,7 +617,7 @@ export const BLOCKED_SIGNALS: readonly SignalDefinition[] = [
   {
     id: "nfl_luck_fumble_regression",
     label: "NFL Fumble Recovery & 3rd Down Conversion Luck Regression",
-    category: "LUCK",
+    category: "TEAM_RATES",
     family: "LUCK",
     outputKind: "2WAY_PROBABILITY",
     validSports: ["americanfootball_nfl"],
@@ -636,7 +638,7 @@ export const BLOCKED_SIGNALS: readonly SignalDefinition[] = [
 export const nflWindElasticitySignal: SignalDefinition = {
   id: "nfl_wind_elasticity",
   label: "NFL Wind Elasticity & Convex Passing/FG Decay",
-  category: "MODEL_SIGNAL",
+  category: "WEATHER",
   family: "MICROCLIMATE",
   outputKind: "CONTINUOUS_VALUE",
   validSports: ["americanfootball_nfl"],
@@ -670,7 +672,7 @@ export const nflWindElasticitySignal: SignalDefinition = {
 export const nflCoachingTendenciesSignal: SignalDefinition = {
   id: "nfl_coaching_tendencies",
   label: "NFL Coaching 2nd-Down Run Alternation & 4th Down Conservatism",
-  category: "MODEL_SIGNAL",
+  category: "PACE",
   family: "SITUATIONAL",
   outputKind: "CONTINUOUS_VALUE",
   validSports: ["americanfootball_nfl"],
@@ -694,7 +696,7 @@ export const nflCoachingTendenciesSignal: SignalDefinition = {
 export const nflInjuryTrajectorySignal: SignalDefinition = {
   id: "nfl_injury_trajectory",
   label: "NFL Practice Report Wed/Thu/Fri Trajectory & Questionable Fade",
-  category: "MODEL_SIGNAL",
+  category: "INJURIES",
   family: "SITUATIONAL",
   outputKind: "CONTINUOUS_VALUE",
   validSports: ["americanfootball_nfl"],
@@ -718,7 +720,7 @@ export const nflInjuryTrajectorySignal: SignalDefinition = {
 export const nflRedzoneTeLeverageSignal: SignalDefinition = {
   id: "nfl_redzone_te_leverage",
   label: "NFL Red Zone TE Leverage & Scoring Efficiency",
-  category: "MODEL_SIGNAL",
+  category: "TEAM_RATES",
   family: "EFFICIENCY",
   outputKind: "2WAY_PROBABILITY",
   validSports: ["americanfootball_nfl"],
@@ -742,7 +744,7 @@ export const nflRedzoneTeLeverageSignal: SignalDefinition = {
 export const nflOffensiveLineTrenchSignal: SignalDefinition = {
   id: "nfl_offensive_line_trench",
   label: "NFL Offensive Line Continuity & PBWR Trench Edge",
-  category: "TRENCHES",
+  category: "TEAM_RATES",
   family: "TRENCHES",
   outputKind: "CONTINUOUS_VALUE",
   validSports: ["americanfootball_nfl"],
@@ -766,7 +768,7 @@ export const nflOffensiveLineTrenchSignal: SignalDefinition = {
 export const nflRefereeCrewTendenciesSignal: SignalDefinition = {
   id: "nfl_referee_crew_tendencies",
   label: "NFL Referee Crew Penalty & Total Points Elasticity",
-  category: "SITUATIONAL",
+  category: "OFFICIALS",
   family: "SITUATIONAL",
   outputKind: "CONTINUOUS_VALUE",
   validSports: ["americanfootball_nfl"],
@@ -790,7 +792,7 @@ export const nflRefereeCrewTendenciesSignal: SignalDefinition = {
 export const nflCircadianTravelFatigueSignal: SignalDefinition = {
   id: "nfl_circadian_travel_fatigue",
   label: "NFL Circadian Rhythm & Timezone Travel Fatigue",
-  category: "SITUATIONAL",
+  category: "SCHEDULE",
   family: "SITUATIONAL",
   outputKind: "CONTINUOUS_VALUE",
   validSports: ["americanfootball_nfl"],
@@ -814,7 +816,7 @@ export const nflCircadianTravelFatigueSignal: SignalDefinition = {
 export const nflContractMilestonesSignal: SignalDefinition = {
   id: "nfl_contract_milestones",
   label: "NFL Late-Season Contract Incentives & Milestone Funneling",
-  category: "NARRATIVE",
+  category: "MILESTONES",
   family: "NARRATIVE",
   outputKind: "CONTINUOUS_VALUE",
   validSports: ["americanfootball_nfl"],
@@ -838,7 +840,7 @@ export const nflContractMilestonesSignal: SignalDefinition = {
 export const nflWr1OutRedistributionSignal: SignalDefinition = {
   id: "nfl_wr1_out_redistribution",
   label: "NFL Alpha WR1-Out Vacated Target Reallocation & Efficiency Decay",
-  category: "EFFICIENCY",
+  category: "PLAYER_AVAILABILITY",
   family: "EFFICIENCY",
   outputKind: "CONTINUOUS_VALUE",
   validSports: ["americanfootball_nfl"],
