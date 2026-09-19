@@ -18,11 +18,15 @@ import argparse
 import csv
 import json
 import math
+import sys
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 from statistics import mean
 from typing import Any
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from stats_json import dumps_report, write_report  # noqa: E402
 
 ALPHA = 0.10
 MIN_N = math.ceil(1.0 / ALPHA) - 1  # 9
@@ -258,7 +262,9 @@ def main() -> int:
     args = ap.parse_args()
     path = Path(args.input)
     if not path.exists():
-        print(json.dumps({"ok": False, "error": f"input missing: {path}", "status": "DATA_BLOCKED"}))
+        payload = {"ok": False, "error": f"input missing: {path}", "status": "DATA_BLOCKED"}
+        write_report(Path(args.out), payload)
+        print(dumps_report(payload))
         return 2
     raw_rows = load_rows(path)
     rows = []
@@ -270,7 +276,13 @@ def main() -> int:
         c["gen_ts"] = gen.timestamp() if gen else 0
         rows.append(c)
 
-    pre = [r for r in rows if r["timing"] == "pre_game"] or rows
+    pre = [r for r in rows if r["timing"] == "pre_game"]
+    timing_filter = "pre_game_only"
+    if not pre:
+        # Strength: never silently expand the denominator. Record the fallback.
+        pre = rows
+        timing_filter = "FALLBACK_all_rows_no_pre_game_clocks"
+    report_n_pre = len(pre)
 
     def axis_books(r):
         return r["books"]
@@ -285,7 +297,8 @@ def main() -> int:
         "buckets": list(BOOK_BUCKETS),
         "input": str(path),
         "n_loaded": len(rows),
-        "n_pre_game": len(pre),
+        "n_pre_game": report_n_pre,
+        "timing_filter": timing_filter,
         "method": {
             "residual_primary": "|y - marketFairProb|",
             "residual_diagnostic": "|y - confidence/100|",
@@ -418,9 +431,8 @@ def main() -> int:
     }
 
     out = Path(args.out)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(report, indent=2), encoding="utf-8")
-    print(json.dumps({"ok": True, "out": str(out), "coupling": report["coupling"].get("verdict"), "n_pre": len(pre)}))
+    write_report(out, report)
+    print(dumps_report({"ok": True, "out": str(out), "coupling": report["coupling"].get("verdict"), "n_pre": report_n_pre, "timing_filter": timing_filter}))
     return 0
 
 

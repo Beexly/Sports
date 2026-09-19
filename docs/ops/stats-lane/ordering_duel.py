@@ -15,10 +15,14 @@ import csv
 import json
 import math
 import random
+import sys
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 from statistics import mean
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from stats_json import dumps_report, write_report  # noqa: E402
 
 VERSIONS_P = {f"v5.2.{i}" for i in range(2, 8)}
 
@@ -264,11 +268,15 @@ def main():
     args = ap.parse_args()
     path = Path(args.input)
     if not path.exists():
-        print(json.dumps({"ok": False, "status": "DATA_BLOCKED", "path": str(path), "need": "sample P export"}))
+        payload = {"ok": False, "status": "DATA_BLOCKED", "path": str(path), "need": "sample P export"}
+        write_report(Path(args.out), payload)
+        print(dumps_report(payload))
         return 2
     rows = [c for c in (coerce(r) for r in load(path)) if c]
     if not rows:
-        print(json.dumps({"ok": False, "status": "EMPTY_SAMPLE_P", "path": str(path)}))
+        payload = {"ok": False, "status": "EMPTY_SAMPLE_P", "path": str(path)}
+        write_report(Path(args.out), payload)
+        print(dumps_report(payload))
         return 2
     by_pt = defaultdict(list)
     for r in rows:
@@ -287,9 +295,8 @@ def main():
     # optional all-market diagnostic
     report["strata"]["ALL_markets_diagnostic_only"] = evaluate_stratum(rows, "ALL")
     out = Path(args.out)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(report, indent=2), encoding="utf-8")
-    print(json.dumps({"ok": True, "out": str(out), "n": len(rows), "strata": list(report["strata"].keys())}))
+    write_report(out, report)
+    print(dumps_report({"ok": True, "out": str(out), "n": len(rows), "strata": list(report["strata"].keys())}))
     return 0
 
 

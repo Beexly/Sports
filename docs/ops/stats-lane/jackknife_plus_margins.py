@@ -35,14 +35,20 @@ import argparse
 import csv
 import json
 import math
+import sys
 from collections import defaultdict
 from datetime import datetime
 from pathlib import Path
 from statistics import mean
 from typing import Any
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from stats_json import dumps_report, write_report  # noqa: E402
+
 ALPHA = 0.10
 MIN_N = 64  # matches packages/prediction-engine/src/conformal-margin-set.ts
+# OOT time-split needs ~2x MIN_N total per sport (half cal / half test)
+MIN_N_OOT_TOTAL = 2 * MIN_N
 
 
 def parse_iso(s: Any):
@@ -226,17 +232,16 @@ def main() -> int:
             ),
         }
         Path(args.out).parent.mkdir(parents=True, exist_ok=True)
-        Path(args.out).write_text(json.dumps(payload, indent=2), encoding="utf-8")
-        print(json.dumps(payload))
+        Path(args.out).write_text(dumps_report(payload), encoding="utf-8")
+        print(dumps_report(payload))
         return 2
 
     rows = [c for c in (coerce(r) for r in load_rows(path)) if c]
-    # require some pred for split baseline; J+ can run on y-only with center=mean
     if not rows:
         payload = {"ok": False, "status": "EMPTY_NO_MARGINS", "path": str(path)}
         Path(args.out).parent.mkdir(parents=True, exist_ok=True)
-        Path(args.out).write_text(json.dumps(payload, indent=2), encoding="utf-8")
-        print(json.dumps(payload))
+        Path(args.out).write_text(dumps_report(payload), encoding="utf-8")
+        print(dumps_report(payload))
         return 2
 
     report: dict[str, Any] = {
@@ -244,6 +249,7 @@ def main() -> int:
         "n_rows_with_margin": len(rows),
         "alpha": args.alpha,
         "min_n": MIN_N,
+        "min_n_oot_total_per_sport": MIN_N_OOT_TOTAL,
         "method": "Jackknife+ LOO mean, sport Mondrian, no borrowing",
         "warning": "Mondrian/J+ partition residuals; they do not fix inverted ranking scores.",
         "by_sport": {},
@@ -263,11 +269,20 @@ def main() -> int:
         if n_cal < MIN_N:
             entry["jackknife_plus"] = {
                 "status": "insufficient_sample",
-                "width": float("inf"),
+                "width": None,
+                "width_infinite": True,
                 "coverage": None,
             }
-            entry["split_conformal"] = {"halfwidth": float("inf"), "coverage": None}
-            entry["verdict"] = "INSUFFICIENT_CAL_n"
+            entry["split_conformal"] = {
+                "halfwidth": None,
+                "halfwidth_infinite": True,
+                "coverage": None,
+            }
+            entry["verdict"] = (
+                "INSUFFICIENT_CAL_n_need_oot_total_ge_128"
+                if len(sub) < MIN_N_OOT_TOTAL
+                else "INSUFFICIENT_CAL_n_after_time_split"
+            )
         else:
             # OOT evaluate on te using each row's pred when present
             half = split_conformal_halfwidth(y_cal, pred_cal, args.alpha)
@@ -312,9 +327,8 @@ def main() -> int:
         "predictedMeanMargin — MIMO-3 stays blocked until those columns ship."
     )
     out = Path(args.out)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(report, indent=2), encoding="utf-8")
-    print(json.dumps({"ok": True, "out": str(out), "n": len(rows), "sports": list(report["by_sport"])}))
+    write_report(out, report)
+    print(dumps_report({"ok": True, "out": str(out), "n": len(rows), "sports": list(report["by_sport"])}))
     return 0
 
 
