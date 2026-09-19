@@ -623,7 +623,7 @@ function getFactoryReturnedExpression(factory: ts.Expression | undefined): ts.Ex
   return unwrapParens(body);
 }
 
-function collectVarInitializers(sf: ts.SourceFile): Map<string, ts.Expression> {
+function collectVarInitializers(root: ts.Node): Map<string, ts.Expression> {
   const map = new Map<string, ts.Expression>();
   const visit = (node: ts.Node): void => {
     if (ts.isVariableDeclaration(node) && ts.isIdentifier(node.name) && node.initializer) {
@@ -631,7 +631,7 @@ function collectVarInitializers(sf: ts.SourceFile): Map<string, ts.Expression> {
     }
     ts.forEachChild(node, visit);
   };
-  visit(sf);
+  visit(root);
   return map;
 }
 
@@ -657,10 +657,16 @@ function resolveObjectLiteral(init: ts.Expression): ts.ObjectLiteralExpression |
 interface AnalysisCtx {
   varDecls: Map<string, ts.Expression>;
   authHelperComplete: boolean;
-  /** Source text of the FACTORY CALL ONLY (not the whole file), so a
-   * same-named `const actual = await importOriginal(...)` for a DIFFERENT
-   * `vi.mock` call elsewhere in the file cannot be mistaken for this one's. */
-  factoryText: string;
+  /** Variable initializers declared INSIDE THIS FACTORY ONLY, as AST nodes.
+   * Scoped to the factory (not the file) for the reason the previous
+   * source-text version documented: a same-named `const actual = await
+   * importOriginal(...)` belonging to a DIFFERENT `vi.mock` call elsewhere in
+   * the same file must not be mistaken for this one's. AST rather than text
+   * because this file's whole design argument is that a regex over source
+   * misses re-exports, aliases and multi-line forms, and because building a
+   * `RegExp` from an interpolated identifier is a denial-of-service pattern
+   * (an unescaped metacharacter in the name changes or explodes the match). */
+  factoryVarDecls: Map<string, ts.Expression>;
 }
 
 interface FactoryAnalysis {
@@ -676,9 +682,19 @@ interface FactoryAnalysis {
   unresolvable: boolean;
 }
 
-function isSpreadOfRealModule(localName: string, factoryText: string): boolean {
-  const re = new RegExp(`\\bconst\\s+${localName}\\s*=\\s*await\\s+import(?:Original|Actual)\\b`);
-  return re.test(factoryText);
+function isSpreadOfRealModule(
+  localName: string,
+  factoryVarDecls: Map<string, ts.Expression>,
+): boolean {
+  const init = factoryVarDecls.get(localName);
+  if (!init || !ts.isAwaitExpression(init)) return false;
+  const call = unwrapParens(init.expression);
+  if (!ts.isCallExpression(call)) return false;
+  const callee = call.expression;
+  return (
+    ts.isIdentifier(callee) &&
+    (callee.text === "importOriginal" || callee.text === "importActual")
+  );
 }
 
 function analyzeObjectLiteral(obj: ts.ObjectLiteralExpression, ctx: AnalysisCtx): FactoryAnalysis {
@@ -698,7 +714,7 @@ function analyzeObjectLiteral(obj: ts.ObjectLiteralExpression, ctx: AnalysisCtx)
       const expr = prop.expression;
       if (ts.isIdentifier(expr)) {
         const name = expr.text;
-        if (isSpreadOfRealModule(name, ctx.factoryText)) {
+        if (isSpreadOfRealModule(name, ctx.factoryVarDecls)) {
           complete = true;
           continue;
         }
@@ -786,9 +802,18 @@ function findWildcardReexportsOfTargets(): string[] {
     for (const file of walkAllSourceFiles(dir)) {
       const parsed = loadFile(file);
       if (!parsed) continue;
-      for (const target of TARGETS) {
-        const re = new RegExp(`export\\s+\\*(?:\\s+as\\s+[A-Za-z_$][\\w$]*)?\\s+from\\s*["']${target.specifier.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}["']`);
-        if (re.test(parsed.text)) {
+      for (const stmt of parsed.sf.statements) {
+        if (!ts.isExportDeclaration(stmt)) continue;
+        // Both wildcard forms the previous regex matched: bare `export * from`
+        // (no clause) and `export * as NS from` (a NamespaceExport clause). A
+        // named re-export `export { a } from` is NOT a wildcard and is skipped.
+        const isWildcard =
+          stmt.exportClause === undefined || ts.isNamespaceExport(stmt.exportClause);
+        if (!isWildcard) continue;
+        const spec = stmt.moduleSpecifier;
+        if (spec === undefined || !ts.isStringLiteral(spec)) continue;
+        const target = TARGETS.find((t) => t.specifier === spec.text);
+        if (target) {
           hits.push(`${path.relative(REPO_ROOT, file)} wildcard re-exports ${target.specifier}`);
         }
       }
@@ -874,8 +899,11 @@ async function runGuard(): Promise<GuardRunResult> {
           unresolvableFactories.push({ file: relFile, target: target.specifier });
           continue;
         }
-        const factoryText = parsed.text.slice(factory.getStart(parsed.sf), factory.getEnd());
-        const analysis = analyzeFactory(factory, { varDecls, authHelperComplete, factoryText });
+        const analysis = analyzeFactory(factory, {
+          varDecls,
+          authHelperComplete,
+          factoryVarDecls: collectVarInitializers(factory),
+        });
 
         if (analysis.unresolvable) {
           unresolvableFactories.push({ file: relFile, target: target.specifier });
@@ -1023,8 +1051,11 @@ describe("detection sanity (FIXTURE source text, not a real vi.mock call in this
       if (!call) throw new Error("fixture source did not parse a vi.mock call — fixture is broken");
       const factory = call.arguments[1];
       if (!factory) throw new Error("fixture source's vi.mock call had no factory argument — fixture is broken");
-      const factoryText = source.slice(factory.getStart(sf), factory.getEnd());
-      return analyzeFactory(factory, { varDecls: collectVarInitializers(sf), authHelperComplete: true, factoryText });
+      return analyzeFactory(factory, {
+        varDecls: collectVarInitializers(sf),
+        authHelperComplete: true,
+        factoryVarDecls: collectVarInitializers(factory),
+      });
     }
 
     const incomplete = analyzeFixture(FIXTURE_INCOMPLETE_SOURCE);
