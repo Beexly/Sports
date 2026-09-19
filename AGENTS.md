@@ -3769,3 +3769,94 @@ figure. The number quoted as proof of green was the same number sitting beside 6
   of the 20 files. The reliable path is the run's log-archive URL (`actions_get` ->
   `get_workflow_run_logs_url`), downloading the zip and reading the complete job file (14,245
   lines here). Use the archive whenever a failing-file list must be COMPLETE.
+
+---
+
+## MONDRIAN ON REAL BOARD GROUPS, AND THE TIMING KILL (2026-09-19, Mimo statistics lane)
+
+Measured on the receipts snapshot: 1,111 rows harvested, 1,087 scored WIN/LOSS.
+Strict Mondrian, alpha 0.10, one q-hat per bin, NO borrowing, finite only when
+n >= ceil(1/alpha)-1 = 9, otherwise infinite with coverage null and NEVER clamped.
+Residual is |y - p| with p = marketFairProb on all scored rows.
+
+**FIRST, A CORRECTION TO THIS FILE. C-302 IS CLOSED, NOT OPEN.** The older note
+says the public performance surfaces do not exclude in-play-generated picks the
+way the eligibility sample does. That is STALE. `apps/web/lib/calibration/in-play-exclusion.ts`
+now holds the rule in one place and is imported by all four readers:
+`confidence-tail.ts`, `public-confidence.ts`, `report.ts` and
+`apps/web/lib/performance/build-performance-summaries.ts`. Its semantics are
+deliberate and worth keeping: an absent or unparseable timestamp means "cannot
+tell" and the row is KEPT, because dropping on a missing timestamp would silently
+shrink every published denominator by however much the data happened to be
+incomplete.
+
+**THE TIMING KILL TRIGGERED, AND IT IS THE FIRST MEASUREMENT OF WHAT THAT
+EXCLUSION IS WORTH.**
+
+| stratum | n | hit rate | mean residual |
+|---|---|---|---|
+| pre_game | 935 | 0.4802 | 0.4824 |
+| in_play_or_at_kickoff | 152 | 0.6974 | 0.3438 |
+
+Gap **+21.72 percentage points** against a pre-registered 10pp kill line. Until
+now the in-play exclusion rested on the argument that a live price already
+encodes part of the outcome. It is now a measured 21.7 point difference in
+realized hit rate, from an independent direction.
+
+**Forward rule, and it binds every future study: REFUSE any ordering comparison,
+calibration claim or signal backtest on a mixed pre-game and in-play sample.**
+A 15% in-play share is enough to move a pooled hit rate by roughly three points
+on its own.
+
+**The pooled residual understates fat board groups.** Pooled q-hat 0.5913, pooled
+marginal coverage 0.9016 on n 1,087. Coverage of each bin UNDER the pooled
+q-hat, against that bin's own q-hat:
+
+| bin | n | own q-hat | own cov | cov under pooled | gap |
+|---|---|---|---|---|---|
+| MONEYLINE given MLS | small | - | 0.9348 | 0.5652 | -37.0pp |
+| MONEYLINE | 179 | 0.7632 | 0.9050 | 0.7709 | -13.4pp |
+| MLB run line 1.5 | 307 | 0.6220 | 0.9055 | 0.8046 | -10.1pp |
+| MLS | 153 | 0.6788 | 0.9085 | 0.8366 | -7.2pp |
+| TOTAL | 396 | 0.515 | 0.9040 | 0.9975 | +9.3pp over |
+| NCAAF | 199 | ~0.506 | 0.9045 | 0.9899 | +8.5pp over |
+
+Sport fat-to-lean q-hat ratio 1.342 (MLS against NCAAF) against a pre-registered
+kill at 1.15: the pooling-understates claim SURVIVES. This is the THIRD
+independent measurement of one defect, after the pooled ECE sitting below every
+stratum it is built from, and the earlier AFC/NFC turnover result.
+
+`MONEYLINE given NFL` at n 5 returns infinite with null coverage. That is the
+method refusing, not a bug. The bookmaker-count bucket is **NOT RUN**:
+`bookmakerCount` is absent from the export. Prediction on record for when it
+lands: thin-book q-hat wider than 10+ books; kill if not.
+
+**MLB run line, n 307, realized hit rate 40.1%.** That is the same bin whose
+`consensusPct` is structurally pinned, so the ordering inside it is produced
+entirely by other factors while the copy credits book agreement.
+
+**The ordering comparison is identifiable after all, and this improves on the
+census finding in this file.** The census concluded the comparison cannot be run
+because basis is collinear with MODEL_VERSION. The sharper statement: the
+collinearity is between the published basis LABEL and the version, NOT between
+the numeric scores on the same rows. So the answerable design is version-fixed
+RECOMPUTED orderings: on eligibility-clean PRE-GAME rows with modelVersion in
+v5.2.2 through v5.2.7 carrying finite confidence, rankingP and marketFairProb,
+recompute all four orderings on the SAME rows and compare. Wilson on top-decile,
+slate/day bootstrap on decile Brier, and if the intervals overlap, say they
+overlap rather than naming a winner. Pre-registration:
+`docs/ops/stats-lane/PRE-REG-ordering-comparison-2026-09-18.yaml`.
+
+**Group-conditional sample sizes, answered.** Finite q-hat needs n >= 9. A Wilson
+half-width of about 0.05 at 0.90 coverage needs n around 138. Distinguishing 0.90
+from 0.82 needs roughly 200 to 250 per bin. **Publish a per-bin number only at
+n >= 138**, with the denominator shown on the same surface.
+
+**Carried on every result, and it must stay carried: Mondrian PARTITIONS a score,
+it does not fix an inverted one. Each bin's top band can still invert.**
+
+**Where the files are.** The lane report, the machine-readable bins, the
+pre-registration and the strict runner live under `docs/ops/stats-lane/` in the
+statistics lane's own workspace and are NOT in this repository tree yet. They
+need to land here before any of the numbers above can be reproduced from the
+repo.
