@@ -3679,13 +3679,13 @@ never written into the repository, and was destroyed after the run.
 
 ---
 
-## MAIN IS RED BECAUSE OF 64 STALE apps/web TESTS, NOT BECAUSE OF THE DATABASE (2026-09-19, Opus)
+## MAIN IS RED BECAUSE OF 64 STALE apps/web TESTS, NOT THE DATABASE. CONFIRMED, AND THIS BRANCH ALREADY FIXES ALL 20 FILES (2026-09-19, Opus + Sonnet verification)
 
-**This SUPERSEDES the previous section of this file, which claimed the stub-versus-real-Prisma
-split was the mechanism. That claim was WRONG. Read this instead; do not act on the old one.**
+**This SUPERSEDES the earlier section claiming the stub-versus-real-Prisma split was the
+mechanism. That claim was WRONG. Do not act on it and do not re-open it.**
 
-Measured from main's own CI log (run 35376690387, job 105703070978, head `47be639a6`, the
-`Test, type-check, lint, Prisma` job). Every workspace passes except one:
+Source of truth: main's own CI log, run 35376690387, job 105703070978, head `47be639a6`, job
+`Test, type-check, lint, Prisma`. Every workspace passes except one:
 
 ```
 apps/web    Test Files  20 failed | 1014 passed | 2 skipped (1036)
@@ -3695,45 +3695,77 @@ apps/web    Test Files  20 failed | 1014 passed | 2 skipped (1036)
 ai-council, compliance, crypto, data-ingestion (70 files), db, epistemic-twin, feature-store,
 genesis-kernel, governed, ingestion-pipeline (35), ops, partner-stack, phase-c,
 prediction-engine (280 files / 3141 tests), quote-plane, stats-api, types, util,
-workers/content-publishing and workers/data-refresh are ALL green. The root `npm test` runs
-every workspace and exits 1 at the end, which is why the job's tail shows only passes and then
-an exit code. Anyone reading the tail concludes the suite passed. It did not.
+workers/content-publishing and workers/data-refresh are ALL green. Root `npm test` runs every
+workspace and exits 1 at the END, so the job's tail shows only passes followed by an exit code.
+Reading the tail tells you the suite passed. It did not.
 
-**None of the 64 failures touches Prisma.** They are five clusters, and all five are
-already-known, already-decided product changes whose tests were never repointed:
+**The complete 20-file list, with failed-test count per file** (65 raw FAIL entries = 64 counted
+failing tests plus one file-level collection error):
 
-1. **Retired customer copy.** Assertions still pin the pre-humanizer strings: the old
+| file | failed |
+|---|---|
+| lib/fantasy/dfs-optimizer.test.ts | 12 |
+| __tests__/preview-page-paywall.test.tsx | 11 |
+| __tests__/honest-degraded-states.test.ts | 6 |
+| __tests__/board-pass-reason-honesty.test.ts | 6 |
+| __tests__/entitlement-fail-closed-audible.test.ts | 4 |
+| __tests__/nfl-house-page.test.ts | 3 |
+| __tests__/news-customer-truth.test.tsx | 3 |
+| __tests__/analytics-instrumentation.test.tsx | 3 |
+| __tests__/nav-static-shell.test.tsx | 2 |
+| __tests__/nav-route-integrity.test.ts | 2 |
+| __tests__/homepage-suspense-nflverse.test.ts | 2 |
+| __tests__/homepage-engine-centerpiece.test.ts | 2 |
+| __tests__/board-class-banner-honesty.test.ts | 2 |
+| __tests__/picks-states-conversion.test.ts | 1 (collection error, the zero-collected pattern) |
+| __tests__/picks-paywall-copy-truth.test.ts | 1 |
+| __tests__/palette-cohesion.test.ts | 1 |
+| __tests__/homepage-doctrine-hero.test.ts | 1 |
+| __tests__/data-first-public-surfaces.test.ts | 1 |
+| __tests__/board-gate-page.test.tsx | 1 |
+| __tests__/board-gate-consumer.test.ts | 1 |
+
+**NOT ONE of the 65 raw FAIL entries references Prisma, Postgres, or `db`.** Five clusters, all
+already-decided product changes whose tests were never repointed:
+
+1. **Retired customer copy.** Assertions pin the pre-humanizer strings: the old
    publish-threshold sentence, the old evidence-health sentence, the old not-yet-scored
-   phrasing, the old board health badge, the old counted-lane summary, and two retired
-   marketing lines. The SOURCE is correct and deliberate; the TESTS pin what was removed.
-2. **Retired IA.** `nav-static-shell` and `nav-route-integrity` still require the
-   intelligence engines route in the top bar, which the four-door trim deliberately removed.
-   `nfl-house-page` asserts a door count floor of six against a deliberate four.
-3. **A partial mock missing a symbol.** Twelve failures read
-   `No "isAdminEmail" export is defined on the "@/lib/auth" mock`. This is the exact partial
-   `vi.mock` hazard this file already documents for `@sports/prediction-engine`, arriving on a
-   second module.
-4. **`lib/fantasy/dfs-optimizer.test.ts`.** The determinism guard, the unseeded-random grep,
-   and four exact-optimum comparisons. This is the defect fixed by seeding the solver.
-5. **`picks-states-conversion.test.ts`.** The module-scope slice throwing on a rewritten
-   anchor sentence, reported as a start marker at -1.
+   phrasing, the old board health badge, the old counted-lane summary, retired marketing lines
+   and a retired palette token. The SOURCE is correct and deliberate; the TESTS pin what was
+   removed.
+2. **Retired IA.** `nav-static-shell` and `nav-route-integrity` still require the intelligence
+   engines route that the four-door trim deliberately removed. `nfl-house-page` asserts a door
+   count floor of six against a deliberate four.
+3. **A partial mock missing a symbol.** `No "isAdminEmail" export is defined on the
+   "@/lib/auth" mock`. Twelve distinct error entries; the raw string occurs 61 times across the
+   stack traces, so quote the file-level counts above rather than either bare number. Same
+   partial `vi.mock` hazard already documented in this file for `@sports/prediction-engine`,
+   arriving on a second module.
+4. **`lib/fantasy/dfs-optimizer.test.ts`**, 12 failures: the determinism guard, the
+   unseeded-random source grep, and four exact-optimum comparisons.
+5. **`picks-states-conversion.test.ts`**, failing at COLLECTION on a module-scope slice whose
+   anchor sentence was rewritten, reported as a start marker at -1.
 
-**Why nobody saw it, corrected.** The previous note said the stub guard in
-`apps/web/vitest.setup.ts` hides these locally. It does not: not one of the 64 reads the
-database, so they fail on a developer machine too. The real reason is smaller and is mine. I
-ran the suite on THIS branch, which already carries the fixes for clusters 3, 4 and 5 and the
-copy repointing for 1 and 2, and I reported the passing count (13,939) without reading the
-failing count. CI reports `64 failed | 13939 passed`: the identical passing figure. The number
-I quoted as proof of green was the same number sitting beside 64 failures.
-
-The stub guard is still real and still worth knowing about. It is simply not why main is red,
-and no migration is needed to diagnose this.
-
-**PR #866 already fixes it.** That PR is based on `47be639a6`, the exact commit main is red on,
-and its `Test, type-check, lint, Prisma` job concluded SUCCESS at 2026-09-19T01:08:46Z, with all
-20 of its checks green and `mergeable_state: clean`. Merging it should turn main green. That is
-an inference from two CI runs on the same base, not a merge that has been performed; the
+**VERIFIED 2026-09-19: all 20 files pass on this branch.** Run against branch HEAD `12598286f`
+in two batches, no database, stub mode: 13 files 150/150, then the remaining 7 files 57/57.
+**20 of 20 files, 207 of 207 tests, zero failures.** The later commit on this branch is
+documentation only (AGENTS.md), verified with `git show --stat`, so it does not affect that
+result. PR #866 is based on `47be639a6`, the exact commit main is red on, and its
+`Test, type-check, lint, Prisma` job concluded SUCCESS. Merging it should turn main green; the
 confirming run is the post-merge one on main.
 
-**Rule this earned.** When you claim a suite is green, read the FAILING count, not the passing
-count. `13939 passed` was true in both worlds. Only `64 failed` distinguished them.
+**Why nobody saw it, corrected, because the earlier note blamed the wrong thing.** The stub
+guard in `apps/web/vitest.setup.ts` does NOT hide these: none of the 64 reads the database, so
+they fail on a developer machine too. The real reason is smaller and it is mine. I ran the
+suite on THIS branch, which already carries every fix, and reported the PASSING count (13,939)
+without reading the failing count. CI reports `64 failed | 13939 passed`: the identical passing
+figure. The number quoted as proof of green was the same number sitting beside 64 failures.
+
+**Two process rules this earned.**
+- When you claim a suite is green, read the FAILING count, not the passing count. `13939
+  passed` was true in both worlds. Only `64 failed` distinguished them.
+- **`get_job_logs` truncates and will land you mid-list.** It returned the same 513,517-char
+  payload at `tail_lines` 6000 and 10000, and a grep over that partial payload surfaced only 13
+  of the 20 files. The reliable path is the run's log-archive URL (`actions_get` ->
+  `get_workflow_run_logs_url`), downloading the zip and reading the complete job file (14,245
+  lines here). Use the archive whenever a failing-file list must be COMPLETE.
