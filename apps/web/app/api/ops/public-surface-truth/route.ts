@@ -12,7 +12,7 @@ import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/perf
 import { loadSettlementBreakdown } from "@/lib/performance/settlement-breakdown";
 import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
 import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
-import { loadPublicClvPolicy } from "@/lib/performance/public-clv-policy";
+import { loadPublicClvPolicy, computeClvPushDoctrineRates } from "@/lib/performance/public-clv-policy";
 import { evaluatePhaseAdvance } from "@/lib/pricing/phase-readiness";
 import {
   STALE_PENDING_PICK_MAX_AGE_DAYS,
@@ -635,6 +635,18 @@ export async function GET(request: Request) {
     clvPolicy && clvPolicy.gradedSampleSize >= 25
       ? clvPolicy.beatCloseCount / clvPolicy.gradedSampleSize
       : null;
+  // The three push-doctrine readings (decided-only / all-graded / push rate),
+  // computed by the shared helper in @sports/types so every surface states the
+  // same numbers. Additive disclosure: evaluatePublicClvPolicy above is
+  // untouched and the gate's beatCloseRate keeps its existing denominator —
+  // which reading the ESTABLISHED 0.524 floor means remains a founder call.
+  const clvDoctrineRates = clvPolicy
+    ? computeClvPushDoctrineRates({
+        beatCloseCount: clvPolicy.beatCloseCount,
+        lostToCloseCount: clvPolicy.lostToCloseCount,
+        matchedCloseCount: clvPolicy.matchedCloseCount,
+      })
+    : null;
   // The rate feeds the pricing-ladder evaluator internally regardless; this is
   // a public endpoint, so the split counts and the rate are only PUBLISHED when
   // the CLV policy says they may be (canExposeClv). Gated → sample size and the
@@ -647,6 +659,12 @@ export async function GET(request: Request) {
           matchedCloseCount: clvPolicy.matchedCloseCount,
           lostToCloseCount: clvPolicy.lostToCloseCount,
           beatCloseRate: clvBeatCloseRate,
+          // The push-doctrine readings beside the system rate: a reader can
+          // reproduce every denominator from the three counts on this object.
+          decidedClvBeatRate: clvDoctrineRates?.decidedClvBeatRate ?? null,
+          decidedClvBeatDenominator: clvDoctrineRates?.decidedClvBeatDenominator ?? 0,
+          clvPushRate: clvDoctrineRates?.clvPushRate ?? null,
+          clvPushRateDenominator: clvDoctrineRates?.clvPushRateDenominator ?? 0,
           clearsBreakEven: clvPolicy.clearsBreakEven,
           canExposeClv: true as const,
           blockers: clvPolicy.blockers,
@@ -658,6 +676,10 @@ export async function GET(request: Request) {
           matchedCloseCount: null,
           lostToCloseCount: null,
           beatCloseRate: null,
+          decidedClvBeatRate: null,
+          decidedClvBeatDenominator: 0,
+          clvPushRate: null,
+          clvPushRateDenominator: 0,
           clearsBreakEven: null,
           canExposeClv: false as const,
           blockers: clvPolicy.blockers,
@@ -672,6 +694,7 @@ export async function GET(request: Request) {
     canonicalSettledPicks: sample?.canonicalSettled ?? 0,
     calibrationPublished,
     beatCloseRate: clvBeatCloseRate,
+    beatCloseRateDecided: clvDoctrineRates?.decidedClvBeatRate ?? null,
   });
 
   // Published PENDING picks on games that have not started whose row the
@@ -739,6 +762,7 @@ export async function GET(request: Request) {
     canonicalSettled: sample?.canonicalSettled ?? 0,
     calibrationPublished,
     clvBeatCloseRate,
+    clvBeatCloseRateDecided: clvDoctrineRates?.decidedClvBeatRate ?? null,
     settlementHealthy: settlement?.health === "HEALTHY",
     boardNotSuppressed:
       boardSurface.surface === "signal"
