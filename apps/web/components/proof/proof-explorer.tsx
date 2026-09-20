@@ -80,8 +80,21 @@ export function ProofExplorer({
             }))}
             sampleSize={sampleSize}
           />
+          {/*
+            The x-axis is `confidence / 100`, a weighted factor score, not a
+            stated win probability. The old caption ("predicted vs observed ·
+            the diagonal is perfect calibration") asserted it was a forecast
+            twice over, and on this score that claim is measurably false: over
+            2,385 settled published non-bootstrap picks with pushes excluded,
+            confidence is non-monotone and anti-predictive at the top, with the
+            80+ band claiming about 87% and realizing about 52%.
+
+            So the diagonal is not a promise we made and missed. It is the line
+            this score would sit on if it happened to behave like a probability,
+            and the distance from it is the finding. Say that instead.
+          */}
           <p className="mt-2 text-center font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-            predicted vs observed · the diagonal is perfect calibration
+            confidence score vs observed · distance from the diagonal is the finding
           </p>
         </div>
 
@@ -138,7 +151,20 @@ export function ProofExplorer({
             {active && active.sufficientSample ? (
               <div className="mt-3 grid grid-cols-3 gap-px overflow-hidden rounded-ds-md border border-mineral bg-mineral">
                 <Stat label="Observed" value={pct(active.observedWinRate)} tone="text-orbital-cyan" />
-                <Stat label="Expected" value={pct(active.expectedWinRate)} tone="text-ultraviolet" />
+                {/*
+                  Labelled "Confidence", not "Expected". This value is the
+                  band's own confidence midpoint over 100 — a weighted factor
+                  score — and sitting it beside the realized rate under the word
+                  "Expected" invited the one reading the number does not
+                  support: forecast vs outcome. Measured, the 80+ band claims
+                  about 87% here and realizes about 52%, so "Expected" would be
+                  reporting a forecast we never made.
+
+                  The number is unchanged and the Delta below still reads
+                  observed minus this value. Only the claim attached to it
+                  moves, which is the whole correction.
+                */}
+                <Stat label="Confidence" value={pct(active.expectedWinRate)} tone="text-ultraviolet" />
                 {/* Sign glyph carries the direction alongside the color —
                     verify above expectation, caution below (plasma is CTA
                     territory, never a shortfall signal). */}

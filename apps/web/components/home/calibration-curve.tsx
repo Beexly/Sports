@@ -111,8 +111,29 @@ export function CalibrationCurve({
         className="stroke-mineral"
         strokeWidth="1"
       />
+      {/*
+        NOT "predicted". A reliability diagram's x-axis is by construction the
+        forecast probability, so labelling this one "predicted" asserted that
+        `expectedWinRate` is a stated win probability. It is not: on this chart
+        it is `confidence / 100` (lib/calibration/compute.ts,
+        `expectedFromConfidence`), a weighted factor sum that was never fit to
+        be a probability.
+
+        That distinction is load bearing rather than pedantic. Measured over
+        2,385 settled published non-bootstrap picks with pushes excluded,
+        confidence is non-monotone and anti-predictive at the top: the 80+ band
+        claims about 87% and realizes about 52%. Its Brier as a probability on
+        that band is worse than a constant 0.5 forecast. An axis that calls it
+        "predicted" tells a reader the diagonal is a promise we made and missed,
+        when the honest reading is that the number on this axis is a SCORE and
+        the curve is diagnostic evidence about that score.
+
+        Same reasoning as pick-card.tsx, which renders raw confidence as
+        "72/100" rather than a percent. See CONFIDENCE_PROBABILITY_CAVEAT in
+        lib/calibration/compute.ts for the full wording.
+      */}
       <text x={PAD} y={HEIGHT - 8} className="fill-ion-2 font-mono text-[10px]">
-        predicted
+        confidence score
       </text>
       <text
         x={8}
