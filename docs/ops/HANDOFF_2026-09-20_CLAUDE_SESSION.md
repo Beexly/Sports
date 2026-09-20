@@ -541,3 +541,28 @@ A `:premium`-scoped read of `/api/v1/signals` would settle it.
 false`, projected exhaustion **2026-09-29T11:27Z** on a linear unthrottled
 basis. Now that NFL spreads and totals depend on the paid leg, that date is a
 launch constraint and not just a bill. Founder-only.
+
+### 9.6 Where §9.3 is NOT, so nobody re-treads it
+
+The obvious suspect for a cross-week fixture mix-up is the identity matcher, and
+it is **ruled out by source**. `packages/ingestion-pipeline/src/game-identity.ts`
+matches an incoming probe to an existing row only inside
+`commenceMatchMsFor(sportKey)`, which is `GAME_IDENTITY_COMMENCE_MATCH_MS` = **18
+hours** for everything except baseball, and only when the **team pair matches
+order-insensitively**. An 18-hour window cannot span seven days, and a MIN @ TB
+probe can only ever twin with another MIN @ TB row. The matcher also fails
+closed: it returns null on a tie, on an ambiguous prefix match, and on an
+orientation conflict, which it logs rather than merging.
+
+So the wrong `commenceTime` is not created by merging. It is either supplied by
+the source for those four fixtures or assigned at fixture creation. That is
+where the next pass should start: `seed-games-from-espn.ts`, `normalizer.ts`
+(`new Date(event.commence_time)`), and whichever provider supplied these four
+rows.
+
+One honest limit on §9.3's evidence: the ESPN scoreboard endpoint is queried per
+day and can return a week's events. Both queries came back with a coherent
+single-day slate (14 events on 2026-09-20 running 17:00Z to 00:20Z, 14 on
+2026-09-27 running 17:00Z to 00:20Z), and the operative measurement does not
+depend on that detail either way: the four matchups appear in the 9/27 response
+and are absent from the 9/20 one.
