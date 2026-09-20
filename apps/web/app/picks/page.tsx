@@ -27,7 +27,7 @@ export function generateMetadata(): Metadata {
     title: "Today's Picks",
     description: publicPicksOpen
       ? "What we're on today, with the line, the timing, and the reason. Free gets a daily teaser; Pro and Elite unlock the full set."
-      : "Picks open when our sample and gates allow. Until then this page stays dark — no invented slate, no fake certainty.",
+      : "Picks open when our sample and gates allow. Until then this page stays dark, no invented slate, no fake certainty.",
     alternates: { canonical: "/picks" },
   };
 }
@@ -345,7 +345,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
           {/* Backend-outage state. A rejected fetch (network fault) or an
               unexpected non-2xx from /api/picks that ISN'T the deliberate
               bootstrap/stale gate lands here. Per the T-picks-outage doctrine
-              this is a CONNECTION problem, never a verdict on the board — so it
+              this is a CONNECTION problem, never a verdict on the board, so it
               is rendered as a calm, designed state that stays visually and
               textually DISTINCT from the "Signal gate collecting" gate below
               (caution amber vs the gate's cyan) and NEVER leaks the raw HTTP
@@ -381,7 +381,7 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
                 This is a connection problem on our side, not a verdict on the
-                board. Nothing is wrong with today&apos;s picks — refresh in a
+                board. Nothing is wrong with today&apos;s picks. Refresh in a
                 moment and the board will be back.
               </p>
             </div>
@@ -413,14 +413,14 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
               </p>
               <h2 className="mt-3 text-lg font-semibold text-white">
                 {bootstrapState.kind === "stale"
-                  ? "Quiet board — waiting on fresh odds (not broken)."
+                  ? "Quiet board, waiting on fresh odds (not broken)."
                   : "Public picks are still gated. The board is closed until the data checks pass."}
               </h2>
               <p className="mx-auto mt-3 max-w-xl text-sm leading-relaxed text-ion-2">
                 {bootstrapState.kind === "stale"
                   ? "This is the honesty guard: we hide picks when odds are past the refresh " +
                     "window or no games are insertable. The board reopens on the next real " +
-                    "odds insert — never on stale lines. Methodology and pricing stay available."
+                    "odds insert, never on stale lines. Methodology and pricing stay available."
                   : "We're building up odds and settlement history before we " +
                     "publish picks. That keeps the record clean and weak signals " +
                     "off the board."}

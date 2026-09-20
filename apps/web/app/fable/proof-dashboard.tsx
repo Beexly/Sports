@@ -103,19 +103,19 @@ export async function ProofDashboard() {
           testId="fable-proof-rel"
           label="REL"
           value={rel === null ? STAT_PLACEHOLDER : formatBrier(rel)}
-          detail="Reliability — mass-weighted (forecast − observed)²"
+          detail="Reliability: mass-weighted (forecast − observed)²"
         />
         <Metric
           testId="fable-proof-res"
           label="RES"
           value={res === null ? STAT_PLACEHOLDER : formatBrier(res)}
-          detail="Resolution — how much outcome rates differ across bins"
+          detail="Resolution: how much outcome rates differ across bins"
         />
         <Metric
           testId="fable-proof-unc"
           label="UNC"
           value={unc === null ? STAT_PLACEHOLDER : formatBrier(unc)}
-          detail="Uncertainty — base-rate noise ȳ(1 − ȳ)"
+          detail="Uncertainty: base-rate noise ȳ(1 − ȳ)"
         />
         <Metric
           testId="fable-proof-bss"
@@ -144,7 +144,7 @@ export async function ProofDashboard() {
           </p>
         )}
         {/* C-224: the public calibration report's own brierScore buckets by
-            confidence, not a market-anchored probability — scoring it as a
+            confidence, not a market-anchored probability, scoring it as a
             Brier score would be the exact claim this product refuses to
             make. REL/RES/UNC/BSS above already carry the real, durable,
             market-anchored measurement; this line duplicated the wrong one. */}
@@ -156,7 +156,7 @@ export async function ProofDashboard() {
       </div>
 
       <div className="mt-6 grid gap-3 sm:grid-cols-3">
-        <ProofLink href="/calibration" label="Calibration" body="The Proof Room — every published receipt." />
+        <ProofLink href="/calibration" label="Calibration" body="The Proof Room: every published receipt." />
         <ProofLink href="/kill-ledger" label="Kill Ledger" body="Failed strategies, left in the record." />
         <ProofLink href="/bookgrade" label="BookGrade" body="Price quality vs consensus close, totals only." />
       </div>
@@ -243,7 +243,7 @@ function ReliabilityCurve({
               </span>
               {/* Devin Review (PR #737): the marker line at expectedWinRate
                   (confidence/100) visually implied "this is where the bar
-                  should land if calibrated" — the Edge Index is a ranking
+                  should land if calibrated": the Edge Index is a ranking
                   signal, not a forecast probability, so there is no such
                   target. Only the real, gated observed rate is shown. */}
               <div className="relative h-3 flex-1 overflow-hidden rounded-full bg-titanium">

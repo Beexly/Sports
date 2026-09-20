@@ -13,7 +13,7 @@ export const dynamic = "force-dynamic";
 export const metadata: Metadata = {
   title: "The NFL House: One Place to Land",
   description:
-    "The NFL hub: the board, fantasy tools, the public record, and The Beat — one place, one engine, one set of receipts. Come for clarity.",
+    "The NFL hub: the board, fantasy tools, the public record, and The Beat. One place, one engine, one set of receipts. Come for clarity.",
   alternates: { canonical: "/house" },
 };
 
@@ -304,7 +304,7 @@ export default async function NflHousePage() {
                 The week has a shape. Here is what to do today.
               </h2>
               <p className="mt-2 max-w-2xl text-sm text-ion-1">
-                Waivers, lineups, injuries, game day. One action per day — tap it and go.
+                Waivers, lineups, injuries, game day. One action per day. Tap it and go.
               </p>
             </Reveal>
 
@@ -422,10 +422,10 @@ export default async function NflHousePage() {
                 </h3>
                 <p className="mt-3 flex-1 text-sm leading-relaxed text-ion-1">
                   A real game-day chat is not open yet. We will not scatter
-                  engagement across rooms we cannot moderate. Until the
-                  safeguards are real — human moderation, privacy review, a
-                  culture that protects beginners — The Beat is the open
-                  surface.
+                  engagement across rooms we cannot moderate. The safeguards
+                  have to be real first: human moderation, privacy review, a
+                  culture that protects beginners. Until then, The Beat is the
+                  open surface.
                 </p>
                 <div className="mt-6 flex flex-wrap gap-3">
                   <Link href="/the-beat" className="btn btn-primary">

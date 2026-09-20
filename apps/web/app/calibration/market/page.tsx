@@ -38,7 +38,7 @@ import { loadEloVsMarketBacktest } from "@/lib/calibration/elo-backtest";
 export const metadata: Metadata = {
   title: { absolute: `Market calibration baseline · ${BRAND_NAME}` },
   description:
-    "The closing line's own forecast error and calibration curve over the full historical archive — the efficient-market baseline the platform model must beat, and an Elo-vs-market comparison. No picks, no fabricated stats.",
+    "The closing line's own forecast error and calibration curve over the full historical archive, the efficient-market baseline the platform model must beat, and an Elo-vs-market comparison. No picks, no fabricated stats.",
   alternates: { canonical: "/calibration/market" },
 };
 
@@ -217,7 +217,7 @@ export default async function MarketCalibrationPage() {
           </h1>
           <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
             The closing line is the market&apos;s most efficient forecast. Here it is de-vigged and calibrated
-            against actual outcomes over the full historical archive — the denominator every future GSE claim must
+            against actual outcomes over the full historical archive, the denominator every future GSE claim must
             beat. Below, a results-only Elo is scored on the <em>same</em> games to show whether a simple
             independent model can match the market. Neither number is a GSE pick; both are honest baselines.
           </p>
@@ -242,7 +242,7 @@ export default async function MarketCalibrationPage() {
           </h2>
           <div className="space-y-3 text-sm leading-relaxed text-ion-1">
             <p>
-              This page publishes the market&apos;s <em>own</em> calibration curve — forecast error and a
+              This page publishes the market&apos;s <em>own</em> calibration curve, forecast error and a
               predicted-vs-actual diagram computed from the de-vigged closing moneyline. It needs no platform track record because it
               makes no claim about any model. A latecomer cannot fake 25 seasons of nflverse outcomes, which is
               why this baseline is the first proof every future edge claim is measured against.
@@ -250,13 +250,13 @@ export default async function MarketCalibrationPage() {
             <p>
               This is a baseline, not a tip sheet. No picks are published here, no fabricated stats are
               ever shown, and when there is no data the loaders return an explicit no-data state that this
-              page surfaces verbatim — never a zero-filled chart.
+              page surfaces verbatim, never a zero-filled chart.
             </p>
             <p>
               The data is computed by two live public endpoints (
               <code>/api/calibration/market-backtest</code> and{" "}
               <code>/api/calibration/elo-backtest</code>). When the historical-games backfill has not yet run, the
-              loaders return an explicit no-data state — surfaced here as plain text, never a fabricated or
+              loaders return an explicit no-data state, surfaced here as plain text, never a fabricated or
               zero-filled chart.
             </p>
           </div>

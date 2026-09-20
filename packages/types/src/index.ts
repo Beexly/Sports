@@ -890,3 +890,8 @@ export interface PublicBlogPost {
   publishedAt: string | null;
   isFeatured: boolean;
 }
+
+export * from "./signal-registry.js";
+
+// Canonical model version boundary constant
+export const CANONICAL_MODEL_VERSION = "v5.2.7";

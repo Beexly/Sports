@@ -34,7 +34,7 @@ export default async function ContestBayPage() {
             </h1>
             <p className="mt-5 max-w-3xl text-lg text-ion-1">
               Pick home or away on every game. Close entries before first kickoff. Climb a pure accuracy
-              leaderboard. This is a completed free paper product — no entry fee, no prize pool,
+              leaderboard. This is a completed free paper product, no entry fee, no prize pool,
               no wagering. Process practice with receipts. Slate kind: methodology paper board (not live market odds).
             </p>
             <div className="mt-6 flex flex-wrap gap-3 text-sm text-ion-2">
@@ -109,7 +109,7 @@ export default async function ContestBayPage() {
 
               <h2 className="mt-12 font-display text-2xl text-ion-white">Leaderboard</h2>
               {board.length === 0 ? (
-                <p className="mt-4 text-sm text-ion-2">No entries yet — be first.</p>
+                <p className="mt-4 text-sm text-ion-2">No entries yet, be first.</p>
               ) : (
                 <div className="mt-4 overflow-x-auto border border-mineral">
                   <table className="w-full text-left text-sm">

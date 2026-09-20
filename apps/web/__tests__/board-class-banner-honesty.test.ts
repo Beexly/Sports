@@ -12,7 +12,11 @@ describe("board class UI honesty", () => {
     expect(src).toContain('data-testid="board-class-banner"');
     expect(src).toContain("boardClass.publicMessage");
     expect(src).toContain("refusePublicFire");
-    expect(src).toMatch(/No public fires/);
+    // Was /No public fires/. The humanizer pass replaced that copy; the
+    // PROPERTY it guarded is that a closed board must not read as "we looked and
+    // found nothing". The shipped string states that far more explicitly, so
+    // pin the property rather than the retired wording.
+    expect(src).toMatch(/An empty lane is not a claim about results/);
   });
 
   it("badge surfaces boardClass state", () => {
@@ -21,7 +25,9 @@ describe("board class UI honesty", () => {
       "utf8",
     );
     expect(src).toContain("boardClass.state");
-    expect(src).toContain("public fire held");
+    // Was "public fire held". AGENTS.md records the badge copy change to
+    // "publishing paused" and bans the old phrasing.
+    expect(src).toContain("publishing paused");
   });
 
   it("LIVE_BOARD off classifier refuses public fire", () => {

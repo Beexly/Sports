@@ -94,7 +94,7 @@ const PRO_FEATURES = [
   { label: "No-Bet reasoning: the code, model version, and evidence behind every pass we make", included: true },
   { label: "Multiprobability intervals: the honest range, not a confident-sounding single number", included: true },
   { label: "Glass Ledger access: every published number with its coverage, bound, and provenance", included: true },
-  { label: "Recompute any claim yourself — the verifier is named, not hand-waved", included: true },
+  { label: "Recompute any claim yourself, the verifier is named, not hand-waved", included: true },
   { label: "Public record + methodology", included: true },
   { label: "The full board unlocked: every signal, every day, all 7 sports", included: true },
   { label: "Confidence rating on every signal", included: true },
@@ -144,7 +144,7 @@ const PLANS: PlanView[] = [
     annual: null,
     annualSavingsPct: null,
     annualMonthly: null,
-    description: "Tools and transparent process first. Full board on paid tiers when gates open with proof — not promises.",
+    description: "Tools and transparent process first. Full board on paid tiers when gates open with proof, not promises.",
     badge: null,
     cta: "Start free",
     features: [...FREE_FEATURES],
@@ -168,7 +168,7 @@ const PLANS: PlanView[] = [
     annual: phase.pro.annual,
     annualSavingsPct: annualSavingsPct(phase.pro),
     annualMonthly: annualMonthlyEquivalent(phase.pro),
-    description: "See why we pass. Every No-Bet with its reasoning, probabilities as honest ranges, and a ledger you can recompute yourself — plus the full board, confidence ratings, Trend Lab and Parlay MRI.",
+    description: "See why we pass. Every No-Bet with its reasoning, probabilities as honest ranges, and a ledger you can recompute yourself, plus the full board, confidence ratings, Trend Lab and Parlay MRI.",
     badge: "Recommended",
     cta: "Subscribe to Pro",
     features: [...PRO_FEATURES],
@@ -430,7 +430,7 @@ export default function PricingPage() {
               The price ladder is public
             </h2>
             <p className="mx-auto mt-3 max-w-2xl text-center text-sm text-ink-300">
-              Prices only rise when a verified proof milestone is met — never on a marketing
+              Prices only rise when a verified proof milestone is met, never on a marketing
               calendar. Join at any phase and your rate is locked for the life of your
               subscription.
             </p>
@@ -602,7 +602,7 @@ export default function PricingPage() {
 
             Sits immediately after "Built to protect you from hype", where a
             reader is closest to asking what the money is actually for. The lead
-            line deliberately does not promise results — see the module
+            line deliberately does not promise results. See the module
             docstring. Four of the seven structural failure modes, projected
             from the same source list the /integrity page renders in full, so
             the two surfaces cannot drift into different wording.

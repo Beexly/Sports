@@ -16,7 +16,7 @@ import type { WatchlistEntry } from "@/lib/watchlist/types";
 export const metadata: Metadata = {
   title: "Watchlist: Follow Teams & Players",
   description:
-    "Follow a team or player. Elite members get alerts when a followed pick grades — never before, only on the settled result.",
+    "Follow a team or player. Elite members get alerts when a followed pick grades, never before, only on the settled result.",
   alternates: { canonical: "/watchlist" },
 };
 
@@ -64,7 +64,7 @@ function SignInRequired() {
     >
       <h2 className="text-lg font-semibold text-ion-white">Sign in to build your watchlist</h2>
       <p className="mt-2 text-sm leading-relaxed text-ion-1">
-        Following is a free account feature — no subscription required.
+        Following is a free account feature, no subscription required.
       </p>
       <Link
         href="/auth/signin"
@@ -208,11 +208,11 @@ function AlertsBanner({ canGetAlerts }: { canGetAlerts: boolean }) {
       {canGetAlerts ? (
         <div className="mt-1.5 space-y-3">
           <p className="text-sm leading-relaxed text-ion-1">
-            As an Elite member you&apos;ll get alerts for what you follow — but only once a pick
+            As an Elite member you&apos;ll get alerts for what you follow, but only once a pick
             is graded (win, loss, push, or void). We never alert on an ungraded tip.
           </p>
           {/* D-2 (C11 BEFORE DEPLOY): the push opt-in component existed and was
-              fully tested but mounted nowhere — no session path could ever
+              fully tested but mounted nowhere, no session path could ever
               create a push_subscriptions row, so the web-push channel was dark
               by construction. This is the mount: it renders nothing until
               VAPID keys are configured (honest), and every state it shows is
@@ -222,7 +222,7 @@ function AlertsBanner({ canGetAlerts }: { canGetAlerts: boolean }) {
       ) : (
         <p className="mt-1.5 text-sm leading-relaxed text-ion-1">
           Elite members get email &amp; push alerts when a followed team&apos;s or
-          player&apos;s pick grades — never before it&apos;s settled.{" "}
+          player&apos;s pick grades, never before it&apos;s settled.{" "}
           <Link href="/pricing" className="text-ultraviolet-glow underline-offset-4 hover:underline">
             See Elite →
           </Link>
@@ -242,7 +242,7 @@ function EmptyState() {
         Nothing followed yet
       </p>
       <p className="mx-auto mt-2 max-w-md text-sm leading-relaxed text-ion-1">
-        Follow a team or player and it lives here — one place to keep track of
+        Follow a team or player and it lives here, one place to keep track of
         what you care about across the board.
       </p>
       <p className="mt-1.5 text-xs text-ion-2">Start with a suggested team below.</p>
@@ -258,7 +258,7 @@ function DegradedState({ reason }: { reason: string }) {
   if (activating) {
     return (
       <p data-testid="watchlist-degraded" className="text-sm leading-relaxed text-ion-1">
-        Watchlist is not activated yet. Nothing is wrong — this surface switches
+        Watchlist is not activated yet. Nothing is wrong. This surface switches
         on with the next platform update.
       </p>
     );
@@ -266,7 +266,7 @@ function DegradedState({ reason }: { reason: string }) {
   return (
     <p data-testid="watchlist-degraded" className="text-sm leading-relaxed text-caution">
       Watchlist is temporarily unavailable. This is a connection problem, not a
-      lost list — refresh in a moment.
+      lost list. Refresh in a moment.
     </p>
   );
 }

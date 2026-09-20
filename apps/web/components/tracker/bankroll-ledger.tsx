@@ -171,7 +171,7 @@ export function BankrollLedger() {
               Drawdown guard tripped
             </p>
             <p className="mt-1 text-sm leading-6 text-ion">
-              Down {fmt(summary.drawdown)}u from a {fmt(summary.peak)}u peak — more than half the
+              Down {fmt(summary.drawdown)}u from a {fmt(summary.peak)}u peak, more than half the
               starting bankroll. Consider pausing and reviewing stake sizes before logging another
               result. A bookkeeping tripwire, not advice.
             </p>
@@ -186,7 +186,7 @@ export function BankrollLedger() {
           Log it like <span className="gse-editorial">it happened.</span>
         </h2>
         <p className="mt-1 max-w-2xl text-sm leading-6 text-ion-1">
-          Stake in units, the result, and — for wins — what came back including the stake.
+          Stake in units, the result, and, for wins, what came back including the stake.
           Pending entries wait on the tape without moving the count.
         </p>
 
@@ -325,7 +325,7 @@ export function BankrollLedger() {
               Every bankroll has a first entry.
             </p>
             <p className="mx-auto mt-3 max-w-md text-sm leading-6 text-ion-1">
-              No entries yet — log your first settled result above and the count comes alive:
+              No entries yet. Log your first settled result above and the count comes alive:
               running total, peak, and drawdown, all computed on-device. Pending entries are
               welcome too; they wait patiently without moving a single unit.
             </p>
@@ -340,7 +340,7 @@ export function BankrollLedger() {
         </Link>
         <br />
         <span className="text-ion-2">
-          Educational record-keeping — nothing here is betting advice, and nothing leaves your device.
+          Educational record-keeping, nothing here is betting advice, and nothing leaves your device.
         </span>
       </p>
     </div>

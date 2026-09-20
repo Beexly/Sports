@@ -26,10 +26,14 @@ vi.mock("@sports/db", () => ({
   isDemoPicksEnabled: () => false,
 }));
 
-vi.mock("@sports/prediction-engine", () => ({
-  getReadinessGates: () => ({ forceNoBetIfStale: false }),
-  toEdgeIndex: (v: number | null) => v,
-}));
+vi.mock("@sports/prediction-engine", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@sports/prediction-engine")>();
+  return {
+    ...actual,
+    getReadinessGates: () => ({ forceNoBetIfStale: false }),
+    toEdgeIndex: (v: number | null) => v,
+  };
+});
 
 vi.mock("@/lib/data-reliability/public-freshness-gate", () => ({
   isPublicPicksSurfaceStale: async () => false,

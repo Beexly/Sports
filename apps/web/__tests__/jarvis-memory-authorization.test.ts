@@ -34,15 +34,25 @@ vi.mock("@sports/db", () => ({
     subagentRun: {
       findUniqueOrThrow: vi.fn().mockResolvedValue({ id: "run-mock" }),
     },
-    // Prisma namespace for error classes
-    Prisma: {
-      PrismaClientKnownRequestError: class PrismaClientKnownRequestError extends Error {
-        readonly code: string;
-        constructor(message: string, opts: { code: string }) {
-          super(message);
-          this.code = opts.code;
-        }
-      },
+  },
+  // Prisma namespace for error classes. TOP LEVEL, not nested under `db`, which
+  // is where it sat until the export-drift guard caught it. `@sports/db` ends
+  // with `export * from "@prisma/client"`, so the real binding is a sibling of
+  // `db`, and `ledgers-core.ts` imports it as one: `import { Prisma } from
+  // "@sports/db"`. Nested, that import resolved to undefined, and the two reads
+  // of `Prisma.PrismaClientKnownRequestError` both sit INSIDE catch blocks
+  // (ledgers-core.ts:271 and :320) -- so the read threw a TypeError from within
+  // the error handler, replacing the real error and making the P2025 arm
+  // unreachable. One of those arms is the concurrent-decision race guard that
+  // raises SubagentRunAlreadyDecidedError, so it could never have been
+  // exercised from this file.
+  Prisma: {
+    PrismaClientKnownRequestError: class PrismaClientKnownRequestError extends Error {
+      readonly code: string;
+      constructor(message: string, opts: { code: string }) {
+        super(message);
+        this.code = opts.code;
+      }
     },
   },
 }));

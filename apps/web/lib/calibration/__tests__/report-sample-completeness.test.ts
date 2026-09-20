@@ -24,6 +24,10 @@ const mocks = vi.hoisted(() => ({
 
 vi.mock("@sports/db", () => ({
   db: { pick: { findMany: mocks.pickFindMany } },
+  // `isStubMode` is read on the path to this handler; an omitted export makes
+  // every read throw, and callers that absorb it serve a fallback while the
+  // file still reports green. Production default: a real DB is not stubbed.
+  isStubMode: () => false,
 }));
 
 vi.mock("@/lib/ops/effective-performance-gate", () => ({

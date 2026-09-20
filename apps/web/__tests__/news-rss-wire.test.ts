@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   classifySignal,
   fetchLiveWire,
+  fetchLiveWireRead,
   parseFeedConfig,
   parseRssItems,
 } from "@/lib/news/rss";
@@ -124,5 +125,76 @@ describe("fetchLiveWire", () => {
     const wire = await fetchLiveWire(new Date("2026-07-02T12:00:00Z"));
     expect(wire).toHaveLength(1);
     expect(wire![0]!.source).toBe("Up");
+  });
+});
+
+describe("fetchLiveWireRead", () => {
+  /**
+   * The whole point: "the wire is down" and "the wire is up and quiet" produce
+   * the same empty item list, so they have to be told apart by something else.
+   * /the-beat renders the second as "No fresh reports", which asserts the wire
+   * is working; during a total outage that sentence is false.
+   */
+  it("distinguishes every feed being down from a quiet wire", async () => {
+    process.env["NEWS_RSS_FEEDS"] =
+      "https://a.example/rss|A|Beat|NFL; https://b.example/rss|B|Beat|NFL";
+    vi.spyOn(globalThis, "fetch").mockRejectedValue(new Error("network down"));
+
+    const down = await fetchLiveWireRead(new Date("2026-07-02T12:00:00Z"));
+    expect(down.items).toEqual([]);
+    expect(down.attempted).toBe(2);
+    expect(down.ok).toBe(0);
+    expect(down.unavailable).toBe(true);
+    expect(down.unconfigured).toBe(false);
+  });
+
+  it("a feed that answers with nothing classifiable is quiet, NOT unavailable", async () => {
+    process.env["NEWS_RSS_FEEDS"] = "https://a.example/rss|A|Beat|NFL";
+    // Real document, real 200, nothing that classifies. Empty is the answer.
+    const xml = `<rss><channel><item><title>Ten takeaways from Tuesday</title><pubDate>Wed, 02 Jul 2026 11:00:00 GMT</pubDate></item></channel></rss>`;
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response(xml, { status: 200 }));
+
+    const quiet = await fetchLiveWireRead(new Date("2026-07-02T12:00:00Z"));
+    expect(quiet.items).toEqual([]);
+    expect(quiet.ok).toBe(1);
+    expect(quiet.unavailable).toBe(false);
+  });
+
+  it("counts a non-ok status as a feed that did not answer", async () => {
+    process.env["NEWS_RSS_FEEDS"] = "https://a.example/rss|A|Beat|NFL";
+    vi.spyOn(globalThis, "fetch").mockResolvedValue(new Response("nope", { status: 503 }));
+
+    const read = await fetchLiveWireRead(new Date("2026-07-02T12:00:00Z"));
+    expect(read.ok).toBe(0);
+    expect(read.unavailable).toBe(true);
+  });
+
+  it("a partial outage is available, because something answered", async () => {
+    process.env["NEWS_RSS_FEEDS"] =
+      "https://down.example/rss|Down|Beat|NFL; https://up.example/rss|Up|Beat|NFL";
+    const xml = `<rss><channel><item><title>Star RB ruled out</title><pubDate>Wed, 02 Jul 2026 11:00:00 GMT</pubDate></item></channel></rss>`;
+    vi.spyOn(globalThis, "fetch").mockImplementation(async (url) =>
+      String(url).includes("down.example")
+        ? Promise.reject(new Error("feed down"))
+        : new Response(xml, { status: 200 }),
+    );
+
+    const read = await fetchLiveWireRead(new Date("2026-07-02T12:00:00Z"));
+    expect(read.attempted).toBe(2);
+    expect(read.ok).toBe(1);
+    expect(read.unavailable).toBe(false);
+    expect(read.items).toHaveLength(1);
+  });
+
+  it("unconfigured is its own state, and is the ONLY one that may show the sample", async () => {
+    const spy = vi.spyOn(globalThis, "fetch");
+    const read = await fetchLiveWireRead();
+    expect(read.unconfigured).toBe(true);
+    expect(read.attempted).toBe(0);
+    // Not unavailable: nothing was asked for, so nothing failed. Conflating the
+    // two would put the labeled fictional sample on the page during an outage,
+    // which is the defect c71542292 fixed one layer up.
+    expect(read.unavailable).toBe(false);
+    expect(spy).not.toHaveBeenCalled();
   });
 });

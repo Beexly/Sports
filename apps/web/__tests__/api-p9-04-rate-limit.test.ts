@@ -51,6 +51,18 @@ const predictionEngineMocks = vi.hoisted(() => ({
   hashLeaf: vi.fn(() => "testhash"),
   parseCanonicalPayload: vi.fn(() => ({})),
   merkleRootFromLeafHashes: vi.fn(() => "root"),
+  // Reached only through the statically-traced call graph from
+  // loadSourceLiveEvidence (@/lib/data-sources/live-evidence -> nflverse
+  // qb-age-rb-trend / birthday-usage-trend), which this file mocks wholesale
+  // below (`catalogMocks.loadSourceLiveEvidence`), so the real trend-discovery
+  // code never runs at runtime under this test. Values are the module's own
+  // documented neutral results, not invented statistics: `welchCompare`
+  // returns its own no-signal case ({ z: 0, pValue: 1 }, trend-discovery.ts),
+  // `discoverCohortTrends` returns no trends, and `range` returns a Bucket
+  // whose test never matches.
+  discoverCohortTrends: vi.fn(() => []),
+  range: vi.fn((label: string) => ({ label, test: () => false })),
+  welchCompare: vi.fn(() => ({ z: 0, pValue: 1 })),
 }));
 
 const catalogMocks = vi.hoisted(() => ({
