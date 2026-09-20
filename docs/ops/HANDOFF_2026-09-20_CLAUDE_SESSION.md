@@ -433,3 +433,197 @@ npm run guardrails                 # 26/26
 Known environment quirk: invoking vitest with `--root apps/web` from the repo
 root makes tests that resolve paths from `process.cwd()` fail on ENOENT. Run
 from `apps/web`. That is a harness artifact, not a real failure.
+
+---
+
+## 9. POST-MERGE PRODUCTION READ, 2026-09-20 20:47-21:00 UTC
+
+Measured against live production over public HTTP only. No database access, no
+secret, no write. Every number below came from `/api/ops/public-surface-truth`,
+`/api/board/state`, `/api/picks`, or ESPN's public scoreboard, and each claim
+says which.
+
+### 9.1 What the merges actually did
+
+- **Deployed SHA is `4e140dd02`** (`deployment.sha` on the truth surface), which
+  carries #870, the mint-side supersede
+  (`packages/ingestion-pipeline/src/supersede-unpublished-pick.ts`). **That
+  closes PRIORITY 2 of section 4.** The publish deadlock is fixed upstream and
+  the 322-file draft PR #871 is superseded; nothing needs cherry-picking from
+  it.
+- **PRIORITY 1 is merged** as #872 (`98b88ca86`), not yet deployed at the time
+  of this read. It puts one shared `computeClvPushDoctrineRates` in
+  `@sports/types` and reports all three CLV denominators side by side.
+- **The line-archive freshness monitor is WIRED**, which section 4 recorded as
+  TESTED AND UNWIRED. `oddsLineArchiveFreshness` is on the truth surface and
+  reads `healthy`, 17 minutes old, 3,601 rows in the recent window.
+
+### 9.2 The live CLV numbers reconcile exactly with #872's arithmetic
+
+`clvPosture`, read 20:47:30Z: graded 1,679 = beat 393 / matched 722 / lost 564.
+
+| reading | value |
+|---|---|
+| all-graded, `393 / 1679` (what the surface publishes today) | 0.2341 |
+| decided-only, `393 / 957` | 0.4107 |
+| push rate, `722 / 1679` | 0.4300 |
+
+Neither beat reading approaches the ESTABLISHED 0.524 floor, so #872 moves no
+gate verdict, exactly as its description claims. Note the sample has grown since
+the 2026-09-19 measurement pinned in the tests (1,587 graded); the tests pin the
+arithmetic against fixed counts, not against the live sample, so they do not go
+stale as rows settle.
+
+### 9.3 OPEN AND SEVERE: the NFL lane shows NEXT Sunday's fixtures as today's
+
+Four NFL rows sit in the board's `publishedToday` lane: **Arizona Cardinals @
+San Francisco 49ers · Houston Texans @ Indianapolis Colts · Carolina Panthers @
+Cleveland Browns · Minnesota Vikings @ Tampa Bay Buccaneers**, every one at
+`edgeIndex` 26 with `confidence` null (model-signal moneylines).
+
+**All four of those matchups are on ESPN's 2026-09-27 schedule. None is on
+2026-09-20.** Checked directly against
+`site.api.espn.com/.../nfl/scoreboard?dates=20260920` (14 events) and
+`dates=20260927` (14 events). Four out of four is not coincidence: random
+fixture cross-linking does not reproduce four real future matchups verbatim.
+
+That lane is query-bounded to today. `state.ts:751-752` filters on
+`gameInSlateWindow(slate)`, which is `commenceTime >= start AND < end` for the
+Eastern calendar day (`lib/picks/slate-window.ts`). So for those rows to appear,
+**our own `games.commenceTime` must place them inside today**, and `/api/picks`
+confirms it: the Buccaneers row reads `2026-09-20T17:02:40.000Z` and the Cowboys
+row `2026-09-20T20:25:36.000Z`.
+
+Those timestamps are the second piece of evidence. Real NFL kickoffs land on
+`:00:00`, `:05:00`, `:20:00`, `:25:00`. `17:02:40` and `20:25:36` are off-grid by
+seconds, which is what a synthesized timestamp looks like, not a sourced one.
+For contrast, the rows that are correctly dated carry clean times: querying
+`/api/picks?sport=NFL&date=2026-09-27` returns **Detroit Lions -7.0 (SPREAD)**
+and **OVER 48.0 (TOTAL)** at `2026-09-27T17:00:00.000Z`, which matches ESPN's
+NYJ @ DET 17:00Z exactly.
+
+**Stated at its real strength.** MEASURED: the four matchups, their presence in
+the today-bounded lane, the two off-grid `commenceTime` values, the clean
+`commenceTime` on the 9/27 rows, and the ESPN schedule for both days. INFERRED:
+that the cause is fixture dating stamping next week's games about seven days
+early. I could not read the `games` table (law 7), so the mechanism is an
+inference from the public surface, not an observation.
+
+**Two things this finding is NOT**, both because this session already got one of
+them wrong today and the correction belongs next to the claim:
+
+- It is **not** the phantom-fixture alarm raised earlier in this session and
+  retracted. These fixtures are real; their date is what disagrees.
+- It is **not** the horizon-scope defect AGENTS.md records ("a day board should
+  not carry January"). **A horizon bound would not catch these rows**, because
+  by their stored `commenceTime` they are already inside today. Bounding the
+  board would hide the symptom and leave the wrong date in the row that gets
+  graded.
+
+**Do not patch this from the board side.** The fix is upstream in fixture
+dating, and it needs a database read this session may not make.
+
+### 9.4 Also open: tomorrow's only NFL game has no pick
+
+`/api/picks?sport=NFL&date=2026-09-21` returns `totalAvailableToday: 0`. The
+2026-09-21 Eastern slate has exactly one game, NYG @ LAR
+(`2026-09-22T00:15Z` = 8:15pm ET Monday). Nothing is published on it in any
+market.
+
+Tonight's IND @ KC (`2026-09-21T00:20Z` = 8:20pm ET, inside the **2026-09-20**
+Eastern slate) is inside today's `totalAvailableToday: 11`, but the FREE tier
+caps the response at 2 rows, so this read cannot confirm which of the 11 it is.
+A `:premium`-scoped read of `/api/v1/signals` would settle it.
+
+### 9.5 Unchanged and still open
+
+`oddsInserting.dualPath.credits` reads remaining 5,341 / used 14,659, `paceOk:
+false`, projected exhaustion **2026-09-29T11:27Z** on a linear unthrottled
+basis. Now that NFL spreads and totals depend on the paid leg, that date is a
+launch constraint and not just a bill. Founder-only.
+
+### 9.6 Where §9.3 is NOT, so nobody re-treads it
+
+The obvious suspect for a cross-week fixture mix-up is the identity matcher, and
+it is **ruled out by source**. `packages/ingestion-pipeline/src/game-identity.ts`
+matches an incoming probe to an existing row only inside
+`commenceMatchMsFor(sportKey)`, which is `GAME_IDENTITY_COMMENCE_MATCH_MS` = **18
+hours** for everything except baseball, and only when the **team pair matches
+order-insensitively**. An 18-hour window cannot span seven days, and a MIN @ TB
+probe can only ever twin with another MIN @ TB row. The matcher also fails
+closed: it returns null on a tie, on an ambiguous prefix match, and on an
+orientation conflict, which it logs rather than merging.
+
+So the wrong `commenceTime` is not created by merging. It is either supplied by
+the source for those four fixtures or assigned at fixture creation. That is
+where the next pass should start: `seed-games-from-espn.ts`, `normalizer.ts`
+(`new Date(event.commence_time)`), and whichever provider supplied these four
+rows.
+
+One honest limit on §9.3's evidence: the ESPN scoreboard endpoint is queried per
+day and can return a week's events. Both queries came back with a coherent
+single-day slate (14 events on 2026-09-20 running 17:00Z to 00:20Z, 14 on
+2026-09-27 running 17:00Z to 00:20Z), and the operative measurement does not
+depend on that detail either way: the four matchups appear in the 9/27 response
+and are absent from the 9/20 one.
+
+### 9.7 The gated lane shows the SAME defect, plus its mirror image
+
+Read `/api/board/state` 20:48:42Z. `gatedTodayRows` holds 32 rows, 5 of them NFL:
+
+| matchup | gate reason as rendered |
+|---|---|
+| Cincinnati Bengals @ Houston Texans | Fixture unconfirmed on official ESPN scoreboard schedule |
+| Atlanta Falcons @ Green Bay Packers | Line within market efficiency band; model conviction below publishing threshold |
+| Baltimore Ravens @ Dallas Cowboys | same |
+| Seattle Seahawks @ Washington Commanders | same |
+| Tennessee Titans @ New York Giants | same |
+
+Against ESPN: **BAL vs DAL, SEA @ WSH and TEN @ NYG are all on 2026-09-27**, not
+today. ATL @ GB is on neither day's scoreboard, so it is later still. That is
+four more mis-dated NFL fixtures on a second today-bounded lane, on top of the
+four in §9.3 — **eight NFL fixtures across two lanes**, which is most of what the
+board says about NFL today.
+
+It also means the engine is scoring next Sunday's games and rendering the result
+to a customer as today's hold, with a conviction reason attached. The reason
+string is honest about the model; it is attached to the wrong day.
+
+**The fifth row is the mirror image and it is the most diagnostic line here.**
+CIN @ HOU is a **real game played today** (ESPN, 17:00Z, final by the time of
+this read) and the board rejects it with "Fixture unconfirmed on official ESPN
+scoreboard schedule". So the confirmation step rejects a fixture that is
+genuinely on today's scoreboard, while four fixtures that are genuinely on next
+week's pass straight through into a today-bounded lane.
+
+Do not read that fifth row as new, though: AGENTS.md already records NFL FIXTURE
+TRIPLICATION (three `games` rows per fixture, only one of them rich) and records
+that a thin phantom row renders as held with a reason computed off the phantom's
+own columns. CIN @ HOU is consistent with that known defect rather than evidence
+of a new one. What is new is the pairing: **the same fixture table is
+simultaneously failing to confirm today's real games and admitting next week's
+as today's.** Whoever picks this up should treat triplication and the date error
+as one investigation, not two, and should start from the entry points named in
+§9.6.
+
+Priority argument, stated plainly: this outranks everything else still open in
+this handoff. It is on the primary customer surface, on NFL Sunday, and it is
+wrong in the direction that matters most for a product whose entire premise is
+that it does not misstate its own record.
+
+### 9.8 Sharper version of the vitest harness note in section 8
+
+Section 8 records that `--root apps/web` from the repo root breaks tests that
+resolve paths from `process.cwd()`. There is a second, different config trap, and
+it is the one more likely to waste a pass:
+
+Invoking `npx vitest run` from `apps/web` with a MIX of `__tests__/...` and
+`lib/...` paths and no `--config` selects a config that lacks the `@` alias, so
+files fail to collect with `Failed to load url @/lib/...  Does the file exist?`.
+The file exists. The run reports `environment 1ms` and finishes in about a
+second, which is the tell: it never built the web environment.
+
+Observed on this branch: the same five files read `3 failed | 2 passed` without
+`--config` and `5 passed (45 tests)` with `--config vitest.config.ts`. Always
+pass `--config vitest.config.ts` from `apps/web`, and treat a sub-second run with
+a near-zero environment time as a config miss, never as a result.

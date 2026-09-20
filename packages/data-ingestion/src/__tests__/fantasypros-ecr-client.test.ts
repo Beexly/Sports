@@ -80,6 +80,15 @@ describe("FantasyPros ECR", () => {
     const missing = new FantasyProsEcrClient(okFetch("<html><body>no ecrData here</body></html>"));
     await expect(missing.getEcrPpr()).resolves.toEqual({ players: [], meta: { label: null, lastUpdatedTs: null } });
 
+    // SECOND fetch in one test body. The crawl-delay timestamp is MODULE-level,
+    // so the beforeEach reset only covers the first call: without this line the
+    // second getEcrPpr waits out the full 5,000ms politeness window and the test
+    // lands exactly on vitest's 5,000ms default timeout. Measured at 5001-5010ms
+    // across runs, which is a coin flip, not a slow machine. Both assertions are
+    // unchanged; this only stops the suite from exercising a real wait the
+    // beforeEach comment already says it never exercises.
+    __resetFantasyProsCrawlDelay();
+
     const malformed = new FantasyProsEcrClient(okFetch("<script>var ecrData = {broken;</script>"));
     await expect(malformed.getEcrPpr()).resolves.toEqual({ players: [], meta: { label: null, lastUpdatedTs: null } });
   });
