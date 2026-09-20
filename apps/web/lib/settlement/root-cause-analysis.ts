@@ -35,6 +35,18 @@ export type SettlementRootCauseCode =
   // at or before generatedAt, so the pick was unplaceable and was graded
   // against a price that did not exist.
   | "LINE_NOT_QUOTED"
+  // Mint-side supersede void code (lane B, 2026-09-20). Stamped on the VOID
+  // PickSettlementEvent payload by
+  // packages/ingestion-pipeline/src/supersede-unpublished-pick.ts (called from
+  // the process-sport write loop); never produced by
+  // classifySettlementRootCause (it explains, the lane acts). Means: the pick
+  // had been UNPUBLISHED by the stale-pick policy (isPublished=false, never
+  // restored by design), its (gameId, pickType) slot blocked every future mint
+  // for that game and market, and the refresh cycle minted a fresh, fully
+  // gated replacement — so the invisible row was voided through this outbox
+  // instead of sitting unpublished until the zero-sit lane voided it after
+  // kickoff.
+  | "STALE_UNPUBLISHED_SUPERSEDED"
   | "UNKNOWN";
 
 /** Fishbone (Ishikawa) category for ops routing. */
@@ -133,6 +145,7 @@ const CODE_CATEGORY: Record<SettlementRootCauseCode, FishboneCategory> = {
   AMBIGUOUS_TEAM_NAME: "MATCHING",
   FIXTURE_NOT_FOUND: "DATA_SOURCE",
   LINE_NOT_QUOTED: "DATA_SOURCE",
+  STALE_UNPUBLISHED_SUPERSEDED: "POLICY",
   UNKNOWN: "UNKNOWN",
 };
 

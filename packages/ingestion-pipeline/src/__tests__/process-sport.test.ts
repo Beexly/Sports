@@ -49,7 +49,9 @@ const mocks = vi.hoisted(() => ({
   pickUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   pickCreate: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   pickUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
-  pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string; selection?: string } | null>>(),
+  pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string; selection?: string; isPublished?: boolean; line?: number } | null>>(),
+  // Mint-side supersede of an unpublished PENDING slot-holder (lane B).
+  supersedeUnpublished: vi.fn<(db: unknown, args: unknown) => Promise<boolean>>(),
   snapshotUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
   resolveRundownApiKey: vi.fn<() => string>(),
   // Mirrors RundownFetchResult: `error` is the human note and `rateLimited`
@@ -198,6 +200,16 @@ vi.mock("@sports/prediction-engine", async () => {
 
 vi.mock("../source-snapshot.js", () => ({
   recordSourceSnapshot: vi.fn().mockResolvedValue(undefined),
+}));
+
+// The supersede void is exercised against its own unit suite
+// (supersede-unpublished-pick.test.ts); here it is a spy so the write-loop
+// branch tests pin WHO calls it and what the loop does with the answer.
+vi.mock("../supersede-unpublished-pick.js", () => ({
+  supersedeUnpublishedPendingPick: mocks.supersedeUnpublished,
+  SUPERSEDED_UNPUBLISHED_RCA_CODE: "STALE_UNPUBLISHED_SUPERSEDED",
+  SUPERSEDE_EVENT_SCHEMA_VERSION: 1,
+  SUPERSEDE_ACTOR: "system:ingestion:process-sport",
 }));
 
 // The confirmer's fetch is replaced; the pure helpers stay real. The batch
@@ -351,6 +363,8 @@ describe("processSport", () => {
     mocks.oddsCreateMany.mockResolvedValue({ count: 0 });
     // Default: no existing pick → the create/update upsert path runs as before.
     mocks.pickFindUnique.mockResolvedValue(null);
+    // Default: the supersede void succeeds when the write loop reaches it.
+    mocks.supersedeUnpublished.mockResolvedValue(true);
     mocks.buildPickSignalSnapshot.mockReturnValue({ pickId: "pick-1" });
     mocks.snapshotUpsert.mockResolvedValue({});
     mocks.circuitState.mockReturnValue("closed");
@@ -823,6 +837,124 @@ describe("processSport", () => {
    * `rundown empty (2d): HTTP 429 rate_limited` on EVERY cycle for all four
    * in-season sports because our own cadence burned the quota by morning.
    */
+  /**
+   * Lane B (2026-09-20) — the write loop's remedy for an UNPUBLISHED PENDING
+   * slot-holder. Measured on production: 30 of 30 NFL Week 3 SPREAD/TOTAL
+   * picks were isPublished=false (stale-pick policy) while all three scoring
+   * gates passed on every game, because unpublish is never undone, the refresh
+   * never re-publishes, and the unique (gameId, pickType) slot blocked every
+   * future mint. The loop now voids the invisible row through the settlement
+   * outbox (supersedeUnpublishedPendingPick) and mints the fresh pick.
+   */
+  describe("supersede of an unpublished PENDING slot-holder (lane B)", () => {
+    it("voids the invisible row through the helper and mints a fresh published pick with a new CLV lock", async () => {
+      mocks.pickFindUnique.mockResolvedValue({
+        id: "pick-stale",
+        result: "PENDING",
+        selection: "Bills +3.5",
+        isPublished: false,
+        line: 3.5,
+      });
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.supersedeUnpublished).toHaveBeenCalledTimes(1);
+      expect(mocks.supersedeUnpublished).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          pickId: "pick-stale",
+          gameId: "game-1",
+          sportKey: "americanfootball_nfl",
+          pickType: "SPREAD",
+          supersededSelection: "Bills +3.5",
+          supersededBySelection: "Chiefs -3.5",
+        }),
+      );
+      // The refresh updateMany must not run for a superseded slot: the freed
+      // slot is served by a CREATE, not an update of the voided row.
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+      expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
+      const created = mocks.pickCreate.mock.calls[0][0] as {
+        data: Record<string, unknown>;
+      };
+      expect(created.data).toMatchObject({
+        gameId: "game-1",
+        pickType: "SPREAD",
+        selection: "Chiefs -3.5",
+        line: -3.5,
+        clvLockLine: -3.5,
+        ingestionRunId: "run-1",
+      });
+      // The fresh mint publishes: no isPublished in the create payload, so
+      // the schema default (true) applies.
+      expect("isPublished" in created.data).toBe(false);
+    });
+
+    it("mints nothing when the supersede loses the race (row left PENDING+unpublished before the void)", async () => {
+      mocks.pickFindUnique.mockResolvedValue({
+        id: "pick-stale",
+        result: "PENDING",
+        selection: "Bills +3.5",
+        isPublished: false,
+        line: 3.5,
+      });
+      mocks.supersedeUnpublished.mockResolvedValue(false);
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      await processSport(SPORT, "key", gates());
+
+      // No create against a slot we did not just free, no refresh of the
+      // row another lane now owns.
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+      expect(
+        warn.mock.calls.some((c) => /supersede lost race/.test(String(c[0]))),
+      ).toBe(true);
+      warn.mockRestore();
+    });
+
+    it("never supersedes a PUBLISHED PENDING pick — the side-flip freeze still protects it", async () => {
+      mocks.pickFindUnique.mockResolvedValue({
+        id: "pick-live",
+        result: "PENDING",
+        selection: "Bills +3.5",
+        isPublished: true,
+        line: 3.5,
+      });
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      await processSport(SPORT, "key", gates());
+
+      // The scored pick is "Chiefs -3.5" (home) against a published away
+      // pick: that is a SIDE FLIP, frozen exactly as before — never voided,
+      // never rewritten.
+      expect(mocks.supersedeUnpublished).not.toHaveBeenCalled();
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+      expect(
+        warn.mock.calls.some((c) => /SIDE FLIP frozen/.test(String(c[0]))),
+      ).toBe(true);
+      warn.mockRestore();
+    });
+
+    it("leaves the published PENDING refresh path untouched (same side → updateMany, no supersede)", async () => {
+      mocks.pickFindUnique.mockResolvedValue({
+        id: "pick-live",
+        result: "PENDING",
+        selection: "Chiefs -3.5",
+        isPublished: true,
+        line: -3.5,
+      });
+      mocks.pickUpdateMany.mockResolvedValue({ count: 1 });
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.supersedeUnpublished).not.toHaveBeenCalled();
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(mocks.pickUpdateMany).toHaveBeenCalledTimes(1);
+    });
+  });
+
   /**
    * C-299 — a pick is a claim made BEFORE the game, or it is not a pick.
    *
