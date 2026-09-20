@@ -298,7 +298,7 @@ describe("(b) no market probability: excluded, never scored on confidence/100", 
     expect(payload.status).toBe("collecting");
     expect(payload.n).toBe(0);
     expect(payload.pBasis).toBe(MARKET_ANCHORED_P_BASIS);
-    expect(payload.pBasis).toBe("market_anchored_v4");
+    expect(payload.pBasis).toBe("market_anchored_v5");
     expect(payload.exclusions).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0, in_play: 0, unverifiable_market_p: 0 });
   });
 });
@@ -377,7 +377,7 @@ describe("C-110 streak basis: market_anchored_v2 restarts a streak counted under
       { confidence: 70, result: "WIN", modelVersion: "v5.2.7", settledAt: settled, pickType: "MONEYLINE", proofReceipt: { marketFairProb: 0.66 }, sportKey: "baseball_mlb" },
     ]);
     const payload = buildDurableMetricsFromSamples({ ...built, samples: built.samples, taggedSamples: built.taggedSamples });
-    expect(metricsPBasis(payload)).toBe("market_anchored_v4");
+    expect(metricsPBasis(payload)).toBe("market_anchored_v5");
     // Artifacts persisted under the earlier tags read as themselves, never as v2.
     expect(metricsPBasis(metricsWithBasis("a", "market_anchored"))).toBe("market_anchored");
     expect(metricsPBasis(metricsWithBasis("a", undefined))).toBe("legacy");
@@ -405,7 +405,7 @@ describe("C-110 streak basis: market_anchored_v2 restarts a streak counted under
     // The reverse also resets: a v2 streak never seeds a v1 artifact.
     expect(consecutiveGreenPriorForBasis({ ...v1Snap, pBasis: MARKET_ANCHORED_P_BASIS }, "market_anchored")).toEqual({
       consecutiveGreenPrior: 0,
-      streakResetFromBasis: "market_anchored_v4",
+      streakResetFromBasis: "market_anchored_v5",
     });
   });
 
@@ -428,7 +428,7 @@ describe("C-110 streak basis: market_anchored_v2 restarts a streak counted under
     expect(first.eligibility.status).toBe("RED");
     expect(first.publish.published).toBe(false);
     let snap = lastSnap();
-    expect(snap.pBasis).toBe("market_anchored_v4");
+    expect(snap.pBasis).toBe("market_anchored_v5");
     expect(snap.streakResetFromBasis).toBe("market_anchored");
 
     // The next v2 artifact builds on the v2 streak, with no further reset.
@@ -439,7 +439,7 @@ describe("C-110 streak basis: market_anchored_v2 restarts a streak counted under
     expect(second.eligibility.consecutiveGreen).toBe(2);
     expect(second.eligibility.status).toBe("RED");
     snap = lastSnap();
-    expect(snap.pBasis).toBe("market_anchored_v4");
+    expect(snap.pBasis).toBe("market_anchored_v5");
     expect(snap.streakResetFromBasis).toBeNull();
   });
 });

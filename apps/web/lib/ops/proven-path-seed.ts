@@ -105,7 +105,7 @@ async function loadRows() {
       settledAt: pick.settledAt,
       sportKey: pick.game?.sport?.key ?? null,
     }));
-    const oddsTable = await loadPublishTimeMarketPResolver(db, forLiveCal);
+    const oddsTable = await loadPublishTimeMarketPResolver(db as never, forLiveCal);
     identicalRows = selectIdenticalRows(forLiveCal, oddsTable.resolveMarketP);
   } catch (err) {
     captureError(err, { path: "proven-path-seed", stage: "selectIdenticalRows" });
