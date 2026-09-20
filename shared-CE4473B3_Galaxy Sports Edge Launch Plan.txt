@@ -1,0 +1,1108 @@
+grity of Galaxy Sports Edge (GSE). An institutional sports intelligence platform cannot substitute
+statistical hygiene for an active live ingestion engine, nor can it mask customer-facing prediction
+inversion behind historical backtest performance.
+\text{Composite Score} = \sum_{i=1}^{8} w_i \cdot S_i
+Each dimension S_i \in [0, 100] is evaluated against explicit empirical standards. A score of 0
+denotes an immediate fatal blocker or complete operational failure; 50 denotes honest parity
+with efficient closing market benchmarks; and 100 represents a fully automated, mathematically
+verified, and externally auditable production state.
+   ●​ Customer-Facing Calibration (w_1 = 0.20): Measures whether displayed numbers
+        represent strictly monotonic, well-calibrated probabilities. Publishing inverted or
+        anti-predictive confidence metrics directly degrades user decision quality and invalidates
+        platform credibility.
+   ●​ CLV and Market Honesty (w_2 = 0.15): Evaluates the mathematical consistency of
+        Closing Line Value (CLV) accounting, the transparency of matched versus unmatched
+        closes in the denominator, and the absence of fabricated track records.
+   ●​ NFL Physical Model (w_3 = 0.15): Evaluates the core margin and total estimation
+        pipeline against efficient market closing prices across seasonal phases (early-season
+        prior reliance versus mid-season regression), quarterback transitions, and environmental
+        dynamics.
+   ●​ NCAAF Pipeline (w_4 = 0.10): Assesses pipeline coverage, schema integrity, and
+        predictive validity for college football slates, heavily penalizing unmonitored failures and
+        missed slates.
+   ●​ MLB Pipeline and Copy Honesty (w_5 = 0.10): Measures market pricing validity across
+        run lines and moneylines, market depth scoring accuracy, and the elimination of
+        tautological or misleading product copy.
+   ●​ Fantasy and Player Props (w_6 = 0.10): Evaluates the physical modeling of count
+        distributions, proper treatment of variance overdispersion, environmental factor
+        decoupling, and live quote ingestion integrity.
+   ●​ Ops and System Reliability (w_7 = 0.10): Evaluates ingestion pipeline uptime,
+        serverless execution limits, database indexing, memory stability, and truth surface
+        availability.
+   ●​ Statistical Hygiene and Governance (w_8 = 0.10): Measures adherence to
+        out-of-sample testing, rejection of noise-mining features, rigorous feature-kill governance,
+        and enforcement of non-AI positioning rules.
+
+Quantitative Audit Breakdown
+Dimension           Weight (w_i)        Score (S_i)         Weighted            Primary Defect or
+                                                            Contribution        Verification Anchor
+(i)             0.20                    12                  2.40                Confidence metric
+Customer-Facing                                                                 is strongly
+Calibration                                                                     anti-predictive
+                                                                                (n=2,385, z=-10.7,
+                                                                                Brier score
+                                                                                0.3617). Card
+                                                                                displays an
+Dimension            Weight (w_i)   Score (S_i)   Weighted       Primary Defect or
+                                                  Contribution   Verification Anchor
+                                                                 inverted score.
+(ii) CLV / Market    0.15           28            4.20           As-written CLV
+Honesty                                                          stands at 23.2%
+                                                                 [0.212, 0.253] due
+                                                                 to
+                                                                 MATCHED_CLOS
+                                                                 E denominator
+                                                                 contamination;
+                                                                 decided-only CLV
+                                                                 is 40.8% [0.377,
+                                                                 0.441] against a
+                                                                 52.4% floor;
+                                                                 21-day archive
+                                                                 gap.
+(iii) NFL Physical   0.15           42            6.30           Market close
+Model                                                            CRPS (7.109)
+                                                                 outperforms all
+                                                                 internal structural
+                                                                 models (DAVE k=8
+                                                                 yields 7.500);
+                                                                 scale parameter
+                                                                 divergence (36.61
+                                                                 pooled OLS vs.
+                                                                 45.42 Hermes
+                                                                 2025); live settled
+                                                                 fixtures n \approx
+                                                                 70.
+(iv) NCAAF           0.10           0             0.00           Slate of
+Pipeline                                                         2026-09-19
+                                                                 completely
+                                                                 missed; zero
+                                                                 historical training
+                                                                 corpus wired;
+                                                                 literature reflects
+                                                                 no empirical arXiv
+                                                                 calibration papers.
+(v) MLB Pipeline & 0.10             25            2.50           Moneyline ECE is
+Copy                                                             healthy (0.0501),
+                                                                 but SPREAD 10+
+                                                                 is anti-predictive,
+                                                                 run-line
+                                                                 consensusPct=1.0
+                                                                 is a structural
+                                                                 tautology, and
+                                                                 MLB SPEAK 40%
+Dimension            Weight (w_i)       Score (S_i)         Weighted             Primary Defect or
+                                                            Contribution         Verification Anchor
+                                                                                 is inverted (n=90).
+(vi) Fantasy &       0.10               34                  3.40                 Red-zone
+Player Props                                                                     touchdown
+                                                                                 variance-to-mean
+                                                                                 ratio (1.82–1.92)
+                                                                                 confirms Negative
+                                                                                 Binomial
+                                                                                 overdispersion and
+                                                                                 rejects Poisson;
+                                                                                 quotes are
+                                                                                 landing, but wind
+                                                                                 adjustments are
+                                                                                 not properly
+                                                                                 isolated from
+                                                                                 game totals.
+(vii) Ops &          0.10               20                  2.00                 Ingestion
+Reliability                                                                      watchdog in RED
+                                                                                 alarm since
+                                                                                 2026-09-13 16:53
+                                                                                 UTC; serverless
+                                                                                 out-of-memory
+                                                                                 crash on 1.64M
+                                                                                 rows; public truth
+                                                                                 surface dark.
+(viii) Statistical   0.10               82                  8.20                 12/12 Move-37 lab
+Hygiene                                                                          feature kills
+                                                                                 upheld; W5–W8
+                                                                                 noise rejected;
+                                                                                 zero-sum failure
+                                                                                 documented;
+                                                                                 non-AI product
+                                                                                 copy discipline
+                                                                                 enforced.
+Total Composite 1.00                    —                   29.00 / 100          System Unfit for
+Score                                                                            Production
+                                                                                 Deployment
+Arithmetic Synthesis
+\text{Composite Score} = 2.40 + 4.20 + 6.30 + 0.00 + 2.50 + 3.40 + 2.00 + 8.20 = 29.00
+The empirical score today is 29.00 out of 100. While statistical hygiene remains commendable
+at 82/100 due to rigorous laboratory pruning, production reliability (20/100) and customer-facing
+calibration (12/100) severely undermine the platform's core utility. The previous internal
+readiness score of 38 failed to penalize the complete outage of the truth surface following the
+serverless out-of-memory (OOM) failure on September 13, and it overlooked the finding that
+client pick cards display a confidence metric that is inversely correlated with realized win rates (z
+= -10.7). A score of 29.00 defines a research laboratory with valid statistical instincts whose
+production deployment remains non-functional and uncalibrated.
+
+B. State of the Architecture (2026-09-19 23:00 CDT)
+The operational and analytical infrastructure is split across two disjoint environments: the
+production engineering environment (Tree A) and the research mill desk (Tree B).
+In Tree A ([span_31](start_span)[span_31](end_span)Beexly/Sports), 7.7 million raw odds
+snapshot rows reside in production databases, where an uncapped ingestion query caused
+serverless memory exhaustion, triggering a sustained watchdog alarm and disabling calibration
+reporting. Customer cards currently display an inverted confidence metric, while PR #866, PR
+#867, and PR #868 remain unmerged.
+In Tree B (Research Mill Desk), 14,251 decided NFL fixtures (1999–2025) are modeled to
+benchmark continuous ranked probability scores, where closing lines outperform structural
+models, scale constants diverge between historical and single-season folds, and candidate
+features W5–W8 have been killed.
+The current architectural state is detailed below across three formal evidential categories:
+Observation, Inference, and Speculation.
+
+Observation
+Tree A: Production Engine (Beexly/Sports)
+
+  ●​ The odds ingestion watchdog has remained continuously in a RED alarm state since
+     2026-09-13 16:53 UTC. The
+     odds_lin[span_7](start_span)[span_7](end_span)e[span_35](start_span)[span_35](end_s
+     pan)_snapshots table accumulated 7.7 million rows without pagination boundaries, and
+     an uncapped IN query attempted to materialize 1.64 million snapshot rows into a
+     serverless instance, resulting in immediate memory exhaustion.
+  ●​ The calibration cron has been offline for six days, preventing truth surface generation and
+     halting live performance reporting.
+  ●​ PR #868 (serverless query batching and memory cap), PR #867 (EPA path configuration
+     and founder decision register), and PR #866 (archive freshness monitoring) remain
+     unmerged pending verified continuous integration builds.
+  ●​ Live customer cards display an uncalibrated confidence figure. Across n =
+     2,[span_39](start_span)[span_39](end_span)385 settled decisions, this metric is strongly
+     anti-predictive, generating a Brier score of 0.3617 with an associated z-score of -10.7.
+  ●​ In an empirical ordering duel across n = 689 picks, sorting by marketFairProb achieves a
+     Brier score of 0.2189, outperforming internal rankingP (0.2462) and internal confidence
+     (0.2741).
+  ●​ Reported Closing Line Value win rate is recorded at 23.2% (95% CI: [0.212, 0.253]) when
+     MATCHED_CLOSE records are retained in the denominator (686/1,587). Restricting
+     evaluation to decided lines yields 40.8% [0.377, 0.441], falling well below the 52.4%
+     break-even floor.
+  ●​ A data gap exists in the odds archive between 2026-08-23 and 2026-09-12. Database
+     records show fixture triplication, unfinalized records marked PENDING dating to January,
+     and a last-write timestamp on gate_decisions of 2026-06-11.
+Tree B: Research Mill Desk
+
+  ●​ Across 14,251 decided NFL fixtures (1999–2025), the closing market line achieves a
+     Continuous Ranked Probability Score (CRPS) of 7.109, outperforming all structural
+     models. DAVE (k=8) yields 7.500, pooled EPA yields 7.573, and core Elo yields 7.576.
+  ●​ The pooled ordinary least squares (OLS) scale factor across the 14,251 fixture corpus is
+     36.61, whereas the Hermes 2025 single-season fold yields 45.42 (DAVE Brier 0.251 vs.
+     market 0.204).
+  ●​ Across the 2025 season (n = 272), DAVE CRPS of 7.629 underperformed both the
+     closing line (6.927) and Elo (7.563). DAVE outperformed Elo strictly during Weeks 1–4
+     (+0.326), while underperforming across Weeks 5–18 (-0.187), in games with starting
+     quarterback changes (-0.171), and in blowouts (-0.442).
+  ●​ The quarterback change residual variance ratio (\tau^2) was measured at 1.379 (78/114),
+     failing the pre-registered significance kill threshold of 1.50.
+  ●​ Hawkes self-exciting process modeling yielded a branching ratio of \hat{n} = 0, exhibiting
+     Poisson behavior with a kickoff inhibition parameter of 0.448.
+  ●​ Empirical environmental checks confirm that wind impacts passing yardage by
+     -3.007\text{ yds/mph}, rain increases incompletepass rates (30.1% vs. 27.6%), and
+     red-zone touchdown variance-to-mean ratios measure 1.82–1.92, which confirms
+     Negative Binomial overdispersion and rejects Poisson assumptions.
+  ●​ Candidate features W5–W8 (Wasserstein distance, Detrended Fluctuation Analysis,
+     Intrinsic Dimension, and Permutation Entropy) failed pre-registered empirical criteria and
+     were killed.
+
+Inference
+  ●​ The divergence between the historical pooled OLS scale (36.61) and the modern Hermes
+     fold (45.42) reflects structural shifts in league scoring dynamics, offensive efficiency, and
+     rule adjustments over 26 years. Taking an unweighted linear average of these values
+     (41.01) would miscalibrate the distribution variance (\sigma), distorting moneyline fair
+     values derived from predicted point spreads.
+  ●​ The production system's CLV collapse to 23.2% is an operational artifact of treating
+     unmatched line snapshots as failed line-beats. When games lack an automated match
+     against the final closing snapshot, the pipeline records them as non-beats, deflating
+     measured CLV. However, even the true decided-only figure (40.8%) reflects severe
+     market underperformance against competitive sportsbooks.
+  ●​ The inverse relationship between UX confidence and realized outcomes (z = -10.7)
+     indicates that the current ranking function overweights factors that commercial
+     bookmakers deliberately exploit, such as public betting favorites and unadjusted brand
+     biases.
+
+Speculation
+  ●​ The archive gap from August 23 to September 12 suggests that unmonitored schema
+     mutations or token expirations occurred in the ingest workers during early college football
+     deployment, going undetected due to the lack of heartbeat monitors.
+  ●​ If the EPA auto-activation scheduled for 2026-10-08 triggers with repository default
+      constants (scale 0.12, home-field advantage 0.025) rather than the empirically measured
+      values (45.42 and 2.10), the production model will output win probabilities compressed
+      tightly around 50%, producing nonsensical recommendations.
+
+C. Week 3 Launch Gate (2026-09-24)
+Binary Gate Verdict
+DO NOT OPEN THE CUSTOMER BOARD ON THURSDAY, SEPTEMBER 24, 2026.
+Opening the board under current conditions would require exposing an inverted confidence
+metric to paying customers, relying on an unverified CLV calculation, and deploying models with
+unmonitored infrastructure. College football operations have already failed for the current week.
+Re-establishing customer trust requires adhering strictly to verified operational gates rather than
+marketing deadlines.
+
+Minimum True Checklist to Reverse Verdict
+The customer board may transition to OPEN status for NFL Week 3 if and only if every condition
+in the following checklist is resolved, verified by automated end-to-end integration tests, and
+signed off in the operational repository:
+   ●​ Infrastructure and Recovery:
+          ○​ PR #868 is merged to main following a verified green CI build, resolving serverless
+              OOM issues.
+          ○​ The odds ingestion query is restricted using cursor-based pagination and a
+              maximum limit of 50,000 rows.
+          ○​ Serverless execution memory allocation is increased to 1024MB, with cold-start
+              latency verified under 400ms.
+          ○​ The monitoring watchdog confirms a continuous GREEN state for at least 48
+              consecutive hours.
+          ○​ The truth surface calibration cron is re-established and actively writing snapshots.
+   ●​ Customer-Facing Calibration Repair:
+          ○​ The legacy inverted confidence display is completely purged from client-side pick
+              cards.
+          ○​ Pick card sorting is driven strictly by marketFairProb or devigged consensus odds.
+          ○​ Public cards display uncalibrated metrics exclusively as non-probabilistic integer
+              indices.
+          ○​ Displayed true probabilities are calibrated via Venn-Abers bounds or isotonic
+              binning.
+          ○​ Ordering duel validation confirms a Brier score \le 0.2189 on the current active
+              slate.
+   ●​ Market Integrity and Reporting:
+          ○​ CLV reporting is updated to display both metrics side-by-side: Total Tracked (23.2%
+              [0.212, 0.253]) and Decided Matches (40.8% [0.377, 0.441]).
+          ○​ Explanatory copy is published detailing the mathematical mechanism behind the
+              MATCHED_CLOSE calculation.
+          ○​ A public notice formally documenting the 2026-08-23 to 2026-09-12 data archive
+              gap is deployed.
+       ○​ All marketing copy claiming "AI-powered edge" is purged across all public-facing
+            assets.
+  ●​ Baseball and Props Sanitization: * The consensusPct = 1.0 artifact is purged from MLB
+     run lines, setting consensusScore = 0.
+       ○​ MLB market depth scoring is disabled until minimum bookmaker depth criteria are
+            verified.
+       ○​ NFL PASS recommendations are suppressed until historical sample size reaches n
+            \ge 100 settled games.
+       ○​ Red-zone touchdown prop distributions are parameterized using Negative Binomial
+            models with variance-to-mean ratio \ge 1.82.
+  ●​ College Football Ring-Fencing:
+       ○​ NCAAF customer boards remain completely offline for the upcoming slate.
+       ○​ A clear public notice is posted: "NCAAF board offline pending ingestion verification".
+       ○​ No college football projections are published without an auditable closing line
+            archive.
+
+D. Dated Through-Path: Road to 100
+Transitioning GSE from its current state (29) to an institutional standard (100) requires a
+disciplined sequence of implementations, kill lines, and methodological integrations. Each step
+maps verified research papers from Jev’s arXiv corpus directly to concrete operational
+components.
+
+Progression Roadmap
+Phase 0: System Stabilization & Remediation (Score: 29 -> 45)​
+Window: 2026-09-19 to 2026-09-21​
+- Merge PR #868, PR #867, PR #866.​
+- Cap odds ingest queries at 50k rows.​
+- Unpublish inverted confidence score from UI cards.​
+- Isolate archive hole (2026-08-23 to 2026-09-12) via read-replica
+audit.​
+​
+Phase 1: Week 3 Gate & Market
+Baselin[span_17](start_span)[span_17](end_span)e (Score: 45 -> 70)​
+Window: 2026-09-22 to 2026-09-24​
+- Deploy Shin de-biasing consensus model (Kaunitz et al.,
+arXiv:1710.02824).​
+- Apply Jackknife+ UQ around closing lines (Barber et al.,
+arXiv:1905.02928).​
+- Publish dual CLV reporting (23.2% system / 40.8% decided).​
+- Suppress uncalibrated NCAAF boards.​
+​
+Phase 2: Engine v5.3.0 & 14k Fixture Calibration
+([span_8](start_span)[span_8](end_span)Score: 70 -> 80)​
+Window: 2026-09-25 to 2026-10-08​
+- Enforce scale factor 45.42 and HFA 2.10; sign MODEL_VERSION 5.3.0.​
+- Implement cross-conformal efficiency (Gasparin & Ramdas,
+arXiv:2503.01495).​
+- Wire non-exchangeable conformal quantiles (Barber et al.,
+arXiv:2202.13415).​
+- Calibrate binary cover heads via Venn-Abers (Vovk & Petej,
+arXiv:1211.0025).​
+​
+Phase 3: Multi-Sport Integration & Props Tails (Score: 80 -> 85)​
+Window: 2026-10-09 to 2026-11-15​
+- Ingest cfbfastR and CollegeFootballData historical corpus
+(2014-2025).​
+- Calibrate CFB spreads via additive quantiles (Sides & Harvill,
+arXiv:2212.08116).​
+- Parameterize props via Negative Binomial qgam (Fasiolo et al.,
+arXiv:1707.03307).​
+- Decouple surface wind adjustments (-3.007 yds/mph) from game totals.​
+​
+Phase 4: Institutional Auditing Standard (Score: 85 -> 100)​
+Window: 2026-11-16 to 2027-01-15​
+- Enforce Conformal Risk Control on drawdowns (Angelopoulos et al.,
+arXiv:2208.02814).​
+- Correct historical selection bias in profit claims (Clegg &
+Cartlidge, arXiv:2306.01740).​
+- Launch public cryptographic verification suite (/performance/audit).​
+- Complete third-party verification against Pinnacle, Circa, and Sumer
+benchmarks.​
+
+
+Phase 0: System Stabilization and Remediation (Score 29 to 45)
+ ●​ Window: Saturday 2026-09-19 23:30 CDT to Monday 2026-09-21 18:00 CDT.
+ ●​ Step 0.1 (Infrastructure): Verify CI suite and merge PR #868 to terminate serverless
+    OOM exceptions. Enforce a 50,000-row batching window with cursor pagination on
+    odds_line_snapshots.
+       ○​ Evidence: Serverless memory profile remains below 450MB over a 24-hour cycle.
+       ○​ Kill Line: If heap memory consumption exceeds 750MB during scheduled cron
+           execution, terminate ingestion immediately.
+       ○​ Owner: Ops Lead.
+       ○​ Failure Mode: Ingestion worker disabled; system holds previous cached snapshot.
+ ●​ Step 0.2 (Customer Board Honesty): Unpublish internal confidence figures from
+    client-side cards. Render marketFairProb derived via Shin devigging as the primary
+    sorting index. Purge consensusPct = 1.0 on MLB run lines.
+       ○​ Evidence: Production pick cards render valid sorted market bounds without raw
+           probability percentages.
+       ○​ Kill Line: If UI renders raw model probability before calibration is restored, trigger
+           deployment rollback.
+       ○​ Owner: Engine Lead.
+       ○​ Failure Mode: Public cards revert to showing market consensus odds without
+            internal model projections.
+ ●​ Step 0.3 (Truth Surface Diagnostics): Execute database audit via replica read queries
+    to isolate the August 23–September 12 archive gap and resolve pending fixture
+    triplications.
+       ○​ Evidence: Diagnostic log outputting exact counts of orphaned, duplicated, and
+            unclosed fixtures.
+       ○​ Kill Line: If data corruption extends to historical grading tables, quarantine the
+            affected sports.
+       ○​ Owner: Data Lead.
+       ○​ Failure Mode: Affected sports locked from public display until records are cleaned.
+
+Phase 1: Week 3 Gate and Market Baseline (Score 45 to 70)
+ ●​ Window: Tuesday 2026-09-22 00:00 CDT to Thursday 2026-09-24 17:00 CDT.
+ ●​ Step 1.1 (Market-First Pricing): Ingest multi-book odds feeds and compute consensus
+    fair lines using the Power and Shin de-biasing methods mapped from Kaunitz et al.
+    (arXiv:1710.02824) and Szalkowski & Nelson (arXiv:1211.4000).
+       ○​ Evidence: Multi-book vig removal achieves a Brier score \le 0.204 on historical
+            closing lines.
+       ○​ Kill Line: If multi-book fair price fails to beat single-book closing lines across 100
+            historical test games, fall back to Pinnacle closing line.
+       ○​ Owner: Engine Lead.
+       ○​ Failure Mode: Devigging pipeline falls back to Pinnacle midpoint lines.
+ ●​ Step 1.2 (Uncertainty Quantification Core): Deploy Jackknife+ predictive inference
+    mapped from Barber, Candès, Ramdas, & Tibshirani (arXiv:1905.02928) across the
+    14,251 fixture historical corpus to establish valid confidence intervals around market
+    spreads.
+       ○​ Evidence: Marginal coverage achieves 1 - \alpha \ge 0.90 across historical
+            validation folds (n \ge 150).
+       ○​ Kill Line: If out-of-sample coverage drops below 0.85 or interval widths exceed
+            Gaussian-close baselines by > 15\%, kill Jackknife+ and default to standard split
+            conformal.
+       ○​ Owner: Engine Lead.
+       ○​ Failure Mode: Conformal bands fall back to static Gaussian close intervals (\pm
+            1.645 \sigma).
+ ●​ Step 1.3 (Dual CLV Publication): Relaunch the public accountability tracking page
+    displaying both total tracked CLV (23.2%) and decided CLV (40.8%). Include clear
+    documentation detailing the impact of the historical archive gap.
+       ○​ Evidence: Public web page verified live by third-party curl requests without
+            authentication walls.
+       ○​ Kill Line: If marketing attempts to suppress the 23.2% metric, block deployment of
+            the tracking dashboard.
+       ○​ Owner: Founder.
+       ○​ Failure Mode: The performance page remains in restricted internal preview.
+
+Phase 2: Engine v5.3.0 and Calibration Engine (Score 70 to 80)
+ ●​ Window: Friday 2026-09-25 08:00 CDT to Thursday 2026-10-08 23:59 CDT.
+ ●​ Step 2.1 (EPA Path Parameterization): Formally sign off on production constants for the
+    EPA auto-activation scheduled for 2026-10-08. Enforce an empirical scale factor of 45.42
+    and home-field advantage of 2.10 points, completely overriding default repository values
+    (0.12 and 0.025).
+       ○​ Evidence: Production environment variables register SCALE_CONSTANT=45.42
+           and HFA_POINTS=2.10.
+       ○​ Kill Line: If auto-activation executes with scale < 30.0, hard-fail the scoring pipeline.
+       ○​ Owner: Founder.
+       ○​ Failure Mode: System blocks EPA integration and holds baseline Elo ratings.
+ ●​ Step 2.2 (Cross-Conformal Efficiency): Implement efficient cross-conformal prediction
+    as formulated by Gasparin & Ramdas (arXiv:2503.01495) to utilize full window
+    observations without burning calibration splits.
+       ○​ Evidence: Prediction interval width narrows by \ge 8\% relative to standard split
+           conformal while preserving 90% coverage.
+       ○​ Kill Line: If execution latency exceeds 250ms per slate, revert to pre-computed
+           static conformal tables.
+       ○​ Owner: Engine Lead.
+       ○​ Failure Mode: Model defaults to pre-calculated split-conformal quantile cutoffs.
+ ●​ Step 2.3 (Non-Exchangeable Temporal Conformal): Integrate non-exchangeable
+    conformal methods from Barber et al. (arXiv:2202.13415) and Oliveira et al.
+    (arXiv:2203.15885) to handle distribution shifts across successive NFL weeks.
+       ○​ Evidence: Coverage remains within [0.88, 0.92] across seasonal transitions (Weeks
+           1–4 to Weeks 5–18).
+       ○​ Kill Line: If early-season interval width expands by > 50\% relative to mid-season
+           bands, kill adaptive weighting and hold static historical quantiles.
+       ○​ Owner: Engine Lead.
+       ○​ Failure Mode: Weekly adaptation is disabled; intervals are calibrated on pooled
+           historical residuals.
+ ●​ Step 2.4 (Venn-Abers Binary Calibration): Deploy Venn-Abers predictors from Vovk &
+    Petej (arXiv:1211.0025) and Petej & Vovk (arXiv:2605.06646) on binary moneyline and
+    spread cover events.
+       ○​ Evidence: Out-of-sample Brier score improves over uncalibrated rankingP (0.2462)
+           by at least 0.005, approaching or beating the 0.2189 market baseline.
+       ○​ Kill Line: If Venn-Abers Brier score fails to beat 0.2189 by \ge 0.005, do not use it
+           for primary ordering; retain devigged market probability as primary sort.
+       ○​ Owner: Engine Lead.
+       ○​ Failure Mode: Probability display reverts to market fair probability.
+
+Phase 3: Multi-Sport Integration and Props Tail Modeling (Score 80 to
+85)
+ ●​ Window: Friday 2026-10-09 08:00 CDT to Sunday 2026-11-15 23:59 CDT.
+ ●​ Step 3.1 (NCAAF Pipeline Ingestion): Ingest play-by-play and game logs from cfbfastR
+    and historical odds from collegefootballdata.com (2014–2025). Calibrate college point
+    spreads via additive quantile modeling using methods from Sides & Harvill
+    (arXiv:2212.08116).
+       ○​ Evidence: Out-of-sample CRPS beats basic Elo baseline across two complete
+            testing seasons (n \ge 1,200).
+        ○​ Kill Line: If college closing line beat-rate falls below 48.0%, keep NCAAF off the
+            public board.
+        ○​ Owner: Data Lead.
+        ○​ Failure Mode: NCAAF product remains dark for customer consumption.
+  ●​ Step 3.2 (Player Props Tail Calibration): Implement Negative Binomial parameterization
+     for touchdown props (VMR 1.82–1.92) using Fast Additive Quantile Regression (qgam)
+     from Fasiolo, Wood, & Zaffran (arXiv:1707.03307).
+        ○​ Evidence: Tail probability Brier score improves by \ge 0.015 over standard Poisson
+            models.
+        ○​ Kill Line: If fitted dispersion parameter \phi collapses toward Poisson assumptions
+            (\text{VMR} \to 1.0), discard the tail adjustments.
+        ○​ Owner: Engine Lead.
+        ○​ Failure Mode: Touchdown props revert to standard Poisson pricing without premium
+            tail claims.
+  ●​ Step 3.3 (Trench Matchup and Weather Integration): Wire opponent-adjusted pass
+     protection and pass rush win rates using the formulation from Pipping-Gamón et al.
+     (arXiv:2604.01491). Couple surface wind vectors exclusively to passing prop yards and
+     total distributions.
+        ○​ Evidence: Wind lookup correctly shifts passing yardage quantiles by -3.007\text{
+            yds/mph} without double-counting game totals.
+        ○​ Kill Line: If trench metrics fail to improve margin spread CRPS by at least 0.005,
+            drop them from the model.
+        ○​ Owner: Data Lead.
+        ○​ Failure Mode: Trench adjustments are zeroed out in team rating calculations.
+### Phase 4: Institutional Auditing Standard (Score 85 to 100)
+  ●​ Window: Monday 2026-11-16 08:00 CDT to Friday 2027-01-15 18:00 CDT.
+  ●​ Step 4.1 (Conformal Risk Control): Deploy Conformal Risk Control as developed by
+     Angelopoulos, Bates, Fisch, & Lei (arXiv:2208.02814) to formally bound expected CLV
+     drawdown and tail loss exposure.
+        ○​ Evidence: Mathematical proof and test suite establishing finite-sample risk bounds
+            on customer portfolio drawdown.
+        ○​ Kill Line: If defined risk metric violates monotonicity with respect to set size, discard
+            and report standard coverage sets.
+        ○​ Owner: Engine Lead.
+        ○​ Failure Mode: Risk control falls back to marginal coverage intervals without
+            loss-bounding guarantees.
+  ●​ Step 4.2 (Selection Bias Correction Audit): Apply Clegg & Cartlidge's correction
+     framework (arXiv:2306.01740) across the entire settled database to identify and
+     neutralize selection-bias artifacts in reported profits.
+        ○​ Evidence: Independent audit verifies that simulated betting strategies maintain
+            positive expected value post-correction.
+        ○​ Kill Line: If positive returns disappear under selection bias correction, restrict
+            platform claims to pure probability calibration.
+        ○​ Owner: Founder.
+        ○​ Failure Mode: Remove all return-on-investment copy; position platform purely as an
+            analytical odds-comparison tool.
+  ●​ Step 4.3 (Public Cryptographic Verification Suite): Launch a public verification
+     repository allowing external researchers to recompute every Brier score, ECE curve, and
+     CLV percentage directly from immutable hash-chained database receipts.
+       ○​ Evidence: Verification suite runs cleanly in independent CI environments (GitHub
+           Actions) without proprietary data dependencies.
+       ○​ Kill Line: If public verification fails to replicate published metrics to within 10^{-6}
+           precision, fail the release.
+       ○​ Owner: Ops Lead.
+       ○​ Failure Mode: Verification badge revoked until recalculation matches to
+           floating-point precision.
+
+E. Complete Item Inventory
+Every locked measurement, production parameter, and Jev arXiv paper is categorized below
+with an explicit operational disposition. No items are omitted.
+
+Production Measurements and Architectural Items
+Item / Signal /    Current Value /     Target / Kill    Operational Tag        Rationale and
+Parameter          State               Threshold                               Disposition
+Closing Line       CRPS = 7.109        Benchmark anchor keep                   Primary
+Margin Baseline    (n=1,871)                                                   benchmark for
+                                                                               point margins.
+                                                                               Structural models
+                                                                               must not override
+                                                                               it without
+                                                                               measured gains.
+DAVE (k=8)         CRPS = 7.500        Beat Close (7.109) measure              Retained as
+Margin Model       (n=1,871)                                                   Rung-2 input for
+                                                                               Weeks 1–4
+                                                                               (+0.326 gain).
+                                                                               Barred from
+                                                                               serving as primary
+                                                                               mean estimator
+                                                                               \mu.
+Pooled EPA         CRPS = 7.573        Beat Close (7.109) measure              Subordinated to
+Margin Model                                                                   market close;
+                                                                               provides team
+                                                                               strength context.
+Core Elo Baseline CRPS = 7.576         Beat DAVE (7.500) keep                  Provides stable
+                                                                               ratings baseline.
+                                                                               Outperformed by
+                                                                               DAVE early, but
+                                                                               superior in Weeks
+                                                                               5–18.
+Fay-Herriot Year   \hat{k} = 7.486     \Delta \text{CRPS} keep                 Exceeds the 0.01
+Shrinkage          (\Delta 0.011 vs.   \ge 0.01                                improvement
+                   k=8)                                                        threshold.
+Item / Signal /    Current Value /    Target / Kill      Operational Tag    Rationale and
+Parameter          State              Threshold                             Disposition
+                                                                            Retained for
+                                                                            season-to-season
+                                                                            rating transitions.
+Mondrian-k         \Delta \text{CRPS} \Delta \text{CRPS} kill               Failed
+Calibration        = 0.0092           \g[span_12](start_                    pre-registered
+                                      span)[span_12](en                     improvement
+                                      d_span)e 0.01                         threshold of 0.01.
+                                                                            Production k
+                                                                            remains fixed at 8.
+OLS Pool Scale 36.61                  Single-universe    measure            Reflects historical
+(Tree B)                              consistency                           14k fixture corpus.
+                                                                            Barred from being
+                                                                            averaged with
+                                                                            production scale
+                                                                            (45.42).
+Hermes Fold        45.42              Accurate variance keep                Accurately models
+Scale (Tree A)                        calibration                           the 2025 modern
+                                                                            scoring
+                                                                            environment. Must
+                                                                            be explicitly signed
+                                                                            into v5.3.0
+                                                                            constants.
+Repository Default 0.12               Match empirical    kill               Represents a 3.8x
+Scale                                 scale (45.42)                         parameter error
+                                                                            relative to
+                                                                            empirical reality.
+                                                                            Deployments
+                                                                            containing this
+                                                                            value must be
+                                                                            blocked.
+QB-Change          \tau^2 = 1.379     Ratio \ge 1.50     k[span_114](start_ Failed significance
+Variance Ratio     (78/114)                              span)[span_114](e threshold.
+                                                         nd_span)ill        Adjustments for
+                                                                            backup
+                                                                            quarterbacks must
+                                                                            be handled via
+                                                                            likelihood
+                                                                            weighting rather
+                                                                            than raw variance
+                                                                            shifts.
+Hawkes             \hat{n} = 0,       \hat{n} > 0        kill               In-game
+Momentum           Poisson behavior (Self-excitation)                       momentum
+Process                                                                     exhibits no
+                                                                            self-exciting
+                                                                            characteristics.
+Item / Signal /     Current Value /     Target / Kill        Operational Tag   Rationale and
+Parameter           State               Threshold                              Disposition
+                                                                               Model remains
+                                                                               strictly Poisson
+                                                                               with kickoff
+                                                                               inhibition.
+Weather: Passing -3.007\text{           Validated physical keep                Highly predictive
+Wind Effect      yds/mph}               impact                                 for passing
+                                                                               yardage
+                                                                               distributions.
+                                                                               Restricted to
+                                                                               player props;
+                                                                               excluded from
+                                                                               totals to avoid
+                                                                               double-counting.
+Weather: Rain       30.1% vs. 27.6%     Realized             keep              Retained for
+Incompletion        base                separation                             micro-level
+                                                                               completion rate
+                                                                               modeling.
+Red-Zone TD         \text{VMR} =        \text{VMR} = 1.0     keep              Confirms Negative
+Variance            1.82\text{--}1.92   (Poisson)                              Binomial
+                                                                               distribution for
+                                                                               red-zone
+                                                                               touchdowns.
+                                                                               Rejects Poisson
+                                                                               assumption across
+                                                                               all TD props.
+Spread \times       Spearman \rho =     Significant linear   kill              Confirms empirical
+Total Correlation   0.016               dependence                             independence
+                                                                               between game
+                                                                               spreads and game
+                                                                               totals under
+                                                                               standard regimes.
+ATS \times Over     Lift = 1.011        Independence         keep              Demonstrates
+Independence        (n=6,682)           rejection                              structural
+                                                                               independence
+                                                                               across full game
+                                                                               outcomes.
+Post-Cover Live     Over rate = 0.538 Exploitable market keep                  Requires
+Total Drag          after 14pt cover  mispricing                               withholding
+                                                                               automated live
+                                                                               totals following
+                                                                               large spread
+                                                                               covers.
+Features W5–W8 Wasserstein, DFA, Pre-registered null kill                      All four feature
+(Move-37)      ID, Perm Ent      rejection                                     families failed
+                                                                               empirical
+Item / Signal /      Current Value /     Target / Kill        Operational Tag    Rationale and
+Parameter            State               Threshold                               Disposition
+                                                                                 validation across
+                                                                                 12/12 test fixtures.
+                                                                                 Fully terminated.
+Inverted UX          Brier = 0.3617, z = Brier \le 0.204      kill               Severely
+Confidence           -10.7                                                       anti-predictive.
+                                                                                 Unpublish
+                                                                                 immediately from
+                                                                                 all customer
+                                                                                 surfaces.
+Model-Ordering       KL3 Brier: Market Model beats            founder-decide     Model sorting
+Switch               0.2189 < Model    Market                                    underperforms
+                     0.2462                                                      devigged market
+                                                                                 fair probabilities.
+                                                                                 Requires founder
+                                                                                 decision to enforce
+                                                                                 marketFairProb
+                                                                                 sort.
+CLV Denominator 23.2% (All) vs.          Floor \ge 52.4\%     f[span_132](start_ Requires founder
+Definition      40.8% (Decided)                               span)[span_132](e sign-off to
+                                                              nd_span)ounder-d standardize
+                                                              ecide              reporting
+                                                                                 definitions and
+                                                                                 publish both
+                                                                                 metrics openly.
+MLB Run-Line         consensusPct =      Non-tautological     kill               Artifact of
+Consensus            1.0                 distribution                            automated
+                                                                                 single-source
+                                                                                 pipeline. Purge
+                                                                                 from UI and
+                                                                                 database.
+Serverless Odds      1.64M rows          Heap <               kill               Uncapped
+Query                fetched (OOM        512\text{MB}                            ingestion query
+                     crash)                                                      caused total
+                                                                                 system failure.
+                                                                                 Replace via PR
+                                                                                 #868 batching.
+Jev arXiv Research Mill Ingestion
+| arXiv ID | Method / Title | Category | Operational Tag | Concrete Impact on Platform | | :--- | :--- |
+:--- | :--- | :--- | | 1905.02928 | Predictive Inference with the Jackknife+ | UQ Conformal | keep |
+Deploys out-of-fold ensemble predictive intervals without single-split data burning on n \approx
+150 windows. | | 2503.01495 | Improving Efficiency of Cross-Conformal | UQ Conformal | keep |
+Provides bounded coverage guarantees, allowing cross-conformal sets to replace split
+conformal across production boards. | | 1707.03307 | Fast Calibrated Additive Quantile
+Regression | Props / Tails | keep | Powers quantile regression GAM (qgam) for non-linear player
+prop distributions and extreme tail estimation. | | 1710.02824 | Beating the Bookies with Their
+Own Numbers | Microstructure | keep | Implements devigging mechanics to extract clean
+consensus fair values across competing sportsbook feeds. | | 1211.4000 | Performance of
+Betting Lines in the NFL | Microstructure | keep | Establishes the historical baseline for home
+underdog line performance and closing line price efficiency. | | 2109.07581 | Impact of
+COVID-19 on Betting Markets | Microstructure | measure | Benchmarks market efficiency
+collapses during crowd-free regimes. Retained for historical study; not a production model. | |
+2306.01740 | Correction Study of Online Sportsbooks | Microstructure | keep | Implements
+corrections for selection-effect bias that artificially inflates reported historical returns. | |
+2607.14430 | Prices, Probabilities, and Parlays | Props / SGPs | keep | Quantifies market
+overpricing on multi-leg parlays relative to leg products, anchoring pricing on time-to-expiry. | |
+1904.06019 | Conformal Prediction Under Covariate Shift | UQ Online | keep | Employs
+density-ratio likelihood weighting to rescale conformal intervals when starting quarterbacks
+change. | | 2202.13415 | Conformal Prediction Beyond Exchangeability | UQ Online | keep |
+Replaces i.i.d. exchangeability assumptions with non-exchangeable weighted quantiles over
+ordered weekly schedules. | | 2203.15885 | Split Conformal on Non-Exchangeable Data | UQ
+Online | keep | Implements sequential split-conformal methods designed for serially dependent
+sports time series. | | 2212.03463 | Sequential Predictive Conformal (SPCI) | UQ Online | keep |
+Exploits residual autocorrelation across weekly game results to adaptively tighten prediction
+bands. | | 2106.00170 | Adaptive Conformal Inference (ACI) | UQ Online | keep | Provides online
+\alpha-adjustment to ensure rolling coverage targets hold across seasonal shifts. | | 2208.02814
+| Conformal Risk Control | UQ Risk | keep | Enforces monotone risk control over expected CLV
+drawdowns and capital allocation thresholds. | | 2306.02732 | Conformal Prediction with Missing
+Values | UQ Robust | keep | Maintains distribution-free coverage when injury, roster, or weather
+features are missing. | | 1905.03222 | Conformalized Quantile Regression (CQR) | UQ
+Conformal | measure | Evaluates asymmetric prediction intervals against standard Gaussian
+spread margins. | | 1211.0025 | Venn-Abers Predictors | Calibration | keep | Computes
+distribution-free calibrated probability intervals for moneyline outcomes and binary event cards. |
+| 2608.11505 | Structural Models vs. Closing Price | Engine | measure | Benchmarks whether
+physical structural models add informational value beyond closing lines. | | 1002.0797 | Soccer:
+Is Scoring a Poisson Process? | Props | measure | Validates rejection of Poisson processes in
+sports scoring tails. Supports Negative Binomial modeling. | | 1807.07536 | Skellam Regression
+for Sports Margins | Margins | measure | Evaluates discrete bivariate margin generation. Soccer
+parameters barred from direct NFL use. | | 2604.01491 | Opponent-Adjusted Line Play in NFL |
+Trenches | measure | Evaluates pass blocking and pass rushing metrics to capture pressure
+differentials. | | 2003.02743 | Generalized Kelly Under Temporal Correlation | Staking / Ops |
+measure | Adjusts capital allocation models to account for covariance across correlated
+weekend game slates. | | 2410.09180 | Convergence & Stationarity of Elo Systems | Engine |
+measure | Formulates theoretical bounds on weekly rating volatility and convergence rates. | |
+1810.03383 | Illusion of Persistence in Sports Data | Engine | measure | Confirms that win
+streaks reflect variance rather than skill, validating mean-reverting luck filters. | | 0706.3188 |
+Tutorial on Conformal Prediction | Reference | keep | Serves as foundational reference
+documentation for platform uncertainty quantification. | | 2609.10737 | Conformal Calibration
+Transfer (TCC) | UQ Transfer | measure | Evaluates transport-based calibration adjustments for
+shifts between regular season and playoff regimes. | | 2609.11935 | Physics-Informed Conformal
+Prediction | UQ Physical | measure | Informs boundary condition modeling for physical
+game-state simulations. | | 2609.12386 | Split Conformal with Label-Shift Adjustments |
+Calibration | measure | Provides analytical adjustments for Bayesian scores under severe
+population label shifts. | | 2609.13453 | Machine Learning API for Data Cubes | Architecture | kill
+| Geospatial earth observation API. Irrelevant to sports prediction pipelines. | | NCAAF Corpus |
+College Football Betting & PBP Archive | Data Source | buy | arXiv contains no actionable
+NCAAF calibration papers. Acquire commercial access or scrape cfbfastR. |
+
+F. Immediate Founder Unblocks
+Engineering execution is blocked pending executive authorization on code merges, script
+executions, database mutations, and external data licensing. The following operational
+directives require immediate founder action.
+
+Next 12 Hours: Immediate Merges and Database Remediation
+1. Pull Request Merge Order
+
+Execute in strict sequence on repository Beexly/Sports:
+  ●​ Merge PR #868 (Ops/OOM Fix): Introduces cursor-based chunking (take: 5000, max:
+     50000) on odds_line_snapshots ingest queries and raises serverless function memory
+     allocation to 1024MB. Pre-condition: Confirm that CI run #2948 is green.
+  ●​ Merge PR #867 (EPA Path & Decisions Register): Enforces NFL_EPA_MIN_GAMES=4
+     and installs the permanent decision registry at docs/ops/FOUNDER_DECISIONS.md.
+  ●​ Merge PR #866 (Archive Freshness Monitoring): Deploys monitoring cron alerts for
+     data staleness exceeding 120 minutes.
+
+2. Administrative API Executions
+
+Execute the following API calls from the administrative deployment environment using
+production authorization tokens:
+# Verify ingestion route operates without memory overflow​
+curl -X GET
+"https://api.galaxysportsedge.com/api/cron/odds-loader?dryRun=1&limit=
+50" \​
+   -H "Authorization: Bearer ${ADMIN_SERVICE_KEY}"​
+​
+# Execute[span_141](start_span)[span_141](end_span) dry-run backfill
+of uncalibrated true probabilities (sample check)​
+curl -X GET
+"https://api.galaxysportsedge.com/api/cron/backfill-independent-truepr
+ob?force=1&dryRun=1&limit=5" \​
+   -H "Authorization: Bearer
+${ADMIN_SER[span_142](start_span)[span_142](end_span)VICE_KEY}"​
+​
+# Execute production database backfill across historical records​
+curl -X GET
+"https://api.galaxysportsedge.com/api/[span_143](start_span)[span_143]
+(end_span)cron/backfill-independent-trueprob?force=1&dryRun=0&limit=50
+0" \​
+  -H "Authorization: Bearer ${ADMIN_SERVICE_KEY}"​
+
+
+3. Database Diagnostic Queries (Read-Replica)
+
+Execute the following read queries against the PostgreSQL read-replica to quantify historical
+data integrity issues:
+-- Audit the August 23 to September 12 archive gap​
+SELECT ​
+      DATE(recorded_at) AS snapshot_day, ​
+      sport, ​
+      COUNT(*) AS total_snapshots,​
+      COUNT(DISTINCT event_id) AS distinct_events​
+FROM odds_line_snapshots​
+WHERE recorded_at >= '2026-08-20' AND recorded_at <= '2026-09-15'​
+GROUP BY DATE(recorded_at), sport​
+ORDER BY snapshot_day ASC;​
+​
+-- Identify corrupted fixture triplications​
+SELECT external_id, sport, COUNT(*) as count​
+FROM games​
+WHERE scheduled_at >= '2026-08-01'​
+GROUP BY external_id, sport​
+HAVING COUNT(*) > 1;​
+​
+-- Locate unfinalized January fixtures​
+SELECT id, sport, scheduled_at, status, updated_at​
+FROM games​
+WHERE status = 'PENDING' AND scheduled_at < '2026-02-01';​
+​
+-- Identify non-unique, identical trueProb records​
+SELECT game_id, bet_type, true_prob, COUNT(*)​
+FROM pick_predictions​
+WHERE created_at >= '2026-09-01'​
+GROUP BY game_id, bet_type, true_prob​
+HAVING COUNT(*) > 1;​
+
+
+4. UI Display Overrides
+
+Deploy the following feature flag overrides directly to environment configurations:
+{​
+   "DISPLAY_INVERTED_CONFIDENCE": false,​
+   "CARD_SORT_KEY": "marketFairProb",​
+   "MLB_RUNLINE_CONSENSUS_SUPPRESS": true,​
+   "MLB_SPREAD_DEPTH_WEIGHT": 0.0,​
+   "PASS_RECOMMENDATIONS_VISIBLE": false,​
+   "NCAAF_PUBLIC_BOARD_ENABLED": false​
+}​
+
+
+Next 14 Days: Production Contracts and Data Licensing
+1. Production Model Constants Sign-Off (Engine v5.3.0)
+
+The founder must formally sign off on the production configuration parameters in
+packages/prediction-engine/src/config.ts prior to the scheduled October 8 auto-activation:
+export const ENGINE_CONSTANTS_V530 = {​
+  MODEL_VERSION: "5.3.0-prod",​
+  NFL_SPREAD_SCALE: 45.42,                        // Empirically verified modern
+scoring fold (NOT pooled 36.61)​
+  NFL_HOME_FIELD_POINTS: 2.10,                      // Modern HFA parameter (Replaces
+repository default 0.025)​
+  DAVE_SEASON_WEIGHT: 8,                          // Production prior weight k=8
+(Fay-Herriot k=7.486)​
+  EPA_MIN_GAMES: 4,                               // Hard floor: no unadjusted EPA
+before Week 5​
+  BOOKMAKER_CONSENSUS_WEIGHT: 0.00, // Zero out uncalibrated depth
+score​
+  CONFORMAL_ALPHA: 0.10,                          // 90% marginal coverage target​
+  DEVIG_METHOD: "SHIN",                           // Standardized market fair value
+extraction​
+};​
+
+
+2. CLV Operational Policy Sign-Off
+
+Approve the following standardized reporting contract for public-facing closing line value:
+\text{CLV}_{\text{Decided}} = \frac{\sum \mathbf{1}_{\text{Matched Beats Close}}}{\text{Total
+Decided Bets with Verified Close}} = 40.8\% \text{CLV}_{\text{System}} = \frac{\sum
+\mathbf{1}_{\text{Matched Beats Close}}}{\text{Total Published Recommendations}} = 23.2\%
+The public dashboard must display both figures alongside clear explanatory documentation.
+Modifying calculation logic to artificially inflate CLV is strictly prohibited.
+
+3. Data Vendor Acquisition Matrix
+
+To eliminate data bottlenecks across active sports, acquire the following data licenses:
+Sport / Domain     Vendor / Source Granularity             License / Access Technical
+                                                           Type                Application
+NCAAF Historical CollegeFootballDa Play-by-play, drive Commercial Tier Powers historical
+                   ta (CFBD)          metrics, historical ($50/mo) / Open model training and
+                                      lines (2014–2025) API                    baseline
+                                                                               validation.
+NCAAF Live Data cfbfastR Pipeline Live box scores, Open Source (MIT Provides live
+                                      roster updates,      License)            ingestion features
+Sport / Domain      Vendor / Source    Granularity         License / Access    Technical
+                                                           Type                Application
+                                       drive-by-drive                          during active
+                                       metrics                                 college slates.
+NFL Player Props Sportradar / The      Real-time         Commercial            Feeds Negative
+                 Odds API              multi-book prop   Production Tier       Binomial
+                                       quotes            (Monthly SaaS)        distribution
+                                       (receptions,                            engines with live
+                                       passing yards,                          book lines.
+                                       TDs)
+NFL Line            Pinnacle / Circa   Real-time line    API Access       Establishes
+Movement            Direct Feeds       movements with Agreement / B2B     ground-truth
+                                       millisecond-stamp Commercial       closing
+                                       ed updates                         benchmarks for
+                                                                          CLV calculations.
+Advanced            ESPN Analytics     Pass Block Win      Open Data      Drives
+Trenches            via nflverse       Rate (PBWR) &       Commons (CC-BY opponent-adjusted
+                                       Pass Rush Win       4.0)           trench play
+                                       Rate (PRWR)                        modules.
+G. Anti-Plan: Negative Engineering Constraints
+Executing any of the following anti-patterns will compromise platform calibration and degrade
+overall system performance. These constraints are enforced as continuous-integration failure
+conditions across the repository:
+  ●​ Do Not Assign Point Margin Mean (\mu) to DAVE: DAVE (k=8) achieves a CRPS of
+      7.500, underperforming closing market prices (7.109). DAVE must remain an auxiliary
+      Rung-2 input for early-season adjustment, not a primary mean estimator.
+  ●​ Do Not Linearly Average Historical and Modern Scale Factors: Averaging the
+      historical corpus OLS scale (36.61) with the modern Hermes fold (45.42) produces a
+      compromised value of 41.01 that miscalibrates probability density across all point spread
+      margins.
+  ●​ Do Not Retune k=4 Based on Single-Fold Validation: The 2024 fold suggested k=4.75,
+      but historical walk-forward cross-validation (n = 1,871) confirms that k=8 provides superior
+      long-term performance across full market cycles. Retuning to k=4 constitutes sample
+      overfitting.
+  ●​ Do Not Flip Sorting Controls to Raw Model Output: In competitive trials (n = 689),
+      sorting by model probability yielded an inferior Brier score (0.2462) relative to devigged
+      market consensus (0.2189). Sorting must remain anchored to market fair values until
+      model predictions demonstrably beat the close out of sample.
+  ●​ Do Not Disguise Inverted Confidence as an "Edge Index": Relabeling an
+      anti-predictive metric (z = -10.7) while continuing to format it as a percentage misleadingly
+      communicates certainty to customers. Any uncalibrated index must be displayed as a
+      non-probabilistic integer score.
+  ●​ Do Not Transfer Association Football Models to American Football: Do not adapt
+      Dixon-Coles bivariate Poisson models, zero-inflation parameters, or goal-timing
+      processes to NFL or college football scoring. American football scoring exhibits discrete,
+      high-variance boundary conditions that Poisson processes fail to model.
+  ●​ Do Not Reopen Hawkes Processes as Momentum Signals: The Hawkes process
+     investigation demonstrated a self-excitation parameter of \hat{n} = 0, rejecting the
+     presence of measurable in-game momentum.
+  ●​ Do Not Reintroduce Features W5–W8: Wasserstein distance, Detrended Fluctuation
+     Analysis, Intrinsic Dimension, and Permutation Entropy failed pre-registered empirical
+     trials across 12 out of 12 test fixtures. They are permanently removed from feature stores.
+  ●​ Do Not Deploy Venn-Abers Corrections Over Inverted Metrics: Venn-Abers calibration
+     guarantees valid probability intervals over calibrated nonconformity scores, but it cannot
+     fix fundamentally misranked, anti-predictive scoring metrics.
+  ●​ Do Not Deploy Adaptive Conformal Inference if Window Widths Fluctuate Widely: If
+     early-season uncertainty intervals expand by more than 50% relative to stable historical
+     distributions, disable adaptive conformal inference and fall back to static historical
+     calibration quantiles.
+  ●​ Do Not Quote Narrative Features Without Empirical Measurement: Features such as
+     unverified player equipment adjustments, generalized fourth-down heuristics, or
+     untracked training camp narratives must not be incorporated into pricing engines.
+  ●​ Do Not Bypass the Early-Season EPA Data Floor: Enforce NFL_EPA_MIN_GAMES=4
+     strictly. Computing opponent-adjusted EPA from small early-season samples introduces
+     substantial estimation error into team ratings.
+  ●​ Do Not Expand Model Scope into New Sports Prematurely: Prohibit engineering work
+     on NBA, NHL, or soccer models until NFL, NCAAF, and MLB pipelines demonstrate full
+     calibration and operational stability.
+  ●​ Do Not Market Platform Features as Artificial Intelligence: Prohibit the use of vague
+     marketing terms like "AI" or "deep neural network edge" in documentation, UI copy, and
+     marketing materials. GSE is a sports analytics platform grounded in probability theory and
+     empirical physics.
+  ●​ Do Not Treat Early-Season Game Samples as Season-Long Indicators: The 17
+     games completed in Weeks 1 and 2 of 2026 provide an insufficient sample for updating
+     macro-level parameters. Prior parameters must remain anchored to the historical 14,251
+     fixture corpus.
+  ●​ Do Not Use Small Live Settlement Samples to Claim Statistical Calibration: Seventy
+     live settled games cannot establish statistical calibration (n \ge 1,000 required). Historical
+     backtest records must be transparently incorporated into public calibration reporting.
+
+H. The Recomputable Standard: What "100" Looks
+Like
+The Formal Audit Statement
+When Galaxy Sports Edge achieves a readiness score of 100, its public methodology statement
+will be verifiable by third-party auditors and quantitative market participants:
+"Galaxy Sports Edge provides real-time, distribution-free sports forecasting calibrated across
+14,251 decided NFL fixtures (1999–2025) and verified against live market prices. Over n \ge
+1,000 production selections, its observed outcome frequencies match forecast true probabilities
+with an Expected Calibration Error below 0.025 and a Brier score superior to closing sportsbook
+consensus (< 0.204). Its marginal 90% prediction intervals maintain verified coverage of 0.90
+\pm 0.015 via non-exchangeable conformal inference. Across all published recommendations, it
+documents a positive Closing Line Value beat-rate exceeding 52.4% under immutable,
+timestamped accounting. All underlying datasets, execution logs, and validation code are
+publicly executable via open cryptographic receipts without proprietary dependencies."
+
+Public Independent Audit Pipeline
+The platform enforces public verifiability through an open four-stage verification architecture that
+decouples mathematical validation from internal application state.
+
+1. Cryptographic Ledger (/performance/audit)
+
+Every published pick generates an immutable, append-only record secured via SHA-256 hash
+chaining:
+\text{Receipt}_t = \text{SHA256}(\text{PickID}_t \parallel \text{Timestamp}_t \parallel
+\text{GameID}_t \parallel \text{OddsSnap[span_187](start_span)[span_187](end_span)shot}_t
+\parallel \text{ModelProb}_t \parallel \text{Receipt}_{t-1})
+Timestamps are certified through an external RFC-3161 compliant timestamping authority to
+establish unalterable proof of publication prior to event start times.
+
+2. Standardized Audit Inputs
+
+Public audit records provide clean, tabular event vectors:
+  ●​ Selection Vector: Timestamp, Sport, GameID, BetType, Selection, PublishedLine,
+      ModelProb, ConformalLower, ConformalUpper.
+  ●​ Closing Market Vector: Final consensus snapshot captured at kickoff (Pinnacle and
+      Circa midpoints), VigFreeFairProb, FinalMarketLine.
+  ●​ Realized Outcome Vector: Official league-settled final scores, box scores, player
+      statistics, and settlement timestamps.
+
+3. Automated Recomputation Engine
+
+Auditors verify platform metrics by executing standardized mathematical calculations:
+
+\text{ECE} = \sum_{m=1}^{M} \frac{\vert{}B_m\vert{}}{N} \left\vert{} \text{acc}(B_m) -
+\text{conf}(B_m) \right\vert{} \text{Brier Score} = \frac{1}{N} \sum_{t=1}^{N} (P_t - Y_t)^2
+\text{Conformal Empirical Coverage} = \frac{1}{N} \sum_{t=1}^{N} \mathbf{1}_{Y_t \in [L(X_t),
+U(X_t)]} \text{CLV}_{\text{Decided}} = \frac{\sum_{t=1}^{N_{\text{decided}}}
+\mathbf{1}_{\text{Beats Close}}}{N_{\text{decided}}} \text{CLV}_{\text{System}} =
+\frac{\sum_{t=1}^{N_{\text{total}}} \mathbf{1}_{\text{Beats Close}}}{N_{\text{total}}}
+4. Audit Execution Script
+
+A self-contained Python script is provided to enable public verification without internal
+dependencies:
+import numpy as np​
+import pandas as pd​
+​
+def run_public_audit(export_url: str):​
+    df = pd.read_csv(export_url)​
+    ​
+    # 1. Brier Score Audit​
+    brier = np.mean((df["model_prob"] - df["realized_outcome"]) ** 2)​
+    ​
+    # 2. Expected Calibration Error (ECE) Audit across 10 deciles​
+    df["bin"] = pd.qcut(df["model_prob"], q=10, duplicates="drop")​
+    grouped = df.groupby("bin", observed=False).agg(​
+         conf=("model_prob", "mean"),​
+         acc=("realized_outcome", "mean"),​
+         count=("realized_outcome", "count")​
+    )​
+    ece = np.sum((grouped["count"] / len(df)) * np.abs(grouped["acc"]
+- grouped["conf"]))​
+    ​
+    # 3. Conformal Coverage Audit​
+    covered = (df["realized_outcome"] >= df["conformal_lower"]) &
+(df["realized_outcome"] <= df["conformal_upper"])​
+    coverage = np.mean(covered.astype(float))​
+    ​
+    # 4. Dual CLV Accounting Audit​
+    decided = df[df["matched_close_available"] == True]​
+    clv_decided = np.mean(decided["beat_closing_price"].astype(float))​
+    clv_system = np.sum(df["beat_closing_price"].astype(float)) /
+len(df)​
+    ​
+    return {​
+         "brier_score": brier,​
+         "ece": ece,​
+         "coverage_90": coverage,​
+         "clv_decided": clv_decided,​
+         "clv_system": clv_system​
+    }​
+​
+if __name__ == "__main__":​
+    results =
+run_public_audit("https://api.galaxysportsedge.com/api/v1/audit/export
+?format=csv")​
+    for metric, value in results.items():​
+         print(f"{metric}: {value:.4f}")​
+
+
+In-Scope vs. Out-of-Scope Production Boundaries
+To maintain rigorous calibration standards, platform scope is strictly partitioned between certified
+production offerings and uncertified markets:
+  ●​ In-Scope Production Markets (Phase 4):
+        ○​ NFL Mainlines: Pre-game point spreads, moneylines, and totals.
+       ○​ NFL Player Props: Passing touchdowns, receptions, and passing yards
+          parameterized via Negative Binomial distributions.
+       ○​ MLB Mainlines: Pre-game moneylines and totals.
+       ○​ NCAAF Mainlines: Division I FBS point spreads and totals (restricted to Week 5
+          onwards, conditional on verified data pipelines).
+  ●​ Out-of-Scope Markets (Explicitly Prohibited):
+       ○​ In-Play / Live Betting: Live betting markets across all sports.
+       ○​ Same-Game Parlays (SGPs): Multi-leg correlated parlays marketed as
+          positive-expectation bets.
+       ○​ Professional Basketball & Hockey: NBA, WNBA, and NHL markets (prohibited until
+          primary sports meet institutional standards).
+       ○​ Association Football: MLS, EPL, and European soccer leagues.
+       ○​ Lower-Division Football: FCS football, Division II/III, and spring developmental
+          leagues.
+       ○​ Unquantified Subjective Props: Anytime touchdown scorers, defensive player
+          props, and novelty event markets.
+
+Failure Thresholds for Institutional Certification
+The public auditing interface enforces binary pass/fail standards. Exceeding any of the following
+error thresholds results in immediate suspension of platform certification badges:
+   ●​ Brier Score Degradation: If moneyline predictions yield a Brier score exceeding 0.204
+       over n \ge 1,000 decisions, the platform's "Market-Beating" status is revoked.
+   ●​ Calibration Error Expansion: If Expected Calibration Error exceeds 0.025 across decile
+       bins, pick generation is automatically disabled.
+   ●​ Conformal Coverage Breach: If marginal coverage over rolling 500-pick windows drops
+       below 88.5% or exceeds 91.5% at nominal \alpha = 0.10, prediction bands are flagged as
+       uncalibrated.
+   ●​ Cryptographic Mismatch: If independent recomputation of receipt hashes detects
+       discrepancies with published ledger states, platform reporting is frozen pending security
+       and data audit.
+
+Works cited
+
+1. Sports/hermes/opp-adj-epa-20260919 has new results,
+https://mail.google.com/mail/?extsrc=sync&client=h&plid=ACUX6DMniNevipMOsCdJqDelUgIlH
+sywzaGKjd0&mid=1a0ba002bb74cacc 2. [Beexly/Sports] Model-accuracy leaderboard — rank
+our own model versions by calibrated accuracy (founder-gated) (PR #96),
+https://mail.google.com/mail/?extsrc=sync&client=h&plid=ACUX6DMYEUkZVORY8_6wRnV4Yx
+Ph6vCSXJjDh5k&mid=19f57562a43a8f1a 3. Handoff:
+C:\Users\Garrett\Sports\.hermes\plans\2026-09-12_095304-gse-launch-execution-handoff.md
+Findings remain documented in: C:\Users\Garrett\Sports\AGENTS.md The handoff contains ...,
+https://mail.google.com/mail/?extsrc=sync&client=h&plid=ACUX6DN8dHt8DY9sRBRsx3pbEyz-
+5MSUpl51ywA&mid=1a096223ca46fdb9 4. [Beexly/Sports] docs(ops): master research & build
+charter (10,000-foot, all domains) (PR #445),
+https://mail.google.com/mail/?extsrc=sync&client=h&plid=ACUX6DOi1AYoiijQK2aJ4ed5NvrabkJ
+K-osTbsA&mid=1a0262c3109b453f 5. DECISIONS.md,
+https://drive.google.com/open?id=1EPrIWStTeOSnDMTtUc-CuG07c66Cgjlr
+

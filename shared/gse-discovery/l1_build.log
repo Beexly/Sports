@@ -1,0 +1,44 @@
+2022: att=19455 joined=19386
+2023: att=19807 joined=19807
+2024: att=19224 joined=19224
+2025: att=18822 joined=18822
+/tmp/nfl/l1_build.py:67: DeprecationWarning: DataFrameGroupBy.apply operated on the grouping columns. This behavior is deprecated, and in a future version of pandas the grouping columns will be excluded from the operation. Either pass `include_groups=False` to exclude the groupings or explicitly select the grouping columns after groupby to silence this warning.
+  g = g.groupby(["season","posteam"], group_keys=False).apply(trail)
+{
+  "seasons": {
+    "2022": {
+      "pbp_rows": 49434,
+      "reg_pass_attempts": 19455,
+      "ftn_rows": 41643,
+      "joined": 19386,
+      "join_rate_pct": 99.65
+    },
+    "2023": {
+      "pbp_rows": 49665,
+      "reg_pass_attempts": 19807,
+      "ftn_rows": 48225,
+      "joined": 19807,
+      "join_rate_pct": 100.0
+    },
+    "2024": {
+      "pbp_rows": 49492,
+      "reg_pass_attempts": 19224,
+      "ftn_rows": 48031,
+      "joined": 19224,
+      "join_rate_pct": 100.0
+    },
+    "2025": {
+      "pbp_rows": 48771,
+      "reg_pass_attempts": 18822,
+      "ftn_rows": 47316,
+      "joined": 18822,
+      "join_rate_pct": 100.0
+    }
+  },
+  "joined_total": 77239,
+  "after_weather_filter": 41568,
+  "dropped_null_weather": 10200,
+  "with_total_line": 77239,
+  "trail8_nonnull": 72676
+}
+WROTE /tmp/nfl/l1_join.csv 77239 rows
