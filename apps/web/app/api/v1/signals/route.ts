@@ -12,6 +12,7 @@ import {
 import { db, isStubMode } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { resolveBoardSurface } from "@/lib/board/board-surface-policy";
+import { dropAdverseEdgePicks } from "@/lib/picks/adverse-edge-suppression";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -62,7 +63,12 @@ export async function GET(req: Request): Promise<NextResponse> {
         ...(scope === "premium" ? {} : { tier: "FREE" as const }),
       },
       orderBy: { generatedAt: "desc" },
-      take: 50,
+      // Over-fetch so the adverse-edge filter below runs BEFORE the 50-row cap,
+      // the same ordering /api/picks and lib/board/state.ts use. Capping first
+      // would let a row we are about to drop consume one of the 50 slots and
+      // then vanish, so a consumer asking for 50 signals would silently get
+      // fewer for a reason the payload never states.
+      take: 80,
       select: {
         id: true,
         pickType: true,
@@ -92,7 +98,31 @@ export async function GET(req: Request): Promise<NextResponse> {
       lineLabel:
         resolveBoardSurface() === "signal" ? "model_signal" : "may_include_market_context",
       boardSurface: resolveBoardSurface(),
-      data: [...picks]
+      /*
+       * ADVERSE-EDGE SUPPRESSION ON THE B2B SURFACE.
+       *
+       * /api/picks and lib/board/state.ts both drop rows whose own
+       * `factorBreakdown.independentEdge.expectedClv` is negative: the engine
+       * priced that side worse than the market, so it is a bet our own model
+       * says loses. Neither v1 route applied the rule, so a row the board and
+       * the consumer app suppress was still emitted here by name, line and
+       * confidence to every API consumer. A partner integrating against v1 was
+       * getting exactly the rows we had decided not to show.
+       *
+       * IMPORTS the predicate rather than restating it (via
+       * dropAdverseEdgePicks -> pricesWorseThanMarket in @sports/types). Two
+       * gates spelling one rule two ways is how they drift, and a drift in this
+       * direction publishes a row the engine said to withhold.
+       *
+       * Absence is SILENCE: a missing, non-finite or unparseable breakdown
+       * KEEPS the row. If that asymmetry ever inverts, a parse bug becomes a
+       * silent board wipe on the partner surface.
+       *
+       * Writes nothing. `isPublished` is untouched, so a suppressed row still
+       * settles and still counts in the published record, win or lose.
+       */
+      data: dropAdverseEdgePicks(picks)
+        .slice(0, 50)
         .map((p) => {
           let rankingP: number | null = null;
           const fb = p.factorBreakdown;
