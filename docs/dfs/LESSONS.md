@@ -1,4 +1,10 @@
-# DFS Lessons Ledger
+# Signal Lessons Ledger
+
+> **Scope note.** This started as a DFS file. It is now the ledger for the shared
+> signal spine (`apps/web/lib/signals/spine.ts`), which feeds the DFS optimizer,
+> the waiver board, the trade calculator, the weekly rankings and the props
+> engine from one set of facts. Published picks read it **advisory only**
+> (`lib/signals/prediction-advisory.ts`) because MODEL_VERSION is frozen.
 
 Every entry is a loss we actually took, the rule it produced, and where that rule
 now lives in code. A lesson that lives only in a document is a lesson you get to
@@ -61,12 +67,19 @@ their correctness as our edge.
 ownership is an assessment, not an oversight, and the contrarian credit is
 cancelled in proportion to severity.
 
-**Where enforced.** `lib/fantasy/dfs-signals.ts` — `buildPenalty()` adds
-`leverage(p) * 6 * worstSeverity(...)` in `leverage` mode, cancelling exactly the
-credit `objVal` grants. Suppressors: `wind`, `precipitation`.
-**Test:** `dfs-signals.test.ts` → *"THE ASYMMETRY RULE: low ownership earns no
-leverage credit under a suppressor"* and *"L-1: suppresses Justin Jefferson for
-the wind, despite 1.8% ownership."*
+**Where enforced.** `lib/signals/apply.ts` → `dfsPenalty({ ownershipAware: true })`
+claws back `leverage(p) * 6` in `leverage` mode.
+
+**The subtlety that took a second pass to get right.** The clause keys on the
+PRESENCE and SIZE of negative effects, **not on the net read**. Once the spine
+became bidirectional, Metcalf's genuine role upgrade (Pittman out, opposing CB1
+out) very nearly cancelled his bad environment, and a net-based rule would have
+called his environment *clean* and handed him full credit for 1.3% ownership —
+rebuilding the exact lineup that lost. An environment with a real suppressor in
+it is not clean just because something good is also happening.
+
+**Test:** `dfs-signals.test.ts` → *"the ownership clause keys on the PRESENCE of
+drag, not the net read."*
 
 **Corollary that also bit us.** Naming a risk and then not acting on it is worse
 than missing it, because it produces false confidence in the rest of the build.
@@ -92,10 +105,19 @@ the entire time. Target share was allowed to override scoring environment.
 quantity is bottom-of-slate, the share is worth little regardless of how dominant
 it is. Implied team total gates role, not the other way round.
 
-**Where enforced.** `dfs-signals.ts` → `low_team_total` suppressor, ramping from
-no effect at 20.0 implied to full effect at 15.0. Applies to QB, RB, WR and TE.
-**Test:** `dfs-signals.test.ts` → *"L-2: suppresses DK Metcalf for an 18.0 implied
-team total, despite 1.3% ownership."*
+**Where enforced.** `spine.ts` → `low_team_total` effect, ramping from no effect
+at 20.0 implied to full effect at 15.0.
+
+**And the interaction that matters more than the effect.** `environmentScalar()`
+multiplies every usage-derived BOOST by the team's scoring environment: ~0.63 at
+an 18.0 implied total, 1.0 at 22, 1.3 at 30. Usage is a *share of a quantity*, so
+a vacated 26% target share on a 29-point offense and the same share on an 18-point
+one are not the same opportunity. They interact multiplicatively, not additively.
+Suppressions are **not** scaled — a bad environment does not become less bad
+because a team-mate got hurt.
+
+**Test:** `spine.test.ts` → *"usage is a share of a quantity"* block, including
+*"Metcalf's real role upgrade is scaled DOWN by Pittsburgh's 18.0 implied total."*
 
 ---
 
@@ -176,7 +198,7 @@ inert, per "absent data is not evidence" — it is not a silent pass.
 
 ### L-6 — The airwave is a signal layer, not background reading
 
-**WIRED.**
+**WIRED, BIDIRECTIONAL.**
 
 **What happened.** Ten shows' worth of analyst consensus was supplied as a
 document and treated as prose to skim for colour. It contained hard, repeated,
@@ -184,16 +206,18 @@ multi-source reads — four independent shows fading Drake London on the Cooper
 Rush quarterback change, three fading the entire Titans offense — that never
 entered any calculation.
 
-**The rule.** Analyst consensus is a typed input with a source count. Two or more
-independent sources constitute a consensus; one is an opinion and carries no
-weight. **FADE reads penalise. START reads do nothing** — a chorus of people
-liking a player is not a reason for the solver to like him more, it is the reason
-his ownership will be high, which `leverage` already prices.
+**The rule.** Analyst consensus — shows, beat writers, **and the founder's own
+notes** — is a typed input with a source count and a quality tier, reusing the
+`TIER_WEIGHT` scale `lib/news/impact.ts` already defines (Insider 1.0 down to
+Unconfirmed 0.2). Two or more independent sources constitute a consensus; one is
+an opinion and carries no weight. **Both directions carry weight**: a FADE
+suppresses and a START boosts, scaled by tier and breadth.
 
-**Where enforced.** `dfs-signals.ts` → `AirwaveRead`, `airwave_fade` suppressor.
-Week 2's corpus is transcribed in `dfs-signals-week2-2026.ts`.
-**Test:** *"a single airwave source is an opinion, not a consensus"* and *"a START
-airwave read carries no weight."*
+**Where enforced.** `spine.ts` → `AirwaveNote`, `airwave` effect. Week 2's corpus
+is transcribed in `lib/signals/week2-2026.ts`.
+**Test:** *"a positive airwave read boosts and a negative one suppresses"*,
+*"source tier scales the airwave weight"*, *"a single airwave voice is an opinion,
+not a consensus."*
 
 ---
 
@@ -226,6 +250,54 @@ large field.
 **The rule.** `stack: true` is close to mandatory; a bring-back should be a
 first-class constraint, not an accident. `dfs-optimizer.ts` enforces a QB stack
 but has no bring-back concept.
+
+---
+
+---
+
+### L-9 — Half a picture is worse than none
+
+**WIRED.** *(Added after the founder overruled the original subtract-only design,
+correctly.)*
+
+**What happened.** The first version of this layer could only SUBTRACT, on an
+asymmetry argument imported from `lib/conviction/gate-contract.ts`.
+
+**Why that was wrong here.** That gate may only withhold because it sits in front
+of PUBLISHED PICKS, where MODEL_VERSION is frozen and the track record is a
+promise. DFS lineups, waiver claims, trade values and prop plays are **selection**
+tools. Nothing there carries a published probability, so the safe direction is
+different. A layer that could only subtract could express exactly half of what we
+already knew: it could see the 30 mph gusts, but not the 26% target share a
+ruled-out WR1 had just vacated.
+
+**The rule.** Selection surfaces take signed weights. The published-pick path
+does not, and that boundary is structural: `prediction-advisory.ts` exports
+`ADVISORY_ONLY = true`, returns no adjusted probability field at all, and carries
+`appliedToProbability: false` on every read. Making it a scoring input requires a
+MODEL_VERSION bump and a calibration pass against settled outcomes.
+
+**Test:** `prediction-advisory.test.ts` → *"advisory only — the boundary that must
+not move"*, including *"returns no adjusted probability field at all."*
+
+---
+
+### L-10 — The arg-slot bug, twice
+
+**FIXED.**
+
+Wiring `ctx` into `readProp` as a positional parameter broke three call sites and
+a test, all written as `PROPS.map(readProp)` — the array INDEX landed in the new
+slot. `tsc` caught the three source sites; it does not typecheck the test file, so
+that one surfaced only as a red test.
+
+This is the same class as the `optimizeOne(opts, undefined, slate)` slot error
+that put `/fantasy/dfs` into a production 500 (AGENTS.md, 2026-09-13).
+
+**The rule.** A function that is commonly `.map`ped takes an **options object**,
+never trailing positional parameters. Property access on a number yields
+`undefined`, so `PROPS.map(readProp)` degrades to neutral instead of wrong.
+`readProp(prop, { ctx, opp, pos })` is the shape.
 
 ---
 

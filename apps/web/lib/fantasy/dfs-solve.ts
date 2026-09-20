@@ -30,15 +30,8 @@ import {
   type OptOpts,
 } from "./dfs-optimizer";
 import { rankByTournamentScore, type SimOpts, type SimStats } from "./dfs-correlation";
-import {
-  adviseMode,
-  buildPenalty,
-  explainSlate,
-  EMPTY_CONTEXT,
-  type ModeAdvice,
-  type SignalContext,
-  type SuppressionReport,
-} from "./dfs-signals";
+import { adviseMode, explainSlate, signalPenalty, type ModeAdvice } from "./dfs-signals";
+import { EMPTY_CONTEXT, type SignalContext, type SignalReport } from "@/lib/signals/spine";
 
 export type SolveOpts = {
   readonly mode: Mode;
@@ -49,6 +42,7 @@ export type SolveOpts = {
   readonly maxExposure?: number;
   readonly slate?: readonly DfsPlayer[];
   readonly context?: SignalContext;
+  readonly contest?: { readonly fieldSize: number; readonly placesPaid: number; readonly singleEntry: boolean };
   readonly sim?: SimOpts;
 };
 
@@ -56,8 +50,8 @@ export type SolvedLineup = {
   readonly players: Lineup;
   readonly metrics: LineupMetrics;
   readonly sim: SimStats;
-  /** Suppressed players that still made this lineup, with their reasons. */
-  readonly carried: readonly SuppressionReport[];
+  /** Signal-moved players that made this lineup, with their reasons. */
+  readonly carried: readonly SignalReport[];
 };
 
 export type SolveResult = {
@@ -68,8 +62,8 @@ export type SolveResult = {
   readonly exposureTarget: number;
   /** Whether the chosen objective matches the contest's payout shape (L-3). */
   readonly modeAdvice: ModeAdvice | null;
-  /** Every suppressed player on the slate, worst first — the "why we skipped him" surface. */
-  readonly suppressed: readonly SuppressionReport[];
+  /** Every player the signals moved, biggest absolute move first. */
+  readonly moved: readonly SignalReport[];
 };
 
 /**
@@ -91,11 +85,11 @@ export function solveSlate(opts: SolveOpts): SolveResult {
     excludes: opts.excludes ?? new Set<string>(),
   };
 
-  const pen = buildPenalty(ctx, opts.mode);
+  const pen = signalPenalty(ctx, opts.mode);
   const gen = generateLineups(optOpts, count, opts.maxExposure ?? 0.6, slate, pen);
 
-  const suppressed = explainSlate(slate, ctx, opts.mode);
-  const suppressedByName = new Map(suppressed.map((s) => [s.player, s]));
+  const moved = explainSlate(slate, ctx);
+  const movedByName = new Map(moved.map((m) => [m.player, m]));
 
   const ranked = rankByTournamentScore(gen.lineups.map((l) => l.players), opts.sim ?? {});
   const lineups: SolvedLineup[] = ranked.map((r) => ({
@@ -103,8 +97,8 @@ export function solveSlate(opts: SolveOpts): SolveResult {
     metrics: metrics(r.players),
     sim: r.sim,
     carried: r.players
-      .map((p) => suppressedByName.get(p.name))
-      .filter((s): s is SuppressionReport => s !== undefined),
+      .map((p) => movedByName.get(p.name))
+      .filter((m): m is SignalReport => m !== undefined),
   }));
 
   return {
@@ -113,7 +107,7 @@ export function solveSlate(opts: SolveOpts): SolveResult {
     partial: gen.partial,
     requested: gen.requested,
     exposureTarget: gen.exposureTarget,
-    modeAdvice: ctx.contest ? adviseMode(ctx.contest, opts.mode) : null,
-    suppressed,
+    modeAdvice: opts.contest ? adviseMode(opts.contest, opts.mode) : null,
+    moved,
   };
 }
