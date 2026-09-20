@@ -566,3 +566,47 @@ single-day slate (14 events on 2026-09-20 running 17:00Z to 00:20Z, 14 on
 2026-09-27 running 17:00Z to 00:20Z), and the operative measurement does not
 depend on that detail either way: the four matchups appear in the 9/27 response
 and are absent from the 9/20 one.
+
+### 9.7 The gated lane shows the SAME defect, plus its mirror image
+
+Read `/api/board/state` 20:48:42Z. `gatedTodayRows` holds 32 rows, 5 of them NFL:
+
+| matchup | gate reason as rendered |
+|---|---|
+| Cincinnati Bengals @ Houston Texans | Fixture unconfirmed on official ESPN scoreboard schedule |
+| Atlanta Falcons @ Green Bay Packers | Line within market efficiency band; model conviction below publishing threshold |
+| Baltimore Ravens @ Dallas Cowboys | same |
+| Seattle Seahawks @ Washington Commanders | same |
+| Tennessee Titans @ New York Giants | same |
+
+Against ESPN: **BAL vs DAL, SEA @ WSH and TEN @ NYG are all on 2026-09-27**, not
+today. ATL @ GB is on neither day's scoreboard, so it is later still. That is
+four more mis-dated NFL fixtures on a second today-bounded lane, on top of the
+four in §9.3 — **eight NFL fixtures across two lanes**, which is most of what the
+board says about NFL today.
+
+It also means the engine is scoring next Sunday's games and rendering the result
+to a customer as today's hold, with a conviction reason attached. The reason
+string is honest about the model; it is attached to the wrong day.
+
+**The fifth row is the mirror image and it is the most diagnostic line here.**
+CIN @ HOU is a **real game played today** (ESPN, 17:00Z, final by the time of
+this read) and the board rejects it with "Fixture unconfirmed on official ESPN
+scoreboard schedule". So the confirmation step rejects a fixture that is
+genuinely on today's scoreboard, while four fixtures that are genuinely on next
+week's pass straight through into a today-bounded lane.
+
+Do not read that fifth row as new, though: AGENTS.md already records NFL FIXTURE
+TRIPLICATION (three `games` rows per fixture, only one of them rich) and records
+that a thin phantom row renders as held with a reason computed off the phantom's
+own columns. CIN @ HOU is consistent with that known defect rather than evidence
+of a new one. What is new is the pairing: **the same fixture table is
+simultaneously failing to confirm today's real games and admitting next week's
+as today's.** Whoever picks this up should treat triplication and the date error
+as one investigation, not two, and should start from the entry points named in
+§9.6.
+
+Priority argument, stated plainly: this outranks everything else still open in
+this handoff. It is on the primary customer surface, on NFL Sunday, and it is
+wrong in the direction that matters most for a product whose entire premise is
+that it does not misstate its own record.
