@@ -610,3 +610,20 @@ Priority argument, stated plainly: this outranks everything else still open in
 this handoff. It is on the primary customer surface, on NFL Sunday, and it is
 wrong in the direction that matters most for a product whose entire premise is
 that it does not misstate its own record.
+
+### 9.8 Sharper version of the vitest harness note in section 8
+
+Section 8 records that `--root apps/web` from the repo root breaks tests that
+resolve paths from `process.cwd()`. There is a second, different config trap, and
+it is the one more likely to waste a pass:
+
+Invoking `npx vitest run` from `apps/web` with a MIX of `__tests__/...` and
+`lib/...` paths and no `--config` selects a config that lacks the `@` alias, so
+files fail to collect with `Failed to load url @/lib/...  Does the file exist?`.
+The file exists. The run reports `environment 1ms` and finishes in about a
+second, which is the tell: it never built the web environment.
+
+Observed on this branch: the same five files read `3 failed | 2 passed` without
+`--config` and `5 passed (45 tests)` with `--config vitest.config.ts`. Always
+pass `--config vitest.config.ts` from `apps/web`, and treat a sub-second run with
+a near-zero environment time as a config miss, never as a result.
