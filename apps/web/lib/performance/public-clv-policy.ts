@@ -179,68 +179,20 @@ export function evaluatePublicClvPolicy(
 // blocker, or any threshold: evaluatePublicClvPolicy above is untouched and
 // never calls this.
 
-export interface ClvVerdictCounts {
-  readonly beatCloseCount: number;
-  readonly lostToCloseCount: number;
-  readonly matchedCloseCount: number;
-}
+// The three-reading helper lives in @sports/types (the boundary both the web
+// package and the prediction engine already import), so every surface that
+// reports a CLV beat rate shares ONE implementation and the readings cannot
+// drift between surfaces. Re-exported here so existing importers of this
+// module keep working unchanged.
+export { computeClvPushDoctrineRates } from "@sports/types";
+export type {
+  ClvVerdictCounts,
+  ClvPushDoctrineRates,
+} from "@sports/types";
 
-export interface ClvPushDoctrineRates {
-  /**
-   * BEAT_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE). MATCHED_CLOSE, the push, is
-   * excluded from both the numerator and the denominator, mirroring the
-   * push-never-averaged doctrine. Null when there are zero decided rows: a
-   * real state, never coerced to 0.
-   */
-  readonly decidedClvBeatRate: number | null;
-  readonly decidedClvBeatDenominator: number;
-  /**
-   * BEAT_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE + MATCHED_CLOSE). The push is
-   * counted in the denominator, not the numerator. Null when there are zero
-   * graded rows.
-   */
-  readonly allGradedClvBeatRate: number | null;
-  readonly allGradedClvBeatDenominator: number;
-  /**
-   * MATCHED_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE + MATCHED_CLOSE). The CLV
-   * analogue of a push rate. Null when there are zero graded rows.
-   */
-  readonly clvPushRate: number | null;
-  readonly clvPushRateDenominator: number;
-}
-
-/**
- * Pure. Computes the three ClvPushDoctrineRates readings from the same three
- * verdict counts this module already gates on elsewhere in this file.
- * Negative or non-finite counts are floored to 0 defensively, so a count is
- * always a count.
- */
-export function computeClvPushDoctrineRates(counts: ClvVerdictCounts): ClvPushDoctrineRates {
-  const beat = nonNegativeCount(counts.beatCloseCount);
-  const lost = nonNegativeCount(counts.lostToCloseCount);
-  const matched = nonNegativeCount(counts.matchedCloseCount);
-
-  const decidedDenominator = beat + lost;
-  const gradedDenominator = beat + lost + matched;
-
-  return {
-    decidedClvBeatRate: decidedDenominator > 0 ? round(beat / decidedDenominator, 4) : null,
-    decidedClvBeatDenominator: decidedDenominator,
-    allGradedClvBeatRate: gradedDenominator > 0 ? round(beat / gradedDenominator, 4) : null,
-    allGradedClvBeatDenominator: gradedDenominator,
-    clvPushRate: gradedDenominator > 0 ? round(matched / gradedDenominator, 4) : null,
-    clvPushRateDenominator: gradedDenominator,
-  };
-}
-
-function nonNegativeCount(value: number): number {
-  return Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0;
-}
-
-function round(value: number, decimals: number): number {
-  const f = 10 ** decimals;
-  return Math.round(value * f) / f;
-}
+// (The local ClvPushDoctrineRates interface and computeClvPushDoctrineRates
+// implementation that used to live here moved verbatim to @sports/types and
+// are re-exported above.)
 
 export interface LoadableClvClient {
   pick: {

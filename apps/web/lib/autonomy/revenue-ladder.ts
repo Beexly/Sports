@@ -12,6 +12,14 @@ export interface RevenueLadderInput {
   readonly canonicalSettled: number;
   readonly calibrationPublished: boolean;
   readonly clvBeatCloseRate: number | null; // 0..1 when known
+  /**
+   * The same beat-close rate computed DECIDED-ONLY (ties excluded from both
+   * numerator and denominator, mirroring the push-never-averaged doctrine).
+   * Purely additive disclosure beside clvBeatCloseRate: the blockers and the
+   * floor above read ONLY clvBeatCloseRate — which reading the ESTABLISHED
+   * 0.524 floor means is a founder decision, not this module's.
+   */
+  readonly clvBeatCloseRateDecided?: number | null;
   readonly settlementHealthy: boolean;
   readonly boardNotSuppressed: boolean;
   readonly liveBoardEnabled: boolean;
@@ -28,6 +36,8 @@ export interface RevenueLadderReport {
   readonly blockersToNext: readonly string[];
   readonly canHonestlyMonetizePublicTrackRecord: boolean;
   readonly operatorMessage: string;
+  /** The decided-only CLV reading passed through beside the rate the floor reads (or null). */
+  readonly clvBeatCloseRateDecided: number | null;
   readonly milestones: ReadonlyArray<{
     readonly step: LadderStep;
     readonly met: boolean;
@@ -123,5 +133,6 @@ export function evaluateRevenueLadder(input: RevenueLadderInput): RevenueLadderR
     canHonestlyMonetizePublicTrackRecord,
     operatorMessage,
     milestones,
+    clvBeatCloseRateDecided: input.clvBeatCloseRateDecided ?? null,
   };
 }

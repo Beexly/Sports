@@ -18,6 +18,7 @@ import {
   computeClvPushDoctrineRates,
   type ClvVerdictCounts,
 } from "@/lib/performance/public-clv-policy";
+import { computeClvPushDoctrineRates as viaTypes } from "@sports/types";
 
 // The measured production counts, 2026-09-19.
 const MEASURED: ClvVerdictCounts = {
@@ -127,5 +128,9 @@ describe("computeClvPushDoctrineRates: three denominators, side by side", () => 
     // with no db, no flags, no gate input. This test exists so a future edit
     // that widens the signature to accept a gate or a flag is caught here.
     expect(computeClvPushDoctrineRates.length).toBe(1);
+  });
+
+  it("the @sports/types shared implementation is byte-identical to the re-export (no drift between surfaces)", () => {
+    expect(viaTypes(MEASURED)).toEqual(computeClvPushDoctrineRates(MEASURED));
   });
 });
