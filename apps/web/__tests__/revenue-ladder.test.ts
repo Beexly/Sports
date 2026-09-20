@@ -49,4 +49,37 @@ describe("revenue ladder readiness", () => {
     expect(r.currentStep).toBe("PROVEN");
     expect(r.canHonestlyMonetizePublicTrackRecord).toBe(true);
   });
+
+  describe("decided-rate passthrough (additive disclosure, floor untouched)", () => {
+    it("carries the decided-only reading beside the rate the floor reads", () => {
+      const r = evaluateRevenueLadder({
+        canonicalSettled: 5000,
+        calibrationPublished: true,
+        clvBeatCloseRate: 0.234,
+        clvBeatCloseRateDecided: 0.4084,
+        settlementHealthy: true,
+        boardNotSuppressed: true,
+        liveBoardEnabled: true,
+        publicPicksEnabled: true,
+        performanceStatsEnabled: true,
+      });
+      expect(r.clvBeatCloseRateDecided).toBe(0.4084);
+      // The ESTABLISHED floor still reads the all-graded rate only:
+      expect(r.blockersToNext.join("; ")).toContain("23.4% < floor 52.4%");
+    });
+
+    it("is null when the caller does not provide the decided reading", () => {
+      const r = evaluateRevenueLadder({
+        canonicalSettled: 5000,
+        calibrationPublished: true,
+        clvBeatCloseRate: 0.6,
+        settlementHealthy: true,
+        boardNotSuppressed: true,
+        liveBoardEnabled: true,
+        publicPicksEnabled: true,
+        performanceStatsEnabled: true,
+      });
+      expect(r.clvBeatCloseRateDecided).toBeNull();
+    });
+  });
 });
