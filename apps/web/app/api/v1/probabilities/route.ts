@@ -11,6 +11,7 @@ import {
 } from "@/lib/b2b/api-key-auth";
 import { db, isStubMode } from "@sports/db";
 import { rankingSortKey } from "@/lib/ranking/sort-key";
+import { dropAdverseEdgePicks } from "@/lib/picks/adverse-edge-suppression";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -62,7 +63,29 @@ export async function GET(req: Request): Promise<NextResponse> {
     })
     .catch(() => []);
 
-  const data = picks
+  /*
+   * ADVERSE-EDGE SUPPRESSION ON THE B2B SURFACE.
+   *
+   * /api/picks and lib/board/state.ts both drop rows whose own
+   * `factorBreakdown.independentEdge.expectedClv` is negative: the engine
+   * priced that side worse than the market, so it is a bet our own model says
+   * loses. Neither v1 route applied the rule, so a row the board and the
+   * consumer app suppress was still emitted here to every API consumer. This
+   * surface is the worse of the two to leak on, because it ships the model
+   * internals (rankingP, marketFairProb) a partner would weight most heavily.
+   *
+   * IMPORTS the predicate rather than restating it (dropAdverseEdgePicks ->
+   * pricesWorseThanMarket in @sports/types). Two gates spelling one rule two
+   * ways is how they drift, and a drift in this direction publishes a row the
+   * engine said to withhold.
+   *
+   * Absence is SILENCE: a missing, non-finite or unparseable breakdown KEEPS
+   * the row, so a parse bug can never become a silent wipe of the partner feed.
+   *
+   * Applied BEFORE the sort, so the ordering a consumer sees is the ordering of
+   * what actually shipped. Writes nothing.
+   */
+  const data = dropAdverseEdgePicks(picks)
     .map((p) => {
       const fb = p.factorBreakdown as Record<string, unknown> | null;
       let rankingP: number | null = null;

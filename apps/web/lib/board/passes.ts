@@ -1,6 +1,7 @@
 import { db, isDemoPicksEnabled, isStubMode } from "@sports/db";
 import { getReadinessGates, toEdgeIndex } from "@sports/prediction-engine";
 import { isPublicPicksSurfaceStale } from "@/lib/data-reliability/public-freshness-gate";
+import { resolveSlateWindow } from "@/lib/picks/slate-window";
 import { unevaluatedPassReason } from "./pass-reason";
 import { collapseGameRowsToFixtures } from "@sports/ingestion-pipeline";
 
@@ -73,11 +74,28 @@ export interface BoardPassesPayload {
   meta: { isSampleData: boolean; suppressedDemoData?: boolean; dataError?: "DB_UNREACHABLE" };
 }
 
+/**
+ * The board day is the US EASTERN calendar day, not the process zone.
+ *
+ * This read `new Date()` + `setHours(0,0,0,0)`, i.e. midnight in whatever zone
+ * the Node process runs in, which is UTC on Vercel. The window therefore ended
+ * at 00:00 UTC, which is 8:00pm ET. From 8pm ET onward the board's "today" was
+ * already TOMORROW, so on an NFL Sunday the whole afternoon slate (1:00pm and
+ * 4:25pm ET kickoffs) dropped out of the lane mid-evening, while those games
+ * were still the day's story.
+ *
+ * It also disagreed with /api/picks, which has resolved its slate on the
+ * Eastern day since 2026-09-05 (`lib/picks/slate-window.ts`). One surface
+ * calling a 7:00pm ET kickoff "today" while the other calls it "tomorrow" is a
+ * split a reader reads as a bug in the picks, not in the clock. Reusing that
+ * helper rather than respelling the boundary is the point: a second spelling
+ * of a day boundary is how the two surfaces drifted apart to begin with.
+ *
+ * `resolveSlateWindow` is DST-correct; it reads the offset in force at that
+ * day's own midnight, so the 25-hour and 23-hour days resolve.
+ */
 function todayBounds(): { start: Date; end: Date } {
-  const start = new Date();
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(start);
-  end.setDate(end.getDate() + 1);
+  const { start, end } = resolveSlateWindow(null, new Date());
   return { start, end };
 }
 

@@ -631,7 +631,9 @@ describe("wiring: both canonical loaders run the odds-table resolver and the sur
     for (const field of ["id", "gameId", "generatedAt", "selection", "homeTeamName", "awayTeamName"]) {
       expect(src).toMatch(new RegExp(`${field}:\\s*true`));
     }
-    expect(src).toMatch(/loadPublishTimeMarketPResolver\(db,\s*rows\)/);
+    // The db handle may carry the repo's defensive cast ("db as never"); the
+    // contract pinned here is that the resolver is injected with rows.
+    expect(src).toMatch(/loadPublishTimeMarketPResolver\(db(?:\s+as\s+never)?,\s*rows\)/);
     expect(src).toMatch(/resolveMarketP:\s*oddsTable\.resolveMarketP/);
     expect(src).toMatch(/pSources:\s*marketPSourcesFromBySource\(honest\.bySource\)/);
     expect(src).toMatch(/marketPFromOddsTable:\s*oddsTable\.stats/);
@@ -651,7 +653,8 @@ describe("wiring: both canonical loaders run the odds-table resolver and the sur
     for (const field of ["id", "gameId", "generatedAt", "selection", "homeTeamName", "awayTeamName"]) {
       expect(src).toMatch(new RegExp(`${field}:\\s*true`));
     }
-    expect(src).toMatch(/loadPublishTimeMarketPResolver\(db,\s*rows\)/);
+    // Same cast tolerance as the cron scan above.
+    expect(src).toMatch(/loadPublishTimeMarketPResolver\(db(?:\s+as\s+never)?,\s*rows\)/);
     expect(src).toMatch(/resolveMarketP:\s*oddsTable\.resolveMarketP/);
     expect(src).toMatch(/bySource:\s*built\.bySource/);
     expect(src).toMatch(/marketPFromOddsTable:\s*oddsTable\.stats/);
