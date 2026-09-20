@@ -45,6 +45,22 @@ Each of these LOOKS like a bug and is not. Do not re-investigate them.
    `"H2H" | "SPREADS" | "TOTALS"` (`packages/types/src/index.ts:353`). There is
    no plural/singular mismatch.
 
+6. **NFL spread and total odds ARE being ingested.** Measured 2026-09-20:
+   79,526 SPREADS rows and 79,707 TOTALS rows, 11 books, 15 games, 100%
+   both-sides priced, fetched fresh that day. Any hypothesis built on "the
+   odds are missing" or "the paid leg is not running" is refuted by
+   measurement. The zero-published-picks symptom is a PUBLISH-layer deadlock;
+   see section 3.
+
+### A method note worth keeping
+
+Four of the five traps above were found by reading source, and the source
+readings were all correct. The ingestion hypothesis built on top of them was
+still wrong, because the code path being *reachable* says nothing about
+whether it *ran*. Source reading establishes what CAN happen; only a
+measurement establishes what DID. When those two disagree, the measurement
+wins.
+
 ---
 
 ## 1. Current production state — measured 2026-09-20 ~16:30 UTC
@@ -186,59 +202,82 @@ session.
 
 ## 3. PRIORITY 2 — NFL publishes zero spreads and zero totals
 
-### Measured (72h window, 2026-09-20)
+### SOLVED AND FIXED by Hermes, 2026-09-20. Root cause below. Fix awaiting merge.
+
+**An earlier draft of this handoff blamed ingestion. That was WRONG and is
+corrected here.** Hermes ran the diagnostic query against production
+(read-only, isolated Neon snapshot, since deleted) and measured:
 
 ```
-americanfootball_nfl   15 games -> MONEYLINE 11, SPREAD 0, TOTAL 0
-baseball_mlb           34 games -> MONEYLINE 21, SPREAD  6, TOTAL 10
+SPREADS  79,526 rows | 11 books | 15 games | 100% both-sides priced
+TOTALS   79,707 rows | 11 books | 15 games | 100% both-sides priced
+All three markets fetched fresh 2026-09-20 20:02:28Z from oddsapi rows.
 ```
 
-Odds ARE flowing: `oddsInserting` lastSuccess 22 min prior, `withinRefreshSla
-true`, `oddsInserted 776` for NFL, both `THE_ODDS_API_KEY` and `THERUNDOWN_API`
-present.
+**The paid leg IS running. The odds ARE ingested. The scorer DOES produce the
+picks:** 15 SPREAD + 15 TOTAL rows exist with confidence 50-100, consensus
+0.667-1.0, and 6-11 books each. None of the three publish gates kills anything.
 
-Every published NFL pick sampled via `/api/picks?sport=NFL` was a HOME team
-moneyline with `hasBookPrice: false` and `line: 0` — i.e. signal-slate rows with
-no book behind them. Verified real vs ESPN: Bucs ML, Patriots ML, Ravens ML.
+### The actual root cause — a publish-layer deadlock
 
-### What has been RULED OUT from source (do not re-check — see section 0)
+All 30 rows carry `isPublished = false`, and three things combine to make that
+permanent:
 
-consensusPct, `isPublishableSpreadLine`, market-key mismatch, and the
-line-integrity guard (`scoring.ts:1130` reads
-`LINE_INTEGRITY_PUBLISH_GUARD_ENABLED`, default OFF — note this is a DIFFERENT
-variable from `LINE_INTEGRITY_VOID_ENABLED`; **founder should confirm the
-PUBLISH_GUARD one is unset in Vercel**).
+1. The **stale-pick policy** unpublished them (founder decision 2026-09-05:
+   unpublish, never restore).
+2. The refresh loop **updates confidence in place but never re-publishes**.
+3. The **unique `(gameId, pickType)` constraint** means a fresh mint can never
+   take the slot.
 
-### What is still open
+Net effect: 30 invisible rows, `picks_touched: 0` across all 10 successful NFL
+runs in the preceding 24h, and **no new book-path pick since 2026-09-14**.
 
-`scoreSpreadPick` has no sport-specific branch that can single out NFL, so this
-is an INPUT SHAPE problem. It needs one database query, which no agent session
-in this repo can run (law 7 forbids touching a database):
+### The fix (shipped, needs merge)
 
-```sql
-SELECT market, COUNT(*) AS rows,
-       COUNT(DISTINCT bookmaker) AS books,
-       COUNT(*) FILTER (WHERE "homeSpreadPrice" IS NOT NULL
-                          AND "awaySpreadPrice" IS NOT NULL) AS both_priced
-FROM odds o JOIN games g ON g.id = o."gameId"
-WHERE g.sport = 'americanfootball_nfl'
-  AND g."commenceTime" BETWEEN now() AND now() + interval '72 hours'
-GROUP BY market;
-```
+Commit `cca14d22a` on `origin/hermes/lane-bc-20260920`, 5 files.
 
-- SPREADS/TOTALS rows = 0 → ingestion problem, do NOT touch `scoring.ts`
-- rows exist but `both_priced` = 0 → normalizer problem (`normalizer.ts:111`)
-- >= 2 books both-priced → genuinely a scoring gate; instrument the `return null`
-  sites at `scoring.ts:432, 439, 448, 461, 474` with per-game counters
+When the slot is held by a PENDING + unpublished row, the write loop now voids
+it through the settlement outbox under a new RCA code
+`STALE_UNPUBLISHED_SUPERSEDED` (same event shape as the zero-sit void these
+rows were headed for at kickoff+24h anyway) and mints a fresh, fully-gated pick
+with a new CLV lock.
 
-### Relevant structural facts (verified in source)
+Published rows are never touched: the side-flip freeze and write-once bet terms
+stay intact, with tests pinning all four branches. Verified by Hermes: repo
+typecheck exit 0, helper 2/2, process-sport 89/89, apps/web RCA 22/22.
+
+First post-deploy cycle should void the 30 and mint fresh published
+spreads/totals.
+
+### Consequence that is now LAUNCH-CRITICAL
+
+After this fix, **NFL spreads and totals depend on the paid Odds API leg**,
+because the keyless path is h2h-only. So the credit burn in section 5 stops
+being a Week 4 problem:
+
+- 5,477 credits remaining, daily budget 600, `paceOk: false`
+- projected exhaustion **2026-09-29**
+- mitigation path already exists: `packages/data-ingestion/src/rundown-client.ts:298`
+  has `v2MarketKey` mapping spreads and totals, and Rundown is the registered
+  fallback. Verify whether it is wired into the NFL path.
+
+### Corrections to earlier claims in this repo's notes
+
+- **Fixture triplication is 2x, not 3x.** Measured: 30 `games` rows for 15
+  fixtures, with the odds on the odds-api twin. AGENTS.md's "three rows per
+  fixture" note is stale.
+- The four source-level hypotheses in section 0 were all correct as *code
+  readings*; the ingestion premise built on top of them was operationally
+  stale. Keep the section 0 entries, discard any conclusion that NFL
+  spread/total odds are missing.
+
+### Structural facts still worth knowing (verified in source)
 
 - The free fallback odds sources emit **h2h ONLY**:
   `packages/data-ingestion/src/espn-odds-client.ts:241,506` and
   `galaxy-kalshi-book.ts:105`. Only the paid Odds API path requests all three
-  (`process-sport.ts:418`, `MARKETS = ["h2h","spreads","totals"]`).
-  `process-sport.ts:400-420` skips the paid leg entirely when the payment
-  circuit is open or `paidCallJustified` is false.
+  (`process-sport.ts:418`, `MARKETS = ["h2h","spreads","totals"]`). This is why
+  the credit risk above is now load-bearing.
 - The signal slate is **structurally moneyline-only**, not config-gated.
   `packages/ingestion-pipeline/src/generate-signal-slate.ts:499,615` hardcode
   `pickType: "MONEYLINE"`, and `IndependentMarketFairValue`
@@ -247,7 +286,15 @@ GROUP BY market;
 - `skellam_cover`, the only cover-probability producer, is sport-gated to
   soccer/hockey/baseball (`packages/prediction-engine/src/skellam.ts:135-140`),
   which EXCLUDES NFL. Consequence: the independentEdge / PASS veto is
-  structurally unreachable for NFL spreads.
+  structurally unreachable for NFL spreads, so those 30 newly-published rows
+  will carry no adverse-edge veto. Watch them.
+
+### Known blocker on the shared lint gate (not owned by this lane)
+
+Untracked file `apps/web/lib/ops/waitUntil.ts:22` fails eslint: it disables
+`no-var-requires` but the firing rule is `no-require-imports`. One-line
+disable-comment fix. The file is untracked and absent from this session's
+working tree, so whoever owns that checkout must fix it.
 
 ---
 
