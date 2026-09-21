@@ -53,8 +53,37 @@ Key finding: **no graphic in this pass printed an explicit metric definition or 
 - Quote-tweet commentary on @NFLPlus/@NFL_Researcher/@RapSheet posts extends reach without new graphics.
 - pro.nfl.com and NFL Pro are the recurring product surfaces; NFL IQ (powered by AWS) is the draft-season surface.
 
-## GSE applications (recorded, not decided)
+## New metric families from pass 2 (80 posts, Apr 24 → Mar 9, 2026)
+
+Definitions below are inferred from usage in post text — labeled as such. Key methodological observation from pass 2: NGS increasingly frames stat nuggets with explicit minimum-qualifier discipline (min. snaps, min. rushes, min. targets) and historical anchors ("since 2021", "in the Next Gen Stats era", "most by any DL since 2018").
+
+28. **NGS Draft Model scores** — Overall / Production / Athleticism (0–100 scale; scale legend 50/60/70/80/90/100 = AVG / AVERAGE / GOOD / ELITE) + **Raw ATH Score** (10.0 scale). "Predictive & raw athleticism models trained against DTs since 2003" (Ugo Bernard: Athleticism 96 (1st), Raw ATH 10.0 (1st)); seven years in use for sleeper ID ("identify sleepers using data and machine learning"); Sonny Styles one of two 2026 prospects at 90+ in all three dimensions; Jeremiyah Love Overall 94 (3rd among RBs in NGS database behind Bijan Robinson 96 and Saquon Barkley 96); David Bailey production 98 (3rd among edges over last 10 draft classes behind Chase Young 99, Will Anderson Jr. 99). No formulas published.
+29. **Makes over expected (kicker)** — Fairbairn 44/48 FG in 2025, 3rd-most makes over expected (+6.1). Inferred: FG probability model vs actual.
+30. **Time to pressure allowed (OL)** — Linderbaum allowed pressure in an average of 3.64 seconds (2nd-longest among centers, min. 250 pass blocks).
+31. **Motion at snap rate** — Alec Ingold led NFL 36.9% (min. 250 snaps); motion rate 53.1% overall (min. 250). Reggie Gilliam 36.1% motion rate (5th, min. 200 snaps).
+32. **Cumulative win probability added on interceptions** — Nahshon Wright added 64.3% (2nd among outside CBs, 2025).
+33. **Target EPA (DB)** — Kevin Byard −18.6 (4th-lowest among safeties); Jamel Dean −30.1 (lowest among outside CBs); Devin Bush −0.73 EPA per target (fewest of any defender targeted 25+ times).
+34. **Yards per coverage snap** — Riq Woolen 0.5 in man coverage (fewest among outside CBs); Devin Bush 0.49 (2nd-fewest among LBs, min. 250).
+35. **Quick pressure rate (OL)** — David Edwards allowed four quick pressures in 2025, 0.7% quick pressure rate (3rd-lowest among LGs, 300+ pass blocks). Confirms quick pressure = under 2.5 seconds (stated in multiple posts).
+36. **Pressures when double teamed** — Osa Odighizuwa 32 (2nd since start of 2024); Jonathan Allen 64 (5th since 2021); Kobie Turner 36 (2024–25 season leader, G2 leaderboard). 9.1% pressure rate when doubled (Odighizuwa, 3rd, min. 200 double teams).
+37. **Run stops for unsuccessful play / run stuffs** — David Onyemata 42 (T-7th among DTs); Maxx Crosby 24 run stuffs for loss/no gain in 2025 (most by a DL since 2018).
+38. **Missed tackle rate (LB)** — Leo Chenal 5.2% (lowest among LBs since 2023, min. 40% snaps at LB, min. 125 tackle attempts); Quay Walker 4.5% (3rd-lowest, 100+ attempts).
+39. **Scramble EPA** — Kyler Murray 4th-most scramble EPA since 2019; 1,993 scramble rush yards (4th).
+40. **Average speed on carries / at LOS** — Keaton Mitchell 14.49 mph on carries (1+ mph faster than any other RB, min. 50 carries); 12.14 mph at LOS.
+41. **Vertical receptions** — Jaylen Waddle 21 (T-2nd in NFL, 2025).
+42. **Receptions vs split-safety** — Michael Pittman Jr. 40 (T-4th among WRs).
+43. **Isolated alignment TDs** — Mike Evans 13 since 2023 (T-most), 39 since 2016 (15 more than any other player).
+44. **EPA per dropback (QB)** — Malik Willis +0.38 (2024–25, most in NFL, min. 100 DB).
+45. **EPA per play with player on/off field** — Ravens +0.13 EPA/play with Ricard on field vs −0.09 without.
+46. **Run rate of player snaps** — Ricard 76.4% (2nd-highest in NFL); Gilliam 78.1% (highest, 200+ snaps).
+47. **Air yards per target** — Alec Pierce 16.9 (league-high, last four seasons, min. 150 targets).
+48. **Completion % as field-side CB** — Cordale Flott 42.9% (4th-lowest, 20+ targets).
+49. **Coverage classification** — NGS "classifies every coverage defenders' responsibility and matchups on every dropback" (AWS explainer video 1:57, Mar 31).
+50. **Expected Points Models** — "move beyond simple yards to evaluate the result of each play based on game situation... the underlying model behind widely used metrics like EPA and success rate" (AWS explainer video 2:42, Apr 2).
+
+## GSE applications (all passes)
 - Mirror the four chart templates with nflverse/FTN-charting data: pass-location maps + CPOE/EPA, carry-path maps + RYOE/MTF, route maps + RECYOE, rush-arc maps + pressure/get-off.
 - Adopt quick-pressure (<2.5s) as the rush-win quality split; get-off and time-to-pressure as edge-eval inputs.
 - Adopt the situational-split discipline: blitz-rate splits, under-center splits, on/off-field splits, per-defender coverage tables — these are the formats that make tracking data predictive for props/DFS.
 - Watch for Run Scheme Classification and Route Classification 2.0 outputs to reverse-engineer the taxonomy.
+- Pass-2 additions: adopt the qualifier discipline (every metric ships with a minimum threshold and historical anchor) in GSE public posts; mirror G2 leaderboards and G3 free-agency cards with nflverse data; Draft Model taxonomy (Overall/Production/Athleticism + Raw ATH) as the template for GSE prospect scoring; spec builds for target EPA for DBs, yards per coverage snap, quick pressure rate (OL allowed), cumulative WPA on INTs, kicker makes over expected, motion at snap rate.
