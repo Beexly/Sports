@@ -135,7 +135,7 @@ NGS Draft Model three scores (Overall/Production/Athleticism, 0–100) + Raw ATH
 
 **Mar 9** | "John Franklin-Myers posted the 4th-highest pressure rate among defensive tackles from 2024-2025 (11.8%, min. 500 pass rushes). Franklin-Myers' 7.5 sacks in 2025 were the 3rd most at the position. @Titans | #TitanUp" + quote of @RapSheet (Franklin-Myers signing with Titans) | image | 5 / 83 / 539 / 171K
 
-**Mar 9** | "Since 2023, Mike Evans has caught 13 touchdowns when aligned as an isolated receiver, the tied with Ja'Marr Chase for the most in the NFL despite missing 12 games in that span. Evans' 39 isolated touchdowns since 2016 are 15 more than any other player. @49ers | #FTTB" + quote of @RapSheet (49ers signing Evans) | image | 0 / 12 / 94 / 30K
+**Mar 9** | "Since 2023, Mike Evans has caught 13 touchdowns when aligned as an isolated receiver, tied with Ja'Marr Chase for the most in the NFL despite missing 12 games in that span. Evans' 39 isolated touchdowns since 2016 are 15 more than any other player. @49ers | #FTTB" + quote of @RapSheet (49ers signing Evans) | image | 0 / 12 / 94 / 30K
 
 **Mar 9** | "Kenneth Gainwell had the highest target rate (27.2%) among running backs who ran 150+ routes in 2025. Gainwell had the 4th most catches (73) and the 5th most YAC (548) among that group while also posting the 4th-highest catch rate (min. 40 targets). @Buccaneers" + quote of @RapSheet (Bucs signing Gainwell) | image | 2 / 7 / 30 / 33K
 
