@@ -41,10 +41,12 @@ import {
   DEFAULT_TEAM_CAPACITY,
   CONSERVATIVE_EVIDENCE_THRESHOLD,
   composeFrontierLedger,
+  composeCorpusLedger,
   FRONTIER_SIGNALS,
   type TeamIndexRegistry,
 } from "@sports/prediction-engine";
 import { loadFilter, saveFilter, recordShadowSignal, settleShadowSignal } from "./shadow-signal-store";
+import { loadCorpusSignals } from "../../../../packages/prediction-engine/src/corpus-signals-load";
 
 /** Particle count — the serverless operating point, matching the filter's own default. */
 const SHADOW_PARTICLES = 1000;
@@ -104,6 +106,16 @@ export async function runShadowEvaluationPass(scope: string): Promise<ShadowPass
   notes.push(
     `frontier ledger rows=${frontier.rows.length} families=${frontier.families} catalog=${FRONTIER_SIGNALS.length} observed=${frontier.observed}`,
   );
+  try {
+    const corpusSignals = loadCorpusSignals();
+    const corpus = composeCorpusLedger(corpusSignals, [], new Date().toISOString());
+    notes.push(
+      `corpus signals=${corpus.rows.length} families=${corpus.families} sources=${corpus.sources} observed=${corpus.observed}`,
+    );
+  } catch (error) {
+    const message = error instanceof Error ? error.message : "corpus registry unavailable";
+    notes.push(`corpus registry unavailable: ${message}`);
+  }
   let settledAbsorbed = 0;
   let evaluated = 0;
   let skipped = 0;

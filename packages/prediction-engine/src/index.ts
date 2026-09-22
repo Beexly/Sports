@@ -956,6 +956,13 @@ export {
   composeFrontierLedger,
 } from "./frontier-signal-catalog.js";
 export type { FrontierSignal, FrontierObservation, FrontierLedger } from "./frontier-signal-catalog.js";
+export {
+  broadcastFamily,
+  collapseCorpusFamilies,
+  composeCorpusLedger,
+  corpusRows,
+} from "./corpus-signals.js";
+export type { CorpusSignal, CorpusObservation, CorpusLedger } from "./corpus-signals.js";
 
 // Player usage archetype (receiving lean / workload) from rushing/receiving usage.
 export { classifyUsageProfile } from "./player-archetype.js";
