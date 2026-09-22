@@ -10,8 +10,7 @@ consolidated here so any agent with repo access can see and continue the work.
 count. A **REJECT** never counts toward the target — every REJECT must be replaced
 with another full-paper read until the valuable count hits 750.
 
-Current count: **365 / 750 valuable** (342 ADAPT + 23 ADOPT; 145 REJECTs on record).
-Needed: **385 more ADAPT/ADOPT ledgers.**
+Current count: **COMPLETE — 750 / 750 valuable** (724 ADAPT + 26 ADOPT), verified 2026-09-21 ~18:49 CDT against the ledger files on disk (zero verdict mismatches, zero REJECTs counted, zero missing files).
 
 Phase 1 (the "500") closed at 510 verified ledgers (365 valuable). Garrett rejected
 the phase-1 framing: his standard was 500 papers *active and worth adapting*.
