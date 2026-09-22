@@ -30,7 +30,7 @@
 #   Footer: statrankings.com. Author caveat (post): "Some noise from injuries
 #   (Jones, Saquon, Price) & two blowouts for CMC (plus cramps). Only one game
 #   for LAR/NYG. Otherwise, should be fairly predictive." Data: statrankings.com.
-#   URL VERIFICATION NEEDED before reuse (digit-sequence discrepancy in report).
+#   URL verified 2026-09-22 AM: https://x.com/MagicSportsGuy/status/2102155677879968087.
 # gridironinfo-pass-attempts-by-air-yards-week2-partial.csv — @GridironInfo_,
 #   1:18 PM CDT Mon — "PASS ATTEMPTS BY AIR YARDS" (2026, Week 2, % of
 #   Attempts, Min: 15). Columns: PLAYER, 0-5, 6-10, 11-20, 21+. PARTIAL:
