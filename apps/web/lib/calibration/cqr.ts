@@ -5,14 +5,18 @@
  * Binary sides stay: Raw → Temp | Platt | PAVA/CIR | EB-τ → eligibility.
  */
 
-/** Split-conformal quantile with finite-sample correction. */
+/** Split-conformal quantile with finite-sample correction.
+ * Fail-closed: when ceil((1-α)(n+1)) > n the quantile is undefined —
+ * return +∞ (vacuous interval / No-Bet) instead of clamping the rank,
+ * which would falsely certify 1−α coverage. At α=0.1 this means n ≥ 9.
+ * (Research: docs/research/2026-09-21/drive-deep/conformal-prediction-small-sample-calibration-audit.md) */
 export function conformalQuantile(scores: readonly number[], alpha: number): number {
   const n = scores.length;
   if (n === 0) return Number.POSITIVE_INFINITY;
+  const rank = Math.ceil((1 - alpha) * (n + 1)) - 1;
+  if (rank >= n) return Number.POSITIVE_INFINITY;
   const s = [...scores].sort((a, b) => a - b);
-  let rank = Math.ceil((1 - alpha) * (n + 1)) - 1;
-  rank = Math.min(Math.max(rank, 0), n - 1);
-  return s[rank]!;
+  return s[Math.max(rank, 0)]!;
 }
 
 /**
