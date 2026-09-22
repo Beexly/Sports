@@ -2,7 +2,7 @@
 
 **Citation:** Kiratidis, A. L. & Leinweber, D. B. (2017). *An Aerodynamic Analysis of Recent FIFA World Cup Balls*. arXiv:1710.02784. URL: https://arxiv.org/abs/1710.02784
 **Ledger completed:** 2026-09-21. **Read:** full text (ar5iv HTML, Sections 1–8 + references, ~625 lines).
-**Verdict**: ADAPT
+**Verdict:** ADAPT
 ADAPT — one sentence: the altitude/temperature air-density model and drag/lift ball-flight ODE are directly adaptable to NFL field-goal/punt distance modeling (Denver altitude effect), but the paper is soccer-ball-specific (wind-tunnel C_D curves for Teamgeist/Jabulani/Brazuca) so its coefficients do not transfer to an NFL football.
 
 ## 1. Research question

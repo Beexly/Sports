@@ -2,7 +2,7 @@
 
 **Citation:** Chudinov, P. (2022). *Projectile motion in a medium with quadratic drag at constant horizontal wind*. arXiv:2206.02397v4. URL: https://arxiv.org/abs/2206.02397
 **Ledger completed:** 2026-09-21. **Read:** full text (PDF, 10 pages, Sections 1–5 + references + Table 1 + 6 figures).
-**Verdict**: ADAPT
+**Verdict:** ADAPT
 ADAPT — one sentence: closed-form elementary-function formulas for wind-perturbed projectile range give GSE a fast analytic wind adjustment for punts/field goals, but the constant-horizontal-wind assumption and no-Magnus simplification make it a first-order correction rather than a full trajectory model.
 
 ## 1. Research question

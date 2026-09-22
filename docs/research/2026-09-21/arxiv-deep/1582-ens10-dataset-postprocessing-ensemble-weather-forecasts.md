@@ -2,7 +2,7 @@
 
 **Citation:** Ashkboos, S., Huang, L., Dryden, N., Dueben, P., Gianinazzi, L., Kummer, L. & Hoefler, T. (2022). *ENS-10: A Dataset For Post-Processing Ensemble Weather Forecasts*. arXiv:2206.14786. URL: https://arxiv.org/abs/2206.14786
 **Ledger completed:** 2026-09-21. **Read:** full text (ar5iv HTML, Sections 1–5 + appendices on EFI/minimum-CRPS, ~1,450 lines).
-**Verdict**: ADAPT
+**Verdict:** ADAPT
 ADAPT — one sentence: ENS-10 is the standard public benchmark for ML ensemble post-processing with a validated differentiable-CRPS Gaussian recipe and a novel extreme-event metric (EECRPS) that GSE can adopt directly to train and score kickoff-weather ensemble correction, though the 3 TB / 20-year global dataset is heavier infrastructure than a stadium-scale use needs.
 
 ## 1. Research question

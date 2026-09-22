@@ -2,7 +2,7 @@
 
 **Citation:** Iwase, K. & Takenawa, T. (2026). *Improvements to the post-processing of weather forecasts using machine learning and feature selection*. arXiv:2604.19340. URL: https://arxiv.org/abs/2604.19340
 **Ledger completed:** 2026-09-21. **Read:** full text (ar5iv HTML, Sections 1–4 + methods/results/discussion + references, ~1810 lines).
-**Verdict**: ADAPT
+**Verdict:** ADAPT
 ADAPT — one sentence: LightGBM with surrounding-grid context and correlation-based feature selection beat both raw NWP and the operational guidance product on temperature/wind/precipitation, giving GSE a cheap, well-validated tabular post-processing recipe, but it is deterministic (no uncertainty) and validated only on JMA's mesoscale model over Japan.
 
 ## 1. Research question

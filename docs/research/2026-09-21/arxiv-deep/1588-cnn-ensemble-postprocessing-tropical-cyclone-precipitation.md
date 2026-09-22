@@ -2,7 +2,7 @@
 
 **Citation:** Chen, S.-W., Juang, J., Wang, C., Chang, H.-L., Hong, J.-S., & Hsiao, C. K. (2024). *A Convolutional Neural Network-based Ensemble Post-processing with Data Augmentation for Tropical Cyclone Precipitation Forecasts*. arXiv:2409.09607. URL: https://arxiv.org/abs/2409.09607
 **Ledger completed:** 2026-09-21. **Read:** full text (arXiv PDF, 16 pages, Sections 1–5 + discussion + conclusions + references).
-**Verdict**: ADAPT
+**Verdict:** ADAPT
 ADAPT — one sentence: The three add-on tricks (temporal-interpolation data augmentation for fast-moving storms, dynamic TC-relative distance features, and recency-weighted CRPS loss) are the transferable payload — GSE rarely deals with tropical cyclones, but the augmentation recipe directly addresses its own small-sample problem (only ~1 hurricane-type game per stadium per decade) and the recency weighting fixes an acknowledged flaw in every paper in this wave that weights training data equally regardless of when it was issued.
 
 ## 1. Research question

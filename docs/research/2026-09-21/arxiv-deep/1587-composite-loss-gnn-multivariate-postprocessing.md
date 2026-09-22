@@ -2,7 +2,7 @@
 
 **Citation:** Lakatos, M. (2025). *A Composite-Loss Graph Neural Network for the Multivariate Post-Processing of Ensemble Weather Forecasts*. arXiv:2509.02784. URL: https://arxiv.org/abs/2509.02784
 **Ledger completed:** 2026-09-21. **Read:** full text (ar5iv HTML, Sections 1–6 + references, ~765 lines).
-**Verdict**: ADAPT
+**Verdict:** ADAPT
 ADAPT — one sentence: The dualGNN (GraphSAGE trained on a weighted ES + variogram-score composite loss) beats every ECC/Schaake-shuffle two-step method on both case studies while keeping marginals calibrated, giving GSE a proven one-step recipe for producing spatially coherent joint weather scenarios across all 30 stadiums in a single forward pass, though the training data appetite (530 days) is larger than anything GSE currently archives.
 
 ## 1. Research question

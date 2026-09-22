@@ -2,7 +2,7 @@
 
 **Citation:** Hammer, H. L. (2019). *Statistical models for short and long term forecasts of snow depth*. arXiv:1901.04695. URL: https://arxiv.org/abs/1901.04695
 **Ledger completed:** 2026-09-21. **Read:** full text (ar5iv HTML, ~612 lines, Sections 1–5 + references + Table 2).
-**Verdict**: ADAPT
+**Verdict:** ADAPT
 ADAPT — one sentence: The zero-inflated gamma regression with physically-grounded snowfall/melting nonlinearity is the only model in this wave (or the wave's existing gap list) that handles a derived, persistent, threshold-sensitive surface variable like snow depth — directly transferable to GSE's Buffalo/Green Bay/Foxboro snow-game totals, where the engine needs a probabilistic snow-depth-on-the-field model, not just a precipitation forecast, and no current engine component produces one.
 
 ## 1. Research question

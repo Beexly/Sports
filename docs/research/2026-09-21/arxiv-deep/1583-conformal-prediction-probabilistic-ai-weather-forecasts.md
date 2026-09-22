@@ -2,7 +2,7 @@
 
 **Citation:** Asch, A., Rossellini, R., Hassanzadeh, P. & Willett, R. (2026). *Rigorous uncertainty quantification of probabilistic AI weather forecasts with conformal prediction*. arXiv:2606.19642. URL: https://arxiv.org/abs/2606.19642
 **Ledger completed:** 2026-09-21. **Read:** full text (ar5iv HTML, Sections 1–4 + Open Research + supplement refs, ~1,050 lines).
-**Verdict**: ADOPT
+**Verdict:** ADOPT
 ADOPT — one sentence: This is the operationally simplest, theoretically guaranteed coverage fix for ensemble weather forecasts — a one-scalar online update (η = 0.01) that converges to target coverage within days, beats EMOS on reliability diagrams with no CRPS loss, works on any forecast model, and slots directly on top of the GSE weather post-processing stack to guarantee calibrated game-day uncertainty; adopt it as the final calibration layer.
 
 ## 1. Research question

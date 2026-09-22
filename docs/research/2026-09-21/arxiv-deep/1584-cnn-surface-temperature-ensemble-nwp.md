@@ -2,7 +2,7 @@
 
 **Citation:** Inoue, T. & Kawabata, T. (2026). *CNN-based Surface Temperature Forecasts with Ensemble Numerical Weather Prediction*. arXiv:2507.18937; published Mon. Wea. Rev. 154: 1527–1547. URL: https://arxiv.org/abs/2507.18937
 **Ledger completed:** 2026-09-21. **Read:** full text (48-page PDF, v3, Sections 1–7 + appendices + references; note ar5iv has no HTML for this version so the PDF was read).
-**Verdict**: ADAPT
+**Verdict:** ADAPT
 ADAPT — one sentence: Member-wise CNN correction of coarse (40 km) ensemble members beats both Kalman-filter baselines and operational 5 km models on temperature while preserving ensemble information content rather than smoothing it away, giving GSE a validated bias-correction + downscaling recipe for temperature forecasts at stadium scale, but extremes remain limited by what the low-resolution inputs contain.
 
 ## 1. Research question

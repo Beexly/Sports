@@ -2,7 +2,7 @@
 
 **Citation:** Baran, S. & Lakatos, M. (2025). *Statistical post-processing of operational dual-resolution wind-speed ensemble forecasts*. arXiv:2506.15578. URL: https://arxiv.org/abs/2506.15578
 **Ledger completed:** 2026-09-21. **Read:** full text (ar5iv HTML, Sections 1–5 + references).
-**Verdict**: ADAPT
+**Verdict:** ADAPT
 ADAPT — one sentence: Truncated-normal EMOS calibration is the cheapest proven wind-speed forecaster available — local and semi-local EMOS beat raw ensembles on every metric and near-erase the gap between a 9 km and 36 km model — but EMOS post-processing makes dual-resolution mixtures nearly redundant, so GSE should calibrate one good wind ensemble rather than pay for two resolutions.
 
 ## 1. Research question

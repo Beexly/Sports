@@ -2,7 +2,7 @@
 
 **Citation:** Mlakar, P., Merše, J. & Faganeli Pucer, J. (2023). *Ensemble weather forecast post-processing with a flexible probabilistic neural network approach*. arXiv:2303.17610. URL: https://arxiv.org/abs/2303.17610
 **Ledger completed:** 2026-09-21. **Read:** full text (ar5iv HTML, Sections 1–5 + discussion + references, ~840 lines).
-**Verdict**: ADAPT
+**Verdict:** ADAPT
 ADAPT — one sentence: joint multi-station multi-lead-time post-processing with normalizing spline flows is the right architecture for GSE's game-day weather calibration, but it is validated only on European 2 m temperature, so wind/precipitation and US stadiums need re-training and re-validation.
 
 ## 1. Research question

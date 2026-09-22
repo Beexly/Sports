@@ -2,7 +2,7 @@
 
 **Citation:** Lakatos, M. (2026). *Statistical versus machine learning-based spatial interpolation of post-processed ensemble weather forecasts*. arXiv:2609.07512. URL: https://arxiv.org/abs/2609.07512
 **Ledger completed:** 2026-09-21. **Read:** full text (25-page PDF, v1, Sections 1–5 + references; note ar5iv redirects to the arXiv abs page for this paper, so the PDF was read).
-**Verdict**: ADAPT
+**Verdict:** ADAPT
 ADAPT — one sentence: The study proves that the best post-processing model at observed stations (EMOS-L) is the worst at unobserved ones, while regional, semi-local, and ML models transfer well — a directly actionable rule for GSE's 30-stadium problem (calibrate stadium-specific models, but design them to interpolate to domed/outdoor venue types via regional/semi-local pooling), plus an altitude-aware linear pool (ALP) that improves combinations at new locations.
 
 ## 1. Research question
