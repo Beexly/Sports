@@ -1,87 +1,62 @@
-> **Ops SoT:** [`docs/ops/CANONICAL.md`](docs/ops/CANONICAL.md) · Production `/cockpit`. Root handoffs archived under `docs/ops/archive/`.
-
 # START HERE — launch control
 
-> One page. Everything else is reference. **Status: the site is LIVE** at
-> galaxysportsedge.com (recovered after the DB rotation). The `research/proven-edge`
-> engine work is **integrated into `main`, green, and dormant-safe** (typecheck 0 ·
-> 5,840 web tests · 487 engine · 36 ingestion · build 192 pages · all scanners clean).
-> Nothing below is urgent — it's the ordered path from "live & silent" to "fully public."
+> **Ops SoT:** [`docs/ops/CANONICAL.md`](docs/ops/CANONICAL.md) · **Doc map:** [`docs/INDEX.md`](docs/INDEX.md) · Production `/cockpit`.
+>
+> **Status:** the site is LIVE at [galaxysportsedge.com](https://www.galaxysportsedge.com).
+> `MODEL_VERSION` is frozen at **v5.2.7**. Calibration board: [`docs/ops/CALIBRATION_STATUS.md`](docs/ops/CALIBRATION_STATUS.md).
+> Work queue: [`docs/ops/AGENT_LEDGER.md`](docs/ops/AGENT_LEDGER.md) + [`docs/ops/LAST_PLAN_2026-09-15.md`](docs/ops/LAST_PLAN_2026-09-15.md).
+
+This page is launch control only. Everything else is in the doc map — do not invent parallel START/MASTER pages.
 
 ---
 
 ## Deploy (when you need to ship `main`)
+
 ```powershell
-cd <your local clone>   # e.g. C:\dev\sports
+cd <your local clone>
 git checkout main && git pull origin main
-vercel --prod --yes        # migrate step won't block; next build needs no DB
-npm run smoke:prod         # green/red checklist of every public route
+vercel --prod --yes
+npm run smoke:prod
 ```
-The migrate-resilience fix and the Prisma-auto-generate fix are now **on `main`** (they
-weren't before — `main` was missing them), so deploys are stable.
 
 ---
 
-## 🚀 The launch checklist — live & silent → fully public (all owner-gated, in order)
-
-You're in **silent launch**: marketing surfaces up, public picks/stats gated OFF (honest
-"collecting" state). To go public, do these in order — each step is proof-gated.
+## Launch checklist — silent → fully public (owner-gated, in order)
 
 **Infra & secrets (one-time, owner accounts):**
-- [ ] Renew **`THE_ODDS_API_KEY`** (paid tier — free exhausts in a day). *Fixes the `/api/health` 503 + empty `/observatory`.*
-- [ ] Stripe **LIVE**: swap to live keys, `npm run stripe:seed`, paste the 4 price IDs, set the live webhook.
-- [ ] Confirm prod env complete (`scripts/check-deploy-readiness.mjs` is the checklist).
-- [ ] **`prisma migrate deploy`** runs on the next DB-reachable deploy → activates the **proof receipts + slate-commitment** tables the engine work added.
-- [ ] Delete the orphan **`sports-db`** Neon project (prod runs on **`gse-postgres`**).
+- [ ] Renew **`THE_ODDS_API_KEY`** (paid tier — free exhausts in a day).
+- [ ] Stripe **LIVE**: live keys, `npm run stripe:seed`, paste the 4 price IDs, live webhook.
+- [ ] Confirm prod env (`scripts/check-deploy-readiness.mjs`).
+- [ ] `prisma migrate deploy` on next DB-reachable deploy (proof receipts + slate-commitment tables).
+- [ ] Delete orphan **`sports-db`** Neon project (prod runs on **`gse-postgres`**).
+- [ ] Rotate any secret that ever landed in chat/logs (see `docs/ops/FOUNDER_ONLY_CHECKLIST.md`).
 
 **Gate-flip sequence (proof-gated; flip in this order):**
-- [ ] **C1** `CANONICAL_HISTORY_ENABLED=true` → accumulate 1–7 days; confirm crons run + data ingests.
+- [ ] **C1** `CANONICAL_HISTORY_ENABLED=true` → accumulate 1–7 days.
 - [ ] **C2** `DERIVED_MODEL_HISTORY_ENABLED=true` (≥50 canonical games/sport).
-- [ ] **C3** `PUBLIC_PICKS_ENABLED=true` + keep `FORCE_NO_BET_IF_STALE=true` (picks go public; stale auto-suppresses).
-- [ ] **C4** `PERFORMANCE_STATS_ENABLED=true` (≥100 settled canonical picks; verify win rates match real outcomes).
-- [ ] **C5** `FEATURED_PICK_PROMOTION_ENABLED=true` (grade thresholds calibrated).
-- [ ] **C6** `CALIBRATION_ADJUSTMENTS_ENABLED=true` — **only** after the path-to-70 §7 audit (held-out `calibratedEce ≤ rawEce`). *Note: already validated once (0.198→0.044); re-confirm at the real sample.*
+- [ ] **C3** `PUBLIC_PICKS_ENABLED=true` + `FORCE_NO_BET_IF_STALE=true`.
+- [ ] **C4** `PERFORMANCE_STATS_ENABLED=true` (≥100 settled canonical picks; rates match outcomes).
+- [ ] **C5** `FEATURED_PICK_PROMOTION_ENABLED=true`.
+- [ ] **C6** `CALIBRATION_ADJUSTMENTS_ENABLED=true` — only after held-out audit (`calibratedEce ≤ rawEce`) per [`CALIBRATION_PUBLISH_CHECKLIST.md`](docs/ops/CALIBRATION_PUBLISH_CHECKLIST.md).
 - [ ] **C7/C8** `PUBLIC_BLOG_ENABLED`, then `CONFIDENCE_DISPLAY_MODE=precision`.
 
-`docs/ops/archive/root-museum/LAUNCH_LEDGER.md` has the full env block + details. `check-deploy-readiness.mjs` validates it.
+Full env block: `docs/ops/archive/root-museum/LAUNCH_LEDGER.md`. Validator: `check-deploy-readiness.mjs`.
 
 ---
 
-## 🔌 The engine layer (integrated; activate deliberately)
-The proof/governance engines (Public Claim Compiler, No-Bet Adversary, Proof Graph, Market
-Memory, Signal Lineage, Cost Governor, + the performance-analytics suite) are **on `main`,
-unit-tested, and dormant** — pure modules with zero live effect until wired. Their honest
-state and the wiring roadmap live at **`/cockpit/integrity`** (the live ledger) and
-`docs/architecture/ADVANCED_SYSTEMS_SPINE_2026-06-22.md`. Live wiring was **deliberately not
-force-activated** — it changes pick/render behavior and several pieces depend on the
-owner-gated `migrate`/VPS, so it's staged as the ledger's gated next-actions, to wire in
-controlled passes (not rushed into a fresh-recovered prod). The 30/60/90 order is in the doc.
+## Decisions locked
 
-## 🧠 Decisions locked
 - **Subscription-primary, affiliate-additive.** Picks free/honest; pay for tools + proof.
-- **Target = proven edge (CLV/EV), not a 70% win rate.** See `docs/strategy/PATH_TO_PROVEN_EDGE.md`.
-- **Honest-and-humble:** settled record ~50.9%; don't sell picks as a proven edge until CLV clears 52.4%.
-- **Fantasy:** free through summer; flip the Pro power-split in August at peak draft demand.
+- **Target = proven edge (CLV/EV), not a bare 70% win rate.** See `docs/strategy/PATH_TO_PROVEN_EDGE.md`.
+- **Honest-and-humble** on the public record; book-priced lane leads; Wilson interval beside 52.4% (D22).
+- **Fantasy tools run on live data or they do not exist** (LAST_PLAN D3).
+- **NFL props is THE product** once schema + ingest + board ship (LAST_PLAN D11).
 
-## 🗂 Doc index
-- **This file** = launch control.
-- Reference: `docs/ops/archive/root-museum/LAUNCH_LEDGER.md`, `docs/strategy/*.md`, `docs/architecture/ADVANCED_SYSTEMS_SPINE_2026-06-22.md`, `docs/ops/archive/root-museum/AFFILIATE_GO_LIVE.md`.
-- Live ops surface: `/cockpit/integrity` (the honest system-state ledger).
-- Superseded (ignore): `docs/ops/archive/root-museum/AGENT_HANDOFF.md`, `handoff/OVERNIGHT_SUMMARY_2026-06-22.md`.
+---
 
+## Agent quickstart
 
-## Orbit unlock (process capital)
-
-- [`docs/ops/ORBIT_UNLOCK.md`](docs/ops/ORBIT_UNLOCK.md) — founder click checklist (free settle, Stripe, credits)
-- [`docs/ops/OPERATOR.md`](docs/ops/OPERATOR.md) — production actions agents cannot perform
-- [`docs/ops/CREDITS.md`](docs/ops/CREDITS.md) — credit claim tracker
-- [`.claude/skills/`](.claude/skills/) — agent SKILL packs
-- `npm run agent:eval` — thin deterministic harness
-- `npm run e2e:pricing-smoke` — public pricing + checkout route probe
-- `npm run export:settled-picks` — JSONL settled picks (DATABASE_URL, read-only)
-
-### Orbit leverage (2026-07-31 wave 3)
-- Map: [`docs/ops/ORBIT_MAP.md`](docs/ops/ORBIT_MAP.md)
-- Calibration: [`docs/ops/CALIBRATION_PIPELINE.md`](docs/ops/CALIBRATION_PIPELINE.md)
-- Eval: `npm run agent:eval` · `npm run dspy:gse` · `npm run orbit:map`
-- CIR: `centeredIsotonicCalibration` (R&D, not live)
+1. Read [`docs/INDEX.md`](docs/INDEX.md) → [`AGENTS.md`](AGENTS.md) laws/loop.
+2. Claim a row in [`docs/ops/AGENT_LEDGER.md`](docs/ops/AGENT_LEDGER.md).
+3. Calibration work starts at [`docs/ops/CALIBRATION_STATUS.md`](docs/ops/CALIBRATION_STATUS.md).
+4. History dumps live in [`docs/ops/SESSION_LOG.md`](docs/ops/SESSION_LOG.md) and `handoff/` (museum).

@@ -1,5 +1,9 @@
 # Galaxy Sports Edge (GSE)
 
+> **Agent doc map:** [`docs/INDEX.md`](docs/INDEX.md) · Ops SoT [`docs/ops/CANONICAL.md`](docs/ops/CANONICAL.md) · Calibration [`docs/ops/CALIBRATION_STATUS.md`](docs/ops/CALIBRATION_STATUS.md)
+> **Start:** [`START_HERE.md`](START_HERE.md) · [`AGENTS.md`](AGENTS.md)
+
+
 [![CI](https://github.com/Beexly/Sports/actions/workflows/ci.yml/badge.svg)](https://github.com/Beexly/Sports/actions/workflows/ci.yml)
 
 Sports picks platform with real data ingestion, deterministic factor-model

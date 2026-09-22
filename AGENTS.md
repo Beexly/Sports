@@ -5,28 +5,33 @@ Auto-loaded by Grok Build, Codex, and Copilot at workspace root; Claude Code loa
 Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 **unattended agent** works here.
 
+**Doc map:** [`docs/INDEX.md`](docs/INDEX.md) · **Ops SoT:** [`docs/ops/CANONICAL.md`](docs/ops/CANONICAL.md) · **Calibration:** [`docs/ops/CALIBRATION_STATUS.md`](docs/ops/CALIBRATION_STATUS.md)
+
 ---
 
 ## CURRENT STATE
 
-Plan: `docs/ops/LAST_PLAN_2026-09-15.md` · branch `hermes/last-plan-2026-09-15` · head `909925139` · Phase 2 · rows: Phase 0+1 DONE/UNPUSHED. Phase 2: C-362-379, C-394-409, C-397 UNPUSHED (A1-A28 all scored/BLOCKED; INDEX.md current; v5.3.0 candidate assembled, duel run on fixture, PROPOSED — see below). Next: C-380 (retire gate_decisions readers), then Phase 3. Branch pushed 2026-09-15, PR #830 open (draft).
-C-397 result: `packages/verifier/src/candidates/v530.ts` + `docs/calibration-proposals/2026-09-15-v530-joint-refit.md` (PROPOSED). Candidate = A2 shrinkage only (w=0.10) — zero of the 7 CANDIDATE-status §4.3 factors (A6,A7,A14,A19,A22,A23,A25) join to a PICKS-H1 pick row today (all are team/player-game features with no props-board join key yet, Phase 3 unshipped); building that join now would be fabricating a feature transform that doesn't exist, so it isn't done. Duel vs market on the committed fixture: ΔBrier=+0.00327 P(better)=0.036 — fails the keep rule, identical to A2/C-366 (same formula, same fixture). Vs v5.2.7's own stored modelProb: ΔBrier=-0.02447 P(better)=0.785 (candidate beats an overconfident stored model, not the keep rule). Real `verifier/picks-h1.json` export is NOT RUN (same gap as v5.2.8). MODEL_VERSION stays v5.2.7; model-freeze.mjs green.
-package-lock.json fixed by founder (`2f0f367ff`, merged into this branch). `npm ci` now works; guardrails/typecheck/build all green on this branch.
-**"Test, type-check, lint, Prisma" still red on PR #830 — confirmed pre-existing on `main`, not this branch's:** 11 tests in `packages/ingestion-pipeline` (`signal-slate-publication-flag.test.ts`, `signal-slate-series-and-grade.test.ts`) fail with `[vitest] No "isThreeWayMoneylineSport"/"isPlausibleEntryOdds"/"isPolymarketIndependentEnabled" export is defined on the mock` — their `vi.mock()` factories were never updated for exports the real modules already have. 1 test in `packages/prediction-engine` (`metric-source-payload-rights.test.ts`) fails on a stale fixture (expects 18 registry ids, canonical is 21). Verified via `git merge-base --is-ancestor` that the commit adding `isThreeWayMoneylineSport` (`fbc3784c7`) is an ancestor of both this branch and `origin/main`, and `packages/prediction-engine/src/metrics/` is byte-identical to `main` — `main` is red for the same reason today. No fix exists to port. Posted root cause + a proposed patch (not applied — out of scope, would widen this PR) as a PR comment. Founder or a dedicated testing-qa task should fix the two mock factories and the fixture in their own commit.
-Founder hands-only pending: §0.2 items 1–5 (rotate secrets; Stripe/Vercel PRICING=FOUNDING; set PREDEXON_API_KEY/HEALTH_ALERT_WEBHOOK_URL/SENTRY_DSN/OPS_READ_SECRET; merge labelled PRs #828/#829 + PR #819; supply oddsmagnet months + prop-line file).
-Open security work not in this plan: issue #820 transport half (connect-time address check).
-Do-not-touch: `hermes/v528-market-gate-preserved-2026-09-11` (does not compile); checkout price-mismatch (fail-closed is correct); pricing amounts; any gate/env flag.
-C-421 residual: A17-A22's original single-commit registration+run violated the kill_line-before-run_sha order gate (repaired 73dcee8a0, run_sha bumped, no recompute); A23-A28 register-then-run in two commits from the start — keep doing that for every future factor, never collapse it back to one commit. Also fixed: AGENTS.md mojibake, 2 pre-existing guardrail false positives (trust-gate on a real CSV column name, 5 em-dashes), and a stale test in index.test.mjs that hardcoded 16 UNTESTED specs against the live docs/factors dir.
-Last five: C-397 pending — v5.3.0 candidate PROPOSED, fails keep rule vs market on fixture (see above); C-404-409 58a8cdfc9 — A23/A25 CANDIDATE, A24/A27/A28 DEAD, A26 BLOCKED; C-421 73dcee8a0+58a8cdfc9 — maintenance (see above); C-398-403 4283b538b; C-375-379/394 de3bdc215.
+Rewrite this block on every status change (do not append forever). Full history: `docs/ops/SESSION_LOG.md`. Doc map: `docs/INDEX.md`.
+
+- **Plan / queue:** `docs/ops/LAST_PLAN_2026-09-15.md` · `docs/ops/AGENT_LEDGER.md` · branch `hermes/last-plan-2026-09-15` · PR #830 (draft).
+- **MODEL_VERSION:** `v5.2.7` frozen. v5.2.8 (A2 shrinkage w=0.10) and v5.3.0 (joint refit) are **PROPOSED** only (`docs/calibration-proposals/`). L11 keep rule not passed on a real export yet.
+- **Calibration board (start here for accuracy work):** `docs/ops/CALIBRATION_STATUS.md`. Live sample: market Brier 0.234 / ECE 0.017; raw `rankingP` worse; shrink w=0.10 matches market. `clvPositive` flag is dead (0 rows true) while 608 rows have `clvValue > 0` — fix the grader, do not backfill flags by hand.
+- **Factors:** A1–A28 scored in `docs/factors/INDEX.md`. CANDIDATE A6,A7,A14,A19,A22,A23,A25 — **none join to priced picks yet** (props board unshipped). Next model work needs the real `verifier/picks-h1.json` export + props join (Phase 3).
+- **Next queue rows:** C-380 (retire `gate_decisions` readers) then Phase 3 props (C-381+).
+- **Founder hands-only (LAST_PLAN §0.2):** rotate secrets · Stripe/Vercel `PRICING=FOUNDING` · set `PREDEXON_API_KEY` / `HEALTH_ALERT_WEBHOOK_URL` / `SENTRY_DSN` / `OPS_READ_SECRET` · merge labelled `frozen-path` / `model-version` PRs · supply oddsmagnet months + prop-line file.
+- **Open security (not in plan):** issue #820 transport half (connect-time address check).
+- **Do-not-touch:** `hermes/v528-market-gate-preserved-2026-09-11` (does not compile) · checkout price-mismatch (fail-closed is correct) · pricing amounts · any gate/env flag · floors.
+- **Known CI red on `main` (pre-existing):** 11 `packages/ingestion-pipeline` mock-factory tests + 1 `packages/prediction-engine` stale registry fixture (18 vs 21 ids). Fix in a dedicated commit; do not widen unrelated PRs.
+- **Factor process (C-421):** always register kill_line, then run in a **second** commit. Never collapse register+run.
 
 ### PredExon handoff (for every later agent)
 
-- Key lives only in Vercel PREDEXON_API_KEY (founder §0.2 item 3). Never commit/log a key.
+- Key lives only in Vercel `PREDEXON_API_KEY` (founder §0.2 item 3). Never commit/log a key.
 - Free & unlimited: GET /v2/kalshi/markets, GET /v2/kalshi/trades, all list-markets and orderbook-history endpoints. Counted 1k/month: everything else. Rate limit free: 1 req/s.
-- **Never** call /v2/data/ticks (paid Parquet, D15). Guard: ssertNotPaidTickPath in predexon-client.ts.
-- Ingest ON when key present (D19) unless PREDEXON_INGEST explicitly off. No key → fail closed.
-- Book 2: galaxy-kalshi-book.ts via PredExon only (D4). Midpoint: actorBreakdown.exchangeMidpointProb.
-- Tape: exchange-tape-capture.ts → odds_line_snapshots book kalshi-predexon, series KXNFL*. Pace default 1100ms. Volume/OI/trades have **no schema column** — name them in evidence, do not migrate (law 2).
+- **Never** call /v2/data/ticks (paid Parquet, D15). Guard: `assertNotPaidTickPath` in `predexon-client.ts`.
+- Ingest ON when key present (D19) unless `PREDEXON_INGEST` explicitly off. No key → fail closed.
+- Book 2: `galaxy-kalshi-book.ts` via PredExon only (D4). Midpoint: `factorBreakdown.exchangeMidpointProb`.
+- Tape: `exchange-tape-capture.ts` → `odds_line_snapshots` book `kalshi-predexon`, series `KXNFL*`. Pace default 1100ms. Volume/OI/trades have **no schema column** — name them in evidence, do not migrate (law 2).
 - Improvements welcome: keep free-plane only, cite docs.predexon.com, add tests, update this block.
 
 ---
@@ -102,13 +107,15 @@ Breaking one discards the run.
    - A version bump of an already-approved package also requires re-approval by
      design (the allow-list is pinned per version). Same rule: report, don't
      approve.
+   - **Session exception (founder 2026-09-21):** read-only production SQL for
+     calibration measurement is allowed when the founder supplies a connection
+     string in-session. Still: never write/migrate, never commit credentials.
 8. **NEVER fabricate product data** — no mock picks, sample odds, placeholder win
    rates, invented benchmarks. Anywhere.
 9. **NEVER weaken a guard to make a test pass.** Never delete a phrase from a
    forbidden-copy list, never loosen an assertion's intent, never change a guardrail's
    threshold. If a guard is red, either the code is wrong or the guard needs *narrower*
    context — never less power.
-
 
 10. **No public rate without its denominator.** Any surface that renders a win rate, CLV rate, calibration number, or verdict renders on the same surface: n, the population definition, and every exclusion count that changed the denominator (in-play, unpriced, pushes). A producer of an exclusion count with no renderer is a defect.
 11. **No MODEL_VERSION bump without a frozen-holdout scorecard.** The bump commit must reference a `docs/factors/*.yaml` row with `run_sha` and a `packages/verifier` scorecard on PICKS-H1 in which the candidate beats the market-anchored baseline. Withhold-only changes remain exempt from the bump.
@@ -187,4 +194,3 @@ invented number makes every other number suspect.
 ## HISTORY
 
 Dated session notes live in `docs/ops/SESSION_LOG.md`, newest first.
-
