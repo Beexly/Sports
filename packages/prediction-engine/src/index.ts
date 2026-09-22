@@ -2062,6 +2062,62 @@ export type { TwoMinuteHurryUpContext, TwoMinuteHurryUpResult } from "./signals/
 export { poolSignalsHierarchically } from "./hierarchical-pool.js";
 export type { IndividualSignalInput, FamilyAggregation, HierarchicalPoolResult } from "./hierarchical-pool.js";
 
+// Salvaged research modules (branch harvest 2026-09-21) — not yet in the live scoring path
+// Multi-market true-probability ensemble — precision-weighted fusion of independent estimators
+export {
+  precisionWeightedEnsemble,
+  ensembleForSide,
+  independentEstimatesForSide,
+  estimatorSigma,
+  SIGMA_BASE,
+  DEFAULT_SOURCE_RELIABILITY,
+} from "./multi-market-ensemble.js";
+export type {
+  EstimatorReliability,
+  MarketEstimate,
+  EnsembleResult,
+  SideEstimateOptions,
+} from "./multi-market-ensemble.js";
+
+// Synthetic public-lean / fade — glass-box crowd model (not betting data)
+export {
+  syntheticPublicLean,
+  MAX_FADE_NUDGE,
+  MAX_CONFIDENCE,
+  SYNTHETIC_FADE_LABEL,
+} from "./synthetic-fade.js";
+export type {
+  PublicLeanInput,
+  FadeContribution,
+  SyntheticPublicLean,
+} from "./synthetic-fade.js";
+
+// Calibration ladder (path-to-70 Step 1) — Platt (small-n) + Wilson-bounded bins
+export {
+  plattScaling,
+  binnedEmpiricalCalibration,
+  buildCalibrationLadder,
+  DEFAULT_LADDER_MIN_SAMPLE,
+} from "./calibration-ladder.js";
+export type {
+  PlattModel,
+  EmpiricalBin,
+  BinnedEmpiricalModel,
+  BinnedEmpiricalOptions,
+  CalibrationMethod,
+  CalibratedLadderProbability,
+  CalibrationLadder,
+} from "./calibration-ladder.js";
+
+// Source reliability stub (provenance fusion pillar)
+export {
+  computeSourceReliability,
+} from "./source-reliability.js";
+export type {
+  SourceReliabilityVerdict,
+  SourceReliabilityReport,
+} from "./source-reliability.js";
+
 // Canonical model version (frozen at v5.2.7 per founder invariant)
 export { MODEL_VERSION } from "./constants.js";
 
