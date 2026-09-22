@@ -2118,6 +2118,21 @@ export type {
   SourceReliabilityReport,
 } from "./source-reliability.js";
 
+// Salvaged: pick-level CLV (gse-moat) and time-ordered OOS skill split (galaxy-sports-edge)
+export { computePickClv } from "./pick-clv.js";
+export type { PickClvResult } from "./pick-clv.js";
+export {
+  computeOosSplit,
+  segmentOosSplit,
+} from "./oos-split.js";
+export type {
+  SettledPickRecord,
+  OosSplitConfig,
+  OosSplitResult,
+  OosSegment,
+  SegmentedOosSplit,
+} from "./oos-split.js";
+
 // Canonical model version (frozen at v5.2.7 per founder invariant)
 export { MODEL_VERSION } from "./constants.js";
 
