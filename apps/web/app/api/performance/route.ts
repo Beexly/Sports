@@ -1,10 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
+import { withErrorCapture } from "@/lib/observability/capture-route-error";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(req: NextRequest): Promise<NextResponse> {
+async function getPerformanceHandler(req: NextRequest): Promise<NextResponse> {
   const gates = getReadinessGates();
   if (!gates.canExposePerformanceStats) {
     return NextResponse.json(bootstrapGateResponse("Performance stats"), { status: 503 });
@@ -133,3 +134,5 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     },
   });
 }
+
+export const GET = withErrorCapture("/api/performance", getPerformanceHandler);

@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { z } from "zod";
 import { db, DurableWriteStoreUnavailableError, requireDurableWriteStore } from "@sports/db";
 import { auth } from "@/lib/auth";
+import { captureRouteError } from "@/lib/observability/capture-route-error";
 import { consumeRateLimit } from "@/lib/api/rate-limit";
 import {
   getOrCreateStripeCustomer,
@@ -391,6 +392,7 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
 
     return NextResponse.json({ url: checkoutSession.url });
   } catch (err) {
+    captureRouteError(err, "/api/subscriptions/checkout", "critical");
     // Log the detail server-side; return a generic message so internal/Stripe
     // error text never leaks to the client.
     const message = err instanceof Error ? err.message : "Checkout failed";

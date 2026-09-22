@@ -16,10 +16,11 @@ import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
 import { getPublicCalibrator, honestConfidence } from "@/lib/calibration/public-confidence";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
+import { withErrorCapture } from "@/lib/observability/capture-route-error";
 
 export const dynamic = "force-dynamic";
 
-export async function GET(req: NextRequest): Promise<NextResponse> {
+async function getPicksHandler(req: NextRequest): Promise<NextResponse> {
   // Public, anonymous, DB-heavy route (findMany + count + per-pick selective
   // filter). IP-keyed rate limit copied from the established pattern in
   // apps/web/app/api/nflverse/injuries/route.ts (consumeRateLimit + clientIp).
@@ -305,3 +306,5 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     },
   });
 }
+
+export const GET = withErrorCapture("/api/picks", getPicksHandler);
