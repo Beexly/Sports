@@ -1,8 +1,10 @@
 # Session record — 2026-09-21 frontier correction
 
 Written so another agent can continue without this chat. Branch
-`hermes/last-plan-2026-09-15`. Not a claim that any of this is on `main`.
-Not pushed unless a later line in this file says a SHA on origin.
+`hermes/last-plan-2026-09-15`. Pushed to origin as `250b50e31`
+(`[hermes-session] record the 2026-09-21 frontier correction`). Not on
+`main`. A follow-up commit may record this SHA if this paragraph was
+written before the push.
 
 ## What the founder corrected, in order
 
