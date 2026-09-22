@@ -297,6 +297,11 @@ Search tips: `arxiv-deep/*.md` is greppable by `## 13. Acceptance` / `GSE implem
 
 ---
 
+## 9b. Second-pass companions (do not stop here)
+
+- [`EXHAUSTIVE_IMPROVEMENT_CATALOG.md`](EXHAUSTIVE_IMPROVEMENT_CATALOG.md) — method families the first pass under-used (copulas, survival/Hawkes, bandits, LOB, LOPO, ensemble failure modes, e-process Kelly, wire-existing list).
+- [`GOOGLE_DEEP_RESEARCH_BRIEF.md`](GOOGLE_DEEP_RESEARCH_BRIEF.md) — unrestricted external research brief (new equations/ML/DBs/theory, 20k-ft blind spots, falsification).
+
 ## 10. Source index
 
 | Path | Role |

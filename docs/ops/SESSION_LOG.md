@@ -1263,3 +1263,12 @@ C-397 UNPUSHED pending — v5.3.0 candidate assembled (`packages/verifier/src/ca
 - Added docs/research/2026-09-21/RESEARCH_TO_PRODUCT_PLAYBOOK.md (calibration / market-CLV-Kelly / props-ratings-tracking / site polish + P0–P5 execution order).
 - Linked from docs/INDEX.md and docs/ops/CALIBRATION_STATUS.md.
 - No production code, gates, floors, or MODEL_VERSION changes.
+
+---
+
+## 2026-09-21 (3) second-pass audit + Google Deep Research brief
+
+- Exhaustive catalog: method families first pass missed (copulas, survival/Hawkes, bandits, LOB, LOPO, ensemble failure modes, e-process Kelly, D/S/I meta-metrics, wire-existing top 15).
+- Stress-tests of current stack recorded (momentum dead, minority-coverage collapse, weighted-mean ensembles fail, mixed-HFA bias, LOPO leakage).
+- External brief: docs/research/2026-09-21/GOOGLE_DEEP_RESEARCH_BRIEF.md (unrestricted 20k-ft + new equations/ML/DBs/theory; cite/test/falsify).
+- No production code, gates, floors, or MODEL_VERSION changes.
