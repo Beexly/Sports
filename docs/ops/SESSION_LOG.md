@@ -1254,3 +1254,12 @@ C-397 UNPUSHED pending — v5.3.0 candidate assembled (`packages/verifier/src/ca
 - docs/ops/CURRENT_STATE.md reduced to a live pointer (old 2026-08-10 numbers removed from the live face; in git history).
 - **Calibration board:** docs/ops/CALIBRATION_STATUS.md — live SQL: settled W/L 3152 @ 54.6%; v5.2.7 56.9% (n=1834); market Brier 0.234/ECE 0.017 vs rankingP 0.267/0.094; shrink w=0.10 matches market; clvPositive 0/608; confidence bands not a p.
 - No production code changed. No gates flipped. No MODEL_VERSION bump.
+
+---
+
+## 2026-09-21 (2) research playbook — 750 arXiv papers
+
+- Synthesized arxiv-program (b83e12f1): 973 ledgers, 750 valuable (25 ADOPT + ADAPT), lane map + ADOPT transfer table.
+- Added docs/research/2026-09-21/RESEARCH_TO_PRODUCT_PLAYBOOK.md (calibration / market-CLV-Kelly / props-ratings-tracking / site polish + P0–P5 execution order).
+- Linked from docs/INDEX.md and docs/ops/CALIBRATION_STATUS.md.
+- No production code, gates, floors, or MODEL_VERSION changes.

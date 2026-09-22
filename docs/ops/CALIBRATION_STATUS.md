@@ -185,6 +185,12 @@ probabilities and a public record, not “proven edge”.
 
 ---
 
+## 4b. Research corpus (2026-09-21)
+
+750 valuable arXiv ledgers now live under `docs/research/2026-09-21/arxiv-deep/`.  
+Transfer map and ranked techniques: [`../research/2026-09-21/RESEARCH_TO_PRODUCT_PLAYBOOK.md`](../research/2026-09-21/RESEARCH_TO_PRODUCT_PLAYBOOK.md).  
+Highest-leverage calibration transfers: ENIR (1074), SplineCalib (0738), per-cell extremizing (0762), CRC loss-rate gate (0743), CORP diagnostics (0469).
+
 ## 5. Commands (no DB writes)
 
 ```bash

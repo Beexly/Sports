@@ -35,6 +35,7 @@
 - Product/biz: `docs/product/` · `docs/strategy/` · `docs/revenue/`
 - Design: `docs/design/` · `DESIGN.md`
 - Factor R&D: `docs/factors/` · `docs/calibration-proposals/` · `docs/brain/`
+- 750-paper research synthesis: `docs/research/2026-09-21/RESEARCH_TO_PRODUCT_PLAYBOOK.md` (ledgers in `arxiv-deep/`)
 
 ## Non-canonical (archaeology only — do not plan from these)
 
