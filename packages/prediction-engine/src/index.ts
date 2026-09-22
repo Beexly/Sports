@@ -947,6 +947,15 @@ export type {
 // that bridges stored ledger rows to the composer (NOT wired into the live score).
 export { composeLedger, ledgerAgeDays } from "./signal-ledger.js";
 export type { LedgerSignalRow, ComposeLedgerOptions } from "./signal-ledger.js";
+export {
+  FRONTIER_SIGNALS,
+  SIGNAL_WEIGHT_FLOOR,
+  SIGNAL_WEIGHT_CANDIDATE,
+  buildFrontierRows,
+  collapseFamilies,
+  composeFrontierLedger,
+} from "./frontier-signal-catalog.js";
+export type { FrontierSignal, FrontierObservation, FrontierLedger } from "./frontier-signal-catalog.js";
 
 // Player usage archetype (receiving lean / workload) from rushing/receiving usage.
 export { classifyUsageProfile } from "./player-archetype.js";

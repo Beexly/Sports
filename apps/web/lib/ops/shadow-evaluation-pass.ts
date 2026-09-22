@@ -40,6 +40,8 @@ import {
   americanToDecimalOdds,
   DEFAULT_TEAM_CAPACITY,
   CONSERVATIVE_EVIDENCE_THRESHOLD,
+  composeFrontierLedger,
+  FRONTIER_SIGNALS,
   type TeamIndexRegistry,
 } from "@sports/prediction-engine";
 import { loadFilter, saveFilter, recordShadowSignal, settleShadowSignal } from "./shadow-signal-store";
@@ -98,6 +100,10 @@ function fairDecimalOddsFromProb(p: number): number | null {
  */
 export async function runShadowEvaluationPass(scope: string): Promise<ShadowPassResult> {
   const notes: string[] = [];
+  const frontier = composeFrontierLedger([], new Date().toISOString());
+  notes.push(
+    `frontier ledger rows=${frontier.rows.length} families=${frontier.families} catalog=${FRONTIER_SIGNALS.length} observed=${frontier.observed}`,
+  );
   let settledAbsorbed = 0;
   let evaluated = 0;
   let skipped = 0;

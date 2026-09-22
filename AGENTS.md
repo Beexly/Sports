@@ -1,9 +1,88 @@
 # AGENTS.md — autonomous run contract
 
+**FOUNDER ORDER, 2026-09-21. Read before any other section.**
+We will never beat the market. That is not the goal. The engine learns
+from everything, not only sports: machine learning, cognition, physics,
+weather, pace, scheme, coaches, narratives, injuries, sports medicine,
+nutrition, algorithms, and code. That is what the arxiv pile is for.
+Learn, then wire, or build the signal the learning implies. A paper
+that is only filed does not count. Full text: `docs/ops/ENGINE_DOCTRINE.md`.
+The program that executes it is `docs/ops/FRONTIER_RESCORE.md`:
+inventory, reevaluate, recalibrate, rescore. Book A stays the published
+record. Book B is the shadow rescore of every settled pick. Neither
+erases the other.
+Session handoff, read before re-deriving any of this:
+`docs/ops/SESSION_2026-09-21-FRONTIER.md`.
+
 Auto-loaded by Grok Build, Codex, and Copilot at workspace root; Claude Code loads it through the `@AGENTS.md` import on line 1 of `CLAUDE.md`. Read this first, every session.
 
 Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 **unattended agent** works here.
+
+---
+
+## MIMO 2026-09-18: DISK RECLAIM AND MACHINE STATUS
+
+Measured on the founder Windows box. Numbers below were observed, not estimated.
+
+WHAT I DID
+- Inventoried C: and all Sports-* clones before deleting anything.
+- Tier 1 caches: pnpm store prune (0 packages removed; lockfiles still reference
+  the store), npm cache clean --force, User TEMP, Windows\Temp,
+  SoftwareDistribution\Download, Edge and Chrome caches.
+- Tier 2 build output: deleted ONLY node_modules, .next, dist, build,
+  __pycache__, and .venv under dormant Sports-* clones and backup/staged copies.
+  Never .git, never source, never .env, never Documents/Desktop.
+- Keepers left intact with node_modules: Sports, Sports-flash-0918, Sports-live,
+  Sports-field-live, Sports-research-audit-2026-09-17.
+- Registered mimo on agent-bus sports/agents.json (machine ops, disk, visual QA).
+- Disk monitor script: C:\Users\Garrett\scripts\disk-monitor.ps1
+  Run: powershell -ExecutionPolicy Bypass -File C:\Users\Garrett\scripts\disk-monitor.ps1
+
+WHAT I SAW
+- First disk reading this session: Free 14.79 GB / Used 461.07 GB / Total 475.85 GB.
+- Baseline before MIMO cleanup: Free 39.10 GB / Used 436.75 GB (other reclaim in
+  between is not attributed to MIMO).
+- After MIMO Tier 1 + Tier 2: Free 58.82 GB / Used 417.03 GB. In the 40-60 GB band.
+- WHAT ATE THE DISK:
+  1. 96 Sports-* clones carrying install/build trees: 175.63 GB total build dirs;
+     164.87 GB dormant (activity before 2026-09-10). Many dormant root
+     node_modules measured 3.46 GB each.
+  2. pnpm store 20.63 GB (still present; prune kept packages because lockfiles
+     in clones still reference them).
+  3. Docker Desktop WSL disk 12.24 GB (daemon stopped, 0 containers).
+  4. UWP LocalCache: iTunes 10.66 GB, Claude desktop 9.27 GB (founder data, not
+     deleted).
+  5. .cache huggingface 2.49 GB, codex-runtimes 1.93 GB.
+  6. Downloads 2.17 GB. Recycle Bin 0 items. npm cache 0.04 GB.
+- Worktree clones store .git as a pointer FILE (Sports-t11, Sports-hermes-hq).
+  That is normal. Full .git directories remain on keepers and on clones like
+  Sports-work and Sports-pr.
+- Primary working repo for engine content: C:\Users\Garrett\Sports
+  (CURRENT STATE block, last activity 2026-09-18). Flash clone:
+  Sports-flash-0918. Bus path: C:\Users\Garrett\agent-bus.
+
+BYTES RECLAIMED (measured free-space delta attributable to MIMO)
+- Tier 1: +0.37 GB (39.10 to 39.46).
+- Tier 2 + finish pass: free ended at 58.82 GB from 39.46 after Tier 1, so
+  about +19.36 GB net on this run after other concurrent reclaim.
+- Absolute free improved from the first-session reading of 14.79 GB to 58.82 GB
+  via combined MIMO cleanup and whatever else reclaimed in between.
+
+REMAINING RISK / NOT DONE
+- pnpm store 20.63 GB still on disk. Founder-approved store reset would need
+  network reinstall for active clones.
+- Docker vhdx 12.24 GB not compacted. iTunes and Claude LocalCache not touched.
+- Disk was NOT at literal zero free when measured; the priority-zero note
+  overstated urgency. It was still well below a safe working margin.
+- MIMO queue items MIMO-1 visual QA, MIMO-2 full suite, MIMO-3 production check
+  are NOT done. Disk work only.
+
+NEXT SAFEST STEP
+- Run disk-monitor.ps1 before any large clone or install.
+- Cap concurrent Sports-* clones; reuse worktrees instead of full clones.
+- Founder decision: Docker prune / WSL compact and pnpm store reset if more
+  headroom is needed.
 
 ---
 
