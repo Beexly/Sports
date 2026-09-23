@@ -30,6 +30,7 @@ import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/perf
 import { db } from "@sports/db";
 import { planAutonomyCycle } from "@/lib/autonomy/operating-kernel";
 import { getReadinessGates } from "@sports/prediction-engine";
+import { checkArchiveStaleness } from "@sports/ingestion-pipeline";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -130,6 +131,17 @@ export async function GET(request: Request): Promise<NextResponse> {
     calibrationDrift,
   });
   const decision = decideHealthAlertStateless(snap);
+
+  // Line-archive freshness (GSE-MON-012). Fail-soft: never take the health cron down.
+  // Catches the silent-outage class that hid a 21-day odds_line_snapshots stall.
+  let archiveStaleness: Awaited<ReturnType<typeof checkArchiveStaleness>> | null = null;
+  try {
+    archiveStaleness = await checkArchiveStaleness({ db });
+  } catch (err) {
+    console.warn(
+      `[health-alert] archive-staleness probe failed: ${err instanceof Error ? err.message : String(err)}`,
+    );
+  }
 
   const deploymentSha =
     process.env["VERCEL_GIT_COMMIT_SHA"]?.slice(0, 12) ??
@@ -260,6 +272,16 @@ export async function GET(request: Request): Promise<NextResponse> {
     snapReason: snap.reason,
     ingestionAgeMinutes: snap.ingestionAgeMinutes,
     settlementUnavailable: snap.settlementUnavailable,
+    archiveStaleness: archiveStaleness
+      ? {
+          isStale: archiveStaleness.isStale,
+          writesInWindow: archiveStaleness.writesInWindow,
+          lastWriteAt: archiveStaleness.lastWriteAt,
+          windowHours: archiveStaleness.windowHours,
+          alerted: archiveStaleness.alerted,
+          reason: archiveStaleness.reason,
+        }
+      : null,
     calibrationDrift: calibrationDrift
       ? {
           since: calibrationDrift.since,
