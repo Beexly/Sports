@@ -1,10 +1,10 @@
 /**
- * CRPSmod sharpness training for parametric post-processing — arXiv 2606.08587v1
+ * CRPSmod sharpness training for parametric post-processing â€” arXiv 2606.08587v1
  * ("Improving Sharpness in Neural Network Parametric Post-processing").
  *
  * ADDITIVE utility. Training stays offline; this module is the serving-time
  * loss math plus the live coverage monitor. Not wired into any training or
- * publish path (wiring changes model behavior and is a NEEDS HUMAN CALL —
+ * publish path (wiring changes model behavior and is a NEEDS HUMAN CALL â€”
  * see tracking report).
  *
  * Paper mechanism: train the probabilistic post-processor (Gaussian family
