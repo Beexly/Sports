@@ -3,13 +3,13 @@
  *
  * ADDITIVE utility. Not wired into any publish path (wiring changes published picks and is a NEEDS HUMAN CALL).
  *
- * Paper mechanism: Bayesian best-arm identification with abstention for engine-version evaluation: inverse-gap-weighted allocation (PGWS) of backtest/paper-trade weeks across the production engine + challenger configs (p_i proportional to 1/gap^2), gating shipment on the Bayesian abstention rule — keep the incumbent iff R_T < r-hat_{T,alpha} — with an adaptive abstention budget alpha_t tied to the cost of a bad ship vs the cost of another evaluation week.
+ * Paper mechanism: Bayesian best-arm identification with abstention for engine-version evaluation: inverse-gap-weighted allocation (PGWS) of backtest/paper-trade weeks across the production engine + challenger configs (p_i proportional to 1/gap^2), gating shipment on the Bayesian abstention rule â€” keep the incumbent iff R_T < r-hat_{T,alpha} â€” with an adaptive abstention budget alpha_t tied to the cost of a bad ship vs the cost of another evaluation week.
  *
  * Improvement (wiring wave-2 slice CALIBRATE):
- * Evaluate engine versions with inverse-gap-weighted allocation (PGWS): allocate backtest/paper-trade weeks p_i proportional to 1/gap^2 across the production engine + challenger configs, and gate shipping on the Bayesian abstention rule — keep the incumbent iff R_T < r-hat_{T,alpha}, with an adaptive abstention budget alpha_t tied to the cost of a bad ship vs the cost of another evaluation week.
+ * Evaluate engine versions with inverse-gap-weighted allocation (PGWS): allocate backtest/paper-trade weeks p_i proportional to 1/gap^2 across the production engine + challenger configs, and gate shipping on the Bayesian abstention rule â€” keep the incumbent iff R_T < r-hat_{T,alpha}, with an adaptive abstention budget alpha_t tied to the cost of a bad ship vs the cost of another evaluation week.
  *
  * ACCEPTANCE GATE:
- * ADAPT the allocation rule iff inverse-gap weighting reaches the same ship-decision confidence with ≥20% fewer evaluation weeks than equal-split on historical version comparisons.
+ * ADAPT the allocation rule iff inverse-gap weighting reaches the same ship-decision confidence with â‰¥20% fewer evaluation weeks than equal-split on historical version comparisons.
  *
  * ENABLED=false: evaluation-allocation policy for version shipment; needs a human call.
  */
