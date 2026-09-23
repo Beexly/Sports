@@ -90,14 +90,14 @@ the only copy, and nobody else can verify or build on it.
 | H-G | Suppression curve vs random and oracle baselines | hermes | DONE | 63e84c32 on origin/hermes/sprint-backup-20260819, verified ancestor 2026-08-19 |
 | H-K | charge.refunded revocation behind REFUND_REVOKES_ACCESS | claude | DONE | e69aa93c on origin/hk/refund-revocation — REIMPLEMENTED by fleet after Hermes confirmed "never implemented". 19 new tests, 72/72, default-OFF structural. Adversarial review confirmed 1 major (active-subscription refund lock-in) + hardening list; revision is C-11 before any merge |
 | H-L | health-alert stateless cooldown + portable payload | claude | DONE | b9ec799 |
-| H-M | Cron no-op audit | hermes | DONE | cd5086f7 on origin/hermes/h-m-cron-audit; data-driven early-return proposal only, ~60/day off-season, 576/day figure withdrawn |
+| H-M | Cron no-op audit | hermes | DONE | cd5086f747f2f4eb8890031ad4aebea6327c698a on origin/hermes/h-m-cron-audit; data-driven early-return proposal only, ~60/day off-season, 576/day figure withdrawn |
 | H-N | Env-shape validator | hermes | CLAIMED | — |
 | H-O | Repair the @/lib/stripe test mock | claude | DONE | ab9f9c2; superseded by #369 single-seam version — the fix had been sitting mergeable in #369 for 12 days and was rebuilt twice for lack of a ledger |
 | H-P | Triage the 73 CI test failures | claude | DONE | #434: every cluster root-caused; fixes shipped for checkout, copy, nflverse, waitlist, kill-switches, PAVA |
 | C-5 | PAVA forward-violation bug in calibration core | claude | DONE | 9627379 |
 | H-Q | Fix remaining singleton test failures (triage notes in v7 handoff) | hermes | DONE | 14b74b5c, merged via 3e997adf; full apps/web suite ZERO failures locally for the first time this session |
 | H-R | NEBULA v7 overnight: reskin + Brier cut + homepage teardown + iris + board rows (owner-ordered) | hermes | DONE | 9dd470802 + 9b380eb09 + 73205dce5 + 1fe63dbc8 + a39668b5a merged as 94706a839 via #754; 5113c73cb + 7aa5005cc + a29cc20e3 + 1bd2534ac + 2d192a61f merged as 111121de2 via #755; footer link as a2d34bb6b via #756; typecheck 0, lint 0, full suite 12949 pass with 8 Windows-local-env failures triaged, eyes-on review via omni vision, production verified Nebula |
-| F-4 | Authorize one-time Hermes push of its local sprint branch (8 UNPUSHED deliverables, single-copy risk) | founder | DONE | 63e84c32 (sprint-backup tip) + cd5086f7 (h-m tip) both on origin, independently verified; grant spent |
+| F-4 | Authorize one-time Hermes push of its local sprint branch (8 UNPUSHED deliverables, single-copy risk) | founder | DONE | 63e84c32 (sprint-backup tip) + cd5086f747f2f4eb8890031ad4aebea6327c698a (h-m tip) both on origin, independently verified; grant spent |
 | C-1 | vercel.json guard drift + drift test | claude | DONE | 657a7f1 |
 | C-2 | Land v5.2.6 calibration evidence | claude | DONE | 175c44f |
 | C-3 | Declare appliedPauseGroups + RUN_GENERATE_SIGNAL_SLATE | claude | DONE | 1d39021 |
