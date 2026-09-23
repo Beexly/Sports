@@ -57,7 +57,7 @@ export function normalQuantile(p: number): number {
   const plow = 0.02425;
   const phigh = 1 - plow;
   let q: number;
-  let r: number;
+  const r: number;
   if (pc < plow) {
     q = Math.sqrt(-2 * Math.log(pc));
     return (((((c[0]! * q + c[1]!) * q + c[2]!) * q + c[3]!) * q + c[4]!) * q + c[5]!) /
