@@ -36,9 +36,9 @@ export function lgamma(x: number): number {
   }
   const z = x - 1;
   let a = c[0];
-  for (let i = 1; i < 9; i++) a += c[i] / (z + i);
+  for (let i = 1; i < 9; i++) a! += c[i]! / (z + i);
   const t = z + 7.5;
-  return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(a);
+  return 0.5 * Math.log(2 * Math.PI) + (z + 0.5) * Math.log(t) - t + Math.log(a!);
 }
 
 /**
@@ -95,9 +95,8 @@ export function abstentionLift(
 ): number {
   const n = epistemic.length;
   if (n === 0) return 0;
-  const order = epistemic.map((_, i) => i).sort((a, b) => epistemic[b] - epistemic[a]);
+  const order = epistemic.map((_, i) => i).sort((a, b) => epistemic[b]! - epistemic[a]!);
   const k = Math.max(1, Math.floor(n / 10));
-  const abstained = new Set(order.slice(0, k));
   const kept = order.slice(k);
   const base = won.filter(Boolean).length / n;
   const keptRate = kept.filter((i) => won[i]).length / Math.max(kept.length, 1);

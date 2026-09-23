@@ -126,7 +126,46 @@ export {
   DEFAULT_MIN_CALIBRATION_SAMPLE,
 } from "./calibration-apply.js";
 export type { Calibrator, CalibratedProbability } from "./calibration-apply.js";
+// Book-path ≥80 confidence tail shrink (v5.3.0, inverted band only). Pure,
+// additive, DISABLED BY DEFAULT — identity unless BOOK_PATH_TAIL_SHRINK_ENABLED
+// and CALIBRATION_ADJUSTMENTS_ENABLED are both true. Never touches
+// independentEdge / rankingP / selection. See book-path-tail-shrink.ts.
+export {
+  shrinkBookPathTailConfidence,
+  bookPathTailShrinkScore,
+  reportBookPathTailShrink,
+  BOOK_PATH_TAIL_FLOOR,
+  BOOK_PATH_TAIL_CEILING,
+  BOOK_PATH_TAIL_STRENGTH,
+} from "./book-path-tail-shrink.js";
+export type {
+  BookPathTailShrinkOptions,
+  BookPathTailShrinkResult,
+  BookPathTailRow,
+  BookPathTailShrinkReport,
+} from "./book-path-tail-shrink.js";
+// market_clv_features — CLV lock/close feature extractor for the Elite
+// line-value ledger and the ESTABLISHED ≥52.4% gate. Flag default off.
+export {
+  extractMarketClvFeatures,
+  clvBpsFromPrices,
+  lineMoveForUs,
+  beatCloseRate,
+  MARKET_CLV_FEATURES_FLAG,
+} from "./market-clv-features.js";
+export type {
+  MarketClvPrices,
+  MarketClvFeatures,
+  MarketClvOptions,
+} from "./market-clv-features.js";
+// Competitive/research signal gap map — precise file:line inventory. Pure data.
+export {
+  SIGNAL_GAP_MAP,
+  signalGapSummary,
+} from "./signal-gap-map.js";
+export type { SignalGapEntry, SignalGapStatus } from "./signal-gap-map.js";
 export * from "./constants.js";
+// expected_turnover_diff is exported below beside the other signal modules.
 export * from "./trend-discovery.js";
 export { getPlatformConfig } from "./platform-config.js";
 export type { PlatformConfig, ConfidenceDisplayMode } from "./platform-config.js";
@@ -2057,6 +2096,34 @@ export type { EarlyDownProeContext, EarlyDownProeResult } from "./signals/tactic
 
 export { evaluateTwoMinuteHurryUpEfficiency } from "./signals/tactical/two-minute-hurry-up-efficiency.js";
 export type { TwoMinuteHurryUpContext, TwoMinuteHurryUpResult } from "./signals/tactical/two-minute-hurry-up-efficiency.js";
+
+// expected_turnover_diff — signed home-minus-away turnover-regression
+// differential over the already-tested computeTurnoverLuck decomposition.
+// Flag EXPECTED_TURNOVER_DIFF_ENABLED, default false. Additive.
+export {
+  computeExpectedTurnoverDiff,
+  EXPECTED_TURNOVER_DIFF_FLAG,
+} from "./signals/expected-turnover-diff.js";
+export type {
+  ExpectedTurnoverDiffTeam,
+  ExpectedTurnoverDiffResult,
+  ExpectedTurnoverDiffOptions,
+} from "./signals/expected-turnover-diff.js";
+export {
+  computeTurnoverLuck,
+  shrinkToLeagueMean,
+  DEFAULT_LEAGUE_BASELINE,
+  DEFAULT_LEAGUE_RECOVERY_SHARE,
+  DEFAULT_POINTS_PER_TURNOVER,
+} from "./signals/turnover-luck.js";
+export type {
+  TurnoverLuckInput,
+  TurnoverLuckOptions,
+  TurnoverLuckResult,
+  TurnoverOccurrence,
+  TurnoverRecovery,
+  LeagueTurnoverBaseline,
+} from "./signals/turnover-luck.js";
 
 // Hierarchical Bayesian Pooling across 8 Signal Families
 export { poolSignalsHierarchically } from "./hierarchical-pool.js";

@@ -56,16 +56,16 @@ function pavaNondecreasing(y: readonly number[]): number[] {
   const counts: number[] = [];
   for (let i = 0; i < n; i++) {
     starts.push(i);
-    sums.push(y[i]);
+    sums.push(y[i]!);
     counts.push(1);
     while (
       sums.length >= 2 &&
-      sums[sums.length - 2] / counts[counts.length - 2] >
-        sums[sums.length - 1] / counts[counts.length - 1]
+      sums[sums.length - 2]! / counts[counts.length - 2]! >
+        sums[sums.length - 1]! / counts[counts.length - 1]!
     ) {
       starts.pop();
-      const s = sums.pop()! + sums[sums.length - 1];
-      const c = counts.pop()! + counts[counts.length - 1];
+      const s = sums.pop()! + sums[sums.length - 1]!;
+      const c = counts.pop()! + counts[counts.length - 1]!;
       sums[sums.length - 1] = s;
       counts[counts.length - 1] = c;
     }
@@ -73,8 +73,8 @@ function pavaNondecreasing(y: readonly number[]): number[] {
   let b = 0;
   for (let i = 0; i < starts.length; i++) {
     const end = i + 1 < starts.length ? starts[i + 1] : n;
-    const m = sums[b] / counts[b];
-    for (let j = starts[i]; j < end; j++) fitted[j] = m;
+    const m = sums[b]! / counts[b]!;
+    for (let j = starts[i]!; j < end!; j++) fitted[j] = m;
     b++;
   }
   return fitted;
@@ -89,22 +89,22 @@ export function fitPsiMonotone(
   uDeciles: readonly number[],
   decileCvar: readonly number[],
 ): (u: number) => number {
-  const order = uDeciles.map((_, i) => i).sort((a, b) => uDeciles[a] - uDeciles[b]);
-  const sortedU = order.map((i) => uDeciles[i]);
-  const sortedCvar = order.map((i) => decileCvar[i]);
+  const order = uDeciles.map((_, i) => i).sort((a, b) => uDeciles[a]! - uDeciles[b]!);
+  const sortedU = order.map((i) => uDeciles[i]!);
+  const sortedCvar = order.map((i) => decileCvar[i]!);
   // Higher novelty should map to lower alpha: isotonic decreasing on the CVaR.
-  const fitted = isotonicDecreasing(sortedCvar);
+  const fitted = isotonicDecreasing(sortedCvar!);
   const maxF = Math.max(...fitted, 1e-9);
   const norm = fitted.map((v) => Math.min(Math.max(v / maxF, 0), 1));
-  return (u: number) => {
-    if (u <= sortedU[0]) return norm[0];
+  return (u: number): number => {
+    if (u <= sortedU[0]!) return norm[0]!;
     for (let i = 1; i < sortedU.length; i++) {
-      if (u <= sortedU[i]) {
-        const t = (u - sortedU[i - 1]) / (sortedU[i] - sortedU[i - 1] || 1);
-        return norm[i - 1] + t * (norm[i] - norm[i - 1]);
+      if (u <= sortedU[i]!) {
+        const t = (u - sortedU[i - 1]!) / (sortedU[i]! - sortedU[i - 1]! || 1);
+        return norm[i - 1]! + t * (norm[i]! - norm[i - 1]!);
       }
     }
-    return norm[norm.length - 1];
+    return norm[norm.length - 1]!;
   };
 }
 
@@ -123,7 +123,7 @@ export function distortedStakeMultiplier(alpha: number, baseStake: number): numb
 /** Gate helper: stakes must decrease monotonically with novelty decile. */
 export function stakesMonotoneDecreasing(stakesByDecile: readonly number[]): boolean {
   for (let i = 1; i < stakesByDecile.length; i++) {
-    if (stakesByDecile[i] > stakesByDecile[i - 1] + 1e-9) return false;
+    if (stakesByDecile[i]! > stakesByDecile[i - 1]! + 1e-9) return false;
   }
   return true;
 }
