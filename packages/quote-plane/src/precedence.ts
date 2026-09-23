@@ -8,7 +8,9 @@
  *   A — provenance-grade (citeAllowed when source clears)
  *   B — internal SIGNAL (Apify: never cite as provenance)
  *
- * OddsPapi: secondary complement; certifiableForLiveGate=false pending legal read.
+ * Parlay: stays on the ladder for merge/gap-fill (market-state only);
+ *   citeAllowed=false and certifiableForLiveGate=false.
+ * OddsPapi: citeAllowed=true; certifiableForLiveGate=false pending legal read.
  */
 
 export const FREE_QUOTE_PRECEDENCE = [
@@ -26,12 +28,24 @@ export type FreeQuoteTier = (typeof FREE_QUOTE_PRECEDENCE)[number];
 const TIER_B_ONLY: ReadonlySet<FreeQuoteTier> = new Set(["apify"]);
 
 /**
+ * Sources that must not appear in citeEligibleSources.
+ * Apify (Tier-B) and parlay (market-state merge only).
+ */
+const CITE_DISALLOWED: ReadonlySet<FreeQuoteTier> = new Set([
+  "apify",
+  "parlay",
+]);
+
+/**
  * Sources that must not certify a live-gate path (internal analytics only).
  * OddsPapi: Motif 2026-09-18 — secondary; legal read pending.
+ * Parlay: market-state only — off live-gate.
+ * Apify: Tier-B — never live-gate.
  */
 const LIVE_GATE_UNCERTIFIABLE: ReadonlySet<FreeQuoteTier> = new Set([
   "oddspapi",
   "apify",
+  "parlay",
 ]);
 
 export function isFreeQuoteTier(value: string): value is FreeQuoteTier {
@@ -56,16 +70,16 @@ export function isTierBOnly(sourceId: string): boolean {
 
 /**
  * Whether this free-ladder source may appear in citeEligibleSources /
- * public-claim provenance. Apify always false.
+ * public-claim provenance. Apify and parlay always false.
  */
 export function citeAllowed(sourceId: string): boolean {
   if (!isFreeQuoteTier(sourceId)) return false;
-  return !isTierBOnly(sourceId);
+  return !CITE_DISALLOWED.has(sourceId);
 }
 
 /**
  * Whether this free-ladder source may certify a live-gate path.
- * OddsPapi and Apify are always false.
+ * OddsPapi, Apify, and parlay are always false.
  */
 export function certifiableForLiveGate(sourceId: string): boolean {
   if (!isFreeQuoteTier(sourceId)) return false;

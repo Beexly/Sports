@@ -1,10 +1,16 @@
 /**
  * SituationSnapshot — book market-state bundle from FREE quote ladder.
  *
- * Pure merge: earlier FREE_QUOTE_PRECEDENCE tier wins on conflict when freshness
- * is comparable; later tiers fill gaps only. Apify never alone sets headline
- * consensus. Does not invent live HTTP providers — accepts already-fetched
- * contributions labeled with freeTier metadata.
+ * Pure merge: earlier FREE_QUOTE_PRECEDENCE tier always keeps the line on
+ * conflict; later tiers fill gaps only. A substantially fresher later tier
+ * only emits a `stale_higher_tier` divergence flag (no overwrite). Apify
+ * never alone sets headline consensus. Does not invent live HTTP providers —
+ * accepts already-fetched contributions labeled with freeTier metadata.
+ *
+ * Hard wall: freeTier label alone is not trusted. Contributions whose line
+ * has non-book provenance (model_prior / synthetic_demo / prediction_market /
+ * market===model / research_only / internal_synthetic) are rejected and never
+ * enter winners/sourcesUsed.
  *
  * Additive parallel to QuoteLine; does not rewrite QuoteLine / KIND_RANK.
  */
@@ -52,7 +58,16 @@ export interface SituationSnapshot {
   readonly books: readonly SituationBookEntry[];
   readonly asOf: string;
   readonly sourcesUsed: readonly FreeQuoteTier[];
+  /**
+   * Tiers that supplied a kept line AND citeAllowed(t).
+   * NOT gated by certifiableForLiveGate — OddsPapi may appear here.
+   */
   readonly citeEligibleSources: readonly FreeQuoteTier[];
+  /**
+   * Tiers that supplied a kept line AND certifiableForLiveGate(t).
+   * OddsPapi / parlay / Apify never appear here.
+   */
+  readonly liveGateEligibleSources: readonly FreeQuoteTier[];
   readonly primaryTier: FreeQuoteTier | null;
   readonly tierBOnly: boolean;
   readonly divergenceFlags?: readonly string[];
@@ -63,11 +78,34 @@ export interface BuildSituationSnapshotInput {
   readonly sport: string;
   readonly contributions: readonly FreeQuoteContribution[];
   /**
-   * Max absolute age skew (ms) to treat two quotes as "freshness comparable".
-   * Default 5 minutes. When later tier is substantially fresher, conflict is
-   * flagged rather than blindly overwritten by earlier tier.
+   * Age skew (ms) used only to decide when a disagreeing later tier is
+   * "substantially fresher" than the kept earlier-tier line. When that
+   * happens we emit `stale_higher_tier` — we never overwrite the earlier
+   * winner. Default 5 minutes. Earlier tier always keeps the line on conflict.
    */
   readonly freshnessWindowMs?: number;
+}
+
+const NON_BOOK_SOURCE_KINDS = new Set<QuoteLine["sourceKind"]>([
+  "model_prior",
+  "synthetic_demo",
+  "prediction_market",
+]);
+
+const NON_BOOK_RIGHTS = new Set<QuoteLine["rights"]>([
+  "research_only",
+  "internal_synthetic",
+]);
+
+/**
+ * Hard wall: true only when the QuoteLine itself looks like book market-state.
+ * freeTier label alone is not trusted — callers may mislabel model/PM lines.
+ */
+export function isBookMarketStateLine(line: QuoteLine): boolean {
+  if (NON_BOOK_SOURCE_KINDS.has(line.sourceKind)) return false;
+  if (line.market === "model") return false;
+  if (NON_BOOK_RIGHTS.has(line.rights)) return false;
+  return true;
 }
 
 function bookLineKey(
@@ -99,24 +137,40 @@ function resolveBookId(line: QuoteLine, freeTier: FreeQuoteTier): string {
   return line.bookId?.trim() || `source:${line.sourceId || freeTier}`;
 }
 
+function rejectReason(line: QuoteLine): string | null {
+  if (NON_BOOK_SOURCE_KINDS.has(line.sourceKind)) {
+    return `sourceKind=${line.sourceKind}`;
+  }
+  if (line.market === "model") {
+    return "market=model";
+  }
+  if (NON_BOOK_RIGHTS.has(line.rights)) {
+    return `rights=${line.rights}`;
+  }
+  return null;
+}
+
 /**
  * Merge free-ladder contributions into a SituationSnapshot.
  *
  * Policy:
- * 1. Sort contributions by FREE_QUOTE_PRECEDENCE (ascending index).
- * 2. For each book|market|selection: first (earlier) tier that supplies a line
- *    owns it when freshness is comparable; later tiers fill gaps only.
- * 3. If later tier disagrees and is not substantially fresher → keep earlier,
- *    emit divergence flag.
+ * 1. Hard-wall reject non-book lines (model/PM/synthetic) regardless of freeTier.
+ * 2. Sort remaining by FREE_QUOTE_PRECEDENCE (ascending index).
+ * 3. For each book|market|selection: earlier tier always keeps the line;
+ *    later tiers fill gaps only. Substantially fresher later tier →
+ *    `stale_higher_tier` flag, still no overwrite.
  * 4. If only Tier-B (Apify) contributions remain → tierBOnly=true and
- *    citeEligibleSources=[].
- * 5. Never let Apify alone set headline consensus (primaryTier stays null /
- *    tierBOnly when no Tier-A-eligible free source contributed a kept line).
+ *    citeEligibleSources / liveGateEligibleSources empty of Tier-A.
+ * 5. citeEligibleSources = kept ∩ citeAllowed (OddsPapi ok; parlay/Apify out).
+ * 6. liveGateEligibleSources = kept ∩ certifiableForLiveGate
+ *    (OddsPapi / parlay / Apify out).
  */
 export function buildSituationSnapshotFromQuotes(
   input: BuildSituationSnapshotInput,
 ): SituationSnapshot {
   const freshnessWindowMs = input.freshnessWindowMs ?? 5 * 60 * 1000;
+  const divergenceFlags: string[] = [];
+
   const scoped = input.contributions.filter(
     (c) =>
       c.line.eventId === input.eventId &&
@@ -124,7 +178,19 @@ export function buildSituationSnapshotFromQuotes(
       (FREE_QUOTE_PRECEDENCE as readonly string[]).includes(c.freeTier),
   );
 
-  const ordered = [...scoped].sort(
+  const bookScoped: FreeQuoteContribution[] = [];
+  for (const c of scoped) {
+    const reason = rejectReason(c.line);
+    if (reason !== null) {
+      divergenceFlags.push(
+        `rejected_non_book:${c.freeTier}:${c.line.sourceId}:${reason}`,
+      );
+      continue;
+    }
+    bookScoped.push(c);
+  }
+
+  const ordered = [...bookScoped].sort(
     (a, b) =>
       tierIndex(a.freeTier) - tierIndex(b.freeTier) ||
       Date.parse(b.line.quoteAsOf) - Date.parse(a.line.quoteAsOf),
@@ -135,7 +201,6 @@ export function buildSituationSnapshotFromQuotes(
     string,
     { contrib: FreeQuoteContribution; bookId: string }
   >();
-  const divergenceFlags: string[] = [];
   const sourcesUsedSet = new Set<FreeQuoteTier>();
 
   for (const c of ordered) {
@@ -150,12 +215,10 @@ export function buildSituationSnapshotFromQuotes(
     }
 
     // Gap already filled by earlier (or equal) tier — later only enrich gaps.
+    // Earlier tier always keeps the line on conflict (no overwrite).
     const kept = existing.contrib;
     const keptTs = Date.parse(kept.line.quoteAsOf);
     const candTs = Date.parse(c.line.quoteAsOf);
-    const ageSkew = Number.isFinite(keptTs) && Number.isFinite(candTs)
-      ? Math.abs(candTs - keptTs)
-      : 0;
 
     const disagree =
       Math.abs(kept.line.q - c.line.q) > 1e-6 ||
@@ -170,7 +233,7 @@ export function buildSituationSnapshotFromQuotes(
         candTs > keptTs + freshnessWindowMs;
 
       if (laterFresher && earlierWins(kept.freeTier, c.freeTier)) {
-        // Explicit divergence: higher tier kept despite substantially fresher lower tier.
+        // Higher tier kept despite substantially fresher lower tier — flag only.
         divergenceFlags.push(
           `stale_higher_tier:${key}:${kept.freeTier}>${c.freeTier}`,
         );
@@ -182,7 +245,6 @@ export function buildSituationSnapshotFromQuotes(
     }
 
     // Never overwrite earlier winner with later tier (gap-fill only).
-    void ageSkew;
     sourcesUsedSet.add(c.freeTier);
   }
 
@@ -229,14 +291,16 @@ export function buildSituationSnapshotFromQuotes(
   const tierBOnly =
     winners.size > 0 ? keptNonB.length === 0 : false;
 
-  // Cite-eligible: tiers that actually supplied a kept line AND citeAllowed,
-  // excluding live-gate-uncertifiable from "cert" path — OddsPapi stays out of
-  // citeEligibleSources for live-gate cert (internal analytics only).
+  // Cite-eligible: kept line AND citeAllowed — NOT gated by live-gate.
+  // OddsPapi (citeAllowed=true, certifiableForLiveGate=false) may appear here.
   const citeEligibleSources = FREE_QUOTE_PRECEDENCE.filter(
-    (t) =>
-      keptTiers.has(t) &&
-      citeAllowed(t) &&
-      certifiableForLiveGate(t),
+    (t) => keptTiers.has(t) && citeAllowed(t),
+  );
+
+  // Live-gate-eligible: kept line AND certifiableForLiveGate.
+  // OddsPapi / parlay / Apify never appear here.
+  const liveGateEligibleSources = FREE_QUOTE_PRECEDENCE.filter(
+    (t) => keptTiers.has(t) && certifiableForLiveGate(t),
   );
 
   // Headline / primary: earliest non–Tier-B kept tier; never Apify alone.
@@ -266,6 +330,7 @@ export function buildSituationSnapshotFromQuotes(
     asOf,
     sourcesUsed,
     citeEligibleSources,
+    liveGateEligibleSources,
     primaryTier,
     tierBOnly,
     ...(divergenceFlags.length
