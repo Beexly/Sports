@@ -1,0 +1,41 @@
+# CQR-TEST — 2026-09-23
+
+Branch: `cursor/wire-port-contract-79e9`
+Base: `origin/main` @ `c153e8b8cde97a98566226dfaf28314cc5be60fb`
+Parent: PORT-CONTRACT @ `4066d7144286603fda9b4f655d748a83ed9a9377`
+
+## What landed
+
+Fail-closed conformal CQR assertions in `apps/web/__tests__/cqr.test.ts` (7 tests, vitest exit 0).
+
+Product code `apps/web/lib/calibration/cqr.ts` was already fail-closed at hermes tip (rank ≥ n → `+∞`; No-Bet expands lo/hi to ±∞). This card ports the research contract into tests only — no scoring / MODEL_VERSION / env / schema change.
+
+## Contract pinned
+
+- `conformalQuantile([], 0.1)` → `+∞`
+- `conformalQuantile` n=5, α=0.1 (rank = ceil(0.9×6)−1 = 5 ≥ n) → `+∞`
+- `conformalQuantile` n≥9, α=0.1 → finite quantile (last sorted score)
+- `cqrInterval` with n=5 calibration → `qhat=+∞`, lo all `−∞`, hi all `+∞` (No-Bet)
+- `cqrInterval` with n≥9 and residuals outside [qLoCal, qHiCal] → finite nonnegative `qhat`, outward expansion (`lo = qLo − qhat`, `hi = qHi + qhat`)
+- empty `yCal` → original bands, `qhat=0`
+- `CQR_PRODUCT_NOTES.defaultOff === true`, `unlocksProven === false`
+
+## API note
+
+`cqrInterval` takes positional args `(qLo, qHi, yCal, qLoCal, qHiCal, alpha=0.1)`, not an options object. Fixture for the finite path places `yCal` outside `[0, 2]` so residuals are nonnegative and expansion is outward (inside-band yCal produced negative qhat and looked like a contraction).
+
+## Verify
+
+```bash
+npx vitest run apps/web/__tests__/cqr.test.ts
+# ✓ 7 tests passed
+```
+
+## Staging
+
+- Staged: `apps/web/__tests__/cqr.test.ts`, `wire/CQR-TEST`
+- Left unstaged: `package-lock.json` (dirty from install; not part of this card)
+
+## Verdict
+
+DONE — tests only. Unblocks STRAY-ARCHIVE and CORPUS-RESCUE on this branch (CORPUS SHA `9ae24d7e2` may still BLOCK rescue). SHADOW-FEED / FEATURE / LESSONS remain blocked pending separate work.
