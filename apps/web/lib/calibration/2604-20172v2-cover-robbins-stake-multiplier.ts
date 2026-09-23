@@ -34,7 +34,7 @@ export function coverWealth(
   let w = 1;
   for (let t = 0; t < outcomes.length; t++) {
     const lambda = Math.min(Math.max(lambdaSchedule(t), -0.99), 0.99);
-    w *= 1 + lambda * (outcomes[t] - m0);
+    w *= 1 + lambda * (outcomes[t]! - m0);
     if (w <= 0) return 0;
   }
   return w;
@@ -106,7 +106,7 @@ export function shuffleTestPassRate(
     const shuffled = [...outcomes];
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(rand() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      [shuffled[i], shuffled[j]] = [shuffled[j]!, shuffled[i]!];
     }
     const w = coverRobbinsWealth(shuffled, m0, (t) => 0.25 / Math.sqrt(t + 1), lambdas);
     if (w < SCALE_UP_WEALTH) pass++;

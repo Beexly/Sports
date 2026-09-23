@@ -38,15 +38,15 @@ export interface ScenarioWorld {
 
 /** Max-world (minimax) regret aggregation. */
 export function maxRegret(worlds: readonly ScenarioWorld[], actionIdx: number): number {
-  return Math.max(...worlds.map((w) => w.regret[actionIdx]));
+  return Math.max(...worlds.map((w) => w.regret[actionIdx]!));
 }
 
 /** Median-world regret aggregation (robust to one adversarial world). */
 export function medianRegret(worlds: readonly ScenarioWorld[], actionIdx: number): number {
-  const rs = worlds.map((w) => w.regret[actionIdx]).sort((a, b) => a - b);
+  const rs = worlds.map((w) => w.regret[actionIdx]!).sort((a, b) => a - b);
   const n = rs.length;
   const mid = Math.floor(n / 2);
-  return n % 2 === 1 ? rs[mid] : (rs[mid - 1] + rs[mid]) / 2;
+  return n % 2 === 1 ? rs[mid]! : (rs[mid - 1]! + rs[mid]!) / 2;
 }
 
 /** 75th-percentile compromise variant. */
@@ -55,9 +55,9 @@ export function percentileRegret(
   actionIdx: number,
   q = 0.75,
 ): number {
-  const rs = worlds.map((w) => w.regret[actionIdx]).sort((a, b) => a - b);
+  const rs = worlds.map((w) => w.regret[actionIdx]!).sort((a, b) => a - b);
   const idx = Math.min(rs.length - 1, Math.floor(q * rs.length));
-  return rs[idx];
+  return rs[idx]!;
 }
 
 /** Trimmed-mean regret (drop top-k worst worlds). */
@@ -66,7 +66,7 @@ export function trimmedMeanRegret(
   actionIdx: number,
   dropTopK = 1,
 ): number {
-  const rs = worlds.map((w) => w.regret[actionIdx]).sort((a, b) => a - b);
+  const rs = worlds.map((w) => w.regret[actionIdx]!).sort((a, b) => a - b);
   const kept = rs.slice(0, Math.max(rs.length - dropTopK, 1));
   return kept.reduce((a, b) => a + b, 0) / kept.length;
 }

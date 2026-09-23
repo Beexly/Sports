@@ -43,7 +43,7 @@ export function empiricalPitMap(
     let hi = n;
     while (lo < hi) {
       const mid = (lo + hi) >> 1;
-      if (sorted[mid] <= g) lo = mid + 1;
+      if (sorted[mid]! <= g) lo = mid + 1;
       else hi = mid;
     }
     return lo / n;
@@ -57,14 +57,14 @@ export function applyPitMap(
   pitMap: readonly number[],
 ): number[] {
   return rawPits.map((p) => {
-    if (p <= grid[0]) return pitMap[0];
-    for (let i = 1; i < grid.length; i++) {
-      if (p <= grid[i]) {
-        const t = (p - grid[i - 1]) / (grid[i] - grid[i - 1] || 1);
-        return pitMap[i - 1] + t * (pitMap[i] - pitMap[i - 1]);
-      }
+if (p <= grid[0]!) return pitMap[0]!;
+  for (let i = 1; i < grid.length; i++) {
+    if (p <= grid[i]!) {
+      const t = (p - grid[i - 1]!) / (grid[i]! - grid[i - 1]! || 1);
+      return pitMap[i - 1]! + t * (pitMap[i]! - pitMap[i - 1]!);
     }
-    return pitMap[pitMap.length - 1];
+  }
+  return pitMap[pitMap.length - 1]!;
   });
 }
 
@@ -85,7 +85,7 @@ export function forecastAdvantageMeasure(
 ): FamResult {
   const n = Math.min(scoresRecal.length, scoresRaw.length);
   if (n === 0) return { dSbar: 0, variance: 0, fam: 0 };
-  const ds = Array.from({ length: n }, (_, i) => scoresRecal[i] - scoresRaw[i]);
+  const ds = Array.from({ length: n }, (_, i) => scoresRecal[i]! - scoresRaw[i]!);
   const dSbar = ds.reduce((a, b) => a + b, 0) / n;
   const variance = ds.reduce((a, b) => a + (b - dSbar) * (b - dSbar), 0) / n;
   const fam = variance > 0 ? dSbar / Math.sqrt(variance) : 0;

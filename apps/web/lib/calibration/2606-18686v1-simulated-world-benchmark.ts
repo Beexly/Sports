@@ -42,7 +42,7 @@ export function rolloutGame(
   rand: () => number,
 ): { homeFinal: number; awayFinal: number } {
   const draw = (dist: readonly number[]) =>
-    dist[Math.floor(rand() * dist.length)];
+    dist[Math.floor(rand() * dist.length)]!;
   let h = state.homeScore;
   let a = state.awayScore;
   for (let d = 0; d < state.drivesRemaining; d++) {
@@ -100,7 +100,7 @@ export function simCRPS(
   term1 /= n * m;
   let term2 = 0;
   for (let i = 0; i < n; i++) {
-    for (let j = 0; j < n; j++) term2 += Math.abs(forecastSamples[i] - forecastSamples[j]);
+    for (let j = 0; j < n; j++) term2 += Math.abs(forecastSamples[i]! - forecastSamples[j]!);
   }
   term2 /= n * n;
   return term1 - 0.5 * term2;
@@ -128,8 +128,8 @@ export function calibrationSlope(
   let num = 0;
   let den = 0;
   for (let i = 0; i < n; i++) {
-    num += (probs[i] - mp) * (outcomes[i] - mo);
-    den += (probs[i] - mp) * (probs[i] - mp);
+    num += (probs[i]! - mp) * (outcomes[i]! - mo);
+    den += (probs[i]! - mp) * (probs[i]! - mp);
   }
   return den > 0 ? num / den : 0;
 }

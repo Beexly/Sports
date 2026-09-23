@@ -40,7 +40,7 @@ export function spectralRisk(
   alphas: readonly number[],
   weights: readonly number[],
 ): number {
-  return alphas.reduce((a, alpha, i) => a + weights[i] * cvarLosses(losses, alpha), 0);
+  return alphas.reduce((a, alpha, i) => a + weights[i]! * cvarLosses(losses, alpha), 0);
 }
 
 /** Mean-CVaR: lambda * mean + (1 - lambda) * CVaR_alpha. */
@@ -80,9 +80,9 @@ function pearson(a: readonly number[], b: readonly number[]): number {
   let da = 0;
   let db = 0;
   for (let i = 0; i < n; i++) {
-    num += (a[i] - ma) * (b[i] - mb);
-    da += (a[i] - ma) * (a[i] - ma);
-    db += (b[i] - mb) * (b[i] - mb);
+num += (a[i]! - ma) * (b[i]! - mb);
+da += (a[i]! - ma) * (a[i]! - ma);
+db += (b[i]! - mb) * (b[i]! - mb);
   }
   return da > 0 && db > 0 ? num / Math.sqrt(da * db) : 0;
 }

@@ -33,7 +33,10 @@ export function computeAnchors(series: readonly number[], window: number): Ancho
   const n = w.length;
   const mean = w.reduce((a, b) => a + b, 0) / Math.max(n, 1);
   const sorted = [...w].sort((a, b) => a - b);
-  const median = n % 2 === 1 ? sorted[(n - 1) / 2] : (sorted[n / 2 - 1] + sorted[n / 2]) / 2;
+  const median =
+    n % 2 === 1
+      ? sorted[(n - 1) / 2]!
+      : (sorted[n / 2 - 1]! + sorted[n / 2]!) / 2;
   // Regression endpoint: OLS fit over the window, evaluated at the last index.
   let slope = 0;
   let intercept = mean;
@@ -42,7 +45,7 @@ export function computeAnchors(series: readonly number[], window: number): Ancho
     let num = 0;
     let den = 0;
     for (let i = 0; i < n; i++) {
-      num += (i - mx) * (w[i] - mean);
+      num += (i - mx) * (w[i]! - mean);
       den += (i - mx) * (i - mx);
     }
     slope = den > 0 ? num / den : 0;
@@ -95,7 +98,7 @@ export function residualArchiveLookup(
   const dist = (a: readonly number[], b: readonly number[]) => {
     let s = 0;
     for (let i = 0; i < Math.min(a.length, b.length); i++) {
-      s += (a[i] - b[i]) * (a[i] - b[i]);
+      s += (a[i]! - b[i]!) * (a[i]! - b[i]!);
     }
     return Math.sqrt(s);
   };

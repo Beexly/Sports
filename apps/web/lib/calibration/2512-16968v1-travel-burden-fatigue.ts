@@ -37,7 +37,7 @@ export function travelBurden(
   let burden = 0;
   let daysAgo = 0;
   for (let i = games.length - 1; i >= 0; i--) {
-    const g = games[i];
+    const g = games[i]!;
     if (daysAgo > windowDays) break;
     const recency = Math.pow(decayPerDay, daysAgo);
     const frequencyPenalty = g.restDays < 1 ? 1.5 : g.restDays < 2 ? 1.2 : 1.0;
