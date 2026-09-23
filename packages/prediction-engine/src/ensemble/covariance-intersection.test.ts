@@ -85,8 +85,8 @@ describe("consistencyCheck + adaptiveWeights", () => {
 
   it("favors the currently better source", () => {
     const w = adaptiveWeights([0.5, 0.7, 0.6]);
-    expect(w[0]).toBeGreaterThan(w[1]);
-    expect(w[0]).toBeGreaterThan(w[2]);
+    expect(w[0]!).toBeGreaterThan(w[1]!);
+    expect(w[0]!).toBeGreaterThan(w[2]!);
     expect(w.reduce((s, x) => s + x, 0)).toBeCloseTo(1, 12);
     expect(simpleAverage([{ mean: 0.5, variance: 0.1 }]).mean).toBeCloseTo(0.5, 12);
     expect(() => adaptiveWeights([])).toThrow();
