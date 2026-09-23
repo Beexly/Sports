@@ -125,13 +125,21 @@ You do **not** need this for the 30-day silent collection period — the paywall
 4. In Test mode → Developers → API keys, grab:
    - Publishable key (`pk_test_*`)
    - Secret key (`sk_test_*`)
-5. Create two products in Test mode: "Pro" and "Elite", with recurring monthly prices $19 and $49 respectively. The setup script in Step 12 can do this for you.
+5. Create the subscription products in Test mode — **Pro**, **Elite**, and **Fantasy** — each with a recurring **monthly** price *and* a recurring **annual** price (six prices in total).
+
+   **Read the amounts out of the code, not out of this checklist.** `apps/web/lib/pricing/pricing-phases.ts` is the single source of truth. The live rung is FOUNDING: Pro $14.99/mo · $99/yr, Elite $24.99/mo · $179/yr, Fantasy $4.99/mo · $49/yr. If `PRICING_PHASE` has been advanced since this was written, those are no longer the right numbers — open the module and use what it says.
+
+   **Why exactness matters:** `apps/web/lib/stripe.ts` compares every Stripe price against the advertised phase amount and fails **closed** on a mismatch (GSE-SEC-024). If the amount, the interval, or the currency disagrees, the checkout route answers 503 and that tier is simply unbuyable — no charge, no error the customer can act on. It is a revenue outage, not a rounding error.
+
+   The Step 12 script can create the **Pro and Elite** pairs for you. It does **not** create Fantasy prices, and its amounts are pinned to the FOUNDING rung — on any later phase, create all six by hand.
 6. Set up the webhook endpoint at Dashboard → Developers → Webhooks → Add endpoint:
    - URL: `https://<APP_HOSTNAME>/api/webhooks/stripe`
    - Events to listen for: `customer.subscription.created`, `customer.subscription.updated`, `customer.subscription.deleted`, `invoice.payment_succeeded`, `invoice.payment_failed`
    - Copy the signing secret (`whsec_*`)
 
-**Produces:** `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, `STRIPE_PRO_PRICE_ID`, `STRIPE_ELITE_PRICE_ID`.
+**Produces:** `STRIPE_SECRET_KEY`, `STRIPE_WEBHOOK_SECRET`, `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`, and the six per-interval price-id vars — `STRIPE_PRO_MONTHLY_PRICE_ID`, `STRIPE_PRO_ANNUAL_PRICE_ID`, `STRIPE_ELITE_MONTHLY_PRICE_ID`, `STRIPE_ELITE_ANNUAL_PRICE_ID`, `STRIPE_FANTASY_MONTHLY_PRICE_ID`, `STRIPE_FANTASY_ANNUAL_PRICE_ID`.
+
+> Only the two monthly vars fall back to the legacy `STRIPE_PRO_PRICE_ID` / `STRIPE_ELITE_PRICE_ID` (`apps/web/lib/billing/price-ids.ts`). The annual vars and both Fantasy vars have no fallback — leave one unset and that plan is unbuyable. Each var may also hold a comma-separated list of ids: the first is what checkout charges, the rest keep existing subscribers mapped to their tier. **Prepend a new id; never replace the list**, or grandfathered members silently drop to FREE while still paying.
 
 > Switch to **Live mode** keys only after legal review is done and you're ready to charge real cards. The platform's gates will let you launch silently and flip checkout on later without touching code.
 
@@ -183,7 +191,13 @@ From your local machine, with `STRIPE_SECRET_KEY` in your shell env:
 node scripts/seed-stripe-prices.mjs
 ```
 
-The script reads the keys from your env, creates the Pro and Elite products in your Stripe account if they don't exist, and prints the price IDs to paste back into Vercel.
+The script reads the keys from your env, creates the Pro and Elite products (monthly + annual) in your Stripe account if they don't exist, and prints the price IDs to paste back into Vercel.
+
+Three caveats:
+
+- It does **not** seed Fantasy prices — create those two by hand (Step 9).
+- Its amounts are pinned to the FOUNDING rung, not read from `apps/web/lib/pricing/pricing-phases.ts`. On any advanced phase it would seed the previous rung's amounts, which checkout then rejects. Create the prices by hand instead.
+- It is idempotent **by `lookup_key`**, so re-running it will not correct the amount on a price that already exists. Fix a wrong amount by creating a new price (Stripe price objects are immutable) and prepending its id.
 
 ---
 

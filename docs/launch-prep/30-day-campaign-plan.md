@@ -133,7 +133,7 @@ The board is open. Now the goal is converting Free → Pro/Elite.
 Themes for the week:
 - **Mon:** "Inside the Signal Feed" — what Free shows vs Pro
 - **Tue:** "Show your work" — a deep-dive on one specific published signal's factor trail
-- **Wed:** "Why I'm charging $19 instead of $99" — pricing philosophy
+- **Wed:** "Why the founding rate is what it is" — pricing philosophy (quote the live figure from `apps/web/lib/pricing/pricing-phases.ts` when you write the post)
 - **Thu:** "I'd rather you cancel than complain" — refund policy as a feature
 - **Fri:** "Week 3 recap — first paid subscribers + what I'm learning"
 - **Sat:** Live slate commentary with Eclipse Gate callouts

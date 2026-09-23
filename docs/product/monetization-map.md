@@ -25,11 +25,18 @@ The wedge stays the wedge. The OS frame does not show up in consumer marketing. 
 
 **What they pay for:**
 
-- **Free** — One pick a day plus all free public surfaces (Gate Cam, Pass List, Public Ledger preview, Live Calibration chart, Edge Lab tools, public Edge Index, methodology page).
-- **Pro ($19/mo)** — All picks, confidence scores, quick reasoning, factor breakdown, custom alerts, Discord/Telegram pipes, programmable alerts (Phase 5), cross-sport correlation queries (Phase 5).
-- **Elite ($49/mo)** — Everything in Pro plus the "What Was Learned" weekly digest, alerts with reasoning, early access, programmable DSL filters (Phase 5), backtesting (Phase 4), live war room access (Phase 5).
+- **Free** — The daily pick teaser plus all free public surfaces (Gate Cam, Pass List, Public Ledger preview, Live Calibration chart, Edge Lab tools, public Edge Index, methodology page).
+- **Fantasy ($4.99/mo · $49/yr)** — The fantasy suite. On the betting board it sees the same free teaser, not the full board.
+- **Pro ($14.99/mo · $99/yr)** — All picks, confidence scores, quick reasoning, factor breakdown, custom alerts, Discord/Telegram pipes, programmable alerts (Phase 5), cross-sport correlation queries (Phase 5).
+- **Elite ($24.99/mo · $179/yr)** — Everything in Pro plus the CLV/line-value ledger, the "What Was Learned" weekly digest, alerts with reasoning, early access, programmable DSL filters (Phase 5), backtesting (Phase 4), live war room access (Phase 5).
 
 **Pricing locked:** DEC-010. Tier narrative is See it / Bet it / Master it.
+
+The figures above are the live FOUNDING rung and are reproduced here for
+narrative context only. `apps/web/lib/pricing/pricing-phases.ts` is the single
+source of truth for every amount on the ladder; the free daily allowance lives in
+`packages/types/src/index.ts` (`dailyPickLimit`). Check both before quoting
+either in a deck, a pitch, or a pricing page.
 
 **Phase status:** Live. Phases 1–4 grow it.
 

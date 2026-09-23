@@ -4,6 +4,10 @@ For Garrett. The first 25 paid customers will come from your personal
 network, sharp-bettor DMs, and 1:1 messages. This is the material to send
 when you DM, email, or text.
 
+> **Before you send:** the prices below quote the live FOUNDING rung. Confirm
+> them against `apps/web/lib/pricing/pricing-phases.ts` first — the ladder
+> advances by operator action, and a quoted price in a DM is a promise.
+
 ---
 
 ## The TL;DR (one paragraph — for cold DMs)
@@ -12,7 +16,7 @@ when you DM, email, or text.
 > service. Every signal exposes its full factor trail (consensus, line
 > movement, depth, freshness). Losses are counted. The public win-rate
 > stays gated until enough settled history exists to publish a defensible
-> number. Free plan gets one signal a day; Pro is $19/mo. Would love your
+> number. Free plan gets a daily signal teaser; Pro is $14.99/mo. Would love your
 > eyes on it: galaxysportsedge.com
 
 ---
@@ -43,8 +47,8 @@ depth, freshness, the whole stack. Every signal gets logged. Every
 outcome counts. The public win-rate page stays gated until there are
 enough settled signals to publish a defensible number.
 
-It launched today. Free tier gets one signal a day. Pro is $19/mo for
-every signal with the reasoning attached. I have a 7-day refund window —
+It launched today. Free tier gets a daily signal teaser. Pro is $14.99/mo
+for every signal with the reasoning attached. I have a 7-day refund window —
 I'd rather you cancel than complain.
 
 Would mean a lot to have your eyes on it before I open the floodgates.
@@ -115,8 +119,8 @@ five surfaces in this order. It takes five minutes.
 > Report opens. Until then, the page says "Collecting." If I quoted a
 > number today, I'd be lying to you.
 
-**"Is $19/mo a lot for one person and a model?"**
-> Pro is $19/mo and gets every signal with its full factor trail. The
+**"Is that a lot for one person and a model?"**
+> Pro is $14.99/mo and gets every signal with its full factor trail. The
 > comparable tout service is $99/mo and gives you vibes. The math
 > favors me. There's also a 7-day refund window — if it's not earning
 > its price, you don't owe me anything.
