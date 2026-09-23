@@ -75,7 +75,7 @@ export function bradleyTerryIteration(wins: number[][], ratings: number[]): numb
       const rowI = wins[i] as number[];
       const rowJ = wins[j] as number[];
       const rj = ratings[j] as number;
-      const nij = rowI[j] + rowJ[i];
+      const nij = (rowI[j] as number) + (rowJ[i] as number);
       if (nij > 0) denom += nij / (ri + rj);
     }
     const wi = totalWins[i] as number;

@@ -17,7 +17,7 @@ describe("2411-06725 GTA-Net: An IoT-Integrated 3D Human Pose", () => {
     const r = mod.boneLengthError([[0, 0, 0], [3, 4, 0]], [[0, 1]], [5])!;
     expect(r.meanErrMm).toBeCloseTo(0, 10);
     expect(r.maxErrMm).toBeCloseTo(0, 10);
-    expect(mod.boneLengthError([[[0, 0, 0]]], [[0, 1]], [5])).toBeNull();
+    expect(mod.boneLengthError([[0, 0, 0]], [[0, 1]], [5])).toBeNull();
   });
   it("temporal smoothing interpolates between raw and frozen", () => {
     const raw: number[][] = [[0], [10], [20]];

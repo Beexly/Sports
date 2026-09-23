@@ -52,7 +52,13 @@ export function mpjpe(pred: number[][], gt: number[][]): number | null {
     const g = gt[j] as number[];
     if (!p || !g || p.length !== 3 || g.length !== 3) return null;
     if (![...p, ...g].every(isFiniteNumber)) return null;
-    s += Math.hypot(p[0] - g[0], p[1] - g[1], p[2] - g[2]);
+    const px = p[0] as number;
+    const py = p[1] as number;
+    const pz = p[2] as number;
+    const gx = g[0] as number;
+    const gy = g[1] as number;
+    const gz = g[2] as number;
+    s += Math.hypot(px - gx, py - gy, pz - gz);
   }
   return s / pred.length;
 }
@@ -75,7 +81,13 @@ export function boneLengthError(
     const exp = expectedMm[i] as number;
     if (!a || !b || a.length !== 3 || b.length !== 3 || !isFiniteNumber(exp)) return null;
     if (![...a, ...b].every(isFiniteNumber)) return null;
-    const len = Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+    const ax = a[0] as number;
+    const ay = a[1] as number;
+    const az = a[2] as number;
+    const bx = b[0] as number;
+    const by = b[1] as number;
+    const bz = b[2] as number;
+    const len = Math.hypot(ax - bx, ay - by, az - bz);
     errs.push(Math.abs(len - exp));
   }
   return {
