@@ -40,7 +40,7 @@ function syntheticSeason(rand: () => number): GameResult[] {
       for (const [h, a] of [
         [i, j],
         [j, i],
-      ]) {
+      ] as const) {
         const diff = (strengths[h] as number) - (strengths[a] as number) + 2.5;
         const margin = diff + (rand() - 0.5) * 12;
         games.push({
