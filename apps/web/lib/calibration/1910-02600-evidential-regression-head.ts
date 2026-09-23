@@ -97,7 +97,6 @@ export function abstentionLift(
   if (n === 0) return 0;
   const order = epistemic.map((_, i) => i).sort((a, b) => epistemic[b] - epistemic[a]);
   const k = Math.max(1, Math.floor(n / 10));
-  const abstained = new Set(order.slice(0, k));
   const kept = order.slice(k);
   const base = won.filter(Boolean).length / n;
   const keptRate = kept.filter((i) => won[i]).length / Math.max(kept.length, 1);

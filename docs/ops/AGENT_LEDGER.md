@@ -90,7 +90,7 @@ the only copy, and nobody else can verify or build on it.
 | H-G | Suppression curve vs random and oracle baselines | hermes | DONE | 63e84c32 on origin/hermes/sprint-backup-20260819, verified ancestor 2026-08-19 |
 | H-K | charge.refunded revocation behind REFUND_REVOKES_ACCESS | claude | DONE | e69aa93c on origin/hk/refund-revocation — REIMPLEMENTED by fleet after Hermes confirmed "never implemented". 19 new tests, 72/72, default-OFF structural. Adversarial review confirmed 1 major (active-subscription refund lock-in) + hardening list; revision is C-11 before any merge |
 | H-L | health-alert stateless cooldown + portable payload | claude | DONE | b9ec799 |
-| H-M | Cron no-op audit | hermes | DONE | cd5086f7 on origin/hermes/h-m-cron-audit; data-driven early-return proposal only, ~60/day off-season, 576/day figure withdrawn |
+| H-M | Cron no-op audit | hermes | DONE | cd5086f7 / 4a12d1f2e on origin/hermes/h-m-cron-audit; data-driven early-return proposal only, ~60/day off-season, 576/day figure withdrawn |
 | H-N | Env-shape validator | hermes | CLAIMED | — |
 | H-O | Repair the @/lib/stripe test mock | claude | DONE | ab9f9c2; superseded by #369 single-seam version — the fix had been sitting mergeable in #369 for 12 days and was rebuilt twice for lack of a ledger |
 | H-P | Triage the 73 CI test failures | claude | DONE | #434: every cluster root-caused; fixes shipped for checkout, copy, nflverse, waitlist, kill-switches, PAVA |

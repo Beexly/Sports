@@ -5,8 +5,8 @@ describe("adaweather-combiner", () => {
   it("puts most weight on the lowest-CRPS member", () => {
     const w = exponentialWeights([1.0, 2.0, 3.0], 1);
     expect(w.reduce((a, b) => a + b, 0)).toBeCloseTo(1, 12);
-    expect(w[0]).toBeGreaterThan(w[1]);
-    expect(w[1]).toBeGreaterThan(w[2]);
+    expect(w[0]!).toBeGreaterThan(w[1]!);
+    expect(w[1]!).toBeGreaterThan(w[2]!);
   });
   it("is uniform when members tie", () => {
     expect(exponentialWeights([2, 2, 2], 1)).toEqual([1 / 3, 1 / 3, 1 / 3]);
@@ -21,12 +21,12 @@ describe("adaweather-combiner", () => {
       expect(w1[k]).toBeCloseTo(on[k]!, 12);
     }
     const mid = hybridWeights(off, on, 0.5);
-    expect(mid[0]).toBeCloseTo(0.4, 12);
+    expect(mid[0]!).toBeCloseTo(0.4, 12);
     expect(mid.reduce((a, b) => a + b, 0)).toBeCloseTo(1, 12);
   });
   it("adaWeatherWeights tracks the recently-hot member", () => {
     const w = adaWeatherWeights([1, 1, 1], [3, 1, 2], { eta: 2, alpha: 0.8 });
-    expect(w[1]).toBeGreaterThan(w[0]);
+    expect(w[1]!).toBeGreaterThan(w[0]!);
     expect(w.reduce((a, b) => a + b, 0)).toBeCloseTo(1, 12);
   });
   it("crpsEnsemble is zero for a perfect deterministic forecast", () => {

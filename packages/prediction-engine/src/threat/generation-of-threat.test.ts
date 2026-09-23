@@ -72,8 +72,8 @@ describe("generationOfThreat", () => {
   it("credits the high-excitation dimension more", () => {
     const { got, branching } = generationOfThreat(params);
     // Dimension 1 -> 0 excitation 0.6 dominates: dim 1's GoT larger.
-    expect(got[1]).toBeGreaterThan(got[0]);
-    expect(got[0]).toBeGreaterThanOrEqual(0);
+    expect(got[1]!).toBeGreaterThan(got[0]!);
+    expect(got[0]!).toBeGreaterThanOrEqual(0);
     expect(branching[0]![1]).toBeCloseTo(0.6, 12);
   });
 });

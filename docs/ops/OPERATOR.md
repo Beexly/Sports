@@ -98,6 +98,17 @@ REDIS_URL=
 NEXT_PUBLIC_APP_URL=
 ```
 
+### 5-PR. Pricing Phase & Stripe Catalogue Phase-Ordering (#822)
+
+**Critical invariant:** The Stripe product/price catalogue for a target phase (e.g., `PROVEN`) must be created in the Stripe Dashboard and populated into the respective `STRIPE_*_PRICE_ID` environment variables **before or simultaneously with** advancing `PRICING_PHASE`.
+
+- `apps/web/lib/stripe.ts` enforces fail-closed checkout amount-matching (`GSE-SEC-024`): if the price ID configured in the environment does not match the exact advertised amount for the active `PRICING_PHASE`, checkout 503s fail-closed to prevent price discrepancy or undercharging.
+- **Phase progression sequence:**
+  1. Create the target phase's price objects in Stripe Dashboard.
+  2. Set `STRIPE_PRO_MONTHLY_PRICE_ID`, `STRIPE_PRO_ANNUAL_PRICE_ID`, `STRIPE_ELITE_MONTHLY_PRICE_ID`, `STRIPE_ELITE_ANNUAL_PRICE_ID`, `STRIPE_FANTASY_MONTHLY_PRICE_ID`, `STRIPE_FANTASY_ANNUAL_PRICE_ID` in Vercel Production Environment Variables.
+  3. Set `PRICING_PHASE` (or advance code default) to the new phase.
+  4. Run deploy-readiness verification (`node scripts/check-deploy-readiness.mjs` or `scripts/lib/stripe-price-check.mjs`).
+
 ### 5-LI. Line-integrity flags (C-281..C-284; ledger C-197)
 
 Two founder-only flags, both **default OFF** and both absent from `.env.example`
