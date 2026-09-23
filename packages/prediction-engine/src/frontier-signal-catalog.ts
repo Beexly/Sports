@@ -75,7 +75,7 @@ export const FRONTIER_SIGNALS: readonly FrontierSignal[] = [
   { key: "props.redzone_target_share", family: "redzone", job: "anytime-TD hit rate beyond base rate", priorWeight: SIGNAL_WEIGHT_CANDIDATE, measuredEffect: 0.3158, source: "A22" },
   { key: "props.redzone_conversion", family: "redzone", job: "red-zone opportunity conversion, same family", priorWeight: SIGNAL_WEIGHT_FLOOR, measuredEffect: null, source: "salvage redzone-opportunity-conversion" },
   { key: "props.negbin_td", family: "redzone", job: "negative-binomial TD, same family, one vote", priorWeight: SIGNAL_WEIGHT_FLOOR, measuredEffect: null, source: "salvage negative-binomial-redzone-td" },
-  { key: "market.shrinkage", family: "market", job: "market is one fixed offset, not the lock on the ledger", priorWeight: SIGNAL_WEIGHT_CANDIDATE, measuredEffect: 0.1, source: "A2 w=0.10 on paired rows" },
+  { key: "market.shrinkage", family: "market", job: "market is one fixed offset, not the seal on the ledger", priorWeight: SIGNAL_WEIGHT_CANDIDATE, measuredEffect: 0.1, source: "A2 w=0.10 on paired rows" },
   { key: "calibration.temperature", family: "calibration", job: "one temperature on pre-game receipts, isotonic cannot invert", priorWeight: SIGNAL_WEIGHT_FLOOR, measuredEffect: 0.041, source: "A8 log-loss-optimize" },
   { key: "lowscore.dixon_coles", family: "lowscore", job: "low-score correlation beside Poisson, one family", priorWeight: SIGNAL_WEIGHT_FLOOR, measuredEffect: null, source: "dixon-coles" },
   { key: "lowscore.poisson", family: "lowscore", job: "independent Poisson joint", priorWeight: SIGNAL_WEIGHT_FLOOR, measuredEffect: null, source: "poisson" },
