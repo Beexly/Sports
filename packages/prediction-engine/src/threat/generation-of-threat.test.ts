@@ -92,7 +92,12 @@ describe("bootstrapGoT", () => {
     expect(se).toHaveLength(2);
     expect(se[0]).toBeGreaterThan(0);
     expect(se[1]).toBeGreaterThan(0);
-    expect(se[0] as number).toBeLessThan(mean[0] as number);
+    const se0 = se[0];
+    const mean0 = mean[0];
+    if (se0 === undefined || mean0 === undefined) {
+      throw new Error("bootstrapGoT must return se[0] and mean[0]");
+    }
+    expect(se0).toBeLessThan(mean0);
     expect(() => bootstrapGoT(params, 600, 1, rand)).toThrow();
   });
 });

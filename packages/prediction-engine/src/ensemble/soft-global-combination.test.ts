@@ -65,7 +65,14 @@ function disruptionWeeks(nWeeks: number, seed: number): CombinationWeek[] {
       const base = y === 1 ? 0.7 : 0.3;
       const sigmas = [0.1, 0.3, 1.0];
       const row = [0, 1, 2].map((m) => {
-        const s = sigmas[order[m] as number] as number;
+        const orderM = order[m];
+        if (orderM === undefined) {
+          throw new Error("order must be defined for each model");
+        }
+        const s = sigmas[orderM];
+        if (s === undefined) {
+          throw new Error("sigmas must cover every model index");
+        }
         return s >= 1 ? rand() : Math.min(0.99, Math.max(0.01, base + (rand() - 0.5) * s * 3));
       });
       forecasts.push(row);
@@ -78,8 +85,14 @@ function disruptionWeeks(nWeeks: number, seed: number): CombinationWeek[] {
 describe("weights", () => {
   it("sums to 1 and favors low-MSE models", () => {
     const w = inverseMseWeights([0.05, 0.2, 0.5]);
+    const w0 = w[0];
+    const w1 = w[1];
+    const w2 = w[2];
+    if (w0 === undefined || w1 === undefined || w2 === undefined) {
+      throw new Error("inverseMseWeights must return three weights");
+    }
     expect(w.reduce((a, x) => a + x, 0)).toBeCloseTo(1, 12);
-    expect((w[0] as number) > (w[1] as number) && (w[1] as number) > (w[2] as number)).toBe(true);
+    expect(w0 > w1 && w1 > w2).toBe(true);
     expect(() => inverseMseWeights([])).toThrow();
   });
 
@@ -106,7 +119,12 @@ describe("tuneLambda + compareSchemes", () => {
     const train = weeks.slice(0, 6);
     const test = weeks.slice(6);
     const gw = globalWeights(train);
-    expect(gw[0]).toBeGreaterThan(gw[2] as number); // sharp > noise
+    const gw0 = gw[0];
+    const gw2 = gw[2];
+    if (gw0 === undefined || gw2 === undefined) {
+      throw new Error("globalWeights must return three weights");
+    }
+    expect(gw0).toBeGreaterThan(gw2); // sharp > noise
     const { lambda } = tuneLambda(train);
     expect(lambda).toBeGreaterThanOrEqual(0);
     expect(lambda).toBeLessThanOrEqual(1);
