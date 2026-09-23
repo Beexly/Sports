@@ -1,0 +1,17 @@
+{
+  "name": "Galaxy Sports Edge",
+  "install": "npm install",
+  "terminals": [
+    {
+      "name": "web",
+      "command": "cd /workspace && DATABASE_URL=stub DIRECT_URL=stub NEXTAUTH_URL=http://localhost:3000 NEXTAUTH_SECRET=\"$(openssl rand -base64 32)\" DEV_FAKE_ADMIN=true PUBLIC_PICKS_ENABLED=true DEMO_PICKS_ENABLED=true npm run dev",
+      "description": "Next.js dev server (Galaxy Sports Edge web app) on http://localhost:3000 in stub-DB mode. No Postgres or secrets required: DATABASE_URL=stub uses the built-in @sports/db stub client, DEV_FAKE_ADMIN=true grants a synthetic ADMIN session so /cockpit renders, and DEMO_PICKS_ENABLED serves deterministic sample picks (always PENDING). NEXTAUTH_SECRET is generated per boot."
+    }
+  ],
+  "ports": [
+    {
+      "name": "web",
+      "port": 3000
+    }
+  ]
+}
