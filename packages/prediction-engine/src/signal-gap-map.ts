@@ -79,7 +79,7 @@ export const SIGNAL_GAP_MAP: readonly SignalGapEntry[] = [
     test: "packages/prediction-engine/src/__tests__/market-clv-features.test.ts",
     flag: "MARKET_CLV_FEATURES_ENABLED (default false)",
     reason:
-      "THIS PR. Pure feature extractor over the existing CLV lock/close pair (clvLock* written at mint, deriveClosingSnapshotFromOdds at settle). Produces clvBps + lineMoveForUs + beatClose for the Elite line-value ledger and the ESTABLISHED ≥52.4% gate. No new schema, no new pricing ladder.",
+      "THIS PR. Pure feature extractor over the existing CLV open/close pair (clvOpen* written at mint, deriveClosingSnapshotFromOdds at settle). Produces clvBps + lineMoveForUs + beatClose for the Elite line-value ledger and the ESTABLISHED ≥52.4% gate. No new schema, no new pricing ladder.",
     dataPath: "CLEAR",
   },
   {
