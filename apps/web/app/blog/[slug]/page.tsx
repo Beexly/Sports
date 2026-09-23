@@ -8,6 +8,9 @@ import { db } from "@sports/db";
 import { getReadinessGates } from "@sports/prediction-engine";
 import { formatDate } from "@/lib/utils";
 import { guardPublicContent, guardPublicExcerpt, guardPublicTitle } from "@/lib/blog/public-guard";
+import { BRAND_NAME } from "@/lib/brand";
+import { SITE_URL } from "@/lib/seo/site-url";
+import { jsonLdScript } from "@/lib/seo/json-ld";
 import type { Metadata } from "next";
 
 export async function generateMetadata({
@@ -20,16 +23,41 @@ export async function generateMetadata({
 
   const post = await db.blogPost.findUnique({
     where: { slug: params.slug, status: "PUBLISHED" },
-    select: { title: true, seoTitle: true, seoDescription: true, excerpt: true },
+    select: {
+      title: true,
+      seoTitle: true,
+      seoDescription: true,
+      excerpt: true,
+      publishedAt: true,
+    },
   });
 
   if (!post) return { title: "Not Found" };
 
+  const title = guardPublicTitle(post.seoTitle ?? post.title);
+  const description = post.seoDescription
+    ? guardPublicTitle(post.seoDescription)
+    : guardPublicExcerpt(post.excerpt).slice(0, 155);
+  const path = `/blog/${params.slug}`;
+
   return {
-    title: guardPublicTitle(post.seoTitle ?? post.title),
-    description: post.seoDescription
-      ? guardPublicTitle(post.seoDescription)
-      : guardPublicExcerpt(post.excerpt).slice(0, 155),
+    title,
+    description,
+    alternates: { canonical: path },
+    openGraph: {
+      type: "article",
+      title,
+      description,
+      url: path,
+      // Only claimed when the record actually carries a publish timestamp.
+      ...(post.publishedAt ? { publishedTime: post.publishedAt.toISOString() } : {}),
+      images: ["/opengraph-image"],
+    },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+    },
   };
 }
 
@@ -56,8 +84,27 @@ export default async function BlogPostPage({
   // picks are free — ENTITLEMENT_REMAP_SPEC.md). Blog gating preserved as-is.
   const showFullContent = entitlements.tier !== "FREE";
 
+  // BlogPosting structured data. Only fields the record actually carries are
+  // claimed — no invented author person, image, or publish date.
+  const articleJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: guardPublicTitle(post.title),
+    description: guardPublicExcerpt(post.excerpt),
+    ...(post.publishedAt ? { datePublished: post.publishedAt.toISOString() } : {}),
+    dateModified: post.updatedAt.toISOString(),
+    url: `${SITE_URL}/blog/${post.slug}`,
+    mainEntityOfPage: `${SITE_URL}/blog/${post.slug}`,
+    author: { "@type": "Organization", name: BRAND_NAME },
+    publisher: { "@type": "Organization", name: BRAND_NAME },
+  };
+
   return (
     <>
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: jsonLdScript(articleJsonLd) }}
+      />
       <Nav />
       <main id="main-content" className="min-h-screen bg-obsidian">
         <div className="max-w-3xl mx-auto px-4 py-16 sm:px-6">
