@@ -5,6 +5,7 @@
  * persisted.
  */
 
+import { extractNumericClaims, validateNumericClaims } from "@/lib/claude-api/numeric-guard";
 import { detectBannedLanguage } from "@/lib/pick-explainer/policy";
 
 export const LOSS_ROOT_CAUSES = [
@@ -35,7 +36,8 @@ export type LossAutopsyParseFailure =
   | "HEADLINE_TOO_LONG"
   | "INVALID_ROOT_CAUSE"
   | "MISSING_CITATION"
-  | "BANNED_LANGUAGE";
+  | "BANNED_LANGUAGE"
+  | "UNGROUNDED_NUMERIC";
 
 export type LossAutopsyParseResult =
   | { readonly ok: true; readonly draft: LossAutopsyDraft }
@@ -52,7 +54,14 @@ function stripFences(raw: string): string {
     .trim();
 }
 
-export function parseLossAutopsyDraft(raw: string): LossAutopsyParseResult {
+/**
+ * @param raw           the model's raw response text
+ * @param groundingText the grounded context the model was given (draft.ts passes
+ *   `buildGroundedContext(...).context`). When supplied, every stat-shaped number
+ *   in the draft must appear in it — an autopsy body is rendered publicly, so a
+ *   fabricated statistic must never survive parsing. Omitted = shape checks only.
+ */
+export function parseLossAutopsyDraft(raw: string, groundingText?: string): LossAutopsyParseResult {
   let obj: Record<string, unknown>;
   try {
     const parsed: unknown = JSON.parse(stripFences(raw));
@@ -79,6 +88,12 @@ export function parseLossAutopsyDraft(raw: string): LossAutopsyParseResult {
   const body = [whatWeSaw, whatHappened, whatWeLearned].join("\n");
   if (!CITATION.test(body)) failures.push("MISSING_CITATION");
   if (detectBannedLanguage([headline, body].join("\n")).length > 0) failures.push("BANNED_LANGUAGE");
+  if (groundingText !== undefined) {
+    const allowed = extractNumericClaims(groundingText).map((c) => c.value);
+    if (!validateNumericClaims([headline, body].join("\n"), { allowed }).grounded) {
+      failures.push("UNGROUNDED_NUMERIC");
+    }
+  }
 
   if (failures.length > 0) return { ok: false, failures: Array.from(new Set(failures)) };
 

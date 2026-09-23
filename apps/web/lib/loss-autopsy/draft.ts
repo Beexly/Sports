@@ -126,7 +126,7 @@ export async function draftLossAutopsy(
       cache: { system: true },
     });
 
-    const parsed = parseLossAutopsyDraft(result.text);
+    const parsed = parseLossAutopsyDraft(result.text, grounded.context);
     if (!parsed.ok) {
       await ledger({
         modelName: result.modelName,
