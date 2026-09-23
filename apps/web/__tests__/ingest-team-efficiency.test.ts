@@ -6,8 +6,13 @@ import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
  * plays, sets opponent/home, and replaces the season. Only the DB is mocked.
  */
 
-const mocks = vi.hoisted(() => ({ deleteMany: vi.fn(), createMany: vi.fn() }));
-vi.mock("@sports/db", () => ({ db: { teamGameEfficiency: { deleteMany: mocks.deleteMany, createMany: mocks.createMany } } }));
+const mocks = vi.hoisted(() => ({ deleteMany: vi.fn(), createMany: vi.fn(), transaction: vi.fn() }));
+vi.mock("@sports/db", () => ({
+  db: {
+    $transaction: mocks.transaction,
+    teamGameEfficiency: { deleteMany: mocks.deleteMany, createMany: mocks.createMany },
+  },
+}));
 vi.mock("@/lib/ingestion/nflverse-gate", async (importActual) => {
   const actual = await importActual<typeof import("@/lib/ingestion/nflverse-gate")>();
   return { ...actual, nflverseIngestionGate: vi.fn(actual.nflverseIngestionGate) };
@@ -35,11 +40,25 @@ function fixture(): { records: Record<string, string>[] } {
   ] };
 }
 
+/**
+ * Prisma's model methods return unexecuted PrismaPromise operations; only the
+ * enclosing `$transaction` runs them. The doubles mirror that: deleteMany /
+ * createMany hand back an inert descriptor, and `$transaction` is what turns
+ * descriptors into results. So a version that awaited the two statements
+ * separately would never produce a `$transaction` call to assert on.
+ */
+type Op = { __op: "deleteMany" | "createMany"; args: { data?: unknown[] } };
+
 beforeEach(() => {
   mocks.deleteMany.mockReset();
   mocks.createMany.mockReset();
+  mocks.transaction.mockReset();
   (nflverseIngestionGate as Mock).mockClear();
-  mocks.createMany.mockImplementation(async (a: { data: unknown[] }) => ({ count: a.data.length }));
+  mocks.deleteMany.mockImplementation((args: Op["args"]) => ({ __op: "deleteMany", args }));
+  mocks.createMany.mockImplementation((args: Op["args"]) => ({ __op: "createMany", args }));
+  mocks.transaction.mockImplementation(async (ops: readonly Op[]) =>
+    ops.map((op) => ({ count: op.__op === "createMany" ? (op.args.data?.length ?? 0) : 0 })),
+  );
 });
 
 describe("ingestTeamEfficiency", () => {
@@ -84,5 +103,45 @@ describe("ingestTeamEfficiency", () => {
     const res = await ingestTeamEfficiency(2023, { now: NOW, fetcher: async () => { throw new Error("down"); } });
     expect(res.status).toBe("source-error");
     expect(mocks.deleteMany).not.toHaveBeenCalled();
+  });
+
+  // --- atomic season replace (data-loss regression guards) ---
+
+  it("issues the delete and the insert as ONE $transaction, not two awaits", async () => {
+    const res = await ingestTeamEfficiency(2023, { now: NOW, fetcher: async () => fixture() });
+    expect(res.status).toBe("ok");
+    expect(res.rowsWritten).toBe(2);
+
+    // Exactly one transaction, carrying both writes in delete→insert order.
+    expect(mocks.transaction).toHaveBeenCalledTimes(1);
+    const ops = mocks.transaction.mock.calls[0]![0] as readonly Op[];
+    expect(ops).toHaveLength(2);
+    expect(ops[0]).toBe(mocks.deleteMany.mock.results[0]!.value);
+    expect(ops[1]).toBe(mocks.createMany.mock.results[0]!.value);
+    expect(ops[0]!.__op).toBe("deleteMany");
+    expect(ops[1]!.__op).toBe("createMany");
+
+    // Each write is enqueued once — never also issued outside the transaction.
+    expect(mocks.deleteMany).toHaveBeenCalledTimes(1);
+    expect(mocks.createMany).toHaveBeenCalledTimes(1);
+  });
+
+  it("does NOT delete the season when the upstream yields no usable rows", async () => {
+    // Structurally fine response, zero scrimmage plays → nothing to replace with.
+    const res = await ingestTeamEfficiency(2023, {
+      now: NOW,
+      fetcher: async () => ({ records: [play({ posteam: "KC", defteam: "DET", play_type: "punt", epa: "1" })] }),
+    });
+    expect(res.status).toBe("source-error");
+    expect(res.rowsWritten).toBe(0);
+    expect(mocks.deleteMany).not.toHaveBeenCalled();
+    expect(mocks.createMany).not.toHaveBeenCalled();
+    expect(mocks.transaction).not.toHaveBeenCalled();
+  });
+
+  it("sets skipDuplicates so a racing manual crawl cannot abort the run on P2002", async () => {
+    await ingestTeamEfficiency(2023, { now: NOW, fetcher: async () => fixture() });
+    const args = mocks.createMany.mock.calls[0]![0] as { skipDuplicates?: boolean };
+    expect(args.skipDuplicates).toBe(true);
   });
 });
