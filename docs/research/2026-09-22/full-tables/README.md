@@ -98,3 +98,28 @@
 #   pass-rush win rate, 2 run stops, 1 pressure, 1 TFL. Data: SumerSports'
 #   own tracking (promotes SumerPass).
 #   https://x.com/SumerSports/status/2102244559879393437
+#
+# PM sweep (one read-only browser task, 21 primary + 6 secondary accounts,
+# home feed, keyword searches EPA/TPRR/aggressiveness/pass rush win rate/CPOE;
+# window: posts after ~10:00 AM CDT 2026-09-22 through ~9:00 PM CDT;
+# no rate-limiting, no CAPTCHAs, no interactions; chart values read from
+# chart images, minor per-cell transcription risk)
+#
+# magicsportsguy-cardio-index-week2.csv — @MagicSportsGuy, 3:46 PM CDT Tue —
+#   "Cardio Index" ("Cardio Kings" chart; subtitle: "Introducing the Cardio
+#   Index: highest route participation, lowest targets per route run"). 10
+#   charted rows: player, position, route participation %, route-part rank,
+#   TPRR, TPRR rank. Footer: no data-source line; branding
+#   "statrankings" / "statrankings.com". Full stat page "coming soon" at
+#   statrankings.com (not yet live at sweep time).
+#   https://x.com/MagicSportsGuy/status/2102499905319375241
+# samhoppen-composite-power-ratings-week3.csv — @SamHoppen, 7:15 PM CDT Tue —
+#   "Week 3 NFL Composite Power Ratings": mean of 6 sources (ESPN FPI,
+#   @greerreNFL nfelo, @inpredict Inpredictable, @KevinCole___ Unexpected
+#   Points, @FTNFantasy/@ASchatzNFL DVOA, PFF) expressed as expected spread
+#   vs. an average team, with per-team std dev across sources. FTN DVOA
+#   footnote: "A combination of preseason priors and in-season DVOA weighted
+#   towards the last few games, divided by 3.6%". FULL 32-team table.
+#   Footer: "Table: @SamHoppen | Data: ESPN, nfelo, Inpredictable,
+#   Unexpected Points, FTN Fantasy, PFF".
+#   https://x.com/SamHoppen/status/2102552359327125852
