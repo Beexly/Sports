@@ -55,14 +55,21 @@ const HERO_HEADLINE =
 const HERO_SUB = HERO_SUB_BY_ORDER[phase.order] ?? HERO_SUB_BY_ORDER[0]!;
 
 export const metadata: Metadata = {
-  title: "Pricing: Founding-Member Rates, Locked For Life",
+  title:
+    phase.id === "FOUNDING"
+      ? "Pricing: Founding-Member Rates, Locked For Life"
+      : `Pricing: ${phase.name} Rates, Locked For Life`,
   description:
-    "A free daily sample and a public record as settled history accumulates, with the full board, confidence, depth, and alerts on the paid tiers. Founding-member pricing: the lowest we will ever offer, locked for the life of your subscription. Monthly or annual. Cancel any time.",
+    phase.id === "FOUNDING"
+      ? "A free daily sample and a public record as settled history accumulates, with the full board, confidence, depth, and alerts on the paid tiers. Founding-member pricing: the lowest we will ever offer, locked for the life of your subscription. Monthly or annual. Cancel any time."
+      : `A free daily sample and a public record as settled history accumulates, with the full board, confidence, depth, and alerts on the paid tiers. ${phase.name} pricing: locked for the life of your subscription. Monthly or annual. Cancel any time.`,
   alternates: { canonical: "/pricing" },
   openGraph: {
     title: `Pricing · ${BRAND_NAME}`,
     description:
-      "Founding-member pricing, locked for life. Monthly or annual, with a 3-day money-back window.",
+      phase.id === "FOUNDING"
+        ? "Founding-member pricing, locked for life. Monthly or annual, with a 3-day money-back window."
+        : `${phase.name} pricing, locked for life. Monthly or annual, with a 3-day money-back window.`,
   },
 };
 

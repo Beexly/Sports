@@ -28,15 +28,15 @@ async function main() {
   // real Next.js page and would pass even if every price string vanished.
   const hasPriceSignal =
     (/\$\d+(?:\.\d{2})?/.test(html) &&
-      /(?:\/\s*(?:mo|yr)|per month|\/month|monthly|Founding)/i.test(html)) &&
-    /Pro|Elite|Fantasy|Founding/i.test(html);
+      /(?:\/\s*(?:mo|yr)|per month|\/month|monthly|Founding|PROVEN)/i.test(html)) &&
+    /Pro|Elite|Fantasy|Founding|PROVEN/i.test(html);
   if (!hasPriceSignal) {
     console.error("FAIL pricing body missing commercial signals");
     process.exit(1);
   }
   console.log(`PASS  GET ${HOST}/pricing → ${pricing.status} (${html.length} bytes)`);
 
-  // Checkout POST is auth-gated — probe that the route exists (401/403/405/400 ok; 404 bad)
+  // Checkout POST is auth-gated — probe that the route exists (401/403/405/400 ok; 404 bad; 503 = price mismatch alert)
   const checkout = await fetch(`${HOST}/api/subscriptions/checkout`, {
     method: "POST",
     headers: {
@@ -47,6 +47,12 @@ async function main() {
   });
   if (checkout.status === 404) {
     console.error("FAIL checkout route 404");
+    process.exit(1);
+  }
+  if (checkout.status === 503) {
+    console.error(
+      "ALERT checkout route returned 503 (Stripe price amount mismatch or unconfigured price ID — check GSE-SEC-024 / STRIPE_*_PRICE_ID env vars)",
+    );
     process.exit(1);
   }
   console.log(
