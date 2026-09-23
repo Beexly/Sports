@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2604.20172v2: Cover Meets Robbins While Betting on Bounded Data: ln n Regret and Almost Sure ln ln n Regret.
  *

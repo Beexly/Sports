@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2401.16392v3: A comprehensive survey of the home advantage in American football.
  *

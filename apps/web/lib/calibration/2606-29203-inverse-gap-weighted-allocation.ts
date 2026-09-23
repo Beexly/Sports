@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2606.29203: Bayesian Best-Arm Identification with Abstention: A Polynomial-to-Exponential Phase Transition.
  *

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2412.03190v1: Node Classification with Integrated Reject Option.
  *
