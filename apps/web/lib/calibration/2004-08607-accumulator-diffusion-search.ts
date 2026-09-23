@@ -75,7 +75,7 @@ function mutate(
     legs.splice(Math.floor(rand() * legs.length), 1);
   } else {
     const cand = legIds[Math.floor(rand() * legIds.length)];
-    if (!legs.includes(cand)) legs.push(cand);
+    if (!legs.includes(cand!)) legs.push(cand!);
   }
   return { legs };
 }
@@ -105,23 +105,23 @@ export function stochasticDiffusionSearch(
     const shuffled = [...legIds].sort(() => rand() - 0.5);
     return { legs: shuffled.slice(0, k) };
   };
-  let agents: Agent[] = Array.from({ length: nAgents }, () => {
+  const agents: Agent[] = Array.from({ length: nAgents }, () => {
     const h = randomHypothesis();
     return { hypothesis: h, active: false, fitness: hypothesisFitness(h, legById) };
   });
-  let best = agents[0].hypothesis;
-  let bestFit = agents[0].fitness;
+  let best = agents[0]!.hypothesis!;
+  let bestFit = agents[0]!.fitness!;
   for (let iter = 0; iter < nIterations; iter++) {
     // Test phase: active if fitness is above the population median.
     const fits = agents.map((x) => x.fitness).sort((x, y) => x - y);
     const median = fits[Math.floor(fits.length / 2)];
-    for (const ag of agents) ag.active = ag.fitness >= median;
+    for (const ag of agents) ag.active = ag.fitness >= median!;
     // Diffusion phase: inactive agents copy a random active hypothesis + mutate.
     const actives = agents.filter((ag) => ag.active);
     for (const ag of agents) {
       if (!ag.active && actives.length > 0) {
-        const donor = actives[Math.floor(rand() * actives.length)];
-        ag.hypothesis = mutate(donor.hypothesis, legIds, rand);
+        const donor = actives[Math.floor(rand() * actives.length)]!;
+        ag.hypothesis = mutate(donor.hypothesis!, legIds, rand);
         ag.fitness = hypothesisFitness(ag.hypothesis, legById);
       }
     }
@@ -150,7 +150,6 @@ export function singlesVsAccumulator(legs: readonly Leg[]): {
   const singlesMean = legs.reduce((a, l) => a + (l.p * l.decimalOdds - 1), 0) / legs.length;
   const singlesVar =
     legs.reduce((a, l) => {
-      const m = l.p * l.decimalOdds - 1;
       return a + l.p * (1 - l.p) * l.decimalOdds * l.decimalOdds;
     }, 0) /
     (legs.length * legs.length);

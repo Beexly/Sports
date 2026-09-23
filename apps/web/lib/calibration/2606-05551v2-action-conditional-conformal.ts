@@ -45,7 +45,7 @@ export function profitFloorCertificate(
   const q = shortfalls[k - 1];
   // Certified floor is relative to a new bet's expected profit; report the
   // shortfall quantile (nu(x) = E[profit|x] - q).
-  return { nu: -q, nCal: n };
+  return { nu: -q!, nCal: n };
 }
 
 /**

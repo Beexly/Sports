@@ -296,6 +296,17 @@ export {
   NFL_EPA_MIN_GAMES,
 } from "./nfl-epa-fair-value.js";
 export type { NflEpaFairValueInput } from "./nfl-epa-fair-value.js";
+// External power-ratings (research corpus / TeamRankings) → independent ML fair value.
+export {
+  powerRatingsToWinProbs,
+  powerRatingsToIndependentFairValue,
+  winPctVsAverageToWinProbs,
+  winPctVsAverageToIndependentFairValue,
+} from "./power-ratings-fair-value.js";
+export type {
+  PowerRatingsMarginInput,
+  WinPctVsAverageInput,
+} from "./power-ratings-fair-value.js";
 // R&D — probability calibration toolkit (isotonic/PAVA, Brier decomposition, ECE).
 // NOT wired into live scoring; built for the future human-gated MODEL_VERSION
 // calibration that turns the confidence score into a calibrated win probability.

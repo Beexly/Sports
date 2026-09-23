@@ -20,7 +20,7 @@ export const ENABLED = false;
 function rbfKernel(a: readonly number[], b: readonly number[], gamma: number): number {
   let s = 0;
   for (let i = 0; i < a.length; i++) {
-    const d = a[i] - b[i];
+    const d = a[i]! - b[i]!;
     s += d * d;
   }
   return Math.exp(-gamma * s);

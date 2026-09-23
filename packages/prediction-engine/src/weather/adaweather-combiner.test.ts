@@ -4,9 +4,15 @@ import { adaWeatherWeights, crpsEnsemble, exponentialWeights, hybridWeights } fr
 describe("adaweather-combiner", () => {
   it("puts most weight on the lowest-CRPS member", () => {
     const w = exponentialWeights([1.0, 2.0, 3.0], 1);
+    const w0 = w[0];
+    const w1 = w[1];
+    const w2 = w[2];
+    if (w0 === undefined || w1 === undefined || w2 === undefined) {
+      throw new Error("exponentialWeights must return three weights");
+    }
     expect(w.reduce((a, b) => a + b, 0)).toBeCloseTo(1, 12);
-    expect(w[0]).toBeGreaterThan(w[1]);
-    expect(w[1]).toBeGreaterThan(w[2]);
+    expect(w0).toBeGreaterThan(w1);
+    expect(w1).toBeGreaterThan(w2);
   });
   it("is uniform when members tie", () => {
     expect(exponentialWeights([2, 2, 2], 1)).toEqual([1 / 3, 1 / 3, 1 / 3]);
@@ -17,16 +23,32 @@ describe("adaweather-combiner", () => {
     const w0 = hybridWeights(off, on, 0);
     const w1 = hybridWeights(off, on, 1);
     for (let k = 0; k < 3; k++) {
-      expect(w0[k]).toBeCloseTo(off[k]!, 12);
-      expect(w1[k]).toBeCloseTo(on[k]!, 12);
+      const w0k = w0[k];
+      const offk = off[k];
+      const w1k = w1[k];
+      const onk = on[k];
+      if (w0k === undefined || offk === undefined || w1k === undefined || onk === undefined) {
+        throw new Error("hybridWeights must return three weights");
+      }
+      expect(w0k).toBeCloseTo(offk, 12);
+      expect(w1k).toBeCloseTo(onk, 12);
     }
     const mid = hybridWeights(off, on, 0.5);
-    expect(mid[0]).toBeCloseTo(0.4, 12);
+    const mid0 = mid[0];
+    if (mid0 === undefined) {
+      throw new Error("hybridWeights must return mid[0]");
+    }
+    expect(mid0).toBeCloseTo(0.4, 12);
     expect(mid.reduce((a, b) => a + b, 0)).toBeCloseTo(1, 12);
   });
   it("adaWeatherWeights tracks the recently-hot member", () => {
     const w = adaWeatherWeights([1, 1, 1], [3, 1, 2], { eta: 2, alpha: 0.8 });
-    expect(w[1]).toBeGreaterThan(w[0]);
+    const w0 = w[0];
+    const w1 = w[1];
+    if (w0 === undefined || w1 === undefined) {
+      throw new Error("adaWeatherWeights must return three weights");
+    }
+    expect(w1).toBeGreaterThan(w0);
     expect(w.reduce((a, b) => a + b, 0)).toBeCloseTo(1, 12);
   });
   it("crpsEnsemble is zero for a perfect deterministic forecast", () => {

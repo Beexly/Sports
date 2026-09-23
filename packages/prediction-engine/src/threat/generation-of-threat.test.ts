@@ -72,9 +72,16 @@ describe("generationOfThreat", () => {
   it("credits the high-excitation dimension more", () => {
     const { got, branching } = generationOfThreat(params);
     // Dimension 1 -> 0 excitation 0.6 dominates: dim 1's GoT larger.
-    expect(got[1]).toBeGreaterThan(got[0]);
-    expect(got[0]).toBeGreaterThanOrEqual(0);
-    expect(branching[0]![1]).toBeCloseTo(0.6, 12);
+    const got0 = got[0];
+    const got1 = got[1];
+    const br0 = branching[0];
+    const br01 = br0?.[1];
+    if (got0 === undefined || got1 === undefined || br01 === undefined) {
+      throw new Error("generationOfThreat must return got[0], got[1], branching[0][1]");
+    }
+    expect(got1).toBeGreaterThan(got0);
+    expect(got0).toBeGreaterThanOrEqual(0);
+    expect(br01).toBeCloseTo(0.6, 12);
   });
 });
 
@@ -85,7 +92,12 @@ describe("bootstrapGoT", () => {
     expect(se).toHaveLength(2);
     expect(se[0]).toBeGreaterThan(0);
     expect(se[1]).toBeGreaterThan(0);
-    expect(se[0] as number).toBeLessThan(mean[0] as number);
+    const se0 = se[0];
+    const mean0 = mean[0];
+    if (se0 === undefined || mean0 === undefined) {
+      throw new Error("bootstrapGoT must return se[0] and mean[0]");
+    }
+    expect(se0).toBeLessThan(mean0);
     expect(() => bootstrapGoT(params, 600, 1, rand)).toThrow();
   });
 });

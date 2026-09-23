@@ -47,7 +47,7 @@ export function cpitTransform(
     const lo = Math.floor(pos);
     const hi = Math.ceil(pos);
     const t = pos - lo;
-    return sortedPits[lo] * (1 - t) + sortedPits[Math.min(hi, n - 1)] * t;
+    return sortedPits[lo]! * (1 - t) + sortedPits[Math.min(hi, n - 1)]! * t;
   };
   const sortedSamples = [...forecastSamples].sort((a, b) => a - b);
   const m = sortedSamples.length;
@@ -56,7 +56,7 @@ export function cpitTransform(
     const lo = Math.floor(pos);
     const hi = Math.ceil(pos);
     const t = pos - lo;
-    return sortedSamples[lo] * (1 - t) + sortedSamples[Math.min(hi, m - 1)] * t;
+    return sortedSamples[lo]! * (1 - t) + sortedSamples[Math.min(hi, m - 1)]! * t;
   };
   return forecastSamples.map((s) => {
     // PIT of this draw under its own forecast, then through G^{-1}, then
@@ -74,7 +74,7 @@ export function pitCvm(pits: readonly number[]): number {
   let s = 0;
   for (let i = 0; i < n; i++) {
     const u = (i + 1) / n;
-    s += (sorted[i] - u) * (sorted[i] - u);
+    s += (sorted[i]! - u) * (sorted[i]! - u);
   }
   return s / n + 1 / (12 * n * n);
 }
@@ -85,7 +85,7 @@ export function sampleCRPS(samples: readonly number[], y: number): number {
   const term1 = samples.reduce((a, s) => a + Math.abs(s - y), 0) / n;
   let term2 = 0;
   for (let i = 0; i < n; i++) {
-    for (let j = 0; j < n; j++) term2 += Math.abs(samples[i] - samples[j]);
+    for (let j = 0; j < n; j++) term2 += Math.abs(samples[i]! - samples[j]!);
   }
   return term1 - 0.5 * (term2 / (n * n));
 }
@@ -99,7 +99,7 @@ export function centralCoverage(
   const sorted = [...samples].sort((a, b) => a - b);
   const lo = sorted[Math.floor((alpha / 2) * sorted.length)];
   const hi = sorted[Math.ceil((1 - alpha / 2) * sorted.length) - 1];
-  return y >= lo && y <= hi;
+  return y >= lo! && y <= hi!;
 }
 
 export interface CpitGate {

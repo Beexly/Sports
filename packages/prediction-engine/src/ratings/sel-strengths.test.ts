@@ -37,11 +37,18 @@ function syntheticSeason(rand: () => number): GameResult[] {
   let day = 1;
   for (let i = 0; i < strengths.length; i++) {
     for (let j = i + 1; j < strengths.length; j++) {
-      for (const [h, a] of [
+      for (const pair of [
         [i, j],
         [j, i],
-      ]) {
-        const diff = (strengths[h] as number) - (strengths[a] as number) + 2.5;
+      ] as const) {
+        const h = pair[0];
+        const a = pair[1];
+        const strengthH = strengths[h];
+        const strengthA = strengths[a];
+        if (strengthH === undefined || strengthA === undefined) {
+          throw new Error("strength index out of range");
+        }
+        const diff = strengthH - strengthA + 2.5;
         const margin = diff + (rand() - 0.5) * 12;
         games.push({
           date: `2024-09-${String(day).padStart(2, "0")}`,

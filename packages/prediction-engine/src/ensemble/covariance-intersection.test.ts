@@ -85,8 +85,14 @@ describe("consistencyCheck + adaptiveWeights", () => {
 
   it("favors the currently better source", () => {
     const w = adaptiveWeights([0.5, 0.7, 0.6]);
-    expect(w[0]).toBeGreaterThan(w[1]);
-    expect(w[0]).toBeGreaterThan(w[2]);
+    const w0 = w[0];
+    const w1 = w[1];
+    const w2 = w[2];
+    if (w0 === undefined || w1 === undefined || w2 === undefined) {
+      throw new Error("adaptiveWeights must return three weights");
+    }
+    expect(w0).toBeGreaterThan(w1);
+    expect(w0).toBeGreaterThan(w2);
     expect(w.reduce((s, x) => s + x, 0)).toBeCloseTo(1, 12);
     expect(simpleAverage([{ mean: 0.5, variance: 0.1 }]).mean).toBeCloseTo(0.5, 12);
     expect(() => adaptiveWeights([])).toThrow();
