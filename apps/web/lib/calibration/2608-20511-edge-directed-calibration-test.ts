@@ -92,7 +92,6 @@ export function edgeTest(
   const order = probOrder(probs);
   const stat = edgeStatisticOrdered(probs, ys, order);
   const rand = mulberryLocal(seed);
-  const n = ys.length;
   let exceed = 0;
   for (let b = 0; b < nPerm; b++) {
     const yStar = probs.map((p) => (rand() < p ? 1 : 0));
