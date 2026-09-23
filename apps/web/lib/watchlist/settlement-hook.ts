@@ -38,6 +38,7 @@
  * belt and suspenders, not a substitute for this module's own isolation.
  */
 
+import type { Prisma } from "@prisma/client";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { dispatchWatchlistAlert } from "./alert-dispatch";
 import type { WatchlistEntityType } from "./types";
@@ -87,12 +88,51 @@ interface WatchlistNotifyDb {
     }): Promise<WatchlistFollowerRow[]>;
   };
   user: {
-    findUnique(args: {
-      where: { id: string };
+    /**
+     * BATCHED, not per-follower. This was `findUnique` called inside the
+     * follower loop below — one round trip per follower (the N+1 that melts
+     * Neon when a popular team settles). `id` is a scalar `String` column, so
+     * the only valid multi-value filter is Prisma's `{ in: [...] }` — never a
+     * bare array. Because the call site casts `dbArg as WatchlistNotifyDb`,
+     * tsc validates against THIS declaration and not against Prisma's, so the
+     * shape here must stay in Prisma's own filter form; the type-level
+     * regression in settlement-hook.test.ts pins it.
+     */
+    findMany(args: {
+      where: { id: { in: string[] } };
       select: { id: true; email: true; emailVerified: true };
-    }): Promise<UserContactRow | null>;
+    }): Promise<UserContactRow[]>;
   };
 }
+
+/**
+ * TYPE-LEVEL REGRESSION — the only check that can catch this class of bug.
+ *
+ * Every query in this module is validated by tsc against the hand-written
+ * `WatchlistNotifyDb` above, NOT against Prisma, because the entry point takes
+ * `dbArg: unknown` and casts it. When such an interface drifts from the real
+ * database, nothing goes red: the vi.fn() doubles in the tests agree with the
+ * fiction, so interface, call site and tests stay mutually consistent while all
+ * three disagree with Prisma. That is exactly how
+ * packages/ingestion-pipeline/src/line-archive.ts shipped
+ * `where: { market: string[] }` against a scalar `String` column — a
+ * PrismaClientValidationError at runtime, thrown before the write, swallowed by
+ * a try/catch, with a green CI.
+ *
+ * These two lines make tsc the enforcer: the interface's own where-clause types
+ * must be assignable to Prisma's generated input types. Note this lives in the
+ * MODULE and not in settlement-hook.test.ts on purpose —
+ * apps/web/tsconfig.json excludes `**\/*.test.ts`, so a type assertion in a
+ * test file under apps/web is never compiled and would silently prove nothing.
+ */
+type FollowerWhere = Parameters<WatchlistNotifyDb["watchlist"]["findMany"]>[0]["where"];
+type ContactWhere = Parameters<WatchlistNotifyDb["user"]["findMany"]>[0]["where"];
+type AssertAssignable<T, U> = T extends U ? true : never;
+const _prismaShapeAssertions: [
+  AssertAssignable<FollowerWhere, Prisma.WatchlistWhereInput>,
+  AssertAssignable<ContactWhere, Prisma.UserWhereInput>,
+] = [true, true];
+void _prismaShapeAssertions;
 
 function teamEntities(event: GradedPickNotifyEvent): Array<{ id: string; ref: GradedPickTeamRef }> {
   const out: Array<{ id: string; ref: GradedPickTeamRef }> = [];
@@ -158,15 +198,21 @@ export async function notifyWatchlistFollowersForGradedPick(
 
     const refById = new Map(entities.map((e) => [e.id, e.ref]));
 
+    // One batched contact lookup for the whole follower set (was a
+    // findUnique per follower). Deleted accounts simply do not come back and
+    // are skipped below, exactly as the per-row null check did.
+    const users = await db.user.findMany({
+      where: { id: { in: [...new Set(followers.map((f) => f.userId))] } },
+      select: { id: true, email: true, emailVerified: true },
+    });
+    const userById = new Map(users.map((u) => [u.id, u]));
+
     for (const follower of followers) {
       try {
         const teamRef = refById.get(follower.entityId);
         if (!teamRef) continue; // defensive — should be unreachable given the `in` filter above
 
-        const user = await db.user.findUnique({
-          where: { id: follower.userId },
-          select: { id: true, email: true, emailVerified: true },
-        });
+        const user = userById.get(follower.userId);
         if (!user) continue; // stale row (user deleted) — nothing to notify
 
         const entitlements = await getUserEntitlements(follower.userId).catch(() => null);
