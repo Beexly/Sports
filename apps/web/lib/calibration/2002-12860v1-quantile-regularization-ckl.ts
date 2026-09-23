@@ -40,7 +40,7 @@ export function gaussianPIT(
   sigmas: readonly number[],
 ): number[] {
   return ys.map((y, i) => {
-    const p = phiStd((y - mus[i]) / Math.max(sigmas[i], 1e-9));
+    const p = phiStd((y - mus[i]!) / Math.max(sigmas[i]!, 1e-9));
     return Math.min(Math.max(p, 1e-9), 1 - 1e-9);
   });
 }
@@ -90,7 +90,7 @@ export function l2QuantileCalibrationError(
     const nominal = g / nGrid;
     const k = Math.min(n - 1, Math.floor(nominal * n));
     const empirical = sorted[k];
-    s += (empirical - nominal) * (empirical - nominal);
+    s += (empirical! - nominal) * (empirical! - nominal);
   }
   return s / nGrid;
 }
