@@ -121,7 +121,6 @@ export function gaussianCopulaDraw(
   chol: readonly (readonly number[])[],
   marginals: readonly { taus: number[]; quantiles: number[] }[],
 ): number[] {
-  const d = uniforms.length;
   const z = uniforms.map((u) =>
     Math.sqrt(2) * inverseErf(2 * Math.min(Math.max(u, 1e-9), 1 - 1e-9) - 1),
   );
