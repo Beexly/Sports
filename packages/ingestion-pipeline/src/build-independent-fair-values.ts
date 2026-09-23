@@ -61,6 +61,10 @@ import {
 import type { IndependentMarketFairValue } from "@sports/types";
 import { db } from "@sports/db";
 import { resolveKalshiTeamAbbr } from "./kalshi-team-abbr.js";
+import {
+  tryResearchPowerRatingsFairValue,
+  tryTeamRankingsFairValue,
+} from "./external-ratings-fair-value.js";
 import { isEspnPowerIndexCleared } from "./independent-source-rights.js";
 
 export type IndependentFairValueBuildInput = {
@@ -662,6 +666,35 @@ export async function buildIndependentFairValues(
   if (!input.skipNetworkIndependents) {
     const epa = await tryNflEpaFairValue(input);
     if (epa) out.push(epa);
+  }
+
+  // 10) Research-corpus power ratings (docs/research CSVs). Flag-gated, default
+  //     OFF. Offline parse only; null when the flag is off, files missing, or
+  //     the snapshot is stale.
+  {
+    const research = await tryResearchPowerRatingsFairValue({
+      sportKey: input.sportKey,
+      homeTeam: input.homeTeam,
+      awayTeam: input.awayTeam,
+      env: input.env ?? process.env,
+      now: input.now,
+    });
+    if (research) out.push(research);
+  }
+
+  // 11) TeamRankings power ratings (rights: cleared-with-attribution). Flag-gated,
+  //     default OFF. Network only when the flag is on; skipped under
+  //     skipNetworkIndependents like every other live source.
+  {
+    const teamrankings = await tryTeamRankingsFairValue({
+      sportKey: input.sportKey,
+      homeTeam: input.homeTeam,
+      awayTeam: input.awayTeam,
+      env: input.env ?? process.env,
+      now: input.now,
+      skipNetworkIndependents: input.skipNetworkIndependents,
+    });
+    if (teamrankings) out.push(teamrankings);
   }
 
   return out;

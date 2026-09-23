@@ -240,6 +240,7 @@ export {
   type SourceLicense,
   type LegalSource,
 } from "./source-registry.js";
+export { envFlagEnabled, envSecret } from "./fail-closed-env.js";
 export {
   PredExonClient,
   PredExonError,
@@ -727,6 +728,27 @@ export {
   type TrTrendRow,
   TeamRankingsClient,
 } from "./teamrankings-client.js";
+export {
+  RESEARCH_POWER_RATINGS_SOURCE,
+  RESEARCH_POWER_RATINGS_FLAG,
+  RESEARCH_POWER_RATINGS_DIR_ENV,
+  RESEARCH_POWER_RATINGS_MAX_AGE_DAYS_ENV,
+  DEFAULT_RESEARCH_POWER_RATINGS_DIR,
+  DEFAULT_COMPOSITE_CSV,
+  DEFAULT_OBJECTIVE_CSV,
+  DEFAULT_MAX_AGE_DAYS,
+  isResearchPowerRatingsEnabled,
+  resolveNflTeamAbbr,
+  parseCompositePowerRatingsCsv,
+  parseObjectivePowerRatingsCsv,
+  mergeResearchRatings,
+  loadResearchPowerRatings,
+  lookupResearchRating,
+  NFL_NAME_TO_ABBR,
+  type ResearchTeamRating,
+  type ResearchPowerRatingsTable,
+  type LoadResearchPowerRatingsOptions,
+} from "./research-power-ratings.js";
 export {
   ROTOWIRE_RSS_SOURCE_ID,
   ROTOWIRE_BASE,

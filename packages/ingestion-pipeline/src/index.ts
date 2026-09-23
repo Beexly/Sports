@@ -131,6 +131,17 @@ export {
 export { generateSignalSlate, blendIndependentHomeFair } from "./generate-signal-slate.js";
 export type { SignalSlateResult } from "./generate-signal-slate.js";
 
+export {
+  tryResearchPowerRatingsFairValue,
+  tryTeamRankingsFairValue,
+  isTeamRankingsFairValueEnabled,
+  resetExternalRatingsCachesForTests,
+  teamRankingsAttribution,
+  TEAMRANKINGS_FAIR_VALUE_FLAG,
+  TEAMRANKINGS_FAIR_VALUE_SOURCE,
+} from "./external-ratings-fair-value.js";
+export type { ExternalRatingsFairValueInput } from "./external-ratings-fair-value.js";
+
 export { runBoardFillPipeline } from "./board-fill.js";
 export type { BoardFillResult } from "./board-fill.js";
 
