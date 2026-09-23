@@ -1,0 +1,85 @@
+# IMPLEMENTED — improvement-ledger wiring checklist
+
+Tracks every IMPROVEMENT-LEDGER item wired into the engine, so waves never duplicate work.
+Format: `arxiv_id` | title | files added | commit | date | notes.
+
+## Wave 0 (2026-09-22 — merged via `motif/wiring-plans-2026-09-22`)
+
+| arxiv_id | Title | Files | Commit | Notes |
+|---|---|---|---|---|
+| 2103.00083 | Quantile aggregation (W-1) | `apps/web/lib/calibration/quantile-isotonize.ts`, `quantile-isotonize.test.ts` | 85f2b37 (merged 62ff528) | Publish-path wiring = NEEDS HUMAN CALL |
+| 1912.05642v4 | Scale-invariant scoring (W-2) | `apps/web/lib/calibration/scrps.ts`, `scrps.test.ts` | 85f2b37 (merged 62ff528) | 2nd ranking gated on ≥2 flips |
+| 1808.07501v2 | Practical scoring rules (W-3) | `apps/web/lib/calibration/practical-scoring.ts`, `practical-scoring.test.ts` | 85f2b37 (merged 62ff528) | Leaderboard gated on Spearman ≥0.95 |
+
+Also on main: `apps/web/lib/calibration/cqr.ts` fail-closed fix (`1d38140`).
+
+## NEEDS HUMAN CALL (do not implement without founder/Hermes call)
+
+- Props storage: `PROP` in Prisma `PickType` + settlement/grading — `schema.prisma`/`migrations/**` frozen to agents (AGENTS.md law 2).
+- Fixture dating fix (Claude handoff §9.3): next-Sunday fixtures stamped ~7 days early — needs DB read (law 7); do not patch from board side.
+- W-1 publish-path wiring: changes published intervals — wire only after 2025 crossing-violation measurement.
+
+## Wave 1 (2026-09-22 — small-effort items, 6 workers)
+## Wave 1 — small-effort items (2026-09-22, 6 parallel workers, direct-to-main)
+
+**Totals: 454 implemented | 47 deferred | 4 needs-human-call** (out of 506 small-effort records; 3 pre-existing skips already on main).
+All additive: new files only, zero edits to existing files, nothing wired into live publish paths.
+Tracking detail per record lives in `~/workspace/wiring-wave/parts/wave1-*.json` (local).
+
+| Worker | Slice | Implemented | New files | Tests | Commits | Target dirs |
+|---|---|---|---|---|---|---|
+| wave1-calibrate | CALIBRATE 45 + INVENT 8 | 50 | 100 (50 modules + 50 tests) | 354/354 web calib + 57/57 invention | 11 (00e2826, 47faf25, be73a0a…) | apps/web/lib/calibration/, packages/prediction-engine/src/invention/ |
+| wave1-decide | DECIDE 62 | 62 | 20 (10 modules + 10 tests) | 209/209 | 2 (80d5edf, 56b6787…) | packages/prediction-engine/src/decision/ |
+| wave1-ingest-1 | INGEST 90 (idx 0–89) | 90 | 180 (90 modules + 90 tests) | 381/381 | 18 (a85a532, 6abf6e5, d93c8e1…) | packages/data-ingestion/src/ |
+| wave1-ingest-2 | INGEST 91 (idx 90–180) | 74 | 148 (74 modules + 74 tests) | 409/409 | 17 (f76fb51, aa93fd1, ff8f8c2…) | packages/data-ingestion/src/ |
+| wave1-model-1 | MODEL 105 (idx 0–104) | 105 | 210 (105 modules + 105 tests) | 521/521 | 30 (f18eeab, 4f81995, e62df82…) | packages/prediction-engine/src/ |
+| wave1-model-2 | MODEL 105 (idx 105–209) | 73 | 146 (73 modules + 73 tests) | 327/327 | 15 (1b24bed, 15b63cc, 0b50add…) | packages/prediction-engine/src/ |
+
+### Implemented arXiv IDs (dedup reference for future waves)
+
+<details><summary>wave1-calibrate — 50 ids</summary>
+
+1204.3463, 1505.04137v1, 1511.05191v1, 1609.09830v1, 1905.03222, 2008.05105v2, 2010.09107, 2011.11277v6, 2101.02703, 2103.06023v4, 2106.00170, 2106.08460, 2112.14649v1, 2204.08276v8, 2208.08598, 2212.03463, 2212.12504v1, 2302.03201v2, 2303.11366v4, 2305.01582v3, 2305.16291v2, 2306.08946v2, 2307.11780v2, 2307.16895, 2308.14339v3, 2312.01586v1, 2401.17743v1, 2402.06062v1, 2402.16300, 2402.17453v5, 2404.13371v1, 2406.02141, 2406.07496v1, 2504.01781, 2506.13687, 2507.15320v5, 2509.04203v1, 2509.08744, 2510.04399v3, 2601.09673v3, 2601.18509, 2602.04714, 2603.19551v2, 2606.08587v1, 2607.24573, 2607.28178, 2608.10620, 2608.21591, 2609.10589, 2609.13100
+
+</details>
+
+<details><summary>wave1-decide — 62 ids</summary>
+
+0712.2771v3, 1009.3753, 1206.2305, 1209.4203, 1305.6831, 1311.2550v2, 1312.3989v1, 1506.00166v2, 1507.08713, 1609.00869, 1610.08558, 1611.09130, 1707.01457, 1708.03813v1, 1710.01503, 1710.01786v1, 1710.02838, 1710.09901v1, 1711.06664, 1802.07024v5, 1802.07107, 1807.11729, 1901.06278, 1902.04256, 1904.09235v2, 1905.09561v1, 1906.02179v2, 2001.10623v2, 2004.14048, 2006.16597v2, 2104.14277v2, 2111.08230v1, 2112.06751, 2201.03387v2, 2206.09034v4, 2208.02814, 2302.13979v1, 2304.03870, 2307.02035v1, 2307.05199v1, 2310.14770v2, 2310.14772v2, 2312.10331, 2402.03035, 2406.04062v1, 2412.14144, 2501.10302, 2503.17927, 2508.07617, 2508.18868v2, 2509.21514v4, 2510.13327, 2603.09947v1, 2603.13581v1, 2603.26620, 2604.11577, 2604.17577, 2604.25280v1, 2606.23448v1, 2607.09505v1, 2607.27143v1, 2608.00127
+
+</details>
+
+<details><summary>wave1-ingest-1 — 90 ids</summary>
+
+0911.4503v1, 1205.4750v1, 1301.2954v1, 1411.1243v1, 1412.0248v1, 1501.07179v1, 1504.01070v1, 1510.02172v2, 1511.04351v2, 1603.05583v1, 1604.05090v1, 1606.02011v3, 1608.03793v2, 1609.03471v1, 1610.06272v2, 1610.09225v1, 1701.08055v1, 1702.05982v1, 1705.08079v2, 1706.00327, 1706.02447v1, 1706.04943v1, 1708.00489v4, 1709.07150, 1710.02784, 1710.02824v2, 1710.06551v2, 1712.05879v1, 1802.00527v1, 1802.08496v2, 1802.08765v1, 1805.02501, 1805.09091, 1806.01930v1, 1810.12068v2, 1901.02776v2, 1901.04695, 1906.03339, 1909.03555v1, 1910.06081v1, 2009.07947v1, 2010.00781v1, 2012.04455v1, 2101.12072v1, 2102.05107, 2102.07081, 2104.14012v1, 2106.12059v3, 2106.14345v2, 2108.02140v1, 2108.03210v3, 2109.07581v1, 2109.13743v2, 2109.15046v2, 2111.09695v1, 2111.12429v2, 2202.10085v2, 2204.10185v1, 2206.02397, 2206.07212v2, 2206.10323v2, 2206.13580v2, 2206.14786, 2207.08635, 2208.01562v2, 2208.04360v2, 2209.07018v1, 2209.08778v1, 2211.02556, 2211.12507, 2211.15734v1, 2212.12015v2, 2302.08981v2, 2303.14857v1, 2303.16648v1, 2303.17610, 2303.17863v2, 2304.12654v1, 2304.14774v3, 2305.01120v3, 2305.03403, 2305.03780v3, 2305.09126v3, 2306.01740v4, 2307.02139v1, 2307.10303, 2307.10411v1, 2307.13116v1, 2307.16642v2, 2308.10231v5
+
+</details>
+
+<details><summary>wave1-ingest-2 — 74 ids</summary>
+
+2308.11142, 2309.00756, 2309.01472, 2309.03808, 2309.07856, 2309.12239, 2309.14390, 2310.08697, 2310.09656, 2310.11459, 2312.04338, 2312.04711, 2312.12700, 2312.13619, 2401.05451, 2401.09940, 2402.06815, 2402.06820, 2402.09444, 2402.10979, 2402.11191, 2402.12400, 2402.15862, 2403.03862, 2403.04873, 2403.11016, 2403.12385, 2403.12977, 2403.13893, 2404.00030, 2404.08254, 2404.19383, 2405.03708, 2405.07354, 2405.11802, 2405.13397, 2405.17214, 2406.01273, 2406.03321, 2408.02498, 2408.02520, 2408.11847, 2409.13098, 2410.08474, 2410.09180, 2411.00862, 2501.14755, 2503.19809, 2504.20768, 2508.19848, 2508.21622, 2509.04546, 2510.04516, 2510.17641, 2511.03279, 2511.14537, 2512.14727, 2512.18013, 2601.18774, 2603.10916, 2604.03840, 2604.04673, 2605.05487, 2606.02547, 2606.03805, 2606.04387, 2606.07492, 2606.08266, 2606.13221, 2607.04590, 2607.17525v1, 2607.18084, 2607.22221v1, 2607.23509
+
+</details>
+
+<details><summary>wave1-model-1 — 105 ids</summary>
+
+0710.0485v2, 0712.0380, 0911.3100, 1112.0076, 1203.2228v2, 1204.3496v1, 1206.6814, 1211.4000, 1212.6018v1, 1310.4461v2, 1403.8125v4, 1404.7493v5, 1410.8042v1, 1501.05831, 1503.03509v1, 1504.05872v1, 1505.00475v1, 1601.00574v1, 1601.04203v2, 1603.06183v1, 1603.07593v2, 1604.01455v3, 1604.03186v1, 1604.07949v3, 1610.02653, 1701.02814v2, 1701.07555, 1702.05662, 1704.00583v1, 1704.02030, 1705.04356v1, 1706.04599v2, 1710.00431v1, 1710.10044v1, 1711.05865v2, 1711.06498, 1711.11122v1, 1802.00967v1, 1802.04987v3, 1802.08664, 1803.06730, 1805.08937v1, 1806.08059v2, 1807.01623v1, 1807.05059, 1807.07536, 1807.09236, 1808.00111v2, 1809.03561v1, 1809.07751, 1810.00908, 1811.12516, 1901.03645, 1902.04489, 2001.10039, 2003.00083, 2006.12471, 2007.15508, 2008.01485, 2008.05203, 2008.10423, 2010.15779v2, 2011.14048v2, 2103.15147v3, 2106.07197v1, 2109.09871, 2112.14451v1, 2112.14846, 2201.01168v1, 2201.05249, 2201.08671, 2202.03034, 2204.11777, 2206.10540, 2207.07318, 2207.08924v2, 2207.13287v1, 2207.13747v1, 2208.00139, 2209.03013v1, 2209.06346v2, 2209.07581, 2209.14594, 2210.06327v3, 2210.11802, 2211.02417v3, 2212.08116v1, 2212.12092, 2301.11898v2, 2301.13594v1, 2303.05774v1, 2303.06021v4, 2303.16776v1, 2304.05242, 2304.05294v5, 2304.06333v2, 2305.03623v1, 2305.14656v1, 2305.16735, 2307.02188v5, 2307.02752v2, 2307.08768, 2307.11777, 2307.13807v1, 2307.15422v2
+
+</details>
+
+<details><summary>wave1-model-2 — 73 ids</summary>
+
+2308.03810v2, 2308.05263, 2308.10328v3, 2308.15443v1, 2308.15559v1, 2309.01641, 2309.12696v1, 2309.14807, 2310.04227v2, 2310.08278v1, 2310.10386v1, 2310.10553v2, 2310.12145v1, 2310.19343v1, 2311.02971v3, 2311.13707v1, 2312.08528v3, 2312.09466v1, 2401.02601v1, 2401.07018, 2401.08718v1, 2401.15161v2, 2402.08328v1, 2402.15588v1, 2403.00578v1, 2403.13821, 2403.14769, 2403.16282v1, 2404.02270v2, 2404.04213, 2404.06587, 2404.10495v2, 2404.11350v3, 2404.15018, 2405.01598v1, 2405.10247, 2406.00814v1, 2406.11584, 2409.01493v1, 2412.09430, 2412.10871v1, 2412.21181v1, 2505.11841v2, 2505.24783, 2507.05470, 2507.15079v1, 2508.16598v1, 2511.02815v1, 2512.14779, 2601.09999, 2602.03767, 2602.09982v1, 2602.21173v1, 2604.17194v1, 2604.21087, 2604.24517v2, 2606.02663, 2606.04900v1, 2606.08578v1, 2606.24171v1, 2607.00164v1, 2607.12248v2, 2607.17991, 2608.01494v1, 2608.07168v1, 2608.14683, 2608.16814v1, 2609.10357v1, 2609.12878, physics/0505118, physics/0512143, physics/0601166v3, physics/0608007v1
+
+</details>
+
+### Deferred (47) — not small work, or gate not evaluable as a pure module
+
+- wave1-ingest-2 (15): gates requiring live measurements/backtests — 2410.21484v1 (narrative review, no pooling), 2412.10298v1 (viewership forecast needs 2020 baseline), 2504.04186v1 (fragmentation measurement), 2504.08764 (recall≥0.95 reproducible), 2507.17844v1 (editor-preference test on 50 NFL clips), 2508.11711v2 (7-day live log review), 2602.18541v1 (LAPIS pilot), 2605.23854v1 (MMWU rank centrality backtest), 2605.24445v1 (drift-calibrated Elo backtest), 2606.19642 (30-day weather sim), 2608.02081v1 (isotonic-BT Brier backtest), 2608.11505v1 (log-opinion-pool diagnostic), 2608.28482v2 (BIN diagnostics), 2609.03790v2 (landmark alignment eval), 2609.21674v1 (frozen NFL blend backtest)
+- wave1-model-2 (32): training programs, not small modules — AutoGluon/AutoML, TimesFM/Chronos/Mamba/GFlowNet/transformer pretraining, LLM fine-tunes, JAGS/Stan weather model, PEB-ridge λ̂, sPoRT test, bookmaking bounds, physics/*
+
+### Needs human call (4, added this wave)
+
+- wave1-decide: (1) wiring any of the 10 decision modules into a live publish path; (2) running the documented ACCEPTANCE GATE backtests and promoting any module.
+- wave1-ingest-2: 2502.14710v1 (head-acceleration-exposure features — injury/health-adjacent modeling, needs founder call); 2507.11642v2 (posture-driven action-intent from NGS tracking — GSE port gated on reproducible test).
+
