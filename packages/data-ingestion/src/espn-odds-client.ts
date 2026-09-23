@@ -453,7 +453,12 @@ export async function fetchEspnOddsForSport(
   }
 
   const out: OddsApiEvent[] = [];
-  const lastUpdate = new Date().toISOString();
+  // NO `last_update` is emitted anywhere below. ESPN's public odds JSON carries
+  // no upstream update timestamp, and stamping the local clock would make every
+  // ESPN row "fresh" by construction — defeating the anti-tautology freshness
+  // gate (`DataNormalizer.freshGameIds`) that exists to catch stale lines.
+  // Omitting the field makes these rows not-provably-fresh, which is the correct
+  // fail-safe. See packages/data-ingestion/src/normalizer.ts.
   const nowMs = now.getTime();
 
   for (let i = 0; i < candidates.length; i++) {
@@ -504,7 +509,6 @@ export async function fetchEspnOddsForSport(
       const markets: OddsApiMarket[] = [
         {
           key: "h2h",
-          last_update: lastUpdate,
           outcomes: [
             { name: ev.away, price: awayMl },
             { name: ev.home, price: homeMl },
@@ -529,7 +533,6 @@ export async function fetchEspnOddsForSport(
       ) {
         markets.push({
           key: "spreads",
-          last_update: lastUpdate,
           outcomes: [
             { name: ev.away, price: awaySpreadPx, point: awaySpreadPt },
             { name: ev.home, price: homeSpreadPx, point: homeSpreadPt },
@@ -548,7 +551,6 @@ export async function fetchEspnOddsForSport(
       ) {
         markets.push({
           key: "totals",
-          last_update: lastUpdate,
           outcomes: [
             { name: "Over", price: overOdds, point: ou },
             { name: "Under", price: underOdds, point: ou },
@@ -559,7 +561,7 @@ export async function fetchEspnOddsForSport(
       const book: OddsApiBookmaker = {
         key: "espn_public",
         title: `ESPN/${providerName}`,
-        last_update: lastUpdate,
+        // no last_update: ESPN exposes no upstream timestamp (see note above)
         markets,
       };
 
