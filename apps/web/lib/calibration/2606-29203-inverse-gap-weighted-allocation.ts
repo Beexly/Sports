@@ -33,8 +33,8 @@ export function allocateEvalWeeks(
   const raw = w.map((x) => x * totalWeeks);
   const floored = raw.map(Math.floor);
   const remainder = totalWeeks - floored.reduce((a, b) => a + b, 0);
-  const frac = raw.map((x, i) => ({ i, f: x - floored[i] })).sort((a, b) => b.f - a.f);
-  for (let k = 0; k < remainder; k++) floored[frac[k % frac.length].i]++;
+  const frac = raw.map((x, i) => ({ i, f: x - floored[i]! })).sort((a, b) => b.f - a.f);
+  for (let k = 0; k < remainder; k++) floored[frac[k % frac.length]!.i!]!++;
   return floored;
 }
 

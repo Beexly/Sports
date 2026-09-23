@@ -82,12 +82,12 @@ export function fitConstrainedWeights(
     const grad = new Array(m).fill(0);
     for (let i = 0; i < n; i++) {
       let pred = 0;
-      for (let j = 0; j < m; j++) pred += w[j] * predMatrix[j][i];
-      const err = pred - ys[i];
-      for (let j = 0; j < m; j++) grad[j] += (2 / n) * err * predMatrix[j][i];
+      for (let j = 0; j < m; j++) pred += w[j]! * predMatrix[j]![i]!;
+      const err = pred - ys[i]!;
+      for (let j = 0; j < m; j++) grad[j] = (grad[j] ?? 0) + (2 / n) * err * predMatrix[j]![i]!;
     }
     w = projectWeights(
-      w.map((x, j) => x - lr * grad[j]),
+      w.map((x, j) => x - lr * (grad[j] ?? 0)),
       space,
     );
   }
@@ -104,8 +104,8 @@ export function combinationBrier(
   let s = 0;
   for (let i = 0; i < n; i++) {
     let pred = 0;
-    for (let j = 0; j < predMatrix.length; j++) pred += w[j] * predMatrix[j][i];
-    s += (pred - ys[i]) * (pred - ys[i]);
+    for (let j = 0; j < predMatrix.length; j++) pred += w[j]! * predMatrix[j]![i]!;
+    s += (pred - ys[i]!) * (pred - ys[i]!);
   }
   return s / Math.max(n, 1);
 }
@@ -128,18 +128,18 @@ export function weightConstraintHorseRace(
   selectIdx: readonly number[],
 ): HorseRaceResult[] {
   const sub = (idx: readonly number[]) => ({
-    pm: predMatrix.map((row) => idx.map((i) => row[i])),
-    y: idx.map((i) => ys[i]),
+    pm: predMatrix.map((row) => idx.map((i) => row[i]!)),
+    y: idx.map((i) => ys[i]!),
   });
   const fit = sub(fitIdx);
   const sel = sub(selectIdx);
   return CONSTRAINT_SPACES.map((space) => {
-    const weights = fitConstrainedWeights(fit.pm, fit.y, space);
+    const weights = fitConstrainedWeights(fit.pm!, fit.y, space);
     return {
       space,
       weights,
-      brierFit: combinationBrier(fit.pm, fit.y, weights),
-      brierSelect: combinationBrier(sel.pm, sel.y, weights),
+      brierFit: combinationBrier(fit.pm!, fit.y, weights),
+      brierSelect: combinationBrier(sel.pm!, sel.y, weights),
     };
   });
 }
@@ -164,7 +164,7 @@ export function conformalSelectionStability(
   const rand = mulberry32(seed);
   const wins = new Map<ConstraintSpace, number>();
   for (let k = 0; k < nWindows; k++) {
-    const boot = selectIdx.map(() => selectIdx[Math.floor(rand() * selectIdx.length)]);
+    const boot = selectIdx.map(() => selectIdx[Math.floor(rand() * selectIdx.length)]!);
     const results = weightConstraintHorseRace(predMatrix, ys, fitIdx, boot);
     const w = pickWinner(results).space;
     wins.set(w, (wins.get(w) ?? 0) + 1);

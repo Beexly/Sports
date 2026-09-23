@@ -18,7 +18,7 @@
 function euclid(a: readonly number[], b: readonly number[]): number {
   let s = 0;
   for (let i = 0; i < a.length; i++) {
-    const d = a[i] - b[i];
+    const d = a[i]! - b[i]!;
     s += d * d;
   }
   return Math.sqrt(s);
@@ -39,7 +39,7 @@ export function energyScore(
   let count = 0;
   for (let i = 0; i < m; i++) {
     for (let j = i + 1; j < m; j++) {
-      term2 += euclid(ensemble[i], ensemble[j]);
+      term2 += euclid(ensemble[i]!, ensemble[j]!);
       count++;
     }
   }
@@ -55,7 +55,7 @@ export function meanEnergyScore(
   const n = ensembles.length;
   if (n === 0) return NaN;
   return (
-    ensembles.reduce((a, e, i) => a + energyScore(e, observations[i]), 0) / n
+    ensembles.reduce((a, e, i) => a + energyScore(e, observations[i]!), 0) / n
   );
 }
 
@@ -73,7 +73,7 @@ export function dieboldMariano(
   lossesB: readonly number[],
 ): DMResult {
   const n = lossesA.length;
-  const diffs = lossesA.map((a, i) => a - lossesB[i]);
+  const diffs = lossesA.map((a, i) => a - lossesB[i]!);
   const meanDiff = diffs.reduce((a, b) => a + b, 0) / n;
   const variance =
     diffs.reduce((a, d) => a + (d - meanDiff) * (d - meanDiff), 0) / n;
@@ -100,7 +100,7 @@ export function ensembleSizeAudit(
 export function rankTransformMargin(
   values: readonly number[],
 ): number[] {
-  const order = values.map((_, i) => i).sort((a, b) => values[a] - values[b]);
+  const order = values.map((_, i) => i).sort((a, b) => values[a]! - values[b]!);
   const ranks = new Array(values.length).fill(0);
   order.forEach((idx, pos) => {
     ranks[idx] = (pos + 1) / (values.length + 1);

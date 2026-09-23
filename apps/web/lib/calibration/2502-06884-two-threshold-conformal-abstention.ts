@@ -39,7 +39,7 @@ export function conformalThreshold(
   const n = sorted.length;
   if (n === 0) return Infinity;
   const k = Math.min(n, Math.ceil((1 - alpha) * (n + 1)));
-  return sorted[k - 1];
+  return sorted[k - 1]!;
 }
 
 export type Triage = "post" | "review" | "abstain";
