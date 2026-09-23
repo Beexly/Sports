@@ -25,6 +25,7 @@ vi.mock("@sports/data-ingestion", () => ({
   // The line-integrity lane reads the platform's odds-freshness line from here
   // rather than defining a second "stale odds" of its own (C-287).
   FRESHNESS_THRESHOLD_MS: 4 * 60 * 60 * 1000,
+  isSportInSeason: () => true,
 }));
 vi.mock("@sports/prediction-engine", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@sports/prediction-engine")>();
