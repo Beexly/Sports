@@ -142,3 +142,14 @@ All additive: 1,248 new files, zero modified, zero deleted (verified via `git di
 1905.11481v2, 1912.04871v4, 2409.00629v2, 2410.17238v1, 2508.01285v2, 2606.29823v1, 2608.25770v2
 
 </details>
+
+## OpenCode Zen free lane - NFL/MLB calibration + CLV (2026-09-23 CT)
+
+Worker: `gse/opencode-nfl-mlb-cal-20260923b` via `opencode/space-bunny-free` (OpenCode 1.18.31). Additive only; disabled-by-default. Tests run from package dirs (9/9 pass).
+
+| arxiv_id | Title | Files | Notes |
+|---|---|---|---|
+| 2403.11016v3 | Minimax-regret engine selection (NFL/MLB states) | `apps/web/lib/calibration/2403-11016v3-minimax-regret-selection.ts`, `.test.ts` | Distinct from feature-store `minimax-regret-2403.ts`; gate = ranking disagreement diagnostic |
+| 2406.03321v2 | Decision-utility ensemble | `apps/web/lib/calibration/2406-03321v2-decision-utility-ensemble.ts`, `.test.ts` | Distinct from feature-store `decision-utility-weighting-2406.ts` |
+| 2108.02419v1 | Joint market / CLV tape simulator | `packages/data-ingestion/src/2108-02419v1-joint-market-simulator.ts`, `.test.ts` | Synthetic live-market tape for CLV ingest training |
+
