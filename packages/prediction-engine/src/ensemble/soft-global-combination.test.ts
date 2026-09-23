@@ -91,7 +91,7 @@ describe("weights", () => {
     const mid = softGlobalWeights(g, l, 0.5);
     expect(mid).toEqual([0.35, 0.3, 0.35]);
     expect(() => softGlobalWeights(g, l, 2)).toThrow();
-    expect(() => softGlobalWeights([0.5], l)).toThrow();
+    expect(() => softGlobalWeights([0.5], l, 0)).toThrow();
   });
 
   it("combine is a weighted average", () => {
