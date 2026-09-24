@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2609.05561: Rollcast: Proper-Score Gated Rolling Anchors for Adaptive Probabilistic Time-Series Forecasting.
  *

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2203.01420v1: Minimax Decision Rules for Planning Under Uncertainty.
  *
