@@ -30,8 +30,35 @@ describe("2410.21484v1 review evidence and forecast diagnostics", () => {
     expect(summary?.n).toBe(4);
     expect(summary?.rawMean).toBeCloseTo(0.225, 10);
     expect(summary?.publicationBiasAdjustedMean).toBeCloseTo(0.15, 10);
+    expect(summary?.median).toBeCloseTo(0.15, 10);
     expect(summary?.trimmedCount).toBe(2);
     expect(mod.poolReportedRoi([], 0.1)).toBeNull();
+  });
+
+  it("keeps odd- and even-sized medians correct", () => {
+    const study = (id: string, reportedRoi: number) => ({
+      id,
+      retrievable: true,
+      primary: true,
+      auditableExperiment: true,
+      reportedRoi,
+    });
+    expect(mod.poolReportedRoi([study("odd-1", 0.2)])?.median).toBeCloseTo(0.2, 10);
+    expect(mod.poolReportedRoi([
+      study("odd-3-a", -0.2),
+      study("odd-3-b", 0.1),
+      study("odd-3-c", 0.2),
+    ])?.median).toBeCloseTo(0.1, 10);
+    expect(mod.poolReportedRoi([
+      study("even-2-a", 0.1),
+      study("even-2-b", 0.3),
+    ])?.median).toBeCloseTo(0.2, 10);
+    expect(mod.poolReportedRoi([
+      study("even-4-a", -0.2),
+      study("even-4-b", 0.1),
+      study("even-4-c", 0.2),
+      study("even-4-d", 0.8),
+    ])?.median).toBeCloseTo(0.15, 10);
   });
 
   it("computes calibration and accuracy metrics without allowing a review conclusion", () => {
