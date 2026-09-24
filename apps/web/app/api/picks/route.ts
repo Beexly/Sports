@@ -405,10 +405,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       if (isBookmakerConsensusClaim(source) && !bound) {
         return { text: null, bound: null };
       }
-      return {
-        text: teaserForViewer(source, entitlements.canSeeConfidence),
-        bound,
-      };
+      // Full reasoning and reasoningShort are gated independently. The first
+      // consensus claim in a full explanation is enough to withhold that whole
+      // field, even if the rest contains no other market phrase.
+      return { text: teaserForViewer(source, entitlements.canSeeConfidence), bound };
     };
     const shortReasoning = projectReasoning(pick.reasoningShort);
     const reasoningSource = entitlements.canSeeFactorBreakdown
