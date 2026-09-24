@@ -23,7 +23,8 @@ this file stays current through the weekend.
 ### Mark Andrews (TE, BAL)
 - **Matchup:** Ravens (1-1) vs Cowboys (1-1), Sun 9/27 3:25pm CDT at Maracanã Stadium, Rio de Janeiro. Ravens -3.5, total 52.5. Cowboys are the designated home team. Watch the field — heavy rain in the area, surface expected to be rough.
 - **The spot Garrett flagged, verified:** Dallas has allowed a league-high **29.7 fantasy points per game to tight ends** through two weeks — worst in the NFL, not third-worst (even better than Garrett remembered). Big chunk came from Isaiah Likely's 8/78/2 in Week 1.
-- **Usage:** 24.5% target share (81st percentile), 67.6% route share, 2.13 yards per route run, 30% first-read share. Last week: 6 catches on 7 targets for 49 yards. Zero TDs so far — due for positive regression. Has been used as a possession/chain-mover rather than the old vertical threat.
+- **Usage:** 24.5% target share (81st percentile; 23.2% per FantasyPros), 67.6% route share, 2.13 yards per route run, 30% first-read share. Last week: 6 catches on 7 targets for 49 yards. Zero TDs so far — due for positive regression.
+- **Garrett's TD call (9/24):** 23.2% target share but only 1 red zone target through two weeks — usage says the scores are coming, and this is the week (league-worst TE defense, 52.5 total, shootout potential in Rio). Has been used as a possession/chain-mover rather than the old vertical threat.
 - **Ceiling note:** commanded a 33% target share after Zay Flowers exited in Week 1; if Flowers (hamstring) misses or is limited, Andrews' ceiling rises further. Early word is Flowers should suit up.
 
 ## Garrett's takes
@@ -34,4 +35,5 @@ this file stays current through the weekend.
 
 ## Log
 - 2026-09-24: Pool opened with Oronde Gadsden II. Props pulled (TD markets only so far).
+- 2026-09-24 AM: "23.2% but only 1 redzone target — this is his week to score" (Andrews) — logged as his TD call vs DAL.
 - 2026-09-24 AM: Added Mark Andrews (vs DAL in Rio). Verified Cowboys TE defense (29.7 FPG, worst), Andrews target share (24.5%), Njoku to IR.
