@@ -84,6 +84,10 @@ export function PickCard({
     bookmakerCount: pick.bookmakerCount,
     dataFreshnessAt: pick.dataFreshnessAt,
     consensusProvider: pick.consensusProvider,
+    consensusSourceId: pick.consensusSourceId,
+    consensusBooks: pick.consensusBooks,
+    consensusBookSetId: pick.consensusBookSetId,
+    consensusCapturedAt: pick.consensusCapturedAt,
   });
   const isConsensusClaim = isBookmakerConsensusClaim(visibleReasoning);
   const safeReasoning =
