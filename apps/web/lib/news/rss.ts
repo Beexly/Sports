@@ -199,14 +199,49 @@ function headlineId(source: string, title: string): string {
   return `rss-${(h >>> 0).toString(36)}`;
 }
 
+/** Per-feed outcome. `ok: false` means the feed did not answer at all. */
+type FeedRead = { readonly ok: true; readonly items: NewsItem[] } | { readonly ok: false };
+const FEED_FAILED: FeedRead = { ok: false };
+
 /**
- * Fetch + classify the configured live wire. Returns null when unconfigured
- * (caller falls back to the labeled sample); returns [] when configured but
- * nothing classifiable arrived (an honest empty wire).
+ * A wire read WITH the fate of the feeds that produced it.
+ *
+ * WHY THIS EXISTS. Every failure inside the per-feed lambda below returns an
+ * empty array, and a thrown fetch is dropped by the `fulfilled` filter, so
+ * `fetchLiveWire` returns [] both when the feeds answered and carried nothing
+ * classifiable AND when every configured feed was unreachable. Those are
+ * opposite facts. `/the-beat` renders the first as "No fresh reports", which
+ * asserts the wire is up and quiet; during a total outage that sentence is
+ * false, and it is the same class of defect as the sample-during-an-outage
+ * one fixed in c71542292, one layer further down.
+ *
+ * `unconfigured` is kept distinct from both: it is the only state that may
+ * fall back to the labeled fictional sample.
  */
-export async function fetchLiveWire(
+export type LiveWireRead = {
+  /** Classified, deduped, freshest first. Empty is a real answer, not an error. */
+  readonly items: NewsItem[];
+  /** Feeds configured for this read. Zero means unconfigured. */
+  readonly attempted: number;
+  /** Feeds that returned a parseable document, whether or not it classified. */
+  readonly ok: number;
+  /** No feeds are configured, so the labeled sample is the honest fallback. */
+  readonly unconfigured: boolean;
+  /**
+   * Feeds were configured and NONE answered. The wire is down, not quiet, and
+   * a caller must not describe it as empty.
+   */
+  readonly unavailable: boolean;
+};
+
+/**
+ * Fetch + classify the configured live wire, reporting how many feeds actually
+ * answered. Prefer this over `fetchLiveWire` on any surface that tells the
+ * reader what the wire is doing.
+ */
+export async function fetchLiveWireRead(
   now: Date = new Date(),
-): Promise<NewsItem[] | null> {
+): Promise<LiveWireRead> {
   let feeds = parseFeedConfig(process.env["NEWS_RSS_FEEDS"]);
   if (
     feeds.length === 0 &&
@@ -214,13 +249,15 @@ export async function fetchLiveWire(
   ) {
     feeds = [...CURATED_SPORTS_NEWS_RSS];
   }
-  if (feeds.length === 0) return null;
+  if (feeds.length === 0) {
+    return { items: [], attempted: 0, ok: 0, unconfigured: true, unavailable: false };
+  }
 
   const results = await Promise.allSettled(
     feeds.map(async (feed) => {
       // SSRF choke point: refuse private/metadata IP literals before issuing.
       const check = validateEndpointUrl(feed.url);
-      if (!check.ok) return [];
+      if (!check.ok) return FEED_FAILED;
       const res = await fetch(feed.url, {
         headers: { "user-agent": "GSE-wire/1.0 (headlines only; contact: site)" },
         signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
@@ -234,19 +271,19 @@ export async function fetchLiveWire(
       let xml: string;
       if (res.status >= 300 && res.status < 400) {
         const location = res.headers.get("location");
-        if (!location) return [];
-        if (locationIsInternalTargetLocation(location)) return [];
+        if (!location) return FEED_FAILED;
+        if (locationIsInternalTargetLocation(location)) return FEED_FAILED;
         const recheck = validateEndpointUrl(location);
-        if (!recheck.ok) return [];
+        if (!recheck.ok) return FEED_FAILED;
         const followed = await fetch(location, {
           headers: { "user-agent": "GSE-wire/1.0 (headlines only; contact: site)" },
           signal: AbortSignal.timeout(FETCH_TIMEOUT_MS),
           redirect: "manual",
         });
-        if (!followed.ok) return [];
+        if (!followed.ok) return FEED_FAILED;
         xml = await followed.text();
       } else {
-        if (!res.ok) return [];
+        if (!res.ok) return FEED_FAILED;
         xml = await res.text();
       }
       const items: NewsItem[] = [];
@@ -268,14 +305,29 @@ export async function fetchLiveWire(
           minutesAgo,
         });
       }
-      return items;
+      return { ok: true, items } as const;
     }),
   );
 
-  const wire = results
-    .filter((r): r is PromiseFulfilledResult<NewsItem[]> => r.status === "fulfilled")
-    .flatMap((r) => r.value)
+  // A REJECTED promise is a failed feed, not an absent one. Counting only the
+  // fulfilled-and-ok ones is what makes "every feed is down" expressible.
+  const reads = results.map((r) => (r.status === "fulfilled" ? r.value : FEED_FAILED));
+  const ok = reads.filter((r) => r.ok).length;
+  const items = reads
+    .flatMap((r) => (r.ok ? r.items : []))
     .sort((a, b) => a.minutesAgo - b.minutesAgo)
     .slice(0, 60);
-  return wire;
+  return { items, attempted: feeds.length, ok, unconfigured: false, unavailable: ok === 0 };
+}
+
+/**
+ * The wire alone, for callers that do not describe its state to a reader.
+ * Null still means unconfigured. Kept so existing callers are unchanged;
+ * anything that renders wire STATUS wants `fetchLiveWireRead`.
+ */
+export async function fetchLiveWire(
+  now: Date = new Date(),
+): Promise<NewsItem[] | null> {
+  const read = await fetchLiveWireRead(now);
+  return read.unconfigured ? null : read.items;
 }

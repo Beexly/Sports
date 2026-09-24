@@ -1,0 +1,81 @@
+/**
+ * Signal Registry Runner.
+ *
+ * Evaluates all registered, active signals for a given game context and
+ * produces the canonical IndependentMarketFairValue[] array.
+ *
+ * Implements strict silence on null/errors, preserves exact wire source tags,
+ * and maintains byte-identical output to legacy procedural branches.
+ */
+
+import type { IndependentMarketFairValue } from "@sports/types";
+import { isSignalProbabilityValue } from "@sports/types";
+import type { IndependentFairValueBuildInput } from "./build-independent-fair-values.js";
+import { SIGNAL_REGISTRY } from "./signal-registry-definitions.js";
+
+export async function runSignalRegistry(
+  input: IndependentFairValueBuildInput,
+): Promise<IndependentMarketFairValue[]> {
+  const out: IndependentMarketFairValue[] = [];
+  const now = input.now ?? (() => new Date());
+
+  // 1) Prefetched (e.g. Kalshi or caller-supplied)
+  if (input.prefetched) {
+    for (const fv of input.prefetched) {
+      if (
+        (fv.homeFairProb != null && Number.isFinite(fv.homeFairProb)) ||
+        (fv.awayFairProb != null && Number.isFinite(fv.awayFairProb))
+      ) {
+        out.push(fv);
+      }
+    }
+  }
+
+  const ctx = {
+    sportKey: input.sportKey,
+    homeTeam: input.homeTeam,
+    awayTeam: input.awayTeam,
+    commenceTime: input.commenceTime,
+    spreadHome: input.spreadHome,
+    env: (input.env ?? process.env) as Record<string, string | undefined>,
+    now,
+    prefetched: input.prefetched,
+    skipNetworkIndependents: input.skipNetworkIndependents,
+  };
+
+  for (const signal of SIGNAL_REGISTRY) {
+    if (signal.id === "prefetched_exchange") continue;
+    if (signal.activationStatus !== "ACTIVE") continue;
+    if (!signal.isRightsCleared(ctx.env)) continue;
+    if (signal.validSports.length > 0 && !signal.validSports.includes(ctx.sportKey as any)) {
+      continue;
+    }
+    if (!signal.evaluate) continue;
+
+    try {
+      const val = await signal.evaluate(ctx);
+      // Imports the predicate rather than restating it, so the rule for "may
+      // this be blended as a win probability" has exactly one spelling. The
+      // conditions are unchanged; only their home moved.
+      //
+      // A CONTINUOUS_VALUE signal returns a scalar and is dropped here rather
+      // than blended. That drop is load-bearing, and it is also why an ACTIVE
+      // continuous signal contributes nothing today: read the registry note
+      // before changing either side.
+      if (isSignalProbabilityValue(val)) {
+        const source = (val.metadata?.source as string) ?? signal.id;
+        out.push({
+          source,
+          homeFairProb: val.homeFairProb,
+          awayFairProb: val.awayFairProb,
+          capturedAt: val.capturedAt,
+        });
+      }
+    } catch (err) {
+      // Catch exceptions silently to satisfy the Null Semantics invariant
+      console.warn(`[SignalRegistry] Signal ${signal.id} abstained on error:`, err);
+    }
+  }
+
+  return out;
+}

@@ -1,0 +1,191 @@
+{
+ "blocked": [
+  {
+   "item": "1309 numbering",
+   "detail": "1101 REJECT replaced by fully-read ADAPT paper 2603.21163v2, written as provisional ledger 1309: 1306-1308 are wave3-reader-02 ledgers (Kelly/Bayesian, onelove). Coordinator confirmation of a permanent number requested; do not renumber without coordinator."
+  },
+  {
+   "item": "report filename",
+   "detail": "Original assignment named wave3-reader-01.json; a later coordinator message said wave3-reader-05.json, but wave3-reader-05.json already exists (props/dfs/abstention reader, ledgers 1138+). Wrote as wave3-reader-01.json to avoid clobbering another reader report."
+  }
+ ],
+ "notes": "Reader 01: all 12 assigned papers (ledgers 1090-1101) read in full from arXiv PDFs, including previously omitted ranges for 1097 (1803.07041v6), 1098 (2206.15241v2), and 1100 (2606.09941v1). 5 ADAPT, 0 ADOPT, 7 REJECT. 1100 reevaluated strictly on merit after completing its omitted ranges: REJECT stands \u2014 the paper explicitly fails on extreme winds, the only sports-relevant regime. Every REJECT has a fully-read same-lane replacement: 1092->1300, 1095->1301, 1096->1302, 1097->1303, 1099->1304, 1100->1305 (all ADAPT, written), 1101->1309 provisional (ADAPT, fully read; number pending coordinator). Repairs completed: exact author citations patched in 1092-1096 (Grody/Bansal/Ashqar; Srilakshmi et al.; Padalkar; Hoffman/Henderson/Nehrkorn; Zafarani/Eftekharnejad/Patel); unauthorized 1306 references removed from 1101. 2003.05854 strict range audit: supplement lines 2563-2581 (trivariate dependence structure) fully read; lines 2582-11079 are Figure 5 scatter-plot graphics only (RMSE 0.137/0.154/0.167) with no missed text. Dedup clean vs assigned papers, /tmp/w3-reader01/dedup.txt, and /tmp/w3-dedup.txt. arXiv API used over HTTPS with >=4s spacing. No PDFs/text committed; no tracker or .git/ changes made by this reader.",
+ "papers": [
+  {
+   "arxiv_id": "1601.04203v2",
+   "title": "Determining Tournament Payout Structures for Daily Fantasy Sports",
+   "ledger": "1090",
+   "ledger_path": "arxiv-deep/1090-determining-tournament-payout-structures-for-daily.md",
+   "source": "pdf",
+   "verdict": "ADAPT",
+   "key_result": "the power-law ideal + constrained bucketing framework is directly reusable for GSE contest/product design; the player-performance prediction problem is untouche\u2026"
+  },
+  {
+   "arxiv_id": "1604.01455v3",
+   "title": "Picking Winners in Daily Fantasy Sports Using Integer Programming",
+   "ledger": "1091",
+   "ledger_path": "arxiv-deep/1091-picking-winners-in-daily-fantasy-sports.md",
+   "source": "pdf",
+   "verdict": "ADAPT",
+   "key_result": "the portfolio-IP formulation (maximize P(at least one entry wins) via mean/variance/correlation decomposition) is the academically rigorous version of GSE's DFS\u2026"
+  },
+  {
+   "arxiv_id": "2411.11012v1",
+   "title": "Optimizing Daily Fantasy Baseball Lineups: A Linear Programming Approach for Enhanced Accuracy",
+   "ledger": "1092",
+   "ledger_path": "arxiv-deep/1092-optimizing-daily-fantasy-baseball-lineups-a.md",
+   "source": "pdf",
+   "verdict": "REJECT",
+   "key_result": "a naive maximize-projected-points PuLP integer program with inconsistent data descriptions, misnamed metrics, and no contest-level validation; strictly dominate\u2026"
+  },
+  {
+   "arxiv_id": "2508.14065v1",
+   "title": "Personalized Contest Recommendation in Fantasy Sports",
+   "ledger": "1093",
+   "ledger_path": "arxiv-deep/1093-personalized-contest-recommendation-in-fantasy-sports.md",
+   "source": "pdf",
+   "verdict": "ADAPT",
+   "key_result": "WiDIR's wide+deep multi-branch architecture with pairwise hinge loss is a production-proven blueprint for GSE contest/content personalization; the paper's scale\u2026"
+  },
+  {
+   "arxiv_id": "2604.13796v1",
+   "title": "Driving Engagement in Daily Fantasy Sports with a Scalable and Urgency-Aware Ranking Engine",
+   "ledger": "1094",
+   "ledger_path": "arxiv-deep/1094-driving-engagement-in-daily-fantasy-sports.md",
+   "source": "pdf",
+   "verdict": "ADAPT",
+   "key_result": "the urgency-feature + target-aware attention + listwise neuralNDCG design is the right architecture for GSE's time-sensitive ranking surfaces (notifications, sl\u2026"
+  },
+  {
+   "arxiv_id": "1102.2846v1",
+   "title": "Potential of 4d-VAR for Exigent Forecasting of Severe Weather",
+   "ledger": "1095",
+   "ledger_path": "arxiv-deep/1095-potential-of-4d-var-for-exigent.md",
+   "source": "pdf",
+   "verdict": "REJECT",
+   "key_result": "a conceptual proposal for worst-case tornado forecasting via 4d-VAR with no executed tornado experiment, no results, and prohibitive compute; no path to GSE val\u2026"
+  },
+  {
+   "arxiv_id": "1802.03913v1",
+   "title": "Assessing the Utility of Weather Data for Photovoltaic Power Prediction",
+   "ledger": "1096",
+   "ledger_path": "arxiv-deep/1096-assessing-the-utility-of-weather-data.md",
+   "source": "pdf",
+   "verdict": "REJECT",
+   "key_result": "a small, methodologically weak solar-power regression study (random splits on time series, unclear units, no weather-value ablation); the domain is far from spo\u2026"
+  },
+  {
+   "arxiv_id": "1803.07041v6",
+   "title": "Spatial Risk Measures and Rate of Spatial Diversification",
+   "ledger": "1097",
+   "ledger_path": "arxiv-deep/1097-spatial-risk-measures-and-rate-of.md",
+   "source": "pdf",
+   "verdict": "REJECT",
+   "key_result": "pure actuarial theory (theorems on when VaR/ES satisfy spatial axioms for max-stable fields), no data, no experiments, no code; no operational path to GSE value\u2026"
+  },
+  {
+   "arxiv_id": "2206.15241v2",
+   "title": "Benchmark Dataset for Precipitation Forecasting by Post-Processing the Numerical Weather Prediction",
+   "ledger": "1098",
+   "ledger_path": "arxiv-deep/1098-benchmark-dataset-for-precipitation-forecasting-by.md",
+   "source": "pdf",
+   "verdict": "ADAPT",
+   "key_result": "the post-NWP optimization pipeline (leakage-safe temporal splitting, variable-selection ablations, class-imbalance sampling, window/hyperparameter sensitivity) \u2026"
+  },
+  {
+   "arxiv_id": "2604.16716v1",
+   "title": "Climate Risk Stress Testing in California: A Geospatial Framework for Banking and Climate-Exposed Sectors",
+   "ledger": "1099",
+   "ledger_path": "arxiv-deep/1099-climate-risk-stress-testing-in-california.md",
+   "source": "pdf",
+   "verdict": "REJECT",
+   "key_result": "a conceptual design paper that explicitly presents no empirical exercise (\"not a finished reduced-form estimation exercise\"); banking/climate-finance framing wi\u2026"
+  },
+  {
+   "arxiv_id": "2606.09941v1",
+   "title": "Stochastic Weather Generators for High-Frequency Wind Vector Time Series",
+   "ledger": "1100",
+   "ledger_path": "arxiv-deep/1100-stochastic-weather-generators-for-high-frequency.md",
+   "source": "pdf",
+   "verdict": "REJECT",
+   "key_result": "a niche deep-generative method (Time VQ-VAE + MaskGIT) for minute-scale wind simulation at one Oklahoma site that explicitly fails on extreme winds \u2014 exactly th\u2026"
+  },
+  {
+   "arxiv_id": "2609.08249v1",
+   "title": "Projection Angles of Projectiles in Sports: Qualitative Assessment of the Effects of Aerodynamic Forces or Run-Up",
+   "ledger": "1101",
+   "ledger_path": "arxiv-deep/1101-projection-angles-of-projectiles-in-sports.md",
+   "source": "pdf",
+   "verdict": "REJECT",
+   "key_result": "elegant classical-mechanics analysis of shot-put/long-jump release angles, but a qualitative theory paper on track-and-field throwing events with no data, no ML\u2026"
+  },
+  {
+   "arxiv_id": "2303.04963v1",
+   "title": "Predicting Elite NBA Lineups Using Individual Player Order Statistics",
+   "ledger": "1300",
+   "ledger_path": "arxiv-deep/1300-predicting-elite-nba-lineups-using-order-statistics.md",
+   "source": "pdf",
+   "verdict": "ADAPT",
+   "key_result": "unanimous-consent classifier ensemble that identifies elite five-man NBA lineups from individual-player order statistics without requiring the five to have play\u2026"
+  },
+  {
+   "arxiv_id": "2212.12504v1",
+   "title": "Parametric Post-Processing of Dual-Resolution Precipitation Forecasts",
+   "ledger": "1301",
+   "ledger_path": "arxiv-deep/1301-parametric-post-processing-dual-resolution-precipitation.md",
+   "source": "pdf",
+   "verdict": "ADAPT",
+   "key_result": "censored shifted gamma EMOS post-processing that fuses a 9 km deterministic forecast with a 51-member 18 km ensemble, with semi-local clustering that matches st\u2026"
+  },
+  {
+   "arxiv_id": "2208.04360v2",
+   "title": "SDWPF: A Dataset for Spatial Dynamic Wind Power Forecasting",
+   "ledger": "1302",
+   "ledger_path": "arxiv-deep/1302-sdwpf-dataset-spatial-dynamic-wind-power-forecasting.md",
+   "source": "pdf",
+   "verdict": "ADAPT",
+   "key_result": "a 4\u2026"
+  },
+  {
+   "arxiv_id": "2003.05854v1",
+   "title": "Spatial Modeling of Heavy Precipitation by Coupling Weather Station Recordings and Ensemble Forecasts with Max-Stable Processes",
+   "ledger": "1303",
+   "ledger_path": "arxiv-deep/1303-spatial-modeling-heavy-precipitation-max-stable-processes.md",
+   "source": "pdf",
+   "verdict": "ADAPT",
+   "key_result": "data-driven max-stable processes that fuse ensemble forecast fields with station extremes, reproducing nugget effects and spatial non-stationarity with a single\u2026"
+  },
+  {
+   "arxiv_id": "2409.13934v1",
+   "title": "On the Extrapolation of Generative Adversarial Networks for Downscaling Precipitation Extremes in Warmer Climates",
+   "ledger": "1304",
+   "ledger_path": "arxiv-deep/1304-extrapolation-of-gans-downscaling-precipitation-extremes.md",
+   "source": "pdf",
+   "verdict": "ADAPT",
+   "key_result": "conditional GANs trained only on historical climate retain 77% of the future increase in extreme precipitation (vs 63\u201365% for deterministic downscalers), provin\u2026"
+  },
+  {
+   "arxiv_id": "2109.15239v1",
+   "title": "Multi Scale Graph Wavenet for Wind Speed Forecasting",
+   "ledger": "1305",
+   "ledger_path": "arxiv-deep/1305-multi-scale-graph-wavenet-wind-speed-forecasting.md",
+   "source": "pdf",
+   "verdict": "ADAPT",
+   "key_result": "spatiotemporal graph forecasting with a learned adjacency matrix that beats state-of-the-art wind-speed baselines by 4\u20135% across 6/12/18/24-hour horizons; the m\u2026"
+  },
+  {
+   "arxiv_id": "2507.06122",
+   "title": "A Bayesian circular mixed-effects model for explaining variability in directional movement in American football",
+   "ledger": "1309",
+   "ledger_path": "arxiv-deep/1309-bayesian-circular-mixed-effects-model-for.md",
+   "source": "pdf",
+   "verdict": "ADAPT",
+   "key_result": "new Bayesian circular-statistics capability for NFL tracking data; player turn-angle-variability random effects transfer directly to YAC / broken-tackle / evasi\u2026"
+  }
+ ],
+ "counts": {
+  "ADAPT": 12,
+  "ADOPT": 0,
+  "REJECT": 7
+ }
+}

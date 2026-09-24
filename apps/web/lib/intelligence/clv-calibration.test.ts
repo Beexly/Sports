@@ -208,4 +208,24 @@ describe("loadClvForward (gated by design)", () => {
     const r = loadClvForward({ oddsApiKey: "test-key" });
     expect(r.status).toBe("gated");
   });
+
+  it("decidedBeatCloseRate excludes exact-zero ties from both sides (push doctrine)", () => {
+    const pairs: ClvPair[] = [
+      { modelProb: 0.58, closingProb: 0.5238 }, // beat
+      { modelProb: 0.45, closingProb: 0.5238 }, // lost
+      { modelProb: 0.5238, closingProb: 0.5238 }, // exact tie
+    ];
+    const r = rollupClv(pairs);
+    expect(r.count).toBe(3);
+    expect(r.beatCloseRate).toBeCloseTo(1 / 3, 4); // all-graded denominator
+    expect(r.decidedBeatCloseRate).not.toBeNull();
+    expect(r.decidedBeatCloseRate).toBeCloseTo(0.5, 4); // 1 beat / 2 decided
+  });
+
+  it("decidedBeatCloseRate is null when every pair tied (never coerced to 0)", () => {
+    const r = rollupClv([{ modelProb: 0.5238, closingProb: 0.5238 }]);
+    expect(r.count).toBe(1);
+    expect(r.beatCloseRate).toBe(0);
+    expect(r.decidedBeatCloseRate).toBeNull();
+  });
 });

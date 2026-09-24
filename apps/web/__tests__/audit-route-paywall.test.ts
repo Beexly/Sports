@@ -44,6 +44,10 @@ vi.mock("@sports/db", () => ({
     pick: { findUnique: mocks.pickFindUnique },
     sourceSnapshot: { findMany: mocks.sourceSnapshotFindMany },
   },
+  // `isStubMode` is read on the path to this handler; an omitted export makes
+  // every read throw, and callers that absorb it serve a fallback while the
+  // file still reports green. Production default: a real DB is not stubbed.
+  isStubMode: () => false,
 }));
 // Readiness gates: force the public-picks gate ON so the route reaches the
 // tier branches (else it 503s). The three history gates feed the detailed

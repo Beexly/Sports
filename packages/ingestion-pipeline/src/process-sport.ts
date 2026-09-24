@@ -24,6 +24,9 @@
 
 import { db } from "@sports/db";
 import {
+  supersedeUnpublishedPendingPick,
+} from "./supersede-unpublished-pick.js";
+import {
   OddsApiClient,
   DataNormalizer,
   MARKETS,
@@ -71,6 +74,7 @@ import type {
   SignalCategory,
   OddsApiEvent,
 } from "@sports/types";
+import { CANONICAL_MODEL_VERSION } from "@sports/types";
 import { recordSourceSnapshot } from "./source-snapshot.js";
 import {
   resolveCanonicalGame,
@@ -100,6 +104,7 @@ import {
   type FixtureConfirmation,
   type FixtureProbe,
 } from "./fixture-confirmation.js";
+import { persistGateDecisions, type GateDecisionInput } from "./gate-decision-sink.js";
 
 /**
  * Spend guard (GSE-SEC-039).
@@ -944,6 +949,7 @@ export async function processSport(
     let skippedInPlay = 0;
     // Games that passed the guard; the pick loop below refuses any other gameId.
     const confirmedGameIds = new Set<string>();
+    const gateDecisionsToPersist: GateDecisionInput[] = [];
 
     // Build OddsInputs with full context enrichment
     const oddsInputs: OddsInput[] = [];
@@ -962,6 +968,16 @@ export async function processSport(
       const fixture = fixtureFor(gameRecord.id);
       if (!fixture || fixture.status !== "confirmed") {
         fixtureUnconfirmed += 1;
+        gateDecisionsToPersist.push({
+          gameId: gameRecord.id,
+          pickId: null,
+          status: "GATED",
+          reasonCode: "UNCONFIRMED_FIXTURE",
+          reason: "Fixture unconfirmed on official ESPN scoreboard schedule",
+          modelVersion: CANONICAL_MODEL_VERSION,
+          isBootstrap,
+          evaluatedAt: fetchedAt,
+        });
         if (fixtureBatch.status === "ok") {
           const line = formatFixtureLine({
             id: gameRecord.id,
@@ -1018,6 +1034,16 @@ export async function processSport(
       if (hasKickedOff(kickoff, fetchedAt)) {
         skippedInPlay += 1;
         console.warn(`${logPrefix} ${sport.key}: ${inPlaySkipLine(gameRecord.id, kickoff, fetchedAt)}`);
+        gateDecisionsToPersist.push({
+          gameId: gameRecord.id,
+          pickId: null,
+          status: "GATED",
+          reasonCode: "IN_PLAY",
+          reason: "Game already underway or completed; pre-game scoring locked",
+          modelVersion: CANONICAL_MODEL_VERSION,
+          isBootstrap,
+          evaluatedAt: fetchedAt,
+        });
         continue;
       }
       confirmedGameIds.add(gameRecord.id);
@@ -1199,6 +1225,7 @@ export async function processSport(
 
     const scoredPicks = scoreGames(oddsInputs, fetchedAt);
     let picksGenerated = 0;
+    const publishedGameIds = new Set<string>();
 
     for (const pick of scoredPicks) {
       // Fixture guard (C-111): no pick is created or refreshed for a game the
@@ -1266,11 +1293,88 @@ export async function processSport(
       // a unique-key upsert, so check first and skip the rewrite when settled.
       const existingPick = await db.pick.findUnique({
         where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
-        select: { id: true, result: true, selection: true },
+        select: { id: true, result: true, selection: true, isPublished: true, line: true },
       });
 
+      // The CREATE payload — shared by both fresh-mint paths below: the normal
+      // empty-slot create, and the supersede create (an unpublished PENDING
+      // slot-holder was voided through the settlement outbox and the slot is
+      // free again). Identical fields either way: a fresh mint is a fresh mint,
+      // with origin fields and write-once locks created exactly once.
+      const createPickData = {
+        gameId: pick.gameId,
+        pickType: pick.pickType,
+        ingestionRunId: run.id,
+        isBootstrap,
+        isFeatured,
+        // CLV lock snapshot — the line/price we ACTUALLY published at, captured
+        // once at creation. Absent from the updateMany above, so the refresh
+        // cycle can never overwrite it. `Pick.line` is now frozen alongside it
+        // (see publishedTerms), so the two agree for the row's whole life.
+        // Moneyline `pick.line` holds the American price; spread/total `pick.line`
+        // holds the points line. Graded against the closing line at settlement.
+        clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
+        clvLockPrice: pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null,
+        // Book-line dispersion at lock — the CLV decomposition's liquidity
+        // regressor, captured write-once (absent from updateMany, like the
+        // CLV lock). For MONEYLINE this resolves to the PUBLISHED side (home vs
+        // away) via the canonical selectionIsHomeSide, so an away-ML pick
+        // locks the away side's disagreement. null when <2 books quoted the
+        // relevant side at publish.
+        bookDisagreementAtLock: bookDisagreementForPick(
+          pick,
+          dispersionByGame.get(pick.gameId),
+        ),
+        ...pickUpdateData,
+        // Minted in the same write as clvLockLine above, from the same
+        // `pick.line`, so display == lock == graded line from birth.
+        ...publishedTerms,
+      };
+
       let upsertedPick: { id: string };
-      if (existingPick && existingPick.result !== "PENDING") {
+      if (
+        existingPick &&
+        existingPick.result === "PENDING" &&
+        existingPick.isPublished === false
+      ) {
+        // SUPERSEDE — the slot is held by a row the stale-pick policy set
+        // isPublished=false on. See supersede-unpublished-pick.ts for the full
+        // lifecycle: unpublish is never undone by design, the refresh never
+        // re-publishes, and the unique (gameId, pickType) slot would block
+        // every future mint for this game and market forever — the measured
+        // cause of zero NFL Week 3 2026 spreads/totals on the board while all
+        // three scoring gates passed on every game. Void the invisible row
+        // through the settlement outbox (its terminus was already VOID via the
+        // zero-sit lane at kickoff+24h; this only moves that void earlier and
+        // records the accurate cause), then mint the fresh, fully gated pick
+        // with a new CLV lock at the current line.
+        //
+        // A PUBLISHED row never reaches this branch: the side-flip freeze, the
+        // write-once bet terms and the settled-frozen rule below apply to it in
+        // full. The stale-pick policy itself is unchanged.
+        const superseded = await supersedeUnpublishedPendingPick(db, {
+          pickId: existingPick.id,
+          gameId: pick.gameId,
+          sportKey: sport.key,
+          pickType: pick.pickType,
+          supersededSelection: existingPick.selection,
+          supersededBySelection: pick.selection,
+        });
+        if (superseded) {
+          upsertedPick = await db.pick.create({ data: createPickData });
+        } else {
+          // Lost the race: the row left the PENDING+unpublished state before
+          // our scoped void could take it — a settle/void lane now owns it and
+          // it is frozen exactly like the settled branch below. Nothing here
+          // creates against a row we did not just free.
+          console.warn(
+            `${logPrefix} supersede lost race: ${sport.key} ${pick.pickType} ` +
+              `slot "${existingPick.selection}" left PENDING+unpublished before ` +
+              `the void; keeping it this cycle`
+          );
+          upsertedPick = { id: existingPick.id };
+        }
+      } else if (existingPick && existingPick.result !== "PENDING") {
         // Frozen — leave the settled pick exactly as graded.
         upsertedPick = { id: existingPick.id };
       } else if (
@@ -1341,40 +1445,30 @@ export async function processSport(
         } else {
           // No existing PENDING pick — create one. Create sets origin fields
           // (ingestionRunId, isBootstrap, isFeatured) and write-once locks.
-          upsertedPick = await db.pick.create({
-            data: {
-              gameId: pick.gameId,
-              pickType: pick.pickType,
-              ingestionRunId: run.id,
-              isBootstrap,
-              isFeatured,
-              // CLV lock snapshot — the line/price we ACTUALLY published at, captured
-              // once at creation. Absent from the updateMany above, so the refresh
-              // cycle can never overwrite it. `Pick.line` is now frozen alongside it
-              // (see publishedTerms), so the two agree for the row's whole life.
-              // Moneyline `pick.line` holds the American price; spread/total `pick.line`
-              // holds the points line. Graded against the closing line at settlement.
-              clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
-              clvLockPrice: pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null,
-              // Book-line dispersion at lock — the CLV decomposition's liquidity
-              // regressor, captured write-once (absent from updateMany, like the
-              // CLV lock). For MONEYLINE this resolves to the PUBLISHED side (home vs
-              // away) via the canonical selectionIsHomeSide, so an away-ML pick
-              // locks the away side's disagreement. null when <2 books quoted the
-              // relevant side at publish.
-              bookDisagreementAtLock: bookDisagreementForPick(
-                pick,
-                dispersionByGame.get(pick.gameId),
-              ),
-              ...pickUpdateData,
-              // Minted in the same write as clvLockLine above, from the same
-              // `pick.line`, so display == lock == graded line from birth.
-              ...publishedTerms,
-            },
-          });
+          upsertedPick = await db.pick.create({ data: createPickData });
         }
       }
       picksGenerated++;
+      publishedGameIds.add(pick.gameId);
+      gateDecisionsToPersist.push({
+        gameId: pick.gameId,
+        pickId: upsertedPick.id,
+        status: "PUBLISHED",
+        reasonCode: "PUBLISHED",
+        reason: `Published ${pick.pickType} pick (${pick.selection} ${pick.line > 0 ? `+${pick.line}` : pick.line}) with confidence ${pick.confidence}`,
+        confidence: pick.confidence,
+        edgeIndex: pick.edgeScore,
+        modelVersion: pick.modelVersion,
+        isBootstrap,
+        evaluatedAt: fetchedAt,
+        evidenceRefs: {
+          pickType: pick.pickType,
+          selection: pick.selection,
+          line: pick.line,
+          bookmakerCount: pick.bookmakerCount,
+          pickGrade: pick.pickGrade,
+        },
+      });
 
       // Capture PickSignalSnapshot — immutable record of signal state at prediction time.
       // Created ONCE (update:{} ensures existing snapshots are never overwritten).
@@ -1475,6 +1569,34 @@ export async function processSport(
         );
       }
     }
+
+    // Record audit decisions for games evaluated in oddsInputs that produced no published pick
+    for (const input of oddsInputs) {
+      if (!publishedGameIds.has(input.gameId)) {
+        const isThin = (input.bookmakerOdds?.length ?? 0) < 2;
+        gateDecisionsToPersist.push({
+          gameId: input.gameId,
+          pickId: null,
+          status: "GATED",
+          reasonCode: isThin ? "INSUFFICIENT_BOOKMAKERS" : "NO_CONVICTION_EDGE",
+          reason: isThin
+            ? "Market depth insufficient: fewer than 2 distinct bookmakers quoting line"
+            : "Line within market efficiency band; model conviction below publishing threshold",
+          confidence: null,
+          edgeIndex: null,
+          modelVersion: CANONICAL_MODEL_VERSION,
+          isBootstrap,
+          evaluatedAt: fetchedAt,
+          evidenceRefs: {
+            bookmakerCount: input.bookmakerOdds?.length ?? 0,
+            markets: Array.from(new Set(input.bookmakerOdds?.map((o) => o.market) ?? [])),
+          },
+        });
+      }
+    }
+
+    // Persist immutable gate decisions audit trail (GSE-GATE-094 recovery)
+    await persistGateDecisions(gateDecisionsToPersist);
 
     await db.ingestionRun.update({
       where: { id: run.id },

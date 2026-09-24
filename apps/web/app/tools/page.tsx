@@ -22,7 +22,7 @@ import { FormulaPlaque } from "@/components/tools/formula-plaque";
 export const metadata: Metadata = {
   title: "Free Betting Calculators: EV, No-Vig, Odds, Parlay",
   description:
-    "Free calculators: EV, no-vig, odds converter, parlay, line movement, and CLV. No account, no paywall, no affiliate links, no track-record claims — every result shows its formula.",
+    "Free calculators: EV, no-vig, odds converter, parlay, line movement, and CLV. No account, no paywall, no affiliate links, no track-record claims, every result shows its formula.",
   alternates: { canonical: "/tools" },
 };
 
@@ -49,7 +49,7 @@ const CALCULATORS = [
     title: "Odds Converter",
     href: "/tools/odds-converter",
     body: "American, decimal, and implied probability, all from one input. Type a price in either format and see all three update together.",
-    when: "Anytime a price is in a format you don't use — or you want the probability behind it.",
+    when: "Anytime a price is in a format you don't use, or you want the probability behind it.",
     formula: "decimal = 1 + A/100  (A > 0)",
     accentBar: "bg-plasma",
     accentText: "text-plasma-glow",
@@ -66,7 +66,7 @@ const CALCULATORS = [
   {
     title: "Line Movement",
     href: "/tools/line-movement",
-    body: "Enter an open price and a current price. See implied-probability shift — pure arithmetic, no sharp/public claims.",
+    body: "Enter an open price and a current price. See implied-probability shift, pure arithmetic, no sharp/public claims.",
     when: "When the number moved and you want to know by how much, in probability terms.",
     formula: "Δimpl = impl(current) − impl(open)",
     accentBar: "bg-plasma",
@@ -75,7 +75,7 @@ const CALCULATORS = [
   {
     title: "CLV Calculator",
     href: "/tools/clv-calculator",
-    body: "Closing-line value in basis points from your decision price vs the close. Your prices only — not a Galaxy track-record claim.",
+    body: "Closing-line value in basis points from your decision price vs the close. Your prices only, not a Galaxy track-record claim.",
     when: "After the game: did your price beat the close? That's the honest scoreboard.",
     formula: "CLV bps = 10000 × (1/close − 1/decision)",
     accentBar: "bg-mineral",
@@ -94,7 +94,7 @@ const PRINCIPLES = [
   },
   {
     title: "Judgment calls are named, not hidden",
-    body: "Where more than one honest convention exists — the no-vig method, how a parlay's legs are assumed to combine — the page says so in a one-line note next to the result.",
+    body: "Where more than one honest convention exists, the no-vig method, how a parlay's legs are assumed to combine, the page says so in a one-line note next to the result.",
   },
 ] as const;
 
@@ -121,7 +121,7 @@ export default function ToolsHubPage(): JSX.Element {
                 Six free tools for the math behind a bet: expected value, fair
                 odds without the bookmaker margin, odds conversion, parlay combining,
                 line movement, and closing-line value. No account, no email, no
-                affiliate link — every result shows the formula and the moment
+                affiliate link, every result shows the formula and the moment
                 you&apos;d actually reach for it.
               </p>
             </Reveal>
@@ -182,7 +182,7 @@ export default function ToolsHubPage(): JSX.Element {
             <div className="mx-auto flex max-w-3xl flex-col items-center gap-5 text-center">
               <h2 className="font-display text-3xl tracking-tight text-ion-white sm:text-4xl">Want to see the model these formulas feed?</h2>
               <p className="text-sm leading-6 text-ion-1">
-                These calculators are generic — the same math anyone can run
+                These calculators are generic, the same math anyone can run
                 by hand. Our methodology page explains how the pick engine
                 itself reads the board.
               </p>

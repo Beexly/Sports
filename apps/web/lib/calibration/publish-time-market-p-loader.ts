@@ -1,7 +1,7 @@
 /**
  * WP-28 batch loader: for every settled two-way MONEYLINE pick in the sample,
- * fetch its game's H2H odds rows in ONE query and build the synchronous
- * resolver hook that live-calibration-p.ts accepts.
+ * resolve its publish-time market probability from the append-only odds table
+ * and build the synchronous resolver hook that live-calibration-p.ts accepts.
  *
  * C-301 (2026-09-09): a pick that carries a proof receipt or a factor-breakdown
  * market fair IS a candidate. Since C-298 the builder reads the odds table
@@ -12,12 +12,49 @@
  * opposite of what those two rows intended. The odds table decides, for every
  * pick, whether it can price the pick at generatedAt.
  *
- * Zero writes. Read-only against the append-only odds table. The query is
- * bounded by the candidates' gameIds and by the latest generatedAt among them;
- * the per-pick "at or before its own generatedAt" cut is applied by the pure
- * resolver (publish-time-market-p.ts). Fails soft: if the odds table cannot be
- * read, the resolver returns null for every pick and `stats.note` says why, so
- * the sample simply keeps counting those picks as excluded. Nothing is invented.
+ * OOM FIX (2026-09-19): the original implementation issued ONE findMany over
+ * `gameId IN (all candidate games), market H2H, fetchedAt <= maxGeneratedAt`
+ * with no lower bound and no take. The odds table appends a full snapshot every
+ * refresh cycle, so that WHERE clause returned every H2H row ever fetched for
+ * every candidate game. Measured against production on 2026-09-19: 1,641,812
+ * rows for the then-current candidate set, which the Vercel function cannot
+ * hold; the function was killed for memory on every call. That killed the
+ * calibration-metrics cron, the autonomy cycle, and every truth-surface read
+ * that had to seed the durable artifact — the external watchdog had not seen a
+ * green run since 2026-09-13 16:53 UTC.
+ *
+ * The replacement issues the two queries the resolver's semantics actually
+ * need. resolvePublishTimeMarketP consumes, per pick, at most the LATEST
+ * eligible row per bookmaker at or before the pick's generatedAt
+ * (latestH2hRowPerBookmaker). So:
+ *
+ *   Phase A (per chunk of distinct pick windows): groupBy(gameId, bookmaker)
+ *   over rows inside the pick's window [generatedAt - STALE_WINDOW_HOURS,
+ *   generatedAt], pre-filtered to exactly the eligibility the resolver applies
+ *   in memory (market H2H, a real bookmaker key, both prices finite non-null
+ *   non-zero), taking _max(fetchedAt). This is the latest usable quote per
+ *   book within the window.
+ *
+ *   Phase B (same chunk): findMany of exactly those winning rows, keyed by
+ *   (gameId, bookmaker, fetchedAt), with a hard take as a circuit breaker.
+ *
+ * The pre-filter mirrors isRealBookmakerKey/isQuotedPrice so the row Phase A
+ * selects is the same row the in-memory scan would have selected; the resolver
+ * still re-checks eligibility on everything Phase B returns, so the two-phase
+ * shape cannot smuggle in a row the resolver would reject.
+ *
+ * The STALE_WINDOW_HOURS floor is the one behavior change, and it is a honesty
+ * tightening, not a relaxation: a pick whose freshest pre-generation quote is
+ * older than the window no longer resolves from that stale price (measured
+ * 2026-09-19: p50 gap 0.00h, p90 0.09h, p99 288.8h — the affected tail is the
+ * ~1% of picks that would have been "priced" from quotes days to months old).
+ * Those picks fall through to the receipt/factor-breakdown fallback or are
+ * excluded, and the floor is carried on the stats so the artifact shows it.
+ *
+ * Zero writes. Read-only against the append-only odds table. Fails soft: if
+ * the odds table cannot be read, the resolver returns null for every pick and
+ * `stats.note` says why, so the sample simply keeps counting those picks as
+ * excluded. Nothing is invented.
  *
  * Candidates are decided on pre-outcome, structural attributes only: settled
  * WIN/LOSS, MONEYLINE, not a three-way moneyline sport (the engine's own
@@ -43,15 +80,58 @@ import {
   type PublishTimeMarketPSource,
   type PublishTimeMarketPUnresolvedReason,
 } from "@/lib/calibration/publish-time-market-p";
+import { NON_BOOK_BOOKMAKER_KEYS } from "@sports/prediction-engine";
+
+/**
+ * How far back before a pick's generatedAt the loader will look for quotes.
+ * The odds table snapshots every refresh cycle; a quote older than this is not
+ * a publish-time market price by any honest reading (measured 2026-09-19: 99%
+ * of resolvable picks sit within minutes-to-hours of their quotes). The value
+ * is carried on the stats so the metrics artifact states its own window.
+ */
+export const MARKET_P_STALE_WINDOW_HOURS = 48;
+
+/** Distinct pick windows per odds-table query pair. Bounds the WHERE clause and every reply. */
+const WINDOWS_PER_QUERY = 25;
+
+/** Circuit breaker on Phase B: a reply larger than this is truncated and reported, never held. */
+const MAX_ROWS_PER_FETCH = 10_000;
+
+/** One distinct (gameId, generatedAt) resolution window. */
+type PickWindow = { readonly gameId: string; readonly at: Date };
+
+/** Phase A reply shape: the latest eligible quote time per (game, book) in a window. */
+type LatestQuoteRow = {
+  readonly gameId: string;
+  readonly bookmaker: string;
+  readonly _max: { readonly fetchedAt: Date | null };
+};
 
 /** The slice of the Prisma client this loader reads (structural, mockable). */
 export type OddsTableDb = {
   readonly odds: {
+    groupBy: (args: {
+      by: ["gameId", "bookmaker"];
+      where: {
+        OR: Array<{
+          gameId: string;
+          market: "H2H";
+          bookmaker: { notIn: readonly string[] };
+          homePrice: { not: number };
+          awayPrice: { not: number };
+          fetchedAt: { gte: Date; lte: Date };
+        }>;
+      };
+      _max: { fetchedAt: true };
+    }) => Promise<readonly LatestQuoteRow[]>;
     findMany: (args: {
       where: {
-        gameId: { in: string[] };
-        market: "H2H";
-        fetchedAt: { lte: Date };
+        OR: Array<{
+          gameId: string;
+          bookmaker: string;
+          market: "H2H";
+          fetchedAt: { gte: Date; lte: Date };
+        }>;
       };
       select: {
         gameId: true;
@@ -60,6 +140,7 @@ export type OddsTableDb = {
         awayPrice: true;
         fetchedAt: true;
       };
+      take: number;
     }) => Promise<readonly OddsRowForMarketP[]>;
   };
 };
@@ -78,7 +159,10 @@ export type OddsTableMarketPStats = {
   /** Settled two-way MONEYLINE picks sent to the odds table (receipted or not, C-301). */
   readonly candidates: number;
   readonly gamesQueried: number;
-  /** Number of odds-table queries issued: 0 when there were no candidates, else 1. */
+  /**
+   * Number of odds-table queries issued: 0 when there were no candidates, else
+   * two per window chunk (Phase A groupBy + Phase B exact-row fetch).
+   */
   readonly queries: number;
   readonly oddsRows: number;
   /** Every resolved candidate, whichever book count. */
@@ -88,6 +172,12 @@ export type OddsTableMarketPStats = {
   readonly unresolved: OddsTableUnresolvedCounts;
   /** Set only when the odds table could not be read; the sample then excludes every candidate. */
   readonly note: string | null;
+  /** OOM fix (2026-09-19): the stale-window floor in hours, present on new artifacts. */
+  readonly staleWindowHours?: number;
+  /** OOM fix: rows Phase B actually returned — the reduced, resolver-relevant set. */
+  readonly rowsAfterReduction?: number;
+  /** OOM fix: true only if the Phase B circuit breaker truncated a reply. */
+  readonly rowsCapped?: boolean;
 };
 
 export type PublishTimeMarketPResolverLoad = {
@@ -135,6 +225,45 @@ export function oddsTableCandidate(pick: PickForLiveCal): PickForMarketP | null 
   return { id, gameId, generatedAt, selection, homeTeamName, awayTeamName };
 }
 
+function distinctWindows(candidates: readonly PickForMarketP[]): PickWindow[] {
+  const seen = new Map<string, PickWindow>();
+  for (const c of candidates) {
+    const key = `${c.gameId}\u0000${c.generatedAt.getTime()}`;
+    if (!seen.has(key)) seen.set(key, { gameId: c.gameId, at: c.generatedAt });
+  }
+  return [...seen.values()].sort((a, b) =>
+    a.gameId === b.gameId
+      ? a.at.getTime() - b.at.getTime()
+      : a.gameId.localeCompare(b.gameId),
+  );
+}
+
+function chunk<T>(items: readonly T[], size: number): T[][] {
+  const out: T[][] = [];
+  for (let i = 0; i < items.length; i += size) out.push(items.slice(i, i + size));
+  return out;
+}
+
+/**
+ * Phase A WHERE arm for one window: the eligibility the in-memory resolver
+ * applies, expressed in SQL so the "latest quote per book" is the same row the
+ * resolver would have picked from an unbounded fetch. Prices: finite non-null
+ * non-zero in JS; `not: 0` excludes NULL and 0 in SQL. Bookmaker: not a
+ * non-book key. Window: at or before the pick's generatedAt, no older than the
+ * stale window.
+ */
+function windowArm(w: PickWindow, windowMs: number) {
+  const at = w.at.getTime();
+  return {
+    gameId: w.gameId,
+    market: "H2H" as const,
+    bookmaker: { notIn: [...NON_BOOK_BOOKMAKER_KEYS] },
+    homePrice: { not: 0 },
+    awayPrice: { not: 0 },
+    fetchedAt: { gte: new Date(at - windowMs), lte: new Date(at) },
+  };
+}
+
 export async function loadPublishTimeMarketPResolver(
   db: OddsTableDb,
   picks: readonly PickForLiveCal[],
@@ -148,27 +277,61 @@ export async function loadPublishTimeMarketPResolver(
     return { resolveMarketP: NULL_MARKET_PROBABILITY_RESOLVER, stats: emptyOddsTableMarketPStats() };
   }
 
+  const windows = distinctWindows(candidates);
   const gameIds = [...new Set(candidates.map((c) => c.gameId))].sort();
-  let latestMs = Number.NEGATIVE_INFINITY;
-  for (const c of candidates) latestMs = Math.max(latestMs, c.generatedAt.getTime());
-  const latestGeneratedAt = new Date(latestMs);
+  const windowMs = MARKET_P_STALE_WINDOW_HOURS * 3_600_000;
 
-  let rows: readonly OddsRowForMarketP[];
+  let rows: OddsRowForMarketP[] = [];
+  let queries = 0;
+  let rowsCapped = false;
   try {
-    rows = await db.odds.findMany({
-      where: {
-        gameId: { in: gameIds },
-        market: "H2H",
-        fetchedAt: { lte: latestGeneratedAt },
-      },
-      select: {
-        gameId: true,
-        bookmaker: true,
-        homePrice: true,
-        awayPrice: true,
-        fetchedAt: true,
-      },
-    });
+    for (const group of chunk(windows, WINDOWS_PER_QUERY)) {
+      // Phase A: latest eligible quote per (game, book) within each window.
+      queries += 1;
+      const latest = await db.odds.groupBy({
+        by: ["gameId", "bookmaker"],
+        where: { OR: group.map((w) => windowArm(w, windowMs)) },
+        _max: { fetchedAt: true },
+      });
+      const winners = latest.filter(
+        (r): r is LatestQuoteRow & { _max: { fetchedAt: Date } } => r._max.fetchedAt != null,
+      );
+      if (winners.length === 0) continue;
+
+      // Phase B: fetch exactly the winning rows, deduped across overlapping windows.
+      const armKeys = new Set<string>();
+      const arms: Array<{
+        gameId: string;
+        bookmaker: string;
+        market: "H2H";
+        fetchedAt: { gte: Date; lte: Date };
+      }> = [];
+      for (const w of winners) {
+        const key = `${w.gameId}\u0000${w.bookmaker}\u0000${w._max.fetchedAt.getTime()}`;
+        if (armKeys.has(key)) continue;
+        armKeys.add(key);
+        arms.push({
+          gameId: w.gameId,
+          bookmaker: w.bookmaker,
+          market: "H2H",
+          fetchedAt: { gte: w._max.fetchedAt, lte: w._max.fetchedAt },
+        });
+      }
+      queries += 1;
+      const fetched = await db.odds.findMany({
+        where: { OR: arms },
+        select: {
+          gameId: true,
+          bookmaker: true,
+          homePrice: true,
+          awayPrice: true,
+          fetchedAt: true,
+        },
+        take: MAX_ROWS_PER_FETCH,
+      });
+      if (fetched.length >= MAX_ROWS_PER_FETCH) rowsCapped = true;
+      rows = rows.concat(fetched as OddsRowForMarketP[]);
+    }
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     return {
@@ -176,7 +339,7 @@ export async function loadPublishTimeMarketPResolver(
       stats: {
         candidates: candidates.length,
         gamesQueried: gameIds.length,
-        queries: 1,
+        queries,
         oddsRows: 0,
         resolved: 0,
         resolvedSingleBook: 0,
@@ -213,12 +376,15 @@ export async function loadPublishTimeMarketPResolver(
     stats: {
       candidates: candidates.length,
       gamesQueried: gameIds.length,
-      queries: 1,
+      queries,
       oddsRows: rows.length,
       resolved: byPickId.size,
       resolvedSingleBook,
       unresolved,
       note: null,
+      staleWindowHours: MARKET_P_STALE_WINDOW_HOURS,
+      rowsAfterReduction: rows.length,
+      rowsCapped,
     },
   };
 }
@@ -258,9 +424,14 @@ export function marketPSourcesFromBySource(
 export function oddsTableStatsNote(stats: OddsTableMarketPStats): string {
   const u = stats.unresolved;
   const tail = stats.note ? ` ${stats.note}.` : "";
+  const reduction =
+    stats.staleWindowHours != null
+      ? ` Bounded recompute: ${stats.staleWindowHours}h window, ${stats.rowsAfterReduction ?? stats.oddsRows} rows after reduction${stats.rowsCapped ? ", REPLY TRUNCATED (rowsCapped)" : ""};`
+      : "";
   return (
     `Odds-table recompute (WP-28, single book since C-110): candidates ${stats.candidates}, games ${stats.gamesQueried}, ` +
-    `queries ${stats.queries}, rows ${stats.oddsRows}, resolved ${stats.resolved} (single book ${stats.resolvedSingleBook}); ` +
-    `unresolved no_rows ${u.no_rows}, no_usable_book ${u.no_usable_book}, insufficient_books ${u.insufficient_books}, no_side ${u.no_side}.${tail}`
+    `queries ${stats.queries}, rows ${stats.oddsRows}, resolved ${stats.resolved} (single book ${stats.resolvedSingleBook});` +
+    `${reduction}` +
+    ` unresolved no_rows ${u.no_rows}, no_usable_book ${u.no_usable_book}, insufficient_books ${u.insufficient_books}, no_side ${u.no_side}.${tail}`
   );
 }

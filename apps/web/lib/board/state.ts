@@ -303,12 +303,36 @@ function extractRankingFromFb(
   return { rankingP, rankingSource };
 }
 
+/**
+ * The board day is the US EASTERN calendar day, not the process zone.
+ *
+ * This read `new Date()` + `setHours(0,0,0,0)`, i.e. midnight in whatever zone
+ * the Node process runs in, which is UTC on Vercel. The window therefore ended
+ * at 00:00 UTC, which is 8:00pm ET. From 8pm ET onward the board's "today" was
+ * already TOMORROW, so on an NFL Sunday the whole afternoon slate (1:00pm and
+ * 4:25pm ET kickoffs) dropped out of the gated and scoring lanes mid-evening,
+ * while those games were still the day's story.
+ *
+ * It also disagreed with this function's own caller: the PUBLISHED rows below
+ * already resolve on the Eastern slate window (`resolveSlateWindow`), the
+ * convention /api/picks has used since 2026-09-05. One board calling a 7:00pm
+ * ET kickoff "today" in one lane and "tomorrow" in the next is a split a reader
+ * reads as a bug in the picks, not in the clock. Reusing the same helper is the
+ * point: a second spelling of a day boundary is how the lanes drifted apart.
+ *
+ * `resolveSlateWindow` is DST-correct; it reads the offset in force at that
+ * day's own midnight, so the 25-hour and 23-hour days resolve.
+ *
+ * NOTE for whoever revives the gate-decision writer: this boundary also bounds
+ * the `gateDecision.evaluatedAt` query below, and AGENTS.md reserves CENTRAL
+ * for that question ("what did we evaluate today" is not the game-day
+ * contract). That is moot today, because `gate_decisions` has had no writer
+ * since 2026-06-11 and returns zero rows in either zone, but it stops being
+ * moot the moment a writer lands. Split the two boundaries then; do not assume
+ * this one still speaks for both.
+ */
 function todayBounds(): { start: Date; end: Date } {
-
-  const start = new Date();
-  start.setHours(0, 0, 0, 0);
-  const end = new Date(start);
-  end.setDate(end.getDate() + 1);
+  const { start, end } = resolveSlateWindow(null, new Date());
   return { start, end };
 }
 

@@ -1,0 +1,52 @@
+# [0496] A novel methodological framework for analyzing the momentum effect in tennis singles (arXiv:2509.01243v1)
+
+**Citation:** Chang Du, Caiya Zhang, Likai Zhou (2026). *A novel methodological framework for analyzing the momentum effect in tennis singles*. arXiv:2509.01243v1. URL: https://arxiv.org/abs/2509.01243v1
+**Ledger completed:** 2026-09-21. **Read:** full text (HTML text extract, 3,514 lines).
+**Verdict:** ADAPT — port the framework's two genuinely transferable components to NFL: (a) CUSUM change-point detection on a drive-level composite performance index to operationalize "game flow" regime shifts, and (b) the χ²-streak-independence test as a falsifiable momentum protocol. Do not port BP+PSO; use GSE's existing models.
+
+## 1. Research question
+Can a four-stage framework — (1) χ² streak-independence test for momentum existence, (2) entropy-weight-method (EWM) composite momentum metric M_t, (3) CUSUM change-point detection with relative-distance shift intensity V_t, (4) BP neural network optimized by PSO for point-outcome prediction with SHAP interpretation — statistically verify momentum in tennis and improve point-outcome prediction?
+
+## 2. Dataset / schema
+2023 Wimbledon men's singles, 31 matches (after first two rounds), 32 athletes, 37 point-level variables (scores, server, aces, winners, unforced/forced errors, double faults, net points, break points, ball speed/spin, rally length, distance run), 7,284 point observations; public via MCM 2024 Problem C (mathmodels.org). Target: Player 1 point outcome (1=win, 0=loss). 16 constructed features across 4 dimensions (score dynamics, technical, stability/error, physical intensity); stepwise logistic-with-AUC selection → 6 features: x_3 (first serve), x_4 (lead status), x_6 (aces), x_7 (winners), x_9 (unforced errors), x_10 (net-point ratio). 80/20 train/test split.
+
+## 3. Method / model
+(1) Existence: 2×k contingency table (streak length W_1…W_7+ × extension/termination), Pearson χ² (k−1 df) or Fisher-Freeman-Halton exact test if cells <5. (2) Quantification: EWM — standardize features (positive/negative direction), p_it = z_it/Σz_it, e_i = −(1/ln T)Σ p_it ln(p_it+ε), w_i = (1−e_i)/Σ(1−e_i), M_t = Σ w_i z_it. Final-match weights: M_t = 0.3959z_3t + 0.1122z_4t + 0.0987z_6t + 0.1162z_7t + 0.1136z_9t + 0.1633z_10t (325 points in Alcaraz–Djokovic final). (3) CUSUM: C_t = M_t − μ + C_{t−1} − d; change point if |C_t| > h (threshold auto-tuned ±10% to hit target count); CP_t = +1/0/−1. 40 change points in the final (20 positive, 20 negative). (4) Shift intensity: V_{t_i} = CP_{t_i}·(D_max/D_i), linear interpolation between/beyond change points. (5) Prediction: BP neural net with PSO weight optimization (v_i(k+1) = ωv_i(k) + c_1r_1(p_best−p_i(k)) + c_2r_2(g_best−p_i(k))); four input scenarios Base / +M / +CP / +V; SHAP values φ_i = Σ_{S⊆F\{i}} |S|!(|F|−|S|−1)!/|F|! [f(S∪{i})−f(S)] for importance.
+
+## 4. Equations & assumptions
+χ² = Σ_iΣ_j (n_ij − n̂_ij)²/n̂_ij, n̂_ij = n_i·n_·j/n. EWM: z_it standardization, p_it proportions, e_i entropy, w_i weights, M_t composite. CUSUM: C_t = M_t − μ + C_{t−1} − d; CP_t sign map. V_t: V_{t_i} = CP_{t_i}(D_max/D_i) + interpolation. PSO velocity update; SHAP Shapley decomposition. Assumptions: momentum is a latent scalar representable as a weighted composite of technical features; EWM's "higher entropy ⇒ more informative" weighting is valid for sports performance features; CUSUM's reference mean μ is stable within a match; the χ² test's independence null correctly models "no momentum" (ignores serve-order and ability heterogeneity — Player 1 is the stronger player in most analyzed points, e.g., Alcaraz final); stepwise AUC selection on the same data used for the final model.
+
+## 5. Features / target
+Inputs: 6 selected features (first serve, lead status, aces, winners, unforced errors, net-point ratio) + M_t + CP_t + V_t. Target: next-point winner (binary), point-level horizon.
+
+## 6. Validation design
+χ² test on n=3,595 winning streaks across 31 matches. Prediction: single 80/20 split on point data from 31 matches; metrics precision/recall/F1/AUC across four input scenarios and four models (RF, SVM, LR, BP+PSO). No cross-validation, no time-ordered split (points pooled across matches), no calibration. The "trained on final match, validated on all 31" protocol in §3.4 contradicts the 80/20 description — split methodology is unclear.
+
+## 7. Numerical results / baselines
+Existence: χ² = 111.497, df=6, p = 9.51×10⁻¹⁸ → reject independence. Conditional P(W_next|W_k): 0.5503, 0.5801, 0.5741, 0.4597, 0.3929, 0.4000, 0.5435 (k=1..7+); P(W_next|L_k): 0.4698, 0.4429, 0.4301, 0.6124, 0.4056, 0.6140, 0.3500 — nonlinear, threshold-like at k=4. BP+PSO: Base AUC 0.7125 → +M 0.7253 → +CP 0.7315 → +M+CP+V 0.7443 (precision 0.6963, recall 0.6766, F1 0.6863). Models on full inputs: RF 0.6550, SVM 0.6383, LR 0.7310, BP+PSO 0.7443. SHAP top-4: X_9 unforced errors (negative), X_7 winners (positive), M (positive), V (negative); CP ranks last (subsumed by V).
+
+## 8. Code / data availability
+Data public (MCM 2024 Problem C, mathmodels.org). Code: not stated. References include Fry & Shukairy (2012) "Searching for momentum in the NFL" (JQAS) — an existing NFL-momentum null-result the authors don't engage with.
+
+## 9. Leakage & limitations
+- The χ² test treats points as independent draws from a homogeneous population, but Player 1 is typically the better player and servers alternate — the "streak extension" probabilities are confounded with ability and serve order; p=9.51×10⁻¹⁸ reflects n=3,595 more than a large effect (conditional probs only move ±0.05–0.10 around 0.5).
+- EWM weighting is unsupervised and data-driven per match — M_t's largest weight (0.3959 on first-serve indicator z_3) means "momentum" is dominated by serve status, a tautology: the momentum metric is mostly a serve proxy. Weights refit per match make M_t incomparable across matches.
+- CUSUM threshold is auto-tuned to hit a *target number* of change points — the 40 change points in the final are a tuning artifact, not a discovery; any series yields "change points" with this procedure.
+- BP+PSO vs LR: 0.7443 vs 0.7310 AUC is marginal and from a single 80/20 split with no significance testing; PSO adds optimization theater for a 1.3pp gain over logistic regression.
+- V_t's negative SHAP with positive M_t is unexplained mechanistically (high shift intensity hurts the player experiencing it? — possibly regression-to-the-mean after CUSUM extremes).
+- Ignores the cited Fry & Shukairy NFL momentum null; the "novelty" is the framework assembly, not any new statistical idea (all components are textbook: EWM, CUSUM, PSO, SHAP).
+
+## 10. GSE overlap
+Partially addressed in Garrett's corpus — with a verdict this paper should respect. The 2026-09-13 discovery lane REJECTED Koopman/DMD momentum (p=0.89) and found AR(1) beats DMD on drive sequences; existing work treats momentum as autocorrelation/dynamical-structure. This paper's momentum is different in construction: regime-shift detection (CUSUM change points on a composite index) rather than autocorrelation. So the overlap is on the question ("does in-game momentum exist?"), not the method. Fry & Shukairy (2012) already searched for NFL momentum with a null result — a direct NFL precedent this paper ignores. Transfer value: the χ² streak protocol and CUSUM flow-detection are cheap to run on nflverse and give a *distinct, falsifiable* test from the rejected DMD approach. Do not re-litigate momentum-as-autocorrelation; test momentum-as-regime-shift.
+
+## 11. GSE implementation spec
+(1) Data: nflverse 2015–2024, drive-level: for each drive compute composite flow index M_d = EWM over (EPA/drive, success rate, explosive-play rate, turnover indicator [negative], 3-and-out indicator [negative]) — no per-match refit; fix EWM weights on 2015–2019 training to keep M_d comparable. (2) Existence test: replicate the paper's χ² protocol on drive streaks (W_k = k consecutive successful drives by EPA>0; n likely >50k — power is ample). Also test on play level. (3) CUSUM on M_d within each game: fix d and h from training data (NOT auto-tuned per game — the paper's target-count tuning is circular); detect flow-regime shifts; V_d via the paper's relative-distance interpolation. (4) Plug M_d, CP_d, V_d as features into GSE's existing drive/game models — NOT BP+PSO (logistic/GBM per GSE stack). (5) SHAP on the fitted model. Effort: 3–5 days; everything is tabular.
+
+## 12. Reproducible test
+Dataset: nflverse drives 2015–2024. Protocol: (a) χ² streak-independence test on drive outcomes (report χ², p, conditional probs by streak length — the paper's Table 4 analogue); (b) add M_d/CP_d/V_d to GSE's game model, time-ordered holdout 2022–2024, metrics log-loss/Brier/AUC; (c) compare against the discovery lane's AR(1) drive model as the momentum-positive control. Must show: either the χ² test rejects with effect sizes ≥2pp on conditional win probs, or CUSUM features add ≥0.002 log-loss on holdout — otherwise accept the Fry & Shukairy null for this construction too.
+
+## 13. Acceptance / rejection gate
+ADOPT CUSUM flow features if they improve GSE's game-model log-loss ≥0.002 on the 2022–2024 holdout or the χ² test shows ≥2pp conditional-probability effects (decision-relevant, not just p-value) — this becomes the live "game flow" input for the 0494 in-game architecture. REJECT if no gain — the discovery lane's DMD rejection plus Fry & Shukairy (2012) would then be two independent NFL nulls, and momentum-as-feature is shelved in favor of AR(1) structure. Either outcome is publishable internally: the protocol is falsifiable by construction, which is more than the paper's per-match-tuned CUSUM can claim.
+
+## 14. Improvement experiment
+Replace the paper's unsupervised EWM composite with a supervised flow index: fit the composite weights to maximize next-drive EPA prediction (discriminative) rather than entropy dispersion, and fit CUSUM's (d, h) by maximizing change-point precision against labeled "turning point" drives (e.g., drives where live win probability moved ≥10pp). Hypothesis: a supervised flow index will show that the paper's EWM weights (serve-proxy-dominated in tennis; likely turnover-dominated in NFL) overweight salient-but-noisy features, and that optimally-tuned CUSUM detects fewer, sharper regime shifts — directly testing whether the paper's change points are signal or tuning artifacts.

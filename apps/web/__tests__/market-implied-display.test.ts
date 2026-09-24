@@ -143,6 +143,7 @@ vi.mock("@sports/db", () => ({
   db: {
     pick: { findMany: mocks.pickFindMany, count: mocks.pickCount },
   },
+  isStubMode: () => false,
 }));
 
 vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));

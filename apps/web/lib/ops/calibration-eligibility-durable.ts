@@ -820,7 +820,7 @@ async function seedMetricsIfMissing(): Promise<DurableMetricsPayload | null> {
       sportKey: pick.game?.sport?.key ?? null,
     }));
     // WP-28: one read-only odds query for the receipt-less moneyline picks.
-    const oddsTable = await loadPublishTimeMarketPResolver(db, rows);
+    const oddsTable = await loadPublishTimeMarketPResolver(db as never, rows);
     const built = picksToCalibrationSamples(rows, { resolveMarketP: oddsTable.resolveMarketP });
     const payload = buildDurableMetricsFromSamples({
       samples: built.samples,

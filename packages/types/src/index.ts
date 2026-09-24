@@ -890,3 +890,94 @@ export interface PublicBlogPost {
   publishedAt: string | null;
   isFeatured: boolean;
 }
+
+export * from "./signal-registry.js";
+
+// Canonical model version boundary constant
+export const CANONICAL_MODEL_VERSION = "v5.2.7";
+
+// ── CLV push-doctrine rates: three denominators, side by side ────────────────
+//
+// This repo's doctrine (AGENTS.md) is that a push is never averaged into a
+// published rate. MATCHED_CLOSE is the CLV analogue of a push: it is neither a
+// win nor a loss against the closing line. Whether a beat-close rate should
+// exclude MATCHED_CLOSE the way a push is excluded from a win rate has never
+// been decided anywhere in this codebase. Separately, the ESTABLISHED gate's
+// 0.524 threshold is the break-even win rate at -110 odds, a DECIDED-only
+// quantity, so a rate computed one way may be getting compared against a
+// threshold defined the other way. Nobody has established which one the gate
+// means.
+//
+// These types and this function do not decide that question and never will.
+// They surface all three readings side by side, each with its own explicit
+// denominator, so a reader sees the ambiguity instead of one silently-chosen
+// number:
+//
+//   decidedClvBeatRate   = BEAT_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE)
+//   allGradedClvBeatRate = BEAT_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE + MATCHED_CLOSE)
+//   clvPushRate          = MATCHED_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE + MATCHED_CLOSE)
+//
+// Purely additive reporting. No gate reads a specific reading as "the" rate;
+// each consumer states which reading it applies and why, beside the others.
+
+export interface ClvVerdictCounts {
+  readonly beatCloseCount: number;
+  readonly lostToCloseCount: number;
+  readonly matchedCloseCount: number;
+}
+
+export interface ClvPushDoctrineRates {
+  /**
+   * BEAT_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE). MATCHED_CLOSE, the push, is
+   * excluded from both the numerator and the denominator, mirroring the
+   * push-never-averaged doctrine. Null when there are zero decided rows: a
+   * real state, never coerced to 0.
+   */
+  readonly decidedClvBeatRate: number | null;
+  readonly decidedClvBeatDenominator: number;
+  /**
+   * BEAT_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE + MATCHED_CLOSE). The push is
+   * counted in the denominator, not the numerator. Null when there are zero
+   * graded rows.
+   */
+  readonly allGradedClvBeatRate: number | null;
+  readonly allGradedClvBeatDenominator: number;
+  /**
+   * MATCHED_CLOSE / (BEAT_CLOSE + LOST_TO_CLOSE + MATCHED_CLOSE). The CLV
+   * analogue of a push rate. Null when there are zero graded rows.
+   */
+  readonly clvPushRate: number | null;
+  readonly clvPushRateDenominator: number;
+}
+
+/**
+ * Pure. Computes the three readings from the verdict counts. Negative or
+ * non-finite counts are floored to 0 defensively, so a count is always a
+ * count. Shared by every surface that reports a CLV beat rate, so the three
+ * readings can never drift apart between surfaces.
+ */
+export function computeClvPushDoctrineRates(counts: ClvVerdictCounts): ClvPushDoctrineRates {
+  const beat = nonNegativeCount(counts.beatCloseCount);
+  const lost = nonNegativeCount(counts.lostToCloseCount);
+  const matched = nonNegativeCount(counts.matchedCloseCount);
+
+  const decidedDenominator = beat + lost;
+  const gradedDenominator = beat + lost + matched;
+
+  return {
+    decidedClvBeatRate: decidedDenominator > 0 ? round4(beat / decidedDenominator) : null,
+    decidedClvBeatDenominator: decidedDenominator,
+    allGradedClvBeatRate: gradedDenominator > 0 ? round4(beat / gradedDenominator) : null,
+    allGradedClvBeatDenominator: gradedDenominator,
+    clvPushRate: gradedDenominator > 0 ? round4(matched / gradedDenominator) : null,
+    clvPushRateDenominator: gradedDenominator,
+  };
+}
+
+function nonNegativeCount(value: number): number {
+  return Number.isFinite(value) ? Math.max(0, Math.floor(value)) : 0;
+}
+
+function round4(value: number): number {
+  return Math.round(value * 10000) / 10000;
+}

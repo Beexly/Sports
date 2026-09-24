@@ -76,8 +76,10 @@ describe("/board/gate — illustrative mode (the default)", () => {
 
     // These strings live in gate-consumer.ts. If the page ever stops calling
     // the real consumer, they disappear and this fails.
-    expect(text).toContain("not enough settled history");
-    expect(text).toContain("not a judgement about the game");
+    // These strings live in gate-consumer.ts. If the page ever stops calling
+    // the real consumer, they disappear and this fails.
+    expect(text).toContain("Not enough history in this category yet");
+    expect(text).toContain("not a judgment about the game");
   });
 
   it("states plainly that the inputs are illustrative and the logic is real", async () => {
@@ -104,9 +106,9 @@ describe("/board/gate — illustrative mode (the default)", () => {
     expect(text).toContain("No win rate, ROI, or performance result is asserted");
 
     // The page DOES print a lower-bound edge on fired rows — that number is
-    // evidence the gate really ran. It must therefore be labelled as arithmetic
-    // on illustrative inputs, or it reads as a measured edge and contradicts
-    // the non-claim directly above it.
+    // evidence the gate really ran. It must therefore be labelled as
+    // arithmetic on illustrative inputs, or it reads as a measured edge and
+    // contradicts the non-claim directly above it.
     expect(text).toContain("not a measured edge in any real market");
     expect(text).toContain("on illustrative inputs");
 

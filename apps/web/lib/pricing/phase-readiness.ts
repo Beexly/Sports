@@ -23,6 +23,14 @@ export interface PhaseReadinessMetrics {
   readonly calibrationPublished: boolean;
   /** Closing-line-value beat-close rate (0–1), or null when not yet measurable. */
   readonly beatCloseRate: number | null;
+  /**
+   * The same beat-close rate computed DECIDED-ONLY (ties excluded from both
+   * numerator and denominator, mirroring the push-never-averaged doctrine), or
+   * null when not provided. Purely additive disclosure: the eligibility check
+   * above reads only beatCloseRate — which reading the floor means is a
+   * founder decision, not this module's.
+   */
+  readonly beatCloseRateDecided?: number | null;
 }
 
 export interface PhaseAdvanceCheck {
@@ -33,6 +41,8 @@ export interface PhaseAdvanceCheck {
   readonly met: readonly string[];
   readonly unmet: readonly string[];
   readonly rationale: string;
+  /** The decided-only reading passed through beside the checked rate (or null). */
+  readonly beatCloseRateDecided: number | null;
 }
 
 function pct(value: number): string {
@@ -61,6 +71,7 @@ export function evaluatePhaseAdvance(
       met: [],
       unmet: [],
       rationale: `${current.name} is the top rung of the ladder. No further price increase is named.`,
+      beatCloseRateDecided: metrics.beatCloseRateDecided ?? null,
     };
   }
 
@@ -99,5 +110,6 @@ export function evaluatePhaseAdvance(
     met,
     unmet,
     rationale,
+    beatCloseRateDecided: metrics.beatCloseRateDecided ?? null,
   };
 }

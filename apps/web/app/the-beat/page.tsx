@@ -5,7 +5,8 @@ import { TheBeat } from "@/components/news/the-beat";
 import { GalaxyBroadcast } from "@/components/news/galaxy-broadcast";
 import { buildBroadcast } from "@/lib/fantasy/host";
 import { WIRE_DISCLAIMER, WIRE_LIVE_DISCLAIMER } from "@/lib/news/wire";
-import { fetchLiveWire } from "@/lib/news/rss";
+import { fetchLiveWireRead } from "@/lib/news/rss";
+import type { NewsItem } from "@/lib/news/impact";
 
 /**
  * The Beat.
@@ -27,10 +28,31 @@ export const metadata: Metadata = {
 export default async function TheBeatPage() {
   const broadcast = buildBroadcast();
   // Live RSS wire when NEWS_RSS_FEEDS is configured (headlines only,
-  // source-attributed, classified into the signal taxonomy); null keeps the
-  // clearly-labeled fictional sample. Fails soft: a feed outage falls back
-  // to whatever fetched, never fabricates.
-  const liveWire = await fetchLiveWire().catch(() => null);
+  // source-attributed, classified into the signal taxonomy); null means no
+  // feeds are configured, which is the one case that shows the labeled
+  // fictional sample.
+  //
+  // An OUTAGE is not that case. This used to read `.catch(() => null)`, and
+  // null is the sample signal, so a failed fetch put fiction on the page
+  // under a comment claiming it never fabricates. Failure now carries its own
+  // flag and the component renders "unavailable" instead.
+  //
+  // The try/catch this replaces could not actually fire: fetchLiveWire wraps
+  // its feeds in Promise.allSettled and swallows every per-feed failure into
+  // an empty array, so a total outage arrived here as a successful empty wire
+  // and rendered "No fresh reports", a sentence that asserts the wire is up
+  // and quiet. fetchLiveWireRead counts the feeds that actually answered, so
+  // down and quiet are now different values. The catch stays as a backstop for
+  // a throw the read does not model.
+  let liveWire: NewsItem[] | null = null;
+  let wireUnavailable = false;
+  try {
+    const read = await fetchLiveWireRead();
+    liveWire = read.unconfigured ? null : read.items;
+    wireUnavailable = read.unavailable;
+  } catch {
+    wireUnavailable = true;
+  }
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">
@@ -160,7 +182,7 @@ export default async function TheBeatPage() {
                 act before the number moves.
               </p>
             </div>
-            <TheBeat liveWire={liveWire} />
+            <TheBeat liveWire={liveWire} unavailable={wireUnavailable} />
             <p className="mt-6 text-xs leading-relaxed text-ion-2">
               {liveWire ? WIRE_LIVE_DISCLAIMER : WIRE_DISCLAIMER}
             </p>

@@ -190,8 +190,16 @@ export type MarketAnchoredPSource = "proof_receipt" | "factor_breakdown" | Marke
  *                       odds table prices at generatedAt; receipt-only and
  *                       factor-breakdown-only rows are counted as
  *                       unverifiable_market_p (57 on the first v3 run).
+ *   market_anchored_v5  OOM fix (2026-09-19): the odds-table loader stopped
+ *                       fetching all history (it pulled 1.64M rows and the
+ *                       function was killed for memory) and now prices from
+ *                       the 48h window before generatedAt only. Quotes older
+ *                       than that are not publish-time prices; picks they
+ *                       alone could price are excluded by reason and fall to
+ *                       the receipt/fallback path. Measured 2026-09-19: p50
+ *                       quote gap 0.00h, p90 0.09h, p99 288.8h.
  */
-export const MARKET_ANCHORED_P_BASIS = "market_anchored_v4" as const;
+export const MARKET_ANCHORED_P_BASIS = "market_anchored_v5" as const;
 export type MarketAnchoredPBasis = typeof MARKET_ANCHORED_P_BASIS;
 
 export type MarketAnchoredPResolution = {
