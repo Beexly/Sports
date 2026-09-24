@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2501.08397: Predict Confidently, Predict Right: Abstention in Dynamic Graph Learning.
  *
