@@ -61,3 +61,13 @@ OUT: Jayden Daniels (WAS), Jaxson Dart (NYG), Alec Pierce (IND). D: Caleb Willia
 
 ## Log
 - 2026-09-24: Garrett redirected from main slate to his weekly **Sunday-Monday slate** (starts Sun 12:00pm CT, ends with MNF). Full 767-player pool pulled read-only; contest + games + salaries logged above.
+
+## Case Keenum research (2026-09-24 — Garrett's ask)
+- **News verified:** Keenum expected to start MNF vs PHI (9/28) — Caleb Williams Grade 1 hamstring (not expected to practice), Tyson Bagent in concussion protocol. Keenum 38, last played 2023 (HOU). Full report: keenum-target-splits.md (nflverse pbp 2013–2023, n=2,270 Keenum targets).
+- **Career split:** WR 59.6% / TE 20.4% / RB 20.0% vs league 59.3% / 20.9% / 19.7% — **no positional favoritism at all.** Not a TE guy, not a checkdown guy.
+- **Rusty-return split (10 games, n=323):** actually MORE WR-heavy — 62.2% WR / 20.1% TE / 17.6% RB. The safety blanket is a person, not a position: 2019 Wk1 WAS Chris Thompson (RB) 23% of targets; 2021 Wk7 CLE Jarvis Landry (slot) 25%; 2023 Wk15 HOU Noah Brown 32%; 2022 Wk18 Landry 33%. Only outlier: 2019 Wk1 RB share spiked to 30%.
+- **Blanket follows the roster, not Keenum:** slot (Landry), receiving RB (Thompson), outside WR (Brown) — whoever owns the separation-friendly role in that scheme.
+- **Garrett's leverage takeaway:** don't bet a position, bet a person — identify Ben Johnson's designated Keenum guy (likely slot or primary receiving back) at low ownership. Caveats: one-game samples, Keenum 38, hasn't played since Dec 2023, zero history in this scheme.
+
+## Log
+- 2026-09-24: Keenum target-split study complete (career + layoff-return). Filed keenum-target-splits.md.
