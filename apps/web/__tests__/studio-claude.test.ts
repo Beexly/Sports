@@ -1,5 +1,6 @@
 import { describe, expect, it, vi } from "vitest";
 import { buildGameIntelligenceNode } from "@/lib/intelligence-graph";
+import { buildStudioNumericGrounding } from "@/lib/studio/build-assets";
 import {
   callClaudeForStudioAsset,
   evaluateStudioGeneratedBodyPolicy,
@@ -217,5 +218,114 @@ describe("Studio Claude generation", () => {
     expect(evaluateStudioGeneratedBodyPolicy("BETTING_EDUCATION", "You should bet this side.")).toEqual(
       expect.arrayContaining(["BE-RECOMMENDATION"])
     );
+  });
+
+  // Studio bodies are persisted to CreatorAsset and exported by creators under the
+  // platform's name, and the templates ask for "the actual numbers" — so the
+  // generation path must reject any stat the node never held. Grounding is the
+  // GAME DATA block ONLY: the templates' SYSTEM prompts carry example statistics
+  // (FANTASY_ANGLE illustrates prop movement as a "line moved from 7.5 to 8.5"),
+  // so grounding on the prompt would let the model's own instructions launder a
+  // fabricated number into "grounded".
+  describe("UNGROUNDED_NUMERIC", () => {
+    const CITE = "Source: PickSignalSnapshot #pick-bos-1";
+
+    function respondWith(text: string) {
+      return vi.fn(async () =>
+        new Response(
+          JSON.stringify({
+            content: [{ type: "text", text }],
+            usage: { input_tokens: 1000, output_tokens: 250 },
+          }),
+          { status: 200 }
+        )
+      );
+    }
+
+    it("excludes the template system prompt's example statistics from the grounding set", () => {
+      const grounded = buildStudioNumericGrounding(makeNode());
+
+      // 7.5 / 8.5 exist only in the FANTASY_ANGLE system prompt's illustration.
+      expect(grounded).not.toContain(7.5);
+      expect(grounded).not.toContain(8.5);
+      // The node's own verified values are there.
+      expect(grounded).toContain(4.5); // the pick's line, inside "Boston Celtics -4.5"
+      expect(grounded).toContain(1.5); // |line movement (spread)| = |-1.5|
+      expect(grounded).toContain(71); // Edge Index
+    });
+
+    it("rejects a prop line the model borrowed from its own system prompt", async () => {
+      const fetchImpl = respondWith(
+        `Milwaukee's prop line moved from 7.5 to 8.5 this week. ${CITE}`
+      );
+
+      await expect(
+        callClaudeForStudioAsset(
+          { node: makeNode(), templateKind: "FANTASY_ANGLE", context },
+          { apiKey: "test-key", fetchImpl }
+        )
+      ).rejects.toThrow("UNGROUNDED_NUMERIC");
+      expect(fetchImpl).toHaveBeenCalledOnce();
+    });
+
+    it("rejects a fabricated win rate the GAME DATA never stated", async () => {
+      const fetchImpl = respondWith(`Boston has covered 63% of these spots. ${CITE}`);
+
+      await expect(
+        callClaudeForStudioAsset(
+          { node: makeNode(), templateKind: "X_THREAD", context },
+          { apiKey: "test-key", fetchImpl }
+        )
+      ).rejects.toThrow("UNGROUNDED_NUMERIC");
+    });
+
+    it("rejects a fabricated record the GAME DATA never stated", async () => {
+      const fetchImpl = respondWith(`Boston is 9-2 at home since March. ${CITE}`);
+
+      await expect(
+        callClaudeForStudioAsset(
+          { node: makeNode(), templateKind: "X_THREAD", context },
+          { apiKey: "test-key", fetchImpl }
+        )
+      ).rejects.toThrow("UNGROUNDED_NUMERIC");
+    });
+
+    it("accepts a body whose numbers are the node's own verified values", async () => {
+      const fetchImpl = respondWith(
+        `Boston Celtics are laying 4.5 and the spread has moved 1.5 points. ${CITE}`
+      );
+
+      const body = await callClaudeForStudioAsset(
+        { node: makeNode(), templateKind: "X_THREAD", context },
+        { apiKey: "test-key", fetchImpl }
+      );
+
+      expect(body).toContain("laying 4.5");
+    });
+
+    it("records the numeric-guard failure on the usage ledger", async () => {
+      const fetchImpl = respondWith(`Boston has covered 63% of these spots. ${CITE}`);
+      const create = vi.fn().mockResolvedValue({ id: "record-ungrounded" });
+
+      await expect(
+        callClaudeForStudioAsset(
+          { node: makeNode(), templateKind: "X_THREAD", context },
+          {
+            apiKey: "test-key",
+            fetchImpl,
+            recordUsage: true,
+            usageClient: {
+              claudeApiCallRecord: { aggregate: vi.fn(), create },
+            },
+          }
+        )
+      ).rejects.toThrow("policy validation");
+
+      expect(create.mock.calls[0]?.[0].data).toMatchObject({
+        surface: "STUDIO_GENERATION",
+        success: false,
+        errorKind: "POLICY_UNGROUNDED_NUMERIC",
+      });
+    });
   });
 });

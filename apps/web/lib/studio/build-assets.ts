@@ -12,6 +12,7 @@ import {
   type RuleSeverity,
 } from "@/lib/compliance-scanner/rules";
 import { normalizeForComplianceScan } from "@/lib/compliance-scanner/normalize";
+import { extractNumericClaims } from "@/lib/claude-api/numeric-guard";
 import {
   STUDIO_TEMPLATES,
   type ClaudePrompt,
@@ -133,6 +134,53 @@ export function serializeNodeGameData(node: GameIntelligenceNode): string {
 
   lines.push("=== END GAME DATA ===");
   return lines.join("\n");
+}
+
+/**
+ * The numbers a generated Studio asset is ALLOWED to contain.
+ *
+ * Grounding is the GAME DATA block ONLY. It is deliberately NOT the template's
+ * system prompt — those carry EXAMPLE statistics (FANTASY_ANGLE's system prompt
+ * literally illustrates prop movement as a "line moved from 7.5 to 8.5"), so
+ * grounding on the system prompt would let the model's own instructions launder a
+ * fabricated stat into "grounded". It is also not the assembled `prompt.user`,
+ * which prefixes GAME DATA onto template instructions.
+ *
+ * The structured half of the set exists because signed values render as "-1.5"
+ * and "Boston Celtics -4.5", and the claim extractor deliberately skips a digit
+ * preceded by "-": without them the platform's own line would be missing from the
+ * grounding set while legitimate copy ("laying 4.5") would read as fabricated.
+ * Every value below is read off the verified node — the signed value and its
+ * magnitude are the SAME real number. Nothing the node does not hold is added.
+ */
+export function buildStudioNumericGrounding(node: GameIntelligenceNode): readonly number[] {
+  const mp = node.marketPulse;
+  const eh = node.evidenceHealth;
+  const values: number[] = [
+    ...extractNumericClaims(serializeNodeGameData(node)).map((claim) => claim.value),
+    mp.bookmakerCoverage,
+    mp.publishedPickCount,
+    eh.score,
+    eh.sourceCount,
+    eh.averageTrust,
+    eh.staleCount,
+    eh.bootstrapCount,
+  ];
+
+  for (const value of [mp.edgeIndex, mp.lineMovementSpread, mp.lineMovementTotal]) {
+    if (value !== null) values.push(value, Math.abs(value));
+  }
+
+  for (const pick of node.picks) {
+    values.push(pick.confidence, pick.edgeScore);
+    // The pick's own line lives inside the selection string ("Boston Celtics -4.5").
+    for (const token of pick.selection.match(/-?\d+(?:\.\d+)?/g) ?? []) {
+      const parsed = Number(token);
+      if (Number.isFinite(parsed)) values.push(parsed, Math.abs(parsed));
+    }
+  }
+
+  return values;
 }
 
 /**
