@@ -55,6 +55,8 @@ export function isBookmakerConsensusClaim(text: string | null | undefined): bool
  *
  * Rules:
  * - Must match the consensus teaser pattern.
+ * - Quantified claims require a resolved non-empty consensusProvider (fail-closed).
+ * - Refuse espn_public and *-thin providers (split on +).
  * - bookmakerCount ≥ 2 (MIN_BOOKMAKERS in prediction-engine).
  * - dataFreshnessAt present and parseable.
  * - consensusPct in (0, 1].
@@ -69,9 +71,12 @@ export function bindPublicConsensusClaim(
   const bookmakerCount = Math.floor(Number(pick.bookmakerCount ?? 0));
   if (!Number.isFinite(bookmakerCount) || bookmakerCount < 2) return null;
 
-  const provider = pick.consensusProvider?.trim().toLowerCase();
+  const provider = pick.consensusProvider?.trim().toLowerCase() ?? "";
+  // Fail-closed: quantified bookmaker-consensus claims require a resolved provider.
+  // Missing/null/empty/whitespace leaves the claim unbound (closes thin/espn hole
+  // when ODDS snapshot is absent and ingestion lookup returns nothing).
+  if (!provider) return null;
   if (
-    provider &&
     provider
       .split("+")
       .some((part) => part === "espn_public" || part.endsWith("-thin"))

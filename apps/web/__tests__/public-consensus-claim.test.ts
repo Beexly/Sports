@@ -27,13 +27,14 @@ describe("public consensus claim binder (T-1 tripwire)", () => {
     expect(isBookmakerConsensusClaim("Market and rest edges align.")).toBe(false);
   });
 
-  it("binds claim + book count + freshness together", () => {
+  it("binds claim + book count + freshness together when provider resolved", () => {
     const bound = bindPublicConsensusClaim(
       {
         reasoningShort: "100% bookmaker consensus on Kansas City Chiefs -5.5.",
         consensusPct: 1,
         bookmakerCount: 5,
         dataFreshnessAt: new Date("2026-08-04T16:00:00.000Z"),
+        consensusProvider: "therundown",
       },
       NOW,
     );
@@ -44,6 +45,39 @@ describe("public consensus claim binder (T-1 tripwire)", () => {
     expect(consensusEvidenceCaption(bound!)).toMatch(/5 books/);
   });
 
+  it("refuses to bind quantified claim when consensusProvider missing", () => {
+    for (const consensusProvider of [undefined, null, "", "   "]) {
+      expect(
+        bindPublicConsensusClaim(
+          {
+            reasoningShort: "84% of bookmakers favor OVER 47.5.",
+            consensusPct: 0.84,
+            bookmakerCount: 4,
+            dataFreshnessAt: NOW,
+            consensusProvider,
+          },
+          NOW,
+        ),
+      ).toBeNull();
+    }
+  });
+
+  it("binds quantified claim when consensusProvider is a good bookmaker source", () => {
+    const bound = bindPublicConsensusClaim(
+      {
+        reasoningShort: "84% of bookmakers favor OVER 47.5.",
+        consensusPct: 0.84,
+        bookmakerCount: 3,
+        dataFreshnessAt: NOW,
+        consensusProvider: "odds_api",
+      },
+      NOW,
+    );
+    expect(bound).not.toBeNull();
+    expect(bound!.bookmakerCount).toBe(3);
+    expect(bound!.consensusPct).toBe(0.84);
+  });
+
   it("refuses to bind without bookmakerCount ≥ 2", () => {
     expect(
       bindPublicConsensusClaim(
@@ -52,6 +86,7 @@ describe("public consensus claim binder (T-1 tripwire)", () => {
           consensusPct: 0.84,
           bookmakerCount: 1,
           dataFreshnessAt: NOW,
+          consensusProvider: "therundown",
         },
         NOW,
       ),
@@ -66,6 +101,7 @@ describe("public consensus claim binder (T-1 tripwire)", () => {
           consensusPct: 1,
           bookmakerCount: 4,
           dataFreshnessAt: null,
+          consensusProvider: "therundown",
         },
         NOW,
       ),
@@ -94,6 +130,7 @@ describe("public consensus claim binder (T-1 tripwire)", () => {
           consensusPct: 0,
           bookmakerCount: 4,
           dataFreshnessAt: NOW,
+          consensusProvider: "therundown",
         },
         NOW,
       ),
