@@ -28,6 +28,12 @@ import {
 import { loadActiveCalibrationDrift } from "@/lib/ops/calibration-eligibility-durable";
 import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import { db } from "@sports/db";
+import {
+  loadOddsCreditTruth,
+  emptyOddsCreditTruth,
+  type OddsCreditLedgerDb,
+} from "@sports/data-ingestion";
+import { isLowQuota } from "@sports/ingestion-pipeline";
 import { planAutonomyCycle } from "@/lib/autonomy/operating-kernel";
 import { getReadinessGates } from "@sports/prediction-engine";
 
@@ -182,6 +188,14 @@ export async function GET(request: Request): Promise<NextResponse> {
     );
   }
 
+  const credits = await loadOddsCreditTruth(
+    db as unknown as OddsCreditLedgerDb,
+    new Date(),
+  ).catch(() => emptyOddsCreditTruth());
+  const oddsApiLowQuota = isLowQuota({
+    oddsApiRemainingRequests: credits.remaining,
+  });
+
   const observedAt = new Date().toISOString();
   let webhook: WebhookOutcome = {
     configured: false,
@@ -227,6 +241,8 @@ export async function GET(request: Request): Promise<NextResponse> {
       autonomySeverity: autonomy?.severity ?? null,
       autonomyHeadline: autonomy?.headline ?? null,
       autonomyTopActions: autonomy?.actions.slice(0, 3).map((a) => a.title) ?? [],
+      oddsApiRemainingRequests: credits.remaining,
+      oddsApiLowQuota,
     });
 
     if (!webhook.configured) {
@@ -276,6 +292,8 @@ export async function GET(request: Request): Promise<NextResponse> {
     // external monitor should watch to detect that alerting itself is down.
     alertDeliveryFailed: decision.shouldAlert && !webhook.delivered,
     observedAt,
+    oddsApiRemainingRequests: credits.remaining,
+    oddsApiLowQuota,
     autonomy: autonomy
       ? {
           version: autonomy.version,

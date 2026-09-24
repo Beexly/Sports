@@ -40,8 +40,8 @@ function syntheticSeason(rand: () => number): GameResult[] {
       for (const [h, a] of [
         [i, j],
         [j, i],
-      ]) {
-        const diff = (strengths[h] as number) - (strengths[a] as number) + 2.5;
+      ] as const) {
+        const diff = strengths[h]! - strengths[a]! + 2.5;
         const margin = diff + (rand() - 0.5) * 12;
         games.push({
           date: `2024-09-${String(day).padStart(2, "0")}`,

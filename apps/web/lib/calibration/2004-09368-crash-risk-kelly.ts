@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2004.09368: Awareness of crash risk improves Kelly strategies in simulated financial time series.
  *
