@@ -71,7 +71,7 @@ export function chooseRecallThreshold(
 ): TriageEvaluation | null {
   if (scores.length === 0 || scores.length !== labels.length || !isFiniteNumber(targetRecall) || targetRecall <= 0 || targetRecall > 1) return null;
   if (!scores.every(isFiniteNumber) || !labels.every((label) => label === 0 || label === 1)) return null;
-  const positives = labels.reduce((sum, label) => sum + label, 0);
+  const positives = labels.reduce<number>((sum, label) => sum + label, 0);
   if (positives === 0) return null;
   const thresholds = [...new Set(scores)].sort((a, b) => a - b);
   for (const threshold of thresholds) {

@@ -80,9 +80,12 @@ export function poolReportedRoi(
   const adjustedValues = trim === 0 ? eligible : eligible.slice(trim, eligible.length - trim);
   const adjustedMean = mean(adjustedValues);
   const middle = Math.floor(eligible.length / 2);
-  const median = eligible.length % 2 === 0
-    ? (eligible[middle - 1] as number + eligible[middle] as number) / 2
-    : eligible[middle] as number;
+  const leftMiddle = eligible[middle - 1];
+  const rightMiddle = eligible[middle];
+  const median = eligible.length % 2 === 0 && leftMiddle !== undefined && rightMiddle !== undefined
+    ? (leftMiddle + rightMiddle) / 2
+    : rightMiddle;
+  if (median === undefined || !Number.isFinite(median)) return null;
 
   return {
     n: eligible.length,
