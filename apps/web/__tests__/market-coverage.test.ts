@@ -37,6 +37,31 @@ describe("classifyMarketCoverage", () => {
     expect(report.degraded[0]!.hint).toMatch(/degraded, not broken/);
   });
 
+  it("names the top supplied TOTAL drop reason and its observed count", () => {
+    const report = classifyMarketCoverage(
+      {
+        games: Array.from({ length: 8 }, () => ({ sportKey: "baseball_mlb" })),
+        picks: [],
+        totalDropReasons: {
+          baseball_mlb: {
+            fewer_than_min_books: 7,
+            confidence_below_floor: 1,
+          },
+        },
+      },
+      { from, to },
+    );
+    const totalDegradation = report.degraded.find((degradation) => degradation.market === "TOTAL");
+
+    expect(totalDegradation?.dropReasonCounts).toEqual({
+      fewer_than_min_books: 7,
+      confidence_below_floor: 1,
+    });
+    expect(totalDegradation?.hint).toContain(
+      "Top drop reason: fewer_than_min_books (7 of 8 games).",
+    );
+  });
+
   it("reports covered when every market has at least one published pending pick", () => {
     const report = classifyMarketCoverage(
       {

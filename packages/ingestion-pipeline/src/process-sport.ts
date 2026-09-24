@@ -50,7 +50,7 @@ import {
 import type { SupportedSportKey, Market } from "@sports/data-ingestion";
 import { createHash } from "node:crypto";
 import {
-  scoreGames,
+  scoreGameWithDropReasons,
   buildPickSignalSnapshot,
   buildPickProofReceipt,
   MARKET_FAIR_METHOD_TAG,
@@ -61,7 +61,7 @@ import {
   buildIndependentFairValues,
   type EloRatingsCache,
 } from "./build-independent-fair-values.js";
-import type { ReadinessGates } from "@sports/prediction-engine";
+import type { ReadinessGates, TotalDropReason } from "@sports/prediction-engine";
 
 /** Production SHA-256 HashFn for the proof spine — a weak hash would void the guarantee. */
 function sha256Hex(input: string): string {
@@ -143,6 +143,7 @@ export interface ProcessSportResult {
   status: "success" | "failed";
   games: number;
   picks: number;
+  totalDropReasons?: Partial<Record<TotalDropReason, number>>;
   error?: string;
   /** Set when the cycle did no work for a benign, classified reason (e.g. "quiet_board"). */
   note?: string;
@@ -1223,7 +1224,17 @@ export async function processSport(
       });
     }
 
-    const scoredPicks = scoreGames(oddsInputs, fetchedAt);
+    const scoredByGame = oddsInputs.map((input) => scoreGameWithDropReasons(input, fetchedAt));
+    const scoredPicks = scoredByGame
+      .flatMap((result) => result.picks)
+      .sort((a, b) => (b.rankingScore ?? b.confidence) - (a.rankingScore ?? a.confidence));
+    const totalDropReasons: Partial<Record<TotalDropReason, number>> = {};
+    for (const result of scoredByGame) {
+      for (const drop of result.dropReasons) {
+        if (drop.market !== "TOTAL") continue;
+        totalDropReasons[drop.reason] = (totalDropReasons[drop.reason] ?? 0) + 1;
+      }
+    }
     let picksGenerated = 0;
     const publishedGameIds = new Set<string>();
 
@@ -1630,6 +1641,7 @@ export async function processSport(
       status: "success",
       games: Object.keys(gameRecords).length,
       picks: picksGenerated,
+      totalDropReasons,
       oddsInserted,
       provider: oddsProviderTag,
       eventsCount: events.length,
