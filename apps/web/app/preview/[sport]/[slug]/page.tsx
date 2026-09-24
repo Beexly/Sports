@@ -109,6 +109,9 @@ async function loadGameForSlug(sportId: string, slug: string) {
           // Wide window — pick best by rankingP after load (not confidence alone).
           orderBy: { generatedAt: "desc" },
           take: 8,
+          include: {
+            signalSnapshot: { select: { bookmakerCount: true } },
+          },
         },
       },
     });
@@ -130,6 +133,29 @@ function bestPublishedPick(game: LoadedGame): LoadedGame["picks"][number] | null
   if (!game.picks.length) return null;
   const sorted = [...game.picks].sort(comparePicksByRanking);
   return sorted[0] ?? null;
+}
+
+async function loadConsensusProvider(
+  ingestionRunId: string | null,
+): Promise<string | null> {
+  if (!ingestionRunId || typeof db.ingestionRun?.findMany !== "function") {
+    return null;
+  }
+  const runs = await db.ingestionRun
+    .findMany({
+      where: { id: ingestionRunId },
+      select: {
+        sourceSnapshots: {
+          where: { sourceKind: "ODDS_EVENTS" },
+          orderBy: { fetchedAt: "desc" },
+          take: 1,
+          select: { provider: true },
+        },
+      },
+      take: 1,
+    })
+    .catch(() => []);
+  return runs[0]?.sourceSnapshots[0]?.provider ?? null;
 }
 
 function toMatchupInput(
@@ -265,6 +291,9 @@ export default async function PreviewPage({ params }: Props) {
   const input = toMatchupInput(resolution.sport.name, game, viewer.canSeeConfidence);
   const preview = buildMatchupPreview(input);
   const pick = bestPublishedPick(game);
+  const consensusProvider = pick
+    ? await loadConsensusProvider(pick.ingestionRunId)
+    : null;
 
   const gameDate = new Date(game.commenceTime);
   const formattedDate = gameDate.toLocaleDateString("en-US", {
@@ -342,8 +371,10 @@ export default async function PreviewPage({ params }: Props) {
                 const bound = bindPublicConsensusClaim({
                   reasoningShort: short,
                   consensusPct: pick.consensusPct,
-                  bookmakerCount: pick.bookmakerCount,
+                  bookmakerCount:
+                    pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount,
                   dataFreshnessAt: pick.dataFreshnessAt,
+                  consensusProvider,
                 });
                 if (!bound) return null;
                 return (
