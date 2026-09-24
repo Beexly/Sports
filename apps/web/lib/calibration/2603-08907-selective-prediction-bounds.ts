@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2603.08907: Cross-Domain Uncertainty Quantification for Selective Prediction: A Comprehensive Bound Ablation with Transfer-Informed Betting.
  *

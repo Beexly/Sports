@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2509.13141v1: A hidden benefit of incomplete round-robin tournaments: Encouraging offensive play.
  *

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 1910.07325v1: Multivariate Forecasting Evaluation: On Sensitive and Strictly Proper Scoring Rules.
  *

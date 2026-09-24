@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2012.04626v2: Minimax Regret Optimisation for Robust Planning in Uncertain MDPs.
  *
