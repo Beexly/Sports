@@ -6,6 +6,7 @@
  *
  * Tolerance: ±12 hours on commenceTime (DST / local-kickoff slack).
  * Hard wall: never copy prices onto the situation snapshot.
+ * Hard wall: both commenceTimes must be present and parseable; missing/invalid → no match.
  */
 
 export const COMMENCE_TOLERANCE_HOURS = 12 as const;
@@ -65,21 +66,26 @@ export function resolveTeamFullName(
   return hit ? hit[1] : s;
 }
 
+/**
+ * True when both ISO times parse and |Δ| ≤ slackHours.
+ * Fail-closed: missing or invalid either side → false (no identity join without times).
+ */
 export function withinHours(
   isoA: string | null | undefined,
   isoB: string | null | undefined,
   slackHours: number = COMMENCE_TOLERANCE_HOURS
 ): boolean {
-  if (!isoA || !isoB) return true;
+  if (!isoA || !isoB) return false;
   const a = Date.parse(isoA);
   const b = Date.parse(isoB);
-  if (!Number.isFinite(a) || !Number.isFinite(b)) return true;
+  if (!Number.isFinite(a) || !Number.isFinite(b)) return false;
   return Math.abs(a - b) <= slackHours * 3600 * 1000;
 }
 
 /**
  * Fill-only: copy eventId from quote when sport + teams + commenceTime match.
  * Never invents eventId. Never copies PRICE_KEYS.
+ * Requires both commenceTimes parseable (withinHours fail-closed).
  */
 export function joinSituationToMarketQuote(
   snapshot: SituationSnapshotLike,
@@ -115,10 +121,17 @@ export function joinSituationToMarketQuote(
     return { snapshot: null, matched: false, reason: "home/away mismatch (order-sensitive)" };
   }
   if (!withinHours(snapshot.commenceTime, quote.commenceTime, toleranceHours)) {
+    const missing =
+      !snapshot.commenceTime ||
+      !quote.commenceTime ||
+      !Number.isFinite(Date.parse(snapshot.commenceTime)) ||
+      !Number.isFinite(Date.parse(quote.commenceTime));
     return {
       snapshot: null,
       matched: false,
-      reason: `commenceTime outside ±${toleranceHours}h`,
+      reason: missing
+        ? "commenceTime missing or invalid (both required)"
+        : `commenceTime outside ±${toleranceHours}h`,
     };
   }
 

@@ -36,6 +36,13 @@ describe("situation-join", () => {
     expect(withinHours("2025-09-21T16:00:00Z", "2025-09-21T03:00:00Z", 12)).toBe(false);
   });
 
+  it("withinHours fail-closed when either time missing or invalid", () => {
+    expect(withinHours(undefined, "2025-09-21T16:00:00Z", 12)).toBe(false);
+    expect(withinHours("2025-09-21T16:00:00Z", undefined, 12)).toBe(false);
+    expect(withinHours("", "2025-09-21T16:00:00Z", 12)).toBe(false);
+    expect(withinHours("not-a-date", "2025-09-21T16:00:00Z", 12)).toBe(false);
+  });
+
   it("match fills eventId from quote", () => {
     const { snapshot, matched } = joinSituationToMarketQuote(
       snap,
@@ -61,6 +68,17 @@ describe("situation-join", () => {
     );
     expect(matched).toBe(true);
     expect(snapshot?.eventId).toBeNull();
+  });
+
+  it("no match when quote commenceTime missing", () => {
+    const { snapshot, matched, reason } = joinSituationToMarketQuote(
+      snap,
+      { home: "BUF", away: "KC", eventId: "orphan" },
+      abbr
+    );
+    expect(matched).toBe(false);
+    expect(snapshot).toBeNull();
+    expect(reason).toMatch(/commenceTime missing or invalid/);
   });
 
   it("never copies prices from quote into snapshot", () => {
