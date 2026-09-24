@@ -162,6 +162,7 @@ export function findSituationForQuote(
     return true;
   });
 
-  if (matches.length !== 1) return null;
-  return joinSituationToMarketQuote(matches[0], quote, abbrToFull, opts).snapshot;
+  const only = matches[0];
+  if (matches.length !== 1 || !only) return null;
+  return joinSituationToMarketQuote(only, quote, abbrToFull, opts).snapshot;
 }
