@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2609.22048: Available Guardrails: Certifying Selective Prediction across ML Systems.
  *

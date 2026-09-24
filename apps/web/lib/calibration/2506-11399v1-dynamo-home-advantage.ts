@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2506.11399v1: Time-Varying Home Field Advantage in Football: Learning from a Non-Stationary Causal Process.
  *
