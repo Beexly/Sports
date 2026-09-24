@@ -17,6 +17,8 @@ import { collapseGameRowsToFixtures, type FixtureCollapseRow } from "@sports/ing
 import {
   MIN_BOOKMAKERS,
   MIN_PUBLISH_CONFIDENCE,
+  TOTAL_DROP_SIGNAL_KEY,
+  TOTAL_DROP_SIGNAL_SOURCE,
   WEIGHTS,
   type TotalDropReason,
 } from "@sports/prediction-engine";
@@ -121,7 +123,7 @@ function topTotalDropReason(
 function hintFor(
   sportKey: string,
   market: MarketKey,
-  games: number,
+  _games: number,
   totalDropReasons?: Readonly<Partial<Record<TotalDropReason, number>>>,
 ): string {
   const feed = "Read oddsInserting on this surface for the live feed state before blaming the feed; the board is degraded, not broken.";
@@ -139,7 +141,7 @@ function hintFor(
     case "TOTAL": {
       const top = topTotalDropReason(totalDropReasons);
       const dropReason = top
-        ? ` Top drop reason: ${top.reason} (${top.count} of ${games} games).`
+        ? ` Top drop reason: ${top.reason} (${top.count} labeled games in this window).`
         : "";
       return (
         `No TOTAL picks while ${sportKey} games are scheduled in the window. A total publishes only when ` +
@@ -265,6 +267,12 @@ export interface MarketCoverageDb {
       select: { pickType: true; game: { select: { sport: { select: { key: true } } } } };
     }): Promise<Array<{ pickType: string; game: { sport: { key: string } } }>>;
   };
+  gameSignal?: {
+    findMany(args: {
+      where: { gameId: { in: string[] }; sourceName: string; signalKey: string };
+      select: { gameId: true; signalValue: true };
+    }): Promise<Array<{ gameId: string; signalValue: unknown }>>;
+  };
 }
 
 export async function loadMarketCoverage(
@@ -314,11 +322,48 @@ export async function loadMarketCoverage(
   // guard the board lanes and the slate use (C-172) is applied here; picks are
   // not collapsed because each pick hangs off exactly one row.
   const fixtures = collapseGameRowsToFixtures(games);
+  const totalDropReasons = await labeledTotalDrops(db, fixtures);
   return classifyMarketCoverage(
     {
       games: fixtures.map((g) => ({ sportKey: g.sport.key })),
       picks: picks.map((p) => ({ sportKey: p.game.sport.key, pickType: p.pickType })),
+      ...(totalDropReasons ? { totalDropReasons } : {}),
     },
     { from: now, to, windowHours },
   );
+}
+
+function reasonFromSignal(value: unknown): TotalDropReason | null {
+  if (!value || typeof value !== "object") return null;
+  const reason = (value as { reason?: unknown }).reason;
+  if (typeof reason !== "string") return null;
+  return (TOTAL_DROP_REASON_ORDER as readonly string[]).includes(reason)
+    ? (reason as TotalDropReason)
+    : null;
+}
+
+async function labeledTotalDrops(
+  db: MarketCoverageDb,
+  fixtures: readonly MarketCoverageGameRow[],
+): Promise<Partial<Record<string, Partial<Record<TotalDropReason, number>>>> | undefined> {
+  if (!db.gameSignal || fixtures.length === 0) return undefined;
+  const sportByGame = new Map(fixtures.map((game) => [game.id, game.sport.key]));
+  const rows = await db.gameSignal.findMany({
+    where: {
+      gameId: { in: [...sportByGame.keys()] },
+      sourceName: TOTAL_DROP_SIGNAL_SOURCE,
+      signalKey: TOTAL_DROP_SIGNAL_KEY,
+    },
+    select: { gameId: true, signalValue: true },
+  });
+  const counts: Partial<Record<string, Partial<Record<TotalDropReason, number>>>> = {};
+  for (const row of rows) {
+    const sportKey = sportByGame.get(row.gameId);
+    const reason = reasonFromSignal(row.signalValue);
+    if (!sportKey || !reason) continue;
+    const sportCounts = counts[sportKey] ?? {};
+    sportCounts[reason] = (sportCounts[reason] ?? 0) + 1;
+    counts[sportKey] = sportCounts;
+  }
+  return Object.keys(counts).length > 0 ? counts : undefined;
 }

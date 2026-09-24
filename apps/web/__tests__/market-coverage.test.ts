@@ -58,7 +58,7 @@ describe("classifyMarketCoverage", () => {
       confidence_below_floor: 1,
     });
     expect(totalDegradation?.hint).toContain(
-      "Top drop reason: fewer_than_min_books (7 of 8 games).",
+      "Top drop reason: fewer_than_min_books (7 labeled games in this window).",
     );
   });
 
@@ -228,6 +228,25 @@ describe("loadMarketCoverage", () => {
     };
     const report = await loadMarketCoverage(db, new Date("2026-09-12T12:00:00Z"), 48);
     expect(report.sports[0]?.games).toBe(2);
+  });
+
+  it("labels a TOTAL gap from the stored drop signal, not from the fixture count", async () => {
+    const db: MarketCoverageDb = {
+      game: {
+        findMany: async () => [
+          gameRow({ id: "g-mlb", externalId: "mlb-1", sportId: "s-mlb", key: "baseball_mlb", home: "Yankees", away: "Red Sox" }),
+        ],
+      },
+      pick: { findMany: async () => [] },
+      gameSignal: {
+        findMany: async () => [{ gameId: "g-mlb", signalValue: { reason: "fewer_than_min_books" } }],
+      },
+    };
+    const report = await loadMarketCoverage(db, new Date("2026-09-12T12:00:00Z"), 48);
+    const total = report.degraded.find((row) => row.market === "TOTAL");
+    expect(total?.dropReasonCounts).toEqual({ fewer_than_min_books: 1 });
+    expect(total?.hint).toContain("Top drop reason: fewer_than_min_books (1 labeled games in this window).");
+    expect(total?.hint).not.toContain("of 1 games");
   });
 });
 

@@ -2,6 +2,8 @@
 export {
   scoreGame,
   scoreGameWithDropReasons,
+  TOTAL_DROP_SIGNAL_SOURCE,
+  TOTAL_DROP_SIGNAL_KEY,
   scoreGames,
   americanToImpliedProbability,
   removeVig,

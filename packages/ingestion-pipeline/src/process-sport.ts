@@ -61,6 +61,7 @@ import {
   buildIndependentFairValues,
   type EloRatingsCache,
 } from "./build-independent-fair-values.js";
+import { persistTotalDropSignals, planTotalDropSignals } from "./total-drop-signals.js";
 import type { ReadinessGates, TotalDropReason } from "@sports/prediction-engine";
 
 /** Production SHA-256 HashFn for the proof spine — a weak hash would void the guarantee. */
@@ -1605,6 +1606,13 @@ export async function processSport(
         });
       }
     }
+
+    await persistTotalDropSignals(
+      db,
+      planTotalDropSignals(oddsInputs, scoredByGame, confirmedGameIds),
+      fetchedAt,
+      logPrefix,
+    );
 
     // Persist immutable gate decisions audit trail (GSE-GATE-094 recovery)
     await persistGateDecisions(gateDecisionsToPersist);

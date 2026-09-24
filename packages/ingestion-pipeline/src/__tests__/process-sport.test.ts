@@ -54,6 +54,8 @@ const mocks = vi.hoisted(() => ({
   // Mint-side supersede of an unpublished PENDING slot-holder (lane B).
   supersedeUnpublished: vi.fn<(db: unknown, args: unknown) => Promise<boolean>>(),
   snapshotUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
+  gameSignalUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
+  gameSignalDeleteMany: vi.fn<(args: unknown) => Promise<unknown>>(),
   resolveRundownApiKey: vi.fn<() => string>(),
   // Mirrors RundownFetchResult: `error` is the human note and `rateLimited`
   // the structured 429 signal the cooldown reads (C-278a).
@@ -91,6 +93,7 @@ vi.mock("@sports/db", () => ({
     odds: { createMany: mocks.oddsCreateMany },
     pick: { upsert: mocks.pickUpsert, findUnique: mocks.pickFindUnique, updateMany: mocks.pickUpdateMany, create: mocks.pickCreate },
     pickSignalSnapshot: { upsert: mocks.snapshotUpsert },
+    gameSignal: { upsert: mocks.gameSignalUpsert, deleteMany: mocks.gameSignalDeleteMany },
     gateDecision: { createMany: vi.fn().mockResolvedValue({ count: 1 }) },
   },
 }));
@@ -175,6 +178,8 @@ vi.mock("@sports/prediction-engine", async () => {
   return {
     scoreGames: mocks.scoreGames,
     scoreGameWithDropReasons: mocks.scoreGameWithDropReasons,
+    TOTAL_DROP_SIGNAL_SOURCE: actual.TOTAL_DROP_SIGNAL_SOURCE ?? "gse-total-drop",
+    TOTAL_DROP_SIGNAL_KEY: actual.TOTAL_DROP_SIGNAL_KEY ?? "total_drop_reason",
     buildPickSignalSnapshot: mocks.buildPickSignalSnapshot,
     selectionIsHomeSide: actual.selectionIsHomeSide,
     // Independent fair-value builders — null-safe stubs (network off in unit tests).

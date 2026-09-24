@@ -1421,6 +1421,10 @@ export function scoreGame(input: OddsInput, fetchedAt?: Date): ScoredPick[] {
   return scoreGameWithDropReasons(input, fetchedAt).picks;
 }
 
+/** Ops GameSignal identity for a withheld TOTAL. Not written onto Pick rows. */
+export const TOTAL_DROP_SIGNAL_SOURCE = "gse-total-drop";
+export const TOTAL_DROP_SIGNAL_KEY = "total_drop_reason";
+
 export function scoreGameWithDropReasons(
   input: OddsInput,
   fetchedAt?: Date,
