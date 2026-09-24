@@ -37,3 +37,27 @@ this file stays current through the weekend.
 - 2026-09-24: Pool opened with Oronde Gadsden II. Props pulled (TD markets only so far).
 - 2026-09-24 AM: "23.2% but only 1 redzone target — this is his week to score" (Andrews) — logged as his TD call vs DAL.
 - 2026-09-24 AM: Added Mark Andrews (vs DAL in Rio). Verified Cowboys TE defense (29.7 FPG, worst), Andrews target share (24.5%), Njoku to IR.
+
+## Sun-Mon slate — DraftKings pool pull (2026-09-24, read-only)
+- **Contest:** NFL $15K Sun-Mon Special [$5K to 1st] — $18 entry, 980 entries, $15,000 prizes, pays top 200. Roster: QB, RB, RB, WR, WR, WR, TE, FLEX, DST. Salary cap $50,000.
+- **Source:** DraftKings draft screen + site's own DKSalaries.csv export (saved: full-tables/dk-sunmon-slate-salaries-week3.csv, 767 players). Signed in via saved vault credentials + SMS code; read-only, no contest entered, no lineup drafted.
+
+### Slate games (15, Sun 9/27 – Mon 9/28)
+Sun 12:00pm CT: KC@MIA (partly cloudy), NYJ@DET (dome), CAR@CLE (clear), HOU@IND (dome), TEN@NYG (**rain**), SEA@WAS (partly cloudy), LAC@BUF, NE@JAX (partly cloudy), CIN@PIT (partly cloudy)
+Sun 3:05pm CT: MIN@TB (partly cloudy), ARI@SF (partly cloudy)
+Sun 3:25pm CT: LV@NO (dome), BAL@DAL (Rio)
+Sun 7:20pm CT: LAR@DEN (partly cloudy night)
+Mon 7:15pm CT: PHI@CHI (partly cloudy night)
+
+### Salary highlights by position
+- **QB:** Allen $8,000 > Lamar $7,500 > Hurts $6,800 > Dak $6,700 > Burrow $6,600 > Purdy $6,500. Value: Mahomes $6,200, Maye $6,100, Nix/Stroud $5,500, Darnold $5,400 [Q], Mayfield $5,300. **Caleb Williams $6,400 [D]** — Case Keenum (CHI) is min-price $4,000 and would start if Williams sits; Tyson Bagent $4,400 [Q].
+- **RB:** Gibbs $8,800 > CMC $8,300 > Henry $7,700 > J. Taylor $7,600 > K. Walker $7,400 > Jeanty $7,100 > Barkley $7,000 > Cook $6,900 > Hampton $6,800.
+- **WR:** JSN $8,600 > Chase $8,100 > Amon-Ra $7,900 > Lamb $7,800 > Nacua $7,700 [Q] > Jefferson $7,500 > Olave $7,200.
+- **TE:** McBride $6,700 > Bowers $6,600 [Q] > Kincaid $5,500 > Warren $5,300 > Loveland $5,000 > Kittle $4,800 > Goedert $4,600 [D] > Kelce $4,500 > **Andrews $4,400** > LaPorta $4,300 > Ferguson $4,100 > Henry $3,900 > Freiermuth $3,800 > J. Johnson $3,700 > **Gadsden $3,500** > Waller/Strange $3,400.
+- **DST:** Seahawks $3,800 top; range down to Dolphins $2,000.
+
+### Key injury/status flags in pool
+OUT: Jayden Daniels (WAS), Jaxson Dart (NYG), Alec Pierce (IND). D: Caleb Williams (CHI), Dallas Goedert (PHI). Q: Sam Darnold, Puka Nacua, Zay Flowers, Mike Evans, Brock Bowers, DJ Moore, Malik Nabers, J.K. Dobbins, Aaron Jones, Travis Etienne, Jaylen Warren, Tony Pollard, Tyjae Spears, Tyson Bagent, Tyler Shough's backup Aidan O'Connell, Chig Okonkwo, Cooper Kupp, Mason Taylor.
+
+## Log
+- 2026-09-24: Garrett redirected from main slate to his weekly **Sunday-Monday slate** (starts Sun 12:00pm CT, ends with MNF). Full 767-player pool pulled read-only; contest + games + salaries logged above.
