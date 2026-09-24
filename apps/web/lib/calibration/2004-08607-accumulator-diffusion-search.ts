@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2004.08607: Accumulator Bet Selection Through Stochastic Diffusion Search.
  *

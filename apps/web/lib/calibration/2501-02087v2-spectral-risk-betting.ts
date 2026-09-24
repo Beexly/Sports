@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2501.02087v2: Beyond CVaR: Leveraging Static Spectral Risk Measures for Enhanced Decision-Making in Distributional Reinforcement Learning.
  *

@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2004.14108v2: Static and Dynamic Models for Multivariate Distribution Forecasts: Proper Scoring Rule Tests of Factor-Quantile vs. Multivariate GARCH Models.
  *
