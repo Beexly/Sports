@@ -955,6 +955,19 @@ export type { UsageProfileInput, UsageProfile, WorkloadTier } from "./player-arc
 // Run-scheme lean (gap/power vs outside/zone) from PBP run direction.
 export { classifyRushScheme } from "./player-rush-scheme.js";
 export type { RushDirectionCounts, RushSchemeProfile } from "./player-rush-scheme.js";
+// Shadow-only bridge from persisted PBP rush profiles to low-weight ledger rows.
+// It is deliberately not imported by the capture route or any scoring surface.
+export {
+  rushProfileToLedgerSignals,
+  rushProfileToLedgerPlayer,
+  RUSH_LEDGER_MIN_RUNS,
+  RUSH_LEDGER_WEIGHT,
+  RUSH_LEDGER_CONFIDENCE,
+} from "./rush-profile-ledger.js";
+export type {
+  RushProfileLedgerInput,
+  RushProfileLedgerPlayer,
+} from "./rush-profile-ledger.js";
 
 export {
   assessUncertainty,

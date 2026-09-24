@@ -22,6 +22,8 @@ describe("ops truth calibration automation surface", () => {
     );
     expect(src).toMatch(/persistCalibrationMetrics/);
     expect(src).toMatch(/evaluateAndPersistEligibility/);
+    expect(src).toMatch(/persistRushShadowLedger/);
+    expect(src).toMatch(/rushShadowLedger/);
     expect(src).toMatch(/eligibleForLearning/);
     expect(src).toMatch(/v5\.0\.0-seed/);
   });

@@ -62,6 +62,8 @@ import {
 import { persistProvenPathPlan } from "@/lib/ops/proven-path-durable";
 import { rebuildPerformanceSummaries } from "@/lib/performance/rebuild-performance-summaries";
 import { backfillIndependentTrueProb } from "@sports/ingestion-pipeline";
+import { persistRushShadowLedger } from "@/lib/ops/rush-shadow-ledger";
+import { ingestionTargetNflSeason } from "@/lib/ingestion/player-stats";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 export const maxDuration = 300;
@@ -445,6 +447,23 @@ export async function GET(request: Request): Promise<NextResponse> {
 
     await persistCalibrationMetrics(payload);
 
+    // Capture/use boundary: normalize the already-persisted, rights-cleared
+    // PBP rush profiles into the universal Signal ledger. This is internal
+    // shadow state only: it does not feed the calibration sample, a pick, a
+    // publish decision, or any public surface. The writer is best-effort and
+    // reports its own incomplete state rather than throwing into this cron.
+    let rushShadowLedger: Awaited<ReturnType<typeof persistRushShadowLedger>> | null = null;
+    let rushShadowLedgerError: string | null = null;
+    try {
+      rushShadowLedger = await persistRushShadowLedger(ingestionTargetNflSeason());
+    } catch (error) {
+      rushShadowLedgerError = error instanceof Error ? error.message : "rush shadow ledger failed";
+      console.warn(
+        "[cron:calibration-metrics] rush shadow ledger failed; calibration cycle is unaffected:",
+        rushShadowLedgerError,
+      );
+    }
+
     // C-319: /performance renders its record section from performance_summaries,
     // and nothing in this repo has ever written a row to it — measured 2026-09-11,
     // the table holds 0 rows while the page publishes "No official record yet"
@@ -632,6 +651,9 @@ export async function GET(request: Request): Promise<NextResponse> {
       marketPFromOddsTable: payload.marketPFromOddsTable ?? null,
       /** Per pick type: the pooled floors sample is not moneyline-only. */
       byMarket: payload.byMarket ?? null,
+      /** Internal capture/use artifact; never a probability or publish input. */
+      rushShadowLedger,
+      rushShadowLedgerError,
     });
   } catch (err) {
     captureError(err, { route: "cron/calibration-metrics" });

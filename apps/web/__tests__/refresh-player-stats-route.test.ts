@@ -2,9 +2,10 @@ import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vite
 
 /**
  * Cron route for nflverse player-data ingestion: CRON_SECRET auth, season
- * validation, the season helper, and aggregation across the three ingestions
- * (weekly stats, snap counts, injuries). The ingestions are mocked (covered by
- * their own tests) so this never touches the network or DB.
+ * validation, the season helper, and aggregation across the satellite
+ * ingestions (weekly stats, snap counts, injuries, depth charts, NGS, PFR
+ * advanced, and rush tendencies). The ingestions are mocked (covered by their
+ * own tests) so this never touches the network or DB.
  */
 
 vi.mock("@/lib/ingestion/player-stats", async (importActual) => {
@@ -15,6 +16,10 @@ vi.mock("@/lib/ingestion/snap-counts", () => ({ ingestSnapCounts: vi.fn() }));
 vi.mock("@/lib/ingestion/injuries", () => ({ ingestInjuries: vi.fn() }));
 vi.mock("@/lib/ingestion/depth-charts", () => ({ ingestDepthCharts: vi.fn() }));
 vi.mock("@/lib/ingestion/next-gen-stats", () => ({ ingestNextGenStats: vi.fn() }));
+// C-355: PFR advanced charting + rush tendencies are satellites. Mocked so this
+// suite never hits the network or the clearance engine.
+vi.mock("@/lib/ingestion/pfr-adv-stats", () => ({ ingestPfrAdvStats: vi.fn() }));
+vi.mock("@/lib/ingestion/rush-tendencies", () => ({ ingestRushTendencies: vi.fn() }));
 // The REG-row probe (C-95) reads the database; here it answers from a list the
 // test controls. Default: no season has rows, which is the pre-probe behaviour
 // (completed floor) every case below was written against.
@@ -33,6 +38,8 @@ import { ingestSnapCounts } from "@/lib/ingestion/snap-counts";
 import { ingestInjuries } from "@/lib/ingestion/injuries";
 import { ingestDepthCharts } from "@/lib/ingestion/depth-charts";
 import { ingestNextGenStats } from "@/lib/ingestion/next-gen-stats";
+import { ingestPfrAdvStats } from "@/lib/ingestion/pfr-adv-stats";
+import { ingestRushTendencies } from "@/lib/ingestion/rush-tendencies";
 import { CRON_MANIFEST } from "@/lib/ops/cron-schedule-manifest";
 import { SATELLITE_DAILY_HOUR_UTC } from "@/lib/ingestion/satellite-window";
 
@@ -65,6 +72,15 @@ describe("GET /api/cron/refresh-player-stats", () => {
     (ingestNextGenStats as Mock).mockImplementation((season: number, statType: string) =>
       Promise.resolve({ status: "ok", season, statType, rowsWritten: 5 }),
     );
+    (ingestPfrAdvStats as Mock).mockReset();
+    (ingestPfrAdvStats as Mock).mockImplementation((season: number, statType: string) =>
+      // Default: rights-gated (permission_required). A scheduled run that
+      // reaches these must still complete; the per-statellite denial remains
+      // visible in the response without failing the run. Tests override to "ok".
+      Promise.resolve({ status: "clearance-denied", season, statType, rowsWritten: 0, blocks: ["rights"] }),
+    );
+    (ingestRushTendencies as Mock).mockReset();
+    (ingestRushTendencies as Mock).mockResolvedValue({ status: "ok", season: 2024, rowsWritten: 12 });
     vi.stubEnv("CRON_SECRET", "secret");
     probe.seasonsWithRegRows = [];
   });
@@ -105,12 +121,14 @@ describe("GET /api/cron/refresh-player-stats", () => {
       expect(ingestDepthCharts).not.toHaveBeenCalled();
       expect(ingestSnapCounts).not.toHaveBeenCalled();
       expect(ingestNextGenStats).not.toHaveBeenCalled();
+      expect(ingestPfrAdvStats).not.toHaveBeenCalled();
+      expect(ingestRushTendencies).not.toHaveBeenCalled();
     } finally {
       vi.useRealTimers();
     }
   });
 
-  it("the daily-window run ingests all four satellites with no query string (C-244)", async () => {
+  it("the daily-window run ingests all satellite families with no query string (C-244)", async () => {
     // The gap in one assertion. Every OTHER satellite test in this file passes
     // ?mode=full, so the suite proved the satellites work in a mode nothing
     // invoked them in; measured on production 2026-09-08,
@@ -140,6 +158,13 @@ describe("GET /api/cron/refresh-player-stats", () => {
         "receiving",
         "rushing",
       ]);
+      // C-355: both new ingesters are reachable from the same daily window.
+      expect((ingestPfrAdvStats as Mock).mock.calls.map((c) => c[1]).sort()).toEqual([
+        "pass",
+        "rec",
+        "rush",
+      ]);
+      expect(ingestRushTendencies).toHaveBeenCalled();
     } finally {
       vi.useRealTimers();
     }
@@ -182,6 +207,10 @@ describe("GET /api/cron/refresh-player-stats", () => {
       expect(ingestInjuries).toHaveBeenCalledWith(labelled);
       expect(ingestSnapCounts).toHaveBeenCalledWith(labelled);
       expect(ingestNextGenStats).toHaveBeenCalledWith(labelled, "passing");
+      expect(ingestPfrAdvStats).toHaveBeenCalledWith(labelled, "pass");
+      expect(ingestPfrAdvStats).toHaveBeenCalledWith(labelled, "rec");
+      expect(ingestPfrAdvStats).toHaveBeenCalledWith(labelled, "rush");
+      expect(ingestRushTendencies).toHaveBeenCalledWith(labelled);
       expect(ingestDepthCharts).not.toHaveBeenCalledWith(floor);
       expect(ingestInjuries).not.toHaveBeenCalledWith(floor);
     } finally {
@@ -296,10 +325,9 @@ describe("GET /api/cron/refresh-player-stats", () => {
   });
 
   it("falls back to the completed floor when the labelled season is not published yet, and reports the attempt", async () => {
-    const now = new Date();
+    const now = new Date(Date.UTC(2026, 8, 15, 3, 0, 0));
     const labelled = ingestionTargetNflSeason(now);
     const floor = currentNflSeason(now);
-    if (labelled === floor) return; // outside the rollover window there is nothing to fall back to
     (ingestPlayerWeeklyStats as Mock).mockImplementation(async (season: number) =>
       season === labelled
         ? { status: "source-error", season, playersUpserted: 0, statsUpserted: 0, error: "HTTP 404" }
@@ -323,10 +351,8 @@ describe("GET /api/cron/refresh-player-stats", () => {
     // Tripwire (2026-09-03 automated review): only a 404 (or ok with zero
     // rows) means "not published yet". A 503 or a timeout on the labelled
     // season is an outage; retrying the floor and answering 200 would hide it.
-    const now = new Date();
+    const now = new Date(Date.UTC(2026, 8, 15, 3, 0, 0));
     const labelled = ingestionTargetNflSeason(now);
-    const floor = currentNflSeason(now);
-    if (labelled === floor) return; // outside the rollover window there is nothing to fall back to
     (ingestPlayerWeeklyStats as Mock).mockImplementation(async (season: number) => ({
       status: "source-error", season, playersUpserted: 0, statsUpserted: 0,
       error: `nflverse fetch failed (503) for https://example.invalid/${season}`,
@@ -346,10 +372,9 @@ describe("GET /api/cron/refresh-player-stats", () => {
     // combined asset with status "ok" and zero upserted rows for a not-yet-
     // published labelled season — an empty labelled-season run must not be
     // recorded as success on a scheduled run.
-    const now = new Date();
+    const now = new Date(Date.UTC(2026, 8, 15, 3, 0, 0));
     const labelled = ingestionTargetNflSeason(now);
     const floor = currentNflSeason(now);
-    if (labelled === floor) return; // outside the rollover window there is nothing to fall back to
     (ingestPlayerWeeklyStats as Mock).mockImplementation(async (season: number) =>
       season === labelled
         ? { status: "ok", season, playersUpserted: 0, statsUpserted: 0 }
@@ -370,10 +395,8 @@ describe("GET /api/cron/refresh-player-stats", () => {
   });
 
   it("does NOT retry the floor when clearance-denied — that is a rights stop, not an unpublished signal", async () => {
-    const now = new Date();
+    const now = new Date(Date.UTC(2026, 8, 15, 3, 0, 0));
     const labelled = ingestionTargetNflSeason(now);
-    const floor = currentNflSeason(now);
-    if (labelled === floor) return; // outside the rollover window there is nothing to fall back to
     (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
       status: "clearance-denied", season: labelled, playersUpserted: 0, statsUpserted: 0, blocks: ["rights"],
     });
@@ -423,6 +446,12 @@ describe("GET /api/cron/refresh-player-stats", () => {
     (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
       status: "ok", season: 2024, playersUpserted: 2, statsUpserted: 4,
     });
+    // Override the default rights-denied PFR mock so this aggregation case
+    // proves a fully-healthy full path (success=true). Rights denial is
+    // covered by the dedicated C-355 case below.
+    (ingestPfrAdvStats as Mock).mockImplementation((season: number, statType: string) =>
+      Promise.resolve({ status: "ok", season, statType, rowsWritten: 2 }),
+    );
     const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024&mode=full", "Bearer secret"));
     expect(res.status).toBe(200);
     const body = (await res.json()) as {
@@ -431,6 +460,8 @@ describe("GET /api/cron/refresh-player-stats", () => {
       snaps: { rowsWritten: number };
       injuries: { rowsWritten: number };
       depth: { rowsWritten: number };
+      pfrAdv: { pass: { rowsWritten: number }; rec: { rowsWritten: number }; rush: { rowsWritten: number } };
+      rushTendencies: { rowsWritten: number };
     };
     expect(body.success).toBe(true);
     expect(body.stats.statsUpserted).toBe(4);
@@ -445,8 +476,51 @@ describe("GET /api/cron/refresh-player-stats", () => {
     expect(ingestNextGenStats).toHaveBeenCalledWith(2024, "passing");
     expect(ingestNextGenStats).toHaveBeenCalledWith(2024, "receiving");
     expect(ingestNextGenStats).toHaveBeenCalledWith(2024, "rushing");
+    // C-355: PFR advanced (all three variants) + rush tendencies.
+    expect(ingestPfrAdvStats).toHaveBeenCalledWith(2024, "pass");
+    expect(ingestPfrAdvStats).toHaveBeenCalledWith(2024, "rec");
+    expect(ingestPfrAdvStats).toHaveBeenCalledWith(2024, "rush");
+    expect(ingestRushTendencies).toHaveBeenCalledWith(2024);
+    expect(body.pfrAdv.pass.rowsWritten).toBe(2);
+    expect(body.pfrAdv.rush.rowsWritten).toBe(2);
+    expect(body.rushTendencies.rowsWritten).toBe(12);
     const ngsBody = body as unknown as { ngs: { passing: { rowsWritten: number } } };
     expect(ngsBody.ngs.passing.rowsWritten).toBe(5);
+  });
+
+  it("C-355: a PFR rights denial is observable but not a satellite failure", async () => {
+    // pfr-advstats-via-nflverse is permission_required / automation_allowed=false
+    // in source-rights-registry.ts (verdict 2026-07-16). That is a rights stop,
+    // not an outage: primary stays green (health SLA), and the expected
+    // permission_required stop does not mask another satellite's failure.
+    (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
+      status: "ok", season: 2024, playersUpserted: 2, statsUpserted: 4,
+    });
+    const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024&mode=full", "Bearer secret"));
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as {
+      success: boolean;
+      pfrAdv: { pass: { status: string; blocks?: readonly string[] } };
+      rushTendencies: { status: string };
+    };
+    expect(body.success).toBe(true);
+    expect(body.pfrAdv.pass.status).toBe("clearance-denied");
+    expect(ingestPfrAdvStats).toHaveBeenCalledWith(2024, "pass");
+    expect(ingestRushTendencies).toHaveBeenCalledWith(2024);
+  });
+
+  it("C-355: a rush-tendencies rights failure still makes the full satellite result unhealthy", async () => {
+    (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
+      status: "ok", season: 2024, playersUpserted: 2, statsUpserted: 4,
+    });
+    (ingestRushTendencies as Mock).mockResolvedValue({
+      status: "clearance-denied", season: 2024, rowsWritten: 0, blocks: ["rights"],
+    });
+    const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024&mode=full", "Bearer secret"));
+    expect(res.status).toBe(200);
+    const body = (await res.json()) as { success: boolean; rushTendencies: { status: string } };
+    expect(body.success).toBe(false);
+    expect(body.rushTendencies.status).toBe("clearance-denied");
   });
 
   it("502s when any ingestion reports a non-ok status", async () => {
