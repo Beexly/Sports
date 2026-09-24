@@ -1,8 +1,8 @@
 # Change Proposal — <title>
 
-**Date:** <YYYY-MM-DD>  
-**Status:** <Proposed / Approved / Rejected>  
-**Author:** <name or team>  
+**Date:** <YYYY-MM-DD>
+**Status:** <Proposed / Approved / Rejected>
+**Author:** <name or team>
 **Affects:** <schema / dependency / product surface / registry / CI>
 
 > *Describe the proposal in one concrete sentence before filling in the sections below.*
@@ -58,6 +58,6 @@
 
 > *An approved signature or explicit approval is required before implementation. Unapproved proposals are not implemented.*
 
-**Owner:** <name>  
-**Signature / approval:** ______________________________  
+**Owner:** <name>
+**Signature / approval:** ______________________________
 **Date:** <YYYY-MM-DD>
