@@ -77,6 +77,15 @@ export function citeAllowed(sourceId: string): boolean {
   return !CITE_DISALLOWED.has(sourceId);
 }
 
+export function citeEligibleSources(
+  sourceIds: Iterable<string>,
+): readonly FreeQuoteTier[] {
+  const supplied = new Set(sourceIds);
+  return FREE_QUOTE_PRECEDENCE.filter(
+    (tier) => supplied.has(tier) && !isTierBOnly(tier) && citeAllowed(tier),
+  );
+}
+
 /**
  * Whether this free-ladder source may certify a live-gate path.
  * OddsPapi, Apify, and parlay are always false.
