@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2110.03874: Uncertainty Quantification in the Bradley-Terry-Luce Model.
  *

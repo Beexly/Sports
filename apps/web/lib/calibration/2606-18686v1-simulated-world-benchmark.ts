@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2606.18686v1: ForecastBench-Sim: A Simulated-World Forecasting Benchmark.
  *

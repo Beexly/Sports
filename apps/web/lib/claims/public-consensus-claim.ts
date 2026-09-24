@@ -1,3 +1,5 @@
+import type { PublicPick } from "@sports/types";
+
 /**
  * Public consensus-claim evidence binder (T-1 tripwire).
  *
@@ -12,7 +14,7 @@
  */
 
 export const CONSENSUS_CLAIM_RE =
-  /\b(\d{1,3})%\s+bookmaker consensus\b/i;
+  /\b\d{1,3}%\s+(?:bookmaker consensus\b|(?:of\s+)?bookmakers?\s+(?:favor|favou?rs?|align|aligned)\b)/i;
 
 export type PublicConsensusEvidence = {
   /** Unmodified teaser text from the pick (no rewrite). */
@@ -25,11 +27,21 @@ export type PublicConsensusEvidence = {
   readonly ageHours: number;
 };
 
+export type PublicConsensusPick = Omit<PublicPick, "reasoning" | "reasoningShort"> & {
+  reasoning: string | null;
+  reasoningShort: string | null;
+  consensusPct?: number | null;
+  bookmakerCount?: number;
+  consensusProvider?: string | null;
+  consensusEvidence?: string | null;
+};
+
 export type ConsensusClaimPickSlice = {
   readonly reasoningShort: string | null | undefined;
   readonly consensusPct?: number | null;
   readonly bookmakerCount?: number | null;
   readonly dataFreshnessAt?: Date | string | null;
+  readonly consensusProvider?: string | null;
 };
 
 /** True when the free teaser asserts a quantified bookmaker-consensus claim. */
@@ -43,6 +55,8 @@ export function isBookmakerConsensusClaim(text: string | null | undefined): bool
  *
  * Rules:
  * - Must match the consensus teaser pattern.
+ * - Quantified claims require a resolved non-empty consensusProvider (fail-closed).
+ * - Refuse espn_public and *-thin providers (split on +).
  * - bookmakerCount ≥ 2 (MIN_BOOKMAKERS in prediction-engine).
  * - dataFreshnessAt present and parseable.
  * - consensusPct in (0, 1].
@@ -56,6 +70,19 @@ export function bindPublicConsensusClaim(
 
   const bookmakerCount = Math.floor(Number(pick.bookmakerCount ?? 0));
   if (!Number.isFinite(bookmakerCount) || bookmakerCount < 2) return null;
+
+  const provider = pick.consensusProvider?.trim().toLowerCase() ?? "";
+  // Fail-closed: quantified bookmaker-consensus claims require a resolved provider.
+  // Missing/null/empty/whitespace leaves the claim unbound (closes thin/espn hole
+  // when ODDS snapshot is absent and ingestion lookup returns nothing).
+  if (!provider) return null;
+  if (
+    provider
+      .split("+")
+      .some((part) => part === "espn_public" || part.endsWith("-thin"))
+  ) {
+    return null;
+  }
 
   const rawFresh = pick.dataFreshnessAt;
   if (rawFresh == null || rawFresh === "") return null;

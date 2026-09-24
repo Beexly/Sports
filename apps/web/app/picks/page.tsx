@@ -10,13 +10,19 @@ import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
-import { getEntitlements, type PublicPick, type DailySlate, type SubscriptionTier } from "@sports/types";
+import { getEntitlements, type DailySlate, type SubscriptionTier } from "@sports/types";
 import { getReadinessGates } from "@sports/prediction-engine";
 import Link from "next/link";
 import { headers } from "next/headers";
 import { NextRequest } from "next/server";
 import { GET as getPicks } from "@/app/api/picks/route";
 import { GET as getDailySlate } from "@/app/api/picks/daily-slate/route";
+import {
+  bindPublicConsensusClaim,
+  consensusEvidenceCaption,
+  isBookmakerConsensusClaim,
+  type PublicConsensusPick,
+} from "@/lib/claims/public-consensus-claim";
 
 // Metadata follows the same gate the page follows, so the description never says
 // the board is dark while /api/picks serves it (or the reverse). The root layout
@@ -42,7 +48,7 @@ interface PicksPageProps {
 
 interface PicksResponse {
   success: boolean;
-  data: PublicPick[];
+  data: PublicConsensusPick[];
   meta: {
     tier: string;
     total: number;
@@ -55,6 +61,27 @@ interface PicksResponse {
     hint?: string;
     /** Which gate darkened the board: history-gated launch vs stale-data pause. */
     kind: "gated" | "stale";
+  };
+}
+
+function bindPublicPickReasoning(
+  pick: PublicConsensusPick,
+  canSeeFactorBreakdown: boolean,
+): PublicConsensusPick {
+  const reasoning = canSeeFactorBreakdown ? pick.reasoning : pick.reasoningShort;
+  const bound = bindPublicConsensusClaim({
+    reasoningShort: reasoning,
+    consensusPct: pick.consensusPct,
+    bookmakerCount: pick.bookmakerCount,
+    dataFreshnessAt: pick.dataFreshnessAt,
+    consensusProvider: pick.consensusProvider,
+  });
+  if (isBookmakerConsensusClaim(reasoning) && !bound) {
+    return { ...pick, reasoning: null, reasoningShort: null, consensusEvidence: null };
+  }
+  return {
+    ...pick,
+    consensusEvidence: bound ? consensusEvidenceCaption(bound) : null,
   };
 }
 
@@ -176,8 +203,15 @@ export default async function PicksPage({ searchParams }: PicksPageProps) {
   ]);
 
   const slate = slateResult.status === "fulfilled" ? slateResult.value : null;
-  const picks: PublicPick[] =
-    picksResult.status === "fulfilled" ? picksResult.value.data : [];
+  const picks: PublicConsensusPick[] =
+    picksResult.status === "fulfilled"
+      ? picksResult.value.data.map((pick) =>
+          bindPublicPickReasoning(
+            pick,
+            Boolean(entitlements.canSeeFactorBreakdown),
+          ),
+        )
+      : [];
   const bootstrapState =
     picksResult.status === "fulfilled" ? picksResult.value.bootstrap : null;
   const fetchError =
