@@ -4,7 +4,7 @@ import { auth } from "@/lib/auth";
 import { getUserEntitlements } from "@/lib/entitlements";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
-import { getEntitlements, type PublicPick, type PickResult, type PickGrade, type RiskLevel, type FactorBreakdown } from "@sports/types";
+import { getEntitlements, type PickResult, type PickGrade, type RiskLevel, type FactorBreakdown } from "@sports/types";
 import { freshPickWhere } from "@/lib/board/stale-pick-policy";
 import { gameInSlateWindow, resolveSlateWindow } from "@/lib/picks/slate-window";
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
@@ -24,6 +24,12 @@ import { dropContradictedModelSignals } from "@/lib/picks/model-signal-coherence
 import { dropAdverseEdgePicks } from "@/lib/picks/adverse-edge-suppression";
 import { clientIp } from "@/lib/api/rate-limit";
 import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
+import {
+  bindPublicConsensusClaim,
+  consensusEvidenceCaption,
+  isBookmakerConsensusClaim,
+  type PublicConsensusPick,
+} from "@/lib/claims/public-consensus-claim";
 
 export const dynamic = "force-dynamic";
 
@@ -232,12 +238,40 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       ? rankedPicks.slice(0, entitlements.dailyPickLimit)
       : rankedPicks;
 
+  const consensusProviderByRun = new Map<string, string>();
+  const ingestionRunIds = limitedPicks
+    .map((pick) => pick.ingestionRunId)
+    .filter((id): id is string => Boolean(id));
+  if (
+    ingestionRunIds.length > 0 &&
+    typeof db.ingestionRun?.findMany === "function"
+  ) {
+    const runs = await db.ingestionRun
+      .findMany({
+        where: { id: { in: ingestionRunIds } },
+        select: {
+          id: true,
+          sourceSnapshots: {
+            where: { sourceKind: "ODDS_EVENTS" },
+            orderBy: { fetchedAt: "desc" },
+            take: 1,
+            select: { provider: true },
+          },
+        },
+      })
+      .catch(() => []);
+    for (const run of runs) {
+      const provider = run.sourceSnapshots[0]?.provider;
+      if (provider) consensusProviderByRun.set(run.id, provider);
+    }
+  }
+
   // Thread 2: honest calibrated confidence. Built once (memoised) and only when
   // the audited calibrator is on; the calibrator is self-suppressing if the
   // sample is insufficient/non-improving, so this is null-safe by construction.
   const calibrator = gates.canApplyCalibrationAdjustments ? await getPublicCalibrator() : null;
 
-  const publicPicks: PublicPick[] = limitedPicks.map((pick) => {
+  const publicPicks: PublicConsensusPick[] = limitedPicks.map((pick) => {
     // Parse + validate factorBreakdown from JSON storage. The Prisma column is
     // typed JsonValue; parseFactorBreakdown checks the shape and returns null
     // for a malformed/legacy blob (a handled "no factor trail" state) so a
@@ -271,6 +305,36 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     // cycle). Reading the pill from the live column while the percentage read
     // the snapshot let a transient feed gap render the pill beside a percentage.
     const bookmakerCount = pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount;
+    const consensusProvider = pick.ingestionRunId
+      ? consensusProviderByRun.get(pick.ingestionRunId) ?? null
+      : null;
+    const consensusSlice = {
+      consensusPct: pick.consensusPct,
+      bookmakerCount,
+      dataFreshnessAt: pick.dataFreshnessAt,
+      consensusProvider,
+    };
+    const projectReasoning = (text: string) => {
+      const source = text.trim();
+      if (!source) return { text: null, bound: null };
+      const bound = bindPublicConsensusClaim({
+        ...consensusSlice,
+        reasoningShort: source,
+      }, now);
+      if (isBookmakerConsensusClaim(source) && !bound) {
+        return { text: null, bound: null };
+      }
+      return {
+        text: teaserForViewer(source, entitlements.canSeeConfidence),
+        bound,
+      };
+    };
+    const shortReasoning = projectReasoning(pick.reasoningShort);
+    const reasoningSource = entitlements.canSeeFactorBreakdown
+      ? pick.reasoning
+      : pick.reasoningShort || pick.reasoning.split(".")[0] + ".";
+    const projectedReasoning = projectReasoning(reasoningSource);
+    const consensusBound = projectedReasoning.bound ?? shortReasoning.bound;
 
     // v5.2.8 Phase 2: the receipt's market-implied win probability on
     // book-priced two-way MONEYLINE picks with >= 2 books, for EVERY tier.
@@ -345,10 +409,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       // free the premium reasoning trail. FREE gets the short teaser.
       // A viewer who cannot see confidence must not read it back as a percentage
       // inside the teaser (lib/picks/teaser-text.ts).
-      reasoning: entitlements.canSeeFactorBreakdown
-        ? pick.reasoning
-        : teaserForViewer(pick.reasoningShort || pick.reasoning.split(".")[0] + ".", entitlements.canSeeConfidence),
-      reasoningShort: teaserForViewer(pick.reasoningShort, entitlements.canSeeConfidence),
+      reasoning: projectedReasoning.text,
+      reasoningShort: shortReasoning.text,
+      consensusPct: pick.consensusPct,
+      bookmakerCount,
+      consensusProvider,
+      consensusEvidence: consensusBound
+        ? consensusEvidenceCaption(consensusBound)
+        : null,
       isFeatured: pick.isFeatured,
       isAuditAvailable:
         !pick.id.startsWith("sample-pick-") &&

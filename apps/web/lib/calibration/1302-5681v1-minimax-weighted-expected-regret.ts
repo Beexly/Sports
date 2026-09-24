@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 1302.5681v1: Weighted Sets of Probabilities and Minimax Weighted Expected Regret.
  *

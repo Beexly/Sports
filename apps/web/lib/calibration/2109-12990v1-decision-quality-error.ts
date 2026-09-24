@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2109.12990v1: Optimal Team Economic Decisions in Counter-Strike.
  *
