@@ -967,7 +967,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     ` Confidence: ${confidence}/100 (${pickGrade.replace(/_/g, " ")}).`;
 
   const reasoningShort =
-    `${Math.round(consensusPct * 100)}% of bookmakers favor ${direction} ${avgTotal.toFixed(1)}.`;
+    `${Math.round(consensusPct * 100)}% of bookmakers favor ${direction} ${totalDisplay}.`;
 
   const factorBreakdown: FactorBreakdown = {
     consensusScore,
