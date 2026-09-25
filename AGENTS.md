@@ -4106,3 +4106,39 @@ Window: posts after ~9:10 AM CDT Thu 2026-09-24 through ~9:10 PM CDT Thu 2026-09
 - No CAPTCHA or rate-limiting at any point; session persisted as @GalaxySportsHQ; read-only throughout.
 - Standing loose end (carried): "Bryce Young map" screenshot from the 2026-09-20 PM sweep remains undescribed/uninventoried.
 - Transcription caveats: @sfdata9ers before/after-contact scatter + @PattonAnalytics POE survival curve (all values approximate); 10+ yard rushes table (one team identity uncertain, transcribed as TB); beyondtheadp CSV (author's tiering preserved, key_takeaway values not captured).
+
+## X ANALYTICS SWEEP 2026-09-25 AM
+
+Window: posts after ~9:10 PM CDT Thu 2026-09-24 through ~9:10 AM CDT Fri 2026-09-25. READ ONLY; no likes/reposts/replies/follows/DMs anywhere. One read-only browser task (shared leased Chromium profile, @GalaxySportsHQ) covering all 21 primary accounts + home feed + keyword searches (EPA, TPRR, CPOE, aggressiveness, pass rush win rate). The nineteen 9/24 AM+PM items were passed in for dedup. No rate-limiting, no CAPTCHAs.
+
+### NEW ITEMS (2)
+
+- @GridironInfo_, 2026-09-25 8:44 AM CDT — "QB Avg. Time To Throw After Week 2" / chart title "QB TIME TO THROW BY TEAM" ("2026 NFL Season · Season · Data: Next Gen Stats"; x-axis "TIME TO THROW", 0.00s–4.50s). Author definition (verbatim): "Shows how long each team's QB holds the ball before throwing, on average." Full table (last name, seconds, descending): Williams 3.42; Hurts 3.41; Daniels 3.25; Jackson 3.19; Willis 3.10; Young 2.98; Smith 2.97; Allen 2.97; Ward 2.97; Mayfield 2.94; Stroud 2.90; Lawrence 2.88; Cousins 2.88; Maye 2.87; Nix 2.85; Purdy 2.83; Jones 2.82; Goff 2.80; Herbert 2.80; Lock 2.77; Rodgers 2.77; Watson 2.76; Prescott 2.71; Shough 2.65; Dart 2.64; Brissett 2.62; Wentz 2.61; Mahomes 2.60; Burrow 2.51; Love 2.45; Rush 2.45. Author text: "Caleb Williams holds it longest so far at 3.42 seconds." Footer verbatim: "@GridironInfo_ | Data: nflverse (nflreadpy) | 2026-09-22". FLAG: chart showed 31 rows vs 32 NFL teams (bottom row likely cropped by the footer; the missing row is NOT reconstructed). QB identity read from team-colored logo + last name (logos APPROXIMATE, last names legible). Author caveats/replies: none stated. https://x.com/GridironInfo_/status/2103480661885501858. CSV: gridironinfo-qb-time-to-throw-by-team-week2.csv (31 rows as visible).
+
+- @FantasyPtsData, 2026-09-24 9:34 PM CDT — deep-ball QB splits, TEXT-ONLY (no chart; borderline item — a stat comparison from the author's proprietary charted data, not a chart or defined metric). Post verbatim: "On balls throws 10+ yads in the air: / Josh Allen: 17/22 - 4 TD - 0 INT / Patrick Mahomes: 6/14 - 0 TD - 1 INT / Drake Maye: 7/15 - 0 TD - 4 INT / Justin Herbert: 12/27 - 1 TD - 3 INT". No metric name or definition given by author; implicitly 10+ air-yard passing splits. Data source: none stated in the post; author bio links fantasypointsdata.com ("FREE Premium Stats & Tools →"). No chart footer (no image). No author caveats/replies. https://x.com/FantasyPtsData/status/2103312221938098368. CSV: fantasypointsdata-deep-ball-10-plus-air-yards-week2.csv (4 rows).
+
+### SEEN / NOT RE-REPORTED
+
+- @sfdata9ers, 2026-09-25 1:21 AM CDT — repost of the 9/24 PM "Rushing Yards Before vs. After Contact" scatter; footer now reads "Data: PFR | Season: 2026 | Weeks: 1 - 2 | Min Rushes: 16 | QBs excluded" (axes: Yards Before Contact/Attempt vs Yards After Contact/Attempt; logo scatter, values not re-transcribed). Already inventoried 9/24 PM. https://x.com/sfdata9ers/status/2103369260441477545
+
+### INNOVATION NOTES (attributed, not build orders)
+
+- None strong in window (per browser pass): the @GridironInfo_ time-to-throw leaderboard is a standard Next Gen Stats metric rendered via nflverse/nflreadpy; the @FantasyPtsData deep-ball splits are proprietary charted data but a standard stat cut, not a new composite.
+- Different-angle (attributed): @RyanPaganetti posted Madden-rating OL trivia (Packers avg 69.0; ATL 83.4 vs GB 69.0, a 14.4-point gap) and a home-feed PBWR note ("The Packers 18.4% ESPN Pass Block Win Rate entering last night was so low I simply assumed there was an error on the ESPN side. Lowest they had ever posted") — stat trivia / single stats, not inventoried as metrics. @SumerSports TNF posts quoted their own out-of-window run-efficiency post (Packers bottom-5 in EPA/play and success rate on designed runs through two weeks) and added single-game stats (Love pressured on 42.3% of dropbacks; 27.3% success rate when pressured; Bijan Robinson 155 rushing yards on outside zone, most since Derrick Henry in the 2019 playoffs) — game commentary with stats, no new metric charts.
+
+### DATA-ACCESS NOTES (in-window; publicly visible only, no gates bypassed)
+
+- @GridironInfo_: bio ("Football by the numbers", joined July 2026) contains NO website/data link. Chart cites "Data: Next Gen Stats" (header) and "Data: nflverse (nflreadpy)" (footer, dated 2026-09-22) — nflverse/nflreadpy is a free open-source public-data project (no gate). No replies on the post at check.
+- @FantasyPtsData: bio links fantasypointsdata.com ("FREE Premium Stats & Tools →"); the 10+ air-yard splits are their proprietary charted data; no API or free-table endpoint stated on the profile.
+
+### NOTHING NEW IN WINDOW
+
+@cmain7 (survivor-contest/Packers posts); @RyanPaganetti (Madden OL trivia, PBWR single-stat note); @jmthrivept (injury analysis — Lamb ankle, Kupp, Bijan hamstring, Love wrist); @hawkblogger (Seahawks practice updates/videos); @MagicSportsGuy (newest posts out of window); @SumerSports (TNF game-commentary stats); @DevyEusuf (jokes/quotes); @statyxio (TNF commentary); @ScottBarrettDFB (Start/Sit video, podcast links); @PattonAnalytics (newest posts out of window); @EstablishTheRun (promos); @DonAtkinsonNFL (fan commentary); @DynatyzeFF (matchup-advantage promo); @PFF (article promo, Falcons basic stat tables); @32BeatWriters (newest posts out of window). Home feed (@GalaxySportsHQ Following tab): dominated by John McClain content; only analytics-adjacent in-window item was the @RyanPaganetti PBWR note above. Keyword searches: EPA (non-NFL noise); aggressiveness (non-NFL noise); "pass rush win rate" (TNF game commentary only); TPRR (surfaced the already-inventoried @BeyondTheADP deep dive, out of window); CPOE (fan commentary only).
+
+### BLOCKERS (2026-09-25 AM)
+
+- @NerdingonNFL: timeline never renders (one reload attempted; standing blocker).
+- @NFLResearcher: timeline renders empty despite 4 posts shown (one bounded attempt; standing blocker).
+- @FTNData: protected account; did not request access (standing blocker).
+- No CAPTCHA or rate-limiting at any point; session persisted as @GalaxySportsHQ; read-only throughout.
+- Standing loose end (carried): "Bryce Young map" screenshot from the 2026-09-20 PM sweep remains undescribed/uninventoried (not encountered during this pass).
