@@ -224,3 +224,10 @@ export {
   fixtureFromGameRows,
   type LeakageGateResult,
 } from "./leakage-gate.js";
+
+// Walk-forward vs closing line (W2 live call site)
+export {
+  runWalkForwardEval,
+  walkForwardShipGate,
+  type WalkForwardEvalResult,
+} from "./walk-forward-eval.js";
