@@ -6,6 +6,14 @@ import {
   evalBinomialCoverage,
   evalWilsonLowerBound,
   evalClopperPearsonLowerBound,
+  evalHonestCeiling,
+  evalRecomputeLedger,
+  evalKalshiBookDivergence,
+  evalKaunitzOutliers,
+  evalConsensusMarketQ,
+  evalRegimeShift,
+  evalFairSkillBrier,
+  evalGroupedClimatology,
 } from "./edge-lab-bridge.js";
 
 describe("edge-lab-bridge", () => {
@@ -66,5 +74,47 @@ describe("edge-lab-bridge", () => {
     expect(c.ok).toBe(true);
     if (c.ok) expect(c.lower).toBeGreaterThan(0);
     expect(evalWilsonLowerBound(11, 10).ok).toBe(false);
+  });
+
+  it("evalHonestCeiling fail-closes on missing claim and flags over-claim", () => {
+    expect(evalHonestCeiling(null).ok).toBe(false);
+    const r = evalHonestCeiling({ claimedRate: 0.8, scope: "blind" } as never);
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.defects.length).toBeGreaterThan(0);
+  });
+
+  it("evalRecomputeLedger fail-closes on empty entries", () => {
+    expect(evalRecomputeLedger([]).ok).toBe(false);
+    expect(evalRecomputeLedger(null).ok).toBe(false);
+  });
+
+  it("evalKalshiBookDivergence fail-closes on missing books", () => {
+    expect(evalKalshiBookDivergence(null, null).ok).toBe(false);
+  });
+
+  it("evalKaunitzOutliers fail-closes on empty quotes", () => {
+    expect(evalKaunitzOutliers([]).ok).toBe(false);
+  });
+
+  it("evalConsensusMarketQ returns null data on empty sources without throwing", () => {
+    const r = evalConsensusMarketQ([]);
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.data).toBeNull();
+  });
+
+  it("evalRegimeShift fail-closes on missing team or weekly", () => {
+    expect(evalRegimeShift(null, []).ok).toBe(false);
+    expect(evalRegimeShift("KC", null).ok).toBe(false);
+  });
+
+  it("evalFairSkillBrier fail-closes on bad nOutcomes", () => {
+    expect(evalFairSkillBrier(0.1, 1).ok).toBe(false);
+    const r = evalFairSkillBrier(0.1, 3);
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(Number.isFinite(r.fairSkill)).toBe(true);
+  });
+
+  it("evalGroupedClimatology fail-closes on empty train", () => {
+    expect(evalGroupedClimatology([]).ok).toBe(false);
   });
 });

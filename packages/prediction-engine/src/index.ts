@@ -1468,6 +1468,7 @@ export type {
   NamedBookTwoWay,
   KalshiBookFlag,
   KalshiBookResult,
+  KalshiBookDenied,
 } from "./edge-lab/kalshi-book-divergence.js";
 
 // Catch rate by aDOT bucket. Independent p. Not a new Odds market.
@@ -1728,6 +1729,17 @@ export {
   weeklyPerformancesFromGames,
 } from "./edge-lab/nfl-change-point.js";
 export type { ChangePointFlag, ChangePointOptions, WeeklyPerformance } from "./edge-lab/nfl-change-point.js";
+
+// Honest ceiling: refuse performance claims that exceed the measured ceiling.
+export {
+  collectCeilingDefects,
+  assertClaimWithinCeiling,
+} from "./edge-lab/honest-ceiling.js";
+export type { PerformanceClaimInput } from "./edge-lab/honest-ceiling.js";
+
+// Recompute verifier: re-score a ledger of claims against stored outcomes.
+export { recomputeLedger } from "./edge-lab/recompute-verifier.js";
+export type { LedgerEntry, RecomputeReport } from "./edge-lab/recompute-verifier.js";
 
 // Ladder + boost scanners: softness map across a market's price ladder.
 // Detects where model p diverges from market q. Does NOT fire live p. priced:false.
