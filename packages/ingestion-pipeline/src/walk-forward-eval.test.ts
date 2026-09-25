@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   runWalkForwardEval,
+  runTaxonomyReport,
   walkForwardShipGate,
 } from "./walk-forward-eval.js";
 import type { SeasonGame, ClosingLines, PredictFn } from "@sports/prediction-engine";
@@ -62,5 +63,21 @@ describe("walk-forward-eval", () => {
       const gate = walkForwardShipGate(r.data);
       expect(["SHIP", "WITHHOLD", "NO_SAMPLES"]).toContain(gate.verdict);
     }
+  });
+
+  it("runTaxonomyReport fail-closes on empty rows", () => {
+    const r = runTaxonomyReport([]);
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.reason).toContain("at least one row");
+  });
+
+  it("runTaxonomyReport runs on real rows", () => {
+    const r = runTaxonomyReport([
+      { context: "NFL_SPREAD", covered: true, width: 0.08 } as never,
+      { context: "NFL_SPREAD", covered: true, width: 0.12 } as never,
+      { context: "NFL_TOTAL", covered: false, width: 0.2 } as never,
+    ] as never);
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.data).toBeDefined();
   });
 });

@@ -7,9 +7,12 @@
 
 import {
   walkForwardSeasons,
+  runWalkForwardTaxonomy,
   type SeasonGame,
   type ClosingLines,
   type WalkForwardResult,
+  type WalkForwardTaxonomyRow,
+  type WalkForwardTaxonomyReport,
   type PredictFn,
 } from "@sports/prediction-engine";
 
@@ -91,3 +94,24 @@ export function walkForwardShipGate(result: WalkForwardResult): {
 
 export { walkForwardSeasons };
 export type { SeasonGame, ClosingLines, WalkForwardResult, PredictFn };
+
+/**
+ * Mondrian taxonomy report — which contexts the model covers and which
+ * categories are under-covered. Fail-closed on empty rows.
+ */
+export function runTaxonomyReport(
+  rows: readonly WalkForwardTaxonomyRow[],
+  opts?: { readonly level?: number; readonly minSamplesForTrust?: number },
+): { readonly ok: true; readonly data: WalkForwardTaxonomyReport } | { readonly ok: false; readonly reason: string } {
+  if (!Array.isArray(rows) || rows.length === 0) {
+    return { ok: false, reason: "taxonomy requires at least one row" };
+  }
+  try {
+    return { ok: true, data: runWalkForwardTaxonomy(rows, opts) };
+  } catch (err) {
+    return {
+      ok: false,
+      reason: err instanceof Error ? err.message : String(err),
+    };
+  }
+}

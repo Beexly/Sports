@@ -2314,3 +2314,13 @@ export {
   logitPoolTest,
   type LogitPoolResult,
 } from "./edge-lab/logit-pool.js";
+
+// Walk-forward taxonomy (Mondrian category coverage, live-path promotion)
+export {
+  runWalkForwardTaxonomy,
+  contextFromLevel1Category,
+  type WalkForwardTaxonomyRow,
+  type WalkForwardTaxonomyOptions,
+  type WalkForwardTaxonomyReport,
+  type CategoryAlert,
+} from "./edge-lab/walk-forward-taxonomy.js";
