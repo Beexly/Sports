@@ -772,3 +772,20 @@ export {
   type SourceAtlasRegistryData,
 } from "./source-atlas-harvester.js";
 
+// Calibration weights — empirical P(WIN) recalibration + signal weights from 2,826 graded picks
+export {
+  CONFIDENCE_RECALIBRATION,
+  WEIGHT_BY_PICK_TYPE,
+  WEIGHT_BY_SPORT,
+  WEIGHT_BY_GRADE,
+  WEIGHT_BY_MODEL_VERSION,
+  PUBLISH_ACTIONS,
+  SIGNAL_COVERAGE_LIVE,
+  calibratedWinProb,
+  combinedSignalWeight,
+  shouldSuppress,
+  type ConfidenceRecalibration,
+  type SignalWeight,
+  type PublishAction,
+} from "./calibration-weights.js";
+

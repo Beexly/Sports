@@ -131,4 +131,44 @@ describe("legal source registry", () => {
       expect(getSource(source.id)).toBe(source);
     }
   });
+
+  it("clears Firecrawl open sources and gates commercial/health vendors", () => {
+    // Open / free sources from the 2026-09-25 intelligence pack.
+    expect(isIngestible("openligadb")).toBe(true);
+    expect(getSource("openligadb")?.license.spdx).toBe("ODbL-1.0");
+    expect(attributionFor("openligadb")).toMatch(/OpenLigaDB/i);
+    expect(isIngestible("thesportsdb")).toBe(true);
+    expect(attributionFor("thesportsdb")).toMatch(/TheSportsDB/i);
+    expect(isIngestible("openf1")).toBe(true);
+    expect(getSource("openf1")?.verdict).toBe("use-with-caution");
+    expect(getSource("openf1")?.commercialUse).toBe(false);
+
+    // Commercial vendors are declared but founder-gated until a contract exists.
+    for (const id of [
+      "sportradar",
+      "genius-sports",
+      "stats-perform",
+      "api-sports",
+      "football-data-org",
+      "sportmonks",
+    ]) {
+      expect(getSource(id)?.verdict).toBe("paid-required");
+      expect(isIngestible(id)).toBe(false);
+      expect(() => assertIngestible(id)).toThrow(/paid-required/);
+    }
+
+    // Official public injury reports: facts-only, caution-gated.
+    for (const id of ["nba-official-injury", "nfl-official-injury", "mlb-injury-report"]) {
+      expect(getSource(id)?.verdict).toBe("use-with-caution");
+      expect(getSource(id)?.attributionRequired).toBe(true);
+      expect(isIngestible(id)).toBe(true);
+    }
+
+    // Sensitive health APIs: consent-gated, not auto-ingestible.
+    for (const id of ["whoop-api", "oura-api"]) {
+      expect(getSource(id)?.verdict).toBe("paid-required");
+      expect(isIngestible(id)).toBe(false);
+      expect(() => assertIngestible(id)).toThrow(/paid-required/);
+    }
+  });
 });

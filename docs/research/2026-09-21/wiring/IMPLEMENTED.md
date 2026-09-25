@@ -155,3 +155,43 @@ Additive disabled-by-default scaffolds only. No live ingestion, database, schema
 | 2504.08764 | `packages/data-ingestion/src/2504-08764-nlp.ts` | `packages/data-ingestion/src/2504-08764-nlp.test.ts` | nlp | `ENABLED=false` scaffold |
 | 2507.17844v1 | `packages/data-ingestion/src/2507-17844v1-tracking.ts` | `packages/data-ingestion/src/2507-17844v1-tracking.test.ts` | tracking | `ENABLED=false` scaffold |
 | 2508.11711v2 | `packages/data-ingestion/src/2508-11711v2-data-infra.ts` | `packages/data-ingestion/src/2508-11711v2-data-infra.test.ts` | data_infra | `ENABLED=false` scaffold |
+
+## Wave 4 — V5–V8 + W3–W6 + D1–D4 builders (2026-09-25)
+
+All 12 builds composed into the engine-facing suite. Live-path promotion remains disabled under the new-files-only rule.
+
+| Build | File | Tests | Status |
+|---|---|---|---|
+| V5 Model-output CSV contract | `packages/prediction-engine/src/eval/model-submission-schema.ts` | 13/13 | DONE |
+| V6 Generalized Poisson TD model | `packages/prediction-engine/src/nfl/generalized-poisson.ts` | 15/15 | DONE |
+| V7 Feature-construction discipline | `packages/prediction-engine/src/eval/feature-construction-recipe.ts` | 11/11 | DONE |
+| V8 Pro-bettor process checklist | `docs/research/2026-09-25/model-process-checklist.md` | doc | DONE |
+| W3 ATS ablation harness | `packages/prediction-engine/src/nfl/ats-ablation-harness.ts` | 6/6 | DONE |
+| W4 Anytime-TD + EV (MIT) | `packages/prediction-engine/src/props/anytime-td-mit.ts` | 14/14 | DONE |
+| W5 Luck-neutralized EPA (MIT) | `packages/prediction-engine/src/nfl/luck-neutralized-epa.ts` | 12/12 | DONE |
+| W6 WP event replay (MIT) | `packages/prediction-engine/src/backtest/wp-event-replay.ts` | 9/9 | DONE |
+| D1 PropLine intake | `packages/data-ingestion/src/propline-intake.ts` | 13/13 | DONE |
+| D2 Forecast-vintage weather | `packages/data-ingestion/src/weather-vintage.ts` | 14/14 | DONE |
+| D3 Sleeper intake | `packages/data-ingestion/src/sleeper-intake.ts` | 9/9 | DONE |
+| D4 cfbfastR college PBP | `packages/data-ingestion/src/cfbfastr-intake.ts` | 10/10 | DONE |
+
+Full prediction-engine suite: 5837/5837 across 817 test files. coverage.test.ts 10/10. data-ingestion new intakes 46/46 + holdout 12/12.
+
+## Wave 5 — NGS-11/12 + strategic adapters (2026-09-25)
+
+| Build | File | Tests | Status |
+|---|---|---|---|
+| NGS-11 Coverage/DB metrics | `packages/prediction-engine/src/nfl/coverage-db-metrics.ts` | 9/9 | DONE |
+| NGS-12 Adjacent metric families | `packages/prediction-engine/src/nfl/ngs-adjacent-metrics.ts` | 13/13 | DONE |
+| Strategic signal adapters | `packages/prediction-engine/src/engine/strategic-signal-adapters.ts` | 16/16 | DONE |
+
+| Decision adapters | `packages/prediction-engine/src/engine/decision-adapters.ts` | 19/19 | DONE |
+| Reasoning surface facade | `packages/prediction-engine/src/engine/reasoning-surface.ts` | 11/11 | DONE |
+
+| Market/inplay/sizing adapters | `packages/prediction-engine/src/engine/market-inplay-sizing-adapters.ts` | 22/22 | DONE |
+
+| Expected-metrics adapters | `packages/prediction-engine/src/engine/expected-metrics-adapters.ts` | 9/9 | DONE |
+
+| Dispersion/bayesian adapters | `packages/prediction-engine/src/engine/dispersion-bayesian-adapters.ts` | 14/14 | DONE |
+
+Wave 5 full prediction-engine suite: 5951/5951 across 825 test files. coverage.test.ts 10/10. Engine adapter surface: 170/170 across 14 test files.
