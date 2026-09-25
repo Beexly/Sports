@@ -10,8 +10,8 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
  *    selects identical history. So every game of an upcoming series got a
  *    BYTE-IDENTICAL trueProb and each was minted as its own published pick:
  *    San Diego Padres ML at 0.7509071950876358 on four separate dates, Tampa
- *    Bay Rays ML at 0.8597101874244611 on three. 18 of 124 published rows — 40%
- *    of the 45 model signals — were exact repeats across 9 matchups.
+ *    Bay Rays ML at 0.8597101874244611 on three. 18 of 124 published rows â€” 40%
+ *    of the 45 model signals â€” were exact repeats across 9 matchups.
  *
  * 2. A SECOND GRADE LADDER. This lane graded on confidence alone at looser
  *    cut-points while book-priced rows were graded on confidence AND a measured
@@ -38,12 +38,16 @@ vi.mock("@sports/db", () => ({
   },
 }));
 
-vi.mock("@sports/prediction-engine", () => ({
-  getReadinessGates: () => ({ canExposePublicPicks: true, canPersistCanonicalHistory: true }),
-  MODEL_VERSION: "vtest",
-  MIN_PUBLISH_CONFIDENCE: 50,
-  PREMIUM_CONFIDENCE_THRESHOLD: 70,
-}));
+vi.mock("@sports/prediction-engine", async (importOriginal) => {
+  const actual = await importOriginal<Record<string, unknown>>();
+  return {
+    ...actual,
+    getReadinessGates: () => ({ canExposePublicPicks: true, canPersistCanonicalHistory: true }),
+    MODEL_VERSION: "vtest",
+    MIN_PUBLISH_CONFIDENCE: 50,
+    PREMIUM_CONFIDENCE_THRESHOLD: 70,
+  };
+});
 
 vi.mock("../build-independent-fair-values.js", () => ({
   buildIndependentFairValues: mocks.buildIndependents,
@@ -99,7 +103,7 @@ beforeEach(() => {
   mocks.gameUpdate.mockResolvedValue({});
   mocks.pickUpdateMany.mockResolvedValue({ count: 0 });
   mocks.pickCreate.mockResolvedValue({});
-  mocks.pickFindUnique.mockResolvedValue(null); // nothing exists yet → create path
+  mocks.pickFindUnique.mockResolvedValue(null); // nothing exists yet â†’ create path
   // A strong, confident read. Identical for every game of the series, which is
   // exactly what the real estimator produces and the whole point of the defect.
   mocks.buildIndependents.mockResolvedValue([

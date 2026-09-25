@@ -30,12 +30,16 @@ vi.mock("@sports/db", () => ({
   },
 }));
 
-vi.mock("@sports/prediction-engine", () => ({
-  getReadinessGates: () => ({ canExposePublicPicks: true, canPersistCanonicalHistory: true }),
-  MODEL_VERSION: "vtest",
-  MIN_PUBLISH_CONFIDENCE: 50,
-  PREMIUM_CONFIDENCE_THRESHOLD: 70,
-}));
+vi.mock("@sports/prediction-engine", async (importOriginal) => {
+  const actual = await importOriginal<Record<string, unknown>>();
+  return {
+    ...actual,
+    getReadinessGates: () => ({ canExposePublicPicks: true, canPersistCanonicalHistory: true }),
+    MODEL_VERSION: "vtest",
+    MIN_PUBLISH_CONFIDENCE: 50,
+    PREMIUM_CONFIDENCE_THRESHOLD: 70,
+  };
+});
 
 vi.mock("../build-independent-fair-values.js", () => ({
   buildIndependentFairValues: mocks.buildIndependents,
@@ -285,7 +289,7 @@ describe("generateSignalSlate fixture confirmation guard (C-111)", () => {
   });
 
   /**
-   * C-299 — the second clock, ours. The scanned-games query already filters
+   * C-299 â€” the second clock, ours. The scanned-games query already filters
    * `commenceTime: { gte: now }`, so on this path the kickoff guard is defence
    * in depth rather than a live hole-closer: it holds even when a row reaches
    * the loop in play, which is what a loosened query filter or a backwards
@@ -297,7 +301,7 @@ describe("generateSignalSlate fixture confirmation guard (C-111)", () => {
       boardResponse({ events: [espnEvent("406", "2026-09-05T19:30Z", "Cincinnati Bearcats", "Boston College Eagles")] }),
     );
     // Kickoff 14:00Z against NOW 15:00Z: an hour under way. ESPN still lists it
-    // at 19:30Z, so the C-111 guard CONFIRMS it — only our own clock refuses.
+    // at 19:30Z, so the C-111 guard CONFIRMS it â€” only our own clock refuses.
     mocks.gameFindMany.mockResolvedValue([{ ...GAME, commenceTime: new Date("2026-09-05T14:00:00.000Z") }]);
     mocks.pickFindUnique.mockResolvedValue(null);
     const warn = vi.spyOn(console, "warn").mockImplementation(() => {});

@@ -36,15 +36,19 @@ vi.mock("@sports/db", () => ({
   },
 }));
 
-vi.mock("@sports/prediction-engine", () => ({
-  getReadinessGates: () => ({
-    canExposePublicPicks: mocks.canExpose.value,
-    canPersistCanonicalHistory: true,
-  }),
-  MODEL_VERSION: "vtest",
-  MIN_PUBLISH_CONFIDENCE: 50,
-  PREMIUM_CONFIDENCE_THRESHOLD: 70,
-}));
+vi.mock("@sports/prediction-engine", async (importOriginal) => {
+  const actual = await importOriginal<Record<string, unknown>>();
+  return {
+    ...actual,
+    getReadinessGates: () => ({
+      canExposePublicPicks: mocks.canExpose.value,
+      canPersistCanonicalHistory: true,
+    }),
+    MODEL_VERSION: "vtest",
+    MIN_PUBLISH_CONFIDENCE: 50,
+    PREMIUM_CONFIDENCE_THRESHOLD: 70,
+  };
+});
 
 vi.mock("../build-independent-fair-values.js", () => ({
   buildIndependentFairValues: mocks.buildIndependents,

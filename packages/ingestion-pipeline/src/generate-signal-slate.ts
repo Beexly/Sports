@@ -24,6 +24,8 @@ import type {
   IndependentMarketFairValue,
 } from "@sports/types";
 import { buildIndependentFairValues } from "./build-independent-fair-values.js";
+import { SIGNAL_REGISTRY } from "./signal-registry-definitions.js";
+import { applyContinuousSignalTilt } from "./continuous-signal-tilt.js";
 import {
   FixtureConfirmer,
   formatFixtureLine,
@@ -424,9 +426,32 @@ export async function generateSignalSlate(opts?: {
       continue;
     }
 
+    // Continuous-signal tilt: situational / efficiency / microclimate signals
+    // vote a log-odds adjustment on top of the probability blend. Fail-open —
+    // never blocks minting when signals abstain.
+    let homeP = blend.homeP;
+    let continuousVotes: readonly { signalId: string; tilt: number }[] = [];
+    try {
+      const tilt = await applyContinuousSignalTilt(homeP, SIGNAL_REGISTRY, {
+        sportKey,
+        homeTeam,
+        awayTeam,
+        commenceTime,
+        spreadHome: null,
+        env: process.env as Record<string, string | undefined>,
+        now: () => now,
+      });
+      if (tilt.applied) {
+        homeP = tilt.adjustedHomeP;
+        continuousVotes = tilt.votes;
+      }
+    } catch {
+      // fail-open
+    }
+
     candidatesWithIndependents += 1;
-    const homeChosen = blend.homeP >= 0.5;
-    const trueProb = homeChosen ? blend.homeP : clamp01(1 - blend.homeP);
+    const homeChosen = homeP >= 0.5;
+    const trueProb = homeChosen ? homeP : clamp01(1 - homeP);
     const confidence = Math.round(trueProb * 100);
     if (confidence < MIN_PUBLISH_CONFIDENCE) {
       picksSkipped += 1;
@@ -484,6 +509,12 @@ export async function generateSignalSlate(opts?: {
           description: `trueProb=${trueProb.toFixed(3)} from ${sourcesLabel}. No book odds attached.`,
           weight: confidence,
         },
+        ...continuousVotes.map((v) => ({
+          name: `Continuous signal — ${v.signalId}`,
+          impact: (v.tilt > 0 ? "positive" : "negative") as "positive" | "negative",
+          description: `Log-odds tilt ${v.tilt.toFixed(4)} (${v.tilt > 0 ? "home" : "away"}).`,
+          weight: Math.min(15, Math.round(Math.abs(v.tilt) * 100)),
+        })),
       ],
     };
 
