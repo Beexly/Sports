@@ -212,3 +212,5 @@ Wave 5 full prediction-engine suite: 5951/5951 across 825 test files. coverage.t
 | props-hb hierarchical Bayes bridge | `packages/ingestion-pipeline/src/props-hb-bridge.ts` | 4/4 | LIVE |
 | Calibration apply/map/monitor/sequence/commitment | `packages/prediction-engine/src/index.ts` barrel | exported | LIVE |
 | edge-lab proportionalDevig / impliedFromDecimal | `packages/prediction-engine/src/index.ts` barrel | exported | LIVE |
+
+| Ensemble learning bridge (logit-pool + residual GBM) | `packages/ingestion-pipeline/src/ensemble-bridge.ts` | 6/6 | LIVE |
