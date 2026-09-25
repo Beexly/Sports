@@ -965,14 +965,47 @@ export {
   type LimitationFlag,
 } from "./model-limitations.js";
 
-// Exact binomial interval ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â conservative counterpart to Wilson. Used by the
+// Exact binomial interval — conservative counterpart to Wilson. Used by the
 // public performance / calibration CI layer so a headline rate is never a
-// bare point estimate.
+// bare point estimate. NOTE: model-limitations already owns the name
+// `wilsonInterval`; the stats.ts variant is exported as `statsWilsonInterval`.
 export {
+  wilsonLowerBound,
+  wilsonInterval as statsWilsonInterval,
+  binomialCoverage,
   clopperPearsonLowerBound,
   clopperPearsonInterval,
 } from "./edge-lab/stats.js";
-export type { ClopperPearsonInterval } from "./edge-lab/stats.js";
+export type { ClopperPearsonInterval, WilsonInterval, BinomialCoverage } from "./edge-lab/stats.js";
+
+// Schedule features (as-of rolling win% / point-diff). Fail-closed on thin history.
+export {
+  SCHEDULE_FEATURE_KEYS,
+  buildScheduleFeatureRows,
+} from "./edge-lab/schedule-features.js";
+export type { ScheduleFeatureResult } from "./edge-lab/schedule-features.js";
+
+// Edge-lab logistic trainer (ridge logistic on feature maps).
+export { logisticTrainer } from "./edge-lab/logistic.js";
+export type {
+  LabeledExample,
+  Predictor,
+  Trainer,
+  LogisticOptions,
+} from "./edge-lab/logistic.js";
+
+// Standings math (points / maxPoints / standingsFacts).
+export {
+  PLAYOFF_SPOTS_PER_CONFERENCE,
+  points as standingsPoints,
+  maxPoints as standingsMaxPoints,
+  standingsFacts,
+} from "./edge-lab/standings-math.js";
+export type { TeamStandingRow, StandingsFacts } from "./edge-lab/standings-math.js";
+
+// Game row + as-of feature store types (schedule features input contract).
+export type { GameRow as EdgeLabGameRow } from "./edge-lab/game-row.js";
+export type { AsOfFeatureStore } from "./edge-lab/asof-store.js";
 
 export {
   noVigFromAmericanPrices,
