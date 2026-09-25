@@ -233,3 +233,11 @@ Wave 5 full prediction-engine suite: 5951/5951 across 825 test files. coverage.t
 | evalLeakageQuality fail-open factor on signal slate | packages/ingestion-pipeline/src/leakage-gate.ts | 7/7 | LIVE |
 | assertSubmissionLeakage fail-closed on submission path | packages/ingestion-pipeline/src/leakage-gate.ts | covered in 7/7 | LIVE |
 | Catch-cushion / comp-air-yards-diff / rec-TD-cushion / sack-TTT bind barrel exports | packages/prediction-engine/src/index.ts | exported | LIVE |
+## Wave 6C — detector classes, Hawkes bootstrap/simulate, edge-lab-bridge (2026-09-25)
+
+| Item | File | Tests | Status |
+|---|---|---|---|
+| PageHinkley + PUDD as live alarm producers | packages/ingestion-pipeline/src/monitoring-bridge.ts | 15/15 | LIVE |
+| bootstrapGoT + simulateHawkes fail-closed wrappers | packages/ingestion-pipeline/src/monitoring-bridge.ts | covered in 15/15 | LIVE |
+| schedule-features + logistic + standings-math + binomial stats | packages/ingestion-pipeline/src/edge-lab-bridge.ts | 7/7 | LIVE |
+| stats wilsonInterval renamed statsWilsonInterval (duplicate barrel export blocked) | packages/prediction-engine/src/index.ts | exported | LIVE |
