@@ -324,3 +324,18 @@ export {
   evalKellyLowerEndpoint,
   type CertEval,
 } from "./certificate-bridge.js";
+
+// Bayesian bridge (hierarchical shrinkage, dirichlet pool, match priors, EP-probit)
+export {
+  evalPartialPool,
+  evalEbTau2,
+  evalOpinionPool,
+  evalFitPoolingWeight,
+  evalDirichletPredictive,
+  evalBlendAnalystView,
+  evalCumulativeProbit,
+  evalRollForwardPriors,
+  evalEpProbitFit,
+  evalEpProbitPredict,
+  type BayesEval,
+} from "./bayesian-bridge.js";

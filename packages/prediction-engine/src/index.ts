@@ -2578,3 +2578,29 @@ export {
   type KellyInput,
   type KellyResult,
 } from "./certificate/kelly-lower-endpoint.js";
+
+// Bayesian: hierarchical shrinkage, dirichlet floor, match priors, EP-probit
+export {
+  partialPool,
+  poolAll,
+  ebTau2,
+  type PooledEstimate,
+} from "./bayesian/hierarchical-shrinkage.js";
+export {
+  dirichletPredictive,
+  updateCounts,
+  opinionPool,
+  fitPoolingWeight,
+} from "./bayesian/dirichlet-floor.js";
+export {
+  cumulativeProbitPredict,
+  fitPriorRegression,
+  blendAnalystView,
+  rollForwardPriors,
+} from "./bayesian/match-prior-discipline.js";
+export {
+  epProbitFit,
+  epProbitPredict,
+  type EpProbitOptions,
+  type EpProbitResult,
+} from "./bayesian/ep-probit.js";
