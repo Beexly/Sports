@@ -123,7 +123,7 @@ export function validateSubmission(pkg: SubmissionPackage): SubmissionValidation
     const row = pkg.rows[i] as SubmissionRow;
 
     for (const col of REQUIRED_SUBMISSION_COLUMNS) {
-      const raw = (row as Record<string, unknown>)[col];
+      const raw = (row as unknown as Record<string, unknown>)[col];
       if (raw === undefined || raw === null) {
         failures.push({
           code: "MISSING_COLUMN",
