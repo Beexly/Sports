@@ -1,5 +1,5 @@
 /**
- * Continuous-signal tilt — turns CONTINUOUS_VALUE registry signals into a
+ * Continuous-signal tilt â€” turns CONTINUOUS_VALUE registry signals into a
  * weighted probability adjustment.
  *
  * The signal registry runner drops CONTINUOUS_VALUE results (they carry no
@@ -13,7 +13,8 @@
  */
 
 import type { SignalDefinition, SignalContinuousValue } from "@sports/types";
-import type { SignalEvaluationContext } from "@sports/types";
+import type { SignalEvaluationContext, SignalFamily } from "@sports/types";
+import { poolSignalsHierarchically } from "@sports/prediction-engine";
 
 export interface ContinuousVote {
   readonly signalId: string;
@@ -29,6 +30,7 @@ export interface ContinuousTiltResult {
   readonly netTilt: number;
   readonly adjustedHomeP: number;
   readonly applied: boolean;
+  readonly pooledEdge: number | null;
 }
 
 /**
@@ -52,7 +54,7 @@ export async function applyContinuousSignalTilt(
   ctx: SignalEvaluationContext,
 ): Promise<ContinuousTiltResult> {
   const votes: ContinuousVote[] = [];
-  let netTilt = 0;
+  // tilt accumulation replaced by hierarchical pool
 
   for (const signal of signals) {
     if (signal.outputKind !== "CONTINUOUS_VALUE") continue;
@@ -76,7 +78,6 @@ export async function applyContinuousSignalTilt(
       const tilt = valueToTilt(continuous.value, signal.trustWeight);
       if (tilt === 0) continue;
 
-      netTilt += tilt;
       votes.push({
         signalId: signal.id,
         family: signal.family,
@@ -85,18 +86,37 @@ export async function applyContinuousSignalTilt(
         tilt: Number(tilt.toFixed(6)),
       });
     } catch {
-      // silent abstain — never let one signal break the slate
+      // silent abstain â€” never let one signal break the slate
     }
   }
 
-  if (votes.length === 0 || netTilt === 0) {
+  if (votes.length === 0) {
     return {
       votes,
       netTilt: 0,
       adjustedHomeP: homeP,
       applied: false,
+      pooledEdge: null,
     };
   }
+
+  // Hierarchical pool: inverse-variance within family, evidence-weighted
+  // across families with DEFAULT_FAMILY_PRIOR_WEIGHTS. This is what makes
+  // "all input weighted" real â€” EFFICIENCY carries 0.22, SITUATIONAL 0.12,
+  // MICROCLIMATE 0.08, LUCK 0.05, NARRATIVE 0.05, etc.
+  const pooled = poolSignalsHierarchically(
+    votes.map((v) => ({
+      signalId: v.signalId,
+      family: v.family as SignalFamily,
+      estimatedEdge: v.tilt,
+      variance: Math.max(0.01, 1 - v.trustWeight),
+      sampleSize: 100,
+      isEligible: true,
+    })),
+    homeP,
+  );
+
+  const netTilt = pooled.blendedEdge ?? votes.reduce((s, v) => s + v.tilt, 0);
 
   // Convert homeP to log-odds, add tilt, convert back.
   const p = Math.min(1 - 1e-6, Math.max(1e-6, homeP));
@@ -107,6 +127,7 @@ export async function applyContinuousSignalTilt(
     votes,
     netTilt: Number(netTilt.toFixed(6)),
     adjustedHomeP: Number(adjusted.toFixed(6)),
-    applied: true,
+    applied: netTilt !== 0,
+    pooledEdge: Number(netTilt.toFixed(6)),
   };
 }
