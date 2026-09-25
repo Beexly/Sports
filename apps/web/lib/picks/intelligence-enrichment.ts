@@ -10,7 +10,13 @@ import {
   runIntelligence,
   type GameBundle,
   type IntelligenceResult,
+  type SignalObservation,
 } from "@/lib/intelligence-core";
+import {
+  wireEverything,
+  coverageReport,
+  type UniversalSignals,
+} from "@/lib/intelligence-core/universal-wiring";
 
 export interface PickIntelligence {
   readonly calibratedProb: number | null;
@@ -24,6 +30,12 @@ export interface PickIntelligence {
   readonly whyNot: readonly string[];
   readonly summary: string | null;
   readonly observationCount: number;
+  /** Coverage of the universal-wiring map: how many families produced observations. */
+  readonly familyCoverage: {
+    readonly total: number;
+    readonly familiesCovered: number;
+    readonly familiesMissing: readonly string[];
+  } | null;
 }
 
 export interface PickForIntelligence {
@@ -48,10 +60,15 @@ export interface PickForIntelligence {
 
 /**
  * Build a GameBundle from a pick row and run the intelligence engine.
+ *
+ * When `signals` is supplied, `wireEverything` (the ALL-knowing wiring map)
+ * produces the full observation list and feeds it into the reasoning spine
+ * via `extraObservations`. Without it, only market/situation context is used.
  */
 export function enrichPickWithIntelligence(
   pick: PickForIntelligence,
   now: Date = new Date(),
+  signals?: UniversalSignals,
 ): PickIntelligence {
   const empty: PickIntelligence = {
     calibratedProb: null,
@@ -65,6 +82,7 @@ export function enrichPickWithIntelligence(
     whyNot: [],
     summary: null,
     observationCount: 0,
+    familyCoverage: null,
   };
 
   try {
@@ -74,6 +92,26 @@ export function enrichPickWithIntelligence(
         : pick.marketFairProb != null && Number.isFinite(pick.marketFairProb)
           ? pick.marketFairProb
           : null;
+
+    // THE ALL-KNOWING WIRING: every module in the repo → observations.
+    // This is what makes the reasoning spine see everything, not just market.
+    let extraObservations: readonly SignalObservation[] = [];
+    let familyCoverage: PickIntelligence["familyCoverage"] = null;
+    if (signals) {
+      try {
+        extraObservations = wireEverything({ ...signals, now });
+        const cov = coverageReport(extraObservations);
+        familyCoverage = {
+          total: cov.total,
+          familiesCovered: cov.familiesCovered,
+          familiesMissing: cov.familiesMissing,
+        };
+      } catch {
+        // fail-open: universal wiring never blocks a pick response
+        extraObservations = [];
+        familyCoverage = null;
+      }
+    }
 
     const bundle: GameBundle = {
       gameId: pick.id,
@@ -97,6 +135,7 @@ export function enrichPickWithIntelligence(
         bookmakerCount: pick.bookmakerCount ?? null,
         consensusPct: pick.consensusPct ?? null,
       },
+      extraObservations,
       modelVersion: pick.modelVersion ?? "v5.2.7",
       statedConfidence: pick.confidence,
       grade: normalizeGrade(pick.pickGrade),
@@ -117,10 +156,43 @@ export function enrichPickWithIntelligence(
       whyNot: result.whyNot,
       summary: result.summary,
       observationCount: result.observationCount,
+      familyCoverage,
     };
   } catch {
     return empty;
   }
+}
+
+/**
+ * Assemble UniversalSignals from a pick row's market + situation fields.
+ * Missing modules are omitted — wireEverything handles the gaps as
+ * "no observation" rather than inventing one.
+ */
+export function universalSignalsFromPick(pick: PickForIntelligence): UniversalSignals {
+  const fairProb =
+    pick.homeFairProb != null && Number.isFinite(pick.homeFairProb)
+      ? pick.homeFairProb
+      : pick.marketFairProb != null && Number.isFinite(pick.marketFairProb)
+        ? pick.marketFairProb
+        : null;
+  const awayProb = fairProb != null ? 1 - fairProb : null;
+
+  return {
+    market: {
+      consensus:
+        pick.line != null && pick.bookmakerCount != null
+          ? {
+              line: pick.line,
+              total: 0,
+              books: pick.bookmakerCount,
+            }
+          : undefined,
+      devig:
+        fairProb != null && awayProb != null
+          ? { homeProb: fairProb, awayProb }
+          : undefined,
+    },
+  };
 }
 
 function normalizeGrade(

@@ -8,7 +8,10 @@ import { getEntitlements, type PickResult, type PickGrade, type RiskLevel, type 
 import { freshPickWhere } from "@/lib/board/stale-pick-policy";
 import { gameInSlateWindow, resolveSlateWindow } from "@/lib/picks/slate-window";
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
-import { enrichPickWithIntelligence } from "@/lib/picks/intelligence-enrichment";
+import {
+  enrichPickWithIntelligence,
+  universalSignalsFromPick,
+} from "@/lib/picks/intelligence-enrichment";
 import {
   isPublicPicksSurfaceStale,
   staleDataGateResponse,
@@ -426,11 +429,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       dataFreshnessAt: pick.dataFreshnessAt?.toISOString() ?? null,
       result: pick.result as PickResult,
       receiptHash: pick.proofReceipt?.contentHash ?? null,
-      // Live intelligence spine (lib/intelligence-core). Fail-open: nulls when
-      // the engine abstains. Six questions + family weights are trust surface.
+      // Live intelligence spine (lib/intelligence-core + universal-wiring).
+      // Fail-open: nulls when the engine abstains. Six questions + family
+      // weights + the ALL-knowing observation map are the trust surface.
       intelligence: (() => {
         try {
-          return enrichPickWithIntelligence({
+          const pickForIntel = {
             id: pick.id,
             selection: pick.selection,
             pickType: pick.pickType,
@@ -448,7 +452,12 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
             bookmakerCount: pick.bookmakerCount ?? null,
             modelVersion: pick.modelVersion,
             pickGrade: pick.pickGrade,
-          });
+          };
+          return enrichPickWithIntelligence(
+            pickForIntel,
+            new Date(),
+            universalSignalsFromPick(pickForIntel),
+          );
         } catch {
           return null;
         }
