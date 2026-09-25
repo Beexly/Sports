@@ -52,3 +52,26 @@ export {
   type GameBundle,
   type IntelligenceResult,
 } from "./engine";
+
+// -- Universal wiring: EVERY module ? all-knowing engine ----------------------
+export {
+  wireEverything as wireAllModules,
+  coverageReport,
+  nflObservations,
+  fantasyObservations,
+  marketObservations,
+  contextObservations,
+  intelObservations,
+  filmObservations,
+  narrativeObservations,
+  sourceObservations,
+  type UniversalSignals,
+  type NflModuleSignals,
+  type FantasyModuleSignals,
+  type MarketModuleSignals,
+  type ContextModuleSignals,
+  type IntelModuleSignals,
+  type FilmModuleSignals,
+  type NarrativeModuleSignals,
+  type SourceModuleSignals,
+} from "./universal-wiring";
