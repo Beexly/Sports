@@ -87,3 +87,33 @@ OUT: Jayden Daniels (WAS), Jaxson Dart (NYG), Alec Pierce (IND). D: Caleb Willia
 
 ## Log
 - 2026-09-24: Keenum target-split study complete (career + layoff-return). Filed keenum-target-splits.md.
+- 2026-09-25 PM: Multi-episode transcript intake complete — full docx read (offsets 1–14,794), filed `../2026-09-25/week3-multi-episode-transcripts.md`. See "Transcript intake — incremental signals" below.
+
+## Transcript intake — incremental signals (2026-09-25 PM)
+
+Host claims unless marked ✅. Full segment map + rejected claims in `../2026-09-25/week3-multi-episode-transcripts.md`.
+
+### New names entering the watch list
+- **Carnell Tate (WR, TEN)** — RotoWire breakout case: 30% first-read target rate, 81% route participation, 21% target share, 40% air-yard share (unverified metrics). Rich Hribar (Sharp): **over 3.5 receptions at +129**; routes on 84% of team dropbacks; NYG secondary depleted (Adebo IR, Newsome rib, Hood elevated, Nubin gave up 123 yds in coverage last week). ⚠️ **Direct weather conflict** with our TEN–NYG rain/gust downgrade — needs Friday metric verification before any use.
+- **Emmett Johnson (RB, KC)** — Sharp prop: **over 23.5 rushing yards** vs MIA. MIA trailed by double digits 67% of snaps; backup RBs (Kalin Black, Mike Washington) both cleared this vs MIA; K. Walker on 475-touch pace → Johnson in line for 8–10 carries in a blowout script. KC–MIA stack depth piece.
+- **Bhayshul Tuten (RB, JAX)** — 49% snap rate, 54% of designed rush attempts, leads NFL in runs over 15 mph (12). NE matchup: sub packages 87% on 1st-and-10 (lg avg 58%) + 41% blitz rate; Cohen dials RB screens 53% vs blitz (lg avg 33%). Slate-relevant (NE@JAX).
+- **David Montgomery (RB, DET)** — IND allows 31+ pts/game to RBs (3rd-best RB matchup); Henry 35, Walker 24 (no TD) vs them; cited projection 18+ touches / 75+ all-purpose yards with goal-line role. NYJ@DET environment.
+
+### Status gaps to recheck Friday (not in injuries file)
+- **Nico Collins (HOU)** — Sharp ref segment says OUT (alongside confirmed-IR Alec Pierce). Our injuries file has no Collins entry. Schultz breakout case depends on it — verify Friday final report.
+- **Ronnie Stanley (BAL)** — Sharp's Lamar prop segment flags him as a question. Relevant to Lamar rushing-upside logic (banged-up OL → more scrambles).
+
+### Environment/detail adds (corroborating existing pool)
+- **Lamar over 38.5 rushing yards** (Sharp bonus bet): DAL blitzes at high rate without pressure; J. Daniels had ~67 rush yds in the 1H vs DAL last week. Adds rushing-floor fuel to BAL–DAL stacks.
+- **JSN vs WAS blitz splits** (Sharp): JSN has all 4 SEA TDs; 39% target rate vs blitz since start of last year (4.5 yds/target); WAS 5th-highest blitz rate, allows 11.6 YPA when blitzing; JSN 129/8 vs WAS in DC last year; SEA #4 EPA/att vs too-high looks. (Pending Darnold final + WAS weather.)
+- **Garrett Wilson over 62.5 receiving yards** (Sharp best bet; ladders to 100): Wilson targeted 44% of routes vs man (Geno); DET 4th in man rate (~30%), 8th in blitz rate; Geno 14/19, 9.0 YPA vs blitz, targeting Wilson 33% (2.5 YPRR); DET defense 31st overall; Jets' first real trailing-script game.
+- **Referee cross-confirmation:** Sharp's ref analyst independently uses the same three crews as `../2026-09-25/week3-referees.md` — Torbert (HOU@IND), Vinovich (LAR@DEN), Hochuli (PHI@CHI) — with under leans on all three games and underdog ATS trends (19–39 home-underdogs ATS w/ Torbert; Broncos 1–6 at home w/ Vinovich; Eagles 6–0 SU w/ Hochuli but "first to 20 wins" framing for MNF).
+
+### Superseded — do not use
+- "Drew Lock likely starts" (recorded ~9/24; superseded by Darnold Thu full practice — trending to start).
+- RotoWire's Bowers TE1-week bold prediction (recorded pre-Friday; Bowers DNP Friday, officially questionable).
+- "Kamara is dust / Etienne hamstring worry" (FantasyPros podcast) — injuries file: Etienne FP Friday, will play.
+- "No clue who CHI's QB is" (FantasyPros podcast) — Keenum expected to start.
+
+### Season-long only (kept labeled, not DFS)
+- Buys: Tuten, Pickens. Sells: Jadarian Price (Charbonnet back ~3–4 wks), AJ Brown (6–8 wks). Stashes: Gadsden, Ted Hurst, Samaje Perine. Sits: Stafford @DEN, all Commanders vs SEA, Loveland vs PHI. Mans waiver order: Boston, Hurst, Mariota, Braelon Allen, Gadsden, Coleman, B. Young, Downs, Freiermuth, Tucker.
