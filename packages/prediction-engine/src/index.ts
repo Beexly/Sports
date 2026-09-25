@@ -1619,6 +1619,53 @@ export type {
   IntBindResult,
   BoundIntSample,
 } from "./edge-lab/props-hb-int-bind.js";
+// Catch-cushion bind: couples the covariate bus (avgCushion) to the
+// receptions | targets model. Fail-closed on null. priced:false.
+export {
+  CATCH_CUSHION_BIND_METHOD_TAG,
+  bindCatchCushionSamples,
+  boundCatchCushionSamples,
+} from "./edge-lab/props-hb-catch-cushion-bind.js";
+export type {
+  CatchCushionBindRequest,
+  CatchCushionBindResult,
+} from "./edge-lab/props-hb-catch-cushion-bind.js";
+
+// Comp-air-yards-diff bind: couples the covariate bus (avgAirYardsDifferential)
+// to the completions | attempts model. Fail-closed on null. priced:false.
+export {
+  COMP_AIR_YARDS_DIFF_BIND_METHOD_TAG,
+  bindCompAirYardsDiffSamples,
+  boundCompAirYardsDiffSamples,
+} from "./edge-lab/props-hb-comp-air-yards-diff-bind.js";
+export type {
+  CompAirYardsDiffBindRequest,
+  CompAirYardsDiffBindResult,
+} from "./edge-lab/props-hb-comp-air-yards-diff-bind.js";
+
+// Rec-TD-cushion bind: couples the covariate bus (avgCushion) to the
+// receiving-TD | targets model. Fail-closed on null. priced:false.
+export {
+  REC_TD_CUSHION_BIND_METHOD_TAG,
+  bindRecTdCushionSamples,
+  boundRecTdCushionSamples,
+} from "./edge-lab/props-hb-rec-td-cushion-bind.js";
+export type {
+  RecTdCushionBindRequest,
+  RecTdCushionBindResult,
+} from "./edge-lab/props-hb-rec-td-cushion-bind.js";
+
+// Sack-TTT bind: couples the covariate bus (avgTimeToThrow) to the
+// sacks | dropbacks model. Fail-closed on null. priced:false.
+export {
+  SACK_TTT_BIND_METHOD_TAG,
+  bindSackTttSamples,
+  boundSackTttSamples,
+} from "./edge-lab/props-hb-sack-ttt-bind.js";
+export type {
+  SackTttBindRequest,
+  SackTttBindResult,
+} from "./edge-lab/props-hb-sack-ttt-bind.js";
 
 // Fire gate: Shin e AND posted juice must both clear. priced:false.
 export { FIRE_GATE_METHOD_TAG, firePostedProp } from "./edge-lab/props-fire-gate.js";

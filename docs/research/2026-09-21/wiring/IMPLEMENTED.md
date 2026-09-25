@@ -221,3 +221,15 @@ Wave 5 full prediction-engine suite: 5951/5951 across 825 test files. coverage.t
 | Monitoring bridge (ECDD + drift ensemble + Hawkes threat) | `packages/ingestion-pipeline/src/monitoring-bridge.ts` | 8/8 | LIVE |
 
 | In-play bridge (antipersistent + Markov WP + mixed-tier) | `packages/ingestion-pipeline/src/inplay-bridge.ts` | 10/10 | LIVE |
+
+## Wave 6B — props fire/price gates + remaining HB models + leakage factor (2026-09-25)
+
+| Item | File | Tests | Status |
+|---|---|---|---|
+| props-hb-*-bind wrappers (9 bind layers) | packages/ingestion-pipeline/src/props-hb-bridge.ts | 17/17 | LIVE |
+| Remaining per-stat estimators (comp/INT/pass-TD/rush-att/rush-TD/sacks/ATD) | packages/ingestion-pipeline/src/props-hb-bridge.ts | covered in 17/17 | LIVE |
+| Fire/price gates after buildBoard (fire-gate, juice-floor, line-shop, priced-edge) | packages/ingestion-pipeline/src/props-slate.ts | 11/11 | LIVE |
+| reasonAnytimeTd on player-prop picks | packages/ingestion-pipeline/src/props-slate.ts | covered in 11/11 | LIVE |
+| evalLeakageQuality fail-open factor on signal slate | packages/ingestion-pipeline/src/leakage-gate.ts | 7/7 | LIVE |
+| assertSubmissionLeakage fail-closed on submission path | packages/ingestion-pipeline/src/leakage-gate.ts | covered in 7/7 | LIVE |
+| Catch-cushion / comp-air-yards-diff / rec-TD-cushion / sack-TTT bind barrel exports | packages/prediction-engine/src/index.ts | exported | LIVE |

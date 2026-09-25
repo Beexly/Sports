@@ -34,6 +34,7 @@ import {
 } from "./fixture-confirmation.js";
 import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
 import { collapseGameRowsToFixtures } from "./fixture-collapse.js";
+import { evalLeakageQuality, fixtureFromGameRows } from "./leakage-gate.js";
 
 /**
  * Rows read from `games` before the per-fixture collapse. Sized well above the
@@ -251,6 +252,58 @@ export async function generateSignalSlate(opts?: {
   });
   const collapsedGames = collapseGameRowsToFixtures(scannedGames);
   const gameList = collapsedGames.slice(0, SLATE_FIXTURE_LIMIT);
+  // Leakage quality gate input. Fail-open on the live slate: when the probe
+  // fixtures are unavailable the factor records "not run" rather than clean.
+  // Submission path uses assertSubmissionLeakage (fail-closed).
+  const leakageGateInput: Parameters<typeof evalLeakageQuality>[0] = {};
+  if (scannedGames.length > 0) {
+    // Build probe fixtures from collapsed game rows when the columns exist.
+    // Missing fields stay null — fixtureFromGameRows never invents them.
+    try {
+      const rows = collapsedGames.slice(0, 32).flatMap((g) => {
+        const home = (g as Record<string, unknown>)["homeRatingBefore"];
+        const away = (g as Record<string, unknown>)["awayRatingBefore"];
+        if (typeof home !== "number" && typeof away !== "number") return [];
+        return [
+          {
+            gameId: String((g as Record<string, unknown>)["id"] ?? g.id),
+            season: 2026,
+            week: 1,
+            team: g.homeTeamName ?? "HOME",
+            opponent: g.awayTeamName ?? "AWAY",
+            isHome: true,
+            ratingBefore: typeof home === "number" ? home : null,
+            ratingAfter: typeof home === "number" ? home : null,
+            snapSharePriorWeeks: null,
+            snapShareCurrentWeek: null,
+            marketSpread: 0,
+            predictedMargin: 0,
+            label: 0 as const,
+          },
+        ];
+      });
+      if (rows.length >= 4) {
+        const clean = fixtureFromGameRows(rows);
+        const contaminated = fixtureFromGameRows(
+          rows.map((r) => ({ ...r, ratingAfter: r.ratingBefore + 80 })),
+        );
+        const sign = fixtureFromGameRows(
+          rows.map((r) => ({ ...r, predictedMargin: -r.predictedMargin })),
+        );
+        Object.assign(leakageGateInput, {
+          featureBuilder: (games: readonly { ratingBefore: number; snapSharePriorWeeks: number | null }[]) => ({
+            rating: games.map((x) => x.ratingBefore),
+            snapShare: games.map((x) => x.snapSharePriorWeeks ?? 0),
+          }),
+          cleanFixture: clean,
+          contaminatedFixture: contaminated,
+          signFixture: sign,
+        });
+      }
+    } catch {
+      // leave leakageGateInput empty — factor will say not run
+    }
+  }
   if (collapsedGames.length !== scannedGames.length) {
     console.log(
       `${logPrefix} collapsed ${scannedGames.length} rows to ${collapsedGames.length} fixtures, slating ${gameList.length}`,
@@ -542,6 +595,15 @@ export async function generateSignalSlate(opts?: {
           weight: Math.min(10, Math.round(Math.abs(kelly.data) * 1000)),
         });
       }
+      // Leakage quality gate (fail-open factor). Never claims clean when
+      // the probes did not run. Submission path uses assertSubmissionLeakage.
+      const leakage = evalLeakageQuality(leakageGateInput);
+      factorBreakdown.factors.push({
+        name: leakage.name,
+        impact: leakage.impact,
+        description: leakage.description,
+        weight: leakage.weight,
+      });
     } catch {
       // fail-open: reasoning enrichment is never a minting gate
     }

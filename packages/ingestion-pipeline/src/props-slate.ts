@@ -16,6 +16,10 @@ import {
   autopsySettled,
   kalmanUpdate,
   GATE_THRESHOLDS,
+  firePostedProp,
+  pricePropAgainstMarket,
+  shopPostedPrices,
+  edgeClearsPosted,
   type BookOdds,
   type PlayerProp,
   type GateResult,
@@ -23,7 +27,29 @@ import {
   type BoardEntry,
   type AutopsyRecord,
   type KalmanState,
+  type PropBookQuote,
+  type ShopBook,
+  type FireOpen,
+  type FireClosed,
+  type FireDenied,
+  type PropEdgeResult,
+  type ShopPick,
+  type ShopDenied,
+  type JuiceFloorResult,
+  type JuiceFloorDenied,
+  reasonAnytimeTd,
+  type PlayerRoleContext,
+  type MarketPrice,
 } from "@sports/prediction-engine";
+
+export type PropFireRow = {
+  readonly propId: string;
+  readonly pOver: number;
+  readonly fire: FireOpen | FireClosed | FireDenied;
+  readonly priced: PropEdgeResult;
+  readonly shop: ShopPick | ShopDenied;
+  readonly juice: JuiceFloorResult | JuiceFloorDenied;
+};
 
 export interface PropsSlateResult {
   readonly ok: boolean;
@@ -32,6 +58,9 @@ export interface PropsSlateResult {
   readonly board: readonly BoardEntry[];
   readonly passList: readonly PassListEntry[];
   readonly gateResults: readonly GateResult[];
+  readonly fireRows: readonly PropFireRow[];
+  readonly fired: readonly BoardEntry[];
+  readonly anytimeTdRows: readonly AnytimeTdRow[];
   readonly errors: readonly string[];
   readonly note: string;
 }
@@ -44,7 +73,21 @@ export interface PropsSlateInput {
   readonly bankroll: number;
   readonly projectedMean: number;
   readonly projectedStdDev: number;
+  /**
+   * Optional rolling-role contexts for anytime-TD props. Keyed by playerId.
+   * Missing entries stay missing — never imputed.
+   */
+  readonly roleContexts?: Readonly<Record<string, PlayerRoleContext>>;
 }
+
+export type AnytimeTdRow = {
+  readonly propId: string;
+  readonly playerId: string;
+  readonly ok: boolean;
+  readonly probability: number | null;
+  readonly ev: number | null;
+  readonly reason: string | null;
+};
 
 /**
  * Run the GSE 4-Beat props pipeline over a prop slate.
@@ -66,7 +109,10 @@ export function runPropsSlate(input: PropsSlateInput): PropsSlateResult {
       passList: [],
       gateResults: [],
       errors: ["props slate is empty"],
-      note: "no props â€” nothing minted (fail-closed)",
+      fireRows: [],
+      fired: [],
+      anytimeTdRows: [],
+      note: "no props — nothing minted (fail-closed)",
     };
   }
 
@@ -112,8 +158,145 @@ export function runPropsSlate(input: PropsSlateInput): PropsSlateResult {
       );
     }
   } catch (err) {
-    errors.push(`buildBoard threw â€” ${err instanceof Error ? err.message : String(err)}`);
+    errors.push(`buildBoard threw — ${err instanceof Error ? err.message : String(err)}`);
     board = [];
+  }
+
+  // Fire/price gates after buildBoard. Every row fail-closes on a missing
+  // two-way quote. Nothing is imputed. fired holds only FireOpen rows.
+  const fireRows: PropFireRow[] = [];
+  const fired: BoardEntry[] = [];
+  const anytimeTdRows: AnytimeTdRow[] = [];
+  const propsById = new Map(props.map((p) => [`${p.playerId}:${p.propType}`, p]));
+
+  // Anytime-TD reasoning (W4 MIT) for player-prop picks. Fail-open on the
+  // slate; missing role context is recorded, never imputed.
+  for (const prop of props) {
+    if (!isAnytimeTdProp(prop.propType)) continue;
+    const key = `${prop.playerId}:${prop.propType}`;
+    const ctx = input.roleContexts?.[prop.playerId];
+    if (ctx == null) {
+      anytimeTdRows.push({
+        propId: key,
+        playerId: prop.playerId,
+        ok: false,
+        probability: null,
+        ev: null,
+        reason: "role context missing — not imputed",
+      });
+      continue;
+    }
+    const price = anytimeTdPrice(prop.odds);
+    try {
+      const r = reasonAnytimeTd(ctx, price);
+      if (r.ok) {
+        const data = r.data as {
+          probability: number;
+          ev: number | null;
+          failClosed: boolean;
+          reason?: string;
+        };
+        anytimeTdRows.push({
+          propId: key,
+          playerId: prop.playerId,
+          ok: !data.failClosed,
+          probability: data.probability,
+          ev: data.ev,
+          reason: data.failClosed ? (data.reason ?? "anytime TD fail-closed") : null,
+        });
+      } else {
+        anytimeTdRows.push({
+          propId: key,
+          playerId: prop.playerId,
+          ok: false,
+          probability: null,
+          ev: null,
+          reason: r.reason,
+        });
+      }
+    } catch (err) {
+      anytimeTdRows.push({
+        propId: key,
+        playerId: prop.playerId,
+        ok: false,
+        probability: null,
+        ev: null,
+        reason: err instanceof Error ? err.message : String(err),
+      });
+    }
+  }
+
+  for (const entry of board) {
+    const key = entry.propId;
+    const prop = propsById.get(key);
+    const modelP = input.modelProbOver[key];
+    const pOver =
+      modelP == null || !Number.isFinite(modelP)
+        ? undefined
+        : entry.recommendedPick === "OVER"
+          ? modelP
+          : 1 - modelP;
+    if (prop == null || pOver == null || !Number.isFinite(pOver)) {
+      fireRows.push({
+        propId: key,
+        pOver: Number.isFinite(pOver) ? pOver : Number.NaN,
+        fire: {
+          ok: false,
+          fire: false,
+          methodTag: "props_fire_gate_v1",
+          priced: false,
+          refuse: "bad_p",
+        },
+        priced: {
+          ok: false,
+          source: "props_hb",
+          pOver: Number.isFinite(pOver) ? pOver : null,
+          qOver: null,
+          edgeOver: null,
+          priced: false,
+          reason: "missing model p or board prop — not imputed",
+        },
+        shop: {
+          ok: false,
+          methodTag: "props_line_shop_v1",
+          surplus: null,
+          clears: false,
+          priced: false,
+          refuse: "no_books",
+          considered: 0,
+        },
+        juice: {
+          ok: false,
+          methodTag: "props_juice_floor_v1",
+          surplus: null,
+          clears: false,
+          priced: false,
+          refuse: "bad_p",
+        },
+      });
+      continue;
+    }
+
+    const quote = twoWayQuote(prop.odds);
+    const books = shopBooksFromOdds(prop.odds);
+    const priced = pricePropAgainstMarket(pOver, quote);
+    const shop = shopPostedPrices(pOver, books);
+    const juice =
+      quote && Number.isFinite(quote.overAmerican)
+        ? edgeClearsPosted(pOver, quote.overAmerican)
+        : {
+            ok: false as const,
+            methodTag: "props_juice_floor_v1" as const,
+            surplus: null,
+            clears: false,
+            priced: false,
+            refuse: "bad_price" as const,
+          };
+    const fire = firePostedProp(pOver, quote, books);
+    fireRows.push({ propId: key, pOver, fire, priced, shop, juice });
+    if (fire.ok && fire.fire) {
+      fired.push(entry);
+    }
   }
 
   return {
@@ -123,12 +306,51 @@ export function runPropsSlate(input: PropsSlateInput): PropsSlateResult {
     board,
     passList,
     gateResults,
+    fireRows,
+    fired,
+    anytimeTdRows,
     errors,
     note:
       errors.length === 0
-        ? `4-beat complete: ${passList.length}/${props.length} props passed gates`
+        ? `4-beat complete: ${passList.length}/${props.length} passed gates, ${fired.length}/${board.length} fired`
         : `4-beat finished with ${errors.length} error(s); fail-closed on those rows`,
   };
+}
+
+function isAnytimeTdProp(propType: string): boolean {
+  const t = propType.toLowerCase().replace(/[\s_-]/g, "");
+  return t.includes("anytimetd") || t.includes("anytimetouchdown") || t === "atd" || t.includes("anytimescorer");
+}
+
+function anytimeTdPrice(odds: readonly BookOdds[]): MarketPrice | undefined {
+  const sharp = odds.find((o) => o.isSharp) ?? odds[0];
+  if (sharp == null || !Number.isFinite(sharp.overOdds) || sharp.overOdds === 0) {
+    return undefined;
+  }
+  // American → decimal. Negative American: 1 + 100/|odds|. Positive: 1 + odds/100.
+  const a = sharp.overOdds;
+  const decimal = a > 0 ? 1 + a / 100 : 1 + 100 / Math.abs(a);
+  return { decimalOdds: Number.isFinite(decimal) && decimal > 1 ? decimal : null };
+}
+
+function twoWayQuote(odds: readonly BookOdds[]): PropBookQuote | null {
+  const sharp = odds.find((o) => o.isSharp) ?? odds[0];
+  if (
+    sharp == null ||
+    !Number.isFinite(sharp.overOdds) ||
+    !Number.isFinite(sharp.underOdds) ||
+    sharp.overOdds === 0 ||
+    sharp.underOdds === 0
+  ) {
+    return null;
+  }
+  return { overAmerican: sharp.overOdds, underAmerican: sharp.underOdds };
+}
+
+function shopBooksFromOdds(odds: readonly BookOdds[]): readonly ShopBook[] {
+  return odds
+    .filter((o) => Number.isFinite(o.overOdds) && o.overOdds !== 0)
+    .map((o) => ({ book: o.bookmaker, american: o.overOdds }));
 }
 
 /**

@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   assertLeakageGate,
+  evalLeakageQuality,
   fixtureFromGameRows,
   runLeakageGate,
 } from "./leakage-gate.js";
@@ -58,6 +59,39 @@ describe("leakage-gate", () => {
     expect(r.ok).toBe(true);
     expect(r.suite.allClean).toBe(true);
     expect(r.suite.probes).toHaveLength(3);
+  });
+
+  it("evalLeakageQuality fail-opens with not-run when fixtures are missing", () => {
+    const f = evalLeakageQuality({});
+    expect(f.ran).toBe(false);
+    expect(f.clean).toBeNull();
+    expect(f.impact).toBe("neutral");
+    expect(f.description).toContain("not run");
+  });
+
+  it("evalLeakageQuality reports clean when probes pass", () => {
+    const f = evalLeakageQuality({
+      featureBuilder: cleanBuilder as never,
+      cleanFixture: cleanFixture as never,
+      contaminatedFixture: cleanFixture as never,
+      signFixture: cleanFixture as never,
+    });
+    expect(f.ran).toBe(true);
+    expect(f.clean).toBe(true);
+    expect(f.impact).toBe("positive");
+  });
+
+  it("evalLeakageQuality reports leak as a negative factor", () => {
+    const f = evalLeakageQuality({
+      featureBuilder: cleanBuilder as never,
+      cleanFixture: cleanFixture as never,
+      contaminatedFixture: contaminatedFixture as never,
+      signFixture: cleanFixture as never,
+    });
+    expect(f.ran).toBe(true);
+    expect(f.clean).toBe(false);
+    expect(f.impact).toBe("negative");
+    expect(f.description).toContain("LEAKAGE");
   });
 
   it("fail-closes when contaminated fixture changes ratingBefore", () => {

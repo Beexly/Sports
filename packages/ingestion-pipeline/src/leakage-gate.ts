@@ -118,3 +118,81 @@ export function fixtureFromGameRows(
 
 export { runAllProbes, assertNoLeakage };
 export type { FeatureBuilder, FixtureGame, ProbeSuiteResult };
+
+export type LeakageQualityFactor = {
+  readonly name: string;
+  readonly impact: "positive" | "negative" | "neutral";
+  readonly description: string;
+  readonly weight: number;
+  readonly ran: boolean;
+  readonly clean: boolean | null;
+};
+
+/**
+ * Slate-level quality factor. Fail-open: when fixtures are missing the gate
+ * does not run and the factor says so — never claims clean. When it runs,
+ * a leak is a negative factor (never a silent pass).
+ */
+export function evalLeakageQuality(input: {
+  readonly featureBuilder?: FeatureBuilder;
+  readonly cleanFixture?: readonly FixtureGame[];
+  readonly contaminatedFixture?: readonly FixtureGame[];
+  readonly signFixture?: readonly FixtureGame[];
+}): LeakageQualityFactor {
+  const { featureBuilder, cleanFixture, contaminatedFixture, signFixture } = input;
+  if (
+    featureBuilder == null ||
+    cleanFixture == null ||
+    cleanFixture.length === 0 ||
+    contaminatedFixture == null ||
+    contaminatedFixture.length === 0 ||
+    signFixture == null ||
+    signFixture.length === 0
+  ) {
+    return {
+      name: "Leakage gate",
+      impact: "neutral",
+      description: "Leakage gate not run — fixtures unavailable. Not a clean bill.",
+      weight: 0,
+      ran: false,
+      clean: null,
+    };
+  }
+  const r = runLeakageGate({
+    featureBuilder,
+    cleanFixture,
+    contaminatedFixture,
+    signFixture,
+  });
+  if (r.ok) {
+    return {
+      name: "Leakage gate",
+      impact: "positive",
+      description: `V1 probes clean (${r.suite.probes.length} probes).`,
+      weight: 2,
+      ran: true,
+      clean: true,
+    };
+  }
+  return {
+    name: "Leakage gate",
+    impact: "negative",
+    description: r.reason,
+    weight: 10,
+    ran: true,
+    clean: false,
+  };
+}
+
+/**
+ * Submission-path hard gate. Throws on any leak. Never used on the live
+ * slate — that path fail-opens with a factor via evalLeakageQuality.
+ */
+export function assertSubmissionLeakage(input: {
+  readonly featureBuilder: FeatureBuilder;
+  readonly cleanFixture: readonly FixtureGame[];
+  readonly contaminatedFixture: readonly FixtureGame[];
+  readonly signFixture: readonly FixtureGame[];
+}): ProbeSuiteResult {
+  return assertLeakageGate(input);
+}
