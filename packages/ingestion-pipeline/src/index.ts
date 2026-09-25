@@ -261,3 +261,14 @@ export {
   type DriftRun,
   type HawkesRun,
 } from "./monitoring-bridge.js";
+
+// In-play bridge (antipersistent scoring + Markov WP + mixed-tier)
+export {
+  evalNextScore,
+  evalInPlayWp,
+  evalMixedTier,
+  buildTeamBalance,
+  type NextScoreEval,
+  type InPlayWpEval,
+  type MixedTierEval,
+} from "./inplay-bridge.js";

@@ -2368,3 +2368,24 @@ export {
   type HawkesParams,
   type GoTResult,
 } from "./threat/generation-of-threat.js";
+
+// In-play live reasoning (antipersistent scoring + Markov WP + mixed-tier)
+export {
+  nextScoreProb,
+  eventWinProb,
+  updateDynamicsCoeffs,
+  type ScoringDynamicsParams,
+} from "./inplay/antipersistent-scoring.js";
+export {
+  inPlayWinProb,
+  teamConditionedBalance,
+  buildTransitionMatrix,
+  type InPlayChainParams,
+} from "./inplay/inplay-wp-markov.js";
+export {
+  augmentationWeights,
+  weightedLogistic,
+  tierBrier,
+  slidingStateFeatures,
+  type TieredGame,
+} from "./inplay/mixed-tier-training.js";
