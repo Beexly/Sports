@@ -13,7 +13,11 @@ import { callClaude } from "./provider-dispatch";
 import type { ClaudeMessagesRequest, ClaudeMessagesResult } from "./messages";
 import { callCerebrasMessages, CerebrasMessagesError } from "./providers/cerebras";
 import { callOpenAiCompatMessages, OpenAiCompatError } from "./openai-compat";
-import type { ClaudeSurface } from "./model-router";
+import { pickModelForSurface, type ClaudeSurface } from "./model-router";
+import {
+  withResponseCache,
+  type ResponseCacheStore,
+} from "./response-cache";
 import {
   FREE_LANE_SURFACES,
   isFreeLaneEnabled,
@@ -26,6 +30,7 @@ type Env = Record<string, string | undefined>;
 
 export interface ContentMessagesRequest extends ClaudeMessagesRequest {
   readonly cerebrasModel?: string;
+  readonly cacheStore?: ResponseCacheStore;
 }
 
 export function secondaryFreeLaneConfig(env: Env = process.env): {
@@ -56,45 +61,73 @@ export async function generateContentMessages(
   request: ContentMessagesRequest,
   env: Env = process.env
 ): Promise<ClaudeMessagesResult> {
-  if (shouldUseFreeLane(request.surface, env)) {
-    const cerebrasKey = env["CEREBRAS_API_KEY"]?.trim();
-    if (cerebrasKey) {
-      try {
-        return await callCerebrasMessages({
-          apiKey: cerebrasKey,
-          system: request.system,
-          user: request.user,
-          maxTokens: request.maxTokens,
-          model: request.cerebrasModel,
-          temperature: request.temperature,
-          fetchImpl: request.fetchImpl,
-        });
-      } catch (error) {
-        if (!(error instanceof CerebrasMessagesError)) throw error;
+  const call = async (): Promise<ClaudeMessagesResult> => {
+    if (shouldUseFreeLane(request.surface, env)) {
+      const cerebrasKey = env["CEREBRAS_API_KEY"]?.trim();
+      if (cerebrasKey) {
+        try {
+          return await callCerebrasMessages({
+            apiKey: cerebrasKey,
+            system: request.system,
+            user: request.user,
+            maxTokens: request.maxTokens,
+            model: request.cerebrasModel,
+            temperature: request.temperature,
+            fetchImpl: request.fetchImpl,
+          });
+        } catch (error) {
+          if (!(error instanceof CerebrasMessagesError)) throw error;
+        }
+      }
+
+      const secondary = secondaryFreeLaneConfig(env);
+      if (secondary) {
+        try {
+          return await callOpenAiCompatMessages({
+            baseUrl: secondary.baseUrl,
+            apiKey: secondary.apiKey,
+            model: secondary.model,
+            system: request.system,
+            user: request.user,
+            maxTokens: request.maxTokens,
+            temperature: request.temperature,
+            fetchImpl: request.fetchImpl,
+            ledgerPrefix: secondary.ledgerPrefix,
+          });
+        } catch (error) {
+          if (!(error instanceof OpenAiCompatError)) throw error;
+        }
       }
     }
 
-    const secondary = secondaryFreeLaneConfig(env);
-    if (secondary) {
-      try {
-        return await callOpenAiCompatMessages({
-          baseUrl: secondary.baseUrl,
-          apiKey: secondary.apiKey,
-          model: secondary.model,
-          system: request.system,
-          user: request.user,
-          maxTokens: request.maxTokens,
-          temperature: request.temperature,
-          fetchImpl: request.fetchImpl,
-          ledgerPrefix: secondary.ledgerPrefix,
-        });
-      } catch (error) {
-        if (!(error instanceof OpenAiCompatError)) throw error;
-      }
-    }
+    return callClaude(request, env);
+  };
+
+  if (
+    env["LLM_RESPONSE_CACHE_ENABLED"] === "true" &&
+    request.cacheStore !== undefined &&
+    request.surface !== undefined
+  ) {
+    const outcome = await withResponseCache({
+      store: request.cacheStore,
+      enabled: true,
+      request: {
+        model: pickModelForSurface(request.surface, env),
+        system: request.system,
+        user: request.user,
+        maxTokens: request.maxTokens,
+        temperature: request.temperature,
+        surface: request.surface,
+      },
+      call,
+    });
+    return {
+      ...outcome.result,
+      durationMs: 0,
+    };
   }
 
-  return callClaude(request, env);
+  return call();
 }
 
 export type { ClaudeSurface };

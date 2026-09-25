@@ -1,122 +1,310 @@
-# DOC_DRIFT — verified documentation lies
+# Documentation Drift
 
-Sweep: 2026-08-18. Scope: live `docs/ops/*.md` and `handoff/*.md` (not
-`docs/ops/archive/**`). An entry is here only if a command I ran proved it.
-Unverified hunches are omitted on purpose.
+Every tracked markdown file under `docs/` was scanned for backtick-quoted repository paths beginning with `apps/`, `packages/`, `scripts/`, `docs/`, `workers/`, `eval/`, or `tools/`. Placeholder paths containing `NNN`, `<...>`, `*`, or `{` were skipped.
 
-## Seed entries (handoff v4)
+| Referencing doc | Quoted path | Status |
+|---|---|---|
+| `docs/EXECUTION_LEDGER.md` | `docs/ops/SUNDAY_FRONTIER_MAXFORCE_AUDIT_2026-07-05.md` | MISSING |
+| `docs/EXECUTION_LEDGER.md` | `docs/ops/CODEX_HANDOFF_SUNDAY_FRONTIER_MAXFORCE_2026-07-05.md` | MISSING |
+| `docs/EXECUTION_LEDGER.md` | `docs/ops/LOCAL_REVIEW_QUEUE_PERSISTENCE_SIMULATOR.md` | MISSING |
+| `docs/EXECUTION_LEDGER.md` | `docs/ops/LOCAL_REVIEW_QUEUE_BLOCKER_REPORT.md` | MISSING |
+| `docs/STAT_INTAKE_COVERAGE_MATRIX.md` | `packages/data-ingestion/nflverse-source.ts` | MISSING |
+| `docs/SURFACE_AUDIT.md` | `apps/web/lib/replay/harness.ts` | MISSING |
+| `docs/SURFACE_AUDIT.md` | `apps/web/lib/metrics/regression-engine.ts` | MISSING |
+| `docs/SURFACE_AUDIT.md` | `packages/prediction-engine/src/projections/correlation.ts` | MISSING |
+| `docs/adr/005-entity-graph-minimal-schema.md` | `docs/adr/pre-implementation-change-proposal-template.md` | MISSING |
+| `docs/adr/005-entity-graph-minimal-schema.md` | `docs/adr/pre-implementation-change-proposal-template.md` | MISSING |
+| `docs/adr/006-settlement-hold-state.md` | `apps/web/lib/data-sources/free-settlement-runner.ts:330-344` | MISSING |
+| `docs/adr/006-settlement-hold-state.md` | `apps/web/lib/autonomy/operating-kernel.ts:172-183` | MISSING |
+| `docs/adr/006-settlement-hold-state.md` | `apps/web/lib/performance/settlement-health.ts:140-155` | MISSING |
+| `docs/ai/phase0/AI_CONTROL_PLANE_ADR_2026-07-21.md` | `packages/ai-control-plane/` | MISSING |
+| `docs/ai/phase0/CONSTELLATION_MASTER_PLAN_REGISTRATION_2026-07-22.md` | `docs/phase0-truth-convergence-2026-07-21` | MISSING |
+| `docs/ai/phase0/CURRENT_REPOSITORY_TRUTH_2026-07-21.md` | `docs/integrations-wave8` | MISSING |
+| `docs/ai/phase0/LIVE_PR_REGISTRY_2026-07-22.md` | `docs/integrations-wave8` | MISSING |
+| `docs/ai/phase0/LIVE_PR_REGISTRY_2026-07-22.md` | `docs/phase0-truth-convergence-2026-07-21` | MISSING |
+| `docs/ai/phase0/NOVA_CONVERGENCE_FREEZE_2026-07-22.md` | `apps/web/lib/opportunity-engine/types.ts:73` | MISSING |
+| `docs/ai/phase0/OWNER_DECISION_PACKET_2026-07-21.md` | `docs/ai/integrations/` | MISSING |
+| `docs/ai/phase0/OWNER_DECISION_PACKET_2026-07-21.md` | `docs/phase0-truth-convergence-2026-07-21` | MISSING |
+| `docs/ai/phase0/PR145_PR146_CONVERGENCE_MAP_2026-07-21.md` | `packages/ai-control-plane/registry/` | MISSING |
+| `docs/ai/phase0/REVISED_PR_STACK_2026-07-21.md` | `docs/integrations-wave8` | MISSING |
+| `docs/ai/phase0/REVISED_PR_STACK_2026-07-21.md` | `docs/ai/integrations/` | MISSING |
+| `docs/ai/phase0/REVISED_PR_STACK_2026-07-21.md` | `docs/phase0-truth-convergence-2026-07-21` | MISSING |
+| `docs/ai/phase0/REVISED_PR_STACK_2026-07-21.md` | `docs/archive-integration-research` | MISSING |
+| `docs/ai/phase0/REVISED_PR_STACK_2026-07-21.md` | `docs/ai/integrations/` | MISSING |
+| `docs/audit/codemod-safety-policy.md` | `apps/web/lib/evidence/` | MISSING |
+| `docs/brain/claim-governance.md` | `docs/adr/source-freshness-and-deploy-readiness-guide.md` | MISSING |
+| `docs/brain/claim-governance.md` | `docs/adr/promotion-publication-checklist.md` | MISSING |
+| `docs/brain/entity-graph.md` | `docs/adr/pre-implementation-change-proposal-template.md` | MISSING |
+| `docs/brain/evidence-vault.md` | `docs/source-registry-spec.md` | MISSING |
+| `docs/brain/evidence-vault.md` | `docs/source-registry-spec.md` | MISSING |
+| `docs/brain/evidence-vault.md` | `docs/adr/pre-implementation-change-proposal-template.md` | MISSING |
+| `docs/brain/evidence-vault.md` | `docs/adr/promotion-publication-checklist.md` | MISSING |
+| `docs/brain/operator-cockpit-governance.md` | `docs/adr/public-cockpit-boundary-and-gate-integrity-contract.md` | MISSING |
+| `docs/brain/operator-cockpit-governance.md` | `docs/adr/public-cockpit-boundary-and-gate-integrity-contract.md` | MISSING |
+| `docs/brain/operator-cockpit-governance.md` | `docs/adr/public-cockpit-boundary-and-gate-integrity-contract.md` | MISSING |
+| `docs/brain/operator-cockpit-governance.md` | `docs/adr/public-cockpit-boundary-and-gate-integrity-contract.md` | MISSING |
+| `docs/brain/signal-ledger.md` | `docs/adr/source-freshness-and-deploy-readiness-guide.md` | MISSING |
+| `docs/brain/signal-ledger.md` | `docs/adr/source-freshness-and-deploy-readiness-guide.md` | MISSING |
+| `docs/brain/source-hierarchy.md` | `docs/adr/source-freshness-and-deploy-readiness-guide.md` | MISSING |
+| `docs/brain/weak-signal-engine.md` | `docs/adr/promotion-publication-checklist.md` | MISSING |
+| `docs/brand-safety-rules-v2.md` | `packages/data-ingestion/src/adapters/` | MISSING |
+| `docs/brand-safety-rules-v2.md` | `apps/web/lib/brand-safety/` | MISSING |
+| `docs/calibration-proposals/2026-06-22-calibration-activation-v5.1.0.md` | `docs/path-to-70.md §4` | MISSING |
+| `docs/calibration-proposals/2026-08-10-closeout-v5.2.6.md` | `apps/web/lib/calibration/live-calibration-p.ts:37` | MISSING |
+| `docs/calibration-proposals/2026-08-10-closeout-v5.2.6.md` | `apps/web/lib/calibration/live-calibration-p.ts:43` | MISSING |
+| `docs/calibration-proposals/2026-08-10-closeout-v5.2.6.md` | `apps/web/lib/calibration/live-calibration-p.ts:73-74` | MISSING |
+| `docs/calibration-proposals/2026-08-10-closeout-v5.2.6.md` | `packages/prediction-engine/src/constants.ts:23` | MISSING |
+| `docs/cockpit-spec.md` | `apps/web/components/decision-path/` | MISSING |
+| `docs/cockpit-spec.md` | `apps/web/components/decision-path/` | MISSING |
+| `docs/cockpit-spec.md` | `apps/web/__tests__/shadow-leak.test.ts` | MISSING |
+| `docs/commercial/COMMERCIAL_EXECUTION_LEDGER.md` | `docs/ops/LOCAL_REVIEW_QUEUE_PERSISTENCE_SIMULATOR.md` | MISSING |
+| `docs/commercial/COMMERCIAL_EXECUTION_LEDGER.md` | `docs/ops/LOCAL_REVIEW_QUEUE_BLOCKER_REPORT.md` | MISSING |
+| `docs/compliance/README.md` | `docs/compliance/exports/compliance-pack-YYYYMMDD.json` | MISSING |
+| `docs/data-sources.md` | `packages/data-ingestion/config.ts` | MISSING |
+| `docs/data-sources.md` | `packages/data-ingestion/config.ts` | MISSING |
+| `docs/data/source-provider-module-taxonomy.md` | `packages/data-ingestion/odds-api/` | MISSING |
+| `docs/data/sports-api-provider-policy.md` | `packages/data-ingestion/odds-api/` | MISSING |
+| `docs/data/sports-api-provider-policy.md` | `docs/source-providers/[provider]-retirement.md` | MISSING |
+| `docs/design/design-to-react-review.md` | `apps/web/components/public/` | MISSING |
+| `docs/design/final-wave-design-pattern-register.md` | `apps/web/components/public/PickCard.tsx` | MISSING |
+| `docs/design/final-wave-design-pattern-register.md` | `apps/web/components/cockpit/EvidenceDrawer.tsx` | MISSING |
+| `docs/design/final-wave-design-pattern-register.md` | `apps/web/components/public/SignalTicker.tsx` | MISSING |
+| `docs/design/final-wave-design-pattern-register.md` | `apps/web/components/public/MarketGravityMeter.tsx` | MISSING |
+| `docs/design/final-wave-design-pattern-register.md` | `apps/web/components/ui/SourceTierBadge.tsx` | MISSING |
+| `docs/design/final-wave-design-pattern-register.md` | `apps/web/components/public/ConfidenceScore.tsx` | MISSING |
+| `docs/design/final-wave-design-pattern-register.md` | `apps/web/components/ui/SettlementBadge.tsx` | MISSING |
+| `docs/design/final-wave-design-pattern-register.md` | `apps/web/components/ui/EmptyState.tsx` | MISSING |
+| `docs/design/stitch-agent-workflow.md` | `docs/vault-content-system/galaxy-voice-brand-canon.md` | MISSING |
+| `docs/design/stitch-agent-workflow.md` | `apps/web/lib/studio/templates/pick-card-template.ts` | MISSING |
+| `docs/evidence-engine.md` | `packages/prediction-engine/src/factors/registry.ts` | MISSING |
+| `docs/evidence-engine.md` | `packages/prediction-engine/__tests__/calibration.test.ts` | MISSING |
+| `docs/evidence-engine.md` | `apps/web/__tests__/shadow-leak.test.ts` | MISSING |
+| `docs/evidence-engine.md` | `packages/prediction-engine/src/factors/rest-days.ts` | MISSING |
+| `docs/fable/master/TYPECHECK_DECISION.md` | `apps/web/.next/cache/.tsbuildinfo` | MISSING |
+| `docs/governance/EU_AI_ACT_EVIDENCE_PACK.md` | `docs/governance/exports/evidence-pack-YYYYMMDD.json` | MISSING |
+| `docs/gse/finish-line-validation-results.md` | `apps/web/lib/gse/waitlist-copy.ts:25` | MISSING |
+| `docs/gse/pr2-owner-review-packet.md` | `apps/web/.gse-local/...` | MISSING |
+| `docs/gse/pr2-waitlist-implementation-readiness.md` | `apps/web/components/gse/` | MISSING |
+| `docs/gse/pr2-waitlist-implementation-readiness.md` | `apps/web/app/waitlist/waitlist-form.tsx` | MISSING |
+| `docs/gse/pr2-waitlist-implementation-readiness.md` | `apps/web/components/waitlist/` | MISSING |
+| `docs/gse/pr2-waitlist-plan.md` | `apps/web/components/gse/` | MISSING |
+| `docs/intelligence/SPORTS_OS_INTELLIGENCE_NETWORK_MASTER_PLAN.md` | `docs/adr/pre-implementation-change-proposal-template.md` | MISSING |
+| `docs/intelligence/SPORTS_OS_INTELLIGENCE_NETWORK_MASTER_PLAN.md` | `docs/design/signature-components.md` | MISSING |
+| `docs/intelligence/design-experience-system.md` | `docs/design/experience-system.md` | MISSING |
+| `docs/intelligence/design-experience-system.md` | `docs/design/signature-components.md` | MISSING |
+| `docs/intelligence/developer-innovation-layer.md` | `docs/source-registry-spec.md` | MISSING |
+| `docs/intelligence/developer-innovation-layer.md` | `docs/source-registry-spec.md` | MISSING |
+| `docs/intelligence/monetization-lanes.md` | `docs/galaxy-monetization-expansion-master-plan-v3.md` | MISSING |
+| `docs/intelligence/monetization-lanes.md` | `docs/adr/pre-implementation-change-proposal-template.md` | MISSING |
+| `docs/intelligence/monetization-lanes.md` | `docs/vault-content-system/` | MISSING |
+| `docs/intelligence/monetization-lanes.md` | `docs/rd-2026-05-23/galaxy-almanac-sample-essay.md` | MISSING |
+| `docs/intelligence/product-ecosystem.md` | `docs/adr/source-freshness-and-deploy-readiness-guide.md` | MISSING |
+| `docs/intelligence/product-ecosystem.md` | `docs/adr/public-cockpit-boundary-and-gate-integrity-contract.md` | MISSING |
+| `docs/launch-prep/03-this-pass-report.md` | `docs/launch-runbook.md §5` | MISSING |
+| `docs/launch-prep/30-day-campaign-plan.md` | `apps/web/lib/feature-gates.ts` | MISSING |
+| `docs/launch-qa-addendum.md` | `apps/web/__tests__/pick-audit-trail.test.ts` | MISSING |
+| `docs/launch-qa-addendum.md` | `apps/web/__tests__/shadow-leak.test.ts` | MISSING |
+| `docs/launch-qa-addendum.md` | `packages/db/src/config.test.ts` | MISSING |
+| `docs/launch-qa-addendum.md` | `apps/web/__tests__/admin-routes.test.ts` | MISSING |
+| `docs/launch-qa-addendum.md` | `apps/web/__tests__/cockpit-held-state.test.ts` | MISSING |
+| `docs/launch-qa-addendum.md` | `packages/content/__tests__/numbers-must-cite-source.test.ts` | MISSING |
+| `docs/launch-qa-addendum.md` | `packages/prediction-engine/src/calibration/brier.ts` | MISSING |
+| `docs/launch-qa-addendum.md` | `packages/prediction-engine/src/calibration/drift.ts` | MISSING |
+| `docs/launch-qa-addendum.md` | `apps/web/app/observatory/quiet/page.tsx` | MISSING |
+| `docs/launch-qa-addendum.md` | `docs/content-archive/quiet/` | MISSING |
+| `docs/launch-qa-addendum.md` | `apps/web/app/observatory/autopsy/page.tsx` | MISSING |
+| `docs/launch-qa-addendum.md` | `apps/web/app/observatory/number/page.tsx` | MISSING |
+| `docs/launch-qa-addendum.md` | `packages/content/src/validators.ts` | MISSING |
+| `docs/launch-qa-addendum.md` | `docs/content-archive/` | MISSING |
+| `docs/legal/COMMUNITY_MODERATION_POLICY.md` | `docs/ops/MODERATOR_COVERAGE_PLAN.md` | MISSING |
+| `docs/media/CODEX_MEDIA_REVENUE_STUDIO_AUDIT.md` | `docs/media/CONTENT_PRODUCTION_QUEUE.md` | MISSING |
+| `docs/media/GSE_MEDIA_REVENUE_OS.md` | `docs/media/CONTENT_PRODUCTION_QUEUE.md` | MISSING |
+| `docs/media/MEDIA_REVENUE_STUDIO_COMPLETION_AUDIT.md` | `docs/ops/SUNDAY_FRONTIER_MAXFORCE_AUDIT_2026-07-05.md` | MISSING |
+| `docs/media/MEDIA_REVENUE_STUDIO_COMPLETION_AUDIT.md` | `apps/web/app/developers/page.tsx` | MISSING |
+| `docs/models/model-benchmark-lab.md` | `packages/prediction-engine/benchmark/` | MISSING |
+| `docs/models/prompt-leak-and-auth-sensitive-policy.md` | `apps/web/lib/claude/` | MISSING |
+| `docs/operator-playbook.md` | `docs/launch-journal.md` | MISSING |
+| `docs/ops/GSE_CREDITS_PROGRAMS_ACTION_PACK_V3.md` | `docs/ops/CLOUD_CREDITS_MAXIMIZATION_STRATEGY_2026-07-08.md` | MISSING |
+| `docs/ops/PHASE_05B_REVEAL_PROTOCOL.md` | `docs/ops/ZK_PROOF_EVOLUTION_ROADMAP.md` | MISSING |
+| `docs/ops/PROVE_THE_EDGE.md` | `packages/db/prisma/schema.prisma:2855` | MISSING |
+| `docs/ops/PROVE_THE_EDGE.md` | `apps/web/lib/ingestion/historical-games.ts:37` | MISSING |
+| `docs/ops/PROVE_THE_EDGE.md` | `packages/db/prisma/schema.prisma:2889` | MISSING |
+| `docs/ops/PROVE_THE_EDGE.md` | `apps/lib/ingestion/player-stats.ts` | MISSING |
+| `docs/ops/PROVE_THE_EDGE.md` | `scripts/backfill/historical-settlement-backfill.ts:19-34` | MISSING |
+| `docs/ops/PROVE_THE_EDGE.md` | `apps/web/lib/calibration/market-backtest.ts:42` | MISSING |
+| `docs/ops/PROVE_THE_EDGE.md` | `apps/web/lib/calibration/market-backtest.ts:23-36` | MISSING |
+| `docs/ops/PROVE_THE_EDGE.md` | `apps/web/lib/performance/public-clv-policy.ts:89-96` | MISSING |
+| `docs/ops/PROVE_THE_EDGE.md` | `scripts/backfill/historical-settlement-backfill.ts:28` | MISSING |
+| `docs/ops/PROVE_THE_EDGE.md` | `packages/db/prisma/schema.prisma:2855` | MISSING |
+| `docs/ops/PROVE_THE_EDGE.md` | `packages/db/prisma/schema.prisma:2889` | MISSING |
+| `docs/ops/PROVE_THE_EDGE.md` | `apps/web/lib/calibration/market-backtest.ts:42` | MISSING |
+| `docs/ops/PROVE_THE_EDGE.md` | `apps/web/lib/performance/public-clv-policy.ts:89-96` | MISSING |
+| `docs/ops/archive/dated/PRIMARY_CLONE_SYNC_AUDIT_2026-05-27.md` | `docs/ops/pr-review-checklist.md` | MISSING |
+| `docs/ops/archive/dated/PRIMARY_CLONE_SYNC_AUDIT_2026-05-27.md` | `docs/ops/stuck-queue-protocol.md` | MISSING |
+| `docs/ops/archive/dated/PRODUCT_CASCADE_MAP.md` | `apps/web/lib/statking/rights/` | MISSING |
+| `docs/ops/archive/dated/REPO_CONSOLIDATION_MAP_2026-07-07.md` | `docs/ops/CLOUD_CREDITS_MAXIMIZATION_STRATEGY_2026-07-08.md` | MISSING |
+| `docs/ops/archive/dated/SUNDAY_FRONTIER_MAXFORCE_AUDIT_2026-07-05.md` | `docs/ops/SUNDAY_FRONTIER_MAXFORCE_AUDIT_2026-07-05.md` | MISSING |
+| `docs/ops/archive/dated/SUNDAY_FRONTIER_MAXFORCE_AUDIT_2026-07-05.md` | `docs/ops/CODEX_HANDOFF_SUNDAY_FRONTIER_MAXFORCE_2026-07-05.md` | MISSING |
+| `docs/ops/archive/dated/SUNDAY_FRONTIER_MAXFORCE_AUDIT_2026-07-05.md` | `docs/ops/LOCAL_REVIEW_QUEUE_BLOCKER_REPORT.md` | MISSING |
+| `docs/ops/archive/dated/SUNDAY_FRONTIER_MAXFORCE_AUDIT_2026-07-05.md` | `docs/ops/LOCAL_REVIEW_QUEUE_PERSISTENCE_SIMULATOR.md` | MISSING |
+| `docs/ops/archive/dated/UQ_HARDENING_SESSION_2026-07-28.md` | `docs/ops/UQ_HANDOFF_2026-07-24.md` | MISSING |
+| `docs/ops/archive/dated/UQ_HARDENING_SESSION_2026-07-28.md` | `docs/ops/PRODUCT_CASCADE_MAP.md` | MISSING |
+| `docs/ops/archive/dated/UQ_HARDENING_SESSION_2026-07-28.md` | `docs/ops/UQ_MODULE_INDEX.md` | MISSING |
+| `docs/ops/archive/dated/UQ_MODULE_INDEX.md` | `docs/ops/UQ_HANDOFF_2026-07-24.md` | MISSING |
+| `docs/ops/archive/dated/UQ_MODULE_INDEX.md` | `docs/ops/UQ_HARDENING_SESSION_2026-07-28.md` | MISSING |
+| `docs/ops/archive/dated/WAVE_COMPLETION_REPORT_2026-05-27.md` | `docs/ops/WAVE_COMPLETION_REPORT...` | MISSING |
+| `docs/ops/archive/dated/WAVE_COMPLETION_REPORT_2026-05-27.md` | `docs/ops/pr-review-checklist.md` | MISSING |
+| `docs/ops/archive/dated/WAVE_COMPLETION_REPORT_2026-05-27.md` | `docs/ops/stuck-queue-protocol.md` | MISSING |
+| `docs/ops/archive/dated/WAVE_COMPLETION_REPORT_2026-05-27.md` | `docs/ops/CODEX_DOCS_PARITY_SYNC_BRIEF.md` | MISSING |
+| `docs/ops/archive/dated/ZK_PROOF_EVOLUTION_ROADMAP.md` | `packages/zk` | MISSING |
+| `docs/ops/archive/dated/decision-log.md` | `docs/ops/issue-queue.md` | MISSING |
+| `docs/ops/archive/dated/decision-log.md` | `docs/ops/issue-queue.md` | MISSING |
+| `docs/ops/archive/dated/decision-log.md` | `docs/ops/issue-queue.md` | MISSING |
+| `docs/ops/archive/dated/improvement-backlog.md` | `apps/web/components/marketing/` | MISSING |
+| `docs/ops/archive/dated/improvement-backlog.md` | `apps/web/components/marketing/` | MISSING |
+| `docs/ops/archive/dated/issue-queue.md` | `apps/web/app/api/cockpit/agent-runs/route.ts` | MISSING |
+| `docs/ops/archive/dated/sports-science-partnerships.md` | `docs/ops/UQ_HANDOFF_2026-07-24.md` | MISSING |
+| `docs/ops/archive/dated/sports-science-partnerships.md` | `docs/ops/CLAUDE_MCP_CONNECTOR_LEVERAGE_2026-07-24.md` | MISSING |
+| `docs/ops/archive/leverage/CODEX_HANDOFF_SUNDAY_FRONTIER_MAXFORCE_2026-07-05.md` | `docs/ops/SUNDAY_FRONTIER_MAXFORCE_AUDIT_2026-07-05.md` | MISSING |
+| `docs/ops/archive/leverage/CODEX_HANDOFF_SUNDAY_FRONTIER_MAXFORCE_2026-07-05.md` | `docs/ops/CODEX_HANDOFF_SUNDAY_FRONTIER_MAXFORCE_2026-07-05.md` | MISSING |
+| `docs/ops/archive/leverage/CODEX_HANDOFF_SUNDAY_FRONTIER_MAXFORCE_2026-07-05.md` | `docs/ops/LOCAL_REVIEW_QUEUE_PERSISTENCE_SIMULATOR.md` | MISSING |
+| `docs/ops/archive/leverage/CODEX_HANDOFF_SUNDAY_FRONTIER_MAXFORCE_2026-07-05.md` | `docs/ops/LOCAL_REVIEW_QUEUE_BLOCKER_REPORT.md` | MISSING |
+| `docs/ops/archive/leverage/GSE_LONG_CONTEXT_PROTOCOL_AND_CODING_AGENT_HANDOFF_2026-07-24.md` | `docs/ops/CLAUDE_MCP_CONNECTOR_LEVERAGE_2026-07-24.md` | MISSING |
+| `docs/ops/archive/leverage/MASTER_PLAN_LEVERAGE.md` | `docs/ops/MASTER_PLAN.md` | MISSING |
+| `docs/ops/archive/leverage/MASTER_PLAN_NARRATIVE.md` | `docs/ops/MASTER_PLAN.md` | MISSING |
+| `docs/ops/archive/leverage/MASTER_PLAN_NARRATIVE.md` | `docs/ops/MASTER_PLAN_LEVERAGE.md` | MISSING |
+| `docs/ops/archive/leverage/UQ_HANDOFF_2026-07-24.md` | `docs/ops/sports-science-partnerships.md` | MISSING |
+| `docs/ops/archive/prompts/CODEX_DOCS_PARITY_SYNC_BRIEF.md` | `docs/ops/PRIMARY_CLONE_SYNC_AUDIT_2026-05-27.md` | MISSING |
+| `docs/ops/archive/prompts/CODEX_DOCS_PARITY_SYNC_BRIEF.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/ops/archive/prompts/CODEX_DOCS_PARITY_SYNC_BRIEF.md` | `docs/ops/improvement-backlog.md` | MISSING |
+| `docs/ops/archive/prompts/CODEX_DOCS_PARITY_SYNC_BRIEF.md` | `docs/ops/issue-queue.md` | MISSING |
+| `docs/ops/archive/prompts/CODEX_DOCS_PARITY_SYNC_BRIEF.md` | `docs/ops/stuck-queue.md` | MISSING |
+| `docs/ops/archive/prompts/CODEX_DOCS_PARITY_SYNC_BRIEF.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/ops/archive/prompts/CODEX_DOCS_PARITY_SYNC_BRIEF.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/ops/archive/prompts/CODEX_DOCS_PARITY_SYNC_BRIEF.md` | `docs/ops/WAVE_COMPLETION_REPORT_2026-05-27.md` | MISSING |
+| `docs/ops/archive/prompts/GROK_AUTONOMOUS_AUDIT_PROMPT.md` | `docs/ops/GROK_AUDIT_PROGRESS.md` | MISSING |
+| `docs/ops/archive/prompts/GROK_INTERROGATORY_ANSWER_KEY.md` | `apps/web/lib/entitlements.ts:20` | MISSING |
+| `docs/ops/archive/prompts/GROK_INTERROGATORY_ANSWER_KEY.md` | `apps/web/app/api/subscriptions/checkout/route.ts:77,79` | MISSING |
+| `docs/ops/archive/prompts/GROK_INTERROGATORY_ANSWER_KEY.md` | `packages/prediction-engine/src/availability-role-tenure.ts:61-62` | MISSING |
+| `docs/ops/archive/prompts/LAUNCH_BACKLOG_2026-06-24.md` | `packages/ingestion-pipeline/src/process-sport.ts:119` | MISSING |
+| `docs/ops/archive/prompts/LAUNCH_BACKLOG_2026-06-24.md` | `packages/data-ingestion/src/normalizer.ts:40` | MISSING |
+| `docs/ops/archive/prompts/LOCAL_REVIEW_QUEUE_PERSISTENCE_SIMULATOR.md` | `docs/ops/LOCAL_REVIEW_QUEUE_BLOCKER_REPORT.md` | MISSING |
+| `docs/ops/archive/root-museum/AUTONOMOUS_OPERATING_SYSTEM.md` | `apps/web/lib/cockpit/agents.ts:8` | MISSING |
+| `docs/ops/archive/root-museum/AUTONOMOUS_OPERATING_SYSTEM.md` | `packages/db/prisma/schema.prisma:831` | MISSING |
+| `docs/ops/archive/root-museum/AUTONOMOUS_OPERATING_SYSTEM.md` | `apps/web/lib/cockpit/agents.ts:27` | MISSING |
+| `docs/ops/archive/root-museum/AUTONOMOUS_OPERATING_SYSTEM.md` | `apps/web/lib/cockpit/transitions.ts:32` | MISSING |
+| `docs/ops/archive/root-museum/AUTONOMOUS_OPERATING_SYSTEM.md` | `apps/web/lib/cockpit/jarvis.ts:14` | MISSING |
+| `docs/ops/archive/root-museum/AUTONOMOUS_OPERATING_SYSTEM.md` | `apps/web/lib/claude-api/usage-store.ts:91` | MISSING |
+| `docs/ops/archive/root-museum/BUILD_LOG.md` | `packages/crypto/pedersen-ledger.ts` | MISSING |
+| `docs/ops/archive/root-museum/CLAUDE_CODEX_HANDOFF.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/ops/archive/root-museum/CLAUDE_CODEX_HANDOFF.md` | `docs/galaxy-sports-edge-master-action-plan.md` | MISSING |
+| `docs/ops/archive/root-museum/CLAUDE_CODEX_HANDOFF.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/ops/archive/root-museum/CLAUDE_CODEX_HANDOFF.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/ops/archive/root-museum/CLAUDE_CODEX_HANDOFF.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/ops/archive/root-museum/CLAUDE_CODEX_HANDOFF.md` | `docs/galaxy-sports-edge-master-action-plan.md` | MISSING |
+| `docs/ops/archive/root-museum/CLAUDE_CODEX_HANDOFF.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/ops/archive/root-museum/CLAUDE_CODEX_HANDOFF.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_3_BRIEF.md` | `docs/galaxy-sports-edge-master-action-plan.md` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_3_BRIEF.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_3_BRIEF.md` | `workers/twitter-bot/` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_3_BRIEF.md` | `workers/discord-bot/` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_3_BRIEF.md` | `workers/journal-pipe/` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_3_BRIEF.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_3_BRIEF.md` | `docs/ops/stuck-queue.md` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_3_BRIEF.md` | `docs/ops/stuck-queue.md` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_4_BRIEF.md` | `docs/galaxy-sports-edge-master-action-plan.md` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_4_BRIEF.md` | `docs/ops/stuck-queue.md` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_4_BRIEF.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_4_BRIEF.md` | `workers/calibration-insights/` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_4_BRIEF.md` | `apps/extension/` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_4_BRIEF.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_4_BRIEF.md` | `docs/ops/stuck-queue.md` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_4_BRIEF.md` | `docs/ops/stuck-queue.md` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_5_BRIEF.md` | `docs/galaxy-sports-edge-master-action-plan.md` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_5_BRIEF.md` | `packages/galaxy-compliance/` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_5_BRIEF.md` | `docs/ops/stuck-queue.md` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_5_BRIEF.md` | `packages/galaxy-dsl/` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_5_BRIEF.md` | `apps/web/app/dsl/` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_5_BRIEF.md` | `apps/web/lib/dsl/` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_5_BRIEF.md` | `packages/anti-galaxy/` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_5_BRIEF.md` | `apps/web/app/anti-galaxy/` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_5_BRIEF.md` | `workers/anti-galaxy/` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_5_BRIEF.md` | `packages/galaxy-compliance/` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_5_BRIEF.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_5_BRIEF.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_5_BRIEF.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/ops/archive/root-museum/CODEX_PHASE_5_BRIEF.md` | `docs/ops/stuck-queue.md` | MISSING |
+| `docs/ops/archive/root-museum/LAUNCH_LEDGER.md` | `docs/path-to-70.md §7` | MISSING |
+| `docs/ops/archive/root-museum/MEDIA_AND_CONTENT_QUALITY.md` | `apps/web/app/calibration/opengraph-image.tsx` | MISSING |
+| `docs/ops/archive/root-museum/MEDIA_AND_CONTENT_QUALITY.md` | `apps/web/app/blog/[slug]/opengraph-image.tsx` | MISSING |
+| `docs/ops/archive/root-museum/MEDIA_AND_CONTENT_QUALITY.md` | `apps/web/app/calibration/opengraph-image.tsx` | MISSING |
+| `docs/ops/archive/root-museum/SALES_CONVERSION_AND_CRM.md` | `apps/web/app/pricing/page.tsx:53-59` | MISSING |
+| `docs/ops/archive/root-museum/SALES_CONVERSION_AND_CRM.md` | `packages/types/src/index.ts:86-98` | MISSING |
+| `docs/ops/archive/root-museum/SALES_CONVERSION_AND_CRM.md` | `apps/web/app/api/picks/route.ts:60` | MISSING |
+| `docs/ops/archive/root-museum/SCRATCH_TO_PRIMARY_COPY_MANIFEST.md` | `docs/ops/pr-review-checklist.md` | MISSING |
+| `docs/ops/archive/root-museum/SCRATCH_TO_PRIMARY_COPY_MANIFEST.md` | `docs/ops/stuck-queue-protocol.md` | MISSING |
+| `docs/ops/archive/root-museum/handoff.md` | `apps/web/app/api/picks/route.ts:13` | MISSING |
+| `docs/ops/archive/root-museum/handoff.md` | `apps/web/app/api/performance/route.ts:7` | MISSING |
+| `docs/ops/archive/root-museum/handoff.md` | `packages/prediction-engine/src/readiness.ts:124` | MISSING |
+| `docs/ops/evals/studio-betting-education-thin-evidence.md` | `apps/web/lib/studio/refusals.ts` | MISSING |
+| `docs/ops/hermes/BUILD_QUEUE.md` | `docs/adr/pre-implementation-change-proposal-template.md` | MISSING |
+| `docs/product/anti-galaxy-spec.md` | `packages/anti-galaxy/` | MISSING |
+| `docs/product/anti-galaxy-spec.md` | `apps/web/app/anti-galaxy/` | MISSING |
+| `docs/product/board-page-spec.md` | `apps/web/components/marketing/` | MISSING |
+| `docs/product/board-page-spec.md` | `apps/web/components/marketing/` | MISSING |
+| `docs/product/chrome-extension-spec.md` | `apps/extension/` | MISSING |
+| `docs/product/claude-api-cost-monitoring-spec.md` | `docs/ops/pr-review-checklist.md` | MISSING |
+| `docs/product/cockpit-journal-spec.md` | `apps/web/components/cockpit/journal/` | MISSING |
+| `docs/product/cockpit-losses-spec.md` | `apps/web/app/cockpit/losses/[id]/page.tsx` | MISSING |
+| `docs/product/cockpit-losses-spec.md` | `apps/web/components/cockpit/losses/` | MISSING |
+| `docs/product/cockpit-studio-spec.md` | `apps/web/app/cockpit/studio/[gameId]/page.tsx` | MISSING |
+| `docs/product/cockpit-studio-spec.md` | `apps/web/components/cockpit/studio/` | MISSING |
+| `docs/product/cockpit-synthetic-monitoring-spec.md` | `docs/ops/issue-queue.md` | MISSING |
+| `docs/product/cockpit-synthetic-monitoring-spec.md` | `docs/ops/runbooks/` | MISSING |
+| `docs/product/cross-sport-correlation-engine-spec.md` | `apps/web/app/correlate/` | MISSING |
+| `docs/product/cross-sport-correlation-engine-spec.md` | `apps/web/lib/correlation-engine/` | MISSING |
+| `docs/product/discord-bot-spec.md` | `workers/discord-bot/` | MISSING |
+| `docs/product/engine-versioning-policy.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/product/engine-versioning-policy.md` | `packages/prediction-engine/src/version.ts` | MISSING |
+| `docs/product/engine-versioning-policy.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/product/galaxy-memory-persistence-spec.md` | `apps/web/lib/galaxy-memory/` | MISSING |
+| `docs/product/github-issues-for-model-spec.md` | `apps/web/app/model-issues/` | MISSING |
+| `docs/product/github-issues-for-model-spec.md` | `apps/web/lib/model-issues/` | MISSING |
+| `docs/product/intelligence-graph-spec.md` | `apps/web/lib/intelligence-graph/wiring/` | MISSING |
+| `docs/product/intelligence-graph-spec.md` | `apps/web/lib/intelligence-graph/types.ts` | MISSING |
+| `docs/product/intelligence-graph-spec.md` | `apps/web/lib/intelligence-graph/builders/` | MISSING |
+| `docs/product/intelligence-graph-spec.md` | `apps/web/lib/intelligence-graph/projections/` | MISSING |
+| `docs/product/intelligence-graph-spec.md` | `apps/web/lib/intelligence-graph/wiring/` | MISSING |
+| `docs/product/intelligence-graph-spec.md` | `apps/web/__tests__/intelligence-graph/` | MISSING |
+| `docs/product/intelligence-graph-spec.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/product/ledger-and-loss-room-spec.md` | `docs/loss-room-shell-spec.md` | MISSING |
+| `docs/product/live-war-room-spec.md` | `apps/web/app/warroom/` | MISSING |
+| `docs/product/live-war-room-spec.md` | `apps/web/lib/warroom/` | MISSING |
+| `docs/product/migration-sequence-spec.md` | `packages/db/scripts/` | MISSING |
+| `docs/product/migration-sequence-spec.md` | `packages/db/archives/` | MISSING |
+| `docs/product/model-court-prompts.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/product/phase-6-plus-planning.md` | `docs/ops/decision-log.md` | MISSING |
+| `docs/product/programmable-dsl-spec.md` | `packages/galaxy-dsl/` | MISSING |
+| `docs/product/programmable-dsl-spec.md` | `apps/web/app/dsl/` | MISSING |
+| `docs/product/programmable-dsl-spec.md` | `apps/web/lib/dsl/` | MISSING |
+| `docs/product/synthetic-monitoring-spec.md` | `workers/synthetic-monitoring/` | MISSING |
+| `docs/product/synthetic-monitoring-spec.md` | `docs/ops/issue-queue.md` | MISSING |
+| `docs/product/synthetic-monitoring-spec.md` | `docs/ops/issue-queue.md` | MISSING |
+| `docs/product/synthetic-monitoring-spec.md` | `apps/web/lib/synthetic-monitoring/check-config.ts` | MISSING |
+| `docs/product/synthetic-monitoring-spec.md` | `docs/ops/issue-queue.md` | MISSING |
+| `docs/product/trust-compliance-toolkit-spec.md` | `packages/galaxy-compliance/` | MISSING |
+| `docs/product/trust-compliance-toolkit-spec.md` | `apps/web/app/compliance-toolkit/` | MISSING |
+| `docs/product/trust-compliance-toolkit-spec.md` | `packages/galaxy-compliance/` | MISSING |
+| `docs/product/twitter-bot-voice-spec.md` | `workers/twitter-bot/` | MISSING |
+| `docs/strategy/RESEARCH_MAP.md` | `docs/ops/HISTORICAL_DATA_AND_PROJECTIONS_QUEUE.md` | MISSING |
+| `docs/strategy/RESEARCH_MAP.md` | `packages/prediction-engine/src/market-backtest.ts` | MISSING |
+| `docs/strategy/RESEARCH_MAP.md` | `docs/adr/pre-implementation-change-proposal-template.md` | MISSING |
+| `docs/strategy/RESEARCH_MAP.md` | `docs/source-registry-spec.md` | MISSING |
+| `docs/strategy/RESEARCH_MAP.md` | `packages/prediction-engine/src/factors/registry.ts` | MISSING |
+| `docs/strategy/vision-tracker.md` | `docs/ops/MODERATOR_COVERAGE_PLAN.md` | MISSING |
+| `docs/uploaded-zip-triage-2026-05-21.md` | `docs/launch-prep/launch-qa-checklist.md` | MISSING |
+| `docs/uploaded-zip-triage-2026-05-21.md` | `apps/web/lib/stripe/` | MISSING |
 
-### D1. `scripts/ops/cron-matrix-from-vercel.mjs` used to be missing
-
-- Claim: `docs/ops/CRON_MATRIX.md:12-13` prescribes
-  `node scripts/ops/cron-matrix-from-vercel.mjs` and `--check`.
-- Was: script did not exist (v4 seed).
-- Now: **FIXED this session (H-B)**.
-- Prove: `test -f scripts/ops/cron-matrix-from-vercel.mjs` → exists.
-  `node scripts/ops/cron-matrix-from-vercel.mjs --check` → exit 0.
-
-### D2. LEDGER guardrail baseline was 22/25
-
-- Claim (stale): `handoff/LEDGER.md` baseline `guards=22/25` with
-  `ai-council` + `dependency-audit` failing.
-- Now: **FIXED**. Line 4 reads `guards=24/26`.
-- Prove: `grep -n 'guards=' handoff/LEDGER.md` →
-  `4:baseline: ... guards=24/26 ...`.
-
-### D3. `CRON_MATRIX.md:7` names `vercel.json` without saying which copy
-
-- Claim: Vercel schedules SoT is `` `vercel.json` → `crons` ``.
-- Fact: two copies exist (`vercel.json` and `apps/web/vercel.json`).
-  Vercel reads the app-directory copy. H-B generator defaults to
-  `apps/web/vercel.json`.
-- Prove: `ls vercel.json apps/web/vercel.json` → both exist.
-  `cmp -s vercel.json apps/web/vercel.json` → IDENTICAL today.
-- Status: **wording still ambiguous**. Copies currently agree; the pointer
-  still does not say which file Vercel reads.
-
-## Schedule truth vs the cadence table
-
-Source of live schedules: `apps/web/vercel.json` `crons`.
-Prove: `node -e` reading that file.
-
-| Job | `docs/ops/CRON_MATRIX.md:31-36` | Live `apps/web/vercel.json` | Verdict |
-|-----|----------------------------------|-----------------------------|---------|
-| settle-picks | `20 * * * *` | `20 * * * *` | match |
-| autonomy-cycle | `7,22,37,52 * * * *` | `7,22,37,52 * * * *` | match |
-| calibration-metrics | `40 */6 * * *` | `40 */6 * * *` | match |
-| health-alert | `*/15 * * * *` | `*/15 * * * *` | match |
-| refresh-odds | `*/30 * * * *` | `*/15 * * * *` | **DRIFT** |
-| free-spine-health | `10,40 * * * *` | `0 */2 * * *` | **DRIFT** |
-
-`docs/ops/CRON_MATRIX.md:38` says "Vercel 30m + GH 2h" for the free-spine
-SLA. Live Vercel is every 2 hours, not every 30 minutes.
-
-GH backstop `5 */2 * * *` for free-spine **does** match
-`.github/workflows/external-cron.yml:34`. Prove: `sed -n '31,34p'
-.github/workflows/external-cron.yml`.
-
-## orbit-unlock-smoke vs live (report only — do not touch)
-
-`scripts/ops/orbit-unlock-smoke.mjs:65,68` asserts:
-
-| Path | Smoke wants | Live |
-|------|-------------|------|
-| `/api/cron/settle-picks` | `0 */3 * * *` | `20 * * * *` |
-| `/api/cron/free-spine-health` | `0 10 * * *` | `0 */2 * * *` |
-
-Prove: `grep -n 'settle-picks\\|free-spine-health' scripts/ops/orbit-unlock-smoke.mjs`
-and the vercel.json dump above. Founder call: do not change the smoke
-expectations (handoff v4).
-
-## Missing paths cited by live docs
-
-Each row: `test -f <path>` (or `test -e` for directories) returned missing.
-
-| path:line | Claimed path | Actually true |
-|-----------|--------------|---------------|
-| `docs/ops/PROVE_THE_EDGE.md:91` | `apps/lib/ingestion/player-stats.ts` | no such tree; ingestion lives under `packages/` |
-| `docs/ops/GSE_CREDITS_PROGRAMS_ACTION_PACK_V3.md:153` | `docs/ops/CLOUD_CREDITS_MAXIMIZATION_STRATEGY_2026-07-08.md` | missing (maybe archived) |
-| `docs/ops/PHASE_05B_REVEAL_PROTOCOL.md:4` | `docs/ops/ZK_PROOF_EVOLUTION_ROADMAP.md` | missing; a copy exists under `docs/ops/archive/dated/` |
-| `handoff/CLAIMS_TRUTH_AUDIT.md:185` | `packages/prediction-engine/src/calibration/apply.ts` | missing; live file is `packages/prediction-engine/src/calibration-apply.ts` (name check: `ls packages/prediction-engine/src/calibration-apply.ts`) |
-| `handoff/LAUNCH_BLOCKERS.md:77` | `apps/web/.env.example` | missing; repo SoT is root `.env.example` |
-| `handoff/LAUNCH_BLOCKERS_ONLY.md:104` | `docs/ops/INCIDENT_RUNBOOK.md` | missing |
-| `handoff/TEST_CENSUS.md:214` | `scripts/build-web.mjs` | missing; real path `apps/web/scripts/build-web.mjs` |
-| `handoff/SESSION_HANDOFF_2026-08-18.md:91` | `.github/workflows/quality.yml` | missing **on purpose** (8-violation halt). Do not recreate. |
-| `handoff/BATTLE_TEST_LOG.md:1964` | `packages/data-ingestion/src/process-sport.ts` and `settle-sport.ts` | missing; both live in `packages/ingestion-pipeline/src/` |
-| `handoff/OPTIMIZER_CALIBRATION_AUDIT.md:25` | `apps/web/lib/fantasy/dfs-exact.ts` | missing |
-| `handoff/REMEDIATION_EXECUTION.md:61` | `apps/web/lib/claude-api/remote-model-client.ts` | missing |
-| `handoff/SESSION_HANDOFF_free-first.md:85` | `apps/web/lib/data-sources/resource-intelligence.ts` | missing |
-| `handoff/SPRINT_QUEUE.md:1264` | `handoff/E2E_BLOCKED.md` | missing |
-| `handoff/PHASE5_SUMMARY.md:65` | `handoff/SPRING_QUEUE.md` | missing (likely typo for `SPRINT_QUEUE.md`) |
-| `docs/ops/EFFICIENCY_AUDIT_2026-08-13.md:71` | `scripts/guardrails/X.mjs` | placeholder, not a file |
-| `handoff/LAUNCH_BLOCKERS.md:32` | `apps/web/app/checkout/` | missing directory (`test -e`) |
-
-## Commands that are not npm scripts
-
-Filtered out journal lines that were `npm run lint:` / `typecheck:`
-(trailing colon, not a script name).
-
-| path:line | Claim | Prove |
-|-----------|-------|-------|
-| `docs/ops/hermes/BUILD_QUEUE.md:814` | `npm run eval:routing-cost` | `node -e` reading `package.json` scripts → key absent. Also `test -f scripts/eval/routing-cost-report.mjs` → missing. |
-
-## Env vars
-
-`docs/ops/CRON_MATRIX.md:20-21` names `CRON_SECRET` and
-`CRON_SECRET_PREVIOUS`. Both are referenced in
-`apps/web/lib/cron/authorize.ts:71-72`. Prove:
-`grep -n CRON_SECRET apps/web/lib/cron/authorize.ts`. **Not drift.**
-
-No other live-doc env-var claim was checked. Unchecked ≠ confirmed.
-
-## Sweep method
-
-1. Listed `docs/ops/*.md` and `handoff/*.md` (225 files).
-2. Extracted backtick paths, `node scripts/...`, and `npm run <name>`.
-3. `test -f` / `test -e` / `package.json` script key lookup.
-4. Dropped archive trees, line-number suffixes, and punctuation-false-positives.
-5. Re-ran `test -f` / `cmp` / `grep` on every row in this file.
-
-Archive docs under `docs/ops/archive/**` contain many more dead links. They
-were not promoted into this map because the sweep was scoped to live
-pointers the next agent will actually follow.
+Docs scanned: 901
+References checked: 4251
+Missing references: 300
