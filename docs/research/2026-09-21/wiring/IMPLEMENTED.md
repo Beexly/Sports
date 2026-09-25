@@ -155,3 +155,26 @@ Additive disabled-by-default scaffolds only. No live ingestion, database, schema
 | 2504.08764 | `packages/data-ingestion/src/2504-08764-nlp.ts` | `packages/data-ingestion/src/2504-08764-nlp.test.ts` | nlp | `ENABLED=false` scaffold |
 | 2507.17844v1 | `packages/data-ingestion/src/2507-17844v1-tracking.ts` | `packages/data-ingestion/src/2507-17844v1-tracking.test.ts` | tracking | `ENABLED=false` scaffold |
 | 2508.11711v2 | `packages/data-ingestion/src/2508-11711v2-data-infra.ts` | `packages/data-ingestion/src/2508-11711v2-data-infra.test.ts` | data_infra | `ENABLED=false` scaffold |
+
+## Wave 4 — @ethandojo NFL handoff builds (2026-09-25, agent/ethandojo-handoff-v2-2026-09-25)
+
+Full spec: `inbox/from-motif/handoff-ethandojo-nfl-builds-v2-fullspec-2026-09-25.md` (Beexly/agent-bus).
+New files only. No existing source, schema, migration, workflow, or config modified.
+Live-path promotion disabled under the new-files-only constraint.
+
+| Build | Name | Implementation | Test | Composition | State |
+|---|---|---|---|---|---|
+| 1 | Game outcome predictor | `packages/prediction-engine/src/nfl/ethandojo-game-predictor.ts` | `ethandojo-game-predictor.test.ts` | `ethandojo/handoff-suite.ts` | composed |
+| 2 | Highlight detector | `gse-ml-service/app/models/highlight_detector.py` + `packages/prediction-engine/src/film/highlight-detector.ts` | `test_highlight_detector.py` + `highlight-detector.test.ts` | `ethandojo/handoff-suite.ts` | composed |
+| 3 | Coverage analyzer | `gse-ml-service/app/models/coverage_classifier.py` + `packages/prediction-engine/src/film/coverage-analyzer.ts` | `test_coverage_classifier.py` + `coverage-analyzer.test.ts` | `ethandojo/handoff-suite.ts` | composed |
+| 4 | Contract value analyzer | `packages/prediction-engine/src/nfl/contract-value.ts` + `packages/data-ingestion/src/overthecap-salaries.ts` | `contract-value.test.ts` + `overthecap-salaries.test.ts` | `ethandojo/handoff-suite.ts` + `ethandojo-handoff-adapters.ts` | composed |
+| 5 | Fourth-down grader | `packages/prediction-engine/src/nfl/fourth-down-grader.ts` | `fourth-down-grader.test.ts` | `ethandojo/handoff-suite.ts` | composed |
+| 6 | Fantasy trade analyzer | `packages/prediction-engine/src/fantasy/trade-analyzer.ts` | `trade-analyzer.test.ts` | `ethandojo/handoff-suite.ts` | composed |
+| 7 | Offensive coordinator | `packages/prediction-engine/src/nfl/offensive-coordinator.ts` | `offensive-coordinator.test.ts` | `ethandojo/handoff-suite.ts` | composed |
+| 8 | Film splitter | `gse-ml-service/app/models/film_splitter.py` + `packages/prediction-engine/src/film/film-splitter.ts` | `test_film_splitter.py` + `film-splitter.test.ts` | `ethandojo/handoff-suite.ts` | composed |
+| 9 | Exploit finder | `packages/prediction-engine/src/nfl/exploit-finder.ts` | `exploit-finder.test.ts` | `ethandojo/handoff-suite.ts` | composed |
+| 10 | Draft copilot | `packages/prediction-engine/src/fantasy/draft-copilot.ts` | `draft-copilot.test.ts` | `ethandojo/handoff-suite.ts` | composed |
+| — | Composition layer | `packages/prediction-engine/src/ethandojo/handoff-suite.ts` | `handoff-suite.test.ts` | — | composed |
+| — | Salary adapter composition | `packages/data-ingestion/src/ethandojo-handoff-adapters.ts` | `ethandojo-handoff-adapters.test.ts` | injectable via `SalaryDataProvider` | composed |
+
+All ten builds are implemented, tested, and composed into the new engine-facing suite; live-path promotion remains disabled under the new-files-only constraint.
