@@ -79,3 +79,69 @@
 # - @PFF "NFL wide receiver rankings: top 32" — only ranks 1–4 (JSN, JJ,
 #   Puka, Chase), 7 (Olave), 24 (Coker) named in post text; full list lives
 #   on pff.com, not in the post.
+#
+# PM sweep (window: posts after ~9:10 AM CDT Thu 2026-09-24 through ~9:10 PM
+# CDT Thu 2026-09-24; one read-only browser task, 21 primary accounts,
+# home feed, keyword searches EPA/TPRR/CPOE/aggressiveness/pass rush win
+# rate; no rate-limiting, no CAPTCHAs, no interactions; standing blockers
+# @NerdingonNFL/@NFLResearcher timelines never render, @FTNData protected;
+# @MagicSportsGuy xFP post carries no full table, so no CSV for it)
+#
+# sfdata9ers-uncatchable-throw-rate-week2.csv — @sfdata9ers, 2:31 PM CDT
+#   Thu — "Uncatchable Throw Rate through Week 2 (min. 30 attempts).
+#   Percentage of all Attempts". 32 QBs; Purdy best 10.71%, Winston worst
+#   22.0%. Author reply: Wentz 16 of 39 attempts uncatchable = 41.03%.
+#   Footer "Data: FTN"; post "Data charted by @FTNFantasy".
+#   https://x.com/sfdata9ers/status/2103205578487304278
+# sfdata9ers-10-plus-yard-rushes-week2.csv — @sfdata9ers, 2:05 PM CDT
+#   Thu — "10+ Yard Rushes through Week 2". All 32 teams (team names read
+#   from logo colors); CHI and BUF tie for 1st with 11; CLE last with 1.
+#   The rank-21 dark-red team was flagged by the sweep as uncertain
+#   (transcribed as TB = likely Tampa Bay, unconfirmed). No data-source
+#   line on the visible chart/post.
+#   https://x.com/sfdata9ers/status/2103199035582562464
+# sfdata9ers-rushing-yards-before-after-contact-week2-partial.csv —
+#   @sfdata9ers, 5:09 PM CDT Thu — "Rushing Yards Before vs. After Contact
+#   (min. 10 rushes, QBs excluded)". Scatter: x = yards before contact /
+#   attempt, y = yards after contact / attempt. 33 labeled players; ALL
+#   values approximate (read off axes). Footer "Data: PFR" (@pfref —
+#   Pro Football Reference, free public tables).
+#   https://x.com/sfdata9ers/status/2103245576460439620
+# pattonanalytics-qb-cpoe-week2.csv — @PattonAnalytics, 2:53 PM CDT Thu —
+#   "Quarterback Completion Percentage Over Expectation" (2026). Author
+#   caveat: "Purdy accidentally got filtered out"; corrected 3:39 PM
+#   version adds B.Purdy +10.5 (flagged via corrected_version_includes_purdy).
+#   Data: @StatRankings (statrankings.com).
+#   https://x.com/PattonAnalytics/status/2103211142810411366
+#   (correction: https://x.com/PattonAnalytics/status/2103222929056059554)
+# pattonanalytics-pressure-expectation-survival-week2-partial.csv —
+#   @PattonAnalytics, 4:05 PM CDT Thu — "How well QBs Mitigate Pressure
+#   Faced: Survival curve for pressure expectation (2026)". X = Pressure
+#   Over Expectation (POE; NO formal definition given by author), Y =
+#   Pressure-to-Sack Ratio (inverted scale). 16 labeled QBs; ALL values
+#   approximate. Author note: "the big three are clustered around the mean"
+#   (per reply, the big three = Josh Allen, Patrick Mahomes, Bryce Young).
+#   Data: @StatRankings. https://x.com/PattonAnalytics/status/2103229377815232540
+# fantasypointsdata-air-yards-lost-drops-week2.csv — @FantasyPtsData,
+#   6:00 PM CDT Thu — "Most Air Yards Lost Due to Drops [2026]": Herbert
+#   70, Mahomes 59, Mayfield 57, Goff 52, Prescott 48. Author reply adds
+#   (no value): "tbf he's worst in EPA lost due to drops" (re: Rodgers).
+#   Data: Fantasy Points Data's own charting; bio offers "FREE Premium
+#   Stats & Tools → fantasypointsdata.com".
+#   https://x.com/FantasyPtsData/status/2103258386204700900
+# beyondtheadp-week2-wr-deep-dive-tprr.csv — @BeyondTheADP (borderline
+#   account, keyword-hit, not on core list), 7:08 PM CDT Thu — "WEEK 2 WR
+#   DEEP DIVE — WHO'S ACTUALLY EARNING TARGETS? TARGETS PER ROUTE RUN".
+#   Author definitions: TPRR = Targets ÷ Routes Run; YPRR = Receiving
+#   Yards ÷ Routes Run. Qualifier: min 5 targets in each of Weeks 1 & 2.
+#   Three tiers (TARGET MAGNETS 30%+, HEAVY INVOLVEMENT 25–29.9%, FANTASY
+#   RADAR 20–24.9%); 16 WRs; JSN leads 44% TPRR / 5.54 YPRR. No external
+#   data source stated (chart credit @beyondtheadp).
+#   https://x.com/BeyondTheADP/status/2103275297135050754
+# jmthrivept-george-kittle-te-profile-week1-2.csv — @jmthrivept, 5:01 PM
+#   CDT Thu — "George Kittle 2026 Wk1-2: Amongst TEs >18 routes": 0.32
+#   TPRR (5th), 3.29 YPRR (2nd), 10.7% Win Rate (11th), 16.1% target share
+#   (14th), 24.3% air-yard share (4th), 9.67 YAC/R (4th). Author comment:
+#   "Absolutely insane per-touch numbers in his first two games off of
+#   Achilles repair." Source: explicitly "per @FantasyPtsData".
+#   https://x.com/jmthrivept/status/2103243452263842045

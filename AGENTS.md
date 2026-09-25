@@ -4027,3 +4027,82 @@ Window: posts after ~9:00 PM CDT Wed 2026-09-23 through ~9:10 AM CDT Thu 2026-09
 - No CAPTCHA or bot challenges at any point; session persisted as @GalaxySportsHQ; read-only throughout.
 - Standing loose end (carried): "Bryce Young map" screenshot from the 2026-09-20 PM sweep remains undescribed/uninventoried.
 - Transcription caveats: @PattonAnalytics first-read scatter (all values approximate); Dynatyze carry-share board (top 3 of 12 visible); PROE+ and 1st-&-10 tables use standard team abbreviations for city names.
+
+---
+
+## ENGINE BENCHMARK: TIMESFM-3 FOUNDATION FORECASTER (2026-09-24, Motif)
+
+**Source:** IG save @voxaris_ai 2026-09-01 (verified release facts via web 2026-09-24); the v1 paper already has a deep ledger (`docs/research/2026-09-21/arxiv-deep/2122-timesfm-decoder-only-foundation-model.md`).
+
+**Metric/tool:** Google TimesFM-3 (released 2026-08-31): 330M-param time-series foundation model, `google/timesfm-3.0-pytorch` on HF. Multivariate natively, past-only + past/future covariates, 9 quantile heads (q10–q90), non-autoregressive single-pass decode. `pip install timesfm[torch]`; darts PR #3199 ports it; MLX port + MCP wrapper exist.
+
+**Engine gap:** no pretrained time-series backbone anywhere in the engine or corpus (confirmed by repo grep 2026-09-21). Fits two lanes: (a) research-loop baseline for time-series sub-tasks (line movement, totals drift) — never the pick path; (b) covariate experiments for the thin weather lane (wave-3 arXiv). 9-quantile output is a ready-made uncertainty source to compare against Mimo's conformal calibration.
+
+**LICENSE GATE:** weights are **non-commercial, non-production** (TimesFM Non-Commercial License v1.0, verified 2026-09-24 on the official HF card). Eval/research/internal use only. Cannot generate picks, sit behind a paid API, or touch `generate-signal-slate.ts` / the book path. Commercial path = BigQuery `AI.FORECAST`. (Repo is not gated — no terms click needed.)
+
+**LIVE:** prereg #1 ran 2026-09-24 on HF Space `Beexly/timesfm3-benchmark` (Docker; weights baked at build on HF's network; serves aggregate results only) — **verdict MET**: TimesFM median MAE 0.2433 vs naive 0.7505 (ratio 0.324 ≤ 0.80). Run record: `docs/research/2026-09-24/evals/timesfm3-space/SPACE.md`; numbers in `docs/research/2026-09-24/evals/prereg-timesfm3-mechanics.md`. Mechanics validated; sports-skill NOT claimed — benchmark #2 needs its own prereg.
+
+## ENGINE BENCHMARK: ACTION-BOARD GSE WIRING — WAVE 3 (2026-09-24, Motif)
+
+- Preregistration contract → `apps/web/lib/calibration/prereg-eval.ts` + test (9/9 pass). Tamper-evident declare-before-run: MET/NOT MET/VOID. Measurement discipline as code.
+- MLB environment regime detector → `packages/prediction-engine/src/edge-lab/features/mlb-environment-regime.ts` + test (5/5). CUSUM step detector on league HR/G → context-matrix era flags; detects the juiced-ball *shape* without ingesting the unverified claim.
+- HR prop factors → `packages/prediction-engine/src/props/hr-factors.ts` + test (4/4). Power × pitcher-vuln × park × weather × lineup → tilt index; one number source for agents + engine.
+- TimesFM-3 benchmark lane → `gse-ml-service/app/models/timesfm_benchmark.py` + `POST /predict/timesfm-benchmark` + test (6/6) + `TIMESFM_SETUP.md`. License VERIFIED 2026-09-24 (official HF card): non-commercial — benchmarking/research OK, pick path or distillation needs a Google commercial license. Structurally barred from consensus (no `probability` field, `usable_as_predictor: False`). **LIVE 2026-09-24:** prereg #1 ran on HF Space `Beexly/timesfm3-benchmark` — **MET** (MAE 0.2433 vs naive 0.7505). Run record in `docs/research/2026-09-24/evals/timesfm3-space/`.
+- Reconciled, already wired: anytime-TD decomposition (`props/conditional-td.ts`), sealed-vault discipline (`eval/edge-lab/sealed-split.mjs`), NFL regime detection (`edge-lab/features/nfl-regime-change.ts`).
+- Blocked: PROP PickType/settlement = NEEDS HUMAN CALL (schema frozen to agents). Content-pipeline items (video editors, Trends workflow) are NOT engine inputs — routed to the content op.
+- All additive; nothing in live publish paths. Ledger: `docs/research/2026-09-21/wiring/IMPLEMENTED.md` Wave 3.
+
+
+## X ANALYTICS SWEEP 2026-09-24 PM
+
+Window: posts after ~9:10 AM CDT Thu 2026-09-24 through ~9:10 PM CDT Thu 2026-09-24. READ ONLY; no likes/reposts/replies/follows/DMs anywhere. One read-only browser task (shared leased Chromium profile, @GalaxySportsHQ) covering all 21 primary accounts + home feed + keyword searches (EPA, TPRR, CPOE, aggressiveness, pass rush win rate). Previously inventoried items passed in for dedup. No rate-limiting, no CAPTCHAs.
+
+### NEW ITEMS (9)
+
+- @jmthrivept, 2026-09-24 5:01 PM CDT — "George Kittle 2026 Wk1-2: Amongst TEs >18 routes" (author gives abbreviations + ranks, no prose definitions): 0.32 TPRR (5th), 3.29 YPRR (2nd), 10.7% Win Rate (11th), 16.1% target share (14th), 24.3% air-yard share (4th), 9.67 YAC/R (4th). Author comment: "Absolutely insane per-touch numbers in his first two games off of Achilles repair." Source: explicitly "per @FantasyPtsData". https://x.com/jmthrivept/status/2103243452263842045. CSV: jmthrivept-george-kittle-te-profile-week1-2.csv.
+
+- @sfdata9ers, 2026-09-24 2:31 PM CDT — "Uncatchable Throw Rate through Week 2 (min. 30 attempts). Percentage of all Attempts": B.Purdy 10.71%, D.Watson 15.38%, G.Smith 15.38%, D.Prescott 16.92%, T.Lawrence 21.15%, K.Cousins 22.03%, D.Lock 22.92%, T.Shough 23.33%, B.Mayfield 24.19%, D.Jones 24.19%, J.Brissett 24.62%, J.Burrow 25.76%, J.Goff 25.97%, J.Dart 26.47%, J.Allen 26.67%, D.Maye 27.27%, C.Williams 27.27%, L.Jackson 28.57%, B.Nix 28.81%, P.Mahomes 29.73%, M.Stafford 30.36%, J.Hurts 30.65%, C.Ward 32.69%, J.Herbert 33.33%, J.Daniels 35.29%, A.Rodgers 36.71%, B.Young 36.99%, J.Love 38.03%, C.Stroud 38.71%, M.Willis 40.00%, C.Rush 41.03%, C.Wentz 41.03%. Author reply (attributed): "16 of his 39 attempts were uncatchable → 41.03%" (re: Wentz). Footer: "Data: FTN"; post: "Data charted by @FTNFantasy". https://x.com/sfdata9ers/status/2103205578487304278. CSV: sfdata9ers-uncatchable-throw-rate-week2.csv.
+
+- @sfdata9ers, 2026-09-24 2:05 PM CDT — "10+ Yard Rushes through Week 2" (32 teams; team names read from logo colors): CHI 11, BUF 11, KC 9, DET 9, IND 9, WAS 8, BAL 8, LAR 8, SEA 7, NE 7, SF 7, JAX 7, HOU 7, ATL 6, CIN 6, NYJ 5, LAC 5, ARI 5, DEN 5, TEN 5, LV 4, NYG 4, [dark-red logo, uncertain — likely TB] 4, CAR 4, GB 4, MIN 3, PHI 3, NO 3, MIA 3, PIT 3, DAL 2, CLE 1. The rank-21 dark-red team's identity is flagged uncertain (transcribed as TB, unconfirmed). No data-source line on the visible chart/post. https://x.com/sfdata9ers/status/2103199035582562464. CSV: sfdata9ers-10-plus-yard-rushes-week2.csv.
+
+- @sfdata9ers, 2026-09-24 5:09 PM CDT — "Rushing Yards Before vs. After Contact (min. 10 rushes, QBs excluded)". Scatter: x = Rushing Yards Before Contact/Attempt, y = Yards After Contact/Attempt. Labeled players (ALL APPROXIMATE, read off axes): J.Cook ~4.25/1.30, B.Corum ~4.20/1.80, K.Williams ~3.50/2.15, T.Spears ~3.25/2.05, B.Irving ~3.15/2.15, J.Gibbs ~3.15/1.55, C.Hubbard ~3.35/1.25, T.Benson ~2.85/1.62, T.Pollard ~2.75/2.10, A.Jones ~2.60/1.55, E.Wilson ~2.60/1.40, R.White ~2.55/2.00, J.Taylor ~2.25/2.30, J.Mason ~1.75/2.30, B.Robinson (ATL) ~2.10/2.15, D.Achane ~2.05/1.50, D.Henry ~2.05/3.25, J.Warren ~1.75/2.65, J.Dobbins ~1.80/2.58, C.Brown ~2.35/1.68, K.Walker ~2.25/3.95, D.Swift ~2.30/2.80, R.Stevenson ~1.55/2.45, C.McCaffrey ~2.95/1.90, B.Hall ~1.90/1.60, T.Allgeier ~2.25/1.02, D.Montgomery ~1.55/1.15, S.Barkley ~1.30/3.45, B.Allen ~1.30/1.80, T.Bigsby ~1.30/1.55, C.Rodriguez ~1.00/2.10, M.Lloyd ~2.10/1.10, R.Dowdle ~1.75/0.75. Footer: "Data: PFR" (@pfref — Pro Football Reference, free public tables). https://x.com/sfdata9ers/status/2103245576460439620. CSV: sfdata9ers-rushing-yards-before-after-contact-week2-partial.csv (all values approximate).
+
+- @MagicSportsGuy (Kevin Adams, StatRankings founder), 2026-09-24 1:06 PM CDT — xFP overachievers: "xFP, early-season overachievers at statrankings.com: Denzel Boston is 4th (Fantasy Points − xFP), +12.9 FP over expectation after back-to-back games with TD receptions to start his career." Metric: expected fantasy points (xFP) vs actual fantasy points. No full table in the post (single-player factoid). Data: statrankings.com (his site). https://x.com/MagicSportsGuy/status/2103184343950897290. No CSV.
+
+- @PattonAnalytics (Steven Patton, Data Scientist @ StatRankings), 2026-09-24 2:53 PM CDT — "A tale of two QBs in the Big Apple" / "Quarterback Completion Percentage Over Expectation — Expected completion percentage compared with completion percentage (2026)": J.Dart +11.9, D.Prescott +11.5, B.Mayfield +9.9, D.Watson +9.6, D.Lock +9.6, L.Jackson +6.8, T.Lawrence +7.6, J.Goff +4.5, J.Allen +4.7, G.Smith +4.3, J.Hurts +4.0, T.Shough +3.8, K.Cousins +3.3, M.Stafford +2.6, B.Young +2.5, J.Burrow +2.1, D.Maye +1.7, B.Nix +1.3, C.Williams +1.2, J.Brissett +1.1, D.Jones −0.7, C.Stroud −2.0, C.Ward −2.9, A.Rodgers −6.3, J.Herbert −4.2, J.Daniels −4.5, M.Willis −5.9, P.Mahomes −5.5, C.Wentz −7.7, J.Love −9.3, C.Rush −16.2, J.Winston −22.0. Author caveat (attributed): "Purdy accidentally got filtered out" — corrected 3:39 PM version adds B.Purdy +10.5 (https://x.com/PattonAnalytics/status/2103222929056059554). Data: @StatRankings (statrankings.com). https://x.com/PattonAnalytics/status/2103211142810411366. CSV: pattonanalytics-qb-cpoe-week2.csv.
+
+- @PattonAnalytics, 2026-09-24 4:05 PM CDT — "How well QBs Mitigate Pressure Faced — Survival curve for pressure expectation (2026)". X = Pressure Over Expectation (POE; author gives NO formal definition), Y = Pressure-to-Sack Ratio (inverted scale, 0–60%+). Labeled QBs (ALL APPROXIMATE): B.Purdy ~−0.10/2%, M.Stafford ~−0.10/9%, D.Jones ~+0.03/11%, J.Daniels ~+0.04/7%, D.Prescott ~−0.05/14%, B.Young ~−0.04/18%, J.Allen ~−0.06/21%, T.Lawrence ~−0.11/19%, D.Lock ~−0.14/16%, B.Nix ~+0.06/15%, B.Mayfield ~+0.11/21%, J.Hurts ~−0.08/26%, C.Ward ~−0.12/42%, M.Willis ~+0.02/42%, C.Rush ~−0.13/63%, C.Wentz ~−0.09/60%. Author note (attributed): "The big three are clustered around the mean" — per thread reply, the big three = Josh Allen, Patrick Mahomes, Bryce Young. Data: @StatRankings. https://x.com/PattonAnalytics/status/2103229377815232540. CSV: pattonanalytics-pressure-expectation-survival-week2-partial.csv (all values approximate).
+
+- @FantasyPtsData, 2026-09-24 6:00 PM CDT — "Most Air Yards Lost Due to Drops [2026]": Justin Herbert 70, Pat Mahomes 59, Baker Mayfield 57, Jared Goff 52, Dak Prescott 48. Author reply (attributed, no value): "tbf he's worst in EPA lost due to drops" (re: Rodgers). Data: Fantasy Points Data's own charting; bio offers "FREE Premium Stats & Tools → fantasypointsdata.com". https://x.com/FantasyPtsData/status/2103258386204700900. CSV: fantasypointsdata-air-yards-lost-drops-week2.csv.
+
+- @BeyondTheADP (borderline account — keyword hit, NOT on the core 21 list), 2026-09-24 7:08 PM CDT — "WEEK 2 WR DEEP DIVE — WHO'S ACTUALLY EARNING TARGETS? TARGETS PER ROUTE RUN (TPRR)". Author definitions: TPRR = Targets ÷ Routes Run; YPRR = Receiving Yards ÷ Routes Run. Qualifier: minimum 5 targets in each of Weeks 1 & 2. Three tiers, 16 WRs: TARGET MAGNETS (30%+): Jaxon Smith-Njigba (SEA) 22/50 44%/5.54, Parker Washington (JAX) 18/46 39%/3.93, Davante Adams (LAR) 16/48 33%/4.60, Amon-Ra St. Brown (DET) 27/82 33%/2.55, Stefon Diggs (WAS) 15/47 32%/2.17. HEAVY INVOLVEMENT (25–29.9%): CeeDee Lamb (DAL) 17/58 29%/3.40, Deebo Samuel (SF) 11/39 28%/2.03, Justin Jefferson (MIN) 15/54 28%/2.72, Christian Watson (GB) 19/68 28%/2.76, Tee Higgins (CIN) 16/60 27%/2.57, DeVonta Smith (PHI) 19/74 26%/2.30, Chris Olave (NO) 23/92 25%/2.91. FANTASY RADAR (20–24.9%): Jalen Coker (CAR) 18/74 24%/2.76, Tetairoa McMillan (CAR) 18/75 24%/2.35, DK Metcalf (PIT) 19/88 22%/0.76, Luther Burden (CHI) 12/57 21%/1.67. No external data source stated (chart credit @beyondtheadp). https://x.com/BeyondTheADP/status/2103275297135050754. CSV: beyondtheadp-week2-wr-deep-dive-tprr.csv.
+
+### INNOVATION NOTES (attributed, not build orders)
+
+- @PattonAnalytics "Pressure Over Expectation (POE) × Pressure-to-Sack Ratio" survival curve: new composite pressure-expectation metric (POE, author gives no definition) crossed with pressure-to-sack ratio — a different angle on this morning's @PFF "lowest pressure-to-sack rate" post, now via StatRankings data. Commenters note the top-corner QBs are "all on a surgeon's slab" (injured QBs).
+- @FantasyPtsData "Most Air Yards Lost Due to Drops" (+ author reply citing "EPA lost due to drops") revisits the Sep 23 @sfdata9ers "Cost of Drops EPA" inventory from the QB-side angle — drops framed as QB air-yards/EPA lost rather than team penalty.
+- @jmthrivept Kittle TE per-touch rank post (six efficiency metrics with TE-class ranks, post-Achilles comeback framing) revisits his own 7:02 AM Tyler Warren route-profile post from a different angle.
+- @BeyondTheADP TPRR/YPRR WR chart revisits Sep 23 @statyxio "man-vs-zone yards/route" territory with a different cut (min-5-targets-per-week qualifier, TPRR tiers, 16-WR deep dive).
+- Also seen: @PattonAnalytics 11h quote of @MagicSportsGuy's 9:09 AM PROE+ post ("The NFC South is setting the pace" — already inventoried) and a 10h quote of his Sep 23 play-caller tendencies chart (covered Sep 23) — no new numbers.
+
+### DATA-ACCESS NOTES (in-window; publicly visible only, no gates bypassed)
+
+- @sfdata9ers: chart footers/replies cite @pfref (Pro Football Reference — free public tables) and FTN Data ("Data: FTN" / "Data charted by @FTNFantasy"). Bio: "#NFL Data Analytics & Insights", supports via ko-fi. No open-data portal of his own observed.
+- @FTNFantasy / @FTNData: bio — "The most advanced NFL charted data, custom & data feeds, player projections, DFS data/tools, betting" at ftnfantasy.com (paid/subscription charted data; the @FTNData X account itself is protected — no follow requested).
+- @FantasyPtsData: own charted data; "FREE Premium Stats & Tools → fantasypointsdata.com" (bio); cited by @jmthrivept as "per @FantasyPtsData" twice today.
+- @MagicSportsGuy: Founder of @StatRankings & FTN Fantasy/Data; metrics surfaced at statrankings.com (xFP overachievers page linked in-post).
+- @PattonAnalytics: bio "Data Scientist @ StatRankings"; charts labeled "Data: @StatRankings" → statrankings.com.
+- @BeyondTheADP: no external data source stated; chart credit @beyondtheadp only.
+
+### NOTHING NEW IN WINDOW
+
+@cmain7 (survivor/ownership commentary); @RyanPaganetti (live-game commentary); @hawkblogger (practice/injury news); @GridironInfo_ (live-game commentary); @DevyEusuf (TNF commentary); @statyxio (TNF commentary, basic stats); @ScottBarrettDFB (promos, non-numeric commentary); @SumerSports (TNF commentary); @EstablishTheRun (promo + no-numbers pace teaser); @DonAtkinsonNFL (49ers news); @DynatyzeFF (fantasy leaderboards only — fantasy points per touch RB leaders, WR target leaders, London/Penix splits); @PFF (game commentary + single-grade one-liners, no standalone metric charts); @32BeatWriters (news aggregation). Home feed: no metric posts from the target list beyond what profiles yielded. Keyword searches: EPA (no new metric hits); TPRR (surfaced @BeyondTheADP chart); CPOE ("Latest" search returned zero results — the CPOE posts came via the profile); aggressiveness (nothing); "pass rush win rate" (nothing new).
+
+### BLOCKERS (2026-09-24 PM)
+
+- @NerdingonNFL: timeline never renders (one reload attempted; standing blocker).
+- @NFLResearcher: timeline renders empty despite 4 posts shown (one reload attempted; standing blocker).
+- @FTNData: protected account; did not request access (standing blocker). Data-source note: ftnfantasy.com paid charted data.
+- No CAPTCHA or rate-limiting at any point; session persisted as @GalaxySportsHQ; read-only throughout.
+- Standing loose end (carried): "Bryce Young map" screenshot from the 2026-09-20 PM sweep remains undescribed/uninventoried.
+- Transcription caveats: @sfdata9ers before/after-contact scatter + @PattonAnalytics POE survival curve (all values approximate); 10+ yard rushes table (one team identity uncertain, transcribed as TB); beyondtheadp CSV (author's tiering preserved, key_takeaway values not captured).
