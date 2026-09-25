@@ -556,7 +556,7 @@ describe("GET /api/cron/refresh-player-stats", () => {
       status: "clearance-denied", season: 2024, rowsWritten: 0, blocks: ["rights"],
     });
     const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024&mode=full", "Bearer secret"));
-    expect(res.status).toBe(200);
+    expect(res.status).toBe(502);
     const body = (await res.json()) as { success: boolean; rushTendencies: { status: string } };
     expect(body.success).toBe(false);
     expect(body.rushTendencies.status).toBe("clearance-denied");
@@ -570,9 +570,9 @@ describe("GET /api/cron/refresh-player-stats", () => {
     expect(res.status).toBe(502);
   });
 
-  it("keeps HTTP 200 when only a satellite fails (primary stamp is the SLA)", async () => {
-    // Route status is primaryOk ? 200 : 502. Satellite failure flips
-    // body.success to false but must not withhold the primary IngestionRun.
+  it("reports a satellite failure as HTTP 502 while preserving the primary run result", async () => {
+    // Satellite failure flips both body.success and the transport status,
+    // while the primary IngestionRun remains visible in the response.
     (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
       status: "ok", season: 2024, playersUpserted: 2, statsUpserted: 4,
     });
@@ -584,10 +584,9 @@ describe("GET /api/cron/refresh-player-stats", () => {
       ),
     );
     const res = await GET(req("http://x/api/cron/refresh-player-stats?season=2024&mode=full", "Bearer secret"));
-    // Deliberate contract: the HTTP status mirrors the PRIMARY ingestion only
-    // (a failed satellite must not 502-and-retry the whole cron); the body
-    // carries success=false and the failing satellite's status.
-    expect(res.status).toBe(200);
+    // Transport mirrors overall success: the body still carries the primary
+    // run and the failing satellite, while monitors see the unhealthy SLA.
+    expect(res.status).toBe(502);
     const body = (await res.json()) as {
       success: boolean;
       ngs: { rushing: { status: string } };

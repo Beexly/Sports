@@ -318,9 +318,12 @@ function evaluateFactor(
   now: Date,
   edgeLabVerdict?: EdgeLabVerdictInput
 ): EvidenceMatrixRow {
-  const matching = evidence.filter((record) =>
-    definition.sourceCategories.includes(record.sourceCategory)
-  );
+  const matching = evidence.filter((record) => {
+    if (record.evidenceFactorKeys) {
+      return record.evidenceFactorKeys.includes(definition.key);
+    }
+    return definition.sourceCategories.includes(record.sourceCategory);
+  });
   if (matching.length === 0) {
     return buildAbsentRow(definition);
   }

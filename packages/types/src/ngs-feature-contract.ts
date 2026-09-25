@@ -7,6 +7,43 @@
  * directional values in the common [-1, 1] scale.
  */
 
+const NGS_NFL_TEAM_ALIASES: Readonly<Record<string, string>> = {
+  ARI: "ARI", ATL: "ATL", BAL: "BAL", BUF: "BUF", CAR: "CAR", CHI: "CHI",
+  CIN: "CIN", CLE: "CLE", DAL: "DAL", DEN: "DEN", DET: "DET", GB: "GB",
+  HOU: "HOU", IND: "IND", JAX: "JAX", KC: "KC", LV: "LV", LAC: "LAC",
+  LA: "LAR", LAR: "LAR", MIA: "MIA", MIN: "MIN", NE: "NE", NO: "NO",
+  NYG: "NYG", NYJ: "NYJ", PHI: "PHI", PIT: "PIT", SEA: "SEA", SF: "SF",
+  TB: "TB", TEN: "TEN", WAS: "WAS", WSH: "WAS", WFT: "WAS",
+};
+
+const NGS_NFL_CANONICAL_KEYS = new Set(Object.values(NGS_NFL_TEAM_ALIASES));
+
+/**
+ * Normalize an NFL source abbreviation to the NGS ledger's canonical key.
+ * This is intentionally allowlisted: a typo or unknown team is a null, never a
+ * blind pass-through. The reader also accepts full team names through the
+ * existing Kalshi resolver before applying this same canonicalization.
+ */
+export function canonicalizeNgsTeamKey(
+  value: string | null | undefined,
+): string | null {
+  const key = value?.trim().toUpperCase();
+  if (!key) return null;
+  const canonical = NGS_NFL_TEAM_ALIASES[key];
+  return canonical && NGS_NFL_CANONICAL_KEYS.has(canonical) ? canonical : null;
+}
+
+/** All source spellings to include when reading a canonical team key. */
+export function ngsTeamKeyAliases(
+  canonical: string | null | undefined,
+): readonly string[] {
+  const normalized = canonicalizeNgsTeamKey(canonical);
+  if (!normalized) return [];
+  return Object.keys(NGS_NFL_TEAM_ALIASES).filter(
+    (alias) => NGS_NFL_TEAM_ALIASES[alias] === normalized,
+  );
+}
+
 export const NGS_FEATURE_SOURCE = "nflverse" as const;
 export const NGS_FEATURE_CATEGORY = "RATINGS" as const;
 
@@ -49,6 +86,8 @@ export const NGS_TEAM_SIGNAL_KEY = "ngs.team_score" as const;
 export const NGS_TEAM_WEIGHT = 2.5 as const;
 export const NGS_TEAM_CONFIDENCE = 0.7 as const;
 export const NGS_TEAM_MAX_SCORE = 5 as const;
+/** The scorer omits the factor when the directed score is not above this floor. */
+export const NGS_TEAM_MIN_CONTRIBUTION = 0.01 as const;
 /** Canonical ledger grain: latest-season rollup, not a per-week raw row. */
 export const NGS_SIGNAL_WEEK = 0 as const;
 
@@ -111,12 +150,32 @@ export function isUsableNgsContextPair(
   away: NgsTeamContextSignal | null | undefined,
   referenceAt?: string,
 ): boolean {
+  const contribution = ngsTeamContributionScore(home, away, referenceAt);
+  return contribution !== null && Math.abs(contribution) > NGS_TEAM_MIN_CONTRIBUTION;
+}
+
+/**
+ * The exact signed home-minus-away score used by the game-context scorer after
+ * freshness decay and the ±5 cap. Returning null means the pair is not valid.
+ * The scorer may flip this sign for an away pick; snapshot auditing uses its
+ * magnitude, so the same contribution gate is shared by both consumers.
+ */
+export function ngsTeamContributionScore(
+  home: NgsTeamContextSignal | null | undefined,
+  away: NgsTeamContextSignal | null | undefined,
+  referenceAt?: string,
+): number | null {
   const referenceAtMs = ngsReferenceAtMs(referenceAt);
-  if (referenceAtMs === null) return false;
-  if (ngsEffectiveWeight(home, referenceAtMs) <= 0) return false;
-  if (ngsEffectiveWeight(away, referenceAtMs) <= 0) return false;
-  if (!home || !away) return false;
-  return Math.abs(home.value - away.value) > 0.01;
+  if (referenceAtMs === null || !home || !away) return null;
+  const homeEffective = ngsEffectiveWeight(home, referenceAtMs);
+  const awayEffective = ngsEffectiveWeight(away, referenceAtMs);
+  if (homeEffective <= 0 || awayEffective <= 0) return null;
+  const differential = home.value - away.value;
+  const contribution = differential * ((homeEffective + awayEffective) / 2);
+  return Math.max(
+    -NGS_TEAM_MAX_SCORE,
+    Math.min(NGS_TEAM_MAX_SCORE, contribution),
+  );
 }
 
 /** True when a team aggregate has at least one finite source feature. */

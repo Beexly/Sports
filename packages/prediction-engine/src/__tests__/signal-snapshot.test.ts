@@ -69,6 +69,25 @@ describe("buildPickSignalSnapshot — signal presence", () => {
     expect(snap.hadRatingsSignal).toBe(false);
   });
 
+  it("records NGS only when the decayed contribution clears the scorer threshold", () => {
+    const ngs = (value: number, capturedAt: string) => ({
+      value,
+      weight: 2.5,
+      confidence: 0.7,
+      capturedAt,
+      season: 2026,
+    });
+    const referenceAt = NOW.toISOString();
+    const oldCapture = new Date(NOW.getTime() - 45 * 86_400_000).toISOString();
+    expect(buildPickSignalSnapshot(
+      "p1", PICK, {
+        ngsHome: ngs(0.4, oldCapture),
+        ngsAway: ngs(0.38, oldCapture),
+        ngsReferenceAt: referenceAt,
+      }, false, false,
+    ).hadNgsSignal).toBe(false);
+  });
+
   it("records NGS only when both valid sides could reach the scorer", () => {
     const ngs = (value: number, capturedAt = NOW.toISOString()) => ({
       value,
@@ -78,7 +97,7 @@ describe("buildPickSignalSnapshot — signal presence", () => {
       season: 2026,
     });
     expect(buildPickSignalSnapshot(
-      "p1", PICK, { ngsHome: ngs(0.4), ngsAway: ngs(-0.1) }, false, false,
+      "p1", PICK, { ngsHome: ngs(0.4), ngsAway: ngs(-0.1), ngsReferenceAt: NOW.toISOString() }, false, false,
     ).hadNgsSignal).toBe(true);
     expect(buildPickSignalSnapshot(
       "p1", PICK, { ngsHome: ngs(0.4), ngsAway: null }, false, false,

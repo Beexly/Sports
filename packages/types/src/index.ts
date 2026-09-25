@@ -547,8 +547,14 @@ export interface EvidenceRecord extends SignalSourceMetadata {
   signalKey: string;
   activationStatus: EvidenceActivationStatus;
   freshnessStatus: FactorEvidenceMetadata["freshnessStatus"];
-  sampleSize?: number | null;
-  whyUsedOrBlocked: string;
+  readonly sampleSize?: number | null;
+  readonly whyUsedOrBlocked: string;
+  /**
+   * Optional narrow factor binding for evidence whose category is shared by
+   * multiple matrix factors (for example, schedule density is not rest data).
+   * Legacy callers may omit this and continue to use category matching.
+   */
+  readonly evidenceFactorKeys?: readonly string[];
 }
 
 export interface OddsInput {

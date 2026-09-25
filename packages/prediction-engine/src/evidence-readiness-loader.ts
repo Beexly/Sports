@@ -181,6 +181,11 @@ export function gameSignalRowsToEvidenceRecords(
       whyUsedOrBlocked: row.isBootstrap
         ? "Stored GameSignal is bootstrap provenance; it is reported for shadow review and cannot activate scoring."
         : `Persisted GameSignal ${row.signalKey} from ${row.sourceName}.`,
+      evidenceFactorKeys:
+        row.signalKey === "schedule_density_7d_home" ||
+        row.signalKey === "schedule_density_7d_away"
+          ? ["schedule.density"]
+          : undefined,
     });
   }
   return records;

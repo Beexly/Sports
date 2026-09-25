@@ -456,6 +456,9 @@ export async function GET(request: Request): Promise<NextResponse> {
     let rushShadowLedgerError: string | null = null;
     try {
       rushShadowLedger = await persistRushShadowLedger(ingestionTargetNflSeason());
+      if (rushShadowLedger.status === "error") {
+        rushShadowLedgerError = rushShadowLedger.errors[0] ?? "rush shadow ledger returned error";
+      }
     } catch (error) {
       rushShadowLedgerError = error instanceof Error ? error.message : "rush shadow ledger failed";
       console.warn(

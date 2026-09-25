@@ -98,6 +98,20 @@ describe("evidence readiness loader", () => {
     expect(schedule?.ageMinutes).toBe(5);
   });
 
+  it("keeps schedule density from falsely activating schedule.rest", () => {
+    const records = gameSignalRowsToEvidenceRecords(
+      [gameSignal({ signalKey: "schedule_density_7d_home", signalValue: 4 })],
+      NOW,
+    );
+    const matrix = reportAllFactorReadiness({ evidence: records, now: NOW });
+    const rest = matrix.rows.find((row) => row.key === "schedule.rest");
+    const density = matrix.rows.find((row) => row.key === "schedule.density");
+
+    expect(density?.status).toBe("ACTIVE");
+    expect(rest?.status).toBe("ABSENT");
+    expect(rest?.canContributeToScore).toBe(false);
+  });
+
   it("keeps unknown GameSignal metrics in shadow instead of treating their value as a sample", () => {
     const records = gameSignalRowsToEvidenceRecords(
       [gameSignal({ signalKey: "wind_mph", sourceCategory: "VENUE_ENVIRONMENT", signalValue: 42 })],

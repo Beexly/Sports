@@ -4,11 +4,9 @@
  * an already-captured, nflverse-rights-stamped PBP aggregate and never fetches,
  * publishes, prices, or passes a signal to the public scoring surface.
  *
- * Signal is a latest-value table. Each profile is a season-level current fact,
- * so the stable key uses week=0 and the same profile upsert is idempotent on a
- * later calibration cycle. The row keeps the source rights snapshot and the
- * original capture time; it does not claim a trust field that the table does
- * not have. The conservative policy lives in weight/confidence.
+ * The current season's two rush keys are replaced atomically. That prevents a
+ * player who falls below the sample floor, loses rights clearance, or leaves
+ * the bounded profile set from retaining a stale shadow row forever.
  */
 import { db, isStubMode, type Prisma } from "@sports/db";
 import {
@@ -19,6 +17,10 @@ import {
 export const RUSH_SHADOW_CATEGORY = "RATINGS" as const;
 export const RUSH_SHADOW_SOURCE = "nflverse" as const;
 export const RUSH_SHADOW_MAX_PROFILES = 2_000;
+export const RUSH_SHADOW_KEYS = [
+  "rush.epa_per_run",
+  "rush.scheme_lean",
+] as const;
 
 export type RushShadowLedgerStatus = "ok" | "no-data" | "stub" | "error";
 
@@ -72,6 +74,20 @@ interface SignalUpsertArgs {
   >;
 }
 
+interface SignalDeleteManyArgs {
+  readonly where: {
+    readonly entityType: "player";
+    readonly key: { readonly in: readonly string[] };
+    readonly season: number;
+    readonly week: 0;
+  };
+}
+
+interface RushShadowSignalDb {
+  deleteMany(args: SignalDeleteManyArgs): Promise<{ count: number }>;
+  upsert(args: SignalUpsertArgs): Promise<unknown>;
+}
+
 /** Minimal DB seam so the writer can be tested without Prisma or a database. */
 export interface RushShadowLedgerDb {
   readonly playerRushProfile: {
@@ -82,9 +98,11 @@ export interface RushShadowLedgerDb {
       readonly take: number;
     }): Promise<readonly RushProfileLedgerRow[] | null>;
   };
-  readonly signal: {
-    upsert(args: SignalUpsertArgs): Promise<unknown>;
-  };
+  readonly signal: RushShadowSignalDb;
+  $transaction(
+    run: (tx: { signal: RushShadowSignalDb }) => Promise<unknown>,
+    options?: { maxWait?: number; timeout?: number },
+  ): Promise<unknown>;
 }
 
 export interface RushShadowLedgerResult {
@@ -125,11 +143,75 @@ function inputJson(value: Prisma.JsonValue): Prisma.InputJsonValue | null {
   return value as Prisma.InputJsonValue;
 }
 
+function buildRushSignalWrites(
+  season: number,
+  rows: readonly RushProfileLedgerRow[],
+  counters: { playersWithSignals: number; composedSignals: number; signalsSkipped: number },
+): SignalWrite[] {
+  const writes: SignalWrite[] = [];
+  for (const profile of rows) {
+    if (profile.sourceId !== RUSH_SHADOW_SOURCE || profile.rightsSnapshot == null) {
+      counters.signalsSkipped += 1;
+      continue;
+    }
+    const capturedAt = capturedIso(profile.fetchedAt);
+    const rightsSnapshot = inputJson(profile.rightsSnapshot);
+    if (capturedAt === null || rightsSnapshot === null) {
+      counters.signalsSkipped += 1;
+      continue;
+    }
+
+    const signals = rushProfileToLedgerSignals({
+      runs: profile.runs,
+      guardRuns: profile.guardRuns,
+      tackleRuns: profile.tackleRuns,
+      endRuns: profile.endRuns,
+      leftRuns: profile.leftRuns,
+      middleRuns: profile.middleRuns,
+      rightRuns: profile.rightRuns,
+      epaPerRun: profile.epaPerRun,
+      capturedAt,
+    });
+    if (signals.length === 0) {
+      counters.signalsSkipped += 1;
+      continue;
+    }
+
+    const composed = composeLedger(signals, { now: capturedAt, halfLifeDays: 0 });
+    if (composed.signalsUsed === 0) {
+      counters.signalsSkipped += 1;
+      continue;
+    }
+    counters.playersWithSignals += 1;
+    counters.composedSignals += composed.signalsUsed;
+
+    for (const signal of signals) {
+      writes.push({
+        entityType: "player",
+        entityId: profile.gsisId,
+        key: signal.key,
+        category: RUSH_SHADOW_CATEGORY,
+        valueRaw: signal.key === "rush.epa_per_run" ? profile.epaPerRun : null,
+        value: signal.value,
+        weight: signal.weight,
+        confidence: signal.confidence ?? 1,
+        capturedAt: new Date(capturedAt),
+        season,
+        week: 0,
+        sourceId: RUSH_SHADOW_SOURCE,
+        rightsSnapshot,
+        fetchedAt: new Date(capturedAt),
+      });
+    }
+  }
+  return writes;
+}
+
 /**
- * Persist the current season's eligible rush profiles as low-weight Signal rows.
- * The writer is intentionally best-effort per row and never throws into a cron
- * or another operational caller; a partial failure is returned as `error` with
- * the exact count so the caller can report an incomplete cycle honestly.
+ * Atomically replace the current season's eligible rush shadow rows.
+ * The source read happens before the transaction; every delete and upsert then
+ * shares one transaction, so a failed upsert cannot leave a partially replaced
+ * generation. This remains shadow-only and never enters pick scoring.
  */
 export async function persistRushShadowLedger(
   season: number,
@@ -170,77 +252,30 @@ export async function persistRushShadowLedger(
   }
 
   const rows = profiles ?? [];
-  if (rows.length === 0) return initialResult(season, "no-data");
-
-  let playersWithSignals = 0;
-  let composedSignals = 0;
+  const counters = { playersWithSignals: 0, composedSignals: 0, signalsSkipped: 0 };
+  const writes = buildRushSignalWrites(season, rows, counters);
   let signalsWritten = 0;
-  let signalsSkipped = 0;
-  const errors: string[] = [];
 
-  for (const profile of rows) {
-    if (profile.sourceId !== RUSH_SHADOW_SOURCE || profile.rightsSnapshot == null) {
-      signalsSkipped += 1;
-      continue;
-    }
-    const capturedAt = capturedIso(profile.fetchedAt);
-    const rightsSnapshot = inputJson(profile.rightsSnapshot);
-    if (capturedAt === null || rightsSnapshot === null) {
-      signalsSkipped += 1;
-      continue;
-    }
-
-    const signals = rushProfileToLedgerSignals({
-      runs: profile.runs,
-      guardRuns: profile.guardRuns,
-      tackleRuns: profile.tackleRuns,
-      endRuns: profile.endRuns,
-      leftRuns: profile.leftRuns,
-      middleRuns: profile.middleRuns,
-      rightRuns: profile.rightRuns,
-      epaPerRun: profile.epaPerRun,
-      capturedAt,
-    });
-    if (signals.length === 0) {
-      signalsSkipped += 1;
-      continue;
-    }
-
-    // Exercise the existing composer as a shadow diagnostic. This result is
-    // deliberately not persisted as a score and is not consumed by picks.
-    const composed = composeLedger(signals, { now: capturedAt, halfLifeDays: 0 });
-    if (composed.signalsUsed === 0) {
-      signalsSkipped += 1;
-      continue;
-    }
-    playersWithSignals += 1;
-    composedSignals += composed.signalsUsed;
-
-    for (const signal of signals) {
-      const valueRaw = signal.key === "rush.epa_per_run" ? profile.epaPerRun : null;
-      const write: SignalWrite = {
-        entityType: "player",
-        entityId: profile.gsisId,
-        key: signal.key,
-        category: RUSH_SHADOW_CATEGORY,
-        valueRaw,
-        value: signal.value,
-        weight: signal.weight,
-        confidence: signal.confidence ?? 1,
-        capturedAt: new Date(capturedAt),
-        season,
-        week: 0,
-        sourceId: RUSH_SHADOW_SOURCE,
-        rightsSnapshot,
-        fetchedAt: new Date(capturedAt),
-      };
-      try {
-        await client.signal.upsert({
+  // A failed row must escape this callback so Prisma rolls back the delete
+  // and every successful sibling write. The outer catch reports the error
+  // without exposing a raw DB exception to the cron response.
+  try {
+    await client.$transaction(async (tx) => {
+      await tx.signal.deleteMany({
+        where: {
+          entityType: "player",
+          key: { in: RUSH_SHADOW_KEYS },
+          season,
+          week: 0,
+        },
+      });
+      for (const write of writes) {
+        await tx.signal.upsert({
           where: {
             entityType_entityId_key_season_week: {
               entityType: "player",
-              entityId: profile.gsisId,
-              key: signal.key,
+              entityId: write.entityId,
+              key: write.key,
               season,
               week: 0,
             },
@@ -258,24 +293,34 @@ export async function persistRushShadowLedger(
           },
         });
         signalsWritten += 1;
-      } catch (error) {
-        errors.push(
-          `${profile.gsisId}/${signal.key}: ${error instanceof Error ? error.message : "upsert failed"}`,
-        );
       }
-    }
+    });
+  } catch (error) {
+    return {
+      ...initialResult(season, "error"),
+      profilesRead: rows.length,
+      errors: [error instanceof Error ? error.message : "rush signal replacement failed"],
+    };
+  }
+
+  if (writes.length === 0) {
+    return {
+      ...initialResult(season, rows.length === 0 ? "no-data" : "ok"),
+      profilesRead: rows.length,
+      signalsSkipped: counters.signalsSkipped,
+    };
   }
 
   return {
-    status: errors.length > 0 ? "error" : "ok",
+    status: "ok",
     mode: "shadow",
     priced: false,
     season,
     profilesRead: rows.length,
-    playersWithSignals,
-    composedSignals,
+    playersWithSignals: counters.playersWithSignals,
+    composedSignals: counters.composedSignals,
     signalsWritten,
-    signalsSkipped,
-    errors,
+    signalsSkipped: counters.signalsSkipped,
+    errors: [],
   };
 }

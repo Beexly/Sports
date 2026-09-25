@@ -14,6 +14,9 @@ export {
   NGS_TEAM_WEIGHT,
   NGS_TEAM_CONFIDENCE,
   NGS_TEAM_MAX_SCORE,
+  NGS_TEAM_MIN_CONTRIBUTION,
+  canonicalizeNgsTeamKey,
+  ngsTeamKeyAliases,
   normalizeNgsFeatures,
   ngsFeaturesToLedgerSignals,
   ngsTeamScore,
@@ -22,6 +25,7 @@ export {
   isUsableNgsContextSignal,
   ngsReferenceAtMs,
   ngsEffectiveWeight,
+  ngsTeamContributionScore,
   isUsableNgsContextPair,
   hasNgsTeamValue,
 } from "@sports/types";

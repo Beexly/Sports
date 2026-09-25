@@ -116,6 +116,35 @@ describe("persistNgsSignals", () => {
     expect(mocks.transaction).not.toHaveBeenCalled();
   });
 
+  it("falls back to a usable weekly grain when week 0 exists but has no features", async () => {
+    const mocks = writerClient([
+      row({ week: 0, cpoe: null, avgTimeToThrow: null, avgSeparation: null, avgYacAboveExpectation: null, rushYardsOverExpectedPerAtt: null, avgCushion: null }),
+      row({ week: 4, cpoe: 7, fetchedAt: new Date("2026-09-24T00:00:00.000Z") }),
+    ]);
+
+    const result = await persistNgsSignals(2026, mocks.client);
+    const playerWrite = writtenRows(mocks.createMany).find((write) => write.key === "ngs.cpoe");
+    const teamWrite = writtenRows(mocks.createMany).find((write) => write.key === "ngs.team_score");
+
+    expect(result.status).toBe("ok");
+    expect(playerWrite).toMatchObject({ week: 4, valueRaw: 7 });
+    expect(teamWrite).toMatchObject({ week: 4 });
+  });
+
+  it("writes team aggregates at multiple usable weeks for a shared-grain loader", async () => {
+    const mocks = writerClient([
+      row({ gsisId: "00-1", team: "KC", week: 0, cpoe: 1 }),
+      row({ gsisId: "00-1", team: "KC", week: 4, cpoe: 9 }),
+    ]);
+
+    await persistNgsSignals(2026, mocks.client);
+
+    const teamWrites = writtenRows(mocks.createMany).filter(
+      (write) => write.key === "ngs.team_score" && write.entityType === "team",
+    );
+    expect(teamWrites.map((write) => write.week).sort((a, b) => a - b)).toEqual([0, 4]);
+  });
+
   it("prefers the season aggregate week and does not mix a newer weekly row into it", async () => {
     const mocks = writerClient([
       row({ week: 0, cpoe: 1, fetchedAt: new Date("2026-09-23T00:00:00.000Z") }),

@@ -32,10 +32,20 @@ function profile(over: Record<string, unknown> = {}) {
   };
 }
 
-function client(findMany: () => Promise<unknown>, upsert: (args: unknown) => Promise<unknown> = async () => ({ id: "signal" })) {
+function client(
+  findMany: () => Promise<unknown>,
+  upsert: (args: unknown) => Promise<unknown> = async () => ({ id: "signal" }),
+  deleteMany: (args: unknown) => Promise<{ count: number }> = async () => ({ count: 0 }),
+) {
+  const signal = { deleteMany, upsert };
+  const transaction = vi.fn(async (
+    run: (tx: { signal: typeof signal }) => Promise<unknown>,
+  ) => run({ signal }));
   return {
     playerRushProfile: { findMany },
-    signal: { upsert },
+    signal,
+    $transaction: transaction,
+    transaction,
   } as unknown as RushShadowLedgerDb;
 }
 
@@ -88,13 +98,38 @@ describe("persistRushShadowLedger", () => {
     expect(first.update).toMatchObject({ value: 0.12, sourceId: "nflverse" });
   });
 
-  it("returns no-data without writes when the capture table is empty", async () => {
-    const findMany = vi.fn(async () => []);
+  it("removes stale rush rows before writing the current season generation", async () => {
+    const deleteMany = vi.fn(async () => ({ count: 3 }));
     const upsert = vi.fn(async () => ({ id: "signal" }));
-    const result = await persistRushShadowLedger(2026, client(findMany, upsert));
+    const result = await persistRushShadowLedger(
+      2026,
+      client(async () => [profile()], upsert, deleteMany),
+    );
+
+    expect(result.status).toBe("ok");
+    expect(deleteMany).toHaveBeenCalledWith({
+      where: {
+        entityType: "player",
+        key: { in: ["rush.epa_per_run", "rush.scheme_lean"] },
+        season: 2026,
+        week: 0,
+      },
+    });
+    expect(upsert).toHaveBeenCalledTimes(2);
+  });
+
+  it("clears the current season generation when the capture table is empty", async () => {
+    const findMany = vi.fn(async () => []);
+    const deleteMany = vi.fn(async () => ({ count: 3 }));
+    const upsert = vi.fn(async () => ({ id: "signal" }));
+    const result = await persistRushShadowLedger(
+      2026,
+      client(findMany, upsert, deleteMany),
+    );
 
     expect(result.status).toBe("no-data");
     expect(result.profilesRead).toBe(0);
+    expect(deleteMany).toHaveBeenCalledTimes(1);
     expect(upsert).not.toHaveBeenCalled();
   });
 
@@ -140,8 +175,8 @@ describe("persistRushShadowLedger", () => {
     const result = await persistRushShadowLedger(2026, client(async () => [profile()], upsert));
 
     expect(result.status).toBe("error");
-    expect(result.signalsWritten).toBe(1);
-    expect(result.errors).toEqual(["00-0034857/rush.scheme_lean: write failed"]);
+    expect(result.signalsWritten).toBe(0);
+    expect(result.errors).toEqual(["write failed"]);
   });
 
   it("rejects an invalid season before reading the database", async () => {

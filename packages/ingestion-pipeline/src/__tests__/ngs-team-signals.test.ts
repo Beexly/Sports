@@ -9,6 +9,11 @@ function client(rows: readonly unknown[]) {
 }
 
 describe("NGS team signal reader", () => {
+  it("normalizes source aliases to the canonical ledger team keys", () => {
+    expect(resolveNgsTeamKey("LA")).toBe("LAR");
+    expect(resolveNgsTeamKey("WSH")).toBe("WAS");
+  });
+
   it("resolves canonical team abbreviations without guessing unknown names", () => {
     expect(resolveNgsTeamKey("Kansas City Chiefs")).toBe("KC");
     expect(resolveNgsTeamKey("New York Giants")).toBe("NYG");

@@ -241,6 +241,6 @@ export async function GET(request: Request): Promise<NextResponse> {
       ...(satellites ?? {}),
       ingestionRun,
     },
-    { status: primaryOk ? 200 : 502 },
+    { status: success ? 200 : 502 },
   );
 }

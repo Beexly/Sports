@@ -7,6 +7,7 @@ import {
   NGS_TEAM_SIGNAL_KEY,
   NGS_TEAM_WEIGHT,
   NGS_TEAM_CONFIDENCE,
+  canonicalizeNgsTeamKey,
   normalizeNgsFeatures,
   ngsTeamScore,
   hasNgsTeamValue,
@@ -161,26 +162,41 @@ function aggregatePlayers(rows: readonly NgsDbRow[]): Map<string, PlayerAggregat
     if (!isUsableRow(row)) continue;
     const current = players.get(row.gsisId) ?? {
       gsisId: row.gsisId,
-      team: row.team,
+      team: canonicalizeNgsTeamKey(row.team),
       rows: new Map<string, NgsDbRow>(),
       sourceWeek: row.week === 0 ? 0 : -1,
       capturedAt: row.fetchedAt,
     };
+    const canonicalTeam = canonicalizeNgsTeamKey(row.team);
     // Keep one latest fetch for each (source week, stat type). The selected
     // week is resolved only after all rows are seen, so a later-arriving
     // week-0 aggregate cannot be mixed with a stale weekly row.
     const rowKey = `${row.week}:${row.statType}`;
     const prior = current.rows.get(rowKey);
     if (!prior || row.fetchedAt > prior.fetchedAt) current.rows.set(rowKey, row);
-    if (!current.team && row.team) current.team = row.team;
+    if (!current.team && canonicalTeam) current.team = canonicalTeam;
     players.set(row.gsisId, current);
   }
   for (const aggregate of players.values()) {
     const availableWeeks = new Set([...aggregate.rows.values()].map((row) => row.week));
-    aggregate.sourceWeek = availableWeeks.has(0) ? 0 : Math.max(...availableWeeks);
-    for (const [rowKey, row] of [...aggregate.rows]) {
-      if (row.week !== aggregate.sourceWeek) aggregate.rows.delete(rowKey);
+    const rowsByWeek = new Map<number, NgsDbRow[]>();
+    for (const row of aggregate.rows.values()) {
+      const weekRows = rowsByWeek.get(row.week) ?? [];
+      weekRows.push(row);
+      rowsByWeek.set(row.week, weekRows);
     }
+    const usableWeeks = [...availableWeeks].filter((week) =>
+      hasNgsValue(playerInput({ ...aggregate, rows: new Map(rowsByWeek.get(week)!.map((row) => [`${row.week}:${row.statType}`, row])) })),
+    );
+    // Prefer a usable week-0 season aggregate. If week 0 exists but is empty,
+    // fall back to the newest week that actually contributes a feature.
+    aggregate.sourceWeek = usableWeeks.includes(0)
+      ? 0
+      : usableWeeks.length > 0
+        ? Math.max(...usableWeeks)
+        : Math.max(...availableWeeks);
+    // Keep all usable source-week rows. Team aggregates may need a common
+    // weekly grain for a matchup; player rows still use preferredSourceWeek.
     const contributing = [...aggregate.rows.values()];
     // Freshness is deliberately conservative: the oldest contributing source
     // row dates the generated signal, not an unrelated refresh of another
@@ -193,8 +209,18 @@ function aggregatePlayers(rows: readonly NgsDbRow[]): Map<string, PlayerAggregat
   return players;
 }
 
-function playerInput(aggregate: PlayerAggregate): NgsFeatureInput {
-  const rows = [...aggregate.rows.values()];
+function rowsForWeek(
+  aggregate: PlayerAggregate,
+  week: number,
+): NgsDbRow[] {
+  return [...aggregate.rows.values()].filter((row) => row.week === week);
+}
+
+function playerInputForWeek(
+  aggregate: PlayerAggregate,
+  week: number,
+): NgsFeatureInput {
+  const rows = rowsForWeek(aggregate, week);
   return {
     cpoe: rows.find((r) => Number.isFinite(r.cpoe))?.cpoe ?? null,
     avgTimeToThrow: rows.find((r) => Number.isFinite(r.avgTimeToThrow))?.avgTimeToThrow ?? null,
@@ -205,20 +231,30 @@ function playerInput(aggregate: PlayerAggregate): NgsFeatureInput {
   };
 }
 
+function playerInput(aggregate: PlayerAggregate): NgsFeatureInput {
+  return playerInputForWeek(aggregate, aggregate.sourceWeek);
+}
+
 function mean(values: readonly (number | null | undefined)[]): number | null {
   const finite = values.filter((v): v is number => typeof v === "number" && Number.isFinite(v));
   if (finite.length === 0) return null;
   return finite.reduce((sum, v) => sum + v, 0) / finite.length;
 }
 
-function teamInput(aggregates: readonly PlayerAggregate[]): NgsTeamFeatureInput {
+function teamInputForWeek(
+  players: readonly PlayerAggregate[],
+  week: number,
+): NgsTeamFeatureInput {
+  const inputs = players
+    .map((player) => playerInputForWeek(player, week))
+    .filter(hasNgsValue);
   return {
-    cpoe: mean(aggregates.map((a) => playerInput(a).cpoe)),
-    timeToThrow: mean(aggregates.map((a) => playerInput(a).avgTimeToThrow)),
-    separation: mean(aggregates.map((a) => playerInput(a).avgSeparation)),
-    yacAboveExpectation: mean(aggregates.map((a) => playerInput(a).avgYacAboveExpectation)),
-    ryoePerAttempt: mean(aggregates.map((a) => playerInput(a).rushYardsOverExpectedPerAtt)),
-    cushion: mean(aggregates.map((a) => playerInput(a).avgCushion)),
+    cpoe: mean(inputs.map((input) => input.cpoe)),
+    timeToThrow: mean(inputs.map((input) => input.avgTimeToThrow)),
+    separation: mean(inputs.map((input) => input.avgSeparation)),
+    yacAboveExpectation: mean(inputs.map((input) => input.avgYacAboveExpectation)),
+    ryoePerAttempt: mean(inputs.map((input) => input.rushYardsOverExpectedPerAtt)),
+    cushion: mean(inputs.map((input) => input.avgCushion)),
   };
 }
 
@@ -227,13 +263,30 @@ type TeamAggregate = {
   readonly players: readonly PlayerAggregate[];
 };
 
-function selectTeamAggregate(aggregates: readonly PlayerAggregate[]): TeamAggregate | null {
-  const usable = aggregates.filter((aggregate) => hasNgsValue(playerInput(aggregate)));
-  if (usable.length === 0) return null;
-  const weeks = new Set(usable.map((aggregate) => aggregate.sourceWeek));
-  const sourceWeek = weeks.has(0) ? 0 : Math.max(...weeks);
-  const players = usable.filter((aggregate) => aggregate.sourceWeek === sourceWeek);
-  return players.length > 0 ? { sourceWeek, players } : null;
+function selectTeamAggregates(
+  aggregates: readonly PlayerAggregate[],
+): readonly TeamAggregate[] {
+  const byWeek = new Map<number, PlayerAggregate[]>();
+  for (const aggregate of aggregates) {
+    const weeks = new Set(
+      [...aggregate.rows.values()]
+        .filter((row) => hasNgsValue(playerInputForWeek(aggregate, row.week)))
+        .map((row) => row.week),
+    );
+    for (const week of weeks) {
+      const current = byWeek.get(week) ?? [];
+      current.push(aggregate);
+      byWeek.set(week, current);
+    }
+  }
+  const preferred = [...byWeek.keys()].sort((a, b) => {
+    if (a === NGS_SIGNAL_WEEK) return -1;
+    if (b === NGS_SIGNAL_WEEK) return 1;
+    return b - a;
+  });
+  return preferred
+    .map((sourceWeek) => ({ sourceWeek, players: byWeek.get(sourceWeek) ?? [] }))
+    .filter((selected) => selected.players.length > 0);
 }
 
 function hasNgsValue(input: NgsFeatureInput): boolean {
@@ -254,6 +307,11 @@ function buildNgsSignalWrites(
 ): NgsSignalWrite[] {
   const writes: NgsSignalWrite[] = [];
   for (const { aggregate, feature } of playerWrites) {
+    const sourceRows = rowsForWeek(aggregate, aggregate.sourceWeek);
+    const capturedAt = sourceRows.reduce(
+      (oldest, row) => row.fetchedAt < oldest ? row.fetchedAt : oldest,
+      sourceRows[0]?.fetchedAt ?? aggregate.capturedAt,
+    );
     writes.push({
       entityType: "player",
       entityId: aggregate.gsisId,
@@ -263,22 +321,22 @@ function buildNgsSignalWrites(
       value: feature.value,
       weight: feature.weight,
       confidence: feature.confidence,
-      capturedAt: aggregate.capturedAt,
+      capturedAt,
       season,
       week: aggregate.sourceWeek,
       sourceId: feature.sourceId,
-      rightsSnapshot: ngsRightsSnapshot([...aggregate.rows.values()], aggregate.sourceWeek),
-      fetchedAt: aggregate.capturedAt,
+      rightsSnapshot: ngsRightsSnapshot(sourceRows, aggregate.sourceWeek),
+      fetchedAt: capturedAt,
     });
   }
   for (const { team, selected } of teamWrites) {
-    const input = teamInput(selected.players);
+    const input = teamInputForWeek(selected.players, selected.sourceWeek);
     if (!hasNgsTeamValue(input)) continue;
-    const capturedAt = selected.players.reduce(
-      (oldest, player) => player.capturedAt < oldest ? player.capturedAt : oldest,
-      selected.players[0]!.capturedAt,
+    const sourceRows = selected.players.flatMap((player) => rowsForWeek(player, selected.sourceWeek));
+    const capturedAt = sourceRows.reduce(
+      (oldest, player) => player.fetchedAt < oldest ? player.fetchedAt : oldest,
+      sourceRows[0]?.fetchedAt ?? new Date(0),
     );
-    const sourceRows = selected.players.flatMap((player) => [...player.rows.values()]);
     const value = ngsTeamScore(input);
     writes.push({
       entityType: "team",
@@ -355,9 +413,9 @@ export async function persistNgsSignals(
     byTeam.set(team, current);
   }
   for (const [team, aggregates] of byTeam) {
-    const selected = selectTeamAggregate(aggregates);
-    if (!selected) continue;
-    teamWrites.push({ team, selected });
+    for (const selected of selectTeamAggregates(aggregates)) {
+      teamWrites.push({ team, selected });
+    }
   }
 
   const playersWithSignals = new Set(playerWrites.map((write) => write.aggregate.gsisId)).size;

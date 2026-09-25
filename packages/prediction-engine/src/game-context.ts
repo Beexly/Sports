@@ -16,18 +16,31 @@
 // ============================================================
 
 // Import shared types from @sports/types — single source of truth
-import type { FactorDetail, GameContextInput, AtsFormBucket } from "@sports/types";
+import type {
+  AtsFormBucket,
+  FactorDetail,
+  GameContextInput,
+  NgsTeamContextSignal,
+} from "@sports/types";
 import { WEIGHTS } from "./constants.js";
 import { clamp } from "./scoring.js";
 import {
-  NGS_TEAM_MAX_SCORE,
-  isUsableNgsContextPair,
-  ngsEffectiveWeight,
+  NGS_TEAM_MIN_CONTRIBUTION,
   ngsReferenceAtMs,
+  ngsTeamContributionScore,
 } from "@sports/types";
 
 // Re-export so consumers can import GameContextInput/AtsFormBucket from this module
 export type { GameContextInput, AtsFormBucket };
+
+function oldestNgsCapture(
+  home: NgsTeamContextSignal,
+  away: NgsTeamContextSignal,
+): string {
+  const homeMs = Date.parse(home.capturedAt);
+  const awayMs = Date.parse(away.capturedAt);
+  return homeMs <= awayMs ? home.capturedAt : away.capturedAt;
+}
 
 // ============================================================
 // Output types
@@ -741,20 +754,20 @@ export function computeGameContext(
     context.ngsHome &&
     context.ngsAway
   ) {
-    const reference = ngsReferenceAtMs(context.ngsReferenceAt);
-    if (reference !== null && isUsableNgsContextPair(context.ngsHome, context.ngsAway, context.ngsReferenceAt)) {
-      const now = reference;
+    const homeMinusAway = ngsTeamContributionScore(
+      context.ngsHome,
+      context.ngsAway,
+      context.ngsReferenceAt,
+    );
+    if (homeMinusAway !== null) {
+      const now = ngsReferenceAtMs(context.ngsReferenceAt)!;
       const ageDays = (date: string) => {
         const captured = Date.parse(date);
         return Number.isFinite(captured) ? Math.max(0, (now - captured) / 86_400_000) : Infinity;
       };
-      const differential = context.ngsHome.value - context.ngsAway.value;
-      const directed = pickedSide === "HOME" ? differential : -differential;
-      const homeEffective = ngsEffectiveWeight(context.ngsHome, now);
-      const awayEffective = ngsEffectiveWeight(context.ngsAway, now);
-      const effectiveWeight = (homeEffective + awayEffective) / 2;
-      ngsScore = clamp(directed * effectiveWeight, -NGS_TEAM_MAX_SCORE, NGS_TEAM_MAX_SCORE);
-      if (Math.abs(ngsScore) > 0.01) {
+      ngsScore = pickedSide === "HOME" ? homeMinusAway : -homeMinusAway;
+      if (Math.abs(ngsScore) <= NGS_TEAM_MIN_CONTRIBUTION) ngsScore = 0;
+      if (ngsScore !== 0) {
         factors.push({
           name: "NGS Team Edge",
           impact: ngsScore > 0 ? "positive" : "negative",
@@ -763,8 +776,8 @@ export function computeGameContext(
           evidence: {
             sourceCategory: "RATINGS",
             sourceName: "nflverse",
-            fetchedAt: context.ngsHome.capturedAt,
-            freshnessStatus: ageDays(context.ngsHome.capturedAt) <= 14 ? "FRESH" : "AGING",
+            fetchedAt: oldestNgsCapture(context.ngsHome, context.ngsAway),
+            freshnessStatus: ageDays(oldestNgsCapture(context.ngsHome, context.ngsAway)) <= 14 ? "FRESH" : "AGING",
             sampleSize: null,
             trustLevel: 0.7,
             activationStatus: "ACTIVE",

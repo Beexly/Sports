@@ -27,6 +27,18 @@ describe("computeGameContext NGS", () => {
     expect(home.factors.find((f) => f.name === "NGS Team Edge")?.impact).toBe("positive");
   });
 
+  it("returns zero rather than a decayed sub-threshold NGS contribution", () => {
+    const oldCapture = "2026-06-01T12:00:00.000Z";
+    const result = computeGameContext({
+      ngsHome: { ...signal(0.4), capturedAt: oldCapture },
+      ngsAway: { ...signal(0.38), capturedAt: oldCapture },
+      ngsReferenceAt: NOW,
+    }, "SPREAD", "HOME");
+
+    expect(result.ngsScore).toBe(0);
+    expect(result.factors.some((factor) => factor.name === "NGS Team Edge")).toBe(false);
+  });
+
   it("does not let missing or malformed NGS rows affect the context", () => {
     const empty = computeGameContext({}, "SPREAD", "HOME");
     expect(empty.ngsScore).toBe(0);

@@ -1,4 +1,8 @@
-import { NGS_TEAM_SIGNAL_KEY } from "@sports/types";
+import {
+  NGS_TEAM_SIGNAL_KEY,
+  canonicalizeNgsTeamKey,
+  ngsTeamKeyAliases,
+} from "@sports/types";
 import { resolveKalshiTeamAbbr } from "./kalshi-team-abbr.js";
 import type { NgsTeamContextSignal } from "@sports/types";
 
@@ -15,7 +19,9 @@ export interface NgsTeamSignalDb {
 
 /** Resolve an odds-feed team name to the NGS signal's NFL abbreviation. */
 export function resolveNgsTeamKey(teamName: string): string | null {
-  return resolveKalshiTeamAbbr("NFL", teamName);
+  return canonicalizeNgsTeamKey(
+    resolveKalshiTeamAbbr("NFL", teamName) ?? teamName,
+  );
 }
 
 type SignalRow = {
@@ -66,11 +72,12 @@ export async function loadNgsTeamSignals(
   const awayKey = resolveNgsTeamKey(awayTeam);
   if (!homeKey || !awayKey || !client.signal) return { home: null, away: null };
   const keys = [homeKey, awayKey];
+  const aliases = Array.from(new Set([...keys, ...keys.flatMap(ngsTeamKeyAliases)]));
   const rows = await client.signal.findMany({
     where: {
       entityType: "team",
       key: NGS_TEAM_SIGNAL_KEY,
-      entityId: { in: keys },
+      entityId: { in: aliases },
       ...(Number.isInteger(season) ? { season } : {}),
     },
     select: { entityId: true, value: true, weight: true, confidence: true, capturedAt: true, season: true, week: true },
@@ -79,9 +86,12 @@ export async function loadNgsTeamSignals(
   const byGrain = new Map<string, SignalRow>();
   for (const raw of Array.isArray(rows) ? rows : []) {
     if (!isUsable(raw)) continue;
-    const grainKey = `${raw.entityId}:${raw.season}:${raw.week}`;
+    const entityId = canonicalizeNgsTeamKey(raw.entityId);
+    if (!entityId) continue;
+    const normalized = { ...raw, entityId };
+    const grainKey = `${entityId}:${normalized.season}:${normalized.week}`;
     const prior = byGrain.get(grainKey);
-    if (!prior || raw.capturedAt > prior.capturedAt) byGrain.set(grainKey, raw);
+    if (!prior || normalized.capturedAt > prior.capturedAt) byGrain.set(grainKey, normalized);
   }
   const homeGrains = new Set([...byGrain.values()].filter((row) => row.entityId === homeKey).map((row) => `${row.season}:${row.week}`));
   const awayGrains = new Set([...byGrain.values()].filter((row) => row.entityId === awayKey).map((row) => `${row.season}:${row.week}`));
