@@ -200,3 +200,19 @@ export type {
   ArchiveStalenessReport,
 } from "./archive-staleness-monitor.js";
 
+
+// Live-path modules: continuous-signal tilt + GSE 4-Beat props slate
+export {
+  applyContinuousSignalTilt,
+  type ContinuousVote,
+  type ContinuousTiltResult,
+} from "./continuous-signal-tilt.js";
+export {
+  runPropsSlate,
+  devigPropBook,
+  propKellyStake,
+  propMonteCarlo,
+  type PropsSlateResult,
+  type PropsSlateInput,
+} from "./props-slate.js";
+export { EXTENDED_SIGNALS } from "./signal-registry-extensions.js";
