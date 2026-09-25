@@ -168,6 +168,21 @@ export {
   buildEvidenceReadinessMatrix,
   getEvidenceFactorDefinition,
 } from "./evidence-readiness-matrix.js";
+export {
+  EVIDENCE_FACTOR_KEYS,
+  evaluateFactorReadiness,
+  gameSignalRowsToEvidenceRecords,
+  loadEvidenceReadiness,
+  reportAllFactorReadiness,
+  signalRowsToEvidenceRecords,
+} from "./evidence-readiness-loader.js";
+export type {
+  EvidenceBundle,
+  EvidenceReadinessDb,
+  GameSignalEvidenceRow,
+  LoadEvidenceReadinessOptions,
+  SignalEvidenceRow,
+} from "./evidence-readiness-loader.js";
 export type {
   BuildEvidenceReadinessMatrixInput,
   EdgeLabVerdictInput,

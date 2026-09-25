@@ -1,7 +1,11 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@sports/db";
 import { auth } from "@/lib/auth";
-import { getReadinessGates } from "@sports/prediction-engine";
+import {
+  getReadinessGates,
+  loadEvidenceReadiness,
+  reportAllFactorReadiness,
+} from "@sports/prediction-engine";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +23,19 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
     by: ["status"],
     _count: { _all: true },
   });
+
+  let evidenceReadiness: ReturnType<typeof reportAllFactorReadiness> | null = null;
+  let evidenceReadinessError: string | null = null;
+  try {
+    const evidence = await loadEvidenceReadiness(db, { limit: 500 });
+    evidenceReadiness = reportAllFactorReadiness({ evidence });
+  } catch (error) {
+    // This is additive observability. A missing/unmigrated evidence table must
+    // not turn the pre-existing cockpit readiness response into a 500 or make
+    // the absence of a report look like a healthy ABSENT matrix.
+    console.error("[cockpit/readiness] evidence-readiness load failed", error);
+    evidenceReadinessError = "unavailable";
+  }
 
   return NextResponse.json({
     success: true,
@@ -40,6 +57,27 @@ export async function GET(_req: NextRequest): Promise<NextResponse> {
         count: g._count._all,
       })),
       minSettledPicksForLearning: gates.minSettledPicksForLearning,
+      evidenceReadiness: evidenceReadiness
+        ? {
+            status: "available",
+            generatedAt: evidenceReadiness.generatedAt,
+            integrityScore: evidenceReadiness.integrityScore,
+            activeContributingFactors: evidenceReadiness.activeContributingFactors,
+            shadowReadyFactors: evidenceReadiness.shadowReadyFactors,
+            blockedCriticalFactors: evidenceReadiness.blockedCriticalFactors,
+            nextBestActions: evidenceReadiness.nextBestActions,
+            rows: evidenceReadiness.rows,
+          }
+        : {
+            status: evidenceReadinessError,
+            generatedAt: null,
+            integrityScore: null,
+            activeContributingFactors: null,
+            shadowReadyFactors: null,
+            blockedCriticalFactors: null,
+            nextBestActions: [],
+            rows: [],
+          },
     },
   });
 }
