@@ -191,3 +191,7 @@ Full prediction-engine suite: 5837/5837 across 817 test files. coverage.test.ts 
 | Market/inplay/sizing adapters | `packages/prediction-engine/src/engine/market-inplay-sizing-adapters.ts` | 22/22 | DONE |
 
 | Expected-metrics adapters | `packages/prediction-engine/src/engine/expected-metrics-adapters.ts` | 9/9 | DONE |
+
+| Dispersion/bayesian adapters | `packages/prediction-engine/src/engine/dispersion-bayesian-adapters.ts` | 14/14 | DONE |
+
+Wave 5 full prediction-engine suite: 5951/5951 across 825 test files. coverage.test.ts 10/10. Engine adapter surface: 170/170 across 14 test files.
