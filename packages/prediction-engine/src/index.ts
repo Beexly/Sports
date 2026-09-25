@@ -2167,22 +2167,9 @@ export {
   type DispersionBayesianAdapterName,
 } from "./engine/dispersion-bayesian-adapters.js";
 
-export {
-  isObservation,
-  isFailClosed,
-  createEntryAdapter,
-  createCompositionRegistry,
-  type AdapterResult,
-  type Observation,
-  type FailClosedResult,
-  type InventoryEntry,
-} from "./engine/universal-adapter.js";
-
-export {
-  createEngineComposition,
-  loadInventoryAndCompose,
-  type EngineComposition,
-} from "./engine/composition.js";
+// universal-adapter / composition use node:crypto — not re-exported from the
+// package root so client bundles stay free of node builtins. Deep-import via
+// "@sports/prediction-engine/src/engine/universal-adapter.js" in server code.
 
 // NGS-11 coverage/DB metrics
 export {

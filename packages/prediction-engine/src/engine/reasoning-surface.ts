@@ -87,7 +87,11 @@ import {
   robustKellyAdapter,
   type ReturnAtom,
 } from "../engine/decision-adapters.js";
-import { isObservation } from "../engine/universal-adapter.js";
+// Local type guard � inlined so this module never value-imports
+// universal-adapter.js (which pulls node:crypto into client bundles).
+function isObservation(r: AdapterResult): r is Extract<AdapterResult, { source: string }> {
+  return !("failClosed" in r);
+}
 
 // ── Shared types ───────────────────────────────────────────────────────────
 
