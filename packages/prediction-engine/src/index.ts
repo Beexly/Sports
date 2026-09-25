@@ -2345,3 +2345,26 @@ export {
   type AdaErSelection,
   type AdaErSelectionOptions,
 } from "./continual/adaer-replay.js";
+
+// Drift / ECDD monitoring + Hawkes threat generation (live-path promotion)
+export {
+  majorityVote,
+  evaluateDrift,
+  type Alarm,
+  type DriftEval,
+} from "./monitoring/drift-monitor-ensemble.js";
+export {
+  createEcdd,
+  ecddUpdate,
+  ecddWorstCaseDelay,
+  type EcddState,
+  type EcddConfig,
+} from "./drift/ecdd-monitor.js";
+export {
+  generationOfThreat,
+  simulateHawkes,
+  intensity as hawkesIntensity,
+  logLikelihood as hawkesLogLikelihood,
+  type HawkesParams,
+  type GoTResult,
+} from "./threat/generation-of-threat.js";

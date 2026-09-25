@@ -251,3 +251,13 @@ export {
   type EwcAnchorEval,
   type AdaErSelectEval,
 } from "./continual-learning-bridge.js";
+
+// Monitoring bridge (ECDD + drift ensemble + Hawkes threat)
+export {
+  runEcdd,
+  runDriftEnsemble,
+  runHawkesThreat,
+  type EcddRun,
+  type DriftRun,
+  type HawkesRun,
+} from "./monitoring-bridge.js";
