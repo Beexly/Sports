@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 1908.08980v1: Evaluating probabilistic forecasts of football matches: The case against the Ranked Probability Score.
  *

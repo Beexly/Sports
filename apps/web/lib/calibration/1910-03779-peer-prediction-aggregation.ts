@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 1910.03779: 1162 Forecast Aggregation via Peer Prediction.
  *

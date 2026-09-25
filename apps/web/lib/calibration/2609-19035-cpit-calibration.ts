@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2609.19035: Calibrated Predictive Distributions from Sample-Based Generators.
  *

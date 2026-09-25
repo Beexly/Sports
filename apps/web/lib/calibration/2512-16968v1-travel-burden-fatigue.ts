@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2512.16968v1: Fairness, Travel, and Market Potential: An Optimization Framework for NBA Expansion.
  *

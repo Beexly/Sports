@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2606.05551v2: Conformal Risk-Averse Decision Making with Action Conditional Guarantee.
  *

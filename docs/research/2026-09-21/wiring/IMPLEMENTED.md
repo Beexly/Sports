@@ -147,3 +147,16 @@ All additive: 1,248 new files, zero modified, zero deleted (verified via `git di
 1905.11481v2, 1912.04871v4, 2409.00629v2, 2410.17238v1, 2508.01285v2, 2606.29823v1, 2608.25770v2
 
 </details>
+
+## Wave 3 — cheap free-lane wiring (bunny, 2026-09-23)
+
+Additive disabled-by-default scaffolds only. No live ingestion, database, schema, credential, or publish-path changes. Local verification: 6 co-located test files, 18 tests passed. Acceptance gates remain documented and unpromoted.
+
+| ID | Module | Co-located test | Lane | State |
+|---|---|---|---|---|
+| 2410.21484v1 | `packages/data-ingestion/src/2410-21484v1-markets.ts` | `packages/data-ingestion/src/2410-21484v1-markets.test.ts` | markets | `ENABLED=false` scaffold |
+| 2412.10298v1 | `packages/data-ingestion/src/2412-10298v1-viewership.ts` | `packages/data-ingestion/src/2412-10298v1-viewership.test.ts` | nlp | `ENABLED=false` scaffold |
+| 2504.04186v1 | `packages/data-ingestion/src/2504-04186v1-data-infra.ts` | `packages/data-ingestion/src/2504-04186v1-data-infra.test.ts` | data_infra | `ENABLED=false` scaffold |
+| 2504.08764 | `packages/data-ingestion/src/2504-08764-nlp.ts` | `packages/data-ingestion/src/2504-08764-nlp.test.ts` | nlp | `ENABLED=false` scaffold |
+| 2507.17844v1 | `packages/data-ingestion/src/2507-17844v1-tracking.ts` | `packages/data-ingestion/src/2507-17844v1-tracking.test.ts` | tracking | `ENABLED=false` scaffold |
+| 2508.11711v2 | `packages/data-ingestion/src/2508-11711v2-data-infra.ts` | `packages/data-ingestion/src/2508-11711v2-data-infra.test.ts` | data_infra | `ENABLED=false` scaffold |

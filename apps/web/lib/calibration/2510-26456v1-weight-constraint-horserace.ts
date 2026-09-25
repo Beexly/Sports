@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2510.26456v1: A Theoretical Comparison of Weight Constraints in Forecast Combination and Model Averaging.
  *

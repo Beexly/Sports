@@ -1,5 +1,4 @@
 import type {
-  PublicPick,
   PickType,
   PickGrade,
   PickResult,
@@ -15,6 +14,12 @@ import { DevigMethodDisclosure } from "./devig-method-disclosure";
 import { displaySelection, NO_BOOK_PRICE_LABEL } from "@/lib/picks/display-selection";
 import { CENTRAL_TZ } from "@/lib/time/central";
 import { formatMarketImpliedLabel } from "@/lib/picks/market-implied-display";
+import {
+  bindPublicConsensusClaim,
+  consensusEvidenceCaption,
+  isBookmakerConsensusClaim,
+  type PublicConsensusPick,
+} from "@/lib/claims/public-consensus-claim";
 import Link from "next/link";
 
 // ─────────────────────────────────────────────
@@ -22,7 +27,7 @@ import Link from "next/link";
 // ─────────────────────────────────────────────
 
 interface PickCardProps {
-  pick: PublicPick;
+  pick: PublicConsensusPick;
   canSeeConfidence: boolean;
   canSeeEdgeScore: boolean;
   canSeeFactorBreakdown: boolean;
@@ -69,6 +74,20 @@ export function PickCard({
   const freshnessAge = pick.dataFreshnessAt
     ? Math.round((Date.now() - new Date(pick.dataFreshnessAt).getTime()) / 60_000)
     : null;
+
+  const visibleReasoning = canSeeFactorBreakdown
+    ? pick.reasoning
+    : pick.reasoningShort;
+  const boundConsensus = bindPublicConsensusClaim({
+    reasoningShort: visibleReasoning,
+    consensusPct: pick.consensusPct,
+    bookmakerCount: pick.bookmakerCount,
+    dataFreshnessAt: pick.dataFreshnessAt,
+    consensusProvider: pick.consensusProvider,
+  });
+  const isConsensusClaim = isBookmakerConsensusClaim(visibleReasoning);
+  const safeReasoning =
+    isConsensusClaim && !boundConsensus ? null : visibleReasoning;
 
   const isFeatured = pick.isFeatured;
 
@@ -209,9 +228,14 @@ export function PickCard({
       {/* Reasoning teaser / full — gated on the SAME flag the API gates the
           full prose on (canSeeFactorBreakdown), so the display gate can never
           drift from the server gate if the two flags ever diverge. */}
-      <p className="text-xs leading-relaxed text-ion-1">
-        {canSeeFactorBreakdown ? pick.reasoning : pick.reasoningShort}
-      </p>
+      {safeReasoning && (
+        <p className="text-xs leading-relaxed text-ion-1">{safeReasoning}</p>
+      )}
+      {isConsensusClaim && boundConsensus && (
+        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
+          {consensusEvidenceCaption(boundConsensus)}
+        </p>
+      )}
 
       {/* Factor breakdown (PRO+ only) */}
       {canSeeFactorBreakdown && pick.factorBreakdown && (

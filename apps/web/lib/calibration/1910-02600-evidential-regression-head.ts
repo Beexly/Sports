@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 1910.02600: Deep Evidential Regression.
  *

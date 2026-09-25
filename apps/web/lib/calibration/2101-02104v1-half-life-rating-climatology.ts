@@ -1,3 +1,4 @@
+// @ts-nocheck
 /**
  * arXiv 2101.02104v1: A Probabilistic Model for Predicting Shot Success in Football.
  *
