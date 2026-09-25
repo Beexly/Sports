@@ -216,3 +216,11 @@ export {
   type PropsSlateInput,
 } from "./props-slate.js";
 export { EXTENDED_SIGNALS } from "./signal-registry-extensions.js";
+
+// Prereg leakage gate (V1 probes live call site)
+export {
+  runLeakageGate,
+  assertLeakageGate,
+  fixtureFromGameRows,
+  type LeakageGateResult,
+} from "./leakage-gate.js";
