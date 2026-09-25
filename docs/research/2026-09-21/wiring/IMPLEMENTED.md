@@ -76,6 +76,7 @@ Tracking detail per record lives in `~/workspace/wiring-wave/parts/wave1-*.json`
 ### Cursor large-effort wires (this agent)
 
 - **1301.0594** (markets) — variance-normalized CLV surprise `S = Δlogit(p)/√Var_t` + steam flag + optional entropy-loss attribution. Scaffold only: `packages/prediction-engine/src/markets/1301-0594-information-incorporation-surprise.ts` (+ adjacent test). `ENABLED=false`. ACCEPTANCE GATE NOT EVALUATED (needs 2025 NFL walk-forward ≥200 flagged events, ≥55% remaining-move direction accuracy; REJECT if continuation-rate gap vs raw |Δp|>2% flags <5pp). Additive only; not on live publish path. Owner Motif-lab; bucket MODEL; verdict ADAPT.
+- **2108.02419v1** (markets) — BBE synthetic-live-market simulator primitives (drive/game state, bettor archetypes, odds ticks, log-loss + closing-line-move MAD gate). Scaffold only: `packages/prediction-engine/src/markets/2108-02419v1-bbe-implementer.ts` (+ adjacent test). `ENABLED=false`. ACCEPTANCE GATE NOT EVALUATED (synthetic-trained live-total model within 10% relative log-loss of real-trained on 2024 test set AND closing-line-move MAD ±0.5). Additive only; not on live publish path. Owner Motif-lab; bucket MODEL; verdict ADAPT.
 
 ### Deferred (47) — not small work, or gate not evaluable as a pure module
 
