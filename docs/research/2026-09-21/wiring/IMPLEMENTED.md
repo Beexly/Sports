@@ -241,3 +241,10 @@ Wave 5 full prediction-engine suite: 5951/5951 across 825 test files. coverage.t
 | bootstrapGoT + simulateHawkes fail-closed wrappers | packages/ingestion-pipeline/src/monitoring-bridge.ts | covered in 15/15 | LIVE |
 | schedule-features + logistic + standings-math + binomial stats | packages/ingestion-pipeline/src/edge-lab-bridge.ts | 7/7 | LIVE |
 | stats wilsonInterval renamed statsWilsonInterval (duplicate barrel export blocked) | packages/prediction-engine/src/index.ts | exported | LIVE |
+## Wave 6D — V5 submission contract + V7 feature recipe live paths (2026-09-25)
+
+| Item | File | Tests | Status |
+|---|---|---|---|
+| validateSubmission / writeSubmissionCsv / parseSubmissionCsv live route | apps/web/app/api/models/submission/route.ts | 7/7 | LIVE (ops auth) |
+| defineFeatureSpace / chronologicalSplit / fitAndReport live cron | apps/web/app/api/cron/feature-recipe-backtest/route.ts | 4/4 | LIVE (gated FEATURE_RECIPE_BACKTEST_ENABLED) |
+| Submission + feature-recipe type exports on barrel | packages/prediction-engine/src/index.ts | exported | LIVE |

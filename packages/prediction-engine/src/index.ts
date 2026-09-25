@@ -2432,12 +2432,31 @@ export {
   parseSubmissionCsv,
   REQUIRED_SUBMISSION_COLUMNS,
 } from "./eval/model-submission-schema.js";
+export type {
+  RequiredSubmissionColumn,
+  ThesisBlock,
+  SubmissionRow,
+  SubmissionPackage,
+  SubmissionValidationFailureCode,
+  SubmissionValidationFailure,
+  SubmissionValidationResult,
+} from "./eval/model-submission-schema.js";
 
 export {
   defineFeatureSpace,
   chronologicalSplit,
   fitAndReport,
   assertChronologicalIntegrity,
+} from "./eval/feature-construction-recipe.js";
+export type {
+  FeatureSpec,
+  FeatureSpace,
+  FeatureSpaceError,
+  FeatureSpaceResult,
+  Sample,
+  ChronologicalSplit,
+  FitReport,
+  PredictorFn,
 } from "./eval/feature-construction-recipe.js";
 
 export {
