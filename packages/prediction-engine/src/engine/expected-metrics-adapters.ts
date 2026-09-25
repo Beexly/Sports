@@ -31,7 +31,11 @@ import {
 import {
   buildCalibrationReport,
   graduationVerdict,
+  type CalibrationReport,
+  type GraduationThresholds,
+  type GroundTruthPoint,
 } from "../expected-metrics/validation.js";
+import type { PlayerExpectedMetric } from "../expected-metrics/types.js";
 
 const NOW_ISO = (): string => new Date().toISOString();
 
@@ -158,6 +162,7 @@ export function cpoeAdapter(
   input: {
     readonly model: ExpectedCompletionModel | null | undefined;
     readonly plays: readonly DropbackPlay[];
+    readonly minAttempts?: number;
   } | null | undefined,
 ): AdapterResult {
   if (
@@ -173,16 +178,31 @@ export function cpoeAdapter(
     };
   }
   try {
-    const cpoe = computeCpoe(input.model, [...input.plays]);
+    const rows = computeCpoe([...input.plays], input.model, {
+      minAttempts: input.minAttempts,
+    });
+    if (rows.length === 0) {
+      return {
+        failClosed: true,
+        reason: "no qualifying passers after min-attempt filter",
+        source: "expected-metrics:cpoe",
+      };
+    }
+    const first = rows[0]!;
     return {
       source: "expected-metrics:cpoe",
       asOf: NOW_ISO(),
-      value: Number(cpoe.toFixed(4)),
+      value: Number(first.overExpected.toFixed(4)),
       confidence: 0.75,
       provenance:
         "packages/prediction-engine/src/expected-metrics/expected-completion.ts#computeCpoe",
       family: "PLAY_CHARTING",
-      raw: { cpoe: Number(cpoe.toFixed(4)), n: input.plays.length },
+      raw: {
+        playerId: first.playerId,
+        plays: first.plays,
+        overExpected: Number(first.overExpected.toFixed(4)),
+        playerCount: rows.length,
+      },
     };
   } catch {
     return {
@@ -240,6 +260,7 @@ export function yacOverExpectedAdapter(
   input: {
     readonly model: ExpectedYacModel | null | undefined;
     readonly plays: readonly CatchPlay[];
+    readonly minCatches?: number;
   } | null | undefined,
 ): AdapterResult {
   if (
@@ -255,16 +276,31 @@ export function yacOverExpectedAdapter(
     };
   }
   try {
-    const yoe = computeYacOverExpected(input.model, [...input.plays]);
+    const rows = computeYacOverExpected([...input.plays], input.model, {
+      minCatches: input.minCatches,
+    });
+    if (rows.length === 0) {
+      return {
+        failClosed: true,
+        reason: "no qualifying receivers after min-catch filter",
+        source: "expected-metrics:yac-over-expected",
+      };
+    }
+    const first = rows[0]!;
     return {
       source: "expected-metrics:yac-over-expected",
       asOf: NOW_ISO(),
-      value: Number(yoe.toFixed(3)),
+      value: Number(first.overExpected.toFixed(3)),
       confidence: 0.75,
       provenance:
         "packages/prediction-engine/src/expected-metrics/expected-yac.ts#computeYacOverExpected",
       family: "PLAY_CHARTING",
-      raw: { yacOverExpected: Number(yoe.toFixed(3)), n: input.plays.length },
+      raw: {
+        playerId: first.playerId,
+        plays: first.plays,
+        overExpected: Number(first.overExpected.toFixed(3)),
+        playerCount: rows.length,
+      },
     };
   } catch {
     return {
@@ -279,34 +315,41 @@ export function yacOverExpectedAdapter(
 
 export function calibrationReportAdapter(
   input: {
-    readonly predicted: readonly number[];
-    readonly actual: readonly number[];
+    readonly ours: readonly PlayerExpectedMetric[];
+    readonly truth: readonly GroundTruthPoint[];
   } | null | undefined,
 ): AdapterResult {
   if (
     !input ||
-    !Array.isArray(input.predicted) ||
-    !Array.isArray(input.actual) ||
-    input.predicted.length === 0 ||
-    input.predicted.length !== input.actual.length
+    !Array.isArray(input.ours) ||
+    !Array.isArray(input.truth) ||
+    input.ours.length === 0 ||
+    input.truth.length === 0
   ) {
     return {
       failClosed: true,
-      reason: "predicted/actual must align and be non-empty",
+      reason: "ours and truth must both be non-empty arrays",
       source: "expected-metrics:calibration-report",
     };
   }
   try {
-    const report = buildCalibrationReport([...input.predicted], [...input.actual]);
+    const report = buildCalibrationReport([...input.ours], [...input.truth]);
     return {
       source: "expected-metrics:calibration-report",
       asOf: NOW_ISO(),
-      value: report.brier ?? report.rmse ?? null,
+      value: report.rmse,
       confidence: 0.9,
       provenance:
         "packages/prediction-engine/src/expected-metrics/validation.ts#buildCalibrationReport",
       family: "CALIBRATION_HISTORY",
-      raw: { ...report, n: input.predicted.length },
+      raw: {
+        n: report.n,
+        pearson: report.pearson,
+        spearman: report.spearman,
+        rmse: report.rmse,
+        mae: report.mae,
+        bias: report.bias,
+      },
     };
   } catch {
     return {
@@ -319,34 +362,43 @@ export function calibrationReportAdapter(
 
 export function graduationVerdictAdapter(
   input: {
-    readonly predicted: readonly number[];
-    readonly actual: readonly number[];
+    readonly ours: readonly PlayerExpectedMetric[];
+    readonly truth: readonly GroundTruthPoint[];
+    readonly thresholds: GraduationThresholds;
   } | null | undefined,
 ): AdapterResult {
   if (
     !input ||
-    !Array.isArray(input.predicted) ||
-    !Array.isArray(input.actual) ||
-    input.predicted.length < 2 ||
-    input.predicted.length !== input.actual.length
+    !Array.isArray(input.ours) ||
+    !Array.isArray(input.truth) ||
+    input.ours.length < 1 ||
+    input.truth.length < 1 ||
+    !input.thresholds ||
+    !Number.isFinite(input.thresholds.minSample)
   ) {
     return {
       failClosed: true,
-      reason: "predicted/actual must align, length >= 2",
+      reason: "ours/truth non-empty and valid thresholds required",
       source: "expected-metrics:graduation-verdict",
     };
   }
   try {
-    const v = graduationVerdict([...input.predicted], [...input.actual]);
+    const report = buildCalibrationReport([...input.ours], [...input.truth]);
+    const v = graduationVerdict(report, input.thresholds);
     return {
       source: "expected-metrics:graduation-verdict",
       asOf: NOW_ISO(),
-      value: typeof v === "boolean" ? v : String(v),
+      value: v.verdict,
       confidence: 0.85,
       provenance:
         "packages/prediction-engine/src/expected-metrics/validation.ts#graduationVerdict",
       family: "CALIBRATION_HISTORY",
-      raw: { verdict: v },
+      raw: {
+        verdict: v.verdict,
+        reason: v.reason,
+        n: report.n,
+        pearson: report.pearson,
+      },
     };
   } catch {
     return {

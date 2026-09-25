@@ -78,8 +78,8 @@ import {
   fgMakeProbabilityAdapter,
   generalizedPoissonAdapter,
   passerRatingAllowedAdapter,
-  type AdapterResult,
 } from "../engine/strategic-signal-adapters.js";
+import type { AdapterResult } from "../engine/universal-adapter.js";
 import {
   cadenceAdapter,
   drawdownRiskAdapter,

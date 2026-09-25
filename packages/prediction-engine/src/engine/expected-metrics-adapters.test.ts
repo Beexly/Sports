@@ -73,26 +73,64 @@ describe("successfulPlayAdapter", () => {
 });
 
 describe("calibrationReportAdapter / graduationVerdictAdapter", () => {
-  it("builds a calibration report from aligned arrays", () => {
-    const predicted = [0.2, 0.4, 0.6, 0.8, 0.5, 0.5, 0.5, 0.5, 0.3, 0.7];
-    const actual = [0, 0, 1, 1, 1, 0, 1, 0, 0, 1];
-    const r = calibrationReportAdapter({ predicted, actual });
+  const ours = [
+    {
+      playerId: "a",
+      plays: 10,
+      actualMean: 0.02,
+      expectedMean: 0.0,
+      overExpected: 0.02,
+      overExpectedTotal: 0.2,
+    },
+    {
+      playerId: "b",
+      plays: 12,
+      actualMean: -0.01,
+      expectedMean: 0.0,
+      overExpected: -0.01,
+      overExpectedTotal: -0.12,
+    },
+    {
+      playerId: "c",
+      plays: 8,
+      actualMean: 0.05,
+      expectedMean: 0.01,
+      overExpected: 0.04,
+      overExpectedTotal: 0.32,
+    },
+  ] as never;
+  const truth = [
+    { playerId: "a", value: 0.01 },
+    { playerId: "b", value: -0.02 },
+    { playerId: "c", value: 0.03 },
+  ] as never;
+
+  it("builds a calibration report from joined player metrics", () => {
+    const r = calibrationReportAdapter({ ours, truth });
     expect(isObservation(r)).toBe(true);
-    if (isObservation(r)) expect(r.raw!.n).toBe(10);
+    if (isObservation(r)) expect(r.raw!.n).toBe(3);
   });
 
-  it("fails closed on misaligned arrays", () => {
-    expect(isFailClosed(calibrationReportAdapter({ predicted: [0.5], actual: [] }))).toBe(true);
+  it("fails closed on empty arrays", () => {
+    expect(isFailClosed(calibrationReportAdapter({ ours: [], truth: [] }))).toBe(true);
     expect(isFailClosed(calibrationReportAdapter(null))).toBe(true);
-    expect(isFailClosed(graduationVerdictAdapter({ predicted: [0.5], actual: [] }))).toBe(true);
+    expect(isFailClosed(graduationVerdictAdapter({ ours: [], truth: [], thresholds: { minSample: 2, graduatedPearson: 0.8, provisionalPearson: 0.5 } }))).toBe(true);
     expect(isFailClosed(graduationVerdictAdapter(null))).toBe(true);
   });
 
-  it("graduation verdict runs on aligned arrays", () => {
+  it("graduation verdict runs on joined metrics", () => {
     const r = graduationVerdictAdapter({
-      predicted: [0.4, 0.6, 0.5, 0.7, 0.3, 0.8, 0.5, 0.5],
-      actual: [0, 1, 0, 1, 0, 1, 1, 0],
+      ours,
+      truth,
+      thresholds: {
+        minSample: 2,
+        graduatedPearson: 0.8,
+        provisionalPearson: 0.5,
+      },
     });
     expect(isObservation(r) || isFailClosed(r)).toBe(true);
+    if (isObservation(r)) {
+      expect(typeof r.value).toBe("string");
+    }
   });
 });
