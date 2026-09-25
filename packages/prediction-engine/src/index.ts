@@ -2395,6 +2395,8 @@ export {
 
 // Drift / ECDD monitoring + Hawkes threat generation (live-path promotion)
 export {
+  PageHinkley,
+  Pudd,
   majorityVote,
   evaluateDrift,
   type Alarm,
@@ -2409,6 +2411,7 @@ export {
 } from "./drift/ecdd-monitor.js";
 export {
   generationOfThreat,
+  bootstrapGoT,
   simulateHawkes,
   intensity as hawkesIntensity,
   logLikelihood as hawkesLogLikelihood,

@@ -16,6 +16,10 @@ import {
   evaluateDrift,
   majorityVote,
   generationOfThreat,
+  bootstrapGoT,
+  simulateHawkes,
+  PageHinkley,
+  Pudd,
   type EcddConfig,
   type EcddState,
   type Alarm,
@@ -147,5 +151,148 @@ export {
   evaluateDrift,
   majorityVote,
   generationOfThreat,
+  bootstrapGoT,
+  simulateHawkes,
+  PageHinkley,
+  Pudd,
 };
 export type { EcddState, EcddConfig, Alarm, DriftEval, HawkesParams, GoTResult };
+
+export type DetectorAlarmRun =
+  | { readonly ok: true; readonly alarms: readonly boolean[]; readonly fired: number }
+  | { readonly ok: false; readonly reason: string };
+
+/**
+ * Page-Hinkley detector as a live alarm producer over weekly Brier values.
+ * Fail-closed on empty or non-finite streams.
+ */
+export function runPageHinkley(
+  weeklyBrier: readonly number[],
+  delta?: number,
+  threshold?: number,
+): DetectorAlarmRun {
+  if (!Array.isArray(weeklyBrier) || weeklyBrier.length === 0) {
+    return { ok: false, reason: "PageHinkley requires a non-empty Brier stream" };
+  }
+  for (let i = 0; i < weeklyBrier.length; i++) {
+    const x = weeklyBrier[i];
+    if (x == null || !Number.isFinite(x)) {
+      return { ok: false, reason: `row ${i}: Brier must be finite — not imputed` };
+    }
+  }
+  try {
+    const det = new PageHinkley(delta, threshold);
+    const alarms = weeklyBrier.map((x) => det.update(x));
+    return { ok: true, alarms, fired: alarms.filter(Boolean).length };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+/**
+ * PUDD detector as a live alarm producer over weekly (uncertain, total) counts.
+ * Fail-closed on invalid counts. Missing weeks are not imputed.
+ */
+export function runPudd(
+  weeks: readonly { readonly uncertain: number; readonly total: number }[],
+  refWeeks?: number,
+  recentWeeks?: number,
+  zThreshold?: number,
+): DetectorAlarmRun {
+  if (!Array.isArray(weeks) || weeks.length === 0) {
+    return { ok: false, reason: "PUDD requires a non-empty weekly count stream" };
+  }
+  for (let i = 0; i < weeks.length; i++) {
+    const w = weeks[i];
+    if (
+      w == null ||
+      !Number.isFinite(w.uncertain) ||
+      !Number.isFinite(w.total) ||
+      w.total <= 0 ||
+      w.uncertain < 0 ||
+      w.uncertain > w.total
+    ) {
+      return {
+        ok: false,
+        reason: `row ${i}: 0 <= uncertain <= total, total > 0 — not imputed`,
+      };
+    }
+  }
+  try {
+    const det = new Pudd(refWeeks, recentWeeks, zThreshold);
+    const alarms = weeks.map((w) => det.update(w.uncertain, w.total));
+    return { ok: true, alarms, fired: alarms.filter(Boolean).length };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+export type HawkesBootstrapRun =
+  | { readonly ok: true; readonly mean: readonly number[]; readonly se: readonly number[] }
+  | { readonly ok: false; readonly reason: string };
+
+/**
+ * Bootstrap GoT parameter uncertainty. Fail-closed on invalid params or nBoot.
+ */
+export function evalBootstrapGoT(
+  params: HawkesParams,
+  T: number,
+  nBoot: number,
+  rand: () => number = Math.random,
+): HawkesBootstrapRun {
+  if (
+    !params ||
+    !Array.isArray(params.mu) ||
+    !Array.isArray(params.alpha) ||
+    !Array.isArray(params.beta) ||
+    params.mu.length === 0 ||
+    params.mu.length !== params.beta.length
+  ) {
+    return { ok: false, reason: "mu/beta must be non-empty and aligned arrays" };
+  }
+  if (!Number.isFinite(T) || T <= 0) {
+    return { ok: false, reason: "T must be finite and > 0" };
+  }
+  if (!Number.isFinite(nBoot) || nBoot < 2) {
+    return { ok: false, reason: "nBoot must be >= 2" };
+  }
+  try {
+    const r = bootstrapGoT(params, T, nBoot, rand);
+    return { ok: true, mean: r.mean, se: r.se };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+export type HawkesSimulateRun =
+  | { readonly ok: true; readonly events: readonly [number, number][] }
+  | { readonly ok: false; readonly reason: string };
+
+/**
+ * Simulate a multivariate Hawkes path. Fail-closed on invalid params.
+ */
+export function evalSimulateHawkes(
+  params: HawkesParams,
+  T: number,
+  rand: () => number = Math.random,
+): HawkesSimulateRun {
+  if (
+    !params ||
+    !Array.isArray(params.mu) ||
+    !Array.isArray(params.alpha) ||
+    !Array.isArray(params.beta) ||
+    params.mu.length === 0 ||
+    params.mu.length !== params.beta.length
+  ) {
+    return { ok: false, reason: "mu/beta must be non-empty and aligned arrays" };
+  }
+  if (!Number.isFinite(T) || T <= 0) {
+    return { ok: false, reason: "T must be finite and > 0" };
+  }
+  try {
+    const events = simulateHawkes(params, T, rand);
+    return { ok: true, events };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}

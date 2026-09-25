@@ -3,6 +3,10 @@ import {
   runDriftEnsemble,
   runEcdd,
   runHawkesThreat,
+  runPageHinkley,
+  runPudd,
+  evalBootstrapGoT,
+  evalSimulateHawkes,
 } from "./monitoring-bridge.js";
 
 describe("monitoring-bridge runEcdd", () => {
@@ -75,5 +79,74 @@ describe("monitoring-bridge runHawkesThreat", () => {
     );
     expect(r.ok).toBe(true);
     if (r.ok) expect(r.data).toBeDefined();
+  });
+});
+
+describe("monitoring-bridge detector classes", () => {
+  it("runPageHinkley fail-closes on empty or non-finite stream", () => {
+    expect(runPageHinkley([]).ok).toBe(false);
+    expect(runPageHinkley([0.2, Number.NaN]).ok).toBe(false);
+  });
+
+  it("runPageHinkley produces alarms on a real Brier stream", () => {
+    const r = runPageHinkley([0.2, 0.21, 0.22, 0.35, 0.4, 0.45, 0.5, 0.55]);
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.alarms.length).toBe(8);
+      expect(r.fired).toBeGreaterThanOrEqual(0);
+    }
+  });
+
+  it("runPudd fail-closes on invalid counts", () => {
+    expect(runPudd([]).ok).toBe(false);
+    expect(runPudd([{ uncertain: 5, total: 3 }]).ok).toBe(false);
+  });
+
+  it("runPudd produces alarms on a real count stream", () => {
+    const weeks = Array.from({ length: 14 }, (_, i) => ({
+      uncertain: i < 8 ? 2 : 12,
+      total: 20,
+    }));
+    const r = runPudd(weeks);
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.alarms.length).toBe(14);
+    }
+  });
+});
+
+describe("monitoring-bridge Hawkes bootstrap/simulate", () => {
+  const params = { mu: [0.3], alpha: [[0.4]], beta: [1.2] };
+
+  it("evalBootstrapGoT fail-closes on nBoot < 2", () => {
+    const r = evalBootstrapGoT(params, 10, 1);
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.reason).toContain("nBoot");
+  });
+
+  it("evalBootstrapGoT returns mean and se", () => {
+    let i = 0;
+    const rand = () => {
+      i += 1;
+      return (i % 7) / 7;
+    };
+    const r = evalBootstrapGoT(params, 10, 5, rand);
+    expect(r.ok, r.ok ? "" : `reason=${r.reason}`).toBe(true);
+    if (r.ok) {
+      expect(r.mean).toHaveLength(1);
+      expect(r.se).toHaveLength(1);
+    }
+  });
+
+  it("evalSimulateHawkes fail-closes on bad T and returns events on real params", () => {
+    expect(evalSimulateHawkes(params, 0).ok).toBe(false);
+    let i = 0;
+    const rand = () => {
+      i += 1;
+      return (i % 5) / 5;
+    };
+    const r = evalSimulateHawkes(params, 5, rand);
+    expect(r.ok, r.ok ? "" : `reason=${r.reason}`).toBe(true);
+    if (r.ok) expect(Array.isArray(r.events)).toBe(true);
   });
 });
