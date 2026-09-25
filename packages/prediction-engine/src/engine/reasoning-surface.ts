@@ -1,11 +1,11 @@
 /**
- * Reasoning surface — single engine-facing facade over every real
- * computation module built in waves 4–5.
+ * Reasoning surface â€” single engine-facing facade over every real
+ * computation module built in waves 4â€“5.
  *
  * The engine calls THIS, not metadata. Every call is real math.
  * Fail-closed on missing inputs. No `any`. No imputation.
  *
- * COMPOSES WITH: V5–V8, W3–W6, D1–D4, NGS-11/12, strategic adapters.
+ * COMPOSES WITH: V5â€“V8, W3â€“W6, D1â€“D4, NGS-11/12, strategic adapters.
  */
 
 import {
@@ -87,13 +87,13 @@ import {
   robustKellyAdapter,
   type ReturnAtom,
 } from "../engine/decision-adapters.js";
-// Local type guard � inlined so this module never value-imports
+// Local type guard — inlined so this module never value-imports
 // universal-adapter.js (which pulls node:crypto into client bundles).
 function isObservation(r: AdapterResult): r is Extract<AdapterResult, { source: string }> {
   return !("failClosed" in r);
 }
 
-// ── Shared types ───────────────────────────────────────────────────────────
+// â”€â”€ Shared types â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export type ReasoningResult<T> =
   | { readonly ok: true; readonly data: T }
@@ -107,7 +107,7 @@ function ok<T>(data: T): { ok: true; data: T } {
   return { ok: true, data };
 }
 
-// ── Model submission (V5) ──────────────────────────────────────────────────
+// â”€â”€ Model submission (V5) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function reasonSubmission(
   pkg: SubmissionPackage,
@@ -123,7 +123,7 @@ export function reasonSubmissionCsv(pkg: SubmissionPackage): ReasoningResult<str
   }
 }
 
-// ── Feature construction (V7) ──────────────────────────────────────────────
+// â”€â”€ Feature construction (V7) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function reasonFeatureSpace(
   specs: readonly FeatureSpec[],
@@ -165,7 +165,7 @@ export function reasonChronologicalSplit(
   }
 }
 
-// ── NFL matchup simulation (V6) ────────────────────────────────────────────
+// â”€â”€ NFL matchup simulation (V6) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function reasonTrailingRating(
   teamId: string,
@@ -195,7 +195,7 @@ export function reasonSimulateMatchup(
       ? opts.homeFieldMultiplier
       : fitHomeFieldMultiplier([]);
   if (hfa === null) {
-    return fail("home-field multiplier unavailable — not hardcoded, not imputed");
+    return fail("home-field multiplier unavailable â€” not hardcoded, not imputed");
   }
   try {
     return ok(simulateMatchup(
@@ -220,7 +220,7 @@ export function reasonSimulateMatchup(
   }
 }
 
-// ── ATS ablation (W3) ──────────────────────────────────────────────────────
+// â”€â”€ ATS ablation (W3) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function reasonAblation(
   features: readonly { readonly name: string; readonly tier?: string }[],
@@ -247,7 +247,7 @@ export function reasonTierKill(
   }
 }
 
-// ── Anytime TD + EV (W4) ───────────────────────────────────────────────────
+// â”€â”€ Anytime TD + EV (W4) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function reasonAnytimeTd(
   ctx: PlayerRoleContext,
@@ -258,7 +258,7 @@ export function reasonAnytimeTd(
   return ok(price ? integrateEv(r, price) : r);
 }
 
-// ── Luck-neutralized EPA (W5) ──────────────────────────────────────────────
+// â”€â”€ Luck-neutralized EPA (W5) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function reasonNeutralizePlay(
   play: PlayInput | null,
@@ -276,7 +276,7 @@ export function reasonDeserveToWin(
   }
 }
 
-// ── WP event replay (W6) ───────────────────────────────────────────────────
+// â”€â”€ WP event replay (W6) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function reasonReplayGame(
   gameId: string,
@@ -306,7 +306,7 @@ export function reasonWpStressTest(
   }
 }
 
-// ── Coverage/DB metrics (NGS-11) ───────────────────────────────────────────
+// â”€â”€ Coverage/DB metrics (NGS-11) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function reasonDbCoverage(
   plays: readonly TargetPlay[],
@@ -318,7 +318,7 @@ export function reasonDbCoverage(
   }
 }
 
-// ── Kicker / scramble (NGS-12) ─────────────────────────────────────────────
+// â”€â”€ Kicker / scramble (NGS-12) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function reasonKickerMoE(
   attempts: readonly FieldGoalAttempt[],
@@ -332,7 +332,7 @@ export function reasonScrambleEpa(
   return ok(computeScrambleEpa(plays));
 }
 
-// ── Strategic adapters (engine contract) ───────────────────────────────────
+// â”€â”€ Strategic adapters (engine contract) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function reasonCoverProbability(
   spread: number,
@@ -382,7 +382,7 @@ export function reasonGeneralizedPoisson(
   return ok(r.value as number);
 }
 
-// ── Decision / sizing (wave 5) ─────────────────────────────────────────────
+// â”€â”€ Decision / sizing (wave 5) â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export function reasonKellyLogGrowth(
   f: number,
@@ -424,7 +424,7 @@ export function reasonDrawdownRisk(
   return ok(r.value as number);
 }
 
-// ── Surface registry ───────────────────────────────────────────────────────
+// â”€â”€ Surface registry â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
 
 export const REASONING_SURFACE = {
   submission: reasonSubmission,
