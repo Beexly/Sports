@@ -2436,3 +2436,32 @@ export {
   slidingStateFeatures,
   type TieredGame,
 } from "./inplay/mixed-tier-training.js";
+
+// Props player modules (conditional-td, catch-prowess, player-similarity, xflag)
+export {
+  marginalizeConditionalTD,
+  marginalizeConditionalFirstDown,
+  isProperTargetDist,
+  type ConditionalTdInputs,
+} from "./props/conditional-td.js";
+export {
+  fitCatchProwess,
+  catchProb,
+  spatialBaseline,
+  type Target,
+} from "./props/catch-prowess.js";
+export {
+  closestComps,
+  robustScale,
+  redundancyWeights,
+  weightedL1,
+  type PlayerSeason,
+  type Comp,
+} from "./props/player-similarity.js";
+export {
+  expectedFlags,
+  xFlagsByTeam,
+  xFlagsByCrew,
+  expectedFreeYardage,
+  type XFlagFeatures,
+} from "./props/xflag.js";

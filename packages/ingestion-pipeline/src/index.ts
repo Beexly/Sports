@@ -272,3 +272,16 @@ export {
   type InPlayWpEval,
   type MixedTierEval,
 } from "./inplay-bridge.js";
+
+// Props-player bridge (conditional-td, catch-prowess, player-similarity, xflag)
+export {
+  evalConditionalTd,
+  evalConditionalFirstDown,
+  evalCatchProwess,
+  evalCatchProb,
+  evalClosestComps,
+  evalXFlags,
+  type PlayerEval,
+  type CatchProwessFit,
+  type XFlagSummary,
+} from "./props-player-bridge.js";
