@@ -40,7 +40,7 @@ baseline: typecheck=0  lint=0  guards=22/25 (api-v1-boundary expected FAIL; ai-c
 |||| P2-4 | INVENTORY.md (.agents + .claude/commands) | BLOCKED | 2026-09-23 11:20 | handoff/INVENTORY.md created with verified counts (8 skills, 34 commands, 1,089,781 bytes, 21 zero-reference items); `test -f handoff/INVENTORY.md` OK, but `git status --short` is non-empty due pre-existing handoff/ changes: M handoff/LEDGER.md and untracked DOC_DRIFT.md, JOURNAL.md, ROUTE_AUTH_INVENTORY.md, TEST_GAP_MAP.md, INVENTORY.md | - |
 || P3-1 | ADR change-proposal template | DONE | 15:25 | Created docs/adr/pre-implementation-change-proposal-template.md; 7 sections; both guardrail scans exit 0; eeb91c177 |
 |||| P3-2 | pin promptfoo to 0.122.0 | DONE | 2026-09-24 22:56 | package.json eval script pinned; typecheck=0, lint=0, promptfoo tests 13/13, perf/commercial/secret guards all exit 0 | a4710d865 |
-|| P3-3 | normalizeEntityName + tests | TODO | — | — |
+|||| P3-3 | normalizeEntityName + tests | DONE | 2026-09-24 23:01 | NFKD accent folding, punctuation/whitespace normalization, guarded generational-suffix removal; 13/13 tests, typecheck=0, lint=0, no any | 82dd324ba |
 || P3-4 | entity-graph repository + tests | TODO | — | — |
 || P3-5 | wire response cache into free lane | TODO | — | — |
 || P4-1 | check-claims.md | TODO | — | — |
