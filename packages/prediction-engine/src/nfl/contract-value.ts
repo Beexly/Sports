@@ -1,4 +1,4 @@
-export type ContractFlag = "surplus" | "overpaid";
+export type ContractFlag = "surplus" | "neutral" | "overpaid";
 
 export interface ContractProductionInput {
   readonly player: string;
@@ -41,7 +41,7 @@ export function analyzeContractValue(
         ...row,
         valuePerDollar,
         percentileVsPosition: percentile,
-        flag: percentile >= 0.9 ? "surplus" : percentile <= 0.1 ? "overpaid" : "surplus",
+        flag: percentile >= 0.9 ? "surplus" : percentile <= 0.1 ? "overpaid" : "neutral",
       });
     });
   }

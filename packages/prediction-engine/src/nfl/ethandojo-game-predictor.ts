@@ -146,8 +146,7 @@ export function aggregateTeamFeatures(plays: readonly NflversePlay[]): TeamFeatu
     }
     if (play.qbDropback === 1) {
       opponentDropbacks += 1;
-      if (play.pressure === 1) pressures += 1;
-      if (play.qbHit === 1 || play.sack === 1) pressures += 1;
+      if (play.pressure === 1 || play.qbHit === 1 || play.sack === 1) pressures += 1;
     }
     if (play.passerPlayerId != null && play.qbDropback === 1 && finite(play.epa) !== null) {
       qbEpa += play.epa ?? 0;
@@ -330,7 +329,7 @@ export function predictGameOutcome(
   input: TeamGameInput,
 ): EthandojoGameOutput | null {
   const features = buildGameFeatureDifferentials(input);
-  const winProb = predictWinProb(model, features);
+  const winProb = predictWinProb(model, features, { now: () => new Date("2026-09-25T00:00:00.000Z") });
   const homeScore = finite(input.projectedScoreHome);
   const awayScore = finite(input.projectedScoreAway);
   if (winProb === null || homeScore === null || awayScore === null) return null;
