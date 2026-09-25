@@ -311,3 +311,16 @@ export {
   type CloseDistillationResult,
   type FeatureAdmissionOutcome,
 } from "./edge-lab-honesty-bridge.js";
+
+// Certificate bridge (display substantiation, No-Bet/Fire certs, Kelly lower endpoint)
+export {
+  evalDisplaySubstantiation,
+  evalDisplayIfSubstantiated,
+  evalWilsonLowerBound,
+  evalNoBetCertificate,
+  evalFireCertificate,
+  evalParseCertificate,
+  evalCertificateHash,
+  evalKellyLowerEndpoint,
+  type CertEval,
+} from "./certificate-bridge.js";

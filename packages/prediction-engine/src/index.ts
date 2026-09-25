@@ -2553,3 +2553,28 @@ export {
   realGameContextFromPreGame,
   settledHistoricalPickToTaxonomyRow,
 } from "./edge-lab/walk-forward-taxonomy-source.js";
+
+// Guards + decision-certificate (display substantiation, No-Bet/Fire certificates)
+export {
+  isDisplaySubstantiated,
+  assertDisplaySubstantiated,
+  displayIfSubstantiated,
+  type SubstantiationEvidence,
+  type DisplayClaim,
+} from "./guards/display-substantiated.js";
+export {
+  canonicalizeForHash,
+  parseDecisionCertificate,
+  noBetCertificate,
+  fireCertificate,
+  mapExclusionToReasons,
+  humanSummaryForReasons,
+  omitUndefined,
+  type MultiprobInterval,
+  type DecisionCertificate,
+} from "./certificate/decision-certificate.js";
+export {
+  kellyFromLowerEndpoint,
+  type KellyInput,
+  type KellyResult,
+} from "./certificate/kelly-lower-endpoint.js";
