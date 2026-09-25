@@ -2528,3 +2528,28 @@ export {
   rwalkPenalty,
   forgettingAudit,
 } from "./continual/2304-01239v1-teacher-student-continual.js";
+
+// Residual edge-lab honesty surface (close-distillation, trials, taxonomy source)
+export {
+  trainCloseDistiller,
+  scoreDistillation,
+  predictedMoveEdge,
+  type CloseRow,
+  type CloseDistiller,
+  type DistillationFoldScore,
+} from "./edge-lab/close-distillation.js";
+export {
+  recordFeatureAdmissionTrial,
+  recordThresholdGrid,
+  decideFamilyAdmissions,
+  type TrialInput,
+  type TrialEntry,
+  type TrialsRegistry,
+  type BhResult,
+  type FamilyAdmissionDecision,
+  type FamilyAdmissionsResult,
+} from "./edge-lab/trials-registry.js";
+export {
+  realGameContextFromPreGame,
+  settledHistoricalPickToTaxonomyRow,
+} from "./edge-lab/walk-forward-taxonomy-source.js";

@@ -299,3 +299,15 @@ export {
   type NaturalGradEval,
   type CoresetEval,
 } from "./continual-learning-bridge.js";
+
+// Edge-lab honesty bridge (close-distillation, trials, taxonomy source)
+export {
+  evalCloseDistillation,
+  evalPredictedMoveEdge,
+  evalFeatureAdmission,
+  evalTaxonomyRow,
+  evalGameContext,
+  type HonestEval,
+  type CloseDistillationResult,
+  type FeatureAdmissionOutcome,
+} from "./edge-lab-honesty-bridge.js";
