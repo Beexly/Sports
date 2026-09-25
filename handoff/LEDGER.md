@@ -41,7 +41,7 @@ baseline: typecheck=0  lint=0  guards=22/25 (api-v1-boundary expected FAIL; ai-c
 || P3-1 | ADR change-proposal template | DONE | 15:25 | Created docs/adr/pre-implementation-change-proposal-template.md; 7 sections; both guardrail scans exit 0; eeb91c177 |
 |||| P3-2 | pin promptfoo to 0.122.0 | DONE | 2026-09-24 22:56 | package.json eval script pinned; typecheck=0, lint=0, promptfoo tests 13/13, perf/commercial/secret guards all exit 0 | a4710d865 |
 |||| P3-3 | normalizeEntityName + tests | DONE | 2026-09-24 23:01 | NFKD accent folding, punctuation/whitespace normalization, guarded generational-suffix removal; 13/13 tests, typecheck=0, lint=0, no any | 82dd324ba |
-|| P3-4 | entity-graph repository + tests | DONE | 2026-09-25 03:29 | H8 typed entity/edge access layer; injected structural DB, provenance guards, normalized upserts, capped one-hop neighbors; 23/23 entity-graph tests, typecheck=0, lint=0, no any | pending commit |
+|| P3-4 | entity-graph repository + tests | DONE | 2026-09-25 03:33 | H8 typed entity/edge access layer; injected structural DB, provenance guards, normalized upserts, capped one-hop neighbors; 23/23 entity-graph tests, typecheck=0, lint=0, guardrails=26/26, no any | e25729265 |
 || P3-5 | wire response cache into free lane | TODO | — | — |
 || P4-1 | check-claims.md | TODO | — | — |
 || P4-2 | states.md | TODO | — | — |
