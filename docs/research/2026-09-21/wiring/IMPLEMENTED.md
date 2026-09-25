@@ -176,3 +176,16 @@ All 12 builds composed into the engine-facing suite. Live-path promotion remains
 | D4 cfbfastR college PBP | `packages/data-ingestion/src/cfbfastr-intake.ts` | 10/10 | DONE |
 
 Full prediction-engine suite: 5837/5837 across 817 test files. coverage.test.ts 10/10. data-ingestion new intakes 46/46 + holdout 12/12.
+
+## Wave 5 — NGS-11/12 + strategic adapters (2026-09-25)
+
+| Build | File | Tests | Status |
+|---|---|---|---|
+| NGS-11 Coverage/DB metrics | `packages/prediction-engine/src/nfl/coverage-db-metrics.ts` | 9/9 | DONE |
+| NGS-12 Adjacent metric families | `packages/prediction-engine/src/nfl/ngs-adjacent-metrics.ts` | 13/13 | DONE |
+| Strategic signal adapters | `packages/prediction-engine/src/engine/strategic-signal-adapters.ts` | 16/16 | DONE |
+
+| Decision adapters | `packages/prediction-engine/src/engine/decision-adapters.ts` | 19/19 | DONE |
+| Reasoning surface facade | `packages/prediction-engine/src/engine/reasoning-surface.ts` | 11/11 | DONE |
+
+| Market/inplay/sizing adapters | `packages/prediction-engine/src/engine/market-inplay-sizing-adapters.ts` | 22/22 | DONE |
