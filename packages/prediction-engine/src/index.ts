@@ -37,7 +37,7 @@ export type { SettlementResult } from "./settlement.js";
 // nearest line a book actually posted, never the raw consensus mean (which makes
 // PUSH structurally unreachable for spreads and totals). See published-line.ts.
 export { snapToPostedLine, formatPublishedLine } from "./published-line.js";
-// Historical backfill settlement engine ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â re-run the FROZEN model on past games
+// Historical backfill settlement engine ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â re-run the FROZEN model on past games
 // using ONLY pre-game data, then settle vs the known result (no-lookahead by design).
 export {
   assemblePreGameFeatures,
@@ -57,7 +57,7 @@ export type {
   SettledHistoricalPick,
   PostKickoffField,
 } from "./historical-replay.js";
-// Closing-Line Value ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â sharp-grade credibility metric (pure; not yet surfaced publicly)
+// Closing-Line Value ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â sharp-grade credibility metric (pure; not yet surfaced publicly)
 export {
   computeSpreadClv,
   computeTotalClv,
@@ -72,7 +72,7 @@ export type {
   MoneylineClvResult,
   ClvSummary,
 } from "./clv.js";
-// CLV capture ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â derive the closing line from the timestamped odds history and
+// CLV capture ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â derive the closing line from the timestamped odds history and
 // grade a pick's lock-time line/price against it. Pure; the settlement pipeline
 // supplies real rows and persists the graded result.
 export {
@@ -86,10 +86,10 @@ export type {
   ClvKind,
   ClvGrade,
 } from "./clv-capture.js";
-// Edge engine ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â surfaces a pick only where INDEPENDENT estimators (Poisson model,
-// Kalshi exchange, FPI, ClubElo, DixonÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“Coles, ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â¦) diverge from the sportsbook fair
+// Edge engine ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â surfaces a pick only where INDEPENDENT estimators (Poisson model,
+// Kalshi exchange, FPI, ClubElo, DixonÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œColes, ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€šÃ‚Â¦) diverge from the sportsbook fair
 // value AND are not contradicted by a referee. Wired into moneyline scoring via
-// context.independentFairValues + deriveRankingProbability (MODEL_VERSION ÃƒÂ¢Ã¢â‚¬Â°Ã‚Â¥ v5.2.0).
+// context.independentFairValues + deriveRankingProbability (MODEL_VERSION ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°Ãƒâ€šÃ‚Â¥ v5.2.0).
 // Pure functions; no I/O. Founder-gated only for map activation / floors, not assessEdge.
 export {
   assessEdge,
@@ -103,7 +103,7 @@ export type {
   AnchorAgreement,
   EdgeAssessment,
 } from "./edge-engine.js";
-// Conviction tier ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â the honest "70% tier" selector (additive, gated off; see
+// Conviction tier ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â the honest "70% tier" selector (additive, gated off; see
 // docs/path-to-70.md). Classifies a pick on calibrated P + edge + CLV history.
 export {
   convictionTier,
@@ -118,7 +118,7 @@ export type {
   ConvictionInput,
   ConvictionResult,
 } from "./conviction-tier.js";
-// Calibration application ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â confidence ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ calibrated win probability (self-suppressing
+// Calibration application ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â confidence ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ calibrated win probability (self-suppressing
 // until a settled sample exists; activation is an audited MODEL_VERSION step). See
 // docs/path-to-70.md. Additive: does not touch the live scoring path or the freeze.
 export {
@@ -132,7 +132,7 @@ export { getPlatformConfig } from "./platform-config.js";
 export type { PlatformConfig, ConfidenceDisplayMode } from "./platform-config.js";
 export { getReadinessGates, bootstrapGateResponse } from "./readiness.js";
 export type { ReadinessGates } from "./readiness.js";
-// Proof-of-record ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â tamper-evident Merkle commitment over published picks.
+// Proof-of-record ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â tamper-evident Merkle commitment over published picks.
 export {
   hashLeaf,
   merkleRoot,
@@ -143,7 +143,7 @@ export {
   parseCanonicalPayload,
 } from "./proof-of-record.js";
 export type { HashFn, PickRecord, MerkleSibling, MerkleProof } from "./proof-of-record.js";
-// Pre-result proof receipt ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â freeze + verify a tamper-evident per-pick claim.
+// Pre-result proof receipt ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â freeze + verify a tamper-evident per-pick claim.
 export {
   buildPickProofReceipt,
   verifyPickProofReceipt,
@@ -152,7 +152,7 @@ export {
   MARKET_FAIR_METHOD_TAG,
 } from "./pick-proof-receipt.js";
 export type { PickProofInput, PickProofReceipt } from "./pick-proof-receipt.js";
-// Slate commitment (commit-reveal) ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â pre-register the whole population; kills cherry-picking.
+// Slate commitment (commit-reveal) ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â pre-register the whole population; kills cherry-picking.
 export {
   buildSlateCommitment,
   provePickInSlate,
@@ -178,7 +178,7 @@ export type {
   EvidenceReadinessMatrix,
   FailureHorizon,
 } from "./evidence-readiness-matrix.js";
-// v6 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â bankroll math helpers. Exported for future model work; not wired to
+// v6 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â bankroll math helpers. Exported for future model work; not wired to
 // the public API until price provenance and policy review are complete.
 export {
   recommendStake,
@@ -191,7 +191,7 @@ export {
   MIN_EDGE_FOR_STAKE,
 } from "./kelly.js";
 export type { KellyStake, StakeInput } from "./kelly.js";
-// v6 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Poisson model (helper module, not yet wired into scoring)
+// v6 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Poisson model (helper module, not yet wired into scoring)
 export {
   factorial,
   poissonPmf,
@@ -202,7 +202,7 @@ export {
   poissonConsistencyScore,
   assertTeamRatesAvailable,
 } from "./poisson.js";
-// Skellam margin / cover ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â hockey/baseball/soccer (same sport gate as Poisson).
+// Skellam margin / cover ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â hockey/baseball/soccer (same sport gate as Poisson).
 // Live: source "skellam_cover" on SPREAD rankingP only. NFL key-numbers are separate.
 export {
   skellamPmf,
@@ -221,8 +221,8 @@ export type {
   SkellamCoverFairValue,
   SkellamPmfPoint,
 } from "./skellam.js";
-// #11 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â team scoring rates computed from REAL stored final scores (no new
-// provider, no fabricated ÃƒÅ½Ã‚Â») ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ an INDEPENDENT Poisson fair value that slots into
+// #11 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â team scoring rates computed from REAL stored final scores (no new
+// provider, no fabricated ÃƒÆ’Ã…Â½Ãƒâ€šÃ‚Â») ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ an INDEPENDENT Poisson fair value that slots into
 // the edge engine as a 2nd estimator. Pure; the ingestion-cron wiring +
 // TEAM_RATES_AVAILABLE=true + MODEL_VERSION bump are founder-gated.
 export {
@@ -240,7 +240,7 @@ export type {
   PoissonFairValueInput,
   PoissonFairValue,
 } from "./team-rates.js";
-// DixonÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“Coles ÃƒÂÃ¢â‚¬Å¾(ÃƒÂÃ‚Â) soccer independent (market-free; TeamGameLog ÃƒÅ½Ã‚Â» + low-score corr).
+// DixonÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã…â€œColes ÃƒÆ’Ã‚ÂÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾(ÃƒÆ’Ã‚ÂÃƒâ€šÃ‚Â) soccer independent (market-free; TeamGameLog ÃƒÆ’Ã…Â½Ãƒâ€šÃ‚Â» + low-score corr).
 export {
   dixonColesTau,
   jointScoreMatrixDixonColes,
@@ -267,7 +267,7 @@ export {
   eloHomeWinFromRatings,
 } from "./elo-from-results.js";
 export type { EloResultGame } from "./elo-from-results.js";
-// ESPN PowerIndex ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ independent win probability (logistic). Model-fair only.
+// ESPN PowerIndex ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ independent win probability (logistic). Model-fair only.
 export {
   powerIndexToWinProbs,
   powerIndexToIndependentFairValue,
@@ -281,13 +281,13 @@ export type {
   PowerIndexLogisticInput,
   PowerIndexLogisticResult,
 } from "./espn-powerindex.js";
-// MLB / general standings win% ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ independent ML fair value.
+// MLB / general standings win% ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ independent ML fair value.
 export {
   standingsWinPctToWinProbs,
   standingsWinPctToIndependentFairValue,
 } from "./standings-strength.js";
 export type { StandingsStrengthInput } from "./standings-strength.js";
-// NFL opponent-adjusted EPA ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ independent ML fair value.
+// NFL opponent-adjusted EPA ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ independent ML fair value.
 export {
   nflEpaToWinProbs,
   nflEpaToIndependentFairValue,
@@ -296,7 +296,7 @@ export {
   NFL_EPA_MIN_GAMES,
 } from "./nfl-epa-fair-value.js";
 export type { NflEpaFairValueInput } from "./nfl-epa-fair-value.js";
-// R&D ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â probability calibration toolkit (isotonic/PAVA, Brier decomposition, ECE).
+// R&D ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â probability calibration toolkit (isotonic/PAVA, Brier decomposition, ECE).
 // NOT wired into live scoring; built for the future human-gated MODEL_VERSION
 // calibration that turns the confidence score into a calibrated win probability.
 export {
@@ -320,7 +320,7 @@ export type {
   SelectedSliceEceResult,
 } from "./probability-calibration.js";
 
-// R&D ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â parametric calibration maps (Platt, Beta) + cross-validated selection
+// R&D ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â parametric calibration maps (Platt, Beta) + cross-validated selection
 // across calibrator families (the honest fix for "isotonic by fiat"). Composes
 // the isotonic/ECE toolkit above; equal-mass ECE for robust small-fold scoring.
 export {
@@ -330,11 +330,11 @@ export {
   selectCalibrator,
 } from "./calibration-map.js";
 
-// R&D ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â temperature scaling (one-parameter overconfidence softener). Not live.
+// R&D ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â temperature scaling (one-parameter overconfidence softener). Not live.
 export { fitTemperature, applyTemperature } from "./temperature-scaling.js";
 export type { TemperatureModel } from "./temperature-scaling.js";
 
-// R&D ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â log-loss optimization + isotonic diagnostics (offline; apply OFF).
+// R&D ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â log-loss optimization + isotonic diagnostics (offline; apply OFF).
 export {
   meanLogLossAtTemperature,
   temperatureLogLossGradient,
@@ -356,7 +356,7 @@ export type {
   CalibratorSelection,
 } from "./calibration-map.js";
 
-// R&D ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â linear Thompson sampling contextual bandit (2026-07-02 ZK/ML dump,
+// R&D ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â linear Thompson sampling contextual bandit (2026-07-02 ZK/ML dump,
 // extraction ledger Cluster B). Dark, NOT wired: the future explore/exploit
 // primitive for allocation decisions (content variants, estimator trials).
 // Must NEVER gate a real-money action without its own founder-approved policy.
@@ -373,7 +373,7 @@ export type {
   LinTsDecision,
 } from "./linear-thompson.js";
 
-// R&D ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â tamper-evident pre-registration of the calibration MAP itself (composes
+// R&D ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â tamper-evident pre-registration of the calibration MAP itself (composes
 // proof-of-record). NOT zero-knowledge; CommitmentEnvelope is a documented
 // future seam only, proof always null. See ZK-ML-DUMP-EXTRACTION-LEDGER.md.
 export {
@@ -387,7 +387,7 @@ export type {
   CommitmentEnvelope,
 } from "./calibration-commitment.js";
 
-// R&D ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â anytime-valid CALIBRATION monitoring (the profit ledger's sibling):
+// R&D ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â anytime-valid CALIBRATION monitoring (the profit ledger's sibling):
 // a Ville e-process testing "the stated probabilities are honest" continuously,
 // two-sided (over/under-confidence) with a per-region bin layer. Dark, unwired;
 // order-sensitive (settlement order required). Proven by adversarial-peeking MC.
@@ -400,7 +400,7 @@ export type {
   CalibrationBinDiagnostic,
 } from "./calibration-sequence.js";
 
-// R&D ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Pedersen homomorphic commitments (the ADDITIVE layer Merkle lacks:
+// R&D ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Pedersen homomorphic commitments (the ADDITIVE layer Merkle lacks:
 // verify a published aggregate against per-pick commitments without opening the
 // picks). Dark, unwired; ADDITIVE to the SHA-256 Merkle layer, never a
 // replacement (classical DLOG only, NOT post-quantum). Group verified by
@@ -422,7 +422,7 @@ export {
 } from "./pedersen-ledger.js";
 export type { PedersenGroup, PedersenCommitment, LedgerCommitmentResult } from "./pedersen-ledger.js";
 
-// Performance CIs for CONTINUOUS returns (ROI/units) ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â the BCa bootstrap
+// Performance CIs for CONTINUOUS returns (ROI/units) ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â the BCa bootstrap
 // counterpart to the Wilson interval (which only covers binomial win rate).
 // Deterministic/seeded so a public performance band is reproducible from the
 // sealed ledger by anyone. Honest uncertainty for the public loss ledger.
@@ -568,7 +568,7 @@ export type { EloBacktestGame, EloBacktestReport, EloBacktestOptions } from "./e
 export { opponentAdjustedRatings } from "./opponent-adjusted.js";
 export type { TeamGameEfficiency, TeamRating, OpponentAdjustOptions } from "./opponent-adjusted.js";
 
-// Weighted composite score ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â the "weight everything" matrix that blends hard
+// Weighted composite score ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â the "weight everything" matrix that blends hard
 // metrics + soft signals (with confidence + freshness valves) into one number
 // plus attributed contributions for interpretation/narration.
 export { compositeScore } from "./composite-score.js";
@@ -943,7 +943,7 @@ export type {
   MarginMixtureVerdict,
   NflMarginMixtureFit,
 } from "./nfl/margin-mixture-model.js";
-// Universal signal ledger ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â the persistent "weight everything" accumulation layer
+// Universal signal ledger ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â the persistent "weight everything" accumulation layer
 // that bridges stored ledger rows to the composer (NOT wired into the live score).
 export { composeLedger, ledgerAgeDays } from "./signal-ledger.js";
 export type { LedgerSignalRow, ComposeLedgerOptions } from "./signal-ledger.js";
@@ -965,7 +965,7 @@ export {
   type LimitationFlag,
 } from "./model-limitations.js";
 
-// Exact binomial interval ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â conservative counterpart to Wilson. Used by the
+// Exact binomial interval ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â conservative counterpart to Wilson. Used by the
 // public performance / calibration CI layer so a headline rate is never a
 // bare point estimate.
 export {
@@ -1000,7 +1000,7 @@ export {
   DEFAULT_MARGIN_SET_ALPHA,
 } from "./conformal-margin-set.js";
 export type { MarginCalibrationRow, MarginPredictionSet } from "./conformal-margin-set.js";
-// Build-queue #4 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â ML independent estimator scaffold (kyleskom concept).
+// Build-queue #4 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ML independent estimator scaffold (kyleskom concept).
 // Gradient-boosted stumps inference + honesty gate. Fed into independentFairValues
 // ONLY after calibration proves it (same law as Poisson / Elo estimators).
 // Reference: repo-firehose-review.md build-queue item #4; edge-engine.ts.
@@ -1040,7 +1040,7 @@ export type {
   ReplayBacktestReport,
 } from "./replay-harness.js";
 
-// R&D ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â SimHash (random-hyperplane LSH, Charikar) angular-similarity signatures
+// R&D ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â SimHash (random-hyperplane LSH, Charikar) angular-similarity signatures
 // with inverse-magnitude multi-probe querying. Dark, NOT wired into live scoring:
 // the approximate-nearest-neighbor primitive for future "closest historical comp /
 // games like this one" surfaces. See ZK-ML-DUMP-EXTRACTION-LEDGER.md, Cluster B.
@@ -1060,7 +1060,7 @@ export type {
   SimhashQueryOptions,
 } from "./simhash.js";
 
-// Expected-metrics engine ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â our OWN expected-value metrics (CPOE / RYOE / xYAC)
+// Expected-metrics engine ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â our OWN expected-value metrics (CPOE / RYOE / xYAC)
 // computed from public play-by-play, proven against Next Gen Stats. Pure,
 // deterministic, fit-on-load; additive and dark. See docs/math/GSE_EXPECTED_METRICS.md.
 export {
@@ -1157,7 +1157,7 @@ export type {
   DriveResult,
 } from "./expected-metrics/index.js";
 
-// Model Promotion Gate ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â pure eligibility evaluator (paired-Brier EB-LCB +
+// Model Promotion Gate ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â pure eligibility evaluator (paired-Brier EB-LCB +
 // CLV non-inferiority + walk-forward integrity). DARK, and deliberately NOT
 // re-exported from this barrel: window-hash.ts uses node:crypto, and this
 // barrel is imported by CLIENT components (e.g. simulation-cloud.tsx ->
@@ -1168,7 +1168,7 @@ export type {
 //   import { evaluatePromotion } from "@sports/prediction-engine/src/promotion/index.js"
 // See docs/frontier/MODEL_PROMOTION_GATE_CONTRACT.md.
 
-// Honesty surface ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â product No-Bet codes, Phase 0 placebo, Glass Ledger receipts
+// Honesty surface ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â product No-Bet codes, Phase 0 placebo, Glass Ledger receipts
 // (namespaced Product* to avoid colliding with gse-score NoBetDecision)
 export {
   evaluateProductNoBet,
@@ -1210,7 +1210,7 @@ export {
 } from "./honesty/commit-reveal.js";
 export type { PickCommitment, PickCommitmentBody } from "./honesty/commit-reveal.js";
 
-// Fire authority ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â dual-asOf + cal + LIVE_BOARD + selective composition (pure)
+// Fire authority ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â dual-asOf + cal + LIVE_BOARD + selective composition (pure)
 export {
   evaluateFireAuthority,
   topologyScore,
@@ -1220,7 +1220,7 @@ export {
   type FireRefuseReason,
 } from "./edge-lab/fire-authority.js";
 
-// Multiple-testing honesty ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â BH-FDR + append-only trials registry (Phase-3 gate)
+// Multiple-testing honesty ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â BH-FDR + append-only trials registry (Phase-3 gate)
 export {
   TRIALS_GENESIS_HASH,
   createTrialsRegistry,
@@ -1237,7 +1237,7 @@ export type {
   BhResult,
 } from "./edge-lab/trials-registry.js";
 
-// Unified prefire ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â run BEFORE selective FIRE (cheap topology refuse)
+// Unified prefire ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â run BEFORE selective FIRE (cheap topology refuse)
 export {
   evaluateUnifiedPrefire,
   composePrefireWithSelective,
@@ -1246,7 +1246,7 @@ export {
   type PrefireRefuseReason,
 } from "./edge-lab/unified-prefire.js";
 
-// Fair Skill Brier (Wang et al.): BrS ÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢ (BÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢1)/B so binary ATD and K-way
+// Fair Skill Brier (Wang et al.): BrS ÃƒÆ’Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ (BÃƒÆ’Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢1)/B so binary ATD and K-way
 // yards ladders are comparable. Not Murphy BSS vs grouped climatology.
 export {
   FAIR_SKILL_BRIER_METHOD_TAG,
@@ -1257,7 +1257,7 @@ export {
   meanFairSkillBrier,
 } from "./edge-lab/fair-skill-brier.js";
 
-// Grouped climatology ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â score the props specialist against positionÃƒÆ’Ã¢â‚¬â€week
+// Grouped climatology ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â score the props specialist against positionÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Âweek
 // naive rates, not the pooled dummy. Positive BSS vs grouped is skill;
 // beating pooled while losing to grouped is grouping-loss, not edge.
 export {
@@ -1280,8 +1280,8 @@ export type {
   ClimatologyScorecard,
 } from "./edge-lab/grouped-climatology.js";
 
-// Market consensus q (Bradley-Terry futures + logit blend). q only ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â never
-// re-anchor independent p toward the market (Mania 3rd-place ÃƒÅ½Ã‚Â±=0.90 is a
+// Market consensus q (Bradley-Terry futures + logit blend). q only ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â never
+// re-anchor independent p toward the market (Mania 3rd-place ÃƒÆ’Ã…Â½Ãƒâ€šÃ‚Â±=0.90 is a
 // Brier win, not an edge).
 export {
   bradleyTerryPair,
@@ -1291,9 +1291,9 @@ export {
 export type { LabeledQ, ConsensusQ, ReanchorResidual } from "./edge-lab/market-consensus-q.js";
 
 // Hierarchical-Bayes props specialist (one-level Gamma-Poisson) plus nested
-// player ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ position ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ league EB with empirical 1/n observation-noise
-// calibration, market-priced e = p ÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢ q (never ÃƒÅ½Ã‚Âº = |2pÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢1|), and the
-// observation-process layer: mean-dependent ÃƒÂÃ¢â‚¬Â (ÃƒÅ½Ã‚Â¼), shrunken QL, idcap,
+// player ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ position ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ league EB with empirical 1/n observation-noise
+// calibration, market-priced e = p ÃƒÆ’Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ q (never ÃƒÆ’Ã…Â½Ãƒâ€šÃ‚Âº = |2pÃƒÆ’Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢1|), and the
+// observation-process layer: mean-dependent ÃƒÆ’Ã‚ÂÃƒÂ¢Ã¢â€šÂ¬Ã‚Â (ÃƒÆ’Ã…Â½Ãƒâ€šÃ‚Â¼), shrunken QL, idcap,
 // recency discount, regime-shift band, expected surplus.
 export {
   fitGroupPrior,
@@ -1345,9 +1345,9 @@ export {
   fitMeanVarianceFromGameLogs,
   phiForMean,
   shrinkQuasiLikelihood,
-  // scaleObservation is NOT re-exported here ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â props-hb-nested.js already
+  // scaleObservation is NOT re-exported here ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â props-hb-nested.js already
   // exports a function of that name with identical semantics (divide
-  // total/games by clamped ÃƒÂÃ¢â‚¬Â ). Both modules keep their own local copy for
+  // total/games by clamped ÃƒÆ’Ã‚ÂÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ). Both modules keep their own local copy for
   // internal use; the barrel surfaces exactly one to avoid a duplicate-export
   // compile error.
   posteriorRateObs,
@@ -1377,7 +1377,7 @@ export {
 } from "./edge-lab/props-hb-catch.js";
 export type { CatchSample, BetaPrior, BetaPosterior } from "./edge-lab/props-hb-catch.js";
 
-// Kaunitz X1 math ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â named-book Shin q ÃƒÂ¢Ã¢â‚¬Â°Ã‚Â¥ ÃƒÂÃ¢â‚¬Å¾ below the cross-book median.
+// Kaunitz X1 math ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â named-book Shin q ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â°Ãƒâ€šÃ‚Â¥ ÃƒÆ’Ã‚ÂÃƒÂ¢Ã¢â€šÂ¬Ã…Â¾ below the cross-book median.
 // Log-only; priced:false. Not wired into process-sport (ox-alpha owns q ingest).
 export {
   KAUNITZ_METHOD_TAG,
@@ -1424,7 +1424,7 @@ export {
 } from "./edge-lab/props-hb-atd.js";
 export type { TouchTdSample } from "./edge-lab/props-hb-atd.js";
 
-// X4 math ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â Kalshi two-way vs Shin book. Log-only; priced:false.
+// X4 math ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â Kalshi two-way vs Shin book. Log-only; priced:false.
 export {
   KALSHI_BOOK_METHOD_TAG,
   DEFAULT_KALSHI_BOOK_TAU,
@@ -1468,7 +1468,7 @@ export type {
   AirYacPosteriors,
 } from "./edge-lab/props-hb-air-yac.js";
 
-// Posted-price juice floor. e = p ÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢ q is not +EV at ÃƒÂ¢Ã‹â€ Ã¢â‚¬â„¢110.
+// Posted-price juice floor. e = p ÃƒÆ’Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ q is not +EV at ÃƒÆ’Ã‚Â¢Ãƒâ€¹Ã¢â‚¬Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢110.
 export {
   JUICE_FLOOR_METHOD_TAG,
   BREAK_EVEN_MINUS_110,
@@ -1535,7 +1535,7 @@ export type {
   ExpectedMeasurement,
 } from "./edge-lab/ngs-measurement-loop.js";
 
-// Catch rate by aDOT ÃƒÆ’Ã¢â‚¬â€ NGS separation. Independent p. Not a new Odds market.
+// Catch rate by aDOT ÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â NGS separation. Independent p. Not a new Odds market.
 export {
   ADOT_SEP_METHOD_TAG,
   TIGHT_SEP_MAX,
@@ -1546,7 +1546,7 @@ export {
 } from "./edge-lab/props-hb-adot-sep.js";
 export type { SepBucket, AdotSepCell, AdotSepCatchSample, AdotSepFit } from "./edge-lab/props-hb-adot-sep.js";
 
-// Covariate bus: leak-safe NGS weekly-mean ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ next-game input features (p path).
+// Covariate bus: leak-safe NGS weekly-mean ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ next-game input features (p path).
 // Pure, no I/O. Does NOT surface vendor expected/yoe y-axis metrics.
 export {
   COVARIATE_BUS_TAG,
@@ -1564,20 +1564,20 @@ export type {
   StatType,
 } from "./edge-lab/covariate-bus.js";
 
-// SEP bind: couples the covariate bus (sepForKickoff) to the aDOTÃƒÆ’Ã¢â‚¬â€SEP catch
-// sample. Fail-closed on null ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â never invents 3.0 yards. Honest weekly-mean
+// SEP bind: couples the covariate bus (sepForKickoff) to the aDOTÃƒÆ’Ã†â€™ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬ÂSEP catch
+// sample. Fail-closed on null ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â never invents 3.0 yards. Honest weekly-mean
 // grain forwarded verbatim. priced:false.
 export { SEP_BIND_METHOD_TAG, bindSepSamples, boundSepSamples } from "./edge-lab/props-hb-adot-sep-bind.js";
 export type { SepBindRequest, SepBindResult } from "./edge-lab/props-hb-adot-sep-bind.js";
 
 // YAC bind: couples the covariate bus (avgYac) to the air+YAC model.
-// Fail-closed on null ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â never invents YAC. Honest weekly-mean grain forwarded
+// Fail-closed on null ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â never invents YAC. Honest weekly-mean grain forwarded
 // verbatim. priced:false.
 export { YAC_BIND_METHOD_TAG, bindYacSamples, boundYacSamples } from "./edge-lab/props-hb-air-yac-bind.js";
 export type { YacBindRequest, YacBindResult, BoundAirYacSample } from "./edge-lab/props-hb-air-yac-bind.js";
 
 // CPOE completion bind: couples the covariate bus (avgTimeToThrow + avgIntendedAirYards)
-// + GSE-CPOE to the completions | attempts model. Fail-closed ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â drops samples
+// + GSE-CPOE to the completions | attempts model. Fail-closed ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â drops samples
 // when any covariate is missing. Never exposes vendor expected/y-axis metrics.
 // priced:false.
 export {
@@ -1593,7 +1593,7 @@ export type {
 } from "./edge-lab/props-hb-cpoe-comp-bind.js";
 
 // Rush-yards bind: couples the covariate bus (pctAttemptsGte8Defenders + avgTimeToLos)
-// to the rushing-yards | attempts model. Fail-closed on null ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â never invents stacking.
+// to the rushing-yards | attempts model. Fail-closed on null ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â never invents stacking.
 // Honest weekly-mean grain forwarded verbatim. priced:false.
 export {
   RUSH_YARDS_BIND_METHOD_TAG,
@@ -1607,7 +1607,7 @@ export type {
 } from "./edge-lab/props-hb-rush-yards-bind.js";
 
 // INT bind: couples the covariate bus (avgTimeToThrow + aggressiveness) to the
-// interceptions | attempts model. Fail-closed on null ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â never invents risk.
+// interceptions | attempts model. Fail-closed on null ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â never invents risk.
 // Honest weekly-mean grain forwarded verbatim. priced:false.
 export {
   INT_BIND_METHOD_TAG,
@@ -1633,7 +1633,7 @@ export {
 } from "./edge-lab/props-hb-snap-exposure.js";
 export type { SnapSample, SnapShare, SnapDenied } from "./edge-lab/props-hb-snap-exposure.js";
 
-// Intelligence cockpit ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ log-only player features. priced:false until hold-out.
+// Intelligence cockpit ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ log-only player features. priced:false until hold-out.
 export { RESEARCH_LOG_METHOD_TAG, playerResearchLog } from "./edge-lab/player-research-log.js";
 export type { ResearchFeatureInput, ResearchLog, ResearchDenied } from "./edge-lab/player-research-log.js";
 
@@ -1675,7 +1675,7 @@ export {
 } from "./edge-lab/props-hb-comp.js";
 export type { CompSample } from "./edge-lab/props-hb-comp.js";
 
-// INTs | attempts. Rare counts on the same exposure. Poisson fallback when no ÃƒÂÃ¢â‚¬Â .
+// INTs | attempts. Rare counts on the same exposure. Poisson fallback when no ÃƒÆ’Ã‚ÂÃƒÂ¢Ã¢â€šÂ¬Ã‚Â .
 export {
   INT_HB_METHOD_TAG,
   fitIntPerAttemptPrior,
@@ -1712,9 +1712,9 @@ export {
 } from "./edge-lab/props-hb-sacks.js";
 export type { SackSample } from "./edge-lab/props-hb-sacks.js";
 
-// Portfolio Kelly layer (Session 2) ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â size for survival. R&D / operator sizing
+// Portfolio Kelly layer (Session 2) ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â size for survival. R&D / operator sizing
 // surfaces only; never report stakes as CLV. CLV deflator self-disarms until
-// ~50 settled samples. Do not invert ÃƒÅ½Ã‚Â£ (no Markowitz).
+// ~50 settled samples. Do not invert ÃƒÆ’Ã…Â½Ãƒâ€šÃ‚Â£ (no Markowitz).
 export {
   fractionalKellyStake,
   jamesSteinShrink,
@@ -1729,7 +1729,7 @@ export type {
   PortfolioKellyResult,
 } from "./edge-lab/kelly.js";
 
-// CIR ÃƒÂ¢Ã¢â‚¬Â Ã¢â‚¬â„¢ Kelly bridge: fit calibrator on hold-out train, size on calibrated p.
+// CIR ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â ÃƒÂ¢Ã¢â€šÂ¬Ã¢â€žÂ¢ Kelly bridge: fit calibrator on hold-out train, size on calibrated p.
 export {
   applyCalibrator,
   sizeAfterCalibration,
@@ -1738,7 +1738,7 @@ export {
   type SizeAfterCalibrationResult,
 } from "./calibration-kelly-bridge.js";
 
-// R&D ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â online Brier OGD convex ensemble (binary probs). Shadow only; no live gate flips.
+// R&D ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â online Brier OGD convex ensemble (binary probs). Shadow only; no live gate flips.
 export {
   runBrierOgdEnsemble,
   equalWeightBlend,
@@ -1753,7 +1753,7 @@ export type {
   BrierOgdReport,
 } from "./brier-ogd-ensemble.js";
 
-// R&D ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â RES-aware Beta + OCO (online Beta log-loss, Hedge adaptive-ÃƒÅ½Ã‚Â´, full pipeline). Shadow only.
+// R&D ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â RES-aware Beta + OCO (online Beta log-loss, Hedge adaptive-ÃƒÆ’Ã…Â½Ãƒâ€šÃ‚Â´, full pipeline). Shadow only.
 export {
   applyOnlineBeta,
   runOnlineBetaRecalibration,
@@ -1788,7 +1788,7 @@ export type {
   OcoPipelineReport,
 } from "./oco-pipeline.js";
 
-// R&D ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â sliding-window Online Beta OGD + Hedge adaptive-ÃƒÅ½Ã‚Â´ analysis (shadow).
+// R&D ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â sliding-window Online Beta OGD + Hedge adaptive-ÃƒÆ’Ã…Â½Ãƒâ€šÃ‚Â´ analysis (shadow).
 export {
   runOnlineBetaSlidingWindow,
   analyzeSlidingWindowOgd,
@@ -1800,11 +1800,11 @@ export type {
 export { analyzeAdaptiveDeltaHedge } from "./adaptive-delta-analysis.js";
 export type { HedgeAdaptiveDeltaAnalysis } from "./adaptive-delta-analysis.js";
 
-// ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ R&D shadow modules (2026-08-10 research spec) ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬ÃƒÂ¢Ã¢â‚¬ÂÃ¢â€šÂ¬
+// ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ R&D shadow modules (2026-08-10 research spec) ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã‚ÂÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬
 // Pure, deterministic, seeded. None reads a gate, env var, DB or network, and
-// none is wired into live scoring ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â they exist to be measured in shadow first.
+// none is wired into live scoring ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â they exist to be measured in shadow first.
 
-// Sequential Monte Carlo latent team strength ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â a direct Murphy-RES
+// Sequential Monte Carlo latent team strength ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â a direct Murphy-RES
 // (resolution/discrimination) lever: time-evolving independent probabilities
 // with genuine posterior uncertainty instead of point estimates.
 export {
@@ -1826,7 +1826,7 @@ export type {
 } from "./team-strength-filter.js";
 
 // Information-theoretic selective-publication gate, in bits. The closed-form
-// counterpart of the spec's VIB bit-threshold gate ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â no neural network needed.
+// counterpart of the spec's VIB bit-threshold gate ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â no neural network needed.
 // NOTE the realised-vs-prior distinction: the prior-only measure rewards
 // confidence regardless of accuracy, so only the realised form is anti-gaming.
 export {
@@ -1871,7 +1871,7 @@ export type {
 // Anytime-valid forecast-SKILL test vs the market (likelihood-ratio E-process).
 // Complements anytime-ledger.ts, which tests betting PROFITABILITY: this one
 // needs no odds/stake model and speaks directly to calibration + resolution.
-// High evidence here is skill vs the market's probabilities only ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â NOT proof of
+// High evidence here is skill vs the market's probabilities only ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â NOT proof of
 // profitability and NOT a licence to claim PROVEN.
 export {
   forecastSkillEProcess,
@@ -1891,7 +1891,7 @@ export type {
   ForecastSkillFoldState,
 } from "./forecast-skill-eprocess.js";
 
-// Shadow ensemble orchestrator ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â see the module header for the full "why". Not
+// Shadow ensemble orchestrator ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â see the module header for the full "why". Not
 // wired into any live/publishing path; SHADOW ONLY.
 export {
   LiveOrchestrator,
@@ -1903,7 +1903,7 @@ export type {
   OrchestratorSettlementResult,
 } from "./pipeline/live-orchestrator.js";
 
-// BAEE ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â shadow-mode-only ensemble weight learner. Not wired for blending.
+// BAEE ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â shadow-mode-only ensemble weight learner. Not wired for blending.
 export { BAEEEnsemble } from "./ensemble/baee-ensemble.js";
 
 // Stable team-name -> filter-index mapping. Append-only ON PURPOSE: reusing an
@@ -1920,12 +1920,12 @@ export {
 } from "./team-index-registry.js";
 export type { TeamIndexRegistry, AssignTeamIndexResult } from "./team-index-registry.js";
 
-// Consecutive-day Brier health check. Pure/DB-agnostic ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â see
+// Consecutive-day Brier health check. Pure/DB-agnostic ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â see
 // apps/web/lib/ops/calibration-regression-snapshot.ts for the DB-backed series builder.
 export { checkCalibrationHealth } from "./calibration-monitor.js";
 export type { CalibrationHealthResult } from "./calibration-monitor.js";
 
-// Calibration-snapshot regression comparison. Pure/DB-agnostic ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â reuses
+// Calibration-snapshot regression comparison. Pure/DB-agnostic ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â reuses
 // brierDecomposition rather than a second Brier/RES calculator.
 export {
   buildCalibrationSnapshot,
@@ -1937,12 +1937,12 @@ export type {
   RegressionVerdict,
 } from "./regression-detector.js";
 
-// De-vig oracle ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â seven-method reference (penaltyblog MIT). Fair probabilities
+// De-vig oracle ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â seven-method reference (penaltyblog MIT). Fair probabilities
 // feed the pick pipeline as calibration *inputs* only; they never bypass scoring.
 export { devig, bisectRoot } from "./devig/oracle.js";
 export type { DevigMethod, DevigResult } from "./devig/oracle.js";
 
-// Parlay MRI v1 ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â same-match bivariate Poisson correlation. priced:false until
+// Parlay MRI v1 ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â same-match bivariate Poisson correlation. priced:false until
 // correlated survivability beats naive on a walk-forward against book SGP quotes.
 export {
   PARLAY_MRI_PRICED,
@@ -1955,7 +1955,7 @@ export {
 } from "./parlay/correlationAdjuster.js";
 export type { SameMatchLeg, ParlayEvaluation } from "./parlay/correlationAdjuster.js";
 
-// Per-sport NB2 dispersion estimation ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â OFFLINE/research evidence only.
+// Per-sport NB2 dispersion estimation ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬ÃƒÂ¢Ã¢â€šÂ¬Ã‚Â OFFLINE/research evidence only.
 // Deliberately not wired into live scoring: changing a constant a priced path
 // uses is MODEL_VERSION-affecting and is the founder's call. Consume from a
 // runner or report. Returns a VERDICT first ("poisson" for NHL-like data) so a
@@ -2067,8 +2067,8 @@ export { MODEL_VERSION } from "./constants.js";
 
 
 // ---------------------------------------------------------------------------
-// Live-path promotion Ã¢â‚¬â€ reasoning surface + real computation adapters
-// (waves 4Ã¢â‚¬â€œ5). Fail-closed. No imputation. Engine must reason, not average.
+// Live-path promotion ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â reasoning surface + real computation adapters
+// (waves 4ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“5). Fail-closed. No imputation. Engine must reason, not average.
 // ---------------------------------------------------------------------------
 export {
   REASONING_SURFACE,
@@ -2167,7 +2167,7 @@ export {
   type DispersionBayesianAdapterName,
 } from "./engine/dispersion-bayesian-adapters.js";
 
-// universal-adapter / composition use node:crypto Ã¢â‚¬â€ not re-exported from the
+// universal-adapter / composition use node:crypto ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â not re-exported from the
 // package root so client bundles stay free of node builtins. Deep-import via
 // "@sports/prediction-engine/src/engine/universal-adapter.js" in server code.
 
@@ -2192,7 +2192,7 @@ export {
   computeOnOffEpa,
 } from "./nfl/ngs-adjacent-metrics.js";
 
-// V5Ã¢â‚¬â€œV8 + W3Ã¢â‚¬â€œW6 modules
+// V5ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“V8 + W3ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Å“W6 modules
 export {
   validateSubmission,
   writeSubmissionCsv,
@@ -2242,7 +2242,7 @@ export {
   baselineWpModel,
 } from "./backtest/wp-event-replay.js";
 
-// Turnover luck (LUCK family) Ã¢â‚¬â€ live-path promotion
+// Turnover luck (LUCK family) ÃƒÂ¢Ã¢â€šÂ¬Ã¢â‚¬Â live-path promotion
 export { computeTurnoverLuck, shrinkToLeagueMean } from "./signals/turnover-luck.js";
 export type { TurnoverLuckInput, TurnoverLuckResult } from "./signals/turnover-luck.js";
 
@@ -2284,3 +2284,9 @@ export type {
   FixtureGame,
   FeatureBuilder,
 } from "./eval/leakage-antipatterns.js";
+
+// edge-lab/devig proportional + implied (kelly already exported above)
+export {
+  proportionalDevig,
+  impliedFromDecimal,
+} from "./edge-lab/devig.js";
