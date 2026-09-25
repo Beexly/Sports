@@ -219,3 +219,5 @@ Wave 5 full prediction-engine suite: 5951/5951 across 825 test files. coverage.t
 | Continual-learning bridge (online metrics + EWC + AdaER) | `packages/ingestion-pipeline/src/continual-learning-bridge.ts` | 10/10 | LIVE |
 
 | Monitoring bridge (ECDD + drift ensemble + Hawkes threat) | `packages/ingestion-pipeline/src/monitoring-bridge.ts` | 8/8 | LIVE |
+
+| In-play bridge (antipersistent + Markov WP + mixed-tier) | `packages/ingestion-pipeline/src/inplay-bridge.ts` | 10/10 | LIVE |
