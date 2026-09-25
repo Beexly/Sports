@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Week 3 DFS Boards — Sun–Mon Special</title>
+<style>
+  * { box-sizing: border-box; }
+  body { font-family: -apple-system, system-ui, "Segoe UI", Roboto, sans-serif; margin: 0; background: #0d1117; color: #e6edf3; padding: 12px; }
+  h1 { font-size: 1.35rem; margin: 4px 0 2px; }
+  .sub { color: #8b949e; font-size: .85rem; margin-bottom: 14px; }
+  .pos { margin-bottom: 18px; }
+  .pos h2 { font-size: 1.05rem; margin: 0 0 8px; padding-bottom: 4px; border-bottom: 1px solid #30363d; }
+  .tier { margin-bottom: 10px; border: 1px solid #30363d; border-radius: 10px; overflow: hidden; }
+  .tier-head { padding: 7px 10px; font-weight: 700; font-size: .85rem; letter-spacing: .02em; }
+  .elite .tier-head { background: #3b2f00; color: #ffd866; }
+  .strong .tier-head { background: #0c2d1a; color: #7ee2a8; }
+  .mid .tier-head { background: #0a2540; color: #79c0ff; }
+  .value .tier-head { background: #2d1a4e; color: #d2a8ff; }
+  .punt .tier-head { background: #2b2b2b; color: #c9c9c9; }
+  .cards { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px; }
+  .card { background: #161b22; border: 1px solid #30363d; border-radius: 8px; padding: 7px 9px; min-width: 0; flex: 1 1 44%; }
+  .card .nm { font-weight: 600; font-size: .85rem; }
+  .card .meta { color: #8b949e; font-size: .75rem; margin-top: 2px; }
+  .card .why { color: #c9d1d9; font-size: .75rem; margin-top: 3px; }
+  .sal { color: #ffd866; font-weight: 700; }
+  .flag { color: #ffb86b; }
+  .stack { border: 1px solid #30363d; border-radius: 10px; padding: 10px; margin-bottom: 10px; background: #11161d; }
+  .stack h3 { margin: 0 0 4px; font-size: .92rem; }
+  .stack .combo { font-size: .85rem; margin: 3px 0; }
+  .stack .note { color: #8b949e; font-size: .78rem; }
+  .foot { color: #8b949e; font-size: .75rem; margin-top: 16px; border-top: 1px solid #30363d; padding-top: 8px; }
+</style>
+</head>
+<body>
+<h1>Week 3 DFS Boards</h1>
+<div class="sub">DraftKings $15K Sun–Mon Special · 15 games Sun 9/27 – Mon 9/28 · Cap $50K · Tiers = role + matchup + salary. Full write-up: <i>week3-deep-dive.md</i></div>
+
+<div class="pos"><h2>QB</h2>
+<div class="tier elite"><div class="tier-head">ELITE — slate-breaking ceiling</div><div class="cards">
+<div class="card"><div class="nm">Josh Allen <span class="sal">$8,000</span></div><div class="meta">BUF vs LAC · 9 TD, 0 TO · AFC OPOY Wk2</div><div class="why">Rushing floor + ceiling; only knock is 15–17 mph wind.</div></div>
+<div class="card"><div class="nm">Lamar Jackson <span class="sal">$7,500</span></div><div class="meta">BAL vs DAL (Rio) · 52.5 total</div><div class="why">Highest-total game, over-lean crew. Stack with Andrews.</div></div>
+<div class="card"><div class="nm">Dak Prescott <span class="sal">$6,700</span></div><div class="meta">DAL vs BAL (Rio) · 52.5 total</div><div class="why">Cheapest path into the week's best game environment.</div></div>
+</div></div>
+<div class="tier strong"><div class="tier-head">STRONG</div><div class="cards">
+<div class="card"><div class="nm">Patrick Mahomes <span class="sal">$6,200</span></div><div class="meta">KC @ MIA · clean weather</div><div class="why">Discount on elite talent in a clean spot.</div></div>
+<div class="card"><div class="nm">Jared Goff <span class="sal">$6,300</span></div><div class="meta">DET vs NYJ · dome</div><div class="why">Dome + Gibbs/Amon-Ra correlation.</div></div>
+<div class="card"><div class="nm">Joe Burrow <span class="sal">$6,600</span></div><div class="meta">CIN @ PIT · over lean +1.3</div><div class="why">Over-lean crew; Chase/Higgins bring ceiling.</div></div>
+<div class="card"><div class="nm">Drake Maye <span class="sal">$6,100</span></div><div class="meta">NE @ JAX · 5.8% proxy own.</div><div class="why">"Slate-breaker" thesis at low projected share.</div></div>
+</div></div>
+<div class="tier mid"><div class="tier-head">MID</div><div class="cards">
+<div class="card"><div class="nm">Justin Herbert <span class="sal">$5,800</span></div><div class="meta">LAC @ BUF · wind</div><div class="why">Wind dents deep balls; high-flag crew pads passing volume.</div></div>
+<div class="card"><div class="nm">Matthew Stafford <span class="sal">$5,900</span></div><div class="meta">LAR @ DEN · early wind only</div><div class="why">No Nacua → Adams funnel; wind fades after Q1.</div></div>
+<div class="card"><div class="nm">Tyler Shough <span class="sal">$5,400</span></div><div class="meta">NO vs LV · dome · NFL yardage leader (662)</div><div class="why">Dome + volume at a mid price.</div></div>
+<div class="card"><div class="nm">Bryce Young <span class="sal">$5,600</span></div><div class="meta">CAR @ CLE · 6 pass TD (tied lead)</div><div class="why">Playing the best ball of his career; Hubbard stackable.</div></div>
+<div class="card"><div class="nm">C.J. Stroud <span class="sal">$5,500</span></div><div class="meta">HOU @ IND</div><div class="why">Solid floor, needs a Collins spike for ceiling.</div></div>
+<div class="card"><div class="nm">Bo Nix <span class="sal">$5,500</span></div><div class="meta">DEN vs LAR · SNF</div><div class="why">Home SNF; road-lean crew is ATS, not scoring.</div></div>
+<div class="card"><div class="nm">Trevor Lawrence <span class="sal">$5,700</span></div><div class="meta">JAX vs NE · fav-lean crew</div><div class="why">Favorite at home; Tuten/Washington cheap pairs.</div></div>
+<div class="card"><div class="nm">Baker Mayfield <span class="sal">$5,300</span></div><div class="meta">TB vs MIN · calm</div><div class="why">Bucky/Egbuka/Godwin give three live targets.</div></div>
+<div class="card"><div class="nm">Sam Darnold <span class="sal">$5,400</span> <span class="flag">[Q]</span></div><div class="meta">SEA @ WAS · trending to start · rain watch</div><div class="why">Capped at Mid until Saturday weather recheck.</div></div>
+</div></div>
+<div class="tier value"><div class="tier-head">VALUE</div><div class="cards">
+<div class="card"><div class="nm">Marcus Mariota <span class="sal">$4,500</span></div><div class="meta">WAS vs SEA · starting · rain watch</div><div class="why">Live arm in a dome-less rain-watch game — check Saturday.</div></div>
+<div class="card"><div class="nm">Daniel Jones <span class="sal">$5,000</span></div><div class="meta">IND vs HOU · dome</div><div class="why">Dome floor with JT/Warren/Downs around him.</div></div>
+<div class="card"><div class="nm">Drew Lock <span class="sal">$5,200</span></div><div class="meta">SEA · only if Darnold sits</div><div class="why">422/4/0 across two starts — proven fill-in.</div></div>
+</div></div>
+<div class="tier punt"><div class="tier-head">PUNT</div><div class="cards">
+<div class="card"><div class="nm">Case Keenum <span class="sal">$4,000</span></div><div class="meta">CHI vs PHI (MNF) · expected starter</div><div class="why">No book lines; projections split 200 vs 241 yds. Pure leverage dart — pair with Raymond.</div></div>
+<div class="card"><div class="nm">Jameis Winston <span class="sal">$4,000</span></div><div class="meta">NYG vs TEN · starting · rain+wind</div><div class="why">Weather-capped chaos punt only.</div></div>
+</div></div>
+</div>
+
+<div class="pos"><h2>RB</h2>
+<div class="tier elite"><div class="tier-head">ELITE</div><div class="cards">
+<div class="card"><div class="nm">Jahmyr Gibbs <span class="sal">$8,800</span></div><div class="meta">DET vs NYJ · dome · 30.5 DK PPG</div><div class="why">93.5% of DET RB carries Wk1; anytime TD steamed to -332.</div></div>
+<div class="card"><div class="nm">Derrick Henry <span class="sal">$7,700</span></div><div class="meta">BAL vs DAL (Rio) · 52.5 total</div><div class="why">Best game environment; TD equity in a shootout.</div></div>
+<div class="card"><div class="nm">Christian McCaffrey <span class="sal">$8,300</span></div><div class="meta">SF vs ARI · ideal weather</div><div class="why">Every-down role in a clean spot.</div></div>
+</div></div>
+<div class="tier strong"><div class="tier-head">STRONG</div><div class="cards">
+<div class="card"><div class="nm">Jonathan Taylor <span class="sal">$7,600</span></div><div class="meta">IND vs HOU · dome</div><div class="why">Dome workhorse.</div></div>
+<div class="card"><div class="nm">Kenneth Walker III <span class="sal">$7,400</span></div><div class="meta">KC @ MIA · clean</div><div class="why">Clean weather, lead role.</div></div>
+<div class="card"><div class="nm">Ashton Jeanty <span class="sal">$7,100</span></div><div class="meta">LV @ NO · dome</div><div class="why">Dome; false-start crew is the only haircut.</div></div>
+<div class="card"><div class="nm">Saquon Barkley <span class="sal">$7,000</span></div><div class="meta">PHI @ CHI (MNF) · under-lean crew</div><div class="why">Game script risk if PHI sits on a lead — MNF leverage.</div></div>
+<div class="card"><div class="nm">James Cook <span class="sal">$6,900</span></div><div class="meta">BUF vs LAC · wind</div><div class="why">Wind doesn't stop the run game.</div></div>
+<div class="card"><div class="nm">Omarion Hampton <span class="sal">$6,800</span></div><div class="meta">LAC @ BUF · wind · DK pivot buzz</div><div class="why">Pivot buzz + likely chasing script = receiving work.</div></div>
+</div></div>
+<div class="tier mid"><div class="tier-head">MID</div><div class="cards">
+<div class="card"><div class="nm">Chuba Hubbard <span class="sal">$6,100</span></div><div class="meta">CAR @ CLE · Brooks IR → workhorse</div><div class="why">22 carries, 4.6 YPC, goal-line + catches. Line steamed 64.5→71.5 — strong, not sneaky.</div></div>
+<div class="card"><div class="nm">De'Von Achane <span class="sal">$6,500</span></div><div class="meta">MIA vs KC · clean</div><div class="why">Home-run threat in a clean game.</div></div>
+<div class="card"><div class="nm">Breece Hall <span class="sal">$6,400</span></div><div class="meta">NYJ @ DET · dome</div><div class="why">Dome receiving-back role.</div></div>
+<div class="card"><div class="nm">Bucky Irving <span class="sal">$6,300</span></div><div class="meta">TB vs MIN · calm</div><div class="why">Lead back with pass-game juice.</div></div>
+<div class="card"><div class="nm">D'Andre Swift <span class="sal">$6,200</span></div><div class="meta">CHI vs PHI (MNF) · Keenum-guy candidate</div><div class="why">5/5/54 Wk2 (team-high receiving yds) — the checkdown archetype.</div></div>
+<div class="card"><div class="nm">Javonte Williams <span class="sal">$6,700</span></div><div class="meta">DAL vs BAL (Rio) · 52.5 total</div><div class="why">Home side of the shootout; over-lean crew.</div></div>
+<div class="card"><div class="nm">Chase Brown <span class="sal">$6,600</span></div><div class="meta">CIN @ PIT · 6.8% proxy own.</div><div class="why">Low-owned bell-cow thesis.</div></div>
+<div class="card"><div class="nm">Kyren Williams <span class="sal">$6,100</span></div><div class="meta">LAR @ DEN · SNF</div><div class="why">Lead role; early wind only.</div></div>
+<div class="card"><div class="nm">Cam Skattebo <span class="sal">$6,200</span></div><div class="meta">NYG vs TEN · rain+wind</div><div class="why">Weather downgrade — runs survive it, catches don't.</div></div>
+</div></div>
+<div class="tier value"><div class="tier-head">VALUE</div><div class="cards">
+<div class="card"><div class="nm">Jaylen Warren <span class="sal">$5,700</span> <span class="flag">[Q]</span></div><div class="meta">PIT vs CIN · workhorse if Dowdle sits</div><div class="why">Holding crew vs PIT OL is the mild knock.</div></div>
+<div class="card"><div class="nm">Tony Pollard <span class="sal">$5,400</span> <span class="flag">[Q]</span></div><div class="meta">TEN @ NYG · full Fri · NYG allows 5.0 YPC</div><div class="why">Rain game — but runs survive weather, and the matchup is soft.</div></div>
+<div class="card"><div class="nm">Aaron Jones <span class="sal">$5,900</span></div><div class="meta">MIN @ TB · cleared, lead back</div><div class="why">Off the report; "most of the work" per Rotoworld.</div></div>
+<div class="card"><div class="nm">Travis Etienne <span class="sal">$5,400</span></div><div class="meta">NO vs LV · cleared · dome</div><div class="why">Full-go Friday; slow start keeps price down.</div></div>
+<div class="card"><div class="nm">J.K. Dobbins <span class="sal">$5,400</span> <span class="flag">[Q]</span></div><div class="meta">DEN vs LAR · full Thu · trending to play</div><div class="why">Lead back SNF if active — confirm Sunday.</div></div>
+<div class="card"><div class="nm">Quinshon Judkins <span class="sal">$5,500</span></div><div class="meta">CLE vs CAR</div><div class="why">Home favorite role at a fair price.</div></div>
+<div class="card"><div class="nm">Bhayshul Tuten <span class="sal">$5,600</span></div><div class="meta">JAX vs NE · fav-lean crew</div><div class="why">Favorite's back at home.</div></div>
+</div></div>
+<div class="tier punt"><div class="tier-head">PUNT</div><div class="cards">
+<div class="card"><div class="nm">Austin Ekeler <span class="sal">n/a</span></div><div class="meta">Unsigned FA · worked out for CAR</div><div class="why">Only if signed — would threaten Hubbard's receiving work. Monitor.</div></div>
+</div></div>
+</div>
+
+<div class="pos"><h2>WR</h2>
+<div class="tier elite"><div class="tier-head">ELITE</div><div class="cards">
+<div class="card"><div class="nm">Jaxon Smith-Njigba <span class="sal">$8,600</span></div><div class="meta">SEA @ WAS · 277 yds leads NFL · 45.2% share</div><div class="why">58.8% first-read (2nd in NFL); TD steamed +110→-102. Rain watch = one-off, not a stack.</div></div>
+<div class="card"><div class="nm">Ja'Marr Chase <span class="sal">$8,100</span></div><div class="meta">CIN @ PIT · over lean +1.3</div><div class="why">Over-lean crew; Burrow stack ceiling.</div></div>
+<div class="card"><div class="nm">Amon-Ra St. Brown <span class="sal">$7,900</span></div><div class="meta">DET vs NYJ · dome</div><div class="why">Dome slot machine with Goff.</div></div>
+<div class="card"><div class="nm">CeeDee Lamb <span class="sal">$7,800</span></div><div class="meta">DAL vs BAL (Rio) · 52.5 total</div><div class="why">Best game environment on the slate.</div></div>
+</div></div>
+<div class="tier strong"><div class="tier-head">STRONG</div><div class="cards">
+<div class="card"><div class="nm">Justin Jefferson <span class="sal">$7,500</span></div><div class="meta">MIN @ TB · calm</div><div class="why">Target hog in a clean spot.</div></div>
+<div class="card"><div class="nm">Chris Olave <span class="sal">$7,200</span></div><div class="meta">NO vs LV · dome · Shough leads NFL in yards</div><div class="why">Dome + volume QB.</div></div>
+<div class="card"><div class="nm">DeVonta Smith <span class="sal">$7,100</span></div><div class="meta">PHI @ CHI (MNF)</div><div class="why">MNF correlation with Hurts.</div></div>
+<div class="card"><div class="nm">Rashee Rice <span class="sal">$6,400</span></div><div class="meta">KC @ MIA · clean</div><div class="why">Mahomes' top target at a discount.</div></div>
+<div class="card"><div class="nm">Garrett Wilson <span class="sal">$6,300</span></div><div class="meta">NYJ @ DET · dome · DK pivot</div><div class="why">Pivot buzz in a dome.</div></div>
+<div class="card"><div class="nm">Davante Adams <span class="sal">$6,200</span></div><div class="meta">LAR @ DEN · no Nacua → funnel</div><div class="why">8-195-2 last game; target funnel without Nacua.</div></div>
+<div class="card"><div class="nm">Tee Higgins <span class="sal">$6,100</span></div><div class="meta">CIN @ PIT · over lean</div><div class="why">Burrow stack secondary.</div></div>
+<div class="card"><div class="nm">Tetairoa McMillan <span class="sal">$6,000</span></div><div class="meta">CAR @ CLE</div><div class="why">Young's downfield threat; 6-TD QB.</div></div>
+<div class="card"><div class="nm">Emeka Egbuka <span class="sal">$6,200</span></div><div class="meta">TB vs MIN · calm</div><div class="why">Mayfield's trusted rookie.</div></div>
+<div class="card"><div class="nm">Ladd McConkey <span class="sal">$5,900</span></div><div class="meta">LAC @ BUF · wind · DK pivot</div><div class="why">Short-area game survives wind.</div></div>
+</div></div>
+<div class="tier mid"><div class="tier-head">MID</div><div class="cards">
+<div class="card"><div class="nm">Rashod Bateman <span class="sal">$4,700</span></div><div class="meta">BAL vs DAL (Rio) · Flowers likely out → WR1</div><div class="why">7-88-1 as WR1 last week; 52.5 total.</div></div>
+<div class="card"><div class="nm">George Pickens <span class="sal">$6,600</span></div><div class="meta">DAL vs BAL (Rio)</div><div class="why">Shootout secondary.</div></div>
+<div class="card"><div class="nm">Josh Downs <span class="sal">$5,700</span></div><div class="meta">IND vs HOU · dome · Pierce IR</div><div class="why">Target bump with Pierce out.</div></div>
+<div class="card"><div class="nm">Malik Nabers <span class="sal">$6,500</span> <span class="flag">[Q]</span></div><div class="meta">NYG vs TEN · full Thu · Winston · rain+wind</div><div class="why">Talent says yes; weather + Winston say wait for Saturday.</div></div>
+<div class="card"><div class="nm">Jaylen Waddle <span class="sal">$6,700</span></div><div class="meta">DEN vs LAR · SNF</div><div class="why">Nix's deep threat; early wind only.</div></div>
+<div class="card"><div class="nm">Khalil Shakir <span class="sal">$4,800</span></div><div class="meta">BUF vs LAC · wind</div><div class="why">Allen's slot — wind-proof role.</div></div>
+<div class="card"><div class="nm">Quentin Johnston <span class="sal">$4,900</span></div><div class="meta">LAC @ BUF · wind</div><div class="why">Chasing-script candidate.</div></div>
+<div class="card"><div class="nm">Jordan Addison <span class="sal">$4,900</span></div><div class="meta">MIN @ TB · 8.2% proxy own.</div><div class="why">Low-owned secondary in a calm game.</div></div>
+<div class="card"><div class="nm">Deebo Samuel <span class="sal">$5,300</span></div><div class="meta">SF vs ARI · Evans [Q]</div><div class="why">Featured if Evans sits; ideal weather.</div></div>
+</div></div>
+<div class="tier value"><div class="tier-head">VALUE</div><div class="cards">
+<div class="card"><div class="nm">Kalif Raymond <span class="sal">$3,800</span></div><div class="meta">CHI vs PHI (MNF) · Keenum-guy favorite</div><div class="why">Led Bears WRs both weeks (13/14, 92.9%); Johnson's trusted quick-game man. Prop 24.5 yds.</div></div>
+<div class="card"><div class="nm">Dontayvion Wicks <span class="sal">$4,100</span></div><div class="meta">PHI @ CHI (MNF) · 2.8% proxy own.</div><div class="why">GPP dart in the last game of the slate.</div></div>
+<div class="card"><div class="nm">Luther Burden III <span class="sal">$5,600</span></div><div class="meta">CHI vs PHI (MNF)</div><div class="why">Wk2 targets were garbage-time — discount the box score.</div></div>
+<div class="card"><div class="nm">Rome Odunze <span class="sal">$5,300</span></div><div class="meta">CHI vs PHI (MNF) · limited snaps</div><div class="why">Downfield role doesn't fit a rusty Keenum.</div></div>
+</div></div>
+</div>
+
+<div class="pos"><h2>TE</h2>
+<div class="tier elite"><div class="tier-head">ELITE</div><div class="cards">
+<div class="card"><div class="nm">Trey McBride <span class="sal">$6,700</span></div><div class="meta">ARI @ SF · 17 rec (tied league lead) · ideal wx</div><div class="why">22 targets; 8 of 17 Brissett completions Wk2. DK pivot buzz.</div></div>
+<div class="card"><div class="nm">Mark Andrews <span class="sal">$4,400</span></div><div class="meta">BAL vs DAL (Rio) · 24.5% share · DAL worst vs TE (29.7 FPG)</div><div class="why">Elite play at a mid price. TD steamed +190→+146; Flowers out → 33% share ceiling. Stack with Lamar.</div></div>
+</div></div>
+<div class="tier strong"><div class="tier-head">STRONG</div><div class="cards">
+<div class="card"><div class="nm">Dalton Kincaid <span class="sal">$5,500</span></div><div class="meta">BUF vs LAC · wind · 6.1% proxy</div><div class="why">Allen's short-area outlet; wind-proof role.</div></div>
+<div class="card"><div class="nm">Tyler Warren <span class="sal">$5,300</span></div><div class="meta">IND vs HOU · dome · Pierce IR bump</div><div class="why">Target vacuum with Pierce out.</div></div>
+<div class="card"><div class="nm">George Kittle <span class="sal">$4,800</span></div><div class="meta">SF vs ARI · ideal wx</div><div class="why">Red-zone role; Evans Q could add targets.</div></div>
+<div class="card"><div class="nm">Travis Kelce <span class="sal">$4,500</span></div><div class="meta">KC @ MIA · clean · DK buzz</div><div class="why">Chalk-adjacent but the role is bankable.</div></div>
+<div class="card"><div class="nm">Sam LaPorta <span class="sal">$4,300</span></div><div class="meta">DET vs NYJ · dome</div><div class="why">Dome + Goff stack piece.</div></div>
+</div></div>
+<div class="tier mid"><div class="tier-head">MID</div><div class="cards">
+<div class="card"><div class="nm">Pat Freiermuth <span class="sal">$3,800</span></div><div class="meta">PIT vs CIN · CIN allowed 200 yds to TEs thru 2</div><div class="why">10 targets/9 catches; McCarthy wants more. Caveats: improved CIN D, holding crew, 42.5 total. Bring-back, not standalone.</div></div>
+<div class="card"><div class="nm">Jake Ferguson <span class="sal">$4,100</span></div><div class="meta">DAL vs BAL (Rio) · 52.5 total</div><div class="why">Shootout TE on the home side.</div></div>
+<div class="card"><div class="nm">Hunter Henry <span class="sal">$3,900</span></div><div class="meta">NE @ JAX · calm</div><div class="why">Maye's safety valve.</div></div>
+<div class="card"><div class="nm">Juwan Johnson <span class="sal">$3,700</span></div><div class="meta">NO vs LV · dome</div><div class="why">Dome target in a Shough offense.</div></div>
+<div class="card"><div class="nm">Harold Fannin Jr. <span class="sal">$4,000</span></div><div class="meta">CLE vs CAR</div><div class="why">Young TE earning routes.</div></div>
+</div></div>
+<div class="tier value"><div class="tier-head">VALUE</div><div class="cards">
+<div class="card"><div class="nm">Oronde Gadsden II <span class="sal">$3,500</span></div><div class="meta">LAC @ BUF · only healthy TE · expected starter</div><div class="why">Props: 35.5–37.5 yds, 3.5 rec, TD +225–280. Best value TE on the slate.</div></div>
+<div class="card"><div class="nm">Cole Kmet <span class="sal">$3,000</span></div><div class="meta">CHI vs PHI (MNF) · every-down snaps</div><div class="why">60/61 snaps + Johnson promised more TE work — narrative only so far. Punt.</div></div>
+<div class="card"><div class="nm">Kenyon Sadiq <span class="sal">$3,500</span></div><div class="meta">NYJ @ DET · dome · Mason Taylor out</div><div class="why">Rookie steps into the role; dome.</div></div>
+</div></div>
+<div class="tier punt"><div class="tier-head">PUNT / AVOID</div><div class="cards">
+<div class="card"><div class="nm">Zach Ertz <span class="sal">$3,100</span></div><div class="meta">PHI @ CHI (MNF) · Goedert out → expected elevation</div><div class="why">Veteran plug-in for MNF. Deep punt only.</div></div>
+<div class="card"><div class="nm">Brock Bowers <span class="sal">$6,600</span> <span class="flag">[Q] — DO NOT START</span></div><div class="meta">LV @ NO · Friday DNP</div><div class="why">Downgraded Friday; Kubiak optimism has been wrong two weeks running.</div></div>
+</div></div>
+</div>
+
+<div class="pos"><h2>DST</h2>
+<div class="tier elite"><div class="tier-head">ELITE</div><div class="cards">
+<div class="card"><div class="nm">Seahawks <span class="sal">$3,800</span></div><div class="meta">@ WAS vs Mariota · rain watch</div><div class="why">Backup QB + possible rain = the week's best DST setup.</div></div>
+<div class="card"><div class="nm">49ers <span class="sal">$3,600</span></div><div class="meta">vs ARI · ideal wx</div><div class="why">Home favorite in clean conditions.</div></div>
+<div class="card"><div class="nm">Lions <span class="sal">$3,500</span></div><div class="meta">vs NYJ · dome</div><div class="why">Dome vs Geno.</div></div>
+</div></div>
+<div class="tier strong"><div class="tier-head">STRONG</div><div class="cards">
+<div class="card"><div class="nm">Chiefs <span class="sal">$3,700</span></div><div class="meta">@ MIA · clean</div><div class="why">Talent + road favorite.</div></div>
+<div class="card"><div class="nm">Giants <span class="sal">$3,400</span></div><div class="meta">vs TEN · rain+wind</div><div class="why">Weather DST — rain + wind + low-flag crew mucks up drives.</div></div>
+<div class="card"><div class="nm">Saints <span class="sal">$3,300</span></div><div class="meta">vs LV · dome · false-start crew</div><div class="why">Dome + drive-killing flags on the visitor.</div></div>
+<div class="card"><div class="nm">Eagles <span class="sal">$3,200</span></div><div class="meta">@ CHI (MNF) vs Keenum · under-lean crew</div><div class="why">38-year-old who hasn't thrown since 2023.</div></div>
+</div></div>
+<div class="tier mid"><div class="tier-head">MID</div><div class="cards">
+<div class="card"><div class="nm">Bengals <span class="sal">$2,900</span></div><div class="meta">vs PIT · #1 fantasy D/ST · holding crew</div><div class="why">Holding flags boost sack/strip upside vs PIT's OL.</div></div>
+<div class="card"><div class="nm">Texans <span class="sal">$3,200</span></div><div class="meta">vs IND</div><div class="why">Solid home unit.</div></div>
+<div class="card"><div class="nm">Rams <span class="sal">$3,100</span></div><div class="meta">@ DEN · SNF</div><div class="why">Primetime road unit.</div></div>
+<div class="card"><div class="nm">Vikings <span class="sal">$3,100</span></div><div class="meta">@ TB · calm</div><div class="why">Away-lean crew likes MIN.</div></div>
+<div class="card"><div class="nm">Jaguars <span class="sal">$2,900</span></div><div class="meta">vs NE · fav-lean crew</div><div class="why">Home favorite.</div></div>
+<div class="card"><div class="nm">Bills <span class="sal">$2,800</span></div><div class="meta">vs LAC · wind</div><div class="why">Wind + home field.</div></div>
+</div></div>
+<div class="tier value"><div class="tier-head">VALUE</div><div class="cards">
+<div class="card"><div class="nm">Steelers <span class="sal">$2,700</span></div><div class="meta">vs CIN · holding crew helps rush</div><div class="why">Martin's flags feed the pass rush.</div></div>
+<div class="card"><div class="nm">Panthers <span class="sal">$3,000</span></div><div class="meta">@ CLE</div><div class="why">Cheap road unit.</div></div>
+<div class="card"><div class="nm">Browns <span class="sal">$2,500</span></div><div class="meta">vs CAR</div><div class="why">Home dog DST with a pulse.</div></div>
+<div class="card"><div class="nm">Broncos <span class="sal">$2,300</span></div><div class="meta">vs LAR · SNF</div><div class="why">Altitude + primetime.</div></div>
+</div></div>
+</div>
+
+<div class="pos"><h2>Stack targets</h2>
+<div class="stack"><h3>1 · BAL@DAL (Rio) — priority</h3><div class="combo"><b>Lamar $7,500 + Andrews $4,400</b> (+ Henry $7,700 / Bateman $4,700) · bring-back <b>Dak $6,700 + Lamb $7,800</b></div><div class="note">52.5 total (highest) · over-lean crew · DAL worst vs TE (29.7 FPG). The game to double up.</div></div>
+<div class="stack"><h3>2 · LAC@BUF</h3><div class="combo"><b>Allen $8,000 + Kincaid $5,500</b> (or Shakir $4,800) · bring-back <b>McConkey $5,900 / Gadsden $3,500</b></div><div class="note">Wind dents deep balls, not the short game. High-flag crew pads passing volume.</div></div>
+<div class="stack"><h3>3 · KC@MIA</h3><div class="combo"><b>Mahomes $6,200 + Rice $6,400</b> (+ Kelce $4,500) · bring-back <b>Achane $6,500</b></div><div class="note">Clean weather, no flags — pure talent stack.</div></div>
+<div class="stack"><h3>4 · CIN@PIT</h3><div class="combo"><b>Burrow $6,600 + Chase $8,100</b> (+ Higgins $6,100) · bring-back <b>Freiermuth $3,800</b></div><div class="note">Over lean +1.3; holding crew pushes checkdowns to Freiermuth.</div></div>
+<div class="stack"><h3>5 · NYJ@DET (dome)</h3><div class="combo"><b>Goff $6,300 + Amon-Ra $7,900</b> (+ LaPorta $4,300) · bring-back <b>B. Hall $6,400 / G. Wilson $6,300</b></div><div class="note">Dome; Gibbs works as a one-off instead.</div></div>
+<div class="stack"><h3>6 · LAR@DEN (SNF)</h3><div class="combo"><b>Stafford $5,900 + Adams $6,200</b> · bring-back <b>Nix $5,500 / Waddle $6,700</b></div><div class="note">Early wind only; no Nacua → Adams funnel.</div></div>
+<div class="stack"><h3>7 · PHI@CHI (MNF) — GPP only</h3><div class="combo"><b>Hurts $6,800 + D. Smith $7,100</b> · bring-back <b>Swift $6,200 / Raymond $3,800</b></div><div class="note">Under-lean crew, low total. Deep punt: <b>Keenum $4,000 + Raymond $3,800</b> — min-price MNF correlation.</div></div>
+<div class="stack"><h3>8 · SEA@WAS — one-off, not a stack</h3><div class="combo"><b>JSN $8,600</b> naked</div><div class="note">45.2% share is matchup-proof, but rain-watch says don't pair him until Saturday's recheck.</div></div>
+</div>
+
+<div class="pos"><h2>Garrett's four — verdicts</h2>
+<div class="stack"><h3>Gadsden $3,500 — VERIFIED STRONG</h3><div class="note">Only healthy TE on roster; props 35.5–37.5 yds / 3.5 rec / TD +225–280. Best value TE on the slate.</div></div>
+<div class="stack"><h3>Andrews $4,400 — VERIFIED STRONG</h3><div class="note">24.5% share vs worst TE defense (29.7 FPG), 52.5 total, TD steamed +190→+146, Flowers likely out. Elite play at a mid price.</div></div>
+<div class="stack"><h3>Hubbard $6,100 — VERIFIED SOLID</h3><div class="note">Brooks IR → workhorse; 4.6 YPC; rush line steamed 64.5→71.5. Strong play, not sneaky — the secret's out.</div></div>
+<div class="stack"><h3>Freiermuth $3,800 — MIXED, HONEST</h3><div class="note">CIN allowed 200 yds to TEs thru 2 (supports Garrett), but improved CIN D + holding crew + 42.5 total cap it. Bring-back in CIN@PIT stacks, not a standalone. Behind Gadsden/Andrews.</div></div>
+</div>
+
+<div class="foot">Research Fri 9/25/2026. No lineups locked. Recheck Sat evening + Sun AM: TEN@NYG rain, SEA@WAS drizzle, LAC@BUF/LAR@DEN wind, Lucas Oil roof; Darnold/Evans/Flowers/Warren/Dobbins designations; Ekeler; MNF designations Sat; Keenum props. No public Sun–Mon ownership projections exist — proxies only.</div>
+</body>
+</html>
