@@ -944,9 +944,35 @@ export type {
   NflMarginMixtureFit,
 } from "./nfl/margin-mixture-model.js";
 // Universal signal ledger — the persistent "weight everything" accumulation layer
-// that bridges stored ledger rows to the composer (NOT wired into the live score).
+// that bridges stored ledger rows to the composer. NGS consumers use the same
+// normalized contract before their rows enter the model.
 export { composeLedger, ledgerAgeDays } from "./signal-ledger.js";
 export type { LedgerSignalRow, ComposeLedgerOptions } from "./signal-ledger.js";
+export {
+  NGS_FEATURE_SOURCE,
+  NGS_FEATURE_CATEGORY,
+  NGS_FEATURE_WEIGHTS,
+  NGS_FEATURE_CONFIDENCE,
+  NGS_FEATURE_KEYS,
+  NGS_TEAM_SIGNAL_KEY,
+  NGS_TEAM_WEIGHT,
+  NGS_TEAM_CONFIDENCE,
+  normalizeNgsFeatures,
+  ngsFeaturesToLedgerSignals,
+  ngsTeamScore,
+  ngsTeamComparisonToLedgerSignal,
+  compareNgsTeams,
+  isUsableNgsContextSignal,
+  ngsReferenceAtMs,
+  ngsEffectiveWeight,
+  isUsableNgsContextPair,
+  hasNgsTeamValue,
+  type NgsFeatureKey,
+  type NgsFeatureInput,
+  type NgsFeature,
+  type NgsTeamFeatureInput,
+  type NgsTeamComparison,
+} from "./ngs-feature-contract.js";
 
 // Player usage archetype (receiving lean / workload) from rushing/receiving usage.
 export { classifyUsageProfile } from "./player-archetype.js";

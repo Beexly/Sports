@@ -58,6 +58,7 @@ const FEATURE_FLAG_KEYS = [
   "hadVenueEnvironmentSignal",
   "hadPaceSignal",
   "hadMilestoneSignal",
+  "hadNgsSignal",
 ] as const;
 
 /** Env honesty: dual Neon URLs + auth + stripe. Free path does not need Odds key. */
@@ -263,6 +264,7 @@ export async function loadJarvisAssessment(): Promise<{
           hadVenueEnvironmentSignal: true,
           hadPaceSignal: true,
           hadMilestoneSignal: true,
+          hadNgsSignal: true,
         },
       })
       .catch(() => []),

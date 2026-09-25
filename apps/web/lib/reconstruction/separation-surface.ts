@@ -23,6 +23,8 @@ export interface SeparationRow {
   readonly playerName: string;
   readonly position: string | null;
   readonly avgSeparation: number; // one player-week
+  /** Source week; 0 is the season aggregate, never a weekly observation. */
+  readonly week?: number;
 }
 
 export interface ReconstructedSeparationPlayer {
@@ -56,6 +58,10 @@ export function buildReconstructedSeparation(
   // Group weekly rows by receiver.
   const byPlayer = new Map<string, { name: string; position: string | null; vals: number[] }>();
   for (const r of rows) {
+    // Week 0 is a full-season aggregate. It is valid persisted source data,
+    // but it is not an independent weekly observation and must not inflate
+    // the sample count behind a reconstructed tendency.
+    if (r.week === 0) continue;
     if (!Number.isFinite(r.avgSeparation)) continue;
     const g = byPlayer.get(r.gsisId);
     if (g) g.vals.push(r.avgSeparation);
@@ -112,7 +118,7 @@ export interface LoadableSeparationClient {
     findMany: (args: {
       where: Record<string, unknown>;
       select: Record<string, unknown>;
-    }) => Promise<Array<{ gsisId: string; playerName: string; position: string | null; avgSeparation: number | null }>>;
+    }) => Promise<Array<{ gsisId: string; playerName: string; position: string | null; avgSeparation: number | null; week: number }>>;
   };
 }
 
@@ -127,13 +133,13 @@ export async function loadReconstructedSeparation(
   const where: Record<string, unknown> = { statType: "receiving", avgSeparation: { not: null } };
   if (opts.season) where["season"] = opts.season;
   const rows = await db.nextGenStat
-    .findMany({ where, select: { gsisId: true, playerName: true, position: true, avgSeparation: true } })
-    .catch(() => [] as Array<{ gsisId: string; playerName: string; position: string | null; avgSeparation: number | null }>);
+    .findMany({ where, select: { gsisId: true, playerName: true, position: true, avgSeparation: true, week: true } })
+    .catch(() => [] as Array<{ gsisId: string; playerName: string; position: string | null; avgSeparation: number | null; week: number }>);
 
   return buildReconstructedSeparation(
     rows
       .filter((r): r is typeof r & { avgSeparation: number } => r.avgSeparation != null)
-      .map((r) => ({ gsisId: r.gsisId, playerName: r.playerName, position: r.position, avgSeparation: r.avgSeparation })),
+      .map((r) => ({ gsisId: r.gsisId, playerName: r.playerName, position: r.position, avgSeparation: r.avgSeparation, week: r.week })),
   );
 }
 

@@ -19,6 +19,7 @@ export type RiskLevel =
 
 export * from "./ladder.js";
 export * from "./heartbeat.js";
+export * from "./ngs-feature-contract.js";
 
 // ============================================================
 // Factor Breakdown — structured scoring factors per pick
@@ -105,6 +106,7 @@ export interface FactorBreakdown {
   crossMarketScore?: number;   // -3–+4: spread and ML markets agree/disagree
   // Schedule density (v5)
   scheduleStressScore?: number; // ±5: compressed schedule fatigue signal
+  ngsScore?: number;            // ±5: persisted NGS team differential
   dataQualityScore?: number;   // 0–100: overall data trust score (always public)
   // Independent-edge layer — may be priced into ranking when trueProb finite (see priced)
   independentEdge?: IndependentEdgeSummary | null;
@@ -383,6 +385,10 @@ export interface AtsFormBucket {
   sampleSize: number;
 }
 
+/** Team-level NGS context shared by ingestion, prediction, and web consumers. */
+import type { NgsTeamContextSignal } from "./ngs-feature-contract.js";
+export type { NgsTeamContextSignal } from "./ngs-feature-contract.js";
+
 export interface GameContextInput {
   openingSpread?: number | null;
   currentSpread?: number | null;
@@ -407,6 +413,11 @@ export interface GameContextInput {
   // Null when no game history exists; scoring returns 0 (neutral) when null.
   scheduleDensityHome?: number | null;
   scheduleDensityAway?: number | null;
+  // Persisted, weighted NGS team signals. Absent → the scorer is unchanged.
+  ngsHome?: NgsTeamContextSignal | null;
+  ngsAway?: NgsTeamContextSignal | null;
+  // ISO reference instant for NGS freshness/replay; set by ingestion.
+  ngsReferenceAt?: string;
   // Data coverage
   bookmakerCoverageMax?: number;
   dataFreshnessMinutes?: number;
@@ -472,7 +483,8 @@ export type SourceSnapshotKind =
   | "CONTEXT_VENUE"
   | "CONTEXT_WEATHER"
   | "CONTEXT_STANDINGS"
-  | "CONTEXT_MILESTONES";
+  | "CONTEXT_MILESTONES"
+  | "RESEARCH_ARTIFACT";
 
 // ============================================================
 // Narrative signal types (Tier-B media / morale context)
@@ -894,7 +906,7 @@ export interface PublicBlogPost {
 export * from "./signal-registry.js";
 
 // Canonical model version boundary constant
-export const CANONICAL_MODEL_VERSION = "v5.2.7";
+export const CANONICAL_MODEL_VERSION = "v5.3.0";
 
 // ── CLV push-doctrine rates: three denominators, side by side ────────────────
 //

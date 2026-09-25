@@ -69,6 +69,28 @@ describe("buildPickSignalSnapshot — signal presence", () => {
     expect(snap.hadRatingsSignal).toBe(false);
   });
 
+  it("records NGS only when both valid sides could reach the scorer", () => {
+    const ngs = (value: number, capturedAt = NOW.toISOString()) => ({
+      value,
+      weight: 2.5,
+      confidence: 0.7,
+      capturedAt,
+      season: 2026,
+    });
+    expect(buildPickSignalSnapshot(
+      "p1", PICK, { ngsHome: ngs(0.4), ngsAway: ngs(-0.1) }, false, false,
+    ).hadNgsSignal).toBe(true);
+    expect(buildPickSignalSnapshot(
+      "p1", PICK, { ngsHome: ngs(0.4), ngsAway: null }, false, false,
+    ).hadNgsSignal).toBe(false);
+    expect(buildPickSignalSnapshot(
+      "p1", PICK, { ngsHome: ngs(0.4, "not-a-date"), ngsAway: ngs(-0.1) }, false, false,
+    ).hadNgsSignal).toBe(false);
+    expect(buildPickSignalSnapshot(
+      "p1", TOTAL_PICK, { ngsHome: ngs(0.4), ngsAway: ngs(-0.1) }, false, false,
+    ).hadNgsSignal).toBe(false);
+  });
+
   it("does not count non-ACTIVE (SHADOW_ONLY) evidence as present", () => {
     const shadowOnly: EvidenceRecord = { ...activeEvidence("INJURIES"), activationStatus: "SHADOW_ONLY" };
     const snap = buildPickSignalSnapshot("p1", PICK, contextWith([shadowOnly]), false, false);

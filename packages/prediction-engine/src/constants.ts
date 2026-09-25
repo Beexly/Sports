@@ -21,8 +21,11 @@
 // v5.2.0 (2026-08-09): independent estimators priced into ranking path.
 // v5.1.0 (2026-06-22): isotonic calibration activated (path-to-70.md §7).
 // v5.2.7 (2026-08-22): Skellam ATS cover → SPREAD rankingP on Poisson sports.
-// Heuristic confidence / composite weights UNCHANGED. Maps still OFF.
-export const MODEL_VERSION = "v5.2.7";
+// v5.3.0 (2026-09-24): persisted nflverse NGS team differential enters the
+// canonical spread/moneyline confidence context; historical v5.2.7 samples
+// remain separate for calibration/learning comparisons.
+// Heuristic market weights remain unchanged; NGS is additive and bounded.
+export const MODEL_VERSION = "v5.3.0";
 
 // ============================================================
 // Confidence thresholds

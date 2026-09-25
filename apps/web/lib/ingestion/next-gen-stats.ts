@@ -7,11 +7,13 @@
  * expected), rushing (rush-yards-over-expected). Keyed by gsis id, idempotent
  * per (season, statType). Clearance-gated, rights/freshness stamped.
  *
- * Phase-A persistence: storage as a system of record. NOT wired into scoring —
- * turning these into a live score input is a separate, calibration-gated step.
+ * Phase-A persistence: storage as a system of record. The durable NGS signal
+ * writer later selects week-0 season aggregates when present, otherwise the
+ * latest shared weekly grain.
  *
- * Season-aggregate rows (week 0 per NGS convention) are skipped so the table
- * holds a single, non-double-counting weekly grain.
+ * Both season-aggregate (week 0) and weekly rows are retained. The downstream
+ * writer applies one source-week policy; the source table itself remains a
+ * faithful, non-lossy record of the published NGS feeds.
  */
 import { fetchNflverse } from "@sports/data-ingestion";
 import { db, type Prisma } from "@sports/db";
@@ -143,12 +145,12 @@ export async function ingestNextGenStats(
     // `fetchNflverse("ngs", …)` serves the COMBINED all-season asset, so we must
     // filter to the requested season here — otherwise every year's rows get
     // written under one season and collide on @@unique(gsisId, season, week,
-    // seasonType, statType). Also skip season-aggregate rows (week 0) and rows
-    // with no player key.
+    // seasonType, statType). Keep both week-0 aggregates and weekly rows; skip
+    // only rows with no player key.
     .filter(
       (r) =>
         Number(r["season"] ?? "0") === season &&
-        Number(r["week"] ?? "0") >= 1 &&
+        Number(r["week"] ?? "0") >= 0 &&
         (r["player_gsis_id"] ?? "") !== "",
     )
     .map((r) => toRecord(r, season, statType, gate.rightsSnapshot, now));

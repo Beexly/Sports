@@ -30,6 +30,7 @@ export const SIGNAL_LABELS: Readonly<Record<string, string>> = {
   hadVenueEnvironmentSignal: "venue environment",
   hadPaceSignal: "pace",
   hadMilestoneSignal: "milestones",
+  hadNgsSignal: "NGS team context",
 };
 
 export interface GroundingGame {

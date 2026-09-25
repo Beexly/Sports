@@ -221,6 +221,11 @@ export async function GET(
       status: snapshot?.hadMilestoneSignal ? "SHADOW" : "ABSENT",
       description: "Team/player milestone context (shadow)",
     },
+    {
+      category: "NGS team context",
+      status: snapshot?.hadNgsSignal ? "LIVE" : "ABSENT",
+      description: "Persisted nflverse NGS differential used in confidence",
+    },
   ];
 
   const liveCount = signalCategories.filter((c) => c.status === "LIVE").length;

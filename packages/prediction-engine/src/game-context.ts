@@ -19,6 +19,12 @@
 import type { FactorDetail, GameContextInput, AtsFormBucket } from "@sports/types";
 import { WEIGHTS } from "./constants.js";
 import { clamp } from "./scoring.js";
+import {
+  NGS_TEAM_MAX_SCORE,
+  isUsableNgsContextPair,
+  ngsEffectiveWeight,
+  ngsReferenceAtMs,
+} from "@sports/types";
 
 // Re-export so consumers can import GameContextInput/AtsFormBucket from this module
 export type { GameContextInput, AtsFormBucket };
@@ -40,6 +46,8 @@ export interface GameContextScores {
   crossMarketScore: number;         // –3 to +4 (spread/ML agreement)
   // v5 additions
   scheduleStressScore: number;      // –5 to +5 (schedule density fatigue)
+  // NGS team differential, bounded to ±5 and weighted by persisted row values.
+  ngsScore: number;
   factors: FactorDetail[];
 }
 
@@ -723,7 +731,51 @@ export function computeGameContext(
   const scheduleStressScore = ss.score;
   if (ss.factor) factors.push(ss.factor);
 
-  // 9. Data quality
+  // 9. NGS team differential — already persisted with its own weight,
+  // confidence, capture time, and source lineage by the NGS signal writer.
+  // The context layer only applies the side orientation and freshness decay.
+  let ngsScore = 0;
+  if (
+    marketType !== "TOTAL" &&
+    (pickedSide === "HOME" || pickedSide === "AWAY") &&
+    context.ngsHome &&
+    context.ngsAway
+  ) {
+    const reference = ngsReferenceAtMs(context.ngsReferenceAt);
+    if (reference !== null && isUsableNgsContextPair(context.ngsHome, context.ngsAway, context.ngsReferenceAt)) {
+      const now = reference;
+      const ageDays = (date: string) => {
+        const captured = Date.parse(date);
+        return Number.isFinite(captured) ? Math.max(0, (now - captured) / 86_400_000) : Infinity;
+      };
+      const differential = context.ngsHome.value - context.ngsAway.value;
+      const directed = pickedSide === "HOME" ? differential : -differential;
+      const homeEffective = ngsEffectiveWeight(context.ngsHome, now);
+      const awayEffective = ngsEffectiveWeight(context.ngsAway, now);
+      const effectiveWeight = (homeEffective + awayEffective) / 2;
+      ngsScore = clamp(directed * effectiveWeight, -NGS_TEAM_MAX_SCORE, NGS_TEAM_MAX_SCORE);
+      if (Math.abs(ngsScore) > 0.01) {
+        factors.push({
+          name: "NGS Team Edge",
+          impact: ngsScore > 0 ? "positive" : "negative",
+          description: `Persisted NGS differential favors ${pickedSide === "HOME" ? "home" : "away"}: ${ngsScore.toFixed(2)} confidence points`,
+          weight: ngsScore,
+          evidence: {
+            sourceCategory: "RATINGS",
+            sourceName: "nflverse",
+            fetchedAt: context.ngsHome.capturedAt,
+            freshnessStatus: ageDays(context.ngsHome.capturedAt) <= 14 ? "FRESH" : "AGING",
+            sampleSize: null,
+            trustLevel: 0.7,
+            activationStatus: "ACTIVE",
+            whyUsedOrBlocked: "Persisted nflverse NGS team signal, weighted and freshness-adjusted",
+          },
+        });
+      }
+    }
+  }
+
+  // 10. Data quality
   const dq = computeDataQuality(
     context.bookmakerCoverageMax,
     context.dataFreshnessMinutes,
@@ -747,6 +799,7 @@ export function computeGameContext(
     crossMarketScore,
     // v5
     scheduleStressScore,
+    ngsScore,
     factors,
   };
 }

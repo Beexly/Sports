@@ -16,6 +16,10 @@ vi.mock("@/lib/ingestion/snap-counts", () => ({ ingestSnapCounts: vi.fn() }));
 vi.mock("@/lib/ingestion/injuries", () => ({ ingestInjuries: vi.fn() }));
 vi.mock("@/lib/ingestion/depth-charts", () => ({ ingestDepthCharts: vi.fn() }));
 vi.mock("@/lib/ingestion/next-gen-stats", () => ({ ingestNextGenStats: vi.fn() }));
+vi.mock("@sports/data-ingestion", async (importActual) => {
+  const actual = await importActual<typeof import("@sports/data-ingestion")>();
+  return { ...actual, persistNgsSignals: vi.fn() };
+});
 // C-355: PFR advanced charting + rush tendencies are satellites. Mocked so this
 // suite never hits the network or the clearance engine.
 vi.mock("@/lib/ingestion/pfr-adv-stats", () => ({ ingestPfrAdvStats: vi.fn() }));
@@ -40,6 +44,7 @@ import { ingestDepthCharts } from "@/lib/ingestion/depth-charts";
 import { ingestNextGenStats } from "@/lib/ingestion/next-gen-stats";
 import { ingestPfrAdvStats } from "@/lib/ingestion/pfr-adv-stats";
 import { ingestRushTendencies } from "@/lib/ingestion/rush-tendencies";
+import { persistNgsSignals } from "@sports/data-ingestion";
 import { CRON_MANIFEST } from "@/lib/ops/cron-schedule-manifest";
 import { SATELLITE_DAILY_HOUR_UTC } from "@/lib/ingestion/satellite-window";
 
@@ -81,6 +86,16 @@ describe("GET /api/cron/refresh-player-stats", () => {
     );
     (ingestRushTendencies as Mock).mockReset();
     (ingestRushTendencies as Mock).mockResolvedValue({ status: "ok", season: 2024, rowsWritten: 12 });
+    (persistNgsSignals as Mock).mockReset();
+    (persistNgsSignals as Mock).mockResolvedValue({
+      status: "ok",
+      season: 2024,
+      rowsRead: 12,
+      playersWithSignals: 2,
+      signalsWritten: 8,
+      teamsWritten: 2,
+      errors: [],
+    });
     vi.stubEnv("CRON_SECRET", "secret");
     probe.seasonsWithRegRows = [];
   });
@@ -484,8 +499,32 @@ describe("GET /api/cron/refresh-player-stats", () => {
     expect(body.pfrAdv.pass.rowsWritten).toBe(2);
     expect(body.pfrAdv.rush.rowsWritten).toBe(2);
     expect(body.rushTendencies.rowsWritten).toBe(12);
-    const ngsBody = body as unknown as { ngs: { passing: { rowsWritten: number } } };
+    const ngsBody = body as unknown as {
+      ngs: { passing: { rowsWritten: number } };
+      ngsLedger: { status: string; teamsWritten: number };
+    };
     expect(ngsBody.ngs.passing.rowsWritten).toBe(5);
+    expect(persistNgsSignals).toHaveBeenCalledWith(2024);
+    expect(ngsBody.ngsLedger).toMatchObject({ status: "ok", teamsWritten: 2 });
+  });
+
+  it("keeps NGS no-data non-fatal but still fails on a ledger write error", async () => {
+    (ingestPlayerWeeklyStats as Mock).mockResolvedValue({
+      status: "ok", season: 2024, playersUpserted: 2, statsUpserted: 4,
+    });
+    (persistNgsSignals as Mock).mockResolvedValue({
+      status: "no-data", season: 2024, rowsRead: 0, playersWithSignals: 0,
+      signalsWritten: 0, teamsWritten: 0, errors: [],
+    });
+    const noData = await GET(req("http://x/api/cron/refresh-player-stats?season=2024&mode=full", "Bearer secret"));
+    expect((await noData.json()).success).toBe(true);
+
+    (persistNgsSignals as Mock).mockResolvedValue({
+      status: "error", season: 2024, rowsRead: 1, playersWithSignals: 1,
+      signalsWritten: 0, teamsWritten: 0, errors: ["write failed"],
+    });
+    const writeError = await GET(req("http://x/api/cron/refresh-player-stats?season=2024&mode=full", "Bearer secret"));
+    expect((await writeError.json()).success).toBe(false);
   });
 
   it("C-355: a PFR rights denial is observable but not a satellite failure", async () => {
@@ -552,8 +591,12 @@ describe("GET /api/cron/refresh-player-stats", () => {
     const body = (await res.json()) as {
       success: boolean;
       ngs: { rushing: { status: string } };
+      ngsLedger: { status: string; errors: readonly string[] };
     };
     expect(body.success).toBe(false);
     expect(body.ngs.rushing.status).toBe("source-error");
+    expect(body.ngsLedger.status).toBe("skipped");
+    expect(body.ngsLedger.errors).toEqual(["rushing: source-error (down)"]);
+    expect(persistNgsSignals).not.toHaveBeenCalled();
   });
 });

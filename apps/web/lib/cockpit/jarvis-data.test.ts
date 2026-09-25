@@ -29,6 +29,7 @@ const state = vi.hoisted(() => ({
   // ratio — the thing this file actually tests — unobservable. Each test sets
   // these to whatever isolates the dimension under test.
   featureSnapshots: [] as Array<Record<string, boolean>>,
+  featureSnapshotSelects: [] as Array<Record<string, unknown>>,
   gameSignalIds: [] as string[],
   publishedGameIds: [] as string[],
   dailyBriefCount: 0,
@@ -53,6 +54,7 @@ function fullSignalSnapshot(): Record<string, boolean> {
       "hadVenueEnvironmentSignal",
       "hadPaceSignal",
       "hadMilestoneSignal",
+      "hadNgsSignal",
     ].map((k) => [k, true]),
   );
 }
@@ -125,7 +127,10 @@ vi.mock("@sports/db", () => ({
       count: () => Promise.resolve(0),
     },
     pickSignalSnapshot: {
-      findMany: () => Promise.resolve(state.featureSnapshots),
+      findMany: (args?: { select?: Record<string, unknown> }) => {
+        if (args?.select) state.featureSnapshotSelects.push(args.select);
+        return Promise.resolve(state.featureSnapshots);
+      },
     },
     gameSignal: {
       groupBy: () =>
@@ -183,6 +188,7 @@ describe("jarvis-data signal coverage", () => {
     state.publishedCanonicalCount = 100;
     state.dataQuality = 0.95;
     state.featureSnapshots = [];
+    state.featureSnapshotSelects = [];
     state.gameSignalIds = [];
     state.publishedGameIds = [];
     state.dailyBriefCount = 0;
@@ -208,6 +214,12 @@ describe("jarvis-data signal coverage", () => {
       (w) => w.isPublished !== true || w.isBootstrap !== false
     );
     expect(unscoped).toEqual([]);
+  });
+
+  it("selects hadNgsSignal from the database feature matrix", async () => {
+    await load();
+    expect(state.featureSnapshotSelects).toHaveLength(1);
+    expect(state.featureSnapshotSelects[0]).toMatchObject({ hadNgsSignal: true });
   });
 
   it("reads RED when public-canonical coverage is low, even with high DQ", async () => {

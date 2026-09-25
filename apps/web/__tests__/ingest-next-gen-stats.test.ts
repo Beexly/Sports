@@ -34,7 +34,7 @@ function dataOf(): Array<Record<string, unknown>> {
 }
 
 describe("ingestNextGenStats", () => {
-  it("maps receiving tracking columns and skips week-0 season aggregates", async () => {
+  it("maps receiving tracking columns and retains the week-0 season aggregate", async () => {
     const records: Record<string, string>[] = [
       {
         season: "2024", season_type: "REG", week: "0", player_gsis_id: "00-9", // season-agg → skipped
@@ -51,17 +51,20 @@ describe("ingestNextGenStats", () => {
     ];
     const res = await ingestNextGenStats(2024, "receiving", { now: NOW, fetcher: async () => ({ records }) });
     expect(res.status).toBe("ok");
-    expect(res.rowsWritten).toBe(1);
+    expect(res.rowsWritten).toBe(2);
     expect(mocks.deleteMany).toHaveBeenCalledWith({ where: { season: 2024, statType: "receiving" } });
-    const d = dataOf()[0]!;
-    expect(d["gsisId"]).toBe("00-9");
-    expect(d["statType"]).toBe("receiving");
-    expect(d["week"]).toBe(3);
-    expect(d["avgSeparation"]).toBe(3.1);
-    expect(d["avgCushion"]).toBe(5.5);
-    expect(d["avgYacAboveExpectation"]).toBe(0.8);
-    expect(d["cpoe"]).toBeNull(); // a passing-only metric stays null for receiving
-    expect(d["fetchedAt"]).toBe(NOW);
+    const aggregate = dataOf().find((row) => row["week"] === 0)!;
+    expect(aggregate["gsisId"]).toBe("00-9");
+    expect(aggregate["avgSeparation"]).toBe(9.9);
+    const weekly = dataOf().find((row) => row["week"] === 3)!;
+    expect(weekly["gsisId"]).toBe("00-9");
+    expect(weekly["statType"]).toBe("receiving");
+    expect(weekly["week"]).toBe(3);
+    expect(weekly["avgSeparation"]).toBe(3.1);
+    expect(weekly["avgCushion"]).toBe(5.5);
+    expect(weekly["avgYacAboveExpectation"]).toBe(0.8);
+    expect(weekly["cpoe"]).toBeNull(); // a passing-only metric stays null for receiving
+    expect(weekly["fetchedAt"]).toBe(NOW);
   });
 
   it("maps passing CPOE and rushing over-expected metrics", async () => {

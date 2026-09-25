@@ -19,6 +19,7 @@
  */
 
 import type { ScoredPick, GameContextInput } from "@sports/types";
+import { isUsableNgsContextPair } from "@sports/types";
 
 export interface PickSignalSnapshotData {
   pickId: string;
@@ -40,6 +41,7 @@ export interface PickSignalSnapshotData {
   hadVenueEnvironmentSignal: boolean;
   hadPaceSignal: boolean;
   hadMilestoneSignal: boolean;
+  hadNgsSignal: boolean;
 
   // Key quantities at prediction time
   bookmakerCount: number;
@@ -116,6 +118,18 @@ export function buildPickSignalSnapshot(
     usedDerivedHistory &&
     ((context?.homeAtsFormAtHome != null) || (context?.awayAtsFormAway != null));
 
+  // NGS was used only when both sides carried a finite normalized value,
+  // non-negative weight, confidence, and a parseable capture timestamp.
+  // Matching the scorer prevents the immutable audit record from claiming a
+  // signal that actually contributed zero (or the scorer's ±5 cap).
+  const hadNgsSignal =
+    pick.pickType !== "TOTAL" &&
+    isUsableNgsContextPair(
+      context?.ngsHome,
+      context?.ngsAway,
+      context?.ngsReferenceAt,
+    );
+
   const activeShadowCategories = new Set(
     (context?.shadowEvidence ?? [])
       .filter((signal) => signal.activationStatus === "ACTIVE")
@@ -183,6 +197,7 @@ export function buildPickSignalSnapshot(
       activeShadowCategories.has("PACE") ||
       activeShadowCategories.has("TEAM_RATES"),
     hadMilestoneSignal: activeShadowCategories.has("MILESTONES"),
+    hadNgsSignal,
 
     // Quantities
     bookmakerCount: pick.bookmakerCount,

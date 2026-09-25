@@ -65,6 +65,15 @@ interface DepthRow {
   readonly playerId: string | null;
   readonly depthRank: number | null;
 }
+interface SignalRow {
+  readonly entityId: string;
+  readonly key: string;
+  readonly value: number;
+  readonly weight: number;
+  readonly confidence: number;
+  readonly capturedAt: Date;
+  readonly week: number;
+}
 
 const RECENT_N = 4;
 
@@ -142,7 +151,7 @@ export async function loadPlayerCompositeScores(season: number, limit = 100): Pr
     agg.set(r.playerId, a);
   }
 
-  const players = await db.player.findMany({ select: { id: true, fullName: true, position: true, recentTeam: true } });
+  const players = await db.player.findMany({ select: { id: true, gsisId: true, fullName: true, position: true, recentTeam: true } });
   const info = new Map((Array.isArray(players) ? players : []).map((p) => [p.id, p]));
 
   // Per-position baselines (mean/std of season PPG) for the production z-score.
@@ -206,6 +215,35 @@ export async function loadPlayerCompositeScores(season: number, limit = 100): Pr
     if (prev === undefined || d.depthRank < prev) depthRankByPlayer.set(d.playerId, d.depthRank);
   }
 
+  // Persisted universal-ledger rows are the canonical NGS input. Reading them
+  // here (instead of re-normalizing raw NextGenStat rows) guarantees the player
+  // index, team scorer, and any future consumer share the same stored weights.
+  // Only centered features are player-level predictors. Separation, cushion,
+  // and raw time-to-throw are magnitudes whose neutral baseline depends on
+  // position, role, and era; they stay available to the team differential,
+  // where the two-sided comparison is meaningful, but must not create a
+  // systematic player-index bias until explicit baselines exist.
+  const signalRows = (await db.signal?.findMany?.({
+    where: {
+      entityType: "player",
+      season,
+      key: { in: ["ngs.cpoe", "ngs.yac_above_expectation", "ngs.ryoe_per_attempt"] },
+    },
+    select: { entityId: true, key: true, value: true, weight: true, confidence: true, capturedAt: true, week: true },
+  })) as SignalRow[] | null | undefined;
+  const ngsByPlayer = new Map<string, SignalRow[]>();
+  for (const row of Array.isArray(signalRows) ? signalRows : []) {
+    if (!row || !Number.isFinite(row.value) || !Number.isFinite(row.weight) || !Number.isFinite(row.confidence) || !(row.capturedAt instanceof Date) || !Number.isInteger(row.week) || row.week < 0) continue;
+    const prior = ngsByPlayer.get(row.entityId) ?? [];
+    prior.push(row);
+    ngsByPlayer.set(row.entityId, prior);
+  }
+  for (const [playerId, rows] of ngsByPlayer) {
+    const weeks = new Set(rows.map((row) => row.week));
+    const sourceWeek = weeks.has(0) ? 0 : Math.max(...weeks);
+    ngsByPlayer.set(playerId, rows.filter((row) => row.week === sourceWeek));
+  }
+
   const result: PlayerScoreRow[] = [];
   for (const [playerId, a] of agg) {
     const meta = info.get(playerId);
@@ -233,6 +271,16 @@ export async function loadPlayerCompositeScores(season: number, limit = 100): Pr
     // is reduced — scores are untouched where depth data is missing.
     if (depthRank !== null) {
       signals.push({ key: "depthRole", value: depthRoleValue(depthRank), weight: 0.75, confidence: 0.7 });
+    }
+    // Centered NGS features are additive: stored Signal rows carry their own
+    // normalized value, weight, confidence, and capture timestamp. No row
+    // means no NGS vote. Magnitude-only features are excluded above.
+    const referenceMs = Date.parse(generatedAt);
+    for (const ngs of ngsByPlayer.get(meta?.gsisId ?? playerId) ?? ngsByPlayer.get(playerId) ?? []) {
+      const ageDays = Number.isFinite(referenceMs)
+        ? Math.max(0, (referenceMs - ngs.capturedAt.getTime()) / 86_400_000)
+        : Infinity;
+      signals.push({ key: ngs.key, value: ngs.value, weight: ngs.weight, confidence: ngs.confidence, ageDays });
     }
     if (games >= RECENT_N + 1) {
       signals.push({ key: "momentum", value: clamp((recentPpg - seasonPpg) / 5, -1.5, 1.5), weight: 1.5, confidence: 0.9 });

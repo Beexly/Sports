@@ -70,6 +70,20 @@ export type {
 export { recordSourceSnapshot } from "./source-snapshot.js";
 export type { SourceSnapshotInput } from "./source-snapshot.js";
 export {
+  persistResearchArtifact,
+  researchArtifactDigest,
+} from "./research-artifact.js";
+export type {
+  ResearchArtifactInput,
+  ResearchArtifactResult,
+  ResearchArtifactStore,
+} from "./research-artifact.js";
+export {
+  loadNgsTeamSignals,
+  resolveNgsTeamKey,
+  type NgsTeamSignalDb,
+} from "./ngs-team-signals.js";
+export {
   refreshOdds,
   UnsupportedSportError,
   CREDIT_GOVERNOR_SKIP_NOTE,

@@ -6,13 +6,21 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
  * via the real composite matrix. Only the DB is mocked.
  */
 
-const mocks = vi.hoisted(() => ({ findMany: vi.fn(), playerFindMany: vi.fn(), injuryFindMany: vi.fn(), snapFindMany: vi.fn(), depthFindMany: vi.fn() }));
+const mocks = vi.hoisted(() => ({
+  findMany: vi.fn(),
+  playerFindMany: vi.fn(),
+  injuryFindMany: vi.fn(),
+  snapFindMany: vi.fn(),
+  depthFindMany: vi.fn(),
+  signalFindMany: vi.fn(),
+}));
 vi.mock("@sports/db", () => ({ db: {
   playerGameStat: { findMany: mocks.findMany },
   player: { findMany: mocks.playerFindMany },
   injury: { findMany: mocks.injuryFindMany },
   snapCount: { findMany: mocks.snapFindMany },
   depthChartEntry: { findMany: mocks.depthFindMany },
+  signal: { findMany: mocks.signalFindMany },
 } }));
 
 import { loadPlayerCompositeScores, availabilitySignalValue } from "@/lib/scoring/player-composite";
@@ -31,6 +39,7 @@ beforeEach(() => {
   mocks.injuryFindMany.mockReset().mockResolvedValue([]);
   mocks.snapFindMany.mockReset().mockResolvedValue([]);
   mocks.depthFindMany.mockReset().mockResolvedValue([]);
+  mocks.signalFindMany.mockReset().mockResolvedValue([]);
 });
 
 describe("availabilitySignalValue", () => {
@@ -82,6 +91,58 @@ describe("loadPlayerCompositeScores", () => {
     expect((await loadPlayerCompositeScores(2024)).status).toBe("no-data");
     mocks.findMany.mockResolvedValue(null);
     expect((await loadPlayerCompositeScores(2024)).status).toBe("no-data");
+  });
+
+  it("uses only centered NGS features from one canonical source week", async () => {
+    mocks.findMany.mockResolvedValue([
+      ...weekRows("p1", [20, 20, 20, 20, 20, 20], 10, 2),
+    ]);
+    const capturedAt = new Date();
+    const older = new Date(capturedAt.getTime() - 86_400_000);
+    mocks.signalFindMany.mockImplementation(async (args: { where?: { key?: { in?: readonly string[] } } }) => {
+      const allowed = new Set(args.where?.key?.in ?? []);
+      return [
+        { entityId: "p1", key: "ngs.cpoe", value: 0.8, weight: 1.5, confidence: 0.85, capturedAt, week: 0 },
+        { entityId: "p1", key: "ngs.cpoe", value: -1, weight: 1.5, confidence: 0.85, capturedAt: older, week: 4 },
+        { entityId: "p1", key: "ngs.yac_above_expectation", value: 0.5, weight: 1.25, confidence: 0.8, capturedAt, week: 0 },
+        { entityId: "p1", key: "ngs.ryoe_per_attempt", value: 0.4, weight: 0.75, confidence: 0.75, capturedAt, week: 0 },
+        { entityId: "p1", key: "ngs.separation", value: 0.6, weight: 1.25, confidence: 0.8, capturedAt, week: 0 },
+        { entityId: "p1", key: "ngs.cushion", value: 0.4, weight: 0.75, confidence: 0.65, capturedAt, week: 0 },
+        { entityId: "p1", key: "ngs.time_to_throw", value: -0.5, weight: 0.5, confidence: 0.65, capturedAt, week: 0 },
+      ].filter((row) => allowed.has(row.key));
+    });
+
+    const r = await loadPlayerCompositeScores(2024);
+    const p1 = r.top.find((x) => x.playerId === "p1")!;
+    const ngsDrivers = p1.drivers.filter((d) => d.key.startsWith("ngs.")).map((d) => d.key);
+    expect(ngsDrivers).toHaveLength(3);
+    expect(new Set(ngsDrivers)).toEqual(new Set([
+      "ngs.cpoe",
+      "ngs.yac_above_expectation",
+      "ngs.ryoe_per_attempt",
+    ]));
+  });
+
+  it("joins NGS player signals through Player.gsisId rather than the internal player id", async () => {
+    const gsisId = "00-0034857";
+    mocks.findMany.mockResolvedValue([
+      ...weekRows("internal-player-id", [20, 20, 20, 20, 20, 20], 10, 2),
+    ]);
+    mocks.playerFindMany.mockResolvedValue([
+      { id: "internal-player-id", gsisId, fullName: "James Cook", position: "RB", recentTeam: "BUF" },
+    ]);
+    const capturedAt = new Date();
+    mocks.signalFindMany.mockResolvedValue([
+      { entityId: gsisId, key: "ngs.cpoe", value: 0.8, weight: 1.5, confidence: 0.85, capturedAt, week: 0 },
+      { entityId: "wrong-internal-id", key: "ngs.cpoe", value: -1, weight: 1.5, confidence: 0.85, capturedAt, week: 0 },
+    ]);
+
+    const r = await loadPlayerCompositeScores(2024);
+    const player = r.top.find((x) => x.playerId === "internal-player-id")!;
+    expect(player.drivers).toEqual(expect.arrayContaining([
+      expect.objectContaining({ key: "ngs.cpoe", value: 0.8 }),
+    ]));
+    expect(player.drivers.some((d) => d.key === "ngs.cpoe" && d.value !== 0.8)).toBe(false);
   });
 
   it("ranks a high-snap-share player above an equal-volume low-snap-share player", async () => {

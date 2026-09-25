@@ -572,6 +572,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const uncertaintyPenalty = ctx?.uncertaintyPenalty ?? 0;
   const crossMarketScore = ctx?.crossMarketScore ?? 0;
   const scheduleStressScore = ctx?.scheduleStressScore ?? 0;
+  const ngsScore = ctx?.ngsScore ?? 0;
   const dataQualityScore = ctx?.dataQualityScore ?? 0;
 
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
@@ -582,7 +583,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
       consensusScore + depthScore + edgeComponentScore + volatilityPenalty +
       lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty +
       headToHeadScore + venueFormScore + uncertaintyPenalty + crossMarketScore +
-      scheduleStressScore + 10,
+      scheduleStressScore + ngsScore + 10,
       0, 100
     )
   );
@@ -732,6 +733,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     uncertaintyPenalty: uncertaintyPenalty !== 0 ? uncertaintyPenalty : undefined,
     crossMarketScore: crossMarketScore !== 0 ? crossMarketScore : undefined,
     scheduleStressScore: scheduleStressScore !== 0 ? scheduleStressScore : undefined,
+    ngsScore: ngsScore !== 0 ? ngsScore : undefined,
     dataQualityScore,
     independentEdge: independentEdge ?? undefined,
     rankingP: rank.rankingP,
@@ -1210,6 +1212,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
   const venueFormScore = ctx?.venueFormScore ?? 0;
   const uncertaintyPenalty = ctx?.uncertaintyPenalty ?? 0;
   const scheduleStressScore = ctx?.scheduleStressScore ?? 0;
+  const ngsScore = ctx?.ngsScore ?? 0;
   const dataQualityScore = ctx?.dataQualityScore ?? 0;
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
   const shadowEvidenceFactors = buildShadowEvidenceFactors(input);
@@ -1232,7 +1235,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     clamp(
       consensusScore + depthScore + edgeComponentScore + volatilityPenalty +
       lineMovementScore + restAdvantageScore + historicalFormScore + dataQualityPenalty +
-      headToHeadScore + venueFormScore + uncertaintyPenalty + scheduleStressScore + 10,
+      headToHeadScore + venueFormScore + uncertaintyPenalty + scheduleStressScore + ngsScore + 10,
       0, 100
     )
   );
@@ -1325,6 +1328,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     venueFormScore: venueFormScore !== 0 ? venueFormScore : undefined,
     uncertaintyPenalty: uncertaintyPenalty !== 0 ? uncertaintyPenalty : undefined,
     scheduleStressScore: scheduleStressScore !== 0 ? scheduleStressScore : undefined,
+    ngsScore: ngsScore !== 0 ? ngsScore : undefined,
     dataQualityScore,
     independentEdge: independentEdge ?? undefined,
     // Persist ranking law for later metrics / bake-off (never edge-as-p).

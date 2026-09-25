@@ -105,6 +105,8 @@ import {
   type FixtureProbe,
 } from "./fixture-confirmation.js";
 import { persistGateDecisions, type GateDecisionInput } from "./gate-decision-sink.js";
+import { loadNgsTeamSignals, type NgsTeamSignalDb } from "./ngs-team-signals.js";
+import { ingestionTargetNflSeason } from "@sports/data-ingestion";
 
 /**
  * Spend guard (GSE-SEC-039).
@@ -1144,6 +1146,22 @@ export async function processSport(
       // never book-echo). Empty → conf ranking; finite trueProb → rankingP priced
       // (v5.2.1+; incl. PASS). SPEAK/LEAN is the glass-box edge claim only.
       let independentFairValues: import("@sports/types").IndependentMarketFairValue[] = [];
+      let ngsTeamSignals: { home: import("@sports/types").NgsTeamContextSignal | null; away: import("@sports/types").NgsTeamContextSignal | null } = { home: null, away: null };
+      try {
+        if (sport.key === NFL_CANONICAL_SPORT_KEY) {
+          ngsTeamSignals = await loadNgsTeamSignals(
+            db as unknown as NgsTeamSignalDb,
+            game.homeTeam,
+            game.awayTeam,
+            ingestionTargetNflSeason(),
+          );
+        }
+      } catch (ngsErr) {
+        console.warn(
+          `${logPrefix} NGS team-signal load failed for ${game.externalId}: ` +
+          `${ngsErr instanceof Error ? ngsErr.message : ngsErr}`,
+        );
+      }
       try {
         independentFairValues = await buildIndependentFairValues(
           {
@@ -1189,6 +1207,9 @@ export async function processSport(
         hasTotalMarket: totalOdds.length > 0,
         hasH2HMarket,
         shadowEvidence: buildMissingContextEvidence(fetchedAt),
+        ngsHome: ngsTeamSignals.home,
+        ngsAway: ngsTeamSignals.away,
+        ngsReferenceAt: fetchedAt.toISOString(),
         ...(independentFairValues.length > 0
           ? { independentFairValues }
           : {}),

@@ -36,6 +36,7 @@ import { ingestSnapCounts } from "@/lib/ingestion/snap-counts";
 import { ingestInjuries } from "@/lib/ingestion/injuries";
 import { ingestDepthCharts } from "@/lib/ingestion/depth-charts";
 import { ingestNextGenStats } from "@/lib/ingestion/next-gen-stats";
+import { persistNgsSignals } from "@sports/data-ingestion";
 // C-355: PFR advanced charting + rush tendencies. The nflverse pfr_advstats
 // release is the permitted route; direct PFR access remains forbidden and
 // ingestPfrAdvStats therefore fails closed on the rights gate.
@@ -57,6 +58,7 @@ type SatelliteBundle = {
     receiving: unknown;
     rushing: unknown;
   };
+  ngsLedger: unknown;
   pfrAdv: {
     pass: unknown;
     rec: unknown;
@@ -155,6 +157,24 @@ export async function GET(request: Request): Promise<NextResponse> {
     const ngsPassing = await ingestNextGenStats(satelliteSeason, "passing");
     const ngsReceiving = await ingestNextGenStats(satelliteSeason, "receiving");
     const ngsRushing = await ingestNextGenStats(satelliteSeason, "rushing");
+    const ngsResults = [ngsPassing, ngsReceiving, ngsRushing];
+    // Each NGS family is a separate transaction. If one family fails, its
+    // prior rows are preserved while the other families are replaced. Do not
+    // publish that mixed generation into the universal Signal ledger: doing
+    // so would silently combine current and stale grains for a season.
+    const ngsLedger = ngsResults.every((result) => result.status === "ok")
+      ? await persistNgsSignals(satelliteSeason)
+      : {
+          status: "skipped" as const,
+          season: satelliteSeason,
+          rowsRead: 0,
+          playersWithSignals: 0,
+          signalsWritten: 0,
+          teamsWritten: 0,
+          errors: ngsResults
+            .filter((result) => result.status !== "ok")
+            .map((result) => `${result.statType}: ${result.status}${result.error ? ` (${result.error})` : ""}`),
+        };
     // C-355. Sequential, same as the other satellites. PFR weekly files are
     // small; rush-tendencies fetches PBP with COLUMN PROJECTION
     // (lib/ingestion/rush-tendencies.ts) so the big file stays light.
@@ -171,6 +191,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       injuries,
       depth,
       ngs: { passing: ngsPassing, receiving: ngsReceiving, rushing: ngsRushing },
+      ngsLedger,
       pfrAdv: { pass: pfrPass, rec: pfrRec, rush: pfrRush },
       rushTendencies,
     };
@@ -189,7 +210,10 @@ export async function GET(request: Request): Promise<NextResponse> {
     const pfrRightsStopped = [pfrPass, pfrRec, pfrRush].every(
       (r) => r.status === "ok" || r.status === "clearance-denied",
     );
-    satellitesOk = nonPfrSatellites.every((r) => r.status === "ok") && pfrRightsStopped;
+    satellitesOk =
+      nonPfrSatellites.every((r) => r.status === "ok") &&
+      (ngsLedger.status === "ok" || ngsLedger.status === "no-data") &&
+      pfrRightsStopped;
   }
 
   const success = primaryOk && satellitesOk;

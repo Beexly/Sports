@@ -240,6 +240,7 @@ export {
   type SourceLicense,
   type LegalSource,
 } from "./source-registry.js";
+export { persistNgsSignals, type NgsSignalWriterDb, type NgsSignalWriterResult } from "./ngs-signal-writer.js";
 export {
   PredExonClient,
   PredExonError,

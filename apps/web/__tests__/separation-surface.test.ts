@@ -9,8 +9,19 @@ import {
  * de-noised tendencies with intervals + provenance when it accrues.
  */
 
-function weeks(gsisId: string, name: string, vals: number[]): SeparationRow[] {
-  return vals.map((v) => ({ gsisId, playerName: name, position: "WR", avgSeparation: v }));
+function weeks(
+  gsisId: string,
+  name: string,
+  vals: number[],
+  sourceWeeks: number[] = vals.map((_, index) => index + 1),
+): SeparationRow[] {
+  return vals.map((v, index) => ({
+    gsisId,
+    playerName: name,
+    position: "WR",
+    avgSeparation: v,
+    week: sourceWeeks[index],
+  }));
 }
 
 describe("buildReconstructedSeparation", () => {
@@ -44,6 +55,16 @@ describe("buildReconstructedSeparation", () => {
     for (let i = 1; i < s.players.length; i++) {
       expect(s.players[i - 1]!.tendency).toBeGreaterThanOrEqual(s.players[i]!.tendency);
     }
+  });
+
+  it("does not count a week-0 season aggregate as an independent weekly observation", () => {
+    const rows: SeparationRow[] = [];
+    for (let i = 0; i < 8; i++) {
+      rows.push(...weeks(`p${i}`, `Player ${i}`, [3.0, 9.9], [1, 0]));
+    }
+    const surface = buildReconstructedSeparation(rows);
+    expect(surface.available).toBe(false);
+    expect(surface.players).toHaveLength(0);
   });
 
   it("shrinks a thin-sample outlier toward the field (de-noising)", () => {

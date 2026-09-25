@@ -52,6 +52,7 @@ const SIGNAL_KEYS = [
   "hadVenueEnvironmentSignal",
   "hadPaceSignal",
   "hadMilestoneSignal",
+  "hadNgsSignal",
 ] as const;
 
 export async function POST(

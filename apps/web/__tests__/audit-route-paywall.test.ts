@@ -86,6 +86,7 @@ const SNAPSHOT = {
   hadVenueEnvironmentSignal: false,
   hadPaceSignal: false,
   hadMilestoneSignal: false,
+  hadNgsSignal: false,
   bookmakerCount: 3,
   dataQualityScore: 64,
   lineMovementDelta: -1.5,

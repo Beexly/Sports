@@ -757,6 +757,7 @@ model SourceSnapshot {
 
   ingestionRun IngestionRun? @relation(fields: [ingestionRunId], references: [id], onDelete: SetNull)
 
+  @@unique([provider, sourceKind, externalId])
   @@index([provider, sourceKind])
   @@index([sport])
   @@index([externalId])
@@ -820,6 +821,7 @@ model PickSignalSnapshot {
   hadVenueEnvironmentSignal Boolean @default(false) // venue/park/dome/weather context present (future)
   hadPaceSignal             Boolean @default(false) // pace/team-rate context present (future)
   hadMilestoneSignal        Boolean @default(false) // team/player milestone context present (future)
+  hadNgsSignal              Boolean @default(false) // both-side persisted NGS team context was available and usable
 
   // Key quantitative values at prediction time (queryable for calibration regression)
   bookmakerCount         Int    @default(0)
@@ -1515,6 +1517,7 @@ enum SourceSnapshotKind {
   CONTEXT_WEATHER
   CONTEXT_STANDINGS
   CONTEXT_MILESTONES
+  RESEARCH_ARTIFACT
 }
 
 enum AtsResult {
