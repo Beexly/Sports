@@ -95,4 +95,59 @@ describe("ingestActionNetworkScoreboard", () => {
     expect(ACTION_NETWORK_BOOK_IDS["FANDUEL"]).toBe(30);
     expect(ACTION_NETWORK_SCOREBOARD_BASE).toBe("https://api.actionnetwork.com");
   });
+
+  it("accepts numeric season values (current payloads ship season as a number)", () => {
+    const res = ingestActionNetworkScoreboard(
+      { games: [{ ...game, season: 2026 }] },
+      asOf,
+      enabledEnv,
+    );
+    expect(res.ok).toBe(true);
+    if (!res.ok) return;
+    expect(res.data.accepted[0]!.season).toBe("2026");
+  });
+
+  it("preserves object line_status payloads without inventing semantics", () => {
+    const res = ingestActionNetworkScoreboard(
+      {
+        games: [
+          {
+            ...game,
+            odds: [{ book_id: 15, line_status: { over: 0, under: 0, ml_home: 1 } }],
+          },
+        ],
+      },
+      asOf,
+      enabledEnv,
+    );
+    expect(res.ok).toBe(true);
+    if (!res.ok) return;
+    expect(res.data.accepted[0]!.lineStatus).toBe(
+      JSON.stringify({ over: 0, under: 0, ml_home: 1 }),
+    );
+  });
+
+  it("resolves away/home via team ids when teams are not in [away, home] order", () => {
+    const res = ingestActionNetworkScoreboard(
+      {
+        games: [
+          {
+            ...game,
+            away_team_id: 129,
+            home_team_id: 134,
+            teams: [
+              { id: 134, abbr: "JAC" },
+              { id: 129, abbr: "NE" },
+            ],
+          },
+        ],
+      },
+      asOf,
+      enabledEnv,
+    );
+    expect(res.ok).toBe(true);
+    if (!res.ok) return;
+    expect(res.data.accepted[0]!.awayAbbr).toBe("NE");
+    expect(res.data.accepted[0]!.homeAbbr).toBe("JAC");
+  });
 });
