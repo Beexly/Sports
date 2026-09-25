@@ -217,3 +217,5 @@ Wave 5 full prediction-engine suite: 5951/5951 across 825 test files. coverage.t
 
 | Walk-forward taxonomy report | `packages/ingestion-pipeline/src/walk-forward-eval.ts` | 6/6 | LIVE |
 | Continual-learning bridge (online metrics + EWC + AdaER) | `packages/ingestion-pipeline/src/continual-learning-bridge.ts` | 10/10 | LIVE |
+
+| Monitoring bridge (ECDD + drift ensemble + Hawkes threat) | `packages/ingestion-pipeline/src/monitoring-bridge.ts` | 8/8 | LIVE |
