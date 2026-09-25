@@ -195,3 +195,14 @@ Full prediction-engine suite: 5837/5837 across 817 test files. coverage.test.ts 
 | Dispersion/bayesian adapters | `packages/prediction-engine/src/engine/dispersion-bayesian-adapters.ts` | 14/14 | DONE |
 
 Wave 5 full prediction-engine suite: 5951/5951 across 825 test files. coverage.test.ts 10/10. Engine adapter surface: 170/170 across 14 test files.
+
+## Wave 6 — live-path promotion (2026-09-25)
+
+| Item | File | Status |
+|---|---|---|
+| 23 signal evaluators into SIGNAL_REGISTRY | `packages/ingestion-pipeline/src/signal-registry-extensions.ts` | LIVE |
+| Continuous-signal tilt (hierarchical pool) | `packages/ingestion-pipeline/src/continuous-signal-tilt.ts` | LIVE |
+| Intelligence-core ? picks API (six questions, family weights) | `apps/web/lib/picks/intelligence-enrichment.ts` | LIVE |
+| GSE 4-Beat props slate | `packages/ingestion-pipeline/src/props-slate.ts` | LIVE |
+| gse-four-beat + leakage probes on barrel | `packages/prediction-engine/src/index.ts` | LIVE |
+| hierarchical-pool | via continuous-signal-tilt | LIVE |
