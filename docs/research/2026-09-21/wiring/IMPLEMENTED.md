@@ -206,3 +206,9 @@ Wave 5 full prediction-engine suite: 5951/5951 across 825 test files. coverage.t
 | GSE 4-Beat props slate | `packages/ingestion-pipeline/src/props-slate.ts` | LIVE |
 | gse-four-beat + leakage probes on barrel | `packages/prediction-engine/src/index.ts` | LIVE |
 | hierarchical-pool | via continuous-signal-tilt | LIVE |
+
+| Prereg leakage gate | `packages/ingestion-pipeline/src/leakage-gate.ts` | 4/4 | LIVE |
+| Walk-forward eval + ship gate | `packages/ingestion-pipeline/src/walk-forward-eval.ts` | 4/4 | LIVE |
+| props-hb hierarchical Bayes bridge | `packages/ingestion-pipeline/src/props-hb-bridge.ts` | 4/4 | LIVE |
+| Calibration apply/map/monitor/sequence/commitment | `packages/prediction-engine/src/index.ts` barrel | exported | LIVE |
+| edge-lab proportionalDevig / impliedFromDecimal | `packages/prediction-engine/src/index.ts` barrel | exported | LIVE |
