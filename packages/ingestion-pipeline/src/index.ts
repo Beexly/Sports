@@ -240,3 +240,14 @@ export {
   type LogitPoolEval,
   type ResidualGbmTrain,
 } from "./ensemble-bridge.js";
+
+// Continual learning bridge (online metrics + EWC + AdaER)
+export {
+  evalOnlineMetrics,
+  evalEwcAnchor,
+  evalAdaErSelect,
+  settledBrier,
+  type OnlineMetricsEval,
+  type EwcAnchorEval,
+  type AdaErSelectEval,
+} from "./continual-learning-bridge.js";

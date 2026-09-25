@@ -2324,3 +2324,24 @@ export {
   type WalkForwardTaxonomyReport,
   type CategoryAlert,
 } from "./edge-lab/walk-forward-taxonomy.js";
+
+// Continual learning (online metrics + EWC anchoring + AdaER replay)
+export {
+  onlineMetricSuite,
+  brierScore,
+  type OnlineMetrics,
+} from "./continual/online-metric-suite.js";
+export {
+  ewcPenalty,
+  ewcGradient,
+  anchoredStep,
+  importanceOverlap,
+  overlapRegime,
+  type OverlapRegime,
+} from "./continual/1612-00796v2-ewc-feature-anchoring.js";
+export {
+  adaErBufferSelect,
+  interferenceScores,
+  type AdaErSelection,
+  type AdaErSelectionOptions,
+} from "./continual/adaer-replay.js";
