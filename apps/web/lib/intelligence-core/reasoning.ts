@@ -166,7 +166,7 @@ function clamp(x: number, lo: number, hi: number): number {
 }
 
 function isPublishableRights(r: SignalObservation["rights"]): boolean {
-  return r.rights === "cleared" || r.rights === "use-with-caution" || r.rights === "licensed";
+  return r === "cleared" || r === "use-with-caution" || r === "licensed";
 }
 
 /**
@@ -364,10 +364,12 @@ export function reason(ctx: SituationalContext): IntelligenceReasoning {
   }
 
   // --- six questions ---
+  // "What do we know" includes every observation (even withheld ones).
+  // Publish gating is separate from knowledge.
   const what =
-    publishable.length === 0
-      ? "We do not yet have a rights-cleared fact on this side."
-      : publishable
+    obs.length === 0
+      ? "We do not yet have a fact on this side."
+      : obs
           .slice(0, 3)
           .map((o) => o.fact)
           .join("; ");
@@ -382,12 +384,12 @@ export function reason(ctx: SituationalContext): IntelligenceReasoning {
       return ctx.commenceTime || "unknown";
     }
     stamps.sort();
-    return stamps[stamps.length - 1];
+    return stamps[stamps.length - 1] ?? ctx.commenceTime ?? "unknown";
   })();
   const where =
-    publishable.length === 0
+    obs.length === 0
       ? "none"
-      : Array.from(new Set(publishable.map((o) => o.origin))).slice(0, 4).join(", ");
+      : Array.from(new Set(obs.map((o) => o.origin))).slice(0, 4).join(", ");
   const reliability = `trust×fresh avg ${evidenceHealth.toFixed(2)} across ${publishable.length} rights-cleared signals; knowability ${knowability.toFixed(2)}.`;
   const marketBelieves =
     marketFairProb != null
