@@ -52,6 +52,7 @@ this file stays current through the weekend.
 - 2026-09-24 AM: "23.2% but only 1 redzone target — this is his week to score" (Andrews) — logged as his TD call vs DAL.
 - 2026-09-24 AM: Added Mark Andrews (vs DAL in Rio). Verified Cowboys TE defense (29.7 FPG, worst), Andrews target share (24.5%), Njoku to IR.
 - 2026-09-24 PM: Garrett flagged Chuba Hubbard (Brooks to IR — verified) and Pat Freiermuth (good matchup per Garrett; 2026 CIN TE splits still to verify). Notes added for both.
+- 2026-09-25: Garrett uploaded the FantasyPros Week 3 primer transcript (Wilcox/Brown). Extracted to `../2026-09-25/week3-fantasypros-primer.md`. Big one: Brown independently loves Freiermuth (CIN 9th-most yards/target + 6th-most FP/target to TEs; Metcalf shadowed by DJ Turner; Muth only Steeler with RZ targets) — upgrades the Freiermuth verdict. New value: Bryce Young $5,600 (QB2 PPG vs QB17 ECR, CAR leads NFL 72% neutral pass rate), Monangai $5,200 [Q] (MNF run-game angle), Wicks $4,100 (2.72 YPRR vs CHI perimeter), Vele $4,400 (WR15 PPG vs LV slot), Adonai Mitchell $4,300 (23.1% targets vs banged-up DET), Mundt $2,600 (punt TE). Two transcript claims NOT used: "Etienne hamstring/Kamara dust" (conflicts with our Fri injury lane) and "Pittman back for PIT" (Pittman is on IND).
 
 ## Sun-Mon slate — DraftKings pool pull (2026-09-24, read-only)
 - **Contest:** NFL $15K Sun-Mon Special [$5K to 1st] — $18 entry, 980 entries, $15,000 prizes, pays top 200. Roster: QB, RB, RB, WR, WR, WR, TE, FLEX, DST. Salary cap $50,000.
