@@ -409,6 +409,41 @@ async function upsertManifestEntry(dataDir: string, entry: NflverseManifestEntry
   await writeManifest(dataDir, next);
 }
 
+/** Hosts nflverse release URLs may hit (primary + ghproxy mirror). */
+const NFLVERSE_FETCH_HOSTS = new Set(["github.com", "ghproxy.net"]);
+
+/**
+ * Fail-closed URL gate for every outbound fetch in this loader. HTTPS only,
+ * no embedded credentials, host must be on the nflverse allowlist. Modeled on
+ * scripts/nova/source-doctor.mjs assertAllowedUrl — plain Error here (no
+ * PolicyHoldError in the verifier package).
+ */
+function assertNflverseFetchUrl(input: RequestInfo | URL): string {
+  const raw =
+    typeof input === "string"
+      ? input
+      : input instanceof URL
+        ? input.href
+        : input.url;
+  let parsed: URL;
+  try {
+    parsed = new URL(raw);
+  } catch {
+    throw new Error(`nflverse fetch URL is not a valid absolute URL: ${raw}`);
+  }
+  if (parsed.protocol !== "https:") {
+    throw new Error(`nflverse fetch URL must be HTTPS (got ${parsed.protocol})`);
+  }
+  if (parsed.username || parsed.password) {
+    throw new Error("Credentials in nflverse fetch URLs are forbidden");
+  }
+  const host = parsed.hostname.replace(/\.$/, "").toLowerCase();
+  if (!NFLVERSE_FETCH_HOSTS.has(host)) {
+    throw new Error(`Host ${parsed.hostname} is not allowlisted for nflverse fetch`);
+  }
+  return parsed.href;
+}
+
 /**
  * Load one C-395 nflverse release. Free, public, no credential. Never writes
  * to the database; optional persistence is files-only under the verifier data
@@ -424,7 +459,14 @@ export async function loadNflverseRelease(
   const persist = opts.persist !== false;
   const dataDir = opts.dataDir ?? defaultVerifierDataDir();
   const timeoutMs = opts.timeoutMs ?? 30_000;
-  const doFetch: FetchLike = opts.fetcher ?? ((input, init) => fetch(input, { ...init, cache: "no-store" }));
+  const underlying: FetchLike =
+    opts.fetcher ?? ((input, init) => fetch(input, { ...init, cache: "no-store" }));
+  // SSRF gate: validate every RequestInfo before it reaches the HTTP client
+  // (default fetch or an injected test fetcher).
+  const doFetch: FetchLike = (input, init) => {
+    const allowed = assertNflverseFetchUrl(input);
+    return underlying(allowed, init);
+  };
 
   // Legal gate first — nothing leaves this process before the registry says yes.
   const source = assertIngestible(NFLVERSE_SOURCE_ID);
