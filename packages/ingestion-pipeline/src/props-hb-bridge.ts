@@ -129,3 +129,167 @@ export {
   shrinkageReport,
 };
 export type { RateSample, GammaPrior, GammaPosterior };
+
+// ── Per-stat hierarchical Bayes models (live call sites) ────────────────────
+
+import {
+  fitYardsPerAttemptPrior,
+  posteriorYardsPerAttempt,
+  probOverRushYardsGivenAttempts,
+} from "@sports/prediction-engine";
+import {
+  fitPassYardsPerAttemptPrior,
+  posteriorPassYardsPerAttempt,
+  probOverPassYardsGivenAttempts,
+} from "@sports/prediction-engine";
+import {
+  fitCatchPrior,
+  posteriorCatch,
+  betaBinomialProbOver,
+} from "@sports/prediction-engine";
+import {
+  fitRecTdPerTargetPrior,
+  posteriorRecTdPerTarget,
+  probRecTdGivenTargets,
+} from "@sports/prediction-engine";
+
+export type PropStatEstimate =
+  | { readonly ok: true; readonly pOver: number; readonly pUnder: number }
+  | { readonly ok: false; readonly reason: string };
+
+/**
+ * P(rush yards over line) from yards-per-attempt prior + attempt exposure.
+ */
+export function estimateRushYardsOver(input: {
+  readonly samples: readonly { readonly games: number; readonly attempts: number; readonly yards: number }[];
+  readonly playerAttempts: number;
+  readonly playerYards: number;
+  readonly playerGames: number;
+  readonly line: number;
+  readonly attemptsNextGame: number;
+}): PropStatEstimate {
+  const { samples, playerAttempts, playerYards, playerGames, line, attemptsNextGame } = input;
+  if (!Array.isArray(samples) || samples.length === 0) {
+    return { ok: false, reason: "rush samples empty" };
+  }
+  if (!Number.isFinite(line) || !Number.isFinite(attemptsNextGame) || attemptsNextGame <= 0) {
+    return { ok: false, reason: "line and attemptsNextGame must be finite, attempts > 0" };
+  }
+  try {
+    const prior = fitYardsPerAttemptPrior(samples as never);
+    if (!prior) return { ok: false, reason: "fitYardsPerAttemptPrior returned null" };
+    const post = posteriorYardsPerAttempt(prior, {
+      attempts: playerAttempts,
+      yards: playerYards,
+      games: playerGames,
+    } as never);
+    const pOver = probOverRushYardsGivenAttempts(post, attemptsNextGame, line);
+    if (!Number.isFinite(pOver) || pOver < 0 || pOver > 1) {
+      return { ok: false, reason: "probOverRushYardsGivenAttempts out of [0,1]" };
+    }
+    return { ok: true, pOver: Number(pOver.toFixed(6)), pUnder: Number((1 - pOver).toFixed(6)) };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+/**
+ * P(pass yards over line) from yards-per-attempt prior + attempt exposure.
+ */
+export function estimatePassYardsOver(input: {
+  readonly samples: readonly { readonly games: number; readonly attempts: number; readonly yards: number }[];
+  readonly playerAttempts: number;
+  readonly playerYards: number;
+  readonly playerGames: number;
+  readonly line: number;
+  readonly attemptsNextGame: number;
+}): PropStatEstimate {
+  const { samples, playerAttempts, playerYards, playerGames, line, attemptsNextGame } = input;
+  if (!Array.isArray(samples) || samples.length === 0) {
+    return { ok: false, reason: "pass samples empty" };
+  }
+  if (!Number.isFinite(line) || !Number.isFinite(attemptsNextGame) || attemptsNextGame <= 0) {
+    return { ok: false, reason: "line and attemptsNextGame must be finite, attempts > 0" };
+  }
+  try {
+    const prior = fitPassYardsPerAttemptPrior(samples as never);
+    if (!prior) return { ok: false, reason: "fitPassYardsPerAttemptPrior returned null" };
+    const post = posteriorPassYardsPerAttempt(prior, {
+      attempts: playerAttempts,
+      yards: playerYards,
+      games: playerGames,
+    } as never);
+    const pOver = probOverPassYardsGivenAttempts(post, attemptsNextGame, line);
+    if (!Number.isFinite(pOver) || pOver < 0 || pOver > 1) {
+      return { ok: false, reason: "probOverPassYardsGivenAttempts out of [0,1]" };
+    }
+    return { ok: true, pOver: Number(pOver.toFixed(6)), pUnder: Number((1 - pOver).toFixed(6)) };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+/**
+ * P(receptions over line) from a Beta catch-rate prior + target exposure.
+ */
+export function estimateReceptionsOver(input: {
+  readonly samples: readonly { readonly receptions: number; readonly targets: number }[];
+  readonly playerReceptions: number;
+  readonly playerTargets: number;
+  readonly line: number;
+  readonly targetsNextGame: number;
+}): PropStatEstimate {
+  const { samples, playerReceptions, playerTargets, line, targetsNextGame } = input;
+  if (!Array.isArray(samples) || samples.length === 0) {
+    return { ok: false, reason: "catch samples empty" };
+  }
+  if (!Number.isFinite(line) || !Number.isFinite(targetsNextGame) || targetsNextGame <= 0) {
+    return { ok: false, reason: "line and targetsNextGame must be finite, targets > 0" };
+  }
+  try {
+    const prior = fitCatchPrior(samples as never);
+    if (!prior) return { ok: false, reason: "fitCatchPrior returned null" };
+    const post = posteriorCatch(prior, playerReceptions, playerTargets);
+    const pOver = betaBinomialProbOver(post, line, targetsNextGame);
+    if (!Number.isFinite(pOver) || pOver < 0 || pOver > 1) {
+      return { ok: false, reason: "betaBinomialProbOver out of [0,1]" };
+    }
+    return { ok: true, pOver: Number(pOver.toFixed(6)), pUnder: Number((1 - pOver).toFixed(6)) };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+/**
+ * P(receiving TD) from a Gamma per-target prior + target exposure.
+ * Returns P(TD > 0) — the anytime-TD probability.
+ */
+export function estimateRecTdProb(input: {
+  readonly samples: readonly { readonly recTds: number; readonly targets: number }[];
+  readonly playerRecTds: number;
+  readonly playerTargets: number;
+  readonly targetsNextGame: number;
+}): PropStatEstimate {
+  const { samples, playerRecTds, playerTargets, targetsNextGame } = input;
+  if (!Array.isArray(samples) || samples.length === 0) {
+    return { ok: false, reason: "rec-td samples empty" };
+  }
+  if (!Number.isFinite(targetsNextGame) || targetsNextGame <= 0) {
+    return { ok: false, reason: "targetsNextGame must be > 0" };
+  }
+  try {
+    const prior = fitRecTdPerTargetPrior(samples as never);
+    if (!prior) return { ok: false, reason: "fitRecTdPerTargetPrior returned null" };
+    const post = posteriorRecTdPerTarget(prior, {
+      recTds: playerRecTds,
+      targets: playerTargets,
+    } as never);
+    const pTd = probRecTdGivenTargets(post, targetsNextGame);
+    if (!Number.isFinite(pTd) || pTd < 0 || pTd > 1) {
+      return { ok: false, reason: "probRecTdGivenTargets out of [0,1]" };
+    }
+    return { ok: true, pOver: Number(pTd.toFixed(6)), pUnder: Number((1 - pTd).toFixed(6)) };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
