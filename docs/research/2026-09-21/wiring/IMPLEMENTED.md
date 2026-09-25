@@ -214,3 +214,6 @@ Wave 5 full prediction-engine suite: 5951/5951 across 825 test files. coverage.t
 | edge-lab proportionalDevig / impliedFromDecimal | `packages/prediction-engine/src/index.ts` barrel | exported | LIVE |
 
 | Ensemble learning bridge (logit-pool + residual GBM) | `packages/ingestion-pipeline/src/ensemble-bridge.ts` | 6/6 | LIVE |
+
+| Walk-forward taxonomy report | `packages/ingestion-pipeline/src/walk-forward-eval.ts` | 6/6 | LIVE |
+| Continual-learning bridge (online metrics + EWC + AdaER) | `packages/ingestion-pipeline/src/continual-learning-bridge.ts` | 10/10 | LIVE |
