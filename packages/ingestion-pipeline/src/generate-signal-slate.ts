@@ -26,6 +26,7 @@ import type {
 import { buildIndependentFairValues } from "./build-independent-fair-values.js";
 import { SIGNAL_REGISTRY } from "./signal-registry-definitions.js";
 import { applyContinuousSignalTilt } from "./continuous-signal-tilt.js";
+import { runLeakageGate, fixtureFromGameRows } from "./leakage-gate.js";
 import {
   FixtureConfirmer,
   formatFixtureLine,
@@ -502,6 +503,46 @@ export async function generateSignalSlate(opts?: {
       // fail-open
     }
 
+    // Prereg leakage gate (V1 probes): sign-convention + future-Elo on a
+    // fixture built from this game. Fail-open with a factor — a leak is a
+    // trust signal, not a minting blocker, but it must be visible.
+    let leakageClean = true;
+    let leakageDetail = "probes not run (insufficient fixture fields)";
+    try {
+      const fixture = fixtureFromGameRows([
+        {
+          gameId: game.id,
+          season: 2026,
+          week: 1,
+          team: homeTeam,
+          opponent: awayTeam,
+          isHome: true,
+          ratingBefore: 1500,
+          ratingAfter: 1500,
+          snapSharePriorWeeks: null,
+          snapShareCurrentWeek: null,
+          marketSpread: 0,
+          predictedMargin: (homeP - 0.5) * 20,
+          label: homeP >= 0.5 ? 1 : 0,
+        },
+      ]);
+      const gate = runLeakageGate({
+        featureBuilder: ((games: readonly { ratingBefore: number }[]) => ({
+          rating: games.map((g) => g.ratingBefore),
+        })) as never,
+        cleanFixture: fixture as never,
+        contaminatedFixture: fixture as never,
+        signFixture: fixture as never,
+      });
+      leakageClean = gate.ok;
+      leakageDetail = gate.ok
+        ? `V1 probes clean (${gate.suite.probes.length} probes)`
+        : gate.reason;
+    } catch {
+      leakageClean = false;
+      leakageDetail = "leakage gate threw — fail-closed";
+    }
+
     candidatesWithIndependents += 1;
     const homeChosen = homeP >= 0.5;
     const trueProb = homeChosen ? homeP : clamp01(1 - homeP);
@@ -561,6 +602,12 @@ export async function generateSignalSlate(opts?: {
           impact: "positive",
           description: `trueProb=${trueProb.toFixed(3)} from ${sourcesLabel}. No book odds attached.`,
           weight: confidence,
+        },
+        {
+          name: "Prereg leakage gate (V1 probes)",
+          impact: leakageClean ? "positive" : "negative",
+          description: leakageDetail,
+          weight: leakageClean ? 5 : 15,
         },
         ...continuousVotes.map((v) => ({
           name: `Continuous signal — ${v.signalId}`,
