@@ -2241,3 +2241,7 @@ export {
   stressTest,
   baselineWpModel,
 } from "./backtest/wp-event-replay.js";
+
+// Turnover luck (LUCK family) — live-path promotion
+export { computeTurnoverLuck, shrinkToLeagueMean } from "./signals/turnover-luck.js";
+export type { TurnoverLuckInput, TurnoverLuckResult } from "./signals/turnover-luck.js";
