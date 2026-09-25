@@ -285,3 +285,17 @@ export {
   type CatchProwessFit,
   type XFlagSummary,
 } from "./props-player-bridge.js";
+
+// Continual: teacher-student + forgetting + natural grad + coreset
+export {
+  evalTeacherStudent,
+  evalForgetting,
+  evalRwalkPenalty,
+  evalNaturalGrad,
+  evalSteinCoreset,
+  type TeacherStudentEval,
+  type ForgettingAudit,
+  type RwalkPenaltyEval,
+  type NaturalGradEval,
+  type CoresetEval,
+} from "./continual-learning-bridge.js";

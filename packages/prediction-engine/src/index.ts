@@ -2501,3 +2501,18 @@ export {
   expectedFreeYardage,
   type XFlagFeatures,
 } from "./props/xflag.js";
+
+// Continual: certainty-weighted + teacher-student (live-path promotion)
+export {
+  naturalGradLogistic,
+  logLossLogistic,
+  steinCoresetGreedy,
+  mmdCoreset,
+} from "./continual/1904-10644v1-certainty-weighted-continual-updates.js";
+export {
+  teacherEmaUpdate,
+  consistencyLoss,
+  multiCropAgreement,
+  rwalkPenalty,
+  forgettingAudit,
+} from "./continual/2304-01239v1-teacher-student-continual.js";

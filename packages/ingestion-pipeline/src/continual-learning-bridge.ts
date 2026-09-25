@@ -226,3 +226,220 @@ export {
   interferenceScores,
 };
 export type { OnlineMetrics, AdaErSelection, OverlapRegime };
+
+// ── Teacher-student + certainty-weighted continual (live call sites) ───────
+
+import {
+  teacherEmaUpdate,
+  consistencyLoss,
+  forgettingAudit,
+  rwalkPenalty,
+  naturalGradLogistic,
+  steinCoresetGreedy,
+} from "@sports/prediction-engine";
+
+export type TeacherStudentEval =
+  | {
+      readonly ok: true;
+      readonly data: {
+        readonly teacher: readonly number[];
+        readonly consistencyLoss: number;
+      };
+    }
+  | { readonly ok: false; readonly reason: string };
+
+/**
+ * EMA teacher update + consistency loss. Fail-closed on misaligned vectors.
+ */
+export function evalTeacherStudent(input: {
+  readonly teacher: readonly number[];
+  readonly student: readonly number[];
+  readonly momentum: number;
+}): TeacherStudentEval {
+  const { teacher, student, momentum } = input;
+  if (
+    !Array.isArray(teacher) ||
+    !Array.isArray(student) ||
+    teacher.length === 0 ||
+    teacher.length !== student.length
+  ) {
+    return { ok: false, reason: "teacher/student must be non-empty and aligned" };
+  }
+  if (!Number.isFinite(momentum) || momentum < 0 || momentum > 1) {
+    return { ok: false, reason: "momentum must be finite in [0,1]" };
+  }
+  try {
+    const updated = teacherEmaUpdate(
+      teacher as number[],
+      student as number[],
+      momentum,
+    );
+    const loss = consistencyLoss(student as number[], updated);
+    return {
+      ok: true,
+      data: {
+        teacher: updated as number[],
+        consistencyLoss: Number(loss.toFixed(6)),
+      },
+    };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+export type ForgettingAudit =
+  | { readonly ok: true; readonly data: { readonly forget: number; readonly bwt: number } }
+  | { readonly ok: false; readonly reason: string };
+
+/**
+ * Catastrophic-forgetting audit: mean forgetting + backward transfer.
+ */
+export function evalForgetting(input: {
+  readonly accBefore: readonly number[];
+  readonly accAfter: readonly number[];
+}): ForgettingAudit {
+  const { accBefore, accAfter } = input;
+  if (
+    !Array.isArray(accBefore) ||
+    !Array.isArray(accAfter) ||
+    accBefore.length === 0 ||
+    accBefore.length !== accAfter.length
+  ) {
+    return { ok: false, reason: "accBefore/accAfter must be non-empty and aligned" };
+  }
+  for (let i = 0; i < accBefore.length; i++) {
+    if (!Number.isFinite(accBefore[i]) || !Number.isFinite(accAfter[i])) {
+      return { ok: false, reason: `row ${i}: accuracies must be finite — not imputed` };
+    }
+  }
+  try {
+    const data = forgettingAudit(accBefore as number[], accAfter as number[]);
+    return {
+      ok: true,
+      data: {
+        forget: Number(data.forget.toFixed(6)),
+        bwt: Number(data.bwt.toFixed(6)),
+      },
+    };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+export type RwalkPenaltyEval =
+  | { readonly ok: true; readonly penalty: number }
+  | { readonly ok: false; readonly reason: string };
+
+/**
+ * RWalk penalty: importance-weighted distance from prior optima.
+ */
+export function evalRwalkPenalty(input: {
+  readonly theta: readonly number[];
+  readonly optParams: readonly (readonly number[])[];
+  readonly fishers: readonly (readonly number[])[];
+  readonly lambdas: readonly number[];
+}): RwalkPenaltyEval {
+  const { theta, optParams, fishers, lambdas } = input;
+  if (!Array.isArray(theta) || theta.length === 0) {
+    return { ok: false, reason: "theta must be non-empty" };
+  }
+  if (
+    !Array.isArray(optParams) ||
+    !Array.isArray(fishers) ||
+    !Array.isArray(lambdas) ||
+    optParams.length === 0 ||
+    optParams.length !== fishers.length ||
+    optParams.length !== lambdas.length
+  ) {
+    return { ok: false, reason: "optParams/fishers/lambdas must be non-empty and aligned" };
+  }
+  try {
+    const p = rwalkPenalty(
+      theta as number[],
+      optParams as number[][],
+      fishers as number[][],
+      lambdas as number[],
+    );
+    return { ok: true, penalty: Number(p.toFixed(6)) };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+export type NaturalGradEval =
+  | { readonly ok: true; readonly theta: readonly number[] }
+  | { readonly ok: false; readonly reason: string };
+
+/**
+ * One certainty-weighted natural-gradient step on a logistic model.
+ */
+export function evalNaturalGrad(input: {
+  readonly X: readonly (readonly number[])[];
+  readonly y: readonly number[];
+  readonly theta: readonly number[];
+  readonly damp: number;
+}): NaturalGradEval {
+  const { X, y, theta, damp } = input;
+  if (!Array.isArray(X) || X.length === 0) {
+    return { ok: false, reason: "X must be non-empty" };
+  }
+  if (!Array.isArray(y) || y.length !== X.length) {
+    return { ok: false, reason: "y must align with X" };
+  }
+  if (!Array.isArray(theta) || theta.length === 0) {
+    return { ok: false, reason: "theta must be non-empty" };
+  }
+  if (!Number.isFinite(damp) || damp < 0) {
+    return { ok: false, reason: "damp must be finite and >= 0" };
+  }
+  try {
+    const next = naturalGradLogistic(
+      X as number[][],
+      y as number[],
+      theta as number[],
+      damp,
+    );
+    return { ok: true, theta: next as number[] };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+export type CoresetEval =
+  | { readonly ok: true; readonly indices: readonly number[] }
+  | { readonly ok: false; readonly reason: string };
+
+/**
+ * Stein coreset selection: pick m representative rows for the replay buffer.
+ */
+export function evalSteinCoreset(input: {
+  readonly X: readonly (readonly number[])[];
+  readonly m: number;
+  readonly bandwidth: number;
+}): CoresetEval {
+  const { X, m, bandwidth } = input;
+  if (!Array.isArray(X) || X.length === 0) {
+    return { ok: false, reason: "X must be non-empty" };
+  }
+  if (!Number.isFinite(m) || m <= 0 || m > X.length) {
+    return { ok: false, reason: "m must be in (0, X.length]" };
+  }
+  if (!Number.isFinite(bandwidth) || bandwidth <= 0) {
+    return { ok: false, reason: "bandwidth must be > 0" };
+  }
+  try {
+    const indices = steinCoresetGreedy(X as number[][], m, bandwidth);
+    return { ok: true, indices: indices as number[] };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+export {
+  teacherEmaUpdate,
+  consistencyLoss,
+  forgettingAudit,
+  rwalkPenalty,
+  naturalGradLogistic,
+  steinCoresetGreedy,
+};
