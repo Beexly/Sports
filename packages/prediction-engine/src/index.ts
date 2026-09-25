@@ -2065,3 +2065,192 @@ export type { IndividualSignalInput, FamilyAggregation, HierarchicalPoolResult }
 // Canonical model version (frozen at v5.2.7 per founder invariant)
 export { MODEL_VERSION } from "./constants.js";
 
+
+// ---------------------------------------------------------------------------
+// Live-path promotion — reasoning surface + real computation adapters
+// (waves 4–5). Fail-closed. No imputation. Engine must reason, not average.
+// ---------------------------------------------------------------------------
+export {
+  REASONING_SURFACE,
+  reasonSubmission,
+  reasonSubmissionCsv,
+  reasonFeatureSpace,
+  reasonFitReport,
+  reasonChronologicalSplit,
+  reasonTrailingRating,
+  reasonSimulateMatchup,
+  reasonAblation,
+  reasonTierKill,
+  reasonAnytimeTd,
+  reasonNeutralizePlay,
+  reasonDeserveToWin,
+  reasonReplayGame,
+  reasonWpStressTest,
+  reasonDbCoverage,
+  reasonKickerMoE,
+  reasonScrambleEpa,
+  reasonCoverProbability,
+  reasonFgMake,
+  reasonPasserRating,
+  reasonGeneralizedPoisson,
+  reasonKellyLogGrowth,
+  reasonRobustKelly,
+  reasonCadence,
+  reasonDrawdownRisk,
+  type ReasoningResult,
+  type ReasoningSurfaceName,
+} from "./engine/reasoning-surface.js";
+
+export {
+  STRATEGIC_ADAPTERS,
+  coverProbabilityAdapter,
+  pinballLossAdapter,
+  lsSpreadAdapter,
+  anchorWeightAdapter,
+  fgMakeProbabilityAdapter,
+  passerRatingAllowedAdapter,
+  generalizedPoissonAdapter,
+  type StrategicAdapterName,
+} from "./engine/strategic-signal-adapters.js";
+
+export {
+  DECISION_ADAPTERS,
+  kellyLogGrowthAdapter,
+  robustKellyAdapter,
+  nominalKellyAdapter,
+  uncertaintyBoxAdapter,
+  cadenceAdapter,
+  drawdownRiskAdapter,
+  kellyCapsAdapter,
+  dominanceScreenAdapter,
+  fractionalCeilingAdapter,
+  type DecisionAdapterName,
+} from "./engine/decision-adapters.js";
+
+export {
+  MARKET_INPLAY_SIZING_ADAPTERS,
+  spreadToWinProbAdapter,
+  overWinTotalAdapter,
+  largeLineMoveAdapter,
+  devigAdapter,
+  multiplicativeNormalizeAdapter,
+  safeLeadAdapter,
+  kellyFractionAdapter,
+  volatilityStakeAdapter,
+  shrinkEdgesAdapter,
+  flbSlopeAdapter,
+  type MarketInplaySizingAdapterName,
+} from "./engine/market-inplay-sizing-adapters.js";
+
+export {
+  EXPECTED_METRICS_ADAPTERS,
+  winProbabilityAdapter,
+  successfulPlayAdapter,
+  completionProbabilityAdapter,
+  cpoeAdapter,
+  expectedYacAdapter,
+  yacOverExpectedAdapter,
+  calibrationReportAdapter,
+  graduationVerdictAdapter,
+  type ExpectedMetricsAdapterName,
+} from "./engine/expected-metrics-adapters.js";
+
+export {
+  DISPERSION_BAYESIAN_ADAPTERS,
+  estimatePhiAdapter,
+  impliedVmrAdapter,
+  shrinkEstimateAdapter,
+  varianceComponentsAdapter,
+  hierarchicalGateAdapter,
+  gaussCopulaJointAdapter,
+  normalCdfAdapter,
+  type DispersionBayesianAdapterName,
+} from "./engine/dispersion-bayesian-adapters.js";
+
+export {
+  isObservation,
+  isFailClosed,
+  createEntryAdapter,
+  createCompositionRegistry,
+  type AdapterResult,
+  type Observation,
+  type FailClosedResult,
+  type InventoryEntry,
+} from "./engine/universal-adapter.js";
+
+export {
+  createEngineComposition,
+  loadInventoryAndCompose,
+  type EngineComposition,
+} from "./engine/composition.js";
+
+// NGS-11 coverage/DB metrics
+export {
+  computeDbCoverageMetrics,
+  manZoneSplit,
+  nflPasserRating,
+  type TargetPlay,
+  type DbCoverageMetrics,
+  type DbMetricsResult,
+} from "./nfl/coverage-db-metrics.js";
+
+// NGS-12 adjacent metric families
+export {
+  fgMakeProbability,
+  computeKickerMoE,
+  computeScrambleEpa,
+  computeMotionRate,
+  computeRunStops,
+  computeAirYards,
+  computeOnOffEpa,
+} from "./nfl/ngs-adjacent-metrics.js";
+
+// V5–V8 + W3–W6 modules
+export {
+  validateSubmission,
+  writeSubmissionCsv,
+  parseSubmissionCsv,
+  REQUIRED_SUBMISSION_COLUMNS,
+} from "./eval/model-submission-schema.js";
+
+export {
+  defineFeatureSpace,
+  chronologicalSplit,
+  fitAndReport,
+  assertChronologicalIntegrity,
+} from "./eval/feature-construction-recipe.js";
+
+export {
+  trailingRatings,
+  fitHomeFieldMultiplier,
+  generalizedPoisson,
+  simulateMatchup,
+  buildMatchup,
+  sampleRareEvents,
+} from "./nfl/generalized-poisson.js";
+
+export {
+  ablate,
+  tierKill,
+  atsAblationPipeline,
+} from "./nfl/ats-ablation-harness.js";
+
+export {
+  anytimeTdProbability,
+  integrateEv,
+  conditionalAnytimeTd,
+  rollingRoleFeatures,
+} from "./props/anytime-td-mit.js";
+
+export {
+  neutralize,
+  neutralizeAll,
+  deserveToWin,
+} from "./nfl/luck-neutralized-epa.js";
+
+export {
+  replayGame,
+  replayGameSeeded,
+  stressTest,
+  baselineWpModel,
+} from "./backtest/wp-event-replay.js";

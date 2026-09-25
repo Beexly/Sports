@@ -15,6 +15,8 @@ import {
   MODEL_VERSION,
   MIN_PUBLISH_CONFIDENCE,
   PREMIUM_CONFIDENCE_THRESHOLD,
+  reasonCoverProbability,
+  reasonKellyLogGrowth,
 } from "@sports/prediction-engine";
 import type {
   FactorBreakdown,
@@ -484,6 +486,34 @@ export async function generateSignalSlate(opts?: {
         },
       ],
     };
+
+    // Live reasoning enrichment (fail-open). Never blocks minting; only adds
+    // real computed factors when the reasoning surface returns observations.
+    try {
+      const cover = reasonCoverProbability(0, (trueProb - 0.5) * 13.5);
+      if (cover.ok) {
+        factorBreakdown.factors.push({
+          name: "Reasoning surface — cover probability",
+          impact: cover.data >= 0.5 ? "positive" : "negative",
+          description: `Normal-margin cover probability ${cover.data.toFixed(3)} at projected edge.`,
+          weight: Math.round(Math.abs(cover.data - 0.5) * 100),
+        });
+      }
+      const kelly = reasonKellyLogGrowth(0.05, [
+        { x: 1, p: trueProb },
+        { x: -1, p: 1 - trueProb },
+      ]);
+      if (kelly.ok && typeof kelly.data === "number") {
+        factorBreakdown.factors.push({
+          name: "Reasoning surface — Kelly log-growth",
+          impact: kelly.data > 0 ? "positive" : "negative",
+          description: `Expected log-growth at f=0.05: ${kelly.data.toFixed(5)}.`,
+          weight: Math.min(10, Math.round(Math.abs(kelly.data) * 1000)),
+        });
+      }
+    } catch {
+      // fail-open: reasoning enrichment is never a minting gate
+    }
 
     const selection = `${chosenTeam} ML ${SIGNAL_SELECTION_SUFFIX}`;
     // Paid viewers read this verbatim. It states an estimate with its status, and
