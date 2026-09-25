@@ -2,15 +2,19 @@ import { describe, expect, it } from "vitest";
 import {
   REASONING_SURFACE,
   reasonAnytimeTd,
+  reasonCadence,
   reasonCoverProbability,
   reasonDbCoverage,
   reasonDeserveToWin,
+  reasonDrawdownRisk,
   reasonFeatureSpace,
   reasonFgMake,
   reasonGeneralizedPoisson,
+  reasonKellyLogGrowth,
   reasonKickerMoE,
   reasonNeutralizePlay,
   reasonPasserRating,
+  reasonRobustKelly,
   reasonScrambleEpa,
   reasonSubmission,
   reasonSubmissionCsv,
@@ -239,5 +243,36 @@ describe("reasoning-surface NGS + adapters", () => {
     const g = reasonGeneralizedPoisson(0, 0, 2);
     expect(g.ok).toBe(true);
     if (g.ok) expect(g.data).toBeCloseTo(Math.exp(-2), 5);
+  });
+
+  it("reasonKellyLogGrowth / reasonRobustKelly / reasonCadence / reasonDrawdownRisk", () => {
+    const k = reasonKellyLogGrowth(0.1, [
+      { x: 1, p: 0.55 },
+      { x: -1, p: 0.45 },
+    ]);
+    expect(k.ok).toBe(true);
+    if (k.ok) expect(typeof k.data).toBe("number");
+
+    const r = reasonRobustKelly(0.55, 2.0);
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.data).toBeGreaterThanOrEqual(0);
+
+    const c = reasonCadence(0.05, 0.01, 0.001, 5);
+    expect(c.ok).toBe(true);
+
+    const d = reasonDrawdownRisk(
+      [0.5, 0.5],
+      [
+        [0.05, -0.02],
+        [-0.01, 0.03],
+      ],
+      30,
+      42,
+    );
+    expect(d.ok).toBe(true);
+    if (d.ok) expect(d.data).toBeGreaterThanOrEqual(0);
+
+    expect(reasonKellyLogGrowth(0, []).ok).toBe(false);
+    expect(reasonRobustKelly(0, 2).ok).toBe(false);
   });
 });

@@ -80,6 +80,13 @@ import {
   passerRatingAllowedAdapter,
   type AdapterResult,
 } from "../engine/strategic-signal-adapters.js";
+import {
+  cadenceAdapter,
+  drawdownRiskAdapter,
+  kellyLogGrowthAdapter,
+  robustKellyAdapter,
+  type ReturnAtom,
+} from "../engine/decision-adapters.js";
 import { isObservation } from "../engine/universal-adapter.js";
 
 // ── Shared types ───────────────────────────────────────────────────────────
@@ -371,6 +378,48 @@ export function reasonGeneralizedPoisson(
   return ok(r.value as number);
 }
 
+// ── Decision / sizing (wave 5) ─────────────────────────────────────────────
+
+export function reasonKellyLogGrowth(
+  f: number,
+  dist: readonly ReturnAtom[],
+): ReasoningResult<number | "RUIN"> {
+  const r = kellyLogGrowthAdapter({ f, dist });
+  if (!isObservation(r)) return fail(r.reason);
+  return ok(r.value as number | "RUIN");
+}
+
+export function reasonRobustKelly(
+  pHat: number,
+  odds: number,
+): ReasoningResult<number> {
+  const r = robustKellyAdapter({ pHat, odds });
+  if (!isObservation(r)) return fail(r.reason);
+  return ok(r.value as number);
+}
+
+export function reasonCadence(
+  edgeMean: number,
+  edgeVar: number,
+  costPerRestake: number,
+  maxCadence: number,
+): ReasoningResult<number> {
+  const r = cadenceAdapter({ edgeMean, edgeVar, costPerRestake, maxCadence });
+  if (!isObservation(r)) return fail(r.reason);
+  return ok(r.value as number);
+}
+
+export function reasonDrawdownRisk(
+  phi: readonly number[],
+  tradeReturns: readonly (readonly number[])[],
+  nPaths: number,
+  seed?: number,
+): ReasoningResult<number> {
+  const r = drawdownRiskAdapter({ phi, tradeReturns, nPaths, seed });
+  if (!isObservation(r)) return fail(r.reason);
+  return ok(r.value as number);
+}
+
 // ── Surface registry ───────────────────────────────────────────────────────
 
 export const REASONING_SURFACE = {
@@ -395,6 +444,10 @@ export const REASONING_SURFACE = {
   fgMake: reasonFgMake,
   passerRating: reasonPasserRating,
   generalizedPoisson: reasonGeneralizedPoisson,
+  kellyLogGrowth: reasonKellyLogGrowth,
+  robustKelly: reasonRobustKelly,
+  cadence: reasonCadence,
+  drawdownRisk: reasonDrawdownRisk,
 } as const;
 
 export type ReasoningSurfaceName = keyof typeof REASONING_SURFACE;
