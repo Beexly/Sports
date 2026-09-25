@@ -231,3 +231,12 @@ export {
   walkForwardShipGate,
   type WalkForwardEvalResult,
 } from "./walk-forward-eval.js";
+
+// Ensemble learning bridge (logit-pool + residual GBM)
+export {
+  evalLogitPool,
+  trainResidualModel,
+  logitPoolShipGate,
+  type LogitPoolEval,
+  type ResidualGbmTrain,
+} from "./ensemble-bridge.js";

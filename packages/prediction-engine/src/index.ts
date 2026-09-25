@@ -2300,3 +2300,17 @@ export {
   type WalkForwardSeasonResult,
   type PredictFn,
 } from "./eval/closing-line-benchmark.js";
+
+// Residual GBM + logit pool (ensemble learning, live-path promotion)
+export {
+  trainResidualGbm,
+  type ResidualGbmRow,
+  type ResidualGbmOptions,
+  type ResidualGbmModel,
+  type ResidualGbmDiagnostics,
+  type ResidualGbmLossPoint,
+} from "./edge-lab/residual-gbm.js";
+export {
+  logitPoolTest,
+  type LogitPoolResult,
+} from "./edge-lab/logit-pool.js";
