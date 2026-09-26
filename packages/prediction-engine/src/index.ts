@@ -3635,3 +3635,149 @@ export {
   errorScaledThreshold,
   actOnEpv,
 } from "./tracking/bootstrap-epv-scaling.js";
+
+// Sizing: stake solvers, drawdown governance, slate allocation.
+// Four names already bind elsewhere in this barrel and are aliased here:
+//   solveLinear          -> sizingSolveLinear        (bayesian/2005-09024)
+//   makeRng              -> sizingMakeRng            (already bound)
+//   quantileHuberLoss    -> sizingQuantileHuberLoss  (rl/1806-06923v2-iqn-critic)
+//   kellyStake           -> bayesianKellyStake       (already bound at index.ts:2542)
+// Three sizing modules each define their own `SlatePick` with different shapes
+// and three define `kellyFraction` with different failure modes, so those are
+// aliased per module. `maxDrawdown` exists in both drawdown-kelly (equity
+// fraction) and ced-drawdown (P&L path), hence the two aliases.
+export {
+  laplaceSmoothed,
+  kellyGrowthRate,
+  lMinGatePasses,
+  solveLinear as sizingSolveLinear,
+  solveGeneralizedKelly,
+  independentKellyFractions,
+  unsaturatedLogGrowth,
+  correlationHaircut,
+  sizeSlate,
+  type KellyPick,
+  type SizedSlate,
+} from "./sizing/0803-1364v2-generalized-kelly-solver.js";
+export {
+  projectKellySimplex,
+  kellyLogGrowth,
+  constrainedKellyWeights,
+  type ConstrainedKellyOptions,
+} from "./sizing/constrained-kelly.js";
+export {
+  riskAversionLambda,
+  solveRiskConstrainedKelly,
+  plainKelly,
+} from "./sizing/risk-constrained-kelly.js";
+export {
+  makeRng as sizingMakeRng,
+  sampleTrueProbs,
+  emcKellyStake,
+  pluginKelly,
+} from "./sizing/emc-kelly.js";
+export {
+  shrinkEdges,
+  edgeToProb,
+  shrinkageKellyStake,
+  shrinkageKellyStakes,
+} from "./sizing/shrinkage-kelly.js";
+export {
+  conformalKellyStake,
+  capBindingFrequency,
+  type ConformalKellyParams,
+  type ConformalKellyQuote,
+  type ConformalKellyResult,
+} from "./sizing/conformal-kelly.js";
+export {
+  newCategory,
+  updatePosterior,
+  posteriorMean,
+  posteriorVar,
+  kellyStake as bayesianKellyStake,
+  maxDrawdown as equityMaxDrawdown,
+  type CategoryPosterior,
+  type StakeQuote,
+} from "./sizing/drawdown-kelly.js";
+export {
+  maxDrawdown as pnlMaxDrawdown,
+  cumulative,
+  conditionalExpectedDrawdown,
+  eulerDrawdownAttribution,
+  rollingDrawdowns,
+  drawdownTriggerStakeScale,
+  type CategoryPnl,
+} from "./sizing/ced-drawdown.js";
+export {
+  independentKelly,
+  decoupledObjective,
+  decoupledSlateKelly,
+  type SlatePick as DecoupledSlatePick,
+} from "./sizing/decoupled-kelly.js";
+export {
+  kellyFraction as univariateKellyFraction,
+  simultaneousKelly,
+  adaptiveKellyScale,
+  simulateWealth,
+  type Edge as KellyEdge,
+} from "./sizing/multivariate-kelly.js";
+export {
+  simulateSlateLogReturns,
+  tailStats,
+  esGovernor,
+  meanEsFrontier,
+  type SlatePick as EsSlatePick,
+  type TailStats,
+  type GovernorResult,
+} from "./sizing/es-governor.js";
+export {
+  kellyFraction as tournamentKellyFraction,
+  simulateKellyFraction,
+  kellyTournament,
+  type BetResolution,
+  type TournamentResult,
+} from "./sizing/kelly-tournament.js";
+export {
+  projectCappedSimplex,
+  constrainedMaxDrawdownWeights,
+  drawdownAdaptiveBounds,
+  type MaxDdOptions,
+} from "./sizing/max-drawdown-portfolio.js";
+export {
+  isCoinFlip,
+  modulateStake,
+  type CoinFlipOptions,
+} from "./sizing/coin-flip-modulator.js";
+export {
+  selectiveFeasibilityCeiling,
+  breakevenKeepRate,
+  ceilingVolume,
+} from "./sizing/selective-feasibility-ceiling.js";
+export {
+  kellyFraction as mpcKellyFraction,
+  solveSlateMpc,
+  type SlatePick as MpcSlatePick,
+  type MpcConfig,
+} from "./sizing/slate-mpc-staker.js";
+export {
+  rollingVolatility,
+  classifyRegime,
+  stakeMultiplier,
+  scaleStake,
+  type VolRegime,
+  type ScalerConfig,
+} from "./sizing/volatility-regime-scaler.js";
+export {
+  decomposePath,
+  pathQualityScore,
+  bankrollRegimeAllowsRamp,
+  type PathDecomposition,
+} from "./sizing/path-form-features.js";
+export {
+  STAKE_ACTIONS,
+  quantileHuberLoss as sizingQuantileHuberLoss,
+  qrLoss,
+  greedyStake,
+  cvarStake,
+  interQuantileRange,
+} from "./sizing/qr-dqn.js";
