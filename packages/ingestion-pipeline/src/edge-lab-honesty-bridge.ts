@@ -32,6 +32,27 @@ import {
   realGameContextFromPreGame,
   settledHistoricalPickToTaxonomyRow,
 } from "@sports/prediction-engine";
+import {
+  AsOfFeatureStore,
+  AsOfViolationError,
+  evVsClose,
+  walkForwardEval,
+  edgeLabShuffledTimePlacebo,
+  conditionalMiProbe,
+  type FeatureObservation,
+  type ServedRecord,
+  type PlaceboEvalRow,
+  type PlaceboEvalReport,
+  type PlaceboOptions,
+  type EdgeLabPlaceboReport,
+  type MiProbeReport,
+  type WalkForwardOptions,
+} from "@sports/prediction-engine";
+
+/** Trainer shape required by edge-lab placebo / walk-forward eval. */
+type EdgeLabTrainer = (
+  train: readonly { readonly features: ReadonlyMap<string, number>; readonly y: 0 | 1 }[],
+) => (features: ReadonlyMap<string, number>) => number;
 
 export type HonestEval<T> =
   | { readonly ok: true; readonly data: T }
@@ -250,6 +271,178 @@ export function evalGameContext(input: {
   }
 }
 
+// ── As-of feature store (leak wall) ─────────────────────────────────────────
+
+/**
+ * Ingest one feature observation into an as-of store.
+ * Rejects closing-line keys unless explicitly allowlisted. Fail-closed.
+ */
+export function evalAsofIngest(input: {
+  readonly store: AsOfFeatureStore;
+  readonly observation: FeatureObservation;
+  readonly marketDecisionKeys?: readonly string[];
+}): HonestEval<{ readonly ok: true }> {
+  const { store, observation } = input;
+  if (!store || !observation) {
+    return { ok: false, reason: "store and observation are required — not imputed" };
+  }
+  try {
+    store.ingest(observation, {
+      marketDecisionKeys: input.marketDecisionKeys,
+    });
+    return { ok: true, data: { ok: true } };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+/**
+ * Read the latest observation knowable at `asOf`. Missing -> fail-closed
+ * (never invents a value). The store records the read in servedAudit.
+ */
+export function evalAsofGet(input: {
+  readonly store: AsOfFeatureStore;
+  readonly entityId: string;
+  readonly featureKey: string;
+  readonly asOf: string;
+}): HonestEval<FeatureObservation> {
+  const { store, entityId, featureKey, asOf } = input;
+  if (!store || !entityId || !featureKey || !asOf) {
+    return { ok: false, reason: "store, entityId, featureKey, asOf are required" };
+  }
+  try {
+    const obs = store.get(entityId, featureKey, asOf);
+    if (!obs) {
+      return {
+        ok: false,
+        reason: `no observation for ${entityId}/${featureKey} knowable at ${asOf} — not imputed`,
+      };
+    }
+    return { ok: true, data: obs };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+/**
+ * Tripwire: throws (via HonestEval) when any served read postdates its cutoff.
+ * A clean store returns ok:true with the served-audit length.
+ */
+export function evalAsofNoLookahead(input: {
+  readonly store: AsOfFeatureStore;
+}): HonestEval<{ readonly servedCount: number }> {
+  const { store } = input;
+  if (!store) {
+    return { ok: false, reason: "store is required" };
+  }
+  try {
+    store.assertNoLookahead();
+    return { ok: true, data: { servedCount: store.servedAudit.length } };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+// ── Placebo / walk-forward eval ─────────────────────────────────────────────
+
+/**
+ * Walk-forward train/test evaluation of EV-vs-close on fired plays.
+ * Fail-closed on missing rows/trainer. Never invents a return.
+ */
+export function evalWalkForward(input: {
+  readonly rows: readonly PlaceboEvalRow[];
+  readonly trainer: EdgeLabTrainer;
+  readonly walkForward: WalkForwardOptions;
+  readonly fireThreshold: number;
+}): HonestEval<PlaceboEvalReport> {
+  const { rows, trainer, walkForward, fireThreshold } = input;
+  if (!Array.isArray(rows) || rows.length === 0) {
+    return { ok: false, reason: "rows empty — not imputed" };
+  }
+  if (typeof trainer !== "function") {
+    return { ok: false, reason: "trainer must be a function" };
+  }
+  if (!Number.isFinite(fireThreshold)) {
+    return { ok: false, reason: "fireThreshold must be finite" };
+  }
+  try {
+    const report = walkForwardEval(rows, trainer, walkForward, fireThreshold);
+    return { ok: true, data: report };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+/**
+ * Shuffled-time placebo: scramble feature times and re-score. A real edge
+ * must survive; a leak shows up as placebo EV comparable to live EV.
+ * Distinct from honesty/placebo-leak's runShuffledTimePlacebo.
+ */
+export function evalEdgeLabPlacebo(input: {
+  readonly store: AsOfFeatureStore;
+  readonly rows: readonly PlaceboEvalRow[];
+  readonly trainer: EdgeLabTrainer;
+  readonly options: PlaceboOptions;
+}): HonestEval<EdgeLabPlaceboReport> {
+  const { store, rows, trainer, options } = input;
+  if (!store) return { ok: false, reason: "store is required" };
+  if (!Array.isArray(rows) || rows.length === 0) {
+    return { ok: false, reason: "rows empty — not imputed" };
+  }
+  if (typeof trainer !== "function") {
+    return { ok: false, reason: "trainer must be a function" };
+  }
+  try {
+    const report = edgeLabShuffledTimePlacebo(store, rows, trainer, options);
+    return { ok: true, data: report };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+/**
+ * Conditional MI probe: I(score; Y | q_close). High MI with q_close held
+ * fixed is evidence the score carries outcome information the close lacks.
+ */
+export function evalConditionalMiProbe(input: {
+  readonly scores: readonly number[];
+  readonly outcomes: readonly (0 | 1)[];
+  readonly qClose: readonly number[];
+  readonly strata?: number;
+  readonly scoreBins?: number;
+  readonly permutations?: number;
+  readonly seed?: number;
+}): HonestEval<MiProbeReport> {
+  const { scores, outcomes, qClose } = input;
+  if (
+    !Array.isArray(scores) ||
+    !Array.isArray(outcomes) ||
+    !Array.isArray(qClose) ||
+    scores.length === 0 ||
+    scores.length !== outcomes.length ||
+    scores.length !== qClose.length
+  ) {
+    return {
+      ok: false,
+      reason: "scores/outcomes/qClose must be equal-length non-empty arrays — not imputed",
+    };
+  }
+  try {
+    const report = conditionalMiProbe({
+      scores,
+      outcomes,
+      qClose,
+      strata: input.strata,
+      scoreBins: input.scoreBins,
+      permutations: input.permutations,
+      seed: input.seed,
+    });
+    return { ok: true, data: report };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
 export {
   trainCloseDistiller,
   scoreDistillation,
@@ -260,6 +453,12 @@ export {
   benjaminiHochberg,
   realGameContextFromPreGame,
   settledHistoricalPickToTaxonomyRow,
+  evVsClose,
+  walkForwardEval,
+  edgeLabShuffledTimePlacebo,
+  conditionalMiProbe,
+  AsOfFeatureStore,
+  AsOfViolationError,
 };
 export type {
   CloseRow,
@@ -268,4 +467,12 @@ export type {
   TrialsRegistry,
   FamilyAdmissionsResult,
   BhResult,
+  FeatureObservation,
+  ServedRecord,
+  PlaceboEvalRow,
+  PlaceboEvalReport,
+  PlaceboOptions,
+  EdgeLabPlaceboReport,
+  MiProbeReport,
+  WalkForwardOptions,
 };

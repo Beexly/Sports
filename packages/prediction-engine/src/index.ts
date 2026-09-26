@@ -1043,9 +1043,39 @@ export {
 } from "./edge-lab/standings-math.js";
 export type { TeamStandingRow, StandingsFacts } from "./edge-lab/standings-math.js";
 
-// Game row + as-of feature store types (schedule features input contract).
+// Game row + as-of feature store (schedule features input contract + leak wall).
 export type { GameRow as EdgeLabGameRow } from "./edge-lab/game-row.js";
-export type { AsOfFeatureStore } from "./edge-lab/asof-store.js";
+export {
+  AsOfFeatureStore,
+  AsOfViolationError,
+} from "./edge-lab/asof-store.js";
+export type {
+  FeatureObservation,
+  ServedRecord,
+  IngestOptions,
+} from "./edge-lab/asof-store.js";
+
+// Edge-lab placebo / walk-forward eval (distinct from honesty/placebo-leak).
+// shuffledTimePlacebo is renamed — honesty/placebo-leak already owns that name.
+export {
+  evVsClose,
+  walkForwardEval,
+  shuffledTimePlacebo as edgeLabShuffledTimePlacebo,
+  conditionalMiProbe,
+} from "./edge-lab/placebo.js";
+export type {
+  EvalRow as PlaceboEvalRow,
+  FiredPlay,
+  OofScore,
+  EvalReport as PlaceboEvalReport,
+  PlaceboOptions,
+  PlaceboReport as EdgeLabPlaceboReport,
+  MiProbeReport,
+} from "./edge-lab/placebo.js";
+export type {
+  TimedRow as EdgeLabTimedRow,
+  WalkForwardOptions,
+} from "./edge-lab/walk-forward.js";
 
 export {
   noVigFromAmericanPrices,

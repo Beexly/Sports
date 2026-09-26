@@ -248,3 +248,11 @@ Wave 5 full prediction-engine suite: 5951/5951 across 825 test files. coverage.t
 | validateSubmission / writeSubmissionCsv / parseSubmissionCsv live route | apps/web/app/api/models/submission/route.ts | 7/7 | LIVE (ops auth) |
 | defineFeatureSpace / chronologicalSplit / fitAndReport live cron | apps/web/app/api/cron/feature-recipe-backtest/route.ts | 4/4 | LIVE (gated FEATURE_RECIPE_BACKTEST_ENABLED) |
 | Submission + feature-recipe type exports on barrel | packages/prediction-engine/src/index.ts | exported | LIVE |
+
+## Wave 6E — asof-store leak wall + edge-lab placebo/walk-forward live path (2026-09-25)
+
+| Item | File | Tests | Status |
+|---|---|---|---|
+| AsOfFeatureStore ingest/get/assertNoLookahead wrappers | packages/ingestion-pipeline/src/edge-lab-honesty-bridge.ts | 3/3 | LIVE |
+| walkForwardEval + edgeLabShuffledTimePlacebo + conditionalMiProbe wrappers | packages/ingestion-pipeline/src/edge-lab-honesty-bridge.ts | covered in 17/17 | LIVE |
+| AsOfFeatureStore class + edge-lab placebo exports on barrel (no name collision) | packages/prediction-engine/src/index.ts | exported | LIVE |
