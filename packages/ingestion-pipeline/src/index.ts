@@ -879,3 +879,14 @@ export {
   type GseScoreEval,
   type GseActionBridgeData,
 } from "./gse-score-bridge.js";
+
+export {
+  reasonAbout,
+  DEFAULT_DISAGREEMENT,
+  type ReasoningTrace,
+  type ReasoningEval,
+  type ReasoningPremise,
+  type ReasoningQuestion,
+  type ReasoningConclusion,
+  type BlockedKernel,
+} from "./reasoning-trace.js";
