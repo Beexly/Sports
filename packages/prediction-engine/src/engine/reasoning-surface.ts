@@ -79,7 +79,7 @@ import {
   generalizedPoissonAdapter,
   passerRatingAllowedAdapter,
 } from "../engine/strategic-signal-adapters.js";
-import type { AdapterResult } from "../engine/universal-adapter.js";
+import type { AdapterResult, Observation } from "../engine/universal-adapter.js";
 import {
   cadenceAdapter,
   drawdownRiskAdapter,
@@ -89,7 +89,7 @@ import {
 } from "../engine/decision-adapters.js";
 // Local type guard — inlined so this module never value-imports
 // universal-adapter.js (which pulls node:crypto into client bundles).
-function isObservation(r: AdapterResult): r is Extract<AdapterResult, { source: string }> {
+function isObservation(r: AdapterResult): r is Observation {
   return !("failClosed" in r);
 }
 

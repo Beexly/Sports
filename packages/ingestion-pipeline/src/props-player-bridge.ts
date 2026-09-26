@@ -135,7 +135,11 @@ export function evalCatchProwess(input: {
     return { ok: false, reason: "targets must be non-empty" };
   }
   try {
-    const baseline = spatialBaseline(targets as Target[]);
+    // Baseline catch probability = empirical catch rate over the sample.
+    // spatialBaseline is a local (x, depth) kernel used inside fitCatchProwess;
+    // it is not a single global baseline.
+    const caught = targets.reduce((s, t) => s + (t.caught ? 1 : 0), 0);
+    const baseline = targets.length > 0 ? caught / targets.length : 0;
     const fit = fitCatchProwess(targets as Target[], priorWeight ?? 30);
     return {
       ok: true,

@@ -198,7 +198,7 @@ export function evalParseCertificate(input: unknown): CertEval<DecisionCertifica
         reason: parsed && "reason" in parsed ? String(parsed.reason) : "malformed certificate",
       };
     }
-    return { ok: true, data: parsed.certificate as DecisionCertificate };
+    return { ok: true, data: parsed.value as DecisionCertificate };
   } catch (err) {
     return { ok: false, reason: err instanceof Error ? err.message : String(err) };
   }

@@ -286,7 +286,10 @@ export async function generateSignalSlate(opts?: {
       if (rows.length >= 4) {
         const clean = fixtureFromGameRows(rows);
         const contaminated = fixtureFromGameRows(
-          rows.map((r) => ({ ...r, ratingAfter: r.ratingBefore + 80 })),
+          rows.map((r) => ({
+            ...r,
+            ratingAfter: (r.ratingBefore ?? 1500) + 80,
+          })),
         );
         const sign = fixtureFromGameRows(
           rows.map((r) => ({ ...r, predictedMargin: -r.predictedMargin })),

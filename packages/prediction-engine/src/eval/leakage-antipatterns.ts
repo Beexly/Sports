@@ -70,11 +70,13 @@ export function futureEloProbe(
       const contaminated = contaminatedFeatures[key];
       if (!clean || !contaminated || clean.length !== contaminated.length) continue;
       for (let i = 0; i < clean.length; i++) {
-        if (Math.abs(clean[i] - contaminated[i]) > 1e-9) {
+        const c = clean[i] as number;
+        const k = contaminated[i] as number;
+        if (Math.abs(c - k) > 1e-9) {
           return {
             name,
             leaked: true,
-            detail: `Feature "${key}"[${i}] changes (${clean[i]} → ${contaminated[i]}) when future games are included — future-Elo contamination.`,
+            detail: `Feature "${key}"[${i}] changes (${c} → ${k}) when future games are included — future-Elo contamination.`,
           };
         }
       }
@@ -109,11 +111,13 @@ export function currentWeekSnapShareProbe(
       const withoutC = withoutCurrent[key];
       if (!withC || !withoutC || withC.length !== withoutC.length) continue;
       for (let i = 0; i < withC.length; i++) {
-        if (Math.abs(withC[i] - withoutC[i]) > 1e-9) {
+        const w = withC[i] as number;
+        const wo = withoutC[i] as number;
+        if (Math.abs(w - wo) > 1e-9) {
           return {
             name,
             leaked: true,
-            detail: `Feature "${key}"[${i}] changes (${withC[i]} → ${withoutC[i]}) when current-week snap share is removed — snap-share leakage.`,
+            detail: `Feature "${key}"[${i}] changes (${w} → ${wo}) when current-week snap share is removed — snap-share leakage.`,
           };
         }
       }

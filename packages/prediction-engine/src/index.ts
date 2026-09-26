@@ -2510,6 +2510,12 @@ export {
   conditionalAnytimeTd,
   rollingRoleFeatures,
 } from "./props/anytime-td-mit.js";
+export type {
+  PlayerRoleContext,
+  RollingRoleFeatures,
+  AnytimeTdResult,
+  MarketPrice,
+} from "./props/anytime-td-mit.js";
 
 export {
   neutralize,
