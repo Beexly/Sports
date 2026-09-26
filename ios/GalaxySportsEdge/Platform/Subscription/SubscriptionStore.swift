@@ -102,11 +102,13 @@ final class SubscriptionStore {
         updatesTask = Task { [weak self] in
             for await result in Transaction.updates {
                 guard let self else { return }
-                guard case .verified(let transaction) = result else { continue }
+                guard case .verified = result else { continue }
                 await self.refreshEntitlements()
                 // The server is told separately — this only syncs the local
-                // view. A local grant is never proof of payment.
-                _ = transaction.jwsRepresentation
+                // view. A local grant is never proof of payment. The signed
+                // blob lives on the verification result, not on the
+                // transaction it wraps.
+                _ = result.jwsRepresentation
             }
         }
     }

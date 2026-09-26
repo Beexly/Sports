@@ -38,7 +38,7 @@ enum OddsMath {
         let raw = decimal >= 2
             ? (decimal - 1) * 100
             : -100 / (decimal - 1)
-        return (raw / 5).rounded() * 5
+        return Int((raw / 5).rounded() * 5)
     }
 
     /// Proportional two-way de-vig: given the raw implied probabilities of two

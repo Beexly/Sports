@@ -101,7 +101,11 @@ extension PickDTO {
         let deVigged = winProbability?.resolvedProbability
         let marketImplied = marketImplied?.resolvedProbability
         let fairProbability = deVigged ?? marketImplied
-        let books = winProbability?.resolvedBooks ?? marketImplied?.resolvedBooks
+        // `self.` on the right: the local `marketImplied` above is the
+        // resolved Double and shadows the DTO property of the same name, so an
+        // unqualified `marketImplied?.resolvedBooks` is a Double being asked
+        // for a property it does not have.
+        let books = winProbability?.resolvedBooks ?? self.marketImplied?.resolvedBooks
 
         return Pick(
             id: id,

@@ -465,7 +465,7 @@ struct UserBet: Identifiable, Codable, Hashable, Sendable {
     }
 
     func profit() -> Double {
-        switch self {
+        switch status {
         case .won:  return payout() - stake
         case .lost: return -stake
         case .push, .void, .pending: return 0

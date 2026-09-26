@@ -98,7 +98,10 @@ struct SignInWebView: UIViewRepresentable {
             }
         }
 
-        private func finish(with cookies: [HTTPCookie]?) {
+        // fileprivate, not private: `makeUIView` above calls this on the
+        // coordinator, and a `private` member of a nested type is only visible
+        // inside that nested type.
+        fileprivate func finish(with cookies: [HTTPCookie]?) {
             guard !settled else { return }
             settled = true
             onFinish(cookies)

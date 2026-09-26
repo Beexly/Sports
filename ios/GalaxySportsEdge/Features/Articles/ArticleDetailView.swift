@@ -52,7 +52,7 @@ struct ArticleDetailView: View {
 
     private func load() async {
         // A cached row that already has its body needs no second request.
-        if !preview.isLocked, case .none = state { return }
+        if !preview.isLocked, case .idle = state { return }
         state = .loading
         do {
             state = .loaded(try await env.service.article(slug: slug))

@@ -60,12 +60,11 @@ final class PushNotificationManager: NSObject {
     // MARK: - Authorization
 
     /// Asks for permission the first time, and quietly does nothing after.
+    ///
+    /// There is no "can this device register for remote notifications" query to
+    /// ask first. APNs answers that question by refusing, and the refusal
+    /// arrives at `didFailToRegister`.
     func requestAuthorization() async {
-        guard UIApplication.shared.canRegisterForRemoteNotifications else {
-            status = .unsupported
-            return
-        }
-
         let settings = await center.notificationSettings()
         switch settings.authorizationStatus {
         case .authorized, .provisional, .ephemeral:
@@ -108,8 +107,14 @@ final class PushNotificationManager: NSObject {
         await sendToBackend(token: hex, subscribing: true)
     }
 
+    /// APNs has no capability query, so the only way to learn that this device
+    /// cannot register is for registration to fail. That is what
+    /// `.unsupported` documents -- "unavailable here, not an error worth
+    /// showing" -- so the refusal lands there and the detail is kept for the
+    /// log rather than shown to a reader who cannot act on it.
     func didFailToRegister(error: Error) {
-        status = .failed(error.localizedDescription)
+        lastRegistrationError = error.localizedDescription
+        status = .unsupported
     }
 
     // MARK: - Backend
