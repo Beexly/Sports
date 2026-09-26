@@ -3912,3 +3912,158 @@ export {
   ucb1Step,
   decayEps,
 } from "./markets/2401-06086v1-imitation-inplay-betting.js";
+
+
+// ── Ratings family: strength estimation, win probability, and its audits ──────
+// GameResult / BtGame / TeamSeason are declared in several modules here; each
+// is aliased so no export name is claimed twice.
+export {
+  fitBradleyTerry as ratingsFitBradleyTerry,
+  btWinProb,
+  mad,
+  strengthCovariate,
+  type BtGame,
+  type BtFit,
+} from "./ratings/bradley-terry.js";
+export {
+  fitLeastSquares,
+  gameVariance,
+  fitWeightedLeastSquares,
+  fitL1Ratings,
+  predictSpread,
+  spreadMae,
+  rankingViolationRate,
+  type GameResult as LeastSquaresGameResult,
+  type LsFit,
+} from "./ratings/least-squares-ratings.js";
+export {
+  marginWeight,
+  updateDynamicRating,
+  dynamicPageRank,
+  ratingToWinProb,
+  type GameResult as DynamicNetworkGameResult,
+} from "./ratings/dynamic-network-rating.js";
+export {
+  shrinkRatings,
+  shrinkRatingsMatrix,
+  shrinkageUncertainty,
+  type ShrinkageInput,
+  type ShrinkageResult,
+} from "./ratings/eb-shrinkage.js";
+export {
+  tullock,
+  differenceForm,
+  fitAlpha,
+  winRmse,
+  fitGameEwp,
+  gameEwp,
+  type TeamSeason as PythagoreanTeamSeason,
+  type GameRow,
+} from "./ratings/pythagorean-duel.js";
+export {
+  recencyWeight,
+  fitMatchupRatings,
+  predictMatchup,
+  timeOrderedMae,
+  type MatchupObs,
+  type MatchupRatings,
+  type SgdOptions,
+} from "./ratings/matchup-ratings.js";
+export {
+  asOfDate,
+  estimateStrengths,
+  selFeatures,
+  auditProvenance,
+  brierScore as ratingsBrierScore,
+  type GameResult as SelGameResult,
+  type TeamStrengths,
+  type SelFeatures,
+  type FeatureProvenance,
+} from "./ratings/sel-strengths.js";
+export {
+  softThreshold as ratingsSoftThreshold,
+  fitImpactScores,
+  predictWpDelta,
+  impactScoreIntervals,
+  mahalanobisSimilarity,
+  yearToYearCorrelation,
+  type DriveObs,
+} from "./ratings/unit-impact.js";
+export {
+  dominanceGraph,
+  countThreeCycles,
+  cycleRate,
+  longCycles,
+  type HeadToHead,
+} from "./ratings/cycle-diagnostics.js";
+export {
+  tieNu,
+  davidsonProbs,
+  davidsonLogLoss,
+  davidsonProbsStrengthDep,
+  type DavidsonProbs,
+} from "./ratings/davidson-ties.js";
+export {
+  fitTVC,
+  predictTVC,
+  effectiveWeight,
+  meanLogLoss as ratingsMeanLogLoss,
+  fitStatic,
+  type TVCGame,
+  type TVCModel,
+} from "./ratings/time-varying-weights.js";
+export {
+  buildTransition,
+  pagerankCentrality,
+  centralityResiduals,
+  teamCentralityDifferential,
+  type ArcKind,
+  type PlayArc,
+} from "./ratings/target-pagerank.js";
+export {
+  edgeWeight,
+  parametricPagerank,
+  winProbFromRatings,
+  tuneRecencyDecay,
+  clvEdge,
+  type RatedGame,
+  type EdgeWeights,
+} from "./ratings/parametric-pagerank.js";
+export {
+  aggregateTeamVector,
+  trainTeamModel,
+  playerGameRating,
+  formRating,
+  detectRoles,
+  auc,
+  type PlayerGame,
+  type TeamGame,
+} from "./ratings/playerank.js";
+export {
+  unadjustedHFA,
+  teamFixedEffectsHFA,
+  mixedEffectsHFA,
+  hfaBiasAudit,
+  simulateNonrandomSchedule,
+  type HFAGame,
+  type HFAEstimate,
+  type HFABiasAudit,
+  type ScheduleSimOpts,
+} from "./ratings/hfa-bias-audit.js";
+export {
+  csf,
+  fitAlphaOls,
+  loocvRmse,
+  compareCsf,
+  type CsfForm,
+  type TeamSeason as CsfTeamSeason,
+} from "./ratings/csf-triple-compare.js";
+export {
+  existenceViolations,
+  kernelWeights,
+  fitDynamicBT,
+  looLogLik,
+  tuneBandwidthLOOCV,
+  type BTGame,
+  type BTFit,
+} from "./ratings/dynamic-bradley-terry.js";
