@@ -398,3 +398,18 @@ export {
   type OrdinalStructureResult,
   type BivPoissonResult,
 } from "./bayesian-pairing-bridge.js";
+
+// Score-model bridge (HMM regimes, WP blender, Poisson/NB/CMP factorization)
+export {
+  evalHmmRegimes,
+  evalHamiltonFilter,
+  evalWpBlend,
+  evalGammaShrink,
+  evalScoreFactorization,
+  evalCmpPmf,
+  evalNegBinPmf,
+  type ScoreEval,
+  type HmmRegimeResult,
+  type WpBlendResult,
+  type ScoreFactorizationResult,
+} from "./score-model-bridge.js";

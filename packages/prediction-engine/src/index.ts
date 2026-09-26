@@ -2880,3 +2880,28 @@ export {
   bivPoissonPmf,
   bivPoissonSample,
 } from "./bayesian/2012-14949-bivariate-poisson-home-advantage.js";
+
+// Bayesian regimes: DSHDP-HMM, WP blender beta prior, three-module score
+export {
+  hmmForwardLogLik,
+  viterbi,
+  hmmStationary,
+  hamiltonFilter,
+} from "./bayesian/2004-03019-dshdp-hmm-regimes.js";
+export {
+  betaUpdate,
+  betaMean,
+  betaVar,
+  wpBlendCell,
+  wpBlendLogistic,
+  gammaPosteriorShrink,
+} from "./bayesian/2207-05114-wp-blender-beta-prior.js";
+export {
+  poissonMle,
+  ingarchFilter,
+  ingarchLogLik,
+  cmpPmf,
+  negBinPmf,
+  negBinMoments,
+  nestedScoreSim,
+} from "./bayesian/1911-08791-three-module-score-factorization.js";
