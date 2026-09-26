@@ -2739,3 +2739,52 @@ export {
   type EpProbitOptions,
   type EpProbitResult,
 } from "./bayesian/ep-probit.js";
+
+// RL: distributional slate, IQN critic, expectile, CQL stake policy
+export {
+  distMean,
+  distStd,
+  cvar,
+  greedyStakeIndex,
+  categoricalCrossEntropy,
+} from "./rl/1707-06887v1-distributional-slate-rl.js";
+export {
+  iqnCvar,
+  cvarGreedy,
+  quantileECE,
+  iqnGate,
+  quantileHuberLoss,
+} from "./rl/1806-06923v2-iqn-critic.js";
+export {
+  expectileOf,
+  expectileLoss,
+  meanConsistencyGap,
+  consistencyGate,
+  expectileGate,
+} from "./rl/1902-08102v2-expectile-critic.js";
+export {
+  cqlPenalty,
+  bellmanMse,
+  opeSelfNormalized,
+  ess,
+  doublyRobust,
+  lowerBoundDiagnostic,
+} from "./rl/2006-04779v2-cql-stake-policy.js";
+
+// SymReg: LM prior, SINDy dynamics, sample-size crossover
+export {
+  trainPrior,
+  logPrior,
+  logEvidence,
+  rankByPrior,
+  rankByRmse,
+  degeneracyGuard,
+  type LMPrior,
+  type Candidate,
+  type RankedCandidate,
+} from "./symreg/lm-prior.js";
+export {
+  stlsqFit,
+  openLoopBfr,
+  gameStateLibraryRow,
+} from "./symreg/sindy-dynamics.js";

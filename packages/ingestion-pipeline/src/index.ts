@@ -339,3 +339,19 @@ export {
   evalEpProbitPredict,
   type BayesEval,
 } from "./bayesian-bridge.js";
+
+// RL + SymReg bridge (distributional slate, CQL stake policy, LM prior, SINDy)
+export {
+  evalDistributionStats,
+  evalGreedyStake,
+  evalIqnGate,
+  evalExpectile,
+  evalConsistencyGate,
+  evalCqlPenalty,
+  evalEss,
+  evalDoublyRobust,
+  evalRankByPrior,
+  evalSindy,
+  type RlEval,
+  type DistributionStats,
+} from "./rl-symreg-bridge.js";
