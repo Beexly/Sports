@@ -11,7 +11,7 @@ import UserNotifications
 ///    foreground presentation has to be implemented on a class.
 /// 3. A graded pick that arrives while the app is open should still be shown;
 ///    the default behaviour drops it silently.
-final class AppDelegate: NSObject, UIApplicationDelegate {
+final class AppDelegate: NSObject, UIApplicationDelegate, UNUserNotificationCenterDelegate {
 
     /// Set by the composition root once the environment exists. Weak, so the
     /// delegate never keeps the environment alive.

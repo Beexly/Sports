@@ -9,20 +9,26 @@ import Foundation
 struct MockFixtures {
 
     private static let reference = Date(timeIntervalSince1970: 1_789_000_000)
+    // Always written `Self.reference`. Inside a stored property's initializer
+    // an unqualified `reference` happens to resolve to the static member, but
+    // inside a computed property's body it resolves against the instance
+    // first and fails with "static member 'reference' cannot be used on
+    // instance of type 'MockFixtures'". Spelling it out is the same length and
+    // does not depend on which kind of property you are in.
 
     var profile = UserProfile(
         id: "sample-user",
         displayName: "Sample Reader",
         email: "[EMAIL]",
         tier: .pro,
-        memberSince: reference.addingTimeInterval(-86_400 * 240),
+        memberSince: Self.reference.addingTimeInterval(-86_400 * 240),
         avatarURL: nil)
 
     var follows: [FollowedEntity] = [
         FollowedEntity(id: "sample-follow-1", kind: .team, entityId: "sample-team-1",
-                       createdAt: reference.addingTimeInterval(-86_400 * 9)),
+                       createdAt: Self.reference.addingTimeInterval(-86_400 * 9)),
         FollowedEntity(id: "sample-follow-2", kind: .player, entityId: "sample-player-1",
-                       createdAt: reference.addingTimeInterval(-86_400 * 3))
+                       createdAt: Self.reference.addingTimeInterval(-86_400 * 3))
     ]
 
     // MARK: - Picks
@@ -245,7 +251,7 @@ struct MockFixtures {
                 report closing-line value separately for exactly that reason.
                 """,
                 author: .desk,
-                publishedAt: reference.addingTimeInterval(-3600 * 5),
+                publishedAt: Self.reference.addingTimeInterval(-3600 * 5),
                 heroImageURL: nil,
                 tags: ["Methodology"],
                 sport: nil,
@@ -262,7 +268,7 @@ struct MockFixtures {
                 since the 2019 season. That is a market inefficiency.
                 """,
                 author: .desk,
-                publishedAt: reference.addingTimeInterval(-3600 * 9),
+                publishedAt: Self.reference.addingTimeInterval(-3600 * 9),
                 heroImageURL: nil,
                 tags: ["NBA", "Defense"],
                 sport: .nba,
@@ -280,7 +286,7 @@ struct MockFixtures {
                 by whoever opened it and whoever is still awake.
                 """,
                 author: .desk,
-                publishedAt: reference.addingTimeInterval(-3600 * 22),
+                publishedAt: Self.reference.addingTimeInterval(-3600 * 22),
                 heroImageURL: nil,
                 tags: ["Props", "Strategy"],
                 sport: .nfl,
