@@ -3912,3 +3912,26 @@ export {
   ucb1Step,
   decayEps,
 } from "./markets/2401-06086v1-imitation-inplay-betting.js";
+
+// Opponent-adjusted EPA tuning constants. computeOpponentAdjustedEpa and its
+// types are already exported above.
+//
+// NOTE on use: this solver DOES NOT CONVERGE on a balanced double round robin
+// (e.g. an NFL season). The opponent-weight matrix is doubly stochastic, so its
+// constant eigenvector has eigenvalue 1 and the kernel's 0.5 under-relaxation
+// maps 1 -> 0.5*1 + 0.5 = 1, i.e. exponentially neutral: the fixed-point
+// iteration stalls no matter how many iterations are allowed. Measured: 3 teams
+// x 4 games, distinct strengths, 1000 iterations at tolerance 1e-4, still
+// converged:false. Its own tests only exercise star schedules and
+// identical-strength round robins, so they never reach this. ALWAYS check
+// `converged` before using a rating from this kernel; a truncated fit is not a
+// rating.
+export {
+  OPPONENT_ADJUSTED_EPA_DEFAULT_TOLERANCE,
+  OPPONENT_ADJUSTED_EPA_DEFAULT_MAX_ITERATIONS,
+  OPPONENT_ADJUSTED_EPA_DEFAULT_DAMPING_FACTOR,
+  OPPONENT_ADJUSTED_EPA_DEFAULT_MIN_GAMES,
+  OPPONENT_ADJUSTED_EPA_WEEK1_OFFENSE_PRIOR_WEIGHT,
+  OPPONENT_ADJUSTED_EPA_WEEK1_DEFENSE_PRIOR_WEIGHT,
+  OPPONENT_ADJUSTED_EPA_SHRINKAGE_FADE_GAMES,
+} from "./signals/opponent-adjusted-epa.js";
