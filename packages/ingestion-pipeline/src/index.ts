@@ -384,3 +384,17 @@ export {
   type AbstentionDecision,
   type StratumDecision,
 } from "./publish-guards-bridge.js";
+
+// Bayesian pairing bridge (Bradley-Terry, ordinal structure, bivariate Poisson)
+export {
+  evalBradleyTerry,
+  evalOrdinalStructure,
+  evalOrdinalPredict,
+  evalBivPoisson,
+  evalDixonColesTau,
+  evalBivPoissonSample,
+  type PairingEval,
+  type BradleyTerryResult,
+  type OrdinalStructureResult,
+  type BivPoissonResult,
+} from "./bayesian-pairing-bridge.js";
