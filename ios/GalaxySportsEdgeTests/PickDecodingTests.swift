@@ -127,9 +127,11 @@ final class PickDecodingTests: XCTestCase {
         let page = try decodeSlate(fullSlateJSON)
         let pick = try XCTUnwrap(page.picks.first)
         XCTAssertTrue(pick.hasBookPrice)
-        // 0.642 -> decimal 1.558 -> -143.8 -> rounded to the retail increment.
-        XCTAssertEqual(pick.odds, -145)
-        XCTAssertEqual(pick.displayOdds, "-145")
+        // 0.642 -> decimal 1.5576 -> -179.3 -> nearest 5-point increment.
+        // -180 is the price that breaks even at 64.29%, which is this row's
+        // probability; -145 would break even at 59.18% and is a different bet.
+        XCTAssertEqual(pick.odds, -180)
+        XCTAssertEqual(pick.displayOdds, "-180")
     }
 
     func testFlattensTheFactorBreakdownAndDropsAbsentMembers() throws {
