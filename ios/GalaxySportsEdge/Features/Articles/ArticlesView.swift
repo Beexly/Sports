@@ -107,6 +107,11 @@ final class ArticlesViewModel {
 
     var hasMore: Bool { !reachedEnd && !articles.isEmpty }
 
+    /// How many rows are loaded right now. Exposed for tests: `articles` stays
+    /// private because the view is meant to reach rows through `state`, and
+    /// paging is exactly the behaviour worth asserting without building a view.
+    var stateCount: Int { articles.count }
+
     func load() async {
         state = .loading
         do {
