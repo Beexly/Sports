@@ -240,8 +240,26 @@ describe("toIndependentFairValue — bridge into the engine's independent fair v
     capturedAt: "2026-06-03T18:00:00.000Z",
     overround: 1.0,
     sides: [
-      { team: "New York", ticker: "KXNBAGAME-26JUN03NYKSAS-NYK", rawImpliedProb: 0.365, fairProb: 0.365 },
-      { team: "San Antonio", ticker: "KXNBAGAME-26JUN03NYKSAS-SAS", rawImpliedProb: 0.635, fairProb: 0.635 },
+      {
+        team: "New York",
+        ticker: "KXNBAGAME-26JUN03NYKSAS-NYK",
+        rawImpliedProb: 0.365,
+        fairProb: 0.365,
+        quoteSpread: 0.01,
+        quoteBid: 0.36,
+        quoteAsk: 0.37,
+        quoteSource: "yes_bid_ask",
+      },
+      {
+        team: "San Antonio",
+        ticker: "KXNBAGAME-26JUN03NYKSAS-SAS",
+        rawImpliedProb: 0.635,
+        fairProb: 0.635,
+        quoteSpread: 0.02,
+        quoteBid: 0.625,
+        quoteAsk: 0.645,
+        quoteSource: "yes_bid_ask",
+      },
     ],
   };
 
@@ -264,8 +282,26 @@ describe("toIndependentFairValue — bridge into the engine's independent fair v
     const thin: KalshiFairValue = {
       ...fv,
       sides: [
-        { team: "New York", ticker: "KXNBAGAME-26JUN03NYKSAS-NYK", rawImpliedProb: null, fairProb: null },
-        { team: "San Antonio", ticker: "KXNBAGAME-26JUN03NYKSAS-SAS", rawImpliedProb: 0.6, fairProb: 0.6 },
+        {
+          team: "New York",
+          ticker: "KXNBAGAME-26JUN03NYKSAS-NYK",
+          rawImpliedProb: null,
+          fairProb: null,
+          quoteSpread: null,
+          quoteBid: null,
+          quoteAsk: null,
+          quoteSource: "missing_two_way",
+        },
+        {
+          team: "San Antonio",
+          ticker: "KXNBAGAME-26JUN03NYKSAS-SAS",
+          rawImpliedProb: 0.6,
+          fairProb: 0.6,
+          quoteSpread: 0.02,
+          quoteBid: 0.59,
+          quoteAsk: 0.61,
+          quoteSource: "yes_bid_ask",
+        },
       ],
     };
     const out = toIndependentFairValue(thin, "SAS", "NYK");
