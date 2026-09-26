@@ -404,3 +404,235 @@ export {
   openLoopBfr,
 };
 export type { LMPrior, Candidate, RankedCandidate };
+
+// ── SymReg residue: subtree mining, NED selection, sample-size crossover ───
+
+import {
+  mineMotifs,
+  compressionCheck,
+  allocateIslands,
+  type Motif,
+  type Island,
+} from "@sports/prediction-engine";
+import {
+  selectByNed,
+  ned,
+  treeEditDistance,
+  dummyAudit,
+} from "@sports/prediction-engine";
+import {
+  crossoverN,
+  doctrineVerdict,
+  winRates,
+  weightedScore,
+  type SizeResult,
+  type DoctrineVerdict,
+} from "@sports/prediction-engine";
+
+export type SymRegEval<T> =
+  | { readonly ok: true; readonly data: T }
+  | { readonly ok: false; readonly reason: string };
+
+/**
+ * Mine frequent subtree motifs across a program corpus and check whether
+ * motif reuse actually compresses the baseline. Fail-closed on empty input.
+ */
+export function evalMineMotifs(input: {
+  readonly programs: readonly unknown[];
+  readonly minSupport: number;
+  readonly topK?: number;
+  readonly baselineSizes: readonly number[];
+  readonly extendedSizes: readonly number[];
+}): SymRegEval<{
+  readonly motifs: readonly Motif[];
+  readonly compression: ReturnType<typeof compressionCheck>;
+}> {
+  const { programs, minSupport, topK, baselineSizes, extendedSizes } = input;
+  if (!Array.isArray(programs) || programs.length === 0) {
+    return { ok: false, reason: "programs must be non-empty" };
+  }
+  if (!Number.isFinite(minSupport) || minSupport < 1) {
+    return { ok: false, reason: "minSupport must be >= 1" };
+  }
+  if (
+    !Array.isArray(baselineSizes) ||
+    !Array.isArray(extendedSizes) ||
+    baselineSizes.length === 0 ||
+    baselineSizes.length !== extendedSizes.length
+  ) {
+    return {
+      ok: false,
+      reason: "baselineSizes/extendedSizes must be non-empty and aligned",
+    };
+  }
+  try {
+    const motifs = mineMotifs(programs as never, minSupport, topK ?? 3);
+    const compression = compressionCheck(
+      baselineSizes as number[],
+      extendedSizes as number[],
+    );
+    return {
+      ok: true,
+      data: {
+        motifs: motifs as Motif[],
+        compression,
+      },
+    };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+/**
+ * Allocate motifs to islands (diversity-preserving program pools).
+ */
+export function evalAllocateIslands(input: {
+  readonly motifs: readonly unknown[];
+  readonly nIslands: number;
+}): SymRegEval<readonly Island[]> {
+  const { motifs, nIslands } = input;
+  if (!Array.isArray(motifs) || motifs.length === 0) {
+    return { ok: false, reason: "motifs must be non-empty" };
+  }
+  if (!Number.isInteger(nIslands) || nIslands <= 0 || nIslands > motifs.length) {
+    return { ok: false, reason: "nIslands must be in (0, motifs.length]" };
+  }
+  try {
+    const islands = allocateIslands(motifs as never, nIslands);
+    return { ok: true, data: islands as Island[] };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+/**
+ * Normalized edit-distance selection: among candidates whose Brier is
+ * within tol of the best, pick the one closest to the reference expression.
+ * Simpler expressions win ties — that is the Occam pressure.
+ */
+export function evalSelectByNed(input: {
+  readonly candidates: readonly {
+    readonly name: string;
+    readonly expr: unknown;
+    readonly brier: number;
+  }[];
+  readonly reference: unknown;
+  readonly tol?: number;
+}): SymRegEval<{ readonly name: string; readonly ned: number; readonly brier: number }> {
+  const { candidates, reference, tol } = input;
+  if (!Array.isArray(candidates) || candidates.length === 0) {
+    return { ok: false, reason: "candidates must be non-empty" };
+  }
+  if (!reference) {
+    return { ok: false, reason: "reference expression required" };
+  }
+  for (let i = 0; i < candidates.length; i++) {
+    if (!Number.isFinite(candidates[i]!.brier)) {
+      return { ok: false, reason: `candidate ${i}: brier must be finite — not imputed` };
+    }
+  }
+  try {
+    const picked = selectByNed(candidates as never, reference as never, tol ?? 0.01);
+    const d = ned(picked.expr as never, reference as never);
+    return {
+      ok: true,
+      data: {
+        name: picked.name,
+        ned: Number(d.toFixed(6)),
+        brier: Number(picked.brier.toFixed(6)),
+      },
+    };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+/**
+ * NED between two expressions (0 = identical structure).
+ */
+export function evalNed(input: {
+  readonly a: unknown;
+  readonly b: unknown;
+}): SymRegEval<number> {
+  const { a, b } = input;
+  if (!a || !b) return { ok: false, reason: "both expressions required" };
+  try {
+    const d = ned(a as never, b as never);
+    return { ok: true, data: Number(d.toFixed(6)) };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+/**
+ * Sample-size crossover: the n above which the ensemble (RF/GB) beats
+ * symbolic regression on every remaining size. Null = never crosses.
+ */
+export function evalCrossoverN(input: {
+  readonly results: readonly SizeResult[];
+}): SymRegEval<{
+  readonly crossoverN: number | null;
+  readonly winRates: Readonly<Record<string, number>>;
+  readonly weightedScore: Readonly<Record<string, number>>;
+  readonly doctrine: DoctrineVerdict;
+}> {
+  const { results } = input;
+  if (!Array.isArray(results) || results.length === 0) {
+    return { ok: false, reason: "results must be non-empty" };
+  }
+  for (let i = 0; i < results.length; i++) {
+    const r = results[i]!;
+    if (!Number.isFinite(r.n) || r.n <= 0) {
+      return { ok: false, reason: `result ${i}: n must be finite and > 0 — not imputed` };
+    }
+  }
+  try {
+    const x = crossoverN(results as SizeResult[]);
+    const wr = winRates(results as SizeResult[]);
+    const ws = weightedScore(results as SizeResult[]);
+    const doctrine = doctrineVerdict(results as SizeResult[]);
+    return {
+      ok: true,
+      data: {
+        crossoverN: x,
+        winRates: wr as Record<string, number>,
+        weightedScore: ws as Record<string, number>,
+        doctrine,
+      },
+    };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+/**
+ * Tree edit distance between two expressions.
+ */
+export function evalTreeEditDistance(input: {
+  readonly a: unknown;
+  readonly b: unknown;
+}): SymRegEval<number> {
+  const { a, b } = input;
+  if (!a || !b) return { ok: false, reason: "both expressions required" };
+  try {
+    const d = treeEditDistance(a as never, b as never);
+    return { ok: true, data: d };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+export {
+  mineMotifs,
+  compressionCheck,
+  allocateIslands,
+  selectByNed,
+  ned,
+  treeEditDistance,
+  dummyAudit,
+  crossoverN,
+  doctrineVerdict,
+  winRates,
+  weightedScore,
+};
+export type { Motif, Island, SizeResult, DoctrineVerdict };

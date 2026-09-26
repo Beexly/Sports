@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   evalCqlPenalty,
+  evalCrossoverN,
   evalDistributionStats,
   evalDoublyRobust,
   evalEss,
@@ -8,7 +9,10 @@ import {
   evalConsistencyGate,
   evalGreedyStake,
   evalIqnGate,
+  evalMineMotifs,
+  evalNed,
   evalRankByPrior,
+  evalSelectByNed,
   evalSindy,
 } from "./rl-symreg-bridge.js";
 
@@ -183,5 +187,93 @@ describe("rl-symreg-bridge LM prior + SINDy", () => {
     });
     expect(r.ok).toBe(true);
     if (r.ok) expect(Number.isFinite(r.data.bfr)).toBe(true);
+  });
+});
+
+describe("rl-symreg-bridge symreg residue", () => {
+  it("evalMineMotifs finds motifs and checks compression", () => {
+    // Simple SrNode trees: { kind: "op", op, children } / { kind: "var", name } / { kind: "const", value }
+    const t1 = { kind: "op", op: "add", children: [{ kind: "var", name: "x" }, { kind: "const", value: 1 }] };
+    const t2 = { kind: "op", op: "add", children: [{ kind: "var", name: "y" }, { kind: "const", value: 2 }] };
+    const t3 = {
+      kind: "op",
+      op: "mul",
+      children: [t1, { kind: "var", name: "z" }],
+    };
+    const r = evalMineMotifs({
+      programs: [t1, t2, t3],
+      minSupport: 2,
+      topK: 3,
+      baselineSizes: [10, 12, 11],
+      extendedSizes: [8, 9, 9],
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(Array.isArray(r.data.motifs)).toBe(true);
+      expect(typeof r.data.compression.pass).toBe("boolean");
+    }
+  });
+
+  it("evalSelectByNed picks a candidate within Brier tol", () => {
+    const simple = { kind: "binary", op: "add", left: { kind: "var", name: "x" }, right: { kind: "const", value: 1 } };
+    const complex = {
+      kind: "binary",
+      op: "mul",
+      left: simple,
+      right: { kind: "var", name: "y" },
+    };
+    const r = evalSelectByNed({
+      candidates: [
+        { name: "simple", expr: simple, brier: 0.25 },
+        { name: "complex", expr: complex, brier: 0.251 },
+      ],
+      reference: simple,
+      tol: 0.05,
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(typeof r.data.name).toBe("string");
+  });
+
+  it("evalNed is 0 for identical structure", () => {
+    const t = { kind: "binary", op: "add", left: { kind: "var", name: "x" }, right: { kind: "const", value: 1 } };
+    const r = evalNed({ a: t, b: t });
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.data).toBeCloseTo(0, 5);
+  });
+
+  it("evalCrossoverN reports crossover and doctrine", () => {
+    const results = [
+      { n: 30, r2: { rf: 0.4, gb: 0.42, sr: 0.45, lasso: 0.38 } },
+      { n: 60, r2: { rf: 0.55, gb: 0.57, sr: 0.5, lasso: 0.52 } },
+      { n: 120, r2: { rf: 0.65, gb: 0.68, sr: 0.58, lasso: 0.6 } },
+    ] as never;
+    const r = evalCrossoverN({ results });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.data.crossoverN === null || r.data.crossoverN > 0).toBe(true);
+      expect(r.data.doctrine).toBeDefined();
+    }
+  });
+
+  it("fail-closes on empty programs or bad params", () => {
+    expect(
+      evalMineMotifs({
+        programs: [],
+        minSupport: 2,
+        baselineSizes: [1],
+        extendedSizes: [1],
+      }).ok,
+    ).toBe(false);
+    expect(
+      evalMineMotifs({
+        programs: [{}],
+        minSupport: 0,
+        baselineSizes: [1],
+        extendedSizes: [1],
+      }).ok,
+    ).toBe(false);
+    expect(evalSelectByNed({ candidates: [], reference: {} }).ok).toBe(false);
+    expect(evalCrossoverN({ results: [] }).ok).toBe(false);
+    expect(evalNed({ a: null, b: {} }).ok).toBe(false);
   });
 });

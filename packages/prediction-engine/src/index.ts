@@ -2905,3 +2905,31 @@ export {
   negBinMoments,
   nestedScoreSim,
 } from "./bayesian/1911-08791-three-module-score-factorization.js";
+
+// SymReg residue: subtree mining, NED selection, sample-size crossover
+export {
+  enumerateSubtrees,
+  mineMotifs,
+  compressionCheck,
+  allocateIslands,
+  subtreeHash,
+  proposeName,
+  type Motif,
+  type Island,
+} from "./symreg/subtree-mining.js";
+export {
+  treeSize,
+  treeEditDistance,
+  ned,
+  selectByNed,
+  dummyAudit,
+  type Candidate as NedCandidate,
+} from "./symreg/ned-selection.js";
+export {
+  winRates,
+  crossoverN,
+  weightedScore,
+  doctrineVerdict,
+  type SizeResult,
+  type DoctrineVerdict,
+} from "./symreg/sample-size-crossover.js";

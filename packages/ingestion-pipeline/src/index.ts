@@ -413,3 +413,14 @@ export {
   type WpBlendResult,
   type ScoreFactorizationResult,
 } from "./score-model-bridge.js";
+
+// SymReg residue on the rl-symreg bridge
+export {
+  evalMineMotifs,
+  evalAllocateIslands,
+  evalSelectByNed,
+  evalNed,
+  evalCrossoverN,
+  evalTreeEditDistance,
+  type SymRegEval,
+} from "./rl-symreg-bridge.js";
