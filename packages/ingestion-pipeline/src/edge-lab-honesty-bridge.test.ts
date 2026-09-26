@@ -11,6 +11,9 @@ import {
   evalAsofNoLookahead,
   evalWalkForward,
   evalConditionalMiProbe,
+  evalNgsSeparation,
+  evalLadderBoost,
+  evalBoostOpportunities,
 } from "./edge-lab-honesty-bridge.js";
 
 function closeRow(qClose: number, epa: number, rest: number) {
@@ -279,6 +282,72 @@ describe("edge-lab-honesty-bridge placebo / walk-forward", () => {
     if (r.ok) {
       expect(Number.isFinite(r.data.miNats)).toBe(true);
       expect(r.data.n).toBe(80);
+    }
+  });
+});
+
+describe("edge-lab-honesty-bridge NGS measurement loop", () => {
+  it("measures separation reconstruction against NGS truth", () => {
+    const predicted = [
+      { playerId: "p1", value: 2.5 },
+      { playerId: "p2", value: 3.1 },
+      { playerId: "p3", value: 1.8 },
+    ];
+    const truth = [
+      { playerId: "p1", actual: 2.4 },
+      { playerId: "p2", actual: 3.3 },
+      { playerId: "p3", actual: 1.9 },
+    ];
+    const r = evalNgsSeparation({ predicted, truth });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.data.n).toBe(3);
+      expect(r.data.priced).toBe(false);
+    }
+  });
+
+  it("fail-closes on empty predicted/truth", () => {
+    const r = evalNgsSeparation({ predicted: [], truth: [{ playerId: "p", actual: 1 }] });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.reason).toContain("not imputed");
+  });
+});
+
+describe("edge-lab-honesty-bridge ladder-boost scanners", () => {
+  it("fail-closes on empty levels", () => {
+    const r = evalLadderBoost({ levels: [], modelPOver: () => 0.5 });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.reason).toContain("not imputed");
+  });
+
+  it("scans a real ladder when a model curve is supplied", () => {
+    const levels = [
+      { line: 5.5, quote: { overAmerican: -110, underAmerican: -110 } },
+      { line: 6.5, quote: { overAmerican: 120, underAmerican: -140 } },
+      { line: 7.5, quote: { overAmerican: 160, underAmerican: -190 } },
+    ];
+    const r = evalLadderBoost({
+      levels,
+      modelPOver: (line) => (line <= 5.5 ? 0.62 : line <= 6.5 ? 0.48 : 0.35),
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.data.levels.length).toBe(3);
+      expect(r.data.methodTag).toBe("ladder_boost_v1");
+    }
+  });
+
+  it("evalBoostOpportunities returns only positive-edge levels or empty", () => {
+    const levels = [
+      { line: 5.5, quote: { overAmerican: -500, underAmerican: 350 } },
+    ];
+    const r = evalBoostOpportunities({
+      levels,
+      modelPOver: () => 0.55,
+    });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      for (const o of r.data) expect(o.edgeOver).toBeGreaterThan(0);
     }
   });
 });

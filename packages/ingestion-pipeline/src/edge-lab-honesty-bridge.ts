@@ -39,6 +39,10 @@ import {
   walkForwardEval,
   edgeLabShuffledTimePlacebo,
   conditionalMiProbe,
+  measureSeparationAgainstNgs,
+  measureExpectedAgainstNgs,
+  scanLadderBoost,
+  scanBoostOpportunities,
   type FeatureObservation,
   type ServedRecord,
   type PlaceboEvalRow,
@@ -47,6 +51,17 @@ import {
   type EdgeLabPlaceboReport,
   type MiProbeReport,
   type WalkForwardOptions,
+  type SepPrediction,
+  type SepTruth,
+  type SepMeasurement,
+  type ExpectedFamily,
+  type ExpectedMeasurement,
+  type PlayerExpectedMetric,
+  type GroundTruthPoint,
+  type LadderLevel,
+  type SoftnessMapResult,
+  type SoftnessMapOptions,
+  type BoostOpportunity,
 } from "@sports/prediction-engine";
 
 /** Trainer shape required by edge-lab placebo / walk-forward eval. */
@@ -459,6 +474,10 @@ export {
   conditionalMiProbe,
   AsOfFeatureStore,
   AsOfViolationError,
+  measureSeparationAgainstNgs,
+  measureExpectedAgainstNgs,
+  scanLadderBoost,
+  scanBoostOpportunities,
 };
 export type {
   CloseRow,
@@ -475,4 +494,121 @@ export type {
   EdgeLabPlaceboReport,
   MiProbeReport,
   WalkForwardOptions,
+  SepPrediction,
+  SepTruth,
+  SepMeasurement,
+  ExpectedFamily,
+  ExpectedMeasurement,
+  PlayerExpectedMetric,
+  GroundTruthPoint,
+  LadderLevel,
+  SoftnessMapResult,
+  SoftnessMapOptions,
+  BoostOpportunity,
 };
+
+// ── NGS measurement loop (reconstruction vs NGS truth, never a live p) ──────
+
+/**
+ * Inner-join our separation reconstruction to NGS actuals by playerId.
+ * Measurement only — never copies NGS into a served metric.
+ */
+export function evalNgsSeparation(input: {
+  readonly predicted: readonly SepPrediction[];
+  readonly truth: readonly SepTruth[];
+}): HonestEval<SepMeasurement> {
+  const { predicted, truth } = input;
+  if (!Array.isArray(predicted) || !Array.isArray(truth)) {
+    return { ok: false, reason: "predicted/truth must be arrays — not imputed" };
+  }
+  if (predicted.length === 0 || truth.length === 0) {
+    return { ok: false, reason: "predicted/truth empty — not imputed" };
+  }
+  try {
+    const m = measureSeparationAgainstNgs(predicted, truth);
+    if (!m.ok) {
+      return { ok: false, reason: `NGS separation measurement refused: ${m.refuse} (n=${m.n})` };
+    }
+    return { ok: true, data: m };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+/**
+ * Measure our expected-metric family (cpoe | ryoe | xyac) against NGS truth.
+ */
+export function evalNgsExpected(input: {
+  readonly family: ExpectedFamily;
+  readonly ours: readonly PlayerExpectedMetric[];
+  readonly truth: readonly GroundTruthPoint[];
+}): HonestEval<ExpectedMeasurement> {
+  const { family, ours, truth } = input;
+  if (family !== "cpoe" && family !== "ryoe" && family !== "xyac") {
+    return { ok: false, reason: "family must be cpoe | ryoe | xyac" };
+  }
+  if (!Array.isArray(ours) || !Array.isArray(truth)) {
+    return { ok: false, reason: "ours/truth must be arrays — not imputed" };
+  }
+  if (ours.length === 0 || truth.length === 0) {
+    return { ok: false, reason: "ours/truth empty — not imputed" };
+  }
+  try {
+    const m = measureExpectedAgainstNgs(family, ours, truth);
+    if (!m.ok) {
+      return { ok: false, reason: `NGS expected measurement refused: ${m.refuse} (n=${m.n})` };
+    }
+    return { ok: true, data: m };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+// ── Ladder / boost scanners (market softness across a line ladder) ──────────
+
+/**
+ * Scan a posted ladder for the softest level vs the model.
+ * Requires a real modelPOver(line) curve — no interpolation, no invention.
+ */
+export function evalLadderBoost(input: {
+  readonly levels: readonly LadderLevel[];
+  readonly modelPOver: (line: number) => number;
+  readonly options?: SoftnessMapOptions;
+}): HonestEval<SoftnessMapResult> {
+  const { levels, modelPOver } = input;
+  if (!Array.isArray(levels) || levels.length === 0) {
+    return { ok: false, reason: "levels empty — not imputed" };
+  }
+  if (typeof modelPOver !== "function") {
+    return { ok: false, reason: "modelPOver must be a function of line" };
+  }
+  try {
+    const result = scanLadderBoost(levels, modelPOver, input.options ?? {});
+    return { ok: true, data: result };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}
+
+/**
+ * Positive-edge boost opportunities across the ladder.
+ */
+export function evalBoostOpportunities(input: {
+  readonly levels: readonly LadderLevel[];
+  readonly modelPOver: (line: number) => number;
+  readonly options?: SoftnessMapOptions;
+}): HonestEval<readonly BoostOpportunity[]> {
+  const { levels, modelPOver } = input;
+  if (!Array.isArray(levels) || levels.length === 0) {
+    return { ok: false, reason: "levels empty — not imputed" };
+  }
+  if (typeof modelPOver !== "function") {
+    return { ok: false, reason: "modelPOver must be a function of line" };
+  }
+  try {
+    const opps = scanBoostOpportunities(levels, modelPOver, input.options ?? {});
+    return { ok: true, data: opps };
+  } catch (err) {
+    return { ok: false, reason: err instanceof Error ? err.message : String(err) };
+  }
+}

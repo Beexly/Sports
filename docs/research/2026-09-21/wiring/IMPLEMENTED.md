@@ -256,3 +256,10 @@ Wave 5 full prediction-engine suite: 5951/5951 across 825 test files. coverage.t
 | AsOfFeatureStore ingest/get/assertNoLookahead wrappers | packages/ingestion-pipeline/src/edge-lab-honesty-bridge.ts | 3/3 | LIVE |
 | walkForwardEval + edgeLabShuffledTimePlacebo + conditionalMiProbe wrappers | packages/ingestion-pipeline/src/edge-lab-honesty-bridge.ts | covered in 17/17 | LIVE |
 | AsOfFeatureStore class + edge-lab placebo exports on barrel (no name collision) | packages/prediction-engine/src/index.ts | exported | LIVE |
+
+## Wave 6F — NGS measurement loop + ladder/boost scanners live path (2026-09-25)
+
+| Item | File | Tests | Status |
+|---|---|---|---|
+| measureSeparationAgainstNgs / measureExpectedAgainstNgs wrappers | packages/ingestion-pipeline/src/edge-lab-honesty-bridge.ts | covered in 22/22 | LIVE |
+| scanLadderBoost / scanBoostOpportunities wrappers | packages/ingestion-pipeline/src/edge-lab-honesty-bridge.ts | covered in 22/22 | LIVE |
