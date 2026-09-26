@@ -28,6 +28,16 @@ jobs:
       - name: Check project.pbxproj matches the source tree
         run: python3 ios/generate_project.py --check
 
+      - name: Check project.pbxproj is structurally sound
+        # A real OpenStep parse, reporting a line and a column. `xcodebuild
+        # -list` on the macOS runner catches the same class of damage, but it
+        # says only "The project is damaged and cannot be opened due to a
+        # parse error" and costs a whole slow lane to find out. This one found
+        # `buildActionMask = [PHONE];` in under a second -- a pbxproj is an
+        # OpenStep property list and `[` cannot begin a value in one, so Xcode
+        # choked on a project whose braces all balanced.
+        run: python3 ios/check_pbxproj.py
+
   build-and-test:
     name: Build + test
     runs-on: macos-15
@@ -92,8 +102,11 @@ jobs:
         # rather than reporting a pass it did not earn.
         run: |
           work="$(mktemp -d)"
-          cp ios/GalaxySportsEdge/Info.plist "$work/corrupt.plist"
-          printf '<unclosed>\n' >> "$work/corrupt.plist"
+          # Drop the closing </plist> so the document cannot parse. An earlier
+          # version of this control appended a stray element after the root,
+          # which plutil accepted -- a control that the tool passes proves
+          # nothing, so the corruption has to be one no reader can forgive.
+          sed '$d' ios/GalaxySportsEdge/Info.plist > "$work/corrupt.plist"
           if plutil -lint "$work/corrupt.plist" >/dev/null 2>&1; then
             echo "::warning::plutil accepted a deliberately corrupt plist on this runner; this step is not a real check here"
             exit 0

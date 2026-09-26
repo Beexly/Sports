@@ -300,12 +300,26 @@ is 0 on a run that produced no test bundle at all.
 
 `.github/workflows/ios-build.yml`, macOS 15, free on a public repo.
 
-- `project` job (ubuntu, ~5s): `generate_project.py --check`.
+- `project` job (ubuntu, ~5s): `generate_project.py --check`, then
+  `check_pbxproj.py`.
 - `build-and-test` job: `plutil -lint` on the two XML property lists,
   `xcodebuild -list` to prove Xcode can open the project, an unsigned
   simulator build, then `xcodebuild test` against a simulator chosen at
   runtime — GitHub adds and removes runtimes from its images, and a
   hard-coded UDID is a flaky lane.
+
+`check_pbxproj.py` parses the project file as what it is — an OpenStep
+property list — and reports a line and a column when something is wrong. It
+exists because of `buildActionMask = [PHONE]`, which the generator emitted
+into all six build phases. `[` cannot begin a value in an OpenStep plist, so
+Xcode refused to open the project at all; its own conversion of the file to
+JSON failed with "JSON text did not start with array or object", which says
+nothing about the cause. Every brace in the file balanced, which is why
+counting them never found it. The value is an integer, `2147483647`.
+
+The generator is the only thing that writes this file, so a structural mistake
+is a bug that reproduces on every run. Catching it in the ubuntu job costs a
+second instead of a 35-minute macOS lane.
 
 The project file is checked with `xcodebuild -list`, not `plutil -lint`. A
 pbxproj is OpenStep; plutil applies the XML grammar to it regardless of the

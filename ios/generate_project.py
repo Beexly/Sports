@@ -260,7 +260,7 @@ def build_pbxproj() -> str:
     for name, _, _, _, _, _ in TARGETS:
         w(f"\t\t{uid('phase', name, 'frameworks')} /* Frameworks */ = {{")
         w("\t\t\tisa = PBXFrameworksBuildPhase;")
-        w("\t\t\tbuildActionMask = [PHONE];")
+        w("\t\t\tbuildActionMask = 2147483647;")
         w("\t\t\tfiles = (")
         w("\t\t\t);")
         w("\t\t\trunOnlyForDeploymentPostprocessing = 0;")
@@ -381,7 +381,7 @@ def build_pbxproj() -> str:
         for name, _, _, _, _, _ in TARGETS:
             w(f"\t\t{uid('phase', name, phase)} /* {kind} */ = {{")
             w(f"\t\t\tisa = PBX{kind}BuildPhase;")
-            w("\t\t\tbuildActionMask = [PHONE];")
+            w("\t\t\tbuildActionMask = 2147483647;")
             w("\t\t\tfiles = (")
             for node in discovered[name]:
                 want_source = phase == "sources"
