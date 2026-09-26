@@ -35,7 +35,7 @@ import {
 } from "./fixture-confirmation.js";
 import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
 import { collapseGameRowsToFixtures } from "./fixture-collapse.js";
-import { evalLeakageQuality, fixtureFromGameRows } from "./leakage-gate.js";
+import { evalLeakageQuality } from "./leakage-gate.js";
 
 /**
  * Rows read from `games` before the per-fixture collapse. Sized well above the
