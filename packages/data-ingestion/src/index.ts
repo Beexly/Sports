@@ -249,6 +249,10 @@ export {
   PREDEXON_SOURCE_ID,
   type PredExonKalshiMarket,
   type PredExonKalshiMarketsPage,
+  PREDEXON_PAID_TICK_PATH_PREFIX,
+  type PredExonKalshiTrade,
+  type PredExonKalshiTradesPage,
+  type PredExonKalshiOutcome,
 } from "./predexon-client.js";
 export { SharpApiClient, SharpApiError, isSharpApiIngestEnabled, SHARP_API_BASE, SHARP_API_SOURCE_ID } from "./sharp-api-client.js";
 export {
