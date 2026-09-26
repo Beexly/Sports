@@ -424,3 +424,19 @@ export {
   evalTreeEditDistance,
   type SymRegEval,
 } from "./rl-symreg-bridge.js";
+
+// RL residue bridge (C51 optimal stopping, Sinkhorn DRL, CFCQL, thin-regime)
+export {
+  evalOptimalStopping,
+  evalC51Project,
+  evalSinkhornStaking,
+  evalRiskPriceUpdate,
+  evalCfcql,
+  evalThinRegimeRetrieval,
+  evalRegimeKey,
+  type RlResidueEval,
+  type StoppingResult,
+  type SinkhornResult,
+  type CfcqlResult,
+  type ThinRegimeResult,
+} from "./rl-residue-bridge.js";

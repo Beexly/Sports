@@ -2994,3 +2994,36 @@ export {
   type SizeResult,
   type DoctrineVerdict,
 } from "./symreg/sample-size-crossover.js";
+
+// RL residue: C51 optimal stopping, Sinkhorn DRL, CFCQL, thin-regime retrieval
+export {
+  stoppingBackwardInduction,
+  c51Project,
+  clvRegret,
+  type StoppingState,
+} from "./rl/2105-08877v2-c51-optimal-stopping.js";
+export {
+  wasserstein1d,
+  entropicTransportCost,
+  scalarizeReturn,
+  riskPriceUpdate,
+} from "./rl/2202-00769v1-sinkhorn-drl-staking.js";
+export {
+  counterfactualPenalty,
+  cfcqlAgentLoss,
+  lambdaPerAgent,
+  lowerBoundHolds,
+} from "./rl/cfcql-penalty.js";
+export {
+  regimeKey,
+  regimeHistogram,
+  fitPowerLaw,
+  thinRegimes,
+  perturbTransitions,
+  retrieveNeighbors,
+  buildRbCqlBatch,
+  type SlateState,
+  type PowerLawFit,
+  type Transition,
+  type WeightedBatch,
+} from "./rl/thin-regime-retrieval.js";
