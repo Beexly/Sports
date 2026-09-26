@@ -123,14 +123,13 @@ export async function hashCertificate(cert: DecisionCertificate): Promise<string
     const digest = await subtle.digest("SHA-256", data);
     return [...new Uint8Array(digest)].map((b) => b.toString(16).padStart(2, "0")).join("");
   }
-  try {
-    const { createHash } = await import("node:crypto");
-    return createHash("sha256").update(payload, "utf8").digest("hex");
-  } catch {
-    let h = 0;
-    for (let i = 0; i < payload.length; i++) h = (h * 31 + payload.charCodeAt(i)) | 0;
-    return `fnv_${(h >>> 0).toString(16)}`;
-  }
+  // NOTE (2026-09-25): the node:crypto fallback was removed because webpack
+  // cannot bundle the "node:" scheme into the client build (UnhandledSchemeError).
+  // globalThis.crypto.subtle exists in every runtime this ships to (browsers,
+  // Node 18+, edge); the FNV branch below covers anything older.
+  let h = 0;
+  for (let i = 0; i < payload.length; i++) h = (h * 31 + payload.charCodeAt(i)) | 0;
+  return `fnv_${(h >>> 0).toString(16)}`;
 }
 
 export async function withContentHash(
