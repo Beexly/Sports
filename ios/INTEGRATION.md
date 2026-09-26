@@ -301,15 +301,31 @@ is 0 on a run that produced no test bundle at all.
 `.github/workflows/ios-build.yml`, macOS 15, free on a public repo.
 
 - `project` job (ubuntu, ~5s): `generate_project.py --check`.
-- `build-and-test` job: `plutil -lint` on the pbxproj and both plists, an
-  unsigned simulator build, then `xcodebuild test` against a simulator chosen
-  at runtime — GitHub adds and removes runtimes from its images, and a
+- `build-and-test` job: `plutil -lint` on the two XML property lists,
+  `xcodebuild -list` to prove Xcode can open the project, an unsigned
+  simulator build, then `xcodebuild test` against a simulator chosen at
+  runtime — GitHub adds and removes runtimes from its images, and a
   hard-coded UDID is a flaky lane.
 
-`plutil -lint` is there because `xcodebuild` reports a malformed pbxproj as
-"damaged ... parse error" with no line number. Brace counting is not a parse
-check: the file that Xcode refused to open had balanced braces, balanced
-parens and no dangling references.
+The project file is checked with `xcodebuild -list`, not `plutil -lint`. A
+pbxproj is OpenStep; plutil applies the XML grammar to it regardless of the
+file name, so it rejects the `// !$*UTF8*$!` header of a file Xcode opens
+without complaint. Brace counting is not a substitute either: the file that
+Xcode refused to open had balanced braces, balanced parens and no dangling
+references.
+
+`xcodebuild test` also exits 0 on a run that produced no test bundle, so the
+step greps the log for an executed-test count and `TEST SUCCEEDED` rather than
+trusting that exit code.
+
+### The generated project file is location-independent
+
+Object ids are derived from the target name and the path relative to it, never
+from the absolute source root. They were derived from the root, which made the
+generated pbxproj differ at every checkout location while looking correct in
+the author's own directory — so `generate_project.py --check` reported the
+project stale on every CI run and had never once passed. A generated file that
+only reproduces where it was generated is not generated; it is a snapshot.
 
 ---
 

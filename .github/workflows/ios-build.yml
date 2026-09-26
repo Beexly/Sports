@@ -71,47 +71,42 @@ jobs:
           fi
           echo "SIMULATOR_UDID=$UDID" >> "$GITHUB_ENV"
 
-      - name: Lint the project file with macOS's own plist parser
-        # `xcodebuild` reports a malformed pbxproj as "damaged ... parse error"
-        # with no line number, which is close to undebuggable. `plutil` is the
-        # same parser with a line number, and it costs nothing. A brace count
-        # does not work here: the file that Xcode refused to open had balanced
-        # braces, balanced parens, and no dangling references.
-        # Two things this step has to get right, both learned the hard way.
+      - name: Lint the shipped property lists
+        # Only the two XML property lists, and only because plutil is the right
+        # tool for those. It is NOT used on project.pbxproj: a pbxproj is
+        # OpenStep, and plutil on this runner applies the XML grammar to it
+        # whatever the file is called. Measured, not assumed -- the raw file and
+        # a copy renamed to .plist both fail with "Unexpected character / at
+        # line 1" on the `// !$*UTF8*$!` header, and stripping that header only
+        # moves the complaint to the `{` on line 2, which is perfectly valid
+        # OpenStep. Do not re-add a pbxproj lint here; the next step opens the
+        # project with Xcode's own reader instead, which is the check that
+        # actually decides anything.
         #
-        # 1. plutil picks its reader from the file name, and "project.pbxproj"
-        #    is not a property-list extension, so it reads the file as XML and
-        #    rejects the OpenStep source Xcode actually writes. The first error
-        #    here was "Unexpected character / at line 1" on the `// !$*UTF8*$!`
-        #    header; dropping that header only moved the complaint to the `{`
-        #    on the next line, and `{` is *valid* OpenStep — a dead giveaway
-        #    that the wrong reader was in use, not a malformed file. Lint a
-        #    .plist-named copy so the OpenStep reader gets selected.
+        # A brace count is not a substitute: the file that Xcode once refused
+        # to open had balanced braces, balanced parens and no dangling refs.
         #
-        # 2. A guard that has quietly stopped reading anything still exits 0,
-        #    so the corrupt copy has to be rejected for the good one to count.
-        #    If plutil cannot even reject that, it is not a usable guard on
-        #    this runner: say so out loud rather than passing for free. The
-        #    check that actually has to hold is the next step, where Xcode's
-        #    own reader opens the project.
+        # The control exists because a lint that has quietly stopped reading
+        # anything still exits 0. If plutil cannot reject a deliberately
+        # corrupt copy, it is not doing any work here, and the step says so
+        # rather than reporting a pass it did not earn.
         run: |
           work="$(mktemp -d)"
-          cp ios/GalaxySportsEdge.xcodeproj/project.pbxproj "$work/project.plist"
-          { cat "$work/project.plist"; printf '}\n'; } > "$work/corrupt.plist"
-
+          cp ios/GalaxySportsEdge/Info.plist "$work/corrupt.plist"
+          printf '<unclosed>\n' >> "$work/corrupt.plist"
           if plutil -lint "$work/corrupt.plist" >/dev/null 2>&1; then
-            echo "::warning::plutil accepted a deliberately corrupt plist on this runner; not a usable guard here, leaving the project to xcodebuild to parse"
-          else
-            plutil -lint "$work/project.plist"
+            echo "::warning::plutil accepted a deliberately corrupt plist on this runner; this step is not a real check here"
+            exit 0
           fi
           plutil -lint ios/GalaxySportsEdge/Info.plist
           plutil -lint ios/GalaxySportsEdge/PrivacyInfo.xcprivacy
 
       - name: Xcode can read the project
-        # The real parse. `xcodebuild -list` is Xcode's own reader on the
-        # project file, and it is what the build and test steps both depend on,
-        # so it is checked on its own rather than inferred from a build that
-        # has not run yet.
+        # The real parse, and the one that matters. `xcodebuild -list` runs
+        # Xcode's own reader over project.pbxproj -- the same reader the build
+        # and test steps depend on -- and fails loudly on a project it cannot
+        # open, instead of surfacing as "damaged ... parse error" three steps
+        # later with no line number.
         run: xcodebuild -list -project ios/GalaxySportsEdge.xcodeproj
 
       - name: Build for iOS Simulator (unsigned)
