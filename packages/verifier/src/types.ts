@@ -7,6 +7,15 @@
  * not exist yet — fixtures exercise every path.
  */
 
+import type { CalibrationVerdict } from "./calibration";
+import type { Decision } from "./integrity";
+
+/** How a candidate's Brier gap to the market decomposes. */
+export type CalibrationDiagnosis = CalibrationVerdict["diagnosis"];
+
+/** How a cluster-level comparison should be reported. */
+export type ClusterVerdict = Decision["verdict"];
+
 /** Frozen holdout identifiers. Never edited without a new ID. */
 export type HoldoutId = "PICKS-H1" | "NFL-H2";
 
@@ -72,6 +81,28 @@ export type Scorecard = {
   readonly pBetterSeed: number;
   readonly bySport: readonly SportStratum[];
   readonly wilson: WilsonBand | null;
+  /**
+   * Calibration diagnostics, reported for BOTH arms against the market
+   * (arXiv:2607.00164). Brier alone cannot tell a resolution-limited model from
+   * a badly calibrated one, and the two call for opposite responses, so the
+   * scorecard now says which one it is in `calibrationDiagnosis`.
+   */
+  readonly candidateEce: number;
+  readonly marketEce: number;
+  readonly candidateMce: number;
+  readonly marketMce: number;
+  readonly candidateResolution: number;
+  readonly marketResolution: number;
+  /** Ten equal-width bins; see DEFAULT_CALIBRATION_BINS. */
+  readonly calibrationBins: number;
+  readonly calibrationDiagnosis: CalibrationDiagnosis;
+  /**
+   * Cluster-level verdict from a game-level bootstrap (arXiv:2604.01491), or
+   * null when the export carries no cluster key. Never silently omitted:
+   * `clusterNote` says which case this is.
+   */
+  readonly clusterVerdict: ClusterVerdict;
+  readonly clusterNote: string;
   readonly harnessOk: boolean;
   readonly harnessNote: string;
 };

@@ -176,3 +176,62 @@ describe("fixture scorecard", () => {
     expect(sc.deltaBrier).toBeGreaterThan(0);
   });
 });
+
+describe("calibration and cluster reporting on the scorecard", () => {
+  it("reports ECE, MCE and resolution for BOTH arms, and names the diagnosis", () => {
+    const rows = [
+      row({ id: "a", outcome: 1, marketFairProb: 0.8, modelProb: 0.7 }),
+      row({ id: "b", outcome: 0, marketFairProb: 0.6, modelProb: 0.7 }),
+      row({ id: "c", outcome: 1, marketFairProb: 0.55, modelProb: 0.45 }),
+      row({ id: "d", outcome: 0, marketFairProb: 0.5, modelProb: 0.4 }),
+    ];
+    const sc = buildScorecard(rows);
+    expect(sc.calibrationBins).toBe(10);
+    expect(Number.isFinite(sc.candidateEce)).toBe(true);
+    expect(Number.isFinite(sc.marketEce)).toBe(true);
+    expect(Number.isFinite(sc.candidateResolution)).toBe(true);
+    expect(Number.isFinite(sc.marketResolution)).toBe(true);
+    // n=4 is below the reporting floor, so no diagnosis is claimed.
+    expect(sc.calibrationDiagnosis).toBe("n-too-small");
+  });
+
+  it("refuses a cluster verdict from one cluster and says so in the note", () => {
+    const rows = [
+      row({ id: "a", outcome: 1, marketFairProb: 0.8, modelProb: 0.7 }),
+      row({ id: "b", outcome: 0, marketFairProb: 0.6, modelProb: 0.7 }),
+      row({ id: "c", outcome: 1, marketFairProb: 0.55, modelProb: 0.45 }),
+      row({ id: "d", outcome: 0, marketFairProb: 0.5, modelProb: 0.4 }),
+    ];
+    const sc = buildScorecard(rows);
+    expect(sc.clusterVerdict).toBe("indistinguishable");
+    expect(sc.clusterNote).toContain("ONE cluster");
+    expect(sc.clusterNote).toContain("clusterIdOf");
+  });
+
+  it("uses a real cluster key when one is supplied", () => {
+    const rows = Array.from({ length: 12 }, (_, i) =>
+      row({
+        id: `r${i}`,
+        outcome: i % 3 === 0 ? 1 : 0,
+        marketFairProb: 0.6,
+        modelProb: 0.5,
+      }),
+    );
+    const sc = buildScorecard(rows, { clusterIdOf: (r) => r.id.slice(0, 2) });
+    expect(sc.clusterNote).toContain("cluster");
+    expect(sc.clusterNote).not.toContain("ONE cluster");
+  });
+
+  it("surfaces the calibration block in the markdown", () => {
+    const rows = [
+      row({ id: "a", outcome: 1, marketFairProb: 0.8, modelProb: 0.7 }),
+      row({ id: "b", outcome: 0, marketFairProb: 0.6, modelProb: 0.7 }),
+      row({ id: "c", outcome: 1, marketFairProb: 0.55, modelProb: 0.45 }),
+      row({ id: "d", outcome: 0, marketFairProb: 0.5, modelProb: 0.4 }),
+    ];
+    const md = scorecardMarkdown("t", buildScorecard(rows));
+    expect(md).toContain("calibration (10 equal-width bins)");
+    expect(md).toContain("diagnosis:");
+    expect(md).toContain("cluster verdict:");
+  });
+});

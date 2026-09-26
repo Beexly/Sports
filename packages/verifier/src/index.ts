@@ -7,6 +7,9 @@
 
 export * from "./types";
 export * from "./stats";
+export * from "./calibration";
+export * from "./exact";
+export * from "./integrity";
 export * from "./holdout";
 export * from "./scorecard";
 export * from "./duel";
