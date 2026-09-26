@@ -100,3 +100,53 @@ test("other banned phrases are unaffected by the lock exemptions", () => {
   const inCode = scan(clean('const cols = ["guaranteed"];\n'));
   assert.equal(inCode.code, 1, inCode.out);
 });
+
+test("guaranteedMultiplier (the upstream DK Pick6 field) is third-party data, not a claim", () => {
+  // The Trust gate's own log surfaced these 4 hits, all in
+  // packages/data-ingestion/src/dk-pick6-intake.ts. It is a property key on
+  // DraftKings' Pick6 payout-tier payload — a third book's contest payout
+  // table — never a claim this platform makes.
+  const file = "packages/data-ingestion/src/dk-pick6-intake.ts";
+  const r = scan({
+    [file]: [
+      "export interface DkPick6PayoutTier {",
+      "  readonly numberOfPicksCorrect: number;",
+      "  readonly guaranteedMultiplier: number;",
+      "}",
+      "",
+    ].join("\n"),
+  });
+  assert.equal(r.code, 0, r.out);
+
+  // The access sites must be clean too, not just the interface.
+  const uses = scan({
+    [file]: [
+      "const mult = asFiniteNumber(tier?.guaranteedMultiplier);",
+      "accepted.push({ guaranteedMultiplier: mult });",
+      "",
+    ].join("\n"),
+  });
+  assert.equal(uses.code, 0, uses.out);
+});
+
+test("the guaranteedMultiplier exemption cannot smuggle a real guarantee claim", () => {
+  // Negative control: blanking the identifier must leave a residual
+  // "guaranteed" on the SAME line still hitting.
+  const file = "packages/data-ingestion/src/dk-pick6-intake.ts";
+  for (const line of [
+    "const guaranteedMultiplier = 10; // guaranteed winner",
+    "export const pitch = `guaranteedMultiplier ${x} — guaranteed profit`;",
+  ]) {
+    const r = scan({ [file]: line + "\n" });
+    assert.equal(r.code, 1, `expected refusal for: ${line}`);
+    assert.match(r.out, /banned\.guaranteed/);
+  }
+  // And the guarantee ban is untouched in every other file and context.
+  for (const [rel, body] of [
+    ["packages/thing.ts", "const x = 1; // guaranteed multiplier of 5x\n"],
+    ["apps/web/lib/page.tsx", "Your guaranteedMultiplier is 10x!\n"],
+  ]) {
+    const r = scan({ [rel]: body });
+    assert.equal(r.code, 1, `expected refusal for: ${rel}`);
+  }
+});

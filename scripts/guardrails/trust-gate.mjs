@@ -297,6 +297,29 @@ const LOCKFILE_SAFE_CONTEXT =
 // anywhere else in the same line still hits.
 const LOCK_PROPER_NOUN_SAFE_CONTEXT = /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b/gi;
 
+// DraftKings' own Pick6 API field is literally named `guaranteedMultiplier` —
+// it is a property key on the upstream payout-tier payload, parsed in
+// packages/data-ingestion/src/dk-pick6-intake.ts. It is third-party data
+// describing a third book's contest payout table, not a claim this platform
+// makes to anyone, so the guaranteed-outcome ban cannot apply to it. (The Trust
+// gate's own log is what surfaced this: 4 hits, all this identifier, all in
+// that one ingestion file — pre-existing on main, unrelated to the surname
+// fix above.)
+//
+// Same blank-then-recheck discipline as every other context here: ONLY the
+// exact upstream identifier is blanked, and ONLY in the one file that actually
+// parses DraftKings' API. A line carrying `guaranteedMultiplier` alongside a
+// real claim — "guaranteedMultiplier 10x — guaranteed winner" — still hits on
+// the residual word. This does not weaken the guaranteed-outcome ban anywhere
+// else, and it does not touch the more specific guaranteed-profit/roi/winner
+// rules, which never matched a compound identifier in the first place.
+//
+// The file scoping is load-bearing, not defensive: an unscoped blank would let
+// a public-copy surface (apps/web) wave the identifier through the ban. A
+// behavioural test pins that.
+const GUARANTEED_UPSTREAM_FIELD_FILE = "packages/data-ingestion/src/dk-pick6-intake.ts";
+const GUARANTEED_UPSTREAM_FIELD_SAFE_CONTEXT = /\bguaranteedMultiplier\b/g;
+
 // Root memory docs (STEP 4b) carry VERBATIM social-post digests: a dated line
 // attributed to a handle, quoting a third party's leaderboard or post text.
 // "D.Lock 22.92%" or "Allen, Purdy, Lock, Jackson" in such a line is quoted
@@ -443,13 +466,21 @@ function scanText(text, relPath) {
         SCAN_FILES.includes(relNorm) &&
         isVerbatimSocialDigestLine(rawLines[i]);
       const matched = !digestQuote && candidates.some((candidate) => {
-        const subject =
-          entry.claim === "banned.lock"
-            ? candidate
-                .replace(LOCK_SAFE_CONTEXT, " ")
-                .replace(LOCKFILE_SAFE_CONTEXT, " ")
-                .replace(LOCK_PROPER_NOUN_SAFE_CONTEXT, " ")
-            : candidate;
+        let subject = candidate;
+        if (entry.claim === "banned.lock") {
+          subject = subject
+            .replace(LOCK_SAFE_CONTEXT, " ")
+            .replace(LOCKFILE_SAFE_CONTEXT, " ")
+            .replace(LOCK_PROPER_NOUN_SAFE_CONTEXT, " ");
+        } else if (
+          entry.claim === "banned.guaranteed-outcome" &&
+          relNorm === GUARANTEED_UPSTREAM_FIELD_FILE
+        ) {
+          // Blank the upstream DK Pick6 identifier only, and only in the
+          // ingestion file that parses it; a residual "guaranteed" anywhere
+          // else on the line still hits.
+          subject = subject.replace(GUARANTEED_UPSTREAM_FIELD_SAFE_CONTEXT, " ");
+        }
         return re.test(subject);
       });
       if (matched) {
