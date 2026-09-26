@@ -13,6 +13,15 @@ import {
   pairedBootstrap,
   wilsonInterval,
 } from "./stats";
+import {
+  DEFAULT_CALIBRATION_BINS,
+  compareCalibration,
+  expectedCalibrationError,
+  maximumCalibrationError,
+  resolution,
+  type CalibrationRow,
+} from "./calibration";
+import { clusterBootstrap, decide } from "./integrity";
 
 export type ScorecardOptions = {
   readonly resamples?: number;
@@ -24,6 +33,15 @@ export type ScorecardOptions = {
    */
   readonly expectCandidateWorse?: boolean;
   readonly label?: string;
+  /** Equal-width calibration bins; the paper's protocol uses ten. */
+  readonly calibrationBins?: number;
+  /**
+   * Group rows into independent clusters (arXiv:2604.01491 draws its interval
+   * from whole games, not rows). Omit it and the export is treated as a single
+   * cluster, which reports "no cluster-level spread" honestly rather than
+   * pretending its rows are independent draws.
+   */
+  readonly clusterIdOf?: (row: HoldoutPickRow) => string | number;
 };
 
 /** Reduce export rows to scored pairs on which BOTH probabilities exist. */
@@ -155,6 +173,34 @@ export function buildScorecard(
       : `HARNESS WRONG: candidate Brier ${candidateBrier.toFixed(5)} <= market ${marketBrier.toFixed(5)} on n=${n} — a historical version beat market on PICKS-H1`
     : `scorecard (no harness expectation): ΔBrier=${(candidateBrier - marketBrier).toFixed(5)} P(better)=${boot.pBetter.toFixed(3)} n=${n}`;
 
+  // Calibration, both arms, against the market (arXiv:2607.00164). A Brier gap
+  // on its own cannot say whether the model is miscalibrated or merely less
+  // sharp, and those need opposite responses, so both are reported.
+  const candidateRows: CalibrationRow[] = [];
+  const marketRows: CalibrationRow[] = [];
+  const clusterIds: (string | number)[] = [];
+  for (let i = 0; i < n; i++) {
+    const src = rows.find((r) => r.id === scored[i]!.id)!;
+    candidateRows.push({ p: src.modelProb!, y: src.outcome });
+    marketRows.push({ p: src.marketFairProb, y: src.outcome });
+    clusterIds.push(options?.clusterIdOf ? options.clusterIdOf(src) : `export:${scored[i]!.id}`);
+  }
+  const bins = options?.calibrationBins ?? DEFAULT_CALIBRATION_BINS;
+  const verdict = compareCalibration(candidateRows, marketRows, { bins });
+
+  // Cluster-level (game-level) bootstrap, arXiv:2604.01491. Without a cluster
+  // key every row is its own cluster only if the caller says so; the default
+  // puts the whole export in one cluster, which honestly reports "no
+  // cluster-level spread" instead of a confident row-level interval.
+  const clustered = clusterBootstrap(
+    { candidateLoss, marketLoss, clusterId: clusterIds },
+    { resamples: options?.resamples ?? DEFAULT_BOOTSTRAP_RESAMPLES, seed: options?.seed ?? DEFAULT_BOOTSTRAP_SEED },
+  );
+  const clusterDecision = decide(clustered);
+  const clusterNote = options?.clusterIdOf
+    ? `game-level bootstrap over ${clustered.clusters} cluster(s)`
+    : `no clusterIdOf supplied: the whole export counts as ONE cluster (${clustered.clusters}), so no row-level independence is assumed. Pass options.clusterIdOf (e.g. game id) for a real interval.`;
+
   return {
     n,
     candidateBrier,
@@ -168,6 +214,16 @@ export function buildScorecard(
     pBetterSeed: boot.seed,
     bySport,
     wilson,
+    candidateEce: expectedCalibrationError(candidateRows, bins),
+    marketEce: expectedCalibrationError(marketRows, bins),
+    candidateMce: maximumCalibrationError(candidateRows, bins),
+    marketMce: maximumCalibrationError(marketRows, bins),
+    candidateResolution: resolution(candidateRows, bins),
+    marketResolution: resolution(marketRows, bins),
+    calibrationBins: bins,
+    calibrationDiagnosis: verdict.diagnosis,
+    clusterVerdict: clusterDecision.verdict,
+    clusterNote,
     harnessOk,
     harnessNote,
   };
@@ -187,6 +243,16 @@ function emptyScorecard(label: string, note: string): Scorecard {
     pBetterSeed: DEFAULT_BOOTSTRAP_SEED,
     bySport: [],
     wilson: null,
+    candidateEce: NaN,
+    marketEce: NaN,
+    candidateMce: NaN,
+    marketMce: NaN,
+    candidateResolution: NaN,
+    marketResolution: NaN,
+    calibrationBins: DEFAULT_CALIBRATION_BINS,
+    calibrationDiagnosis: "n-too-small",
+    clusterVerdict: "indistinguishable",
+    clusterNote: `${label}: ${note}`,
     harnessOk: false,
     harnessNote: `${label}: ${note}`,
   };
@@ -213,6 +279,15 @@ export function scorecardMarkdown(title: string, sc: Scorecard): string {
       "",
     );
   }
+  // Calibration block (arXiv:2607.00164). ECE/MCE say whether probabilities
+  // match outcomes; resolution says how sharply the arm separates them. A Brier
+  // gap with equal ECE is a resolution gap, not a calibration failure.
+  lines.push(
+    `calibration (${sc.calibrationBins} equal-width bins): ECE cand ${f(sc.candidateEce)} / mkt ${f(sc.marketEce)} · MCE cand ${f(sc.candidateMce)} / mkt ${f(sc.marketMce)} · resolution cand ${f(sc.candidateResolution)} / mkt ${f(sc.marketResolution)}`,
+    `diagnosis: **${sc.calibrationDiagnosis}**`,
+    `cluster verdict: **${sc.clusterVerdict}** — ${sc.clusterNote}`,
+    "",
+  );
   if (sc.bySport.length > 0) {
     lines.push("| sport | n | cand Brier | mkt Brier | Δ | P(better) |", "|---|---|---|---|---|---|");
     for (const s of sc.bySport) {
