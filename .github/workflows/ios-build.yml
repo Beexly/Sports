@@ -1,0 +1,43 @@
+name: iOS build (SwiftUI)
+
+# Free build lane for the native SwiftUI app: compiles on GitHub's macOS
+# runners (no Mac required, no signing for simulator builds).
+on:
+  push:
+    branches: [feat/ios-swiftui]
+    paths: ["ios/**", ".github/workflows/ios-build.yml"]
+  pull_request:
+    branches: [main]
+    paths: ["ios/**"]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show available Xcode versions
+        run: ls /Applications | grep -i xcode || true
+
+      - name: Select Xcode 16 if present
+        run: |
+          for app in Xcode_16.4.app Xcode_16.3.app Xcode_16.2.app Xcode_16.1.app Xcode_16.app; do
+            if [ -d "/Applications/$app" ]; then
+              echo "Selecting /Applications/$app"
+              sudo xcode-select -s "/Applications/$app/Contents/Developer"
+              break
+            fi
+          done
+          xcodebuild -version
+
+      - name: Build for iOS Simulator (unsigned)
+        run: |
+          xcodebuild -project ios/GalaxySportsEdge.xcodeproj \
+            -target GalaxySportsEdge \
+            -configuration Debug \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -derivedDataPath /tmp/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            build
