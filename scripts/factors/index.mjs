@@ -194,11 +194,23 @@ export function commitDate(repoRoot, sha) {
 /**
  * ISO date of the earliest commit on the YAML file whose body contains a
  * non-empty kill_line. null when the file is untracked or never had one.
+ *
+ * Searches every ref, not just HEAD. The gate's claim is "the kill line was
+ * written before the run" — evidence for that lives wherever the spec was
+ * first committed, which is not necessarily the branch the spec was ported
+ * onto. Scoping the search to HEAD made a faithful port look like a
+ * retrofitted kill line, because the port commit is always newer than the
+ * recorded run_sha. Earliest qualifying commit still wins, so a kill line
+ * genuinely written after its run is still refused.
+ *
+ * Needs a full clone: `git log --all` and `git show <run_sha>` both come up
+ * empty on a shallow (fetch-depth 1) checkout, and the gate then refuses
+ * rather than passing silently.
  */
 export function killLineCommitDate(repoRoot, relYamlPath) {
   let hashes;
   try {
-    hashes = execFileSync("git", ["log", "--format=%H", "--", relYamlPath], {
+    hashes = execFileSync("git", ["log", "--all", "--format=%H", "--", relYamlPath], {
       cwd: repoRoot,
       encoding: "utf8",
       stdio: ["ignore", "pipe", "ignore"],
