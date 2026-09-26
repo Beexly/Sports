@@ -1,0 +1,16 @@
+{
+  "name": "Galaxy Sports Edge",
+  "user": "node",
+  "build": {
+    "dockerfile": "Dockerfile"
+  },
+  "install": "bash .cursor/install.sh",
+  "start": "bash .cursor/start.sh",
+  "terminals": [
+    {
+      "name": "web",
+      "command": "bash .cursor/dev.sh"
+    }
+  ],
+  "ports": [3000]
+}
