@@ -31,16 +31,78 @@ before using the word "byte-identical."
 
 ---
 
+## 0. Census restated, with the normalizer, on the checkout actually in use
+
+**Checkout: `/tmp/wtp` · branch `hermes/wire-papers-2026-09-26` · commit `aa094062c` · base `origin/main @ d667351f9`.**
+
+The `7d891ec71` figures were measured on a different commit (the `[hermes-V3]`
+lane, "correct V3-347/348 SHAs after rebase onto origin"). The trees differ, so
+the totals are not expected to match. They are reported side by side rather
+than reconciled away.
+
+### The normalizer, written down
+
+Implemented in `audit/normalizer.py`, with the same explanation in its
+docstring. Three hashes:
+
+- **hash 1 — raw.** The entire file, verbatim bytes. No transformation.
+- **hash 2 — algorithm.** (a) remove the leading `/** ... */` block comment,
+  which carries the arXiv id, the improvement record and the acceptance gate;
+  (b) drop blank lines and lines starting `//`, `*`, `/*`; (c) drop any line
+  containing a backtick; (d) drop every line matching
+  `^(export )?const (ARXIV_ID|LANE|VERDICT|ENABLED|ACCEPTANCE_GATE|DOCTRINE)\b`;
+  (e) collapse whitespace; (f) join and md5. **Only hash 2 buckets anything.**
+- **hash 3 — assertion.** hash 2, then keep only lines bearing an assertion
+  (`expect(`, `assert.`, `toBe*`, `toEqual*`, `toBeCloseTo*`,
+  `toBeGreaterThan*`, `toBeLessThan*`, `toHaveLength*`, `toThrow`). Test files
+  only.
+
+### data-ingestion/src, measured both places
+
+| Measure | `7d891ec71` | `aa094062c` (this checkout) |
+|---|---|---|
+| non-test `.ts` modules | 461 | **478** |
+| …of which export `ARXIV_ID` | 362 | **368** |
+| …of which do not | — | 110 |
+| share an algorithm body across >1 paper id | **269** | **269** |
+| …in how many groups | **34** | **34** |
+| `wave-reports` entries | **61** | **61** |
+| `wave1-reader` range | 01–10 | **01–10** |
+| `wave1` tracklet modules: raw / algorithm hashes | — | **31 / 1** |
+| their tests: raw / algorithm / assertion hashes | 31 / — / 1 | **31 / 31 / 1** |
+
+**Every shared-body figure matches exactly**: 269 modules, 34 groups, the 31
+tracklet modules as one group, 31 test raw hashes collapsing to **1 assertion
+body**, 61 wave-report entries, wave1-reader 01–10. Only the two file totals
+differ (478 vs 461, 368 vs 362), which is a +17 / +6 tree delta between the two
+commits. I have not chased that delta further; it is a difference in checkout,
+not a disagreement about the finding.
+
+The assertion hash is the load-bearing new number. The 31 tracklet test files
+have 31 distinct algorithm bodies — they are not copy-paste — but **1 distinct
+assertion body**. They assert the same things. See §2.
+
+---
+
 ## 1. Counts
+
+Full tree, this checkout. **Five buckets, summing to 706.**
 
 | Bucket | Count | Note |
 |---|---|---|
-| Modules audited | 704 | recounted from the tree |
+| Modules audited | 704 | non-test, paper-derived, whole tree |
 | REAL_IMPLEMENTATION | **5** | **hand-read floor, not a census** |
 | TEMPLATE_STAMP | 307 | shared algorithm body across different paper ids |
 | BROKEN | 0 | |
 | UNRESOLVED | 392 | unique body, attribution unverified |
-| DUPLICATE_COLLAPSED | 2 | `2607.08725`, `2503.04638` |
+| **DUPLICATE_COLLAPSED** | **2** | `2607.08725`, `2503.04638` |
+
+5 + 307 + 392 = **704**. The two collapsed duplicates are a **fifth bucket**,
+`DUPLICATE_COLLAPSED`, and they are not paper-derived modules at all — they are
+`2607.08725` and `2503.04638`, each of which appeared **twice** in the 29-URL
+set Garrett sent, collapsed to one row each and not double-counted. The CSV has
+**706 rows** for that reason. They sit in no other bucket and are not evidence
+about any module; they are a property of the input list, not of the tree.
 
 The 5 are the modules I opened and confirmed by reading. There are certainly
 more real modules among the 392; the 5 are the number I can defend, and they
@@ -77,9 +139,14 @@ vocabulary happens to be most common. Strata, in this order:
 - the body implements the quantity the paper actually names, read from the
   paper rather than from the module header;
 - the exported symbols correspond to that quantity;
-- at least one test in the repo exercises the quantity, and the test's
-  assertions are about the paper's claim rather than about the module's own
-  constants;
+- **a repo test exercises the paper's claim, and that test is not a copy.** A
+  test file whose assertion body (hash 3) is identical to a sibling paper's
+  test does **not** satisfy this condition, no matter how the test file's raw
+  bytes differ or how many assertions it contains. The 31 tracklet tests are
+  exactly this case: 31 distinct test algorithm bodies, **1 distinct assertion
+  body**. They assert the same things about the same shared implementation, so
+  they attest to the template, not to 31 papers. Distinct-looking test files
+  are not independent evidence.
 - the module's `ACCEPTANCE_GATE` is evaluable against the body, i.e. the gate
   is not a string with no code behind it.
 
@@ -104,22 +171,42 @@ of it are in the tree:
 | Stage | Path | In tree? |
 |---|---|---|
 | Per-paper record source (supplies `Improvement (record)` and `ACCEPTANCE GATE`) | `docs/research/2026-09-21/arxiv-program/index/IMPROVEMENT-LEDGER.jsonl` | yes, 1,251 records, same field schema as the module headers |
-| Generation records, per worker | `docs/research/2026-09-21/arxiv-program/phase2/wave-reports/wave1-reader-01..61.jsonl` | yes, 61 files |
+| Generation records, per worker | `docs/research/2026-09-21/arxiv-program/phase2/wave-reports/` | yes, **61 entries** |
 | Lane/bucket assignment | `normalized_lane`, `bucket` fields in the same JSONL | yes |
 | **The module header+body template itself** | — | **not committed** |
 
-Two things the audit would need to establish, both currently unanswerable from
-committed artifacts:
+Correction, 2026-09-26: this checkpoint previously said *"269 of the 307
+stamped modules have no matching `arxiv_id` in `IMPROVEMENT-LEDGER.jsonl`."*
+**That was wrong — my lookup was broken, not the data.** The extracted keys
+carried an `arXiv:` prefix, so every lookup missed. Re-run correctly:
 
-- **The template is not in the tree.** The nearest file,
-  `docs/research/2026-09-21/arxiv-program/state/ledger-template.md`, is the
-  *arXiv-deep ledger* template, not the module header template. The stamping
-  therefore cannot be reproduced or diffed against its source.
-- **The record source does not cover the stamped ids.** 269 of the 307 stamped
-  modules have no matching `arxiv_id` in `IMPROVEMENT-LEDGER.jsonl`. So the
-  headers those modules cite came from a different or extended record set that
-  is not identified in the tree. Finding that set is the first question of the
-  audit.
+```
+modules exporting ARXIV_ID      : 368
+ids matching ledger exactly     : 368
+ids matching after version-strip:   0
+ids NOT in ledger at all        :   0
+```
+
+**All 368 exported ids match `IMPROVEMENT-LEDGER.jsonl` exactly.** There is no
+unidentified record set. The earlier claim is withdrawn in full, and the
+"two gaps" framing collapses to one.
+
+Correction, 2026-09-26: this checkpoint previously named the generation
+records `wave1-reader-01..61.jsonl`. **That is wrong.** `wave-reports/` holds
+**61 entries** spanning three waves:
+
+- `wave1-reader-01.jsonl` … `wave1-reader-10.jsonl` — **wave1 is 01–10 only**
+- `wave2-reader-11.jsonl` … `wave2-reader-20.jsonl` (+ `wave2-reader-12-search-log.md`)
+- `wave3-reader-01..19.json` (mixed `.json` and `.jsonl`, with `-2b`, `-3b1..3b3` variants)
+
+So the reader fan-out is roughly 10 + 10 + 19 = 39 generation runs across 61
+files, not 61 runs.
+
+**The one real gap** the audit would still need to close: the module
+header+body template is not committed anywhere in the tree. The nearest file,
+`docs/research/2026-09-21/arxiv-program/state/ledger-template.md`, is the
+*arXiv-deep ledger* template, not the module header template. The stamping
+therefore cannot be reproduced or diffed against its source.
 
 Second lane, and it does not outrank adjudication.
 
