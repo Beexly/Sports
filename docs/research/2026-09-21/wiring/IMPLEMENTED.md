@@ -285,3 +285,22 @@ Ten modules that had zero barrel coverage, now exported and wrapped.
 Notes recorded from the implementation: evalVerifyPruning REFUSES when pruning
 changes the optimum (it is a guard, not a report); evalPowerLawShares refuses a
 split that does not partition the pool; evalMarginProbs refuses a non-partition.
+
+## Wave 6H — ratings family live path (2026-09-25)
+
+Seventeen modules that had zero barrel coverage, now exported and wrapped.
+
+| Item | File | Tests | Status |
+|---|---|---|---|
+| bradley-terry, least-squares, dynamic-network, eb-shrinkage | packages/ingestion-pipeline/src/ratings-bridge.ts | covered in 71/71 | LIVE |
+| pythagorean-duel, matchup-ratings, sel-strengths, unit-impact | packages/ingestion-pipeline/src/ratings-bridge.ts | covered in 71/71 | LIVE |
+| cycle-diagnostics, davidson-ties, time-varying-weights | packages/ingestion-pipeline/src/ratings-bridge.ts | covered in 71/71 | LIVE |
+| target-pagerank, parametric-pagerank, playerank | packages/ingestion-pipeline/src/ratings-bridge.ts | covered in 71/71 | LIVE |
+| hfa-bias-audit, csf-triple-compare, dynamic-bradley-terry | packages/ingestion-pipeline/src/ratings-bridge.ts | covered in 71/71 | LIVE |
+| Barrel exports (GameResult/BtGame/TeamSeason aliased per module; four colliding names aliased to ratings* — existing bayesian/calibration homes kept) | packages/prediction-engine/src/index.ts | exported | LIVE |
+
+Notes: evalVerifyPruning-style guard pattern reused — evalAuditProvenance REFUSES
+when any feature postdates the target (a leaking feature is withheld, never
+reported). evalKernelWeights is fail-closed on non-positive bandwidth;
+evalFitDynamicBt returns a typed refusal when the BT existence condition is
+violated.
