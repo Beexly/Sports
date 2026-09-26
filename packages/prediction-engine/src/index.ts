@@ -2958,6 +2958,7 @@ export {
 } from "./bayesian/2207-05114-wp-blender-beta-prior.js";
 export {
   poissonMle,
+  poissonSample,
   ingarchFilter,
   ingarchLogLik,
   cmpPmf,
