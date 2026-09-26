@@ -116,12 +116,23 @@ final class AuthSession {
 
     // MARK: - Account deletion
 
+    /// Why the failure is a type and not a bare `String`: `Result`'s second
+    /// parameter is constrained to `Error`, so `Result<Void, String>` does not
+    /// compile. Wrapping the sentence keeps the one call site a one-word
+    /// change and gives the reason somewhere to live.
+    struct Failure: LocalizedError, Sendable {
+        let message: String
+        var errorDescription: String? { message }
+    }
+
     /// App Store guideline 5.1.1(v). Deletes server-side — which cascades
     /// sessions, watchlist, subscription and push tokens off the user — and
     /// then wipes every local trace. Returns the reason on failure so the
     /// sheet can explain itself instead of just closing.
-    func deleteAccount() async -> Result<Void, String> {
-        guard hasStoredSession else { return .failure("You're not signed in.") }
+    func deleteAccount() async -> Result<Void, Failure> {
+        guard hasStoredSession else {
+            return .failure(Failure(message: "You're not signed in."))
+        }
         status = .deletingAccount
         do {
             try await service.deleteAccount()
@@ -131,7 +142,7 @@ final class AuthSession {
             status = .signedOut
             let reason = (error as? APIError)?.errorDescription ?? error.localizedDescription
             lastError = reason
-            return .failure(reason)
+            return .failure(Failure(message: reason))
         }
     }
 }

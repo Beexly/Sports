@@ -197,7 +197,7 @@ struct DeleteAccountView: View {
         case .success:
             didDelete = true
         case .failure(let reason):
-            failure = reason
+            failure = reason.message
         }
     }
 }

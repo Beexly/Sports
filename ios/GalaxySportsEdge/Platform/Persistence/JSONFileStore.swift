@@ -3,6 +3,11 @@ import Observation
 
 /// A small, file-backed collection of `Codable` values.
 ///
+/// `Value` is required to be `Identifiable` because the store is keyed by
+/// `Value.ID`; that is the identity the upsert replaces on and `contains`
+/// tests against. Constraining it here keeps `key` a plain closure the call
+/// site supplies, rather than forcing every stored type to spell out an `id`.
+///
 /// Deliberately not a database: the app's local state is a few hundred rows of
 /// JSON at most, and a dependency-free store is one fewer thing to keep
 /// working on a device. Writes are atomic so a crash mid-save cannot leave a
@@ -10,7 +15,7 @@ import Observation
 /// log is the one failure mode worth spending code on here.
 @MainActor
 @Observable
-final class JSONFileStore<Value: Codable & Sendable> {
+final class JSONFileStore<Value: Codable & Sendable & Identifiable> {
 
     private(set) var values: [Value] = []
     private let fileURL: URL

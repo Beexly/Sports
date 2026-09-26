@@ -78,7 +78,7 @@ struct ArticleDetailView: View {
     }
 
     @ViewBuilder
-    private func headerOnly: some View {
+    private var headerOnly: some View {
         VStack(alignment: .leading, spacing: Theme.S.md) {
             Text(preview.title)
                 .font(.display(26, .heavy))
