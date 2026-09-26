@@ -1,0 +1,200 @@
+{
+  "expo": {
+    "name": "Galaxy Sports Edge",
+    "slug": "galaxy-sports-edge",
+    "scheme": "gse",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "userInterfaceStyle": "dark",
+    "newArchEnabled": true,
+    "icon": "./assets/icon-1024.png",
+    "primaryColor": "#FF4D2E",
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/REPLACE_WITH_EAS_PROJECT_ID",
+      "fallbackToCacheTimeout": 0,
+      "checkAutomatically": "ON_LOAD"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "bundleIdentifier": "com.galaxysportsedge.app",
+      "buildNumber": "1",
+      "supportsTablet": true,
+      "requireFullScreen": false,
+      "usesAppleSignIn": true,
+      "infoPlist": {
+        "CFBundleDisplayName": "Sports Edge",
+        "CFBundleShortVersionString": "1.0.0",
+        "LSApplicationQueriesSchemes": [],
+        "UIBackgroundModes": [
+          "remote-notification",
+          "fetch"
+        ],
+        "ITSAppUsesNonExemptEncryption": false,
+        "NSAppTransportSecurity": {
+          "NSAllowsArbitraryLoads": false
+        },
+        "CFBundleLocalizations": [
+          "en"
+        ],
+        "UIViewControllerBasedStatusBarAppearance": true,
+        "NSUserNotificationsUsageDescription": "Galaxy Sports Edge sends settlement results and line-movement alerts for picks you follow. Nothing else.",
+        "UIApplicationSceneManifest": {
+          "UIApplicationSupportsMultipleScenes": false
+        }
+      },
+      "associatedDomains": [
+        "applinks:www.galaxysportsedge.com"
+      ],
+      "privacyManifests": {
+        "NSPrivacyTracking": false,
+        "NSPrivacyTrackingDomains": [],
+        "NSPrivacyCollectedDataTypes": [
+          {
+            "NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeEmailAddress",
+            "NSPrivacyCollectedDataTypeLinked": true,
+            "NSPrivacyCollectedDataTypeTracking": false,
+            "NSPrivacyCollectedDataTypePurposes": [
+              "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+            ]
+          },
+          {
+            "NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeUserID",
+            "NSPrivacyCollectedDataTypeLinked": true,
+            "NSPrivacyCollectedDataTypeTracking": false,
+            "NSPrivacyCollectedDataTypePurposes": [
+              "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+            ]
+          },
+          {
+            "NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypePurchaseHistory",
+            "NSPrivacyCollectedDataTypeLinked": true,
+            "NSPrivacyCollectedDataTypeTracking": false,
+            "NSPrivacyCollectedDataTypePurposes": [
+              "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+            ]
+          },
+          {
+            "NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeProductInteraction",
+            "NSPrivacyCollectedDataTypeLinked": false,
+            "NSPrivacyCollectedDataTypeTracking": false,
+            "NSPrivacyCollectedDataTypePurposes": [
+              "NSPrivacyCollectedDataTypePurposeAnalytics",
+              "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+            ]
+          },
+          {
+            "NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeCrashData",
+            "NSPrivacyCollectedDataTypeLinked": false,
+            "NSPrivacyCollectedDataTypeTracking": false,
+            "NSPrivacyCollectedDataTypePurposes": [
+              "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+            ]
+          },
+          {
+            "NSPrivacyCollectedDataType": "NSPrivacyCollectedDataTypeDeviceID",
+            "NSPrivacyCollectedDataTypeLinked": false,
+            "NSPrivacyCollectedDataTypeTracking": false,
+            "NSPrivacyCollectedDataTypePurposes": [
+              "NSPrivacyCollectedDataTypePurposeAppFunctionality"
+            ]
+          }
+        ],
+        "NSPrivacyAccessedAPITypes": [
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryUserDefaults",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "CA92.1"
+            ]
+          },
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryFileTimestamp",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "C617.1"
+            ]
+          },
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategoryDiskSpace",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "E174.1"
+            ]
+          },
+          {
+            "NSPrivacyAccessedAPIType": "NSPrivacyAccessedAPICategorySystemBootTime",
+            "NSPrivacyAccessedAPITypeReasons": [
+              "35F9.1"
+            ]
+          }
+        ]
+      }
+    },
+    "plugins": [
+      "expo-router",
+      "expo-secure-store",
+      "expo-localization",
+      [
+        "expo-splash-screen",
+        {
+          "backgroundColor": "#08090C",
+          "image": "./assets/splash-icon.png",
+          "imageWidth": 180,
+          "dark": {
+            "backgroundColor": "#08090C"
+          }
+        }
+      ],
+      [
+        "expo-notifications",
+        {
+          "icon": "./assets/notification-icon.png",
+          "color": "#FF4D2E",
+          "mode": "production",
+          "enableBackgroundRemoteNotifications": true
+        }
+      ],
+      "expo-iap",
+      [
+        "expo-widgets",
+        {
+          "widgets": [
+            {
+              "name": "SlateActivity",
+              "displayName": "Slate",
+              "description": "Open picks, gated games, and the model version. State only; never a line.",
+              "supportedFamilies": [],
+              "contentMarginsDisabled": false,
+              "ios": {
+                "supportedFamilies": [
+                  "accessoryRectangular"
+                ]
+              },
+              "android": null
+            }
+          ],
+          "enablePushNotifications": true,
+          "frequentUpdates": false
+        }
+      ]
+    ],
+    "experiments": {
+      "typedRoutes": true,
+      "reactCompiler": true
+    },
+    "extra": {
+      "eas": {
+        "projectId": "REPLACE_WITH_EAS_PROJECT_ID"
+      },
+      "apiBaseUrl": "https://www.galaxysportsedge.com",
+      "legal": {
+        "terms": "https://www.galaxysportsedge.com/terms",
+        "privacy": "https://www.galaxysportsedge.com/privacy",
+        "disclosure": "https://www.galaxysportsedge.com/how-we-make-money",
+        "responsiblePlay": "https://www.galaxysportsedge.com/integrity"
+      }
+    }
+  }
+}

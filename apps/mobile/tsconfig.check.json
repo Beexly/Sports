@@ -1,0 +1,46 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noImplicitOverride": true,
+    "noFallthroughCasesInSwitch": true,
+    "jsx": "react-jsx",
+    "target": "ES2022",
+    "lib": [
+      "ES2023",
+      "DOM"
+    ],
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "moduleDetection": "force",
+    "resolveJsonModule": true,
+    "isolatedModules": true,
+    "skipLibCheck": true,
+    "noEmit": true,
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "types": [
+      "react"
+    ],
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ]
+    }
+  },
+  "include": [
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    "src/**/*.d.ts",
+    "app/**/*.ts",
+    "app/**/*.tsx",
+    "expo-env.d.ts",
+    ".expo/types/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules",
+    "ios",
+    "android",
+    "tests"
+  ]
+}

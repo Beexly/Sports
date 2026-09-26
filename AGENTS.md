@@ -70,6 +70,119 @@ Repository rules live in `CLAUDE.md` and apply in full. This file governs how an
 
 ## THE LOOP
 
+**UPDATED 2026-09-15 (NATIVE iOS CLIENT BUILT — `apps/mobile` now exists; read this
+before touching mobile, the mobile API surface, or the X transport).**
+
+**What landed.** `apps/mobile/` is a new Expo SDK 57 / React Native 0.86.3 / React 19.2.3
+iOS client, plus a small `apps/web/app/api/mobile/v1/*` server surface, a bearer-auth helper at
+`apps/web/lib/mobile/bearer-auth.ts`, and an X transport at `workers/twitter-bot/`.
+Full context in `docs/mobile/` (README, PLAN, REVIEW_AND_AUDIT, research round 1).
+
+**`apps/mobile` IS DELIBERATELY EXCLUDED FROM THE npm WORKSPACES.** The root `workspaces`
+array now carries `"!apps/mobile"`. Reason, and do not undo it casually: `apps/web` is on
+React 18.3 while the mobile client is on React 19.2.3 (React Native 0.86 requires it). npm
+hoists to one root `node_modules`, so a shared workspace either fails the install or silently
+gives one of the two apps the wrong React — the second outcome is far more likely and much
+harder to diagnose. The mobile app therefore installs with its own lockfile and is driven from
+the root by `npm run mobile:start` / `mobile:verify` / `mobile:test`, which use `npm --prefix`.
+
+**NEVER publish `confidence` as a percentage on a mobile surface either.** The template
+carries the rule as a linter check (`apps/mobile/scripts/lint-rules.js`) because a client has
+no server to correct it. Same measurement as the web: the 80+ band claims 0.8663 and realizes
+0.5191 (z = −10.7). The app renders `72/100`.
+
+**Client mirroring rule — the mobile app may only ever REMOVE rows, never add them.**
+`apps/mobile/src/lib/trust.ts` mirrors `adverse-edge-suppression` and the stale-pick policy
+defensively. If you change either predicate on the server, change the mirror in the same PR or
+the client will resurrect rows the server stopped sending. The mirror preserves the upstream
+asymmetry exactly: absence is silence, and silence KEEPS the row. A parse failure must never
+become a board wipe, and there is a negative-control test pinning that.
+
+**Entitlements on the client are PRESENTATIONAL ONLY.** `apps/mobile/src/lib/entitlements.ts`
+picks labels for fields the server already redacted. It must never be used to reveal data that
+arrived in a payload — that is CLAUDE.md rule 3 and there is a test asserting the module
+imports no components and holds no state. If a future change reads a `canSee*` flag to show
+something, reject it in review regardless of how convenient it is.
+
+**TypeScript is NOT a reliable gate on the iOS-side dev host.** `tsc` there intermittently
+exits 0 with EMPTY output when it was actually killed by a ~180s process cap. Measured: a
+one-file project importing `react-native` took 182s and died silently; the same configuration
+later completed and reported real errors. `apps/mobile/scripts/typecheck.js` writes its report
+with `fsync` and prints its own summary line — **a missing summary line means the run was
+killed, not that the code is clean.** Before trusting any check, feed it a known-bad input.
+
+**Do not treat the typecheck as a gate for `apps/mobile`.** It completed several times with 0
+diagnostics and later failed to complete on every attempt, including a two-file project. The
+gates are `scripts/lint-rules.js` (9 rules, self-tested on every run) and the test suite. Run
+`tsc --noEmit` on a reliable host before believing the type layer.
+
+**The X transport now EXISTS** at `workers/twitter-bot/` (OAuth 1.0a signer, API v2 client,
+send pipeline). It is tested and NOT wired up: it needs credentials, a real ledger over
+`BotOutboxRecord`, and a cron entry. Read `workers/twitter-bot/README.md` before touching it.
+
+**TWO LINES FROM THAT README ARE LOAD-BEARING, so they are repeated here:**
+
+- **`MUTE_BOT` is checked at SEND time, not at schedule time**, and only the literal `"true"`
+  mutes. A mute that takes effect next cycle is not a mute.
+- **A lost response is classified `UNKNOWN` and MUST NOT be retried.** The failure mode that
+  matters is not "posted never", it is "posted twice after a timeout". A duplicate post to a
+  public account is worse than a missing one.
+
+**`XClient` has exactly ONE mutating method: `postTweet`.** There is no follow, like, retweet,
+unfollow, unlike or delete, because the voice spec says the bot does none of those and a
+capability that does not exist cannot be called. There is a test asserting the prototype
+surface. Adding one of those methods is a product decision, not a refactor.
+
+**One template defect is FIXED and one question is still OPEN.**
+
+Fixed 2026-09-15, found by EXECUTING the template rather than reading it:
+`pick-publication.ts` rendered the pick line TWICE (`BOS @ NYK BOS -3.5` in production,
+`BOS -3.5 -3.5` in any test whose fixture followed the field names instead of the adapter —
+the `matchup`/`line` split is not what the field names suggest). It also rendered confidence as
+a percent. Both are corrected, with a test that asserts the exact rendered line and counts the
+side occurrences so the duplication cannot return.
+
+Still OPEN, and it is an OWNER decision: `docs/product/twitter-bot-voice-spec.md` permits
+✅/❌/⚖️ while `DESIGN.md` mandates W/L/P/V monograms and forbids emoji. Both cannot be right.
+The proposed resolution is in `docs/mobile/X_COMMUNITY_STRATEGY.md` section 3: the settlement
+glyph is a single-use exception on the settlement lead post only. It was NOT changed
+unilaterally, because it would override an explicit product decision and break pinned tests.
+
+**Upstream findings an agent should carry forward** (full detail in
+`docs/mobile/REVIEW_AND_AUDIT.md` §4):
+
+- The FIELD revision collapsed the four-band confidence ladder to two effective colours —
+  `--conf-strong`, `--conf-solid` and `--conf-lean` all resolve to `#C4BFB6`. `DESIGN.md` still
+  specifies four hues. Either accept two bands or reintroduce two tints; do not invent a third
+  palette at a call site.
+- `DESIGN.md`'s YAML front matter and `design-system/colors_and_type.css` are STALE and still
+  document the pre-FIELD palette. `BRAND_AND_DESIGN_SYSTEM.md` flagged this in June; it is still
+  true, and this build had to choose between two files that disagree. Generate one from the
+  other with Style Dictionary rather than keeping two mirrors in sync by hand.
+- `/api/push/subscribe` is Web Push only (it validates `PushSubscription.toJSON()`); native
+  devices need `/api/mobile/v1/devices`, which is additive and does not loosen that validator.
+- React Native 0.86's bundled TypeScript definitions omit `ListHeaderComponent` and
+  `ListFooterComponent` from `VirtualizedListProps`. Use `ScrollView` or augment locally.
+- `expo-iap` v3 renamed `E_USER_CANCELLED` to `ErrorCode.UserCancelled`; comparing against the
+  v2 name compiles and makes every user cancellation render a purchase error.
+
+**DO NOT `finishTransaction` BEFORE THE SERVER ACKNOWLEDGES.** `apps/mobile/app/paywall.tsx`
+currently does, and it is the most expensive defect in the client. `finishTransaction` tells
+StoreKit the app has handled the transaction, so StoreKit will never re-deliver it. If the
+subsequent server call fails, the customer has been charged and the server has no record — they
+see the free tier and StoreKit will not help. The fix: finish only after the server confirms, set
+`appAccountToken` on the purchase so a signed-out purchase is still reconcilable to an account,
+and reconcile `getAvailablePurchases()` against the server on every foreground. Full reasoning in
+`docs/mobile/research/round-02-repositories.md`. **Do not build a client-side retry queue for
+this** — StoreKit already has a durable one, and a second queue is how a purchase gets recorded
+twice.
+
+**The mobile client has never been built or run.** There is no Xcode on the host it was written
+on. Treat every runtime claim in `docs/mobile/` as unverified until someone runs
+`npx expo start --ios` on a Mac. The typecheck passes; the build does not exist yet.
+
+---
+
 **UPDATED 2026-09-13 (NFL WEEK 1 LIVE CHECK — three production defects fixed, three
 data outages found, conviction gate built). PR #808, branch
 `claude/nfl-kickoff-live-check-0qwxfm`. Read this before touching the board, the

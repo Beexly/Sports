@@ -1,0 +1,11 @@
+{
+  "name": "@sports/twitter-bot",
+  "version": "0.1.0",
+  "private": true,
+  "description": "X (Twitter) transport for the GSE bot: OAuth 1.0a signing, rate limiting, idempotent send. The templates and the compliance gate live in apps/web/lib/twitter-bot and apps/web/lib/bot-outbox.",
+  "type": "commonjs",
+  "main": "oauth1.js",
+  "scripts": {
+    "test": "node --test --test-concurrency=1 *.test.js"
+  }
+}
