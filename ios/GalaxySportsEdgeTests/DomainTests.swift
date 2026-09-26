@@ -229,17 +229,22 @@ final class DomainTests: XCTestCase {
     }
 
     func testCookiesRoundTripThroughDisk() {
+        // An injected backend, not the keychain: CI builds unsigned, so it has
+        // no entitlements and no keychain, and a test that ran against one
+        // would be asserting the runner's signing configuration.
+        let storage = MemoryCookieStorage()
         var store = SessionCookieStore(cookies: [
             SessionCookie(name: "next-auth.session-token", value: "abc")
-        ])
-        // Assert the write first: without it a keychain failure and a decoding
-        // bug are indistinguishable from the outside.
-        XCTAssertTrue(store.persist(), "the keychain must accept the write for this to mean anything")
-        let restored = SessionCookieStore.restore()
+        ], storage: storage)
+        // Assert the write first: without it a failed write and a decoding bug
+        // are indistinguishable from the outside.
+        XCTAssertTrue(store.persist(), "the backend must accept the write for this to mean anything")
+        let restored = SessionCookieStore.restore(from: storage)
         XCTAssertEqual(restored.cookies, store.cookies)
+        XCTAssertTrue(restored.hasSessionCookie)
         store.clear()
-        store.persist()
-        XCTAssertTrue(SessionCookieStore.restore().cookies.isEmpty)
+        XCTAssertTrue(store.persist())
+        XCTAssertTrue(SessionCookieStore.restore(from: storage).cookies.isEmpty)
     }
 
     // MARK: - Sign-in callback validation

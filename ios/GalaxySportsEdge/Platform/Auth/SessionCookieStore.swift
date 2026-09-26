@@ -11,6 +11,51 @@ struct SessionCookie: Codable, Hashable, Sendable {
     var isSecureCookie: Bool { name.hasPrefix("__Secure-") || name.hasPrefix("__Host-") }
 }
 
+/// Where the cookie jar is kept.
+///
+/// The keychain is the only correct answer for a credential on a real device,
+/// but an unsigned build — which is exactly what CI compiles and tests — has no
+/// entitlements and therefore no keychain at all, so a test written against it
+/// would be testing the runner's signing configuration rather than the store.
+/// The protocol exists so that test can supply its own backend; nothing else
+/// should ever pass one.
+protocol CookieStorage: AnyObject, Sendable {
+    /// Returns whether the value was actually accepted. A silently dropped
+    /// credential write is indistinguishable from a sign-out.
+    @discardableResult func write(_ value: String, for key: String) -> Bool
+    func read(_ key: String) -> String?
+    @discardableResult func delete(_ key: String) -> Bool
+}
+
+final class KeychainCookieStorage: CookieStorage, @unchecked Sendable {
+    func write(_ value: String, for key: String) -> Bool { Keychain.write(key, value) }
+    func read(_ key: String) -> String? { Keychain.read(key) }
+    func delete(_ key: String) -> Bool { Keychain.delete(key) }
+}
+
+/// A backend that lives only as long as the test that made it.
+final class MemoryCookieStorage: CookieStorage, @unchecked Sendable {
+    private let lock = NSLock()
+    private var items: [String: String] = [:]
+
+    func write(_ value: String, for key: String) -> Bool {
+        lock.lock(); defer { lock.unlock() }
+        items[key] = value
+        return true
+    }
+
+    func read(_ key: String) -> String? {
+        lock.lock(); defer { lock.unlock() }
+        return items[key]
+    }
+
+    func delete(_ key: String) -> Bool {
+        lock.lock(); defer { lock.unlock() }
+        items.removeValue(forKey: key)
+        return true
+    }
+}
+
 /// The NextAuth session, held as the cookie set the web flow produced.
 ///
 /// The backend authenticates with a NextAuth **session cookie**, not a bearer
@@ -21,10 +66,18 @@ struct SessionCookieStore: Sendable, Equatable {
 
     private static let keychainKey = "gse.auth.cookies"
 
+    private let storage: any CookieStorage
     private(set) var cookies: [SessionCookie]
 
-    init(cookies: [SessionCookie] = []) {
+    init(cookies: [SessionCookie] = [], storage: any CookieStorage = KeychainCookieStorage()) {
         self.cookies = cookies
+        self.storage = storage
+    }
+
+    /// Compares the jar, not the backend: two stores holding the same cookies
+    /// are the same session wherever they happen to be kept.
+    static func == (lhs: SessionCookieStore, rhs: SessionCookieStore) -> Bool {
+        lhs.cookies == rhs.cookies
     }
 
     var isEmpty: Bool { cookies.isEmpty }
@@ -81,18 +134,18 @@ struct SessionCookieStore: Sendable, Equatable {
     @discardableResult
     func persist() -> Bool {
         guard !cookies.isEmpty else {
-            return Keychain.delete(Self.keychainKey)
+            return storage.delete(Self.keychainKey)
         }
         guard let data = try? JSONEncoder().encode(cookies),
               let raw = String(data: data, encoding: .utf8) else { return false }
-        return Keychain.write(Self.keychainKey, raw)
+        return storage.write(raw, for: Self.keychainKey)
     }
 
-    static func restore() -> SessionCookieStore {
-        guard let raw = Keychain.read(keychainKey),
+    static func restore(from storage: any CookieStorage = KeychainCookieStorage()) -> SessionCookieStore {
+        guard let raw = storage.read(keychainKey),
               let data = raw.data(using: .utf8),
               let decoded = try? JSONDecoder().decode([SessionCookie].self, from: data)
-        else { return SessionCookieStore() }
-        return SessionCookieStore(cookies: decoded)
+        else { return SessionCookieStore(storage: storage) }
+        return SessionCookieStore(cookies: decoded, storage: storage)
     }
 }

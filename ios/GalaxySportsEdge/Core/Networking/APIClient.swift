@@ -52,10 +52,9 @@ actor APIClient {
     static func makeDecoder() -> JSONDecoder {
         let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
+        decoder.dateDecodingStrategy = .serverTimestamp
         return decoder
     }
-
     // MARK: - Session cookies
 
     func adopt(cookies incoming: [SessionCookie]) {
@@ -226,4 +225,43 @@ actor APIClient {
         let failure = try? JSONDecoder().decode(Failure.self, from: data)
         return failure?.error ?? failure?.message
     }
+}
+
+extension JSONDecoder.DateDecodingStrategy {
+    /// The backend serialises every date with JavaScript's `Date.toISOString()`,
+    /// which *always* carries milliseconds -- `"2026-09-27T18:00:00.000Z"`.
+    /// The stock `.iso8601` strategy is `ISO8601DateFormatter` without
+    /// `.withFractionalSeconds`, so it rejects exactly that string, and every
+    /// payload containing a timestamp failed to decode. Not a fixture problem:
+    /// `apps/web/app/api/picks/route.ts` emits `commenceTime` that way, so the
+    /// whole slate would have failed in the app too.
+    ///
+    /// Both shapes are accepted, because a field that has been through a
+    /// database round trip or a hand-written test can arrive without the
+    /// fractional part.
+    static let serverTimestamp = JSONDecoder.DateDecodingStrategy.custom { decoder in
+        let container = try decoder.singleValueContainer()
+        let raw = try container.decode(String.self)
+        if let date = ISO8601DateFormatter.gseWithFractional.date(from: raw)
+            ?? ISO8601DateFormatter.gsePlain.date(from: raw) {
+            return date
+        }
+        throw DecodingError.dataCorruptedError(
+            in: container,
+            debugDescription: "Expected an ISO-8601 date string, got \(raw.debugDescription).")
+    }
+}
+
+extension ISO8601DateFormatter {
+    static let gseWithFractional: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime, .withFractionalSeconds]
+        return formatter
+    }()
+
+    static let gsePlain: ISO8601DateFormatter = {
+        let formatter = ISO8601DateFormatter()
+        formatter.formatOptions = [.withInternetDateTime]
+        return formatter
+    }()
 }
