@@ -40,6 +40,10 @@ function market(overrides: Partial<PredExonKalshiMarket> & Pick<PredExonKalshiMa
     cap_strike: null,
     close_time: null,
     outcomes: [],
+    volume: null,
+    dollar_volume: null,
+    open_interest: null,
+    dollar_open_interest: null,
     ...overrides,
   };
 }
