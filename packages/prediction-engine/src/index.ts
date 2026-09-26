@@ -3929,3 +3929,19 @@ export {
   OPPONENT_ADJUSTED_EPA_WEEK1_DEFENSE_PRIOR_WEIGHT,
   OPPONENT_ADJUSTED_EPA_SHRINKAGE_FADE_GAMES,
 } from "./signals/opponent-adjusted-epa.js";
+
+export {
+  aggregateSignals,
+  CONCLUSION_AGREEMENT_GAP,
+  STALENESS_WEIGHT_MULTIPLIER,
+  type AggregationTrace,
+  type AggregationEval,
+  type DisagreementState,
+  type SignalObservation,
+} from "./reasoning/aggregation-trace.js";
+export {
+  interpretSituation,
+  type SituationalReading,
+  type SituationalEval,
+  type GameContext,
+} from "./reasoning/situational-engine.js";
