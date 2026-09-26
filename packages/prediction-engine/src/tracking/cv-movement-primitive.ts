@@ -73,7 +73,9 @@ export function estimateCameraMotion(
               const py = by + y, px = bx + x;
               const cy = by + y + dy, cx = bx + x + dx;
               if (cy < 0 || cy >= h || cx < 0 || cx >= w) { diff = Infinity; break; }
-              diff += Math.abs(prevFrame[py][px] - currFrame[cy][cx]);
+              const prevRow = prevFrame[py] as number[];
+              const currRow = currFrame[cy] as number[];
+              diff += Math.abs((prevRow[px] as number) - (currRow[cx] as number));
             }
           }
           if (diff < bestDiff) {
@@ -97,7 +99,9 @@ export function estimateCameraMotion(
       bestKey = key;
     }
   }
-  const [dx, dy] = bestKey.split(",").map(Number);
+  const parts = bestKey.split(",").map(Number);
+  const dx = parts[0] as number;
+  const dy = parts[1] as number;
   return { dx, dy, magnitude: Math.sqrt(dx * dx + dy * dy) };
 }
 
@@ -198,8 +202,8 @@ export function deriveMovementMetrics(
     let speedCount = 0;
 
     for (let i = 1; i < t.frames.length; i++) {
-      const prev = t.frames[i - 1];
-      const curr = t.frames[i];
+      const prev = t.frames[i - 1] as FramePoint;
+      const curr = t.frames[i] as FramePoint;
       if (prev.xM == null || curr.xM == null || prev.yM == null || curr.yM == null) continue;
 
       const dx = curr.xM - prev.xM;

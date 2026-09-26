@@ -167,6 +167,20 @@ export function gateProp(
   // Use the sharpest book for devigging
   const sharpOdds = prop.odds.filter((o) => o.isSharp);
   const bestBook = sharpOdds.length > 0 ? sharpOdds[0] : prop.odds[0];
+  if (bestBook == null) {
+    return {
+      propId: `${prop.playerId}:${prop.propType}`,
+      gateStatus: "DISCARDED",
+      discardReason: "no book odds — refuse to invent a price",
+      expectedValuePct: 0,
+      deviggedFairOdds: 0,
+      recommendedPick: "PASS",
+      shin: { trueProbOver: 0, trueProbUnder: 0, syntheticVig: 0, converged: false },
+      lineFreshnessMinutes,
+      bookCount: prop.odds.length,
+      sharpBookCount: sharpOdds.length,
+    };
+  }
   const shin = shinDevig(bestBook.overOdds, bestBook.underOdds);
 
   // Line freshness check
@@ -280,12 +294,15 @@ export function monteCarloProp(
   }
   samples.sort((a, b) => a - b);
   const overHitRate = samples.filter((s) => s > line).length / simulations;
+  const p5Val = samples[Math.floor(simulations * 0.05)] as number;
+  const p50Val = samples[Math.floor(simulations * 0.5)] as number;
+  const p95Val = samples[Math.floor(simulations * 0.95)] as number;
   return {
     simulations,
     overHitRate: Number(overHitRate.toFixed(4)),
-    p5: Number(samples[Math.floor(simulations * 0.05)].toFixed(2)),
-    p50: Number(samples[Math.floor(simulations * 0.5)].toFixed(2)),
-    p95: Number(samples[Math.floor(simulations * 0.95)].toFixed(2)),
+    p5: Number(p5Val.toFixed(2)),
+    p50: Number(p50Val.toFixed(2)),
+    p95: Number(p95Val.toFixed(2)),
   };
 }
 

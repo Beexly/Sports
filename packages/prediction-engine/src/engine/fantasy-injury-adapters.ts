@@ -84,7 +84,9 @@ export function hotHandAdapter(
   // Repetition contrast: is the player more likely to get the ball after getting the ball?
   let repeatCount = 0;
   for (let i = 1; i < touches.length; i++) {
-    if (touches[i] > 0 && touches[i - 1] > 0) repeatCount++;
+    const curr = touches[i] as number;
+    const prev = touches[i - 1] as number;
+    if (curr > 0 && prev > 0) repeatCount++;
   }
   const repeatRate = repeatCount / (touches.length - 1);
   return obs("injuries:hot-hand", Number(repeatRate.toFixed(4)), 0.72,

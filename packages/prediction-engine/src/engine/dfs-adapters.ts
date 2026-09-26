@@ -59,10 +59,14 @@ export function paretoFilterAdapter(
   // Count Pareto-optimal players (no other player has more points AND less salary)
   let paretoCount = 0;
   for (let i = 0; i < points.length; i++) {
+    const pi = points[i] as number;
+    const si = salaries[i] as number;
     let dominated = false;
     for (let j = 0; j < points.length; j++) {
       if (i === j) continue;
-      if (points[j] >= points[i] && salaries[j] <= salaries[i] && (points[j] > points[i] || salaries[j] < salaries[i])) {
+      const pj = points[j] as number;
+      const sj = salaries[j] as number;
+      if (pj >= pi && sj <= si && (pj > pi || sj < si)) {
         dominated = true;
         break;
       }
@@ -125,7 +129,8 @@ export function powerLawSharesAdapter(
     shares.push(s);
     total += s;
   }
-  const topShare = total > 0 ? shares[0] / total : 0;
+  const firstShare = shares[0] as number;
+  const topShare = total > 0 ? firstShare / total : 0;
   return obs("dfs:power-law", Number(topShare.toFixed(4)), 0.8,
     "packages/prediction-engine/src/dfs/payout-framework.ts#powerLawShares",
     "FANTASY_DFS", { topShare: Number(topShare.toFixed(4)), nPaid: n, alpha: a });

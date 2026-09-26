@@ -170,10 +170,12 @@ export function eceAdapter(
   }
   const bins = new Map<number, { conf: number[]; out: number[] }>();
   for (let i = 0; i < confidences.length; i++) {
-    const bin = Math.floor(confidences[i] * 10) / 10;
+    const c = confidences[i] as number;
+    const o = outcomes[i] as number;
+    const bin = Math.floor(c * 10) / 10;
     if (!bins.has(bin)) bins.set(bin, { conf: [], out: [] });
-    bins.get(bin)!.conf.push(confidences[i]);
-    bins.get(bin)!.out.push(outcomes[i]);
+    bins.get(bin)!.conf.push(c);
+    bins.get(bin)!.out.push(o);
   }
   let ece = 0;
   for (const [_, b] of bins) {

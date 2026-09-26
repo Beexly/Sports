@@ -83,8 +83,9 @@ export function overroundForecastAdapter(
   let sum = 0;
   let weightSum = 0;
   for (let i = 0; i < n; i++) {
+    const h = history[i] as number;
     const w = Math.pow(0.9, n - 1 - i);
-    sum += history[i] * w;
+    sum += h * w;
     weightSum += w;
   }
   const forecast = weightSum > 0 ? sum / weightSum : 0;
@@ -143,7 +144,8 @@ export function devigOracleAdapter(
   const total = implied.reduce((a, b) => a + b, 0);
   const fairProbs = implied.map((p) => p / total);
   const overround = total - 1;
-  return obs("devig:oracle", Number(fairProbs[0].toFixed(4)), 0.9,
+  const firstFair = fairProbs[0] as number;
+  return obs("devig:oracle", Number(firstFair.toFixed(4)), 0.9,
     "packages/prediction-engine/src/devig/oracle.ts#devig",
     "MARKET", { fairProbs: fairProbs.map((p) => Number(p.toFixed(4))), overround: Number(overround.toFixed(4)), method: method ?? "proportional" });
 }

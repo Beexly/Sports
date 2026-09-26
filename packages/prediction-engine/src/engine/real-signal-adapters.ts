@@ -214,7 +214,9 @@ export function brierScoreAdapter(
   }
   let sum = 0;
   for (let i = 0; i < probs.length; i++) {
-    const diff = probs[i] - outcomes[i];
+    const p = probs[i] as number;
+    const o = outcomes[i] as number;
+    const diff = p - o;
     sum += diff * diff;
   }
   const brier = sum / probs.length;
@@ -246,8 +248,10 @@ export function logLossAdapter(
   }
   let sum = 0;
   for (let i = 0; i < probs.length; i++) {
-    const p = Math.max(1e-15, Math.min(1 - 1e-15, probs[i]));
-    sum += outcomes[i] * Math.log(p) + (1 - outcomes[i]) * Math.log(1 - p);
+    const pi = probs[i] as number;
+    const oi = outcomes[i] as number;
+    const p = Math.max(1e-15, Math.min(1 - 1e-15, pi));
+    sum += oi * Math.log(p) + (1 - oi) * Math.log(1 - p);
   }
   const ll = -sum / probs.length;
 
