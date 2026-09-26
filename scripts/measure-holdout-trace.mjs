@@ -13,8 +13,8 @@ const here = dirname(fileURLToPath(import.meta.url));
 const root = resolve(here, "..");
 
 // Node 22 strips types on import of the .ts module.
-const { reasonAbout } = await import(
-  resolve(root, "packages/ingestion-pipeline/src/reasoning-trace.ts")
+const { traceHoldoutGame } = await import(
+  resolve(root, "packages/ingestion-pipeline/src/reasoning-trace/from-bridge.ts")
 );
 
 const rows = readFileSync(resolve(root, "data/gse-dataset/holdout.jsonl"), "utf8")
@@ -29,33 +29,15 @@ for (const row of rows) {
   if (row.season !== 2025 || row.partition !== "holdout") {
     throw new Error(`row ${row.game_id} is not the sealed 2025 holdout`);
   }
-  const premises = [
-    {
-      id: "rest",
-      readingKind: "PHYSICAL_MODIFIER",
-      claim: `rest_diff ${row.rest_diff} is context, not a probability`,
-    },
-    {
-      id: "roof",
-      readingKind: "CATEGORICAL",
-      claim: `roof ${row.roof} is context, not a probability`,
-    },
-  ];
-  const result = reasonAbout(
-    {
-      question: `What do the stored bridge results say about ${row.away_team} at ${row.home_team}?`,
-      unit: "game",
-      interference: "UNKNOWN",
-      targetFitOnQuestionSample: false,
-      blockedKernels: [
-        {
-          name: "glmf",
-          reason: "Gaussian ALS on a binomial matrix, mu is the sample mean",
-        },
-      ],
-    },
-    premises,
-  );
+  const result = traceHoldoutGame({
+    game_id: row.game_id,
+    season: row.season,
+    week: row.week,
+    home_team: row.home_team,
+    away_team: row.away_team,
+    rest_diff: row.rest_diff,
+    roof: row.roof,
+  });
   if (!result.ok) throw new Error(result.reason);
   const data = result.data;
   if (data.publishablePick !== false || data.beatsBookClaim !== false) {
@@ -82,7 +64,7 @@ Measured ${new Date().toISOString()} by calling \`reasonAbout\` once per sealed 
 
 Scores and \`home_win\` were not passed in. Moneylines were not converted into probabilities. Assigning them a sample size would have been a fabricated premise.
 
-Each call received two context premises (rest, roof) and the blocked GLMF kernel. Context is not a forecast.
+Each call went through \`traceHoldoutGame\`. Rest and roof are context. The bridge premise is a refusal, because the row has no bridge payload. Scores were not passed in. \`withheldReasons\` is empty on every row because the conclusion is INSUFFICIENT, not WITHHELD. There is still no confidence field.
 
 ## Distribution
 

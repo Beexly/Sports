@@ -31,6 +31,8 @@ describe("reasonAbout", () => {
     const expected = (0.62 * 200 + 0.64 * 80) / 280;
     expect(r.data.agreementSummary).toBeCloseTo(expected, 10);
     expect(r.data.sourceCount).toBe(2);
+    expect(r.data.withheldReasons).toEqual([]);
+    expect(r.data.reasoningTraceBrand).toBe("GSE_REASONING_TRACE");
     expect(r.data.unknowns.map((u) => u.id)).toContain("glmf");
   });
 
@@ -63,6 +65,9 @@ describe("reasonAbout", () => {
     expect(r.data.agreementSummary).toBeNull();
     expect(r.data.conflicts).toHaveLength(1);
     expect(r.data.conflicts[0]?.gap).toBeCloseTo(0.4, 10);
+    expect(r.data.withheldReasons).toEqual(["a and b differ by 0.4 on the same outcome"]);
+    expect(r.data.derivedMetrics.conflict_density).toBe(1);
+    expect(r.data.derivedMetrics.signal_agreement_index).toBeCloseTo(0.6, 10);
   });
 
   it("withholds a reverse-Stein target even when the premises agree", () => {
@@ -74,6 +79,7 @@ describe("reasonAbout", () => {
     if (!r.ok) return;
     expect(r.data.conclusion).toBe("WITHHELD");
     expect(r.data.reason).toContain("reverse-Stein");
+    expect(r.data.withheldReasons).toEqual(["target was fit on the question sample"]);
     expect(r.data.agreementSummary).toBeNull();
   });
 
@@ -103,5 +109,42 @@ describe("reasonAbout", () => {
   it("refuses an empty question", () => {
     const r = reasonAbout({ ...question, question: "  " }, []);
     expect(r.ok).toBe(false);
+  });
+
+  it("measures agreement at both extremes without changing the decision", () => {
+    const tight = reasonAbout(question, [prob("a", 0.5, 10), prob("b", 0.5, 10)]);
+    const wide = reasonAbout(question, [prob("a", 0.01, 10), prob("b", 0.99, 10)]);
+    expect(tight.ok && wide.ok).toBe(true);
+    if (!tight.ok || !wide.ok) return;
+    expect(tight.data.conclusion).toBe("ASSOCIATION_ONLY");
+    expect(tight.data.derivedMetrics.signal_agreement_index).toBeCloseTo(1, 10);
+    expect(tight.data.derivedMetrics.conflict_density).toBe(0);
+    expect(wide.data.conclusion).toBe("WITHHELD");
+    expect(wide.data.derivedMetrics.signal_agreement_index).toBeCloseTo(0.02, 10);
+    expect(wide.data.derivedMetrics.conflict_density).toBe(1);
+  });
+
+  it("measures market alignment and staleness only when those inputs exist", () => {
+    const aligned = reasonAbout(
+      { ...question, decisionTimestamp: "2026-01-10T18:00:00.000Z", decisionWindowMs: 86_400_000 },
+      [
+        prob("model", 0.6, 20),
+        { id: "market", readingKind: "PROBABILITY", probability: 0.6, sampleCount: 1, outcome: "home", role: "MARKET", claim: "price", evidenceTimestamp: "2026-01-10T12:00:00.000Z", declaredWeight: 1 },
+      ],
+    );
+    const stale = reasonAbout(
+      { ...question, decisionTimestamp: "2026-01-10T18:00:00.000Z", decisionWindowMs: 86_400_000 },
+      [
+        { ...prob("model", 0.7, 20), evidenceTimestamp: "2025-01-01T00:00:00.000Z", declaredWeight: 1 },
+      ],
+    );
+    const bare = reasonAbout(question, [prob("model", 0.7, 20)]);
+    expect(aligned.ok && stale.ok && bare.ok).toBe(true);
+    if (!aligned.ok || !stale.ok || !bare.ok) return;
+    expect(aligned.data.derivedMetrics.market_alignment_score).toBeCloseTo(1, 10);
+    expect(aligned.data.derivedMetrics.staleness_pressure).toBe(0);
+    expect(stale.data.derivedMetrics.staleness_pressure).toBe(1);
+    expect(bare.data.derivedMetrics.market_alignment_score).toBeNull();
+    expect(bare.data.derivedMetrics.staleness_pressure).toBeNull();
   });
 });

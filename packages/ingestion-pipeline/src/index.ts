@@ -889,4 +889,6 @@ export {
   type ReasoningQuestion,
   type ReasoningConclusion,
   type BlockedKernel,
+  type DerivedMetrics,
 } from "./reasoning-trace.js";
+export { traceHoldoutGame, type HoldoutScheduleRow } from "./reasoning-trace/from-bridge.js";

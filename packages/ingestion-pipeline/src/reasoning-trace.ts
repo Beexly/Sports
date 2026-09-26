@@ -35,6 +35,12 @@ export interface ReasoningPremise {
   readonly claim: string;
   /** Set when a bridge refused the kernel. Absence of a number, not a zero. */
   readonly refused?: string;
+  /** Optional. Does not change withholding. Used only for the market-alignment metric. */
+  readonly role?: "MARKET" | "SIGNAL";
+  /** Optional ISO-8601. Does not change withholding. */
+  readonly evidenceTimestamp?: string;
+  /** Optional. Does not change withholding. Defaults to 1 for staleness pressure. */
+  readonly declaredWeight?: number;
 }
 
 export interface BlockedKernel {
@@ -53,6 +59,9 @@ export interface ReasoningQuestion {
    */
   readonly targetFitOnQuestionSample: boolean;
   readonly blockedKernels?: readonly BlockedKernel[];
+  /** Optional. Does not change withholding. */
+  readonly decisionTimestamp?: string;
+  readonly decisionWindowMs?: number;
 }
 
 export interface DiscardedPremise {
@@ -91,7 +100,32 @@ export interface ReasoningTrace {
   readonly agreementSummaryIsPublishable: false;
   /** How many probability premises entered the summary. 1 is not agreement. */
   readonly sourceCount: number;
+  /**
+   * Empty unless conclusion is WITHHELD. Each entry is one cause. This does
+   * not decide the withhold; the branches below do.
+   */
+  readonly withheldReasons: readonly string[];
+  readonly derivedMetrics: DerivedMetrics;
+  readonly reasoningTraceBrand: "GSE_REASONING_TRACE";
   readonly trace: readonly string[];
+}
+
+/**
+ * Measurements that are not a decision.
+ * signal_agreement_index: 1 - (max - min) over usable probabilities that all
+ * name one outcome. Null if fewer than two share that outcome. Range (0, 1].
+ * conflict_density: same-outcome pairs past the disagreement gap, divided by
+ * all same-outcome pairs. Null if there is no such pair. Range [0, 1].
+ * market_alignment_score: 1 - |mean of non-market usable probabilities - the
+ * market probability|. Null if either side is missing. Range (0, 1].
+ * staleness_pressure: stale declared weight divided by weight that carried a
+ * timestamp. Null if the question has no decision time. Range [0, 1].
+ */
+export interface DerivedMetrics {
+  readonly signal_agreement_index: number | null;
+  readonly conflict_density: number | null;
+  readonly market_alignment_score: number | null;
+  readonly staleness_pressure: number | null;
 }
 
 export type ReasoningEval =
@@ -112,6 +146,57 @@ function isProbability(v: unknown): v is number {
   return typeof v === "number" && Number.isFinite(v) && v > 0 && v < 1;
 }
 
+function derivedMetricsOf(
+  question: ReasoningQuestion,
+  premises: readonly ReasoningPremise[],
+  usable: readonly { id: string; probability: number; outcome: string; role?: ReasoningPremise["role"] }[],
+  disagreement: number,
+): DerivedMetrics {
+  const outcomes = new Set(usable.map((item) => item.outcome));
+  let signal_agreement_index: number | null = null;
+  let conflict_density: number | null = null;
+  if (outcomes.size === 1 && usable.length >= 2) {
+    const values = usable.map((item) => item.probability);
+    signal_agreement_index = 1 - (Math.max(...values) - Math.min(...values));
+    let pairs = 0;
+    let conflicts = 0;
+    for (let i = 0; i < usable.length; i++) {
+      for (let j = i + 1; j < usable.length; j++) {
+        pairs += 1;
+        if (Math.abs(usable[i]!.probability - usable[j]!.probability) > disagreement) conflicts += 1;
+      }
+    }
+    conflict_density = pairs === 0 ? null : conflicts / pairs;
+  }
+
+  const market = premises.find((item) => item.role === "MARKET" && isProbability(item.probability));
+  const others = usable.filter((item) => item.role !== "MARKET");
+  let market_alignment_score: number | null = null;
+  if (market && isProbability(market.probability) && others.length > 0) {
+    const mean = others.reduce((sum, item) => sum + item.probability, 0) / others.length;
+    market_alignment_score = 1 - Math.abs(mean - market.probability);
+  }
+
+  let staleness_pressure: number | null = null;
+  const decisionMs = question.decisionTimestamp === undefined ? Number.NaN : Date.parse(question.decisionTimestamp);
+  if (Number.isFinite(decisionMs) && question.decisionWindowMs !== undefined && question.decisionWindowMs >= 0) {
+    let total = 0;
+    let stale = 0;
+    for (const item of premises) {
+      if (item.evidenceTimestamp === undefined) continue;
+      const evidenceMs = Date.parse(item.evidenceTimestamp);
+      if (!Number.isFinite(evidenceMs)) continue;
+      const weight = item.declaredWeight ?? 1;
+      if (!Number.isFinite(weight) || weight < 0) continue;
+      total += weight;
+      if (decisionMs - evidenceMs > question.decisionWindowMs) stale += weight;
+    }
+    staleness_pressure = total > 0 ? stale / total : null;
+  }
+
+  return { signal_agreement_index, conflict_density, market_alignment_score, staleness_pressure };
+}
+
 function base(question: ReasoningQuestion, reason: string, conclusion: ReasoningConclusion, extra: Partial<ReasoningTrace> & { trace: readonly string[] }): ReasoningTrace {
   return {
     publishablePick: false,
@@ -129,6 +214,14 @@ function base(question: ReasoningQuestion, reason: string, conclusion: Reasoning
     agreementSummary: extra.agreementSummary ?? null,
     agreementSummaryIsPublishable: false,
     sourceCount: extra.sourceCount ?? 0,
+    withheldReasons: conclusion === "WITHHELD" ? (extra.withheldReasons ?? [reason]) : [],
+    derivedMetrics: extra.derivedMetrics ?? {
+      signal_agreement_index: null,
+      conflict_density: null,
+      market_alignment_score: null,
+      staleness_pressure: null,
+    },
+    reasoningTraceBrand: "GSE_REASONING_TRACE",
     trace: extra.trace,
   };
 }
@@ -157,7 +250,7 @@ export function reasonAbout(question: ReasoningQuestion, premises: readonly Reas
 
   const discarded: DiscardedPremise[] = [];
   const context: string[] = [];
-  const usable: { id: string; probability: number; sampleCount: number; outcome: string }[] = [];
+  const usable: { id: string; probability: number; sampleCount: number; outcome: string; role?: ReasoningPremise["role"] }[] = [];
 
   for (const p of premises) {
     if (p.refused !== undefined && p.refused.length > 0) {
@@ -193,8 +286,10 @@ export function reasonAbout(question: ReasoningQuestion, premises: readonly Reas
       });
       continue;
     }
-    usable.push({ id: p.id, probability: p.probability, sampleCount: p.sampleCount, outcome: p.outcome });
+    usable.push({ id: p.id, probability: p.probability, sampleCount: p.sampleCount, outcome: p.outcome, role: p.role });
   }
+
+  const derived = derivedMetricsOf(question, premises, usable, disagreement);
 
   const trace: string[] = [
     PUBLICATION,
@@ -211,6 +306,8 @@ export function reasonAbout(question: ReasoningQuestion, premises: readonly Reas
         discarded,
         unknowns,
         contextPremises: context,
+        withheldReasons: ["target was fit on the question sample"],
+        derivedMetrics: derived,
         trace,
       }),
     };
@@ -227,6 +324,8 @@ export function reasonAbout(question: ReasoningQuestion, premises: readonly Reas
         usedPremises: usable.map((u) => u.id),
         contextPremises: context,
         sourceCount: usable.length,
+        withheldReasons: [`premises name different outcomes: ${[...outcomes].join(", ")}`],
+        derivedMetrics: derived,
         trace,
       }),
     };
@@ -252,6 +351,8 @@ export function reasonAbout(question: ReasoningQuestion, premises: readonly Reas
         usedPremises: usable.map((u) => u.id),
         contextPremises: context,
         sourceCount: usable.length,
+        withheldReasons: conflicts.map((pair) => `${pair.a} and ${pair.b} differ by ${pair.gap} on the same outcome`),
+        derivedMetrics: derived,
         trace,
       }),
     };
@@ -265,6 +366,7 @@ export function reasonAbout(question: ReasoningQuestion, premises: readonly Reas
         discarded,
         unknowns,
         contextPremises: context,
+        derivedMetrics: derived,
         trace,
       }),
     };
@@ -304,6 +406,7 @@ export function reasonAbout(question: ReasoningQuestion, premises: readonly Reas
         contextPremises: context,
         agreementSummary: summary,
         sourceCount: usable.length,
+        derivedMetrics: derived,
         trace,
       },
     ),

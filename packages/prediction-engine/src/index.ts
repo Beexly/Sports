@@ -3945,3 +3945,8 @@ export {
   type SituationalEval,
   type GameContext,
 } from "./reasoning/situational-engine.js";
+export {
+  registerDeclarations,
+  SIGNAL_FAMILIES,
+  type SignalDeclaration,
+} from "./reasoning/signal-registry.js";
