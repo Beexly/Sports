@@ -34,6 +34,7 @@ import {
   isBookmakerConsensusClaim,
   type PublicConsensusPick,
 } from "@/lib/claims/public-consensus-claim";
+import { reconstructConsensusBookSet } from "@/lib/claims/publish-time-consensus-evidence";
 
 export const dynamic = "force-dynamic";
 
@@ -242,7 +243,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       ? rankedPicks.slice(0, entitlements.dailyPickLimit)
       : rankedPicks;
 
-  const consensusProviderByRun = new Map<string, string>();
+  const consensusProviderByRun = new Map<
+    string,
+    { provider: string; sourceId: string; capturedAt: Date }
+  >();
   const ingestionRunIds = limitedPicks
     .map((pick) => pick.ingestionRunId)
     .filter((id): id is string => Boolean(id));
@@ -259,15 +263,75 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
             where: { sourceKind: "ODDS_EVENTS" },
             orderBy: { fetchedAt: "desc" },
             take: 1,
-            select: { provider: true },
+            select: { id: true, provider: true, fetchedAt: true },
           },
         },
       })
       .catch(() => []);
     for (const run of runs) {
-      const provider = run.sourceSnapshots[0]?.provider;
-      if (provider) consensusProviderByRun.set(run.id, provider);
+      const snapshot = run.sourceSnapshots[0];
+      if (snapshot?.provider) {
+        consensusProviderByRun.set(run.id, {
+          provider: snapshot.provider,
+          sourceId: snapshot.id,
+          capturedAt: snapshot.fetchedAt,
+        });
+      }
     }
+  }
+
+  const consensusBookSetByPick = new Map<string, ReturnType<typeof reconstructConsensusBookSet>>();
+  const limitedPicksForType = limitedPicks as Array<(typeof limitedPicks)[number] & {
+    readonly pickType: "SPREAD" | "MONEYLINE" | "TOTAL";
+  }>;
+  const consensusGameIds = [...new Set(limitedPicksForType.map((pick) => pick.gameId))];
+  if (consensusGameIds.length > 0 && typeof db.odds?.findMany === "function") {
+    const latestAsOf = limitedPicksForType.reduce(
+      (latest, pick) => (pick.generatedAt > latest ? pick.generatedAt : latest),
+      new Date(0),
+    );
+    const oddsRows = await db.odds.findMany({
+      where: { gameId: { in: consensusGameIds }, fetchedAt: { lte: latestAsOf } },
+      select: {
+        gameId: true,
+        bookmaker: true,
+        market: true,
+        homePrice: true,
+        awayPrice: true,
+        homeSpreadPrice: true,
+        awaySpreadPrice: true,
+        spread: true,
+        total: true,
+        overPrice: true,
+        underPrice: true,
+        fetchedAt: true,
+      },
+    }).catch(() => []);
+    for (const pick of limitedPicksForType) {
+      const source = pick.ingestionRunId
+        ? consensusProviderByRun.get(pick.ingestionRunId) ?? null
+        : null;
+      if (!source) {
+        consensusBookSetByPick.set(pick.id, null);
+        continue;
+      }
+      consensusBookSetByPick.set(
+        pick.id,
+        reconstructConsensusBookSet(
+          {
+            id: pick.id,
+            gameId: pick.gameId,
+            pickType: pick.pickType,
+            generatedAt: pick.generatedAt,
+            bookmakerCount: pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount,
+          },
+          oddsRows,
+          source,
+        ),
+      );
+    }
+  } else {
+    for (const pick of limitedPicksForType) consensusBookSetByPick.set(pick.id, null);
   }
 
   // Thread 2: honest calibrated confidence. Built once (memoised) and only when
@@ -309,14 +373,31 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     // cycle). Reading the pill from the live column while the percentage read
     // the snapshot let a transient feed gap render the pill beside a percentage.
     const bookmakerCount = pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount;
-    const consensusProvider = pick.ingestionRunId
+    const consensusSource = pick.ingestionRunId
       ? consensusProviderByRun.get(pick.ingestionRunId) ?? null
+      : null;
+    const consensusBookSet = consensusBookSetByPick.get(pick.id) ?? null;
+    const consensusProvider = consensusBookSet && consensusSource
+      ? consensusSource.provider
       : null;
     const consensusSlice = {
       consensusPct: pick.consensusPct,
       bookmakerCount,
       dataFreshnessAt: pick.dataFreshnessAt,
       consensusProvider,
+      consensusSourceId: consensusBookSet?.sourceId ?? null,
+      consensusBooks: consensusBookSet?.books ?? null,
+      consensusBookSetId: consensusBookSet?.bookSetId ?? null,
+      consensusCapturedAt: consensusBookSet?.capturedAt ?? null,
+      consensusBookSet:
+        consensusBookSet && consensusProvider
+          ? {
+              books: consensusBookSet.books,
+              sourceId: consensusBookSet.sourceId,
+              provider: consensusProvider,
+              capturedAt: consensusBookSet.capturedAt,
+            }
+          : null,
     };
     const projectReasoning = (text: string) => {
       const source = text.trim();
@@ -328,10 +409,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       if (isBookmakerConsensusClaim(source) && !bound) {
         return { text: null, bound: null };
       }
-      return {
-        text: teaserForViewer(source, entitlements.canSeeConfidence),
-        bound,
-      };
+      // Full reasoning and reasoningShort are gated independently. The first
+      // consensus claim in a full explanation is enough to withhold that whole
+      // field, even if the rest contains no other market phrase.
+      return { text: teaserForViewer(source, entitlements.canSeeConfidence), bound };
     };
     const shortReasoning = projectReasoning(pick.reasoningShort);
     const reasoningSource = entitlements.canSeeFactorBreakdown
@@ -418,6 +499,10 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       consensusPct: pick.consensusPct,
       bookmakerCount,
       consensusProvider,
+      consensusSourceId: consensusBound?.consensusSourceId ?? null,
+      consensusBooks: consensusBound?.consensusBooks ?? null,
+      consensusBookSetId: consensusBound?.consensusBookSetId ?? null,
+      consensusCapturedAt: consensusBound?.consensusCapturedAt ?? null,
       consensusEvidence: consensusBound
         ? consensusEvidenceCaption(consensusBound)
         : null,
