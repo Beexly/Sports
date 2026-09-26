@@ -355,3 +355,17 @@ export {
   type RlEval,
   type DistributionStats,
 } from "./rl-symreg-bridge.js";
+
+// Metalearning + Conformal bridge (ALPACA BLR, librarian, Levene/Welch)
+export {
+  evalOnlineBlr,
+  evalAlpacaGate,
+  evalBlrNll,
+  evalLibrarian,
+  evalRetrieveTopS,
+  evalSplitQuality,
+  evalSplitQualityScore,
+  type MetaEval,
+  type LibrarianResult,
+  type SplitQualityResult,
+} from "./metalearning-conformal-bridge.js";

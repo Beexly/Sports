@@ -2788,3 +2788,38 @@ export {
   openLoopBfr,
   gameStateLibraryRow,
 } from "./symreg/sindy-dynamics.js";
+
+// Metalearning: MAML rookie adapter, ALPACA online regression, metric librarian
+export {
+  innerAdapt,
+  queryLoss,
+  mamlMetaLoss,
+  foMetaGradient,
+  metaTrain,
+  type FewShotTask,
+} from "./metalearning/1703-03400v3-maml-rookie-adapter.js";
+export {
+  blrInit,
+  blrUpdate,
+  blrPredictive,
+  blrNLL,
+  alpacaGate,
+  type BLRPosterior,
+} from "./metalearning/1807-08912v2-alpaca-online-regression.js";
+export {
+  retrieveTopS,
+  learnMetricScales,
+  prototypePredict,
+  librarianGate,
+  scaledDistance,
+} from "./metalearning/1901-09890v1-meta-metric-librarian.js";
+
+// Conformal: Levene-Welch variance/t tests, Mondrian taxonomy
+export {
+  levene,
+  brownForsythe,
+  welchT,
+  splitQuality,
+  type VarianceTestResult,
+  type WelchTResult,
+} from "./conformal/levene-welch.js";
