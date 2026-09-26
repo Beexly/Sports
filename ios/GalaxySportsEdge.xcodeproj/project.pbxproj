@@ -29,6 +29,8 @@
 		B14A40F9B62C4CC5863FCA60 /* PicksViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8DFF2580DEF948B78682D586 /* PicksViewModel.swift */; };
 		6D9327AA3DE246EAB4A804A7 /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 336A9F4AF0694F26873B800F /* ProfileView.swift */; };
 		36287AC3B3924BEAB588796C /* ScoresView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F97CEBC4490E42FFA5AAAD0A /* ScoresView.swift */; };
+		3C02CA224B5B457E8634D168 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AF6534B8EF484AECACC710A6 /* Assets.xcassets */; };
+		96657116C42B4766BA85EFA5 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = B6F7BBFF68244C33B787BD18 /* PrivacyInfo.xcprivacy */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -55,6 +57,8 @@
 		336A9F4AF0694F26873B800F /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProfileView.swift"; sourceTree = "<group>"; };
 		F97CEBC4490E42FFA5AAAD0A /* ScoresView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ScoresView.swift"; sourceTree = "<group>"; };
 		34EE7BD18843478896034A15 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		AF6534B8EF484AECACC710A6 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		B6F7BBFF68244C33B787BD18 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
 		FBD820214F9040B482924F7E /* GalaxySportsEdge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GalaxySportsEdge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -92,6 +96,8 @@
 				7A3C0FB00FF34B319F7958B0,
 				B21C40C78B504A3EAF3F70BC,
 				34EE7BD18843478896034A15,
+				AF6534B8EF484AECACC710A6,
+				B6F7BBFF68244C33B787BD18,
 			);
 			name = "GalaxySportsEdge";
 			path = "GalaxySportsEdge";
@@ -254,6 +260,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				3C02CA224B5B457E8634D168 /* Assets.xcassets in Resources */,
+				96657116C42B4766BA85EFA5 /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -346,6 +354,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = GalaxySportsEdge/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -369,6 +378,7 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = "";
 				GENERATE_INFOPLIST_FILE = NO;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				INFOPLIST_FILE = GalaxySportsEdge/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 17.0;
 				LD_RUNPATH_SEARCH_PATHS = (
