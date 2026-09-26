@@ -41,9 +41,13 @@ function sha256Hex(msg: string): string {
   for (let i = 0; i < withPad.length; i += 64) {
     for (let t = 0; t < 16; t++) w[t] = dv.getUint32(i + t * 4);
     for (let t = 16; t < 64; t++) {
-      const s0 = ((w[t - 15] >>> 7) | (w[t - 15] << 25)) ^ ((w[t - 15] >>> 18) | (w[t - 15] << 14)) ^ (w[t - 15] >>> 3);
-      const s1 = ((w[t - 2] >>> 17) | (w[t - 2] << 15)) ^ ((w[t - 2] >>> 19) | (w[t - 2] << 13)) ^ (w[t - 2] >>> 10);
-      w[t] = (w[t - 16] + s0 + w[t - 7] + s1) >>> 0;
+      const w15 = w[t - 15] as number;
+      const w2 = w[t - 2] as number;
+      const w16 = w[t - 16] as number;
+      const w7 = w[t - 7] as number;
+      const s0 = ((w15 >>> 7) | (w15 << 25)) ^ ((w15 >>> 18) | (w15 << 14)) ^ (w15 >>> 3);
+      const s1 = ((w2 >>> 17) | (w2 << 15)) ^ ((w2 >>> 19) | (w2 << 13)) ^ (w2 >>> 10);
+      w[t] = (w16 + s0 + w7 + s1) >>> 0;
     }
     let a = h0, b = h1, c = h2, d = h3, e = h4, f = h5, g = h6, h = h7;
     for (let t = 0; t < 64; t++) {
