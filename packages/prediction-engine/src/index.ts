@@ -3324,3 +3324,69 @@ export {
   type MarginProbs,
   type SkellamRegression,
 } from "./nfl/skellam-margin.js";
+// ── Research surface: capital / DML / NB-RBPF / opponent-adjusted EPA ────────
+export {
+  stepCapital,
+  runCapital,
+  runNullSuite,
+  runPlantedComparison,
+  type CapitalPath,
+  type RunOptions,
+  type NullReport,
+  type PlantedReport,
+} from "./research/capital.js";
+export {
+  timeIndex,
+  generateDmlPanel,
+  DEFAULT_PANEL,
+  type QbStatus,
+  type DmlGameRow,
+  type PanelDesign,
+} from "./research/dml-panel.js";
+export {
+  TRIM_LOW,
+  TRIM_HIGH,
+  N_FOLDS,
+  FILTER_INTERVENTION_GAIN,
+  estimateQbOutAtt,
+  placeboAtt,
+  sensitivityInterval,
+  diagnoseQbOut,
+  type DmlEstimate,
+  type DmlDiagnostics,
+} from "./research/dml-qb-out.js";
+export {
+  R9_SNAPSHOT_VERSION,
+  FIXED_LAMBDA,
+  MAX_PARTICLES,
+  MAX_UNITS,
+  logNbPmf,
+  NbRbpf,
+  type NbRbpfOptions,
+  type NbRbpfSnapshot,
+  type NbRbpfDiagnostics,
+} from "./research/nb-rbpf.js";
+export {
+  DEFAULT_DESIGN,
+  drawNb,
+  generateSyntheticGames,
+  type SyntheticGame,
+  type SyntheticDesign,
+} from "./research/synthetic-nb.js";
+export {
+  computeOpponentAdjustedEpa,
+  type TeamGameEpaSplit,
+  type TeamEpaPrior,
+  type OpponentAdjustedEpaOptions,
+  type LeagueEpaAverages,
+  type OpponentAdjustedEpaRating,
+  type OpponentAdjustedEpaTeamResult,
+  type OpponentAdjustedEpaSolve,
+} from "./signals/opponent-adjusted-epa.js";
+
+// ── GSE-score calibration action policy ──────────────────────────────────────
+export {
+  calibrationActionCap,
+  calibrationRequiresHardPass,
+  calibrationRiskSeverity,
+} from "./gse-score/calibration-action-policy.js";

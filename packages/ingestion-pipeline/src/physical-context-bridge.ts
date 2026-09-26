@@ -356,7 +356,21 @@ export function evalApplyBeta(input: {
   }
   if (!finite(p)) return fail("p must be finite");
   try {
-    const calibrated = applyBeta({ method: "beta", a: model.a, b: model.b, c: model.c }, p);
+    // applyBeta reads only a/b/c, but the engine's BetaModel type also carries
+    // the fitted map + its canonical serialization, so hand it a complete record.
+    const beta = {
+      method: "beta",
+      a: model.a,
+      b: model.b,
+      c: model.c,
+      predict: (q: number) =>
+        applyBeta(
+          { method: "beta", a: model.a, b: model.b, c: model.c, predict: (x: number) => x, paramsCanonical: "" },
+          q,
+        ),
+      paramsCanonical: `beta:a=${model.a},b=${model.b},c=${model.c}`,
+    };
+    const calibrated = applyBeta(beta, p);
     if (!finite(calibrated)) return fail("beta calibration produced non-finite output");
     return { ok: true, data: { calibrated } };
   } catch (e) {
