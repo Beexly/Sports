@@ -35,7 +35,7 @@ jobs:
       - name: Build for iOS Simulator (unsigned)
         run: |
           xcodebuild -project ios/GalaxySportsEdge.xcodeproj \
-            -target GalaxySportsEdge \
+            -scheme GalaxySportsEdge \
             -configuration Debug \
             -destination 'platform=iOS Simulator,name=iPhone 16' \
             -derivedDataPath /tmp/DerivedData \
