@@ -2542,10 +2542,6 @@ export {
   recordFeatureAdmissionTrial,
   recordThresholdGrid,
   decideFamilyAdmissions,
-  type TrialInput,
-  type TrialEntry,
-  type TrialsRegistry,
-  type BhResult,
   type FamilyAdmissionDecision,
   type FamilyAdmissionsResult,
 } from "./edge-lab/trials-registry.js";
