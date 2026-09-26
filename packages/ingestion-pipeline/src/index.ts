@@ -468,3 +468,33 @@ export {
   type Ar1ForecastResult,
   type AbcSsmResult,
 } from "./bayesian-residue-bridge.js";
+
+// SymReg/Conformal/Promotion/Kernel/Certificate residue bridge
+export {
+  evalParetoPrune,
+  evalSkeletonJaccard,
+  evalPairedPvalue,
+  evalVerticalFilter,
+  evalNmse,
+  evalStagedRefine,
+  evalHillClimb,
+  evalStlsq,
+  evalVerifySideInfo,
+  evalDropIntercept,
+  evalTaxonomy,
+  evalCategoryDiagnostics,
+  evalGreedyPartition,
+  evalBestSplit,
+  evalAssignLeafId,
+  evalStandardNormalQuantile,
+  evalZCritOneSided,
+  evalRbfKernel,
+  evalRffKrr,
+  evalGateCertificate,
+  ROOT_LEAF,
+  type ResidueEval,
+  type ParetoPruneResult,
+  type TaxonomyAssignment,
+  type PartitionResult,
+  type RefineResult,
+} from "./symreg-conformal-residue-bridge.js";

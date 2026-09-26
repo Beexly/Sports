@@ -440,7 +440,7 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
             pickType: pick.pickType,
             confidence: pick.confidence,
             reasoning: pick.reasoning,
-            sportKey: pick.game.sportKey,
+            sportKey: pick.game.sport?.key ?? null,
             commenceTime: pick.game.commenceTime,
             homeTeamName: pick.game.homeTeamName,
             awayTeamName: pick.game.awayTeamName,

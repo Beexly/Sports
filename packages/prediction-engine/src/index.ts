@@ -3030,7 +3030,10 @@ export {
 
 // Metalearning residue: GP posterior, uncertainty-weighted meta-loss, EWA/BOA, fixed-support pools
 export {
+  rbfKernelGp,
   gpPosterior1d,
+  rffFeatures,
+  krrFit,
   uncertaintyMetaLoss,
   ewaUpdate,
   boaUpdate,
@@ -3103,3 +3106,79 @@ export {
   ouWinProb,
   type AR1State,
 } from "./bayesian/2104-07537-dynamic-probit-vb.js";
+
+// SymReg residue: AI Feynman Pareto pruning + vertical SR filters (shared
+// pure primitives; vertical-SR file duplicates the same functions).
+export {
+  paretoFrontier,
+  skeletonJaccard,
+  pairedPvalue,
+  hypothesisReject,
+  verticalFilter,
+  type ParetoPoint,
+} from "./symreg/2006-10782v2-aifeynman-pareto-pruning.js";
+
+// SymReg residue: DGSR-lite staged refinement
+export {
+  nmse,
+  hillClimbRefine,
+  stagedRefine,
+} from "./symreg/2401-00282v1-dgsr-lite-refinement.js";
+
+// SymReg residue: SINDy-SI side-information verification + sparse regression
+export {
+  leastSquaresActive,
+  stlsq,
+  verifySideInfo,
+  dropIntercept,
+  type SideInfoSpec,
+  type SideInfoReport,
+} from "./symreg/sindy-si.js";
+
+// Conformal residue: sports taxonomy for Mondrian partitions
+export {
+  restBucket,
+  tier1Categories,
+  tier2Intersections,
+  assignMondrianCategory,
+  parentCategory,
+  summarizeCategoryDiagnostics,
+  type TaxonomyCategory,
+  type SportsGameContext,
+  type RestBucket,
+  type CategoryDiagnostics,
+} from "./conformal/sports-taxonomy.js";
+
+// Conformal residue: LWT/MCPS greedy partition sketch + Mondrian manager
+export {
+  bestSplit,
+  assignLeafId,
+  greedyPartition,
+  leafQuantile,
+  ROOT_LEAF_ID,
+  UNMATCHED_LEAF_ID,
+  type SplitCandidate,
+  type LeafPathStep,
+  type LeafDefinition,
+  type PartitionSample,
+  type GreedyPartitionOptions,
+} from "./conformal/lwt-mcps-sketch.js";
+export {
+  MondrianResidualManager,
+  type MondrianResidualStoreOptions,
+  type QuantileLookupResult,
+} from "./conformal/mondrian.js";
+
+// Promotion residue: Acklam normal quantile + alpha-aware z critical value
+export {
+  standardNormalQuantile,
+  zCritOneSided,
+} from "./promotion/normal-quantile.js";
+
+// Certificate residue: gate-candidate to DecisionCertificate bridge
+export {
+  certificateFromGateCandidate,
+  certificatesFromGateCandidates,
+  type GateCandidateView,
+  type BridgeOptions as GateCertificateBridgeOptions,
+} from "./certificate/gate-certificate-bridge.js";
