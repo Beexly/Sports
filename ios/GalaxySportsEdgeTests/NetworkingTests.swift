@@ -122,12 +122,13 @@ final class NetworkingTests: XCTestCase {
 
     func testMetaMappingReadsTheEntitlementFacts() throws {
         let json = """
-        { "tier": "ELITE", "total": 6, "totalAvailableToday": 6,
-          "hitDailyLimit": false, "date": "2026-09-27",
-          "canSeeConfidence": true, "canSeeFactorBreakdown": true,
-          "containsSeedData": false }
+        { "success": true, "data": [],
+          "meta": { "tier": "ELITE", "total": 6, "totalAvailableToday": 6,
+                    "hitDailyLimit": false, "date": "2026-09-27",
+                    "canSeeConfidence": true, "canSeeFactorBreakdown": true,
+                    "containsSeedData": false } }
         """
-        let envelope = try JSONDecoder().decode(Envelope<[PickDTO]>.self, from: Data(json.utf8))
+        let envelope = try APIClient.makeDecoder().decode(Envelope<[PickDTO]>.self, from: Data(json.utf8))
         let meta = try XCTUnwrap(envelope.meta).toSlateMeta()
         XCTAssertEqual(meta.tier, .elite)
         XCTAssertEqual(meta.total, 6)
@@ -140,7 +141,7 @@ final class NetworkingTests: XCTestCase {
         // No meta at all must mean "no entitlements assumed", not "everything
         // allowed". Assuming access is how a paywall renders itself open.
         let json = #"{ "success": true, "data": [] }"#
-        let envelope = try JSONDecoder().decode(Envelope<[PickDTO]>.self, from: Data(json.utf8))
+        let envelope = try APIClient.makeDecoder().decode(Envelope<[PickDTO]>.self, from: Data(json.utf8))
         XCTAssertNil(envelope.meta)
         let meta = SlateMeta()
         XCTAssertEqual(meta.tier, .free)
@@ -150,8 +151,8 @@ final class NetworkingTests: XCTestCase {
 
     func testAnUnknownTierFallsBackToFree() throws {
         // An unrecognised tier must never sort above a known paid one.
-        let json = #"{ "tier": "DIAMOND", "total": 1 }"#
-        let envelope = try JSONDecoder().decode(Envelope<[PickDTO]>.self, from: Data(json.utf8))
+        let json = #"{ "success": true, "data": [], "meta": { "tier": "DIAMOND", "total": 1 } }"#
+        let envelope = try APIClient.makeDecoder().decode(Envelope<[PickDTO]>.self, from: Data(json.utf8))
         XCTAssertEqual(try XCTUnwrap(envelope.meta).toSlateMeta().tier, .free)
     }
 }

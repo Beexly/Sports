@@ -296,12 +296,21 @@ struct Team: Identifiable, Codable, Hashable, Sendable {
     /// abbreviation when short, and is truncated to three characters when not
     /// — never reduced to an empty string, which is what taking the first
     /// character of each word produces for a one-word name like "Chiefs".
+    ///
+    /// The table comes first because initials are frequently not the
+    /// abbreviation anyone recognises: "Green Bay Packers" is GB, not GBP, and
+    /// "Buffalo Bills" is BUF, not BB. Anything not listed falls through to the
+    /// initials rule, which is right often enough to be a reasonable default
+    /// and is never blank.
     static func abbreviation(for name: String) -> String {
+        let trimmed = name.trimmingCharacters(in: .whitespaces)
+        if let known = knownAbbreviations[trimmed.lowercased()] {
+            return known
+        }
         let words = name
             .split(whereSeparator: { $0 == " " || $0 == "-" || $0 == "." })
             .filter { !$0.isEmpty }
         guard words.count > 1 else {
-            let trimmed = name.trimmingCharacters(in: .whitespaces)
             return trimmed.count <= 3
                 ? trimmed.uppercased()
                 : String(trimmed.prefix(3)).uppercased()
@@ -313,6 +322,25 @@ struct Team: Identifiable, Codable, Hashable, Sendable {
             ? String(name.prefix(3)).uppercased()
             : initials.joined().uppercased()
     }
+
+    /// Full name → the abbreviation the leagues and the wire actually use,
+    /// lowercased key. Deliberately not exhaustive: it holds the teams whose
+    /// real abbreviation is *not* their initials, which is exactly the set the
+    /// initials rule gets wrong. Everything else is better served by the
+    /// fallback than by a table that would have to be kept current.
+    private static let knownAbbreviations: [String: String] = [
+        "kansas city chiefs": "KC",
+        "buffalo bills": "BUF",
+        "green bay packers": "GB",
+        "chicago cubs": "CHC",
+        "boston red sox": "BOS",
+        "los angeles dodgers": "LAD",
+        "miami heat": "MIA",
+        "las vegas raiders": "LV",
+        "new orleans saints": "NO",
+        "new york giants": "NYG",
+        "san francisco 49ers": "SF",
+    ]
 }
 
 struct Game: Identifiable, Hashable, Sendable {
@@ -474,10 +502,14 @@ struct UserBet: Identifiable, Codable, Hashable, Sendable {
 
     /// Break-even win rate for this price: `+145` needs 40.8%, `-110` needs
     /// 52.4%. Nil when there is no price — there is no threshold to compute.
+    ///
+    /// As a percentage, matching `OddsMath.breakEvenWinRate`. The positive
+    /// branch was missing the `* 100`, so a +145 bet reported 0.41% and read
+    /// as a bet nobody could ever win.
     var breakEvenWinRate: Double? {
         guard odds != 0 else { return nil }
         return odds > 0
-            ? 100 / (100 + Double(odds))
+            ? 100 / (100 + Double(odds)) * 100
             : Double(-odds) / (Double(-odds) + 100) * 100
     }
 }

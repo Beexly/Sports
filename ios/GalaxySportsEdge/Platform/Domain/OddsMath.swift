@@ -78,9 +78,18 @@ enum OddsMath {
     }
 
     /// Win rate a bettor must hold to break even at this price, as a percentage.
+    ///
+    /// Break-even is where expected value is zero: `p * payout(1) - 1 = 0`, so
+    /// `p = 1 / payout(1)`. It is *not* the implied probability, and the two
+    /// only agree below evens: `-110` implies 110/210 ≈ 52.38% and breaks even
+    /// at the same 52.38%, while `+145` implies 145/245 ≈ 59.18% but breaks
+    /// even at 100/245 ≈ 40.82%. Returning the implied probability here made
+    /// every positive-price bet look like it needed a win rate it does not.
     static func breakEvenWinRate(american: Int) -> Double? {
-        guard let implied = impliedProbability(american: american) else { return nil }
-        return implied * 100
+        guard let decimal = payout(stake: 1, american: american), decimal > 0 else {
+            return nil
+        }
+        return (1 / decimal) * 100
     }
 
     /// Expected value per unit staked, given the model's fair probability for
@@ -92,9 +101,17 @@ enum OddsMath {
     }
 
     /// The gap in percentage points between the model's fair probability and
-    /// the market's implied probability. **Not** expected value: this ignores
-    /// the vig, so it can read positive on a bet that is actually negative-EV.
-    /// The UI labels it "vs market", never "edge %".
+    /// the market's implied probability.
+    ///
+    /// This is *not* a percentage return, and the two must not be read as
+    /// interchangeable. For a single quoted line they cannot even disagree in
+    /// sign: `expectedValue` is `payout(1) * (fair - implied)`, so the vig
+    /// scales the number without ever flipping it. Ten points of edge is ten
+    /// points of edge whether the line is -110 or -200, while the same ten
+    /// points are worth very different money at each. Where the distinction
+    /// does bite is comparing the model against a *different*, cheaper line
+    /// than the one quoted — positive against one price, negative against the
+    /// other. The UI labels this "vs market", never "edge %".
     static func edgePoints(fairProbability: Double, american: Int) -> Double? {
         guard let implied = impliedProbability(american: american) else { return nil }
         return (fairProbability - implied) * 100

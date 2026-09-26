@@ -71,14 +71,21 @@ struct SessionCookieStore: Sendable, Equatable {
 
     // MARK: - Persistence
 
-    func persist() {
+    /// Writes the jar to the keychain, or clears it when empty.
+    ///
+    /// Returns whether the keychain accepted the write. The credential is the
+    /// only thing this app stores here, and a write that silently fails looks
+    /// exactly like a sign-out: the reader is asked to log in again with no
+    /// explanation. Returning the result is what lets a test say "the keychain
+    /// refused this" instead of "the cookies came back empty".
+    @discardableResult
+    func persist() -> Bool {
         guard !cookies.isEmpty else {
-            Keychain.delete(Self.keychainKey)
-            return
+            return Keychain.delete(Self.keychainKey)
         }
         guard let data = try? JSONEncoder().encode(cookies),
-              let raw = String(data: data, encoding: .utf8) else { return }
-        Keychain.write(Self.keychainKey, raw)
+              let raw = String(data: data, encoding: .utf8) else { return false }
+        return Keychain.write(Self.keychainKey, raw)
     }
 
     static func restore() -> SessionCookieStore {

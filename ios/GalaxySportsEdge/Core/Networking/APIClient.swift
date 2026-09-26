@@ -32,15 +32,28 @@ actor APIClient {
         configuration.requestCachePolicy = .reloadRevalidatingCacheData
         session = URLSession(configuration: configuration)
 
-        let decoder = JSONDecoder()
-        decoder.keyDecodingStrategy = .convertFromSnakeCase
-        decoder.dateDecodingStrategy = .iso8601
-        self.decoder = decoder
+        self.decoder = Self.makeDecoder()
 
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         encoder.dateEncodingStrategy = .iso8601
         self.encoder = encoder
+    }
+
+    /// The decoder every response is read with.
+    ///
+    /// Exposed so the contract tests use the production configuration instead
+    /// of a hand-rolled `JSONDecoder()`. They did not, and the gap was worth
+    /// twelve red tests: a default decoder expects dates as seconds since the
+    /// reference date, the API sends ISO-8601 strings, and every payload with
+    /// a timestamp in it failed to decode while the app itself worked fine.
+    /// A test decoder is a second, silently diverging definition of the wire
+    /// format.
+    static func makeDecoder() -> JSONDecoder {
+        let decoder = JSONDecoder()
+        decoder.keyDecodingStrategy = .convertFromSnakeCase
+        decoder.dateDecodingStrategy = .iso8601
+        return decoder
     }
 
     // MARK: - Session cookies

@@ -109,7 +109,7 @@ final class DomainTests: XCTestCase {
             "sport": "NFL", "tags": ["Methodology"],
             "publishedAt": "2026-09-26T12:00:00.000Z", "isFeatured": false } }
         """
-        let envelope = try JSONDecoder().decode(Envelope<ArticleDTO>.self, from: Data(json.utf8))
+        let envelope = try APIClient.makeDecoder().decode(Envelope<ArticleDTO>.self, from: Data(json.utf8))
         let article = try envelope.payload().toDomain()
         XCTAssertTrue(article.isLocked)
         XCTAssertTrue(article.isPremium)
@@ -126,7 +126,7 @@ final class DomainTests: XCTestCase {
             "sport": "NFL", "tags": [], "publishedAt": "2026-09-26T12:00:00.000Z",
             "isFeatured": false } }
         """
-        let envelope = try JSONDecoder().decode(Envelope<ArticleDTO>.self, from: Data(json.utf8))
+        let envelope = try APIClient.makeDecoder().decode(Envelope<ArticleDTO>.self, from: Data(json.utf8))
         let article = try envelope.payload().toDomain()
         XCTAssertFalse(article.isLocked)
         XCTAssertEqual(article.readMinutes, 3, "660 words at 220 wpm")
@@ -142,7 +142,7 @@ final class DomainTests: XCTestCase {
             "seoTitle": "SEO title", "seoDescription": "SEO dek",
             "publishedAt": "2026-09-26T12:00:00.000Z", "isFeatured": false } }
         """
-        let envelope = try JSONDecoder().decode(Envelope<ArticleDTO>.self, from: Data(json.utf8))
+        let envelope = try APIClient.makeDecoder().decode(Envelope<ArticleDTO>.self, from: Data(json.utf8))
         let article = try envelope.payload().toDomain()
         XCTAssertEqual(article.title, "SEO title")
         XCTAssertEqual(article.dek, "SEO dek")
@@ -232,7 +232,9 @@ final class DomainTests: XCTestCase {
         var store = SessionCookieStore(cookies: [
             SessionCookie(name: "next-auth.session-token", value: "abc")
         ])
-        store.persist()
+        // Assert the write first: without it a keychain failure and a decoding
+        // bug are indistinguishable from the outside.
+        XCTAssertTrue(store.persist(), "the keychain must accept the write for this to mean anything")
         let restored = SessionCookieStore.restore()
         XCTAssertEqual(restored.cookies, store.cookies)
         store.clear()

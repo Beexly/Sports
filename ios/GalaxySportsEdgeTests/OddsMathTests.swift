@@ -76,7 +76,9 @@ final class OddsMathTests: XCTestCase {
         // Retail quotes at 5-point increments; 0.60 comes back as -150.
         XCTAssertEqual(OddsMath.americanFromProbability(0.60), -150)
         XCTAssertEqual(OddsMath.americanFromProbability(0.50), 100)
-        XCTAssertEqual(OddsMath.americanFromProbability(0.64), -110)
+        // 0.64 is a -180, not a -110: -180 breaks even at 64.29%, which is the
+        // nearest 5-point increment to 0.64, while -110 breaks even at 52.4%.
+        XCTAssertEqual(OddsMath.americanFromProbability(0.64), -180)
     }
 
     func testAmericanFromProbabilityRejectsOutOfRange() {
@@ -132,15 +134,36 @@ final class OddsMathTests: XCTestCase {
         XCTAssertEqual(ev ?? 0, 0.05, accuracy: 0.0001)
     }
 
-    func testEdgePointsCanReadPositiveOnANegativeEVBet() {
-        // The whole reason the UI does not call this "edge": beating the
-        // implied probability is not the same as being positive-EV once the
-        // vig has been paid.
+    func testEdgePointsAndExpectedValueAlwaysAgreeOnSign() {
+        // The previous version of this test asserted that a bet could show
+        // positive edge and negative expected value at the same price. It
+        // cannot: expected value is payout(1) x (fair - implied), and the
+        // multiplier is positive, so the two share a sign at every price.
+        // Claiming otherwise is how a screen ends up showing a green number
+        // over a losing bet.
         let price = -200
-        let ev = OddsMath.expectedValue(fairProbability: 0.34, american: price) ?? 0
-        let points = OddsMath.edgePoints(fairProbability: 0.34, american: price) ?? 0
-        XCTAssertGreaterThan(points, 0)
-        XCTAssertLessThan(ev, 0, "0.34 x 1.5 - 1 is -49%; the 'edge' is a mirage")
+        let implied = OddsMath.impliedProbability(american: price) ?? 0
+
+        let justAbove = implied + 0.01
+        XCTAssertGreaterThan(OddsMath.edgePoints(fairProbability: justAbove, american: price) ?? 0, 0)
+        XCTAssertGreaterThan(OddsMath.expectedValue(fairProbability: justAbove, american: price) ?? 0, 0)
+
+        let justBelow = implied - 0.01
+        XCTAssertLessThan(OddsMath.edgePoints(fairProbability: justBelow, american: price) ?? 0, 0)
+        XCTAssertLessThan(OddsMath.expectedValue(fairProbability: justBelow, american: price) ?? 0, 0)
+    }
+
+    func testEdgePointsShrinksAsThePriceGetsWorse() {
+        // The same 0.60 is worth far more at -110 than at -300, and the gap
+        // against the market shrinks as the price gets worse, because the
+        // implied probability the gap is measured against moves.
+        let fair = 0.60
+        XCTAssertEqual(OddsMath.edgePoints(fairProbability: fair, american: -110) ?? 0,
+                       7.619, accuracy: 0.001)
+        XCTAssertEqual(OddsMath.edgePoints(fairProbability: fair, american: -300) ?? 0,
+                       -15.0, accuracy: 0.001)
+        XCTAssertGreaterThan(OddsMath.expectedValue(fairProbability: fair, american: -110) ?? 0,
+                             OddsMath.expectedValue(fairProbability: fair, american: -300) ?? 0)
     }
 
     func testBreakEvenWinRateMatchesThePrice() {

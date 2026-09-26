@@ -153,7 +153,8 @@ final class BetStoreTests: XCTestCase {
         let second = makeStore()
         XCTAssertEqual(second.all.count, 2)
         XCTAssertEqual(second.recordLabel, "1-1")
-        XCTAssertEqual(second.netProfit, 45, accuracy: 0.0001)  // +145 then -100
+        // +90.91 won at -110, -100 lost at +145: the pair is down 9.09, not up.
+        XCTAssertEqual(second.netProfit, -9.0909090, accuracy: 0.0001)
     }
 
     func testUpdateReplacesRatherThanDuplicates() {

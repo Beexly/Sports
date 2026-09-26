@@ -11,7 +11,7 @@ import XCTest
 final class PickDecodingTests: XCTestCase {
 
     private func decodeSlate(_ json: String) throws -> SlatePage {
-        let envelope = try JSONDecoder().decode(Envelope<[PickDTO]>.self, from: Data(json.utf8))
+        let envelope = try APIClient.makeDecoder().decode(Envelope<[PickDTO]>.self, from: Data(json.utf8))
         let payload = try envelope.payload()
         return SlatePage(picks: payload.map { $0.toDomain() },
                          meta: envelope.meta?.toSlateMeta() ?? SlateMeta())
@@ -342,13 +342,13 @@ final class PickDecodingTests: XCTestCase {
           "error": "Too many requests. Please wait and try again.",
           "code": "rate_limited" }
         """
-        let envelope = try JSONDecoder().decode(Envelope<[PickDTO]>.self, from: Data(json.utf8))
+        let envelope = try APIClient.makeDecoder().decode(Envelope<[PickDTO]>.self, from: Data(json.utf8))
         XCTAssertThrowsError(try envelope.payload())
     }
 
     func testAMissingDataKeyIsADecodingFailureNotAnEmptySlate() throws {
         let json = #"{ "success": true, "meta": { "tier": "PRO" } }"#
-        let envelope = try JSONDecoder().decode(Envelope<[PickDTO]>.self, from: Data(json.utf8))
+        let envelope = try APIClient.makeDecoder().decode(Envelope<[PickDTO]>.self, from: Data(json.utf8))
         XCTAssertThrowsError(try envelope.payload())
     }
 
