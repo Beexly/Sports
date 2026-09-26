@@ -229,7 +229,7 @@ git push origin main   # auto-deploys to production
 
 ### Database access (Neon)
 ```powershell
-$env:DATABASE_URL = "postgresql://neondb_owner:npg_T9pt2wsgHkEu@ep-summer-moon-apv5ccys-pooler.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
+$env:DATABASE_URL = "postgresql://neondb_owner:<REDACTED-ROTATED-IN-NEON-CONSOLE>@ep-summer-moon-apv5ccys-pooler.c-7.us-east-1.aws.neon.tech/neondb?sslmode=require&channel_binding=require"
 # NEVER commit this URL. Env only.
 ```
 
