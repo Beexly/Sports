@@ -18,7 +18,7 @@ struct MyBetsView: View {
             ZStack {
                 Theme.bg.ignoresSafeArea()
 
-                if bets.bets.isEmpty {
+                if bets.all.isEmpty {
                     EmptyStateView(
                         icon: "list.bullet.rectangle.portrait",
                         title: "No bets tracked",
@@ -73,9 +73,9 @@ struct MyBetsView: View {
 
     private var visibleBets: [UserBet] {
         switch filter {
-        case .all: bets.bets
-        case .pending: bets.bets.filter { $0.status == .pending }
-        case .settled: bets.bets.filter { $0.status != .pending }
+        case .all: bets.all
+        case .pending: bets.all.filter { $0.status == .pending }
+        case .settled: bets.all.filter { $0.status != .pending }
         }
     }
 
@@ -201,9 +201,9 @@ struct BetRow: View {
                         .font(.num(13, .bold))
                         .foregroundStyle(Theme.text2)
                 } else {
-                    Text(bet.profit(unitSize: unitSize).signedCurrency)
+                    Text(bet.profit().signedCurrency)
                         .font(.num(14, .bold))
-                        .foregroundStyle(bet.profit(unitSize: unitSize) >= 0
+                        .foregroundStyle(bet.profit() >= 0
                                          ? Theme.win : Theme.loss)
                 }
             }

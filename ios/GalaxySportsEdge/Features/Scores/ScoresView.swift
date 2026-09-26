@@ -1,32 +1,14 @@
 import SwiftUI
 import Observation
 
-@MainActor
-@Observable
-final class ScoresViewModel {
-    private let service: SportsService
-    var state: LoadState<[Game]> = .idle
-    var selectedSport: Sport? = nil
-    var showLiveOnly = false
-
-    init(service: SportsService) { self.service = service }
-
-    func load() async {
-        state = .loading
-        do {
-            state = .loaded(try await service.games(sport: selectedSport, date: .now))
-        } catch {
-            state = .failed((error as? APIError)?.errorDescription ?? error.localizedDescription)
-        }
-    }
-
-    func select(_ sport: Sport?) async {
-        selectedSport = sport
-        await load()
-    }
-}
-
+/// The scoreboard.
+///
+/// The `games` route returns the real `Game` rows, so this tab carries live
+/// status, the engine's public Edge Index, and the scheduling context
+/// (rest days, back-to-back flags) the engine already computes. Rest is the
+/// most actionable non-score fact on a board and most apps omit it.
 struct ScoresView: View {
+
     @Environment(AppEnvironment.self) private var env
     @State private var vm: ScoresViewModel?
 
@@ -50,222 +32,234 @@ struct ScoresView: View {
 
     @ViewBuilder
     private func content(_ vm: ScoresViewModel) -> some View {
-        VStack(spacing: 0) {
-            sportStrip(vm)
+        ScrollView {
+            LazyVStack(spacing: Theme.S.lg, pinnedViews: [.sectionHeaders]) {
 
-            AsyncContent(state: vm.state, retry: { await vm.load() }) { games in
-                let visible = vm.showLiveOnly ? games.filter { $0.status.isLive } : games
-                if visible.isEmpty {
-                    EmptyStateView(
-                        icon: "sportscourt",
-                        title: "No games",
-                        message: vm.showLiveOnly
-                            ? "Nothing is live right now."
-                            : "No games scheduled for this filter.")
-                } else {
-                    ScrollView {
-                        LazyVStack(spacing: Theme.S.md, pinnedViews: [.sectionHeaders]) {
-                            ForEach(leagues(in: visible), id: \.self) { league in
-                                Section {
-                                    ForEach(visible.filter { $0.league == league }) { game in
+                Section {
+                    AsyncContent(state: vm.state, retry: { await vm.load() }) { games in
+                        if games.isEmpty {
+                            EmptyStateView(
+                                icon: "sportscourt",
+                                title: "No games found",
+                                message: "The engine is not tracking any games for this day yet.")
+                                .frame(height: 320)
+                        } else {
+                            LazyVStack(spacing: Theme.S.md) {
+                                ForEach(vm.sections, id: \.self) { section in
+                                    SectionHeaderRow(section: section, count: vm.games(in: section).count)
+                                    ForEach(vm.games(in: section)) { game in
                                         GameRow(game: game)
                                     }
-                                } header: {
-                                    // NOTE (Motif fix): `vm` was referenced here
-                                    // but was not in scope — it is now passed in.
-                                    leagueHeader(league, vm: vm)
                                 }
                             }
+                            .padding(.horizontal, Theme.S.lg)
+                            .padding(.bottom, Theme.S.xxl)
                         }
-                        .padding(.horizontal, Theme.S.lg)
-                        .padding(.bottom, Theme.S.xxl)
                     }
-                    .scrollIndicators(.hidden)
-                    .refreshable { await vm.load() }
+                } header: {
+                    filterBar(vm)
                 }
             }
         }
+        .scrollIndicators(.hidden)
+        .refreshable { await vm.load() }
         .background(Theme.bg)
     }
 
-    private func leagues(in games: [Game]) -> [String] {
-        var seen = Set<String>()
-        return games.compactMap { seen.insert($0.league).inserted ? $0.league : nil }
-    }
-
-    private func leagueHeader(_ league: String, vm: ScoresViewModel) -> some View {
-        HStack {
-            Text(league)
-                .font(.system(size: 11, weight: .heavy))
-                .tracking(1)
-                .foregroundStyle(Theme.text3)
-            Spacer()
+    private func filterBar(_ vm: ScoresViewModel) -> some View {
+        HStack(spacing: Theme.S.sm) {
             Button {
+                vm.liveOnly.toggle()
                 Task { await vm.load() }
             } label: {
-                Image(systemName: "arrow.clockwise")
-                    .font(.system(size: 11, weight: .bold))
-                    .foregroundStyle(Theme.text3)
-            }
-        }
-        .padding(.vertical, Theme.S.sm)
-        .padding(.horizontal, 4)
-        .background(Theme.bg)
-    }
-
-    private func sportStrip(_ vm: ScoresViewModel) -> some View {
-        ScrollView(.horizontal, showsIndicators: false) {
-            HStack(spacing: Theme.S.sm) {
-                liveToggle(vm)
-
-                chip("All", "flame.fill", vm.selectedSport == nil) {
-                    Task { await vm.select(nil) }
+                HStack(spacing: 5) {
+                    Image(systemName: "bolt.fill").font(.system(size: 11, weight: .bold))
+                    Text("Live").font(.system(size: 13, weight: .semibold))
                 }
-                ForEach(Sport.featured) { sport in
-                    chip(sport.display, sport.icon, vm.selectedSport == sport) {
-                        Task { await vm.select(sport) }
+                .foregroundStyle(vm.liveOnly ? Color.black : Theme.text2)
+                .padding(.horizontal, 13)
+                .padding(.vertical, 9)
+                .background(
+                    Capsule().fill(vm.liveOnly ? AnyShapeStyle(Theme.nebula) : AnyShapeStyle(Theme.surface))
+                )
+                .overlay(Capsule().strokeBorder(vm.liveOnly ? Color.clear : Theme.stroke, lineWidth: 1))
+            }
+            .buttonStyle(.plain)
+
+            ScrollView(.horizontal, showsIndicators: false) {
+                HStack(spacing: Theme.S.sm) {
+                    ForEach(Sport.featured) { sport in
+                        Button {
+                            Task { await vm.select(sport) }
+                        } label: {
+                            HStack(spacing: 5) {
+                                Image(systemName: sport.icon).font(.system(size: 11, weight: .bold))
+                                Text(sport.display).font(.system(size: 13, weight: .semibold))
+                            }
+                            .foregroundStyle(vm.selectedSport == sport ? Color.black : Theme.text2)
+                            .padding(.horizontal, 13)
+                            .padding(.vertical, 9)
+                            .background(
+                                Capsule().fill(vm.selectedSport == sport
+                                               ? AnyShapeStyle(Theme.nebula)
+                                               : AnyShapeStyle(Theme.surface))
+                            )
+                            .overlay(Capsule().strokeBorder(vm.selectedSport == sport
+                                                           ? Color.clear : Theme.stroke, lineWidth: 1))
+                        }
+                        .buttonStyle(.plain)
                     }
                 }
             }
-            .padding(.horizontal, Theme.S.lg)
-            .padding(.vertical, Theme.S.md)
         }
+        .padding(.horizontal, Theme.S.lg)
+        .padding(.vertical, Theme.S.md)
+        .background(Theme.bg)
         .overlay(alignment: .bottom) {
             Rectangle().fill(Theme.stroke).frame(height: 1)
         }
     }
+}
 
-    private func liveToggle(_ vm: ScoresViewModel) -> some View {
-        Button {
-            withAnimation(.snappy) { vm.showLiveOnly.toggle() }
-        } label: {
-            HStack(spacing: 5) {
-                Circle().fill(Theme.loss).frame(width: 6, height: 6)
-                Text("Live").font(.system(size: 13, weight: .semibold))
-            }
-            .foregroundStyle(vm.showLiveOnly ? .black : Theme.loss)
-            .padding(.horizontal, 13)
-            .padding(.vertical, 9)
-            .background(
-                Capsule().fill(vm.showLiveOnly ? AnyShapeStyle(Theme.loss)
-                                               : AnyShapeStyle(Theme.surface))
-            )
-            .overlay(Capsule().strokeBorder(
-                vm.showLiveOnly ? .clear : Theme.loss.opacity(0.3), lineWidth: 1))
-        }
-        .buttonStyle(.plain)
-    }
+struct SectionHeaderRow: View {
+    let section: ScoresViewModel.Section
+    let count: Int
 
-    private func chip(_ title: String, _ icon: String,
-                      _ active: Bool, _ action: @escaping () -> Void) -> some View {
-        Button(action: action) {
-            HStack(spacing: 5) {
-                Image(systemName: icon).font(.system(size: 11, weight: .bold))
-                Text(title).font(.system(size: 13, weight: .semibold))
-            }
-            .foregroundStyle(active ? .black : Theme.text2)
-            .padding(.horizontal, 13)
-            .padding(.vertical, 9)
-            .background(Capsule().fill(active ? AnyShapeStyle(Theme.nebula)
-                                              : AnyShapeStyle(Theme.surface)))
-            .overlay(Capsule().strokeBorder(active ? .clear : Theme.stroke, lineWidth: 1))
+    var body: some View {
+        HStack {
+            Text(section.title.uppercased())
+                .font(.system(size: 10, weight: .heavy))
+                .tracking(1)
+                .foregroundStyle(Theme.text3)
+            Spacer()
+            Text("\(count)")
+                .font(.num(10, .bold))
+                .foregroundStyle(Theme.text3)
         }
-        .buttonStyle(.plain)
+        .padding(.top, Theme.S.sm)
+        .padding(.bottom, 2)
     }
 }
 
-// MARK: - Game row
+// MARK: - Row
 
 struct GameRow: View {
     let game: Game
 
     var body: some View {
-        VStack(spacing: Theme.S.md) {
-            HStack {
-                statusLabel
-                Spacer()
-                if let total = game.total {
-                    Text("O/U \(total, specifier: "%.1f")")
-                        .font(.num(11, .semibold))
-                        .foregroundStyle(Theme.text3)
-                }
+        VStack(spacing: Theme.S.sm) {
+            HStack(spacing: Theme.S.md) {
+                statusBlock
+                teamsBlock
+                scoreBlock
             }
 
-            VStack(spacing: Theme.S.sm) {
-                teamLine(team: game.away, score: game.awayScore,
-                         spread: game.awaySpread, isWinner: winner == .away)
-                teamLine(team: game.home, score: game.homeScore,
-                         spread: game.homeSpread, isWinner: winner == .home)
+            if game.hasFatigueRisk || (game.edgeIndex ?? 0) >= 60 {
+                contextStrip
             }
         }
-        .card()
+        .card(padding: Theme.S.md)
     }
 
-    private var winner: Side? {
-        guard game.isFinal,
-              let a = game.awayScore, let h = game.homeScore else { return nil }
-        if a == h { return nil }
-        return a > h ? .away : .home
-    }
+    // MARK: Pieces
 
-    private enum Side { case away, home }
-
-    @ViewBuilder
-    private var statusLabel: some View {
-        if game.status.isLive {
-            HStack(spacing: 5) {
-                Circle().fill(Theme.loss).frame(width: 6, height: 6)
-                Text(game.status.label.uppercased())
-                    .font(.system(size: 10, weight: .heavy))
-                    .tracking(0.5)
-                    .foregroundStyle(Theme.loss)
+    private var statusBlock: some View {
+        VStack(spacing: 3) {
+            Text(game.status == .live ? "LIVE" : game.status.label.uppercased())
+                .font(.system(size: 9, weight: .heavy))
+                .tracking(0.6)
+                .foregroundStyle(game.status.isLive ? Theme.loss : Theme.text3)
+            if game.status == .scheduled {
+                Text(Fmt.kickoff.string(from: game.commenceTime))
+                    .font(.num(11, .medium))
+                    .foregroundStyle(Theme.text3)
             }
-        } else if game.isFinal {
-            Text("FINAL")
-                .font(.system(size: 10, weight: .heavy))
-                .tracking(0.5)
-                .foregroundStyle(Theme.text3)
-        } else {
-            Text(Fmt.kickoffLabel(game.commenceTime).uppercased())
-                .font(.system(size: 10, weight: .heavy))
-                .tracking(0.5)
-                .foregroundStyle(Theme.violet)
+            if let edge = game.edgeIndex {
+                Text(String(format: "%.0f", edge))
+                    .font(.num(13, .heavy))
+                    .foregroundStyle(Theme.violet)
+            }
         }
+        .frame(width: 40, alignment: .leading)
     }
 
-    private func teamLine(team: Team, score: Int?,
-                          spread: Double?, isWinner: Bool) -> some View {
-        HStack(spacing: Theme.S.md) {
-            AsyncLogo(url: team.logoURL, text: team.abbreviation,
-                      size: 32, tint: isWinner ? Theme.win : Theme.text2)
+    private var teamsBlock: some View {
+        VStack(alignment: .leading, spacing: 5) {
+            teamRow(game.away, score: game.awayScore, spread: game.awaySpread)
+            Divider().overlay(Theme.stroke).frame(height: 1)
+            teamRow(game.home, score: game.homeScore, spread: game.homeSpread)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+    }
 
-            VStack(alignment: .leading, spacing: 1) {
-                Text(team.name)
-                    .font(.system(size: 15, weight: isWinner ? .bold : .medium))
-                    .foregroundStyle(isWinner ? Theme.text : Theme.text2)
-                    .lineLimit(1)
-                if let record = team.record {
-                    Text(record)
-                        .font(.system(size: 11))
-                        .foregroundStyle(Theme.text3)
-                }
-            }
+    private func teamRow(_ team: Team, score: Int?, spread: Double?) -> some View {
+        HStack(spacing: Theme.S.sm) {
+            Text(team.abbreviation)
+                .font(.num(13, .bold))
+                .foregroundStyle(Theme.text2)
+                .frame(width: 34, alignment: .leading)
 
-            Spacer()
+            Text(team.name)
+                .font(.system(size: 14, weight: .medium))
+                .foregroundStyle(Theme.text)
+                .lineLimit(1)
 
-            if let spread, !game.isFinal {
-                Text(spread > 0 ? "+\(spread, specifier: "%.1f")"
-                                : "\(spread, specifier: "%.1f")")
-                    .font(.num(12, .semibold))
+            Spacer(minLength: 0)
+
+            if let spread {
+                Text(String(format: "%+.1f", spread))
+                    .font(.num(12, .medium))
                     .foregroundStyle(Theme.text3)
             }
 
-            if let score {
-                Text("\(score)")
-                    .font(.num(22, .bold))
-                    .foregroundStyle(isWinner ? Theme.text : Theme.text2)
-                    .frame(minWidth: 34, alignment: .trailing)
+            Text(score.map(String.init) ?? "–")
+                .font(.num(15, .heavy))
+                .foregroundStyle(Theme.text)
+                .frame(width: 30, alignment: .trailing)
+        }
+    }
+
+    private var scoreBlock: some View {
+        VStack(spacing: 3) {
+            if let total = game.total {
+                Text("O/U \(String(format: "%.1f", total))")
+                    .font(.num(10, .medium))
+                    .foregroundStyle(Theme.text3)
+            }
+            if let edge = game.edgeIndex, edge >= 60 {
+                Text("high edge")
+                    .font(.system(size: 9, weight: .semibold))
+                    .foregroundStyle(Theme.violet)
             }
         }
+        .frame(width: 54, alignment: .trailing)
+    }
+
+    /// Rest and back-to-back context, straight from the engine's own columns.
+    private var contextStrip: some View {
+        HStack(spacing: Theme.S.sm) {
+            if game.isBackToBackAway {
+                contextChip("Away on a back-to-back", Theme.push)
+            }
+            if game.isBackToBackHome {
+                contextChip("Home on a back-to-back", Theme.push)
+            }
+            if let rest = game.restDaysAway, rest <= 3, !game.isBackToBackAway {
+                contextChip("Away \(rest)d rest", Theme.text3)
+            }
+            if let rest = game.restDaysHome, rest <= 3, !game.isBackToBackHome {
+                contextChip("Home \(rest)d rest", Theme.text3)
+            }
+            Spacer(minLength: 0)
+        }
+    }
+
+    private func contextChip(_ text: String, _ tint: Color) -> some View {
+        Text(text)
+            .font(.system(size: 9, weight: .semibold))
+            .foregroundStyle(tint)
+            .padding(.horizontal, 7)
+            .padding(.vertical, 3)
+            .background(Capsule().fill(tint.opacity(0.12)))
     }
 }

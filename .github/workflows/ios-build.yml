@@ -1,7 +1,7 @@
 name: iOS build (SwiftUI)
 
-# Free build lane for the native SwiftUI app: compiles on GitHub's macOS
-# runners (no Mac required, no signing for simulator builds).
+# Free build lane for the native SwiftUI app: compiles AND tests on GitHub's
+# macOS runners. No Mac required, no signing (simulator build + unit tests).
 on:
   push:
     branches: [feat/ios-swiftui]
@@ -12,9 +12,26 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
+  project:
+    # Cheap, and the only thing that catches a hand-edited pbxproj.
+    # project.pbxproj is GENERATED (ios/generate_project.py); a hand edit
+    # silently drops files from the build, which is the exact failure mode the
+    # generator exists to prevent.
+    name: Project file is in sync
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Check project.pbxproj matches the source tree
+        run: python3 ios/generate_project.py --check
+
+  build-and-test:
+    name: Build + test
     runs-on: macos-15
-    timeout-minutes: 30
+    timeout-minutes: 35
     steps:
       - uses: actions/checkout@v4
 
@@ -32,6 +49,28 @@ jobs:
           done
           xcodebuild -version
 
+      - name: Select an available simulator
+        run: |
+          # A hard-coded destination is a flaky test lane: simulator runtimes
+          # get added and removed from GitHub's images. Pick whatever is
+          # actually installed rather than failing on a missing UDID.
+          UDID=$(xcrun simctl list devices available -j | python3 -c "
+          import json, sys
+          data = json.load(sys.stdin)['devices']
+          for runtime, devices in data.items():
+              if 'iOS' not in runtime:
+                  continue
+              for device in devices:
+                  if device.get('isAvailable'):
+                      print(device['udid'])
+                      raise SystemExit
+          ")
+          if [ -z "$UDID" ]; then
+            echo "::error::No available iOS simulator runtime on this runner"
+            exit 1
+          fi
+          echo "SIMULATOR_UDID=$UDID" >> "$GITHUB_ENV"
+
       - name: Build for iOS Simulator (unsigned)
         run: |
           xcodebuild -project ios/GalaxySportsEdge.xcodeproj \
@@ -41,3 +80,23 @@ jobs:
             -derivedDataPath /tmp/DerivedData \
             CODE_SIGNING_ALLOWED=NO \
             build
+
+      - name: Unit tests
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project ios/GalaxySportsEdge.xcodeproj \
+            -scheme GalaxySportsEdge \
+            -configuration Debug \
+            -destination "platform=iOS Simulator,id=$SIMULATOR_UDID" \
+            -derivedDataPath /tmp/DerivedData \
+            CODE_SIGNING_ALLOWED=NO \
+            | tee /tmp/test.log
+          # `xcodebuild test` exits 0 on a run that produced no test bundle at
+          # all, so "no results" is checked explicitly rather than trusted.
+          grep -qE "Test Suite '.*' passed|Executed [0-9]+ tests" /tmp/test.log
+          grep -q "TEST SUCCEEDED" /tmp/test.log
+
+      - name: Re-check the project file after the build
+        # Cheap insurance that the run did not silently mutate anything.
+        run: python3 ios/generate_project.py --check

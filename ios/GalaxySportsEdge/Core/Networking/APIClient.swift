@@ -1,156 +1,73 @@
 import Foundation
-import Security // NOTE (Motif fix): Keychain APIs live in the Security framework.
 
-// MARK: - Configuration
-
-enum AppConfiguration {
-    /// Set to `false` once your backend is live and `baseURL` is correct.
-    static let useMockData = true
-
-    static let baseURL = URL(string: "https://api.galaxysportsedge.com")!
-    static let apiVersion = "v1"
-
-    /// Seconds before a request times out.
-    static let timeout: TimeInterval = 20
-}
-
-// MARK: - Errors
-
-enum APIError: LocalizedError {
-    case invalidURL
-    case unauthorized
-    case notFound
-    case rateLimited
-    case server(status: Int, message: String?)
-    case decoding(Error)
-    case transport(Error)
-    case offline
-
-    var errorDescription: String? {
-        switch self {
-        case .invalidURL:               "That request couldn't be built."
-        case .unauthorized:             "Your session expired. Please sign in again."
-        case .notFound:                 "We couldn't find what you were looking for."
-        case .rateLimited:              "Too many requests — slow down a moment."
-        case .server(let s, let m):     m ?? "Server error (\(s))."
-        case .decoding:                 "We got an unexpected response from the server."
-        case .transport(let e):         (e as NSError).localizedDescription
-        case .offline:                  "You appear to be offline."
-        }
-    }
-
-    var isRetryable: Bool {
-        switch self {
-        case .rateLimited, .server, .transport, .offline: true
-        default: false
-        }
-    }
-}
-
-// MARK: - Endpoint
-
-enum HTTPMethod: String { case get = "GET", post = "POST", delete = "DELETE" }
-
-struct Endpoint {
-    var path: String
-    var method: HTTPMethod = .get
-    var query: [String: String] = [:]
-    var requiresAuth: Bool = false
-
-    func url(base: URL) -> URL? {
-        var comps = URLComponents(
-            url: base.appendingPathComponent("\(AppConfiguration.apiVersion)/\(path)"),
-            resolvingAgainstBaseURL: false)
-        if !query.isEmpty {
-            comps?.queryItems = query
-                .sorted { $0.key < $1.key }
-                .map { URLQueryItem(name: $0.key, value: $0.value) }
-        }
-        return comps?.url
-    }
-}
-
-// MARK: - Token storage
-
-enum AuthTokenStore {
-    private static let key = "gse.auth.token"
-
-    static var token: String? {
-        get { Keychain.read(key) }
-        set {
-            if let newValue { Keychain.write(key, newValue) }
-            else { Keychain.delete(key) }
-        }
-    }
-
-    static func clear() { Keychain.delete(key) }
-}
-
-enum Keychain {
-    static func write(_ key: String, _ value: String) {
-        let data = Data(value.utf8)
-        let q: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key
-        ]
-        SecItemDelete(q as CFDictionary)
-        var add = q
-        add[kSecValueData as String] = data
-        add[kSecAttrAccessible as String] = kSecAttrAccessibleAfterFirstUnlock
-        SecItemAdd(add as CFDictionary, nil)
-    }
-
-    static func read(_ key: String) -> String? {
-        let q: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key,
-            kSecReturnData as String: true,
-            kSecMatchLimit as String: kSecMatchLimitOne
-        ]
-        var out: AnyObject?
-        guard SecItemCopyMatching(q as CFDictionary, &out) == errSecSuccess,
-              let data = out as? Data else { return nil }
-        return String(data: data, encoding: .utf8)
-    }
-
-    static func delete(_ key: String) {
-        let q: [String: Any] = [
-            kSecClass as String: kSecClassGenericPassword,
-            kSecAttrAccount as String: key
-        ]
-        SecItemDelete(q as CFDictionary)
-    }
-}
-
-// MARK: - Client
-
+/// The app's single HTTP door.
+///
+/// An actor because it owns mutable state (the replayed session cookies) and
+/// is reached from every screen. Responsibilities kept deliberately narrow:
+/// build the request, attach credentials, retry what is worth retrying, and
+/// turn a non-2xx into a typed `APIError`. It knows nothing about picks or
+/// games — that is `LiveSportsService`'s job.
 actor APIClient {
+
     static let shared = APIClient()
 
     private let session: URLSession
     private let decoder: JSONDecoder
     private let encoder: JSONEncoder
+    private var cookies: SessionCookieStore
 
-    init() {
-        let cfg = URLSessionConfiguration.default
-        cfg.timeoutIntervalForRequest = AppConfiguration.timeout
-        cfg.waitsForConnectivity = true
-        cfg.requestCachePolicy = .reloadRevalidatingCacheData
-        session = URLSession(configuration: cfg)
+    /// Test seam: a stubbed protocol lets tests assert on requests without a
+    /// network. `APIClient` is a concrete type, so the seam is a closure.
+    private let transportOverride: (@Sendable (URLRequest) async throws -> (Data, URLResponse))?
 
-        decoder = JSONDecoder()
+    init(cookies: SessionCookieStore = SessionCookieStore(),
+         transport: (@Sendable (URLRequest) async throws -> (Data, URLResponse))? = nil) {
+        self.cookies = cookies
+        self.transportOverride = transport
+
+        let configuration = URLSessionConfiguration.default
+        configuration.timeoutIntervalForRequest = AppConfiguration.timeout
+        configuration.timeoutIntervalForResource = AppConfiguration.timeout * 2
+        configuration.waitsForConnectivity = true
+        configuration.requestCachePolicy = .reloadRevalidatingCacheData
+        session = URLSession(configuration: configuration)
+
+        let decoder = JSONDecoder()
         decoder.keyDecodingStrategy = .convertFromSnakeCase
         decoder.dateDecodingStrategy = .iso8601
+        self.decoder = decoder
 
-        encoder = JSONEncoder()
+        let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         encoder.dateEncodingStrategy = .iso8601
+        self.encoder = encoder
     }
 
-    // MARK: Public
+    // MARK: - Session cookies
+
+    func adopt(cookies incoming: [SessionCookie]) {
+        cookies.absorb(incoming)
+        cookies.persist()
+    }
+
+    func currentCookies() -> [SessionCookie] { cookies.cookies }
+
+    func clearSession() {
+        cookies.clear()
+        cookies.persist()
+    }
+
+    var isSignedIn: Bool { cookies.hasSessionCookie }
+
+    // MARK: - Requests
 
     func get<T: Decodable>(_ endpoint: Endpoint, as type: T.Type) async throws -> T {
-        try await send(endpoint, body: Optional<Empty>.none, as: T.self)
+        try await send(endpoint, body: Optional<NoPayload>.none, as: T.self)
+    }
+
+    func getEnvelope<T: Decodable>(_ endpoint: Endpoint,
+                                   as type: T.Type) async throws -> Envelope<T> {
+        try await send(endpoint, body: Optional<NoPayload>.none, as: Envelope<T>.self)
     }
 
     func post<B: Encodable, T: Decodable>(_ endpoint: Endpoint,
@@ -159,37 +76,73 @@ actor APIClient {
         try await send(endpoint, body: body, as: T.self)
     }
 
-    func sendVoid<B: Encodable>(_ endpoint: Endpoint, body: B) async throws {
+    func postVoid<B: Encodable>(_ endpoint: Endpoint, body: B) async throws {
         _ = try await raw(endpoint, bodyData: try encoder.encode(body))
     }
 
-    // MARK: Private
+    /// DELETE. Used by account deletion, which must report a real 200/204
+    /// rather than pretending a 404 meant the account was already gone.
+    @discardableResult
+    func delete<T: Decodable>(_ endpoint: Endpoint, as type: T.Type) async throws -> T {
+        try await send(endpoint, body: Optional<NoPayload>.none, as: T.self)
+    }
 
-    private struct Empty: Codable {}
+    /// DELETE that expects no body back.
+    func deleteVoid(_ endpoint: Endpoint) async throws {
+        _ = try await raw(endpoint, bodyData: nil)
+    }
+
+    // MARK: - Internals
+
+    private struct NoPayload: Encodable {}
 
     private func send<B: Encodable, T: Decodable>(_ endpoint: Endpoint,
                                                   body: B?,
                                                   as _: T.Type) async throws -> T {
-        let bodyData = try body.map { try encoder.encode($0) }
+        let bodyData: Data?
+        if let body {
+            bodyData = try encoder.encode(body)
+        } else {
+            bodyData = nil
+        }
         let data = try await raw(endpoint, bodyData: bodyData)
-
-        if T.self == Empty.self { return Empty() as! T }
-
+        guard !data.isEmpty else {
+            // A 204/empty body decoded as `NoBody` succeeds; anything else
+            // asked for a payload the server did not send.
+            if T.self == NoBody.self { return NoBody() as! T }
+            throw APIError.decoding("empty response body")
+        }
         do {
             return try decoder.decode(T.self, from: data)
         } catch {
             #if DEBUG
-            print("🛰️ Decode failure for \(endpoint.path): \(error)")
-            print(String(data: data, encoding: .utf8) ?? "<binary>")
+            print("🛰️ decode failure for \(endpoint.method.rawValue) \(endpoint.path): \(error)")
+            if let text = String(data: data, encoding: .utf8) {
+                print(String(text.prefix(600)))
+            }
             #endif
-            throw APIError.decoding(error)
+            throw APIError.decoding(String(describing: error))
         }
     }
 
+    /// Issues the request, retrying only what `APIError.isRetryable` allows.
     private func raw(_ endpoint: Endpoint, bodyData: Data?) async throws -> Data {
-        guard let url = endpoint.url(base: AppConfiguration.baseURL) else {
-            throw APIError.invalidURL
+        var attempt = 0
+        var delay = AppConfiguration.retryBaseDelay
+
+        while true {
+            do {
+                return try await perform(endpoint, bodyData: bodyData)
+            } catch let error as APIError where error.shouldAutoRetry && attempt < AppConfiguration.maxRetries {
+                attempt += 1
+                try? await Task.sleep(nanoseconds: UInt64(delay * 1_000_000_000))
+                delay *= 2
+            }
         }
+    }
+
+    private func perform(_ endpoint: Endpoint, bodyData: Data?) async throws -> Data {
+        guard let url = endpoint.url() else { throw APIError.invalidURL }
 
         var request = URLRequest(url: url)
         request.httpMethod = endpoint.method.rawValue
@@ -201,40 +154,63 @@ actor APIClient {
             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         }
 
-        if endpoint.requiresAuth, let token = AuthTokenStore.token {
-            request.setValue("Bearer \(token)", forHTTPHeaderField: "Authorization")
+        if endpoint.requiresAuth, let header = cookies.headerValue {
+            request.setValue(header, forHTTPHeaderField: "Cookie")
         }
 
         let data: Data
         let response: URLResponse
         do {
-            (data, response) = try await session.data(for: request)
+            if let transportOverride {
+                (data, response) = try await transportOverride(request)
+            } else {
+                (data, response) = try await session.data(for: request)
+            }
         } catch let urlError as URLError {
-            throw urlError.code == .notConnectedToInternet ? APIError.offline
-                                                           : APIError.transport(urlError)
+            throw urlError.code == .notConnectedToInternet
+                ? APIError.offline
+                : APIError.transport(urlError.localizedDescription)
         } catch {
-            throw APIError.transport(error)
+            throw APIError.transport(error.localizedDescription)
         }
 
         guard let http = response as? HTTPURLResponse else {
-            throw APIError.transport(URLError(.badServerResponse))
+            throw APIError.transport("Malformed response.")
         }
 
         switch http.statusCode {
         case 200..<300:
             return data
+
         case 401, 403:
-            AuthTokenStore.clear()
+            clearSession()
             throw APIError.unauthorized
+
         case 404:
             throw APIError.notFound
+
         case 429:
-            throw APIError.rateLimited
+            let retryAfter = (http.value(forHTTPHeaderField: "Retry-After")).flatMap(TimeInterval.init)
+            throw APIError.rateLimited(retryAfter: retryAfter)
+
+        case 503:
+            // The engine answers 503 for "still collecting" and for the
+            // stale-data kill switch. Both are honest states, not bugs, and
+            // both carry a reason string — surface that instead of a red
+            // "server error".
+            let reason = Self.serverMessage(in: data)
+                ?? "The engine is still collecting data for this slate. Try again shortly."
+            throw APIError.gated(reason: reason)
+
         default:
-            let message = (try? JSONDecoder().decode(ServerError.self, from: data))?.message
-            throw APIError.server(status: http.statusCode, message: message)
+            throw APIError.server(status: http.statusCode, message: Self.serverMessage(in: data))
         }
     }
 
-    private struct ServerError: Decodable { let message: String? }
+    private static func serverMessage(in data: Data) -> String? {
+        guard !data.isEmpty else { return nil }
+        struct Failure: Decodable { let error: String?; let message: String? }
+        let failure = try? JSONDecoder().decode(Failure.self, from: data)
+        return failure?.error ?? failure?.message
+    }
 }

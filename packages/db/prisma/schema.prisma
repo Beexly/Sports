@@ -38,6 +38,7 @@ model User {
   watchlistEntries  Watchlist[]
   checkoutAttempts  CheckoutAttempt[]
   pushSubscriptions PushSubscription[]
+  apnsDevices        ApnsDevice[]
 
   @@index([email])
   @@map("users")
@@ -959,6 +960,41 @@ model Watchlist {
 // following the exact Watchlist precedent above. Application code
 // (apps/web/lib/push/subscription-db.ts) fails gracefully when this table
 // is absent, exactly like Watchlist/OddsLineSnapshot.
+// ── NATIVE (APNs) PUSH DEVICES ──────────────────────────────────────────────
+//
+// The existing `push_subscriptions` table is Web-Push-shaped: it requires
+// `endpoint`, `p256dh` and `auth`, the three fields a browser's
+// `PushSubscription.toJSON()` produces. An APNs device token is a single 64-char
+// hex string with no endpoint and no keys, so it cannot be stored there
+// honestly — shoehorning it in would mean writing fake values into columns
+// another reader trusts.
+//
+// Kept as a separate table rather than a nullable-column extension of
+// `push_subscriptions` because the two have genuinely different lifecycles: a
+// Web Push row dies with the browser subscription; an APNs row dies when the
+// app is uninstalled or the reader signs out, neither of which the server
+// observes directly.
+model ApnsDevice {
+  id        String   @id @default(cuid())
+  userId    String
+  /// 64-char hex APNs device token. Globally unique per device: re-registering
+  /// upserts in place, so a reader who signs in as someone else on the same
+  /// phone REPLACES the row's userId rather than leaving the previous
+  /// account's push routing alive.
+  token     String   @unique
+  platform  String   @default("ios")
+  /// Optional stable per-install id, so one device with several accounts can
+  /// be distinguished without trusting a client-supplied userId.
+  appDeviceId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("apns_devices")
+}
+
 model PushSubscription {
   id        String   @id @default(cuid())
   userId    String

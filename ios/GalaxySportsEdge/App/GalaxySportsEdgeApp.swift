@@ -1,17 +1,35 @@
 import SwiftUI
 
+/// The app entry point.
+///
+/// Appearance is configured here rather than per-view so a screen never has to
+/// remember what the tab bar looks like, and so changing the design system
+/// changes every bar at once.
 @main
 struct GalaxySportsEdgeApp: App {
-    @State private var env = AppEnvironment()
 
-    init() { Self.configureAppearance() }
+    @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
+    @State private var env = AppEnvironment()
+    @State private var router = AppRouter.shared
+
+    init() {
+        Self.configureAppearance()
+        // The delegate needs the environment to route APNs callbacks, and the
+        // environment is not available until `@State` has been initialised —
+        // which is exactly why this assignment lives in `body`, not in `init`.
+    }
 
     var body: some Scene {
         WindowGroup {
             RootView()
                 .environment(env)
+                .environment(router)
                 .preferredColorScheme(.dark)
                 .tint(Theme.violet)
+                .task {
+                    AppDelegate.environment = env
+                    await env.start()
+                }
         }
     }
 

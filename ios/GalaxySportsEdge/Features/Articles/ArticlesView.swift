@@ -1,196 +1,193 @@
 import SwiftUI
 import Observation
 
-@MainActor
-@Observable
-final class ArticlesViewModel {
-    private let service: SportsService
-    var state: LoadState<[Article]> = .idle
-
-    init(service: SportsService) { self.service = service }
-
-    func load() async {
-        state = .loading
-        do { state = .loaded(try await service.articles(page: 1, limit: 20)) }
-        catch {
-            state = .failed((error as? APIError)?.errorDescription ?? error.localizedDescription)
-        }
-    }
-}
-
+/// The Reads tab, backed by `GET /api/blog` — the real editorial feed, with the
+/// server's own paywall applied. A FREE viewer receives every post's title,
+/// dek and tags but a `null` body; that is the paywall signal, and the list
+/// labels which posts are behind it rather than hiding them.
 struct ArticlesView: View {
+
     @Environment(AppEnvironment.self) private var env
     @State private var vm: ArticlesViewModel?
+
+    private let pageSize = 20
 
     var body: some View {
         NavigationStack {
             ZStack {
                 Theme.bg.ignoresSafeArea()
-                if let vm {
-                    AsyncContent(state: vm.state, retry: { await vm.load() }) { articles in
-                        ScrollView {
-                            LazyVStack(spacing: Theme.S.lg) {
-                                if let lead = articles.first {
-                                    NavigationLink(value: lead) {
-                                        FeaturedArticleCard(article: lead)
-                                    }
-                                    .buttonStyle(.plain)
-                                }
-
-                                ForEach(articles.dropFirst()) { article in
-                                    NavigationLink(value: article) {
-                                        ArticleRow(article: article)
-                                    }
-                                    .buttonStyle(.plain)
-                                }
-                            }
-                            .padding(.horizontal, Theme.S.lg)
-                            .padding(.bottom, Theme.S.xxl)
-                        }
-                        .scrollIndicators(.hidden)
-                        .refreshable { await vm.load() }
-                    }
-                } else {
-                    LoadingView()
-                }
+                if let vm { content(vm) } else { LoadingView() }
             }
             .navigationTitle("Reads")
             .navigationBarTitleDisplayMode(.large)
-            .navigationDestination(for: Article.self) { ArticleDetailView(article: $0) }
             .task {
                 if vm == nil {
-                    let created = ArticlesViewModel(service: env.service)
+                    let created = ArticlesViewModel(service: env.service, pageSize: pageSize)
                     vm = created
                     await created.load()
                 }
             }
         }
     }
-}
 
-// MARK: - Cards
+    @ViewBuilder
+    private func content(_ vm: ArticlesViewModel) -> some View {
+        ScrollView {
+            LazyVStack(spacing: Theme.S.lg) {
+                AsyncContent(state: vm.state, retry: { await vm.load() }) { articles in
+                    if articles.isEmpty {
+                        EmptyStateView(
+                            icon: "newspaper",
+                            title: "Nothing published",
+                            message: "No posts on the desk yet. Check back soon.")
+                            .frame(height: 320)
+                    } else {
+                        LazyVStack(spacing: Theme.S.md) {
+                            ForEach(articles) { article in
+                                NavigationLink(value: article) {
+                                    ArticleCard(article: article)
+                                }
+                                .buttonStyle(.plain)
+                            }
 
-struct FeaturedArticleCard: View {
-    let article: Article
-
-    var body: some View {
-        VStack(alignment: .leading, spacing: 0) {
-            ZStack {
-                // NOTE (Motif fix): LinearGradient has no `.opacity(_:)` —
-                // opacity is applied to the view instead.
-                Theme.nebula
-                RadialGradient(colors: [.white.opacity(0.25), .clear],
-                               center: .topLeading, startRadius: 4, endRadius: 220)
-                Image(systemName: "sparkles")
-                    .font(.system(size: 40, weight: .light))
-                    .foregroundStyle(.white.opacity(0.35))
-            }
-            .frame(height: 168)
-            .opacity(0.9)
-            .clipped()
-
-            VStack(alignment: .leading, spacing: Theme.S.sm) {
-                HStack(spacing: Theme.S.sm) {
-                    Pill(text: "Featured", tint: .black, filled: true)
-                    if article.isPremium {
-                        Pill(text: "Premium", tint: Theme.cyan, icon: "lock.fill")
+                            if vm.hasMore {
+                                Button {
+                                    Task { await vm.loadMore() }
+                                } label: {
+                                    Text(vm.isLoadingMore ? "Loading…" : "Load more")
+                                        .font(.system(size: 13, weight: .semibold))
+                                        .foregroundStyle(Theme.violet)
+                                        .frame(maxWidth: .infinity)
+                                        .padding(.vertical, Theme.S.md)
+                                }
+                                .buttonStyle(.plain)
+                                .disabled(vm.isLoadingMore)
+                            }
+                        }
+                        .padding(.horizontal, Theme.S.lg)
+                        .padding(.bottom, Theme.S.xxl)
                     }
-                    Spacer()
                 }
-
-                Text(article.title)
-                    .font(.display(20, .heavy))
-                    .foregroundStyle(Theme.text)
-                    .lineLimit(3)
-                    .multilineTextAlignment(.leading)
-
-                Text(article.dek)
-                    .font(.system(size: 13))
-                    .foregroundStyle(Theme.text2)
-                    .lineLimit(2)
-                    .multilineTextAlignment(.leading)
-
-                HStack(spacing: Theme.S.sm) {
-                    AsyncLogo(url: article.author.avatarURL,
-                              text: article.author.initials, size: 22, tint: Theme.cyan)
-                    Text(article.author.name)
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundStyle(Theme.text2)
-                    Text("·").foregroundStyle(Theme.text3)
-                    Text("\(article.readMinutes) min")
-                        .font(.system(size: 11))
-                        .foregroundStyle(Theme.text3)
-                    Spacer()
-                }
-                .padding(.top, 2)
             }
-            .padding(Theme.S.lg)
         }
-        .background(Theme.surface)
-        .clipShape(RoundedRectangle(cornerRadius: Theme.R.lg, style: .continuous))
-        .overlay(
-            RoundedRectangle(cornerRadius: Theme.R.lg, style: .continuous)
-                .strokeBorder(Theme.stroke, lineWidth: 1)
-        )
+        .scrollIndicators(.hidden)
+        .refreshable { await vm.reload() }
+        .background(Theme.bg)
+        .navigationDestination(for: Article.self) { article in
+            ArticleDetailView(slug: article.slug, preview: article)
+        }
     }
 }
 
-struct ArticleRow: View {
+// MARK: - View model
+
+@MainActor
+@Observable
+final class ArticlesViewModel {
+
+    private let service: SportsService
+    private let pageSize: Int
+
+    var state: LoadState<[Article]> = .idle
+    var isLoadingMore = false
+    /// Paging stops when a page comes back short, which is the server saying
+    /// "that was the last one". Guessing a total instead is how a feed loops
+    /// forever on a page boundary.
+    private(set) var reachedEnd = false
+
+    init(service: SportsService, pageSize: Int = 20) {
+        self.service = service
+        self.pageSize = pageSize
+    }
+
+    private var articles: [Article] {
+        if case .loaded(let rows) = state { return rows }
+        return []
+    }
+
+    var hasMore: Bool { !reachedEnd && !articles.isEmpty }
+
+    func load() async {
+        state = .loading
+        do {
+            let page = try await service.articles(page: 1, limit: pageSize)
+            reachedEnd = page.count < pageSize
+            state = .loaded(page)
+        } catch {
+            state = .failed(PicksViewModel.message(for: error))
+        }
+    }
+
+    func loadMore() async {
+        guard !isLoadingMore, hasMore else { return }
+        isLoadingMore = true
+        defer { isLoadingMore = false }
+        do {
+            let next = try await service.articles(page: articles.count / pageSize + 1,
+                                                  limit: pageSize)
+            reachedEnd = next.count < pageSize
+            state = .loaded(articles + next)
+        } catch {
+            // A failed "load more" must not wipe the list the reader is already
+            // reading. Keep what is on screen.
+            state = .loaded(articles)
+        }
+    }
+
+    func reload() async {
+        reachedEnd = false
+        await load()
+    }
+}
+
+// MARK: - Card
+
+struct ArticleCard: View {
     let article: Article
 
     var body: some View {
-        HStack(alignment: .top, spacing: Theme.S.md) {
-            VStack(alignment: .leading, spacing: 6) {
-                HStack(spacing: 6) {
-                    Text(article.tags.first ?? "Analysis")
-                        .font(.system(size: 10, weight: .heavy))
-                        .tracking(0.6)
-                        .foregroundStyle(Theme.violet)
-                    if article.isPremium {
-                        Image(systemName: "lock.fill")
-                            .font(.system(size: 9, weight: .bold))
-                            .foregroundStyle(Theme.cyan)
-                    }
+        VStack(alignment: .leading, spacing: Theme.S.sm) {
+            HStack(spacing: Theme.S.sm) {
+                if let sport = article.sport {
+                    Pill(text: sport.display, tint: Theme.violet, icon: sport.icon)
                 }
-
-                Text(article.title)
-                    .font(.display(16, .bold))
-                    .foregroundStyle(Theme.text)
-                    .lineLimit(3)
-                    .multilineTextAlignment(.leading)
-
-                Text(article.dek)
-                    .font(.system(size: 12))
-                    .foregroundStyle(Theme.text2)
-                    .lineLimit(2)
-                    .multilineTextAlignment(.leading)
-
-                HStack(spacing: 6) {
-                    Text(article.author.name)
-                    Text("·")
-                    Text("\(article.readMinutes) min")
-                    Text("·")
-                    Text(Fmt.relative.localizedString(for: article.publishedAt, relativeTo: .now))
+                ForEach(article.tags.prefix(2), id: \.self) { tag in
+                    Pill(text: tag, tint: Theme.text3)
                 }
-                .font(.system(size: 11))
-                .foregroundStyle(Theme.text3)
-                .padding(.top, 2)
+                Spacer(minLength: 0)
+                if article.isPremium {
+                    Pill(text: "Pro", tint: Theme.cyan, icon: "lock.fill")
+                }
             }
 
-            Spacer(minLength: 0)
+            Text(article.title)
+                .font(.display(17, .bold))
+                .foregroundStyle(Theme.text)
+                .multilineTextAlignment(.leading)
+                .fixedSize(horizontal: false, vertical: true)
 
-            // NOTE (Motif fix): LinearGradient has no `.opacity(_:)` —
-            // opacity is applied to the view instead.
-            RoundedRectangle(cornerRadius: Theme.R.sm, style: .continuous)
-                .fill(Theme.nebula)
-                .opacity(0.35)
-                .frame(width: 78, height: 78)
-                .overlay(
-                    Image(systemName: "newspaper.fill")
-                        .font(.system(size: 20))
-                        .foregroundStyle(.white.opacity(0.5))
-                )
+            if !article.dek.isEmpty {
+                Text(article.dek)
+                    .font(.system(size: 13))
+                    .foregroundStyle(Theme.text2)
+                    .multilineTextAlignment(.leading)
+                    .lineLimit(3)
+                    .fixedSize(horizontal: false, vertical: true)
+            }
+
+            HStack(spacing: 6) {
+                Text(Fmt.relative.localizedString(for: article.publishedAt, relativeTo: .now))
+                if article.readMinutes > 0 {
+                    Text("·")
+                    Text("\(article.readMinutes) min read")
+                }
+                Spacer(minLength: 0)
+            }
+            .font(.system(size: 11))
+            .foregroundStyle(Theme.text3)
+            .padding(.top, 2)
         }
+        .frame(maxWidth: .infinity, alignment: .leading)
         .card()
     }
 }
