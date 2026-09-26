@@ -3,6 +3,8 @@ import { askJarvis, JARVIS_QUESTIONS, JARVIS_INTENT_ORDER } from "@/lib/cockpit/
 import { buildOwnerSummary, type BuildOwnerSummaryInput, type GatesForOwnerSummary } from "@/lib/cockpit/owner-summary";
 import { synthesizeJarvis, type JarvisInput } from "@/lib/cockpit/jarvis";
 import { evaluatePublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
+import { CAPABILITY_REGISTRY } from "@/lib/jarvis/capability-registry";
+import { buildMemoryStatus } from "@/lib/jarvis/intelligence-state";
 
 const NOW = new Date("2026-05-18T12:00:00Z");
 
@@ -351,5 +353,173 @@ describe("JARVIS_QUESTIONS", () => {
       expect(JARVIS_QUESTIONS[intent]).toBeTruthy();
       expect(JARVIS_QUESTIONS[intent].endsWith("?")).toBe(true);
     }
+  });
+});
+
+// ─── Operator-assistant truth audit (2026-08-25) ─────────────────────────────
+//
+// These assert that the answers the operator actually reads are DERIVED from
+// the registries they claim to summarize, not hand-written prose that drifts
+// away from them. A hardcoded list cannot pass a test that reads the registry.
+//
+// Runtime assertions only: apps/web/tsconfig.json excludes __tests__, so a
+// type-level check here would never be verified.
+
+describe("askJarvis('what-is-not-wired') — derived from the capability registry", () => {
+  const missing = CAPABILITY_REGISTRY.filter(
+    (c) => c.status === "NOT_WIRED" || c.status === "DESIGNED"
+  );
+
+  it("names every NOT_WIRED / DESIGNED capability in the answer prose", () => {
+    const answer = askJarvis("what-is-not-wired", makeSummary());
+    for (const cap of missing) {
+      expect(answer.answer).toContain(cap.name);
+    }
+  });
+
+  it("names no capability the registry reports as wired (DRAFT_ONLY / MANUAL / ACTIVE)", () => {
+    const answer = askJarvis("what-is-not-wired", makeSummary());
+    const wired = CAPABILITY_REGISTRY.filter(
+      (c) => c.status === "DRAFT_ONLY" || c.status === "MANUAL" || c.status === "ACTIVE"
+    );
+    for (const cap of wired) {
+      expect(answer.answer).not.toContain(cap.name);
+    }
+  });
+
+  it("does not describe Agent Orchestration or Market / Line Intelligence as non-functional while the registry rates them DRAFT_ONLY", () => {
+    const answer = askJarvis("what-is-not-wired", makeSummary());
+    const prose = answer.answer.toLowerCase();
+    const orchestration = CAPABILITY_REGISTRY.find((c) => c.id === "agent-orchestration");
+    const market = CAPABILITY_REGISTRY.find((c) => c.id === "market-line-intelligence");
+    if (orchestration && orchestration.status !== "NOT_WIRED" && orchestration.status !== "DESIGNED") {
+      expect(prose).not.toContain("agent orchestration");
+    }
+    if (market && market.status !== "NOT_WIRED" && market.status !== "DESIGNED") {
+      expect(prose).not.toContain("market/clv intelligence");
+    }
+  });
+
+  it("the count in the prose matches the number of capabilities it names", () => {
+    const answer = askJarvis("what-is-not-wired", makeSummary());
+    expect(answer.answer).toContain(
+      `${missing.length} of ${CAPABILITY_REGISTRY.length} capabilities`
+    );
+    const named = CAPABILITY_REGISTRY.filter((c) => answer.answer.includes(c.name));
+    expect(named.length).toBe(missing.length);
+  });
+});
+
+describe("askJarvis('what-can-run') — human-triggered examples come from the registry", () => {
+  const manual = CAPABILITY_REGISTRY.filter((c) => c.status === "MANUAL");
+
+  it("names every MANUAL capability it counts", () => {
+    const answer = askJarvis("what-can-run", makeSummary());
+    for (const cap of manual) {
+      expect(answer.answer).toContain(cap.name);
+    }
+  });
+
+  it("does not cite settlement as human-triggered unless a MANUAL capability is named for it", () => {
+    const answer = askJarvis("what-can-run", makeSummary());
+    const settlementIsManual = manual.some((c) => c.name.toLowerCase().includes("settlement"));
+    if (!settlementIsManual) {
+      expect(answer.answer.toLowerCase()).not.toContain("settlement");
+    }
+  });
+
+  it("the prose and the supporting MANUAL line agree", () => {
+    const answer = askJarvis("what-can-run", makeSummary());
+    const supportLine = answer.supportingState.find((s) => s.startsWith("Human-triggered (MANUAL):"));
+    expect(supportLine).toBeDefined();
+    for (const cap of manual) {
+      expect(supportLine).toContain(cap.name);
+      expect(answer.answer).toContain(cap.name);
+    }
+  });
+});
+
+describe("askJarvis('workers') — UNKNOWN is reported as unknown, not as failure", () => {
+  function unknownStatusSummary() {
+    const assessment = makeAssessment({
+      ingestion: {
+        lastAttemptAt: null,
+        lastSuccessAt: null,
+        lastWasSuccess: null,
+        recentFailureCount: 0,
+      },
+      settlement: {
+        lastSettlementAt: null,
+        settledIn24h: 0,
+        pendingPickCount: 0,
+      },
+    });
+    return makeSummary({ assessment });
+  }
+
+  it("the fixture really produces UNKNOWN department statuses", () => {
+    const summary = unknownStatusSummary();
+    const ingestion = summary.departments.find((d) => d.id === "data-reliability");
+    const settlement = summary.departments.find((d) => d.id === "settlement-results");
+    expect(ingestion?.status).toBe("UNKNOWN");
+    expect(settlement?.status).toBe("UNKNOWN");
+  });
+
+  it("does not assert that workers have issues when both statuses are UNKNOWN", () => {
+    const answer = askJarvis("workers", unknownStatusSummary());
+    expect(answer.answer.toLowerCase()).not.toContain("workers have issues");
+  });
+
+  it("reports LOW confidence when a key status is UNKNOWN", () => {
+    const answer = askJarvis("workers", unknownStatusSummary());
+    expect(answer.confidence).toBe("LOW");
+  });
+
+  it("still reports a real problem when one status is RED, even alongside an UNKNOWN", () => {
+    const assessment = makeAssessment({
+      ingestion: {
+        lastAttemptAt: null,
+        lastSuccessAt: null,
+        lastWasSuccess: null,
+        recentFailureCount: 0,
+      },
+      settlement: {
+        lastSettlementAt: new Date(NOW.getTime() - 1000 * 60 * 60 * 24 * 5),
+        settledIn24h: 0,
+        pendingPickCount: 12,
+      },
+    });
+    const answer = askJarvis("workers", makeSummary({ assessment }));
+    expect(answer.answer.toLowerCase()).toContain("workers have issues");
+  });
+
+  it("keeps HIGH confidence and the healthy answer when both statuses are GREEN", () => {
+    const answer = askJarvis("workers", makeSummary());
+    const ingestion = makeSummary().departments.find((d) => d.id === "data-reliability");
+    const settlement = makeSummary().departments.find((d) => d.id === "settlement-results");
+    if (ingestion?.status === "GREEN" && settlement?.status === "GREEN") {
+      expect(answer.confidence).toBe("HIGH");
+      expect(answer.answer.toLowerCase()).toContain("running normally");
+    }
+  });
+});
+
+describe("askJarvis('what-is-memory-status') — derived from the memory status object", () => {
+  it("states the memory truth string the status builder reports, verbatim", () => {
+    const answer = askJarvis("what-is-memory-status", makeSummary());
+    expect(answer.answer).toContain(buildMemoryStatus().truth);
+  });
+
+  it("names the store the status builder reports", () => {
+    const answer = askJarvis("what-is-memory-status", makeSummary());
+    expect(answer.answer).toContain(buildMemoryStatus().store);
+  });
+
+  it("still reports the not-wired posture today (buildMemoryStatus is not wired)", () => {
+    const memory = buildMemoryStatus();
+    expect(memory.wired).toBe(false);
+    const answer = askJarvis("what-is-memory-status", makeSummary());
+    expect(answer.answer).toMatch(/no persistent memory/i);
+    expect(answer.supportingState.join("\n")).toContain("Memory wired: NO");
   });
 });
