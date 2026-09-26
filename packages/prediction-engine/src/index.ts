@@ -3781,3 +3781,134 @@ export {
   cvarStake,
   interQuantileRange,
 } from "./sizing/qr-dqn.js";
+
+// Markets + odds: display, honesty gating, effective price, noise wedge,
+// informed flow, marginal-price oracle, excess movement, arb/promo scan,
+// de-vig methods, favourite-longshot audit, odds-history fusion, market
+// pooling, volume momentum, spread skill tables, Kelly policy, count models,
+// bandit policies.
+// Deliberately NOT re-exported (already bound elsewhere in this barrel, or
+// deliberate duplicates): benjaminiHochberg, BookOdds, devig, logLoss,
+// brierScore, kellyGrowthRate, poissonMle, poissonLogLik, poissonPmf,
+// negBinMoments, and every module-level `ENABLED` — a barrel can bind only
+// one `ENABLED`, so bridges read those through the deep path instead.
+// `spearman` already binds, hence the alias.
+export {
+  validateDisplay,
+  renderLabeledPick,
+  type DisplayPick,
+  type LabeledDisplay,
+} from "./markets/probability-display.js";
+export {
+  binomialP,
+  honestyGate,
+  fitRestDecay,
+  type SpotRecord,
+  type HonestyVerdict,
+} from "./markets/situational-honesty-filter.js";
+export {
+  postedEv,
+  effectiveEv,
+  isSignFlip,
+  signFlipRate,
+  bookFeeGap,
+  type PricedPick,
+} from "./markets/effective-price.js";
+export {
+  estimateEpsilon,
+  noiseWedge,
+  fairOddsNoisy,
+  longshotFilter,
+  type NoiseWedgeOpts,
+} from "./markets/noise-wedge-odds.js";
+export {
+  detectInformedFlow,
+  deltaAuc,
+  crossSectionalBar,
+  type FlowBet,
+  type SegmentFlow,
+  type InformedVerdict,
+  type DeltaAuc,
+} from "./markets/informed-flow.js";
+export {
+  fitLiquidity,
+  marginalPrice,
+  oracleMid,
+  flagMispricings,
+  impliedFeeGamma,
+  tightnessIndex,
+  type BookQuote,
+  type MispricingFlag,
+} from "./markets/marginal-price-oracle.js";
+export {
+  movement,
+  uncertaintyReduction,
+  excessMovement,
+  inGameSignal,
+  excessTTest,
+  calibrateCrossover,
+  type GameBlock,
+  type InGameSignal,
+} from "./markets/excess-movement-monitor.js";
+export {
+  americanToDecimal,
+  impliedProb,
+  scanArb,
+  evaluatePromo,
+  hedgedPromoValue,
+  type ArbResult,
+  type PromoTerms,
+} from "./markets/arb-lp-scanner.js";
+export {
+  multiplicativeNormalize,
+  ooEpc,
+  flGlm,
+} from "./odds/oo-epc.js";
+export {
+  bucketRoi,
+  flbSlope,
+  type OddsBucket,
+  type BucketRoi,
+} from "./odds/favorite-longshot-audit.js";
+export {
+  convexFuse,
+  fitFusionWeight,
+  fusionGate,
+  type FusionFit,
+} from "./markets/1802-08848v1-odds-history-fusion.js";
+export {
+  mixturePool,
+  productPool,
+  interpolatedPool,
+  updateWealth,
+  fitAlpha,
+  type ProbVector,
+  type AlphaFit,
+} from "./markets/1106-4509-ml-market-pooling.js";
+export {
+  ewma,
+  volumeMomentumFeature,
+  beatWriterSentiment,
+  totalsModelFeatures,
+  type TotalsFeatures,
+} from "./markets/1310-6998v1-twitter-volume-momentum.js";
+export {
+  rankedProbScore,
+  eceProbs,
+  pairedT,
+  spearman as spreadSpearman,
+  fbeta,
+  classWeightedBCE,
+  normalCdfLocal,
+} from "./markets/1910-08858v2-spread-win-probability-table.js";
+export {
+  kellyBinary,
+  kellySized,
+  drawdownGate,
+} from "./markets/2003-09384v2-static-theta-threshold-policy.js";
+export { zinbPmf } from "./markets/2112-13001v3-dcp-prop-framework.js";
+export {
+  epsilonGreedyStep,
+  ucb1Step,
+  decayEps,
+} from "./markets/2401-06086v1-imitation-inplay-betting.js";
