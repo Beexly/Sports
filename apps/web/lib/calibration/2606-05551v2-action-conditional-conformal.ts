@@ -43,7 +43,7 @@ export function profitFloorCertificate(
     .map((b) => b.expectedProfit - b.realizedProfit)
     .sort((a, b) => a - b);
   const k = Math.min(n, Math.ceil((1 - alpha) * (n + 1)));
-  const q = shortfalls[k - 1];
+  const q = shortfalls[k - 1]!;
   // Certified floor is relative to a new bet's expected profit; report the
   // shortfall quantile (nu(x) = E[profit|x] - q).
   return { nu: -q, nCal: n };

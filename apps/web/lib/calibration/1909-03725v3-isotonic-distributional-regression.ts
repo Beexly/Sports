@@ -27,16 +27,16 @@ export function pava(y: readonly number[]): number[] {
   const blockCount: number[] = [];
   for (let i = 0; i < n; i++) {
     blockStart.push(i);
-    blockSum.push(y[i]);
+    blockSum.push(y[i]!);
     blockCount.push(1);
     while (
       blockSum.length >= 2 &&
-      blockSum[blockSum.length - 2] / blockCount[blockCount.length - 2] >
-        blockSum[blockSum.length - 1] / blockCount[blockCount.length - 1]
+      blockSum[blockSum.length - 2]! / blockCount[blockCount.length - 2]! >
+        blockSum[blockSum.length - 1]! / blockCount[blockCount.length - 1]!
     ) {
       const s = blockStart.pop()!;
-      const sum = blockSum.pop()! + blockSum[blockSum.length - 1];
-      const cnt = blockCount.pop()! + blockCount[blockCount.length - 1];
+      const sum = blockSum.pop()! + blockSum[blockSum.length - 1]!;
+      const cnt = blockCount.pop()! + blockCount[blockCount.length - 1]!;
       blockSum[blockSum.length - 1] = sum;
       blockCount[blockCount.length - 1] = cnt;
       void s;
@@ -44,9 +44,9 @@ export function pava(y: readonly number[]): number[] {
   }
   let b = 0;
   for (let i = 0; i < blockStart.length; i++) {
-    const start = blockStart[i];
-    const end = i + 1 < blockStart.length ? blockStart[i + 1] : n;
-    const mean = blockSum[b] / blockCount[b];
+    const start = blockStart[i]!;
+    const end = i + 1 < blockStart.length ? blockStart[i + 1]! : n;
+    const mean = blockSum[b]! / blockCount[b]!;
     for (let j = start; j < end; j++) fitted[j] = mean;
     b++;
   }
@@ -73,9 +73,9 @@ export function idrFit(
   ys: readonly number[],
   gridT: readonly number[],
 ): IdrFit {
-  const order = xs.map((_, i) => i).sort((a, b) => xs[a] - xs[b]);
-  const xsSorted = order.map((i) => xs[i]);
-  const ysSorted = order.map((i) => ys[i]);
+  const order = xs.map((_, i) => i).sort((a, b) => xs[a]! - xs[b]!);
+  const xsSorted = order.map((i) => xs[i]!);
+  const ysSorted = order.map((i) => ys[i]!);
   const cdfFits = gridT.map((t) =>
     pava(ysSorted.map((y) => (y > t ? 1 : 0))).map((f) => 1 - f),
   );
@@ -83,18 +83,18 @@ export function idrFit(
 }
 
 function interp1(x: number, xs: readonly number[], fs: readonly number[]): number {
-  if (x <= xs[0]) return fs[0];
+  if (x <= xs[0]!) return fs[0]!;
   const n = xs.length;
-  if (x >= xs[n - 1]) return fs[n - 1];
+  if (x >= xs[n - 1]!) return fs[n - 1]!;
   let lo = 0;
   let hi = n - 1;
   while (hi - lo > 1) {
     const mid = (lo + hi) >> 1;
-    if (xs[mid] <= x) lo = mid;
+    if (xs[mid]! <= x) lo = mid;
     else hi = mid;
   }
-  const t = (x - xs[lo]) / (xs[hi] - xs[lo] || 1);
-  return fs[lo] + t * (fs[hi] - fs[lo]);
+  const t = (x - xs[lo]!) / (xs[hi]! - xs[lo]! || 1);
+  return fs[lo]! + t * (fs[hi]! - fs[lo]!);
 }
 
 /** Calibrated conditional CDF F(t | x) via interpolation of the IDR fit. */
@@ -107,8 +107,8 @@ export function idrCdf(fit: IdrFit, x: number, t: number): number {
 /** alpha-quantile of the IDR conditional distribution at x. */
 export function idrQuantile(fit: IdrFit, x: number, alpha: number): number {
   const { gridT } = fit;
-  let lo = gridT[0];
-  let hi = gridT[gridT.length - 1];
+  let lo = gridT[0]!;
+  let hi = gridT[gridT.length - 1]!;
   for (let i = 0; i < 40; i++) {
     const mid = (lo + hi) / 2;
     if (idrCdf(fit, x, mid) < alpha) lo = mid;
@@ -129,12 +129,12 @@ export function crpsFromCdfGrid(
 ): number {
   let s = 0;
   for (let i = 1; i < gridT.length; i++) {
-    const a = gridT[i - 1];
-    const b = gridT[i];
+    const a = gridT[i - 1]!;
+    const b = gridT[i]!;
     const dt = b - a;
     if (dt <= 0) continue;
-    const fa = cdfVals[i - 1];
-    const fb = cdfVals[i];
+    const fa = cdfVals[i - 1]!;
+    const fb = cdfVals[i]!;
     // ∫ F^2 over the cell (F linear).
     const intF2 = (dt * (fa * fa + fa * fb + fb * fb)) / 3;
     // ∫ 1{y<=t} over the cell.

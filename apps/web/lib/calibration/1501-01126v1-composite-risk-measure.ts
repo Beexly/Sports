@@ -108,9 +108,9 @@ export function projectSimplex(v: readonly number[]): number[] {
   let rho = 0;
   let css = 0;
   for (let i = 0; i < n; i++) {
-    css += sorted[i];
+    css += sorted[i]!;
     const t = (css - 1) / (i + 1);
-    if (sorted[i] - t > 0) rho = i + 1;
+    if (sorted[i]! - t > 0) rho = i + 1;
   }
   const cssRho = sorted.slice(0, rho).reduce((a, b) => a + b, 0);
   const theta = (cssRho - 1) / Math.max(rho, 1);
@@ -141,10 +141,10 @@ export function crmObjective(
     const outcomeLosses: number[] = [];
     for (let o = 0; o < nOutcomeDraws; o++) {
       let profit = 0;
-      for (let i = 0; i < picks.length; i++) {
-        const win = rand() < ps[i];
-        profit += win ? weights[i] * (picks[i].decimalOdds - 1) : -weights[i];
-      }
+  for (let i = 0; i < picks.length; i++) {
+    const win = rand() < ps[i]!;
+    profit += win ? weights[i]! * (picks[i]!.decimalOdds - 1) : -weights[i]!;
+  }
       outcomeLosses.push(-profit);
     }
     innerVals.push(innerCvar(outcomeLosses));

@@ -1,0 +1,30 @@
+# CORPUS-RESCUE
+
+Branch: `cursor/wire-port-contract-79e9`
+Base: `origin/main` @ `c153e8b8cde97a98566226dfaf28314cc5be60fb`
+Parent: CQR-TEST @ `268459f52519bbae2ed52c9389855a84f77359a7`
+
+## What landed
+
+Nothing rescued. Target SHA is not a valid object locally or on origin.
+
+## Evidence
+
+- `git cat-file -t 9ae24d7e2` → `fatal: Not a valid object name '9ae24d7e2'`
+- `git fetch origin 9ae24d7e2` → `fatal: couldn't find remote ref 9ae24d7e2`
+- Remotes: only `origin` → `Beexly/Sports`. No alternate remote that could hold the SHA.
+- Related corpus paths exist under other SHAs/paths (not the card target):
+  - `packages/ai-council/src/corpus.ts`
+  - `docs/research/2026-09-21/drive-deep/world-class-sports-probability-engine-corpus-audit.md`
+  - `docs/research/2026-09-21/arxiv-program/index/corpus-index.jsonl`
+  - `docs/research/2026-09-21/arxiv-deep/`
+  - Nearby SHAs observed in history notes: `061492838`, `e8bc46a6d`, `4454dcd67`, `78b79485b` — none equal `9ae24d7e2`.
+- Card DoD for what "rescue" means (cherry-pick, restore blob, re-link path) is not in-repo.
+
+## Staging
+
+Left `package-lock.json` unstaged (pre-existing dirty; not part of this card).
+
+## Verdict
+
+**BLOCKED** — SHA `9ae24d7e2` absent from local object store and origin refs. Observed errors above are the honest close. Related corpus content already on tree under different SHAs; do not invent a rescue. Does not unblock SHADOW-FEED / FEATURE / LESSONS.

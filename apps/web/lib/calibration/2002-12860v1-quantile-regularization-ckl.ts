@@ -41,7 +41,7 @@ export function gaussianPIT(
   sigmas: readonly number[],
 ): number[] {
   return ys.map((y, i) => {
-    const p = phiStd((y - mus[i]) / Math.max(sigmas[i], 1e-9));
+    const p = phiStd((y - mus[i]!) / Math.max(sigmas[i]!, 1e-9));
     return Math.min(Math.max(p, 1e-9), 1 - 1e-9);
   });
 }
@@ -55,12 +55,12 @@ export function cklBar(pits: readonly number[], nBins = 20): number {
   const counts = new Array(nBins).fill(0);
   for (const p of pits) {
     const b = Math.min(nBins - 1, Math.floor(p * nBins));
-    counts[b]++;
+    counts[b]!++;
   }
   const n = pits.length;
   let kl = 0;
   for (let b = 0; b < nBins; b++) {
-    const q = counts[b] / n;
+    const q = counts[b]! / n;
     if (q > 0) kl += q * Math.log(q / (1 / nBins));
   }
   return kl;
@@ -90,7 +90,7 @@ export function l2QuantileCalibrationError(
   for (let g = 1; g <= nGrid; g++) {
     const nominal = g / nGrid;
     const k = Math.min(n - 1, Math.floor(nominal * n));
-    const empirical = sorted[k];
+    const empirical = sorted[k]!;
     s += (empirical - nominal) * (empirical - nominal);
   }
   return s / nGrid;

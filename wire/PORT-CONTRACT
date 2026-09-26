@@ -1,0 +1,45 @@
+# PORT-CONTRACT — 2026-09-23
+
+Branch: `cursor/wire-port-contract-79e9`
+Base: `origin/main` @ `c153e8b8cde97a98566226dfaf28314cc5be60fb`
+Source: `origin/hermes/last-plan-2026-09-15` @ `44cbac98c`
+
+## Adopted (five paths, no behavior change)
+
+1. `docs/ops/ENGINE_DOCTRINE.md`
+2. `packages/prediction-engine/src/frontier-signal-catalog.ts`
+3. `packages/prediction-engine/src/__tests__/frontier-signal-catalog.test.ts`
+4. `packages/verifier/src/loaders/nflverse-releases.ts`
+5. `packages/verifier/src/__tests__/nflverse-releases.test.ts`
+
+Path checks: DOCTRINE_OK · CATALOG_OK · LOADER_OK
+
+`composeFrontierLedger` remains empty (compose surface not wired; absence = null).
+
+## Typecheck
+
+Command: `npm run typecheck` → exit 2
+
+Spill: `/home/ubuntu/.cursor/projects/workspace/agent-tools/7828d955-5d56-4a84-9d33-d8c580062ced.txt` (SPILL_OK)
+
+Triage of spill for adopted-file import failures (`TS2307` / `Cannot find module` / `frontier-signal-catalog` / `nflverse-releases` / `ENGINE_DOCTRINE`):
+
+**NO_ADOPTED_IMPORT_ERRORS**
+
+Failures observed are PRE-EXISTING and outside the five adopted paths:
+
+- `apps/web` calibration (`TS2532` / `TS2322` / `TS2345` / `TS2538` / `TS18048`)
+- `packages/prediction-engine` ensemble / ratings / threat / weather test type errors
+
+## Verdict
+
+Typecheck failed. Cause is pre-existing, not a missing import from the adopted files.
+
+**STOP — no behavior change.** Per PORT-CONTRACT contract: log the missing-import situation (here: none) and stop. Do not edit scoring, gates, MODEL_VERSION, env, schema, or guardrails.
+
+`package-lock.json` dirty from bare `npm install` — left unstaged / not committed.
+
+## Unblocks (next cards, not this commit)
+
+- SHADOW-FEED, FEATURE, LESSONS remain blocked until this wire card is landed.
+- CQR-TEST, STRAY-ARCHIVE, CORPUS-RESCUE are separate cards (CORPUS SHA `9ae24d7e2` may BLOCK).

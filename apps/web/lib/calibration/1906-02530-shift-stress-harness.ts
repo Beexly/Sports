@@ -38,7 +38,7 @@ function clip(p: number, eps = 1e-9): number {
 export function brierScore(probs: readonly number[], ys: readonly number[]): number {
   const n = probs.length;
   if (n === 0) return NaN;
-  return probs.reduce((a, p, i) => a + (p - ys[i]) * (p - ys[i]), 0) / n;
+  return probs.reduce((a, p, i) => a + (p - ys[i]!) * (p - ys[i]!), 0) / n;
 }
 
 export function negativeLogLikelihood(
@@ -49,7 +49,7 @@ export function negativeLogLikelihood(
   if (n === 0) return NaN;
   return (
     -probs.reduce(
-      (a, p, i) => a + ys[i] * Math.log(clip(p)) + (1 - ys[i]) * Math.log(clip(1 - p)),
+      (a, p, i) => a + ys[i]! * Math.log(clip(p)) + (1 - ys[i]!) * Math.log(clip(1 - p)),
       0,
     ) / n
   );
@@ -70,8 +70,8 @@ export function expectedCalibrationError(
       .map((p, i) => (p > lo && (p <= hi || (b === nBins - 1 && p === 1)) ? i : -1))
       .filter((i) => i >= 0);
     if (idx.length === 0) continue;
-    const acc = idx.reduce((a, i) => a + ys[i], 0) / idx.length;
-    const conf = idx.reduce((a, i) => a + probs[i], 0) / idx.length;
+const acc = idx.reduce((a, i) => a + ys[i]!, 0) / idx.length;
+const conf = idx.reduce((a, i) => a + probs[i]!, 0) / idx.length;
     ece += (idx.length / n) * Math.abs(acc - conf);
   }
   return ece;

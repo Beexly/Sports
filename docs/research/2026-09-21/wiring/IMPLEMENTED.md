@@ -73,6 +73,11 @@ Tracking detail per record lives in `~/workspace/wiring-wave/parts/wave1-*.json`
 
 </details>
 
+### Cursor large-effort wires (this agent)
+
+- **1301.0594** (markets) — variance-normalized CLV surprise `S = Δlogit(p)/√Var_t` + steam flag + optional entropy-loss attribution. Scaffold only: `packages/prediction-engine/src/markets/1301-0594-information-incorporation-surprise.ts` (+ adjacent test). `ENABLED=false`. ACCEPTANCE GATE NOT EVALUATED (needs 2025 NFL walk-forward ≥200 flagged events, ≥55% remaining-move direction accuracy; REJECT if continuation-rate gap vs raw |Δp|>2% flags <5pp). Additive only; not on live publish path. Owner Motif-lab; bucket MODEL; verdict ADAPT.
+- **2108.02419v1** (markets) — BBE synthetic-live-market simulator primitives (drive/game state, bettor archetypes, odds ticks, log-loss + closing-line-move MAD gate). Scaffold only: `packages/prediction-engine/src/markets/2108-02419v1-bbe-implementer.ts` (+ adjacent test). `ENABLED=false`. ACCEPTANCE GATE NOT EVALUATED (synthetic-trained live-total model within 10% relative log-loss of real-trained on 2024 test set AND closing-line-move MAD ±0.5). Additive only; not on live publish path. Owner Motif-lab; bucket MODEL; verdict ADAPT.
+
 ### Deferred (47) — not small work, or gate not evaluable as a pure module
 
 - wave1-ingest-2 (15): gates requiring live measurements/backtests — 2410.21484v1 (narrative review, no pooling), 2412.10298v1 (viewership forecast needs 2020 baseline), 2504.04186v1 (fragmentation measurement), 2504.08764 (recall≥0.95 reproducible), 2507.17844v1 (editor-preference test on 50 NFL clips), 2508.11711v2 (7-day live log review), 2602.18541v1 (LAPIS pilot), 2605.23854v1 (MMWU rank centrality backtest), 2605.24445v1 (drift-calibrated Elo backtest), 2606.19642 (30-day weather sim), 2608.02081v1 (isotonic-BT Brier backtest), 2608.11505v1 (log-opinion-pool diagnostic), 2608.28482v2 (BIN diagnostics), 2609.03790v2 (landmark alignment eval), 2609.21674v1 (frozen NFL blend backtest)

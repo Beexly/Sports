@@ -64,7 +64,7 @@ export function mseVsBaseline(
   baselinePred: readonly number[],
 ): { dynamoMse: number; baselineMse: number; relativeImprovement: number } {
   const mse = (preds: readonly number[]) =>
-    drives.reduce((a, d, i) => a + (d.xp - preds[i]) * (d.xp - preds[i]), 0) /
+    drives.reduce((a, d, i) => a + (d.xp - preds[i]!) * (d.xp - preds[i]!), 0) /
     Math.max(drives.length, 1);
   const dynamoMse = mse(dynamoPred);
   const baselineMse = mse(baselinePred);

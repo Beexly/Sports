@@ -40,10 +40,10 @@ export function worldRegret(world: World, policy: PolicyTable): number {
   let regret = 0;
   const nb = world.value.length;
   for (let b = 0; b < nb; b++) {
-    const ne = world.value[b].length;
+    const ne = world.value[b]!.length;
     for (let e = 0; e < ne; e++) {
-      const tierIdx = policy.policy[b][e];
-      regret += world.oracle[b][e] - world.value[b][e][tierIdx];
+      const tierIdx = policy.policy[b]![e]!;
+      regret += world.oracle[b]![e]! - world.value[b]![e]![tierIdx]!;
     }
   }
   return regret;
@@ -62,8 +62,8 @@ export function maxWorldRegret(worlds: readonly World[], policy: PolicyTable): n
  */
 export function minimaxRegretPolicy(worlds: readonly World[]): PolicyTable {
   if (worlds.length === 0) throw new Error("minimaxRegretPolicy: no worlds");
-  const nb = worlds[0].value.length;
-  const ne = worlds[0].value[0].length;
+  const nb = worlds[0]!.value.length;
+  const ne = worlds[0]!.value[0]!.length;
   const nt = STAKE_TIERS.length;
   const policy: number[][] = Array.from({ length: nb }, () =>
     new Array(ne).fill(2),
@@ -71,14 +71,14 @@ export function minimaxRegretPolicy(worlds: readonly World[]): PolicyTable {
   const stateWorstRegret = (b: number, e: number, t: number): number => {
     let worst = -Infinity;
     for (const w of worlds) {
-      worst = Math.max(worst, w.oracle[b][e] - w.value[b][e][t]);
+      worst = Math.max(worst, w.oracle[b]![e]! - w.value[b]![e]![t]!);
     }
     return worst;
   };
   for (let sweep = 0; sweep < 3; sweep++) {
     for (let b = 0; b < nb; b++) {
       for (let e = 0; e < ne; e++) {
-        let bestT = policy[b][e];
+        let bestT = policy[b]![e]!;
         let bestR = stateWorstRegret(b, e, bestT);
         for (let t = 0; t < nt; t++) {
           const r = stateWorstRegret(b, e, t);
@@ -87,7 +87,7 @@ export function minimaxRegretPolicy(worlds: readonly World[]): PolicyTable {
             bestT = t;
           }
         }
-        policy[b][e] = bestT;
+        policy[b]![e] = bestT;
       }
     }
   }

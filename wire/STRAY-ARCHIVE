@@ -1,0 +1,25 @@
+# STRAY-ARCHIVE
+
+Branch: `cursor/wire-port-contract-79e9`
+Base: `origin/main` @ `c153e8b8cde97a98566226dfaf28314cc5be60fb`
+Parent: CQR-TEST @ `268459f52519bbae2ed52c9389855a84f77359a7`
+
+## What landed
+
+Nothing archived. Card DoD is not recoverable from this tree.
+
+## Evidence
+
+- `rg STRAY-ARCHIVE|CORPUS-RESCUE|9ae24d7e2` hits only `wire/PORT-CONTRACT` and `wire/CQR-TEST` (naming next cards). No card DoD, acceptance criteria, or archive checklist elsewhere in-repo.
+- `find . -iname '*stray*'` (excluding node_modules/.git) empty.
+- Untracked inventory: only `package-lock.json` modified unstaged. No stray research dumps, handoff pastes, or orphan files to move.
+- `docs/ops/archive/` already present with `dated/`, `leverage/`, `prompts/`, `README.md`, `root-museum/`, `root-scripts/`. No empty destination that needed creation.
+- Handoff "stray" mentions elsewhere are historical sprint hygiene notes, not this card's DoD.
+
+## Staging
+
+Left `package-lock.json` unstaged (pre-existing dirty; not part of this card).
+
+## Verdict
+
+**BLOCKED** — no card DoD in tree, no stray untracked files to archive, archive root already exists. Cannot invent an archive move without acceptance criteria. Does not unblock SHADOW-FEED / FEATURE / LESSONS.

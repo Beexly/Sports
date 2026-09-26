@@ -75,8 +75,8 @@ function mutate(
   if (r < 0.4 && legs.length > 2) {
     legs.splice(Math.floor(rand() * legs.length), 1);
   } else {
-    const cand = legIds[Math.floor(rand() * legIds.length)];
-    if (!legs.includes(cand)) legs.push(cand);
+      const cand = legIds[Math.floor(rand() * legIds.length)]!;
+      if (!legs.includes(cand)) legs.push(cand);
   }
   return { legs };
 }
@@ -110,19 +110,19 @@ export function stochasticDiffusionSearch(
     const h = randomHypothesis();
     return { hypothesis: h, active: false, fitness: hypothesisFitness(h, legById) };
   });
-  let best = agents[0].hypothesis;
-  let bestFit = agents[0].fitness;
+let best = agents[0]!.hypothesis;
+let bestFit = agents[0]!.fitness;
   for (let iter = 0; iter < nIterations; iter++) {
     // Test phase: active if fitness is above the population median.
     const fits = agents.map((x) => x.fitness).sort((x, y) => x - y);
-    const median = fits[Math.floor(fits.length / 2)];
+    const median = fits[Math.floor(fits.length / 2)]!;
     for (const ag of agents) ag.active = ag.fitness >= median;
     // Diffusion phase: inactive agents copy a random active hypothesis + mutate.
     const actives = agents.filter((ag) => ag.active);
     for (const ag of agents) {
       if (!ag.active && actives.length > 0) {
-        const donor = actives[Math.floor(rand() * actives.length)];
-        ag.hypothesis = mutate(donor.hypothesis, legIds, rand);
+      const donor = actives[Math.floor(rand() * actives.length)]!;
+      ag.hypothesis = mutate(donor.hypothesis, legIds, rand);
         ag.fitness = hypothesisFitness(ag.hypothesis, legById);
       }
     }

@@ -66,11 +66,11 @@ export function btFit(
       gTheta[g.away] -= err;
       gH += err;
     }
-    for (let i = 0; i < nTeams; i++) theta[i] += lr * gTheta[i];
+    for (let i = 0; i < nTeams; i++) theta[i]! += lr * gTheta[i]!;
     h += lr * gH;
     // project onto sum(theta) = 0
     const m = theta.reduce((a, b) => a + b, 0) / nTeams;
-    for (let i = 0; i < nTeams; i++) theta[i] -= m;
+    for (let i = 0; i < nTeams; i++) theta[i]! -= m;
   }
   return { theta, h };
 }
@@ -89,10 +89,10 @@ export function btStandardErrors(
   let infoH = 0;
   for (const g of games) {
     const w = g.weight ?? 1;
-    const p = sigmoid(fit.theta[g.home] - fit.theta[g.away] + fit.h);
+    const p = sigmoid(fit.theta[g.home]! - fit.theta[g.away]! + fit.h);
     const v = w * p * (1 - p);
-    info[g.home] += v;
-    info[g.away] += v;
+    info[g.home]! += v;
+    info[g.away]! += v;
     infoH += v;
   }
   const seTheta = info.map((v) => (v > 1e-9 ? 1 / Math.sqrt(v) : Infinity));
@@ -136,7 +136,7 @@ export function btFitDecayed(
 ): { theta: number[]; h: number; seTheta: number[]; seH: number } {
   const weighted = games.map((g, i) => ({
     ...g,
-    weight: Math.pow(lambda, lags[i]),
+    weight: Math.pow(lambda, lags[i]!),
   }));
   const fit = btFit(nTeams, weighted);
   const { seTheta, seH } = btStandardErrors(nTeams, weighted, fit);
