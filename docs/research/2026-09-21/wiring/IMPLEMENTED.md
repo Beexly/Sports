@@ -97,7 +97,7 @@ All additive: 1,248 new files, zero modified, zero deleted (verified via `git di
 | wave2-ingest-2 | INGEST 136 | 136 | 272 (136 modules + 136 tests) | 591/591 | 11 (ed8fc2b, 8d9e5b1, 1626f02, 6564baa, 0fc770c, 1cb61e5, 288ea40, 0440386, f9cefd9, 994eb7f, 8f4d1a) | packages/data-ingestion/src/ |
 | wave2-model-1 | MODEL 128 | 128 | 256 (128 modules + 128 tests) | 134/134 on records 0-27; remainder files verified on remote, final test count pending | 11 (8339a8a, d850f53, 3ea6ebe, c153e8b, f3bd006, 4c00a6e, ad06fdc, 4c63117, 67a1694, b19b74b, b9aa22c) | packages/prediction-engine/src/ (+ lane subdirs) |
 | wave2-model-2 | MODEL 129 | 129 | 258 (129 modules + 129 tests) | 338/338 | 11 (ae0d0d3, a77c9f1, efe9a25, 8ad9884, 911f701, dea5bd7, 6a9a96b, f065fcc, 46e98da, 01da748, 915133c) | packages/prediction-engine/src/ |
-| wave2-invent | INVENT 7 | 7 | 14 (7 modules + 7 tests) | 57/57 | 1 (97c33e7) | packages/prediction-engine/src/invention/ |
+| wave2-invent | INVENT 8 | 8 | 16 (8 modules + 8 tests) | 57/57 | 1 (97c33e7) | packages/prediction-engine/src/invention/ |
 
 ### Implemented arXiv IDs (dedup reference for future waves)
 
@@ -137,9 +137,9 @@ All additive: 1,248 new files, zero modified, zero deleted (verified via `git di
 
 </details>
 
-<details><summary>wave2-invent — 7 ids</summary>
+<details><summary>wave2-invent — 8 ids</summary>
 
-1905.11481v2, 1912.04871v4, 2409.00629v2, 2410.17238v1, 2508.01285v2, 2606.29823v1, 2608.25770v2
+1301.0594, 1905.11481v2, 1912.04871v4, 2409.00629v2, 2410.17238v1, 2508.01285v2, 2606.29823v1, 2608.25770v2
 
 </details>
 
