@@ -34,6 +34,7 @@ const mocks = vi.hoisted(() => ({
   getHeadToHeadForm: vi.fn<(...args: unknown[]) => Promise<unknown>>(),
   // prediction-engine
   scoreGames: vi.fn<(inputs: unknown[], at: Date) => unknown[]>(),
+  scoreGameWithDropReasons: vi.fn<(input: unknown, at: Date) => { picks: unknown[]; dropReasons: unknown[] }>(),
   buildPickSignalSnapshot: vi.fn<(...args: unknown[]) => Record<string, unknown>>(),
   // db
   ingestionRunCreate: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
@@ -53,6 +54,8 @@ const mocks = vi.hoisted(() => ({
   // Mint-side supersede of an unpublished PENDING slot-holder (lane B).
   supersedeUnpublished: vi.fn<(db: unknown, args: unknown) => Promise<boolean>>(),
   snapshotUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
+  gameSignalUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
+  gameSignalDeleteMany: vi.fn<(args: unknown) => Promise<unknown>>(),
   resolveRundownApiKey: vi.fn<() => string>(),
   // Mirrors RundownFetchResult: `error` is the human note and `rateLimited`
   // the structured 429 signal the cooldown reads (C-278a).
@@ -90,6 +93,7 @@ vi.mock("@sports/db", () => ({
     odds: { createMany: mocks.oddsCreateMany },
     pick: { upsert: mocks.pickUpsert, findUnique: mocks.pickFindUnique, updateMany: mocks.pickUpdateMany, create: mocks.pickCreate },
     pickSignalSnapshot: { upsert: mocks.snapshotUpsert },
+    gameSignal: { upsert: mocks.gameSignalUpsert, deleteMany: mocks.gameSignalDeleteMany },
     gateDecision: { createMany: vi.fn().mockResolvedValue({ count: 1 }) },
   },
 }));
@@ -173,6 +177,9 @@ vi.mock("@sports/prediction-engine", async () => {
   );
   return {
     scoreGames: mocks.scoreGames,
+    scoreGameWithDropReasons: mocks.scoreGameWithDropReasons,
+    TOTAL_DROP_SIGNAL_SOURCE: actual.TOTAL_DROP_SIGNAL_SOURCE ?? "gse-total-drop",
+    TOTAL_DROP_SIGNAL_KEY: actual.TOTAL_DROP_SIGNAL_KEY ?? "total_drop_reason",
     buildPickSignalSnapshot: mocks.buildPickSignalSnapshot,
     selectionIsHomeSide: actual.selectionIsHomeSide,
     // Independent fair-value builders — null-safe stubs (network off in unit tests).
@@ -343,6 +350,10 @@ describe("processSport", () => {
     mocks.getAtsForm.mockResolvedValue(null);
     mocks.getHeadToHeadForm.mockResolvedValue(null);
     mocks.scoreGames.mockReturnValue([scoredPick()]);
+    mocks.scoreGameWithDropReasons.mockImplementation((input, at) => ({
+      picks: mocks.scoreGames([input], at),
+      dropReasons: [],
+    }));
     mocks.pickUpsert.mockResolvedValue({ id: "pick-1" });
     mocks.pickCreate.mockResolvedValue({ id: "pick-1" });
     mocks.pickUpdateMany.mockResolvedValue({ count: 0 });
@@ -389,7 +400,7 @@ describe("processSport", () => {
         [expect.objectContaining({ id: "game-1", homeTeamName: "Chiefs", awayTeamName: "Bills" })],
       );
       // Scoring never sees the phantom game, so no pick can be created or refreshed.
-      expect(mocks.scoreGames).toHaveBeenCalledWith([], expect.any(Date));
+      expect(mocks.scoreGameWithDropReasons).not.toHaveBeenCalled();
       expect(mocks.pickCreate).not.toHaveBeenCalled();
       expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
       expect(result).toMatchObject({ status: "success", games: 1 });
@@ -417,7 +428,7 @@ describe("processSport", () => {
 
       const result = await processSport(SPORT, "key", gates());
 
-      expect(mocks.scoreGames).toHaveBeenCalledWith([], expect.any(Date));
+      expect(mocks.scoreGameWithDropReasons).not.toHaveBeenCalled();
       expect(mocks.pickCreate).not.toHaveBeenCalled();
       expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
       const corrections = mocks.gameUpdate.mock.calls.filter(
@@ -524,7 +535,7 @@ describe("processSport", () => {
 
       const result = await processSport(SPORT, "key", gates());
 
-      expect(mocks.scoreGames).toHaveBeenCalledWith([], expect.any(Date));
+      expect(mocks.scoreGameWithDropReasons).not.toHaveBeenCalled();
       expect(mocks.pickCreate).not.toHaveBeenCalled();
       expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
       // Odds rows are still archived; only pick generation is gated.
@@ -957,7 +968,7 @@ describe("processSport", () => {
 
       // Never scored: the in-play game contributes no OddsInput at all, so no
       // receipt can be minted off a live price either.
-      expect(mocks.scoreGames).toHaveBeenCalledWith([], expect.any(Date));
+      expect(mocks.scoreGameWithDropReasons).not.toHaveBeenCalled();
       expect(mocks.pickCreate).not.toHaveBeenCalled();
       expect(result).toMatchObject({ status: "success", skippedInPlay: 1 });
       expect(warn.mock.calls.some((c) => /in-play, no pick/.test(String(c[0])))).toBe(true);

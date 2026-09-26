@@ -780,11 +780,29 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 // Score TOTAL pick
 // ============================================================
 
-function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
+export type TotalDropReason =
+  | "fewer_than_min_books"
+  | "no_two_sided_prices"
+  | "consensus_below_floor"
+  | "confidence_below_floor"
+  | "line_integrity"
+  | "tiebreak_no_vote";
+
+export type MarketDropReason =
+  | { market: "TOTAL"; reason: TotalDropReason }
+  | { market: "SPREAD" | "MONEYLINE"; reason: "unpublished" };
+
+type TotalScoringResult =
+  | { pick: ScoredPick; dropReason?: undefined }
+  | { pick: null; dropReason: TotalDropReason };
+
+function scoreTotalPick(input: OddsInput, fetchedAt: Date): TotalScoringResult {
   const totalOdds = input.bookmakerOdds.filter(
     (o) => o.market === "TOTALS" && o.total !== undefined
   );
-  if (totalOdds.length < MIN_BOOKMAKERS) return null;
+  if (totalOdds.length < MIN_BOOKMAKERS) {
+    return { pick: null, dropReason: "fewer_than_min_books" };
+  }
 
   const totals = totalOdds.map((o) => o.total as number);
   const avgTotal = totals.reduce((a, b) => a + b, 0) / totals.length;
@@ -806,7 +824,9 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   // Line consensus (`totals`, `avgTotal`, `totalDispersion`) deliberately keeps
   // every book carrying a total: a line without a price is still real
   // information about where the line sits.
-  if (pricedTotals.length < MIN_BOOKMAKERS) return null;
+  if (pricedTotals.length < MIN_BOOKMAKERS) {
+    return { pick: null, dropReason: "no_two_sided_prices" };
+  }
 
   // The SPREAD twin of this check lives beside isPublishableSpreadLine. Totals
   // had no line-integrity guard of any kind (the run-line ladder is
@@ -829,7 +849,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
       pricedTotals.filter((o) => isRealBookmakerKey(o.bookmaker)).map((o) => o.total as number),
     )
   ) {
-    return null;
+    return { pick: null, dropReason: "line_integrity" };
   }
 
   // Over is the market favorite when its SIGNED American price is <= the under
@@ -850,7 +870,9 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const votingTotals = strictTiebreak
     ? pricedTotals.filter((o) => o.overPrice! !== o.underPrice!)
     : pricedTotals;
-  if (strictTiebreak && votingTotals.length === 0) return null;
+  if (strictTiebreak && votingTotals.length === 0) {
+    return { pick: null, dropReason: "tiebreak_no_vote" };
+  }
   const overFavored = votingTotals.filter(
     (o) =>
       strictTiebreak
@@ -861,10 +883,14 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const overIsChosen = strictTiebreak
     ? overFavoredPct > 0.5
     : overFavoredPct >= 0.5;
-  if (strictTiebreak && overFavoredPct === 0.5) return null;
+  if (strictTiebreak && overFavoredPct === 0.5) {
+    return { pick: null, dropReason: "tiebreak_no_vote" };
+  }
   const consensusPct = overIsChosen ? overFavoredPct : 1 - overFavoredPct;
 
-  if (consensusPct < WEIGHTS.CONSENSUS_MIN_PCT) return null;
+  if (consensusPct < WEIGHTS.CONSENSUS_MIN_PCT) {
+    return { pick: null, dropReason: "consensus_below_floor" };
+  }
 
   const pickedSide = overIsChosen ? "OVER" : "UNDER";
 
@@ -938,7 +964,9 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     )
   );
 
-  if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
+  if (confidence < MIN_PUBLISH_CONFIDENCE) {
+    return { pick: null, dropReason: "confidence_below_floor" };
+  }
 
   const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
@@ -988,28 +1016,30 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   };
 
   return {
-    gameId: input.gameId,
-    pickType: "TOTAL",
-    selection,
-    // SNAPPED posted total — same value as `selection`. `avgTotal` remains the
-    // scoring mean. See published-line.ts.
-    line: publishedTotal,
-    confidence,
-    rankingScore: confidence, // no independent ML edge on totals yet
-    edgeScore,
-    consensusPct,
-    marketFairProb: fairProb,
-    entryPrice: Math.round(avgPrice),
-    bookmakerCount: pricedTotals.length,
-    dataQualityScore,
-    tier,
-    pickGrade,
-    riskLevel,
-    reasoning,
-    reasoningShort,
-    factorBreakdown,
-    modelVersion: MODEL_VERSION,
-    dataFreshnessAt: fetchedAt,
+    pick: {
+      gameId: input.gameId,
+      pickType: "TOTAL",
+      selection,
+      // SNAPPED posted total — same value as `selection`. `avgTotal` remains the
+      // scoring mean. See published-line.ts.
+      line: publishedTotal,
+      confidence,
+      rankingScore: confidence, // no independent ML edge on totals yet
+      edgeScore,
+      consensusPct,
+      marketFairProb: fairProb,
+      entryPrice: Math.round(avgPrice),
+      bookmakerCount: pricedTotals.length,
+      dataQualityScore,
+      tier,
+      pickGrade,
+      riskLevel,
+      reasoning,
+      reasoningShort,
+      factorBreakdown,
+      modelVersion: MODEL_VERSION,
+      dataFreshnessAt: fetchedAt,
+    },
   };
 }
 
@@ -1388,22 +1418,40 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
  * @returns Publishable `ScoredPick`s sorted by `confidence` descending.
  */
 export function scoreGame(input: OddsInput, fetchedAt?: Date): ScoredPick[] {
+  return scoreGameWithDropReasons(input, fetchedAt).picks;
+}
+
+/** Ops GameSignal identity for a withheld TOTAL. Not written onto Pick rows. */
+export const TOTAL_DROP_SIGNAL_SOURCE = "gse-total-drop";
+export const TOTAL_DROP_SIGNAL_KEY = "total_drop_reason";
+
+export function scoreGameWithDropReasons(
+  input: OddsInput,
+  fetchedAt?: Date,
+): { picks: ScoredPick[]; dropReasons: MarketDropReason[] } {
   // `now` is only a freshness stamp (see `fetchedAt` docs above); it does not
   // enter the scoring math. Omitting `fetchedAt` reads the wall clock here and
   // is the one nondeterministic default in this library entrypoint.
   const now = fetchedAt ?? new Date();
   const picks: ScoredPick[] = [];
+  const dropReasons: MarketDropReason[] = [];
 
   const spreadPick = scoreSpreadPick(input, now);
   if (spreadPick) picks.push(spreadPick);
+  else dropReasons.push({ market: "SPREAD", reason: "unpublished" });
 
-  const totalPick = scoreTotalPick(input, now);
-  if (totalPick) picks.push(totalPick);
+  const totalResult = scoreTotalPick(input, now);
+  if (totalResult.pick) picks.push(totalResult.pick);
+  else dropReasons.push({ market: "TOTAL", reason: totalResult.dropReason });
 
   const mlPick = scoreMoneylinePick(input, now);
   if (mlPick) picks.push(mlPick);
+  else dropReasons.push({ market: "MONEYLINE", reason: "unpublished" });
 
-  return picks.sort((a, b) => (b.rankingScore ?? b.confidence) - (a.rankingScore ?? a.confidence));
+  return {
+    picks: picks.sort((a, b) => (b.rankingScore ?? b.confidence) - (a.rankingScore ?? a.confidence)),
+    dropReasons,
+  };
 }
 
 // ============================================================

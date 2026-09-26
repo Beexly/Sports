@@ -1,6 +1,9 @@
 // allow: SIZE_OK - package-root export barrel kept stable for downstream imports.
 export {
   scoreGame,
+  scoreGameWithDropReasons,
+  TOTAL_DROP_SIGNAL_SOURCE,
+  TOTAL_DROP_SIGNAL_KEY,
   scoreGames,
   americanToImpliedProbability,
   removeVig,
@@ -16,6 +19,7 @@ export {
   NON_BOOK_BOOKMAKER_KEYS,
   isRealBookmakerKey,
 } from "./scoring.js";
+export type { MarketDropReason, TotalDropReason } from "./scoring.js";
 export {
   computeGameContext,
   computeLineMovementScore,
