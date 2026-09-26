@@ -420,7 +420,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         try {
           const pickForIntel = {
             id: pick.id,
-            selection: pick.selection,
+            // Same stripped selection the public payload ships (no "(model signal)" marker).
+            selection: displaySelection(pick.selection),
             pickType: pick.pickType,
             confidence: pick.confidence,
             reasoning: pick.reasoning,
