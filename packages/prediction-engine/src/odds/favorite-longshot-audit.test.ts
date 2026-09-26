@@ -27,4 +27,26 @@ describe("favorite-longshot-audit", () => {
   it("edge cases throw", () => {
     expect(() => flbSlope([])).toThrow();
   });
+  // Regression: the old implementation used Math.max(implied, 1e-9) and read
+  // implied > 1 as valid, so a WIN paid less than a LOSS (negative decimal
+  // odds) and a winning bucket could report a negative ROI. It must throw.
+  it("refuses implied probabilities outside (0, 1] instead of reporting negative odds", () => {
+    const negOdds = [{ label: "bad", minOdds: 1.1, maxOdds: 1.9, implied: [1.5], outcomes: [1] }];
+    expect(() => bucketRoi(negOdds)).toThrow(/implied probability 1.5/);
+
+    const zero = [{ label: "zero", minOdds: 1.1, maxOdds: 1.9, implied: [0], outcomes: [1] }];
+    expect(() => bucketRoi(zero)).toThrow(/implied probability 0/);
+
+    const nan = [{ label: "nan", minOdds: 1.1, maxOdds: 1.9, implied: [Number.NaN], outcomes: [1] }];
+    expect(() => bucketRoi(nan)).toThrow(/implied probability NaN/);
+  });
+  it("refuses mismatched implied/outcome lengths", () => {
+    const ragged = [{ label: "ragged", minOdds: 1.1, maxOdds: 1.9, implied: [0.5, 0.5], outcomes: [1] }];
+    expect(() => bucketRoi(ragged)).toThrow(/2 implied values for 1 outcomes/);
+  });
+  it("a winning bucket at a valid price still reports a positive ROI", () => {
+    const win = [{ label: "win", minOdds: 1.1, maxOdds: 1.9, implied: [0.5, 0.5], outcomes: [1, 0] }];
+    // dec = 2, win pays +1, loss -1 -> roi = 0
+    expect(bucketRoi(win)[0]?.roi).toBeCloseTo(0, 10);
+  });
 });
