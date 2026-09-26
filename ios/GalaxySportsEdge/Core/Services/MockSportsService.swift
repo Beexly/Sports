@@ -126,6 +126,8 @@ struct MockSportsService: SportsService {
 
     func billingPortalURL() async throws -> URL {
         try await wait()
-        AppConfiguration.webOrigin
+        // Explicit: the body stopped being a single expression when `wait()`
+        // was added above it, and implicit return only covers the one-line case.
+        return AppConfiguration.webOrigin
     }
 }
