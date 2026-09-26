@@ -99,6 +99,29 @@ export interface EthandojoGameOutput {
   readonly projectedScoreAway: number;
 }
 
+export interface EthandojoBenchmarkPick {
+  readonly week: number;
+  readonly predictedHomeWin: boolean;
+  readonly homeWon: 0 | 1;
+}
+
+export interface EthandojoBenchmarkWeek {
+  readonly week: number;
+  readonly wins: number;
+  readonly losses: number;
+  readonly accuracy: number;
+  readonly postedWins: number;
+  readonly postedLosses: number;
+  readonly postedAccuracy: number;
+  readonly beatsCoinFlip: boolean;
+  readonly matchesOrBeatsPosted: boolean;
+}
+
+export const ETHANDOJO_POSTED_RECORDS: Readonly<Record<number, { readonly wins: number; readonly losses: number }>> = {
+  1: { wins: 10, losses: 6 },
+  2: { wins: 11, losses: 5 },
+};
+
 export interface WalkForwardGame {
   readonly game: TeamGameInput;
   readonly model: MlModelObject | null;
@@ -391,4 +414,30 @@ export function simulateEthandojoSeason(
     }
   }
   return output;
+}
+
+
+export function evaluateEthandojoBenchmark(
+  picks: readonly EthandojoBenchmarkPick[],
+): readonly EthandojoBenchmarkWeek[] {
+  const weeks = [...new Set(picks.map((pick) => pick.week))].sort((a, b) => a - b);
+  return weeks.map((week) => {
+    const rows = picks.filter((pick) => pick.week === week);
+    const wins = rows.filter((pick) => pick.predictedHomeWin === (pick.homeWon === 1)).length;
+    const losses = rows.length - wins;
+    const accuracy = rows.length === 0 ? 0 : wins / rows.length;
+    const posted = ETHANDOJO_POSTED_RECORDS[week] ?? { wins: 0, losses: 0 };
+    const postedAccuracy = posted.wins + posted.losses === 0 ? 0 : posted.wins / (posted.wins + posted.losses);
+    return {
+      week,
+      wins,
+      losses,
+      accuracy,
+      postedWins: posted.wins,
+      postedLosses: posted.losses,
+      postedAccuracy,
+      beatsCoinFlip: accuracy > 0.5,
+      matchesOrBeatsPosted: accuracy >= postedAccuracy,
+    };
+  });
 }

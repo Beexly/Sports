@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 import {
   aggregateTeamFeatures,
   buildGameFeatureDifferentials,
+  evaluateEthandojoBenchmark,
   ETHANDOJO_FEATURE_KEYS,
   fitEthandojoModel,
   predictGameOutcome,
@@ -90,6 +91,17 @@ describe("ethandojo game predictor", () => {
     expect(model).not.toBeNull();
     expect(predictWinProb(model, complete([1, 1, 1, 1, 1, 1, 1]), { now: () => new Date("2026-09-25T00:00:00.000Z") })).not.toBeNull();
     expect(predictWinProb(model, { ...complete([1, 1, 1, 1, 1, 1, 1]), qbEPA: null })).toBeNull();
+  });
+
+  it("evaluates the posted weekly benchmark gate", () => {
+    const result = evaluateEthandojoBenchmark([
+      { week: 1, predictedHomeWin: true, homeWon: 1 },
+      { week: 1, predictedHomeWin: true, homeWon: 0 },
+      { week: 2, predictedHomeWin: false, homeWon: 0 },
+      { week: 2, predictedHomeWin: false, homeWon: 1 },
+    ]);
+    expect(result[0]).toMatchObject({ accuracy: 0.5, beatsCoinFlip: true, matchesOrBeatsPosted: false });
+    expect(result[1]?.postedAccuracy).toBeCloseTo(11 / 16);
   });
 
   it("walk-forward training never includes the target week", () => {
