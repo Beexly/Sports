@@ -253,13 +253,9 @@ describe("/api/picks payload: market-implied win probability reaches every tier"
     expect(row["hasBookPrice"]).toBe(true);
 
     // The raw engine field name never ships, and no confidence-as-a-percent
-    // reaches an anonymous reader on the paid/confidence surfaces. Intelligence
-    // spine may carry calibratedProb labels; those are a separate trust surface
-    // and are not the confidence entitlement field under test here.
+    // reaches an anonymous reader anywhere in the payload.
     expect(JSON.stringify(row)).not.toContain("marketFairProb");
-    const { intelligence: _intel, ...confidenceSurface } = row;
-    expect(JSON.stringify(confidenceSurface)).not.toMatch(/\d+\s?%/);
-    void _intel;
+    expect(JSON.stringify(row)).not.toMatch(/\d+\s?%/);
   });
 
   it("never emits the reserved independent_estimate basis", async () => {

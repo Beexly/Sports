@@ -10,6 +10,7 @@ import { gameInSlateWindow, resolveSlateWindow } from "@/lib/picks/slate-window"
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
 import {
   enrichPickWithIntelligence,
+  projectPickIntelligenceForViewer,
   universalSignalsFromPick,
 } from "@/lib/picks/intelligence-enrichment";
 import {
@@ -438,10 +439,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
             modelVersion: pick.modelVersion,
             pickGrade: pick.pickGrade,
           };
-          return enrichPickWithIntelligence(
+          const raw = enrichPickWithIntelligence(
             pickForIntel,
             new Date(),
             universalSignalsFromPick(pickForIntel),
+          );
+          // FREE: numeric spine only — no percent-formatted model prose /
+          // "(model signal)" leak in intelligence.summary or sixQuestions.
+          return projectPickIntelligenceForViewer(
+            raw,
+            entitlements.canSeeConfidence,
           );
         } catch {
           return null;
