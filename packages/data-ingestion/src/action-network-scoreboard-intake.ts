@@ -10,8 +10,12 @@
  * VERIFIED LIVE 2026-09-25 (curl, this VM):
  *   GET https://api.actionnetwork.com/web/v1/scoreboard/nfl
  *       ?date=20260927&bookIds=15,30
- *   -> HTTP 200, 908,305 bytes, 16 NFL games (Week 3, 2026-09-27),
- *      each with per-book moneyline/spread/total rows.
+ *   -> HTTP 200 ONLY with a browser-like User-Agent (CloudFront 403s
+ *      bare curl/default UAs as of 2026-09-25), 1,593,336 bytes, 16 games.
+ *   Schema drift notes (audit 2026-09-25): `season` is numeric, not a
+ *   string; `line_status` is a per-market object ({over:0,...}), not a
+ *   string; and `teams` order is UNSTABLE — away/home must be resolved
+ *   via away_team_id/home_team_id matched to the team entries' ids.
  *
  * COMPOSES WITH: action-network-client (transport-adjacent), odds inputs.
  *
@@ -85,7 +89,9 @@ interface ScoreboardGame {
   readonly season?: unknown;
   readonly week?: unknown;
   readonly league_name?: unknown;
-  readonly teams?: readonly { readonly abbr?: unknown }[];
+  readonly away_team_id?: unknown;
+  readonly home_team_id?: unknown;
+  readonly teams?: readonly { readonly id?: unknown; readonly abbr?: unknown }[];
   readonly odds?: readonly {
     readonly book_id?: unknown;
     readonly ml_away?: unknown;
@@ -99,6 +105,57 @@ interface ScoreboardGame {
     readonly under?: unknown;
     readonly line_status?: unknown;
   }[];
+}
+
+/** `season` arrives numeric (2026) in current payloads, string in older ones. */
+function asSeason(v: unknown): string {
+  if (typeof v === "string" && v.length > 0) return v;
+  if (typeof v === "number" && Number.isFinite(v)) return String(Math.trunc(v));
+  return "unknown";
+}
+
+/**
+ * `line_status` is a per-market object ({over:0, under:0, ...}) in current
+ * payloads and was a string in older ones. Preserve either form without
+ * inventing semantics.
+ */
+function asLineStatus(v: unknown): string | null {
+  if (typeof v === "string" && v.length > 0) return v;
+  if (v !== null && typeof v === "object") {
+    try {
+      return JSON.stringify(v);
+    } catch {
+      return null;
+    }
+  }
+  return null;
+}
+
+/**
+ * Team order in `teams` is NOT stable (verified 2026-09-25: one game had
+ * [away, home], the next [home, away]). Resolve via away_team_id /
+ * home_team_id matched against the team entries' ids; fall back to index
+ * order only when ids are absent.
+ */
+function teamAbbrs(game: ScoreboardGame): {
+  readonly away: string | null;
+  readonly home: string | null;
+} {
+  const teams = game?.teams ?? [];
+  const awayId = asFiniteNumber(game?.away_team_id);
+  const homeId = asFiniteNumber(game?.home_team_id);
+  const byId = new Map<number, string>();
+  for (const t of teams) {
+    const id = asFiniteNumber(t?.id);
+    const abbr = asString(t?.abbr);
+    if (id !== null && abbr) byId.set(Math.trunc(id), abbr);
+  }
+  const away = awayId !== null ? (byId.get(Math.trunc(awayId)) ?? null) : null;
+  const home = homeId !== null ? (byId.get(Math.trunc(homeId)) ?? null) : null;
+  return {
+    away: away ?? asString(teams[0]?.abbr),
+    home: home ?? asString(teams[1]?.abbr),
+  };
 }
 
 /**
@@ -135,9 +192,7 @@ export function ingestActionNetworkScoreboard(
   payload.games.forEach((game, gi) => {
     const gameId = asFiniteNumber(game?.id);
     const startTime = asString(game?.start_time);
-    const teams = game?.teams ?? [];
-    const awayAbbr = asString(teams[0]?.abbr);
-    const homeAbbr = asString(teams[1]?.abbr);
+    const { away: awayAbbr, home: homeAbbr } = teamAbbrs(game);
 
     if (gameId === null || !startTime || !awayAbbr || !homeAbbr) {
       rejected.push({ index: gi, reason: "missing game id/teams/start_time" });
@@ -154,7 +209,7 @@ export function ingestActionNetworkScoreboard(
       accepted.push({
         gameId: Math.trunc(gameId),
         league: asString(game?.league_name) ?? "unknown",
-        season: asString(game?.season) ?? "unknown",
+        season: asSeason(game?.season),
         week: asFiniteNumber(game?.week) !== null ? Math.trunc(asFiniteNumber(game?.week)!) : null,
         awayAbbr,
         homeAbbr,
@@ -170,7 +225,7 @@ export function ingestActionNetworkScoreboard(
         total: asFiniteNumber(odd?.total),
         totalOver: asFiniteNumber(odd?.over),
         totalUnder: asFiniteNumber(odd?.under),
-        lineStatus: asString(odd?.line_status),
+        lineStatus: asLineStatus(odd?.line_status),
         asOf: asOfTime,
         source: ACTION_NETWORK_SCOREBOARD_SOURCE,
       });
