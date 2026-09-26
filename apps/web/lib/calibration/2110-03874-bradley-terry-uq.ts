@@ -89,7 +89,7 @@ export function btStandardErrors(
   let infoH = 0;
   for (const g of games) {
     const w = g.weight ?? 1;
-    const p = sigmoid(fit.theta[g.home] - fit.theta[g.away] + fit.h);
+    const p = sigmoid(fit.theta[g.home]! - fit.theta[g.away]! + fit.h);
     const v = w * p * (1 - p);
     info[g.home] += v;
     info[g.away] += v;
@@ -136,7 +136,7 @@ export function btFitDecayed(
 ): { theta: number[]; h: number; seTheta: number[]; seH: number } {
   const weighted = games.map((g, i) => ({
     ...g,
-    weight: Math.pow(lambda, lags[i]),
+    weight: Math.pow(lambda, lags[i]!),
   }));
   const fit = btFit(nTeams, weighted);
   const { seTheta, seH } = btStandardErrors(nTeams, weighted, fit);
