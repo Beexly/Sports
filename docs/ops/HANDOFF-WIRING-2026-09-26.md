@@ -180,10 +180,20 @@ export function evalThing(input: {...}): XEval<Out> {
 - Full monorepo `npm run typecheck` can exceed 3 min — run per-workspace: `npm run typecheck -w @sports/prediction-engine` etc. Workspace names: `@sports/prediction-engine`, `@sports/ingestion-pipeline`, `@sports/data-ingestion`, `sports-web` (apps/web).
 - `npm run lint` at root runs eslint on apps/web and can take minutes.
 
-## PARALLEL SESSION
+## PARALLEL SESSION — OWNERSHIP (authoritative)
 
-- Worktree `mimo/handinhand-20260925`, may have local commits only. Communicate via cross-session chat (hop limit = 5, then messages bounce — if hop limit hit, report to user and continue).
-- Ownership historically: their bayesian/symreg residue (now largely landed), mine rl/metalearning/conformal/certificate/promotion + broad orphan hunting. Coordinate before claiming a row if `docs/ops/AGENT_LEDGER.md` / `docs/data/FLEET_DISPATCH.md` say otherwise.
+- Worktree `mimo/handinhand-20260925`. Cross-session chat (hop limit = 5).
+- **THEIRS (already on main, done — do not redo):**
+  - `fd73e0ce8` V5 submission contract + V7 feature-recipe live paths (#7/#8)
+  - `660299b8f` asof-store leak wall + edge-lab placebo/walk-forward (#3-5 residual)
+  - `b73520085` NGS measurement loop + ladder/boost scanners
+  - bayesian-residue family, earlier symreg residue
+- **MINE (already on main, done — do not redo):** rl-residue, metalearning-residue, symreg-conformal-residue (`d4280364e`), window-hash pure-JS, picks-API intelligence, holdout-discipline + sportKey red-line fixes.
+- **IN PROGRESS (MINE only):** T31 physical-context bridge = weather (air-density-fg, ball-physics, decision-calibrated-weather) + honesty `shinFairForSide` + calibration-blend + inplay safe-lead. Signatures in T31 section above.
+- **THEIRS NEXT (assigned 2026-09-26, they are idle):** dfs portfolio batch + nfl scoring batch:
+  - `dfs/dominance-pruning.ts`, `dfs/ip-portfolio.ts`, `dfs/value-tier.ts`, `dfs/tournament-variance.ts`, `dfs/cluster-salary-screen.ts`, `dfs/payout-framework.ts`
+  - `nfl/block-poisson.ts`, `nfl/generalized-poisson.ts`, `nfl/luck-neutralized-epa.ts`, `nfl/parsimonious-season.ts`
+- Do not touch rl/symreg/metalearning/conformal/certificate/promotion (mine, largely done) or each other's in-progress bridge files. If hop limit hit, report to user and continue locally.
 
 ## IMMEDIATE NEXT STEPS (in order)
 
