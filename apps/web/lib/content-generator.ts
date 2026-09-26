@@ -14,7 +14,7 @@ import {
   type ClaudeApiBudgetPolicy,
 } from "@/lib/claude-api/cost-monitor";
 import { loadClaudeBudgetPolicy } from "@/lib/claude-api/budget-store";
-import { extractNumericClaims, validateNumericClaims } from "@/lib/claude-api/numeric-guard";
+import { validateNumericClaims } from "@/lib/claude-api/numeric-guard";
 import { ClaudeMessagesError } from "@/lib/claude-api/messages";
 import { jynxComplete } from "@/lib/claude-api/jynx-complete";
 import {
@@ -280,8 +280,9 @@ export function evaluateGeneratedBlogPolicy(
   // the source prompt (the model's only data). Blocks a hallucinated stat before it
   // could ever be persisted/published. Only runs when the caller supplies grounding.
   if (grounding) {
-    const allowed = extractNumericClaims(grounding.promptText).map((c) => c.value);
-    if (!validateNumericClaims(publicText, { allowed }).grounded) {
+    // Grounding TEXT, not flattened values — the kind of each number lives in
+    // its label. See lib/claude-api/numeric-guard.ts.
+    if (!validateNumericClaims(publicText, { text: grounding.promptText }).grounded) {
       return { allowed: false, reason: "UNGROUNDED_NUMERIC" };
     }
   }

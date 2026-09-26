@@ -141,13 +141,15 @@ a CLV tracker for evaluating closing-line value over time.`,
 };
 
 /**
- * Per-mode prelude builders. Codex aligns the GameIntelligenceNode shape
- * during integration.
+ * Per-mode CONTEXT builders — the grounded evidence ONLY, with the user's
+ * question deliberately excluded.
+ *
+ * This is what the numeric guard validates against. The user's question is NOT
+ * evidence: a question like "why are they 11-1 ATS?" must not whitelist 11 and 1
+ * for the model to echo back as fact. Mirrors the pick explainer, which grounds
+ * on `buildGroundedContext(...).context` and never on the reader's question.
  */
-export function buildAskThisGamePrelude(
-  node: unknown,
-  question: string,
-): string {
+export function buildAskThisGameContext(node: unknown): string {
   // Codex: replace the cast below with a typed reference during integration.
   const n = node as Record<string, unknown>;
 
@@ -173,16 +175,10 @@ Pre-mortem (What Would Change Our Mind):
 ${formatField(n["premortemText"])}
 
 Evidence refs:
-${formatField(n["evidenceRefsList"])}
-
-User question:
-${question}`;
+${formatField(n["evidenceRefsList"])}`;
 }
 
-export function buildAskTheSlatePrelude(
-  slate: unknown,
-  question: string,
-): string {
+export function buildAskTheSlateContext(slate: unknown): string {
   const s = slate as Record<string, unknown>;
 
   return `Mode: ASK_THE_SLATE
@@ -198,7 +194,39 @@ Slate Weather:
 - Notable conditions: ${formatField(s["notableConditions"])}
 
 Per-game summary:
-${formatField(s["perGameSummary"])}
+${formatField(s["perGameSummary"])}`;
+}
+
+export function buildExplainForMyLensContext(
+  node: unknown,
+  lens: { kind: string; details: unknown },
+): string {
+  return `Mode: EXPLAIN_FOR_MY_LENS
+Lens: ${lens.kind} (${formatField(lens.details)})
+
+${buildAskThisGameContext(node)}`;
+}
+
+const LENS_REFRAME_INSTRUCTIONS = `Reframe your answer through the lens. If lens.kind === 'FAN', do not include
+betting language. If lens.kind === 'FANTASY', focus on player-prop and
+DFS-relevant context. If lens.kind === 'CREATOR', return the answer in a
+format the creator can re-use (citations inline, structure tagged). If
+lens.kind === 'ANALYST', expose more raw signal data.`;
+
+/**
+ * Per-mode prelude builders — the full user turn sent to the model: the grounded
+ * context above PLUS the user's question. Never pass a prelude to the numeric
+ * guard; pass the matching *Context builder's output instead.
+ */
+export function buildAskThisGamePrelude(node: unknown, question: string): string {
+  return `${buildAskThisGameContext(node)}
+
+User question:
+${question}`;
+}
+
+export function buildAskTheSlatePrelude(slate: unknown, question: string): string {
+  return `${buildAskTheSlateContext(slate)}
 
 User question:
 ${question}`;
@@ -209,18 +237,12 @@ export function buildExplainForMyLensPrelude(
   question: string,
   lens: { kind: string; details: unknown },
 ): string {
-  const base = buildAskThisGamePrelude(node, question);
+  return `${buildExplainForMyLensContext(node, lens)}
 
-  return `Mode: EXPLAIN_FOR_MY_LENS
-Lens: ${lens.kind} (${formatField(lens.details)})
+User question:
+${question}
 
-${base}
-
-Reframe your answer through the lens. If lens.kind === 'FAN', do not include
-betting language. If lens.kind === 'FANTASY', focus on player-prop and
-DFS-relevant context. If lens.kind === 'CREATOR', return the answer in a
-format the creator can re-use (citations inline, structure tagged). If
-lens.kind === 'ANALYST', expose more raw signal data.`;
+${LENS_REFRAME_INSTRUCTIONS}`;
 }
 
 function formatField(value: unknown): string {

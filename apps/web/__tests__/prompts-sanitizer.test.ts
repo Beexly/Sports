@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { buildExplainUser, sanitizePromptInput } from "@/lib/pick-explainer/prompts";
+import { sanitizePromptInput as sharedSanitizePromptInput } from "@/lib/claude-api/prompt-sanitize";
 
 /**
  * GSE-SEC-057: untrusted user text interpolated into prompts.
@@ -38,6 +39,13 @@ describe("sanitizePromptInput (GSE-SEC-057)", () => {
     expect(sanitizePromptInput("Why did the model pick the over?")).toBe(
       "Why did the model pick the over?",
     );
+  });
+
+  it("is one shared implementation, not a second weaker copy", () => {
+    // The Model Court interpolates the reader's question the same way, so it
+    // imports `@/lib/claude-api/prompt-sanitize` directly. `pick-explainer/prompts`
+    // re-exports that same function for its existing importers.
+    expect(sanitizePromptInput).toBe(sharedSanitizePromptInput);
   });
 });
 

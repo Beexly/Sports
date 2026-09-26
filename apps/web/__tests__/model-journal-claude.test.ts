@@ -170,8 +170,72 @@ describe("Model Journal Claude generation", () => {
       expect(evaluateModelJournalDraftPolicy(draft, grounding)).not.toContain("UNGROUNDED_NUMERIC");
     });
 
+    it("blocks a record assembled from two unrelated tallies (11 settled, 2 autopsies)", () => {
+      // Only wins and losses ground a record. Splicing every count into one flat
+      // list used to let "11-2" pass out of settledPicks=11 and autopsies=2.
+      const draft = "The model closed the week 11-2 on settled sides.";
+      expect(evaluateModelJournalDraftPolicy(draft, grounding)).toContain("UNGROUNDED_NUMERIC");
+    });
+
     it("does not run the numeric check when no grounding is supplied (backward compatible)", () => {
       expect(evaluateModelJournalDraftPolicy("A 9-2 week.")).not.toContain("UNGROUNDED_NUMERIC");
+    });
+  });
+
+  /**
+   * GSE-SEC-071 (ported from `explainPick`) — `ClaudeMessagesError.message` is
+   * `Claude API error: ${status} - ${await response.text()}`, i.e. the RAW upstream
+   * body. `app/api/cockpit/journal/route.ts` returns `error.message` verbatim in a
+   * 503. Admin-only, but the leak is the same shape.
+   */
+  describe("upstream error bodies are not forwarded to the caller (GSE-SEC-071)", () => {
+    const SECRETS = [
+      "req_011CabcdefGHIJKLmnop",
+      "organization org_9f3c2b",
+      "credit balance is too low",
+      "internal-model-router-7",
+    ];
+
+    function claudeErrorFetch(status: number): typeof fetch {
+      const body = JSON.stringify({
+        type: "error",
+        error: { type: "invalid_request_error", message: SECRETS.join(" | ") },
+        request_id: SECRETS[0],
+      });
+      return (async () =>
+        new Response(body, {
+          status,
+          headers: { "content-type": "application/json" },
+        })) as unknown as typeof fetch;
+    }
+
+    async function draftAgainst(status: number): Promise<Error> {
+      try {
+        await generateModelJournalDraftMarkdown(weekData, {
+          apiKey: "test-key",
+          fetchImpl: claudeErrorFetch(status),
+          monthlySpendUsd: 0,
+          budgetPolicy: DEFAULT_CLAUDE_API_BUDGETS.MODEL_JOURNAL_DRAFT,
+        });
+      } catch (err) {
+        return err as Error;
+      }
+      throw new Error("generateModelJournalDraftMarkdown resolved; expected it to throw");
+    }
+
+    it.each([400, 401, 429, 500, 529])("leaks nothing from a %i upstream body", async (status) => {
+      const err = await draftAgainst(status);
+      for (const secret of SECRETS) {
+        expect(err.message).not.toContain(secret);
+      }
+      expect(err.message).not.toContain("Claude API error");
+      expect(err.message).not.toContain(String(status));
+    });
+
+    it("returns an actionable generic message, not an empty one", async () => {
+      const err = await draftAgainst(500);
+      expect(err.message.length).toBeGreaterThan(20);
+      expect(err.message).toMatch(/temporarily unavailable/i);
     });
   });
 });

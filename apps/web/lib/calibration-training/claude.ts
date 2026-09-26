@@ -16,7 +16,7 @@ import {
   CALIBRATION_INSIGHT_SYSTEM_PROMPT,
   type CalibrationInsightInput,
 } from "@/lib/calibration-training/insight-prompt";
-import { extractNumericClaims, validateNumericClaims } from "@/lib/claude-api/numeric-guard";
+import { validateNumericClaims } from "@/lib/claude-api/numeric-guard";
 
 export const MIN_CALIBRATION_INSIGHT_ESTIMATES = 5;
 
@@ -217,8 +217,9 @@ export function evaluateCalibrationInsightPolicy(
   }
 
   if (grounding) {
-    const allowed = extractNumericClaims(grounding.promptText).map((c) => c.value);
-    if (!validateNumericClaims(trimmed, { allowed }).grounded) {
+    // Grounding TEXT, not flattened values — the kind of each number lives in
+    // its label. See lib/claude-api/numeric-guard.ts.
+    if (!validateNumericClaims(trimmed, { text: grounding.promptText }).grounded) {
       return { allowed: false, reason: "UNGROUNDED_NUMERIC" };
     }
   }
