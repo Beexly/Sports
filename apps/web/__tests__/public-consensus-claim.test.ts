@@ -102,12 +102,17 @@ describe("public claim surface contract (T-1)", () => {
       "../app/preview/[sport]/[slug]/page.tsx",
       "../app/picks/page.tsx",
       "../components/picks/pick-card.tsx",
-      "../app/api/picks/route.ts",
     ];
     for (const path of paths) {
       const src = readFileSync(resolve(__dirname, path), "utf8");
       expect(src).toMatch(/bindPublicConsensusClaim/);
       expect(src).toMatch(/consensusEvidenceCaption/);
+    }
+    // API + dashboard share the fail-closed projector (binder + scrub).
+    for (const path of ["../app/api/picks/route.ts", "../app/dashboard/page.tsx"]) {
+      const src = readFileSync(resolve(__dirname, path), "utf8");
+      expect(src).toMatch(/projectPublicConsensusReasoning|bindPublicConsensusClaim/);
+      expect(src).toMatch(/consensusEvidenceCaption|projectPublicConsensusReasoning/);
     }
   });
 });

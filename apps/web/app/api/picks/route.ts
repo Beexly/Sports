@@ -18,7 +18,6 @@ import {
 } from "@/lib/data-reliability/public-freshness-gate";
 import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-publish-runtime";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
-import { teaserForViewer } from "@/lib/picks/teaser-text";
 import { displaySelection } from "@/lib/picks/display-selection";
 import { resolveMarketImplied, resolveWinProbability } from "@/lib/picks/market-implied-display";
 import { publicEdgeScore } from "@/lib/picks/public-edge-score";
@@ -29,12 +28,11 @@ import { dropAdverseEdgePicks } from "@/lib/picks/adverse-edge-suppression";
 import { clientIp } from "@/lib/api/rate-limit";
 import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
 import {
-  bindPublicConsensusClaim,
   consensusEvidenceCaption,
-  isBookmakerConsensusClaim,
   type PublicConsensusPick,
 } from "@/lib/claims/public-consensus-claim";
 import { reconstructConsensusBookSet } from "@/lib/claims/publish-time-consensus-evidence";
+import { projectPublicConsensusReasoning } from "@/lib/claims/project-public-consensus-reasoning";
 
 export const dynamic = "force-dynamic";
 
@@ -399,21 +397,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
             }
           : null,
     };
-    const projectReasoning = (text: string) => {
-      const source = text.trim();
-      if (!source) return { text: null, bound: null };
-      const bound = bindPublicConsensusClaim({
-        ...consensusSlice,
-        reasoningShort: source,
-      }, now);
-      if (isBookmakerConsensusClaim(source) && !bound) {
-        return { text: null, bound: null };
-      }
-      // Full reasoning and reasoningShort are gated independently. The first
-      // consensus claim in a full explanation is enough to withhold that whole
-      // field, even if the rest contains no other market phrase.
-      return { text: teaserForViewer(source, entitlements.canSeeConfidence), bound };
-    };
+    // Full reasoning and reasoningShort are gated independently via the shared
+    // fail-closed projector (same path as preview/dashboard). The first
+    // consensus claim in a full explanation is enough to withhold that whole
+    // field, even if the rest contains no other market phrase.
+    const projectReasoning = (text: string) =>
+      projectPublicConsensusReasoning(text, consensusSlice, {
+        scrubConfidence: true,
+        canSeeConfidence: entitlements.canSeeConfidence,
+        now,
+      });
     const shortReasoning = projectReasoning(pick.reasoningShort);
     const reasoningSource = entitlements.canSeeFactorBreakdown
       ? pick.reasoning
