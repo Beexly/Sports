@@ -3182,3 +3182,53 @@ export {
   type GateCandidateView,
   type BridgeOptions as GateCertificateBridgeOptions,
 } from "./certificate/gate-certificate-bridge.js";
+
+// Weather physics: air density, ball behavior under temperature
+export {
+  fahrenheitToKelvin,
+  airDensityKgM3,
+  kickDistanceScale,
+  effectiveKickDistance,
+  venueEffectEstimate,
+  SEA_LEVEL_RHO,
+} from "./weather/air-density-fg.js";
+export {
+  pressureAtTemp,
+  pressureDrop,
+  restitutionAtTemp,
+  ballEffects,
+  fitLambda,
+  type BallEffects,
+} from "./weather/ball-physics.js";
+
+// Decision-calibrated weather: value of a forecast source, not its RMSE
+export {
+  thresholdDecision,
+  decisionValue,
+  rmse as weatherRmse,
+  selectWeatherSource,
+  type WeatherSource,
+} from "./weather/decision-calibrated-weather.js";
+
+// Honesty: Shin fair probability for a chosen side of a two-way book
+export { shinFairForSide } from "./honesty/devig-method-compare.js";
+
+// Calibration blend: parametric tail + isotonic middle, monotone envelope
+export {
+  applyBeta,
+  monotoneEnvelope,
+  tailBlendMap,
+  fitOofCalibration,
+  type CalibrationMap,
+  type BlendOptions,
+  type OofCalibrationFit,
+} from "./edge-lab/calibration-blend.js";
+
+// In-play: safe-lead survival under Brownian drift/diffusion
+export {
+  safeLeadProb,
+  diffusionWinProb,
+  leadSafetyFeature,
+  expectedLeadChangesRemaining,
+  type SafeLeadParams,
+} from "./inplay/safe-lead.js";
