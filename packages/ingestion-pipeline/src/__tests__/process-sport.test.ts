@@ -162,6 +162,7 @@ vi.mock("@sports/data-ingestion", async () => {
   oddsApiKeyPresence: vi.fn().mockReturnValue({ present: true, matchedEnv: "THE_ODDS_API_KEY" }),
   rundownApiKeyPresence: vi.fn().mockReturnValue({ present: false, matchedEnv: null }),
   };
+  isResearchPowerRatingsEnabled: vi.fn().mockReturnValue(false),
 });
 
 vi.mock("@sports/prediction-engine", async () => {

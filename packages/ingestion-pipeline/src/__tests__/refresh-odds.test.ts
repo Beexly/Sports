@@ -118,6 +118,7 @@ beforeEach(() => {
   // The default governor (built when a test injects none) allows everything,
   // so the loop-behaviour tests above are unaffected by pacing.
   mocks.buildPaidOddsGovernor.mockImplementation(() => stubGovernor({}));
+  isResearchPowerRatingsEnabled: vi.fn().mockReturnValue(false),
 });
 
 afterEach(() => {

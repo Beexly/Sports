@@ -127,4 +127,5 @@ describe("seedGamesFromEspn — game identity", () => {
     expect(mocks.gameUpdate).not.toHaveBeenCalled();
     expect(mocks.gameUpsert).toHaveBeenCalledTimes(1);
   });
+  isResearchPowerRatingsEnabled: vi.fn().mockReturnValue(false),
 });

@@ -44,6 +44,7 @@ beforeEach(() => {
   mocks.seedGamesFromEspn.mockResolvedValue({ upserted: 0, errors: [] });
   mocks.generateSignalSlate.mockResolvedValue({ picksUpserted: 0, gamesConsidered: 0 });
   mocks.refreshOdds.mockResolvedValue(oddsEnvelope([{ sport: "americanfootball_nfl", ok: true, oddsInserted: 12 }]));
+  isResearchPowerRatingsEnabled: vi.fn().mockReturnValue(false),
 });
 
 describe("runBoardFillPipeline (C-109 governed odds refresh)", () => {

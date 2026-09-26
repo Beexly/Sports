@@ -91,6 +91,7 @@ vi.mock("@sports/data-ingestion", () => ({
     ])
   ),
   lookupMlbWinPct: vi.fn().mockImplementation((map, team) => map.get(team.toLowerCase()) ?? null),
+  isResearchPowerRatingsEnabled: vi.fn().mockReturnValue(false),
 }));
 
 describe("Signal Registry Migration — Deterministic Parity under v5.2.7", () => {
