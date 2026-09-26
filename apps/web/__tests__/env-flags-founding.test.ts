@@ -1,7 +1,20 @@
-import { describe, expect, it } from "vitest";
+import { beforeEach, describe, expect, it, vi } from "vitest";
 import { flagEnabled, waitlistGated } from "@/lib/env/flags";
 import { resolveBoardSurface } from "@/lib/board/board-surface-policy";
 import { passesPublicSelectiveFilter } from "@/lib/calibration/selective-publish-runtime";
+
+// Mocking precedent: apps/web/__tests__/picks-stale-kill-switch.test.ts
+const mocks = vi.hoisted(() => ({
+  pickFindFirst: vi.fn<(args?: unknown) => Promise<unknown>>(),
+}));
+
+vi.mock("@sports/db", () => ({
+  db: { pick: { findFirst: mocks.pickFindFirst } },
+}));
+
+const { isSignalBoardSlateStale } = await import(
+  "@/lib/data-reliability/public-freshness-gate"
+);
 
 describe("founding env defaults", () => {
   it("waitlist open when gate true but FORCE unset (legacy)", () => {
@@ -53,8 +66,39 @@ describe("founding env defaults", () => {
 });
 
 describe("signal board product law", () => {
-  it("documents dual freshness: generation SLA or upcoming pending signals", () => {
-    // Implementation: isSignalBoardSlateStale in public-freshness-gate.ts
-    expect(true).toBe(true);
+  const now = new Date("2026-09-08T12:00:00Z");
+  const fresh = new Date(now.getTime() - 60 * 60 * 1000); // 1h ago: ok
+  const stale = new Date(now.getTime() - 5 * 60 * 60 * 1000); // 5h ago: stale (>240m SLA)
+
+  beforeEach(() => {
+    mocks.pickFindFirst.mockReset();
+  });
+
+  it("not stale when the last published pick is within the freshness SLA", async () => {
+    mocks.pickFindFirst.mockResolvedValueOnce({ generatedAt: fresh });
+    await expect(isSignalBoardSlateStale(now)).resolves.toBe(false);
+    expect(mocks.pickFindFirst).toHaveBeenCalledTimes(1);
+  });
+
+  it("stale with no upcoming pending signal in the 7d horizon", async () => {
+    mocks.pickFindFirst
+      .mockResolvedValueOnce({ generatedAt: stale })
+      .mockResolvedValueOnce(null);
+    await expect(isSignalBoardSlateStale(now)).resolves.toBe(true);
+    expect(mocks.pickFindFirst).toHaveBeenCalledTimes(2);
+  });
+
+  it("not stale when an upcoming pending signal exists in the 7d horizon", async () => {
+    mocks.pickFindFirst
+      .mockResolvedValueOnce({ generatedAt: stale })
+      .mockResolvedValueOnce({ id: "pending-1" });
+    await expect(isSignalBoardSlateStale(now)).resolves.toBe(false);
+  });
+
+  it("stale when there has never been a published pick", async () => {
+    mocks.pickFindFirst
+      .mockResolvedValueOnce(null)
+      .mockResolvedValueOnce(null);
+    await expect(isSignalBoardSlateStale(now)).resolves.toBe(true);
   });
 });
