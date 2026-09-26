@@ -54,7 +54,7 @@ import {
 import {
   tullock,
   differenceForm,
-  fitAlpha,
+  ratingsFitAlpha,
   winRmse,
   fitGameEwp,
   gameEwp,
@@ -107,8 +107,8 @@ import {
 import {
   fitTVC,
   predictTVC,
-  effectiveWeight,
   ratingsMeanLogLoss,
+  effectiveWeight,
   fitStatic,
   type TVCGame,
   type TVCModel,
@@ -514,7 +514,7 @@ export function evalFitAlpha(input: {
     return { ok: false, reason: 'form must be "tullock" | "difference"' };
   }
   return guard(() => {
-    const a = fitAlpha(input.seasons, input.form, input.init ?? 2);
+    const a = ratingsFitAlpha(input.seasons, input.form, input.init ?? 2);
     if (!Number.isFinite(a) || a <= 0) {
       throw new Error("fitAlpha returned a non-positive exponent");
     }
@@ -1564,7 +1564,7 @@ export {
   shrinkageUncertainty,
   tullock,
   differenceForm,
-  fitAlpha,
+  ratingsFitAlpha as fitAlpha,
   winRmse,
   fitGameEwp,
   gameEwp,

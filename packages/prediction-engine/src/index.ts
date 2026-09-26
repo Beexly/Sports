@@ -3953,7 +3953,7 @@ export {
 export {
   tullock,
   differenceForm,
-  fitAlpha,
+  fitAlpha as ratingsFitAlpha,
   winRmse,
   fitGameEwp,
   gameEwp,
