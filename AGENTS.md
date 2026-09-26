@@ -4224,3 +4224,46 @@ Window: posts after ~9:10 AM CDT through ~9:10 PM CDT Fri 2026-09-25. READ ONLY;
 - X keyword search intermittently stuck on "Loading…"; worked after retries — all 5 searches completed.
 - No CAPTCHA or rate-limiting; session persisted as @GalaxySportsHQ; read-only throughout.
 - Standing loose end (carried): "Bryce Young map" screenshot from the 2026-09-20 PM sweep remains undescribed/uninventoried.
+
+## ENGINE METHODS INVENTORY (2026-09-26, Motif)
+
+New engine methods landed as research + draft PRs today. Code improvements are on `hermes/*` branches as draft PRs #911, #913–#918 (all open on remote); research and rescue understanding are archived under `docs/research/2026-09-26/`. This section is the index — read the files, don't re-derive.
+
+### Movement prediction (E1) — `docs/research/2026-09-26/2026-09-26-movement-module-spec.md`
+- Query-centric transformer over all 22 players; per-horizon `dx`, `dy`, speed, uncertainty (logvar), confidence.
+- Losses: masked time-weighted Huber + acceleration regularization; landing-dropout training; VRMSE < 0.9 gate; rollout-stability probe (chained ≤ 2× direct, else pushforward fine-tune).
+- 14 tests incl. causality (zeroing future frames changes nothing), permutation invariance, determinism.
+- `/predict/movement` returns NO `probability` — stays out of the consensus client until explicitly integrated.
+
+### Big Data Bowl port pack (E2) — `docs/research/2026-09-26/2026-09-26-big-data-bowl-deepdive.md`, `2026-09-26-bdb-code-extraction.md`
+- Predict frame deltas, cumulatively sum, anchor to last observation, clip to field bounds.
+- Geometric baseline + learned residual (+0.0045 CV, strongest reported ablation); GNN-lite neighbor aggregation (+0.0030); K=6, r=30yd, τ=8, ally/opp split, 17 aggregates.
+- **Axis correction (v3, 2026-09-26):** x-axis play-direction canonicalization (`x' = 120 − x`, deterministic at load) is SEPARATE from y-axis across-field symmetry augmentation/TTA (`y' = 53.3 − y`, negate `velocity_y`/`acceleration_y`, `(180 − angle) % 360`, mirror `ball_land_y`; TTA unflips predicted `dy`). v1/v2 handoffs conflated them — implement v3.
+- SHAP-vector → KMeans meta-features for tabular markets (repo2 claimed −11% RMSE).
+- DO NOT PORT: bidirectional recurrence, 8+ layer depth, 20-model ensembles, synthetic competition training data, pre-scaler augmentation, anomaly removal, Shapley Flow.
+
+### Broadcast video → trajectories (E3) — `docs/research/2026-09-26/2026-09-26-video-tracking-spec.md`, `field-registration-homography-research.md`
+- Deterministic ingest → shot cuts → detection → tracking → field registration → projection → kinematics → output manifest. 8 acceptance tests.
+- Shippable: RF-DETR ≤L (Apache-2.0), Supervision (MIT), `trackers` (Apache-2.0), TransNetV2 (MIT), PySceneDetect (BSD-3), TVCalib (MIT), OpenCV/scipy/numpy.
+- Lab-only/non-commercial: Ultralytics YOLO (AGPL-3.0), LocateAnything-3B (NVIDIA non-commercial), PnLCalib (unverified), Roboflow Universe keypoint model (terms unverified).
+- QC: hash-mark-only correspondences can look locally accurate while the field transform drifts; NFL/NCAA template mismatch = silent 3.58-yard bias; registration resets at camera cuts; invalid homographies return null + flags, never silent coords.
+
+### The Well transfer — `docs/research/2026-09-26/2026-09-26-thewell-engine-alignment.md`
+- Code BSD-3-Clause; dataset CC BY 4.0 (commercial OK with attribution) — but all 16 datasets are grid continuum simulations, severe domain gap. NO football pretraining; `active_matter` as protocol sandbox only.
+- Transferable: scheduled input noise, variance-scaled RMSE, rollout-stability testing, acceleration-consistency loss, conditional pushforward fine-tuning. Core lesson: one-step performance hides multi-step rollout collapse.
+
+### Verifier + factor foundry (rescue ports, draft PRs #913–#918)
+- `packages/verifier` (frozen-holdout scorecard/duel/joint/fact-graph) + 28 `docs/factors` specs + `scripts/factors` foundry — PR #914 (108 tests via vitest shim, incl. 28 hand-computed stat pins).
+- Fail-closed conformal quantile (rank > n → refuse, not +Infinity) — PR #913.
+- Four papers wired into the scorecard — PR #916 (168 tests): Murphy decomposition (Brier ambiguity → reliability/resolution/uncertainty + binning residual), cluster bootstrap verdicts, relabeling-null artifact check, BigInt-exact Wilson.
+- mimo-xfp pre-registered record — PR #917: Unit 1 FAIL (xFP/FPOE does not beat naive last-week fantasy points, Δrho = −0.0165, CI covers zero) is a publishable NEGATIVE result; guard `verify-record.test.mjs` pins prose↔artifact↔kill-line agreement.
+- Docs-cleanup remainder — PR #918: news wire as stored feed, ingestion modules, calibration-evidence guard (found orphan A8 evidence; A8 stays BLOCKED — ran on synthetic fixture).
+- Trust gate surname fix — PR #915: "Drew Lock" false positives exempted with behavioural tests; CI greenness UNPROVEN (host can't run the full scan).
+- Rescue reports: `docs/research/2026-09-26/RESCUE-2026-09-26-*.md` (6 files) — read before touching those PRs.
+- Deliberately un-ported, highest leverage next: `docs/research/2026-09-26/RESEARCH_TO_PRODUCT_PLAYBOOK.md` — synthesis over 1,511 arxiv-deep ledgers mapping papers to GSE techniques with numeric gates.
+
+### Decisions locked 2026-09-26 (Garrett delegated)
+- Do NOT wait for NGS; loader stays NGS-schema-compatible; BDB data lab-only (CC BY-NC 4.0); commercial path = E3 trajectories + synthetic fixtures (license-clean footage corpus still owed).
+- Ball landing optional: supplied → projectile/drag landing head → geometric baseline; train with landing dropout.
+- ZeroGPU: <2M params, mixed precision, per-epoch checkpoint/resume, start batch 64 halve-on-OOM with grad accumulation, interruptible chunks, inference as ZeroGPU Space.
+- Engine handoff for Minis (v3, corrected): agent-bus `inbox/from-motif/handoff-engine-movement-video-builds-v3-corrected-augmentation-2026-09-26.md`.
