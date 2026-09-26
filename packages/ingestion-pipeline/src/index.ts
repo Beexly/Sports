@@ -440,3 +440,12 @@ export {
   type CfcqlResult,
   type ThinRegimeResult,
 } from "./rl-residue-bridge.js";
+
+// Metalearning residue (GP posterior, uncertainty meta-loss, EWA/BOA, fixed-support pools)
+export {
+  evalGpPosterior,
+  evalUncertaintyMetaLoss,
+  evalEwaUpdate,
+  evalBoaUpdate,
+  evalFixedSupportPools,
+} from "./metalearning-conformal-bridge.js";

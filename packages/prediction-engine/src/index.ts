@@ -3027,3 +3027,21 @@ export {
   type Transition,
   type WeightedBatch,
 } from "./rl/thin-regime-retrieval.js";
+
+// Metalearning residue: GP posterior, uncertainty-weighted meta-loss, EWA/BOA, fixed-support pools
+export {
+  gpPosterior1d,
+  uncertaintyMetaLoss,
+  ewaUpdate,
+  boaUpdate,
+  simplexProject,
+  smoothWeights,
+} from "./metalearning/2208-08135v1-uncertainty-weighted-metalearning.js";
+export {
+  canonicalPool,
+  archetypeCoverage,
+  designedPool,
+  sampleEpisode,
+  type Game,
+  type Episode,
+} from "./metalearning/fixed-support-pools.js";
