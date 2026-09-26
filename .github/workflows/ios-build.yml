@@ -78,7 +78,10 @@ jobs:
         # does not work here: the file that Xcode refused to open had balanced
         # braces, balanced parens, and no dangling references.
         run: |
-          plutil -lint ios/GalaxySportsEdge.xcodeproj/project.pbxproj
+          # The pbxproj's first line is the `// !$*UTF8*$!` header, which
+          # plutil rejects ("Unexpected character / at line 1") even though
+          # Xcode's own parser skips it. Drop the header and lint the rest.
+          sed '1d' ios/GalaxySportsEdge.xcodeproj/project.pbxproj | plutil -lint -- -
           plutil -lint ios/GalaxySportsEdge/Info.plist
           plutil -lint ios/GalaxySportsEdge/PrivacyInfo.xcprivacy
 
