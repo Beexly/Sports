@@ -873,3 +873,9 @@ export {
   type OpponentAdjustedEpaEval,
   type OpponentAdjustedEpaRatingRow,
 } from "./signals-bridge.js";
+
+export {
+  evalGseActionScore,
+  type GseScoreEval,
+  type GseActionBridgeData,
+} from "./gse-score-bridge.js";
