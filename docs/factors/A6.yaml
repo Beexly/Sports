@@ -1,0 +1,20 @@
+id: A6
+title: Permutation entropy of within-drive play calling
+hypothesis: Offensive play-call unpredictability within drives carries information beyond pass_oe for game outcomes.
+estimand: out-of-sample R² margin of permutation-entropy features vs pass_oe baseline
+unit: ΔR² versus pass_oe
+data: [nflverse.pbp]
+discover_era: 1999-2019
+validate_era: 2020-2024
+kill_line: "validate-era R² margin vs pass_oe < 0.02"
+mde_80pct_power: 0.0294
+script: scripts/factors/A6.mjs
+status: CANDIDATE
+number: 0.0961
+ci: [0.0756, 0.1158]
+n: 2686
+run_sha: "3b35c099e2a437bce75f50550f05b28881c27dbc"
+run_at: "2026-09-15T22:38:06.147Z"
+blocked_on: null
+notes: >
+  W8. Never run before this row. pbp 2017–2024 fetched like edge-lab loaders. PE = Bandt–Pompe order-3 of pass/run calls within each offensive drive, mean across drives with length >= 3. Baseline = mean pass_oe on the team-game. Outcome = offensive EPA/play. OLS fit on discover, OOS R² on validate. kill_line: R² margin vs pass_oe < 0.02. C-370. C-370 run 2026-09-15: REG team-games 2017–2024. Discover 2017-2019 n=1536; Validate 2020-2024 n=2686. R2 base=0.0091 full=0.1051 margin=0.0961 CI[0.0756,0.1158] MDE80=0.0294. Mean PE discover=0.4493 validate=0.459. YAML lists discover 1999-2019; this run uses the user-sliced 2017-2024 window. Data: nflverse pbp (CC BY 4.0), projected cache under packages/verifier/data/; no DB.
