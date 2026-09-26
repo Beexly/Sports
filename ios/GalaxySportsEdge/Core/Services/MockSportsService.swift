@@ -282,8 +282,10 @@ struct MockSportsService: SportsService {
             Article(id: "n4",
                 title: "College Football Conference Championship Preview",
                 dek: "Four games, four edges, and one that we're passing on entirely.",
-                body: "Championship weekend is historically one of the softest \
-                markets of the year because casual money floods in.",
+                body: """
+                Championship weekend is historically one of the softest \
+                markets of the year because casual money floods in.
+                """,
                 author: analysts[3],
                 publishedAt: Date().addingTimeInterval(-3600 * 30),
                 heroImageURL: nil,
