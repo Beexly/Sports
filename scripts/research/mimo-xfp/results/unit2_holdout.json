@@ -1,0 +1,28 @@
+{
+  "n_holdout_pairs": 983,
+  "spearman_catchable": 0.111301,
+  "spearman_raw": 0.076337,
+  "delta_rho": 0.034964,
+  "delta_rho_ci_low": -0.021572,
+  "delta_rho_ci_high": 0.090841,
+  "mae_catchable_map": 27.271998,
+  "mae_raw_map": 27.404233,
+  "kill_line_passed": false,
+  "verdict": "INCONCLUSIVE: point estimate better but week-bootstrap CI includes 0 (not an edge)",
+  "train_seasons": [
+    2022,
+    2023
+  ],
+  "holdout_seasons": [
+    2024,
+    2025
+  ],
+  "min_targets": 4,
+  "join_keys": "ftn.nflverse_game_id+nflverse_play_id = pbp.game_id+play_id; receiver_player_id",
+  "catchable_def": "sum air_yards on targets with FTN is_catchable_ball true",
+  "raw_def": "sum air_yards on all targets to the receiver-week",
+  "bootstrap_reps": 2000,
+  "bootstrap_unit": "season-week",
+  "attribution_nflverse": "Data via nflverse (nflverse-data), CC BY 4.0",
+  "attribution_ftn": "FTN Data via nflverse, CC BY-SA 4.0"
+}
