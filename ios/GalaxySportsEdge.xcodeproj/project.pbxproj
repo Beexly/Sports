@@ -7,59 +7,59 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		9A9231AF28486D51F5F76DF9 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 20F1EDAA6FD3BF4925F46E9E /* Assets.xcassets */; };
-		032C475662369F85DD01F812 /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = ABBC6D72457AC2BB8120EA26 /* PrivacyInfo.xcprivacy */; };
-		619D6C686D71A8AFE52F83F0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = EAC618C049BE4B9ADC30B025 /* AppDelegate.swift */; };
-		DDFB5D6B2551FC1BEEE7F0E8 /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 802F208DF2505FA8EC82DA69 /* AppEnvironment.swift */; };
-		DDBBED0421C1C8D8574CB4C4 /* GalaxySportsEdgeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = E5C03AB80E8B7E688DCDEDA0 /* GalaxySportsEdgeApp.swift */; };
-		B1A3DF2491E00878D805FD2D /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0C9CA5766360AB19CAA8C089 /* RootView.swift */; };
-		13ED28C42AA16B28913890FD /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A377B6187D93A171C1C9B4 /* Components.swift */; };
-		6CC9F7683F6EA7A9325BB67B /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F525F86AAD4A864140CB8B0 /* Formatting.swift */; };
-		707964B06763AF482C3B2BDD /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F0F4B2506FF2F512B5DD47F /* Theme.swift */; };
-		3E00AE12B1874317727B7F41 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 43103F0556F3EAFBD40BA102 /* APIClient.swift */; };
-		895E8894221E4C5E06CE4039 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07EC18CAED937EEE49F158E0 /* APIError.swift */; };
-		21BD55AC40A4D16331E8F641 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = DDE839F48733F61A430D7EE0 /* Endpoint.swift */; };
-		9A84ED32FBA0E66A358D9D16 /* Envelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = 84D94EB8E642EA3A46ECB712 /* Envelope.swift */; };
-		15CDA13093425FEABF363506 /* LiveSportsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 75A2C856AFF7067DE0D8A159 /* LiveSportsService.swift */; };
-		BE0BC42E58596FD395004B20 /* MockFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 66E576987A7AEE0D7424CB27 /* MockFixtures.swift */; };
-		01EA66133BA0ECD30CD872EC /* MockSportsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B970BF205C75294750AF9A9 /* MockSportsService.swift */; };
-		742BF7B8C651F8CB67C3A19A /* SportsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8E7E5992D59C8B2490B9E3A3 /* SportsService.swift */; };
-		23B6D950F10DFD82E9673F55 /* DeleteAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3EDB8957A7D5E1C151161868 /* DeleteAccountView.swift */; };
-		FF5418CF3794C97606890080 /* ArticleDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3938A7B9BED2B3586333EE0F /* ArticleDetailView.swift */; };
-		ED99BD8BA3F86E82952BF813 /* ArticlesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBCBE4FE8E68D572B37B52CC /* ArticlesView.swift */; };
-		D3DE05635C004CC56745C4D7 /* AddBetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0F50C081FA1088C57288E26B /* AddBetView.swift */; };
-		DC8D64407C47D69B7A3835BF /* MyBetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 952013B602D7136D69AEEB21 /* MyBetsView.swift */; };
-		42744A65178221709EE0C4F3 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 33BBF5D68552196C0B3F8DCD /* PaywallView.swift */; };
-		5616A87D51CF9DD2D9BA555A /* AskTheEdgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49C3B8C81357232A22A331BC /* AskTheEdgeView.swift */; };
-		883B4AE7ED5EA06BCCE98B75 /* PickCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 73C3DA60172B5956CC268EDF /* PickCard.swift */; };
-		8DA02D00EBEC8FD1E9A5DD19 /* PickDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2059227177A28DB6B751FB08 /* PickDetailView.swift */; };
-		C864DC4DC215191D95BB6D32 /* PicksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74E1048C9A09F837AB9607C /* PicksView.swift */; };
-		C3AD37AD1AF832DE2871BB2E /* PicksViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8C4A78BC284084C579AEE21B /* PicksViewModel.swift */; };
-		96D22A81F894908CD78BDA0A /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CF4544AB112EBB1B0C844378 /* ProfileView.swift */; };
-		6F2AF222C2AC43C437A2F2E8 /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3CA213717DAC21FF4A9D035C /* SignInView.swift */; };
-		60D3E5FE6291011B0FF82D0F /* ScoresView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B93839325BBEB4FDE87DB7C9 /* ScoresView.swift */; };
-		938E660C40C9145869D9AF2D /* ScoresViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = E3DF26CA8835DD6E7384AEB1 /* ScoresViewModel.swift */; };
-		DA5D13F848655BFA7CE1F671 /* BrowserSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = B88825E4CF9B57429C7BC3F1 /* BrowserSheet.swift */; };
-		1788C1DACB04E7A99667B906 /* AuthSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0B65666CFE524E56D1088669 /* AuthSession.swift */; };
-		343B03437BF17FEF8C70EC07 /* SessionCookieStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E1FF85E5B2E9499D1CB31C8 /* SessionCookieStore.swift */; };
-		050F117E057D4160BDBCCE7D /* SignInWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E55F36973B1FFABE5F7DB6D3 /* SignInWebView.swift */; };
-		2A553A8E6809D99A48F466DC /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = D1B9E8B45A8715DA851185DA /* AppConfiguration.swift */; };
-		58B00A46522CD7316C74EB58 /* DTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 634591BA15A8D9F02ED9EAF8 /* DTOs.swift */; };
-		DFFA78873A721800F8E4B94D /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F39800F6C60F571F736D785 /* Models.swift */; };
-		67CA2A798FE3FD2A4A59DDD8 /* OddsMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = EA7EEEAD61D9CDFF87E2849F /* OddsMath.swift */; };
-		A1F53B437D31A2A6CB41E671 /* BetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 422A8ECB93D7BB8859853251 /* BetStore.swift */; };
-		96716637535EBBB7799A4CAE /* JSONFileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 06E057A95E38494DA39F6453 /* JSONFileStore.swift */; };
-		1232682D77E82B306BB4340B /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5CFE6520B50BE767E1A627FF /* Keychain.swift */; };
-		40AA9410D73590CAC8C79F9C /* SavedPicksStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA23729FBE92E83BDA260784 /* SavedPicksStore.swift */; };
-		0322140AC5381EFCF10F50BC /* PushNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5FE70FEF31070E3B799BFDF /* PushNotificationManager.swift */; };
-		E2DAA2D91E5D3A8D79496980 /* SubscriptionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 538C3CF38EDA3BB01D527EB8 /* SubscriptionStore.swift */; };
-		AC2C955FFF87A4874984050E /* BetStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0303219ABC31B1A256DC9ECD /* BetStoreTests.swift */; };
-		47C5201B525EFFEAD561A66F /* DomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8741093A72C3E6EA5094066B /* DomainTests.swift */; };
-		D67DD7BE6D0D3250677CA23D /* NetworkingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = B74582BE770A814411AB4854 /* NetworkingTests.swift */; };
-		CD6204B6EE063ADF4439428B /* OddsMathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 006EA4ED4178ED73F2D2D4E1 /* OddsMathTests.swift */; };
-		D44F782DD7EAF78D6BA01682 /* PickDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6FAB79FD92E04ADE107B9B7A /* PickDecodingTests.swift */; };
-		5D7A38111548BA41170FDAC6 /* StubSportsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8223312086E839046CD61777 /* StubSportsService.swift */; };
-		0E07DCF3F8BD7EDF1986ED50 /* ViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40B385B38536A1C406DA3D65 /* ViewModelTests.swift */; };
+		CEFA7C0AD499079AB5F93B2B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 674112F96157BD8233927896 /* Assets.xcassets */; };
+		3DAF4DF03F69C692FABE23DE /* PrivacyInfo.xcprivacy in Resources */ = {isa = PBXBuildFile; fileRef = 0ECE901D500B57F822CAC1F8 /* PrivacyInfo.xcprivacy */; };
+		D5B1975A151053A260E78840 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13756B5043D47DAE7867365C /* AppDelegate.swift */; };
+		34C06B24A8E496E91E3CE12D /* AppEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = BA6CD6331579C7CE117B8831 /* AppEnvironment.swift */; };
+		2A81C0010C50DC4B02065BCE /* GalaxySportsEdgeApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 39BDD91692207E94548D2E37 /* GalaxySportsEdgeApp.swift */; };
+		87F85879B1F6D4A509926B3D /* RootView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6F41E455A1AFF104B0504D6B /* RootView.swift */; };
+		DCE3A49331F5C285EF2FF7D2 /* Components.swift in Sources */ = {isa = PBXBuildFile; fileRef = C51967ED9956271A90CEEB4D /* Components.swift */; };
+		42833D661F9567AAAB830628 /* Formatting.swift in Sources */ = {isa = PBXBuildFile; fileRef = B9630276DEBE0E587037C5F2 /* Formatting.swift */; };
+		502DA0E98328F8A9C7E317D3 /* Theme.swift in Sources */ = {isa = PBXBuildFile; fileRef = 21FCE1C961F6DB16535DA710 /* Theme.swift */; };
+		BF4D0786E49DDBF893FDB412 /* APIClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9A66F57C617C2B0326422E26 /* APIClient.swift */; };
+		D65A1462DBD47ED429CC02D4 /* APIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = A585130C6C4BBD36F1452F3E /* APIError.swift */; };
+		28D47B906B794E2F149811E1 /* Endpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7937CA32E2311E5EE94BE913 /* Endpoint.swift */; };
+		D18C5CFCA1910AC1F7F0A7B7 /* Envelope.swift in Sources */ = {isa = PBXBuildFile; fileRef = E04E76F73C5EF92A63938B33 /* Envelope.swift */; };
+		B53A8C0E0A213006C872608E /* LiveSportsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5836542AB7377A984B1D70B8 /* LiveSportsService.swift */; };
+		50AB9715FB575D49A9B865CF /* MockFixtures.swift in Sources */ = {isa = PBXBuildFile; fileRef = C8352D584A66BE376BC0F037 /* MockFixtures.swift */; };
+		3A640B7DC87AEA8E1A5B77E1 /* MockSportsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9089251B7988D9DDF10DFEF1 /* MockSportsService.swift */; };
+		21738F89C910122DFD57AE43 /* SportsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9FE200DFB5CB6A1396A919D3 /* SportsService.swift */; };
+		E442AF350A61A3D6BE451B99 /* DeleteAccountView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D2B542F482644948F64BF4B0 /* DeleteAccountView.swift */; };
+		817A75EF654221908D548192 /* ArticleDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CC24E32F7251819C19DD267C /* ArticleDetailView.swift */; };
+		B81593E0DD55015CD07DA9CE /* ArticlesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB3A3EC94BCB585C4FEFA59D /* ArticlesView.swift */; };
+		F32EB88F3E0707E4DCCEA627 /* AddBetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D966820BE673D1FA1636F221 /* AddBetView.swift */; };
+		4A209ACDD49059AE3691B51D /* MyBetsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 219FA82A4DDA19A4D75D3186 /* MyBetsView.swift */; };
+		2EF3F5F78A5A7F8DDE961572 /* PaywallView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 07D57EDFF99026EFBA12921C /* PaywallView.swift */; };
+		666FCD21B74C34C37DDF1E91 /* AskTheEdgeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6342017B2FA056053FE8E9B8 /* AskTheEdgeView.swift */; };
+		7AF82FC0C09B028FE33BBAA0 /* PickCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 327EEDC360360A56A9EF4475 /* PickCard.swift */; };
+		E1C67BDABE9D95BC66BB2719 /* PickDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = DEF381535323B17DA1FE2E74 /* PickDetailView.swift */; };
+		963339795F04C4C556F787D7 /* PicksView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 13E99DA4269483946FBC0543 /* PicksView.swift */; };
+		B3086542A4AF120D8C121F33 /* PicksViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6482314B0AD351485442E516 /* PicksViewModel.swift */; };
+		03A2E0FDEDFCA5A5FCE7DDBD /* ProfileView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3ED7636A1829DFCFCDEF0F4E /* ProfileView.swift */; };
+		E76EC7C2C36757369394CA6F /* SignInView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 80539F12489E59302C05D9E1 /* SignInView.swift */; };
+		F2ED35F533D6C96427290F19 /* ScoresView.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1EDC22746AA924B2AA16695 /* ScoresView.swift */; };
+		DA4C059E1E712DF384F79F9C /* ScoresViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 46046BE2548EC8F752B8699A /* ScoresViewModel.swift */; };
+		9754F1620D0D29F3B249F715 /* BrowserSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A0BE4962F16CAF360F03833 /* BrowserSheet.swift */; };
+		AE5F29542CBD26CA91F54448 /* AuthSession.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5F181818E112B3B15D25EB42 /* AuthSession.swift */; };
+		325CE84ED4F0BD4F2CCD8E69 /* SessionCookieStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = E12CD3AEF05B3204306EB1EC /* SessionCookieStore.swift */; };
+		9634E57508F2095DE527BB64 /* SignInWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 3C33A2251BFFCAB5BA7F081E /* SignInWebView.swift */; };
+		F299BE2011C06A85A96B6BA4 /* AppConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = BB702881A20A443A4F00D2EB /* AppConfiguration.swift */; };
+		BA6B1BEF98D5C11E0587FB51 /* DTOs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 747F7AE44D25DBFCE90BEB85 /* DTOs.swift */; };
+		EDA915D92953D6341AFAF694 /* Models.swift in Sources */ = {isa = PBXBuildFile; fileRef = EF31BC2B643B666442F9A0BA /* Models.swift */; };
+		55F8FC4E8AED42F58FA5472F /* OddsMath.swift in Sources */ = {isa = PBXBuildFile; fileRef = C65FCF66010532699EEFD6A7 /* OddsMath.swift */; };
+		FBA9233935F813231137F60B /* BetStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B301CA51E69078EF9ABAD368 /* BetStore.swift */; };
+		965E8C722F58B08E6944CC58 /* JSONFileStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE42A6CD4E2EC1D707C44228 /* JSONFileStore.swift */; };
+		5D7AB2244FA5B9DE675708BE /* Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 6E8EF6F6EB1000DA598FEB05 /* Keychain.swift */; };
+		EDBC33AE818B25A54E608694 /* SavedPicksStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 20139E49F7544EA0C44EEF30 /* SavedPicksStore.swift */; };
+		DA1628E89613BAAC56927F79 /* PushNotificationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 358B2B532D4136E1CB3C4E7C /* PushNotificationManager.swift */; };
+		F8F3D3546466821ACCAD8FFA /* SubscriptionStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = C723A3634B45F2D5D4FF08B4 /* SubscriptionStore.swift */; };
+		9490C17B5575DBE5EB511FBF /* BetStoreTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 738646184E411F571ACBFCF3 /* BetStoreTests.swift */; };
+		27D7A7FDC48162BAC9058DDC /* DomainTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5933285DDF0214EC97AA414A /* DomainTests.swift */; };
+		C3D2A4726995FD003EFF1B0A /* NetworkingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9499D7B31CAD766934102114 /* NetworkingTests.swift */; };
+		A7DF03FE81C6409CD0FC7E70 /* OddsMathTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7081D9E0715AF8F7D8A41373 /* OddsMathTests.swift */; };
+		628065D3B811B3C3EFA096C6 /* PickDecodingTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = C7E1EB9B11D381311BD8217E /* PickDecodingTests.swift */; };
+		9D09EA975A3DB037AA65CCDA /* StubSportsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 568E08FAD01B0F87942249B6 /* StubSportsService.swift */; };
+		E55673B8528DC586F12709E4 /* ViewModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5903E3A2C33CC6BEC5802AE2 /* ViewModelTests.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -73,61 +73,61 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		20F1EDAA6FD3BF4925F46E9E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
-		E19BE210E061B40340050BB4 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		ABBC6D72457AC2BB8120EA26 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
-		EAC618C049BE4B9ADC30B025 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		802F208DF2505FA8EC82DA69 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
-		E5C03AB80E8B7E688DCDEDA0 /* GalaxySportsEdgeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalaxySportsEdgeApp.swift; sourceTree = "<group>"; };
-		0C9CA5766360AB19CAA8C089 /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
-		75A377B6187D93A171C1C9B4 /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
-		1F525F86AAD4A864140CB8B0 /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
-		0F0F4B2506FF2F512B5DD47F /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
-		43103F0556F3EAFBD40BA102 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
-		07EC18CAED937EEE49F158E0 /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
-		DDE839F48733F61A430D7EE0 /* Endpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
-		84D94EB8E642EA3A46ECB712 /* Envelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Envelope.swift; sourceTree = "<group>"; };
-		75A2C856AFF7067DE0D8A159 /* LiveSportsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSportsService.swift; sourceTree = "<group>"; };
-		66E576987A7AEE0D7424CB27 /* MockFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFixtures.swift; sourceTree = "<group>"; };
-		7B970BF205C75294750AF9A9 /* MockSportsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSportsService.swift; sourceTree = "<group>"; };
-		8E7E5992D59C8B2490B9E3A3 /* SportsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsService.swift; sourceTree = "<group>"; };
-		3EDB8957A7D5E1C151161868 /* DeleteAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountView.swift; sourceTree = "<group>"; };
-		3938A7B9BED2B3586333EE0F /* ArticleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailView.swift; sourceTree = "<group>"; };
-		FBCBE4FE8E68D572B37B52CC /* ArticlesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesView.swift; sourceTree = "<group>"; };
-		0F50C081FA1088C57288E26B /* AddBetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBetView.swift; sourceTree = "<group>"; };
-		952013B602D7136D69AEEB21 /* MyBetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBetsView.swift; sourceTree = "<group>"; };
-		33BBF5D68552196C0B3F8DCD /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
-		49C3B8C81357232A22A331BC /* AskTheEdgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskTheEdgeView.swift; sourceTree = "<group>"; };
-		73C3DA60172B5956CC268EDF /* PickCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickCard.swift; sourceTree = "<group>"; };
-		2059227177A28DB6B751FB08 /* PickDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickDetailView.swift; sourceTree = "<group>"; };
-		B74E1048C9A09F837AB9607C /* PicksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicksView.swift; sourceTree = "<group>"; };
-		8C4A78BC284084C579AEE21B /* PicksViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicksViewModel.swift; sourceTree = "<group>"; };
-		CF4544AB112EBB1B0C844378 /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
-		3CA213717DAC21FF4A9D035C /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
-		B93839325BBEB4FDE87DB7C9 /* ScoresView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoresView.swift; sourceTree = "<group>"; };
-		E3DF26CA8835DD6E7384AEB1 /* ScoresViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoresViewModel.swift; sourceTree = "<group>"; };
-		B88825E4CF9B57429C7BC3F1 /* BrowserSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserSheet.swift; sourceTree = "<group>"; };
-		0B65666CFE524E56D1088669 /* AuthSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSession.swift; sourceTree = "<group>"; };
-		6E1FF85E5B2E9499D1CB31C8 /* SessionCookieStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCookieStore.swift; sourceTree = "<group>"; };
-		E55F36973B1FFABE5F7DB6D3 /* SignInWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWebView.swift; sourceTree = "<group>"; };
-		D1B9E8B45A8715DA851185DA /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
-		634591BA15A8D9F02ED9EAF8 /* DTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTOs.swift; sourceTree = "<group>"; };
-		1F39800F6C60F571F736D785 /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
-		EA7EEEAD61D9CDFF87E2849F /* OddsMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddsMath.swift; sourceTree = "<group>"; };
-		422A8ECB93D7BB8859853251 /* BetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetStore.swift; sourceTree = "<group>"; };
-		06E057A95E38494DA39F6453 /* JSONFileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONFileStore.swift; sourceTree = "<group>"; };
-		5CFE6520B50BE767E1A627FF /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
-		CA23729FBE92E83BDA260784 /* SavedPicksStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedPicksStore.swift; sourceTree = "<group>"; };
-		B5FE70FEF31070E3B799BFDF /* PushNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationManager.swift; sourceTree = "<group>"; };
-		538C3CF38EDA3BB01D527EB8 /* SubscriptionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionStore.swift; sourceTree = "<group>"; };
+		674112F96157BD8233927896 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		E5BC434C55561559B0B0EFE3 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		0ECE901D500B57F822CAC1F8 /* PrivacyInfo.xcprivacy */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = PrivacyInfo.xcprivacy; sourceTree = "<group>"; };
+		13756B5043D47DAE7867365C /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		BA6CD6331579C7CE117B8831 /* AppEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppEnvironment.swift; sourceTree = "<group>"; };
+		39BDD91692207E94548D2E37 /* GalaxySportsEdgeApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GalaxySportsEdgeApp.swift; sourceTree = "<group>"; };
+		6F41E455A1AFF104B0504D6B /* RootView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootView.swift; sourceTree = "<group>"; };
+		C51967ED9956271A90CEEB4D /* Components.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Components.swift; sourceTree = "<group>"; };
+		B9630276DEBE0E587037C5F2 /* Formatting.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Formatting.swift; sourceTree = "<group>"; };
+		21FCE1C961F6DB16535DA710 /* Theme.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Theme.swift; sourceTree = "<group>"; };
+		9A66F57C617C2B0326422E26 /* APIClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIClient.swift; sourceTree = "<group>"; };
+		A585130C6C4BBD36F1452F3E /* APIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = APIError.swift; sourceTree = "<group>"; };
+		7937CA32E2311E5EE94BE913 /* Endpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Endpoint.swift; sourceTree = "<group>"; };
+		E04E76F73C5EF92A63938B33 /* Envelope.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Envelope.swift; sourceTree = "<group>"; };
+		5836542AB7377A984B1D70B8 /* LiveSportsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LiveSportsService.swift; sourceTree = "<group>"; };
+		C8352D584A66BE376BC0F037 /* MockFixtures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockFixtures.swift; sourceTree = "<group>"; };
+		9089251B7988D9DDF10DFEF1 /* MockSportsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockSportsService.swift; sourceTree = "<group>"; };
+		9FE200DFB5CB6A1396A919D3 /* SportsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SportsService.swift; sourceTree = "<group>"; };
+		D2B542F482644948F64BF4B0 /* DeleteAccountView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DeleteAccountView.swift; sourceTree = "<group>"; };
+		CC24E32F7251819C19DD267C /* ArticleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticleDetailView.swift; sourceTree = "<group>"; };
+		AB3A3EC94BCB585C4FEFA59D /* ArticlesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArticlesView.swift; sourceTree = "<group>"; };
+		D966820BE673D1FA1636F221 /* AddBetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AddBetView.swift; sourceTree = "<group>"; };
+		219FA82A4DDA19A4D75D3186 /* MyBetsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyBetsView.swift; sourceTree = "<group>"; };
+		07D57EDFF99026EFBA12921C /* PaywallView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PaywallView.swift; sourceTree = "<group>"; };
+		6342017B2FA056053FE8E9B8 /* AskTheEdgeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AskTheEdgeView.swift; sourceTree = "<group>"; };
+		327EEDC360360A56A9EF4475 /* PickCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickCard.swift; sourceTree = "<group>"; };
+		DEF381535323B17DA1FE2E74 /* PickDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickDetailView.swift; sourceTree = "<group>"; };
+		13E99DA4269483946FBC0543 /* PicksView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicksView.swift; sourceTree = "<group>"; };
+		6482314B0AD351485442E516 /* PicksViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PicksViewModel.swift; sourceTree = "<group>"; };
+		3ED7636A1829DFCFCDEF0F4E /* ProfileView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileView.swift; sourceTree = "<group>"; };
+		80539F12489E59302C05D9E1 /* SignInView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInView.swift; sourceTree = "<group>"; };
+		C1EDC22746AA924B2AA16695 /* ScoresView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoresView.swift; sourceTree = "<group>"; };
+		46046BE2548EC8F752B8699A /* ScoresViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScoresViewModel.swift; sourceTree = "<group>"; };
+		1A0BE4962F16CAF360F03833 /* BrowserSheet.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BrowserSheet.swift; sourceTree = "<group>"; };
+		5F181818E112B3B15D25EB42 /* AuthSession.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AuthSession.swift; sourceTree = "<group>"; };
+		E12CD3AEF05B3204306EB1EC /* SessionCookieStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SessionCookieStore.swift; sourceTree = "<group>"; };
+		3C33A2251BFFCAB5BA7F081E /* SignInWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignInWebView.swift; sourceTree = "<group>"; };
+		BB702881A20A443A4F00D2EB /* AppConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfiguration.swift; sourceTree = "<group>"; };
+		747F7AE44D25DBFCE90BEB85 /* DTOs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DTOs.swift; sourceTree = "<group>"; };
+		EF31BC2B643B666442F9A0BA /* Models.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Models.swift; sourceTree = "<group>"; };
+		C65FCF66010532699EEFD6A7 /* OddsMath.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddsMath.swift; sourceTree = "<group>"; };
+		B301CA51E69078EF9ABAD368 /* BetStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetStore.swift; sourceTree = "<group>"; };
+		CE42A6CD4E2EC1D707C44228 /* JSONFileStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONFileStore.swift; sourceTree = "<group>"; };
+		6E8EF6F6EB1000DA598FEB05 /* Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Keychain.swift; sourceTree = "<group>"; };
+		20139E49F7544EA0C44EEF30 /* SavedPicksStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedPicksStore.swift; sourceTree = "<group>"; };
+		358B2B532D4136E1CB3C4E7C /* PushNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationManager.swift; sourceTree = "<group>"; };
+		C723A3634B45F2D5D4FF08B4 /* SubscriptionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionStore.swift; sourceTree = "<group>"; };
 		C94E6C79E05365CBCED7B5FE /* GalaxySportsEdge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GalaxySportsEdge.app; sourceTree = BUILT_PRODUCTS_DIR; };
-		0303219ABC31B1A256DC9ECD /* BetStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetStoreTests.swift; sourceTree = "<group>"; };
-		8741093A72C3E6EA5094066B /* DomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainTests.swift; sourceTree = "<group>"; };
-		B74582BE770A814411AB4854 /* NetworkingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingTests.swift; sourceTree = "<group>"; };
-		006EA4ED4178ED73F2D2D4E1 /* OddsMathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddsMathTests.swift; sourceTree = "<group>"; };
-		6FAB79FD92E04ADE107B9B7A /* PickDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickDecodingTests.swift; sourceTree = "<group>"; };
-		8223312086E839046CD61777 /* StubSportsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubSportsService.swift; sourceTree = "<group>"; };
-		40B385B38536A1C406DA3D65 /* ViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTests.swift; sourceTree = "<group>"; };
+		738646184E411F571ACBFCF3 /* BetStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetStoreTests.swift; sourceTree = "<group>"; };
+		5933285DDF0214EC97AA414A /* DomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainTests.swift; sourceTree = "<group>"; };
+		9499D7B31CAD766934102114 /* NetworkingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingTests.swift; sourceTree = "<group>"; };
+		7081D9E0715AF8F7D8A41373 /* OddsMathTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OddsMathTests.swift; sourceTree = "<group>"; };
+		C7E1EB9B11D381311BD8217E /* PickDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickDecodingTests.swift; sourceTree = "<group>"; };
+		568E08FAD01B0F87942249B6 /* StubSportsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubSportsService.swift; sourceTree = "<group>"; };
+		5903E3A2C33CC6BEC5802AE2 /* ViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTests.swift; sourceTree = "<group>"; };
 		5025B334F0F1FEBEA11B38CB /* GalaxySportsEdgeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GalaxySportsEdgeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -189,9 +189,9 @@
 				5563D11E163B24D91475B2BA /* Platform/Persistence */,
 				5CB9EEF072D14E005E3896F9 /* Platform/Push */,
 				4DCE26800586F85C958804D0 /* Platform/Subscription */,
-				20F1EDAA6FD3BF4925F46E9E /* Assets.xcassets */,
-				E19BE210E061B40340050BB4 /* Info.plist */,
-				ABBC6D72457AC2BB8120EA26 /* PrivacyInfo.xcprivacy */,
+				674112F96157BD8233927896 /* Assets.xcassets */,
+				E5BC434C55561559B0B0EFE3 /* Info.plist */,
+				0ECE901D500B57F822CAC1F8 /* PrivacyInfo.xcprivacy */,
 			);
 			name = GalaxySportsEdge;
 			path = GalaxySportsEdge;
@@ -201,10 +201,10 @@
 		3F2792FA01DBDEDA62812652 /* App */ = {
 			isa = PBXGroup;
 			children = (
-				EAC618C049BE4B9ADC30B025 /* AppDelegate.swift */,
-				802F208DF2505FA8EC82DA69 /* AppEnvironment.swift */,
-				E5C03AB80E8B7E688DCDEDA0 /* GalaxySportsEdgeApp.swift */,
-				0C9CA5766360AB19CAA8C089 /* RootView.swift */,
+				13756B5043D47DAE7867365C /* AppDelegate.swift */,
+				BA6CD6331579C7CE117B8831 /* AppEnvironment.swift */,
+				39BDD91692207E94548D2E37 /* GalaxySportsEdgeApp.swift */,
+				6F41E455A1AFF104B0504D6B /* RootView.swift */,
 			);
 			name = App;
 			path = App;
@@ -214,9 +214,9 @@
 		59AACB36CC81ADBC5A0FF511 /* Core/Design */ = {
 			isa = PBXGroup;
 			children = (
-				75A377B6187D93A171C1C9B4 /* Components.swift */,
-				1F525F86AAD4A864140CB8B0 /* Formatting.swift */,
-				0F0F4B2506FF2F512B5DD47F /* Theme.swift */,
+				C51967ED9956271A90CEEB4D /* Components.swift */,
+				B9630276DEBE0E587037C5F2 /* Formatting.swift */,
+				21FCE1C961F6DB16535DA710 /* Theme.swift */,
 			);
 			name = Core/Design;
 			path = Core/Design;
@@ -226,10 +226,10 @@
 		9E3EFE350CA37F6B09175F1A /* Core/Networking */ = {
 			isa = PBXGroup;
 			children = (
-				43103F0556F3EAFBD40BA102 /* APIClient.swift */,
-				07EC18CAED937EEE49F158E0 /* APIError.swift */,
-				DDE839F48733F61A430D7EE0 /* Endpoint.swift */,
-				84D94EB8E642EA3A46ECB712 /* Envelope.swift */,
+				9A66F57C617C2B0326422E26 /* APIClient.swift */,
+				A585130C6C4BBD36F1452F3E /* APIError.swift */,
+				7937CA32E2311E5EE94BE913 /* Endpoint.swift */,
+				E04E76F73C5EF92A63938B33 /* Envelope.swift */,
 			);
 			name = Core/Networking;
 			path = Core/Networking;
@@ -239,10 +239,10 @@
 		BC8CF19C4C15CD6FB6260144 /* Core/Services */ = {
 			isa = PBXGroup;
 			children = (
-				75A2C856AFF7067DE0D8A159 /* LiveSportsService.swift */,
-				66E576987A7AEE0D7424CB27 /* MockFixtures.swift */,
-				7B970BF205C75294750AF9A9 /* MockSportsService.swift */,
-				8E7E5992D59C8B2490B9E3A3 /* SportsService.swift */,
+				5836542AB7377A984B1D70B8 /* LiveSportsService.swift */,
+				C8352D584A66BE376BC0F037 /* MockFixtures.swift */,
+				9089251B7988D9DDF10DFEF1 /* MockSportsService.swift */,
+				9FE200DFB5CB6A1396A919D3 /* SportsService.swift */,
 			);
 			name = Core/Services;
 			path = Core/Services;
@@ -252,7 +252,7 @@
 		89C4E55879CCD674AB33898C /* Features/Account */ = {
 			isa = PBXGroup;
 			children = (
-				3EDB8957A7D5E1C151161868 /* DeleteAccountView.swift */,
+				D2B542F482644948F64BF4B0 /* DeleteAccountView.swift */,
 			);
 			name = Features/Account;
 			path = Features/Account;
@@ -262,8 +262,8 @@
 		587EAFFF319CF6DD28D6B54D /* Features/Articles */ = {
 			isa = PBXGroup;
 			children = (
-				3938A7B9BED2B3586333EE0F /* ArticleDetailView.swift */,
-				FBCBE4FE8E68D572B37B52CC /* ArticlesView.swift */,
+				CC24E32F7251819C19DD267C /* ArticleDetailView.swift */,
+				AB3A3EC94BCB585C4FEFA59D /* ArticlesView.swift */,
 			);
 			name = Features/Articles;
 			path = Features/Articles;
@@ -273,8 +273,8 @@
 		02D22D504F8C71E14414D2B6 /* Features/MyBets */ = {
 			isa = PBXGroup;
 			children = (
-				0F50C081FA1088C57288E26B /* AddBetView.swift */,
-				952013B602D7136D69AEEB21 /* MyBetsView.swift */,
+				D966820BE673D1FA1636F221 /* AddBetView.swift */,
+				219FA82A4DDA19A4D75D3186 /* MyBetsView.swift */,
 			);
 			name = Features/MyBets;
 			path = Features/MyBets;
@@ -284,7 +284,7 @@
 		097FF240F55920C019A2309C /* Features/Paywall */ = {
 			isa = PBXGroup;
 			children = (
-				33BBF5D68552196C0B3F8DCD /* PaywallView.swift */,
+				07D57EDFF99026EFBA12921C /* PaywallView.swift */,
 			);
 			name = Features/Paywall;
 			path = Features/Paywall;
@@ -294,11 +294,11 @@
 		C260DB2AB56116F4796B2CC4 /* Features/Picks */ = {
 			isa = PBXGroup;
 			children = (
-				49C3B8C81357232A22A331BC /* AskTheEdgeView.swift */,
-				73C3DA60172B5956CC268EDF /* PickCard.swift */,
-				2059227177A28DB6B751FB08 /* PickDetailView.swift */,
-				B74E1048C9A09F837AB9607C /* PicksView.swift */,
-				8C4A78BC284084C579AEE21B /* PicksViewModel.swift */,
+				6342017B2FA056053FE8E9B8 /* AskTheEdgeView.swift */,
+				327EEDC360360A56A9EF4475 /* PickCard.swift */,
+				DEF381535323B17DA1FE2E74 /* PickDetailView.swift */,
+				13E99DA4269483946FBC0543 /* PicksView.swift */,
+				6482314B0AD351485442E516 /* PicksViewModel.swift */,
 			);
 			name = Features/Picks;
 			path = Features/Picks;
@@ -308,8 +308,8 @@
 		7338181C62495E74621BEDA7 /* Features/Profile */ = {
 			isa = PBXGroup;
 			children = (
-				CF4544AB112EBB1B0C844378 /* ProfileView.swift */,
-				3CA213717DAC21FF4A9D035C /* SignInView.swift */,
+				3ED7636A1829DFCFCDEF0F4E /* ProfileView.swift */,
+				80539F12489E59302C05D9E1 /* SignInView.swift */,
 			);
 			name = Features/Profile;
 			path = Features/Profile;
@@ -319,8 +319,8 @@
 		8737888334D7A44EF2C6ED58 /* Features/Scores */ = {
 			isa = PBXGroup;
 			children = (
-				B93839325BBEB4FDE87DB7C9 /* ScoresView.swift */,
-				E3DF26CA8835DD6E7384AEB1 /* ScoresViewModel.swift */,
+				C1EDC22746AA924B2AA16695 /* ScoresView.swift */,
+				46046BE2548EC8F752B8699A /* ScoresViewModel.swift */,
 			);
 			name = Features/Scores;
 			path = Features/Scores;
@@ -330,7 +330,7 @@
 		151DC53A69BDCC0A282EEBDE /* Features/Support */ = {
 			isa = PBXGroup;
 			children = (
-				B88825E4CF9B57429C7BC3F1 /* BrowserSheet.swift */,
+				1A0BE4962F16CAF360F03833 /* BrowserSheet.swift */,
 			);
 			name = Features/Support;
 			path = Features/Support;
@@ -340,9 +340,9 @@
 		5B99B2B5449A0B49DA46AA18 /* Platform/Auth */ = {
 			isa = PBXGroup;
 			children = (
-				0B65666CFE524E56D1088669 /* AuthSession.swift */,
-				6E1FF85E5B2E9499D1CB31C8 /* SessionCookieStore.swift */,
-				E55F36973B1FFABE5F7DB6D3 /* SignInWebView.swift */,
+				5F181818E112B3B15D25EB42 /* AuthSession.swift */,
+				E12CD3AEF05B3204306EB1EC /* SessionCookieStore.swift */,
+				3C33A2251BFFCAB5BA7F081E /* SignInWebView.swift */,
 			);
 			name = Platform/Auth;
 			path = Platform/Auth;
@@ -352,7 +352,7 @@
 		66A163934BBE3F10A7FE259E /* Platform/Config */ = {
 			isa = PBXGroup;
 			children = (
-				D1B9E8B45A8715DA851185DA /* AppConfiguration.swift */,
+				BB702881A20A443A4F00D2EB /* AppConfiguration.swift */,
 			);
 			name = Platform/Config;
 			path = Platform/Config;
@@ -362,9 +362,9 @@
 		62F82B8BD95D0CADAFDB5C9C /* Platform/Domain */ = {
 			isa = PBXGroup;
 			children = (
-				634591BA15A8D9F02ED9EAF8 /* DTOs.swift */,
-				1F39800F6C60F571F736D785 /* Models.swift */,
-				EA7EEEAD61D9CDFF87E2849F /* OddsMath.swift */,
+				747F7AE44D25DBFCE90BEB85 /* DTOs.swift */,
+				EF31BC2B643B666442F9A0BA /* Models.swift */,
+				C65FCF66010532699EEFD6A7 /* OddsMath.swift */,
 			);
 			name = Platform/Domain;
 			path = Platform/Domain;
@@ -374,10 +374,10 @@
 		5563D11E163B24D91475B2BA /* Platform/Persistence */ = {
 			isa = PBXGroup;
 			children = (
-				422A8ECB93D7BB8859853251 /* BetStore.swift */,
-				06E057A95E38494DA39F6453 /* JSONFileStore.swift */,
-				5CFE6520B50BE767E1A627FF /* Keychain.swift */,
-				CA23729FBE92E83BDA260784 /* SavedPicksStore.swift */,
+				B301CA51E69078EF9ABAD368 /* BetStore.swift */,
+				CE42A6CD4E2EC1D707C44228 /* JSONFileStore.swift */,
+				6E8EF6F6EB1000DA598FEB05 /* Keychain.swift */,
+				20139E49F7544EA0C44EEF30 /* SavedPicksStore.swift */,
 			);
 			name = Platform/Persistence;
 			path = Platform/Persistence;
@@ -387,7 +387,7 @@
 		5CB9EEF072D14E005E3896F9 /* Platform/Push */ = {
 			isa = PBXGroup;
 			children = (
-				B5FE70FEF31070E3B799BFDF /* PushNotificationManager.swift */,
+				358B2B532D4136E1CB3C4E7C /* PushNotificationManager.swift */,
 			);
 			name = Platform/Push;
 			path = Platform/Push;
@@ -397,7 +397,7 @@
 		4DCE26800586F85C958804D0 /* Platform/Subscription */ = {
 			isa = PBXGroup;
 			children = (
-				538C3CF38EDA3BB01D527EB8 /* SubscriptionStore.swift */,
+				C723A3634B45F2D5D4FF08B4 /* SubscriptionStore.swift */,
 			);
 			name = Platform/Subscription;
 			path = Platform/Subscription;
@@ -407,13 +407,13 @@
 		3E17CEF93F7A2318599144D4 /* GalaxySportsEdgeTests */ = {
 			isa = PBXGroup;
 			children = (
-				0303219ABC31B1A256DC9ECD /* BetStoreTests.swift */,
-				8741093A72C3E6EA5094066B /* DomainTests.swift */,
-				B74582BE770A814411AB4854 /* NetworkingTests.swift */,
-				006EA4ED4178ED73F2D2D4E1 /* OddsMathTests.swift */,
-				6FAB79FD92E04ADE107B9B7A /* PickDecodingTests.swift */,
-				8223312086E839046CD61777 /* StubSportsService.swift */,
-				40B385B38536A1C406DA3D65 /* ViewModelTests.swift */,
+				738646184E411F571ACBFCF3 /* BetStoreTests.swift */,
+				5933285DDF0214EC97AA414A /* DomainTests.swift */,
+				9499D7B31CAD766934102114 /* NetworkingTests.swift */,
+				7081D9E0715AF8F7D8A41373 /* OddsMathTests.swift */,
+				C7E1EB9B11D381311BD8217E /* PickDecodingTests.swift */,
+				568E08FAD01B0F87942249B6 /* StubSportsService.swift */,
+				5903E3A2C33CC6BEC5802AE2 /* ViewModelTests.swift */,
 			);
 			name = GalaxySportsEdgeTests;
 			path = GalaxySportsEdgeTests;
@@ -486,50 +486,50 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = [PHONE];
 			files = (
-				619D6C686D71A8AFE52F83F0 /* AppDelegate.swift in Sources */,
-				DDFB5D6B2551FC1BEEE7F0E8 /* AppEnvironment.swift in Sources */,
-				DDBBED0421C1C8D8574CB4C4 /* GalaxySportsEdgeApp.swift in Sources */,
-				B1A3DF2491E00878D805FD2D /* RootView.swift in Sources */,
-				13ED28C42AA16B28913890FD /* Components.swift in Sources */,
-				6CC9F7683F6EA7A9325BB67B /* Formatting.swift in Sources */,
-				707964B06763AF482C3B2BDD /* Theme.swift in Sources */,
-				3E00AE12B1874317727B7F41 /* APIClient.swift in Sources */,
-				895E8894221E4C5E06CE4039 /* APIError.swift in Sources */,
-				21BD55AC40A4D16331E8F641 /* Endpoint.swift in Sources */,
-				9A84ED32FBA0E66A358D9D16 /* Envelope.swift in Sources */,
-				15CDA13093425FEABF363506 /* LiveSportsService.swift in Sources */,
-				BE0BC42E58596FD395004B20 /* MockFixtures.swift in Sources */,
-				01EA66133BA0ECD30CD872EC /* MockSportsService.swift in Sources */,
-				742BF7B8C651F8CB67C3A19A /* SportsService.swift in Sources */,
-				23B6D950F10DFD82E9673F55 /* DeleteAccountView.swift in Sources */,
-				FF5418CF3794C97606890080 /* ArticleDetailView.swift in Sources */,
-				ED99BD8BA3F86E82952BF813 /* ArticlesView.swift in Sources */,
-				D3DE05635C004CC56745C4D7 /* AddBetView.swift in Sources */,
-				DC8D64407C47D69B7A3835BF /* MyBetsView.swift in Sources */,
-				42744A65178221709EE0C4F3 /* PaywallView.swift in Sources */,
-				5616A87D51CF9DD2D9BA555A /* AskTheEdgeView.swift in Sources */,
-				883B4AE7ED5EA06BCCE98B75 /* PickCard.swift in Sources */,
-				8DA02D00EBEC8FD1E9A5DD19 /* PickDetailView.swift in Sources */,
-				C864DC4DC215191D95BB6D32 /* PicksView.swift in Sources */,
-				C3AD37AD1AF832DE2871BB2E /* PicksViewModel.swift in Sources */,
-				96D22A81F894908CD78BDA0A /* ProfileView.swift in Sources */,
-				6F2AF222C2AC43C437A2F2E8 /* SignInView.swift in Sources */,
-				60D3E5FE6291011B0FF82D0F /* ScoresView.swift in Sources */,
-				938E660C40C9145869D9AF2D /* ScoresViewModel.swift in Sources */,
-				DA5D13F848655BFA7CE1F671 /* BrowserSheet.swift in Sources */,
-				1788C1DACB04E7A99667B906 /* AuthSession.swift in Sources */,
-				343B03437BF17FEF8C70EC07 /* SessionCookieStore.swift in Sources */,
-				050F117E057D4160BDBCCE7D /* SignInWebView.swift in Sources */,
-				2A553A8E6809D99A48F466DC /* AppConfiguration.swift in Sources */,
-				58B00A46522CD7316C74EB58 /* DTOs.swift in Sources */,
-				DFFA78873A721800F8E4B94D /* Models.swift in Sources */,
-				67CA2A798FE3FD2A4A59DDD8 /* OddsMath.swift in Sources */,
-				A1F53B437D31A2A6CB41E671 /* BetStore.swift in Sources */,
-				96716637535EBBB7799A4CAE /* JSONFileStore.swift in Sources */,
-				1232682D77E82B306BB4340B /* Keychain.swift in Sources */,
-				40AA9410D73590CAC8C79F9C /* SavedPicksStore.swift in Sources */,
-				0322140AC5381EFCF10F50BC /* PushNotificationManager.swift in Sources */,
-				E2DAA2D91E5D3A8D79496980 /* SubscriptionStore.swift in Sources */,
+				D5B1975A151053A260E78840 /* AppDelegate.swift in Sources */,
+				34C06B24A8E496E91E3CE12D /* AppEnvironment.swift in Sources */,
+				2A81C0010C50DC4B02065BCE /* GalaxySportsEdgeApp.swift in Sources */,
+				87F85879B1F6D4A509926B3D /* RootView.swift in Sources */,
+				DCE3A49331F5C285EF2FF7D2 /* Components.swift in Sources */,
+				42833D661F9567AAAB830628 /* Formatting.swift in Sources */,
+				502DA0E98328F8A9C7E317D3 /* Theme.swift in Sources */,
+				BF4D0786E49DDBF893FDB412 /* APIClient.swift in Sources */,
+				D65A1462DBD47ED429CC02D4 /* APIError.swift in Sources */,
+				28D47B906B794E2F149811E1 /* Endpoint.swift in Sources */,
+				D18C5CFCA1910AC1F7F0A7B7 /* Envelope.swift in Sources */,
+				B53A8C0E0A213006C872608E /* LiveSportsService.swift in Sources */,
+				50AB9715FB575D49A9B865CF /* MockFixtures.swift in Sources */,
+				3A640B7DC87AEA8E1A5B77E1 /* MockSportsService.swift in Sources */,
+				21738F89C910122DFD57AE43 /* SportsService.swift in Sources */,
+				E442AF350A61A3D6BE451B99 /* DeleteAccountView.swift in Sources */,
+				817A75EF654221908D548192 /* ArticleDetailView.swift in Sources */,
+				B81593E0DD55015CD07DA9CE /* ArticlesView.swift in Sources */,
+				F32EB88F3E0707E4DCCEA627 /* AddBetView.swift in Sources */,
+				4A209ACDD49059AE3691B51D /* MyBetsView.swift in Sources */,
+				2EF3F5F78A5A7F8DDE961572 /* PaywallView.swift in Sources */,
+				666FCD21B74C34C37DDF1E91 /* AskTheEdgeView.swift in Sources */,
+				7AF82FC0C09B028FE33BBAA0 /* PickCard.swift in Sources */,
+				E1C67BDABE9D95BC66BB2719 /* PickDetailView.swift in Sources */,
+				963339795F04C4C556F787D7 /* PicksView.swift in Sources */,
+				B3086542A4AF120D8C121F33 /* PicksViewModel.swift in Sources */,
+				03A2E0FDEDFCA5A5FCE7DDBD /* ProfileView.swift in Sources */,
+				E76EC7C2C36757369394CA6F /* SignInView.swift in Sources */,
+				F2ED35F533D6C96427290F19 /* ScoresView.swift in Sources */,
+				DA4C059E1E712DF384F79F9C /* ScoresViewModel.swift in Sources */,
+				9754F1620D0D29F3B249F715 /* BrowserSheet.swift in Sources */,
+				AE5F29542CBD26CA91F54448 /* AuthSession.swift in Sources */,
+				325CE84ED4F0BD4F2CCD8E69 /* SessionCookieStore.swift in Sources */,
+				9634E57508F2095DE527BB64 /* SignInWebView.swift in Sources */,
+				F299BE2011C06A85A96B6BA4 /* AppConfiguration.swift in Sources */,
+				BA6B1BEF98D5C11E0587FB51 /* DTOs.swift in Sources */,
+				EDA915D92953D6341AFAF694 /* Models.swift in Sources */,
+				55F8FC4E8AED42F58FA5472F /* OddsMath.swift in Sources */,
+				FBA9233935F813231137F60B /* BetStore.swift in Sources */,
+				965E8C722F58B08E6944CC58 /* JSONFileStore.swift in Sources */,
+				5D7AB2244FA5B9DE675708BE /* Keychain.swift in Sources */,
+				EDBC33AE818B25A54E608694 /* SavedPicksStore.swift in Sources */,
+				DA1628E89613BAAC56927F79 /* PushNotificationManager.swift in Sources */,
+				F8F3D3546466821ACCAD8FFA /* SubscriptionStore.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -537,13 +537,13 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = [PHONE];
 			files = (
-				AC2C955FFF87A4874984050E /* BetStoreTests.swift in Sources */,
-				47C5201B525EFFEAD561A66F /* DomainTests.swift in Sources */,
-				D67DD7BE6D0D3250677CA23D /* NetworkingTests.swift in Sources */,
-				CD6204B6EE063ADF4439428B /* OddsMathTests.swift in Sources */,
-				D44F782DD7EAF78D6BA01682 /* PickDecodingTests.swift in Sources */,
-				5D7A38111548BA41170FDAC6 /* StubSportsService.swift in Sources */,
-				0E07DCF3F8BD7EDF1986ED50 /* ViewModelTests.swift in Sources */,
+				9490C17B5575DBE5EB511FBF /* BetStoreTests.swift in Sources */,
+				27D7A7FDC48162BAC9058DDC /* DomainTests.swift in Sources */,
+				C3D2A4726995FD003EFF1B0A /* NetworkingTests.swift in Sources */,
+				A7DF03FE81C6409CD0FC7E70 /* OddsMathTests.swift in Sources */,
+				628065D3B811B3C3EFA096C6 /* PickDecodingTests.swift in Sources */,
+				9D09EA975A3DB037AA65CCDA /* StubSportsService.swift in Sources */,
+				E55673B8528DC586F12709E4 /* ViewModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -554,8 +554,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = [PHONE];
 			files = (
-				9A9231AF28486D51F5F76DF9 /* Assets.xcassets in Resources */,
-				032C475662369F85DD01F812 /* PrivacyInfo.xcprivacy in Resources */,
+				CEFA7C0AD499079AB5F93B2B /* Assets.xcassets in Resources */,
+				3DAF4DF03F69C692FABE23DE /* PrivacyInfo.xcprivacy in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

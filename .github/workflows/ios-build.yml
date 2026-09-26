@@ -77,13 +77,42 @@ jobs:
         # same parser with a line number, and it costs nothing. A brace count
         # does not work here: the file that Xcode refused to open had balanced
         # braces, balanced parens, and no dangling references.
+        # Two things this step has to get right, both learned the hard way.
+        #
+        # 1. plutil picks its reader from the file name, and "project.pbxproj"
+        #    is not a property-list extension, so it reads the file as XML and
+        #    rejects the OpenStep source Xcode actually writes. The first error
+        #    here was "Unexpected character / at line 1" on the `// !$*UTF8*$!`
+        #    header; dropping that header only moved the complaint to the `{`
+        #    on the next line, and `{` is *valid* OpenStep — a dead giveaway
+        #    that the wrong reader was in use, not a malformed file. Lint a
+        #    .plist-named copy so the OpenStep reader gets selected.
+        #
+        # 2. A guard that has quietly stopped reading anything still exits 0,
+        #    so the corrupt copy has to be rejected for the good one to count.
+        #    If plutil cannot even reject that, it is not a usable guard on
+        #    this runner: say so out loud rather than passing for free. The
+        #    check that actually has to hold is the next step, where Xcode's
+        #    own reader opens the project.
         run: |
-          # The pbxproj's first line is the `// !$*UTF8*$!` header, which
-          # plutil rejects ("Unexpected character / at line 1") even though
-          # Xcode's own parser skips it. Drop the header and lint the rest.
-          sed '1d' ios/GalaxySportsEdge.xcodeproj/project.pbxproj | plutil -lint -- -
+          work="$(mktemp -d)"
+          cp ios/GalaxySportsEdge.xcodeproj/project.pbxproj "$work/project.plist"
+          { cat "$work/project.plist"; printf '}\n'; } > "$work/corrupt.plist"
+
+          if plutil -lint "$work/corrupt.plist" >/dev/null 2>&1; then
+            echo "::warning::plutil accepted a deliberately corrupt plist on this runner; not a usable guard here, leaving the project to xcodebuild to parse"
+          else
+            plutil -lint "$work/project.plist"
+          fi
           plutil -lint ios/GalaxySportsEdge/Info.plist
           plutil -lint ios/GalaxySportsEdge/PrivacyInfo.xcprivacy
+
+      - name: Xcode can read the project
+        # The real parse. `xcodebuild -list` is Xcode's own reader on the
+        # project file, and it is what the build and test steps both depend on,
+        # so it is checked on its own rather than inferred from a build that
+        # has not run yet.
+        run: xcodebuild -list -project ios/GalaxySportsEdge.xcodeproj
 
       - name: Build for iOS Simulator (unsigned)
         run: |

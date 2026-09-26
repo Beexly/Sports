@@ -94,12 +94,19 @@ class Node:
         return "in Sources" if self.is_source else "in Resources"
 
 
-def discover(root: str) -> list[Node]:
+def discover(target: str, root: str) -> list[Node]:
     """Walk a source root and turn every relevant file into a project node.
 
     Everything else — markdown, images, anything not a Swift file or a build
     resource — is deliberately left out. A resource nothing reads is bundle
     weight and a stale-copy risk.
+
+    Object ids are keyed on `target` and the path *relative to the target
+    root*, never on `root` itself. `root` is absolute, so keying on it made
+    every id depend on where the repository happened to be checked out: the
+    generator reproduced its own output in one directory and not in another,
+    and the "project file is in sync" check could never pass on a CI runner,
+    whose checkout path is not the author's.
     """
     nodes: list[Node] = []
     if not os.path.isdir(root):
@@ -118,7 +125,7 @@ def discover(root: str) -> list[Node]:
         for bundle in bundles:
             name = f"{rel_dir}/{bundle}" if rel_dir else bundle
             nodes.append(Node(name, "folder.assetcatalog", False, True, rel_dir,
-                              uid("ref", root, name), uid("build", root, name)))
+                              uid("ref", target, name), uid("build", target, name)))
 
         for name in sorted(filenames):
             if name.startswith("."):
@@ -128,14 +135,14 @@ def discover(root: str) -> list[Node]:
 
             if ext == ".swift":
                 nodes.append(Node(rel, "sourcecode.swift", True, False, rel_dir,
-                                  uid("ref", root, rel), uid("build", root, rel)))
+                                  uid("ref", target, rel), uid("build", target, rel)))
             elif ext in RESOURCE_FILE_EXTENSIONS:
                 nodes.append(Node(rel, "text.plist.xml", False, True, rel_dir,
-                                  uid("ref", root, rel), uid("build", root, rel)))
+                                  uid("ref", target, rel), uid("build", target, rel)))
             elif name == INFO_PLIST and not rel_dir:
                 # Referenced by INFOPLIST_FILE, never a build phase.
                 nodes.append(Node(rel, "text.plist.xml", False, False, "",
-                                  uid("ref", root, rel), uid("build", root, rel)))
+                                  uid("ref", target, rel), uid("build", target, rel)))
     return nodes
 
 
@@ -197,7 +204,7 @@ TARGETS = [
 
 
 def build_pbxproj() -> str:
-    discovered = {name: discover(path) for name, path, _, _, _, _ in TARGETS}
+    discovered = {name: discover(name, path) for name, path, _, _, _, _ in TARGETS}
     out: list[str] = []
     w = out.append
 
