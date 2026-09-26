@@ -1,0 +1,506 @@
+<title>The Enforcement Ladder</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&family=JetBrains+Mono:wght@400;500;700&display=swap">
+
+<style>
+:root{
+  --ground:#F2F4F6;
+  --surface:#FBFCFD;
+  --surface-2:#E8ECEF;
+  --edge:#D3DAE0;
+  --edge-strong:#B4BFC8;
+  --text:#161B21;
+  --text-2:#4A555F;
+  --text-3:#6E7A85;
+  --accent:#A8690A;
+  --accent-bright:#D98A0B;
+  --accent-wash:#FBF0DC;
+  --blocked:#A83B34;
+  --blocked-wash:#FAE9E7;
+  --verified:#1F6B54;
+  --verified-wash:#E4F1EC;
+  --code-bg:#161B21;
+  --code-text:#DDE4EA;
+  --measure:68ch;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --ground:#0F1419;
+    --surface:#161C23;
+    --surface-2:#1D242C;
+    --edge:#2A333C;
+    --edge-strong:#3D4954;
+    --text:#E4EAEF;
+    --text-2:#A3AFB9;
+    --text-3:#7C8892;
+    --accent:#D98A0B;
+    --accent-bright:#EBA430;
+    --accent-wash:#241B0B;
+    --blocked:#DC7A72;
+    --blocked-wash:#2A1614;
+    --verified:#5FBA9A;
+    --verified-wash:#0F231D;
+    --code-bg:#080B0E;
+    --code-text:#D3DBE2;
+  }
+}
+:root[data-theme="dark"]{
+  --ground:#0F1419;
+  --surface:#161C23;
+  --surface-2:#1D242C;
+  --edge:#2A333C;
+  --edge-strong:#3D4954;
+  --text:#E4EAEF;
+  --text-2:#A3AFB9;
+  --text-3:#7C8892;
+  --accent:#D98A0B;
+  --accent-bright:#EBA430;
+  --accent-wash:#241B0B;
+  --blocked:#DC7A72;
+  --blocked-wash:#2A1614;
+  --verified:#5FBA9A;
+  --verified-wash:#0F231D;
+  --code-bg:#080B0E;
+  --code-text:#D3DBE2;
+}
+
+*{box-sizing:border-box;}
+body{
+  margin:0;
+  background:var(--ground);
+  color:var(--text);
+  font-family:"Source Serif 4",Georgia,"Times New Roman",serif;
+  font-size:17px;
+  line-height:1.62;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1020px;margin:0 auto;padding:0 28px 120px;}
+
+h1,h2,h3,h4,.ui{font-family:Archivo,"Helvetica Neue",Arial,sans-serif;}
+code,pre,.mono{font-family:"JetBrains Mono",ui-monospace,"SF Mono",Menlo,monospace;}
+
+/* ---------- masthead ---------- */
+header.mast{
+  padding:76px 0 40px;
+  border-bottom:1px solid var(--edge);
+  margin-bottom:8px;
+}
+.kicker{
+  font-family:Archivo,sans-serif;
+  font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+  color:var(--accent);margin:0 0 20px;
+}
+h1{
+  font-size:clamp(2.4rem,6vw,3.9rem);
+  font-weight:700;letter-spacing:-.03em;line-height:1.02;
+  margin:0 0 22px;text-wrap:balance;
+}
+.standfirst{
+  font-size:1.2rem;color:var(--text-2);max-width:60ch;margin:0 0 30px;
+}
+.meta{
+  display:flex;flex-wrap:wrap;gap:8px 10px;
+  font-family:Archivo,sans-serif;font-size:11.5px;font-weight:600;
+  letter-spacing:.05em;text-transform:uppercase;
+}
+.meta span{
+  border:1px solid var(--edge-strong);color:var(--text-3);
+  padding:5px 11px;border-radius:2px;
+}
+
+/* ---------- sections ---------- */
+section{padding-top:60px;}
+h2{
+  font-size:1.65rem;font-weight:700;letter-spacing:-.02em;
+  margin:0 0 8px;text-wrap:balance;
+}
+.sec-note{
+  color:var(--text-3);font-size:.95rem;margin:0 0 30px;max-width:var(--measure);
+}
+h3{
+  font-size:1.12rem;font-weight:600;letter-spacing:-.01em;
+  margin:36px 0 10px;text-wrap:balance;
+}
+p{max-width:var(--measure);margin:0 0 17px;}
+ul{max-width:var(--measure);padding-left:20px;margin:0 0 17px;}
+li{margin-bottom:8px;}
+strong{font-weight:600;}
+a{color:var(--accent);text-decoration-thickness:1px;text-underline-offset:2px;}
+a:focus-visible,summary:focus-visible{outline:2px solid var(--accent-bright);outline-offset:3px;}
+
+/* ---------- the ladder (a real sequence, so it gets numbers) ---------- */
+.ladder{display:flex;flex-direction:column;gap:2px;margin:0 0 20px;}
+.rung{
+  display:grid;grid-template-columns:62px 1fr;
+  background:var(--surface);border:1px solid var(--edge);
+}
+.rung-n{
+  display:flex;align-items:flex-start;justify-content:center;padding-top:22px;
+  font-family:"JetBrains Mono",monospace;font-size:.82rem;font-weight:700;
+  color:var(--accent);background:var(--surface-2);
+  border-right:1px solid var(--edge);
+}
+.rung-b{padding:20px 24px 22px;}
+.rung h4{
+  font-size:1rem;font-weight:600;margin:0 0 4px;
+  display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;
+}
+.rung p{font-size:.95rem;color:var(--text-2);margin:0;max-width:62ch;}
+.tag{
+  font-family:Archivo,sans-serif;font-size:9.5px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;padding:3px 7px;border-radius:2px;
+}
+.tag.block{background:var(--blocked-wash);color:var(--blocked);}
+.tag.soft{background:var(--surface-2);color:var(--text-3);}
+.tag.ok{background:var(--verified-wash);color:var(--verified);}
+
+/* ---------- callouts ---------- */
+.note{
+  border-left:3px solid var(--accent);background:var(--accent-wash);
+  padding:18px 22px;margin:24px 0;max-width:var(--measure);
+}
+.note.warn{border-left-color:var(--blocked);background:var(--blocked-wash);}
+.note.good{border-left-color:var(--verified);background:var(--verified-wash);}
+.note p{margin:0 0 10px;font-size:.96rem;}
+.note p:last-child{margin:0;}
+.note .lbl{
+  font-family:Archivo,sans-serif;font-size:10px;font-weight:700;
+  letter-spacing:.13em;text-transform:uppercase;color:var(--accent);
+  display:block;margin-bottom:7px;
+}
+.note.warn .lbl{color:var(--blocked);}
+.note.good .lbl{color:var(--verified);}
+
+/* ---------- code ---------- */
+pre{
+  background:var(--code-bg);color:var(--code-text);
+  padding:17px 20px;border-radius:3px;overflow-x:auto;
+  font-size:13px;line-height:1.62;margin:0 0 20px;
+  border:1px solid var(--edge);
+}
+pre code{color:inherit;background:none;padding:0;font-size:inherit;}
+p code,li code,td code{
+  background:var(--surface-2);color:var(--text);
+  padding:1px 5px;border-radius:2px;font-size:.86em;
+  border:1px solid var(--edge);
+}
+
+/* ---------- tables ---------- */
+.tw{overflow-x:auto;margin:0 0 24px;border:1px solid var(--edge);}
+table{border-collapse:collapse;width:100%;background:var(--surface);font-size:.9rem;min-width:520px;}
+th{
+  font-family:Archivo,sans-serif;font-size:10.5px;font-weight:700;
+  letter-spacing:.1em;text-transform:uppercase;text-align:left;
+  padding:12px 15px;background:var(--surface-2);color:var(--text-3);
+  border-bottom:1px solid var(--edge);white-space:nowrap;
+}
+td{padding:12px 15px;border-bottom:1px solid var(--edge);vertical-align:top;color:var(--text-2);}
+td:first-child{color:var(--text);font-weight:600;}
+tr:last-child td{border-bottom:none;}
+.num{font-variant-numeric:tabular-nums;}
+
+/* ---------- correction blocks ---------- */
+.fix{border:1px solid var(--edge);background:var(--surface);padding:22px 24px;margin:0 0 14px;}
+.fix-head{
+  display:flex;align-items:baseline;gap:11px;flex-wrap:wrap;margin-bottom:11px;
+}
+.fix-head h4{margin:0;font-size:1.02rem;font-weight:600;}
+.fix p{font-size:.95rem;margin:0 0 11px;}
+.fix p:last-child{margin:0;}
+.verdict{
+  font-family:Archivo,sans-serif;font-size:9.5px;font-weight:700;
+  letter-spacing:.11em;text-transform:uppercase;padding:3px 8px;border-radius:2px;
+}
+.v-right{background:var(--verified-wash);color:var(--verified);}
+.v-part{background:var(--accent-wash);color:var(--accent);}
+.v-new{background:var(--surface-2);color:var(--text-3);}
+
+details{
+  border:1px solid var(--edge);background:var(--surface);
+  padding:0;margin:0 0 10px;max-width:var(--measure);
+}
+summary{
+  cursor:pointer;padding:14px 20px;font-family:Archivo,sans-serif;
+  font-size:.92rem;font-weight:600;list-style:none;
+}
+summary::-webkit-details-marker{display:none;}
+summary::before{content:"+ ";color:var(--accent);font-weight:700;}
+details[open] summary::before{content:"− ";}
+details[open] summary{border-bottom:1px solid var(--edge);}
+.det-body{padding:16px 20px 4px;}
+.det-body p{font-size:.93rem;}
+
+hr{border:none;border-top:1px solid var(--edge);margin:56px 0 0;}
+footer{padding-top:34px;color:var(--text-3);font-size:.88rem;}
+footer p{max-width:var(--measure);}
+
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;}}
+@media (max-width:620px){
+  body{font-size:16px;}
+  .wrap{padding:0 18px 80px;}
+  .rung{grid-template-columns:44px 1fr;}
+  .rung-b{padding:16px 16px 18px;}
+}
+</style>
+
+<div class="wrap">
+
+<header class="mast">
+  <p class="kicker">Claude Code operating doctrine · GSE / Beexly-Sports</p>
+  <h1>The Enforcement Ladder</h1>
+  <p class="standfirst">Your operating prompt asks a model to remember 310 lines of rules. Six of those rules can be made unbreakable instead. This is the map of which mechanism does what — and where the current stack is quietly wrong.</p>
+  <div class="meta">
+    <span>Read 26 Aug 2026</span>
+    <span>Sources: academy.claude.com · code.claude.com · platform.claude.com</span>
+    <span>Hooks tested, 12/12 pass</span>
+  </div>
+</header>
+
+<section>
+  <h2>The one idea</h2>
+  <p class="sec-note">Everything below follows from a single distinction the current prompt stack doesn't yet draw.</p>
+
+  <p>A rule written in <code>CLAUDE.md</code> or an operating prompt is <em>guidance</em>. It competes with every other line in the file for the model's attention, and the longer the file grows, the less reliably any single line lands. That is not a defect in the model; it is what a prompt is.</p>
+
+  <p>A rule written as a hook is <em>code that runs before the action and can refuse it</em>. And the property that makes this decisive for your setup: <strong>a <code>PreToolUse</code> hook fires before any permission-mode check, in every mode — including <code>bypassPermissions</code>.</strong> A hook that exits 2 blocks the call even under <code>--dangerously-skip-permissions</code>. Settings-level <code>deny</code> rules do not have that property against a bypass session; hooks do.</p>
+
+  <p>So the question for every rule in §5 of your operating prompt is not "is it stated clearly enough?" It is "which rung of the ladder is this rule on, and is it on the right one?"</p>
+
+  <div class="ladder">
+    <div class="rung"><div class="rung-n">0</div><div class="rung-b">
+      <h4>Hooks <span class="tag block">can block</span></h4>
+      <p>The only mechanism that enforces. Fires on lifecycle events, runs as code, returns a decision. Zero context cost — it isn't in the prompt at all. Everything you cannot afford to have ignored belongs here and nowhere else.</p>
+    </div></div>
+    <div class="rung"><div class="rung-n">1</div><div class="rung-b">
+      <h4>Permission rules <span class="tag block">can block</span></h4>
+      <p>Evaluated <code>deny → ask → allow</code>, first match wins, specificity irrelevant. A broad deny cannot carry allowlist exceptions. Blocks in every mode except that allow rules go inert under bypass. Good for scoping; weaker than hooks as a guarantee.</p>
+    </div></div>
+    <div class="rung"><div class="rung-n">2</div><div class="rung-b">
+      <h4>CLAUDE.md <span class="tag soft">guidance only</span></h4>
+      <p>Loads every request, re-injected after every compaction. Target under 200 lines. Conventions and always-true facts live here. Hard rules do not.</p>
+    </div></div>
+    <div class="rung"><div class="rung-n">3</div><div class="rung-b">
+      <h4>Skills <span class="tag soft">guidance only</span></h4>
+      <p>Descriptions load at session start within a ~1% context budget; the body loads only on invocation — and then persists for the rest of the session. Reusable procedures belong here, which is where most of your §7.2 and §10 currently sit misfiled.</p>
+    </div></div>
+    <div class="rung"><div class="rung-n">4</div><div class="rung-b">
+      <h4>Subagents <span class="tag ok">scoped tools</span></h4>
+      <p>Separate context window, summary returns. Cannot block, but <code>tools</code> / <code>disallowedTools</code> / <code>permissionMode</code> hard-scope what one can touch. This is where "builder never verifies own work" becomes mechanical rather than aspirational.</p>
+    </div></div>
+    <div class="rung"><div class="rung-n">5</div><div class="rung-b">
+      <h4>Autonomy controls <span class="tag ok">structural</span></h4>
+      <p><code>/goal</code>, worktrees, plan mode. These don't constrain behavior — they shape how long the seat runs unattended and whether two seats can collide. Worktrees make your multi-seat collision risk structurally impossible instead of procedurally discouraged.</p>
+    </div></div>
+  </div>
+
+  <div class="note good">
+    <span class="lbl">Why this ordering matters for you specifically</span>
+    <p>NORTHSTAR names the real constraint precisely: not intelligence, not effort, but <em>attention economics</em> — the fleet's error <em>detection</em> works while its error <em>prevention</em> doesn't. Rungs 0 and 1 are prevention. Everything currently sitting on rung 2 that belongs on rung 0 is a rule you're paying attention to enforce, every session, forever.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Corrections to the current stack</h2>
+  <p class="sec-note">Five findings where the existing prompt stack is wrong, half-right, or missing something that changes a decision. Stated plainly, including where your seat got it right.</p>
+
+  <div class="fix">
+    <div class="fix-head">
+      <h4><code>--dangerously-skip-permissions</code> rejection</h4>
+      <span class="verdict v-right">Correct — and there's a better answer now</span>
+    </div>
+    <p>Your Sonnet seat rejected it, and rejected the source document's reasoning ("safe because we've already verified workspace contents") as a non-sequitur. That was right: content verification has nothing to do with permission safety.</p>
+    <p>The upgrade is that you no longer face a choice between autonomy and safety. <strong>Auto mode plus <code>PreToolUse</code> hooks gives you both</strong> — the classifier reviews each action, and your hooks block the sealed paths regardless of mode. That's strictly more autonomy than the current default with strictly more enforcement than the prose rules provide. The guidance for unattended runs is explicit: keep them in auto mode, not bypass, because the classifier stays active — while noting it "never judges whether the code is actually correct."</p>
+  </div>
+
+  <div class="fix">
+    <div class="fix-head">
+      <h4><code>--bare</code> rejection</h4>
+      <span class="verdict v-part">Half right — the reasoning conflates two things</span>
+    </div>
+    <p>The document says <code>--bare</code> would skip "the pre-commit secret scan, the stop-hook git check, and the sealed-path guards." Two of those three are Claude Code hooks and would indeed be skipped. But <strong>a git pre-commit hook in <code>.githooks/</code> is run by git, not by Claude Code</strong> — <code>--bare</code> doesn't touch it. Git runs it whenever a commit happens, from any client.</p>
+    <p>The conclusion still holds for interactive dev sessions, so the rule can stay. But the reason should be corrected, because the docs now say <code>--bare</code> is recommended for scripted and SDK calls and <em>will become the default for <code>-p</code> in a future release</em>. A rule justified by a mistaken mechanism will break confusingly when that default lands.</p>
+    <p>There's also a sharper security fact underneath: <strong>without <code>--bare</code>, a <code>-p</code> session runs hooks from a project's settings and connects <code>.mcp.json</code> servers even in a folder never trusted</strong>, with no dialog. For a repo carrying many agent-authored config files, that is worth knowing in both directions.</p>
+  </div>
+
+  <div class="fix">
+    <div class="fix-head">
+      <h4>Seat switching costs more than anyone has priced</h4>
+      <span class="verdict v-new">Not currently in the stack</span>
+    </div>
+    <p>The fleet switches models by design — Fable for judgment moments, Sonnet for the workhorse, Hermes on free tiers. Here is the part nobody has costed: <strong>the model and the effort level are part of the prompt-cache key.</strong> Switching either mid-session recomputes the entire request from scratch, at full input price rather than the 0.1× cache-read rate.</p>
+    <p>Fable's own doctrine is "on → decide → off," which is the right instinct. This gives it a number: every on/off cycle inside a live session pays for a full context rebuild twice. Batch the judgment moments; don't interleave them.</p>
+    <p>Two related economics worth having: <code>/rewind</code> truncates to an already-cached prefix and is therefore <em>cheaper than <code>/compact</code></em> for abandoning a bad path — compaction reads the whole conversation to summarize it. And resuming a long session after a Claude Code upgrade busts the cache, making "the first turn back into a long session the most expensive request you send."</p>
+  </div>
+
+  <div class="fix">
+    <div class="fix-head">
+      <h4>Project skills grant tools even in untrusted runs</h4>
+      <span class="verdict v-new">Security-relevant, not in the stack</span>
+    </div>
+    <p>Workspace trust gates a project's <code>permissions.allow</code> rules — but it does <strong>not</strong> gate a skill's <code>allowed-tools</code> frontmatter. A project skill's tool grant applies even in a <code>-p</code> run in an untrusted folder.</p>
+    <p>For most repos this is a footnote. For one where multiple agent seats author config files into <code>.claude/</code> across 400+ branches, it means a skill file is a capability grant that bypasses the trust prompt. Worth adding <code>.claude/skills/</code> to whatever review gate already covers <code>.claude/</code> in your never-modify list — which the sealed-path hook in the kit now enforces.</p>
+  </div>
+
+  <div class="fix">
+    <div class="fix-head">
+      <h4>The Academy corpus dependency</h4>
+      <span class="verdict v-part">Partially resolvable now</span>
+    </div>
+    <p>§9 routes to <code>docs/CLAUDE-ACADEMY-PLAYBOOK.md</code>, a 755-page index whose full texts live only at <code>C:\Users\Garrett\academy-corpus\</code>. The instruction to degrade to titles-only and never invent contents is exactly right and should stay.</p>
+    <p>But the standing-consult list — the eight or so lessons cited at specific moments — is small enough to resolve permanently. Those lessons have been read directly and their operative content is in this document and the kit. The corpus dependency can be narrowed from "the whole standing list" to "specific lookups beyond it."</p>
+  </div>
+</section>
+
+<section>
+  <h2>Context and token economics</h2>
+  <p class="sec-note">What actually drives spend, and the counter-move for each. Ordered by how much it applies to a multi-seat fleet running long sessions.</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>Driver</th><th>Mechanism</th><th>Counter-move</th></tr></thead>
+    <tbody>
+      <tr><td>Model / effort switching</td><td>Both are cache-key components; a switch recomputes the whole request</td><td>Batch judgment moments into one Fable block; don't interleave seats mid-session</td></tr>
+      <tr><td>Long session, low activity</td><td>Full conversation re-sent every turn; a one-line question in a day-old session costs the whole context</td><td><code>/clear</code> between tasks, <code>/rename</code> first so it's findable</td></tr>
+      <tr><td>Cache expiry</td><td>1h TTL on subscription main conversation; 5 min on usage credits. Clock starts at request initiation</td><td>Know which bucket you're in; <code>ENABLE_PROMPT_CACHING_1H=1</code> restores 1h on credits</td></tr>
+      <tr><td>Verbose tool output</td><td>A 10k-line test log costs the same context whether or not it was needed</td><td><code>PreToolUse</code> hook rewriting the command to filter — shipped in the kit</td></tr>
+      <tr><td>Bloated always-on prompt</td><td>Loads every request, re-injected after every compaction</td><td>Split procedures into skills; keep the resident file under 200 lines</td></tr>
+      <tr><td>Vague prompts</td><td>Underspecification forces exploration, which costs far more than the words saved</td><td>Name the artifact, path, and success condition up front</td></tr>
+      <tr><td>Agent teams</td><td>~7× a standard session when teammates run in plan mode</td><td>Sonnet for teammates, small teams, shut them down when done</td></tr>
+      <tr><td>Idle background</td><td>Scheduled tasks, <code>/loop</code> ticks, and goal check-ins each send full context while idle</td><td>Typically under $0.04/session — but <code>CLAUDE_CODE_GOAL_CHECKIN_MINUTES=0</code> disables check-ins</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Cache mechanics worth knowing exactly</h3>
+  <p>Order is immutable: <strong>tools → system → messages</strong>, matched on exact prefix. A change anywhere invalidates everything after it. Cache writes happen only at breakpoints — the 20-block lookback finds entries prior requests already wrote, it does not retroactively cache stable content sitting behind your breakpoint.</p>
+  <p>Read is <strong>0.1×</strong> base input. A 5-minute write is 1.25× and pays for itself after one read; a 1-hour write is 2.0× and pays for itself after two. Below the model's minimum cacheable size nothing caches <em>and no error is returned</em> — verify with <code>cache_creation_input_tokens</code> and <code>cache_read_input_tokens</code> rather than assuming.</p>
+
+  <div class="note">
+    <span class="lbl">The CI-minutes situation has a cheaper answer than waiting for the pool</span>
+    <p>Actions minutes are exhausted and §6 correctly makes the local verify block the gate. The kit's <code>Stop</code> hook goes further: it runs typecheck, <code>check:ledger</code>, and <code>agent:eval</code> on <em>every turn end</em> and refuses to let the turn close while they're red — with the failure fed straight back so the seat fixes it unprompted. Build and <code>guardrails</code> stay out of it deliberately, because a Stop hook you notice is a Stop hook you'll disable.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Autonomy without loosening anything</h2>
+  <p class="sec-note">Three mechanisms that raise how much a seat can do unattended, none of which require relaxing a guardrail.</p>
+
+  <h3>Worktrees — the collision fix</h3>
+  <p>Right now, two seats working simultaneously are kept apart by ledger discipline alone: claim before work, never edit rows you don't own. That's procedure. Worktrees make it structural — each session gets an independent file tree, and the isolation is enforced by four checks that block edits, shell commands, and git redirects back into the main checkout, for the session <em>and every subagent it spawns</em>.</p>
+<pre><code>claude --worktree c75-wave        # named worktree, own branch
+claude --worktree "#672"          # branch from an existing PR</code></pre>
+  <p>A <code>.worktreeinclude</code> at the repo root copies gitignored files (env, local config) into each new tree — only files that match a pattern <em>and</em> are gitignored, so tracked files are never duplicated. Or set it permanently per-agent:</p>
+<pre><code>---
+name: refactorer
+description: Applies mechanical refactors across many files
+isolation: worktree
+---</code></pre>
+  <p>One caveat that matters: a <code>-p</code> run has no exit prompt, so its worktree is never auto-cleaned. And <code>${CLAUDE_PROJECT_DIR}</code> keeps pointing at the original root after entering a worktree — the worktree path arrives as the <code>cwd</code> field in the hook's input JSON instead.</p>
+
+  <h3><code>/goal</code> — a completion condition, not a prompt</h3>
+  <p>Sets an end state and keeps working across turns until a fast evaluator confirms it. This fits the C-75 wave and the acceptance-harness work directly, because both have checkable end states:</p>
+<pre><code>/goal the falsifier acceptance harness passes planted-edge, pure-noise,
+      and inverted cases at n in {100, 1000, 5000}, and npm run
+      check:ledger exits 0 — or stop after 20 turns</code></pre>
+  <p>The binding constraint: <strong>the evaluator only reads the transcript.</strong> It does not run commands or read files independently, so the condition has to be something the seat's own output can demonstrate. Bound it inside the condition itself — the "or stop after 20 turns" clause above is the documented pattern. A goal does not change permission mode; run it in auto mode for unattended turns.</p>
+
+  <h3>Plan mode with context discharge</h3>
+  <p>Standard advice is to plan before executing and actually read the plan. The under-used part: with <code>showClearContextOnPlanAccept</code> enabled, the approval menu gains an option that <strong>approves the plan and clears the planning context</strong> — so implementation starts without carrying the exploration transcript. On a codebase this size, that exploration is often the larger half of the context.</p>
+</section>
+
+<section>
+  <h2>Prompt doctrine, with the numbers</h2>
+  <p class="sec-note">The techniques that measurably move output quality, and the two that have quietly changed underneath most existing runbooks.</p>
+
+  <p><strong>Specificity is the largest single lever.</strong> Anthropic's own eval on one running example: a vague request scored 2.32/10. Rewritten to be clear and direct — naming the action, deliverable, timeframe, audience, and constraints — it scored 3.92. Adding output-quality guidelines on top ("list all portion sizes in grams," not "be detailed") took it to 7.86. The tell for a good guideline is that it names an artifact which either appears in the output or doesn't.</p>
+
+  <p><strong>Put long data above the question.</strong> Queries placed at the end, after the documents, improved response quality by up to 30% on complex multi-document inputs. Every prompt in the business library follows this shape.</p>
+
+  <p><strong>Force reasoning before any score.</strong> A grader asked for a bare 1–10 regresses to the middle — "models tend to default to middling scores around 6." Demand strengths, weaknesses, and reasoning first, then the number, then discard the reasoning if you don't need it. This is why your falsifier's verdict vocabulary works and a confidence score wouldn't.</p>
+
+  <div class="note warn">
+    <span class="lbl">Two things that changed under existing runbooks</span>
+    <p><strong>Prefilling the assistant turn is gone.</strong> On Claude 4.6+ a prefilled final assistant message returns a 400 error. Anything forcing JSON with a prefilled <code>{</code> needs to move to structured outputs or an explicit format instruction.</p>
+    <p><strong>"Think hard" language now backfires.</strong> Aggressive thinking prompts were written for models that under-triggered. Current models with adaptive thinking over-trigger on them. Same for tool prompts — "CRITICAL: MUST use tool" should become "Use this tool when…". Note also that <code>ultrathink</code> adds an in-context instruction for that turn <em>without</em> changing the effort sent to the API; "think", "think hard", and "think more" are not recognized keywords at all.</p>
+  </div>
+
+  <details>
+    <summary>Model and effort selection, as a decision table</summary>
+    <div class="det-body">
+      <div class="tw"><table>
+        <thead><tr><th>Level</th><th>Use for</th></tr></thead>
+        <tbody>
+          <tr><td class="mono">low</td><td>Mechanical sweeps, short scoped work, anything latency-sensitive and not intelligence-sensitive</td></tr>
+          <tr><td class="mono">medium</td><td>Cost-sensitive work that can trade some intelligence</td></tr>
+          <tr><td class="mono">high</td><td>The default on every model except Opus 4.7. Balanced</td></tr>
+          <tr><td class="mono">xhigh</td><td>Deeper reasoning at higher spend. Gate design, statistical rulings</td></tr>
+          <tr><td class="mono">max</td><td>Demanding tasks — but prone to overthinking and diminishing returns. Test before adopting</td></tr>
+        </tbody>
+      </table></div>
+      <p>Effort is settable per-skill and per-subagent in frontmatter, which is the right granularity for your seat model: <code>effort: low</code> on mechanical verification sweeps, <code>xhigh</code> reserved for the gate-design moments Fable is called in for. Precedence runs env var &gt; configured &gt; model default.</p>
+    </div>
+  </details>
+
+  <details>
+    <summary>Skill authoring traps worth knowing before writing any</summary>
+    <div class="det-body">
+      <p><strong>Descriptions are budgeted and truncated.</strong> The skill listing gets ~1% of the context window; when it overflows, descriptions are dropped starting with least-invoked skills. Per-entry, description plus <code>when_to_use</code> is capped at 1,536 characters. Put the key use case first — the tail is what gets cut.</p>
+      <p><strong>Invoked content persists for the whole session</strong> and is not re-read on later turns. Write standing instructions, not one-time steps. After auto-compaction, only the most recent invocation of each skill is re-attached, first 5,000 tokens each, 25,000 total.</p>
+      <p><strong><code>$0</code> is the first argument</strong>, not <code>$1</code>. Indexed skill arguments are zero-based.</p>
+      <p><strong>A failed <code>!</code>-injected command aborts the entire invocation</strong> — Claude never sees the content. Append <code>|| true</code> to anything expected to exit non-zero.</p>
+      <p><strong>Portability:</strong> outside Claude Code, only six frontmatter fields are legal. An extra field is a hard error, not an ignored one.</p>
+    </div>
+  </details>
+</section>
+
+<section>
+  <h2>What shipped alongside this</h2>
+  <p class="sec-note">Working files, not descriptions of files. The hooks were tested against a 12-case matrix before shipping — including false-positive checks like a branch named <code>maintenance-branch</code> not tripping the push-to-main guard.</p>
+
+  <div class="tw">
+  <table>
+    <thead><tr><th>File</th><th>Rung</th><th>What it does</th></tr></thead>
+    <tbody>
+      <tr><td class="mono">guard-sealed-paths.sh</td><td>0</td><td>Blocks edits to the §5 never-modify list and any <code>.env*</code>. Unbypassable by permission mode</td></tr>
+      <tr><td class="mono">guard-git-and-gates.sh</td><td>0</td><td>Blocks push/merge to main, gate flips, workflow dispatch, and verify commands piped through <code>head</code>/<code>tail</code></td></tr>
+      <tr><td class="mono">gate-session-close.sh</td><td>0</td><td>Stop hook. Refuses to end a turn while the verify block is red, or while STATE.md is behind the last commit</td></tr>
+      <tr><td class="mono">trim-verbose-output.sh</td><td>0</td><td>Rewrites known-verbose commands so only signal returns. Never touches gated commands</td></tr>
+      <tr><td class="mono">settings.json</td><td>0–1</td><td>Wires the hooks; deny/ask/allow rules; explicit 1h cache TTL</td></tr>
+      <tr><td class="mono">cold-reviewer.md</td><td>4</td><td>Subagent with no memory of the build. Structured output including a Scope Check and an Obstacles section</td></tr>
+      <tr><td class="mono">stat-adversary.md</td><td>4</td><td>Hostile statistical referee. Default verdict REFUTED; runs the eight attacks including push-asymmetry and the consensus-close problem</td></tr>
+      <tr><td class="mono">skills/ ×3</td><td>3</td><td>falsifier-run, claims-check, session-close — lifted out of the always-on prompt</td></tr>
+      <tr><td class="mono">BUSINESS-PROMPTS.md</td><td>—</td><td>Ten prompts for the side of the business NORTHSTAR names as never measured</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <div class="note">
+    <span class="lbl">Install order, lowest risk first</span>
+    <p>The hooks are additive and reversible: drop them in, run one session, watch <code>/hooks</code>. Nothing else needs to change for them to start working. The skills split is higher value long-term but touches the operating prompt, so it belongs behind a normal ledger claim — and the live Sonnet seat owns that queue right now.</p>
+  </div>
+</section>
+
+<section>
+  <h2>Uncertainty ledger</h2>
+  <p class="sec-note">What isn't confirmed. Written here rather than omitted, because a document about honesty laws that quietly smooths over its own gaps would be self-refuting.</p>
+
+  <ul>
+    <li><strong>Two hook output shapes conflict across sources.</strong> For <code>PostToolUse</code> and <code>Stop</code>, the guide prose puts <code>decision</code>/<code>reason</code> at the top level while reference code blocks nest them under <code>hookSpecificOutput</code>. The kit's Stop hook uses <strong>exit 2 with stderr</strong>, which is unambiguous in both readings — so this conflict doesn't affect anything shipped. Verify empirically before relying on the JSON form.</li>
+    <li><strong><code>escalate</code> as a <code>permissionDecision</code> value is unverified.</strong> <code>allow</code>/<code>deny</code>/<code>ask</code>/<code>defer</code> are solid across three sources; one reference lists <code>escalate</code> as a synonym for <code>ask</code>. Nothing shipped depends on it.</li>
+    <li><strong><code>promptCacheTtl</code> in settings is version-gated</strong> (v2.1.242+) and unverified against your installed build. If it errors, remove the key — the subscription default is already 1h for the main conversation.</li>
+    <li><strong>The <code>/cost</code> command could not be confirmed to still exist.</strong> Current docs show <code>/usage</code>, <code>/usage-credits</code>, and <code>/insights</code>. If a runbook references <code>/cost</code>, check it.</li>
+    <li><strong><code>/output-style</code> was removed in v2.1.91.</strong> Use <code>/config</code> or the <code>outputStyle</code> setting. Any runbook calling the old command is broken.</li>
+    <li><strong>Subdirectory namespacing for <code>.claude/commands/</code> is no longer documented.</strong> The old <code>frontend/component.md → /frontend:component</code> behavior may or may not survive; directory-qualified names are documented only for nested skills dirs.</li>
+    <li><strong>All docs moved hosts.</strong> <code>docs.claude.com/en/docs/claude-code/*</code> now redirects to <code>code.claude.com/docs/en/*</code>, and prompt-engineering pages to <code>platform.claude.com</code>. Any stored URL in the repo's playbook index is stale.</li>
+  </ul>
+
+  <p>Separately, and worth saying directly: the hooks in the kit were tested against synthetic input in an isolated clone, not against your actual repo with your actual <code>npm</code> scripts. The <code>Stop</code> hook in particular assumes <code>npm run typecheck</code>, <code>check:ledger</code>, and <code>agent:eval</code> exist and behave as §7.3 describes. Run it once interactively before trusting it to gate an unattended session.</p>
+</section>
+
+<hr>
+<footer>
+  <p>Built from lessons read directly at academy.claude.com and the current documentation, cross-checked across six parallel research passes. Where sources disagreed, the disagreement is recorded above rather than resolved silently. Nothing in the Beexly/Sports repository was modified — this is advisory input for the ledger, not a claim on it.</p>
+</footer>
+
+</div>
