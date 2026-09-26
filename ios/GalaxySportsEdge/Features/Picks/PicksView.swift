@@ -21,13 +21,18 @@ struct PicksView: View {
             .navigationBarTitleDisplayMode(.large)
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
-                    NavigationLink {
-                        SavedPicksView(vm: vm)
-                    } label: {
-                        Image(systemName: "bookmark")
+                    // `vm` is optional until the first load; the bookmark
+                    // screen has nothing to show before then, so it is hidden
+                    // rather than wrapped in an empty view.
+                    if let vm {
+                        NavigationLink {
+                            SavedPicksView(vm: vm)
+                        } label: {
+                            Image(systemName: "bookmark")
+                        }
+                        .tint(Theme.violet)
+                        .accessibilityLabel("Saved picks")
                     }
-                    .tint(Theme.violet)
-                    .accessibilityLabel("Saved picks")
                 }
             }
             .task {

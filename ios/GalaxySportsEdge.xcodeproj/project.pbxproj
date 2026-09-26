@@ -120,7 +120,7 @@
 		CA23729FBE92E83BDA260784 /* SavedPicksStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SavedPicksStore.swift; sourceTree = "<group>"; };
 		B5FE70FEF31070E3B799BFDF /* PushNotificationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushNotificationManager.swift; sourceTree = "<group>"; };
 		538C3CF38EDA3BB01D527EB8 /* SubscriptionStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SubscriptionStore.swift; sourceTree = "<group>"; };
-		C94E6C79E05365CBCED7B5FE /* GalaxySportsEdge */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GalaxySportsEdge; sourceTree = BUILT_PRODUCTS_DIR; };
+		C94E6C79E05365CBCED7B5FE /* GalaxySportsEdge.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = GalaxySportsEdge.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		0303219ABC31B1A256DC9ECD /* BetStoreTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BetStoreTests.swift; sourceTree = "<group>"; };
 		8741093A72C3E6EA5094066B /* DomainTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainTests.swift; sourceTree = "<group>"; };
 		B74582BE770A814411AB4854 /* NetworkingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NetworkingTests.swift; sourceTree = "<group>"; };
@@ -128,7 +128,7 @@
 		6FAB79FD92E04ADE107B9B7A /* PickDecodingTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PickDecodingTests.swift; sourceTree = "<group>"; };
 		8223312086E839046CD61777 /* StubSportsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StubSportsService.swift; sourceTree = "<group>"; };
 		40B385B38536A1C406DA3D65 /* ViewModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewModelTests.swift; sourceTree = "<group>"; };
-		5025B334F0F1FEBEA11B38CB /* GalaxySportsEdgeTests */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GalaxySportsEdgeTests; sourceTree = BUILT_PRODUCTS_DIR; };
+		5025B334F0F1FEBEA11B38CB /* GalaxySportsEdgeTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = GalaxySportsEdgeTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -682,6 +682,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 									"$(inherited)",
 									"@executable_path/Frameworks",
@@ -706,6 +707,7 @@
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				BUNDLE_LOADER = "$(TEST_HOST)";
+				GENERATE_INFOPLIST_FILE = YES;
 				LD_RUNPATH_SEARCH_PATHS = (
 									"$(inherited)",
 									"@executable_path/Frameworks",

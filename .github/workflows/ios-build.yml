@@ -71,6 +71,17 @@ jobs:
           fi
           echo "SIMULATOR_UDID=$UDID" >> "$GITHUB_ENV"
 
+      - name: Lint the project file with macOS's own plist parser
+        # `xcodebuild` reports a malformed pbxproj as "damaged ... parse error"
+        # with no line number, which is close to undebuggable. `plutil` is the
+        # same parser with a line number, and it costs nothing. A brace count
+        # does not work here: the file that Xcode refused to open had balanced
+        # braces, balanced parens, and no dangling references.
+        run: |
+          plutil -lint ios/GalaxySportsEdge.xcodeproj/project.pbxproj
+          plutil -lint ios/GalaxySportsEdge/Info.plist
+          plutil -lint ios/GalaxySportsEdge/PrivacyInfo.xcprivacy
+
       - name: Build for iOS Simulator (unsigned)
         run: |
           xcodebuild -project ios/GalaxySportsEdge.xcodeproj \

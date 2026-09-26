@@ -173,6 +173,9 @@ def target_settings(is_app: bool) -> list[str]:
     # a configuration one.
     return common + [
         "BUNDLE_LOADER = \"$(TEST_HOST)\";",
+        # The test bundle has no Info.plist of its own on disk, so Xcode has to
+        # synthesise one. Without this the build fails on a missing plist.
+        "GENERATE_INFOPLIST_FILE = YES;",
         "LD_RUNPATH_SEARCH_PATHS = (",
         "\t\t\t\t\t\"$(inherited)\",",
         "\t\t\t\t\t\"@executable_path/Frameworks\",",
@@ -185,14 +188,16 @@ def target_settings(is_app: bool) -> list[str]:
 
 
 TARGETS = [
-    # name, root dir, product type, wrapper type, is_app
-    (APP_NAME, APP_DIR, "com.apple.product-type.application", "application", True),
-    (TEST_NAME, TEST_DIR, "com.apple.product-type.bundle.unit-test", "cfbundle", False),
+    # name, root dir, productType, wrapper, product file name, is_app
+    (APP_NAME, APP_DIR, "com.apple.product-type.application",
+     "application", APP_NAME + ".app", True),
+    (TEST_NAME, TEST_DIR, "com.apple.product-type.bundle.unit-test",
+     "cfbundle", TEST_NAME + ".xctest", False),
 ]
 
 
 def build_pbxproj() -> str:
-    discovered = {name: discover(path) for name, path, _, _, _ in TARGETS}
+    discovered = {name: discover(path) for name, path, _, _, _, _ in TARGETS}
     out: list[str] = []
     w = out.append
 
@@ -207,7 +212,7 @@ def build_pbxproj() -> str:
 
     # ── PBXBuildFile ──────────────────────────────────────────────────────
     w("/* Begin PBXBuildFile section */")
-    for name, _, _, _, _ in TARGETS:
+    for name, _, _, _, _, _ in TARGETS:
         for node in discovered[name]:
             if not (node.is_source or node.is_resource):
                 continue
@@ -231,20 +236,21 @@ def build_pbxproj() -> str:
 
     # ── PBXFileReference ──────────────────────────────────────────────────
     w("/* Begin PBXFileReference section */")
-    for name, _, _, wrapper, _ in TARGETS:
+    for name, _, _, wrapper, product_file, _ in TARGETS:
         for node in discovered[name]:
             w(f"\t\t{node.ref_id} /* {node.name} */ = {{isa = PBXFileReference; "
               f"lastKnownFileType = {node.file_type}; path = {node.name}; "
               f"sourceTree = \"<group>\"; }};")
-        w(f"\t\t{uid('product', name)} /* {name} */ = {{isa = PBXFileReference; "
+        w(f"\t\t{uid('product', name)} /* {product_file} */ = "
+          f"{{isa = PBXFileReference; "
           f"explicitFileType = wrapper.{wrapper}; includeInIndex = 0; "
-          f"path = {name}; sourceTree = BUILT_PRODUCTS_DIR; }};")
+          f"path = {product_file}; sourceTree = BUILT_PRODUCTS_DIR; }};")
     w("/* End PBXFileReference section */")
     w("")
 
     # ── PBXFrameworksBuildPhase ───────────────────────────────────────────
     w("/* Begin PBXFrameworksBuildPhase section */")
-    for name, _, _, _, _ in TARGETS:
+    for name, _, _, _, _, _ in TARGETS:
         w(f"\t\t{uid('phase', name, 'frameworks')} /* Frameworks */ = {{")
         w("\t\t\tisa = PBXFrameworksBuildPhase;")
         w("\t\t\tbuildActionMask = [PHONE];")
@@ -261,7 +267,7 @@ def build_pbxproj() -> str:
     w(f"\t\t{uid('group', '<root>')} = {{")
     w("\t\t\tisa = PBXGroup;")
     w("\t\t\tchildren = (")
-    for name, _, _, _, _ in TARGETS:
+    for name, _, _, _, _, _ in TARGETS:
         w(f"\t\t\t\t{group_id(name)} /* {name} */,")
     w("\t\t\t);")
     w("\t\t\tsourceTree = \"<group>\";" if False else "\t\t\tsourceTree = \"<group>\";")
@@ -271,14 +277,14 @@ def build_pbxproj() -> str:
     w(f"\t\t{products_group} /* Products */ = {{")
     w("\t\t\tisa = PBXGroup;")
     w("\t\t\tchildren = (")
-    for name, _, _, _, _ in TARGETS:
+    for name, _, _, _, _, _ in TARGETS:
         w(f"\t\t\t\t{uid('product', name)} /* {name} */,")
     w("\t\t\t);")
     w("\t\t\tname = Products;")
     w("\t\t\tsourceTree = \"<group>\";")
     w("\t\t};")
 
-    for name, _, _, _, _ in TARGETS:
+    for name, _, _, _, _, _ in TARGETS:
         nodes = discovered[name]
         w("")
         w(f"\t\t{group_id(name)} /* {name} */ = {{")
@@ -313,7 +319,7 @@ def build_pbxproj() -> str:
 
     # ── PBXNativeTarget ───────────────────────────────────────────────────
     w("/* Begin PBXNativeTarget section */")
-    for name, _, product_type, _, is_app in TARGETS:
+    for name, _, product_type, _, _, is_app in TARGETS:
         w(f"\t\t{uid('target', name)} /* {name} */ = {{")
         w("\t\t\tisa = PBXNativeTarget;")
         w(f"\t\t\tbuildConfigurationList = {uid('configlist', name)} "
@@ -355,7 +361,7 @@ def build_pbxproj() -> str:
     w("\t\t\tprojectDirPath = \"\";")
     w("\t\t\tprojectRoot = \"\";")
     w("\t\t\ttargets = (")
-    for name, _, _, _, _ in TARGETS:
+    for name, _, _, _, _, _ in TARGETS:
         w(f"\t\t\t\t{uid('target', name)} /* {name} */,")
     w("\t\t\t);")
     w("\t\t};")
@@ -365,7 +371,7 @@ def build_pbxproj() -> str:
     # ── Build phases ──────────────────────────────────────────────────────
     for phase, kind in (("sources", "Sources"), ("resources", "Resources")):
         w(f"/* Begin PBX{kind}BuildPhase section */")
-        for name, _, _, _, _ in TARGETS:
+        for name, _, _, _, _, _ in TARGETS:
             w(f"\t\t{uid('phase', name, phase)} /* {kind} */ = {{")
             w(f"\t\t\tisa = PBX{kind}BuildPhase;")
             w("\t\t\tbuildActionMask = [PHONE];")
@@ -433,7 +439,7 @@ def build_pbxproj() -> str:
         w(f"\t\t\tname = {config};")
         w("\t\t};")
 
-    for name, _, _, _, is_app in TARGETS:
+    for name, _, _, _, _, is_app in TARGETS:
         for config in ("Debug", "Release"):
             w(f"\t\t{uid('config', name, config)} /* {config} */ = {{")
             w("\t\t\tisa = XCBuildConfiguration;")
@@ -458,7 +464,7 @@ def build_pbxproj() -> str:
     w("\t\t\tdefaultConfigurationIsVisible = 0;")
     w("\t\t\tdefaultConfigurationName = Release;")
     w("\t\t};")
-    for name, _, _, _, _ in TARGETS:
+    for name, _, _, _, _, _ in TARGETS:
         w(f"\t\t{uid('configlist', name)} /* Build configuration list for "
           f"PBXNativeTarget \"{name}\" */ = {{")
         w("\t\t\tisa = XCConfigurationList;")
@@ -474,7 +480,7 @@ def build_pbxproj() -> str:
     w(f"\trootObject = {uid('project')} /* Project object */;")
     w("}")
 
-    counts = {name: len(discovered[name]) for name, _, _, _, _ in TARGETS}
+    counts = {name: len(discovered[name]) for name, _, _, _, _, _ in TARGETS}
     return "\n".join(out) + "\n", counts
 
 

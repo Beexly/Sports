@@ -1,4 +1,5 @@
 import SwiftUI
+import StoreKit
 
 /// The paywall.
 ///
