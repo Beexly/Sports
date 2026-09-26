@@ -86,9 +86,11 @@ enum OddsMath {
     /// even at 100/245 ≈ 40.82%. Returning the implied probability here made
     /// every positive-price bet look like it needed a win rate it does not.
     static func breakEvenWinRate(american: Int) -> Double? {
-        guard let decimal = payout(stake: 1, american: american), decimal > 0 else {
-            return nil
-        }
+        // A zero line is not a price: it pays the stake back and nothing more,
+        // so there is no win rate that breaks even.
+        guard american != 0 else { return nil }
+        let decimal = payout(stake: 1, american: american)
+        guard decimal > 0 else { return nil }
         return (1 / decimal) * 100
     }
 
