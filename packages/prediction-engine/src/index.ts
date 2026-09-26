@@ -2153,6 +2153,79 @@ export type { TwoMinuteHurryUpContext, TwoMinuteHurryUpResult } from "./signals/
 // Hierarchical Bayesian Pooling across 8 Signal Families
 export { poolSignalsHierarchically } from "./hierarchical-pool.js";
 export type { IndividualSignalInput, FamilyAggregation, HierarchicalPoolResult } from "./hierarchical-pool.js";
+// Salvaged research modules (branch harvest 2026-09-21) — not yet in the live scoring path
+// Multi-market true-probability ensemble — precision-weighted fusion of independent estimators
+export {
+  precisionWeightedEnsemble,
+  ensembleForSide,
+  independentEstimatesForSide,
+  estimatorSigma,
+  SIGMA_BASE,
+  DEFAULT_SOURCE_RELIABILITY,
+} from "./multi-market-ensemble.js";
+export type {
+  EstimatorReliability,
+  MarketEstimate,
+  EnsembleResult,
+  SideEstimateOptions,
+} from "./multi-market-ensemble.js";
+
+// Synthetic public-lean / fade — glass-box crowd model (not betting data)
+export {
+  syntheticPublicLean,
+  MAX_FADE_NUDGE,
+  MAX_CONFIDENCE,
+  SYNTHETIC_FADE_LABEL,
+} from "./synthetic-fade.js";
+export type {
+  PublicLeanInput,
+  FadeContribution,
+  SyntheticPublicLean,
+} from "./synthetic-fade.js";
+
+// Calibration ladder (path-to-70 Step 1) — binned-empirical + Wilson-bounded bins.
+// NOTE (rescue 2026-09-25): plattScaling, PlattModel and CalibrationMethod are NOT
+// re-exported here — this barrel already exports those names from
+// ./calibration-map.js (a different implementation); re-exporting them would
+// create duplicate barrel exports and break the Next.js build. The ladder's own
+// Platt implementation remains importable via the submodule path
+// "@sports/prediction-engine/src/calibration-ladder.js".
+export {
+  binnedEmpiricalCalibration,
+  buildCalibrationLadder,
+  DEFAULT_LADDER_MIN_SAMPLE,
+} from "./calibration-ladder.js";
+export type {
+  EmpiricalBin,
+  BinnedEmpiricalModel,
+  BinnedEmpiricalOptions,
+  CalibratedLadderProbability,
+  CalibrationLadder,
+} from "./calibration-ladder.js";
+
+// Source reliability stub (provenance fusion pillar)
+export {
+  computeSourceReliability,
+} from "./source-reliability.js";
+export type {
+  SourceReliabilityVerdict,
+  SourceReliabilityReport,
+} from "./source-reliability.js";
+
+// Salvaged: pick-level CLV (gse-moat) and time-ordered OOS skill split (galaxy-sports-edge)
+export { computePickClv } from "./pick-clv.js";
+export type { PickClvResult } from "./pick-clv.js";
+export {
+  computeOosSplit,
+  segmentOosSplit,
+} from "./oos-split.js";
+export type {
+  SettledPickRecord,
+  OosSplitConfig,
+  OosSplitResult,
+  OosSegment,
+  SegmentedOosSplit,
+} from "./oos-split.js";
 
 // Canonical model version (frozen at v5.2.7 per founder invariant)
 export { MODEL_VERSION } from "./constants.js";
