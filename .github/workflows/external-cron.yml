@@ -20,15 +20,16 @@ name: External Cron (Galaxy Sports Edge)
 #   CRON_TARGET_URL   — e.g. https://www.galaxysportsedge.com (no trailing slash)
 #
 # 2026-08-06: free-spine-health primary heartbeat; refresh-player-stats
-# secondary (sequential satellites after OOM fix). settle hourly.
+# secondary (sequential satellites after OOM fix).
 # 2026-08-07: autonomy-cycle (I9 plan→act) hourly dry-run / execute when
 # AUTONOMY_EXECUTE=true on production (route-side).
+# 2026-09-15 C-418 (LAST_PLAN D16/frozen-path): settle-picks job removed.
+# Vercel cron (`vercel.json` `/api/cron/settle-picks` at `20 * * * *`) is the
+# only settle-picks scheduler. Do not re-add a second one.
 
 on:
   schedule:
     # PRIVATE-REPO MINUTES ECONOMY: keep cadence lean.
-    # Hourly on the :15 — settle picks whose games have completed.
-    - cron: "15 * * * *"
     # Every 2h at :05 — free multi-source spine + IngestionRun SUCCESS stamp
     # (under 240m SLA; ~12 jobs/day). I3/I8 durable free-spine heartbeat.
     - cron: "5 */2 * * *"
@@ -56,7 +57,6 @@ on:
           - board-fill
           - generate-signal-slate
           - backfill-independent-trueprob
-          - settle-picks
           - jarvis-snapshot
           - autonomy-cycle
           - autonomy-cycle-execute
@@ -146,35 +146,6 @@ jobs:
             --location \
             --max-time 360 \
             "${CRON_TARGET_URL}/api/cron/refresh-odds")
-          echo "HTTP ${response}"
-          if command -v jq >/dev/null 2>&1; then
-            jq . /tmp/body.json || cat /tmp/body.json
-          else
-            cat /tmp/body.json
-          fi
-          test "${response}" = "200"
-
-  settle-picks:
-    name: Settle completed picks
-    if: ${{ github.event.schedule == '15 * * * *' || github.event.inputs.target == 'settle-picks' }}
-    runs-on: ubuntu-latest
-    timeout-minutes: 6
-    steps:
-      - name: Hit /api/cron/settle-picks
-        env:
-          CRON_SECRET: ${{ secrets.CRON_SECRET }}
-          CRON_TARGET_URL: ${{ secrets.CRON_TARGET_URL }}
-        run: |
-          set -euo pipefail
-          if [ -z "${CRON_SECRET}" ] || [ -z "${CRON_TARGET_URL}" ]; then
-            echo "::error::CRON_SECRET or CRON_TARGET_URL not configured"
-            exit 1
-          fi
-          response=$(curl -sS -o /tmp/body.json -w "%{http_code}" \
-            -H "Authorization: Bearer ${CRON_SECRET}" \
-            --location \
-            --max-time 300 \
-            "${CRON_TARGET_URL}/api/cron/settle-picks")
           echo "HTTP ${response}"
           if command -v jq >/dev/null 2>&1; then
             jq . /tmp/body.json || cat /tmp/body.json
