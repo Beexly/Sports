@@ -38,6 +38,7 @@ disclosed vendor fact.
 | `inventory-props.txt` | QB and prop-side inventory. |
 | `inventory-benchmark.txt` | What was scanned, at which line offsets. |
 | `inventory-sources.txt` | **Empty (0 bytes) in the original.** Not reconstructed — listed here so the gap is visible rather than silently dropped. |
+| `nfl-analytics-reverse-engineering-MASTER.md` | The 13,710-line / 1.4MB master consolidation of the whole KB, including a "Deliberately left out (and why)" section and an open-items list. **Read this one first** — the per-file digests above are its inputs. |
 
 ## How to read the line references
 
@@ -45,6 +46,22 @@ disclosed vendor fact.
 `AGENTS.md` as it stood on 2026-09-25 (4,029 lines). They are anchors into a file
 that has since moved, so treat them as provenance for the claim rather than as a
 live citation, and re-resolve before relying on one.
+
+## Read the master first
+
+`nfl-analytics-reverse-engineering-MASTER.md` supersedes the per-file digests as
+the entry point. It carries a section the individual files do not: what was
+deliberately left out and why, plus a list of OPEN ITEMS marked *do not use or
+guess*. That list is the useful part — it names the specific numbers that must
+not be used until verified (e.g. a Josh Allen 55.3% CPOE conflict between a
+graphic transcription and the post text).
+
+Its §10 attribution map points at
+`docs/research/2026-09-21/nextgenstats-profile/` for the underlying inventories
+(`post-inventory-2026-09-21.md`, `metric-glossary.md`,
+`ngs-methodology-backend-2026-09-21.md`,
+`ngs-implementation-playbook-2026-09-21.md`, and the continuation + QC files).
+Those are already on `main`; this directory holds only the 09-25 pass.
 
 ## Status
 
