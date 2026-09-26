@@ -189,7 +189,22 @@ describe("research bridge — DML panel and QB-out ATT", () => {
   });
 
   it("sensitivityInterval widens with gamma and fails closed below 1", () => {
-    const est: DmlEstimate = { att: 0.05, se: 0.02, ciLow: 0.01, ciHigh: 0.09, n: 100 };
+    const est: DmlEstimate = {
+      att: 0.05,
+      se: 0.02,
+      ciLow: 0.01,
+      ciHigh: 0.09,
+      n: 100,
+      nTreated: 50,
+      nTrimmed: 98,
+      meanPropensity: 0.5,
+      minPropensity: 0.12,
+      maxPropensity: 0.88,
+      impliedLogitShift: 0,
+      filterGain: 0.02,
+      priced: false,
+      status: "shadow",
+    };
     const narrow = evalSensitivityInterval(est, 1);
     const wide = evalSensitivityInterval(est, 3);
     expect(narrow.ok).toBe(true);
@@ -284,12 +299,12 @@ describe("research bridge — negative-binomial surface", () => {
 
 describe("research bridge — opponent-adjusted EPA", () => {
   const games: TeamGameEpaSplit[] = [
-    { team: "A", opponent: "B", offDropbackPlays: 40, offDropbackEpaPerPlay: 0.12, offRushPlays: 30, offRushEpaPerPlay: 0.03 },
-    { team: "B", opponent: "A", offDropbackPlays: 38, offDropbackEpaPerPlay: 0.04, offRushPlays: 32, offRushEpaPerPlay: -0.02 },
-    { team: "A", opponent: "C", offDropbackPlays: 42, offDropbackEpaPerPlay: 0.09, offRushPlays: 28, offRushEpaPerPlay: 0.01 },
-    { team: "C", opponent: "A", offDropbackPlays: 39, offDropbackEpaPerPlay: 0.05, offRushPlays: 31, offRushEpaPerPlay: -0.01 },
-    { team: "B", opponent: "C", offDropbackPlays: 41, offDropbackEpaPerPlay: 0.06, offRushPlays: 29, offRushEpaPerPlay: 0.0 },
-    { team: "C", opponent: "B", offDropbackPlays: 37, offDropbackEpaPerPlay: 0.07, offRushPlays: 33, offRushEpaPerPlay: 0.02 },
+    { team: "A", opponent: "B", offDropbackPlays: 40, offDropbackEpaPerPlay: 0.12, offRushPlays: 30, offRushEpaPerPlay: 0.03, defDropbackPlays: 40, defDropbackEpaPerPlayAllowed: 0.12, defRushPlays: 30, defRushEpaPerPlayAllowed: 0.03 },
+    { team: "B", opponent: "A", offDropbackPlays: 38, offDropbackEpaPerPlay: 0.04, offRushPlays: 32, offRushEpaPerPlay: -0.02, defDropbackPlays: 38, defDropbackEpaPerPlayAllowed: 0.04, defRushPlays: 32, defRushEpaPerPlayAllowed: -0.02 },
+    { team: "A", opponent: "C", offDropbackPlays: 42, offDropbackEpaPerPlay: 0.09, offRushPlays: 28, offRushEpaPerPlay: 0.01, defDropbackPlays: 42, defDropbackEpaPerPlayAllowed: 0.09, defRushPlays: 28, defRushEpaPerPlayAllowed: 0.01 },
+    { team: "C", opponent: "A", offDropbackPlays: 39, offDropbackEpaPerPlay: 0.05, offRushPlays: 31, offRushEpaPerPlay: -0.01, defDropbackPlays: 39, defDropbackEpaPerPlayAllowed: 0.05, defRushPlays: 31, defRushEpaPerPlayAllowed: -0.01 },
+    { team: "B", opponent: "C", offDropbackPlays: 41, offDropbackEpaPerPlay: 0.06, offRushPlays: 29, offRushEpaPerPlay: 0.0, defDropbackPlays: 41, defDropbackEpaPerPlayAllowed: 0.06, defRushPlays: 29, defRushEpaPerPlayAllowed: 0.0 },
+    { team: "C", opponent: "B", offDropbackPlays: 37, offDropbackEpaPerPlay: 0.07, offRushPlays: 33, offRushEpaPerPlay: 0.02, defDropbackPlays: 37, defDropbackEpaPerPlayAllowed: 0.07, defRushPlays: 33, defRushEpaPerPlayAllowed: 0.02 },
   ];
 
   it("nets the schedule and returns a rating per team", () => {

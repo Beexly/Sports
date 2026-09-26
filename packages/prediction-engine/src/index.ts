@@ -3390,3 +3390,248 @@ export {
   calibrationRequiresHardPass,
   calibrationRiskSeverity,
 } from "./gse-score/calibration-action-policy.js";
+
+// Edge-lab honesty: claim ceiling constants, council, selective gate, context
+// bind, Kaunitz types. collectCeilingDefects / assertClaimWithinCeiling /
+// PerformanceClaimInput are already exported above and are NOT repeated here.
+export {
+  BREAK_EVEN,
+  BLIND_ATS_CEILING,
+  SELECTIVE_CLAIM_FLOOR,
+  HonestCeilingError,
+  type SelectiveClaimFloor,
+  type PerformanceClaimScope,
+  type SelectiveClaimProof,
+} from "./edge-lab/honest-ceiling.js";
+export {
+  staticOpinion,
+  type EdgeLabAgentRole,
+  type EdgeLabContext,
+  type AgentOpinion,
+  type DebateRound,
+  type DebateSummary,
+  type EdgeLabAgent,
+  type EdgeLabCouncil,
+} from "./edge-lab/agent-roles.js";
+export {
+  DEFAULT_MAX_GUARDIAN_WIDTH,
+  marketMicrostructureAnalyst,
+  featureAnalyst,
+  placeboAnalyst,
+  calibrationAnalyst,
+  riskHonestyGuardian,
+  decisionAgent,
+  glassLedgerRecorder,
+  defaultAgents,
+  SequentialEdgeLabCouncil,
+} from "./edge-lab/edge-lab-council.js";
+export {
+  MIN_STRATUM_CALIBRATION,
+  vennAbersInterval,
+  applySelectiveGate,
+  coverageEdgeCurve,
+  tuneTau,
+  GateSetOverlapError,
+  type VennAbersInterval,
+  type MultiprobSource,
+  type MultiprobGateOptions,
+  type NoBetReason,
+  type GateDecisionRow,
+  type FiredDecision,
+  type SelectiveGateReport,
+  type CoverageEdgePoint,
+  type CoverageEdgeCurveOptions,
+  type TauSelection,
+  type TuneTauOptions,
+} from "./edge-lab/selective-gate.js";
+export {
+  CONTEXT_BIND_METHOD_TAG,
+  bindTeamContext,
+  bindTeamContextBatch,
+  type ContextField,
+  type ContextCell,
+  type ContextBindRequest,
+  type ContextRefuse,
+  type ContextBindResult,
+} from "./edge-lab/props-context-bind.js";
+export type {
+  KaunitzSide,
+  KaunitzResult,
+  KaunitzRefuse,
+  KaunitzDenied,
+} from "./edge-lab/kaunitz-outlier.js";
+
+// Experimental research surface. Four of these modules ship
+// `export const ENABLED = false` behind an unevaluated acceptance gate, so the
+// ENABLED constants are deliberately NOT re-exported (a barrel can bind only
+// one `ENABLED`); the bridges read them through the deep path and publish gate
+// status on every result instead.
+export {
+  effectiveBreadth,
+  entropyBreadth,
+  isTopHeavy,
+} from "./experimental/effective-breadth.js";
+export {
+  aggregateShap,
+  ashapStability,
+  topKFeatures,
+  type GroupContribution,
+} from "./experimental/ashap-aggregate.js";
+export {
+  fitITSPoisson,
+  scanBreaks,
+  itsGate,
+  type BreakScan,
+  type ITSFit,
+} from "./experimental/1805-01271v1-its-break-harness.js";
+// This module's normalCdf is its own ~5e-10 Abramowitz-Stegun approximation;
+// the barrel already binds `normalCdf` from ./performance-ci.js.
+export {
+  normalCdf as itsHarnessNormalCdf,
+} from "./experimental/1805-01271v1-its-break-harness.js";
+// experimental/1905-03628v1-nested-poisson-totals.ts is intentionally NOT
+// exported: byte-identical subset of the already-barrelled
+// ./bayesian/1911-08791-three-module-score-factorization.js.
+export {
+  cfovFeatures,
+  timeOrderedEval,
+  type CFOV,
+  type PlayerGame,
+} from "./experimental/1804-04226v1-cfov-decomposition.js";
+export {
+  volumeBuckets,
+  resiliencyRegression,
+  steamSignal,
+  scarceLiquidityFlag,
+  type FlowBucket,
+  type ResiliencyFit,
+  type Trade,
+} from "./experimental/1708-02715v1-order-flow-resiliency.js";
+
+// Props/DFS + metrics. The JOI block is taken from 2003-01712v1 only:
+// 1912-10417v1-regime-switching-synergy-network.ts carries a byte-identical
+// copy of PairSequence/joiPerDropback/synergyEdge/rankStackPairs plus its own
+// ENABLED, so exporting both would collide on five names.
+export {
+  completeMatrix,
+  specializationEmbedding,
+  imputationRmse,
+} from "./props-dfs/1505-01147v2-local-matrix-completion.js";
+export {
+  sesForecast,
+  trailingMean,
+  rollingOriginMae,
+  availabilityProb,
+  lineupForecastGain,
+} from "./props-dfs/1909-12938v1-ts-forecast-dfs-optimizer.js";
+export {
+  joiPerDropback,
+  synergyEdge,
+  rankStackPairs,
+  type PairSequence,
+} from "./props-dfs/2003-01712v1-joi-stack-metric.js";
+// softThreshold already binds from ./bayesian/1911-08138-sparse-form-hmm.js.
+export {
+  softThreshold as softThresholdLasso,
+  istaLasso,
+  tvDenoise1d,
+} from "./props-dfs/2004-08428v1-era-adjusted-features.js";
+// The first three already bind from ./bayesian/1908-05745-nmf-target-archetypes.js.
+export {
+  nmfFrobenius as propsNmfFrobenius,
+  nmfArchetypeAssign as propsNmfArchetypeAssign,
+  adjustedRandIndex as propsAdjustedRandIndex,
+  emGaussianMixture1d,
+  emMonotone,
+} from "./props-dfs/2006-07513-bayesian-shot-archetypes.js";
+export {
+  expectedMax2,
+  emaxPortfolioGreedy,
+} from "./props-dfs/2112-07002-emax-duel-optimizer.js";
+export {
+  buildMetricResidualRollups,
+  metricResidualRollupKey,
+  type MetricResidualMetricId,
+  type MetricResidualPlayInput,
+  type MetricResidualRollup,
+} from "./metrics/core/residual-rollup.js";
+export {
+  empiricalBayesShrink,
+  shrinkProbability,
+  shrinkWeightedMean,
+} from "./metrics/core/shrinkage.js";
+
+// Invention + tracking: equation separability, dual-margin bandit experiments,
+// SELA MCTS, case bank, meta-analytics, expected drive value, EPV bootstrap.
+// `Sample` already binds elsewhere in this barrel, hence the alias.
+export {
+  deltaSepAdditive,
+  deltaSepMultiplicative,
+  probeSeparability,
+  normalizeByPace,
+  recombine,
+  passesImprovementGate,
+  type Sample as FeynmanSample,
+  type FeatureGroup,
+  type SeparabilityResult,
+  type RecombinedEquation,
+} from "./invention/1905-11481v2-ai-feynman-separability.js";
+export {
+  NUM_ARMS,
+  initialArmState,
+  assignArm,
+  recordOutcome,
+  computeDualMargin,
+  passesDualMarginGate,
+  cateReplicatesLive,
+  defaultExperimentSpec,
+  type ExperimentSpec,
+  type BanditArmState,
+  type Assignment,
+  type DualMarginResult,
+} from "./invention/2409-00629v2-dualmargin-bandit-experiment.js";
+export {
+  makeRootNode,
+  meanValue,
+  ucbScore,
+  wideningLimit,
+  rollout,
+  runMCTSSearch,
+  runRoundRobin,
+  wastedRolloutRate,
+  spearman,
+  valueEstimateVsTruth,
+  passesSelaGate,
+  type HypothesisNode,
+  type MCTSNode,
+  type MCTSConfig,
+} from "./invention/2410-17238v1-sela-mcts.js";
+export {
+  cosineSimilarity,
+  retrieveTopK,
+  reviseRank,
+  retrieveCounterCase,
+  retainGate,
+  selectBestProductionCase,
+  type DiscoveryCase,
+} from "./invention/case-bank.js";
+export {
+  discriminationIndex,
+  stabilityIndex,
+  independenceIndices,
+  ebShrink,
+  reliabilityReport,
+  type MetricAudit,
+} from "./invention/meta-analytics.js";
+export {
+  edv,
+  attributeEdv,
+  riskAdjustedEdv,
+  type ScoringPlay,
+  type PlayActor,
+} from "./tracking/expected-drive-value.js";
+export {
+  bootstrapSe,
+  errorScaledThreshold,
+  actOnEpv,
+} from "./tracking/bootstrap-epv-scaling.js";

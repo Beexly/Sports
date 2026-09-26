@@ -31,7 +31,7 @@ import {
   prunePool,
   bruteForceOptimal,
   verifyPruning,
-  type DfsPlayer as DominationDfsPlayer,
+  type DominationDfsPlayer,
   type Lineup,
   type PruneVerification,
 } from "@sports/prediction-engine";
@@ -40,7 +40,7 @@ import {
   buildLineup,
   shrinkVariance,
   buildPortfolio,
-  type DfsPlayer as PortfolioDfsPlayer,
+  type PortfolioDfsPlayer,
   type PortfolioConfig,
 } from "@sports/prediction-engine";
 import {

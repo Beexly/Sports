@@ -356,21 +356,25 @@ export function evalApplyBeta(input: {
   }
   if (!finite(p)) return fail("p must be finite");
   try {
-    // applyBeta reads only a/b/c, but the engine's BetaModel type also carries
-    // the fitted map + its canonical serialization, so hand it a complete record.
-    const beta = {
-      method: "beta",
-      a: model.a,
-      b: model.b,
-      c: model.c,
-      predict: (q: number) =>
-        applyBeta(
-          { method: "beta", a: model.a, b: model.b, c: model.c, predict: (x: number) => x, paramsCanonical: "" },
-          q,
-        ),
-      paramsCanonical: `beta:a=${model.a},b=${model.b},c=${model.c}`,
-    };
-    const calibrated = applyBeta(beta, p);
+    // BetaModel extends CalibratorFit, so it carries a predict closure and a
+    // canonical serialization of its own parameters. applyBeta reads only
+    // a/b/c, but the commitment string is what makes two fits distinguishable,
+    // so it is built from the real coefficients rather than stubbed.
+    const { a, b, c } = model;
+    const calibrated = applyBeta(
+      {
+        method: "beta",
+        a,
+        b,
+        c,
+        paramsCanonical: `beta|a=${a}|b=${b}|c=${c}`,
+        predict: (q: number) => {
+          const pc = Math.min(1 - 1e-9, Math.max(1e-9, q));
+          return 1 / (1 + Math.exp(-(a * Math.log(pc) - b * Math.log(1 - pc) + c)));
+        },
+      },
+      p,
+    );
     if (!finite(calibrated)) return fail("beta calibration produced non-finite output");
     return { ok: true, data: { calibrated } };
   } catch (e) {
