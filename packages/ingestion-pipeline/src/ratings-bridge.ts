@@ -301,7 +301,13 @@ export function evalPredictSpread(input: {
   if (!input.fit) {
     return { ok: false, reason: "fit required — not imputed" };
   }
-  return guard(() => predictSpread(input.fit, input.home, input.away));
+  return guard(() => {
+    const s = predictSpread(input.fit, input.home, input.away);
+    if (!Number.isFinite(s)) {
+      throw new Error("predictSpread returned a non-finite spread");
+    }
+    return s;
+  });
 }
 
 /** Spread MAE of a fitted rating set — the honesty number for a rating model. */
@@ -553,7 +559,16 @@ export function evalGameEwp(input: {
   if (!coef) {
     return { ok: false, reason: "coefficients required — not imputed" };
   }
-  return guard(() => gameEwp(pd, hfa, restEdge, coef));
+  if (![coef.alpha, coef.beta, coef.gamma].every(Number.isFinite)) {
+    return { ok: false, reason: "coef alpha/beta/gamma must be finite — not imputed" };
+  }
+  return guard(() => {
+    const p = gameEwp(pd, hfa, restEdge, coef);
+    if (!Number.isFinite(p) || p <= 0 || p >= 1) {
+      throw new Error("gameEwp returned a probability outside (0,1)");
+    }
+    return p;
+  });
 }
 
 // ── matchup-ratings ─────────────────────────────────────────────────────────
@@ -738,7 +753,13 @@ export function evalPredictWpDelta(input: {
   if (!input.scores || !input.units) {
     return { ok: false, reason: "scores and units required — not imputed" };
   }
-  return guard(() => predictWpDelta(input.scores, input.units));
+  return guard(() => {
+    const d = predictWpDelta(input.scores, input.units);
+    if (!Number.isFinite(d)) {
+      throw new Error("predictWpDelta returned a non-finite delta");
+    }
+    return d;
+  });
 }
 
 /** Bootstrap credible intervals for the Impact Scores. */
@@ -1076,7 +1097,7 @@ export function evalTeamCentralityDifferential(input: {
   readonly teamOf: (id: string) => string;
   readonly teamA: string;
   readonly teamB: string;
-  readonly k: number;
+  readonly k?: number;
 }): RatingEval<number> {
   if (Object.keys(input.centrality ?? {}).length === 0) {
     return { ok: false, reason: "centrality empty — not imputed" };
@@ -1084,7 +1105,7 @@ export function evalTeamCentralityDifferential(input: {
   if (typeof input.teamOf !== "function") {
     return { ok: false, reason: "teamOf must be a function" };
   }
-  if (!Number.isInteger(input.k) || input.k < 1) {
+  if (!Number.isInteger(input.k ?? 11) || (input.k ?? 11) < 1) {
     return { ok: false, reason: "k must be a positive integer" };
   }
   return guard(() =>
@@ -1093,7 +1114,7 @@ export function evalTeamCentralityDifferential(input: {
       input.teamOf,
       input.teamA,
       input.teamB,
-      input.k,
+      input.k ?? 11,
     ),
   );
 }
@@ -1201,6 +1222,8 @@ export function evalAggregateTeamVector(input: {
   readonly games: ReadonlyArray<PlayerGame>;
   readonly featureNames: readonly string[];
 }): RatingEval<number[]> {
+  const games = requireArray(input.games, "games");
+  if (!games.ok) return games;
   const names = requireArray(input.featureNames, "featureNames");
   if (!names.ok) return names;
   return guard(() => aggregateTeamVector(input.games, input.featureNames));
@@ -1553,8 +1576,6 @@ export {
   estimateStrengths,
   selFeatures,
   auditProvenance,
-  ratingsBrierScore,
-  softThreshold,
   fitImpactScores,
   predictWpDelta,
   impactScoreIntervals,

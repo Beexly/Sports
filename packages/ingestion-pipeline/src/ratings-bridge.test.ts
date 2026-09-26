@@ -714,6 +714,41 @@ describe("ratings-bridge target-pagerank", () => {
     expect(d.ok).toBe(true);
   });
 
+  it("defaults k to 11", () => {
+    const t = evalBuildTransition({ arcs });
+    if (!t.ok) return;
+    const c = evalPagerankCentrality({ nodes: t.data.nodes, trans: t.data.trans });
+    if (!c.ok) return;
+    const teamOf = (id: string) => (id.startsWith("WR") ? "BUF" : "NYJ");
+    const d = evalTeamCentralityDifferential({
+      centrality: c.data,
+      teamOf,
+      teamA: "BUF",
+      teamB: "NYJ",
+    });
+    expect(d.ok).toBe(true);
+  });
+
+  it("refuses NaN coefficients rather than returning NaN", () => {
+    const r = evalGameEwp({
+      pd: 7,
+      hfa: 1,
+      restEdge: 1,
+      coef: { alpha: Number.NaN, beta: 0, gamma: 0 },
+    });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.reason).toContain("finite");
+  });
+
+  it("refuses an empty game set rather than imputing zeros", () => {
+    const r = evalAggregateTeamVector({
+      games: [],
+      featureNames: ["a", "b"],
+    });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.reason).toContain("not imputed");
+  });
+
   it("fail-closes on empty arcs and a non-function teamOf", () => {
     expect(evalBuildTransition({ arcs: [] }).ok).toBe(false);
     expect(
