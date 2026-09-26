@@ -104,7 +104,7 @@ export function buildBriefing(): BriefingCard[] {
   }
 
   // Pick'em edge
-  const prop = PROPS.map(readProp).sort((a, b) => b.edge - a.edge)[0];
+  const prop = PROPS.map((p) => readProp(p)).sort((a, b) => b.edge - a.edge)[0];
   if (prop) {
     cards.push({
       id: "brief-props", kind: "props", priority: Math.round(prop.edge * 65),
