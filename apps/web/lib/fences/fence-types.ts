@@ -22,6 +22,38 @@ export interface FencePlugin {
   evaluate(input: FenceInput): Promise<FenceResult> | FenceResult;
 }
 
+/**
+ * Tri-state result of reading a typed domain object out of `FenceInput.metadata`.
+ *
+ * The distinction between "absent" and "invalid" is load-bearing: a fence may
+ * legitimately have nothing to review when the key is absent, but a key that IS
+ * present and malformed must fail closed rather than be silently treated as
+ * absent (which would fall through to weaker text-based heuristics).
+ */
+export type MetadataRead<T> =
+  | { readonly kind: "absent" }
+  | { readonly kind: "invalid" }
+  | { readonly kind: "ok"; readonly value: T };
+
+const ABSENT = { kind: "absent" } as const;
+const INVALID = { kind: "invalid" } as const;
+
+/**
+ * Read `input.metadata[key]` through a total parser. Absent/null keys read as
+ * "absent"; a present value the parser rejects reads as "invalid" so callers
+ * can fail closed on it.
+ */
+export function readMetadata<T>(
+  input: FenceInput,
+  key: string,
+  parse: (value: unknown) => T | null,
+): MetadataRead<T> {
+  const raw = input.metadata[key];
+  if (raw === undefined || raw === null) return ABSENT;
+  const parsed = parse(raw);
+  return parsed === null ? INVALID : { kind: "ok", value: parsed };
+}
+
 export function pass(fenceId: string): FenceResult {
   return { fenceId, fixHints: [], ok: true, reasons: [], severity: "PASS" };
 }
