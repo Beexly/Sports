@@ -263,3 +263,25 @@ Wave 5 full prediction-engine suite: 5951/5951 across 825 test files. coverage.t
 |---|---|---|---|
 | measureSeparationAgainstNgs / measureExpectedAgainstNgs wrappers | packages/ingestion-pipeline/src/edge-lab-honesty-bridge.ts | covered in 22/22 | LIVE |
 | scanLadderBoost / scanBoostOpportunities wrappers | packages/ingestion-pipeline/src/edge-lab-honesty-bridge.ts | covered in 22/22 | LIVE |
+
+## Wave 6G — dfs + nfl batch live paths (2026-09-25)
+
+Ten modules that had zero barrel coverage, now exported and wrapped.
+
+| Item | File | Tests | Status |
+|---|---|---|---|
+| dfs/cluster-salary-screen (kMeans, undervalued, teammate diff) | packages/ingestion-pipeline/src/dfs-bridge.ts | covered in 34/34 | LIVE |
+| dfs/dominance-pruning (pareto, dominance, prune, brute-force, verify) | packages/ingestion-pipeline/src/dfs-bridge.ts | covered in 34/34 | LIVE |
+| dfs/ip-portfolio (stack, lineup, variance shrink, portfolio) | packages/ingestion-pipeline/src/dfs-bridge.ts | covered in 34/34 | LIVE |
+| dfs/payout-framework (power-law alpha, shares, buckets, nice) | packages/ingestion-pipeline/src/dfs-bridge.ts | covered in 34/34 | LIVE |
+| dfs/tournament-variance (lambda, budget, bystander, required dEV) | packages/ingestion-pipeline/src/dfs-bridge.ts | covered in 34/34 | LIVE |
+| dfs/value-tier (quantize, error cost, top-3 acc, misprice) | packages/ingestion-pipeline/src/dfs-bridge.ts | covered in 34/34 | LIVE |
+| nfl/block-poisson (log-lambda, loglik, dispersion, MLE fit) | packages/ingestion-pipeline/src/nfl-batch-bridge.ts | covered in 30/30 | LIVE |
+| nfl/parsimonious-season (null MAE, sched-adj diff, wins regression) | packages/ingestion-pipeline/src/nfl-batch-bridge.ts | covered in 30/30 | LIVE |
+| nfl/progress-target (play/drive progress, incremental R2) | packages/ingestion-pipeline/src/nfl-batch-bridge.ts | covered in 30/30 | LIVE |
+| nfl/skellam-margin (Bessel, PMF/CDF, margin, cover, regression) | packages/ingestion-pipeline/src/nfl-batch-bridge.ts | covered in 30/30 | LIVE |
+| Barrel exports for all ten (DfsPlayer aliased per module) | packages/prediction-engine/src/index.ts | exported | LIVE |
+
+Notes recorded from the implementation: evalVerifyPruning REFUSES when pruning
+changes the optimum (it is a guard, not a report); evalPowerLawShares refuses a
+split that does not partition the pool; evalMarginProbs refuses a non-partition.

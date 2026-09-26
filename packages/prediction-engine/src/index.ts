@@ -3232,3 +3232,95 @@ export {
   expectedLeadChangesRemaining,
   type SafeLeadParams,
 } from "./inplay/safe-lead.js";
+
+// ── DFS batch: portfolio construction, dominance pruning, payout calibration ──
+// cluster-salary-screen.ts
+export {
+  kMeansClusters,
+  flagUndervalued,
+  teammateDifferential,
+  type SlatePlayer,
+  type ValueFlag,
+} from "./dfs/cluster-salary-screen.js";
+// dominance-pruning.ts — DfsPlayer aliased; ip-portfolio.ts owns the other one.
+export {
+  paretoFilter,
+  dominancePrune,
+  prunePool,
+  bruteForceOptimal,
+  verifyPruning,
+  type DfsPlayer as DominationDfsPlayer,
+  type Lineup,
+  type PruneVerification,
+} from "./dfs/dominance-pruning.js";
+// ip-portfolio.ts
+export {
+  stackBonus,
+  buildLineup,
+  shrinkVariance,
+  buildPortfolio,
+  type DfsPlayer as PortfolioDfsPlayer,
+  type PortfolioConfig,
+} from "./dfs/ip-portfolio.js";
+// payout-framework.ts
+export {
+  fitPowerLawAlpha,
+  powerLawShares,
+  bucketPayouts,
+  niceNumber,
+} from "./dfs/payout-framework.js";
+// tournament-variance.ts
+export {
+  calibrateLambdaFromLadder,
+  varianceBudgetPass,
+  bystanderEquityDonation,
+  requiredDeltaEV,
+} from "./dfs/tournament-variance.js";
+// value-tier.ts
+export {
+  quantizeToTiers,
+  tierErrorCost,
+  top3TierAccuracy,
+  flagMispriced,
+  type MispriceFlag,
+} from "./dfs/value-tier.js";
+
+// ── NFL batch: score-distribution blocks, season regression, progress metrics ──
+// block-poisson.ts — chance-rate MLE with Dawid-Sebastiani dispersion
+export {
+  logLambda,
+  poissonLogLik,
+  dawidSebastiani,
+  fitChanceRates,
+  type BlockObs,
+  type ChanceRateParams,
+} from "./nfl/block-poisson.js";
+// parsimonious-season.ts — schedule-adjusted wins regression against a null table
+export {
+  maeNullTable,
+  scheduleAdjustedDiff,
+  fitWinsRegression,
+  predictWins,
+  tableMae,
+  type EarlyGame,
+} from "./nfl/parsimonious-season.js";
+// progress-target.ts — play/drive progress + incremental R-squared
+export {
+  playProgress,
+  driveProgress,
+  incrementalRSquared,
+} from "./nfl/progress-target.js";
+// skellam-margin.ts — independent-Poisson margin distribution (lamdba \u2212 l2)
+export {
+  besselI,
+  skellamPMF,
+  skellamCDF,
+  marginProbs,
+  coverProb,
+  fitSkellamRegression,
+  predictMarginProbs,
+  type SkellamParams,
+  type SkellamObs,
+  type MarginProbs,
+  type SkellamRegression,
+} from "./nfl/skellam-margin.js";
