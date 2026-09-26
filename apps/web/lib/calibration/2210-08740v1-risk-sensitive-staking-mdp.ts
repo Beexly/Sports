@@ -93,7 +93,7 @@ export function solveRiskSensitiveMDP(
     Array.from({ length: STAKE_TIERS.length }, () => [] as number[]),
   );
   for (const h of history) {
-    samples[stateIndex(h.bankrollBucket, h.edgeBucket)][h.tierIdx].push(h.profit);
+    samples[stateIndex(h.bankrollBucket, h.edgeBucket)]![h.tierIdx]!.push(h.profit);
   }
   const tables: number[][] = BETAS.map(() => []);
   for (let bi = 0; bi < BETAS.length; bi++) {
@@ -108,12 +108,12 @@ export function solveRiskSensitiveMDP(
         let bestTier = 0;
         let bestTierObj = Infinity;
         for (let t = 0; t < STAKE_TIERS.length; t++) {
-          let prof = samples[s][t];
-          if (restart > 0 && prof.length > 0) {
+          let prof = samples[s]![t]!;
+          if (restart > 0 && prof.length! > 0) {
             // bootstrap resample for the restart
-            prof = prof.map(() => prof[Math.floor(rand() * prof.length)]);
+            prof = prof.map(() => prof[Math.floor(rand() * prof.length!)]!);
           }
-          const obj = prof.length > 0 ? riskSensitiveObjective(prof, beta) : Infinity;
+          const obj = prof.length! > 0 ? riskSensitiveObjective(prof, beta!) : Infinity;
           if (obj < bestTierObj) {
             bestTierObj = obj;
             bestTier = t;
@@ -121,8 +121,8 @@ export function solveRiskSensitiveMDP(
         }
         table.push(bestTier);
         if (bestTierObj < Infinity) {
-          totalObj += bestTierObj * Math.max(samples[s][bestTier].length, 1);
-          totalN += Math.max(samples[s][bestTier].length, 1);
+          totalObj += bestTierObj * Math.max(samples[s]![bestTier]!.length, 1);
+          totalN += Math.max(samples[s]![bestTier]!.length, 1);
         }
       }
       const avg = totalN > 0 ? totalObj / totalN : Infinity;
@@ -150,13 +150,13 @@ export function distributionalEvaluation(
   readonly successSacrifice: number;
 } {
   const sorted = [...samples].sort((a, b) => a - b);
-  const p95 = sorted[Math.min(sorted.length - 1, Math.floor(0.95 * sorted.length))];
+  const p95 = sorted[Math.min(sorted.length - 1, Math.floor(0.95 * sorted.length))]!;
   const meanProfit = mean(samples);
   return {
     mean: meanProfit,
     cvar75: cvarCost(samples),
     p95Profit: p95,
-    successSacrifice: p95 - meanProfit,
+    successSacrifice: p95! - meanProfit,
   };
 }
 

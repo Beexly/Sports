@@ -32,7 +32,7 @@ export function ignorancePerGame(p: number, y: number): number {
 export function meanIgnorance(probs: readonly number[], ys: readonly number[]): number {
   const n = probs.length;
   if (n === 0) return NaN;
-  return probs.reduce((a, p, i) => a + ignorancePerGame(p, ys[i]), 0) / n;
+  return probs.reduce((a, p, i) => a + ignorancePerGame(p, ys[i]!), 0) / n;
 }
 
 /**
@@ -77,13 +77,13 @@ export function resamplingInterval(
   const means: number[] = [];
   for (let b = 0; b < nBoot; b++) {
     let s = 0;
-    for (let i = 0; i < n; i++) s += perGameDiff[Math.floor(rand() * n)];
+    for (let i = 0; i < n; i++) s += perGameDiff[Math.floor(rand() * n)]!;
     means.push(s / n);
   }
   means.sort((a, b2) => a - b2);
   return {
-    lo: means[Math.floor(0.025 * nBoot)],
-    hi: means[Math.ceil(0.975 * nBoot) - 1],
+    lo: means[Math.floor(0.025 * nBoot)]!,
+    hi: means[Math.ceil(0.975 * nBoot) - 1]!,
   };
 }
 
@@ -97,7 +97,7 @@ export function meetsAdoptionGate(
   ys: readonly number[],
 ): { deltaBits: number; multiplier: number; lo: number; hi: number; adopt: boolean } {
   const deltaBits = relativeIgnoranceBits(probsIncumbent, probsChallenger, ys);
-  const diff = probsIncumbent.map((p, i) => ignorancePerGame(p, ys[i]) - ignorancePerGame(probsChallenger[i], ys[i]));
+  const diff = probsIncumbent.map((p, i) => ignorancePerGame(p, ys[i]!) - ignorancePerGame(probsChallenger[i]!, ys[i]!));
   const { lo, hi } = resamplingInterval(diff);
   const adopt = deltaBits >= 0.05 && (lo > 0 || hi < 0);
   return { deltaBits, multiplier: probabilityMultiplier(deltaBits), lo, hi, adopt };

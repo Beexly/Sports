@@ -9,10 +9,10 @@ import {
 } from "@/lib/calibration/crpsmod-loss";
 
 // ============================================================
-// arXiv 2606.08587v1 â€” CRPSmod sharpness. Additive only.
+// arXiv 2606.08587v1 — CRPSmod sharpness. Additive only.
 // ============================================================
 
-describe("CRPSmod â€” 2606.08587v1", () => {
+describe("CRPSmod — 2606.08587v1", () => {
   it("normalCdf/normalQuantile invert each other", () => {
     expect(normalCdf(0)).toBeCloseTo(0.5, 7);
     expect(normalCdf(1.96)).toBeCloseTo(0.975, 4);

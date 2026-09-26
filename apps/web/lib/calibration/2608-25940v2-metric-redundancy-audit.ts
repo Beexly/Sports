@@ -19,7 +19,7 @@
 /** Spearman rank correlation between two metric columns. */
 export function spearman(a: readonly number[], b: readonly number[]): number {
   const rank = (xs: readonly number[]): number[] => {
-    const order = xs.map((_, i) => i).sort((x, y) => xs[x] - xs[y]);
+    const order = xs.map((_, i) => i).sort((x, y) => xs[x]! - xs[y]!);
     const r = new Array(xs.length).fill(0);
     order.forEach((idx, pos) => {
       r[idx] = pos;
@@ -34,9 +34,9 @@ export function spearman(a: readonly number[], b: readonly number[]): number {
   let da = 0;
   let db = 0;
   for (let i = 0; i < n; i++) {
-    num += (ra[i] - m) * (rb[i] - m);
-    da += (ra[i] - m) * (ra[i] - m);
-    db += (rb[i] - m) * (rb[i] - m);
+    num += (ra[i]! - m) * (rb[i]! - m);
+    da += (ra[i]! - m) * (ra[i]! - m);
+    db += (rb[i]! - m) * (rb[i]! - m);
   }
   return da > 0 && db > 0 ? num / Math.sqrt(da * db) : 0;
 }
@@ -57,8 +57,8 @@ export function substitutePairs(
   const pairs: { a: string; b: string; rho: number }[] = [];
   for (let i = 0; i < columns.length; i++) {
     for (let j = i + 1; j < columns.length; j++) {
-      const rho = spearman(columns[i], columns[j]);
-      if (Math.abs(rho) > threshold) pairs.push({ a: names[i], b: names[j], rho });
+      const rho = spearman(columns[i]!, columns[j]!);
+      if (Math.abs(rho) > threshold) pairs.push({ a: names[i]!, b: names[j]!, rho });
     }
   }
   return pairs.sort((x, y) => Math.abs(y.rho) - Math.abs(x.rho));
@@ -73,9 +73,9 @@ export function pearson(a: readonly number[], b: readonly number[]): number {
   let da = 0;
   let db = 0;
   for (let i = 0; i < n; i++) {
-    num += (a[i] - ma) * (b[i] - mb);
-    da += (a[i] - ma) * (a[i] - ma);
-    db += (b[i] - mb) * (b[i] - mb);
+    num += (a[i]! - ma) * (b[i]! - mb);
+    da += (a[i]! - ma) * (a[i]! - ma);
+    db += (b[i]! - mb) * (b[i]! - mb);
   }
   return da > 0 && db > 0 ? num / Math.sqrt(da * db) : 0;
 }
@@ -97,13 +97,13 @@ export function forwardSelectCore(
     // Simple average of z-scored metrics as the composite.
     const n = target.length;
     const zs = idxs.map((j) => {
-      const col = columns[j];
+      const col = columns[j]!;
       const m = col.reduce((a, b) => a + b, 0) / n;
       const sd = Math.sqrt(col.reduce((a, b) => a + (b - m) * (b - m), 0) / n) || 1;
       return col.map((v) => (v - m) / sd);
     });
     return Array.from({ length: n }, (_, i) =>
-      zs.reduce((a, z) => a + z[i], 0) / Math.max(zs.length, 1),
+      zs.reduce((a, z) => a + z[i]!, 0) / Math.max(zs.length, 1),
     );
   };
   let bestCorr = 0;
@@ -120,7 +120,7 @@ export function forwardSelectCore(
     selected.push(bestIdx);
     remaining.delete(bestIdx);
   }
-  return { core: selected.map((i) => names[i]), predictiveCorr: bestCorr };
+  return { core: selected.map((i) => names[i]!), predictiveCorr: bestCorr };
 }
 
 /** Collapse substitute pairs: drop the later-named metric of each pair. */

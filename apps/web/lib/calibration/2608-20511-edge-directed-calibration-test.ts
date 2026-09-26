@@ -52,7 +52,7 @@ export function edgeStatisticOrdered(
   let cum = 0;
   let maxAbs = 0;
   for (const i of order) {
-    cum += ys[i] - probs[i];
+    cum += ys[i]! - probs[i]!;
     const a = Math.abs(cum);
     if (a > maxAbs) maxAbs = a;
   }
@@ -61,7 +61,7 @@ export function edgeStatisticOrdered(
 
 /** Probability ordering used by the directed statistic (ascending forecast). */
 export function probOrder(probs: readonly number[]): number[] {
-  return probs.map((_, i) => i).sort((a, b) => probs[a] - probs[b]);
+  return probs.map((_, i) => i).sort((a, b) => probs[a]! - probs[b]!);
 }
 
 /**
@@ -120,8 +120,8 @@ export function weeklyQCRun(
   if (!res.fires) return { ...res, triage: "pass" };
   // Direction check: monotone residual drift -> recalibration map.
   const n = probs.length;
-  const order = probs.map((_, i) => i).sort((a, b) => probs[a] - probs[b]);
-  const resids = order.map((i) => ys[i] - probs[i]);
+  const order = probs.map((_, i) => i).sort((a, b) => probs[a]! - probs[b]!);
+  const resids = order.map((i) => ys[i]! - probs[i]!);
   const first = resids.slice(0, Math.floor(n / 2)).reduce((a, b) => a + b, 0);
   const second = resids.slice(Math.floor(n / 2)).reduce((a, b) => a + b, 0);
   const monotone = Math.sign(first) !== Math.sign(second) && Math.abs(first) + Math.abs(second) > 0;

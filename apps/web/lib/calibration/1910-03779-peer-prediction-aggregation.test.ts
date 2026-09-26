@@ -43,4 +43,8 @@ describe("peer-prediction (CA) aggregation", () => {
     expect(spearman([1, 2, 3, 4], [4, 3, 2, 1])).toBeCloseTo(-1, 10);
     expect(Math.abs(spearman([3, 1, 4, 2], [3, 1, 4, 2]))).toBeGreaterThanOrEqual(0.3);
   });
+
+  it("aggregateProbs returns [] on an empty prediction matrix (no throw)", () => {
+    expect(aggregateProbs([], [])).toEqual([]);
+  });
 });
