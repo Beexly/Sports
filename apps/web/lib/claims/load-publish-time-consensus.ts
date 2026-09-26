@@ -151,8 +151,9 @@ export function consensusSliceFromResolved(
   },
 ) {
   if (!resolved) {
+    // Fail-closed: no mint-time book set → withhold consensusPct too (T-1 / #901 IMPROVE).
     return {
-      consensusPct: base.consensusPct,
+      consensusPct: null as number | null,
       bookmakerCount: base.bookmakerCount,
       dataFreshnessAt: base.dataFreshnessAt,
       consensusProvider: null as string | null,

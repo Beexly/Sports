@@ -785,9 +785,10 @@ describe("markets-odds bridge: overround / one-over-EPC de-vig", () => {
     expect(r.ok).toBe(true);
     if (!r.ok) return;
     // Raw implied 0.523560 each; multiplicative halves to 0.5.
-    expect(r.data.multiplicative[0]).toBeCloseTo(0.5, 12);
-    expect(r.data.oneOverEpc[0]).toBeCloseTo(0.5, 12);
-    expect(r.data.oneOverEpc[0] + r.data.oneOverEpc[1]).toBeCloseTo(1, 10);
+    // noUncheckedIndexedAccess: index access is T | undefined.
+    expect(r.data.multiplicative[0] ?? 0).toBeCloseTo(0.5, 12);
+    expect(r.data.oneOverEpc[0] ?? 0).toBeCloseTo(0.5, 12);
+    expect((r.data.oneOverEpc[0] ?? 0) + (r.data.oneOverEpc[1] ?? 0)).toBeCloseTo(1, 10);
   });
 
   it("keeps a three-way favourite ordering intact under FL-GLM", () => {

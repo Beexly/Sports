@@ -159,7 +159,8 @@ describe("public claim surface wiring (preview + dashboard + API)", () => {
   it("API uses shared projector for both reasoning fields", () => {
     const src = readFileSync(resolve(root, paths.api), "utf8");
     expect(src).toMatch(/projectPublicConsensusReasoning/);
-    expect(src).toMatch(/reconstructConsensusBookSet/);
+    expect(src).toMatch(/loadPublishTimeConsensusByPickId/);
+    expect(src).toMatch(/consensusSliceFromResolved/);
     expect(src).toMatch(/consensusSourceId/);
     expect(src).toMatch(/consensusBooks/);
     expect(src).toMatch(/consensusBookSetId/);
