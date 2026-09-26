@@ -91,7 +91,7 @@ final class DomainTests: XCTestCase {
     func testGatedFieldsRenderAsDashesNotZeros() {
         // A gated confidence shown as 0 is a claim that the model has no
         // opinion. A dash is a claim that you are not allowed to see it.
-        let pick = Fixtures.makePick(confidence: nil, hasBookPrice: false)
+        let pick = Fixtures.makePick(hasBookPrice: false, confidence: nil)
         XCTAssertNil(pick.confidence)
         XCTAssertEqual(pick.displayConfidence, "—")
         XCTAssertEqual(pick.displayOdds, "—")

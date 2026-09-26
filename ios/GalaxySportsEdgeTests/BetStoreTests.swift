@@ -26,7 +26,7 @@ final class BetStoreTests: XCTestCase {
 
     func testWinReturnsStakePlusProfit() {
         let bet = Fixtures.makeBet(odds: -110, stake: 100, status: .won)
-        XCTAssertEqual(bet.payout(), [PHONE], accuracy: 0.0001)
+        XCTAssertEqual(bet.payout(), 190.9090909, accuracy: 0.0001)
         XCTAssertEqual(bet.profit(), 90.9090909, accuracy: 0.0001)
     }
 

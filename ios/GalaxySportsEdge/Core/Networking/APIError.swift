@@ -5,7 +5,7 @@ import Foundation
 /// `retryable` is the single source of truth for whether `APIClient` should
 /// re-issue a request: a 404 or a decoding bug will fail identically forever,
 /// while a 429 or a dropped socket will not.
-enum APIError: LocalizedError, Sendable {
+enum APIError: LocalizedError, Sendable, Equatable {
     case invalidURL
     case unauthorized
     case notFound
