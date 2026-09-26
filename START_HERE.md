@@ -1,4 +1,8 @@
 > **Ops SoT:** [`docs/ops/CANONICAL.md`](docs/ops/CANONICAL.md) · Production `/cockpit`. Root handoffs archived under `docs/ops/archive/`.
+>
+> **Agents:** also read [`docs/agent-index/README.md`](docs/agent-index/README.md) — the 1,658-paper
+> corpus is already in `main` (it is *unfindable*, not lost), and 495 pushed branches are
+> not merged. That map is the fastest way to avoid redoing work someone already finished.
 
 # START HERE — launch control
 
