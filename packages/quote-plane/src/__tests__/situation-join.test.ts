@@ -5,6 +5,7 @@ import {
   withinHours,
   joinSituationToMarketQuote,
   findSituationForQuote,
+  type SituationEventRecord,
 } from "../situation-join";
 
 const abbr = {
@@ -14,7 +15,7 @@ const abbr = {
   LAR: "Los Angeles Rams",
 };
 
-const snap = {
+const snap: SituationEventRecord = {
   sport: "americanfootball_nfl",
   eventId: null as string | null,
   home: "Buffalo Bills",
