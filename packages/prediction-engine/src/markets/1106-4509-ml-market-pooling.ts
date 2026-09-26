@@ -98,6 +98,19 @@ export function fitAlpha(
   weights: number[],
   grid = 21,
 ): AlphaFit {
+  if (memberProbs.length === 0) throw new Error("fitAlpha: no events");
+  if (outcomes.length !== memberProbs.length) {
+    throw new Error(
+      `fitAlpha: ${outcomes.length} outcomes for ${memberProbs.length} events; one class index per event`,
+    );
+  }
+  const firstEvent = memberProbs[0];
+  const firstMember = firstEvent?.[0];
+  if (!Array.isArray(firstEvent) || !Array.isArray(firstMember)) {
+    throw new Error(
+      "fitAlpha: expected ProbVector[][] (events × members × classes). One event is [members], not the member rows themselves.",
+    );
+  }
   let best: AlphaFit = { alpha: 0, avgLogLoss: Infinity };
   for (let g = 0; g < grid; g++) {
     const alpha = g / (grid - 1);

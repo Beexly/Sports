@@ -3916,16 +3916,10 @@ export {
 // Opponent-adjusted EPA tuning constants. computeOpponentAdjustedEpa and its
 // types are already exported above.
 //
-// NOTE on use: this solver DOES NOT CONVERGE on a balanced double round robin
-// (e.g. an NFL season). The opponent-weight matrix is doubly stochastic, so its
-// constant eigenvector has eigenvalue 1 and the kernel's 0.5 under-relaxation
-// maps 1 -> 0.5*1 + 0.5 = 1, i.e. exponentially neutral: the fixed-point
-// iteration stalls no matter how many iterations are allowed. Measured: 3 teams
-// x 4 games, distinct strengths, 1000 iterations at tolerance 1e-4, still
-// converged:false. Its own tests only exercise star schedules and
-// identical-strength round robins, so they never reach this. ALWAYS check
-// `converged` before using a rating from this kernel; a truncated fit is not a
-// rating.
+// A balanced schedule makes the opponent-weight matrix doubly stochastic.
+// The solver pins each split's play-weighted mean to the raw league average
+// so that constant mode cannot stall the iteration. A solve that still
+// reports converged:false is not a rating; the bridge refuses it.
 export {
   OPPONENT_ADJUSTED_EPA_DEFAULT_TOLERANCE,
   OPPONENT_ADJUSTED_EPA_DEFAULT_MAX_ITERATIONS,

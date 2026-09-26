@@ -1035,14 +1035,13 @@ describe("markets-odds bridge: ML market pooling", () => {
     expect(r.data.mixture[1]).toBeCloseTo(0.45, 10);
   });
 
-  it("reports the alpha fit as unavailable rather than inventing one", () => {
-    // Known kernel defect: fitAlpha hands a single row to interpolatedPool,
-    // which reads `members[0].length` off a number. It cannot succeed.
+  it("does not invent an alpha from one market of member rows", () => {
+    // fitAlpha scores events × members × classes. This API is one market.
     const r = evalMarketPooling(MEMBERS, [1, 1, 1], [0, 0, 1], 11);
     expect(r.ok).toBe(true);
     if (!r.ok) return;
     expect(r.data.alphaFit).toBeNull();
-    expect(r.data.alphaFitBlockedReason).toContain("cannot normalize");
+    expect(r.data.alphaFitBlockedReason).toContain("ProbVector[][]");
   });
 
   it("puts more weight on the more accurate member after a wealth update", () => {

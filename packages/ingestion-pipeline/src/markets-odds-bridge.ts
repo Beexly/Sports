@@ -96,7 +96,6 @@ import {
   type FusionFit,
 } from "@sports/prediction-engine/src/markets/1802-08848v1-odds-history-fusion.js";
 import {
-  fitAlpha,
   interpolatedPool,
   mixturePool,
   productPool,
@@ -1362,16 +1361,15 @@ export function evalOddsHistoryFusion(
 // ---------------------------------------------------------------------------
 
 /**
- * `fitAlpha` in 1106-4509 declares its row argument as `ProbVector[][]`, one
- * level deeper than the code actually uses: it indexes `memberProbs[e]` and
- * hands that straight to `interpolatedPool(members: ProbVector[])`, so the
- * runtime shape is `ProbVector[]`. The declaration is wrong, the kernel is not
- * (a sibling agent and this file both run it on flat rows successfully). The
- * source file is read-only here, so the mismatch is absorbed once, here, with
- * a single documented assertion instead of `@ts-expect-error` or `any`.
+ * This call is one market: N member vectors and N class indexes. `fitAlpha`
+ * scores a pooled vector against one class per event, so the argument has to
+ * be events × members × classes. Passing the member rows as if they were
+ * events makes `interpolatedPool` read `.length` off a number and throw
+ * "cannot normalize non-positive vector". That throw is a bad call, not a
+ * kernel that cannot fit. The fit is left null until a caller supplies events.
  */
-type AlphaFitter = (rows: ProbVector[], outcomes: number[], weights: number[], grid: number) => AlphaFit;
-const fitAlphaRows = fitAlpha as (r: unknown, o: number[], w: number[], g: number) => AlphaFit;
+const ALPHA_FIT_UNAVAILABLE =
+  "fitAlpha needs ProbVector[][] (events × members × classes) and one class index per event; this call is one market, so no alpha is fit";
 
 export interface MarketPoolingResult {
   /** Null because the kernel's alpha fit cannot run. See alphaFitBlockedReason. */
@@ -1437,12 +1435,11 @@ export function evalMarketPooling(
   let product: number[];
   let interpolated: number[];
   let wealth: number[];
-  let alphaFit: AlphaFit | null = null;
-  let alphaFitBlockedReason: string | null = null;
+  const alphaFit: AlphaFit | null = null;
+  const alphaFitBlockedReason: string | null = ALPHA_FIT_UNAVAILABLE;
   // Freshly copied vectors: the pooling kernels are pure, but the copies make
   // that guarantee local rather than assumed.
   const pools: ProbVector[] = members.map((m) => [...m]);
-  const fitAlphaTyped: AlphaFitter = fitAlphaRows;
   try {
     mixture = mixturePool(pools, w);
     product = productPool(pools, w);
@@ -1454,19 +1451,6 @@ export function evalMarketPooling(
     );
   } catch (err) {
     return fail(`pooling threw: ${msg(err)}`);
-  }
-  // KNOWN KERNEL DEFECT, not worked around: `fitAlpha` hands a single row
-  // (`memberProbs[e]`) to `interpolatedPool`, which expects an array of member
-  // vectors and reads `members[0].length` off it. The row is a number, so the
-  // length is undefined and its internal `normalize` throws
-  // "cannot normalize non-positive vector" for every input. The source module
-  // is read-only here, so the bridge reports the fit as unavailable with the
-  // kernel's own message rather than silently returning a substitute number.
-  try {
-    alphaFit = fitAlphaTyped(pools, ys, w, grid);
-  } catch (err) {
-    alphaFit = null;
-    alphaFitBlockedReason = msg(err);
   }
   for (const [name, v] of [
     ["mixturePool", mixture],

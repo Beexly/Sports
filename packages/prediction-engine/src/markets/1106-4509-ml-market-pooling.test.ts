@@ -78,4 +78,12 @@ describe("fitAlpha", () => {
     expect(fit.alpha).toBeGreaterThan(0.7);
     expect(fit.avgLogLoss).toBeLessThan(mixLoss);
   });
+
+  it("refuses a flat member-row list instead of reading .length off a number", () => {
+    const flat = [
+      [0.6, 0.4],
+      [0.5, 0.5],
+    ];
+    expect(() => fitAlpha(flat as unknown as number[][][], [0, 1], [1, 1])).toThrow(/ProbVector\[\]\[\]/);
+  });
 });

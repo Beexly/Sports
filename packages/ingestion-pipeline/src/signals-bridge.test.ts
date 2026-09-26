@@ -1701,16 +1701,12 @@ describe("signals-bridge opponent-adjusted-epa", () => {
     expect(r.reason).toContain("did NOT converge");
   });
 
-  it("MEASURED KERNEL LIMITATION: a balanced double round robin of distinct-strength teams never converges", () => {
-    // Every row here is a symmetric two-sided record, and the three teams each
-    // play four games, so the opponent-weight matrix is doubly stochastic. Its
-    // constant eigenvector has eigenvalue 1, which the kernel's 0.5
-    // under-relaxation maps to 0.5*1 + 0.5 = 1: the mode is exponentially
-    // NEUTRAL, not contracting, so the solve stalls short of the 1e-4
-    // tolerance however long it is allowed to run. Measured: 1000 damped
-    // iterations, still unconverged. The kernel's own test file only exercises
-    // star and identical-strength fixtures, so it never sees this.
-    // The bridge's job here is to REFUSE, not to publish a truncated fit.
+  it("converges on a balanced double round robin once the additive gauge is pinned", () => {
+    // Every row is a symmetric two-sided record and each team plays four games,
+    // so the opponent-weight matrix is doubly stochastic. The kernel pins each
+    // split's play-weighted mean to the raw league average, which removes the
+    // constant mode under-relaxation cannot contract. A truncated fit is still
+    // refused; this fixture is no longer truncated.
     const roundRobin: TeamGameEpaSplit[] = [
       { team: "A", opponent: "B", offDropbackPlays: 35, offDropbackEpaPerPlay: 0.2, offRushPlays: 30, offRushEpaPerPlay: 0.02, defDropbackPlays: 32, defDropbackEpaPerPlayAllowed: -0.1, defRushPlays: 33, defRushEpaPerPlayAllowed: 0.03 },
       { team: "B", opponent: "A", offDropbackPlays: 30, offDropbackEpaPerPlay: 0.05, offRushPlays: 33, offRushEpaPerPlay: -0.01, defDropbackPlays: 35, defDropbackEpaPerPlayAllowed: -0.2, defRushPlays: 30, defRushEpaPerPlayAllowed: -0.02 },
@@ -1730,9 +1726,16 @@ describe("signals-bridge opponent-adjusted-epa", () => {
       requestedTeams: ["A", "B", "C"],
       options: { minGames: 4, maxIterations: 1000 },
     });
-    expect(r.ok).toBe(false);
-    if (r.ok) return;
-    expect(r.reason).toContain("did NOT converge in 1000 iterations");
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.data.converged).toBe(true);
+    expect(r.data.iterations).toBeLessThan(1000);
+    const a = r.data.ratings.find((x) => x.team === "A");
+    const c = r.data.ratings.find((x) => x.team === "C");
+    expect(a).toBeDefined();
+    expect(c).toBeDefined();
+    if (a === undefined || c === undefined) return;
+    expect(a.ratedOffDropbackEpaPerPlay).toBeGreaterThan(c.ratedOffDropbackEpaPerPlay);
   });
 
   it("lists a below-minimum-games team as under-sampled instead of rating it zero", () => {
