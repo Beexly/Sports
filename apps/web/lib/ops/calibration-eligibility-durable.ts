@@ -4,6 +4,7 @@
  */
 
 import { db, isStubMode } from "@sports/db";
+import type { DeployedVersionMapHoldout } from "@/lib/calibration/deployed-map-holdout";
 import { MODEL_VERSION } from "@sports/prediction-engine";
 import {
   evaluateCalibrationEligibility,
@@ -51,6 +52,17 @@ export interface DurableMetricsPayload {
   readonly status: "ok" | "collecting";
   readonly modelVersion: string | null;
   readonly dateRange: string | null;
+  /**
+   * C-297: projected calibration of the DEPLOYED model version's own rows
+   * under identity / temperature / Platt / centered-isotonic maps, each
+   * fitted on a time-ordered train slice and scored on the held-out test
+   * slice only. Absent on every artifact written before 2026-09-09, and null
+   * when the deployed version has too few time-ordered rows to split.
+   *
+   * Read-only projection: the eligibility gate is NOT given this value and
+   * nothing about what it decides depends on it.
+   */
+  readonly deployedVersionMapHoldout?: DeployedVersionMapHoldout | null;
   readonly overall: {
     readonly brier: number;
     readonly ece: number;
