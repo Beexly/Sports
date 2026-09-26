@@ -369,3 +369,18 @@ export {
   type LibrarianResult,
   type SplitQualityResult,
 } from "./metalearning-conformal-bridge.js";
+
+// Publish-guards bridge (abstention, stratum coverage, reliability, promotion)
+export {
+  evalReliability,
+  evalAbstention,
+  evalChowAbstain,
+  evalStratumGate,
+  evalFloorStrata,
+  evalPromotion,
+  evalPairedBrierLcb,
+  evalClvNonInferiority,
+  type GuardEval,
+  type AbstentionDecision,
+  type StratumDecision,
+} from "./publish-guards-bridge.js";

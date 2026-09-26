@@ -2823,3 +2823,38 @@ export {
   type VarianceTestResult,
   type WelchTResult,
 } from "./conformal/levene-welch.js";
+
+// Certificate residue: proper scoring, selective abstention, stratum coverage
+export {
+  meanBrier,
+  reliabilityDiagram,
+} from "./certificate/proper-scoring.js";
+export {
+  chowStyleShouldAbstain,
+  npStyleLowerEndpointFire,
+  sampleFloorAbstain,
+  evaluateAbstentionHelpers,
+  type Interval,
+  type AbstentionConfig,
+} from "./certificate/selective-abstention.js";
+export {
+  stratumKey,
+  parseStratumKey,
+  coverageFor,
+  refuseIfEmptyStratum,
+  floorStrata,
+  type StratumCoverage,
+} from "./certificate/stratum-coverage.js";
+
+// Promotion: CLV non-inferiority, empirical Bernstein, walk-forward integrity
+export {
+  welchOneSidedNonInferiority,
+  pairedBrierLcb,
+  evaluatePromotion,
+  recomputePromotionDecision,
+  validateWalkForwardIntegrity,
+  computeWindowHash,
+  type PromotionInput,
+  type PromotionDecision,
+  type PairedBrierLcbResult,
+} from "./promotion/index.js";
