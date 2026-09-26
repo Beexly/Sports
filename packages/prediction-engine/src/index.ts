@@ -2895,18 +2895,23 @@ export {
   type StratumCoverage,
 } from "./certificate/stratum-coverage.js";
 
-// Promotion: CLV non-inferiority, empirical Bernstein, walk-forward integrity
+// Promotion: CLV non-inferiority, empirical Bernstein, walk-forward integrity.
+// Leaf imports only — promotion/index.js re-exports window-hash.ts (node:crypto)
+// and must not be reached from the package root (client-bundle landmine).
+export { welchOneSidedNonInferiority } from "./promotion/clv-non-inferiority.js";
+export { pairedBrierLcb } from "./promotion/empirical-bernstein.js";
+export type { PairedBrierLcbResult } from "./promotion/empirical-bernstein.js";
 export {
-  welchOneSidedNonInferiority,
-  pairedBrierLcb,
   evaluatePromotion,
   recomputePromotionDecision,
-  validateWalkForwardIntegrity,
-  computeWindowHash,
-  type PromotionInput,
-  type PromotionDecision,
-  type PairedBrierLcbResult,
-} from "./promotion/index.js";
+} from "./promotion/evaluate.js";
+export { validateWalkForwardIntegrity } from "./promotion/integrity.js";
+export type {
+  PromotionInput,
+  PromotionDecision,
+} from "./promotion/types.js";
+// computeWindowHash is intentionally NOT re-exported here: it lives in
+// promotion/window-hash.ts and imports node:crypto. Deep-import it server-side.
 
 // Bayesian pairing: Bradley-Terry, ordinal structure select, bivariate Poisson
 export {
