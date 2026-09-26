@@ -449,3 +449,22 @@ export {
   evalBoaUpdate,
   evalFixedSupportPools,
 } from "./metalearning-conformal-bridge.js";
+
+// Bayesian residue bridge (copula-HMM, NMF archetypes, sparse HMM, workload, AR1/OU, ABC-SSM, Hawkes)
+export {
+  evalGaussCopulaJoint,
+  evalNmfArchetypes,
+  evalLassoBic,
+  evalRidgeFit,
+  evalArxFit,
+  evalAr1Forecast,
+  evalOuWinProb,
+  evalAbcSsm,
+  evalHawkesGridFit,
+  type BayesResidueEval,
+  type NmfArchetypeResult,
+  type LassoBicResult,
+  type WorkloadFitResult,
+  type Ar1ForecastResult,
+  type AbcSsmResult,
+} from "./bayesian-residue-bridge.js";

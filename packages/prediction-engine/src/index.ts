@@ -3045,3 +3045,61 @@ export {
   type Game,
   type Episode,
 } from "./metalearning/fixed-support-pools.js";
+
+// Copula-HMM momentum: Gaussian copula sampling + joint
+export {
+  gaussCopulaSample,
+  gaussCopulaJoint,
+} from "./bayesian/2002-01193-copula-hmm-momentum.js";
+
+// Doubly-self-exciting scores: Hawkes grid fit (intensity/logLik already
+// aliased from generation-of-threat — do not duplicate)
+export {
+  hawkesGridFit,
+} from "./bayesian/2304-01538-doubly-self-exciting-scores.js";
+
+// ABC-SSM: approximate Bayesian computation on a state-space season model
+export {
+  makeRng,
+  simulateSeason,
+  auxiliaryScore,
+  scoreDistance,
+  type SsmParams,
+  type GameObs,
+} from "./bayesian/abc-ssm.js";
+
+// NMF target archetypes
+export {
+  nmfFrobenius,
+  nmfArchetypeAssign,
+  adjustedRandIndex,
+} from "./bayesian/1908-05745-nmf-target-archetypes.js";
+
+// Sparse-form HMM: LASSO + BIC selection (HMM fns already exported from dshdp)
+export {
+  softThreshold,
+  lassoCoordDescent,
+  bicScore,
+  lassoBicSelect,
+} from "./bayesian/1911-08138-sparse-form-hmm.js";
+
+// Workload availability: ridge/ARX/IRLS fits
+export {
+  solveLinear,
+  ridgeFit,
+  ridgePredict,
+  arxFit,
+  adjustedPlusMinus,
+  irlsFit,
+  logisticLogLoss,
+  stadiumFactorFit,
+} from "./bayesian/2005-09024v1-workload-availability-model.js";
+
+// Dynamic probit VB: AR(1) + OU forecasting
+export {
+  ar1Update,
+  ar1Forecast,
+  ouForecast,
+  ouWinProb,
+  type AR1State,
+} from "./bayesian/2104-07537-dynamic-probit-vb.js";
