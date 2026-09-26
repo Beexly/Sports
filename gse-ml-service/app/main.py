@@ -34,7 +34,15 @@ POST /predict/etkf    app.models.etkf              YES -- see calibration note
 POST /predict/free-energy app.models.free_energy_coder  NO -- untrained
 POST /predict/mps     app.models.mps_layer         NO -- a layer, not a model
 POST /predict/irl     app.models.irl               NO -- unimplemented stub
+POST /predict/movement app.models.movement         NO -- trajectories, no scorer
 ===================== ============================ ==========================
+
+``/predict/movement`` is the only endpoint that returns a *trajectory* (positions for
+every player at every horizon). It is also the only one with a real model behind it, and
+it is still NOT consensus-eligible: a trajectory is not a probability, and the head is
+served from seeded weights rather than a trained checkpoint, so a number here would be
+noise. Its uncertainty output (``sigma``, ``conf``) is reported as calibration
+*diagnostics* for a downstream scorer to consume -- it is not itself a prediction.
 
 Error contract
 --------------
@@ -109,6 +117,12 @@ try:
 except Exception as exc:  # pragma: no cover
     irl_module = None  # type: ignore[assignment]
     _IMPORT_ERRORS["irl"] = f"{type(exc).__name__}: {exc}"
+
+try:
+    from app.models import movement as movement_module
+except Exception as exc:  # pragma: no cover
+    movement_module = None  # type: ignore[assignment]
+    _IMPORT_ERRORS["movement"] = f"{type(exc).__name__}: {exc}"
 
 try:  # torch is needed directly for seeding and tensor construction
     import torch
@@ -241,6 +255,23 @@ MODEL_CARDS: Dict[str, Dict[str, Any]] = {
             "remote-model-client rejects it as malformed and drops it from consensus."
         ),
     },
+    "movement": {
+        "endpoint": "/predict/movement",
+        "kind": "trajectory_forecaster",
+        "returns_probability": False,
+        "usable_as_predictor": False,
+        "signal": "uncalibrated_seeded_weights",
+        "summary": (
+            "Query-centric movement head: per-entity temporal encoding, two global "
+            "context tokens (ball landing, play context), NO entity positional encoding "
+            "so it is permutation invariant, per-horizon heads for delta, speed, "
+            "log-variance and conf. Returns TRAJECTORIES for every player at every "
+            "horizon -- not a probability, so remote-model-client drops it from "
+            "consensus. The weights are seeded per request, not loaded from a trained "
+            "checkpoint: the geometry, the speed cap, the flip TTA and the calibration "
+            "gates are real and tested, the accuracy is not yet real."
+        ),
+    },
 }
 
 
@@ -251,6 +282,7 @@ def _module_for(name: str) -> Any:
         "free_energy": free_energy_module,
         "mps": mps_module,
         "irl": irl_module,
+        "movement": movement_module,
     }[name]
 
 
@@ -643,6 +675,195 @@ class IrlResponse(BaseModel):
 
 
 # ---------------------------------------------------------------------------
+# MOVEMENT (E1)
+# ---------------------------------------------------------------------------
+
+
+def _mv_const(name: str, fallback: Any) -> Any:
+    """Read a constant off the movement module, tolerating the module being absent.
+
+    Pydantic evaluates field defaults at class-definition time, so a default that read
+    ``movement_module.HORIZONS`` directly would make this file fail to IMPORT whenever
+    the movement module failed to import -- turning one broken optional dependency into a
+    dead service, which is exactly what the per-module import guards above exist to
+    prevent. The fallbacks mirror the module's values and are pinned to them by
+    ``test_movement_endpoint_defaults_mirror_the_module``.
+    """
+    if movement_module is None:
+        return fallback
+    return getattr(movement_module, name, fallback)
+
+
+class MovementFrameRequest(BaseModel):
+    """One 10 Hz tracking instant. Field aliases are the camelCase NGS client shape."""
+
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+
+    frame_id: int = Field(alias="frameId", description="Strictly increasing along the play")
+    time: float = Field(description="Seconds from the start of the play")
+    player_xy: List[List[float]] = Field(
+        alias="playerXy", description="(N, 2) player positions in yards, 22 on an NFL play"
+    )
+    team: Optional[List[int]] = Field(default=None, description="0 = away, 1 = home")
+    position: Optional[List[int]] = Field(default=None, description="0-10 roster slot")
+    is_targeted_receiver: Optional[List[bool]] = Field(
+        default=None, alias="isTargetedReceiver"
+    )
+    ball_xy: Optional[List[float]] = Field(default=None, alias="ballXy")
+    ball_landing_xy: Optional[List[float]] = Field(default=None, alias="ballLandingXy")
+    frames_to_landing: Optional[float] = Field(default=None, alias="framesToLanding")
+
+    @field_validator("player_xy")
+    @classmethod
+    def _player_xy_is_a_finite_matrix(cls, value: List[List[float]]) -> List[List[float]]:
+        rows, cols = _finite_matrix(value, "player_xy")
+        if cols != 2:
+            raise ValueError(f"player_xy must have 2 columns, got {cols}")
+        if rows > MAX_TEAMS:
+            raise ValueError(f"player_xy has {rows} entities, cap is {MAX_TEAMS}")
+        return value
+
+    @field_validator("ball_xy", "ball_landing_xy")
+    @classmethod
+    def _pair_is_finite_pair(cls, value: Optional[List[float]]) -> Optional[List[float]]:
+        if value is None:
+            return value
+        if len(value) != 2:
+            raise ValueError(f"expected [x, y], got {len(value)} numbers")
+        for coordinate in value:
+            if not math.isfinite(coordinate):
+                raise ValueError(f"coordinate must be finite, got {coordinate!r}")
+        return value
+
+
+class PlayContextRequest(BaseModel):
+    """Frame-invariant per-play context. One per request.
+
+    ``competition`` is validated rather than defaulted past a mistake: the NFL and NCAA
+    hash-mark templates differ, and silently registering an NCAA play on an NFL template
+    biases the field by ~3.58 yd -- a bias large enough to look like a real but wrong
+    model effect.
+    """
+
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+
+    quarter: int = Field(ge=1, le=5)
+    down: int = Field(ge=1, le=4)
+    yards_to_go: int = Field(ge=1, le=99)
+    yardline_100: float = Field(ge=0.0, le=100.0)
+    clock: float = Field(ge=0.0, le=3600.0)
+    score_diff: int = Field(ge=-99, le=99)
+    play_direction: int = Field(default=1, alias="playDirection")
+    competition: str = "nfl"
+
+    @field_validator("play_direction")
+    @classmethod
+    def _direction_is_plus_or_minus_one(cls, value: int) -> int:
+        if value not in (-1, 1):
+            raise ValueError("play_direction must be exactly 1 or -1")
+        return value
+
+    @field_validator("competition")
+    @classmethod
+    def _competition_is_known(cls, value: str) -> str:
+        if value not in ("nfl", "ncaa"):
+            raise ValueError("competition must be 'nfl' or 'ncaa'")
+        return value
+
+
+class MovementRequest(BaseModel):
+    """A play's history plus the prediction settings. Everything is a request field.
+
+    There is no hidden state: the same body always produces the same response, because
+    the head's weights are seeded from ``seed`` rather than loaded from a checkpoint.
+    """
+
+    model_config = ConfigDict(extra="forbid", populate_by_name=True)
+
+    frames: List[MovementFrameRequest] = Field(min_length=1, max_length=MAX_FRAMES)
+    context: PlayContextRequest
+    horizons: List[float] = Field(
+        default_factory=lambda: list(_mv_const("HORIZONS", (0.5, 1.0, 2.0)))
+    )
+    history_frames: int = Field(
+        default_factory=lambda: int(_mv_const("HISTORY_FRAMES", 10)),
+        alias="historyFrames",
+        ge=1,
+        le=MAX_FRAMES,
+        description="How many trailing frames the model actually sees",
+    )
+    seed: int = 20260926
+    d_model: int = Field(default=128, alias="dModel", ge=8, le=MAX_HIDDEN_DIM)
+    n_layers: int = Field(default=4, alias="nLayers", ge=1, le=8)
+    n_heads: int = Field(default=4, alias="nHeads", ge=1, le=16)
+    flip_tta: bool = Field(
+        default=False,
+        alias="flipTta",
+        description="Average the prediction with its horizontal mirror (doubles cost)",
+    )
+    include_baseline: bool = Field(
+        default=True,
+        alias="includeBaseline",
+        description="Also return the constant-velocity physics baseline it must beat",
+    )
+
+    @field_validator("horizons")
+    @classmethod
+    def _horizons_are_ordered_and_bounded(cls, value: List[float]) -> List[float]:
+        if not value:
+            raise ValueError("horizons must not be empty")
+        if len(value) > 8:
+            raise ValueError(f"at most 8 horizons, got {len(value)}")
+        previous = 0.0
+        for horizon in value:
+            if not math.isfinite(horizon) or horizon <= 0.0:
+                raise ValueError(f"horizons must be finite and positive, got {horizon!r}")
+            if horizon > 10.0:
+                raise ValueError(f"horizon {horizon}s exceeds the 10s cap")
+            if horizon <= previous:
+                raise ValueError("horizons must be strictly increasing")
+            previous = horizon
+        return value
+
+
+class MovementResponse(BaseModel):
+    """Trajectories at every horizon, plus the uncertainty a scorer needs.
+
+    ``probability`` is annotated ``None`` -- not ``Optional[float]`` -- for the same
+    reason as ``IrlResponse``: this endpoint must never be able to emit a number, because
+    ``remote-model-client.ts`` admits a response carrying a finite probability into
+    consensus, and a seeded-weights head is not a prediction. Typing it as NoneType makes
+    a future attempt to return a float fail here, loudly.
+
+    The shapes are ``(H, N, 2)`` for positions/deltas/sigma, ``(H, N)`` for speeds/conf
+    and ``(H, N)`` for ``tta_extra_variance`` -- all in yards, with ``H`` the horizon
+    axis in the same order as the request's ``horizons``.
+    """
+
+    model: str = "movement"
+    probability: None = None
+    usable_as_predictor: bool = False
+    weights: str = "seeded_per_request"
+    horizons: List[float]
+    entity_count: int
+    n_params: int
+    positions: List[List[List[float]]]
+    deltas: List[List[List[float]]]
+    speeds: List[List[float]]
+    sigma: List[List[List[float]]]
+    conf: List[List[float]]
+    flip_tta: bool
+    tta_extra_variance: Optional[List[List[float]]] = None
+    baseline_positions: Optional[List[List[List[float]]]] = None
+    baseline_mean_abs_gap: Optional[List[float]] = Field(
+        default=None,
+        alias="baselineMeanAbsGap",
+        description="Per-horizon mean |head - baseline| in yards, for the A/B that matters",
+    )
+    notes: str
+
+
+# ---------------------------------------------------------------------------
 # App
 # ---------------------------------------------------------------------------
 
@@ -1031,4 +1252,149 @@ def predict_irl(request: IrlRequest) -> IrlResponse:
         probability=result["probability"],
         reason=result["reason"],
         required_data=list(result["required_data"]),
+    )
+
+
+@app.post("/predict/movement", response_model=MovementResponse, tags=["models"])
+def predict_movement(request: MovementRequest) -> MovementResponse:
+    """Forecast every player's trajectory at each horizon. Never returns a probability.
+
+    This is the one endpoint here that returns trajectories rather than a feature vector
+    or a stub. What is real about it: the per-entity temporal encoding, the two global
+    context tokens, the absence of any entity positional encoding (so it is permutation
+    invariant over players), the per-interval speed cap, the flip TTA and the calibration
+    gate. What is not real yet: the weights. They are seeded from the request's ``seed``
+    and never trained, so the accuracy is meaningless even though the geometry is not.
+
+    DELIBERATE DESIGN -- do not "fix" this by adding a probability:
+
+    A trajectory has no honest probability attached to it, and this head is not
+    calibrated. ``remote-model-client.ts`` admits a response carrying a finite
+    ``probability`` in ``[0, 1]`` into the ensemble consensus, so a number here would
+    pull the ensemble average with an untrained model. ``MovementResponse.probability``
+    is typed ``None``, so returning a float fails here at request time rather than
+    silently in production.
+
+    The head runs on a seeded numpy forward pass, so identical bodies give identical
+    responses -- which is what makes the endpoint's determinism testable without a
+    checkpoint. Set ``flipTta`` to double the cost for a mirror-averaged prediction.
+    """
+    module = _require("movement")
+
+    frames = [
+        module.Frame(
+            frame_id=frame.frame_id,
+            time=frame.time,
+            player_xy=np.asarray(frame.player_xy, dtype=np.float64),
+            team=None if frame.team is None else np.asarray(frame.team, dtype=np.float64),
+            position=(
+                None if frame.position is None else np.asarray(frame.position, dtype=np.float64)
+            ),
+            is_targeted_receiver=(
+                None
+                if frame.is_targeted_receiver is None
+                else np.asarray(frame.is_targeted_receiver, dtype=np.float64)
+            ),
+            ball_xy=None if frame.ball_xy is None else np.asarray(frame.ball_xy, dtype=float),
+            ball_landing_xy=(
+                None
+                if frame.ball_landing_xy is None
+                else np.asarray(frame.ball_landing_xy, dtype=float)
+            ),
+            frames_to_landing=frame.frames_to_landing,
+        )
+        for frame in request.frames
+    ]
+    context = module.PlayContext(
+        quarter=request.context.quarter,
+        down=request.context.down,
+        yards_to_go=request.context.yards_to_go,
+        yardline_100=request.context.yardline_100,
+        clock=request.context.clock,
+        score_diff=request.context.score_diff,
+        play_direction=request.context.play_direction,
+        competition=request.context.competition,
+    )
+
+    try:
+        # load_play sorts, rejects duplicate/non-monotonic frame ids, and canonicalises
+        # the play to attack rightward. Canonicalisation is the whole reason a
+        # leftward play scores the same as its mirror -- done here, once, rather than
+        # left to the caller.
+        ordered, canonical_context = module.load_play(frames, context, canonicalize=True)
+        history = ordered[-request.history_frames :]
+
+        head = module.MovementPredictor(
+            d_model=request.d_model,
+            n_layers=request.n_layers,
+            n_heads=request.n_heads,
+            n_horizons=len(request.horizons),
+            seed=request.seed,
+        )
+        batch = head.forward(history, canonical_context, horizons=request.horizons)
+
+        anchor = history[-1].player_xy
+        deltas = batch.deltas
+        sigma = batch.sigma()
+        tta_extra_variance = None
+        if request.flip_tta:
+            # apply_flip_tta mirrors the RAW frames, re-runs the head and un-mirrors dx
+            # (negating it) but not dy. That is the documented BDB misfire: flipping the
+            # indexed column instead of the raw coordinates and re-deriving every feature
+            # is what collapsed a 0.589 yd model to 3.674 yd.
+            tta_deltas, extra = module.apply_flip_tta(
+                lambda h: head.forward(h, canonical_context, horizons=request.horizons).deltas,
+                history,
+            )
+            # The TTA spread is a variance, not a delta: add it to each axis's variance
+            # floor so a consumer that trusts `sigma` sees the disagreement too.
+            variance = np.square(sigma) + extra[..., None]
+            sigma = np.sqrt(variance)
+            deltas = tta_deltas
+            tta_extra_variance = extra
+
+        positions = module.anchor_and_cumsum(deltas, anchor)
+
+        baseline_positions = None
+        baseline_gap = None
+        if request.include_baseline:
+            baseline = module.PhysicsBaseline()
+            baseline_positions = module.anchor_and_cumsum(
+                baseline.predict(history, request.horizons), anchor
+            )
+            baseline_gap = np.abs(positions - baseline_positions).mean(axis=1).tolist()
+    except module.ValidationError as exc:
+        raise _bad_request(exc)
+    except ValueError as exc:
+        # MovementPredictor raises a plain ValueError when the requested width busts the
+        # 2M parameter budget. That is the caller's mistake, so it is a 422, not a 500.
+        raise _bad_request(exc)
+
+    return MovementResponse(
+        horizons=[float(h) for h in request.horizons],
+        entity_count=int(deltas.shape[1]),
+        n_params=head.count_params(),
+        positions=np.round(positions, 4).tolist(),
+        deltas=np.round(deltas, 4).tolist(),
+        speeds=np.round(batch.speeds, 4).tolist(),
+        sigma=np.round(sigma, 4).tolist(),
+        conf=np.round(batch.conf, 4).tolist(),
+        flip_tta=request.flip_tta,
+        tta_extra_variance=(
+            None if tta_extra_variance is None else np.round(tta_extra_variance, 6).tolist()
+        ),
+        baseline_positions=(
+            None if baseline_positions is None else np.round(baseline_positions, 4).tolist()
+        ),
+        baseline_mean_abs_gap=(
+            None if baseline_gap is None else [round(value, 4) for value in baseline_gap]
+        ),
+        notes=(
+            "Trajectories, not a prediction: `probability` is null by design so the "
+            "ensemble client excludes this model. Weights are seeded from `seed`, not "
+            "loaded from a checkpoint, so treat `positions` as a geometry-correct "
+            "placeholder and `sigma`/`conf` as uncalibrated until the head is trained "
+            "and passes the calibration gate (ECE < 0.15 yd, Mahalanobis coverage "
+            "within 5pp of 0.393 at r=1 and 0.865 at r=2)."
+        ),
     )
