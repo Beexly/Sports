@@ -1,0 +1,1472 @@
+                                             Let’s Reason Formally: Natural-Formal Hybrid Reasoning Enhances
+                                                                  LLM’s Math Capability
+
+                                                                  Ruida Wang1 * , Yuxin Li2 * , Yi R. (May) Fung2 , Tong Zhang1
+                                                          1
+                                                              University of Illinois Urbana-Champaign, 2 Hong Kong University of Science and Technology
+                                                                            Correspondence: ruidaw@illinois.edu, ylinq@connect.ust.hk,
+                                                                                   yrfung@ust.hk, tongzhang@tongzhang-ml.org
+
+
+
+
+                                                                     Abstract                               of machine learning systems (Newell and Simon,
+                                              Enhancing the mathematical reasoning capa-                    1956). Among these tasks, mathematical reasoning
+                                                                                                            is considered crucial for evaluating the capabilities
+arXiv:2505.23703v4 [cs.AI] 13 Oct 2025
+
+
+
+
+                                              bilities of LLMs has garnered significant at-
+                                              tention in both the mathematical and computer                 of Large Language Models (LLMs). Recently, both
+                                              science communities. Recent works have made                   academia and industry have been actively working
+                                              substantial progress in both Natural Language                 on two branches of LLM math reasoning, namely
+                                              (NL) reasoning and Formal Language (FL) rea-                  Natural Language (NL) reasoning and Formal Lan-
+                                              soning by leveraging the potential of pure Re-
+                                                                                                            guage (FL) reasoning.
+                                              inforcement Learning (RL) methods on base
+                                              models. However, RL approaches struggle to                       In the NL math reasoning, taking advantage of
+                                              impart new capabilities not presented in the                  the vast NL data during pre-training, researchers
+                                              base model (Yue et al., 2025), highlighting the               have been continuously making progress in the
+                                              need to integrate more knowledge like FL into                 field during the last few years. Many works tried
+                                              NL math reasoning effectively. Yet, this inte-                to enhance LLMs’ Math capability from various
+                                              gration is challenging due to inherent dispari-               perspective (Hendrycks et al., 2021; LI et al., 2024;
+                                              ties in problem structure and reasoning format
+                                                                                                            Rafailov et al., 2023; Wei et al., 2022). Recent
+                                              between NL and FL (Wang et al., 2024). To
+                                              address these challenges, we introduce NL-FL
+                                                                                                            progress in pure Reinforcement Learning (RL)
+                                              HybridReasoning (NFL-HR), an end-to-end                       training on base models has notable success in solv-
+                                              framework designed to incorporate the FL ex-                  ing IMO-level problems through reflection capabil-
+                                              pert into NL math problem-solving. To bridge                  ity in Long Chain-of-Thought (CoT) (Guo et al.,
+                                              the NL and FL input format gap, we propose                    2025). However, the latest works have shown that
+                                              the NL-FL Problem Alignment method, which                     while RL methods fail to introduce novel capabil-
+                                              reformulates the Question-Answering (QA)                      ities beyond the base model (Gandhi et al., 2025).
+                                              problems in NL as existence theorems in FL.
+                                                                                                            Consequently, integrating knowledge from other
+                                              Subsequently, the Mixed Problem Input tech-
+                                              nique we provide enables the FL reasoner to                   domains, such as FL reasoning, has emerged as a
+                                              handle both QA and existence problems concur-                 promising direction to enhance LLM’s mathemati-
+                                              rently. Lastly, we mitigate the NL and FL out-                cal reasoning abilities.
+                                              put format gap in reasoning through an LLM-                      On the other end, FL reasoning leverages
+                                              based Answer Extraction mechanism. Compre-                    the inherent verifiability of formal systems like
+                                              hensive experiments demonstrate that the NFL-                 Lean (De Moura et al., 2015; Moura and Ullrich,
+                                              HR framework achieves 89.80% and 84.34%
+                                                                                                            2021), Coq (Coq, 1996), and Isabelle (Paulson,
+                                              accuracy rates on the MATH-500 and the AMC
+                                              benchmarks, surpassing the NL baseline by
+                                                                                                            1994). They provide a rigorous framework for
+                                              4.60% and 4.82%, respectively. Notably, some                  defining solutions and verifying their correctness.
+                                              problems resolved by our framework remain                     This reliability facilitates large-scale and risk-free
+                                              unsolved by the NL baseline model even under                  data generation (Lin et al., 2025; Wang et al.,
+                                              a larger number of trials.                                    2025b; Xin et al., 2024b; Dong and Ma, 2025),
+                                         1    Introduction                                                  which enables the use of synthetically generated
+                                                                                                            data for stable RL/SFT training (Wang et al., 2024;
+                                         The capability of performing rigorous mathemati-                   Xin et al., 2024a; Wu et al., 2024). With the ad-
+                                         cal reasoning has always been regarded as a corner-                vancements in Long CoT reasoning models, pure
+                                         stone of human intelligence and a fundamental goal                 RL methods have proven to be particularly effec-
+                                             * First authors                                                tive for FL reasoners (Ren et al., 2025; Wang et al.,
+ (a) NL-FL Problem Alignment
+
+                                                 Format              Existence problem 1                                                        Lean4 Statement 1
+                                                Translator                                                       Autoformalizer
+         QA problem:                                                Existence problem 2:                                                Lean4 Statement 2:
+         Convert the point 0, 3 in
+                                                                    Prove that the point 0, 3 in                                        theorem math500_precalculus_807_1
+         rectangular coordinates to
+                                                                    rectangular coordinates can                                         (r : ℝ) (θ : ℝ) (hr : r > 0) (hθ : θ ∈ Ico 0
+         polar coordinates. Enter
+                                                                    be uniquely represented in                                          (2 * π)) :
+         your answer in the form
+                                                                    polar coordinates by $, % ,                                            (r, θ) = (Real.sqrt (3 ^ 2 + 0 ^ 2),
+          $, % , where $ > 0 and
+                                                                    where $ > 0 and % ∈ 0, 2) .                                         arctan (0 / 3)) := by
+         % ∈ 0, 2) .
+
+
+                                                                     Existence problem 3                                                       Lean4 Statement 3
+
+
+
+
+                                                                                 (b) FL Reasoner Solving
+               (c) Answer Extraction
+                                                                                                   Lean4 Statement 1
+                                                                                                                                    Long CoT
+                                 NL Answer 1
+                                                                                                                                     Prover
+                                                                                          Long CoT Proof 2:
+                                                                                          Prove the Lean4 statement by thinking …
+                                 NL Answer 2:                                             <think>                                                    Mixed Problem
+                                     !
+                                  3,                                                      Long CoT NL + FL thinking                                      Input
+                                      "                                                   </think>
+                                                                              Random      Lean4 proof
+                                                                               Drop
+                                  NL Answer 3                General LLM
+                                                                                                   Lean4 Statement 3
+
+
+
+
+Figure 1: NL-FL HybridReasoning (NFL-HR) framework: (a) NL-FL Problem Alignment: We first translate the
+QA-style NL problem into the NL existence problem using a general LLM, followed by converting the problem into
+an FL existence theorem through an autoformalizer. (b) FL Reasoner Problem Solving: We then apply the mixed
+problem input technique to ask the FL reasoner to concurrently address the QA problem in NL and the existence
+problem in FL within a unified Long CoT thinking process. (c) Answer Extraction: Finally, we use the LLM to
+extract the implicit NL answer from the FL prover’s Long CoT output.
+
+2025a). However, despite rapid progress in enhanc-                                                 ing by enabling them to tackle problems that are
+ing FL reasoning capabilities, most efforts remain                                                 otherwise difficult under a purely NL context. The
+confined to FL theorem-proving tasks, limiting the                                                 framework overview is presented in Fig. 1. The
+broader application of FL-derived knowledge to NL                                                  core methodology of our framework can be sum-
+math problems. A substantial gap persists between                                                  marized into three stages that works synergistically
+NL and FL reasoning due to the differences in prob-                                                together:
+lem structure and reasoning format. FL tasks are                                                   1. NL-FL Problem Alignment: We develop a
+typically structured as closed-ended theorems with                                                    method to establish a non-ambiguous alignment
+fixed conditions and goals. Whereas NL problems                                                       between the NL problem and FL problem. It
+are often Question-Answering (QA) style, as those                                                     is done by firstly converting QA problems into
+in MATH-500 (Lightman et al., 2023). Further-                                                         NL existence problems1 using a general LLM,
+more, FL training frequently biases models’ final                                                     followed by formalizing the existence problem
+outputs toward FL code, reducing their effective-                                                     into FL through an autoformalizer.
+ness in directly addressing NL questions, which are
+often expressed in more concise and less structured                                                2. FL Reasoner Solving: At this stage, we im-
+formats.                                                                                              plement the Mixed Problem Input technique, al-
+                                                                                                      lowing the FL reasoner to concurrently address
+   In summary, in the context of NL math reasoning
+                                                                                                      both the FL existence problem and the QA prob-
+requiring broader knowledge integration to extend
+                                                                                                      lem in NL in its Long CoT thinking, thereby
+LLM capabilities, it is a natural idea to integrate FL
+                                                                                                      applying FL knowledge to solve NL tasks.
+reasoning to enhance that. However, FL reasoning
+remains constrained by its rigid problem structure                                                 3. Answer extraction: The final stage involves
+and reasoning format. Addressing these challenges                                                     extracting the implicit NL answer from the
+collectively presents a promising research direction                                                  Long CoT output generated by the FL reasoner.
+in leveraging FL to enhance NL math problem-                                                          This step effectively unifying the output for-
+solving.                                                                                              mat of FL-derived reasoning with NL question-
+                                                                                                      answering.
+   To solve the problems above, we propose NL-
+FL HybridReasoning (NFL-HR), an end-to-end                                                             1
+                                                                                                       The QA problems seek a specific answer while the exis-
+framework that augments LLMs’ NL math reason-                                                      tence problems ask for the proof of existence of the answer.
+   We summarize our contributions as follows: (1)
+                                                              Find the smallest positive real number C for
+We introduce NFL-HR, a comprehensive frame-
+                                                              which
+work that effectively incorporates FL reasoning                         !"        # !
+to address NL math problems. (2) The proposed                           ! 2 3         !
+                                                                        !             !
+NL-FL Problem Alignment and Answer Extraction                           ! 0 →2 v! ↑ C↓v↓
+methods relatively effectively reduce the disparity
+between NL and FL reasoning in both problem                    for all two-dimensional vectors v.
+structure and reasoning format, broadening the ca-
+pability of FL methods. (3) We conduct comprehen-               Figure 2: QA problem for NL math dataset
+sive experiments using the NFL-HR framework,
+achieving accuracy rates of 89.80% on the MATH-            type is typically a closed-ended, proof-oriented task
+500 dataset and 84.34% on the AMC dataset, sur-            framed as: “Given conditions {c1 , c2 , · · · }, prove
+passing the NL baseline of Qwen3-8B by 4.60%               the goal a”. In NL-FL translation (or formaliza-
+and 4.82%, respectively. Notably, the problems             tion), traditional methods demonstrated in Zheng
+successfully solved by our framework are hard for          et al. (2021) will simply present the correct answer
+the NL reasoner even with a larger number of tri-          in the statement and let the FL reasoner prove the
+als, highlighting the effectiveness of integrating FL      answer is correct. For instance, in the previous
+reasoning with NL problem-solving. Our code is             example, traditional methods will reformulate the
+available here here.                                       problem as “prove the C is 4.” While this is a valid
+                                                           formalization, it offers limited utility in deriving
+2     Methodology
+                                                           the answer we do not know.
+In this section, we present the details of NL-FL              However, if we directly use the LLM to trans-
+HybridReasoning framework, which leverages                 form the QA problem in NL into an FL problem,
+the knowledge of Formal Language (FL) reason-              there is an ambiguous point. Since the FL requires
+ers to tackle Natural Language (NL) math prob-             a goal proof, but there is no such goal provided in
+lems. To bridge the format gap between NL and              the NL question. Thus, the LLMs tend to directly
+FL reasoner’s inputs, we propose the NL-FL Prob-           guess and answer to bridge the gap between the FL
+lem Alignment method in Section 2.1. We further            proof and the NL question. But this can confuse
+introduce the Mixed Problem Input technique in             the FL reasoner since the guessed answer is mostly
+Section 2.2, which enables the Long CoT FL rea-            incorrect.
+soner to solve QA problem in NL and existence
+problem in FL concurrently. Finally, we present                Prove that there exists a smallest positive
+the Answer Extraction method to output format of               real number C such that
+FL reasoner to answer NL question in Section 2.3.                       !"
+                                                                        ! 2 3
+                                                                                 # !
+                                                                                     !
+Overall, the task for our framework can be defined                      !            !
+                                                                        ! 0 →2 v! ↑ C↓v↓
+as: “Using post-training methods to extend the
+LLM’s capabilities in solving NL-based math QA                 for all two-dimensional vectors v.
+problems.”
+                                                              Figure 3: QA reformatted to existence problem
+2.1     NL-FL Problem Alignment
+2.1.1    QA-existence problem translation                     To address this, we adopt a few-shot prompting
+ A key challenge in applying FL reasoners to NL            strategy to let a general LLM reformulate the QA
+problems lies in the disparity between their prob-         problem into an NL existence problem. Instead
+lem structures. NL math datasets primarily contain         of providing a specific value, this type of problem
+blank-filling questions that require the LLMs to           focuses on establishing the existence of the solu-
+determine specific numerical or formulaic answers.         tion, thus removing the ambiguity. The detailed
+For instance, a typical NL problem is structured           prompt is provided in Appendix H.1, where we
+as “Given conditions {c1 , c2 , · · · }, find the answer   offer cross-domain examples to guide the transfor-
+a,” as illustrated in Fig. 2, where the objective is to    mation process. The reformulated NL existence
+identify the value of C.                                   problem for the QA task is illustrated in Fig. 3,
+   On the other hand, in FL reasoning, the problem         where the objective shifts from “finding the num-
+ber” to “proving the existence of the number”.        the NL problem first. Further analysis of this be-
+                                                      havior is provided in Appendix G.
+2.1.2 Autoformalization
+                                                         Thus, we take advantage of such behavior in
+ In the FL research, many works try to automate the   the Mixed Problem Input technique, where we use
+formalization process. They use millions of pairs     the QA problem as xN L and the translated exis-
+NL-FL aligned problems to train LLMs named            tence Lean4 statement as xF L . During the reason-
+autoformalizer to do such a process (Wang et al.,     ing process, the FL prover initially addresses the
+2025a; Ren et al., 2025; Lin et al., 2025). The       QA problem, which indirectly provides an answer
+autoformalizer’s input is the NL proof problem        through its Long CoT. This response is then utilized
+and outputs its corresponding FL proof problem        to write Lean4 code to prove the FL existence prob-
+(or statement). The existence problem we derived      lem. By structuring the input in a QA-existence
+above is the unambiguous counterparty of the QA       mixed problem format, the FL prover leverages its
+problem in NL and is suitable for FL statement        expertise to resolve the NL question while concur-
+formulation. Thus, we can use the autoformalizer      rently generating the FL proof. An example of the
+to transform the NL existence problem to the cor-     input-output structure is presented in Fig. 5, and a
+responding FL statement. Specifically, we adopt       detailed prompt can be found in Appendix H.3.
+Lean4 in the NFL-HR framework due to its rapidly
+advancing models in autoformalization. An exam-
+ple of a formalized FL statement is demonstrated            == Input ==
+in Fig. 4.                                                  Think about and solve the
+                                                            ω→  following problem step by step
+                                                            ω→  in Lean 4.
+      theorem math500_precalculus_675_2 :                   # Problem: <NL_QA_problem>
+          → (C : \R),                                       # Formal statement
+          IsLeast {C | 0 < C ↑ ↓ (v :
+          EuclideanSpace \R (Fin 2)), ↔(2 * v
+                                                            ```lean4
+          0 + 3 * v 1, -2 * v 0)↔ ↗ C * ↔v↔}                /-- <NL_QA_problem> -/
+          C := by sorry                                     <FL_existence_problem>
+                                                            == Output ==
+                                                            <think>
+         Figure 4: Formalized Lean4 statement               # Finding the Smallest Positive
+                                                            ω→  Real Number $C$ for a Matrix
+  The autoformalization process effectively miti-           ω→  Norm Inequality
+gates the format gap between NL and FL problems,            <reasoning contents omitted>
+enabling the FL reasoner to indirectly address the          **The answer is: 4**
+QA problem in NL systematically.                            # Now translated it to Lean4:
+2.2    FL Reasoner Problem Solving                          <reasoning contents omitted>
+                                                            </think>
+ In this section, we introduce the Mixed Problem            <FL solutions>
+Input technique, which enables the FL reasoner (or
+prover) to implicitly address the QA problem in NL
+while processing their corresponding FL existence            Figure 5: Input-Output of the FL reasoner
+problems. Formally, the input to the FL prover is
+                                                         However, in FL prover’s reasoning process of the
+defined as:
+                                                      mixed input problem, the NL answer is only implic-
+         P rover(xF L , xN L ) = zCoT , yF L          itly presented in the Long CoT and not correctly
+                                                      formatted. This is because the training process of
+where xF L and xN L represent the FL and NL prob-     the prover established a rigid FL format bias. It
+lems, zCoT denotes the Long CoT content and yF L      makes the prover unable to directly provide the NL
+is the FL solution. During the FL prover’s reason-    answer in a formatted way for verification. Thus,
+ing process, we observed that it initially resolves   we employ the answer extraction method to retrieve
+the NL question included in the prompt before gen-    the desired response from the Long CoT content.
+erating the corresponding FL proof. Notably, even
+when the NL problem mismatches the correspond-        2.3    Answer Extraction
+ing FL statement, the prover still tends to address    This section details the approach for retrieving
+the implicit solutions embedded within the Long             MATH-500 is a collection of 500 challenging
+CoT content and enabling the framework to com-           mathematical problems designed to benchmark ad-
+bine the knowledge from the NL and FL reasoners.         vanced reasoning and problem-solving capabili-
+Specifically, we use a general-purpose LLM to ex-        ties in LLMs. The dataset covers diverse mathe-
+tract the NL answer from the Long CoT output,            matical domains, with each problem accompanied
+formatting the response in the \boxed{} block for        by its corresponding numerical or formulaic solu-
+verification. The prompt structure is illustrated in     tion for verification. It is widely used for research
+Fig. 6, with the complete prompt template provided       in mathematical reasoning, symbolic computation,
+in Appendix H.4.                                         and automated theorem proving. The AMC dataset
+                                                         consists of 83 problems extracted and reformat-
+                                                         ted from AMC-2022 and AMC-2023 (Beeching
+      Find the answer to the following
+                                                         et al., 2024), with a format transition from multiple-
+      ω→  question in the provided long
+                                                         choice to QA-style numerical answers. Positioned
+      ω→  CoT content. Your answer
+                                                         as an intermediate-level dataset between MATH-
+      ω→  should be in \boxed\{\}
+                                                         500 and IMO-level problems, making it a suitable
+      ω→  format.
+                                                         benchmark for assessing more advanced reasoning
+      Here is the question:
+      <NL_QA_problem>                                    capabilities in NL-based math tasks.
+      The answer is contained in the                     3.1.2    Baseline & Evaluation Metric
+      ω→  following Long CoT content:
+      <Long_CoT_from_prover>                             We choose Qwen3-8B (Team, 2025) as the base-
+                                                         line model due to its advanced Long CoT reason-
+                                                         ing capability and leading performance across vari-
+        Figure 6: Prompt for answer extraction           ous benchmarks. We do not apply RL methods to
+                                                         the NL reasoning model because Long CoT mod-
+  To prevent overthinking in the straightforward
+                                                         els are typically distilled from RL-trained large
+answer extraction task, we do not use the think-
+                                                         models (Team, 2025; Guo et al., 2025), as shown
+ing mode of the general LLM. But we do allow
+                                                         by Guo et al. (2025); RL methods applied directly
+the LLM to perform the normal CoT to check the
+                                                         to small models typically do not outperform the
+correctness of the answer. Additionally, to reduce
+                                                         distilled variants.
+potential biases introduced during FL training, we
+                                                            For evaluation, we utilize the pass@16 metric
+randomly exclude some FL outputs and prompt the
+                                                         on both datasets. This metric asks the model to
+NL model to directly resolve the problem, allowing
+                                                         generate 16 potential answers for each question
+the framework to leverage both the general LLM
+                                                         and considers the problem correctly solved if any
+and the FL reasoner’s knowledge
+                                                         of the generated answers match the correct solu-
+3     Experiments                                        tion. It is an appropriate metric to evaluate the
+                                                         capability limit for math reasoning frameworks.
+To validate the effectiveness of our proposed NL-        We chose this metric to align with the recent find-
+FL HybridReasoning framework, we conduct                 ings that pure RL methods reduce incorrect outputs
+comprehensive experiments on widely applied              but struggle to expand overall reasoning capabil-
+benchmarks (Lightman et al., 2023; Beeching et al.,      ity (Yue et al., 2025; Gandhi et al., 2025), which
+2024). Additionally, we evaluate the framework’s         makes the assessment of capability limit meaning-
+unique FL capabilities (Section 3.4), the computa-       ful.
+tion cost of NFL-HR (Section 3.5), and conduct
+ablation studies (Section 3.6) to further substantiate   3.2     Implementation Details
+its effectiveness.                                       We employ Qwen3-8B (Team, 2025) with
+                                                         Long CoT thinking mode for format transla-
+3.1    Experiment Setup
+                                                         tion and non-thinking mode for answer extrac-
+3.1.1 Dataset                                            tion. For autoformalization, we utilize Kimina-
+To evaluate the efficiency of NFL-HR in advancing        Autoformalizer (Wang et al., 2025a), while Kimina-
+LLM NL math reasoning, we choose the MATH-               Prover-Preview-7B (Wang et al., 2025a) serves as
+500 (Lightman et al., 2023) and AMC (Beeching            the FL reasoner. Details of the Kimina-Prover se-
+et al., 2024) datasets.                                  ries of models can be found in Appendix D. The
+             Dataset           Data Number      NL Reasoning          NL-FL HybridReasoning       Improvement
+              AMC                   83             79.52%                    84.34%                  4.82%
+           MATH-500                500             85.20%                    89.80%                  4.60%
+       MATH-500 by subject
+            Prealgebra             82              84.15%                    89.02%                 4.88%
+      Counting & Probability       38              84.21%                    89.47%                 5.26%
+       Intermediate Algebra        97              84.54%                    89.69%                 5.15%
+             Geometry              41              65.85%                    80.49%                 14.63%
+            Precalculus            56              76.79%                    83.93%                 7.14%
+              Algebra              124             94.35%                    95.16%                 0.81%
+          Number Theory            62              90.32%                    91.94%                 1.61%
+
+  Table 1: Main experiment result of NFL-HR under MATH-500 and AMC benchmarks with pass@16 metric.
+
+temperature for proof generation is configured at           Dataset    Subset problem #   NL-16   NL-64   HR-16
+0.7, with other inference steps set to 0.6 to maintain      AMC              7             0%      0%     100%
+a balance between exploration and stability. We             MATH             23            0%      0%     100%
+also set the temperature of the baseline model to
+                                                         Table 2: Results on FL’s unique capability, where the
+0.7. Inference is conducted using vllm (Kwon et al.,
+                                                         “Subset problem #” means the number of problems not
+2023) with default parameters. To manage GPU             solved by the NL reasoning but solved by NFL-HR
+usage, we limit the maximum token generation to          (HR) in the main experiment.
+8192 tokens per query. The complete evaluation
+process consumes approximately 200 A6000 GPU             mance across all domains. It effectively mitigates
+hours.                                                   the weaknesses of NL reasoning by incorporating
+                                                         the rigorous verification capabilities of FL during
+3.3     Main Results                                     training. This consistent improvement underscores
+We present the main experiment results in Tab. 1.        the value of incorporating FL-derived logical struc-
+From the table, the NFL-HR achieves accuracy             tures into NL problem-solving.
+rates of 84.34% on the AMC dataset and 89.80%
+on the MATH-500 dataset. Outperforming the NL            3.4    Study on FL’s Unique Capability
+baseline by 4.82% and 4.60% respectively, which          To verify the FL prover supplies abilities hard to at-
+records 79.52% on AMC and 85.20% on MATH-                tain through pure NL training, we re-evaluated the
+500.                                                     NL baseline on the subset of problems that are only
+   In the subjective-level result, the NL reasoning      solved by NFL-HR in the main experiment. This
+baseline performs relatively badly on domains like       subset represents 8.43% of AMC problems and
+Geometry and Precalculus. In Precalculus, the            4.60% of MATH-500 problems. To test whether
+NL model achieves only 76.79%, while NFL-HR              these problems can be finished by NL reasoner,
+reaches 83.93%. This gain stems from FL reason-          we allow a pass@64 generation in this experiment.
+ing’s emphasis on the precise, step-by-step logical      The results are reported in Tab. 2.
+analysis, which is vital for handling complex calcu-        The table shows that even with 64 attempts, the
+lations in calculus. In Geometry, since most prob-       NL models obtained a 0% accuracy rate on every
+lems are about numerical geometrical concepts like       problem for both sub-datasets. It typically stalls in
+degrees and edges, whose data is easy to obtain          the self-reflection loop and produces no valid an-
+by FL training in analytic geometry, but not that        swer. In contrast, NFL-HR continues to solve all
+easy through NL training. This advantage leads to        items in the group in the pass@16 metric, confirm-
+a 14.63% of improvement.                                 ing that the FL component contributes distinctive
+   From a general perspective, the NL baseline ex-       knowledge that the NL system alone finds hard to
+hibits substantial performance variability across        cover.
+subjects. It excels in areas with abundant data,
+such as algebra and number theory, but falters in        3.5    Computation Cost Study
+fields that require precise logical deductions, like     We test the efficiency of the NFL-HR framework
+geometry and precalculus. In contrast, NFL-HR            by comparing the average tokens generated by
+demonstrates consistent and relatively high perfor-      NFL-HR and the NL reasoning baseline of Qwen3-
+       Method     AMC       MATH-500    Average        the framework’s accuracy diminishing to levels be-
+      Qwen3-8B   6,611.53    4,305.30   5,458.42       low that of pure NL reasoning. This suggests that
+      NFL-HR     7,447.06    5,173.63   6,310.35       increasingly sophisticated datasets require more rig-
+                                                       orous reasoning capabilities. Thereby heightening
+Table 3: Tokens generated for Qwen3-8B and NFL-HR
+in AMC and MATH-500 dataset under pass@16.             the importance of precise FL integration facilitated
+                                                       by the alignment step.
+           Method               AMC     MATH-500       3.6.2    Drop expert FL prover
+      NL Reasoning             79.52%     85.20%       To evaluate the contribution of the specialized
+ NFL-HR w/o existence align.   77.11%     88.20%
+ NFL-HR w/o expert prover      80.72%     88.33%
+                                                       FL prover, this experiment involved substituting
+        NFL-HR                 84.34%     89.80%       it with the general-purpose LLM (Qwen3-8B) in
+                                                       NFL-HR. The corresponding results are detailed
+Table 4: Ablation study results, all experiments are   in Tab. 4. This configuration yielded an average
+performed under pass@16.                               performance decrease of 2.55% compared to the
+8B in the MATH-500 and AMC dataset under the           original NFL-HR, underscoring the efficacy of in-
+pass@16 metric. The results are presented in Tab. 3.   corporating an FL expert for enhancing NL rea-
+We can see that the NFL-HR requires approxi-           soning. This performance dip is attributed to the
+mately 850 additional tokens per query on aver-        general LLM’s lack of field-specific FL training,
+age. Compared to the unique capability obtained        which consequently impeded the framework’s abil-
+of NFL-HR as shown in Section 3.4, where NFL-          ity to address advanced problems in certain sub-
+HR can solve problems that the NL baseline is un-      jects. Nevertheless, even with this substitution, the
+able to answer even under much larger trials. This     framework demonstrated an average improvement
+demonstrates the gain of capability that outweighs     of 2.17% over the NL baseline. This suggests that
+the modest increase in token usage.                    activating the model’s inherent FL knowledge can
+   Furthermore, in real-time inference, both sys-      still benefit NL reasoning.
+tems cost the same scale of GPU hours on average.
+This is because the NFL-HR distributes its gener-      3.7     Case Study
+ation across multiple stages, but the NL baseline      This section presents a detailed case study illustrat-
+conducts a single-pass generation that has more        ing each stage of the NFL-HR framework. Due
+GPU cost as it generates later tokens. Therefore,      to the space constraints, we only provide analysis
+we conclude the additional generation cost as a rea-   in the main paper, while the detailed input-output
+sonable and worthwhile trade-off for the improved      examples are available in Appendix I.
+reasoning performance.                                    During the QA-existence problem translation
+                                                       stage, the LLM demonstrates a thorough analysis
+3.6    Ablation Studies
+                                                       of the task, and the model also effectively utilizes
+3.6.1 Drop existence alignment                         the provided few-shot examples. Notably, even
+To test the effectiveness of the NL-FL Problem         when presented with a QA problem in the sense
+Alignment, we drop the existence alignment step        of unit translation, a format not typically framed
+in NFL-HR and replace it with directly passing         as an existence problem in NL math datasets. The
+the NL QA-style problems to the autoformalizer         model achieves an accurate translation. And pro-
+to translate. During this experiment, it was ob-       vide the result in a markdown box as instructed. In
+served that such direct formalization could lead       the subsequent autoformalization stage, the auto-
+to discrepancies between the correct NL answer         formalizer successfully converts the NL existence
+and the generated FL statement, potentially disori-    problem into a formal Lean4 statement. Despite
+enting the prover. Consequently, in this ablated       the inclusion of some unnecessary elements in the
+configuration, the prover was guided only to solve     formal goal, it is still a valid autoformalization, and
+the autoformalized statement, with only the FL rea-    the result successfully compiles.
+soning segment subsequently utilized for answer           For the FL prover generation phase, the expert
+extraction. The dropping of the existence align-       prover correctly and concisely addresses the NL
+ment causes the accuracy rate to reduce by 4.42%.      question. It then generates the corresponding FL
+Notably, on the harder AMC dataset, this perfor-       proof, which also passes verification. Finally, in the
+mance deterioration was particularly acute, with       answer extraction stage, even without Long CoT,
+the general LLM still performs chain-of-thought        4.2   Formal Math Reasoning
+reasoning to verify the result based on the FL
+prover’s output, as intended. This behavior en-        Formal Language (FL) reasoning involves express-
+hances the framework’s robustness and can poten-       ing mathematical statements in first-order logic,
+tially rectify minor discrepancies arising from the    rendering every component of the mathematical
+FL reasoning process.                                  reasoning system verifiable. This approach mit-
+                                                       igates ambiguity and provides a solid founda-
+                                                       tion for the reasoning process. Researchers have
+                                                       developed many FLs in the last decades, such
+4     Related Work                                     as Isabelle (Paulson, 1994), Lean (De Moura
+                                                       et al., 2015; Moura and Ullrich, 2021), CoQ (Coq,
+4.1    Natural Math Reasoning                          1996), Metamath (Megill and Wheeler, 2019),
+                                                       and HOL Light (Harrison, 2009). Among these,
+Enhancing the mathematical problem-solving abil-       Lean4 (Moura and Ullrich, 2021) has garnered sig-
+ities of LLMs has consistently attracted interest      nificant attention due to its elegance and simplicity.
+from both industrial and academic research com-           Most research in FL reasoning has concen-
+munities. This is largely because mathematical         trated on developing more advanced prover mod-
+reasoning is widely considered a hallmark of ad-       els. Researchers have proposed various meth-
+vanced intelligence. From their interception, LLMs     ods to enhance the formal reasoning capabili-
+demonstrated notable aptitude for mathematical         ties of LLMs. Representative approaches in-
+tasks. Benchmark datasets have charted rapid           clude LeanDojo (Yang et al., 2024), which ap-
+advancements, progressing from primary-school          plies retrieval methods to suggest tactics; Theo-
+level problems (Cobbe et al., 2021), through high-     remLlama (Wang et al., 2024), which attempts
+school problems (Lightman et al., 2023; Hendrycks      to transform NL proofs into FL proofs; and the
+et al., 2021), to university-competition-level ques-   DeepSeek-Prover family (Xin et al., 2024b,a; Ren
+tions (Gulati et al., 2024). Concurrently, the de-     et al., 2025), Goedel-Prover (Lin et al., 2025),
+velopment of extensive datasets such as OpenWeb-       and STP (Dong and Ma, 2025), which employ
+Math (Paster et al., 2023), ProofPiles (Azerbayev      advanced techniques for large-scale formal data
+et al., 2023b), and Numina-Math (LI et al., 2024)      annotation. Recently, systems like MA-LoT (Wang
+has expanded the scale of the math corpus to bil-      et al., 2025b), Kimina-Prover (Wang et al., 2025a),
+lions of tokens for pre-training and millions of       and DeepSeek-Prover-V2 (Ren et al., 2025) uti-
+question-answering pairs for fine-tuning. Along-       lize different strategies to train models with Long
+side these data curation efforts, researchers have     Chain-of-Thought, advancing formal reasoning ca-
+explored diverse training methodologies, ranging       pabilities to address IMO-level problems.
+from simple instruction fine-tuning (Brown et al.,        Despite these rapid advancements, inherent dis-
+2020) and code-augmented training (Roziere et al.,     parities between FL and NL in both problem formu-
+2023) to Reinforcement Learning (RL) alignment         lation and reasoning paradigms mean that few stud-
+strategies (Rafailov et al., 2023; Schulman et al.,    ies have directly leveraged FL models to enhance
+2017; Shao et al., 2024). More recently, pure RL       the NL reasoning capabilities of LLMs. The major-
+training applied to base models to develop Long        ity of these efforts focus on answer selection based
+Chain-of-Thought capabilities has yielded impres-      on formal verification (Yao et al., 2025; Zhou et al.,
+sive performance gains, exemplified by DeepSeek-       2024), or involve the indirect incorporation of FL-
+R1 (Guo et al., 2025). However, recent stud-           derived knowledge during RL training (Guo et al.,
+ies suggest that such RL-based training primar-        2025). Concurrently, new benchmarks are emerg-
+ily refines existing abilities rather than impart-     ing to explore the integration of formal reasoning
+ing novel capabilities beyond those inherent in        with even more complex input modalities, such
+the base model (Yue et al., 2025; Gandhi et al.,       as the multimodal problems presented in MATP-
+2025). Consequently, investigating methods to          Bench (He et al., 2025). Consequently, bridging
+integrate diverse knowledge sources and reason-        the gap between NL and FL reasoning represents a
+ing paradigms into LLM mathematical problem-           promising direction in the background of the gen-
+solving has emerged as a significant research direc-   eral need to integrate diverse knowledge sources
+tion.                                                  into math reasoning.
+5   Conclusion                                           Limitations
+This paper introduces NFL-HR, an end-to-end              Despite the promising results of NFL-HR, there
+framework that directly integrates the knowledge         are still some limitations in our work that can be
+of Formal Language (FL) into Natural Language            further addressed in future research. First, even
+(NL) mathematical problem-solving. The frame-            though our work integrates FL methods in NL rea-
+work largely addresses the gap in input format be-       soning, the verifiability of FL is not properly used
+tween NL and FL problems through the proposed            in the framework. Future work can focus on meth-
+NL-FL problem Alignment method, which trans-             ods to fix NL reasoning through FL feedback. Sec-
+forms the QA problem in NL into an existence             ondly, our framework effectively bridges the gap
+theorem-proving statement in FL. Subsequently,           between NL and FL reasoners’ input and output
+we present the method to solve NL questions by the       formats. The gap may still hinder performance,
+FL reasoner using the Mixed Problem Input tech-          which makes the development of blank-filling FL
+nique. Finally, an answer extraction mechanism           suitable for QA problems a promising direction. In
+retrieves solutions from the FL reasoning process,       the sense of potential risks, there is no immediately
+which bridges the output format gap between NL           identifiable risk for the results of this paper.
+and FL reasoning. Comprehensive experiments
+demonstrate the effectiveness of NFL-HR, which
+achieves 89.80% accuracy rate on the MATH-500            References
+dataset and 84.34% on the AMC dataset. Further-          Zhangir Azerbayev, Bartosz Piotrowski, Hailey
+more, NFL-HR surpasses the NL baseline across              Schoelkopf, Edward W Ayers, Dragomir Radev, and
+                                                           Jeremy Avigad. 2023a. Proofnet: Autoformalizing
+all subjects in the MATH-500 dataset and demon-            and formally proving undergraduate-level mathemat-
+strates the ability to solve problems relatively hard      ics. arXiv preprint arXiv:2302.12433.
+for pure NL reasoners. The code will be open-
+                                                         Zhangir Azerbayev, Hailey Schoelkopf, Keiran Paster,
+sourced to encourage further research and develop-         Marco Dos Santos, Stephen McAleer, Albert Q Jiang,
+ment in this area.                                         Jia Deng, Stella Biderman, and Sean Welleck. 2023b.
+                                                           Llemma: An open language model for mathematics.
+6   Discussion                                             arXiv preprint arXiv:2310.10631.
+
+Although pure RL training provides LLMs with             Edward Beeching, Shengyi Costa Huang, Albert Jiang,
+                                                           Jia Li, Benjamin Lipkin, Zihan Qina, Kashif Rasul,
+strong capabilities in many cases, recent works
+                                                           Ziju Shen, Roman Soletskyi, and Lewis Tunstall.
+have proved that such training is unable to provide        2024. Numinamath 7b tir. https://huggingface.
+the model with the knowledge that is relatively            co/AI-MO/NuminaMath-7B-TIR.
+weak in its base model. This highlights the promis-
+                                                         Tom Brown, Benjamin Mann, Nick Ryder, Melanie
+ing direction of research into methods that incorpo-       Subbiah, Jared D Kaplan, Prafulla Dhariwal, Arvind
+rate broader knowledge into NL reasoning. Gener-           Neelakantan, Pranav Shyam, Girish Sastry, Amanda
+ally speaking, NFL-HR provides a promising and             Askell, and 1 others. 2020. Language models are
+general setting for integrating expert knowledge           few-shot learners. Advances in neural information
+                                                           processing systems, 33:1877–1901.
+in a specific field into reasoning. Thus, the con-
+tribution of this paper is not limited to the field of   Karl Cobbe, Vineet Kosaraju, Mohammad Bavarian,
+math reasoning but gives a general pipeline for the        Mark Chen, Heewoo Jun, Lukasz Kaiser, Matthias
+                                                           Plappert, Jerry Tworek, Jacob Hilton, Reiichiro
+integration of different fields’ knowledge.                Nakano, Christopher Hesse, and John Schulman.
+                                                           2021. Training verifiers to solve math word prob-
+                                                           lems. arXiv preprint arXiv:2110.14168.
+                                                         Projet Coq. 1996. The coq proof assistant-reference
+                                                           manual. INRIA Rocquencourt and ENS Lyon, ver-
+                                                           sion, 5.
+                                                         Leonardo De Moura, Soonho Kong, Jeremy Avigad,
+                                                           Floris Van Doorn, and Jakob von Raumer. 2015. The
+                                                           lean theorem prover (system description). In Auto-
+                                                           mated Deduction-CADE-25: 25th International Con-
+                                                           ference on Automated Deduction, Berlin, Germany,
+                                                           August 1-7, 2015, Proceedings 25, pages 378–388.
+                                                           Springer.
+Kefan Dong and Tengyu Ma. 2025. Beyond lim-                  Xia, Danqi Chen, Sanjeev Arora, and Chi Jin.
+  ited data: Self-play llm theorem provers with it-          2025. Goedel-prover: A frontier model for open-
+  erative conjecturing and proving. arXiv preprint           source automated theorem proving.     Preprint,
+  arXiv:2502.00212.                                          arXiv:2502.07640.
+Kanishk Gandhi, Ayush Chakravarthy, Anikait Singh,         Norman Megill and David A Wheeler. 2019. Metamath:
+  Nathan Lile, and Noah D Goodman. 2025. Cognitive           a computer language for mathematical proofs. Lulu.
+  behaviors that enable self-improving reasoners, or,        com.
+  four habits of highly effective stars. arXiv preprint
+  arXiv:2503.01307.                                        Leonardo de Moura and Sebastian Ullrich. 2021. The
+                                                             lean 4 theorem prover and programming language. In
+Aryan Gulati, Brando Miranda, Eric Chen, Emily Xia,          Automated Deduction–CADE 28: 28th International
+  Kai Fronsdal, Bruno de Moraes Dumont, and Sanmi            Conference on Automated Deduction, Virtual Event,
+  Koyejo. 2024. Putnam-axiom: A functional and               July 12–15, 2021, Proceedings 28, pages 625–635.
+  static benchmark for measuring higher level mathe-         Springer.
+  matical reasoning. In The 4th Workshop on Mathe-
+  matical Reasoning and AI at NeurIPS’24.                  Allen Newell and Herbert Simon. 1956. The logic
+                                                             theory machine–a complex information processing
+Daya Guo, Dejian Yang, Haowei Zhang, Junxiao                 system. IRE Transactions on information theory,
+  Song, Ruoyu Zhang, Runxin Xu, Qihao Zhu, Shi-              2(3):61–79.
+  rong Ma, Peiyi Wang, Xiao Bi, and 1 others. 2025.
+  Deepseek-r1: Incentivizing reasoning capability in       OpenAI. 2024.       Learning to reason with
+  llms via reinforcement learning. arXiv preprint            llms.            https://openai.com/index/
+  arXiv:2501.12948.                                          learning-to-reason-with-llms/.    Accessed:
+                                                             2024-11-24.
+John Harrison. 2009. Hol light: An overview. In Inter-
+  national Conference on Theorem Proving in Higher         Keiran Paster, Marco Dos Santos, Zhangir Azerbayev,
+  Order Logics, pages 60–66. Springer.                       and Jimmy Ba. 2023. Openwebmath: An open
+                                                             dataset of high-quality mathematical web text. arXiv
+Zhitao He, Zongwei Lyu, Dazhong Chen, Dadi Guo,              preprint arXiv:2310.06786.
+  and Yi R Fung. 2025. Matp-bench: Can mllm be
+  a good automated theorem prover for multimodal           Lawrence C Paulson. 1994. Isabelle: A generic theorem
+  problems? arXiv preprint arXiv:2506.06034.                 prover. Springer.
+Dan Hendrycks, Collin Burns, Saurav Kadavath, Akul         Rafael Rafailov, Archit Sharma, Eric Mitchell, Christo-
+  Arora, Steven Basart, Eric Tang, Dawn Song, and Ja-        pher D Manning, Stefano Ermon, and Chelsea Finn.
+  cob Steinhardt. 2021. Measuring mathematical prob-         2023. Direct preference optimization: Your lan-
+  lem solving with the math dataset. arXiv preprint          guage model is secretly a reward model. Advances in
+  arXiv:2103.03874.                                          Neural Information Processing Systems, 36:53728–
+                                                             53741.
+Woosuk Kwon, Zhuohan Li, Siyuan Zhuang, Ying
+ Sheng, Lianmin Zheng, Cody Hao Yu, Joseph E.              ZZ Ren, Zhihong Shao, Junxiao Song, Huajian Xin,
+ Gonzalez, Hao Zhang, and Ion Stoica. 2023. Effi-            Haocheng Wang, Wanjia Zhao, Liyue Zhang, Zhe
+ cient memory management for large language model            Fu, Qihao Zhu, Dejian Yang, and 1 others. 2025.
+ serving with pagedattention. In Proceedings of the          Deepseek-prover-v2: Advancing formal mathemati-
+ ACM SIGOPS 29th Symposium on Operating Systems              cal reasoning via reinforcement learning for subgoal
+ Principles.                                                 decomposition. arXiv preprint arXiv:2504.21801.
+Jia LI, Edward Beeching, Lewis Tunstall, Ben               David Renshaw. 2025. Compfiles: Catalog Of Math
+   Lipkin, Roman Soletskyi, Shengyi Costa Huang,             Problems Formalized In Lean. https://github.
+   Kashif Rasul, Longhui Yu, Albert Jiang, Ziju              com/dwrensha/compfiles.
+   Shen, Zihan Qin, Bin Dong, Li Zhou, Yann
+   Fleureau, Guillaume Lample, and Stanislas Polu.         Baptiste Roziere, Jonas Gehring, Fabian Gloeckle, Sten
+   2024. Numinamath. [https://huggingface.co/                Sootla, Itai Gat, Xiaoqing Ellen Tan, Yossi Adi,
+   AI-MO/NuminaMath-CoT](https://github.com/                 Jingyu Liu, Romain Sauvestre, Tal Remez, and 1
+   project-numina/aimo-progress-prize/blob/                  others. 2023. Code llama: Open foundation models
+   main/report/numina_dataset.pdf).                          for code. arXiv preprint arXiv:2308.12950.
+
+Hunter Lightman, Vineet Kosaraju, Yuri Burda, Harri-       John Schulman, Filip Wolski, Prafulla Dhariwal,
+  son Edwards, Bowen Baker, Teddy Lee, Jan Leike,            Alec Radford, and Oleg Klimov. 2017. Proxi-
+  John Schulman, Ilya Sutskever, and Karl Cobbe.             mal policy optimization algorithms. arXiv preprint
+  2023. Let’s verify step by step. In The Twelfth Inter-     arXiv:1707.06347.
+  national Conference on Learning Representations.
+                                                           Zhihong Shao, Peiyi Wang, Qihao Zhu, Runxin Xu,
+Yong Lin, Shange Tang, Bohan Lyu, Jiayun Wu,                 Junxiao Song, Mingchuan Zhang, YK Li, Yu Wu,
+  Hongzhou Lin, Kaiyu Yang, Jia Li, Mengzhou                 and Daya Guo. 2024. Deepseekmath: Pushing the
+  limits of mathematical reasoning in open language       Xinyu Zhang, Yuxuan Dong, Yanrui Wu, Jiaxing Huang,
+  models. arXiv preprint arXiv:2402.03300.                  Chengyou Jia, Basura Fernando, Mike Zheng Shou,
+                                                            Lingling Zhang, and Jun Liu. 2025. Physreason:
+Qwen Team. 2025. Qwen3.                                     A comprehensive benchmark towards physics-based
+                                                            reasoning. arXiv preprint arXiv:2502.12054.
+Haiming Wang, Mert Unsal, Xiaohan Lin, Mantas
+  Baksys, Junqi Liu, Marco Dos Santos, Flood Sung,        Kunhao Zheng, Jesse Michael Han, and Stanislas Polu.
+  Marina Vinyes, Zhenzhe Ying, Zekai Zhu, and 1 oth-        2021. Minif2f: a cross-system benchmark for for-
+  ers. 2025a. Kimina-prover preview: Towards large          mal olympiad-level mathematics. arXiv preprint
+  formal reasoning models with reinforcement learning.      arXiv:2109.00110.
+  arXiv preprint arXiv:2504.11354.
+                                                          Jin Peng Zhou, Charles Staats, Wenda Li, Christian
+Ruida Wang, Rui Pan, Yuxin Li, Jipeng Zhang, Yizhen          Szegedy, Kilian Q Weinberger, and Yuhuai Wu.
+  Jia, Shizhe Diao, Renjie Pi, Junjie Hu, and Tong           2024. Don’t trust: Verify–grounding llm quantita-
+  Zhang. 2025b. Ma-lot: Multi-agent lean-based long          tive reasoning with autoformalization. arXiv preprint
+  chain-of-thought reasoning enhances formal theorem         arXiv:2403.18120.
+  proving. arXiv preprint arXiv:2503.03205.
+
+Ruida Wang, Jipeng Zhang, Yizhen Jia, Rui Pan, Shizhe
+  Diao, Renjie Pi, and Tong Zhang. 2024. Theoreml-
+  lama: Transforming general-purpose llms into lean4
+  experts. arXiv preprint arXiv:2407.03203.
+
+Jason Wei, Xuezhi Wang, Dale Schuurmans, Maarten
+   Bosma, Fei Xia, Ed Chi, Quoc V Le, Denny Zhou,
+   and 1 others. 2022. Chain-of-thought prompting elic-
+   its reasoning in large language models. Advances
+   in neural information processing systems, 35:24824–
+   24837.
+
+Zijian Wu, Suozhi Huang, Zhejian Zhou, Huaiyuan
+  Ying, Jiayu Wang, Dahua Lin, and Kai Chen. 2024.
+   Internlm2. 5-stepprover: Advancing automated theo-
+   rem proving via expert iteration on large-scale lean
+   problems. arXiv preprint arXiv:2410.15700.
+
+Huajian Xin, Daya Guo, Zhihong Shao, Zhizhou Ren,
+  Qihao Zhu, Bo Liu, Chong Ruan, Wenda Li, and
+  Xiaodan Liang. 2024a. Deepseek-prover: Advancing
+  theorem proving in llms through large-scale synthetic
+  data. arXiv preprint arXiv:2405.14333.
+
+Huajian Xin, ZZ Ren, Junxiao Song, Zhihong Shao,
+  Wanjia Zhao, Haocheng Wang, Bo Liu, Liyue Zhang,
+  Xuan Lu, Qiushi Du, and 1 others. 2024b. Deepseek-
+  prover-v1. 5: Harnessing proof assistant feedback for
+  reinforcement learning and monte-carlo tree search.
+  arXiv preprint arXiv:2408.08152.
+
+Kaiyu Yang, Aidan Swope, Alex Gu, Rahul Chala-
+  mala, Peiyang Song, Shixing Yu, Saad Godil, Ryan J
+  Prenger, and Animashree Anandkumar. 2024. Le-
+  andojo: Theorem proving with retrieval-augmented
+  language models. Advances in Neural Information
+  Processing Systems, 36.
+
+Jiarui Yao, Ruida Wang, and Tong Zhang. 2025.
+   Fans–formal answer selection for natural language
+   math reasoning using lean4.       arXiv preprint
+   arXiv:2503.03238.
+
+Yang Yue, Zhiqi Chen, Rui Lu, Andrew Zhao, Zhaokai
+  Wang, Shiji Song, and Gao Huang. 2025. Does re-
+  inforcement learning really incentivize reasoning ca-
+  pacity in llms beyond the base model? arXiv preprint
+  arXiv:2504.13837.
+A     Discussion of AI usage
+This work used Copilot to assist code-writing and                  Method       AMC      MATH-500
+OpenAI’s models to fix grammatical issues of the                 NL baseline   77.11%      86.20%
+paper. All the ideas of the paper are original.                   NFL-HR       81.93%      89.40%
+                                                                Improvement     4.82%       3.20%
+B     Term chart
+                                                        Table 7: Using DeepSeek-R1-Distilled-8B-0528 as NL
+To help the reader better understand the terms, we      model for NL baseline and NFL-HR under pass@16.
+provide a chart that explains every term, abbrevia-
+tion, and corresponding tool in detail in Tab 5.           From the results, we can find that when using
+                                                        DeepSeek-R1 in the place of Qwen3, the NFL-HR
+C     Additional experiments                            framework still yields a consistent performance
+We provide the results of additional experiments in     improvement over the NL baseline. This confirms
+this section.                                           that our framework can effectively integrate the
+                                                        unique capabilities of FL reasoners across different
+C.1     Problem format study                            NL base models.
+In order to test that the improved reasoning capa-
+                                                        C.3 Generalization of NFL-HR to other fields
+bility of the NFL-HR framework comes from the
+unique FL reasoning capability of the FL reasoner,      To validate the capability of the NFL-HR frame-
+instead of the existence problems are relatively easy   work is not limited to the Math domain only, we ex-
+to solve. We perform an experiment of replacing         tend the framework to the PhysReason-mini bench-
+the process of autoformalization and the FL prover      mark (Zhang et al., 2025). It is a benchmark that
+with an NL solver to solve the existence problem in     consists of 200 high-school-level competition prob-
+the NFL-HR. The pass@16 results are presented           lems. We apply the first sub-question from each
+in Tab. 6.                                              problem and replace the images with the provided
+                                                        captions to ensure that the NL baseline can process
+                                                        the inputs as pure tests. The pass@16 result for the
+             Method              AMC      MATH-500      NL baseline using Qwen3-8B is 22.50% while the
+           NL baseline           79.52%    85.20%       NFL-HR achieves 26.50%. The 4% improvement
+    solve NL existence problem   53.01%    70.20%       over the NL baseline provides additional evidence
+             NFL-HR              84.34%    89.80%
+                                                        for the huge potential of the generalizability of our
+Table 6: Problem format study result, all results are   approach.
+pass@16
+                                                        D    Details of models used
+   We can discover that simply changing the for-        The FL reasoner is a Lean4 theorem-proving model
+mat of the problem into an existence-style proof        developed by the Numina and Kimi teams, intro-
+problem does not improve the NL model perfor-           duced in Wang et al. (2025a). The prover model
+mance. On the contrary, it significantly reduces the    was trained using large-scale Reinforcement Learn-
+accuracy. Such a reduction is because the Qwen3         ing on Lean4 data to enable Long CoT reasoning
+is not specially trained to answer proof questions.     of the model. This enables the model to firstly con-
+This indicates that the improvement observed with       duct a thorough analysis of the problem and then
+NFL-HR does not come from the problem refor-            accurately construct a Lean4 proof based on the
+matting alone, but from integration of the unique       draft reasoning. It achieved a state-of-the-art per-
+capability of the FL reasoner.                          formance across multiple theorem proving bench-
+                                                        marks.
+C.2     Additional Long CoT models                         As for the autoformalizer, it was trained on
+To assess the generalizability of the NFL-HR            problems from PutnamBench (Gulati et al., 2024),
+framework across different NL reasoners, we con-        MiniF2F (Zheng et al., 2021), ProofNet (Azer-
+duct the experiment using DeepSeek-R1-Distilled-        bayev et al., 2023a), and Compfiles (Renshaw,
+8B-0528 (Guo et al., 2025) as the general NL model      2025). Wang et al. (2025a) fine-tunes a 7B base
+in NFL-HR and compare it with pure NL reason-           model to be an autoformalizer based on the col-
+ing. The results are presented in Tab. 7.               lected training. Furthermore, they applied expert
+     Term             Explaination
+     NL (Natural      Refers to language that humans use in our daily life, often unable to perform auto step-by-step
+     Language)        verification. The typical verification method for NL math is to check whether the answer is
+                      correct.
+     FL (Formal       A structured and mathematically precise representation of logic and proofs, which ensures
+     Language)        rigorous verification and eliminates ambiguities present in NL reasoning.
+     Lean4            A functional programming language and interactive theorem prover developed for formalizing
+                      mathematics and verifying proofs.
+     FL reasoner      The model aims to write FL proofs with FL statements as input. Most provers also require a
+     (or FL prover)   natural language statement as additional input to guide FL reasoning. Currently, Lean4 provers
+                      are fast advancing FL provers. In the sense of naming, in the context of FL works (Wang et al.,
+                      2024; Ren et al., 2025; Wu et al., 2024; Wang et al., 2025a), the FL reasoner is called a prover
+                      since its usage is to prove theorems of FL. In this paper, since we want to unify the FL reasoning
+                      and NL reasoning, we call the model FL reasoner in most cases.
+     NL reasoner      The model aims to solve NL math problems with an NL question as input. The typical input for
+                      the reasoner is a question that requires a specific numerical or formulaic answer.
+     QA problem in    The type of problem for most NL math training and evaluation datasets. The problem is an NL
+     NL               question that seeks a specific numerical or formulaic answer.
+     FL problem       The type of problem for FL dataset. The problem is a set of conditions and goals that require
+     (or FL           formal proofs to complete the proof.
+     statement)
+     Long CoT         The reasoning structure provided by OpenAI-o1 (OpenAI, 2024) and open-sourced by DeepSeek-
+     (Long Chain-     R1 (Guo et al., 2025) that performs long and detailed thinking before making the final output.
+     of-Thought)      Different from traditional CoT, the Long CoT allows for multi-step logical reasoning before
+                      proof generation, reflection, and iterative refinement from self-checking results (Wang et al.,
+                      2025b).
+
+                                                 Table 5: Term Chart
+
+
+iteration based on Lean4 verification and LLM                  soners. This may come from the NL-FL alignment
+judgement using QwQ-32B. On a 1,000-problem                    process or within formal reasoning itself. For exam-
+human-curated test set, the autoformalizer achieves            ple, in probability problems, it is often meaningless
+a one-shot accuracy of 66%, and its Lean4 compi-               to prove the existence of a probability value. Sim-
+lation success rate reaches over 90%.                          ilarly, in geometry problems, the required answer
+                                                               may be expressed in degrees, whereas Lean4 oper-
+E   Discussion of verifiability of FL                          ates in radians, creating potential inconsistencies.
+                                                               Thus, to maintain the robustness and generality of
+In this work, we do not integrate the verifiability of
+                                                               the framework across diverse problem types, we
+FL as a direct mechanism for NL output validation,
+                                                               randomly drop FL outputs in such scenarios, allow-
+but as the foundation of the unique formal reason-
+                                                               ing the NL model to reason directly when formal
+ing capability of the FL reasoner. The FL plays a
+                                                               logic is unsuitable.
+crucial role in the training of FL reasoner through
+RL by ensuring step-by-step correctness, which is                 Furthermore, since the autoformalizer in NFL-
+hard for NL reasoning. Our focus is on integrating             HR may fail to generate a valid Lean4 statement,
+such a unique capability of FL reasoner into NL                we randomly drop some FL results and allow the
+math problem-solving, rather than directly using               LLM to directly answer the question to amend that
+FL to validate or correct the NL-generated answers,            problem. This design enables us to handle cases
+which is left for future work to discuss.                      where NL-FL alignment is ill-posed or less mean-
+                                                               ingful.
+F   Motivation for randomly dropping FL
+    results                                                    G     FL reasoner’s performance given
+                                                                     different NL and FL problems
+The motivation for our design of randomly drop-
+ping some FL reasoners’ results and directly using             In this section, we demonstrate that the FL prover
+the NL reasoner to solve the problem is that some              handles its NL and FL input separately in its Long
+problems are inherently challenging for FL rea-                CoT process during thinking. The input-output
+example is as follows.                                             We're importing the necessary libraries and opening namespaces
+                                                                   ω→  for our proof. The `maxHeartbeats 0` option allows Lean to
+                                                                   ω→  use as many computational resources as needed for this
+ == Input ==                                                       ω→  proof.
+ <|im_start|>system
+ You are an expert in mathematics and Lean 4.<|im_end|>            Now, let's define the theorem statement. The problem asks to
+ <|im_start|>user                                                  ω→ show that there are no integers $x$ and $y$ such that $4x^3
+ Think about and solve the following problem step by step in       ω→ - 7y^3 = 2003$. To formalize this, we can assume there
+ω→ Lean 4.                                                         ω→ exist real numbers $b$, $h$, and $v$ representing $x$, $y$,
+ # Problem:Show that there are no integers $x$ and $y$ such that   ω→ and the value of the expression, respectively, and derive a
+ω→ $4x^3 - 7y^3 = 2003$.                                           ω→ contradiction:
+ # Formal statement:
+ ```lean4                                                           ```tactics
+ import Mathlib                                                     /-- Show that there are no integers $x$ and $y$ such that $4x^3
+ import Aesop                                                      ω→ - 7y^3 = 2003$.-/
+                                                                    theorem mathd_algebra_478
+set_option maxHeartbeats 0                                            (b h v : \R)
+                                                                      (h_0 : 0 < b \and 0 < h \and 0 < v)
+open BigOperators Real Nat Topology Rat                               (h_1 : v = 1 / 3 * (b * h))
+                                                                      (h_2 : b = 30)
+/-- Show that there are no integers $x$ and $y$ such that $4x^3       (h_3 : h = 13 / 2) :
+ω→ - 7y^3 = 2003$.-/                                                  v = 65 := by
+ theorem mathd_algebra_478                                          ```
+   (b h v : \R)
+   (h_0 : 0 < b \and 0 < h \and 0 < v)                             We have variables $b$, $h$, and $v$ representing $x$, $y$, and
+   (h_1 : v = 1 / 3 * (b * h))                                     ω→  $4x^3 - 7y^3$, respectively. The hypotheses give us that $b
+   (h_2 : b = 30)                                                  ω→  = 30$ and $h = 13/2$. Let's compute $v$ using these values:
+   (h_3 : h = 13 / 2) :
+   v = 65 :=                                                        From h_1: $v = \frac{1}{3} \cdot (b \cdot h)$
+ ```                                                                Substituting $b = 30$ and $h = 13/2$:
+ <|im_end|>                                                         $v = \frac{1}{3} \cdot (30 \cdot \frac{13}{2}) = \frac{1}{3}
+ <|im_start|>assistant                                             ω→ \cdot 75 = 25$
+ == Output ==
+ <think>                                                           But we also have $v > 0$ from h_0, which is consistent with $v
+ # Solving the Equation $4x^3 - 7y^3 = 2003$ for Integers $x$      ω→  = 25$. However, we need to show that these values cannot
+ω→ and $y$                                                         ω→  satisfy $4x^3 - 7y^3 = 2003$.
+To show that there are no integers $x$ and $y$ satisfying $4x^3    Wait, there's a contradiction here. If $b = 30$ and $h = 13/2$,
+ω→ - 7y^3 = 2003$, we can approach this problem by considering     ω→  then $v = 25$, but $v$ should be $4x^3 - 7y^3 = 2003$.
+ω→ the equation modulo certain integers to derive a                ω→  Let's check if $4 \cdot 30^3 - 7 \cdot (13/2)^3 = 2003$:
+ω→ contradiction.
+                                                                    $4 \cdot 30^3 = 4 \cdot 27000 = 108000$
+ First, let's think about how to approach this problem. We need     $7 \cdot (13/2)^3 = 7 \cdot \frac{2197}{8} = \frac{15379}{8} =
+ω→ to show that the equation $4x^3 - 7y^3 = 2003$ has no           ω→ 1922.375$
+ω→ integer solutions. A common technique for solving                $108000 - 1922.375 = 106077.625 \neq 2003$
+ω→ Diophantine equations is to consider them modulo a small
+ω→ integer, as cubes modulo small numbers have a limited range     So these values cannot satisfy the equation. In fact, we can
+ω→ of possible values.                                             ω→  compute $v$ directly from h_1 with the given values:
+
+Let's try modulo 7. When considering the equation modulo 7, we     ```tactics
+ω→  have:                                                          rw [h_2, h_3] at h_1
+- $4x^3 - 7y^3 \equiv 4x^3 \pmod{7}$                               linarith
+- $2003 \equiv 2003 \bmod 7$                                       ```
+
+Calculating $2003 \bmod 7$:                                        After substituting $b = 30$ and $h = 13/2$ into h_1, we get $v
+$2003 \div 7 = 286$ remainder $1$, so $2003 \equiv 1 \pmod{7}$.    ω→  = \frac{1}{3} \cdot (30 \cdot \frac{13}{2}) = 25$. But from
+                                                                   ω→  h_0, we have $v > 0$, which is consistent. However, $v$
+Therefore, we need $4x^3 \equiv 1 \pmod{7}$, which simplifies      ω→  should equal $2003$ if $4x^3 - 7y^3 = 2003$.
+ω→  to $x^3 \equiv 2 \pmod{7}$ (since $4^{-1} \equiv 2
+ω→  \pmod{7}$ as $4 \cdot 2 = 8 \equiv 1 \pmod{7}$).               The contradiction arises because the values given in h_2 and
+                                                                   ω→  h_3 cannot satisfy the equation $4x^3 - 7y^3 = 2003$ when
+ Now, let's check if $x^3 \equiv 2 \pmod{7}$ is possible. The      ω→  $v = 25$.
+ω→ possible values for $x^3 \pmod{7}$ can be computed by
+ω→ checking all residues modulo 7:                                 Therefore, we have shown that assuming there exist integers $x$
+ - $0^3 \equiv 0 \pmod{7}$                                         ω→  and $y$ such that $4x^3 - 7y^3 = 2003$ leads to a
+ - $1^3 \equiv 1 \pmod{7}$                                         ω→  contradiction. Hence, no such integers can exist.
+ - $2^3 \equiv 8 \equiv 1 \pmod{7}$
+ - $3^3 \equiv 27 \equiv 6 \pmod{7}$                               The Lean proof is complete. We've shown that if $b = 30$ and $h
+ - $4^3 \equiv 64 \equiv 1 \pmod{7}$                               ω→  = 13/2$, then $v = 25$, but $v$ must equal $2003$ for a
+ - $5^3 \equiv 125 \equiv 6 \pmod{7}$                              ω→  solution to exist. Since $25 \neq 2003$, there is a
+ - $6^3 \equiv 216 \equiv 6 \pmod{7}$                              ω→  contradiction. Therefore, no integers $x$ and $y$ satisfy
+                                                                   ω→  $4x^3 - 7y^3 = 2003$.
+So the possible values for $x^3 \pmod{7}$ are $\{0, 1, 6\}$.       </think>
+ω→  Since $2 \notin \{0, 1, 6\}$, it's impossible for $x^3         ```lean4
+ω→  \equiv 2 \pmod{7}$. Therefore, there are no integer            import Mathlib
+ω→  solutions to $4x^3 - 7y^3 = 2003$.                             import Aesop
+
+Let's formalize this in Lean 4:                                    set_option maxHeartbeats 0
+
+```tactics                                                         open BigOperators Real Nat Topology Rat
+import Mathlib
+import Aesop                                                       /-- Show that there are no integers $x$ and $y$ such that $4x^3
+                                                                   ω→ - 7y^3 = 2003$.-/
+set_option maxHeartbeats 0                                         theorem mathd_algebra_478
+                                                                     (b h v : \R)
+open BigOperators Real Nat Topology Rat                              (h_0 : 0 < b \and 0 < h \and 0 < v)
+```                                                                  (h_1 : v = 1 / 3 * (b * h))
+                                                                     (h_2 : b = 30)
+  (h_3 : h = 13 / 2) :
+  v = 65 := by
+    rw [h_2, h_3] at h_1
+    linarith
+```
+
+
+   In the example, we can clearly observe that al-
+though the NL problem provided has no relation,
+the FL prover still solves both problems in its Long
+CoT process, indicating the robustness of such pro-
+cess of FL prover. It also serves as the founda-
+tion for our Mixed Problem Input technique in Sec-
+tion 2.2
+H     Prompts used in generation
+H.1    QA-Existence problem translation prompt
+The following is an example of a few-shot prompt for the QA-Existence problem translation
+
+<|im_start|>user
+@ Question-answering problem:
+```md
+Convert the point $(0,3)$ in rectangular coordinates to polar coordinates. Enter
+ω→  your answer in the form $(r,\theta),$ where $r > 0$ and $0 \le \theta < 2 \pi.$
+```
+
+@ Existence problem:
+```md
+Prove the existence of the point in polar coordinates $(r,\theta),$ where $r > 0$
+ω→  and $0 \le \theta < 2 \pi.$ for the point $(0,3)$ in rectangular coordinates.
+```
+
+===
+
+@ Question-answering problem:
+```md
+Define
+\[p = \sum_{k = 1}^\infty \\frac{1}{k^2} \quad \text{and} \quad q = \sum_{k =
+ω→  1}^\infty \\frac{1}{k^3}.\]Find a way to write
+\[\sum_{j = 1}^\infty \sum_{k = 1}^\infty \\frac{1}{(j + k)^3}\]in terms of $p$ and
+ω→  $q.$
+```
+@ Existence problem:
+```md
+Define
+\[p = \sum_{k = 1}^\infty \\frac{1}{k^2} \quad \text{and} \quad q = \sum_{k =
+ω→  1}^\infty \\frac{1}{k^3}.\] Prove that \[\sum_{j = 1}^\infty \sum_{k =
+ω→  1}^\infty \\frac{1}{(j + k)^3}\] can be represented in terms of $p$ and $q$.
+```
+===
+@ Question-answering problem:
+```md
+If $f(x) = \\frac{3x-2}{x-2}$, what is the value of $f(-2) +f(-1)+f(0)$? Express
+ω→  your answer as a common fraction.
+```
+@ Existence problem:
+```md
+Define $f(x) = \\frac{3x-2}{x-2}$. Prove that there exists $ y = f(-2) + f(-1) +
+ω→  f(0)$ and $y$ can be expressed as a common fraction.
+```
+===
+@ Question-answering problem:
+```md
+<QA_problem_to_translate>
+```
+Based on the above examples, translate the QA problem into an existing problem,
+ω→  then put it in a markdown code block as in the examples.<|im_end|>
+
+H.2   Autoformalization prompt
+The prompt we use for autoformalization from the NL existence problem to Lean4 statements is mostly
+similar to the prompt provided by Kimina-Autoformalizer (Wang et al., 2025a). The template is as follows
+
+<|im_start|>system
+You are an expert in mathematics and Lean 4.<|im_end|>
+<|im_start|>user
+Please combine the following theorems into a more advanced theorem. Use the
+ω→  following theorem names: <intended_name>
+<NL_existance_problem><|im_end|>
+
+H.3   Prover generation prompt
+The prompt we use to query the Lean4 prover with NL QA problem and FL existence problem to obtain
+the Long CoT reasoning with NL answers and FL proofs is as follows:
+
+<|im_start|>system
+You are an expert in mathematics and Lean 4.<|im_end|>
+<|im_start|>user
+Think about and solve the following problem step by step in Lean 4.
+# Problem: <NL_QA_Problem>
+# Formal statement:
+```lean4
+import Mathlib
+import Aesop
+
+set_option maxHeartbeats 0
+
+open BigOperators Real Nat Topology Rat
+
+/-- <NL_QA_problem> -/
+<FL_existence_problem>
+```<|im_end|>
+
+H.4   Answer collection prompt
+The full prompt we use to query the general LLM to extract the answer to the NL question with FL Long
+CoT
+
+<|im_start|>user
+Find the answer to the following question in the provided long CoT content. Your
+ω→  answer should be in \boxed\{\} format.
+
+Here is the question:
+<NL_QA_problem>
+
+The answer is contained in the following Long CoT content
+<Long_CoT_from_prover>
+<|im_end|>
+I     Detailed Input-Output Examples
+I.1    QA-Existence problem translation example
+== Input ==
+<|im_start|>user
+@ Question-answering problem:
+```md
+Convert the point $(0,3)$ in rectangular coordinates to polar coordinates. Enter
+ω→  your answer in the form $(r,\theta),$ where $r > 0$ and $0 \le \theta < 2 \pi.$
+```
+
+@ Existence problem:
+```md
+Prove the existence of the point in polar coordinates $(r,\theta),$ where $r > 0$
+ω→  and $0 \le \theta < 2 \pi.$ for the point $(0,3)$ in rectangular coordinates.
+```
+
+===
+
+@ Question-answering problem:
+```md
+Define
+\[p = \sum_{k = 1}^\infty \frac{1}{k^2} \quad\text{and} \quad q = \sum_{k =
+ω→  1}^\infty \frac{1}{k^3}.\]Find a way to write
+\[\sum_{j = 1}^\infty \sum_{k = 1}^\infty \frac{1}{(j + k)^3}\]in terms of $p$ and
+ω→  $q.$
+```
+
+@ Existence problem:
+```md
+Define
+\[p = \sum_{k = 1}^\infty \frac{1}{k^2} \quad\text{and} \quad q = \sum_{k =
+ω→  1}^\infty \frac{1}{k^3}.\] Prove that \[\sum_{j = 1}^\infty \sum_{k = 1}^\infty
+ω→  \frac{1}{(j + k)^3}\] can be represented in terms of $p$ and $q$.
+```
+
+===
+
+@ Question-answering problem:
+```md
+If $f(x) = \frac{3x-2}{x-2}$, what is the value of $f(-2) +f(-1)+f(0)$? Express
+ω→  your answer as a common fraction.
+```
+
+@ Existence problem:
+```md
+Define $f(x) = \frac{3x-2}{x-2}$. Prove that there exists $ y = f(-2) + f(-1) +
+ω→  f(0)$ and $y$ can be expressed as a common fraction.
+```
+
+===
+@ Question-answering problem:
+```md
+If 4 daps = 7 yaps, and 5 yaps = 3 baps, how many daps equal 42 baps?
+```
+
+Based on the above examples, translate the QA problem into existence proble then,
+ω→  put it in a markdown code block as the examples.<|im_end|>
+<|im_start|>assistant
+== Output ==
+<think>
+Okay, let me try to figure out how to approach this. The user wants me to take each
+ω→  QA problem and convert it into an existence problem, following the examples
+ω→  provided. Let me look at the examples again to understand the pattern.
+
+In the first example, the QA problem was converting rectangular coordinates to
+ω→  polar coordinates. The existence problem then was to prove that such a polar
+ω→  coordinate exists for the given rectangular point. So the existence problem is
+ω→  about proving that the conversion is possible under the given constraints (r>0
+ω→  and 0 <= \theta < 2\pi).
+
+Similarly, for the second example with the infinite series, the QA problem was to
+ω→  express a double sum in terms of p and q. The existence problem was to prove
+ω→  that such a representation is possible. So the existence problem is about
+ω→  proving that the expression can be written in terms of p and q, not just that
+ω→  it's a valid expression.
+
+For the third example with the function f(x), the QA problem was to compute the sum
+ω→  of f at three points. The existence problem was to prove that y exists and can
+ω→  be expressed as a common fraction. So here, the existence problem is about
+ω→  ensuring that the sum exists and is a common fraction.
+
+Now, applying this to the last QA problem: "If 4 daps = 7 yaps, and 5 yaps = 3 baps,
+ω→  how many daps equal 42 baps?"
+
+The QA problem is a unit conversion problem. The existence problem should then be
+ω→  to prove that there exists a number of daps equal to 42 baps, given the
+ω→  conversion rates. So the existence problem would need to show that such a
+ω→  conversion is possible, perhaps by demonstrating that the conversions are
+ω→  consistent and that the number can be calculated.
+
+Let me structure this. The original QA problem is to find the number of daps
+ω→  equivalent to 42 baps. The existence problem would be to prove that such a
+ω→  number exists, given the conversion rates. So, the steps would involve showing
+ω→  that the conversion factors are consistent and that the calculation leads to a
+ω→  valid number.
+
+Therefore, the existence problem would state that given the conversion rates
+ω→  between daps, yaps, and baps, there exists a number of daps equal to 42 baps,
+ω→  and that this number can be determined through the given relationships.
+I need to make sure that the existence problem is phrased in a way that mirrors the
+ω→  examples. For instance, in the first example, the existence problem was about
+ω→  proving the existence of the polar coordinates. Here, it's about proving that
+ω→  the conversion exists and can be calculated.
+
+So, the existence problem would be: "Define the conversion rates 4 daps = 7 yaps and
+ω→  5 yaps = 3 baps. Prove that there exists a number of daps equal to 42 baps, and
+ω→  that this number can be determined through the given conversion rates."
+
+But maybe more formally, as in the examples, it would be something like:
+
+"Prove that there exists a number of daps equal to 42 baps, given that 4 daps = 7
+ω→  yaps and 5 yaps = 3 baps."
+
+Alternatively, to mirror the previous examples, maybe:
+
+"Prove that the number of daps equal to 42 baps exists and can be determined using
+ω→  the given conversion rates."
+
+But I need to check the exact structure of the examples. In the first existence
+ω→  problem, they mentioned "prove the existence of the point..." and the second
+ω→  one was "prove that the sum can be represented...". The third one was "prove
+ω→  that there exists y = ... and y can be expressed as a common fraction."
+
+So the structure is: "Prove that [the desired quantity] exists and [some property
+ω→  about it]."
+
+So for the unit conversion problem, the existence problem would be:
+
+"Prove that there exists a number of daps equal to 42 baps, given that 4 daps = 7
+ω→  yaps and 5 yaps = 3 baps, and that this number can be determined through the
+ω→  given conversion rates."
+
+But to make it concise, maybe:
+
+"Prove that there exists a number of daps equal to 42 baps, given that 4 daps = 7
+ω→  yaps and 5 yaps = 3 baps."
+
+Alternatively, perhaps the existence problem is to show that the conversion is
+ω→  possible, i.e., that the relationships are consistent and that the answer is a
+ω→  valid number.
+
+So, putting it all together, the existence problem would be:
+
+"Define the conversion rates 4 daps = 7 yaps and 5 yaps = 3 baps. Prove that there
+ω→  exists a number of daps equal to 42 baps, and that this number can be determined
+ω→  using the given conversion rates."
+
+But I need to make sure that the existence problem is phrased in a way that mirrors
+ω→  the previous examples. Let me check the original examples again.
+In the first existence problem, they said: "Prove the existence of the point in
+ω→  polar coordinates... for the point (0,3) in rectangular coordinates." So it's
+ω→  about existence of a specific point under certain conditions.
+
+In the second, they said: "Prove that [the sum] can be represented in terms of p and
+ω→  q."
+
+In the third: "Prove that there exists y = ... and y can be expressed as a common
+ω→  fraction."
+
+So for the unit conversion problem, the existence problem would be: "Prove that
+ω→  there exists a number of daps equal to 42 baps, given the conversion rates 4
+ω→  daps = 7 yaps and 5 yaps = 3 baps, and that this number can be determined
+ω→  through the given conversion rates."
+
+But maybe even more concise: "Prove that there exists a number of daps equal to 42
+ω→  baps, given that 4 daps = 7 yaps and 5 yaps = 3 baps."
+
+I think that's acceptable. Now, translating this into markdown code block as per
+ω→  the examples.
+
+So, the QA problem is:
+
+"If 4 daps = 7 yaps, and 5 yaps = 3 baps, how many daps equal 42 baps?"
+
+The existence problem would be:
+
+"Prove that there exists a number of daps equal to 42 baps, given that 4 daps = 7
+ω→  yaps and 5 yaps = 3 baps."
+
+But maybe to mirror the previous examples more precisely, the existence problem
+ω→  might need to include the conversion rates in the definition. Let me check the
+ω→  previous examples.
+
+In the first existence problem, the user defined the conversion (the rectangular
+ω→  coordinates) and then proved the existence. Similarly, in the second, they
+ω→  defined p and q, then proved the sum can be expressed in terms of them. In the
+ω→  third, they defined f(x), then proved that y exists and can be expressed as a
+ω→  common fraction.
+
+So for the unit conversion problem, the existence problem should define the
+ω→  conversion rates first and then prove the existence.
+
+Therefore, the existence problem would be:
+
+"Define the conversion rates 4 daps = 7 yaps and 5 yaps = 3 baps. Prove that there
+ω→  exists a number of daps equal to 42 baps."
+
+Alternatively, to match the structure of the previous examples more closely,
+ω→  perhaps:
+"Define the conversion rates 4 daps = 7 yaps and 5 yaps = 3 baps. Prove that there
+ω→  exists a number of daps equal to 42 baps."
+
+Yes, that seems to fit. So, the existence problem is about proving that such a
+ω→  number exists, given the conversion rates.
+
+Therefore, the markdown code block would be:
+
+```md
+Define the conversion rates 4 daps = 7 yaps and 5 yaps = 3 baps. Prove that there
+ω→  exists a number of daps equal to 42 baps.
+```
+
+But to make sure that the existence problem is properly phrased as in the examples,
+ω→  maybe the user expects the existence problem to be phrased as "Prove the
+ω→  existence of [something]..." So perhaps:
+
+"Prove the existence of a number of daps equal to 42 baps, given that 4 daps = 7
+ω→  yaps and 5 yaps = 3 baps."
+
+But I think the key is to have the existence problem mirror the structure of the
+ω→  previous examples. Since the QA problem is asking for a numerical answer, the
+ω→  existence problem would be about proving that such a number exists (i.e., that
+ω→  the conversion is possible and the answer is a real number, which in this case
+ω→  is an integer, but the existence is more about the possibility of the
+ω→  conversion rather than the specific value).
+
+So, the final answer for the existence problem would be as above.
+</think>
+
+```md
+Define the conversion rates 4 daps = 7 yaps and 5 yaps = 3 baps. Prove that there
+ω→  exists a number of daps equal to 42 baps.
+```
+I.2   Autoformalization example
+== Input ==
+<|im_start|>system
+You are an expert in mathematics and Lean 4.<|im_end|>
+<|im_start|>user
+Please combine the following theorems into a more advanced theorem. Use the
+ω→  following theorem names: math500_prealgebra_2086_1
+
+Define the conversion rates 4 daps = 7 yaps and 5 yaps = 3 baps. Prove that there
+ω→  exists a number of daps equal to 42 baps, and that this number can be expressed
+ω→  as a common fraction.<|im_end|>
+<|im_start|>assistant
+== Output ==
+```lean4
+import Mathlib
+
+theorem math500_prealgebra_2086_1
+  (daps yaps baps : \R)
+  (h_0 : 4 * daps = 7 * yaps)
+  (h_1 : 5 * yaps = 3 * baps) :
+  \exist x, 42 * baps = x * daps \and \exist q : \Q, x = q := by sorry
+```
+
+I.3   Prover generation example
+== Input ==
+<|im_start|>system
+You are an expert in mathematics and Lean 4.<|im_end|>
+<|im_start|>user
+Think about and solve the following problem step by step in Lean 4.
+# Problem: If 4 daps = 7 yaps, and 5 yaps = 3 baps, how many daps equal 42 baps?
+# Formal statement:
+```lean4
+import Mathlib
+import Aesop
+
+set_option maxHeartbeats 0
+
+open BigOperators Real Nat Topology Rat
+
+/-- If 4 daps = 7 yaps, and 5 yaps = 3 baps, how many daps equal 42 baps? -/
+theorem math500_prealgebra_2086_1
+  (daps yaps baps : \R)
+  (h_0 : 4 * daps = 7 * yaps)
+  (h_1 : 5 * yaps = 3 * baps) :
+  \exist x, 42 * baps = x * daps \and \exist q : \Q, x = q := by sorry
+```
+<|im_end|>
+<|im_start|>assistant
+== Output ==
+<think>
+# Solving the Daps, Yaps, and Baps Problem in Lean 4
+
+Let me tackle this algebra problem about converting between daps, yaps, and baps.
+ω→  We have:
+- 4 daps = 7 yaps
+- 5 yaps = 3 baps
+And we need to find how many daps equal 42 baps.
+
+First, I'll think about how to approach this. We need to convert baps to yaps, then
+ω→  yaps to daps.
+
+From 5 yaps = 3 baps, we get that 1 yap = 3/5 bap. So to convert baps to yaps, we
+ω→  multiply by 5/3.
+To convert yaps to daps, we use 4 daps = 7 yaps, which means 1 yap = 4/7 daps. So we
+ω→  multiply by 7/4.
+
+So for 42 baps:
+1. Convert to yaps: 42 × (5/3) = 70 yaps
+2. Convert to daps: 70 × (4/7) = 40 daps
+Now, let's translate this to Lean 4. We need to prove that 42 baps = 40 daps.
+
+```tactics
+import Mathlib
+import Aesop
+
+set_option maxHeartbeats 0
+
+open BigOperators Real Nat Topology Rat
+```
+
+We start by setting up the problem with the given equations. We need to represent
+ω→  the conversion relationships:
+
+```tactics
+/-- If 4 daps = 7 yaps, and 5 yaps = 3 baps, how many daps equal 42 baps? -/
+theorem math500_prealgebra_2086_1
+  (daps yaps baps : \R)
+  (h_0 : 4 * daps = 7 * yaps)
+  (h_1 : 5 * yaps = 3 * baps) :
+  \exist x, 42 * baps = x * daps \and \exist q : \Q, x = q := by
+```
+
+We need to find a value `x` such that `42 * baps = x * daps` and `x` is rational.
+ω→  Let's solve the equations to find `x`.
+
+From h_0: 4 daps = 7 yaps, we get yaps = (4/7) daps
+From h_1: 5 yaps = 3 baps, we get baps = (5/3) yaps
+
+Substituting yaps from h_0 into h_1:
+5 yaps = 3 baps
+5 * (4/7 daps) = 3 baps
+20/7 daps = 3 baps
+1 bap = (20/7)/3 daps = 20/21 daps
+
+So 42 baps = 42 * (20/21) daps = 40 daps
+
+Let's prove this in Lean:
+
+```tactics
+use 40
+constructor
+```
+
+We need to prove two things:
+1. 42 * baps = 40 * daps
+2. 40 is rational (trivial, since 40 is an integer)
+
+Let's tackle the first part. From our equations:
+4 daps = 7 yaps
+5 yaps = 3 baps
+We can solve for baps in terms of daps:
+From h_0: yaps = (4/7) daps
+From h_1: baps = (5/3) yaps = (5/3) * (4/7) daps = (20/21) daps
+
+So 42 baps = 42 * (20/21) daps = 40 daps
+
+In Lean, we need to manipulate the equations to show 42 * baps = 40 * daps:
+
+```tactics
+· -- We need to prove that 42 * baps = 40 * daps
+  linarith
+```
+
+The Lean proof is remarkably concise. Let me explain why this works. The `linarith`
+ω→  tactic is powerful for solving linear arithmetic problems. It takes the given
+ω→  equations:
+- h_0: 4 * daps = 7 * yaps
+- h_1: 5 * yaps = 3 * baps
+
+And it needs to prove that 42 * baps = 40 * daps.
+
+Let's derive this manually to see how Lean is able to compute it:
+
+From h_0: 4 daps = 7 yaps, we have yaps = (4/7) daps
+From h_1: 5 yaps = 3 baps, substituting yaps gives 5 * (4/7 daps) = 3 baps
+So 20/7 daps = 3 baps
+Therefore, 1 bap = (20/7)/3 daps = 20/21 daps
+So 42 baps = 42 * (20/21) daps = 40 daps
+
+The equation 42 * baps = 40 * daps is exactly what Lean's `linarith` is proving.
+ω→  It's able to manipulate the original equations to derive this result directly.
+ω→  The key insight is that `linarith` can work with real numbers and solve systems
+ω→  of linear equations and inequalities. In this case, it's effectively solving
+ω→  for the relationship between baps and daps via yaps.
+
+For the second part of the goal:
+
+```tactics
+· -- We need to prove that 40 is rational
+  refine 〈40, by norm_num〉
+```
+
+This proves that 40 is indeed a rational number (which is obvious, but Lean requires
+ω→  us to explicitly provide a rational witness for the existential statement). The
+ω→  `norm_num` tactic proves that 40 = (40 : \Q), confirming 40 is rational.
+
+In conclusion, we've shown that 42 baps = 40 daps, so the answer is 40. The Lean
+ω→  proof is elegant because it directly computes the answer using the given
+ω→  conversion equations, demonstrating how powerful automated reasoning can be for
+ω→  these types of algebra problems.
+</think>
+```lean4
+import Mathlib
+import Aesop
+
+set_option maxHeartbeats 0
+
+open BigOperators Real Nat Topology Rat
+
+/-- If 4 daps = 7 yaps, and 5 yaps = 3 baps, how many daps equal 42 baps? -/
+theorem math500_prealgebra_2086_1
+  (daps yaps baps : \R)
+  (h_0 : 4 * daps = 7 * yaps)
+  (h_1 : 5 * yaps = 3 * baps) :
+  \exist x, 42 * baps = x * daps \and \exist q : \Q, x = q := by
+  use 40
+  constructor
+  · -- We need to prove that 42 * baps = 40 * daps
+    linarith
+  · -- We need to prove that 40 is rational
+    refine 〈40, by norm_num〉
+```
+
+I.4   Answer collection example
+== Input ==
+<|im_start|>user
+Find the answer to the following question in the provided long CoT content. Your
+ω→  answer should be in \boxed\{\} format.
+
+Here is the question:
+If 4 daps = 7 yaps, and 5 yaps = 3 baps, how many daps equal 42 baps?
+
+The answer is contained in the following Long CoT content
+<Long_CoT_content_as_above>
+<|im_end|>
+<|im_start|>assistant
+<think>
+
+</think>
+== Output ==
+
+To solve the problem, we need to convert 42 baps into daps using the given
+ω→  conversion rates:
+
+- 4 daps = 7 yaps $ 1 yap = $\frac{4}{7}$ daps
+- 5 yaps = 3 baps $ 1 bap = $\frac{5}{3}$ yaps
+
+We first convert baps to yaps:
+$$
+42 \text{ baps} \times \frac{5}{3} \text{ yaps/bap} = 70 \text{ yaps}
+$$
+
+Next, we convert yaps to daps:
+$$
+70 \text{ yaps} \times \frac{4}{7} \text{ daps/yap} = 40 \text{ daps}
+$$
+
+Thus, 42 baps equal 40 daps.
+
+$$
+\boxed{40}
+$$
+

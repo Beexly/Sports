@@ -1,0 +1,2544 @@
+                                                   Empirical Evaluation of No Free Lunch Violations
+                                                         in Permutation-Based Optimization
+                                                                                     Grzegorz Sroka
+
+                                              Department of Nonlinear Analysis, Rzeszów University of Technology, Powsta!ców Warszawy 12,
+                                                                                   35-959 Rzeszów, Poland
+                                                                                  e-mail: gsroka@prz.edu.pl
+
+                                              Abstract.     The No Free Lunch (NFL) theorem guarantees equal average performance only under
+                                          uniform sampling of a function space closed under permutation (c.u.p.). We ask when this averaging
+                                          ceases to reflect what benchmarking actually reports. We study an iterative-search setting with sampling
+arXiv:2603.03613v1 [stat.ML] 4 Mar 2026
+
+
+
+
+                                          without replacement, where algorithms di"er only in evaluation order. Binary objectives allow exhaustive
+                                          evaluation in the fully enumerable case, and e#ciency is defined by the first time the global minimum
+                                          is reached. We then construct two additional benchmarks by algebraically recombining the same baseline
+                                          functions through sums and di"erences. Function-algorithm relations are examined via correlation struc-
+                                          ture, hierarchical clustering, delta heatmaps, and PCA. A one-way ANOVA with Tukey contrasts confirms
+                                          that algebraic reformulations induce statistically meaningful shifts in performance patterns. The uniformly
+                                          sampled baseline remains consistent with the global NFL symmetry. In contrast, the algebraically modified
+                                          benchmarks yield stable re-rankings and coherent clusters of functions and sampling policies. Composite
+                                          objectives can also exhibit non-additive search e"ort despite being built from simpler components. Monte
+                                          Carlo experiments indicate that order e"ects persist in larger spaces and depend on function class. Taken
+                                          together, the results show how objective reformulation and benchmark design can generate structured local
+                                          departures from NFL intuition. They motivate algorithm choice that is aware of both the problem class
+                                          and the objective representation. This message applies to evolutionary computation as well as to statistical
+                                          procedures based on relabeling, resampling, and permutation tests.
+
+
+                                          1     Introduction
+                                          Optimization in practice is performed on finite, discrete machines. Under these conditions,
+                                          the NFL theorem can be a poor guide. Performance may depend on structure in a restricted
+                                          problem class, not on averages over the full space of all functions.
+                                              Is there a universal optimization algorithm that performs equally well across all pos-
+                                          sible problems? This question lies at the heart of one of the most intriguing results in
+                                          optimization - the NFL theorem. Introduced in 1995, NFL suggests that, on average,
+                                          all optimization algorithms perform identically when evaluated over the entire space of
+                                          possible problems. This provocative claim has sparked significant debate and criticism.
+                                              In his book [30], Goldberg argued that traditional optimization methods are e!ective
+                                          only for a narrow class of problems, while robust techniques like evolutionary algorithms
+                                          achieve good results across a wider range. However, the authors of a seminal 1995 report
+                                          [88] countered this, stating that no algorithm outperforms another when averaged over all
+                                          possible problems. The NFL theorem has also been used in broader disputes. For instance,
+                                          Dembski [20] invoked the NFL framework in arguments related to intelligent design.
+                                              As Clerc observes [16], computation is finite and discrete. This remark is the direct
+                                          inspiration for our study. This makes it natural to study restricted classes of functions,
+                                          including those that are not closed under permutation (not-c.u.p.):
+
+                                                On a computer everything is discrete finite so we consider more carefully not-
+                                                c.u.p. sets of functions. It appears that except for very particular cases, not
+                                                only the NFL does not hold, not only there is a best algorithm in average, but
+                                                that an ”ultimate” algorithm does exist.
+
+
+                                                                                               1
+This perspective motivates our focus on structured subsets where NFL-style averaging may
+fail and where performance di!erences among algorithms can persist.
+     This paper aims to revisit the NFL theorem, focusing on specific conditions under
+which it does not hold. By analyzing subsets of binary functions closed under permutation
+(c.u.p.) and arithmetic operations, we demonstrate that certain algorithmic groups exhibit
+di!ering levels of e"ciency, challenging the universality of NFL.
+     In this study, we focus on permutation-based optimization algorithms due to their
+broad applicability in combinatorial optimization problems such as the traveling sales-
+man problem, scheduling, assignment problems, and routing. These algorithms exploit
+symmetries in the solution space and are widely used in evolutionary computation and
+heuristic optimization. Because permutation spaces are finite and discrete, they provide a
+well-defined framework for examining theoretical implications of NFL in settings close to
+practice.
+     To conduct a controlled and exhaustive study of algorithm performance across the full
+space of binary objective functions, we restrict our analysis to the case n = 4, where all
+4! = 24 permutations and the corresponding 224 binary functions can be fully enumerated.
+This dimensionality allows exact measurement of algorithm e"ciency without sampling
+error and enables precise verification of structural properties such as c.u.p. For larger
+dimensions, exhaustive analysis becomes infeasible due to the rapid growth of the function
+space. For n = 5, the space grows from 224 to 2120 , i.e., by a factor of 296 → 1028 . For
+n = 10, the number of permutations is 10! = 3628800, and the full function space contains
+210! = 23628800 binary functions, which is out of reach even for HPC systems.
+     It should be noted that even for n = 4 the computations can be tedious. For much
+larger domains, such as 230 , 250 , or 2100 , manual investigation is practically impossible and
+would require substantial computational resources, both in processing power and memory.
+In such cases, a more e!ective approach is to apply statistical methods and analyze selected
+binary samples with specific characteristics. For example, one could select functions whose
+output vectors are highly imbalanced, e.g., where at least 91% of all bits are equal to either
+‘’1” or “0”. One could also select sequences in which 91% of the initial positions in the
+binary string are “1”. Such sampling rules could facilitate the study of higher dimensions
+and improve the e"ciency of the analysis.
+     Hence, n = 4 o!ers a balance between tractability and analytical rigor, making it
+suitable for uncovering conditions under which the assumptions of the NFL theorem may
+no longer hold. Extension to higher dimensions using statistical sampling is planned for
+future research and lies outside the scope of this work.
+     The methodological choices in our study were guided by the aim of ensuring clarity,
+rigor, and direct interpretability of the results. Restricting the codomain to {0, 1} was an
+intentional analytical simplification, enabling full enumeration of the function space (for
+small problem sizes) and isolation of structural properties relevant to the NFL theorem.
+This follows a well-established practice in the NFL literature (e.g., Ho and Pepyne [36]),
+where binary functions serve as minimal yet representative models. Importantly, the con-
+clusions extend to broader codomains, as the observed e!ects depend on problem structure
+rather than on value range. Likewise, the assumption of sampling without replacement
+reflects the original NFL framework (Wolpert and Macready [88]). It ensures that each eval-
+uation step provides new information and allows fair comparison of information-e"cient
+strategies. Although idealized, this assumption is consistent with mechanisms present in
+many practical metaheuristics (e.g., tabu search, duplicate elimination in evolutionary al-
+gorithms), where revisiting solutions is avoided or minimized. By adopting these design
+decisions, we eliminate artifacts unrelated to problem structure and focus on essential fac-
+tors influencing algorithm performance. Our findings confirm that when the problem class
+
+
+                                               2
+departs from the fully random case, structural regularities can systematically favor certain
+algorithms, even under the most information-e"cient conditions.
+
+Methodology. This study analyzed the e"ciency of 24 permutation-based algorithms
+on a set of 16 binary functions closed under permutation (c.u.p.). Statistical analyses,
+including correlation matrices, hierarchical clustering, and PCA, were applied to assess
+the impact of algebraic transformations of functions on optimization. The study identified
+conditions under which the NFL does not hold, highlighting the role of function structure
+in the varying e!ectiveness of optimization algorithms.
+
+
+2    Related work
+We briefly review recent advances in permutation optimization that exploit the geometry,
+algebra, and probabilistic structure of permutation spaces.
+     Recent research on permutation problems emphasizes the necessity of tailoring oper-
+ators and models to the specific structure of this search space. Moraglio and Poli [51]
+introduced the concept of geometric crossover for permutation representation, based on a
+defined metric of the solution space and unifying existing recombination operators within
+a common geometric framework. Santucci et al. [69],[70] proposed an algebraic approach,
+treating the set of permutations as a group structure, which enabled the transfer of contin-
+uous algorithms (e.g., di!erential evolution and particle swarm optimization) into the dis-
+crete domain by defining corresponding operations on permutations. From a probabilistic
+perspective, Ceberio et al. [12] analyzed the impact of the choice of permutation distance
+metric (e.g., Kendall, Cayley, Ulam) in Mallows and Generalized Mallows models within
+EDAs, showing that an appropriate distance measure significantly a!ects algorithmic per-
+formance and yields smoother fitness landscapes. Santucci and Ceberio [68] introduced
+a doubly stochastic matrix (DSM) model for EDAs tackling the Quadratic Assignment
+Problem (QAP), which more e!ectively captures solution structure and outperforms ear-
+lier probabilistic models, while Ceberio and Santucci [11] proposed a model-based gradient
+search method that reduces computational overhead and improves scalability for permu-
+tation problems. Doerr et al. [24] conducted a formal runtime analysis of evolutionary
+algorithms in permutation spaces, adapting classical benchmarks (such as Leading Ones
+and Jump) to this domain, and demonstrated that mutation di"culty depends not only
+on Hamming distance but also on the cycle structure of a given permutation. These works
+- encompassing generalized metric spaces, probabilistic models, geometric operators, and
+algebraic formalisms - are consistent with the approach adopted in this study or represent
+its natural extension, confirming that the proposed method aligns with current research
+directions in permutation optimization algorithms.
+     Collectively, these studies frame our controlled evaluation of permutation-based algo-
+rithms on structured benchmark classes.
+
+
+3    Notation
+Let X be a discrete set of states and Y be a discrete set of values that can be assigned these
+states by mapping f : X ↑ Y. We assume that both sets are finite, and - in the context of
+optimization - f is the cost function, also called objective function, energy function, etc.
+A specific function f corresponds to a certain optimization problem, while the set F = Y X
+is the space of all possible optimization problems. In particular, when Y = {0, 1}, the set
+F consists of 2|X | binary functions.
+
+
+                                              3
+Example 1 Let the set X = {1, 2, 3, 4} and Y = {0, 1} denote the set of values. Then
+|X | = 4. |Y| = 2 and we have |F| = mn = 24 = 16 possible functions: X ↑ Y defined by
+their values on the set X (see Table1).
+
+In this example, we fix n = 4 to denote the input dimension, i.e., the number of elements
+in the domain X , and m = 2 to denote the cardinality of the codomain Y. The functions
+are fully specified by their output values on each element of X , and the input strings in
+Table 1 represent all binary combinations of length n = 4.
+
+
+        Values on X
+                      f1   f2     f3   f4   f5   f6   f7   f8    f9   f 10   f 11     f 12   f 13   f 14   f 15   f 16
+ f ↓F
+         x1           0     1      0   1    0    1     0    1    0     1      0        1      0      1      0      1
+         x2           0     0      1   1    0    0     1    1    0     0      1        1      0      0      1      1
+         x3           0     0      0   0    1    1     1    1    0     0      0        0      1      1      1      1
+         x4           0     0      0   0    0    0     0    0    1     1      1        1      1      1      1      1
+
+                                Table 1: 16 preparation functions.
+
+
+
+The strings used in the above table should be understood as follows: for each function
+f ↓ F we have: the values of the function f i are binary expansions of the number i ↔ 1,
+written in reverse bit order (i.e., least significant bit first). For example, f 4(1) = 1,
+f 4(2) = 1, f 4(3) = 0, f 4(4) = 0. A wide range of applications of binary functions has
+been discussed, among others, in papers: [36], [67], [93], [94].
+    We measure the e"ciency of an algorithm designed to solve a problem f by the number
+of objective-function evaluations required to reach a prescribed solution quality. We assume
+that di!erent points of space X are evaluated. The result of the search is the sequence
+
+                Tm = {< x1 , f (x1 ) >, < x2 , f (x2 ) >, . . . , < xm , f (xm ) >}
+where 1 ↗ xi ↗ m, for m ↓ {1, ..., |X |} (|X | here means the size of the set X ), xi ↓ X and
+f (xi ) = yi ↓ Y [30], [77].
+    In order to define the concept of an optimization algorithm, we will introduce definitions
+regarding the sampling principle.
+    When optimizing a function f : X ↑ Y one can assume that the sets X and Y are
+known, but only a few specific values y = f (x) are known. Then that partial information
+about f can be described by a function d : X ↑ Y ↘ {?} and is called a data. Symbol "?"
+means an unknown value of f (x). For all x, for which we know the values y = f (x) we get
+d(x) = f (x), for the remaining x we get d(x) = ?.
+    Let D be the set of all possible ”data” for the function in F. Hence |D| = (m + 1)n and
+for each x ↓ X , d(x) = ? this means "no data", i.e. situation, in which we know nothing
+about the cost function.
+
+Definition 1 (Sampling Policy) [43] A sampling policy s is a function s : D ↑ X ,
+where D is the set of all possible data (defined above).
+
+Definition 2 (Non-Repeating Policy) [43] A non-repeating sampling policy s is a func-
+tion s : D ↑ X s.t. if s(d) = x then either d(x) = ? or |d| = m.
+
+Definition 3 (Optimization Algorithm) [43] An optimization algorithm A based on
+sampling policy s is iterated use of that sampling policy and data updating:
+
+                                                 4
+                                                                                                                                                                                 ????
+
+
+
+
+                                                                                                                                                                            s(????)=1
+                                                                                                                       f (1) = 0                                                                                                  f (1) = 1
+
+
+                                                                                      ??0?                                                                                                                                                                              ??1?
+
+
+
+
+                                                     f (2) = 0                   s(??0?)=2                       f (2) = 1                                                                                                               f (2) = 0                 s(??1?)=2                    f (2) = 1
+
+                                       ?00?                                                                                         ?10?                                                                                   ??10                                                                                    ??11
+
+
+
+
+                                 s(?00?)=3                                                                                     s(?10?)=3                                                                             s(??10)=3                                                                                s(??11)=3
+
+               f (3) = 0                                  f (3) = 1                                        f (3) = 0                                   f (3) = 1                                   f (3) = 0                                  f (3) = 1                                   f (3) = 0                                   f (3) = 1
+
+
+
+              000?                                               100?                                     010?                                               011?                                 0?10                                               1?10                                0?11                                               1?11
+
+
+
+
+            s(000?)=4                                        s(100?)=4                                  s(010?)=4                                         s(011?)=4                             s(0?10)=4                                        s(1?10)=4                             s(0?11)=4                                         s(1?11)=4
+
+f (4) = 0                                     f (4) = 0                                  f (4) = 0                                         f (4) = 0                                f (4) = 0                                     f (4) = 0                                f (4) = 0                                      f (4) = 0
+                           f (4) = 1                                       f (4) = 1                                   f (4) = 1                                      f (4) = 1                                f (4) = 1                                     f (4) = 1                                f (4) = 1                                      f (4) = 1
+
+
+0000                           0001           1000                             1001          0100                            0101          0110                           0111          0010                       0110           1010                           1110          0011                         0111          1011                           1111
+
+
+
+
+Figure 1: Example of policies represented as a tree: a policy for functions f : {1, 2, 3, 4} ↑
+{0, 1}.
+
+
+  (a) Set d to be initial data,
+  (b) If there are no unsampled x ↓ X , then terminate,
+  (c) Sample at x = s(d) and add the result to the data d, i.e. set d(x) = f (x),
+  (d) Go to step (b).
+
+    We present an exemplary optimization algorithm using the directed graph shown in
+Figure 1. In this graph, nodes represent data. Edges show all potential data transitions
+resulting from sampling the problem function according to the optimizer’s sampling prin-
+ciple. Figure 1 is inspired by [43].
+    The paper is organized as follows. Section 4 introduces the permutational iterative-
+search framework and the benchmarking protocol, including the e"ciency measure. Sec-
+tions 5-8 analyze algorithm-function dependencies and the e!ects of algebraic structure and
+transformations. Section 9 discusses implications for statistics and evolutionary computing
+and concludes the paper.
+
+
+4            Iterative search algorithm
+We define an iterative search algorithm as a sequence of sampled points with no repetitions
+(if we are practitioners, we probably see the algorithm as a process. Just imagine that
+the definition given here is the result of such a process). These are permutations (In
+[39]:Function ω : X ↑ X we call permutation when ω is a bijection) positions and we have
+e.g. 4! = 1 · 2 · 3 · 4 = 24 possible algorithms, listed in Table 2.
+    Based on the above description of the point sampling problem, we can create a table
+of algorithms:
+        Algorithm                         a1                               a2                          a3                   a4                               a5                      a6                     a7                              a8                    a9                       a10                          a11
+        Sequence                       (1,2,3,4)                        (1,2,4,3)                   (1,3,2,4)            (1,3,4,2)                        (1,4,2,3)               (1,4,3,2)              (2,1,3,4)                       (2,1,4,3)             (2,3,1,4)                (2,3,4,1)                    (2,4,1,3)
+        Algorithm                         a12                              a13                         a14                  a15                              a16                     a17                    a18                             a19                   a20                      a21                          a22
+        Sequence                       (2,4,3,1)                        (3,1,2,4)                   (3,1,4,2)            (3,2,1,4)                        (3,2,4,1)               (3,4,1,2)              (3,4,2,1)                       (4,1,2,3)             (4,1,3,2)                (4,2,3,1)                    (4,2,1,3)
+        Algorithm                         a23                              a24
+        Sequence                       (4,3,1,2)                        (4,3,2,1)
+
+
+
+                                                                                                       Table 2: 24 preparatory sequences.
+
+
+
+
+                                                                                                                                                                        5
+4.1   Characteristics of the 24 Permutation-Based Algorithms
+All 24 algorithms presented in Table 2 are based on a shared strategy for exploring the
+solution space, di!ering solely in the permutation order of four predefined input points.
+The operational mechanism of each heuristic remains identical: the algorithms follow a
+deterministic, fixed sequence of four evaluations without employing any adaptive parameter
+tuning, randomness, or memory. In practice, this means that the only distinction between
+algorithms lies in the order in which they evaluate the same four points. Despite the absence
+of learning or memory, each algorithm encounters di!erent results at di!erent stages of the
+search process - the order of access determines which pieces of information (i.e., objective
+function values) are seen "earlier" and which are "delayed". Each algorithm is conceptually
+defined as a deterministic procedure over the same four input configurations, without any
+code-based implementation, randomness, memory, or adaptation.
+    The sampling order directly a!ects the balance between exploration and exploitation.
+Initial evaluation points determine which regions of the input space are examined first.
+Algorithms that begin by sampling points close to one another (neighboring in the input
+space) immediately concentrate their evaluations on a limited area (favoring exploitation),
+whereas those starting from more distant or extreme points initially perform a broader,
+more distributed exploration (favoring exploration). For example, an algorithm that eval-
+uates points in the order (1, 2, 3, 4) will quickly uncover local structures of the objective
+function, while a permutation such as (1, 4, 2, 3) initially surveys two boundary regions,
+gaining a broader view of the space at the expense of slower convergence toward promising
+regions.
+    The main consequences of these strategies can be summarized as follows:
+
+
+   • Early region discovery: The sampling order determines which areas of the objective
+     function are discovered first. Algorithms starting with neighboring points tend to fo-
+     cus on local regions (stronger exploitation), while those beginning with distant points
+     cover a broader area (stronger exploration). As a result, di!erent permutations yield
+     di!erent speeds in identifying valuable regions.
+
+
+   • No adaptation - diverse observation sequences: All algorithms in Table 2 are de-
+     terministic and non-adaptive: a fixed a priori evaluation order reveals regions in a
+     di!erent order, but never uses observed function values to choose the next point. The
+     di!ering order means that each permutation generates a distinct sequence of observed
+     function values (i.e., varying patterns of success and failure). This yields di!erent
+     observed-value (best-so-far) trajectories and thus di!erent e!ectiveness. Under the
+     same evaluation budget, the outcome still depends on the chosen order.
+   • Pattern similarity and clustering: Algorithms that share a similar initial scheme (e.g.,
+     those starting from the same point or initially evaluating neighboring elements) tend
+     to exhibit similar behavior and performance. Closely related permutations result in
+     similar evaluation trajectories, which manifest as clusters in correlation and hierar-
+     chical clustering analyses. These structured di!erences in sampling order provide a
+     clear explanation for the observed grouping of algorithmic behaviors.
+
+
+Although all algorithms evaluate the same four points, di!erences in sampling order lead
+to distinct informational trajectories, resulting in varying levels of e!ectiveness. The pre-
+sented set provides a precisely controlled experimental framework for analyzing how heuris-
+tic structure influences optimization performance.
+
+                                             6
+4.2    Evaluation on Benchmark Functions
+To empirically examine how the di!erences among the 24 permutation-based algorithms
+a!ect their performance, we now turn to a controlled benchmark setting. We consider the
+test functions B = {f 1, ..., f 16}. As for many cases of artificial sets of test functions, we
+assume that we know the minimum value of all test function problems, here equal to zero.
+For each pair (ai , fj ), we record the smallest number of trials si,j needed by algorithm ai to
+find the minimum of function fj . To facilitate comparison across algorithms and functions,
+we compute a normalized index called e"ciency [16]:
+
+                                                    |X | ↔ si,j
+                                        Eai ,fj =                                                  (1)
+                                                     |X | ↔ 1
+
+where |X | denotes the number of points in the domain. For example, in our main setting
+with n = 4, we have X = {1, 2, 3, 4} and thus |X | = 4. E"ciency scores range from 1
+(when the optimum is found in the first trial) to 0 (when it is found in the last possible
+trial).
+
+Definition 4 (Function Permutation)[43]: Let ω be a permutation ω : X ↑ X , and
+let f : X ↑ Y be an arbitrary function. We call fω a function permutation where we define
+fω (x) = f (ω(x)).
+
+Definition 5 (c.u.p) [38], [43], [50]: Let F be a set function: X ↑ Y. We say F is closed
+under permutation, or c.u.p., i! for any permutation ω : X ↑ X , f ↓ F =≃ fω ↓ F.
+
+Example 2 (not-c.u.p.) Let f := f2 from Table 1, i.e., (f (1), f (2), f (3), f (4)) = (1, 0, 0, 0).
+Let ω = (1 2) be the transposition. Then (fω (1), fω (2), fω (3), fω (4)) = (0, 1, 0, 0) ⇐= (1, 0, 0, 0),
+hence F = {f } is not c.u.p.
+
+Definition 6 (Permutation Closure) [39], [43]: Let F be a set of function mapping:
+X ↑ Y. We define Fc.u.p as the smallest set containing F that is closed under permutation.
+
+    Not so long ago Maurice Clerc at [16] proved that NFL theorem [1], [4], [25], [31], [36],
+[38], [39], [43], [44], [50], [56], [62], [65], [74], [77], [83], [90], [91] does not occur for certain
+classes of continuous functions or for certain non-closed sets due to the permutation of
+elements (not-c.u.p.). Some properties of functions on c.u.p. subsets can be proved.
+    To visualize the performance of all 24 sampling algorithms across the test function set,
+we present two summary tables.
+    Table 3 shows the number of steps si,j required by algorithm ai to find the minimum
+of function fj (i.e., the number of evaluations before the optimum is reached for the first
+time).
+    Table 4 reports the corresponding e"ciency values Eai ,fj as defined by Equation (1),
+normalized to the range [0, 1]. These scores represent how early in the sampling sequence
+the optimum was discovered - with 1 indicating success at the first step, and 0 indicating
+the last possible step.
+    The last row in each table reports the total number of steps or the average e"ciency
+for each algorithm across all tested functions.
+    For comparison, we also examined smaller dimensions n = 2 and n = 3, which require
+7 and 15 trials, respectively, for full function identification. In line with this, the mean
+e"ciency of algorithms increases with n: it is 0.5 for n = 2, approximately 0.625 for
+n = 3, and 0.71 for n = 4. This trend supports the general observation that greater input
+dimensionality improves the discriminatory power of algorithm performance metrics.
+
+
+                                                    7
+            Algorithm
+                          a1      a2        a3         a4     a5     a6    a7    a8     a9     a10    a11    a12    a13    a14    a15    a16    a17    a18    a19    a20     a21     a22     a23     a24
+ Function
+
+       f1                  1       1         1          1      1     1      1     1      1      1      1      1      1      1      1      1      1      1      1      1       1       1       1       1
+       f2                  2       2         2          2      2     2      1     1      1      1      1      1      1      1      1      1      1      1      1      1       1       1       1       1
+       f3                  1       1         1          1      1     1      2     2      2      2      2      2      1      1      1      1      1      1      1      1       1       1       1       1
+       f4                  3       3         2          2      2     2      3     3      2      2      2      2      1      1      1      1      1      1      1      1       1       1       1       1
+       f5                  1       1         1          1      1     1      1     1      1      1      1      1      2      2      2      2      2      2      1      1       1       1       1       1
+       f6                  2       2         3          3      2     2      1     1      1      1      1      1      3      3      2      2      2      2      1      1       1       1       1       1
+       f7                  1       1         1          1      1     1      2     2      3      3      2      2      2      2      3      3      2      2      1      1       1       1       1       1
+       f8                  4       3         4          3      2     2      4     3      4      3      2      2      4      3      4      3      2      2      1      1       1       1       1       1
+       f9                  1       1         1          1      1     1      1     1      1      1      1      1      1      1      1      1      1      1      2      2       2       2       2       2
+       f10                 2       2         2          2      3     3      1     1      1      1      1      1      1      1      1      1      1      1      3      3       2       2       2       2
+       f11                 1       1         1          1      1     1      2     2      2      2      3      3      1      1      1      1      1      1      2      2       3       3       2       2
+       f12                 3       4         2          2      4     3      3     4      2      2      4      3      1      1      1      1      1      1      4      3       3       4       2       2
+       f13                 1       1         1          1      1     1      1     1      1      1      1      1      2      2      2      2      3      3      2      2       2       2       3       3
+       f14                 2       2         3          4      3     4      1     1      1      1      1      1      3      4      2      2      4      3      3      4       2       2       4       3
+       f15                 1       1         1          1      1     1      2     2      3      4      3      4      2      2      3      4      3      4      2      2       4       3       3       4
+       f16                 4       4         4          4      4     4      4     4      4      4      4      4      4      4      4      4      4      4      4      4       4       4       4       4
+      Total               30      30        30         30     30    30     30    30     30     30     30     30     30     30     30     30     30     30     30     30      30      30      30      30
+
+
+                                       Table 3: Number of needed sampled points table for n=4.
+     Algorithm
+                    a1      a2         a3         a4         a5     a6     a7     a8     a9     a10    a11    a12    a13    a14    a15    a16    a17    a18    a19    a20     a21     a22     a23     a24
+ Funkcion
+
+     f1              1       1       1             1          1      1      1      1      1      1      1      1      1      1      1      1      1      1      1       1       1       1       1       1
+     f2            2/3     2/3     2/3           2/3        2/3    2/3      1      1      1      1      1      1      1      1      1      1      1      1      1       1       1       1       1       1
+     f3              1       1       1             1          1      1    2/3    2/3    2/3    2/3    2/3    2/3      1      1      1      1      1      1      1       1       1       1       1       1
+     f4            1/3     1/3     2/3           2/3        2/3    2/3    1/3    1/3    2/3    2/3    2/3    2/3      1      1      1      1      1      1      1       1       1       1       1       1
+     f5              1       1       1             1          1      1      1      1      1      1      1      1    2/3    2/3    2/3    2/3    2/3    2/3      1       1       1       1       1       1
+     f6            2/3     2/3     1/3           1/3        2/3    2/3      1      1      1      1      1      1    1/3    1/3    2/3    2/3    2/3    2/3      1       1       1       1       1       1
+     f7              1       1       1             1          1      1    2/3    2/3    1/3    1/3    2/3    2/3    2/3    2/3    2/3    2/3    2/3    2/3      1       1       1       1       1       1
+     f8              0     1/3       0           1/3        2/3    2/3      0    1/3      0    1/3    2/3    2/3      0    1/3      0    1/3    2/3    2/3      1       1       1       1       1       1
+     f9              1       1       1             1          1      1      1      1      1      1      1      1      1      1      1      1      1      1    2/3     2/3     2/3     2/3     2/3     2/3
+     f10           2/3     2/3     2/3           2/3        1/3    1/3      1      1      1      1      1      1      1      1      1      1      1      1    1/3     1/3     2/3     2/3     2/3     2/3
+     f11             1       1       1             1          1      1    2/3    2/3    2/3    2/3    1/3    1/3      1      1      1      1      1      1    2/3     2/3     1/3     1/3     2/3     2/3
+     f12           1/3       0     2/3           2/3          0    1/3    1/3      0    2/3    2/3      0    1/3      1      1      1      1      1      1      0     1/3     1/3       0     2/3     2/3
+     f13             1       1       1             1          1      1      1      1      1      1      1      1    2/3    2/3    2/3    2/3    1/3    1/3    2/3     2/3     2/3     2/3     1/3     1/3
+     f14           2/3     2/3     1/3             0        1/3      0      1      1      1      1      1      1    1/3      0    2/3    2/3      0    1/3    1/3       0     2/3     2/3       0     1/3
+     f15             1       1       1             1          1      1    2/3    2/3    1/3      0    1/3      0    2/3    2/3    1/3      0    1/3      0    2/3     2/3       0     1/3     1/3       0
+     f16             0       0       0             0          0      0      0      0      0      0      0      0      0      0      0      0      0      0      0       0       0       0       0       0
+    Mean           0.71    0.71    0.71          0.71       0.71   0.71   0.71   0.71   0.71   0.71   0.71   0.71   0.71   0.71   0.71   0.71   0.71   0.71   0.71    0.71    0.71    0.71    0.71    0.71
+
+
+                                                                     Table 4: E"ciency algorithms table.
+
+
+5            Statistical and visual analysis of optimization algorithms
+             for binary functions
+Optimization of binary functions is a fundamental problem in numerical computing and
+artificial intelligence. The choice of an appropriate optimization algorithm significantly
+impacts the e"ciency of solving problems within di!erent search spaces. This analysis is
+based on two datasets given in Figure 2 and Figure 3 which provide deep insights into
+the performance di!erences of various algorithms and their interactions with di!erent test
+binary functions.
+    The correlogram in Figure 2 provides a detailed quantitative assessment of the rela-
+tionships between 24 permutation-based algorithms given in Table 2, revealing the under-
+lying structure of their performance across various test binary functions given in Table
+1. The color-coded matrix, with correlation coe"cients ranging from -1 to 1, highlights
+key patterns of similarity and divergence among the evaluated algorithms. Strong posi-
+tive correlations, represented in shades of deep red, indicate algorithmic pairs that exhibit
+highly consistent performance, suggesting that their search mechanisms explore and ex-
+ploit the solution space in a similar manner. Conversely, negative correlations, appearing
+in shades of blue, signify cases where algorithms produce fundamentally di!erent opti-
+mization behaviors, potentially due to di!ering balance strategies between exploration
+and exploitation.
+    The clustering of algorithms with high correlation values suggests the presence of dom-
+inant heuristic structures that align closely in their performance. Specific algorithmic pairs
+a1 and a2, demonstrate near-perfect correlation, implying nearly identical search dynam-
+
+
+                                                                                                        8
+                                                                                                                                                                         1
+                            a1 1.00 0.94 0.89 0.77 0.77 0.72 0.77 0.72 0.55 0.38 0.44 0.32 0.55 0.44 0.44 0.27 0.21 0.15 0.38 0.32 0.15 0.27 0.15 0.10
+                            a2 0.94 1.00 0.77 0.72 0.89 0.77 0.72 0.77 0.44 0.32 0.55 0.38 0.38 0.32 0.27 0.15 0.15 0.10 0.55 0.44 0.27 0.44 0.21 0.15
+                            a3 0.89 0.77 1.00 0.94 0.72 0.77 0.55 0.44 0.44 0.27 0.21 0.15 0.77 0.72 0.55 0.38 0.44 0.32 0.32 0.38 0.10 0.15 0.27 0.15                   0.8
+
+                            a4 0.77 0.72 0.94 1.00 0.77 0.89 0.38 0.32 0.27 0.15 0.15 0.10 0.72 0.77 0.44 0.32 0.55 0.38 0.44 0.55 0.15 0.21 0.44 0.27
+                            a5 0.77 0.89 0.72 0.77 1.00 0.94 0.44 0.55 0.21 0.15 0.44 0.27 0.32 0.38 0.15 0.10 0.27 0.15 0.77 0.72 0.38 0.55 0.44 0.32
+                                                                                                                                                                         0.6
+                            a6 0.72 0.77 0.77 0.89 0.94 1.00 0.32 0.38 0.15 0.10 0.27 0.15 0.44 0.55 0.21 0.15 0.44 0.27 0.72 0.77 0.32 0.44 0.55 0.38
+                            a7 0.77 0.72 0.55 0.38 0.44 0.32 1.00 0.94 0.89 0.77 0.77 0.72 0.44 0.27 0.55 0.44 0.15 0.21 0.27 0.15 0.32 0.38 0.10 0.15
+                                                                                                                                                                         0.4
+                            a8 0.72 0.77 0.44 0.32 0.55 0.38 0.94 1.00 0.77 0.72 0.89 0.77 0.27 0.15 0.38 0.32 0.10 0.15 0.44 0.27 0.44 0.55 0.15 0.21
+                            a9 0.55 0.44 0.44 0.27 0.21 0.15 0.89 0.77 1.00 0.94 0.72 0.77 0.55 0.38 0.77 0.72 0.32 0.44 0.15 0.10 0.38 0.32 0.15 0.27
+                           a10 0.38 0.32 0.27 0.15 0.15 0.10 0.77 0.72 0.94 1.00 0.77 0.89 0.44 0.32 0.72 0.77 0.38 0.55 0.21 0.15 0.55 0.44 0.27 0.44                   0.2
+                           a11 0.44 0.55 0.21 0.15 0.44 0.27 0.77 0.89 0.72 0.77 1.00 0.94 0.15 0.10 0.32 0.38 0.15 0.27 0.55 0.38 0.72 0.77 0.32 0.44
+                           a12 0.32 0.38 0.15 0.10 0.27 0.15 0.72 0.77 0.77 0.89 0.94 1.00 0.21 0.15 0.44 0.55 0.27 0.44 0.44 0.32 0.77 0.72 0.38 0.55
+                                                                                                                                                                         0
+                           a13 0.55 0.38 0.77 0.72 0.32 0.44 0.44 0.27 0.55 0.44 0.15 0.21 1.00 0.94 0.89 0.77 0.77 0.72 0.15 0.27 0.15 0.10 0.38 0.32
+                           a14 0.44 0.32 0.72 0.77 0.38 0.55 0.27 0.15 0.38 0.32 0.10 0.15 0.94 1.00 0.77 0.72 0.89 0.77 0.27 0.44 0.21 0.15 0.55 0.44
+                           a15 0.44 0.27 0.55 0.44 0.15 0.21 0.55 0.38 0.77 0.72 0.32 0.44 0.89 0.77 1.00 0.94 0.72 0.77 0.10 0.15 0.27 0.15 0.32 0.38                   -0.2
+
+                           a16 0.27 0.15 0.38 0.32 0.10 0.15 0.44 0.32 0.72 0.77 0.38 0.55 0.77 0.72 0.94 1.00 0.77 0.89 0.15 0.21 0.44 0.27 0.44 0.55
+                           a17 0.21 0.15 0.44 0.55 0.27 0.44 0.15 0.10 0.32 0.38 0.15 0.27 0.77 0.89 0.72 0.77 1.00 0.94 0.38 0.55 0.44 0.32 0.77 0.72
+                                                                                                                                                                         -0.4
+                           a18 0.15 0.10 0.32 0.38 0.15 0.27 0.21 0.15 0.44 0.55 0.27 0.44 0.72 0.77 0.77 0.89 0.94 1.00 0.32 0.44 0.55 0.38 0.72 0.77
+                           a19 0.38 0.55 0.32 0.44 0.77 0.72 0.27 0.44 0.15 0.21 0.55 0.44 0.15 0.27 0.10 0.15 0.38 0.32 1.00 0.94 0.77 0.89 0.77 0.72
+                                                                                                                                                                         -0.6
+                           a20 0.32 0.44 0.38 0.55 0.72 0.77 0.15 0.27 0.10 0.15 0.38 0.32 0.27 0.44 0.15 0.21 0.55 0.44 0.94 1.00 0.72 0.77 0.89 0.77
+                           a21 0.15 0.27 0.10 0.15 0.38 0.32 0.32 0.44 0.38 0.55 0.72 0.77 0.15 0.21 0.27 0.44 0.44 0.55 0.77 0.72 1.00 0.94 0.77 0.89
+                           a22 0.27 0.44 0.15 0.21 0.55 0.44 0.38 0.55 0.32 0.44 0.77 0.72 0.10 0.15 0.15 0.27 0.32 0.38 0.89 0.77 0.94 1.00 0.72 0.77                   -0.8
+                           a23 0.15 0.21 0.27 0.44 0.44 0.55 0.10 0.15 0.15 0.27 0.32 0.38 0.38 0.55 0.32 0.44 0.77 0.72 0.77 0.89 0.77 0.72 1.00 0.94
+                           a24 0.10 0.15 0.15 0.27 0.32 0.38 0.15 0.21 0.27 0.44 0.44 0.55 0.32 0.44 0.38 0.55 0.72 0.77 0.72 0.77 0.89 0.77 0.94 1.00
+                                                                                                                                                                         -1
+                                                                               a10
+                                                                                     a11
+                                                                                           a12
+                                                                                                 a13
+                                                                                                       a14
+                                                                                                             a15
+                                                                                                                   a16
+                                                                                                                         a17
+                                                                                                                               a18
+                                                                                                                                     a19
+                                                                                                                                           a20
+                                                                                                                                                 a21
+                                                                                                                                                       a22
+                                                                                                                                                             a23
+                                                                                                                                                                   a24
+                                  a1
+                                       a2
+                                            a3
+                                                 a4
+                                                      a5
+                                                           a6
+                                                                a7
+                                                                     a8
+                                                                          a9
+
+
+
+
+Figure 2: Correlogram showing pairwise correlations between the performance profiles of
+the 24 permutation orders (sampling strategies) a1 - a24 (Table 2), i.e., variants of the
+same non-repeating sampling algorithm di!ering only in sampling order. The axes denote
+strategies; color intensity encodes the correlation coe"cient.
+
+
+ics, likely due to shared heuristic design principles. Similarly, the relationship between
+a3 and a7 suggests that these algorithms adopt complementary strategies that respond
+similarly to test function landscapes, leading to stable and predictable results. The strong
+correlation between a12 and a16 further reinforces this trend, indicating that these al-
+gorithms maintain a balanced approach across di!erent function sets, leading to similar
+convergence behaviors.
+    Examining the distribution of moderate correlations, certain algorithms exhibit partial
+alignment in their search behaviors but maintain distinct characteristics in specific function
+classes. The correlation between a5 and a9, for instance, suggests some degree of shared
+performance trends, yet noticeable variations in their e"ciency on selected functions. This
+divergence may stem from di!erences in local search intensification or the ability to navi-
+gate complex solution spaces with varying constraints. Similarly, algorithms a10 and a14
+show moderate correlation values, indicating some overlap in their optimization trajectories
+while retaining individualized adaptation mechanisms.
+    The apparent distinctness of algorithms a19, a21 and a23 in the correlogram should
+be interpreted with caution. Although their rows in the correlation matrix di!er from
+those of algorithms such as a3 and a4 in the original column order, sorting the correlation
+coe"cients in ascending order yields identical profiles. This indicates that these algorithms
+share the same distribution (multiset) of correlation values, while di!ering only in the
+assignment of these values to specific algorithm pairs. Therefore, they should not be
+treated as outliers in terms of overall correlation strength. Instead, their distinction is
+relational and results from a di!erent arrangement of pairwise similarities. This may
+a!ect their position in the hierarchical clustering, but it does not imply a fundamentally
+di!erent global correlation profile.
+    The correlogram also reveals intricate structural dependencies among groups of algo-
+rithms, where clusters of strongly correlated methods emerge as functionally equivalent
+heuristics. These groupings indicate that some algorithms are interchangeable in terms
+of performance, reinforcing the hypothesis that certain heuristic designs converge toward
+
+                                                                                     9
+                                                                                                                                                                      0.5
+                                                                                                                                                                f14
+
+                                                                                                                                                                f10   0.4
+
+                                                                                                                                                                f2
+                                                                                                                                                                      0.3
+                                                                                                                                                                f1
+
+                                                                                                                                                                f16
+                                                                                                                                                                      0.2
+                                                                                                                                                                f9
+
+                                                                                                                                                                f13   0.1
+
+                                                                                                                                                                f5
+                                                                                                                                                                      0
+                                                                                                                                                                f6
+
+                                                                                                                                                                f8    -0.1
+
+                                                                                                                                                                f4
+                                                                                                                                                                      -0.2
+                                                                                                                                                                f3
+
+                                                                                                                                                                f7
+                                                                                                                                                                      -0.3
+                                                                                                                                                                f15
+
+                                                                                                                                                                f11   -0.4
+
+                                                                                                                                                                f12
+                                                                                                                                                                      -0.5
+                         a5
+
+
+                              a6
+
+
+                                   a4
+
+
+                                        a3
+
+
+                                             a1
+
+
+                                                  a2
+
+
+                                                       a8
+
+
+                                                            a7
+
+
+                                                                 a9
+
+
+                                                                      a10
+
+
+                                                                            a12
+
+
+                                                                                  a11
+
+
+                                                                                        a20
+
+
+                                                                                              a19
+
+
+                                                                                                    a22
+
+
+                                                                                                          a21
+
+
+                                                                                                                a24
+
+
+                                                                                                                      a23
+
+
+                                                                                                                            a17
+
+
+                                                                                                                                  a18
+
+
+                                                                                                                                        a16
+
+
+                                                                                                                                              a15
+
+
+                                                                                                                                                    a13
+
+
+                                                                                                                                                          a14
+Figure 3: Hierarchical clustering of permutation based algorithms in binary function opti-
+mization. Horizontal axis: permutation-based algorithms clustered by performance simi-
+larity. Vertical axis: Binary functions, representing algorithm behavior across di!erent op-
+timization landscapes. The color scale on the right denotes row-mean-centered performance
+values (deviations from the function-wise mean): red and orange indicate above-average
+performance for a given function, while blue shades represent below-average performance.
+Green and yellow correspond to values close to the function-wise mean, indicating only
+minor deviations.
+
+common optimization patterns. The hierarchical nature of these relationships suggests
+that within a constrained function set, specific algorithms consistently outperform others,
+thereby challenging the assumption of uniform algorithmic e!ectiveness across all possible
+problems. This structural insight contributes to a more refined understanding of algorith-
+mic behavior, allowing for a classification of heuristics based on their expected e"ciency
+within controlled benchmarking environments.
+    The visualization of correlation structures through this correlogram serves as a criti-
+cal analytical tool in evaluating algorithmic e"ciency and redundancy. The identification
+of highly correlated algorithmic pairs o!ers insight into the functional overlap between
+heuristics, while areas of weak correlation provide an opportunity to explore complemen-
+tary strategies that could enhance performance diversity. The emerging clustering pat-
+terns suggest that while certain algorithms exhibit near-identical behaviors, others diverge
+significantly, reflecting di!erences in heuristic mechanisms and adaptability to varied opti-
+mization landscapes. These observations o!er a foundation for a deeper investigation into
+algorithmic selection strategies, particularly in designing ensembles or hybrid approaches
+that capitalize on complementary search behaviors. In the literature, Surjanovic and Bing-
+ham [80] observed that the e!ectiveness of heuristic algorithms is strongly correlated with
+the characteristics of the optimization landscape, which is confirmed by the obtained re-
+sults.
+    Figure 3 shows a hierarchically clustered heatmap of row-mean-centered performance
+values. It reveals structured relationships between algorithms and functions, allowing for
+a detailed assessment of the structural dependencies within the studied space. The visual-
+ization presents hierarchical grouping of both algorithms and functions. This enables the
+identification of algorithm performance patterns depending on the characteristics of the
+test functions. The clustering of algorithms indicates that certain methods exhibit a high
+level of performance consistency. This may suggest similar exploration and exploitation
+strategies. In particular, the group of algorithms comprising a1, a3, a7, a10 demonstrates
+stability and consistent relative performance patterns across multiple functions. This sug-
+
+
+                                                                            10
+gests that these algorithms are less susceptible to changes in the structure of test functions
+and can be regarded as relatively universal strategies within the analyzed benchmark.
+    Conversely, algorithms a5, a8, and a12 should not be interpreted as exhibiting a fun-
+damentally di!erent overall value profile based solely on the heatmap. As shown by the
+row-wise sorted comparisons (e.g., a12 vs. a3), the sorted profiles can be identical. In such
+cases, the di!erences arise from the assignment of values to specific functions. Thus, the
+distinction is function-specific (relational) rather than a di!erence in the overall distribu-
+tion of values. This suggests function-dependent selectivity (i.e., relative specialization)
+rather than a globally distinct value pattern.
+    The clustering analysis of test functions shows that functions f 1, f 2, f 5 form a homo-
+geneous group with similar relative performance patterns. This is consistent with their
+similar algebraic and structural properties. It also suggests that algorithms performing
+well on one of these functions tend to show similarly favorable relative performance on the
+others within the same group. Functions f 3, f 4, f 6, on the other hand, exhibit greater
+variability in results depending on the applied algorithm. This may imply that their
+structure requires specific exploration strategies. Significant performance di!erences are
+also visible for functions f 8, f 9, f 13. These functions show strong local variations in row-
+mean-centered values. This may indicate the existence of complex function landscapes
+that require more adaptive optimization methods.
+    Particularly noteworthy are the intense contrasts in row-mean-centered values for func-
+tions f 12, f 14, f 15. For some algorithms, specifically a17, a22, a24, these functions exhibit
+substantial di!erences. This may suggest that these algorithms employ search mechanisms
+that di!er from those used by other methods. Additionally, the fact that certain algo-
+rithms a9, a11, a20 do not form distinct clusters in the hierarchical structure may indicate
+that their e!ectiveness is more heterogeneous. It may also indicate that their e!ectiveness
+depends on specific characteristics of the test binary functions.
+    The dendrograms also highlight closely clustered subgroups of algorithms. This is par-
+ticularly visible for the set a2, a4, a6, which exhibits almost identical relative performance
+profiles across most functions. This suggests that these methods employ very similar
+search space exploration mechanisms. In contrast, the group a19, a21, a23 demonstrates
+much greater variability in results. This indicates that these algorithms are relatively more
+e!ective on specific subsets of test functions, but are not equally e"cient across the entire
+problem space.
+    These observations are highly relevant for algorithm classification and the selection of
+optimization methods for specific problems. The clear clustering of functions with similar
+properties suggests that optimization can be e!ectively conducted using a set of algorithms
+tailored to a particular problem type. This is preferable to relying on a single method for all
+cases. The results also indicate that, within the studied space, there exist more challenging
+functions for which the di!erences in algorithm performance are more pronounced. This
+makes them a key reference point for further research on optimization methods and their
+adaptation to specific problem classes.
+    Similar observations were made by Hansen et al. [33], who propose an anytime perfor-
+mance assessment for black-box optimization based on the number of function evaluations
+needed to reach predefined targets. This framework enables quantitative performance
+comparisons across problem classes and evaluation budgets. This relationship is consis-
+tent with the benchmark-function descriptions compiled by Surjanovic and Bingham [80].
+They show that complex landscapes (e.g., narrow valleys or many local minima) can make
+optimization di"cult and can hinder convergence to the minimum.
+
+
+
+
+                                              11
+6    Additivity measures independent of the implementation
+Optimization algorithms play a pivotal role in addressing complex problems across a wide
+array of scientific and engineering disciplines. Evaluating their performance accurately and
+consistently is of paramount importance for both theoretical analysis and practical appli-
+cation. Traditional evaluation metrics, however, often rely on the specifics of the hardware,
+software environment, and implementation details. In black-box optimization, performance
+is commonly reported in objective-function evaluations rather than wall-clock time, since
+implementation-dependent computational overhead may dominate and can vary markedly
+across methods and implementations [61]. This dependence creates challenges in drawing
+universal conclusions about algorithmic e"ciency and behavior. To overcome these lim-
+itations, researchers have increasingly focused on the development of implementation-
+independent measures. An implementation-independent measure abstracts away hard-
+ware and software dependencies, focusing solely on the intrinsic properties of the algorithm
+and the objective function. Such measures are crucial for enabling a fair comparison of al-
+gorithms, irrespective of the computing environment or programming language used. They
+allow for the isolation of algorithmic contributions to performance and facilitate a deeper
+understanding of optimization principles. In this context, one of the most intriguing prop-
+erties of implementation-independent measures [33],[96] is their additivity. Additivity
+refers to the ability to decompose a composite function into simpler components, analyze
+them independently, and recombine their results to predict the performance on the compos-
+ite function. This property is not only theoretically elegant but also practically significant,
+as it o!ers insights into algorithm behavior and helps design more e"cient strategies for
+complex optimization tasks. The question of whether an implementation-independent mea-
+sure is additive is far from trivial. Additivity implies that the performance of an algorithm
+on a composite function f k = f i + f j can be directly derived from its performance on the
+individual functions f i and f j. This is of particular interest in optimization, as it allows:
+1. Performance Prediction: The ability to infer performance on complex functions from
+simpler components reduces computational costs and accelerates the evaluation process.
+2. Algorithm Design: Understanding additivity can guide the design of algorithms that
+exploit the structure of composite functions for improved e"ciency.
+3. Generalization Across Domains: Additive measures find applications in various fields,
+from machine learning and game theory to risk analysis and economics, providing a unify-
+ing framework for studying diverse systems.
+     Moreover, many practical optimization problems have finite variable resolu-
+tion (e.g., due to physical limits or numerical precision), which e!ectively dis-
+cretizes the search space and motivates studying discrete and binary objective
+functions [82]. Despite its importance, the additivity of implementation-independent
+measures has received limited attention in the literature, particularly in the context of
+binary objective functions. The results presented in this paper aim to address this gap
+by systematically analyzing the additivity property and its implications for optimization
+algorithms. The theoretical foundation of implementation-independent measures can be
+traced to cooperative game theory, where the Shapley value [9],[14],[48] was introduced
+to quantify the contributions of individual players to the total payo! of a game. Formally,
+let v be a characteristic function defined on a set of features N = {1, 2, . . . , n}, where
+v(S) represents the value of a coalition S ⇒ N. The Shapley value ωi (v), is defined by
+Equation (2):
+                               !        |S|!(n ↔ |S| ↔ 1)!
+                   ωi (v) =                                [v(S ↘ {i}) ↔ v(S)]             (2)
+                                                n!
+                              S→N\{i}
+
+
+
+                                                 12
+provides a fair allocation of the total value among players based on their marginal contri-
+butions. Its properties, including e"ciency, symmetry, null player, and additivity, make
+it a powerful tool for analyzing systems with additive characteristics. In the context of
+optimization, these properties translate to performance measures that remain invariant
+across di!erent implementations and accurately reflect the algorithm’s intrinsic capabili-
+ties. Additivity, in particular, enables the decomposition of composite functions, o!ering
+a systematic approach to studying their behavior. In this paper, ”decomposition” refers
+to a pointwise algebraic relation between benchmark functions (e.g., f 5 + f 10 = f 14)
+defined on the same domain, rather than to classical variable separability of the form
+f (x, y) = g(x) + h(y) for all (x, y) in the domain. This study explores the additivity
+property of implementation-independent measures through an empirical analysis of 24 op-
+timization algorithms applied to 16 binary objective functions. The specific objectives are:
+1. To establish a rigorous framework for evaluating additivity in implementation-independent
+measures.
+2. To empirically analyze the performance of algorithms on sums and di!erences of binary
+functions and investigate the conditions under which additivity holds.
+3. To identify practical implications of additivity in improving algorithm design, reducing
+computational costs, and understanding feature interactions.
+The results of this study reveal several nontrivial and highly significant findings:
+
+
+   • Enhanced Algorithmic E"ciency: Certain algorithms consistently perform better on
+     composite functions, achieving optima with fewer trials. For example, algorithm a4
+     achieves the optimum for f 5 + f 10 = f 14 in three trials, compared to four for f 14
+     alone.
+
+   • Systematic Patterns in Performance: By grouping algorithms based on their nu-
+     merical sequences and analyzing their behavior on composite functions, we uncover
+     patterns that suggest a deeper structural relationship between function composition
+     and algorithmic e"ciency.
+
+   • Broad Applicability: The findings are not limited to binary objective functions but
+     have potential implications for a wide range of domains, including machine learning,
+     economics, and risk assessment [9],[14],[48],[66].
+
+    These results demonstrate the potential of additivity analysis to provide new insights
+into optimization and motivate further exploration of this property in more complex set-
+tings.
+This section provides a rigorous theoretical foundation for implementation-independent
+measures, with a particular emphasis on the property of additivity. By defining these
+measures and exploring their key properties, we establish a framework for understanding
+their role in analyzing optimization algorithms.
+
+    An implementation-independent (performance) measure [33],[96] is a quantita-
+tive metric designed to evaluate the performance of optimization algorithms without being
+influenced by the specifics of the computational environment. Unlike conventional metrics
+runtime or computational complexity; these measures rely solely on the intrinsic properties
+of the algorithm and the objective function.
+    Let F = {f 1, f 2, . . . , f n} denote a set of objective functions, and let A = {a1, a2, . . . , am}
+represent a set of algorithms.
+
+
+
+                                                 13
+Definition 7 Let M (ai, f j) denote the number of evaluations (queries) of the objective
+function f j required by algorithm ai to discover the global minimum over the domain X .
+This is equivalent to the value si,j defined in Section 4.2.
+
+    This measure is considered implementation-independent if it satisfies the following cri-
+teria:
+1. Invariance: M (ai, f j) remains unchanged under variations in hardware, software, or
+programming language.
+2. Consistency: The measure reflects the fundamental e"ciency of the algorithm in ex-
+ploring the solution space.
+3. Reproducibility: Results obtained using M (ai, f j) can be reproduced across di!erent
+experimental setups.
+Several desirable properties of implementation-independent measures ensure their utility
+in analyzing and comparing algorithms:
+(a) E"ciency: The total number of function evaluations across all algorithms applied to
+a function f j should match the theoretical"m minimum required       to identify the global op-
+timum. This property is expressed as:         i=1 M (ai, f j) ⇑ M ↑ (f j), where M ↑ (f j) is the
+
+theoretical minimum number of evaluations.
+(b) Symmetry: If two functions f i and f j are structurally equivalent, the measure should
+yield identical results for any algorithm: M (ak, f i) = M (ak, f j), ⇓ak ↓ A.
+(c) Monotonicity: For a function f j that can be decomposed into two simpler subfunctions
+f j = f p + f q, the measure should satisfy: M (ak, f j) ⇑ max{M (ak, f p), M (ak, f q)}.
+(d) Additivity: One of the most critical properties, additivity ensures that the measure for
+a composite function can be expressed as the sum of the measures for its components. For
+f j = f p + f q, this property is formalized as: M (ak, f j) = M (ak, f p) + M (ak, f q).
+To make the notion of additivity more precise, we formalize the operation f k = f i + f j
+as a pointwise sum over the domain X . That is, for every x ↓ X we define: f k(x) =
+f i(x) + f j(x) where f i, f j, f k : X ↑ {0, 1} and addition is understood as integer addi-
+tion. To ensure that f k remains a binary function, we restrict attention to those cases
+where f i(x) + f j(x) ↓ {0, 1} for all x. For example, the function f 14 = (1, 0, 1, 1)
+arises as the pointwise sum of f 5 = (0, 0, 1, 0) and f 10 = (1, 0, 0, 1). However, even if
+f 14(x) = f 5(x) + f 10(x) holds for all x, the performance measure M may not obey addi-
+tivity. In our experiments, we observed that M (a4, f 14) ⇐= M (a4, f 5) + M (a4, f 10). This
+indicates that structural additivity of functions does not guarantee additive performance,
+which may depend on how the composition a!ects the landscape of the search space.
+Adding functions may reduce symmetry in the objective landscape, thereby improving dis-
+crimination among search candidates and aiding algorithm performance.
+
+
+7    Hierarchy of algorithms in algebraic structure-based bench-
+     marks: new perspectives on NFL
+Modern analysis of optimization algorithms requires not only an understanding of their
+functioning but also a precise grasp of the structure of the problems they are tested on.
+In the context of the NFL theorem, an especially significant aspect is how benchmarks are
+organized and how they influence the performance of heuristic algorithms. One critical
+issue that has been overlooked in the literature is the impact of algebraic operations on
+test functions within sets that preserve the c.u.p. property. This chapter focuses on a
+detailed analysis of how addition and subtraction of functions a!ect the performance of
+permutation algorithms in benchmarks based on the c.u.p. structure. Specifically, we will
+work with 24 permutation-based algorithms listed in Table 2, evaluated on benchmarks
+
+
+                                               14
+constructed from Table 1 c.u.p. functions. These benchmarks are formed through summa-
+tion and di!erence operations within the c.u.p. structure, based on functions from Table
+1, excluding function f 1. The resulting benchmarks retain the c.u.p. property after these
+algebraic transformations (The vertical axis in Figure 5 represents a c.u.p. benchmark con-
+structed from all possible function additions within the c.u.p. set, excluding f 1. Similarly,
+the vertical axis in Figure 7 represents a c.u.p. benchmark generated from all possible
+function subtractions within the c.u.p. set, also excluding f 1). Such benchmarks are used
+in research on the robustness of heuristics to structural changes in test functions and in the
+construction of problem spaces with predictable optimization properties [9],[45],[89],[90].
+By utilizing algorithm performance correlograms, we aim to answer key research questions:
+
+
+   • Do algebraic relationships between functions influence the classification of algo-
+     rithms?
+
+   • Can addition and subtraction operations lead to local inequalities in performance
+     despite global compliance with NFL?
+
+   • Do certain algorithmic strategies remain stable regardless of algebraic transforma-
+     tions of test binary functions?
+
+The addition or subtraction of functions leads to local inequalities in algorithm performance
+when algebraic operations modify the function landscape in a way that favors specific
+search strategies. Experimental results show that di!erences in algorithm e"ciency arise
+primarily in the case of function subtraction, where some algorithms reach the optimum
+faster, indicating local preferences resulting from changes in the search space structure.
+While the No Free Lunch theorem remains globally valid, systematic deviations in the
+number of required evaluations may occur on restricted sets of functions, depending on
+how the objective function is transformed.
+    The analysis encompasses two fundamental aspects:
+
+
+
+
+Figure 4: Correlation matrix of algorithm performance on the summation-based c.u.p.
+benchmark. Legend: Red/Orange Shades - High positive correlation between algorithm
+performance. Blue Shades - Strong negative correlation, indicating contrasting perfor-
+mance trends. Green/Yellow Shades - Moderate correlation levels, representing partial
+similarity.
+
+
+
+                                             15
+Figure 5: Hierarchical clustering of permutation-based algorithms on function additions
+in the c.u.p. benchmark. Horizontal axis: permutation-based algorithms clustered by per-
+formance similarity. Vertical axis: function additions (composite functions in the c.u.p.
+benchmark), representing algorithm behavior across algebraically combined optimization
+landscapes. The color scale on the right denotes row-mean-centered performance values
+(deviations from the function-wise mean): red and orange indicate above-average perfor-
+mance for a given composite function, while blue shades represent below-average perfor-
+mance. Green and yellow correspond to values close to the function-wise mean, indicating
+only minor deviations. Dendrograms show hierarchical clustering of both functions and
+algorithms based on similarity of performance patterns.
+
+
+7.1   Function Addition
+The advanced correlogram shown in Figure 4 illustrates the correlation matrix between
+the performances of 24 permutation-based algorithms across binary functions. The hori-
+zontal and vertical axes both correspond to individual algorithms labeled as a1 through
+a24, representing their mutual performance correlations in the optimization process. The
+matrix structure enables the identification of relationships between algorithmic behaviors,
+highlighting both strong and weak dependencies in performance trends.
+    The color gradient and circular visual elements encode the correlation coe"cients be-
+tween pairs of algorithms. Dark red regions indicate high positive correlations, where the
+performance of two algorithms is strongly related, suggesting they explore the search space
+in a similar manner. In contrast, near-zero correlations, represented by lighter shades, sug-
+gest independent behavior between algorithms, implying divergent search strategies. For
+instance, the algorithms a1, a2, a3, a4, a5, a6 demonstrate significant positive correlations,
+suggesting that these approaches share similar sampling mechanisms, leading to compa-
+rable e"ciency profiles across tested binary functions. Similarly, another subgroup com-
+prising a13, a14, a15, a16, a17, a18 forms a separate cluster of closely correlated algorithms,
+reflecting their analogous performance patterns.
+    Conversely, algorithms such as a9, a10, a11, a12 exhibit weak or near-zero correlations
+with most other approaches, signifying that their optimization behaviors diverge substan-
+tially from those of the strongly correlated groups. This separation indicates that these
+methods rely on distinct exploration-exploitation balances, leading to performance vari-
+
+
+                                              16
+Figure 6: Correlation matrix of algorithm performance on function subtractions in the
+c.u.p. benchmark. Dark Red: high positive correlation (close to 1) - algorithms exhibit
+nearly identical behavior on the same function sums, Light Red:moderate positive correla-
+tion – algorithms show some similarity in performance trends, Gray: near-zero correlation
+- no significant relationship between algorithms on function sums, Circles: visual represen-
+tation of correlation - the larger the red portion, the stronger the positive relationship, X
+and Y Axis: 24 permutation-based algorithms evaluated on function sums, Dendrogram:
+hierarchical clustering of algorithms based on performance similarity on function sums.
+
+
+ations that are not easily predictable based on the behaviors of other algorithms. The
+presence of isolated correlations in specific regions of the matrix further emphasizes that
+some algorithmic strategies are uniquely e!ective on certain subsets of binary functions
+while being ine"cient in others.
+    The upper triangular matrix representation, utilizing circular elements, o!ers an ad-
+ditional perspective on correlation strength. The proportion of the red-filled segments in
+each circle visually reinforces the degree of similarity between algorithms, providing an
+intuitive understanding of performance dependencies. The largest fully filled circles, such
+as those linking a1 and a2, a3 and a4 , or a5 and a6, confirm nearly identical performance
+distributions, while fragmented or near-empty circles, as seen in interactions involving a9
+or a12, highlight weak interdependencies.
+    These findings reinforce the structural partitioning of permutation-based optimization
+methods into performance classes, where certain approaches exhibit consistent e"ciency
+patterns while others follow unique search trajectories. The results suggest that func-
+tion landscapes play a crucial role in dictating algorithmic behavior, and although some
+methods can generalize across multiple function categories, others exhibit specialized per-
+formance advantages that are di"cult to extrapolate beyond specific function groups. This
+visualization underscores the necessity of careful algorithm selection in binary optimization
+tasks, as similarities in performance trends do not always guarantee universal applicability
+across diverse optimization landscapes.
+    Analyzing Figure 5 reveals distinct clustering and relative performance patterns for
+both functions and algorithms. This indicates the presence of systematic dependencies
+arising from algebraic operations on functions. The diagram shows row-mean-centered
+performance values and their hierarchical organization, which together expose structured
+relationships within the analyzed benchmark.
+    The color scheme of the diagram reflects row-mean-centered performance values for
+specific function sums. Red and orange areas indicate above-average performance for a
+
+                                             17
+Figure 7: Hierarchical clustering of permutation-based algorithms on function di!erences
+in the c.u.p. benchmark. Horizontal axis: permutation-based algorithms clustered by
+performance similarity. Vertical axis: function di!erences derived from the c.u.p. bench-
+mark, representing algorithm behavior across di!erence-based optimization landscapes.
+The color scale on the right denotes row-mean-centered performance values (deviations
+from the function-wise mean): red and orange indicate above-average performance for a
+given function di!erence, while blue shades represent below-average performance. Green
+and yellow correspond to values close to the function-wise mean, indicating only minor
+deviations. Dendrograms show hierarchical clustering of both function di!erences and al-
+gorithms based on similarity of performance patterns. Clusters indicate groups with similar
+relative performance structure.
+
+
+given function sum (relative to the mean value of that row). Blue-shaded regions indicate
+below-average performance for that function sum. Green and yellow regions correspond
+to values close to the function-wise mean, indicating only minor deviations. For instance,
+functions f 4 + f 9 = f 12, f 3 + f 5 = f 7, and f 5 + f 12 = f 16 exhibit notably strong
+local positive deviations in selected regions of the heatmap. This suggests that their alge-
+braic compositions may create optimization landscapes with similar relative performance
+structure for subsets of algorithms. Algorithms a3, a7, and a12 demonstrate relatively
+consistent behavior in these regions. This may suggest a shared response pattern in the
+analyzed solution space.
+    Conversely, blue-shaded regions indicate below-average relative performance for specific
+function sums. An example is function f 6 + f 11 = f 16, whose landscape appears particu-
+larly unfavorable for algorithms a15 and a19 within the analyzed benchmark. Meanwhile,
+functions f 2 + f 5 = f 6 and f 2 + f 3 = f 4 exhibit values that are closer to the function-
+wise mean across a broader subset of algorithms. This suggests that their influence on
+optimization remains more balanced and does not strongly favor any particular algorithm
+in relative terms.
+    Hierarchical clustering applied to the diagram highlights function groupings. This
+suggests that certain sums of test functions lead to optimization landscapes with similar
+relative performance patterns. Clusters of functions f 2 + f 9 = f 10, f 3 + f 10 = f 12,
+and f 5 + f 10 = f 14 indicate shared properties that may influence algorithmic behavior
+
+
+                                             18
+in related ways. The clustering of algorithms further suggests that specific optimization
+methods exhibit similar performance profiles. In particular, algorithms a7, a8, and a2 ap-
+pear to belong to the same group, which suggests a comparable response to the analyzed
+function sums. In contrast, algorithms a11 and a22 are positioned within more heteroge-
+neous clusters. This suggests greater sensitivity to changes in test function structures.
+    A key observation derived from this analysis is that the c.u.p. benchmark structure re-
+mains organized even after the summation operation. This indicates that algebraic function
+combinations do not introduce complete randomness in the relative performance patterns.
+Instead, they preserve and reveal distinct structural dependencies. This is significant in
+the context of the NFL theorem, because it suggests that for specific classes of test func-
+tions within a structured benchmark, algorithms may exhibit systematic di!erences in
+performance.
+    Further analysis has shown that functions containing components f 2, f 3, f 5, and
+f 9 frequently appear in regions with pronounced local deviations from the function-wise
+mean. This suggests that their structural properties may play a key role in shaping the
+optimization landscape. Their algebraic combinations appear to influence the problem
+formulation in a way that benefits specific algorithms in relative terms. This observation
+is consistent with departures from uniformly random algorithmic e"ciency within the
+analyzed function class.
+    Based on these results, critical implications arise regarding benchmark design and algo-
+rithm selection for specific optimization problems. The analysis demonstrates that instead
+of treating test functions as independent and random objects, their algebraic structures
+should be considered. These structures a!ect how algorithms explore and exploit the so-
+lution space. Future studies should explore this methodology in analyzing other types
+of algebraic operations. This would help define more precisely the dependency patterns
+between test binary function structures and the e"ciency of optimization heuristics.
+    From a practical perspective, leveraging these findings for benchmark design will be
+crucial to better represent real-world optimization problems. Proper grouping of test func-
+tions could allow for more accurate classification of algorithms and optimization strategies
+tailored to the characteristics of the objective function landscape. Thus, future research
+could focus on developing adaptive algorithm selection methods based on the algebraic
+analysis of test functions. This would mark a new direction in the field of heuristic opti-
+mization.
+
+7.2   Function Subtraction
+The function subtraction operation introduces greater variability in results, as observed in
+both Figure 6 and Figure 7.
+    The presented correlogram provides a detailed analysis of the relationships among
+twenty-four permutation-based optimization algorithms, focusing on their covariance struc-
+ture within a systematically transformed benchmark function set. The benchmark was
+generated by computing all possible pairwise di!erences between functions from the orig-
+inal c.u.p. set, with the exclusion of f 1, which consists entirely of zeros. Despite this
+exclusion, the newly formed function set remains closed under permutation, preserving
+essential structural properties that influence algorithmic behavior. The visualization of
+the covariance matrix reveals significant patterns in algorithm performance, highlighting
+both similarities and divergences in optimization strategies.
+    The correlogram represents algorithmic relationships through a dual-format approach,
+combining numerical correlation values in the lower triangular matrix with circular segment
+visualizations in the upper triangular section. The color scheme provides an intuitive means
+of assessing correlation strength, with red hues indicating positive correlations, meaning
+
+                                            19
+that the respective algorithms exhibit similar performance across the modified function
+set, while blue hues signify negative correlations, suggesting contrasting optimization ten-
+dencies. The intensity of the colors reflects the magnitude of the correlation, with stronger
+shades corresponding to higher absolute values. This structure enables a rapid identifica-
+tion of algorithm clusters that share common search behaviors, as well as pairs that tend
+to perform in opposition to one another.
+    A thorough examination of the correlation structure reveals well-defined algorithmic
+groupings, with certain methods exhibiting strong intra-group cohesion while maintain-
+ing distinct separation from others. Notably, the algorithms labeled as a1 through a5
+demonstrate consistently high positive correlations, indicating that these approaches rely
+on similar search heuristics and are a!ected in comparable ways by function transforma-
+tions. The shared performance trends suggest deterministic tendencies, possibly driven by
+structured permutation strategies that remain robust across the transformed benchmark.
+In contrast, the algorithms a9 through a12 exhibit negative correlations with this initial
+group, implying fundamentally di!erent search dynamics. Their performance divergence
+suggests reliance on more stochastic or adaptive mechanisms, likely incorporating proba-
+bilistic recombination or mutation techniques that allow them to explore solution spaces
+in a less constrained manner.
+    The presence of moderate correlation values in algorithms a15, a16, and a17 suggests
+a more hybridized optimization strategy, blending elements of deterministic and adaptive
+approaches. The positioning of these algorithms within the correlation structure indicates
+that they benefit from function transformations in scenarios where highly structured meth-
+ods encounter di"culties, yet they retain some degree of similarity with other randomized
+approaches. This versatility may make them particularly useful in optimization problems
+where maintaining a balance between exploration and exploitation is crucial.
+    A key observation from the correlogram is the strong positive correlation among al-
+gorithms a19 through a24, indicating a set of methods that perform in a nearly identical
+manner. This redundancy suggests that these algorithms may not o!er unique advantages
+over one another, making them functionally interchangeable in many optimization con-
+texts. The consistently strong correlations within this group imply a shared underlying
+search principle that responds similarly to variations in the function set, possibly reflect-
+ing a specific algorithmic bias towards certain structural properties of the transformed
+benchmarks.
+    At the same time, the correlogram highlights algorithm pairs with near-zero corre-
+lations, signifying largely independent optimization behaviors. These independent rela-
+tionships are particularly important when designing ensemble approaches, as combining
+algorithms with uncorrelated performance can enhance overall robustness in optimization
+tasks. Examples of such independent behaviors can be seen in the contrasting performance
+profiles of algorithms a6 and a20 or a14 and a22, where their relative independence sug-
+gests that they explore the function space through fundamentally di!erent methodologies.
+This insight is valuable for selecting complementary algorithms that can compensate for
+one another’s weaknesses, making them well-suited for hybrid optimization frameworks.
+    The broader implications of these findings underscore the impact of function set modifi-
+cations on algorithm performance. Since the benchmark was constructed by systematically
+computing di!erences between functions within the original c.u.p. set, the resulting opti-
+mization landscapes retain inherent structural dependencies while introducing new com-
+putational challenges. The covariance structure observed in the correlogram suggests that
+certain algorithms exhibit greater sensitivity to these transformations, forming well-defined
+clusters that reflect their inherent strengths and weaknesses. The exclusion of f 1 ensures
+that trivial zero-di!erence cases do not distort the analysis, yet the remaining function set
+
+
+                                             20
+maintains strong interdependencies, as evidenced by the correlation patterns among the
+algorithms.
+    The analysis confirms that some permutation-based algorithms are naturally suited
+for optimization tasks involving function di!erences, while others exhibit varying degrees
+of adaptability depending on the transformation applied to the objective functions. This
+reinforces the idea that permutation-based heuristics are highly influenced by the struc-
+tural modifications of their function landscapes, making their performance characteristics
+contingent on the properties of the underlying benchmark. Understanding these relation-
+ships allows for a more informed selection of algorithms based on covariance patterns,
+particularly in contexts where hybrid or ensemble approaches are being considered.
+    The correlogram ultimately provides a comprehensive perspective on algorithmic be-
+havior under transformed function conditions, revealing the existence of redundant opti-
+mization strategies, oppositional search methodologies, and functionally independent tech-
+niques. The clustering of positively correlated algorithms suggests that function trans-
+formations favor certain strategies while negatively correlated methods o!er alternative
+approaches that may be advantageous in di!erent optimization contexts. These insights
+contribute to a deeper understanding of algorithmic adaptation in permutation-based opti-
+mization and o!er potential directions for further research into adaptive algorithm selection
+frameworks based on covariance analysis.
+    The analysis of the hierarchically clustered heatmap in Figure 7 for 24 permutation-
+based algorithms in the context of c.u.p. function subtraction reveals distinct clustering
+patterns among algorithms based on their response to di!erent function di!erences. The
+benchmark structure remains organized even after applying the subtraction operation. This
+suggests that certain algorithms exhibit stable behavioral patterns across subtraction-based
+test functions.
+    First and foremost, the algorithms a1, a2, a3, a4 form a closely clustered group, as
+reflected by their similar color patterns and their proximity in the clustered arrangement.
+Their proximity indicates that they behave in a very similar manner across many function
+di!erences. This suggests a comparable search strategy or similar heuristic mechanisms in
+their operation. Similarly, a strong relationship can be observed in the group a5, a6, a7,
+which also exhibits highly similar relative performance patterns. This indicates that they
+respond in a comparable way to the variability of subtraction-based functions.
+    It is also worth noting the algorithms a10, a11, a12, which, while forming their own
+subgroup, often display a contrasting relative performance pattern with respect to the first
+two groups. In practical terms, this means that for function di!erences where the a1 -
+a4 group tends to show above-average relative performance, the a10 - a12 subgroup may
+show below-average relative performance, and vice versa. This behavior may stem from a
+di!erent approach to the exploration and exploitation of the solution space.
+    A particularly interesting case is the group a15, a16, a17, which, in some parts of the
+heatmap, exhibits similar relative performance patterns, but in other parts shows clear
+internal variation. This suggests that these algorithms are more sensitive to specific classes
+of subtraction-based functions and that their performance depends on the characteristics of
+the tested optimization problems. Similar irregular patterns can be observed for algorithms
+a20, a21, a22. These algorithms show visible transitions between above-average and below-
+average relative performance across di!erent function di!erences, indicating that their
+operating mechanisms may respond di!erently depending on the applied subtraction-based
+function structure.
+    Additionally, from the color structure of the heatmap, it is evident that function dif-
+ferences such as f 12 ↔ f 9, f 14 ↔ f 10, and f 16 ↔ f 13 have a significant impact on the
+observed patterns. Their presence in intensely warm-colored regions suggests that these
+
+
+                                             21
+function di!erences generate strong positive deviations from the function-wise mean for
+specific groups of algorithms. This indicates that they are among the most influential
+subtraction-based functions in shaping the relative performance structure. On the other
+hand, function di!erences such as f 7 ↔ f 3 and f 11 ↔ f 9 dominate darker blue regions,
+indicating below-average relative performance for some algorithm groups. This suggests
+that algorithms respond to them in a contrasting manner, with some methods performing
+relatively better while others lose e"ciency.
+    The dendrograms indicate that algorithms naturally cluster into distinct groups. This
+supports the conclusion that the benchmark structure remains preserved after the subtrac-
+tion operation. It also allows for further classification of algorithms, not only in terms of
+their similarity in the classic c.u.p. setting, but also in the context of subtraction-based
+function di!erences.
+    Taken together, the observations from Figure 7 indicate that algorithms a1 - a4 and a5
+- a7 exhibit strong similarities in their relative performance patterns, whereas algorithms
+a10 - a12 and a15 - a17 may display di!erent behavioral patterns depending on the char-
+acteristics of the subtraction-based functions. Certain function di!erences have a more
+significant influence on the clustering of algorithms. This provides useful insight into their
+e!ectiveness in optimization analysis.
+    The correlation and clustering analysis allowed for the identification of groups of algo-
+rithms that exhibit robustness or sensitivity to specific test function transformations. For
+instance, algorithms a3, a7, and a12 display similar behavior in the context of algebraic
+function subtraction, suggesting they operate according to similar exploration and exploita-
+tion patterns within the solution space. In contrast, algorithms a15, a19, and a22 exhibit
+distinctly di!erent patterns depending on the analyzed functions, which may indicate their
+specific adaptation to certain types of objective function landscapes. A key observation is
+that the structure of c.u.p. benchmarks remains preserved even after function subtraction,
+demonstrating the inherent orderliness of this problem space and suggesting that, con-
+trary to the NFL assumptions, certain algorithms may be better suited to specific function
+classes.
+
+
+8     The Impact of Algebraic Transformations of Test Functions
+      on the Performance of Optimization Algorithms
+8.1   Conclusions from Di!erential Heatmaps and PCA
+In this analysis, we present a detailed study of three datasets: Data1 (original data),
+Data2 (sum-dominant) and Data3 (di!erence-dominant) were obtained by algebraic re-
+combination using sums and di!erences of the original functions. Each of these datasets
+was analyzed using di!erential heatmaps and Principal Component Analysis (PCA) to
+investigate the impact of algebraic operations on the relationships between functions and
+algorithms. The goal of this analysis is to understand how algebraic operations on functions
+a!ect the structure of the data and the behavior of algorithms in the context of the No Free
+Lunch Theorem. Data1 represents the original functions from Table 1, which belong to the
+c.u.p. set. This set includes functions from f 2 to f 15, excluding f 1 (composed entirely of
+zeros) and f 16 (composed entirely of ones). The performance of these functions is 0 and 1
+for each algorithm, respectively, due to their definitions. Data1 thus contains a matrix of
+performance values for 14 functions f 2 ↔ f 15 and 24 algorithms a1 ↔ a24. Each function
+in Data1 is independent and represents the original relationships between functions and
+algorithms. Data2 was created by replacing the original functions from Table 1 with sums
+and di!erences of functions from the same c.u.p. set. Each function in Data2 is the result
+
+
+                                             22
+of algebraic operations on functions from Data1. For example:
+- f 2 in Data2 is the result of the operation f 4 ↔ f 3,
+- f 3 in Data2 is the result of the operation f 8 ↔ f 6,
+- f 4 in Data2 is the result of the operation f 12 ↔ f 9,
+- f 5 in Data2 is the result of the operation f 14 ↔ f 10,
+- f 6 in Data2 is the result of the operation f 2 + f 5,
+- f 7 in Data2 is the result of the operation f 3 + f 5,
+- f 8 in Data2 is the result of the operation f 3 + f 6,
+- f 9 in Data2 is the result of the operation f 13 ↔ f 5,
+- f 10 in Data2 is the result of the operation f 2 + f 9,
+- f 11 in Data2 is the result of the operation f 3 + f 9,
+- f 12 in Data2 is the result of the operation f 3 + f 10,
+- f 13 in Data2 is the result of the operation f 5 + f 9,
+- f 14 in Data2 is the result of the operation f 2 + f 13,
+- f 15 in Data2 is the result of the operation f 7 + f 9.
+
+     These operations introduce new relationships between functions and algorithms, which
+may lead to changes in algorithm performance.
+     Data3 was created by replacing the original functions from Table 1 with di!erences
+and sums of functions from the same c.u.p. set. Each function in Data3 is the result of
+subtracting two functions from Data1. For example:
+- f 2 in Data3 is the result of the operation f 6 ↔ f 5,
+- f 3 in Data3 is the result of the operation f 4 ↔ f 2,
+- f 4 in Data3 is the result of the operation f 8 ↔ f 5,
+- f 5 in Data3 is the result of the operation f 7 ↔ f 3,
+- f 6 in Data3 is the result of the operation f 8 ↔ f 3,
+- f 7 in Data3 is the result of the operation f 15 ↔ f 9,
+- f 8 in Data3 is the result of the operation f 4 + f 5,
+- f 9 in Data3 is the result of the operation f 15 ↔ f 7,
+- f 10 in Data3 is the result of the operation f 14 ↔ f 5,
+- f 11 in Data3 is the result of the operation f 15 ↔ f 5,
+- f 12 in Data3 is the result of the operation f 11 + f 2,
+- f 13 in Data3 is the result of the operation f 15 ↔ f 3,
+- f 14 in Data3 is the result of the operation f 9 + f 6,
+- f 15 in Data3 is the result of the operation f 13 + f 3.
+
+    These operations introduce another layer of changes in the relationships between func-
+tions and algorithms.
+    Figure 8 compares function-algorithm relationships after algebraic modification of the
+benchmark functions using two delta heatmaps. Panel (a) reports the element-wise di!er-
+ences Data2-Data1. Panel (b) shows Data3-Data1. The colormap encodes both the sign
+and the magnitude of the change in performance values. Red indicates positive deviations
+(higher values in the modified dataset). Dark blue indicates strong negative deviations
+(lower values). Orange/yellow denotes small deviations around zero. Green/cyan corre-
+sponds to moderate negative shifts.
+    In panel (a), negative deviations dominate and form coherent, block-structured regions.
+The most pronounced degradation is observed for f 2. An extended deep-blue region spans
+approximately a9↔a24. This indicates a large decrease relative to the baseline across many
+algorithms. A second major negative structure occurs for f 9. It is nearly uniformly deep
+blue over a1↔a16. This row then exhibits a clear sign reversal for later algorithms. Around
+
+
+                                            23
+Figure 8: Comparison of function-algorithm relationships with modified functions. a) Delta
+Heatmap: Data2 - Data1, b) Delta Heatmap: Data3 - Data1
+
+
+a19 ↔ a22, di!erences become strongly positive (red). This shows that the same algebraic
+construction can penalize broad algorithm groups while benefiting a narrower subset. Out-
+side these large-scale blocks, many entries take green/cyan tones. This is consistent with
+a systematic moderate decrease rather than isolated fluctuations. Additional severe local
+drops are also visible (e.g., f 5 ↔ a21 and f 5 ↔ a22). Positive deviations are present but
+remain localized. These include f 8 ↔ a1 and f 4 ↔ a9/a10. They also include several gains
+for f 12 (e.g., a2, a11, a22) and multiple gains for f 14 (e.g., a4, a6, a14, a20). Near-zero
+changes (orange/yellow) are comparatively sparse. They appear mainly as isolated cells.
+    Panel (b) displays a more heterogeneous, higher-contrast pattern. There is frequent
+alternation between strongly negative and strongly positive regions. Large negative areas
+persist. This is most notable for f 2 across approximately a7 ↔ a12 and again a15 ↔ a24.
+It is also visible for f 5 over early algorithms a1 ↔ a8. At the same time, panel (b) con-
+tains larger and more contiguous positive blocks than panel (a). This indicates stronger
+pair-dependent re-ranking. Clear examples include f 3 over a9 ↔ a12. They also include f 5
+around a13/a14 and a17/a18. Another example is f 7 around a7 ↔ a9 and a13 ↔ a15. Addi-
+tional positive clusters appear for higher-index functions with selected later algorithms. For
+instance, f 10 shows positives around a19/a21/a22. Similarly, f 13 shows positives around
+a13/a14/a17/a19/a20/a23. Moderate negative background regions (green/cyan) remain
+visible for parts of f 8 and f 14. Because Data3 is constructed primarily from di!erences
+but also includes several sums, the pattern in panel (b) should be interpreted as the net
+e!ect of this algebraic recombination. It should not be interpreted as a purely subtractive
+perturbation.
+    Figure 9 reports a PCA of three datasets: Data1 (red), Data2 (blue), and Data3
+(green). PCA is computed on transposed matrices Data1, Data2, Data3. Each point is one
+algorithm a1↔a24. Each algorithm is represented by a 14-dimensional profile over f 2↔f 15.
+The plot shows PC1 vs. PC2 scores. PCA is performed separately for each dataset. Thus,
+the axes are dataset-specific orthogonal bases. Interpretation follows explained variance,
+dominant loadings, and within-dataset score structure.
+    For Data1, PC1 and PC2 explain 30.22% and 30.22% of variance (60.45% total). A
+
+
+                                             24
+Figure 9: PCA for Three Data Sets. X-axis: First Principal Component (PC1), Y-axis:
+Second Principal Component (PC2)
+
+
+defining feature is the PC1–PC3 degeneracy. Each of PC1-PC3 explains 30.22%. The
+leading variability lies in a 3D subspace. The specific axes inside that subspace are not
+unique. We therefore use aggregated squared-loading contributions over PC1-PC3. The
+largest contributions come from f 8, f 12, f 14, f 15. Each contributes 0.439 over PC1-PC3.
+A second tier is f 4, f 6, f 7, f 10, f 11, f 13. Each contributes 0.173. The smallest contribu-
+tions are f 2, f 3, f 5, f 9. Each contributes 0.052. Data1 is strongly low-dimensional. Its
+dominant variability is split across three equally important directions.
+    For Data2, PC1 explains 33.99% and PC2 explains 23.52% (57.51% total). PC1-PC3
+explain 74.87%. Loadings show the dominant contrasts induced by sum/di!erence recom-
+bination. Along PC1, the largest absolute loadings are f 9 (0.628) versus f 3 (0.501) and f 2
+(0.390). Signs are conventional. The primary separation is therefore driven by f 9 against
+the joint contribution of f 3 and f 2. Along PC2, the leading contrast is f 4 (0.572) versus f 5
+(0.480). Additional non-negligible terms are f 12 (0.312) and f 3 (0.273). Score extremes
+mirror these contrasts. Along PC1, the most extreme algorithms include a20 (0.927), a24
+(0.906), a18 (0.904), and a3 (0.861). Along PC2, the largest magnitudes occur at a16
+(1.126), a15 (1.035), and a13 (0.974).
+    For Data3, PC1 explains 32.45% and PC2 explains 19.01% (51.46% total). PC1-PC3
+explain 68.31%. Data3 also has the largest overall variability across algorithms. Total
+variance (sum of eigenvalues) increases from 1.053 (Data1) to 1.264 (Data2) and reaches
+1.992 (Data3). Loadings identify the dominant drivers. Along PC1, f 2 (0.507) contrasts
+with f 11 (0.443), f 9 (0.408), and f 13 (0.325). Along PC2, f 3 (0.580) contrasts with
+f 10 (0.529). Further contributions come from f 4 (0.360) and f 6 (0.261). Score extremes
+are stronger than in Data2. For PC1, the largest magnitudes are a2 (1.387), a5 (1.307),
+a6 (1.256), and a20 (0.981). For PC2, the strongest magnitudes include a10 (1.100), a8
+(0.929), and a21 (0.835).
+    Taken together, Figures 8 and 9 show that algebraic recombination reshapes function-
+algorithm relations in a structured, non-uniform manner. In Figure 8a), Data2-Data1 is
+dominated by broad, block-structured reductions, with fewer localized gains and occasional
+sign reversals for specific algorithm subsets. In Figure 8b), Data3-Data1 is higher-contrast
+
+
+                                              25
+and more heterogeneous, with substantial improvements and degradations concentrated in
+distinct subregions, consistent with stronger pair-dependent re-ranking. Figure 9 supports
+this at the global level: Data2 is driven primarily by the f 9 vs. (f 3, f 2) contrast, with a
+secondary f 4 - f 5 contrast, whereas Data3 is dominated by f 2 vs. (f 11, f 9, f 13) and f 3
+vs. f10. Overall, the transformations selectively alter dominant function-level contrasts,
+producing dataset-specific reorganization of algorithm behavior. These transformations
+systematically reshape the dominant function-level contrasts, yielding dataset-specific re-
+ordering of algorithm performance profiles.
+
+8.2     Analysis of Study Results Using ANOVA and Tukey’s Post Hoc Test
+This analysis aimed to determine whether modifications to benchmark functions signifi-
+cantly a!ect optimization algorithm performance, even within the c.u.p. function space. A
+one-way analysis of variance (ANOVA) [60] was employed to assess the di!erences between
+the datasets. The F -statistic and corresponding p-value were computed to test the null
+hypothesis, which posits no significant di!erences between the mean results in the respec-
+tive datasets. In addition, Tukey’s post hoc test [81] was conducted to investigate detailed
+pairwise di!erences between datasets. The results of the ANOVA are presented in Table 5.
+The calculated F -statistic value is 110.68, and the associated p-value is 3.59965 ⇔ 10↓44 ,
+which is significantly below the commonly used threshold (ε = 0.05). This leads to the
+rejection of the null hypothesis, indicating that the di!erences between the three datasets
+are statistically significant.
+ Source of Variance    Sum of Squares (SS)   Degrees of Freedom (DF)    Mean Square (MS)       F - statistic        p-value
+       Data                  24.533                      2                  12.2666               110.68       3.59965 → 10→44
+       Error                111.379                    1005                  0.1108                  -                 -
+       Total                135.913                    1007                     -                    -                 -
+
+
+                                   Table 5: Summary of ANOVA Results
+
+    Table 5 reports a highly significant main e!ect of the dataset in a one-way ANOVA,
+indicating that at least one dataset di!ers in its mean element-wise performance value.
+Because the ANOVA F-test does not identify which specific pairs of datasets di!er, Tukey’s
+post hoc procedure was applied to all pairwise contrasts among Data1, Data2, and Data3.
+The resulting mean di!erences, confidence intervals, and adjusted p-values are summarized
+in Table 6.
+   Comparison         Mean Di!erence   Lower Confidence Interval   Upper Confidence Interval     p-value
+ Data1 vs. Data2         0.32639               0.26619                     0.38658               0.0000
+ Data1 vs. Data3         0.33532               0.27512                     0.39551               0.0000
+ Data2 vs. Data3         0.00893               -0.05127                    0.06912               0.93556
+
+
+                                       Table 6: Results of Tukey’s Test
+
+    Interpretation of Tukey’s Test Results
+1. Data1 vs. Data2: The mean di!erence was 0.32639, and the p↔value = 0.0000, indi-
+cating a statistically significant di!erence between these datasets.
+2. Data1 vs. Data3: The mean di!erence was 0.33532, and the p↔value = 0.0000, also
+confirming a significant di!erence.
+3. Data2 vs. Data3: The mean di!erence was 0.00893 and the p↔value = 0.93556, sug-
+gesting no significant di!erences between these datasets.
+
+   Modifications of functions through addition and subtraction alter the structure of opti-
+mization problems, a!ecting algorithm e"ciency even though the functions remain within
+the c.u.p. set. PCA analysis [58] and ANOVA tests indicate that these operations intro-
+duce statistically significant shifts in performance relative to the original dataset, leading to
+
+                                                            26
+variations in algorithm behavior. Algorithms based on more exploratory strategies appear
+to be less a!ected by these changes compared to those that heavily rely on local function
+structures.
+
+8.3   Analysis of the Boxplot for Data1, Data2, and Data3
+The boxplot in Figure 10 illustrates the distribution of values for three datasets: Data1,
+Data2, and Data3. Each of these datasets contains results obtained through di!erent alge-
+braic transformations of test functions, allowing for an assessment of their impact on the
+performance of optimization algorithms. The boxes in the plot represent the interquartile
+range (IQR), which spans the values between the first (Q1) and third quartiles (Q3). The
+red lines within the boxes indicate the median, while the whiskers show the range of values
+excluding outliers. Individual points outside the whiskers represent outliers, which exceed
+1.5 times the IQR.
+
+
+
+
+Figure 10: Comparison of Distributions of Three Data Sets Using a Box Plot. X-axis:
+Data Sets, Y-axis: Function Values
+
+    Analyzing Data1, we observe that the values in this dataset are highly concentrated
+around high values, indicating stability and uniformity in the results concerning the tested
+functions. The interquartile range oscillates around 0.8 - 0.9, while the lower bound is
+notably restricted. Outliers appear in the lower part, suggesting that certain functions
+and algorithms exhibited significantly poorer performance in rare instances. For Data2,
+a much greater dispersion of values is evident compared to Data1. The central value
+(median) has shifted towards significantly lower values, indicating an overall decrease in
+algorithm performance within this dataset. The box is asymmetric, with an extended lower
+part, suggesting that results in the lower range are more scattered. The whiskers extend to
+values close to zero, indicating that some test functions result in substantial performance
+degradation for algorithms. Data3 exhibits a distribution similar to Data2, although its
+values appear even more dispersed. The results span nearly the entire range from values
+close to zero up to 1.0, meaning that certain algorithms achieve very high e"ciency on se-
+lected functions, while others display extremely low e!ectiveness. Additionally, the box in
+this case is larger than in Data2, suggesting even greater variance in results and a stronger
+di!erentiation in algorithm behavior. The interquartile range encompasses both very low
+and high values, meaning that the structure of test functions, after undergoing transfor-
+mations, leads to extreme results for di!erent optimization methods. Comparing the three
+
+
+                                             27
+datasets, clear di!erences emerge as a result of the applied modifications to the test func-
+tions. Data1, as the original dataset, exhibits the highest stability and relatively uniform
+values, suggesting that the original set of test functions was well-balanced in relation to the
+algorithms. Data2 and Data3, in which functions were subjected to summation and di!er-
+entiation operations, show significantly greater variance, as well as a noticeable downward
+shift in the median. The fact that values in these datasets span the full spectrum from
+0 to 1 indicates complex interactions between algorithms and transformed test functions,
+ultimately causing optimization algorithms to exhibit non-uniform performance. The re-
+sults of the ANOVA and Tukey’s test indicate that modifications to test functions have a
+significant impact on algorithm results. The original dataset (Data1) significantly di!ers
+from both modified datasets (Data2 and Data3), while the di!erences between Data2 and
+Data3 are statistically insignificant. This suggests that both types of modifications to test
+functions lead to similar changes in algorithm performance. In the context of the NFL
+theorem, these results have significant implications. Even in permutation-closed spaces,
+modifications to test functions can lead to situations where the NFL theorem does not hold.
+This means that the choice of test functions is crucial for the evaluation of optimization
+algorithms.
+   The following theorem is supported by our empirical findings:
+
+Theorem 1 The No Free Lunch Theorem (NFLT) holds globally in function spaces that
+are closed under permutation (c.u.p.) and are sampled uniformly, as formally proven in
+Igel and Toussaint [39],[40]. However, introducing algebraic modifications (e.g., addition
+or subtraction) to benchmark functions can induce structural biases that violate uniformity
+assumptions, potentially leading to local violations of NFLT - even within a c.u.p. space.
+
+Corollary 1 NFL does not hold locally in test function sets modified through algebraic
+operations, even if the original structure was c.u.p.
+
+    In general, the fact that the NFL does not hold on subsets (apart our paper, similar
+sets were considered, among others, in [40]) of the set of all functions seems natural, but
+nonetheless, the rigorous mathematical statements in this area are interesting. The NFL
+holds on a subset if and only if it is a c.u.p. closure [16],[40].
+
+    If this is the case, the NFL property can be considered independently from the set
+structure, as formulated in the following:
+
+Observation 1 A c.u.p. closure transformed in this way is not a c.u.p closure anymore.
+
+Implication 1 Given Observation 1, it follows that NFL does not hold for the transformed
+data set analyzed in this work.
+
+8.4   Monte Carlo Simulations for Higher Dimensions: Methodology, Re-
+      sults, and Comparative Analysis
+To generalize the conclusions drawn from the exhaustive analysis conducted for the case
+of n = 4, an extensive empirical study was carried out using the Monte Carlo method [25]
+for larger problem sizes: n = 10, n = 30, n = 50, and n = 100. The objective of these ex-
+periments was to determine whether the structural relationship between the permutation-
+based sampling order and the optimization performance of objective functions persists
+in exponentially more complex spaces, where full enumeration becomes computationally
+infeasible.
+
+
+                                              28
+    In accordance with the assumptions and positions established earlier in the study, rep-
+resentative sampling of binary functions f : X ↑ {0, 1} with specific structural character-
+istics was applied for larger values of n. Three function classes were considered: balanced
+functions, where the number of zeros and ones is approximately equal; strongly unbalanced
+functions, in which at least 91% of output values are identical; and symmetric functions,
+whose outputs depend solely on the Hamming weight of the input. For n = 10 and n = 30,
+50 functions were analyzed (approximately 16 - 17 from each class); for n = 50, 15 func-
+tions were studied (5 per class), and for n = 100, three functions were examined-one from
+each class. Given the enormous complexity of the function space, which grows double-
+                                                                        100
+exponentially with the size of the domain (for n = 100, it reaches 22 ), such a selection
+represents a compromise between representativeness and computational feasibility.
+    The Monte Carlo method was implemented following methodological guidelines from
+the literature [21], [25], ensuring control over estimator variance and representativeness of
+the sample in the context of large function spaces.
+    In each experiment, non-repeating sampling with a budget of m = 4 points was em-
+ployed, following the methodology used in the n = 4 case. For n = 10, all 24 permutations
+were tested; for n = 30, 10 representative permutations were selected; for n = 50, 6 were
+used; and for n = 100, 3 algorithms were applied. For each function, the best result found
+was recorded, and the average e"ciency of each algorithm was computed.
+    For n = 10, di!erences between algorithms were clearly observable. For balanced
+functions, the di!erence in performance (mean best result) between the best and worst al-
+gorithm exceeded 18%. For symmetric functions, some permutations produced results that
+were 12%-15% better than others. Strongly unbalanced functions showed much smaller
+variance-nearly all permutations yielded near-optimal results, ranging from 35.4% to 62.1%,
+with an average around 49.2%. For balanced functions, the results ranged from 46.7% to
+78.2%, and for symmetric functions-from 58.9% to 81.3%, with a clear dominance of ex-
+ploratory permutations.
+    For n = 30, analogous patterns were observed: the performance gap between the best
+and worst-performing permutations reached 22 - 30 percentage points. The average e"-
+ciency for balanced functions was 63.4% (range: 52.3% - 75.5%), for unbalanced functions
+49.5% (40.1% - 58.8%), and for symmetric functions 70.6% (60.2% - 84.0%). High perfor-
+mance of exploratory permutations remained evident in this setting as well.
+    For n = 50, due to the limited sample size (15 functions, 6 algorithms), the analysis
+served as a more focused exploratory study. The results still revealed considerable variance.
+For symmetric functions, the di!erence between the best and worst permutation reached 21
+percentage points; for balanced functions, 15 points; and for unbalanced functions, about 6
+- 8 points. The average e"ciencies were 66.1%, 59.2%, and 46.5%, respectively-consistent
+with the trends observed for lower dimensions.
+    In the case of n = 100, one function from each class was analyzed, each tested with three
+di!erent algorithms. The di!erences between permutations for the symmetric function
+reached 19.4%, for the balanced function 12.6%, and for the unbalanced function 6.3%.
+Despite the small sample size, the observed trends remained consistent, and the structure
+of the sampling continued to significantly a!ect the final result.
+    The conducted study confirms that the relationship between the sampling order and
+algorithm performance is not merely an artifact of the limited space in the n = 4 case
+but rather a structural phenomenon that persists in higher-dimensional settings. Algo-
+rithmic e"ciency depends on both the function class and the type of permutation used.
+These results challenge the universal validity of the classical No Free Lunch theorem and
+suggest that, in practical optimization scenarios, the structure of the algorithm and the
+nature of the objective function play a critical role. Symmetric and balanced functions are
+
+
+                                             29
+particularly sensitive to the sampling strategy, which opens possibilities for more precise
+characterization and the design of dedicated optimization strategies. The Monte Carlo
+method, supported by the selection of functions with well-defined structural properties,
+proves to be an e!ective and reliable tool for algorithm analysis in cases where full enu-
+meration is infeasible. The obtained results represent a significant step toward a deeper
+understanding of algorithmic behavior in large solution spaces, supporting the generaliza-
+tion of earlier observations and providing an empirical foundation for further research in
+adaptive heuristics. As a result, the presented analyses not only confirm the scalability of
+the phenomena observed in the small function space but also o!er a methodological re-
+search template that can be extended to other function classes and even larger dimensions
+in future studies.
+
+8.5   Conclusions and future research directions
+The conducted research provides an innovative perspective on the impact of algebraic
+operations on test functions in permutation-based optimization algorithms. The results
+indicate that both the addition and subtraction of binary functions within the c.u.p. struc-
+ture lead to systematic correlations in algorithmic performance, challenging the classical
+assumptions of the NFL theorem in a constrained, local setting. Previous approaches to
+heuristic optimization analysis have not accounted for structural dependencies within the
+test function space, relying instead on the assumption of complete randomness in outcomes,
+which suggests the necessity of revisiting these concepts.
+    The issue of function structure influence on algorithm performance has been previously
+discussed in the works of Clerc [16] and Whitley [87], yet their analyses focused primarily
+on the properties of individual test functions and their impact on the exploration pro-
+cess within the solution space. Whitley pointed out fundamental limitations of heuristics
+related to the landscape of the objective function but did not consider algebraic transfor-
+mations as an analytical tool for algorithm assessment. Clerc, in his research, emphasized
+structural dependencies in optimization problems but did not relate them to systematic
+modifications of test functions. It is only through our research that we demonstrate how
+algebraic operations can introduce a new dimension of analysis, enabling the identification
+of performance patterns in algorithms that have previously eluded traditional evaluation
+methods.
+    Similar attempts to challenge the generality of the NFL theorem can be found in the
+work of Kimbrough et al. [45], who showed that specific problem classes, such as constraint
+optimization problems handled by the Feasible-Infeasible Two-Population (FI-2Pop) Ge-
+netic Algorithm, can violate the NFL assumptions. Their research focused on the impact
+of constraints on algorithm e"ciency, demonstrating that problem structure can favor cer-
+tain heuristic methods. Our analyses extend this line of research, showing that structural
+dependencies in test functions also lead to non-uniform distributions of algorithm e"-
+ciency within structured benchmarks. The results indicate that certain algorithms exhibit
+systematic performance patterns on algebraically related functions, suggesting that the as-
+sumption of complete performance randomness may be flawed for real-world optimization
+problems. This aligns with findings in the paper [50], where a MAX-2-SAT problem with
+an objective value-permutation that does not conform to a standard MAX-2-SAT problem
+is presented. This result shows that MAX-2-SAT is not c.u.p. for the case n=3, with proof
+hints also provided for n=4. Previously, the MAX-SAT problem was explored in works
+such as [39], [77], and [85], further underscoring how problem-specific structures can lead
+to deviations from general theoretical assumptions.
+    Future research should focus on exploring the impact of multiplicative algebraic op-
+erations on test functions, which may reveal additional layers of structural dependencies
+
+                                            30
+determining the performance of optimization algorithms. Extending analyses to higher-
+order transformations, including polynomial or nonlinear combinations of test functions,
+could further refine algorithm classification concerning their resistance to specific problem
+types. Additionally, the application of machine learning methods to predict heuristic per-
+formance based on the algebraic properties of test functions could lead to the development
+of new adaptive optimization strategies.
+    Ultimately, this study opens new perspectives in heuristic optimization, providing an
+algorithm analysis methodology that transcends standard statistical randomness models
+and captures deep structural dependencies within test function spaces. The ability to more
+precisely match algorithms to specific problem classes implies that future research could
+more accurately define the limits of the NFL theorem’s validity and identify scenarios in
+which structural dependencies within test functions determine the selection of an optimal
+heuristic.
+
+
+9     Implications
+The results reported in this paper indicate that permutation structure and objective refor-
+mulation can systematically influence algorithm behavior. This is particularly relevant for
+inference and optimization procedures that rely on relabeling, resampling, or permutation-
+based search. In such settings, evaluation order and symmetry can shape early-stage
+information acquisition. Below, we focus on implications for statistics and evolutionary
+computing. The discussion emphasizes structurally restricted function classes (including
+c.u.p.) and the arithmetic structure of objectives, which can induce consistent re-rankings
+among permutational strategies.
+
+9.1     Implications for Statistics
+The No Free Lunch theorem carries significant consequences for statistics, particularly in
+the design and application of algorithms for specific analytical tasks. This study focuses on
+permutational algorithms - a class of methods that operate by permuting elements within a
+dataset or objective function-and investigates their behavior under conditions that violate
+the assumptions of the NFL theorem. In particular, it analyzes function subsets c.u.p. and
+their impact on algorithmic performance. Below, the findings are discussed in the context
+of concrete statistical applications:
+
+9.1.1    Permutational Significance Tests in Multivariate Statistics
+In multivariate statistics, especially in fields such as genomics or neuroimaging [25],[59],[67]
+hypothesis testing is often used to examine group di!erences. Traditional parametric
+tests such as Student’s t-test [63] or ANOVA [60], rely on assumptions of normality and
+homogeneity of variance, which are frequently violated in practice. The results presented in
+this study suggest that for data satisfying the c.u.p. condition (i.e., when the distribution
+of results is closed under permutation), permutational algorithms may o!er a more robust
+alternative. In a permutation test, the null hypothesis is assessed by repeatedly shu#ing
+group labels and recalculating the test statistic to generate an empirical distribution.
+    Our experiments with 24 permutational algorithms a1 - a24 on artificial function sets
+revealed substantial performance di!erences across algorithms within constrained prob-
+lem subsets. For example, for test function f 14 (constructed as the sum of two simpler
+functions, f 5 and f 10, where f 5 represents a smooth unimodal convex structure and f 10
+introduces discontinuities and noise), one algorithm a4 located the optimum significantly
+faster than when each component function was evaluated independently. This indicates
+
+                                              31
+that leveraging the structural properties of the c.u.p. set - such as additive e!ects that
+create a richer and more discriminative optimization landscape - enhanced sensitivity to
+real di!erences. Similarly, in empirical permutation tests, an algorithm optimized for a
+specific cost function (e.g., sum of squared di!erences) can more e!ectively detect subtle
+discrepancies between groups when data exhibit an ordered structure. Employing such
+tailored permutational approaches increases the power of the test (the ability to detect
+true e!ects) while simultaneously reducing the risk of Type I errors.
+
+9.1.2   Optimization of Regression Estimators via Permutations
+Regression analysis [42],[44] often encounters di"culties caused by outliers or heteroscedas-
+ticity, which undermine the assumptions of classical Ordinary Least Squares (OLS) meth-
+ods. While robust methods like Least Absolute Deviations (LAD) exist, they may also be
+ine"cient under certain data configurations. This study proposes a framework for optimiz-
+ing regression estimators through a focus on permutational data subsets and an analysis
+of the arithmetic properties of objective functions. Our results indicate that violations of
+the NFL theorem on c.u.p. sets can be leveraged to improve parameter estimation.
+    To illustrate, consider financial data where income distributions exhibit ”heavy tails”
+(substantial deviation from normality). Rather than using classical OLS, one can apply a
+permutational algorithm that rearranges residuals to minimize a suitably constructed loss
+function that accounts for this structure (e.g., a cost function that penalizes large errors
+more heavily). Our experiments confirm the validity of this approach: performance on a
+composite function (e.g., f 14 = f 5 + f 10) was not additive with respect to the results
+on its components. In other words, the cumulative e!ects of two features can create an
+optimization landscape that favors certain methods more than would be expected from
+their individual behaviors. This synergy e!ect translates to more accurate and stable
+regression estimates in cases where classical assumptions fail. A permutational strategy
+thus yields more precise and interpretable models, particularly for datasets with mixed
+quality or numerous outliers.
+
+9.1.3   Permutational Bootstrap Methods
+The bootstrap technique [10],[19],[67] is a fundamental tool for estimating sampling distri-
+butions and constructing confidence intervals. However, traditional bootstrap procedures
+can be computationally expensive and may not fully exploit data structure. Our find-
+ings show that permutation-based bootstrap methods can be optimized for c.u.p. subsets,
+reducing computational complexity while maintaining statistical accuracy. That is, viola-
+tions of NFL assumptions in restricted problem sets allow the algorithm to focus on the
+most informative permutations.
+    For instance, in time-series analysis, block bootstrap methods sample contiguous blocks
+of data to preserve temporal dependencies. These can be enhanced using permutational
+algorithms that respect the sequential structure of the data (i.e., avoiding the disruption
+of natural groupings). Our analysis shows that certain permutational algorithms (e.g., the
+a2 - a4 - a6 group characterized by systematic search) can generate representative permu-
+tations with fewer iterations, thus reducing computational load in the bootstrap context.
+This enables reliable estimation of confidence intervals for complex datasets (e.g., high-
+frequency financial series or environmental data) with significantly lower computational
+cost.
+
+
+
+
+                                             32
+9.1.4   Permutational Tests in Mixed-E!ects Models
+Mixed-e!ects models [41], used to analyze hierarchical data structures (e.g., students in
+classrooms, patients in hospitals), pose challenges when testing the significance of fixed and
+random e!ects due to their complexity and sensitivity to distributional assumptions. Our
+findings suggest that permutation tests can be e!ectively applied in mixed-e!ects contexts
+by using c.u.p. sets to construct empirical distributions of test statistics.
+    The key idea is to permute data within natural groups (e.g., within each classroom or
+hospital) rather than across the entire dataset. This preserves the inherent dependency
+structure among observations and avoids violating model assumptions. For example, in
+an educational study assessing a new teaching method, the significance of classroom-level
+e!ects can be tested by permuting student assignments within classes. Our experiments re-
+vealed similar benefits from respecting structure: functions with similar properties formed
+homogeneous clusters (e.g., f 1, f 2, and f 5 exhibited similar performance profiles), sup-
+porting the consistent behavior of certain algorithm groups. This suggests that restricted
+group-wise permutations yield more reliable test results in mixed models than traditional
+methods, eliminating the need for strict parametric assumptions.
+
+9.1.5   Analysis of Nonlinear Dependencies in Multivariate Data
+Identifying nonlinear dependencies [17],[32],[46],[75] among variables is a common challenge
+in multivariate analysis. Standard association measures such as Pearson’s correlation may
+fail to detect such relationships when the dependence is non-linear. Permutational algo-
+rithms introduced in this study o!er a powerful tool for exploring nonlinear dependencies
+by deliberately introducing permutations and observing the e!ects on a target function
+(e.g., mutual information or distance metrics). This approach can uncover hidden pat-
+terns in the data.
+     In our experiments, applying permutations to combine or modify test functions re-
+vealed dependencies not evident in the individual analyses. For instance, summing two
+functions f 5 and f 10 to form f 14 changed the optimization landscape such that algorithms
+responded di!erently than when evaluating each component separately. This shift indi-
+cates nonlinear interactions between the components-analogous to statistical data where
+a significant change in a criterion function after permuting a variable implies a nonlinear
+relationship with other variables. Furthermore, our correlation and PCA analyses demon-
+strated (see Section 8.1) that introducing such nonlinear transformations (e.g., summing or
+subtracting functions) generated new directions of variability in algorithm outputs. Simi-
+larly, permutation-based procedures can detect nonlinear inter-variable relationships that
+linear association measures may miss. As shown in [78], nonlinear short-term forecasting
+on empirical time series can reveal signatures of deterministic chaos and separate them
+from sampling/measurement error and externally induced noise. For environmental pre-
+dictors (e.g., temperature and precipitation), we probe nonlinear dependence by shu#ing
+variables and monitoring the change in an objective criterion (e.g., mutual information).
+
+9.1.6   Bayesian Statistics
+Bayesian statistics is based on the iterative updating of probability distributions as new
+data become available [7],[26],[29],[84]. Unlike frequentist approaches, Bayesian methods
+incorporate prior knowledge in the form of a prior distribution, which is then updated
+via the likelihood function to obtain the posterior distribution. This approach allows for
+considerable modeling flexibility - from analyses based on small samples to complex hi-
+erarchical models - but the e!ectiveness of Bayesian methods strongly depends on the
+
+
+                                             33
+appropriate selection of prior distributions and the e"ciency of algorithms for exploring
+the parameter space (e.g., the e"ciency of Markov chain Monte Carlo (MCMC) sampling
+[64],[21]). The results obtained in this study suggest that conscious incorporation of prob-
+lem structure (e.g., restricting the function space to specific classes) may favor certain
+analytical strategies over others. In other words, using additional (structural) knowledge
+- analogous to the role of the prior distribution in the Bayesian paradigm - can break the
+universal assumptions of the No Free Lunch theorem and improve inference outcomes for
+specific problem classes.
+    The permutational strategies proposed in this study can enhance Bayesian modeling by
+more e!ectively matching model assumptions to the actual structure of the data. When
+data are skewed or heavy-tailed, Gaussian assumptions can be brittle, so robustness is
+improved by using heavy-tailed priors and/or likelihoods (e.g., Student-t). For example,
+when data exhibit clear skewness or heavy tails (e.g., due to outliers or missing values),
+standard prior assumptions (such as the classical Gaussian prior [92]) may be inadequate.
+Instead, one should employ priors that reflect the observed structure - such as asymmetric
+or heavy-tailed distributions - to improve model fit and interpretation. Our analyses con-
+firm this need: the performance distributions of algorithms after function modifications
+show extreme variation - values range nearly across the full spectrum from close to 0 to 1,
+with some algorithms achieving very low e"ciency while others perform very well. Such
+spread (presence of outliers, visible in Figure 10) indicates data heterogeneity and corre-
+sponds to heavy-tailed distributions of performance. Therefore, in Bayesian analysis, one
+should use prior distributions capable of capturing this variability (e.g., heavy-tailed rather
+than normal priors) to avoid misleading assumptions and improve inference reliability.
+
+   Permutational MCMC Strategies and Parameter Grouping
+
+    Our correlogram and hierarchical-clustering results reveal clear structural clusters in
+the benchmark (see Figures 2 - 3; see also Figures 4 - 7 for transformed benchmarks).
+Such structure suggests strong dependencies; in Bayesian inference, blocked (grouped)
+MCMC updates and the choice of scan order can improve mixing and reduce autocorrela-
+tion [64],[21]. For instance, functions f 1, f 2, and f 5 form a homogeneous group (Figure 3).
+The composite function f 14 = f 5 + f 10 shows that algebraic structure can change the
+performance landscape: empirically, M (a4, f 14) ⇐= M (a4, f 5) + M (a4, f 10). Finally, some
+algorithms behave more heterogeneously (e.g., the a15 - a17 group), while others show weak
+similarity to most methods (e.g., a9), supporting the view that the benchmark decomposes
+into strongly related groups.
+
+   Applications in Hierarchical Models
+
+    Our correlograms and dendrograms (see Figures 2 - 7) show that performance depen-
+dence is not uniform across the benchmark. Instead, it concentrates within coherent groups.
+A similar situation arises in Bayesian inference under strong posterior dependence. In such
+cases, blocked (grouped) updates and the choice of scan order can improve mixing and re-
+duce autocorrelation [64]. Motivated by this analogy, we propose a preprocessing step.
+We use correlation-based clustering to define parameter blocks before running MCMC. See
+the f 14 = f 5 + f 10 example above for a concrete illustration of how structural coupling
+changes e"ciency.
+
+   Monte Carlo Simulations and Algorithmic E"ciency
+
+   Monte Carlo experiments (see Section 8.4) show that sensitivity to sampling order
+
+                                              34
+persists for larger problem sizes n = 10, 30, 50, 100 and depends strongly on function class.
+For n = 30, the gap between the best and worst sampling orders is 22 - 30 percentage
+points; mean e"ciencies are 63.4% for balanced functions, 49.5% for strongly unbalanced
+functions, and 70.6% for symmetric functions. This empirical pattern motivates importing
+structure-aware sampling ideas into Bayesian computation, where blocked updates and
+scan order are known to a!ect mixing and autocorrelation [64].
+
+9.2     Implications for Evolutionary Algorithms
+This study highlights that NFL equalities rely on specific conditions. In particular, they as-
+sume uniform averaging over the function class and permutation-closure. When these con-
+ditions are not met, search strategies can di!er systematically in a benchmark-dependent
+way [15],[38],[39],[50],[51],[77],[85],[89]. This directly a!ects how evolutionary algorithms
+should be designed and applied. C.u.p. function classes indicate when NFL-style average-
+case equivalences hold. However, our structured benchmarks and algebraic objective re-
+combinations produce consistent re-rankings across algorithms. They also reveal non-
+additive e"ciency on composite objectives, especially when objective structure is exploited
+(e.g., symmetry and compositional structure). PCA analyses (see Section 8.1) confirm
+clear shifts in data structure after function transformations. Even simple additions or
+subtractions substantially reorganize function-algorithm relationships. The key practical
+guidelines for evolutionary algorithms are discussed below.
+
+9.2.1    Designing Operators
+Both the correlations of algorithm results and the hierarchical clustering analysis indicate
+that the design of genetic operators (mutation, crossover, selection) should take into ac-
+count the structure of the problem [15],[51] (see, e.g., an applied example in [37]). In
+the conducted experiments, groups of algorithms with nearly identical behavior were ob-
+served - for example, algorithms a1 and a2 exhibited an almost perfect correlation of
+results across the entire set of test functions. Such pairs (di!ering only by minor heuristic
+changes, e.g., the order of search) achieved similar outcomes, which suggests that certain
+modifications of operators do not introduce significant changes in performance. In other
+words, if an evolutionary operator does not exploit the specific structure of the objective
+function landscape, the algorithm may turn out to be redundant in relation to another
+with a similar operational scheme.
+    On the other hand, the results highlight the need to design operators that are robust
+to algebraic changes in the objective. In Data2, negative deviations dominate and often
+form block-structured regions (e.g., a pronounced drop for f 2 spanning roughly a9 - a24,
+and mostly negative values for f 9 over a1 - a16, followed by a sign reversal around a19 -
+a22), with severe local degradations such as f 5 - a21 and f 5 - a22. Positive deviations are
+present but typically localized, including f 8 - a1 and gains on f 12 for a2 (also a11 and
+a22), as well as multiple gains on f 14 (e.g., a4, a6, a14, a20). Panel 8b) (Figure 8) is more
+heterogeneous and contains larger contiguous positive regions, indicating stronger pair-
+dependent re-ranking; it should be interpreted as the net e!ect of algebraic recombination
+rather than a purely subtractive perturbation. These patterns motivate operator designs
+that maintain search e!ectiveness under structured objective recombinations.
+    Consequently, in the design of operators for evolutionary algorithms [15],[69],[70], it is
+worthwhile to consider the algebraic properties of the objective function. Our results indi-
+cate that the structure of the problem (e.g., permutation symmetries or objective additiv-
+ity) can a!ect the e!ectiveness of operators - for example, adding two functions may reduce
+the symmetry of the landscape and facilitate the algorithm’s ability to distinguish good
+
+
+                                             35
+from bad solutions. This suggests that crossover operators that preserve favorable permu-
+tation segments or mutation operators aligned with the representation may be beneficial for
+convergence. For instance, in permutation problems such as the traveling salesman prob-
+lem [76], a customized crossover that retains promising sub-permutations of cities could
+preserve good partial structures while still exploring new configurations. Similar conclu-
+sions follow from the analysis of covariance of algorithm results: strongly cohesive groups
+emerge (e.g., a1 - a4 and a5 - a7), while some algorithms exhibit more context-dependent
+behavior under transformations (e.g., a15 - a17), and others show irregular transitions
+between positive and negative covariance patterns (e.g., a20 - a22). These observations
+suggest that operators promoting stable performance across algebraic transformations of
+the objective should be prioritized, especially in variable or multi-component optimization
+settings.
+
+9.2.2   Multi-Objective Evolutionary Algorithms (MOEA)
+Although the present study evaluates permutation-based benchmarks in a single-objective
+setting using an e"ciency-oriented performance measure, the findings are informative for
+multi-objective evolutionary algorithms (MOEAs) (see e.g., [5],[22]), where objective cri-
+teria are frequently aggregated, decomposed, or otherwise algebraically recombined during
+problem formulation and analysis. In MOEA studies, approximation sets are commonly
+assessed with indicators such as hypervolume and IGD[79].
+    Our experiments show that simple algebraic recombinations of objective functions (ad-
+dition/subtraction) can significantly a!ect algorithm performance even within the same
+c.u.p. function space. This e!ect is confirmed by a one-way ANOVA over the element-
+wise performance values across the three datasets (Data1, Data2, Data3), which yields
+F = 110.68 with p = 3.59965 ⇔ 10↓44 (Table 5). Tukey’s post-hoc test (Table 6) shows
+statistically significant di!erences between Data1 and Data2 (mean di!erence = 0.32639,
+p = 0.0000) and between Data1 and Data3 (mean di!erence = 0.33532, p = 0.0000), while
+Data2 vs. Data3 is not significant (mean di!erence = 0.00893, p = 0.93556). Thus, the
+original benchmark set di!ers markedly from both algebraically recombined sets, whereas
+the two recombined datasets are statistically indistinguishable under this test. The trans-
+formed datasets were generated from the original c.u.p. functions using algebraic opera-
+tions, while preserving permutation-closure. Nonetheless, function-algorithm relationships
+changed substantially (see Figure 8). Data2 was generated via a mixture of sums and
+di!erences (e.g., f 6 = f 2 + f 5 and f 5 = f 14 ↔ f 10). In contrast, Data3 was constructed
+primarily from di!erences, but it still includes several sums (e.g., f 2 = f 6 ↔ f 5 and
+f 12 = f 11 + f 2). These observations suggest a practical implication for MOEAs. The
+specific algebraic form used to combine criteria may change the e!ective di"culty of the
+search. It may also reorder which strategies appear most e!ective for a given formulation.
+For example, this includes aggregating components vs. keeping them separate, or refor-
+mulating objectives via structured recombinations. Depending on the formulation, such
+changes may also alter dominance relations in the objective space. Finally, the algorithm -
+algorithm correlation matrices (see Figures 2/6) and the covariance-based hierarchical clus-
+tering heatmaps (see Figures 3/7) indicate that algorithm families di!er in their sensitivity
+to such transformations. Strongly cohesive groups (e.g., a1 - a4 and a5 - a7) exhibit highly
+aligned behavior. Other groups show more context-dependent patterns under subtraction-
+based modifications (e.g., a15 - a17). Some subgroups display inverse covariance relative to
+the dominant clusters (e.g., a10 - a12). For MOEA design, this motivates using operators
+and selection mechanisms that remain e!ective under structured changes of the objective
+formulation. When permutation symmetries are present, it also motivates incorporating
+symmetry-aware variation or evaluation. This can reduce redundant search over equivalent
+
+                                             36
+representations.
+
+9.2.3   Hyperparameter Optimization with Permutational Algorithms
+Hyperparameter optimization (HPO) is a central task in machine learning. The goal is
+to find configurations that maximize model performance under limited evaluation budgets
+[2],[6],[28]. In practice, evolutionary and population-based search strategies are frequently
+considered for large or discrete design spaces. This includes settings related to neural
+architecture design [54],[96]. It also includes structured configuration choices in discrete or
+permutation-based spaces [30],[51],[86]. A particularly relevant HPO regime occurs when
+part of the configuration is naturally represented as a permutation. In this case, the order
+of components matters and symmetry is present.
+     In the experimental setup reported above, we sought a controlled empirical basis for
+understanding how a purely permutational search structure a!ects optimization e"ciency.
+We analyzed 24 permutation-based algorithms that share an identical mechanism. They
+di!er only in the order in which they evaluate a fixed set of candidate points (Table 2).
+This design isolates the e!ect of evaluation order as the only algorithmic degree of freedom.
+The performance measure used in the experiments is the normalized e"ciency index Eai ,fj
+(see Section 4.2). It is defined by the trial at which the known optimum is first reached -
+Equation (1). This index directly captures how early useful information is acquired during
+the search.
+     Two observations are particularly informative for HPO with permutation structure.
+First, correlation and clustering analyses reveal strongly cohesive families of algorithms
+whose performance profiles are highly aligned. This includes near-perfect similarity for
+a1 - a2, and a strong relationship for a12 - a16. This indicates that small changes in
+permutational evaluation order can lead either to practically redundant behavior (high
+correlation) or to distinct exploration/exploitation trajectories (weak or negative correla-
+tions). In HPO practice, this supports using correlation- and cluster-based diagnostics to
+avoid maintaining multiple algorithm variants that are e!ectively interchangeable. It also
+supports selecting genuinely complementary search orders when designing ensembles or
+hybrids.
+     Second, the study shows that algebraic recombinations of objective functions can sys-
+tematically reshape function - algorithm relationships. This happens even within the same
+c.u.p. function space. The benchmark transformations Data2 and Data3 are constructed
+from Data1 by structured sums and di!erences. For example, in Data2: f 13 = f 5+f 9. For
+example, in Data3: f 2 = f 6 ↔ f 5. These transformations preserve permutation-closure.
+Di!erential heatmaps (Figure 8) show broad, structured performance shifts. They include
+block-like degradations and localized gains. ANOVA with Tukey post-hoc tests also con-
+firms a highly significant dataset e!ect (see Table 5 - 6). For HPO, this provides a concrete
+caution. Seemingly simple objective reformulations (e.g., adding penalty terms, changing
+how criteria are combined, or replacing a base objective with a structured recombination)
+may change the e!ective search landscape. They may also reorder which strategies are
+most e"cient, even when the underlying symmetry class remains unchanged.
+     These results motivate permutation-aware HPO designs that explicitly exploit symme-
+try. This reduces redundant exploration of equivalent representations. They also motivate
+prioritizing robustness to structured objective reformulations, because objective recombi-
+nations can substantially change which search orders are e"cient (see Figure 8; see also
+Tables 5 - 6). Finally, empirical dependency analyses (correlation and clustering) can
+be used to select non-redundant algorithmic variants and assemble more complementary
+search components.
+
+
+
+                                              37
+9.2.4    Quadratic Assignment Problem (QAP)
+The Quadratic Assignment Problem (QAP) [47] is a classical NP-hard permutation prob-
+lem. The goal is to assign n facilities to n locations while minimizing an interaction
+cost. The objective is typically expressed as a sum of products of pairwise flows and
+the corresponding distances induced by the assignment permutation. The search space
+has size n!, which makes QAP challenging for general-purpose heuristics. From the NFL
+viewpoint, no optimizer is uniformly best when performance is averaged over all objec-
+tive functions [38],[39],[43],[44],[50],[56]. Therefore, systematic advantages must be tied
+to structural regularities of the targeted problem class. Our controlled c.u.p. benchmark
+supports this practical interpretation. Correlation and clustering reveal families of near-
+redundant search orders (see Figures 2 - 3). They also reveal outlier behaviors, such as
+a19, a21, and a23, which deviate from the dominant clusters and are consistent with
+specialization to particular landscape types rather than broad robustness. Algebraic re-
+formulations of the objective substantially reshape function-algorithm relationships (see
+Figure 8). The resulting delta patterns show that the same structured recombination can
+penalize broad algorithm groups while benefiting narrower subsets. This is consistent with
+local performance inequalities emerging under structured transformations, even though
+the global NFL statement remains intact for the full function class. In addition, structural
+additivity of objective components does not imply additive search e!ort. In our exper-
+iments, even when a function can be written as a pointwise sum (e.g., f 14 arising from
+f 5 + f 10 in the binary c.u.p. construction), the performance measure M need not satisfy
+M (a, fi +fj ) = M (a, fi )+M (a, fj ). Such non-additivity is compatible with the interpreta-
+tion that composition can change symmetry and discriminability in the landscape. These
+observations motivate QAP-oriented algorithm design principles. QAP costs decompose
+into many pairwise interactions, so operators and models can explicitly exploit permu-
+tation structure and interaction patterns. At the same time, they should remain robust
+to structured objective reformulations, because even simple algebraic recombinations can
+re-rank search orders. One principled direction is to use assignment-aware probabilistic
+models, such as doubly stochastic matrix (DSM) models within EDAs for QAP [68].
+
+9.3     Conclusion
+No Free Lunch theorems are average - case statements. Under uniform averaging over a
+finite function class and non - revisiting search, all optimizers have identical expected per-
+formance [89],[90]. In the sharpened finite - domain formulation, under uniform weighting
+this equivalence holds if and only if the function class is closed under permutation (c.u.p.)
+[39]. Our fully enumerated n = 4 baseline is c.u.p. by construction. Consistently, all 24
+evaluation orders listed in Table 2 attain the same mean e"ciency in Data1 (Table 4).
+NFL constrains the uniform average over the class; it does not imply equality on each
+individual objective. Our contribution is to characterize what remains informative beyond
+this average. Structure - preserving algebraic objective reformulations (sums and di!er-
+ences) systematically reorganize function - algorithm dependencies. They reveal stable
+families of near - equivalent evaluation orders and transformation - sensitive variants. We
+also observe non - additivity of search e!ort: performance on fi ± fj cannot be inferred
+from performance on fi and fj alone. Practically, objective formulation and benchmark
+construction define the e!ective testing regime and should be treated as part of algorithm
+design rather than neutral preprocessing. Beyond optimization benchmarks, the same
+NFL lens applies whenever the task distribution is shaped by symmetry or structural re-
+strictions. This includes permutation-based inference and stochastic simulation. In such
+regimes, the induced problem family can make evaluation order and objective coupling
+
+
+                                             38
+practically consequential.
+   The article has the potential to influence further research in the field of the mathe-
+matical foundations of heuristic optimization and is recommended for scientists, engineers,
+and practitioners involved in optimization and evolutionary algorithms.
+
+   The data supporting the findings of this study are available from the corresponding
+author upon reasonable request.
+
+    All numerical computations, data processing, and statistical visualizations presented
+in this study were performed using MATLAB R2023b on a DELL computer (system
+specification: Windows 10 Home, version 22H2).
+
+
+Acknowledgements
+The author gratefully acknowledges Professor S$awomir T. Wierzcho% (Institute of Com-
+puter Science of Polish Academy of Sciences, Warsaw, Poland) for the initial inspiration
+and encouragement that helped shape this research direction, for drawing the author’s
+attention to the work of M. Clerc, and for thoughtful comments and suggestions on both
+the substantive content and the editorial presentation of the manuscript, which improved
+its clarity.
+
+
+
+
+References
+
+[1]    S.P. Adam, S.-A.N. Alexandropoulosand, P.M. Pardalos and M.N. Vrahatis, No
+       Free Lunch Theorem: A review, Approximation and Optimization: Algorithms,
+       Complexity and Applications, Springer, 57-82, (2019), https://doi.org/10.1007/
+       978-3-030-12767-1_5.
+
+[2]    Y. Ahmed, et al. Optimizing photocatalytic dye degradation: A machine learning
+       and metaheuristic approach for predicting methylene blue in contaminated water,
+       Results in Engineering 25, 103-538, (2025), https://doi.org/10.1016/j.rineng.
+       2024.103538.
+
+[3]    B. Zolghadr-Asli, No-Free-Lunch-Theorem: a page taken from the computational
+       intelligence for water resources planning and management, Environmental Science
+       and Pollution Research 30.20, 57212-57218, (2023), https://doi.org/10.1007/
+       s11356-023-26300-1.
+
+[4]    A. Auger, O. Teytaud, Continuous lunches are free!, Proceedings of the 9th Annual
+       Conference on Genetic and Evolutionary Computation, 916-922, (2007), https:
+       //doi.org/10.1145/1276958.1277145.
+
+[5]    S. Babaei, et al. Multi-Objective Optimization for Green BTS Site Selection in
+       Telecommunication Networks Using NSGA-II and MOPSO, Algorithms 18(1), 9,
+       (2025), https://doi.org/10.3390/a18010009.
+
+
+
+
+                                            39
+[6]    J. Bergstra, Y. Bengio, Random search for hyper-parameter optimization, Journal
+       of Machine Learning Research, 13(2), 281–305, (2012), http://jmlr.org/papers/
+       v13/bergstra12a.html.
+[7]    J.J. Bon, A. Bretherton, K. Buchhorn, et al. Being Bayesian in the 2020s: Op-
+       portunities and Challenges in the Practice of Modern Applied Bayesian Statistics,
+       Philosophical Transactions of the Royal Society A: Mathematical, Physical and En-
+       gineering Sciences, 381(2247), The Royal Society, (2023), https://doi.org/10.
+       1098/rsta.2022.0156.
+[8]    I. Boujnah, et al. Towards Precision in Bolted Joint Design: A Preliminary Machine
+       Learning-Based Parameter Prediction, Proceedings of the Design Society, 5, 3211-
+       3220, (2024), https://doi.org/10.1017/pds.2025.10335.
+[9]    H. Cai, et al. Shapley value-based class activation mapping for improved explain-
+       ability in neural networks , The Visual Computer 41, 7249–7267, (2025), https:
+       //doi.org/10.1007/s00371-025-03803-1.
+[10]   A. Canty, B.D. Ripley, Boot: Bootstrap R (S-Plus) Functions, R Package Version
+       1.3-28.1, (2022), https://cran.r-project.org/web/packages/boot/boot.pdf.
+[11]   J. Ceberio, V. Santucci, Model-based gradient search for permutation problems,
+       ACM Transactions on Evolutionary Learning and Optimization, 3(4), 1-35, (2023),
+       https://doi.org/10.1145/3628605.
+[12]   J. Ceberio, E. Irurozki, A. Mendiburu and J.A. Lozano, A review of distances
+       for the Mallows and Generalized Mallows estimation of distribution algorithms,
+       Computational Optimization and Applications, 62(2), 545-564, (2015), https:
+       //doi.org/10.1007/s10589-015-9740-x.
+[13]   P. Chitnelawong, et al. No Free Lunch for Avoiding Clustering Vulnerabilities in
+       Distributed Systems, Scientific Reports, 14(1), 12789, (2023), https://doi.org/
+       10.1038/s41598-024-63278-3.
+[14]   D. Choudhury, et al. Consolidating Marginalism and Egalitarianism: A New Value
+       for Transferable Utility Games, (2022), https://doi.org/10.48550/arXiv.2201.
+       09182.
+[15]   V.A. Cicirello, A survey and analysis of evolutionary operators for permutations,
+       In Proceedings of the 15th International Joint Conference on Computational In-
+       telligence, Rome, Italy, Vol. 1, p.288-299, (2023), https://doi.org/10.5220/
+       0012204900003595.
+[16]   M. Clerc, Iterative optimisation-When a best algorithm does exist and other frus-
+       trating theorems, (2021), Online at https://hal.science/hal-03230263.
+[17]   M. Clerc, When Nearer is Better, (2007), Online at https://hal.science/
+       hal-00137320v2.
+[18]   C. Croux, C. Dehon, Influence functions of the Spearman and Kendall correlation
+       measures, Statistical Methods & Applications, 19(4), 497-515, (2010), https://
+       doi.org/10.1007/s10260-010-0142-z.
+[19]   A.C. Davison, D.V. Hinkley, In: Bootstrap Methods and Their Applications, Cam-
+       bridge Series in Statistical and Probabilistic Mathematics. Cambridge University
+       Press, (1997), https://doi.org/10.1017/CBO9780511802843.001.
+
+                                           40
+[20]   W.A. Dembski, No Free Lunch: Why Specified Complexity Cannot Be Purchased
+       Without Intelligence, Rowman & Littlefield, (2001), https://doi.org/10.5040/
+       9798216410973.
+
+[21]   A.Z. Deriba, D.Y. Yang, Performance-Based Risk Assessment for Large-Scale
+       Transportation Networks Using the Transitional Markov Chain Monte Carlo Method
+       , ASCE-ASME Journal of Risk and Uncertainty in Engineering Systems, Part A:
+       Civil Engineering, 11(1), 0402-4090, (2025), https://doi.org/10.1061/AJRUA6.
+       RUENG-1402.
+
+[22]   P. DiBarba, et al. Optimal Multi-Physics Synthesis of a Dual-Frequency Power In-
+       ductor Using Deep Neural Networks and Gaussian Process Regression, Algorithms
+       18(1), 10, (2025), https://doi.org/10.3390/a18010010.
+
+[23]   X. Dong, Yu. Qin-mei and C. Dong, A Probe into China Engineering Education Re-
+       form Based on ”China Manufacturing 2025”, (2025), https://doi.org/10.12783/
+       dtssehs/ermm2017/14672.
+
+[24]   B. Doerr, Y. Ghannane and M.I. Brahim, Towards a stronger theory for
+       permutation-based evolutionary algorithms, In Proceedings of the Genetic and Evo-
+       lutionary Computation Conference, pp. 1390-1398, (2022), https://doi.org/10.
+       1145/3512290.3528720.
+
+[25]   B. Efron, T. Hastie, Computer Age Statistical Inference: Algorithms, Evidence, and
+       Data Science, Cambridge University Press, (2016), http://www.cambridge.org/
+       9781107149892.
+
+[26]   S. Fortini, S. Petrone, Exchangeability, Prediction, and Predictive Modeling in
+       Bayesian Statistics, Statistical Science, 40(1), 40-67, (2025), https://doi.org/
+       10.1214/24-STS965.
+
+[27]   L.F. Plata-Gonz&ez, I. Amaya, J.C. Ortiz-Bayliss, S.E. Conant-Pablos, H.
+       Terashima-Marín, and C.A. Coello Coello, Evolutionary-based tailoring of synthetic
+       instances for the Knapsack problem, Soft Computing, 23(23), 12711-12728, (2019),
+       https://doi.org/10.1007/s00500-019-03822-w.
+
+[28]   T.Kee, K.H. Winky, Optimizing Machine Learning Models for Urban Sciences: A
+       Comparative Analysis of Hyperparameter Tuning Methods, Urban Science, 9(9), 348,
+       (2025), https://doi.org/10.3390/urbansci9090348.
+
+[29]   A. Gelman, J.B. Carlin, H.S. Stern and D.B. Rubin, Bayesian Data Analysis, Chap-
+       man and Hall/CRC, (1995), https://doi.org/10.1201/9780429258411.
+
+[30]   D.E. Goldberg, Genetic Algorithms in Search, Optimization and Machine Learning,
+       Addision Weseley Publisching Company, Reading, MA, (1989).
+
+[31]   M. Goldblum, et al. The No Free Lunch Theorem, Kolmogorov Complexity, and the
+       Role of Inductive Biases in Machine Learning, (2024), https://arxiv.org/abs/
+       2304.05366.
+
+[32]   T. Hastie, R. Tibshirani and J. Friedman, The Elements of Statistical Learning:
+       Data Mining, Inference, and Prediction, (Vol. 2, pp. 1-758), New York: Springer,
+       (2009), https://doi.org/10.1007/978-0-387-21606-5.
+
+
+
+                                           41
+[33]   N. Hansen, A. Auger, D. Brockho! and T. Tu’ar, Anytime performance assessment
+       in blackbox optimization benchmarking, IEEE Transactions on Evolutionary Compu-
+       tation, 26(6), 1293-1305, (2022), https://doi.org/10.1109/TEVC.2022.3210897.
+
+[34]   L. He, et al. Optimization of thermal management performance of direct-cooled
+       power battery based on backpropagation neural network and deep reinforcement
+       learning, Applied Thermal Engineering 258, 124661, (2025), https://doi.org/
+       10.1016/j.applthermaleng.2024.124661.
+
+[35]   S. Herbert, No Free Lunch Theorems for quantum state measurements as re-
+       sources in classical sampling and generative modelling, (2023), https://doi.org/
+       10.48550/arXiv.2309.13967.
+
+[36]   Y. Ho, D. Pepyne, Simple Explanation of the No-Free-Lunch Theorem and Its Im-
+       plications, Journal of Optimization Theory and Applications 115, 549-570, (2002),
+       https://doi.org/10.1023/A:1021251113462.
+
+[37]   J. Huang, R. Wu and J. Li, Enhancing network robustness with structural prior and
+       evolutionary techniques, Information Sciences 690, 121529, (2025), https://doi.
+       org/10.1016/j.ins.2024.121529.
+
+[38]   C. Igel, No Free Lunch Theorems: Limitations and perspectives of metaheuris-
+       tics, In: Theory and Principled Methods for the Design of Metaheuristics, Berlin,
+       Heidelberg: Springer Berlin Heidelberg, 1-23, (2014), https://doi.org/10.1007/
+       978-3-642-33206-7_1.
+
+[39]   C. Igel, M. Toussaint, On Classes of Functions for which No Free Lunch Results
+       Hold, (2001), https://doi.org/10.48550/arXiv.cs/0108011.
+
+[40]   C. Igel, M. Toussaint, Recent Results on No-Free-Lunch Theorems for Optimization,
+       (2003), https://doi.org/10.48550/arXiv.cs/0303032.
+
+[41]   J. Jiang, Linear and Generalized Linear Mixed Models and Their Ap-
+       plications, Springer, New York, NY, (2007), https://doi.org/10.1007/
+       978-0-387-47946-0_2.
+
+[42]   I. Jolli!e, Principal Component Analysis, In: International Encyclopedia of Statis-
+       tical Science. Berlin, Heidelberg: Springer Berlin Heidelberg, p. 1945-1948, (2025),
+       https://doi.org/10.1007/978-3-662-69359-9_483.
+
+[43]   T. Joyce, J.M. Herrmann, A review of No Free Lunch Theorems, and their im-
+       plications for metaheuristic optimisation, Nature-Inspired Algorithms and Applied
+       Optimization, Springer International Publishing, 27-51, (2018), https://doi.org/
+       10.1007/978-3-319-67669-2_2.
+
+[44]   R. Koenker, Quantile Regression, Econometric Society Monographs, Cambridge
+       University Press, Cambridge, (2025).
+
+[45]   S.O. Kimbrough, G.J. Koehler, M. Lu and D.H. Wood,On a Feasible-Infeasible Two-
+       Population (FI-2Pop) Genetic Algorithm for Constrained Optimization: Distance
+       Tracing and No Free Lunch, European Journal of Operational Research, 190(2),
+       310-327, (2008), https://doi.org/10.1016/j.ejor.2007.06.028.
+
+
+
+
+                                            42
+[46]   A. Kohli, et al. Precision Medicine in View of Genomic Biomarker Dis-
+       covery, In: Genomics-Driven Drug Discovery Through Pharmacogenomics,
+       IGI Global Scientific Publishing, 185-216, (2025), https://doi.org/10.4018/
+       979-8-3693-6597-7.ch007.
+
+[47]   R.S. Liggett, The quadratic assignment problem: an analysis of applications and
+       solution strategies, Environment and Planning B: Planning and Design, 7(2), 141-
+       162, (1980), https://doi.org/10.1068/b070141.
+
+[48]   T. Lim, A Hodge theoretic extension of Shapley axioms, (2021), https://doi.org/
+       10.48550/arXiv.2106.15094.
+
+[49]   L. Mariot, S. Picek, D. Jakobovic, M. Djurasevic and A. Leporati, On the di"culty
+       of evolving permutation codes, In: International Conference on the Applications of
+       Evolutionary Computation (Part of EvoStar). Cham: Springer International Pub-
+       lishing, p. 141-156, (2022), https://doi.org/10.1007/978-3-031-02462-7_10.
+
+[50]   J. McDermott, When and Why Metaheuristics Researchers can Ignore “No Free
+       Lunch” Theorems, SN Computer Science, 1(1), pp. 60, (2020), https://doi.org/
+       10.1007/s42979-020-0063-3.
+
+[51]   A. Moraglio, R. Poli, Geometric crossover for the permutation representation, Intel-
+       ligenza Artificiale, 5(1), 49-63, (2011), https://doi.org/10.3233/IA-2011-0004.
+
+[52]   G.D. Monek, S. Fischer, Expert twin: a digital twin with an integrated fuzzy-based
+       decision-making module, Decision Making: Applications in Management and Engi-
+       neering, 8(1), 1-21, (2025), https://doi.org/10.31181/dmame8120251181.
+
+[53]   D.C. Montgomery, Design and Analysis of Experiments, John Wiley & Sons, (2017).
+
+[54]   M.H. Nikzad, M. Heidari-Rarani, and M. Mirkhalaf, A novel Taguchi-based ap-
+       proach for optimizing neural network architectures: Application to elastic short
+       fiber composites, Composites Science and Technology 259: 110951, (2025), https:
+       //doi.org/10.1016/j.compscitech.2024.110951.
+
+[55]   M. Oltean, Searching for a Practical Evidence of the No Free Lunch Theorems,
+       In International Workshop on Biologically Inspired Approaches to Advanced Infor-
+       mation Technology (pp. 472-483). Berlin, Heidelberg: Springer Berlin Heidelberg,
+       (2004), https://doi.org/10.1007/978-3-540-27835-1_34.
+
+[56]   R. Ortner, Adaptive Algorithms for Meta-Induction, Journal for General
+       Philosophy of Science 54(3), 433-450, (2023), https://doi.org/10.1007/
+       s10838-021-09590-2.
+
+[57]   V. Parada, Automatic Generation of Algorithms, CRC Press, (2025), https://doi.
+       org/10.1201/9781003542896.
+
+[58]   S.S. Pathak, et al. Prediction of compressive strength of concrete using multi-
+       layer perception network, generalized feedforward network, principal component
+       analysis network, time lagged recurrent network, recurrent network, Asian Jour-
+       nal of Civil Engineering 26(1), 431-450, (2025), https://doi.org/10.1007/
+       s42107-024-01175-w.
+
+[59]   F. Pesarin, L. Salmaso, Permutation Tests for Complex Data: Theory, Applications,
+       and Software, John Wiley & Sons, (2010).
+
+                                            43
+[60]   O. Polushkina-Merchanskaya, et al. Considerations for missing data, outliers and
+       transformations in permutation testing for ANOVA with multivariate responses,
+       Chemometrics and Intelligent Laboratory Systems, 105320, (2025), https://doi.
+       org/10.1016/j.chemolab.2025.105320.
+
+[61]   E. Raponi, N.C. Rakotonirina, J. Rapin, C. Doerr and O. Teytaud, Optimizing
+       with low budgets: A comparison on the black-box optimization benchmarking suite
+       and openai gym, IEEE Transactions on Evolutionary Computation, vol. 29(1), pp.
+       91-101, (2025), https://doi.org/10.1109/TEVC.2023.3346788.
+
+[62]   M. Rashki, M. Faes, No-Free-Lunch Theorems for Reliability Analysis, ASCE-
+       ASME Journal of Risk and Uncertainty in Engineering Systems, Part A: Civil Engi-
+       neering, 9(3), 04023019, (2023), https://doi.org/10.1061/AJRUA6.RUENG-1015.
+
+[63]   A. Rijal, B. Waluyo, E!ectiveness of Di!erentiated Learning in Mathematics:
+       Insights from Elementary School Students, Journal of Education and Learning
+       (EduLearn) 19(1), 241-248, (2025), https://doi.org/10.11591/edulearn.v19i1.
+       21806.
+
+[64]   G.O. Roberts, S.K. Sahu, Updating schemes, correlation structure, blocking and
+       parameterization for the Gibbs sampler, Journal of the Royal Statistical Society
+       Series B: Statistical Methodology 59(2), 291-317, (1997), https://doi.org/10.
+       1111/1467-9868.00070.
+
+[65]   B. Rombaut, et al. There’s no such thing as a free lunch: Lessons learned from
+       exploring the overhead introduced by the greenkeeper dependency bot in npm, ACM
+       Transactions on Software Engineering and Methodology, 32(1), 1-40, (2023), https:
+       //doi.org/10.1145/3522587.
+
+[66]   E.C. Rosenthal, C. Trudeau, Interdependent security games in a unidirectional net-
+       work, Risk Analysis 44(6), 1430-1439, (2024), https://doi.org/10.1111/risa.
+       14234.
+
+[67]   A. Said, Introduction to arithmetic coding-theory and practice, (2023), https://
+       doi.org/10.48550/arXiv.2302.00819.
+
+[68]   V. Santucci, J. Ceberio, On the use of the Doubly Stochastic Matrix models for the
+       Quadratic Assignment Problem, Evolutionary Computation, 33(3), 425-457, (2025),
+       https://doi.org/10.1162/evco_a_00369.
+
+[69]   V. Santucci, M. Baioletti and A. Milani, An algebraic framework for swarm and evo-
+       lutionary algorithms in combinatorial optimization, Swarm and Evolutionary Com-
+       putation 55. 100673, (2020), https://doi.org/10.1016/j.swevo.2020.100673.
+
+[70]   V. Santucci, M. Baioletti and A. Milani, An algebraic di!erential evolution for
+       the linear ordering problem, In Proceedings of the Companion Publication of the
+       2015 Annual Conference on Genetic and Evolutionary Computation, pp. 1479-1480,
+       (2015), https://doi.org/10.1145/2739482.2764693.
+
+[71]   A. Schmitz, C. Schmidt-Wellenburg and J. Volle, Integrating geometric data anal-
+       ysis and network analysis by iterative reciprocal mapping. The example of the Ger-
+       man field of sociology, Poetics 108, 101-947, (2025), https://doi.org/10.1016/j.
+       poetic.2024.101947.
+
+
+
+                                           44
+[72]   C. Schumacher, M. D. Vose and L. D. Whitley, The No Free Lunch and Prob-
+       lem Description Length, In: Proceedings of the 3rd Annual Conference on Genetic
+       and Evolutionary Computation, pp. 565-570, Morgan Kaufmann Publishers Inc.,
+       Burlington, (2001).
+
+[73]   G. Sun, Tt. Li, Optimizing Logistics in Forestry Supply Chains: A Vehicle Routing
+       Problem Based on Carbon Emission Reduction, Forests 16(1), 62, (2025), https:
+       //doi.org/10.3390/f16010062.
+
+[74]   G. Schurz, Hume’s problem solved: The optimality of meta-induction, Mit Press,
+       (2019), https://doi.org/10.7551/mitpress/11964.001.0001.
+
+[75]   N. Simon, et al. Regularization paths for Cox’s proportional hazards model via coor-
+       dinate descent, Journal of Statistical Software, 39, 1-13, (2011), https://doi.org/
+       10.18637/jss.v039.i05.
+
+[76]   S.M. Soak, B.H. Ahn, New subtour-based crossover operator for the TSP,
+       In: Genetic and Evolutionary Computation Conference, Berlin, Heidelberg:
+       Springer Berlin Heidelberg, pp. 1610-1611, (2003), https://doi.org/10.1007/
+       3-540-45110-2_49.
+
+[77]   M.J. Streeter, Two broad classes of functions for which a No Free Lunch result does
+       not hold, In: Genetic and Evolutionary Computation Conference. Berlin, Heidel-
+       berg: Springer Berlin Heidelberg, 1418-1430, (2003), https://doi.org/10.1007/
+       3-540-45110-2_15.
+
+[78]   G. Sugihara, R.M. May, Nonlinear forecasting as a way of distinguishing chaos
+       from measurement error in time series, Nature, 344(6268), 734-741, (1990), https:
+       //doi.org/10.1038/344734a0.
+
+[79]   Y. Sun, G.G. Yen and Z. Yi, IGD indicator-based evolutionary algorithm for many-
+       objective optimization problems, IEEE Transactions on Evolutionary Computation,
+       23(2), pp. 173-187, (2019), https://doi.org/10.1109/TEVC.2018.2791283.
+
+[80]   S. Surjanovic, D. Bingham, Virtual library of simulation experiments: Test functions
+       and datasets, (2013), http://www.sfu.ca/{~}ssurjano/optimization.html.
+
+[81]   Y. Takane, E. J. Beh and R. Lombardo, A theory of contrasts for modified Freeman-
+       Tukey statistics and its applications to Tukey’s post-hoc tests for contingency tables,
+       Computational Statistics, 40(3), 1423-1446, (2025), https://doi.org/10.1007/
+       s00180-024-01537-7.
+
+[82]   A. Thomaser, J. De Nobel, D. Vermetten, F. Ye, T. Bäck and A. Kononova, When to
+       be Discrete: Analyzing Algorithm Performance on Discretized Continuous Problems,
+       In Proceedings of the Genetic and Evolutionary Computation Conference, pp. 856-
+       863, (2023), https://doi.org/10.1145/3583131.3590410.
+
+[83]   A. Urba%czyk, et al. (µ+ϑ) Evolution Strategy with Socio-cognitive Mutation, Jour-
+       nal of Automation, Mobile Robotics and Intelligent Systems, 18(1), pp. 1-11, (2024),
+       https://doi.org/10.14313/JAMRIS/1â!"2024/1.
+
+[84]   S. Watanabe, Recent Advances in Algebraic Geometry and Bayesian Statistics, In-
+       formation Geometry, 7 (Suppl 1), 187-209, (2024), https://doi.org/10.1007/
+       s41884-022-00083-9.
+
+
+                                             45
+[85]   D. Whitley, J. Rowe, Focused No Free Lunch Theorems. In Proceedings of the 10th
+       annual conference on Genetic and evolutionary computation, pp. 811-818, (2008),
+       https://doi.org/10.1145/1389095.1389254.
+
+[86]   D. Whitley, A genetic algorithm tutorial, Statistics and Computing, 4(2), 65-85,
+       (1994), https://doi.org/10.1007/BF00175354.
+
+[87]   D. Whitley, J.P. Watson, Complexity theory and the no free lunch theorem,
+       Search methodologies: Introductory tutorials in optimization and decision support
+       techniques, 317-339, Springer, Boston, MA, (2005), https://doi.org/10.1007/
+       0-387-28356-0_11.
+
+[88]   D.H. Wolpert, W.G. Macready, No Free Lunch Theorems for Search. Vol. 10. No.
+       12, pp. 2756-2760, Technical Report SFI-TR-95-02-010, Santa Fe Institute, (1995),
+       https://api.semanticscholar.org/CorpusID:12890367.
+
+[89]   D.H. Wolpert, W.G. Macready, No Free Lunch Theorems for Optimization, IEEE
+       Transactions on Evolutionary Computation, 1(1), 67-82, (1997), https://doi.org/
+       10.1109/4235.585893.
+
+[90]   D.H. Wolpert, What is important about the No Free Lunch Theorems?, In: Black
+       box optimization, machine learning, and No-Free Lunch Theorems. Cham: Springer
+       International Publishing, Vol. 170, 373-388, (2021), https://doi.org/10.1007/
+       978-3-030-66515-9_13.
+
+[91]   D.H. Wolpert, The implications of the No-Free-Lunch Theorems for meta-induction,
+       Journal for General Philosophy of Science 54(3), 421-432, Sringer, (2023), https:
+       //doi.org/10.1007/s10838-022-09609-2.
+
+[92]   M. Vladimirova, et al. Understanding priors in Bayesian neural networks at the unit
+       level. In: International Conference on Machine Learning, pp. 6458-6467, PMLR,
+       (2019), https://proceedings.mlr.press/v97/vladimirova19a.html.
+
+[93]   J. Voges, et al. GABAC: an arithmetic coding solution for genomic data, Bioin-
+       formatics, 36(7) 2275-2277, (2020), https://doi.org/10.1093/bioinformatics/
+       btz922.
+
+[94]   M.D. Vose, D. Whitley, No Free Lunch. In Proceedings of the 9th Annual Confer-
+       ence Companion on Genetic and Evolutionary Computation, pp. 3734-3764, (2007),
+       https://dl.acm.org/doi/10.1145/1274000.1274131.
+
+[95]   H. Xie, Hu. Kang, Schur method for robust partial quadratic eigenvalue assignment
+       problem, Computational and Applied Mathematics, 44(1), 41, (2025), https://
+       doi.org/10.1007/s40314-024-03000-1.
+
+[96]   X. Yang, et al. Meta-Black-Box optimization for evolutionary algorithms: Review
+       and perspective, Swarm and Evolutionary Computation, 93, 101838, (2025), https:
+       //doi.org/10.1016/j.swevo.2024.101838.
+
+[97]   H. Zhang, W. Shiji and W. Jieping, Automatic optimization design of laser trian-
+       gulation ranging sensors using an improved genetic algorithm, Measurement, 241,
+       115739, (2025), https://doi.org/10.1016/j.measurement.2024.115739.
+
+
+
+
+                                           46
+
