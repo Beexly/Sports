@@ -105,6 +105,9 @@ jobs:
       - name: Run Vercel skip-gate tests
         run: node --test scripts/vercel-skip-build.test.mjs
 
+      - name: Guard the mimo-xfp research record against a silent flip
+        run: node --test scripts/research/mimo-xfp/verify-record.test.mjs
+
       # §10.9: the budget acceptance run is mandatory and its evidence is
       # RETAINED — a missing artifact fails the build.
       - name: Upload budget acceptance artifact (§10.9)
