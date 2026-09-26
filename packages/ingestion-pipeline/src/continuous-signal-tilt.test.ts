@@ -32,7 +32,7 @@ function contSignal(over: Partial<SignalDefinition> = {}): SignalDefinition {
     isRightsCleared: () => true,
     acquisitionTask: null,
     blockedReason: null,
-    evaluate: () => ({ value: 1.0, capturedAt: new Date().toISOString() }),
+    evaluate: () => ({ value: 1.0, capturedAt: new Date().toISOString(), metadata: { homeSign: 1 } }),
     ...over,
   };
 }
@@ -49,7 +49,7 @@ describe("applyContinuousSignalTilt", () => {
   it("tilts away when signals are negative", async () => {
     const r = await applyContinuousSignalTilt(
       0.55,
-      [contSignal({ evaluate: () => ({ value: -1.5, capturedAt: new Date().toISOString() }) })],
+      [contSignal({ evaluate: () => ({ value: -1.5, capturedAt: new Date().toISOString(), metadata: { homeSign: 1 } }) })],
       ctx,
     );
     expect(r.applied).toBe(true);
@@ -90,8 +90,8 @@ describe("applyContinuousSignalTilt", () => {
     const r1 = await applyContinuousSignalTilt(0.55, [noRights], ctx);
     expect(r1.applied).toBe(false);
 
-    const heavy = contSignal({ trustWeight: 1.0, evaluate: () => ({ value: 2, capturedAt: new Date().toISOString() }) });
-    const light = contSignal({ trustWeight: 0.05, evaluate: () => ({ value: 2, capturedAt: new Date().toISOString() }), id: "light" });
+    const heavy = contSignal({ trustWeight: 1.0, evaluate: () => ({ value: 2, capturedAt: new Date().toISOString(), metadata: { homeSign: 1 } }) });
+    const light = contSignal({ trustWeight: 0.05, evaluate: () => ({ value: 2, capturedAt: new Date().toISOString(), metadata: { homeSign: 1 } }), id: "light" });
     const rHeavy = await applyContinuousSignalTilt(0.55, [heavy], ctx);
     const rLight = await applyContinuousSignalTilt(0.55, [light], ctx);
     expect(rHeavy.netTilt).toBeGreaterThan(rLight.netTilt);
@@ -106,5 +106,24 @@ describe("applyContinuousSignalTilt", () => {
     const r = await applyContinuousSignalTilt(0.55, [bad], ctx);
     expect(r.applied).toBe(false);
     expect(r.adjustedHomeP).toBe(0.55);
+    expect(r.refused[0]?.reason).toContain("boom");
+  });
+
+  it("does not move homeP for an unsigned scalar", async () => {
+    const r = await applyContinuousSignalTilt(
+      0.55,
+      [contSignal({ evaluate: () => ({ value: 1.0, capturedAt: new Date().toISOString() }) })],
+      ctx,
+    );
+    expect(r.applied).toBe(false);
+    expect(r.adjustedHomeP).toBe(0.55);
+    expect(r.refused[0]?.reason).toContain("unsigned");
+  });
+
+  it("does not clamp a home probability outside (0, 1)", async () => {
+    const r = await applyContinuousSignalTilt(1.4, [contSignal()], ctx);
+    expect(r.applied).toBe(false);
+    expect(r.adjustedHomeP).toBe(1.4);
+    expect(r.refused[0]?.reason).toContain("not clamped");
   });
 });

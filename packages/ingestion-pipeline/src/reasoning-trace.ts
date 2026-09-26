@@ -28,6 +28,8 @@ export interface ReasoningPremise {
   readonly readingKind: ReasoningReadingKind;
   /** Required to count, and only when readingKind is PROBABILITY. Strictly inside (0, 1). */
   readonly probability?: number;
+  /** Required for a probability to count. Two premises with different outcomes are not a blend. */
+  readonly outcome?: string;
   /** Observations behind the premise. A probability with no sample does not count. */
   readonly sampleCount?: number;
   readonly claim: string;
@@ -87,6 +89,8 @@ export interface ReasoningTrace {
    */
   readonly agreementSummary: number | null;
   readonly agreementSummaryIsPublishable: false;
+  /** How many probability premises entered the summary. 1 is not agreement. */
+  readonly sourceCount: number;
   readonly trace: readonly string[];
 }
 
@@ -124,6 +128,7 @@ function base(question: ReasoningQuestion, reason: string, conclusion: Reasoning
     conflicts: extra.conflicts ?? [],
     agreementSummary: extra.agreementSummary ?? null,
     agreementSummaryIsPublishable: false,
+    sourceCount: extra.sourceCount ?? 0,
     trace: extra.trace,
   };
 }
@@ -152,7 +157,7 @@ export function reasonAbout(question: ReasoningQuestion, premises: readonly Reas
 
   const discarded: DiscardedPremise[] = [];
   const context: string[] = [];
-  const usable: { id: string; probability: number; sampleCount: number }[] = [];
+  const usable: { id: string; probability: number; sampleCount: number; outcome: string }[] = [];
 
   for (const p of premises) {
     if (p.refused !== undefined && p.refused.length > 0) {
@@ -174,6 +179,13 @@ export function reasonAbout(question: ReasoningQuestion, premises: readonly Reas
       });
       continue;
     }
+    if (p.outcome === undefined || p.outcome.trim().length === 0) {
+      discarded.push({
+        id: p.id,
+        reason: "a probability with no named outcome does not count. It might be the other side.",
+      });
+      continue;
+    }
     if (p.sampleCount === undefined || !Number.isFinite(p.sampleCount) || p.sampleCount < 1) {
       discarded.push({
         id: p.id,
@@ -181,7 +193,7 @@ export function reasonAbout(question: ReasoningQuestion, premises: readonly Reas
       });
       continue;
     }
-    usable.push({ id: p.id, probability: p.probability, sampleCount: p.sampleCount });
+    usable.push({ id: p.id, probability: p.probability, sampleCount: p.sampleCount, outcome: p.outcome });
   }
 
   const trace: string[] = [
@@ -199,6 +211,22 @@ export function reasonAbout(question: ReasoningQuestion, premises: readonly Reas
         discarded,
         unknowns,
         contextPremises: context,
+        trace,
+      }),
+    };
+  }
+
+  const outcomes = new Set(usable.map((u) => u.outcome));
+  if (outcomes.size > 1) {
+    trace.push(`withheld: premises name ${outcomes.size} different outcomes`);
+    return {
+      ok: true,
+      data: base(question, "probability premises do not name the same outcome. They were not averaged.", "WITHHELD", {
+        discarded,
+        unknowns,
+        usedPremises: usable.map((u) => u.id),
+        contextPremises: context,
+        sourceCount: usable.length,
         trace,
       }),
     };
@@ -223,6 +251,7 @@ export function reasonAbout(question: ReasoningQuestion, premises: readonly Reas
         conflicts,
         usedPremises: usable.map((u) => u.id),
         contextPremises: context,
+        sourceCount: usable.length,
         trace,
       }),
     };
@@ -248,18 +277,25 @@ export function reasonAbout(question: ReasoningQuestion, premises: readonly Reas
     weighted += u.probability * u.sampleCount;
   }
   const summary = weighted / weight;
+  const single = usable.length === 1;
   const causal = question.interference === "NONE" ? "interference none, still not a causal claim from this trace" : `interference ${question.interference}, association only`;
   trace.push(causal);
-  trace.push(`agreement summary ${summary.toFixed(6)} from ${usable.length} premise(s), sample weight ${weight}`);
+  trace.push(
+    single
+      ? `single source ${summary.toFixed(6)}. This is not agreement.`
+      : `agreement summary ${summary.toFixed(6)} from ${usable.length} premise(s), sample weight ${weight}`,
+  );
   trace.push("association only. Not a pick. Not a book comparison.");
 
   return {
     ok: true,
     data: base(
       question,
-      question.interference === "NONE"
-        ? "premises agree. The summary is an association, not a cause and not a pick."
-        : "premises agree. Interference is not cleared, so this is an association only.",
+      single
+        ? "one probability source. Not agreement, not a cause, and not a pick."
+        : question.interference === "NONE"
+          ? "premises name the same outcome and agree. The summary is an association, not a cause and not a pick."
+          : "premises name the same outcome and agree. Interference is not cleared, so this is an association only.",
       "ASSOCIATION_ONLY",
       {
         discarded,
@@ -267,6 +303,7 @@ export function reasonAbout(question: ReasoningQuestion, premises: readonly Reas
         usedPremises: usable.map((u) => u.id),
         contextPremises: context,
         agreementSummary: summary,
+        sourceCount: usable.length,
         trace,
       },
     ),

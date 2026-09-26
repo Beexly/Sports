@@ -9,8 +9,8 @@ const question: ReasoningQuestion = {
   blockedKernels: [{ name: "glmf", reason: "Gaussian ALS on a binomial matrix, mu is the sample mean" }],
 };
 
-function prob(id: string, probability: number, sampleCount: number): ReasoningPremise {
-  return { id, readingKind: "PROBABILITY", probability, sampleCount, claim: id };
+function prob(id: string, probability: number, sampleCount: number, outcome = "home"): ReasoningPremise {
+  return { id, readingKind: "PROBABILITY", probability, sampleCount, outcome, claim: id };
 }
 
 describe("reasonAbout", () => {
@@ -30,7 +30,29 @@ describe("reasonAbout", () => {
     expect(r.data.discarded.map((d) => d.id)).toContain("wind");
     const expected = (0.62 * 200 + 0.64 * 80) / 280;
     expect(r.data.agreementSummary).toBeCloseTo(expected, 10);
+    expect(r.data.sourceCount).toBe(2);
     expect(r.data.unknowns.map((u) => u.id)).toContain("glmf");
+  });
+
+  it("does not average probabilities that name different outcomes", () => {
+    const r = reasonAbout(question, [
+      prob("home-model", 0.62, 100, "home"),
+      prob("away-model", 0.64, 100, "away"),
+    ]);
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.data.conclusion).toBe("WITHHELD");
+    expect(r.data.agreementSummary).toBeNull();
+    expect(r.data.reason).toContain("same outcome");
+  });
+
+  it("does not call one source agreement", () => {
+    const r = reasonAbout(question, [prob("only", 0.58, 40)]);
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    expect(r.data.sourceCount).toBe(1);
+    expect(r.data.reason).toContain("one probability source");
+    expect(r.data.agreementSummary).toBeCloseTo(0.58, 10);
   });
 
   it("withholds when two probabilities disagree instead of blending them", () => {
