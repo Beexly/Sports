@@ -269,14 +269,24 @@ final class DomainTests: XCTestCase {
             "https://data.example.com")
     }
 
-    func testAnEmptyPlistEntryDoesNotShadowTheDefault() {
-        XCTAssertNil(AppConfiguration.override("GSEBaseURL", in: ["app"]))
+    func testThePlistIsTheSecondLevel() {
+        // No launch argument, so this is the entry the app ships with. These
+        // tests run inside the app, so the value really is being read out of
+        // the Info.plist that will go to the simulator.
+        XCTAssertEqual(AppConfiguration.override("GSEBaseURL", in: ["app"]),
+                       "https://galaxysportsedge.com")
     }
 
-    func testATrailingFlagWithNoValueIsIgnored() {
+    func testAKeyPresentNowhereIsAbsent() {
+        XCTAssertNil(AppConfiguration.override("GSEAbsentKey", in: ["app"]))
+    }
+
+    func testATrailingFlagWithNoValueFallsBackToThePlist() {
         // `-GSEBaseURL` at the end of the list has no value. Reading past it
-        // would swallow the next argument.
-        XCTAssertNil(AppConfiguration.override("GSEBaseURL", in: ["app", "-GSEBaseURL"]))
+        // would swallow the next argument, so it is treated as unset and the
+        // normal precedence continues.
+        XCTAssertEqual(AppConfiguration.override("GSEBaseURL", in: ["app", "-GSEBaseURL"]),
+                       AppConfiguration.override("GSEBaseURL", in: ["app"]))
     }
 
     func testTheDataSourceSwitchAcceptsWhatPeopleActuallyType() {
@@ -288,9 +298,10 @@ final class DomainTests: XCTestCase {
             XCTAssertEqual(AppConfiguration.booleanOverride("GSEUseMockData", in: ["-GSEUseMockData", raw]),
                            false, "\(raw) should read as false")
         }
-        // Nonsense falls back to the product's default rather than guessing.
+        // Nonsense is not guessed at; it falls back to the default.
         XCTAssertNil(AppConfiguration.booleanOverride("GSEUseMockData", in: ["-GSEUseMockData", "maybe"]))
-        XCTAssertNil(AppConfiguration.booleanOverride("GSEUseMockData", in: ["app"]))
+        // Absent everywhere means "no opinion", so the product default stands.
+        XCTAssertNil(AppConfiguration.booleanOverride("GSEAbsentKey", in: ["app"]))
     }
 
     func testADataSourceThatIsNotAnAbsoluteURLIsRejected() {
