@@ -495,13 +495,48 @@ join hops (see wave 2).
   verified clean (exit 0).
 - **redteam branch** = this audit + all fixes. NOT pushed, NOT merged.
 
-## Next honest attacks (after wave 3)
+## WAVE 4 (owner-authorized): the confidence rewire, landed
 
-1. Split confidence into a labelled `marketEchoScore` and a pure model rank.
-2. Owner adjudicates the two `main` pushes.
-3. When grok lands its officials re-measure, reconcile the two officials
-   DARK records (A: n=269 r=+0.0274; grok: pending) into one canonical row.
-4. Register the grok lane in the coord system or sunset the board.
-5. Founder decision: narrative part's post-kickoff computability (above).
-6. Merge the red-team branch's fixes (public copy honesty, ENTRY_ODDS_MAX_ABS,
-   honest logger, manifest-driven verifier) into main after owner review.
+The owner authorized rewiring public confidence on 2026-09-27. Landed as
+`ce4e2b711` on the red-team branch:
+
+- **Both measured channels removed from every confidence sum.**
+  `edgeComponentScore` (the book's own de-vigged fair vs the offered price —
+  no model in it; it is the vig asymmetry) is out of SPREAD, TOTAL and
+  MONEYLINE. `crossMarketScore` (H2H de-vigged probability, ±4/−3) is out of
+  SPREAD. Their factor-breakdown entries survive with **weight 0** and honest
+  descriptions — the old "Pricing Edge" factor literally said *"Model
+  estimates +X% edge vs market price"*, a mislabel now corrected to a
+  market-internal comparison.
+- **Invariance is now machine-pinned.** The three `it.fails` guards in
+  `confidence-market-independence.test.ts` are plain passing `it()` tests;
+  the magnitude pin asserts **0 movement** with the historical 7-point leak
+  recorded in prose.
+- **MONEYLINE deliberately stays market-anchored** (consensus term = the
+  de-vigged win probability): for a moneyline pick that probability IS the
+  pick's substance, the publication gate is `fairProb >= 0.58`, and the
+  factor text says "Market implies a N% win probability". Documented in
+  scoring.ts; not relabeled as model opinion.
+- **Publish-set consequence, recorded:** with `MIN_PUBLISH_CONFIDENCE`
+  unchanged at 50, the removed padding tightens the board — a moneyline
+  favorite now needs de-vigged fair ≳ 0.83 absent context (was ≈ 0.68).
+  Fourteen test fixtures were strengthened to preserve intent (the Steelers
+  specimen ladder moved −350 → −800 so the withhold gate, not the floor, is
+  the veto discriminator; quoted-price/baseball/consensus/soccer/devig/
+  skellam fixtures to heavier or fuller book sets, rationale in place). No
+  assertion weakened, no floor lowered.
+- **MODEL_VERSION stays v5.2.7** — founder-frozen constant, calibration
+  table keyed to it. The repo's own law says a scoring change needs a bump
+  plus a calibration pass; the constant is not altered without the founder
+  issuing the number. **Open founder decision #1.**
+- Verification: full prediction-engine suite **847 files / 6,138 tests
+  passed**; web confidence-adjacent suites **132 passed**; tsc exit 0.
+
+## Next honest attacks (after wave 4)
+
+1. Owner adjudicates the two `main` pushes.
+2. Founder issues the post-rewire MODEL_VERSION + a calibration pass, and
+   decides whether the tightened publish bar is the intended restraint.
+3. Register the grok lane in the coord system or sunset the board.
+4. Founder decision: narrative part's post-kickoff computability.
+5. Merge the red-team branch into main after review.
