@@ -1,3 +1,5 @@
+> **2026-09-27 bucket reorg:** this directory was split into buckets. See `docs/MOVED.md` for the full map: `dossiers/` -> `docs/data-sources/research/2026-09-17/dossiers/`, `props-consensus/` -> `docs/props/research/2026-09-17/props-consensus/`, `statrankings/` -> `docs/fantasy/research/2026-09-17/statrankings/`, `gse-lab/` -> `docs/engine/research/2026-09-17/gse-lab/`, `edge-sheet/` -> `docs/predictions/research/2026-09-17/edge-sheet/`, `full-tables/` -> `docs/dfs/research/2026-09-17/full-tables/`.
+
 # GSE Research Library — 2026-09-17
 
 Everything Motif's lab produced or collected on 2026-09-17, filed so every

@@ -4,6 +4,27 @@ Auto-loaded by Grok Build, Codex, and Copilot at workspace root; Claude Code loa
 
 ---
 
+## DOCS BUCKETS — where research lives (2026-09-27 reorg)
+
+`docs/research/<date>/` is retired as a dumping ground. Every bucket owns its
+research. Full map: `docs/INDEX.md`. Every old path: `docs/MOVED.md`.
+
+| Bucket | Holds | Research inbox |
+|---|---|---|
+| `docs/dfs/` | DK/FanDuel: optimizer notes, slates, GPP construction, pick'em, weekly packets | `docs/dfs/research/<YYYY-MM-DD>/` |
+| `docs/predictions/` | Game picks (ML/spread/total): pipeline, markets, evals, calibration | `docs/predictions/research/<YYYY-MM-DD>/` |
+| `docs/props/` | Player props + pick'em: consensus, reverse-engineering, prompt packs | `docs/props/research/<YYYY-MM-DD>/` |
+| `docs/fantasy/` | Season-long: projections, rankings, splits, stat tables | `docs/fantasy/research/<YYYY-MM-DD>/` |
+| `docs/engine/` | The machine: architecture, wiring specs, calibration, ML, cept/ theory | `docs/engine/research/<YYYY-MM-DD>/` |
+| `docs/data-sources/` | Every feed: nflverse, NGS, FTN, Sleeper, Odds API, dossiers, strategy | `docs/data-sources/research/<YYYY-MM-DD>/` |
+| `docs/arxiv-program/` | The 1,000-valuable-papers corpus (target 750) | `docs/arxiv-program/research/<YYYY-MM-DD>/` |
+
+**Filing rule:** new research goes in `<bucket>/research/<YYYY-MM-DD>/` — dated,
+always. Never at a bucket root, never in `docs/research/`, never in a new
+top-level folder. Bucket by main topic; if none fits, closest bucket + say so
+in the commit message.
+
+
 **UPDATED 2026-09-13 (Motif — game-day calibration pass + v5.3.0 spec).** Founder ordered a full
 review/rebuild of the prediction engine ("extremely in depth", "trust no claims", ship direct to
 prod — NO shadow period, founder override: "we're way too far behind"). Three agents are building;
