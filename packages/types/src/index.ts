@@ -419,6 +419,12 @@ export interface GameContextInput {
   // are async I/O) so the PURE, synchronous scorer can run the edge engine
   // against them. Home/away perspective. Absent → scorer is unchanged.
   independentFairValues?: IndependentMarketFairValue[];
+  /**
+   * Settled forecast/outcome rows for this market family. The scorer may only
+   * withhold on them. Absent or empty does not vote, so a pick with no history
+   * publishes exactly as before. A history the screen cannot read withholds.
+   */
+  calibrationHistory?: CalibrationHistoryRow[];
   // Totals side-selection tie-break (Wave 5 proposal — NOT yet the default).
   // "strict": only books whose over/under prices DISCRIMINATE
   // (overPrice !== underPrice) count as consensus votes; equal-juice books
@@ -426,6 +432,14 @@ export interface GameContextInput {
   // `overPrice <= underPrice` rule, under which the standard -110/-110 quote
   // counts as an OVER vote at every book.
   totalsTiebreak?: "legacy" | "strict";
+}
+
+/** One settled forecast. `path` is the order the screen splits. `y` is the outcome. */
+export interface CalibrationHistoryRow {
+  readonly p: number;
+  readonly y: 0 | 1;
+  readonly stratum: string;
+  readonly path: number;
 }
 
 /**

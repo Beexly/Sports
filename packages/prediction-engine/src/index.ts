@@ -33,6 +33,10 @@ export {
 export type { GameContextInput, GameContextScores, AtsFormBucket } from "./game-context.js";
 export { calculatePickResult, selectGradingLine, selectionIsHomeSide } from "./settlement.js";
 export type { SettlementResult } from "./settlement.js";
+// Mint-time calibration history builder — pure mapper from settled picks to
+// CalibrationHistoryRow[] for calibrationHistoryWithholds. Fail-open on absence.
+export { buildCalibrationHistory } from "./calibration/build-calibration-history.js";
+export type { SettledPickHistorySource } from "./calibration/build-calibration-history.js";
 // The published-line rule: the customer-visible / locked / graded handicap is the
 // nearest line a book actually posted, never the raw consensus mean (which makes
 // PUSH structurally unreachable for spreads and totals). See published-line.ts.
