@@ -992,6 +992,41 @@ export type {
 export { composeLedger, ledgerAgeDays } from "./signal-ledger.js";
 export type { LedgerSignalRow, ComposeLedgerOptions } from "./signal-ledger.js";
 
+// The PRODUCER side of the ledger, and the weight tuner that scores it against
+// settled outcomes. #924 shipped both modules but exported neither, so they were
+// unreachable from outside this package; `signal-ledger-sources` is the adapter
+// that reads the four populated entity tables into candidates. All three stay
+// read-only and none is wired into the published score.
+export {
+  buildCandidate,
+  categoryPrior,
+  normalizeReading,
+  CATEGORY_PRIORS,
+} from "./signal-ledger-populator.js";
+export type {
+  LedgerCandidate,
+  CandidateSourceRow,
+  EntityType,
+} from "./signal-ledger-populator.js";
+export {
+  projectPlayerGameStats,
+  projectSnapCounts,
+  projectNextGenStats,
+  projectInjuries,
+  projectAllSources,
+  explainProjection,
+} from "./signal-ledger-sources.js";
+export type {
+  AnchorTable,
+  SignalAnchor,
+  PlayerGameStatRow,
+  SnapCountRow,
+  NextGenStatRow,
+  InjuryRow,
+} from "./signal-ledger-sources.js";
+export { pointBiserial, correlationToMultiplier, tuneSignalWeights, MIN_SAMPLES } from "./tune-signal-weights.js";
+export type { KeyOutcome, TunedWeight } from "./tune-signal-weights.js";
+
 // Player usage archetype (receiving lean / workload) from rushing/receiving usage.
 export { classifyUsageProfile } from "./player-archetype.js";
 export type { UsageProfileInput, UsageProfile, WorkloadTier } from "./player-archetype.js";
