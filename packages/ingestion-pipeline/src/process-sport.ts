@@ -90,6 +90,7 @@ import { eventOddsId, toPropLineSnapshotRows, type PropEventLike } from "./prop-
 import { capturePinnacleLineSnapshotsIfEnabled } from "./pinnacle-line-archive.js";
 import { bookLineDispersion } from "./book-dispersion.js";
 import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
+import { loadCalibrationHistoryForSport } from "./load-calibration-history.js";
 import {
   RUNDOWN_RATE_LIMIT_COOLDOWN_MS,
   isRundownCoolingDown,
@@ -956,6 +957,10 @@ export async function processSport(
     // Elo ratings fitted once per sport/day within this cycle (no fabricated ratings).
     const eloCache: EloRatingsCache = new Map();
 
+    // Settled pick history for the mint-time calibration blind-spot screen.
+    // Loaded once per sport; fail-open — undefined is silence, never a veto.
+    const calibrationHistory = await loadCalibrationHistoryForSport(sport.key);
+
     // gameId -> per-kind book-line dispersion at lock, filled in the game loop
     // and read at pick creation (a separate loop over scoredPicks below).
     // MONEYLINE is stored per side (home/away are not complementary).
@@ -1191,6 +1196,9 @@ export async function processSport(
         shadowEvidence: buildMissingContextEvidence(fetchedAt),
         ...(independentFairValues.length > 0
           ? { independentFairValues }
+          : {}),
+        ...(calibrationHistory && calibrationHistory.length > 0
+          ? { calibrationHistory }
           : {}),
       };
 
