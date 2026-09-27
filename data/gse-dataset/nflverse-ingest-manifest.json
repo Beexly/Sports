@@ -1,0 +1,92 @@
+{
+  "generated_at": "2026-09-27T03:33:03.197Z",
+  "package": "@nflverse/nflreadts",
+  "seasons": [
+    2024,
+    2025
+  ],
+  "publishes_pick": false,
+  "pbp_probe": {
+    "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2024.csv.gz",
+    "present": {
+      "go_wp": false,
+      "punt_wp": false,
+      "fg_wp": false
+    }
+  },
+  "datasets": [
+    {
+      "name": "contracts",
+      "loader": "loadContracts",
+      "path": "data/gse-dataset/contracts.jsonl",
+      "read": 52959,
+      "kept": 11550,
+      "refused": {
+        "outside_window": 37858,
+        "missing_gsis_id": 3551
+      },
+      "note": "OverTheCap historical contracts via nflverse. Kept when gsis_id is present and the signed term covers 2024 or 2025. years null is not given a guessed length.",
+      "rows": 11550,
+      "sha256": "badc5992543c91f46f855a0696c868767110dfd424b915286327967f8c98df06",
+      "bytes": 1793445,
+      "zero_refusals": false
+    },
+    {
+      "name": "rosters",
+      "loader": "loadRosters + loadRostersWeekly",
+      "path": "data/gse-dataset/rosters.jsonl",
+      "read": 99781,
+      "kept": 99740,
+      "refused": {
+        "missing_gsis_id": 41
+      },
+      "note": "Season rows and weekly rows share the file. roster_level tells them apart. A blank gsis_id is refused.",
+      "rows": 99740,
+      "sha256": "26d575409700c4273abb4c8c7c1e788b0fe3d832276cc73a9acde593e96afaf2",
+      "bytes": 20872178,
+      "zero_refusals": false
+    },
+    {
+      "name": "snap-counts",
+      "loader": "loadSnapCounts",
+      "path": "data/gse-dataset/snap-counts.jsonl",
+      "read": 53228,
+      "kept": 53228,
+      "refused": {},
+      "note": "This release has game_id and pfr_player_id. It has no gsis_id column, so none was added.",
+      "rows": 53228,
+      "sha256": "ac52ddceba431699640975c274835b3303cdff3e94707b4628df72f0f51fe39c",
+      "bytes": 12270533,
+      "zero_refusals": true
+    },
+    {
+      "name": "participation",
+      "loader": "loadParticipation",
+      "path": "data/gse-dataset/participation.jsonl",
+      "read": 91103,
+      "kept": 91103,
+      "refused": {},
+      "note": "2023 and later is FTN Data via nflverse, CC-BY-SA 4.0. players_on_field is players_on_play split on commas, else offense_players plus defense_players. Blank cells stay null (0 kept rows). Internal storage. Not a commercial display. keys: defenders_in_box,defense_coverage_type,defense_man_zone_type,defense_names,defense_numbers,defense_personnel,defense_players,defense_positions,n_defense,n_offense,nflverse_game_id,ngs_air_yards,number_of_pass_rushers,offense_formation,offense_names,offense_numbers,offense_personnel,offense_players,offense_positions,old_game_id,play_id,players_on_play,possession_team,route,time_to_throw,was_pressure",
+      "rows": 91103,
+      "sha256": "8762b5b4806ede2bdf861578c149551c1b4fe9f4a8f9658b8dbe819add2b712b",
+      "bytes": 55997774,
+      "zero_refusals": true
+    },
+    {
+      "name": "fourth-down",
+      "loader": "nfl4th pre_computed_go_boost RDS",
+      "path": "data/gse-dataset/fourth-down.jsonl",
+      "read": 8465,
+      "kept": 8465,
+      "refused": {
+        "missing_game_id": 0,
+        "missing_play_id": 0
+      },
+      "note": "play_by_play_2024.csv.gz columns go_wp=false punt_wp=false fg_wp=false. The model was not ported. Rows are the published pre_computed_go_boost RDS for 2024 and 2025.",
+      "rows": 8465,
+      "sha256": "ef451ac5e7863a66aeca5de46c37caaaa6958f24f3ba6589a86243cb49284da7",
+      "bytes": 1172393,
+      "zero_refusals": true
+    }
+  ]
+}
