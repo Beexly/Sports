@@ -1,0 +1,45 @@
+{
+  "ablation": {
+    "raw": {
+      "formula_min": 0.5818,
+      "min(b,c)": 0.4398,
+      "max(b,c)": 0.4726,
+      "b alone": 0.43,
+      "c alone": 0.5077,
+      "(b+c)/2": 0.4598,
+      "c-b (smooth, no kink)": 0.6039,
+      "|c-b|": 0.5473
+    },
+    "refit": {
+      "formula_min": 0.5818,
+      "min(b,c)": 0.5602,
+      "max(b,c)": 0.4726,
+      "b alone": 0.57,
+      "c alone": 0.5077,
+      "(b+c)/2": 0.5402,
+      "c-b (smooth, no kink)": 0.6039,
+      "|c-b|": 0.5473
+    },
+    "hgb": 0.6268,
+    "margin_vs_best_alt": -0.0437,
+    "prediction_pass": false,
+    "kink_vs_smooth": -0.0437
+  },
+  "boundary": {
+    "goal_line_c_binds_grid": 1.0,
+    "own_terr_c_binds_grid": 0.0,
+    "midfield_c_binds_grid": 0.16,
+    "goal_line_c_binds_observed": 1.0,
+    "own_terr_c_binds_observed": 0.0,
+    "boundary_line": "yl = 4.5*ytg + 29.25",
+    "matches_spec": true
+  },
+  "cross_era": {
+    "refit_auc": 0.5927,
+    "raw_auc": 0.5927,
+    "hgb_auc": 0.6334,
+    "prediction_pass": true,
+    "killed": false
+  },
+  "verdict": "DIE"
+}

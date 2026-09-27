@@ -1,0 +1,72 @@
+{
+  "baselines": {
+    "B1_train_mean": -0.0,
+    "B2_human_heuristic": -0.2755,
+    "B3_GLI_calibrated": 0.0037,
+    "B3_GLI_raw_uncalibrated": -17.6215,
+    "B3_affine_a": 0.026280650083582994,
+    "B3_affine_b": -0.0949195275767873,
+    "B4_HGB_ceiling": 0.2168
+  },
+  "best": {
+    "seed": 42,
+    "test_r2": 0.0157,
+    "length": 4,
+    "program": "mul(-0.211, abs(X3))",
+    "time_term": {
+      "in_program": false,
+      "swing_rel_pct": 0.0,
+      "retained": false,
+      "is_constant": false
+    },
+    "gen0_implied_train_r2": null
+  },
+  "replication": {
+    "seed": 42,
+    "test_r2": 0.0183,
+    "length": 4,
+    "program": "mul(-0.211, abs(X3))",
+    "time_term": {
+      "in_program": false,
+      "swing_rel_pct": 0.0,
+      "retained": false,
+      "is_constant": false
+    },
+    "gen0_implied_train_r2": null
+  },
+  "shuffled": {
+    "seed": 42,
+    "test_r2": -0.0463,
+    "program": "-0.211",
+    "length": 1
+  },
+  "criteria": {
+    "c1_R2_gt_0.05": [
+      false,
+      0.0157
+    ],
+    "c2_beats_B2_by_0.02": [
+      true,
+      0.2912
+    ],
+    "c3_replicates_gt_0.03": [
+      false,
+      0.0183
+    ],
+    "c4_time_term_retained": [
+      false,
+      {
+        "in_program": false,
+        "swing_rel_pct": 0.0,
+        "retained": false,
+        "is_constant": false
+      }
+    ],
+    "c5_shuffled_le_0.05": [
+      true,
+      -0.0463
+    ]
+  },
+  "falsified": true,
+  "all_pass": false
+}
