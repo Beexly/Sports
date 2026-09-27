@@ -13,4 +13,6 @@ NGS summary tables from nflverse (passing, rushing, receiving) through 2026 week
 | YAC over expected | 255 | +0.171 | LIVE |
 | special teams EPA | 272 | +0.054 | stored, unused |
 
-The 2025 r values are same-season associations, not a week-lagged walk-forward. They decide what is allowed to move week 3. They are not a claim that NGS beats the close.
+The 2025 r values are same-season associations, not a week-lagged walk-forward. They decide what is allowed to inform week 3. They are not a claim that NGS beats the close.
+
+Doctrine: Next Gen summary tables are ingested to learn. They are not stolen commercial feeds. Raw RFID tracking, PFF grades, and SIS charting stay out. NGS may move on-field efficiency by at most 0.15 of that family's signed value. It cannot replace the opponent-adjusted EPA blend and it cannot decide the game.

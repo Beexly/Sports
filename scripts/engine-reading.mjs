@@ -78,13 +78,13 @@ for (const context of contexts) {
   );
   const splitRow = split.get(context.game_id);
   const ngsRow = ngs.get(context.game_id);
+  const ngsHelper = ngsRow && typeof ngsRow.ngs_st_signed === "number" ? ngsRow.ngs_st_signed : null;
   const efficiency = (() => {
     const base = splitRow ? splitRow.efficiency_signed : null;
-    const extra = ngsRow ? ngsRow.ngs_st_signed : null;
-    if (typeof base === "number" && typeof extra === "number") return clip(0.7 * base + 0.3 * extra);
-    if (typeof base === "number") return base;
-    if (typeof extra === "number") return extra;
-    return null;
+    if (typeof base === "number" && typeof ngsHelper === "number") {
+      return clip(base + 0.15 * ngsHelper);
+    }
+    return typeof base === "number" ? base : null;
   })();
   const availability = clip((context.away.injuries.out.length - context.home.injuries.out.length) / 6);
   const rest = game && typeof game.rest_diff === "number" ? clip((game.rest_diff * REST_SLOPE) / MARGIN_SCALE) : null;
@@ -132,6 +132,8 @@ for (const context of contexts) {
     roof: game ? game.roof : null,
     surface: game ? game.surface : null,
     rest_diff: game ? game.rest_diff : null,
+    ngs_helper_signed: ngsHelper,
+    ngs_helper_role: "informs on_field_efficiency by at most 0.15. not the deciding factor. nflverse summary tables only. no raw tracking. no PFF. no SIS.",
     elo: elo.get(context.game_id) ?? null,
     market_devig_is_context_only: true,
     engine_edge: reading.engineEdge.value,

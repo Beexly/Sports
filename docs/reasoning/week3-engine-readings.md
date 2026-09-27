@@ -30,29 +30,29 @@ Dark share by design: 0.20. Those families are named so they are not forgotten. 
 
 | game | edge | coverage | dark | rest | roof | referee |
 |---|---:|---:|---:|---:|---|---|
-| ATL at GB | 0.104 | 0.67 | 0.25 | 0 | outdoors | Shawn Smith |
-| ARI at SF | 0.086 | 0.68 | 0.24 | 0 | outdoors |  |
-| BAL at DAL | -0.023 | 0.68 | 0.24 | 0 |  |  |
-| CAR at CLE | 0.022 | 0.68 | 0.24 | 0 | outdoors |  |
-| CIN at PIT | -0.007 | 0.68 | 0.24 | 0 | outdoors |  |
-| HOU at IND | 0.055 | 0.68 | 0.24 | 0 |  |  |
-| KC at MIA | -0.135 | 0.68 | 0.24 | 0 | outdoors |  |
-| LAC at BUF | 0.260 | 0.68 | 0.24 | 3 | outdoors |  |
+| ATL at GB | 0.122 | 0.67 | 0.25 | 0 | outdoors | Shawn Smith |
+| ARI at SF | 0.105 | 0.68 | 0.24 | 0 | outdoors |  |
+| BAL at DAL | -0.021 | 0.68 | 0.24 | 0 |  |  |
+| CAR at CLE | 0.009 | 0.68 | 0.24 | 0 | outdoors |  |
+| CIN at PIT | -0.023 | 0.68 | 0.24 | 0 | outdoors |  |
+| HOU at IND | 0.062 | 0.68 | 0.24 | 0 |  |  |
+| KC at MIA | -0.155 | 0.68 | 0.24 | 0 | outdoors |  |
+| LAC at BUF | 0.287 | 0.68 | 0.24 | 3 | outdoors |  |
 | LA at DEN | 0.019 | 0.68 | 0.24 | 1 | outdoors |  |
-| LV at NO | 0.057 | 0.68 | 0.24 | 0 | dome |  |
-| MIN at TB | 0.057 | 0.68 | 0.24 | 0 | outdoors |  |
-| NE at JAX | 0.065 | 0.68 | 0.24 | 0 | outdoors |  |
-| NYJ at DET | 0.189 | 0.68 | 0.24 | 3 | dome |  |
-| SEA at WAS | -0.141 | 0.68 | 0.24 | 0 | outdoors |  |
-| TEN at NYG | -0.031 | 0.68 | 0.24 | -1 | outdoors |  |
-| PHI at CHI | -0.023 | 0.68 | 0.24 | 0 | outdoors |  |
+| LV at NO | 0.073 | 0.68 | 0.24 | 0 | dome |  |
+| MIN at TB | 0.067 | 0.68 | 0.24 | 0 | outdoors |  |
+| NE at JAX | 0.087 | 0.68 | 0.24 | 0 | outdoors |  |
+| NYJ at DET | 0.195 | 0.68 | 0.24 | 3 | dome |  |
+| SEA at WAS | -0.146 | 0.68 | 0.24 | 0 | outdoors |  |
+| TEN at NYG | -0.032 | 0.68 | 0.24 | -1 | outdoors |  |
+| PHI at CHI | -0.015 | 0.68 | 0.24 | 0 | outdoors |  |
 
 
 LAC at BUF, the edge taken apart. The parts sum to the edge.
 
 | signal | signed | points in the edge |
 |---|---:|---:|
-| on_field_efficiency | 0.809 | 0.113 |
+| on_field_efficiency | 1.000 | 0.140 |
 | scheme_play_design | -0.094 | -0.011 |
 | availability | 0.667 | 0.080 |
 | schedule_and_body | 0.088 | 0.007 |
