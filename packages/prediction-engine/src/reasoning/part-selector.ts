@@ -91,12 +91,19 @@ export function selectPart(candidate: PartCandidate, representatives: readonly s
   const f1: 0 | 1 = honestyCleared(candidate) ? 0 : 1;
   const f2: 0 | 1 = duplicated ? 1 : 0;
   const f3: 0 | 1 = candidate.has_row ? 0 : 1;
+  // Named rather than indexed. `scores` is a fixed three-element literal, but
+  // noUncheckedIndexedAccess types both `scores[0]` and array destructuring as
+  // possibly undefined. The three products and the Math.max are unchanged; only
+  // the lookup is spelled so the compiler can prove it.
+  const f1Score = PART_LAMBDA.f1 * f1;
+  const f2Score = PART_LAMBDA.f2 * f2;
+  const f3Score = PART_LAMBDA.f3 * f3;
   const scores = [
-    { term: "f1" as const, score: PART_LAMBDA.f1 * f1 },
-    { term: "f2" as const, score: PART_LAMBDA.f2 * f2 },
-    { term: "f3" as const, score: PART_LAMBDA.f3 * f3 },
+    { term: "f1" as const, score: f1Score },
+    { term: "f2" as const, score: f2Score },
+    { term: "f3" as const, score: f3Score },
   ];
-  const g = Math.max(scores[0].score, scores[1].score, scores[2].score);
+  const g = Math.max(f1Score, f2Score, f3Score);
   const winning = scores
     .filter((term) => term.score === g && term.score > 0)
     .sort((a, b) => (a.term < b.term ? -1 : 1))[0];
