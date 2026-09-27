@@ -272,8 +272,8 @@ image column to the blog route. Both are backend work, not client work.
 
 ## 5. Tests
 
-118 test methods, 1,672 lines, 7 files, in a real `XCTest` target that CI runs
-on a simulator.
+125 test methods, 1,779 lines, 7 files, in a real `XCTest` target that CI runs
+on a simulator. All 125 pass.
 
 | File | What it pins |
 |---|---|
