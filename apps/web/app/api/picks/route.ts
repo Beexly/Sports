@@ -10,6 +10,7 @@ import { gameInSlateWindow, resolveSlateWindow } from "@/lib/picks/slate-window"
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
 import {
   enrichPickWithIntelligence,
+  projectPickIntelligenceForViewer,
   universalSignalsFromPick,
 } from "@/lib/picks/intelligence-enrichment";
 import {
@@ -18,7 +19,6 @@ import {
 } from "@/lib/data-reliability/public-freshness-gate";
 import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-publish-runtime";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
-import { teaserForViewer } from "@/lib/picks/teaser-text";
 import { displaySelection } from "@/lib/picks/display-selection";
 import { resolveMarketImplied, resolveWinProbability } from "@/lib/picks/market-implied-display";
 import { publicEdgeScore } from "@/lib/picks/public-edge-score";
@@ -29,11 +29,14 @@ import { dropAdverseEdgePicks } from "@/lib/picks/adverse-edge-suppression";
 import { clientIp } from "@/lib/api/rate-limit";
 import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
 import {
-  bindPublicConsensusClaim,
   consensusEvidenceCaption,
-  isBookmakerConsensusClaim,
   type PublicConsensusPick,
 } from "@/lib/claims/public-consensus-claim";
+import {
+  consensusSliceFromResolved,
+  loadPublishTimeConsensusByPickId,
+} from "@/lib/claims/load-publish-time-consensus";
+import { projectPublicConsensusReasoning } from "@/lib/claims/project-public-consensus-reasoning";
 
 export const dynamic = "force-dynamic";
 
@@ -242,33 +245,17 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       ? rankedPicks.slice(0, entitlements.dailyPickLimit)
       : rankedPicks;
 
-  const consensusProviderByRun = new Map<string, string>();
-  const ingestionRunIds = limitedPicks
-    .map((pick) => pick.ingestionRunId)
-    .filter((id): id is string => Boolean(id));
-  if (
-    ingestionRunIds.length > 0 &&
-    typeof db.ingestionRun?.findMany === "function"
-  ) {
-    const runs = await db.ingestionRun
-      .findMany({
-        where: { id: { in: ingestionRunIds } },
-        select: {
-          id: true,
-          sourceSnapshots: {
-            where: { sourceKind: "ODDS_EVENTS" },
-            orderBy: { fetchedAt: "desc" },
-            take: 1,
-            select: { provider: true },
-          },
-        },
-      })
-      .catch(() => []);
-    for (const run of runs) {
-      const provider = run.sourceSnapshots[0]?.provider;
-      if (provider) consensusProviderByRun.set(run.id, provider);
-    }
-  }
+  // Shared mint-time book-set loader (same path as preview/dashboard — #901 IMPROVE).
+  const consensusResolvedByPick = await loadPublishTimeConsensusByPickId(
+    limitedPicks.map((pick) => ({
+      id: pick.id,
+      gameId: pick.gameId,
+      pickType: pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
+      generatedAt: pick.generatedAt,
+      bookmakerCount: pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount,
+      ingestionRunId: pick.ingestionRunId ?? null,
+    })),
+  );
 
   // Thread 2: honest calibrated confidence. Built once (memoised) and only when
   // the audited calibrator is on; the calibrator is self-suppressing if the
@@ -309,30 +296,23 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     // cycle). Reading the pill from the live column while the percentage read
     // the snapshot let a transient feed gap render the pill beside a percentage.
     const bookmakerCount = pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount;
-    const consensusProvider = pick.ingestionRunId
-      ? consensusProviderByRun.get(pick.ingestionRunId) ?? null
-      : null;
-    const consensusSlice = {
+    const mint = consensusResolvedByPick.get(pick.id) ?? null;
+    const consensusSlice = consensusSliceFromResolved(mint, {
       consensusPct: pick.consensusPct,
       bookmakerCount,
       dataFreshnessAt: pick.dataFreshnessAt,
-      consensusProvider,
-    };
-    const projectReasoning = (text: string) => {
-      const source = text.trim();
-      if (!source) return { text: null, bound: null };
-      const bound = bindPublicConsensusClaim({
-        ...consensusSlice,
-        reasoningShort: source,
-      }, now);
-      if (isBookmakerConsensusClaim(source) && !bound) {
-        return { text: null, bound: null };
-      }
-      return {
-        text: teaserForViewer(source, entitlements.canSeeConfidence),
-        bound,
-      };
-    };
+    });
+    const consensusProvider = consensusSlice.consensusProvider;
+    // Full reasoning and reasoningShort are gated independently via the shared
+    // fail-closed projector (same path as preview/dashboard). The first
+    // consensus claim in a full explanation is enough to withhold that whole
+    // field, even if the rest contains no other market phrase.
+    const projectReasoning = (text: string) =>
+      projectPublicConsensusReasoning(text, consensusSlice, {
+        scrubConfidence: true,
+        canSeeConfidence: entitlements.canSeeConfidence,
+        now,
+      });
     const shortReasoning = projectReasoning(pick.reasoningShort);
     const reasoningSource = entitlements.canSeeFactorBreakdown
       ? pick.reasoning
@@ -415,9 +395,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       // inside the teaser (lib/picks/teaser-text.ts).
       reasoning: projectedReasoning.text,
       reasoningShort: shortReasoning.text,
-      consensusPct: pick.consensusPct,
+      // Unbound mint-time book set → withhold consensusPct (#901 IMPROVE).
+      consensusPct: consensusBound ? pick.consensusPct : null,
       bookmakerCount,
       consensusProvider,
+      consensusSourceId: consensusBound?.consensusSourceId ?? null,
+      consensusBooks: consensusBound?.consensusBooks ?? null,
+      consensusBookSetId: consensusBound?.consensusBookSetId ?? null,
+      consensusCapturedAt: consensusBound?.consensusCapturedAt ?? null,
       consensusEvidence: consensusBound
         ? consensusEvidenceCaption(consensusBound)
         : null,
@@ -436,7 +421,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         try {
           const pickForIntel = {
             id: pick.id,
-            selection: pick.selection,
+            // Same stripped selection the public payload ships (no "(model signal)" marker).
+            selection: displaySelection(pick.selection),
             pickType: pick.pickType,
             confidence: pick.confidence,
             reasoning: pick.reasoning,
@@ -453,10 +439,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
             modelVersion: pick.modelVersion,
             pickGrade: pick.pickGrade,
           };
-          return enrichPickWithIntelligence(
+          const raw = enrichPickWithIntelligence(
             pickForIntel,
             new Date(),
             universalSignalsFromPick(pickForIntel),
+          );
+          // FREE: numeric spine only — no percent-formatted model prose /
+          // "(model signal)" leak in intelligence.summary or sixQuestions.
+          return projectPickIntelligenceForViewer(
+            raw,
+            entitlements.canSeeConfidence,
           );
         } catch {
           return null;
