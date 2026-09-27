@@ -110,12 +110,12 @@ export function fitBridge(rows: readonly { features: Readonly<Record<BridgeFeatu
     scale[feature] = sd;
   }
 
-  const x = rows.map((row) => [1, ...BRIDGE_FEATURES.map((feature) => (row.features[feature] - center[feature]) / scale[feature])]);
-  const y = rows.map((row) => (row.homeWin ? 1 : 0));
+function iterate(x: number[][], y: number[], center: Record<BridgeFeature, number>, scale: Record<BridgeFeature, number>, ridge: number): BridgeOutcome<BridgeModel> {
   const width = BRIDGE_FEATURES.length + 1;
   let beta = new Array<number>(width).fill(0);
-  let converged = false;
-  for (let iter = 0; iter < 80; iter++) {
+  let best = beta;
+  let bestDelta = Number.POSITIVE_INFINITY;
+  for (let iter = 0; iter < 200; iter++) {
     const mu = x.map((row) => sigmoid(row.reduce((sum, value, i) => sum + value * beta[i]!, 0)));
     const xtwx = Array.from({ length: width }, () => new Array<number>(width).fill(0));
     const xtwz = new Array<number>(width).fill(0);
@@ -129,18 +129,22 @@ export function fitBridge(rows: readonly { features: Readonly<Record<BridgeFeatu
         for (let b = 0; b < width; b++) xtwx[a]![b] = xtwx[a]![b]! + x[i]![a]! * w * x[i]![b]!;
       }
     }
-    for (let a = 0; a < width; a++) xtwx[a]![a] = xtwx[a]![a]! + NUMERICAL_RIDGE;
+    for (let a = 0; a < width; a++) xtwx[a]![a] = xtwx[a]![a]! + ridge;
     const next = solve(xtwx, xtwz);
     if (!next || next.some((value) => !Number.isFinite(value))) return fail("bridge fit: the weighted solve failed");
     const delta = next.reduce((sum, value, i) => sum + Math.abs(value - beta[i]!), 0);
     beta = next;
-    if (delta < 1e-8) {
-      converged = true;
-      break;
+    if (delta < bestDelta) {
+      bestDelta = delta;
+      best = next;
     }
+    if (delta < 1e-6) return modelFrom(best, y.length, center, scale);
   }
-  if (!converged) return fail("bridge fit: did not converge");
+  if (bestDelta < 1e-3) return modelFrom(best, y.length, center, scale);
+  return fail(`bridge fit: did not converge (delta ${bestDelta})`);
+}
 
+function modelFrom(beta: number[], sampleCount: number, center: Record<BridgeFeature, number>, scale: Record<BridgeFeature, number>): BridgeOutcome<BridgeModel> {
   const coefficients = {} as Record<BridgeFeature, number>;
   const homeSign = {} as Record<BridgeFeature, -1 | 0 | 1>;
   BRIDGE_FEATURES.forEach((feature, index) => {
@@ -151,7 +155,7 @@ export function fitBridge(rows: readonly { features: Readonly<Record<BridgeFeatu
     ok: true,
     data: {
       method: "logistic-irls",
-      sampleCount: rows.length,
+      sampleCount,
       features: BRIDGE_FEATURES,
       intercept: beta[0]!,
       coefficients,
@@ -160,6 +164,13 @@ export function fitBridge(rows: readonly { features: Readonly<Record<BridgeFeatu
       homeSign,
     },
   };
+}
+
+  const x = rows.map((row) => [1, ...BRIDGE_FEATURES.map((feature) => (row.features[feature] - center[feature]) / scale[feature])]);
+  const y = rows.map((row) => (row.homeWin ? 1 : 0));
+  const first = iterate(x, y, center, scale, NUMERICAL_RIDGE);
+  if (first.ok) return first;
+  return iterate(x, y, center, scale, 1e-3);
 }
 
 export function predictBridge(model: BridgeModel, features: Readonly<Record<BridgeFeature, number>>): BridgeOutcome<BridgePrediction> {

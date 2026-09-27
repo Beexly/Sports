@@ -17,7 +17,7 @@ function trailingMean(source, end, window) {
   return mean(source.slice(Math.max(0, end - window), end));
 }
 
-function buildFeatures(games) {
+export function buildFeatures(games) {
   const ordered = [...games].sort((a, b) => (a.gameday < b.gameday ? -1 : a.gameday > b.gameday ? 1 : a.game_id < b.game_id ? -1 : 1));
   const appearances = [];
   const byTeam = new Map();
@@ -109,7 +109,7 @@ function americanToRaw(ml) {
   return ml > 0 ? 100 / (ml + 100) : -ml / (-ml + 100);
 }
 
-function featuresOf(row) {
+export function featuresOf(row) {
   const need = [
     "home_margin_avg", "away_margin_avg", "home_pts_scored_avg", "away_pts_scored_avg",
     "home_pts_allowed_avg", "away_pts_allowed_avg", "home_opp_adj_pts_scored", "away_opp_adj_pts_scored",
@@ -131,7 +131,8 @@ function featuresOf(row) {
   };
 }
 
-const games = readJsonl("data/gse-dataset/games.jsonl");
+const runningWeek3 = process.argv[1]?.includes("week3");
+if (runningWeek3) {
 const builtFeatures = buildFeatures(games);
 const schedule = new Map(games.map((row) => [row.game_id, row]));
 const train = [];
@@ -231,3 +232,4 @@ const out = resolve(root, "docs/reasoning/week3-2026.md");
 mkdirSync(dirname(out), { recursive: true });
 writeFileSync(out, body.join("\n"));
 console.log(JSON.stringify({ train: fit.data.sampleCount, forward, association, withheld, insufficient, open: lines.filter((row) => !row.settled).map((row) => ({ matchup: row.matchup, model: row.model, market: row.market, gap: row.gap, conclusion: row.conclusion, priors: row.priors })) }, null, 2));
+}
