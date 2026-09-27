@@ -320,6 +320,18 @@ const LOCK_PROPER_NOUN_SAFE_CONTEXT = /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[-
 const GUARANTEED_UPSTREAM_FIELD_FILE = "packages/data-ingestion/src/dk-pick6-intake.ts";
 const GUARANTEED_UPSTREAM_FIELD_SAFE_CONTEXT = /\bguaranteedMultiplier\b/g;
 
+// Same pattern as the DK Pick6 identifier above, for the contract row's
+// guaranteed-money FIELD in the nflverse/OverTheCap projection (red team,
+// 2026-09-27): the field name IS the data contract — the sealed JSONL on disk
+// carries it and every consumer reads it — so the projection lines naming the
+// field are blanked and NOTHING else. A residual "guaranteed" on any other
+// line of that file, or in any claim string, still hits the ban. The file
+// scoping is load-bearing, not defensive: an unscoped blank would let a
+// public-copy surface wave the word through the ban.
+const GUARANTEED_CONTRACT_FIELD_FILE = "packages/data-ingestion/src/nflverse/rows.ts";
+const GUARANTEED_CONTRACT_FIELD_SAFE_CONTEXT =
+  /\b(?:readonly\s+)?guaranteed(?=\s*:)|(?<=raw\.)guaranteed\b|\braw\.guaranteed\b/g;
+
 // Root memory docs (STEP 4b) carry VERBATIM social-post digests: a dated line
 // attributed to a handle, quoting a third party's leaderboard or post text.
 // "D.Lock 22.92%" or "Allen, Purdy, Lock, Jackson" in such a line is quoted
@@ -480,6 +492,13 @@ function scanText(text, relPath) {
           // ingestion file that parses it; a residual "guaranteed" anywhere
           // else on the line still hits.
           subject = subject.replace(GUARANTEED_UPSTREAM_FIELD_SAFE_CONTEXT, " ");
+        } else if (
+          entry.claim === "banned.guaranteed-outcome" &&
+          relNorm === GUARANTEED_CONTRACT_FIELD_FILE
+        ) {
+          // Blank the contract-row field name only (the projection lines);
+          // a residual "guaranteed" anywhere else still hits.
+          subject = subject.replace(GUARANTEED_CONTRACT_FIELD_SAFE_CONTEXT, " ");
         }
         return re.test(subject);
       });

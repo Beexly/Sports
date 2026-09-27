@@ -36,6 +36,7 @@ const ALLOWED_PREFIX = "packages/prediction-engine/src/edge-lab/";
 // guard test lives outside that guard's (narrower) scan targets entirely.
 const SELF_PATHS = new Set([
   "scripts/guardrails/sealed-holdout-open-scan.mjs",
+  "scripts/guardrails/sealed-holdout-open-scan.test.mjs",
   "apps/web/__tests__/sealed-holdout-open-scan-guard.test.ts",
 ]);
 
