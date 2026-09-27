@@ -1027,6 +1027,18 @@ export type {
 export { pointBiserial, correlationToMultiplier, tuneSignalWeights, MIN_SAMPLES } from "./tune-signal-weights.js";
 export type { KeyOutcome, TunedWeight } from "./tune-signal-weights.js";
 
+// The anchor CENSUS that feeds the anchors above. V3-350 requires an AnchorTable
+// and refuses to invent one, so without a measured population the whole chain
+// projects nothing. This measures it from the caller's own rows: no hardcoded
+// baseline, no wall clock, deterministic.
+export { censusAnchors, formatCensusReport, RunningStats, MIN_CENSUS_ROWS } from "./signal-anchor-census.js";
+export type {
+  AnchorCensusStatus,
+  CensusEntry,
+  CensusReport,
+  CensusObservation,
+} from "./signal-anchor-census.js";
+
 // Player usage archetype (receiving lean / workload) from rushing/receiving usage.
 export { classifyUsageProfile } from "./player-archetype.js";
 export type { UsageProfileInput, UsageProfile, WorkloadTier } from "./player-archetype.js";
