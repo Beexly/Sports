@@ -52,10 +52,13 @@ describe("nflverse row projection", () => {
     // about which seasons exist.
     expect(isIngestSeason(2018)).toBe(true);
     expect(isIngestSeason(2025)).toBe(true);
+    // 2026 is the application season, so it is an ingest season. The seasons that
+    // must be refused are now 2017 and 2027, not 2017 and 2026.
+    expect(isIngestSeason(2026)).toBe(true);
     expect(isIngestSeason(2017)).toBe(false);
-    expect(isIngestSeason(2026)).toBe(false);
+    expect(isIngestSeason(2027)).toBe(false);
     expect(isIngestSeason(null)).toBe(false);
-    expect(INGEST_SEASONS).toHaveLength(8);
+    expect(INGEST_SEASONS).toHaveLength(9);
     // 2025 is the holdout, so training history must actually be plural.
     expect(INGEST_SEASONS.filter((s) => s < 2025).length).toBeGreaterThanOrEqual(6);
 
@@ -63,7 +66,8 @@ describe("nflverse row projection", () => {
     // silently kept or silently dropped.
     expect(projectRoster({ season: 2017, gsis_id: "00-1" }, "season").ok).toBe(false);
     expect(projectRoster({ season: 2018, gsis_id: "00-1" }, "season").ok).toBe(true);
-    expect(projectSnap({ game_id: "g", pfr_player_id: "p", season: 2026 }).ok).toBe(false);
+    expect(projectSnap({ game_id: "g", pfr_player_id: "p", season: 2027 }).ok).toBe(false);
+    expect(projectSnap({ game_id: "g", pfr_player_id: "p", season: 2026 }).ok).toBe(true);
     expect(projectSnap({ game_id: "g", pfr_player_id: "p", season: 2019 }).ok).toBe(true);
     expect(projectFourthDown({ game_id: "g", play_id: 1, season: 2017 }).ok).toBe(false);
     expect(projectFourthDown({ game_id: "g", play_id: 1, season: 2019 }).ok).toBe(true);

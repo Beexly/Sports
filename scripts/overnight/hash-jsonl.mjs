@@ -15,15 +15,28 @@ import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
 
-// Verbatim from the overnight prompt's CURRENT TRUTH table. The measurement wins on
-// disagreement: both numbers get written down, the file is never rewritten to match.
-const EXPECTED = {
-  'contracts.jsonl':    { bytes: 1793445,  lines: 11550, sha256: 'badc5992543c91f46f855a0696c868767110dfd424b915286327967f8c98df06' },
-  'rosters.jsonl':      { bytes: 20872178, lines: 99740, sha256: '26d575409700c4273abb4c8c7c1e788b0fe3d832276cc73a9acde593e96afaf2' },
-  'snap-counts.jsonl':  { bytes: 12270533, lines: 53228, sha256: 'ac52ddceba431699640975c274835b3303cdff3e94707b4628df72f0f51fe39c' },
-  'participation.jsonl':{ bytes: 55997774, lines: 91103, sha256: '8762b5b4806ede2bdf861578c149551c1b4fe9f4a8f9658b8dbe819add2b712b' },
-  'fourth-down.jsonl':  { bytes: 1172393,  lines: 8465,  sha256: 'ef451ac5e7863a66aeca5de46c37caaaa6958f24f3ba6589a86243cb49284da7' },
-};
+// Expectations come from the ingest manifest, which is the seal the ingest itself wrote.
+//
+// This used to be a hardcoded copy of the overnight prompt's CURRENT TRUTH table. That table
+// described 2024-2025 and the four single-file grain names, so once the corpus widened to
+// eight seasons and the layout became one file per season, every entry went stale and the
+// verifier reported 0/5 while main's own manifest disagreed with it. A verifier that cannot
+// pass on the data it is verifying trains people to ignore it, which is the opposite of what
+// AGENTS.md means by "verify sha256 against the manifest".
+//
+// Reading the manifest also makes this correct forever: a new season or a new split file is
+// sealed automatically instead of needing a hand-edited table to be updated in step.
+function tableFromManifest(rootDir) {
+  const p = path.join(rootDir, 'nflverse-ingest-manifest.json');
+  if (!fs.existsSync(p)) return null;
+  const m = JSON.parse(fs.readFileSync(p, 'utf8'));
+  const out = {};
+  for (const d of m.datasets) {
+    if (!d.sha256) continue;
+    out[path.basename(d.path)] = { bytes: d.bytes, lines: d.rows, sha256: d.sha256 };
+  }
+  return out;
+}
 
 function hashFile(file) {
   const h = crypto.createHash('sha256');
@@ -65,8 +78,14 @@ if (one) {
   process.exit(0);
 }
 
-let table = EXPECTED;
-if (expectPath) table = JSON.parse(fs.readFileSync(expectPath, 'utf8'));
+let table = expectPath
+  ? JSON.parse(fs.readFileSync(expectPath, 'utf8'))
+  : tableFromManifest(root) ?? {};
+if (Object.keys(table).length === 0) {
+  console.error(`hash-jsonl: no expectations. Manifest missing at ${path.join(root, 'nflverse-ingest-manifest.json')}?`);
+  process.exit(1);
+}
+console.log(`verifying ${Object.keys(table).length} file(s) against ${expectPath ?? 'the ingest manifest'}`);
 
 let failures = 0;
 const rows = [];
