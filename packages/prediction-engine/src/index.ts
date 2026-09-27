@@ -992,6 +992,62 @@ export type {
 export { composeLedger, ledgerAgeDays } from "./signal-ledger.js";
 export type { LedgerSignalRow, ComposeLedgerOptions } from "./signal-ledger.js";
 
+// The PRODUCER side of the ledger, and the weight tuner that scores it against
+// settled outcomes. #924 shipped both modules but exported neither, so they were
+// unreachable from outside this package; `signal-ledger-sources` is the adapter
+// that reads the four populated entity tables into candidates. All three stay
+// read-only and none is wired into the published score.
+export {
+  buildCandidate,
+  categoryPrior,
+  normalizeReading,
+  CATEGORY_PRIORS,
+} from "./signal-ledger-populator.js";
+export type {
+  LedgerCandidate,
+  CandidateSourceRow,
+  EntityType,
+} from "./signal-ledger-populator.js";
+export {
+  projectPlayerGameStats,
+  projectSnapCounts,
+  projectNextGenStats,
+  projectInjuries,
+  projectAllSources,
+  explainProjection,
+} from "./signal-ledger-sources.js";
+export type {
+  AnchorTable,
+  SignalAnchor,
+  PlayerGameStatRow,
+  SnapCountRow,
+  NextGenStatRow,
+  InjuryRow,
+} from "./signal-ledger-sources.js";
+export { pointBiserial, correlationToMultiplier, tuneSignalWeights, MIN_SAMPLES } from "./tune-signal-weights.js";
+export type { KeyOutcome, TunedWeight } from "./tune-signal-weights.js";
+
+// The GROUP-aware tuner. #924's floors and scales its evidence by the ROW count,
+// but picks cluster by fixture (AGENTS.md: every NFL fixture is THREE `games`
+// rows; the same model-signal selection is published per-series with byte-
+// identical trueProb), so the row count is not the independent sample size.
+// This counts DISTINCT groups and reports the row-count figure alongside so the
+// inflation is visible rather than hidden. Same correlation, honest denominator.
+export { tuneGroupedWeights, multiplierFrom } from "./tune-signal-weights-grouped.js";
+export type { GroupedObservation, GroupedTunedWeight, GroupKey, TunedKey, TuneGroupsOptions } from "./tune-signal-weights-grouped.js";
+
+// The anchor CENSUS that feeds the anchors above. V3-350 requires an AnchorTable
+// and refuses to invent one, so without a measured population the whole chain
+// projects nothing. This measures it from the caller's own rows: no hardcoded
+// baseline, no wall clock, deterministic.
+export { censusAnchors, formatCensusReport, RunningStats, MIN_CENSUS_ROWS } from "./signal-anchor-census.js";
+export type {
+  AnchorCensusStatus,
+  CensusEntry,
+  CensusReport,
+  CensusObservation,
+} from "./signal-anchor-census.js";
+
 // Player usage archetype (receiving lean / workload) from rushing/receiving usage.
 export { classifyUsageProfile } from "./player-archetype.js";
 export type { UsageProfileInput, UsageProfile, WorkloadTier } from "./player-archetype.js";
