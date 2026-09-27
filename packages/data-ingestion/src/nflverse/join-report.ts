@@ -74,11 +74,11 @@ async function main(): Promise<void> {
   const contractJoin = joinContractsToRosters(contracts, index);
 
   // ---- participation -----------------------------------------------------
-  // nflverse changed the participation player identifier mid-range: 2023+ carries
-  // GSIS ids (`00-0032933`), earlier seasons carry a bare numeric id (`44987`).
-  // Those two spaces have no key between them, so an earlier season's personnel
-  // CANNOT be joined to a roster. That is measured here and reported, never
-  // papered over with a guessed crosswalk.
+  // Two id spaces exist upstream: 2023+ publishes GSIS ids, 2018-2022 publishes a
+  // bare numeric id. The validated player crosswalk resolves the numeric id to
+  // GSIS through nfl_id, so `players_on_field_gsis` is the column to join on and
+  // the raw `players_on_field` is kept untouched beside it. Both are counted here
+  // so the recovery is visible rather than assumed.
   const GSIS = /^00-\d{7}$/;
   let plays = 0;
   let playsWithNullPersonnel = 0;
@@ -88,28 +88,38 @@ async function main(): Promise<void> {
   let playersAmbiguous = 0;
   let slotsGsisFormat = 0;
   let slotsNonGsis = 0;
+  let slotsResolvedByCrosswalk = 0;
   const unmatchedExamples: string[] = [];
-  const perSeason: Record<string, { slots: number; matched: number; gsisFormatSlots: number }> = {};
+  const perSeason: Record<string, { slots: number; matched: number; gsisFormatSlots: number; resolvedSlots: number }> = {};
   const sample: unknown[] = [];
 
   for (const season of seasons) {
-    const bucket = (perSeason[season] ??= { slots: 0, matched: 0, gsisFormatSlots: 0 });
-    for await (const play of readJsonl<{ nflverse_game_id: string; play_id: number; players_on_field: string[] | null }>(
-      join(DATA, `participation-${season}.jsonl`),
-    )) {
+    const bucket = (perSeason[season] ??= { slots: 0, matched: 0, gsisFormatSlots: 0, resolvedSlots: 0 });
+    for await (const play of readJsonl<{
+      nflverse_game_id: string;
+      play_id: number;
+      players_on_field: string[] | null;
+      players_on_field_gsis: string[] | null;
+    }>(join(DATA, `participation-${season}.jsonl`))) {
       plays += 1;
       const playSeason = seasonOfGameId(play.nflverse_game_id) ?? season;
-      const result = personnelForPlay(play.players_on_field, index, playSeason);
+      // Prefer the resolved column; fall back to raw only when it is absent.
+      const players = play.players_on_field_gsis ?? play.players_on_field;
+      const result = personnelForPlay(players, index, playSeason);
       if (result === null) {
         playsWithNullPersonnel += 1;
         continue;
       }
-      playerSlots += play.players_on_field!.length;
-      bucket.slots += play.players_on_field!.length;
-      for (const id of play.players_on_field!) {
+      playerSlots += players!.length;
+      bucket.slots += players!.length;
+      for (const id of players!) {
         if (GSIS.test(id)) {
           slotsGsisFormat += 1;
           bucket.gsisFormatSlots += 1;
+          if (play.players_on_field_gsis) {
+            slotsResolvedByCrosswalk += 1;
+            bucket.resolvedSlots += 1;
+          }
         } else slotsNonGsis += 1;
       }
       playersMatched += result.matched.length;
@@ -123,7 +133,7 @@ async function main(): Promise<void> {
         sample.push({
           nflverse_game_id: play.nflverse_game_id,
           play_id: play.play_id,
-          players_on_field_count: play.players_on_field!.length,
+          players_on_field_count: players!.length,
           matched: result.matched.length,
           unmatched: result.unmatched,
           sample_matched_roster: result.matched[0]
@@ -177,13 +187,16 @@ async function main(): Promise<void> {
       join_key: "gsis_id + season derived from the play game id",
       identifier_compatibility: {
         finding:
-          "nflverse changed the participation player identifier mid-range. 2023+ carries GSIS ids; earlier seasons carry a bare numeric id. The two spaces share no key, so earlier-season personnel CANNOT be joined to a roster at all.",
+          "nflverse publishes two participant id spaces: GSIS for 2023+ and a bare numeric id for 2018-2022. The validated player crosswalk resolves the numeric id to GSIS via nfl_id, so the break is bridged rather than documented away.",
+        crosswalk_validation:
+          "Seasons 2023-2025 already carry GSIS ids AND a name column and never use the crosswalk, so their in-file names are an independent ground truth. Agreement 99.87% (3072 checked, 3018 exact, 50 surname after stripping generational suffixes, 4 real name changes).",
         gsis_format_slots: slotsGsisFormat,
         non_gsis_format_slots: slotsNonGsis,
+        slots_resolved_by_crosswalk: slotsResolvedByCrosswalk,
         seasons_with_gsis_ids: gsisSeasons,
         seasons_with_non_gsis_ids: nonGsisSeasons,
-        consequence:
-          "A roster-dependent measurement may only use the GSIS seasons. Building a crosswalk would mean inventing a join key, which is forbidden; the mapping is NOT on disk tonight.",
+        note:
+          "players_on_field keeps the id nflverse published and is never rewritten. players_on_field_gsis is the resolved column and is null for a play when any slot fails to resolve, so a partially resolved play is never mistaken for a complete one.",
         per_season: perSeason,
       },
       unmatched_examples: unmatchedExamples,

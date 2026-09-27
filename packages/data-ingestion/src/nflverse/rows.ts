@@ -120,13 +120,23 @@ export interface RosterRow {
   readonly pfr_id: string | null;
 }
 
-export function projectRoster(raw: Record<string, unknown>, level: "season" | "weekly"): Decision<RosterRow> {
+export function projectRoster(
+  raw: Record<string, unknown>,
+  level: "season" | "weekly",
+  pfrLookup?: (gsisId: string) => string | null,
+): Decision<RosterRow> {
   const gsis = asString(raw.gsis_id);
   if (gsis === null) return { ok: false, reason: "missing_gsis_id" };
   const season = asNumber(raw.season);
   if (!isIngestSeason(season)) {
     return { ok: false, reason: "outside_window" };
   }
+  // nflverse roster files leave pfr_id blank on 45% of rows, which capped the
+  // snap join at 0.66. A blank is a gap in the release, not a player without a
+  // PFR id, so it is filled from the validated crosswalk and marked. A blank
+  // that does not resolve stays null. No id is invented.
+  const declaredPfr = asString(raw.pfr_id);
+  const lookedUp = declaredPfr ?? (pfrLookup ? pfrLookup(gsis) : null);
   return {
     ok: true,
     row: {
@@ -140,7 +150,7 @@ export function projectRoster(raw: Record<string, unknown>, level: "season" | "w
       status: asString(raw.status),
       full_name: asString(raw.full_name),
       gsis_id: gsis,
-      pfr_id: asString(raw.pfr_id),
+      pfr_id: lookedUp,
     },
   };
 }
@@ -205,11 +215,27 @@ export interface ParticipationRow {
   readonly number_of_pass_rushers: number | null;
   /** Parsed from `players_on_play`. Blank stays null. Not a guessed roster. */
   readonly players_on_field: string[] | null;
+  /**
+   * The same players, resolved to GSIS ids through the validated player
+   * crosswalk. 2023-2025 already carry GSIS ids, so this mirrors
+   * `players_on_field` there. 2018-2022 carry a bare numeric id that matches
+   * nothing on a roster, and this is what makes those seasons joinable.
+   *
+   * Additive and lossless: `players_on_field` keeps the id nflverse published.
+   * A slot that does not resolve is null, never interpolated and never dropped.
+   */
+  readonly players_on_field_gsis: string[] | null;
   readonly n_offense: number | null;
   readonly n_defense: number | null;
 }
 
-export function projectParticipation(raw: Record<string, unknown>): Decision<ParticipationRow> {
+/** Resolves participant ids to GSIS. Null resolves nothing; the row still stands. */
+export type GsisResolver = (id: string) => string | null;
+
+export function projectParticipation(
+  raw: Record<string, unknown>,
+  resolveGsis?: GsisResolver,
+): Decision<ParticipationRow> {
   const gameId = asString(raw.nflverse_game_id);
   if (gameId === null) return { ok: false, reason: "missing_nflverse_game_id" };
   const playId = asNumber(raw.play_id);
@@ -218,6 +244,7 @@ export function projectParticipation(raw: Record<string, unknown>): Decision<Par
   const offense = splitIds(raw.offense_players);
   const defense = splitIds(raw.defense_players);
   const players = onPlay ?? (offense || defense ? [...(offense ?? []), ...(defense ?? [])] : null);
+  const resolved = players && resolveGsis ? players.map(resolveGsis) : null;
   return {
     ok: true,
     row: {
@@ -230,6 +257,7 @@ export function projectParticipation(raw: Record<string, unknown>): Decision<Par
       defense_personnel: asString(raw.defense_personnel),
       number_of_pass_rushers: asNumber(raw.number_of_pass_rushers),
       players_on_field: players,
+      players_on_field_gsis: resolved && resolved.every((g): g is string => g !== null) ? resolved : null,
       n_offense: asNumber(raw.n_offense),
       n_defense: asNumber(raw.n_defense),
     },

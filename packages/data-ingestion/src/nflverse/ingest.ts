@@ -31,6 +31,7 @@ import {
   INGEST_SEASONS,
   type Decision,
 } from "./rows.js";
+import { loadPlayerCrosswalk } from "./player-crosswalk.js";
 
 /**
  * One source of truth for the season list, imported from rows.ts. Keeping a
@@ -283,6 +284,18 @@ export async function ingestNflverseCycle8(): Promise<{ manifestPath: string; da
   await mkdir(DATA_DIR, { recursive: true });
   const datasets: DatasetManifest[] = [];
 
+  // One nflverse table carries every id system, which is what makes the
+  // 2018-2022 participation ids and the blank roster pfr_ids resolvable. It is
+  // loaded once and threaded through the projections below.
+  const crosswalk = await loadPlayerCrosswalk(CACHE_DIR);
+  const resolveGsis = (id: string): string | null => crosswalk.nflToGsis.get(id) ?? null;
+  const resolvePfr = (gsis: string): string | null => crosswalk.gsisToPfr.get(gsis) ?? null;
+  process.stderr.write(
+    `player crosswalk: ${crosswalk.stats.rows} players, ` +
+      `${crosswalk.nflToGsis.size} nfl_id->gsis_id, ${crosswalk.gsisToPfr.size} gsis_id->pfr_id, ` +
+      `ambiguous dropped nfl=${crosswalk.stats.ambiguous_nfl_dropped} pfr=${crosswalk.stats.ambiguous_pfr_dropped}\n`,
+  );
+
   const contracts = unwrap("contracts", await loadContracts({ format: "parquet" }));
   requireRows("loadContracts", contracts);
   const contractOut = collect(contracts as unknown as Record<string, unknown>[], projectContract);
@@ -305,8 +318,8 @@ export async function ingestNflverseCycle8(): Promise<{ manifestPath: string; da
     requireRows(`loadRosters ${season}`, seasonRosters);
     const weeklyRosters = unwrap(`rosters-weekly ${season}`, await loadRostersWeekly([season], { format: "parquet" }));
     requireRows(`loadRostersWeekly ${season}`, weeklyRosters);
-    const seasonOut = collect(seasonRosters as unknown as Record<string, unknown>[], (raw) => projectRoster(raw, "season"));
-    const weeklyOut = collect(weeklyRosters as unknown as Record<string, unknown>[], (raw) => projectRoster(raw, "weekly"));
+    const seasonOut = collect(seasonRosters as unknown as Record<string, unknown>[], (raw) => projectRoster(raw, "season", resolvePfr));
+    const weeklyOut = collect(weeklyRosters as unknown as Record<string, unknown>[], (raw) => projectRoster(raw, "weekly", resolvePfr));
     const rosterPath = join(DATA_DIR, `rosters-${season}.jsonl`);
     await writeJsonl(rosterPath, [...seasonOut.kept, ...weeklyOut.kept]);
     const rosterRefused: Record<string, number> = {};
@@ -346,7 +359,7 @@ export async function ingestNflverseCycle8(): Promise<{ manifestPath: string; da
   for (const season of SEASONS) {
     const part = unwrap(`participation ${season}`, await loadParticipation(season, { format: "parquet" }));
     requireRows(`loadParticipation ${season}`, part);
-    const participationOut = collect(part as unknown as Record<string, unknown>[], projectParticipation);
+    const participationOut = collect(part as unknown as Record<string, unknown>[], (raw) => projectParticipation(raw, resolveGsis));
     const sampleKeys = part[0] ? Object.keys(part[0] as Record<string, unknown>).sort().join(",") : "";
     const blankPersonnel = participationOut.kept.reduce((count, row) => count + (row.players_on_field === null ? 1 : 0), 0);
     if (participationOut.kept.length > 0 && blankPersonnel === participationOut.kept.length) {

@@ -1,0 +1,37 @@
+{
+  "generated_at": "2026-09-27T05:00:06.701Z",
+  "method": "Seasons 2023-2025 already carry gsis ids and a name column and never use the crosswalk. Their in-file names are therefore an independent ground truth for the same players the crosswalk resolves.",
+  "checked": 3072,
+  "exact_name_match": 3018,
+  "same_name_middle_initial_differs": 0,
+  "surname_only_match": 50,
+  "mismatch": 4,
+  "agreement_rate": 0.9986979166666666,
+  "strict_agreement_rate": 0.982421875,
+  "examples": [
+    {
+      "gsis": "00-0036967",
+      "inFile": "Joe Tryon",
+      "crosswalk": "Joe Tryon-Shoyinka",
+      "season": 2023
+    },
+    {
+      "gsis": "00-0035642",
+      "inFile": "Josh Allen",
+      "crosswalk": "Josh Hines-Allen",
+      "season": 2023
+    },
+    {
+      "gsis": "00-0037817",
+      "inFile": "Zach Tom",
+      "crosswalk": "Zach Bako-Bewele",
+      "season": 2023
+    },
+    {
+      "gsis": "00-0034810",
+      "inFile": "Sebastian Joseph",
+      "crosswalk": "Sebastian Joseph-Day",
+      "season": 2023
+    }
+  ]
+}
