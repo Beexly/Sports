@@ -12,6 +12,18 @@ import type { CalibrationHistoryRow, OddsInput, ScoredPick } from "@sports/types
 const BOOKS = ["fanduel", "draftkings", "betmgm", "caesars", "pointsbet"];
 const ML_BOOKS = [...BOOKS, "betrivers", "wynn", "bet365", "espnbet", "fanatics"];
 
+/** Game context strong enough that the moneyline clears MIN_PUBLISH_CONFIDENCE. */
+const ML_CONTEXT = {
+  homeAtsForm: { wins: 6, losses: 2, pushes: 0, sampleSize: 8 },
+  awayAtsForm: { wins: 2, losses: 6, pushes: 0, sampleSize: 8 },
+  homeAtsFormAtHome: { wins: 4, losses: 1, pushes: 0, sampleSize: 5 },
+  awayAtsFormAway: { wins: 1, losses: 4, pushes: 0, sampleSize: 5 },
+  headToHeadForm: { wins: 3, losses: 0, pushes: 0, sampleSize: 3 },
+  restDaysHome: 7,
+  restDaysAway: 3,
+  dataQualityScore: 10,
+} as const;
+
 function spreadInput(history?: CalibrationHistoryRow[]): OddsInput {
   return {
     gameId: "nhl-calibration-blindspot",
@@ -55,15 +67,33 @@ function moneylineInput(history?: CalibrationHistoryRow[]): OddsInput {
     awayTeam: "Bills",
     commenceTime: new Date("2026-09-10T18:00:00Z"),
     sport: "NFL",
-    bookmakerOdds: ML_BOOKS.map((bookmaker) => ({
-      bookmaker,
-      market: "H2H" as const,
-      homePrice: -350,
-      awayPrice: 290,
-    })),
+    bookmakerOdds: [
+      // The spread market must be present for the moneyline scorer to run:
+      // it reads cross-market context from the same input. Without these rows
+      // the H2H-only input mints no moneyline pick at all, and "withholds"
+      // would pass for the wrong reason.
+      ...BOOKS.map((bookmaker) => ({
+        bookmaker,
+        market: "SPREADS" as const,
+        spread: -3.5,
+        homeSpreadPrice: -110,
+        awaySpreadPrice: -110,
+      })),
+      ...ML_BOOKS.map((bookmaker) => ({
+        bookmaker,
+        market: "H2H" as const,
+        homePrice: -180,
+        awayPrice: 155,
+      })),
+    ],
+    // A moneyline confidence sum is consensus + depth + game-context + 10; it
+    // no longer includes the market-echo edgeComponent term. A bare two-sided
+    // board therefore lands near 27 and never clears MIN_PUBLISH_CONFIDENCE,
+    // so the context must carry the rest. Without a strong context this test
+    // would assert "withheld" against a pick that was never minted at all.
     context: history
-      ? { bookmakerCoverageMax: ML_BOOKS.length, calibrationHistory: history }
-      : { bookmakerCoverageMax: ML_BOOKS.length },
+      ? { ...ML_CONTEXT, bookmakerCoverageMax: ML_BOOKS.length, calibrationHistory: history }
+      : { ...ML_CONTEXT, bookmakerCoverageMax: ML_BOOKS.length },
   };
 }
 
