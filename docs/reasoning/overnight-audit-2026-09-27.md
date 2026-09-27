@@ -69,3 +69,4 @@ participation row 1 is `2024_01_TEN_CHI` play 40 with 22 players in `players_on_
 snap-counts keys are `season, week, team, player, position, offense_snaps, offense_pct,
 defense_snaps, defense_pct, st_snaps, st_pct, game_id, pfr_player_id` and carry no `gsis_id`;
 `fourth-down.jsonl` has `punt_wp` and its first row's value is genuinely null.
+|1 | 2026-09-27T04:06:38Z | verify-files | scripts/overnight/verify-files.mjs | node scripts/overnight/verify-files.mjs | 0 | 5/5 sha256 match; bytes+rows exact; publishes_pick=false; seasons=[2024,2025]; participation row1=2024_01_TEN_CHI play40 n=22; snaps have no gsis_id; punt_wp null | - | no fit; no season extension yet; .ps1 deleted not force-added (.gitignore:195 + AGENTS.md law 2) | PASS | -|
