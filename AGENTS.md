@@ -4262,6 +4262,14 @@ New engine methods landed as research + draft PRs today. Code improvements are o
 - Rescue reports: `docs/research/2026-09-26/RESCUE-2026-09-26-*.md` (6 files) — read before touching those PRs.
 - Deliberately un-ported, highest leverage next: `docs/research/2026-09-26/RESEARCH_TO_PRODUCT_PLAYBOOK.md` — synthesis over 1,511 arxiv-deep ledgers mapping papers to GSE techniques with numeric gates.
 
+### Stranded-work sweep (2026-09-26/27, Garrett: "another agent must see it immediately")
+Local-only work rescued into the repo — nothing lives only in a local tree:
+- **Symbolic regression / machine discovery (MOVE-37 lane):** `docs/research/2026-09-13/symbolic-regression/` (43 files) — REPORT.md, REPORT_WPA2.md (+ robust/stratified variants), bottleneck ablation, formulas_a.csv / formulas_b.csv, wpa2 verdicts, and the full discovery scripts (prep/discover/discover_b/wpa2_*). Honesty policy: null results reported as null.
+- **Parlay-angle lab:** `docs/research/2026-09-21/whalelay-lab/` (9 scripts) — angles/load/render/leg_odds/likely26/Stafford-series analysis. Research record only; parquets stay local (re-downloadable from nflverse).
+- **Week 3 DFS:** `docs/research/2026-09-25/gpp-winning-lineup-construction.md` (evergreen GPP construction research from local-only commits), `week3-multi-episode-transcripts.md`, `docs/research/2026-09-24/dfs-week3-pool-notes.md`, `docs/research/2026-09-25/dfs-week3/` (lineups.json + DKSalaries-Week3-SunMon.csv).
+- **Keenum splits:** `docs/research/2026-09-24/keenum-target-splits.md` (Case Keenum 2013–2023 target distribution, nflverse).
+- Already-in-repo (not re-pushed): `docs/research/2026-09-17/gse-lab/` (team advanced metrics), IMPROVEMENT-LEDGER + BUILD-QUEUE + WIRE-IN-PLAN at `docs/research/2026-09-21/arxiv-program/index/`.
+
 ### Decisions locked 2026-09-26 (Garrett delegated)
 - Do NOT wait for NGS; loader stays NGS-schema-compatible; BDB data lab-only (CC BY-NC 4.0); commercial path = E3 trajectories + synthetic fixtures (license-clean footage corpus still owed).
 - Ball landing optional: supplied → projectile/drag landing head → geometric baseline; train with landing dropout.
