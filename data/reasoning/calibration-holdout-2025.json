@@ -1,0 +1,42 @@
+{
+  "generated_at": "2026-09-27T04:26:20Z",
+  "slice": "measure-calibration",
+  "engine_family_calibration": {
+    "status": "INSUFFICIENT_SAMPLE",
+    "n": 0,
+    "reason": "The contract wants a settled vector of family contributions plus outcomes on seasons before 2025. data/reasoning/parts-registry.jsonl holds signed values for exactly one game, 2026_03_LAC_BUF, and there is no historical per-game family-contribution vector on disk. The sample is 0, not 250.",
+    "probabilityClaimsAllowed": false,
+    "fit_run": false
+  },
+  "bridge_premise_calibration": {
+    "status": "MEASURED",
+    "n": 285,
+    "holdout_season": 2025,
+    "training_window": "1999-2024 (run-bridge.mjs excludes season >= 2025 from the fit)",
+    "source": "data/gse-dataset/bridge-premises.jsonl",
+    "contract": {
+      "min_sample": 250,
+      "max_ece": 0.06,
+      "max_drift": 0.1
+    },
+    "metrics": {
+      "n": 285,
+      "brier": 0.2237430131385838,
+      "log_loss": 0.6365476394547599,
+      "ece": 0.051868442761204184,
+      "mean_predicted": 0.5602435047289792,
+      "actual_home_win_rate": 0.5333333333333333,
+      "drift": 0.026910171395645888
+    },
+    "reference_constant_0_5": {
+      "brier": 0.25,
+      "log_loss": 0.6931471805599453,
+      "ece": 0.033333333333333326
+    },
+    "passes_ece": true,
+    "passes_drift": true,
+    "note": "These are bridge premise probabilities, not engine confidences. They are not publishable and they do not move the calibration page. probabilityClaimsAllowed stays false for the product.",
+    "dropped_no_outcome": 0,
+    "dropped_outside_unit_interval": 0
+  }
+}
