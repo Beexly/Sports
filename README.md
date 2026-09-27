@@ -17,7 +17,7 @@ Branch `grok/reasoning-layer-2026-09-26`. Do not redo this work.
 - Eight LIVE week-3 parts are locked in `data/reasoning/parts-registry.jsonl` for `2026_03_LAC_BUF` only. The edge sum is `0.30259224777263855`. Do not copy those signed values onto another game.
 - Officials, weather, narrative contract, and coaching are DARK. Officials failed honesty. A named referee does not turn it on.
 - nflverse contracts, rosters, snap counts, participation, and fourth-down probabilities for 2024 and 2025 are in `data/gse-dataset/*.jsonl`. Hashes are in `data/gse-dataset/nflverse-ingest-manifest.json`. `go_wp` is not on play-by-play. It came from the nfl4th RDS. The model was not ported.
-- There is no `from-bridge.ts` and no `reasonAbout`. The reading path is `readParts` → `aggregateSignals`.
+- Week-3 readings go through `readParts` → `aggregateSignals`. `packages/ingestion-pipeline/src/reasoning-trace/from-bridge.ts` already exists for stored bridge premises. Do not add a second one, and do not treat it as the week-3 edge.
 - `SignalFamily` stays eight members. Do not expand it to hit a feature count.
 - Tonight's queue is `docs/reasoning/overnight-agent-prompt-2026-09-26.md`. The owner is running that queue on Grok. Other agents do not start it.
 

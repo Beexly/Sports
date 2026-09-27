@@ -2,7 +2,12 @@
 
 Live contract for every agent in this repo. Read this file. Then stop looking for a newer status in an old log.
 
-History through 2026-09-24 (X sweeps, Move-37 lab notes, benchmark dumps) is frozen at `docs/ops/AGENTS-history-through-2026-09-24.md`. Do not append sweep logs to this file. Do not treat that archive as a task list.
+Old sweep logs are frozen. They are not a task list.
+
+- Branch history through the reasoning split: `docs/ops/AGENTS-history-through-2026-09-24.md`
+- `main` as of `2882afd4e`, including the 2026-09-26 sweeps: `docs/ops/AGENTS-history-main-2026-09-26.md`
+
+Do not append new sweep logs to this file.
 
 Product overview stays in `CLAUDE.md`. This file is where we are, and what you must not redo.
 
@@ -42,7 +47,9 @@ DARK, because honesty failed, not because a cell was empty:
 
 The only LIVE path is `g = max(0.5*f1, 0.3*f2, 0.2*f3) = 0` in `packages/prediction-engine/src/reasoning/part-selector.ts`. f1 is honesty (`|r| >= 0.08` and `|slope| > se`). f2 is "this family already has a representative." f3 is a missing week-3 row. Do not loosen those bars. Do not add a prior. Do not rescale live families. Market is context. Meters are not the edge.
 
-Reading path: `readParts` → `aggregateSignals`. There is no `from-bridge.ts` and no `reasonAbout`. Do not create them. Do not import the selector into `packages/prediction-engine/src/engine/reasoning-surface.ts`.
+Week-3 reading path: `readParts` → `aggregateSignals` in `packages/prediction-engine`. Do not import the selector into `reasoning-surface.ts`.
+
+`packages/ingestion-pipeline/src/reasoning-trace/from-bridge.ts` already exists. It calls `reasonAbout` in `packages/ingestion-pipeline/src/reasoning-trace.ts` and only turns stored bridge premises into a holdout trace. It does not set a LIVE part and it is not the week-3 edge. Do not create a second copy. Do not delete it.
 
 `SignalFamily` in `packages/types/src/signal-registry.ts` has eight members and the prior weights sum to 1. Do not widen it. A new grain goes in a catalog file, not in that union.
 

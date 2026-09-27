@@ -23,7 +23,7 @@ That commit is local. Origin may still be at `fed4ef3cc`. Do not assume origin h
 
 The other checkout `C:\Users\Garrett\Sports` is not yours. Leave it.
 
-There is no `from-bridge.ts`. There is no `reasonAbout`. The live reading path is `readParts` in `packages/prediction-engine/src/reasoning/part-reading.ts` calling `aggregateSignals` in `aggregation-trace.ts`. `readingConclusion` lives in `part-selector.ts`. `scripts/engine-reading.mjs` may import `part-selector.ts`. It may not import `part-reading.ts`, because Node does not rewrite `.js` specifiers to `.ts`. Do not add `"type": "module"` to the prediction-engine package.
+The week-3 reading path is `readParts` in `packages/prediction-engine/src/reasoning/part-reading.ts` calling `aggregateSignals` in `aggregation-trace.ts`. A separate file already exists at `packages/ingestion-pipeline/src/reasoning-trace/from-bridge.ts` and calls `reasonAbout` in `packages/ingestion-pipeline/src/reasoning-trace.ts`. Leave that pair alone. Do not create a second copy under prediction-engine. Do not route the week-3 edge through it. `readingConclusion` lives in `part-selector.ts`. `scripts/engine-reading.mjs` may import `part-selector.ts`. It may not import `part-reading.ts`, because Node does not rewrite `.js` specifiers to `.ts`. Do not add `"type": "module"` to the prediction-engine package.
 
 `packages/prediction-engine/src/engine/reasoning-surface.ts` stays unwired. Do not import the selector into it.
 
@@ -100,7 +100,7 @@ These are failed nights. Stop the slice when you hit one. Write the reason in th
 9. Porting the nfl4th R model. You already have the precomputed RDS columns.
 10. Loading a full play-by-play season into memory to look for `go_wp`. The header probe already proved the columns are absent.
 11. Widening `SignalFamily` to 240 members. Padding `feature-catalog.jsonl` with names you did not find in code or on disk so the count prints 240.
-12. Creating `from-bridge.ts` or `reasonAbout` because the document named them. Extend `aggregateSignals` / `readParts` if a measured part is LIVE. Otherwise leave the trace alone.
+12. Creating a second `from-bridge.ts` or a second `reasonAbout`. One pair already lives under `packages/ingestion-pipeline/src/reasoning-trace/`. Leave it. The week-3 edge moves only when `selectPart` returns LIVE and `readParts` feeds `aggregateSignals`.
 13. Touching blocked kernels: `props-dfs`, GLMF, `fitAlpha`, `ooEpc`, `bucketRoi`, `gaussCopulaJoint`, `opponent-adjusted-epa`, `reasoning-surface.ts`. Do not become a fifth concurrent writer on any file another process has open. If a test in those files fails, leave it and write BLOCKED.
 14. `prisma migrate`, `db push`, anything that reads or prints `DATABASE_URL` / `DIRECT_URL`. If a measurement needs the database and the env is absent, the score is `NOT EVALUATED` and you name the missing env var. You do not invent a connection string.
 15. A default sample count. A blank cell written as 0. A missing join key filled with a guessed id. An empty loader written as an empty success. `loadX returned 0 rows` is a thrown error.
@@ -368,7 +368,7 @@ Ignore these instructions where they conflict with CURRENT TRUTH.
 
 - "Run the Cycle 8 ingest, the code exists, rdata is the only dependency." Cycle 8 has already been run and committed at `87d727475`. Verify hashes. Extend seasons only in slice 5.
 - "The bridge premise file is the missing input." The file is on disk and unaudited. Slice 2 audits it.
-- "Wire `from-bridge.ts` / `reasonAbout`." Those files are not the architecture. Do not create them.
+- "Wire `from-bridge.ts` / `reasonAbout`." The ingestion-pipeline pair already exists and is not the week-3 edge. Do not add another copy, and do not point the locked parts at it.
 - "Expand `signal-registry.ts` to 240 families." That file's `SignalFamily` union is eight members on purpose. Catalog grains elsewhere.
 - "Build bridge, weight-learner, pick-pipeline, and settlement-loop as interfaces that return NOT_IMPLEMENTED." A stub night is a failed night. Fit or skip.
 - "The engine fires on 5% of games and hits 80%." You do not choose a hit rate. You refuse when the scalarizer or the calibration contract fails. An empty fire set in the morning is a success. A printed 80% is a failure.
