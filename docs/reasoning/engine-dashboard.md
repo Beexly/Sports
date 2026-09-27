@@ -41,7 +41,9 @@ and stays null.
 
 ## nflverse manifest
 
-Source: `data/gse-dataset/nflverse-ingest-manifest.json`, seasons 2018-2025, `publishes_pick` false.
+Source: `data/gse-dataset/nflverse-ingest-manifest.json`, seasons **2018-2026**,
+`publishes_pick` false. 2026 is the application season; 2025 is still the holdout and is never
+fitted on.
 
 | file | rows | bytes | sha256 (first 16) |
 |---|---:|---:|---|
@@ -64,25 +66,38 @@ was dropped, and the parts sum to 382557.
 
 ## Scalarizer verdicts
 
-Source: `data/reasoning/dark-candidates.jsonl`
+Source: `data/reasoning/dark-candidates.jsonl` and `data/reasoning/stored-candidates.jsonl`
 
 | family | n | r | slope | se | g | verdict |
 |---|---:|---:|---:|---:|---:|---|
 | coaching | 285 | 0.0346098177800266 | 0.7166085172924505 | 1.2300681449666506 | 0.5 | DARK, winning term f1 |
+| **narrative_contract** | **285** | **0.23359561489783362** | **1.1071012391250847** | **0.2739333017720089** | **0.2** | **STORED, winning term f3** |
 
-New this night, and corrected after review. f1 fails on both bars: `|r|` 0.0346 is under
-0.08, and `|slope|` 0.71661 is not greater than `se` 1.23007. The 2025 holdout is scored
-against coefficients fitted on 2018-2024 only, frozen before scoring.
+`narrative_contract` **cleared honesty for the first time in this run.** f1 = 0 because
+`|r|` 0.2336 is at or above 0.08 and `|slope|` 1.1071 is greater than `se` 0.2739, on a 2025
+holdout scored by coefficients fitted on 2018-2024 only. f2 = 0 because the family has no
+representative. f3 = 1 because there is no week-3 row for the target game, so
+`g = max(0.5*0, 0.3*0, 0.2*1) = 0.2`.
 
-A first run reported r=-0.0346, slope=-0.2952, se=0.5067. Those were a 2025 refit rather than
-a walk-forward: the regressor handed to the fitter was the raw feature instead of the frozen
-model's prediction. The verdict did not change, but the statistics did, including the sign of
-r. The corrected row is appended to `data/reasoning/dark-candidates.jsonl` with a
-`supersedes` field; the incorrect row was not rewritten.
+Training agrees: n=1942, r=0.2034, so it is not a holdout artefact.
 
-The instructive detail that survives: in sample the slope cleared its standard error (0.412
-against 0.178), and scored out of sample it does not. The old stored row had `|r|` 0.014 and no
-slope or standard error at all, so it could not have passed f1 even in principle.
+**The path to LIVE is one command.** Proven on `2026_03_ATL_GB`, the only 2026 week-3 game
+nflverse has published: feature gap 1.8618, `signed 0.0912`, model p 0.6329, and `selectPart`
+returns **LIVE, g = 0, winning term none**. When `2026_03_LAC_BUF` week-3 snap rows publish,
+`node scripts/overnight/compute-week3-narrative.mjs 2026_03_LAC_BUF` produces the row and f3
+becomes 0. No re-fit is needed; the coefficients are sealed in `stored-candidates.jsonl`.
+
+**LAC@BUF, measured honestly from the latest sealed rows** (2026 weeks 1-2, which is *not* a
+week-3 row and is labelled as such): LAC mean APY 7.051 over 2720 matched snaps, BUF mean APY
+9.408 over 2945, feature gap -2.357, **`signed -0.1155`**, model p 0.4262. The sign is
+negative — BUF carries the higher contract intensity, so this family points *against* LAC and
+at its existing 0.03 prior would pull the edge down, not up. Nothing was written to the
+registry.
+
+`coaching` was re-measured and remains DARK, with the statistics corrected after review — a
+first run reported a 2025 refit rather than a walk-forward. The verdict never moved; the
+numbers, including the sign of r, did. The incorrect row was left in place and a corrected one
+appended with a `supersedes` field.
 
 ## LAC edge
 
@@ -90,6 +105,12 @@ Source: `data/reasoning/parts-registry.jsonl`, 8 rows, unmodified this night.
 
 Recomputed sum of `weight * signed` is `0.30259224777263855`, exactly equal to the documented
 value at full double precision. No LIVE part was added, so the edge did not move.
+
+When `narrative_contract` goes LIVE it will **not** leave the edge where it is. Its measured
+LAC@BUF value is -0.1155 at the existing 0.03 prior, a contribution of about -0.0035, so the
+edge will fall slightly. Dark-by-design prior mass drops from 0.24 to 0.21. No prior is added
+and no live family is rescaled: `narrative_contract` already carries 0.03 in
+`engine-weights.ts`.
 
 ## Price archive
 
