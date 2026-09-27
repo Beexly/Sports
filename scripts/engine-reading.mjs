@@ -54,6 +54,13 @@ const split = new Map(
     .map((line) => JSON.parse(line))
     .map((row) => [row.game_id, row]),
 );
+const driveStart = new Map(
+  readFileSync(resolve(root, "data/gse-dataset/current/week3-drive-start.jsonl"), "utf8")
+    .trim()
+    .split("\n")
+    .map((line) => JSON.parse(line))
+    .map((row) => [row.game_id, row]),
+);
 
 function clip(value) {
   if (value > 1) return 1;
@@ -72,10 +79,18 @@ for (const context of contexts) {
   const game = games.get(context.game_id);
   const homeScheme = context.home.scheme_prior_weeks;
   const awayScheme = context.away.scheme_prior_weeks;
-  const scheme = diff(
+  const schemeBase = diff(
     (homeScheme.motion_rate + homeScheme.play_action_rate + homeScheme.rpo_rate + homeScheme.shotgun_rate) / 4,
     (awayScheme.motion_rate + awayScheme.play_action_rate + awayScheme.rpo_rate + awayScheme.shotgun_rate) / 4,
   );
+  const driveRow = driveStart.get(context.game_id);
+  const driveHelper = driveRow && typeof driveRow.helper_signed === "number" ? driveRow.helper_signed : null;
+  const scheme = (() => {
+    if (typeof schemeBase === "number" && typeof driveHelper === "number") {
+      return clip(schemeBase + 0.15 * driveHelper);
+    }
+    return schemeBase;
+  })();
   const splitRow = split.get(context.game_id);
   const ngsRow = ngs.get(context.game_id);
   const ngsHelper = ngsRow && typeof ngsRow.ngs_st_signed === "number" ? ngsRow.ngs_st_signed : null;
@@ -134,6 +149,8 @@ for (const context of contexts) {
     rest_diff: game ? game.rest_diff : null,
     ngs_helper_signed: ngsHelper,
     ngs_helper_role: "informs on_field_efficiency by at most 0.15. not the deciding factor. nflverse summary tables only. no raw tracking. no PFF. no SIS.",
+    drive_start_helper_signed: driveHelper,
+    drive_start_r_2025: 0.186,
     elo: elo.get(context.game_id) ?? null,
     market_devig_is_context_only: true,
     engine_edge: reading.engineEdge.value,

@@ -7,7 +7,7 @@
 
 export const ENGINE_FAMILIES = [
   { id: "on_field_efficiency", prior: 0.14, role: "premise", why: "Prior-week passing EPA is on the week-3 row." },
-  { id: "scheme_play_design", prior: 0.12, role: "premise", why: "Motion, play-action, RPO, and shotgun rates are charted." },
+  { id: "scheme_play_design", prior: 0.12, role: "premise", why: "Motion, play-action, RPO, shotgun. Drive-start field position (2025 r=+0.186, n=272) may move this family by at most 0.15. Not the MOVE-37 sin formula." },
   { id: "availability", prior: 0.12, role: "premise", why: "Quarterback and the out list are on the injury report." },
   { id: "schedule_and_body", prior: 0.08, role: "premise", why: "Rest is on the game file. 2024-2025 fit: +0.41 margin points per extra rest day (n=544, se=0.25)." },
   { id: "historical_strength", prior: 0.08, role: "premise", why: "Elo is one strength premise, not the product." },
