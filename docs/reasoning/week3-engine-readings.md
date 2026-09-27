@@ -1,6 +1,7 @@
 # Engine edge, week 3
 
 The edge is the sum of prior times signal across the whole table. A dark family adds zero and the live families are not scaled up to hide it. The price is context. Brier, Kelly, and Bradley-Terry are meters.
+Candidates pass through selectPart in packages/prediction-engine/src/reasoning/part-selector.ts. The eight families already in the sum are live-edge-registry.ts. Officials is dark on the 2025 holdout, including games that have a referee name.
 On-field efficiency is a shrunk opponent-adjusted blend: 55% pass EPA residual, 15% rush EPA residual, 15% CPOE, 10% explosive-pass rate, 5% interception luck. The 2025 season is the prior. 2026 weeks 1-2 are the observation.
 Airwave is in the edge at a prior of 0.05. It is the questionable and doubtful skill wire, not a second copy of the out list. SiriusXM audio was not captured.
 OpenRouter lane: openrouter_unconfigured. No model call was made.
@@ -18,7 +19,7 @@ Priors:
 | coaching | 0.06 | dark |
 | trench_personnel | 0.05 | premise |
 | market_context | 0.05 | context_not_objective |
-| officials | 0.04 | premise |
+| officials | 0.04 | dark |
 | chemistry | 0.04 | premise |
 | bio_nutrition | 0.04 | dark |
 | narrative_contract | 0.03 | dark |
@@ -26,11 +27,11 @@ Priors:
 | calibration_meters | 0.03 | meter |
 | airwave | 0.05 | premise |
 
-Dark share by design: 0.20. Those families are named so they are not forgotten. They contribute nothing until a row exists.
+Dark share by design: 0.24. Those families are named so they are not forgotten. A dark coefficient stays zero. A missing row is not filled with a guess.
 
 | game | edge | coverage | dark | rest | roof | referee |
 |---|---:|---:|---:|---:|---|---|
-| ATL at GB | 0.126 | 0.67 | 0.25 | 0 | outdoors | Shawn Smith |
+| ATL at GB | 0.106 | 0.63 | 0.29 | 0 | outdoors | Shawn Smith |
 | ARI at SF | 0.109 | 0.68 | 0.24 | 0 | outdoors |  |
 | BAL at DAL | -0.029 | 0.68 | 0.24 | 0 |  |  |
 | CAR at CLE | -0.009 | 0.68 | 0.24 | 0 | outdoors |  |

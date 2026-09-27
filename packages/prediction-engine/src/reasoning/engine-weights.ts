@@ -15,7 +15,7 @@ export const ENGINE_FAMILIES = [
   { id: "coaching", prior: 0.06, role: "dark", why: "Fourth-down go rate was measured. 2025 walk-forward r was -0.014, so it does not move the tilt." },
   { id: "trench_personnel", prior: 0.05, role: "premise", why: "qb_hit per dropback. 2025 walk-forward correlation with home wins was 0.241 on 250 games." },
   { id: "market_context", prior: 0.05, role: "context_not_objective", why: "The devigged price is context. The engine does not chase it." },
-  { id: "officials", prior: 0.04, role: "premise", why: "Referee home-margin residuals from 2024-2025, used only when |mean| > se and the game has a name." },
+  { id: "officials", prior: 0.04, role: "dark", why: "2025 holdout of 2024 crew means: n=113, r=-0.093 versus home win, slope=-0.0101, se=0.0103. |slope| does not clear se, so the part selector returns DARK even when the crew is named." },
   { id: "chemistry", prior: 0.04, role: "premise", why: "QB this week versus the snap leader of weeks 1-2. A change is a disruption." },
   { id: "bio_nutrition", prior: 0.04, role: "dark", why: "No nutrition rows exist. Injury names are availability, not nutrition." },
   { id: "narrative_contract", prior: 0.03, role: "dark", why: "Contract and cohort modules exist. No week-3 row was joined." },

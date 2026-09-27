@@ -6,6 +6,7 @@
 import { readFileSync, writeFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { composeEngineReading, ENGINE_FAMILIES, assertPriorsSumToOne } from "../packages/prediction-engine/src/reasoning/engine-weights.ts";
+import { readingConclusion, week3CandidateDecisions } from "../packages/prediction-engine/src/reasoning/part-selector.ts";
 
 const root = resolve(process.cwd());
 assertPriorsSumToOne();
@@ -74,6 +75,13 @@ function diff(home, away) {
   return clip(home - away);
 }
 
+const registryRows = readFileSync(resolve(root, "data/reasoning/parts-registry.jsonl"), "utf8")
+  .trim()
+  .split("\n")
+  .map((line) => JSON.parse(line));
+const representatives = registryRows.map((row) => row.family);
+const rationale = new Map(registryRows.map((row) => [row.family, row.rationale]));
+
 const readings = [];
 for (const context of contexts) {
   const game = games.get(context.game_id);
@@ -106,8 +114,11 @@ for (const context of contexts) {
   const strength = elo.has(context.game_id) ? clip((elo.get(context.game_id) - 0.5) * 2) : null;
   const situation = situational.get(context.game_id);
   const refereeName = game && game.referee ? game.referee : null;
+  const partDecisions = week3CandidateDecisions(Boolean(refereeName), representatives);
+  const officialsDecision = partDecisions.find((decision) => decision.family === "officials");
   const crew = refereeName && envCal.referees[refereeName] ? envCal.referees[refereeName] : null;
-  const officials = crew && crew.home_margin_used ? clip(crew.home_margin_used / MARGIN_SCALE) : null;
+  const officialsMeasured = crew && crew.home_margin_used ? clip(crew.home_margin_used / MARGIN_SCALE) : null;
+  const officials = officialsDecision && officialsDecision.status === "LIVE" ? officialsMeasured : null;
   function qbDisrupted(side) {
     const qb = side.quarterback || "";
     const lead = (side.qb_snap_leader_prior_weeks || {}).player || "";
@@ -144,6 +155,8 @@ for (const context of contexts) {
     home_team: context.home_team,
     gameday: context.gameday,
     referee: game ? game.referee : null,
+    part_decisions: partDecisions,
+    officials_measured_signed: officialsMeasured,
     roof: game ? game.roof : null,
     surface: game ? game.surface : null,
     rest_diff: game ? game.rest_diff : null,
@@ -187,6 +200,7 @@ const lines = [
   "# Engine edge, week 3",
   "",
   "The edge is the sum of prior times signal across the whole table. A dark family adds zero and the live families are not scaled up to hide it. The price is context. Brier, Kelly, and Bradley-Terry are meters.",
+  "Candidates pass through selectPart in packages/prediction-engine/src/reasoning/part-selector.ts. The eight families already in the sum are live-edge-registry.ts. Officials is dark on the 2025 holdout, including games that have a referee name.",
   "On-field efficiency is a shrunk opponent-adjusted blend: 55% pass EPA residual, 15% rush EPA residual, 15% CPOE, 10% explosive-pass rate, 5% interception luck. The 2025 season is the prior. 2026 weeks 1-2 are the observation.",
   "Airwave is in the edge at a prior of 0.05. It is the questionable and doubtful skill wire, not a second copy of the out list. SiriusXM audio was not captured.",
   `OpenRouter lane: ${readings[0].model_lane}. No model call was made.`,
@@ -197,7 +211,7 @@ const lines = [
   "|---|---:|---|",
   ...ENGINE_FAMILIES.map((family) => `| ${family.id} | ${family.prior.toFixed(2)} | ${family.role} |`),
   "",
-  `Dark share by design: ${dark.reduce((sum, family) => sum + family.prior, 0).toFixed(2)}. Those families are named so they are not forgotten. They contribute nothing until a row exists.`,
+  `Dark share by design: ${dark.reduce((sum, family) => sum + family.prior, 0).toFixed(2)}. Those families are named so they are not forgotten. A dark coefficient stays zero. A missing row is not filled with a guess.`,
   "",
   "| game | edge | coverage | dark | rest | roof | referee |",
   "|---|---:|---:|---:|---:|---|---|",
@@ -210,6 +224,68 @@ for (const row of readings) {
 lines.push("");
 lines.push(...partLines);
 writeFileSync(resolve(root, "docs/reasoning/week3-engine-readings.md"), lines.join("\n"));
+
+const lac = readings.find((row) => row.game_id === "2026_03_LAC_BUF");
+const lacConclusion = readingConclusion(lac.game_id, lac.engine_edge_parts.length, lac.part_decisions, lac.engine_edge);
+const ledger = [
+  "# Week 3 part ledger",
+  "",
+  lacConclusion,
+  "",
+  "The eight registry families are LIVE when this game has a number in the sum. The four candidates are the closed roster in part-selector.ts. STORED means a cleared fit with no row for that game. None of the four candidates cleared. Officials stays DARK when a referee is named, because the 2025 holdout slope is inside one standard error.",
+  "",
+  "publishes_pick is false. The trace sees the LIVE parts. Its confidence is not a win probability.",
+  "",
+  "| game_id | family | state | winning_term | reason |",
+  "|---|---|---|---|---|",
+];
+const storedRows = [];
+const darkRows = [];
+for (const row of readings) {
+  const present = new Map(row.engine_edge_parts.map((part) => [part.id, part]));
+  for (const family of representatives) {
+    const part = present.get(family);
+    if (part) {
+      ledger.push(`| ${row.game_id} | ${family} | LIVE | none | ${rationale.get(family)} signed ${part.signed} points ${part.points}. |`);
+    } else {
+      const reason = "representative stays locked. This game has no numeric value, so the contribution is zero. That is not a stored fit";
+      ledger.push(`| ${row.game_id} | ${family} | LIVE | none | ${reason} |`);
+    }
+  }
+  for (const decision of row.part_decisions) {
+    ledger.push(`| ${row.game_id} | ${decision.family} | ${decision.status} | ${decision.winning_term} | ${decision.why} |`);
+    if (decision.status === "STORED") {
+      storedRows.push({
+        game_id: row.game_id,
+        family: decision.family,
+        state: decision.status,
+        winning_term: decision.winning_term,
+        reason: decision.why,
+        reactivates_when: decision.reactivates_when,
+      });
+    }
+    if (decision.status === "DARK") {
+      darkRows.push({
+        game_id: row.game_id,
+        family: decision.family,
+        state: decision.status,
+        winning_term: decision.winning_term,
+        failing_objective: decision.winning_term,
+        reason: decision.why,
+        reactivates_when: decision.reactivates_when,
+      });
+    }
+  }
+}
+writeFileSync(resolve(root, "docs/reasoning/week3-parts.md"), ledger.join("\n") + "\n");
+writeFileSync(
+  resolve(root, "data/reasoning/stored-candidates.jsonl"),
+  storedRows.map((row) => JSON.stringify(row)).join("\n") + (storedRows.length ? "\n" : ""),
+);
+writeFileSync(
+  resolve(root, "data/reasoning/dark-candidates.jsonl"),
+  darkRows.map((row) => JSON.stringify(row)).join("\n") + "\n",
+);
 
 const coverage = readings.map((row) => row.coverage);
 console.log(JSON.stringify({
