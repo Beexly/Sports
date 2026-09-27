@@ -288,7 +288,7 @@ export const TRUST_CLAIMS: readonly TrustClaim[] = [
     evidence: "NONE",
     visibility: "INTERNAL",
     lastReviewedAt: LAST_REVIEW,
-    reviewNote: "Sports-betting slang for a 'guaranteed' pick (a lock, lock of the day). This library scanner uses word boundaries to avoid matching 'block', 'unlock', 'clock', but is deliberately CONSERVATIVE: it does NOT carve out the temporal idiom ('at lock', 'lock time'), so that copy is also flagged — phrase line-locking timing with the safeReplacement or 'line close' instead. (The CI trust-gate guardrail blanks the temporal idiom; the public-copy gate intentionally does not, since over-blocking is safe and under-blocking is not.) Claim forms ('a lock', 'it's a lock') fail as intended.",
+    reviewNote: "Sports-betting slang for a 'guaranteed' pick (a lock, lock of the day). This library scanner uses word boundaries to avoid matching 'block', 'unlock', 'clock', and blanks the same proper-noun contexts the CI trust-gate does (Drew Lock / D.Lock / server-side lock). It is deliberately CONSERVATIVE on the temporal idiom ('at lock', 'lock time') — that copy is still flagged; phrase line-locking timing with the safeReplacement or 'line close' instead. Callers scanning root memory docs may pass lockDigestExempt to skip dated @handle digest lines (trust-gate SCAN_FILES parity). Claim forms ('a lock', 'it's a lock') fail as intended.",
     safeReplacement: "high-confidence pick",
   },
   {
@@ -567,9 +567,37 @@ function slugForPositioningPhrase(phrase: string): string {
  *
  * Returns every hit; the caller decides how to report them.
  */
-export function scanForBannedPhrases(input: string): BannedPhraseHit[] {
+
+// Mirror scripts/guardrails/trust-gate.mjs LOCK_PROPER_NOUN_SAFE_CONTEXT:
+// Drew Lock / D.Lock are an NFL QB surname; "server-side lock" is mutex prose.
+// Blank-then-recheck so residual standalone "lock" slang still hits.
+const LOCK_PROPER_NOUN_SAFE_CONTEXT =
+  /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b/gi;
+
+/** Dated @handle social-digest lines (verbatim third-party data in memory docs). */
+export function isVerbatimSocialDigestLine(line: string): boolean {
+  return /@\w+/.test(line) && /\d{4}-\d{2}-\d{2}/.test(line);
+}
+
+/**
+ * Options for {@link scanForBannedPhrases}.
+ *
+ * `lockDigestExempt` mirrors trust-gate's SCAN_FILES digest exemption: on a
+ * dated @handle line, bare "Lock" in a quoted leaderboard is surname data, not
+ * betting slang. Only enable for root memory docs (AGENTS.md / README.md / …) —
+ * never for marketing surfaces.
+ */
+export interface ScanBannedPhrasesOptions {
+  readonly lockDigestExempt?: boolean;
+}
+
+export function scanForBannedPhrases(
+  input: string,
+  options: ScanBannedPhrasesOptions = {},
+): BannedPhraseHit[] {
   const hits: BannedPhraseHit[] = [];
   const lines = input.split(/\r?\n/);
+  const lockDigestExempt = options.lockDigestExempt === true;
 
   for (const claim of getBannedClaims()) {
     const phrase = claim.copy;
@@ -583,7 +611,20 @@ export function scanForBannedPhrases(input: string): BannedPhraseHit[] {
       : new RegExp(escapeRegex(normPhrase), "i");
 
     lines.forEach((line, idx) => {
-      if (pattern.test(normalizeForScan(line))) {
+      // Trust-gate parity: skip the lock slang ban on verbatim social digests
+      // when the caller scoped this scan to a root memory doc.
+      if (
+        claim.id === "banned.lock" &&
+        lockDigestExempt &&
+        isVerbatimSocialDigestLine(line)
+      ) {
+        return;
+      }
+      let subject = normalizeForScan(line);
+      if (claim.id === "banned.lock") {
+        subject = subject.replace(LOCK_PROPER_NOUN_SAFE_CONTEXT, " ");
+      }
+      if (pattern.test(subject)) {
         hits.push({
           phrase,
           claimId: claim.id,
@@ -593,6 +634,7 @@ export function scanForBannedPhrases(input: string): BannedPhraseHit[] {
       }
     });
   }
+
 
   for (const rawPhrase of FORBIDDEN_PHRASES) {
     if (CLAIM_COVERED_POSITIONING_PHRASES.has(rawPhrase.toLowerCase())) continue;

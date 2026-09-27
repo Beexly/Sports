@@ -168,6 +168,36 @@ export function enrichPickWithIntelligence(
  * Missing modules are omitted — wireEverything handles the gaps as
  * "no observation" rather than inventing one.
  */
+
+/**
+ * Project intelligence for a viewer entitlement.
+ *
+ * FREE viewers may receive the numeric spine (calibratedProb, knowability, …)
+ * but must not receive percent-formatted model prose or the internal
+ * "(model signal)" marker anywhere in the JSON. PRO+ keeps the full explain.
+ */
+export function projectPickIntelligenceForViewer(
+  intel: PickIntelligence,
+  canSeeConfidence: boolean,
+): PickIntelligence {
+  if (canSeeConfidence) return intel;
+  return {
+    calibratedProb: intel.calibratedProb,
+    situationalShift: intel.situationalShift,
+    knowability: intel.knowability,
+    evidenceHealth: intel.evidenceHealth,
+    publishState: intel.publishState,
+    // sixQuestions.marketBelieves / improvesDecisions embed "NN%" model language.
+    sixQuestions: null,
+    familyWeights: intel.familyWeights,
+    why: [],
+    whyNot: [],
+    summary: null,
+    observationCount: intel.observationCount,
+    familyCoverage: intel.familyCoverage,
+  };
+}
+
 export function universalSignalsFromPick(pick: PickForIntelligence): UniversalSignals {
   const fairProb =
     pick.homeFairProb != null && Number.isFinite(pick.homeFairProb)

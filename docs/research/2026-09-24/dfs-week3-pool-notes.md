@@ -27,16 +27,32 @@ this file stays current through the weekend.
 - **Garrett's TD call (9/24):** 23.2% target share but only 1 red zone target through two weeks — usage says the scores are coming, and this is the week (league-worst TE defense, 52.5 total, shootout potential in Rio). Has been used as a possession/chain-mover rather than the old vertical threat.
 - **Ceiling note:** commanded a 33% target share after Zay Flowers exited in Week 1; if Flowers (hamstring) misses or is limited, Andrews' ceiling rises further. Early word is Flowers should suit up.
 
+### Chuba Hubbard (RB, CAR) — $6,100
+- **Garrett's note (9/24 PM):** "chuba hubbard - brooks is out."
+- **Verified:** Jonathon Brooks placed on IR 9/23, core muscle surgery, out 6+ weeks minimum (Rapoport). Hubbard is the clear RB1: 22 attempts, 4.6 YPC through two weeks. Bryce Young's passing (648 yds, 6 TDs, tied league lead) is carrying the offense; Hubbard's volume has been light but efficient.
+- **Depth watch:** AJ Dillon is RB2; Trevor Etienne (ankle) also on IR. Panthers are working out Austin Ekeler (31, Achilles tear Week 2 2025, reportedly fully cleared) — if signed, he could take passing-down work behind Hubbard. Monitor before lock.
+- **Game:** Panthers (1-1) at Browns (1-1), Sun 9/27 12:00pm CT, clear weather.
+
+### Pat Freiermuth (TE, PIT) — $3,800
+- **Garrett's note (9/24 PM):** "freiermuth has a good matchup."
+- **Support found (9/25):** Cincinnati has allowed **200 receiving yards to tight ends through two games** (Athlon) — Garrett's read has real 2026 backing, not just 2025 memory. Freiermuth himself: 10 targets / 9 catches through two weeks; McCarthy publicly wants him more involved. Props: 3.5 receptions (-146 over), 34.5 yards, TD +355.
+- **Honest caveats:** (1) the 2026 Bengals D is genuinely improved (#1 fantasy D/ST, 8 sacks); (2) Clay Martin's holding-heavy crew can stall PIT drives; (3) 42.5 total with PIT implied 19.5 caps the ceiling. Verdict: viable value TE, behind Gadsden and Andrews in the same salary neighborhood — best as a correlated bring-back in CIN@PIT stacks, not a standalone smash.
+- **Game:** Bengals at Steelers, Sun 9/27 12:00pm CT, partly cloudy.
+
 ## Garrett's takes
 - 2026-09-24 AM: Cowboys "gave up 27 fantasy points to TEs, third-worst vs TE" — checked: actually **29.7 FPG, worst in the league** (even better for Andrews). Likely's 8/78/2 in Week 1 did most of the damage.
 - 2026-09-24 AM: Andrews "25% target share, fourth-best among TEs" — checked: **24.5%** (81st percentile), essentially right on the number.
 - 2026-09-24 AM: "Njoku will be out" — checked: **confirmed**, fibula, on IR, minimum 4 games.
 - 2026-09-24 AM: "hearing a lot of Gadsden talk this morning" — checked: real, driven by the Njoku/Kolar injuries; beat writers pushing him as a pickup.
+- 2026-09-24 PM: "chuba hubbard - brooks is out" — checked: **confirmed**, Brooks to IR 9/23 (core muscle surgery, 6+ weeks). Hubbard the clear RB1 at $6,100; Ekeler workout is the depth watch.
+- 2026-09-24 PM: "freiermuth has a good matchup" — logged; **caution:** 2026 Bengals D is much improved (16.5 pts/gm, #1 fantasy D/ST), so the 2025 worst-vs-TE angle may not carry over. TE-specific 2026 splits still to verify.
 
 ## Log
 - 2026-09-24: Pool opened with Oronde Gadsden II. Props pulled (TD markets only so far).
 - 2026-09-24 AM: "23.2% but only 1 redzone target — this is his week to score" (Andrews) — logged as his TD call vs DAL.
 - 2026-09-24 AM: Added Mark Andrews (vs DAL in Rio). Verified Cowboys TE defense (29.7 FPG, worst), Andrews target share (24.5%), Njoku to IR.
+- 2026-09-24 PM: Garrett flagged Chuba Hubbard (Brooks to IR — verified) and Pat Freiermuth (good matchup per Garrett; 2026 CIN TE splits still to verify). Notes added for both.
+- 2026-09-25: Garrett uploaded the FantasyPros Week 3 primer transcript (Wilcox/Brown). Extracted to `../2026-09-25/week3-fantasypros-primer.md`. Big one: Brown independently loves Freiermuth (CIN 9th-most yards/target + 6th-most FP/target to TEs; Metcalf shadowed by DJ Turner; Muth only Steeler with RZ targets) — upgrades the Freiermuth verdict. New value: Bryce Young $5,600 (QB2 PPG vs QB17 ECR, CAR leads NFL 72% neutral pass rate), Monangai $5,200 [Q] (MNF run-game angle), Wicks $4,100 (2.72 YPRR vs CHI perimeter), Vele $4,400 (WR15 PPG vs LV slot), Adonai Mitchell $4,300 (23.1% targets vs banged-up DET), Mundt $2,600 (punt TE). Two transcript claims NOT used: "Etienne hamstring/Kamara dust" (conflicts with our Fri injury lane) and "Pittman back for PIT" (Pittman is on IND).
 
 ## Sun-Mon slate — DraftKings pool pull (2026-09-24, read-only)
 - **Contest:** NFL $15K Sun-Mon Special [$5K to 1st] — $18 entry, 980 entries, $15,000 prizes, pays top 200. Roster: QB, RB, RB, WR, WR, WR, TE, FLEX, DST. Salary cap $50,000.
@@ -71,3 +87,33 @@ OUT: Jayden Daniels (WAS), Jaxson Dart (NYG), Alec Pierce (IND). D: Caleb Willia
 
 ## Log
 - 2026-09-24: Keenum target-split study complete (career + layoff-return). Filed keenum-target-splits.md.
+- 2026-09-25 PM: Multi-episode transcript intake complete — full docx read (offsets 1–14,794), filed `../2026-09-25/week3-multi-episode-transcripts.md`. See "Transcript intake — incremental signals" below.
+
+## Transcript intake — incremental signals (2026-09-25 PM)
+
+Host claims unless marked ✅. Full segment map + rejected claims in `../2026-09-25/week3-multi-episode-transcripts.md`.
+
+### New names entering the watch list
+- **Carnell Tate (WR, TEN)** — RotoWire breakout case: 30% first-read target rate, 81% route participation, 21% target share, 40% air-yard share (unverified metrics). Rich Hribar (Sharp): **over 3.5 receptions at +129**; routes on 84% of team dropbacks; NYG secondary depleted (Adebo IR, Newsome rib, Hood elevated, Nubin gave up 123 yds in coverage last week). ⚠️ **Direct weather conflict** with our TEN–NYG rain/gust downgrade — needs Friday metric verification before any use.
+- **Emmett Johnson (RB, KC)** — Sharp prop: **over 23.5 rushing yards** vs MIA. MIA trailed by double digits 67% of snaps; backup RBs (Kalin Black, Mike Washington) both cleared this vs MIA; K. Walker on 475-touch pace → Johnson in line for 8–10 carries in a blowout script. KC–MIA stack depth piece.
+- **Bhayshul Tuten (RB, JAX)** — 49% snap rate, 54% of designed rush attempts, leads NFL in runs over 15 mph (12). NE matchup: sub packages 87% on 1st-and-10 (lg avg 58%) + 41% blitz rate; Cohen dials RB screens 53% vs blitz (lg avg 33%). Slate-relevant (NE@JAX).
+- **David Montgomery (RB, DET)** — IND allows 31+ pts/game to RBs (3rd-best RB matchup); Henry 35, Walker 24 (no TD) vs them; cited projection 18+ touches / 75+ all-purpose yards with goal-line role. NYJ@DET environment.
+
+### Status gaps to recheck Friday (not in injuries file)
+- **Nico Collins (HOU)** — Sharp ref segment says OUT (alongside confirmed-IR Alec Pierce). Our injuries file has no Collins entry. Schultz breakout case depends on it — verify Friday final report.
+- **Ronnie Stanley (BAL)** — Sharp's Lamar prop segment flags him as a question. Relevant to Lamar rushing-upside logic (banged-up OL → more scrambles).
+
+### Environment/detail adds (corroborating existing pool)
+- **Lamar over 38.5 rushing yards** (Sharp bonus bet): DAL blitzes at high rate without pressure; J. Daniels had ~67 rush yds in the 1H vs DAL last week. Adds rushing-floor fuel to BAL–DAL stacks.
+- **JSN vs WAS blitz splits** (Sharp): JSN has all 4 SEA TDs; 39% target rate vs blitz since start of last year (4.5 yds/target); WAS 5th-highest blitz rate, allows 11.6 YPA when blitzing; JSN 129/8 vs WAS in DC last year; SEA #4 EPA/att vs too-high looks. (Pending Darnold final + WAS weather.)
+- **Garrett Wilson over 62.5 receiving yards** (Sharp best bet; ladders to 100): Wilson targeted 44% of routes vs man (Geno); DET 4th in man rate (~30%), 8th in blitz rate; Geno 14/19, 9.0 YPA vs blitz, targeting Wilson 33% (2.5 YPRR); DET defense 31st overall; Jets' first real trailing-script game.
+- **Referee cross-confirmation:** Sharp's ref analyst independently uses the same three crews as `../2026-09-25/week3-referees.md` — Torbert (HOU@IND), Vinovich (LAR@DEN), Hochuli (PHI@CHI) — with under leans on all three games and underdog ATS trends (19–39 home-underdogs ATS w/ Torbert; Broncos 1–6 at home w/ Vinovich; Eagles 6–0 SU w/ Hochuli but "first to 20 wins" framing for MNF).
+
+### Superseded — do not use
+- "Drew Lock likely starts" (recorded ~9/24; superseded by Darnold Thu full practice — trending to start).
+- RotoWire's Bowers TE1-week bold prediction (recorded pre-Friday; Bowers DNP Friday, officially questionable).
+- "Kamara is dust / Etienne hamstring worry" (FantasyPros podcast) — injuries file: Etienne FP Friday, will play.
+- "No clue who CHI's QB is" (FantasyPros podcast) — Keenum expected to start.
+
+### Season-long only (kept labeled, not DFS)
+- Buys: Tuten, Pickens. Sells: Jadarian Price (Charbonnet back ~3–4 wks), AJ Brown (6–8 wks). Stashes: Gadsden, Ted Hurst, Samaje Perine. Sits: Stafford @DEN, all Commanders vs SEA, Loveland vs PHI. Mans waiver order: Boston, Hurst, Mariota, Braelon Allen, Gadsden, Coleman, B. Young, Downs, Freiermuth, Tucker.
