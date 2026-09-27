@@ -285,7 +285,37 @@ export function buildFeatures(
     }
   }
 
-  /** Opponent-quality term over this appearance's strictly-earlier games. */
+  /** Baseline for a team at a gameday, using only appearances strictly earlier than that day. */
+  const baselineAt = (team: string, gameday: string): Baseline | undefined => {
+    const list = byTeam.get(team);
+    if (list === undefined) return undefined;
+    let k = 0;
+    while (k < list.length && list[k]!.gameday < gameday) k++;
+    const prior = list.slice(0, k);
+    const priorReg = prior.filter((p) => p.phase === "REG");
+    const priorPost = prior.filter((p) => p.phase === "POST");
+    return {
+      scored: trailingMean(prior.map((p) => p.scored), k, window),
+      allowed: trailingMean(prior.map((p) => p.allowed), k, window),
+      margin: trailingMean(prior.map((p) => p.margin), k, window),
+      n: prior.length,
+      nReg: priorReg.length,
+      scoredReg: trailingMean(priorReg.map((p) => p.scored), priorReg.length, window),
+      nPost: priorPost.length,
+      scoredPost: trailingMean(priorPost.map((p) => p.scored), priorPost.length, window),
+    };
+  };
+
+  const syntheticAppearance = (team: string, opponent: string, game: NormalizedGame): Appearance => ({
+    team,
+    opponent,
+    gameId: game.game_id,
+    gameday: game.gameday,
+    phase: game.season_phase,
+    scored: 0,
+    allowed: 0,
+    margin: 0,
+  });
   const opponentTerm = (
     ap: Appearance,
     field: "allowed" | "scored",
@@ -314,10 +344,13 @@ export function buildFeatures(
   for (const game of ordered) {
     const homeIndex = indexByTeamGame.get(`${game.home_team} ${game.game_id}`);
     const awayIndex = indexByTeamGame.get(`${game.away_team} ${game.game_id}`);
-    const homeAp = homeIndex === undefined ? undefined : appearances[homeIndex];
-    const awayAp = awayIndex === undefined ? undefined : appearances[awayIndex];
-    const homeBase = homeIndex === undefined ? undefined : baselineOf.get(homeIndex);
-    const awayBase = awayIndex === undefined ? undefined : baselineOf.get(awayIndex);
+    // Settled games keep the baseline stored at their appearance. An unsettled
+    // game was not added as history, but it still gets that team's strictly
+    // earlier settled games. Its own missing score is not written back.
+    const homeAp = homeIndex === undefined ? syntheticAppearance(game.home_team, game.away_team, game) : appearances[homeIndex];
+    const awayAp = awayIndex === undefined ? syntheticAppearance(game.away_team, game.home_team, game) : appearances[awayIndex];
+    const homeBase = homeIndex === undefined ? baselineAt(game.home_team, game.gameday) : baselineOf.get(homeIndex);
+    const awayBase = awayIndex === undefined ? baselineAt(game.away_team, game.gameday) : baselineOf.get(awayIndex);
 
     const homeOppDef = homeAp === undefined ? null : opponentTerm(homeAp, "allowed");
     const homeOppOff = homeAp === undefined ? null : opponentTerm(homeAp, "scored");

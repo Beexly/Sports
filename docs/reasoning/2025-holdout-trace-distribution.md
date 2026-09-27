@@ -1,6 +1,6 @@
 # 2025 holdout trace distribution
 
-Measured 2026-09-26T23:28:22.080Z by calling `reasonAbout` once per sealed holdout row. The trace source was not edited. The holdout manifest was not edited. No pick was written.
+Measured 2026-09-26T23:37:55.935Z by calling `reasonAbout` once per sealed holdout row. The trace source was not edited. The holdout manifest was not edited. No pick was written.
 
 ## What was actually on the row
 
@@ -8,7 +8,7 @@ Measured 2026-09-26T23:28:22.080Z by calling `reasonAbout` once per sealed holdo
 
 Scores and `home_win` were not passed in. Moneylines were not converted into probabilities. Assigning them a sample size would have been a fabricated premise.
 
-Each call received two context premises (rest, roof) and the blocked GLMF kernel. Context is not a forecast.
+Each call went through `traceHoldoutGame`. Rest and roof are context. The bridge premise is a refusal, because the row has no bridge payload. Scores were not passed in. `withheldReasons` is empty on every row because the conclusion is INSUFFICIENT, not WITHHELD. There is still no confidence field.
 
 ## Distribution
 

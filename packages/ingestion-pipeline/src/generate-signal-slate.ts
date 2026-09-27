@@ -26,7 +26,7 @@ import type {
 import { buildIndependentFairValues } from "./build-independent-fair-values.js";
 import { SIGNAL_REGISTRY } from "./signal-registry-definitions.js";
 import { applyContinuousSignalTilt } from "./continuous-signal-tilt.js";
-import { runLeakageGate, fixtureFromGameRows } from "./leakage-gate.js";
+import { runLeakageGate, fixtureFromGameRows, evalLeakageQuality } from "./leakage-gate.js";
 import {
   FixtureConfirmer,
   formatFixtureLine,
@@ -35,7 +35,7 @@ import {
 } from "./fixture-confirmation.js";
 import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
 import { collapseGameRowsToFixtures } from "./fixture-collapse.js";
-import { evalLeakageQuality } from "./leakage-gate.js";
+import type { SignalSlateOptions } from "./signal-slate-options.js";
 
 /**
  * Rows read from `games` before the per-fixture collapse. Sized well above the
@@ -174,15 +174,21 @@ const MODEL_SIGNAL_GRADE = "LEAN" as const;
 /**
  * Generate model-signal MONEYLINE picks for upcoming games using independents only.
  */
-export async function generateSignalSlate(opts?: {
-  readonly horizonHours?: number;
-  readonly logPrefix?: string;
-  readonly now?: Date;
-  /** When true, do not call ESPN seed (board-fill already seeded). */
-  readonly skipSeed?: boolean;
-  /** Injected fetch for the fixture confirmation scoreboard (tests); defaults to global fetch. */
-  readonly fetchImpl?: typeof fetch;
-}): Promise<SignalSlateResult> {
+export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<SignalSlateResult> {
+  if (!opts?.trace || opts.trace.conclusion !== "ASSOCIATION_ONLY") {
+    return {
+      ok: false,
+      gamesConsidered: 0,
+      candidatesWithIndependents: 0,
+      picksUpserted: 0,
+      picksSkipped: 0,
+      fixtureUnconfirmed: 0,
+      skippedInPlay: 0,
+      seriesRepeatsSkipped: 0,
+      errors: ["slate requires an ASSOCIATION_ONLY reasoning trace and does not mint without one"],
+      note: "slate refused: no association trace",
+    };
+  }
   const logPrefix = opts?.logPrefix ?? "[signal-slate]";
   const now = opts?.now ?? new Date();
   const horizonHours = opts?.horizonHours ?? 504; // 21d signal board (early season)

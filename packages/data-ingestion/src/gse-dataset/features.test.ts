@@ -285,6 +285,35 @@ describe("Stage C / no lookahead", () => {
     expect(features[0]!.home_opp_adj_pts_scored).toBeNull();
   });
 
+  it("gives an unplayed game the history of games already played", () => {
+    const played = makeGame({
+      game_id: "PLAYED",
+      gameday: "2026-09-13",
+      season: 2026,
+      home_team: "BUF",
+      away_team: "NYJ",
+      home_score: 30,
+      away_score: 10,
+      margin: 20,
+    });
+    const next = makeGame({
+      game_id: "NEXT",
+      gameday: "2026-09-27",
+      season: 2026,
+      home_team: "BUF",
+      away_team: "LAC",
+      settled: false,
+    });
+    const features = buildFeatures([next, played]).features;
+    const row = features.find((f) => f.game_id === "NEXT")!;
+    const first = features.find((f) => f.game_id === "PLAYED")!;
+    expect(row.home_games_prior).toBe(1);
+    expect(row.home_pts_scored_avg).toBe(30);
+    expect(row.away_games_prior).toBe(0);
+    expect(row.away_pts_scored_avg).toBeNull();
+    expect(first.home_games_prior).toBe(0);
+  });
+
   it("is order-independent: the same games shuffled give the same features", () => {
     const games = makeSchedule(14);
     const forward = buildFeatures(games).features;

@@ -4,14 +4,24 @@
 
 Sports picks platform with real data ingestion, deterministic factor-model
 prediction ranking, subscription paywalls, content generation, and an internal
-operator cockpit. We're not AI. We're math you can read. See `CLAUDE.md` for
-the full system overview and non-negotiable rules.
+operator cockpit. We're not AI. We're math you can read. Agents start at
+`AGENTS.md`. `CLAUDE.md` is the product overview.
 
 > **Current mode: internal calibration only.** No auto-publish. No auto-send.
-> No external posting. No automated betting. The platform's `ContentDraft`
-> engine drafts internally; the legacy content-publishing worker is hard-gated
-> off by default. See `docs/calibration-proposals/FROZEN.md` and
-> `scripts/guardrails/*` for the enforcement surface.
+> No external posting. No automated betting. `publishes_pick` stays false.
+
+## Where the code is (2026-09-26)
+
+Branch `grok/reasoning-layer-2026-09-26`. Do not redo this work.
+
+- Eight LIVE week-3 parts are locked in `data/reasoning/parts-registry.jsonl` for `2026_03_LAC_BUF` only. The edge sum is `0.30259224777263855`. Do not copy those signed values onto another game.
+- Officials, weather, narrative contract, and coaching are DARK. Officials failed honesty. A named referee does not turn it on.
+- nflverse contracts, rosters, snap counts, participation, and fourth-down probabilities for 2024 and 2025 are in `data/gse-dataset/*.jsonl`. Hashes are in `data/gse-dataset/nflverse-ingest-manifest.json`. `go_wp` is not on play-by-play. It came from the nfl4th RDS. The model was not ported.
+- Week-3 readings go through `readParts` → `aggregateSignals`. `packages/ingestion-pipeline/src/reasoning-trace/from-bridge.ts` already exists for stored bridge premises. Do not add a second one, and do not treat it as the week-3 edge.
+- `SignalFamily` stays eight members. Do not expand it to hit a feature count.
+- Tonight's queue is `docs/reasoning/overnight-agent-prompt-2026-09-26.md`. The owner is running that queue on Grok. Other agents do not start it.
+
+Older sweep notes are in `docs/ops/AGENTS-history-through-2026-09-24.md`. They are not current tasks.
 
 ## FABLE/NFL evidence layer
 
@@ -144,10 +154,9 @@ For the step-by-step morning operator recipe (install → validate → push → 
 → stage validation → flipping the performance gate → rollback), see
 [`docs/launch-runbook.md`](docs/launch-runbook.md).
 
-**Launch-night handoff (read this first if you just sat down):**
+Launch-night reports remain at
 [`reports/launch-night/morning-handoff.md`](reports/launch-night/morning-handoff.md).
-That file links the rest of the launch-night reports in the right
-reading order — start there.
+They are history. Current agent state is `AGENTS.md`.
 
 All cockpit pages and `/api/cockpit/*` routes redirect non-admins to
 `/auth/signin?callbackUrl=/cockpit`.
