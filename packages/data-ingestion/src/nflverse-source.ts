@@ -20,7 +20,8 @@
  * docs/data-analytics-strategy.md.
  */
 
-import { gunzipSync } from "node:zlib";
+import { createGunzip, gunzipSync } from "node:zlib";
+import { once } from "node:events";
 import { noStoreFetch } from "./no-store-fetch.js";
 
 export const NFLVERSE_BASE = "https://github.com/nflverse/nflverse-data/releases/download";
@@ -375,6 +376,103 @@ function parseCsvProjected(text: string, columns: readonly string[]): CsvTable {
  * (Buffer / node:zlib); use on the Node.js runtime.
  */
 export async function decodeDatasetText(response: Response): Promise<string> {
+  // MEMORY. This decodes one asset at a time but the whole body is resident:
+  // the compressed buffer AND the decompressed string AND the parsed row objects.
+  // `player_stats.csv` measures 33,447,747 bytes uncompressed (Content-Length
+  // from the nflverse release), so `gunzipSync` over it briefly holds the gz
+  // buffer, the full decompressed Buffer, AND its utf8 string at once, and the
+  // caller then builds a row object per record on top of that. Measured
+  // consequence in production on dpl_5w9WsXUHtYq3KbMiX58gTZzKZjZR:
+  // `/api/cron/refresh-player-stats` returned 500 sixteen times at 21:30-21:33
+  // UTC with "instance was killed because it ran out of available memory" —
+  // and NOT in the 10:00 satellite window, so the PRIMARY path alone is over the
+  // ceiling. The same path also succeeded at 2026-09-28T02:00:03Z
+  // (`player_game_stats` max fetchedAt), so this is a MARGIN problem, not a
+  // hard limit: it fits sometimes and dies sometimes.
+  //
+  // The fix is to stop holding the compressed copy. Decoding the RESPONSE BODY
+  // STREAM with an incremental TextDecoder means the gz bytes are consumed and
+  // released chunk by chunk and never sit in memory alongside the output. The
+  // returned string is byte-identical, the gzip magic-byte detection is
+  // unchanged, and no row is dropped or sampled — this reduces peak memory
+  // without changing a single record.
+  if (response.body) {
+    const reader = response.body.getReader();
+    // Peek the first TWO bytes to detect gzip by MAGIC rather than by URL, so
+    // an uncompressed asset or a test mock still works exactly as before. Two
+    // separate reads are required: a stream may hand back a single byte, and
+    // testing magic on one byte would misread every gzipped asset as plain and
+    // emit raw binary — which is exactly what this test caught.
+    const decoder = new TextDecoder("utf-8");
+    const r1 = await reader.read();
+    if (r1.done) return "";
+    const b0 = new Uint8Array(r1.value);
+    let head: Uint8Array;
+    let isGzip: boolean;
+    if (b0.length >= 2) {
+      head = b0;
+      isGzip = b0[0] === 0x1f && b0[1] === 0x8b;
+    } else {
+      const r2 = await reader.read();
+      if (r2.done) {
+        // A one-byte body: no magic number is possible, so it is plain text.
+        return decoder.decode(b0);
+      }
+      const b1 = new Uint8Array(r2.value);
+      head = new Uint8Array(b0.length + b1.length);
+      head.set(b0, 0);
+      head.set(b1, b0.length);
+      isGzip = head.length > 1 && head[0] === 0x1f && head[1] === 0x8b;
+    }
+
+    if (!isGzip) {
+      let out = decoder.decode(head, { stream: true });
+      for (;;) {
+        const next = await reader.read();
+        if (next.done) break;
+        out += decoder.decode(next.value, { stream: true });
+      }
+      out += decoder.decode();
+      return out;
+    }
+
+    // Gzip: pipe each chunk into an ASYNC gunzip AS IT ARRIVES, so the
+    // compressed bytes are released chunk by chunk and never sit in memory
+    // alongside the output. Buffering the chunks into an array first (the
+    // obvious way to write this) would save nothing at all — that is exactly
+    // the residency the original `gunzipSync` had.
+    const gunzip = createGunzip();
+    const done = new Promise<void>((resolvePromise, rejectPromise) => {
+      gunzip.on("end", resolvePromise);
+      gunzip.on("finish", resolvePromise);
+      gunzip.on("error", rejectPromise);
+    });
+    let out = "";
+    // Consume the gunzip output while chunks are still being written.
+    const pump = (async () => {
+      for await (const piece of gunzip) {
+        out += decoder.decode(piece as Uint8Array, { stream: true });
+      }
+    })();
+
+    gunzip.write(Buffer.from(head));
+    for (;;) {
+      const next = await reader.read();
+      if (next.done) break;
+      if (!gunzip.write(Buffer.from(next.value))) {
+        // Respect backpressure so a slow decompressor cannot balloon the queue.
+        await once(gunzip, "drain");
+      }
+    }
+    gunzip.end();
+    await done;
+    await pump;
+    out += decoder.decode();
+    return out;
+  }
+
+  // No streaming body (a mock, or a runtime without ReadableStream): the
+  // original buffered path, unchanged.
   const buf = Buffer.from(await response.arrayBuffer());
   const isGzip = buf.length > 1 && buf[0] === 0x1f && buf[1] === 0x8b;
   return isGzip ? gunzipSync(buf).toString("utf8") : buf.toString("utf8");
