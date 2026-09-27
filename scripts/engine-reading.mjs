@@ -82,8 +82,14 @@ for (const context of contexts) {
     coaching: situation ? situation.coaching_signed : null,
     airwave: airwave.has(context.game_id) ? airwave.get(context.game_id) : null,
   });
-  if (reading.publishesPick !== false || reading.tiltIsProbability !== false) {
-    throw new Error("engine reading leaked a pick or a probability");
+  if (reading.engineEdge.value !== null) {
+    const partSum = reading.engineEdge.parts.reduce((sum, part) => sum + part.points, 0);
+    if (Math.abs(partSum - reading.engineEdge.value) > 1e-9) {
+      throw new Error(`edge parts do not sum for ${context.game_id}`);
+    }
+    if (Math.abs(reading.engineEdge.value) - reading.coverage > 1e-9) {
+      throw new Error(`edge was rescaled above coverage for ${context.game_id}`);
+    }
   }
   readings.push({
     game_id: context.game_id,
@@ -129,7 +135,7 @@ const dark = ENGINE_FAMILIES.filter((family) => family.role === "dark");
 const lines = [
   "# Engine edge, week 3",
   "",
-  "The edge is the weighted composite of the live signals. We build it. The price does not define it. Brier, Kelly, and Bradley-Terry measure it after the fact. A dark family is a named hole, not a reason to call the rest nothing.",
+  "The edge is the sum of prior times signal across the whole table. A dark family adds zero and the live families are not scaled up to hide it. The price is context. Brier, Kelly, and Bradley-Terry are meters.",
   "On-field efficiency is a shrunk opponent-adjusted blend: 55% pass EPA residual, 15% rush EPA residual, 15% CPOE, 10% explosive-pass rate, 5% interception luck. The 2025 season is the prior. 2026 weeks 1-2 are the observation.",
   "Airwave is in the edge at a prior of 0.05. It is the questionable and doubtful skill wire, not a second copy of the out list. SiriusXM audio was not captured.",
   `OpenRouter lane: ${readings[0].model_lane}. No model call was made.`,

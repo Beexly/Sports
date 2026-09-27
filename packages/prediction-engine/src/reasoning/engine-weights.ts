@@ -1,8 +1,8 @@
 /**
- * The edge is this composite. Every live signal is part of it.
- * A family with no row stays named and contributes nothing.
- * Brier, Kelly, Bradley-Terry, and the price are meters and context.
- * They score the edge. They do not define it.
+ * Standing rule, from the start: the edge is the sum of prior × signal
+ * across the whole table. A missing signal adds zero. Live signals are
+ * not rescaled to fill that hole. Meters score the edge later. They are
+ * not the edge.
  */
 
 export const ENGINE_FAMILIES = [
@@ -36,7 +36,7 @@ export interface EngineEdgePart {
 }
 
 export interface EngineEdge {
-  readonly definition: "The edge is the weighted composite of the live signals.";
+  readonly definition: "The edge is the sum of prior times signal across the whole table. Missing signals add zero.";
   readonly value: number | null;
   readonly parts: readonly EngineEdgePart[];
 }
@@ -115,16 +115,16 @@ export function composeEngineReading(
     raw.push({ id: family.id, prior: family.prior, signed: bounded });
   }
 
-  const edge = weight > 0 ? mass / weight : null;
+  const edge = weight > 0 ? mass : null;
   const parts: EngineEdgePart[] = raw.map((part) => ({
     ...part,
-    points: edge === null ? 0 : (part.prior * part.signed) / weight,
+    points: part.prior * part.signed,
   }));
 
   return {
     gameId,
     engineEdge: {
-      definition: "The edge is the weighted composite of the live signals.",
+      definition: "The edge is the sum of prior times signal across the whole table. Missing signals add zero.",
       value: edge,
       parts,
     },
