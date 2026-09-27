@@ -24,9 +24,10 @@ ADJUST = ROOT / "data" / "gse-dataset" / "current" / "week3-usage-adjustments.js
 REPORT = ROOT / "docs" / "reasoning" / "week3-signal-ledger.md"
 
 CHART_AS_OF = "2026-09-26T12:12:29Z"
-OL = {"LT": 0.04, "RT": 0.04, "LG": 0.025, "RG": 0.025, "C": 0.03}
+WEEK = 3
+CALIBRATION = ROOT / "data" / "gse-dataset" / "current" / "ol-drag-calibration.json"
+INJURIES = ROOT / "data" / "gse-dataset" / "current" / "injuries_2026.csv"
 SKILL = {"QB": 0.08, "RB": 0.05, "WR": 0.04, "TE": 0.03}
-STATUS_MULT = {"OUT": 1.0, "DOUBTFUL": 0.7, "QUESTIONABLE": 0.35}
 SCHEME_KEYS = ("shotgun_rate", "no_huddle_rate", "motion_rate", "play_action_rate", "rpo_rate", "screen_rate")
 
 
@@ -43,7 +44,45 @@ def num(value):
         return 0.0
 
 
+def load_line_rules():
+    fitted = json.loads(CALIBRATION.read_text())
+    multipliers = {name: row["multiplier"] for name, row in fitted["coefficients"].items()}
+    game_status = {}
+    practice = {}
+    with INJURIES.open(newline="") as handle:
+        for row in csv.DictReader(handle):
+            if int(row["week"]) != WEEK or row["game_type"] != "REG":
+                continue
+            key = (row["team"], row["gsis_id"])
+            game_status[key] = row["report_status"]
+            practice[key] = row["practice_status"]
+    return multipliers, game_status, practice
+
+
 def clip(value, low, high):
+    return max(low, min(high, value))
+
+
+def line_multiplier(players, multipliers, game_status, practice):
+    starters = [player for player in players if player["pos"] in ("LT", "RT") and player["rank"] == 1]
+    seen = set()
+    unique = []
+    for player in starters:
+        if player["gsis_id"] in seen:
+            continue
+        seen.add(player["gsis_id"])
+        unique.append(player)
+    if not unique:
+        return 1.0, "no starting tackle on the chart"
+    states = [game_status.get((player["team"], player["gsis_id"]), "") for player in unique]
+    practices = [practice.get((player["team"], player["gsis_id"]), "") for player in unique]
+    if any(item in ("Out", "Doubtful") for item in states):
+        return 1 + multipliers["tackle_out"], "starting tackle out"
+    if any(item.startswith("Did Not") for item in practices):
+        return 1 + multipliers["tackle_dnp"], "starting tackle did not practice"
+    if any(item.startswith("Limited") for item in practices):
+        return 1 + multipliers["tackle_limited"], "starting tackle limited"
+    return 1.0, "starting tackles practiced in full"
     return max(low, min(high, value))
 
 
@@ -146,6 +185,7 @@ def main():
     contexts = [game for game in contexts if game["settled"] is not True]
     chart = load_chart()
     status = load_status(contexts)
+    line_rules, game_status, practice_status = load_line_rules()
     rush, team_rush = load_usage()
     fantasy, targets = load_fantasy()
     totals = {}
@@ -183,10 +223,10 @@ def main():
             for player in players:
                 by_pos[player["pos"]].append(player)
                 state = status.get((team, norm(player["player"])), "ACTIVE")
-                weight = OL.get(player["pos"], SKILL.get(player["pos"], 0.005))
-                mult = STATUS_MULT.get(state, 0.0)
+                weight = SKILL.get(player["pos"], 0.005)
+                mult = 1.0 if state in ("OUT", "DOUBTFUL") else 0.0
                 points = -weight * mult
-                flows = "offense" if player["pos"] in OL or player["pos"] in SKILL else "roster"
+                flows = "offense" if player["pos"] in {"LT", "RT", "LG", "RG", "C"} or player["pos"] in SKILL else "roster"
                 signals.append({
                     "game_id": game_id,
                     "team": team,
@@ -216,20 +256,14 @@ def main():
                 })
                 count += 1
 
-            ol_drag = 0.0
-            for player in players:
-                if player["pos"] not in OL or player["rank"] > 2:
-                    continue
-                state = status.get((team, norm(player["player"])), "ACTIVE")
-                share = 1.0 if player["rank"] == 1 else 0.5
-                ol_drag += -OL[player["pos"]] * STATUS_MULT.get(state, 0.0) * share
-            ol_drag = max(ol_drag, -0.08)
+            multiplier, reason = line_multiplier(players, line_rules, game_status, practice_status)
             adjustments.append({
                 "kind": "ol",
                 "game_id": game_id,
                 "team": team,
-                "multiplier": round(1 + ol_drag, 4),
-                "drag": round(ol_drag, 4),
+                "multiplier": round(multiplier, 4),
+                "drag": round(multiplier - 1, 4),
+                "reason": reason,
             })
 
             def vacate(position, usage_of, scheme_mult):
@@ -320,7 +354,7 @@ def main():
     lines = [
         "# Signal ledger, week 3",
         "",
-        "Every charted player is a signal. A family bucket is not a player. An offensive lineman who is out or questionable lowers every skill projection on that team. A starter back who is out moves a share of his work to the next back. That share is larger when the team runs and when the next back has been efficient. It is never the whole starter job.",
+        "Every charted player is a signal. The offensive-line multiplier is the 2024-2025 fit, and the same file is what next week reads. A starting tackle who is out, or who did not practice, lowers the skill players. A questionable tag with a full practice does not.",
         "",
         f"Signals this week: {len(signals)}. Per game: {counts[0]} to {counts[-1]}. Median game total on the slate: {median_total}.",
         "",
@@ -333,10 +367,10 @@ def main():
         lines.append(
             f"| {row['team']} | {row['starter']} | {row['starter_status']} | {row['player']} | {row['work']:.2f} | {row['points']:.2f} | {row['run_rate']} | {row['total_line']} | {row['team_edge']:+.3f} | {row['agrees']} |"
         )
-    drags = [row for row in adjustments if row["kind"] == "ol" and row["drag"] < 0]
-    lines.extend(["", "## Offensive line dragging the skill players", "", "| team | multiplier |", "|---|---:|"])
+    drags = [row for row in adjustments if row["kind"] == "ol"]
+    lines.extend(["", "## Offensive line", "", "The multiplier comes from 2024 and 2025, not from a 4 percent guess. A starting tackle who is out is -11.3 percent. One who did not practice is -7.5 percent. One who was limited is -5.0 percent. A full practice is no change. A backup guard is not in the fit.", "", "| team | multiplier | why |", "|---|---:|---|"])
     for row in sorted(drags, key=lambda item: item["drag"]):
-        lines.append(f"| {row['team']} | {row['multiplier']:.3f} |")
+        lines.append(f"| {row['team']} | {row['multiplier']:.3f} | {row['reason']} |")
     lines.append("")
     REPORT.write_text("\n".join(lines))
     print(json.dumps({

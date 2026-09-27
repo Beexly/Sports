@@ -1,6 +1,6 @@
 # Signal ledger, week 3
 
-Every charted player is a signal. A family bucket is not a player. An offensive lineman who is out or questionable lowers every skill projection on that team. A starter back who is out moves a share of his work to the next back. That share is larger when the team runs and when the next back has been efficient. It is never the whole starter job.
+Every charted player is a signal. The offensive-line multiplier is the 2024-2025 fit, and the same file is what next week reads. A starting tackle who is out, or who did not practice, lowers the skill players. A questionable tag with a full practice does not.
 
 Signals this week: 2269. Per game: 141 to 160. Median game total on the slate: 43.5.
 
@@ -18,15 +18,39 @@ The total is the posted number on the game file. No player prop price was on tha
 | DEN | Jonah Coleman | OUT | J.K. Dobbins | 2.89 | 2.89 | 0.422 | 44.5 | +0.029 | True |
 | NO | Barion Brown | OUT | Chris Olave | 0.06 | 0.03 | 0.366 | 43.5 | +0.077 | False |
 
-## Offensive line dragging the skill players
+## Offensive line
 
-| team | multiplier |
-|---|---:|
-| BAL | 0.960 |
-| KC | 0.960 |
-| HOU | 0.974 |
-| CLE | 0.975 |
-| WAS | 0.975 |
-| MIN | 0.985 |
-| DET | 0.988 |
-| BUF | 0.996 |
+The multiplier comes from 2024 and 2025, not from a 4 percent guess. A starting tackle who is out is -11.3 percent. One who did not practice is -7.5 percent. One who was limited is -5.0 percent. A full practice is no change. A backup guard is not in the fit.
+
+| team | multiplier | why |
+|---|---:|---|
+| BAL | 0.887 | starting tackle out |
+| KC | 0.887 | starting tackle out |
+| MIN | 0.925 | starting tackle did not practice |
+| NE | 0.950 | starting tackle limited |
+| NYG | 0.950 | starting tackle limited |
+| ARI | 1.000 | starting tackles practiced in full |
+| SF | 1.000 | starting tackles practiced in full |
+| DAL | 1.000 | starting tackles practiced in full |
+| CAR | 1.000 | starting tackles practiced in full |
+| CLE | 1.000 | starting tackles practiced in full |
+| CIN | 1.000 | starting tackles practiced in full |
+| PIT | 1.000 | starting tackles practiced in full |
+| HOU | 1.000 | starting tackles practiced in full |
+| IND | 1.000 | starting tackles practiced in full |
+| MIA | 1.000 | starting tackles practiced in full |
+| LAC | 1.000 | starting tackles practiced in full |
+| BUF | 1.000 | starting tackles practiced in full |
+| LA | 1.000 | starting tackles practiced in full |
+| DEN | 1.000 | starting tackles practiced in full |
+| LV | 1.000 | starting tackles practiced in full |
+| NO | 1.000 | starting tackles practiced in full |
+| TB | 1.000 | starting tackles practiced in full |
+| JAX | 1.000 | starting tackles practiced in full |
+| NYJ | 1.000 | starting tackles practiced in full |
+| DET | 1.000 | starting tackles practiced in full |
+| SEA | 1.000 | starting tackles practiced in full |
+| WAS | 1.000 | starting tackles practiced in full |
+| TEN | 1.000 | starting tackles practiced in full |
+| PHI | 1.000 | starting tackles practiced in full |
+| CHI | 1.000 | starting tackles practiced in full |
