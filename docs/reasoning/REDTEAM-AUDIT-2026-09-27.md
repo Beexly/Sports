@@ -408,3 +408,100 @@ auto-HEAD, accepts explicit `none` with reason, real root stamps the real SHA.
    the coaching fit leaked (the fitter-reads-the-wrong-field class).
 5. Get B unblocked: cherry-pick or NOT_EVALUATED, then slices 8–12.
 6. Owner decides who pushed `overnight/2026-09-27-A`.
+
+---
+
+## P0-7 `origin/main` was pushed twice during the night (pusher undetermined)
+
+Measured from the fetch reflog (read in B's tree, which shares refs):
+
+```
+f117a3038 refs/remotes/origin/main@{2026-09-26 23:57:26 -0500}: update by push
+d6197a3aa refs/remotes/origin/main@{2026-09-26 22:55:01 -0500}: fetch origin main: fast-forward
+```
+
+and a second push landing `e4dba0234` at ~00:09:38 local. The first push moved
+`main` from `d6197a3aa` (PR #919 merge) to A's HEAD — Session A's entire night
+is now `main`. The second added the crosswalk integration and the loop repair.
+
+The work order forbids agent push (`main` especially). The reflog records the
+push but not the pusher. Either the owner pushed A's work (authorized) or an
+agent violated FORBIDDEN 1 against `main`. Owner must adjudicate; the red team
+cannot. Evidence trail: reflog timestamps, A's heartbeat gap 23:42→23:59.
+
+## P2-5 The append-only loop was repaired in place — violation, mitigated
+
+`e4dba0234` rewrote the historical loop rows' timestamps in place
+(`repair-loop-timestamps.mjs`), restored a cycle-7 row that had been dropped
+entirely (`repair-loop-restored.mjs`), and stamped `utc_source` citing the git
+author date or the join-report `generated_at` for every replaced value. My
+correction row (cycle 13) survived. Git history preserves the pre-rewrite
+state via the commits.
+
+Letter of the law: append-only violated — history was edited. Spirit: the
+replacements are git-traceable facts, the repair scripts are committed, and
+the correction row still names the original fabrication. Graded a violation
+with full mitigation. Rule going forward: **a ledger repair is an appended
+row describing the edit plus a separate mechanical commit — never both in one
+silent pass, and never an in-place edit of a row's prose.**
+
+## VERIFIED-GOOD (wave 3): grok's narrative STORED fit and the 2026 ingest
+
+- `measure-narrative.mjs` re-run independently in grok's tree: **reproduces to
+  the last digit** (train n=1942 r=0.20344943432147203; holdout n=285
+  r=0.23359561489783362, slope=1.1071012391250847, se=0.2739333017720089;
+  honesty cleared; STORED on f3). The regressor is the frozen pre-2025
+  prediction — the coaching refit bug is not present here.
+- Every external claim in grok's 2026 ingest verified against nflverse:
+  `snap_counts_2026.csv` **200**, `roster_2026.csv` **200**,
+  `pbp_participation_2026.csv` **404** (correct — season in progress),
+  `pre_computed_go_boost_2026.rds` **200**.
+- The 2026 snap rows are real and shaped as claimed: week 1 = 1,492 rows / 16
+  games, week 2 = 1,502 / 16, week 3 = **92 rows for `2026_03_ATL_GB` only** —
+  the Thursday game. LAC@BUF is absent (unplayed). Grok did **not** fabricate
+  a LAC@BUF week-3 row and did **not** write the registry (still 8 rows).
+- Grok's post-morning behaviour stayed inside the laws: no push from its lane,
+  frozen coefficients reused, weeks-1-2 proxy explicitly labelled
+  `is_week_3_row: false`.
+
+**Design flag for the founder (not a violation):** the narrative part is
+computable only from in-game snaps — its week-3 "LIVE" value cannot exist
+before kickoff. The pre-game-usable quantity is the weeks-1-2 APY gap (grok:
+signed −0.1155 for LAC@BUF). If LIVE parts are ever wired into pre-game
+publishing, this part must be excluded or redefined on offseason data. Decide
+before the registry gains a 2026 row.
+
+## VERIFIED-GOOD (wave 3): A's crosswalk enrichment is additive and safe
+
+Exhaustive pairwise scan of `rosters-2018.jsonl` before/after:
+**originals_overwritten = 0, missing_filled = 26,176.** Participation keeps
+raw `players_on_field` and adds `players_on_field_gsis` beside it. The
+crosswalk source is nflverse `players.csv` (CC-BY 4.0, attributed), validated
+by A at 99.87% name agreement before use, and by the red team at 100% on both
+join hops (see wave 2).
+
+## STATE AFTER WAVE 3 (00:15 local)
+
+- **main** = `e4dba0234`: A's full night + crosswalk + clean typecheck +
+  repaired loop. Pushed.
+- **grok branch** = `693ba1786`, ahead 19, unpushed: 2026 ingest, narrative
+  STORED with the LIVE path, dashboard updates. `next: measure-officials`
+  — will DUPLICATE A's officials DARK when it runs (grok's lane is not in
+  the coord system; the lanes cannot see each other's records).
+- **B** = fast-forwarded to `e4dba0234` by the red team; stalled 60+ min with
+  zero output before that (it was tasked with an impossible slice). Prompt
+  rewritten: its slice 7 is now independent reproduction of a sibling
+  measurement; scripts preserved in `scripts/overnight-b/`; typecheck
+  verified clean (exit 0).
+- **redteam branch** = this audit + all fixes. NOT pushed, NOT merged.
+
+## Next honest attacks (after wave 3)
+
+1. Split confidence into a labelled `marketEchoScore` and a pure model rank.
+2. Owner adjudicates the two `main` pushes.
+3. When grok lands its officials re-measure, reconcile the two officials
+   DARK records (A: n=269 r=+0.0274; grok: pending) into one canonical row.
+4. Register the grok lane in the coord system or sunset the board.
+5. Founder decision: narrative part's post-kickoff computability (above).
+6. Merge the red-team branch's fixes (public copy honesty, ENTRY_ODDS_MAX_ABS,
+   honest logger, manifest-driven verifier) into main after owner review.
