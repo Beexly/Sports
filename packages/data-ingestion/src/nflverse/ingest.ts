@@ -31,7 +31,14 @@ import {
   type Decision,
 } from "./rows.js";
 
-const SEASONS = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025] as const;
+// TRAINING_SEASONS is the walk-forward corpus: everything the fits may learn from, with 2025
+// held out. APPLICATION_SEASONS is the in-flight season the locked parts are scored on. They
+// are separate because a fit must never see the application season, and because an in-flight
+// season is legitimately missing grains that a completed one has: nflverse has not published
+// 2026 participation yet, and that is a fact to record, not a crash.
+const TRAINING_SEASONS = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025] as const;
+const APPLICATION_SEASONS = [2026] as const;
+const SEASONS = [...TRAINING_SEASONS, ...APPLICATION_SEASONS] as const;
 const ROOT = resolve(__dirname, "..", "..", "..", "..");
 const DATA_DIR = join(ROOT, "data", "gse-dataset");
 const CACHE_DIR = join(DATA_DIR, ".cache", "nflverse-cycle8");
@@ -314,13 +321,24 @@ export async function ingestNflverseCycle8(): Promise<{ manifestPath: string; da
     note: "This release has game_id and pfr_player_id. It has no gsis_id column, so none was added.",
   }, snapPath));
 
-  // Participation is written one file per season. Eight seasons of FTN participation
-  // is roughly 183 MB in a single file, past the 90 MB ceiling, so it is split rather
-  // than dropped: no season is silently discarded to keep a file small. Every part
-  // keeps its own row count and sha256 in the manifest.
+  // Participation is written one file per season. Eight seasons of FTN participation is
+  // roughly 183 MB in a single file, past the 90 MB ceiling, so it is split rather than
+  // dropped: no season is silently discarded to keep a file small. Every part keeps its own
+  // row count and sha256 in the manifest.
+  //
+  // A season the release has not published yet is recorded as a refusal and the run
+  // continues. 2026 participation does not exist mid-season; that is a recorded fact, not a
+  // reason to abandon the other nine seasons.
   const participationFiles: DatasetManifest[] = [];
+  const participationUnavailable: string[] = [];
   for (const season of SEASONS) {
-    const part = unwrap(`participation ${season}`, await loadParticipation(season, { format: "parquet" }));
+    let part: readonly unknown[] | null = null;
+    try {
+      part = unwrap(`participation ${season}`, await loadParticipation(season, { format: "parquet" })) as readonly unknown[];
+    } catch (error) {
+      participationUnavailable.push(`${season}: ${error instanceof Error ? error.message : String(error)}`);
+      continue;
+    }
     requireRows(`loadParticipation ${season}`, part);
     const seasonOut = collect(part as unknown as Record<string, unknown>[], projectParticipation);
     const sampleKeys = part[0] ? Object.keys(part[0] as Record<string, unknown>).sort().join(",") : "";
@@ -341,6 +359,9 @@ export async function ingestNflverseCycle8(): Promise<{ manifestPath: string; da
     }, seasonPath));
   }
   datasets.push(...participationFiles);
+  if (participationUnavailable.length > 0) {
+    console.log(`participation unavailable for: ${participationUnavailable.join(" | ")}`);
+  }
 
   const pbpProbe = await pbpFourthColumns(2024);
   const fourthPath = join(DATA_DIR, "fourth-down.jsonl");

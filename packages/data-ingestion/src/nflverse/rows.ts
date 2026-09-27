@@ -4,11 +4,12 @@
  */
 
 /**
- * Seasons this repo ingests. The window is deliberately wider than the two
- * seasons originally landed: 2025 is the holdout, so a fit needs training
- * seasons strictly before it, and two seasons are not a training set.
+ * Seasons this repo ingests. 2018-2025 is the walk-forward corpus, with 2025 held out and
+ * never fitted on. 2026 is the in-flight application season: the locked parts are scored
+ * on 2026 week 3, so a deal that covers 2026 has to be kept or the week-3 row cannot be
+ * computed from sealed data.
  */
-export const INGEST_SEASONS = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025] as const;
+export const INGEST_SEASONS = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026] as const;
 
 export type IngestSeason = (typeof INGEST_SEASONS)[number];
 

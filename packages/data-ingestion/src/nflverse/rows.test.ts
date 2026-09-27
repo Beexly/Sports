@@ -13,12 +13,12 @@ import {
 describe("nflverse row projection", () => {
   it("keeps a contract inside the window and refuses a missing gsis id", () => {
     expect(contractCoversWindow(2022, 4)).toBe(true);
-    // 2017, not 2022. The window used to be 2024-2025, so 2022 sat outside it and a
-    // null `years` there was refused. The window is now 2018-2025, which puts 2022
-    // inside it, so the same assertion has to be made about a year that is still
+    // 2017, not 2026. The window used to end at 2025, so 2026 sat outside it and a
+    // null `years` there was refused. The window now runs to 2026, the application
+    // season, so the same assertion has to be made about a year that is still
     // outside: a null `years` is never given a guessed length.
     expect(contractCoversWindow(2017, null)).toBe(false);
-    expect(contractCoversWindow(2026, 3)).toBe(false);
+    expect(contractCoversWindow(2027, 3)).toBe(false);
     const missing = projectContract({ player: "A", year_signed: 2024, gsis_id: "" });
     expect(missing.ok).toBe(false);
     const kept = projectContract({
@@ -50,8 +50,12 @@ describe("nflverse row projection", () => {
       expect(contractCoversWindow(season, null)).toBe(true);
     }
     // A season past the window is still refused, and a null year_signed never passes.
-    expect(contractCoversWindow(2026, 1)).toBe(false);
+    expect(contractCoversWindow(2027, 1)).toBe(false);
     expect(contractCoversWindow(null, 4)).toBe(false);
+    // 2026 is the application season, so a deal covering it is kept on the first branch.
+    expect(contractCoversWindow(2026, null)).toBe(true);
+    // Signed in 2024 for four years reaches 2027 and therefore covers 2026.
+    expect(contractCoversWindow(2024, 4)).toBe(true);
   });
 
   it("does not turn a blank snap count into zero", () => {

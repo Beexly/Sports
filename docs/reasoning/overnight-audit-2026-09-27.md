@@ -185,6 +185,77 @@ individually reasonable. Check what the fitting function actually reads, not wha
 calculated — and when a reported number and a stored number disagree, that is a bug in the
 reporting, not a rounding difference.
 
+## Slices 13-14 — the STORED blocker was an ingest problem, not a dead end
+
+`narrative_contract` came back STORED at `g = 0.2`, and the first reading of that was "the
+week-3 row cannot be computed, there is no 2026 data". That was wrong, and it was the kind of
+wrong that ends a night early. It was an ingest gap.
+
+### 2026 was available and had never been pulled
+
+HEAD-checked before assuming: `snap_counts_2026`, `roster_2026`, `roster_weekly_2026` and
+`pre_computed_go_boost_2026.rds` all return **200**. `pbp_participation_2026` returns **404**,
+which is correct — participation is published after a season ends, and 2026 is at week 3.
+
+The fix was to split the ingest's season list into a training corpus and an application
+season, and to make each grain record an unavailable season as a refusal instead of crashing
+the run. Contracts covering 2026 were already in the file, because a deal signed in 2024 for
+four years covers 2026; only the snap and roster tables actually stopped at 2025.
+
+| | before | after |
+|---|---:|---:|
+| snap-counts 2026 rows | 0 | 3086 |
+| rosters 2026 rows | 0 | 11029 |
+| contracts rows | 35944 | 39013 |
+| participation 2026 | absent | recorded unavailable: "not yet published" |
+
+Adding 2026 to `INGEST_SEASONS` changed the meaning of `contractCoversWindow(2026, 3)` in
+`rows.test.ts`, the same way widening the window moved 2022 last time. The assertion was moved
+to 2027, which is still genuinely outside the window, and a new assertion pins that a 2024
+four-year deal now covers 2026. 5 tests pass.
+
+### The application path is built and proven
+
+`scripts/overnight/compute-week3-narrative.mjs` applies the **frozen** pre-2025 coefficients
+to a game's snap rows. It does not refit: a refit would be a different claim from the one the
+scalarizer accepted.
+
+Proven on `2026_03_ATL_GB`, the one 2026 week-3 game nflverse has published:
+
+```
+home mean APY 8.166   away mean APY 6.304   feature gap 1.8618
+signed 0.0912   model p 0.6329 (inside (0,1))
+scalarizer: LIVE, g = 0, winning term none
+```
+
+So the moment `2026_03_LAC_BUF` week-3 snaps are published, one command produces the row and
+`f3` becomes 0 with `f1` and `f2` already 0. Becoming LIVE is a data-arrival event, not a
+project.
+
+### LAC@BUF itself, honestly measured from the latest sealed data
+
+`2026_03_LAC_BUF` returns `NO_SNAP_ROWS`. LAC and BUF do both have weeks 1-2, so the same
+feature was computed for the pair from the most recent sealed rows:
+
+```
+window            2026 weeks 1,2   (NOT a week-3 row)
+LAC mean APY      7.051038919485299   over 2720 matched snaps
+BUF mean APY      9.408282123259763   over 2945 matched snaps
+feature gap      -2.3572432037744644
+signed           -0.1154855988909408
+model p           0.4262223777313707   (inside (0,1))
+```
+
+**The sign is negative.** BUF carries the higher contract intensity, so this family points
+against LAC, and at its existing 0.03 prior it would move the LAC edge down slightly rather
+than up. That is the useful part: it is better to learn the direction tonight than to add a
+positive part in the morning and find the sign later.
+
+This is a weeks-1-2 measurement and is **not** the week-3 registry row, so nothing was written
+to `parts-registry.jsonl`, which remains 8 rows and unmodified. The provenance is in
+`signed_source` and the window is labelled in the output. `is_week_3_row` is `false` in the
+JSON so no consumer can mistake it for the locked value.
+
 ## Slice 2 — bridge-premises audit
 
 `scripts/overnight/audit-bridge-premises.mjs`, exit 0. 285 rows, 0 parse errors, 285 distinct
@@ -247,3 +318,4 @@ called and the file was not deleted or modified.
 |11 | 2026-09-27T04:37:26Z | morning-report | docs/reasoning/morning-2026-09-27.md | git log --oneline b6723fd5a..HEAD | 0 | 11 cycles, 14 commits, 0 stuck; coaching DARK g=0.5 n=285; LAC edge 0.30259224777263855 unchanged; catalog 6 rows; engine calibration INSUFFICIENT_SAMPLE n=0; one gate NOT_EVALUATED | no family reached g=0; no LIVE part added; parts-registry.jsonl unmodified at 8 rows | did not score an acceptance gate and did not mark one passed; did not publish a win rate; did not push; morning report is the last commit | PASS | -|
 |12 | 2026-09-27T04:42:10Z | review-correction | scripts/overnight/measure-coaching.mjs,data/reasoning/dark-candidates.jsonl,docs/reasoning/morning-2026-09-27.md,docs/reasoning/engine-dashboard.md,docs/reasoning/overnight-audit-2026-09-27.md | npx tsx scripts/overnight/measure-coaching.mjs | 0 | coaching walk-forward corrected: regressor is now the frozen pre-2025 prediction; holdout n=285 r=0.0346098177800266 slope=0.7166085172924505 se=1.2300681449666506; verdict unchanged DARK g=0.5 winning=f1 | coaching DARK, g=0.5, winning_term=f1, f1=1 f2=0 f3=1 | did not rewrite the incorrect dark-candidates row; appended a superseding row; did not amend any commit; no family promoted on the false number because the verdict did not move | DARK | -|
 |13 | 2026-09-27T04:55:05Z | measure-narrative-contract | scripts/overnight/measure-narrative.mjs,data/reasoning/stored-candidates.jsonl | npx tsx scripts/overnight/measure-narrative.mjs | 0 | honesty CLEARED: holdout n=285 r=0.23359561489783362 slope=1.1071012391250847 se=0.2739333017720089; f1=0 f2=0 f3=1; g=0.2 winning=f3; train n=1942 r=0.20344943432147203 | narrative_contract STORED, g=0.2, winning_term=f3, f1=0 f2=0 f3=1 | did not write a 2026_03_LAC_BUF signed value (zero 2026 snaps/rosters/contracts exist); did not edit parts-registry.jsonl; did not add a prior; did not re-fit to reach g=0 | STORED | -|
+|14 | 2026-09-27T05:04:31Z | ingest-2026-and-week3-path | packages/data-ingestion/src/nflverse/ingest.ts,packages/data-ingestion/src/nflverse/rows.ts,packages/data-ingestion/src/nflverse/rows.test.ts,scripts/overnight/compute-week3-narrative.mjs,data/gse-dataset/* | npx tsx packages/data-ingestion/src/nflverse/ingest.ts ; npx tsx scripts/overnight/compute-week3-narrative.mjs ; npx tsx scripts/overnight/compute-week3-narrative.mjs --pair LAC BUF | 0 | 2026 ingested: snaps 3086 rows, rosters 11029, contracts 39013; participation 2026 recorded unavailable; ATL@GB week3 signed=0.0912 model_p=0.6329 scalarizer LIVE g=0; LAC/BUF weeks1-2 signed=-0.1155 model_p=0.4262 | narrative_contract STORED; proven LIVE g=0 on 2026_03_ATL_GB once the target game's week-3 snaps publish | did not write a registry row from a weeks-1-2 window; did not refit the sealed coefficients; did not copy the ATL@GB signed value onto LAC@BUF; registry still 8 rows | STORED | -|
