@@ -77,22 +77,33 @@ function ece(ps, bins = 10) {
 }
 
 const n = pairs.length;
-const meanPredicted = pairs.reduce((a, x) => a + x.p, 0) / n;
-const actualRate = pairs.reduce((a, x) => a + x.y, 0) / n;
 
-const metrics = {
-  n,
-  brier: brier(pairs),
-  log_loss: logLoss(pairs),
-  ece: ece(pairs),
-  mean_predicted: meanPredicted,
-  actual_home_win_rate: actualRate,
-  // Drift = |mean predicted − realised rate|. Stated here so it is not a guess.
-  drift: Math.abs(meanPredicted - actualRate),
-};
+// Every metric below divides by n. With an empty population that is NaN, and writing NaN
+// into the artifact would look like a measurement. No population means no measurement.
+const insufficient = n < MIN_SAMPLE;
+const empty = n === 0;
+
+const metrics = empty
+  ? null
+  : {
+      n,
+      brier: brier(pairs),
+      log_loss: logLoss(pairs),
+      ece: ece(pairs),
+      mean_predicted: pairs.reduce((a, x) => a + x.p, 0) / n,
+      actual_home_win_rate: pairs.reduce((a, x) => a + x.y, 0) / n,
+      // Drift = |mean predicted − realised rate|. Stated here so it is not a guess.
+      drift: Math.abs(pairs.reduce((a, x) => a + x.p, 0) / n - pairs.reduce((a, x) => a + x.y, 0) / n),
+    };
 
 // Constant-0.5 reference, so the numbers mean something.
-const reference = { brier: brier(pairs.map((x) => ({ p: 0.5, y: x.y }))), log_loss: Math.log(2), ece: ece(pairs.map((x) => ({ p: 0.5, y: x.y }))) };
+const reference = empty
+  ? null
+  : {
+      brier: brier(pairs.map((x) => ({ p: 0.5, y: x.y }))),
+      log_loss: Math.log(2),
+      ece: ece(pairs.map((x) => ({ p: 0.5, y: x.y }))),
+    };
 
 const out = {
   generated_at: new Date().toISOString().replace(/\.\d{3}Z$/, 'Z'),
@@ -108,7 +119,7 @@ const out = {
     fit_run: false,
   },
   bridge_premise_calibration: {
-    status: n >= MIN_SAMPLE ? 'MEASURED' : 'INSUFFICIENT_SAMPLE',
+    status: insufficient ? 'INSUFFICIENT_SAMPLE' : 'MEASURED',
     n,
     holdout_season: 2025,
     training_window: '1999-2024 (run-bridge.mjs excludes season >= 2025 from the fit)',
@@ -116,8 +127,8 @@ const out = {
     contract: { min_sample: MIN_SAMPLE, max_ece: MAX_ECE, max_drift: MAX_DRIFT },
     metrics,
     reference_constant_0_5: reference,
-    passes_ece: metrics.ece <= MAX_ECE,
-    passes_drift: metrics.drift <= MAX_DRIFT,
+    passes_ece: empty ? null : metrics.ece <= MAX_ECE,
+    passes_drift: empty ? null : metrics.drift <= MAX_DRIFT,
     note:
       'These are bridge premise probabilities, not engine confidences. They are not publishable and they do not ' +
       'move the calibration page. probabilityClaimsAllowed stays false for the product.',

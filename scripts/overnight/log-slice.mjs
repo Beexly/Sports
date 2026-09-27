@@ -131,15 +131,23 @@ const auditPath = join(ROOT, 'docs', 'reasoning', `overnight-audit-${auditDate}.
 mkdirSync(dirname(auditPath), { recursive: true });
 
 if (!existsSync(auditPath)) {
-  writeFileSync(
-    auditPath,
-    `# Overnight audit - ${auditDate}\n\n` +
-      `One row per cycle. Every number here traces to a command whose output is in context.\n` +
-      `Verdicts: \`PASS\` \`DARK\` \`STORED\` \`NOT_EVALUATED\` \`BLOCKED\` \`STUCK\`\n\n` +
-      `| cycle | utc | slice | files touched | command | exit | measured | scalarizer | refused | verdict | commit |\n` +
-      `|---:|---|---|---|---|---:|---|---|---|---|\n`,
-    'utf8'
-  );
+  // 'wx' fails if the file appeared between the check and the write, so two
+  // concurrent runs cannot both truncate and rewrite the header.
+  try {
+    writeFileSync(
+      auditPath,
+      `# Overnight audit - ${auditDate}\n\n` +
+        `One row per cycle. Every number here traces to a command whose output is in context.\n` +
+        `Verdicts: \`PASS\` \`DARK\` \`STORED\` \`NOT_EVALUATED\` \`BLOCKED\` \`STUCK\`\n\n` +
+        `| cycle | utc | slice | files touched | command | exit | measured | scalarizer | refused | verdict | commit |\n` +
+        `|---:|---|---|---|---|---:|---|---|---|---|\n`,
+      { encoding: 'utf8', flag: 'wx' }
+    );
+  } catch (e) {
+    // EEXIST means a concurrent run won the race and already wrote the header. That is
+    // the correct outcome, not an error.
+    if (e?.code !== 'EEXIST') throw e;
+  }
 }
 
 const cell = (v) => String(v ?? '').replace(/\|/g, '\\|').replace(/\r?\n/g, ' ').trim() || '-';
