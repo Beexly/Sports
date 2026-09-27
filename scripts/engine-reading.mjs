@@ -23,6 +23,13 @@ const games = new Map(
 );
 const calibration = JSON.parse(readFileSync(resolve(root, "data/gse-dataset/current/calibration-weights.json"), "utf8"));
 const elo = new Map(calibration.game_probability.week3.map((row) => [row.game_id, row.probability]));
+const split = new Map(
+  readFileSync(resolve(root, "data/gse-dataset/current/week3-split-efficiency.jsonl"), "utf8")
+    .trim()
+    .split("\n")
+    .map((line) => JSON.parse(line))
+    .map((row) => [row.game_id, row]),
+);
 
 function clip(value) {
   if (value > 1) return 1;
@@ -45,15 +52,13 @@ for (const context of contexts) {
     (homeScheme.motion_rate + homeScheme.play_action_rate + homeScheme.rpo_rate + homeScheme.shotgun_rate) / 4,
     (awayScheme.motion_rate + awayScheme.play_action_rate + awayScheme.rpo_rate + awayScheme.shotgun_rate) / 4,
   );
-  const efficiency = diff(
-    context.home.passing_epa_per_attempt_prior_weeks,
-    context.away.passing_epa_per_attempt_prior_weeks,
-  );
+  const splitRow = split.get(context.game_id);
+  const efficiency = splitRow ? splitRow.efficiency_signed : null;
   const availability = clip((context.away.injuries.out.length - context.home.injuries.out.length) / 6);
   const rest = game && typeof game.rest_diff === "number" ? clip(game.rest_diff / 7) : null;
   const strength = elo.has(context.game_id) ? clip((elo.get(context.game_id) - 0.5) * 2) : null;
   const reading = composeEngineReading(context.game_id, {
-    on_field_efficiency: efficiency === null ? null : clip(efficiency / 0.4),
+    on_field_efficiency: efficiency,
     scheme_play_design: scheme,
     availability,
     schedule_and_body: rest,
@@ -95,6 +100,7 @@ const lines = [
   "# Engine readings, week 3",
   "",
   "The tilt is home-positive and unitless. It is not a win probability. Nothing here is a pick.",
+  "On-field efficiency is no longer raw passing EPA. It is a shrunk opponent-adjusted blend: 55% pass EPA residual, 15% rush EPA residual, 15% CPOE, 10% explosive-pass rate, 5% interception luck. The 2025 season is the prior. 2026 weeks 1-2 are the observation. Passing is weighted above rushing because rushing efficiency does not carry the same way.",
   "Brier, Kelly, Bradley-Terry, and the closing price do not enter the tilt. The price is withheld on purpose. The meters stay a governor. Calibration on the Elo is still WATCH.",
   `OpenRouter lane: ${readings[0].model_lane}. No model call was made.`,
   "",
