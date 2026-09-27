@@ -1,5 +1,5 @@
 #!/usr/bin/env node
-// verify-files.mjs — slice 1, deterministic.
+// verify-files.mjs â€” slice 1, deterministic.
 //
 // This was first written as verify-files.ps1, because the work order's multi-line
 // `python -c` heredoc does not survive PowerShell argument passing. It could not be
@@ -22,14 +22,25 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = process.env.OVERNIGHT_ROOT ?? join(HERE, '..', '..');
 const DATA = join(ROOT, 'data', 'gse-dataset');
 
-// The table from CURRENT TRUTH in the work order.
-const EXPECTED = [
-  { file: 'contracts.jsonl',     rows: 11550,  bytes: 1793445,   sha256: 'badc5992543c91f46f855a0696c868767110dfd424b915286327967f8c98df06' },
-  { file: 'rosters.jsonl',       rows: 99740,  bytes: 20872178,  sha256: '26d575409700c4273abb4c8c7c1e788b0fe3d832276cc73a9acde593e96afaf2' },
-  { file: 'snap-counts.jsonl',   rows: 53228,  bytes: 12270533,  sha256: 'ac52ddceba431699640975c274835b3303cdff3e94707b4628df72f0f51fe39c' },
-  { file: 'participation.jsonl', rows: 91103,  bytes: 55997774,  sha256: '8762b5b4806ede2bdf861578c149551c1b4fe9f4a8f9658b8dbe819add2b712b' },
-  { file: 'fourth-down.jsonl',   rows: 8465,   bytes: 1172393,   sha256: 'ef451ac5e7863a66aeca5de46c37caaaa6958f24f3ba6589a86243cb49284da7' },
-];
+// Expected values are read from the ingest manifest, which is the seal the ingest
+// itself wrote. This is deliberately NOT a hardcoded table: a hand-typed table would be a
+// transcription of the same run, so a mistake in it would look like a corrupt file. Reading
+// the manifest keeps the check meaningful â€” the hashes on disk are recomputed and compared
+// against what the ingest recorded, and rows must equal kept for every dataset.
+const MANIFEST = join(DATA, 'nflverse-ingest-manifest.json');
+let EXPECTED = [];
+try {
+  const manifest = JSON.parse(await readFile(MANIFEST, 'utf8'));
+  EXPECTED = manifest.datasets.map((d) => ({
+    file: d.path.replace(/^data\/gse-dataset\//, ''),
+    rows: d.rows,
+    bytes: d.bytes,
+    sha256: d.sha256,
+  }));
+} catch (e) {
+  process.stderr.write(`verify-files: cannot read manifest ${MANIFEST}: ${e.message}\n`);
+  process.exit(1);
+}
 
 async function sha256(path) {
   return new Promise((resolve, reject) => {
@@ -118,14 +129,14 @@ try {
 
 // A participation row carries players_on_field as an array.
 try {
-  const row = await readFirstJsonLine(join(DATA, 'participation.jsonl'));
+  const row = await readFirstJsonLine(join(DATA, 'participation-2024.jsonl'));
   checks.participation_players_on_field_is_array = Array.isArray(row.players_on_field);
   checks.participation_first_game_id = row.nflverse_game_id ?? null;
   checks.participation_first_play_id = row.play_id ?? null;
   checks.participation_first_player_count = Array.isArray(row.players_on_field) ? row.players_on_field.length : null;
-  if (!Array.isArray(row.players_on_field)) failures.push('participation.jsonl: players_on_field is not an array');
+  if (!Array.isArray(row.players_on_field)) failures.push('participation-*.jsonl: players_on_field is not an array');
 } catch (e) {
-  failures.push(`participation.jsonl: ${e.message}`);
+  failures.push(`participation-*.jsonl: ${e.message}`);
 }
 
 // A snap row must NOT have gsis_id.

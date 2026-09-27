@@ -1,5 +1,5 @@
 /**
- * Cycle 8. Pull the five nflverse grains for 2024 and 2025.
+ * Pull the five nflverse grains for 2018-2025.
  * Join keys that are blank are refused. Counts are measured from the rows
  * that were actually written.
  */
@@ -31,7 +31,7 @@ import {
   type Decision,
 } from "./rows.js";
 
-const SEASONS = [2024, 2025] as const;
+const SEASONS = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025] as const;
 const ROOT = resolve(__dirname, "..", "..", "..", "..");
 const DATA_DIR = join(ROOT, "data", "gse-dataset");
 const CACHE_DIR = join(DATA_DIR, ".cache", "nflverse-cycle8");
@@ -274,7 +274,7 @@ export async function ingestNflverseCycle8(): Promise<{ manifestPath: string; da
     read: contracts.length,
     kept: contractOut.kept.length,
     refused: contractOut.refused,
-    note: "OverTheCap historical contracts via nflverse. Kept when gsis_id is present and the signed term covers 2024 or 2025. years null is not given a guessed length.",
+    note: `OverTheCap historical contracts via nflverse. Kept when gsis_id is present and the signed term covers one of the ingest seasons ${SEASONS.join(", ")}. years null is not given a guessed length.`,
   }, contractPath));
 
   const seasonRosters = unwrap("rosters", await loadRosters([...SEASONS], { format: "parquet" }));
@@ -314,36 +314,40 @@ export async function ingestNflverseCycle8(): Promise<{ manifestPath: string; da
     note: "This release has game_id and pfr_player_id. It has no gsis_id column, so none was added.",
   }, snapPath));
 
-  const participationParts: Record<string, unknown>[] = [];
+  // Participation is written one file per season. Eight seasons of FTN participation
+  // is roughly 183 MB in a single file, past the 90 MB ceiling, so it is split rather
+  // than dropped: no season is silently discarded to keep a file small. Every part
+  // keeps its own row count and sha256 in the manifest.
+  const participationFiles: DatasetManifest[] = [];
   for (const season of SEASONS) {
     const part = unwrap(`participation ${season}`, await loadParticipation(season, { format: "parquet" }));
     requireRows(`loadParticipation ${season}`, part);
-    participationParts.push(...(part as unknown as Record<string, unknown>[]));
+    const seasonOut = collect(part as unknown as Record<string, unknown>[], projectParticipation);
+    const sampleKeys = part[0] ? Object.keys(part[0] as Record<string, unknown>).sort().join(",") : "";
+    const blankPersonnel = seasonOut.kept.reduce((count, row) => count + (row.players_on_field === null ? 1 : 0), 0);
+    if (seasonOut.kept.length > 0 && blankPersonnel === seasonOut.kept.length) {
+      throw new Error(`participation ${season} kept ${seasonOut.kept.length} rows and every players_on_field is null. keys: ${sampleKeys}`);
+    }
+    const seasonPath = join(DATA_DIR, `participation-${season}.jsonl`);
+    await writeJsonl(seasonPath, seasonOut.kept);
+    participationFiles.push(await finishDataset({
+      name: `participation-${season}`,
+      loader: "loadParticipation",
+      path: `data/gse-dataset/participation-${season}.jsonl`,
+      read: part.length,
+      kept: seasonOut.kept.length,
+      refused: seasonOut.refused,
+      note: `Season ${season}. 2023 and later is FTN Data via nflverse, CC-BY-SA 4.0. players_on_field is players_on_play split on commas, else offense_players plus defense_players. Blank cells stay null (${blankPersonnel} kept rows). Internal storage. Not a commercial display.`,
+    }, seasonPath));
   }
-  const participationOut = collect(participationParts, projectParticipation);
-  const sampleKeys = participationParts[0] ? Object.keys(participationParts[0]).sort().join(",") : "";
-  const blankPersonnel = participationOut.kept.reduce((count, row) => count + (row.players_on_field === null ? 1 : 0), 0);
-  if (participationOut.kept.length > 0 && blankPersonnel === participationOut.kept.length) {
-    throw new Error(`participation kept ${participationOut.kept.length} rows and every players_on_field is null. keys: ${sampleKeys}`);
-  }
-  const participationPath = join(DATA_DIR, "participation.jsonl");
-  await writeJsonl(participationPath, participationOut.kept);
-  datasets.push(await finishDataset({
-    name: "participation",
-    loader: "loadParticipation",
-    path: "data/gse-dataset/participation.jsonl",
-    read: participationParts.length,
-    kept: participationOut.kept.length,
-    refused: participationOut.refused,
-    note: `2023 and later is FTN Data via nflverse, CC-BY-SA 4.0. players_on_field is players_on_play split on commas, else offense_players plus defense_players. Blank cells stay null (${blankPersonnel} kept rows). Internal storage. Not a commercial display. keys: ${sampleKeys}`,
-  }, participationPath));
+  datasets.push(...participationFiles);
 
   const pbpProbe = await pbpFourthColumns(2024);
   const fourthPath = join(DATA_DIR, "fourth-down.jsonl");
   const fourth = await extractFourthDown(fourthPath);
   const fourthNote = pbpProbe.error
-    ? `pbp header probe failed (${pbpProbe.error}). The model was not ported. Rows are the published pre_computed_go_boost RDS for 2024 and 2025.`
-    : `play_by_play_2024.csv.gz columns go_wp=${String(pbpProbe.present.go_wp)} punt_wp=${String(pbpProbe.present.punt_wp)} fg_wp=${String(pbpProbe.present.fg_wp)}. The model was not ported. Rows are the published pre_computed_go_boost RDS for 2024 and 2025.`;
+    ? `pbp header probe failed (${pbpProbe.error}). The model was not ported. Rows are the published pre_computed_go_boost RDS for ${SEASONS.join(", ")}.`
+    : `play_by_play_2024.csv.gz columns go_wp=${String(pbpProbe.present.go_wp)} punt_wp=${String(pbpProbe.present.punt_wp)} fg_wp=${String(pbpProbe.present.fg_wp)}. The model was not ported. Rows are the published pre_computed_go_boost RDS for ${SEASONS.join(", ")}.`;
   datasets.push(await finishDataset({
     name: "fourth-down",
     loader: "nfl4th pre_computed_go_boost RDS",

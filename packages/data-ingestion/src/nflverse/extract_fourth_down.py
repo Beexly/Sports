@@ -5,7 +5,8 @@ Those values are published as RDS on nflverse/nfl4th.
 NaN stays null. A row without game_id or play_id is not written.
 
 Stdout is one JSON object: {"read", "kept", "refused"}.
-The JSONL is written to <out>.tmp and renamed only after both seasons load.
+The JSONL is written to <out>.tmp and renamed only after every season loads.
+A season the release does not publish (HTTP 404) is recorded as a refusal and skipped.
 """
 
 from __future__ import annotations
@@ -14,10 +15,13 @@ import json
 import math
 import os
 import sys
+import urllib.error
 import urllib.request
 from pathlib import Path
 
 import rdata
+
+SEASONS = (2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025)
 
 
 def num(value: object) -> float | None:
@@ -98,8 +102,16 @@ def main() -> None:
     refused = {"missing_game_id": 0, "missing_play_id": 0}
     try:
         with tmp.open("w", encoding="utf-8", newline="\n") as handle:
-            for season in (2024, 2025):
-                rows, season_read, season_refused = load_season(season, cache_dir)
+            for season in SEASONS:
+                try:
+                    rows, season_read, season_refused = load_season(season, cache_dir)
+                except urllib.error.HTTPError as error:
+                    # A season that was never published is recorded as a refusal and the
+                    # run continues. The year is not invented and not silently skipped.
+                    if error.code != 404:
+                        raise
+                    refused[f"season_unavailable_{season}"] += 1
+                    continue
                 read += season_read
                 for reason, count in season_refused.items():
                     refused[reason] = refused.get(reason, 0) + count

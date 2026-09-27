@@ -7,12 +7,17 @@ import {
   projectRoster,
   projectSnap,
   splitIds,
+  INGEST_SEASONS,
 } from "./rows.js";
 
 describe("nflverse row projection", () => {
   it("keeps a contract inside the window and refuses a missing gsis id", () => {
     expect(contractCoversWindow(2022, 4)).toBe(true);
-    expect(contractCoversWindow(2022, null)).toBe(false);
+    // 2017, not 2022. The window used to be 2024-2025, so 2022 sat outside it and a
+    // null `years` there was refused. The window is now 2018-2025, which puts 2022
+    // inside it, so the same assertion has to be made about a year that is still
+    // outside: a null `years` is never given a guessed length.
+    expect(contractCoversWindow(2017, null)).toBe(false);
     expect(contractCoversWindow(2026, 3)).toBe(false);
     const missing = projectContract({ player: "A", year_signed: 2024, gsis_id: "" });
     expect(missing.ok).toBe(false);
@@ -29,6 +34,24 @@ describe("nflverse row projection", () => {
     });
     expect(kept.ok).toBe(true);
     if (kept.ok) expect(kept.row.gsis_id).toBe("00-0030000");
+  });
+
+  it("covers every ingest season, not just the two that were first landed", () => {
+    // 2018 is the earliest ingest season. A deal signed in it is kept on the first
+    // branch, with no need for `years` at all.
+    expect(contractCoversWindow(2018, 1)).toBe(true);
+    expect(contractCoversWindow(2018, null)).toBe(true);
+    // Signed in 2017 for four years reaches 2020, which is inside the window.
+    expect(contractCoversWindow(2017, 4)).toBe(true);
+    // Signed in 2017 for one year ends in 2017, before the window opens.
+    expect(contractCoversWindow(2017, 1)).toBe(false);
+    // Every ingest season is inside the window by construction.
+    for (const season of INGEST_SEASONS) {
+      expect(contractCoversWindow(season, null)).toBe(true);
+    }
+    // A season past the window is still refused, and a null year_signed never passes.
+    expect(contractCoversWindow(2026, 1)).toBe(false);
+    expect(contractCoversWindow(null, 4)).toBe(false);
   });
 
   it("does not turn a blank snap count into zero", () => {
