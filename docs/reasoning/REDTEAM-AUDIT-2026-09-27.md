@@ -109,6 +109,64 @@ stays in the frozen record; the writer can no longer produce it.
 
 ---
 
+---
+
+## P0-3 Two lanes forked slice 5 into incompatible on-disk layouts
+
+**Measured 2026-09-26 23:48 local**
+
+| lane | rosters | snaps | participation | manifest |
+|---|---|---|---|---|
+| grok-reasoning (LIVE) | **one** `rosters.jsonl` 404653 rows / 84 MB | **one** `snap-counts.jsonl` 205355 / 47 MB | `participation-YYYY.jsonl` × 8 | 11 datasets |
+| on-0927-A | `rosters-YYYY.jsonl` × 8 | `snap-counts-YYYY.jsonl` × 8 | `participation-YYYY.jsonl` × 8 | 27 datasets |
+| on-0927-B | **still the 2024–2025 pair** | same | same | original |
+| redteam (this branch) | 2024–2025 at `bae2ef459` | | | |
+
+The work order says split by season only when a file would exceed 90 MB.
+Participation at 8 seasons would; rosters (84 MB) and snaps (47 MB) would not.
+**Grok's layout is the compliant one.** Session A over-split everything.
+
+Session B's prompt currently teaches A's names (`read rosters-2024.jsonl, not
+rosters.jsonl`). If grok commits first, Session B will look for files that do
+not exist. If A's layout lands first, grok's `join-report.json` and ingest
+manifest point at paths that vanish.
+
+Both lanes also independently wrote `packages/data-ingestion/src/nflverse/joins.ts`
+(grok 37 KB + `joins.test.ts`; A has its own pure joiner + 26 tests). Same
+night, two joiners, two report schemas, two row-count conventions.
+
+**Fix required (owner or a single designated lane — not both):** pick grok's
+file layout, delete the duplicate joiner, and rewrite SESSION-B-PROMPT's
+CURRENT TRUTH file names. Do not merge two manifests.
+
+---
+
+## P0-4 Pre-2023 participation cannot join to rosters — and one report hides it
+
+Both joiners independently measured the same structural fact:
+
+- 2018–2022 `players_on_field` carries bare numeric ids (`44987`, …).
+- 2023–2025 carries GSIS ids (`00-0030000`, …).
+- The two spaces share **no key**. Crosswalk is not on disk and inventing one
+  is FORBIDDEN.
+
+Consequence: participation→roster id match rate is **0% for 2018–2022** and
+**100% for 2023–2025**. The blended 0.3797 is not a coverage shortfall — it is
+five seasons of structurally unjoinable rows.
+
+Session A's `join-report.json` says this out loud under
+`identifier_compatibility`. Grok's report buries it: top-level
+`participation_personnel.matchRate` is **1** (play-level "we looked at this
+play"), next to `idMatchRate: 0.3797`. An agent skimming the summary sees a
+perfect join and fits a personnel model on 2018–2024.
+
+**Any slice-7 measurement that derives a roster/personnel feature from
+participation must train only on 2023–2025, or report `NOT_EVALUATED` for the
+numeric-id seasons.** A fit that treats unmatched as "player absent" is
+invented data.
+
+---
+
 ## P1-1 `entryOdds` guard accepted the launch audit's own `-10533` class
 
 **Measured**
