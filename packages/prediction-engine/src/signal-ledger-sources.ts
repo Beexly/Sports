@@ -58,6 +58,23 @@ export interface SignalAnchor {
 export type AnchorTable = Readonly<Record<string, SignalAnchor>>;
 
 /**
+ * A row's capture instant as Prisma hands it back: a `Date` on a normal
+ * request, an ISO `string` from a serialized or worker client.
+ *
+ * The row interfaces below previously declared `readonly fetchedAt: Date`
+ * while `loadSignalLedger` — the first PRODUCTION caller — passes ISO strings.
+ * That is precisely a type lie the compiler cannot catch: it builds, and it
+ * throws `r.fetchedAt.toISOString is not a function` at runtime. Found by
+ * running the real caller, not by re-reading the declarations.
+ */
+export type DateLike = Date | string;
+
+/** ISO-8601 for either representation. Never a wall-clock read. */
+function toIso(value: DateLike): string {
+  return value instanceof Date ? value.toISOString() : new Date(value).toISOString();
+}
+
+/**
  * The subset of each source row these adapters read. Declared structurally (not
  * as a Prisma type) so the package stays db-free and unit-testable, and so a
  * caller can pass a projected/renamed shape without the engine importing the
@@ -73,7 +90,7 @@ export interface PlayerGameStatRow {
   readonly passingEpa: number | null;
   readonly rushingEpa: number | null;
   readonly receivingEpa: number | null;
-  readonly fetchedAt: Date;
+  readonly fetchedAt: DateLike;
 }
 
 export interface SnapCountRow {
@@ -83,7 +100,7 @@ export interface SnapCountRow {
   readonly offensePct: number | null;
   readonly stPct: number | null;
   readonly defensePct: number | null;
-  readonly fetchedAt: Date;
+  readonly fetchedAt: DateLike;
 }
 
 export interface NextGenStatRow {
@@ -97,7 +114,7 @@ export interface NextGenStatRow {
   readonly expectedCompletionPct: number | null;
   readonly completionPct: number | null;
   readonly avgAirYardsToSticks: number | null;
-  readonly fetchedAt: Date;
+  readonly fetchedAt: DateLike;
 }
 
 export interface InjuryRow {
@@ -107,7 +124,7 @@ export interface InjuryRow {
   readonly week: number;
   readonly reportStatus: string | null;
   readonly practiceStatus: string | null;
-  readonly fetchedAt: Date;
+  readonly fetchedAt: DateLike;
 }
 
 /**
@@ -193,7 +210,7 @@ export function projectPlayerGameStats(
           valueRaw: raw,
           weight: prior.weight,
           confidence: prior.confidence,
-          capturedAt: r.fetchedAt.toISOString(),
+          capturedAt: toIso(r.fetchedAt),
           season: r.season,
           week: r.week,
         },
@@ -236,7 +253,7 @@ export function projectSnapCounts(
           valueRaw: raw,
           weight: prior.weight,
           confidence: prior.confidence,
-          capturedAt: r.fetchedAt.toISOString(),
+          capturedAt: toIso(r.fetchedAt),
           season: r.season,
           week: r.week,
         },
@@ -281,7 +298,7 @@ export function projectNextGenStats(
           valueRaw: raw,
           weight: prior.weight,
           confidence: prior.confidence,
-          capturedAt: r.fetchedAt.toISOString(),
+          capturedAt: toIso(r.fetchedAt),
           season: r.season,
           week: r.week,
         },
@@ -331,7 +348,7 @@ export function projectInjuries(
         valueRaw: ordinal,
         weight: prior.weight,
         confidence: prior.confidence,
-        capturedAt: r.fetchedAt.toISOString(),
+        capturedAt: toIso(r.fetchedAt),
         season: r.season,
         week: r.week,
       },
