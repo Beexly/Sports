@@ -4,6 +4,7 @@ import {
   verifyPickProofReceipt,
   isPlausibleEntryOdds,
   ENTRY_ODDS_MIN_ABS,
+  ENTRY_ODDS_MAX_ABS,
   type PickProofInput,
 } from "../pick-proof-receipt.js";
 
@@ -115,6 +116,17 @@ describe("entryOdds plausibility write-guard (P0-2, launch audit 2026-09-08)", (
     }
   });
 
+  it("rejects extreme odds outside the plausible two-way band", () => {
+    // The launch audit's -10533 is a line/id falling into the price slot, not a
+    // real book price. Same for anything past 10000.
+    for (const odds of [-10533, 10533, -20000, 20000, Number.MAX_SAFE_INTEGER]) {
+      expect(isPlausibleEntryOdds(odds)).toBe(false);
+    }
+    expect(isPlausibleEntryOdds(-10000)).toBe(true);
+    expect(isPlausibleEntryOdds(10000)).toBe(true);
+    expect(isPlausibleEntryOdds(-10001)).toBe(false);
+  });
+
   it("fail-closes on non-number and non-finite input", () => {
     for (const bad of [null, undefined, "−110", Number.NaN, Number.POSITIVE_INFINITY]) {
       expect(isPlausibleEntryOdds(bad)).toBe(false);
@@ -123,6 +135,7 @@ describe("entryOdds plausibility write-guard (P0-2, launch audit 2026-09-08)", (
 
   it("constants are the documented band", () => {
     expect(ENTRY_ODDS_MIN_ABS).toBe(100);
+    expect(ENTRY_ODDS_MAX_ABS).toBe(10000);
   });
 
   it("boundary semantics: |odds| >= 100 passes the validator", () => {

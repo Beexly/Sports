@@ -12,6 +12,7 @@
 import { appendFileSync, existsSync, readFileSync, mkdirSync, writeFileSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { execFileSync } from 'node:child_process';
 
 const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = process.env.OVERNIGHT_ROOT ?? join(HERE, '..', '..');
@@ -55,8 +56,76 @@ if (!VERDICTS.has(verdict)) {
 
 const next = args.next ?? 'stop';
 const measured = args.measured ?? '';
-const commit = args.commit ?? null;
 const blocker = args.blocker ?? null;
+
+// --- commit honesty -------------------------------------------------------
+// The loop line is provenance. A null commit next to a real SHA is the exact
+// lie this product exists to prevent, and it is the one an agent writes by
+// accident after a compaction. So: resolve HEAD unless the caller explicitly
+// opts out, and refuse a SHA-shaped value that is not in the repo.
+
+function resolveHeadCommit() {
+  try {
+    const out = execFileSync('git', ['rev-parse', 'HEAD'], {
+      cwd: ROOT,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+    return /^[0-9a-f]{40}$/i.test(out) ? out.toLowerCase() : null;
+  } catch {
+    return null;
+  }
+}
+
+function commitExists(sha) {
+  try {
+    execFileSync('git', ['cat-file', '-e', `${sha}^{commit}`], {
+      cwd: ROOT,
+      stdio: ['ignore', 'ignore', 'ignore'],
+    });
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+const SHA_RE = /^[0-9a-f]{7,40}$/i;
+const rawCommit = args.commit;
+let commit;
+
+if (rawCommit === undefined || rawCommit === 'auto' || rawCommit === 'HEAD') {
+  commit = resolveHeadCommit();
+  if (commit === null) {
+    // No git here (scratch OVERNIGHT_ROOT) or HEAD unreadable. A bare null is
+    // only legal when the caller says why — the same rule as an explicit none.
+    const reason = args['commit-reason'] ?? args.commitReason ?? '';
+    if (!reason && verdict === 'PASS') {
+      fail(
+        'log-slice: no git HEAD to stamp on a PASS slice. ' +
+          'Pass --commit <sha> or --commit none --commit-reason "<why>".'
+      );
+    }
+    commit = null;
+  }
+} else if (rawCommit === 'none' || rawCommit === 'null') {
+  const reason = args['commit-reason'] ?? args.commitReason ?? '';
+  if (!reason) {
+    fail(
+      'log-slice: --commit none requires --commit-reason "<why there is no commit>". ' +
+        'A bare null is how a real SHA gets erased from the record.'
+    );
+  }
+  commit = null;
+} else if (SHA_RE.test(rawCommit)) {
+  if (!commitExists(rawCommit)) {
+    fail(`log-slice: --commit ${rawCommit} is not a commit in ${ROOT}`);
+  }
+  commit = rawCommit.toLowerCase();
+} else {
+  fail(
+    `log-slice: --commit must be a sha, "auto", or "none" (with --commit-reason). Got ${JSON.stringify(rawCommit)}`
+  );
+}
 
 const loopPath = join(ROOT, 'data', 'reasoning', 'overnight-loop.jsonl');
 mkdirSync(dirname(loopPath), { recursive: true });

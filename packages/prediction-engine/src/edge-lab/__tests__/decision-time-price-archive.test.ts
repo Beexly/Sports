@@ -118,13 +118,18 @@ describe("decision-time price archive", () => {
     ).rejects.toThrow(/decision_time_price/);
   });
 
-  it("refuses American prices with absolute value below 100", async () => {
+  it("refuses American prices with absolute value below 100 or above 10000", async () => {
     for (const price of [-33, -43, -86, 0.5, 99]) {
       await expect(record(row({ decision_time_price: price }))).rejects.toThrow(
         /decision_time_price/,
       );
     }
-    for (const price of [-110, -10533, 100, -100]) {
+    for (const price of [-10533, 10533, -20000]) {
+      await expect(record(row({ decision_time_price: price }))).rejects.toThrow(
+        /decision_time_price/,
+      );
+    }
+    for (const price of [-110, -10000, 100, -100, 10000]) {
       await expect(record(row({ decision_time_price: price }))).resolves.toMatchObject({ ok: true });
     }
   });

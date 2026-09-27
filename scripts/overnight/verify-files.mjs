@@ -8,6 +8,12 @@
 // .mjs like the rest of the harness. That also removes the PowerShell 5.1-versus-7 question
 // entirely, and there is no shell between this file and the filesystem.
 //
+// Expected rows/bytes/sha256 come from data/gse-dataset/nflverse-ingest-manifest.json —
+// the same seal the ingest writer produced. A frozen hash table here is a landmine: the
+// moment season-extension rewrites the JSONL, a hardcoded 2024-2025 digest fails against
+// a correct ingest and the next agent "fixes" it by loosening the check. A missing seal
+// is STUCK, not a skip.
+//
 // Exits non-zero if any hash, row count, byte count, or structural assertion fails.
 // Emits JSON on stdout so the caller can quote it in the audit row.
 
@@ -22,15 +28,6 @@ const HERE = dirname(fileURLToPath(import.meta.url));
 const ROOT = process.env.OVERNIGHT_ROOT ?? join(HERE, '..', '..');
 const DATA = join(ROOT, 'data', 'gse-dataset');
 
-// The table from CURRENT TRUTH in the work order.
-const EXPECTED = [
-  { file: 'contracts.jsonl',     rows: 11550,  bytes: 1793445,   sha256: 'badc5992543c91f46f855a0696c868767110dfd424b915286327967f8c98df06' },
-  { file: 'rosters.jsonl',       rows: 99740,  bytes: 20872178,  sha256: '26d575409700c4273abb4c8c7c1e788b0fe3d832276cc73a9acde593e96afaf2' },
-  { file: 'snap-counts.jsonl',   rows: 53228,  bytes: 12270533,  sha256: 'ac52ddceba431699640975c274835b3303cdff3e94707b4628df72f0f51fe39c' },
-  { file: 'participation.jsonl', rows: 91103,  bytes: 55997774,  sha256: '8762b5b4806ede2bdf861578c149551c1b4fe9f4a8f9658b8dbe819add2b712b' },
-  { file: 'fourth-down.jsonl',   rows: 8465,   bytes: 1172393,   sha256: 'ef451ac5e7863a66aeca5de46c37caaaa6958f24f3ba6589a86243cb49284da7' },
-];
-
 async function sha256(path) {
   return new Promise((resolve, reject) => {
     const h = createHash('sha256');
@@ -41,7 +38,7 @@ async function sha256(path) {
   });
 }
 
-// Streams line-by-line, because participation.jsonl is 53 MB and must not be read whole.
+// Streams line-by-line, because participation.jsonl is tens of MB and must not be read whole.
 async function countLines(path) {
   return new Promise((resolve, reject) => {
     let n = 0;
@@ -63,8 +60,48 @@ async function readFirstJsonLine(path) {
 
 const failures = [];
 const files = [];
+const checks = {};
 
-for (const e of EXPECTED) {
+const manifestPath = join(DATA, 'nflverse-ingest-manifest.json');
+let manifest = null;
+try {
+  manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
+  checks.manifest_present = true;
+} catch (e) {
+  checks.manifest_present = false;
+  failures.push(`nflverse-ingest-manifest.json: ${e.message}`);
+}
+
+// --- seal the datasets against the writer's own manifest --------------------
+
+const datasets = Array.isArray(manifest?.datasets) ? manifest.datasets : [];
+const expectedSeals = [];
+for (const d of datasets) {
+  const name = typeof d?.name === 'string' ? d.name : null;
+  const path = typeof d?.path === 'string' ? d.path : null;
+  if (!name || !path) {
+    failures.push(`manifest dataset missing name/path: ${JSON.stringify(d).slice(0, 80)}`);
+    continue;
+  }
+  const file = path.replace(/^.*[\\/]/, '');
+  if (typeof d.sha256 !== 'string' || d.sha256.length !== 64) {
+    failures.push(`${file}: manifest has no sha256 seal — cannot verify`);
+    continue;
+  }
+  if (typeof d.rows !== 'number' || typeof d.bytes !== 'number') {
+    failures.push(`${file}: manifest has no rows/bytes seal — cannot verify`);
+    continue;
+  }
+  expectedSeals.push({ file, name, rows: d.rows, bytes: d.bytes, sha256: d.sha256 });
+}
+
+if (expectedSeals.length === 0 && failures.length === 0) {
+  failures.push('manifest datasets produced no verifiable seals');
+}
+checks.seal_source = 'manifest.datasets[].{sha256,rows,bytes}';
+checks.seal_count = expectedSeals.length;
+
+for (const e of expectedSeals) {
   const path = join(DATA, e.file);
   let st;
   try {
@@ -76,7 +113,6 @@ for (const e of EXPECTED) {
   }
 
   const [actualHash, actualRows] = await Promise.all([sha256(path), countLines(path)]);
-
   const hashOk = actualHash === e.sha256;
   const bytesOk = st.size === e.bytes;
   const rowsOk = actualRows === e.rows;
@@ -99,21 +135,11 @@ for (const e of EXPECTED) {
 
 // --- structural assertions -------------------------------------------------
 
-const checks = {};
-
-const manifestPath = join(DATA, 'nflverse-ingest-manifest.json');
-try {
-  const manifest = JSON.parse(await readFile(manifestPath, 'utf8'));
-  checks.manifest_present = true;
-  checks.publishes_pick = manifest.publishes_pick;
-  checks.publishes_pick_ok = manifest.publishes_pick === false;
-  checks.seasons = manifest.seasons;
-  if (manifest.publishes_pick !== false) {
-    failures.push(`manifest publishes_pick is ${JSON.stringify(manifest.publishes_pick)}, must be false`);
-  }
-} catch (e) {
-  checks.manifest_present = false;
-  failures.push(`nflverse-ingest-manifest.json: ${e.message}`);
+checks.publishes_pick = manifest?.publishes_pick ?? null;
+checks.publishes_pick_ok = manifest?.publishes_pick === false;
+checks.seasons = manifest?.seasons ?? null;
+if (manifest && manifest.publishes_pick !== false) {
+  failures.push(`manifest publishes_pick is ${JSON.stringify(manifest.publishes_pick)}, must be false`);
 }
 
 // A participation row carries players_on_field as an array.

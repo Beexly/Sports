@@ -149,11 +149,19 @@ function committedFields(i: PickProofInput): Readonly<Record<string, string | nu
  * guard: reject at mint time so no new poisoned rows can exist.
  */
 export const ENTRY_ODDS_MIN_ABS = 100;
+/**
+ * Upper bound on |American odds| for a NEW write. Sportsbook two-way prices
+ * essentially never leave (-10000, 10000); values beyond that are the same
+ * class of bug as the poison band — a line, a player id, or a concatenated
+ * field falling into the price slot. The launch audit's -10533 is the frozen
+ * example. Frozen rows stay frozen; this gates new mints only.
+ */
+export const ENTRY_ODDS_MAX_ABS = 10000;
 
 /**
  * True when `entryOdds` is a finite number within the plausible American-odds
- * band (|odds| >= ENTRY_ODDS_MIN_ABS). Pure; shared by every pick-commit path
- * so the rule cannot drift between callers.
+ * band (ENTRY_ODDS_MIN_ABS <= |odds| <= ENTRY_ODDS_MAX_ABS). Pure; shared by
+ * every pick-commit path so the rule cannot drift between callers.
  *
  * DELIBERATELY a WRITE-PATH gate, not a buildPickProofReceipt throw: the 199
  * frozen rows from the 2026-09-08 audit carry poison-band prices whose hashes
@@ -163,7 +171,12 @@ export const ENTRY_ODDS_MIN_ABS = 100;
  * integrity alarm. Callers MINTING new receipts must call this first.
  */
 export function isPlausibleEntryOdds(entryOdds: unknown): entryOdds is number {
-  return typeof entryOdds === "number" && Number.isFinite(entryOdds) && Math.abs(entryOdds) >= ENTRY_ODDS_MIN_ABS;
+  return (
+    typeof entryOdds === "number" &&
+    Number.isFinite(entryOdds) &&
+    Math.abs(entryOdds) >= ENTRY_ODDS_MIN_ABS &&
+    Math.abs(entryOdds) <= ENTRY_ODDS_MAX_ABS
+  );
 }
 
 /**

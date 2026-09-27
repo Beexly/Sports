@@ -123,9 +123,13 @@ function openProbability(value: number, field: string): number {
 }
 
 function validAmericanPrice(value: number): number {
-  if (!Number.isFinite(value) || value === 0 || Math.abs(value) < 100) {
+  // Same band as isPlausibleEntryOdds on the receipt path: poison-band values
+  // are spread/total lines that leaked into the price slot, and values past
+  // 10000 are the launch audit's -10533 class of bug — an id or a line, not a
+  // book quote. CLV against a fabricated price is worse than no CLV.
+  if (!Number.isFinite(value) || value === 0 || Math.abs(value) < 100 || Math.abs(value) > 10000) {
     throw new Error(
-      `decision-time price archive: decision_time_price must be finite American odds with |price| >= 100, got ${describe(value)}`,
+      `decision-time price archive: decision_time_price must be finite American odds with 100 <= |price| <= 10000, got ${describe(value)}`,
     );
   }
   return value;

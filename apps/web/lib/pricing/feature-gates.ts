@@ -116,7 +116,7 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
   {
     key: "confidence",
     displayName: "Confidence",
-    customerExplanation: "Galaxy's estimate of how strong, stable, and supported a signal is. An estimate, never a promise.",
+    customerExplanation: "Galaxy's estimate of how strong, stable, and supported a signal is. An estimate, never a promise. It is a ranking score, not a win probability, and it includes market context — it can move when book prices move.",
     internalNote: "Confidence score, Pro and Elite only (packages/types: FREE canSeeConfidence=false; /api/picks nulls it for every viewer without the entitlement). Free's two daily teaser picks carry no confidence score; the free trust signal is the Edge Index. An earlier note here said Free got it on its two picks, which never matched the shipped entitlements.",
     minTier: "PRO", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "PRO",
   },
