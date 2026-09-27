@@ -23,6 +23,13 @@ const games = new Map(
 );
 const calibration = JSON.parse(readFileSync(resolve(root, "data/gse-dataset/current/calibration-weights.json"), "utf8"));
 const elo = new Map(calibration.game_probability.week3.map((row) => [row.game_id, row.probability]));
+const situational = new Map(
+  readFileSync(resolve(root, "data/gse-dataset/current/week3-situational.jsonl"), "utf8")
+    .trim()
+    .split("\n")
+    .map((line) => JSON.parse(line))
+    .map((row) => [row.game_id, row]),
+);
 const split = new Map(
   readFileSync(resolve(root, "data/gse-dataset/current/week3-split-efficiency.jsonl"), "utf8")
     .trim()
@@ -57,12 +64,15 @@ for (const context of contexts) {
   const availability = clip((context.away.injuries.out.length - context.home.injuries.out.length) / 6);
   const rest = game && typeof game.rest_diff === "number" ? clip(game.rest_diff / 7) : null;
   const strength = elo.has(context.game_id) ? clip((elo.get(context.game_id) - 0.5) * 2) : null;
+  const situation = situational.get(context.game_id);
   const reading = composeEngineReading(context.game_id, {
     on_field_efficiency: efficiency,
     scheme_play_design: scheme,
     availability,
     schedule_and_body: rest,
     historical_strength: strength,
+    trench_personnel: situation ? situation.trench_signed : null,
+    coaching: situation ? situation.coaching_signed : null,
   });
   if (reading.publishesPick !== false || reading.tiltIsProbability !== false) {
     throw new Error("engine reading leaked a pick or a probability");
@@ -100,7 +110,8 @@ const lines = [
   "# Engine readings, week 3",
   "",
   "The tilt is home-positive and unitless. It is not a win probability. Nothing here is a pick.",
-  "On-field efficiency is no longer raw passing EPA. It is a shrunk opponent-adjusted blend: 55% pass EPA residual, 15% rush EPA residual, 15% CPOE, 10% explosive-pass rate, 5% interception luck. The 2025 season is the prior. 2026 weeks 1-2 are the observation. Passing is weighted above rushing because rushing efficiency does not carry the same way.",
+  "On-field efficiency is a shrunk opponent-adjusted blend: 55% pass EPA residual, 15% rush EPA residual, 15% CPOE, 10% explosive-pass rate, 5% interception luck. The 2025 season is the prior. 2026 weeks 1-2 are the observation.",
+  "Trench is now in the tilt. It is qb_hit per dropback, home net minus away net, and it earned that place with a 2025 walk-forward correlation of 0.241 on 250 games. Fourth-down rate and special-teams EPA were measured and kept out.",
   "Brier, Kelly, Bradley-Terry, and the closing price do not enter the tilt. The price is withheld on purpose. The meters stay a governor. Calibration on the Elo is still WATCH.",
   `OpenRouter lane: ${readings[0].model_lane}. No model call was made.`,
   "",
