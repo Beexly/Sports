@@ -68,15 +68,21 @@ Source: `data/reasoning/dark-candidates.jsonl`
 
 | family | n | r | slope | se | g | verdict |
 |---|---:|---:|---:|---:|---:|---|
-| coaching | 285 | -0.0346098177800267 | -0.2952060610406444 | 0.5067251687981046 | 0.5 | DARK, winning term f1 |
+| coaching | 285 | 0.0346098177800266 | 0.7166085172924505 | 1.2300681449666506 | 0.5 | DARK, winning term f1 |
 
-New this night. f1 fails on both bars: `|r|` 0.0346 is under 0.08, and `|slope|` 0.29521 is
-not greater than `se` 0.50673. The 2025 holdout was scored by coefficients fitted on
-2018-2024 only.
+New this night, and corrected after review. f1 fails on both bars: `|r|` 0.0346 is under
+0.08, and `|slope|` 0.71661 is not greater than `se` 1.23007. The 2025 holdout is scored
+against coefficients fitted on 2018-2024 only, frozen before scoring.
 
-The instructive detail: in sample the slope cleared its standard error (0.4119 against
-0.1779), and out of sample it does not. The old stored row had `|r|` 0.014 and no slope or
-standard error at all, so it could not have passed f1 even in principle.
+A first run reported r=-0.0346, slope=-0.2952, se=0.5067. Those were a 2025 refit rather than
+a walk-forward: the regressor handed to the fitter was the raw feature instead of the frozen
+model's prediction. The verdict did not change, but the statistics did, including the sign of
+r. The corrected row is appended to `data/reasoning/dark-candidates.jsonl` with a
+`supersedes` field; the incorrect row was not rewritten.
+
+The instructive detail that survives: in sample the slope cleared its standard error (0.412
+against 0.178), and scored out of sample it does not. The old stored row had `|r|` 0.014 and no
+slope or standard error at all, so it could not have passed f1 even in principle.
 
 ## LAC edge
 

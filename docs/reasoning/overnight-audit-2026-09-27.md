@@ -143,6 +143,48 @@ they said" case, not a case of adjusting a number to make a suite green.
 
 No fit was run in this slice. No LIVE part was added.
 
+## Slice 7 — coaching walk-forward, and a correction found by review
+
+A review of the completed change found a real defect in this slice, and the fix is recorded
+here rather than quietly applied.
+
+**What went wrong.** `measure-coaching.mjs` built each holdout row as
+`{ ...row, p: trainPrediction }`. The spread kept the raw feature in `x`, and the training
+prediction landed in a different key, `p`. `ols()` reads only `x`. So the reported slope and
+its standard error were re-estimated on 2025 alone and then scored against 2025 — a 2025
+refit wearing a walk-forward's name. The training coefficients were computed, used to fill a
+field nothing read, and then discarded.
+
+**Why it mattered even though the verdict did not move.** The reported numbers were wrong,
+including the sign of r. The verdict stayed DARK with `g = 0.5` and winning term f1, so no
+family was promoted on a false number. But the failure mode is the expensive one: the
+in-sample standard-error bar is the *permissive* test, so had the numbers fallen the other way
+this would have made a family LIVE on holdout-fitted significance.
+
+**The fix.** The regressor is now the frozen model prediction:
+`{ x: trainFit.intercept + trainFit.slope * row.x, y: row.y }`. Only coefficients fitted on
+2018-2024 produce `x`, so no 2025 game can influence them.
+
+| | n | r | slope | se |
+|---|---:|---:|---:|---:|
+| train 2018-2024 | 1942 | -0.052500310976587736 | -0.41194885898930633 | 0.17790215869069315 |
+| holdout 2025, frozen model | 285 | 0.0346098177800266 | 0.7166085172924505 | 1.2300681449666506 |
+
+Verdict unchanged: DARK, `g = 0.5`, winning term f1. `|r|` 0.0346 is under 0.08 and
+`|slope|` 0.71661 is not greater than `se` 1.23007.
+
+**What was not done.** The incorrect row in `data/reasoning/dark-candidates.jsonl` was left
+in place. A corrected row was appended carrying a `supersedes` field naming it and the reason
+the numbers were wrong. Rewriting a ledger row because it turned out to be wrong destroys the
+only evidence that the mistake happened.
+
+**Transferable lesson.** A refit-on-holdout is invisible when the code correctly *computes*
+out-of-sample predictions and then hands the fitter a different field than the one it
+computes. Reading the code top to bottom does not catch it, because every line looks
+individually reasonable. Check what the fitting function actually reads, not what was
+calculated — and when a reported number and a stored number disagree, that is a bug in the
+reporting, not a rounding difference.
+
 ## Slice 2 — bridge-premises audit
 
 `scripts/overnight/audit-bridge-premises.mjs`, exit 0. 285 rows, 0 parse errors, 285 distinct
@@ -203,3 +245,4 @@ called and the file was not deleted or modified.
 |9 | 2026-09-27T04:27:23Z | dashboard | docs/reasoning/engine-dashboard.md,data/reasoning/module-ledger.jsonl,data/reasoning/feature-catalog.jsonl,scripts/overnight/scan-features.mjs | node scripts/overnight/scan-modules.mjs ; node scripts/overnight/scan-features.mjs | 0 | module-ledger 63 rows (59 catalogued, 4 blocked, 0 wired/measured_zero); feature-catalog 6 rows, 0 skipped, 0 false claims; LAC edge 0.30259224777263855 unchanged | no new verdict; dashboard reports the coaching DARK recorded at cycle 7 | did not pad the catalog toward 240; no row claims wired or measured_zero; no hit-rate projection and no units in the dashboard | PASS | -|
 |10 | 2026-09-27T04:36:30Z | joins | packages/data-ingestion/src/nflverse/joins.ts,packages/data-ingestion/src/nflverse/joins.test.ts,data/gse-dataset/join-report.json | npx vitest run src/nflverse/joins.test.ts ; npx tsc --noEmit | 0 | roster index 404653 rows -> 24850 keys, 1 ambiguous (2019\|00-0035718); snaps->rosters 135808/205355 matched (0.6613, pfr_id blank on 44.7% of roster rows); contracts->rosters 35138/35944 (0.9776); personnel ids 3019631/7952525 (0.3797) but 2023-2025 rate is 1.0 | not a scalarizer slice; no fit | did not build a jersey-number crosswalk that does not exist; did not coerce 2018-2022 ids; did not write an exploded personnel file; did not select one row for the ambiguous key | PASS | -|
 |11 | 2026-09-27T04:37:26Z | morning-report | docs/reasoning/morning-2026-09-27.md | git log --oneline b6723fd5a..HEAD | 0 | 11 cycles, 14 commits, 0 stuck; coaching DARK g=0.5 n=285; LAC edge 0.30259224777263855 unchanged; catalog 6 rows; engine calibration INSUFFICIENT_SAMPLE n=0; one gate NOT_EVALUATED | no family reached g=0; no LIVE part added; parts-registry.jsonl unmodified at 8 rows | did not score an acceptance gate and did not mark one passed; did not publish a win rate; did not push; morning report is the last commit | PASS | -|
+|12 | 2026-09-27T04:42:10Z | review-correction | scripts/overnight/measure-coaching.mjs,data/reasoning/dark-candidates.jsonl,docs/reasoning/morning-2026-09-27.md,docs/reasoning/engine-dashboard.md,docs/reasoning/overnight-audit-2026-09-27.md | npx tsx scripts/overnight/measure-coaching.mjs | 0 | coaching walk-forward corrected: regressor is now the frozen pre-2025 prediction; holdout n=285 r=0.0346098177800266 slope=0.7166085172924505 se=1.2300681449666506; verdict unchanged DARK g=0.5 winning=f1 | coaching DARK, g=0.5, winning_term=f1, f1=1 f2=0 f3=1 | did not rewrite the incorrect dark-candidates row; appended a superseding row; did not amend any commit; no family promoted on the false number because the verdict did not move | DARK | -|

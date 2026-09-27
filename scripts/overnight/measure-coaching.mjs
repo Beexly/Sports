@@ -111,9 +111,14 @@ if (!trainFit) {
   process.exit(1);
 }
 
-// Score the holdout with the training coefficients. The holdout statistics below are the
-// honest out-of-sample numbers, because the coefficients never saw a 2025 game.
-const scored = holdout.map((p) => ({ ...p, p: trainFit.intercept + trainFit.slope * p.x }));
+// Score the holdout with the training coefficients, then measure the TRAINED MODEL's
+// out-of-sample performance — not a fresh regression on the holdout.
+//
+// The regressor here must be the prediction, `p`. Feeding ols() the raw feature `x` would
+// refit the slope on 2025 itself and then score it against 2025, which is in-sample and
+// would let a family pass f1 on holdout-fitted significance. Only the pre-2025
+// coefficients are allowed to produce `p`, so no 2025 game can influence them.
+const scored = holdout.map((row) => ({ x: trainFit.intercept + trainFit.slope * row.x, y: row.y }));
 const holdoutFit = ols(scored);
 
 // --- verdict --------------------------------------------------------------
