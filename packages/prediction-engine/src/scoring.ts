@@ -10,6 +10,7 @@ import type {
   IndependentEdgeSummary,
 } from "@sports/types";
 import { computePickGrade, pricesWorseThanMarket } from "@sports/types";
+import { calibrationHistoryWithholds } from "./calibration/pathwise-defect.js";
 import { assessEdge, type IndependentEstimate } from "./edge-engine.js";
 import {
   MODEL_VERSION,
@@ -666,6 +667,9 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
 
   // Our own model prices this side worse than the book. Do not sell it.
   if (pricesWorseThanMarket(independentEdgeRaw)) return null;
+  // A calm pooled calibration score hid a broken slice. Do not sell it.
+  // Absent history does not vote, and this line does not change a survivor's score.
+  if (calibrationHistoryWithholds(input.context?.calibrationHistory)) return null;
 
   const rank = deriveRankingProbability(confidence, independentEdgeRaw, {
     independentWeight: 0.7,
@@ -1003,6 +1007,7 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   );
 
   if (confidence < MIN_PUBLISH_CONFIDENCE) return null;
+  if (calibrationHistoryWithholds(input.context?.calibrationHistory)) return null;
 
   const edgeScore = clamp(Math.round((edgeComponentScore / WEIGHTS.EDGE_COMPONENT_MAX) * 100), 0, 100);
   const pickGrade: PickGrade = computePickGrade(confidence, edgeScore);
@@ -1296,6 +1301,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
 
   // Our own model prices this side worse than the book. Do not sell it.
   if (pricesWorseThanMarket(independentEdgeRaw)) return null;
+  if (calibrationHistoryWithholds(input.context?.calibrationHistory)) return null;
 
   const confidence = Math.round(
     clamp(
