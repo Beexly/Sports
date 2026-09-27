@@ -1,6 +1,6 @@
 # Engine dashboard
 
-Generated 2026-09-27T04:39:04.903Z by `node scripts/overnight/build-dashboard.mjs`.
+Generated 2026-09-27T04:42:38.630Z by `node scripts/overnight/build-dashboard.mjs`.
 Every number below is read from the file printed beside it.
 No hit-rate projection, no units, no public win rate. The calibration page stays dark.
 
@@ -97,7 +97,7 @@ Each is DARK because honesty failed (f1), not because a cell was empty:
 
 - **coaching** —  (16 recorded attempts).
 - **narrative_contract** —  (16 recorded attempts).
-- **officials** —  (16 recorded attempts).
+- **officials** — n=269, r=0.027366, slope=0.208919, se=0.467033 (17 recorded attempts).
 - **weather_physics** —  (16 recorded attempts).
 
 ## Calibration
