@@ -81,17 +81,18 @@ describe("negative control — a genuinely varying consensus is still reported a
       "fanduel", "draftkings", "betmgm", "caesars", "pointsbet",
       "williamhill", "unibet", "betrivers", "bovada", "superbook",
     ];
-    // 8 of 10 books home-favored -> consensusPct = 0.8, genuinely below 1.0.
-    // The 2 dissenting books sit close to the pack (+0.5, not the old +2.0),
-    // which keeps spreadOfSpreads at 1.4 (under the >1.5 volatility-penalty
+    // 9 of 10 books home-favored -> consensusPct = 0.9, genuinely below 1.0.
+    // The 1 dissenting book sits close to the pack (+0.5, not the old +2.0),
+    // which keeps spreadOfSpreads ~1.05 (under the >1.5 volatility-penalty
     // threshold in computeVolatilityPenalty) and 10 full-price books clear
-    // the market-depth ideal, so confidence lands at 55, above
-    // MIN_PUBLISH_CONFIDENCE (50) and the pick actually mints. The prior
-    // 9-book fixture (7 of 9 home-favored, dissent at +2.0) tripped that same
-    // confidence floor: consensus 0.778 plus a -5 line-variance penalty plus
-    // a small negative pricing edge landed at ~46, so scoreGame silently
-    // returned no SPREAD pick and this negative control asserted nothing.
-    const spreads = [-3.0, -3.0, -3.0, -3.0, -3.0, -3.0, -3.0, -3.0, 0.5, 0.5];
+    // the market-depth ideal, so confidence lands above
+    // MIN_PUBLISH_CONFIDENCE (50) and the pick actually mints. NOTE: this
+    // fixture was 8-of-10 (consensus 0.8, confidence 55) before the
+    // 2026-09-27 market-echo rewire removed the market-internal edge
+    // component from the confidence sum; 0.8 consensus no longer clears the
+    // floor (48), so the fixture was made one book stronger. The assertions'
+    // intent is unchanged: a genuinely varying consensus still mints.
+    const spreads = [-3.0, -3.0, -3.0, -3.0, -3.0, -3.0, -3.0, -3.0, -3.0, 0.5];
     const input: OddsInput = {
       gameId: "nfl-varying-1",
       homeTeam: "Chiefs",
@@ -115,19 +116,28 @@ describe("negative control — a genuinely varying consensus is still reported a
   });
 
   it("a baseball TOTAL pick (not SPREAD) is unaffected and keeps its honest varying claim", () => {
+    // Ten books, nine of them over-favored at -120/+100 (one under-favored at
+    // +100/-120), totals 7.5 with one 8.0: consensusPct 0.9 — genuinely
+    // varying and below 1.0 — while clearing MIN_PUBLISH_CONFIDENCE on the
+    // post-market-echo scale (consensus 24 + depth 20 + base 10 = 54). The
+    // pre-rewire five-book mixed fixture no longer mints.
+    const books = [
+      "fanduel", "draftkings", "betmgm", "caesars", "pointsbet",
+      "betrivers", "wynn", "bet365", "espnbet", "fanatics",
+    ];
     const input: OddsInput = {
       gameId: "mlb-total-1",
       homeTeam: "St. Louis Cardinals",
       awayTeam: "Texas Rangers",
       commenceTime: new Date("2026-06-01T18:00:00Z"),
       sport: "baseball_mlb",
-      bookmakerOdds: [
-        { bookmaker: "fanduel", market: "TOTALS" as const, total: 7.5, overPrice: -110, underPrice: -110 },
-        { bookmaker: "draftkings", market: "TOTALS" as const, total: 7.5, overPrice: -112, underPrice: -108 },
-        { bookmaker: "betmgm", market: "TOTALS" as const, total: 8.0, overPrice: -110, underPrice: -110 },
-        { bookmaker: "caesars", market: "TOTALS" as const, total: 7.5, overPrice: -108, underPrice: -112 },
-        { bookmaker: "pointsbet", market: "TOTALS" as const, total: 8.0, overPrice: 105, underPrice: -125 },
-      ],
+      bookmakerOdds: books.map((bookmaker, i) => ({
+        bookmaker,
+        market: "TOTALS" as const,
+        total: i === 9 ? 8.0 : 7.5,
+        overPrice: i === 9 ? 100 : -120,
+        underPrice: i === 9 ? -120 : 100,
+      })),
     };
     const pick = scoreGame(input).find((p) => p.pickType === "TOTAL");
     expect(pick).toBeTruthy();

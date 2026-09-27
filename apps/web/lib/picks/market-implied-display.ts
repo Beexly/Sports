@@ -135,13 +135,15 @@ export function formatMarketImpliedLabel(display: MarketImpliedDisplay): string 
  * The restated public calibration claim (proposal section 1), scoped to what
  * the PROVEN eligibility measurement actually scores: the market-implied
  * probability on settled two-way MONEYLINE picks (receipt-first, shipped in
- * fbc3784c7). Confidence is a ranking score and is not part of it — but it is
- * not independent of the market either (see confidence-market-independence
- * tests), so the claim says so.
+ * fbc3784c7). Confidence is a ranking score and is not part of it; since the
+ * 2026-09-27 market-echo rewire, spread/total confidence does not include the
+ * market's probability either, and moneyline confidence is market-anchored by
+ * design and labeled as such.
  */
 export const MARKET_IMPLIED_CALIBRATION_CLAIM =
   "The calibration we measure ourselves on is the calibration of that market-implied probability " +
   "on our settled two-way moneyline picks: the average implied probability across books, " +
   "normalised to remove the vig, fixed at publish time and committed to the pick's proof receipt, " +
-  "never recomputed. Confidence is a ranking score and is not part of that measurement. " +
-  "It is a composite that includes market context, so it is not an independent model probability either.";
+  "never recomputed. Confidence is a ranking score and is not part of that measurement; " +
+  "on spreads and totals it does not include the market's probability of the outcome, and on " +
+  "moneylines it is anchored on the market's win probability and labeled as such.";

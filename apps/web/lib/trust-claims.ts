@@ -137,14 +137,14 @@ export const TRUST_CLAIMS: readonly TrustClaim[] = [
   {
     id: "methodology.confidence-presentation",
     copy:
-      "Confidence is a 0-100 selection score, shown as \"NN/100\" and never as a percentage. It ranks how much value we think is on the board, and it is not a win probability. It is a composite that includes market context, so it is not an independent model probability either. The only win probability we publish is the market-implied one, taken from the book prices on the pick.",
+      "Confidence is a 0-100 selection score, shown as \"NN/100\" and never as a percentage. It ranks how much value we think is on the board, and it is not a win probability. On spreads and totals it is built from board signals — book agreement, market depth, line movement, game context — and does not include the market's probability of the outcome. On moneylines it is anchored on the market's win probability, labeled as such in the factor trail. The only win probability we publish as a probability is the market-implied one, taken from the book prices on the pick.",
     category: "METHODOLOGY",
     status: "APPROVED",
     evidence: "ENGINE_BEHAVIOR",
     visibility: "PUBLIC",
     lastReviewedAt: LAST_REVIEW,
     reviewNote:
-      "Corrected v5.2.8 Phase 2. The previous copy claimed a CONFIDENCE_DISPLAY_MODE that does not exist in platform-config.ts (verified by grep), and claimed numeric scores appear only once calibrated - pick-card.tsx renders NN/100 unconditionally. Both halves were unobservable claims on a PUBLIC surface. The copy now describes what the code does: a 0-100 score rendered NN/100, never a percent. 2026-09-27 red team: Session A measured that published confidence moves 7 points when marketFairProb moves on an identical bet (packages/prediction-engine scoring.ts fairProb + cross-market channels; confidence-market-independence.test.ts). Copy now discloses the market-echo composite instead of implying market independence.",
+      "Corrected v5.2.8 Phase 2. The previous copy claimed a CONFIDENCE_DISPLAY_MODE that does not exist in platform-config.ts (verified by grep), and claimed numeric scores appear only once calibrated - pick-card.tsx renders NN/100 unconditionally. Both halves were unobservable claims on a PUBLIC surface. 2026-09-27 red team: Session A measured the market echo (confidence moved 7 points on an identical bet when marketFairProb moved). Owner authorized the rewire: the market-internal edge component and the cross-market bonus no longer feed the spread/total confidence sum (market-echo guard in scoring.ts, invariance tests in confidence-market-independence.test.ts); the moneyline path stays market-anchored by design and says so. Copy describes the post-rewire mechanics.",
   },
   {
     id: "methodology.risk-levels",

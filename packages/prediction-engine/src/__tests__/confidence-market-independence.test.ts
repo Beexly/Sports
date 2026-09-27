@@ -1,48 +1,35 @@
 /**
  * Does a market-derived probability reach the published `confidence` number?
  *
- * UNDER TEST (a hypothesis, not an established fact): "realized win rate falls
- * as confidence rises, and `marketFairProb` leaks into confidence."
+ * HISTORY: this file was written when the answer was YES. The three channel
+ * tests below were committed as `it.fails` guards asserting the invariance we
+ * wanted while the leak stood, with the measured size pinned separately:
+ * marketFairProb 0.5000 -> 0.3957 at an identical entry price moved confidence
+ * 57 -> 50, and flipping the H2H market moved 61 -> 54.
  *
- * This file MEASURES the second half of that claim. It is deliberately a
- * regression test written against the behaviour we would WANT (confidence
- * independent of market probability) so that it fails today if the leak is
- * real. It does not assert a number the market chose; it asserts an
- * INVARIANCE, which is the falsifiable claim: everything held constant except
- * a market probability, the published confidence must not move.
+ * 2026-09-27, owner-authorized rewire: the market-probability channels were
+ * removed from the confidence sum (scoring.ts market-echo guard — the
+ * market-internal edgeComponent and the cross-market ±4/−3 bonus are now
+ * context-only factors with weight 0). The guards flipped green, which is the
+ * signal their own header said to act on, so they are plain `it()` invariance
+ * tests now. The magnitude pin became an invariance pin: confidence must NOT
+ * move when only a market probability moves.
  *
- * What is actually under test, by code reference:
- *   scoring.ts:520-521  fairProb = removeVig(homeImpliedAvg, awayImpliedAvg)
- *                      -> the de-vigged market probability of the picked side.
- *                      This is the same quantity the receipt commits as
- *                      `marketFairProb` (MARKET_FAIR_METHOD_TAG, proportional).
- *   scoring.ts:532      edgeComponentScore = computeEdgeScore(fairProb, avgPrice, ...)
- *   scoring.ts:580-588  confidence = consensus + depth + edgeComponent + ... + 10
+ * STILL TRUE AND DELIBERATE: scoreMoneyline anchors its confidence on the
+ * de-vigged win probability (consensusPct = fairProb). For a moneyline pick
+ * that probability IS the pick's substance; the publication gate is
+ * fairProb >= 0.58 and the factor text says "Market implies a N% win
+ * probability". These tests pin the SPREAD path, which has no such excuse.
  *
- *   and a second, independent channel — the H2H (moneyline) market:
- *   scoring.ts:540-547  mlFairProbHome = removeVig(avgH, avgA)  <- market implied
- *   game-context.ts:698 computeCrossMarketScore(pickedSide, mlFairProbHome, ...)
- *   game-context.ts:469-489  -> +WEIGHTS.CROSS_MARKET_AGREE_BONUS (4) or
- *                              -WEIGHTS.CROSS_MARKET_DISAGREE_PENALTY (3)
- *   scoring.ts:573      crossMarketScore is added into the same sum as `confidence`
- *
- * Both channels are market-derived probabilities being arithmetically ADDED to
- * confidence. The code says so in its own words at scoring.ts:1219:
- * "Heuristic confidence stays as the market-echo composite for UX continuity."
- * The leak is therefore BY DESIGN and documented in the source, not an accidental
- * regression.
- *
- * WHY `it.fails` AND NOT A PERMANENTLY RED SUITE:
- * The three invariance assertions below are real, and they currently fail — the
- * leak is confirmed and measured. Committing them as ordinary `it()` would leave
- * the branch permanently red, which is how a suite teaches everyone to ignore
- * red. `it.fails` asserts the CURRENT (leaky) behaviour: the suite stays green
- * while the leak stands, and flips RED THE MOMENT someone fixes it. That red is
- * the signal to delete these guards. Nothing is deleted in the meantime; the
- * invariant stays written down and machine-checked.
- *
- * The final test in this file is a plain passing `it()` that pins the measured
- * SIZE of the leak, so the number survives even after the guards are retired.
+ * What guards the invariance, by code reference:
+ *   scoring.ts market-echo guard  edgeComponentScore and crossMarketScore are
+ *                                 excluded from the confidence sum; their
+ *                                 factorBreakdown entries carry weight 0.
+ *   scoring.ts:520-521            fairProb still feeds marketFairProb (context
+ *                                 + receipt) and the Edge Index — both labeled
+ *                                 as market quantities. That is correct and
+ *                                 out of scope here: the invariant is about
+ *                                 the CONFIDENCE number only.
  */
 
 import { describe, expect, it } from "vitest";
@@ -124,7 +111,7 @@ function crossMarketChannel(h2hHomePrice: number, h2hAwayPrice: number): OddsInp
 }
 
 describe("confidence vs. market probability (hypothesis under test)", () => {
-  it.fails("CHANNEL 1: published confidence is invariant to marketFairProb", () => {
+  it("CHANNEL 1: published confidence is invariant to marketFairProb", () => {
     // Same bet, same entry price, same books. Only the market's probability
     // for our side differs, because the de-vig split differs.
     const a = pick(scoreGame(edgeChannel(-110)));
@@ -152,7 +139,7 @@ describe("confidence vs. market probability (hypothesis under test)", () => {
     ).toBe(a.confidence);
   });
 
-  it.fails("CHANNEL 2: published confidence is invariant to the H2H market-implied probability", () => {
+  it("CHANNEL 2: published confidence is invariant to the H2H market-implied probability", () => {
     // The moneyline market agrees with our spread side, then disagrees with it.
     const agree = pick(scoreGame(crossMarketChannel(-200, +170)));
     const disagree = pick(scoreGame(crossMarketChannel(+170, -200)));
@@ -168,7 +155,7 @@ describe("confidence vs. market probability (hypothesis under test)", () => {
     ).toBe(agree.confidence);
   });
 
-  it.fails("the number frozen onto the proof receipt is the same leaked number", () => {
+  it("the number frozen onto the proof receipt is the same leaked number", () => {
     // Closes the loop back to pick-proof-receipt.ts: the receipt does not
     // compute confidence, it commits whatever the scorer handed it. So the
     // audited, tamper-evident artifact carries the market-contaminated value.
@@ -202,10 +189,13 @@ describe("confidence vs. market probability (hypothesis under test)", () => {
     ).toBe(a.confidence);
   });
 
-  it("MEASURED: the leak moves published confidence by 7 points on an identical bet", () => {
-    // The number, pinned as a PASSING assertion so the finding is a positive
-    // record and not only a guard. If this ever fails, the leak was fixed and the
-    // three it.fails guards above are now reporting the repair.
+  it("MEASURED HISTORY -> INVARIANCE: confidence does not move when only a market probability moves", () => {
+    // Historical record: before the 2026-09-27 rewire this same fixture moved
+    // published confidence by 7 points (57 -> 50) on a byte-identical bet when
+    // marketFairProb moved 0.5000 -> 0.3957, and the H2H flip moved 61 -> 54.
+    // The channels were the market-internal edgeComponent and the cross-market
+    // ±4/−3 bonus; both are context-only now. The assertion below is the
+    // invariant that replaces the old magnitude pin.
     const a = pick(scoreGame(edgeChannel(-110)));
     const b = pick(scoreGame(edgeChannel(-400)));
 
@@ -219,7 +209,8 @@ describe("confidence vs. market probability (hypothesis under test)", () => {
     expect(
       moved,
       `marketFairProb ${a.marketFairProb.toFixed(4)} -> ${b.marketFairProb.toFixed(4)} at an ` +
-        `identical entry price moved confidence ${a.confidence} -> ${b.confidence}`,
-    ).toBeGreaterThanOrEqual(5);
+        `identical entry price moved confidence ${a.confidence} -> ${b.confidence} — ` +
+        `the market-echo guard in scoring.ts has regressed`,
+    ).toBe(0);
   });
 });

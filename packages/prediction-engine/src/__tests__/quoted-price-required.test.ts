@@ -21,7 +21,11 @@ import type { OddsInput } from "@sports/types";
  * score or win rate.
  */
 
-const NCAAF_SPREADS = [-3.5, -3.5, -3.5, -3.5] as const;
+// Ten books, not four: the positive controls must clear MIN_PUBLISH_CONFIDENCE
+// on the post-market-echo scale (consensus 30 + full depth 20 + base 10 = 60).
+// At four books depth alone (8) dropped the honest controls below the floor
+// after the edge component left the confidence sum.
+const NCAAF_SPREADS = [-3.5, -3.5, -3.5, -3.5, -3.5, -3.5, -3.5, -3.5, -3.5, -3.5] as const;
 
 type SpreadBook = {
   readonly spread: number;
@@ -105,14 +109,20 @@ describe("scoreGame — a spread is never published at a price no book quoted", 
   });
 
   it("narrows to the two-sided books rather than vetoing the market", () => {
-    // The guard must not turn "one book is incomplete" into "no pick". Three
+    // The guard must not turn "one book is incomplete" into "no pick". Ten
     // complete books plus one home-only book is still a real, priceable market.
-    // Prices are uniform on purpose: a dispersed set (e.g. one book at
-    // -108/-112) moves the fair probability enough to fail the edge threshold
-    // on its own, which would make this control pass or fail for a reason that
-    // has nothing to do with the guard under test.
+    // Prices are uniform on purpose: a dispersed set would move the fair
+    // probability for reasons that have nothing to do with the guard under
+    // test. Book count matters post-rewire: pricedOdds must reach the depth
+    // that clears MIN_PUBLISH_CONFIDENCE.
     const picks = scoreGame(
       spreadInput([
+        { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+        { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
         { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
         { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
         { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
@@ -136,6 +146,12 @@ describe("scoreGame — a spread is never published at a price no book quoted", 
       { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
       { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
       { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
       { spread: -3.5, homeSpreadPrice: -108, awaySpreadPrice: -112 },
     ];
     const withIncomplete = scoreGame(
@@ -146,7 +162,7 @@ describe("scoreGame — a spread is never published at a price no book quoted", 
     expect(withIncomplete?.entryPrice).toBe(completeOnly?.entryPrice);
     expect(withIncomplete?.confidence).toBe(completeOnly?.confidence);
     // And the incomplete book is not counted as one that priced the market.
-    expect(withIncomplete?.bookmakerCount).toBe(4);
+    expect(withIncomplete?.bookmakerCount).toBe(10);
   });
   it("ignores a one-sided outlier price entirely, so it cannot manufacture an edge", () => {
     // avgPrice and fairProb are COMPARED to produce the edge, so they must come
@@ -157,10 +173,17 @@ describe("scoreGame — a spread is never published at a price no book quoted", 
     // The outlier here is +900 on the chosen side from a book that quotes no
     // opposite side. Under the mismatched-set version it dragged avgPrice far
     // from the complete market; now it is dropped before any price is averaged,
-    // so the result is identical to the same three complete books alone.
-    // Four complete books: three sits below the engine's own market-depth bar
-    // and publishes nothing, which would make this assert undefined === undefined.
+    // so the result is identical to the same complete books alone.
+    // Ten complete books: fewer cannot clear MIN_PUBLISH_CONFIDENCE on the
+    // post-market-echo scale (depth alone), which would make this assert
+    // undefined === undefined.
     const complete = [
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
+      { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
       { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
       { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
       { spread: -3.5, homeSpreadPrice: -110, awaySpreadPrice: -110 },
@@ -177,7 +200,7 @@ describe("scoreGame — a spread is never published at a price no book quoted", 
 });
 
 describe("scoreGame — a total is never published at a price no book quoted", () => {
-  const TOTALS = [51.5, 51.5, 51.5, 51.5] as const;
+  const TOTALS = [51.5, 51.5, 51.5, 51.5, 51.5, 51.5, 51.5, 51.5, 51.5, 51.5] as const;
 
   it("publishes normally when the books quote both directions", () => {
     // Uniform -110/-110 for the same reason as the spread control above: a
@@ -219,6 +242,12 @@ describe("scoreGame — a total is never published at a price no book quoted", (
       { total: 51.5, overPrice: -110, underPrice: -110 },
       { total: 51.5, overPrice: -110, underPrice: -110 },
       { total: 51.5, overPrice: -110, underPrice: -110 },
+      { total: 51.5, overPrice: -110, underPrice: -110 },
+      { total: 51.5, overPrice: -110, underPrice: -110 },
+      { total: 51.5, overPrice: -110, underPrice: -110 },
+      { total: 51.5, overPrice: -110, underPrice: -110 },
+      { total: 51.5, overPrice: -110, underPrice: -110 },
+      { total: 51.5, overPrice: -110, underPrice: -110 },
     ];
     const withOutlier = scoreGame(
       totalInput([...complete, { total: 51.5, overPrice: 900 }]),
@@ -228,6 +257,6 @@ describe("scoreGame — a total is never published at a price no book quoted", (
     expect(withOutlier?.entryPrice).toBe(completeOnly?.entryPrice);
     expect(withOutlier?.confidence).toBe(completeOnly?.confidence);
     // And the book that priced only one direction is not counted as pricing it.
-    expect(withOutlier?.bookmakerCount).toBe(4);
+    expect(withOutlier?.bookmakerCount).toBe(10);
   });
 });
