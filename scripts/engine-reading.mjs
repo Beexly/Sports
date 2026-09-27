@@ -37,6 +37,13 @@ const situational = new Map(
     .map((line) => JSON.parse(line))
     .map((row) => [row.game_id, row]),
 );
+const ngs = new Map(
+  readFileSync(resolve(root, "data/gse-dataset/current/week3-ngs-st-pace.jsonl"), "utf8")
+    .trim()
+    .split("\n")
+    .map((line) => JSON.parse(line))
+    .map((row) => [row.game_id, row]),
+);
 const envCal = JSON.parse(readFileSync(resolve(root, "data/gse-dataset/current/environment-calibration.json"), "utf8"));
 const REST_SLOPE = envCal.rest_days_to_margin.used_slope;
 const MARGIN_SCALE = 14;
@@ -70,7 +77,15 @@ for (const context of contexts) {
     (awayScheme.motion_rate + awayScheme.play_action_rate + awayScheme.rpo_rate + awayScheme.shotgun_rate) / 4,
   );
   const splitRow = split.get(context.game_id);
-  const efficiency = splitRow ? splitRow.efficiency_signed : null;
+  const ngsRow = ngs.get(context.game_id);
+  const efficiency = (() => {
+    const base = splitRow ? splitRow.efficiency_signed : null;
+    const extra = ngsRow ? ngsRow.ngs_st_signed : null;
+    if (typeof base === "number" && typeof extra === "number") return clip(0.7 * base + 0.3 * extra);
+    if (typeof base === "number") return base;
+    if (typeof extra === "number") return extra;
+    return null;
+  })();
   const availability = clip((context.away.injuries.out.length - context.home.injuries.out.length) / 6);
   const rest = game && typeof game.rest_diff === "number" ? clip((game.rest_diff * REST_SLOPE) / MARGIN_SCALE) : null;
   const strength = elo.has(context.game_id) ? clip((elo.get(context.game_id) - 0.5) * 2) : null;
