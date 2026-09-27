@@ -69,4 +69,55 @@ participation row 1 is `2024_01_TEN_CHI` play 40 with 22 players in `players_on_
 snap-counts keys are `season, week, team, player, position, offense_snaps, offense_pct,
 defense_snaps, defense_pct, st_snaps, st_pct, game_id, pfr_player_id` and carry no `gsis_id`;
 `fourth-down.jsonl` has `punt_wp` and its first row's value is genuinely null.
+
+## Slice 2 — bridge-premises audit
+
+`scripts/overnight/audit-bridge-premises.mjs`, exit 0. 285 rows, 0 parse errors, 285 distinct
+`game_id`, no duplicates, 0 probabilities outside `[0,1]`, 0 nulls.
+
+One `signal_id` (`pregame_context_logit`, 285 rows), one `method` (`logistic-irls`, 285 rows),
+one `sample_count` (**6955**, 285 rows). The file has **no season field and no year field at
+all** — keys are exactly `game_id, signal_id, outcome, probability, sample_count, method,
+home_sign`.
+
+### The constant sample count is explained, not suspicious
+
+The work order calls a constant `sample_count` on holdout rows a smell. Measured, it is the
+training row count of one fit, stamped onto every scored game, which is correct by
+construction. `scripts/run-bridge.mjs:74` writes `predicted.data.sampleCount`, which is
+`fit.data.sampleCount` — a property of the fit, not of the game.
+
+Reproduced independently, applying the writer's own refusal rules to `features.jsonl`:
+
+| quantity | value |
+|---|---|
+| `features.jsonl` rows | 7548, seasons 1999-2026 |
+| rows with `season >= 2025` (excluded from fit) | 557 |
+| pre-2025 candidate rows | 6991 |
+| refused: `home_margin_avg` missing | 16 |
+| refused: `home_opp_adj_pts_scored` missing | 15 |
+| refused: `away_margin_avg` missing | 4 |
+| refused: `away_opp_adj_pts_scored` missing | 1 |
+| **reproduced training rows** | **6955** |
+
+6991 - 36 = 6955, matching the file exactly.
+
+### The fit is genuinely out of sample
+
+`run-bridge.mjs:48` is `if (row.season >= 2025) continue;` in the training loop, so the fit
+uses seasons 1999-2024. `holdout.jsonl` is 285 rows, and all 285 of them match `features.jsonl`
+rows of season 2025. No 2025 outcome enters the fit.
+
+### Disposition
+
+The work order's "audit the writer before you trust a probability" is satisfied: the writer is
+`scripts/run-bridge.mjs`, the training window is pre-2025, and the constant `sample_count` is
+the training N. **This file is a real walk-forward holdout**, which contradicts
+`AGENTS.md:66` ("Do not treat it as a holdout") and the work order's framing of the constant as
+a smell. Both are recorded here as superseded by measurement.
+
+It still does **not** enter the live edge. A clean holdout is a precondition for trusting a
+probability, not a substitute for `selectPart` returning `g = 0`. `aggregateSignals` was not
+called and the file was not deleted or modified.
 |1 | 2026-09-27T04:06:38Z | verify-files | scripts/overnight/verify-files.mjs | node scripts/overnight/verify-files.mjs | 0 | 5/5 sha256 match; bytes+rows exact; publishes_pick=false; seasons=[2024,2025]; participation row1=2024_01_TEN_CHI play40 n=22; snaps have no gsis_id; punt_wp null | - | no fit; no season extension yet; .ps1 deleted not force-added (.gitignore:195 + AGENTS.md law 2) | PASS | -|
+|2 | 2026-09-27T04:10:04Z | audit-bridge-premises | data/gse-dataset/bridge-premises.jsonl | node scripts/overnight/audit-bridge-premises.mjs | 0 | 285 rows, 1 signal_id, 1 method, sample_count constant 6955, 0 parse errors, 285 distinct game_id, 0 probs outside [0,1], no season/year field; reproduced 6991 pre-2025 rows minus 36 refusals = 6955 exactly | not run; no fit, no LIVE | did not delete or modify bridge-premises.jsonl; did not call aggregateSignals; did not treat it as LIVE | PASS | -|
