@@ -115,6 +115,17 @@ describe("entryOdds plausibility write-guard (P0-2, launch audit 2026-09-08)", (
     }
   });
 
+  it("rejects the documented frozen integers -33, -43 and -86", () => {
+    // The concrete values named in the 2026-09-08 audit as having reached 199
+    // frozen receipt rows. They stay in the data (history is frozen); this asserts
+    // the write-guard would refuse any NEW row carrying them.
+    for (const odds of [-33, -43, -86]) {
+      expect(isPlausibleEntryOdds(odds)).toBe(false);
+    }
+    // The paired claim from the same audit: the standard -110 is accepted.
+    expect(isPlausibleEntryOdds(-110)).toBe(true);
+  });
+
   it("fail-closes on non-number and non-finite input", () => {
     for (const bad of [null, undefined, "−110", Number.NaN, Number.POSITIVE_INFINITY]) {
       expect(isPlausibleEntryOdds(bad)).toBe(false);
