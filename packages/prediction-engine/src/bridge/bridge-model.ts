@@ -115,7 +115,7 @@ export function fitBridge(rows: readonly { features: Readonly<Record<BridgeFeatu
   const width = BRIDGE_FEATURES.length + 1;
   let beta = new Array<number>(width).fill(0);
   let converged = false;
-  for (let iter = 0; iter < 25; iter++) {
+  for (let iter = 0; iter < 80; iter++) {
     const mu = x.map((row) => sigmoid(row.reduce((sum, value, i) => sum + value * beta[i]!, 0)));
     const xtwx = Array.from({ length: width }, () => new Array<number>(width).fill(0));
     const xtwz = new Array<number>(width).fill(0);
