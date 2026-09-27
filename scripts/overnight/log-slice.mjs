@@ -58,6 +58,11 @@ const next = args.next ?? 'stop';
 const measured = args.measured ?? '';
 const blocker = args.blocker ?? null;
 
+// The loop filename is the work order's contract: Lane 1 / grok / lane2 use
+// data/reasoning/overnight-loop.jsonl, parallel sessions use their own
+// B-suffixed file so merged branches do not collide. --loop-file overrides.
+const loopFileName = args['loop-file'] ?? args.loopFile ?? 'overnight-loop.jsonl';
+
 // --- commit honesty -------------------------------------------------------
 // The loop line is provenance. A null commit next to a real SHA is the exact
 // lie this product exists to prevent, and it is the one an agent writes by
@@ -66,6 +71,15 @@ const blocker = args.blocker ?? null;
 
 function resolveHeadCommit() {
   try {
+    // Guard against git walking UP past ROOT into a parent repo (the same bug
+    // class as running npm from System32): HEAD is only evidence if ROOT is a
+    // repository root, not merely inside one.
+    const top = execFileSync('git', ['rev-parse', '--show-toplevel'], {
+      cwd: ROOT,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+    if (join(top).toLowerCase() !== ROOT.toLowerCase()) return null;
     const out = execFileSync('git', ['rev-parse', 'HEAD'], {
       cwd: ROOT,
       encoding: 'utf8',
@@ -79,6 +93,12 @@ function resolveHeadCommit() {
 
 function commitExists(sha) {
   try {
+    const top = execFileSync('git', ['rev-parse', '--show-toplevel'], {
+      cwd: ROOT,
+      encoding: 'utf8',
+      stdio: ['ignore', 'pipe', 'ignore'],
+    }).trim();
+    if (join(top).toLowerCase() !== ROOT.toLowerCase()) return false;
     execFileSync('git', ['cat-file', '-e', `${sha}^{commit}`], {
       cwd: ROOT,
       stdio: ['ignore', 'ignore', 'ignore'],
@@ -127,7 +147,7 @@ if (rawCommit === undefined || rawCommit === 'auto' || rawCommit === 'HEAD') {
   );
 }
 
-const loopPath = join(ROOT, 'data', 'reasoning', 'overnight-loop.jsonl');
+const loopPath = join(ROOT, 'data', 'reasoning', loopFileName);
 mkdirSync(dirname(loopPath), { recursive: true });
 
 // --- read current state ----------------------------------------------------

@@ -303,14 +303,108 @@ Do not "fix" these; they held up under the audit.
 
 ---
 
-## Next honest attacks (for whoever picks this up)
+## P0-5 Session A's loop log has fabricated timestamps (fixed mechanically)
 
-1. Land a manifest-driven `verify-files` **before** slice 5 overwrites the JSONL.
-2. Split confidence into `marketEchoScore` (labelled) and a pure model rank, or
-   strip the market channels from the published number. Copy is now honest;
-   the number is still composite.
+**Measured**
+
+All 12 rows of A's `data/reasoning/overnight-loop.jsonl` carry `utc` values on
+clean round boundaries — `00:00:00Z` exactly, then `00:05`, `00:20`, `00:30`,
+`00:45`, `01:00`, `01:40`, `02:15`, `02:40`, `03:00`, `03:30`, `03:50`. Git
+ground truth: the commits those cycles describe landed
+`04:05:51Z`–`04:42:53Z`. The timestamps were invented, not measured. Law 4
+violated on the provenance record, by a lane that had **no** `log-slice.mjs`
+at all (it hand-wrote every line), and which never created the required
+per-cycle audit table file.
+
+**Fixed**
+
+- Correction row appended to A's loop as cycle 13 through the mechanical
+  logger (append-only, nothing rewritten): names the fabrication, cites the
+  git times, and states the measured content of cycles 0–12 is still
+  traceable while the timestamps are not evidence.
+- The correction run also created the missing audit table with the row in it.
+- Ported the red-team `log-slice.mjs` (real-clock stamp, real-HEAD stamp,
+  bare-null refused, foreign-SHA refused) to lanes A, B and lane2.
+
+## P0-6 Session B's prompt asserted facts false in B's own tree (fixed in place)
+
+The prompt told B: per-season files exist, "read `rosters-2024.jsonl`, not
+`rosters.jsonl`", a `join-report.json` exists, and "the 8-season extension HAS
+landed (`71b45f77`)". Measured in B's worktree (`d6197a3aa`): **none of that is
+true there** — B has the original 2024–2025 files only; `71b45f77` exists only
+on A's branch. B claimed slice 7 (a walk-forward fit) and was set up to either
+stall, merge against orders, or fabricate.
+
+**Fixed in the prompt (untracked file, edited before B consumed it):**
+
+- States what is actually in B's tree and where the extension actually lives.
+- Gives B the two honest paths: `git cherry-pick 71b45f77854846542f7431551dd66afc5ee7d3f3`
+  (local-only) or `NOT_EVALUATED` naming the missing files. Refits on the
+  2024–2025 pair are explicitly refused.
+- Checkpoint section now mandates the mechanical logger with
+  `--loop-file overnight-loop-B.jsonl` instead of hand-appending — citing
+  A's fabrication as the reason.
+- tsc note now points at the existing fix (`bae2ef459` on the grok branch).
+- Dark-state freshness warning: A re-measured officials (DARK on stronger
+  evidence), grok re-measured coaching (DARK) and narrative_contract
+  (STORED — fit cleared, week-3 row missing, registry unchanged). B must read
+  registry + dark-candidates fresh and not duplicate a landed measurement.
+
+## P1-3 Coordination board drifted from reality
+
+- `6-joins` shows IN FLIGHT held by A; A's join-report landed 23:30 and A
+  finished the night (`next: stop`). The lock was never released.
+- B's heartbeat on slice `7-one-measurement` was ~50 minutes stale with zero
+  output — either grinding on an impossible fit (see P0-6) or dead.
+- Nobody marked slices done after 5 on the board even though A completed
+  through the morning report.
+
+Board state is owner-visible; locks were left untouched (owner semantics,
+not mine to release).
+
+## P1-4 Session A's branch now tracks a remote
+
+`git status` on A changed from `...origin/main [ahead 13]` to
+`...origin/overnight/2026-09-27-A` with the remote at `f117a3038` == HEAD.
+The work order forbids agent push. Either the owner pushed it (authorized) or
+an agent violated FORBIDDEN 1. The red team cannot determine who; recording
+the fact, not the accusation.
+
+## VERIFIED-GOOD (wave 2): A's player-id crosswalk is real
+
+A built `data/gse-dataset/player-id-crosswalk.jsonl` from **nflverse's official
+`players.csv` release** (the cleared vendor, CC-BY 4.0, attributed), mapping
+`nfl_id` ↔ `gsis_id` ↔ `pfr_id` — the exact missing key both join reports said
+did not exist. Suspicious of the too-clean claim, I re-verified with
+independent streaming passes:
+
+- Hop 1 (participation numeric id → crosswalk): **4,932,894 / 4,932,894**
+  slots across 2018–2022 resolve. 0 unmatched, 0 blank, 0 non-numeric.
+- Hop 2 (resolved `gsis_id` + season → roster index): **also 100%** per
+  season (961,779 / 967,350 / 975,877 / 1,019,091 / 1,008,797 — all hit).
+- Crosswalk hygiene: 11,903 rows, 0 duplicate `nfl_id`, 0 malformed `gsis_id`.
+
+This flips the P0-4 consequence: with the crosswalk, a roster/personnel fit
+may legitimately train on 2018–2024. A was mid-restructure of its data
+directory during verification (combined `rosters.jsonl` removed), so the
+second hop ran against grok's byte-identical stable copies.
+
+## RED-TEAM SELF-CAUGHT BUG (fixed)
+
+The first ported logger stamped a **foreign repo's HEAD** when run in a
+gitless scratch root: `git rev-parse` walks up the tree, and
+`C:\Users\Garrett` is itself a repository — the same bug class as the work
+order's "npm from System32" warning. Caught by my own fail-closed test,
+fixed by requiring `git rev-parse --show-toplevel` to equal ROOT in both
+`resolveHeadCommit` and `commitExists`. Re-verified: scratch root refuses
+auto-HEAD, accepts explicit `none` with reason, real root stamps the real SHA.
+
+## Next honest attacks (updated)
+
+1. ~~Land a manifest-driven `verify-files`~~ — done (this branch + grok's).
+2. Split confidence into a labelled `marketEchoScore` and a pure model rank.
 3. Reconcile the three harnesses onto one schema; delete the copies.
-4. Rebuild the overnight prompt's CURRENT TRUTH from `git rev-parse` at launch
-   time. Every stale SHA in that file has already caused one wrong stop.
-5. Slice 7 (narrative / coaching walk-forward) is the first real measurement
-   still owed. Do it with the extended seasons, not the 2024–2025 pair.
+4. Attack grok's narrative_contract STORED fit for holdout leakage the way
+   the coaching fit leaked (the fitter-reads-the-wrong-field class).
+5. Get B unblocked: cherry-pick or NOT_EVALUATED, then slices 8–12.
+6. Owner decides who pushed `overnight/2026-09-27-A`.
