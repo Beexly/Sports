@@ -3,7 +3,23 @@
  * A blank join key is a refusal. A missing number stays null. Nothing is filled in.
  */
 
-export const INGEST_SEASONS = [2024, 2025] as const;
+/**
+ * Seasons the pipeline ingests. 2025 is the HOLDOUT; everything before it is
+ * eligible training history. Two seasons are not a training set, which is why
+ * this list starts at 2018 rather than at 2024.
+ *
+ * This is the single source of truth. `ingest.ts` imports it rather than keeping
+ * its own copy, so a season can never be gated on by the loader and filtered out
+ * by the projection (or the reverse).
+ */
+export const INGEST_SEASONS = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025] as const;
+
+export type IngestSeason = (typeof INGEST_SEASONS)[number];
+
+/** True when `value` is a season this pipeline ingests. */
+export function isIngestSeason(value: number | null): value is IngestSeason {
+  return value !== null && (INGEST_SEASONS as readonly number[]).includes(value);
+}
 
 export type Keep<T> = { readonly ok: true; readonly row: T };
 export type Drop = { readonly ok: false; readonly reason: string };
@@ -62,7 +78,7 @@ export interface ContractRow {
  */
 export function contractCoversWindow(yearSigned: number | null, years: number | null): boolean {
   if (yearSigned === null) return false;
-  if (INGEST_SEASONS.includes(yearSigned as 2024 | 2025)) return true;
+  if (isIngestSeason(yearSigned)) return true;
   if (years === null || years <= 0) return false;
   const end = yearSigned + years - 1;
   return INGEST_SEASONS.some((season) => yearSigned <= season && season <= end);
@@ -108,7 +124,7 @@ export function projectRoster(raw: Record<string, unknown>, level: "season" | "w
   const gsis = asString(raw.gsis_id);
   if (gsis === null) return { ok: false, reason: "missing_gsis_id" };
   const season = asNumber(raw.season);
-  if (season === null || !INGEST_SEASONS.includes(season as 2024 | 2025)) {
+  if (!isIngestSeason(season)) {
     return { ok: false, reason: "outside_window" };
   }
   return {
@@ -155,7 +171,7 @@ export function projectSnap(raw: Record<string, unknown>): Decision<SnapRow> {
   const pfr = asString(raw.pfr_player_id);
   if (pfr === null) return { ok: false, reason: "missing_pfr_player_id" };
   const season = asNumber(raw.season);
-  if (season === null || !INGEST_SEASONS.includes(season as 2024 | 2025)) {
+  if (!isIngestSeason(season)) {
     return { ok: false, reason: "outside_window" };
   }
   return {
@@ -235,7 +251,7 @@ export function projectFourthDown(raw: Record<string, unknown>): Decision<Fourth
   const playId = asNumber(raw.play_id);
   if (playId === null) return { ok: false, reason: "missing_play_id" };
   const season = asNumber(raw.season);
-  if (season !== null && !INGEST_SEASONS.includes(season as 2024 | 2025)) {
+  if (season !== null && !isIngestSeason(season)) {
     return { ok: false, reason: "outside_window" };
   }
   return {

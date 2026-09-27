@@ -28,10 +28,26 @@ import {
   projectParticipation,
   projectRoster,
   projectSnap,
+  INGEST_SEASONS,
   type Decision,
 } from "./rows.js";
 
-const SEASONS = [2024, 2025] as const;
+/**
+ * One source of truth for the season list, imported from rows.ts. Keeping a
+ * second copy here is how a season ends up loaded and then refused by the
+ * projection, or worse, silently dropped.
+ *
+ * Every season-keyed grain is processed ONE SEASON AT A TIME and written to its
+ * own file. The previous revision accumulated every season into a single array
+ * and then built a second full copy in `collect()`, which is what OOMs the V8
+ * heap once participation crosses a few seasons: each row carries a
+ * `players_on_field` array of 22 ids. Peak memory is now one season, not eight.
+ *
+ * Per-season files also keep every artifact under the 90 MB ceiling, so a
+ * multi-season grain stays committable instead of becoming a single file GitHub
+ * will refuse.
+ */
+const SEASONS = INGEST_SEASONS;
 const ROOT = resolve(__dirname, "..", "..", "..", "..");
 const DATA_DIR = join(ROOT, "data", "gse-dataset");
 const CACHE_DIR = join(DATA_DIR, ".cache", "nflverse-cycle8");
@@ -62,6 +78,8 @@ interface FourthExtract {
   readonly read: number;
   readonly kept: number;
   readonly refused: Record<string, number>;
+  /** Seasons the nfl4th release does not publish. Recorded, never invented. */
+  readonly missingSeasons: number[];
 }
 
 interface PbpProbe {
@@ -218,9 +236,9 @@ async function pbpFourthColumns(season: number): Promise<PbpProbe> {
 }
 
 function parseFourthExtract(stdout: string): FourthExtract {
-  let parsed: { read?: unknown; kept?: unknown; refused?: unknown };
+  let parsed: { read?: unknown; kept?: unknown; refused?: unknown; missing_seasons?: unknown };
   try {
-    parsed = JSON.parse(stdout.trim()) as { read?: unknown; kept?: unknown; refused?: unknown };
+    parsed = JSON.parse(stdout.trim()) as { read?: unknown; kept?: unknown; refused?: unknown; missing_seasons?: unknown };
   } catch {
     throw new Error(`fourth-down extract stdout was not JSON: ${stdout.slice(0, 400)}`);
   }
@@ -237,14 +255,17 @@ function parseFourthExtract(stdout: string): FourthExtract {
   if (parsed.read !== parsed.kept + refusalTotal(refused)) {
     throw new Error(`fourth-down read ${parsed.read} != kept ${parsed.kept} + refused ${refusalTotal(refused)}`);
   }
-  return { read: parsed.read, kept: parsed.kept, refused };
+  const missingSeasons = Array.isArray(parsed.missing_seasons)
+    ? parsed.missing_seasons.filter((s): s is number => typeof s === "number" && Number.isFinite(s))
+    : [];
+  return { read: parsed.read, kept: parsed.kept, refused, missingSeasons };
 }
 
-async function extractFourthDown(path: string): Promise<FourthExtract> {
+async function extractFourthDown(path: string, seasons: readonly number[]): Promise<FourthExtract> {
   const script = join(__dirname, "extract_fourth_down.py");
   await mkdir(CACHE_DIR, { recursive: true });
   const stdout = await new Promise<string>((resolvePromise, reject) => {
-    const child = spawn("python", [script, path, CACHE_DIR], { stdio: ["ignore", "pipe", "inherit"] });
+    const child = spawn("python", [script, path, CACHE_DIR, ...seasons.map(String)], { stdio: ["ignore", "pipe", "inherit"] });
     const chunks: Buffer[] = [];
     child.stdout.on("data", (chunk: Buffer) => chunks.push(chunk));
     child.on("error", reject);
@@ -277,73 +298,86 @@ export async function ingestNflverseCycle8(): Promise<{ manifestPath: string; da
     note: "OverTheCap historical contracts via nflverse. Kept when gsis_id is present and the signed term covers 2024 or 2025. years null is not given a guessed length.",
   }, contractPath));
 
-  const seasonRosters = unwrap("rosters", await loadRosters([...SEASONS], { format: "parquet" }));
-  requireRows("loadRosters", seasonRosters);
-  const weeklyRosters = unwrap("rosters-weekly", await loadRostersWeekly([...SEASONS], { format: "parquet" }));
-  requireRows("loadRostersWeekly", weeklyRosters);
-  const seasonOut = collect(seasonRosters as unknown as Record<string, unknown>[], (raw) => projectRoster(raw, "season"));
-  const weeklyOut = collect(weeklyRosters as unknown as Record<string, unknown>[], (raw) => projectRoster(raw, "weekly"));
-  const rosterPath = join(DATA_DIR, "rosters.jsonl");
-  await writeJsonl(rosterPath, [...seasonOut.kept, ...weeklyOut.kept]);
-  const rosterRefused: Record<string, number> = {};
-  for (const source of [seasonOut.refused, weeklyOut.refused]) {
-    for (const [reason, count] of Object.entries(source)) rosterRefused[reason] = (rosterRefused[reason] ?? 0) + count;
+  // Rosters, one season at a time. Season rows and weekly rows share the file;
+  // roster_level tells them apart.
+  for (const season of SEASONS) {
+    const seasonRosters = unwrap(`rosters ${season}`, await loadRosters([season], { format: "parquet" }));
+    requireRows(`loadRosters ${season}`, seasonRosters);
+    const weeklyRosters = unwrap(`rosters-weekly ${season}`, await loadRostersWeekly([season], { format: "parquet" }));
+    requireRows(`loadRostersWeekly ${season}`, weeklyRosters);
+    const seasonOut = collect(seasonRosters as unknown as Record<string, unknown>[], (raw) => projectRoster(raw, "season"));
+    const weeklyOut = collect(weeklyRosters as unknown as Record<string, unknown>[], (raw) => projectRoster(raw, "weekly"));
+    const rosterPath = join(DATA_DIR, `rosters-${season}.jsonl`);
+    await writeJsonl(rosterPath, [...seasonOut.kept, ...weeklyOut.kept]);
+    const rosterRefused: Record<string, number> = {};
+    for (const source of [seasonOut.refused, weeklyOut.refused]) {
+      for (const [reason, count] of Object.entries(source)) rosterRefused[reason] = (rosterRefused[reason] ?? 0) + count;
+    }
+    datasets.push(await finishDataset({
+      name: `rosters-${season}`,
+      loader: "loadRosters + loadRostersWeekly",
+      path: `data/gse-dataset/rosters-${season}.jsonl`,
+      read: seasonRosters.length + weeklyRosters.length,
+      kept: seasonOut.kept.length + weeklyOut.kept.length,
+      refused: rosterRefused,
+      note: "Season rows and weekly rows share the file. roster_level tells them apart. A blank gsis_id is refused.",
+    }, rosterPath));
   }
-  datasets.push(await finishDataset({
-    name: "rosters",
-    loader: "loadRosters + loadRostersWeekly",
-    path: "data/gse-dataset/rosters.jsonl",
-    read: seasonRosters.length + weeklyRosters.length,
-    kept: seasonOut.kept.length + weeklyOut.kept.length,
-    refused: rosterRefused,
-    note: "Season rows and weekly rows share the file. roster_level tells them apart. A blank gsis_id is refused.",
-  }, rosterPath));
 
-  const snaps = unwrap("snap-counts", await loadSnapCounts([...SEASONS], { format: "parquet" }));
-  requireRows("loadSnapCounts", snaps);
-  const snapOut = collect(snaps as unknown as Record<string, unknown>[], projectSnap);
-  const snapPath = join(DATA_DIR, "snap-counts.jsonl");
-  await writeJsonl(snapPath, snapOut.kept);
-  datasets.push(await finishDataset({
-    name: "snap-counts",
-    loader: "loadSnapCounts",
-    path: "data/gse-dataset/snap-counts.jsonl",
-    read: snaps.length,
-    kept: snapOut.kept.length,
-    refused: snapOut.refused,
-    note: "This release has game_id and pfr_player_id. It has no gsis_id column, so none was added.",
-  }, snapPath));
+  for (const season of SEASONS) {
+    const snaps = unwrap(`snap-counts ${season}`, await loadSnapCounts([season], { format: "parquet" }));
+    requireRows(`loadSnapCounts ${season}`, snaps);
+    const snapOut = collect(snaps as unknown as Record<string, unknown>[], projectSnap);
+    const snapPath = join(DATA_DIR, `snap-counts-${season}.jsonl`);
+    await writeJsonl(snapPath, snapOut.kept);
+    datasets.push(await finishDataset({
+      name: `snap-counts-${season}`,
+      loader: "loadSnapCounts",
+      path: `data/gse-dataset/snap-counts-${season}.jsonl`,
+      read: snaps.length,
+      kept: snapOut.kept.length,
+      refused: snapOut.refused,
+      note: "This release has game_id and pfr_player_id. It has no gsis_id column, so none was added.",
+    }, snapPath));
+  }
 
-  const participationParts: Record<string, unknown>[] = [];
+  // Participation, one season at a time. This is the grain that OOMs: every row
+  // carries players_on_field, an array of 22 GSIS ids.
   for (const season of SEASONS) {
     const part = unwrap(`participation ${season}`, await loadParticipation(season, { format: "parquet" }));
     requireRows(`loadParticipation ${season}`, part);
-    participationParts.push(...(part as unknown as Record<string, unknown>[]));
+    const participationOut = collect(part as unknown as Record<string, unknown>[], projectParticipation);
+    const sampleKeys = part[0] ? Object.keys(part[0] as Record<string, unknown>).sort().join(",") : "";
+    const blankPersonnel = participationOut.kept.reduce((count, row) => count + (row.players_on_field === null ? 1 : 0), 0);
+    if (participationOut.kept.length > 0 && blankPersonnel === participationOut.kept.length) {
+      throw new Error(`participation ${season} kept ${participationOut.kept.length} rows and every players_on_field is null. keys: ${sampleKeys}`);
+    }
+    const participationPath = join(DATA_DIR, `participation-${season}.jsonl`);
+    await writeJsonl(participationPath, participationOut.kept);
+    datasets.push(await finishDataset({
+      name: `participation-${season}`,
+      loader: "loadParticipation",
+      path: `data/gse-dataset/participation-${season}.jsonl`,
+      read: part.length,
+      kept: participationOut.kept.length,
+      refused: participationOut.refused,
+      note: `2023 and later is FTN Data via nflverse, CC-BY-SA 4.0. players_on_field is players_on_play split on commas, else offense_players plus defense_players. Blank cells stay null (${blankPersonnel} kept rows). Internal storage. Not a commercial display. keys: ${sampleKeys}`,
+    }, participationPath));
   }
-  const participationOut = collect(participationParts, projectParticipation);
-  const sampleKeys = participationParts[0] ? Object.keys(participationParts[0]).sort().join(",") : "";
-  const blankPersonnel = participationOut.kept.reduce((count, row) => count + (row.players_on_field === null ? 1 : 0), 0);
-  if (participationOut.kept.length > 0 && blankPersonnel === participationOut.kept.length) {
-    throw new Error(`participation kept ${participationOut.kept.length} rows and every players_on_field is null. keys: ${sampleKeys}`);
-  }
-  const participationPath = join(DATA_DIR, "participation.jsonl");
-  await writeJsonl(participationPath, participationOut.kept);
-  datasets.push(await finishDataset({
-    name: "participation",
-    loader: "loadParticipation",
-    path: "data/gse-dataset/participation.jsonl",
-    read: participationParts.length,
-    kept: participationOut.kept.length,
-    refused: participationOut.refused,
-    note: `2023 and later is FTN Data via nflverse, CC-BY-SA 4.0. players_on_field is players_on_play split on commas, else offense_players plus defense_players. Blank cells stay null (${blankPersonnel} kept rows). Internal storage. Not a commercial display. keys: ${sampleKeys}`,
-  }, participationPath));
 
-  const pbpProbe = await pbpFourthColumns(2024);
+  // Probe the most recent season actually in the list, not a hardcoded year, so
+  // the probe cannot drift away from what was ingested.
+  const probeSeason = Math.max(...SEASONS);
+  const pbpProbe = await pbpFourthColumns(probeSeason);
   const fourthPath = join(DATA_DIR, "fourth-down.jsonl");
-  const fourth = await extractFourthDown(fourthPath);
-  const fourthNote = pbpProbe.error
-    ? `pbp header probe failed (${pbpProbe.error}). The model was not ported. Rows are the published pre_computed_go_boost RDS for 2024 and 2025.`
-    : `play_by_play_2024.csv.gz columns go_wp=${String(pbpProbe.present.go_wp)} punt_wp=${String(pbpProbe.present.punt_wp)} fg_wp=${String(pbpProbe.present.fg_wp)}. The model was not ported. Rows are the published pre_computed_go_boost RDS for 2024 and 2025.`;
+  const fourth = await extractFourthDown(fourthPath, SEASONS);
+  const seasonList = SEASONS.join(", ");
+  const missingList = fourth.missingSeasons.length > 0
+    ? ` nfl4th does not publish: ${fourth.missingSeasons.join(", ")}. Recorded as a refusal; no year was invented.`
+    : " Every requested season was published.";
+  const fourthNote = (pbpProbe.error
+    ? `pbp header probe failed (${pbpProbe.error}). The model was not ported. Rows are the published pre_computed_go_boost RDS for ${seasonList}.`
+    : `play_by_play columns go_wp=${String(pbpProbe.present.go_wp)} punt_wp=${String(pbpProbe.present.punt_wp)} fg_wp=${String(pbpProbe.present.fg_wp)}. The model was not ported. Rows are the published pre_computed_go_boost RDS for ${seasonList}.`) + missingList;
   datasets.push(await finishDataset({
     name: "fourth-down",
     loader: "nfl4th pre_computed_go_boost RDS",

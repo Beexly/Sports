@@ -1,6 +1,8 @@
 import { describe, expect, it } from "vitest";
 import {
   contractCoversWindow,
+  isIngestSeason,
+  INGEST_SEASONS,
   projectContract,
   projectFourthDown,
   projectParticipation,
@@ -11,9 +13,23 @@ import {
 
 describe("nflverse row projection", () => {
   it("keeps a contract inside the window and refuses a missing gsis id", () => {
-    expect(contractCoversWindow(2022, 4)).toBe(true);
-    expect(contractCoversWindow(2022, null)).toBe(false);
-    expect(contractCoversWindow(2026, 3)).toBe(false);
+    // A deal whose signed span overlaps any ingest season is kept.
+    expect(contractCoversWindow(2022, 4)).toBe(true); // 2022..2025
+    expect(contractCoversWindow(2016, 5)).toBe(true); // 2016..2020, reaches 2018
+
+    // A deal signed INSIDE the window covers that season by construction, so a
+    // null length is not a guess and does not refuse it. This flipped from false
+    // to true when the window widened to 2018-2025: 2022 is now an ingest season.
+    expect(contractCoversWindow(2022, null)).toBe(true);
+    expect(contractCoversWindow(2025, null)).toBe(true);
+
+    // The real "no guessed length" rule, tested where it binds: a season signed
+    // OUTSIDE the window with an unknown length cannot be shown to reach it.
+    expect(contractCoversWindow(2016, null)).toBe(false);
+    expect(contractCoversWindow(2027, null)).toBe(false);
+    expect(contractCoversWindow(2027, 3)).toBe(false); // 2027..2029, entirely after
+    expect(contractCoversWindow(null, 4)).toBe(false);
+
     const missing = projectContract({ player: "A", year_signed: 2024, gsis_id: "" });
     expect(missing.ok).toBe(false);
     const kept = projectContract({
@@ -29,6 +45,28 @@ describe("nflverse row projection", () => {
     });
     expect(kept.ok).toBe(true);
     if (kept.ok) expect(kept.row.gsis_id).toBe("00-0030000");
+  });
+
+  it("gates every projection on the shared ingest season list", () => {
+    // One source of truth: the loader and the projection can never disagree
+    // about which seasons exist.
+    expect(isIngestSeason(2018)).toBe(true);
+    expect(isIngestSeason(2025)).toBe(true);
+    expect(isIngestSeason(2017)).toBe(false);
+    expect(isIngestSeason(2026)).toBe(false);
+    expect(isIngestSeason(null)).toBe(false);
+    expect(INGEST_SEASONS).toHaveLength(8);
+    // 2025 is the holdout, so training history must actually be plural.
+    expect(INGEST_SEASONS.filter((s) => s < 2025).length).toBeGreaterThanOrEqual(6);
+
+    // A roster/snap/fourth-down row from a non-ingest season is refused, not
+    // silently kept or silently dropped.
+    expect(projectRoster({ season: 2017, gsis_id: "00-1" }, "season").ok).toBe(false);
+    expect(projectRoster({ season: 2018, gsis_id: "00-1" }, "season").ok).toBe(true);
+    expect(projectSnap({ game_id: "g", pfr_player_id: "p", season: 2026 }).ok).toBe(false);
+    expect(projectSnap({ game_id: "g", pfr_player_id: "p", season: 2019 }).ok).toBe(true);
+    expect(projectFourthDown({ game_id: "g", play_id: 1, season: 2017 }).ok).toBe(false);
+    expect(projectFourthDown({ game_id: "g", play_id: 1, season: 2019 }).ok).toBe(true);
   });
 
   it("does not turn a blank snap count into zero", () => {

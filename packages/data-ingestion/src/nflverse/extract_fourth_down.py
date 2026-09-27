@@ -87,19 +87,31 @@ def load_season(season: int, cache_dir: Path) -> tuple[list[dict[str, object]], 
 
 
 def main() -> None:
-    if len(sys.argv) != 3:
-        raise SystemExit("usage: extract_fourth_down.py <out.jsonl> <cache-dir>")
+    if len(sys.argv) < 4:
+        raise SystemExit("usage: extract_fourth_down.py <out.jsonl> <cache-dir> <season> [season ...]")
     out = Path(sys.argv[1])
     cache_dir = Path(sys.argv[2])
+    seasons = [int(arg) for arg in sys.argv[3:]]
     out.parent.mkdir(parents=True, exist_ok=True)
     tmp = out.with_name(out.name + ".tmp")
     read = 0
     kept = 0
     refused = {"missing_game_id": 0, "missing_play_id": 0}
+    missing: list[int] = []
     try:
         with tmp.open("w", encoding="utf-8", newline="\n") as handle:
-            for season in (2024, 2025):
-                rows, season_read, season_refused = load_season(season, cache_dir)
+            for season in seasons:
+                try:
+                    rows, season_read, season_refused = load_season(season, cache_dir)
+                except Exception as error:  # noqa: BLE001 - a 404 must not abort the run
+                    # A season that is simply not published is a refusal, not a
+                    # crash. Record it and keep going. An invented year is worse.
+                    missing.append(season)
+                    print(
+                        f"season {season} unavailable: {error}",
+                        file=sys.stderr,
+                    )
+                    continue
                 read += season_read
                 for reason, count in season_refused.items():
                     refused[reason] = refused.get(reason, 0) + count
@@ -113,7 +125,13 @@ def main() -> None:
         if tmp.exists():
             tmp.unlink()
         raise
-    sys.stdout.write(json.dumps({"read": read, "kept": kept, "refused": refused}, separators=(",", ":")) + "\n")
+    sys.stdout.write(
+        json.dumps(
+            {"read": read, "kept": kept, "refused": refused, "missing_seasons": missing},
+            separators=(",", ":"),
+        )
+        + "\n"
+    )
 
 
 if __name__ == "__main__":
