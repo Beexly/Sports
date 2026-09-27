@@ -14,14 +14,53 @@
  */
 import { createReadStream, existsSync } from "node:fs";
 import { createInterface } from "node:readline";
-import { join, resolve } from "node:path";
+import { join, resolve, dirname } from "node:path";
 import { reasonAbout, type ReasoningEval } from "./reasoning-trace.js";
 import type { SlateAcceptedTrace } from "./signal-slate-options.js";
 
-// This package compiles to CommonJS, so __dirname is the module's own
-// directory; the data root is the repo root three levels up.
+/**
+ * Resolve the repo-root data directory WITHOUT assuming a bundler layout.
+ *
+ * WHY THIS EXISTS. This module previously did `resolve(__dirname, "..", "..",
+ * "..")` and joined `data/gse-dataset/`. That arithmetic is only correct when
+ * the compiled module sits at `<root>/packages/ingestion-pipeline/dist`. On
+ * Vercel the package is bundled under `apps/web`, so three levels up is
+ * `/var/task/apps/web` and the lookup missed the tracked data file. The
+ * fail-closed guard then did its job perfectly and took the whole board with
+ * it: `/api/cron/board-fill` and `/api/cron/generate-signal-slate` returned
+ * 500 for every run (measured 16x and 8x on deployment
+ * dpl_5w9WsXUHtYq3KbMiX58gTZzKZjZR) with "bridge-premises.jsonl is missing at
+ * /var/task/apps/web/data/gse-dataset/...".
+ *
+ * The file was never the problem — `data/gse-dataset/bridge-premises.jsonl` is
+ * tracked in git (85,924 bytes, 285 measured `pregame_context_logit` holdout
+ * rows, mean probability 0.560244). Only the PATH was wrong.
+ *
+ * So: walk UP from this module until a directory that actually contains
+ * `data/gse-dataset` is found. The env override wins when set. If nothing
+ * contains it, we return the conventional path anyway so the caller throws the
+ * SAME honest fail-closed error naming the real location — the guard's
+ * behaviour is unchanged, only the path we look in is now correct.
+ */
+function resolveDataRoot(): string {
+  const override = process.env["GSE_DATA_ROOT"];
+  if (override && override.trim().length > 0) return resolve(override.trim());
+
+  let dir = __dirname;
+  for (let hop = 0; hop < 8; hop += 1) {
+    const candidate = join(dir, "data", "gse-dataset");
+    if (existsSync(candidate)) return dir;
+    const parent = dirname(dir);
+    if (parent === dir) break; // filesystem root reached
+    dir = parent;
+  }
+  // Nothing found. Fall back to the conventional repo root so the caller's
+  // error message names the path a reader can actually go look for.
+  return process.cwd();
+}
+
 const BRIDGE_PREMISES_PATH = join(
-  resolve(__dirname, "..", "..", ".."),
+  resolveDataRoot(),
   "data",
   "gse-dataset",
   "bridge-premises.jsonl",
