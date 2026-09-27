@@ -574,12 +574,50 @@ The owner authorized rewiring public confidence on 2026-09-27. Landed as
 - **B**: fast-forwarded and re-briefed; still zero own output all night.
 - **lane2**: idle since 23:04; its catalog/ledger superseded by main's.
 
-## Next honest attacks (after wave 5)
+## WAVE 6 (owner-ordered takeover): merge, push, everything green
 
-1. Owner adjudicates the THREE `main` pushes.
-2. Founder issues the post-rewire `MODEL_VERSION` + calibration pass, and
-   rules on the tightened publish bar.
-3. Merge reconciliation per `LAYOUT-DIVERGENCE` when grok's branch is ready.
-4. Require `coord.mjs heartbeat` in the next work order, or sunset the board.
-5. Reconcile the officials DARK records when grok's re-measure lands.
-6. Founder decision: narrative part's post-kickoff computability.
+The owner killed the other sessions and ordered: merge, push, everything
+green, autonomously. Executed:
+
+- **PR #921 had already landed grok's line on main** (2026 application
+  season, cross-validated narrative) — the mystery pusher followed the
+  LAYOUT-DIVERGENCE recommendation. What remained was the red-team lane.
+- **Integration branch `integration/2026-09-27`** off `origin/main`, red-team
+  branch merged. Eight conflicts, each resolved as the superset:
+  - `decision-time-price-archive`: ONE implementation survives (the
+    grok-lineage one, with the 100..10000 band); session A's
+    `validateDecisionTimePriceRow` / `archiveDateFor` / band constants
+    ported onto it; A's duplicate test file deleted, its unique coverage
+    folded into the canonical 26-test suite.
+  - `confidence-market-independence`: the post-rewire version (invariance
+    green, magnitude pin = 0).
+  - `pick-proof-receipt` tests: union — A's named frozen integers
+    (−33/−43/−86) restored beside the extreme-band tests.
+  - `part-selector`, lane scripts: main's versions. The two append-only
+    ledgers: both lanes' lines unioned in order, nothing rewritten.
+- **Three defects the gates caught on the integration** (all fixed):
+  1. `ingest.ts` did not typecheck after #921 (unwrap narrowed via the
+     nflreadts package's own `isOk`, which discriminates nothing on this
+     union; `loadSnapCounts` bottoms out at `unknown`). Fixed on the
+     discriminant; data-ingestion tsc 0.
+  2. The manifest still listed combined grains the per-season layout no
+     longer contains. New `reseal-manifest.mjs` recomputes every seal from
+     disk — it found all 28 already correct, so the stale part was the
+     verifier's sample names, fixed to follow the manifest.
+  3. `verify-files` structural samples stream to the first play with a
+     personnel list (a season file's first line may legally be
+     null-personnel) and assert `players_on_field_gsis` length parity.
+- **Final state on the pushed commit**: engine 847 files / 6,144 tests;
+  data-ingestion 478 files / 2,438 tests; web confidence suites 99; tsc 0
+  everywhere; `verify-files` PASS 28/28 seals; secret scan clean.
+- **PUSHED** (owner-authorized): `origin/main` = `0c5d6d7bd`
+  (`ecb718280..0c5d6d7bd`). Branch records `integration/2026-09-27` and
+  `redteam/overnight-audit-2026-09-27` pushed for provenance.
+- Coord: B's stale `7-one-measurement` lock released (B never produced
+  output; the night it was assigned is covered by A's commits on main).
+
+**Gates that stay CLOSED, deliberately**: `publishes_pick` false, publish
+gates off, calibration page dark, `priced` false, registry at 8 rows.
+"Make live" here means the integration is live — not that the product
+publishes claims the evidence does not support. That line is not mine to
+move and I did not move it.
