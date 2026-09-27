@@ -37,6 +37,9 @@ const situational = new Map(
     .map((line) => JSON.parse(line))
     .map((row) => [row.game_id, row]),
 );
+const envCal = JSON.parse(readFileSync(resolve(root, "data/gse-dataset/current/environment-calibration.json"), "utf8"));
+const REST_SLOPE = envCal.rest_days_to_margin.used_slope;
+const MARGIN_SCALE = 14;
 const split = new Map(
   readFileSync(resolve(root, "data/gse-dataset/current/week3-split-efficiency.jsonl"), "utf8")
     .trim()
@@ -69,9 +72,21 @@ for (const context of contexts) {
   const splitRow = split.get(context.game_id);
   const efficiency = splitRow ? splitRow.efficiency_signed : null;
   const availability = clip((context.away.injuries.out.length - context.home.injuries.out.length) / 6);
-  const rest = game && typeof game.rest_diff === "number" ? clip(game.rest_diff / 7) : null;
+  const rest = game && typeof game.rest_diff === "number" ? clip((game.rest_diff * REST_SLOPE) / MARGIN_SCALE) : null;
   const strength = elo.has(context.game_id) ? clip((elo.get(context.game_id) - 0.5) * 2) : null;
   const situation = situational.get(context.game_id);
+  const refereeName = game && game.referee ? game.referee : null;
+  const crew = refereeName && envCal.referees[refereeName] ? envCal.referees[refereeName] : null;
+  const officials = crew && crew.home_margin_used ? clip(crew.home_margin_used / MARGIN_SCALE) : null;
+  function qbDisrupted(side) {
+    const qb = side.quarterback || "";
+    const lead = (side.qb_snap_leader_prior_weeks || {}).player || "";
+    const out = (side.injuries.out || []).some((item) => qb && item.toLowerCase().includes(qb.toLowerCase().split(" (")[0]));
+    if (out) return 1;
+    if (qb && lead && qb !== lead) return 1;
+    return 0;
+  }
+  const chemistry = clip(qbDisrupted(context.away) - qbDisrupted(context.home));
   const reading = composeEngineReading(context.game_id, {
     on_field_efficiency: efficiency,
     scheme_play_design: scheme,
@@ -81,6 +96,8 @@ for (const context of contexts) {
     trench_personnel: situation ? situation.trench_signed : null,
     coaching: situation ? situation.coaching_signed : null,
     airwave: airwave.has(context.game_id) ? airwave.get(context.game_id) : null,
+    officials,
+    chemistry,
   });
   if (reading.engineEdge.value !== null) {
     const partSum = reading.engineEdge.parts.reduce((sum, part) => sum + part.points, 0);
