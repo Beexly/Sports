@@ -1,4 +1,4 @@
-﻿/**
+/**
  * Markets/odds bridge â€” this layer decides whether a markets or odds kernel
  * produced a number that is legal enough to hand downstream, and fails closed
  * on everything else: a probability outside [0,1], a de-vigged vector that
@@ -1465,14 +1465,9 @@ export function evalMarketPooling(
       return fail(`pooling ${name}: result ${fmt(v)} sums to ${sum(v).toFixed(9)}, not 1`);
     }
   }
-  if (alphaFit !== null) {
-    if (!finite(alphaFit.alpha) || !unit(alphaFit.alpha)) {
-      return fail(`pooling: fitted alpha ${alphaFit.alpha} outside [0,1]`);
-    }
-    if (!finite(alphaFit.avgLogLoss) || alphaFit.avgLogLoss < 0) {
-      return fail(`pooling: avgLogLoss ${alphaFit.avgLogLoss} invalid`);
-    }
-  }
+  // alphaFit is a documented const null above — the kernel cannot fit one
+  // market (see alphaFitBlockedReason) — so there is no fitted-alpha guard to
+  // run here. The null path below carries the reason verbatim.
   return ok({
     alphaFit,
     alphaFitBlockedReason,

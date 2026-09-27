@@ -9,6 +9,7 @@ import {
 import { refreshOdds, type RefreshOddsResult } from "./refresh-odds.js";
 import { generateSignalSlate, type SignalSlateResult } from "./generate-signal-slate.js";
 import { seedGamesFromEspn, type SeedGamesFromEspnResult } from "./seed-games-from-espn.js";
+import { slateAssociationTrace } from "./slate-association.js";
 
 export type BoardFillResult = {
   readonly ok: boolean;
@@ -39,11 +40,13 @@ export async function runBoardFillPipeline(opts?: {
   // 2) Odds dual-path (soft-fails honestly when keys absent)
   const odds = await refreshOdds(opts?.sport ? { sport: opts.sport } : {});
 
-  // 3) Independent signal slate (no book labels)
+  // 3) Independent signal slate (no book labels). The slate mints only on a
+  // stored association trace (see slate-association.ts) — fail-closed.
   const signals = await generateSignalSlate({
     logPrefix: `${logPrefix}:signal`,
     // games already seeded; avoid nested re-seed loop
     skipSeed: true,
+    trace: await slateAssociationTrace(),
   });
 
   const ok = odds.ok || signals.picksUpserted > 0 || seed.upserted > 0;

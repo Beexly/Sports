@@ -17,5 +17,8 @@ export function associationTrace(): SlateAcceptedTrace {
   if (!result.ok || result.data.conclusion !== "ASSOCIATION_ONLY") {
     throw new Error("slate fixture did not produce an association");
   }
-  return result.data;
+  // The runtime guard above just verified the conclusion; the type-level
+  // narrowing mirrors that verified fact (reasonAbout's return type carries
+  // the full ReasoningConclusion union).
+  return { ...result.data, conclusion: "ASSOCIATION_ONLY" };
 }

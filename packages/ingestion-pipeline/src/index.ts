@@ -129,6 +129,7 @@ export {
 } from "./kalshi-team-abbr.js";
 
 export { generateSignalSlate, blendIndependentHomeFair } from "./generate-signal-slate.js";
+export { slateAssociationTrace } from "./slate-association.js";
 export type { SignalSlateResult } from "./generate-signal-slate.js";
 
 export { runBoardFillPipeline } from "./board-fill.js";

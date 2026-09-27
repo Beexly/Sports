@@ -1263,12 +1263,19 @@ describe("processSport", () => {
     const NOW = new Date(T_RUN_AT);
     function twoWayFavouriteOdds(gameExternalId: string, withDraw: boolean) {
       const books = ["draftkings", "fanduel", "betmgm", "caesars", "betrivers", "pointsbet", "bovada", "betonline", "mybookie", "lowvig", "unibet"];
+      // -800/+650, not -400/+320: the 2026-09-27 market-echo rewire removed the
+      // market-internal edge component from the moneyline confidence sum, and
+      // -400 (de-vigged fair ~0.736, no scorer context in this drive) lands at
+      // ~44 on the current scale — under the unchanged MIN_PUBLISH_CONFIDENCE.
+      // The heavier favourite (fair ~0.87) clears it at ~52, so this control
+      // still discriminates the C-118 guard: the soccer leg mints nothing on
+      // byte-identical prices while the two-way leg writes a MONEYLINE.
       return books.map((bookmaker) => ({
         gameExternalId,
         bookmaker,
         market: "H2H" as const,
-        homePrice: -400,
-        awayPrice: 320,
+        homePrice: -800,
+        awayPrice: 650,
         ...(withDraw ? { drawPrice: 450 } : {}),
         fetchedAt: NOW,
         bookmakerLastUpdate: NOW,
