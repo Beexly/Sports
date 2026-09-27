@@ -49,8 +49,13 @@ export interface ReasoningTurnResult {
 /**
  * Read the engine's measured state. Split out so the reasoning turn is testable
  * without a database and so a caller can substitute a cached snapshot.
+ *
+ * Takes no clock: the census carries each reading's own `capturedAt`, and
+ * `buildReasoningPrompt` takes the `now` that stamps the reasoning context. A
+ * second, unused clock here would be a second honest-looking timestamp that
+ * governs nothing.
  */
-export async function loadEngineState(now: string): Promise<JarvisEngineState> {
+export async function loadEngineState(): Promise<JarvisEngineState> {
   const ledgerResult = await loadSignalLedger(db);
   const ledger: GroundedLedger = {
     // The census does not write `signals`; it reports what it MEASURED. Whether a

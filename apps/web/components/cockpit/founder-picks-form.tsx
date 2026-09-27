@@ -229,7 +229,7 @@ export function FounderPicksForm({ games }: { games: readonly FounderPickGame[] 
           disabled={state === "busy"}
           className="rounded-lg border border-orbital-cyan/50 bg-orbital-cyan/15 px-4 py-2 text-sm font-medium text-ion-white transition-colors hover:bg-orbital-cyan/25 disabled:opacity-50"
         >
-          {state === "busy" ? "Locking in…" : "Lock in this call"}
+          {state === "busy" ? "Recording…" : "Record this call"}
         </button>
         {state === "ok" || state === "err" ? (
           <p
