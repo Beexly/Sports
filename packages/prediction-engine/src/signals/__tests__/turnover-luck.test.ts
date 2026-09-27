@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest";
 import { existsSync, readFileSync } from "node:fs";
+import { execFileSync } from "node:child_process";
 import { dirname, resolve } from "node:path";
 import {
   computeTurnoverLuck,
@@ -214,10 +215,24 @@ describe("league baseline provenance", () => {
     throw new Error("repo root not found: no ancestor contains tsconfig.base.json");
   }
 
+  // The docs reorg of 2026-09-27 16:10 (504ef1928) moved the research buckets
+  // under docs/engine/research/. This path is asserted to be TRACKED, because a
+  // silently-absent CSV would make `pooled()` read nothing and the provenance
+  // pins below would stop testing anything.
   const labCsv = resolve(
     findRepoRoot(),
-    "docs/research/2026-09-17/gse-lab/defense_detail_2025.csv",
+    "docs/engine/research/2026-09-17/gse-lab/defense_detail_2025.csv",
   );
+
+  it("reads the measured CSV from its post-reorg home, and that file is tracked", () => {
+    expect(existsSync(labCsv)).toBe(true);
+    expect(
+      execFileSync("git", ["ls-files", "--error-unmatch", "docs/engine/research/2026-09-17/gse-lab/defense_detail_2025.csv"], {
+        cwd: findRepoRoot(),
+        encoding: "utf8",
+      }).trim(),
+    ).toBe("docs/engine/research/2026-09-17/gse-lab/defense_detail_2025.csv");
+  });
 
   function pooled(): { ff: number; int: number; teams: number } {
     const lines = readFileSync(labCsv, "utf8").trim().split("\n");
