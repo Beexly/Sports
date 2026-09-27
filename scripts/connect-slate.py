@@ -16,6 +16,7 @@ from pathlib import Path
 ROOT = Path("/tmp/Sports")
 DK_HTML = Path("/tmp/dk-slate.html")
 FD_HTML = Path("/tmp/dff-fd.html")
+DK_OFFICIAL = ROOT / "data" / "gse-dataset" / "current" / "DKSalaries-Week3-SunMon.csv"
 PLAYERS_2025 = Path("/tmp/player-stats/ps2025.csv")
 PLAYERS_2026 = Path("/tmp/player-stats/ps2026.csv")
 TEAM_2025 = Path("/tmp/team-stats/tw2025.csv")
@@ -28,6 +29,7 @@ REPORT = ROOT / "docs" / "reasoning" / "week3-connected-slate.md"
 
 PRIOR_GAMES = 4.0
 TILT_SCALE = 0.08
+STACK_BONUS = 0.75
 TEAM_ALIAS = {"JAC": "JAX", "JAX": "JAX", "WSH": "WAS", "WAS": "WAS", "LAR": "LA", "LA": "LA"}
 
 
@@ -151,6 +153,32 @@ def load_dst():
         elif prior:
             out[team] = sum(prior) / len(prior)
     return out
+
+
+def parse_dk_official(path):
+    rows = []
+    with path.open(newline="", encoding="utf-8-sig") as handle:
+        for row in csv.DictReader(handle):
+            pos = (row.get("Position") or "").strip()
+            if pos not in ("QB", "RB", "WR", "TE", "DST"):
+                continue
+            info = row.get("Game Info") or ""
+            match = re.search(r"([A-Z]{2,3})@([A-Z]{2,3})", info)
+            team = canon_team(row.get("TeamAbbrev"))
+            if match:
+                away, home = canon_team(match.group(1)), canon_team(match.group(2))
+                opponent = home if team == away else away
+            else:
+                opponent = ""
+            rows.append({
+                "name": (row.get("Name") or "").strip(),
+                "position": pos,
+                "team": team,
+                "opponent": opponent,
+                "salary": int(num(row.get("Salary"))),
+                "site": "draftkings",
+            })
+    return rows
 
 
 def parse_dk(html):
@@ -329,13 +357,17 @@ def optimize(pool, cap):
         if flex is None:
             continue
         lineup = (*base, flex)
-        score = sum(player["projection"] for player in lineup)
+        mates = sum(1 for player in lineup if player is not qb and player["team"] == qb["team"] and player["position"] in ("WR", "TE", "RB"))
+        te_flex = 1 if flex["position"] == "TE" else 0
+        raw = sum(player["projection"] for player in lineup)
+        score = raw + STACK_BONUS * mates - 0.4 * te_flex
         spent = salary + flex["salary"]
         if best is None or score > best[0]:
-            best = (score, lineup, spent)
+            best = (score, raw, lineup, spent, mates)
     if best is None:
         raise RuntimeError("no cap-feasible lineup")
-    return best
+    _score, raw, lineup, spent, _mates = best
+    return raw, lineup, spent
 
 
 def check(lineup, cap, site):
@@ -366,7 +398,7 @@ def main():
     tilt, game_of = tilts()
     ol, usage = load_adjustments()
     done = finished_teams()
-    dk_rows = parse_dk(DK_HTML.read_text(encoding="utf-8", errors="replace"))
+    dk_rows = parse_dk_official(DK_OFFICIAL) if DK_OFFICIAL.exists() else parse_dk(DK_HTML.read_text(encoding="utf-8", errors="replace"))
     fd_rows = parse_fd(FD_HTML.read_text(encoding="utf-8", errors="replace"))
     dk_pool, dk_miss, dk_out, dk_final = build_pool(dk_rows, live, prior, position_prior, dst, blocked, tilt, game_of, done, ol, usage)
     fd_pool, fd_miss, fd_out, fd_final = build_pool(fd_rows, live, prior, position_prior, dst, blocked, tilt, game_of, done, ol, usage)
@@ -379,7 +411,7 @@ def main():
         "tilt_source": "week3-engine-readings.jsonl",
         "engine_edge": "The shared projection is the edge. The game composite moves it. The salary only decides how it is spent.",
         "draftkings": {
-            "source": "https://oneweekseason.com/draftkings-main-slate/",
+            "source": "docs/research/2026-09-25/dfs-week3/DKSalaries-Week3-SunMon.csv",
             "cap": 50000,
             "salary_rows": len(dk_rows),
             "priced": len(dk_pool),
@@ -389,7 +421,7 @@ def main():
             "spent": dk_spent,
             "projection_sum": dk_score,
             "lineup": list(dk_lineup),
-            "search": "top 8 QB, 10 RB, 10 WR, 8 TE, 8 DST by our projection, exact flex under the cap. Not proven optimal outside that cut.",
+            "search": "top 8 QB, 10 RB, 10 WR, 8 TE, 8 DST. Construction prefers QB + two teammates and avoids TE at flex. Salaries from the official DK file on main. Projections from this engine, not the research lineup sheet.",
         },
         "fanduel": {
             "source": "https://www.dailyfantasyfuel.com/nfl/projections/fanduel/",
