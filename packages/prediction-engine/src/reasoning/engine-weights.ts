@@ -19,9 +19,9 @@ export const ENGINE_FAMILIES = [
   { id: "chemistry", prior: 0.04, role: "dark", why: "QB-receiver continuity code exists. No week-3 number was joined." },
   { id: "bio_nutrition", prior: 0.04, role: "dark", why: "No nutrition rows exist. Injury names are availability, not nutrition." },
   { id: "narrative_contract", prior: 0.03, role: "dark", why: "Contract and cohort modules exist. No week-3 row was joined." },
-  { id: "social", prior: 0.03, role: "dark", why: "No social feed is ingested." },
+  { id: "social", prior: 0.0, role: "dark", why: "Folded into airwave. Instagram has no API row." },
   { id: "calibration_meters", prior: 0.03, role: "meter", why: "Brier, ECE, Kelly, and Bradley-Terry score the engine. They are not a signal about this game." },
-  { id: "airwave", prior: 0.02, role: "dark", why: "Podcast files in the tree are fixtures. No real note is joined." },
+  { id: "airwave", prior: 0.05, role: "premise", why: "Week-3 wire: AP injury statuses plus beat corroboration. Questionable and doubtful skill players only, so known outs are not counted twice." },
 ] as const;
 
 export type EngineFamilyId = (typeof ENGINE_FAMILIES)[number]["id"];

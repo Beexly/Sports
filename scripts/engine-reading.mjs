@@ -23,6 +23,13 @@ const games = new Map(
 );
 const calibration = JSON.parse(readFileSync(resolve(root, "data/gse-dataset/current/calibration-weights.json"), "utf8"));
 const elo = new Map(calibration.game_probability.week3.map((row) => [row.game_id, row.probability]));
+const airwave = new Map(
+  readFileSync(resolve(root, "data/gse-dataset/current/airwave-edges.jsonl"), "utf8")
+    .trim()
+    .split("\n")
+    .map((line) => JSON.parse(line))
+    .map((row) => [row.game_id, row.airwave_signed]),
+);
 const situational = new Map(
   readFileSync(resolve(root, "data/gse-dataset/current/week3-situational.jsonl"), "utf8")
     .trim()
@@ -73,6 +80,7 @@ for (const context of contexts) {
     historical_strength: strength,
     trench_personnel: situation ? situation.trench_signed : null,
     coaching: situation ? situation.coaching_signed : null,
+    airwave: airwave.has(context.game_id) ? airwave.get(context.game_id) : null,
   });
   if (reading.publishesPick !== false || reading.tiltIsProbability !== false) {
     throw new Error("engine reading leaked a pick or a probability");
@@ -123,7 +131,7 @@ const lines = [
   "",
   "The edge is the weighted composite of the live signals. We build it. The price does not define it. Brier, Kelly, and Bradley-Terry measure it after the fact. A dark family is a named hole, not a reason to call the rest nothing.",
   "On-field efficiency is a shrunk opponent-adjusted blend: 55% pass EPA residual, 15% rush EPA residual, 15% CPOE, 10% explosive-pass rate, 5% interception luck. The 2025 season is the prior. 2026 weeks 1-2 are the observation.",
-  "Trench is in the edge. It is qb_hit per dropback, home net minus away net, measured at r = 0.241 on 250 walk-forward games. Fourth-down rate and special-teams EPA were measured and left out.",
+  "Airwave is in the edge at a prior of 0.05. It is the questionable and doubtful skill wire, not a second copy of the out list. SiriusXM audio was not captured.",
   `OpenRouter lane: ${readings[0].model_lane}. No model call was made.`,
   "",
   "Priors:",
