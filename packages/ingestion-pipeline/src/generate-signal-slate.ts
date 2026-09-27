@@ -175,6 +175,20 @@ const MODEL_SIGNAL_GRADE = "LEAN" as const;
  * Generate model-signal MONEYLINE picks for upcoming games using independents only.
  */
 export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<SignalSlateResult> {
+  if (!opts?.trace || opts.trace.conclusion !== "ASSOCIATION_ONLY") {
+    return {
+      ok: false,
+      gamesConsidered: 0,
+      candidatesWithIndependents: 0,
+      picksUpserted: 0,
+      picksSkipped: 0,
+      fixtureUnconfirmed: 0,
+      skippedInPlay: 0,
+      seriesRepeatsSkipped: 0,
+      errors: ["slate requires an ASSOCIATION_ONLY reasoning trace and does not mint without one"],
+      note: "slate refused: no association trace",
+    };
+  }
   const logPrefix = opts?.logPrefix ?? "[signal-slate]";
   const now = opts?.now ?? new Date();
   const horizonHours = opts?.horizonHours ?? 504; // 21d signal board (early season)

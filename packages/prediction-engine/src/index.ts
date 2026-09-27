@@ -3950,3 +3950,12 @@ export {
   SIGNAL_FAMILIES,
   type SignalDeclaration,
 } from "./reasoning/signal-registry.js";
+export {
+  fitBridge,
+  predictBridge,
+  BRIDGE_FEATURES,
+  MIN_FIT_ROWS,
+  type BridgeModel,
+  type BridgePrediction,
+  type BridgeFeature,
+} from "./bridge/bridge-model.js";

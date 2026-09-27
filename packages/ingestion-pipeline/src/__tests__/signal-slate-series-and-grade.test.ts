@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { associationTrace } from "./slate-trace-fixture.js";
 
 /**
  * Two defects in the model-signal lane, both measured on the 124 published
@@ -89,7 +90,7 @@ const BOARD = {
 const espnFetch = vi.fn<(url: string) => Promise<Response>>();
 
 const runSlate = () =>
-  generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch });
+  generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch, trace: associationTrace() });
 
 const createdData = (): Array<Record<string, unknown>> =>
   mocks.pickCreate.mock.calls.map((c) => (c[0] as { data: Record<string, unknown> }).data);
