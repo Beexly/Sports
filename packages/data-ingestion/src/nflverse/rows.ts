@@ -12,7 +12,14 @@
  * its own copy, so a season can never be gated on by the loader and filtered out
  * by the projection (or the reverse).
  */
-export const INGEST_SEASONS = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025] as const;
+/**
+ * 2018-2025 is the walk-forward corpus, with 2025 held out and never fitted on.
+ * 2026 is the in-flight application season: the locked parts are scored on 2026 week 3, so
+ * a deal that covers 2026 has to be kept or the week-3 row cannot be computed from sealed
+ * data. nflverse has 2026 snaps, rosters and nfl4th; it does not yet have 2026
+ * participation, which ships after a season ends, and that is recorded as a refusal.
+ */
+export const INGEST_SEASONS = [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026] as const;
 
 export type IngestSeason = (typeof INGEST_SEASONS)[number];
 

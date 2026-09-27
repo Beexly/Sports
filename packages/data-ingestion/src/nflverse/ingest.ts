@@ -356,8 +356,19 @@ export async function ingestNflverseCycle8(): Promise<{ manifestPath: string; da
 
   // Participation, one season at a time. This is the grain that OOMs: every row
   // carries players_on_field, an array of 22 GSIS ids.
+  //
+  // A season the release has not published is recorded and the run continues. 2026
+  // participation does not exist mid-season; that is a fact about the release, not a
+  // reason to abandon the nine seasons that do exist.
+  const participationUnavailable: string[] = [];
   for (const season of SEASONS) {
-    const part = unwrap(`participation ${season}`, await loadParticipation(season, { format: "parquet" }));
+    let part: readonly unknown[];
+    try {
+      part = unwrap(`participation ${season}`, await loadParticipation(season, { format: "parquet" })) as readonly unknown[];
+    } catch (error) {
+      participationUnavailable.push(`${season}: ${error instanceof Error ? error.message : String(error)}`);
+      continue;
+    }
     requireRows(`loadParticipation ${season}`, part);
     const participationOut = collect(part as unknown as Record<string, unknown>[], (raw) => projectParticipation(raw, resolveGsis));
     const sampleKeys = part[0] ? Object.keys(part[0] as Record<string, unknown>).sort().join(",") : "";
@@ -376,6 +387,12 @@ export async function ingestNflverseCycle8(): Promise<{ manifestPath: string; da
       refused: participationOut.refused,
       note: `2023 and later is FTN Data via nflverse, CC-BY-SA 4.0. players_on_field is players_on_play split on commas, else offense_players plus defense_players. Blank cells stay null (${blankPersonnel} kept rows). Internal storage. Not a commercial display. keys: ${sampleKeys}`,
     }, participationPath));
+  }
+
+  if (participationUnavailable.length > 0) {
+    console.log(
+      `participation not published for ${participationUnavailable.length} season(s): ${participationUnavailable.join(" | ")}`,
+    );
   }
 
   // Probe the most recent season actually in the list, not a hardcoded year, so

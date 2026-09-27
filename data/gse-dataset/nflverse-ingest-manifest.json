@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T05:04:26.645Z",
+  "generated_at": "2026-09-27T05:20:15.609Z",
   "package": "@nflverse/nflreadts",
   "seasons": [
     2018,
@@ -9,11 +9,12 @@
     2022,
     2023,
     2024,
-    2025
+    2025,
+    2026
   ],
   "publishes_pick": false,
   "pbp_probe": {
-    "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2025.csv.gz",
+    "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2026.csv.gz",
     "present": {
       "go_wp": false,
       "punt_wp": false,
@@ -26,15 +27,15 @@
       "loader": "loadContracts",
       "path": "data/gse-dataset/contracts.jsonl",
       "read": 52959,
-      "kept": 35944,
+      "kept": 39013,
       "refused": {
-        "outside_window": 13464,
-        "missing_gsis_id": 3551
+        "missing_gsis_id": 3551,
+        "outside_window": 10395
       },
       "note": "OverTheCap historical contracts via nflverse. Kept when gsis_id is present and the signed term covers 2024 or 2025. years null is not given a guessed length.",
-      "rows": 35944,
-      "sha256": "58f16653c7489e0affb8a34f31b201a358b95b2e6cb68840bae12d12a57eb82f",
-      "bytes": 5551974,
+      "rows": 39013,
+      "sha256": "169aae0bea49792adcafddff5a08aeea560a7f8f3922f98a829b6ea67b7363fc",
+      "bytes": 6027855,
       "zero_refusals": false
     },
     {
@@ -158,6 +159,21 @@
       "zero_refusals": false
     },
     {
+      "name": "rosters-2026",
+      "loader": "loadRosters + loadRostersWeekly",
+      "path": "data/gse-dataset/rosters-2026.jsonl",
+      "read": 11035,
+      "kept": 11029,
+      "refused": {
+        "missing_gsis_id": 6
+      },
+      "note": "Season rows and weekly rows share the file. roster_level tells them apart. A blank gsis_id is refused.",
+      "rows": 11029,
+      "sha256": "64542be033cbe5895581c91baa1e8760af40c8479ee64dce431af041fccd5280",
+      "bytes": 2321033,
+      "zero_refusals": false
+    },
+    {
       "name": "snap-counts-2018",
       "loader": "loadSnapCounts",
       "path": "data/gse-dataset/snap-counts-2018.jsonl",
@@ -259,6 +275,19 @@
       "rows": 26613,
       "sha256": "8253a3395e75a359d52b724b22c6da2deb2f7a32b01ef38a7885de7cd7380b33",
       "bytes": 6134422,
+      "zero_refusals": true
+    },
+    {
+      "name": "snap-counts-2026",
+      "loader": "loadSnapCounts",
+      "path": "data/gse-dataset/snap-counts-2026.jsonl",
+      "read": 3086,
+      "kept": 3086,
+      "refused": {},
+      "note": "This release has game_id and pfr_player_id. It has no gsis_id column, so none was added.",
+      "rows": 3086,
+      "sha256": "d6b0bd3b2fc275da47eb10fa0846a7525affd3f4e2ce0bca9a130b17c30d2f37",
+      "bytes": 709596,
       "zero_refusals": true
     },
     {
@@ -369,16 +398,16 @@
       "name": "fourth-down",
       "loader": "nfl4th pre_computed_go_boost RDS",
       "path": "data/gse-dataset/fourth-down.jsonl",
-      "read": 33002,
-      "kept": 33002,
+      "read": 33476,
+      "kept": 33476,
       "refused": {
         "missing_game_id": 0,
         "missing_play_id": 0
       },
-      "note": "play_by_play columns go_wp=false punt_wp=false fg_wp=false. The model was not ported. Rows are the published pre_computed_go_boost RDS for 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025. Every requested season was published.",
-      "rows": 33002,
-      "sha256": "4a394829346b72e2139667663d43839afd293dd3ea98ce6c4b177cbe3d88ef66",
-      "bytes": 4575209,
+      "note": "play_by_play columns go_wp=false punt_wp=false fg_wp=false. The model was not ported. Rows are the published pre_computed_go_boost RDS for 2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025, 2026. Every requested season was published.",
+      "rows": 33476,
+      "sha256": "8500d89f3ea4c4989890b8aae73423e168b4136eeddffe84724e5df3cc67e91b",
+      "bytes": 4641116,
       "zero_refusals": true
     }
   ]
