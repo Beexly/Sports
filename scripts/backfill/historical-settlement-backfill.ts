@@ -50,6 +50,7 @@ import {
   buildPickProofReceipt,
   isPlausibleEntryOdds,
   ENTRY_ODDS_MIN_ABS,
+  ENTRY_ODDS_MAX_ABS,
   type RawScheduleRow,
   type SettledHistoricalPick,
 } from "../../packages/prediction-engine/src/index.js";
@@ -249,7 +250,7 @@ async function main(): Promise<void> {
       pick.marketFairProb > 0 &&
       pick.marketFairProb < 1 &&
       pick.entryOdds !== null &&
-      pick.entryOdds !== 0
+      isPlausibleEntryOdds(pick.entryOdds)
     ) {
       try {
         buildPickProofReceipt(
@@ -438,7 +439,7 @@ async function writeBackfill(settled: SettledHistoricalPick[]): Promise<void> {
   console.log(
     `proof receipts refused for implausible entryOdds: ${receiptsRefusedBadOdds}` +
       (receiptsRefusedBadOdds > 0 ? ` (first values: ${refusedOddsValues.join(", ")})` : "") +
-      ` — a price with |value| < ${ENTRY_ODDS_MIN_ABS} is not a valid American price. The pick was still written; only the receipt was not minted. Existing receipts were not touched.`,
+      ` — a price outside ${ENTRY_ODDS_MIN_ABS} <= |value| <= ${ENTRY_ODDS_MAX_ABS} is not a valid American price. The pick was still written; only the receipt was not minted. Existing receipts were not touched.`,
   );
   if (skippedNoGame > 0) {
     console.log(
