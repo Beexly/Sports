@@ -288,7 +288,18 @@ export async function ingestNflverseCycle8(): Promise<{ manifestPath: string; da
   // 2018-2022 participation ids and the blank roster pfr_ids resolvable. It is
   // loaded once and threaded through the projections below.
   const crosswalk = await loadPlayerCrosswalk(CACHE_DIR);
-  const resolveGsis = (id: string): string | null => crosswalk.nflToGsis.get(id) ?? null;
+  // Normalise to GSIS, whichever shape the release published.
+  //
+  // 2023-2025 already carry GSIS ids and 2018-2022 carry nfl_id. A resolver that
+  // only did the numeric lookup returned null for the 2023-2025 seasons, so
+  // players_on_field_gsis came out null there and only a fallback to the raw
+  // column saved the join. Any consumer reading the resolved column alone would
+  // have silently lost three seasons. Pass an existing GSIS id straight through.
+  const GSIS_SHAPE = /^00-\d{7}$/;
+  const resolveGsis = (id: string): string | null => {
+    if (GSIS_SHAPE.test(id)) return id;
+    return crosswalk.nflToGsis.get(id) ?? null;
+  };
   const resolvePfr = (gsis: string): string | null => crosswalk.gsisToPfr.get(gsis) ?? null;
   process.stderr.write(
     `player crosswalk: ${crosswalk.stats.rows} players, ` +
