@@ -1,0 +1,1063 @@
+{
+  "generated_at": "2026-09-27T04:35:19.877Z",
+  "dataset": "gse-dataset",
+  "season_range": {
+    "min": 2018,
+    "max": 2025,
+    "seasons": [
+      2018,
+      2019,
+      2020,
+      2021,
+      2022,
+      2023,
+      2024,
+      2025
+    ],
+    "source": "rosters.jsonl season column"
+  },
+  "inputs": {
+    "rosters": {
+      "lines": 404653,
+      "jsonObjects": 404653,
+      "blankLines": 0,
+      "nonJsonLines": 0,
+      "nonObjectLines": 0
+    },
+    "snap_counts": {
+      "lines": 205355,
+      "jsonObjects": 205355,
+      "blankLines": 0,
+      "nonJsonLines": 0,
+      "nonObjectLines": 0
+    },
+    "contracts": {
+      "lines": 35944,
+      "jsonObjects": 35944,
+      "blankLines": 0,
+      "nonJsonLines": 0,
+      "nonObjectLines": 0
+    },
+    "participation": [
+      {
+        "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2018.jsonl",
+        "rows": 47875
+      },
+      {
+        "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2019.jsonl",
+        "rows": 48034
+      },
+      {
+        "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2020.jsonl",
+        "rows": 48513
+      },
+      {
+        "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2021.jsonl",
+        "rows": 50714
+      },
+      {
+        "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2022.jsonl",
+        "rows": 50150
+      },
+      {
+        "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2023.jsonl",
+        "rows": 46168
+      },
+      {
+        "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2024.jsonl",
+        "rows": 45919
+      },
+      {
+        "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2025.jsonl",
+        "rows": 45184
+      }
+    ],
+    "participation_total_rows": 382557
+  },
+  "roster_index": {
+    "indexed_rows": 404653,
+    "keys": 24850,
+    "season_level_rows": 24851,
+    "weekly_level_rows": 379802,
+    "ambiguous_keys": 1,
+    "ambiguous_key_samples": [
+      "2019|00-0035718"
+    ],
+    "refusals": {}
+  },
+  "pfr_index": {
+    "keys": 12976,
+    "ambiguous_keys": 1,
+    "roster_rows_with_blank_pfr_id": 180775
+  },
+  "joins": {
+    "participation_personnel": {
+      "inputRows": 382557,
+      "eligible": 361518,
+      "matched": 361518,
+      "unmatched": 0,
+      "blankKey": 21039,
+      "ambiguous": 0,
+      "matchRate": 1,
+      "playsWithNullPersonnel": 21039,
+      "playsWithEmptyPersonnel": 0,
+      "playsWithUnusablePersonnel": 0,
+      "playsJoined": 361518,
+      "idsConsidered": 7952525,
+      "idsMatched": 3019631,
+      "idsUnmatched": 4932894,
+      "idsBlank": 0,
+      "idsAmbiguous": 0,
+      "idMatchRate": 0.3797071999144926,
+      "perFile": [
+        {
+          "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2018.jsonl",
+          "rows": 47875
+        },
+        {
+          "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2019.jsonl",
+          "rows": 48034
+        },
+        {
+          "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2020.jsonl",
+          "rows": 48513
+        },
+        {
+          "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2021.jsonl",
+          "rows": 50714
+        },
+        {
+          "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2022.jsonl",
+          "rows": 50150
+        },
+        {
+          "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2023.jsonl",
+          "rows": 46168
+        },
+        {
+          "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2024.jsonl",
+          "rows": 45919
+        },
+        {
+          "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2025.jsonl",
+          "rows": 45184
+        }
+      ],
+      "perSeason": [
+        {
+          "season": 2018,
+          "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2018.jsonl",
+          "rows": 47875,
+          "playsWithNullPersonnel": 4153,
+          "playsWithEmptyPersonnel": 0,
+          "playsJoined": 43722,
+          "idsConsidered": 961779,
+          "idsMatched": 0,
+          "idsUnmatched": 961779,
+          "idsBlank": 0,
+          "idsAmbiguous": 0,
+          "idsGsisFormat": 0,
+          "idsNumericFormat": 961779,
+          "idsUnknownFormat": 0,
+          "idMatchRate": 0
+        },
+        {
+          "season": 2019,
+          "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2019.jsonl",
+          "rows": 48034,
+          "playsWithNullPersonnel": 4058,
+          "playsWithEmptyPersonnel": 0,
+          "playsJoined": 43976,
+          "idsConsidered": 967350,
+          "idsMatched": 0,
+          "idsUnmatched": 967350,
+          "idsBlank": 0,
+          "idsAmbiguous": 0,
+          "idsGsisFormat": 0,
+          "idsNumericFormat": 967350,
+          "idsUnknownFormat": 0,
+          "idMatchRate": 0
+        },
+        {
+          "season": 2020,
+          "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2020.jsonl",
+          "rows": 48513,
+          "playsWithNullPersonnel": 4151,
+          "playsWithEmptyPersonnel": 0,
+          "playsJoined": 44362,
+          "idsConsidered": 975877,
+          "idsMatched": 0,
+          "idsUnmatched": 975877,
+          "idsBlank": 0,
+          "idsAmbiguous": 0,
+          "idsGsisFormat": 0,
+          "idsNumericFormat": 975877,
+          "idsUnknownFormat": 0,
+          "idMatchRate": 0
+        },
+        {
+          "season": 2021,
+          "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2021.jsonl",
+          "rows": 50714,
+          "playsWithNullPersonnel": 4386,
+          "playsWithEmptyPersonnel": 0,
+          "playsJoined": 46328,
+          "idsConsidered": 1019091,
+          "idsMatched": 0,
+          "idsUnmatched": 1019091,
+          "idsBlank": 0,
+          "idsAmbiguous": 0,
+          "idsGsisFormat": 0,
+          "idsNumericFormat": 1019091,
+          "idsUnknownFormat": 0,
+          "idMatchRate": 0
+        },
+        {
+          "season": 2022,
+          "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2022.jsonl",
+          "rows": 50150,
+          "playsWithNullPersonnel": 4291,
+          "playsWithEmptyPersonnel": 0,
+          "playsJoined": 45859,
+          "idsConsidered": 1008797,
+          "idsMatched": 0,
+          "idsUnmatched": 1008797,
+          "idsBlank": 0,
+          "idsAmbiguous": 0,
+          "idsGsisFormat": 0,
+          "idsNumericFormat": 1008797,
+          "idsUnknownFormat": 0,
+          "idMatchRate": 0
+        },
+        {
+          "season": 2023,
+          "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2023.jsonl",
+          "rows": 46168,
+          "playsWithNullPersonnel": 0,
+          "playsWithEmptyPersonnel": 0,
+          "playsJoined": 46168,
+          "idsConsidered": 1015592,
+          "idsMatched": 1015592,
+          "idsUnmatched": 0,
+          "idsBlank": 0,
+          "idsAmbiguous": 0,
+          "idsGsisFormat": 1015592,
+          "idsNumericFormat": 0,
+          "idsUnknownFormat": 0,
+          "idMatchRate": 1
+        },
+        {
+          "season": 2024,
+          "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2024.jsonl",
+          "rows": 45919,
+          "playsWithNullPersonnel": 0,
+          "playsWithEmptyPersonnel": 0,
+          "playsJoined": 45919,
+          "idsConsidered": 1010090,
+          "idsMatched": 1010090,
+          "idsUnmatched": 0,
+          "idsBlank": 0,
+          "idsAmbiguous": 0,
+          "idsGsisFormat": 1010090,
+          "idsNumericFormat": 0,
+          "idsUnknownFormat": 0,
+          "idMatchRate": 1
+        },
+        {
+          "season": 2025,
+          "file": "C:\\Users\\Garrett\\Sports-wt-grok-reasoning\\data\\gse-dataset\\participation-2025.jsonl",
+          "rows": 45184,
+          "playsWithNullPersonnel": 0,
+          "playsWithEmptyPersonnel": 0,
+          "playsJoined": 45184,
+          "idsConsidered": 993949,
+          "idsMatched": 993949,
+          "idsUnmatched": 0,
+          "idsBlank": 0,
+          "idsAmbiguous": 0,
+          "idsGsisFormat": 993949,
+          "idsNumericFormat": 0,
+          "idsUnknownFormat": 0,
+          "idMatchRate": 1
+        }
+      ]
+    },
+    "snaps_to_rosters": {
+      "inputRows": 205355,
+      "eligible": 205355,
+      "matched": 135808,
+      "unmatched": 69547,
+      "blankKey": 0,
+      "ambiguous": 18,
+      "matchRate": 0.6613328139076233,
+      "matchedExactly": 135790,
+      "matchedAmbiguous": 18,
+      "matchedRows": [
+        {
+          "game_id": "2018_01_ATL_PHI",
+          "pfr_player_id": "FoleNi00"
+        },
+        {
+          "game_id": "2018_01_ATL_PHI",
+          "pfr_player_id": "ErtzZa00"
+        },
+        {
+          "game_id": "2018_01_ATL_PHI",
+          "pfr_player_id": "AghoNe00"
+        },
+        {
+          "game_id": "2018_01_ATL_PHI",
+          "pfr_player_id": "WallMi00"
+        },
+        {
+          "game_id": "2018_01_ATL_PHI",
+          "pfr_player_id": "CartDe02"
+        }
+      ]
+    },
+    "contracts_to_rosters": {
+      "inputRows": 35944,
+      "eligible": 35944,
+      "matched": 35138,
+      "unmatched": 806,
+      "blankKey": 0,
+      "ambiguous": 1453,
+      "matchRate": 0.9775762296906298,
+      "gsisIdsInRoster": 7924,
+      "gsisIdsAmbiguousInRoster": 265
+    }
+  },
+  "sample_joined_plays": [
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 39,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 399,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0032933",
+          "full_name": "Antonio Hamilton",
+          "position": "DB",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0034623",
+          "full_name": "Andre Chachere",
+          "position": "DB",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0035150",
+          "full_name": "Kris Boyd",
+          "position": "DB",
+          "team": "HOU",
+          "roster_level": "season",
+          "week": 20
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 55,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 396,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0034445",
+          "full_name": "Nick Gates",
+          "position": "OL",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0036884",
+          "full_name": "Marco Wilson",
+          "position": "DB",
+          "team": "NE",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0038984",
+          "full_name": "Kei'Trel Clark",
+          "position": "DB",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 77,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 397,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0034445",
+          "full_name": "Nick Gates",
+          "position": "OL",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0036884",
+          "full_name": "Marco Wilson",
+          "position": "DB",
+          "team": "NE",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0038984",
+          "full_name": "Kei'Trel Clark",
+          "position": "DB",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 102,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 397,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0034445",
+          "full_name": "Nick Gates",
+          "position": "OL",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0036884",
+          "full_name": "Marco Wilson",
+          "position": "DB",
+          "team": "NE",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0038984",
+          "full_name": "Kei'Trel Clark",
+          "position": "DB",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 124,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 397,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0034445",
+          "full_name": "Nick Gates",
+          "position": "OL",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0036884",
+          "full_name": "Marco Wilson",
+          "position": "DB",
+          "team": "NE",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0038984",
+          "full_name": "Kei'Trel Clark",
+          "position": "DB",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 147,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 397,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0034445",
+          "full_name": "Nick Gates",
+          "position": "OL",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0036884",
+          "full_name": "Marco Wilson",
+          "position": "DB",
+          "team": "NE",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0038984",
+          "full_name": "Kei'Trel Clark",
+          "position": "DB",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 172,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 397,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0034445",
+          "full_name": "Nick Gates",
+          "position": "OL",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0036884",
+          "full_name": "Marco Wilson",
+          "position": "DB",
+          "team": "NE",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0038984",
+          "full_name": "Kei'Trel Clark",
+          "position": "DB",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 197,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 397,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0034445",
+          "full_name": "Nick Gates",
+          "position": "OL",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0036884",
+          "full_name": "Marco Wilson",
+          "position": "DB",
+          "team": "NE",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0038984",
+          "full_name": "Kei'Trel Clark",
+          "position": "DB",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 220,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 397,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0034445",
+          "full_name": "Nick Gates",
+          "position": "OL",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0036884",
+          "full_name": "Marco Wilson",
+          "position": "DB",
+          "team": "NE",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0038984",
+          "full_name": "Kei'Trel Clark",
+          "position": "DB",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 245,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 396,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0037095",
+          "full_name": "Christian Holmes",
+          "position": "DB",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0039149",
+          "full_name": "Quan Martin",
+          "position": "DB",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0032933",
+          "full_name": "Antonio Hamilton",
+          "position": "DB",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 276,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 393,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0035258",
+          "full_name": "Hjalte Froholdt",
+          "position": "OL",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0033084",
+          "full_name": "Kendall Fuller",
+          "position": "DB",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0036625",
+          "full_name": "Benjamin St-Juste",
+          "position": "DB",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 310,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 393,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0035258",
+          "full_name": "Hjalte Froholdt",
+          "position": "OL",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0033084",
+          "full_name": "Kendall Fuller",
+          "position": "DB",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0036625",
+          "full_name": "Benjamin St-Juste",
+          "position": "DB",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 332,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 393,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0035258",
+          "full_name": "Hjalte Froholdt",
+          "position": "OL",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0033084",
+          "full_name": "Kendall Fuller",
+          "position": "DB",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0036625",
+          "full_name": "Benjamin St-Juste",
+          "position": "DB",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 357,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 393,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0035258",
+          "full_name": "Hjalte Froholdt",
+          "position": "OL",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0033084",
+          "full_name": "Kendall Fuller",
+          "position": "DB",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0036625",
+          "full_name": "Benjamin St-Juste",
+          "position": "DB",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 380,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 393,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0035258",
+          "full_name": "Hjalte Froholdt",
+          "position": "OL",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0033084",
+          "full_name": "Kendall Fuller",
+          "position": "DB",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0036625",
+          "full_name": "Benjamin St-Juste",
+          "position": "DB",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 405,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 393,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0035258",
+          "full_name": "Hjalte Froholdt",
+          "position": "OL",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0033084",
+          "full_name": "Kendall Fuller",
+          "position": "DB",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0036625",
+          "full_name": "Benjamin St-Juste",
+          "position": "DB",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 427,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 383,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0035150",
+          "full_name": "Kris Boyd",
+          "position": "DB",
+          "team": "HOU",
+          "roster_level": "season",
+          "week": 20
+        },
+        {
+          "gsis_id": "00-0037747",
+          "full_name": "Christian Matthew",
+          "position": "DB",
+          "team": "BAL",
+          "roster_level": "season",
+          "week": 21
+        },
+        {
+          "gsis_id": "00-0034071",
+          "full_name": "Danny Johnson",
+          "position": "DB",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 15
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 469,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 397,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0034445",
+          "full_name": "Nick Gates",
+          "position": "OL",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0036884",
+          "full_name": "Marco Wilson",
+          "position": "DB",
+          "team": "NE",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0038984",
+          "full_name": "Kei'Trel Clark",
+          "position": "DB",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 526,
+      "season": 2023,
+      "players_on_field_count": 21,
+      "matched_roster_rows": 379,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0034445",
+          "full_name": "Nick Gates",
+          "position": "OL",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0036884",
+          "full_name": "Marco Wilson",
+          "position": "DB",
+          "team": "NE",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0038984",
+          "full_name": "Kei'Trel Clark",
+          "position": "DB",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    },
+    {
+      "nflverse_game_id": "2023_01_ARI_WAS",
+      "play_id": 558,
+      "season": 2023,
+      "players_on_field_count": 22,
+      "matched_roster_rows": 396,
+      "unmatched_gsis_ids": [],
+      "ambiguous_gsis_ids": [],
+      "blank_ids": 0,
+      "matched_players": [
+        {
+          "gsis_id": "00-0034445",
+          "full_name": "Nick Gates",
+          "position": "OL",
+          "team": "WAS",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0036884",
+          "full_name": "Marco Wilson",
+          "position": "DB",
+          "team": "NE",
+          "roster_level": "season",
+          "week": 18
+        },
+        {
+          "gsis_id": "00-0038984",
+          "full_name": "Kei'Trel Clark",
+          "position": "DB",
+          "team": "ARI",
+          "roster_level": "season",
+          "week": 18
+        }
+      ]
+    }
+  ],
+  "notes": [
+    "ID FORMAT CHANGES BY SEASON. players_on_field holds raw jersey numbers in 2018-2022 and gsis ids in 2023-2025. See joins.participation_personnel.perSeason: idsNumericFormat and idsGsisFormat. The 2018-2022 ids cannot be resolved against a gsis roster and are reported as idsUnmatched, not coerced. The overall idMatchRate of about 0.38 is a consequence of that encoding split; in 2023-2025 it is 1.0.",
+    "sample_joined_plays holds only plays that produced at least one matched roster row, so every id in it came out of the files and resolved against the roster. 2018-2022 plays are absent from the sample because their players_on_field values are jersey numbers and match nothing by construction.",
+    "Personnel joins are scoped to the season parsed from nflverse_game_id; participation rows carry no season column.",
+    "A players_on_field of null is counted as playsWithNullPersonnel and is never joined as an empty personnel list.",
+    "personnelForPlay is season-scoped, not week-scoped. Weekly roster rows for the whole season are returned alongside the season-level row; consumers must filter on roster_level.",
+    "A snap row whose pfr id resolves to more than one gsis_id is counted as matched_ambiguous and is given no gsis_id.",
+    "A snap row with no roster match is kept as an unmatched row and is never given a synthesised gsis_id.",
+    "Match rates are matched / eligible, where eligible is inputRows minus blankKey. idMatchRate is idsMatched / (idsMatched + idsUnmatched).",
+    "Row counts are every line in the file, including lines a parser refused; refusals are counted separately and never silently dropped from the denominator."
+  ]
+}
