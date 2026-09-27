@@ -68,6 +68,7 @@ AGENTS.md references to old paths resolve through this file.
 - `docs/research/cept/`* -> `docs/engine/research/cept/`* (2 files)
 
 ## Individual file moves (14)
+- `docs/research/2026-09-17/README.md` -> `docs/data-sources/research/2026-09-17/README.md` (with redistribution note prepended)
 
 - `docs/2026-09-13-confidence-calibration-baseline.md` -> `docs/predictions/research/2026-09-13/2026-09-13-confidence-calibration-baseline.md`
 - `docs/2026-09-18/ftn-dossier.md` -> `docs/data-sources/research/2026-09-18/ftn-dossier.md`
