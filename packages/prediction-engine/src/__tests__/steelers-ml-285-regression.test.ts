@@ -38,16 +38,24 @@ function steelersMlInput(independentFairValues?: IndependentMarketFairValue[]): 
     commenceTime: new Date("2026-09-13T17:00:00Z"),
     sport: "NFL",
     // Specimen odds are Steelers ML -285 / +235. The scorer needs a heavy
-    // favourite to clear MIN_PUBLISH_CONFIDENCE on the no-estimate control
-    // (same shape as scoring-independent-edge.test.ts at -350/+290), so the
-    // fixture uses that publishable ladder while the SPECIMEN numbers stay
-    // pinned in the header and in the independent fair values below
-    // (trueProb 0.58 vs market fair ≈ 0.74 ⇒ rawEdge ≈ -0.163 ≈ -0.1629).
+    // favourite to clear MIN_PUBLISH_CONFIDENCE on the no-estimate control, so
+    // the fixture uses a publishable ladder (-800/+650) while the SPECIMEN
+    // numbers stay pinned in the header and in the independent fair values
+    // below. NOTE: the ladder was -350/+290 until the 2026-09-27 market-echo
+    // rewire removed the market-internal edgeComponent from the confidence
+    // sum (-350 no longer clears the floor; -800/+650, de-vigged fair ~0.87,
+    // does). The heavier ladder keeps the DISCRIMINATION this file exists
+    // for: absent the gate the pick publishes (confidence ~52), so only the
+    // withhold gate — not the floor — vetoes the adverse case. The
+    // independent read of 0.58 against the fixture's market fair 0.8696
+    // reproduces rawEdge ~ -0.29 (the incident's recorded -0.1629 was against
+    // the -285 specimen's own market fair ~0.74) — same decision PASS, same
+    // expectedClv < 0, steeper magnitude.
     bookmakerOdds: BOOKS.map((bookmaker) => ({
       bookmaker,
       market: "H2H" as const,
-      homePrice: -350,
-      awayPrice: 290,
+      homePrice: -800,
+      awayPrice: 650,
     })),
     context: { bookmakerCoverageMax: BOOKS.length, independentFairValues },
   };
@@ -78,8 +86,11 @@ const steelersIndependent: IndependentMarketFairValue[] = [
 describe("Steelers ML -285 regression specimen (must never publish)", () => {
   it("withholds the pick when our own model prices the favourite worse than the book", () => {
     // Home is the chosen side (heavy favourite). Independent trueProb 0.58
-    // against market fair ≈ 0.74 ⇒ rawEdge ≈ -0.163 (the recorded -0.1629),
-    // decision PASS, expectedClv < 0.
+    // against the fixture's market fair ≈ 0.87 ⇒ rawEdge ≈ -0.29, decision
+    // PASS, expectedClv < 0 — the same withhold decision as the recorded
+    // incident (rawEdge -0.1629 at the -285 specimen's own market fair ≈0.74).
+    // The floor cannot be what vetoes here: absent independents this ladder
+    // publishes, so the gate is the discriminator.
     const picks = scoreGame(steelersMlInput(steelersIndependent));
     expect(ml(picks)).toBeUndefined();
   });
@@ -92,11 +103,14 @@ describe("Steelers ML -285 regression specimen (must never publish)", () => {
   });
 
   it("still publishes when our model is MORE optimistic than the book", () => {
-    // Positive control: independent trueProb 0.85 vs fair ≈ 0.74 ⇒ +edge.
+    // Positive control: independent trueProb 0.92 vs the fixture's market fair
+    // ≈ 0.87 ⇒ +edge. (Was 0.85 vs ≈ 0.74 before the ladder moved heavier in
+    // the market-echo rewire; 0.85 is now BELOW the fixture's fair value and
+    // would be withheld — the opposite of this control's intent.)
     const pick = ml(
       scoreGame(
         steelersMlInput([
-          { source: "nfl-epa-fair-value", homeFairProb: 0.85, awayFairProb: 0.15 },
+          { source: "nfl-epa-fair-value", homeFairProb: 0.92, awayFairProb: 0.08 },
         ]),
       ),
     );

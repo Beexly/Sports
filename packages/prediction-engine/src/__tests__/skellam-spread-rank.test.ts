@@ -101,8 +101,8 @@ describe("scoreSpreadPick — Skellam ATS ranking", () => {
       bookmakerOdds: ten.map((bookmaker) => ({
         bookmaker,
         market: "H2H" as const,
-        homePrice: -350,
-        awayPrice: 290,
+        homePrice: -800,
+        awayPrice: 650,
       })),
       context: {
         bookmakerCoverageMax: ten.length,

@@ -584,7 +584,7 @@ export default function PricingPage() {
                 <h3 className="text-sm font-semibold text-white">How confidence works</h3>
                 <p className="mt-2 text-sm leading-relaxed text-ink-300">
                   {getFeature("confidence")?.customerExplanation ??
-                    "A 0 to 100 ranking score of how strongly the model likes a pick. It is not a win probability and is not part of the market-implied measurement. It is an input to your judgment, not a promise."}
+                    "A 0 to 100 ranking score of how strongly the model likes a pick. It is not a win probability. On spreads and totals it is built from board signals — book agreement, market depth, line movement, game context — and does not include the market's probability of the outcome. On moneylines it is anchored on the market's win probability, labeled as such. It is an input to your judgment, not a promise."}
                 </p>
               </div>
               <div className="rounded-2xl border border-titanium bg-carbon/40 p-6">

@@ -1,222 +1,304 @@
 /**
- * Decision-time price archive.
+ * Append-only decision-time price archive for prop edges.
  *
- * Closing-line value needs two prices: the one you saw when you decided, and a
- * later one. This file accumulates only the first. It is accumulation, not proof
- * — an archive row is a record that a price was observed at a decision time, not
- * a claim that the archive can already settle CLV. `priced` stays false on
- * every priced result until a settlement module that was not faked says so.
+ * pricePropAgainstMarket() is pure: it prices a prop against a book and hands
+ * back e = p − q without touching disk. That purity is deliberate — the module
+ * is imported by backtests, replays and guards, none of which should be able to
+ * write. This file is the other half: once a caller has a successful pure
+ * result, it records the price it actually saw AT DECISION TIME, so a later
+ * closing line can be compared against it honestly.
  *
- * Append-only by construction: a validated row is appended with the append flag
- * as exactly one complete line plus newline. There is no truncate path and no
- * temp-then-rename path, so two concurrent callers can never leave a
- * half-written first line behind.
+ * CLV can only be settled against a price that was written down before the
+ * outcome was known. Reconstructing that price after the fact is a
+ * back-solved number, not a measurement. Hence append-only: one JSON line per
+ * decision, never a rewrite, never a truncate. A later bug in a caller must not
+ * be able to silently rewrite what was believed at the time.
  *
- * This module is the ONLY place in the prop stack that touches the filesystem.
- * `pricePropAgainstMarket` in props-priced-edge.ts stays pure and gains no `fs`
- * import; a caller invokes the recorder after it already has a successful pure
- * result.
+ * Every field is validated BEFORE any filesystem call. A row that fails
+ * validation throws and writes nothing — the archive is evidence, and a
+ * half-valid line is worse than a missing one.
  */
 
-import { appendFileSync, mkdirSync } from "node:fs";
-import { join } from "node:path";
+import { appendFile, mkdir } from "node:fs/promises";
+import { join, resolve } from "node:path";
+import type { PropEdgeResult } from "./props-priced-edge.js";
 
-import type { PricedPropEdge } from "./props-priced-edge.js";
+export const DECISION_TIME_PRICE_DIRNAME = "decision-time-prices";
 
-/** Absolute value floor for a plausible American price. */
-export const DECISION_TIME_PRICE_MIN_ABS = 100;
+const REPO_ROOT = resolve(__dirname, "..", "..", "..", "..");
 
-/** Tolerance for the caller's edge agreeing with p - q. */
-export const EDGE_TOLERANCE = 1e-9;
-
-export const DEFAULT_ARCHIVE_DIR = "data/decision-time-prices";
+/** Where the archive lands when the caller does not redirect it. */
+export const DEFAULT_DECISION_TIME_PRICE_DIR = join(
+  REPO_ROOT,
+  "data",
+  DECISION_TIME_PRICE_DIRNAME,
+);
 
 export type DecisionTimePriceRow = {
   readonly game_id: string;
   readonly market_id: string;
   readonly side: string;
-  /** American odds as offered at decision time. */
+  /** American odds observed for `side` at decision time. */
   readonly decision_time_price: number;
-  /** ISO-8601 instant the decision was made. */
+  /** ISO-8601 UTC instant the decision was made. Drives the file name. */
   readonly decision_time_utc: string;
-  /** Model probability, strictly inside (0, 1). */
   readonly model_probability: number;
-  /** Shin-devigged market probability, strictly inside (0, 1). */
   readonly devigged_market_prob: number;
-  /** Must equal model_probability - devigged_market_prob within EDGE_TOLERANCE. */
+  /** Must equal model_probability − devigged_market_prob. */
   readonly edge: number;
   readonly model_source: string;
-  /** Lowercase hex sha256 of the covariate vector that produced the model number. */
+  /** sha256 of the covariate row, lowercase hex, 64 chars. */
   readonly covariates_hash: string;
 };
 
-const SHA256_HEX = /^[0-9a-f]{64}$/;
-const ISO_8601 = /^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}:\d{2}(\.\d+)?(Z|[+-]\d{2}:?\d{2})$/;
+export type DecisionTimePriceRecordResult = {
+  readonly ok: true;
+  /** Absolute path of the JSONL file this line landed in. */
+  readonly path: string;
+  /** UTC day the row was filed under, YYYY-MM-DD. */
+  readonly day: string;
+  /** Bytes appended, including the trailing newline. */
+  readonly bytes: number;
+};
 
-function nonBlankString(value: unknown, field: string): string {
-  if (typeof value !== "string" || value.trim().length === 0) {
-    throw new Error(`decision-time-price-archive: ${field} must be a non-blank string`);
-  }
-  return value;
-}
+export type DecisionTimePriceRecordOptions = {
+  /** Redirect the archive root. Tests must use this; production uses the default. */
+  readonly baseDir?: string;
+};
 
-function openUnitInterval(value: unknown, field: string): number {
-  if (typeof value !== "number" || !Number.isFinite(value) || !(value > 0 && value < 1)) {
+/** The identity + quote a caller hands the recorder alongside a pure result. */
+export type PricedPropArchiveContext = {
+  readonly game_id: string;
+  readonly market_id: string;
+  readonly side: string;
+  readonly decision_time_price: number;
+  readonly decision_time_utc: string;
+};
+
+const COVARIATES_HASH = /^[0-9a-f]{64}$/;
+const ISO_DATE_PREFIX = /^\d{4}-\d{2}-\d{2}/;
+const EDGE_TOLERANCE = 1e-9;
+
+function nonBlank(value: unknown, field: string): string {
+  if (typeof value !== "string" || value.trim() === "") {
     throw new Error(
-      `decision-time-price-archive: ${field} must be finite and strictly inside (0, 1), got ${String(value)}`,
+      `decision-time price archive: ${field} must be a non-blank string, got ${describe(value)}`,
     );
   }
   return value;
 }
 
-/**
- * UTC calendar date of the decision instant. The archive is partitioned by this
- * date so a day can be hashed and shipped on its own.
- */
-export function archiveDateFor(decisionTimeUtc: string): string {
-  const ms = Date.parse(decisionTimeUtc);
-  if (!Number.isFinite(ms)) {
-    throw new Error(`decision-time-price-archive: decision_time_utc does not parse: ${decisionTimeUtc}`);
+function describe(value: unknown): string {
+  if (typeof value === "string") return JSON.stringify(value);
+  if (typeof value === "number") return String(value);
+  if (value === null) return "null";
+  return typeof value;
+}
+
+function validTimestamp(value: string): number {
+  // The shape guard rejects strings Date.parse happens to accept but that are
+  // not ISO-8601 ("March 3, 2026", "2026"). The parse guard rejects ISO-shaped
+  // strings that are not real instants ("2026-13-45T00:00:00Z").
+  if (!ISO_DATE_PREFIX.test(value)) {
+    throw new Error(
+      `decision-time price archive: decision_time_utc must be ISO-8601, got ${describe(value)}`,
+    );
   }
-  return new Date(ms).toISOString().slice(0, 10);
+  const ms = Date.parse(value);
+  if (!Number.isFinite(ms)) {
+    throw new Error(
+      `decision-time price archive: decision_time_utc does not parse to a valid Date, got ${describe(value)}`,
+    );
+  }
+  return ms;
+}
+
+function openProbability(value: number, field: string): number {
+  if (!Number.isFinite(value) || value <= 0 || value >= 1) {
+    throw new Error(
+      `decision-time price archive: ${field} must be finite and strictly inside (0, 1), got ${describe(value)}`,
+    );
+  }
+  return value;
+}
+
+function validAmericanPrice(value: number): number {
+  // Same band as isPlausibleEntryOdds on the receipt path: poison-band values
+  // are spread/total lines that leaked into the price slot, and values past
+  // 10000 are the launch audit's -10533 class of bug — an id or a line, not a
+  // book quote. CLV against a fabricated price is worse than no CLV.
+  if (!Number.isFinite(value) || value === 0 || Math.abs(value) < 100 || Math.abs(value) > 10000) {
+    throw new Error(
+      `decision-time price archive: decision_time_price must be finite American odds with 100 <= |price| <= 10000, got ${describe(value)}`,
+    );
+  }
+  return value;
+}
+
+function validEdge(edge: number, modelProb: number, deviggedProb: number): number {
+  if (!Number.isFinite(edge)) {
+    throw new Error(
+      `decision-time price archive: edge must be finite, got ${describe(edge)}`,
+    );
+  }
+  const expected = modelProb - deviggedProb;
+  // Refuse rather than recompute. Storing a silently repaired edge would make
+  // the archive disagree with the caller without recording that it did.
+  if (Math.abs(edge - expected) > EDGE_TOLERANCE) {
+    throw new Error(
+      `decision-time price archive: edge ${edge} is not model_probability − devigged_market_prob (${expected}); refusing to record an edge the caller did not compute`,
+    );
+  }
+  return edge;
+}
+
+function validHash(value: string): string {
+  if (typeof value !== "string" || !COVARIATES_HASH.test(value)) {
+    throw new Error(
+      `decision-time price archive: covariates_hash must be 64 lowercase hex chars, got ${describe(value)}`,
+    );
+  }
+  return value;
+}
+
+// The documented price band, exported under the names session A's validator
+// used so both lanes' consumers and tests speak one API. The band floor is the
+// poison band (a spread/total line leaking into the price slot); the ceiling
+// is the launch audit's -10533 class of bug (red-team addition, 2026-09-27).
+export const DECISION_TIME_PRICE_MIN_ABS = 100;
+export const DECISION_TIME_PRICE_MAX_ABS = 10000;
+
+/** UTC day key for an ISO-8601 instant, A-side name for `decisionTimePriceDay`. */
+export function archiveDateFor(decisionTimeUtc: string): string {
+  return decisionTimePriceDay(decisionTimeUtc);
 }
 
 /**
- * Validate a row in full BEFORE any filesystem call, so a refused row can never
- * have gained a line. Returns the row typed and normalized for serialization.
+ * Validate a row in full WITHOUT touching the filesystem, returning the row
+ * normalized for serialization. A refused row throws here and can therefore
+ * never have gained a line; `recordDecisionTimePrice` runs this same rule set
+ * before its single append.
  */
 export function validateDecisionTimePriceRow(row: DecisionTimePriceRow): DecisionTimePriceRow {
   if (row == null || typeof row !== "object") {
-    throw new Error("decision-time-price-archive: row must be an object");
+    throw new Error("decision-time price archive: row must be an object");
   }
-
-  const game_id = nonBlankString(row.game_id, "game_id");
-  const market_id = nonBlankString(row.market_id, "market_id");
-  const side = nonBlankString(row.side, "side");
-  const model_source = nonBlankString(row.model_source, "model_source");
-
-  const decision_time_utc = nonBlankString(row.decision_time_utc, "decision_time_utc");
-  if (!ISO_8601.test(decision_time_utc) || !Number.isFinite(Date.parse(decision_time_utc))) {
-    throw new Error(`decision-time-price-archive: decision_time_utc is not a parseable ISO-8601 instant: ${decision_time_utc}`);
-  }
-
-  const price = row.decision_time_price;
-  if (typeof price !== "number" || !Number.isFinite(price)) {
-    throw new Error(`decision-time-price-archive: decision_time_price must be finite, got ${String(price)}`);
-  }
-  if (price === 0) {
-    throw new Error("decision-time-price-archive: decision_time_price must not be zero");
-  }
-  if (Math.abs(price) < DECISION_TIME_PRICE_MIN_ABS) {
-    throw new Error(
-      `decision-time-price-archive: decision_time_price ${price} is inside the poison band; a plausible American price has |odds| >= ${DECISION_TIME_PRICE_MIN_ABS}`,
-    );
-  }
-
-  const model_probability = openUnitInterval(row.model_probability, "model_probability");
-  const devigged_market_prob = openUnitInterval(row.devigged_market_prob, "devigged_market_prob");
-
-  if (typeof row.edge !== "number" || !Number.isFinite(row.edge)) {
-    throw new Error(`decision-time-price-archive: edge must be finite, got ${String(row.edge)}`);
-  }
-  // Refuse a caller's wrong edge. Do NOT silently recompute and store it: a stored
-  // edge that disagrees with p - q is a lie about what the engine computed.
-  const expected = model_probability - devigged_market_prob;
-  if (Math.abs(row.edge - expected) > EDGE_TOLERANCE) {
-    throw new Error(
-      `decision-time-price-archive: edge ${row.edge} does not equal model_probability - devigged_market_prob (${expected}) within ${EDGE_TOLERANCE}`,
-    );
-  }
-
-  if (typeof row.covariates_hash !== "string" || !SHA256_HEX.test(row.covariates_hash)) {
-    throw new Error(
-      `decision-time-price-archive: covariates_hash must be 64 lowercase hex characters, got ${String(row.covariates_hash)}`,
-    );
-  }
-
   return {
-    game_id,
-    market_id,
-    side,
-    decision_time_price: price,
-    decision_time_utc,
-    model_probability,
-    devigged_market_prob,
-    edge: row.edge,
-    model_source,
-    covariates_hash: row.covariates_hash,
+    game_id: nonBlank(row.game_id, "game_id"),
+    market_id: nonBlank(row.market_id, "market_id"),
+    side: nonBlank(row.side, "side"),
+    decision_time_price: validAmericanPrice(row.decision_time_price),
+    decision_time_utc: nonBlank(row.decision_time_utc, "decision_time_utc"),
+    model_probability: openProbability(row.model_probability, "model_probability"),
+    devigged_market_prob: openProbability(row.devigged_market_prob, "devigged_market_prob"),
+    edge: validEdge(row.edge, openProbability(row.model_probability, "model_probability"), openProbability(row.devigged_market_prob, "devigged_market_prob")),
+    model_source: nonBlank(row.model_source, "model_source"),
+    covariates_hash: validHash(row.covariates_hash),
   };
 }
 
-export type RecordDecisionTimePriceOptions = {
-  /** Override the archive root. Tests pass a temp dir; the product passes nothing. */
-  readonly dir?: string;
-};
-
 /**
- * Append one validated decision-time price. Throws on any refusal, and a throw
- * guarantees no line was written because validation completes before the write.
+ * UTC day key, YYYY-MM-DD, for an ISO-8601 instant.
+ *
+ * UTC, not local. A decision made at 23:59:59Z belongs to that UTC day even
+ * when the machine filing it is on the other side of the date line, and a
+ * local-date split would silently move rows between files per runner.
  */
-export function recordDecisionTimePrice(
-  row: DecisionTimePriceRow,
-  options: RecordDecisionTimePriceOptions = {},
-): { path: string; row: DecisionTimePriceRow } {
-  const validated = validateDecisionTimePriceRow(row);
-  const dir = options.dir ?? DEFAULT_ARCHIVE_DIR;
-  const date = archiveDateFor(validated.decision_time_utc);
-  const target = join(dir, `${date}.jsonl`);
-
-  mkdirSync(dir, { recursive: true });
-  // One complete line plus newline, appended. Never truncated.
-  appendFileSync(target, `${JSON.stringify(validated)}\n`, { encoding: "utf8", flag: "a" });
-
-  return { path: target, row: validated };
+export function decisionTimePriceDay(decisionTimeUtc: string): string {
+  return new Date(validTimestamp(decisionTimeUtc)).toISOString().slice(0, 10);
 }
 
-export type PricedPropEvaluationContext = {
-  readonly gameId: string;
-  readonly marketId: string;
-  /** "over" | "under" | "home" | "away" | any other non-blank label. */
-  readonly side: string;
-  readonly decisionTimeUtc: string;
-  /** The American price actually quoted for `side` at decision time. */
-  readonly decisionTimePrice: number;
-  /** Lowercase hex sha256 of the covariate vector behind `pOver`. */
-  readonly covariatesHash: string;
-  readonly dir?: string;
-};
+/** Filename an instant is filed under. */
+export function decisionTimePriceFileName(decisionTimeUtc: string): string {
+  return `${decisionTimePriceDay(decisionTimeUtc)}.jsonl`;
+}
 
 /**
- * Map a SUCCESSFUL pure priced result onto an archive row and append it.
+ * Append ONE validated row as a single JSON line to
+ * `<baseDir>/YYYY-MM-DD.jsonl`, the day being the UTC date of
+ * `decision_time_utc`.
  *
- * `result.priced` is read, never written. This function cannot flip it, and it
- * refuses an unpriced result rather than archiving a number the engine declined
- * to price.
+ * Throws — never writes, never creates the file — if any field is invalid.
+ * The file is only ever opened for append.
  */
-export function recordPricedPropEvaluation(
-  result: PricedPropEdge,
-  context: PricedPropEvaluationContext,
-): { path: string; row: DecisionTimePriceRow } {
-  if (result == null || result.ok !== true) {
-    throw new Error("decision-time-price-archive: recordPricedPropEvaluation requires a successful priced result");
-  }
-  if (result.priced !== false) {
-    throw new Error("decision-time-price-archive: recorder never flips priced; refusing a result that already claims it");
-  }
+export async function recordDecisionTimePrice(
+  row: DecisionTimePriceRow,
+  options: DecisionTimePriceRecordOptions = {},
+): Promise<DecisionTimePriceRecordResult> {
+  // Validate everything first. Nothing below may run on a partial row.
+  const gameId = nonBlank(row.game_id, "game_id");
+  const marketId = nonBlank(row.market_id, "market_id");
+  const side = nonBlank(row.side, "side");
+  const price = validAmericanPrice(row.decision_time_price);
+  const decisionTimeUtc = nonBlank(row.decision_time_utc, "decision_time_utc");
+  const day = decisionTimePriceDay(decisionTimeUtc);
+  const modelProbability = openProbability(row.model_probability, "model_probability");
+  const deviggedMarketProb = openProbability(row.devigged_market_prob, "devigged_market_prob");
+  const edge = validEdge(row.edge, modelProbability, deviggedMarketProb);
+  const modelSource = nonBlank(row.model_source, "model_source");
+  const covariatesHash = validHash(row.covariates_hash);
 
+  // Explicit key order so a line is byte-stable regardless of how the caller
+  // spelled the object. Callers' values are stored verbatim — the archive
+  // records what was claimed, not a tidied-up version of it.
+  const line = `${JSON.stringify({
+    game_id: gameId,
+    market_id: marketId,
+    side,
+    decision_time_price: price,
+    decision_time_utc: decisionTimeUtc,
+    model_probability: modelProbability,
+    devigged_market_prob: deviggedMarketProb,
+    edge,
+    model_source: modelSource,
+    covariates_hash: covariatesHash,
+  })}\n`;
+
+  const baseDir = options.baseDir ?? DEFAULT_DECISION_TIME_PRICE_DIR;
+  await mkdir(baseDir, { recursive: true });
+  const path = join(baseDir, `${day}.jsonl`);
+  await appendFile(path, line, "utf8");
+  return { ok: true, path, day, bytes: Buffer.byteLength(line, "utf8") };
+}
+
+/**
+ * Map a successful pure result onto a decision-time row and archive it.
+ *
+ * The pure result carries no timestamp and no American price — those are
+ * properties of the quote the caller saw, not of the model — so the caller
+ * supplies them as `context`.
+ *
+ * `priced` stays `false`. Recording the decision-time price is what makes a
+ * future CLV comparison POSSIBLE; it is not the comparison, and it is not a
+ * license to retroactively flip the flag. Do not add a `priced = true` write
+ * here, and do not add one to pricePropAgainstMarket either — that flag is a
+ * product decision about what may be claimed publicly, not an archival side
+ * effect. The archive is evidence. It does not promote itself to a claim.
+ */
+export async function recordPricedPropEvaluation(
+  result: PropEdgeResult,
+  context: PricedPropArchiveContext,
+  covariatesHash: string,
+  options: DecisionTimePriceRecordOptions = {},
+): Promise<DecisionTimePriceRecordResult> {
+  if (!result.ok) {
+    throw new Error(
+      `decision-time price archive: refusing to archive an unpriced prop result (${result.reason})`,
+    );
+  }
   return recordDecisionTimePrice(
     {
-      game_id: context.gameId,
-      market_id: context.marketId,
+      game_id: context.game_id,
+      market_id: context.market_id,
       side: context.side,
-      decision_time_price: context.decisionTimePrice,
-      decision_time_utc: context.decisionTimeUtc,
+      decision_time_price: context.decision_time_price,
+      decision_time_utc: context.decision_time_utc,
       model_probability: result.pOver,
       devigged_market_prob: result.qOver,
       edge: result.edgeOver,
       model_source: result.source,
-      covariates_hash: context.covariatesHash,
+      covariates_hash: covariatesHash,
     },
-    context.dir != null ? { dir: context.dir } : {},
+    options,
   );
 }
