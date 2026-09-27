@@ -217,6 +217,23 @@ def tilts():
     return signed, game_of
 
 
+def load_adjustments():
+    path = ROOT / "data" / "gse-dataset" / "current" / "week3-usage-adjustments.jsonl"
+    ol = {}
+    usage = {}
+    if not path.exists():
+        return ol, usage
+    for line in path.read_text().splitlines():
+        if not line.strip():
+            continue
+        row = json.loads(line)
+        if row["kind"] == "ol":
+            ol[row["team"]] = row["multiplier"]
+        elif row["kind"] == "usage":
+            usage[(norm_name(row["player"]), row["team"])] = row
+    return ol, usage
+
+
 def finished_teams():
     done = set()
     for line in GAMES.read_text().splitlines():
@@ -229,7 +246,7 @@ def finished_teams():
     return done
 
 
-def build_pool(salary_rows, live, prior, position_prior, dst, blocked, tilt, game_of, done):
+def build_pool(salary_rows, live, prior, position_prior, dst, blocked, tilt, game_of, done, ol, usage):
     pool = []
     unmatched = []
     excluded_out = []
@@ -256,6 +273,11 @@ def build_pool(salary_rows, live, prior, position_prior, dst, blocked, tilt, gam
                 unmatched.append(f"{row['name']} {row['team']}")
                 continue
             base, games_n, pos, source = built
+            base *= ol.get(row["team"], 1.0)
+            moved = usage.get(key)
+            if moved:
+                base += moved["points"]
+                source = "usage-cascade" if moved["agrees"] else "usage-added"
         environment = tilt.get(row["team"], 0.0)
         connected = base * (1 + TILT_SCALE * environment)
         pool.append({
@@ -342,17 +364,18 @@ def main():
     dst = load_dst()
     blocked = outs_by_team()
     tilt, game_of = tilts()
+    ol, usage = load_adjustments()
     done = finished_teams()
     dk_rows = parse_dk(DK_HTML.read_text(encoding="utf-8", errors="replace"))
     fd_rows = parse_fd(FD_HTML.read_text(encoding="utf-8", errors="replace"))
-    dk_pool, dk_miss, dk_out, dk_final = build_pool(dk_rows, live, prior, position_prior, dst, blocked, tilt, game_of, done)
-    fd_pool, fd_miss, fd_out, fd_final = build_pool(fd_rows, live, prior, position_prior, dst, blocked, tilt, game_of, done)
+    dk_pool, dk_miss, dk_out, dk_final = build_pool(dk_rows, live, prior, position_prior, dst, blocked, tilt, game_of, done, ol, usage)
+    fd_pool, fd_miss, fd_out, fd_final = build_pool(fd_rows, live, prior, position_prior, dst, blocked, tilt, game_of, done, ol, usage)
     dk_score, dk_lineup, dk_spent = optimize(dk_pool, 50000)
     fd_score, fd_lineup, fd_spent = optimize(fd_pool, 60000)
     check(dk_lineup, 50000, "draftkings")
     check(fd_lineup, 60000, "fanduel")
     payload = {
-        "projection": "half-PPR, 2026 weeks 1-2 shrunk toward the 2025 per-game mean with 4 games of prior, then times (1 + 0.08 * team tilt)",
+        "projection": "half-PPR, shrunk toward 2025, times the offensive-line multiplier, plus vacated work when the starter back is out, then times (1 + 0.08 * team edge)",
         "tilt_source": "week3-engine-readings.jsonl",
         "engine_edge": "The shared projection is the edge. The game composite moves it. The salary only decides how it is spent.",
         "draftkings": {
