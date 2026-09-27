@@ -89,13 +89,16 @@ const GRAIN_SPECS = [
     note: 'Snap counts carry pfr_player_id and game_id, never gsis_id. Do not invent a gsis_id.',
   },
   {
-    file: 'participation.jsonl',
+    // Participation is one file per season since the 8-season re-ingest; a single
+    // 183 MB file is past the 90 MB ceiling, so the grain spans the set.
+    file: null,
+    files: [2018, 2019, 2020, 2021, 2022, 2023, 2024, 2025].map((y) => `participation-${y}.jsonl`),
     grain_id: 'play_participation',
     tier: 'play',
     direction: 'none',
     signal_family: 'none',
     require: ['players_on_field'],
-    note: 'players_on_field is parsed from the players_on_play release column. 2023+ is FTN via nflverse, CC-BY-SA 4.0.',
+    note: 'players_on_field is parsed from the players_on_play release column. 2023+ is FTN via nflverse, CC-BY-SA 4.0. One file per season.',
   },
   {
     file: 'fourth-down.jsonl',
@@ -112,15 +115,25 @@ const rows = [];
 const skipped = [];
 
 for (const spec of GRAIN_SPECS) {
-  const header = readHeader(spec.file);
-  if (!header) {
-    skipped.push({ file: spec.file, reason: 'file missing or first line unparseable' });
+  const sources = spec.files ?? [spec.file];
+  let header = null;
+  let total = 0;
+  const seen = [];
+  for (const file of sources) {
+    const h = readHeader(file);
+    if (!h) { skipped.push({ file, reason: 'file missing or first line unparseable' }); continue; }
+    if (header === null) header = h;
+    total += countLines(file) ?? 0;
+    seen.push(file);
+  }
+  if (header === null) {
+    skipped.push({ file: sources.join(','), reason: 'no readable part' });
     continue;
   }
   // A grain enters the catalog only if its required keys were genuinely seen in the header.
   const missing = spec.require.filter((k) => !header.keys.includes(k));
   if (missing.length > 0) {
-    skipped.push({ file: spec.file, reason: `required key(s) absent from header: ${missing.join(', ')}` });
+    skipped.push({ file: sources.join(','), reason: `required key(s) absent from header: ${missing.join(', ')}` });
     continue;
   }
   rows.push({
@@ -128,9 +141,9 @@ for (const spec of GRAIN_SPECS) {
     tier: spec.tier,
     direction: spec.direction,
     signal_family: spec.signal_family,
-    source_file: `data/gse-dataset/${spec.file}`,
+    source_file: seen.length === 1 ? `data/gse-dataset/${seen[0]}` : `data/gse-dataset/${seen[0]} (+${seen.length - 1} more)`,
     status: 'catalogued',
-    sample_count: countLines(spec.file),
+    sample_count: total,
     observed_keys: header.keys,
     note: spec.note,
   });
