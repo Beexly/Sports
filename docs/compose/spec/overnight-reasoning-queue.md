@@ -78,10 +78,17 @@ that after any compaction the next cycle is a command, not a recollection.
 
 | Script | Fixes | Contract |
 |---|---|---|
-| `verify-files.ps1` | PowerShell escaping. The prompt's multi-line `python -c` heredoc does not survive PowerShell argument passing. | `Get-FileHash` streaming per file, line counts, manifest `publishes_pick` check, `players_on_field` array check, snap-row `gsis_id` absence, `punt_wp: null` presence. Emits JSON. Non-zero exit on any mismatch. |
+| `verify-files.mjs` | PowerShell escaping. The prompt's multi-line `python -c` heredoc does not survive PowerShell argument passing, and a here-string still has to be quoted correctly by whatever calls it. | Streaming SHA-256 per file, line counts, manifest `publishes_pick` check, `players_on_field` array check, snap-row `gsis_id` absence, `punt_wp: null` presence. Emits JSON. Non-zero exit on any mismatch. |
 | `log-slice.mjs` | Compaction amnesia. The loop line is the only durable state; appending it must not depend on remembering to. | One JSON object appended atomically to `data/reasoning/overnight-loop.jsonl` plus one row to the audit md. Refuses a non-monotonic cycle number. Prints the new `next`. |
 | `scan-modules.mjs` | Context burn on slice 8. Walking 62 directories by hand burns the window and invites post-compaction invention. | Walks `packages/prediction-engine/src/*` deterministically; per directory emits file count, whether any file exports a number, matched blocked-kernel names, and a data-file reference. Emits `module-ledger.jsonl` rows with status `catalogued` or `blocked`. **Never assigns `wired` or `measured_zero`** — those require a number an agent computed. |
-| `scan-features.mjs` | Context burn on slice 9, and the 240-row trap. | Derives candidate grains from the headers of the five nflverse JSONL files and the manifest. Emits `feature-catalog.jsonl` with `status: catalogued` and real `source_file`. A grain not seen in a header is not emitted. The count will be well under 240 and that is a pass. |
+| `scan-features.mjs` | Context burn on slice 9, and the 240-row trap. | Derives candidate grains from the headers of the five nflverse JSONL files and the manifest. Emits `feature-catalog.jsonl` with `status: catalogued` and real `source_file`. A grain whose required keys are not in the observed header is skipped and the skip is reported. The count will be well under 240 and that is a pass. |
+
+The hasher was first written as `verify-files.ps1` and could not be committed: `.gitignore:195`
+is `*.ps1`, and `AGENTS.md` law 2 forbids editing `.gitignore`. A script nobody can commit is a
+script the next agent does not have, so it is a `.mjs` like the rest of the harness. That also
+removes the PowerShell 5.1-versus-7 question. Both implementations were run and agreed on
+every hash before the `.ps1` was deleted, which makes the pair a cross-check rather than a
+guess.
 
 `scan-modules.mjs` and `scan-features.mjs` may only ever produce `catalogued` or `blocked` or
 `absent`. Promoting a row to `wired` or `measured_zero` requires a measurement recorded

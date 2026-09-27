@@ -53,10 +53,16 @@ not merely written.
 
 | Script | Fixes | Result observed |
 |---|---|---|
-| `verify-files.ps1` | PowerShell escaping. The work order's multi-line `python -c` heredoc does not survive PowerShell argument passing. | Exit 0. All 5 sha256, byte counts, and row counts match. |
+| `verify-files.mjs` | PowerShell escaping. The work order's multi-line `python -c` heredoc does not survive PowerShell argument passing. | Exit 0. All 5 sha256, byte counts, and row counts match. |
 | `log-slice.mjs` | Compaction amnesia. | Cycle 0 appended; a repeat of cycle 0 was refused with exit 2. |
 | `scan-modules.mjs` | Context burn on slice 8. | 63 directories: 59 `catalogued`, 4 `blocked`. Zero rows claim `wired` or `measured_zero`. |
 | `scan-features.mjs` | Context burn on slice 9, and the 240-row trap. | 6 grains, 0 skipped. Count is derived from headers actually read. |
+
+The hasher was written first as `verify-files.ps1` and could not be committed: `.gitignore:195`
+is `*.ps1`, and `AGENTS.md` law 2 forbids editing `.gitignore`. Rather than force-add a file
+the repo deliberately ignores, it was ported to `.mjs`. Both implementations were executed and
+agreed on all five hashes and all structural checks before the `.ps1` was deleted, so the pair
+is a cross-check rather than an assumption.
 
 Slice 1 verification detail, exit 0: `publishes_pick` is `false` and seasons are `[2024, 2025]`;
 participation row 1 is `2024_01_TEN_CHI` play 40 with 22 players in `players_on_field`;
