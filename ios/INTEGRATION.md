@@ -366,3 +366,68 @@ build, in the order it will bite.
    scaffold wrote it).
 7. **`usesAppStoreIAP`**, if Apple rules that a Stripe-hosted checkout is not
    acceptable for in-app digital subscriptions. See §4.2.
+
+
+---
+
+## 8. Plugging in your data
+
+The app is not tied to one dataset. Where it reads from is decided at launch,
+not at compile time, so the same build can be pointed anywhere.
+
+| Key | Meaning | Default |
+|---|---|---|
+| `GSEBaseURL` | API root. `Endpoint` appends `api/`. | `https://galaxysportsedge.com` |
+| `GSEWebOrigin` | Origin for the sign-in page and the checkout/portal pages. | `https://galaxysportsedge.com` |
+| `GSEUseMockData` | `true` runs the whole app on the bundled sample slate, no backend. | `false` |
+
+**In the simulator** — pass them as launch arguments, which beat everything:
+
+```
+-GSEBaseURL https://staging.yourdomain.com
+-GSEWebOrigin https://staging.yourdomain.com
+-GSEUseMockData true
+```
+
+**For a build** — edit the same three keys in
+`ios/GalaxySportsEdge/Info.plist`, or set them per configuration in the scheme.
+The keys are in the plist with the production values, so they are visible
+rather than buried in a Swift constant.
+
+Precedence is: launch argument → Info.plist → compiled-in default. A value that
+is present but not an absolute URL is rejected and falls back to the default
+with an assertion in debug, because a typo in a base URL otherwise looks
+exactly like a backend being down. The rules are pinned by tests in
+`DomainTests` under "Plugging in a dataset".
+
+### What the app expects from the API
+
+The same routes the web app serves; see §2. In short:
+
+- `GET /api/picks?date=&sport=` → `{ success, data: [PickDTO], meta }`
+- `GET /api/picks/daily-slate` → the slate plus entitlement `meta`
+- `GET /api/games`, `GET /api/blog`, `GET /api/blog?slug=`
+- `GET /api/me`, `/api/watchlist`, `/api/subscriptions/*`, `/api/push/apns`
+
+`PickDTO` is transcribed from `apps/web/app/api/picks/route.ts`, and the
+decoding tests in `PickDecodingTests` are pinned to that shape, so if you point
+the app at a different deployment the failures will be about data that is
+genuinely different rather than about shape drift.
+
+Two things worth knowing before you point it somewhere:
+
+- **Dates must be ISO-8601, and fractional seconds are accepted.** The backend
+  emits `Date.toISOString()`, which always carries milliseconds. The decoder
+  handles both that and plain ISO-8601.
+- **The `meta` object is where the entitlements live** — `tier`,
+  `canSeeConfidence`, `hitDailyLimit`. If it is missing the app assumes the
+  conservative free tier, so a route that omits `meta` shows a paywalled app
+  rather than a wide-open one.
+
+### Offline / demo mode
+
+`-GSEUseMockData true` runs the entire app against `MockFixtures`: a complete
+sample slate, games, articles, a profile, and the paywall, with no network at
+all. `MockSportsService` sets `meta.containsSeedData = true` so the UI labels
+it, and the pick ids are prefixed `sample-` so a fixture can never be mistaken
+for a real engine row if it reaches a log or a share sheet.

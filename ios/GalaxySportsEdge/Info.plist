@@ -42,6 +42,16 @@
 	<true/>
 	<key>UIUserInterfaceStyle</key>
 	<string>Dark</string>
+	<!-- Data source. Edit these, or pass -GSEBaseURL / -GSEWebOrigin /
+	     -GSEUseMockData as launch arguments, to point a built app at a
+	     different dataset without editing Swift. A launch argument wins over
+	     these; with neither, the app uses the production backend. -->
+	<key>GSEBaseURL</key>
+	<string>https://galaxysportsedge.com</string>
+	<key>GSEWebOrigin</key>
+	<string>https://galaxysportsedge.com</string>
+	<key>GSEUseMockData</key>
+	<string>false</string>
 	<key>NSAppTransportSecurity</key>
 	<dict>
 		<key>NSAllowsArbitraryLoads</key>

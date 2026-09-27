@@ -211,17 +211,29 @@ final class DomainTests: XCTestCase {
         XCTAssertEqual(store.cookies.count, 2)
     }
 
-    func testOnlySessionCookiesAreTakenOutOfAWebViewJar() {
+    func testOnlySessionCookiesAreTakenOutOfAWebViewJar() throws {
         // The web view's cookie store also holds theme and consent cookies.
         // Persisting those would make the app a general-purpose jar it has no
         // use for.
+        //
+        // Built with a domain and unwrapped with XCTUnwrap rather than `!`.
+        // `HTTPCookie(properties:)` returns nil for a dictionary without a
+        // domain, and force-unwrapping that nil kills the entire test runner:
+        // the suite then reports zero failures while xcodebuild names this one
+        // test as failing, which is the least useful failure mode there is. A
+        // failed unwrap says which cookie was malformed.
+        func cookie(_ name: String, _ value: String) throws -> HTTPCookie {
+            try XCTUnwrap(HTTPCookie(properties: [
+                .name: name,
+                .value: value,
+                .domain: "galaxysportsedge.app",
+                .path: "/"
+            ]), "could not build a \(name) cookie")
+        }
+
         let jar = [
-            HTTPCookie(properties: [
-                .name: "next-auth.session-token", .value: "keep", .path: "/"
-            ])!,
-            HTTPCookie(properties: [
-                .name: "theme", .value: "drop", .path: "/"
-            ])!
+            try cookie("next-auth.session-token", "keep"),
+            try cookie("theme", "drop")
         ]
         let taken = SessionCookieStore.sessionCookies(from: jar)
         XCTAssertEqual(taken.count, 1)
@@ -245,6 +257,49 @@ final class DomainTests: XCTestCase {
         store.clear()
         XCTAssertTrue(store.persist())
         XCTAssertTrue(SessionCookieStore.restore(from: storage).cookies.isEmpty)
+    }
+
+    // MARK: - Plugging in a dataset
+
+    func testALaunchArgumentWinsOverThePlist() {
+        // The whole point of the override: the same binary, pointed somewhere
+        // else, with no rebuild.
+        XCTAssertEqual(
+            AppConfiguration.override("GSEBaseURL", in: ["app", "-GSEBaseURL", "https://data.example.com"]),
+            "https://data.example.com")
+    }
+
+    func testAnEmptyPlistEntryDoesNotShadowTheDefault() {
+        XCTAssertNil(AppConfiguration.override("GSEBaseURL", in: ["app"]))
+    }
+
+    func testATrailingFlagWithNoValueIsIgnored() {
+        // `-GSEBaseURL` at the end of the list has no value. Reading past it
+        // would swallow the next argument.
+        XCTAssertNil(AppConfiguration.override("GSEBaseURL", in: ["app", "-GSEBaseURL"]))
+    }
+
+    func testTheDataSourceSwitchAcceptsWhatPeopleActuallyType() {
+        for raw in ["1", "true", "TRUE", "yes", "on"] {
+            XCTAssertEqual(AppConfiguration.booleanOverride("GSEUseMockData", in: ["-GSEUseMockData", raw]),
+                           true, "\(raw) should read as true")
+        }
+        for raw in ["0", "false", "FALSE", "no", "off"] {
+            XCTAssertEqual(AppConfiguration.booleanOverride("GSEUseMockData", in: ["-GSEUseMockData", raw]),
+                           false, "\(raw) should read as false")
+        }
+        // Nonsense falls back to the product's default rather than guessing.
+        XCTAssertNil(AppConfiguration.booleanOverride("GSEUseMockData", in: ["-GSEUseMockData", "maybe"]))
+        XCTAssertNil(AppConfiguration.booleanOverride("GSEUseMockData", in: ["app"]))
+    }
+
+    func testADataSourceThatIsNotAnAbsoluteURLIsRejected() {
+        // A typo here would otherwise be indistinguishable from an outage.
+        XCTAssertNotNil(AppConfiguration.url(from: "https://data.example.com"))
+        XCTAssertNotNil(AppConfiguration.url(from: "http://10.0.0.5:3000"))
+        XCTAssertNil(AppConfiguration.url(from: "data.example.com"))
+        XCTAssertNil(AppConfiguration.url(from: "/api"))
+        XCTAssertNil(AppConfiguration.url(from: ""))
     }
 
     // MARK: - Sign-in callback validation
