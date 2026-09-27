@@ -143,7 +143,7 @@ export default async function CockpitFounderPicksPage() {
 
         {record.picks.length === 0 ? (
           <p className="mt-4 text-sm text-ion-2">
-            No calls yet. The first one you lock in starts the record.
+            No calls yet. The first one you record starts the record.
           </p>
         ) : (
           <ul className="mt-4 space-y-2">

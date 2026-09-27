@@ -229,8 +229,12 @@ export function computeAdjustments(ctx: AdjustmentContext): Adjustment[] {
   const out: Adjustment[] = [];
   const players = c.players ?? [];
   const starters = c.starters ?? [];
-  const mag = (k: MagnitudeKey, calibratedKeys: ReadonlySet<string>): number =>
-    c.magnitudes?.[k] ?? DEFAULT_MAGNITUDES[k];
+  // The magnitude is the CALLER's value when supplied, else the labelled
+  // UNCALIBRATED default. It deliberately does not read `calibratedKeys`:
+  // whether a value is calibrated is reported per adjustment by `isCal`, and a
+  // magnitude lookup that could see the calibration set would be a second,
+  // quieter place where that claim is made.
+  const mag = (k: MagnitudeKey): number => c.magnitudes?.[k] ?? DEFAULT_MAGNITUDES[k];
   // A key counts as calibrated only when the caller EXPLICITLY supplied it.
   const calibratedKeys = new Set(Object.keys(c.magnitudes ?? {}));
   const isCal = (k: string) => calibratedKeys.has(k);
@@ -277,7 +281,7 @@ export function computeAdjustments(ctx: AdjustmentContext): Adjustment[] {
             rule: "OL_INJURY_QB", category: "OL_INJURY",
             affectedPlayerId: m.playerId, affectedName: m.name, affectedPosition: mp,
             target: "passing_yards", direction: "DOWN",
-            magnitude: mag("OL_INJURY_QB_PASSING_YARDS", calibratedKeys) * strength,
+            magnitude: mag("OL_INJURY_QB_PASSING_YARDS") * strength,
             evidence: {
               rule: "spec §1 — starting lineman absent reduces QB passing efficiency",
               triggered: true,
@@ -293,7 +297,7 @@ export function computeAdjustments(ctx: AdjustmentContext): Adjustment[] {
             rule: "OL_INJURY_RB", category: "OL_INJURY",
             affectedPlayerId: m.playerId, affectedName: m.name, affectedPosition: mp,
             target: "checkdown_share", direction: "UP",
-            magnitude: mag("OL_INJURY_RB_CHECKDOWN", calibratedKeys) * strength,
+            magnitude: mag("OL_INJURY_RB_CHECKDOWN") * strength,
             evidence: {
               rule: "spec §1 — pressure outlet: a missing blocker moves a little share to the back",
               triggered: true,
@@ -310,7 +314,7 @@ export function computeAdjustments(ctx: AdjustmentContext): Adjustment[] {
         rule: "OL_INJURY_TEAM_PASS_RATE", category: "OL_INJURY",
         affectedPlayerId: `team:${team}`, affectedName: team, affectedPosition: "UNK",
         target: "team_pass_rate", direction: "DOWN",
-        magnitude: mag("OL_INJURY_TEAM_PASS_RATE", calibratedKeys) * strength,
+        magnitude: mag("OL_INJURY_TEAM_PASS_RATE") * strength,
         evidence: {
           rule: "spec §1 — less protection, a tick less willingness to throw",
           triggered: true,
@@ -335,7 +339,7 @@ export function computeAdjustments(ctx: AdjustmentContext): Adjustment[] {
               rule: "SECONDARY_INJURY_QB", category: "SECONDARY_INJURY",
               affectedPlayerId: m.playerId, affectedName: m.name, affectedPosition: mp,
               target: "passing_yards", direction: "UP",
-              magnitude: mag("SECONDARY_INJURY_QB_PASSING_YARDS", calibratedKeys) * strength,
+              magnitude: mag("SECONDARY_INJURY_QB_PASSING_YARDS") * strength,
               evidence: {
                 rule: "spec §2 — a missing DB opens throwing lanes",
                 triggered: true,
@@ -351,7 +355,7 @@ export function computeAdjustments(ctx: AdjustmentContext): Adjustment[] {
               rule: "SECONDARY_INJURY_REC", category: "SECONDARY_INJURY",
               affectedPlayerId: m.playerId, affectedName: m.name, affectedPosition: mp,
               target: "fantasy_points", direction: "UP",
-              magnitude: (mag(mp === "WR" ? "SECONDARY_INJURY_WR_FANTASY" : "SECONDARY_INJURY_TE_FANTASY", calibratedKeys)) * strength,
+              magnitude: (mag(mp === "WR" ? "SECONDARY_INJURY_WR_FANTASY" : "SECONDARY_INJURY_TE_FANTASY")) * strength,
               magKey: mp === "WR" ? "SECONDARY_INJURY_WR_FANTASY" : "SECONDARY_INJURY_TE_FANTASY",
               evidence: {
                 rule: "spec §2 — softer coverage shell, more targets for the affected receiver",
@@ -370,7 +374,7 @@ export function computeAdjustments(ctx: AdjustmentContext): Adjustment[] {
         rule: "SECONDARY_INJURY_DST", category: "SECONDARY_INJURY",
         affectedPlayerId: `dst:${team}`, affectedName: team, affectedPosition: "DST",
         target: "defense_points_allowed", direction: "UP",
-        magnitude: mag("SECONDARY_INJURY_DST_ALLOWED", calibratedKeys) * strength,
+        magnitude: mag("SECONDARY_INJURY_DST_ALLOWED") * strength,
         evidence: {
           rule: "spec §2 — the DST that lost a starting DB allows more",
           triggered: true,
@@ -394,7 +398,7 @@ export function computeAdjustments(ctx: AdjustmentContext): Adjustment[] {
               rule: "PASS_RUSH_INJURY_QB", category: "PASS_RUSH_INJURY",
               affectedPlayerId: m.playerId, affectedName: m.name, affectedPosition: mp,
               target: "time_to_throw", direction: "UP",
-              magnitude: Math.abs(mag("PASS_RUSH_INJURY_TIME_TO_THROW", calibratedKeys)) * strength,
+              magnitude: Math.abs(mag("PASS_RUSH_INJURY_TIME_TO_THROW")) * strength,
               evidence: {
                 rule: "spec §3 — fewer rushers means more time in the pocket",
                 triggered: true,
@@ -410,7 +414,7 @@ export function computeAdjustments(ctx: AdjustmentContext): Adjustment[] {
               rule: "PASS_RUSH_INJURY_WR", category: "PASS_RUSH_INJURY",
               affectedPlayerId: m.playerId, affectedName: m.name, affectedPosition: mp,
               target: "fantasy_points", direction: "UP",
-              magnitude: mag("PASS_RUSH_INJURY_WR_FANTASY", calibratedKeys) * strength,
+              magnitude: mag("PASS_RUSH_INJURY_WR_FANTASY") * strength,
               evidence: {
                 rule: "spec §3 — extended drives feed the receiver",
                 triggered: true,
@@ -452,7 +456,7 @@ export function computeAdjustments(ctx: AdjustmentContext): Adjustment[] {
       rule: "DEPTH_CHART_PROMOTION", category: "DEPTH_CHART",
       affectedPlayerId: p.playerId, affectedName: p.name, affectedPosition: pos,
       target: "target_share", direction: "UP",
-      magnitude: mag("DEPTH_CHART_PROMOTION_SHARE", calibratedKeys),
+      magnitude: mag("DEPTH_CHART_PROMOTION_SHARE"),
       evidence: {
         rule: "spec §4 — a promoted backup inherits part of the starter's share",
         triggered: true,
@@ -476,7 +480,7 @@ export function computeAdjustments(ctx: AdjustmentContext): Adjustment[] {
           rule: "WEATHER_WIND", category: "WEATHER",
           affectedPlayerId: p.playerId, affectedName: p.name, affectedPosition: pos,
           target: "pass_attempts", direction: "DOWN",
-          magnitude: mag("WEATHER_WIND_PASS_ATTEMPTS", calibratedKeys) * t,
+          magnitude: mag("WEATHER_WIND_PASS_ATTEMPTS") * t,
           evidence: {
             rule: "spec §5 — sustained wind suppresses pass volume",
             triggered: true, triggerDetail: `${wind} mph sustained`,
@@ -490,7 +494,7 @@ export function computeAdjustments(ctx: AdjustmentContext): Adjustment[] {
           rule: "WEATHER_WIND", category: "WEATHER",
           affectedPlayerId: p.playerId, affectedName: p.name, affectedPosition: pos,
           target: "rushing_attempts", direction: "UP",
-          magnitude: mag("WEATHER_WIND_RUN_RATE", calibratedKeys) * t,
+          magnitude: mag("WEATHER_WIND_RUN_RATE") * t,
           evidence: {
             rule: "spec §5 — sustained wind lifts the run rate",
             triggered: true, triggerDetail: `${wind} mph sustained`,
@@ -518,7 +522,7 @@ export function computeAdjustments(ctx: AdjustmentContext): Adjustment[] {
         rule: "GAME_SCRIPT", category: "GAME_SCRIPT",
         affectedPlayerId: p.playerId, affectedName: p.name, affectedPosition: pos,
         target: "pass_attempts", direction: "UP",
-        magnitude: mag("GAME_SCRIPT_TRAILING_PASS_UP", calibratedKeys) * 0.5,
+        magnitude: mag("GAME_SCRIPT_TRAILING_PASS_UP") * 0.5,
         evidence: {
           rule: "spec §6 — a large spread implies more passing; side unattributed so halved, garbage-time discount applied",
           triggered: true, triggerDetail: `spread ${spread}`,
