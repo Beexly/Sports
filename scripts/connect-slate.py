@@ -3,7 +3,7 @@
 Fantasy, the week-3 game reading, and the lineup solver share one number.
 Salaries are pulled from the public weekly slate pages. Their projections
 are ignored. Thursday's finished game is left out. A player listed out is
-left out. The lineup is cap-feasible. It is not a sportsbook pick.
+left out. The lineup is that edge spent under the salary cap.
 """
 import csv
 import html
@@ -266,6 +266,7 @@ def build_pool(salary_rows, live, prior, position_prior, dst, blocked, tilt, gam
             "salary": row["salary"],
             "site": row["site"],
             "projection": connected,
+            "engine_edge": connected,
             "projection_before_game": base,
             "game_tilt_for_team": environment,
             "game_id": game_of.get(row["team"]),
@@ -353,7 +354,7 @@ def main():
     payload = {
         "projection": "half-PPR, 2026 weeks 1-2 shrunk toward the 2025 per-game mean with 4 games of prior, then times (1 + 0.08 * team tilt)",
         "tilt_source": "week3-engine-readings.jsonl",
-        "publishable_pick": False,
+        "engine_edge": "The shared projection is the edge. The game composite moves it. The salary only decides how it is spent.",
         "draftkings": {
             "source": "https://oneweekseason.com/draftkings-main-slate/",
             "cap": 50000,
@@ -400,9 +401,9 @@ def main():
 
     fantasy = sorted(dk_pool, key=lambda item: -item["projection"])[:15]
     report = [
-        "# Connected slate, week 3",
+        "# Engine edge on the slate, week 3",
         "",
-        "One number feeds the fantasy list and both solvers. The game reading moves it by `1 + 0.08 * team tilt`. Their published projections were not used. This is not a sportsbook pick.",
+        "The edge is our number. Half-PPR history, shrunk toward 2025, moved by the game composite (`1 + 0.08 * team edge`). Fantasy rank and both solvers spend that same edge. Salaries come from the weekly pages. Their projections are not the edge.",
         "",
         f"DraftKings salaries: {len(dk_rows)} rows, {len(dk_pool)} priced, {len(dk_miss)} unmatched, {len(dk_out)} removed as out. Spent {dk_spent} of 50000. Projection sum {dk_score:.2f}.",
         f"FanDuel salaries: {len(fd_rows)} Sunday rows, {len(fd_pool)} priced, {len(fd_miss)} unmatched, {len(fd_out)} removed as out. Spent {fd_spent} of 60000. Projection sum {fd_score:.2f}. Monday is not on the FanDuel page.",

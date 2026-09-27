@@ -1,9 +1,8 @@
-# Engine readings, week 3
+# Engine edge, week 3
 
-The tilt is home-positive and unitless. It is not a win probability. Nothing here is a pick.
+The edge is the weighted composite of the live signals. We build it. The price does not define it. Brier, Kelly, and Bradley-Terry measure it after the fact. A dark family is a named hole, not a reason to call the rest nothing.
 On-field efficiency is a shrunk opponent-adjusted blend: 55% pass EPA residual, 15% rush EPA residual, 15% CPOE, 10% explosive-pass rate, 5% interception luck. The 2025 season is the prior. 2026 weeks 1-2 are the observation.
-Trench is now in the tilt. It is qb_hit per dropback, home net minus away net, and it earned that place with a 2025 walk-forward correlation of 0.241 on 250 games. Fourth-down rate and special-teams EPA were measured and kept out.
-Brier, Kelly, Bradley-Terry, and the closing price do not enter the tilt. The price is withheld on purpose. The meters stay a governor. Calibration on the Elo is still WATCH.
+Trench is in the edge. It is qb_hit per dropback, home net minus away net, measured at r = 0.241 on 250 walk-forward games. Fourth-down rate and special-teams EPA were measured and left out.
 OpenRouter lane: openrouter_unconfigured. No model call was made.
 
 Priors:
@@ -29,7 +28,7 @@ Priors:
 
 Dark share by design: 0.33. Those families are named so they are not forgotten. They contribute nothing until a row exists.
 
-| game | tilt | coverage | dark | rest | roof | referee |
+| game | edge | coverage | dark | rest | roof | referee |
 |---|---:|---:|---:|---:|---|---|
 | ATL at GB | 0.092 | 0.59 | 0.33 | 0 | outdoors | Shawn Smith |
 | ARI at SF | 0.179 | 0.59 | 0.33 | 0 | outdoors |  |
@@ -47,3 +46,15 @@ Dark share by design: 0.33. Those families are named so they are not forgotten. 
 | SEA at WAS | -0.235 | 0.59 | 0.33 | 0 | outdoors |  |
 | TEN at NYG | -0.020 | 0.59 | 0.33 | -1 | outdoors |  |
 | PHI at CHI | -0.013 | 0.59 | 0.33 | 0 | outdoors |  |
+
+
+LAC at BUF, the edge taken apart. The parts sum to the edge.
+
+| signal | signed | points in the edge |
+|---|---:|---:|
+| on_field_efficiency | 0.950 | 0.226 |
+| scheme_play_design | -0.094 | -0.019 |
+| availability | 0.667 | 0.136 |
+| schedule_and_body | 0.429 | 0.058 |
+| historical_strength | 0.556 | 0.075 |
+| trench_personnel | 0.749 | 0.063 |

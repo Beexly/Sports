@@ -1,10 +1,8 @@
 /**
- * Prior weights for the prediction engine.
- *
- * Brier, Kelly, Bradley-Terry, and the closing number are meters or context.
- * They are not the objective. A family with no measured row stays dark at its
- * prior so the missing share is visible. Priors sum to 1. They are not
- * probabilities and they do not publish a pick.
+ * The edge is this composite. Every live signal is part of it.
+ * A family with no row stays named and contributes nothing.
+ * Brier, Kelly, Bradley-Terry, and the price are meters and context.
+ * They score the edge. They do not define it.
  */
 
 export const ENGINE_FAMILIES = [
@@ -29,8 +27,23 @@ export const ENGINE_FAMILIES = [
 export type EngineFamilyId = (typeof ENGINE_FAMILIES)[number]["id"];
 export type EngineFamilyRole = (typeof ENGINE_FAMILIES)[number]["role"];
 
+export interface EngineEdgePart {
+  readonly id: EngineFamilyId;
+  readonly prior: number;
+  readonly signed: number;
+  /** This family's share of the edge. The parts sum to the edge. */
+  readonly points: number;
+}
+
+export interface EngineEdge {
+  readonly definition: "The edge is the weighted composite of the live signals.";
+  readonly value: number | null;
+  readonly parts: readonly EngineEdgePart[];
+}
+
 export interface EngineReading {
   readonly gameId: string;
+  readonly engineEdge: EngineEdge;
   readonly tilt: number | null;
   readonly tiltIsProbability: false;
   readonly publishesPick: false;
@@ -75,6 +88,7 @@ export function composeEngineReading(
   let darkShare = 0;
   let withheldShare = 0;
   let meterShare = 0;
+  const raw: { id: EngineFamilyId; prior: number; signed: number }[] = [];
   const notes: string[] = [];
 
   for (const family of ENGINE_FAMILIES) {
@@ -98,11 +112,23 @@ export function composeEngineReading(
     weight += family.prior;
     mass += family.prior * bounded;
     used.push(family.id);
+    raw.push({ id: family.id, prior: family.prior, signed: bounded });
   }
+
+  const edge = weight > 0 ? mass / weight : null;
+  const parts: EngineEdgePart[] = raw.map((part) => ({
+    ...part,
+    points: edge === null ? 0 : (part.prior * part.signed) / weight,
+  }));
 
   return {
     gameId,
-    tilt: weight > 0 ? mass / weight : null,
+    engineEdge: {
+      definition: "The edge is the weighted composite of the live signals.",
+      value: edge,
+      parts,
+    },
+    tilt: edge,
     tiltIsProbability: false,
     publishesPick: false,
     coverage: weight,

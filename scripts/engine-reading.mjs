@@ -1,6 +1,6 @@
 /**
- * Week-3 engine readings. The tilt is a home-positive mix of the families
- * that have a number. It is not a win probability and it is not a pick.
+ * Week-3 engine edge. The edge is the weighted composite of the live
+ * signals. It is home-positive. It is not a win probability.
  * OpenRouter is called only when OPENROUTER_API_KEY is set.
  */
 import { readFileSync, writeFileSync } from "node:fs";
@@ -88,6 +88,8 @@ for (const context of contexts) {
     rest_diff: game ? game.rest_diff : null,
     elo: elo.get(context.game_id) ?? null,
     market_devig_is_context_only: true,
+    engine_edge: reading.engineEdge.value,
+    engine_edge_parts: reading.engineEdge.parts,
     tilt: reading.tilt,
     tilt_is_probability: false,
     publishes_pick: false,
@@ -105,14 +107,23 @@ for (const context of contexts) {
 const outJson = resolve(root, "data/gse-dataset/current/week3-engine-readings.jsonl");
 writeFileSync(outJson, readings.map((row) => JSON.stringify(row)).join("\n") + "\n");
 
+const buf = readings.find((row) => row.game_id === "2026_03_LAC_BUF");
+const partLines = [
+  "",
+  "LAC at BUF, the edge taken apart. The parts sum to the edge.",
+  "",
+  "| signal | signed | points in the edge |",
+  "|---|---:|---:|",
+  ...buf.engine_edge_parts.map((part) => `| ${part.id} | ${part.signed.toFixed(3)} | ${part.points.toFixed(3)} |`),
+  "",
+];
 const dark = ENGINE_FAMILIES.filter((family) => family.role === "dark");
 const lines = [
-  "# Engine readings, week 3",
+  "# Engine edge, week 3",
   "",
-  "The tilt is home-positive and unitless. It is not a win probability. Nothing here is a pick.",
+  "The edge is the weighted composite of the live signals. We build it. The price does not define it. Brier, Kelly, and Bradley-Terry measure it after the fact. A dark family is a named hole, not a reason to call the rest nothing.",
   "On-field efficiency is a shrunk opponent-adjusted blend: 55% pass EPA residual, 15% rush EPA residual, 15% CPOE, 10% explosive-pass rate, 5% interception luck. The 2025 season is the prior. 2026 weeks 1-2 are the observation.",
-  "Trench is now in the tilt. It is qb_hit per dropback, home net minus away net, and it earned that place with a 2025 walk-forward correlation of 0.241 on 250 games. Fourth-down rate and special-teams EPA were measured and kept out.",
-  "Brier, Kelly, Bradley-Terry, and the closing price do not enter the tilt. The price is withheld on purpose. The meters stay a governor. Calibration on the Elo is still WATCH.",
+  "Trench is in the edge. It is qb_hit per dropback, home net minus away net, measured at r = 0.241 on 250 walk-forward games. Fourth-down rate and special-teams EPA were measured and left out.",
   `OpenRouter lane: ${readings[0].model_lane}. No model call was made.`,
   "",
   "Priors:",
@@ -123,7 +134,7 @@ const lines = [
   "",
   `Dark share by design: ${dark.reduce((sum, family) => sum + family.prior, 0).toFixed(2)}. Those families are named so they are not forgotten. They contribute nothing until a row exists.`,
   "",
-  "| game | tilt | coverage | dark | rest | roof | referee |",
+  "| game | edge | coverage | dark | rest | roof | referee |",
   "|---|---:|---:|---:|---:|---|---|",
 ];
 for (const row of readings) {
@@ -132,6 +143,7 @@ for (const row of readings) {
   );
 }
 lines.push("");
+lines.push(...partLines);
 writeFileSync(resolve(root, "docs/reasoning/week3-engine-readings.md"), lines.join("\n"));
 
 const coverage = readings.map((row) => row.coverage);

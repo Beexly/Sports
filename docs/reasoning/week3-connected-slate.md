@@ -1,6 +1,6 @@
-# Connected slate, week 3
+# Engine edge on the slate, week 3
 
-One number feeds the fantasy list and both solvers. The game reading moves it by `1 + 0.08 * team tilt`. Their published projections were not used. This is not a sportsbook pick.
+The edge is our number. Half-PPR history, shrunk toward 2025, moved by the game composite (`1 + 0.08 * team edge`). Fantasy rank and both solvers spend that same edge. Salaries come from the weekly pages. Their projections are not the edge.
 
 DraftKings salaries: 257 rows, 250 priced, 5 unmatched, 2 removed as out. Spent 49900 of 50000. Projection sum 123.27.
 FanDuel salaries: 330 Sunday rows, 313 priced, 14 unmatched, 3 removed as out. Spent 59900 of 60000. Projection sum 124.17. Monday is not on the FanDuel page.
