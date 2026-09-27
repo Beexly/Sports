@@ -1027,6 +1027,15 @@ export type {
 export { pointBiserial, correlationToMultiplier, tuneSignalWeights, MIN_SAMPLES } from "./tune-signal-weights.js";
 export type { KeyOutcome, TunedWeight } from "./tune-signal-weights.js";
 
+// The GROUP-aware tuner. #924's floors and scales its evidence by the ROW count,
+// but picks cluster by fixture (AGENTS.md: every NFL fixture is THREE `games`
+// rows; the same model-signal selection is published per-series with byte-
+// identical trueProb), so the row count is not the independent sample size.
+// This counts DISTINCT groups and reports the row-count figure alongside so the
+// inflation is visible rather than hidden. Same correlation, honest denominator.
+export { tuneGroupedWeights, multiplierFrom } from "./tune-signal-weights-grouped.js";
+export type { GroupedObservation, GroupedTunedWeight, GroupKey, TunedKey, TuneGroupsOptions } from "./tune-signal-weights-grouped.js";
+
 // The anchor CENSUS that feeds the anchors above. V3-350 requires an AnchorTable
 // and refuses to invent one, so without a measured population the whole chain
 // projects nothing. This measures it from the caller's own rows: no hardcoded
