@@ -96,7 +96,10 @@ export function selectPart(candidate: PartCandidate, representatives: readonly s
     { term: "f2" as const, score: PART_LAMBDA.f2 * f2 },
     { term: "f3" as const, score: PART_LAMBDA.f3 * f3 },
   ];
-  const g = Math.max(scores[0].score, scores[1].score, scores[2].score);
+  // Spread rather than index: Math.max over the same three values, but no
+  // possibly-undefined read, so noUncheckedIndexedAccess is satisfied without an
+  // assertion. The scalarizer's arithmetic is unchanged.
+  const g = Math.max(...scores.map((term) => term.score));
   const winning = scores
     .filter((term) => term.score === g && term.score > 0)
     .sort((a, b) => (a.term < b.term ? -1 : 1))[0];
