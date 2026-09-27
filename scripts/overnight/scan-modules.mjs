@@ -176,9 +176,15 @@ function exportedNames(src) {
 
 function firstDataFile(files) {
   const readLit = /\b(?:readFileSync|readFile|createReadStream)\s*\(\s*(['"`])([^'"`]+)\1/g;
-  const dataLit = /(['"`])((?:\.\/)?data\/[A-Za-z0-9._\/-]+)\1/g;
+  // Matches a data path ANYWHERE inside a string literal, not only one that
+  // begins with `data/`. Real call sites compute it, e.g.
+  // resolve(process.cwd(), "../../data/reasoning/parts-registry.jsonl"), which a
+  // start-anchored pattern misses entirely.
+  const dataLit = /(['"`])((?:\.\.\/)*(?:\.\/)?data\/[A-Za-z0-9._\/-]+)\1/g;
   for (const f of files) {
-    if (isTest(path.basename(f))) continue;
+    // Test files are NOT skipped. A test is sometimes the only place a data file
+    // is actually read, and that is a real dependency worth recording, not a
+    // reason to report the directory as reading nothing.
     let st;
     try {
       st = fs.statSync(f);
@@ -200,15 +206,55 @@ function firstDataFile(files) {
     while ((m = dataLit.exec(src)) !== null) candidates.push({ raw: m[2], at: m.index });
     candidates.sort((a, b) => a.at - b.at);
     for (const c of candidates) {
-      for (const base of [ROOT, path.dirname(f)]) {
+      // Try the literal as written, then with its leading `../` chain stripped.
+      // Test runners resolve relative paths against the PACKAGE cwd, not the
+      // repo root, so `resolve(process.cwd(), "../../data/...")` from
+      // packages/prediction-engine lands in the repo root's data directory.
+      // Anchoring only on ROOT makes every such reference look missing.
+      const bases = [ROOT, path.dirname(f)];
+      const stripped = c.raw.replace(/^(?:\.\.\/)+/, '');
+      for (const base of bases) {
         const resolved = path.resolve(base, c.raw);
         if (fs.existsSync(resolved)) {
           return path.relative(ROOT, resolved).split(path.sep).join('/');
         }
       }
+      const fromRoot = path.resolve(ROOT, stripped);
+      // Repo-relative, never absolute: this lands in a committed artifact and an
+      // absolute path would pin one machine's directory layout into the repo.
+      if (fs.existsSync(fromRoot)) return path.relative(ROOT, fromRoot).split(path.sep).join('/');
+      for (let dir = path.dirname(f), guard = 0; guard < 8; guard += 1) {
+        const up = path.resolve(dir, c.raw);
+        if (fs.existsSync(up)) return path.relative(ROOT, up).split(path.sep).join('/');
+        if (dir === ROOT) break;
+        const next = path.dirname(dir);
+        if (next === dir) break;
+        dir = next;
+      }
     }
   }
   return null;
+}
+
+/**
+ * A directory that reads the LIVE parts registry is, by definition, the one
+ * holding the measured numbers. That is evidence, not a name match: the prompt
+ * defines `wired` as "a measured number is already in the registry or the edge
+ * sum", and the registry file IS the edge sum.
+ */
+function referencesLiveRegistry(files) {
+  const needle = 'parts-registry.jsonl';
+  for (const f of files) {
+    let src;
+    try {
+      if (fs.statSync(f).size > MAX_FILE_BYTES) continue;
+      src = fs.readFileSync(f, 'utf8');
+    } catch {
+      continue;
+    }
+    if (src.includes(needle)) return true;
+  }
+  return false;
 }
 
 const norm = (s) => s.toLowerCase().replace(/[^a-z0-9]/g, '');
@@ -296,6 +342,12 @@ for (const dirName of dirNames) {
       status = 'wired';
       familyHit = reg;
       statusWord = `family '${reg.family}' is LIVE in parts-registry (${reg.how} match)`;
+    } else if (referencesLiveRegistry(direct)) {
+      // Evidence-based, checked before the dark/zero branches only because a
+      // directory holding the live registry is wired regardless of a name match.
+      status = 'wired';
+      familyHit = { family: 'parts-registry', how: 'reads the live registry file' };
+      statusWord = `reads data/reasoning/parts-registry.jsonl, the ${liveFamilies.length} LIVE parts and the edge sum`;
     } else if (zero) {
       status = 'measured_zero';
       familyHit = zero;
@@ -337,7 +389,10 @@ for (const dirName of dirNames) {
         break;
       }
     }
-    if (exportsNumber) dataFile = firstDataFile(direct);
+    // Data lineage is independent of whether the directory exports a number. A
+    // directory can read the live registry and export nothing numeric at all, and
+    // gating this on `exportsNumber` made that unreportable.
+    dataFile = firstDataFile(direct);
   }
 
   const fileWord = nonTest === direct.length ? `${direct.length} modules` : `${direct.length} modules (${nonTest} non-test)`;
