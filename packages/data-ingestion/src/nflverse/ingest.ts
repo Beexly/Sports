@@ -90,8 +90,11 @@ interface PbpProbe {
 }
 
 function unwrap<T>(label: string, result: { ok: true; value: T } | { ok: false; error: Error }): T {
-  if (isOk(result)) return result.value;
-  throw new Error(`${label}: ${result.error.message}`);
+  // Narrow on the discriminant directly. The external isOk() helper is typed
+  // against the nflreadts package's own Result, not this union, so it narrows
+  // nothing here.
+  if (!result.ok) throw new Error(`${label}: ${result.error.message}`);
+  return result.value;
 }
 
 function requireRows(label: string, rows: readonly unknown[]): void {
@@ -323,7 +326,9 @@ export async function ingestNflverseCycle8(): Promise<{ manifestPath: string; da
   }, contractPath));
 
   // Rosters, one season at a time. Season rows and weekly rows share the file;
-  // roster_level tells them apart.
+  // roster_level tells them apart. The nflreadts loaders type rosters as
+  // RosterRecord[]; collect() takes the loose record shape, hence the one
+  // boundary cast — same as contracts below.
   for (const season of SEASONS) {
     const seasonRosters = unwrap(`rosters ${season}`, await loadRosters([season], { format: "parquet" }));
     requireRows(`loadRosters ${season}`, seasonRosters);
@@ -349,9 +354,14 @@ export async function ingestNflverseCycle8(): Promise<{ manifestPath: string; da
   }
 
   for (const season of SEASONS) {
-    const snaps = unwrap(`snap-counts ${season}`, await loadSnapCounts([season], { format: "parquet" }));
+    // loadSnapCounts' package type bottoms out at unknown; the explicit type
+    // parameter names the row shape every downstream step already assumes.
+    const snaps = unwrap<Record<string, unknown>[]>(
+      `snap-counts ${season}`,
+      await loadSnapCounts([season], { format: "parquet" }),
+    );
     requireRows(`loadSnapCounts ${season}`, snaps);
-    const snapOut = collect(snaps as unknown as Record<string, unknown>[], projectSnap);
+    const snapOut = collect(snaps, projectSnap);
     const snapPath = join(DATA_DIR, `snap-counts-${season}.jsonl`);
     await writeJsonl(snapPath, snapOut.kept);
     datasets.push(await finishDataset({

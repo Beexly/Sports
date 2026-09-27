@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-09-27T05:32:20.926Z",
+  "generated_at": "2026-09-27T13:46:37Z",
   "package": "@nflverse/nflreadts",
   "seasons": [
     2018,
@@ -410,5 +410,6 @@
       "bytes": 4641116,
       "zero_refusals": true
     }
-  ]
+  ],
+  "reseal_note": "Seals recomputed from disk by scripts/overnight/reseal-manifest.mjs; entries whose file does not exist were dropped and reported. The ingest re-run remains the gold path for regenerating both files and manifest."
 }

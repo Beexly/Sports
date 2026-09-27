@@ -142,38 +142,86 @@ if (manifest && manifest.publishes_pick !== false) {
   failures.push(`manifest publishes_pick is ${JSON.stringify(manifest.publishes_pick)}, must be false`);
 }
 
-// A participation row carries players_on_field as an array.
+// Structural assertions run against the per-season layout: the combined
+// participation.jsonl / snap-counts.jsonl files no longer exist (2026-09-27
+// integration), so the earliest per-season file from the manifest's own
+// dataset list is the sample. If the layout ever changes again, this follows
+// the manifest instead of a hardcoded name.
+function firstDatasetFile(prefix) {
+  const candidates = expectedSeals
+    .map((e) => ({ file: e.file, season: Number.parseInt(e.file.replace(/^\D+/u, ''), 10) }))
+    .filter((e) => e.file.startsWith(prefix) && Number.isFinite(e.season))
+    .sort((a, b) => a.season - b.season);
+  return candidates[0]?.file ?? null;
+}
+
+const participationFile = firstDatasetFile('participation-');
+const snapFile = firstDatasetFile('snap-counts-');
+const fourthDownFile = firstDatasetFile('fourth-down') ?? 'fourth-down.jsonl';
+
+// A participation row carries players_on_field as an array. The first line of
+// a season file can be a null-personnel play (legal — null stays null), so
+// stream until the first play that HAS a personnel list and assert on that.
 try {
-  const row = await readFirstJsonLine(join(DATA, 'participation.jsonl'));
-  checks.participation_players_on_field_is_array = Array.isArray(row.players_on_field);
-  checks.participation_first_game_id = row.nflverse_game_id ?? null;
-  checks.participation_first_play_id = row.play_id ?? null;
-  checks.participation_first_player_count = Array.isArray(row.players_on_field) ? row.players_on_field.length : null;
-  if (!Array.isArray(row.players_on_field)) failures.push('participation.jsonl: players_on_field is not an array');
+  if (participationFile === null) throw new Error('no per-season participation file in the manifest');
+  const sample = await (async () => {
+    const stream = createReadStream(join(DATA, participationFile), { encoding: 'utf8' });
+    const rl = createInterface({ input: stream, crlfDelay: Infinity });
+    for await (const line of rl) {
+      if (!line.trim()) continue;
+      const candidate = JSON.parse(line);
+      if (Array.isArray(candidate.players_on_field)) return candidate;
+    }
+    return null;
+  })();
+  if (sample === null) throw new Error(`no play with a players_on_field array found in ${participationFile}`);
+  checks.participation_sample = participationFile;
+  checks.participation_players_on_field_is_array = true;
+  checks.participation_first_game_id = sample.nflverse_game_id ?? null;
+  checks.participation_first_play_id = sample.play_id ?? null;
+  checks.participation_first_player_count = sample.players_on_field.length;
+  checks.participation_gsis_resolved_state =
+    sample.players_on_field_gsis === null || sample.players_on_field_gsis === undefined
+      ? 'absent'
+      : Array.isArray(sample.players_on_field_gsis)
+        ? 'array'
+        : 'other';
+  // The crosswalk-resolved column must be same-length wherever it exists on a
+  // play that has personnel. Absent on files written before the enrichment.
+  if (Array.isArray(sample.players_on_field_gsis)) {
+    checks.participation_gsis_resolved_same_length =
+      sample.players_on_field_gsis.length === sample.players_on_field.length;
+    if (sample.players_on_field_gsis.length !== sample.players_on_field.length) {
+      failures.push(`${participationFile}: players_on_field_gsis length differs from players_on_field`);
+    }
+  }
 } catch (e) {
-  failures.push(`participation.jsonl: ${e.message}`);
+  failures.push(`participation sample: ${e.message}`);
 }
 
 // A snap row must NOT have gsis_id.
 try {
-  const row = await readFirstJsonLine(join(DATA, 'snap-counts.jsonl'));
+  if (snapFile === null) throw new Error('no per-season snap-counts file in the manifest');
+  const row = await readFirstJsonLine(join(DATA, snapFile));
   const keys = Object.keys(row);
+  checks.snap_sample = snapFile;
   checks.snap_keys = keys;
   checks.snap_has_gsis_id = keys.includes('gsis_id');
-  if (keys.includes('gsis_id')) failures.push('snap-counts.jsonl: unexpected gsis_id column present');
+  if (keys.includes('gsis_id')) failures.push(`${snapFile}: unexpected gsis_id column present`);
 } catch (e) {
-  failures.push(`snap-counts.jsonl: ${e.message}`);
+  failures.push(`snap-counts sample: ${e.message}`);
 }
 
 // A fourth-down row may carry punt_wp: null. Null is not a zero.
 try {
-  const row = await readFirstJsonLine(join(DATA, 'fourth-down.jsonl'));
+  const row = await readFirstJsonLine(join(DATA, fourthDownFile));
   const keys = Object.keys(row);
+  checks.fourth_down_sample = fourthDownFile;
   checks.fourth_down_has_punt_wp = keys.includes('punt_wp');
   checks.fourth_down_punt_wp_is_null = row.punt_wp === null;
-  if (!keys.includes('punt_wp')) failures.push('fourth-down.jsonl: no punt_wp column');
+  if (!keys.includes('punt_wp')) failures.push(`${fourthDownFile}: no punt_wp column`);
 } catch (e) {
-  failures.push(`fourth-down.jsonl: ${e.message}`);
+  failures.push(`fourth-down sample: ${e.message}`);
 }
 
 const out = {
