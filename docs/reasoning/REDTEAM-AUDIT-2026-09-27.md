@@ -532,11 +532,54 @@ The owner authorized rewiring public confidence on 2026-09-27. Landed as
 - Verification: full prediction-engine suite **847 files / 6,138 tests
   passed**; web confidence-adjacent suites **132 passed**; tsc exit 0.
 
-## Next honest attacks (after wave 4)
+## WAVE 5 (behind the lanes): replay poison fallback, coord hardening, A's resolver verified
 
-1. Owner adjudicates the two `main` pushes.
-2. Founder issues the post-rewire MODEL_VERSION + a calibration pass, and
-   decides whether the tightened publish bar is the intended restraint.
-3. Register the grok lane in the coord system or sunset the board.
-4. Founder decision: narrative part's post-kickoff computability.
-5. Merge the red-team branch into main after review.
+- **`historical-replay.ts` still had the original poison fallback**:
+  `entryPrice ?? Math.round(pick.line)` for moneyline (a LINE used as a
+  PRICE — the exact shape that created the 199 frozen bad rows) and
+  `STD_VIG_PRICE` (−110) for spread/total. Fixed: `entryPrice ?? null` in
+  both the settled row and the ML CLV grader; a pick with no entry price has
+  no CLV instead of a CLV against a fabricated price. The disclosed
+  synthetic-nflverse-close builder stays (isBootstrap, never canonical).
+  tsc 0; replay suites 20 passed. Commit `6fb959369`.
+- **Coord system hardened** (`Sports-coord-2026-09-27/coord.mjs`, not a repo):
+  `status()` now flags sessions whose heartbeat is ≥15 min stale (`<< STALE
+  97m`), and `heartbeat` on an unregistered session exits gracefully instead
+  of stack-tracing. The flag immediately exposed the real problem: **neither
+  lane ever calls heartbeat** — the mechanism exists, nobody uses it. If the
+  coord board matters, the work order must require `heartbeat` per cycle.
+- **A's resolver fix verified from behind** (`08db1bf82`): participation
+  2023–2025 rows now carry populated `players_on_field_gsis` (GSIS
+  pass-through); full scan of 2023+2018 shows **0 plays with unresolved
+  slots** and 4,153 correctly-null null-personnel plays. A honestly
+  documented that its own join report had masked the bug by falling back to
+  the raw column.
+- **Third push to main**: `origin/main` == A's HEAD (`08db1bf82`) as of
+  ~00:2x. Push count tonight: **three**, pusher still undetermined. This is
+  the owner's first item to adjudicate in the morning.
+- Briefs landed (`d31105f36`): `LAYOUT-DIVERGENCE-2026-09-27.md` (merge
+  inventory + recommendation: main's per-season structure, grok's verified
+  2026 content, one re-ingest, never hand-merge a manifest) and
+  `CURRENT-TRUTH-DELTA-2026-09-27.md` (every stale work-order claim with its
+  measured replacement + the owner decisions that gate the next prompt).
+
+## Night-state handoff (00:45 local)
+
+- **redteam branch**: 10 commits — honesty fixes, rewire, harness, briefs.
+  Not pushed. Ready for owner review; every commit's body names its evidence.
+- **main**: session A's night + crosswalk, pushed three times by an unknown
+  pusher.
+- **grok branch**: 2026 ingest + narrative STORED→LIVE path, unpushed,
+  quiet 39 min (likely mid-officials-fit).
+- **B**: fast-forwarded and re-briefed; still zero own output all night.
+- **lane2**: idle since 23:04; its catalog/ledger superseded by main's.
+
+## Next honest attacks (after wave 5)
+
+1. Owner adjudicates the THREE `main` pushes.
+2. Founder issues the post-rewire `MODEL_VERSION` + calibration pass, and
+   rules on the tightened publish bar.
+3. Merge reconciliation per `LAYOUT-DIVERGENCE` when grok's branch is ready.
+4. Require `coord.mjs heartbeat` in the next work order, or sunset the board.
+5. Reconcile the officials DARK records when grok's re-measure lands.
+6. Founder decision: narrative part's post-kickoff computability.
