@@ -94,6 +94,127 @@ budget-capped key for a month and compare. (6) Instant rollback is the runbook
 for the next bad deploy (`vercel promote`, no rebuild).
 Founder taps: spend budget in the Vercel dashboard; AI Gateway pilot decision.
 
+## NEON COST & LEVERAGE — ROUND 2 (2026-09-28, founder)
+
+Deep-platform value, verified against current neon.com/docs this session.
+Full research: `docs/data-sources/research/2026-09-28/neon-max-leverage-round2-2026-09-28.md` (+ `neon-max-leverage-round2/round2-laneA|B|C.md` detail).
+
+(1) **pg_cron IS available** (Neon's own docs contradict stale third-party tables).
+3-step enablement: API-set `cron.database_name` (needs Neon API key), restart
+compute, `CREATE EXTENSION`. Per-branch, UTC schedules. Neon's verbatim rule:
+jobs only run when the compute is ACTIVE. Our 23 Vercel crons already pin the
+compute awake, so moving pure-SQL maintenance jobs (prune-rate-limits,
+calibration rollups, reconcile-entitlements) onto pg_cron costs ~$0 marginal
+and deletes Vercel invocations + the cron-timeout failure mode. (2) **pgvector
+on every plan, no add-on** (v0.8.x HNSW ≤ 2,000 dims — bge-m3's 1,024 fits).
+Embeddings live in the system of record, JOINable with predictions; kills any
+future Pinecone/Weaviate bill. (3) **Neon-Managed Vercel integration** — branch-
+per-preview done right. NEVER the Vercel-Managed "Native" flavor: it provisions
+a NEW Neon project, can't attach to gse-postgres, breaks `neon login`, and
+deleting from Vercel permanently deletes the DB. Branch-per-preview is NOT a
+cost bomb (idle branches scale to zero independently, first 10 free on Launch,
+extras $1.50/branch-mo prorated hourly) — risk is cleanup lag: janitor cron
+for `preview/*` branches > 7 days with no open PR. (4) **Scheduled Neon
+Functions** — native cron triggers (shipped ~2026-09-21), scale-to-zero-
+compatible, FREE during public beta. Signals writer models at ~$0.59/mo post-
+beta. Honest caveat: does NOT cut the $19.35/mo DB bill — it queries the same
+branch compute and the other 22 crons pin it awake anyway. Needs project region
+in us-east-1/us-east-2/eu-central-1/ap-southeast-1. (5) **Data API (managed
+PostgREST) + RLS for public reads** — no separate charge. `anonymous` role +
+`GRANT SELECT` + RLS `is_published = true` on published views = the
+public/private doctrine as infrastructure; deletes Vercel API-route invocations
+for the hottest reads. Catches: no official rate limiting (put Cloudflare or
+Vercel in front), manual schema-cache refresh after migrations, JWT required
+even for anonymous, SQL views/RPC only (no business logic). (6) **Pooling
+migration checklist**: `DATABASE_URL` = pooled + `?pgbouncer=true`
+(disables Prisma's prepared-statement caching path); `DIRECT_URL` = direct for
+migrate/push/pull/pg_dump. Stay on direct permanently: `SET`/`RESET`,
+LISTEN/NOTIFY, WITH HOLD cursors, SQL-level PREPARE, session advisory locks.
+(7) **TimescaleDB + pg_partman both listed** — continuous aggregates +
+retention policies could retire hand-rolled rollup/prune jobs; evaluate on a
+throwaway branch. (8) **Do NOT run 24/7 logical replication for analytics** —
+a connected subscriber pins prod compute awake ($19.35/mo at 0.25 CU,
+$77.40/mo at 1 CU min), plus traffic counts against the 500 GB allowance.
+Use throwaway analytics branches or scheduled exports instead. (9) **Autoscale
+worst-case math** ($0.106/CU-hr Launch): 4 CU x 3h backfill = $1.27; 16 CU
+runaway x 48h weekend = $81.41 vs $5.09 (1 CU cap) vs $2.54 (0.5 CU cap) —
+grounds the 0.5–1 CU default cap. (10) **pg_net / pg_http NOT available** —
+no webhooks from SQL; outbound path = Vercel cron or Neon Function polling a
+queue table. (11) **Object Storage + Function (`sharp`) image pipeline** —
+resize-once-at-write replaces Vercel image transforms ($0.05–$0.0812/1K);
+$0.023/GB-mo, no per-op fees. No on-the-fly resizing; beta-era eligibility
+needs a console check. (12) **Neon Auth**: 1M MAU included on Launch — no
+paid auth spend today, so this is $300–2,880/yr avoidance insurance; users
+live in our own `neon_auth` schema (branch-aware, RLS-compatible). MFA/SSO
+still missing — migrate only if next-auth v5 beta becomes a liability.
+Correction to round-1: the Functions "10 active/400 waiting CH" and 5 GB
+Object Storage free allowances are **Free-plan-only**, not Launch — both are
+cheap usage billing on Launch.
+
+## VERCEL COST & LEVERAGE — ROUND 2 (2026-09-28, founder)
+
+Full research: `docs/engine/research/2026-09-28/vercel-max-leverage-round2-2026-09-28.md`
+(+ `vercel-max-leverage-round2/r2-gateway-shootout.md|r2-caching.md|r2-platform.md`
+detail). Consolidation audit: `docs/engine/research/2026-09-28/consolidation-neon-vercel-vs-paid-services-2026-09-28.md`.
+
+(1) **AI Gateway price shootout** (per 1M in/out, fetched 2026-09-28): Claude
+Sonnet 5.5 $2.00/$10.00 live; Grok 4.7 $2.00/$6.00 live; GPT-4o-mini $0.15/$0.60
+(zero-markup policy); OpenRouter effective = list x1.055 (the 5.5% deposit
+fee: $50/mo -> $52.75, $200/mo -> $211.00). **Gateway wins or ties on every
+basket model** — OpenRouter's only win is Llama 3.1 8B raw list. Discounted
+below-list today: gemini-3.x flashes -50%, mercury-2.5 -80%, longcat-2.5 -59%
+(we rotate our lanes onto discounted models when the work fits). BYOK = $0
+gateway fee. Per-request ZDR and `disallowPromptTraining` are FREE — every
+basket family has a no-prompt-training agreement **except DeepSeek**
+(assumed-trains unless filtered, which blocks DeepSeek routes). **Run the $5/mo
+free credit first — first top-up forfeits it permanently.** (2) **Preview
+deploy controls** — the unbounded tail risk: every push = a full billed build
+even on failure; 50+ failed deploys ~= 200 wasted build-minutes; a measured
+build-heavy setup burned $269/30d. Fixes: `ignoreCommand` (extend beyond
+docs-only), disable auto-preview on agent branches in vercel.json, dashboard
+Project Settings -> Git, `github.autoJobCancelation: true`. (3) **Firewall**
+(dashboard-only, zero code, rulesets free on Pro): AI Bots Log 7 days -> Deny;
+Bot Protection -> Challenge (JS challenge); `/api/*` 100 req/60s/IP -> 429;
+challenge scraper UAs (python-requests, Go-http-client, Scrapy, curl, wget).
+Every blocked scraper saves bandwidth ($0.15/GB), invocations, compute.
+(4) **ISR patterns (previous Next.js model — no cacheComponents migration yet)**:
+public projections `revalidate = false` + on-demand `revalidatePath` from a
+CRON_SECRET route with warm-up fetch; rankings `revalidate = 86400` safety
+net + on-demand primary; internal APIs `dynamic = 'force-dynamic'` (auto
+private, no manual headers — the public/private fence as cache policy). One
+uncached fetch or `cookies()`/`headers()` poisons the whole route dynamic.
+PPR holes still invoke the function — hole-free ISR is cheaper for uniform
+pages. Cron routes must use `revalidateTag(tag, 'max')` (updateTag is Server
+Actions only). (5) **Fluid sizing on all 23 crons**: `memory: 512`,
+`maxDuration: 120-180` in vercel.json functions config — memory is ~70% of an
+I/O-bound run's cost; the real value is the hung-run guardrail. (6) **Signals
+chain -> 1 Workflow** (write->slate->settle->alerts): ~$0.81/mo events,
+cost-neutral vs crons, wins = retries + no missed/duplicated ticks + uncapped
+sleep() for game-finalization polling. Migrate one chain first on preview.
+(7) **Observability $0-3/mo**: free logs + usage dashboard + spend alerts;
+Observability Plus on prod only ($1.20/1M events, no base fee); skip log
+drains ($0.50/GB). (8) **Sandbox as fleet backtest executor**: Pro has NO
+included allowance (the "5 CPU-hrs" figures are Hobby) — but ~100
+backtests/mo ~= $11, inside the $20 credit. Firecracker microVMs, iad1, 24h
+sessions, outbound network — hit Neon via read-only role + branch string.
+(9) **Middleware matcher audit**: 1M included, then $0.65/1M — narrow to
+fenced/internal paths only. (10) **Allowances sweep**: Web Analytics 100K
+events + Speed Insights 10K are ~$10/mo of included value — BUT do NOT switch
+off free Cloudflare/Clarity for Vercel Web Analytics (no included events on
+Pro, $0.03/1K — would CREATE spend).
+
+Consolidation audit highlights (14 services mapped): 4 LLM routers ->
+1 primary + 1 fallback (Vercel AI Gateway pilot: one budget-capped key, one
+lane, one month); HF PRO usage-vs-price audit (ZeroGPU too small/pricey for
+fleet inference — downgrade candidate, do not cancel blind); Sentry ->
+kill if paid / uninstall if unset / keep if free (check SENTRY_DSN + tier);
+next-auth -> Neon Auth is operational only ($0 today — low priority, real
+migration risk); future vector DB -> Lakebase Search (kills a Pinecone bill
+before it exists); backtest artifacts -> Neon Object Storage; **do NOT buy
+Upstash Redis** (cache module is store-agnostic; Postgres-backed cache is the
+fallback); honest gaps with no native replacement: email (Resend free 3k/mo),
+payments (Stripe fees), odds data ($30/mo, enrichment-only by design).
+
 ---
 
 **UPDATED 2026-09-13 (Motif — game-day calibration pass + v5.3.0 spec).** Founder ordered a full
@@ -4616,3 +4737,4 @@ Window: posts after ~9:10 AM CDT through ~9:10 PM CDT Sun 2026-09-27. Read-only 
 - Standing loose end (carried): "Bryce Young map" screenshot from the 2026-09-20 PM sweep remains undescribed/uninventoried; no source file found in the local checkout.
 - @sambruchhaus posted additional in-window SNF commentary (McVay halftime, Davis Webb rollout rate, Adams-vs-Surtain angle, respected-corners coverage, Rams pressure rate, Saints 11-personnel 55.2%, Kubiak 27.78% play-action rate, Dak-targeting-Humphrey narrative, Kyler Murray aDOT/time-to-throw) — seen but not fully transcribed; available as a follow-up read if the benchmark needs it.
 - Two @GridironInfo_ posts ("Drake Maye last 7 games" ~9:20 PM, CAR@CLE game recap ~9:25 PM CDT) arrived after the ~9:10 PM window cutoff — excluded; first candidates for the next sweep.
+
