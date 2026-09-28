@@ -43,7 +43,11 @@ import { captureError } from "@/lib/observability/sentry";
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
+/** Headroom for serializing the response before the function is killed. */
+const TAIL_RESERVE_MS = 20;
+
 export async function GET(req: Request): Promise<NextResponse> {
+  const startedAtMs = Date.now();
   const denied = await cronAuthError(req);
   if (denied) return denied;
 
@@ -119,7 +123,16 @@ export async function GET(req: Request): Promise<NextResponse> {
 
   let report;
   try {
-    report = await writeSignalCandidates(db, candidates);
+    // Stop early rather than 504. Measured 2026-09-28: the first live tick
+    // returned 504 because this writes one row at a time over the full
+    // candidate set. The deadline is absolute (from THIS route's start) and
+    // leaves a tail reserve for serializing the response, because a run that
+    // spends the whole budget in upserts never gets to report what it did —
+    // and a write that cannot report is indistinguishable from a write that
+    // did nothing. Unreached candidates are picked up by the next hourly tick:
+    // every write is an upsert on the unique tuple, so re-running converges.
+    const deadline = new Date(startedAtMs + (maxDuration - TAIL_RESERVE_MS) * 1000);
+    report = await writeSignalCandidates(db, candidates, { deadline });
   } catch (error) {
     captureError(error, { tags: { surface: "signal-ledger-write" } });
     return NextResponse.json(

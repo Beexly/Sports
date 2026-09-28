@@ -249,7 +249,7 @@ export function projectSignalCandidates(input: {
 export async function writeSignalCandidates(
   db: SignalWriterDb,
   candidates: readonly SignalWriteCandidate[],
-  options: { batchSize?: number } = {},
+  options: { batchSize?: number; deadline?: Date } = {},
 ): Promise<SignalWriteReport> {
   const batchSize = options.batchSize ?? 500;
   const report: SignalWriteReport = {
@@ -262,6 +262,21 @@ export async function writeSignalCandidates(
   if (candidates.length === 0) return report;
 
   for (let i = 0; i < candidates.length; i += batchSize) {
+    // DEADLINE. Measured in production 2026-09-28: this route returned 504
+    // ("Vercel Runtime Error") on its first live tick because it upserts one
+    // row at a time, sequentially, over the full candidate set. Stopping at a
+    // wall-clock deadline is safe precisely BECAUSE every write is an upsert
+    // keyed on (entityType, entityId, key, season, week): whatever this run
+    // does not reach, the next run re-does identically and converges. The
+    // alternative — truncating silently — would read as a populated table
+    // that is quietly partial, which is the exact failure the report exists
+    // to make visible. `remaining` states it instead.
+    if (options.deadline !== undefined && new Date() >= options.deadline) {
+      report.errors.push(
+        `deadline reached with ${candidates.length - i} candidates unwritten; the next run resumes and converges (upserts are idempotent)`,
+      );
+      break;
+    }
     const batch = candidates.slice(i, i + batchSize);
     report.batches += 1;
     for (const c of batch) {

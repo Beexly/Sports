@@ -191,6 +191,77 @@ describe("writeSignalCandidates", () => {
     expect(report.errors[0]).toContain("bad");
   });
 
+  it("stops at the deadline and REPORTS the remainder — never truncates silently", async () => {
+    // This is the production bug, pinned. The route's first live tick returned
+    // 504 because it upserts one row at a time over the full candidate set.
+    // The fix is a deadline; the risk that fix introduces is a write that
+    // quietly stops and reads as complete. So the remainder must be REPORTED.
+    let calls = 0;
+    const slowDb = {
+      signal: {
+        upsert: async () => {
+          calls += 1;
+          return {};
+        },
+      },
+    } as never;
+    const rows = Array.from({ length: 1200 }, (_, i) => ({
+      entityType: "player" as const,
+      entityId: `p${i}`,
+      key: "pgs.target_share",
+      category: "PRODUCTION",
+      value: 0.5,
+      valueRaw: 0.5,
+      season: 2026,
+      week: 1,
+      capturedAt: new Date("2026-09-28T00:00:00Z"),
+      fetchedAt: new Date("2026-09-28T00:00:00Z"),
+      sourceId: "nflverse",
+      rightsSnapshot: { source: "nflverse", dataset: "pgs.target_share", measured: true },
+    }));
+    // A deadline already in the past: the first batch check trips.
+    const report = await writeSignalCandidates(slowDb, rows, {
+      deadline: new Date(Date.now() - 1000),
+    });
+    expect(calls).toBe(0);
+    expect(report.written).toBe(0);
+    expect(report.errors.join(" ")).toMatch(/deadline reached/i);
+    // The number that matters: it says how much was NOT done.
+    expect(report.errors.join(" ")).toMatch(/1200/);
+  });
+
+  it("writes every row when the deadline has not passed", async () => {
+    let calls = 0;
+    const okDb = {
+      signal: {
+        upsert: async () => {
+          calls += 1;
+          return {};
+        },
+      },
+    } as never;
+    const rows = Array.from({ length: 3 }, (_, i) => ({
+      entityType: "player" as const,
+      entityId: `p${i}`,
+      key: "pgs.target_share",
+      category: "PRODUCTION",
+      value: 0.5,
+      valueRaw: 0.5,
+      season: 2026,
+      week: 1,
+      capturedAt: new Date("2026-09-28T00:00:00Z"),
+      fetchedAt: new Date("2026-09-28T00:00:00Z"),
+      sourceId: "nflverse",
+      rightsSnapshot: { source: "nflverse", dataset: "pgs.target_share", measured: true },
+    }));
+    const report = await writeSignalCandidates(okDb, rows, {
+      deadline: new Date(Date.now() + 60_000),
+    });
+    expect(calls).toBe(3);
+    expect(report.written).toBe(3);
+    expect(report.errors).toHaveLength(0);
+  });
+
   it("writes nothing and reports zero for an empty candidate set", async () => {
     const { db, calls } = fakeDb();
     const report = await writeSignalCandidates(db, []);
