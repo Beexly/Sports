@@ -16,6 +16,33 @@ import { freshnessMode, resolveFreshnessThresholdMs } from "./freshness-schedule
 // classified live.
 const MAX_CLOCK_SKEW_MS = 5 * 60 * 1000; // 5 minutes
 
+/**
+ * Upper bound on the magnitude of an accepted American price.
+ *
+ * WHY THIS EXISTS (measured 2026-09-28 on live Neon, 2,613,507 `odds` rows with
+ * `market='H2H'`): the magnitude>=100 floor below was the ONLY bound, so
+ * implausible upstream prices entered the feed intact — 509,201 rows with
+ * `homePrice` outside -500..+500, reaching -100,000 (fanatics) and
+ * -200,000 (williamhill_us). Every one of those books is a real book, so this
+ * is not a bad-book problem.
+ *
+ * The downstream damage is measured, not theoretical: of 1,293 MONEYLINE picks,
+ * 143 carry a `clvLockPrice` outside -500..-101, and `scoring.ts` rejects any
+ * moneyline pick at `fairProb < 0.58` — the same threshold that a de-vigged
+ * 0.9994 probability trips. So a runaway upstream price feeds `removeVig()` →
+ * `computeEdgeScore()` → a 99.9% "consensus" and publishes a pick at -21200
+ * (e.g. "San Diego Padres ML (-21200)"). That number is not tradeable, it is
+ * not a real quoted price, and `clvLockPrice` for such a row is not an entry
+ * price — so moneyline CLV and moneyline EV are UNPUBLISHABLE until these rows
+ * are refused at the boundary.
+ *
+ * 500 is deliberately generous: the genuine tail of the feed tops out near
+ * -535 (espn_public) and -510 (fanduel), so this cuts nothing real. It is a
+ * correctness floor, not a tuning knob, and it is a FUNCTION of price
+ * validity — it does not touch any gate, floor, flag, or MODEL_VERSION.
+ */
+const MAX_AMERICAN_PRICE_MAGNITUDE = 500;
+
 export class DataNormalizer {
   /**
    * Guard the odds-format boundary.
@@ -29,11 +56,18 @@ export class DataNormalizer {
    * pricing edge (the root of the "Edge Index 100" board bug). Drop any price
    * that is not a valid American number so it never enters scoring; a market
    * with too few usable prices is simply skipped by the engine.
+   *
+   * BOTH ends are bounded: the magnitude floor rejects decimal/malformed odds,
+   * and MAX_AMERICAN_PRICE_MAGNITUDE rejects the runaway prices above. A market
+   * whose prices are all refused is skipped downstream, which is the correct
+   * outcome — it means we do not have a real price to publish.
    */
   private sanitizeAmericanPrice(price: number | undefined): number | undefined {
     if (price === undefined || price === null) return undefined;
     if (!Number.isFinite(price)) return undefined;
-    if (Math.abs(price) < 100) return undefined; // decimal / malformed — not American
+    const magnitude = Math.abs(price);
+    if (magnitude < 100) return undefined; // decimal / malformed — not American
+    if (magnitude > MAX_AMERICAN_PRICE_MAGNITUDE) return undefined; // runaway
     return price;
   }
 
