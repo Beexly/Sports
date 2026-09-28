@@ -146,6 +146,17 @@ export async function GET(req: Request): Promise<NextResponse> {
     );
   }
 
+  // One line per tick, on stderr. MEASURED 2026-09-28: the Vercel log viewer
+  // truncates the response body, and a 200 is byte-identical whether this wrote
+  // forty rows or forty thousand. That is the whole reason the table could sit
+  // empty for the life of the project — a green cron that was writing nothing
+  // looked exactly like a green cron that was writing. The count belongs in the
+  // log where anyone can read it without an authenticated ops call.
+  process.stderr.write(
+    `[cron:signal-ledger-write] candidates=${report.candidates} written=${report.written} ` +
+      `skipped=${report.skipped} batches=${report.batches} errors=${report.errors.length}\n`,
+  );
+
   return NextResponse.json({
     success: report.skipped === 0,
     data: {
