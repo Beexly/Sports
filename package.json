@@ -53,6 +53,8 @@
     "guard:commercial-copy": "node scripts/guardrails/commercial-copy-scan.mjs",
     "guard:performance-claims": "node scripts/guardrails/no-unsupported-performance-claims.mjs",
     "guard:no-raw-ngs": "node scripts/guardrails/no-raw-ngs-export.mjs",
+    "guard:public-surface-doctrine": "node scripts/guardrails/public-private-surface-doctrine.mjs",
+    "test:public-surface-doctrine": "node --test scripts/guardrails/public-private-surface-doctrine.test.mjs",
     "guard:partner-offers": "node scripts/guardrails/partner-offer-compliance-scan.mjs",
     "guard:api-payload-rights": "node scripts/guardrails/api-payload-rights-scan.mjs",
     "guard:openapi-security": "node scripts/guardrails/openapi-security-scan.mjs",
