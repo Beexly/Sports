@@ -24,6 +24,20 @@ always. Never at a bucket root, never in `docs/research/`, never in a new
 top-level folder. Bucket by main topic; if none fits, closest bucket + say so
 in the commit message.
 
+---
+
+## INGEST-AND-LEARN DOCTRINE (2026-09-28, founder — HARD)
+
+**DO NOT CLAIM THINGS ARE DEAD UNTIL TESTED AND CITED AND CONFIRMED.** Nothing is
+discarded, skipped, or written off without the founder's consent. Untested items are
+**UNTESTED — QUEUED FOR EVALUATION**, never SKIP/DEAD. Likes, stars, and vibes are not
+evidence of deadness.
+
+**WE INGEST, WE LEARN.** We do not use commercial data commercially, and we do not sell
+their data. We learn from it with intelligence and reasoning — methods, patterns,
+structures — then give our own analysis. A restrictive license means research/learn-only,
+never "throw it away." Full doctrine: `docs/governance/ingest-and-learn-doctrine.md`.
+
 
 **UPDATED 2026-09-13 (Motif — game-day calibration pass + v5.3.0 spec).** Founder ordered a full
 review/rebuild of the prediction engine ("extremely in depth", "trust no claims", ship direct to
