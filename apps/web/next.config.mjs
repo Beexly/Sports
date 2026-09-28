@@ -47,10 +47,16 @@ const nextConfig = {
       // of a path built with `join()` + `existsSync()`, so nothing pulls
       // data/gse-dataset/ into the function. The walk-up then correctly fails and
       // falls back to cwd, which reports the honest path and takes the board down
-      // with it. These two crons are the ONLY consumers of that dataset, so they
-      // are the only routes that need it traced.
-      "/api/cron/board-fill": ["../../data/gse-dataset/**/*"],
-      "/api/cron/generate-signal-slate": ["../../data/gse-dataset/**/*"],
+      // These two crons are the ONLY consumers of that dataset, so they are
+      // the only routes that need it traced. The glob is deliberately the ONE
+      // FILE, not `data/gse-dataset/**`: that directory is 445MB, dominated by
+      // participation-*.jsonl (42MB each, 7 of them) which neither route reads.
+      // Tracing the directory produced a 467.65MB serverless function and Vercel
+      // rejected it (measured on dpl_HNMeSEoLgQnvWgKUYzvTcBnJzPEj, 2026-09-28:
+      // "exceeds the maximum uncompressed size limit of 250mb"). The guard reads
+      // exactly one file, so exactly one file is traced — 85,924 bytes.
+      "/api/cron/board-fill": ["../../data/gse-dataset/bridge-premises.jsonl"],
+      "/api/cron/generate-signal-slate": ["../../data/gse-dataset/bridge-premises.jsonl"],
     },
   },
   webpack: (config) => {
