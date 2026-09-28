@@ -115,4 +115,40 @@ describe("GET /api/cron/signal-ledger-write", () => {
       delete process.env["SIGNAL_LEDGER_SHARD"];
     }
   });
+
+  it("ROTATES the shard by hour so consecutive ticks cover the whole population", async () => {
+    // The bug this pins: with a constant 0/1 shard the deadline stops each run
+    // at 80,000 of 118,402 rows, so the same leading rows are rewritten hourly
+    // and the tail (MEASURED 38,402 rows, 32.4%) is never reached — while the
+    // log still reports a normal-looking tick. Vercel crons cannot carry a
+    // per-entry env var, so a shard nobody sets stays 0 forever.
+    delete process.env["SIGNAL_LEDGER_SHARD"];
+    const seen: string[] = [];
+    for (let hour = 0; hour < 4; hour += 1) {
+      writeSignalCandidates.mockClear();
+      // Freeze the clock to a distinct hour for each simulated tick.
+      const realNow = Date.now;
+      Date.now = () => Date.UTC(2026, 8, 28, hour, 23, 0);
+      try {
+        const res = await invoke();
+        const body = (await res.json()) as { data: { shard: string } };
+        seen.push(body.data.shard);
+      } finally {
+        Date.now = realNow;
+      }
+    }
+    // Consecutive hours must alternate, or the tail is unreachable forever.
+    expect(new Set(seen).size).toBeGreaterThan(1);
+  });
+
+  it("an explicit SIGNAL_LEDGER_SHARD still wins over the rotation", async () => {
+    process.env["SIGNAL_LEDGER_SHARD"] = "0/2";
+    try {
+      const res = await invoke();
+      const body = (await res.json()) as { data: { shard: string } };
+      expect(body.data.shard).toBe("0/2");
+    } finally {
+      delete process.env["SIGNAL_LEDGER_SHARD"];
+    }
+  });
 });
