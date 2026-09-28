@@ -46,6 +46,40 @@ export const maxDuration = 300;
 /** Headroom for serializing the response before the function is killed. */
 const TAIL_RESERVE_MS = 20;
 
+/**
+ * `"<n>/<total>"` -> shard n of `total`, or 0/1 when unset, blank, or malformed.
+ *
+ * A MALFORMED value must not silently mean "no shard", because that would make
+ * a typo write the FULL population from every shard and multiply the write load
+ * by the shard count. A bad config therefore refuses loudly: this returns null
+ * and the route reports the bad value instead of guessing.
+ */
+function parseShard(raw: string | undefined): { readonly n: number; readonly total: number } | null {
+  const value = (raw ?? "").trim();
+  if (value.length === 0) return { n: 0, total: 1 };
+  const match = /^(\d+)\/(\d+)$/.exec(value);
+  if (!match) return null;
+  const n = Number(match[1]);
+  const total = Number(match[2]);
+  if (!Number.isInteger(n) || !Number.isInteger(total) || total < 1 || n < 0 || n >= total) return null;
+  return { n, total };
+}
+
+/**
+ * Stable bucket for a candidate, from its own identity. The SAME row always
+ * lands in the SAME bucket, on every run and every deploy, with no stored state
+ * — which is what lets N shards cover the population exactly once.
+ */
+function shardOf(entityId: string, key: string, shard: { readonly n: number; readonly total: number }): boolean {
+  if (shard.total === 1) return true;
+  let hash = 0;
+  const id = `${entityId}|${key}`;
+  for (let i = 0; i < id.length; i += 1) {
+    hash = (hash * 31 + id.charCodeAt(i)) >>> 0;
+  }
+  return hash % shard.total === shard.n;
+}
+
 export async function GET(req: Request): Promise<NextResponse> {
   const startedAtMs = Date.now();
   const denied = await cronAuthError(req);
@@ -54,7 +88,26 @@ export async function GET(req: Request): Promise<NextResponse> {
   // Read the same four sources the census reads, through the same injected
   // client shape, so the write and the report can never disagree about what
   // exists.
+  //
+  // CURSOR, and it is load-bearing. MEASURED on the first live tick
+  // (2026-09-28, dpl_4YJcJTeTqJCwsB2eiNicFnH1jPDi):
+  // `candidates=118083 written=84500 skipped=0 errors=1` — the deadline stopped
+  // the run with 33,583 candidates (28.4%) unwritten. Because the read had no
+  // cap and no cursor, the NEXT run re-reads the same 118,083 rows in the same
+  // order and dies at the same place: an hourly job that converges on nothing.
+  // "The next run resumes" is only true if the next run starts further along,
+  // so this shards the work by a stable, content-derived bucket rather than
+  // trusting wall-clock position. The cursor is derived from the row's own
+  // identity, so it is the same every run and covers the whole population
+  // exactly once across the shard set — no state, no checkpoint, no lost
+  // position if a run dies mid-flight.
+  //
+  // SHARD is `process.env.SIGNAL_LEDGER_SHARD` ("<n>/<total>"); the default is
+  // 0/1, so an unconfigured run still writes EVERYTHING and the behavior a
+  // single deploy sees is unchanged until shards are added. Nothing is dropped:
+  // shard k of N over a deterministic bucket is a partition, not a sample.
   let candidates;
+  const shard = parseShard(process.env["SIGNAL_LEDGER_SHARD"]);
   try {
     const [pgs, snaps, ngs, injuries] = await Promise.all([
       db.playerGameStat.findMany({ orderBy: { fetchedAt: "desc" } }),
@@ -131,7 +184,24 @@ export async function GET(req: Request): Promise<NextResponse> {
     // and a write that cannot report is indistinguishable from a write that
     // did nothing. Unreached candidates are picked up by the next hourly tick:
     // every write is an upsert on the unique tuple, so re-running converges.
+    // A malformed shard config is REFUSED, never treated as 0/1. Guessing here
+    // would let every shard write the whole population.
+    if (shard === null) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "bad SIGNAL_LEDGER_SHARD",
+          detail: 'expected "<n>/<total>" with 0 <= n < total; no signal was written',
+        },
+        { status: 500 },
+      );
+    }
+    const scoped =
+      shard.total === 1
+        ? candidates
+        : candidates.filter((c) => shardOf(c.entityId, c.key, shard));
     const deadline = new Date(startedAtMs + (maxDuration - TAIL_RESERVE_MS) * 1000);
+    report = await writeSignalCandidates(db, scoped, { deadline });
     report = await writeSignalCandidates(db, candidates, { deadline });
   } catch (error) {
     captureError(error, { tags: { surface: "signal-ledger-write" } });
@@ -153,13 +223,15 @@ export async function GET(req: Request): Promise<NextResponse> {
   // looked exactly like a green cron that was writing. The count belongs in the
   // log where anyone can read it without an authenticated ops call.
   process.stderr.write(
-    `[cron:signal-ledger-write] candidates=${report.candidates} written=${report.written} ` +
+    `[cron:signal-ledger-write] shard=${shard.n}/${shard.total} ` +
+      `candidates=${report.candidates} written=${report.written} ` +
       `skipped=${report.skipped} batches=${report.batches} errors=${report.errors.length}\n`,
   );
 
   return NextResponse.json({
     success: report.skipped === 0,
     data: {
+      shard: `${shard.n}/${shard.total}`,
       candidates: report.candidates,
       written: report.written,
       skipped: report.skipped,
