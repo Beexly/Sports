@@ -47,6 +47,40 @@ export const maxDuration = 300;
 const TAIL_RESERVE_MS = 20;
 
 /**
+ * How many shards the population is split into by default.
+ *
+ * MEASURED: one tick writes 80,000 rows inside its deadline against a
+ * 118,402-row population, so a partition must be comfortably under that for
+ * every shard to finish. Two shards of ~59,201 each do. Raising this without
+ * re-measuring would put every shard over the deadline and reintroduce the
+ * silent partial coverage this exists to prevent.
+ */
+const SHARD_COUNT = 2;
+
+/**
+ * The shard this run writes.
+ *
+ * An explicit `SIGNAL_LEDGER_SHARD` always wins. Absent one, the shard
+ * alternates by HOUR so consecutive ticks cover the whole population: a fixed
+ * 0/1 shard rewrites the same leading rows every hour and never reaches the
+ * tail (MEASURED: 38,402 of 118,402 rows, 32.4%, never written).
+ *
+ * The hour is UTC because the schedule is a UTC cron expression, so the
+ * rotation is stable regardless of where the function runs. Returns null for a
+ * MALFORMED explicit value, which the caller refuses rather than guessing.
+ */
+function resolveShard(
+  raw: string | undefined,
+  startedAtMs: number,
+): { readonly n: number; readonly total: number } | null {
+  const value = (raw ?? "").trim();
+  if (value.length === 0) {
+    return { n: new Date(startedAtMs).getUTCHours() % SHARD_COUNT, total: SHARD_COUNT };
+  }
+  return parseShard(raw);
+}
+
+/**
  * `"<n>/<total>"` -> shard n of `total`, or 0/1 when unset, blank, or malformed.
  *
  * A MALFORMED value must not silently mean "no shard", because that would make
@@ -107,7 +141,24 @@ export async function GET(req: Request): Promise<NextResponse> {
   // single deploy sees is unchanged until shards are added. Nothing is dropped:
   // shard k of N over a deterministic bucket is a partition, not a sample.
   let candidates;
-  const shard = parseShard(process.env["SIGNAL_LEDGER_SHARD"]);
+  // SHARD SELECTION. An explicit `SIGNAL_LEDGER_SHARD` always wins (that is
+  // how an operator drives a specific partition on demand). Absent one, the
+  // shard ROTATES WITH THE HOUR.
+  //
+  // WHY, and it is arithmetic rather than taste. MEASURED on the 05:23 CDT
+  // tick (dpl_FPCcycQXzyucePsdn92tSqgLWDq2): `candidates=118402 written=80000`
+  // at 160 batches. The deadline stops the run at 80,000 rows, so with a
+  // constant 0/1 shard the same first 80,000 rows are rewritten every hour and
+  // the remaining 38,402 (32.4%) are NEVER reached — a job that reports
+  // `errors=1` forever while quietly covering two thirds of the population.
+  //
+  // Sharding alone did not fix that, because Vercel crons cannot carry a
+  // per-entry env var, so a shard index nobody sets stays 0 forever. Deriving
+  // it from the hour needs no configuration, alternates deterministically, and
+  // covers the whole population within the shard count. A shard is a
+  // PARTITION, so alternating costs no duplicated work beyond the upserts that
+  // already existed, and every row is a plain upsert keyed on the unique tuple.
+  const shard = resolveShard(process.env["SIGNAL_LEDGER_SHARD"], startedAtMs);
   try {
     const [pgs, snaps, ngs, injuries] = await Promise.all([
       db.playerGameStat.findMany({ orderBy: { fetchedAt: "desc" } }),
