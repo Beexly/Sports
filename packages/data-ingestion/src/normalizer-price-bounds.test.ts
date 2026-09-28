@@ -13,6 +13,14 @@ import type { OddsApiEvent } from "@sports/types";
  *
  * These tests pin BOTH ends of the bound. The floor side already existed and is
  * pinned here so a future "simplification" cannot quietly drop it.
+ *
+ * WHY THE CEILING IS 500 (derived in commit a865e72e7; full price-shape tables
+ * in normalizer.ts): the round-to-the-hundred share rises 3.7% -> 28.2% -> 82.4%
+ * -> 95.9% across -100..-500, -500..-1000, -1000..-3000 and beyond -3000, and is
+ * 100% at exactly -1000. The original "-535 was the tail" justification in
+ * f4b20f2d8 was too thin to support a hard bound. Both -500 and -1000 were then
+ * tested against a two-book two-sided quorum and keep the SAME 259 of 976
+ * moneyline games, so the tighter bound costs no games.
  */
 
 function h2hEvent(prices: { home: number; away: number }): OddsApiEvent {
