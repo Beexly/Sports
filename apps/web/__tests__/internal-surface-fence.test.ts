@@ -20,6 +20,7 @@ const FLAGS = [
   "PARLAY_MRI_PUBLIC",
   "CALIBRATION_JSON_PUBLIC",
   "TRUTH_TOPOLOGY_PUBLIC",
+  "SOURCES_CATALOG_PUBLIC",
 ] as const;
 
 const APP = join(process.cwd(), "app");
@@ -144,9 +145,15 @@ describe("the fence is actually wired (regression on the audit finding)", () => 
 
       const guardAt = body.indexOf(`isApiRoutePublic("${path}")`);
       // Compare against the CALL site, not the import at the top of the file.
+      // The assertion is about ORDER (refuse before load), so the loader list
+      // is a set of known loader names, not an exhaustive one. Kept explicit
+      // rather than regexed over every `load*(` call: a generic pattern also
+      // matched non-loader calls and reported false "no loader to guard"
+      // failures on routes that were correctly wired.
       const loadAt = Math.max(
         body.indexOf("loadPublic"),
         body.indexOf("handleRealtime"),
+        body.indexOf("loadSourceLiveEvidence"),
       );
       expect(guardAt, `${path} gates on its own path`).toBeGreaterThan(-1);
       expect(loadAt, `${path} has a loader to guard`).toBeGreaterThan(-1);

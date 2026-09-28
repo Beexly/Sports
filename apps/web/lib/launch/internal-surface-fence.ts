@@ -88,6 +88,27 @@ export const INTERNAL_API_ROUTES = {
     env: "TRUTH_TOPOLOGY_PUBLIC",
     exposes: "truth topology graph and the rule set behind it",
   },
+  /**
+   * The source stack, published anonymously.
+   *
+   * Found 2026-09-28 by walking the import graph rather than reading route
+   * files, which is why the route-level sweep missed it: the route's own text
+   * names no keep-out column, it re-exports `DATA_SOURCE_STACK` from
+   * `@/lib/data-sources/catalog`.
+   *
+   * The doctrine names this shape directly: "Data sources: which sources are
+   * used *and* which were refused (that is competitive intel)." The payload
+   * carries the refused ones too, via a per-source `status` that includes
+   * `permission-required`, `founder-gated`, and `planned`, plus the `envVar`
+   * name behind every provider, which maps the shop's wiring to its config.
+   *
+   * A rate limit is not a fence. The route was anonymous with an IP limit of
+   * 60/minute, which throttles scraping without withholding the data.
+   */
+  "/api/sources/catalog": {
+    env: "SOURCES_CATALOG_PUBLIC",
+    exposes: "the full source stack, refused-source status, and provider envVar names",
+  },
 } as const satisfies Readonly<Record<string, { env: string; exposes: string }>>;
 
 export type InternalApiRoute = keyof typeof INTERNAL_API_ROUTES;
@@ -165,6 +186,7 @@ export const INTERNAL_SURFACE_POLICY = {
   "/parlay-mri": "internal — per-leg risk and EV (opt-in PARLAY_MRI_PUBLIC)",
   "/api/calibration": "internal — calibration internals (opt-in CALIBRATION_JSON_PUBLIC)",
   "/api/gse/v1/truth": "internal — truth topology (opt-in TRUTH_TOPOLOGY_PUBLIC)",
+  "/api/sources/catalog": "internal — source stack, refused-source status, provider envVar names (opt-in SOURCES_CATALOG_PUBLIC)",
   "/clv": "public — gated proof surface, 503 until canExposePerformanceStats (UNCHANGED)",
   "/stats": "public — gated proof surface, 404 until STATS_PUBLIC (UNCHANGED)",
   "/api/projections": "public — projections are the allowed surface (UNCHANGED)",
