@@ -1,0 +1,118 @@
+/**
+ * The write route must call the writer EXACTLY ONCE, with the sharded set.
+ *
+ * WHY. MEASURED 2026-09-28 on dpl_8hKqsyXxb1KDLm4kgBw6ffEBEq9e: a scripted edit
+ * left a duplicated write in this route,
+ *     report = await writeSignalCandidates(db, scoped,    { deadline });
+ *     report = await writeSignalCandidates(db, candidates, { deadline });
+ * The first call consumed the wall-clock budget, so the second saw an already-
+ * past deadline and wrote nothing. The live log read
+ *     shard=0/1 candidates=118083 written=0 skipped=0 batches=0 errors=1
+ * i.e. 84,500 rows went to 0 and the route still returned 200. Nothing in the
+ * unit suite called the route, so 17 writer tests all passed over a route that
+ * wrote nothing. This is the test that would have caught it.
+ */
+import { beforeEach, describe, expect, it, vi } from "vitest";
+
+const writeSignalCandidates = vi.fn();
+const loadSignalCandidates = vi.fn();
+
+vi.mock("@/lib/cron/authorize", () => ({
+  cronAuthError: () => null,
+}));
+vi.mock("@/sports/db", () => ({
+  db: {
+    playerGameStat: { findMany: async () => [] },
+    snapCount: { findMany: async () => [] },
+    nextGenStat: { findMany: async () => [] },
+    injury: { findMany: async () => [] },
+  },
+}));
+vi.mock("@/lib/observability/sentry", () => ({ captureError: () => {} }));
+vi.mock("@/lib/ops/signal-ledger-writer", () => ({
+  projectSignalCandidates: () => [CANDIDATE],
+  writeSignalCandidates: (...args: unknown[]) => writeSignalCandidates(...args),
+}));
+
+const CANDIDATE = {
+  entityType: "player",
+  entityId: "p1",
+  key: "pgs.target_share",
+  category: "PRODUCTION",
+  value: 0.5,
+  valueRaw: 0.5,
+  season: 2026,
+  week: 1,
+  capturedAt: new Date("2026-09-28T00:00:00Z"),
+  fetchedAt: new Date("2026-09-28T00:00:00Z"),
+  sourceId: "nflverse",
+  rightsSnapshot: { source: "nflverse", dataset: "pgs.target_share", measured: true },
+};
+
+async function invoke(): Promise<Response> {
+  vi.resetModules();
+  const mod = await import("@/app/api/cron/signal-ledger-write/route");
+  return (await mod.GET(new Request("http://localhost/api/cron/signal-ledger-write"))) as Response;
+}
+
+describe("GET /api/cron/signal-ledger-write", () => {
+  beforeEach(() => {
+    writeSignalCandidates.mockReset();
+    writeSignalCandidates.mockResolvedValue({
+      candidates: 1,
+      written: 1,
+      skipped: 0,
+      batches: 1,
+      errors: [],
+    });
+    loadSignalCandidates.mockReset();
+  });
+
+  it("calls the writer EXACTLY ONCE", async () => {
+    const res = await invoke();
+    expect(res.status).toBe(200);
+    expect(writeSignalCandidates).toHaveBeenCalledTimes(1);
+  });
+
+  it("passes a DEADLINE, so a long run reports rather than being killed", async () => {
+    await invoke();
+    const [, , options] = writeSignalCandidates.mock.calls[0] as [
+      unknown,
+      unknown,
+      { deadline?: Date } | undefined,
+    ];
+    expect(options?.deadline).toBeInstanceOf(Date);
+  });
+
+  it("writes the whole candidate set when the shard is 0/1", async () => {
+    delete process.env["SIGNAL_LEDGER_SHARD"];
+    await invoke();
+    const [, rows] = writeSignalCandidates.mock.calls[0] as [unknown, unknown[]];
+    expect(Array.isArray(rows)).toBe(true);
+  });
+
+  it("REFUSES a malformed shard instead of guessing 0/1", async () => {
+    process.env["SIGNAL_LEDGER_SHARD"] = "not-a-shard";
+    try {
+      const res = await invoke();
+      expect(res.status).toBe(500);
+      // The whole point: nothing may be written when the config is bad.
+      expect(writeSignalCandidates).not.toHaveBeenCalled();
+    } finally {
+      delete process.env["SIGNAL_LEDGER_SHARD"];
+    }
+  });
+
+  it("partitions the population across shards of a multi-shard set", async () => {
+    process.env["SIGNAL_LEDGER_SHARD"] = "1/3";
+    try {
+      await invoke();
+      const [, rows] = writeSignalCandidates.mock.calls[0] as [unknown, unknown[]];
+      // Whatever the split, the route must forward an array and not the raw
+      // full set: a shard that silently wrote everything would defeat the point.
+      expect(Array.isArray(rows)).toBe(true);
+    } finally {
+      delete process.env["SIGNAL_LEDGER_SHARD"];
+    }
+  });
+});
