@@ -1,5 +1,15 @@
 # Ranking-basis census, measured with the real comparator (2026-09-28)
 
+> **SUPERSEDED IN PART.** The 34.8% below is REAL but it is **legacy, not
+> live**: all 1,015 rows are from June-July 2026. August and September picks
+> carry `rankingP` on 100% of rows, so the anti-predictive branch does not
+> order anything a customer sees today. Read
+> `ranking-basis-census-legacy-split.md` in this folder for the month split
+> and for the two wrong SQL queries that first hid this. This file is kept
+> because the number and the decile table remain correct as a description
+> of the historical record, and because deleting a measurement someone
+> would otherwise redo is how the same 20 minutes get spent twice.
+
 **Bucket: engine.** This answers a question the code has been asking in its own
 header since it was written, and which nobody had ever measured.
 
@@ -95,8 +105,18 @@ first is the primary key, the second is the fallback.
 
 **Reading this honestly.** 60.6% of published graded rows are ordered by the
 engine's own signed edge. The remaining ~39% carry no estimate, and for those the
-cascade resolves to `confidence`, so **34.8% of the population is being ordered,
-at least in part, by a score measured to invert at its top.**
+cascade resolves to `confidence`, so 34.8% of the population is ordered, at least
+in part, by a score measured to invert at its top.
+
+**The load-bearing correction (2026-09-28, same day).** The sentence above is
+true of the *historical record* and was, as first written, misleading about the
+*present*. Split by month, all 1,015 of those rows are from June-July 2026;
+August and September picks carry `rankingP` on 100% of rows, so the
+anti-predictive branch orders nothing a customer sees today. See
+`ranking-basis-census-legacy-split.md`. What survives as a real concern is
+narrower and is about measurement, not the board: a backtest or calibration fit
+over all settled picks is currently mixing a well-ordered recent sample with a
+June-July sample that has no `rankingP` at all.
 
 Two things this does **not** say:
 
