@@ -216,4 +216,49 @@ describe("GET /api/cron/signal-ledger-write", () => {
     expect(body.success).toBe(true);
     expect(res.status).toBe(200);
   });
+
+  it("says CONVERGED when there was nothing to write, not 'broken'", async () => {
+    // The exact case that produced a false outage claim on 2026-09-28.
+    //
+    // The writer was at 100% coverage of the 2026 population, so hourly ticks
+    // reported `written=0` — CORRECTLY, because every tuple already existed and
+    // an upsert of an existing tuple does not move `fetchedAt`. Those ticks were
+    // read as a dead writer and filed in the ledger as a live outage before a
+    // coverage check falsified the claim 20 minutes later.
+    //
+    // `written: 0` is ambiguous on its own. The DENOMINATOR is what disambiguates
+    // it: 0 written of 0 candidates is a converged job; 0 written of 118,402 is
+    // a job that missed everything. This pins that the response says which.
+    delete process.env["SIGNAL_LEDGER_SHARD"];
+    writeSignalCandidates.mockResolvedValue({
+      candidates: 0,
+      written: 0,
+      skipped: 0,
+      batches: 0,
+      errors: [],
+    });
+    const res = await invoke();
+    const body = (await res.json()) as { success: boolean; data: { coverage: string } };
+    expect(body.success).toBe(true);
+    expect(res.status).toBe(200);
+    expect(body.data.coverage).toMatch(/converged/i);
+    // Explicitly NOT the alarming word: nothing was missed because nothing existed.
+    expect(body.data.coverage).not.toMatch(/suspicious|partial/i);
+  });
+
+  it("flags SUSPICIOUS when work existed and NONE of it was written", async () => {
+    // The other side of the same ambiguity, and the one that IS a defect:
+    // candidates present, zero written, and no error to explain it.
+    delete process.env["SIGNAL_LEDGER_SHARD"];
+    writeSignalCandidates.mockResolvedValue({
+      candidates: 118402,
+      written: 0,
+      skipped: 0,
+      batches: 0,
+      errors: [],
+    });
+    const res = await invoke();
+    const body = (await res.json()) as { data: { coverage: string } };
+    expect(body.data.coverage).toMatch(/suspicious/i);
+  });
 });

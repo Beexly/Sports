@@ -266,6 +266,33 @@ export async function GET(req: Request): Promise<NextResponse> {
     );
   }
 
+  // COVERAGE CLASSIFICATION, computed once and used in BOTH the log line and the
+  // response body so the two can never disagree — the same class of defect the
+  // route already had once, where the log reported one call's number and the
+  // body reported another's.
+  //
+  // WHY THIS EXISTS. `written: 0` alone cannot tell you whether the writer is
+  // broken or merely CONVERGED. MEASURED 2026-09-28, and I got this wrong in
+  // this repo's own ledger before the field existed: the writer was at 100%
+  // coverage of the 2026 population (2,136 of 2,136 tuples), so the hourly ticks
+  // reporting `written=0` were CORRECT — every tuple already exists and an
+  // upsert of an existing tuple does not move `fetchedAt`. I read those ticks
+  // as a dead writer and filed a live-outage claim that a coverage check
+  // falsified twenty minutes later. The discriminator is the DENOMINATOR:
+  //   candidates=0  -> there was nothing to write; converged
+  //   candidates>0 and written=0 and no error -> work existed and none landed
+  //   written < candidates -> partial
+  const unwritten = report.candidates - report.written;
+  const complete = report.errors.length === 0 && unwritten === 0;
+  const coverageLabel =
+    report.candidates === 0
+      ? "converged"
+      : report.written === 0 && report.errors.length === 0
+        ? "SUSPICIOUS-work-present-none-written"
+        : complete
+          ? "complete"
+          : `partial-${unwritten}-unwritten`;
+
   // One line per tick, on stderr. MEASURED 2026-09-28: the Vercel log viewer
   // truncates the response body, and a 200 is byte-identical whether this wrote
   // forty rows or forty thousand. That is the whole reason the table could sit
@@ -275,7 +302,8 @@ export async function GET(req: Request): Promise<NextResponse> {
   process.stderr.write(
     `[cron:signal-ledger-write] shard=${shard.n}/${shard.total} ` +
       `candidates=${report.candidates} written=${report.written} ` +
-      `skipped=${report.skipped} batches=${report.batches} errors=${report.errors.length}\n`,
+      `skipped=${report.skipped} batches=${report.batches} errors=${report.errors.length} ` +
+      `coverage=${coverageLabel}\n`,
   );
 
   // `success` is the number an operator reads first, so it must be true only
@@ -289,10 +317,8 @@ export async function GET(req: Request): Promise<NextResponse> {
   // which is the 200-shaped failure this lane exists to kill, in the same
   // response body whose whole purpose is to make a partial write visible.
   //
-  // The shard is fully written only when every candidate landed. Any error —
-  // a deadline break, a partial upsert failure, a malformed shard handled
-  // above — means partial coverage, and partial coverage is not success.
-  const complete = report.errors.length === 0 && report.written === report.candidates;
+  // `complete` is the value computed ABOVE, next to `coverageLabel`, so the log
+  // line and this body cannot disagree about the same tick.
   return NextResponse.json(
     {
       success: complete,
@@ -303,6 +329,7 @@ export async function GET(req: Request): Promise<NextResponse> {
         skipped: report.skipped,
         batches: report.batches,
         errors: report.errors.slice(0, 20),
+        coverage: coverageLabel,
         // Restated in the response so nobody can read this endpoint as a claim
         // that the signals are predictive.
         weights: "all 1 (priors are the tuner's job, not the writer's)",
