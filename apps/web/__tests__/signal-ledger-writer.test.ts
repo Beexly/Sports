@@ -108,6 +108,19 @@ describe("projectSignalCandidates", () => {
     }
   });
 
+  it("sets fetchedAt on EVERY row — the schema rejects the write without it", () => {
+    // Measured in production 2026-09-28: omitting `fetchedAt` (DateTime, no
+    // default) fails every single upsert with "Argument `fetchedAt` is
+    // missing", so the table stays at 0 rows. A missing field here is the
+    // difference between a populated table and an empty one, so it is pinned
+    // per-row across every source table rather than assumed.
+    const out = projectSignalCandidates(input()) as unknown as Array<Record<string, unknown>>;
+    expect(out.length).toBeGreaterThan(0);
+    for (const c of out) {
+      expect(c.fetchedAt).toBeInstanceOf(Date);
+    }
+  });
+
   it("returns an empty list rather than throwing when every source is empty", () => {
     const out = projectSignalCandidates(
       input({ playerGameStats: [], snapCounts: [], nextGenStats: [], injuries: [] }),

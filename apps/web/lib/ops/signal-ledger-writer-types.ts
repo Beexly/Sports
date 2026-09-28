@@ -22,6 +22,15 @@ export interface SignalWriteCandidate {
   readonly week: number;
   readonly sourceId: string;
   /**
+   * REQUIRED by the schema (`fetchedAt DateTime`, no default). Measured in
+   * production on 2026-09-28: omitting it fails EVERY upsert with "Argument
+   * `fetchedAt` is missing". The writer reports that as `skipped` rather than
+   * silently populating nothing, which is why the failure was visible at all.
+   * Distinct from `capturedAt`: that is when the signal was OBSERVED, this is
+   * when the row was WRITTEN.
+   */
+  readonly fetchedAt: Date;
+  /**
    * The schema requires this on every signal (`rightsSnapshot Json`). Named for
    * the source dataset so a row's provenance survives the row.
    */
