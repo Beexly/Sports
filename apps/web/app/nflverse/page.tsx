@@ -11,6 +11,8 @@ import {
 } from "@/lib/nflverse/birthday-usage-trend";
 import { loadQbAgeRbTrendReport } from "@/lib/nflverse/qb-age-rb-trend";
 import { loadNflverseUsagePulse, type NflverseQbAgeRow } from "@/lib/nflverse/usage-pulse";
+import { getViewerEntitlements } from "@/lib/pricing/tier-access";
+import { TierGatePanel } from "@/components/pricing/tier-gate-panel";
 
 export const dynamic = "force-dynamic";
 
@@ -65,6 +67,45 @@ function qbBucketLabel(row: NflverseQbAgeRow): string {
 }
 
 export default async function NflversePage(): Promise<JSX.Element> {
+  // Server-side gate (CLAUDE.md rule 3), identical in shape to app/trends/page.tsx:
+  // the usage pulse and both trend reports are the same Pro analytics that
+  // /api/nflverse/* serve behind requirePremiumApiRateLimited. This page used to
+  // SSR all three to anyone, republishing as HTML exactly what those endpoints
+  // 401 on — including the per-player opportunities / targets / carries /
+  // targetShare / airYardsShare / WOPR / PPR / age table.
+  //
+  // The gate runs BEFORE the loaders on purpose: an unentitled visitor must not
+  // trigger the upstream nflverse fetches at all, so the paywall is also not a
+  // free denial-of-wallet lever. getViewerEntitlements fails closed to FREE.
+  const viewer = await getViewerEntitlements();
+  if (!viewer.canUseTrendLab) {
+    return (
+      <div className="relative isolate min-h-screen bg-carbon text-ion">
+        <GeneratedPlate assetId="nflverse-gridiron" className="-z-10 opacity-20" />
+        <Nav />
+        <main id="main-content" className="mx-auto flex w-full max-w-7xl flex-col gap-10 px-4 py-12 sm:px-6 lg:px-8">
+          <section>
+            <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-orbital-cyan">NFL · usage pulse</p>
+            <h1 className="mt-2 max-w-4xl font-display text-4xl font-semibold leading-[1.02] text-ion-white sm:text-6xl">
+              Real NFL rows before real claims.
+            </h1>
+            <p className="mt-5 max-w-2xl text-base leading-7 text-ion-1">
+              The pulse reads nflverse player-week and roster releases directly: usage,
+              target share, air-yard share, WOPR, and quarterback-age context from real
+              source rows. It does not publish picks, projections, or significant trends.
+            </p>
+          </section>
+          <TierGatePanel
+            need="PRO"
+            surface="The NFLverse usage pulse"
+            blurb="The player-week usage table (opportunities, target and air-yard share, WOPR, PPR) and the QB-age and birthday cohort reports are a Pro surface. Free members keep the board, the Academy, and the public, verifiable record."
+          />
+        </main>
+        <Footer />
+      </div>
+    );
+  }
+
   const [pulse, qbAgeTrend, birthdayTrend] = await Promise.all([
     loadNflverseUsagePulse(),
     loadQbAgeRbTrendReport(),
