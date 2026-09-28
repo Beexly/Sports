@@ -38,6 +38,25 @@ const nextConfig = {
       "/stats/**": ["../../data/statking/**/*", "../../data/source-atlas/**/*"],
       "/admin/statking/**": ["../../data/statking/**/*", "../../data/source-atlas/**/*"],
       "/fable": ["../../docs/fable/**/*"],
+      // MEASURED 2026-09-27 on dpl_DU9K91tetxKe8oa5YdLvKBaBRJd7 (the deploy
+      // carrying the #928 path fix): board-fill and generate-signal-slate STILL
+      // returned 500 with "bridge-premises.jsonl is missing at
+      // /var/task/apps/web/data/gse-dataset/...". The #928 fix was correct about
+      // PATH ARITHMETIC and irrelevant about the real problem: the file is not in
+      // the serverless bundle at all. Webpack cannot trace a runtime `fs` read
+      // of a path built with `join()` + `existsSync()`, so nothing pulls
+      // data/gse-dataset/ into the function. The walk-up then correctly fails and
+      // falls back to cwd, which reports the honest path and takes the board down
+      // These two crons are the ONLY consumers of that dataset, so they are
+      // the only routes that need it traced. The glob is deliberately the ONE
+      // FILE, not `data/gse-dataset/**`: that directory is 445MB, dominated by
+      // participation-*.jsonl (42MB each, 7 of them) which neither route reads.
+      // Tracing the directory produced a 467.65MB serverless function and Vercel
+      // rejected it (measured on dpl_HNMeSEoLgQnvWgKUYzvTcBnJzPEj, 2026-09-28:
+      // "exceeds the maximum uncompressed size limit of 250mb"). The guard reads
+      // exactly one file, so exactly one file is traced — 85,924 bytes.
+      "/api/cron/board-fill": ["../../data/gse-dataset/bridge-premises.jsonl"],
+      "/api/cron/generate-signal-slate": ["../../data/gse-dataset/bridge-premises.jsonl"],
     },
   },
   webpack: (config) => {
