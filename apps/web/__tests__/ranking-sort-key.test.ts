@@ -4,6 +4,7 @@ import {
   rankingBasisCensus,
   rankingSortKey,
   readRankingKey,
+  readSignedEdge,
 } from "@/lib/ranking/sort-key";
 
 /**
@@ -151,5 +152,68 @@ describe("rankingBasisCensus", () => {
       census.total,
     );
     expect(census.total).toBe(CASES.length);
+  });
+});
+
+/**
+ * The ranking half of the confidence inversion (AGENTS.md, still OPEN).
+ *
+ * `adverse-edge-suppression` removes rows whose own signed edge is negative. It
+ * does not reorder the POSITIVES, and those were ordered by a number measured
+ * ANTI-PREDICTIVE: conf 80+ claims 0.8663 and realizes 0.5191 (n 2,385, z =
+ * -10.7). These pin the fix — the board now orders on `expectedClv`, the same
+ * signed number the mint gate and the display suppression already trust.
+ */
+describe("signed-edge ranking (the open half of the confidence inversion)", () => {
+  const withClv = (confidence: number, expectedClv: number) => ({
+    confidence,
+    factorBreakdown: { independentEdge: { expectedClv } },
+  });
+
+  it("reads expectedClv and reports absence as null, never as 0", () => {
+    expect(readSignedEdge(withClv(50, 0.22))).toBe(0.22);
+    // Absent is NOT zero: a 0.0 expectedClv on a CONTRADICTS row is a real
+    // reading, and conflating the two would silently demote honest rows.
+    expect(readSignedEdge({ confidence: 50 })).toBeNull();
+    expect(readSignedEdge(withClv(50, 0))).toBe(0);
+    expect(readSignedEdge({ confidence: 50, factorBreakdown: { independentEdge: {} } })).toBeNull();
+    expect(readSignedEdge({ confidence: 50, factorBreakdown: { independentEdge: { expectedClv: "0.2" } } })).toBeNull();
+    expect(readSignedEdge({ confidence: 50, factorBreakdown: { independentEdge: { expectedClv: Number.NaN } } })).toBeNull();
+  });
+
+  it("ranks the biggest signed edge FIRST even when it has the lowest confidence", () => {
+    // The measured inversion: conf 91 carried the SMALLEST positive edge and
+    // conf 85 the LARGEST. Under confidence the 91 sorted first.
+    const highConfSmallEdge = withClv(91, 0.0217);
+    const lowConfBigEdge = withClv(85, 0.2257);
+    const sorted = [highConfSmallEdge, lowConfBigEdge].sort(comparePicksByRanking);
+    expect(sorted[0]!.factorBreakdown).toBe(lowConfBigEdge.factorBreakdown);
+  });
+
+  it("puts a row with a measured edge above one with none, whatever its confidence", () => {
+    const measured = withClv(40, 0.05);
+    const unmeasured = { confidence: 95 };
+    expect([unmeasured, measured].sort(comparePicksByRanking)[0]).toBe(measured);
+  });
+
+  it("keeps confidence as the tiebreak when no row carries an edge", () => {
+    // Nothing here is reordered by the new key, so the previous behaviour must
+    // survive exactly — otherwise this fix changes boards it was not aimed at.
+    const a = { confidence: 90 };
+    const b = { confidence: 70 };
+    expect([b, a].sort(comparePicksByRanking)[0]).toBe(a);
+  });
+
+  it("still pins featured first, ahead of any edge", () => {
+    const featured = { ...withClv(30, 0.01), isFeatured: true };
+    const better = withClv(95, 0.4);
+    expect([better, featured].sort(comparePicksByRanking)[0]).toBe(featured);
+  });
+
+  it("is a valid comparator (antisymmetric, reflexive) on mixed rows", () => {
+    const rows = [withClv(91, 0.0217), withClv(85, 0.2257), { confidence: 72 }, withClv(60, -0.1)];
+    const shuffled = [...rows].reverse().sort(comparePicksByRanking);
+    expect(shuffled).toEqual([...rows].sort(comparePicksByRanking));
+    expect(comparePicksByRanking(rows[0]!, rows[0]!)).toBe(0);
   });
 });
