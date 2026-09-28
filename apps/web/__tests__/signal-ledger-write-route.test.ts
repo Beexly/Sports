@@ -151,4 +151,69 @@ describe("GET /api/cron/signal-ledger-write", () => {
       delete process.env["SIGNAL_LEDGER_SHARD"];
     }
   });
+
+  it("a DEADLINE-truncated run is NOT a success — never a 200-shaped failure", async () => {
+    // The contract that was missing. MEASURED 2026-09-28, observed by running
+    // the real route with real candidates and a deadline already in the past:
+    //
+    //   http=200 success=true candidates=20 written=0
+    //     errors=["deadline reached with 20 candidates unwritten"]
+    //
+    // `success` was `report.skipped === 0`, and a run that breaks on the
+    // deadline before its first upsert skips ZERO rows — so the single field
+    // an operator or a monitor reads first said "fine" about a run that wrote
+    // nothing. The body carried the evidence and the header contradicted it.
+    // A writer that truncates is the exact failure this lane exists to kill,
+    // so it must not be readable as success.
+    delete process.env["SIGNAL_LEDGER_SHARD"];
+    writeSignalCandidates.mockResolvedValue({
+      candidates: 20,
+      written: 0,
+      skipped: 0,
+      batches: 0,
+      errors: ["deadline reached with 20 of 20 candidates unwritten in this shard"],
+    });
+    const res = await invoke();
+    const body = (await res.json()) as { success: boolean; data: { written: number } };
+    expect(body.success).toBe(false);
+    // And not a bare 200 either: a status-code-only health check has to see it.
+    expect(res.status).toBe(503);
+    // The shortfall is still reported rather than hidden behind the failure.
+    expect(body.data.written).toBe(0);
+  });
+
+  it("a run that wrote FEWER rows than it read is not a success", async () => {
+    // `success` must mean the whole shard landed, not merely that no row
+    // raised. One lost row is partial coverage, and partial coverage that
+    // reads as success is how 32.4% of the population went unwritten.
+    delete process.env["SIGNAL_LEDGER_SHARD"];
+    writeSignalCandidates.mockResolvedValue({
+      candidates: 20,
+      written: 19,
+      skipped: 0,
+      batches: 1,
+      errors: [],
+    });
+    const res = await invoke();
+    const body = (await res.json()) as { success: boolean };
+    expect(body.success).toBe(false);
+    expect(res.status).toBe(503);
+  });
+
+  it("a FULL write is a 200 with success=true — the positive control", async () => {
+    // Without this, a route that always returned 503 would pass the two tests
+    // above. The fix must not turn every tick into a failure.
+    delete process.env["SIGNAL_LEDGER_SHARD"];
+    writeSignalCandidates.mockResolvedValue({
+      candidates: 1,
+      written: 1,
+      skipped: 0,
+      batches: 1,
+      errors: [],
+    });
+    const res = await invoke();
+    const body = (await res.json()) as { success: boolean };
+    expect(body.success).toBe(true);
+    expect(res.status).toBe(200);
+  });
 });

@@ -230,6 +230,55 @@ describe("writeSignalCandidates", () => {
     expect(report.errors.join(" ")).toMatch(/1200/);
   });
 
+  it("does NOT claim the next run resumes, because the read has no cursor", async () => {
+    // The text this pins used to read:
+    //   "the next run resumes and converges (upserts are idempotent)"
+    // and that sentence is what hid a real coverage hole behind `errors=1` on
+    // every single tick. MEASURED 2026-09-28: the deadline stopped the run at
+    // 80,000 of 118,402 rows, and because the read has NO CURSOR, the next run
+    // re-read from row 0 and stopped at 80,000 again — forever. The 38,402
+    // tail rows were never written by any tick. Idempotence covers the UPSERT;
+    // it never covered the READ.
+    //
+    // An error message that promises convergence the code cannot deliver is
+    // worse than no message, because it is the operator's only evidence and it
+    // says the opposite of the truth.
+    let calls = 0;
+    const db = {
+      signal: {
+        upsert: async () => {
+          calls += 1;
+          return {};
+        },
+      },
+    } as never;
+    const rows = Array.from({ length: 1200 }, (_, i) => ({
+      entityType: "player" as const,
+      entityId: `p${i}`,
+      key: "pgs.target_share",
+      category: "PRODUCTION" as const,
+      value: 0.5,
+      valueRaw: 0.5,
+      season: 2026,
+      week: 1,
+      capturedAt: new Date("2026-09-28T00:00:00Z"),
+      fetchedAt: new Date("2026-09-28T00:00:00Z"),
+      sourceId: "nflverse",
+      rightsSnapshot: { source: "nflverse", dataset: "pgs", measured: true },
+    }));
+    const report = await writeSignalCandidates(db, rows, {
+      deadline: new Date(Date.now() - 1000),
+    });
+    const msg = report.errors.join(" ");
+    expect(msg).not.toMatch(/next run resumes and converges/i);
+    // And it must SAY what is actually true: this shard is short, and a repeat
+    // pass re-reads from the start rather than continuing.
+    expect(msg).toMatch(/not resumable|no cursor|re-reads from the start/i);
+    // The shortfall is real, not a message over nothing: no row was written.
+    expect(calls).toBe(0);
+    expect(report.written).toBe(0);
+  });
+
   it("writes every row when the deadline has not passed", async () => {
     let calls = 0;
     const okDb = {

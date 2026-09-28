@@ -278,23 +278,46 @@ export async function GET(req: Request): Promise<NextResponse> {
       `skipped=${report.skipped} batches=${report.batches} errors=${report.errors.length}\n`,
   );
 
-  return NextResponse.json({
-    success: report.skipped === 0,
-    data: {
-      shard: `${shard.n}/${shard.total}`,
-      candidates: report.candidates,
-      written: report.written,
-      skipped: report.skipped,
-      batches: report.batches,
-      errors: report.errors.slice(0, 20),
-      // Restated in the response so nobody can read this endpoint as a claim
-      // that the signals are predictive.
-      weights: "all 1 (priors are the tuner's job, not the writer's)",
-      confidence: "1.0 = the reading is measured, NOT that it is predictive",
+  // `success` is the number an operator reads first, so it must be true only
+  // when the whole shard actually landed. MEASURED 2026-09-28: this was
+  // `report.skipped === 0`, which a DEADLINE BREAK satisfies while writing
+  // NOTHING — `skipped` counts per-row upsert failures, and a run that stops
+  // before the first upsert skips zero rows and reports zero. A truncated run
+  // therefore self-reported `success: true` with a 200. Observed exactly:
+  //   http=200 success=true candidates=20 written=0
+  //     errors=["deadline reached with 20 candidates unwritten"]
+  // which is the 200-shaped failure this lane exists to kill, in the same
+  // response body whose whole purpose is to make a partial write visible.
+  //
+  // The shard is fully written only when every candidate landed. Any error —
+  // a deadline break, a partial upsert failure, a malformed shard handled
+  // above — means partial coverage, and partial coverage is not success.
+  const complete = report.errors.length === 0 && report.written === report.candidates;
+  return NextResponse.json(
+    {
+      success: complete,
+      data: {
+        shard: `${shard.n}/${shard.total}`,
+        candidates: report.candidates,
+        written: report.written,
+        skipped: report.skipped,
+        batches: report.batches,
+        errors: report.errors.slice(0, 20),
+        // Restated in the response so nobody can read this endpoint as a claim
+        // that the signals are predictive.
+        weights: "all 1 (priors are the tuner's job, not the writer's)",
+        confidence: "1.0 = the reading is measured, NOT that it is predictive",
+      },
+      note:
+        "Wrote MEASURED columns only. No published projection, gate, floor or MODEL_VERSION was touched, " +
+        "and no magnitude was fitted here. `signals` now holds real evidence; whether that evidence predicts " +
+        "anything is the tuner's question, and is not answered by this endpoint.",
     },
-    note:
-      "Wrote MEASURED columns only. No published projection, gate, floor or MODEL_VERSION was touched, " +
-      "and no magnitude was fitted here. `signals` now holds real evidence; whether that evidence predicts " +
-      "anything is the tuner's question, and is not answered by this endpoint.",
-  });
+    // A truncated run is a 503, not a 200: the work did not finish, and a
+    // monitoring check that reads only the status code must be able to see it.
+    // This is the SECOND argument — putting `status` in the body object puts a
+    // field in the JSON and leaves the response 200, which is the very defect
+    // being fixed. Assert the status, do not trust the body.
+    complete ? {} : { status: 503 },
+  );
 }

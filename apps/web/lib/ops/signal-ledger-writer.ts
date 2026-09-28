@@ -265,15 +265,27 @@ export async function writeSignalCandidates(
     // DEADLINE. Measured in production 2026-09-28: this route returned 504
     // ("Vercel Runtime Error") on its first live tick because it upserts one
     // row at a time, sequentially, over the full candidate set. Stopping at a
-    // wall-clock deadline is safe precisely BECAUSE every write is an upsert
-    // keyed on (entityType, entityId, key, season, week): whatever this run
-    // does not reach, the next run re-does identically and converges. The
-    // alternative — truncating silently — would read as a populated table
-    // that is quietly partial, which is the exact failure the report exists
-    // to make visible. `remaining` states it instead.
+    // wall-clock deadline is safe because every write is an upsert keyed on
+    // (entityType, entityId, key, season, week), so a REPEATED pass over the
+    // same rows is idempotent.
+    //
+    // BUT "idempotent" is not "resumes", and the difference is the whole point.
+    // This text used to read `the next run resumes and converges (upserts are
+    // idempotent)`. That was false and it is what hid a 32.4% coverage hole
+    // behind `errors=1` on every tick: the read has NO cursor, so a run that
+    // stops at row 80,000 re-reads from row 0 and stops at row 80,000 again,
+    // forever. Rows 80,001..118,402 were never written by any tick, ever.
+    // Idempotence covers the UPSERT; it never covered the READ. Never again
+    // promise a resume from a read that has no cursor — state the shortfall
+    // and who covers it. (The caller now rotates the shard, so the pair of
+    // ticks does cover the population; the text must not claim that the single
+    // next run resumes this one.)
     if (options.deadline !== undefined && new Date() >= options.deadline) {
+      const unwritten = candidates.length - i;
       report.errors.push(
-        `deadline reached with ${candidates.length - i} candidates unwritten; the next run resumes and converges (upserts are idempotent)`,
+        `deadline reached with ${unwritten} of ${candidates.length} candidates unwritten in this shard; ` +
+          `this run is NOT resumable on its own (the read has no cursor, so a repeat pass re-reads from the start) — ` +
+          `a later tick must be given a shard that covers these rows`,
       );
       break;
     }
