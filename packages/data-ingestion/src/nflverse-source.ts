@@ -640,7 +640,29 @@ const PLAYER_STATS_WEEK_COLUMNS = [
   "headshot_url",
   "position",
   "recent_team",
+  // 2025+ spelling of `recent_team`. BOTH are listed because nflverse renamed
+  // the column after2024 and the rename is not uniform across the assets this
+  // function merges: a combined table and a per-season file can disagree.
+  //
+  // WHY THIS MATTERS (measured 2026-09-28 on live Neon): `player_game_stats.team`
+  // was NULL on all 1,068 rows of 2026 and every row of 2025, while seasons
+  // 2020-2024 were fully populated. `opponent_team` survived the rename, which
+  // is the tell that one field lost its source and its sibling did not.
+  //
+  // This list is a PROJECTION — a column absent from it is dropped before
+  // `ingestPlayerWeeklyStats` can read it, silently. So adding `team` here is
+  // the load-bearing half of that fix; the ingest's multi-name reader is the
+  // other half. Omitting it means the ingest asks for a column this projection
+  // has already thrown away, and the nulls persist while everything reports
+  // success. Keep the two in step.
+  //
+  // Cost is one field on a record that already carries 17: this projection is
+  // what keeps the primary cron inside its heap on a 33MB asset spanning every
+  // season since 1999, and one column does not move that.
+  "team",
   "opponent_team",
+  // 2025+ spelling of `opponent_team`; same reasoning as `team` above.
+  "opponent",
   "season",
   "week",
   "season_type",
