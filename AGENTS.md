@@ -38,6 +38,23 @@ their data. We learn from it with intelligence and reasoning — methods, patter
 structures — then give our own analysis. A restrictive license means research/learn-only,
 never "throw it away." Full doctrine: `docs/governance/ingest-and-learn-doctrine.md`.
 
+## NEON BRANCH-ONLY TESTING (2026-09-28, founder — HARD)
+
+**No agent tests database work against the default Neon branch. Ever.** Writers,
+migrations, backfills, and calibration jobs run on a throwaway branch
+(`neon checkout <agent>-<task> --create`), which is a copy-on-write fork of the
+whole backend. Non-default branches auto-expire after 7 days
+(`neon.ts` branch policy). The default branch is production data: predictions,
+settled outcomes, calibration history. The signal-ledger 0-row/504 incidents
+happened because writers were tested where they could hurt. Verify on a branch,
+then point at production deliberately — never by accident.
+
+`neon.ts` at repo root declares the branch policy; `neon deploy` applies it.
+Until the project is onboarded to the backend platform, create test branches
+through the Neon console or API with the same 7-day discipline: name them,
+use them, delete them.
+
+---
 
 **UPDATED 2026-09-13 (Motif — game-day calibration pass + v5.3.0 spec).** Founder ordered a full
 review/rebuild of the prediction engine ("extremely in depth", "trust no claims", ship direct to
