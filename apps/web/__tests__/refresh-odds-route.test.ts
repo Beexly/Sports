@@ -28,7 +28,14 @@ vi.mock("@/lib/cron/authorize", () => ({
   cronAuthError: () => null,
   cronAuthErrorBearerOnly: () => null,
 }));
-vi.mock("@sports/db", () => ({ db: {} }));
+// Spread the real module and override only what this test controls. The
+// mock-factory-export-drift guard requires every export the traced call path
+// reaches for to exist, and hand-listing ~30 engine exports is exactly how that
+// guard exists to stop a test from being written against a shape I assumed.
+vi.mock("@sports/db", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@sports/db")>();
+  return { ...actual, db: {} };
+});
 // Real specifiers, read off the route's own import list (2026-09-28). An earlier
 // draft of this file mocked paths I had invented and it failed to transform,
 // which is the same class of error as writing a test against a shape I assumed.
@@ -53,9 +60,10 @@ vi.mock("@/lib/data-reliability/healthcheck-ping", () => ({
 vi.mock("@/lib/data-reliability/monitor-odds-fetchedat", () => ({
   monitorOddsFetchedAt: (...a: unknown[]) => monitorOddsFetchedAt(...a),
 }));
-vi.mock("@sports/prediction-engine", () => ({
-  getReadinessGates: (...a: unknown[]) => getReadinessGates(...a),
-}));
+vi.mock("@sports/prediction-engine", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@sports/prediction-engine")>();
+  return { ...actual, getReadinessGates: (...a: unknown[]) => getReadinessGates(...a) };
+});
 vi.mock("@/lib/odds/paid-odds-governor", () => ({
   buildPaidOddsGovernor: (...a: unknown[]) => buildPaidOddsGovernor(...a),
 }));
