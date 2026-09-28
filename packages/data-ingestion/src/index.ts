@@ -96,6 +96,7 @@ export {
   decodeDatasetText,
   fetchNflverseText,
   fetchNflverse,
+  fetchNflversePlayerStatsWeek,
   type CsvTable,
   type NflverseDataset,
   type NflverseDatasetKey,
