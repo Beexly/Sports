@@ -145,37 +145,52 @@ export async function GET(request: Request): Promise<NextResponse> {
     );
   }
 
-  return NextResponse.json({
-    ok: true,
-    path: "autonomy-cycle",
-    elapsedMs: Date.now() - started,
-    dryRun,
-    executeEnabled,
-    observation: {
-      ingestionAgeMinutes: observation.ingestionAgeMinutes,
-      freeSpineAgeMinutes: observation.freeSpineAgeMinutes,
-      freeSpineSource,
-      settlementBand: observation.settlementBand,
-      settlementOverdue: observation.settlementOverdue,
-      databaseOk: observation.databaseOk,
-      ingestionOk: observation.ingestionOk,
+  // FAILED ACTIONS ARE NOT A SUCCESS. MEASURED 2026-09-28: `cycle.failedCount`
+  // was only ever logged (console.warn at the branch above) while the response
+  // stayed `ok: true` on a 200. So a cycle whose autonomous actions all failed
+  // was indistinguishable, to every status-reading consumer, from a clean one —
+  // and this is the cron that decides what the system does next. The `dryRun`
+  // flag is the thing that keeps that honest, and `dryRun` is true by default,
+  // so in the common case `failedCount > 0` means planned work did not land.
+  //
+  // 503, not 500: the plan and the probe succeeded; the ACTIONS are what did
+  // not. The body still carries the full cycle so the failure is diagnosable.
+  const actionsFailed = cycle.failedCount > 0;
+
+  return NextResponse.json(
+    {
+      ok: !actionsFailed,
+      path: "autonomy-cycle",
+      elapsedMs: Date.now() - started,
+      dryRun,
+      executeEnabled,
+      observation: {
+        ingestionAgeMinutes: observation.ingestionAgeMinutes,
+        freeSpineAgeMinutes: observation.freeSpineAgeMinutes,
+        freeSpineSource,
+        settlementBand: observation.settlementBand,
+        settlementOverdue: observation.settlementOverdue,
+        databaseOk: observation.databaseOk,
+        ingestionOk: observation.ingestionOk,
+      },
+      plan: {
+        severity: plan.severity,
+        headline: plan.headline,
+        honestyScore: plan.introspection.honestyScore,
+        refuseDefaultHeld: plan.introspection.refuseDefaultHeld,
+        autonomousQueue: plan.autonomousQueue.map((a) => ({
+          kind: a.kind,
+          title: a.title,
+          target: a.target,
+        })),
+        ownerQueue: plan.ownerQueue.map((a) => ({
+          kind: a.kind,
+          title: a.title,
+          target: a.target,
+        })),
+      },
+      cycle,
     },
-    plan: {
-      severity: plan.severity,
-      headline: plan.headline,
-      honestyScore: plan.introspection.honestyScore,
-      refuseDefaultHeld: plan.introspection.refuseDefaultHeld,
-      autonomousQueue: plan.autonomousQueue.map((a) => ({
-        kind: a.kind,
-        title: a.title,
-        target: a.target,
-      })),
-      ownerQueue: plan.ownerQueue.map((a) => ({
-        kind: a.kind,
-        title: a.title,
-        target: a.target,
-      })),
-    },
-    cycle,
-  });
+    actionsFailed ? { status: 503 } : {},
+  );
 }
