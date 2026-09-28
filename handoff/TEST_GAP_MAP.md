@@ -9,7 +9,7 @@ descending — biggest untested files first.
 
 | File | Lines | Mentions | Test files (≤3) |
 |---|---:|---:|---|
-| apps/web/lib/scraping/extraction-modes.ts | 166 | 0 | — |
+| apps/web/lib/scraping/extraction-modes.ts | 166 | COVERED | apps/web/__tests__/extraction-modes.test.ts (2026-09-28, 31 tests) |
 | apps/web/lib/claude-api/jynx-complete.ts | 41 | 0 | — |
 | apps/web/lib/billing/reconcile-entitlements.ts | 621 | 1 | apps/web/__tests__/reconcile-entitlements.test.ts |
 | apps/web/lib/scraping/sports-data-candidates.ts | 547 | 1 | apps/web/__tests__/sports-data-candidates.test.ts |
