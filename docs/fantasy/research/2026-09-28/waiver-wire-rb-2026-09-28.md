@@ -10,5 +10,7 @@
 ## Washington — Ekeler returns, backfield murky
 - Austin Ekeler (31) is expected to re-sign with Washington pending a physical (Rapoport/Garafolo, 9/28). Fully cleared from the 2025 Week 2 Achilles tear; worked out for Carolina last week.
 - Current room: Jacory Croskey-Merritt (team-high 142 rush yards), Rachaad White (team-high 151 scrimmage yards, third-down role; hurt his shoulder Sunday but returned — signing reportedly NOT related per ESPN), rookie Kaytron Allen. Jeremy McNichols on IR.
-- **Garrett's read: nobody knows what they're planning.** Ekeler was signed for depth; role uncertain; likely third-down/pass-pro insurance that lets the young backs keep developing. This is a wait-and-see, not a waiver target.
+- **Garrett's read: nobody knows what they're planning — and it's murkier than it looks, because Rachaad White is already playing the Ekeler role.** White is the designated third-down/pass-catching back and leads the team in scrimmage yards (151). Signing Ekeler into that exact role either means a straight timeshare that kills both, or...
+- ...the 2024 template: last time Ekeler was in Washington they used him all over the place and he was hyper-efficient — 4.8 YPC (367 yards on limited carries), 35 catches for 366 yards, 31.3 yards per kickoff return (second-team All-Pro) in just 12 games. If they go back to that usage, it's White's role that gets eaten, not the young rushers'.
+- Either way this is a wait-and-see, not a waiver target. Watch who takes third-down snaps in Week 4 — that's the tell.
 - Sources: Commanders Wire/USA Today 9/28, NY Post 9/28, TSN/ESPN 9/28.
