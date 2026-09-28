@@ -17,6 +17,13 @@ export const metadata: Metadata = {
   description:
     "A fictional NBA DFS slate for optimizer and lineup-validation testing. All players, salaries, and projections are invented, not real contest data.",
   alternates: { canonical: "/fantasy/nba" },
+  // This page is fiction by construction, so it is ALWAYS the sample state and
+  // there is no live feed to wait for. That makes it exactly like /fantasy/dfs,
+  // /fantasy/props and /fantasy/lineup, which are all noindex for this reason.
+  // It was the one fictional slate that could still rank for "NBA DFS" while
+  // serving invented players. Not in the sitemap, but that is not the same as
+  // unindexable.
+  robots: { index: false, follow: true },
 };
 
 /**
@@ -53,9 +60,12 @@ export default function NbaFantasyPage() {
             style={{ background: "radial-gradient(60% 80% at 50% 0%, rgba(255,77,46, 0.08), transparent 70%)" }}
           />
           <div className="mx-auto max-w-5xl">
-            <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan">
-              <span className="live-dot" />
-              Fantasy · NBA · Validator demo
+            <p className="eyebrow text-orbital-cyan">
+              {/* No live-dot here. The dot is a visual claim that this surface is
+                  live, and this surface is invented by construction — a live
+                  signal above a fictional slate is the exact pairing law 8
+                  exists to prevent. /fantasy/props made the same call. */}
+              Fantasy · NBA · Validator demo · fictional data
             </p>
             <h1
               className="mt-5 font-display text-balance text-ion-white"
