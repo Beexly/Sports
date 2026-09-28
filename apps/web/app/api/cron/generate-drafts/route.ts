@@ -140,7 +140,72 @@ export async function GET(request: Request): Promise<NextResponse> {
     );
   }
 
-  return NextResponse.json({ ok: true, daily, weeklyRecap, quietBoard, honestRecord });
+  // A DRAFT CYCLE THAT PRODUCED NOTHING MUST NOT READ AS SUCCESS. MEASURED
+  // 2026-09-28 by reading this route: three of the four generators
+  // (weeklyRecap, quietBoard, honestRecord) are wrapped in isolated catches that
+  // log to console.error and leave the outcome `null`, and `daily` propagates
+  // its own throw. So a cycle where every single draft failed to build returned
+  // `ok: true` on a 200 with a body reading
+  //   { ok: true, daily: null, weeklyRecap: null, quietBoard: null,
+  //     honestRecord: null }
+  // That is the 200-shaped failure fixed in the four sibling crons, and it is
+  // the most consequential of them: this is the content lane, so "the drafts
+  // did not generate" is a customer-visible absence, not an internal metric.
+  // The isolation is deliberate and stays — a failed Monday recap must not take
+  // down the daily brief. It just must not be invisible while doing so.
+  const outcomes = { daily, weeklyRecap, quietBoard, honestRecord };
+  // A generator either produced a draft (`created: true`), deliberately skipped
+  // for a stated reason (`skipped: true`), or FAILED SILENTLY — an outcome
+  // object that is neither, which is what an isolated catch leaves behind when
+  // a builder half-fails. The last case is the one that used to be invisible.
+  const entries = Object.entries(outcomes);
+  const produced = entries.filter(([, v]) => v !== null && v.created === true).length;
+  const silentlyFailed = entries.filter(
+    ([, v]) => v !== null && v.created !== true && v.skipped !== true,
+  ).length;
+  const skipped = entries.filter(([, v]) => v !== null && v.skipped === true).length;
+  const nulled = entries.filter(([, v]) => v === null).length;
+
+  // Nothing at all landed, and at least one generator actually FAILED. "Failed"
+  // means two distinct things here, and the second was the one I originally
+  // missed: a generator can fail by returning a non-conforming outcome OR by
+  // throwing into its isolated catch and leaving `null`. MEASURED 2026-09-28
+  // with a test that drives the real mechanism (the daily brief skipping while
+  // both optional builders throw), which produced exactly
+  //   { produced: 0, skipped: 2, notRun: 2, verdict: "NOTHING PRODUCED: all 2
+  //     generator(s) skipped for stated reasons, 2 not run" }
+  // and still returned ok:true — a null is a generator that DID NOT RUN, and
+  // that is not the same as one that legitimately declined. The word
+  // "NOTHING PRODUCED" in that verdict was the tell.
+  const totalFailed = silentlyFailed + nulled;
+  const nothingLanded = produced === 0 && totalFailed > 0;
+  // Every generator either skipped for a stated reason or failed: nothing ran.
+  const nothingRan = produced === 0 && totalFailed === entries.length;
+
+  return NextResponse.json(
+    {
+      ok: !(nothingLanded || nothingRan),
+      daily,
+      weeklyRecap,
+      quietBoard,
+      honestRecord,
+      coverage: {
+        produced,
+        skipped,
+        silentlyFailed,
+        notRun: nulled,
+        verdict:
+          produced > 0
+            ? totalFailed > 0
+              ? `PARTIAL: ${produced} produced, ${skipped} skipped, ${totalFailed} generator(s) failed`
+              : `OK: ${produced} produced, ${skipped} skipped, none failed`
+            : totalFailed > 0
+              ? `FAILED: nothing produced and ${totalFailed} generator(s) failed (${nulled} never ran)`
+              : `NOTHING PRODUCED: all ${skipped} generator(s) skipped for stated reasons, nothing failed`,
+      },
+    },
+    nothingLanded || nothingRan ? { status: 503 } : {},
+  );
 }
 
 async function generateDailyBrief(
