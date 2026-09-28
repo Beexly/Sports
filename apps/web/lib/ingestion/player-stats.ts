@@ -46,6 +46,51 @@ function int(value: string | undefined): number | null {
 }
 
 /**
+ * Read a field that nflverse has renamed across seasons.
+ *
+ * WHY (measured 2026-09-28 on live Neon). This file read the team key from
+ * `recent_team` alone. nflverse renamed that column after 2024, so
+ * `player_game_stats.team` is now written NULL: empty on all 1,068 rows of 2026
+ * and all of 2025, while seasons 2020-2024 are fully populated (5,447-5,698 rows
+ * each). `opponent` stayed full throughout, which is the tell — one field lost
+ * its source and the other did not.
+ *
+ * WHY IT MATTERS BEYOND A NULL COLUMN. `team` is the join key the whole
+ * adjustment layer fans out on (`computeAdjustments` builds `byTeam` from it),
+ * so an empty team means every §1 OL_INJURY / §2 SECONDARY_INJURY /
+ * §3 PASS_RUSH_INJURY adjustment finds no teammates and silently produces
+ * nothing. The ingest reported success. Two 2025+ seasons of player data were
+ * invisible to the team-scoped rules.
+ *
+ * `depth-charts.ts` already carries this exact `pick()` helper and its own
+ * comment records the same 2025 schema break; this file was the one that did not
+ * get it. Same remedy, same helper shape, so both files resolve a renamed field
+ * the same way.
+ */
+function pick(r: Readonly<Record<string, string>>, keys: readonly string[]): string {
+  for (const k of keys) {
+    const v = r[k];
+    if (v !== undefined && v !== "") return v;
+  }
+  return "";
+}
+
+/**
+ * Team code for a stats row, or null when upstream carries neither spelling.
+ * `recent_team` (legacy, populated through 2024) then `team` (2025+).
+ */
+function teamCode(r: Readonly<Record<string, string>>): string | null {
+  const t = pick(r, ["recent_team", "team"]);
+  return t === "" ? null : t;
+}
+
+/** Opponent code: `opponent_team` legacy, `opponent` 2025+. */
+function opponentCode(r: Readonly<Record<string, string>>): string | null {
+  const o = pick(r, ["opponent_team", "opponent"]);
+  return o === "" ? null : o;
+}
+
+/**
  * Stats season for engines + website + crons.
  *
  * Delegates to `resolveFootballStatsSeason` so product surfaces stay on the
@@ -134,7 +179,7 @@ export async function ingestPlayerWeeklyStats(
     players.set(gsis, {
       fullName: r["player_display_name"] ?? r["player_name"] ?? gsis,
       position: r["position"] ?? null,
-      recentTeam: r["recent_team"] ?? null,
+      recentTeam: teamCode(r),
       headshotUrl: r["headshot_url"] ?? null,
     });
   }
@@ -168,8 +213,8 @@ export async function ingestPlayerWeeklyStats(
     const seasonType = (r["season_type"] ?? "REG").toUpperCase().startsWith("POST") ? "POST" : "REG";
 
     const stat = {
-      team: r["recent_team"] ?? null,
-      opponent: r["opponent_team"] ?? null,
+      team: teamCode(r),
+      opponent: opponentCode(r),
       attempts: int(r["attempts"]),
       carries: int(r["carries"]),
       receptions: int(r["receptions"]),
