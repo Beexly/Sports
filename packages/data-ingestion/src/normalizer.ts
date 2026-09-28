@@ -36,10 +36,16 @@ const MAX_CLOCK_SKEW_MS = 5 * 60 * 1000; // 5 minutes
  * price — so moneyline CLV and moneyline EV are UNPUBLISHABLE until these rows
  * are refused at the boundary.
  *
- * 500 is deliberately generous: the genuine tail of the feed tops out near
- * -535 (espn_public) and -510 (fanduel), so this cuts nothing real. It is a
- * correctness floor, not a tuning knob, and it is a FUNCTION of price
- * validity — it does not touch any gate, floor, flag, or MODEL_VERSION.
+ * 500 is deliberately generous and, MEASURED, immaterial to the book. The
+ * corruption onset was located by price-shape, not guessed: real quotes are
+ * 3.7% round-to-the-hundred between -100 and -500, and that rises to 82.4% in
+ * the 1000-3000 band and 95.9% beyond -3000, with 100.0% of prices at exactly
+ * -1000. Genuine books DO quote non-round prices past -1000 (mybookieag: 10,649
+ * such rows), so a -1000 ceiling is defensible too. Tested both: a 2-book
+ * two-sided quorum survives at EXACTLY the same 259 of 976 moneyline games under
+ * -500 and under -1000, with 0 games rescued by the looser bound and 717
+ * dropping either way. Since the looser ceiling removes no additional games
+ * while permitting prices the shape analysis flags as synthetic, 500 stands.
  */
 const MAX_AMERICAN_PRICE_MAGNITUDE = 500;
 
