@@ -98,6 +98,21 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     })),
     // THE HONESTY BLOCK: what is measured and what is not.
     provenance: {
+      // MEASURED from the rows the window was built from. `season`/`week` above
+      // are what the caller ASKED for; these are what the data actually held, and
+      // the two can disagree without either being wrong (measured 2026-09-28: the
+      // stats feed stopped at 2026 week 3 while the games feed was already scored
+      // through 2026-09-27). `week` alone cannot show that, because it was an
+      // input rather than an observation.
+      newestWeek: report.newestWeek,
+      weeksAvailable: report.weeksAvailable,
+      stale: report.stale,
+      freshness:
+        report.stale || report.weeksAvailable < report.window
+          ? `STALE: requested week ${report.week}, newest measured week ${report.newestWeek}, ` +
+            `${report.weeksAvailable} week(s) available against a ${report.window}-game window. ` +
+            `The projection below is real and measured, but it is built on older games than the requested week.`
+          : `fresh: measured through week ${report.newestWeek}`,
       projection: `MEASURED mean fantasyPointsPpr over the last ${report.window} real games`,
       floorCeiling: `MEASURED observed min/max in the same ${report.window}-game window`,
       salary: report.salaryIsReal

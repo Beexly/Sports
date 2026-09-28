@@ -81,6 +81,33 @@ export interface EngineSlateReport {
   readonly window: number;
   readonly season: number;
   readonly week: number;
+  /**
+   * What the projection could actually see, MEASURED from the rows the query
+   * returned — never from the caller's requested week.
+   *
+   * WHY THIS EXISTS (measured 2026-09-28 on live Neon). `week` was accepted as
+   * a required option and then never used: the stats query filters on `season`
+   * only, so every caller got "the most recent 5 games of whatever exists" and
+   * the report echoed back the week it was ASKED for. Production had
+   * `player_game_stats` for 2026 weeks 1-3 (fetched 90 min before the read)
+   * while `games` and `team_game_logs` were already scored through 2026-09-27 —
+   * a full week ahead. The slate therefore projected from week 3 and described
+   * itself in the week the caller named. Nothing errored, because a projection
+   * built on stale-but-real data is not a fault any layer can detect.
+   *
+   * `newestWeek` is what the data supports; a caller comparing it to `week`
+   * can see the gap instead of inferring freshness from a number that was an
+   * input, not an observation. `weeksAvailable` is what the window could draw
+   * on at all, which is the honest denominator for `PROJECTION_WINDOW`.
+   */
+  readonly newestWeek: number;
+  readonly weeksAvailable: number;
+  /**
+   * True when the data cannot support the requested week. The slate is still
+   * returned — it is built from real measured games, just older ones — so this
+   * is a REPORTED condition, never a silent substitution.
+   */
+  readonly stale: boolean;
 }
 
 const NEUTRAL_OWNERSHIP = 0.5;
@@ -225,6 +252,14 @@ export async function buildEngineSlate(
     });
   }
 
+  // Freshness is measured from the ROWS, never from the caller's `week`. The
+  // stats query selects `week`, so this is an observation of what the window was
+  // actually built from rather than an echo of the request.
+  const observedWeeks = [...new Set(stats.map((s) => s.week))].filter(
+    (w): w is number => typeof w === "number" && Number.isFinite(w),
+  );
+  const newestWeek = observedWeeks.length > 0 ? Math.max(...observedWeeks) : 0;
+
   return {
     players: out,
     dropped,
@@ -235,6 +270,9 @@ export async function buildEngineSlate(
     window: PROJECTION_WINDOW,
     season,
     week,
+    newestWeek,
+    weeksAvailable: observedWeeks.length,
+    stale: newestWeek < week,
   };
 }
 
