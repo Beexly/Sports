@@ -56,6 +56,17 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
     report = await buildEngineSlate({ season, week, now });
   } catch (err) {
     captureError(err, { route: "cron/engine-dfs-slate" });
+    // MEASURED 2026-09-28: this branch returned `{ status: 200 }` with
+    // `success: false` in the body. Someone wrote the failure branch and then
+    // chose 200, so a slate build that CRASHED was answered 200 to Vercel's
+    // scheduler, to any uptime check, and to whoever reads the log — the exact
+    // 200-shaped failure fixed in the three sibling crons in this same series.
+    // The body was honest; only the status lied, which is the worst place for
+    // the lie because the status is what everything automated reads.
+    //
+    // 503: nothing was built, so this cron did not do its work. The note is
+    // kept verbatim — an empty slate is the honest failure and the sample slate
+    // is never substituted.
     return NextResponse.json(
       {
         success: false,
@@ -64,7 +75,7 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
         week,
         note: "An empty slate is the honest failure; the sample slate is never substituted here.",
       },
-      { status: 200 },
+      { status: 503 },
     );
   }
 
