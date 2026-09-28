@@ -54,6 +54,46 @@ Until the project is onboarded to the backend platform, create test branches
 through the Neon console or API with the same 7-day discipline: name them,
 use them, delete them.
 
+## NEON COST & LEVERAGE (2026-09-28, founder)
+
+**Compute duty cycle is the entire game.** Neon bills compute in CU-hours
+(Launch $0.106/CU-hr, min 0.25 CU). A never-suspending compute = 0.25 x 730h =
+~182.5 CU-hrs/mo = **~$19.35/mo**. Storage is trivial at our volumes
+($0.35/GB-mo). Scale-to-zero needs 5 min idle — our 23 crons hit the DB roughly
+every 2 min, so the compute likely never sleeps. Options: accept ~$19/mo as
+the price of fresh signals, batch the writer, or evaluate Neon Functions.
+Full audit: `docs/data-sources/research/2026-09-28/neon-max-leverage-audit-2026-09-28.md`.
+
+Rules: (1) Branch-only testing (above) — every forgotten branch is another
+~$19/mo leak; the `neon.ts` 7-day TTL handles future ones once `neon deploy`
+runs (needs a Neon API key — founder tap). (2) App routes use the `-pooler`
+connection string; direct only for migrations and pg_dump. (3) Cap autoscale
+max at 0.5-1 CU by default; raise deliberately for known heavy jobs.
+(4) PITR history window = 1 day. (5) Spending notifications on.
+Founder taps: confirm the Neon plan tier + current burn in console (the pasted
+billing screenshot was Vercel's, not Neon's — Neon tier unconfirmed); Neon API
+key for `neon deploy`.
+
+## VERCEL COST & LEVERAGE (2026-09-28, founder)
+
+Pro = $20/mo + $20 usage credit. Fluid compute bills memory for the whole
+instance lifetime INCLUDING I/O waits — our I/O-heavy crons should run at
+minimum viable memory with short durations. Region is already iad1 (the cheap
+one). Full audit: `docs/engine/research/2026-09-28/vercel-max-leverage-2026-09-28.md`
+(Vercel = hosting/compute = engine bucket).
+
+Biggest levers: (1) ISR the public projections/rankings pages — a cached
+response costs zero invocations and zero compute. (2) Set a Spend Management
+on-demand budget with alerts (default $200 is too high). (3) CRON_SECRET is
+already enforced on cron routes (verified 2026-09-28). (4) ignoreCommand
+already skips docs-only builds; the real fix is the red build — 50+ failed
+deploys burned real build minutes. (5) AI Gateway pilot: zero markup,
+per-key budgets, built-in fallbacks — queued for evaluation as the fleet's
+router vs OpenRouter (5.5% deposit fee) / NIM; route one lane through a
+budget-capped key for a month and compare. (6) Instant rollback is the runbook
+for the next bad deploy (`vercel promote`, no rebuild).
+Founder taps: spend budget in the Vercel dashboard; AI Gateway pilot decision.
+
 ---
 
 **UPDATED 2026-09-13 (Motif — game-day calibration pass + v5.3.0 spec).** Founder ordered a full
