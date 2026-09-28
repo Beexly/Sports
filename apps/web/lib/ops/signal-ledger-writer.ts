@@ -139,6 +139,7 @@ export function projectSignalCandidates(input: {
         sourceId: "nflverse",
         // The schema requires a rights snapshot on every signal. The source is
         // named rather than left empty, so a row's provenance survives the row.
+        fetchedAt: new Date(r.fetchedAt),
         rightsSnapshot: { source: "nflverse", dataset: key, measured: true },
         ...base,
       });
@@ -165,6 +166,7 @@ export function projectSignalCandidates(input: {
         week: r.week,
         capturedAt: new Date(r.fetchedAt),
         sourceId: "nflverse",
+        fetchedAt: new Date(r.fetchedAt),
         rightsSnapshot: { source: "nflverse", dataset: key, measured: true },
         ...base,
       });
@@ -196,6 +198,7 @@ export function projectSignalCandidates(input: {
         week: r.week,
         capturedAt: new Date(r.fetchedAt),
         sourceId: "nflverse",
+        fetchedAt: new Date(r.fetchedAt),
         rightsSnapshot: { source: "nflverse", dataset: key, measured: true },
         ...base,
       });
@@ -227,6 +230,7 @@ export function projectSignalCandidates(input: {
       week: r.week,
       capturedAt: new Date(r.fetchedAt),
       sourceId: "nflverse",
+      fetchedAt: new Date(r.fetchedAt),
       rightsSnapshot: { source: "nflverse", dataset: "injury.availability", measured: true },
       ...base,
     });
