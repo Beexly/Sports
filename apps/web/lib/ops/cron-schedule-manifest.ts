@@ -167,6 +167,10 @@ export const CRON_MANIFEST: readonly CronManifestEntry[] = [
   // sample, scheduler liveness). Bearer CRON_SECRET like every cron; it was
   // built 2026-08 but never scheduled, so nothing ever read it.
   cronEntry("/api/ops/daily-truth", "5 12 * * *"),
+  // Spec item 4's writer. Without a schedule the `signals` table stays at 0
+  // rows, which is the state this cron exists to end. Hourly at :23, off the
+  // :02/:17/:32/:47 board ticks so it never competes with the public board.
+  cronEntry("/api/cron/signal-ledger-write", "23 * * * *"),
 ];
 
 /** Manifest entry for a path, or null when the path is not a declared cron. */

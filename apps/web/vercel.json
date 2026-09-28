@@ -96,6 +96,10 @@
     {
       "path": "/api/ops/daily-truth",
       "schedule": "5 12 * * *"
+    },
+    {
+      "path": "/api/cron/signal-ledger-write",
+      "schedule": "23 * * * *"
     }
   ],
   "headers": [
