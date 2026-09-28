@@ -202,7 +202,6 @@ export async function GET(req: Request): Promise<NextResponse> {
         : candidates.filter((c) => shardOf(c.entityId, c.key, shard));
     const deadline = new Date(startedAtMs + (maxDuration - TAIL_RESERVE_MS) * 1000);
     report = await writeSignalCandidates(db, scoped, { deadline });
-    report = await writeSignalCandidates(db, candidates, { deadline });
   } catch (error) {
     captureError(error, { tags: { surface: "signal-ledger-write" } });
     return NextResponse.json(
