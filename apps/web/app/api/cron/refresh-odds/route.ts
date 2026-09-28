@@ -73,13 +73,27 @@ export async function GET(request: Request) {
       logPrefix: "[cron:refresh-odds:signal-only]",
       trace: await slateAssociationTrace(),
     });
-    return NextResponse.json({
-      ok: true,
-      skipped: "no-odds-key",
-      refreshed: false,
-      reason: "No THE_ODDS_API_KEY / RUNDOWN_API_KEY — signal-only board fill attempted",
-      signals,
-    });
+    // A REFUSAL TO RUN IS NOT A HEALTHY RUN. MEASURED 2026-09-28: this branch
+    // returned `ok: true` with `refreshed: false` on a 200, so an odds plane
+    // that is not configured at all — provider offline, key missing, quota
+    // exhausted — reported PERFECT HEALTH to every status-reading consumer.
+    // That is worse than the failed-fetch case below: this one is silent by
+    // construction and is the default configuration on any deploy without a
+    // key. `ok` now states the truth (the signal-only fill happened) and the
+    // status states that no odds were fetched.
+    const slateOk = signals?.ok === true;
+    return NextResponse.json(
+      {
+        ok: slateOk,
+        skipped: "no-odds-key",
+        refreshed: false,
+        reason: "No THE_ODDS_API_KEY / RUNDOWN_API_KEY — signal-only board fill attempted",
+        signals,
+      },
+      // 503: the odds plane is not serving. A monitoring check that only reads
+      // the status now sees an unconfigured plane instead of a green one.
+      slateOk ? { status: 200 } : { status: 503 },
+    );
   }
 
   const gates = getReadinessGates();
@@ -175,9 +189,15 @@ export async function GET(request: Request) {
   const fetchedAtPingUrl = process.env["HC_ODDS_FETCHEDAT_PING_URL"];
   const oddsFetchedAt = await monitorOddsFetchedAt(fetchedAtPingUrl);
 
-  return NextResponse.json({
-    ok: result.ok,
-    elapsedMs: result.elapsedMs,
+  // This response carried NO status argument, so it was always 200. MEASURED
+  // 2026-09-28: a failed refresh was honest in the body and a lie in the header.
+  // A zero-quote run over a non-zero slate is also a failed refresh, per the
+  // comment above. 503 is used for both: the odds plane is not serving.
+  const served = result.ok && !(result.totalCount > 0 && result.okCount === 0);
+  return NextResponse.json(
+    {
+      ok: served,
+      elapsedMs: result.elapsedMs,
     okCount: result.okCount,
     totalCount: result.totalCount,
     requestedSport: requestedSport ?? null,
@@ -193,5 +213,7 @@ export async function GET(request: Request) {
       summary: oddsFetchedAt.freshness.summary,
       pinged: oddsFetchedAt.pinged,
     },
-  });
+    },
+    served ? {} : { status: 503 },
+  );
 }
