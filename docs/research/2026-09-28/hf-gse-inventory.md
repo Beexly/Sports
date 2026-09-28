@@ -1,5 +1,13 @@
 # Hugging Face × GSE — repo audit + opportunity inventory (2026-09-28)
 
+> **CORRECTION (Garrett, 2026-09-28 — HARD):** an earlier version of this report marked items
+> SKIP/DEAD without testing them. That was wrong. Standing doctrine: **DO NOT CLAIM THINGS ARE
+> DEAD UNTIL TESTED AND CITED AND CONFIRMED. WE INGEST, WE LEARN** — we do not use commercial
+> data commercially, we do not sell their data; we learn from it with intelligence and reasoning,
+> then give our own analysis. Every verdict below that was not backed by a live test has been
+> downgraded to **UNTESTED — QUEUED FOR EVALUATION**. A restrictive license means
+> research/learn-only, never "throw it away." Likes/stars are not evidence of deadness.
+
 **Question:** Garrett has HF ZeroGPU access and believes HF was discussed for GSE but never wired up.
 **Answer:** Correct. HF appears in the repo only as documentation and license-forbidden registry entries.
 Zero code calls it. ZeroGPU was used once in real life (voice-clone tests, local only) and planned
@@ -96,7 +104,7 @@ how the 2026-09-13 voice-clone tests ran.
 | `Salesforce/moirai-1.0-R-small` | **CC-BY-NC-4.0** ✗ | — | **SKIP** — non-commercial, incompatible with GSE. |
 | `time-series-library/lag-llama` | **GATED**, license unverified | — | **LATER** — check card after accepting; not first pick. |
 | `facebook/detr-resnet-50` — detection bootstrap for the movement module | Apache-2.0 (known) | Already in `external-registry.ts` as research-first | **LATER** — use when detector wiring starts; registry entry exists. |
-| NFL datasets on HF (`tuxmx/nfl_bets_scores`, `keremberke/nfl-object-detection`, `dolly-the-sheep/NFL_game_footage`, etc.) | **None declared** on any of them | — | **SKIP** — unlicensed scraps, 0–7 likes each. No nflverse mirror exists on HF. nflverse-direct + Neon remain the source. |
+| NFL datasets on HF (`tuxmx/nfl_bets_scores`, `keremberke/nfl-object-detection`, `dolly-the-sheep/NFL_game_footage`, etc.) | **None declared** on any of them | — | **UNTESTED — QUEUED FOR EVALUATION** — earlier draft wrongly called these "unlicensed scraps, SKIP" without testing. Per doctrine: ingest, inspect actual contents + provenance, learn what we can, then decide. No nflverse mirror exists on HF (verified); that is a fact about availability, not a verdict on these datasets. |
 | `MCG-NJU/SportsMOT` (player tracking eval) | **CC-BY-NC-4.0** ✗ | — | **SKIP for product** — eval/research only, consistent with existing doctrine. |
 | Embeddings for the research corpus: `BAAI/bge-m3` (**MIT** ✓), `mixedbread-ai/mxbai-embed-large-v1` (**Apache-2.0** ✓); reranker `BAAI/bge-reranker-v2-m3` (**Apache-2.0** ✓) | Permissive ✓ | CPU, in-process or microservice | **USE NOW** — retrieval over the 585-paper arXiv corpus + X analytics sweep. Cheapest high-value ML win available; zero GPU needed. |
 
@@ -106,7 +114,7 @@ how the 2026-09-13 voice-clone tests ran.
 |---|---|---|---|
 | `nvidia/parakeet-tdt-1.1b` — speech recognition | **CC-BY-4.0** ✓ (attribution required) | ZeroGPU Space or NVIDIA NIM endpoint | **USE NOW** — commentary transcription lane (brev lane-4 already flagged it). Give attribution, it's clean. |
 | `nvidia/NVIDIA-Nemotron-Parse-2.0` — PDF/chart→structured text | **OpenMDW-1.1** (NVIDIA Open Model License — review terms before commercial use) | ZeroGPU / NIM | **LATER** — research-intake parsing; license review first. |
-| Sports predictor Spaces (`saimanideeppellimari/NFL_prediction`, `seh363/Fantasy-Football-Expected-Points`, etc.) | n/a | — | **SKIP** — all 0–1 likes, dead personal projects. GSE engine stays home-grown per the re-implementation rule. |
+| Sports predictor Spaces (`saimanideeppellimari/NFL_prediction`, `seh363/Fantasy-Football-Expected-Points`, etc.) | n/a | — | **UNTESTED — QUEUED FOR EVALUATION** — earlier draft wrongly called these "all dead, 0–1 likes" without running them. Per doctrine: actually run each Space, record what it predicts and how, learn its method, then judge. GSE engine stays home-grown per the re-implementation rule — but their METHODS are ingestible. |
 
 ### Revenue engine (Garrett: "efficiency, production, overhead, customer service, retention")
 
@@ -148,8 +156,12 @@ how the 2026-09-13 voice-clone tests ran.
     chase a ghost.
 
 ### Standing rules this inventory respects
-- CC-BY-NC / non-commercial assets (Moirai, SportsMOT, OmniVoice weights) never touch the product —
-  research/lab only, matching the existing SmartStake/Kalshi fence precedents.
+- **INGEST-AND-LEARN (Garrett, 2026-09-28 — HARD):** nothing is DEAD until tested, cited, and
+  confirmed. Untested = UNTESTED, queued for evaluation. We ingest, we learn with intelligence
+  and reasoning, then give our own analysis. We do not use commercial data commercially and we
+  do not sell their data.
+- CC-BY-NC / non-commercial assets (Moirai, SportsMOT, OmniVoice weights) are research/learn-only —
+  that is a license fact, not a verdict to discard them. Their methods are still ingestible.
 - "Discovery is not approval" (already written in the source-registry notes): every model gets
   license + security (SkillSpector) + benchmark review before install.
 - Gated models (TimesFM, Lag-Llama) need per-model terms acceptance — a Garrett tap, not an agent action.
