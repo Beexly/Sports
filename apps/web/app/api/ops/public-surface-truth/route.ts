@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isContestsPublic, isStatsPublic, PUBLIC_NAV_POLICY } from "@/lib/launch/public-surface-gate";
-import { resolveContestStorageMode } from "@/lib/contests/store";
 import { resolveWaitlistStorageMode } from "@/lib/gse/waitlist-store";
 import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 import { HANDLED_STRIPE_WEBHOOK_EVENTS } from "@/lib/billing/stripe-webhook-events";
@@ -813,7 +812,6 @@ export async function GET(request: Request) {
         minSettledPicksForLearning: gates.minSettledPicksForLearning,
         calibrationPublished,
       },
-      contestStorage: resolveContestStorageMode(),
       waitlistStorage: resolveWaitlistStorageMode(),
       waitlist,
       settlement,

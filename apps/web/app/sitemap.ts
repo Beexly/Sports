@@ -149,12 +149,6 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           { path: "/stats/expert-board", priority: 0.5, changeFrequency: "weekly" as const },
         ] as const)
       : []),
-    ...(isContestsPublic()
-      ? ([
-          { path: "/fantasy/contests", priority: 0.6, changeFrequency: "weekly" as const },
-          { path: "/contests", priority: 0.65, changeFrequency: "daily" as const },
-        ] as const)
-      : []),
   ];
 
   // Internal surfaces are filtered here rather than deleted from ROUTES.
