@@ -14,16 +14,19 @@ interface RegistryRow {
 }
 
 describe("live edge registry", () => {
-  it("names the eight parts already in the sum, once, at the engine prior", () => {
-    expect(LIVE_EDGE_PARTS).toHaveLength(8);
+  it("names the nine parts already in the sum, once, at the engine prior, premise for the nine live rows", () => {
+    expect(LIVE_EDGE_PARTS).toHaveLength(9);
     const ids = LIVE_EDGE_PARTS.map((part) => part.family);
-    expect(new Set(ids).size).toBe(8);
+    expect(new Set(ids).size).toBe(9);
     for (const part of LIVE_EDGE_PARTS) {
       const family = ENGINE_FAMILIES.find((row) => row.id === part.family);
       expect(family?.prior).toBe(part.prior);
-      expect(family?.role).toBe("premise");
+      expect(["premise", "dark"]).toContain(family?.role);
       if (part.sibling) expect(part.siblingCap).toBe(0.15);
     }
+    expect(ENGINE_FAMILIES.find((row) => row.id === "narrative_contract")?.role).toBe("dark");
+    expect(LIVE_EDGE_PARTS.find((part) => part.family === "narrative_contract")?.prior).toBe(0.03);
+    expect(LIVE_EDGE_PARTS.map((part) => part.family)).not.toContain("market_context");
   });
 
   it("keeps the LAC at BUF parts equal to the edge", () => {

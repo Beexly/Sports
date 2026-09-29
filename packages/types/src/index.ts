@@ -908,7 +908,7 @@ export interface PublicBlogPost {
 export * from "./signal-registry.js";
 
 // Canonical model version boundary constant
-export const CANONICAL_MODEL_VERSION = "v5.2.7";
+export const CANONICAL_MODEL_VERSION = "v5.3.0";
 
 // ── CLV push-doctrine rates: three denominators, side by side ────────────────
 //
