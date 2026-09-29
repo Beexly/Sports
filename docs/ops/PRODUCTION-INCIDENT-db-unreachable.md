@@ -152,3 +152,51 @@ shipped.
 | 3m / 13m / 25m | Preview | Ready / Ready / Ready |
 
 Previews succeed because preview builds are not gated on the production database.
+
+---
+
+## ADDENDUM 2 — narrowing the hypothesis (read-only, no changes made)
+
+Three observations that further discriminate between the candidate causes.
+
+**1. The 503 is fast and deterministic, not a cold start.**
+`/api/health` returns 503 in 0.67s, 0.66s, 0.69s across three consecutive
+probes. A Neon scale-to-zero wake takes seconds to tens of seconds and is
+non-deterministic on the first hit. A consistent sub-second rejection is a
+refusal, not a cold start.
+
+**2. Scale-to-zero is unlikely to be the whole story anyway.**
+`packages/db/pg-cron/001-rate-limit-prune.sql` states it plainly: *"the 23 Vercel
+crons already pin the prod compute awake (scale-to-zero needs 5 idle minutes)."*
+The `refresh-odds` cron runs every 15 minutes, which is well inside the wake
+window. So a merely-suspended compute should already have been woken by the cron
+that is failing — which is itself consistent with the cron failing to connect
+rather than the cron waking it.
+
+**3. The credential hypothesis is the one that fits both failures.**
+The build log shows the HTTP/443 fallback *reaching* authentication and being
+refused for `neondb_owner`. Reaching auth means DNS resolved, TLS negotiated, and
+Postgres spoke. Only a credential or a suspended-compute-invalidation explains
+"authenticates, then refuses" — and it explains why the TCP path fails at the
+same time.
+
+**Ranked, with what would confirm each:**
+
+| # | Hypothesis | Confirm by | Cost of being wrong |
+|---|---|---|---|
+| 1 | `neondb_owner` password rotated in Neon, or the Vercel env var is wrong/stale | Neon console: check the role's password age; Vercel: compare `DIRECT_URL` and `DATABASE_URL` against the console value | Hours; a redeploy with correct creds fixes it immediately |
+| 2 | Prod compute suspended or in a failed state | Neon console: compute status + `SELECT 1` from the console | Minutes; resume the compute |
+| 3 | Branch/endpoint deleted or renamed, leaving the env vars pointing at a host that no longer resolves for auth | Neon console: confirm the branch and that `neondb_owner` still exists on it | Minutes to fix the env var, but the branch may need recreating |
+
+**What NOT to do.** The build log itself offers
+`MIGRATE_GATE_ALLOW_UNVERIFIED=true` as a "deliberate temporary override." Using
+it would turn a failed build green and deploy a Prisma client against a schema
+whose parity was never confirmed. The gate's own message says that exact
+mismatch "caused the /api/picks outage" previously. The guard is the only thing
+currently standing between a credentials problem and a silent schema mismatch in
+production. Override it and the failure mode becomes invisible.
+
+**Meanwhile:** the last good deployment keeps serving, so public pages are up and
+only DB-backed routes are dark. There is no data loss from the outage itself —
+the writes that never happened were odds fetches, and the credit governor spent
+nothing.
