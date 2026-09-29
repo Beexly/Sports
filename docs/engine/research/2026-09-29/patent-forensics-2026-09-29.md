@@ -2,7 +2,7 @@
 **Research date:** 2026-09-29 · **Read-only research** · **Analyst:** Motif + two forensic subagents
 **Question from Garrett:** before we build on these expired patents, understand the FULL scope — why did the original owners stop? Dead end? Funding? Acquisition? Just term expiry?
 
-**Correction to the earlier report:** US20060132487A1 ("vanishing-point camera analysis") was listed as an abandoned Sharp application. It is NOT Sharp — it was filed by Object Prediction Technologies LLC and GRANTED as US7609855B2 (Oct 27, 2009, inventors Sada/Tsai/Meijome), now expired for non-payment of fees. It's still free prior art for our purposes — arguably cleaner than assumed. Details in §8.
+**Correction to the earlier report:** US20060132487A1 ("vanishing-point camera analysis") was listed as an abandoned Sharp application. It is NOT Sharp — it was filed by Object Prediction Technologies LLC and GRANTED as US7609855B2 (Oct 27, 2009, inventors Sada/Tsai/Meijome), now expired for non-payment of fees. It's still free prior art for our purposes — arguably cleaner than assumed. Details in PART 2, US7609855B2 row.
 
 ---
 
@@ -10,7 +10,7 @@
 
 **Headline: normal 20-year term expiry on a commercial winner. The tech won, the company was acquired, the patents aged out.**
 
-| Patent | Title | Filed → Granted | Status |
+| Patent | Title / function | Filed → Granted | Status |
 |---|---|---|---|
 | [US7075556B1](https://patents.google.com/patent/US7075556B1/en) | Telestrator system | 1999-10-21 → 2006-07-11 | Expired – Lifetime (2019) |
 | [US5953077A](https://patents.google.com/patent/US5953077A/en) | System for displaying an object not visible to a camera (FoxTrax glowing puck) | 1997-01-17 → 1999-09-14 | Expired – Lifetime (2017) |
@@ -41,7 +41,7 @@
 
 **Headline: fee lapse — Sharp deliberately stopped paying. The parent company orphaned the technology, the licensing spin-out failed to gain traction, then Sharp's corporate crisis killed the lab.**
 
-| Patent | Title | Filed → Granted | Status |
+| Patent | Title / function | Filed → Granted | Status |
 |---|---|---|---|
 | [US7499077B2](https://patents.google.com/patent/US7499077B2/en) | Automatic summarization of football video (parent) | 2001-08-20 → 2009-03-03 | Expired — Fee Related (2022) |
 | [US7312812B2](https://patents.google.com/patent/US7312812B2/en) | Detecting the start of a football segment (line-convergence cue) | 2005-01-05 → 2007-12-25 | Expired — Fee Related (2022) |

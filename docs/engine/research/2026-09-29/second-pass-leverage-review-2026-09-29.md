@@ -1,6 +1,6 @@
 # Second-Pass Leverage Review — 2026-09-29
 **What the first pass missed, what's under-leveraged, and what the data actually says.**
-Integrates: patent-mining report (5 ARE + 5 GSE ideas, 30 kills) + awesome-llm-apps leverage map (45 items) + 5 empirical gap-fills with sources. Raw synthesis: `~/workspace/second-pass/raw-synthesis-2026-09-29.md`. Gap-fills: `~/workspace/second-pass/gap-fills-2026-09-29.md`.
+Integrates: patent-mining report (5 ARE + 5 GSE ideas, 30 kills) + awesome-llm-apps leverage map (45 items) + 5 empirical gap-fills with sources. Raw synthesis: `docs/engine/research/2026-09-29/second-pass-raw-synthesis-2026-09-29.md`. Gap-fills: `docs/engine/research/2026-09-29/second-pass-gap-fills-2026-09-29.md`.
 
 ---
 

@@ -89,9 +89,9 @@ GSE's rule (2026-09-28): the public site shows **only projections and rankings**
 - **Revenue shape:** indirect — data hygiene for everything downstream (content + models).
 
 ### G4. Vanishing-point broadcast-camera calibration (the geometric brick under G1/G2)
-- **Patent:** US20060132487A1 — *"Method of analyzing moving objects using a vanishing point algorithm"* — application, never granted (abandoned).
+- **Patent:** US20060132487A1 (Object Prediction Technologies LLC) — *"Method of analyzing moving objects using a vanishing point algorithm"* — GRANTED as US7609855B2 (Oct 27, 2009); now expired for non-payment of fees.
 - **What it teaches:** Use field-line vanishing points to recover camera geometry from broadcast video without instrumenting the camera — the calibration step everything else depends on.
-- **GSE implementation:** Not a standalone product — the calibration front-end for G1 (field homography) and G2 (field-color masking). Abandoned-application status means it is pure prior art; the method is implemented from scratch with modern line detectors. **UNTESTED — QUEUED FOR EVALUATION.**
+- **GSE implementation:** Not a standalone product — the calibration front-end for G1 (field homography) and G2 (field-color masking). Expired-grant status means it is free prior art; the method is implemented from scratch with modern line detectors. **UNTESTED — QUEUED FOR EVALUATION.**
 - **Agent-fleet build effort:** ~1 week prototype inside G1.
 - **Revenue shape:** indirect — accuracy foundation for G1/G2.
 
