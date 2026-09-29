@@ -114,8 +114,18 @@ export function middleware(req: NextRequest): NextResponse {
 }
 
 export const config = {
+  // Cost-leverage (2026-09-28): middleware used to run on EVERY page view
+  // (match-all minus statics) just to reach a `NextResponse.next()` no-op for
+  // public routes. The only real work here is (a) the /dashboard|/admin|/cockpit
+  // cookie redirect, (b) the /waitlist Basic Auth gate, and (c) the /embed
+  // early return — which is itself a no-op pass-through. Narrowing the matcher
+  // to the paths that actually need middleware deletes a middleware invocation
+  // on every public page view (Pro: 1M included, then $0.65/1M). Behavior is
+  // unchanged: /embed/* and all other public paths never needed middleware.
   matcher: [
-    // Match all paths except static files and API routes
-    "/((?!_next/static|_next/image|favicon.ico|api/).*)",
+    "/dashboard/:path*",
+    "/admin/:path*",
+    "/cockpit/:path*",
+    "/waitlist/:path*",
   ],
 };
