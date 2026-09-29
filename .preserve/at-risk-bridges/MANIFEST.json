@@ -1,0 +1,385 @@
+{
+ "captured": "2026-09-29",
+ "reason": "Uncommitted work found in an UNREGISTERED worktree under a MiMo session dir. The blobs are not in any git object store, so a git-level recovery path does not exist. Found by docs/ops/queue-status.md.",
+ "sourcePath": "C:/Users/Garrett/XiaomiMiMoProjects/.mimo-sessions/2026-09-24/.../repo",
+ "status": "PRESERVED ONLY - not reviewed, not compiled, not wired. A preservation copy, not an endorsement.",
+ "count": 75,
+ "totalBytes": 2319752,
+ "files": [
+  {
+   "file": "apps/web/lib/api-v1/api-v1-composed-metric-payload-bridge.test.ts",
+   "bytes": 3112,
+   "sha256": "676f64028a443ae53734754b93c862d09b91d7f057d019f8a29cb84b35b41375"
+  },
+  {
+   "file": "apps/web/lib/api-v1/composed-metric-payload-fixture-bridge.ts",
+   "bytes": 2645,
+   "sha256": "7d75c9250f7437381d79f9b128fecf130492d21f58ea5bd5e2d9e388e23439f6"
+  },
+  {
+   "file": "apps/web/lib/api-v1/rpcp-conformal-bridge.test.ts",
+   "bytes": 1843,
+   "sha256": "191d7725e1305d538c9851ef4cb6acc29416e54e6c1e5c2433f9bb233c2526ea"
+  },
+  {
+   "file": "apps/web/lib/api-v1/rpcp-conformal-bridge.ts",
+   "bytes": 6746,
+   "sha256": "85e32c71983129d51085d1046267e534f46222dd1fbf7f03b01ed07996ba7c3f"
+  },
+  {
+   "file": "apps/web/lib/api-v1/workflow-task-bridge.ts",
+   "bytes": 1025,
+   "sha256": "23799f95fb1c2de048183e7f11ca266a052e5f44d0989d126af8c3535a8559da"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/bayesian-bridge.test.ts",
+   "bytes": 4511,
+   "sha256": "ad29dc75ba328a64efee4ec30572d266310fe3da0d063d1ef772394190e660f2"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/bayesian-bridge.ts",
+   "bytes": 11526,
+   "sha256": "8c1ba65500515cfdbe97f60f1f2b2620a70094a1184a3c54804b157f97701e6c"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/bayesian-pairing-bridge.test.ts",
+   "bytes": 4017,
+   "sha256": "b91165f8ee04946f3a09b0687ed2585070006de3610e4f26316938fba75765ef"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/bayesian-pairing-bridge.ts",
+   "bytes": 10271,
+   "sha256": "e3bc0bcd883e33e21ed5c43632ff19380b2d1be4d6a44d2e3a3c69a48009b62c"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/bayesian-residue-bridge.test.ts",
+   "bytes": 5618,
+   "sha256": "f9f1912b982d677ef5641784f59811ee71d690f6b6f60864714038510be7420a"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/bayesian-residue-bridge.ts",
+   "bytes": 14981,
+   "sha256": "1aef78b49112a4a13f1ca4afd10fff40eb6d7f1db6da52b505295dc161a10618"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/calibration-conformal-bridge.ts",
+   "bytes": 140509,
+   "sha256": "a80b729a0e0469309b931ac250ac3d9255fb75e47d7006df39d0161c4d554cf8"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/certificate-bridge.test.ts",
+   "bytes": 4074,
+   "sha256": "f743065f911dc9e285b8f69a25f995413a7516cbd089a1ffcbb4e4a5ba21f2f3"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/certificate-bridge.ts",
+   "bytes": 8388,
+   "sha256": "ad956dbc7cc52416aa0ff992a0494be3abef0013b57916245f5b5227b2db91b5"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/continual-learning-bridge.test.ts",
+   "bytes": 5305,
+   "sha256": "d846c6b009d2d8e9077670cc98fad1bc610f08ed0244506dae2f3b58592bafdc"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/continual-learning-bridge.ts",
+   "bytes": 13067,
+   "sha256": "e055c6fbb5ac9c1279ac0bf933cb519bfeab6aa0acc4310e996a88a50119122b"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/decision-ensemble-bridge.ts",
+   "bytes": 138338,
+   "sha256": "6a064d3d823056f42814226068005bb8881e55b8e09f3282aae1783598e2eb6b"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/dfs-bridge.test.ts",
+   "bytes": 13140,
+   "sha256": "601650094722a5b844e0e071d5250259fa78e40ccd1232d0de6055679997568e"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/dfs-bridge.ts",
+   "bytes": 23123,
+   "sha256": "e066753433023aaea1f213305bae728622619f2aeef94539326b1fc5c46ca705"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/edge-lab-bridge.test.ts",
+   "bytes": 4356,
+   "sha256": "607bab9f98ee9e9fceba60c383f6137e1946b01c64d760906851e30a6bd6fd51"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/edge-lab-bridge.ts",
+   "bytes": 12539,
+   "sha256": "74ff9f5a7946a556f86eeb8eb5854b58fdc6dd4e11cc21d07d96b520e5db6728"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/edge-lab-honesty-bridge.test.ts",
+   "bytes": 10734,
+   "sha256": "f8b6fa09780d73f6726d5878e1644f85490b97f8ce355d15c6c0b037fe9c7ba8"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/edge-lab-honesty-bridge.ts",
+   "bytes": 20120,
+   "sha256": "1dc9d0f7c908e2e1343056b808d4837a8237b993a1dfaa4a6b51ebdcc217732f"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/edge-lab-honesty2-bridge.test.ts",
+   "bytes": 31037,
+   "sha256": "229836acb43333315015803b2a488e0c974454fd41305ea82a7f26bb5452669c"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/edge-lab-honesty2-bridge.ts",
+   "bytes": 55034,
+   "sha256": "1d5aa9947c9797ce70d33371d724ea43bd86392002ab69155ec97168fa069b33"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/ensemble-bridge.test.ts",
+   "bytes": 2482,
+   "sha256": "44f3e69c05b145d42b22639d7f62ba78d177c004c92340a09143969ec0578cc8"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/ensemble-bridge.ts",
+   "bytes": 3839,
+   "sha256": "8ea611609ae13ccba9db1dd603ec5dedd0a09f52a38c30be847a0fdaf9a7d50c"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/experimental-models-bridge.test.ts",
+   "bytes": 25334,
+   "sha256": "009d403189fe111b2a61a297802559fed4add0e64ac69de870b45749579b954a"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/experimental-models-bridge.ts",
+   "bytes": 42930,
+   "sha256": "4a48faa1a08fe7bbba41365c0e97fef639bbd5f03e84e2db2c846f41064d4762"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/inplay-bridge.test.ts",
+   "bytes": 3358,
+   "sha256": "240f624251fad730f691d81082e4f2a83d148d2a590220ce96536632cfb70b21"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/inplay-bridge.ts",
+   "bytes": 5588,
+   "sha256": "468258eeeeeda5ea09cde57e48127fa8e1d417c652841c7a976df5540f5169dc"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/invention-tracking-bridge.test.ts",
+   "bytes": 38091,
+   "sha256": "678a95990879b4a7772072b4b9695db4ecca3c15d57d86bceece9b6270dae87d"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/invention-tracking-bridge.ts",
+   "bytes": 61691,
+   "sha256": "d9184909f8df9f7cec889282ec43cbeb68b29840d75a9c76429440090d268da4"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/markets-odds-bridge.test.ts",
+   "bytes": 58793,
+   "sha256": "eaf475f51dc94bcf00394ac5592d8736e41b78457cbd6c22d8fff87df5badab4"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/markets-odds-bridge.ts",
+   "bytes": 74719,
+   "sha256": "de45c89a1a8e6708e318d2afa2472ece9bcb9b33536531546695019ae20757ed"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/metalearning-conformal-bridge.test.ts",
+   "bytes": 7088,
+   "sha256": "cb8a925a3523051393cdbee95a225724e4dd79e0f537fb119166de101742e880"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/metalearning-conformal-bridge.ts",
+   "bytes": 15920,
+   "sha256": "283dde8788244f1ca2b5ae5dd5bcc7f3c10a30663a6a010982417c424acb4785"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/monitoring-bridge.test.ts",
+   "bytes": 4455,
+   "sha256": "e95845b2204a7685cc51a88c35c024266008af0fbe09b1a4c7c60422ff01e8ce"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/monitoring-bridge.ts",
+   "bytes": 9072,
+   "sha256": "d51fdd19bd2ca0c962d2d44ab6e497b9ad693ba16358ef2b6a6cf33db14d6694"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/nfl-batch-bridge.test.ts",
+   "bytes": 11331,
+   "sha256": "92ac58c5a72ca7586d8385671d38ff2c427377294f5278b86d1e9101e60c7263"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/nfl-batch-bridge.ts",
+   "bytes": 18094,
+   "sha256": "99743ad919b1c4d609ac7b20d652dcb8e2d736c9503e1a86617b88ad82ae902b"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/physical-context-bridge.test.ts",
+   "bytes": 11604,
+   "sha256": "2027c0f436d32eb36809edce7558679b30a777679bb57cd725b00b23a2308208"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/physical-context-bridge.ts",
+   "bytes": 21856,
+   "sha256": "a7852f1fc17d8371d3b34c55132146173b2384db91d6bc365bcc4abb27283d2f"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/props-hb-bridge.test.ts",
+   "bytes": 10729,
+   "sha256": "2bfd3cd861462dda551a39f453fca6b065d6ec98ee7334fac4be21685e6ff7b9"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/props-hb-bridge.ts",
+   "bytes": 29463,
+   "sha256": "7ef87cd5cf29ae12c0022f2a04890d432a5feb082e22a528217b6e4d6d1325ed"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/props-metrics-bridge.test.ts",
+   "bytes": 35427,
+   "sha256": "a4e9ffe405343a656332a124d6b6ef7906eee17260f5137c1d5bfe491d4a9b71"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/props-metrics-bridge.ts",
+   "bytes": 55743,
+   "sha256": "70682b16be7188b2216ff892d12daaa06e40492e29f48b90e7b1f829c875c5e3"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/props-player-bridge.test.ts",
+   "bytes": 5004,
+   "sha256": "998c5ee9964d712dec593e519ade32a132cc4c775a9c24826745c707f32a00cc"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/props-player-bridge.ts",
+   "bytes": 9728,
+   "sha256": "681e7f4074f8a816c7cb5436e8da0c60e9837ac88d4d323ebb029c7734c50416"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/publish-guards-bridge.test.ts",
+   "bytes": 5803,
+   "sha256": "1c3349b0bae2081edbdc5e77e8c5afa67c99038c932afc4aceef64f7a73b8d9d"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/publish-guards-bridge.ts",
+   "bytes": 11116,
+   "sha256": "4a04b89d9e5cdeaf56fcae8a0959b795c9ad7029e3f37b2f2b409e1f8a6b9939"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/ratings-bridge.test.ts",
+   "bytes": 38955,
+   "sha256": "6b6a2909aae50c59ca00747650756925b3a9998a1970434f29eb3dee095cfb04"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/ratings-bridge.ts",
+   "bytes": 151907,
+   "sha256": "cb15cf264696f1bec3c38e593b23af8ef364aab7fc4c51fdce138d8c030187a1"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/research-causal-bridge.test.ts",
+   "bytes": 14246,
+   "sha256": "b64028123f1dae2d8377683ec02b6d21552ab5f80f1c2b9b19f461db9d2f1c31"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/research-causal-bridge.ts",
+   "bytes": 21273,
+   "sha256": "62bcd0b94d30605f678e7ced231379ffa8de450154168b910b0d107f3cd16d2d"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/research-gse-bridge.test.ts",
+   "bytes": 49742,
+   "sha256": "a639dd7a396a57a5b6bb1e81d7f373caaf04904c71840083845df5453f50c807"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/research-gse-bridge.ts",
+   "bytes": 132742,
+   "sha256": "a105b0fa65d2df3372a5cdb6c856ff57d791ebf966fd6439652df5ce0a0ef05c"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/rl-residue-bridge.test.ts",
+   "bytes": 5566,
+   "sha256": "47dacab5412102fc01ce97f0b0204e852d0715205508f30e2f534ed71765a07e"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/rl-residue-bridge.ts",
+   "bytes": 12723,
+   "sha256": "2b7bc951473b80a6fb559165689711d95a42f420ef44067f4186bf3cfd7989f0"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/rl-symreg-bridge.test.ts",
+   "bytes": 8407,
+   "sha256": "5459fa8d2aca900e6d7b6afceab614bd6733b796a5a68a974cdb7b7ca10be196"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/rl-symreg-bridge.ts",
+   "bytes": 20142,
+   "sha256": "62dbe185e202402f65eb7428c2802a227a1316766ff5585a27f0e0041cdd7526"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/root-research-bridge.ts",
+   "bytes": 132773,
+   "sha256": "f4bd58a35828f6940b637481f0ab665e000be84b91b94ef6761309f833bb7ba9"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/score-model-bridge.test.ts",
+   "bytes": 3913,
+   "sha256": "273f062d9195785623f12098e763884f7296886c1fc74d48a4eeecb509977029"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/score-model-bridge.ts",
+   "bytes": 10024,
+   "sha256": "4a531b78783e55fa1fb34fd4f3c1999914ca3b78fa418ec697502190d36c2a45"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/scoredist-bridge.test.ts",
+   "bytes": 52400,
+   "sha256": "6d96f6c8cd36f510eb38d6651a15e77bd09a350e3ab137c3e856768de2471a5d"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/scoredist-bridge.ts",
+   "bytes": 113222,
+   "sha256": "1bc9ea4d5d554c6060135aaf113f1b3e5e6487b7139eb2eb194c0391cd77fb5f"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/signals-bridge.test.ts",
+   "bytes": 68970,
+   "sha256": "a1593ee8244b69145312ab0d35c5b6ea01f4741b1e20a34738fd28f0466859d8"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/signals-bridge.ts",
+   "bytes": 141377,
+   "sha256": "d38192643a0bd43428a9feb2d1d5e6f592a65f24debd7c85272e34695f00305d"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/sizing-bridge.test.ts",
+   "bytes": 59735,
+   "sha256": "1634a4c3e4c45950def5ff6ca185cbc780a5ede69aeadffc0175f28392cac571"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/sizing-bridge.ts",
+   "bytes": 109576,
+   "sha256": "a81ea57ee3597f7f3b5947af57fc120946d8081676c3349dfc4900ace29156a6"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/symreg-conformal-residue-bridge.test.ts",
+   "bytes": 10573,
+   "sha256": "1914b010b8b2fcb55ae3debe89f12dd6b22d7155eba3bf2f9887268886cccb6d"
+  },
+  {
+   "file": "packages/ingestion-pipeline/src/symreg-conformal-residue-bridge.ts",
+   "bytes": 23765,
+   "sha256": "8336458df06a282a7ad2d35c3b9ef8cd2595ec24b2dd28e7024eb8d10904a4bd"
+  },
+  {
+   "file": "packages/prediction-engine/src/__tests__/calibration-kelly-bridge.test.ts",
+   "bytes": 3529,
+   "sha256": "878f5453e049c325efa430829ae838600d84da53f5b6238085f6fc243fc7f0ef"
+  },
+  {
+   "file": "packages/prediction-engine/src/calibration-kelly-bridge.ts",
+   "bytes": 6496,
+   "sha256": "abd7b09016d8c9e8707f2cb68dc8326373b9798a92e60a7edac72e89871c5c1c"
+  },
+  {
+   "file": "packages/prediction-engine/src/certificate/gate-certificate-bridge.ts",
+   "bytes": 2379,
+   "sha256": "1d83cf4539064dd09a4c97915278042f64991a2383bf3d5646c8866e32fe26fe"
+  }
+ ]
+}
