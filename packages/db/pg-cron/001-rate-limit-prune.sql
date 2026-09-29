@@ -36,7 +36,7 @@
 SELECT cron.schedule(
   'prune-rate-limit-counters',
   '30 6 * * *',
-  $$DELETE FROM rate_limit_counters WHERE expires_at < now() - interval '48 hours'$$
+  $$DELETE FROM rate_limit_counters WHERE window_start < now() - interval '48 hours'$$
 );
 
 -- Rollback:
