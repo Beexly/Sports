@@ -1,5 +1,21 @@
 # Agent ledger
 
+## FOUNDER ORDER — 2026-09-29 — DO NOT STOP
+
+Garrett, this session: keep working. Do not stop. Do not stall. Do not wait for approval. Do not ask what to do next. A blocker is one evidence line, then the next item. Finish the unit, write what you actually ran, take the next unwired item.
+
+Look at everything. Every item in the code is researched, wired, weighted, and calibrated, and fed into engine ingestion (`packages/ingestion-pipeline` into the reasoning engine). A module with a passing test and no live import edge is not done. Untested stays UNTESTED — QUEUED FOR EVALUATION. Never SKIP. Never DEAD. Never discarded without founder consent.
+
+Rails still bind. Hitting this order by breaking one discards the run:
+- Do not flip a shadow stamp to ACTIVE. A missing source is a licensing decision: record it, then move to the next item. Flipping the stamp fabricates provenance.
+- Do not change a weight, a gate, PUBLIC_PICKS, STATS_PUBLIC, LIVE_BOARD, PERFORMANCE_STATS, or MODEL_VERSION. A weight changes only after a measurement you ran, and only on the book path. Leave signal-path confidence alone.
+- Do not publish a row whose own independent-edge decision is PASS, or whose signed expected edge is adverse.
+- No invented numbers. If you did not run it, write NOT RUN.
+- No push unless Garrett named the branch in that session. One task, one commit. Stage by name. Never `git add -A`. Never `--no-verify`.
+- No package install, no migration, no database write. Neon tests are branch-only, never the default branch.
+
+Open measurement, not yet published: `docs/ops/live-path-reachability.json` is uncommitted on `motif/orchestration-v4-2026-09-28`. The script that wrote it was corrected twice in session `20260929_084524_96fc5b`. Re-run it before citing it, then wire the next real unwired module into ingestion. Do not reuse that session's counts until you have re-measured them.
+
 One row per unit of work. **Every agent working on this repo reads this file first,
 claims its row, and writes its evidence when done.**
 
