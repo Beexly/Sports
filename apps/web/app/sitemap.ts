@@ -3,7 +3,7 @@ import { loadPublicJournalEntries } from "@/lib/journal/load";
 import { SITE_URL } from "@/lib/seo/site-url";
 import { slugify } from "@/lib/seo/sports-jsonld";
 import { db } from "@sports/db";
-import { isContestsPublic, isStatsPublic } from "@/lib/launch/public-surface-gate";
+import { isStatsPublic } from "@/lib/launch/public-surface-gate";
 import { isPagePublic } from "@/lib/launch/internal-surface-fence";
 import { listEpisodes } from "@/lib/podcast/episodes";
 import { listIssues } from "@/lib/newsletter/issues";
