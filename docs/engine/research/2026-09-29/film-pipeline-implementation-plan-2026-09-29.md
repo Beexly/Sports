@@ -72,7 +72,7 @@ For every cause of their stopping or limitation, the corresponding design action
 ## 6. Data and analytics needed
 
 **Inputs:**
-- Broadcast game footage (source TBD — §5.6).
+- Broadcast game footage (source TBD — §5, risk #6).
 - Hand-labeled validation set: 3+ full games with play boundaries, down/distance, formation tags (built once, reused at every gate).
 - League data feeds (schedules, rosters, official play-by-play) as weak supervision and cross-checks — enrichment, not required for v1.
 - Scoreboard/clock OCR models, audio event detectors (whistle, crowd) — off-the-shelf components, not research.
@@ -108,7 +108,7 @@ For every cause of their stopping or limitation, the corresponding design action
 | 2 | G3 replay discriminator + #25 semantic moment search | 1–2 wks | Replay-as-play < 1%; top-5 retrieval on labeled queries |
 | 3 | Charting weak labels → engine features | ongoing | Label agreement ≥ 0.8 vs hand-charted sample before model ingestion |
 
-**Preconditions (both must clear before Phase 0):** (a) footage sourcing resolved (§5.6); (b) 3-game hand-labeled validation set built. **Kill rule:** any phase that misses its gate twice gets redesigned or killed — no sunk-cost drift.
+**Preconditions (both must clear before Phase 0):** (a) footage sourcing resolved (§5, risk #6); (b) 3-game hand-labeled validation set built. **Kill rule:** any phase that misses its gate twice gets redesigned or killed — no sunk-cost drift.
 
 ---
 

@@ -1,5 +1,5 @@
 # Patent Mining: Autonomous Revenue Engine + Galaxy Sports Edge
-**Research date:** September 29, 2026 · **Lane owner:** Motif (patent-mining subagent) · **Scope:** expired/abandoned patents only
+**Research date:** September 29, 2026 · **Lane owner:** Motif (patent-mining subagent) · **Scope:** expired/abandoned patents for leverage mining; the kill list (Part 3) intentionally also records ACTIVE blockers so the team does not walk into live IP
 
 > **Doctrine check (Garrett, standing).** The premise that abandoned patents are "literal gold" is rejected. Most lapsed patents died for legitimate reasons — hardware capital requirements, commoditization, acquisition absorption, or supersession by better methods. This report filters ruthlessly and marks what was actually tested. Per **WE INGEST, WE LEARN**: nothing below is declared "dead" without citation; untested items are marked **UNTESTED — QUEUED FOR EVALUATION**.
 >
@@ -82,16 +82,16 @@ GSE's rule (2026-09-28): the public site shows **only projections and rankings**
 - **Revenue shape:** indirect — analyst labor saved on film processing; faster content turnaround; structured play clips as internal model features. No public product.
 
 ### G3. Replay-segment identification (live vs. replay discriminator)
-- **Patents:** US7474698B2 / US7653131B2 — *"Identification of replay segments"* (US20060083304A1); sibling to the Sharp summarization family. Granted 2009-01-06 — expected **Expired – Lifetime** by the 20-year term from the ~2006 filing (verify displayed status on Google Patents before use).
+- **Patents:** US7474698B2 / US7653131B2 — *"Identification of replay segments"* (US20060083304A1); sibling to the Sharp summarization family. US7474698B2: filed 2002-09-27, granted 2009-01-06, **Expired – Fee Related** (adjusted expiry 2024-12-08 — Sharp stopped paying maintenance fees; NOT natural 20-year expiry). Verified in forensics-evidence-sharp-2026-09-29.md §6.
 - **What it teaches:** Distinguish replay segments from live play in broadcast sports video — essential because replays double-count plays and corrupt automated highlight/event pipelines.
 - **GSE implementation:** A dedicated replay discriminator in the clip-harvesting pipeline: never let a replay be indexed as a new play; conversely, route replay angles to the telestration pipeline (G1) where alternate angles are most valuable. **UNTESTED — QUEUED FOR EVALUATION.**
 - **Agent-fleet build effort:** ~1 week as a module inside G2's pipeline.
 - **Revenue shape:** indirect — data hygiene for everything downstream (content + models).
 
 ### G4. Vanishing-point broadcast-camera calibration (the geometric brick under G1/G2)
-- **Patent:** US20060132487A1 — *"Method of analyzing moving objects using a vanishing point algorithm"* — application, never granted (abandoned).
+- **Patent:** US20060132487A1 (Object Prediction Technologies LLC) — *"Method of analyzing moving objects using a vanishing point algorithm"* — GRANTED as US7609855B2 (Oct 27, 2009); now expired for non-payment of fees.
 - **What it teaches:** Use field-line vanishing points to recover camera geometry from broadcast video without instrumenting the camera — the calibration step everything else depends on.
-- **GSE implementation:** Not a standalone product — the calibration front-end for G1 (field homography) and G2 (field-color masking). Abandoned-application status means it is pure prior art; the method is implemented from scratch with modern line detectors. **UNTESTED — QUEUED FOR EVALUATION.**
+- **GSE implementation:** Not a standalone product — the calibration front-end for G1 (field homography) and G2 (field-color masking). Expired-grant status means it is free prior art; the method is implemented from scratch with modern line detectors. **UNTESTED — QUEUED FOR EVALUATION.**
 - **Agent-fleet build effort:** ~1 week prototype inside G1.
 - **Revenue shape:** indirect — accuracy foundation for G1/G2.
 
