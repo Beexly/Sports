@@ -615,6 +615,26 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
       );
     }
 
+    // v5.3.0 GATE, NOW ENFORCED. AGENTS.md 2026-09-13 names the specimen: the
+    // Steelers ML -285 published at conf 50 while its OWN independentEdge read
+    // `decision: "PASS"`, rawEdge -0.1629 — "we decline rather than overclaim
+    // one". The file said the rule ("never publish when
+    // independentEdge.decision is PASS, regardless of path"); nothing read it,
+    // so the same failure recurred in the Bears shape on 2026-09-28.
+    //
+    // The engine declining to claim an edge is a correct outcome, not a pick.
+    // Publishing it is the one thing this gate must never do. The row is still
+    // WRITTEN, because the published record is the honest record of what the
+    // engine thought; only the exposure is withheld.
+    const passVeto = independentEdge.decision === "PASS";
+    if (passVeto) {
+      console.warn(
+        `[signal-slate] publication withheld for ${game.id} (${chosenTeam} ML): independentEdge.decision=PASS`,
+      );
+    }
+
+    const publicationVeto = stalenessVeto || passVeto;
+
     const factorBreakdown: FactorBreakdown = {
       consensusScore: 0,
       marketDepthScore: 0,
@@ -828,7 +848,7 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
             // that old cannot know about a quarterback change, and the pick
             // still shipped. `isPublished` here is the GATE's value AND this
             // row's value; they are no longer the same statement.
-            isPublished: gates.canExposePublicPicks && !stalenessVeto,
+            isPublished: gates.canExposePublicPicks && !publicationVeto,
             isBootstrap: !gates.canPersistCanonicalHistory,
             isFeatured: false,
             generatedAt: now,
