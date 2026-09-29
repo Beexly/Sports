@@ -100,6 +100,15 @@ export {
   SPEAK_EDGE,
   LEAN_EDGE,
 } from "./edge-engine.js";
+// Market-free source agreement for the no-book signal path. The signal slate
+// stamped `agreement` from a source COUNT (>= 2 -> CONFIRMS), so two estimators
+// reading opposite directions were recorded as corroborated and the pick
+// explainer printed that word to customers. See independent-agreement.ts.
+export {
+  sourceAgreement,
+  SOURCE_DIRECTION_EPSILON,
+} from "./independent-agreement.js";
+export type { SourceAgreement, AgreementInput } from "./independent-agreement.js";
 export type {
   IndependentEstimate,
   EdgeInput,

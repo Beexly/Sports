@@ -17,6 +17,7 @@ import {
   PREMIUM_CONFIDENCE_THRESHOLD,
   reasonCoverProbability,
   reasonKellyLogGrowth,
+  sourceAgreement,
 } from "@sports/prediction-engine";
 import type {
   FactorBreakdown,
@@ -579,7 +580,13 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
 
     const independentEdge: IndependentEdgeSummary = {
       decision: trueProb >= 0.58 ? "LEAN" : "PASS",
-      agreement: sources.length >= 2 ? "CONFIRMS" : "SOLO",
+      // Real direction agreement between the estimators, NOT how many there
+      // are. The old `sources.length >= 2 ? "CONFIRMS" : "SOLO"` recorded two
+      // sources reading the matchup in OPPOSITE directions as corroborated,
+      // and apps/web/lib/pick-explainer/grounding.ts prints this word to
+      // customers. Descriptive only: decision/confidence/conviction are
+      // computed above and are untouched. See independent-agreement.ts.
+      agreement: sourceAgreement(independents),
       // No book line on pure signal slate — omit market, never invent 0.5
       marketFairProb: null,
       trueProb,
