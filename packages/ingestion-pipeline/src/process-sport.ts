@@ -337,9 +337,34 @@ export async function processSport(
   // This is the single gating point for bootstrap provenance.
   const isBootstrap = !gates.canPersistCanonicalHistory;
 
-  const run = await db.ingestionRun.create({
-    data: { sport: sport.key, status: "RUNNING" },
-  });
+  // The IngestionRun row is the only durable record that this cycle ran, and
+  // this is the FIRST write — so a database outage lands right here, above the
+  // try that records failures. Left unguarded the throw escapes processSport
+  // and the owner is never told. Open the run under its own guard and report
+  // through the DB-independent channels. We STOP rather than continue: every
+  // write below needs a real run id (Odds.ingestionRunId is NOT NULL).
+  let run: { id: string };
+  try {
+    run = await db.ingestionRun.create({
+      data: { sport: sport.key, status: "RUNNING" },
+    });
+  } catch (openErr) {
+    const message = openErr instanceof Error ? openErr.message : String(openErr);
+    console.error(
+      `${logPrefix} ${sport.key} failed: ingestion run could not be opened — ${message}`,
+    );
+    await notifyOwner(`GSE ingestion FAILED\nsport: ${sport.key}\nrun_open_failed: ${message}`);
+    return {
+      sport: sport.key,
+      status: "failed",
+      games: 0,
+      picks: 0,
+      oddsInserted: 0,
+      eventsCount: 0,
+      error: `run_open_failed: ${message}`,
+      skippedInPlay: 0,
+    };
+  }
 
   // Paid Odds API accounting for the result envelope (contract with the odds
   // client, C-109). Declared outside the try so the failed envelope carries
@@ -1651,10 +1676,21 @@ export async function processSport(
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error(`${logPrefix} ${sport.key} failed: ${message}`);
-    await db.ingestionRun.update({
-      where: { id: run.id },
-      data: { status: "FAILED", errorMessage: message, completedAt: new Date() },
-    });
+    // The database that failed the body is the one most likely to fail THIS
+    // write too. Unguarded it throws, and the throw skips the owner alert and
+    // the failed envelope below — losing the failure record precisely when the
+    // outage is real. Record what we can, then keep going.
+    try {
+      await db.ingestionRun.update({
+        where: { id: run.id },
+        data: { status: "FAILED", errorMessage: message, completedAt: new Date() },
+      });
+    } catch (recordErr) {
+      console.error(
+        `${logPrefix} ${sport.key}: FAILED run not recorded (database unreachable) — ` +
+          `${recordErr instanceof Error ? recordErr.message : String(recordErr)}`,
+      );
+    }
     // Push the failure to the owner's phone (free Telegram bot; no-op until
     // TELEGRAM_BOT_TOKEN/CHAT_ID are set; never throws, never blocks).
     await notifyOwner(
