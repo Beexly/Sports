@@ -1065,6 +1065,32 @@ export type {
 export { pointBiserial, correlationToMultiplier, tuneSignalWeights, MIN_SAMPLES } from "./tune-signal-weights.js";
 export type { KeyOutcome, TunedWeight } from "./tune-signal-weights.js";
 
+// The FAMILY-weight evidence census. Every signal in the registry carries a
+// hand-assigned `trustWeight`, and the hierarchical pool carries
+// `DEFAULT_FAMILY_PRIOR_WEIGHTS` (SITUATIONAL 0.12, NARRATIVE 0.05, …). Those
+// numbers move a published probability and had never been measured against a
+// settled outcome. This module measures them, stratified by pickType, and
+// refuses to report "no effect" when the honest answer is "we do not know".
+export {
+  censusFamilyWeights,
+  formatFamilyWeightReport,
+  familiesRestingOnPriors,
+  findCollinearFamilies,
+  pickTypeMixDistance,
+  stratifiedZ,
+  twoProportionZ,
+  twoTailedP,
+  EVIDENCE_SATURATION_MULTIPLE,
+  EVIDENCE_SATURATION_ROWS,
+  MAX_PICKTYPE_SHARE,
+  MIN_ABS_Z,
+  MIN_STRATUM_OBSERVATIONS,
+} from "./calibration/family-weight-evidence.js";
+export type {
+  FamilyStratum,
+  FamilyWeightMeasurement,
+} from "./calibration/family-weight-evidence.js";
+
 // The GROUP-aware tuner. #924's floors and scales its evidence by the ROW count,
 // but picks cluster by fixture (AGENTS.md: every NFL fixture is THREE `games`
 // rows; the same model-signal selection is published per-series with byte-
