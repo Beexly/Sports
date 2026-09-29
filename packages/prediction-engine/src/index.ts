@@ -109,6 +109,25 @@ export {
   SOURCE_DIRECTION_EPSILON,
 } from "./independent-agreement.js";
 export type { SourceAgreement, AgreementInput } from "./independent-agreement.js";
+// The fantasy variance model — OUR projection. Deliberately separate from the
+// process grade, which is context and never a forecast. See fantasy-variance.ts
+// for the measured-CV snapshot and the McCaffrey spot-check falsifiers.
+export {
+  buildVarianceProjections,
+  recencyWeight,
+  classifyCvSource,
+  RECENCY_HALF_LIFE_WEEKS,
+  SHRINKAGE_KAPPA_GAMES,
+  SPEC_POSTED_POSITIONAL_CV,
+  POSITIONAL_CV_SNAPSHOT,
+} from "./fantasy-variance.js";
+export type {
+  PlayerWeek,
+  VarianceModelInput,
+  ProjectionRow,
+  CvSource,
+  ModelPosition,
+} from "./fantasy-variance.js";
 export type {
   IndependentEstimate,
   EdgeInput,
