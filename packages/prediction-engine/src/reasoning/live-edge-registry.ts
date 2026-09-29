@@ -1,6 +1,9 @@
 /**
- * The eight families that already enter the week-3 edge.
- * A new grain in one of these families is a duplicate, not a ninth part.
+ * The nine families that enter the week-3 edge.
+ * narrative_contract cleared both honesty bars on the 2025 holdout
+ * (roster-level: n=285, r=+0.112232, slope=+0.051235, se=+0.026966)
+ * and gained its week-3 row from the published 2026 roster (STORED -> LIVE).
+ * A new grain in one of these families is a duplicate, not a tenth part.
  * Priors are the engine priors. This file does not add one.
  */
 
@@ -13,7 +16,8 @@ export interface LiveEdgePart {
     | "historical_strength"
     | "trench_personnel"
     | "chemistry"
-    | "airwave";
+    | "airwave"
+    | "narrative_contract";
   readonly grain: string;
   readonly sibling: string | null;
   readonly siblingCap: number | null;
@@ -86,10 +90,18 @@ export const LIVE_EDGE_PARTS: readonly LiveEdgePart[] = [
     prior: 0.05,
     reason: "SiriusXM audio is not this row.",
   },
+  {
+    family: "narrative_contract",
+    grain: "mean roster APY gap, BUF minus LAC",
+    sibling: null,
+    siblingCap: null,
+    prior: 0.03,
+    reason: "2025 walk-forward cleared both honesty bars (n=285, r=+0.112232, slope=+0.051235, se=+0.026966). Week-3 row from the published 2026 roster.",
+  },
 ];
 
 /** LAC at BUF parts from week3-engine-readings.jsonl. Home-positive. They sum to the edge. */
-export const LAC_BUF_EDGE = 0.30259224777263855;
+export const LAC_BUF_EDGE = 0.30384082052641725;
 
 export const LAC_BUF_PARTS: readonly { family: LiveEdgePart["family"]; signed: number; points: number }[] = [
   { family: "on_field_efficiency", signed: 1, points: 0.14 },
@@ -100,4 +112,5 @@ export const LAC_BUF_PARTS: readonly { family: LiveEdgePart["family"]; signed: n
   { family: "trench_personnel", signed: 0.7486746146729814, points: 0.03743373073364907 },
   { family: "chemistry", signed: 0, points: 0 },
   { family: "airwave", signed: -0.2083, points: -0.010415 },
+  { family: "narrative_contract", signed: 0.04161909179262402, points: 0.0012485727537787205 },
 ];

@@ -17,6 +17,7 @@ const TRACE_FAMILY: Record<string, SignalFamily> = {
   trench_personnel: "TRENCHES",
   chemistry: "SITUATIONAL",
   airwave: "NARRATIVE",
+  narrative_contract: "NARRATIVE",
 };
 
 export interface EdgePartInput {

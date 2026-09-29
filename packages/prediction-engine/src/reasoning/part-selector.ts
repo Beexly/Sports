@@ -178,15 +178,15 @@ export const COACHING_GO_RATE: PartCandidate = {
   has_row: false,
 };
 
-/** No contract table was joined to a week-3 player. */
+/** Contract APY gap, BUF minus LAC. 2025 walk-forward versus home win cleared both honesty bars. */
 export const NARRATIVE_CONTRACT: PartCandidate = {
   family: "narrative_contract",
-  grain: "contracts",
-  r: null,
-  slope: null,
-  se: null,
-  n: null,
-  has_row: false,
+  grain: "game_contract_apy_roster_gap",
+  r: 0.11223167517940649,
+  slope: 0.051235,
+  se: 0.026965559008299653,
+  n: 285,
+  has_row: true,
 };
 
 export function readingConclusion(gameId: string, liveCount: number, decisions: readonly PartDecision[], edge: number): string {

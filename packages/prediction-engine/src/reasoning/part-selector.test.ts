@@ -22,6 +22,8 @@ const REPRESENTATIVES = [
   "airwave",
 ];
 
+const REPRESENTATIVES_WITH_CONTRACT = [...REPRESENTATIVES, "narrative_contract"];
+
 describe("part selector", () => {
   it("keeps the week-3 candidate roster closed", () => {
     expect([...CANDIDATE_FAMILIES]).toEqual(["officials", "weather_physics", "narrative_contract", "coaching"]);
@@ -41,10 +43,16 @@ describe("part selector", () => {
     ).toThrow(/not on the candidate roster/);
   });
 
-  it("refuses the four week-3 candidates, honesty winning each time", () => {
+  it("refuses the three remaining week-3 candidates, honesty winning each time, and admits the measured contract family", () => {
+    // A family already holding a registry row must not darken its own
+    // candidate: the representative roster is the prior state.
     const decisions = week3CandidateDecisions(false, REPRESENTATIVES);
     expect(decisions.map((decision) => decision.family)).toEqual([...CANDIDATE_FAMILIES]);
-    for (const decision of decisions) {
+    const admitted = decisions.find((decision) => decision.family === "narrative_contract")!;
+    expect(admitted.status).toBe("LIVE");
+    expect(admitted.winning_term).toBe("none");
+    expect(admitted.g).toBe(0);
+    for (const decision of decisions.filter((row) => row.family !== "narrative_contract")) {
       expect(decision.status).toBe("DARK");
       expect(decision.winning_term).toBe("f1");
       expect(decision.g).toBe(0.5);
@@ -65,11 +73,14 @@ describe("part selector", () => {
     expect(named.reactivates_when).toContain("Naming the referee does not flip f1");
   });
 
-  it("names the documented failure on weather, coaching, and contracts", () => {
+  it("names the documented failure on weather and coaching, and the measured contract fit", () => {
     expect(selectWeek3Candidate(WEATHER_WIND, REPRESENTATIVES).why).toContain("not greater than se");
     expect(selectWeek3Candidate(COACHING_GO_RATE, REPRESENTATIVES).why).toContain("under 0.08");
-    expect(selectWeek3Candidate(NARRATIVE_CONTRACT, REPRESENTATIVES).why).toContain("r was not stored");
-    expect(selectWeek3Candidate(NARRATIVE_CONTRACT, REPRESENTATIVES).why).toContain("no week-3 row");
+    const measured = selectWeek3Candidate(NARRATIVE_CONTRACT, REPRESENTATIVES);
+    expect(measured.status).toBe("LIVE");
+    expect(measured.why).toContain("grain game_contract_apy_roster_gap");
+    expect(Math.abs(NARRATIVE_CONTRACT.r!)).toBeGreaterThanOrEqual(0.08);
+    expect(NARRATIVE_CONTRACT.slope!).toBeGreaterThan(NARRATIVE_CONTRACT.se!);
   });
 
   it("darks a second CPOE because the registry already holds the family", () => {

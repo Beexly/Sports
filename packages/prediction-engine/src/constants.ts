@@ -22,7 +22,11 @@
 // v5.1.0 (2026-06-22): isotonic calibration activated (path-to-70.md §7).
 // v5.2.7 (2026-08-22): Skellam ATS cover → SPREAD rankingP on Poisson sports.
 // Heuristic confidence / composite weights UNCHANGED. Maps still OFF.
-export const MODEL_VERSION = "v5.2.7";
+// v5.3.0 (2026-09-27): narrative_contract STORED→LIVE, ninth week-3 part.
+// Roster-level 2025 holdout cleared both honesty bars (n=285, r=+0.112232,
+// slope=+0.051235, se=+0.026966). Edge +0.0012 on LAC@BUF. Heuristic
+// confidence / composite weights UNCHANGED. Maps still OFF.
+export const MODEL_VERSION = "v5.3.0";
 
 // ============================================================
 // Confidence thresholds
