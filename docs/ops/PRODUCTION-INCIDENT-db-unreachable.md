@@ -65,3 +65,90 @@ open, so it cannot cause the blackout — but the free cost-control is silently 
 
 No code was changed in producing this. Read-only throughout: no DB write, no
 migration, no deploy, no env flip.
+
+---
+
+## ADDENDUM — root cause found in the Vercel build logs (same day, later)
+
+Six CONSECUTIVE production deploys have failed over the last ~6 hours, while every
+preview deploy is Ready. That asymmetry is the clue: this is not a site-wide
+outage, it is production-only.
+
+`vercel inspect sports-igsylie41-... --logs` shows the build never reaching
+`npm run build`. It dies in the pre-build migration gate:
+
+```
+> @sports/db@1.0.0 db:migrate
+> prisma migrate deploy
+Error: P1001: Can't reach database server at `[REDACTED]:5432`
+  Please make sure your database server is running at `[REDACTED]:5432`.
+
+[migrate-if-configured] could not reach the DB via the DIRECT endpoint
+    after 4 attempts - verifying schema parity via the POOLED endpoint...
+> prisma migrate status
+Error: P1001: Can't reach database server at `[REDACTED]:5432`
+
+[neon-http-parity] HTTP query failed via POSTGRES_URL:
+    password authentication failed for user 'neondb_owner'
+[neon-http-parity] HTTP query failed via POSTGRES_PRISMA_URL:
+    password authentication failed for user 'neondb_owner'
+[neon-http-parity] HTTP query failed via DATABASE_URL:
+    password authentication failed for user 'neondb_owner'
+
+[migrate-if-configured] FAIL-CLOSED: direct endpoint unreachable AND the pooled
+    check did not confirm parity (verdict: unknown).
+
+Error: Command "cd ../.. && npm run db:generate && node scripts/deploy/
+    migrate-if-configured.mjs && NODE_OPTIONS=--max-old-space-size=8192
+    npm run build --workspace=@sports/web" exited with 1
+```
+
+**TWO DISTINCT FAILURES, and the second is the more informative one:**
+
+1. `P1001 Can't reach database server` on port 5432 — the direct (non-pooled)
+   Neon endpoint is not accepting TCP connections.
+2. `password authentication failed for user 'neondb_owner'` on the HTTP (port
+   443) path — the fallback path resolves DNS and speaks Postgres, but the
+   CREDENTIAL is rejected.
+
+Failure 2 is what makes this diagnosable. If the database were merely down, the
+HTTP path would also fail to connect. It reaches authentication and is refused
+there, which points at the `neondb_owner` password in the Vercel environment
+variables rather than at the database process itself.
+
+**The build gate did the right thing.** `migrate-if-configured.mjs` is
+fail-closed by design and refused to ship a Prisma client whose schema parity it
+could not confirm — its own log says that exact mismatch "caused the /api/picks
+outage" previously. The guard is working. The environment beneath it is not.
+
+**The site is serving the LAST GOOD deployment**, which is why public pages 200
+while everything DB-backed 503s. The live SHA (`f61ef8e38c22`) is 13+ commits
+behind main, and `MODEL_VERSION v5.3.0` is among the commits that have never
+shipped.
+
+**What needs a human, in this order:**
+
+1. Is the Neon project `gse-postgres` actually running, and is its compute
+   suspended? A suspended Neon compute refuses TCP and would also invalidate
+   pooled credentials. Check in the Neon console.
+2. If the compute is fine, the `neondb_owner` password in Vercel is wrong or
+   rotated without being updated. `DIRECT_URL` and `DATABASE_URL` must both be
+   corrected together.
+3. Do NOT set `MIGRATE_GATE_ALLOW_UNVERIFIED=true` as a shortcut. The log offers
+   it as a "deliberate temporary override", but shipping a Prisma client against
+   an unverified schema is the failure mode that caused the earlier /api/picks
+   outage. Fix the credentials first.
+
+**Deployment history for context:**
+
+| Age | Env | Status |
+|---|---|---|
+| 7m | Production | Error |
+| 8m | Production | Error |
+| 27m | Production | Error |
+| 46m | Production | Error |
+| 1h | Production | Error |
+| 2h | Production | Error |
+| 3m / 13m / 25m | Preview | Ready / Ready / Ready |
+
+Previews succeed because preview builds are not gated on the production database.
