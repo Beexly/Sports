@@ -58,8 +58,21 @@ describe("fantasy variance model", () => {
     expect(row.proj).toBeGreaterThan(0);
     expect(row.games).toBe(47);
     expect(row.reliability).toBeCloseTo(47 / (47 + SHRINKAGE_KAPPA_GAMES), 6);
-    expect(row.floor).toBeCloseTo(row.proj * (1 - row.cvPlayer), 9);
-    expect(row.ceiling).toBeCloseTo(row.proj * (1 + row.cvPlayer), 9);
+    // The band is z-scaled (68% band z=0.806): floor/ceiling are
+    // proj*(1±z*cv), NOT proj*(1±cv). Pin against the labeled interval so
+    // the test asserts the real contract without hardcoding z.
+    const primary = row.intervals[0];
+    expect(primary).toBeDefined();
+    expect(row.floor).toBe(primary!.floor);
+    expect(row.ceiling).toBe(primary!.ceiling);
+    expect(primary!.floor).toBeCloseTo(
+      Math.max(0, row.proj * (1 - primary!.z * row.cvPlayer)),
+      9,
+    );
+    expect(primary!.ceiling).toBeCloseTo(
+      row.proj * (1 + primary!.z * row.cvPlayer),
+      9,
+    );
   });
 
   it("FALSIFIER: the posted spot-check is McCaffrey's REALIZED 2025 total, not a projection", () => {
