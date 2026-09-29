@@ -10,21 +10,17 @@ descending — biggest untested files first.
 | File | Lines | Mentions | Test files (≤3) |
 |---|---:|---:|---|
 | apps/web/lib/scraping/extraction-modes.ts | 166 | COVERED | apps/web/__tests__/extraction-modes.test.ts (2026-09-28, 31 tests) |
-| apps/web/lib/claude-api/jynx-complete.ts | 41 | 0 | — |
-| apps/web/lib/billing/reconcile-entitlements.ts | 621 | 1 | apps/web/__tests__/reconcile-entitlements.test.ts |
-| apps/web/lib/scraping/sports-data-candidates.ts | 547 | 1 | apps/web/__tests__/sports-data-candidates.test.ts |
-| apps/web/lib/claude-api/response-cache.ts | 238 | 1 | apps/web/__tests__/response-cache.test.ts |
-| apps/web/lib/scraping/data-rules.ts | 208 | 1 | apps/web/__tests__/scraping-clearance.test.ts |
-| apps/web/lib/billing/price-ids.ts | 197 | 1 | apps/web/lib/billing/price-ids.test.ts |
-| apps/web/lib/claude-api/open-weight-catalog.ts | 182 | 1 | apps/web/lib/claude-api/openai-compat.test.ts |
-| apps/web/lib/scraping/tool-registry.ts | 162 | 1 | apps/web/__tests__/scraping-clearance.test.ts |
-| apps/web/lib/billing/stripe-outcome.ts | 126 | 1 | apps/web/__tests__/stripe-outcome.test.ts |
-| apps/web/lib/claude-api/model-economics.ts | 118 | 1 | apps/web/__tests__/model-economics.test.ts |
-| apps/web/lib/claude-api/providers/google-oauth.ts | 118 | 1 | apps/web/lib/claude-api/providers/google-oauth.test.ts |
-| apps/web/lib/claude-api/usage-store.ts | 118 | 1 | apps/web/__tests__/claude-api-usage-store.test.ts |
-| apps/web/lib/claude-api/jynx-examples.ts | 116 | 1 | apps/web/lib/claude-api/jynx-examples.test.ts |
-| apps/web/lib/claude-api/internal-llm.ts | 113 | 1 | apps/web/__tests__/internal-llm.test.ts |
-| apps/web/lib/claude-api/provider-dispatch.ts | 98 | 1 | apps/web/lib/claude-api/provider-dispatch.test.ts |
+| apps/web/lib/claude-api/jynx-complete.ts | 41 | COVERED | apps/web/__tests__/jynx-complete.test.ts (2026-09-28, 12 tests) |
+| apps/web/lib/scraping/sports-data-candidates.ts | 547 | COVERED | accessors: 2026-09-29, 21 tests |
+| apps/web/lib/billing/reconcile-entitlements.ts | 884 | COVERED | 41 tests in a 42KB file |
+| apps/web/lib/scraping/data-rules.ts | 208 | COVERED | 84 tests (scraping-clearance) |
+| apps/web/lib/scraping/tool-registry.ts | 162 | COVERED | 94 tests (scraping-clearance) |
+| apps/web/lib/billing/price-ids.ts | 248 | COVERED | 58 tests across 3 files |
+| apps/web/lib/claude-api/response-cache.ts | 238 | COVERED | 24 tests across 2 files |
+| apps/web/lib/billing/notice.ts | 69 | COVERED | 110 tests across 15 files |
+| apps/web/lib/claude-api/open-weight-catalog.ts | 182 | THIN | 1 file, 4 tests — next candidate |
+| apps/web/lib/billing/stripe-outcome.ts | 126 | THIN | 1 file, 4 tests |
+| apps/web/lib/claude-api/numeric-guard.ts | 67 | THIN | 1 file, 4 tests |
 | apps/web/lib/billing/checkout-repair-owner-queue.ts | 84 | 1 | apps/web/__tests__/checkout-repair-owner-queue.test.ts |
 | apps/web/lib/claude-api/budget-store.ts | 75 | 1 | apps/web/__tests__/claude-api-budget-store.test.ts |
 | apps/web/lib/claude-api/jynx-errors.ts | 75 | 1 | apps/web/lib/claude-api/jynx-errors.test.ts |
@@ -54,15 +50,26 @@ descending — biggest untested files first.
 | apps/web/lib/claude-api/dashboard.ts | 120 | 47 | apps/web/__tests__/api-v1-shadow-route-harness.test.ts; apps/web/__tests__/api-v1-shadow-route-replay.test.ts; apps/web/__tests__/billing-notice.test.ts |
 | apps/web/lib/scraping/index.ts | 12 | 138 | apps/web/__tests__/affiliate-structural-separation-guard.test.ts; apps/web/__tests__/ai-control-plane-authority.test.ts; apps/web/__tests__/ai-control-plane-claim-pg.test.ts |
 
-## Ten highest-priority gaps
+## Priority ranking (RE-MEASURED 2026-09-29, SO-1c — read this first)
 
-1. `apps/web/lib/scraping/extraction-modes.ts` — 166 lines, 0 tests
-2. `apps/web/lib/claude-api/jynx-complete.ts` — 41 lines, 0 tests
-3. `apps/web/lib/billing/reconcile-entitlements.ts` — 621 lines, 1 test
-4. `apps/web/lib/scraping/sports-data-candidates.ts` — 547 lines, 1 test
-5. `apps/web/lib/claude-api/response-cache.ts` — 238 lines, 1 test
-6. `apps/web/lib/scraping/data-rules.ts` — 208 lines, 1 test
-7. `apps/web/lib/billing/price-ids.ts` — 197 lines, 1 test
-8. `apps/web/lib/claude-api/open-weight-catalog.ts` — 182 lines, 1 test
-9. `apps/web/lib/scraping/tool-registry.ts` — 162 lines, 1 test
-10. `apps/web/lib/billing/stripe-outcome.ts` — 126 lines, 1 test
+**The "1 mention" counts in the original table were stale and the ranking built on
+them was wrong.** Measured against the working tree on 2026-09-29:
+`reconcile-entitlements.ts` was listed at 1 mention but has **41 tests in a 42KB
+file**; `data-rules.ts` 84, `tool-registry.ts` 94, `price-ids.ts` 58,
+`response-cache.ts` 24, `notice.ts` 110. A "mention" also undercounts by design —
+a test file naming a module is not proof it covers it.
+
+**Re-measure before ranking.** A quick pass that counts `it(` in the test files
+naming each module is enough to avoid spending a cycle on a 41-test file.
+
+Remaining genuinely thin files, by measured test count:
+
+1. `apps/web/lib/claude-api/open-weight-catalog.ts` — 182 lines, 4 tests — next candidate
+2. `apps/web/lib/billing/stripe-outcome.ts` — 126 lines, 4 tests (BILLING: money path)
+3. `apps/web/lib/claude-api/numeric-guard.ts` — 67 lines, 4 tests
+
+**Pattern worth reusing:** the useful gaps in this list were not the biggest
+files, they were the files whose accessors feed a CUSTOMER-FACING surface with
+no test beneath them — `sports-data-candidates.ts` published its counts to the
+Sources cockpit and the resource-intelligence API through five untested
+functions. Prefer a file with live consumers over a file that is merely large.
