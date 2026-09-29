@@ -14,8 +14,14 @@ import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { dirname, join, relative, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 
+// The trailing `(#symbol)?` is REQUIRED for correctness, not optional. This
+// pattern once mandated the fragment, which silently skipped all 22
+// module-only provenance strings (`provenance: "…/signals/wind-elasticity.ts"`,
+// with no #symbol) and reported 35 violations when the true count is 57. A
+// guard that misses 40 percent of the defect class is worse than no guard,
+// because it reads as a clean bill of health.
 const PROVENANCE_RE =
-  /packages\/prediction-engine\/src\/([A-Za-z0-9_./-]+\.ts)#([A-Za-z_$][A-Za-z0-9_$]*)/g;
+  /packages\/prediction-engine\/src\/([A-Za-z0-9_./-]+\.ts)(?:#([A-Za-z_$][A-Za-z0-9_$]*))?/g;
 
 const ADAPTER_LAYER_DIR = "packages/prediction-engine/src/engine";
 
@@ -206,7 +212,11 @@ function collectViolations(): Violation[] {
     let match: RegExpExecArray | null;
     while ((match = PROVENANCE_RE.exec(source)) !== null) {
       const moduleRel = match[1]!; // e.g. signals/turnover-luck.ts
-      const symbol = match[2]!;
+      // May be undefined: 22 of the 57 strings name a MODULE with no #symbol
+      // (e.g. "…/signals/wind-elasticity.ts"). Those are still claims -- they
+      // assert the value came from that module -- so they are still checked,
+      // but only for "is the module imported at all".
+      const symbol = match[2];
       const provenance = match[0]!;
       const dedupeKey = `${adapterRel}::${provenance}`;
       if (seen.has(dedupeKey)) continue;
@@ -229,13 +239,14 @@ function collectViolations(): Violation[] {
         reasons.push(
           `adapter has no value import of packages/prediction-engine/src/${stripExt(moduleRel)}`,
         );
-      } else if (!symbolImported) {
+      } else if (symbol && !symbolImported) {
         reasons.push(
           `adapter imports the module but not the value symbol '${symbol}'`,
         );
       }
 
-      if (existsSync(moduleAbs)) {
+      // Only meaningful when a symbol was actually named.
+      if (existsSync(moduleAbs) && symbol) {
         const modSrc = readFileSync(moduleAbs, "utf8");
         if (!moduleExportsValueSymbol(modSrc, symbol)) {
           reasons.push(
@@ -300,7 +311,17 @@ describe("engine adapter provenance integrity", () => {
   //
   // To fix one: make the adapter actually import and call the module its
   // provenance names, then lower KNOWN_VIOLATIONS by 1 in the same commit.
-  const KNOWN_VIOLATIONS = 35;
+  // Counts, from three independent methods, because the first two disagreed:
+  //   93  distinct module#symbol claims in the adapter layer overall
+  //   52  of them VIOLATIONS (claimed but not value-imported)  <- this constant
+  //   41  genuinely backed by a real value import
+  //   35  what an earlier, buggy version of this guard reported
+  // The 35 -> 52 correction: the old regex required a `#symbol` fragment, so
+  // module-only claims were never collected at all. 41 of the 52 are the
+  // "module named, symbol omitted" shape. Do not lower this number without
+  // re-deriving it with a second method; a guard that silently under-reports
+  // its own defect class reads as a clean bill of health.
+  const KNOWN_VIOLATIONS = 52;
 
   it("never grows: no NEW unbacked provenance may be added", () => {
     const violations = collectViolations();
