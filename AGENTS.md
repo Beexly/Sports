@@ -4751,3 +4751,26 @@ MINOR/SITUATIONAL (in-window; not full metric builds; recorded for completeness)
 - Chart transcription caveats: @GridironInfo_ stacked-bar charts use team logos as row labels (no text); team IDs for ambiguous rows marked provisional in items 2 and 6. Small segments in the Series Results chart (item 5) are unlabeled — values estimated from bar widths (marked ~). @SamHoppen defensive table row 14 read as BROWNS but duplicates row 31 — recorded as Giants by elimination (provisional). @csv_enjoyer EPA/Rush-by-gap panels: per-gap values too small to transcribe exactly; structure/metric/source captured. @StephenKrupka RB workloads: approximate scatter positions.
 - Standing loose end (carried): "Bryce Young map" screenshot from the 2026-09-20 PM sweep remains undescribed/uninventoried.
 - Post-cutoff candidates for the next sweep: none flagged — [boundary] items above were inventoried in this run.
+
+---
+
+## FILM-PIPELINE PATENT PROGRAM (2026-09-29, Motif — RESEARCH ONLY, not approved for build)
+
+Automated broadcast-film pipeline from expired-patent architectures, re-implemented with modern tools: ingest broadcast → play segmentation → replay discrimination → camera calibration → field-anchored telestration → semantic moment search. Outputs (both internal-only per the public/private doctrine): (a) 2–4s telestrated clips for the X video operation; (b) automated charting labels → proprietary training data (variance model, signals table, rankings). The labeled dataset builds itself as a byproduct of the content pipeline.
+
+**Patent numbers (all at `https://patents.google.com/patent/<NUMBER>/en`):**
+- Telestration (Sportvision lineage): US7075556B1, US5953077A, US6133946A, US6292130B1, US6229550B1, US6466275B1
+- Summarization (Sharp Labs): US7499077B2, US7312812B2, US7639275B2, US7474331B2, US8018491B2
+- Replay ID: US7474698B2, US7653131B2
+- Vanishing-point: US7609855B2 (granted; filed as US20060132487A1)
+
+**Why they stopped (forensics 2026-09-29):** Sportvision WON — Emmy-winning yellow line, still on NFL broadcasts via SMT (acquired Sportvision Oct 2016); patents aged out by normal 20-year term 2017–2019. Sharp Labs was orphaned (parent wouldn't productize, HiMpact/ESPN spin-out fizzled) + Sharp's 2012–2016 collapse/Foxconn takeover + handcrafted heuristics superseded by learned methods. Neither stopped because the problem was unsolvable. Field has since validated the architecture (nflgsplat on consumer RTX 4080; soccer charting real-time on RTX 4060).
+
+**Two limitations to design around:** (1) calibration/registration fragility → image-based match-moving + neural segmentation, zero stadium hardware; (2) single-cue brittleness → multimodal learned boundaries (OCR/clock, audio, data feeds) with explicit uncertainty, no single broadcast cue as ground truth. Walk-through gaps documented: automatic generation (theirs is operator-triggered), segmentation compositing (theirs is colorimetry), learned boundaries (theirs are handcrafted).
+
+**Preconditions before Phase 0:** (a) footage sourcing resolved — input broadcast video must be legitimately obtained; (b) 3-game hand-labeled validation set built. **Kill rule:** any phase missing its gate twice gets redesigned or killed. **Backend:** local RTX 4080-class GPU for prototyping; Neon for metadata/labels/pgvector; object storage for video. **APIs: none required** — broadcast in, clips/labels out. Family/continuation review still owed before any build.
+
+Docs: `docs/engine/research/2026-09-29/film-pipeline-implementation-plan-2026-09-29.md` (full plan: scope, cause→action chain, expected results, forecasted discrepancies, data/backend/API needs) · `patent-forensics-2026-09-29.md` (per-patent claims + corporate trails) · `patent-mining-are-gse-2026-09-29.md` (idea report) · `second-pass-leverage-review-2026-09-29.md` (cross-report synthesis).
+
+### PENDING — Garrett's own note (2026-09-29)
+He knows there may be pending work queued up right now; he's away from his computer and will get to it as soon as he can. Do not reassign, close, or act on his pending items while he's away — leave them for him. Pending includes: the film-pipeline preconditions above (his calls: footage sourcing, validation-set resourcing), the orchestration branch's unverified infra changes (vercel.json `github.autoJobCancelation`, narrowed middleware, unpooled-DATABASE_URL diagnostic — CI/build evidence still owed, see branch `motif/orchestration-v4-2026-09-28`), and his personal taps (Marketplace buyer replies, Michelle's Tuesday pickup, Etsy OAuth + upload, EEOC portal counsel switch).
