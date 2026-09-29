@@ -28,12 +28,12 @@
     "apps/web/app/api/admin/trigger-refresh/route.ts",
     "packages/prediction-engine/src/scoring.ts"
   ],
-  "engineFiles": 901,
+  "engineFiles": 900,
   "reachedByScheduledRoutesOnly": 482,
   "evaluated": 482,
   "used": 481,
-  "neverEvaluated": 419,
-  "neverUsed": 420,
+  "neverEvaluated": 418,
+  "neverUsed": 419,
   "neverEvaluatedButTested": 382,
   "unresolvedSpecifierClasses": 1,
   "largestNeverEvaluated": [
@@ -314,6 +314,40 @@
       "packages/data-ingestion/src/index.ts -> ./kalshi-client.js",
       "packages/data-ingestion/src/index.ts -> KalshiClient",
       "packages/data-ingestion/src/index.ts -> KalshiError"
+    ]
+  },
+  "islandStructure": {
+    "measured": "2026-09-29",
+    "note": "An import closure is an upper bound on a call graph, not a call graph. 419 never-evaluated modules is NOT one research island needing a few root wires: they are ~405 independent islands, so each needs its own decision.",
+    "neverEvaluatedModules": 418,
+    "trueOrphans_noNonTestImporterAnywhere": 407,
+    "importedOnlyByOtherUnwiredModules": 11,
+    "alreadyImportedByALiveModule_expectZero": 0,
+    "weaklyConnectedIslands": 405,
+    "largestIslandSize": 4,
+    "arxivStylePaperModulesInEngine": 306,
+    "whyThePaperCountMatters": "Roughly a third of the engine is literature implementations (diffusion, Mamba, panel-DML, ...). Wiring those into ingestion would put research code on the published path with no measured justification. They are offline by design, not unfinished. The actionable set is the non-paper decision logic: 19 of the 20 largest never-evaluated modules are non-paper.",
+    "largestNeverEvaluatedNonPaper": [
+      "packages/prediction-engine/src/team-ratings/upset-parity-prior.ts",
+      "packages/prediction-engine/src/team-ratings/win-strength-diagnostic.ts",
+      "packages/prediction-engine/src/team-ratings/q-index-parity.ts",
+      "packages/prediction-engine/src/win-spread-total/in-game-volatility.ts",
+      "packages/prediction-engine/src/timeseries/lag-covariates.ts",
+      "packages/prediction-engine/src/props-dfs/lineup-roles.ts",
+      "packages/prediction-engine/src/experimental/velo.ts",
+      "packages/prediction-engine/src/calibration/base-rate-honesty.ts",
+      "packages/prediction-engine/src/weather/density-altitude.ts",
+      "packages/prediction-engine/src/props-dfs/fractional-tackles.ts",
+      "packages/prediction-engine/src/automl/greedy-portfolio.ts",
+      "packages/prediction-engine/src/edge-lab/features/weather-edge-adapter.ts",
+      "packages/prediction-engine/src/win-spread-total/pi-ratings.ts",
+      "packages/prediction-engine/src/ensemble/dampened-log-odds.ts",
+      "packages/prediction-engine/src/weather/inverse-far-blending.ts",
+      "packages/prediction-engine/src/ensemble/decision-weighted-pinball.ts",
+      "packages/prediction-engine/src/calibration/temporal-conformal.ts",
+      "packages/prediction-engine/src/props/fractional-contribution.ts",
+      "packages/prediction-engine/src/automl/successive-halving.ts",
+      "packages/prediction-engine/src/ensemble/corrected-forecast-combination.ts"
     ]
   }
 }
