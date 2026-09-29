@@ -120,6 +120,12 @@ export {
   SHRINKAGE_KAPPA_GAMES,
   SPEC_POSTED_POSITIONAL_CV,
   POSITIONAL_CV_SNAPSHOT,
+  PROJECTION_BANDS,
+  DEFAULT_BAND_COVERAGE,
+  bandFor,
+  projectionInterval,
+  BAND_SUPPRESSED_POSITIONS,
+  POSITIONAL_BASELINE_LABEL,
 } from "./fantasy-variance.js";
 export type {
   PlayerWeek,
@@ -127,6 +133,10 @@ export type {
   ProjectionRow,
   CvSource,
   ModelPosition,
+  ProjectionBand,
+  ProjectionInterval,
+  BandKind,
+  ProcessGradeIsNeverPublishable,
 } from "./fantasy-variance.js";
 export type {
   IndependentEstimate,

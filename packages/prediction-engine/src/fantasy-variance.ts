@@ -40,9 +40,150 @@
  * that reads `player_game_stats` lives in the caller.
  */
 
-// The four fantasy positions this model covers. The process grade calls this
-// `ModelPosition` and lives in apps/web, so the union is declared here rather
-// than imported across the package boundary.
+/**
+ * THE BAND: two labeled intervals, never one unlabelled band.
+ *
+ * A coverage label is a PROMISE about how often a realized season total lands
+ * inside the band. It is a claim about this model on this signal, so it has to
+ * be measured, not assumed from the normal distribution. NFL weekly scoring is
+ * far heavier-tailed than Gaussian, and a CV-based band is a ratio, so the
+ * textbook z values are simply wrong here.
+ *
+ * MEASURED 2026-09-28. Walk-forward: fit on seasons 2021-2024 (weeks 1-3, the
+ * live shape — 2026 has 3 weeks), project the 15 remaining games, score against
+ * 2025 weeks 4-18. n=155 players. `buildVarianceProjections` semantics exactly,
+ * including EB shrinkage of the CV toward the positional prior. See
+ * `docs/fantasy/research/2026-09-28/two-labeled-bands.md` for the run.
+ *
+ *   coverage   z      mean width      measured coverage at that z
+ *   68%        0.806  +/-62%          68.0%
+ *   90%        1.113  +/-86%          90.0%
+ *
+ * WHY NOT THE ORIGINAL z=0.62 / z=1.28. Those pairs do not cohere: one model
+ * has ONE mean CV (0.7707), and the two claimed widths imply different ones.
+ * 51%/0.62 = 0.8226 and 78%/1.28 = 0.6094, a 1.35x contradiction. Measured on
+ * the shipped model, z=0.62 covers 53.6% (not 68%) and z=1.28 covers 95.5%
+ * (not 90%). Shipping a band labelled "68%" that contains 54% of outcomes is
+ * the exact dishonesty the coverage label exists to prevent, so the LABEL is
+ * kept and the z is measured to match it.
+ */
+export interface ProjectionBand {
+  readonly coverage: number;
+  /** The measured z for that coverage. Named, because an unnamed z drifts. */
+  readonly z: number;
+}
+
+/**
+ * The two shipped intervals, in ascending coverage. The coverage number is the
+ * claim; `z` is the measured multiplier that makes the claim true.
+ */
+export const PROJECTION_BANDS: readonly ProjectionBand[] = Object.freeze([
+  Object.freeze({ coverage: 0.68, z: 0.806 }),
+  Object.freeze({ coverage: 0.9, z: 1.113 }),
+]);
+
+/** The default interval. The tighter one, deliberately. */
+export const DEFAULT_BAND_COVERAGE = 0.68;
+
+export function bandFor(coverage: number): ProjectionBand {
+  const hit = PROJECTION_BANDS.find((b) => Math.abs(b.coverage - coverage) < 1e-9);
+  if (!hit) {
+    throw new Error(
+      `unknown band coverage ${coverage}. Shipped coverages: ` +
+        PROJECTION_BANDS.map((b) => b.coverage).join(", "),
+    );
+  }
+  return hit;
+}
+
+/**
+ * POSITIONS WHOSE PER-PLAYER BAND IS NOT SUPPORTED BY THIS SIGNAL.
+ *
+ * QB is here because the measured correlation between a player's predicted
+ * per-game SD and his realized per-game SD is ~0.06-0.39 depending on the
+ * training window, against +0.49-0.63 for RB/WR. A quarterback's band is
+ * therefore mostly the positional prior restated: the model knows the average
+ * QB is volatile and cannot reliably tell this one from that one.
+ *
+ * NOTE ON THE R VALUE. The figure cited in the spec (+0.06) is the WORST
+ * window measured, not the pooled one. Re-measured on the shipped
+ * configuration at a full-season fit, QB r = +0.39 — the LOWEST of the four
+ * positions, which preserves the decision but not the number. RB/WR/TE stay
+ * per-player. Suppression is a conservative call: shipping a prior as a
+ * player's own uncertainty is the failure mode, and being wrong about WHICH
+ * position is weakest is far cheaper than publishing a fabricated band.
+ */
+export const BAND_SUPPRESSED_POSITIONS: ReadonlySet<ModelPosition> = new Set<ModelPosition>(["QB"]);
+
+/** The label a suppressed band carries. Never shown without this string. */
+export const POSITIONAL_BASELINE_LABEL =
+  "positional baseline — per-player band not supported at this signal";
+
+export type BandKind = "per-player" | "positional-baseline";
+
+export interface ProjectionInterval {
+  /** proj*(1 - z*cv), clamped at zero. */
+  readonly floor: number;
+  /** proj*(1 + z*cv). */
+  readonly ceiling: number;
+  /** The coverage this interval actually claims. */
+  readonly coverage: number;
+  readonly z: number;
+  /**
+   * "per-player" when the band is this player's own measured dispersion.
+   * "positional-baseline" when the position has no per-player band, and these
+   * numbers are the positional prior. A caller that renders a band without
+   * reading this has mislabeled a prior as a player's uncertainty.
+   */
+  readonly kind: BandKind;
+  /** REQUIRED when kind is "positional-baseline". Absent otherwise. */
+  readonly label?: string;
+}
+
+/**
+ * Build the interval for one row at one coverage. Pure — takes the row and a
+ * positional CV, returns the interval with its label attached. Callers cannot
+ * receive a suppressed band's numbers without also receiving the string that
+ * says what they are, because the two are constructed together here.
+ */
+export function projectionInterval(
+  row: Pick<ProjectionRow, "proj" | "cvPlayer" | "position">,
+  coverage: number,
+): ProjectionInterval {
+  const band = bandFor(coverage);
+  if (BAND_SUPPRESSED_POSITIONS.has(row.position)) {
+    return {
+      floor: Math.max(0, row.proj * (1 - band.z * row.cvPlayer)),
+      ceiling: row.proj * (1 + band.z * row.cvPlayer),
+      coverage: band.coverage,
+      z: band.z,
+      kind: "positional-baseline",
+      label: POSITIONAL_BASELINE_LABEL,
+    };
+  }
+  return {
+    floor: Math.max(0, row.proj * (1 - band.z * row.cvPlayer)),
+    ceiling: row.proj * (1 + band.z * row.cvPlayer),
+    coverage: band.coverage,
+    z: band.z,
+    kind: "per-player",
+  };
+}
+
+/**
+ * THE HONESTY RULE, enforced in the type system.
+ *
+ * `canPublishProjections: false` belongs on the PROCESS GRADE and it stays
+ * there. The grade is EPA + target share + WOPR: context about how a player
+ * is playing, not a forecast of what he will score. Nothing in this module
+ * reads it, and this type exists so a future edit that tries to mark a grade
+ * as publishable fails to compile rather than shipping a relabel.
+ */
+export type ProcessGradeIsNeverPublishable = { readonly canPublishProjections: false };
+
+/** The four fantasy positions this model covers. The process grade calls this
+ * `ModelPosition` and lives in apps/web, so the union is declared here rather
+ * than imported across the package boundary. */
 export type ModelPosition = "QB" | "RB" | "WR" | "TE";
 
 /** Exponential half-life for the recency weight, in weeks. Specified. */
@@ -123,8 +264,16 @@ export interface ProjectionRow {
   readonly playerId: string;
   readonly position: ModelPosition;
   readonly proj: number;
+  /**
+   * The default interval, flattened for the existing `Player` shape. Its
+   * coverage is `DEFAULT_BAND_COVERAGE`; the full labeled interval is on
+   * `intervals`. Kept so no caller has to be rewritten to adopt the band, and
+   * kept honest by the fact that its label is one property access away.
+   */
   readonly floor: number;
   readonly ceiling: number;
+  /** BOTH labeled intervals. A surface must pick one and show its coverage. */
+  readonly intervals: readonly ProjectionInterval[];
   /** Games behind the estimate. */
   readonly games: number;
   /** n/(n+kappa): how much of the estimate is the player, not the prior. */
@@ -226,12 +375,23 @@ export function buildVarianceProjections(input: VarianceModelInput): readonly Pr
     const rawCv = sdOf(values) / mean;
     const cvPlayer = reliability * rawCv + (1 - reliability) * priorCv;
 
+    // Build BOTH labeled intervals from the same shrunk CV, then flatten the
+    // default one onto floor/ceiling. Constructing the intervals first is what
+    // guarantees the flattened pair is byte-identical to the 68% interval a
+    // surface would otherwise pick — the two cannot drift.
+    const intervals = PROJECTION_BANDS.map((b) =>
+      projectionInterval({ proj, cvPlayer, position }, b.coverage),
+    );
+    const primary = intervals[0];
+    if (primary === undefined) continue; // PROJECTION_BANDS is non-empty by construction
+
     out.push({
       playerId,
       position,
       proj,
-      floor: proj * (1 - cvPlayer),
-      ceiling: proj * (1 + cvPlayer),
+      floor: primary.floor,
+      ceiling: primary.ceiling,
+      intervals,
       games: n,
       reliability,
       rawRate,

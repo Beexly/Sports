@@ -18,7 +18,13 @@
  * When the flag is off, this returns null and the illustrative pool stands.
  */
 
-import type { ProjectionRow } from "@sports/prediction-engine";
+import {
+  DEFAULT_BAND_COVERAGE,
+  POSITIONAL_BASELINE_LABEL,
+  projectionInterval,
+  type ProjectionInterval,
+  type ProjectionRow,
+} from "@sports/prediction-engine";
 import type { Player } from "../fantasy/players";
 import {
   registerProjectionsProvider,
@@ -36,6 +42,13 @@ export interface VariancePlayer extends Player {
   readonly varianceGames?: number;
   /** n/(n+kappa): how much of the estimate is the player, not the prior. */
   readonly varianceReliability?: number;
+  /**
+   * The interval this row's floor/ceiling actually IS. Mandatory on any
+   * variance row: a surface that renders a band reads this to know which
+   * coverage to print, and — critically — whether the numbers are the
+   * player's own dispersion or the positional prior restated.
+   */
+  readonly varianceBand?: ProjectionInterval;
 }
 
 function round(v: number, d = 1): number {
@@ -45,17 +58,33 @@ function round(v: number, d = 1): number {
 
 /**
  * Map variance rows onto the `Player` shape the engines already read. Pure.
- * The band comes from the model: floor = proj*(1-CV), ceiling = proj*(1+CV).
- * Nothing here re-derives it, and nothing reads the process grade.
+ * The band comes from the model: floor/ceiling are the DEFAULT_BAND_COVERAGE
+ * interval, and `varianceBand` says which one that is. Nothing here re-derives
+ * it, and nothing reads the process grade.
  */
 export function varianceRowsToPlayers(
   rows: readonly ProjectionRow[],
   nameById: ReadonlyMap<string, { name: string; team: string }>,
+  coverage: number = DEFAULT_BAND_COVERAGE,
 ): VariancePlayer[] {
   return rows
     .map((r): VariancePlayer | null => {
       const who = nameById.get(r.playerId);
       if (!who) return null; // no identity -> not surfaced, never invented
+      // Rebuilt here from the row rather than trusted off `r.intervals`, so
+      // this function stays correct if a caller hands it rows built by an
+      // older shape. The engine's own `projectionInterval` is the only source.
+      const band: ProjectionInterval = projectionInterval(r, coverage);
+      const pct = (band.z * r.cvPlayer * 100).toFixed(0);
+      // The note ALWAYS states the coverage. This is the "no surface shows a
+      // band without its label" rule enforced at the point the string is made,
+      // so it cannot be dropped by a surface that forgets to render it.
+      const coverageText = `${(band.coverage * 100).toFixed(0)}% coverage`;
+      const note =
+        `Our variance model: ${r.games} games, reliability ${r.reliability.toFixed(2)}, ` +
+        `${coverageText} band +/-${pct}%` +
+        (band.kind === "positional-baseline" ? ` (${POSITIONAL_BASELINE_LABEL})` : "") +
+        `. Process grade is separate context.`;
       return {
         id: r.playerId,
         name: who.name,
@@ -63,18 +92,17 @@ export function varianceRowsToPlayers(
         team: who.team,
         bye: 0, // a fact join elsewhere, never invented here
         proj: round(r.proj),
-        floor: round(r.floor),
-        ceiling: round(r.ceiling),
+        floor: round(band.floor),
+        ceiling: round(band.ceiling),
         usage: 0, // usage is a process-grade fact; a projection must not fake it
         schemeFit: 0.6, // documented neutral, matching the graded pool's fallback
         role: `${r.position} · variance model`,
         trend: "flat", // a projection has no trend; the grade owns that
         injury: "healthy",
-        note:
-          `Our variance model: ${r.games} games, reliability ${r.reliability.toFixed(2)}, ` +
-          `band +/-${(r.cvPlayer * 100).toFixed(0)}%. Process grade is separate context.`,
+        note,
         varianceGames: r.games,
         varianceReliability: round(r.reliability, 3),
+        varianceBand: band,
       };
     })
     .filter((p): p is VariancePlayer => p !== null)

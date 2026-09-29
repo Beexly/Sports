@@ -200,8 +200,12 @@ describe("the env gate", () => {
     expect(provider.attribution).toContain("variance model");
     const [proj] = provider.list();
     expect(proj.proj).toBe(300);
-    expect(proj.floor).toBe(240);
-    expect(proj.ceiling).toBe(390);
+    // The row's hand-written floor/ceiling (240/390, the OLD z=1.0 band) are
+    // deliberately ignored: `varianceRowsToPlayers` rebuilds the interval from
+    // cvPlayer at the default 68% coverage, so the two cannot drift. 300 with
+    // cv 0.3 at z=0.806 is 227.5 / 372.5.
+    expect(proj.floor).toBe(227.5);
+    expect(proj.ceiling).toBe(372.5);
     expect(proj.source).toBe("live");
   });
 });
