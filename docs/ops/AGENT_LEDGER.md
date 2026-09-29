@@ -31,6 +31,48 @@ Validated by `scripts/ops/check-agent-ledger.mjs`, which runs in CI via
 `apps/web/__tests__/agent-ledger.test.ts`. A malformed or dishonest row fails the
 build.
 
+## ACTIVE INCIDENT — 2026-09-29 — PRODUCTION DEPLOYS FAILING, DATABASE UNREACHABLE
+
+**READ THIS BEFORE ANY OTHER WORK IN THIS FILE.** Seven consecutive production
+deploys have failed. `/api/health` and `/api/picks` both return 503. The site
+serves the last GOOD deployment, so public pages are 200 while everything
+DB-backed is 503. Production is 13+ commits behind main and `MODEL_VERSION
+v5.3.0` has never shipped.
+
+TWO failures, from `vercel inspect --logs`:
+1. `P1001 Can't reach database server at <host>:5432` — direct Neon endpoint
+   refuses TCP.
+2. `password authentication failed for user 'neondb_owner'` on the HTTP/443
+   fallback, via POSTGRES_URL, POSTGRES_PRISMA_URL AND DATABASE_URL.
+
+Failure 2 is the diagnostic one: a down database would fail to CONNECT on 443
+too. Reaching auth and being refused implicates the CREDENTIAL or a SUSPENDED
+Neon compute, not the database process. See
+`docs/ops/PRODUCTION-INCIDENT-db-unreachable.md` for full logs and history.
+
+NEEDS A HUMAN, in order: (1) Neon console — is `gse-postgres` compute running
+or SUSPENDED? A suspended compute refuses TCP and invalidates pooled creds,
+which fits both symptoms. (2) If running, the `neondb_owner` password in
+Vercel is wrong or was rotated without updating both `DIRECT_URL` and
+`DATABASE_URL`. (3) Do NOT set `MIGRATE_GATE_ALLOW_UNVERIFIED=true` to force a
+build: shipping a Prisma client against an unverified schema is the exact
+failure mode that caused the earlier /api/picks outage. The fail-closed gate
+is working correctly; fix what is beneath it.
+
+Cannot be diagnosed locally: the neonctl token on this machine is a DIFFERENT
+account (baxley.garrett / PickPilot) and reports `Projects Limit 0` with "not
+an organization member" — it has no access to `gse-postgres`.
+
+**Every odds/signal finding in this ledger is downstream of this.** The odds
+blackout is NOT an odds problem: `process-sport.ts:340` issues
+`db.ingestionRun.create()` above the `try` that opens at :384, so with the DB
+down it throws outside the catch, no FAILED row is written, `getOdds()` at :422
+is never reached, and zero credits are spent — which makes the credit governor
+look healthy. Credit fields are `null`, not `0`: a spent budget leaves
+numbers, and `null` means the cycle never completed.
+
+---
+
 ## Why this exists
 
 Four agents work on `Beexly/Sports` — a local Hermes runner, GitHub Copilot, a
