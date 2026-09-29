@@ -170,9 +170,6 @@ export default async function FantasyHubPage({
                 <Link href="/nflverse" className="btn btn-ghost">
                   NFLverse Pulse
                 </Link>
-                <Link href="/api/sources/catalog" className="btn btn-ghost">
-                  Data sources
-                </Link>
                 <Link href="/fantasy/baseline" className="btn btn-ghost">
                   Baseline map
                 </Link>

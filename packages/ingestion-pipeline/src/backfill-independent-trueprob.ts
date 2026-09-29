@@ -17,6 +17,7 @@ import {
   type EloRatingsCache,
 } from "./build-independent-fair-values.js";
 import { blendIndependentHomeFair } from "./generate-signal-slate.js";
+import { sourceAgreement } from "@sports/prediction-engine";
 type FactorBreakdownLike = {
   readonly rankingP?: number | null;
   readonly rankingSource?: string | null;
@@ -234,7 +235,9 @@ export async function backfillIndependentTrueProb(opts?: {
     const independentEdge = {
       ...prevEdge,
       decision: trueProb >= 0.58 ? "LEAN" : "PASS",
-      agreement: sources.length >= 2 ? "CONFIRMS" : "SOLO",
+      // Real direction agreement, not a source count. `sources.length >= 2`
+      // stamped two estimators reading opposite directions as "CONFIRMS".
+      agreement: sourceAgreement(independents),
       // Omit synthetic market — only persist real book fair
       ...(marketFair != null
         ? { marketFairProb: marketFair }

@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { PlayerLabTable } from "@/components/players/player-lab-table";
 import { Attribution } from "@/components/ui/attribution";
 import { Footer } from "@/components/ui/footer";
+import { isPagePublic } from "@/lib/launch/internal-surface-fence";
 import { MetricExplainer } from "@/components/ui/metric-explainer";
 import { Nav } from "@/components/ui/nav";
 import { PageHero } from "@/components/ui/page-hero";
@@ -110,6 +112,11 @@ interface PlayersPageProps {
 }
 
 export default async function PlayersPage({ searchParams }: PlayersPageProps): Promise<JSX.Element> {
+  // Public/private surface doctrine: the MetricExplainer rail and PlayerLab
+  // tables put metric decompositions behind each player row. Projections are
+  // allowed; the decomposition is not.
+  if (!isPagePublic("/players")) notFound();
+
   const requested = searchParams?.view;
   const view = resolvePlayerView(requested);
 

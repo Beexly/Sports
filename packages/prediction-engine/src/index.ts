@@ -100,6 +100,44 @@ export {
   SPEAK_EDGE,
   LEAN_EDGE,
 } from "./edge-engine.js";
+// Market-free source agreement for the no-book signal path. The signal slate
+// stamped `agreement` from a source COUNT (>= 2 -> CONFIRMS), so two estimators
+// reading opposite directions were recorded as corroborated and the pick
+// explainer printed that word to customers. See independent-agreement.ts.
+export {
+  sourceAgreement,
+  SOURCE_DIRECTION_EPSILON,
+} from "./independent-agreement.js";
+export type { SourceAgreement, AgreementInput } from "./independent-agreement.js";
+// The fantasy variance model — OUR projection. Deliberately separate from the
+// process grade, which is context and never a forecast. See fantasy-variance.ts
+// for the measured-CV snapshot and the McCaffrey spot-check falsifiers.
+export {
+  buildVarianceProjections,
+  recencyWeight,
+  classifyCvSource,
+  RECENCY_HALF_LIFE_WEEKS,
+  SHRINKAGE_KAPPA_GAMES,
+  SPEC_POSTED_POSITIONAL_CV,
+  POSITIONAL_CV_SNAPSHOT,
+  PROJECTION_BANDS,
+  DEFAULT_BAND_COVERAGE,
+  bandFor,
+  projectionInterval,
+  BAND_SUPPRESSED_POSITIONS,
+  POSITIONAL_BASELINE_LABEL,
+} from "./fantasy-variance.js";
+export type {
+  PlayerWeek,
+  VarianceModelInput,
+  ProjectionRow,
+  CvSource,
+  ModelPosition,
+  ProjectionBand,
+  ProjectionInterval,
+  BandKind,
+  ProcessGradeIsNeverPublishable,
+} from "./fantasy-variance.js";
 export type {
   IndependentEstimate,
   EdgeInput,
@@ -1026,6 +1064,32 @@ export type {
 } from "./signal-ledger-sources.js";
 export { pointBiserial, correlationToMultiplier, tuneSignalWeights, MIN_SAMPLES } from "./tune-signal-weights.js";
 export type { KeyOutcome, TunedWeight } from "./tune-signal-weights.js";
+
+// The FAMILY-weight evidence census. Every signal in the registry carries a
+// hand-assigned `trustWeight`, and the hierarchical pool carries
+// `DEFAULT_FAMILY_PRIOR_WEIGHTS` (SITUATIONAL 0.12, NARRATIVE 0.05, …). Those
+// numbers move a published probability and had never been measured against a
+// settled outcome. This module measures them, stratified by pickType, and
+// refuses to report "no effect" when the honest answer is "we do not know".
+export {
+  censusFamilyWeights,
+  formatFamilyWeightReport,
+  familiesRestingOnPriors,
+  findCollinearFamilies,
+  pickTypeMixDistance,
+  stratifiedZ,
+  twoProportionZ,
+  twoTailedP,
+  EVIDENCE_SATURATION_MULTIPLE,
+  EVIDENCE_SATURATION_ROWS,
+  MAX_PICKTYPE_SHARE,
+  MIN_ABS_Z,
+  MIN_STRATUM_OBSERVATIONS,
+} from "./calibration/family-weight-evidence.js";
+export type {
+  FamilyStratum,
+  FamilyWeightMeasurement,
+} from "./calibration/family-weight-evidence.js";
 
 // The GROUP-aware tuner. #924's floors and scales its evidence by the ROW count,
 // but picks cluster by fixture (AGENTS.md: every NFL fixture is THREE `games`

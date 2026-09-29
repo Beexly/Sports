@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Footer } from "@/components/ui/footer";
+import { isPagePublic } from "@/lib/launch/internal-surface-fence";
 import { Nav } from "@/components/ui/nav";
 import {
   metricsByCategory,
@@ -117,6 +119,10 @@ function CoverageMapSection({ data }: { data: CoverageMapUiData }): JSX.Element 
 }
 
 export default function MetricsMethodologyPage(): JSX.Element {
+  // Public/private surface doctrine: the named metric inventory with its
+  // anchor/signal/noise labels is a metric registry, which is internal.
+  if (!isPagePublic("/intelligence/metrics")) notFound();
+
   const groups = metricsByCategory();
   const s = methodologySummary();
   const coverage = coverageMapUiData();

@@ -34,7 +34,16 @@ export default async function DfsSuitePage() {
       accent="cyan"
       title={<>Build the lineup. <span className="gse-editorial" style={{ fontSize: "1.08em" }}>See the why</span>.</>}
       intro="Pick your mode, set your locks and fades, and the optimizer builds lineups that actually fit the salary cap. Every lineup shows its salary, stack, projected ownership, and leverage score. Export straight to DraftKings CSV."
-      note="Running on a sample slate until a live salary feed is connected. The math is real; the player pool is illustrative."
+      // Derived from `live`, never a constant. This used to be a hardcoded
+      // string, so the "sample slate" disclosure rendered over LIVE salaries
+      // too — telling a paying customer their real board was fake. Law 8 is
+      // about not presenting fabricated data as real; the mirror failure is
+      // just as bad, and it was what this actually did.
+      note={
+        live
+          ? "Live salary feed connected. Salaries and player pool are real; lineup math is ours."
+          : "Running on a sample slate until a live salary feed is connected. The math is real; the player pool is illustrative."
+      }
       wide
     >
       {/* ── Salary Board — the optimizer's input layer ─────────────── */}
