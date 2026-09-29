@@ -34,6 +34,7 @@ import {
   type FixtureProbe,
 } from "./fixture-confirmation.js";
 import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
+import { stalenessBlockers } from "./signal-staleness.js";
 import { collapseGameRowsToFixtures } from "./fixture-collapse.js";
 import type { SignalSlateOptions } from "./signal-slate-options.js";
 
@@ -591,6 +592,29 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
       rationale: `Independent blend (${sourcesLabel}): model estimate ${(trueProb * 100).toFixed(1)}% for ${chosenTeam}, uncalibrated and not a book price. Model signal only.`,
     };
 
+    // Staleness veto, computed from the SAME independentEdge the row stores so
+    // the gate and the payload can never describe different reads.
+    //
+    // `now` is this run's clock, which is the moment the read is minted — so a
+    // fresh cron run always passes this. What it catches is a run that goes on
+    // to publish a pick whose COMMENCE time has drawn near while the model
+    // inputs behind it are hours old relative to that fixture. The live
+    // specimen (Bears ML, 8h07m48s before kickoff, solo elo, no market) is
+    // pinned as a regression test in signal-staleness.test.ts.
+    const stalenessBlockersNow = stalenessBlockers({
+      agreement: independentEdge.agreement,
+      sources: independentEdge.sources,
+      bookPriced: independentEdge.marketFairProb !== null,
+      generatedAt: now,
+      commenceTime: game.commenceTime,
+    });
+    const stalenessVeto = stalenessBlockersNow.length > 0;
+    if (stalenessVeto) {
+      console.warn(
+        `[signal-slate] publication vetoed for ${game.id} (${chosenTeam} ML): ${stalenessBlockersNow.join(", ")}`,
+      );
+    }
+
     const factorBreakdown: FactorBreakdown = {
       consensusScore: 0,
       marketDepthScore: 0,
@@ -795,7 +819,16 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
             ...shared,
             // On CREATE the gate decides outright: there is no prior operator
             // judgement to preserve, so the flag is simply the gate's value.
-            isPublished: gates.canExposePublicPicks,
+            //
+            // AND the staleness gate has a veto (2026-09-28). Before this, a
+            // signal pick published off the single global gate with NO per-pick
+            // judgement at all. Live specimen: Chicago Bears ML, conf 60,
+            // published, generated 8h07m48s before kickoff on `sources:["elo"]`
+            // / `agreement:"SOLO"` / `marketFairProb:null`. A solo-source read
+            // that old cannot know about a quarterback change, and the pick
+            // still shipped. `isPublished` here is the GATE's value AND this
+            // row's value; they are no longer the same statement.
+            isPublished: gates.canExposePublicPicks && !stalenessVeto,
             isBootstrap: !gates.canPersistCanonicalHistory,
             isFeatured: false,
             generatedAt: now,
