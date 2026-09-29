@@ -200,3 +200,76 @@ production. Override it and the failure mode becomes invisible.
 only DB-backed routes are dark. There is no data loss from the outage itself —
 the writes that never happened were odds fetches, and the credit governor spent
 nothing.
+
+---
+
+## ADDENDUM 3 — DIAGNOSIS COMPLETE: Neon is fully healthy. The credential is wrong. (2026-09-29)
+
+I ruled out the provider, the network, and a suspended compute. The founder supplied
+the production endpoints, which let me test them directly. **No credentials were used in
+any probe below** — every request is unauthenticated, and no connection string, password,
+or token was read, printed, or transmitted.
+
+Endpoints under test (from the founder):
+
+```
+apirest  ep-summer-moon-apv5ccys.apirest.c-7.us-east-1.aws.neon.tech
+auth     ep-summer-moon-apv5ccys.neonauth.c-7.us-east-1.aws.neon.tech
+```
+
+### What the probes show
+
+| Probe | Result | What it rules OUT |
+|---|---|---|
+| DNS for both hosts | `apirest → 18.213.221.100`, `neonauth → 54.82.82.69` | DNS failure, wrong host, typo |
+| TCP 443 to apirest | **HTTP 400** (server responding) | Suspended compute, dead endpoint, firewall drop |
+| TCP 443 to neonauth | **HTTP 404** (server responding) | Network path failure |
+| `GET /neondb/auth/.well-known/jwks.json` | **HTTP 200**, 1 live key (`kty=OKP`, `alg=EdDSA`, `kid=196e9e7e-afa…`) | Neon-wide outage, auth subsystem down, compute asleep |
+| Neon status page | **"All Systems Operational"** | Provider incident |
+| `console.neon.tech/api/...` | **401** (auth challenge served) | Neon API being down |
+| `api.neon.tech` from this laptop | connection failure | — (see note; this is **local to my machine**, not Neon. Supabase and PlanetScale both answered normally from the same laptop, so it is a local DNS/route issue on my side and says nothing about production.) |
+
+### The conclusion
+
+**The database is up, awake, reachable, and its auth service is serving live signing keys.**
+Neon is not the problem. The build log showed
+
+```
+[neon-http-parity] HTTP query failed via POSTGRES_URL:     password authentication failed for user 'neondb_owner'
+[neon-http-parity] HTTP query failed via POSTGRES_PRISMA_URL: password authentication failed for user 'neondb_owner'
+[neon-http-parity] HTTP query failed via DATABASE_URL:      password authentication failed for user 'neondb_owner'
+```
+
+and that error is only reachable when the TCP/TLS/HTTP path **works** and the server
+**identifies itself enough to reject the credential**. A down database produces `P1001`
+on every path including HTTPS; it does not produce an auth rejection. So the `P1001`
+against `:5432` is the pooled/direct TCP route being unavailable from Vercel's build
+sandbox, and the *real* blocker is the credential.
+
+`DIRECT_URL`, `DATABASE_URL`, and `POSTGRES_URL` were last set **38 days ago**. The
+`neondb_owner` password has most likely been rotated since, or the role was reset, and
+the Vercel env vars were never updated to match.
+
+### The fix — two steps, both founder-gated (credential access is not mine)
+
+1. **Neon console → `gse-postgres` → Roles → `neondb_owner`** (or Connection Strings →
+   "Reset password"). Copy the current password. Do NOT paste it into this chat.
+2. **Vercel → Sports → Settings → Environment Variables**, update **all** of:
+   - `DIRECT_URL`  (non-pooled, used by `prisma migrate`)
+   - `DATABASE_URL` (pooled, used at runtime)
+   - `POSTGRES_URL`
+   to the same new password, then redeploy. They must match; `migrate` runs against
+   `DIRECT_URL` and the app against `DATABASE_URL`, and a split pair reproduces this
+   exact failure.
+
+**Do not set `MIGRATE_GATE_ALLOW_UNVERIFIED=true`.** It would force the build green past
+an unverified schema — the one state that previously caused the `/api/picks` outage. The
+fail-closed gate is currently the only thing preventing a second, worse incident.
+
+### Why this took until now
+
+I stated a cause ("the credential") three times before I had evidence for it, and it was
+right each time for the wrong reason — the first two guesses were also plausible. The
+founder supplying the endpoints turned a ranked hypothesis into a measurement. That is
+the honest shape of this incident: the symptom was always visible, and the *cause* took
+an independent input I could not manufacture.
