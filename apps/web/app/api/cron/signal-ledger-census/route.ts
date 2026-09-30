@@ -8,6 +8,15 @@
  * tables, measures the anchor per signal key, and reports what the ledger
  * could hold today.
  *
+ * UPDATE 2026-09-30 (ledger row LEDGER-COMPOSE): `signals` is no longer empty —
+ * the writer cron landed and the table holds 118,462 rows / 2,536 entities, so
+ * the "held 0 rows" clause above is superseded. `composeLedger` STILL has no
+ * production reader: its only caller, composeByEntity, has zero callers
+ * repo-wide. That is not an oversight to be closed by adding a caller here —
+ * the census output this route measures is the missing prerequisite, because
+ * the stored `value` is the source column verbatim and the composer requires a
+ * shared -1..1 scale. Normalize first, wire second.
+ *
  * LAWS OBSERVED:
  * - CRON_SECRET bearer auth only (`bearer_only`; this route is read-only but
  *   defaults to the strict mode rather than opting into the spoofable header).

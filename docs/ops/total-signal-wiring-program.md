@@ -127,9 +127,30 @@ gse-grok-build-sandbox.
    reporting "additive". Neither has a production caller: zero production risk.
    Fix the math, add asymmetric-input tests that fail on the old code.
 2. **player signals table** — 0 rows. The empty core of the total-signal doctrine.
+   **SUPERSEDED 2026-09-30: no longer empty.** 118,462 rows / 2,536 entities
+   (read-only, hermes_ro), 10 keys, last fetch 2026-09-30T10:00. The writer
+   landed (#932/#934/#935). What is still missing is the NORMALIZATION and
+   WEIGHT-FITTING half — see item 3.
 3. **composeLedger production wiring** — no production callers today; wiring it
    changes what production publishes, which is authorized under this program,
    gated by the promotion rule above.
+   **CORRECTION 2026-09-30 (ledger row LEDGER-COMPOSE): the authorization above
+   is withdrawn, and the premise is wrong as written.** Two corrections:
+   (a) composeLedger is an ENTITY composer (signal-ledger.ts:76) and is NOT the
+   pick reasoning spine — calibratedProb/sixQuestions live in
+   apps/web/intelligence-core. Its only caller is composeByEntity
+   (signal-ledger-populator.ts:154), which has ZERO callers repo-wide.
+   (b) It must not be wired until its input contract is met. The composer reads
+   `value` as a shared -1..1 directional scale and takes the weighted MEAN
+   (composite-score.ts:13-14, :78), but the writer stores the source column
+   VERBATIM (signal-ledger-writer.ts:20-22) — measured ranges are fantasy_ppr
+   -5.74..57.90, passing_epa -35.57..33.19, cpoe -25.42..25.03 vs
+   injury.availability -1..0, and every row carries weight=1.0/confidence=1.0.
+   A blended score would be decided by UNIT, not player quality. REORDERED: the
+   prerequisite is (i) normalize per key via `normalizeReading` using the
+   census-measured anchors, then (ii) run `tuneSignalWeights` over settled
+   outcomes to replace the uniform 1.0/1.0, then (iii) only then give
+   composeLedger a caller, shadow-first. Step (ii) is the real blocker.
 4. **pick'em intakes promotion** — DK Pick6, Underdog, PrizePicks, Sleeper,
    Action Network scoreboard: verified live, currently behind default-off flags.
 5. **Kalshi/Polymarket as calibration inputs** — free market-data APIs verified;
