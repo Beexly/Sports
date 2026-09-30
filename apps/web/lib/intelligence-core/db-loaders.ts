@@ -442,12 +442,18 @@ export async function loadPlayerStats(
   home: PlayerGameStatRow[];
   away: PlayerGameStatRow[];
   unresolved: boolean;
-  /** Rows placed by the schedule because the stored team column was NULL. */
-  resolvedViaSchedule?: number;
+  /**
+   * Rows placed by the schedule because the stored team column was NULL.
+   * Required rather than optional so every return site carries it and the
+   * orchestrator's union with its fail-open fallback stays exact.
+   */
+  resolvedViaSchedule: number;
 }> {
   const homeAbbr = nflTeamAbbr(input.homeTeamName);
   const awayAbbr = nflTeamAbbr(input.awayTeamName);
-  if (!homeAbbr || !awayAbbr) return { home: [], away: [], unresolved: true };
+  if (!homeAbbr || !awayAbbr) {
+    return { home: [], away: [], unresolved: true, resolvedViaSchedule: 0 };
+  }
 
   // Which rows to fetch is decided by the schedule, not by guessing a WHERE
   // on the empty column: a stat row's team is unknown, so `opponent IN (home,
@@ -657,8 +663,8 @@ export async function loadBundleSurfaces(
       async () =>
         season != null && lagWeek != null && homeAbbr && awayAbbr
           ? loadPlayerStats(input, season, lagWeek)
-          : { home: [], away: [], unresolved: true },
-      { home: [], away: [], unresolved: true },
+          : { home: [], away: [], unresolved: true, resolvedViaSchedule: 0 },
+      { home: [], away: [], unresolved: true, resolvedViaSchedule: 0 },
     ),
     safe("gameSignals", () => loadGameSignals(input.gameId), {
       gameSignals: [],
@@ -668,7 +674,7 @@ export async function loadBundleSurfaces(
 
   if (playerStats.unresolved && homeAbbr && awayAbbr) {
     notes.push(
-      (playerStats.resolvedViaSchedule ?? 0) > 0
+      playerStats.resolvedViaSchedule > 0
         ? "playerGameStat rows carry no stored team for this season; the schedule-derived join also placed none of them, so the player-stat surfaces are empty"
         : "no playerGameStat rows resolvable to either club for this season (stored team empty and the schedule join placed none); player-stat surfaces empty",
     );
