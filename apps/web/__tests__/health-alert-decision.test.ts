@@ -279,6 +279,17 @@ describe("classifyHealthAlertSnapshot — quota", () => {
     expect(classifyHealthAlertSnapshot(healthyDb()).unhealthy).toBe(false);
   });
 
+  it("a failed read is unreadable even when a reading came back", () => {
+    // The two ledger queries run in parallel; a partial failure must not be
+    // promoted to "measured and fine" just because one of them returned.
+    const q = assessOddsQuota({ remaining: 842, readFailed: true, lowQuotaWhenMeasured: false });
+    expect(q.measurable).toBe(false);
+    expect(q.lowQuota).toBeNull();
+    expect(q.readFailed).toBe(true);
+    const snap = classifyHealthAlertSnapshot({ ...healthyDb(), quota: q });
+    expect(snap.unhealthy).toBe(true);
+  });
+
   it("the escalation reaches the stateless decision, so a webhook actually fires", () => {
     const snap = classifyHealthAlertSnapshot({
       ...healthyDb(),

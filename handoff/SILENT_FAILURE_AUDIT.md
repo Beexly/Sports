@@ -134,7 +134,7 @@ Controls proving the fix is not red-by-default:
 
 - `packages/db/src/__tests__/neon-pool-monitor.test.ts` — 6 added, 21 total pass
 - `packages/data-ingestion/src/__tests__/odds-credit-governor.test.ts` — 4 added, 65 total pass
-- `apps/web/__tests__/health-alert-decision.test.ts` — 11 added, 22 total pass
+- `apps/web/__tests__/health-alert-decision.test.ts` — 12 added, 23 total pass
 
 Suites: `packages/db` 38/38 · `packages/data-ingestion` 2459/2459 (480 files) ·
 `packages/ingestion-pipeline` 1452 passed / 6 skipped · `apps/web` targeted 60/60.

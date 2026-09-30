@@ -58,14 +58,26 @@ export function assessOddsQuota(input: {
   readonly readFailed: boolean;
   readonly lowQuotaWhenMeasured: boolean;
 }): HealthAlertOddsQuota {
+  // readFailed is checked FIRST and unconditionally. A partial read that failed
+  // one of its two queries is not evidence of a healthy quota, so a remaining
+  // number must never promote a failed read back to "measured and fine" — that
+  // is the same silent failure one layer down.
+  if (input.readFailed) {
+    return {
+      measurable: false,
+      lowQuota: null,
+      readFailed: true,
+      reason:
+        "quota=unreadable: the odds credit ledger could not be read (database unreachable or erroring); remaining is unknown, NOT fine",
+    };
+  }
   if (input.remaining === null) {
     return {
       measurable: false,
       lowQuota: null,
-      readFailed: input.readFailed,
-      reason: input.readFailed
-        ? "quota=unreadable: the odds credit ledger could not be read (database unreachable or erroring); remaining is unknown, NOT fine"
-        : "quota=unknown: no odds credit reading has ever been recorded; remaining is unknown, NOT fine",
+      readFailed: false,
+      reason:
+        "quota=unknown: no odds credit reading has ever been recorded; remaining is unknown, NOT fine",
     };
   }
   return {
