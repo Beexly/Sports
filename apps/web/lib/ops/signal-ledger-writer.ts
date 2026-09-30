@@ -64,6 +64,11 @@ import {
 import { signalScaleFor } from "@sports/prediction-engine/src/signal-scale-table.js";
 import type { SignalWriterDb, SignalWriteCandidate, SignalWriteReport } from "./signal-ledger-writer-types.js";
 
+// Re-exported so callers can type a `SignalWriteCandidate[]` without reaching
+// into the types module directly. The route annotates its `candidates` binding
+// with this type; without the re-export that import fails to resolve.
+export type { SignalWriteCandidate };
+
 /** The source tables this writer reads, and the keys each contributes. */
 export const SIGNAL_SOURCE_KEYS = {
   playerGameStat: [
