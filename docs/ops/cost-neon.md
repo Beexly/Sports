@@ -197,3 +197,43 @@ neon api /projects/summer-brook-99380762/endpoints?limit=200  # suspend_timeout_
 ```
 
 The three-line reconciliation in §1 (branch-hours ÷ 720 × $1.50; compute CU-h × $0.106; egress GB over 500 × $0.10) reproduced Neon's $157.86 exactly and is the fastest way to tell which line moved after any change. All figures above are month-to-date for 2026-09; the consumption endpoint resets on 2026-10-01, so re-baseline then.
+
+---
+
+## Verification note (2026-09-29, hermes)
+
+I tried to make the P1 fix myself and could not. Recorded so the next agent
+does not repeat the attempt.
+
+**The local `NEON_API_TOKEN` is not an API key.** It is a 219-character
+connection string beginning `https://ep-sum...`, i.e. a database URL, not a
+`napi_...` token. Calling `GET https://console.neon.tech/api/v2/projects` with
+it as a bearer returns:
+
+```
+401  {"message":"supplied credentials do not pass authentication"}
+```
+
+This is consistent with the earlier finding on this machine: `neonctl me`
+reports `Projects Limit 0` and `not an organization member` for the only org it
+can see. The local CLI identity belongs to a different account than the one
+that owns `gse-postgres` and `sports-db`.
+
+Nothing in this repo holds a working `napi_` token, so the audit's own numbers
+were obtained another way -- most likely a browser session, or a key that was
+never persisted.
+
+**P1 therefore requires the founder** (or an `napi_` key in
+`~/AppData/Local/hermes/.env` as `NEON_API_KEY`):
+
+1. Neon console -> `sports-db` (`wild-tooth-31983487`) -> branch `main`
+   (`br-damp-lake-apfiobts`) -> its endpoint -> set suspend timeout to 5 min.
+2. Optionally lower the CU limit from 8 to 0.25 in the same place.
+
+Both are pure runtime configuration, touch no rows, and are reversible. The
+$610.56/month figure is the CEILING if that endpoint ever receives a real
+connection while scale-to-zero is off; realistic exposure today is $0.01.
+
+**Not done here, and deliberately not guessed:** this is a control-plane change
+on a production account, and I will not attempt it without a credential that
+actually authenticates.
