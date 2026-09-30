@@ -509,10 +509,12 @@ export {
   paidCallMutexKey,
   resetPaidCallReservationWarning,
   loadOddsCreditTruth,
+  loadOddsCreditTruthOutcome,
 } from "./odds-credit-ledger.js";
 export type {
   OddsCreditLedgerDb,
   OddsCreditLedgerRows,
+  OddsCreditTruthOutcome,
   OddsCreditLedgerTx,
   PaidCallMarker,
   ReservePaidCallSlotInput,

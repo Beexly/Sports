@@ -140,21 +140,48 @@ export async function recordCreditObservation(
   }
 }
 
-export async function loadLatestCreditObservation(
+/**
+ * A ledger read plus whether it actually SUCCEEDED. "The read failed" and
+ * "there is no observation" are different facts with opposite operational
+ * meaning, and collapsing them is how a database outage became an
+ * indistinguishable-from-fresh credit reading.
+ */
+type LedgerRead<T> = {
+  readonly value: T;
+  /** True when the query threw. `value` is then the caller's neutral value. */
+  readonly failed: boolean;
+  readonly error: string | null;
+};
+
+function readFailure<T>(err: unknown, neutral: T): LedgerRead<T> {
+  return {
+    value: neutral,
+    failed: true,
+    error: err instanceof Error ? err.message : String(err),
+  };
+}
+
+async function readLatestCreditObservation(
   db: OddsCreditLedgerRows,
-): Promise<OddsCreditObservation | null> {
+): Promise<LedgerRead<OddsCreditObservation | null>> {
   try {
     const row = await db.jarvisMemoryEvent.findFirst({
       where: { scope: ODDS_CREDITS_SCOPE, memory_type: "episodic" },
       orderBy: { created_at: "desc" },
       select: { full_text: true, metadata: true },
     });
-    if (!row) return null;
+    if (!row) return { value: null, failed: false, error: null };
     const raw = parseRow(row);
-    return isObservation(raw) ? raw : null;
-  } catch {
-    return null;
+    return { value: isObservation(raw) ? raw : null, failed: false, error: null };
+  } catch (err) {
+    return readFailure(err, null);
   }
+}
+
+export async function loadLatestCreditObservation(
+  db: OddsCreditLedgerRows,
+): Promise<OddsCreditObservation | null> {
+  return (await readLatestCreditObservation(db)).value;
 }
 
 /** Bound on the observation window read for the truth surface and the projection. */
@@ -166,10 +193,10 @@ export const CREDIT_OBSERVATION_WINDOW_LIMIT = 500;
  * a busy day the projection anchors on the latest readings, never on the
  * oldest 500 of the window.
  */
-export async function loadCreditObservationsSince(
+async function readCreditObservationsSince(
   db: OddsCreditLedgerRows,
   since: Date,
-): Promise<OddsCreditObservation[]> {
+): Promise<LedgerRead<OddsCreditObservation[]>> {
   try {
     const rows = await db.jarvisMemoryEvent.findMany({
       where: { scope: ODDS_CREDITS_SCOPE, memory_type: "episodic", created_at: { gte: since } },
@@ -177,10 +204,21 @@ export async function loadCreditObservationsSince(
       select: { full_text: true, metadata: true },
       take: CREDIT_OBSERVATION_WINDOW_LIMIT,
     });
-    return rows.map(parseRow).filter(isObservation).reverse();
-  } catch {
-    return [];
+    return {
+      value: rows.map(parseRow).filter(isObservation).reverse(),
+      failed: false,
+      error: null,
+    };
+  } catch (err) {
+    return readFailure(err, []);
   }
+}
+
+export async function loadCreditObservationsSince(
+  db: OddsCreditLedgerRows,
+  since: Date,
+): Promise<OddsCreditObservation[]> {
+  return (await readCreditObservationsSince(db, since)).value;
 }
 
 function markerRowData(marker: PaidCallMarker): Record<string, unknown> {
@@ -399,17 +437,52 @@ export async function reservePaidCallSlot(
 }
 
 /**
+ * `loadOddsCreditTruth` plus the fact the truth alone cannot carry: whether the
+ * ledger could be READ at all. Every caller that reports on the quota needs
+ * this, because `OddsCreditTruth.remaining === null` means both "the ledger is
+ * empty" and "the database is down" — and a quota that could not be read is
+ * not a quota that is fine.
+ */
+export interface OddsCreditTruthOutcome {
+  readonly truth: OddsCreditTruth;
+  /** True when either ledger query threw. Never true for an empty-but-readable ledger. */
+  readonly readFailed: boolean;
+  readonly error: string | null;
+}
+
+/**
+ * Truth-surface block (oddsInserting.dualPath.credits): latest reading plus a
+ * projection from the last 24 hours of observations. Read-only; never throws —
+ * it reports failure through `readFailed` instead.
+ */
+export async function loadOddsCreditTruthOutcome(
+  db: OddsCreditLedgerRows,
+  now: Date = new Date(),
+): Promise<OddsCreditTruthOutcome> {
+  const since = new Date(now.getTime() - 24 * 60 * 60 * 1000);
+  const [latest, last24h] = await Promise.all([
+    readLatestCreditObservation(db),
+    readCreditObservationsSince(db, since),
+  ]);
+  const readFailed = latest.failed || last24h.failed;
+  return {
+    truth: buildOddsCreditTruth({ latest: latest.value, last24h: last24h.value, now }),
+    readFailed,
+    error: latest.error ?? last24h.error,
+  };
+}
+
+/**
  * Truth-surface block (oddsInserting.dualPath.credits): latest reading plus a
  * projection from the last 24 hours of observations. Read-only; never throws.
+ *
+ * For a surface that REPORTS the quota rather than spends against it, use
+ * `loadOddsCreditTruthOutcome` — this function's failure is indistinguishable
+ * from an empty ledger, which is exactly the silent failure being fixed.
  */
 export async function loadOddsCreditTruth(
   db: OddsCreditLedgerRows,
   now: Date = new Date(),
 ): Promise<OddsCreditTruth> {
-  const since = new Date(now.getTime() - 24 * 60 * 60 * 1000);
-  const [latest, last24h] = await Promise.all([
-    loadLatestCreditObservation(db),
-    loadCreditObservationsSince(db, since),
-  ]);
-  return buildOddsCreditTruth({ latest, last24h, now });
+  return (await loadOddsCreditTruthOutcome(db, now)).truth;
 }
