@@ -1091,6 +1091,38 @@ export type {
   FamilyWeightMeasurement,
 } from "./calibration/family-weight-evidence.js";
 
+// The RELIABILITY measurement layer. The census above asks whether a family
+// raises win rate; this asks whether the published PROBABILITY matches the
+// settled outcome — a family can lift win rate and still make the number we
+// publish worse. Reads `independentEdge.trueProb` (the causally-safe blend),
+// never pools bet types, bootstraps on fixtures, and refuses to name a verdict
+// below 200 rows / 60 fixtures. The five measurable cells in the first real run
+// are all badly miscalibrated with non-monotone reliability curves, and TOTAL
+// carries no probability at all (0 of 1,109 settled picks).
+export {
+  measureFamilyReliability,
+  measureAllFamilies,
+  formatReliabilityReport,
+  calibrationFit,
+  clusterBootstrap,
+  semanticsConflict,
+  isMeasured,
+  UNMEASURED_VERDICTS,
+  MIN_CELL_ROWS,
+  MIN_CELL_FIXTURES,
+  MIN_CONTRAST_ARM_ROWS,
+  LOG_LOSS_CLIP,
+  SLOPE_TOLERANCE,
+  LEVEL_TOLERANCE,
+} from "./calibration/family-reliability.js";
+export type {
+  FamilyReliability,
+  ReliabilityVerdict,
+  ReliabilityBucket,
+  SettledPickObservation,
+  ProbabilityEvent,
+} from "./calibration/family-reliability.js";
+
 // The GROUP-aware tuner. #924's floors and scales its evidence by the ROW count,
 // but picks cluster by fixture (AGENTS.md: every NFL fixture is THREE `games`
 // rows; the same model-signal selection is published per-series with byte-
