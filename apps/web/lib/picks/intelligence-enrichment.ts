@@ -11,6 +11,7 @@ import {
   type GameBundle,
   type IntelligenceResult,
   type SignalObservation,
+  type SignalShadowPolicy,
 } from "@/lib/intelligence-core";
 import {
   wireEverything,
@@ -48,6 +49,12 @@ export interface PickIntelligence {
   readonly dbSurfacesEmpty: readonly string[];
   /** Resolution trace: abbreviations, season/week, and any per-surface notes. */
   readonly dbResolution: BundleResolution | null;
+  /**
+   * SHADOW-ONLY accounting. `observationCount` above counts every observation
+   * that was wired in; this says how many of those were actually allowed to
+   * move the calibrated number. Inert (all zeros) unless a policy was passed.
+   */
+  readonly shadowReport: IntelligenceResult["shadowReport"] | null;
 }
 
 export interface PickForIntelligence {
@@ -90,6 +97,14 @@ export function enrichPickWithIntelligence(
   signals?: UniversalSignals,
   /** Pre-loaded DB surfaces. Omit to run on market context alone. */
   surfaces?: LoadedBundleSurfaces,
+  /**
+   * SHADOW MODE: pass `shadowPolicy` to hold named families OUT of the calibrated
+   * spine while still counting and reporting them. Omit it (the default) and
+   * every family calibrates exactly as it does today. Build it with
+   * `shadowOnly(families, justification)` from `@/lib/intelligence-core` — the
+   * justification is mandatory, so this cannot be switched on by accident.
+   */
+  shadowPolicy?: SignalShadowPolicy,
 ): PickIntelligence {
   const empty: PickIntelligence = {
     calibratedProb: null,
@@ -108,6 +123,7 @@ export function enrichPickWithIntelligence(
     dbRowCount: 0,
     dbSurfacesEmpty: [],
     dbResolution: surfaces?.resolution ?? null,
+    shadowReport: null,
   };
 
   try {
@@ -186,7 +202,9 @@ export function enrichPickWithIntelligence(
         : {}),
     };
 
-    const result = runIntelligence(bundle);
+    const result = runIntelligence(
+      shadowPolicy ? { ...bundle, shadowPolicy } : bundle,
+    );
 
     const dbSurfacesFilled = surfaces
       ? countFilledSurfaces(surfaces)
@@ -210,6 +228,7 @@ export function enrichPickWithIntelligence(
       dbRowCount,
       dbSurfacesEmpty: surfaces ? emptySurfaceNames(surfaces) : SURFACE_NAMES,
       dbResolution: surfaces?.resolution ?? null,
+      shadowReport: result.shadowReport,
     };
   } catch {
     return empty;
@@ -283,6 +302,9 @@ export function projectPickIntelligenceForViewer(
     dbRowCount: intel.dbRowCount,
     dbSurfacesEmpty: intel.dbSurfacesEmpty,
     dbResolution: intel.dbResolution,
+    // Pure counting metadata (families, counts, justification) — no percentages
+    // or model prose, so it is safe for the FREE projection.
+    shadowReport: intel.shadowReport,
   };
 }
 
