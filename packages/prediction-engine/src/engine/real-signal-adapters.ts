@@ -1,9 +1,22 @@
 /**
- * Real signal adapters — call the actual exported functions from
- * prediction-engine modules and produce Observations with real values.
+ * Real signal adapters — extra signals exposed as Observations.
  *
- * These are NOT metadata wrappers. Each adapter invokes the real computation
- * and returns the result as an Observation. Fail-closed when input is missing.
+ * HONESTY NOTE (SURF-16 provenance audit): every adapter below computes its
+ * value INLINE in this file. The old header claimed each adapter "invokes
+ * the real computation", and the old provenance strings named engine modules
+ * such as `signals/turnover-luck.ts#computeTurnoverLuck` that this file never
+ * imported — in 7 cases naming modules that do not exist on disk at all.
+ * Those claims were deleted. Each adapter now carries
+ * `engine-inline:real-signal-adapters#<fn>`, naming the function that
+ * actually produced the number.
+ *
+ * Several of these have a real counterpart that SHOULD be adopted
+ * (`signals/turnover-luck.ts#computeTurnoverLuck`,
+ * `signals/opponent-adjusted-epa.ts#computeOpponentAdjustedEpa`,
+ * `expected-metrics/expected-points.ts#predictExpectedPoints`); adopting one
+ * means calling it, not re-citing it. Filed as implementation work.
+ *
+ * Fail-closed when input is missing.
  */
 
 import type { Observation, FailClosedResult, AdapterResult } from "./universal-adapter.js";
@@ -85,7 +98,7 @@ export function turnoverLuckAdapter(input: TurnoverLuckInput | null | undefined)
     asOf: NOW_ISO(),
     value: Number(adjustedMargin.toFixed(4)),
     confidence: Math.min(1, 0.5 + strength * 0.4),
-    provenance: "packages/prediction-engine/src/signals/turnover-luck.ts#computeTurnoverLuck",
+    provenance: "engine-inline:real-signal-adapters#turnoverLuckAdapter",
     family: "CALIBRATION_HISTORY",
     raw: {
       luckScore: Number(luckScore.toFixed(4)),
@@ -123,7 +136,7 @@ export function opponentAdjustedEpaAdapter(
     asOf: NOW_ISO(),
     value: Number(netEpa.toFixed(4)),
     confidence: Math.min(1, 0.5 + (totalPlays / 500) * 0.4),
-    provenance: "packages/prediction-engine/src/signals/opponent-adjusted-epa.ts#computeOpponentAdjustedEpa",
+    provenance: "engine-inline:real-signal-adapters#opponentAdjustedEpaAdapter",
     family: "MARKET",
     raw: {
       team,
@@ -158,7 +171,7 @@ export function expectedPointsAdapter(play: EpPlay | null | undefined): AdapterR
     asOf: NOW_ISO(),
     value: Number(ep.toFixed(3)),
     confidence: 0.85,
-    provenance: "packages/prediction-engine/src/expected-metrics/expected-points.ts#predictExpectedPoints",
+    provenance: "engine-inline:real-signal-adapters#expectedPointsAdapter",
     family: "MARKET",
     raw: {
       ep: Number(ep.toFixed(3)),
@@ -190,7 +203,7 @@ export function winProbabilityAdapter(play: WpPlay | null | undefined): AdapterR
     asOf: NOW_ISO(),
     value: Number(wp.toFixed(4)),
     confidence: 0.88,
-    provenance: "packages/prediction-engine/src/expected-metrics/win-probability.ts#predictLogistic",
+    provenance: "engine-inline:real-signal-adapters#winProbabilityAdapter",
     family: "MARKET",
     raw: {
       wp: Number(wp.toFixed(4)),
@@ -226,7 +239,7 @@ export function brierScoreAdapter(
     asOf: NOW_ISO(),
     value: Number(brier.toFixed(6)),
     confidence: Math.min(1, probs.length / 100),
-    provenance: "packages/prediction-engine/src/calibration/calibration-horserace.ts#brier",
+    provenance: "engine-inline:real-signal-adapters#brierScoreAdapter",
     family: "CALIBRATION_HISTORY",
     raw: {
       brier: Number(brier.toFixed(6)),
@@ -260,7 +273,7 @@ export function logLossAdapter(
     asOf: NOW_ISO(),
     value: Number(ll.toFixed(6)),
     confidence: Math.min(1, probs.length / 100),
-    provenance: "packages/prediction-engine/src/calibration/calibration-horserace.ts#logLoss",
+    provenance: "engine-inline:real-signal-adapters#logLossAdapter",
     family: "CALIBRATION_HISTORY",
     raw: { logLoss: Number(ll.toFixed(6)), n: probs.length },
   };
@@ -285,7 +298,7 @@ export function windElasticityAdapter(
     asOf: NOW_ISO(),
     value: Number(totalImpact.toFixed(4)),
     confidence: 0.8,
-    provenance: "packages/prediction-engine/src/signals/wind-elasticity.ts",
+    provenance: "engine-inline:real-signal-adapters#windElasticityAdapter",
     family: "WEATHER_TRAVEL",
     raw: {
       windMph,
@@ -320,7 +333,7 @@ export function injuryTrajectoryAdapter(
     asOf: NOW_ISO(),
     value: Number(trajectory.toFixed(4)),
     confidence: 0.85,
-    provenance: "packages/prediction-engine/src/signals/injury-trajectory.ts",
+    provenance: "engine-inline:real-signal-adapters#injuryTrajectoryAdapter",
     family: "INJURY_AVAILABILITY",
     raw: {
       injuryStatus,
@@ -348,7 +361,7 @@ export function redzoneTeLeverageAdapter(
     asOf: NOW_ISO(),
     value: Number(leverage.toFixed(4)),
     confidence: 0.75,
-    provenance: "packages/prediction-engine/src/signals/redzone-te-leverage.ts",
+    provenance: "engine-inline:real-signal-adapters#redzoneTeLeverageAdapter",
     family: "SCHEME_TENDENCY",
     raw: {
       teRedzoneTargets,
@@ -378,7 +391,7 @@ export function scheduleDensityAdapter(
     asOf: NOW_ISO(),
     value: Number(impact.toFixed(4)),
     confidence: 0.88,
-    provenance: "packages/prediction-engine/src/signals/schedule-density.ts",
+    provenance: "engine-inline:real-signal-adapters#scheduleDensityAdapter",
     family: "SCHEDULE_DENSITY",
     raw: {
       gamesLast7Days,
@@ -408,7 +421,7 @@ export function qbReceiverContinuityAdapter(
     asOf: NOW_ISO(),
     value: Number(impact.toFixed(4)),
     confidence: 0.78,
-    provenance: "packages/prediction-engine/src/signals/qb-receiver-continuity.ts",
+    provenance: "engine-inline:real-signal-adapters#qbReceiverContinuityAdapter",
     family: "SCHEME_TENDENCY",
     raw: {
       gamesTogether,
@@ -440,7 +453,7 @@ export function coachingTendenciesAdapter(
     asOf: NOW_ISO(),
     value: Number(overall.toFixed(4)),
     confidence: 0.72,
-    provenance: "packages/prediction-engine/src/signals/coaching-tendencies.ts",
+    provenance: "engine-inline:real-signal-adapters#coachingTendenciesAdapter",
     family: "SCHEME_TENDENCY",
     raw: {
       passRate,
@@ -470,7 +483,7 @@ export function refereeCrewTendenciesAdapter(
     asOf: NOW_ISO(),
     value: Number(delta.toFixed(4)),
     confidence: 0.7,
-    provenance: "packages/prediction-engine/src/signals/referee-crew-tendencies.ts",
+    provenance: "engine-inline:real-signal-adapters#refereeCrewTendenciesAdapter",
     family: "SCHEME_TENDENCY",
     raw: {
       foulRate,
@@ -503,7 +516,7 @@ export function parsimoniousSeasonAdapter(
     asOf: NOW_ISO(),
     value: Number(adjWins.toFixed(2)),
     confidence: Math.min(1, (gamesPlayed ?? 0) / 17),
-    provenance: "packages/prediction-engine/src/nfl/parsimonious-season.ts",
+    provenance: "engine-inline:real-signal-adapters#parsimoniousSeasonAdapter",
     family: "MARKET",
     raw: {
       projectedWins: Number(adjWins.toFixed(2)),
@@ -532,7 +545,7 @@ export function skellamMarginAdapter(
     asOf: NOW_ISO(),
     value: Number(margin.toFixed(2)),
     confidence: 0.82,
-    provenance: "packages/prediction-engine/src/nfl/skellam-margin.ts",
+    provenance: "engine-inline:real-signal-adapters#skellamMarginAdapter",
     family: "MARKET",
     raw: {
       margin: Number(margin.toFixed(2)),
@@ -562,7 +575,7 @@ export function conformalIntervalAdapter(
     asOf: NOW_ISO(),
     value: Number(width.toFixed(4)),
     confidence: 0.85,
-    provenance: "packages/prediction-engine/src/calibration/1905-07886-conformal-ncp-intervals.ts#conformalInterval",
+    provenance: "engine-inline:real-signal-adapters#conformalIntervalAdapter",
     family: "CALIBRATION_HISTORY",
     raw: {
       lower: Number(lower.toFixed(4)),

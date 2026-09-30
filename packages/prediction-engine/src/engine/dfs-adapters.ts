@@ -1,6 +1,14 @@
 /**
- * DFS adapters — wires cluster-salary, dominance-pruning, ip-portfolio,
- * and payout-framework real exported functions into the engine.
+ * DFS adapters — salary, Pareto, shrinkage and payout signals as Observations.
+ *
+ * HONESTY NOTE (SURF-16 provenance audit): every adapter below computes its
+ * value INLINE in this file. The old header claimed each adapter "wires
+ * cluster-salary, dominance-pruning, ip-portfolio, and payout-framework real
+ * exported functions", but this file's only engine import was
+ * `import type { Observation, ... }` — erased at compile time — so no such
+ * call site existed. Those claims were deleted. Each adapter now carries
+ * `engine-inline:dfs-adapters#<fn>`, naming the function that actually
+ * produced the number.
  */
 
 import type { Observation, FailClosedResult, AdapterResult } from "./universal-adapter.js";
@@ -30,7 +38,7 @@ export function flagUndervaluedAdapter(
   const posPtsPerDollar = (positionAvgPts ?? 15) / ((positionAvgSalary ?? 5000) / 1000);
   const valueRatio = ptsPerDollar / Math.max(0.1, posPtsPerDollar);
   return obs("dfs:undervalued", Number(valueRatio.toFixed(3)), 0.82,
-    "packages/prediction-engine/src/dfs/cluster-salary-screen.ts#flagUndervalued",
+    "engine-inline:dfs-adapters#flagUndervaluedAdapter",
     "FANTASY_DFS", { valueRatio: Number(valueRatio.toFixed(3)), ptsPerDollar: Number(ptsPerDollar.toFixed(3)), isUndervalued: valueRatio > 1.15 });
 }
 
@@ -43,7 +51,7 @@ export function teammateDifferentialAdapter(
   }
   const diff = (toRoleRate ?? 0) - (offRoleRate ?? 0);
   return obs("dfs:teammate-diff", Number(diff.toFixed(4)), 0.78,
-    "packages/prediction-engine/src/dfs/cluster-salary-screen.ts#teammateDifferential",
+    "engine-inline:dfs-adapters#teammateDifferentialAdapter",
     "FANTASY_DFS", { differential: Number(diff.toFixed(4)), toRoleRate, offRoleRate });
 }
 
@@ -74,7 +82,7 @@ export function paretoFilterAdapter(
     if (!dominated) paretoCount++;
   }
   return obs("dfs:pareto", paretoCount, 0.85,
-    "packages/prediction-engine/src/dfs/dominance-pruning.ts#paretoFilter",
+    "engine-inline:dfs-adapters#paretoFilterAdapter",
     "FANTASY_DFS", { paretoCount, totalPlayers: points.length });
 }
 
@@ -93,7 +101,7 @@ export function shrinkVarianceAdapter(
   const w = priorWeight ?? 10;
   const shrunk = ((n * (rawVar ?? 0)) + (w * (priorVar ?? 10))) / (n + w);
   return obs("dfs:shrink-var", Number(shrunk.toFixed(4)), 0.82,
-    "packages/prediction-engine/src/dfs/ip-portfolio.ts#shrinkVariance",
+    "engine-inline:dfs-adapters#shrinkVarianceAdapter",
     "FANTASY_DFS", { shrunk: Number(shrunk.toFixed(4)), rawVar, priorVar, nObs: n, priorWeight: w });
 }
 
@@ -106,7 +114,7 @@ export function stackBonusAdapter(
   }
   const bonus = ((playerCount ?? 0) - 1) * (correlation ?? 0.3) * 0.5;
   return obs("dfs:stack-bonus", Number(bonus.toFixed(3)), 0.75,
-    "packages/prediction-engine/src/dfs/ip-portfolio.ts#stackBonus",
+    "engine-inline:dfs-adapters#stackBonusAdapter",
     "FANTASY_DFS", { bonus: Number(bonus.toFixed(3)), playerCount, correlation });
 }
 
@@ -132,7 +140,7 @@ export function powerLawSharesAdapter(
   const firstShare = shares[0] as number;
   const topShare = total > 0 ? firstShare / total : 0;
   return obs("dfs:power-law", Number(topShare.toFixed(4)), 0.8,
-    "packages/prediction-engine/src/dfs/payout-framework.ts#powerLawShares",
+    "engine-inline:dfs-adapters#powerLawSharesAdapter",
     "FANTASY_DFS", { topShare: Number(topShare.toFixed(4)), nPaid: n, alpha: a });
 }
 

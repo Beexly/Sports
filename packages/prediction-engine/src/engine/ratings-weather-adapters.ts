@@ -1,6 +1,17 @@
 /**
- * Ratings & Weather adapters — wires real exported functions from
- * prediction-engine/src/ratings and /weather into the engine.
+ * Ratings & Weather adapters — ratings and weather effects as Observations.
+ *
+ * HONESTY NOTE (SURF-16 provenance audit): every adapter below computes its
+ * value INLINE in this file. The old header claimed each adapter "invokes the
+ * real computation", and the old provenance strings named
+ * `prediction-engine/src/ratings` and `/weather` modules that this file never
+ * imported. Those claims were deleted. Each adapter now carries
+ * `engine-inline:ratings-weather-adapters#<fn>`, naming the function that
+ * actually produced the number.
+ *
+ * Note the weather adapters used a citation with a paper id
+ * (`weather/2109-09287-stadium-factor-decomposition.ts`) — a module that is
+ * absent from disk. Adopting it means porting the formula and gating it.
  */
 
 import type { Observation, FailClosedResult, AdapterResult } from "./universal-adapter.js";
@@ -29,7 +40,7 @@ export function bradleyTerryAdapter(
   const diff = (homeRating ?? 0) - (awayRating ?? 0);
   const winProb = 1 / (1 + Math.pow(edge, -(diff)));
   return obs("ratings:bradley-terry", Number(winProb.toFixed(4)), 0.85,
-    "packages/prediction-engine/src/ratings/bradley-terry.ts#btWinProb",
+    "engine-inline:ratings-weather-adapters#bradleyTerryAdapter",
     "MARKET", { winProb: Number(winProb.toFixed(4)), homeRating, awayRating, homeEdge: edge });
 }
 
@@ -48,7 +59,7 @@ export function csfAdapter(
   const pa = pointsAgainst ?? 0;
   const csfValue = (pf - pa) / Math.pow(pf + pa, a - 1 || 1);
   return obs("ratings:csf", Number(csfValue.toFixed(4)), 0.8,
-    "packages/prediction-engine/src/ratings/csf-triple-compare.ts#csf",
+    "engine-inline:ratings-weather-adapters#csfAdapter",
     "MARKET", { csf: Number(csfValue.toFixed(4)), pf, pa, alpha: a });
 }
 
@@ -67,7 +78,7 @@ export function davidsonProbsAdapter(
   const nu = tieNu ?? 0.3;
   const z = hs + as + nu * Math.sqrt(hs * as);
   return obs("ratings:davidson", Number((hs / z).toFixed(4)), 0.82,
-    "packages/prediction-engine/src/ratings/davidson-ties.ts#davidsonProbs",
+    "engine-inline:ratings-weather-adapters#davidsonProbsAdapter",
     "MARKET", { homeProb: Number((hs / z).toFixed(4)), awayProb: Number((as / z).toFixed(4)), tieProb: Number((nu * Math.sqrt(hs * as) / z).toFixed(4)) });
 }
 
@@ -82,7 +93,7 @@ export function cycleRateAdapter(
   }
   const rate = (threeCycles ?? 0) / Math.pow(teamCount ?? 1, 3);
   return obs("ratings:cycle-rate", Number(rate.toFixed(6)), 0.75,
-    "packages/prediction-engine/src/ratings/cycle-diagnostics.ts#cycleRate",
+    "engine-inline:ratings-weather-adapters#cycleRateAdapter",
     "MARKET", { cycleRate: Number(rate.toFixed(6)), teamCount, threeCycles });
 }
 
@@ -97,7 +108,7 @@ export function windChillAdapter(tempF: number | null | undefined, windMph: numb
   const v = windMph ?? 0;
   const wc = 35.74 + 0.6215 * t - 35.75 * Math.pow(v, 0.16) + 0.4275 * t * Math.pow(v, 0.16);
   return obs("weather:wind-chill", Number(wc.toFixed(1)), 0.88,
-    "packages/prediction-engine/src/weather/2109-09287-stadium-factor-decomposition.ts#windChill",
+    "engine-inline:ratings-weather-adapters#windChillAdapter",
     "WEATHER_TRAVEL", { windChill: Number(wc.toFixed(1)), tempF: t, windMph: v });
 }
 
@@ -110,7 +121,7 @@ export function heatIndexAdapter(tempF: number | null | undefined, humidity: num
   // Simplified heat index
   const hi = t + 0.5 * (rh / 100) * (t - 50);
   return obs("weather:heat-index", Number(hi.toFixed(1)), 0.85,
-    "packages/prediction-engine/src/weather/2109-09287-stadium-factor-decomposition.ts#heatIndex",
+    "engine-inline:ratings-weather-adapters#heatIndexAdapter",
     "WEATHER_TRAVEL", { heatIndex: Number(hi.toFixed(1)), tempF: t, humidity: rh });
 }
 
@@ -130,7 +141,7 @@ export function passWeatherImpactAdapter(
   const precipEffect = -(precip / 100) * 0.08;
   const total = windEffect + tempEffect + precipEffect;
   return obs("weather:pass-impact", Number(total.toFixed(4)), 0.85,
-    "packages/prediction-engine/src/weather/2109-09287-stadium-factor-decomposition.ts#passWeatherImpact",
+    "engine-inline:ratings-weather-adapters#passWeatherImpactAdapter",
     "WEATHER_TRAVEL", { total: Number(total.toFixed(4)), windEffect, tempEffect, precipEffect });
 }
 
@@ -148,7 +159,7 @@ export function fgWeatherAdjAdapter(
   const tempPenalty = t < 35 ? -0.05 : 0;
   const adjusted = Math.max(0.05, Math.min(0.99, (baseProb ?? 0.5) + windPenalty + tempPenalty));
   return obs("weather:fg-adj", Number(adjusted.toFixed(4)), 0.82,
-    "packages/prediction-engine/src/weather/2109-09287-stadium-factor-decomposition.ts#fgWeatherAdj",
+    "engine-inline:ratings-weather-adapters#fgWeatherAdjAdapter",
     "WEATHER_TRAVEL", { adjusted: Number(adjusted.toFixed(4)), baseProb, windPenalty, tempPenalty });
 }
 

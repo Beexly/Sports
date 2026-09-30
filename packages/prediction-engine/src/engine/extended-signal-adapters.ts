@@ -1,11 +1,21 @@
 /**
- * Extended real signal adapters — wires exported functions from EVERY
- * prediction-engine module into the engine as Observations.
+ * Extended signal adapters — extra signals exposed as Observations.
  *
- * Each adapter invokes the real computation and returns the result.
+ * HONESTY NOTE (SURF-16 provenance audit): except for `devigAdapter`, every
+ * adapter below computes its value INLINE in this file. Their old
+ * provenance strings named either an engine module this file never imported
+ * or, in 16 cases, a bare directory such as `.../src/calibration/` — and a
+ * directory is not a computation. Those claims were deleted. Each adapter now
+ * carries `engine-inline:extended-signal-adapters#<fn>`, which names the
+ * function that actually produced the number.
+ *
+ * `devigAdapter` is the exception: it genuinely calls
+ * `devig/oracle.ts#devig` and keeps a real module#symbol provenance.
+ *
  * Fail-closed when input is missing. No `any`. No fake data.
  */
 
+import { devig } from "../devig/oracle.js";
 import type { Observation, FailClosedResult, AdapterResult } from "./universal-adapter.js";
 
 const NOW = (): string => new Date().toISOString();
@@ -30,7 +40,7 @@ export function expectedCompletionAdapter(
   }
   const cpoe = ((completions ?? 0) / Math.max(1, attempts ?? 1) - (expectedCompletions ?? 0) / Math.max(1, attempts ?? 1)) * 100;
   return obs("metrics:cpoe", Number(cpoe.toFixed(2)), 0.85,
-    "packages/prediction-engine/src/expected-metrics/expected-completion.ts#computeCpoe",
+    "engine-inline:extended-signal-adapters#expectedCompletionAdapter",
     "PLAY_CHARTING", { cpoe: Number(cpoe.toFixed(2)), attempts, completions, expectedCompletions });
 }
 
@@ -43,7 +53,7 @@ export function expectedYacAdapter(
   }
   const yacAbove = (actualYac ?? 0) - (expectedYac ?? 0);
   return obs("metrics:yac-above-expected", Number(yacAbove.toFixed(3)), 0.82,
-    "packages/prediction-engine/src/expected-metrics/expected-yac.ts",
+    "engine-inline:extended-signal-adapters#expectedYacAdapter",
     "PLAY_CHARTING", { yacAboveExpected: Number(yacAbove.toFixed(3)), actualYac, expectedYac });
 }
 
@@ -56,7 +66,7 @@ export function successRateAdapter(
   }
   const sr = (successfulPlays ?? 0) / (totalPlays ?? 1);
   return obs("metrics:success-rate", Number(sr.toFixed(4)), 0.88,
-    "packages/prediction-engine/src/expected-metrics/success-rate.ts",
+    "engine-inline:extended-signal-adapters#successRateAdapter",
     "SCHEME_TENDENCY", { successRate: Number(sr.toFixed(4)), successfulPlays, totalPlays });
 }
 
@@ -69,7 +79,7 @@ export function drivesAdapter(
     return fail("metrics:drives", "missing drive data");
   }
   return obs("metrics:drives", Number((pointsPerDrive ?? 0).toFixed(3)), 0.8,
-    "packages/prediction-engine/src/expected-metrics/drives.ts#buildDrives",
+    "engine-inline:extended-signal-adapters#drivesAdapter",
     "SCHEME_TENDENCY", { playsPerDrive, yardsPerDrive, pointsPerDrive });
 }
 
@@ -85,7 +95,7 @@ export function qbBurdenAdapter(
   }
   const burden = (dropbacks ?? 0) / (teamPlays ?? 1);
   return obs("nfl:qb-burden", Number(burden.toFixed(4)), 0.85,
-    "packages/prediction-engine/src/nfl/qb-burden.ts",
+    "engine-inline:extended-signal-adapters#qbBurdenAdapter",
     "SCHEME_TENDENCY", { burden: Number(burden.toFixed(4)), dropbacks, teamPlays, epaPerDropback });
 }
 
@@ -99,7 +109,7 @@ export function receiverDifficultyAdapter(
   }
   const difficulty = (targetShare ?? 0) * (1 + (2.5 - (separation ?? 2.5)) / 5);
   return obs("nfl:receiver-difficulty", Number(difficulty.toFixed(4)), 0.78,
-    "packages/prediction-engine/src/nfl/receiver-difficulty.ts",
+    "engine-inline:extended-signal-adapters#receiverDifficultyAdapter",
     "PLAY_CHARTING", { difficulty: Number(difficulty.toFixed(4)), targetShare, separation, cushion });
 }
 
@@ -112,7 +122,7 @@ export function roleVolatilityAdapter(
   }
   const vol = ((snapShareVariance ?? 0) + (targetShareVariance ?? 0)) / 2;
   return obs("nfl:role-volatility", Number(vol.toFixed(4)), 0.75,
-    "packages/prediction-engine/src/nfl/role-volatility.ts",
+    "engine-inline:extended-signal-adapters#roleVolatilityAdapter",
     "SCHEME_TENDENCY", { volatility: Number(vol.toFixed(4)), snapShareVariance, targetShareVariance });
 }
 
@@ -126,7 +136,7 @@ export function rushEnvironmentAdapter(
   }
   const env = (boxCount ?? 0) * -0.05 + (runDefenseEpa ?? 0) + (yardsBeforeContact ?? 1.5) * 0.1;
   return obs("nfl:rush-environment", Number(env.toFixed(4)), 0.8,
-    "packages/prediction-engine/src/nfl/rush-environment.ts",
+    "engine-inline:extended-signal-adapters#rushEnvironmentAdapter",
     "SCHEME_TENDENCY", { environment: Number(env.toFixed(4)), boxCount, runDefenseEpa, yardsBeforeContact });
 }
 
@@ -142,7 +152,7 @@ export function marginMixtureAdapter(
   const margin = (homeExpectedScore ?? 0) - (awayExpectedScore ?? 0);
   const totalVar = (homeVariance ?? 10) + (awayVariance ?? 10);
   return obs("nfl:margin-mixture", Number(margin.toFixed(2)), 0.82,
-    "packages/prediction-engine/src/nfl/margin-mixture-model.ts",
+    "engine-inline:extended-signal-adapters#marginMixtureAdapter",
     "MARKET", { margin: Number(margin.toFixed(2)), totalVariance: totalVar, homeExpectedScore, awayExpectedScore });
 }
 
@@ -155,7 +165,7 @@ export function blockPoissonAdapter(
   }
   const expectedDiff = (lambdaHome ?? 0) - (lambdaAway ?? 0);
   return obs("nfl:block-poisson", Number(expectedDiff.toFixed(3)), 0.8,
-    "packages/prediction-engine/src/nfl/block-poisson.ts",
+    "engine-inline:extended-signal-adapters#blockPoissonAdapter",
     "MARKET", { expectedDiff: Number(expectedDiff.toFixed(3)), lambdaHome, lambdaAway });
 }
 
@@ -184,7 +194,7 @@ export function eceAdapter(
     ece += (b.conf.length / confidences.length) * Math.abs(avgConf - avgOut);
   }
   return obs("calibration:ece", Number(ece.toFixed(6)), Math.min(1, confidences.length / 100),
-    "packages/prediction-engine/src/calibration/",
+    "engine-inline:extended-signal-adapters#eceAdapter",
     "CALIBRATION_HISTORY", { ece: Number(ece.toFixed(6)), n: confidences.length, isGreen: ece <= 0.04 });
 }
 
@@ -199,7 +209,7 @@ export function reliabilityDiagramAdapter(
   const expected = ((binIndex ?? 0) + 0.5) / 10;
   const gap = Math.abs((binWinRate ?? 0) - expected);
   return obs("calibration:reliability", Number(gap.toFixed(4)), 0.85,
-    "packages/prediction-engine/src/calibration/",
+    "engine-inline:extended-signal-adapters#reliabilityDiagramAdapter",
     "CALIBRATION_HISTORY", { binIndex, binCount, binWinRate, expected, gap: Number(gap.toFixed(4)) });
 }
 
@@ -215,7 +225,7 @@ export function teamRatingAdapter(
   }
   const net = (offEpaPerPlay ?? 0) - (defEpaPerPlay ?? 0);
   return obs("ratings:team", Number(net.toFixed(4)), Math.min(1, (plays ?? 0) / 500),
-    "packages/prediction-engine/src/ratings/",
+    "engine-inline:extended-signal-adapters#teamRatingAdapter",
     "MARKET", { netEpa: Number(net.toFixed(4)), offEpaPerPlay, defEpaPerPlay, plays });
 }
 
@@ -230,7 +240,7 @@ export function eloRatingAdapter(
   const expected = 1 / (1 + Math.pow(10, ((opponentRating ?? 0) - (rating ?? 0)) / 400));
   const delta = 32 * ((result ?? 0) - expected);
   return obs("ratings:elo", Number(delta.toFixed(2)), 0.85,
-    "packages/prediction-engine/src/ratings/",
+    "engine-inline:extended-signal-adapters#eloRatingAdapter",
     "MARKET", { rating, opponentRating, result, expected: Number(expected.toFixed(4)), delta: Number(delta.toFixed(2)) });
 }
 
@@ -250,7 +260,7 @@ export function weatherImpactAdapter(
   const precipEffect = -((precipChance ?? 0) / 100) * 0.1;
   const total = (isOutdoor ?? true) ? windEffect + tempEffect + precipEffect : 0;
   return obs("weather:impact", Number(total.toFixed(4)), 0.82,
-    "packages/prediction-engine/src/weather/",
+    "engine-inline:extended-signal-adapters#weatherImpactAdapter",
     "WEATHER_TRAVEL", { total: Number(total.toFixed(4)), windEffect, tempEffect, precipEffect, tempF, windMph });
 }
 
@@ -266,7 +276,7 @@ export function altitudeFatigueAdapter(
   const acclimation = Math.min(1, (daysAtAltitude ?? 0) / 7);
   const net = (isHomeTeam ?? false) ? altitudePenalty * (1 - acclimation) : -altitudePenalty * (1 - acclimation);
   return obs("weather:altitude", Number(net.toFixed(4)), 0.78,
-    "packages/prediction-engine/src/weather/",
+    "engine-inline:extended-signal-adapters#altitudeFatigueAdapter",
     "WEATHER_TRAVEL", { net: Number(net.toFixed(4)), altitudeFt, daysAtAltitude, acclimation });
 }
 
@@ -283,7 +293,7 @@ export function travelFatigueAdapter(
   const restBonus = Math.min(0.1, ((daysRest ?? 3) - 3) * 0.02);
   const net = tzPenalty + distPenalty + restBonus;
   return obs("weather:travel-fatigue", Number(net.toFixed(4)), 0.8,
-    "packages/prediction-engine/src/weather/",
+    "engine-inline:extended-signal-adapters#travelFatigueAdapter",
     "WEATHER_TRAVEL", { net: Number(net.toFixed(4)), tzPenalty, distPenalty, restBonus });
 }
 
@@ -301,7 +311,7 @@ export function injuryImpactAdapter(
   const starterFactor = starterCount ? Math.max(0, 1 - (starterCount / Math.max(1, playerCount ?? 1))) : 0;
   const impact = avgWeight * starterFactor;
   return obs("injuries:impact", Number(impact.toFixed(4)), 0.85,
-    "packages/prediction-engine/src/injuries/",
+    "engine-inline:extended-signal-adapters#injuryImpactAdapter",
     "INJURY_AVAILABILITY", { impact: Number(impact.toFixed(4)), playerCount, starterCount, avgWeight });
 }
 
@@ -315,7 +325,7 @@ export function depthChartAdapter(
   }
   const continuity = (starterSnapShare ?? 0) * (1 - (starterGamesMissed ?? 0) / 17);
   return obs("injuries:depth-chart", Number(continuity.toFixed(4)), 0.8,
-    "packages/prediction-engine/src/injuries/",
+    "engine-inline:extended-signal-adapters#depthChartAdapter",
     "INJURY_AVAILABILITY", { continuity: Number(continuity.toFixed(4)), starterSnapShare, backupSnapShare, starterGamesMissed });
 }
 
@@ -333,7 +343,7 @@ export function fantasyProjectionAdapter(
   const pprMult = 1 + (pprSetting ?? 1) * 0.15;
   const adjusted = (projectedPoints ?? 0) * pprMult;
   return obs("fantasy:projection", Number(adjusted.toFixed(2)), 0.82,
-    "packages/prediction-engine/src/fantasy/",
+    "engine-inline:extended-signal-adapters#fantasyProjectionAdapter",
     "FANTASY_DFS", { adjustedProjection: Number(adjusted.toFixed(2)), projectedPoints, ceiling, floor, pprSetting });
 }
 
@@ -348,7 +358,7 @@ export function dfsValueAdapter(
   const value = (projectedPoints ?? 0) / ((salary ?? 1) / 1000);
   const leverage = (ownership ?? 0) < 0.15 ? 0.2 : (ownership ?? 0) > 0.3 ? -0.1 : 0;
   return obs("fantasy:dfs-value", Number(value.toFixed(3)), 0.8,
-    "packages/prediction-engine/src/dfs/",
+    "engine-inline:extended-signal-adapters#dfsValueAdapter",
     "FANTASY_DFS", { value: Number(value.toFixed(3)), leverage: Number(leverage.toFixed(3)), projectedPoints, salary, ownership });
 }
 
@@ -364,7 +374,7 @@ export function propEdgeAdapter(
   }
   const edge = (modelProb ?? 0) - (marketProb ?? 0);
   return obs("props:edge", Number(edge.toFixed(4)), Math.min(1, (sampleSize ?? 0) / 50),
-    "packages/prediction-engine/src/props/",
+    "engine-inline:extended-signal-adapters#propEdgeAdapter",
     "MARKET", { edge: Number(edge.toFixed(4)), modelProb, marketProb, sampleSize });
 }
 
@@ -378,12 +388,26 @@ export function propLineValueAdapter(
   }
   const zScore = ((projection ?? 0) - (line ?? 0)) / (stdDev ?? 1);
   return obs("props:line-value", Number(zScore.toFixed(3)), 0.82,
-    "packages/prediction-engine/src/props/",
+    "engine-inline:extended-signal-adapters#propLineValueAdapter",
     "MARKET", { zScore: Number(zScore.toFixed(3)), line, projection, stdDev });
 }
 
 // ── market / odds ────────────────────────────────────────────────────────────
 
+/** American odds (-110 / +150) -> decimal odds (1.909 / 2.5). */
+function americanToDecimal(american: number): number | null {
+  if (!Number.isFinite(american) || american === 0) return null;
+  return american > 0 ? 1 + american / 100 : 1 + 100 / -american;
+}
+
+/**
+ * Calls the real `devig/oracle.ts#devig` (multiplicative). The old body
+ * computed `implied / total`, which is exactly that function, but read its
+ * inputs as decimal prices: `1 / -110` is a negative implied probability,
+ * and the result only looked sane because both sides were equal. Converting
+ * American -> decimal first makes the arithmetic meaningful and keeps the
+ * `devig/oracle.ts#devig` provenance true.
+ */
 export function devigAdapter(
   homePrice: number | null | undefined,
   awayPrice: number | null | undefined,
@@ -391,13 +415,28 @@ export function devigAdapter(
   if (!Number.isFinite(homePrice) || !Number.isFinite(awayPrice)) {
     return fail("market:devig", "missing price data");
   }
-  const homeImp = 1 / (homePrice ?? 1);
-  const awayImp = 1 / (awayPrice ?? 1);
-  const total = homeImp + awayImp;
-  const homeFair = homeImp / total;
-  return obs("market:devig", Number(homeFair.toFixed(4)), 0.9,
-    "packages/prediction-engine/src/devig/",
-    "MARKET", { homeFair: Number(homeFair.toFixed(4)), awayFair: Number((1 - homeFair).toFixed(4)), homePrice, awayPrice });
+  const homeDecimal = americanToDecimal(homePrice as number);
+  const awayDecimal = americanToDecimal(awayPrice as number);
+  if (homeDecimal === null || awayDecimal === null) {
+    return fail("market:devig", "prices must be finite American values (e.g. -110, +150)");
+  }
+  try {
+    const r = devig([homeDecimal, awayDecimal], "multiplicative");
+    const homeFair = r.probabilities[0] ?? 0;
+    const awayFair = r.probabilities[1] ?? 0;
+    return obs("market:devig", Number(homeFair.toFixed(4)), 0.9,
+      "packages/prediction-engine/src/devig/oracle.ts#devig",
+      "MARKET", {
+        homeFair: Number(homeFair.toFixed(4)),
+        awayFair: Number(awayFair.toFixed(4)),
+        overround: Number(r.margin.toFixed(4)),
+        method: r.method,
+        homePrice,
+        awayPrice,
+      });
+  } catch (err) {
+    return fail("market:devig", err instanceof Error ? err.message : "devig failed");
+  }
 }
 
 export function lineMovementAdapter(
@@ -410,7 +449,7 @@ export function lineMovementAdapter(
   }
   const delta = (currentSpread ?? 0) - (openingSpread ?? 0);
   return obs("market:line-movement", Number(delta.toFixed(2)), Math.min(1, (bookCount ?? 1) / 5),
-    "packages/prediction-engine/src/odds/",
+    "engine-inline:extended-signal-adapters#lineMovementAdapter",
     "MARKET", { delta: Number(delta.toFixed(2)), openingSpread, currentSpread, bookCount });
 }
 
@@ -424,7 +463,7 @@ export function consensusAdapter(
   }
   const agreement = 1 - Math.min(1, (spreadStdDev ?? 0) / 3);
   return obs("market:consensus", Number((avgSpread ?? 0).toFixed(2)), agreement,
-    "packages/prediction-engine/src/market/",
+    "engine-inline:extended-signal-adapters#consensusAdapter",
     "MARKET", { avgSpread, spreadStdDev, bookCount, agreement: Number(agreement.toFixed(3)) });
 }
 
