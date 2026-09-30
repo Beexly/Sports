@@ -53,6 +53,22 @@ export {
   type IntelligenceResult,
 } from "./engine";
 
+// -- DB loaders: the real rows behind those surfaces ------------------------
+export {
+  loadBundleSurfaces,
+  loadInjuries,
+  loadRatings,
+  loadSnaps,
+  loadNgs,
+  loadPlayerStats,
+  loadGameSignals,
+  nflSeasonForDate,
+  nflSeasonWeekForDate,
+  type BundleLoaderInput,
+  type LoadedBundleSurfaces,
+  type BundleResolution,
+} from "./db-loaders";
+
 // -- Universal wiring: EVERY module ? all-knowing engine ----------------------
 export {
   wireEverything as wireAllModules,

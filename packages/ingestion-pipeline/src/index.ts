@@ -127,6 +127,11 @@ export {
   resolveKalshiTeamAbbr,
   normalizeTeamKey,
 } from "./kalshi-team-abbr.js";
+export {
+  NFL_NAME_TO_ABBR,
+  nflTeamAbbr,
+  isPlaceholderTeamName,
+} from "./nfl-team-abbr.js";
 
 export { generateSignalSlate, blendIndependentHomeFair } from "./generate-signal-slate.js";
 export { slateAssociationTrace } from "./slate-association.js";
