@@ -36,6 +36,17 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": resolve(__dirname, "."),
+      // Workspace packages resolve their own internal imports with the
+      // TypeScript ESM `.js` extension convention (88 specifiers in
+      // packages/data-ingestion/src/index.ts). Vitest's resolver cannot map a
+      // `.js` specifier to the `.ts` source, so `@sports/data-ingestion`
+      // loaded as `undefined` and every test importing `calibratedWinProb`
+      // died with "calibratedWinProb is not a function". Pin the alias at the
+      // TypeScript entry so the suite actually exercises the engine.
+      "@sports/data-ingestion": resolve(
+        __dirname,
+        "../../packages/data-ingestion/src/index.ts",
+      ),
       "next/server": nextServerEntry,
     },
   },
