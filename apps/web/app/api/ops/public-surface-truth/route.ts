@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from "next/server";
+// isContestsPublic is still reported below. The contests SURFACE is gone, but
+// this endpoint is the operator truth surface: saying "contests is dark" is
+// exactly the fact an operator needs, and a silently-missing key would read as
+// "unknown" rather than "deliberately off". The gate itself stays in
+// public-surface-gate.ts for the same reason.
 import { isContestsPublic, isStatsPublic, PUBLIC_NAV_POLICY } from "@/lib/launch/public-surface-gate";
-import { resolveContestStorageMode } from "@/lib/contests/store";
 import { resolveWaitlistStorageMode } from "@/lib/gse/waitlist-store";
 import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
 import { HANDLED_STRIPE_WEBHOOK_EVENTS } from "@/lib/billing/stripe-webhook-events";
@@ -813,7 +817,6 @@ export async function GET(request: Request) {
         minSettledPicksForLearning: gates.minSettledPicksForLearning,
         calibrationPublished,
       },
-      contestStorage: resolveContestStorageMode(),
       waitlistStorage: resolveWaitlistStorageMode(),
       waitlist,
       settlement,
