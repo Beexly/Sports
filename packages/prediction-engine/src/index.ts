@@ -2417,6 +2417,19 @@ export {
   buildCalibrationLadder,
   DEFAULT_LADDER_MIN_SAMPLE,
 } from "./calibration-ladder.js";
+
+// The honest path from settled history to a REAL modelProb committed on a
+// PickProofReceipt (so Brier/ECE become computable). Self-suppressing: it returns
+// null unless a validated map exists and the audited gate is open.
+export {
+  resolveModelProb,
+  MODEL_PROB_CORPUS_WHERE,
+  MODEL_PROB_CORPUS_ORDER_BY,
+} from "./model-prob-bridge.js";
+export type {
+  ResolvedModelProb,
+  ModelProbRefusalReason,
+} from "./model-prob-bridge.js";
 export type {
   EmpiricalBin,
   BinnedEmpiricalModel,
