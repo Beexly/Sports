@@ -141,6 +141,9 @@ export async function GET(req: Request): Promise<NextResponse> {
   // single deploy sees is unchanged until shards are added. Nothing is dropped:
   // shard k of N over a deterministic bucket is a partition, not a sample.
   let candidates;
+  // Rows refused for want of a fitted scale, by key. Reported in the response so
+  // an unscorable key is a visible finding rather than a silent disappearance.
+  let dropped: Readonly<Record<string, number>> = {};
   // SHARD SELECTION. An explicit `SIGNAL_LEDGER_SHARD` always wins (that is
   // how an operator drives a specific partition on demand). Absent one, the
   // shard ROTATES WITH THE HOUR.
@@ -166,7 +169,7 @@ export async function GET(req: Request): Promise<NextResponse> {
       db.nextGenStat.findMany({ orderBy: { fetchedAt: "desc" } }),
       db.injury.findMany({ orderBy: { fetchedAt: "desc" } }),
     ]);
-    candidates = projectSignalCandidates({
+    const projection = projectSignalCandidates({
       playerGameStats: pgs.map((r) => ({
         playerId: r.playerId,
         season: r.season,
@@ -212,6 +215,8 @@ export async function GET(req: Request): Promise<NextResponse> {
         fetchedAt: r.fetchedAt,
       })),
     });
+    candidates = projection.candidates;
+    dropped = projection.dropped;
   } catch (error) {
     captureError(error, { tags: { surface: "signal-ledger-write" } });
     return NextResponse.json(
@@ -287,14 +292,21 @@ export async function GET(req: Request): Promise<NextResponse> {
       skipped: report.skipped,
       batches: report.batches,
       errors: report.errors.slice(0, 20),
+      // Rows refused for want of a fitted scale, by key. On prod this is the
+      // three snap.* keys: all 31,100 snap_counts rows carry a NULL playerId,
+      // so they have no entity and nothing to project. Visible on purpose.
+      dropped,
       // Restated in the response so nobody can read this endpoint as a claim
       // that the signals are predictive.
-      weights: "all 1 (priors are the tuner's job, not the writer's)",
+      value: "NORMALIZED per key onto a shared -1..1 scale from a measured anchor/spread (valueRaw keeps the source column verbatim)",
+      weights: "FITTED per key on within-player correlation vs a settled outcome; 0 where no outcome joins (not a guess)",
       confidence: "1.0 = the reading is measured, NOT that it is predictive",
     },
     note:
-      "Wrote MEASURED columns only. No published projection, gate, floor or MODEL_VERSION was touched, " +
-      "and no magnitude was fitted here. `signals` now holds real evidence; whether that evidence predicts " +
-      "anything is the tuner's question, and is not answered by this endpoint.",
+      "Wrote MEASURED columns only, normalized onto a shared per-key scale with a fitted weight. " +
+      "No published projection, gate, floor or MODEL_VERSION was touched. The weights come from a fit " +
+      "against next-week settled fantasy points with the player fixed effect removed (see " +
+      "packages/prediction-engine/src/signal-scale-table.ts); seven of thirteen keys measure weight 0 " +
+      "because no settled outcome joins them, which is a finding and not a gap in the write.",
   });
 }
