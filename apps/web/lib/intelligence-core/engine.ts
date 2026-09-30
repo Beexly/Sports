@@ -142,6 +142,11 @@ export function buildSituationalContext(bundle: GameBundle): SituationalContext 
     gameId: bundle.gameId,
     sport: bundle.sport,
     selection: bundle.selection,
+    // Carried so reason() can tell which side of the home/away frame the pick
+    // is on and re-express the leans in that frame. Without these the engine
+    // is selection-blind and every away pick inherits the home sign.
+    homeTeam: bundle.homeTeam,
+    awayTeam: bundle.awayTeam,
     pickType: bundle.pickType,
     commenceTime: bundle.commenceTime,
     observations,

@@ -84,6 +84,17 @@ export interface SituationalContext {
   readonly gameId: string;
   readonly sport: string;
   readonly selection: string;
+  /**
+   * Home/away frame that every observation lean and every home-minus-away
+   * difference is expressed in (see SignalObservation.lean).
+   *
+   * These are what let `reason()` re-express those numbers in the *selection's*
+   * frame. Optional so callers that predate the frame keep working: with no
+   * team names, an unresolvable selection is treated as "selection A" — the
+   * frame the lean convention already documents — rather than silently flipped.
+   */
+  readonly homeTeam?: string;
+  readonly awayTeam?: string;
   readonly pickType: "SPREAD" | "TOTAL" | "MONEYLINE" | "PROP";
   readonly commenceTime: string;
   readonly observations: readonly SignalObservation[];
@@ -170,6 +181,48 @@ function isPublishableRights(r: SignalObservation["rights"]): boolean {
 }
 
 /**
+ * Does `selection` name `team`? Token-boundary match so "BUF" matches
+ * "BUF" and "BUF +3.5" but not "BUFFALO" or the "KC" inside "PACKERS".
+ */
+function selectionNamesTeam(selection: string, team: string): boolean {
+  const sel = selection.trim().toUpperCase();
+  const t = team.trim().toUpperCase();
+  if (sel.length === 0 || t.length === 0) return false;
+  if (sel === "HOME" || sel === "AWAY") return sel === "HOME" ? t === "HOME" : t === "AWAY";
+  if (sel === t) return true;
+  const escaped = t.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  return new RegExp(`(^|[^A-Z0-9])${escaped}([^A-Z0-9]|$)`).test(sel);
+}
+
+/**
+ * Which side of the home/away frame the pick is on: +1 home, -1 away.
+ *
+ * This is the selection-blindness guard. SignalObservation.lean is documented
+ * as "positive favors home/over/selection A" and the adapters honour that by
+ * negating away-side leans (signal-adapters.ts injuryObservations/ngsObservations).
+ * So every lean, and every home-minus-away difference, arrives in the HOME
+ * frame. Without re-expressing it here, an away pick silently inherits the home
+ * sign: an away-QB-out injury RAISES P(win) on a BUF pick instead of lowering it,
+ * and `explain()` then narrates that number to a customer.
+ *
+ * Returns +1 (the documented "selection A" behavior) when the frame cannot be
+ * resolved — a PROP/TOTAL pick, a player name rather than a team, a selection
+ * that names both sides, or a context built without team names. Guessing a sign
+ * there would be worse than the explicit, documented default.
+ */
+function selectionOrientation(ctx: SituationalContext): 1 | -1 {
+  // Only team-level carries are expressed on a home/away axis. A TOTAL is
+  // priced over/under and a PROP on a player; neither has a home/away side for
+  // these leans to invert against, so leave them on the documented frame.
+  if (ctx.pickType !== "MONEYLINE" && ctx.pickType !== "SPREAD") return 1;
+  // Home first: a selection naming both sides is ambiguous, and the documented
+  // frame is the safer of the two fallbacks.
+  if (ctx.homeTeam && selectionNamesTeam(ctx.selection, ctx.homeTeam)) return 1;
+  if (ctx.awayTeam && selectionNamesTeam(ctx.selection, ctx.awayTeam)) return -1;
+  return 1;
+}
+
+/**
  * Reason over a full situational context.
  *
  * This is the all-knowing step: it does not just average metrics. It
@@ -211,20 +264,26 @@ export function reason(ctx: SituationalContext): IntelligenceReasoning {
 
   // --- situational shift: rest / travel / weather / injuries / density ---
   const s = ctx.situation;
+  // Every lean and every home-minus-away difference below arrives in the HOME
+  // frame. Re-express them in the SELECTION's frame or an away pick inherits
+  // the home sign. See selectionOrientation().
+  const orientation = selectionOrientation(ctx);
+  const restForUs = () => (orientation === 1 ? s.restDaysHome : s.restDaysAway);
+  const restForThem = () => (orientation === 1 ? s.restDaysAway : s.restDaysHome);
   let situationalShift = 0;
   const why: string[] = [];
   const whyNot: string[] = [];
 
   if (s.restDaysHome != null && s.restDaysAway != null) {
-    const restEdge = (s.restDaysHome - s.restDaysAway) * 0.025;
+    const restEdge = (s.restDaysHome - s.restDaysAway) * 0.025 * orientation;
     situationalShift += restEdge;
     if (restEdge > 0.02) {
       why.push(
-        `Rest edge: ${s.restDaysHome}d vs ${s.restDaysAway}d — fresher legs historically worth ~${(restEdge * 100).toFixed(1)} pts of probability.`,
+        `Rest edge: we have ${restForUs()}d vs their ${restForThem()}d — fresher legs historically worth ~${(restEdge * 100).toFixed(1)} pts of probability.`,
       );
     } else if (restEdge < -0.02) {
       whyNot.push(
-        `Rest deficit: ${s.restDaysHome}d vs ${s.restDaysAway}d — this game script works against us.`,
+        `Rest deficit: we have ${restForUs()}d vs their ${restForThem()}d — this game script works against us.`,
       );
     }
   }
@@ -271,13 +330,20 @@ export function reason(ctx: SituationalContext): IntelligenceReasoning {
     chartingN += 1;
   }
   if (chartingN > 0) {
+    // avgLean is in the HOME frame; selectionLean is the same number asked from
+    // the selection's side. Without this the sign never inverts.
     const avgLean = chartingLean / chartingN;
-    situationalShift += clamp(avgLean * 0.08, -0.12, 0.12);
+    const selectionLean = avgLean * orientation;
+    situationalShift += clamp(selectionLean * 0.08, -0.12, 0.12);
     const chartObs = publishable.filter((o) => o.family === "PLAY_CHARTING" || o.family === "SCHEME_TENDENCY");
     for (const o of chartObs.slice(0, 4)) {
       if (o.lean != null && Math.abs(o.lean) > 0.3) {
-        const dir = o.lean > 0 ? "supports" : "undercuts";
-        why.push(`${o.fact} — ${dir} this side (lean ${o.lean.toFixed(2)}, trust ${o.trust.toFixed(2)}).`);
+        // Narrate the oriented lean, not the raw one: on an away pick a
+        // positive home-frame lean is evidence AGAINST us, and a summary that
+        // said "supports" would contradict the number printed beside it.
+        const oriented = o.lean * orientation;
+        const dir = oriented > 0 ? "supports" : "undercuts";
+        why.push(`${o.fact} — ${dir} this side (lean ${oriented.toFixed(2)}, trust ${o.trust.toFixed(2)}).`);
       }
     }
   }
