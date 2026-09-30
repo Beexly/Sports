@@ -1112,6 +1112,34 @@ export type {
   CensusObservation,
 } from "./signal-anchor-census.js";
 
+// Per-key SCALE + WEIGHT fit, and the committed table of the numbers it
+// produced on prod. This is what replaces the uniform `weight = 1` that shipped
+// on all 118,462 persisted rows: the raw values span a 103x range of standard
+// deviations, so a uniform weight over them was an arithmetic average of ten
+// different units. The fit is within-player (fixed effect removed) against a
+// settled outcome, because the between-player number is mostly player identity.
+export {
+  fitSignalScales,
+  formatScaleReport,
+  normalizeWithScale,
+  MIN_SCALE_FIXTURES,
+} from "./signal-scale-fit.js";
+export type {
+  SignalScale,
+  SignalScaleTable,
+  ScaleVerdict,
+  SignalScaleObservation,
+  SignalOutcomeObservation,
+  FitSignalScalesOptions,
+} from "./signal-scale-fit.js";
+export {
+  SIGNAL_SCALES,
+  SIGNAL_SCALE_KEYS,
+  signalScaleFor,
+  SIGNAL_SCALE_TABLE_VERSION,
+  SIGNAL_SCALE_TABLE_SOURCE,
+} from "./signal-scale-table.js";
+
 // Player usage archetype (receiving lean / workload) from rushing/receiving usage.
 export { classifyUsageProfile } from "./player-archetype.js";
 export type { UsageProfileInput, UsageProfile, WorkloadTier } from "./player-archetype.js";

@@ -30,7 +30,9 @@ vi.mock("@/sports/db", () => ({
 }));
 vi.mock("@/lib/observability/sentry", () => ({ captureError: () => {} }));
 vi.mock("@/lib/ops/signal-ledger-writer", () => ({
-  projectSignalCandidates: () => [CANDIDATE],
+  // The real projector returns { candidates, dropped }: rows it refused for want
+  // of a fitted scale are counted per key rather than vanishing silently.
+  projectSignalCandidates: () => ({ candidates: [CANDIDATE], dropped: { "snap.offense_pct": 3 } }),
   writeSignalCandidates: (...args: unknown[]) => writeSignalCandidates(...args),
 }));
 
@@ -43,6 +45,10 @@ const CANDIDATE = {
   valueRaw: 0.5,
   season: 2026,
   week: 1,
+  // The FITTED weight for pgs.target_share, not a uniform 1. A mock that still
+  // says 1 would let the weight regression this PR fixes pass unnoticed here.
+  weight: 0.101859,
+  confidence: 1,
   capturedAt: new Date("2026-09-28T00:00:00Z"),
   fetchedAt: new Date("2026-09-28T00:00:00Z"),
   sourceId: "nflverse",
@@ -82,6 +88,24 @@ describe("GET /api/cron/signal-ledger-write", () => {
       { deadline?: Date } | undefined,
     ];
     expect(options?.deadline).toBeInstanceOf(Date);
+  });
+
+  it("REPORTS rows dropped for want of a fitted scale, keyed, not silently", async () => {
+    // The projector refuses a row it cannot place on the shared scale. That is a
+    // finding (on prod: every snap_counts row, for want of a playerId), and a
+    // 200 that quietly omits it is exactly the "green cron that was writing
+    // nothing" failure this route's stderr line was added to prevent.
+    const res = await invoke();
+    const body = (await res.json()) as { data: { dropped: Record<string, number> } };
+    expect(body.data.dropped).toEqual({ "snap.offense_pct": 3 });
+  });
+
+  it("STATES the fitted-weight policy rather than the old 'all 1' string", async () => {
+    const res = await invoke();
+    const body = (await res.json()) as { data: { weights: string; value: string } };
+    expect(body.data.weights).not.toContain("all 1");
+    expect(body.data.weights).toContain("FITTED");
+    expect(body.data.value).toContain("NORMALIZED");
   });
 
   it("writes the whole candidate set when the shard is 0/1", async () => {

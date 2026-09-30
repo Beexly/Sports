@@ -12,31 +12,62 @@
  * pipeline's fuel has never existed.
  *
  * WHY IT IS SAFE TO WRITE. Every value this file persists is a MEASURED column
- * off a table the platform already populates — the same four the census reads,
- * holding player_game_stats 35,168 / snap_counts 29,513 / next_gen_stats /
- * injuries 6,501 rows on prod. Nothing is derived from a model, inferred, or
- * sampled, and no magnitude is invented:
+ * off a table the platform already populates — the same four the census reads.
+ * Nothing is derived from a model, inferred, or sampled, and no magnitude is
+ * invented:
  *
- *   - `value` is the source column verbatim, and `valueRaw` keeps it again so a
- *     normalized reading can never quietly become the record.
+ *   - `valueRaw` is the source column verbatim, so a normalized reading can
+ *     never quietly become the record.
+ *   - `value` is that same column placed on the SHARED directional scale using
+ *     the measured per-key anchor/spread in `signal-scale-table.ts`. This is the
+ *     schema's own documented contract for the column ("normalized directional
+ *     reading (+ good / − bad) for the composer"); before this change the writer
+ *     put the RAW reading there, so `composeLedger` was blending ten different
+ *     units — `pgs.passing_epa` (sd 9.63) against `pgs.target_share` (sd 0.093),
+ *     a 103x mismatch in magnitude.
  *   - `confidence` is 1.0 for a settled measured stat and is NOT a tunable.
- *   - `weight` is 1 for every key. A weight is a PRIOR; the tuner
- *     (tune-signal-weights.ts) is what replaces it with a fitted number, and
- *     inventing priors here would fabricate the ranking the tuner is supposed to
- *     measure. Zero-weighting a key would be an equally unearned claim.
+ *   - `weight` is the FITTED per-key weight from `signal-scale-table.ts`, no
+ *     longer a uniform 1. The previous uniform-1 was not a neutral choice: it
+ *     asserted that ten keys measured in different units contribute equally,
+ *     which is the defect. The weights are fitted on WITHIN-player correlation
+ *     against a settled outcome (next-week PPR above median), evidence counted
+ *     in distinct fixtures. Seven of thirteen keys measure weight 0 — no
+ *     joinable evidence, not a guess — and are still written, because "present
+ *     and honest" is not the same as "allowed to move a score".
  *
  * AN UNCALIBRATED SIGNAL MUST NOT MOVE A PUBLISHED PROJECTION. This file does
  * not change the adjustment layer, any gate, or any published number. It only
- * makes the measured evidence EXIST so the prop pipeline and the tuner have
- * something to read. That is the difference between filling a table and
- * believing a number, and only the second one is founder-gated.
+ * makes the measured evidence EXIST on a comparable scale with a defensible
+ * weight, so the prop pipeline and the tuner have something to read. That is
+ * the difference between filling a table and believing a number, and only the
+ * second one is founder-gated.
  *
- * Idempotent by construction: the write is an upsert keyed on the same unique
- * tuple the schema declares, so a re-run converges rather than double-voting.
- * A duplicated signal would be double-counted downstream.
+ * IDEMPOTENT BY CONSTRUCTION, WITH ONE HONEST CONSEQUENCE. The write is an upsert
+ * keyed on the same unique tuple the schema declares, so a re-run converges
+ * rather than double-voting. But `value` and `weight` are only refreshed by a
+ * re-run, so rows written before this change keep the raw `value` and weight 1
+ * until the writer next visits them. `signals` is not read by any production
+ * consumer today (measured: the only reader is `/api/ops/signal-ledger-state`,
+ * which counts rows and deliberately selects no values), so no consumer can
+ * observe a mixed-scale table through this change.
+ *
+ * A KEY WITH NO FITTED SCALE IS DROPPED, NOT DEFAULTED. If the scale table has
+ * no entry for a key, the row is skipped: there is no honest normalized value
+ * for a key with no measured baseline, and writing the raw number into `value`
+ * is exactly the bug being fixed. `report.dropped` names what was skipped so a
+ * key that stops appearing is visible rather than silent.
  */
 
+import {
+  normalizeWithScale,
+} from "@sports/prediction-engine/src/signal-scale-fit.js";
+import { signalScaleFor } from "@sports/prediction-engine/src/signal-scale-table.js";
 import type { SignalWriterDb, SignalWriteCandidate, SignalWriteReport } from "./signal-ledger-writer-types.js";
+
+// Re-exported so callers can type a `SignalWriteCandidate[]` without reaching
+// into the types module directly. The route annotates its `candidates` binding
+// with this type; without the re-export that import fails to resolve.
+export type { SignalWriteCandidate };
 
 /** The source tables this writer reads, and the keys each contributes. */
 export const SIGNAL_SOURCE_KEYS = {
@@ -57,11 +88,64 @@ function finite(value: number | null | undefined): value is number {
 }
 
 /**
+ * Encode an injury report's own status into the ordinal the ledger documents:
+ * 1 = active/available, 0 = doubtful/questionable, -1 = out, null = the source
+ * said nothing this can be read from.
+ *
+ * THE `??` BUG THIS FIXES. The previous encoder was
+ * `(reportStatus ?? practiceStatus ?? "").toUpperCase()`. `??` falls through only
+ * on null/undefined — NOT on an empty string — and on prod every one of the
+ * 6,812 `injuries` rows stores `reportStatus` as `''` rather than NULL
+ * (measured 2026-09-30: `reportStatus IS NULL` matches 0 rows,
+ * `reportStatus = ''` matches 3,744). So `??` never fell through, the encoder
+ * saw `""`, and the row was DROPPED. Measured consequence: 2,955 rows whose
+ * `practiceStatus` was "Full Participation in Practice" — the HEALTHIEST
+ * reading in the table — were discarded, and only 3,068 of 6,812 injuries ever
+ * became a signal. The persisted `injury.availability` values are `-1` and `0`
+ * and nothing else; the +1 case had never once been written, so the key could
+ * report bad news and never good news.
+ *
+ * The fix is to fall through on a BLANK string, not just a null one, and to
+ * prefer whichever field actually carries information. Measured on the same
+ * 6,812 rows this encodes 6,065 of them (3,400 full / 1,556 limited / 1,810 DNP)
+ * against 3,068 before, and restores the +1 case.
+ */
+export function encodeInjuryAvailability(
+  reportStatus: string | null,
+  practiceStatus: string | null,
+): number | null {
+  const report = (reportStatus ?? "").trim().toUpperCase();
+  const practice = (practiceStatus ?? "").trim().toUpperCase();
+
+  // Practice participation is the finer-grained report (full / limited / DNP)
+  // and the injury report is the coarser one (out / doubtful / questionable), so
+  // a definite practice reading outranks a blank-or-questionable report.
+  if (practice.includes("DID NOT PARTICIPATE")) return -1;
+  if (report.includes("OUT")) return -1;
+  if (report.includes("DOUBTFUL") || report.includes("QUESTIONABLE")) return 0;
+  if (practice.includes("LIMITED")) return 1;
+  if (practice.includes("FULL") || practice.includes("ACTIVE")) return 1;
+  return null;
+}
+
+export interface SignalProjection {
+  readonly candidates: readonly SignalWriteCandidate[];
+  /**
+   * Rows NOT written, by key, with the reason implied by the key's absence from
+   * the scale table or its inability to normalize. Reported rather than dropped
+   * silently: a key that is unscorable is a finding, and the founder report is
+   * the only place it can be seen.
+   */
+  readonly dropped: Readonly<Record<string, number>>;
+}
+
+/**
  * Project the four measured tables into candidate `signals` rows.
  *
  * Pure and exported so it is testable with no database, and so the test can pin
- * the property that matters: every emitted `value` is byte-identical to a
- * column that actually exists in the source row.
+ * the two properties that matter: every `valueRaw` is byte-identical to a column
+ * that actually exists in the source row, and every `value` is that same column
+ * placed on the shared scale with the key's fitted weight.
  */
 export function projectSignalCandidates(input: {
   readonly playerGameStats: ReadonlyArray<{
@@ -104,139 +188,170 @@ export function projectSignalCandidates(input: {
     practiceStatus: string | null;
     fetchedAt: Date | string;
   }>;
-}): SignalWriteCandidate[] {
+}): SignalProjection {
   const out: SignalWriteCandidate[] = [];
-  const base = {
-    // A settled measured statistic is the top of the honesty scale. It is 1.0
-    // because the reading is real, NOT because the signal is proven predictive:
-    // that is what the tuner measures, and conflating the two is how an
-    // unvalidated signal ends up looking like a validated one.
-    confidence: 1.0,
-    weight: 1.0,
+  // A key with no fitted scale cannot be placed on the shared scale, so its rows
+  // are dropped rather than written with a raw value posing as a normalized one.
+  // Counted per key so a key that stops appearing is visible in the report.
+  const dropped = new Map<string, number>();
+  const dropUnscored = (key: string): void => {
+    dropped.set(key, (dropped.get(key) ?? 0) + 1);
+  };
+
+  /**
+   * Build one candidate on the shared scale, or drop it.
+   *
+   * `value` becomes the NORMALIZED reading (-1..1) that `composeLedger` and
+   * `compositeScore` are documented to expect, and `valueRaw` keeps the source
+   * column verbatim so the transformation stays auditable. `weight` is the
+   * key's FITTED weight, which is 0 for a key with no joinable outcome evidence
+   * — a zero-weight row is still written, because it is a real measurement that
+   * is simply not yet allowed to move a score, and because the tuner needs it to
+   * exist in order to ever fit it.
+   */
+  const emit = (args: {
+    entityId: string;
+    key: string;
+    category: string;
+    raw: number;
+    season: number;
+    week: number;
+    fetchedAt: Date | string;
+  }): void => {
+    if (!finite(args.raw)) return;
+    // A row with no entity cannot be written, and that is the prod shape for all
+    // 31,100 snap_counts rows (NULL playerId). Counted as a drop rather than
+    // returned in silence, because a key that stops appearing is a finding.
+    if (!args.entityId) {
+      dropUnscored(args.key);
+      return;
+    }
+    const scale = signalScaleFor(args.key);
+    if (!scale) {
+      dropUnscored(args.key);
+      return;
+    }
+    const value = normalizeWithScale(args.raw, scale);
+    if (value === null) {
+      // The scale exists but cannot normalize (non-positive spread, or a
+      // non-finite anchor). Treated exactly like a missing scale: dropped, and
+      // counted, rather than passed through as a raw number.
+      dropUnscored(args.key);
+      return;
+    }
+    out.push({
+      entityType: "player",
+      entityId: args.entityId,
+      key: args.key,
+      category: args.category,
+      value,
+      valueRaw: args.raw,
+      season: args.season,
+      week: args.week,
+      capturedAt: new Date(args.fetchedAt),
+      sourceId: "nflverse",
+      // The schema requires a rights snapshot on every signal. The source is
+      // named rather than left empty, so a row's provenance survives the row.
+      fetchedAt: new Date(args.fetchedAt),
+      rightsSnapshot: { source: "nflverse", dataset: args.key, measured: true },
+      // A settled measured statistic is the top of the honesty scale. It is 1.0
+      // because the reading is real, NOT because the signal is proven
+      // predictive: that is what the fitted weight measures, and conflating the
+      // two is how an unvalidated signal ends up looking like a validated one.
+      confidence: 1.0,
+      weight: scale.weight,
+    });
   };
 
   for (const r of input.playerGameStats) {
-    if (!r.playerId) continue;
-    const columns: ReadonlyArray<readonly [string, number | null]> = [
-      ["pgs.target_share", r.targetShare],
-      ["pgs.fantasy_ppr", r.fantasyPointsPpr],
-      ["pgs.passing_epa", r.passingEpa],
-      ["pgs.rushing_epa", r.rushingEpa],
-      ["pgs.receiving_epa", r.receivingEpa],
+    const columns: ReadonlyArray<readonly [string, number | null, string]> = [
+      ["pgs.target_share", r.targetShare, "PRODUCTION"],
+      ["pgs.fantasy_ppr", r.fantasyPointsPpr, "PRODUCTION"],
+      ["pgs.passing_epa", r.passingEpa, "EFFICIENCY"],
+      ["pgs.rushing_epa", r.rushingEpa, "EFFICIENCY"],
+      ["pgs.receiving_epa", r.receivingEpa, "EFFICIENCY"],
     ];
-    for (const [key, value] of columns) {
-      if (!finite(value)) continue;
-      out.push({
-        entityType: "player",
+    for (const [key, value, category] of columns) {
+      emit({
         entityId: r.playerId,
         key,
-        category: "PRODUCTION",
-        value,
-        valueRaw: value,
+        category,
+        raw: value as number,
         season: r.season,
         week: r.week,
-        capturedAt: new Date(r.fetchedAt),
-        sourceId: "nflverse",
-        // The schema requires a rights snapshot on every signal. The source is
-        // named rather than left empty, so a row's provenance survives the row.
-        fetchedAt: new Date(r.fetchedAt),
-        rightsSnapshot: { source: "nflverse", dataset: key, measured: true },
-        ...base,
+        fetchedAt: r.fetchedAt,
       });
     }
   }
 
   for (const r of input.snapCounts) {
-    if (!r.playerId) continue;
-    const columns: ReadonlyArray<readonly [string, number | null]> = [
-      ["snap.offense_pct", r.offensePct],
-      ["snap.st_pct", r.stPct],
-      ["snap.defense_pct", r.defensePct],
+    const columns: ReadonlyArray<readonly [string, number | null, string]> = [
+      ["snap.offense_pct", r.offensePct, "PRODUCTION"],
+      ["snap.st_pct", r.stPct, "PRODUCTION"],
+      ["snap.defense_pct", r.defensePct, "HEALTH"],
     ];
-    for (const [key, value] of columns) {
-      if (!finite(value)) continue;
-      out.push({
-        entityType: "player",
-        entityId: r.playerId,
+    for (const [key, value, category] of columns) {
+      emit({
+        // Measured on prod 2026-09-30: all 31,100 snap_counts rows carry a NULL
+        // playerId, so every snap row is dropped here and the three keys persist
+        // 0 rows. `dropped` reports that rather than leaving it invisible.
+        entityId: r.playerId ?? "",
         key,
-        category: "HEALTH",
-        value,
-        valueRaw: value,
+        category,
+        raw: value as number,
         season: r.season,
         week: r.week,
-        capturedAt: new Date(r.fetchedAt),
-        sourceId: "nflverse",
-        fetchedAt: new Date(r.fetchedAt),
-        rightsSnapshot: { source: "nflverse", dataset: key, measured: true },
-        ...base,
+        fetchedAt: r.fetchedAt,
       });
     }
   }
 
   for (const r of input.nextGenStats) {
-    if (!r.gsisId) continue;
-    const columns: ReadonlyArray<readonly [string, number | null]> = [
-      ["ngs.cpoe", r.cpoe],
-      ["ngs.avg_separation", r.avgSeparation],
-      ["ngs.yac_above_expectation", r.avgYacAboveExpectation],
-      ["ngs.air_yards_to_sticks", r.avgAirYardsToSticks],
+    const columns: ReadonlyArray<readonly [string, number | null, string]> = [
+      ["ngs.cpoe", r.cpoe, "PRODUCTION"],
+      ["ngs.avg_separation", r.avgSeparation, "PRODUCTION"],
+      ["ngs.yac_above_expectation", r.avgYacAboveExpectation, "PRODUCTION"],
+      ["ngs.air_yards_to_sticks", r.avgAirYardsToSticks, "PRODUCTION"],
     ];
-    for (const [key, value] of columns) {
-      if (!finite(value)) continue;
-      out.push({
-        entityType: "player",
+    for (const [key, value, category] of columns) {
+      emit({
         // NGS is keyed by gsisId where the other tables use the internal
         // playerId. Both are recorded verbatim rather than crosswalked, because
-        // the teams crosswalk this repo needs does not exist yet (0 rows) and
-        // inventing an id join would fabricate the link.
+        // the crosswalk this repo needs does not exist: measured 2026-09-30, 0 of
+        // 380 distinct gsis match a playerId, and 0 of 32 team strings match
+        // `games`. Inventing an id join would fabricate the link — and it is why
+        // these four keys carry weight 0 (no join, no fit).
         entityId: r.gsisId,
         key,
-        category: "PRODUCTION",
-        value,
-        valueRaw: value,
+        category,
+        raw: value as number,
         season: r.season,
         week: r.week,
-        capturedAt: new Date(r.fetchedAt),
-        sourceId: "nflverse",
-        fetchedAt: new Date(r.fetchedAt),
-        rightsSnapshot: { source: "nflverse", dataset: key, measured: true },
-        ...base,
+        fetchedAt: r.fetchedAt,
       });
     }
   }
 
   for (const r of input.injuries) {
-    const entityId = r.playerId ?? r.gsisId;
-    if (!entityId) continue;
     // Availability is CATEGORICAL, so it is encoded as an explicit, documented
     // ordinal rather than invented. 1 = active/available, 0 = doubtful,
     // -1 = out. This is an encoding of the source's own status string, NOT a
     // severity judgement and NOT a projection; the adjustment layer is what
     // turns it into one, and that layer is where the uncalibrated gate lives.
-    const status = (r.reportStatus ?? r.practiceStatus ?? "").toUpperCase();
-    let availability: number | null = null;
-    if (status.includes("OUT")) availability = -1;
-    else if (status.includes("DOUBTFUL") || status.includes("QUESTIONABLE")) availability = 0;
-    else if (status.includes("ACTIVE") || status.includes("FULL") || status.includes("LIMITED")) availability = 1;
+    const availability = encodeInjuryAvailability(r.reportStatus, r.practiceStatus);
     if (availability === null) continue;
-    out.push({
-      entityType: "player",
-      entityId,
+    emit({
+      entityId: r.playerId ?? r.gsisId ?? "",
       key: "injury.availability",
       category: "HEALTH",
-      value: availability,
-      valueRaw: availability,
+      raw: availability,
       season: r.season,
       week: r.week,
-      capturedAt: new Date(r.fetchedAt),
-      sourceId: "nflverse",
-      fetchedAt: new Date(r.fetchedAt),
-      rightsSnapshot: { source: "nflverse", dataset: "injury.availability", measured: true },
-      ...base,
+      fetchedAt: r.fetchedAt,
     });
   }
 
-  return out;
+  return { candidates: out, dropped: Object.freeze(Object.fromEntries(dropped)) };
 }
 
 /**

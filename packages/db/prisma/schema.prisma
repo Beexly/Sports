@@ -3161,7 +3161,14 @@ model Signal {
   category   String // SignalCategory value (PRODUCTION / HEALTH / NARRATIVE / ...)
   valueRaw   Float? // source reading, retained for audit
   value      Float // normalized directional reading (+ good / − bad) for the composer
-  weight     Float    @default(1) // base importance (>= 0)
+  //            Measured per key, NOT uniform: the raw values span a 103x range of
+  //            standard deviations (pgs.target_share 0.093 .. pgs.passing_epa 9.63),
+  //            so a single weight asserted that ten different units contribute
+  //            equally. Fitted per key on within-player correlation against a
+  //            settled outcome, evidence counted in distinct fixtures; 0 where no
+  //            outcome joins. See signal-scale-table.ts (measured 2026-09-30,
+  //            118,462 rows) and docs/brain/signal-ledger-scale-fit.md.
+  weight     Float    @default(1) // base importance (>= 0), per the fitted scale table
   confidence Float    @default(1) // 0..1 honesty valve (settled stat ≈ 1, rumor ≈ 0.2)
   capturedAt DateTime // drives freshness decay
 
