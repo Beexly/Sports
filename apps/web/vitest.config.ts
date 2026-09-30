@@ -45,6 +45,21 @@ export default defineConfig({
       // ROOT, not `src/index.ts`: callers deep-import it too (e.g.
       // `@sports/data-ingestion/src/source-registry`), and a file-exact
       // alias silently breaks those.
+      "@sports/ingestion-pipeline": resolve(
+        __dirname,
+        "../../packages/ingestion-pipeline/src/index.ts",
+      ),
+      // Deep `.js` specifiers INTO a workspace package must resolve to `.ts`.
+      // Same class of bug as #969: a specifier like
+      // `@sports/prediction-engine/src/hierarchical-pool.js` resolves to nothing
+      // because no such `.js` exists on disk. Aliasing the package ROOT (rather
+      // than a bare specifier) lets Vite map `.js` to `.ts` inside a package it
+      // transforms. Each root needs its own entry; the previous attempt used a
+      // regex alias, which this config's alias type rejects.
+      "@sports/prediction-engine": resolve(
+        __dirname,
+        "../../packages/prediction-engine",
+      ),
       "@sports/data-ingestion": resolve(
         __dirname,
         "../../packages/data-ingestion",
