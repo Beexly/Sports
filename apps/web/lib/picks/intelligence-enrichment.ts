@@ -17,6 +17,7 @@ import {
   coverageReport,
   type UniversalSignals,
 } from "@/lib/intelligence-core/universal-wiring";
+import type { BundleResolution, LoadedBundleSurfaces } from "@/lib/intelligence-core/db-loaders";
 
 export interface PickIntelligence {
   readonly calibratedProb: number | null;
@@ -36,6 +37,17 @@ export interface PickIntelligence {
     readonly familiesCovered: number;
     readonly familiesMissing: readonly string[];
   } | null;
+  /**
+   * How many of the bundle's twelve raw DB surfaces actually returned rows.
+   * This is the "0 of 14 fields filled" counter, measured rather than assumed.
+   */
+  readonly dbSurfacesFilled: number;
+  /** Total rows read across all DB surfaces. 0 means the loaders found nothing. */
+  readonly dbRowCount: number;
+  /** Which surfaces were empty, for the honest-empty-state note. */
+  readonly dbSurfacesEmpty: readonly string[];
+  /** Resolution trace: abbreviations, season/week, and any per-surface notes. */
+  readonly dbResolution: BundleResolution | null;
 }
 
 export interface PickForIntelligence {
@@ -61,6 +73,13 @@ export interface PickForIntelligence {
 /**
  * Build a GameBundle from a pick row and run the intelligence engine.
  *
+ * `surfaces` carries the real DB rows (injuries, ratings, snaps, NGS, player
+ * stats, game signals) loaded by `loadBundleSurfaces`. Pass it to wire the
+ * bundle's twelve raw surfaces; omit it and the engine reasons from market
+ * context alone. Keeping the DB out of this function is deliberate — it stays
+ * synchronous and testable, and a failed load degrades to market-only rather
+ * than throwing.
+ *
  * When `signals` is supplied, `wireEverything` (the ALL-knowing wiring map)
  * produces the full observation list and feeds it into the reasoning spine
  * via `extraObservations`. Without it, only market/situation context is used.
@@ -69,6 +88,8 @@ export function enrichPickWithIntelligence(
   pick: PickForIntelligence,
   now: Date = new Date(),
   signals?: UniversalSignals,
+  /** Pre-loaded DB surfaces. Omit to run on market context alone. */
+  surfaces?: LoadedBundleSurfaces,
 ): PickIntelligence {
   const empty: PickIntelligence = {
     calibratedProb: null,
@@ -83,6 +104,10 @@ export function enrichPickWithIntelligence(
     summary: null,
     observationCount: 0,
     familyCoverage: null,
+    dbSurfacesFilled: 0,
+    dbRowCount: 0,
+    dbSurfacesEmpty: [],
+    dbResolution: surfaces?.resolution ?? null,
   };
 
   try {
@@ -140,9 +165,33 @@ export function enrichPickWithIntelligence(
       statedConfidence: pick.confidence,
       grade: normalizeGrade(pick.pickGrade),
       now,
+      // --- THE WIRING: real DB rows into the bundle's raw surfaces ---
+      // Before this, all twelve of these were undefined on every pick, so
+      // the reasoning spine saw market context only.
+      ...(surfaces
+        ? {
+            homeInjuries: surfaces.homeInjuries,
+            awayInjuries: surfaces.awayInjuries,
+            homeNgs: surfaces.homeNgs,
+            awayNgs: surfaces.awayNgs,
+            homePlayerStats: surfaces.homePlayerStats,
+            awayPlayerStats: surfaces.awayPlayerStats,
+            homeRatings: surfaces.homeRatings,
+            awayRatings: surfaces.awayRatings,
+            weather: surfaces.weather,
+            gameSignals: surfaces.gameSignals,
+            homeSnaps: surfaces.homeSnaps,
+            awaySnaps: surfaces.awaySnaps,
+          }
+        : {}),
     };
 
     const result = runIntelligence(bundle);
+
+    const dbSurfacesFilled = surfaces
+      ? countFilledSurfaces(surfaces)
+      : 0;
+    const dbRowCount = surfaces ? totalRowCount(surfaces) : 0;
 
     return {
       calibratedProb: result.calibratedProb,
@@ -157,10 +206,45 @@ export function enrichPickWithIntelligence(
       summary: result.summary,
       observationCount: result.observationCount,
       familyCoverage,
+      dbSurfacesFilled,
+      dbRowCount,
+      dbSurfacesEmpty: surfaces ? emptySurfaceNames(surfaces) : SURFACE_NAMES,
+      dbResolution: surfaces?.resolution ?? null,
     };
   } catch {
     return empty;
   }
+}
+
+/** The twelve raw DB surfaces on GameBundle, in declaration order. */
+const SURFACE_NAMES = [
+  "homeInjuries",
+  "awayInjuries",
+  "homeNgs",
+  "awayNgs",
+  "homePlayerStats",
+  "awayPlayerStats",
+  "homeRatings",
+  "awayRatings",
+  "weather",
+  "gameSignals",
+  "homeSnaps",
+  "awaySnaps",
+] as const;
+
+function countFilledSurfaces(s: LoadedBundleSurfaces): number {
+  return SURFACE_NAMES.reduce(
+    (n, key) => (s[key].length > 0 ? n + 1 : n),
+    0,
+  );
+}
+
+function totalRowCount(s: LoadedBundleSurfaces): number {
+  return SURFACE_NAMES.reduce((n, key) => n + s[key].length, 0);
+}
+
+function emptySurfaceNames(s: LoadedBundleSurfaces): string[] {
+  return SURFACE_NAMES.filter((key) => s[key].length === 0);
 }
 
 /**
@@ -195,6 +279,10 @@ export function projectPickIntelligenceForViewer(
     summary: null,
     observationCount: intel.observationCount,
     familyCoverage: intel.familyCoverage,
+    dbSurfacesFilled: intel.dbSurfacesFilled,
+    dbRowCount: intel.dbRowCount,
+    dbSurfacesEmpty: intel.dbSurfacesEmpty,
+    dbResolution: intel.dbResolution,
   };
 }
 

@@ -13,6 +13,7 @@ import {
   projectPickIntelligenceForViewer,
   universalSignalsFromPick,
 } from "@/lib/picks/intelligence-enrichment";
+import { loadBundleSurfaces } from "@/lib/intelligence-core/db-loaders";
 import {
   isPublicPicksSurfaceStale,
   staleDataGateResponse,
@@ -262,6 +263,39 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   // sample is insufficient/non-improving, so this is null-safe by construction.
   const calibrator = gates.canApplyCalibrationAdjustments ? await getPublicCalibrator() : null;
 
+  // THE WIRING: load the real DB surfaces (injuries, team_game_efficiency,
+  // snap_counts, next_gen_stats, player_game_stats, game_signals) for every
+  // pick on the slate BEFORE the synchronous projection below. Previously
+  // this call site ran the reasoning spine on market context alone — all
+  // twelve raw bundle surfaces were undefined on every pick.
+  //
+  // The surfaces are loaded here (parallel, once per pick) and the engine is
+  // run once inside the projection below, where `factorBreakdown` is already
+  // parsed. Splitting it this way keeps a single engine run per pick.
+  // Fail-open per surface: an unresolved or failing surface contributes zero
+  // rows and a note; it never throws and never blanks `intelligence`.
+  const surfacesByPickId = new Map<string, Awaited<ReturnType<typeof loadBundleSurfaces>>>();
+  await Promise.all(
+    limitedPicks.map(async (pick) => {
+      const commence = new Date(pick.game.commenceTime);
+      if (!Number.isFinite(commence.getTime())) return;
+      try {
+        surfacesByPickId.set(
+          pick.id,
+          await loadBundleSurfaces({
+            gameId: pick.gameId,
+            homeTeamName: pick.game.homeTeamName,
+            awayTeamName: pick.game.awayTeamName,
+            commenceTime: commence,
+            asOf: now,
+          }),
+        );
+      } catch {
+        // no surfaces for this pick; the engine falls back to market context
+      }
+    }),
+  );
+
   const publicPicks: PublicConsensusPick[] = limitedPicks.map((pick) => {
     // Parse + validate factorBreakdown from JSON storage. The Prisma column is
     // typed JsonValue; parseFactorBreakdown checks the shape and returns null
@@ -414,7 +448,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       dataFreshnessAt: pick.dataFreshnessAt?.toISOString() ?? null,
       result: pick.result as PickResult,
       receiptHash: pick.proofReceipt?.contentHash ?? null,
-      // Live intelligence spine (lib/intelligence-core + universal-wiring).
+      // Live intelligence spine (lib/intelligence-core + universal-wiring),
+      // against the real DB surfaces loaded above.
       // Fail-open: nulls when the engine abstains. Six questions + family
       // weights + the ALL-knowing observation map are the trust surface.
       intelligence: (() => {
@@ -441,8 +476,9 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
           };
           const raw = enrichPickWithIntelligence(
             pickForIntel,
-            new Date(),
+            now,
             universalSignalsFromPick(pickForIntel),
+            surfacesByPickId.get(pick.id),
           );
           // FREE: numeric spine only — no percent-formatted model prose /
           // "(model signal)" leak in intelligence.summary or sixQuestions.
