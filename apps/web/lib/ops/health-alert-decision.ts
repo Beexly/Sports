@@ -18,6 +18,64 @@ export type HealthAlertCalibrationDrift = {
   readonly failingFloors: readonly string[];
 };
 
+/**
+ * The Odds API quota, as a THREE-state reading.
+ *
+ * The bug this type exists to prevent: `OddsCreditTruth.remaining` is null both
+ * when the ledger has never recorded a reading and when the database could not
+ * be read at all. `isLowQuota(null)` is false by design ("a header-less
+ * response is not a zero"), so a health surface that reported the boolean
+ * straight reported **"quota fine" while the database was down**. An
+ * unmeasured quota must be reported as unmeasured, which needs three states,
+ * not two.
+ */
+export type HealthAlertOddsQuota = {
+  /** True only when a real reading backs the verdict. */
+  readonly measurable: boolean;
+  /**
+   * Tri-state on purpose: null when unmeasurable. A `false` here is a claim
+   * that the quota was measured and found fine; null is a claim that it was
+   * not measured at all. They are not interchangeable.
+   */
+  readonly lowQuota: boolean | null;
+  /** True when the READ failed (database unreachable/erroring) — as opposed to an empty ledger. */
+  readonly readFailed: boolean;
+  /** Human-readable provenance, surfaced in the alert reason. */
+  readonly reason: string;
+};
+
+/**
+ * Turn a credit-ledger read into a three-state quota reading.
+ *
+ * `lowQuotaWhenMeasured` is the caller's existing `isLowQuota(...)` verdict; it
+ * is only consulted when a reading actually exists. `readFailed` is the
+ * distinction that matters operationally — a failed read is a broken signal and
+ * escalates the alert, while a genuinely-never-observed quota on a fresh
+ * install is merely unknown and does not page anyone.
+ */
+export function assessOddsQuota(input: {
+  readonly remaining: number | null;
+  readonly readFailed: boolean;
+  readonly lowQuotaWhenMeasured: boolean;
+}): HealthAlertOddsQuota {
+  if (input.remaining === null) {
+    return {
+      measurable: false,
+      lowQuota: null,
+      readFailed: input.readFailed,
+      reason: input.readFailed
+        ? "quota=unreadable: the odds credit ledger could not be read (database unreachable or erroring); remaining is unknown, NOT fine"
+        : "quota=unknown: no odds credit reading has ever been recorded; remaining is unknown, NOT fine",
+    };
+  }
+  return {
+    measurable: true,
+    lowQuota: input.lowQuotaWhenMeasured,
+    readFailed: false,
+    reason: `quota=measured: ${input.remaining} remaining`,
+  };
+}
+
 export type HealthAlertSnapshot = {
   readonly unhealthy: boolean;
   readonly reason: string;
@@ -28,6 +86,11 @@ export type HealthAlertSnapshot = {
    * callers that never load the marker (and older snapshots) keep compiling.
    */
   readonly calibrationDrift?: HealthAlertCalibrationDrift | null;
+  /**
+   * The Odds API quota reading. Optional for backward compatibility, but a
+   * caller that reports quota MUST pass it — see `assessOddsQuota`.
+   */
+  readonly quota?: HealthAlertOddsQuota | null;
 };
 
 export type HealthAlertState = {
@@ -76,6 +139,8 @@ export function classifyHealthAlertSnapshot(input: {
   capabilities: ReadonlyArray<{ capabilityId: string; status: string; reason?: string }>;
   /** Open post-publish calibration drift marker; omit or null when none is open. */
   calibrationDrift?: HealthAlertCalibrationDrift | null;
+  /** Three-state quota reading from `assessOddsQuota`; omit or null when not loaded. */
+  quota?: HealthAlertOddsQuota | null;
 }): HealthAlertSnapshot {
   const checkErrors = Object.entries(input.checks)
     .filter(([, c]) => c.status !== "ok")
@@ -92,12 +157,25 @@ export function classifyHealthAlertSnapshot(input: {
     (settlement?.reason?.toLowerCase().includes("critically behind") ?? false);
 
   const drift = input.calibrationDrift ?? null;
+  const quota = input.quota ?? null;
+
+  // A quota whose ledger read FAILED is a broken signal, and a broken signal
+  // that the snapshot calls healthy is the silent failure: the DB ping can be
+  // green while this one query is denied, timing out, or the table is missing.
+  // A quota that is merely never-observed does NOT escalate — an unknown
+  // reading is honest, a failed read is an outage.
+  const quotaUnreadable = quota !== null && quota.readFailed === true;
 
   // Unhealthy if any check fails, ingestion > 90m, settlement critically behind,
-  // or a published calibration claim has drifted below its floors.
+  // a published calibration claim has drifted below its floors, or the odds
+  // credit ledger could not be read.
   const ingestionStale = ingestionAge !== null && ingestionAge > 90;
   const unhealthy =
-    checkErrors.length > 0 || ingestionStale || settlementUnavailable || drift !== null;
+    checkErrors.length > 0 ||
+    ingestionStale ||
+    settlementUnavailable ||
+    drift !== null ||
+    quotaUnreadable;
 
   const parts: string[] = [];
   if (checkErrors.length) parts.push(`checks=[${checkErrors.join("; ")}]`);
@@ -108,6 +186,7 @@ export function classifyHealthAlertSnapshot(input: {
       `calibrationDrift=${drift.previousStatus}->${drift.currentStatus} since ${drift.since} floors=[${drift.failingFloors.join("; ")}]`,
     );
   }
+  if (quotaUnreadable) parts.push("oddsQuota=unreadable");
 
   return {
     unhealthy,
@@ -115,6 +194,7 @@ export function classifyHealthAlertSnapshot(input: {
     ingestionAgeMinutes: ingestionAge,
     settlementUnavailable,
     calibrationDrift: drift,
+    quota,
   };
 }
 

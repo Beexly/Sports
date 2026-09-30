@@ -4,6 +4,7 @@ import {
   decideHealthAlert,
   HEALTH_ALERT_QUIET_MS,
   decideHealthAlertStateless,
+  assessOddsQuota,
 } from "@/lib/ops/health-alert-decision";
 
 describe("classifyHealthAlertSnapshot", () => {
@@ -183,5 +184,115 @@ describe("decideHealthAlertStateless — bounded alerting without persistence", 
       if (decideHealthAlertStateless(noAge, T0 + tick * TICK).shouldAlert) alerts += 1;
     }
     expect(alerts).toBe(6); // one per 4h UTC block
+  });
+});
+
+// ── F1: a quota that could not be read must not read as "fine" ─────────────
+// The regression this locks down: the health-alert cron derived
+// `oddsApiLowQuota` straight from `isLowQuota(remaining)`, and `remaining` is
+// null both for an empty ledger and for a database that could not be read. So
+// a total outage emitted `oddsApiLowQuota: false` — a green quota reading
+// produced by a dead database.
+describe("assessOddsQuota", () => {
+  it("a measured reading passes its low-quota verdict straight through", () => {
+    const healthy = assessOddsQuota({
+      remaining: 842,
+      readFailed: false,
+      lowQuotaWhenMeasured: false,
+    });
+    expect(healthy.measurable).toBe(true);
+    expect(healthy.lowQuota).toBe(false);
+    expect(healthy.readFailed).toBe(false);
+    expect(healthy.reason).toContain("842");
+  });
+
+  it("a measured low reading reports low, not unknown", () => {
+    const low = assessOddsQuota({ remaining: 4, readFailed: false, lowQuotaWhenMeasured: true });
+    expect(low.measurable).toBe(true);
+    expect(low.lowQuota).toBe(true);
+  });
+
+  // The core fix: null is not false.
+  it("an unreadable quota is UNMEASURABLE, never 'fine'", () => {
+    const q = assessOddsQuota({ remaining: null, readFailed: true, lowQuotaWhenMeasured: false });
+    expect(q.measurable).toBe(false);
+    expect(q.lowQuota).toBeNull();
+    expect(q.readFailed).toBe(true);
+    expect(q.reason).toMatch(/unreadable/i);
+  });
+
+  it("a never-observed quota is unmeasurable but NOT a read failure", () => {
+    const q = assessOddsQuota({ remaining: null, readFailed: false, lowQuotaWhenMeasured: false });
+    expect(q.measurable).toBe(false);
+    expect(q.lowQuota).toBeNull();
+    expect(q.readFailed).toBe(false);
+    expect(q.reason).toMatch(/unknown/i);
+  });
+
+  it("a zero reading is measured — 0 is a number, not a missing value", () => {
+    const q = assessOddsQuota({ remaining: 0, readFailed: false, lowQuotaWhenMeasured: true });
+    expect(q.measurable).toBe(true);
+    expect(q.lowQuota).toBe(true);
+  });
+});
+
+describe("classifyHealthAlertSnapshot — quota", () => {
+  const healthyDb = () => ({
+    checks: {
+      database: { status: "ok" },
+      ingestion: { status: "ok", ageMinutes: 5 },
+    },
+    capabilities: [{ capabilityId: "settlement", status: "healthy" }],
+    calibrationDrift: null,
+  });
+
+  it("an unreadable quota is UNHEALTHY even when every check is green", () => {
+    // The nastiest version of the bug: the DB ping succeeds while the one
+    // query that reads the quota is denied, timing out, or missing its table.
+    const snap = classifyHealthAlertSnapshot({
+      ...healthyDb(),
+      quota: assessOddsQuota({ remaining: null, readFailed: true, lowQuotaWhenMeasured: false }),
+    });
+    expect(snap.unhealthy).toBe(true);
+    expect(snap.reason).toContain("oddsQuota=unreadable");
+  });
+
+  it("a never-observed quota does NOT page a fresh install", () => {
+    const snap = classifyHealthAlertSnapshot({
+      ...healthyDb(),
+      quota: assessOddsQuota({ remaining: null, readFailed: false, lowQuotaWhenMeasured: false }),
+    });
+    expect(snap.unhealthy).toBe(false);
+    expect(snap.reason).toBe("ok");
+  });
+
+  it("a measured healthy quota keeps the snapshot green", () => {
+    const snap = classifyHealthAlertSnapshot({
+      ...healthyDb(),
+      quota: assessOddsQuota({ remaining: 842, readFailed: false, lowQuotaWhenMeasured: false }),
+    });
+    expect(snap.unhealthy).toBe(false);
+    expect(snap.quota?.lowQuota).toBe(false);
+  });
+
+  it("a caller that omits the quota entirely still classifies as before", () => {
+    expect(classifyHealthAlertSnapshot(healthyDb()).unhealthy).toBe(false);
+  });
+
+  it("the escalation reaches the stateless decision, so a webhook actually fires", () => {
+    const snap = classifyHealthAlertSnapshot({
+      ...healthyDb(),
+      quota: assessOddsQuota({ remaining: null, readFailed: true, lowQuotaWhenMeasured: false }),
+    });
+    expect(snap.unhealthy).toBe(true);
+    // decideHealthAlertStateless is bounded by design — it fires when a rung
+    // crosses or a 4h block opens, then goes quiet. The quota failure must
+    // reach the same ladder every other cause reaches, not be swallowed on the
+    // way, and it must inherit the same bound rather than page every tick.
+    const TICK = 15 * 60_000;
+    const T0 = Date.parse("2026-08-19T00:00:00Z");
+    expect(decideHealthAlertStateless(snap, T0).shouldAlert).toBe(true); // opens the block
+    expect(decideHealthAlertStateless(snap, T0 + TICK).shouldAlert).toBe(false); // quiet
+    expect(decideHealthAlertStateless(snap, T0 + 4 * 60 * 60_000).shouldAlert).toBe(true); // next block
   });
 });
