@@ -31,6 +31,7 @@ import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/perf
 import { db } from "@sports/db";
 import {
   loadOddsCreditTruthOutcome,
+  emptyOddsCreditTruth,
   type OddsCreditLedgerDb,
 } from "@sports/data-ingestion";
 import { isLowQuota } from "@sports/ingestion-pipeline";
@@ -136,10 +137,16 @@ export async function GET(request: Request): Promise<NextResponse> {
   // down" (both are remaining=null), so reporting its boolean reported
   // oddsApiLowQuota=false straight through a total outage. Read the outcome,
   // keep the reading three-state, and let it reach the classifier.
+  // The guard keeps this route's "never throw the cron" promise: an unexpected
+  // throw becomes an UNREADABLE quota (red), never a fine one (green).
   const creditOutcome = await loadOddsCreditTruthOutcome(
     db as unknown as OddsCreditLedgerDb,
     new Date(),
-  );
+  ).catch((err: unknown) => ({
+    truth: emptyOddsCreditTruth(),
+    readFailed: true,
+    error: err instanceof Error ? err.message : String(err),
+  }));
   const credits = creditOutcome.truth;
   if (creditOutcome.readFailed) {
     console.warn(
