@@ -23,6 +23,17 @@ export {
   type IntelligenceReasoning,
 } from "./reasoning";
 
+// -- Shadow-only: count & report a family without letting it move the spine ---
+export {
+  shadowOnly,
+  assertValidShadowPolicy,
+  situationScalarFor,
+  shadowedFamilyTest,
+  InvalidShadowPolicyError,
+  SIGNAL_FAMILIES,
+  type SignalShadowPolicy,
+} from "./shadow";
+
 export {
   injuryObservations,
   ngsObservations,
