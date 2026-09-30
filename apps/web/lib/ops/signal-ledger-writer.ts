@@ -183,7 +183,7 @@ export function projectSignalCandidates(input: {
     practiceStatus: string | null;
     fetchedAt: Date | string;
   }>;
-}): SignalWriteCandidate[] {
+}): SignalProjection {
   const out: SignalWriteCandidate[] = [];
   // A key with no fitted scale cannot be placed on the shared scale, so its rows
   // are dropped rather than written with a raw value posing as a normalized one.

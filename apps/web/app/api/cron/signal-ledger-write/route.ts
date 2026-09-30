@@ -37,7 +37,7 @@
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { db } from "@sports/db";
-import { projectSignalCandidates, writeSignalCandidates } from "@/lib/ops/signal-ledger-writer";
+import { projectSignalCandidates, writeSignalCandidates, type SignalWriteCandidate } from "@/lib/ops/signal-ledger-writer";
 import { captureError } from "@/lib/observability/sentry";
 
 export const dynamic = "force-dynamic";
@@ -140,7 +140,7 @@ export async function GET(req: Request): Promise<NextResponse> {
   // 0/1, so an unconfigured run still writes EVERYTHING and the behavior a
   // single deploy sees is unchanged until shards are added. Nothing is dropped:
   // shard k of N over a deterministic bucket is a partition, not a sample.
-  let candidates;
+  let candidates: readonly SignalWriteCandidate[] = [];
   // Rows refused for want of a fitted scale, by key. Reported in the response so
   // an unscorable key is a visible finding rather than a silent disappearance.
   let dropped: Readonly<Record<string, number>> = {};
