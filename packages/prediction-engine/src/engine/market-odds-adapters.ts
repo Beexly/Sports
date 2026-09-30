@@ -1,8 +1,20 @@
 /**
- * Market & Odds adapters — wires spread-winprob, steam detection, overround,
- * and devig real exported functions into the engine.
+ * Market & Odds adapters — spread, steam, overround and devig signals.
+ *
+ * HONESTY NOTE (SURF-16 provenance audit): the spread-winprob, line-move,
+ * steam and overround adapters below compute their values INLINE in this
+ * file. They do NOT call `market/spread-winprob-map.ts`,
+ * `market/steam-curvature.ts`, `market/book-overround-bandit.ts` or
+ * `odds/favorite-longshot-audit.ts`, and their old provenance strings
+ * naming those modules were deleted because the adapters never imported
+ * them. Each now carries `engine-inline:market-odds-adapters#<fn>`, which
+ * says plainly that the number came from this file's own arithmetic.
+ *
+ * `devigOracleAdapter` is the one exception: it genuinely calls
+ * `devig/oracle.ts#devig`, so it keeps a real module#symbol provenance.
  */
 
+import { devig, type DevigMethod } from "../devig/oracle.js";
 import type { Observation, FailClosedResult, AdapterResult } from "./universal-adapter.js";
 
 const NOW = (): string => new Date().toISOString();
@@ -27,7 +39,7 @@ export function spreadToWinProbAdapter(spread: number | null | undefined, sd: nu
   const z = -s / sigma; // negative spread = home favored
   const winProb = 0.5 * (1 + erf(z / Math.SQRT2));
   return obs("market:spread-winprob", Number(winProb.toFixed(4)), 0.9,
-    "packages/prediction-engine/src/market/spread-winprob-map.ts#spreadToWinProb",
+    "engine-inline:market-odds-adapters#spreadToWinProbAdapter",
     "MARKET", { winProb: Number(winProb.toFixed(4)), spread: s, sd: sigma });
 }
 
@@ -51,7 +63,7 @@ export function largeLineMoveAdapter(
   const t = threshold ?? 1;
   const isLarge = Math.abs(movePoints ?? 0) > t;
   return obs("market:line-move", isLarge ? 1 : 0, 0.88,
-    "packages/prediction-engine/src/market/spread-winprob-map.ts#isLargeLineMove",
+    "engine-inline:market-odds-adapters#largeLineMoveAdapter",
     "MARKET", { movePoints, threshold: t, isLarge });
 }
 
@@ -66,7 +78,7 @@ export function steamExceedanceAdapter(
   const exceedances = moves.filter((m) => Math.abs(m) > t).length;
   const rate = exceedances / moves.length;
   return obs("market:steam-exceedance", Number(rate.toFixed(4)), 0.82,
-    "packages/prediction-engine/src/market/spread-winprob-map.ts#steamNullExceedanceRate",
+    "engine-inline:market-odds-adapters#steamExceedanceAdapter",
     "MARKET", { rate: Number(rate.toFixed(4)), exceedances, n: moves.length, threshold: t });
 }
 
@@ -90,7 +102,7 @@ export function overroundForecastAdapter(
   }
   const forecast = weightSum > 0 ? sum / weightSum : 0;
   return obs("market:overround-forecast", Number(forecast.toFixed(4)), 0.78,
-    "packages/prediction-engine/src/market/book-overround-bandit.ts#naiveOverroundForecast",
+    "engine-inline:market-odds-adapters#overroundForecastAdapter",
     "MARKET", { forecast: Number(forecast.toFixed(4)), n });
 }
 
@@ -109,7 +121,7 @@ export function detectSteamAdapter(
   // Steam = large move + high velocity + multiple books
   const isSteam = Math.abs(movePoints ?? 0) > 1.5 && v > 0.5 && bc >= 3;
   return obs("market:detect-steam", isSteam ? 1 : 0, 0.8,
-    "packages/prediction-engine/src/market/steam-curvature.ts#detectSteam",
+    "engine-inline:market-odds-adapters#detectSteamAdapter",
     "MARKET", { isSteam, movePoints, velocity: v, bookCount: bc });
 }
 
@@ -125,12 +137,25 @@ export function bucketRoiAdapter(
   }
   const roi = ((totalReturned ?? 0) - (totalStaked ?? 0)) / (totalStaked ?? 1);
   return obs("odds:bucket-roi", Number(roi.toFixed(4)), 0.85,
-    "packages/prediction-engine/src/odds/favorite-longshot-audit.ts#bucketRoi",
+    "engine-inline:market-odds-adapters#bucketRoiAdapter",
     "CALIBRATION_HISTORY", { roi: Number(roi.toFixed(4)), bucketCount, totalStaked, totalReturned });
 }
 
 // ── devig/oracle.ts ─────────────────────────────────────────────────────────
 
+/** American odds (-110 / +150) -> decimal odds (1.909 / 2.5). */
+function americanToDecimal(american: number): number | null {
+  if (!Number.isFinite(american) || american === 0) return null;
+  return american > 0 ? 1 + american / 100 : 1 + 100 / -american;
+}
+
+/**
+ * Calls the real `devig/oracle.ts#devig`. The previous inline body computed
+ * `implied / total`, which is exactly `devig(odds, "multiplicative")`, so
+ * the multiplicative result is unchanged; the other six methods are now
+ * genuinely selectable instead of the old `method` string being echoed into
+ * `raw` while every call silently did the same thing.
+ */
 export function devigOracleAdapter(
   oddsArray: readonly number[] | null | undefined,
   method: string | null | undefined,
@@ -138,16 +163,41 @@ export function devigOracleAdapter(
   if (!oddsArray || oddsArray.length < 2) {
     return fail("devig:oracle", "missing odds array");
   }
-  // Convert American odds to implied probs
-  const toImplied = (o: number): number => o > 0 ? 100 / (o + 100) : -o / (-o + 100);
-  const implied = oddsArray.map(toImplied);
-  const total = implied.reduce((a, b) => a + b, 0);
-  const fairProbs = implied.map((p) => p / total);
-  const overround = total - 1;
-  const firstFair = fairProbs[0] as number;
-  return obs("devig:oracle", Number(firstFair.toFixed(4)), 0.9,
-    "packages/prediction-engine/src/devig/oracle.ts#devig",
-    "MARKET", { fairProbs: fairProbs.map((p) => Number(p.toFixed(4))), overround: Number(overround.toFixed(4)), method: method ?? "proportional" });
+  const decimal = oddsArray.map(americanToDecimal);
+  if (decimal.some((o) => o === null)) {
+    return fail("devig:oracle", "odds must be finite American values (e.g. -110, +150)");
+  }
+  // The old adapter accepted any string and echoed it; only the seven real
+  // DevigMethod values can be honoured, so anything else is multiplicative.
+  const m: DevigMethod = isDevigMethod(method) ? method : "multiplicative";
+  try {
+    const r = devig(decimal as number[], m);
+    const fairProbs = r.probabilities;
+    const firstFair = fairProbs[0] ?? 0;
+    return obs("devig:oracle", Number(firstFair.toFixed(4)), 0.9,
+      "packages/prediction-engine/src/devig/oracle.ts#devig",
+      "MARKET", {
+        fairProbs: fairProbs.map((p) => Number(p.toFixed(4))),
+        overround: Number(r.margin.toFixed(4)),
+        method: r.method,
+      });
+  } catch (err) {
+    return fail("devig:oracle", err instanceof Error ? err.message : "devig failed");
+  }
+}
+
+const DEVG_METHODS: readonly string[] = [
+  "multiplicative",
+  "additive",
+  "power",
+  "shin",
+  "differential_margin_weighting",
+  "odds_ratio",
+  "logarithmic",
+];
+
+function isDevigMethod(m: string | null | undefined): m is DevigMethod {
+  return typeof m === "string" && DEVG_METHODS.includes(m);
 }
 
 // ── export all ──────────────────────────────────────────────────────────────

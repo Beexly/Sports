@@ -189,6 +189,14 @@ interface Violation {
   reasons: string[];
 }
 
+/** An adapter source under inspection. `adapterAbs` locates it for relative
+ *  import resolution; `source` is its text. Split so the detector can run
+ *  against synthetic text without writing files. */
+interface AdapterSource {
+  adapterAbs: string;
+  source: string;
+}
+
 function listAdapterFiles(): string[] {
   const dir = resolve(REPO_ROOT, ADAPTER_LAYER_DIR);
   return readdirSync(dir)
@@ -198,12 +206,22 @@ function listAdapterFiles(): string[] {
 }
 
 function collectViolations(): Violation[] {
-  const violations: Violation[] = [];
-  const adapters = listAdapterFiles();
+  return collectViolationsIn(
+    listAdapterFiles().map((abs) => ({ adapterAbs: abs, source: readFileSync(abs, "utf8") })),
+  );
+}
 
-  for (const adapterAbs of adapters) {
+/**
+ * Core detector. Takes adapter sources in memory so the same code path can be
+ * exercised against a synthetic fixture (see the "teeth" test) as well as
+ * against the real files. The module-existence and value-export checks still
+ * hit real disk, so a fixture proves the detector reads target sources.
+ */
+function collectViolationsIn(adapters: readonly AdapterSource[]): Violation[] {
+  const violations: Violation[] = [];
+
+  for (const { adapterAbs, source } of adapters) {
     const adapterRel = relative(REPO_ROOT, adapterAbs).replace(/\\/g, "/");
-    const source = readFileSync(adapterAbs, "utf8");
     const imports = collectValueImports(adapterAbs, source);
 
     // Reset lastIndex for global regex
@@ -302,26 +320,23 @@ describe("engine adapter provenance integrity", () => {
 
   // RATCHET, not a zero-tolerance assertion.
   //
-  // 35 violations exist TODAY (SURF-13) and a test that demands zero would be
-  // permanently red, which is how "delete the test" happens. So the test
-  // asserts the count cannot GROW, and separately that the known set is
-  // exactly the adjudicated one. Fixing a violation LOWERS the count, which
-  // fails this test and forces a conscious ratchet edit -- the intended
-  // direction: every fix must name itself in the ledger.
+  // History: 35 violations existed (SURF-13), then 52 once the regex was
+  // corrected to collect module-only claims. Every one has now been fixed
+  // (SURF-16 provenance sweep), so the count is 0 and the assertion below is
+  // effectively zero-tolerance.
   //
-  // To fix one: make the adapter actually import and call the module its
-  // provenance names, then lower KNOWN_VIOLATIONS by 1 in the same commit.
-  // Counts, from three independent methods, because the first two disagreed:
-  //   93  distinct module#symbol claims in the adapter layer overall
-  //   52  of them VIOLATIONS (claimed but not value-imported)  <- this constant
-  //   41  genuinely backed by a real value import
-  //   35  what an earlier, buggy version of this guard reported
-  // The 35 -> 52 correction: the old regex required a `#symbol` fragment, so
-  // module-only claims were never collected at all. 41 of the 52 are the
-  // "module named, symbol omitted" shape. Do not lower this number without
-  // re-deriving it with a second method; a guard that silently under-reports
-  // its own defect class reads as a clean bill of health.
-  const KNOWN_VIOLATIONS = 52;
+  // It was NOT zero-tolerance before, and deliberately so: the "teeth" test
+  // below used to prove the detector still worked by requiring live
+  // violations to exist. That design made it structurally impossible to fix
+  // the last violation -- fixing the defect turned the guard red. The teeth
+  // test now runs the SAME detector over a synthetic fixture instead, so the
+  // ratchet can sit at 0 without the guard going blind.
+  //
+  // To reintroduce a violation you must edit a real adapter to claim a module
+  // it does not import; the ratchet then fails. Do not lower this number
+  // without re-deriving it with a second method; a guard that silently
+  // under-reports its own defect class reads as a clean bill of health.
+  const KNOWN_VIOLATIONS = 0;
 
   it("never grows: no NEW unbacked provenance may be added", () => {
     const violations = collectViolations();
@@ -334,23 +349,111 @@ describe("engine adapter provenance integrity", () => {
     ).toBeLessThanOrEqual(KNOWN_VIOLATIONS);
   });
 
-  it("still finds the SURF-13 violation classes (proves the guard has teeth)", () => {
-    const violations = collectViolations();
-    // Every known violation must cite a module that IS imported (type-only or
-    // otherwise) or a symbol that does not exist. If the detector quietly
-    // stopped matching, the ratchet above would pass for the wrong reason.
-    expect(violations.length).toBeGreaterThan(0);
+  it("still names every violation class (proves the guard has teeth)", () => {
+    // Runs the real detector over a synthetic adapter, so the guard keeps its
+    // teeth even now that the real adapter layer is clean. If the regex or any
+    // rule silently regressed, these expectations fail.
+    //
+    // The fixture cites four real engine modules so that BOTH disk-backed
+    // checks (does the module exist, does it export the symbol) are exercised
+    // against real sources rather than stubbed input.
+    const fixtureAbs = resolve(REPO_ROOT, ADAPTER_LAYER_DIR, "__fixture-adapters.ts");
+    const fixture: AdapterSource = {
+      adapterAbs: fixtureAbs,
+      source: [
+        // A real value import. The fixture adapter sits in
+        // packages/prediction-engine/src/engine/, so this specifier resolves
+        // to packages/prediction-engine/src/expected-metrics/expected-completion
+        // -- the same module RULE 4 and the control below cite.
+        'import { computeCpoe } from "../expected-metrics/expected-completion.js";',
+        // RULE 1 "no value import": a real module and a real export of it,
+        // but this adapter never imports it.
+        'export function a(): string { return "packages/prediction-engine/src/expected-metrics/win-probability.ts#predictWinProbability"; }',
+        // RULE 2 "module does not exist": the cited module is absent from disk.
+        'export function b(): string { return "packages/prediction-engine/src/signals/wind-elasticity.ts"; }',
+        // RULE 3 "symbol not exported": the module exists on disk, but
+        // predictLogistic is not an export of it (the historic defect).
+        'export function c(): string { return "packages/prediction-engine/src/expected-metrics/win-probability.ts#predictLogistic"; }',
+        // RULE 4 "imports module, not this symbol": the module IS value-imported
+        // (computeCpoe) but predictCompletionProbability is not imported.
+        'export function d(): string { return "packages/prediction-engine/src/expected-metrics/expected-completion.ts#predictCompletionProbability"; }',
+        // POSITIVE CONTROL: genuinely backed -- computeCpoe is really imported
+        // and really exported. This one must NOT be flagged.
+        'export function e(): string { return "packages/prediction-engine/src/expected-metrics/expected-completion.ts#computeCpoe"; }',
+      ].join("\n"),
+    };
+
+    const violations = collectViolationsIn([fixture]);
+    const bySymbol = new Map(violations.map((v) => [v.symbol, v.reasons.join("; ")]));
+
     // Four distinct failure modes the detector must still be able to name.
-    // These are the actual strings collectViolations() emits, not a guess.
-    const allReasons = violations.flatMap((v) => v.reasons);
+    // These are the actual strings collectViolationsIn() emits, not a guess.
     expect(
-      allReasons.some((r) => /no value import of/.test(r)),
-      "detector lost the 'no value import' rule",
-    ).toBe(true);
+      bySymbol.get("predictWinProbability"),
+      "expected the 'no value import' rule to fire",
+    ).toMatch(/no value import of/);
     expect(
-      allReasons.some((r) => /is not a value export of/.test(r)),
-      "detector lost the 'symbol is not exported' rule -- this is the " +
-        "predictLogistic case, the one that proves the check reads target sources",
-    ).toBe(true);
+      bySymbol.get(undefined),
+      "expected the module-only claim to be collected",
+    ).toMatch(/cited module does not exist on disk/);
+    expect(
+      bySymbol.get("predictLogistic"),
+      "expected the 'symbol not exported' rule to fire",
+    ).toMatch(/is not a value export of/);
+    expect(bySymbol.get("predictCompletionProbability")).toMatch(
+      /imports the module but not the value symbol/,
+    );
+    // Every violation must name at least one reason (guards against a rule
+    // silently emitting nothing).
+    for (const v of violations) {
+      expect(v.reasons.length, `${v.provenance} produced no reason`).toBeGreaterThan(0);
+    }
+    // Exactly the four seeded defects; the positive control is not flagged.
+    expect(violations.length).toBe(4);
+
+    // POSITIVE CONTROL: the real adapter layer must still contain claims that
+    // ARE backed. Without this, an over-eager detector that flags everything
+    // would still satisfy every assertion above.
+    expect(
+      collectBackedClaimCount(),
+      "no backed module#symbol claims remain -- the detector may now be flagging everything",
+    ).toBeGreaterThan(0);
+  });
+
+  it("backed claims stay backed (positive control for the whole guard)", () => {
+    expect(collectBackedClaimCount()).toBeGreaterThan(0);
   });
 });
+
+/**
+ * Count provenance claims in the real adapter layer that ARE backed by a real
+ * value import of a module that exists and exports the named symbol.
+ */
+function collectBackedClaimCount(): number {
+  let backed = 0;
+  for (const { adapterAbs, source } of listAdapterFiles().map((abs) => ({
+    adapterAbs: abs,
+    source: readFileSync(abs, "utf8"),
+  }))) {
+    const imports = collectValueImports(adapterAbs, source);
+    PROVENANCE_RE.lastIndex = 0;
+    const seen = new Set<string>();
+    let match: RegExpExecArray | null;
+    while ((match = PROVENANCE_RE.exec(source)) !== null) {
+      const moduleRel = match[1]!;
+      const symbol = match[2];
+      const provenance = match[0]!;
+      if (seen.has(provenance)) continue;
+      seen.add(provenance);
+      const moduleKey = normalizeModuleKey(`packages/prediction-engine/src/${moduleRel}`);
+      const moduleAbs = resolve(REPO_ROOT, "packages/prediction-engine/src", moduleRel);
+      if (!existsSync(moduleAbs)) continue;
+      const { moduleImported, symbolImported } = moduleKeyHasValueImport(imports, moduleKey, symbol);
+      if (!moduleImported) continue;
+      if (symbol && !symbolImported) continue;
+      if (symbol && !moduleExportsValueSymbol(readFileSync(moduleAbs, "utf8"), symbol)) continue;
+      backed += 1;
+    }
+  }
+  return backed;
+}
