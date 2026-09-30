@@ -16,6 +16,9 @@ const mocks = vi.hoisted(() => ({
   nextGenStat: { findMany: vi.fn() },
   playerGameStat: { findMany: vi.fn() },
   gameSignal: { findMany: vi.fn() },
+  // The schedule team index reads the NFL schedule from `games` to resolve a
+  // NULL `player_game_stats.team` row through its `opponent`.
+  game: { findMany: vi.fn() },
 }));
 vi.mock("@sports/db", () => ({ db: mocks }));
 
@@ -24,9 +27,11 @@ import {
   loadInjuries,
   loadRatings,
   loadGameSignals,
+  loadPlayerStats,
   nflSeasonForDate,
   nflSeasonWeekForDate,
 } from "./db-loaders";
+import { __resetScheduleTeamIndexCache } from "./schedule-team-index";
 
 function injuryRow(over: Record<string, unknown> = {}) {
   return {
@@ -65,7 +70,53 @@ function gseRow(over: Record<string, unknown> = {}) {
 beforeEach(() => {
   vi.clearAllMocks();
   for (const t of Object.values(mocks)) t.findMany.mockResolvedValue([]);
+  // The schedule index is memoised process-wide; without a reset one test's
+  // schedule would satisfy every later test in the file.
+  __resetScheduleTeamIndexCache();
 });
+
+/** One week of NFL schedule in the shape buildScheduleTeamIndex selects. */
+function scheduleGame(
+  homeTeamName: string,
+  awayTeamName: string,
+  commenceTime: string,
+) {
+  return { homeTeamName, awayTeamName, commenceTime: new Date(commenceTime) };
+}
+
+/**
+ * Real prod shape for the first two 2026 weeks (verified on Neon
+ * 2026-09-30), including the Rams' GSE spelling 'LA' rather than nflverse's
+ * 'LAR'.
+ */
+const KC_2026_SCHEDULE = [
+  scheduleGame("Kansas City Chiefs", "Dallas Cowboys", "2026-09-10T20:25:00Z"),
+  scheduleGame("Buffalo Bills", "New York Jets", "2026-09-13T17:00:00Z"),
+  scheduleGame("Kansas City Chiefs", "Buffalo Bills", "2026-09-20T17:00:00Z"),
+];
+
+/** A player-stat row shaped like the real thing: team NULL, opponent set. */
+function nullTeamStatRow(over: Record<string, unknown> = {}) {
+  return {
+    playerId: "p1",
+    team: null,
+    opponent: "DAL",
+    season: 2026,
+    week: 1,
+    attempts: null,
+    carries: 8,
+    receptions: 3,
+    targets: 5,
+    targetShare: 0.22,
+    fantasyPointsPpr: 11.4,
+    passingEpa: null,
+    rushingEpa: 0.04,
+    receivingEpa: 0.11,
+    sourceId: "nflverse",
+    fetchedAt: new Date("2026-09-11T00:00:00Z"),
+    ...over,
+  };
+}
 
 describe("season / week resolution", () => {
   it("labels September and later as the current season, Jan/Feb as the prior", () => {
@@ -344,5 +395,193 @@ describe("loadBundleSurfaces", () => {
     expect(snap.week).toEqual({ lt: 3 });
     expect(ngs.week).toEqual({ lt: 3 });
     expect(pgs.week).toEqual({ lt: 3 });
+  });
+
+  it("leaves the weather zero labelled as a missing producer, not a pending backfill", async () => {
+    mocks.gameSignal.findMany.mockResolvedValue([
+      {
+        sourceCategory: "SCHEDULE",
+        sourceName: "schedule-internal",
+        signalKey: "schedule_density_7d_home",
+        signalValue: 1,
+        trustLevel: 1,
+        fetchedAt: new Date(),
+      },
+    ]);
+    const s = await loadBundleSurfaces(input);
+    expect(s.weather).toEqual([]);
+    const note = s.resolution.notes.find((n) => n.includes("weather"));
+    // "no producer" is the claim under test: a reader must not file this zero
+    // next to a backfill that will fix it.
+    expect(note).toMatch(/no producer/i);
+    expect(note).toMatch(/not a pending backfill/i);
+  });
+});
+
+/**
+ * The player-stat surfaces read zero rows on 100% of picks because
+ * `player_game_stats.team` is NULL for the 2025 and 2026 seasons. These tests
+ * pin the recovery join and, just as importantly, its refusal to guess.
+ */
+describe("loadPlayerStats — schedule-derived team recovery", () => {
+  const input = {
+    gameId: "g1",
+    homeTeamName: "Kansas City Chiefs",
+    awayTeamName: "Buffalo Bills",
+    commenceTime: new Date("2026-09-27T17:00:00Z"),
+  };
+
+  /** Route the two population queries: stored-team rows, then NULL-team rows. */
+  function mockStatQueries(stored: unknown[], nullTeam: unknown[]): void {
+    mocks.playerGameStat.findMany
+      .mockReset()
+      .mockResolvedValueOnce(stored)
+      .mockResolvedValueOnce(nullTeam);
+  }
+
+  it("places a NULL-team row on the club that actually played its opponent", async () => {
+    mocks.game.findMany.mockResolvedValue(KC_2026_SCHEDULE);
+    // KC played DAL in week 1, so a KC offensive row names DAL as opponent.
+    mockStatQueries([], [nullTeamStatRow({ playerId: "pKC", opponent: "DAL" })]);
+
+    const out = await loadPlayerStats(input, 2026, 3);
+
+    expect(out.home.map((r) => r.opponent)).toEqual(["DAL"]);
+    expect(out.away).toEqual([]);
+    expect(out.unresolved).toBe(false);
+    expect(out.resolvedViaSchedule).toBe(1);
+  });
+
+  it("places the mirror image on the away club, not on the opponent's opponent", async () => {
+    mocks.game.findMany.mockResolvedValue(KC_2026_SCHEDULE);
+    // BUF played NYJ in week 1, so a BUF row names NYJ.
+    mockStatQueries([], [nullTeamStatRow({ playerId: "pBUF", opponent: "NYJ" })]);
+
+    const out = await loadPlayerStats(input, 2026, 3);
+    expect(out.away.map((r) => r.opponent)).toEqual(["NYJ"]);
+    expect(out.home).toEqual([]);
+  });
+
+  it("asks for the opponents these two clubs actually faced, not just home/away", async () => {
+    mocks.game.findMany.mockResolvedValue(KC_2026_SCHEDULE);
+    mockStatQueries([], []);
+
+    await loadPlayerStats(input, 2026, 3);
+
+    // This is the bug the fix exists to avoid: filtering on
+    // opponent IN (KC, BUF) would return almost none of the home club's rows,
+    // because KC's rows mostly name a third club. DAL is in this list only
+    // because the schedule says KC played them.
+    const recovery = mocks.playerGameStat.findMany.mock.calls[1][0].where;
+    expect(recovery.team).toBeNull();
+    const asked = recovery.opponent.in as string[];
+    expect(asked).toContain("DAL"); // third club, week 1
+    expect(asked).toContain("NYJ"); // third club, week 1
+    expect(asked).toContain("BUF"); // KC's week-2 opponent
+    expect(asked).toContain("KC"); // BUF's week-2 opponent
+    expect(asked).not.toEqual(["KC", "BUF"]);
+  });
+
+  it("drops a row rather than attributing it when the week is ambiguous", async () => {
+    // The week-22 clamp folds several postseason games into one bucket, so
+    // SF's week-22 opponent is genuinely unknown.
+    mocks.game.findMany.mockResolvedValue([
+      scheduleGame("Las Vegas Raiders", "San Francisco 49ers", "2027-01-10T21:05:00Z"),
+      scheduleGame("Tennessee Titans", "San Francisco 49ers", "2027-01-10T21:05:00Z"),
+      scheduleGame("Los Angeles Chargers", "San Francisco 49ers", "2027-01-10T21:05:00Z"),
+    ]);
+    mockStatQueries([], [
+      nullTeamStatRow({ playerId: "amb", season: 2026, week: 18, opponent: "SF" }),
+    ]);
+
+    const out = await loadPlayerStats(
+      { ...input, homeTeamName: "San Francisco 49ers", awayTeamName: "Buffalo Bills" },
+      2026,
+      22,
+    );
+    // Correct answer is "we do not know", not "whichever club was read last".
+    expect(out.home).toEqual([]);
+    expect(out.away).toEqual([]);
+    expect(out.unresolved).toBe(true);
+  });
+
+  it("never returns the same player's row twice across both queries", async () => {
+    mocks.game.findMany.mockResolvedValue(KC_2026_SCHEDULE);
+    mockStatQueries(
+      [{ playerId: "pKC", team: "KC", opponent: "DAL", season: 2026, week: 1 }],
+      [nullTeamStatRow({ playerId: "pKC", opponent: "DAL" })],
+    );
+    const out = await loadPlayerStats(input, 2026, 3);
+    expect(out.home).toHaveLength(1);
+  });
+
+  it("keeps distinct players who share a club, week and opponent", async () => {
+    mocks.game.findMany.mockResolvedValue(KC_2026_SCHEDULE);
+    mockStatQueries(
+      [],
+      [
+        nullTeamStatRow({ playerId: "pA", opponent: "DAL" }),
+        nullTeamStatRow({ playerId: "pB", opponent: "DAL" }),
+        nullTeamStatRow({ playerId: "pC", opponent: "DAL" }),
+      ],
+    );
+    const out = await loadPlayerStats(input, 2026, 3);
+    // A dedupe key of (team, week, opponent) would collapse these to one row
+    // and quietly hide a whole offence.
+    expect(out.home).toHaveLength(3);
+  });
+
+  it("still trusts the stored team column when the source set it", async () => {
+    mocks.game.findMany.mockResolvedValue(KC_2026_SCHEDULE);
+    mockStatQueries(
+      [
+        {
+          playerId: "pStored",
+          team: "KC",
+          opponent: "DAL",
+          season: 2026,
+          week: 1,
+          attempts: 30,
+          carries: 0,
+          receptions: 0,
+          targets: 40,
+          targetShare: 0.7,
+          fantasyPointsPpr: 18.2,
+          passingEpa: 0.3,
+          rushingEpa: null,
+          receivingEpa: null,
+          sourceId: "nflverse",
+          fetchedAt: new Date("2026-09-11T00:00:00Z"),
+        },
+      ],
+      [],
+    );
+    const out = await loadPlayerStats(input, 2026, 3);
+    expect(out.home).toHaveLength(1);
+    expect(out.resolvedViaSchedule).toBe(0);
+  });
+
+  it("returns empty without a note-worthy failure when the schedule read throws", async () => {
+    mocks.game.findMany.mockRejectedValue(new Error("db down"));
+    mockStatQueries([], [nullTeamStatRow({ opponent: "DAL" })]);
+    const out = await loadPlayerStats(input, 2026, 3);
+    // Fail-closed: no schedule, no attribution. Never a throw, never a guess.
+    expect(out.home).toEqual([]);
+    expect(out.away).toEqual([]);
+    expect(out.unresolved).toBe(true);
+  });
+
+  it("issues at most one schedule read for many picks (single-flight memo)", async () => {
+    mocks.game.findMany.mockResolvedValue(KC_2026_SCHEDULE);
+    // Unbounded: every concurrent pick issues both stat queries.
+    mocks.playerGameStat.findMany.mockResolvedValue([]);
+    await Promise.all([
+      loadPlayerStats(input, 2026, 3),
+      loadPlayerStats(input, 2026, 3),
+      loadPlayerStats(input, 2026, 3),
+    ]);
+    // /api/picks loads surfaces once per pick in parallel; without the memo a
+    // slate of 30 would read the whole NFL schedule 30 times.
+    expect(mocks.game.findMany).toHaveBeenCalledTimes(1);
   });
 });

@@ -44,6 +44,7 @@
 import { db } from "@sports/db";
 import { nflTeamAbbr, isPlaceholderTeamName } from "@sports/ingestion-pipeline";
 import { currentNflSeasonLabel } from "@sports/data-ingestion";
+import { scheduleTeamIndex, opponentsInWindow } from "@/lib/intelligence-core/schedule-team-index";
 import type {
   InjuryRow,
   NgsRow,
@@ -64,6 +65,34 @@ const MAX_NGS_ROWS = 40;
 const MAX_PLAYER_STAT_ROWS = 80;
 /** Weeks of ratings history per team (most recent N first-occurrence weeks). */
 const RATINGS_HISTORY_WEEKS = 6;
+
+/**
+ * The player-stat projection, named once because loadPlayerStats issues the
+ * same SELECT twice (stored-team rows and NULL-team recovery rows) and the two
+ * must stay identical — a projection that drifts between them would silently
+ * return differently-shaped rows for the same player.
+ *
+ * `playerId` is selected purely as the row's identity for dedupe; it is not
+ * part of PlayerGameStatRow.
+ */
+const PLAYER_STAT_SELECT = {
+  playerId: true,
+  team: true,
+  opponent: true,
+  season: true,
+  week: true,
+  attempts: true,
+  carries: true,
+  receptions: true,
+  targets: true,
+  targetShare: true,
+  fantasyPointsPpr: true,
+  passingEpa: true,
+  rushingEpa: true,
+  receivingEpa: true,
+  sourceId: true,
+  fetchedAt: true,
+} as const;
 
 // ---------------------------------------------------------------------------
 // Season / week resolution
@@ -386,56 +415,116 @@ export async function loadNgs(
  * Per-player weekly game stats for both teams. Lagged strictly (see
  * loadRatings).
  *
+ * WHY THE JOIN IS NOT A PLAIN `team = ?` FILTER
  * `player_game_stats.team` is NULL on every prod row for the 2025 and 2026
- * seasons (verified: 6,396 rows for 2025 and 1,091 for 2026, 0 non-null), and
- * `players.recentTeam` cannot stand in for it (verified: 0 of 2026 week-3 stat
- * rows join a player whose recentTeam is set). This loader therefore resolves
- * the join through the stored team column and, where that column is empty,
- * returns nothing for that side rather than borrowing another team's rows.
+ * seasons (measured on Neon 2026-09-30: 2026 = 1,091 rows / 0 non-null, 2025 =
+ * 6,396 rows / 0 non-null; 2024 and earlier are 100% populated). Filtering on
+ * it therefore returns zero rows forever, which is how this surface read as an
+ * empty surface rather than a missing join.
+ *
+ * The stored column is still trusted when it is set — it is the source's own
+ * label and costs nothing. Only when it is NULL do we fall back to the
+ * schedule-derived resolution in ./schedule-team-index, which reads the row's
+ * `opponent` and asks the live schedule which club played that opponent that
+ * week. That inversion was falsified against `next_gen_stats.team` before it
+ * shipped: 414/414 comparable rows agree, the only raw-string differences
+ * being the Rams' `LA` vs `LAR` spelling, which agree under normalization.
+ *
+ * Rows that cannot be resolved exactly are dropped and counted, never
+ * attributed to a neighbouring club. `unresolved` stays true only when BOTH
+ * the stored column and the schedule failed to place any row.
  */
 export async function loadPlayerStats(
   input: BundleLoaderInput,
   season: number,
   lagWeek: number,
-): Promise<{ home: PlayerGameStatRow[]; away: PlayerGameStatRow[]; unresolved: boolean }> {
+): Promise<{
+  home: PlayerGameStatRow[];
+  away: PlayerGameStatRow[];
+  unresolved: boolean;
+  /**
+   * Rows placed by the schedule because the stored team column was NULL.
+   * Required rather than optional so every return site carries it and the
+   * orchestrator's union with its fail-open fallback stays exact.
+   */
+  resolvedViaSchedule: number;
+}> {
   const homeAbbr = nflTeamAbbr(input.homeTeamName);
   const awayAbbr = nflTeamAbbr(input.awayTeamName);
-  if (!homeAbbr || !awayAbbr) return { home: [], away: [], unresolved: true };
+  if (!homeAbbr || !awayAbbr) {
+    return { home: [], away: [], unresolved: true, resolvedViaSchedule: 0 };
+  }
 
-  const rows = await db.playerGameStat.findMany({
-    where: {
-      season,
-      week: { lt: lagWeek },
-      team: { in: [homeAbbr, awayAbbr] },
-    },
-    select: {
-      team: true,
-      opponent: true,
-      season: true,
-      week: true,
-      attempts: true,
-      carries: true,
-      receptions: true,
-      targets: true,
-      targetShare: true,
-      fantasyPointsPpr: true,
-      passingEpa: true,
-      rushingEpa: true,
-      receivingEpa: true,
-      sourceId: true,
-      fetchedAt: true,
-    },
-    orderBy: { week: "desc" },
-    take: MAX_PLAYER_STAT_ROWS * 2,
-  });
+  // Which rows to fetch is decided by the schedule, not by guessing a WHERE
+  // on the empty column: a stat row's team is unknown, so `opponent IN (home,
+  // away)` would MISS the home club's rows (they mostly name a third club as
+  // the opponent). The reverse index names the exact opponents these two
+  // clubs faced in the lagged window, which is a superset-safe, exact filter.
+  const resolution = await scheduleTeamIndex(nflSeasonWeekForDate);
+  const window = opponentsInWindow(resolution, season, [homeAbbr, awayAbbr], lagWeek);
+  const opponentFilter = [...new Set(window.map((w) => w.opponent))];
+
+  // Two populations, two WHERE shapes. The stored-team query is unchanged in
+  // spirit (the source's own label wins); the NULL-team query is the recovery
+  // path this surface needed. Run together — this runs once per pick and the
+  // picks route fans it out across the slate.
+  const [storedRows, nullTeamRows] = await Promise.all([
+    db.playerGameStat.findMany({
+      where: { season, week: { lt: lagWeek }, team: { in: [homeAbbr, awayAbbr] } },
+      select: PLAYER_STAT_SELECT,
+      orderBy: { week: "desc" },
+      take: MAX_PLAYER_STAT_ROWS * 2,
+    }),
+    opponentFilter.length > 0
+      ? db.playerGameStat.findMany({
+          where: {
+            season,
+            week: { lt: lagWeek },
+            team: null,
+            opponent: { in: opponentFilter },
+          },
+          select: PLAYER_STAT_SELECT,
+          orderBy: { week: "desc" },
+          take: MAX_PLAYER_STAT_ROWS * 2,
+        })
+      : Promise.resolve([]),
+  ]);
 
   const home: PlayerGameStatRow[] = [];
   const away: PlayerGameStatRow[] = [];
-  for (const r of rows) {
-    if (r.team === homeAbbr && home.length < MAX_PLAYER_STAT_ROWS) home.push(r);
-    else if (r.team === awayAbbr && away.length < MAX_PLAYER_STAT_ROWS) away.push(r);
+  const seen = new Set<string>();
+  let resolvedViaSchedule = 0;
+
+  const place = (r: PlayerGameStatRow & { playerId?: string | null }, derived: string | null): void => {
+    const team = r.team ?? derived;
+    if (team !== homeAbbr && team !== awayAbbr) return;
+    // Dedupe on the row's real identity. Two different players on the same
+    // club share (season, week, team, opponent), so that tuple is NOT a key —
+    // it would silently drop most of a team's offensive rows.
+    const key = r.playerId
+      ? `${r.playerId}:${r.season}:${r.week}`
+      : `${team}:${r.season}:${r.week}:${r.opponent ?? ""}`;
+    if (seen.has(key)) return;
+    const bucket = team === homeAbbr ? home : away;
+    if (bucket.length >= MAX_PLAYER_STAT_ROWS) return;
+    seen.add(key);
+    bucket.push(r);
+    if (!r.team) resolvedViaSchedule++;
+  };
+
+  for (const r of storedRows) place(r, null);
+  for (const r of nullTeamRows) {
+    const derived =
+      resolution.index.get(`${r.season}:${r.week}:${r.opponent ?? ""}`) ?? null;
+    place(r, derived);
   }
-  return { home, away, unresolved: home.length === 0 && away.length === 0 };
+
+  return {
+    home,
+    away,
+    unresolved: home.length === 0 && away.length === 0,
+    resolvedViaSchedule,
+  };
 }
 
 /**
@@ -574,8 +663,8 @@ export async function loadBundleSurfaces(
       async () =>
         season != null && lagWeek != null && homeAbbr && awayAbbr
           ? loadPlayerStats(input, season, lagWeek)
-          : { home: [], away: [], unresolved: true },
-      { home: [], away: [], unresolved: true },
+          : { home: [], away: [], unresolved: true, resolvedViaSchedule: 0 },
+      { home: [], away: [], unresolved: true, resolvedViaSchedule: 0 },
     ),
     safe("gameSignals", () => loadGameSignals(input.gameId), {
       gameSignals: [],
@@ -585,12 +674,29 @@ export async function loadBundleSurfaces(
 
   if (playerStats.unresolved && homeAbbr && awayAbbr) {
     notes.push(
-      "playerGameStat rows carry no team for this season; player-stat surfaces returned empty rather than borrowed from another team",
+      playerStats.resolvedViaSchedule > 0
+        ? "playerGameStat rows carry no stored team for this season; the schedule-derived join also placed none of them, so the player-stat surfaces are empty"
+        : "no playerGameStat rows resolvable to either club for this season (stored team empty and the schedule join placed none); player-stat surfaces empty",
     );
   }
   if (signals.weather.length === 0) {
+    // This is a STRUCTURAL absence, not a missing-data gap, and the wording
+    // says so. Measured on prod Neon 2026-09-30: `game_signals` holds 5,172
+    // rows across 2,586 games, ALL of them sourceCategory SCHEDULE from
+    // sourceName "schedule-internal" with keys schedule_density_7d_home /
+    // schedule_density_7d_away. Zero rows carry WEATHER or
+    // VENUE_ENVIRONMENT. The only writer of game_signals in the repo is
+    // context-enrichment.ts and it writes SCHEDULE rows only, so this table
+    // can never hold weather through any existing code path.
+    //
+    // It also could not be keyed today even if a writer existed: an
+    // information_schema scan of every column in every table found no venue,
+    // stadium, latitude, longitude or altitude column anywhere in the schema
+    // (the only "surface"-named columns are unrelated product surfaces). A
+    // weather fetch needs a grid coordinate per game, and there is nowhere to
+    // read one from.
     notes.push(
-      "no WEATHER/VENUE_ENVIRONMENT game_signals rows for this game (prod has none in those categories); weather surface empty",
+      "weather surface has no producer: no code path writes WEATHER/VENUE_ENVIRONMENT game_signals rows, and the schema has no venue/coordinate column to key a forecast on. This 0 is permanent until a venue feed is built, not a pending backfill.",
     );
   }
 

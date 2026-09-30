@@ -52,6 +52,12 @@ type Site = {
  * looked. Anything here that has NOT been looked at says so in its own `why`.
  */
 const REGISTRY: Readonly<Record<string, readonly Site[]>> = {
+  "apps/web/lib/intelligence-core/schedule-team-index.ts": [
+    {
+      kind: "unbounded",
+      why: "Read-only schedule lookup, one findMany on games for the as-of week, used to resolve which club a player belonged to. No cap is applied because the caller needs EVERY fixture in that week to attribute a team unambiguously; the set is one NFL week, not a growing table. Read-only: this file issues no writes.",
+    },
+  ],
   "apps/web/lib/board/market-coverage.ts": [
     { kind: "unbounded", why: "Coverage counts every canonical fixture; no cap to truncate." },
   ],
