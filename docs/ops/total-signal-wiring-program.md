@@ -138,6 +138,89 @@ gse-grok-build-sandbox.
 7. **Odds API backfill wiring** — account active (20K credits/month); historical
    backfills feed calibration.
 
+## GSE state of play — week of 2026-09-23 → 2026-09-30
+
+Everything below is current as of 2026-09-30. Canonical records live in the
+pointers; this section is the map, not the territory. Read it before scoping any
+wiring session — it is the difference between building on reality and building on
+assumptions.
+
+### Standing doctrines (HARD — never violate)
+
+- **NGS internal-only** (2026-09-28): NGS data, metric names, and discussion never
+  touch the public surface. Reasoning fuel only.
+- **Public/private surface** (2026-09-28): the public site shows projections and
+  rankings ONLY. All signals, metrics, methodology stay internal.
+- **INGEST-AND-LEARN** (2026-09-28): nothing is dead until tested, cited, and
+  confirmed. Untested items are `UNTESTED — QUEUED FOR EVALUATION`, never
+  SKIP/DEAD. A restrictive license means research/learn-only, not discard.
+- **Branch-only DB testing** (2026-09-28): all Neon writers, migrations, and
+  backfills run on throwaway branches (auto-expire 7d). Never the default branch.
+- **Provenance honesty** (2026-09-30): 52 fabricated claims → 0. Every published
+  number names its producing function (`engine-inline:<file>#<fn>`).
+- **Research standard** (2026-09-30): answers built from real consensus across
+  multiple outlets, never single-source opinion.
+
+### System state (2026-09-30)
+
+- Production healthy: `/api/health` 200, settlement HEALTHY, ledger 441 rows,
+  guard exit 0. Engine suite: 859 files, 6,297 tests, 0 failed.
+- Four merges closed the 2026-09-29 outage loop: provenance defect (`3e074c58`),
+  ledger-tail shard (`0360e92b`), health-alert null-manufacture + pool-monitor
+  false-ok (`14b1f4a`, `e1020eb7`). PR #966 (SURF-21 ledger receipt) merged.
+- **player signals table: 0 rows.** The empty core of the total-signal doctrine.
+- **composeLedger: no production callers.** Wiring it is authorized under this
+  program, gated by the promotion rule.
+- **devig adapters: math wrong, no production callers.** One reads American odds
+  as decimal (negative implied probability); the other sum-normalizes while
+  reporting "additive". Fix + asymmetric-input tests = queue item #1.
+- **reservePaidCallSlot fails open** — pacing decision, needs Garrett's budget
+  call. Do not change unilaterally.
+- Graded pool rebuilt 2024 → 2025 data (2026-09-28); nflverse confirmed live:
+  35,490 player-week rows, 2026 weeks 1–3 in the DB.
+- HF Inference Providers are account-level 403-blocked ("exceeded monthly
+  spending limit", $0.00 spent) — a support ticket on Garrett's account fixes it;
+  no token ever will. Local-CPU bge-m3 is the $0 workaround.
+
+### Active programs feeding this one
+
+- **Total-signal doctrine** (2026-09-13/27): the play is the METHOD, not the
+  equation. Spec: `motif/total-signal-wiring-2026-09-27`. Plumbing exists
+  (nflverse adapter, Sleeper market signals, source router, lineage); no
+  adjustment layer yet.
+- **Rankings program** (2026-09-28): rest-of-season + weekly + positional
+  rankings, weeks 4–10 onward.
+- **Film-pipeline program**: patent forensics + implementation plan landed in
+  `docs/research/` — the legal/technical basis for real-footage video work.
+  Sports-video rule stands: real game footage only, 2–4s transformative clips,
+  commentary-led; never AI motion graphics as substitute.
+- **Odds API backfill lane**: account active (20K credits/month); historical
+  backfills feed calibration.
+- **Pick'em intakes** (2026-09-25): DK Pick6, Underdog, PrizePicks, Sleeper,
+  Action Network verified live behind default-off env flags — Garrett's merge +
+  flag-flip still owed.
+- **Prediction-market stack** (verified): Kalshi + Polymarket free market-data
+  APIs; `warproxxx/poly_data` (GPL-3.0) for backfills; two Kalshi bot chassis
+  (`ryanfrigo/kalshi-ai-trading-bot`, `OctagonAI/kalshi-trading-bot-cli`) queued
+  for head-to-head paper testing; TimesFM 2.5 (Apache-2.0) is the
+  commercial-safe forecaster (3.0 weights are research-only).
+- **Machine-discovery lane** (DeepSeek/MOVE-37): DeepSeek = theorist/protocol
+  engineer, no code execution; no numeric claim published without Motif-lab
+  execution. 4 lab runs queued.
+- **arXiv program**: 585/750 valuable papers verified (2026-09-26); NGS 48-post
+  inventory + metric glossary committed. Target: 750 + 250 Garrett-discretionary.
+- **DFS process system** (2026-09-27): 10 process gates; the gap is live feed
+  registration (`activeDfsSlate()` falls back to the sample slate).
+
+### Garrett's open decisions (not the agent's)
+
+- `reservePaidCallSlot` budget call (fail-open stays until he decides).
+- Mimo orphan branches: 8 found, 2 big ones awaiting his triage; draft PRs
+  #913–#918 are ports, not missions.
+- Rotate Neon `neondb_owner` password (all three Vercel vars together).
+- Delete `neon-storage.env` from Downloads; decide the `ep-floral-queen` branch.
+- HF support ticket for the Inference Providers 403 (his account).
+
 ## Standing rules
 
 - `AGENTS.md` governs; this program does not override it.
