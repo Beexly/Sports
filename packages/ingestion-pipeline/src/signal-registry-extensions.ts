@@ -12,10 +12,14 @@ import {
   computeTurnoverLuck,
   evaluateQbTwpRegression,
   evaluateAgeConditionedRest,
+  evaluatePrimetimeTargetConcentration,
+  evaluateTemperaturePrecipitationDecay,
 } from "@sports/prediction-engine";
 import { evalShortWeekRoadDeficit, evalLinearWindPassImpact } from "./signals-bridge.js";
 import { nflTeamAbbr } from "./nfl-team-abbr.js";
 import { NFL_SCHEME_PRIOR, NFL_SCHEME_PRIOR_SEASON } from "./priors/nfl-2025-scheme.js";
+import { SCHEME_MEASURED_SIGNALS } from "./scheme-measured-signals.js";
+import { classifyNflBroadcast, isStandalonePrimetime } from "./nfl-broadcast.js";
 
 function teamLabel(team: unknown): string | null {
   if (typeof team === "string") return team;
@@ -328,19 +332,42 @@ export const nflPrimetimeTargetConcentrationSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
-  // DIRECTION: homeSign +1, neutral 1. more targets concentrated in prime = more opportunity for the passer's favorite target.
-  // The evaluator's own field is `targetShareMultiplier`; the registry previously read
-  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  // DIRECTION: homeSign +1, neutral 0. On a standalone night window the kernel's
+  // alpha multiplier (1.18) scales the measured WR1-share gap. A bigger home
+  // funnel benefits more from the spotlight. A regional window, or a kickoff
+  // we cannot classify, abstains. Route participation is not measured.
   homeSign: 1 as const,
-  neutralValue: 1,
-  evaluate: async () => {
-    // The kernel's input contract does not match the env keys this wrapper
-    // used to pass, and the result was read off a field the kernel does not
-    // return. That read emits 0, which is a vote the measurement never made.
-    // Abstain. The sanctioned call is the matching function in
-    // signals-bridge.ts, and it stays unwired until its real inputs exist in
-    // the schema. Do not restore a type-erasing call.
-    return null;
+  neutralValue: 0,
+  evaluate: async (ctx) => {
+    if (ctx.sportKey !== "americanfootball_nfl") return null;
+    const window = classifyNflBroadcast(ctx.commenceTime);
+    if (!isStandalonePrimetime(window) || window == null) return null;
+    const homeAbbr = nflTeamAbbr(teamLabel(ctx.homeTeam));
+    const awayAbbr = nflTeamAbbr(teamLabel(ctx.awayTeam));
+    if (homeAbbr == null || awayAbbr == null) return null;
+    const home = NFL_SCHEME_PRIOR[homeAbbr];
+    const away = NFL_SCHEME_PRIOR[awayAbbr];
+    if (home == null || away == null) return null;
+    const kernel = evaluatePrimetimeTargetConcentration({
+      broadcastWindow: window,
+      playerDepthChartRole: "ALPHA_WR1",
+      baselineTargetShare: home.wrFunnel,
+    });
+    const gap = home.wrFunnel - away.wrFunnel;
+    const value = Number(((kernel.targetShareMultiplier - 1) * gap).toFixed(4));
+    if (!Number.isFinite(value)) return null;
+    return {
+      value,
+      capturedAt: ctx.now().toISOString(),
+      metadata: {
+        broadcastWindow: window,
+        targetShareMultiplier: kernel.targetShareMultiplier,
+        homeWrFunnel: home.wrFunnel,
+        awayWrFunnel: away.wrFunnel,
+        routeParticipationNotMeasured: true,
+        season: NFL_SCHEME_PRIOR_SEASON,
+      },
+    };
   },
 };
 
@@ -910,19 +937,44 @@ export const nflTempPrecipSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
-  // DIRECTION: homeSign +1, neutral 0. weather-adjusted passing yards for the offense.
-  // The evaluator's own field is `passingYardsAdjustment`; the registry previously read
-  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  // DIRECTION: homeSign +1, neutral 0. Cold and precipitation suppress passing.
+  // The yards adjustment is applied to the pass-rate gap, so the more pass-heavy
+  // side is hurt. Heavy rain is not inferred from a forecast word. Snow, freezing
+  // rain, and light rain are. No forecast text means no precipitation claim.
   homeSign: 1 as const,
   neutralValue: 0,
-  evaluate: async () => {
-    // The kernel's input contract does not match the env keys this wrapper
-    // used to pass, and the result was read off a field the kernel does not
-    // return. That read emits 0, which is a vote the measurement never made.
-    // Abstain. The sanctioned call is the matching function in
-    // signals-bridge.ts, and it stays unwired until its real inputs exist in
-    // the schema. Do not restore a type-erasing call.
-    return null;
+  evaluate: async (ctx) => {
+    if (ctx.sportKey !== "americanfootball_nfl") return null;
+    const temp = num(ctx.env, "TEMP_F");
+    const precipRaw = ctx.env.PRECIP_TYPE;
+    if (temp == null || precipRaw == null) return null;
+    const allowed = ["NONE", "LIGHT_RAIN", "HEAVY_RAIN", "SNOW", "FREEZING_RAIN"] as const;
+    if (!allowed.includes(precipRaw as (typeof allowed)[number])) return null;
+    const homeAbbr = nflTeamAbbr(teamLabel(ctx.homeTeam));
+    const awayAbbr = nflTeamAbbr(teamLabel(ctx.awayTeam));
+    if (homeAbbr == null || awayAbbr == null) return null;
+    const home = NFL_SCHEME_PRIOR[homeAbbr];
+    const away = NFL_SCHEME_PRIOR[awayAbbr];
+    if (home == null || away == null) return null;
+    const kernel = evaluateTemperaturePrecipitationDecay({
+      temperatureFahrenheit: temp,
+      precipitationType: precipRaw as (typeof allowed)[number],
+      isDomeVenue: bool(ctx.env, "IS_DOME") === true,
+    });
+    const passGap = home.passRate - away.passRate;
+    const value = Number((kernel.passingYardsAdjustment * passGap).toFixed(4));
+    if (!Number.isFinite(value)) return null;
+    return {
+      value,
+      capturedAt: ctx.now().toISOString(),
+      metadata: {
+        tempF: temp,
+        precipType: precipRaw,
+        passingYardsAdjustment: kernel.passingYardsAdjustment,
+        passGap,
+        baselineNotMeasured: true,
+      },
+    };
   },
 };
 
@@ -983,4 +1035,5 @@ export const EXTENDED_SIGNALS: readonly SignalDefinition[] = [
   nflLinearWindPassSignal,
   nflTempPrecipSignal,
   nflTurfSurfaceFatigueSignal,
+  ...SCHEME_MEASURED_SIGNALS,
 ];

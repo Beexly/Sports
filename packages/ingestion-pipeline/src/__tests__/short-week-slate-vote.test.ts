@@ -120,7 +120,7 @@ describe("short-week votes from the slate env", () => {
   it("abstains when rest was not observed, rather than assuming a week", async () => {
     const { vote, tilt } = await shortWeek({ IS_ROAD_TEAM: "0" });
     expect(vote).toBeUndefined();
-    expect(tilt.adjustedHomeP).toBe(0.5);
+    expect(tilt.votes.some((v) => v.signalId === "nfl_short_week_road_deficit")).toBe(false);
   });
 
   it("a wrapper that used to emit 0 from a missing field now abstains", async () => {

@@ -10,7 +10,17 @@ export interface VenueWeatherReading {
   readonly stadium: string;
   readonly windMph: number;
   readonly tempF: number | null;
+  readonly precipType: "NONE" | "LIGHT_RAIN" | "SNOW" | "FREEZING_RAIN" | null;
   readonly observedFor: string | null;
+}
+
+export function classifyPrecip(shortForecast: string | null | undefined): VenueWeatherReading["precipType"] {
+  if (shortForecast == null || shortForecast.trim() === "") return null;
+  const text = shortForecast.toLowerCase();
+  if (text.includes("freezing rain") || text.includes("sleet") || text.includes("ice pellet")) return "FREEZING_RAIN";
+  if (text.includes("snow")) return "SNOW";
+  if (text.includes("rain") || text.includes("shower") || text.includes("drizzle")) return "LIGHT_RAIN";
+  return "NONE";
 }
 
 type FetchLike = (input: string, init?: RequestInit) => Promise<Response>;
@@ -63,6 +73,7 @@ export async function fetchOutdoorVenueWeather(
         periods?: ReadonlyArray<{
           temperature?: number;
           windSpeed?: string;
+          shortForecast?: string;
           startTime?: string;
         }>;
       };
@@ -74,6 +85,7 @@ export async function fetchOutdoorVenueWeather(
       stadium: venue.stadium,
       windMph,
       tempF: typeof period?.temperature === "number" ? period.temperature : null,
+      precipType: classifyPrecip(period?.shortForecast),
       observedFor: period?.startTime ?? null,
     };
   } catch {

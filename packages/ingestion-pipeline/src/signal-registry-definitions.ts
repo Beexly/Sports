@@ -57,6 +57,7 @@ import {
   evaluateWr1OutRedistribution,
 } from "@sports/prediction-engine";
 import { EXTENDED_SIGNALS } from "./signal-registry-extensions.js";
+import { homeRelativeCircadian } from "./circadian-vote.js";
 
 export const DEFAULT_KILL_LINE = {
   maxBrierScoreVsMarket: 0.250,
@@ -867,21 +868,29 @@ export const nflCircadianTravelFatigueSignal: SignalDefinition = {
   outputKind: "CONTINUOUS_VALUE",
   validSports: ["americanfootball_nfl"],
   owner: "quant-travel",
-  dataDependencies: ["nfl_stadium_timezones", "nfl_schedules"],
-  // HONESTY: not ACTIVE. The evaluator below is a stub that returns null
-  // on every call, so this signal cannot reach a pick under any input.
-  // ACTIVE would be a coverage claim the code does not support. SHADOW_ONLY
-  // keeps it registered and visible while telling the truth. Promote to
-  // ACTIVE only when a real evaluate() is wired to per-play ingestion.
-  activationStatus: "SHADOW_ONLY",
+  dataDependencies: ["nfl_team_timezone", "nfl_schedule_rest"],
+  activationStatus: "ACTIVE",
   trustWeight: 0.09,
+  homeSign: 1 as const,
+  neutralValue: 0,
   killLine: DEFAULT_KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: "evaluator stub: returns null for every input pending per-play ingestion",
+  blockedReason: null,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
-    return null; // Ingested dynamically per travel itinerary
+    const vote = homeRelativeCircadian({
+      homeTeam: ctx.homeTeam,
+      awayTeam: ctx.awayTeam,
+      commenceTime: ctx.commenceTime,
+      env: ctx.env,
+    });
+    if (vote == null) return null;
+    return {
+      value: vote.value,
+      capturedAt: ctx.now().toISOString(),
+      metadata: vote.metadata,
+    };
   },
 };
 

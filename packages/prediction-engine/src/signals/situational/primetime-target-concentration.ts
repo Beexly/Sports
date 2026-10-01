@@ -13,14 +13,15 @@ export interface PrimetimeContext {
   readonly broadcastWindow: "REGIONAL_SUNDAY_EARLY" | "REGIONAL_SUNDAY_LATE" | "TNF_PRIMETIME" | "SNF_PRIMETIME" | "MNF_PRIMETIME" | "INTERNATIONAL_STANDALONE";
   readonly playerDepthChartRole: "ALPHA_WR1" | "SECONDARY_WR2" | "SLOT_WR3" | "BREAD_AND_BUTTER_TE1" | "PASS_CATCHING_RB";
   readonly baselineTargetShare: number; // 0.0 to 1.0
-  readonly baselineRouteParticipationRate: number; // 0.0 to 1.0
+  /** Absent means route participation was not measured. The share multiplier does not use it. */
+  readonly baselineRouteParticipationRate?: number | null;
 }
 
 export interface PrimetimeResult {
   readonly isStandalonePrimetime: boolean;
   readonly targetShareMultiplier: number;
   readonly adjustedTargetShare: number;
-  readonly adjustedRouteParticipationRate: number;
+  readonly adjustedRouteParticipationRate: number | null;
   readonly firstReadTargetConcentrationMultiplier: number;
   readonly primetimeFunnelingTier: "HYPER_TARGETED" | "MODERATE_BOOST" | "NEUTRAL" | "SQUEEZED_OUT";
 }
@@ -42,7 +43,7 @@ export function evaluatePrimetimeTargetConcentration(
       isStandalonePrimetime: false,
       targetShareMultiplier: 1.0,
       adjustedTargetShare: context.baselineTargetShare,
-      adjustedRouteParticipationRate: context.baselineRouteParticipationRate,
+      adjustedRouteParticipationRate: context.baselineRouteParticipationRate ?? null,
       firstReadTargetConcentrationMultiplier: 1.0,
       primetimeFunnelingTier: "NEUTRAL",
     };
@@ -94,9 +95,12 @@ export function evaluatePrimetimeTargetConcentration(
     Math.max(0.01, Math.min(0.48, context.baselineTargetShare * targetShareMult)).toFixed(4)
   );
 
-  const adjustedRouteParticipationRate = Number(
-    Math.max(0.10, Math.min(1.0, context.baselineRouteParticipationRate * routeMult)).toFixed(3)
-  );
+  const adjustedRouteParticipationRate =
+    context.baselineRouteParticipationRate == null
+      ? null
+      : Number(
+          Math.max(0.10, Math.min(1.0, context.baselineRouteParticipationRate * routeMult)).toFixed(3),
+        );
 
   return {
     isStandalonePrimetime: true,
