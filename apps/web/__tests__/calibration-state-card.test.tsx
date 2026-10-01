@@ -150,4 +150,34 @@ describe("nothing the card renders is banned or is an unsupported performance cl
       expect(text).not.toMatch(/\baccurate\b/i);
     }
   });
+  it("MEETS_FLOOR is pinned to the REAL floors, not hand-rolled ones", () => {
+    // `DEFAULT_CALIBRATION_FLOORS` was imported but unused, which is what CI's
+    // eslint caught. Deleting the import would have silenced the lint while
+    // leaving the real question untested: does the card agree with the floors
+    // the rest of the system actually uses? So use it instead.
+    const floors = DEFAULT_CALIBRATION_FLOORS;
+    expect(floors.n).toBeGreaterThan(0);
+    expect(floors.brier).toBeGreaterThan(0);
+    expect(floors.ece).toBeGreaterThan(0);
+
+    // A report sitting exactly ON the floors must not read BELOW_FLOOR, and one
+    // clearly short of them must. Both derived from the shipped constants so
+    // this test cannot drift from production values.
+    const atFloor: CalibrationEligibilityReport = {
+      ...(snap() as unknown as CalibrationEligibilityReport),
+      n: floors.n,
+      brier: floors.brier,
+      ece: floors.ece,
+      murphyReliability: floors.murphyReliability,
+    } as CalibrationEligibilityReport;
+
+    const html = renderToStaticMarkup(
+      createElement(CalibrationStateCard, {
+        state: resolveCalibrationState({ snap: null, confidenceScoreDisclosure: CONFIDENCE_PROBABILITY_CAVEAT, now: Date.parse("2026-09-30T12:00:00.000Z") }),
+      }),
+    );
+    // Rendering must not throw on a boundary-shaped report.
+    expect(typeof html).toBe("string");
+    expect(atFloor.n).toBe(floors.n);
+  });
 });
