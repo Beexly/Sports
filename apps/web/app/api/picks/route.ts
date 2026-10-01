@@ -473,6 +473,17 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
             bookmakerCount: pick.bookmakerCount ?? null,
             modelVersion: pick.modelVersion,
             pickGrade: pick.pickGrade,
+            // The scheduling columns the picks query already selects. Passing
+            // them costs no extra read and turns on the spine's rest, back-to-back
+            // and schedule-density branches, which had no caller anywhere.
+            scheduleContext: {
+              restDaysHome: pick.game.restDaysHome,
+              restDaysAway: pick.game.restDaysAway,
+              isBackToBackHome: pick.game.isBackToBackHome,
+              isBackToBackAway: pick.game.isBackToBackAway,
+              scheduleDensityHome: pick.game.scheduleDensityHome,
+              scheduleDensityAway: pick.game.scheduleDensityAway,
+            },
           };
           const raw = enrichPickWithIntelligence(
             pickForIntel,

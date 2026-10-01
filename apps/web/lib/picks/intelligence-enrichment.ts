@@ -19,6 +19,10 @@ import {
   type UniversalSignals,
 } from "@/lib/intelligence-core/universal-wiring";
 import type { BundleResolution, LoadedBundleSurfaces } from "@/lib/intelligence-core/db-loaders";
+import {
+  deriveSituation,
+  type GameScheduleContext,
+} from "@/lib/intelligence-core/situation";
 
 export interface PickIntelligence {
   readonly calibratedProb: number | null;
@@ -50,6 +54,13 @@ export interface PickIntelligence {
   /** Resolution trace: abbreviations, season/week, and any per-surface notes. */
   readonly dbResolution: BundleResolution | null;
   /**
+   * The situation scalars actually fed to the spine this run, or null when the
+   * pick carried no scheduling context and no injuries. Reported rather than
+   * assumed: a consumer can see WHICH situation terms moved the number, which
+   * was previously impossible because `situation` was never populated at all.
+   */
+  readonly situationApplied: Readonly<Record<string, number>> | null;
+  /**
    * SHADOW-ONLY accounting. `observationCount` above counts every observation
    * that was wired in; this says how many of those were actually allowed to
    * move the calibrated number. Inert (all zeros) unless a policy was passed.
@@ -75,6 +86,12 @@ export interface PickForIntelligence {
   readonly bookmakerCount?: number | null;
   readonly modelVersion?: string | null;
   readonly pickGrade?: string | null;
+  /**
+   * The scheduling columns off the `games` row (rest days, back-to-back,
+   * 7-day density). The picks query already selects them, so passing this costs
+   * no extra read. Omit it and the spine's rest and density branches stay dark.
+   */
+  readonly scheduleContext?: GameScheduleContext | null;
 }
 
 /**
@@ -123,6 +140,7 @@ export function enrichPickWithIntelligence(
     dbRowCount: 0,
     dbSurfacesEmpty: [],
     dbResolution: surfaces?.resolution ?? null,
+    situationApplied: null,
     shadowReport: null,
   };
 
@@ -154,6 +172,16 @@ export function enrichPickWithIntelligence(
       }
     }
 
+    // THE FIFTH SURFACE: situation (rest / B2B / density / availability).
+    // Derived from the scheduling columns already on the pick's game row plus
+    // the injury rows the loaders just read. Before this, `situation` was
+    // always undefined, so reasoning.ts's rest, travel, weather, injury and
+    // density branches never fired on a live pick.
+    const situation = deriveSituation(pick.scheduleContext ?? undefined, {
+      home: surfaces?.homeInjuries,
+      away: surfaces?.awayInjuries,
+    });
+
     const bundle: GameBundle = {
       gameId: pick.id,
       sport: pick.sportKey,
@@ -181,6 +209,7 @@ export function enrichPickWithIntelligence(
       statedConfidence: pick.confidence,
       grade: normalizeGrade(pick.pickGrade),
       now,
+      ...(situation ? { situation } : {}),
       // --- THE WIRING: real DB rows into the bundle's raw surfaces ---
       // Before this, all twelve of these were undefined on every pick, so
       // the reasoning spine saw market context only.
@@ -228,6 +257,7 @@ export function enrichPickWithIntelligence(
       dbRowCount,
       dbSurfacesEmpty: surfaces ? emptySurfaceNames(surfaces) : SURFACE_NAMES,
       dbResolution: surfaces?.resolution ?? null,
+      situationApplied: situation ?? null,
       shadowReport: result.shadowReport,
     };
   } catch {
@@ -302,6 +332,7 @@ export function projectPickIntelligenceForViewer(
     dbRowCount: intel.dbRowCount,
     dbSurfacesEmpty: intel.dbSurfacesEmpty,
     dbResolution: intel.dbResolution,
+    situationApplied: intel.situationApplied,
     // Pure counting metadata (families, counts, justification) — no percentages
     // or model prose, so it is safe for the FREE projection.
     shadowReport: intel.shadowReport,
