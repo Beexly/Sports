@@ -39,6 +39,8 @@ import { db } from "@sports/db";
 import { registerDfsSlateProvider, type DfsSlateProvider } from "@/lib/integrations/dfs";
 import type { DfsPlayer, DfsPos } from "@/lib/fantasy/dfs-slate";
 import {
+  applyFantasyAdjustment,
+  adjustmentsMayMovePublished,
   computeAdjustments,
   rollUpByPlayer,
   parsePosition,
@@ -177,7 +179,7 @@ export async function buildEngineSlate(
     now,
   });
   const rollup = rollUpByPlayer(adjustments);
-  const adjustmentsCalibrated = adjustments.length > 0 && adjustments.every((a) => a.calibrated);
+  const adjustmentsCalibrated = adjustmentsMayMovePublished(adjustments);
 
   // ── Assemble the slate ──────────────────────────────────────────────────
   const out: DfsPlayer[] = [];
@@ -201,11 +203,12 @@ export async function buildEngineSlate(
     const proj = w.pts / w.games;
     const r = ranges.get(playerId) ?? { lo: proj, hi: proj };
 
-    // Apply the measured fantasy-point adjustment, and ONLY a calibrated one:
-    // an uncalibrated default must not move a published projection.
+    // Apply the measured fantasy-point adjustment through the promotion gate:
+    // an uncalibrated default computes in shadow but must not move a published
+    // projection (weight 0 until calibrated).
     let finalProj = proj;
     const fp = rollup.get(playerId)?.find((x) => x.target === "fantasy_points");
-    if (fp && fp.net !== 0 && adjustmentsCalibrated) finalProj = proj + fp.net;
+    if (fp) finalProj = applyFantasyAdjustment(proj, fp.net, adjustmentsCalibrated);
 
     const salary = options.salaryByPlayerId?.[playerId];
 
