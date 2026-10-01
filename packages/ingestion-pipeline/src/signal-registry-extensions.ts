@@ -26,6 +26,7 @@ import { rosterAgeAt } from "./nfl-roster-age.js";
 import { sameDivision2026 } from "./nfl-division.js";
 import { elevationAboveThreshold, surfaceAcclimationMismatch } from "./nfl-venue-facts.js";
 import { pregameMarketAnchor } from "./nfl-pregame-market.js";
+import { pressureMatchup } from "./nfl-pressure-matchup.js";
 import { nflWeekOf } from "./nfl-week.js";
 import { classifyNflBroadcast, isStandalonePrimetime } from "./nfl-broadcast.js";
 
@@ -1060,6 +1061,33 @@ export const nflPregameMarketSignal: SignalDefinition = {
   },
 };
 
+export const nflPressureMatchupSignal: SignalDefinition = {
+  id: "nfl_pressure_matchup",
+  label: "NFL Pressure Matchup",
+  category: "TEAM_RATES",
+  family: "SITUATIONAL",
+  outputKind: "CONTINUOUS_VALUE",
+  validSports: ["americanfootball_nfl"],
+  owner: "quant-coaching",
+  dataDependencies: ["nflverse_pbp_2025", "nflverse_pbp_2026_through_week_3"],
+  activationStatus: "ACTIVE",
+  trustWeight: 0.1,
+  killLine: KILL_LINE,
+  isRightsCleared: () => true,
+  acquisitionTask: null,
+  blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. Positive means the home side creates
+  // more pressure than it allows, relative to the visitor. Not fourth-down.
+  homeSign: 1 as const,
+  neutralValue: 0,
+  evaluate: async (ctx) => {
+    if (ctx.sportKey !== "americanfootball_nfl") return null;
+    const reading = pressureMatchup(ctx);
+    if (reading == null) return null;
+    return { value: reading.value, capturedAt: "2026-10-01", metadata: reading.metadata };
+  },
+};
+
 // ── Export block for SIGNAL_REGISTRY ───────────────────────────────────────
 
 export const EXTENDED_SIGNALS: readonly SignalDefinition[] = [
@@ -1087,6 +1115,7 @@ export const EXTENDED_SIGNALS: readonly SignalDefinition[] = [
   nflTempPrecipSignal,
   nflTurfSurfaceFatigueSignal,
   nflPregameMarketSignal,
+  nflPressureMatchupSignal,
   ...SCHEME_MEASURED_SIGNALS,
   ...NFL_INJURY_SIGNALS,
   nflEspnEnteringRecordSignal,
