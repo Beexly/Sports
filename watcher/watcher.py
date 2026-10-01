@@ -220,7 +220,11 @@ def fetch_windows(cfg: WatcherConfig, session: requests.Session) -> list[dict[st
     if not cfg.scheduler_url:
         return []
     try:
-        r = session.get(cfg.scheduler_url, timeout=10)
+        r = session.get(
+            cfg.scheduler_url,
+            headers={"Authorization": f"Bearer {cfg.ingest_secret}"},
+            timeout=10,
+        )
         r.raise_for_status()
         data = r.json()
         return data.get("active_windows", []) if isinstance(data, dict) else []
