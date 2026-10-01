@@ -242,6 +242,7 @@ export function hypothesizeCombinations(
       for (let i = 0; i < observed.length; i++) {
         if (usedObs.has(i)) continue;
         const o = observed[i];
+        if (!o) continue;
         if (o.route === role.route && o.side === role.side) {
           matched++;
           usedObs.add(i);
