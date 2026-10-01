@@ -1,9 +1,15 @@
 /**
  * Field model for the perception layer (Layer 2/3 of the CV pipeline).
  *
- * The tracking layer (cv-movement-primitive.ts) emits field positions in
- * meters: xM along the field length (0 = one end line, 109.7 = the other;
- * 120 yards), yM across the width (0..48.8; 53.3 yards).
+ * The tracking layer emits field positions in meters: xM along the field
+ * length measured from the goal line (0 = the goal line at the xM=0 end,
+ * 91.44 = the far goal line; negative xM reaches into the near end zone),
+ * yM across the width (0..48.8; 53.3 yards), 0 at the near sideline.
+ *
+ * ONE field-coordinate story (reconciled 2026-10-01): this is the SAME
+ * origin as the tracking template (cv-template.ts
+ * templateXForYardFromOwnGoal) — A's homography output feeds
+ * toOffenseFrame directly with no translation.
  *
  * Perception reasons in the OFFENSE frame: downfield yards from the line of
  * scrimmage (positive = toward the opponent end zone) and lateral yards from
@@ -58,8 +64,10 @@ export function offenseDistance(a: OffensePoint, b: OffensePoint): number {
 /**
  * Build a SnapContext from a score-bug yard line.
  * `yardLine` is e.g. { team: "KC", yard: 32 } meaning "ball on KC's 32".
- * `possession` is the offense team. `sideSign` maps which end line is xM=0:
- * pass +1 when the possessing team's own goal line sits at xM=0.
+ * `possession` is the offense team. `sideSign` maps which goal line is
+ * xM=0: pass +1 when the possessing team's own goal line sits at xM=0.
+ * (Reconciled 2026-10-01: goal-line origin, shared with the tracking
+ * template — no end-zone offset.)
  */
 export function snapContextFromYardLine(
   yardLine: { team: string; yard: number },
@@ -71,7 +79,7 @@ export function snapContextFromYardLine(
     yardLine.team === possession ? yardLine.yard : 100 - yardLine.yard;
   const losXM =
     sideSign === 1
-      ? (fromOwnGoalYd + 10) * METERS_PER_YARD
-      : (110 - fromOwnGoalYd) * METERS_PER_YARD;
+      ? fromOwnGoalYd * METERS_PER_YARD
+      : (100 - fromOwnGoalYd) * METERS_PER_YARD;
   return { losXM, losYM: (FIELD_WIDTH_YD / 2) * METERS_PER_YARD, attackDir: sideSign };
 }
