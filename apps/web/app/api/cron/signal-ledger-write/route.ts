@@ -16,13 +16,13 @@
  * 6,501 rows on prod. `value` is the source column verbatim and `valueRaw`
  * keeps it again, so no normalization can quietly become the record.
  *
- * WHAT IT DELIBERATELY DOES NOT DO. It does not weight, rank, scale, or gate.
- * `weight` is 1 for every key because a weight is a PRIOR and inventing priors
- * here would fabricate the ranking `tune-signal-weights.ts` is supposed to
- * measure. `confidence` is 1.0 because the reading is REAL — not because the
- * signal is proven predictive, which is a different claim the tuner makes. No
- * published projection, gate, floor, or MODEL_VERSION is touched. This fills a
- * table; it does not believe a number.
+ * WHAT IT DELIBERATELY DOES NOT DO. It does not rank, gate, or let an
+ * uncalibrated signal move a published number. `weight` is the key's FITTED
+ * weight from `signal-scale-table.ts` (0 where no settled outcome joins the
+ * key — a finding, not a gap); `confidence` is 1.0 because the reading is
+ * REAL — not because the signal is proven predictive, which is a different
+ * claim the tuner makes. No published projection, gate, floor, or
+ * MODEL_VERSION is touched. This fills a table; it does not believe a number.
  *
  * LAWS OBSERVED:
  * - CRON_SECRET bearer auth, same strict mode as the census route.
@@ -31,6 +31,9 @@
  *   duplicated signal would be double-counted downstream.
  * - A partial write is REPORTED (written/skipped/errors), never truncated
  *   silently, because the prop pipeline reads a populated table as fuel.
+ *   Any skipped row or error makes the tick a 500, never a 200-shaped
+ *   success — a monitor that only checks the status code must not read a
+ *   broken tick as healthy.
  * - No env flag, no gate, no schema change, no migration.
  */
 
@@ -136,10 +139,11 @@ export async function GET(req: Request): Promise<NextResponse> {
   // exactly once across the shard set — no state, no checkpoint, no lost
   // position if a run dies mid-flight.
   //
-  // SHARD is `process.env.SIGNAL_LEDGER_SHARD` ("<n>/<total>"); the default is
-  // 0/1, so an unconfigured run still writes EVERYTHING and the behavior a
-  // single deploy sees is unchanged until shards are added. Nothing is dropped:
-  // shard k of N over a deterministic bucket is a partition, not a sample.
+  // SHARD is `process.env.SIGNAL_LEDGER_SHARD` ("<n>/<total>"); absent one,
+  // the shard ROTATES BY HOUR (see resolveShard) so consecutive ticks cover
+  // the whole population — a fixed 0/1 shard rewrites the same leading rows
+  // every hour and never reaches the tail. Nothing is dropped: shard k of N
+  // over a deterministic bucket is a partition, not a sample.
   let candidates: readonly SignalWriteCandidate[] = [];
   // Rows refused for want of a fitted scale, by key. Reported in the response so
   // an unscorable key is a visible finding rather than a silent disappearance.
@@ -283,8 +287,18 @@ export async function GET(req: Request): Promise<NextResponse> {
       `skipped=${report.skipped} batches=${report.batches} errors=${report.errors.length}\n`,
   );
 
-  return NextResponse.json({
-    success: report.skipped === 0,
+  // LOUD, not green. MEASURED 2026-09-28 (dpl_8hKqsyXxb1KDLm4kgBw6ffEBEq9e): a
+  // duplicated write made the second call see an already-past deadline and
+  // write 0 rows, and the route returned 200 with `success: true` because
+  // `skipped` was 0 — the "green cron that was writing nothing" incident.
+  // `skipped === 0` is not the same as "the write worked": any fault the
+  // report carries (skipped rows, a deadline stop, any error) is a 500 with
+  // success:false, so a monitor that only checks the status code cannot read
+  // a broken tick as healthy.
+  const failed = report.skipped > 0 || report.errors.length > 0;
+  return NextResponse.json(
+    {
+      success: !failed,
     data: {
       shard: `${shard.n}/${shard.total}`,
       candidates: report.candidates,
@@ -308,5 +322,7 @@ export async function GET(req: Request): Promise<NextResponse> {
       "against next-week settled fantasy points with the player fixed effect removed (see " +
       "packages/prediction-engine/src/signal-scale-table.ts); eight of thirteen keys measure weight 0 " +
       "because no settled outcome joins them, which is a finding and not a gap in the write.",
-  });
+    },
+    { status: failed ? 500 : 200 },
+  );
 }

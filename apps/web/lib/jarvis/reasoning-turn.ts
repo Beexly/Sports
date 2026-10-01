@@ -1,6 +1,11 @@
 /**
  * Jarvis reasoning turn — the model speaks, the engine supplies every number.
  *
+ * UNWIRED (measured 2026-10-01): no production caller — the only importer is
+ * this module's own test. This is the narration seam for a Jarvis surface
+ * that does not exist yet; do not treat it as live until a route or caller
+ * wires it in.
+ *
  * This is the seam between two things that already exist and had never met:
  *   - the engine's MEASURED state (census, anchors, calibration eligibility),
  *     read here through the same loader the V3-353 cron uses, and
