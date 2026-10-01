@@ -171,6 +171,13 @@ export const CRON_MANIFEST: readonly CronManifestEntry[] = [
   // rows, which is the state this cron exists to end. Hourly at :23, off the
   // :02/:17/:32/:47 board ticks so it never competes with the public board.
   cronEntry("/api/cron/signal-ledger-write", "23 * * * *"),
+  // Path-disagreement arbitration (Opus tier). Reads published picks written in
+  // the last 6h, pairs the reasoning path against the legacy book path per
+  // fixture + market, and appends every ruling to the decision ledger. At :41 so
+  // a paid Opus pass never competes with the :02/:17/:32/:47 board ticks or the
+  // :05/:20/:35/:50 signal-slate ticks for the cron's time budget. Writes no
+  // Pick: it rules on which of two recorded claims stands, nothing more.
+  cronEntry("/api/cron/arbiter-adjudication", "41 * * * *"),
 ];
 
 /** Manifest entry for a path, or null when the path is not a declared cron. */
