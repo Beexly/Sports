@@ -153,4 +153,26 @@ describe("the schedule is declared in both places", () => {
     expect(boardMinutes).not.toContain(minute);
     expect(slateMinutes).not.toContain(minute);
   });
+
+  it("is declared in the LIVE apps/web config, not only the inert root copy", () => {
+    // This is the mistake the first push made, and the drift guard caught it in
+    // CI rather than in review: `vercel.json` at the repo root is INERT. Vercel
+    // reads `crons` only from the configured Root Directory, which is
+    // `apps/web`. Adding a cron to the root copy alone leaves every local tool
+    // green while production never schedules it, and the site keeps ingesting
+    // with a dead lane nobody notices.
+    //
+    // `vercel-config-drift.test.ts` catches the two files disagreeing, but only
+    // if one of them moved. It does not know WHICH one Vercel reads. This
+    // assertion names the live one explicitly, so adding a cron to the wrong
+    // file fails here first with a message that says which file matters.
+    const liveConfig = JSON.parse(
+      readFileSync(resolve(repoRoot, "apps/web/vercel.json"), "utf-8"),
+    ) as { crons: ReadonlyArray<{ path: string; schedule: string }> };
+    const inLive = liveConfig.crons.find((c) => c.path === ROUTE_PATH);
+
+    expect(inLive, `${ROUTE_PATH} is missing from apps/web/vercel.json`).toBeDefined();
+    const fromManifest = CRON_MANIFEST.find((c) => c.path === ROUTE_PATH);
+    expect(inLive?.schedule).toBe(fromManifest?.schedule);
+  });
 });
