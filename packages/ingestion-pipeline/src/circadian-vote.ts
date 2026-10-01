@@ -6,6 +6,7 @@
 import { evalCircadianTravelFatigue } from "./signals-bridge.js";
 import { nflTeamAbbr } from "./nfl-team-abbr.js";
 import { NFL_TEAM_TIMEZONE, localHour24, tzOffsetHours } from "./nfl-team-timezone.js";
+import { ESPN_NEUTRAL_SITE_PAIRS } from "./priors/espn-nfl-2026-w4.js";
 
 function label(team: unknown): string | null {
   if (typeof team === "string") return team;
@@ -33,6 +34,8 @@ export function homeRelativeCircadian(input: {
   const homeAbbr = nflTeamAbbr(label(input.homeTeam));
   const awayAbbr = nflTeamAbbr(label(input.awayTeam));
   if (homeAbbr == null || awayAbbr == null) return null;
+  const pair = [homeAbbr, awayAbbr].sort().join("|");
+  if (ESPN_NEUTRAL_SITE_PAIRS.some((p) => [...p].sort().join("|") === pair)) return null;
   const homeZone = NFL_TEAM_TIMEZONE[homeAbbr];
   const awayZone = NFL_TEAM_TIMEZONE[awayAbbr];
   if (homeZone == null || awayZone == null) return null;
@@ -63,7 +66,7 @@ export function homeRelativeCircadian(input: {
       localKickoffHour: hour,
       visitorSpreadTilt: bridged.data.netGameSpreadTiltPoints,
       travelMilesNotMeasured: true,
-      assumption: "home club plays in its home city. A neutral site is not detected.",
+      assumption: "home club plays in its home city, except the ESPN neutral-site pair for this week",
     },
   };
 }

@@ -19,6 +19,8 @@ import { evalShortWeekRoadDeficit, evalLinearWindPassImpact } from "./signals-br
 import { nflTeamAbbr } from "./nfl-team-abbr.js";
 import { NFL_SCHEME_PRIOR, NFL_SCHEME_PRIOR_SEASON } from "./priors/nfl-2025-scheme.js";
 import { SCHEME_MEASURED_SIGNALS } from "./scheme-measured-signals.js";
+import { NFL_INJURY_SIGNALS } from "./nfl-injury-signals.js";
+import { nflEspnEnteringRecordSignal } from "./espn-record-signal.js";
 import { classifyNflBroadcast, isStandalonePrimetime } from "./nfl-broadcast.js";
 
 function teamLabel(team: unknown): string | null {
@@ -1036,4 +1038,6 @@ export const EXTENDED_SIGNALS: readonly SignalDefinition[] = [
   nflTempPrecipSignal,
   nflTurfSurfaceFatigueSignal,
   ...SCHEME_MEASURED_SIGNALS,
+  ...NFL_INJURY_SIGNALS,
+  nflEspnEnteringRecordSignal,
 ];
