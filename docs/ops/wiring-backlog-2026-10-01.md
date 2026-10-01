@@ -160,3 +160,53 @@ set for the film pipeline (per his 9/29 pending note), Odds API backfill budget.
   pressure/sacks/blitzes, defensive tendency rates (partial), bad-throw %, stacked-box %, PFF facet grades
   (env-gated ingest; charting win rates NOT covered), yards allowed/coverage snap, aDOT, NGS separation,
   red-zone TD%, expected sack-rate delta, two-high shell rate.
+
+## Completed wiring — 2026-10-01 (branch `motif/ledger-shadow-2026-10-01`, PR #988)
+
+All items below are wired as real production code, tested, and pushed. Newly
+wired, uncalibrated signals compute in shadow and cannot affect published
+outputs (standing directive). Rights postures labeled honestly per item.
+
+### Tier 1 — engine core (commits a459761, d824d2b, a793661 + earlier)
+1. **composeLedger → published score (shadow).** `composeByEntity`/`composeLedger`/
+   `compositeScore`; stored + fresh signals share one composition path. Bounded,
+   read-only; no publication effects.
+2. **Stored-signal reader.** Prisma `Signal` writer already existed; reader wired
+   (5 tests). The "signals table written, never read" gap is closed.
+3. **Game-keyed weather writer** (`a459761`). NWS weather writes finite wind/temp/
+   precip rows into `game_signals`; picks route shadows `WEATHER_TRAVEL` (8 tests).
+4. **Weight-tuning caller + player crosswalk** (`d824d2b`). Canonical `Player.gsisId`
+   crosswalk; `GET /api/ops/signal-weight-tuning` computes verdicts, never persists
+   weights (10 tests). Real GSIS↔NGS coverage still to measure.
+5. **Devig oracle callers** (`a793661`). `GET /api/ops/devig` exposes all seven
+   methods read-only; published scoring's inline fair-value math untouched (needs
+   a MODEL_VERSION bump to change) (13 tests).
+
+### Tier 2
+1. **Injury-trajectory analyzer caller** (`1513676`). Maps stored injury status
+   into the real `analyzeInjuryTrajectory`; cron-secret ops route, read-only,
+   500-row bound (6 tests).
+2. **Line-movement / steam candidates** (`33e3f2c`). OPEN→latest consensus movement
+   from `OddsLineSnapshot` (median across books); |movement| ≥ 2.0 pts flagged as
+   steam candidate (observation flag, not a calibrated verdict); sharp-signal
+   layer stays default-off (6 tests).
+3. **Prediction-market snapshot persistence** (`bf17f14`). Cron persists Kalshi/
+   Polymarket independent fair values into `game_signals` (MARKET_SENTIMENT).
+   RIGHTS: Kalshi gate closed (paid-required, `isIngestible("kalshi")` false —
+   fetcher returns null, cron persists nothing); Polymarket compliance-held,
+   default-off. Machinery ready, no bypass (4 tests).
+4. **NGS weekly ingestion** (`c224967`). Wednesday cron fetches nflverse's CC-BY-4.0
+   NGS assets (receiving/rushing/passing), parses weekly rows, upserts
+   `ngs.avg_separation` / `ngs.ryoe_per_att` / `ngs.cpoe` as player signals keyed
+   by gsisId. POSTURE: internal-only (2026-09-28 NGS doctrine, HARD); weight=0 on
+   every row (NGS weighting founder-gated — shadow only); re-ingest never
+   overwrites weight; week defaults to max REG week in data, never invented.
+   Verified end-to-end on real assets: 27,322 rows parsed → 138 signal rows,
+   0 invalid (3 projection tests).
+
+### Still owed (not blockers on the above)
+- Route-level suites for the newer Tier 2 routes (auth/bounds/no-write proofs).
+- PR #988 CI + mergeability check after the latest pushes.
+- Full web typecheck remains unusable (~25k pre-existing errors); not claimed clean.
+- Founder-gated: NGS scoring weight, pick'em flag flips, Polymarket/Kalshi rights,
+  Odds API backfill budget, `reservePaidCallSlot` fail-open design, footage sourcing.
