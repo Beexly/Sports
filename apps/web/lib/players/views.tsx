@@ -57,7 +57,6 @@ export type SectionKind =
   | "production-defense"
   | "snaps"
   | "opportunity-receiving"
-  | "opportunity-rushing"
   | "trenches-qb"
   | "trenches-coverage"
   | "combine"

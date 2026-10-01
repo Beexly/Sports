@@ -168,6 +168,7 @@ export function buildPropPlayerInputs(
       prior: {
         mean: posUsagePrior.get(pos) ?? usageMean,
         sampleSize: SHRINKAGE_K_GAMES,
+        source: "position-prior",
       },
     });
     const effPosterior = estimateNormalNormalRatePosterior({
@@ -179,6 +180,7 @@ export function buildPropPlayerInputs(
       prior: {
         mean: posEffPrior.get(pos) ?? effMean,
         sampleSize: SHRINKAGE_K_GAMES,
+        source: "position-prior",
       },
     });
 

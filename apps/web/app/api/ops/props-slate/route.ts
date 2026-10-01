@@ -40,8 +40,8 @@ import { db } from "@sports/db";
 import {
   OddsApiClient,
   resolveOddsApiKey,
-  type OddsApiEvent,
 } from "@sports/data-ingestion";
+import type { OddsApiEvent } from "@sports/types";
 import {
   runPropsSlate,
   type PlayerProp,
@@ -372,6 +372,7 @@ export async function GET(req: Request): Promise<NextResponse> {
                 week,
                 sourceId: "gse-props-slate",
                 capturedAt: now,
+                fetchedAt: now,
                 rightsSnapshot: {
                   provenance: "engine market-anchored projection",
                   note: "shadow-only; uncalibrated",

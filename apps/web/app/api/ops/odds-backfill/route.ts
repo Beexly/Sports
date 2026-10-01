@@ -134,7 +134,7 @@ export async function POST(request: Request): Promise<NextResponse> {
     });
   }
 
-  const client = new OddsApiClient({ apiKey: key });
+  const client = new OddsApiClient(key);
   const now = new Date();
   let callsMade = 0;
   let rowsWritten = 0;
@@ -173,7 +173,7 @@ export async function POST(request: Request): Promise<NextResponse> {
   // after exactly 1 call regardless of maxCalls.)
   const slot = await reservePaidCallSlot(db as unknown as OddsCreditLedgerDb, {
     sport: NFL_SPORT_KEY,
-    purpose: "odds-backfill",
+    purpose: "odds",
     now,
     intervalMs: 60 * 60 * 1_000,
   });

@@ -19,9 +19,9 @@
 
 export interface FairValueLike {
   readonly source: string;
-  readonly homeFairProb: number | null;
-  readonly awayFairProb: number | null;
-  readonly capturedAt: string;
+  readonly homeFairProb?: number | null;
+  readonly awayFairProb?: number | null;
+  readonly capturedAt?: string;
 }
 
 export interface MarketSignalRow {
@@ -39,7 +39,8 @@ export interface MarketSignalRow {
 
 /**
  * Project a fair-value snapshot to a persistable row, or null when the
- * snapshot carries no usable probability (honest miss — never persisted).
+ * snapshot carries no usable probability or no as-of timestamp
+ * (honest miss — never persisted).
  */
 export function toMarketSignalRow(fv: FairValueLike): MarketSignalRow | null {
   const home = fv.homeFairProb;
@@ -48,6 +49,8 @@ export function toMarketSignalRow(fv: FairValueLike): MarketSignalRow | null {
     (typeof home === "number" && Number.isFinite(home)) ||
     (typeof away === "number" && Number.isFinite(away));
   if (!usable) return null;
+  // Without the CLV as-of timestamp the row cannot be honestly timestamped.
+  if (!fv.capturedAt) return null;
   return {
     sourceCategory: "MARKET_SENTIMENT",
     sourceName: fv.source,

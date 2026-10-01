@@ -222,6 +222,7 @@ export {
   propMonteCarlo,
   type PropsSlateResult,
   type PropsSlateInput,
+  type PlayerProp,
 } from "./props-slate.js";
 export { EXTENDED_SIGNALS } from "./signal-registry-extensions.js";
 

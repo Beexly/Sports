@@ -23,7 +23,6 @@ import type {
   InjuryPracticeReport,
   OfficialGameStatus,
   PlayerPositionTier,
-  PracticeStatus,
 } from "@sports/prediction-engine";
 
 export interface InjuryRowLike {
@@ -41,7 +40,7 @@ export function mapReportStatus(raw: string | null | undefined): OfficialGameSta
   return "NONE";
 }
 
-export function mapPracticeStatus(raw: string | null | undefined): PracticeStatus | undefined {
+export function mapPracticeStatus(raw: string | null | undefined): InjuryPracticeReport["friday"] {
   const s = (raw ?? "").toLowerCase().trim();
   if (!s) return undefined;
   if (s.includes("did not participate") || s === "dnp" || s.includes("did not practice")) return "DNP";
