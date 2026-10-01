@@ -28,9 +28,18 @@ Owner: Motif wires this backlog (Garrett's call, 2026-09-30). Coding agent compo
 1. **`composeLedger` → published score.** 84,500 signal rows, "fuel with no engine"; zero production
    callers (only populator-internal + read-only loader). `signal-ledger-populator.ts:136-154`,
    `signal-ledger-loader.ts` exist; `index.ts:1040-1042`: "none is wired into the published score."
-   Next step: wire in shadow, compose-only.
-2. **Player signals table — "the empty core of the total-signal doctrine."** `player_signals`
-   absent repo-wide (code, migrations, schemas). Schema + writer + reader needed.
+   STATUS 2026-10-01: WIRED in shadow (PR #988) — `composeByEntity` barrel-exported, new
+   `apps/web/lib/ops/signal-ledger-shadow.ts`, census cron returns `data.shadow`. Computed,
+   never persisted, never touches the published score.
+2. **Player signals table — "the empty core of the total-signal doctrine."** CORRECTION 2026-10-01:
+   the sweep's premise was stale — the generic `signals` table EXISTS (Prisma `Signal` model,
+   `@@map("signals")`), the WRITER exists (`apps/web/lib/ops/signal-ledger-writer.ts`), and the
+   write cron exists and runs hourly (`/api/cron/signal-ledger-write`, vercel.json). The actual gap
+   was the READER: nothing read `db.signal` rows into the composer (only the row-counting state
+   route). STATUS 2026-10-01: WIRED in shadow (PR #988) — new `apps/web/lib/ops/signal-ledger-store.ts`
+   `readStoredSignals(db, filter)`; census cron returns `data.shadowStored` (identical math on the
+   persisted ledger) with `storedRows`/`storedDropped` ledger health. Uncomposable rows are dropped
+   and counted, never defaulted.
 3. **Observation-engine input starvation.** Weather surface structurally empty (zero WEATHER writers;
    the inventory-cited `game-weather-capture.ts` does not exist); universal wiring still market-only
    (`universalSignalsFromPick` → `market.consensus` + `market.devig` only). NWS read path exists
