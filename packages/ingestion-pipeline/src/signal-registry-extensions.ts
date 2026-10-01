@@ -24,7 +24,7 @@ import { nflEspnEnteringRecordSignal } from "./espn-record-signal.js";
 import { nflHomeRoadSplitSignal } from "./nfl-split-record-signal.js";
 import { rosterAgeAt } from "./nfl-roster-age.js";
 import { sameDivision2026 } from "./nfl-division.js";
-import { elevationAboveThreshold, surfaceAcclimationMismatch } from "./nfl-venue-facts.js";
+import { elevationAboveThreshold, roofAcclimationMismatch, surfaceAcclimationMismatch } from "./nfl-venue-facts.js";
 import { pregameMarketAnchor } from "./nfl-pregame-market.js";
 import { pressureMatchup } from "./nfl-pressure-matchup.js";
 import { restDays2026 } from "./nfl-rest.js";
@@ -1038,6 +1038,35 @@ export const nflTurfSurfaceFatigueSignal: SignalDefinition = {
   },
 };
 
+export const nflRoofAcclimationSignal: SignalDefinition = {
+  id: "nfl_roof_acclimation",
+  label: "NFL Roof Acclimation Mismatch",
+  category: "VENUE_ENVIRONMENT",
+  family: "MICROCLIMATE",
+  outputKind: "CONTINUOUS_VALUE",
+  validSports: ["americanfootball_nfl"],
+  owner: "quant-situational",
+  dataDependencies: ["nfl_venue_surface_2025_public_record"],
+  activationStatus: "ACTIVE",
+  trustWeight: 0.05,
+  killLine: KILL_LINE,
+  isRightsCleared: () => true,
+  acquisitionTask: null,
+  blockedReason: null,
+  homeSign: 1 as const,
+  neutralValue: 0,
+  evaluate: (ctx) => {
+    if (ctx.sportKey !== "americanfootball_nfl") return null;
+    const reading = roofAcclimationMismatch({
+      homeTeam: teamLabel(ctx.homeTeam) ?? "",
+      awayTeam: teamLabel(ctx.awayTeam) ?? "",
+      commenceTime: ctx.commenceTime,
+    });
+    if (reading == null) return null;
+    return { value: reading.value, capturedAt: "2025-public-record", metadata: reading.metadata };
+  },
+};
+
 export const nflPregameMarketSignal: SignalDefinition = {
   id: "nfl_pregame_market_anchor",
   label: "NFL Pregame Market Anchor",
@@ -1118,6 +1147,7 @@ export const EXTENDED_SIGNALS: readonly SignalDefinition[] = [
   nflLinearWindPassSignal,
   nflTempPrecipSignal,
   nflTurfSurfaceFatigueSignal,
+  nflRoofAcclimationSignal,
   nflPregameMarketSignal,
   nflPressureMatchupSignal,
   ...SCHEME_MEASURED_SIGNALS,

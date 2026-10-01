@@ -98,3 +98,27 @@ export function surfaceAcclimationMismatch(input: {
     },
   };
 }
+
+export function roofAcclimationMismatch(input: {
+  homeTeam: string;
+  awayTeam: string;
+  commenceTime?: Date;
+}): { value: number; metadata: Record<string, unknown> } | null {
+  const homeAbbr = nflTeamAbbr(label(input.homeTeam));
+  const awayAbbr = nflTeamAbbr(label(input.awayTeam));
+  if (homeAbbr == null || awayAbbr == null) return null;
+  if (neutralThisWeek(homeAbbr, awayAbbr, input.commenceTime)) return null;
+  const home = NFL_VENUE_SURFACE[homeAbbr];
+  const away = NFL_VENUE_SURFACE[awayAbbr];
+  if (home == null || away == null) return null;
+  if (home.controlledRoof === away.controlledRoof) return null;
+  return {
+    value: 1,
+    metadata: {
+      basis: "visitor home roof differs from the venue roof; not a weather reading",
+      venueRoof: home.controlledRoof ? "controlled" : "open",
+      visitorHomeRoof: away.controlledRoof ? "controlled" : "open",
+      asOf: home.asOf,
+    },
+  };
+}
