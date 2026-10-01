@@ -56,7 +56,10 @@
  * reasons are the deliverable as much as the weights are:
  *   - ngs.* (4 keys): the writer keys NGS rows by gsisId while every settled
  *     outcome is keyed by playerId, and 0 of 380 distinct gsis match a playerId.
- *     No join, no fit, no weight. (The crosswalk does not exist in this repo.)
+ *     No join, no fit, no weight. (No shared crosswalk lookup existed in this
+ *     repo when this was measured; see `apps/web/lib/ops/player-crosswalk.ts`
+ *     and `GET /api/ops/id-crosswalk` for the lookup and the live join-health
+ *     report. The DATA gap — 0 of 380 joined — is what keeps the weight at 0.)
  *   - snap.* (3 keys): never persisted at all. All 31,100 `snap_counts` rows
  *     have a NULL `playerId`, and the writer drops a row with no id, so these
  *     keys project nothing. Their anchors below are measured on the source table

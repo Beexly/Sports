@@ -317,10 +317,14 @@ export function projectSignalCandidates(input: {
       emit({
         // NGS is keyed by gsisId where the other tables use the internal
         // playerId. Both are recorded verbatim rather than crosswalked, because
-        // the crosswalk this repo needs does not exist: measured 2026-09-30, 0 of
-        // 380 distinct gsis match a playerId, and 0 of 32 team strings match
-        // `games`. Inventing an id join would fabricate the link — and it is why
-        // these four keys carry weight 0 (no join, no fit).
+        // the shared lookup did not exist when this was measured (2026-09-30:
+        // 0 of 380 distinct gsis match a playerId, and 0 of 32 team strings
+        // match `games`). The lookup now lives in
+        // `apps/web/lib/ops/player-crosswalk.ts` with a live join-health
+        // report at `GET /api/ops/id-crosswalk`; the writer keeps recording
+        // verbatim until that report shows the join is real. Inventing an id
+        // join would fabricate the link — and it is why these four keys carry
+        // weight 0 (no join, no fit).
         entityId: r.gsisId,
         key,
         category,
