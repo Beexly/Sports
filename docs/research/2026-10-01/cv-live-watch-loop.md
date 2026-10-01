@@ -1,12 +1,43 @@
 # GSE CV live watch loop — architecture spec (2026-10-01)
 
-## The vision (Garrett's correction, 2026-10-01)
+## The vision (Garrett's directive, 2026-10-01 — DECISIVE)
 
-There is **no licensing step**. The CV system watches football the way Garrett
-watches it: live, on his own screen, like a person sitting on the couch. It
-observes **his viewing** — his own paid TV/stream on his own Windows box —
-and turns what it sees into engine signals in real time. Nothing is scraped
-from anyone's servers, nothing is redistributed, nothing is published.
+There is **no licensing step** and **no human in the loop**. An autonomous
+watcher runs on Garrett's always-on Windows box at home: the game-window
+scheduler auto-tunes his viewing app to the game(s) per window — no clicks
+from him — captures his own screen at 1–5 fps, and relays frames to this VM,
+which runs detection → tracking → homography → per-game learning store,
+live, as each game plays. His subscriptions, his hardware, his home; nothing
+is restreamed or published anywhere.
+
+Garrett's only involvement is one-time setup (box on, logged into his apps —
+setup, not per-game). After that he never touches it.
+
+```
+Garrett's Windows box (always-on, his home)          This Linux VM
+──────────────────────────────────────────          ─────────────────────
+scheduler wakes per game window
+  → auto-tunes viewing app (YouTube TV/NFL app/NFL+)
+  → screen capture (mss/DXGI), 1-5 fps
+  → JPEG frames → HTTPS POST ──────────────→ ┌ ingest endpoint
+                                             ▼
+                                      frame buffer → YOLO detector
+                                                   → tracklet association
+                                                   → field homography
+                                                   → movement metrics
+                                                   → watch.* learning store
+                                                     (weight 0, shadow)
+```
+
+## Hard lines (do not cross)
+
+- No DRM stripping, no credential sharing/stuffing, no scraping of NFL or
+  streaming servers directly, no restreaming or publishing video anywhere.
+- Screen capture of his own licensed viewing, on his own machine, for his
+  own private analysis only.
+- Residual ToS risk: streaming services can flag automated app use; the
+  watcher mimics normal viewing patterns (one stream, real cadence) to stay
+  boring, but the risk is nonzero and owned, not hidden.
 
 ```
 Garrett's Windows box (viewing machine)          This Linux VM (GSE engine)
@@ -25,57 +56,65 @@ Game on screen (his paid TV/stream)
                                                      → engine signals (weight 0, shadow)
 ```
 
-## Windows capture client (v1 spec)
+## Windows autonomous watcher (v1 spec)
 
-Minimal Python service on Garrett's Windows viewing machine. No kernel
-drivers, no HDMI capture hardware for v1 — plain screen capture of the
-display/region showing the game.
+A user-level Python service on Garrett's always-on Windows box. Three jobs:
+**tune, capture, relay.** No kernel drivers, no capture hardware for v1 —
+plain screen capture of the viewing app.
 
-- **Capture**: `mss` (fast, pure-ctypes) or OpenCV; grab the game window or a
-  configured screen region at **1–5 fps** (v1 default 2 fps — enough for
-  movement features, light on bandwidth).
-- **Preprocess**: downscale to ≤960px wide, JPEG quality ~70. A 960×540 JPEG
-  at q70 is ~60–100 KB → at 2 fps ≈ 200 KB/s upstream. Trivial.
-- **Transport**: `POST /api/ops/watch-frame` on the VM with a shared secret
-  header (same `CRON_SECRET` pattern the ops routes use). Body: multipart
-  JPEG + JSON `{clientTs, fps, width, height, source: "screen"}`. Retry with
-  backoff; local ring buffer if the VM is unreachable (drop oldest — live
-  data goes stale fast, never backfill screen frames).
-- **Footprint**: one `pip install mss opencv-python-headless requests`
-  service, ~80 lines. Runs as a user-level script Garrett starts on game day;
-  a tray toggle / hotkey pauses capture (bye week, non-game content).
-- **Privacy**: captures only when Garrett starts it, only the configured
-  region. Frames are ephemeral — the VM keeps detections/tracklets, not raw
-  screen images, beyond a short debug window.
+- **Tune (auto, per game window):** the scheduler tells the watcher which
+  game to show. Tuning = launch/focus the viewing app and navigate to the
+  game, via deep links where the app supports them (YouTube TV and the NFL
+  app both accept launch URLs), falling back to scripted keystrokes.
+  Honest caveat: this is the most brittle part — app UI changes break
+  scripted navigation, so keep the tune logic tiny, logged, and per-app
+  isolated. Retries with backoff; if tuning fails, the watcher captures
+  whatever is on screen and flags the window as degraded rather than
+  dying silently.
+- **Capture:** `mss` (fast, pure-ctypes) or DXGI; grab the app window at
+  **1–5 fps** (v1 default 2 fps).
+- **Preprocess:** downscale to ≤960px wide, JPEG quality ~70 (~60–100 KB
+  per frame → ~200 KB/s upstream at 2 fps). Trivial.
+- **Transport:** `POST /api/ops/watch-frame` on the VM with a shared secret
+  header (same `CRON_SECRET` pattern as the other ops routes). Body:
+  multipart JPEG + JSON `{clientTs, fps, width, height, gameId,
+  source: "screen"}`. Retry with backoff; local ring buffer if the VM is
+  unreachable (drop oldest — live data goes stale fast, never backfill
+  screen frames).
+- **Footprint:** `pip install mss opencv-python-headless requests`, ~150
+  lines. Runs as a scheduled task / service — starts on boot, no login
+  needed beyond the one-time setup.
+- **Privacy:** frames are ephemeral — the VM keeps detections/tracklets,
+  not raw screen images, beyond a short debug window.
 
-Reference implementation sketch (not yet built — v1 build task):
+## Sunday coverage: two modes, one input
 
-```python
-# watch_capture.py — run on Garrett's Windows box on game day
-import time, io, requests, mss
-from PIL import Image
+During the early/late Sunday windows one input can't see 9 games. v1:
 
-VM_URL = "https://<vm>/api/ops/watch-frame"
-SECRET = "<CRON_SECRET>"   # Garrett's, never committed
-FPS, WIDTH = 2, 960
+- **(a) Priority-game mode:** tune to one game (highest engine edge, or
+  Garrett's preset priority list). Full film for that game.
+- **(b) RedZone/multiview mode:** tune to NFL RedZone, which whips around
+  every game's key plays on a single feed — one capture input learns from
+  ALL games' scoring plays simultaneously. The learning store tags each
+  segment by game (RedZone's on-screen score bug identifies the game;
+  v1.5: OCR the bug, v1: time-range heuristics from the scheduler).
 
-sct = mss.mss()
-mon = sct.monitors[1]  # or a configured region dict
-while True:
-    t0 = time.time()
-    img = sct.grab(mon)
-    pil = Image.frombytes("RGB", img.size, img.bgra, "raw", "BGRX")
-    pil.thumbnail((WIDTH, WIDTH * 9 // 16))
-    buf = io.BytesIO(); pil.save(buf, "JPEG", quality=70)
-    try:
-        requests.post(VM_URL, headers={"x-ops-secret": SECRET},
-                      files={"frame": ("f.jpg", buf.getvalue(), "image/jpeg")},
-                      data={"clientTs": str(time.time()), "fps": str(FPS)},
-                      timeout=5)
-    except Exception:
-        pass  # drop frame, keep cadence
-    time.sleep(max(0, 1 / FPS - (time.time() - t0)))
-```
+Honest flag: full simultaneous all-game film (every snap of every game)
+needs more capture inputs — extra boxes/tuners, one stream per game. That
+is a future hardware/money decision for Garrett, not this build. The
+ingest endpoint and learning store are already multi-game keyed, so
+scaling is additive, not a redesign.
+
+## Next-day deep study: NFL+ All-22 lane
+
+NFL+ Premium posts All-22 coaches film after games — a legit paid product
+and the highest-quality learning data (full-field view, no broadcast cuts).
+Spec as the film-study lane: automated next-day pull of All-22 for every
+game (same auto-tune + capture machinery, pointed at NFL+ replay), full
+formation/coverage extraction into `watch.plays` / `watch.formations` /
+`watch.tendencies`. Live Sunday is the RedZone/priority feed; Monday is
+All-22 study for all games. This is where the real film knowledge
+accumulates.
 
 ## VM ingest endpoint (sketch)
 
@@ -102,10 +141,12 @@ New ops route, same protection pattern as the other `/api/ops/*` routes:
 
 ## What v1 does NOT do
 
-- No recording of full games, no redistribution, no publishing of clips —
-  the 2–4s transformative-clip doctrine still governs anything public.
+- No video retention: frames are analyzed and dropped — the VM keeps
+  detections/tracklets/positions, not video. No redistribution, no
+  publishing of clips — the 2–4s transformative-clip doctrine still
+  governs anything public.
 - No reading of anyone else's stream or server — the only input is pixels
-  from Garrett's own screen, captured locally with his machine running it.
+  from Garrett's own screen, captured locally on his own machine.
 - No published picks or projections change: every CV-derived signal lands
   at weight 0 in shadow until validated.
 
@@ -127,20 +168,25 @@ game ID), the one-screen constraint (v1 watches whatever is on his display;
 all-games-simultaneously needs more capture inputs — Garrett's call later),
 and the readiness checklist for Steelers @ Browns tonight (7:15 PM CT).
 
-## Open gaps (largest first)
+## Open gaps (largest first, vs. the autonomous live-watch-loop vision)
 
-1. **Yardline/field-marking detection for the homography.** The DLT math is
-   proven on fixtures, but a live broadcast view needs automatic
-   correspondences (yardline ∩ sideline intersections). v1 options: line
-   detection (Hough) + field-color masking, or a tiny keypoint model. Until
-   this exists, homography is hand-seeded per broadcast view.
-2. **Capture client is specced, not built.** Needs Garrett's Windows box and
-   his tap to run on game day.
-3. **Detector at broadcast distance.** 360p eval footage shows YOLOv8n finds
-   near players but misses small/distant ones (see eval numbers). The watch
-   loop captures at 960px+, which helps; a larger model (v8m/v8s) is the
-   fallback if recall is short.
-4. **Ingest endpoint + worker not built.** Straightforward; gated behind
-   the capture client existing.
+1. **Watcher/tune/ingest/scheduler are spec'd, not built.** The autonomous
+   chain (auto-tune → capture → relay → ingest → worker) exists on paper.
+   None of it is blocked on anything but build time + Garrett's one-time
+   setup (box on, logged into his apps).
+2. **Field-landmark detection for the homography.** The DLT math is proven
+   on fixtures, but a live broadcast view needs automatic 2D
+   correspondences (yard-line ∩ sideline, hash marks) — yard lines alone
+   are a degenerate configuration (proven in the eval). v1 fallback:
+   hand-seed per broadcast view.
+3. **Motion-aware association.** Pure-IoU `buildTracklets` fragments on
+   broadcast pace (52 tracklets / ~6 players, median life 0.8s). Fix
+   direction: camera-motion compensation + prediction, or higher fps.
+   Usable today for counts/heatmaps; not per-player tracking.
+4. **Detector at broadcast distance.** P=1.00/R=0.74 at 360p (n=57);
+   misses concentrate in piles/occlusions. Watch-loop captures at 960px+,
+   which should help; larger model (v8m) is the fallback.
 5. **Identity/team association.** Tracklets are anonymous boxes; jersey-color
    clustering for team assignment is follow-up work.
+6. **RedZone game-tagging.** v1: scheduler time-range heuristics; v1.5: OCR
+   the on-screen score bug.

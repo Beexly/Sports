@@ -39,9 +39,32 @@ computes windows and ensures the ingest worker is up only when needed.
    input in the loop).
 3. If no window is active → worker stays down. Nothing runs between games.
 
-**Multi-game windows (e.g. Sunday 12 PM: 8 simultaneous games):** the
-scheduler arms for ALL in-window games. The one-screen constraint applies —
-see below.
+**Multi-game windows:** the scheduler arms for ALL in-window games. With one
+capture input, v1 runs two modes (see `cv-live-watch-loop.md`):
+
+- **(a) Priority-game mode:** tune to one game (highest engine edge, or
+  Garrett's preset priority list). Full film for that game.
+- **(b) RedZone/multiview mode:** tune to NFL RedZone — one feed whips
+  around every game's key plays, so a single capture input learns from ALL
+  games' scoring plays simultaneously. Frames tagged by game (v1: scheduler
+  time-range heuristics; v1.5: OCR the score bug).
+
+**International windows are first-class, starting THIS Sunday:** the early
+window is not a late-season edge case. Sun 2026-10-04 opens with
+Colts vs Commanders from London, kickoff 13:30 UTC = **8:30 AM CT**
+(event `401872965`, verified via ESPN API). The scheduler treats any
+kickoff time as a normal window — arm at kickoff−15 min regardless of hour.
+This Sunday's windows: **8:30 AM CT (London) → 12:00 PM CT (9 games) →
+3:05/3:25 PM CT → 7:20 PM CT (SNF)**.
+
+**Next-day deep study (NFL+ All-22 lane):** NFL+ Premium posts All-22
+coaches film after games — a legit paid product, the highest-quality
+learning data (full-field view, no broadcast cuts). Same auto-tune +
+capture machinery, pointed at NFL+ replay the morning after: automated
+pull of All-22 for every game → formation/coverage extraction into
+`watch.plays` / `watch.formations` / `watch.tendencies`. Live Sunday is
+the RedZone/priority feed; Monday is All-22 study for all games. This is
+where the real film knowledge accumulates.
 
 Reference sketch (the ~60-line core; not yet built):
 
@@ -58,20 +81,20 @@ const active = getWindows().filter(w => w.windowStart <= now && now <= w.windowE
 if (active.length) ensureWorkerUp(active); else ensureWorkerDown();
 ```
 
-## The one-screen constraint (explicit)
+## The one-input constraint (explicit)
 
-**v1 watches whatever is on Garrett's display.** The Windows capture client
-grabs his screen; the scheduler auto-arms for every window, so any game he
-has on gets learned from. Each ingested frame is tagged with the game ID —
-via a tiny client-side selector ("which game am I watching?", defaulting to
-the national game: TNF/SNF/MNF, or the first in-window game) — so the
-learning store stays correctly keyed even on multi-game Sundays.
+**v1 has one capture input: the autonomous watcher on Garrett's Windows
+box.** The scheduler auto-tunes it per window — no human in the loop — so
+on single-game windows (TNF/SNF/MNF/London) it simply watches that game.
+On multi-game Sunday windows it runs priority-game or RedZone mode (above),
+and each ingested frame is tagged with the game ID so the learning store
+stays correctly keyed.
 
-**True all-games-simultaneously coverage needs more capture inputs** than one
-screen: extra boxes/tuners feeding the ingest endpoint, one stream per game.
-That is a hardware/money decision for Garrett later — not this build. The
-ingest endpoint and learning store are already multi-game keyed, so scaling
-is additive, not a redesign.
+**True all-games-simultaneously coverage needs more capture inputs** than
+one box: extra machines/tuners feeding the ingest endpoint, one stream per
+game. That is a hardware/money decision for Garrett later — not this build.
+The ingest endpoint and learning store are already multi-game keyed, so
+scaling is additive, not a redesign.
 
 ## Per-game learning store (spec)
 
@@ -125,28 +148,38 @@ research → wire → weight → calibrate → test → polish order. Retention:
 positions/tracklets/detections kept for the season; raw frames dropped after
 24h.
 
-## Tonight: Steelers @ Browns, 7:15 PM CT — readiness
+## Tonight: Steelers @ Browns, 7:15 PM CT — autonomous readiness
 
-**What would need to be true by 7:15 PM CT tonight for the loop to watch it:**
+**What runs autonomously by kickoff (no Garrett involvement):**
 
 1. ✅ Schedule known — event `401872964`, window 7:00 PM → ~10:45 PM CT.
    (Verified via ESPN API 2026-10-01.)
 2. ✅ Detector ready — YOLOv8n weights local, `yolo-detect.py` working,
    48/48 tests green, real-footage eval done (P=1.00, R=0.74).
-3. ❌ **Windows capture client built and running on Garrett's box** —
-   spec'd (`cv-live-watch-loop.md`), not built. Needs his machine + his tap.
-4. ❌ **VM ingest endpoint + worker built and deployed** — sketched, not built.
-5. ❌ **Scheduler built and armed for tonight's window** — spec'd above;
-   the core is ~60 lines, but it doesn't exist yet.
-6. ⚠️ **Homography per broadcast view** — hand-seed fallback available
-   (~30s per game); auto field-landmark detection is the research gap.
-7. ⚠️ **Association fragments on broadcast pace** (52 tracklets / ~6 players)
-   — counts and heatmaps work tonight; per-player tracking doesn't yet.
-8. ❌ **Garrett's tap** — client running on his Windows box with the game on.
+3. ❌ **Autonomous watcher (tune + capture + relay)** — spec'd
+   (`cv-live-watch-loop.md`), not built.
+4. ❌ **VM ingest endpoint + worker** — sketched, not built.
+5. ❌ **Scheduler armed for tonight's window** — spec'd; the core is
+   ~60 lines, but it doesn't exist yet.
+6. ⚠️ **Homography** — hand-seed fallback per broadcast view (~30s,
+   one-time); auto field-landmark detection is the research gap.
+7. ⚠️ **Association fragments on broadcast pace** (52 tracklets / ~6
+   players) — counts and heatmaps work tonight; per-player tracking doesn't.
+
+**What Garrett does exactly once (setup, not per-game):** leave the Windows
+box on, logged into his YouTube TV / NFL app / NFL+ subscriptions, with the
+watcher installed as a boot service. After that he never touches it — the
+scheduler auto-tunes per window, including tonight.
+
+**Cost/hardware picture (v1):** his existing Windows box + subscriptions he
+already pays for (YouTube TV Sunday Ticket / NFL app / NFL+). No new
+purchases, no new subscriptions. Full simultaneous all-game film (every
+snap of every game) would need extra capture inputs later — his call, not
+this build.
 
 **Bottom line:** the sensing math is measured and ready; the three builds
-(capture client, ingest endpoint + worker, scheduler) are spec'd but
-unbuilt. Nothing is blocked on anything except build time + Garrett's
-Windows box. The honest v1 for tonight, if the builds landed: detections +
-counts + field-position heatmaps at weight 0, hand-seeded homography,
-single-screen (whatever game he has on).
+(watcher, ingest + worker, scheduler) are spec'd but unbuilt. Nothing is
+blocked on anything except build time + Garrett's one-time setup. The
+honest v1 for tonight, if the builds landed: detections + counts +
+field-position heatmaps at weight 0, hand-seeded homography, zero human
+input after setup.
