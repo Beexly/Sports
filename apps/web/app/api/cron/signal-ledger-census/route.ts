@@ -5,8 +5,10 @@
  * created and `composeLedger` had no production reader; the populator
  * (V3-350), the census (V3-351) and the grouped tuner (V3-352) were reachable
  * only from tests. This job is the reader: it loads the four populated entity
- * tables, measures the anchor per signal key, and reports what the ledger
- * could hold today.
+ * tables, measures the anchor per signal key, reports what the ledger could
+ * hold today — and runs the SHADOW compose (`composeLedgerShadow`), the first
+ * production execution of the composer. Shadow means shadow: the composed
+ * scores are computed and reported, never persisted, never promoted.
  *
  * LAWS OBSERVED:
  * - CRON_SECRET bearer auth only (`bearer_only`; this route is read-only but
@@ -34,6 +36,7 @@ import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { db } from "@sports/db";
 import { loadSignalLedger, type LedgerLoadReport } from "@/lib/ops/signal-ledger-loader";
+import { composeLedgerShadow } from "@/lib/ops/signal-ledger-shadow";
 import { captureError } from "@/lib/observability/sentry";
 
 export const dynamic = "force-dynamic";
@@ -61,6 +64,14 @@ export async function GET(req: Request): Promise<NextResponse> {
 
   const { census, candidates, rowsRead, anchors } = report;
 
+  // SHADOW COMPOSE (Tier 1 #1 of the wiring backlog): run the loaded candidates
+  // through the production composer. Read-only — the numbers below are computed,
+  // never persisted, and never touch the published pick score. One clock read
+  // per run, injected for determinism (see signal-ledger-shadow.ts).
+  const nowIso = new Date().toISOString();
+  const shadow = composeLedgerShadow(candidates, nowIso);
+  const SHADOW_TOP_N = 250;
+
   // What the ledger could hold TODAY, stated as a count rather than a claim.
   const measuredKeys = Object.keys(anchors).filter((k) => k !== "injury.availability");
 
@@ -83,9 +94,24 @@ export async function GET(req: Request): Promise<NextResponse> {
       })),
       skipped: census.skipped,
       censusText: report.censusText,
+      shadow: {
+        now: shadow.now,
+        halfLifeDays: shadow.halfLifeDays,
+        summary: shadow.summary,
+        // Top-N by |score| for response size; summary carries the totals.
+        topEntities: shadow.entities.slice(0, SHADOW_TOP_N).map((e) => ({
+          entityType: e.entityType,
+          entityId: e.entityId,
+          score: e.score,
+          topSignals: e.topSignals,
+          candidateCount: e.candidateCount,
+        })),
+        topTruncated: shadow.entities.length > SHADOW_TOP_N,
+      },
     },
     note:
-      "READ-ONLY census. Nothing was written to `signals` or any other table. " +
+      "READ-ONLY census + SHADOW compose. Nothing was written to `signals` or any other table. " +
+      "Shadow scores are computed, never persisted, and never touch the published pick score. " +
       "A key listed as insufficient-rows has a measured row count below the floor, NOT a missing producer. " +
       "Sample a candidate with: /api/ops/signal-ledger-census.",
   });
