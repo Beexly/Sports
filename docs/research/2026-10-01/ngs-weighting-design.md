@@ -231,12 +231,13 @@ the join, not a target to steer toward.
 8. **Internal-only.** Nothing in this plan moves an NGS metric, name, or
    weight toward a public surface. The fence work (2026-09-30) stays intact.
 
-## 7. Open questions
+## 7. Open questions (updated 2026-10-01)
 
-- `ngs.ryoe_per_att` has no measured anchor/spread yet (it postdates the
-  scale-fit census, which measured the older `ngs.yac_above_expectation` /
-  `ngs.air_yards_to_sticks` keys). The backfill census must measure it before
-  normalization.
+- ~~`ngs.ryoe_per_att` has no measured anchor/spread yet~~ **RESOLVED.**
+  Step 1 validation (`docs/research/2026-10-01/ngs-backfill-step1-validation.md`,
+  2024 season, n=554): mean=0.366, **sd=1.688**. Use 1.7 as the normalization
+  anchor. Separation (sd=1.039) and CPOE (sd=7.644) validated against the
+  scale-fit's 1.020 / 7.820 within 2.5%.
 - Whether the outcome should stay next-week PPR-above-median or gain a
   second head (e.g. next-week PPR total, or position-specific outcomes for
   CPOE→passing yards). Recommend: keep the single established outcome for
