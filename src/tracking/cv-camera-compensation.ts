@@ -45,6 +45,20 @@ export function applyMat3(H: Mat3, x: number, y: number): { x: number; y: number
   };
 }
 
+/** Row-major 3×3 multiplication: (A·B)·p = A·(B·p). */
+export function mat3Mul(A: Mat3, B: Mat3): Mat3 {
+  const a = A.m;
+  const b = B.m;
+  const m: number[] = new Array(9).fill(0);
+  for (let r = 0; r < 3; r++) {
+    for (let c = 0; c < 3; c++) {
+      m[r * 3 + c] =
+        a[r * 3]! * b[c]! + a[r * 3 + 1]! * b[3 + c]! + a[r * 3 + 2]! * b[6 + c]!;
+    }
+  }
+  return { m: m as Mat3["m"] };
+}
+
 export function invertMat3(H: Mat3): Mat3 {
   const m = H.m;
   const a = m[0]!, b = m[1]!, c = m[2]!;
