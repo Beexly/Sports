@@ -88,7 +88,7 @@ export interface EngineShadowRecord {
 }
 
 /** The shape `resolvePickDisagreement` must return to be usable. */
-interface ArbiterResult {
+export interface ArbiterResult {
   readonly preferred?: unknown;
   readonly rationale?: unknown;
 }
@@ -104,11 +104,17 @@ export type ArbiterLoader = () => Promise<unknown>;
 
 let arbiterLoader: ArbiterLoader | null = null;
 
+/**
+ * The module this lane will try to load for the arbiter.
+ *
+ * Named rather than inline so the barrel export and the loader cannot drift,
+ * and so whoever builds the arbiter can see from here what name to export.
+ */
+export const DEFAULT_ARBITER_MODULE = "@/lib/picks/resolve-pick-disagreement";
+
 /** Default: look for the arbiter module, and treat absence as normal. */
-const defaultArbiterLoader: ArbiterLoader = async () => {
-  const specifier = "@/lib/picks/resolve-pick-disagreement";
-  return import(/* @vite-ignore */ specifier);
-};
+const defaultArbiterLoader: ArbiterLoader = async () =>
+  import(/* @vite-ignore */ DEFAULT_ARBITER_MODULE);
 
 /** Test seam: install a loader, or pass null to restore the default. */
 export function __setArbiterLoader(loader: ArbiterLoader | null): void {
@@ -231,11 +237,13 @@ function shadowPayload(record: EngineShadowRecord): Record<string, unknown> {
     engine: engine
       ? {
           selection: engine.selection,
-          line: engine.line,
           pickType: engine.pickType,
           homeWinProb: engine.homeWinProb,
           marketFairProb: engine.marketFairProb,
-          edgeVsMarket: engine.edgeVsMarket,
+          // Signed to the SIDE the engine took. Sourced from `EnginePick.edge`,
+          // the field that actually holds it; the previous `engine.edgeVsMarket`
+          // read a name that does not exist and recorded `undefined` here.
+          edgeVsMarket: engine.edge,
           homeLedgerScore: engine.homeLedgerScore,
           awayLedgerScore: engine.awayLedgerScore,
           homeSignalsUsed: engine.homeSignalsUsed,

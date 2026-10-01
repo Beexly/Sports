@@ -45,7 +45,32 @@
  *     BEFORE the edge test rather than after.
  */
 
-import type { IntelligenceReasoning } from "./reasoning.js";
+/**
+ * The reasoning fields `recommend()` reads, declared here rather than imported.
+ *
+ * `IntelligenceReasoning` lives in `apps/web/lib/intelligence-core`, and the
+ * dependency runs the other way: `apps/web` imports THIS package, so importing
+ * the spine's type would create a cycle. This is the structural subset the
+ * recommender actually consumes, and it is declared so that the REAL
+ * `IntelligenceReasoning` satisfies it without a cast: every field below is
+ * read, and adding one to the recommender forces adding it here.
+ *
+ * Do not widen it to "the whole reasoning output". The point of this module is
+ * that it reads a probability and the gates around it, and nothing else.
+ */
+export interface RecommendReasoning {
+  /** Empirically calibrated P(WIN). Never the raw stated confidence. */
+  readonly calibratedProb: number;
+  /** SHADOW and WITHHOLD are binding: neither may produce a pick. */
+  readonly publishState: "SHADOW" | "WITHHOLD" | "CANDIDATE";
+  readonly withholdReasons: readonly string[];
+  /** 0-1 how complete our knowledge is. */
+  readonly knowability: number;
+  /** 0-1 evidence health across sources. */
+  readonly evidenceHealth: number;
+  /** Why lines, surfaced into the recommendation's own trace. */
+  readonly why: readonly string[];
+}
 
 /** What the engine concluded. NO_BET is a conclusion, not a failure. */
 export type RecommendationVerdict = "PICK" | "NO_BET";
@@ -57,8 +82,13 @@ export type RecommendationVerdict = "PICK" | "NO_BET";
  * real but small, which is what an honest bookmaker posture looks like on most
  * fixtures. The other four are the engine declining for reasons of evidence or
  * policy, and each names which gate closed.
+ *
+ * Named `RecommendationNoBetReason`, not `NoBetReason`: `NoBetReason` is
+ * already exported from `./edge-lab/selective-gate.js` for a different gate,
+ * and two unrelated enums sharing one exported name is a coin flip at every
+ * call site.
  */
-export type NoBetReason =
+export type RecommendationNoBetReason =
   | "THRESHOLD"
   | "WITHHELD_BY_ENGINE"
   | "SHADOWED_BY_ENGINE"
@@ -98,7 +128,7 @@ export interface RecommendOptions {
 
 export interface RecommendInput {
   /** The engine's own reasoning output. */
-  readonly reasoning: IntelligenceReasoning;
+  readonly reasoning: RecommendReasoning;
   /**
    * De-vigged market probability for the HOME side, or null when there is no
    * usable market. Comparison only: it is never averaged into the call.
@@ -135,14 +165,14 @@ export interface EngineRecommendation {
   /** The probability the engine assigns the home side, whatever it decided. */
   readonly homeProb: number;
   /** Present exactly when `verdict` is NO_BET. */
-  readonly noBetReason: NoBetReason | null;
+  readonly noBetReason: RecommendationNoBetReason | null;
   /** Human-readable trace. Never contains a pick when there is none. */
   readonly why: readonly string[];
 }
 
 const clamp01 = (x: number): number => (Number.isFinite(x) ? Math.max(0, Math.min(1, x)) : 0);
 
-function noBet(reason: NoBetReason, homeProb: number, why: string[]): EngineRecommendation {
+function noBet(reason: RecommendationNoBetReason, homeProb: number, why: string[]): EngineRecommendation {
   return {
     verdict: "NO_BET",
     selection: null,

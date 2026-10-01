@@ -926,12 +926,11 @@ export {
 export {
   arbitrate,
   recordEngineShadowPick,
-  ARBITER_MODULE_CANDIDATES,
-  DEFAULT_ARBITER_MODEL,
+  DEFAULT_ARBITER_MODULE,
   type ArbitrationOutcome,
   type ArbiterLoader,
   type ArbiterResult,
   type EngineShadowRecord,
   type LegacyPickSummary,
 } from "./engine-shadow-pick.js";
-export { processSport, type ProcessSportOptions } from "./process-sport.js";
+export type { ProcessSportOptions } from "./process-sport.js";

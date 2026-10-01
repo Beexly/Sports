@@ -206,11 +206,17 @@ function composeSide(
 /**
  * Compose the ledger for each side, then let the caller's spine decide.
  *
- * Returns null when the inputs cannot support a call at all: no `reasoner` on
- * this host, a non-finite line, a reasoner that declined, or a ledger with no
- * weighted row on either side. The last of those matters most. "The engine had
- * nothing to say" is NOT "the engine agrees with the legacy pick", and a
- * comparison record that cannot tell those apart is worth nothing.
+ * Returns null when the inputs cannot support a RECORD at all: no `reasoner` on
+ * this host, a non-finite line, or a reasoner that declined.
+ *
+ * A ledger that read clean but carried no weighted row on either side is NOT
+ * null. "The engine had nothing to say" is a real answer, and it is a different
+ * answer from "the engine agrees with the legacy pick" -- conflating the two
+ * poisons the sample the arbiter is later scored on, because a silent engine
+ * would be counted as a correct agreement. So that case returns a pick flagged
+ * `ledgerSilent`, holding the market's own number exactly. That is the only
+ * reason `ledgerSilent` exists, and until this path existed the field could
+ * never be true.
  */
 export function deriveEnginePick(input: EnginePickInput): EnginePick | null {
   if (input.reasoner === undefined) return null;
@@ -218,7 +224,50 @@ export function deriveEnginePick(input: EnginePickInput): EnginePick | null {
 
   const home = composeSide(input.homeLedger, input.now, input.halfLifeDays);
   const away = composeSide(input.awayLedger, input.now, input.halfLifeDays);
-  if (home.signalsUsed === 0 && away.signalsUsed === 0) return null;
+
+  // The ledger READ succeeded and weighed nothing on either side. The engine has
+  // no opinion, which is an answer rather than an absence.
+  //
+  // The reasoner is deliberately NOT called here. With no weighted row there is
+  // nothing for the spine to reason over, and letting it run over an empty
+  // ledger would record a probability the engine's own evidence does not
+  // support -- the exact fabrication this lane exists to prevent. The pick holds
+  // the market's number unchanged and declines, which is what "no opinion"
+  // means operationally.
+  if (home.signalsUsed === 0 && away.signalsUsed === 0) {
+    const anchor = input.marketFairProb;
+    // Without a market there is no number to hold, so there is nothing honest to
+    // put in the Float probability column and no record worth writing.
+    if (anchor === null || !Number.isFinite(anchor)) return null;
+    return {
+      gameId: input.gameId,
+      pickType: input.pickType,
+      verdict: "NO_BET",
+      selection: null,
+      side: 0,
+      homeWinProb: anchor,
+      marketFairProb: anchor,
+      // Exactly zero by construction: the engine IS the market here. Recorded as
+      // a number rather than null so the scorer can tell "held the market" from
+      // "no market to compare against".
+      edge: 0,
+      // SHADOW, not CANDIDATE: the engine does not stand behind this, and a
+      // WITHHOLD would assert an active decision the engine never made.
+      publishState: "SHADOW",
+      withholdReasons: [
+        "the ledger read clean but carried no weighted row on either side, so the engine has no opinion to offer",
+      ],
+      noBetReason: "LEDGER_SILENT",
+      homeLedgerScore: home.score,
+      awayLedgerScore: away.score,
+      homeSignalsUsed: 0,
+      awaySignalsUsed: 0,
+      homeTopKeys: [...home.topKeys],
+      awayTopKeys: [...away.topKeys],
+      ledgerSilent: true,
+      basis: "ledger read clean with no weighted row on either side; holding the market and declining to pick",
+    };
+  }
 
   const reasoned = input.reasoner({
     gameId: input.gameId,

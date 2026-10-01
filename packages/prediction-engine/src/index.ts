@@ -1053,8 +1053,9 @@ export type {
   EngineRecommendation,
   RecommendInput,
   RecommendOptions,
+  RecommendReasoning,
   RecommendationVerdict,
-  NoBetReason,
+  RecommendationNoBetReason,
 } from "./engine-recommendation.js";
 
 // The PRODUCER side of the ledger, and the weight tuner that scores it against

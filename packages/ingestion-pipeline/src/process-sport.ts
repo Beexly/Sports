@@ -71,6 +71,7 @@ import {
   type ArbiterLoader,
   type EngineShadowRecord,
   type LegacyPickSummary,
+  type RecordEngineShadowOptions,
 } from "./engine-shadow-pick.js";
 import type { ReadinessGates } from "@sports/prediction-engine";
 
@@ -356,7 +357,7 @@ function shouldThinFillFromRundown(
 export interface ProcessSportOptions {
   readonly engineReasoner?: EngineReasoner;
   readonly arbiterLoader?: ArbiterLoader;
-  readonly shadowRecorder?: (record: EngineShadowRecord) => Promise<boolean>;
+  readonly shadowRecorder?: (options: RecordEngineShadowOptions) => Promise<boolean>;
 }
 
 export async function processSport(

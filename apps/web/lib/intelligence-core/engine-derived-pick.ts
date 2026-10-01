@@ -25,10 +25,16 @@
 
 import {
   recommend,
-  type IntelligenceReasoning,
+  type EngineRecommendation,
   type RecommendOptions,
+  type RecommendationNoBetReason,
+  type RecommendationVerdict,
 } from "@sports/prediction-engine";
-import { reason, type SignalObservation } from "@/lib/intelligence-core";
+import {
+  reason,
+  type IntelligenceReasoning,
+  type SignalObservation,
+} from "@/lib/intelligence-core";
 import type { EngineReasoner } from "@sports/ingestion-pipeline";
 
 export type EnginePickSide = "SPREAD" | "TOTAL" | "MONEYLINE";
@@ -54,7 +60,7 @@ export interface ReasonedEnginePickInput {
   /** ISO instant. REQUIRED: it makes the run replayable. */
   readonly now: string;
   readonly halfLifeDays?: number;
-  readonly modelVersion?: string;
+  readonly modelVersion: string;
   readonly sportKey?: string | null;
   readonly recommendOptions?: RecommendOptions;
 }
@@ -63,6 +69,10 @@ export interface ReasonedEnginePick {
   readonly gameId: string;
   readonly pickType: EnginePickSide;
   /** The engine's verdict. PICK or NO_BET; never both. */
+  readonly verdict: RecommendationVerdict;
+  /** Present exactly on NO_BET. Names which gate closed. */
+  readonly noBetReason: RecommendationNoBetReason | null;
+  /** The engine's own verdict. Flattened, so it survives the package boundary. */
   readonly recommendation: EngineRecommendation;
   /** The engine's own probability for the side it took, or null on no bet. */
   readonly selection: string | null;
@@ -76,6 +86,7 @@ export interface ReasonedEnginePick {
   readonly withholdReasons: readonly string[];
   readonly knowability: number;
   readonly evidenceHealth: number;
+  /** Rights-cleared observations that actually fed the spine. */
   readonly observationCount: number;
   readonly homeSignalsUsed: number;
   readonly awaySignalsUsed: number;
@@ -126,7 +137,6 @@ export function reasonEnginePick(input: ReasonedEnginePickInput): ReasonedEngine
     // reason the engine agrees with it. The engine earns its own base.
     statedConfidence: null,
     grade: undefined,
-    now: new Date(input.now),
   });
 
   const recommendation = recommend({
@@ -148,6 +158,7 @@ export function reasonEnginePick(input: ReasonedEnginePickInput): ReasonedEngine
   return {
     gameId: input.gameId,
     pickType: input.pickType,
+    recommendation,
     verdict: recommendation.verdict,
     selection: recommendation.selection,
     side: recommendation.side,
@@ -159,7 +170,7 @@ export function reasonEnginePick(input: ReasonedEnginePickInput): ReasonedEngine
     noBetReason: recommendation.noBetReason,
     knowability: reasoning.knowability,
     evidenceHealth: reasoning.evidenceHealth,
-    observationCount: reasoning.observationCount,
+    observationCount: reasoning.shadowReport.calibrationCount,
     homeSignalsUsed: home.signalsUsed,
     awaySignalsUsed: away.signalsUsed,
     basis,

@@ -24,8 +24,10 @@
  * code, fed by rows shaped exactly like the ones on production.
  */
 
-import { beforeEach, afterEach, describe, expect, it, vi } from "vitest";
+import { beforeAll, beforeEach, afterEach, describe, expect, it, vi } from "vitest";
 import type { ReadinessGates } from "@sports/prediction-engine";
+import type { EngineReasoner, EngineReasonerResult } from "../engine-pick.js";
+import type { FixtureProbe } from "../fixture-confirmation.js";
 
 const mocks = vi.hoisted(() => ({
   circuitState: vi.fn<() => "closed" | "open" | "half_open">(),
@@ -64,7 +66,7 @@ const mocks = vi.hoisted(() => ({
     unmatchedSecondary: 0,
     skippedWellCovered: 0,
   })),
-  confirmBatch: vi.fn<(sportKey: string, probes: readonly unknown[]) => Promise<unknown>>(),
+  confirmBatch: vi.fn<(sportKey: string, probes: readonly FixtureProbe[]) => Promise<unknown>>(),
   independentsInput: vi.fn(),
   // THE LEDGER READ. The only thing stubbed in the engine path is the database
   // itself, exactly as the rest of this harness stubs it.
@@ -275,14 +277,22 @@ function ledgerRow(
 const CAPTURED = new Date(K_MS - 3 * 86_400_000).toISOString();
 
 /**
- * This package's vitest config has no `testTimeout`, so it inherits the 5s
- * default. The FIRST test here pays a one-time cold Vite transform of
- * `@sports/prediction-engine` and its transitive imports, which on its own
- * exceeds 5s. `apps/web/vitest.config.ts` raises its ceiling to 60s for exactly
- * this reason, with the same reasoning. Set per-suite rather than in the shared
- * config so this cannot be mistaken for slowing every test in the package down.
+ * Budget for the one-time cold Vite transform of `@sports/prediction-engine`
+ * and its transitive imports, paid in the `beforeAll` warm-up rather than
+ * inside a test.
+ *
+ * This package's vitest config sets no `testTimeout`, so tests inherit the 5s
+ * default, which that transform blows past on its own. It is ALSO not a fixed
+ * cost: run the whole package (95 files transforming at once) and the same
+ * transform measures in the minutes, which is how a 60s per-test ceiling turned
+ * into a coin flip that failed two of these eight tests on a loaded machine.
+ *
+ * So the transform is paid once, in a hook with its own budget, and the tests
+ * themselves keep a modest per-test ceiling that only has to cover the work
+ * under test. Set per-suite rather than in the shared config so this cannot be
+ * mistaken for slowing every test in the package down.
  */
-const COLD_TRANSFORM_TIMEOUT_MS = 60_000;
+const COLD_TRANSFORM_TIMEOUT_MS = 300_000;
 
 /**
  * Resolve the fixture the way production does: full club names, which the
@@ -366,23 +376,40 @@ function shadowPayload(): {
  */
 function reasonerReturning(over: Partial<EngineReasonerResult> = {}) {
   return (): EngineReasonerResult => ({
-    gameId: "game-1",
-    pickType: "SPREAD",
     verdict: "PICK",
     selection: "Chiefs -3.5",
     side: 1,
     homeWinProb: 0.61,
-    marketFairProb: 0.55,
     edge: 0.06,
     publishState: "CANDIDATE",
     withholdReasons: [],
     noBetReason: null,
-    knowability: 0.8,
-    evidenceHealth: 0.8,
-    observationCount: 2,
-    homeSignalsUsed: 2,
-    awaySignalsUsed: 1,
     basis: "test reasoner",
+    ...over,
+  });
+}
+
+/**
+ * A reasoner that DISAGREES with the legacy pick: the away side against a
+ * home-side legacy selection.
+ *
+ * This is the fixture the arbiter tests need and that `installLopsidedLedger`
+ * alone does not provide. That fixture composes a ledger favouring the home
+ * side and the legacy pick also takes the home side, so the generator correctly
+ * short-circuits to AGREE and never reaches the arbiter at all. That is right
+ * behaviour and the wrong test input: an arbiter is only ever consulted about a
+ * disagreement, so a test that wants arbitration to run has to produce one.
+ *
+ * The legacy pick is unchanged and still publishes; only the ENGINE's opinion
+ * differs. That is the whole point of the lane.
+ */
+function reasonerDisagreeing(over: Partial<EngineReasonerResult> = {}): EngineReasoner {
+  return reasonerReturning({
+    selection: "Bills +3.5",
+    side: -1,
+    homeWinProb: 0.44,
+    edge: 0.06,
+    basis: "test reasoner favouring the away side against the home-side legacy pick",
     ...over,
   });
 }
@@ -395,6 +422,14 @@ async function runGenerator(reasoner: EngineReasoner = reasonerReturning()) {
 }
 
 describe("the engine derives its own pick (shadow lane)", () => {
+  // Pay the cold module-graph transform HERE, where a failing budget means "the
+  // graph could not be built" rather than "one test was slow". `runGenerator`
+  // imports the generator lazily to dodge a hoisted-mock cycle, so nothing else
+  // forces this import first.
+  beforeAll(async () => {
+    await import("../process-sport.js");
+  }, COLD_TRANSFORM_TIMEOUT_MS);
+
   beforeEach(() => {
     for (const mock of Object.values(mocks)) mock.mockReset();
 
@@ -441,7 +476,7 @@ describe("the engine derives its own pick (shadow lane)", () => {
     // The status must be `confirmed` with an `event`, matching the contract the
     // real confirmer returns for a fixture the day's board does list. Any other
     // status is a legitimate refusal, and the generator correctly makes no pick.
-    mocks.confirmBatch.mockImplementation(async (_sportKey: string, probes: readonly { id: string }[]) => ({
+    mocks.confirmBatch.mockImplementation(async (_sportKey: string, probes: readonly FixtureProbe[]) => ({
       status: "ok",
       eventsOnBoard: probes.length,
       byGameId: new Map(
@@ -586,7 +621,8 @@ describe("the engine derives its own pick (shadow lane)", () => {
     __setArbiterLoader(async () => {
       throw new Error("Cannot find module '@/lib/picks/resolve-pick-disagreement'");
     });
-    await runGenerator();
+    // The engine must DISAGREE for the arbiter to be consulted at all.
+    await runGenerator(reasonerDisagreeing());
 
     const payload = shadowPayload();
     expect(payload.arbitration["verdict"]).toBe("ARBITER_UNAVAILABLE");
@@ -608,7 +644,7 @@ describe("the engine derives its own pick (shadow lane)", () => {
         throw new Error("arbiter upstream 503");
       },
     }));
-    await runGenerator();
+    await runGenerator(reasonerDisagreeing());
     expect(shadowPayload().arbitration["verdict"]).toBe("ARBITER_FAILED");
     expect(shadowPayload().arbitration["publishedWinner"]).toBe("LEGACY");
 
@@ -616,7 +652,7 @@ describe("the engine derives its own pick (shadow lane)", () => {
     mocks.shadowSignalUpsert.mockClear();
     installLopsidedLedger();
     __setArbiterLoader(async () => ({ resolvePickDisagreement: async () => "ENGINE" }));
-    await runGenerator();
+    await runGenerator(reasonerDisagreeing());
     expect(shadowPayload().arbitration["verdict"]).toBe("ARBITER_FAILED");
     expect(shadowPayload().arbitration["publishedWinner"]).toBe("LEGACY");
 
@@ -626,7 +662,7 @@ describe("the engine derives its own pick (shadow lane)", () => {
     __setArbiterLoader(async () => ({
       resolvePickDisagreement: async () => ({ preferred: "SOMETHING_ELSE" }),
     }));
-    await runGenerator();
+    await runGenerator(reasonerDisagreeing());
     expect(shadowPayload().arbitration["verdict"]).toBe("ARBITER_FAILED");
     expect(shadowPayload().arbitration["publishedWinner"]).toBe("LEGACY");
 
@@ -651,7 +687,7 @@ describe("the engine derives its own pick (shadow lane)", () => {
         rationale: "the ledger blend favours the other side of this market",
       }),
     }));
-    await runGenerator();
+    await runGenerator(reasonerDisagreeing());
 
     const payload = shadowPayload();
     expect(payload.arbitration["verdict"]).toBe("ENGINE_PREFERRED");
