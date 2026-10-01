@@ -70,9 +70,16 @@ export function poolAdjacentViolators(values: readonly number[]): number[] {
   const blocks: [number, number][] = values.map((v) => [v, 1]);
   let i = 0;
   while (i < blocks.length - 1) {
-    if (blocks[i][0] > blocks[i + 1][0]) {
-      const w = blocks[i][1] + blocks[i + 1][1];
-      const v = (blocks[i][0] * blocks[i][1] + blocks[i + 1][0] * blocks[i + 1][1]) / w;
+    // `noUncheckedIndexedAccess` is enabled in this repo, so index access is
+    // `T | undefined`. The loop bound guarantees both exist; binding them to
+    // locals satisfies the checker without a non-null assertion, which would
+    // silence a real bug if the bound ever changed.
+    const cur = blocks[i];
+    const next = blocks[i + 1];
+    if (cur === undefined || next === undefined) break;
+    if (cur[0] > next[0]) {
+      const w = cur[1] + next[1];
+      const v = (cur[0] * cur[1] + next[0] * next[1]) / w;
       blocks.splice(i, 2, [v, w]);
       // A merge can create a violation to the left; re-check it.
       i = Math.max(i - 1, 0);
@@ -122,11 +129,23 @@ export function fitIsotonicMap(
   const rates = cells.map((cell) => cell.y.reduce((a, b) => a + b, 0) / cell.y.length);
   const monotone = poolAdjacentViolators(rates);
 
-  const points: CalibrationPoint[] = cells.map((cell, i) => ({
-    published: cell.pub.reduce((a, b) => a + b, 0) / cell.pub.length,
-    calibrated: monotone[i],
-    n: cell.y.length,
-  }));
+  // PAVA preserves input length, so `monotone[i]` exists for every cell.
+  // `noUncheckedIndexedAccess` cannot see that, and it should not have to: an
+  // invariant violation here would silently write `undefined` into a customer
+  // probability, so it is checked rather than asserted.
+  const points: CalibrationPoint[] = cells.map((cell, i) => {
+    const calibrated = monotone[i];
+    if (calibrated === undefined) {
+      throw new Error(
+        `isotonic: PAVA returned ${monotone.length} values for ${cells.length} cells`,
+      );
+    }
+    return {
+      published: cell.pub.reduce((a, b) => a + b, 0) / cell.pub.length,
+      calibrated,
+      n: cell.y.length,
+    };
+  });
 
   return { points, size: points.length };
 }
@@ -137,21 +156,29 @@ export function fitIsotonicMap(
  */
 export function applyIsotonicMap(map: IsotonicMap, published: number): number {
   const pts = map.points;
-  if (pts.length === 0) throw new Error("isotonic: empty map");
+  const first = pts[0];
+  if (first === undefined) throw new Error("isotonic: empty map");
   const p = clamp01(published);
-  if (p <= pts[0].published) return clamp01(pts[0].calibrated);
+  if (p <= first.published) return clamp01(first.calibrated);
   const last = pts[pts.length - 1];
+  if (last === undefined) throw new Error("isotonic: empty map");
   if (p >= last.published) return clamp01(last.calibrated);
 
   let lo = 0;
   let hi = pts.length - 1;
   while (lo < hi) {
     const mid = Math.floor((lo + hi + 1) / 2);
-    if (pts[mid].published <= p) lo = mid;
+    const probe = pts[mid];
+    if (probe === undefined) break;
+    if (probe.published <= p) lo = mid;
     else hi = mid - 1;
   }
   const a = pts[lo];
   const b = pts[lo + 1];
+  // `lo` is in range and `lo + 1 < pts.length` because `p < last.published`.
+  if (a === undefined || b === undefined) {
+    throw new Error(`isotonic: lookup left the fitted range at published=${p}`);
+  }
   if (b.published === a.published) return clamp01(a.calibrated);
   const t = (p - a.published) / (b.published - a.published);
   return clamp01(a.calibrated + (b.calibrated - a.calibrated) * t);
