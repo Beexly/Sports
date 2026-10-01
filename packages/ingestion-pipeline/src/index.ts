@@ -221,6 +221,15 @@ export {
   type PropsSlateResult,
   type PropsSlateInput,
 } from "./props-slate.js";
+export {
+  runPropsSlateShadow,
+  propsSlateShadowEnabled,
+  PROPS_SLATE_SHADOW_ENABLED_ENV,
+  type PropsSlateShadowSource,
+  type PropsSlateShadowResult,
+  type PropsSlateShadowOptions,
+  type ShadowPropLine,
+} from "./props-slate-shadow.js";
 export { EXTENDED_SIGNALS } from "./signal-registry-extensions.js";
 
 // Prereg leakage gate (V1 probes live call site)
