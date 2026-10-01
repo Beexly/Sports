@@ -255,7 +255,20 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
       awayTeamName: true,
       commenceTime: true,
       createdAt: true,
-      sport: { select: { key: true, name: true } },
+            // Schedule/situational facts already written by context-enrichment.ts.
+            // Selected because the continuous signals read REST_DAYS / OPP_REST_DAYS
+            // / IS_ROAD_TEAM and were abstaining for want of them — the data was
+            // already on the row, simply never selected. Null (enrichment not yet
+            // run) passes through as absent; the signal abstains rather than guessing.
+            restDaysHome: true,
+            restDaysAway: true,
+            isBackToBackHome: true,
+            isBackToBackAway: true,
+            scheduleDensityHome: true,
+            scheduleDensityAway: true,
+            openingSpread: true,
+            openingTotal: true,
+            sport: { select: { key: true, name: true } },
       // Feeds the survivor rule, which is selectCanonical's rule and not a new
       // one: most picks, most odds children, non-ESPN externalId, oldest row.
       _count: { select: { picks: true, odds: true, oddsLineSnapshots: true } },
@@ -518,6 +531,24 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
         awayTeam,
         commenceTime,
         now: () => now,
+        // Straight from the scanned row — no second query. Nulls pass through so
+        // the evaluator abstains instead of receiving a default rest-day number.
+        schedule: {
+                  restDaysHome: game.restDaysHome ?? null,
+                  restDaysAway: game.restDaysAway ?? null,
+                  // NOT defaulted with `?? false`. `isBackToBack` is non-nullable in the
+                  // schema with @default(false), so Prisma returns a real boolean — but
+                  // if it ever came back null/undefined, inventing `false` would assert
+                  // "not a back-to-back" about a game we know nothing about, and it would
+                  // be the sole reason `scheduleEnv` claimed the GameSchedule source on a
+                  // row where nothing was actually read. Null passes through as absent.
+                  isBackToBackHome: game.isBackToBackHome ?? null,
+                  isBackToBackAway: game.isBackToBackAway ?? null,
+                  scheduleDensityHome: game.scheduleDensityHome ?? null,
+                  scheduleDensityAway: game.scheduleDensityAway ?? null,
+                  openingSpread: game.openingSpread ?? null,
+                  openingTotal: game.openingTotal ?? null,
+                },
       },
       // Shared across the whole slate run: 80 fixtures often share a team on the
       // same day, and the rate lookup is the expensive part. The cache key

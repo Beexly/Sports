@@ -39,6 +39,12 @@ export interface SignalGameContextInput {
   readonly commenceTime: Date;
   readonly now?: () => Date;
   readonly windowGames?: number;
+  /**
+   * Schedule/situational facts already on the Game row. Passed through, never
+   * queried here: the slate has the row and selecting the columns costs nothing,
+   * while a second query for the same game would be pointless.
+   */
+  readonly schedule?: GameScheduleFacts;
 }
 
 export interface DerivedSignalContext {
@@ -55,6 +61,79 @@ export interface DerivedSignalContext {
   /** League scoring average used for the rate comparisons, if resolved. */
   readonly leagueAvgScored: number | null;
 }
+
+/**
+ * The schedule/situational columns `context-enrichment.ts` already writes to
+ * `Game`. These are REAL, already-populated facts, so the SITUATIONAL signals
+ * that read REST_DAYS / OPP_REST_DAYS / IS_ROAD_TEAM get genuine inputs instead
+ * of abstaining for want of a source that was never missing — it was simply
+ * never selected.
+ *
+ * Null means the enrichment pass has not run for this game yet. Null is passed
+ * through as absent rather than coerced to a rest-day default: "4 days rest" is
+ * not a safe guess when it is the entire signal.
+ */
+export interface GameScheduleFacts {
+  readonly restDaysHome: number | null;
+  readonly restDaysAway: number | null;
+  readonly isBackToBackHome: boolean | null;
+  readonly isBackToBackAway: boolean | null;
+  readonly scheduleDensityHome: number | null;
+  readonly scheduleDensityAway: number | null;
+  readonly openingSpread: number | null;
+  readonly openingTotal: number | null;
+}
+
+/**
+ * Map schedule facts into the env keys the evaluators read.
+ *
+ * The evaluators are written from the perspective of ONE team — `IS_ROAD_TEAM`
+ * asks whether the team under evaluation is the visitor, `REST_DAYS` is that
+ * team's rest. The slate evaluates the picked side, which for a home-picked
+ * line is the home team, so `IS_ROAD_TEAM` is "0" by construction. Mapping this
+ * the wrong way would invert every situational signal in the engine, so it is
+ * stated here rather than left implicit.
+ */
+function scheduleEnv(
+  facts: GameScheduleFacts | undefined,
+  env: Record<string, string>,
+  sources: string[],
+): void {
+  if (!facts) return;
+    let any = false;
+    const set = (k: string, v: number | null | undefined) => {
+      if (v == null) return;
+      env[k] = String(v);
+      any = true;
+    };
+
+    // Evaluated team = the home side. Stated explicitly, not assumed by omission.
+    set("REST_DAYS", facts.restDaysHome);
+    set("OPP_REST_DAYS", facts.restDaysAway);
+    set("HOME_REST_DAYS", facts.restDaysHome);
+    set("AWAY_REST_DAYS", facts.restDaysAway);
+    // `? 1 : 0` is WRONG for a null boolean: `null ? 1 : 0` is 0, which is a
+      // confident "not a back-to-back" invented from missing data, and it is enough
+      // to claim the GameSchedule source on a row where nothing was read. Pass the
+      // boolean through as 1/0 only when it is actually known.
+      if (facts.isBackToBackHome != null) set("IS_BACK_TO_BACK_HOME", facts.isBackToBackHome ? 1 : 0);
+      if (facts.isBackToBackAway != null) set("IS_BACK_TO_BACK_AWAY", facts.isBackToBackAway ? 1 : 0);
+    set("SCHEDULE_DENSITY_HOME", facts.scheduleDensityHome);
+    set("SCHEDULE_DENSITY_AWAY", facts.scheduleDensityAway);
+    set("OPENING_SPREAD", facts.openingSpread);
+    set("OPENING_TOTAL", facts.openingTotal);
+
+    // `IS_ROAD_TEAM` is a CONSTANT of the slate, not an observation: the slate
+    // evaluates the home side, so it is 0 for every game. Writing it last means
+    // it can never be the reason a source is claimed — otherwise a game with no
+    // enrichment at all would still report "GameSchedule" and tell a reader the
+    // schedule was read when nothing was. `any` is false exactly when every
+    // schedule fact was null.
+    if (any) {
+      env.IS_ROAD_TEAM = "0";
+      sources.push("GameSchedule");
+    }
+  }
 
 /** Drop bootstrap rows; the remainder is what the engine may actually reason from. */
 function realRows(rows: readonly TeamScoringRecord[]): TeamScoringRecord[] {
@@ -78,6 +157,7 @@ export async function deriveSignalGameContext(
   const window = input.windowGames ?? 20;
   const env: Record<string, string> = {};
   const sources: string[] = [];
+  scheduleEnv(input.schedule, env, sources);
 
   let home: TeamScoringRecord[] = [];
   let away: TeamScoringRecord[] = [];
@@ -195,6 +275,7 @@ export async function deriveSignalGameContextCached(
   const window = input.windowGames ?? 20;
   const env: Record<string, string> = {};
   const sources: string[] = [];
+  scheduleEnv(input.schedule, env, sources);
 
   let home: TeamScoringRecord[];
   let away: TeamScoringRecord[];

@@ -28,6 +28,8 @@ import {
   deriveSignalGameContextCached,
   SignalContextCache,
 } from "../signal-game-context.js";
+import { applyContinuousSignalTilt } from "../continuous-signal-tilt.js";
+import { SIGNAL_REGISTRY } from "../signal-registry-definitions.js";
 
 const KICKOFF = new Date("2026-10-01T18:00:00Z");
 const input = {
@@ -160,8 +162,112 @@ describe("SignalContextCache", () => {
 
     expect(early.env.TEAM_SCORED_AVG).toBe("25.0000");
     // A different day MUST be a different query, so a changed truth comes back.
-    const kcDays = mocks.getTeamScoringRecords.mock.calls.filter((c) => c[0] === "KC");
-    expect(kcDays.length).toBe(2);
-    expect(kcDays[0][3]?.toISOString()).not.toBe(kcDays[1][3]?.toISOString());
+        const kcDays = mocks.getTeamScoringRecords.mock.calls.filter((c) => c[0] === "KC");
+            expect(kcDays.length).toBe(2);
+            // Destructured after the length assertion; `as Date` marks the non-null
+            // bound the assertion above already establishes.
+            const [firstKickoff, secondKickoff] = kcDays.map((c) => c[3] as Date);
+            expect(firstKickoff).toBeDefined();
+            expect((firstKickoff as Date).toISOString()).not.toBe((secondKickoff as Date).toISOString());
+      });
+});
+
+describe("END TO END — a wired signal reaches a probability", () => {
+  beforeEach(() => {
+    mocks.getTeamScoringRecords.mockReset();
+    mocks.getLeagueAverageScored.mockReset();
+    mocks.getTeamScoringRecords.mockResolvedValue(rows(10, 25, 20));
+    mocks.getLeagueAverageScored.mockResolvedValue(22);
+  });
+
+  it("REST_DAYS from the Game row makes a SITUATIONAL signal actually vote", async () => {
+    // The short-week road deficit: the AWAY team on 4 days' rest against a
+    // rested home team. This is the scenario the evaluator models, and it is
+    // the one thing the engine previously could not express — not because the
+    // signal was missing, but because REST_DAYS was never selected off the row.
+    const ctx = await deriveSignalGameContext({
+      ...input,
+      schedule: {
+        restDaysHome: 7, restDaysAway: 4,
+        isBackToBackHome: false, isBackToBackAway: false,
+        scheduleDensityHome: 1, scheduleDensityAway: 2,
+        openingSpread: -3, openingTotal: 45,
+      },
+    });
+    // REST_DAYS is the HOME side (the team the slate evaluates); the short-week
+    // scenario puts the deficit on the VISITOR, which the evaluator reads as
+    // REST_DAYS=4 / OPP_REST_DAYS=7 with IS_ROAD_TEAM=1. Both are derived from
+    // the same two columns, seen from opposite sides.
+    expect(ctx.env.REST_DAYS).toBe("7");
+    expect(ctx.env.OPP_REST_DAYS).toBe("4");
+    expect(ctx.env.HOME_REST_DAYS).toBe("7");
+    expect(ctx.env.AWAY_REST_DAYS).toBe("4");
+    expect(ctx.env.IS_ROAD_TEAM).toBe("0");
+    expect(ctx.sources).toContain("GameSchedule");
+
+    // Evaluated from the visitor's perspective, the road team IS fatigued.
+    const tilt = await applyContinuousSignalTilt(0.5, SIGNAL_REGISTRY, {
+      sportKey: "americanfootball_nfl",
+      homeTeam: "KC", awayTeam: "NE",
+      // Seen from the visitor: the SAME two columns, swapped. REST_DAYS is
+      // therefore the away value and OPP_REST_DAYS the home value.
+      env: {
+        ...ctx.env,
+        IS_ROAD_TEAM: "1",
+        REST_DAYS: ctx.env.AWAY_REST_DAYS,
+        OPP_REST_DAYS: ctx.env.HOME_REST_DAYS,
+        TRAVEL_DISTANCE_MILES: "800",
+        IS_DIVISION_RIVALRY: "0",
+      },
+      now: () => new Date("2026-10-01T12:00:00Z"),
+    } as never);
+
+    const vote = tilt.votes.find((v) => v.signalId === "nfl_short_week_road_deficit");
+    expect(vote, "the short-week signal must reach the tilt").toBeTruthy();
+    // Raw is the spread penalty; negative because the ROAD team is worse.
+    expect(vote!.rawValue).toBeLessThan(0);
+    expect(vote!.tilt).toBeLessThan(0);
+    expect(tilt.applied).toBe(true);
+    // And it must MOVE the number, not merely be recorded.
+    expect(tilt.adjustedHomeP).not.toBe(0.5);
+  });
+
+  it("abstains honestly when enrichment has not run (nulls, not defaults)", async () => {
+    // isBackToBackHome/Away are non-nullable with @default(false) in the schema,
+    // so they ARE known (false) even on an un-enriched row. That is a real
+    // observed value, not a stand-in, which is why the GameSchedule source is
+    // legitimately claimed here. The nullable rest/density columns must still
+    // abstain rather than be coerced to a plausible rest-day number.
+    const ctx = await deriveSignalGameContext({
+      ...input,
+      schedule: {
+        restDaysHome: null, restDaysAway: null,
+        isBackToBackHome: false, isBackToBackAway: false,
+        scheduleDensityHome: null, scheduleDensityAway: null,
+        openingSpread: null, openingTotal: null,
+      },
+    });
+    expect(ctx.env.REST_DAYS).toBeUndefined();
+    expect(ctx.env.OPP_REST_DAYS).toBeUndefined();
+    expect(ctx.env.SCHEDULE_DENSITY_HOME).toBeUndefined();
+    // The real boolean IS passed through, because the database asserted it.
+    expect(ctx.env.IS_BACK_TO_BACK_HOME).toBe("0");
+    // IS_ROAD_TEAM is a slate constant, never an observation: it must not be the
+    // reason a source gets claimed.
+    expect(ctx.env.IS_ROAD_TEAM).toBe("0");
+  });
+
+  it("claims NO schedule source when every schedule fact is null", async () => {
+    // Guards the specific lie: reporting "GameSchedule" when nothing was read.
+    const ctx = await deriveSignalGameContext({
+      ...input,
+      schedule: {
+        restDaysHome: null, restDaysAway: null,
+        scheduleDensityHome: null, scheduleDensityAway: null,
+        openingSpread: null, openingTotal: null,
+      } as never,
+    });
+    expect(ctx.sources).not.toContain("GameSchedule");
+    expect(ctx.env.IS_ROAD_TEAM).toBeUndefined();
   });
 });
