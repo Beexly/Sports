@@ -3,6 +3,9 @@ import {
   ROUTE_COMBINATIONS,
   hypothesizeCombinations,
 } from "./cv-route-combinations";
+import type { RouteName, FieldSide, RouteDepth } from "./cv-route-combinations";
+
+type Obs = { route: RouteName; side: FieldSide; depth: RouteDepth };
 
 describe("route combination ontology", () => {
   it("defines at least 10 named combinations", () => {
@@ -18,37 +21,39 @@ describe("route combination ontology", () => {
   });
 
   it("recognizes smash from hitch + corner same side", () => {
-    const hyps = hypothesizeCombinations([
+    const obs: Obs[] = [
       { route: "hitch", side: "right", depth: "short" },
       { route: "corner", side: "right", depth: "intermediate" },
-    ]);
-    expect(hyps[0].combination).toBe("smash");
-    expect(hyps[0].confidence).toBe(1);
+    ];
+    const hyps = hypothesizeCombinations(obs);
+    expect(hyps[0]?.combination).toBe("smash");
+    expect(hyps[0]?.confidence).toBe(1);
   });
 
   it("recognizes mesh from crossing drags", () => {
-    const hyps = hypothesizeCombinations([
+    const obs: Obs[] = [
       { route: "drag", side: "left", depth: "short" },
       { route: "drag", side: "right", depth: "short" },
-    ]);
+    ];
+    const hyps = hypothesizeCombinations(obs);
     const mesh = hyps.find((h) => h.combination === "mesh");
     expect(mesh).toBeDefined();
   });
 
   it("recognizes verticals from 4 deep traces", () => {
-    const hyps = hypothesizeCombinations([
+    const obs: Obs[] = [
       { route: "go", side: "left", depth: "deep" },
       { route: "seam", side: "middle", depth: "deep" },
       { route: "seam", side: "middle", depth: "deep" },
       { route: "go", side: "right", depth: "deep" },
-    ]);
-    expect(hyps[0].combination).toBe("verticals");
+    ];
+    const hyps = hypothesizeCombinations(obs);
+    expect(hyps[0]?.combination).toBe("verticals");
   });
 
   it("returns empty for unrecognized groupings", () => {
-    const hyps = hypothesizeCombinations([
-      { route: "hitch", side: "left", depth: "short" },
-    ]);
+    const obs: Obs[] = [{ route: "hitch", side: "left", depth: "short" }];
+    const hyps = hypothesizeCombinations(obs);
     expect(hyps.length).toBe(0);
   });
 });
