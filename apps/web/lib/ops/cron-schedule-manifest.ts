@@ -179,6 +179,14 @@ export const CRON_MANIFEST: readonly CronManifestEntry[] = [
   // warm-pings the HF Space /health while a window is active or arming, so it
   // never cold-starts mid-drive. Writes only the scheduler_runs heartbeat.
   cronEntry("/api/cron/watch-warm", "*/3 * * * *"),
+  // Props slate shadow runner (motif/audit-fix-props-2026-10-01). Hourly at
+  // :25: runs the GSE 4-Beat props pipeline in shadow mode. Env-gated
+  // (default OFF), never persists, never publishes.
+  cronEntry("/api/cron/props-slate-shadow", "25 * * * *"),
+  // Engine DFS slate provider registration (motif/audit-fix-props-2026-10-01).
+  // Hourly at :55: builds the engine slate and registers it as the DFS
+  // provider when the founder's DFS_PROVIDER flag is set; read-only.
+  cronEntry("/api/cron/engine-dfs-slate", "55 * * * *"),
 ];
 
 /** Manifest entry for a path, or null when the path is not a declared cron. */
