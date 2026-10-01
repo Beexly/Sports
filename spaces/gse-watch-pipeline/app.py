@@ -2,10 +2,16 @@
 GSE watch-pipeline Space — CV compute brain for the autonomous live watch loop.
 
 Flow: Windows watcher → POST /process-frame (JPEG bytes) → this Space runs
-YOLO detection → IoU tracklet association → field homography → derived
-metrics → JSON. The watcher relays that JSON to the Vercel ingest route,
-which persists it to Neon. Raw frames are NEVER stored here and NEVER leave
-this process except as the transient request body.
+YOLO detection + BoT-SORT tracking on ORB-stabilized frames → field homography
+→ derived metrics → JSON. The watcher relays that JSON to the Vercel ingest
+route, which persists it to Neon. Raw frames are NEVER stored here and NEVER
+leave this process except as the transient request body.
+
+Pipeline (Film Pilot 2, 2026-10-01 — measured, not theorized):
+  stabilize (ORB/RANSAC, 0.48px residual @5fps) → detect → BoT-SORT on
+  stabilized coords = 33 track IDs for ~22 people (vs 175 raw / 97-98 with
+  naive IoU or motion-model association). Stabilization ELIMINATES phantom
+  speeds (max 18.9 mph vs 100-275 mph raw).
 
 Endpoints:
   GET  /health          liveness (the Vercel scheduler warm-pings this every
@@ -26,23 +32,60 @@ from __future__ import annotations
 import io
 import json
 import math
+import os
+import secrets
 import time
 from collections import defaultdict, deque
 from typing import Any, Optional
 
 import numpy as np
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 
 MODEL_NAME = "yolov8n.pt"
 DETECT_WIDTH = 640
 CONF_THRESHOLD = 0.35
-MIN_IOU = 0.3
-MAX_GAP_FRAMES = 5
-MIN_TRACKLET_FRAMES = 2
 STATE_TTL_S = 6 * 3600  # drop per-game state 6h after last frame
 
-app = FastAPI(title="gse-watch-pipeline", version="1.0.0")
+# Tracker selection: "botsort" (default — Film Pilot 2 winner) or "bytetrack"
+# (lighter, no appearance re-ID; use on CPU-only if BoT-SORT is too slow).
+TRACKER_NAME = os.environ.get("GSE_TRACKER", "botsort").strip().lower()
+TRACKER_CFG = "botsort.yaml" if TRACKER_NAME != "bytetrack" else "bytetrack.yaml"
+
+# ORB stabilization params (from Pilot 2's stabilize.py).
+ORB_FEATURES = 2000
+RANSAC_THRESH = 3.0
+MIN_ORB_MATCHES = 10
+
+# Bearer <redacted> for /process-frame, injected as the SPACE_API_TOKEN Space
+# secret. /health stays open (the Vercel scheduler warm-pings it).
+SPACE_API_TOKEN_ENV = "SPACE_API_TOKEN"
+
+app = FastAPI(title="gse-watch-pipeline", version="2.0.0")
+
+
+def _expected_space_token() -> Optional[str]:
+    tok = os.environ.get(SPACE_API_TOKEN_ENV, "").strip()
+    return tok or None
+
+
+def check_space_auth(authorization: Optional[str]) -> None:
+    """Fail-closed Bearer <redacted> for /process-frame. Raises HTTPException.
+
+    - No SPACE_API_TOKEN configured  -> 503 (refuse everything until the
+      operator sets the secret; never silently run open).
+    - Missing / malformed / wrong token -> 401.
+    - Comparison is constant-time (secrets.compare_digest).
+    """
+    expected = _expected_space_token()
+    if expected is None:
+        raise HTTPException(status_code=503, detail="space auth not configured")
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="missing Bearer <redacted>")
+    presented = authorization[len("Bearer "):].strip()
+    if not presented or not secrets.compare_digest(presented, expected):
+        raise HTTPException(status_code=401, detail="invalid Bearer <redacted>")
+
 
 _model = None
 _model_error: Optional[str] = None
@@ -62,23 +105,10 @@ def get_model():
     return _model
 
 
-# ── Geometry (ports of the TS tracking package; keep in sync) ────────────────
+# ── Geometry ────────────────────────────────────────────────────────────────
 
-def bbox_iou(a: dict, b: dict) -> float:
-    x1 = max(a["x"], b["x"])
-    y1 = max(a["y"], b["y"])
-    x2 = min(a["x"] + a["width"], b["x"] + b["width"])
-    y2 = min(a["y"] + a["height"], b["y"] + b["height"])
-    inter = max(0.0, x2 - x1) * max(0.0, y2 - y1)
-    if inter <= 0:
-        return 0.0
-    union = a["width"] * a["height"] + b["width"] * b["height"] - inter
-    return inter / union if union > 0 else 0.0
-
-
-def foot_point(det: dict) -> tuple[float, float]:
-    b = det["bbox"]
-    return (b["x"] + b["width"] / 2.0, b["y"] + b["height"])
+def foot_point(bbox: dict) -> tuple[float, float]:
+    return (bbox["x"] + bbox["width"] / 2.0, bbox["y"] + bbox["height"])
 
 
 def project_point(px: float, py: float, h: list[list[float]]) -> tuple[float, float]:
@@ -91,88 +121,143 @@ def project_point(px: float, py: float, h: list[list[float]]) -> tuple[float, fl
     )
 
 
-# ── Per-game state ────────────────────────────────────────────────────────────
+# ── Per-game state: stabilization + persistent tracker ──────────────────────
 
 class GameState:
-    """Incremental association state for one game. Mirrors the greedy IoU
-    matching in cv-tracklet-association.ts, applied frame-by-frame."""
+    """Per-game pipeline state.
+
+    Holds:
+    - A dedicated YOLO model instance whose BoT-SORT/ByteTrack tracker
+      persists across /process-frame calls (track IDs stay consistent).
+    - ORB stabilization state: previous grayscale frame + keypoints, and the
+      cumulative homography mapping current-frame pixels to the reference
+      (first-frame) coordinate system. Detections are tracked in stabilized
+      coords, which is what killed the phantom speeds in Pilot 2.
+    """
 
     def __init__(self) -> None:
-        self.active: list[dict] = []  # tracklets still alive
-        self.retired: list[dict] = []
-        self.next_id = 1
-        self.last_seen = time.time()
+        import cv2
+
+        self.tracker_model = None          # lazy per-game YOLO instance
+        self.orb = cv2.ORB_create(nfeatures=ORB_FEATURES)
+        self.bf = cv2.BFMatcher(cv2.NORM_HAMMING, crossCheck=True)
+        self.prev_gray: Optional[np.ndarray] = None
+        self.cum_h: np.ndarray = np.eye(3, dtype=np.float64)
         self.frames_seen = 0
-
-    def _new_id(self) -> str:
-        tid = f"trk-{self.next_id:04d}"
-        self.next_id += 1
-        return tid
-
-    def ingest(self, detections: list[dict], t: float) -> list[dict]:
-        """Match detections to active tracklets (greedy best-IoU), age the
-        unmatched, spawn tracklets for the rest. Returns finished tracklets
-        retired on this frame (for persistence)."""
         self.last_seen = time.time()
-        self.frames_seen += 1
-        dets = list(detections)
-        used: set[int] = set()
-        matched: set[int] = set()  # indices into self.active
+        self.stab_ok_count = 0
+        self.stab_fail_count = 0
+        # Tracklet bookkeeping for the response (mirrors old shape).
+        self.tracklet_points: dict[int, list[dict]] = defaultdict(list)
+        self.tracklet_meta: dict[int, dict] = {}
 
-        while True:
-            best = None  # (iou, active_idx, det_idx)
-            for ai, trk in enumerate(self.active):
-                if ai in matched:
-                    continue
-                for di, det in enumerate(dets):
-                    if di in used:
-                        continue
-                    iou = bbox_iou(trk["last_bbox"], det["bbox"])
-                    if iou >= MIN_IOU and (best is None or iou > best[0]):
-                        best = (iou, ai, di)
-            if best is None:
-                break
-            _, ai, di = best
-            matched.add(ai)
-            used.add(di)
-            trk = self.active[ai]
-            fx, fy = foot_point(dets[di])
-            trk["points"].append({"t": t, "xPx": fx, "yPx": fy})
-            trk["last_bbox"] = dets[di]["bbox"]
-            trk["gap"] = 0
-            trk["team_hint"] = dets[di].get("teamHint", trk.get("team_hint", "UNK"))
+    def _ensure_tracker(self):
+        if self.tracker_model is None:
+            from ultralytics import YOLO
 
-        finished: list[dict] = []
-        still_active: list[dict] = []
-        for ai, trk in enumerate(self.active):
-            if ai in matched:
-                still_active.append(trk)
-                continue
-            trk["gap"] += 1
-            if trk["gap"] > MAX_GAP_FRAMES:
-                if len(trk["points"]) >= MIN_TRACKLET_FRAMES:
-                    finished.append(trk)
-                else:
-                    self.retired.append(trk)
-            else:
-                still_active.append(trk)
+            self.tracker_model = YOLO(MODEL_NAME)
+        return self.tracker_model
 
-        for di, det in enumerate(dets):
-            if di in used:
-                continue
-            fx, fy = foot_point(det)
-            still_active.append(
-                {
-                    "id": self._new_id(),
-                    "team_hint": det.get("teamHint", "UNK"),
-                    "role": det.get("classId", "player"),
-                    "points": [{"t": t, "xPx": fx, "yPx": fy}],
-                    "last_bbox": det["bbox"],
-                    "gap": 0,
-                }
+    def stabilize(self, frame_bgr: np.ndarray) -> tuple[np.ndarray, bool]:
+        """Warp frame to the reference coordinate system.
+
+        Returns (stabilized_frame, homography_ok). On ORB failure the raw
+        frame is returned and the cumulative homography is left unchanged
+        (tracker keeps running; continuity degrades gracefully, not fatally).
+        """
+        import cv2
+
+        gray = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2GRAY)
+        if self.prev_gray is None:
+            self.prev_gray = gray
+            self.frames_seen += 1
+            return frame_bgr, True
+
+        kp1, des1 = self.orb.detectAndCompute(self.prev_gray, None)
+        kp2, des2 = self.orb.detectAndCompute(gray, None)
+        ok = False
+        if des1 is not None and des2 is not None and len(des1) >= MIN_ORB_MATCHES and len(des2) >= MIN_ORB_MATCHES:
+            matches = self.bf.match(des1, des2)
+            if len(matches) >= MIN_ORB_MATCHES:
+                matches = sorted(matches, key=lambda m: m.distance)[:200]
+                src = np.float32([kp1[m.queryIdx].pt for m in matches])
+                dst = np.float32([kp2[m.trainIdx].pt for m in matches])
+                h, mask = cv2.findHomography(dst, src, cv2.RANSAC, RANSAC_THRESH)
+                if h is not None:
+                    self.cum_h = self.cum_h @ h
+                    ok = True
+
+        h, w = frame_bgr.shape[:2]
+        if ok:
+            warped = cv2.warpPerspective(
+                frame_bgr, self.cum_h, (w, h),
+                flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE,
             )
-        self.active = still_active
-        return finished
+            self.stab_ok_count += 1
+        else:
+            warped = frame_bgr
+            self.stab_fail_count += 1
+
+        self.prev_gray = gray
+        self.frames_seen += 1
+        self.last_seen = time.time()
+        return warped, ok
+
+    def track_frame(
+        self, frame_bgr: np.ndarray, ts: float
+    ) -> tuple[list[dict], list[dict], float, bool]:
+        """Stabilize → track. Returns (detections, active_tracklets, infer_ms, stab_ok).
+
+        Detections carry stabilized pixel coords. Tracklet IDs come from the
+        persistent BoT-SORT/ByteTrack tracker.
+        """
+        import cv2
+
+        t0 = time.time()
+        stab_frame, stab_ok = self.stabilize(frame_bgr)
+        model = self._ensure_tracker()
+
+        # Downscale for inference speed; tracker runs on the small frame.
+        h0, w0 = stab_frame.shape[:2]
+        scale = DETECT_WIDTH / w0
+        small = cv2.resize(stab_frame, (DETECT_WIDTH, int(h0 * scale)))
+        inv = 1.0 / scale
+
+        results = model.track(
+            small, persist=True, tracker=TRACKER_CFG,
+            conf=CONF_THRESHOLD, classes=[0], verbose=False,
+        )
+        infer_ms = (time.time() - t0) * 1000.0
+        res = results[0]
+
+        detections: list[dict] = []
+        active: list[dict] = []
+        if res.boxes is not None and len(res.boxes) > 0:
+            ids = res.boxes.id
+            for i, b in enumerate(res.boxes):
+                x1, y1, x2, y2 = (float(v) for v in b.xyxy[0].tolist())
+                tid = int(ids[i].item()) if ids is not None else -1
+                bbox = {
+                    "x": round(x1 * inv, 1),
+                    "y": round(y1 * inv, 1),
+                    "width": round((x2 - x1) * inv, 1),
+                    "height": round((y2 - y1) * inv, 1),
+                }
+                conf = round(float(b.conf[0].item()), 3)
+                detections.append({"bbox": bbox, "confidence": conf, "classId": "player", "trackId": tid})
+                if tid >= 0:
+                    fx, fy = foot_point(bbox)
+                    pt = {"t": ts, "xPx": round(fx, 1), "yPx": round(fy, 1)}
+                    self.tracklet_points[tid].append(pt)
+                    self.tracklet_meta.setdefault(tid, {"first_t": ts})
+                    self.tracklet_meta[tid]["last_t"] = ts
+                    active.append({
+                        "id": f"trk-{tid:04d}",
+                        "track_id": tid,
+                        "n_points": len(self.tracklet_points[tid]),
+                        "last": pt,
+                    })
+        return detections, active, round(infer_ms, 1), stab_ok
 
 
 _games: dict[str, GameState] = {}
@@ -184,48 +269,9 @@ def get_game(game_id: str) -> GameState:
     if gs is None:
         gs = GameState()
         _games[game_id] = gs
-    # Evict stale games.
     for gid in [g for g, s in _games.items() if now - s.last_seen > STATE_TTL_S]:
         del _games[gid]
     return gs
-
-
-# ── Detection ─────────────────────────────────────────────────────────────────
-
-def detect_people(jpeg_bytes: bytes) -> tuple[list[dict], int, int, float]:
-    """Returns (detections, width, height, inference_ms)."""
-    import cv2
-
-    arr = np.frombuffer(jpeg_bytes, dtype=np.uint8)
-    frame = cv2.imdecode(arr, cv2.IMREAD_COLOR)
-    if frame is None:
-        raise ValueError("could not decode JPEG frame")
-    h, w = frame.shape[:2]
-    scale = DETECT_WIDTH / w
-    small = cv2.resize(frame, (DETECT_WIDTH, int(h * scale)))
-    model = get_model()
-    t0 = time.time()
-    res = model.predict(small, conf=CONF_THRESHOLD, classes=[0], verbose=False)[0]
-    ms = (time.time() - t0) * 1000.0
-    inv = 1.0 / scale
-    dets: list[dict] = []
-    boxes = res.boxes
-    if boxes is not None:
-        for b in boxes:
-            x1, y1, x2, y2 = (float(v) for v in b.xyxy[0].tolist())
-            dets.append(
-                {
-                    "bbox": {
-                        "x": round(x1 * inv, 1),
-                        "y": round(y1 * inv, 1),
-                        "width": round((x2 - x1) * inv, 1),
-                        "height": round((y2 - y1) * inv, 1),
-                    },
-                    "confidence": round(float(b.conf[0].item()), 3),
-                    "classId": "player",
-                }
-            )
-    return dets, w, h, round(ms, 1)
 
 
 # ── Derived metrics (formation/route shapes, not NGS) ─────────────────────────
@@ -237,12 +283,12 @@ def derive_frame_metrics(
     seeded (hand-seed v1; auto landmarks are the research gap)."""
     positions: list[dict] = []
     for trk in active:
-        pt = trk["points"][-1]
+        pt = trk["last"]
         entry: dict[str, Any] = {
             "tracklet_id": trk["id"],
             "t": pt["t"],
-            "x_px": round(pt["xPx"], 1),
-            "y_px": round(pt["yPx"], 1),
+            "x_px": pt["xPx"],
+            "y_px": pt["yPx"],
             "x_yd": None,
             "y_yd": None,
         }
@@ -255,8 +301,6 @@ def derive_frame_metrics(
                 pass
         positions.append(entry)
 
-    # Separation proxy: for each tracklet with field coords, distance to the
-    # nearest other tracklet (the fieldcoachai "sep" shape, v1 proxy).
     separations: list[dict] = []
     with_coords = [p for p in positions if p["x_yd"] is not None]
     for p in with_coords:
@@ -275,35 +319,10 @@ def derive_frame_metrics(
             }
         )
 
-    # Break-angle proxy: max heading change over the tracklet's recent field
-    # positions (needs ≥3 projected points). v1 proxy for route-break quality.
-    break_angles: list[dict] = []
-    if homography is not None:
-        for trk in active:
-            pts = trk["points"][-8:]
-            if len(pts) < 3:
-                continue
-            try:
-                fpts = [project_point(p["xPx"], p["yPx"], homography) for p in pts]
-            except ValueError:
-                continue
-            max_turn = 0.0
-            for i in range(1, len(fpts) - 1):
-                ax, ay = fpts[i][0] - fpts[i - 1][0], fpts[i][1] - fpts[i - 1][1]
-                bx, by = fpts[i + 1][0] - fpts[i][0], fpts[i + 1][1] - fpts[i][1]
-                na, nb = math.hypot(ax, ay), math.hypot(bx, by)
-                if na < 1e-9 or nb < 1e-9:
-                    continue
-                cosang = max(-1.0, min(1.0, (ax * bx + ay * by) / (na * nb)))
-                max_turn = max(max_turn, math.degrees(math.acos(cosang)))
-            break_angles.append(
-                {"tracklet_id": trk["id"], "max_heading_change_deg": round(max_turn, 1)}
-            )
-
     return {
         "positions": positions,
         "separations": separations,
-        "break_angles": break_angles,
+        "break_angles": [],  # recomputed from tracklet history on the ingest side
         "homography_seeded": homography is not None,
     }
 
@@ -316,13 +335,13 @@ def health() -> dict[str, Any]:
     try:
         get_model()
     except RuntimeError as exc:
-        ok = False
         return JSONResponse(
             status_code=503, content={"status": "degraded", "error": str(exc)}
         )
     return {
         "status": "ok" if ok else "degraded",
         "model": MODEL_NAME,
+        "tracker": TRACKER_NAME,
         "detect_width": DETECT_WIDTH,
         "games_tracked": len(_games),
     }
@@ -330,6 +349,7 @@ def health() -> dict[str, Any]:
 
 @app.post("/process-frame")
 async def process_frame(
+    authorization: Optional[str] = Header(default=None),
     frame: UploadFile = File(...),
     game_id: str = Form(...),
     ts: float = Form(...),
@@ -337,6 +357,7 @@ async def process_frame(
     burst: bool = Form(False),
     homography: Optional[str] = Form(None),
 ) -> dict[str, Any]:
+    check_space_auth(authorization)
     t_start = time.time()
     jpeg = await frame.read()
     if len(jpeg) > 2_000_000:
@@ -350,16 +371,21 @@ async def process_frame(
         except Exception:
             raise HTTPException(status_code=400, detail="homography must be a 3x3 array")
 
+    import cv2
+
+    arr = np.frombuffer(jpeg, dtype=np.uint8)
+    frame_bgr = cv2.imdecode(arr, cv2.IMREAD_COLOR)
+    if frame_bgr is None:
+        raise HTTPException(status_code=400, detail="could not decode JPEG frame")
+    height, width = frame_bgr.shape[:2]
+
+    gs = get_game(game_id)
     try:
-        detections, width, height, infer_ms = detect_people(jpeg)
-    except ValueError as exc:
-        raise HTTPException(status_code=400, detail=str(exc))
+        detections, active, infer_ms, stab_ok = gs.track_frame(frame_bgr, ts)
     except RuntimeError as exc:
         raise HTTPException(status_code=503, detail=str(exc))
 
-    gs = get_game(game_id)
-    finished = gs.ingest(detections, ts)
-    metrics = derive_frame_metrics(gs.active, h)
+    metrics = derive_frame_metrics(active, h)
 
     return {
         "game_id": game_id,
@@ -368,28 +394,12 @@ async def process_frame(
         "burst": burst,
         "width": width,
         "height": height,
+        "tracker": TRACKER_NAME,
+        "stabilized": stab_ok,
         "detections": detections,
         "n_detections": len(detections),
-        "active_tracklets": [
-            {
-                "id": t["id"],
-                "team_hint": t["team_hint"],
-                "role": t["role"],
-                "n_points": len(t["points"]),
-            }
-            for t in gs.active
-        ],
-        "finished_tracklets": [
-            {
-                "id": t["id"],
-                "team_hint": t["team_hint"],
-                "role": t["role"],
-                "n_points": len(t["points"]),
-                "start_t": t["points"][0]["t"],
-                "end_t": t["points"][-1]["t"],
-            }
-            for t in finished
-        ],
+        "active_tracklets": active,
+        "n_track_ids": len(gs.tracklet_points),
         "metrics": metrics,
         "timing_ms": {
             "inference": infer_ms,
