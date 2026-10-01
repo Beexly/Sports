@@ -31,6 +31,7 @@ import {
   type ContinuousVote,
 } from "./continuous-signal-tilt.js";
 import { deriveSignalGameContextCached, SignalContextCache } from "./signal-game-context.js";
+import { fetchOutdoorVenueWeather } from "./fetch-venue-weather.js";
 import { runLeakageGate, fixtureFromGameRows, evalLeakageQuality } from "./leakage-gate.js";
 import {
   FixtureConfirmer,
@@ -557,6 +558,15 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
       // context builder must never introduce.
       signalContextCache,
     );
+    const weatherEnv: Record<string, string> = { ...signalContext.env };
+    if (opts?.weatherFetch) {
+      const reading = await fetchOutdoorVenueWeather(homeTeam, opts.weatherFetch);
+      if (reading) {
+        weatherEnv.WIND_MPH = String(reading.windMph);
+        weatherEnv.WEATHER_STADIUM = reading.stadium;
+        weatherEnv.IS_DOME = "0";
+      }
+    }
     const continuousVotes: ContinuousVote[] = [];
     try {
       const tilt = await applyContinuousSignalTilt(homeP, SIGNAL_REGISTRY, {
@@ -565,7 +575,7 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
         awayTeam,
         commenceTime,
         spreadHome: null,
-        env: signalContext.env,
+        env: weatherEnv,
         now: () => now,
       });
       if (tilt.applied) {

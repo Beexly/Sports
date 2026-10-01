@@ -13,7 +13,19 @@ import {
   evaluateQbTwpRegression,
   evaluateAgeConditionedRest,
 } from "@sports/prediction-engine";
-import { evalShortWeekRoadDeficit } from "./signals-bridge.js";
+import { evalShortWeekRoadDeficit, evalLinearWindPassImpact } from "./signals-bridge.js";
+import { nflTeamAbbr } from "./nfl-team-abbr.js";
+import { NFL_SCHEME_PRIOR, NFL_SCHEME_PRIOR_SEASON } from "./priors/nfl-2025-scheme.js";
+
+function teamLabel(team: unknown): string | null {
+  if (typeof team === "string") return team;
+  if (team && typeof team === "object") {
+    const row = team as { abbreviation?: unknown; name?: unknown };
+    if (typeof row.abbreviation === "string" && row.abbreviation.trim() !== "") return row.abbreviation;
+    if (typeof row.name === "string") return row.name;
+  }
+  return null;
+}
 
 const KILL_LINE = {
   maxBrierScoreVsMarket: 0.250,
@@ -340,26 +352,49 @@ export const nflEarlyDownProeSignal: SignalDefinition = {
   outputKind: "CONTINUOUS_VALUE",
   validSports: ["americanfootball_nfl"],
   owner: "quant-pace",
-  dataDependencies: ["nfl_pbp"],
+  dataDependencies: ["nflverse_2025_pbp_pass_oe"],
   activationStatus: "ACTIVE",
   trustWeight: 0.10,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
-  // DIRECTION: homeSign +1, neutral 0. positive PROE differential = more pass volume for the team.
-  // The evaluator's own field is `proeDifferential`; the registry previously read
-  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  // DIRECTION: homeSign +1, neutral 0. The value is home pass_oe minus away
+  // pass_oe, in rate units. A larger value means the home side's prior-season
+  // play-calling was more pass-heavy than the visitor's, which favors home.
+  // This is nflverse scrimmage pass_oe, all downs, season 2025. It is not the
+  // early-down-only kernel. That kernel wants an expected early-down rate and
+  // a seconds-per-play pace we do not have, and calling it would mislabel the
+  // measurement. The early-down neutral pass rate is recorded in metadata and
+  // does not vote.
   homeSign: 1 as const,
   neutralValue: 0,
-  evaluate: async () => {
-    // The kernel's input contract does not match the env keys this wrapper
-    // used to pass, and the result was read off a field the kernel does not
-    // return. That read emits 0, which is a vote the measurement never made.
-    // Abstain. The sanctioned call is the matching function in
-    // signals-bridge.ts, and it stays unwired until its real inputs exist in
-    // the schema. Do not restore a type-erasing call.
-    return null;
+  evaluate: async (ctx) => {
+    if (ctx.sportKey !== "americanfootball_nfl") return null;
+    const homeAbbr = nflTeamAbbr(teamLabel(ctx.homeTeam));
+    const awayAbbr = nflTeamAbbr(teamLabel(ctx.awayTeam));
+    if (homeAbbr == null || awayAbbr == null) return null;
+    const home = NFL_SCHEME_PRIOR[homeAbbr];
+    const away = NFL_SCHEME_PRIOR[awayAbbr];
+    if (home == null || away == null) return null;
+    const value = Number(((home.proePp - away.proePp) / 100).toFixed(4));
+    if (!Number.isFinite(value)) return null;
+    return {
+      value,
+      capturedAt: ctx.now().toISOString(),
+      metadata: {
+        season: NFL_SCHEME_PRIOR_SEASON,
+        source: "nflverse pass_oe, scrimmage plays, regular season",
+        homeAbbr,
+        awayAbbr,
+        homeProePp: home.proePp,
+        awayProePp: away.proePp,
+        homeNeutralPass: home.neutralPass,
+        awayNeutralPass: away.neutralPass,
+        homePassDefenseRank: home.passDefenseRank,
+        awayPassDefenseRank: away.passDefenseRank,
+      },
+    };
   },
 };
 
@@ -819,19 +854,44 @@ export const nflLinearWindPassSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
-  // DIRECTION: homeSign +1, neutral 0. wind-adjusted passing yardage for the offense.
-  // The evaluator's own field is `passingYardageAdjustment`; the registry previously read
-  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  // DIRECTION: homeSign +1, neutral 0. Wind suppresses passing yards. The
+  // home-relative value is that suppression times (home pass rate minus away
+  // pass rate). A pass-heavier home side is hurt. A pass-heavier visitor is
+  // hurt, which favors home. Equal pass rates say nothing. No measured
+  // passing-yards baseline, so the projection is not used.
   homeSign: 1 as const,
   neutralValue: 0,
-  evaluate: async () => {
-    // The kernel's input contract does not match the env keys this wrapper
-    // used to pass, and the result was read off a field the kernel does not
-    // return. That read emits 0, which is a vote the measurement never made.
-    // Abstain. The sanctioned call is the matching function in
-    // signals-bridge.ts, and it stays unwired until its real inputs exist in
-    // the schema. Do not restore a type-erasing call.
-    return null;
+  evaluate: async (ctx) => {
+    if (ctx.sportKey !== "americanfootball_nfl") return null;
+    const wind = num(ctx.env, "WIND_MPH");
+    if (wind == null) return null;
+    const homeAbbr = nflTeamAbbr(teamLabel(ctx.homeTeam));
+    const awayAbbr = nflTeamAbbr(teamLabel(ctx.awayTeam));
+    if (homeAbbr == null || awayAbbr == null) return null;
+    const home = NFL_SCHEME_PRIOR[homeAbbr];
+    const away = NFL_SCHEME_PRIOR[awayAbbr];
+    if (home == null || away == null) return null;
+    const bridged = evalLinearWindPassImpact({
+      windSpeedMph: wind,
+      isEnclosedOrDome: bool(ctx.env, "IS_DOME") === true,
+      baselinePassingYards: null,
+    });
+    if (!bridged.ok) return null;
+    const passGap = home.passRate - away.passRate;
+    const value = Number((bridged.data.passingYardsTilt * passGap).toFixed(4));
+    if (!Number.isFinite(value)) return null;
+    return {
+      value,
+      capturedAt: ctx.now().toISOString(),
+      metadata: {
+        windMph: wind,
+        passingYardsTilt: bridged.data.passingYardsTilt,
+        homePassRate: home.passRate,
+        awayPassRate: away.passRate,
+        stadium: ctx.env.WEATHER_STADIUM ?? null,
+        baselineNotMeasured: true,
+      },
+    };
   },
 };
 

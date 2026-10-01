@@ -820,8 +820,8 @@ export interface LinearWindPassImpactEval {
   readonly effectiveWindDecayMph: number;
   /** Signed shift in team passing yards. A tilt, NOT a forecast. */
   readonly passingYardsTilt: number;
-  /** Wind-adjusted passing yardage projection. A projection of a base, not a win probability. */
-  readonly projectedPassingYards: number;
+  /** Wind-adjusted passing yardage projection. Null when no baseline was measured. */
+  readonly projectedPassingYards: number | null;
   /** Signed percentage-point shift in completion rate. A tilt, NOT a probability. */
   readonly completionRateTiltPp: number;
   /** Multiplier on 20+ yard attempt rate. */
@@ -832,7 +832,8 @@ export function evalLinearWindPassImpact(input: {
   readonly windSpeedMph: number;
   readonly isEnclosedOrDome: boolean;
   readonly gustSpeedMph?: number;
-  readonly baselinePassingYards: number;
+  /** Null means no team passing-yards baseline was measured. The yards tilt still computes. */
+  readonly baselinePassingYards: number | null;
   readonly passAttemptBaseline?: number;
 }): SignalEval<LinearWindPassImpactEval> {
   const bad =
@@ -840,7 +841,10 @@ export function evalLinearWindPassImpact(input: {
     badIf(typeof input.isEnclosedOrDome !== "boolean", `isEnclosedOrDome must be a boolean: ${String(input.isEnclosedOrDome)}`) ??
     badIf(input.gustSpeedMph !== undefined && !isIn(input.gustSpeedMph, 0, 160), `gustSpeedMph out of range: ${String(input.gustSpeedMph)}`) ??
     badIf(input.gustSpeedMph !== undefined && input.gustSpeedMph < input.windSpeedMph, `gustSpeedMph ${input.gustSpeedMph} is below sustained wind ${input.windSpeedMph}`) ??
-    badIf(!isIn(input.baselinePassingYards, 20, 600), `baselinePassingYards out of range: ${String(input.baselinePassingYards)}`) ??
+    badIf(
+      input.baselinePassingYards != null && !isIn(input.baselinePassingYards, 20, 600),
+      `baselinePassingYards out of range: ${String(input.baselinePassingYards)}`,
+    ) ??
     badIf(input.passAttemptBaseline !== undefined && !isIn(input.passAttemptBaseline, 0, 100), `passAttemptBaseline out of range: ${String(input.passAttemptBaseline)}`);
   if (bad) return bad;
 
@@ -858,7 +862,10 @@ export function evalLinearWindPassImpact(input: {
   const outBad =
     badIf(!isIn(out.effectiveWindDecayMph, 0, 115), `effectiveWindDecayMph out of range: ${String(out.effectiveWindDecayMph)}`) ??
     badIf(!isIn(out.passingYardageAdjustment, -80, 0), `passingYardsTilt must be <= 0, got ${String(out.passingYardageAdjustment)}`) ??
-    badIf(!isIn(out.projectedPassingYards, 0, 600), `projectedPassingYards out of range: ${String(out.projectedPassingYards)}`) ??
+    badIf(
+      out.projectedPassingYards != null && !isIn(out.projectedPassingYards, 0, 600),
+      `projectedPassingYards out of range: ${String(out.projectedPassingYards)}`,
+    ) ??
     badIf(!isIn(out.completionPercentageDelta, -20, 0), `completionRateTiltPp must be <= 0, got ${String(out.completionPercentageDelta)}`) ??
     badIf(!isMultiplier(out.deepPassRateCompression, 0.4, 1.0), `deepPassRateCompression out of range: ${String(out.deepPassRateCompression)}`);
   if (outBad) return outBad;

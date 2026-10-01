@@ -12,7 +12,8 @@ export interface WindPassImpactContext {
   readonly windSpeedMph: number;
   readonly isEnclosedOrDome: boolean;
   readonly gustSpeedMph?: number;
-  readonly baselinePassingYards: number;
+  /** Measured team passing-yards baseline. Absent means the projection is not computed. */
+  readonly baselinePassingYards?: number | null;
   readonly passAttemptBaseline?: number;
 }
 
@@ -21,7 +22,7 @@ export interface WindPassImpactResult {
   readonly sustainedWindMph: number;
   readonly effectiveWindDecayMph: number; // wind above calm threshold
   readonly passingYardageAdjustment: number; // expected shift in team passing yards
-  readonly projectedPassingYards: number;
+  readonly projectedPassingYards: number | null;
   readonly completionPercentageDelta: number; // percentage points shift
   readonly deepPassRateCompression: number; // multiplier on 20+ yard attempts
 }
@@ -39,7 +40,7 @@ export function evaluateLinearWindPassImpact(
       sustainedWindMph: 0,
       effectiveWindDecayMph: 0,
       passingYardageAdjustment: 0,
-      projectedPassingYards: context.baselinePassingYards,
+      projectedPassingYards: context.baselinePassingYards ?? null,
       completionPercentageDelta: 0,
       deepPassRateCompression: 1.0,
     };
@@ -68,9 +69,10 @@ export function evaluateLinearWindPassImpact(
     Math.max(-75.0, Math.min(0, rawPassingYardageAdjustment)).toFixed(1)
   );
 
-  const projectedPassingYards = Number(
-    Math.max(80.0, context.baselinePassingYards + passingYardageAdjustment).toFixed(1)
-  );
+  const projectedPassingYards =
+    context.baselinePassingYards == null
+      ? null
+      : Number(Math.max(80.0, context.baselinePassingYards + passingYardageAdjustment).toFixed(1));
 
   // Completion percentage drops ~0.24 percentage points per effective mph above 8 mph
   const completionPercentageDelta = Number(

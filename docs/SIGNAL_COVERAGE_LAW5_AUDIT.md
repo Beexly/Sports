@@ -55,9 +55,18 @@ manufacturing the measurement.
   `PlayerGameStat.targetShare` has season and week and no game date, so a
   latest-week read can include the game being predicted. Route participation
   is not a column. Not wired on a partial.
-- `nfl_early_down_proe_momentum` — kernel wants an early-down pass rate and an
-  expected pass rate. `TeamGameEfficiency` stores game EPA and success rate,
-  not that split.
+- `nfl_early_down_proe_momentum` — wired from the nflverse 2025 scrimmage
+  pass_oe prior (`priors/nfl-2025-scheme.ts`). The vote is home pass_oe minus
+  away pass_oe. It is not the early-down-only kernel. That kernel still wants
+  an expected early-down rate and a seconds-per-play pace we do not have.
+  Calling it would mislabel the measurement. The early-down neutral pass rate
+  is in the metadata and does not vote.
+- `nfl_linear_wind_pass_impact` — wired when the slate is given a National
+  Weather Service fetch. Production `board-fill` passes one. The home venue
+  must be in the outdoor coordinate table. The yards suppression is the
+  kernel's. It is applied to the pass-rate gap, so wind hurts the more
+  pass-heavy side. No passing-yards baseline was measured, so the projection
+  is not used. A team with no coordinate abstains. That is not a dome claim.
 - `nfl_two_minute_hurry_up` — kernel wants two-minute drive counts. Not a column.
 - `nfl_bye_week_defensive_install` — rest days can say the prep window was
   long. The kernel also wants a coordinator name and a pedigree tier, and it
@@ -81,9 +90,11 @@ manufacturing the measurement.
   `nfl_redzone_personnel_grouping` — no red-zone trip or personnel columns.
   `TeamGameEfficiency` does not carry them.
 - `nfl_rookie_breakout_cohort` — `Player` has no draft round.
-- `nfl_high_altitude_fatigue`, `nfl_linear_wind_pass_impact`,
-  `nfl_temperature_precipitation_decay`, `nfl_turf_surface_fatigue` — no
-  weather, elevation, or surface columns. Not manufactured.
+- `nfl_high_altitude_fatigue`, `nfl_temperature_precipitation_decay`,
+  `nfl_turf_surface_fatigue` — no elevation or surface column. The NWS
+  reading includes temperature. It is not passed into the slate, because the
+  temperature kernel also wants a precipitation type and a passing-yards
+  baseline, and a temperature number alone would mislabel that kernel.
 
 SHADOW_ONLY (10) and BLOCKED_MISSING_SOURCE (5) are unchanged. Their blockers
 in the sections below still name the missing source. Do not flip
