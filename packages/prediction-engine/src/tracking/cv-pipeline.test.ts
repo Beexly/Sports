@@ -72,6 +72,10 @@ describe("cv-pipeline (end-to-end, fixture frames)", () => {
       expect(met.topSpeedMs).toBeCloseTo(2.0, 2);
       expect(met.avgSpeedMs).toBeCloseTo(2.0, 2);
     }
+
+    // Wiring: provided homography + legacy associator reported.
+    expect(out.homographyMethod).toBe("provided");
+    expect(out.associator).toBe("legacy-iou");
   });
 
   it("identities hold: KC moves right, PHI moves left", () => {
@@ -106,5 +110,43 @@ describe("cv-pipeline (end-to-end, fixture frames)", () => {
         homography: SCALE_H,
       }),
     ).toThrow(/at least one frame/);
+  });
+
+  it("motion-aware association option runs the reachable-set associator", () => {
+    const script = [0, 1, 2, 3, 4, 5].map((k) => [
+      playerDetection(10 + 2 * k, 8, 8, 12, "KC"),
+      playerDetection(40 - 2 * k, 24, 8, 12, "PHI"),
+    ]);
+    const out = runMovementPipeline({
+      frames: buildFrames(),
+      detector: new FixtureDetector(script),
+      homography: SCALE_H,
+      motionAwareAssociation: true,
+    });
+    expect(out.associator).toBe("motion-aware");
+    expect(out.tracklets).toHaveLength(2);
+    expect(out.metrics).toHaveLength(2);
+    for (const met of out.metrics) {
+      expect(met.distanceM).toBeCloseTo(1.0, 2);
+    }
+  });
+
+  it("hand-seed fallback engages when landmarks are unreadable", () => {
+    const script = [0, 1, 2, 3, 4, 5].map((k) => [
+      playerDetection(10 + 2 * k, 8, 8, 12, "KC"),
+    ]);
+    const out = runMovementPipeline({
+      frames: buildFrames(),
+      detector: new FixtureDetector(script),
+      homographySource: {
+        deriveFromLandmarks: {
+          losAnchor: { losYard: 25, losImageX: 32, side: "own" },
+          fallbackHomography: SCALE_H,
+        },
+      },
+    });
+    expect(out.homographyMethod).toBe("hand-seed-fallback");
+    expect(out.tracklets).toHaveLength(1);
+    expect(out.metrics[0]?.distanceM).toBeCloseTo(1.0, 2);
   });
 });

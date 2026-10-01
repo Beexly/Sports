@@ -20,6 +20,8 @@
 
 import type { Homography } from "./cv-movement-primitive.js";
 
+export type { Homography } from "./cv-movement-primitive.js";
+
 export interface Correspondence {
   readonly xPx: number;
   readonly yPx: number;
@@ -229,4 +231,149 @@ export function projectPoint(
     xM: (h.h11 * p.xPx + h.h12 * p.yPx + h.h13) / denom,
     yM: (h.h21 * p.xPx + h.h22 * p.yPx + h.h23) / denom,
   };
+}
+
+/* ------------------------------------------------------------------ */
+/* Degenerate-correspondence guard (gap: named refusal, not garbage)    */
+/* ------------------------------------------------------------------ */
+
+/**
+ * Why a correspondence set was refused.
+ * - "too-few": fewer than 4 correspondences (a homography has 8 DOF).
+ * - "colinear-src": points colinear in pixel space.
+ * - "colinear-dst": points colinear in field-meter space (e.g. the
+ *   hash-mark row alone, or the boundary row alone — a single row has
+ *   no 2D spread and cannot constrain a homography).
+ * - "scale-mismatch": the fitted homography's local scale disagrees with
+ *   the independent Sloan px/yard calibration beyond tolerance.
+ */
+export type DegenerateReason =
+  | "too-few"
+  | "colinear-src"
+  | "colinear-dst"
+  | "scale-mismatch";
+
+/**
+ * Named refusal for degenerate correspondence sets. Callers that can
+ * degrade (e.g. resolveHomography's hand-seeded fallback) catch this
+ * specifically; anything else propagates as a genuine bug.
+ */
+export class DegenerateCorrespondencesError extends Error {
+  readonly reason: DegenerateReason;
+  constructor(reason: DegenerateReason, message: string) {
+    super(message);
+    this.name = "DegenerateCorrespondencesError";
+    this.reason = reason;
+  }
+}
+
+/**
+ * Smallest-to-largest eigenvalue ratio of the 2D point covariance below
+ * which the set is treated as collinear. [DERIVED]
+ */
+export const COLINEAR_EIGEN_RATIO = 1e-6;
+
+function covarianceEigenRatio(pts: readonly { x: number; y: number }[]): number {
+  const n = pts.length;
+  if (n < 2) return 0;
+  let mx = 0;
+  let my = 0;
+  for (const p of pts) {
+    mx += p.x / n;
+    my += p.y / n;
+  }
+  let sxx = 0;
+  let sxy = 0;
+  let syy = 0;
+  for (const p of pts) {
+    const dx = p.x - mx;
+    const dy = p.y - my;
+    sxx += dx * dx;
+    sxy += dx * dy;
+    syy += dy * dy;
+  }
+  const trace = sxx + syy;
+  if (trace <= 0) return 0;
+  const det = sxx * syy - sxy * sxy;
+  const disc = Math.sqrt(Math.max(0, (trace / 2) * (trace / 2) - det));
+  const lmin = Math.max(0, trace / 2 - disc);
+  const lmax = Math.max(trace / 2 + disc, 1e-300);
+  return lmin / lmax;
+}
+
+/**
+ * Refuse (named) a correspondence set that cannot constrain a homography:
+ * too few points, or colinear in either space. A single correspondence
+ * row — the hash-mark row alone or the boundary row alone — is collinear
+ * in BOTH spaces and is refused here, never fit.
+ *
+ * Throws DegenerateCorrespondencesError; returns void on a healthy set.
+ */
+export function checkCorrespondenceGeometry(
+  points: readonly Correspondence[],
+): void {
+  if (points.length < 4) {
+    throw new DegenerateCorrespondencesError(
+      "too-few",
+      `checkCorrespondenceGeometry: need ≥4 correspondences, got ${points.length}`,
+    );
+  }
+  const src = points.map((p) => ({ x: p.xPx, y: p.yPx }));
+  const dst = points.map((p) => ({ x: p.xM, y: p.yM }));
+  if (covarianceEigenRatio(src) < COLINEAR_EIGEN_RATIO) {
+    throw new DegenerateCorrespondencesError(
+      "colinear-src",
+      "checkCorrespondenceGeometry: correspondences colinear in pixel space",
+    );
+  }
+  if (covarianceEigenRatio(dst) < COLINEAR_EIGEN_RATIO) {
+    throw new DegenerateCorrespondencesError(
+      "colinear-dst",
+      "checkCorrespondenceGeometry: correspondences colinear in field-meter space",
+    );
+  }
+}
+
+/**
+ * Independent scale cross-check (Sloan kernel): the fitted homography's
+ * local isotropic scale at a pixel point (meters per pixel from the
+ * Jacobian) must agree with metersPerPx = YARDS_TO_METERS / pxPerYard
+ * within tolerancePct percent. A passing DLT fit on mislabeled lines
+ * (e.g. every line off by one 5-yard step) fails here loudly instead of
+ * silently emitting a wrong-sized field.
+ *
+ * Throws DegenerateCorrespondencesError("scale-mismatch") on violation.
+ */
+export function validateHomographyScale(
+  h: Homography,
+  pxPerYard: number,
+  at: { xPx: number; yPx: number },
+  tolerancePct: number,
+): void {
+  const { xPx, yPx } = at;
+  const d = h.h31 * xPx + h.h32 * yPx + h.h33;
+  if (Math.abs(d) < 1e-12) {
+    throw new DegenerateCorrespondencesError(
+      "scale-mismatch",
+      "validateHomographyScale: homography singular at sample point",
+    );
+  }
+  const xM = (h.h11 * xPx + h.h12 * yPx + h.h13) / d;
+  const yM = (h.h21 * xPx + h.h22 * yPx + h.h23) / d;
+  // Jacobian of the projective map at (xPx, yPx).
+  const dxMdx = (h.h11 * d - xM * d * h.h31) / (d * d);
+  const dyMdy = (h.h22 * d - yM * d * h.h32) / (d * d);
+  const localMetersPerPx = Math.sqrt(Math.abs(dxMdx * dyMdy));
+  const expectedMetersPerPx = 0.9144 / pxPerYard;
+  const relErr =
+    Math.abs(localMetersPerPx - expectedMetersPerPx) /
+    Math.max(expectedMetersPerPx, 1e-12);
+  if (relErr * 100 > tolerancePct) {
+    throw new DegenerateCorrespondencesError(
+      "scale-mismatch",
+      `validateHomographyScale: local ${localMetersPerPx.toExponential(2)} m/px vs ` +
+        `calibrated ${expectedMetersPerPx.toExponential(2)} m/px ` +
+        `(${(relErr * 100).toFixed(1)}% > ${tolerancePct}% tolerance)`,
+    );
+  }
 }

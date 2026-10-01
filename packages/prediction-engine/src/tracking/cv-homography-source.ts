@@ -78,8 +78,10 @@ export function resolveHomography(
   }
   const scaleTolerancePct = opts.scaleTolerancePct ?? 10;
 
-  const useFallback = (reason: string): HomographyResolution => {
-    if (opts.fallbackHomography == null) throw reason instanceof Error ? reason : new Error(String(reason));
+  const useFallback = (reason: string | Error): HomographyResolution => {
+    if (opts.fallbackHomography == null) {
+      throw reason instanceof Error ? reason : new Error(String(reason));
+    }
     return {
       homography: opts.fallbackHomography,
       method: "hand-seed-fallback",

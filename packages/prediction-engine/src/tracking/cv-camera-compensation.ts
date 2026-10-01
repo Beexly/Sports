@@ -56,7 +56,7 @@ export function mat3Mul(A: Mat3, B: Mat3): Mat3 {
         a[r * 3]! * b[c]! + a[r * 3 + 1]! * b[3 + c]! + a[r * 3 + 2]! * b[6 + c]!;
     }
   }
-  return { m: m as Mat3["m"] };
+  return { m: m as unknown as Mat3["m"] };
 }
 
 export function invertMat3(H: Mat3): Mat3 {

@@ -35,16 +35,34 @@ import {
 } from "./cv-movement-primitive.js";
 import {
   buildTracklets,
+  associateMotionAware,
   type AssociationOptions,
+  type MotionAwareOptions,
 } from "./cv-tracklet-association.js";
 import type { Detector, VideoFrame } from "./cv-detector-contract.js";
+import {
+  resolveHomography,
+  type HomographyMethod,
+  type HomographySource,
+} from "./cv-homography-source.js";
 
 export interface MovementPipelineInput {
   readonly frames: readonly VideoFrame[];
   readonly detector: Detector;
-  /** Field homography (pixels → meters), e.g. from fitHomographyDLT(). */
-  readonly homography: Homography;
+  /**
+   * Field homography (pixels → meters). Provide directly, or omit and set
+   * homographySource to derive it (landmarks → guard → DLT → scale
+   * cross-check, with hand-seed fallback).
+   */
+  readonly homography?: Homography;
+  readonly homographySource?: HomographySource;
   readonly association?: AssociationOptions;
+  /**
+   * Use motion-aware association (reachable-set gating, pile coasting)
+   * instead of the legacy IoU associator. Default false.
+   */
+  readonly motionAwareAssociation?: boolean;
+  readonly motionAwareOptions?: MotionAwareOptions;
   /** Estimate + subtract camera motion. Default true. */
   readonly compensateMotion?: boolean;
 }
@@ -56,6 +74,11 @@ export interface MovementPipelineOutput {
   /** Per video-frame camera motion; index 0 is always zero. */
   readonly cameraMotion: CameraMotionField[];
   readonly detectionsPerFrame: number[];
+  /** How the field homography was obtained. */
+  readonly homographyMethod: HomographyMethod;
+  readonly homographyDetail: string;
+  /** Which associator ran. */
+  readonly associator: "legacy-iou" | "motion-aware";
 }
 
 const ZERO_MOTION: CameraMotionField = { dx: 0, dy: 0, magnitude: 0 };
@@ -63,11 +86,22 @@ const ZERO_MOTION: CameraMotionField = { dx: 0, dy: 0, magnitude: 0 };
 export function runMovementPipeline(
   input: MovementPipelineInput,
 ): MovementPipelineOutput {
-  const { frames, detector, homography } = input;
+  const { frames, detector } = input;
   if (frames.length === 0) {
     throw new Error("runMovementPipeline: need at least one frame");
   }
   const compensateMotion = input.compensateMotion ?? true;
+  const motionAware = input.motionAwareAssociation ?? false;
+
+  // 0. Resolve the field homography: provided > landmarks-DLT chain >
+  //    hand-seed fallback. The DLT chain (detect → guard → fit → scale
+  //    cross-check) degrades to the hand seed on degenerate geometry
+  //    instead of crashing the pipeline.
+  const homographyResolution = resolveHomography(frames[0]!, {
+    homography: input.homography,
+    deriveFromLandmarks: input.homographySource?.deriveFromLandmarks,
+  });
+  const homography = homographyResolution.homography;
 
   // 1. Detect.
   const perFrame = frames.map((f) => ({
@@ -77,8 +111,11 @@ export function runMovementPipeline(
   }));
   const detectionsPerFrame = perFrame.map((p) => p.detections.length);
 
-  // 2. Associate into tracklets.
-  const tracklets = buildTracklets(perFrame, input.association);
+  // 2. Associate into tracklets (legacy IoU or motion-aware).
+  const associator = motionAware ? "motion-aware" : "legacy-iou";
+  const tracklets = motionAware
+    ? associateMotionAware(perFrame, input.motionAwareOptions)
+    : buildTracklets(perFrame, input.association);
 
   // 3. Camera motion per consecutive frame pair, aligned by video frame.
   const tToIndex = new Map<number, number>(frames.map((f) => [f.t, f.index]));
@@ -119,5 +156,13 @@ export function runMovementPipeline(
   // 6. Metrics.
   const metrics = deriveMovementMetrics(world);
 
-  return { tracklets: world, metrics, cameraMotion, detectionsPerFrame };
+  return {
+    tracklets: world,
+    metrics,
+    cameraMotion,
+    detectionsPerFrame,
+    homographyMethod: homographyResolution.method,
+    homographyDetail: homographyResolution.detail,
+    associator,
+  };
 }

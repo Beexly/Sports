@@ -1,8 +1,10 @@
 import { describe, expect, it } from "vitest";
 import {
+  associateMotionAware,
   bboxIoU,
   buildTracklets,
 } from "./cv-tracklet-association.js";
+import type { Mat3 } from "./cv-camera-compensation.js";
 import { playerDetection, type FrameDetections } from "./cv-detector-contract.js";
 
 function framesWith(
@@ -90,5 +92,131 @@ describe("cv-tracklet-association", () => {
     const tracklets = buildTracklets(framesWith(perFrame));
     expect(tracklets).toHaveLength(2);
     expect(tracklets[0]?.id).not.toBe(tracklets[1]?.id);
+  });
+});
+
+describe("cv-tracklet-association motion-aware (K2)", () => {
+  // 6 players, constant world velocity; camera pans 120 px/s in +x.
+  // 10 fps stress fixture: 12 px/frame camera shift fragments IoU.
+  function panFixture(): {
+    frames: FrameDetections[];
+    homos: Mat3[];
+  } {
+    const N = 60;
+    const dt = 0.1;
+    const camVx = 120;
+    const players = [
+      { x: 100, y: 100, vx: 30, vy: 10 },
+      { x: 200, y: 150, vx: -20, vy: 15 },
+      { x: 300, y: 80, vx: 50, vy: -5 },
+      { x: 400, y: 200, vx: -40, vy: -10 },
+      { x: 150, y: 250, vx: 10, vy: 30 },
+      { x: 350, y: 120, vx: -15, vy: -25 },
+    ];
+    const frames: FrameDetections[] = [];
+    for (let k = 0; k < N; k++) {
+      const t = k * dt;
+      const dets = players.map((p, i) =>
+        playerDetection(
+          p.x + p.vx * t + camVx * t,
+          p.y + p.vy * t,
+          16, 32,
+          `T${i}`,
+        ),
+      );
+      frames.push({ frameIndex: k, t, detections: dets });
+    }
+    const homos: Mat3[] = [];
+    for (let k = 0; k < N - 1; k++) {
+      homos.push({ m: [1, 0, camVx * dt, 0, 1, 0, 0, 0, 1] });
+    }
+    return { frames, homos };
+  }
+
+  it("pan fixture: legacy IoU fragments (>=20), motion-aware holds 6", () => {
+    const { frames, homos } = panFixture();
+    const legacy = buildTracklets(frames, { minIou: 0.3, minTrackletFrames: 1 });
+    expect(legacy.length).toBeGreaterThanOrEqual(20);
+
+    const motion = associateMotionAware(frames, {
+      homographies: homos,
+      pxPerMeter: 20,
+      vMaxMps: 10,
+      minTrackletFrames: 2,
+    });
+    expect(motion).toHaveLength(6);
+    for (const trk of motion) {
+      expect(trk.frames.length).toBeGreaterThan(50);
+    }
+  });
+
+  it("pile-coast: 10-frame gap splits legacy, motion-aware survives as 1", () => {
+    // One player at 20 px/s; detections missing frames 10..19.
+    const N = 30;
+    const dt = 1 / 30;
+    const perFrame: ReturnType<typeof playerDetection>[][] = [];
+    for (let k = 0; k < N; k++) {
+      if (k >= 10 && k < 20) perFrame.push([]);
+      else perFrame.push([playerDetection(50 + 20 * k * dt, 100, 16, 32, "KC")]);
+    }
+    const frames = perFrame.map((dets, i) => ({
+      frameIndex: i,
+      t: i * dt,
+      detections: dets,
+    }));
+
+    const legacy = buildTracklets(frames, { maxGapFrames: 5, minTrackletFrames: 1 });
+    expect(legacy).toHaveLength(2);
+
+    const motion = associateMotionAware(frames, {
+      coastFrames: 15,
+      pxPerMeter: 20,
+      vMaxMps: 10,
+      minTrackletFrames: 1,
+    });
+    expect(motion).toHaveLength(1);
+    expect(motion[0]?.frames).toHaveLength(20); // 10 before + 10 after, gap coasted
+  });
+
+  it("crossing players: no ID switch", () => {
+    // A moves left->right at y=100; B moves right->left at y=130.
+    // They cross in x at frame 15 but stay 30px apart in y.
+    const N = 30;
+    const dt = 1 / 30;
+    const perFrame: ReturnType<typeof playerDetection>[][] = [];
+    for (let k = 0; k < N; k++) {
+      perFrame.push([
+        playerDetection(50 + 8 * k, 100, 16, 32, "A"),
+        playerDetection(50 + 8 * (N - 1 - k), 130, 16, 32, "B"),
+      ]);
+    }
+    const frames = perFrame.map((dets, i) => ({
+      frameIndex: i,
+      t: i * dt,
+      detections: dets,
+    }));
+    const motion = associateMotionAware(frames, {
+      pxPerMeter: 20,
+      vMaxMps: 10,
+      minTrackletFrames: 2,
+    });
+    expect(motion).toHaveLength(2);
+    // The tracklet born on the left (A) must still be moving right at the end.
+    const leftBorn = motion.reduce((a, b) =>
+      (a.frames[0]?.xPx ?? 0) < (b.frames[0]?.xPx ?? 0) ? a : b,
+    );
+    const rightBorn = motion.reduce((a, b) =>
+      (a.frames[0]?.xPx ?? 0) > (b.frames[0]?.xPx ?? 0) ? a : b,
+    );
+    const lx0 = leftBorn.frames[0]?.xPx ?? 0;
+    const lx1 = leftBorn.frames[leftBorn.frames.length - 1]?.xPx ?? 0;
+    const rx0 = rightBorn.frames[0]?.xPx ?? 0;
+    const rx1 = rightBorn.frames[rightBorn.frames.length - 1]?.xPx ?? 0;
+    expect(lx1).toBeGreaterThan(lx0); // A kept going right
+    expect(rx1).toBeLessThan(rx0); // B kept going left
+    // And they never shared an identity: foot-point y-lanes stay separated
+    // (A: bbox y=100 → foot 132; B: bbox y=130 → foot 162).
+    for (const f of leftBorn.frames) expect(f.yPx).toBeLessThan(147);
+    for (const f of rightBorn.frames) expect(f.yPx).toBeGreaterThan(147);
   });
 });

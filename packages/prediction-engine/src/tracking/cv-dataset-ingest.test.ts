@@ -11,7 +11,7 @@ import {
   type DatasetLicenses,
   type TrainingItem,
 } from "./cv-dataset-ingest.js";
-import licensesJson from "../../DATASET_LICENSES.json";
+import licensesJson from "../../../../DATASET_LICENSES.json";
 
 const licenses = licensesJson as DatasetLicenses;
 

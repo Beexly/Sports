@@ -252,11 +252,13 @@ export function houghLines(
   width: number,
   height: number,
   voteThreshold: number,
+  /** Rho bin size in px; >1 absorbs sub-bin jitter (hash-mark stage). */
+  rhoBinPx = 1,
 ): ImageLine[] {
   const thetaStep = Math.PI / 180;
   const numTheta = 180;
   const maxRho = Math.hypot(width, height);
-  const rhoStep = 1;
+  const rhoStep = rhoBinPx;
   const numRho = Math.ceil((2 * maxRho) / rhoStep);
   const acc: number[][] = Array.from({ length: numRho }, () =>
     new Array(numTheta).fill(0),
