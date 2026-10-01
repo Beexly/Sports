@@ -99,10 +99,44 @@ for (const [name, rel] of Object.entries(local)) {
   }
 }
 
+// Per-package node_modules. npm hoists most deps to the root but nests the ones
+// that collide with another version, so a worktree with only a ROOT node_modules
+// is incomplete: `packages/db` needs its nested @neondatabase/serverless and the
+// whole ingest chain (@sports/data-ingestion -> @sports/db) fails to resolve.
+const pkgDirs = [];
+for (const scope of ["packages", "apps", "workers"]) {
+  const dir = path.join(wt, scope);
+  if (!fs.existsSync(dir)) continue;
+  for (const name of fs.readdirSync(dir)) {
+    const nested = path.join(dir, name, "node_modules");
+    if (fs.existsSync(nested)) pkgDirs.push(path.join(dir, name));
+  }
+}
+let nestedJunctions = 0;
+for (const pkgRoot of pkgDirs) {
+  const targetNm = path.join(primary, path.relative(wt, pkgRoot), "node_modules");
+  if (!fs.existsSync(targetNm)) continue;
+  const localNm = path.join(pkgRoot, "node_modules");
+  fs.mkdirSync(localNm, { recursive: true });
+  for (const entry of fs.readdirSync(targetNm)) {
+    const link = path.join(localNm, entry);
+    if (fs.existsSync(link)) continue;
+    const target = path.join(targetNm, entry);
+    clear(link);
+    try {
+      fs.symlinkSync(target, link, "junction");
+      nestedJunctions++;
+    } catch (e) {
+      console.log("NESTED-FAIL " + path.relative(wt, link) + ": " + e.message);
+    }
+  }
+}
+
 console.log("---");
 console.log("worktree:      " + wt);
 console.log("primary:       " + primary);
 console.log("reused entries: " + junctioned + " (broken " + broken + ")");
+console.log("nested pkg deps: " + nestedJunctions + " across " + pkgDirs.length + " package(s)");
 console.log("@sports linked:  " + fs.readdirSync(scopeDir).length);
 const pe = path.join(scopeDir, "prediction-engine/src/scoring.ts");
 console.log("prediction-engine scoring.ts resolves: " + fs.existsSync(pe));

@@ -712,7 +712,14 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     depthFactor,
     edgeFactor,
     ...(volatilityFactor ? [volatilityFactor] : []),
-    ...contextFactors,
+    // The zeroed copy, NOT `contextFactors`. Spreading the raw array here
+    // discarded the market-echo guard computed above and published
+    // "Cross-Market Alignment" at weight 4 / impact "positive" while
+    // crossMarketScore contributes 0 to the sum — a claim the number does not
+    // support. SPREAD is the ONLY scorer that can emit a cross-market factor
+    // (`computeCrossMarketScore` gates on marketType === "SPREAD"), so this was
+    // the one path where the guard mattered and the one path that skipped it.
+    ...marketEchoFactors,
     ...shadowEvidenceFactors,
     ...independentEdgeFactors,
   ];
@@ -1001,13 +1008,18 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const dataQualityScore = ctx?.dataQualityScore ?? 0;
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
   const shadowEvidenceFactors = buildShadowEvidenceFactors(input);
+  // Same market-echo guard the other two scorers apply, so all three paths agree
+  // on the law rather than TOTAL being safe only because
+  // `computeCrossMarketScore` happens to gate on SPREAD today. If that gate ever
+  // widens, a raw spread here would republish the false-weight bug.
+  const marketEchoFactors = zeroMarketEchoFactorWeights(contextFactors);
 
   const factors: FactorDetail[] = [
     consensusFactor,
     depthFactor,
     edgeFactor,
     ...(volatilityFactor ? [volatilityFactor] : []),
-    ...contextFactors,
+    ...marketEchoFactors,
     ...shadowEvidenceFactors,
   ];
 
