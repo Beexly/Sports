@@ -4116,3 +4116,19 @@ export {
   type BridgePrediction,
   type BridgeFeature,
 } from "./bridge/bridge-model.js";
+
+// CV watch-loop game-window scheduler (motif/watch-loop-2026-10-01).
+export {
+  ARM_LEAD_MS,
+  STAND_DOWN_MS,
+  FALLBACK_WINDOW_MS,
+  windowStartFor,
+  windowEndFor,
+  eventToWindow,
+  fetchWindowsForDate,
+  chicagoYmd,
+  getActiveWindows,
+  nextWindow,
+  fetchUpcomingWindows,
+  type GameWindow,
+} from "./watch/watch-scheduler.js";
