@@ -92,7 +92,12 @@ Stage 2 (detection) PASSES. Film remains UNCALIBRATED, weight zero, shadow-only.
 
 ## Next pilots
 
-- Pilot 2: same clip at 10 fps (running) — does sample rate rescue association?
+- Pilot 2: same clip at 10 fps — DONE, result: sample rate alone does NOT
+  rescue greedy IoU. 10 fps → 147 tracklets, median life 0.8 s (vs 1.0 s at
+  5 fps), max 6.5 s, 4 tracklets > 5 s. More samples = more fragments; the
+  ~26 px inter-sample camera displacement still defeats IoU matching, and the
+  shorter dt (0.1 s) doubles phantom-jump speeds (max 731 mph). Conclusion:
+  stabilization must come BEFORE association, not a higher frame rate.
 - Pilot 3: full-game Chiefs–Dolphins highlights (official, chiefs.com) —
   multi-play corpus with nflverse play-by-play anchors.
 - Pilot 4: stabilization prototype (ORB/RANSAC) before re-measuring.
