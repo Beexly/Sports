@@ -1058,6 +1058,38 @@ function buildArithmetic(
     );
   }
 
+  // Continuous-signal votes. These come from the slate path
+  // (`generate-signal-slate.ts` → `applyContinuousSignalTilt`), which writes one
+  // `Continuous signal — <id>` factor per vote carrying the raw value, the neutral
+  // it was centered against, the declared sign, the trustWeight and the family.
+  //
+  // They are enumerated from the factor array rather than from a fixed list, so a
+  // signal wired later appears in the trace with no change to this module — which
+  // is the point of Law 5's fifth column. A signal that votes but cannot be shown
+  // is not wired.
+  //
+  // NOT part of the confidence sum: the slate applies the tilt to the independent
+  // home probability BEFORE scoring, so by the time a pick exists the vote is
+  // already inside `trueProb`. They are shown as excluded so the reader does not
+  // add them to the arithmetic and get a wrong number.
+  const continuous = fb.factors.filter((f) => f.name.startsWith("Continuous signal —"));
+  if (continuous.length > 0) {
+    for (const f of continuous) {
+      const id = f.name.replace("Continuous signal — ", "");
+      add(
+        `Continuous signal: ${id}`,
+        f.weight,
+        `factorBreakdown.factors["${f.name}"].weight`,
+        false,
+        "Applied upstream in the slate, not in this confidence sum: " +
+          "applyContinuousSignalTilt adjusts the independent home probability " +
+          "before scoring, so the vote is already inside trueProb by the time " +
+          "this pick exists. Adding it here would double-count it. " +
+          `Detail: ${f.description}`,
+      );
+    }
+  }
+
   const base = 10;
   const includedSum = terms.reduce((s, t) => (t.enteredSum ? s + t.value : s), 0);
   const clampedSum = clamp(includedSum + base, 0, 100);

@@ -30,6 +30,7 @@ import {
   applyContinuousSignalTilt,
   type ContinuousVote,
 } from "./continuous-signal-tilt.js";
+import { deriveSignalGameContextCached, SignalContextCache } from "./signal-game-context.js";
 import { runLeakageGate, fixtureFromGameRows, evalLeakageQuality } from "./leakage-gate.js";
 import {
   FixtureConfirmer,
@@ -264,6 +265,11 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
   });
   const collapsedGames = collapseGameRowsToFixtures(scannedGames);
   const gameList = collapsedGames.slice(0, SLATE_FIXTURE_LIMIT);
+  // Run-scoped memo for the per-game signal context, created once here rather
+  // than inside the loop: the per-team rate lookup is the expensive query and a
+  // slate frequently carries the same team on the same day across fixtures. It
+  // dies with the run, so no stale rates can leak into a later slate.
+  const signalContextCache = new SignalContextCache();
   // Leakage quality gate input. Fail-open on the live slate: when the probe
   // fixtures are unavailable the factor records "not run" rather than clean.
   // Submission path uses assertSubmissionLeakage (fail-closed).
@@ -498,11 +504,29 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
     // vote a log-odds adjustment on top of the probability blend. Fail-open —
     // never blocks minting when signals abstain.
     let homeP = blend.homeP;
-    // Typed as the real `ContinuousVote[]`, not a hand-narrowed `{signalId, tilt}`:
-// the factor text below reports the raw value, the neutral it was centered
-// against, the declared sign, the trustWeight and the family, and a narrower
-// local type would silently drop all of it.
-let continuousVotes: readonly ContinuousVote[] = [];
+    // The 23 continuous signals declare a `homeSign` and a `neutralValue` and are
+    // wired to vote, but they read their inputs from `ctx.env` — DEFENSIVE_PLAYS,
+    // REST_DAYS, WIND_MPH and the rest. `process.env` holds none of those, so
+    // passing it meant every signal abstained and the whole continuous path was
+    // inert in production while looking wired in the registry. Derive a real
+    // per-game context from TeamGameLog instead; anything the engine cannot
+    // establish is ABSENT, and the evaluator abstains rather than guessing.
+    const signalContext = await deriveSignalGameContextCached(
+      {
+        sportKey,
+        homeTeam,
+        awayTeam,
+        commenceTime,
+        now: () => now,
+      },
+      // Shared across the whole slate run: 80 fixtures often share a team on the
+      // same day, and the rate lookup is the expensive part. The cache key
+      // includes the kickoff DAY, so it cannot serve a later game an earlier
+      // game's view — that would be lookahead, which is the one thing this
+      // context builder must never introduce.
+      signalContextCache,
+    );
+    const continuousVotes: ContinuousVote[] = [];
     try {
       const tilt = await applyContinuousSignalTilt(homeP, SIGNAL_REGISTRY, {
         sportKey,
@@ -510,12 +534,12 @@ let continuousVotes: readonly ContinuousVote[] = [];
         awayTeam,
         commenceTime,
         spreadHome: null,
-        env: process.env as Record<string, string | undefined>,
+        env: signalContext.env,
         now: () => now,
       });
       if (tilt.applied) {
         homeP = tilt.adjustedHomeP;
-        continuousVotes = tilt.votes;
+        continuousVotes.push(...tilt.votes);
       }
     } catch {
       // fail-open

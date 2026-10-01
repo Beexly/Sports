@@ -200,12 +200,42 @@ The last is the important one: it catches any signal whose neutral point is
 declared wrong, which is precisely the class of bug a sign declared by eye
 introduces.
 
-### What this does NOT do
+### The input side — also fixed
 
-`refusedUnsigned: 0` means every ACTIVE continuous signal *can* vote. It does
-**not** mean one fired in the audit run: the audit supplies a fixed env and only 1
-signal had all its inputs present. Turning the rest on requires per-play ingestion
-to populate their context — and the `SHADOW_ONLY` stubs mark exactly that work.
+`REFUSED_UNSIGNED: 0` only proved the signals *could* vote. They still received
+nothing: `generate-signal-slate.ts` passed `env: process.env` to the tilt, and
+every evaluator reads DEFENSIVE_PLAYS / REST_DAYS / WIND_MPH from `ctx.env`.
+Process env holds none of those, so a correctly wired signal abstained anyway.
+
+`signal-game-context.ts` derives a real per-game context from TeamGameLog. Its
+three rules:
+
+1. **Derive, never invent.** A field the engine cannot establish is ABSENT, the
+   evaluator returns null, the signal abstains. Absent data producing abstention
+   is correct; absent data producing a plausible-looking default is not.
+2. **No lookahead.** Rates are pulled with `gameDate < kickoff`, never "most
+   recent N". The run cache is keyed on (team, kickoff DAY), so it can never
+   serve a later game an earlier game's truth — pinned by a test that supplies
+   two different realities for one team on two dates and requires both back.
+3. **Bootstrap rows are dropped.** `isBootstrap` rows are synthetic early-season
+   filler; mixing them into a rate manufactures precision that is not there. The
+   surviving sample size is reported so thin windows stay visible.
+
+Tested for the failure that actually matters — confidently wrong data entering a
+published probability — rather than for coverage: no lookahead, no bootstrap
+contamination, abstention below a 5-game minimum, abstention without a league
+benchmark, and a clean fail-closed on a data-layer throw.
+
+### What this still does NOT do
+
+Only the EFFICIENCY rate signals have inputs today. REST_DAYS, IS_ROAD_TEAM,
+WIND_MPH and the rest come from a schedule / weather / pbp source that is not
+wired, so those evaluators still abstain — correctly, and visibly, rather than
+being filled with guesses. `SignalContextCache` removes the N+1 the per-game
+lookup would otherwise cause across a slate of 80 fixtures.
+
+The 9 `SHADOW_ONLY` stubs still have stub evaluators; they go ACTIVE when
+per-play ingestion calls them.
 
 ## Next, in order
 
