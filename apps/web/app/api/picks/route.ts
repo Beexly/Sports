@@ -14,6 +14,7 @@ import {
   universalSignalsFromPick,
 } from "@/lib/picks/intelligence-enrichment";
 import { loadBundleSurfaces } from "@/lib/intelligence-core/db-loaders";
+import { shadowOnly } from "@/lib/intelligence-core";
 import {
   isPublicPicksSurfaceStale,
   staleDataGateResponse,
@@ -490,6 +491,16 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
             now,
             universalSignalsFromPick(pickForIntel),
             surfacesByPickId.get(pick.id),
+            // WEATHER_TRAVEL is newly fed (the game-weather-capture cron now
+            // writes the `weather` surface the bundle always read empty), and
+            // its lean math is asserted, not fitted — so it computes in shadow
+            // per the wire-first doctrine: counted and reported, never moving
+            // the calibrated number until it is weighted and calibrated.
+            // No-op today: with zero weather rows the policy holds out nothing.
+            shadowOnly(
+              ["WEATHER_TRAVEL"],
+              "Weather observations are newly wired (2026-10-01: game-weather-capture cron fills the surface); the wind/temp lean is asserted, not fitted. Shadow until weighted + calibrated.",
+            ),
           );
           // FREE: numeric spine only — no percent-formatted model prose /
           // "(model signal)" leak in intelligence.summary or sixQuestions.
