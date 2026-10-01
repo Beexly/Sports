@@ -220,7 +220,7 @@ export async function POST(request: Request): Promise<NextResponse> {
         if (event) {
           rows = mapHistoricalEventToRows(event, item.gameId, phase, new Date(res.data.timestamp));
         }
-      } catch (err) {
+      } catch {
         // One failed timestamp must not kill the run; record and continue.
         perGame.push({ externalId: item.externalId, phases: [phase], rows: -1 });
         continue;

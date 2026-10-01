@@ -92,7 +92,7 @@ export function buildPropPlayerInputs(
   // Positional priors from the same window (empirical Bayes).
   const posUsage = new Map<string, number[]>();
   const posEff = new Map<string, number[]>();
-  for (const [pid, rs] of byPlayer) {
+  for (const rs of byPlayer.values()) {
     const pos = (rs[0]?.position ?? "").toUpperCase();
     if (!ELIGIBLE_POSITIONS.has(pos)) continue;
     let wSum = 0;

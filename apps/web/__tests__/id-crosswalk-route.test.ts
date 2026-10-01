@@ -1,5 +1,4 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { NextResponse } from "next/server";
 
 /**
  * GET /api/ops/id-crosswalk — route-level tests.
@@ -49,10 +48,10 @@ beforeEach(() => {
 });
 
 describe("GET /api/ops/id-crosswalk", () => {
-  it("401s without the bearer secret", async () => {
+  it("500s when CRON_SECRET is unset (never an open route) and never resolves", async () => {
     delete process.env["CRON_SECRET"];
     const res = await GET(new Request("https://x/api/ops/id-crosswalk?gsisId=00-1"));
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(500);
     expect(mocks.resolvePlayerByGsis).not.toHaveBeenCalled();
   });
 

@@ -63,7 +63,6 @@ export const maxDuration = 120;
 const ENABLED = process.env.PROPS_SLATE_ENABLED === "1";
 const MAX_GAMES = 3;
 const BANKROLL_PAPER = 1000;
-const LINE_FRESHNESS_MINUTES = 30;
 
 /** Odds API player-prop markets with an engine projection mapping. */
 const PROP_MARKETS = [
