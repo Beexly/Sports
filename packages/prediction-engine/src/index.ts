@@ -1043,6 +1043,7 @@ export type { LedgerSignalRow, ComposeLedgerOptions } from "./signal-ledger.js";
 export {
   buildCandidate,
   categoryPrior,
+  composeByEntity,
   normalizeReading,
   resolveWeight,
   CATEGORY_PRIORS,
