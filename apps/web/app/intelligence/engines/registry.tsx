@@ -302,7 +302,8 @@ const RUSHING_CONTACT_ENGINE = engine({
       definition: (
         <>
           Elite <span className="text-orbital-cyan">YAC</span> behind thin YBC is a back winning on his own:
-          a second, independent estimator to triangulate against Next Gen RYOE. We surface the split, we don&apos;t
+          a second, independent estimator to triangulate against expected rushing
+          efficiency. We surface the split, we don&apos;t
           average it away.
         </>
       ),

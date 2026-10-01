@@ -114,6 +114,8 @@ export {
   loadSportResultGamesForElo,
   sportKeyToKalshiLeague,
   guessKalshiTeamAbbr,
+  tryKalshiFairValue,
+  tryPolymarketIndependentFairValue,
 } from "./build-independent-fair-values.js";
 export type {
   IndependentFairValueBuildInput,
@@ -220,6 +222,7 @@ export {
   propMonteCarlo,
   type PropsSlateResult,
   type PropsSlateInput,
+  type PlayerProp,
 } from "./props-slate.js";
 export {
   runPropsSlateShadow,

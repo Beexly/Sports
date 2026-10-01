@@ -171,6 +171,17 @@ export const CRON_MANIFEST: readonly CronManifestEntry[] = [
   // rows, which is the state this cron exists to end. Hourly at :23, off the
   // :02/:17/:32/:47 board ticks so it never competes with the public board.
   cronEntry("/api/cron/signal-ledger-write", "23 * * * *"),
+  // Game-keyed weather writer (motif/ledger-shadow-2026-10-01, Tier 1 #3).
+  // 3x daily: persists weather snapshot keyed to game for the WEATHER_TRAVEL
+  // shadow gate. CRON_SECRET-gated, idempotent.
+  cronEntry("/api/cron/game-weather-capture", "10 6,12,18 * * *"),
+  // Prediction-market snapshot persistence (motif/ledger-shadow-2026-10-01,
+  // Tier 2 #3). 3x daily: Kalshi/Polymarket fetch -> persist loop, rights
+  // gates enforced, read-only shadow observation.
+  cronEntry("/api/cron/prediction-market-snapshot", "20 6,12,18 * * *"),
+  // Weekly NGS ingestion into signals (motif/ledger-shadow-2026-10-01).
+  // Wednesdays 11:30 UTC: internal-only, weight 0 until validated.
+  cronEntry("/api/cron/ngs-ingest", "30 11 * * 3"),
   // CV watch-loop game-window scheduler (motif/watch-loop-2026-10-01). Every
   // 10 min: ESPN scoreboard poll -> watch.games upsert -> Space warm-ping ->
   // scheduler_runs heartbeat. Bearer-only cron auth, like every mutating cron.

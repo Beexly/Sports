@@ -127,7 +127,7 @@ const BASELINE: Readonly<Record<string, number>> = {
   "apps/web/components/picks/evidence-audit-drawer.tsx": 2,
   "apps/web/components/picks/pick-card.tsx": 3,
   "apps/web/components/picks/value-gap.tsx": 1,
-  "apps/web/components/players/player-lab-table.tsx": 9,
+  "apps/web/components/players/player-lab-table.tsx": 7, // 2026-10-01: NGS hardening removed 2
   "apps/web/components/reconstruction/separation-panel.tsx": 2,
   "apps/web/components/tracker/bankroll-ledger.tsx": 2,
   "apps/web/components/tracker/staking-calculator.tsx": 1,

@@ -102,6 +102,18 @@
       "schedule": "23 * * * *"
     },
     {
+      "path": "/api/cron/game-weather-capture",
+      "schedule": "10 6,12,18 * * *"
+    },
+    {
+      "path": "/api/cron/prediction-market-snapshot",
+      "schedule": "20 6,12,18 * * *"
+    },
+    {
+      "path": "/api/cron/ngs-ingest",
+      "schedule": "30 11 * * 3"
+    },
+    {
       "path": "/api/cron/watch-scheduler",
       "schedule": "*/10 * * * *"
     },

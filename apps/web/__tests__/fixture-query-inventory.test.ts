@@ -94,6 +94,18 @@ const REGISTRY: Readonly<Record<string, readonly Site[]>> = {
   "apps/web/app/api/admin/dashboard/route.ts": [
     { kind: "capped-by-design", why: "Admin-only listing, take 30. Operator surface, not a public claim. C-166 lists it." },
   ],
+  "apps/web/app/api/cron/game-weather-capture/route.ts": [
+    { kind: "unbounded", why: "Cron reads NFL games in the upcoming window to attach weather; no cap, one weather row per game, no per-fixture collapse needed." },
+  ],
+  "apps/web/app/api/cron/prediction-market-snapshot/route.ts": [
+    { kind: "capped-by-design", why: "Cron snapshots prediction markets for the next MAX_GAMES by kickoff; cap bounds the batch, earliest games first, deliberate." },
+  ],
+  "apps/web/app/api/ops/odds-backfill/route.ts": [
+    { kind: "unbounded", why: "Backfill reads all NFL games in the date range to check existing snapshot phases for idempotency; not a display query, no cap to truncate." },
+  ],
+  "apps/web/app/api/ops/props-slate/route.ts": [
+    { kind: "capped-by-design", why: "Props slate builds for the next MAX_GAMES scheduled NFL games; cap bounds the slate, earliest kickoffs first, deliberate." },
+  ],
   "packages/ingestion-pipeline/src/freeze-slate-commitments.ts": [
     { kind: "unbounded", why: "Commits the whole slate; no cap to truncate." },
   ],

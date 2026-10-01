@@ -152,3 +152,42 @@ set for the film pipeline (per his 9/29 pending note), Odds API backfill budget.
   pressure/sacks/blitzes, defensive tendency rates (partial), bad-throw %, stacked-box %, PFF facet grades
   (env-gated ingest; charting win rates NOT covered), yards allowed/coverage snap, aDOT, NGS separation,
   red-zone TD%, expected sack-rate delta, two-high shell rate.
+
+## 2026-10-01 night session — Garrett's directives executed
+
+### NGS public-leak remediation (Garrett, 2026-10-01 — live doctrine violation, fixed)
+Garrett reported NGS content visible on the public site. Audit found and closed four leaks:
+- `GET /api/nflverse/next-gen-stats` served the raw NGS dataset as JSON behind only a premium
+  rate limit (a rate limit is not a fence). Now `NGS_JSON_PUBLIC` (default dark) in
+  `INTERNAL_API_ROUTES`, refusing before any data load. (`d1e4529`)
+- `GET /api/nflverse/expected-metrics` served CPOE/RYOE/xYAC with NGS validation reports
+  naming NGS metrics. Now `EXPECTED_METRICS_PUBLIC` (default dark). (`d1e4529`)
+- `/intelligence/reconstruction` page premise named Next Gen Stats. Now `RECONSTRUCTION_PUBLIC`
+  (default dark) via `isPagePublic` 404. (`d1e4529`)
+- `/intelligence/engines` registry mentioned "Next Gen RYOE" once; reworded to not name the
+  source (page stays public). (`d1e4529`)
+- `/players` was already fenced. Fence test loader list extended (`loadNflverse`); route tests
+  updated. No internal callers of the fenced API routes exist.
+
+### Pick'em lane PARKED (Garrett, 2026-10-01: "get rid of the pick them for right now")
+- Verified: all five pick'em intakes (DK Pick6, Underdog, PrizePicks, Sleeper, Action Network
+  scoreboard) are env-gated and default-off; no crons or API routes call them. Already dark.
+- Code kept (verified working, branch motif/pickem-intake-audit-2026-09-25); lane marked PARKED,
+  not deleted. Sleeper may still be evaluated for non-pick'em fantasy functionality.
+
+### Props lane ACTIVE (Garrett, 2026-10-01: "props yes")
+- `runPropsSlate` wiring in flight (subagent): honest model-probability sourcing, persistence
+  target, default-off/shadow caller. Nothing published until calibrated.
+
+### NGS weighting — Garrett delegated to Motif
+- "You take the lead on figuring out how to find those and how to weight those correctly most
+  intelligently." Research subagent mining the repo corpus (IG posts, NGS glossary, research
+  papers, competitive intel) for a per-metric weighting design. `weight: 0` preserved until
+  the design is implemented and validated. NGS stays internal even after weights enable.
+
+### Odds API historical backfill (Garrett, 2026-10-01 — authorized)
+- `POST /api/ops/odds-backfill` built and pushed (`5c75cd5`): fills OPEN/CLOSE phases in
+  `OddsLineSnapshot` via `/historical/sports/{sport}/odds`. CRON_SECRET-gated, idempotent,
+  bounded (default 32 calls), paced by `reservePaidCallSlot` + `decidePaidOddsCall` governor
+  + 2,000-credit floor, dry-run mode. Garrett approved the spend but does not want to keep
+  paying — the pipeline is built for efficiency (2 calls/game max, skips fully-backfilled games).

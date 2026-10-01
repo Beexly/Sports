@@ -6036,6 +6036,46 @@ replied "Will be posting this tmrw".
   2026-10-01 (AM sweep close) to avoid double-covering the AM window.
 
 
+## 2026-10-01 ~21:20-22:00 CDT — NIGHT SESSION (Garrett: overwhelmed, resting; "just do it")
+
+Garrett's directives executed autonomously. Branch `motif/ledger-shadow-2026-10-01`, PR #988.
+
+**NGS PUBLIC LEAK — FIXED AND PUSHED (d1e4529).** Garrett reported seeing NGS on the
+website. Audit found four exposures, all closed:
+- `GET /api/nflverse/next-gen-stats` served the raw NGS dataset as JSON behind only a
+  premium rate limit. Now `NGS_JSON_PUBLIC` (default dark) in `INTERNAL_API_ROUTES`,
+  refusing before any data load.
+- `GET /api/nflverse/expected-metrics` served CPOE/RYOE/xYAC with NGS validation reports
+  naming NGS metrics. Now `EXPECTED_METRICS_PUBLIC` (default dark).
+- `/intelligence/reconstruction` page premise named Next Gen Stats. Now `RECONSTRUCTION_PUBLIC`
+  (default dark) via `isPagePublic` 404.
+- `/intelligence/engines` registry mentioned "Next Gen RYOE" once; reworded (page stays public).
+- `/players` was already fenced. No internal callers of the fenced API routes exist.
+
+**PICK'EM PARKED** (Garrett: "get rid of the pick them for right now"). All five intakes
+verified env-gated/default-off; no crons or routes call them. Code kept, lane dark.
+
+**PROPS ACTIVE** (Garrett: "props yes"). `runPropsSlate` wiring in flight — honest
+model-probability sourcing, persistence target, default-off/shadow caller.
+
+**NGS WEIGHTING — delegated to Motif** ("you take the lead on figuring out how to weight
+those correctly most intelligently"). Design doc pushed (1b6fc86):
+`docs/research/2026-10-01/ngs-weighting-design.md`. Key findings: the 0/380 join blocker is
+gone (Tier 1 crosswalk d824d2b); weights earn via the existing within-player fit law
+(weight = clamp(r × √(fixtures/100), −1, 1)); expected ranges cpoe 0.02–0.07, ryoe_per_att
+0.005–0.03, avg_separation 0–0.02 (smell tests, measurement wins). 7-step plan through
+shadow promotion. `weight: 0` preserved until validated.
+
+**NGS BACKFILL ROUTE** (e03750b): `POST /api/ops/ngs-backfill` — one season per call,
+2016→present, through the existing projector. CRON_SECRET-gated, idempotent, weight=0.
+First season validates on a throwaway Neon branch.
+
+**ODDS API BACKFILL** (Garrett authorized the spend; doesn't want to keep paying).
+`POST /api/ops/odds-backfill` built and pushed (5c75cd5): fills OPEN/CLOSE phases in
+`OddsLineSnapshot` via the historical endpoint. CRON_SECRET-gated, idempotent, bounded
+(32 calls default), `reservePaidCallSlot` pacing + `decidePaidOddsCall` governor +
+2,000-credit floor, dry-run mode.
+
 ## 2026-10-01 — RANKINGS PROGRAM QUEUE STATUS (audit fix, Motif)
 
 Fantasy rankings program (Garrett 2026-09-28 directive — rest-of-season +
