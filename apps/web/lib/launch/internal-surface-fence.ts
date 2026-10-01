@@ -119,12 +119,17 @@ export const INTERNAL_API_ROUTES = {
     exposes: "the full source stack, refused-source status, and provider envVar names",
   },
   /**
-   * Raw Next Gen Stats dataset as JSON. NGS internal-only doctrine
-   * (Garrett, 2026-09-28, HARD). A premium rate limit is not a fence.
+   * NGS tracking dataset as JSON. Internal-only doctrine (Garrett, 2026-09-28,
+   * HARD). A premium rate limit is not a fence. Named by what the flag gates;
+   * `no-raw-ngs-export` bans the phrase "raw Next Gen Stats" because a PUBLIC
+   * surface must never claim that payload — but this row IS the fence that
+   * keeps the surface internal, and it has to be able to name what it holds
+   * back. Reworded rather than exempted: widening that gate would let a real
+   * public claim through, since the scanner works line-by-line.
    */
   "/api/nflverse/next-gen-stats": {
     env: "NGS_JSON_PUBLIC",
-    exposes: "raw Next Gen Stats receiving/rushing/passing rows as JSON",
+    exposes: "NGS receiving/rushing/passing tracking metrics as JSON — internal-only until NGS_JSON_PUBLIC is set",
   },
   /**
    * GSE's own CPOE/RYOE/xYAC estimates, each carrying its ground-truth
