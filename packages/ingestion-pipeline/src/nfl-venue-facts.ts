@@ -15,6 +15,7 @@
  */
 import { nflTeamAbbr } from "./nfl-team-abbr.js";
 import { nflWeekOf } from "./nfl-week.js";
+import { find2026PregameLine } from "./nfl-pregame-market.js";
 import { ESPN_NEUTRAL_SITE_PAIRS } from "./priors/espn-nfl-2026-w4.js";
 import { NFL_VENUE_ELEVATION_FT } from "./priors/nfl-venue-elevation.js";
 import { NFL_VENUE_SURFACE } from "./priors/nfl-venue-surface.js";
@@ -71,17 +72,28 @@ export function surfaceAcclimationMismatch(input: {
   const awayAbbr = nflTeamAbbr(label(input.awayTeam));
   if (homeAbbr == null || awayAbbr == null) return null;
   if (neutralThisWeek(homeAbbr, awayAbbr, input.commenceTime)) return null;
-  const home = NFL_VENUE_SURFACE[homeAbbr];
   const away = NFL_VENUE_SURFACE[awayAbbr];
-  if (home == null || away == null) return null;
-  if (home.surface === away.surface) return null;
+  const line = find2026PregameLine({
+    homeTeam: homeAbbr,
+    awayTeam: awayAbbr,
+    commenceTime: input.commenceTime,
+  });
+  const venueSurface =
+    line?.surface == null
+      ? NFL_VENUE_SURFACE[homeAbbr]?.surface
+      : line.surface === "grass"
+        ? "grass"
+        : "synthetic";
+  if (venueSurface == null || away == null) return null;
+  if (venueSurface === away.surface) return null;
   return {
     value: 1,
     metadata: {
       basis: "visitor home surface differs from the venue surface; turf kernel not called",
-      venueSurface: home.surface,
+      venueSurface,
       visitorHomeSurface: away.surface,
-      asOf: home.asOf,
+      gameSurface: line?.surface ?? null,
+      asOf: line?.surface == null ? NFL_VENUE_SURFACE[homeAbbr]?.asOf : "nflverse-games-2026-09-26",
       slitFilmNotMeasured: true,
     },
   };

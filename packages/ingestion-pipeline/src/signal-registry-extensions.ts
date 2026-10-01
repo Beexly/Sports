@@ -25,6 +25,7 @@ import { nflHomeRoadSplitSignal } from "./nfl-split-record-signal.js";
 import { rosterAgeAt } from "./nfl-roster-age.js";
 import { sameDivision2026 } from "./nfl-division.js";
 import { elevationAboveThreshold, surfaceAcclimationMismatch } from "./nfl-venue-facts.js";
+import { pregameMarketAnchor } from "./nfl-pregame-market.js";
 import { nflWeekOf } from "./nfl-week.js";
 import { classifyNflBroadcast, isStandalonePrimetime } from "./nfl-broadcast.js";
 
@@ -1032,6 +1033,33 @@ export const nflTurfSurfaceFatigueSignal: SignalDefinition = {
   },
 };
 
+export const nflPregameMarketSignal: SignalDefinition = {
+  id: "nfl_pregame_market_anchor",
+  label: "NFL Pregame Market Anchor",
+  category: "ODDS",
+  family: "MARKET_MICROSTRUCTURE",
+  outputKind: "CONTINUOUS_VALUE",
+  validSports: ["americanfootball_nfl"],
+  owner: "quant-market",
+  dataDependencies: ["nflverse_games_csv_2026-09-26"],
+  activationStatus: "ACTIVE",
+  trustWeight: 0.12,
+  killLine: KILL_LINE,
+  isRightsCleared: () => true,
+  acquisitionTask: null,
+  blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. Value is de-vigged home probability
+  // minus 0.5. One aggregated line. Not a close. Not the pick by itself.
+  homeSign: 1 as const,
+  neutralValue: 0,
+  evaluate: async (ctx) => {
+    if (ctx.sportKey !== "americanfootball_nfl") return null;
+    const reading = pregameMarketAnchor(ctx);
+    if (reading == null) return null;
+    return { value: reading.value, capturedAt: "2026-09-26", metadata: reading.metadata };
+  },
+};
+
 // ── Export block for SIGNAL_REGISTRY ───────────────────────────────────────
 
 export const EXTENDED_SIGNALS: readonly SignalDefinition[] = [
@@ -1058,6 +1086,7 @@ export const EXTENDED_SIGNALS: readonly SignalDefinition[] = [
   nflLinearWindPassSignal,
   nflTempPrecipSignal,
   nflTurfSurfaceFatigueSignal,
+  nflPregameMarketSignal,
   ...SCHEME_MEASURED_SIGNALS,
   ...NFL_INJURY_SIGNALS,
   nflEspnEnteringRecordSignal,
