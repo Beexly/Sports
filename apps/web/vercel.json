@@ -104,6 +104,10 @@
     {
       "path": "/api/cron/game-weather-capture",
       "schedule": "10 6,12,18 * * *"
+    },
+    {
+      "path": "/api/cron/prediction-market-snapshot",
+      "schedule": "20 6,12,18 * * *"
     }
   ],
   "headers": [

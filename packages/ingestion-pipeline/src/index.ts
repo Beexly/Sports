@@ -114,6 +114,8 @@ export {
   loadSportResultGamesForElo,
   sportKeyToKalshiLeague,
   guessKalshiTeamAbbr,
+  tryKalshiFairValue,
+  tryPolymarketIndependentFairValue,
 } from "./build-independent-fair-values.js";
 export type {
   IndependentFairValueBuildInput,
