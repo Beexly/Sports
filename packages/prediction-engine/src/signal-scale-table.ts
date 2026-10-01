@@ -6,7 +6,7 @@
  * population; the reproduction query and the full method live in
  * `apps/web/scripts/fit-signal-scales.mjs`, and the law lives in
  * `signal-scale-fit.ts`. Nothing here is hand-tuned, and nothing here is a
- * plausible-looking constant: the seven keys with no joinable evidence carry
+ * plausible-looking constant: the eight keys with no joinable evidence carry
  * weight 0 and a stated reason, which is the honest answer.
  *
  * MEASURED POPULATION (the provenance of every row below)
@@ -52,7 +52,7 @@
  *   "which player is this", not "will they do better next week". Weighting by
  *   it would advertise predictive power the data does not have.
  *
- * WHY SEVEN KEYS CARRY WEIGHT 0. Each for its own measured reason, and the
+ * WHY EIGHT KEYS CARRY WEIGHT 0. Each for its own measured reason, and the
  * reasons are the deliverable as much as the weights are:
  *   - ngs.* (4 keys): the writer keys NGS rows by gsisId while every settled
  *     outcome is keyed by playerId, and 0 of 380 distinct gsis match a playerId.

@@ -306,7 +306,7 @@ export async function GET(req: Request): Promise<NextResponse> {
       "Wrote MEASURED columns only, normalized onto a shared per-key scale with a fitted weight. " +
       "No published projection, gate, floor or MODEL_VERSION was touched. The weights come from a fit " +
       "against next-week settled fantasy points with the player fixed effect removed (see " +
-      "packages/prediction-engine/src/signal-scale-table.ts); seven of thirteen keys measure weight 0 " +
+      "packages/prediction-engine/src/signal-scale-table.ts); eight of thirteen keys measure weight 0 " +
       "because no settled outcome joins them, which is a finding and not a gap in the write.",
   });
 }
