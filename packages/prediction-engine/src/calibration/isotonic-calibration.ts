@@ -215,8 +215,15 @@ export function expectedCalibrationError(
     const q = clamp01(predicted);
     // Last bin is closed on the right so p === 1 lands inside it.
     const idx = Math.min(binCount - 1, Math.floor(q * binCount));
-    bins[idx].p.push(q);
-    bins[idx].y.push(outcome);
+    // `clamp01` guarantees q in [0, 1] so idx is in [0, binCount), but
+    // noUncheckedIndexedAccess cannot prove that. A silently dropped row here
+    // would quietly shrink the ECE denominator, so bound it explicitly.
+    const bin = bins[idx];
+    if (bin === undefined) {
+      throw new Error(`expectedCalibrationError: bin ${idx} out of range for ${binCount}`);
+    }
+    bin.p.push(q);
+    bin.y.push(outcome);
   }
   let ece = 0;
   for (const bin of bins) {
