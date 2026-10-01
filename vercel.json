@@ -74,6 +74,10 @@
       "schedule": "15 * * * *"
     },
     {
+      "path": "/api/cron/ngs-ingest",
+      "schedule": "30 11 * * 3"
+    },
+    {
       "path": "/api/cron/prediction-market-snapshot",
       "schedule": "20 6,12,18 * * *"
     },
