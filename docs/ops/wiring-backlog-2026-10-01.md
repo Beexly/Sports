@@ -161,52 +161,41 @@ set for the film pipeline (per his 9/29 pending note), Odds API backfill budget.
   (env-gated ingest; charting win rates NOT covered), yards allowed/coverage snap, aDOT, NGS separation,
   red-zone TD%, expected sack-rate delta, two-high shell rate.
 
-## Completed wiring — 2026-10-01 (branch `motif/ledger-shadow-2026-10-01`, PR #988)
+## 2026-10-01 night session — Garrett's directives executed
 
-All items below are wired as real production code, tested, and pushed. Newly
-wired, uncalibrated signals compute in shadow and cannot affect published
-outputs (standing directive). Rights postures labeled honestly per item.
+### NGS public-leak remediation (Garrett, 2026-10-01 — live doctrine violation, fixed)
+Garrett reported NGS content visible on the public site. Audit found and closed four leaks:
+- `GET /api/nflverse/next-gen-stats` served the raw NGS dataset as JSON behind only a premium
+  rate limit (a rate limit is not a fence). Now `NGS_JSON_PUBLIC` (default dark) in
+  `INTERNAL_API_ROUTES`, refusing before any data load. (`d1e4529`)
+- `GET /api/nflverse/expected-metrics` served CPOE/RYOE/xYAC with NGS validation reports
+  naming NGS metrics. Now `EXPECTED_METRICS_PUBLIC` (default dark). (`d1e4529`)
+- `/intelligence/reconstruction` page premise named Next Gen Stats. Now `RECONSTRUCTION_PUBLIC`
+  (default dark) via `isPagePublic` 404. (`d1e4529`)
+- `/intelligence/engines` registry mentioned "Next Gen RYOE" once; reworded to not name the
+  source (page stays public). (`d1e4529`)
+- `/players` was already fenced. Fence test loader list extended (`loadNflverse`); route tests
+  updated. No internal callers of the fenced API routes exist.
 
-### Tier 1 — engine core (commits a459761, d824d2b, a793661 + earlier)
-1. **composeLedger → published score (shadow).** `composeByEntity`/`composeLedger`/
-   `compositeScore`; stored + fresh signals share one composition path. Bounded,
-   read-only; no publication effects.
-2. **Stored-signal reader.** Prisma `Signal` writer already existed; reader wired
-   (5 tests). The "signals table written, never read" gap is closed.
-3. **Game-keyed weather writer** (`a459761`). NWS weather writes finite wind/temp/
-   precip rows into `game_signals`; picks route shadows `WEATHER_TRAVEL` (8 tests).
-4. **Weight-tuning caller + player crosswalk** (`d824d2b`). Canonical `Player.gsisId`
-   crosswalk; `GET /api/ops/signal-weight-tuning` computes verdicts, never persists
-   weights (10 tests). Real GSIS↔NGS coverage still to measure.
-5. **Devig oracle callers** (`a793661`). `GET /api/ops/devig` exposes all seven
-   methods read-only; published scoring's inline fair-value math untouched (needs
-   a MODEL_VERSION bump to change) (13 tests).
+### Pick'em lane PARKED (Garrett, 2026-10-01: "get rid of the pick them for right now")
+- Verified: all five pick'em intakes (DK Pick6, Underdog, PrizePicks, Sleeper, Action Network
+  scoreboard) are env-gated and default-off; no crons or API routes call them. Already dark.
+- Code kept (verified working, branch motif/pickem-intake-audit-2026-09-25); lane marked PARKED,
+  not deleted. Sleeper may still be evaluated for non-pick'em fantasy functionality.
 
-### Tier 2
-1. **Injury-trajectory analyzer caller** (`1513676`). Maps stored injury status
-   into the real `analyzeInjuryTrajectory`; cron-secret ops route, read-only,
-   500-row bound (6 tests).
-2. **Line-movement / steam candidates** (`33e3f2c`). OPEN→latest consensus movement
-   from `OddsLineSnapshot` (median across books); |movement| ≥ 2.0 pts flagged as
-   steam candidate (observation flag, not a calibrated verdict); sharp-signal
-   layer stays default-off (6 tests).
-3. **Prediction-market snapshot persistence** (`bf17f14`). Cron persists Kalshi/
-   Polymarket independent fair values into `game_signals` (MARKET_SENTIMENT).
-   RIGHTS: Kalshi gate closed (paid-required, `isIngestible("kalshi")` false —
-   fetcher returns null, cron persists nothing); Polymarket compliance-held,
-   default-off. Machinery ready, no bypass (4 tests).
-4. **NGS weekly ingestion** (`c224967`). Wednesday cron fetches nflverse's CC-BY-4.0
-   NGS assets (receiving/rushing/passing), parses weekly rows, upserts
-   `ngs.avg_separation` / `ngs.ryoe_per_att` / `ngs.cpoe` as player signals keyed
-   by gsisId. POSTURE: internal-only (2026-09-28 NGS doctrine, HARD); weight=0 on
-   every row (NGS weighting founder-gated — shadow only); re-ingest never
-   overwrites weight; week defaults to max REG week in data, never invented.
-   Verified end-to-end on real assets: 27,322 rows parsed → 138 signal rows,
-   0 invalid (3 projection tests).
+### Props lane ACTIVE (Garrett, 2026-10-01: "props yes")
+- `runPropsSlate` wiring in flight (subagent): honest model-probability sourcing, persistence
+  target, default-off/shadow caller. Nothing published until calibrated.
 
-### Still owed (not blockers on the above)
-- Route-level suites for the newer Tier 2 routes (auth/bounds/no-write proofs).
-- PR #988 CI + mergeability check after the latest pushes.
-- Full web typecheck remains unusable (~25k pre-existing errors); not claimed clean.
-- Founder-gated: NGS scoring weight, pick'em flag flips, Polymarket/Kalshi rights,
-  Odds API backfill budget, `reservePaidCallSlot` fail-open design, footage sourcing.
+### NGS weighting — Garrett delegated to Motif
+- "You take the lead on figuring out how to find those and how to weight those correctly most
+  intelligently." Research subagent mining the repo corpus (IG posts, NGS glossary, research
+  papers, competitive intel) for a per-metric weighting design. `weight: 0` preserved until
+  the design is implemented and validated. NGS stays internal even after weights enable.
+
+### Odds API historical backfill (Garrett, 2026-10-01 — authorized)
+- `POST /api/ops/odds-backfill` built and pushed (`5c75cd5`): fills OPEN/CLOSE phases in
+  `OddsLineSnapshot` via `/historical/sports/{sport}/odds`. CRON_SECRET-gated, idempotent,
+  bounded (default 32 calls), paced by `reservePaidCallSlot` + `decidePaidOddsCall` governor
+  + 2,000-credit floor, dry-run mode. Garrett approved the spend but does not want to keep
+  paying — the pipeline is built for efficiency (2 calls/game max, skips fully-backfilled games).
