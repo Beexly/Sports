@@ -133,7 +133,7 @@ export default async function CalibrationProofRoomPage() {
           THE headline state, above everything else on the page.
 
           Until this, a customer could read every number in the Proof Room and
-          still not be able to answer "so is your calibration any good?" — the
+          still not be able to answer "so is your calibration any good?" The
           verdict was scattered across a gate flag, a receipt, and a streak
           counter. It now leads the page as a graded, sourced state, and it
           carries its own limits so the state can never be read without them.
