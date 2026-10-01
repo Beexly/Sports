@@ -24,6 +24,7 @@ import { nflEspnEnteringRecordSignal } from "./espn-record-signal.js";
 import { nflHomeRoadSplitSignal } from "./nfl-split-record-signal.js";
 import { rosterAgeAt } from "./nfl-roster-age.js";
 import { sameDivision2026 } from "./nfl-division.js";
+import { elevationAboveThreshold, surfaceAcclimationMismatch } from "./nfl-venue-facts.js";
 import { nflWeekOf } from "./nfl-week.js";
 import { classifyNflBroadcast, isStandalonePrimetime } from "./nfl-broadcast.js";
 
@@ -867,32 +868,28 @@ export const nflRookieBreakoutSignal: SignalDefinition = {
 
 export const nflHighAltitudeSignal: SignalDefinition = {
   id: "nfl_high_altitude_fatigue",
-  label: "NFL High-Altitude Fatigue Decay",
+  label: "NFL Venue Elevation Above 4000 ft",
   category: "VENUE_ENVIRONMENT",
   family: "MICROCLIMATE",
   outputKind: "CONTINUOUS_VALUE",
   validSports: ["americanfootball_nfl"],
   owner: "quant-weather",
-  dataDependencies: ["nfl_stadium_weather_feed"],
+  dataDependencies: ["usgs_epqs_outdoor_venues"],
   activationStatus: "ACTIVE",
   trustWeight: 0.07,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
-  // DIRECTION: homeSign +1, neutral 0. altitude spreads against the VISITING team, so this is signed for the picked side.
-  // The evaluator's own field is `spreadPointAdjustment`; the registry previously read
-  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  // DIRECTION: homeSign +1, neutral 0. Thousands of measured feet above 4,000.
+  // Not the fatigue kernel's spread. Arrival days and snap pace are unmeasured.
   homeSign: 1 as const,
   neutralValue: 0,
-  evaluate: async () => {
-    // The kernel's input contract does not match the env keys this wrapper
-    // used to pass, and the result was read off a field the kernel does not
-    // return. That read emits 0, which is a vote the measurement never made.
-    // Abstain. The sanctioned call is the matching function in
-    // signals-bridge.ts, and it stays unwired until its real inputs exist in
-    // the schema. Do not restore a type-erasing call.
-    return null;
+  evaluate: async (ctx) => {
+    if (ctx.sportKey !== "americanfootball_nfl") return null;
+    const reading = elevationAboveThreshold(ctx);
+    if (reading == null) return null;
+    return { value: reading.value, capturedAt: "2026-10-01", metadata: reading.metadata };
   },
 };
 
@@ -1010,32 +1007,28 @@ export const nflTempPrecipSignal: SignalDefinition = {
 
 export const nflTurfSurfaceFatigueSignal: SignalDefinition = {
   id: "nfl_turf_surface_fatigue",
-  label: "NFL Turf Surface Fatigue",
+  label: "NFL Surface Acclimation Mismatch",
   category: "VENUE_ENVIRONMENT",
   family: "MICROCLIMATE",
   outputKind: "CONTINUOUS_VALUE",
   validSports: ["americanfootball_nfl"],
   owner: "quant-biomechanics",
-  dataDependencies: ["nfl_stadium_meta"],
+  dataDependencies: ["nfl_venue_surface_2025_public_record"],
   activationStatus: "ACTIVE",
   trustWeight: 0.06,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
-  // DIRECTION: homeSign -1, neutral 1. a LOWER multiplier means more late-game decay; neutral is 1.
-  // The evaluator's own field is `lateGameExplosiveRunDecayMultiplier`; the registry previously read
-  // a field this result does not return, so `?? 0` made it silently emit nothing.
-  homeSign: -1 as const,
-  neutralValue: 1,
-  evaluate: async () => {
-    // The kernel's input contract does not match the env keys this wrapper
-    // used to pass, and the result was read off a field the kernel does not
-    // return. That read emits 0, which is a vote the measurement never made.
-    // Abstain. The sanctioned call is the matching function in
-    // signals-bridge.ts, and it stays unwired until its real inputs exist in
-    // the schema. Do not restore a type-erasing call.
-    return null;
+  // DIRECTION: homeSign +1, neutral 0. A mismatch favors the club playing on
+  // its own surface. Same surface abstains. Not the turf kernel's multiplier.
+  homeSign: 1 as const,
+  neutralValue: 0,
+  evaluate: async (ctx) => {
+    if (ctx.sportKey !== "americanfootball_nfl") return null;
+    const reading = surfaceAcclimationMismatch(ctx);
+    if (reading == null) return null;
+    return { value: reading.value, capturedAt: "2025-public-record", metadata: reading.metadata };
   },
 };
 
