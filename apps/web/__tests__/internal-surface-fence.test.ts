@@ -154,6 +154,7 @@ describe("the fence is actually wired (regression on the audit finding)", () => 
         body.indexOf("loadPublic"),
         body.indexOf("handleRealtime"),
         body.indexOf("loadSourceLiveEvidence"),
+        body.indexOf("loadNflverse"),
       );
       expect(guardAt, `${path} gates on its own path`).toBeGreaterThan(-1);
       expect(loadAt, `${path} has a loader to guard`).toBeGreaterThan(-1);

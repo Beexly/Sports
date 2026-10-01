@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it, vi, type Mock } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi, type Mock } from "vitest";
 import { NextResponse } from "next/server";
 
 vi.mock("@/lib/api-entitlement", () => ({ requirePremiumApiRateLimited: vi.fn() }));
@@ -64,9 +64,27 @@ function cannedMetrics(status: "live" | "source-error"): NflverseExpectedMetrics
 beforeEach(() => {
   (requirePremiumApiRateLimited as Mock).mockReset().mockResolvedValue(null);
   (loadNflverseExpectedMetrics as Mock).mockReset().mockResolvedValue(cannedMetrics("live"));
+  // NGS internal-only doctrine: the route is dark unless the founder opts in.
+  process.env["EXPECTED_METRICS_PUBLIC"] = "1";
+});
+
+afterEach(() => {
+  delete process.env["EXPECTED_METRICS_PUBLIC"];
 });
 
 describe("GET /api/nflverse/expected-metrics", () => {
+  it("refuses with 404 internal-surface before the entitlement check when the founder flag is off", async () => {
+    delete process.env["EXPECTED_METRICS_PUBLIC"];
+
+    const res = await GET();
+
+    expect(res.status).toBe(404);
+    const body = (await res.json()) as Record<string, unknown>;
+    expect(body["reason"]).toBe("internal_surface");
+    expect(requirePremiumApiRateLimited).not.toHaveBeenCalled();
+    expect(loadNflverseExpectedMetrics).not.toHaveBeenCalled();
+  });
+
   it("returns the gate's denial and never touches the loader when not entitled", async () => {
     (requirePremiumApiRateLimited as Mock).mockResolvedValue(NextResponse.json({ error: "premium required" }, { status: 403 }));
 
