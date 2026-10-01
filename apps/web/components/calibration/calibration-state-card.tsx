@@ -3,7 +3,7 @@
  *
  * Closes the loop the honest caveat never closed. `CONFIDENCE_PROBABILITY_CAVEAT`
  * has been computed, carried on the report, and pinned by tests since 2026-09-19
- * — and rendered on no surface at all. The string existed; the disclosure did
+ * , and rendered on no surface at all. The string existed; the disclosure did
  * not. This component is the surface it was written for.
  *
  * It renders a graded `CalibrationPublicState` rather than a boolean, and it
@@ -12,7 +12,7 @@
  * reading what that state does not establish. A badge on its own invites the
  * inference the badge cannot support.
  *
- * Server component. Pure render over a plain object — no fetching, so it can be
+ * Server component. Pure render over a plain object, no fetching, so it can be
  * used from a page, a panel, or an API payload unchanged.
  */
 
@@ -23,7 +23,7 @@ import type { CalibrationPublicState, CalibrationState } from "@/lib/calibration
  * Presentation per state. `tone` is deliberately drawn from the existing
  * semantic scale (`text-orbital-cyan` = clear signal, `text-alert` = bad) and
  * never from a green/red casino ramp, which the brand standards ban. The
- * label is the STATE, not a grade — a customer should be able to read their own
+ * label is the STATE, not a grade: a customer should be able to read their own
  * position without interpreting a symbol.
  */
 const PRESENTATION: Readonly<
@@ -61,9 +61,13 @@ const PRESENTATION: Readonly<
   },
 };
 
-/** Short form for a metric, using the em-dash placeholder for a missing value. */
+/**
+ * Short form for a metric. A missing value renders as "n/a", NOT as an em
+ * dash: the brand guard bans em/en dashes in public copy, and a dash here
+ * would also read as a value rather than as the absence of one.
+ */
 function metric(value: number | null | undefined, digits: number): string {
-  return typeof value === "number" && Number.isFinite(value) ? value.toFixed(digits) : "—";
+  return typeof value === "number" && Number.isFinite(value) ? value.toFixed(digits) : "n/a";
 }
 
 export function CalibrationStateCard({
