@@ -69,5 +69,5 @@ engine already ingests nflverse/NGS-derived data.
 
 ## Env vars (Vercel)
 
-- `GSE_WATCH_SPACE_URL` — e.g. `https://galaxysportsedge-gse-watch-pipeline.hf.space`
+- `GSE_WATCH_SPACE_URL` — e.g. `https://beexly-gse-watch-pipeline.hf.space`
 - `CRON_SECRET` — gates the ingest route and both crons (existing)

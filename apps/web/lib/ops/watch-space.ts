@@ -4,7 +4,7 @@
  * The Space is the CV compute brain (cloud-hosted — nothing runs on Garrett's
  * local workspace or the GSE VM). Its URL is configured via the
  * GSE_WATCH_SPACE_URL env var, e.g.
- *   https://galaxysportsedge-gse-watch-pipeline.hf.space
+ *   https://beexly-gse-watch-pipeline.hf.space
  */
 
 /** Base URL of the watch-pipeline Space (no trailing slash). */

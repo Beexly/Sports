@@ -13,6 +13,13 @@ pinned: false
 CV compute brain for the GSE autonomous live watch loop. **Cloud-hosted —
 nothing here relies on Garrett's local workspace or the GSE VM for compute.**
 
+> Namespace note: this Space lives at `Beexly/gse-watch-pipeline`
+> (`https://beexly-gse-watch-pipeline.hf.space`). Garrett's HF credential is
+> user-scoped and cannot create repos under the GalaxySportsEdge org, so the
+> Space runs under his personal namespace where his other Docker/ZeroGPU
+> Spaces already run. Moving it under the org later is a one-line config
+> change in the watcher + Vercel env var.
+
 Flow:
 
 ```
