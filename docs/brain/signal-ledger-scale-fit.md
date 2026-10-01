@@ -80,7 +80,7 @@ Note what the fit does to the two keys the uniform weight had backwards:
 scale in the ledger and the weakest signal in it, and the fit is what stops a
 ±35 EPA reading from dominating a composite it has no demonstrated claim on.
 
-**Seven of thirteen keys earn weight 0, and that is the finding, not a gap.**
+**Eight of thirteen keys earn weight 0, and that is the finding, not a gap.**
 Each for its own measured reason:
 
 - **`ngs.*` (4 keys)** — the writer keys NGS rows by `gsisId` while every settled

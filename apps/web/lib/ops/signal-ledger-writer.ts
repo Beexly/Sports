@@ -31,7 +31,7 @@
  *     asserted that ten keys measured in different units contribute equally,
  *     which is the defect. The weights are fitted on WITHIN-player correlation
  *     against a settled outcome (next-week PPR above median), evidence counted
- *     in distinct fixtures. Seven of thirteen keys measure weight 0 — no
+ *     in distinct fixtures. Eight of thirteen keys measure weight 0 — no
  *     joinable evidence, not a guess — and are still written, because "present
  *     and honest" is not the same as "allowed to move a score".
  *
