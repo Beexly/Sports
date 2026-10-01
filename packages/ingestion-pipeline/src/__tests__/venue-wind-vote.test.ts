@@ -78,4 +78,47 @@ describe("venue wind votes against the pass-heavier side", () => {
     expect(reading?.windMph).toBe(18);
     expect(reading?.tempF).toBe(62);
   });
+
+  it("a kickoff hour is the reading, not the current hour", async () => {
+    const fetcher = async (url: string) => {
+      if (url.includes("/points/")) {
+        return new Response(JSON.stringify({
+          properties: { forecastHourly: "https://api.weather.gov/gridpoints/CLE/83,65/forecast/hourly" },
+        }), { status: 200 });
+      }
+      return new Response(JSON.stringify({
+        properties: {
+          periods: [
+            {
+              startTime: "2026-10-01T16:00:00-04:00",
+              endTime: "2026-10-01T17:00:00-04:00",
+              temperature: 82,
+              windSpeed: "12 mph",
+              shortForecast: "Partly Sunny",
+            },
+            {
+              startTime: "2026-10-01T20:00:00-04:00",
+              endTime: "2026-10-01T21:00:00-04:00",
+              temperature: 78,
+              windSpeed: "10 mph",
+              shortForecast: "Cloudy",
+            },
+          ],
+        },
+      }), { status: 200 });
+    };
+    const kickoff = new Date("2026-10-02T00:15:00Z");
+    const reading = await fetchOutdoorVenueWeather("Cleveland Browns", fetcher, 4000, kickoff);
+    expect(reading?.windMph).toBe(10);
+    expect(reading?.tempF).toBe(78);
+    expect(reading?.precipType).toBe("NONE");
+    expect(reading?.observedFor).toBe("2026-10-01T20:00:00-04:00");
+    const missed = await fetchOutdoorVenueWeather(
+      "Cleveland Browns",
+      fetcher,
+      4000,
+      new Date("2026-10-03T00:15:00Z"),
+    );
+    expect(missed).toBeNull();
+  });
 });

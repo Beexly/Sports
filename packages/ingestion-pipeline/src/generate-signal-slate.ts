@@ -560,13 +560,19 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
     );
     const weatherEnv: Record<string, string> = { ...signalContext.env };
     if (opts?.weatherFetch) {
-      const reading = await fetchOutdoorVenueWeather(homeTeam, opts.weatherFetch);
+      const reading = await fetchOutdoorVenueWeather(
+        homeTeam,
+        opts.weatherFetch,
+        4000,
+        commenceTime instanceof Date ? commenceTime : undefined,
+      );
       if (reading) {
         weatherEnv.WIND_MPH = String(reading.windMph);
         if (reading.tempF != null) weatherEnv.TEMP_F = String(reading.tempF);
         if (reading.precipType != null) weatherEnv.PRECIP_TYPE = reading.precipType;
         weatherEnv.WEATHER_STADIUM = reading.stadium;
         weatherEnv.IS_DOME = "0";
+        if (reading.observedFor) weatherEnv.WEATHER_PERIOD_START = reading.observedFor;
       }
     }
     const continuousVotes: ContinuousVote[] = [];

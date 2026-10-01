@@ -255,8 +255,16 @@ export const nflAgeConditionedRestSignal: SignalDefinition = {
     if (week == null || week.season !== 2026 || week.week !== 4) return null;
     const homeAbbr = nflTeamAbbr(teamLabel(ctx.homeTeam));
     const awayAbbr = nflTeamAbbr(teamLabel(ctx.awayTeam));
-    const homeRest = num(ctx.env, "HOME_REST_DAYS");
-    const awayRest = num(ctx.env, "AWAY_REST_DAYS");
+    const lookedUpRest =
+      num(ctx.env, "HOME_REST_DAYS") == null && num(ctx.env, "AWAY_REST_DAYS") == null
+        ? restDays2026({
+            homeTeam: teamLabel(ctx.homeTeam) ?? "",
+            awayTeam: teamLabel(ctx.awayTeam) ?? "",
+            commenceTime: ctx.commenceTime,
+          })
+        : null;
+    const homeRest = num(ctx.env, "HOME_REST_DAYS") ?? lookedUpRest?.homeRest ?? null;
+    const awayRest = num(ctx.env, "AWAY_REST_DAYS") ?? lookedUpRest?.awayRest ?? null;
     if (homeAbbr == null || awayAbbr == null || homeRest == null || awayRest == null) return null;
     const homeAge = rosterAgeAt(homeAbbr, ctx.commenceTime);
     const awayAge = rosterAgeAt(awayAbbr, ctx.commenceTime);
@@ -287,6 +295,7 @@ export const nflAgeConditionedRestSignal: SignalDefinition = {
         awayBracket: away.ageBracket,
         homeMargin: home.expectedMarginAdjustment,
         awayMargin: away.expectedMarginAdjustment,
+        restSource: lookedUpRest == null ? "env" : "nfl-2026-rest",
       },
     };
   },
@@ -949,6 +958,7 @@ export const nflLinearWindPassSignal: SignalDefinition = {
         homePassRate: home.passRate,
         awayPassRate: away.passRate,
         stadium: ctx.env.WEATHER_STADIUM ?? null,
+        periodStart: ctx.env.WEATHER_PERIOD_START ?? null,
         baselineNotMeasured: true,
       },
     };
@@ -1005,6 +1015,7 @@ export const nflTempPrecipSignal: SignalDefinition = {
         precipType: precipRaw,
         passingYardsAdjustment: kernel.passingYardsAdjustment,
         passGap,
+        periodStart: ctx.env.WEATHER_PERIOD_START ?? null,
         baselineNotMeasured: true,
       },
     };

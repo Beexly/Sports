@@ -31,10 +31,26 @@ function parseWindMph(windSpeed: string | undefined): number | null {
   return match ? Number(match[1]) : null;
 }
 
+function periodCoveringKickoff<T extends { startTime?: string; endTime?: string }>(
+  periods: readonly T[],
+  at: Date,
+): T | null {
+  const target = at.getTime();
+  if (!Number.isFinite(target)) return null;
+  for (const period of periods) {
+    const start = Date.parse(period.startTime ?? "");
+    const end = Date.parse(period.endTime ?? "");
+    if (!Number.isFinite(start) || !Number.isFinite(end) || end <= start) continue;
+    if (target >= start && target < end) return period;
+  }
+  return null;
+}
+
 export async function fetchOutdoorVenueWeather(
   teamName: string,
   fetcher: FetchLike,
   timeoutMs = 4000,
+  at?: Date,
 ): Promise<VenueWeatherReading | null> {
   const abbr = nflTeamAbbr(teamName);
   if (abbr == null) return null;
@@ -78,7 +94,11 @@ export async function fetchOutdoorVenueWeather(
         }>;
       };
     };
-    const period = hourly.properties?.periods?.[0];
+    const periods = hourly.properties?.periods ?? [];
+    // No kickoff: the first period is the current hour, which is what the
+    // existing callers asked for. A kickoff with no covering period abstains.
+    // Using "now" for a game hours away is the wrong wind.
+    const period = at == null ? periods[0] : periodCoveringKickoff(periods, at);
     const windMph = parseWindMph(period?.windSpeed);
     if (windMph == null || !Number.isFinite(windMph)) return null;
     return {
