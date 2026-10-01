@@ -226,16 +226,38 @@ published probability — rather than for coverage: no lookahead, no bootstrap
 contamination, abstention below a 5-game minimum, abstention without a league
 benchmark, and a clean fail-closed on a data-layer throw.
 
-### What this still does NOT do
+### The schedule family — also live now
 
-Only the EFFICIENCY rate signals have inputs today. REST_DAYS, IS_ROAD_TEAM,
-WIND_MPH and the rest come from a schedule / weather / pbp source that is not
-wired, so those evaluators still abstain — correctly, and visibly, rather than
-being filled with guesses. `SignalContextCache` removes the N+1 the per-game
-lookup would otherwise cause across a slate of 80 fixtures.
+The SITUATIONAL family still abstained after the first two commits, and not for
+a missing source: `context-enrichment.ts` has always written restDays,
+back-to-back, schedule density and opening lines to `Game`. The slate query just
+never selected those columns. They are now selected and passed through.
 
-The 9 `SHADOW_ONLY` stubs still have stub evaluators; they go ACTIVE when
-per-play ingestion calls them.
+Proven end to end: a road team on 4 days rest against a rested home team yields
+raw spread penalty −2.25, log-odds tilt −0.0377, adjusted probability 0.4998.
+
+Note for the next reader: the evaluators are written from ONE team perspective
+(`IS_ROAD_TEAM` = is the evaluated team the visitor). Both REST_DAYS and
+OPP_REST_DAYS come from the same two columns seen from opposite sides. Inverting
+that would silently flip every situational signal, so the mapping is stated in
+code and pinned from both sides in the tests.
+
+### What this still does NOT do — and why each is correct, not merely unfinished
+
+| Family | Blocked on | Why abstaining is right |
+|---|---|---|
+| MICROCLIMATE (wind, altitude, temp, turf) | **No source exists.** No weather, venue, stadium or park model in the schema at all. | There is nothing to read. Building a weather table to make these fire would be inventing the data they claim to measure. |
+| LUCK (turnover luck) | `TeamGameLog` carries scores, not fumble/interception columns. | Needs a pbp-backed source. The field names are declared in the context builder so the gap is visible. |
+| Offense / special teams (age, OL, QB) | Roster-age, QB-age and personnel columns do not exist. | Same as MICROCLIMATE: no source, so no signal. |
+| 9 SHADOW_ONLY stubs (officials, coaching, redzone, trench, contract) | Their real evaluators exist and are unit-tested, but they take PER-PLAY context: `refereeName`, `crewFlagsPerGame`, `down`/`distance`, `coachAggressivenessScore`. None of that is in the schema or on the Game row. | Verified: exactly one caller each, and it is the index barrel — never the product. The stub's `return null` is the honest answer for a game-level slate with no play-level feed. ACTIVE when per-play ingestion exists. |
+
+The distinction that matters: a signal blocked by an UNSELECTED column is a bug
+and was treated as one (that was the schedule family). A signal blocked by a
+column that DOES NOT EXIST is DARK-for-missing-source, and the honest move is to
+say so rather than manufacture a table.
+
+`SignalContextCache` removes the N+1 the per-game rate lookup would otherwise
+cause across a slate of 80 fixtures.
 
 ## Next, in order
 
