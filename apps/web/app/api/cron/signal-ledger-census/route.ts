@@ -37,6 +37,7 @@ import { cronAuthError } from "@/lib/cron/authorize";
 import { db } from "@sports/db";
 import { loadSignalLedger, type LedgerLoadReport } from "@/lib/ops/signal-ledger-loader";
 import { composeLedgerShadow } from "@/lib/ops/signal-ledger-shadow";
+import { readStoredSignals } from "@/lib/ops/signal-ledger-store";
 import { captureError } from "@/lib/observability/sentry";
 
 export const dynamic = "force-dynamic";
@@ -72,6 +73,30 @@ export async function GET(req: Request): Promise<NextResponse> {
   const shadow = composeLedgerShadow(candidates, nowIso);
   const SHADOW_TOP_N = 250;
 
+  // SHADOW STORED (Tier 1 #2 of the wiring backlog): the same composer, run
+  // against the PERSISTED ledger (`signals`, filled hourly by the write cron)
+  // instead of a fresh projection of the entity tables. Same math, different
+  // fuel: a divergence between the two series is a finding (stale writes,
+  // dropped keys, a write cron that stopped). Still fully read-only — the
+  // select above is the only touch, and nothing is promoted or published.
+  const stored = await readStoredSignals(db);
+  const shadowStored = composeLedgerShadow(stored.candidates, nowIso);
+
+  const shapeShadow = (s: typeof shadow) => ({
+    now: s.now,
+    halfLifeDays: s.halfLifeDays,
+    summary: s.summary,
+    // Top-N by |score| for response size; summary carries the totals.
+    topEntities: s.entities.slice(0, SHADOW_TOP_N).map((e) => ({
+      entityType: e.entityType,
+      entityId: e.entityId,
+      score: e.score,
+      topSignals: e.topSignals,
+      candidateCount: e.candidateCount,
+    })),
+    topTruncated: s.entities.length > SHADOW_TOP_N,
+  });
+
   // What the ledger could hold TODAY, stated as a count rather than a claim.
   const measuredKeys = Object.keys(anchors).filter((k) => k !== "injury.availability");
 
@@ -94,24 +119,21 @@ export async function GET(req: Request): Promise<NextResponse> {
       })),
       skipped: census.skipped,
       censusText: report.censusText,
-      shadow: {
-        now: shadow.now,
-        halfLifeDays: shadow.halfLifeDays,
-        summary: shadow.summary,
-        // Top-N by |score| for response size; summary carries the totals.
-        topEntities: shadow.entities.slice(0, SHADOW_TOP_N).map((e) => ({
-          entityType: e.entityType,
-          entityId: e.entityId,
-          score: e.score,
-          topSignals: e.topSignals,
-          candidateCount: e.candidateCount,
-        })),
-        topTruncated: shadow.entities.length > SHADOW_TOP_N,
+      shadow: shapeShadow(shadow),
+      // The persisted ledger, composed with the identical math. `storedRows`
+      // and `storedDropped` expose the ledger's own health: rows the write
+      // cron persisted, and rows the reader refused to compose.
+      shadowStored: {
+        ...shapeShadow(shadowStored),
+        storedRows: stored.rowsRead,
+        storedDropped: stored.rowsDropped,
       },
     },
     note:
       "READ-ONLY census + SHADOW compose. Nothing was written to `signals` or any other table. " +
-      "Shadow scores are computed, never persisted, and never touch the published pick score. " +
+      "`shadow` composes a fresh projection of the entity tables; `shadowStored` composes the " +
+      "persisted `signals` rows with the identical math. Shadow scores are computed, never persisted, " +
+      "and never touch the published pick score. " +
       "A key listed as insufficient-rows has a measured row count below the floor, NOT a missing producer. " +
       "Sample a candidate with: /api/ops/signal-ledger-census.",
   });
