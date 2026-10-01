@@ -61,6 +61,7 @@ WINDOW_POLL_S = 60            # how often to re-check the scheduler for windows
 @dataclass
 class WatcherConfig:
     space_url: str                       # https://<org>-gse-watch-pipeline.hf.space
+    space_token: str                     # Bearer token for the Space /process-frame (SPACE_API_TOKEN secret)
     ingest_url: str                      # https://<vercel-app>/api/ops/watch-ingest
     ingest_secret: str                   # Bearer <CRON_SECRET> equivalent
     scheduler_url: str = ""              # optional: Vercel watch-scheduler status
@@ -190,6 +191,7 @@ def process_and_relay(
                     else {}
                 ),
             },
+            headers={"Authorization": f"Bearer {cfg.space_token}"},
             timeout=30,
         )
         r.raise_for_status()

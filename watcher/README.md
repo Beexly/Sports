@@ -29,8 +29,8 @@ One-time setup (Garrett's only involvement, ever):
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
-# 3. Copy config.example.json -> config.json and fill in the four values:
-#    space_url, ingest_url, ingest_secret, scheduler_url
+# 3. Copy config.example.json -> config.json and fill in the five values:
+#    space_url, space_token, ingest_url, ingest_secret, scheduler_url
 # 4. Log into the viewing apps in the browser (YouTube TV / NFL app / NFL+)
 #    so the deep links land on the right game.
 ```
