@@ -230,7 +230,8 @@ describe("/api/picks — the engine runs on real DB surfaces, not market context
     expect(mocks.enrichPickWithIntelligence).toHaveBeenCalledTimes(2);
     for (const call of mocks.enrichPickWithIntelligence.mock.calls) {
       // Args 1-3 are pick / now / universalSignals. The surfaces bundle is arg 4.
-      expect(call).toHaveLength(4);
+      // Arg 5 is the shadowOnly WEATHER_TRAVEL gate (2026-10-01, Tier 1 #3).
+      expect(call).toHaveLength(5);
       const surfaces = call[3] as { resolution?: { notes?: string[] } };
       // Identity, not shape: this is the loader's own object.
       expect(surfaces.resolution?.notes).toContain(BUNDLE_MARKER);

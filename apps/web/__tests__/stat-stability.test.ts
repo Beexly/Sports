@@ -49,6 +49,7 @@ describe("Player Lab wiring", () => {
 
   it("the view explainers define the grade for readers", () => {
     const views = read("lib/players/views.tsx");
-    expect(views.match(/Stat Stability Grade/g)?.length).toBe(3);
+    // 2026-10-01: NGS privacy hardening (f0198c68) removed one explainer; 2 remain.
+    expect(views.match(/Stat Stability Grade/g)?.length).toBe(2);
   });
 });
