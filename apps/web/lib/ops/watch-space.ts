@@ -3,18 +3,23 @@
  *
  * The Space is the CV compute brain (cloud-hosted — nothing runs on Garrett's
  * local workspace or the GSE VM). Its URL is configured via the
- * GSE_WATCH_SPACE_URL env var, e.g.
- *   https://beexly-gse-watch-pipeline.hf.space
+ * GSE_WATCH_SPACE_URL env var; when unset it defaults to the production
+ * Space (https://beexly-gse-watch-pipeline.hf.space).
  */
 
 /** Base URL of the watch-pipeline Space (no trailing slash). */
+export const DEFAULT_WATCH_SPACE_URL = "https://beexly-gse-watch-pipeline.hf.space";
+
 export function watchSpaceUrl(): string | null {
-  const u = process.env.GSE_WATCH_SPACE_URL?.trim().replace(/\/+$/, "");
+  const u = (process.env.GSE_WATCH_SPACE_URL?.trim() || DEFAULT_WATCH_SPACE_URL).replace(
+    /\/+$/,
+    "",
+  );
   return u && u.length > 0 ? u : null;
 }
 
 /**
- * Warm-ping the Space's /health so ZeroGPU doesn't cold-start mid-drive.
+ * Warm-ping the Space's /health so it doesn't cold-start mid-drive.
  * Returns true when the Space reports healthy. Never throws — the scheduler
  * treats a failed ping as "not warm" and retries next tick.
  */
