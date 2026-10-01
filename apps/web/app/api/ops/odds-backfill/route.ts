@@ -11,8 +11,10 @@
  * - CRON_SECRET Bearer <redacted> (founder/ops only, never a public surface).
  * - Idempotent: games already holding both phases are skipped before any call.
  * - Bounded: `maxCalls` caps paid calls per run (default 32 ≈ one NFL week).
- * - Paced: `reservePaidCallSlot` (hourly slot) + the credit governor; the run
- *   stops when the governor refuses or remaining credits fall below the floor.
+ * - Paced: `reservePaidCallSlot` (hourly run-level mutex) + the credit governor;
+ *   the run stops when the governor refuses or remaining credits fall below
+ *   the floor. The governor is checked before the mutex is consumed, so a
+ *   refused run never burns the pacing marker.
  * - Dry-run mode: `dryRun: true` plans and reports without a single paid call.
  *
  * SHAPE. One row per bookmaker per market per side (SPREAD/TOTAL; moneylines
@@ -137,32 +139,72 @@ export async function POST(request: Request): Promise<NextResponse> {
   let callsMade = 0;
   let rowsWritten = 0;
   let creditsRemaining: number | null = null;
-  const stoppedEarly: string | null = null;
+  let stoppedEarly: string | null = null;
   const perGame: Array<{ externalId: string; phases: BackfillPhase[]; rows: number }> = [];
+
+  // Governor FIRST (no side effects): refuse the whole run when the quota
+  // cannot fund it, before consuming the pacing marker.
+  const preDecision = decidePaidOddsCall({
+    remaining: creditsRemaining,
+    now,
+    purpose: "odds",
+    hasEventWithin48h: null,
+    freeCoversPurpose: false,
+  });
+  if (!preDecision.allow) {
+    return NextResponse.json({
+      ok: true,
+      dryRun: false,
+      gamesInWindow: games.length,
+      gamesNeedingBackfill: plan.length,
+      estimatedPaidCalls: estimatedCalls,
+      callsMade: 0,
+      rowsWritten: 0,
+      creditsRemaining: null,
+      stoppedEarly: "governor-refused",
+      monthlyCredits: MONTHLY_CREDITS,
+      perGame: [],
+    });
+  }
+
+  // Run-level pacing mutex: one reservation per RUN, not per call.
+  // (Previously the hourly slot was reserved inside the per-phase loop, so
+  // the second call always found the first call's marker and the run stopped
+  // after exactly 1 call regardless of maxCalls.)
+  const slot = await reservePaidCallSlot(db as unknown as OddsCreditLedgerDb, {
+    sport: NFL_SPORT_KEY,
+    purpose: "odds-backfill",
+    now,
+    intervalMs: 60 * 60 * 1_000,
+  });
+  if (!slot.reserved) {
+    return NextResponse.json({
+      ok: true,
+      dryRun: false,
+      gamesInWindow: games.length,
+      gamesNeedingBackfill: plan.length,
+      estimatedPaidCalls: estimatedCalls,
+      callsMade: 0,
+      rowsWritten: 0,
+      creditsRemaining: null,
+      stoppedEarly: "pacing-slot-taken",
+      monthlyCredits: MONTHLY_CREDITS,
+      perGame: [],
+    });
+  }
 
   for (const item of plan) {
     for (const phase of item.phases) {
-      if (callsMade >= maxCalls) break;
+      if (callsMade >= maxCalls) {
+        stoppedEarly = "max-calls-reached";
+        break;
+      }
 
-      // Pace: one paid call per hourly slot.
-      const slot = await reservePaidCallSlot(db as unknown as OddsCreditLedgerDb, {
-        sport: NFL_SPORT_KEY,
-        purpose: "odds",
-        now,
-        intervalMs: 60 * 60 * 1_000,
-      });
-      if (!slot.reserved) break;
-
-      // Governor: refuse when the quota cannot fund the run.
-      const decision = decidePaidOddsCall({
-        remaining: creditsRemaining,
-        now,
-        purpose: "odds",
-        hasEventWithin48h: null,
-        freeCoversPurpose: false,
-      });
-      if (!decision.allow) break;
-      if (creditsRemaining !== null && creditsRemaining < CREDIT_FLOOR) break;
+      // Credit floor: stop before spending below the reserve.
+      if (creditsRemaining !== null && creditsRemaining < CREDIT_FLOOR) {
+        stoppedEarly = "credit-floor";
+        break;
+      }
 
       const asOf = phaseTimestamp(item.commenceTime, phase);
       let rows: BackfillSnapshotRow[] = [];
@@ -190,7 +232,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       }
       perGame.push({ externalId: item.externalId, phases: [phase], rows: rows.length });
     }
-    if (callsMade >= maxCalls) break;
+    if (callsMade >= maxCalls || stoppedEarly) break;
   }
 
   return NextResponse.json({
