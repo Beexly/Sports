@@ -42,14 +42,21 @@
  * the difference between filling a table and believing a number, and only the
  * second one is founder-gated.
  *
- * IDEMPOTENT BY CONSTRUCTION, WITH ONE HONEST CONSEQUENCE. The write is an upsert
- * keyed on the same unique tuple the schema declares, so a re-run converges
- * rather than double-voting. But `value` and `weight` are only refreshed by a
- * re-run, so rows written before this change keep the raw `value` and weight 1
- * until the writer next visits them. `signals` is not read by any production
- * consumer today (measured: the only reader is `/api/ops/signal-ledger-state`,
- * which counts rows and deliberately selects no values), so no consumer can
- * observe a mixed-scale table through this change.
+ * IDEMPOTENT BY CONSTRUCTION, AND A RE-RUN NOW CONVERGES. The write is an
+ * upsert keyed on the same unique tuple the schema declares, so a re-run
+ * converges rather than double-voting. `value`, `valueRaw` and `weight` are
+ * all in the `update` clause, so a row written before this file existed
+ * converges onto the fitted scale and the fitted weight the next time the
+ * writer visits it — the `update` branch is not an optional path, it is the
+ * only path every pre-existing row can take.
+ *
+ * (That `weight` was MISSING from the `update` clause, while present on
+ * `create`, is a defect this file previously shipped. See the note at the
+ * upsert. `signals` is not read by any production consumer today — measured:
+ * the only reader is `/api/ops/signal-ledger-state`, which counts rows and
+ * deliberately selects no values — so the fix has no consumer-visible blast
+ * radius, which is exactly why it needed a test rather than a production
+ * incident to find it.)
  *
  * A KEY WITH NO FITTED SCALE IS DROPPED, NOT DEFAULTED. If the scale table has
  * no entry for a key, the row is skipped: there is no honest normalized value
@@ -407,9 +414,27 @@ export async function writeSignalCandidates(
             },
           },
           create: c,
+          // `weight` IS refreshed here, and that is the whole point.
+          //
+          // MEASURED DEFECT, this branch. Every row in `signals` predates the
+          // fitted-weight table, so every row arrives at this upsert on the
+          // `update` path — and the `update` clause omitted `weight`. The
+          // fitted weight was therefore written ONLY by the `create` branch,
+          // which a re-run of an existing row never reaches. A key's weight
+          // could not change, ever, without a brand-new (entity, key, season,
+          // week) tuple appearing. That is why the production measurement
+          // still reads a flat weight 1.0 on every key while the committed
+          // table says otherwise: the fit is correct and unreachable.
+          //
+          // Including it makes the writer converge on the fit rather than on
+          // the schema default, which is the property an idempotent upsert is
+          // supposed to have. It cannot double-vote: `weight` is a property of
+          // the KEY (signal-scale-table.ts), not an accumulating vote, and the
+          // unique tuple still guarantees one row per key.
           update: {
             value: c.value,
             valueRaw: c.valueRaw,
+            weight: c.weight,
             confidence: c.confidence,
             capturedAt: c.capturedAt,
             sourceId: c.sourceId,

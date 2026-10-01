@@ -275,6 +275,53 @@ describe("writeSignalCandidates", () => {
     });
   });
 
+  it("REFRESHES the weight on the update path, not only on create", async () => {
+    // The regression this pins. Every row in `signals` predates the fitted
+    // weight table, so every real row arrives here on the `update` branch.
+    // When `weight` was absent from that clause the fitted weight was
+    // unreachable: `create` could set it, and `update` could never change it,
+    // so production kept reading a flat 1.0 on every key while the committed
+    // table said otherwise. A test that only inspected `create` (which is what
+    // the file's other assertions do) cannot see that class of bug, because on
+    // a fresh database `create` is the branch that runs.
+    const { db, calls } = fakeDb();
+    const fitted = {
+      ...one,
+      key: "pgs.target_share",
+      // The real committed fitted weight for this key, not a placeholder.
+      weight: 0.101859,
+    } as SignalWriteCandidate;
+
+    await writeSignalCandidates(db, [fitted]);
+
+    const args = calls[0] as { create: { weight: number }; update: Record<string, unknown> };
+    expect(args.create.weight).toBe(0.101859);
+    // The assertion that matters: the update clause carries it too.
+    expect(args.update.weight).toBe(0.101859);
+    // And the rest of the converging set, so a future edit cannot quietly
+    // trade one refreshed column for another.
+    expect(args.update.value).toBe(fitted.value);
+    expect(args.update.valueRaw).toBe(fitted.valueRaw);
+    expect(args.update.confidence).toBe(fitted.confidence);
+    expect(args.update.capturedAt).toBe(fitted.capturedAt);
+  });
+
+  it("propagates a zero weight, so a refit can demote a key and not just promote it", async () => {
+    // The asymmetry that would survive a naive fix: if the update clause
+    // guarded `weight` with something like `c.weight || 1`, or the candidate
+    // builder substituted a default for a key with no earned weight, a key
+    // that HAS been refitted down to zero would be pinned at its old non-zero
+    // value forever. Zero is the honest answer for those keys and it has to
+    // survive the same code path as any other number.
+    const { db, calls } = fakeDb();
+    const demoted = { ...one, key: "injury.availability", weight: 0 } as SignalWriteCandidate;
+
+    await writeSignalCandidates(db, [demoted]);
+
+    const args = calls[0] as { update: Record<string, unknown> };
+    expect(args.update.weight).toBe(0);
+  });
+
   it("reports a partial failure instead of silently truncating", async () => {
     const { db } = fakeDb((args) => {
       if ((args as { create: { key: string } }).create.key === "bad") {
