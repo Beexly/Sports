@@ -357,13 +357,25 @@ export function estimateInterFrameHomography(
   );
   if (matches.length < minInliers) return null;
 
+  // RANSAC sampling PRNG (mulberry32). Non-crypto use: uniform 4-point
+  // sampling only — a seeded PRNG also makes compensation reproducible
+  // across runs, which aids debugging. Seeded per call so repeated
+  // invocations don't correlate.
+  let ransacSeed = (Date.now() ^ 0x9e3779b9) | 0;
+  const ransacRand = (): number => {
+    ransacSeed |= 0;
+    ransacSeed = (ransacSeed + 0x6d2b79f5) | 0;
+    let t = Math.imul(ransacSeed ^ (ransacSeed >>> 15), 1 | ransacSeed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  };
   let best: Homography | null = null;
   let bestInliers = 0;
   let bestSet: Match[] = [];
   for (let it = 0; it < ransacIterations; it++) {
     // Sample 4 distinct matches.
     const idx = new Set<number>();
-    while (idx.size < 4) idx.add(Math.floor(Math.random() * matches.length));
+    while (idx.size < 4) idx.add(Math.floor(ransacRand() * matches.length));
     const sample = [...idx].map((i) => matches[i]!);
     const h = fitFromMatches(sample);
     if (h == null) continue;

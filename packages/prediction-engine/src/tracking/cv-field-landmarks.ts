@@ -102,7 +102,8 @@ export function maskScoreBug(frame: VideoFrame, bugRect: BoundingBox): VideoFram
   for (let y = y0; y < y1; y++) {
     const row = pixels[y];
     if (row == null) continue;
-    for (let x = x0; x < x1; x++) row[x] = 0;
+    // fill() with numeric bounds: no dynamic-key assignment.
+    row.fill(0, x0, x1);
   }
   return { ...frame, pixels };
 }
