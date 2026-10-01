@@ -4784,6 +4784,25 @@ Motif is building the weight-free half of the broadcast-video movement pipeline.
 - **Composition points for the coding agent:** (1) implement the real `Detector` behind `cv-detector-contract.ts` when Garrett approves model weights/footage — do not reimplement association or calibration around it; (2) wire `MovementMetric[]` from `runMovementPipeline()` into NGS-style validation and the engine's tracking surface — that wiring is deliberately not done yet.
 - **Untouched on purpose:** footage sourcing, the 3-game hand-labeled validation set, and detector/weights selection remain Garrett's calls (see FILM-PIPELINE PATENT PROGRAM preconditions above). This increment needs none of them.
 
+## WIRING BACKLOG — Motif's lane (2026-10-01, Garrett's direct order)
+
+Garrett: "it is best if you wire them" — Motif owns the wiring backlog himself (he carries the
+context); the coding agent composes, does not duplicate.
+
+- **Backlog:** `docs/ops/wiring-backlog-2026-10-01.md` (ranked, from 4 read-only recon sweeps).
+- **Done:** Tier 1 #1 — `composeLedger` runs in shadow. Branch `motif/ledger-shadow-2026-10-01` → PR #988.
+  `composeByEntity` barrel-exported; new `apps/web/lib/ops/signal-ledger-shadow.ts`; the census cron
+  now returns `data.shadow` (computed, never persisted, never touches the published score). 5 tests green.
+- **Next:** Tier 1 #2 `player_signals` table (absent repo-wide — schema + writer + reader), then #3–#5
+  (observation inputs, `tuneSignalWeights`, devig oracle callers).
+- **Corrections banked from the sweeps:** the Session 0 inventory's "conformalRdPosture zero callers" and
+  "2 of 14 fields" claims are stale at current main (caller exists at `public-surface-truth/route.ts:998`;
+  `picks/route.ts:277-297` loads all 12 surfaces); the devig math is fixed (#965) — only asymmetric-input
+  tests are owed. `player_signals` truly does not exist; `runPropsSlate` truly has no caller;
+  `canPublishPicks` is hard-`false` at `market-signal.ts:49`.
+- **Standing order (restated, not debatable):** research → wire → weight → calibrate → test → polish.
+  Shadow-only until calibrated; no calibration verdicts on old-model picks.
+
 **Garrett's standing order on sequencing (2026-09-30, restated explicitly — not up for debate):** wire the ENTIRE engine first — every signal ingested, then weighted, then calibrated — and ONLY then judge/recalibrate predictions. Do not score calibration (Brier or otherwise) on old-model picks and present it as a verdict on the current engine; history never changes, so that is a losing battle by construction. The order is research → wire → weight → calibrate → test → polish. Stop relitigating the order and do the wiring.
 
 ## X ANALYTICS SWEEP 2026-09-29 PM
