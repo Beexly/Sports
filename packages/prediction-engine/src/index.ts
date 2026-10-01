@@ -1035,6 +1035,28 @@ export type {
 export { composeLedger, ledgerAgeDays } from "./signal-ledger.js";
 export type { LedgerSignalRow, ComposeLedgerOptions } from "./signal-ledger.js";
 
+// The engine emitting a PICK, not just a probability. `IntelligenceReasoning`
+// has no side, no selection and no pick in its return type, and
+// `SituationalContext.selection` is an INPUT, so the spine could answer "60% on
+// the home side" and never "take the home side". This is the conversion, as a
+// separate pure step so the public picks route's rendered `why` lines are
+// untouched. NO BET is a first-class outcome, the market is compared to rather
+// than blended into, and publishState WITHHOLD/SHADOW cannot produce a pick.
+export {
+  recommend,
+  selectionForSide,
+  DEFAULT_MIN_EDGE,
+  DEFAULT_MIN_KNOWABILITY,
+  DEFAULT_MIN_EVIDENCE_HEALTH,
+} from "./engine-recommendation.js";
+export type {
+  EngineRecommendation,
+  RecommendInput,
+  RecommendOptions,
+  RecommendationVerdict,
+  NoBetReason,
+} from "./engine-recommendation.js";
+
 // The PRODUCER side of the ledger, and the weight tuner that scores it against
 // settled outcomes. #924 shipped both modules but exported neither, so they were
 // unreachable from outside this package; `signal-ledger-sources` is the adapter

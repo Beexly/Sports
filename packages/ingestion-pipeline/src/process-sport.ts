@@ -62,6 +62,16 @@ import {
   buildIndependentFairValues,
   type EloRatingsCache,
 } from "./build-independent-fair-values.js";
+import { deriveEnginePick, type EnginePickType, type EngineReasoner } from "./engine-pick.js";
+import { loadLedgerSides, nflSeasonWeekForDate } from "./signal-ledger-loader.js";
+import {
+  arbitrate,
+  recordEngineShadowPick,
+  __setArbiterLoader,
+  type ArbiterLoader,
+  type EngineShadowRecord,
+  type LegacyPickSummary,
+} from "./engine-shadow-pick.js";
 import type { ReadinessGates } from "@sports/prediction-engine";
 
 /** Production SHA-256 HashFn for the proof spine — a weak hash would void the guarantee. */
@@ -328,12 +338,41 @@ function shouldThinFillFromRundown(
   return thinFillCandidates(thin, Date.now()).length > 0;
 }
 
+/**
+ * The host-level seams `processSport` accepts.
+ *
+ * `engineReasoner` is the important one. The reasoning spine lives in
+ * `apps/web/lib/intelligence-core`, and `apps/web` imports THIS package, so the
+ * dependency cannot be reversed for a static import here. The pipeline
+ * therefore composes the ledger and hands the composed result to a reasoner the
+ * host supplies, which is where the real spine runs. Omitted means this host
+ * cannot reason, and the engine's pick is null: an honest "no opinion" rather
+ * than a number this package invented to look busy.
+ *
+ * `shadowRecorder` and `arbiterLoader` are the same kind of seam: the arbiter
+ * adapter is being built in another lane, so it is resolved defensively and its
+ * absence or failure must never change what publishes.
+ */
+export interface ProcessSportOptions {
+  readonly engineReasoner?: EngineReasoner;
+  readonly arbiterLoader?: ArbiterLoader;
+  readonly shadowRecorder?: (record: EngineShadowRecord) => Promise<boolean>;
+}
+
 export async function processSport(
   sport: SportConfig,
   apiKey: string,
   gates: ReadinessGates,
   logPrefix: string = "[ingestion]",
+  options: ProcessSportOptions = {},
 ): Promise<ProcessSportResult> {
+  // The host-level seams, resolved once. An arbiter loader supplied by the host
+  // takes precedence over the defensive default; both resolve to "no
+  // arbitration" when the module is absent, and neither can fail a pick.
+  const engineReasoner = options.engineReasoner;
+  const shadowRecorder = options.shadowRecorder ?? recordEngineShadowPick;
+  if (options.arbiterLoader !== undefined) __setArbiterLoader(options.arbiterLoader);
+
   // Derive once per call — immutable within this invocation.
   // This is the single gating point for bootstrap provenance.
   const isBootstrap = !gates.canPersistCanonicalHistory;
@@ -1484,6 +1523,156 @@ export async function processSport(
       }
       picksGenerated++;
       publishedGameIds.add(pick.gameId);
+
+      // ==========================================================================
+      // THE ENGINE DERIVES ITS OWN PICK (shadow). The legacy pick above is
+      // already written and is what publishes. Nothing below can change that.
+      //
+      // Measured on origin/main before this landed: the code path reaching
+      // `db.pick.create` called `buildIndependentFairValues` and a confidence
+      // heuristic, and contained ZERO calls to the reasoning engine. The engine
+      // read picks after they were written and had never influenced one, and
+      // `composeLedger` had no production caller at all outside its own test.
+      //
+      // So the engine is asked for its own opinion here, on real persisted
+      // ledger rows, and that opinion is RECORDED BESIDE the legacy pick. Which
+      // one publishes is unchanged, and stays a human decision made after the
+      // two have been compared on settled games.
+      //
+      // The whole block is fail-open and side-effect free with respect to
+      // `picks`: it reads, it derives, it writes one `shadow_signals` row, and
+      // it cannot publish, unpublish, or rewrite anything. `recordEngineShadowPick`
+      // returns a boolean rather than throwing, and the derivation is wrapped
+      // because a pick must survive every failure mode of its own shadow.
+      // ==========================================================================
+      try {
+        const engineMarketFairProb =
+          typeof pick.marketFairProb === "number" &&
+          pick.marketFairProb > 0 &&
+          pick.marketFairProb < 1
+            ? pick.marketFairProb
+            : null;
+        // `fetchedAt` is the single clock this run already read, so the
+        // freshness decay inside composeLedger is reproducible per run and the
+        // recorded probability can be replayed from the stored row.
+        const shadowNow = fetchedAt.toISOString();
+        // The scored pick carries no team names and no kickoff, so the fixture
+        // is resolved from the game row. The names come from the DATABASE, not
+        // from the feed, for the same reason every other surface reads them
+        // there: the feed writes city-only names on some sports, and the ledger
+        // roster is keyed by the abbreviation the stored name maps to.
+        const shadowGame = await db.game.findUnique({
+          where: { id: pick.gameId },
+          select: { homeTeamName: true, awayTeamName: true, commenceTime: true },
+        });
+        // ONE week resolution, used for both the lag bound and the season the
+        // ledger rows are read from. Resolving them separately would let the
+        // two disagree and read a season the lag bound was not derived from.
+        const seasonWeek =
+          shadowGame === null
+            ? null
+            : nflSeasonWeekForDate(shadowGame.commenceTime);
+        const ledgerSides =
+          shadowGame === null || seasonWeek === null
+            ? null
+            : await loadLedgerSides({
+                homeTeam: shadowGame.homeTeamName,
+                awayTeam: shadowGame.awayTeamName,
+                season: seasonWeek.season,
+                asOfWeek: seasonWeek.week,
+                now: fetchedAt,
+              });
+        // A ledger whose READ failed is not a ledger that has nothing to say.
+        // Deriving from it would turn a database blip into a clean "the engine
+        // saw nothing" in the record the arbiter is later scored on, so an
+        // unreadable ledger silences the engine explicitly.
+        const enginePick =
+          shadowGame === null || ledgerSides === null || !ledgerSides.ledgerReadable
+            ? null
+            : deriveEnginePick({
+                gameId: pick.gameId,
+                homeTeam: shadowGame.homeTeamName,
+                awayTeam: shadowGame.awayTeamName,
+                pickType: pick.pickType as EnginePickType,
+                line: pick.line,
+                marketFairProb: engineMarketFairProb,
+                homeLedger: ledgerSides.home,
+                awayLedger: ledgerSides.away,
+                now: shadowNow,
+                modelVersion: pick.modelVersion,
+                // The reasoner is a host-level injection, not an import: the
+                // reasoning spine lives in `apps/web`, which imports THIS
+                // package, so the dependency cannot be reversed here. Without an
+                // injected reasoner the engine has no opinion and the pick is
+                // null, which is the honest answer on a host that cannot reason.
+                ...(engineReasoner != null ? { reasoner: engineReasoner } : {}),
+              });
+        const legacySummary: LegacyPickSummary = {
+          selection: pick.selection,
+          line: pick.line,
+          pickType: pick.pickType as EnginePickType,
+          confidence: pick.confidence,
+          pickId: upsertedPick.id,
+        };
+        // Arbitration runs only when there IS a disagreement to arbitrate.
+        // Three distinct non-disagreements, and conflating any two of them
+        // would corrupt the sample the arbiter is later scored on:
+        //   - the engine derived nothing at all (silent ledger, unreadable
+        //     rows, or no spine on this host);
+        //   - the engine declined to pick (a real answer: NO BET);
+        //   - the engine and legacy named the same selection.
+        // Only a genuine PICK that differs from legacy is worth asking about.
+        const engineDisagrees =
+          enginePick !== null &&
+          enginePick.verdict === "PICK" &&
+          (enginePick.selection !== pick.selection ||
+            enginePick.pickType !== legacySummary.pickType);
+        const arbitration = !engineDisagrees
+          ? {
+              verdict: "AGREE" as const,
+              rationale:
+                enginePick === null
+                  ? "engine derived no pick; nothing to arbitrate"
+                  : enginePick.verdict === "NO_BET"
+                    ? `engine declined to pick (${enginePick.noBetReason ?? "no reason recorded"}); that is an answer, not a disagreement`
+                    : "engine and legacy selected the same side and market",
+              publishedWinner: "LEGACY" as const,
+              arbitrationFailed: false,
+            }
+          : await arbitrate(enginePick, legacySummary, {
+                gameId: pick.gameId,
+                marketFairProb: engineMarketFairProb,
+                ledgerHomeRows: ledgerSides?.home.length ?? 0,
+                ledgerAwayRows: ledgerSides?.away.length ?? 0,
+              });
+        // The recorder takes RecordEngineShadowOptions, so the payload is passed
+                // under its `record` key. Passing the record bare destructures to
+                // undefined and silently loses every shadow row.
+        await shadowRecorder({
+          record: {
+            gameId: pick.gameId,
+            // Names this lane so its rows can never collide with, or overwrite,
+            // the existing shadow lane's rows for the same fixture.
+            modelVersion: `engine-shadow:${pick.modelVersion}`,
+            engine: enginePick,
+            legacy: legacySummary,
+            arbitration,
+            recordedAt: shadowNow,
+          },
+        });
+        for (const note of ledgerSides?.notes ?? []) {
+          console.warn(`${logPrefix} engine shadow ledger: ${note}`);
+        }
+      } catch (engineErr) {
+        // The legacy pick is already persisted above and is unaffected. A
+        // failure here costs the shadow comparison for this fixture and nothing
+        // else, which is the whole reason the shadow lane is separate.
+        console.warn(
+          `${logPrefix} engine shadow pick failed for pick.gameId ${pick.gameId}: ` +
+            `${engineErr instanceof Error ? engineErr.message : engineErr}`,
+        );
+      }
+
       gateDecisionsToPersist.push({
         gameId: pick.gameId,
         pickId: upsertedPick.id,

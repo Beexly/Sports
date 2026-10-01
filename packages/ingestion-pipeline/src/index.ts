@@ -898,3 +898,40 @@ export {
   type DerivedMetrics,
 } from "./reasoning-trace.js";
 export { traceHoldoutGame, type HoldoutScheduleRow } from "./reasoning-trace/from-bridge.js";
+
+// The engine deriving its own pick, beside the legacy one, in shadow. Before
+// this, the pick generator contained no call to the reasoning engine at all and
+// `composeLedger` had no production caller outside its own test. Nothing here
+// publishes: the legacy pick still does, and a disagreement is arbitrated by an
+// independently supplied adapter whose failure can never change that.
+export {
+  deriveEnginePick,
+  type EnginePick,
+  type EnginePickInput,
+  type EnginePickType,
+  type EngineReasoner,
+  type EngineReasonerInput,
+  type EngineReasonerResult,
+  type EngineVerdict,
+  type EnginePublishState,
+  type ComposedSide,
+} from "./engine-pick.js";
+export {
+  loadLedgerSides,
+  nflSeasonWeekForDate,
+  MAX_LEDGER_ROWS,
+  type LedgerLoadInput,
+  type LedgerSides,
+} from "./signal-ledger-loader.js";
+export {
+  arbitrate,
+  recordEngineShadowPick,
+  ARBITER_MODULE_CANDIDATES,
+  DEFAULT_ARBITER_MODEL,
+  type ArbitrationOutcome,
+  type ArbiterLoader,
+  type ArbiterResult,
+  type EngineShadowRecord,
+  type LegacyPickSummary,
+} from "./engine-shadow-pick.js";
+export { processSport, type ProcessSportOptions } from "./process-sport.js";
