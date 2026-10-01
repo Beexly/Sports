@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { db } from "@sports/db";
@@ -8,6 +9,7 @@ import {
   type LoadableSeparationClient,
 } from "@/lib/reconstruction/separation-surface";
 import { SeparationPanel } from "@/components/reconstruction/separation-panel";
+import { isPagePublic } from "@/lib/launch/internal-surface-fence";
 
 export const dynamic = "force-dynamic";
 
@@ -25,6 +27,11 @@ export const metadata: Metadata = {
  * flag is off, or before NGS data has accrued, the page shows an honest state.
  */
 export default async function ReconstructionPage() {
+  // NGS internal-only doctrine (Garrett, 2026-09-28, HARD): this exhibit's
+  // premise names Next Gen Stats, so the page is internal. Dark unless the
+  // founder opts in.
+  if (!isPagePublic("/intelligence/reconstruction")) notFound();
+
   const enabled = process.env["RECONSTRUCTION_FEATURES_ENABLED"] === "true";
 
   const surface: ReconstructedSeparationSurface = enabled

@@ -72,6 +72,15 @@ export const INTERNAL_SURFACES = {
     env: "PARLAY_MRI_PUBLIC",
     exposes: "per-leg risk, survivability, expected value, house-edge compounding",
   },
+  /**
+   * R&D exhibit whose premise names Next Gen Stats (reconstruction from NGS
+   * aggregates). NGS internal-only doctrine (Garrett, 2026-09-28, HARD):
+   * no NGS data, metric names, or discussion on the public site.
+   */
+  "/intelligence/reconstruction": {
+    env: "RECONSTRUCTION_PUBLIC",
+    exposes: "separation-reconstruction exhibit naming Next Gen Stats",
+  },
 } as const satisfies Readonly<Record<string, { env: string; exposes: string }>>;
 
 export type InternalSurfacePath = keyof typeof INTERNAL_SURFACES;
@@ -108,6 +117,23 @@ export const INTERNAL_API_ROUTES = {
   "/api/sources/catalog": {
     env: "SOURCES_CATALOG_PUBLIC",
     exposes: "the full source stack, refused-source status, and provider envVar names",
+  },
+  /**
+   * Raw Next Gen Stats dataset as JSON. NGS internal-only doctrine
+   * (Garrett, 2026-09-28, HARD). A premium rate limit is not a fence.
+   */
+  "/api/nflverse/next-gen-stats": {
+    env: "NGS_JSON_PUBLIC",
+    exposes: "raw Next Gen Stats receiving/rushing/passing rows as JSON",
+  },
+  /**
+   * GSE's own CPOE/RYOE/xYAC estimates, each carrying its ground-truth
+   * validation report vs Next Gen Stats. Names NGS metrics and discusses
+   * NGS validation — internal under the NGS doctrine.
+   */
+  "/api/nflverse/expected-metrics": {
+    env: "EXPECTED_METRICS_PUBLIC",
+    exposes: "CPOE/RYOE/xYAC estimates with NGS validation reports",
   },
 } as const satisfies Readonly<Record<string, { env: string; exposes: string }>>;
 
@@ -187,6 +213,9 @@ export const INTERNAL_SURFACE_POLICY = {
   "/api/calibration": "internal — calibration internals (opt-in CALIBRATION_JSON_PUBLIC)",
   "/api/gse/v1/truth": "internal — truth topology (opt-in TRUTH_TOPOLOGY_PUBLIC)",
   "/api/sources/catalog": "internal — source stack, refused-source status, provider envVar names (opt-in SOURCES_CATALOG_PUBLIC)",
+  "/api/nflverse/next-gen-stats": "internal — raw NGS dataset as JSON (opt-in NGS_JSON_PUBLIC)",
+  "/api/nflverse/expected-metrics": "internal — CPOE/RYOE/xYAC with NGS validation reports (opt-in EXPECTED_METRICS_PUBLIC)",
+  "/intelligence/reconstruction": "internal — NGS-naming reconstruction exhibit (opt-in RECONSTRUCTION_PUBLIC)",
   "/clv": "public — gated proof surface, 503 until canExposePerformanceStats (UNCHANGED)",
   "/stats": "public — gated proof surface, 404 until STATS_PUBLIC (UNCHANGED)",
   "/api/projections": "public — projections are the allowed surface (UNCHANGED)",
