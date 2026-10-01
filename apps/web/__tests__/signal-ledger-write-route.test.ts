@@ -11,6 +11,11 @@
  * i.e. 84,500 rows went to 0 and the route still returned 200. Nothing in the
  * unit suite called the route, so 17 writer tests all passed over a route that
  * wrote nothing. This is the test that would have caught it.
+ *
+ * A second gap the same incident exposed: the route returned 200 with
+ * success:true whenever `skipped` was 0, even with errors present and 0 rows
+ * written — `skipped === 0` is not "the write worked". The loud-failure tests
+ * below pin a 500 for any fault the report carries.
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -174,5 +179,46 @@ describe("GET /api/cron/signal-ledger-write", () => {
     } finally {
       delete process.env["SIGNAL_LEDGER_SHARD"];
     }
+  });
+
+  it("returns 500 — never 200 — when the deadline stops the write with 0 rows written", async () => {
+    // The exact incident shape (dpl_8hKqsyXxb1KDLm4kgBw6ffEBEq9e): the second
+    // write call saw an already-past deadline, wrote nothing, skipped nothing,
+    // and the route returned 200 with success:true. `skipped === 0` is not the
+    // same as "the write worked" — a monitor that only checks the status code
+    // must not read a broken tick as healthy.
+    delete process.env["SIGNAL_LEDGER_SHARD"];
+    writeSignalCandidates.mockResolvedValue({
+      candidates: 118083,
+      written: 0,
+      skipped: 0,
+      batches: 0,
+      errors: [
+        "deadline reached with 118083 candidates unwritten; the next run resumes and converges (upserts are idempotent)",
+      ],
+    });
+    const res = await invoke();
+    expect(res.status).toBe(500);
+    const body = (await res.json()) as { success: boolean };
+    expect(body.success).toBe(false);
+  });
+
+  it("returns 500 when rows were skipped, even if some were written", async () => {
+    delete process.env["SIGNAL_LEDGER_SHARD"];
+    writeSignalCandidates.mockResolvedValue({
+      candidates: 10,
+      written: 7,
+      skipped: 3,
+      batches: 1,
+      errors: [
+        "pgs.target_share/p1: boom",
+        "pgs.target_share/p2: boom",
+        "pgs.target_share/p3: boom",
+      ],
+    });
+    const res = await invoke();
+    expect(res.status).toBe(500);
+    const body = (await res.json()) as { success: boolean };
+    expect(body.success).toBe(false);
   });
 });

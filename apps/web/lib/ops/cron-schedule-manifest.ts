@@ -171,6 +171,14 @@ export const CRON_MANIFEST: readonly CronManifestEntry[] = [
   // rows, which is the state this cron exists to end. Hourly at :23, off the
   // :02/:17/:32/:47 board ticks so it never competes with the public board.
   cronEntry("/api/cron/signal-ledger-write", "23 * * * *"),
+  // CV watch-loop game-window scheduler (motif/watch-loop-2026-10-01). Every
+  // 10 min: ESPN scoreboard poll -> watch.games upsert -> Space warm-ping ->
+  // scheduler_runs heartbeat. Bearer-only cron auth, like every mutating cron.
+  cronEntry("/api/cron/watch-scheduler", "*/10 * * * *"),
+  // CV watch-loop Space warm ping (motif/watch-loop-2026-10-01). Every 3 min:
+  // warm-pings the HF Space /health while a window is active or arming, so it
+  // never cold-starts mid-drive. Writes only the scheduler_runs heartbeat.
+  cronEntry("/api/cron/watch-warm", "*/3 * * * *"),
 ];
 
 /** Manifest entry for a path, or null when the path is not a declared cron. */
