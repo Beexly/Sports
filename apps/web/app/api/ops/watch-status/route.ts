@@ -6,37 +6,25 @@
  * The Windows watcher polls this to decide what to tune to; operators use
  * it on game day to confirm the loop is armed.
  *
- * Auth: same CRON_SECRET Bearer <redacted> as the other ops routes (the watcher
- * relays with the shared secret). Read-only — never writes.
+ * Auth: shared CRON_SECRET bearer auth (bearer_only default), like the other
+ * ops routes — the watcher relays with the shared secret. Read-only — never
+ * writes.
  */
 
 import { NextResponse } from "next/server";
-import { timingSafeEqual } from "node:crypto";
+import { cronAuthError } from "@/lib/cron/authorize";
 import { db } from "@sports/db";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-function hasOpsAuth(request: Request): boolean {
-  const secret = process.env.CRON_SECRET?.trim();
-  if (!secret) return false;
-  const auth = request.headers.get("authorization") ?? "";
-  const expected = `Bearer ${secret}`;
-  try {
-    const a = Buffer.from(auth);
-    const b = Buffer.from(expected);
-    return a.length === b.length && timingSafeEqual(a, b);
-  } catch {
-    return false;
-  }
-}
-
 type Row = Record<string, unknown>;
 
 export async function GET(request: Request) {
-  if (!hasOpsAuth(request)) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  }
+  // Shared cron auth (bearer_only default): timing-safe, supports
+  // CRON_SECRET_PREVIOUS rotation, and 500s loudly when CRON_SECRET is unset.
+  const denied = cronAuthError(request);
+  if (denied) return denied;
   const q = (db as never as { $queryRawUnsafe: <T>(q: string) => Promise<T> })
     .$queryRawUnsafe;
   try {

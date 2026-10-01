@@ -551,3 +551,34 @@ export function rollUpByPlayer(
   }
   return m;
 }
+
+// ── Shadow-scoring guard (promotion gate) ───────────────────────────────────
+
+/**
+ * Promotion gate for the total-signal program: uncalibrated signals compute in
+ * shadow but must NEVER move a published number. Returns true only when at
+ * least one adjustment exists AND every adjustment carries a caller-measured
+ * (calibrated) magnitude. A single uncalibrated adjustment in the set keeps the
+ * whole set in shadow — calibration is all-or-nothing at promotion time, so a
+ * half-measured Saturday cannot nudge a projection.
+ */
+export function adjustmentsMayMovePublished(
+  adjustments: readonly Pick<Adjustment, "calibrated">[],
+): boolean {
+  return adjustments.length > 0 && adjustments.every((a) => a.calibrated);
+}
+
+/**
+ * Apply a player's net fantasy-points adjustment to a measured projection.
+ * Returns the projection UNCHANGED unless the promotion gate passed — this is
+ * the weight-0 enforcement for the adjustment layer: the layer always computes
+ * (shadow), but only calibrated magnitudes reach published numbers.
+ */
+export function applyFantasyAdjustment(
+  proj: number,
+  net: number,
+  mayMove: boolean,
+): number {
+  if (!mayMove || net === 0) return proj;
+  return proj + net;
+}

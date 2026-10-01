@@ -20,14 +20,17 @@ export const dynamic = "force-dynamic";
 export const maxDuration = 60; // heavy nflverse loads need headroom
 
 export const metadata: Metadata = {
-  title: "Player Lab: Production, Snaps, Next Gen, Edge & Market in One Surface",
+  // NGS internal-only doctrine (Garrett, 2026-09-28, HARD): no NGS data,
+  // metric names, or brand mentions on any public surface — including SEO
+  // metadata. The Next Gen / edge views were removed; the copy follows.
+  title: "Player Lab: Production, Snaps & Market in One Surface",
   description:
-    "One tabbed Player Lab over the engine's live intake layer: season production & last-5 form, snap share, receiving/rushing opportunity, Next Gen tracking, pressure & coverage, combine, QBR, edge signals, injuries, market moves, and licensed DFS salaries. Settled facts, honest empty states, never fabricated.",
+    "One tabbed Player Lab over the engine's live intake layer: season production & last-5 form, snap share, receiving/rushing opportunity, pressure & coverage, combine, QBR, injuries, market moves, and licensed DFS salaries. Settled facts, honest empty states, never fabricated.",
   alternates: { canonical: "/players" },
   openGraph: {
-    title: "Player Lab: Production, Snaps, Next Gen, Edge & Market in One Surface",
+    title: "Player Lab: Production, Snaps & Market in One Surface",
     description:
-      "One tabbed Player Lab over the engine's live intake layer: production, snaps, Next Gen tracking, pressure/coverage, edge signals, injuries, market moves, and licensed DFS salaries. Settled facts, honest empty states.",
+      "One tabbed Player Lab over the engine's live intake layer: production, snaps, pressure/coverage, injuries, market moves, and licensed DFS salaries. Settled facts, honest empty states.",
     url: "/players",
   },
 };

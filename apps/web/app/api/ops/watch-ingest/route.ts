@@ -5,8 +5,9 @@
  * validates it and persists detections/tracklets/positions/derived metrics to
  * the watch.* learning store (Neon). DB credentials stay server-side.
  *
- * Auth: Authorization: Bearer <CRON_SECRET> (same pattern as the other ops
- * routes). The watcher relays with the shared secret Garrett provisions.
+ * Auth: Authorization: Bearer <CRON_SECRET> via the shared cron auth module
+ * (same as the other ops routes, bearer_only by default). The watcher relays
+ * with the shared secret Garrett provisions.
  *
  * ?dryRun=1 — validate + count, no writes. Used by tests and game-day checks.
  *
@@ -14,7 +15,7 @@
  */
 
 import { NextResponse } from "next/server";
-import { timingSafeEqual } from "node:crypto";
+import { cronAuthError } from "@/lib/cron/authorize";
 import { db } from "@sports/db";
 import {
   persistFrameOutput,
@@ -24,24 +25,11 @@ import {
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
 
-function hasOpsAuth(request: Request): boolean {
-  const secret = process.env.CRON_SECRET?.trim();
-  if (!secret) return false;
-  const auth = request.headers.get("authorization") ?? "";
-  const expected = `Bearer ${secret}`;
-  try {
-    const a = Buffer.from(auth);
-    const b = Buffer.from(expected);
-    return a.length === b.length && timingSafeEqual(a, b);
-  } catch {
-    return false;
-  }
-}
-
 export async function POST(request: Request) {
-  if (!hasOpsAuth(request)) {
-    return NextResponse.json({ error: "unauthorized" }, { status: 401 });
-  }
+  // Shared cron auth (bearer_only default): timing-safe, supports
+  // CRON_SECRET_PREVIOUS rotation, and 500s loudly when CRON_SECRET is unset.
+  const denied = cronAuthError(request);
+  if (denied) return denied;
   let body: unknown;
   try {
     body = await request.json();
