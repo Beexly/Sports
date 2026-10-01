@@ -6035,3 +6035,20 @@ replied "Will be posting this tmrw".
 - The 2026-10-01 PM sweep's window should start at ~10:15 AM CDT Thu
   2026-10-01 (AM sweep close) to avoid double-covering the AM window.
 
+
+## 2026-10-01 — RANKINGS PROGRAM QUEUE STATUS (audit fix, Motif)
+
+Fantasy rankings program (Garrett 2026-09-28 directive — rest-of-season +
+week-by-week + positional player rankings, weeks 4 through 10 and onward,
+FantasyPoints-style): **QUEUED — NOT BUILT, NOT LIVE** as of 2026-10-01.
+Plan only: `docs/research/2026-09-28/orchestration/rankings-program.md`
+(status banner added 2026-10-01). No implementing code, no API route, no
+page. Not buildable as a "minimal honest version" today: there is no live
+player-projection feed to wire it to — the DFS slate still falls back to the
+sample slate (live feed unregistered) and the engine's own outputs are
+game-level pick probabilities/edges, not per-player fantasy points. Inventing
+a projection source would violate the honesty laws. Foundation-gated per the
+plan §6; build assigned to the coding agent once the foundation gates clear.
+PRs #937/#940/#941 are the *picks-board* ranking branch (board now orders on
+the engine's own signed edge per #940) — NOT this program. Do not present
+fantasy rankings as shipped.

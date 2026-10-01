@@ -1,5 +1,11 @@
 # Rankings Program — FantasyPoints-style player rankings (2026-09-28)
 
+> **STATUS (2026-10-01, audit): QUEUED — NOT BUILT, NOT LIVE.** The three
+> products below (rest-of-season, week-by-week, positional rankings) have no
+> implementing code, no API route, and no page as of 2026-10-01. This document
+> is the plan only. Foundation-gated per §6; build assigned to the coding agent
+> once the foundation gates clear. Do not present rankings as shipped.
+
 **Trigger:** Garrett heard a FantasyPoints.com radio ad claiming the most accurate 2025 NFL projections because they "hand-graded every single play of the season." His directive: we do this going forward — rest-of-season rankings, week-by-week rankings, positional rankings — weeks 4 through 10 and onward, built by the coding agent once the foundation work is done.
 
 ## 0. What the ad's claim actually is (and what we must beat)
