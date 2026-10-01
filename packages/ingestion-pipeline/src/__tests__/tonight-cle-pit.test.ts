@@ -74,6 +74,8 @@ describe("Cleveland vs Pittsburgh uses the kickoff reading and the rest file", (
     const ids = tilt.votes.map((v) => v.signalId);
     expect(ids).toContain("nfl_linear_wind_pass_impact");
     expect(ids).toContain("nfl_age_conditioned_rest");
+    expect(ids).not.toContain("nfl_official_out_skill");
+    expect(ids).not.toContain("nfl_practice_dnp_skill");
     expect(tilt.votes.find((v) => v.signalId === "nfl_linear_wind_pass_impact")?.rawValue).toBe(-0.105);
   });
 });
