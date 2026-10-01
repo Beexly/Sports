@@ -4775,6 +4775,17 @@ Docs (all under `docs/engine/research/2026-09-29/`): `film-pipeline-implementati
 ### PENDING — Garrett's own note (2026-09-29)
 He knows there may be pending work queued up right now; he's away from his computer and will get to it as soon as he can. Do not reassign, close, or act on his pending items while he's away — leave them for him. Pending includes: the film-pipeline preconditions above (his calls: footage sourcing, validation-set resourcing), the orchestration branch's unverified infra changes (vercel.json `github.autoJobCancelation`, narrowed middleware, unpooled-DATABASE_URL diagnostic — CI/build evidence still owed, see branch `motif/orchestration-v4-2026-09-28`), and his personal taps (Marketplace buyer replies, Michelle's Tuesday pickup, Etsy OAuth + upload, EEOC portal counsel switch).
 
+## CV PIPELINE — Motif's lane (2026-09-30, Garrett's direct order)
+
+Motif is building the weight-free half of the broadcast-video movement pipeline. **Coding agent: do not duplicate this work — compose with it.**
+
+- **Branch/PR:** `motif/cv-pipeline-2026-09-30` → PR #986 (open for review/merge).
+- **Files** (`packages/prediction-engine/src/tracking/`): `cv-detector-contract.ts` (Detector interface — the swappable boundary where a real YOLO/RT-DETR drops in later; no weights in repo), `cv-tracklet-association.ts` (greedy IoU matching → Tracklet[], occlusion tolerance, blip rejection), `cv-homography.ts` (real DLT projective homography with Hartley normalization — supersedes the bounding-box approximation in `fitHomographyFromYardlines()` for perspective broadcast views), `cv-pipeline.ts` (`runMovementPipeline()`: frames → detect → associate → camera-motion compensation → homography → movement metrics). 22 new tests, all green; `tsc` clean.
+- **Composition points for the coding agent:** (1) implement the real `Detector` behind `cv-detector-contract.ts` when Garrett approves model weights/footage — do not reimplement association or calibration around it; (2) wire `MovementMetric[]` from `runMovementPipeline()` into NGS-style validation and the engine's tracking surface — that wiring is deliberately not done yet.
+- **Untouched on purpose:** footage sourcing, the 3-game hand-labeled validation set, and detector/weights selection remain Garrett's calls (see FILM-PIPELINE PATENT PROGRAM preconditions above). This increment needs none of them.
+
+**Garrett's standing order on sequencing (2026-09-30, restated explicitly — not up for debate):** wire the ENTIRE engine first — every signal ingested, then weighted, then calibrated — and ONLY then judge/recalibrate predictions. Do not score calibration (Brier or otherwise) on old-model picks and present it as a verdict on the current engine; history never changes, so that is a losing battle by construction. The order is research → wire → weight → calibrate → test → polish. Stop relitigating the order and do the wiring.
+
 ## X ANALYTICS SWEEP 2026-09-29 PM
 
 Window: posts after ~9:30 AM CDT through ~9:30 PM CDT Tue 2026-09-29. Read-only throughout (no likes/reposts/replies/follows/DMs). Session persisted as @GalaxySportsHQ; no CAPTCHA encountered. Coverage: all 22 accounts' recent posts (21 primary + @FantasyFFData via searches) + home feed (Following + For You) + X keyword searches on the Latest tab: EPA, aggressiveness, "pass rush win rate", TPRR, CPOE. The 9/29-AM items passed in for dedup; genuinely new cuts inventoried below, duplicates noted once under DIFFERENT-ANGLE. Tuesday evening after Week 3 (no game tonight; MNF PHI 7 @ CHI 27 was Monday).
