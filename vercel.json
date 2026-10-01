@@ -112,6 +112,14 @@
     {
       "path": "/api/cron/ngs-ingest",
       "schedule": "30 11 * * 3"
+    },
+    {
+      "path": "/api/cron/watch-scheduler",
+      "schedule": "*/10 * * * *"
+    },
+    {
+      "path": "/api/cron/watch-warm",
+      "schedule": "*/3 * * * *"
     }
   ],
   "headers": [
