@@ -27,6 +27,7 @@ import { sameDivision2026 } from "./nfl-division.js";
 import { elevationAboveThreshold, surfaceAcclimationMismatch } from "./nfl-venue-facts.js";
 import { pregameMarketAnchor } from "./nfl-pregame-market.js";
 import { pressureMatchup } from "./nfl-pressure-matchup.js";
+import { restDays2026 } from "./nfl-rest.js";
 import { nflWeekOf } from "./nfl-week.js";
 import { classifyNflBroadcast, isStandalonePrimetime } from "./nfl-broadcast.js";
 
@@ -163,13 +164,16 @@ export const nflShortWeekRoadSignal: SignalDefinition = {
     }
     const rivalry = rivalryEnv ?? lookedUp;
 
-    // Slate path. Both rest columns are already on the Game row and already
-    // copied into env. The thesis is the ROAD team's short week, which is the
-    // away team. Evaluate that side, then flip the sign so a road penalty
-    // favors home. Missing travel or rivalry skips that modifier; it does not
-    // block the rest component and it is not imputed as 0 miles or "not a rivalry."
-    const homeRest = num(ctx.env, "HOME_REST_DAYS");
-    const awayRest = num(ctx.env, "AWAY_REST_DAYS");
+    const lookedUpRest =
+      num(ctx.env, "HOME_REST_DAYS") == null && num(ctx.env, "AWAY_REST_DAYS") == null
+        ? restDays2026({
+            homeTeam: teamLabel(ctx.homeTeam) ?? "",
+            awayTeam: teamLabel(ctx.awayTeam) ?? "",
+            commenceTime: ctx.commenceTime,
+          })
+        : null;
+    const homeRest = num(ctx.env, "HOME_REST_DAYS") ?? lookedUpRest?.homeRest ?? null;
+    const awayRest = num(ctx.env, "AWAY_REST_DAYS") ?? lookedUpRest?.awayRest ?? null;
     if (homeRest != null && awayRest != null) {
       const bridged = evalShortWeekRoadDeficit({
         isRoadTeam: true,
