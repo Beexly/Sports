@@ -21,6 +21,10 @@ import { NFL_SCHEME_PRIOR, NFL_SCHEME_PRIOR_SEASON } from "./priors/nfl-2025-sch
 import { SCHEME_MEASURED_SIGNALS } from "./scheme-measured-signals.js";
 import { NFL_INJURY_SIGNALS } from "./nfl-injury-signals.js";
 import { nflEspnEnteringRecordSignal } from "./espn-record-signal.js";
+import { nflHomeRoadSplitSignal } from "./nfl-split-record-signal.js";
+import { rosterAgeAt } from "./nfl-roster-age.js";
+import { sameDivision2026 } from "./nfl-division.js";
+import { nflWeekOf } from "./nfl-week.js";
 import { classifyNflBroadcast, isStandalonePrimetime } from "./nfl-broadcast.js";
 
 function teamLabel(team: unknown): string | null {
@@ -144,7 +148,17 @@ export const nflShortWeekRoadSignal: SignalDefinition = {
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const travel = num(ctx.env, "TRAVEL_DISTANCE_MILES");
-    const rivalry = bool(ctx.env, "IS_DIVISION_RIVALRY");
+    const rivalryEnv = bool(ctx.env, "IS_DIVISION_RIVALRY");
+    let lookedUp: boolean | null = null;
+    if (rivalryEnv == null && ctx.commenceTime instanceof Date) {
+      const week = nflWeekOf(ctx.commenceTime);
+      const homeAbbr = nflTeamAbbr(teamLabel(ctx.homeTeam));
+      const awayAbbr = nflTeamAbbr(teamLabel(ctx.awayTeam));
+      if (week != null && homeAbbr != null && awayAbbr != null) {
+        lookedUp = sameDivision2026(homeAbbr, awayAbbr, week.season);
+      }
+    }
+    const rivalry = rivalryEnv ?? lookedUp;
 
     // Slate path. Both rest columns are already on the Game row and already
     // copied into env. The thesis is the ROAD team's short week, which is the
@@ -216,43 +230,57 @@ export const nflAgeConditionedRestSignal: SignalDefinition = {
   outputKind: "CONTINUOUS_VALUE",
   validSports: ["americanfootball_nfl"],
   owner: "quant-situational",
-  dataDependencies: ["nfl_schedule", "nfl_rosters"],
+  dataDependencies: ["nfl_schedule", "nfl_com_act_roster_2026"],
   activationStatus: "ACTIVE",
   trustWeight: 0.08,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
-  // DIRECTION: homeSign +1, neutral 0. expected margin for the team being rested.
-  // The evaluator's own field is `expectedMarginAdjustment`; the registry previously read
-  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  // DIRECTION: homeSign +1, neutral 0. Home margin minus away margin.
+  // The kernel's age input is equal-weight active roster age. Snap counts are
+  // not on this roster. The most experienced active QB is not a named starter.
   homeSign: 1 as const,
   neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const snapWeightedRosterAge = num(ctx.env, "ROSTER_SNAP_WEIGHTED_AGE");
-    const daysOfRest = num(ctx.env, "REST_DAYS");
-    const startingQbAge = num(ctx.env, "STARTING_QB_AGE");
-    const offensiveLineAvgAge = num(ctx.env, "OL_AVG_AGE");
-    if (
-      snapWeightedRosterAge == null ||
-      daysOfRest == null ||
-      startingQbAge == null ||
-      offensiveLineAvgAge == null
-    ) {
-      return null;
-    }
-    const res = evaluateAgeConditionedRest({
-      teamName: ctx.homeTeam,
-      daysOfRest,
-      snapWeightedRosterAge,
-      startingQbAge,
-      offensiveLineAvgAge,
+    const week = nflWeekOf(ctx.commenceTime);
+    if (week == null || week.season !== 2026 || week.week !== 4) return null;
+    const homeAbbr = nflTeamAbbr(teamLabel(ctx.homeTeam));
+    const awayAbbr = nflTeamAbbr(teamLabel(ctx.awayTeam));
+    const homeRest = num(ctx.env, "HOME_REST_DAYS");
+    const awayRest = num(ctx.env, "AWAY_REST_DAYS");
+    if (homeAbbr == null || awayAbbr == null || homeRest == null || awayRest == null) return null;
+    const homeAge = rosterAgeAt(homeAbbr, ctx.commenceTime);
+    const awayAge = rosterAgeAt(awayAbbr, ctx.commenceTime);
+    if (homeAge == null || awayAge == null) return null;
+    const home = evaluateAgeConditionedRest({
+      teamName: homeAbbr,
+      daysOfRest: homeRest,
+      snapWeightedRosterAge: homeAge.equalWeightAge,
+      startingQbAge: homeAge.mostExperiencedQbAge,
+      offensiveLineAvgAge: homeAge.olEqualWeightAge,
+    });
+    const away = evaluateAgeConditionedRest({
+      teamName: awayAbbr,
+      daysOfRest: awayRest,
+      snapWeightedRosterAge: awayAge.equalWeightAge,
+      startingQbAge: awayAge.mostExperiencedQbAge,
+      offensiveLineAvgAge: awayAge.olEqualWeightAge,
     });
     return {
-      value: res.expectedMarginAdjustment,
-      capturedAt: ctx.now().toISOString(),
-      metadata: { ...res },
+      value: Number((home.expectedMarginAdjustment - away.expectedMarginAdjustment).toFixed(2)),
+      capturedAt: homeAge.observedAt,
+      metadata: {
+        ageBasis: "equal-weight active roster, not snap-weighted",
+        qbBasis: "most experienced active QB, starter not designated",
+        homeAge: homeAge.equalWeightAge,
+        awayAge: awayAge.equalWeightAge,
+        homeBracket: home.ageBracket,
+        awayBracket: away.ageBracket,
+        homeMargin: home.expectedMarginAdjustment,
+        awayMargin: away.expectedMarginAdjustment,
+      },
     };
   },
 };
@@ -1040,4 +1068,5 @@ export const EXTENDED_SIGNALS: readonly SignalDefinition[] = [
   ...SCHEME_MEASURED_SIGNALS,
   ...NFL_INJURY_SIGNALS,
   nflEspnEnteringRecordSignal,
+  nflHomeRoadSplitSignal,
 ];
