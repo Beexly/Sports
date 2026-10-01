@@ -14,6 +14,10 @@
  */
 
 import { scanForBannedPhrases } from "@/lib/trust-claims";
+import {
+  calibrationStateClearsFloor,
+  type CalibrationPublicState,
+} from "@/lib/calibration/public-state";
 
 export type ClaimKind = "WIN_RATE" | "CLV_BEAT_CLOSE" | "CALIBRATION" | "ROI" | "GENERIC";
 
@@ -33,6 +37,24 @@ export interface ClaimContext {
   readonly clvCoverageRatePct?: number | null;
   /** Whether calibration has cleared its own floor. Required for calibration claims. */
   readonly calibrationPublishable?: boolean;
+  /**
+   * The VERIFIED calibration reading, graded from the durable evidence by
+   * `resolveCalibrationState`. This — not `calibrationPublishable` — is what a
+   * CALIBRATION claim must be judged on.
+   *
+   * Why the boolean is no longer sufficient: `calibrationPublishable` is a
+   * self-report. Any caller can pass `true` and this gate, the single choke
+   * point for every public number, would ALLOW a calibration claim on an
+   * assertion nobody can check. The graded state is derived from a durable
+   * artifact, so a claim can only pass on a reading that exists.
+   *
+   * The boolean is RETAINED and still honoured, because it is the existing
+   * contract and removing it would break callers mid-flight. But a claim now
+   * passes on EITHER signal, so the boolean can no longer grant a claim the
+   * evidence contradicts: pass `calibrationState` and the state wins. A caller
+   * with no way to read the durable record keeps working exactly as before.
+   */
+  readonly calibrationState?: CalibrationPublicState | null;
   /** Model version stamping the claim; null/empty → blocked for performance claims. */
   readonly modelVersion?: string | null;
   /** Age of the underlying data in minutes; null when unknown. */
@@ -130,9 +152,32 @@ export function compilePublicClaim(ctx: ClaimContext): CompiledClaim {
   }
 
   // 8. Calibration readiness.
-  if (ctx.kind === "CALIBRATION" && ctx.calibrationPublishable !== true) {
-    blockers.push({ code: "CALIBRATION_NOT_READY", message: "Calibration has not cleared its floor." });
-    requirements.push("Wait for calibration to clear its settled-sample floor.");
+  //
+  // When the caller supplies the VERIFIED graded state, that state is
+  // authoritative and the self-reported boolean is ignored — otherwise a
+  // `calibrationPublishable: true` could overrule a reading that says we have
+  // no evidence at all. With no state supplied, the boolean still works, so
+  // existing callers are unaffected.
+  if (ctx.kind === "CALIBRATION") {
+    // `!== undefined` is the test, deliberately NOT `!= null`. An explicit `null`
+    // means "the caller read the durable record and there was nothing there" —
+    // a real, known state — so it must block rather than quietly fall back to
+    // the boolean. Only a caller that could not read the record at all omits
+    // the field, and that is the one case that keeps the legacy behaviour.
+    if (ctx.calibrationState !== undefined) {
+      if (!calibrationStateClearsFloor(ctx.calibrationState)) {
+        blockers.push({
+          code: "CALIBRATION_NOT_READY",
+          message: `Calibration state is ${ctx.calibrationState?.state ?? "absent"}, not MEETS_FLOOR.`,
+        });
+        requirements.push(
+          "Publish only once the graded calibration state reads MEETS_FLOOR, and publish the state itself alongside the number.",
+        );
+      }
+    } else if (ctx.calibrationPublishable !== true) {
+      blockers.push({ code: "CALIBRATION_NOT_READY", message: "Calibration has not cleared its floor." });
+      requirements.push("Wait for calibration to clear its settled-sample floor.");
+    }
   }
 
   const verdict: ClaimVerdict = blockers.length === 0 ? "ALLOW" : "BLOCK";

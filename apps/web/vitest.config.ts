@@ -65,6 +65,45 @@ export default defineConfig({
         "../../packages/data-ingestion",
       ),
       "next/server": nextServerEntry,
+      // Every remaining workspace package root, for the same reason as the three
+      // above. Without this, `@sports/db` and friends resolve through the root
+      // `node_modules`, where they are symlinks into a SEPARATE checkout of the
+      // packages that is not this worktree's HEAD — so a test that asserts on
+      // package behaviour silently reads stale sources, and a green run certifies
+      // code the PR never touched. Roots, not `src/index.ts`: callers deep-import
+      // (`@sports/db/src/...`) and a file-exact alias breaks those.
+      ...Object.fromEntries(
+        [
+          "ai-council",
+          "compliance",
+          "crypto",
+          "db",
+          "epistemic-twin",
+          "feature-store",
+          "genesis-kernel",
+          "governed",
+          "ops",
+          "partner-stack",
+          "phase-c",
+          "quote-plane",
+          "stats-api",
+          "types",
+          "util",
+        ].map((name) => [`@sports/${name}`, resolve(__dirname, "../../packages", name)]),
+      ),
+      "@sports/worker-pick-generation": resolve(
+        __dirname,
+        "../../workers/pick-generation",
+      ),
+      "@sports/worker-data-refresh": resolve(__dirname, "../../workers/data-refresh"),
+      "@sports/worker-content-publishing": resolve(
+        __dirname,
+        "../../workers/content-publishing",
+      ),
+      "@sports/worker-airwave-listener": resolve(
+        __dirname,
+        "../../workers/airwave-listener",
+      ),
     },
   },
 });
