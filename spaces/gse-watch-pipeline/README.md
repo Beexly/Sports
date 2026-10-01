@@ -45,8 +45,10 @@ is per-second of actual inference.
 
 ## API
 
-- `GET /health` → `{status, model, detect_width, games_tracked}`
-- `POST /process-frame` (multipart):
+- `GET /health` → `{status, model, detect_width, games_tracked}` (open —
+  liveness probe for the Vercel warm ping)
+- `POST /process-frame` (multipart, **requires**
+  `Authorization: Bearer <GSE_SPACE_TOKEN>`):
   - `frame`: JPEG bytes (720p, q~60, ≤2MB)
   - `game_id`: ESPN event id, e.g. `401872964`
   - `ts`: frame timestamp, epoch seconds (float)
@@ -58,6 +60,19 @@ is per-second of actual inference.
 
 Returns detections, active/finished tracklets, per-frame derived metrics
 (field positions, separation proxies, break-angle proxies), and timing.
+
+## Auth
+
+`POST /process-frame` burns paid GPU, so anonymous callers get 401. Setup:
+
+1. In the Space: Settings → Variables and secrets → New secret, name
+   `GSE_SPACE_TOKEN`, value = a long random string. The endpoint is
+   fail-closed: until this secret exists it answers 503 to everything
+   rather than running open.
+2. On the Windows watcher: set `space_token` in `config.json` to the same
+   value (the watcher sends it as `Authorization: Bearer <token>`).
+
+Rotate by updating both sides; no code change needed.
 
 ## Per-game state
 

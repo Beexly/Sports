@@ -9,9 +9,12 @@ this process except as the transient request body.
 
 Endpoints:
   GET  /health          liveness (the Vercel scheduler warm-pings this every
-                       3 min during game windows so ZeroGPU stays warm)
+                       3 min during game windows so ZeroGPU stays warm).
+                       Unauthenticated by design.
   POST /process-frame   multipart: frame (JPEG), game_id, ts, fps, burst,
-                       homography (optional JSON 3x3 px->yards)
+                       homography (optional JSON 3x3 px->yards).
+                       REQUIRES Authorization: Bearer <GSE_SPACE_TOKEN> —
+                       paid GPU, no anonymous inference.
 
 Derived metrics aim at what NGS does NOT give us: route shapes, separation
 proxies, break-angle proxies, formation-relevant geometry — never a worse
@@ -23,15 +26,17 @@ downloads.
 
 from __future__ import annotations
 
+import hmac
 import io
 import json
 import math
+import os
 import time
 from collections import defaultdict, deque
 from typing import Any, Optional
 
 import numpy as np
-from fastapi import FastAPI, File, Form, HTTPException, UploadFile
+from fastapi import Depends, FastAPI, File, Form, Header, HTTPException, UploadFile
 from fastapi.responses import JSONResponse
 
 MODEL_NAME = "yolov8n.pt"
@@ -46,6 +51,36 @@ app = FastAPI(title="gse-watch-pipeline", version="1.0.0")
 
 _model = None
 _model_error: Optional[str] = None
+
+
+# ── Auth ────────────────────────────────────────────────────────────────────
+#
+# POST /process-frame burns paid GPU, so it is gated on a shared bearer token.
+# The token lives in the Space's secrets as GSE_SPACE_TOKEN (never in the
+# repo); the Windows watcher sends it as `Authorization: Bearer <token>` and
+# carries the same value in its config.json as `space_token`.
+#
+# Fail-closed: if GSE_SPACE_TOKEN is unset, /process-frame refuses everything
+# (503) rather than running open. GET /health stays unauthenticated — it is
+# the liveness probe the Vercel scheduler warm-pings.
+
+
+def _expected_space_token() -> str:
+    return os.environ.get("GSE_SPACE_TOKEN", "")
+
+
+def verify_space_token(
+    authorization: Optional[str] = Header(default=None),
+) -> None:
+    """FastAPI dependency: reject unauthenticated /process-frame callers."""
+    expected = _expected_space_token()
+    if not expected:
+        raise HTTPException(status_code=503, detail="space auth not configured")
+    if not authorization or not authorization.startswith("Bearer "):
+        raise HTTPException(status_code=401, detail="missing bearer token")
+    provided = authorization[len("Bearer ") :].strip()
+    if not provided or not hmac.compare_digest(provided, expected):
+        raise HTTPException(status_code=401, detail="invalid token")
 
 
 def get_model():
@@ -328,7 +363,7 @@ def health() -> dict[str, Any]:
     }
 
 
-@app.post("/process-frame")
+@app.post("/process-frame", dependencies=[Depends(verify_space_token)])
 async def process_frame(
     frame: UploadFile = File(...),
     game_id: str = Form(...),

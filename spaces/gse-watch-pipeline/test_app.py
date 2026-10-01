@@ -6,6 +6,7 @@ avoided by stubbing). Run: python -m pytest test_app.py -q  (or unittest).
 
 import importlib.util
 import math
+import os
 import sys
 import types
 import unittest
@@ -18,14 +19,44 @@ def load_app():
         if name not in sys.modules:
             sys.modules[name] = types.ModuleType(name)
     fastapi = sys.modules["fastapi"]
+
+    # Record route registrations so tests can assert auth wiring:
+    # [(method, path, decorator_kwargs)].
+    registered_routes: list = []
+
+    def _route(method):
+        def deco(path, **kwargs):
+            def wrap(f):
+                registered_routes.append((method, path, kwargs))
+                return f
+
+            return wrap
+
+        return deco
+
     fastapi.FastAPI = lambda **kw: types.SimpleNamespace(
-        get=lambda *a, **k: (lambda f: f), post=lambda *a, **k: (lambda f: f)
+        get=_route("GET"), post=_route("POST")
     )
     fastapi.File = lambda *a, **k: None
     fastapi.Form = lambda *a, **k: None
+    fastapi.Header = lambda *a, **k: None
+    fastapi.Depends = lambda dep: dep
     fastapi.UploadFile = object
-    fastapi.HTTPException = type("HTTPException", (Exception,), {})
-    sys.modules["fastapi.responses"].JSONResponse = object
+
+    class HTTPException(Exception):
+        def __init__(self, status_code=500, detail=None):
+            super().__init__(detail)
+            self.status_code = status_code
+            self.detail = detail
+
+    fastapi.HTTPException = HTTPException
+
+    class JSONResponse:
+        def __init__(self, status_code=200, content=None):
+            self.status_code = status_code
+            self.content = content
+
+    sys.modules["fastapi.responses"].JSONResponse = JSONResponse
     np = sys.modules["numpy"]
     np.frombuffer = lambda *a, **k: None
 
@@ -33,6 +64,7 @@ def load_app():
     spec = importlib.util.spec_from_file_location("watch_app", path)
     mod = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(mod)
+    mod.ROUTE_REGISTRATIONS = registered_routes
     return mod
 
 
@@ -151,6 +183,78 @@ class TestDerivedMetrics(unittest.TestCase):
         active = [{"id": "trk-0001", "points": pts}]
         m = app.derive_frame_metrics(active, h)
         self.assertAlmostEqual(m["break_angles"][0]["max_heading_change_deg"], 90.0, places=0)
+
+
+class TestSpaceAuth(unittest.TestCase):
+    """Bearer gate on POST /process-frame (paid GPU — no anonymous inference)."""
+
+    def setUp(self):
+        self._saved = os.environ.get("GSE_SPACE_TOKEN")
+
+    def tearDown(self):
+        if self._saved is None:
+            os.environ.pop("GSE_SPACE_TOKEN", None)
+        else:
+            os.environ["GSE_SPACE_TOKEN"] = self._saved
+
+    def _exc(self, *args):
+        try:
+            app.verify_space_token(*args)
+        except app.HTTPException as e:  # noqa: BLE001 - asserting on it
+            return e
+        self.fail("expected HTTPException")
+
+    def test_missing_header_rejected_401(self):
+        os.environ["GSE_SPACE_TOKEN"] = "s3cret"
+        e = self._exc(None)
+        self.assertEqual(e.status_code, 401)
+
+    def test_wrong_scheme_rejected_401(self):
+        os.environ["GSE_SPACE_TOKEN"] = "s3cret"
+        e = self._exc("Token s3cret")
+        self.assertEqual(e.status_code, 401)
+
+    def test_wrong_token_rejected_401(self):
+        os.environ["GSE_SPACE_TOKEN"] = "s3cret"
+        e = self._exc("Bearer wrong")
+        self.assertEqual(e.status_code, 401)
+
+    def test_empty_bearer_rejected_401(self):
+        os.environ["GSE_SPACE_TOKEN"] = "s3cret"
+        e = self._exc("Bearer ")
+        self.assertEqual(e.status_code, 401)
+
+    def test_correct_token_accepted(self):
+        os.environ["GSE_SPACE_TOKEN"] = "s3cret"
+        self.assertIsNone(app.verify_space_token("Bearer s3cret"))
+
+    def test_unset_server_token_fails_closed_503(self):
+        # Fail-closed: an unconfigured Space refuses everything rather than
+        # running open.
+        os.environ.pop("GSE_SPACE_TOKEN", None)
+        e = self._exc("Bearer anything")
+        self.assertEqual(e.status_code, 503)
+
+    def test_process_frame_route_declares_auth_dependency(self):
+        regs = [
+            kw
+            for method, path, kw in app.ROUTE_REGISTRATIONS
+            if method == "POST" and path == "/process-frame"
+        ]
+        self.assertEqual(len(regs), 1)
+        self.assertTrue(
+            regs[0].get("dependencies"),
+            "POST /process-frame must declare auth dependencies",
+        )
+
+    def test_health_route_has_no_auth_dependency(self):
+        regs = [
+            kw
+            for method, path, kw in app.ROUTE_REGISTRATIONS
+            if method == "GET" and path == "/health"
+        ]
+        self.assertEqual(len(regs), 1)
+        self.assertNotIn("dependencies", regs[0])
 
 
 if __name__ == "__main__":

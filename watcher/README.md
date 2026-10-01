@@ -29,8 +29,13 @@ One-time setup (Garrett's only involvement, ever):
 python -m venv .venv
 .venv\Scripts\activate
 pip install -r requirements.txt
-# 3. Copy config.example.json -> config.json and fill in the four values:
-#    space_url, ingest_url, ingest_secret, scheduler_url
+# 3. Copy config.example.json -> config.json and fill in the five values:
+#    space_url, space_token, ingest_url, ingest_secret, scheduler_url
+#    - space_token must match the Space's GSE_SPACE_TOKEN secret
+#      (Space Settings -> Variables and secrets). The Space's /process-frame
+#      rejects unauthenticated callers, so the watcher cannot run without it.
+#    - ingest_secret is the Vercel CRON_SECRET (Bearer auth on the ingest
+#      and status routes).
 # 4. Log into the viewing apps in the browser (YouTube TV / NFL app / NFL+)
 #    so the deep links land on the right game.
 ```
