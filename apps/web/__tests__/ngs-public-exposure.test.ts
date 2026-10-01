@@ -215,4 +215,38 @@ describe("NGS stays internal in the serving layer", () => {
       );
     }
   });
+
+  it("the NGS backfill route 401s without the Bearer <redacted>, under every public flag", async () => {
+    vi.stubEnv("CRON_SECRET", "secret");
+    const { POST } = await import("@/app/api/ops/ngs-backfill/route");
+    for (const combo of [
+      {},
+      { PLAYERS_PUBLIC: "true" },
+      {
+        PLAYERS_PUBLIC: "true",
+        METHODOLOGY_PUBLIC: "true",
+        METRICS_PUBLIC: "true",
+        NFLVERSE_PUBLIC: "true",
+      },
+    ]) {
+      for (const [k, v] of Object.entries(combo)) process.env[k] = v;
+      const res = (await POST(
+        new Request("http://x/api/ops/ngs-backfill?season=2024", { method: "POST" }),
+      )) as Response;
+      expect(res.status, `backfill 401s with flags ${JSON.stringify(combo)}`).toBe(401);
+      for (const k of Object.keys(combo)) delete process.env[k];
+    }
+    vi.unstubAllEnvs();
+  });
+
+  it("the NGS ingest cron route 401s without the Bearer <redacted>, under every public flag", async () => {
+    vi.stubEnv("CRON_SECRET", "secret");
+    const { GET } = await import("@/app/api/cron/ngs-ingest/route");
+    process.env.PLAYERS_PUBLIC = "true";
+    const res = (await GET(
+      new Request("http://x/api/cron/ngs-ingest"),
+    )) as Response;
+    expect(res.status).toBe(401);
+    vi.unstubAllEnvs();
+  });
 });
