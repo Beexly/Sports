@@ -4,6 +4,28 @@ import {
   universalSignalsFromPick,
   type PickForIntelligence,
 } from "./intelligence-enrichment";
+import type { LoadedBundleSurfaces } from "@/lib/intelligence-core/db-loaders";
+
+/** A complete surface set: every key present, most empty. */
+function surfaces(over: Partial<LoadedBundleSurfaces> = {}): LoadedBundleSurfaces {
+  return {
+    gameId: "g-1",
+    homeInjuries: [],
+    awayInjuries: [],
+    homeNgs: [],
+    awayNgs: [],
+    homePlayerStats: [],
+    awayPlayerStats: [],
+    homeRatings: [],
+    awayRatings: [],
+    weather: [],
+    gameSignals: [],
+    homeSnaps: [],
+    awaySnaps: [],
+    resolution: null,
+    ...over,
+  } as unknown as LoadedBundleSurfaces;
+}
 
 function pick(over: Partial<PickForIntelligence> = {}): PickForIntelligence {
   return {
@@ -75,5 +97,53 @@ describe("enrichPickWithIntelligence", () => {
       market: { devig: { homeProb: Number.NaN, awayProb: Number.NaN } },
     } as never);
     expect(r.calibratedProb === null || Number.isFinite(r.calibratedProb)).toBe(true);
+  });
+
+  it("reports the situation scalars it fed the spine", () => {
+    const p = pick({
+      scheduleContext: { restDaysHome: 8, restDaysAway: 7, scheduleDensityHome: 1 },
+    });
+    const r = enrichPickWithIntelligence(p, new Date(), universalSignalsFromPick(p));
+    expect(r.situationApplied).toEqual({
+      restDaysHome: 8,
+      restDaysAway: 7,
+      scheduleDensity: 1,
+    });
+  });
+
+  it("leaves situationApplied null when the pick carries no scheduling context", () => {
+    const r = enrichPickWithIntelligence(pick(), new Date(), universalSignalsFromPick(pick()));
+    expect(r.situationApplied).toBeNull();
+  });
+
+  it("derives an availability term from the loaded injury rows alone", () => {
+    // No scheduling columns at all, but the loaders brought injuries. The
+    // situation must still say something rather than reporting nothing.
+    const loaded = surfaces({
+      awayInjuries: [
+        {
+          playerName: "P",
+          team: "BUF",
+          position: "QB",
+          reportStatus: "Out",
+          practiceStatus: null,
+          primaryInjury: null,
+          season: 2026,
+          week: 3,
+          sourceId: "nflverse",
+          fetchedAt: new Date(),
+        },
+      ],
+    });
+    const p = pick();
+    const r = enrichPickWithIntelligence(p, new Date(), universalSignalsFromPick(p), loaded);
+    expect(r.situationApplied?.["injuryImpact"]).toBeGreaterThan(0);
+  });
+
+  it("never fabricates travel or weather terms", () => {
+    const p = pick({ scheduleContext: { restDaysHome: 8, restDaysAway: 7 } });
+    const r = enrichPickWithIntelligence(p, new Date(), universalSignalsFromPick(p));
+    expect(r.situationApplied).not.toHaveProperty("travelTimezoneShift");
+    expect(r.situationApplied).not.toHaveProperty("weatherImpact");
   });
 });

@@ -64,6 +64,14 @@ export {
   type IntelligenceResult,
 } from "./engine";
 
+// -- Situation: the scheduling/availability context the spine reads -----------
+export {
+  deriveSituation,
+  injuryImpactFromRows,
+  type GameScheduleContext,
+  type SituationInput,
+} from "./situation";
+
 // -- DB loaders: the real rows behind those surfaces ------------------------
 export {
   loadBundleSurfaces,
