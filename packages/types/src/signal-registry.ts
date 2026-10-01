@@ -161,6 +161,31 @@ export interface SignalDefinition {
   readonly acquisitionTask: string | null;
   /** Plain-English explanation when non-ACTIVE. */
   readonly blockedReason: string | null;
+  /**
+   * THE DIRECTION DECLARATION — what makes a continuous signal able to vote.
+   *
+   * WHY THIS EXISTS. `applyContinuousSignalTilt` refuses any continuous value
+   * that does not say which side it favors, because a scalar with no direction
+   * cannot move a probability honestly. Until this field existed NO registry
+   * signal declared one, so all 31 CONTINUOUS_VALUE signals were refused and
+   * the entire continuous path voted 0 despite `activationStatus: "ACTIVE"`.
+   *
+   * `homeSign` is 1 when a LARGER value of this signal favors the picked side
+   * and -1 when a larger value favors the opponent. It is a property of what
+   * the number MEANS, and it must be derived from the evaluator's own
+   * semantics — never guessed from the signal's name.
+   *
+   * `neutralValue` is the value at which this signal says NOTHING. This is not
+   * cosmetic. The raw outputs are not one scale: some are signed deltas around
+   * 0, others are MULTIPLIERS around 1. Feeding a multiplier straight into the
+   * tilt would move a probability for its NEUTRAL value — tanh(1.0) is +0.76,
+   * so a "no effect" fatigue multiplier of 1.0 would tilt home by ~2.7% of a
+   * unit weight. Normalizing by (value - neutralValue) is what makes "no
+   * effect" mean no effect.
+   */
+  readonly homeSign?: -1 | 1;
+  /** Value at which this signal asserts nothing. Defaults to 0 (delta signals). */
+  readonly neutralValue?: number;
   /** Pure execution function. Required if ACTIVE or SHADOW_ONLY. */
   readonly evaluate?: SignalEvaluator;
 }

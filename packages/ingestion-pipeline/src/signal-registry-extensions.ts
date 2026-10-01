@@ -58,15 +58,23 @@ function bool(env: Record<string, string | undefined>, key: string): boolean | n
 
 export const nflTurnoverLuckSignal: SignalDefinition = {
   id: "nfl_turnover_luck",
-  label: "NFL Turnover Luck (recovery variance vs skill)",
-  category: "TEAM_RATES",
-  family: "LUCK",
-  outputKind: "CONTINUOUS_VALUE",
-  validSports: ["americanfootball_nfl"],
-  owner: "quant-luck",
-  dataDependencies: ["nfl_player_stats_weekly", "nfl_pbp"],
-  activationStatus: "ACTIVE",
-  trustWeight: 0.12,
+    label: "NFL Turnover Luck (recovery variance vs skill)",
+    category: "TEAM_RATES",
+    family: "LUCK",
+    outputKind: "CONTINUOUS_VALUE",
+    validSports: ["americanfootball_nfl"],
+    owner: "quant-luck",
+    dataDependencies: ["nfl_player_stats_weekly", "nfl_pbp"],
+    activationStatus: "ACTIVE",
+    trustWeight: 0.12,
+    // DIRECTION: homeSign +1, neutral 0. The value is a recovery-share deviation
+    // from the league baseline: recovering forced fumbles / intercepting above
+    // expectation means the DEFENSE did something real, which favors the team
+    // being evaluated. The registry's own comment calls this "recovery-share
+    // deviation" and splits skill (occurrence) from luck (recovery), so the
+    // signed direction is the recovery surplus.
+    homeSign: 1 as const,
+    neutralValue: 0,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
@@ -127,6 +135,11 @@ export const nflShortWeekRoadSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. road team short rest => spread moves AGAINST the road team; larger (toward 0 from -3.5) = less harm.
+  // The evaluator's own field is `spreadPointAdjustment`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: 1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const isRoadTeam = bool(ctx.env, "IS_ROAD_TEAM");
@@ -173,6 +186,11 @@ export const nflAgeConditionedRestSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. expected margin for the team being rested.
+  // The evaluator's own field is `expectedMarginAdjustment`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: 1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const snapWeightedRosterAge = num(ctx.env, "ROSTER_SNAP_WEIGHTED_AGE");
@@ -217,6 +235,11 @@ export const nflFourthDownAggressionSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. higher go-rate = more fourth-down attempts = more first downs.
+  // The evaluator's own field is `expectedGoProbabilityOnFourthAndShort`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: 1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const goForItRate = num(ctx.env, "COACH_GO_FOR_IT_RATE");
@@ -251,6 +274,11 @@ export const nflSecondAndTenTendencySignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign -1, neutral 0.5. higher expected pass prob on 2nd&10 = pass-leaning, which historically costs; neutral is .5.
+  // The evaluator's own field is `expectedPassProbability`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: -1 as const,
+  neutralValue: 0.5,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const passRate = num(ctx.env, "SECOND_AND_TEN_PASS_RATE");
@@ -283,6 +311,11 @@ export const nflPrimetimeTargetConcentrationSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 1. more targets concentrated in prime = more opportunity for the passer's favorite target.
+  // The evaluator's own field is `targetShareMultiplier`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: 1 as const,
+  neutralValue: 1,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const isPrimetime = bool(ctx.env, "IS_PRIMETIME");
@@ -317,6 +350,11 @@ export const nflEarlyDownProeSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. positive PROE differential = more pass volume for the team.
+  // The evaluator's own field is `proeDifferential`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: 1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const proe = num(ctx.env, "EARLY_DOWN_PROE");
@@ -349,6 +387,11 @@ export const nflTwoMinuteHurryUpSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. more points added per opportunity is better for the offense.
+  // The evaluator's own field is `expectedPointsAddedPerTwoMinuteOpportunity`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: 1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const epa = num(ctx.env, "TWO_MINUTE_EPA_PER_PLAY");
@@ -381,6 +424,11 @@ export const nflByeWeekDefensiveInstallSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign -1, neutral 0. negative value means opponent EPA falls (good for defense).
+  // The evaluator's own field is `opponentFirstHalfEpaDelta`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: -1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const comingOffBye = bool(ctx.env, "COMING_OFF_BYE");
@@ -415,6 +463,11 @@ export const nflQbTwpRegressionSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. offensive EPA adjustment; positive is better for the offense.
+  // The evaluator's own field is `offensiveEpaAdjustment`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: 1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const passAttempts = num(ctx.env, "QB_PASS_ATTEMPTS");
@@ -451,6 +504,11 @@ export const nflQbReceiverContinuitySignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. continuity trust index: larger = more trusted chemistry.
+  // The evaluator's own field is `trustIndex`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: 1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const gamesTogether = num(ctx.env, "QB_WR_GAMES_TOGETHER");
@@ -483,6 +541,11 @@ export const nflPenaltyDifferentialSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. expected spread adjustment from penalties.
+  // The evaluator's own field is `expectedSpreadAdjustmentPoints`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: 1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const yardsFor = num(ctx.env, "PENALTY_YARDS_FOR");
@@ -517,6 +580,11 @@ export const nflBackupQbTargetSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign -1, neutral 0. lower average depth of target = less efficient passing game.
+  // The evaluator's own field is `adjustedAdot`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: -1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const isBackup = bool(ctx.env, "QB_IS_BACKUP");
@@ -551,6 +619,11 @@ export const nflManZoneArchetypeSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign -1, neutral 0. man-zone coverage inflates aDot against the archetype.
+  // The evaluator's own field is `adjustedAdot`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: -1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const manRate = num(ctx.env, "DEF_MAN_RATE");
@@ -572,15 +645,23 @@ export const nflManZoneArchetypeSignal: SignalDefinition = {
 
 export const nflWr1VacatedSignal: SignalDefinition = {
   id: "nfl_wr1_vacated_target_efficiency",
-  label: "NFL WR1-Out Efficiency Decay",
-  category: "PLAYER_AVAILABILITY",
-  family: "EFFICIENCY",
-  outputKind: "CONTINUOUS_VALUE",
-  validSports: ["americanfootball_nfl"],
-  owner: "quant-targets",
-  dataDependencies: ["nfl_injuries", "nfl_player_stats_weekly"],
-  activationStatus: "ACTIVE",
-  trustWeight: 0.10,
+    label: "NFL WR1-Out Efficiency Decay",
+    category: "PLAYER_AVAILABILITY",
+    family: "EFFICIENCY",
+    outputKind: "CONTINUOUS_VALUE",
+    validSports: ["americanfootball_nfl"],
+    owner: "quant-targets",
+    dataDependencies: ["nfl_injuries", "nfl_player_stats_weekly"],
+    activationStatus: "ACTIVE",
+    trustWeight: 0.10,
+    // DIRECTION: homeSign +1, neutral 0. The local placeholder computes
+    // `edge = (reallocation - wr2TargetShare) * 0.6` — how much better the offense
+    // does after its WR1 goes out than the WR2's share alone predicts. A larger
+    // value means the offense absorbed the loss better. NOTE: this signal wraps a
+    // locally-defined placeholder, not the upstream WR1 redistributor; that is
+    // flagged as an open wiring item rather than silently counted as covered.
+    homeSign: 1 as const,
+    neutralValue: 0,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
@@ -632,6 +713,11 @@ export const nflRedzoneOppConversionSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. higher high-value touch score = better red-zone conversion.
+  // The evaluator's own field is `highValueTouchScore`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: 1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const trips = num(ctx.env, "REDZONE_TRIPS");
@@ -666,6 +752,11 @@ export const nflNegBinomRedzoneTdSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. edge over naive Poisson = genuine red-zone TD skill.
+  // The evaluator's own field is `edgeOverPoissonAnytimeTd`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: 1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const mean = num(ctx.env, "REDZONE_TD_MEAN");
@@ -700,6 +791,11 @@ export const nflRedzonePersonnelSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. play-action EPA bonus; positive is better for the offense.
+  // The evaluator's own field is `playActionEpaBonus`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: 1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const personnel = num(ctx.env, "REDZONE_PERSONNEL_GROUPING");
@@ -734,6 +830,11 @@ export const nflRookieBreakoutSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. a higher target share is a breakout.
+  // The evaluator's own field is `adjustedTargetShare`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: 1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const isRookie = bool(ctx.env, "PLAYER_IS_ROOKIE");
@@ -770,6 +871,11 @@ export const nflHighAltitudeSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. altitude spreads against the VISITING team, so this is signed for the picked side.
+  // The evaluator's own field is `spreadPointAdjustment`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: 1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const elevationFt = num(ctx.env, "STADIUM_ELEVATION_FT");
@@ -802,6 +908,11 @@ export const nflLinearWindPassSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. wind-adjusted passing yardage for the offense.
+  // The evaluator's own field is `passingYardageAdjustment`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: 1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const wind = num(ctx.env, "WIND_MPH");
@@ -834,6 +945,11 @@ export const nflTempPrecipSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. weather-adjusted passing yards for the offense.
+  // The evaluator's own field is `passingYardsAdjustment`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: 1 as const,
+  neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const temp = num(ctx.env, "TEMP_F");
@@ -868,6 +984,11 @@ export const nflTurfSurfaceFatigueSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
+  // DIRECTION: homeSign -1, neutral 1. a LOWER multiplier means more late-game decay; neutral is 1.
+  // The evaluator's own field is `lateGameExplosiveRunDecayMultiplier`; the registry previously read
+  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  homeSign: -1 as const,
+  neutralValue: 1,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const surface = num(ctx.env, "TURF_SOFTNESS_INDEX");

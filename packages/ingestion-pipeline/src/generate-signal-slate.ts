@@ -26,7 +26,10 @@ import type {
 } from "@sports/types";
 import { buildIndependentFairValues } from "./build-independent-fair-values.js";
 import { SIGNAL_REGISTRY } from "./signal-registry-definitions.js";
-import { applyContinuousSignalTilt } from "./continuous-signal-tilt.js";
+import {
+  applyContinuousSignalTilt,
+  type ContinuousVote,
+} from "./continuous-signal-tilt.js";
 import { runLeakageGate, fixtureFromGameRows, evalLeakageQuality } from "./leakage-gate.js";
 import {
   FixtureConfirmer,
@@ -495,7 +498,11 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
     // vote a log-odds adjustment on top of the probability blend. Fail-open —
     // never blocks minting when signals abstain.
     let homeP = blend.homeP;
-    let continuousVotes: readonly { signalId: string; tilt: number }[] = [];
+    // Typed as the real `ContinuousVote[]`, not a hand-narrowed `{signalId, tilt}`:
+// the factor text below reports the raw value, the neutral it was centered
+// against, the declared sign, the trustWeight and the family, and a narrower
+// local type would silently drop all of it.
+let continuousVotes: readonly ContinuousVote[] = [];
     try {
       const tilt = await applyContinuousSignalTilt(homeP, SIGNAL_REGISTRY, {
         sportKey,
@@ -669,11 +676,30 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
           description: leakageDetail,
           weight: leakageClean ? 5 : 15,
         },
-        ...continuousVotes.map((v) => ({
-          name: `Continuous signal — ${v.signalId}`,
-          impact: (v.tilt > 0 ? "positive" : "negative") as "positive" | "negative",
-          description: `Log-odds tilt ${v.tilt.toFixed(4)} (${v.tilt > 0 ? "home" : "away"}).`,
-          weight: Math.min(15, Math.round(Math.abs(v.tilt) * 100)),
+        ...(continuousVotes.map((v) => {
+          // Show the arithmetic, not just the outcome: the raw value in its own
+          // units, the neutral value it was compared against, and the direction
+          // it was declared to mean. A bare "tilt 0.0231 (home)" tells a reader
+          // nothing about WHY the engine leaned that way.
+          const centered = "centeredValue" in v ? v.centeredValue : undefined;
+          const homeSign = "homeSign" in v ? v.homeSign : undefined;
+          const neutral = "neutralValue" in v ? v.neutralValue : undefined;
+          const arithmetic = [
+            `raw ${v.rawValue}`,
+            centered != null ? `neutral ${neutral}` : null,
+            centered != null ? `delta ${centered}` : null,
+            homeSign != null ? `sign ${homeSign > 0 ? "+" : "-"}` : null,
+          ]
+            .filter(Boolean)
+            .join(", ");
+          return {
+            name: `Continuous signal — ${v.signalId}`,
+            impact: (v.tilt > 0 ? "positive" : "negative") as "positive" | "negative",
+            description:
+              `Log-odds tilt ${v.tilt.toFixed(4)} toward ${v.tilt > 0 ? "home" : "away"} ` +
+              `from ${arithmetic} at trustWeight ${v.trustWeight} (${v.family}).`,
+            weight: Math.min(15, Math.round(Math.abs(v.tilt) * 100)),
+          };
         })),
       ],
     };

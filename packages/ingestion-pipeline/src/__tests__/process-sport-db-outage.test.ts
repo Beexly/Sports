@@ -48,6 +48,11 @@ vi.mock("@sports/db", () => ({
       upsert: vi.fn().mockResolvedValue({ id: "p-1" }),
     },
     pickSignalSnapshot: { upsert: vi.fn().mockResolvedValue({}) },
+    // processSport writes a proof receipt per pick. This mock omitted it, so the
+    // call fell through to the REAL Prisma client and the test hung until it was
+    // killed by the timeout — indefinitely at 30s, so no bump hides it. A DB
+    // outage test must never reach the database it is pretending has died.
+    pickProofReceipt: { upsert: vi.fn().mockResolvedValue({}) },
     gateDecision: { createMany: vi.fn().mockResolvedValue({ count: 0 }) },
   },
 }));
@@ -58,6 +63,20 @@ vi.mock("../owner-alert.js", () => ({ notifyOwner: mocks.notifyOwner }));
 
 import { processSport } from "../process-sport.js";
 
+// ─────────────────────────────────────────────────────────────────────────────
+// WHY "absent" AND NOT "key".
+//
+// This test used to pass the literal string "key" as the API key. That is NOT a
+// sentinel (see `oddsKeyIsSentinel` in process-sport.ts), so the paid OddsApi leg
+// ran for real — a live network call inside a test that is asserting a DATABASE
+// outage. It hung until the timeout, which is why only THIS test in the file
+// timed out: the other four reject at run-open, before any fetch.
+//
+// "absent" takes the keyless path — no paid client, no network. This test is
+// about containment when Postgres dies, so it must never depend on an upstream
+// odds provider being reachable, slow, or paid for. Asserting outage behavior
+// while making real HTTP calls is what hid this from CI.
+// ─────────────────────────────────────────────────────────────────────────────
 const SPORT = { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" };
 const gates: ReadinessGates = { canPersistCanonicalHistory: true } as ReadinessGates;
 
@@ -80,7 +99,7 @@ describe("processSport DB-outage containment", () => {
     mocks.ingestionRunCreate.mockRejectedValue(OUTAGE);
 
     // The regression itself: pre-fix this REJECTED and escaped processSport.
-    const res = await processSport(SPORT as never, "key", gates);
+    const res = await processSport(SPORT as never, "absent", gates);
 
     expect(res.status).toBe("failed");
     expect(res.error).toContain("run_open_failed");
@@ -90,7 +109,7 @@ describe("processSport DB-outage containment", () => {
   it("alerts the owner when the run cannot be opened", async () => {
     mocks.ingestionRunCreate.mockRejectedValue(OUTAGE);
 
-    await processSport(SPORT as never, "key", gates);
+    await processSport(SPORT as never, "absent", gates);
 
     // Pre-fix: zero calls. The outage was invisible to every dashboard.
     expect(mocks.notifyOwner).toHaveBeenCalledTimes(1);
@@ -103,7 +122,7 @@ describe("processSport DB-outage containment", () => {
   it("spends no credits and writes no odds when the run cannot be opened", async () => {
     mocks.ingestionRunCreate.mockRejectedValue(OUTAGE);
 
-    const res = await processSport(SPORT as never, "key", gates);
+    const res = await processSport(SPORT as never, "absent", gates);
 
     // We STOP rather than continue: Odds.ingestionRunId is NOT NULL, so a
     // fabricated run id would produce unattributable writes.
@@ -115,14 +134,29 @@ describe("processSport DB-outage containment", () => {
   });
 
   it("still returns the failed envelope when the catch's own FAILED write ALSO fails", async () => {
-    // DB up at open, then it dies: the body write AND the FAILED write both
-    // fail. Pre-fix the FAILED write's throw skipped the owner alert and the
-    // failed envelope, losing the record precisely when the outage is real.
+      // DB up at open, then it dies: the body write AND the FAILED write both
+      // fail. Pre-fix the FAILED write's throw skipped the owner alert and the
+      // failed envelope, losing the record precisely when the outage is real.
+      //
+      // THE FETCH STUB IS LOAD-BEARING, and this test used to hang for exactly the
+      // 5s test timeout. Unlike the four tests above, this one reaches the body of
+      // processSport, which runs the KEYLESS odds path (ESPN / TheRundown) — real
+      // HTTPS to a third party — before it ever reaches `db.sport.upsert`. It is a
+      // test about what happens when POSTGRES DIES; it has no business depending on
+      // whether an upstream odds provider is reachable, or how slow it is today.
+      //
+      // It passed in CI for a long time only because the network was fast enough to
+      // fit inside the timeout, then failed the moment it wasn't. Stubbing fetch
+      // removes the dependency entirely: the test now asserts containment, and
+      // containment is all it was ever about. This also makes it deterministic.
+      (globalThis as unknown as { fetch: unknown }).fetch = vi.fn(async () => {
+        throw new Error("network disabled in process-sport-db-outage tests");
+      });
     mocks.ingestionRunCreate.mockResolvedValue({ id: "run-1" });
     mocks.sportUpsert.mockRejectedValue(new Error("body write failed"));
     mocks.ingestionRunUpdate.mockRejectedValue(OUTAGE);
 
-    const res = await processSport(SPORT as never, "key", gates);
+    const res = await processSport(SPORT as never, "absent", gates);
 
     expect(res.status).toBe("failed");
     expect(res.error).toContain("body write failed");
@@ -135,7 +169,7 @@ describe("processSport DB-outage containment", () => {
     mocks.ingestionRunCreate.mockRejectedValue(OUTAGE);
     mocks.notifyOwner.mockResolvedValue(false); // Telegram down, same as the DB
 
-    const res = await processSport(SPORT as never, "key", gates);
+    const res = await processSport(SPORT as never, "absent", gates);
 
     expect(res.status).toBe("failed");
     expect(res.error).toContain("run_open_failed");

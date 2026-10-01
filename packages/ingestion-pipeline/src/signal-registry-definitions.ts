@@ -675,12 +675,26 @@ export const nflWindElasticitySignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-weather",
   dataDependencies: ["nfl_stadium_weather_feed"],
-  activationStatus: "ACTIVE",
+  // HONESTY: not ACTIVE. The evaluator below is a stub that returns null
+  // on every call, so this signal cannot reach a pick under any input.
+  // ACTIVE would be a coverage claim the code does not support. SHADOW_ONLY
+  // keeps it registered and visible while telling the truth. Promote to
+  // ACTIVE only when a real evaluate() is wired to per-play ingestion.
+  activationStatus: "SHADOW_ONLY",
   trustWeight: 0.10,
+  // DIRECTION: homeSign +1, neutral 1.0. `calculateWindElasticity` returns
+  // `passingYardsMultiplier`, and the field is defined with 1.0 as its
+  // "nothing to say" value (wind-elasticity.ts:39, :57) — so 1.0 means NO
+  // adjustment and must produce NO tilt. A value above 1 means the wind HELPS
+  // the offense, which favors the side being evaluated. Without neutralValue 1.0
+  // the tilt would fire on its own neutral value (tanh(1.0) = +0.76), inventing
+  // a view out of arithmetic.
+  homeSign: 1 as const,
+  neutralValue: 1.0,
   killLine: DEFAULT_KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: "evaluator stub: returns null for every input pending per-play ingestion",
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const weather = (ctx.env as any)?.WIND_MPH != null ? Number((ctx.env as any).WIND_MPH) : null;
@@ -709,12 +723,17 @@ export const nflCoachingTendenciesSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-coaching",
   dataDependencies: ["nflverse_play_calling_feed"],
-  activationStatus: "ACTIVE",
+  // HONESTY: not ACTIVE. The evaluator below is a stub that returns null
+  // on every call, so this signal cannot reach a pick under any input.
+  // ACTIVE would be a coverage claim the code does not support. SHADOW_ONLY
+  // keeps it registered and visible while telling the truth. Promote to
+  // ACTIVE only when a real evaluate() is wired to per-play ingestion.
+  activationStatus: "SHADOW_ONLY",
   trustWeight: 0.08,
   killLine: DEFAULT_KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: "evaluator stub: returns null for every input pending per-play ingestion",
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     return null; // Ingested dynamically per play context
@@ -733,12 +752,17 @@ export const nflInjuryTrajectorySignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-injuries",
   dataDependencies: ["nfl_official_injury_feed"],
-  activationStatus: "ACTIVE",
+  // HONESTY: not ACTIVE. The evaluator below is a stub that returns null
+  // on every call, so this signal cannot reach a pick under any input.
+  // ACTIVE would be a coverage claim the code does not support. SHADOW_ONLY
+  // keeps it registered and visible while telling the truth. Promote to
+  // ACTIVE only when a real evaluate() is wired to per-play ingestion.
+  activationStatus: "SHADOW_ONLY",
   trustWeight: 0.12,
   killLine: DEFAULT_KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: "evaluator stub: returns null for every input pending per-play ingestion",
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     return null; // Ingested dynamically per injury report feed
@@ -757,12 +781,17 @@ export const nflRedzoneTeLeverageSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-personnel",
   dataDependencies: ["nfl_personnel_rz_feed"],
-  activationStatus: "ACTIVE",
+  // HONESTY: not ACTIVE. The evaluator below is a stub that returns null
+  // on every call, so this signal cannot reach a pick under any input.
+  // ACTIVE would be a coverage claim the code does not support. SHADOW_ONLY
+  // keeps it registered and visible while telling the truth. Promote to
+  // ACTIVE only when a real evaluate() is wired to per-play ingestion.
+  activationStatus: "SHADOW_ONLY",
   trustWeight: 0.10,
   killLine: DEFAULT_KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: "evaluator stub: returns null for every input pending per-play ingestion",
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     return null; // Ingested dynamically per team matchup
@@ -781,12 +810,17 @@ export const nflOffensiveLineTrenchSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-trenches",
   dataDependencies: ["nfl_snap_counts", "nfl_pfr_advstats"],
-  activationStatus: "ACTIVE",
+  // HONESTY: not ACTIVE. The evaluator below is a stub that returns null
+  // on every call, so this signal cannot reach a pick under any input.
+  // ACTIVE would be a coverage claim the code does not support. SHADOW_ONLY
+  // keeps it registered and visible while telling the truth. Promote to
+  // ACTIVE only when a real evaluate() is wired to per-play ingestion.
+  activationStatus: "SHADOW_ONLY",
   trustWeight: 0.12,
   killLine: DEFAULT_KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: "evaluator stub: returns null for every input pending per-play ingestion",
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     return null; // Ingested dynamically per matchup trench stats
@@ -805,12 +839,17 @@ export const nflRefereeCrewTendenciesSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-officials",
   dataDependencies: ["nflverse_officials", "games_csv_referee"],
-  activationStatus: "ACTIVE",
+  // HONESTY: not ACTIVE. The evaluator below is a stub that returns null
+  // on every call, so this signal cannot reach a pick under any input.
+  // ACTIVE would be a coverage claim the code does not support. SHADOW_ONLY
+  // keeps it registered and visible while telling the truth. Promote to
+  // ACTIVE only when a real evaluate() is wired to per-play ingestion.
+  activationStatus: "SHADOW_ONLY",
   trustWeight: 0.08,
   killLine: DEFAULT_KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: "evaluator stub: returns null for every input pending per-play ingestion",
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     return null; // Ingested dynamically per assigned officiating crew
@@ -829,12 +868,17 @@ export const nflCircadianTravelFatigueSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-travel",
   dataDependencies: ["nfl_stadium_timezones", "nfl_schedules"],
-  activationStatus: "ACTIVE",
+  // HONESTY: not ACTIVE. The evaluator below is a stub that returns null
+  // on every call, so this signal cannot reach a pick under any input.
+  // ACTIVE would be a coverage claim the code does not support. SHADOW_ONLY
+  // keeps it registered and visible while telling the truth. Promote to
+  // ACTIVE only when a real evaluate() is wired to per-play ingestion.
+  activationStatus: "SHADOW_ONLY",
   trustWeight: 0.09,
   killLine: DEFAULT_KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: "evaluator stub: returns null for every input pending per-play ingestion",
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     return null; // Ingested dynamically per travel itinerary
@@ -853,12 +897,17 @@ export const nflContractMilestonesSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-incentives",
   dataDependencies: ["nflverse_contracts_otc"],
-  activationStatus: "ACTIVE",
+  // HONESTY: not ACTIVE. The evaluator below is a stub that returns null
+  // on every call, so this signal cannot reach a pick under any input.
+  // ACTIVE would be a coverage claim the code does not support. SHADOW_ONLY
+  // keeps it registered and visible while telling the truth. Promote to
+  // ACTIVE only when a real evaluate() is wired to per-play ingestion.
+  activationStatus: "SHADOW_ONLY",
   trustWeight: 0.11,
   killLine: DEFAULT_KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: "evaluator stub: returns null for every input pending per-play ingestion",
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     return null; // Ingested dynamically per player contract thresholds
@@ -877,12 +926,17 @@ export const nflWr1OutRedistributionSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-targets",
   dataDependencies: ["nfl_injuries", "nfl_player_stats_weekly"],
-  activationStatus: "ACTIVE",
+  // HONESTY: not ACTIVE. The evaluator below is a stub that returns null
+  // on every call, so this signal cannot reach a pick under any input.
+  // ACTIVE would be a coverage claim the code does not support. SHADOW_ONLY
+  // keeps it registered and visible while telling the truth. Promote to
+  // ACTIVE only when a real evaluate() is wired to per-play ingestion.
+  activationStatus: "SHADOW_ONLY",
   trustWeight: 0.14,
   killLine: DEFAULT_KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: "evaluator stub: returns null for every input pending per-play ingestion",
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     return null; // Ingested dynamically per injury status & depth chart

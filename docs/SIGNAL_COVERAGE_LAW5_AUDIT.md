@@ -53,10 +53,15 @@ These emit `homeFairProb`, so they are blended by `assessEdge` into `trueProb`.
 
 All 10 are weighted, and every one appears in the reasoning traces.
 
-## B. ACTIVE continuous signals — 31, weighted, tested, and MUTED
+## B. Continuous signals — WAS: 31 weighted, tested, and MUTED. NOW: FIXED.
+
+> **Superseded by "§B resolved" at the end of this document.** The table below is
+> kept as the record of what was true when measured. As of 2026-10-01 all 23
+> remaining ACTIVE continuous signals declare a `homeSign` and a `neutralValue`,
+> and the 9 stub evaluators are `SHADOW_ONLY`. `REFUSED_UNSIGNED` went 31 → 0.
 
 Every one has: a real `evaluate`, a real `trustWeight` (0.06–0.14), a
-unit test, and **no effect on any published number**.
+unit test, and — at the time of measurement — **no effect on any published number**.
 
 Families: SITUATIONAL 13 · MICROCLIMATE 5 · NARRATIVE 3 (of 4) · TRENCHES 1 (of 2)
 · LUCK 1 (of 2) · EFFICIENCY 7.
@@ -136,15 +141,76 @@ instead of refusing it, so a broken map returning 4.2 published `trueProb 1.0`.
 
 ## Reconciliation, per the five
 
-- **Wired end-to-end:** 10 probability-path signals + 9 context terms. **Exceptions:** 31 muted (§B), 3 config-dark (§E), 6 DARK families (§D).
+- **Wired end-to-end:** 10 probability-path signals + 9 context terms + 23 continuous signals that now declare a direction. **Exceptions:** 10 `SHADOW_ONLY` stubs, 3 config-dark (§E), 6 DARK families (§D).
 - **Weighted with rationale:** 10/10 probability signals; context terms carry `WEIGHTS.*` constants. **Gap:** `HEAD_TO_HEAD_COMPONENT_MAX` and `VENUE_FORM_COMPONENT_MAX` are declared and never read — `game-context.ts` hardcodes 5/3.
 - **Tested:** yes, though market depth and volatility penalty are only asserted `>= 0` / `<= 0`; zeroing either would leave the suite green.
-- **Demonstrated in a trace:** all 10, across three real traces.
-- **Honest:** §B and §E are **not** honest today. §C and §D are.
+- **Demonstrated in a trace:** all 10 probability-path, across three real traces.
+- **Honest:** §B is now honest (directions declared, stubs demoted). §E remains **not** honest — silently inert, neither live nor gated.
+
+---
+
+## §B resolved — the 31 muted signals, wired (2026-10-01, verified)
+
+The measurement above found 31 ACTIVE continuous signals that could not vote.
+**That gap is closed.** Three distinct defects, each proven before and after:
+
+**1. No signal declared a direction.** `applyContinuousSignalTilt` refuses any
+continuous value that does not say which side it favors. `SignalDefinition` gained
+`homeSign`, and all 23 remaining ACTIVE continuous signals now declare one —
+derived by reading each evaluator's own semantics, never guessed from the signal's
+name. Each carries a comment stating the reasoning.
+
+**2. Signals read fields their evaluators never return.** 21 signals extracted
+`(res as { edge?: number }).edge`. A cast to an invented type compiles, so the
+`?? 0` fallback fired silently and those signals emitted nothing forever. The real
+result interfaces were read and each repointed to the field that exists —
+`spreadPointAdjustment`, `expectedMarginAdjustment`, `adjustedAdot`,
+`offensiveEpaAdjustment`, and so on.
+
+**3. Multipliers were not normalized.** `neutralValue` is new and load-bearing.
+Several signals return ratios (`passingYardsMultiplier`, `fatigueMultiplier`) whose
+"no effect" value is `1.0`, not `0`. Since `tanh(1.0) = +0.76`, an un-normalized
+multiplier tilts home ~2.7% **for saying nothing at all** — the engine inventing a
+view out of arithmetic. `neutralValue` makes "no effect" mean no effect regardless
+of units.
+
+**9 signals relabelled SHADOW_ONLY.** Their evaluators are stubs returning `null`
+on every call ("ingested dynamically per play context"). ACTIVE was a coverage
+claim the code did not support. They stay registered and go ACTIVE in one line
+when real per-play ingestion calls them.
+
+### Before / after, measured by `signal-vote-audit.test.ts`
+
+| Measure | Before | After |
+|---|---|---|
+| ACTIVE continuous signals | 31 | 23 (9 stubs demoted, honestly) |
+| `REFUSED_UNSIGNED` | 31 | **0** |
+| Muted but weighted | 31 | **0** |
+
+### Proof by execution — `signal-vote-live.test.ts`
+
+Declarations are necessary, not sufficient. Four tests run the real tilt function:
+
+- an unsigned signal is **still refused** (the law survives the declarations)
+- a multiplier at `neutralValue` produces **zero** tilt — the tanh(1.0) trap
+- a declared sign moves probability **the way it says**
+- **every** ACTIVE continuous signal is silent at its own neutral value
+
+The last is the important one: it catches any signal whose neutral point is
+declared wrong, which is precisely the class of bug a sign declared by eye
+introduces.
+
+### What this does NOT do
+
+`refusedUnsigned: 0` means every ACTIVE continuous signal *can* vote. It does
+**not** mean one fired in the audit run: the audit supplies a fixed env and only 1
+signal had all its inputs present. Turning the rest on requires per-play ingestion
+to populate their context — and the `SHADOW_ONLY` stubs mark exactly that work.
 
 ## Next, in order
 
-1. Each continuous signal declares `homeSign`, or is marked inactive. Nothing else in this list unblocks 31 signals.
+1. Populate per-play ingestion context so the 23 wired continuous signals actually fire in production. The declarations are in place; the inputs are not.
 2. Mark the §E families DARK-with-gate explicitly rather than leaving them silently inert.
 3. Strengthen the depth/volatility assertions from `>= 0` to a real nonzero fixture.
 4. Give `restAdvantageScore` and `historicalFormScore` `FactorBreakdown` fields; `grounding.ts` cannot currently list them as components.
+5. Replace the `nfl_wr1_vacated_target_efficiency` local placeholder with the upstream WR1 redistributor.

@@ -47,6 +47,7 @@
  */
 
 import { readFileSync } from "node:fs";
+import { join } from "node:path";
 import { describe, expect, it } from "vitest";
 
 import { applyContinuousSignalTilt } from "./continuous-signal-tilt.js";
@@ -244,20 +245,39 @@ describe("signal coverage — the honesty gate vs the signals", () => {
     // independently of any fixture: the two registry source files contain no
     // homeSign at all, so no evaluate() in production can return one. A runtime
     // test alone would be satisfiable by editing a fixture; this cannot.
+    //
+    // HISTORY. This asserted the registry files contained NO `homeSign`, and it
+    // was the proof that all 31 continuous signals were muted. The signals now
+    // declare their direction, so the assertion is INVERTED: every ACTIVE
+    // continuous signal must carry one. The static check is kept because it is
+    // the one a fixture edit cannot satisfy — a real signal's sign lives in the
+    // registry source, so this fails if someone strips the declarations back out.
     const files = [
-      new URL("./signal-registry-definitions.ts", import.meta.url),
-      new URL("./signal-registry-extensions.ts", import.meta.url),
+      "signal-registry-definitions.ts",
+      "signal-registry-extensions.ts",
     ];
     const offenders: string[] = [];
-    for (const url of files) {
-      const src = readFileSync(url, "utf8");
-      if (/homeSign/.test(src)) offenders.push(url.pathname);
+    for (const name of files) {
+      // Resolved against __dirname rather than `import.meta.url`: this package's
+      // tsconfig compiles to CommonJS, where `import.meta` is a TS1343 error and
+      // the typecheck job in CI fails. The static check is the whole point of this
+      // test, so it must compile.
+      const src = readFileSync(join(__dirname, name), "utf8");
+      if (/homeSign/.test(src)) offenders.push(name);
     }
     console.log("REGISTRY_FILES_EMITTING_HOMESIGN " + JSON.stringify(offenders));
+
+    // Every ACTIVE continuous signal must now declare a direction.
+    const unsignedDeclarations = ACTIVE_CONTINUOUS.filter((s) => s.homeSign == null);
+    console.log(
+      "ACTIVE_CONTINUOUS_WITHOUT_HOMESIGN " +
+        JSON.stringify(unsignedDeclarations.map((s) => s.id)),
+    );
     expect(
-      offenders,
-      "a registry signal now emits metadata.homeSign; update continuous-signal-tilt.test.ts " +
-        "and re-check the tilt law before relaxing anything else",
+      unsignedDeclarations,
+      "an ACTIVE continuous signal declares no homeSign. Either give it a " +
+        "direction derived from its evaluator's own semantics, or mark it " +
+        "SHADOW_ONLY so the registry stops counting it as coverage.",
     ).toEqual([]);
   });
 
@@ -283,28 +303,41 @@ describe("signal coverage — the honesty gate vs the signals", () => {
     expect(Object.values(byStatus).reduce((a, b) => a + b, 0)).toBe(SIGNAL_REGISTRY.length);
   });
 
-  // THE ALARM — top level, because `it.fails` cannot nest inside an `it`.
+  // HISTORY OF THIS BLOCK, because the shape of the assertion is the point.
   //
-  // This suite is EXPECTED to be red until the continuous signals declare a
-  // direction, and a branch must never carry a red suite. The inversion is the
-  // point: it goes green by itself the day a signal ships a real `homeSign`,
-  // and then THIS test fails loudly, so nobody can close the gap by relaxing the
-  // assertion, deleting the file, or hand-writing a sign off the metric's name.
-  // Whoever genuinely fixes it has to delete this wrapper on purpose.
+  // This was an `it.fails` alarm: the suite was EXPECTED to be red while the
+  // signals declared no direction, so the branch stayed green and the alarm
+  // would invert loudly the moment a real `homeSign` appeared. It was verified
+  // in both directions — green while muted, red when a real sign was simulated.
   //
-  // The six tests above pass today and keep passing regardless. They are the
-  // measurement; this one is the alarm.
-  it.fails(
-    "ALARM: every exercised ACTIVE continuous signal must declare metadata.homeSign",
-    async () => {
-      const audited = await auditAll();
-      const unsigned = audited.filter((a) => a.verdict === "REFUSED_UNSIGNED");
-      expect(
-        unsigned.length,
-        `${unsigned.length} signal(s) are wired + weighted but refused for want of ` +
-          `metadata.homeSign: ${unsigned.map((a) => a.id).join(", ")}. Each must declare ` +
-          `which way its own value points, or be marked inactive.`,
-      ).toBe(0);
-    },
-  );
+  // It has now fired for real: the continuous signals declare their direction
+  // and `refusedUnsigned` is 0. So the alarm did its job and is RETIRED, on
+  // purpose, replaced by the plain positive assertion below. Leaving an
+  // `it.fails` in place after the thing it watched is fixed would be a false
+  // alarm, which is worse than no alarm.
+  it("every exercised ACTIVE continuous signal now declares a direction", async () => {
+    const audited = await auditAll();
+    const unsigned = audited.filter((a) => a.verdict === "REFUSED_UNSIGNED");
+    expect(
+      unsigned.length,
+      `${unsigned.length} signal(s) are wired + weighted but refused for want of a ` +
+        `direction: ${unsigned.map((a) => a.id).join(", ")}. Each must declare which ` +
+        `way its own value points, or be marked SHADOW_ONLY.`,
+    ).toBe(0);
+  });
+
+  it("the retired alarm is genuinely retired, not deleted to hide a gap", () => {
+    // If someone re-registers an unsigned ACTIVE signal this must catch it
+    // again, from the live registry, with the id named.
+    const unsignedInRegistry = SIGNAL_REGISTRY.filter(
+      (s) =>
+        s.activationStatus === "ACTIVE" &&
+        s.outputKind === "CONTINUOUS_VALUE" &&
+        s.homeSign == null,
+    );
+    expect(
+      unsignedInRegistry.map((s) => s.id),
+      "an ACTIVE continuous signal lost its homeSign declaration",
+    ).toEqual([]);
+  });
 });
