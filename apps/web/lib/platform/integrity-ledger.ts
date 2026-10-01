@@ -241,7 +241,7 @@ export const INTEGRITY_LEDGER: readonly SystemEntry[] = [
     ownerGate: "lives on claude/laughing-wozniak-gyryjx — cherry-pick onto trunk per BRANCH_RECONCILIATION.md",
     evidenceRefs: ["docs/strategy/BRANCH_RECONCILIATION.md"],
     lastVerifiedAt: null,
-    failureMode: "no calibrated model probability → receipt modelProb stays null.",
+    failureMode: "no champion/challenger PROMOTION path — receipts now commit a real independent modelProb (independentEdge.trueProb), but there is no calibrated champion to promote into it.",
     nextAction: "cherry-pick the promoter; gate promotion on no-calibration-regression + sample floor.",
   },
 
