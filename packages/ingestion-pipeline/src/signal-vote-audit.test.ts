@@ -84,6 +84,11 @@ function generousEnv(): Record<string, string> {
   ]) {
     env[key] = "12";
   }
+  // The slate path. A tired visitor against a rested home side — the case the
+  // short-week signal exists to see. Both columns set to 12 would be a normal
+  // week and the signal would correctly say nothing.
+  env.HOME_REST_DAYS = "7";
+  env.AWAY_REST_DAYS = "4";
   for (const key of ["IS_ROAD_TEAM", "IS_DIVISION_RIVALRY", "IS_HOME_TEAM", "PLAYED_LAST_WEEK",
     "IS_SHORT_WEEK", "HOME_TEAM", "AWAY_TEAM"]) {
     env[key] = "1";

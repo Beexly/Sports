@@ -943,6 +943,22 @@ describe("signals-bridge situational: short-week-road-deficit", () => {
     if (r.ok) return;
     expect(r.reason).toContain("restDays");
   });
+
+  it("does not invent miles when travel was not measured", () => {
+    const r = evalShortWeekRoadDeficit({
+      isRoadTeam: true,
+      restDays: 4,
+      travelDistanceMiles: null,
+      opponentRestDays: 7,
+      isDivisionRivalry: null,
+    });
+    expect(r.ok).toBe(true);
+    if (!r.ok) return;
+    // -1.75 base, no miles modifier, -0.50 opponent had normal rest
+    expect(r.data.spreadPointsTilt).toBe(-2.25);
+    expect(r.data.explanation).toContain("travel not measured");
+    expect(r.data.explanation).toContain("rivalry not measured");
+  });
 });
 
 describe("signals-bridge situational: circadian-travel-fatigue", () => {

@@ -205,31 +205,24 @@ describe("END TO END — a wired signal reaches a probability", () => {
     expect(ctx.env.IS_ROAD_TEAM).toBe("0");
     expect(ctx.sources).toContain("GameSchedule");
 
-    // Evaluated from the visitor's perspective, the road team IS fatigued.
+    // The slate evaluates the home side (IS_ROAD_TEAM=0) and already has both
+    // rest columns. The signal must vote from THAT env. Swapping the keys in
+    // the test was hiding the production bug: the road team's short week never
+    // reached the tilt.
     const tilt = await applyContinuousSignalTilt(0.5, SIGNAL_REGISTRY, {
       sportKey: "americanfootball_nfl",
       homeTeam: "KC", awayTeam: "NE",
-      // Seen from the visitor: the SAME two columns, swapped. REST_DAYS is
-      // therefore the away value and OPP_REST_DAYS the home value.
-      env: {
-        ...ctx.env,
-        IS_ROAD_TEAM: "1",
-        REST_DAYS: ctx.env.AWAY_REST_DAYS,
-        OPP_REST_DAYS: ctx.env.HOME_REST_DAYS,
-        TRAVEL_DISTANCE_MILES: "800",
-        IS_DIVISION_RIVALRY: "0",
-      },
+      env: ctx.env,
       now: () => new Date("2026-10-01T12:00:00Z"),
     } as never);
 
     const vote = tilt.votes.find((v) => v.signalId === "nfl_short_week_road_deficit");
-    expect(vote, "the short-week signal must reach the tilt").toBeTruthy();
-    // Raw is the spread penalty; negative because the ROAD team is worse.
-    expect(vote!.rawValue).toBeLessThan(0);
-    expect(vote!.tilt).toBeLessThan(0);
+    expect(vote, "the short-week signal must reach the tilt from the slate env").toBeTruthy();
+    // Home-relative: the road penalty is negated, so a tired visitor favors home.
+    expect(vote!.rawValue).toBe(2.25);
+    expect(vote!.tilt).toBeGreaterThan(0);
     expect(tilt.applied).toBe(true);
-    // And it must MOVE the number, not merely be recorded.
-    expect(tilt.adjustedHomeP).not.toBe(0.5);
+    expect(tilt.adjustedHomeP).toBeGreaterThan(0.5);
   });
 
   it("abstains honestly when enrichment has not run (nulls, not defaults)", async () => {

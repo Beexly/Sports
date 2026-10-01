@@ -1,38 +1,19 @@
 /**
- * Signal Registry Extensions — the 22 signal evaluators that exist in
- * packages/prediction-engine/src/signals/ but were never registered into
- * the live slate.
+ * Signal Registry Extensions — continuous signals registered into the live slate.
  *
- * Every evaluator is real computation. Fail-closed when the evaluation
- * context lacks required inputs — never imputed. These extend
- * SIGNAL_REGISTRY (see signal-registry-definitions.ts).
+ * A wrapper calls its kernel only when the kernel's own inputs are present.
+ * A wrapper whose env keys do not match the kernel abstains. It does not
+ * invent a call shape, and it does not emit 0 for a field the kernel does
+ * not return. These extend SIGNAL_REGISTRY (see signal-registry-definitions.ts).
  */
 
 import type { SignalDefinition } from "@sports/types";
 import {
   computeTurnoverLuck,
-  evaluateTurfSurfaceFatigue,
-  evaluateQbReceiverContinuity,
-  evaluatePenaltyDifferentialMomentum,
-  evaluateBackupQbTargetDistribution,
-  evaluateManZoneReceiverArchetype,
   evaluateQbTwpRegression,
-  evaluateHighAltitudeFatigueDecay,
-  evaluateLinearWindPassImpact,
-  evaluateTemperaturePrecipitationDecay,
-  evaluateRookieBreakoutCohort,
-  evaluateNegativeBinomialRedzoneTd,
-  evaluateRedZoneOpportunityConversion,
-  evaluateByeWeekDefensiveInstallation,
   evaluateAgeConditionedRest,
-  evaluateFourthDownCoachingAggressiveness,
-  evaluateLopezSecondAndTenTendency,
-  evaluatePrimetimeTargetConcentration,
-  evaluateShortWeekRoadDeficit,
-  evaluateEarlyDownProeMomentum,
-  evaluateRedZonePersonnelGrouping,
-  evaluateTwoMinuteHurryUpEfficiency,
 } from "@sports/prediction-engine";
+import { evalShortWeekRoadDeficit } from "./signals-bridge.js";
 
 const KILL_LINE = {
   maxBrierScoreVsMarket: 0.250,
@@ -135,38 +116,76 @@ export const nflShortWeekRoadSignal: SignalDefinition = {
   isRightsCleared: () => true,
   acquisitionTask: null,
   blockedReason: null,
-  // DIRECTION: homeSign +1, neutral 0. road team short rest => spread moves AGAINST the road team; larger (toward 0 from -3.5) = less harm.
-  // The evaluator's own field is `spreadPointAdjustment`; the registry previously read
-  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  // DIRECTION: homeSign +1, neutral 0. The value is home-relative. A road
+  // team on a short week produces a positive value (the road penalty, negated),
+  // which favors home. The slate always evaluates the home side, so the away
+  // rest column is the road team's rest — reading only the home side made this
+  // signal mute on the exact case it exists to see.
   homeSign: 1 as const,
   neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
+    const travel = num(ctx.env, "TRAVEL_DISTANCE_MILES");
+    const rivalry = bool(ctx.env, "IS_DIVISION_RIVALRY");
+
+    // Slate path. Both rest columns are already on the Game row and already
+    // copied into env. The thesis is the ROAD team's short week, which is the
+    // away team. Evaluate that side, then flip the sign so a road penalty
+    // favors home. Missing travel or rivalry skips that modifier; it does not
+    // block the rest component and it is not imputed as 0 miles or "not a rivalry."
+    const homeRest = num(ctx.env, "HOME_REST_DAYS");
+    const awayRest = num(ctx.env, "AWAY_REST_DAYS");
+    if (homeRest != null && awayRest != null) {
+      const bridged = evalShortWeekRoadDeficit({
+        isRoadTeam: true,
+        restDays: awayRest,
+        travelDistanceMiles: travel,
+        opponentRestDays: homeRest,
+        isDivisionRivalry: rivalry,
+      });
+      if (!bridged.ok) return null;
+      const roadTilt = bridged.data.spreadPointsTilt;
+      return {
+        value: -roadTilt,
+        capturedAt: ctx.now().toISOString(),
+        metadata: {
+          perspective: "home-relative",
+          roadSpreadPointAdjustment: roadTilt,
+          travelKnown: travel != null,
+          rivalryKnown: rivalry != null,
+          homeRestDays: homeRest,
+          awayRestDays: awayRest,
+          explanation: bridged.data.explanation,
+        },
+      };
+    }
+
+    // One-side path, for a caller that evaluated a single team and said which
+    // side it is. The tilt is always applied to home probability, so a road
+    // team's penalty is negated. A home-side reading is already home-relative.
     const isRoadTeam = bool(ctx.env, "IS_ROAD_TEAM");
     const restDays = num(ctx.env, "REST_DAYS");
     const opponentRestDays = num(ctx.env, "OPP_REST_DAYS");
-    const travelDistanceMiles = num(ctx.env, "TRAVEL_DISTANCE_MILES");
-    const isDivisionRivalry = bool(ctx.env, "IS_DIVISION_RIVALRY");
-    if (
-      isRoadTeam == null ||
-      restDays == null ||
-      opponentRestDays == null ||
-      travelDistanceMiles == null ||
-      isDivisionRivalry == null
-    ) {
-      return null;
-    }
-    const res = evaluateShortWeekRoadDeficit({
+    if (isRoadTeam == null || restDays == null || opponentRestDays == null) return null;
+    const bridged = evalShortWeekRoadDeficit({
       isRoadTeam,
       restDays,
+      travelDistanceMiles: travel,
       opponentRestDays,
-      travelDistanceMiles,
-      isDivisionRivalry,
+      isDivisionRivalry: rivalry,
     });
+    if (!bridged.ok) return null;
+    const sideTilt = bridged.data.spreadPointsTilt;
     return {
-      value: res.spreadPointAdjustment,
+      value: isRoadTeam ? -sideTilt : sideTilt,
       capturedAt: ctx.now().toISOString(),
-      metadata: { ...res },
+      metadata: {
+        perspective: "evaluated-side",
+        evaluatedSideTilt: sideTilt,
+        travelKnown: travel != null,
+        rivalryKnown: rivalry != null,
+        explanation: bridged.data.explanation,
+      },
     };
   },
 };
@@ -240,22 +259,14 @@ export const nflFourthDownAggressionSignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: 1 as const,
   neutralValue: 0,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const goForItRate = num(ctx.env, "COACH_GO_FOR_IT_RATE");
-    const leagueAvg = num(ctx.env, "LEAGUE_GO_FOR_IT_RATE");
-    const leverage = num(ctx.env, "FOURTH_DOWN_LEVERAGE");
-    if (goForItRate == null || leagueAvg == null || leverage == null) return null;
-    const res = evaluateFourthDownCoachingAggressiveness({
-      goForItRate,
-      leagueAverageGoForItRate: leagueAvg,
-      leverageIndex: leverage,
-    } as never);
-    return {
-      value: (res as { edge?: number }).edge ?? 0,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 
@@ -279,20 +290,14 @@ export const nflSecondAndTenTendencySignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: -1 as const,
   neutralValue: 0.5,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const passRate = num(ctx.env, "SECOND_AND_TEN_PASS_RATE");
-    const leaguePassRate = num(ctx.env, "LEAGUE_SECOND_AND_TEN_PASS_RATE");
-    if (passRate == null || leaguePassRate == null) return null;
-    const res = evaluateLopezSecondAndTenTendency({
-      secondAndTenPassRate: passRate,
-      leagueSecondAndTenPassRate: leaguePassRate,
-    } as never);
-    return {
-      value: (res as { edge?: number }).edge ?? 0,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 
@@ -316,22 +321,14 @@ export const nflPrimetimeTargetConcentrationSignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: 1 as const,
   neutralValue: 1,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const isPrimetime = bool(ctx.env, "IS_PRIMETIME");
-    const targetShare = num(ctx.env, "WR1_TARGET_SHARE");
-    const leagueShare = num(ctx.env, "LEAGUE_WR1_TARGET_SHARE");
-    if (isPrimetime == null || targetShare == null || leagueShare == null) return null;
-    const res = evaluatePrimetimeTargetConcentration({
-      isPrimetime,
-      wr1TargetShare: targetShare,
-      leagueWr1TargetShare: leagueShare,
-    } as never);
-    return {
-      value: (res as { edge?: number }).edge ?? 0,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 
@@ -355,20 +352,14 @@ export const nflEarlyDownProeSignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: 1 as const,
   neutralValue: 0,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const proe = num(ctx.env, "EARLY_DOWN_PROE");
-    const momentum = num(ctx.env, "EARLY_DOWN_PROE_MOMENTUM");
-    if (proe == null || momentum == null) return null;
-    const res = evaluateEarlyDownProeMomentum({
-      earlyDownProe: proe,
-      momentum,
-    } as never);
-    return {
-      value: (res as { edge?: number }).edge ?? 0,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 
@@ -392,20 +383,14 @@ export const nflTwoMinuteHurryUpSignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: 1 as const,
   neutralValue: 0,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const epa = num(ctx.env, "TWO_MINUTE_EPA_PER_PLAY");
-    const leagueEpa = num(ctx.env, "LEAGUE_TWO_MINUTE_EPA");
-    if (epa == null || leagueEpa == null) return null;
-    const res = evaluateTwoMinuteHurryUpEfficiency({
-      twoMinuteEpaPerPlay: epa,
-      leagueTwoMinuteEpa: leagueEpa,
-    } as never);
-    return {
-      value: (res as { edge?: number }).edge ?? 0,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 
@@ -429,20 +414,14 @@ export const nflByeWeekDefensiveInstallSignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: -1 as const,
   neutralValue: 0,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const comingOffBye = bool(ctx.env, "COMING_OFF_BYE");
-    const defensiveEpaTrend = num(ctx.env, "DEFENSIVE_EPA_TREND");
-    if (comingOffBye == null || defensiveEpaTrend == null) return null;
-    const res = evaluateByeWeekDefensiveInstallation({
-      comingOffBye,
-      defensiveEpaTrend,
-    } as never);
-    return {
-      value: (res as { edge?: number }).edge ?? 0,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 
@@ -509,20 +488,14 @@ export const nflQbReceiverContinuitySignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: 1 as const,
   neutralValue: 0,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const gamesTogether = num(ctx.env, "QB_WR_GAMES_TOGETHER");
-    const targetShare = num(ctx.env, "QB_WR_TARGET_SHARE");
-    if (gamesTogether == null || targetShare == null) return null;
-    const res = evaluateQbReceiverContinuity({
-      gamesTogether,
-      targetShare,
-    } as never);
-    return {
-      value: (res as { continuityScore?: number }).continuityScore ?? 0,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 
@@ -546,22 +519,14 @@ export const nflPenaltyDifferentialSignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: 1 as const,
   neutralValue: 0,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const yardsFor = num(ctx.env, "PENALTY_YARDS_FOR");
-    const yardsAgainst = num(ctx.env, "PENALTY_YARDS_AGAINST");
-    const momentum = num(ctx.env, "PENALTY_MOMENTUM");
-    if (yardsFor == null || yardsAgainst == null || momentum == null) return null;
-    const res = evaluatePenaltyDifferentialMomentum({
-      penaltyYardsFor: yardsFor,
-      penaltyYardsAgainst: yardsAgainst,
-      momentum,
-    } as never);
-    return {
-      value: (res as { edge?: number }).edge ?? 0,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 
@@ -585,22 +550,14 @@ export const nflBackupQbTargetSignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: -1 as const,
   neutralValue: 0,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const isBackup = bool(ctx.env, "QB_IS_BACKUP");
-    const starterTargetShare = num(ctx.env, "STARTER_TARGET_SHARE");
-    const backupTargetShare = num(ctx.env, "BACKUP_TARGET_SHARE");
-    if (isBackup == null || starterTargetShare == null || backupTargetShare == null) return null;
-    const res = evaluateBackupQbTargetDistribution({
-      isBackupQb: isBackup,
-      starterTargetShare,
-      backupTargetShare,
-    } as never);
-    return {
-      value: (res as { edge?: number }).edge ?? 0,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 
@@ -624,22 +581,14 @@ export const nflManZoneArchetypeSignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: -1 as const,
   neutralValue: 0,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const manRate = num(ctx.env, "DEF_MAN_RATE");
-    const wrManEpa = num(ctx.env, "WR_MAN_EPA");
-    const wrZoneEpa = num(ctx.env, "WR_ZONE_EPA");
-    if (manRate == null || wrManEpa == null || wrZoneEpa == null) return null;
-    const res = evaluateManZoneReceiverArchetype({
-      defenseManRate: manRate,
-      wrManEpa,
-      wrZoneEpa,
-    } as never);
-    return {
-      value: (res as { matchupEdge?: number }).matchupEdge ?? 0,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 
@@ -718,22 +667,14 @@ export const nflRedzoneOppConversionSignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: 1 as const,
   neutralValue: 0,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const trips = num(ctx.env, "REDZONE_TRIPS");
-    const tds = num(ctx.env, "REDZONE_TDS");
-    const leagueRate = num(ctx.env, "LEAGUE_REDZONE_TD_RATE") ?? 0.55;
-    if (trips == null || tds == null || trips <= 0) return null;
-    const res = evaluateRedZoneOpportunityConversion({
-      redzoneTrips: trips,
-      redzoneTds: tds,
-      leagueRedzoneTdRate: leagueRate,
-    } as never);
-    return {
-      value: (res as { edge?: number }).edge ?? tds / trips - leagueRate,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 
@@ -757,22 +698,14 @@ export const nflNegBinomRedzoneTdSignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: 1 as const,
   neutralValue: 0,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const mean = num(ctx.env, "REDZONE_TD_MEAN");
-    const dispersion = num(ctx.env, "REDZONE_TD_DISPERSION");
-    const observed = num(ctx.env, "REDZONE_TD_OBSERVED");
-    if (mean == null || dispersion == null || observed == null) return null;
-    const res = evaluateNegativeBinomialRedzoneTd({
-      mean,
-      dispersion,
-      observed,
-    } as never);
-    return {
-      value: (res as { edge?: number }).edge ?? 0,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 
@@ -796,22 +729,14 @@ export const nflRedzonePersonnelSignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: 1 as const,
   neutralValue: 0,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const personnel = num(ctx.env, "REDZONE_PERSONNEL_GROUPING");
-    const successRate = num(ctx.env, "REDZONE_PERSONNEL_SUCCESS_RATE");
-    const leagueRate = num(ctx.env, "LEAGUE_REDZONE_PERSONNEL_SUCCESS");
-    if (personnel == null || successRate == null || leagueRate == null) return null;
-    const res = evaluateRedZonePersonnelGrouping({
-      personnelGrouping: personnel,
-      successRate,
-      leagueSuccessRate: leagueRate,
-    } as never);
-    return {
-      value: (res as { edge?: number }).edge ?? 0,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 
@@ -835,22 +760,14 @@ export const nflRookieBreakoutSignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: 1 as const,
   neutralValue: 0,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const isRookie = bool(ctx.env, "PLAYER_IS_ROOKIE");
-    const draftCapital = num(ctx.env, "PLAYER_DRAFT_CAPITAL");
-    const usageTrend = num(ctx.env, "PLAYER_USAGE_TREND");
-    if (isRookie == null || draftCapital == null || usageTrend == null) return null;
-    const res = evaluateRookieBreakoutCohort({
-      isRookie,
-      draftCapital,
-      usageTrend,
-    } as never);
-    return {
-      value: (res as { breakoutScore?: number }).breakoutScore ?? 0,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 
@@ -876,20 +793,14 @@ export const nflHighAltitudeSignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: 1 as const,
   neutralValue: 0,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const elevationFt = num(ctx.env, "STADIUM_ELEVATION_FT");
-    const isVisiting = bool(ctx.env, "IS_VISITING");
-    if (elevationFt == null || isVisiting == null) return null;
-    const res = evaluateHighAltitudeFatigueDecay({
-      elevationFeet: elevationFt,
-      isVisitingTeam: isVisiting,
-    } as never);
-    return {
-      value: (res as { fatigueMultiplier?: number }).fatigueMultiplier ?? 1,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 
@@ -913,20 +824,14 @@ export const nflLinearWindPassSignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: 1 as const,
   neutralValue: 0,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const wind = num(ctx.env, "WIND_MPH");
-    const isDome = bool(ctx.env, "IS_DOME");
-    if (wind == null || isDome == null) return null;
-    const res = evaluateLinearWindPassImpact({
-      windMph: wind,
-      isDomeOrClosed: isDome,
-    } as never);
-    return {
-      value: (res as { passYardsMultiplier?: number }).passYardsMultiplier ?? 1,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 
@@ -950,22 +855,14 @@ export const nflTempPrecipSignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: 1 as const,
   neutralValue: 0,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const temp = num(ctx.env, "TEMP_F");
-    const precip = num(ctx.env, "PRECIP_IN");
-    const isDome = bool(ctx.env, "IS_DOME");
-    if (temp == null || precip == null || isDome == null) return null;
-    const res = evaluateTemperaturePrecipitationDecay({
-      tempF: temp,
-      precipInches: precip,
-      isDomeOrClosed: isDome,
-    } as never);
-    return {
-      value: (res as { scoringMultiplier?: number }).scoringMultiplier ?? 1,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 
@@ -989,20 +886,14 @@ export const nflTurfSurfaceFatigueSignal: SignalDefinition = {
   // a field this result does not return, so `?? 0` made it silently emit nothing.
   homeSign: -1 as const,
   neutralValue: 1,
-  evaluate: async (ctx) => {
-    if (ctx.sportKey !== "americanfootball_nfl") return null;
-    const surface = num(ctx.env, "TURF_SOFTNESS_INDEX");
-    const isTurf = bool(ctx.env, "IS_ARTIFICIAL_TURF");
-    if (surface == null || isTurf == null) return null;
-    const res = evaluateTurfSurfaceFatigue({
-      turfSoftnessIndex: surface,
-      isArtificialTurf: isTurf,
-    } as never);
-    return {
-      value: (res as { fatigueMultiplier?: number }).fatigueMultiplier ?? 1,
-      capturedAt: ctx.now().toISOString(),
-      metadata: res as never,
-    };
+  evaluate: async () => {
+    // The kernel's input contract does not match the env keys this wrapper
+    // used to pass, and the result was read off a field the kernel does not
+    // return. That read emits 0, which is a vote the measurement never made.
+    // Abstain. The sanctioned call is the matching function in
+    // signals-bridge.ts, and it stays unwired until its real inputs exist in
+    // the schema. Do not restore a type-erasing call.
+    return null;
   },
 };
 

@@ -8,6 +8,98 @@ Companion tests that recompute these numbers:
 **The five, per signal (Law 5):** wired · weighted · tested · demonstrated in a
 trace · honest about what it does.
 
+## Current pass — recomputed from the registry, not from the sections below
+
+The sections below this one are the record of earlier passes. Their headline
+counts are stale. This section is the recount.
+
+Registry (`SIGNAL_REGISTRY`, counted by the vote audit, not by hand):
+47 signals. ACTIVE 32, SHADOW_ONLY 10, BLOCKED_MISSING_SOURCE 5.
+Of the 32 ACTIVE, 23 are CONTINUOUS_VALUE and 9 are probability-path.
+
+What actually votes from the slate env:
+
+- `nfl_short_week_road_deficit` — wired. The slate already copies
+  `restDaysHome` / `restDaysAway` into `HOME_REST_DAYS` / `AWAY_REST_DAYS`.
+  The wrapper used to read only the home side (`IS_ROAD_TEAM` is 0 by
+  construction) and also required travel miles and a rivalry flag that are
+  not columns. Both gates kept the road team's short week from ever reaching
+  a probability. It now evaluates the away team as the road team through
+  `evalShortWeekRoadDeficit` and returns a home-relative value. Missing
+  travel or rivalry skips that modifier. It is not stored as 0 miles and it
+  is not stored as "not a rivalry." A visitor on 4 days against a home side
+  on 7 days, miles unknown, returns raw 2.25 and moves home probability up.
+  Measured miles of 1800 return raw 2.9. Normal rest (7 and 7) abstains.
+
+What is ACTIVE, weighted, and honestly abstaining. Each wrapper that used to
+call its kernel through a type-erasing cast and then read a field the kernel
+does not return now returns null. That read emitted 0. A 0 is a vote the
+measurement never made. The sanctioned call remains the matching function in
+`signals-bridge.ts`. None of these have their kernel's inputs in the schema,
+so they are DARK. Promoting them by inventing the missing table would be
+manufacturing the measurement.
+
+- `nfl_turnover_luck` — no play-level fumble or interception columns. The
+  wrapper still calls `computeTurnoverLuck` when those env keys are present.
+  The slate does not set them.
+- `nfl_age_conditioned_rest` — `Player` has no birth date and no age.
+  `SnapCount` has snaps and position, not age. Rest days exist and are not
+  sufficient.
+- `nfl_fourth_down_aggressiveness` — kernel wants a coach name, a fourth-down
+  go-rate over expected, a red-zone go rate, and an in-play score and quarter.
+  No fourth-down split and no coach table.
+- `nfl_second_and_ten_tendency` — kernel wants the prior snap's play type and
+  the live score, quarter, and clock. No per-play source at slate time.
+- `nfl_primetime_target_concentration` — `Game.commenceTime` can classify the
+  broadcast window. `DepthChartEntry` can name a role, bounded by `scrapedAt`.
+  `PlayerGameStat.targetShare` has season and week and no game date, so a
+  latest-week read can include the game being predicted. Route participation
+  is not a column. Not wired on a partial.
+- `nfl_early_down_proe_momentum` — kernel wants an early-down pass rate and an
+  expected pass rate. `TeamGameEfficiency` stores game EPA and success rate,
+  not that split.
+- `nfl_two_minute_hurry_up` — kernel wants two-minute drive counts. Not a column.
+- `nfl_bye_week_defensive_install` — rest days can say the prep window was
+  long. The kernel also wants a coordinator name and a pedigree tier, and it
+  applies a default tier when the pedigree is missing. Rest alone must not
+  call it.
+- `nfl_qb_twp_regression` — wrapper still calls the kernel when its env keys
+  are present. `PlayerGameStat` has attempts and passing EPA, not
+  interceptions and not turnover-worthy plays.
+- `nfl_qb_receiver_continuity` — kernel wants games-together, which is not a column.
+- `nfl_penalty_differential_momentum` — kernel wants rolling penalty yards,
+  pre-snap fouls, and DPI yards. Not columns.
+- `nfl_backup_qb_target_distribution` — `Injury` exists. The kernel also wants
+  named target-share baselines and a games-sampled floor the slate does not
+  select, and `PlayerGameStat` has no date bound. Not half-wired.
+- `nfl_man_zone_receiver_archetype` — no charting table.
+- `nfl_wr1_vacated_target_efficiency` — the local placeholder formula was
+  removed. It was not the kernel. The kernel is `evalWr1OutRedistribution`,
+  which needs named players and leak-safe shares. `Injury` exists; the join
+  is not selected.
+- `nfl_redzone_opportunity_conversion`, `nfl_negative_binomial_redzone_td`,
+  `nfl_redzone_personnel_grouping` — no red-zone trip or personnel columns.
+  `TeamGameEfficiency` does not carry them.
+- `nfl_rookie_breakout_cohort` — `Player` has no draft round.
+- `nfl_high_altitude_fatigue`, `nfl_linear_wind_pass_impact`,
+  `nfl_temperature_precipitation_decay`, `nfl_turf_surface_fatigue` — no
+  weather, elevation, or surface columns. Not manufactured.
+
+SHADOW_ONLY (10) and BLOCKED_MISSING_SOURCE (5) are unchanged. Their blockers
+in the sections below still name the missing source. Do not flip
+`DERIVED_MODEL_HISTORY_ENABLED`. The calibration seam stays unfitted.
+
+Traces: three, built by `buildReasoningTrace` from a real tilt, each with
+residual 0. Tired visitor (raw 2.25), measured 1800 miles (raw 2.9), and a
+normal-rest week that emits no continuous factor. Test:
+`packages/ingestion-pipeline/src/__tests__/short-week-slate-vote.test.ts`.
+
+The vote-audit fixture, re-run after this pass, recorded
+`canVoteAsShipped: 1` and `refusedUnsigned: 0` out of 23 ACTIVE continuous
+signals. The one that votes is the short-week signal, given a visitor on 4
+days and a home side on 7. The other 22 return null. That is abstention, not
+a silent zero.
+
 ---
 
 ## HEADLINE — the finding that matters

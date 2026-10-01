@@ -1455,16 +1455,29 @@ export interface ShortWeekRoadDeficitEval {
 export function evalShortWeekRoadDeficit(input: {
   readonly isRoadTeam: boolean;
   readonly restDays: number;
-  readonly travelDistanceMiles: number;
+  /**
+   * Null is "not measured." The kernel then skips the miles modifier.
+   * A number is still range-checked. Null is never coerced to 0.
+   */
+  readonly travelDistanceMiles: number | null;
   readonly opponentRestDays: number;
-  readonly isDivisionRivalry: boolean;
+  /** Null is "not measured." The kernel then skips the rivalry dampener. */
+  readonly isDivisionRivalry: boolean | null;
 }): SignalEval<ShortWeekRoadDeficitEval> {
+  const travelAbsent = input.travelDistanceMiles == null;
+  const rivalryAbsent = input.isDivisionRivalry == null;
   const bad =
     badIf(typeof input.isRoadTeam !== "boolean", `isRoadTeam must be a boolean: ${String(input.isRoadTeam)}`) ??
     badIf(!isIn(input.restDays, 1, 30), `restDays out of range: ${String(input.restDays)}`) ??
-    badIf(!isIn(input.travelDistanceMiles, 0, 6000), `travelDistanceMiles out of range: ${String(input.travelDistanceMiles)}`) ??
+    badIf(
+      !travelAbsent && !isIn(input.travelDistanceMiles as number, 0, 6000),
+      `travelDistanceMiles out of range: ${String(input.travelDistanceMiles)}`,
+    ) ??
     badIf(!isIn(input.opponentRestDays, 1, 30), `opponentRestDays out of range: ${String(input.opponentRestDays)}`) ??
-    badIf(typeof input.isDivisionRivalry !== "boolean", `isDivisionRivalry must be a boolean: ${String(input.isDivisionRivalry)}`);
+    badIf(
+      !rivalryAbsent && typeof input.isDivisionRivalry !== "boolean",
+      `isDivisionRivalry must be a boolean or null: ${String(input.isDivisionRivalry)}`,
+    );
   if (bad) return bad;
 
   const ctx: ShortWeekRoadContext = {
