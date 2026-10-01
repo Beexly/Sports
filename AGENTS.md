@@ -4790,11 +4790,16 @@ Garrett: "it is best if you wire them" — Motif owns the wiring backlog himself
 context); the coding agent composes, does not duplicate.
 
 - **Backlog:** `docs/ops/wiring-backlog-2026-10-01.md` (ranked, from 4 read-only recon sweeps).
-- **Done:** Tier 1 #1 — `composeLedger` runs in shadow. Branch `motif/ledger-shadow-2026-10-01` → PR #988.
-  `composeByEntity` barrel-exported; new `apps/web/lib/ops/signal-ledger-shadow.ts`; the census cron
-  now returns `data.shadow` (computed, never persisted, never touches the published score). 5 tests green.
-- **Next:** Tier 1 #2 `player_signals` table (absent repo-wide — schema + writer + reader), then #3–#5
-  (observation inputs, `tuneSignalWeights`, devig oracle callers).
+- **Done:** Tier 1 #1 — `composeLedger` runs in shadow; Tier 1 #2 — stored-signal reader.
+  Branch `motif/ledger-shadow-2026-10-01` → PR #988 (updated to cover both). `composeByEntity`
+  barrel-exported; new `apps/web/lib/ops/signal-ledger-shadow.ts`; the census cron now returns
+  `data.shadow` (fresh projection) AND `data.shadowStored` (persisted `signals` ledger, identical
+  math, with `storedRows`/`storedDropped` health). Computed, never persisted, never touches the
+  published score. 10 tests green.
+- **Correction banked:** the sweep's Tier 1 #2 premise ("`player_signals` absent repo-wide") was
+  stale — the `signals` table, writer, and hourly write cron all exist; the missing piece was the
+  READER, now built (`apps/web/lib/ops/signal-ledger-store.ts`).
+- **Next:** Tier 1 #3–#5 (observation inputs, `tuneSignalWeights`, devig oracle callers).
 - **Corrections banked from the sweeps:** the Session 0 inventory's "conformalRdPosture zero callers" and
   "2 of 14 fields" claims are stale at current main (caller exists at `public-surface-truth/route.ts:998`;
   `picks/route.ts:277-297` loads all 12 surfaces); the devig math is fixed (#965) — only asymmetric-input
