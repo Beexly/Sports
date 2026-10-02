@@ -153,9 +153,11 @@ class LLMEngine:
             # Grounding audit over MODEL-GENERATED text only (chain text the
             # model produced). Harness metadata (latencies) is not a claim.
             # Grounded values = observations + numbers stated in the question
-            # (e.g. "2 starters", "4 legs") + market numbers (spread/total).
+            # (e.g. "2 starters", "4 legs") + market numbers (spread/total)
+            # + profile numbers (e.g. league averages).
             grounded_vals = [float(v) for v in T1_OBSERVATIONS.values()]
-            for src in [T1_QUESTION] + [str(v) for v in T1_MARKET.values()]:
+            for src in ([T1_QUESTION] + [str(v) for v in T1_MARKET.values()]
+                        + [str(v) for v in T1_PROFILES.values()]):
                 for m in NUMBER_RE.finditer(src):
                     try:
                         grounded_vals.append(float(m.group(0)))

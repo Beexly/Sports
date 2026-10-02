@@ -41,7 +41,7 @@ model.eval()
 print("Model ready.", flush=True)
 
 
-@spaces.GPU(duration=120)
+@spaces.GPU(duration=60)
 def chat(message: str, history: list):
     """Chat endpoint (api_name=/chat). Text-only; history as Gradio pairs."""
     try:
@@ -59,7 +59,7 @@ def chat(message: str, history: list):
         with torch.inference_mode():
             out = model.generate(
                 **inputs,
-                max_new_tokens=1024,
+                max_new_tokens=2048,
                 temperature=0.2,
                 do_sample=True,
                 pad_token_id=tokenizer.eos_token_id,

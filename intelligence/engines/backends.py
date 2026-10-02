@@ -107,13 +107,15 @@ class GradioBackend(LLMBackend):
     def __init__(self, space: str, api_name: str = "/chat",
                  max_retries: int = 4, base_backoff_s: float = 5.0,
                  request_timeout_s: float = 180.0,
-                 extra_params: dict | None = None):
+                 extra_params: dict | None = None,
+                 hf_token: str | None = None):
         self.space = space
         self.api_name = api_name
         self.max_retries = max_retries
         self.base_backoff_s = base_backoff_s
         self.request_timeout_s = request_timeout_s
         self.extra_params = extra_params or {}
+        self.hf_token = hf_token
         self._client = None
 
     def _connect(self):
@@ -123,7 +125,8 @@ class GradioBackend(LLMBackend):
         last = None
         for attempt in range(self.max_retries):
             try:
-                self._client = Client(self.space)
+                self._client = (Client(self.space, token=self.hf_token)
+                                if self.hf_token else Client(self.space))
                 return self._client
             except Exception as exc:  # noqa: BLE001
                 last = exc
@@ -146,11 +149,10 @@ class GradioBackend(LLMBackend):
             t0 = time.time()
             try:
                 # extra_params lets callers set Space-specific controls
-                # (e.g. mode dropdown, max tokens, temperature).
-                kwargs = dict(self.extra_params)
-                kwargs.setdefault("param_3", max_tokens)
-                kwargs.setdefault("param_4", temperature)
-                result = client.predict(message, api_name=self.api_name, **kwargs)
+                # (e.g. studio-chat's mode dropdown / max tokens / temperature).
+                # Only pass what the caller configured — endpoints differ.
+                result = client.predict(message, api_name=self.api_name,
+                                        **dict(self.extra_params))
                 text = result if isinstance(result, str) else str(result)
                 return BackendResult(text=text, latency_s=time.time() - t0,
                                      backend_name=f"gradio:{self.space}")
