@@ -636,8 +636,22 @@ export const nflRedzoneOppConversionSignal: SignalDefinition = {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const trips = num(ctx.env, "REDZONE_TRIPS");
     const tds = num(ctx.env, "REDZONE_TDS");
-    const leagueRate = num(ctx.env, "LEAGUE_REDZONE_TD_RATE") ?? 0.55;
+    // NO DEFAULT. The league red-zone TD rate is a MEASURED league baseline, and
+    // this signal SUBTRACTS it to form the edge. Substituting an unsourced 0.55
+    // when it is absent did not fail soft: it shifted every team's reading the
+    // same direction, because the same wrong constant moved every team. 0.55
+    // appears exactly once in the repo — no source, no date, no provenance.
+    //
+    // `0.55` is the repo's own "I don't know" convention (c01 clamps to it), and
+    // used as a value it silently became a claim about the NFL.
+    //
+    // The sibling `nflNegativeBinomRedzoneTdSignal` twenty lines down already
+    // does this correctly: `if (mean == null || dispersion == null || observed
+    // == null) return null;`. The honest pattern was known in this file and not
+    // applied here, which is the whole shape of the bug.
+    const leagueRate = num(ctx.env, "LEAGUE_REDZONE_TD_RATE");
     if (trips == null || tds == null || trips <= 0) return null;
+    if (leagueRate == null) return null;
     const res = evaluateRedZoneOpportunityConversion({
       redzoneTrips: trips,
       redzoneTds: tds,

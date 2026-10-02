@@ -178,7 +178,23 @@ async function buildLiveSlate(entitlements: Entitlements): Promise<TwinSlate | n
 
     const conf01 = pick ? c01((pick.confidence ?? 0) / 100) : c01((row.dataQualityScore ?? 0) / 100);
     const signalDensity = conf01;
-    const contradictionMass = pick ? c01(1 - (pick.consensusPct ?? 0.5)) : 0.5;
+    // `consensusPct` is `Float @default(0)` and NON-NULLABLE in schema.prisma, so
+    // `pick.consensusPct` is never null and the old `?? 0.5` never fired. What
+    // actually happened: a pick with no bookmaker consensus (bookmakerCount 0 —
+    // a model signal, which is exactly the population most likely to be
+    // unwritten) read 0, so `1 - 0 = 1`, and hud.ts renders this as
+    // `contradictionMass * 100` = 100% credible counter-evidence. Absence was
+    // being displayed as MAXIMAL dissent, on a customer-facing surface, and the
+    // `?? 0.5` in the source read like the guard everyone assumed was there.
+    //
+    // The fix keys availability off `bookmakerCount`, the sibling field already
+    // used two lines below for `marketGravity`: with no books there is no
+    // consensus to be in contradiction WITH, so there is no contradiction mass.
+    // The value is a real, sourced neutral (a pick nobody priced has neither
+    // agreement nor dissent), not a stand-in for a number we failed to read.
+    const hasBooks = (pick?.bookmakerCount ?? 0) > 0;
+    const contradictionMass =
+      pick && hasBooks ? c01(1 - pick.consensusPct) : 0.5;
     const volatility = spreadVol ?? RISK_VOL[String(pick?.riskLevel ?? "")] ?? 0.4;
     const marketGravity = c01((pick?.bookmakerCount ?? row.bookmakerCoverageMax ?? 0) / 8);
 
