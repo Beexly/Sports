@@ -4,4 +4,5 @@ export * from "./commercial-copy-fence";
 export * from "./fence-types";
 export * from "./no-raw-ngs-fence";
 export * from "./responsible-gaming-fence";
+export * from "./revenue-metadata";
 export * from "./source-rights-fence";
