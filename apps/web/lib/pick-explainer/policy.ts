@@ -7,7 +7,7 @@
  * Pure and fully unit-tested. A failing explanation is never shown to the user.
  */
 
-import { extractNumericClaims, validateNumericClaims } from "@/lib/claude-api/numeric-guard";
+import { validateNumericClaims } from "@/lib/claude-api/numeric-guard";
 
 // Same families the Model Court enforces, tuned for explanation OUTPUT (not the
 // user's question). Certainty here targets unconditional outcome claims.
@@ -89,8 +89,13 @@ export function evaluatePickExplanationPolicy(text: string, groundingText?: stri
   if (matchesAny(trimmed, EV_PATTERNS)) failures.push("EV_KELLY_WINRATE");
   if (matchesAny(trimmed, COMPETITOR_PATTERNS)) failures.push("COMPETITOR_COMPARE");
   if (groundingText !== undefined) {
-    const allowed = extractNumericClaims(groundingText).map((c) => c.value);
-    if (!validateNumericClaims(trimmed, { allowed }).grounded) failures.push("UNGROUNDED_NUMERIC");
+    // Hand the guard the grounding TEXT, not a flattened list of values: the
+    // KIND of each number (probability vs hit rate vs factor weight vs version
+    // string) lives in its label, and flattening is what let a true probability
+    // be spent as a cover rate. See lib/claude-api/numeric-guard.ts.
+    if (!validateNumericClaims(trimmed, { text: groundingText }).grounded) {
+      failures.push("UNGROUNDED_NUMERIC");
+    }
   }
 
   return failures;

@@ -70,6 +70,43 @@ describe("parseLossAutopsyDraft", () => {
     if (!res.ok) expect(res.failures).toContain("BANNED_LANGUAGE");
   });
 
+  // REGRESSION (GAP 1): the autopsy body is rendered publicly on
+  // /performance/losses/[id]. A stat the grounded context never stated must not
+  // reach that page. draft.ts passes buildGroundedContext(...).context here.
+  describe("UNGROUNDED_NUMERIC", () => {
+    const GROUNDING = `Bookmaker consensus 84%. Closing line value 1.5 points. ${CITE}`;
+
+    it("accepts a draft whose numbers all appear in the grounded context", () => {
+      const res = parseLossAutopsyDraft(valid(), GROUNDING);
+      expect(res.ok).toBe(true);
+    });
+
+    it("rejects a fabricated statistic the grounded context never stated", () => {
+      const res = parseLossAutopsyDraft(
+        valid({ whatHappened: `The side lost outright; they are now 3-9 as a road favorite ${CITE}.` }),
+        GROUNDING,
+      );
+      expect(res.ok).toBe(false);
+      if (!res.ok) expect(res.failures).toContain("UNGROUNDED_NUMERIC");
+    });
+
+    it("rejects a fabricated percentage in the headline", () => {
+      const res = parseLossAutopsyDraft(
+        valid({ headline: "A 97% consensus still lost" }),
+        GROUNDING,
+      );
+      expect(res.ok).toBe(false);
+      if (!res.ok) expect(res.failures).toContain("UNGROUNDED_NUMERIC");
+    });
+
+    it("leaves the no-grounding call path unchanged", () => {
+      const res = parseLossAutopsyDraft(
+        valid({ whatHappened: `They are now 3-9 as a road favorite ${CITE}.` }),
+      );
+      expect(res.ok).toBe(true);
+    });
+  });
+
   it("caps lesson tags at five", () => {
     const res = parseLossAutopsyDraft(valid({ lessonTags: ["a", "b", "c", "d", "e", "f", "g"] }));
     expect(res.ok).toBe(true);
