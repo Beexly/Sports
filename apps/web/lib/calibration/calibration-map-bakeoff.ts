@@ -7,6 +7,7 @@
  */
 
 import type { CalibrationSample, IsotonicDebugReport, LogLossSliceReport } from "@sports/prediction-engine";
+import { debiasedExpectedCalibrationError } from "./ece-debiased";
 import {
   betaCalibration,
   brierDecomposition,
@@ -39,6 +40,8 @@ export type MapDecompRow = {
   readonly n: number;
   readonly brier: number;
   readonly ece: number;
+  /** Variance-corrected ECE. Raw `ece` is unchanged. Diagnostic only. */
+  readonly eceDebiased: number;
   readonly reliability: number;
   readonly resolution: number;
   readonly uncertainty: number;
@@ -52,6 +55,7 @@ function decomp(method: string, samples: readonly CalibrationSample[]): MapDecom
       n: 0,
       brier: NaN,
       ece: NaN,
+      eceDebiased: NaN,
       reliability: NaN,
       resolution: NaN,
       uncertainty: NaN,
@@ -64,6 +68,7 @@ function decomp(method: string, samples: readonly CalibrationSample[]): MapDecom
     n: samples.length,
     brier: d.brier,
     ece: expectedCalibrationError(samples),
+    eceDebiased: debiasedExpectedCalibrationError(samples).debiased,
     reliability: d.reliability,
     resolution: d.resolution,
     uncertainty: d.uncertainty,
@@ -253,6 +258,7 @@ export function runCalibrationMapBakeoff(
       n: test.length,
       brier: NaN,
       ece: NaN,
+      eceDebiased: NaN,
       reliability: NaN,
       resolution: NaN,
       uncertainty: NaN,
@@ -283,6 +289,7 @@ export function runCalibrationMapBakeoff(
       n: test.length,
       brier: NaN,
       ece: NaN,
+      eceDebiased: NaN,
       reliability: NaN,
       resolution: NaN,
       uncertainty: NaN,
