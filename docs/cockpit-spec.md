@@ -167,7 +167,7 @@ Per CLAUDE.md's tier table:
 | Context | full (factor presence visible) | full | full |
 | Signals | factor names visible, contribution magnitudes redacted | full | full |
 | Gate | full (pass/fail visible) | full | full |
-| Verdict | one pick per day, confidence hidden | all picks, confidence visible | all picks + line movement + early-access |
+| Verdict | daily teaser (`dailyPickLimit`), confidence hidden | all picks, confidence visible | all picks + line movement + early-access |
 
 **Why this works for free users:** They see the engine's *process* on all picks, every day, transparently. They see *which* picks they don't have access to. The conversion ask is "see the numbers," not "see anything at all."
 

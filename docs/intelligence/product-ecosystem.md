@@ -51,10 +51,12 @@ settlement accountability.
 - Source freshness timestamp
 - Settlement and calibration feedback post-game
 
-**Tier access**:
-- Free: 1 pick/day, no confidence score
+**Tier access** (allowance owned by `packages/types/src/index.ts` → `dailyPickLimit`;
+prices owned by `apps/web/lib/pricing/pricing-phases.ts`):
+- Free: daily pick teaser, no confidence score
+- Fantasy: fantasy suite; the same free teaser on the betting board
 - Pro: all picks, confidence scores, line movement
-- Elite: all Pro + early access, analytics, alerts
+- Elite: all Pro + CLV ledger, analytics, alerts
 
 **Forbidden**:
 - Fake picks

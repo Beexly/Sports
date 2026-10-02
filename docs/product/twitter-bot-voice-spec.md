@@ -173,7 +173,7 @@ Hard refusals, no override:
 Codex implements. Recommended defaults:
 
 - **Slate state updates:** Max 12 per day. Bot picks the highest-signal gates to surface (largest factor scores, biggest line moves, biggest evidence health drops). Configurable.
-- **Pick publications:** No rate limit beyond "one free pick per day" upstream.
+- **Pick publications:** No rate limit beyond the free-tier daily teaser cap upstream (`packages/types/src/index.ts` → `dailyPickLimit`).
 - **Pick settlements:** No rate limit — every settled free pick gets one post.
 - **Post-mortems:** No rate limit — every losing free pick gets one thread within 24h.
 - **Total daily ceiling:** 20 posts per 24-hour window. Bot refuses to post beyond this and queues overflow for the next day.
