@@ -25,7 +25,7 @@
 | 13 | [Lag-Llama](https://huggingface.co/time-series-foundation-models/Lag-Llama) | time-series-foundation-models | small | Apache-2.0 | Probabilistic univariate TS foundation (LLaMA-based) | Win-probability / in-game trajectory modeling |
 | 14 | [Nemotron-Research-Reasoning-Qwen-1.5B](https://huggingface.co/nvidia/Nemotron-Research-Reasoning-Qwen-1.5B) | nvidia | 1.8B | **CC-BY-NC-4.0 ⚠️** | NVIDIA's open reasoning research model | Tiny reasoning research bed; research-only license |
 | 15 | [Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled](https://huggingface.co/Jackrong/Qwen3.5-27B-Claude-4.6-Opus-Reasoning-Distilled) | Jackrong (community) | 27B | unknown ⚠️ | Community reasoning distill, 2.9k likes | Interesting but unverified provenance — evaluate, don't trust |
-| 16 | [Kimi-K2.6](https://huggingface.co/moonshotai/Kimi-K2.6) | moonshotai | MoE | custom | K2 successor (Garrett may have meant this by "Mimo2.6") | Track; thinking variant likely to follow |
+| 16 | [Kimi-K2.6](https://huggingface.co/moonshotai/Kimi-K2.6) | moonshotai | MoE | custom | K2 successor | Track; thinking variant likely to follow |
 | 17 | [chronos-bolt-base](https://huggingface.co/amazon/chronos-bolt-base) | amazon | small | Apache-2.0 | Fast Chronos variant (1M+ downloads) | Low-latency live in-game forecasting |
 | 18 | [tabpfn_3](https://huggingface.co/Prior-Labs/tabpfn_3) | Prior-Labs | foundation | custom | TabPFN v3 (May 2026) | Newest tabular foundation — test vs v2 on prop tasks |
 | 19 | [timesfm-2.5-200m-pytorch](https://huggingface.co/google/timesfm-2.5-200m-pytorch) | google | 200M | custom (Google) | Lightweight TimesFM (1.5M downloads) | Cheap baseline for TS ablations |
@@ -33,7 +33,7 @@
 
 \* R1 distills inherit the base model's license lineage; verify per-artifact before commercial use.
 
-**Naming note (Garrett's list → Hub reality):** "Mimo2.6" matches no Xiaomi artifact on the Hub (Xiaomi has no public org models found); closest live candidates are **Kimi-K2.6** (moonshotai) and the community **Kimi-K2.6-Reasoning-Distilled** family. "GLM 3.6 prime" → closest shipping tier is **GLM-4.7-Flash**. "Muse Spark 1.3/1.4" and "Gemini 3.8" are **not on HF** (proprietary). Recommend Garrett confirm which "Mimo" he meant.
+**Naming note (Garrett's list → Hub reality) — resolved 2026-10-02:** "Mimo2.6" = **Xiaomi MiMo-V2.6**, real on HF under `XiaomiMiMo/` (see Correction section below); the earlier "no public org models" claim was wrong. "GLM 3.6 prime" → closest shipping tier is **GLM-4.7-Flash**. "Muse Spark 1.3/1.4" and "Gemini 3.8" are **not on HF** (proprietary).
 
 ---
 
@@ -121,7 +121,10 @@ Custom license (Prior Labs — verify commercial terms). Zero-training SOTA on s
 - **Scale:** The best reasoning models are 600B–1T params — Inference Providers only, never local. Budget per-token cost; keep L1–L3 on small models.
 - **No sports models exist** — do not go hunting for an "NFL predictor" download; the build is fine-tune/reasoning-over-data, not model discovery.
 - **Community distills** (Jackrong etc.) have unverified provenance — evaluate outputs, never trust weights blindly.
-- **Naming:** confirm with Garrett whether "Mimo2.6" = Kimi-K2.6 or Xiaomi Mimo; and note "Muse Spark 1.3/1.4" + "Gemini 3.8" are not on HF.
+- **Naming:** "Mimo2.6" resolved 2026-10-02 = Xiaomi MiMo-V2.6 (see Correction); "Muse Spark 1.3/1.4" + "Gemini 3.8" are not on HF.
 
 ## Raw API responses
 Saved under `~/workspace/corpus-intelligence/handoff/hf-survey-raw/` (per-search JSON: reasoning-*.json, author-*.json, sports-*.json, prim-*.json, ts/tabular, trending, datasets-*.json) for audit/re-runs.
+
+## Correction 2026-10-02 (Garrett's IG post)
+"Mimo 2.6" resolved: **Xiaomi MiMo-V2.6 family is real and on HF** under `XiaomiMiMo/` — the earlier "no public org models" note was wrong. Family: `MiMo-V2.6-Distill-Qwen-9B` (9B, image-text-to-text, 12.7K downloads), `MiMo-V2.6-Pro-RL` (82.7K downloads), `MiMo-V2.6-Flash-RL` (44.7K downloads), plus MOPD variants and GGUF quants (bartowski). Post claims MIT license; HF API license field null — verify in model card before product use. Coding/tool-use/visual — candidate local model for the coding-agent lane.
