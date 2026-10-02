@@ -2,6 +2,7 @@ import { describe, expect, it, vi } from "vitest";
 import { DEFAULT_CLAUDE_API_BUDGETS } from "@/lib/claude-api/cost-monitor";
 import {
   answerModelCourtQuestion,
+  buildPromptParts,
   detectModelCourtRefusal,
   evaluateModelCourtAnswerPolicy,
 } from "@/lib/intelligence-graph/model-court/answer";
@@ -228,6 +229,49 @@ describe("Model Court answer runtime", () => {
       const failures = evaluateModelCourtAnswerPolicy("They are 8-2 in their last 10.", GROUNDING);
       expect(failures[0]).toBe("MISSING_CITATION");
       expect(failures).toContain("UNGROUNDED_NUMERIC");
+    });
+  });
+
+  // REGRESSION (GAP 2): the user's own question is NOT evidence. Grounding on the
+  // full prelude let a user seed a statistic and have the model echo it back as
+  // fact. buildPromptParts splits the two; only the context grounds the guard.
+  describe("the user's question does not ground numbers in the answer", () => {
+    const SEEDED_QUESTION = "How does the model read their 11-1 ATS mark this season?";
+
+    it("keeps the question out of groundingContext while the model still sees it", () => {
+      const parts = buildPromptParts({ mode: "ASK_THIS_GAME", node, question: SEEDED_QUESTION });
+
+      expect(parts.promptUser).toContain(SEEDED_QUESTION);
+      expect(parts.groundingContext).not.toContain(SEEDED_QUESTION);
+      expect(parts.groundingContext).not.toContain("11-1");
+      // The evidence itself is still there to ground against.
+      expect(parts.groundingContext).toContain("Evidence refs:");
+    });
+
+    it("rejects an answer echoing a statistic that appeared only in the question", async () => {
+      const CITE = "(source: market at 2026-05-22T18:00:00.000Z)";
+      const fetchImpl = vi.fn(async () =>
+        new Response(
+          JSON.stringify({
+            content: [{ type: "text", text: `The engine has them at 11-1 ATS. ${CITE}` }],
+            usage: { input_tokens: 900, output_tokens: 120 },
+          }),
+          { status: 200 }
+        )
+      );
+
+      await expect(
+        answerModelCourtQuestion(
+          { mode: "ASK_THIS_GAME", node, question: SEEDED_QUESTION },
+          {
+            apiKey: "test-key",
+            fetchImpl,
+            monthlySpendUsd: 0,
+            budgetPolicy: DEFAULT_CLAUDE_API_BUDGETS.MODEL_COURT_ANSWER,
+          }
+        )
+      ).rejects.toThrow("UNGROUNDED_NUMERIC");
+      expect(fetchImpl).toHaveBeenCalledOnce();
     });
   });
 });

@@ -13,8 +13,11 @@ import {
 import { loadClaudeBudgetPolicy } from "@/lib/claude-api/budget-store";
 import type { GameIntelligenceNode, UserLens } from "@/lib/intelligence-graph";
 import {
+  buildAskTheSlateContext,
   buildAskTheSlatePrelude,
+  buildAskThisGameContext,
   buildAskThisGamePrelude,
+  buildExplainForMyLensContext,
   buildExplainForMyLensPrelude,
   REFUSAL_TEMPLATES,
   SYSTEM_PROMPT,
@@ -136,7 +139,7 @@ export async function answerModelCourtQuestion(
   }
 
   try {
-    const promptUser = buildPromptUser(input);
+    const { promptUser, groundingContext } = buildPromptParts(input);
     const result = await callClaude({
       apiKey: options.apiKey,
       fetchImpl: options.fetchImpl,
@@ -147,14 +150,13 @@ export async function answerModelCourtQuestion(
       user: promptUser,
       cache: { system: true },
     });
-    // Residual (accepted for launch): promptUser embeds the user's raw QUESTION
-    // alongside the grounded node/slate data, so a number the user seeds ("did
-    // you hit 68%?") is whitelisted for echo. That's an echo of the user's own
-    // text, not a fabricated MODEL stat, and the tout-shaped families (win
-    // rate/ROI/+EV) stay banned outright by EV_PATTERNS regardless of
-    // grounding. Splitting context-only grounding out of the prelude builders
-    // is a follow-up, not required for this gate.
-    const policyFailures = evaluateModelCourtAnswerPolicy(result.text, promptUser);
+    // GROUNDING: validate numbers against `groundingContext` — the evidence
+    // ONLY — never against `promptUser`, which also carries the user's raw
+    // question. Grounding on the prelude let a user seed their own statistic
+    // ("why are they 11-1 ATS?") and have the model echo it back as fact.
+    // A question is not evidence. Mirrors explainPick, which grounds on
+    // `grounded.context` and deliberately excludes the reader's question.
+    const policyFailures = evaluateModelCourtAnswerPolicy(result.text, groundingContext);
     if (policyFailures.length > 0) {
       await maybeRecordModelCourtUsage({
         input,
@@ -267,20 +269,39 @@ export function evaluateModelCourtAnswerPolicy(bodyMarkdown: string, groundingTe
   return failures;
 }
 
-function buildPromptUser(input: ModelCourtAnswerInput): string {
+export interface ModelCourtPromptParts {
+  /** Full user turn sent to the model: grounded context + the user's question. */
+  readonly promptUser: string;
+  /** Grounded evidence ONLY — the question is excluded. Guard against this. */
+  readonly groundingContext: string;
+}
+
+export function buildPromptParts(input: ModelCourtAnswerInput): ModelCourtPromptParts {
   if (input.mode === "ASK_THE_SLATE") {
-    return buildAskTheSlatePrelude(input.slate ?? {}, input.question);
+    const slate = input.slate ?? {};
+    return {
+      promptUser: buildAskTheSlatePrelude(slate, input.question),
+      groundingContext: buildAskTheSlateContext(slate),
+    };
   }
   if (input.mode === "EXPLAIN_FOR_MY_LENS") {
     if (!input.node || !input.lens) {
       throw new ModelCourtAnswerError("Model Court lens mode requires a game and lens context.");
     }
-    return buildExplainForMyLensPrelude(toCourtNodeContext(input.node), input.question, input.lens);
+    const nodeContext = toCourtNodeContext(input.node);
+    return {
+      promptUser: buildExplainForMyLensPrelude(nodeContext, input.question, input.lens),
+      groundingContext: buildExplainForMyLensContext(nodeContext, input.lens),
+    };
   }
   if (!input.node) {
     throw new ModelCourtAnswerError("Model Court game mode requires a game context.");
   }
-  return buildAskThisGamePrelude(toCourtNodeContext(input.node), input.question);
+  const nodeContext = toCourtNodeContext(input.node);
+  return {
+    promptUser: buildAskThisGamePrelude(nodeContext, input.question),
+    groundingContext: buildAskThisGameContext(nodeContext),
+  };
 }
 
 function toCourtNodeContext(node: GameIntelligenceNode): Record<string, unknown> {
