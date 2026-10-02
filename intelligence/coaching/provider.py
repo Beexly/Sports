@@ -47,10 +47,23 @@ from coaching import tenures as TN
 _TAU_CACHE: dict[str, Any] = {}
 
 
+def _search_dirs() -> list[str]:
+    """Dirs to search for coaching artifacts.
+
+    An explicit GSE_COACHING_DATA_DIR is exclusive. Falling through to the
+    repo or the legacy path would make "this directory is empty" read as
+    "the other directory has the file."
+    """
+    from coaching import base_data as _BD
+    env = os.environ.get(_BD.ENV_VAR)
+    if env:
+        return [env]
+    return _BD.candidate_dirs()
+
+
 def _tau_table_path() -> Optional[str]:
     """Path to a fitted tau_hat.csv, or None when it is not present."""
-    from coaching import base_data as _BD
-    for d in _BD.candidate_dirs():
+    for d in _search_dirs():
         p = os.path.join(d, "tau_hat.csv")
         if os.path.exists(p):
             return p
@@ -110,7 +123,7 @@ def _fitted_fitter():
     from coaching import base_data as _BD
     from coaching import coach_risk as _CR
 
-    for d in _BD.candidate_dirs():
+    for d in _search_dirs():
         import glob as _glob
         paths = sorted(_glob.glob(os.path.join(d, "pbp_*.parquet")))
         if not paths:
@@ -139,7 +152,7 @@ def _fitted_engine():
     from coaching import base_data as _BD
     from coaching import situational_wp as _SW
 
-    for d in _BD.candidate_dirs():
+    for d in _search_dirs():
         import glob as _glob
         paths = sorted(_glob.glob(os.path.join(d, "pbp_*.parquet")))
         if not paths:
