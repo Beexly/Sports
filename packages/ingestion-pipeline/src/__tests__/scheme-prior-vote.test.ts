@@ -39,11 +39,8 @@ describe("nflverse 2025 scheme prior votes", () => {
     const tilt = await applyContinuousSignalTilt(0.5, SIGNAL_REGISTRY, ctx("KC", "BAL"));
     const vote = tilt.votes.find((v) => v.signalId === "nfl_early_down_proe_momentum");
     expect(vote?.rawValue).toBe(expected);
-    if (expected > 0) {
-      expect(tilt.adjustedHomeP).toBeGreaterThan(0.5);
-    } else {
-      expect(tilt.adjustedHomeP).toBeLessThan(0.5);
-    }
+    // Other 2025 priors also vote on an undated fixture. This signal's sign
+    // is not the slate's sign.
   });
 
   it("abstains when either club is not in the prior", async () => {
