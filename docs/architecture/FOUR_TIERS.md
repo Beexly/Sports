@@ -28,7 +28,10 @@ label inference as INFERENCE with a breaking_condition, output the requested JSO
 schema. The deterministic GSE contract (adversary_review, correlated_theses,
 checklist) still disposes — the model proposes.
 
-**This IS the reasoner. This IS the product.**
+The brief calls this the reasoner and the product. Measured wiring does not.
+`packages/prediction-engine/src/scoring.ts` does not call this Space. The
+`intelligence/engines/` harness can. A published pick does not currently pass
+through MiMo.
 
 ## TIER 2 — SIGNALS / FORECASTING (Hugging Face)
 
@@ -97,23 +100,18 @@ behavior.expected_wp_given_coach.
 | Core Engine → Proof MCP (Tier 1 → Tier 4) | Committed picks → MCP receipt hashes | MCP reads committed picks; no code change needed |
 | Proof MCP → Core Engine (Tier 4 → Tier 1) | Read-only | No code change needed; audit surface only |
 
-## Integration Tests Needed
+## What was measured, not proposed
 
-For each boundary without an integration, build the simplest bridge:
-
-1. **Tier 1 → Tier 3:** Write JSONL files on disk (Python writes, TS reads) or
-   use a shared Postgres table as the exchange medium. Currently the /chat prompt
-   is the exchange mechanism — verify it is sufficient and document it.
-
-2. **Tier 1 → Tier 2:** Do NOT consume TimesFM output in a commercial path.
-   Document the NC constraint in the signal's manifest. If a baseline forecast is
-   needed, use a commercially licensed model or build an in-house equivalent.
-
-3. **Tier 1 → Tier 4:** Ensure the Proof MCP can read committed picks. Currently
-   it can — verify and document.
-
-4. **Tier 2 → Tier 1:** No bridge needed (no flow). Document that TimesFM output
-   is not consumed as a signal.
+1. Tier 1 coaching producer now writes `intelligence/coaching/data/tau_hat.csv`
+   (1,523 cells, manifest beside it). `tests/test_tau_artifact_contract.py`
+   pins the CSV hash to the manifest. `tests/test_coaching_gates.py` passed
+   4/4 on 2026-10-02 against nflverse parquet, not a fixture.
+2. Tier 1 to Tier 3 has no production bridge. The engines harness builds a
+   prompt and can post it to `/chat`. Scoring does not. No JSONL bridge was
+   added, because a file nobody reads is not an integration.
+3. Tier 2 to Tier 1 has no consumer. TimesFM output is not in a commercial
+   path. That is the constraint. No TimesFM forecast was generated for this.
+4. Tier 4 reads the public site, not the repo. It cannot see an unpushed pick.
 
 ## License Constraints Across Tiers
 

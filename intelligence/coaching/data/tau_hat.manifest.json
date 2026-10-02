@@ -1,0 +1,95 @@
+{
+ "artifact": "intelligence/coaching/data/tau_hat.csv",
+ "sha256": "b09e6cf2666cc94a011525e28898a069991f99a505aa5fa2eebfe272f24389bd",
+ "rows": 1523,
+ "producer": "coaching.coach_risk.TauFitter.fit",
+ "producer_entrypoint": "python -m coaching.refit_tau (DATA_DIR still points at the legacy path; this table was fit by calling TauFitter directly on the nflverse parquets named below)",
+ "fit_window": "2022-2026 inclusive, one point fit, not walk-forward",
+ "point_in_time": false,
+ "point_in_time_note": "A 2026 unit cell pools 2026 decisions already in the file (weeks 1-3 as of the 2026-10-02 upstream update). Do not treat a 2026 unit tau as pre-kickoff. fallback_level tells a unit fit from a backoff.",
+ "fallback_level_counts": {
+  "league": 933,
+  "league_region": 373,
+  "pooled": 162,
+  "unit": 55
+ },
+ "columns": [
+  "tau_hat",
+  "n",
+  "hamming_min",
+  "fallback",
+  "team",
+  "season",
+  "region",
+  "wp_bin",
+  "tau_hat_served",
+  "fallback_level"
+ ],
+ "source_license": "nflverse/nflverse-data SPDX CC-BY-4.0. This table is a derivative and keeps that attribution. It is not a TimesFM output and carries no TimesFM non-commercial constraint.",
+ "sources": [
+  {
+   "season": 2022,
+   "filename": "play_by_play_2022.parquet",
+   "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2022.parquet",
+   "sha256": "931121d8897779d7944e2a293e92ed8799c8e5cceef84096ac42339003fedc09",
+   "bytes": 20426548,
+   "upstream_updated_at": "2026-02-12T10:25:24Z",
+   "committed": false,
+   "note": "2022-2025 are local inputs to the fit and are NOT committed (80MB). Re-fetch from the URL; sha256 must match or the table is not this table."
+  },
+  {
+   "season": 2023,
+   "filename": "play_by_play_2023.parquet",
+   "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2023.parquet",
+   "sha256": "bd3484731408def6b0ec93225bba2bd7b2c65769ca707a2b9444d891abdc6776",
+   "bytes": 20534088,
+   "upstream_updated_at": "2026-02-12T10:24:52Z",
+   "committed": false,
+   "note": "2022-2025 are local inputs to the fit and are NOT committed (80MB). Re-fetch from the URL; sha256 must match or the table is not this table."
+  },
+  {
+   "season": 2024,
+   "filename": "play_by_play_2024.parquet",
+   "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2024.parquet",
+   "sha256": "3fd2896bc0b911b615142d2f1fabae54a4bbba5ab7b73b28187b118ef8af6a3b",
+   "bytes": 20597560,
+   "upstream_updated_at": "2026-08-13T12:26:27Z",
+   "committed": false,
+   "note": "2022-2025 are local inputs to the fit and are NOT committed (80MB). Re-fetch from the URL; sha256 must match or the table is not this table."
+  },
+  {
+   "season": 2025,
+   "filename": "play_by_play_2025.parquet",
+   "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2025.parquet",
+   "sha256": "c6ecedd6d678cc37ed316b23ef84ee1ec6abb69c514bb11868a7ebd5a367df29",
+   "bytes": 20337029,
+   "upstream_updated_at": "2026-08-13T12:26:09Z",
+   "committed": false,
+   "note": "2022-2025 are local inputs to the fit and are NOT committed (80MB). Re-fetch from the URL; sha256 must match or the table is not this table."
+  },
+  {
+   "season": 2026,
+   "filename": "play_by_play_2026.parquet",
+   "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2026.parquet",
+   "sha256": "ad20b9292686d0bbc899020062789f3b42b5c8542b9a3d9c1dc3ce317d2d248d",
+   "bytes": 3723133,
+   "upstream_updated_at": "2026-10-02T15:46:33Z",
+   "committed": true,
+   "note": "2022-2025 are local inputs to the fit and are NOT committed (80MB). Re-fetch from the URL; sha256 must match or the table is not this table."
+  }
+ ],
+ "held_out_measurement_2026-10-02": {
+  "protocol": "TauFitter.fit(seasons=[2022, 2023]) then hamming_gate on 2024-2025 opponent-half fourth downs. Separate fit from the served table.",
+  "n": 3988,
+  "acc_tau": 0.3593,
+  "acc_wpmax": 0.2916,
+  "delta_pp": 6.7703,
+  "gate_pass": true,
+  "gate": "delta_pp >= 3"
+ },
+ "do_not": [
+  "Do not cite the served table itself as validated at +6.77pp. That number is the held-out fit above.",
+  "Do not describe fallback_level other than 'unit' as a per-team measurement.",
+  "Do not route any TimesFM output into this table."
+ ]
+}
