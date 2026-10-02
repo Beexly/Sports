@@ -32,6 +32,7 @@ import { kalshiHomeMid } from "./nfl-kalshi-mid.js";
 import { pregameMarketAnchor } from "./nfl-pregame-market.js";
 import { penaltyMatchup } from "./nfl-penalty-matchup.js";
 import { nflQbRushRateSignal } from "./nfl-qb-rush.js";
+import { PERSONNEL_SIGNALS } from "./nfl-personnel.js";
 import { pressureMatchup } from "./nfl-pressure-matchup.js";
 import { restDays2026 } from "./nfl-rest.js";
 import { nflWrAdotSignal } from "./nfl-wr-adot.js";
@@ -1207,6 +1208,7 @@ export const EXTENDED_SIGNALS: readonly SignalDefinition[] = [
   ...INTEL_PRIOR_SIGNALS,
   nflQbRushRateSignal,
   nflWrAdotSignal,
+  ...PERSONNEL_SIGNALS,
   ...NFL_INJURY_SIGNALS,
   nflEspnEnteringRecordSignal,
   nflHomeRoadSplitSignal,
