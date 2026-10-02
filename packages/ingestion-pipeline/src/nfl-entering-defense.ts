@@ -92,7 +92,25 @@ export const nflEnteringRushDefenseSignal = defenseSignal(
   "mean EPA allowed on rush plays, visitor minus home, so a positive value is a better home rush defense",
 );
 
+export const nflEnteringPassSuccessAllowedSignal = defenseSignal(
+  "nfl_entering_pass_success_allowed",
+  "NFL Pass Success Rate Allowed, 2026 weeks 1-3",
+  (row) => row.passPlays,
+  (home, away) => away.passSuccessAllowed - home.passSuccessAllowed,
+  "share of pass plays with EPA above zero allowed, visitor minus home",
+);
+
+export const nflEnteringRushSuccessAllowedSignal = defenseSignal(
+  "nfl_entering_rush_success_allowed",
+  "NFL Rush Success Rate Allowed, 2026 weeks 1-3",
+  (row) => row.rushPlays,
+  (home, away) => away.rushSuccessAllowed - home.rushSuccessAllowed,
+  "share of rush plays with EPA above zero allowed, visitor minus home",
+);
+
 export const ENTERING_DEFENSE_SIGNALS: readonly SignalDefinition[] = [
   nflEnteringPassDefenseSignal,
   nflEnteringRushDefenseSignal,
+  nflEnteringPassSuccessAllowedSignal,
+  nflEnteringRushSuccessAllowedSignal,
 ];
