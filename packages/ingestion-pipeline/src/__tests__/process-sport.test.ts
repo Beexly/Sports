@@ -223,7 +223,19 @@ vi.mock("../build-independent-fair-values.js", async () => {
   return { ...actual, buildIndependentFairValues: recorded };
 });
 
-import { processSport, pickSelectionSide } from "../process-sport.js";
+import { processSport as processSportUngated, pickSelectionSide } from "../process-sport.js";
+import { BOOK_PICK_AUTHORIZATION } from "../book-pick-verdict-gate.js";
+
+/** Existing cases exercise the publish path. Production does not pass this map. */
+const allowGroundedTrace = { get: () => BOOK_PICK_AUTHORIZATION };
+function processSport(
+  sport: Parameters<typeof processSportUngated>[0],
+  apiKey: string,
+  gates: Parameters<typeof processSportUngated>[2],
+  logPrefix?: string,
+) {
+  return processSportUngated(sport, apiKey, gates, logPrefix, allowGroundedTrace);
+}
 import { resetRundownCooldowns } from "../rundown-thin-fill.js";
 import { fetchEspnOddsForSport, isNflPreseasonFetchWindow } from "@sports/data-ingestion";
 
@@ -395,6 +407,13 @@ describe("processSport", () => {
       expect(result).toMatchObject({ status: "success", games: 1 });
       expect(warn.mock.calls.some((c) => /fixture not listed/.test(String(c[0])) && /game-1/.test(String(c[0])))).toBe(true);
       warn.mockRestore();
+    });
+
+    it("mints no book pick when the reasoning-trace verdict is absent", async () => {
+      const result = await processSportUngated(SPORT, "key", gates());
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+      expect(result).toMatchObject({ status: "success" });
     });
 
     it("generates no pick and writes no correction when the board lists the fixture but its ESPN kickoff has already passed", async () => {

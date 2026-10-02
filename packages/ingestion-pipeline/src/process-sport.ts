@@ -63,6 +63,7 @@ import {
   type EloRatingsCache,
 } from "./build-independent-fair-values.js";
 import type { ReadinessGates } from "@sports/prediction-engine";
+import { bookPickVerdictGate } from "./book-pick-verdict-gate.js";
 
 /** Production SHA-256 HashFn for the proof spine — a weak hash would void the guarantee. */
 function sha256Hex(input: string): string {
@@ -333,6 +334,12 @@ export async function processSport(
   apiKey: string,
   gates: ReadinessGates,
   logPrefix: string = "[ingestion]",
+  /**
+   * Per-game reasoning-trace verdicts. Absent, or a game with no entry,
+   * refuses the book pick. Do not pass GROUNDED unless a trace producer
+   * actually emitted it. Tests that exercise the publish path may pass it.
+   */
+  traceVerdicts?: { readonly get: (gameId: string) => string | undefined },
 ): Promise<ProcessSportResult> {
   // Derive once per call — immutable within this invocation.
   // This is the single gating point for bootstrap provenance.
@@ -1269,6 +1276,30 @@ export async function processSport(
       // this one line refuses the create, the PENDING refresh of selection /
       // line / confidence / factorBreakdown, AND the receipt mint below.
       if (!confirmedGameIds.has(pick.gameId)) continue;
+      // Reasoning-trace withhold. Absence is a refusal, not a 0.5.
+      // ASSOCIATION_ONLY opens a signal slate; it does not mint this pick.
+      // An allowed pick is unchanged: this branch only continues.
+      const traceGate = bookPickVerdictGate(traceVerdicts?.get(pick.gameId));
+      if (!traceGate.publishable) {
+        gateDecisionsToPersist.push({
+          gameId: pick.gameId,
+          pickId: null,
+          status: "GATED",
+          reasonCode: traceGate.reasonCode,
+          reason: `${sport.key} ${pick.pickType} ${pick.selection}: ${traceGate.reason}`,
+          confidence: pick.confidence,
+          edgeIndex: pick.edgeScore,
+          modelVersion: pick.modelVersion,
+          isBootstrap,
+          evaluatedAt: fetchedAt,
+          evidenceRefs: {
+            pickType: pick.pickType,
+            selection: pick.selection,
+            line: pick.line,
+          },
+        });
+        continue;
+      }
       // Fields refreshed on every cycle (confidence, grade, market depth).
       // result, settledAt: intentionally absent — never overwritten by refresh.
       // ingestionRunId: intentionally absent from update — preserves creation run ID.

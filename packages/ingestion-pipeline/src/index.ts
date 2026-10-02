@@ -1,4 +1,6 @@
 export { processSport } from "./process-sport.js";
+export { bookPickVerdictGate, BOOK_PICK_AUTHORIZATION } from "./book-pick-verdict-gate.js";
+export type { BookPickVerdictGate } from "./book-pick-verdict-gate.js";
 export type { SportConfig, ProcessSportResult } from "./process-sport.js";
 export {
   settleSport,
