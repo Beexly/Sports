@@ -168,6 +168,12 @@ export function buildPropPlayerInputs(
       prior: {
         mean: posUsagePrior.get(pos) ?? usageMean,
         sampleSize: SHRINKAGE_K_GAMES,
+        // `posUsagePrior` is the mean of the observed per-position values, which
+        // is exactly what `position-prior` names. The label is required by
+        // PlayerRatePrior and was simply omitted here, so the typecheck failed
+        // rather than the code being wrong. Labelling it truthfully is the fix;
+        // defaulting it to a peer pool would claim evidence that was not used.
+        source: "position-prior",
       },
     });
     const effPosterior = estimateNormalNormalRatePosterior({
@@ -179,6 +185,8 @@ export function buildPropPlayerInputs(
       prior: {
         mean: posEffPrior.get(pos) ?? effMean,
         sampleSize: SHRINKAGE_K_GAMES,
+        // Same as the usage prior above: a mean over per-position values.
+        source: "position-prior",
       },
     });
 

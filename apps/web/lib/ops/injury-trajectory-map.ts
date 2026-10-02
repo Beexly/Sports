@@ -23,8 +23,15 @@ import type {
   InjuryPracticeReport,
   OfficialGameStatus,
   PlayerPositionTier,
-  PracticeStatus,
 } from "@sports/prediction-engine";
+// NOT from the barrel. Two modules export a type called `PracticeStatus`:
+// `availability-role-tenure` ("full" | "limited" | "dnp" | "unknown") and
+// `signals/bio/injury-trajectory` ("FP" | "LP" | "DNP" | "DNP_NIR" | "MP"). The
+// barrel re-exports the FIRST, so importing the name from it silently binds the
+// wrong union — and the values this mapper returns are NFL report codes, which
+// belong to the second. Aliased here so the collision is visible at the import
+// rather than as a type error three functions away.
+import type { PracticeStatus } from "@sports/prediction-engine/src/signals/bio/injury-trajectory.js";
 
 export interface InjuryRowLike {
   reportStatus: string | null;

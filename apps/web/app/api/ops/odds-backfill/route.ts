@@ -134,7 +134,11 @@ export async function POST(request: Request): Promise<NextResponse> {
     });
   }
 
-  const client = new OddsApiClient({ apiKey: key });
+  // `OddsApiClient` takes the key POSITIONALLY (`constructor(apiKey: string)`).
+  // Passing `{ apiKey: key }` type-errored and, had it compiled, would have
+  // thrown "THE_ODDS_API_KEY is required" at runtime because the object is
+  // truthy but the key inside it is what the client reads.
+  const client = new OddsApiClient(key);
   const now = new Date();
   let callsMade = 0;
   let rowsWritten = 0;
@@ -173,7 +177,12 @@ export async function POST(request: Request): Promise<NextResponse> {
   // after exactly 1 call regardless of maxCalls.)
   const slot = await reservePaidCallSlot(db as unknown as OddsCreditLedgerDb, {
     sport: NFL_SPORT_KEY,
-    purpose: "odds-backfill",
+    // `PaidCallPurpose` is the closed union "odds" | "scores". This route
+    // fetches ODDS (historical lines), so "odds" is the truthful purpose and is
+    // also the one the credit ledger already meters. "odds-backfill" was not a
+    // member of the union and did not type-check; inventing a fourth purpose
+    // here would have split the ledger's accounting for the same paid call.
+    purpose: "odds",
     now,
     intervalMs: 60 * 60 * 1_000,
   });
