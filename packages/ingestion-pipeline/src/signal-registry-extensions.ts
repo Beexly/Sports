@@ -21,6 +21,7 @@ import { NFL_SCHEME_PRIOR, NFL_SCHEME_PRIOR_SEASON } from "./priors/nfl-2025-sch
 import { DROPBACK_SIGNALS } from "./nfl-dropback-rates.js";
 import { ENTERING_DEFENSE_SIGNALS } from "./nfl-entering-defense.js";
 import { ENTERING_RATE_SIGNALS } from "./nfl-entering-rates.js";
+import { SUCCESS_SIGNALS } from "./nfl-success-rates.js";
 import { SCHEME_MEASURED_SIGNALS } from "./scheme-measured-signals.js";
 import { INTEL_PRIOR_SIGNALS } from "./nfl-intel-priors.js";
 import { NFL_INJURY_SIGNALS } from "./nfl-injury-signals.js";
@@ -1207,6 +1208,7 @@ export const EXTENDED_SIGNALS: readonly SignalDefinition[] = [
   nflKalshiHomeMidSignal,
   nflPressureMatchupSignal,
   ...SCHEME_MEASURED_SIGNALS,
+  ...SUCCESS_SIGNALS,
   ...ENTERING_RATE_SIGNALS,
   ...ENTERING_DEFENSE_SIGNALS,
   ...DROPBACK_SIGNALS,

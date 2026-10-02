@@ -1,0 +1,38 @@
+/**
+ * 2026 weeks 1-3 offensive success. success is EPA above zero.
+ * series_success is the play-file series flag. Week 4 only.
+ */
+export const NFL_2026_W4_SUCCESS: Readonly<Record<string, { readonly successRate: number; readonly seriesSuccessRate: number }>> = {
+  ARI: { successRate: 0.4638, seriesSuccessRate: 0.6667 },
+  ATL: { successRate: 0.4545, seriesSuccessRate: 0.5657 },
+  BAL: { successRate: 0.5243, seriesSuccessRate: 0.6919 },
+  BUF: { successRate: 0.5, seriesSuccessRate: 0.7604 },
+  CAR: { successRate: 0.4115, seriesSuccessRate: 0.6124 },
+  CHI: { successRate: 0.4541, seriesSuccessRate: 0.6972 },
+  CIN: { successRate: 0.4413, seriesSuccessRate: 0.648 },
+  CLE: { successRate: 0.4171, seriesSuccessRate: 0.56 },
+  DAL: { successRate: 0.5027, seriesSuccessRate: 0.754 },
+  DEN: { successRate: 0.4148, seriesSuccessRate: 0.5852 },
+  DET: { successRate: 0.5122, seriesSuccessRate: 0.7415 },
+  GB: { successRate: 0.3679, seriesSuccessRate: 0.5699 },
+  HOU: { successRate: 0.4151, seriesSuccessRate: 0.5755 },
+  IND: { successRate: 0.4421, seriesSuccessRate: 0.6526 },
+  JAX: { successRate: 0.5086, seriesSuccessRate: 0.7314 },
+  KC: { successRate: 0.4949, seriesSuccessRate: 0.7071 },
+  LA: { successRate: 0.4505, seriesSuccessRate: 0.6782 },
+  LAC: { successRate: 0.4084, seriesSuccessRate: 0.5707 },
+  LV: { successRate: 0.4145, seriesSuccessRate: 0.658 },
+  MIA: { successRate: 0.3511, seriesSuccessRate: 0.5745 },
+  MIN: { successRate: 0.3237, seriesSuccessRate: 0.5087 },
+  NE: { successRate: 0.4011, seriesSuccessRate: 0.6096 },
+  NO: { successRate: 0.4739, seriesSuccessRate: 0.7348 },
+  NYG: { successRate: 0.4278, seriesSuccessRate: 0.6203 },
+  NYJ: { successRate: 0.4384, seriesSuccessRate: 0.6404 },
+  PHI: { successRate: 0.3799, seriesSuccessRate: 0.6201 },
+  PIT: { successRate: 0.4021, seriesSuccessRate: 0.567 },
+  SEA: { successRate: 0.4677, seriesSuccessRate: 0.6237 },
+  SF: { successRate: 0.5595, seriesSuccessRate: 0.7976 },
+  TB: { successRate: 0.3684, seriesSuccessRate: 0.5053 },
+  TEN: { successRate: 0.4172, seriesSuccessRate: 0.5828 },
+  WAS: { successRate: 0.4183, seriesSuccessRate: 0.6394 },
+};
