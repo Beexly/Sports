@@ -49,12 +49,19 @@ npm start
 >    standalone long-running worker, not to the deployed Vercel cron path.
 >
 > 2. **Worker run command.** `node workers/data-refresh/index.js` is wrong —
->    no such file exists. The canonical entry is the npm script
->    `workers:refresh` → `node workers/data-refresh/dist/index.js` (run after a
->    build), per `package.json`. The TypeScript source lives at
->    `workers/data-refresh/src/index.ts` (run directly with `ts-node src/index.ts`
->    during development). The same pattern holds for `workers:picks` and
+>    no such file exists. **The 2026-06-30 correction printed here was also
+>    wrong** and is superseded (2026-08-25): `workers:refresh` does NOT run
+>    `node workers/data-refresh/dist/index.js`. Per `package.json` it is
+>    `npm run start --workspace=workers/data-refresh`, whose `start` script is
+>    `ts-node --esm src/index.ts`. The same holds for `workers:picks` and
 >    `workers:content`.
+>
+>    **All three of those commands currently fail on Node 20** (the version CI
+>    pins) with `TypeError [ERR_UNKNOWN_FILE_EXTENSION]: Unknown file extension
+>    ".ts"`, because `--esm` is paired with a CommonJS/NodeNext `tsconfig.json`.
+>    Do not put a worker in a runbook step until that is fixed. Full inventory,
+>    the blast radius, and the open delete/keep/wire-up decision:
+>    **`workers/README.md`**.
 >
 > 3. **Health checks.** `GET /api/health`
 >    (`apps/web/app/api/health/route.ts`) checks ONLY two things: the database
