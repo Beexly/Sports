@@ -51,7 +51,7 @@ export function PropsEdge({
             (market === "All" || l.market === market) &&
             (team === "All" || l.team === team),
         )
-        .map(readProp)
+        .map((p) => readProp(p))
         .sort((a, b) => b.edge - a.edge),
     [lines, market, team],
   );
