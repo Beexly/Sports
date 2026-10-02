@@ -34,6 +34,7 @@ import { penaltyMatchup } from "./nfl-penalty-matchup.js";
 import { nflQbRushRateSignal } from "./nfl-qb-rush.js";
 import { PERSONNEL_SIGNALS } from "./nfl-personnel.js";
 import { pressureMatchup } from "./nfl-pressure-matchup.js";
+import { RAW_COLUMN_SIGNALS } from "./nfl-raw-columns.js";
 import { restDays2026 } from "./nfl-rest.js";
 import { nflWrAdotSignal } from "./nfl-wr-adot.js";
 import { nflWeekOf } from "./nfl-week.js";
@@ -1209,6 +1210,7 @@ export const EXTENDED_SIGNALS: readonly SignalDefinition[] = [
   nflQbRushRateSignal,
   nflWrAdotSignal,
   ...PERSONNEL_SIGNALS,
+  ...RAW_COLUMN_SIGNALS,
   ...NFL_INJURY_SIGNALS,
   nflEspnEnteringRecordSignal,
   nflHomeRoadSplitSignal,
