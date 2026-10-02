@@ -208,7 +208,18 @@ function assessIndependentEdge(
   homeIsChosen: boolean,
   marketFairProb: number,
   dataQualityScore: number,
-  marketConsistent: boolean
+  marketConsistent: boolean,
+  /**
+   * OPTIONAL offline-fitted recalibrator for the published `trueProb`.
+   *
+   * This is the seam that makes the engine's calibration reachable in
+   * production. `edge-engine.ts` can apply a map, but nothing passed one, so the
+   * published probability stayed uncalibrated no matter how good the fits were.
+   * Optional on purpose: with no map this call is byte-identical to before, so
+   * every existing caller keeps its exact behaviour and the change cannot move a
+   * published number until a map is deliberately supplied.
+   */
+  calibrator?: { readonly predict: (p: number) => number },
 ): IndependentEdgeSummary | null {
   if (!fairValues || fairValues.length === 0) return null;
 
@@ -226,6 +237,7 @@ function assessIndependentEdge(
     // Real evidence health shrinks the edge; absent → edge engine's full default.
     evidenceScore: dataQualityScore > 0 ? dataQualityScore : undefined,
     marketConsistent,
+    calibrator,
   });
 
   return {
@@ -663,6 +675,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     fairProb,
     dataQualityScore,
     twoSidedImpliedSum >= 1,
+    input.context?.probabilityCalibrator,
   );
 
   // Our own model prices this side worse than the book. Do not sell it.
@@ -699,7 +712,14 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     depthFactor,
     edgeFactor,
     ...(volatilityFactor ? [volatilityFactor] : []),
-    ...contextFactors,
+    // The zeroed copy, NOT `contextFactors`. Spreading the raw array here
+    // discarded the market-echo guard computed above and published
+    // "Cross-Market Alignment" at weight 4 / impact "positive" while
+    // crossMarketScore contributes 0 to the sum — a claim the number does not
+    // support. SPREAD is the ONLY scorer that can emit a cross-market factor
+    // (`computeCrossMarketScore` gates on marketType === "SPREAD"), so this was
+    // the one path where the guard mattered and the one path that skipped it.
+    ...marketEchoFactors,
     ...shadowEvidenceFactors,
     ...independentEdgeFactors,
   ];
@@ -988,13 +1008,18 @@ function scoreTotalPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
   const dataQualityScore = ctx?.dataQualityScore ?? 0;
   const contextFactors: FactorDetail[] = ctx?.factors ?? [];
   const shadowEvidenceFactors = buildShadowEvidenceFactors(input);
+  // Same market-echo guard the other two scorers apply, so all three paths agree
+  // on the law rather than TOTAL being safe only because
+  // `computeCrossMarketScore` happens to gate on SPREAD today. If that gate ever
+  // widens, a raw spread here would republish the false-weight bug.
+  const marketEchoFactors = zeroMarketEchoFactorWeights(contextFactors);
 
   const factors: FactorDetail[] = [
     consensusFactor,
     depthFactor,
     edgeFactor,
     ...(volatilityFactor ? [volatilityFactor] : []),
-    ...contextFactors,
+    ...marketEchoFactors,
     ...shadowEvidenceFactors,
   ];
 
@@ -1296,7 +1321,8 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     homeIsChosen,
     fairProb,
     dataQualityScore,
-    twoSidedImpliedSum >= 1
+    twoSidedImpliedSum >= 1,
+    input.context?.probabilityCalibrator,
   );
 
   // Our own model prices this side worse than the book. Do not sell it.

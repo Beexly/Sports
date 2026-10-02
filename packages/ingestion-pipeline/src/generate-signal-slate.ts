@@ -26,7 +26,12 @@ import type {
 } from "@sports/types";
 import { buildIndependentFairValues } from "./build-independent-fair-values.js";
 import { SIGNAL_REGISTRY } from "./signal-registry-definitions.js";
-import { applyContinuousSignalTilt } from "./continuous-signal-tilt.js";
+import {
+  applyContinuousSignalTilt,
+  type ContinuousVote,
+} from "./continuous-signal-tilt.js";
+import { deriveSignalGameContextCached, SignalContextCache } from "./signal-game-context.js";
+import { fetchOutdoorVenueWeather } from "./fetch-venue-weather.js";
 import { runLeakageGate, fixtureFromGameRows, evalLeakageQuality } from "./leakage-gate.js";
 import {
   FixtureConfirmer,
@@ -251,7 +256,20 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
       awayTeamName: true,
       commenceTime: true,
       createdAt: true,
-      sport: { select: { key: true, name: true } },
+            // Schedule/situational facts already written by context-enrichment.ts.
+            // Selected because the continuous signals read REST_DAYS / OPP_REST_DAYS
+            // / IS_ROAD_TEAM and were abstaining for want of them — the data was
+            // already on the row, simply never selected. Null (enrichment not yet
+            // run) passes through as absent; the signal abstains rather than guessing.
+            restDaysHome: true,
+            restDaysAway: true,
+            isBackToBackHome: true,
+            isBackToBackAway: true,
+            scheduleDensityHome: true,
+            scheduleDensityAway: true,
+            openingSpread: true,
+            openingTotal: true,
+            sport: { select: { key: true, name: true } },
       // Feeds the survivor rule, which is selectCanonical's rule and not a new
       // one: most picks, most odds children, non-ESPN externalId, oldest row.
       _count: { select: { picks: true, odds: true, oddsLineSnapshots: true } },
@@ -261,6 +279,11 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
   });
   const collapsedGames = collapseGameRowsToFixtures(scannedGames);
   const gameList = collapsedGames.slice(0, SLATE_FIXTURE_LIMIT);
+  // Run-scoped memo for the per-game signal context, created once here rather
+  // than inside the loop: the per-team rate lookup is the expensive query and a
+  // slate frequently carries the same team on the same day across fixtures. It
+  // dies with the run, so no stale rates can leak into a later slate.
+  const signalContextCache = new SignalContextCache();
   // Leakage quality gate input. Fail-open on the live slate: when the probe
   // fixtures are unavailable the factor records "not run" rather than clean.
   // Submission path uses assertSubmissionLeakage (fail-closed).
@@ -495,7 +518,64 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
     // vote a log-odds adjustment on top of the probability blend. Fail-open —
     // never blocks minting when signals abstain.
     let homeP = blend.homeP;
-    let continuousVotes: readonly { signalId: string; tilt: number }[] = [];
+    // The 23 continuous signals declare a `homeSign` and a `neutralValue` and are
+    // wired to vote, but they read their inputs from `ctx.env` — DEFENSIVE_PLAYS,
+    // REST_DAYS, WIND_MPH and the rest. `process.env` holds none of those, so
+    // passing it meant every signal abstained and the whole continuous path was
+    // inert in production while looking wired in the registry. Derive a real
+    // per-game context from TeamGameLog instead; anything the engine cannot
+    // establish is ABSENT, and the evaluator abstains rather than guessing.
+    const signalContext = await deriveSignalGameContextCached(
+      {
+        sportKey,
+        homeTeam,
+        awayTeam,
+        commenceTime,
+        now: () => now,
+        // Straight from the scanned row — no second query. Nulls pass through so
+        // the evaluator abstains instead of receiving a default rest-day number.
+        schedule: {
+                  restDaysHome: game.restDaysHome ?? null,
+                  restDaysAway: game.restDaysAway ?? null,
+                  // NOT defaulted with `?? false`. `isBackToBack` is non-nullable in the
+                  // schema with @default(false), so Prisma returns a real boolean — but
+                  // if it ever came back null/undefined, inventing `false` would assert
+                  // "not a back-to-back" about a game we know nothing about, and it would
+                  // be the sole reason `scheduleEnv` claimed the GameSchedule source on a
+                  // row where nothing was actually read. Null passes through as absent.
+                  isBackToBackHome: game.isBackToBackHome ?? null,
+                  isBackToBackAway: game.isBackToBackAway ?? null,
+                  scheduleDensityHome: game.scheduleDensityHome ?? null,
+                  scheduleDensityAway: game.scheduleDensityAway ?? null,
+                  openingSpread: game.openingSpread ?? null,
+                  openingTotal: game.openingTotal ?? null,
+                },
+      },
+      // Shared across the whole slate run: 80 fixtures often share a team on the
+      // same day, and the rate lookup is the expensive part. The cache key
+      // includes the kickoff DAY, so it cannot serve a later game an earlier
+      // game's view — that would be lookahead, which is the one thing this
+      // context builder must never introduce.
+      signalContextCache,
+    );
+    const weatherEnv: Record<string, string> = { ...signalContext.env };
+    if (opts?.weatherFetch) {
+      const reading = await fetchOutdoorVenueWeather(
+        homeTeam,
+        opts.weatherFetch,
+        4000,
+        commenceTime instanceof Date ? commenceTime : undefined,
+      );
+      if (reading) {
+        weatherEnv.WIND_MPH = String(reading.windMph);
+        if (reading.tempF != null) weatherEnv.TEMP_F = String(reading.tempF);
+        if (reading.precipType != null) weatherEnv.PRECIP_TYPE = reading.precipType;
+        weatherEnv.WEATHER_STADIUM = reading.stadium;
+        weatherEnv.IS_DOME = "0";
+        if (reading.observedFor) weatherEnv.WEATHER_PERIOD_START = reading.observedFor;
+      }
+    }
+    const continuousVotes: ContinuousVote[] = [];
     try {
       const tilt = await applyContinuousSignalTilt(homeP, SIGNAL_REGISTRY, {
         sportKey,
@@ -503,12 +583,12 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
         awayTeam,
         commenceTime,
         spreadHome: null,
-        env: process.env as Record<string, string | undefined>,
+        env: weatherEnv,
         now: () => now,
       });
       if (tilt.applied) {
         homeP = tilt.adjustedHomeP;
-        continuousVotes = tilt.votes;
+        continuousVotes.push(...tilt.votes);
       }
     } catch {
       // fail-open
@@ -669,11 +749,30 @@ export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<Si
           description: leakageDetail,
           weight: leakageClean ? 5 : 15,
         },
-        ...continuousVotes.map((v) => ({
-          name: `Continuous signal — ${v.signalId}`,
-          impact: (v.tilt > 0 ? "positive" : "negative") as "positive" | "negative",
-          description: `Log-odds tilt ${v.tilt.toFixed(4)} (${v.tilt > 0 ? "home" : "away"}).`,
-          weight: Math.min(15, Math.round(Math.abs(v.tilt) * 100)),
+        ...(continuousVotes.map((v) => {
+          // Show the arithmetic, not just the outcome: the raw value in its own
+          // units, the neutral value it was compared against, and the direction
+          // it was declared to mean. A bare "tilt 0.0231 (home)" tells a reader
+          // nothing about WHY the engine leaned that way.
+          const centered = "centeredValue" in v ? v.centeredValue : undefined;
+          const homeSign = "homeSign" in v ? v.homeSign : undefined;
+          const neutral = "neutralValue" in v ? v.neutralValue : undefined;
+          const arithmetic = [
+            `raw ${v.rawValue}`,
+            centered != null ? `neutral ${neutral}` : null,
+            centered != null ? `delta ${centered}` : null,
+            homeSign != null ? `sign ${homeSign > 0 ? "+" : "-"}` : null,
+          ]
+            .filter(Boolean)
+            .join(", ");
+          return {
+            name: `Continuous signal — ${v.signalId}`,
+            impact: (v.tilt > 0 ? "positive" : "negative") as "positive" | "negative",
+            description:
+              `Log-odds tilt ${v.tilt.toFixed(4)} toward ${v.tilt > 0 ? "home" : "away"} ` +
+              `from ${arithmetic} at trustWeight ${v.trustWeight} (${v.family}).`,
+            weight: Math.min(15, Math.round(Math.abs(v.tilt) * 100)),
+          };
         })),
       ],
     };

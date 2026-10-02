@@ -47,6 +47,7 @@ export async function runBoardFillPipeline(opts?: {
     // games already seeded; avoid nested re-seed loop
     skipSeed: true,
     trace: await slateAssociationTrace(),
+    weatherFetch: fetch,
   });
 
   const ok = odds.ok || signals.picksUpserted > 0 || seed.upserted > 0;

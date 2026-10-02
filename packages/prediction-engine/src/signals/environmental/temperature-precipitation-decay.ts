@@ -16,8 +16,8 @@ export interface WeatherConditionContext {
   readonly temperatureFahrenheit: number;
   readonly precipitationType: "NONE" | "LIGHT_RAIN" | "HEAVY_RAIN" | "SNOW" | "FREEZING_RAIN";
   readonly isDomeVenue: boolean;
-  readonly baselinePassingYards: number;
-  readonly baselineGameTotal: number;
+  readonly baselinePassingYards?: number | null;
+  readonly baselineGameTotal?: number | null;
 }
 
 export interface WeatherConditionResult {

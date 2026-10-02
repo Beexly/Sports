@@ -1,0 +1,165 @@
+# Reasoning trace — MONEYLINE
+# Emitted by src/__tests__/traces/emit-traces.mts from real scoreGame() output.
+# gameId=trace-ml-chiefs-eagles  modelVersion=v5.3.0  asOf=2026-04-15T12:00:00.000Z
+# confidence=58  rankingScore=82  tier=FREE
+# arithmetic reconciles: yes (residual 0)  calibration seam: ABSENT — unchanged by law  fitted here: no
+
+══════════════════════════════════════════════════════════════════════════════
+REASONING TRACE — MONEYLINE  Chiefs ML (-800)
+══════════════════════════════════════════════════════════════════════════════
+game       : trace-ml-chiefs-eagles  (NFL)
+matchup    : Eagles @ Chiefs
+picked side: HOME
+line       : -800
+model      : v5.3.0    as of 2026-04-15T12:00:00.000Z
+
+MARKET READ
+──────────────────────────────────────────────────────────────────────────────
+  10 books pricing this market · consensus 87.0%
+  market fair (proportional): 87.0%   Shin (display only): 87.8%
+  entry price: -800   Edge Index: 31/100   data quality: 80/100
+  two-way implied sum (overround): 1.0222 → market CONSISTENT (≥1)
+  books      : fanduel, draftkings, betmgm, caesars, pointsbet, betrivers, wynn, bet365, espnbet, fanatics (+6 more)
+  e.g.        fanduel -800  draftkings -800  betmgm -800  caesars -800
+
+SIGNALS THAT FIRED
+──────────────────────────────────────────────────────────────────────────────
+  FIRED — 4 signal(s) carried weight into the confidence sum:
+    +22.1739  Bookmaker Consensus  [positive]
+             Market implies a 87% win probability for this side
+             fed by: bookmakerOdds
+    +     20  Market Coverage  [positive]
+             10 bookmakers pricing this market
+             fed by: bookmakerCoverageMax, bookmakerOdds
+    -      4  Rest Advantage  [negative]
+             2 more rest days for away team
+             fed by: restDaysHome, restDaysAway, isBackToBackHome, isBackToBackAway
+    +     10  Home ATS Form  [positive]
+             Home covering at 70% ATS (7-3 last 10)
+             fed by: homeAtsForm
+
+  FIRED BUT NOT IN THE CONFIDENCE SUM — 2 context-only factor(s):
+    +      0  Pricing Edge  [neutral]
+             Offered price sits 1.9% above the de-vigged market fair value (market-internal comparison, not a model edge; context only — not in confidence)
+             fed by: bookmakerOdds
+             WHY EXCLUDED: Market-internal: the book's own de-vigged fair value versus the offered price. Both inputs are market quantities, so it is excluded from confidence (scoring.ts:378-397). Its value ships as edgeScore.
+    +     24  Independent Edge (kalshi, poisson)  [positive]
+             2 independent estimates agree (kalshi, poisson) put the side at 92.5% vs the sportsbook's 87.0% fair value — a +5.5% divergence (evidence/uncertainty-adjusted to +4.4%). If correct, the close should move our way: expected CLV +4.4%.
+             fed by: independentFairValues
+             WHY EXCLUDED: Ranking delta, not a confidence term: this weight is `rankingScore − confidence` (scoring.ts:1350-1352). It moved the RANKING key only; the confidence sum never saw it.
+
+SIGNALS THAT DID NOT FIRE (present in the input, produced no factor)
+──────────────────────────────────────────────────────────────────────────────
+  4 input signal(s) were PRESENT and produced NO factor. Each one is listed because
+  silence here is a real engine decision, not an absence of one:
+
+    ✗ Away ATS Form   [WRONG_SIDE_NOT_READ]
+      input field : awayAtsForm
+      input value : 5-5 (n=10)
+      why no factor: The scorer reads only the PICKED side's ATS bucket (game-context.ts:667-675). This is the unpicked side's record (5-5 (n=10)), so it never entered the decision at all.
+
+    ✗ Head-to-Head Form   [GATED_NO_SCORE]
+      input field : headToHeadForm
+      input value : 5-5 (n=10)
+      scored      : +0
+      why no factor: Read 5-5 (n=10) — the H2H ATS rate sits in the neutral band, so the signal scored 0 (game-context.ts:373-381) — no weight emitted.
+
+    ✗ Cross-Market Agreement   [NOT_APPLICABLE_TO_MARKET]
+      input field : derived mlFairProbHome (H2H book rows)
+      input value : derived=0.8696
+      why no factor: Cross-market agreement is defined only as SPREAD-versus-MONEYLINE (game-context.ts:457). This MONEYLINE scorer never reads it, so the moneyline fair probability it derived (0.8696) could not produce a factor here.
+
+    ✗ Signal Conflict   [GATED_NO_SCORE]
+      input field : (derived from lineMovementScore × historicalFormScore × headToHeadScore × crossMarketScore)
+      input value : lineMovement=0 form=10 h2h=0 crossMarket=0
+      scored      : +0
+      why no factor: The conflict detector ran on this pick's own signal values and found no contradicting combination, so it scored 0 and emitted no weight (game-context.ts:602).
+
+
+CONFIDENCE ARITHMETIC
+──────────────────────────────────────────────────────────────────────────────
+  Terms that ENTERED the confidence sum:
+    +22.1739  Bookmaker Consensus
+              source: factorBreakdown.consensusScore
+    +     20  Market Coverage
+              source: factorBreakdown.marketDepthScore
+    +      0  Market Risk (volatility penalty)
+              source: factorBreakdown.volatilityPenalty
+    +      0  Line Movement
+              source: factorBreakdown.lineMovementScore
+    +      0  Data Quality (penalty)
+              source: 0 — dataQualityScore ≥ 50 so computeDataQuality emitted no factor and no penalty (game-context.ts:319-321)
+    -      4  Rest Advantage
+              source: factorBreakdown.factors["Rest Advantage"].weight
+    +     10  Historical ATS Form
+              source: factorBreakdown.factors["Home ATS Form"].weight
+    +      0  Head-to-Head Form
+              source: 0 — no factor fired for this signal
+    +      0  Venue Form
+              source: 0 — no factor fired for this signal
+    +      0  Signal Conflict (uncertainty penalty)
+              source: 0 — no factor fired for this signal
+    +      0  Schedule Density
+              source: 0 — no factor fired for this signal
+    +     10  Board-quality base (flat, always present)
+    ──────────────────────────────────────────────────
+    = 48.1739  sum of included terms
+    + 10  base  = 58.1739
+    clamp(0, 100)          = 58.1739
+    round(...)             = 58
+    pick.confidence        = 58
+
+  RECONCILES ✓ — the trace's arithmetic reproduces the published number exactly.
+
+  Terms EXCLUDED from the confidence sum (2):
+    + 7.6691  Pricing Edge (edgeComponentScore)
+             EXCLUDED by the market-echo guard: 25-max market-internal component, removed from the sum at scoring.ts:657-665 / :1320-1327. Value still ships as the Edge Index (edgeScore).
+    +     24  Independent Edge (kalshi, poisson)
+             Weight 24: this is the RANKING delta (rankingScore − confidence), not a confidence term. It moved rankingScore, never confidence.
+
+INDEPENDENT EDGE
+──────────────────────────────────────────────────────────────────────────────
+  decision        : SPEAK     agreement: CONFIRMS
+  sources consulted: kalshi, poisson
+    · kalshi                 independent P(HOME) = 93.0%
+    · poisson                independent P(HOME) = 92.0%
+  blended         : 92.5%   (weights default to 1, scoring.ts:230)
+  market fair     : 87.0%
+  raw edge        : 5.54 pts
+  shrunk edge     : 4.43 pts
+  expected CLV    : 4.43 pts   conviction: 67/100
+  priced into rank: YES
+  withhold gate   : pricesWorseThanMarket = false
+  rationale       : 2 independent estimates agree (kalshi, poisson) put the side at 92.5% vs the sportsbook's 87.0% fair value — a +5.5% divergence (evidence/uncertainty-adjusted to +4.4%). If correct, the close should move our way: expected CLV +4.4%.
+
+CALIBRATION SEAM
+──────────────────────────────────────────────────────────────────────────────
+  seam present    : NO
+  fitted here     : NO — and it never can be
+  before seam     : 0.9250
+  after seam      : 0.9250
+  delta           : 0.0000
+  moved the value : NO
+
+  NO SEAM. No calibrator was supplied, so by the LAW (edge-engine.ts:92-97)
+  the value is unchanged: the pre-seam blend and the published trueProb are
+  the same number. Nothing was fitted at runtime.
+
+RANKING PATH
+──────────────────────────────────────────────────────────────────────────────
+  rankingScore  : 82
+  rankingP      : 0.8215
+  rankingSource : blend_indep_conf
+  blend terms   : confidence/100 = 0.5800  ·  independent trueProb = 0.9250  (weight 0.7)
+  formula       : 0.3·0.5800 + 0.7·0.9250 = 0.8215
+  priced        : YES — independents drove the ranking key
+
+FINAL PICK
+──────────────────────────────────────────────────────────────────────────────
+  Chiefs ML (-800)
+  confidence 58/100 → tier FREE, grade LEAN, risk LOW_RISK
+  engine prose: Chiefs ML (-800): fair value 87% across 10 bookmakers. Edge: -1.9%. Context: rest disadvantage, independent model edge priced into ranking. Confidence: 58/100 (LEAN). Ranking: 82/100 via blend_indep_conf.
+
+UNRESOLVED: none. Every field in this trace traces to real scored output.
+
+══════════════════════════════════════════════════════════════════════════════

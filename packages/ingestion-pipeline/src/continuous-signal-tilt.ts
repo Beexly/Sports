@@ -20,7 +20,14 @@ export interface ContinuousVote {
   readonly signalId: string;
   readonly family: string;
   readonly trustWeight: number;
+  /** The value the evaluator returned, in its own units (may be a multiplier). */
   readonly rawValue: number;
+  /** rawValue minus the signal's neutral value: the signed delta actually used. */
+  readonly centeredValue: number;
+  /** Which way a larger value points. 1 = favors picked side, -1 = opponent. */
+  readonly homeSign: -1 | 1;
+  /** The value at which this signal asserts nothing (0 for deltas, 1 for ratios). */
+  readonly neutralValue: number;
   /** Signed log-odds contribution (positive = toward home). */
   readonly tilt: number;
 }
@@ -95,15 +102,32 @@ export async function applyContinuousSignalTilt(
         refused.push({ signalId: signal.id, reason: "continuous value is not finite" });
         continue;
       }
-      const homeSign = homeSignOf(continuous.metadata);
-      if (homeSign === null) {
+      const homeSign = signal.homeSign ?? homeSignOf(continuous.metadata);
+      if (homeSign == null) {
         refused.push({
           signalId: signal.id,
-          reason: "unsigned continuous value. metadata.homeSign must be 1 or -1 before it can move a probability",
+          reason:
+            "unsigned continuous value. metadata.homeSign (or the registry's " +
+            "SignalDefinition.homeSign) must be 1 or -1 before it can move a probability",
         });
         continue;
       }
-      const signed = continuous.value * homeSign;
+      // NEUTRAL-VALUE NORMALIZATION. The registry's continuous outputs are not
+      // one scale. Some are signed deltas whose "nothing to say" value is 0;
+      // others are MULTIPLIERS whose neutral value is 1. Feeding a multiplier
+      // through the tilt unchanged would move the probability for its own
+      // neutral value — tanh(1.0) is +0.76, so a fatigue multiplier of exactly
+      // 1.0 ("no effect") would push toward home. That is the engine
+      // inventing a view out of arithmetic, which is the failure this module
+      // exists to prevent. Normalize to a signed delta first, so "no effect"
+      // means no effect on every signal regardless of its units.
+      const neutral = signal.neutralValue ?? 0;
+      const centered = continuous.value - neutral;
+      if (!Number.isFinite(centered)) {
+        refused.push({ signalId: signal.id, reason: "value minus neutralValue is not finite" });
+        continue;
+      }
+      const signed = centered * homeSign;
       const tilt = valueToTilt(signed, signal.trustWeight);
       if (tilt === 0) continue;
 
@@ -112,6 +136,11 @@ export async function applyContinuousSignalTilt(
         family: signal.family,
         trustWeight: signal.trustWeight,
         rawValue: continuous.value,
+        // Recorded so a reasoning trace can show the units and the neutral value
+        // it normalized against, rather than an unexplained number.
+        centeredValue: Number(centered.toFixed(6)),
+        homeSign,
+        neutralValue: neutral,
         tilt: Number(tilt.toFixed(6)),
       });
     } catch (err) {

@@ -19,6 +19,12 @@ export type SignalSlateOptions = {
   readonly skipSeed?: boolean;
   /** Injected fetch for the fixture confirmation scoreboard (tests); defaults to global fetch. */
   readonly fetchImpl?: typeof fetch;
+  /**
+   * National Weather Service fetch for the home venue. Production passes
+   * global fetch. Tests omit it, and the slate then abstains on weather
+   * instead of calling the network.
+   */
+  readonly weatherFetch?: typeof fetch;
   readonly trace: SlateAcceptedTrace;
   readonly reasoningTraceBrand?: never;
 };

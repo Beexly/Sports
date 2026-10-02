@@ -44,7 +44,15 @@ Owner: Motif wires this backlog (Garrett's call, 2026-09-30). Coding agent compo
    the inventory-cited `game-weather-capture.ts` does not exist); universal wiring still market-only
    (`universalSignalsFromPick` → `market.consensus` + `market.devig` only). NWS read path exists
    (`apps/web/lib/weather/game-weather.ts`) but no game-keyed writer.
-4. **`tuneSignalWeights` + team crosswalk — the "weight" step.** Zero non-test callers (barrel export only).
+4. ~~**`tuneSignalWeights` + team crosswalk — the "weight" step.** Zero non-test callers (barrel export only).~~
+   **WIRED (branch `hermes/tune-signal-weights-caller`, unpushed; ledger TUNE-WIRE-1).**
+   `measureSignalWeights` (engine) is the call site and pays the evidence floor in distinct FIXTURES;
+   `tuneSignalWeightsFromLedger` + `GET /api/ops/signal-weights` is the read-only db caller; `resolveWeight`
+   threads the fitted weight through all four projections so it replaces the flat `CATEGORY_PRIORS` 1.0.
+   **The crosswalk turned out not to be needed**: the tuner joins `signals`→`player_game_stats` on `playerId`,
+   never through settled picks, so `TUNE-BLOCK-1`'s broken player→game bridge is bypassed rather than faked.
+   Scope limit, stated so it is not later overclaimed: the outcome is a PLAYER outcome (did the reading predict
+   that player's next game), not a pick-level claim; team-keyed signals are refused and counted.
 5. **Devig oracle + 3 adapters, no production callers.** Math fixed; asymmetric-input tests missing (see above).
 6. **NGS weighting into scoring.** Ingestion dark (`nflverse-ngs.ts` typed-access layer wired dark);
    weighting explicitly founder-gated. Internal-only doctrine respected.

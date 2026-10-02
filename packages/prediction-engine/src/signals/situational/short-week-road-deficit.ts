@@ -15,9 +15,17 @@
 export interface ShortWeekRoadContext {
   readonly isRoadTeam: boolean;
   readonly restDays: number; // e.g. 4 for Sun->Thu, 7 for standard Sun->Sun
-  readonly travelDistanceMiles: number;
+  /**
+   * Air miles, when measured. Null means the distance was not observed.
+   * Absence skips the travel modifier. It is not zero miles and not a guess.
+   */
+  readonly travelDistanceMiles: number | null;
   readonly opponentRestDays: number;
-  readonly isDivisionRivalry: boolean;
+  /**
+   * Null means division membership was not observed. Absence skips the
+   * familiarity dampener. It is not "not a rivalry."
+   */
+  readonly isDivisionRivalry: boolean | null;
 }
 
 export interface ShortWeekRoadResult {
@@ -36,6 +44,8 @@ export function evaluateShortWeekRoadDeficit(ctx: ShortWeekRoadContext): ShortWe
 
   // Acute deficit occurs when visiting on short rest (4 days)
   const acuteDeficit = ctx.isRoadTeam && isShortWeek;
+  const travelKnown = ctx.travelDistanceMiles != null && Number.isFinite(ctx.travelDistanceMiles);
+  const rivalryKnown = ctx.isDivisionRivalry != null;
 
   let spreadPenalty = 0.0;
   let q4FatigueFactor = 1.0;
@@ -44,11 +54,11 @@ export function evaluateShortWeekRoadDeficit(ctx: ShortWeekRoadContext): ShortWe
     // Baseline 4-day road penalty: -1.75 points
     let penalty = -1.75;
 
-    // Compounded by travel distance (>1,000 miles adds fatigue)
-    if (ctx.travelDistanceMiles > 1500) {
+    // Travel modifier only when miles were measured. Unknown is not 0 miles.
+    if (travelKnown && (ctx.travelDistanceMiles as number) > 1500) {
       penalty -= 0.65;
       q4FatigueFactor += 0.25;
-    } else if (ctx.travelDistanceMiles > 800) {
+    } else if (travelKnown && (ctx.travelDistanceMiles as number) > 800) {
       penalty -= 0.35;
       q4FatigueFactor += 0.15;
     }
@@ -59,8 +69,8 @@ export function evaluateShortWeekRoadDeficit(ctx: ShortWeekRoadContext): ShortWe
       q4FatigueFactor += 0.10;
     }
 
-    // Division games have higher scheme familiarity which partially dampens prep deficits
-    if (ctx.isDivisionRivalry) {
+    // Division familiarity dampens the prep deficit only when rivalry is known.
+    if (rivalryKnown && ctx.isDivisionRivalry) {
       penalty += 0.40; // slightly dampens the penalty
     }
 
@@ -70,11 +80,19 @@ export function evaluateShortWeekRoadDeficit(ctx: ShortWeekRoadContext): ShortWe
     spreadPenalty = +0.60;
   }
 
-  // Confidence scales with extreme rest asymmetry and verified distance
+  // Confidence scales with extreme rest asymmetry. Unmeasured miles do not
+  // raise it: a number we did not observe is not evidence.
   const confidence = acuteDeficit ? (opponentHasNormalRest ? 0.88 : 0.78) : 0.65;
 
+  const travelClause = travelKnown
+    ? `${ctx.travelDistanceMiles}mi travel`
+    : "travel not measured";
+  const rivalryClause = rivalryKnown
+    ? (ctx.isDivisionRivalry ? "division rivalry known" : "not a division rivalry")
+    : "rivalry not measured";
+
   const explanation = acuteDeficit
-    ? `Road team on short rest (${ctx.restDays}d vs ${ctx.opponentRestDays}d, ${ctx.travelDistanceMiles}mi travel) incurs ${spreadPenalty.toFixed(2)} pt situational deficit with ${(q4FatigueFactor * 100 - 100).toFixed(0)}% Q4 fatigue elevation.`
+    ? `Road team on short rest (${ctx.restDays}d vs ${ctx.opponentRestDays}d, ${travelClause}, ${rivalryClause}) incurs ${spreadPenalty.toFixed(2)} pt situational deficit with ${(q4FatigueFactor * 100 - 100).toFixed(0)}% Q4 fatigue elevation.`
     : `Neutral or standard rest situational context (${ctx.restDays}d vs ${ctx.opponentRestDays}d).`;
 
   return {

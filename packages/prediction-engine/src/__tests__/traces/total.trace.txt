@@ -1,0 +1,155 @@
+# Reasoning trace — TOTAL
+# Emitted by src/__tests__/traces/emit-traces.mts from real scoreGame() output.
+# gameId=trace-total-celtics-heat  modelVersion=v5.3.0  asOf=2026-04-15T12:00:00.000Z
+# confidence=70  rankingScore=70  tier=PREMIUM
+# arithmetic reconciles: yes (residual 0)  calibration seam: ABSENT — unchanged by law  fitted here: no
+
+══════════════════════════════════════════════════════════════════════════════
+REASONING TRACE — TOTAL  OVER 224.5
+══════════════════════════════════════════════════════════════════════════════
+game       : trace-total-celtics-heat  (NBA)
+matchup    : Heat @ Celtics
+picked side: OVER
+line       : 224.5
+model      : v5.3.0    as of 2026-04-15T12:00:00.000Z
+
+MARKET READ
+──────────────────────────────────────────────────────────────────────────────
+  10 books pricing this market · consensus 100.0%
+  market fair (proportional): 50.0%   Shin (display only): 50.0%
+  entry price: -110   Edge Index: 26/100   data quality: 80/100
+  two-way implied sum (overround): 1.0476 → market CONSISTENT (≥1)
+  books      : fanduel, draftkings, betmgm, caesars, pointsbet, betrivers, wynn, bet365, espnbet, fanatics (+6 more)
+  e.g.        fanduel@224.5 -110  draftkings@224.5 -110  betmgm@224.5 -110  caesars@224.5 -110
+
+SIGNALS THAT FIRED
+──────────────────────────────────────────────────────────────────────────────
+  FIRED — 3 signal(s) carried weight into the confidence sum:
+    +     30  Bookmaker Consensus  [positive]
+             100% of bookmakers align on this side
+             fed by: bookmakerOdds
+    +     20  Market Coverage  [positive]
+             10 bookmakers pricing this market
+             fed by: bookmakerCoverageMax, bookmakerOdds
+    +     10  Line Movement  [positive]
+             Line moved +2.0 pts from open — confirming pick direction
+             fed by: openingSpread, currentSpread, openingTotal, currentTotal
+
+  FIRED BUT NOT IN THE CONFIDENCE SUM — 1 context-only factor(s):
+    +      0  Pricing Edge  [neutral]
+             Offered price sits 2.4% above the de-vigged market fair value (market-internal comparison, not a model edge; context only — not in confidence)
+             fed by: bookmakerOdds
+             WHY EXCLUDED: Market-internal: the book's own de-vigged fair value versus the offered price. Both inputs are market quantities, so it is excluded from confidence (scoring.ts:378-397). Its value ships as edgeScore.
+
+SIGNALS THAT DID NOT FIRE (present in the input, produced no factor)
+──────────────────────────────────────────────────────────────────────────────
+  6 input signal(s) were PRESENT and produced NO factor. Each one is listed because
+  silence here is a real engine decision, not an absence of one:
+
+    ✗ Rest Advantage   [NOT_APPLICABLE_TO_MARKET]
+      input field : restDaysHome/restDaysAway/isBackToBackHome/isBackToBackAway
+      input value : home=3d away=1d b2bHome=false b2bAway=false
+      why no factor: A total is side-agnostic: the scorer deliberately never reads rest for a TOTAL (game-context.ts:653), so this input could not produce a factor.
+
+    ✗ Head-to-Head Form   [NOT_APPLICABLE_TO_MARKET]
+      input field : headToHeadForm
+      input value : 7-3 (n=10)
+      why no factor: Head-to-head ATS form is only read for a side-specific pick; an OVER/UNDER total has no side to attach an H2H ATS record to (game-context.ts:691). The bucket 7-3 (n=10) was supplied and structurally cannot affect a total.
+
+    ✗ Schedule Density   [NOT_APPLICABLE_TO_MARKET]
+      input field : scheduleDensityHome/scheduleDensityAway
+      input value : home=5 away=1 (games in last 7d)
+      why no factor: Totals are not side-specific, so computeScheduleStressScore returns 0 for an OVER/UNDER side by construction (game-context.ts:508-513). The densities home=5 away=1 were supplied but cannot be attributed to a side of a total, so they scored nothing.
+
+    ✗ Cross-Market Agreement   [NOT_APPLICABLE_TO_MARKET]
+      input field : derived mlFairProbHome (H2H book rows)
+      input value : derived=null
+      why no factor: Cross-market agreement is defined only as SPREAD-versus-MONEYLINE (game-context.ts:457). This TOTAL scorer never reads it, so the moneyline fair probability it derived (null) could not produce a factor here.
+
+    ✗ Signal Conflict   [GATED_NO_SCORE]
+      input field : (derived from lineMovementScore × historicalFormScore × headToHeadScore × crossMarketScore)
+      input value : lineMovement=10 form=0 h2h=0 crossMarket=0
+      scored      : +0
+      why no factor: The conflict detector ran on this pick's own signal values and found no contradicting combination, so it scored 0 and emitted no weight (game-context.ts:602).
+
+    ✗ Independent Edge   [NOT_APPLICABLE_TO_MARKET]
+      input field : independentFairValues[kalshi]
+      input value : kalshi: home=0.5 away=0.5
+      why no factor: The TOTAL scorer never consults independent fair values at all (its factorBreakdown at scoring.ts:1054-1070 carries no independentEdge), so kalshi at 0.5 could not affect this pick.
+
+
+CONFIDENCE ARITHMETIC
+──────────────────────────────────────────────────────────────────────────────
+  Terms that ENTERED the confidence sum:
+    +     30  Bookmaker Consensus
+              source: factorBreakdown.consensusScore
+    +     20  Market Coverage
+              source: factorBreakdown.marketDepthScore
+    +      0  Market Risk (volatility penalty)
+              source: factorBreakdown.volatilityPenalty
+    +     10  Line Movement
+              source: factorBreakdown.lineMovementScore
+    +      0  Data Quality (penalty)
+              source: 0 — dataQualityScore ≥ 50 so computeDataQuality emitted no factor and no penalty (game-context.ts:319-321)
+    +     10  Board-quality base (flat, always present)
+    ──────────────────────────────────────────────────
+    = 60  sum of included terms
+    + 10  base  = 70
+    clamp(0, 100)          = 70
+    round(...)             = 70
+    pick.confidence        = 70
+
+  RECONCILES ✓ — the trace's arithmetic reproduces the published number exactly.
+
+  Terms EXCLUDED from the confidence sum (7):
+    +      0  Rest Advantage
+             Excluded from the TOTAL sum: a total is side-agnostic, so computeGameContext scores this signal 0 for a TOTAL and scoring.ts:1014-1020 omits it.
+    +      0  Historical ATS Form
+             Excluded from the TOTAL sum: a total is side-agnostic, so computeGameContext scores this signal 0 for a TOTAL and scoring.ts:1014-1020 omits it.
+    +      0  Head-to-Head Form
+             Excluded from the TOTAL sum: a total is side-agnostic, so computeGameContext scores this signal 0 for a TOTAL and scoring.ts:1014-1020 omits it.
+    +      0  Venue Form
+             Excluded from the TOTAL sum: a total is side-agnostic, so computeGameContext scores this signal 0 for a TOTAL and scoring.ts:1014-1020 omits it.
+    +      0  Signal Conflict (uncertainty penalty)
+             Excluded from the TOTAL sum: a total is side-agnostic, so computeGameContext scores this signal 0 for a TOTAL and scoring.ts:1014-1020 omits it.
+    +      0  Schedule Density
+             Excluded from the TOTAL sum: a total is side-agnostic, so computeGameContext scores this signal 0 for a TOTAL and scoring.ts:1014-1020 omits it.
+    + 6.5476  Pricing Edge (edgeComponentScore)
+             EXCLUDED by the market-echo guard: 25-max market-internal component, removed from the sum at scoring.ts:657-665 / :1320-1327. Value still ships as the Edge Index (edgeScore).
+
+INDEPENDENT EDGE
+──────────────────────────────────────────────────────────────────────────────
+  NOT ASSESSED. No independent fair value was blended for this TOTAL pick.
+  The honest default: with no independent estimate the engine declines rather than manufacture an
+  edge from the market's own price (edge-engine.ts:35-37, :152-166).
+  sources NOT consulted by this TOTAL scorer: kalshi
+
+CALIBRATION SEAM
+──────────────────────────────────────────────────────────────────────────────
+  seam present    : NO
+  fitted here     : NO — and it never can be
+  before seam     : n/a
+  after seam      : n/a
+  delta           : n/a
+  moved the value : NO
+
+  No independent trueProb on this pick, so the seam never had a value to act
+  on. Nothing was fitted and nothing moved.
+
+RANKING PATH
+──────────────────────────────────────────────────────────────────────────────
+  rankingScore  : 70
+  rankingP      : 0.7000
+  rankingSource : confidence
+  blend terms   : confidence/100 = 0.7000  ·  independent trueProb = n/a
+  priced        : no — confidence alone ranked
+
+FINAL PICK
+──────────────────────────────────────────────────────────────────────────────
+  OVER 224.5
+  confidence 70/100 → tier PREMIUM, grade LEAN, risk LOW_RISK
+  engine prose: OVER 224.5 backed by 100% of 10 bookmakers. Fair value: 50%. Edge: -2.4%. Total line moving in pick direction. Confidence: 70/100 (LEAN).
+
+UNRESOLVED: none. Every field in this trace traces to real scored output.
+
+══════════════════════════════════════════════════════════════════════════════
