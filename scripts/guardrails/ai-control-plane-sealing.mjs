@@ -35,6 +35,14 @@ const SKIP_DIRS = new Set([
   "build",
   "coverage",
   "Sports", // Skip nested repo copy to avoid duplicate path violations
+  // Git worktrees are FULL CHECKOUTS of this same repo, living inside it. The
+  // walk below is filesystem-based (not `git ls-files`), so without this it
+  // descends into every `.worktrees/<name>/` and reports those files as
+  // violations of a rule they do not break -- they are copies of files already
+  // scanned at the top level. Observed: 160 phantom violations, and a red CI
+  // check for any developer who has a worktree, while CI itself (which has
+  // none) stayed green. Same class as the nested-repo skip above it.
+  ".worktrees",
 ]);
 
 /** Control-plane modules whose import is restricted to tests/internal. */

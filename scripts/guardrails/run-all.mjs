@@ -59,6 +59,38 @@ const GUARDS = [
   ["dependency-audit", ["node", "scripts/guardrails/dependency-audit.mjs"]],
   ["agent-bash-guard", ["node", "scripts/guardrails/agent-bash-guard.mjs", "--selftest"]],
 ];
+/**
+ * GUARD SELF-TESTS. The entries above are the guards THEMSELVES: they scan the
+ * tree and fail on a violation. These are the tests for the guards, and until
+ * now four of them had no CI step at all:
+ *
+ *   trust-gate.test.mjs (9 cases)                          never ran
+ *   commercial-copy-scan.test.mjs (8)                      never ran
+ *   no-unsupported-performance-claims.test.mjs (13)        never ran
+ *   sealed-holdout-open-scan.test.mjs (2)                 never ran
+ *
+ * All four are green, which is exactly why this matters: a guard can be
+ * neutered -- its pattern narrowed, its fixture list emptied, its exit code
+ * swallowed -- and every guard in the list above keeps passing, because the
+ * thing that would have noticed is the thing nobody was running. This is the
+ * same masking failure this file was written to kill (see its header: an `&&`
+ * chain hid seventeen guards), reintroduced one layer down.
+ *
+ * Run with `node scripts/guardrails/run-all.mjs --selftests` on its own, or as
+ * part of the normal run. Named `selftest:*` so a failure here is never mistaken
+ * for a policy violation in the tree.
+ */
+const GUARD_SELF_TESTS = [
+  ["selftest:trust-gate", ["node", "scripts/guardrails/trust-gate.test.mjs"]],
+  ["selftest:commercial-copy-scan", ["node", "scripts/guardrails/commercial-copy-scan.test.mjs"]],
+  [
+    "selftest:no-unsupported-performance-claims",
+    ["node", "scripts/guardrails/no-unsupported-performance-claims.test.mjs"],
+  ],
+  ["selftest:sealed-holdout-open-scan", ["node", "scripts/guardrails/sealed-holdout-open-scan.test.mjs"]],
+  ["selftest:ai-transport-import-boundary", ["node", "scripts/guardrails/ai-transport-import-boundary.test.mjs"]],
+];
+
 
 function flag(name) {
   const hit = process.argv.find((a) => a.startsWith(`--${name}=`));
@@ -68,22 +100,38 @@ const only = flag("only")?.split(",").map((s) => s.trim()).filter(Boolean) ?? nu
 const skip = flag("skip")?.split(",").map((s) => s.trim()).filter(Boolean) ?? [];
 const serial = process.argv.includes("--serial");
 const asJson = process.argv.includes("--json");
+const selftestsOnly = process.argv.includes("--selftests");
+const skipSelftests = process.argv.includes("--skip-selftests");
+// Self-tests are ON by default. A guard whose own test never runs can be
+// neutered silently; that is the failure this defaults away from. Opt out
+// explicitly with --skip-selftests.
 
-const selected = GUARDS.filter(([name]) => {
-  if (only !== null && !only.includes(name)) return false;
-  if (skip.includes(name)) return false;
+const selftestNames = new Set(GUARD_SELF_TESTS.map(([name]) => name));
+const guardItems = selftestsOnly ? [] : GUARDS;
+const selftestItems = skipSelftests ? [] : GUARD_SELF_TESTS;
+const ALL_ITEMS = [...guardItems, ...selftestItems];
+
+const selected = ALL_ITEMS.filter(([name]) => {
+  // `--only` / `--skip` match a bare guard name, so a caller who names
+  // "trust-gate" gets the guard, not its self-test. `selftest:` prefixed names
+  // select the self-tests directly.
+  const bare = name.replace(/^selftest:/, "");
+  const isSelfTest = selftestNames.has(name);
+  if (only !== null && !only.includes(name) && !only.includes(bare)) return false;
+  if (skip.includes(name) || skip.includes(bare)) return false;
+  if (selftestsOnly && !isSelfTest) return false;
   return true;
 });
 
 // When --only is used, every named guard must exist — a typo should fail loud,
 // not silently pass with "0/0 passed".
 if (only !== null) {
-  const known = new Set(GUARDS.map(([name]) => name));
+  const known = new Set(ALL_ITEMS.map(([name]) => name).concat(GUARDS.map(([n]) => n)));
   const unknown = only.filter((n) => !known.has(n));
   if (unknown.length > 0) {
     console.error(
       `[guardrails] --only references unknown guard(s): ${unknown.join(", ")}\n` +
-        `Available guards: ${GUARDS.map(([n]) => n).join(", ")}`,
+        `Available guards: ${ALL_ITEMS.map(([n]) => n).join(", ")}`,
     );
     process.exit(2);
   }
@@ -134,6 +182,7 @@ const results = await runPool(selected, concurrency);
 const totalMs = Date.now() - startedAt;
 
 const failed = results.filter((r) => !r.ok);
+const selftestFailures = failed.filter((r) => selftestNames.has(r.name));
 
 if (asJson) {
   console.log(JSON.stringify({ totalMs, concurrency, results }, null, 2));
@@ -151,7 +200,21 @@ if (asJson) {
       `(concurrency ${concurrency}).`,
   );
   if (failed.length > 0) {
-    console.log(`[guardrails] FAILED: ${failed.map((f) => f.name).join(", ")}`);
+    // Split the two failure kinds, because they mean opposite things and an
+    // operator must not have to guess which one they are looking at:
+    //   - a plain guard failing  = the TREE has a violation
+    //   - a `selftest:` failing  = the GUARD is broken and stopped checking
+    const guardFails = failed.filter((f) => !selftestNames.has(f.name));
+    const selfFails = failed.filter((f) => selftestNames.has(f.name));
+    if (guardFails.length > 0) {
+      console.log(`[guardrails] VIOLATIONS in tree: ${guardFails.map((f) => f.name).join(", ")}`);
+    }
+    if (selfFails.length > 0) {
+      console.log(
+        `[guardrails] BROKEN GUARDS (self-test failed, so that guard is NOT ` +
+          `trustworthy this run): ${selfFails.map((f) => f.name).join(", ")}`,
+      );
+    }
   }
 }
 
