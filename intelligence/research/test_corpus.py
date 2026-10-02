@@ -28,7 +28,9 @@ def test_window_loads_and_every_weight_is_withheld():
 def test_known_papers_bind_to_code_and_do_not_license_a_claim():
     iwin = cite("1704.00197")
     assert "in_game_win_probability" in iwin["slots"]
-    assert iwin["binding"]["status"] == "state_only"
+    assert iwin["binding"]["status"] == "margin_only"
+    assert iwin["binding"]["module"] == "research.iwinrnfl_ratings"
+    assert iwin["weight"] is None
     kelly = cite("2604.08885")
     assert kelly["binding"]["status"] == "not_run"
     assert BINDINGS["2606.23598"]["status"] == "intervals_required"

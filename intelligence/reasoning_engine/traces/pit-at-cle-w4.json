@@ -58,6 +58,42 @@
       "fired": false,
       "weight": null,
       "weight_status": "prior-not-applied-unless-wind-over-15"
+    },
+    {
+      "signal": "iwinrnfl_expected_margin",
+      "value": {
+        "margin": {
+          "paper": "1704.00197v3",
+          "equation": "h + R_home - R_away",
+          "home": "CLE",
+          "away": "PIT",
+          "home_edge": 2.1777749196602363,
+          "home_rating": -3.822296744803361,
+          "away_rating": -0.688542826738663,
+          "expected_margin": -0.9559789984044617,
+          "n_games": 1187.0,
+          "weight": null,
+          "weight_status": "withheld",
+          "publishes_pick": false
+        },
+        "paper_normal_approx": {
+          "paper": "1704.00197v3",
+          "equation": "Phi((h + R_home - R_away) / 14)",
+          "sigma_points": 14.0,
+          "sigma_source": "paper stated approximation, citation [16], not fitted on this book",
+          "probability": 0.4727796950312628,
+          "weight": null,
+          "weight_status": "withheld",
+          "publishes_pick": false,
+          "note": "Paper approximation for a pre-game normal. Not Table 1. Not a published pick."
+        }
+      },
+      "source": "real",
+      "license": "paper equation on nflverse CC-BY-4.0",
+      "fired": true,
+      "weight": null,
+      "weight_status": "withheld",
+      "note": "Least-squares margin. Table 1 was not applied. Not a pick."
     }
   ],
   "gaps": [
@@ -74,9 +110,14 @@
     "weight_status": "withheld",
     "bindings": {
       "1704.00197": {
-        "module": "kernels.three",
-        "status": "state_only",
-        "claim": "iWinRNFL is not emitted. No in-game win probability is published from this paper."
+        "module": "research.iwinrnfl_ratings",
+        "status": "margin_only",
+        "claim": "Least-squares margin is loaded. Table 1 win probability is refused. Sigma 14 is the paper's statement, not a fitted weight."
+      },
+      "1601.04302": {
+        "module": "research.footballonomics",
+        "status": "benefit_only",
+        "claim": "Fourth-down benefit equation loads. Net benefit is refused until delta_pi is measured. Not a go-for-it call."
       },
       "2604.08885": {
         "module": "staking.screening",

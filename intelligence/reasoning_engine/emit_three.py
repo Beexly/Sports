@@ -39,6 +39,19 @@ def main() -> None:
             "weight": None,
             "weight_status": "prior-not-applied-unless-wind-over-15",
         })
+        rating_path = os.path.join(ROOT, "research", "data", "iwinrnfl_ratings_2026_w4.json")
+        rating_doc = json.load(open(rating_path, encoding="utf-8"))
+        card = next(c for c in rating_doc["cards"] if c["margin"]["home"] == home and c["margin"]["away"] == away)
+        facts.append({
+            "signal": "iwinrnfl_expected_margin",
+            "value": card,
+            "source": "real",
+            "license": "paper equation on nflverse CC-BY-4.0",
+            "fired": True,
+            "weight": None,
+            "weight_status": "withheld",
+            "note": "Least-squares margin. Table 1 was not applied. Not a pick.",
+        })
         doc = {
             "game_id": f"{away}-at-{home}-2026-w4",
             "bet_type": None,

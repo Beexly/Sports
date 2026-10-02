@@ -18,6 +18,7 @@ from integration.providers import DataGapError, ProviderRegistry
 from integration.stubs import fixture_league_avgs
 from qb_behavior.situational.provider import SituationalQBProvider
 from coaching.rest_days import rest_before
+from research.iwinrnfl_ratings import PAPER as RATING_PAPER
 from reasoning_engine.facets import epa_facets
 from reasoning_engine.seal import seal_trace
 from tests.helpers import card_request
@@ -104,6 +105,27 @@ def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int
     else:
         facts.append({"signal": "weather", "value": weather, "fired": weather.get("available", False),
                       "source": weather.get("source", "unknown"), "license": weather.get("license", "unknown")})
+
+    rating_path = os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "research", "data", "iwinrnfl_ratings_2026_w4.json")
+    if season == 2026 and week == 4 and os.path.exists(rating_path):
+        with open(rating_path, encoding="utf-8") as fh:
+            rating_doc = json.load(fh)
+        card = next((c for c in rating_doc["cards"] if c["margin"]["home"] == home and c["margin"]["away"] == away), None)
+        if card is None:
+            gaps.append(f"{RATING_PAPER}: no rating card for {away} at {home}")
+        else:
+            facts.append({
+                "signal": "iwinrnfl_expected_margin",
+                "value": card,
+                "fired": True,
+                "source": "real",
+                "license": "paper equation on nflverse CC-BY-4.0",
+                "weight": None,
+                "weight_status": "withheld",
+                "note": "Margin from the paper's least squares. Table 1 probability was not emitted.",
+            })
+    else:
+        gaps.append(f"{RATING_PAPER}: rating artifact is for 2026 week 4 only")
 
     reg = ProviderRegistry(qb=SituationalQBProvider(), coaching=coaching, trust=None, ol=ol)
     trace = analyze(card_request(), reg, league_avgs=fixture_league_avgs())

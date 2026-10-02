@@ -1,0 +1,131 @@
+{
+  "paper": "1704.00197v3",
+  "equation": "minimize sum (margin - (h + R_home - R_away))^2, sum R = 0",
+  "as_of": "before 2026 week 4",
+  "n_games": 1187.0,
+  "home_edge": 2.1777749196602363,
+  "ratings": {
+    "ARI": -4.092313232524538,
+    "ATL": -3.3778265828642686,
+    "BAL": 6.032286262956333,
+    "BUF": 7.842438902844225,
+    "CAR": -6.769687656768589,
+    "CHI": -1.4408948008047728,
+    "CIN": 1.3932087430190143,
+    "CLE": -3.822296744803361,
+    "DAL": 2.1245324588584067,
+    "DEN": 0.5628479506050953,
+    "DET": 5.497045829379416,
+    "GB": 2.4836989757927186,
+    "HOU": -0.2995813337809555,
+    "IND": -3.0314768321100303,
+    "JAX": 0.8893569937983326,
+    "KC": 5.115204192123832,
+    "LA": 2.206857950316524,
+    "LAC": 0.07906131882348344,
+    "LV": -4.01252752355574,
+    "MIA": -0.4505159930000264,
+    "MIN": 1.7849237026714604,
+    "NE": -1.032658908597062,
+    "NO": -2.00607274309838,
+    "NYG": -4.474640239859132,
+    "NYJ": -4.44783188452114,
+    "PHI": 5.114792580232715,
+    "PIT": -0.688542826738663,
+    "SEA": 2.9678510106682072,
+    "SF": 5.308402708637119,
+    "TB": 0.27982113198557124,
+    "TEN": -6.988236376940469,
+    "WAS": -2.7472270327453234
+  },
+  "gamma_blend": null,
+  "gamma_blend_status": "withheld \u2014 pre-season win totals are not in this repo",
+  "table_1_probability": null,
+  "table_1_status": "refused \u2014 standardization constants were not printed",
+  "held_out_mae_2024_2025": 11.347878113295804,
+  "held_out_note": "Trained on games before 2024 week 1. MAE is points, not a win rate.",
+  "cards": [
+    {
+      "margin": {
+        "paper": "1704.00197v3",
+        "equation": "h + R_home - R_away",
+        "home": "CLE",
+        "away": "PIT",
+        "home_edge": 2.1777749196602363,
+        "home_rating": -3.822296744803361,
+        "away_rating": -0.688542826738663,
+        "expected_margin": -0.9559789984044617,
+        "n_games": 1187.0,
+        "weight": null,
+        "weight_status": "withheld",
+        "publishes_pick": false
+      },
+      "paper_normal_approx": {
+        "paper": "1704.00197v3",
+        "equation": "Phi((h + R_home - R_away) / 14)",
+        "sigma_points": 14.0,
+        "sigma_source": "paper stated approximation, citation [16], not fitted on this book",
+        "probability": 0.4727796950312628,
+        "weight": null,
+        "weight_status": "withheld",
+        "publishes_pick": false,
+        "note": "Paper approximation for a pre-game normal. Not Table 1. Not a published pick."
+      }
+    },
+    {
+      "margin": {
+        "paper": "1704.00197v3",
+        "equation": "h + R_home - R_away",
+        "home": "BUF",
+        "away": "NE",
+        "home_edge": 2.1777749196602363,
+        "home_rating": 7.842438902844225,
+        "away_rating": -1.032658908597062,
+        "expected_margin": 11.052872731101523,
+        "n_games": 1187.0,
+        "weight": null,
+        "weight_status": "withheld",
+        "publishes_pick": false
+      },
+      "paper_normal_approx": {
+        "paper": "1704.00197v3",
+        "equation": "Phi((h + R_home - R_away) / 14)",
+        "sigma_points": 14.0,
+        "sigma_source": "paper stated approximation, citation [16], not fitted on this book",
+        "probability": 0.7850874295556259,
+        "weight": null,
+        "weight_status": "withheld",
+        "publishes_pick": false,
+        "note": "Paper approximation for a pre-game normal. Not Table 1. Not a published pick."
+      }
+    },
+    {
+      "margin": {
+        "paper": "1704.00197v3",
+        "equation": "h + R_home - R_away",
+        "home": "CHI",
+        "away": "NYJ",
+        "home_edge": 2.1777749196602363,
+        "home_rating": -1.4408948008047728,
+        "away_rating": -4.44783188452114,
+        "expected_margin": 5.184712003376603,
+        "n_games": 1187.0,
+        "weight": null,
+        "weight_status": "withheld",
+        "publishes_pick": false
+      },
+      "paper_normal_approx": {
+        "paper": "1704.00197v3",
+        "equation": "Phi((h + R_home - R_away) / 14)",
+        "sigma_points": 14.0,
+        "sigma_source": "paper stated approximation, citation [16], not fitted on this book",
+        "probability": 0.6444341362009576,
+        "weight": null,
+        "weight_status": "withheld",
+        "publishes_pick": false,
+        "note": "Paper approximation for a pre-game normal. Not Table 1. Not a published pick."
+      }
+    }
+  ],
+  "publishes_pick": false
+}

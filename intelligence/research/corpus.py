@@ -30,9 +30,14 @@ SLOT_RULES: tuple[tuple[str, tuple[str, ...]], ...] = (
 # Code that already exists, and what this window does NOT license us to say.
 BINDINGS: dict[str, dict[str, str]] = {
     "1704.00197": {
-        "module": "kernels.three",
-        "status": "state_only",
-        "claim": "iWinRNFL is not emitted. No in-game win probability is published from this paper.",
+        "module": "research.iwinrnfl_ratings",
+        "status": "margin_only",
+        "claim": "Least-squares margin is loaded. Table 1 win probability is refused. Sigma 14 is the paper's statement, not a fitted weight.",
+    },
+    "1601.04302": {
+        "module": "research.footballonomics",
+        "status": "benefit_only",
+        "claim": "Fourth-down benefit equation loads. Net benefit is refused until delta_pi is measured. Not a go-for-it call.",
     },
     "2604.08885": {
         "module": "staking.screening",
