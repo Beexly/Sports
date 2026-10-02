@@ -1,0 +1,22 @@
+{
+  "n_pairs": 6022,
+  "spearman_xfp": 0.210119,
+  "spearman_naive": 0.226608,
+  "delta_rho": -0.016489,
+  "rmse_xfp": 8.696999,
+  "rmse_naive": 10.271886,
+  "delta_rho_ci_low": -0.03959,
+  "delta_rho_ci_high": 0.008622,
+  "kill_line_passed": false,
+  "verdict": "FAIL: xFP does not beat naive raw FP on holdout Spearman",
+  "attribution": "Data via nflverse (nflverse-data), CC BY 4.0",
+  "train_max_season": 2019,
+  "holdout_seasons": [
+    2020,
+    2025
+  ],
+  "min_opps": 8,
+  "scoring": "standard PPR (nflverse fantasy_points_ppr preferred)",
+  "bootstrap_reps": 2000,
+  "bootstrap_unit": "season-week"
+}
