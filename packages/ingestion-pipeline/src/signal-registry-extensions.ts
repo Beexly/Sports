@@ -34,6 +34,7 @@ import { penaltyMatchup } from "./nfl-penalty-matchup.js";
 import { nflQbRushRateSignal } from "./nfl-qb-rush.js";
 import { pressureMatchup } from "./nfl-pressure-matchup.js";
 import { restDays2026 } from "./nfl-rest.js";
+import { nflWrAdotSignal } from "./nfl-wr-adot.js";
 import { nflWeekOf } from "./nfl-week.js";
 import { classifyNflBroadcast, isStandalonePrimetime } from "./nfl-broadcast.js";
 
@@ -1205,6 +1206,7 @@ export const EXTENDED_SIGNALS: readonly SignalDefinition[] = [
   ...ENTERING_DEFENSE_SIGNALS,
   ...INTEL_PRIOR_SIGNALS,
   nflQbRushRateSignal,
+  nflWrAdotSignal,
   ...NFL_INJURY_SIGNALS,
   nflEspnEnteringRecordSignal,
   nflHomeRoadSplitSignal,
