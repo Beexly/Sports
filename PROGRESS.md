@@ -13,3 +13,7 @@
 ## Suite C (after tau commit, before exclusivity fix)
 
 804 tests, 784 PASS, 14 FAIL, 6 SKIP. Ten are the missing seed CSVs. Four are tau-absence tests that fell through to the committed tau_hat.csv / pbp. Fix in progress: GSE_COACHING_DATA_DIR is exclusive for the tau table.
+
+## HF re-query 2026-10-02T17:57:25Z
+
+mimo-brain-engine RUNNING zero-a10g. studio-chat RUNNING zero-a10g. gse-watch-pipeline RUNNING cpu-basic. timesfm3-benchmark PAUSED. gse-proof-mcp PAUSED.

@@ -1,7 +1,5 @@
 {
-  "provenance": "Copied from the read-only inventory survey written against commit cc151ddd3. Label SURVEY. Not re-audited line by line in this commit. The live scoring path still bypasses SIGNAL_REGISTRY. This file is an inventory, not a runtime registry.",
-  "survey_commit": "cc151ddd3",
-  "count": 47,
+  "provenance": "Regenerated 2026-10-02T17:57:25Z at HEAD 531b39a43. wired_state is taken from the prior survey field plus the homeSign wire. This is not a fresh line-by-line re-read of all 47 evaluators. Prior survey commit remains cc151ddd3.",
   "signals": [
     {
       "id": "prefetched_exchange",
@@ -40,7 +38,12 @@
       "label": "\"Caller-supplied / Pre-fetched Exchange Fair Value\"",
       "output_kind": "2WAY_PROBABILITY",
       "activation_status": "ACTIVE",
-      "trust_weight": "1.0"
+      "trust_weight": "1.0",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "STUB_OR_CONSTANT",
+        "evidence": "evaluate is `return null` with the comment 'Handled directly when prefetched rows are passed' - packages/ingestion-pipeline/src/signal-registry-definitions.ts:91-94. The registry entry computes nothing; the prefetched rows are copied by buildIndependentFairValues:456-464."
+      }
     },
     {
       "id": "kalshi",
@@ -79,7 +82,12 @@
       "label": "\"Kalshi Exchange Real-time Fair Value\"",
       "output_kind": "2WAY_PROBABILITY",
       "activation_status": "ACTIVE",
-      "trust_weight": "1.0"
+      "trust_weight": "1.0",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "tryKalshiFairValue - packages/ingestion-pipeline/src/build-independent-fair-values.ts:473 (imported at :25 from ./build-independent-fair-values.js), a live Kalshi exchange fetch."
+      }
     },
     {
       "id": "espn_powerindex",
@@ -118,7 +126,12 @@
       "label": "\"ESPN Football Power Index (FPI) Logistic\"",
       "output_kind": "2WAY_PROBABILITY",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.8"
+      "trust_weight": "0.8",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "tryEspnPowerIndexFairValue - build-independent-fair-values.ts:485, gated by isEspnPowerIndexCleared (independent-source-rights.ts:22-28)."
+      }
     },
     {
       "id": "clubelo",
@@ -157,7 +170,12 @@
       "label": "\"ClubElo European Football Ratings\"",
       "output_kind": "2WAY_PROBABILITY",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.9"
+      "trust_weight": "0.9",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "tryClubEloFairValue - build-independent-fair-values.ts:495 (free ClubElo CSV)."
+      }
     },
     {
       "id": "poisson_dixon_coles",
@@ -196,7 +214,12 @@
       "label": "\"Team Rate Scoring Model (Dixon-Coles / Poisson)\"",
       "output_kind": "2WAY_PROBABILITY",
       "activation_status": "ACTIVE",
-      "trust_weight": "1.0"
+      "trust_weight": "1.0",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "poissonIndependentFairValue / dixonColesIndependentFairValue over getTeamScoringRecords + getLeagueAverageScored - build-independent-fair-values.ts:497-520."
+      }
     },
     {
       "id": "skellam_cover",
@@ -235,7 +258,12 @@
       "label": "\"Skellam Cover Spread Fair Value\"",
       "output_kind": "SPREAD_COVER_PROBABILITY",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.85"
+      "trust_weight": "0.85",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "skellamCoverFairValue over real team scoring records - build-independent-fair-values.ts; SKELLAM_COVER_SOURCE = \"skellam_cover\" at packages/prediction-engine/src/skellam.ts:33."
+      }
     },
     {
       "id": "mlb_standings",
@@ -274,7 +302,12 @@
       "label": "\"MLB Official Standings Win% Logistic\"",
       "output_kind": "2WAY_PROBABILITY",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.75"
+      "trust_weight": "0.75",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "tryMlbStandingsFairValue - build-independent-fair-values.ts, called in the MLB branch."
+      }
     },
     {
       "id": "elo",
@@ -313,7 +346,12 @@
       "label": "\"Chronological Team Results Elo\"",
       "output_kind": "2WAY_PROBABILITY",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.9"
+      "trust_weight": "0.9",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "getOrFitEloRatings + eloFairValueFromRatings - build-independent-fair-values.ts."
+      }
     },
     {
       "id": "polymarket_gamma_internal",
@@ -352,7 +390,12 @@
       "label": "\"Polymarket Prediction Exchange Gamma Fair Value\"",
       "output_kind": "2WAY_PROBABILITY",
       "activation_status": "SHADOW_ONLY",
-      "trust_weight": "0.5"
+      "trust_weight": "0.5",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "tryPolymarketIndependentFairValue - build-independent-fair-values.ts, SHADOW_ONLY."
+      }
     },
     {
       "id": "nfl_epa_adj",
@@ -391,7 +434,12 @@
       "label": "\"NFL Opponent-Adjusted EPA/Play (nflverse)\"",
       "output_kind": "2WAY_PROBABILITY",
       "activation_status": "ACTIVE",
-      "trust_weight": "1.0"
+      "trust_weight": "1.0",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "tryNflEpaFairValue - build-independent-fair-values.ts; nflverse EPA rows, CC-BY-4.0."
+      }
     },
     {
       "id": "nfl_contract_incentives",
@@ -430,7 +478,12 @@
       "label": "\"NFL Player Contract Incentives & Milestones\"",
       "output_kind": "2WAY_PROBABILITY",
       "activation_status": "BLOCKED_MISSING_SOURCE",
-      "trust_weight": "0.0"
+      "trust_weight": "0.0",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "STUB_OR_CONSTANT",
+        "evidence": "No evaluate is declared; the registry lists it BLOCKED_MISSING_SOURCE. blockedReason and acquisitionTask are set at packages/ingestion-pipeline/src/signal-registry-definitions.ts:584. BLOCKED_MISSING_SOURCE entries declare no evaluate at all; blockedReason and acquisitionTask name the missing acquisition."
+      }
     },
     {
       "id": "nfl_cognitive_load_fatigue",
@@ -469,7 +522,12 @@
       "label": "\"NFL Cognitive Load & Thursday Night Travel Stress\"",
       "output_kind": "2WAY_PROBABILITY",
       "activation_status": "BLOCKED_MISSING_SOURCE",
-      "trust_weight": "0.0"
+      "trust_weight": "0.0",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "STUB_OR_CONSTANT",
+        "evidence": "No evaluate is declared; the registry lists it BLOCKED_MISSING_SOURCE. blockedReason and acquisitionTask are set at packages/ingestion-pipeline/src/signal-registry-definitions.ts:600. BLOCKED_MISSING_SOURCE entries declare no evaluate at all; blockedReason and acquisitionTask name the missing acquisition."
+      }
     },
     {
       "id": "nfl_beat_desk_corroboration",
@@ -508,7 +566,12 @@
       "label": "\"NFL Beat Reporter Injury & Depth Chart Insights\"",
       "output_kind": "2WAY_PROBABILITY",
       "activation_status": "BLOCKED_MISSING_SOURCE",
-      "trust_weight": "0.0"
+      "trust_weight": "0.0",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "STUB_OR_CONSTANT",
+        "evidence": "No evaluate is declared; the registry lists it BLOCKED_MISSING_SOURCE. blockedReason and acquisitionTask are set at packages/ingestion-pipeline/src/signal-registry-definitions.ts:616. BLOCKED_MISSING_SOURCE entries declare no evaluate at all; blockedReason and acquisitionTask name the missing acquisition."
+      }
     },
     {
       "id": "nfl_trench_pass_block_win_rate",
@@ -547,7 +610,12 @@
       "label": "\"NFL Offensive vs Defensive Line Pass Block Win Rate (PBWR)\"",
       "output_kind": "2WAY_PROBABILITY",
       "activation_status": "BLOCKED_MISSING_SOURCE",
-      "trust_weight": "0.0"
+      "trust_weight": "0.0",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "STUB_OR_CONSTANT",
+        "evidence": "No evaluate is declared; the registry lists it BLOCKED_MISSING_SOURCE. blockedReason and acquisitionTask are set at packages/ingestion-pipeline/src/signal-registry-definitions.ts:632. BLOCKED_MISSING_SOURCE entries declare no evaluate at all; blockedReason and acquisitionTask name the missing acquisition."
+      }
     },
     {
       "id": "nfl_luck_fumble_regression",
@@ -586,7 +654,12 @@
       "label": "\"NFL Fumble Recovery & 3rd Down Conversion Luck Regression\"",
       "output_kind": "2WAY_PROBABILITY",
       "activation_status": "BLOCKED_MISSING_SOURCE",
-      "trust_weight": "0.0"
+      "trust_weight": "0.0",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "STUB_OR_CONSTANT",
+        "evidence": "No evaluate is declared; the registry lists it BLOCKED_MISSING_SOURCE. blockedReason and acquisitionTask are set at packages/ingestion-pipeline/src/signal-registry-definitions.ts:648. BLOCKED_MISSING_SOURCE entries declare no evaluate at all; blockedReason and acquisitionTask name the missing acquisition."
+      }
     },
     {
       "id": "nfl_wind_elasticity",
@@ -625,7 +698,12 @@
       "label": "\"NFL Wind Elasticity & Convex Passing/FG Decay\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.10"
+      "trust_weight": "0.10",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "calculateWindElasticity (packages/prediction-engine/src/signals/environment/wind-elasticity.ts), invoked at packages/ingestion-pipeline/src/signal-registry-definitions.ts:685. Real math, but its input is process.env.WIND_MPH, which has zero writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_coaching_tendencies",
@@ -664,7 +742,12 @@
       "label": "\"NFL Coaching 2nd-Down Run Alternation & 4th Down Conservatism\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.08"
+      "trust_weight": "0.08",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "STUB_OR_CONSTANT",
+        "evidence": "evaluate returns null unconditionally after the sport guard (packages/ingestion-pipeline/src/signal-registry-definitions.ts:703) - it computes no fact at all. These evaluate bodies are `return null` after the sport guard only, so no value can ever be produced. Independently recorded at docs/ops/wiring-backlog-2026-10-01.md item 7."
+      }
     },
     {
       "id": "nfl_injury_trajectory",
@@ -703,7 +786,12 @@
       "label": "\"NFL Practice Report Wed/Thu/Fri Trajectory & Questionable Fade\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.12"
+      "trust_weight": "0.12",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "STUB_OR_CONSTANT",
+        "evidence": "evaluate returns null unconditionally after the sport guard (packages/ingestion-pipeline/src/signal-registry-definitions.ts:727) - it computes no fact at all. These evaluate bodies are `return null` after the sport guard only, so no value can ever be produced. Independently recorded at docs/ops/wiring-backlog-2026-10-01.md item 7."
+      }
     },
     {
       "id": "nfl_redzone_te_leverage",
@@ -742,7 +830,12 @@
       "label": "\"NFL Red Zone TE Leverage & Scoring Efficiency\"",
       "output_kind": "2WAY_PROBABILITY",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.10"
+      "trust_weight": "0.10",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "STUB_OR_CONSTANT",
+        "evidence": "evaluate returns null unconditionally after the sport guard (packages/ingestion-pipeline/src/signal-registry-definitions.ts:751) - it computes no fact at all. These evaluate bodies are `return null` after the sport guard only, so no value can ever be produced. Independently recorded at docs/ops/wiring-backlog-2026-10-01.md item 7."
+      }
     },
     {
       "id": "nfl_offensive_line_trench",
@@ -781,7 +874,12 @@
       "label": "\"NFL Offensive Line Continuity & PBWR Trench Edge\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.12"
+      "trust_weight": "0.12",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "STUB_OR_CONSTANT",
+        "evidence": "evaluate returns null unconditionally after the sport guard (packages/ingestion-pipeline/src/signal-registry-definitions.ts:775) - it computes no fact at all. These evaluate bodies are `return null` after the sport guard only, so no value can ever be produced. Independently recorded at docs/ops/wiring-backlog-2026-10-01.md item 7."
+      }
     },
     {
       "id": "nfl_referee_crew_tendencies",
@@ -820,7 +918,12 @@
       "label": "\"NFL Referee Crew Penalty & Total Points Elasticity\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.08"
+      "trust_weight": "0.08",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "STUB_OR_CONSTANT",
+        "evidence": "evaluate returns null unconditionally after the sport guard (packages/ingestion-pipeline/src/signal-registry-definitions.ts:799) - it computes no fact at all. These evaluate bodies are `return null` after the sport guard only, so no value can ever be produced. Independently recorded at docs/ops/wiring-backlog-2026-10-01.md item 7."
+      }
     },
     {
       "id": "nfl_circadian_travel_fatigue",
@@ -859,7 +962,12 @@
       "label": "\"NFL Circadian Rhythm & Timezone Travel Fatigue\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.09"
+      "trust_weight": "0.09",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "STUB_OR_CONSTANT",
+        "evidence": "evaluate returns null unconditionally after the sport guard (packages/ingestion-pipeline/src/signal-registry-definitions.ts:823) - it computes no fact at all. These evaluate bodies are `return null` after the sport guard only, so no value can ever be produced. Independently recorded at docs/ops/wiring-backlog-2026-10-01.md item 7."
+      }
     },
     {
       "id": "nfl_contract_milestones",
@@ -898,7 +1006,12 @@
       "label": "\"NFL Late-Season Contract Incentives & Milestone Funneling\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.11"
+      "trust_weight": "0.11",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "STUB_OR_CONSTANT",
+        "evidence": "evaluate returns null unconditionally after the sport guard (packages/ingestion-pipeline/src/signal-registry-definitions.ts:847) - it computes no fact at all. These evaluate bodies are `return null` after the sport guard only, so no value can ever be produced. Independently recorded at docs/ops/wiring-backlog-2026-10-01.md item 7."
+      }
     },
     {
       "id": "nfl_wr1_out_redistribution",
@@ -937,7 +1050,12 @@
       "label": "\"NFL Alpha WR1-Out Vacated Target Reallocation & Efficiency Decay\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.14"
+      "trust_weight": "0.14",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "STUB_OR_CONSTANT",
+        "evidence": "evaluate returns null unconditionally after the sport guard (packages/ingestion-pipeline/src/signal-registry-definitions.ts:871) - it computes no fact at all. These evaluate bodies are `return null` after the sport guard only, so no value can ever be produced. Independently recorded at docs/ops/wiring-backlog-2026-10-01.md item 7."
+      }
     },
     {
       "id": "nfl_turnover_luck",
@@ -976,7 +1094,12 @@
       "label": "\"NFL Turnover Luck (recovery variance vs skill)\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.12"
+      "trust_weight": "0.12",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "computeTurnoverLuck (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:59. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_short_week_road_deficit",
@@ -1015,7 +1138,12 @@
       "label": "\"NFL Short-Week Road Rest Deficit\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.11"
+      "trust_weight": "0.11",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateShortWeekRoadDeficit (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:115. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_age_conditioned_rest",
@@ -1054,7 +1182,9 @@
       "label": "\"NFL Age-Conditioned Rest Recovery\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.08"
+      "trust_weight": "0.08",
+      "wired_state": "partial",
+      "_blocked_reason": "homeSign +1 landed at e28e4b808. Live slate still passes process.env. Those keys have no writer."
     },
     {
       "id": "nfl_fourth_down_aggressiveness",
@@ -1093,7 +1223,12 @@
       "label": "\"NFL Fourth-Down Coaching Aggressiveness\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.09"
+      "trust_weight": "0.09",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateFourthDownCoachingAggressiveness (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:205. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_second_and_ten_tendency",
@@ -1132,7 +1267,12 @@
       "label": "\"NFL 2nd-and-10 Play-Calling Tendency (Lopez)\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.07"
+      "trust_weight": "0.07",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateLopezSecondAndTenTendency (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:239. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_primetime_target_concentration",
@@ -1171,7 +1311,12 @@
       "label": "\"NFL Primetime Target Concentration\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.08"
+      "trust_weight": "0.08",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluatePrimetimeTargetConcentration (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:271. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_early_down_proe_momentum",
@@ -1210,7 +1355,12 @@
       "label": "\"NFL Early-Down PROE Momentum\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.10"
+      "trust_weight": "0.10",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateEarlyDownProeMomentum (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:305. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_two_minute_hurry_up",
@@ -1249,7 +1399,12 @@
       "label": "\"NFL Two-Minute Hurry-Up Efficiency\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.08"
+      "trust_weight": "0.08",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateTwoMinuteHurryUpEfficiency (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:337. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_bye_week_defensive_install",
@@ -1288,7 +1443,12 @@
       "label": "\"NFL Bye-Week Defensive Installation Edge\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.09"
+      "trust_weight": "0.09",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateByeWeekDefensiveInstallation (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:369. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_qb_twp_regression",
@@ -1327,7 +1487,12 @@
       "label": "\"NFL QB Turnover-Worthy-Play Regression\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.13"
+      "trust_weight": "0.13",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateQbTwpRegression (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:403. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_qb_receiver_continuity",
@@ -1366,7 +1531,12 @@
       "label": "\"NFL QB-Receiver Continuity\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.10"
+      "trust_weight": "0.10",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateQbReceiverContinuity (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:439. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_penalty_differential_momentum",
@@ -1405,7 +1575,12 @@
       "label": "\"NFL Penalty Differential Momentum\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.07"
+      "trust_weight": "0.07",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluatePenaltyDifferentialMomentum (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:471. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_backup_qb_target_distribution",
@@ -1444,7 +1619,12 @@
       "label": "\"NFL Backup-QB Target Distribution Shift\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.11"
+      "trust_weight": "0.11",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateBackupQbTargetDistribution (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:505. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_man_zone_receiver_archetype",
@@ -1483,7 +1663,12 @@
       "label": "\"NFL Man/Zone Receiver Archetype Matchup\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.10"
+      "trust_weight": "0.10",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateManZoneReceiverArchetype (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:539. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_wr1_vacated_target_efficiency",
@@ -1522,7 +1707,12 @@
       "label": "\"NFL WR1-Out Efficiency Decay\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.10"
+      "trust_weight": "0.10",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "STUB_OR_CONSTANT",
+        "evidence": "Calls evaluateWr1OutRedistributionPlaceholder (defined packages/ingestion-pipeline/src/signal-registry-extensions.ts:609-617) - a hard-coded literal formula (`wr2 + vacated*0.45`, `*0.6`) with no data source behind it. The function name declares the placeholder status."
+      }
     },
     {
       "id": "nfl_redzone_opportunity_conversion",
@@ -1561,7 +1751,12 @@
       "label": "\"NFL Red-Zone Opportunity Conversion\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.11"
+      "trust_weight": "0.11",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateRedZoneOpportunityConversion (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:620. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_negative_binomial_redzone_td",
@@ -1600,7 +1795,12 @@
       "label": "\"NFL Negative-Binomial Red-Zone TD Rate\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.10"
+      "trust_weight": "0.10",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateNegativeBinomialRedzoneTd (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:654. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_redzone_personnel_grouping",
@@ -1639,7 +1839,12 @@
       "label": "\"NFL Red-Zone Personnel Grouping Edge\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.09"
+      "trust_weight": "0.09",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateRedZonePersonnelGrouping (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:688. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_rookie_breakout_cohort",
@@ -1678,7 +1883,12 @@
       "label": "\"NFL Rookie Breakout Cohort\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.06"
+      "trust_weight": "0.06",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateRookieBreakoutCohort (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:722. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_high_altitude_fatigue",
@@ -1717,7 +1927,12 @@
       "label": "\"NFL High-Altitude Fatigue Decay\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.07"
+      "trust_weight": "0.07",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateHighAltitudeFatigueDecay (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:758. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_linear_wind_pass_impact",
@@ -1756,7 +1971,12 @@
       "label": "\"NFL Linear Wind Passing Impact\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.08"
+      "trust_weight": "0.08",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateLinearWindPassImpact (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:790. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_temperature_precipitation_decay",
@@ -1795,7 +2015,12 @@
       "label": "\"NFL Temperature & Precipitation Decay\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.08"
+      "trust_weight": "0.08",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateTemperaturePrecipitationDecay (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:822. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     },
     {
       "id": "nfl_turf_surface_fatigue",
@@ -1834,7 +2059,12 @@
       "label": "\"NFL Turf Surface Fatigue\"",
       "output_kind": "CONTINUOUS_VALUE",
       "activation_status": "ACTIVE",
-      "trust_weight": "0.06"
+      "trust_weight": "0.06",
+      "wired_state": "no",
+      "_blocked_reason": {
+        "class": "LOCAL_CODE",
+        "evidence": "evaluateTurfSurfaceFatigue (packages/prediction-engine/src/signals/), invoked at packages/ingestion-pipeline/src/signal-registry-extensions.ts:856. Real computation; inputs read from process.env keys that have zero production writers. The 22 extension evaluators read their inputs from ctx.env via num()/bool() (signal-registry-extensions.ts:46-55) and the slate passes env: process.env (generate-signal-slate.ts:507). WIND_MPH, REDZONE_TRIPS, DEFENSIVE_PLAYS and SHORT_WEEK_REST are written by no production code (git grep finds them only inside the registry and a test fixture). Corroborated by docs/ops/wiring-backlog-2026-10-01.md item 8 ('reads WIND_MPH env with zero writers') and item 13 ('All 22 extension evaluators read 71 env keys with zero writers')."
+      }
     }
   ]
 }
