@@ -26,12 +26,24 @@ OFF_COLS = ["season", "week", "game_id", "drive", "posteam", "defteam", "down",
 
 def load():
     frames = []
+    candidates = [
+        os.path.join(os.path.dirname(os.path.abspath(__file__)), "data"),
+        DATA,
+    ]
     for y in YEARS:
-        p = os.path.join(DATA, f"pbp_{y}.parquet")
-        df = pd.read_parquet(p, columns=OFF_COLS)
-        frames.append(df)
-    df = pd.concat(frames, ignore_index=True)
-    return df
+        path = None
+        for d in candidates:
+            for name in (f"play_by_play_{y}.parquet", f"pbp_{y}.parquet"):
+                p = os.path.join(d, name)
+                if os.path.exists(p):
+                    path = p
+                    break
+            if path:
+                break
+        if path is None:
+            raise FileNotFoundError(f"no play-by-play parquet for {y}")
+        frames.append(pd.read_parquet(path, columns=OFF_COLS))
+    return pd.concat(frames, ignore_index=True)
 
 def safe_div(a, b):
     return float(a) / float(b) if b else np.nan
@@ -141,8 +153,10 @@ def main():
     print("total plays:", len(df))
     off = offensive_tendencies(df)
     deff = defensive_tendencies(df)
-    off.to_csv(os.path.join(DATA, "off_tendencies.csv"), index=False)
-    deff.to_csv(os.path.join(DATA, "def_tendencies.csv"), index=False)
+    out = os.environ.get("GSE_TENDENCY_OUT", DATA)
+    os.makedirs(out, exist_ok=True)
+    off.to_csv(os.path.join(out, "off_tendencies.csv"), index=False)
+    deff.to_csv(os.path.join(out, "def_tendencies.csv"), index=False)
     print("off rows:", len(off), "| def rows:", len(deff))
     print("saved.")
 
