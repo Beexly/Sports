@@ -62,6 +62,7 @@ from integration.stubs import fixture_league_avgs, fixture_registry
 from tests.helpers import card_request, funnel_legs
 
 from coaching.provider import CoachingEngineProvider
+from coaching.ol_provider import NflverseOLProvider
 from qb_behavior.situational.provider import SituationalQBProvider
 
 pytestmark = pytest.mark.e2e
@@ -154,3 +155,20 @@ class TestT1OnStubsStillKillsTheFunnel:
         assert bundle.get("shared_link") == "pit_pressure_lands", (
             f"bundle no longer shares one link: {bundle.get('shared_link')}")
         assert bundle.get("thesis_broken") is True
+
+
+def test_ol_provider_moves_the_track_off_unchecked():
+    """Week 4 2026 is in the injury file. The track must be checked.
+    It must not become FINAL just because the trench was looked at.
+    """
+    reg = ProviderRegistry(
+        qb=SituationalQBProvider(),
+        coaching=CoachingEngineProvider(),
+        trust=None,
+        ol=NflverseOLProvider(),
+    )
+    traced = analyze(card_request(), reg, league_avgs=fixture_league_avgs())
+    ol = (traced.checklist or {}).get("offensive_line")
+    val = ol.value if hasattr(ol, "value") else ol
+    assert val != "UNCHECKED", val
+    assert traced.label != "FINAL"

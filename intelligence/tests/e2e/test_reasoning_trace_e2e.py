@@ -99,11 +99,12 @@ def _clear_checklist(**overrides) -> dict:
 # T1 — the pressure-funnel stack must be REJECTED at L5, never recommended.
 # ---------------------------------------------------------------------------
 
+@pytest.mark.adversary
 class TestT1PressureFunnelRejected:
-    """Spec §8 T1: 4-leg correlated stack on one INFERENCE link. When the
-    breaking condition is met pre-kickoff (TTT 2.1s < 2.3s), the L4 adversary
-    KILLS the thesis and the killed legs must be excluded from any L5
-    recommendation. A card shallower than L5 is a contract violation."""
+    """Spec §8 T1. Passes on a hand-built trace, so it cannot tell a real
+    funnel kill from a chain that was never built. The analyze() test is
+    tests/e2e/test_t1_real_e2e.py.
+    """
 
     def _trace(self) -> ReasoningTrace:
         return ReasoningTrace(
