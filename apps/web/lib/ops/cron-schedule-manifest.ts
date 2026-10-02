@@ -198,12 +198,6 @@ export const CRON_MANIFEST: readonly CronManifestEntry[] = [
   // Hourly at :55: builds the engine slate and registers it as the DFS
   // provider when the founder's DFS_PROVIDER flag is set; read-only.
   cronEntry("/api/cron/engine-dfs-slate", "55 * * * *"),
-];
-
-/** Manifest entry for a path, or null when the path is not a declared cron. */
-export function findCronEntry(path: string): CronManifestEntry | null {
-  return CRON_MANIFEST.find((c) => c.path === path) ?? null;
-}
   // Path-disagreement arbitration (Opus tier). Reads published picks written in
   // the last 6h, pairs the reasoning path against the legacy book path per
   // fixture + market, and appends every ruling to the decision ledger. At :41 so
@@ -211,3 +205,9 @@ export function findCronEntry(path: string): CronManifestEntry | null {
   // :05/:20/:35/:50 signal-slate ticks for the cron's time budget. Writes no
   // Pick: it rules on which of two recorded claims stands, nothing more.
   cronEntry("/api/cron/arbiter-adjudication", "41 * * * *"),
+];
+
+/** Manifest entry for a path, or null when the path is not a declared cron. */
+export function findCronEntry(path: string): CronManifestEntry | null {
+  return CRON_MANIFEST.find((c) => c.path === path) ?? null;
+}
