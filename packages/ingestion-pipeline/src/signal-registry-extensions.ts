@@ -25,6 +25,7 @@ import { nflHomeRoadSplitSignal } from "./nfl-split-record-signal.js";
 import { rosterAgeAt } from "./nfl-roster-age.js";
 import { sameDivision2026 } from "./nfl-division.js";
 import { elevationAboveThreshold, roofAcclimationMismatch, surfaceAcclimationMismatch } from "./nfl-venue-facts.js";
+import { kalshiHomeMid } from "./nfl-kalshi-mid.js";
 import { pregameMarketAnchor } from "./nfl-pregame-market.js";
 import { pressureMatchup } from "./nfl-pressure-matchup.js";
 import { restDays2026 } from "./nfl-rest.js";
@@ -1105,6 +1106,38 @@ export const nflPregameMarketSignal: SignalDefinition = {
   },
 };
 
+export const nflKalshiHomeMidSignal: SignalDefinition = {
+  id: "nfl_kalshi_home_mid",
+  label: "NFL Kalshi Home Mid",
+  category: "ODDS",
+  family: "MARKET_MICROSTRUCTURE",
+  outputKind: "CONTINUOUS_VALUE",
+  validSports: ["americanfootball_nfl"],
+  owner: "quant-market",
+  dataDependencies: ["kalshi_kxnflgame_orderbook_2026-10-02T00:00:52Z"],
+  activationStatus: "ACTIVE",
+  trustWeight: 0.1,
+  killLine: KILL_LINE,
+  isRightsCleared: () => true,
+  acquisitionTask: null,
+  blockedReason: null,
+  // DIRECTION: homeSign +1, neutral 0. Value is the home ticker's bid/ask
+  // mid minus 0.5. One book. Not a close. Not the games-file line.
+  homeSign: 1 as const,
+  neutralValue: 0,
+  evaluate: async (ctx) => {
+    if (ctx.sportKey !== "americanfootball_nfl") return null;
+    const reading = kalshiHomeMid({
+      homeTeam: teamLabel(ctx.homeTeam) ?? "",
+      awayTeam: teamLabel(ctx.awayTeam) ?? "",
+      commenceTime: ctx.commenceTime,
+      now: ctx.now(),
+    });
+    if (reading == null) return null;
+    return { value: reading.value, capturedAt: "2026-10-02T00:00:52Z", metadata: reading.metadata };
+  },
+};
+
 export const nflPressureMatchupSignal: SignalDefinition = {
   id: "nfl_pressure_matchup",
   label: "NFL Pressure Matchup",
@@ -1160,6 +1193,7 @@ export const EXTENDED_SIGNALS: readonly SignalDefinition[] = [
   nflTurfSurfaceFatigueSignal,
   nflRoofAcclimationSignal,
   nflPregameMarketSignal,
+  nflKalshiHomeMidSignal,
   nflPressureMatchupSignal,
   ...SCHEME_MEASURED_SIGNALS,
   ...NFL_INJURY_SIGNALS,
