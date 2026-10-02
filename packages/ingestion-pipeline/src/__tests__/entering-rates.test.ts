@@ -24,7 +24,10 @@ describe("2026 entering rates", () => {
     expect(byId.get("nfl_entering_early_down_pass_rate")).toBeCloseTo(home!.earlyDownPassRate - away!.earlyDownPassRate, 4);
     expect(byId.get("nfl_entering_offense_epa")).toBeCloseTo(home!.offEpa - away!.offEpa, 4);
     expect(byId.get("nfl_entering_pace")).toBeCloseTo((home!.playsPerGame - away!.playsPerGame) / 10, 4);
-    expect(tilt.votes).toHaveLength(4);
+    expect(byId.get("nfl_entering_shotgun")).toBeCloseTo(home!.shotgun - away!.shotgun, 4);
+    expect(byId.get("nfl_entering_proe")).toBeCloseTo((home!.proePp - away!.proePp) / 100, 4);
+    expect(byId.get("nfl_entering_rb_bellcow")).toBeCloseTo(home!.rbBellcow - away!.rbBellcow, 4);
+    expect(tilt.votes).toHaveLength(11);
   });
 
   it("abstains before week 4", async () => {

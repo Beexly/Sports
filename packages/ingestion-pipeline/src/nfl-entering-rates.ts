@@ -105,9 +105,65 @@ export const nflEnteringPaceSignal = measured(
   "scrimmage plays per game, home minus away, divided by 10, three games not seventeen",
 );
 
+export const nflEnteringShotgunSignal = measured(
+  "nfl_entering_shotgun",
+  "NFL Shotgun Rate, 2026 weeks 1-3",
+  (home, away) => home.shotgun - away.shotgun,
+  "shotgun flag mean on scrimmage plays, same definition as the 2025 scheme script, not that season",
+);
+
+export const nflEnteringNoHuddleSignal = measured(
+  "nfl_entering_no_huddle",
+  "NFL No-Huddle Rate, 2026 weeks 1-3",
+  (home, away) => home.noHuddle - away.noHuddle,
+  "no_huddle flag mean on scrimmage plays, same definition as the 2025 scheme script",
+);
+
+export const nflEnteringProeSignal = measured(
+  "nfl_entering_proe",
+  "NFL Pass Rate Over Expected, 2026 weeks 1-3",
+  (home, away) => (home.proePp - away.proePp) / 100,
+  "mean pass_oe in percentage points, divided by 100, same scale as the 2025 PROE vote",
+);
+
+export const nflEnteringNeutralPassSignal = measured(
+  "nfl_entering_neutral_pass",
+  "NFL Neutral-Situation Pass Rate, 2026 weeks 1-3",
+  (home, away) => home.neutralPass - away.neutralPass,
+  "downs 1-2 with win probability between 0.20 and 0.80, same definition as the 2025 scheme script",
+);
+
+export const nflEnteringRzPassSignal = measured(
+  "nfl_entering_rz_pass",
+  "NFL Red-Zone Pass Rate, 2026 weeks 1-3",
+  (home, away) => home.rzPass - away.rzPass,
+  "pass rate inside the opponent 20, same definition as the 2025 scheme script, three-game sample",
+);
+
+export const nflEnteringBellcowSignal = measured(
+  "nfl_entering_rb_bellcow",
+  "NFL RB Bellcow Share, 2026 weeks 1-3",
+  (home, away) => home.rbBellcow - away.rbBellcow,
+  "top rusher share of team rushes on the play file, not the 2025 stats_reg column",
+);
+
+export const nflEnteringWrFunnelSignal = measured(
+  "nfl_entering_wr_funnel",
+  "NFL WR1 Target Funnel, 2026 weeks 1-3",
+  (home, away) => home.wrFunnel - away.wrFunnel,
+  "top pass-catcher share of team targets on the play file, not the 2025 stats_reg column",
+);
+
 export const ENTERING_RATE_SIGNALS: readonly SignalDefinition[] = [
   nflEnteringPassRateSignal,
   nflEnteringEarlyDownPassSignal,
   nflEnteringOffenseEpaSignal,
   nflEnteringPaceSignal,
+  nflEnteringShotgunSignal,
+  nflEnteringNoHuddleSignal,
+  nflEnteringProeSignal,
+  nflEnteringNeutralPassSignal,
+  nflEnteringRzPassSignal,
+  nflEnteringBellcowSignal,
+  nflEnteringWrFunnelSignal,
 ];
