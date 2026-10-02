@@ -41,6 +41,71 @@ export function btAdoptionGate(gameCount: number): { readonly refused: boolean; 
   return { refused: false, reason: "sample floor cleared; ENABLED is still false until a human call and a sealed coverage check" };
 }
 
+/**
+ * Condition 4.1 connectivity guardrail — arXiv:2003.00083v1 (Bong et al.,
+ * "Nonparametric Estimation in the Dynamic Bradley-Terry Model", AISTATS 2020),
+ * NOT 2110.03874. Quoted verbatim from the 1494 brief
+ * (corpus-intelligence briefs/c10/r26/1494-dynamic-bradley-terry.md.brief.md;
+ * mirrored at docs/arxiv-program/research/2026-09-21/arxiv-deep/1494-dynamic-bradley-terry.md):
+ *   "Condition 4.1: every partition of teams has an i→j edge with X̃_ij(t)>0
+ *    (strong connectivity of smoothed comparison graph)"
+ *
+ * HONEST SCOPE: the paper's directional smoothed-graph condition needs the
+ * fulltext, which is ABSENT from every tree (bt-condition.md, 2026-10-02). What
+ * is implementable today is the weaker NECESSARY condition: the participation
+ * graph (an undirected edge per played pair) must be connected. This gate
+ * refuses when even that floor fails; clearing it is not the paper's condition.
+ */
+export function btConnectivityGate(
+  nTeams: number,
+  games: readonly GameResult[],
+): { readonly ok: boolean; readonly components: number; readonly reason: string } {
+  if (!Number.isInteger(nTeams) || nTeams < 2) {
+    return { ok: false, components: nTeams > 0 ? nTeams : 0, reason: `refused: ${nTeams} teams is not a pairwise field` };
+  }
+  const parent = new Array<number>(nTeams).fill(-1);
+  const find = (x: number): number => {
+    let root = x;
+    while (parent[root]! >= 0) root = parent[root]!;
+    while (parent[x]! >= 0) {
+      const next = parent[x]!;
+      parent[x] = root;
+      x = next;
+    }
+    return root;
+  };
+  const union = (a: number, b: number): void => {
+    const ra = find(a);
+    const rb = find(b);
+    if (ra === rb) return;
+    const sa = parent[ra]!;
+    const sb = parent[rb]!;
+    if (sa <= sb) {
+      parent[ra] = sa + sb;
+      parent[rb] = ra;
+    } else {
+      parent[rb] = sa + sb;
+      parent[ra] = rb;
+    }
+  };
+  for (const g of games) {
+    if (!Number.isInteger(g.home) || !Number.isInteger(g.away)) continue;
+    if (g.home === g.away) continue; // a self-pair compares nothing
+    if (g.home < 0 || g.away < 0 || g.home >= nTeams || g.away >= nTeams) continue;
+    union(g.home, g.away);
+  }
+  let components = 0;
+  for (let i = 0; i < nTeams; i++) if (find(i) === i) components++;
+  if (components !== 1) {
+    return {
+      ok: false,
+      components,
+      reason: `refused: participation graph has ${components} components (need 1). Condition 4.1 floor fails; a pairwise rating is not estimable.`,
+    };
+  }
+  return { ok: true, components: 1, reason: "participation graph connected; the paper's directional condition is still unverified (fulltext absent)" };
+}
+
 export interface GameResult {
   /** Team indices into the strength vector. */
   readonly home: number;

@@ -5,6 +5,7 @@ import {
   ENABLED,
   MIN_ADOPTION_GAMES,
   btAdoptionGate,
+  btConnectivityGate,
   btFit,
   btFitDecayed,
   btStandardErrors,
@@ -24,6 +25,37 @@ describe("Bradley-Terry uncertainty quantification", () => {
     const cleared = btAdoptionGate(MIN_ADOPTION_GAMES);
     expect(cleared.refused).toBe(false);
     expect(ENABLED).toBe(false);
+  });
+
+  it("connectivity gate refuses a week-1 schedule (disjoint pairs) — Condition 4.1 floor", () => {
+    const g = [
+      { home: 0, away: 1, homeWin: 1 as const },
+      { home: 2, away: 3, homeWin: 0 as const },
+    ];
+    const r = btConnectivityGate(4, g);
+    expect(r.ok).toBe(false);
+    expect(r.components).toBe(2);
+    expect(r.reason).toContain("2 components");
+    expect(ENABLED).toBe(false);
+  });
+
+  it("connectivity gate clears a connected schedule and labels the paper condition unverified", () => {
+    const g = [
+      { home: 0, away: 1, homeWin: 1 as const },
+      { home: 1, away: 2, homeWin: 0 as const },
+      { home: 2, away: 3, homeWin: 1 as const },
+    ];
+    const r = btConnectivityGate(4, g);
+    expect(r.ok).toBe(true);
+    expect(r.components).toBe(1);
+    expect(r.reason).toContain("unverified");
+  });
+
+  it("connectivity gate refuses empty schedules, self-pairs only, and a one-team field", () => {
+    expect(btConnectivityGate(32, []).ok).toBe(false);
+    const selfOnly = [{ home: 3, away: 3, homeWin: 1 as const }];
+    expect(btConnectivityGate(32, selfOnly).ok).toBe(false);
+    expect(btConnectivityGate(1, []).ok).toBe(false);
   });
 
   it("symmetric teams get ~zero strengths and ~0.5 neutral-site probs", () => {
