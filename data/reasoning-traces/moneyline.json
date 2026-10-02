@@ -1,0 +1,288 @@
+{
+  "source": "fixture",
+  "license": "not-applicable",
+  "real_pick": false,
+  "registry_signals_shown": false,
+  "note": "Constructed OddsInput run through scoreGame and buildReasoningTrace. Not a settled game, not a published pick, not backed by a registry signal. No calibrator was supplied and none was fit.",
+  "bet_type": "MONEYLINE",
+  "pick_id": "fixture-ml-not-a-pick",
+  "selection": "Chiefs ML (-800)",
+  "confidence": 52,
+  "trace": {
+    "schema": "sports.reasoning-trace.v1",
+    "gameId": "fixture-ml-not-a-pick",
+    "sport": "NFL",
+    "homeTeam": "Chiefs",
+    "awayTeam": "Eagles",
+    "pickType": "MONEYLINE",
+    "selection": "Chiefs ML (-800)",
+    "line": -800,
+    "pickedSide": "HOME",
+    "modelVersion": "v5.3.0",
+    "dataFreshnessAt": "2026-04-15T12:00:00.000Z",
+    "fired": [
+      {
+        "name": "Bookmaker Consensus",
+        "weight": 22.173913043478265,
+        "impact": "positive",
+        "description": "Market implies a 87% win probability for this side",
+        "enteredConfidenceSum": true,
+        "fedBy": [
+          "bookmakerOdds"
+        ]
+      },
+      {
+        "name": "Market Coverage",
+        "weight": 20,
+        "impact": "positive",
+        "description": "10 bookmakers pricing this market",
+        "enteredConfidenceSum": true,
+        "fedBy": [
+          "bookmakerCoverageMax",
+          "bookmakerOdds"
+        ]
+      },
+      {
+        "name": "Pricing Edge",
+        "weight": 0,
+        "impact": "neutral",
+        "description": "Offered price sits 1.9% above the de-vigged market fair value (market-internal comparison, not a model edge; context only — not in confidence)",
+        "enteredConfidenceSum": false,
+        "fedBy": [
+          "bookmakerOdds"
+        ],
+        "exclusionReason": "Market-internal: the book's own de-vigged fair value versus the offered price. Both inputs are market quantities, so it is excluded from confidence (scoring.ts:378-397). Its value ships as edgeScore."
+      },
+      {
+        "name": "Independent Edge (kalshi, poisson)",
+        "weight": 28,
+        "impact": "positive",
+        "description": "2 independent estimates agree (kalshi, poisson) put the side at 92.5% vs the sportsbook's 87.0% fair value — a +5.5% divergence (evidence/uncertainty-adjusted to +4.4%). If correct, the close should move our way: expected CLV +4.4%.",
+        "enteredConfidenceSum": false,
+        "fedBy": [
+          "independentFairValues"
+        ],
+        "exclusionReason": "Ranking delta, not a confidence term: this weight is `rankingScore − confidence` (scoring.ts:1350-1352). It moved the RANKING key only; the confidence sum never saw it."
+      }
+    ],
+    "suppressed": [
+      {
+        "field": "derived mlFairProbHome (H2H book rows)",
+        "signal": "Cross-Market Agreement",
+        "reason": "NOT_APPLICABLE_TO_MARKET",
+        "explanation": "Cross-market agreement is defined only as SPREAD-versus-MONEYLINE (game-context.ts:457). This MONEYLINE scorer never reads it, so the moneyline fair probability it derived (0.8696) could not produce a factor here.",
+        "inputValue": "derived=0.8696",
+        "computedScore": null
+      },
+      {
+        "field": "(derived from lineMovementScore × historicalFormScore × headToHeadScore × crossMarketScore)",
+        "signal": "Signal Conflict",
+        "reason": "GATED_NO_SCORE",
+        "explanation": "The conflict detector ran on this pick's own signal values and found no contradicting combination, so it scored 0 and emitted no weight (game-context.ts:602).",
+        "inputValue": "lineMovement=0 form=0 h2h=0 crossMarket=0",
+        "computedScore": 0
+      }
+    ],
+    "arithmetic": {
+      "terms": [
+        {
+          "label": "Bookmaker Consensus",
+          "value": 22.173913043478265,
+          "source": "factorBreakdown.consensusScore",
+          "enteredSum": true
+        },
+        {
+          "label": "Market Coverage",
+          "value": 20,
+          "source": "factorBreakdown.marketDepthScore",
+          "enteredSum": true
+        },
+        {
+          "label": "Market Risk (volatility penalty)",
+          "value": 0,
+          "source": "factorBreakdown.volatilityPenalty",
+          "enteredSum": true
+        },
+        {
+          "label": "Line Movement",
+          "value": 0,
+          "source": "factorBreakdown.lineMovementScore",
+          "enteredSum": true
+        },
+        {
+          "label": "Data Quality (penalty)",
+          "value": 0,
+          "source": "0 — dataQualityScore ≥ 50 so computeDataQuality emitted no factor and no penalty (game-context.ts:319-321)",
+          "enteredSum": true
+        },
+        {
+          "label": "Rest Advantage",
+          "value": 0,
+          "source": "0 — no factor fired for this signal",
+          "enteredSum": true
+        },
+        {
+          "label": "Historical ATS Form",
+          "value": 0,
+          "source": "0 — no factor fired for this signal",
+          "enteredSum": true
+        },
+        {
+          "label": "Head-to-Head Form",
+          "value": 0,
+          "source": "0 — no factor fired for this signal",
+          "enteredSum": true
+        },
+        {
+          "label": "Venue Form",
+          "value": 0,
+          "source": "0 — no factor fired for this signal",
+          "enteredSum": true
+        },
+        {
+          "label": "Signal Conflict (uncertainty penalty)",
+          "value": 0,
+          "source": "0 — no factor fired for this signal",
+          "enteredSum": true
+        },
+        {
+          "label": "Schedule Density",
+          "value": 0,
+          "source": "0 — no factor fired for this signal",
+          "enteredSum": true
+        },
+        {
+          "label": "Pricing Edge (edgeComponentScore)",
+          "value": 7.669082125603898,
+          "source": "factorBreakdown.edgeScore",
+          "enteredSum": false,
+          "exclusionReason": "EXCLUDED by the market-echo guard: 25-max market-internal component, removed from the sum at scoring.ts:657-665 / :1320-1327. Value still ships as the Edge Index (edgeScore)."
+        },
+        {
+          "label": "Independent Edge (kalshi, poisson)",
+          "value": 28,
+          "source": "factorBreakdown.factors[\"Independent Edge\"].weight",
+          "enteredSum": false,
+          "exclusionReason": "Weight 28: this is the RANKING delta (rankingScore − confidence), not a confidence term. It moved rankingScore, never confidence."
+        }
+      ],
+      "base": 10,
+      "includedSum": 42.173913043478265,
+      "clampedSum": 52.173913043478265,
+      "pickConfidence": 52,
+      "reconciles": true,
+      "residual": 0
+    },
+    "market": {
+      "bookmakerCount": 10,
+      "consensusPct": 0.8695652173913044,
+      "marketFairProb": 0.8695652173913044,
+      "marketFairMethod": "proportional",
+      "marketFairShinProb": 0.877778,
+      "entryPrice": -800,
+      "edgeScore": 31,
+      "dataQualityScore": 80,
+      "books": [
+        {
+          "bookmaker": "fanduel",
+          "price": -800
+        },
+        {
+          "bookmaker": "draftkings",
+          "price": -800
+        },
+        {
+          "bookmaker": "betmgm",
+          "price": -800
+        },
+        {
+          "bookmaker": "caesars",
+          "price": -800
+        },
+        {
+          "bookmaker": "pointsbet",
+          "price": -800
+        },
+        {
+          "bookmaker": "betrivers",
+          "price": -800
+        },
+        {
+          "bookmaker": "wynn",
+          "price": -800
+        },
+        {
+          "bookmaker": "bet365",
+          "price": -800
+        },
+        {
+          "bookmaker": "espnbet",
+          "price": -800
+        },
+        {
+          "bookmaker": "fanatics",
+          "price": -800
+        }
+      ],
+      "twoSidedImpliedSum": 1.0222222222222224,
+      "marketConsistent": true
+    },
+    "independentEdge": {
+      "assessed": true,
+      "sourcesConsulted": [
+        "kalshi",
+        "poisson"
+      ],
+      "sourcesNotConsulted": [],
+      "sourceProbabilities": [
+        {
+          "source": "kalshi",
+          "prob": 0.93
+        },
+        {
+          "source": "poisson",
+          "prob": 0.92
+        }
+      ],
+      "blendedProbability": 0.925,
+      "marketFairProbability": 0.8696,
+      "rawEdge": 0.0554,
+      "shrunkEdge": 0.0443,
+      "agreement": "CONFIRMS",
+      "decision": "SPEAK",
+      "priced": true,
+      "expectedClv": 0.0443,
+      "conviction": 67,
+      "rationale": "2 independent estimates agree (kalshi, poisson) put the side at 92.5% vs the sportsbook's 87.0% fair value — a +5.5% divergence (evidence/uncertainty-adjusted to +4.4%). If correct, the close should move our way: expected CLV +4.4%.",
+      "pricesWorseThanMarket": false
+    },
+    "calibrationSeam": {
+      "present": false,
+      "fittedAtRuntime": false,
+      "beforeSeam": 0.925,
+      "afterSeam": 0.925,
+      "delta": 0,
+      "changedValue": false,
+      "note": "NO SEAM. No calibrator was supplied, so by the LAW (edge-engine.ts:92-97) the value is unchanged: the pre-seam blend and the published trueProb are the same number. Nothing was fitted at runtime."
+    },
+    "ranking": {
+      "rankingScore": 80,
+      "rankingP": 0.8035,
+      "source": "blend_indep_conf",
+      "confidenceAsProbability": 0.52,
+      "independentTrueProb": 0.925,
+      "independentWeight": 0.7,
+      "blendedFormula": "0.3·0.5200 + 0.7·0.9250 = 0.8035",
+      "priced": true
+    },
+    "pick": {
+      "confidence": 52,
+      "tier": "FREE",
+      "pickGrade": "LEAN",
+      "riskLevel": "LOW_RISK",
+      "edgeScore": 31,
+      "reasoning": "Chiefs ML (-800): fair value 87% across 10 bookmakers. Edge: -1.9%. Context: independent model edge priced into ranking. Confidence: 52/100 (LEAN). Ranking: 80/100 via blend_indep_conf."
+    },
+    "unresolved": []
+  }
+}

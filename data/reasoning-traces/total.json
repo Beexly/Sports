@@ -1,0 +1,274 @@
+{
+  "source": "fixture",
+  "license": "not-applicable",
+  "real_pick": false,
+  "registry_signals_shown": false,
+  "note": "Constructed OddsInput run through scoreGame and buildReasoningTrace. Not a settled game, not a published pick, not backed by a registry signal. No calibrator was supplied and none was fit.",
+  "bet_type": "TOTAL",
+  "pick_id": "fixture-total-not-a-pick",
+  "selection": "OVER 47.5",
+  "confidence": 60,
+  "trace": {
+    "schema": "sports.reasoning-trace.v1",
+    "gameId": "fixture-total-not-a-pick",
+    "sport": "NFL",
+    "homeTeam": "Chiefs",
+    "awayTeam": "Eagles",
+    "pickType": "TOTAL",
+    "selection": "OVER 47.5",
+    "line": 47.5,
+    "pickedSide": "OVER",
+    "modelVersion": "v5.3.0",
+    "dataFreshnessAt": "2026-04-15T12:00:00.000Z",
+    "fired": [
+      {
+        "name": "Bookmaker Consensus",
+        "weight": 30,
+        "impact": "positive",
+        "description": "100% of bookmakers align on this side",
+        "enteredConfidenceSum": true,
+        "fedBy": [
+          "bookmakerOdds"
+        ]
+      },
+      {
+        "name": "Market Coverage",
+        "weight": 20,
+        "impact": "positive",
+        "description": "10 bookmakers pricing this market",
+        "enteredConfidenceSum": true,
+        "fedBy": [
+          "bookmakerCoverageMax",
+          "bookmakerOdds"
+        ]
+      },
+      {
+        "name": "Pricing Edge",
+        "weight": 0,
+        "impact": "neutral",
+        "description": "Offered price sits 2.4% above the de-vigged market fair value (market-internal comparison, not a model edge; context only — not in confidence)",
+        "enteredConfidenceSum": false,
+        "fedBy": [
+          "bookmakerOdds"
+        ],
+        "exclusionReason": "Market-internal: the book's own de-vigged fair value versus the offered price. Both inputs are market quantities, so it is excluded from confidence (scoring.ts:378-397). Its value ships as edgeScore."
+      }
+    ],
+    "suppressed": [
+      {
+        "field": "derived mlFairProbHome (H2H book rows)",
+        "signal": "Cross-Market Agreement",
+        "reason": "NOT_APPLICABLE_TO_MARKET",
+        "explanation": "Cross-market agreement is defined only as SPREAD-versus-MONEYLINE (game-context.ts:457). This TOTAL scorer never reads it, so the moneyline fair probability it derived (null) could not produce a factor here.",
+        "inputValue": "derived=null",
+        "computedScore": null
+      },
+      {
+        "field": "(derived from lineMovementScore × historicalFormScore × headToHeadScore × crossMarketScore)",
+        "signal": "Signal Conflict",
+        "reason": "GATED_NO_SCORE",
+        "explanation": "The conflict detector ran on this pick's own signal values and found no contradicting combination, so it scored 0 and emitted no weight (game-context.ts:602).",
+        "inputValue": "lineMovement=0 form=0 h2h=0 crossMarket=0",
+        "computedScore": 0
+      }
+    ],
+    "arithmetic": {
+      "terms": [
+        {
+          "label": "Bookmaker Consensus",
+          "value": 30,
+          "source": "factorBreakdown.consensusScore",
+          "enteredSum": true
+        },
+        {
+          "label": "Market Coverage",
+          "value": 20,
+          "source": "factorBreakdown.marketDepthScore",
+          "enteredSum": true
+        },
+        {
+          "label": "Market Risk (volatility penalty)",
+          "value": 0,
+          "source": "factorBreakdown.volatilityPenalty",
+          "enteredSum": true
+        },
+        {
+          "label": "Line Movement",
+          "value": 0,
+          "source": "factorBreakdown.lineMovementScore",
+          "enteredSum": true
+        },
+        {
+          "label": "Data Quality (penalty)",
+          "value": 0,
+          "source": "0 — dataQualityScore ≥ 50 so computeDataQuality emitted no factor and no penalty (game-context.ts:319-321)",
+          "enteredSum": true
+        },
+        {
+          "label": "Rest Advantage",
+          "value": 0,
+          "source": "0 — no factor fired for this signal",
+          "enteredSum": false,
+          "exclusionReason": "Excluded from the TOTAL sum: a total is side-agnostic, so computeGameContext scores this signal 0 for a TOTAL and scoring.ts:1014-1020 omits it."
+        },
+        {
+          "label": "Historical ATS Form",
+          "value": 0,
+          "source": "0 — no factor fired for this signal",
+          "enteredSum": false,
+          "exclusionReason": "Excluded from the TOTAL sum: a total is side-agnostic, so computeGameContext scores this signal 0 for a TOTAL and scoring.ts:1014-1020 omits it."
+        },
+        {
+          "label": "Head-to-Head Form",
+          "value": 0,
+          "source": "0 — no factor fired for this signal",
+          "enteredSum": false,
+          "exclusionReason": "Excluded from the TOTAL sum: a total is side-agnostic, so computeGameContext scores this signal 0 for a TOTAL and scoring.ts:1014-1020 omits it."
+        },
+        {
+          "label": "Venue Form",
+          "value": 0,
+          "source": "0 — no factor fired for this signal",
+          "enteredSum": false,
+          "exclusionReason": "Excluded from the TOTAL sum: a total is side-agnostic, so computeGameContext scores this signal 0 for a TOTAL and scoring.ts:1014-1020 omits it."
+        },
+        {
+          "label": "Signal Conflict (uncertainty penalty)",
+          "value": 0,
+          "source": "0 — no factor fired for this signal",
+          "enteredSum": false,
+          "exclusionReason": "Excluded from the TOTAL sum: a total is side-agnostic, so computeGameContext scores this signal 0 for a TOTAL and scoring.ts:1014-1020 omits it."
+        },
+        {
+          "label": "Schedule Density",
+          "value": 0,
+          "source": "0 — no factor fired for this signal",
+          "enteredSum": false,
+          "exclusionReason": "Excluded from the TOTAL sum: a total is side-agnostic, so computeGameContext scores this signal 0 for a TOTAL and scoring.ts:1014-1020 omits it."
+        },
+        {
+          "label": "Pricing Edge (edgeComponentScore)",
+          "value": 6.547619047619041,
+          "source": "factorBreakdown.edgeScore",
+          "enteredSum": false,
+          "exclusionReason": "EXCLUDED by the market-echo guard: 25-max market-internal component, removed from the sum at scoring.ts:657-665 / :1320-1327. Value still ships as the Edge Index (edgeScore)."
+        }
+      ],
+      "base": 10,
+      "includedSum": 50,
+      "clampedSum": 60,
+      "pickConfidence": 60,
+      "reconciles": true,
+      "residual": 0
+    },
+    "market": {
+      "bookmakerCount": 10,
+      "consensusPct": 1,
+      "marketFairProb": 0.5,
+      "marketFairMethod": "proportional",
+      "marketFairShinProb": 0.5,
+      "entryPrice": -110,
+      "edgeScore": 26,
+      "dataQualityScore": 80,
+      "books": [
+        {
+          "bookmaker": "fanduel",
+          "line": 47.5,
+          "price": -110
+        },
+        {
+          "bookmaker": "draftkings",
+          "line": 47.5,
+          "price": -110
+        },
+        {
+          "bookmaker": "betmgm",
+          "line": 47.5,
+          "price": -110
+        },
+        {
+          "bookmaker": "caesars",
+          "line": 47.5,
+          "price": -110
+        },
+        {
+          "bookmaker": "pointsbet",
+          "line": 47.5,
+          "price": -110
+        },
+        {
+          "bookmaker": "betrivers",
+          "line": 47.5,
+          "price": -110
+        },
+        {
+          "bookmaker": "wynn",
+          "line": 47.5,
+          "price": -110
+        },
+        {
+          "bookmaker": "bet365",
+          "line": 47.5,
+          "price": -110
+        },
+        {
+          "bookmaker": "espnbet",
+          "line": 47.5,
+          "price": -110
+        },
+        {
+          "bookmaker": "fanatics",
+          "line": 47.5,
+          "price": -110
+        }
+      ],
+      "twoSidedImpliedSum": 1.0476190476190477,
+      "marketConsistent": true
+    },
+    "independentEdge": {
+      "assessed": false,
+      "sourcesConsulted": [],
+      "sourcesNotConsulted": [],
+      "sourceProbabilities": [],
+      "blendedProbability": null,
+      "marketFairProbability": 0.5,
+      "rawEdge": null,
+      "shrunkEdge": null,
+      "agreement": "NONE",
+      "decision": "PASS",
+      "priced": false,
+      "expectedClv": null,
+      "conviction": null,
+      "rationale": null,
+      "pricesWorseThanMarket": false
+    },
+    "calibrationSeam": {
+      "present": false,
+      "fittedAtRuntime": false,
+      "beforeSeam": null,
+      "afterSeam": null,
+      "delta": null,
+      "changedValue": false,
+      "note": "No independent trueProb on this pick, so the seam never had a value to act on. Nothing was fitted and nothing moved."
+    },
+    "ranking": {
+      "rankingScore": 60,
+      "rankingP": 0.6,
+      "source": "confidence",
+      "confidenceAsProbability": 0.6,
+      "independentTrueProb": null,
+      "independentWeight": 0.7,
+      "blendedFormula": null,
+      "priced": false
+    },
+    "pick": {
+      "confidence": 60,
+      "tier": "FREE",
+      "pickGrade": "LEAN",
+      "riskLevel": "LOW_RISK",
+      "edgeScore": 26,
+      "reasoning": "OVER 47.5 backed by 100% of 10 bookmakers. Fair value: 50%. Edge: -2.4%. Confidence: 60/100 (LEAN)."
+    },
+    "unresolved": []
+  }
+}
