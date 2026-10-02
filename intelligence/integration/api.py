@@ -307,15 +307,18 @@ def _build_data_context(game: dict[str, Any], providers: ProviderRegistry,
                         ctx.observations[f"scheme.{team}.off_elite_rush"] = 1.0
             for team, coach_id in (game.get("playcallers") or {}).items():
                 cp = None
+                last_gap = None
                 for cid in (coach_id, coach_id.lower().replace(" ", "-")):
                     try:
                         cp = providers.coaching.get_coach_profile(cid, season)
                         break
-                    except DataGapError:
+                    except DataGapError as e:
+                        last_gap = e.reason
                         continue
                 if cp is None:
                     ev("coaching_scheme",
-                       f"no profile for playcaller {coach_id} ({team})",
+                       f"no profile for playcaller {coach_id} ({team})"
+                       + (f": {last_gap}" if last_gap else ""),
                        R.Verification.INFERENCE)
                     continue
                 ctx.profiles[f"coach.{coach_id}"] = cp.yoy_delta_note or cp.name
