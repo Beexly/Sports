@@ -26,8 +26,9 @@ describe("measured elevation and surface mismatch", () => {
       env: {},
     } as never);
     expect(reading).toBeTruthy();
-    expect(reading!.value).toBeCloseTo(1.1949, 3);
-    expect(reading!.metadata?.basis).toBe("usgs feet above 4000, fatigue kernel not called");
+    if (!reading || !("value" in reading)) throw new Error("expected a continuous value");
+    expect(reading.value).toBeCloseTo(1.1949, 3);
+    expect(reading.metadata?.basis).toBe("usgs feet above 4000, fatigue kernel not called");
     const { tilt, found } = await vote(
       "nfl_high_altitude_fatigue",
       "Denver Broncos",

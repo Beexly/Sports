@@ -32,8 +32,9 @@ describe("official roster age, division, and home/road split", () => {
       env: { HOME_REST_DAYS: "7", AWAY_REST_DAYS: "4" },
     } as never);
     expect(reading).toBeTruthy();
-    expect(reading!.metadata?.ageBasis).toBe("equal-weight active roster, not snap-weighted");
-    expect(reading!.value).toBeGreaterThan(0);
+    if (!reading || !("value" in reading)) throw new Error("expected a continuous value");
+    expect(reading.metadata?.ageBasis).toBe("equal-weight active roster, not snap-weighted");
+    expect(reading.value).toBeGreaterThan(0);
     const found = await vote(
       "nfl_age_conditioned_rest",
       "Cleveland Browns",

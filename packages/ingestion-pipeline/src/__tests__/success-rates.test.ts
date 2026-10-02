@@ -15,8 +15,10 @@ describe("2026 success rates", () => {
     } as never);
     const home = NFL_2026_W4_SUCCESS.CLE;
     const away = NFL_2026_W4_SUCCESS.PIT;
+    expect(home).toBeDefined();
+    expect(away).toBeDefined();
     const byId = new Map(tilt.votes.map((vote) => [vote.signalId, vote.rawValue]));
-    expect(byId.get("nfl_off_success_rate")).toBeCloseTo(home.successRate - away.successRate, 4);
-    expect(byId.get("nfl_series_success_rate")).toBeCloseTo(home.seriesSuccessRate - away.seriesSuccessRate, 4);
+    expect(byId.get("nfl_off_success_rate")).toBeCloseTo(home!.successRate - away!.successRate, 4);
+    expect(byId.get("nfl_series_success_rate")).toBeCloseTo(home!.seriesSuccessRate - away!.seriesSuccessRate, 4);
   });
 });

@@ -15,8 +15,10 @@ describe("2025 personnel", () => {
     } as never);
     const home = NFL_2025_PERSONNEL.CLE;
     const away = NFL_2025_PERSONNEL.PIT;
+    expect(home).toBeDefined();
+    expect(away).toBeDefined();
     const byId = new Map(tilt.votes.map((vote) => [vote.signalId, vote.rawValue]));
-    expect(byId.get("nfl_personnel_11")).toBeCloseTo(home.personnel11 - away.personnel11, 4);
-    expect(byId.get("nfl_personnel_12")).toBeCloseTo(home.personnel12 - away.personnel12, 4);
+    expect(byId.get("nfl_personnel_11")).toBeCloseTo(home!.personnel11 - away!.personnel11, 4);
+    expect(byId.get("nfl_personnel_12")).toBeCloseTo(home!.personnel12 - away!.personnel12, 4);
   });
 });

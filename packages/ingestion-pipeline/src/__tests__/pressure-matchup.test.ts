@@ -27,8 +27,10 @@ describe("week-4 pressure matchup", () => {
       commenceTime: new Date("2026-10-04T20:00:00Z"),
       env: {},
     } as never);
-    expect(reading!.value).toBeCloseTo(0.092766, 6);
-    expect(reading!.metadata?.fourthDownNotVoted).toBe(true);
+    expect(reading).toBeTruthy();
+    if (!reading || !("value" in reading)) throw new Error("expected a continuous value");
+    expect(reading.value).toBeCloseTo(0.092766, 6);
+    expect(reading.metadata?.fourthDownNotVoted).toBe(true);
 
     const { tilt, found } = await vote("Seattle Seahawks", "Los Angeles Chargers", "2026-10-04T20:00:00Z");
     expect(found!.rawValue).toBeCloseTo(0.092766, 6);

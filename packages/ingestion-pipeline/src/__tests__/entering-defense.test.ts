@@ -15,11 +15,13 @@ describe("2026 defense allowed", () => {
     } as never);
     const home = NFL_2026_W4_DEFENSE.CLE;
     const away = NFL_2026_W4_DEFENSE.PIT;
+    expect(home).toBeDefined();
+    expect(away).toBeDefined();
     const byId = new Map(tilt.votes.map((vote) => [vote.signalId, vote.rawValue]));
-    expect(byId.get("nfl_entering_pass_epa_allowed")).toBeCloseTo(away.passEpaAllowed - home.passEpaAllowed, 4);
-    expect(byId.get("nfl_entering_rush_epa_allowed")).toBeCloseTo(away.rushEpaAllowed - home.rushEpaAllowed, 4);
-    expect(byId.get("nfl_entering_pass_success_allowed")).toBeCloseTo(away.passSuccessAllowed - home.passSuccessAllowed, 4);
-    expect(byId.get("nfl_entering_rush_success_allowed")).toBeCloseTo(away.rushSuccessAllowed - home.rushSuccessAllowed, 4);
+    expect(byId.get("nfl_entering_pass_epa_allowed")).toBeCloseTo(away!.passEpaAllowed - home!.passEpaAllowed, 4);
+    expect(byId.get("nfl_entering_rush_epa_allowed")).toBeCloseTo(away!.rushEpaAllowed - home!.rushEpaAllowed, 4);
+    expect(byId.get("nfl_entering_pass_success_allowed")).toBeCloseTo(away!.passSuccessAllowed - home!.passSuccessAllowed, 4);
+    expect(byId.get("nfl_entering_rush_success_allowed")).toBeCloseTo(away!.rushSuccessAllowed - home!.rushSuccessAllowed, 4);
     expect(tilt.votes).toHaveLength(4);
   });
 });

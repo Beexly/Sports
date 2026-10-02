@@ -24,11 +24,13 @@ describe("unused 2025 scheme columns", () => {
     );
     const home = NFL_SCHEME_PRIOR.CLE;
     const away = NFL_SCHEME_PRIOR.PIT;
+    expect(home).toBeDefined();
+    expect(away).toBeDefined();
     const byId = new Map(tilt.votes.map((vote) => [vote.signalId, vote.rawValue]));
-    expect(byId.get("nfl_prior_pass_rate")).toBeCloseTo(home.passRate - away.passRate, 4);
-    expect(byId.get("nfl_shotgun_rate")).toBeCloseTo(home.shotgun - away.shotgun, 4);
-    expect(byId.get("nfl_no_huddle_rate")).toBeCloseTo(home.noHuddle - away.noHuddle, 4);
-    expect(byId.get("nfl_rb_bellcow")).toBeCloseTo(home.rbBellcow - away.rbBellcow, 4);
+    expect(byId.get("nfl_prior_pass_rate")).toBeCloseTo(home!.passRate - away!.passRate, 4);
+    expect(byId.get("nfl_shotgun_rate")).toBeCloseTo(home!.shotgun - away!.shotgun, 4);
+    expect(byId.get("nfl_no_huddle_rate")).toBeCloseTo(home!.noHuddle - away!.noHuddle, 4);
+    expect(byId.get("nfl_rb_bellcow")).toBeCloseTo(home!.rbBellcow - away!.rbBellcow, 4);
     expect(tilt.votes).toHaveLength(4);
   });
 });

@@ -15,11 +15,13 @@ describe("2026 dropback rates", () => {
     } as never);
     const home = NFL_2026_W4_DROPBACK.CLE;
     const away = NFL_2026_W4_DROPBACK.PIT;
+    expect(home).toBeDefined();
+    expect(away).toBeDefined();
     const byId = new Map(tilt.votes.map((vote) => [vote.signalId, vote.rawValue]));
-    expect(byId.get("nfl_sack_rate_allowed")).toBeCloseTo((away.sackAllowed - home.sackAllowed) * 100, 4);
-    expect(byId.get("nfl_sack_rate_forced")).toBeCloseTo((home.sackForced - away.sackForced) * 100, 4);
-    expect(byId.get("nfl_cpoe")).toBeCloseTo((home.cpoe - away.cpoe) / 10, 4);
-    expect(byId.get("nfl_scramble_rate")).toBeCloseTo((home.scrambleRate - away.scrambleRate) * 100, 4);
+    expect(byId.get("nfl_sack_rate_allowed")).toBeCloseTo((away!.sackAllowed - home!.sackAllowed) * 100, 4);
+    expect(byId.get("nfl_sack_rate_forced")).toBeCloseTo((home!.sackForced - away!.sackForced) * 100, 4);
+    expect(byId.get("nfl_cpoe")).toBeCloseTo((home!.cpoe - away!.cpoe) / 10, 4);
+    expect(byId.get("nfl_scramble_rate")).toBeCloseTo((home!.scrambleRate - away!.scrambleRate) * 100, 4);
     expect(tilt.votes.length).toBeGreaterThanOrEqual(4);
   });
 });

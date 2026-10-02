@@ -30,9 +30,10 @@ describe("pregame market anchor", () => {
     } as never);
     const fair = noVigFromAmericanPrices([-700, 500])!.fairProbabilities[0]!;
     expect(reading).toBeTruthy();
-    expect(reading!.value).toBeCloseTo(fair - 0.5, 6);
-    expect(reading!.metadata?.basis).toContain("not a close");
-    expect(reading!.metadata?.vintage).toBe("unstated");
+    if (!reading || !("value" in reading)) throw new Error("expected a continuous value");
+    expect(reading.value).toBeCloseTo(fair - 0.5, 6);
+    expect(reading.metadata?.basis).toContain("not a close");
+    expect(reading.metadata?.vintage).toBe("unstated");
 
     const { tilt, found } = await vote(
       "nfl_pregame_market_anchor",
