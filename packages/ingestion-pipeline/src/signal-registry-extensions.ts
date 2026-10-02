@@ -266,6 +266,37 @@ export const nflAgeConditionedRestSignal: SignalDefinition = {
   neutralValue: 0,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
+    // ENV CONTRACT (kept from the pre-merge row so callers carrying measured
+    // env fields keep working, and continuous-signal-tilt.test.ts drives the
+    // real kernel through them). Direct home-team evaluation: the four env
+    // numbers are the caller's measured inputs, not invented here. Fail closed
+    // when any is absent — the measured 2026-W4 path below takes over instead.
+    const snapWeightedRosterAge = num(ctx.env, "ROSTER_SNAP_WEIGHTED_AGE");
+    const daysOfRest = num(ctx.env, "REST_DAYS");
+    const startingQbAge = num(ctx.env, "STARTING_QB_AGE");
+    const offensiveLineAvgAge = num(ctx.env, "OL_AVG_AGE");
+    if (
+      snapWeightedRosterAge != null &&
+      daysOfRest != null &&
+      startingQbAge != null &&
+      offensiveLineAvgAge != null
+    ) {
+      const res = evaluateAgeConditionedRest({
+        teamName: ctx.homeTeam,
+        daysOfRest,
+        snapWeightedRosterAge,
+        startingQbAge,
+        offensiveLineAvgAge,
+      });
+      return {
+        value: res.expectedMarginAdjustment,
+        capturedAt: ctx.now().toISOString(),
+        // homeSign +1 (row-level declaration above, mirrored in metadata):
+        // expectedMarginAdjustment is computed for ctx.homeTeam alone, so a
+        // positive value is home-implied points. No away-team branch exists.
+        metadata: { ...res, homeSign: 1 },
+      };
+    }
     const week = nflWeekOf(ctx.commenceTime);
     if (week == null || week.season !== 2026 || week.week !== 4) return null;
     const homeAbbr = nflTeamAbbr(teamLabel(ctx.homeTeam));

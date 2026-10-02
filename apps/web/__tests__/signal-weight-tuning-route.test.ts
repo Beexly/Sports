@@ -60,10 +60,10 @@ beforeEach(() => {
 });
 
 describe("GET /api/ops/signal-weight-tuning", () => {
-  it("401s without the bearer secret and never reads the table", async () => {
+  it("500s when CRON_SECRET is unset (never an open route) and never reads the table", async () => {
     delete process.env["CRON_SECRET"];
     const res = await GET(new Request("https://x/api/ops/signal-weight-tuning"));
-    expect(res.status).toBe(401);
+    expect(res.status).toBe(500);
     expect(mocks.pickSignalSnapshotFindMany).not.toHaveBeenCalled();
   });
 

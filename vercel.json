@@ -116,6 +116,22 @@
     {
       "path": "/api/ops/daily-truth",
       "schedule": "5 12 * * *"
+    },
+    {
+      "path": "/api/cron/watch-scheduler",
+      "schedule": "*/10 * * * *"
+    },
+    {
+      "path": "/api/cron/watch-warm",
+      "schedule": "*/3 * * * *"
+    },
+    {
+      "path": "/api/cron/props-slate-shadow",
+      "schedule": "25 * * * *"
+    },
+    {
+      "path": "/api/cron/engine-dfs-slate",
+      "schedule": "55 * * * *"
     }
   ],
   "headers": [

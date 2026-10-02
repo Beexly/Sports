@@ -41,17 +41,11 @@ import {
   OddsApiClient,
   resolveOddsApiKey,
 } from "@sports/data-ingestion";
-// `OddsApiEvent` lives in @sports/types, not @sports/data-ingestion. The
-// data-ingestion modules import it FROM there; re-importing it from
-// data-ingestion resolved to nothing and did not type-check.
 import type { OddsApiEvent } from "@sports/types";
 import {
   runPropsSlate,
+  type PlayerProp,
 } from "@sports/ingestion-pipeline";
-// `PlayerProp` is defined in props-gates and re-exported by props-slate, but it
-// is NOT re-exported from the ingestion-pipeline barrel, so importing the name
-// from the barrel resolved to undefined. Imported from the module that owns it.
-import type { PlayerProp } from "@sports/ingestion-pipeline/src/props-slate.js";
 import {
   reconcileMarketAnchoredPlayers,
   type MarketAnchoredPlayerProjection,
@@ -69,7 +63,6 @@ export const maxDuration = 120;
 const ENABLED = process.env.PROPS_SLATE_ENABLED === "1";
 const MAX_GAMES = 3;
 const BANKROLL_PAPER = 1000;
-const LINE_FRESHNESS_MINUTES = 30;
 
 /** Odds API player-prop markets with an engine projection mapping. */
 const PROP_MARKETS = [
@@ -373,16 +366,13 @@ export async function GET(req: Request): Promise<NextResponse> {
                 category: "RATINGS",
                 value: pOver,
                 valueRaw: pOver,
-                // `fetchedAt` is REQUIRED on Signal; without it the insert throws
-                // at runtime. It is the moment this slate read its inputs, which
-                // is the `now` already in scope — not a wall-clock guess.
-                fetchedAt: now,
                 weight: 0,
                 confidence: 1,
                 season,
                 week,
                 sourceId: "gse-props-slate",
                 capturedAt: now,
+                fetchedAt: now,
                 rightsSnapshot: {
                   provenance: "engine market-anchored projection",
                   note: "shadow-only; uncalibrated",

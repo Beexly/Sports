@@ -115,9 +115,6 @@ describe("the fence is actually wired (regression on the audit finding)", () => 
   it("every fenced page calls its own gate before rendering", () => {
     for (const [path, meta] of Object.entries(INTERNAL_SURFACES)) {
       const src = pageGuard(path);
-      expect(src, `${path} must import the fence`).toContain(
-        "internal-surface-fence",
-      );
       // Search from the default export: an earlier helper in these files can
       // legitimately contain "return (", and the loader import line sits above
       // the handler. Both would make a whole-file indexOf compare nonsense.
@@ -125,11 +122,26 @@ describe("the fence is actually wired (regression on the audit finding)", () => 
       expect(bodyAt, `${path} has a default export`).toBeGreaterThan(-1);
       const body = src.slice(bodyAt);
 
-      const gateAt = body.indexOf(`isPagePublic("${path}")`);
-      const returnAt = body.indexOf("return (");
-      expect(gateAt, `${path} gates on its own path`).toBeGreaterThan(-1);
-      expect(returnAt, `${path} renders`).toBeGreaterThan(-1);
-      expect(gateAt, `${path} gate precedes the render`).toBeLessThan(returnAt);
+      if (meta.env === null) {
+        // Permanently dark (NGS doctrine, HARD): no opt-in exists, so the
+        // page must 404 unconditionally — no flag can re-expose it. It has
+        // no render path at all.
+        const nfAt = body.indexOf("notFound()");
+        expect(nfAt, `${path} 404s unconditionally`).toBeGreaterThan(-1);
+        expect(body, `${path} has no render path`).not.toContain("return (");
+        expect(body, `${path} names no NGS metric`).not.toMatch(
+          /Next Gen Stats|CPOE|RYOE/i,
+        );
+      } else {
+        expect(src, `${path} must import the fence`).toContain(
+          "internal-surface-fence",
+        );
+        const gateAt = body.indexOf(`isPagePublic("${path}")`);
+        const returnAt = body.indexOf("return (");
+        expect(gateAt, `${path} gates on its own path`).toBeGreaterThan(-1);
+        expect(returnAt, `${path} renders`).toBeGreaterThan(-1);
+        expect(gateAt, `${path} gate precedes the render`).toBeLessThan(returnAt);
+      }
       expect(meta.exposes.length).toBeGreaterThan(0);
     }
   });

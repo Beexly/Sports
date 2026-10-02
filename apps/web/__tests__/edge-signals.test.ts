@@ -1,4 +1,6 @@
 import { gzipSync } from "node:zlib";
+import { existsSync } from "node:fs";
+import { join } from "node:path";
 import { afterEach, describe, expect, it, vi } from "vitest";
 vi.mock("@/lib/api-entitlement", () => ({ requirePremiumApiRateLimited: async () => null }));
 import {
@@ -102,14 +104,12 @@ describe("nflverse edge signals (buy-low / sell-high fusion)", () => {
     expect(edge.canPublishPicks).toBe(false);
   });
 
-  it("serves the edge-signals API without publishing picks", async () => {
-    vi.stubGlobal("fetch", mockFetch());
-    vi.resetModules();
-    const mod = await import("@/app/api/nflverse/edge-signals/route");
-    const response = (await mod.GET()) as Response;
-    const body = (await response.json()) as Record<string, unknown>;
-    expect(response.status).toBe(200);
-    expect(body["success"]).toBe(true);
-    expect((body["data"] as Record<string, unknown>)["canPublishPicks"]).toBe(false);
+  it("the public edge-signals API route no longer exists (doctrine: no public NGS opt-in)", () => {
+    // NGS internal-only doctrine (Garrett, 2026-09-28, HARD): the serving
+    // route was DELETED, not fenced. The loader stays internal-only.
+    expect(
+      existsSync(join(process.cwd(), "app/api/nflverse/edge-signals/route.ts")),
+      "deleted route must stay deleted",
+    ).toBe(false);
   });
 });

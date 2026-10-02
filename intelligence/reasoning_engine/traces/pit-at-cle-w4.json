@@ -1,0 +1,68 @@
+{
+  "game_id": "PIT-at-CLE-2026-w4",
+  "bet_type": null,
+  "pick": null,
+  "probability_before_calibration": null,
+  "probability_after_calibration": null,
+  "confidence": null,
+  "facts": [
+    {
+      "signal": "CLE.epa_facets",
+      "value": {
+        "team": "CLE",
+        "season": 2026,
+        "before_week": 4,
+        "plays": 237,
+        "pass_epa": 11.91,
+        "rush_epa": -21.279,
+        "turnover_epa": -16.008,
+        "turnover_n": 3,
+        "source": "real",
+        "license": "nflverse CC-BY-4.0",
+        "point_in_time": true,
+        "note": "Sum of play EPA on this team's offensive plays before the named week. Not a win probability."
+      },
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "fired": true,
+      "weight": null,
+      "weight_status": "not-fitted"
+    },
+    {
+      "signal": "PIT.epa_facets",
+      "value": {
+        "team": "PIT",
+        "season": 2026,
+        "before_week": 4,
+        "plays": 250,
+        "pass_epa": -23.872,
+        "rush_epa": -3.416,
+        "turnover_epa": -14.96,
+        "turnover_n": 5,
+        "source": "real",
+        "license": "nflverse CC-BY-4.0",
+        "point_in_time": true,
+        "note": "Sum of play EPA on this team's offensive plays before the named week. Not a win probability."
+      },
+      "source": "real",
+      "license": "nflverse CC-BY-4.0",
+      "fired": true,
+      "weight": null,
+      "weight_status": "not-fitted"
+    },
+    {
+      "signal": "weather_horizons",
+      "value": null,
+      "source": "real",
+      "license": "CC-BY-4.0; hosted free tier is non-commercial",
+      "fired": false,
+      "weight": null,
+      "weight_status": "prior-not-applied-unless-wind-over-15"
+    }
+  ],
+  "gaps": [
+    "no published pick",
+    "tau served table is a point fit, not used as a probability"
+  ],
+  "fit_stamp": "point fit \u2014 not pre-kickoff. 2026 unit cells pool in-season weeks."
+}
