@@ -34,7 +34,7 @@ import {
   emptyOddsCreditTruth,
   type OddsCreditLedgerDb,
 } from "@sports/data-ingestion";
-import { isLowQuota } from "@sports/ingestion-pipeline";
+import { isLowQuota, checkArchiveStaleness } from "@sports/ingestion-pipeline";
 import { planAutonomyCycle } from "@/lib/autonomy/operating-kernel";
 import { getReadinessGates } from "@sports/prediction-engine";
 
@@ -175,6 +175,45 @@ export async function GET(request: Request): Promise<NextResponse> {
     process.env["GIT_COMMIT_SHA"]?.slice(0, 12) ??
     null;
 
+  // Line-archive write freshness (GSE-MON-012). This monitor was written FOR the
+  // 2026-08-22 -> 2026-09-13 outage, where the archive died for 21 days because
+  // the writer's Prisma filter was wrong and its catch swallowed the error. It
+  // carried 36 passing tests and ZERO callers, so the alarm for that outage was
+  // never actually armed. Run it here, every tick.
+  //
+  // Best-effort, and fail-visible: a read that throws must NOT read as healthy,
+  // so an unreadable monitor reports isStale with the reason, never an all-clear.
+  let archiveStaleness: {
+    isStale: boolean;
+    writesInWindow: number;
+    lastWriteAt: string | null;
+    windowHours: number;
+    alerted: boolean;
+    reason: string;
+  };
+  try {
+    const r = await checkArchiveStaleness({ db: db as never, env: process.env });
+    archiveStaleness = {
+      isStale: r.isStale,
+      writesInWindow: r.writesInWindow,
+      lastWriteAt: r.lastWriteAt ? r.lastWriteAt.toISOString() : null,
+      windowHours: r.windowHours,
+      alerted: r.alerted,
+      reason: r.reason,
+    };
+  } catch (err) {
+    archiveStaleness = {
+      isStale: true,
+      writesInWindow: 0,
+      lastWriteAt: null,
+      windowHours: 6,
+      alerted: false,
+      reason: `archive staleness monitor could not be read: ${
+        err instanceof Error ? err.message : String(err)
+      }`,
+    };
+  }
+
   // Settlement + gates → autonomy plan (best-effort; never fail the cron)
   let autonomy: ReturnType<typeof planAutonomyCycle> | null = null;
   try {
@@ -251,6 +290,7 @@ export async function GET(request: Request): Promise<NextResponse> {
       decisionReason: decision.reason,
       ingestionAgeMinutes: snap.ingestionAgeMinutes,
       settlementUnavailable: snap.settlementUnavailable,
+      lineArchiveStaleness: archiveStaleness,
       calibrationDrift: calibrationDrift
         ? {
             since: calibrationDrift.since,
