@@ -113,27 +113,17 @@ export function computeMetrics(
   };
 }
 
-/**
- * Isotonic calibration with rejection — applies ONLY if holdout Brier improves.
- * This is sjpagano's exact discipline: test it, reject it if it doesn't help.
- */
-export function tryIsotonic(
+function fitIsotonicCalibrator(
   trainProbs: readonly number[],
   trainOutcomes: readonly number[],
-  holdoutProbs: readonly number[],
-  holdoutOutcomes: readonly number[],
-): IsotonicResult {
-  // Fit isotonic regression on train (pool adjacent violators)
+): (p: number) => number {
   const pairs = trainProbs.map((p, i) => ({ p, y: trainOutcomes[i] as number }));
   pairs.sort((a, b) => a.p - b.p);
-
-  // PAV algorithm
   const blocks: { p: number; y: number; w: number }[] = pairs.map((x) => ({ p: x.p, y: x.y, w: 1 }));
   for (let i = 0; i < blocks.length - 1; i++) {
     const cur = blocks[i] as { p: number; y: number; w: number };
     const nxt = blocks[i + 1] as { p: number; y: number; w: number };
     if (cur.y > nxt.y) {
-      // Merge
       const merged = {
         p: (cur.p * cur.w + nxt.p * nxt.w) / (cur.w + nxt.w),
         y: (cur.y * cur.w + nxt.y * nxt.w) / (cur.w + nxt.w),
@@ -143,11 +133,8 @@ export function tryIsotonic(
       i = Math.max(-1, i - 2);
     }
   }
-
-  // Map holdout probs through the isotonic fit
-  const calibrate = (p: number): number => {
+  return (p: number): number => {
     if (blocks.length === 0) return p;
-    // Find nearest block
     let best = blocks[0] as { p: number; y: number; w: number };
     let bestDist = Math.abs(p - best.p);
     for (const b of blocks) {
@@ -159,10 +146,21 @@ export function tryIsotonic(
     }
     return best.y;
   };
+}
 
+/**
+ * Isotonic calibration with rejection — applies ONLY if the selection
+ * Brier improves. The fit uses train only. The selection slice decides
+ * apply/reject. It is not a sealed test.
+ */
+export function tryIsotonic(
+  trainProbs: readonly number[],
+  trainOutcomes: readonly number[],
+  holdoutProbs: readonly number[],
+  holdoutOutcomes: readonly number[],
+): IsotonicResult {
+  const calibrate = fitIsotonicCalibrator(trainProbs, trainOutcomes);
   const calibratedProbs = holdoutProbs.map(calibrate);
-
-  // Evaluate on holdout
   const holdoutBrierBefore = computeMetrics(holdoutProbs, holdoutOutcomes).brier;
   const holdoutBrierAfter = computeMetrics(calibratedProbs, holdoutOutcomes).brier;
   const deltaBrier = holdoutBrierAfter - holdoutBrierBefore;
@@ -172,19 +170,21 @@ export function tryIsotonic(
       applied: true,
       deltaBrier: Number(deltaBrier.toFixed(6)),
       calibratedProbs,
-      reason: `Isotonic improved holdout Brier by ${Math.abs(deltaBrier).toFixed(6)} — applied.`,
+      reason: `Isotonic improved selection Brier by ${Math.abs(deltaBrier).toFixed(6)} — applied on the selection set, not a sealed test.`,
     };
   }
   return {
     applied: false,
     deltaBrier: Number(deltaBrier.toFixed(6)),
-    calibratedProbs: holdoutProbs, // return uncalibrated
-    reason: `Isotonic worsened holdout Brier by ${deltaBrier.toFixed(6)} — REJECTED. Original probs returned.`,
+    calibratedProbs: holdoutProbs,
+    reason: `Isotonic worsened selection Brier by ${deltaBrier.toFixed(6)} — REJECTED. Original probs returned.`,
   };
 }
 
 /**
- * Run the full calibration gate. Returns metrics + isotonic decision.
+ * Selection-set gate. `passed` is always false here: the metrics were
+ * computed on the same rows that accepted or rejected the map. A sealed
+ * pass is `runSealedCalibrationGate`.
  */
 export function runCalibrationGate(
   trainProbs: readonly number[],
@@ -192,16 +192,81 @@ export function runCalibrationGate(
   holdoutProbs: readonly number[],
   holdoutOutcomes: readonly number[],
   config: GateConfig = DEFAULT_GATE_CONFIG,
-): { metrics: CalibrationMetrics; isotonic: IsotonicResult; passed: boolean; failures: string[] } {
+): {
+  metrics: CalibrationMetrics;
+  isotonic: IsotonicResult;
+  passed: false;
+  failures: string[];
+  metricsAreSelectionSet: true;
+  sealed: false;
+} {
   const iso = tryIsotonic(trainProbs, trainOutcomes, holdoutProbs, holdoutOutcomes);
   const finalProbs = iso.applied ? iso.calibratedProbs : holdoutProbs;
   const metrics = computeMetrics(finalProbs, holdoutOutcomes);
 
-  const failures: string[] = [];
+  const failures: string[] = [
+    "metrics were computed on the selection set; this is not a sealed pass",
+  ];
   if (metrics.brier > config.maxBrier) failures.push(`Brier ${metrics.brier} > ${config.maxBrier}`);
   if (metrics.logLoss > config.maxLogLoss) failures.push(`LogLoss ${metrics.logLoss} > ${config.maxLogLoss}`);
   if (metrics.auc < config.minAuc) failures.push(`AUC ${metrics.auc} < ${config.minAuc}`);
   if (metrics.ece > config.maxEce) failures.push(`ECE ${metrics.ece} > ${config.maxEce}`);
 
-  return { metrics, isotonic: iso, passed: failures.length === 0, failures };
+  return {
+    metrics,
+    isotonic: iso,
+    passed: false,
+    failures,
+    metricsAreSelectionSet: true,
+    sealed: false,
+  };
+}
+
+/**
+ * Fit on train, accept or reject on the selection slice, score only the
+ * sealed slice. The sealed rows are not used to choose the map.
+ */
+export function runSealedCalibrationGate(
+  trainProbs: readonly number[],
+  trainOutcomes: readonly number[],
+  selectionProbs: readonly number[],
+  selectionOutcomes: readonly number[],
+  sealedProbs: readonly number[],
+  sealedOutcomes: readonly number[],
+  config: GateConfig = DEFAULT_GATE_CONFIG,
+): {
+  metrics: CalibrationMetrics | null;
+  isotonic: IsotonicResult;
+  passed: boolean;
+  failures: string[];
+  metricsAreSelectionSet: false;
+  sealed: boolean;
+} {
+  const iso = tryIsotonic(trainProbs, trainOutcomes, selectionProbs, selectionOutcomes);
+  if (sealedProbs.length === 0 || sealedProbs.length !== sealedOutcomes.length) {
+    return {
+      metrics: null,
+      isotonic: iso,
+      passed: false,
+      failures: ["sealed split missing or length mismatch; refusal, not a default pass"],
+      metricsAreSelectionSet: false,
+      sealed: false,
+    };
+  }
+  const calibrate = fitIsotonicCalibrator(trainProbs, trainOutcomes);
+  const finalProbs = iso.applied ? sealedProbs.map(calibrate) : sealedProbs;
+  const metrics = computeMetrics(finalProbs, sealedOutcomes);
+  const failures: string[] = [];
+  if (metrics.brier > config.maxBrier) failures.push(`Brier ${metrics.brier} > ${config.maxBrier}`);
+  if (metrics.logLoss > config.maxLogLoss) failures.push(`LogLoss ${metrics.logLoss} > ${config.maxLogLoss}`);
+  if (metrics.auc < config.minAuc) failures.push(`AUC ${metrics.auc} < ${config.minAuc}`);
+  if (metrics.ece > config.maxEce) failures.push(`ECE ${metrics.ece} > ${config.maxEce}`);
+  return {
+    metrics,
+    isotonic: iso,
+    passed: failures.length === 0,
+    failures,
+    metricsAreSelectionSet: false,
+    sealed: true,
+  };
 }

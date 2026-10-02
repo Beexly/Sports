@@ -3,6 +3,8 @@ import { describe, expect, it } from "vitest";
 import {
   DECAY_LAMBDAS,
   ENABLED,
+  MIN_ADOPTION_GAMES,
+  btAdoptionGate,
   btFit,
   btFitDecayed,
   btStandardErrors,
@@ -14,6 +16,14 @@ describe("Bradley-Terry uncertainty quantification", () => {
   it("is disabled by default", () => {
     expect(ENABLED).toBe(false);
     expect(DECAY_LAMBDAS).toEqual([0.9, 0.95, 0.98]);
+  });
+
+  it("refuses adoption below the sample floor and still refuses to publish at the floor", () => {
+    expect(btAdoptionGate(2).refused).toBe(true);
+    expect(btAdoptionGate(MIN_ADOPTION_GAMES - 1).refused).toBe(true);
+    const cleared = btAdoptionGate(MIN_ADOPTION_GAMES);
+    expect(cleared.refused).toBe(false);
+    expect(ENABLED).toBe(false);
   });
 
   it("symmetric teams get ~zero strengths and ~0.5 neutral-site probs", () => {

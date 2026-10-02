@@ -3,6 +3,7 @@ import {
   computeMetrics,
   tryIsotonic,
   runCalibrationGate,
+  runSealedCalibrationGate,
   DEFAULT_GATE_CONFIG,
 } from "./calibration-gates.js";
 
@@ -66,7 +67,35 @@ describe("W1: calibration gates with isotonic rejection", () => {
     expect(r.metrics).toBeDefined();
     expect(r.isotonic).toBeDefined();
     expect(typeof r.passed).toBe("boolean");
+    expect(r.passed).toBe(false);
+    expect(r.metricsAreSelectionSet).toBe(true);
+    expect(r.sealed).toBe(false);
+    expect(r.failures[0]).toContain("selection set");
     expect(Array.isArray(r.failures)).toBe(true);
+  });
+
+  it("refuses a sealed pass when the sealed split is missing", () => {
+    const trainProbs = [0.6, 0.4, 0.7, 0.3];
+    const trainOutcomes = [1, 0, 1, 0];
+    const r = runSealedCalibrationGate(trainProbs, trainOutcomes, trainProbs, trainOutcomes, [], []);
+    expect(r.passed).toBe(false);
+    expect(r.sealed).toBe(false);
+    expect(r.metrics).toBeNull();
+  });
+
+  it("scores the sealed slice, not the selection slice", () => {
+    const trainProbs = [0.9, 0.9, 0.9, 0.9, 0.1, 0.1, 0.1, 0.1];
+    const trainOutcomes = [1, 1, 1, 1, 0, 0, 0, 0];
+    const selectionProbs = [0.8, 0.2];
+    const selectionOutcomes = [1, 0];
+    const sealedProbs = [0.7, 0.3];
+    const sealedOutcomes = [1, 0];
+    const r = runSealedCalibrationGate(
+      trainProbs, trainOutcomes, selectionProbs, selectionOutcomes, sealedProbs, sealedOutcomes,
+    );
+    expect(r.sealed).toBe(true);
+    expect(r.metricsAreSelectionSet).toBe(false);
+    expect(r.metrics?.n).toBe(2);
   });
 
   it("gate config has sensible defaults", () => {

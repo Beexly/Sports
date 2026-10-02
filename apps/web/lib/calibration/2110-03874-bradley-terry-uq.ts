@@ -28,6 +28,19 @@ export function mulberry32(seed: number): () => number {
 
 export const ENABLED = false;
 
+/** Doctrine floor. Below this, a BT fit is not an adoption. The fitter itself still runs for tests. */
+export const MIN_ADOPTION_GAMES = 40;
+
+export function btAdoptionGate(gameCount: number): { readonly refused: boolean; readonly reason: string } {
+  if (!Number.isInteger(gameCount) || gameCount < MIN_ADOPTION_GAMES) {
+    return {
+      refused: true,
+      reason: `Bradley-Terry adoption refused: ${gameCount} games is below ${MIN_ADOPTION_GAMES}. ENABLED stays false.`,
+    };
+  }
+  return { refused: false, reason: "sample floor cleared; ENABLED is still false until a human call and a sealed coverage check" };
+}
+
 export interface GameResult {
   /** Team indices into the strength vector. */
   readonly home: number;
