@@ -9,7 +9,8 @@ import { type MetricTerm } from "@/components/ui/metric-explainer";
 // layouts) lives in the 'use client' EngineView — functions cannot cross the
 // server→client RSC boundary, so they must not live in anything the server page
 // hands to a client component.
-import { loadPlayerModel } from "@/lib/intelligence/player-model";
+import { loadPlayerModel } from "@/lib/intelligence/player-model"
+import { loadEdgeBoard } from "@/lib/intelligence/edge-board";
 import { loadExpectedPointsForDisplay } from "@/lib/intelligence/expected-points-display";
 import { loadQbForward } from "@/lib/intelligence/qb-forward";
 import { loadRushingContact } from "@/lib/intelligence/rushing-contact";
@@ -610,10 +611,53 @@ const PROOF_ENGINE = engine({
 });
 
 // ─────────────────────────────────────────────────────────────────────────────
+// EDGE BOARD — cross-dataset divergence, ranked (composes the five loaders above)
+// ─────────────────────────────────────────────────────────────────────────────
+
+const EDGE_BOARD_ENGINE = engine({
+  slug: "edge-board",
+  group: "Cross-position core",
+  label: "Edge Board",
+  title: "Where the signals disagree the loudest.",
+  description: (
+    <>
+      Every other engine answers one question against one lens. This one asks the meta-question: across
+      every dataset we ingest, where do the signals <em>disagree</em> the loudest? Disagreement is where the
+      market has not caught up. One ranked list, each row quoting the real number behind it.
+    </>
+  ),
+  api: "/api/intelligence/edge-board",
+  sourceIds: ["nflverse"],
+  explainer: [
+    {
+      term: "Magnitude: how loud is the disagreement?",
+      definition: (
+        <>
+          A 0&ndash;100 score normalized <em>across</em> edge types, so a rating gap and a vacated-volume
+          cascade rank on one axis. It is a ranking score, not a probability.
+        </>
+      ),
+    },
+    {
+      term: "Direction: buy-low or sell-high?",
+      definition:
+        "Sign convention: the input says the player is worth more than production has shown (buy-low), or the reverse (sell-high).",
+    },
+    {
+      term: "Source line: did every lens actually load?",
+      definition:
+        "Each of the five underlying loaders reports live or source-error with how many edges it contributed. One dead dataset never takes the board down, and never hides itself.",
+    },
+  ],
+  load: loadEdgeBoard,
+});
+
+// ─────────────────────────────────────────────────────────────────────────────
 // REGISTRY
 // ─────────────────────────────────────────────────────────────────────────────
 
 export const ENGINES: readonly EngineEntry[] = [
+  EDGE_BOARD_ENGINE,
   PLAYER_MODEL_ENGINE,
   EXPECTED_POINTS_ENGINE,
   QB_FORWARD_ENGINE,

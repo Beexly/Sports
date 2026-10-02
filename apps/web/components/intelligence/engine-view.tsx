@@ -25,7 +25,8 @@ import type { RouteRate, RouteRateRow, RouteRateSignal } from "@/lib/intelligenc
 import type { ScoringZone, ScoringZoneRow, ScoringZoneSignal } from "@/lib/intelligence/scoring-zone";
 import type { TeamEnvironment, TeamEnvironmentRow } from "@/lib/intelligence/team-environment";
 import type { OpportunityTransfer, OpportunityTransferRow, TransferConfidence } from "@/lib/intelligence/opportunity-transfer";
-import type { ClvBacktest, ClvBacktestRow } from "@/lib/intelligence/clv-calibration";
+import type { ClvBacktest, ClvBacktestRow } from "@/lib/intelligence/clv-calibration"
+import type { EdgeBoard, EdgeRow } from "@/lib/intelligence/edge-board";
 import type { PredictivenessProof, PredictivenessSplit } from "@/lib/intelligence/predictiveness";
 import type { SleeperTrending, TrendingRow } from "@/lib/integrations/sleeper";
 
@@ -961,6 +962,84 @@ export interface EngineViewProps {
   readonly data: unknown;
 }
 
+export // ─────────────────────────────────────────────────────────────────────────────
+// EDGE BOARD — cross-dataset divergence, ranked
+// ─────────────────────────────────────────────────────────────────────────────
+
+function edgeColumns(): Column<EdgeRow>[] {
+  return [
+    {
+      key: "player",
+      label: "Player",
+      render: (r) => (
+        <span className="font-semibold text-ion-white">
+          {r.player}
+          <span className="ml-2 font-mono text-[11px] text-ion-1">{r.position}</span>
+        </span>
+      ),
+    },
+    { key: "team", label: "Tm", render: (r) => <span className="font-mono text-ion-1">{r.team}</span> },
+    { key: "label", label: "Signal", render: (r) => <span className="text-ion-2">{r.label}</span> },
+    {
+      key: "magnitude",
+      label: "Magnitude",
+      align: "right",
+      numeric: true,
+      tooltip: "0-100, normalized across edge types so heterogeneous gaps rank on one axis. A ranking score, not a probability.",
+      render: (r) => <span className="font-mono text-ion-white">{Math.round(r.magnitude)}</span>,
+    },
+    {
+      key: "signed",
+      label: "Gap",
+      align: "right",
+      numeric: true,
+      tooltip: "The signed driver value behind the magnitude, in the edge's own units.",
+      render: (r) => (
+        <span className={`font-mono ${r.signed >= 0 ? "text-verify-on-light" : "text-alert-on-light"}`}>
+          {r.signed >= 0 ? "+" : ""}
+          {r.signed.toFixed(2)}
+        </span>
+      ),
+    },
+    { key: "reason", label: "Why", render: (r) => <span className="text-ion-2">{r.reason}</span> },
+    { key: "source", label: "Source", render: (r) => <span className="font-mono text-[11px] text-ion-1">{r.source}</span> },
+  ];
+}
+
+function EdgeBoardView({ b }: { b: EdgeBoard }): JSX.Element {
+  if (b.status === "source-error") {
+    return <SourceError variant="dark" reason={b.error ?? "UNKNOWN"} />;
+  }
+  const live = b.sources.filter((s) => s.status === "live");
+  const errored = b.sources.filter((s) => s.status === "source-error");
+  return (
+    <div className="flex flex-col gap-6">
+      <Note>
+        {b.season === null ? "Season unresolved" : `Season ${b.season}`}
+        {b.throughWeek === null ? "" : ` · through week ${b.throughWeek}`} ·{" "}
+        {live.length}/{b.sources.length} sources live
+        {errored.length > 0 ? ` · ${errored.map((s) => s.label).join(", ")} unavailable` : ""}
+      </Note>
+
+      <div className="flex flex-col gap-3">
+        <SubHead kicker="Divergences" title="Where the signals disagree loudest" />
+        <DataTable
+          variant="dark"
+          rows={b.edges}
+          columns={edgeColumns()}
+          rowKey={(r) => r.key}
+          showRank
+          emptyTitle="No qualifying divergence in any source for this window."
+          initialSort={{ key: "magnitude", dir: "desc" }}
+          minWidth={860}
+        />
+      </div>
+
+      <Note>{b.note}</Note>
+    </div>
+  );
+}
+
 export function EngineView({ engine, data }: EngineViewProps): JSX.Element {
   switch (engine) {
     case "player-model":
@@ -985,6 +1064,8 @@ export function EngineView({ engine, data }: EngineViewProps): JSX.Element {
       return <WaiverTrendsView t={data as SleeperTrending} />;
     case "proof":
       return <ProofView p={data as PredictivenessProof} />;
+    case "edge-board":
+      return <EdgeBoardView b={data as EdgeBoard} />;
     default:
       return <SourceError variant="dark" reason={`Unknown engine "${engine}".`} />;
   }
