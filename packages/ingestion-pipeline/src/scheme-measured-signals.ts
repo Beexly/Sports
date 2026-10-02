@@ -124,10 +124,50 @@ export const nflPriorOffenseEpaSignal = measured(
   "nflverse 2025 EPA per scrimmage play, home minus away. A prior, not the live EPA blend",
 );
 
+export const nflPriorPassRateSignal = measured(
+  "nfl_prior_pass_rate",
+  "NFL Pass Rate, prior season",
+  "EFFICIENCY",
+  0.08,
+  (home, away) => home.passRate - away.passRate,
+  "nflverse 2025 pass plays over pass plus run, home minus away, not the 2026 weeks 1-3 rate",
+);
+
+export const nflShotgunRateSignal = measured(
+  "nfl_shotgun_rate",
+  "NFL Shotgun Rate, prior season",
+  "SITUATIONAL",
+  0.06,
+  (home, away) => home.shotgun - away.shotgun,
+  "nflverse 2025 shotgun share, home minus away",
+);
+
+export const nflNoHuddleRateSignal = measured(
+  "nfl_no_huddle_rate",
+  "NFL No-Huddle Rate, prior season",
+  "SITUATIONAL",
+  0.05,
+  (home, away) => home.noHuddle - away.noHuddle,
+  "nflverse 2025 no-huddle share, home minus away",
+);
+
+export const nflRbBellcowSignal = measured(
+  "nfl_rb_bellcow",
+  "NFL RB Bellcow Share, prior season",
+  "EFFICIENCY",
+  0.06,
+  (home, away) => home.rbBellcow - away.rbBellcow,
+  "nflverse 2025 top running back share of team rushes, home minus away",
+);
+
 export const SCHEME_MEASURED_SIGNALS: readonly SignalDefinition[] = [
   nflRedzonePassTendencySignal,
   nflWrTargetFunnelSignal,
   nflPacePlaysSignal,
   nflPassDefensePriorSignal,
   nflPriorOffenseEpaSignal,
+  nflPriorPassRateSignal,
+  nflShotgunRateSignal,
+  nflNoHuddleRateSignal,
+  nflRbBellcowSignal,
 ];
