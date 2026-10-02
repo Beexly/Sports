@@ -372,7 +372,9 @@ def _build_data_context(game: dict[str, Any], providers: ProviderRegistry,
             ev("offensive_line", f"DATA-GAP: {e.reason}", R.Verification.INFERENCE)
 
     # --- L3 causal chains (provider-built, converted to canonical) ---
-    chains_i, link_conds = build_causal_chains(game, providers, league_avgs)
+    chains_i, link_conds, chain_gaps = build_causal_chains(game, providers, league_avgs)
+    for gap in chain_gaps:
+        ev("offensive_line", f"DATA-GAP: {gap}", R.Verification.INFERENCE)
     chains_c, display, verifs = _to_canonical_chains(chains_i, link_conds)
     ctx.chains = chains_c
     for conds in link_conds.values():

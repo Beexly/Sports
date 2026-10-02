@@ -96,6 +96,7 @@ def build_causal_chains(game: dict[str, Any], providers: ProviderRegistry,
     """
     chains: list[CausalChain] = []
     link_conditions: dict[str, list[BreakingCondition]] = {}
+    gaps: list[str] = []
     away, home = game.get("away"), game.get("home")
     defense = game.get("defense", {}) or {}
     playcallers = game.get("playcallers", {}) or {}
@@ -106,11 +107,13 @@ def build_causal_chains(game: dict[str, Any], providers: ProviderRegistry,
             continue
         try:
             ol = providers.ol.get_ol_state(team, week, season)
-        except DataGapError:
+        except DataGapError as e:
+            gaps.append(f"{team} offensive_line: {e.reason}")
             continue
         try:
             fp = providers.coaching.get_scheme_fingerprint(team, week, season)
-        except DataGapError:
+        except DataGapError as e:
+            gaps.append(f"{team} coaching_scheme: {e.reason}")
             continue
         if not ol.starters_out:
             continue
@@ -154,7 +157,7 @@ def build_causal_chains(game: dict[str, Any], providers: ProviderRegistry,
             verification=Verification.COMPUTED if ttt is not None else Verification.INFERENCE))
         link_conditions.setdefault(link_id, []).extend(conditions)
 
-    return chains, link_conditions
+    return chains, link_conditions, gaps
 
 
 def detect_scheme_matchup_conflict(chains: list[CausalChain],
