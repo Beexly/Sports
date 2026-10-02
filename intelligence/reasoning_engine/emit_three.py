@@ -6,6 +6,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 from reasoning_engine.facets import epa_facets
+from reasoning_engine.seal import seal_trace
 
 GAMES = (("CLE", "PIT"), ("BUF", "NE"), ("CHI", "NYJ"))
 PBP = os.path.join(ROOT, "coaching", "data", "play_by_play_2026.parquet")
@@ -49,6 +50,7 @@ def main() -> None:
             "gaps": ["no published pick", "tau served table is a point fit, not used as a probability"],
             "fit_stamp": "point fit — not pre-kickoff. 2026 unit cells pool in-season weeks.",
         }
+        doc = seal_trace(doc)
         path = os.path.join(OUT, f"{away.lower()}-at-{home.lower()}-w4.json")
         json.dump(doc, open(path, "w", encoding="utf-8"), indent=2)
         print("wrote", path)

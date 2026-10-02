@@ -17,7 +17,9 @@ from integration.api import analyze
 from integration.providers import DataGapError, ProviderRegistry
 from integration.stubs import fixture_league_avgs
 from qb_behavior.situational.provider import SituationalQBProvider
+from coaching.rest_days import rest_before
 from reasoning_engine.facets import epa_facets
+from reasoning_engine.seal import seal_trace
 from tests.helpers import card_request
 
 
@@ -79,6 +81,24 @@ def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int
         except DataGapError as e:
             gaps.append(f"tau {team}: {e.reason}")
 
+    for team in (home, away):
+        try:
+            rest = rest_before(team, season, week)
+            facts.append({
+                "signal": f"{team}.rest_days",
+                "value": rest,
+                "fired": rest.get("rest_days") is not None,
+                "source": rest.get("source", "gap"),
+                "license": rest.get("license", "nflverse CC-BY-4.0"),
+                "weight": None,
+                "weight_status": "withheld",
+                "note": "rest days, not an age, not a tilt",
+            })
+            if rest.get("gap"):
+                gaps.append(f"rest {team}: {rest['gap']}")
+        except (FileNotFoundError, ValueError) as e:
+            gaps.append(f"rest {team}: {e}")
+
     if weather is None:
         gaps.append("weather: not fetched for this run")
     else:
@@ -87,7 +107,7 @@ def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int
 
     reg = ProviderRegistry(qb=SituationalQBProvider(), coaching=coaching, trust=None, ol=ol)
     trace = analyze(card_request(), reg, league_avgs=fixture_league_avgs())
-    return {
+    return seal_trace({
         "game_id": f"{away}-{home}-{season}-w{week}",
         "bet_type": "CARD",
         "facts": facts,
@@ -101,7 +121,7 @@ def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int
         "probability_before_calibration": None,
         "probability_after_calibration": None,
         "note": "No pick was emitted. The façade refused or did not reach a publishable card. Facts above are measurements. They are not a probability.",
-    }
+    })
 
 
 def write_trace(path: str, doc: dict[str, Any]) -> None:
