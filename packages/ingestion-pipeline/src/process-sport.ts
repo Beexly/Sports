@@ -1629,7 +1629,27 @@ export async function processSport(
     }
 
     // Persist immutable gate decisions audit trail (GSE-GATE-094 recovery)
-    await persistGateDecisions(gateDecisionsToPersist);
+    //
+    // The RESULT was previously discarded here. `persistGateDecisions` isolates
+    // its own DB failure and returns { persisted: 0, error }, so a write that
+    // silently lost every gate decision looked identical to one that saved them
+    // all, and the run below was still marked SUCCESS. Three readers of this
+    // table (board/passes, load-engine-story, board/state) then read a table
+    // that was never written, with nothing to say so.
+    //
+    // The write stays failure-isolated on purpose (a broken audit trail must not
+    // lose the ingest), but the loss is now recorded on the run, where an
+    // operator and the health surface can both see it.
+    const gateDecisionWrite = await persistGateDecisions(gateDecisionsToPersist);
+    const gateDecisionsLost = gateDecisionWrite.error
+      ? gateDecisionWrite.attempted - gateDecisionWrite.persisted
+      : 0;
+    if (gateDecisionWrite.error) {
+      console.warn(
+        `[process-sport] gate decision audit trail INCOMPLETE for run ${run.id}: ` +
+          `${gateDecisionsLost}/${gateDecisionWrite.attempted} not persisted (${gateDecisionWrite.error})`,
+      );
+    }
 
     await db.ingestionRun.update({
       where: { id: run.id },
@@ -1638,6 +1658,16 @@ export async function processSport(
         gamesUpserted: Object.keys(gameRecords).length,
         oddsInserted,
         completedAt: new Date(),
+        // `errorMessage` is the real column on IngestionRun (there is no
+        // `notes`). A partially-lost audit trail is not a run FAILURE -- the
+        // ingest itself succeeded and must not be retried as if it had not --
+        // but it must not be silent either, so it is recorded where an operator
+        // and the health surface already look.
+        ...(gateDecisionsLost > 0
+          ? {
+              errorMessage: `gate_decisions_lost=${gateDecisionsLost}/${gateDecisionWrite.attempted}: ${gateDecisionWrite.error}`,
+            }
+          : {}),
       },
     });
 

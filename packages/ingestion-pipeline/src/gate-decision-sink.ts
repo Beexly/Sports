@@ -13,6 +13,7 @@
  */
 
 import { db } from "@sports/db";
+import type { Prisma, GateDecisionStatus } from "@prisma/client";
 
 export type GateReasonCode =
   | "PUBLISHED"
@@ -76,11 +77,34 @@ export async function persistGateDecisions(
     });
   }
 
+  // The row shape Prisma expects, stated instead of erased. The previous
+  // `deduplicated as any` removed the ONLY typecheck on this wire format, which
+  // is how a bad column name would have shipped. `evidenceRefs` is the one
+  // genuinely open field (Prisma InputJsonValue), so it is narrowed there and
+  // nowhere else.
+  const rows: Prisma.GateDecisionCreateManyInput[] = deduplicated.map((d) => ({
+    gameId: d.gameId,
+    pickId: d.pickId,
+    status: d.status as GateDecisionStatus,
+    reason: d.reason,
+    reasonCode: d.reasonCode,
+    confidence: d.confidence,
+    edgeIndex: d.edgeIndex,
+    modelVersion: d.modelVersion,
+    isBootstrap: d.isBootstrap,
+    evaluatedAt: d.evaluatedAt,
+    ...(d.evidenceRefs !== undefined
+      ? { evidenceRefs: d.evidenceRefs as Prisma.InputJsonValue }
+      : {}),
+  }));
+
   try {
-    const result = await db.gateDecision.createMany({
-      data: deduplicated as any,
-      skipDuplicates: true,
-    });
+    // NO `skipDuplicates`. GateDecision has no `@@unique` in schema.prisma --
+    // only `@@index` -- so that flag was a no-op that LOOKED like protection.
+    // It is dropped rather than left as decoration; the in-memory de-dup by
+    // gameId above is the real guarantee, and a unique constraint is a schema
+    // change (owner-owned) rather than something to fake here.
+    const result = await db.gateDecision.createMany({ data: rows });
 
     return {
       attempted: decisions.length,
