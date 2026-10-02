@@ -27,4 +27,5 @@ def test_tau_csv_matches_manifest():
     # A unit cell is a measurement. A prior cell is not. Both must stay labeled.
     assert levels["unit"] == 55
     assert manifest["source_license"].startswith("nflverse/nflverse-data")
-    assert manifest["point_in_time"] is False
+    assert manifest["fit_stamp"] == "point fit — not pre-kickoff. 2026 unit cells pool in-season weeks."
+    assert all(r["fit_stamp"] == manifest["fit_stamp"] for r in rows)

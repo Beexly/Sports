@@ -26,6 +26,7 @@ from reasoning.interfaces import AnalysisRequest as RAnalysisRequest, DataContex
 from . import types as T
 from .pipeline import TOP_PASS_RUSH_CUTOFF, build_causal_chains
 from .providers import DataGapError, ProviderRegistry
+from context.tau_wire import TAU_STAMP
 from .trace import FileTraceStore, make_trace_id, utcnow_iso
 from .types import (
     AnalysisRequest,
@@ -240,10 +241,11 @@ def _build_data_context(game: dict[str, Any], providers: ProviderRegistry,
                         if t.get("tau_hat") is not None:
                             ctx.observations[f"coaching.{team}.tau_hat"] = \
                                 float(t["tau_hat"])
+                            ctx.observations[f"coaching.{team}.tau_stamp"] = TAU_STAMP
                             ev("coaching_scheme",
                                f"{team} 4th-down risk preference tau-hat "
                                f"{t['tau_hat']:.3f} ({t.get('fallback_level')}"
-                               f", {t.get('n_decisions')} decisions)",
+                               f", {t.get('n_decisions')} decisions). {TAU_STAMP}",
                                R.Verification.COMPUTED)
                     except DataGapError as e:
                         _note_gap("coaching_scheme", qb_id, e.reason,
