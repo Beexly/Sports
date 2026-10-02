@@ -31,7 +31,7 @@ import { elevationAboveThreshold, roofAcclimationMismatch, surfaceAcclimationMis
 import { kalshiHomeMid } from "./nfl-kalshi-mid.js";
 import { pregameMarketAnchor } from "./nfl-pregame-market.js";
 import { penaltyMatchup } from "./nfl-penalty-matchup.js";
-import { nflQbRushRateSignal } from "./nfl-qb-rush.js";
+import { nflQbRushRateSignal, nflQbRushYardsSignal } from "./nfl-qb-rush.js";
 import { PERSONNEL_SIGNALS } from "./nfl-personnel.js";
 import { pressureMatchup } from "./nfl-pressure-matchup.js";
 import { RAW_COLUMN_SIGNALS } from "./nfl-raw-columns.js";
@@ -1209,6 +1209,7 @@ export const EXTENDED_SIGNALS: readonly SignalDefinition[] = [
   ...ENTERING_DEFENSE_SIGNALS,
   ...INTEL_PRIOR_SIGNALS,
   nflQbRushRateSignal,
+  nflQbRushYardsSignal,
   nflWrAdotSignal,
   nflWrYacSignal,
   nflWrDropRateSignal,

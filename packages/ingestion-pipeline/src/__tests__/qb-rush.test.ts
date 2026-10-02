@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { applyContinuousSignalTilt } from "../continuous-signal-tilt.js";
-import { nflQbRushRateSignal } from "../nfl-qb-rush.js";
+import { nflQbRushRateSignal, nflQbRushYardsSignal } from "../nfl-qb-rush.js";
 
 const kickoff = new Date("2026-10-04T17:00:00Z");
 
@@ -16,6 +16,18 @@ describe("QB rush rate", () => {
     } as never);
     expect(tilt.votes[0]?.rawValue).toBeCloseTo(7.0 - 6.1, 4);
     expect(tilt.votes).toHaveLength(1);
+  });
+
+  it("votes rush yards per game on the same join, divided by 10", async () => {
+    const tilt = await applyContinuousSignalTilt(0.5, [nflQbRushYardsSignal], {
+      sportKey: "americanfootball_nfl",
+      homeTeam: "Buffalo Bills",
+      awayTeam: "New England Patriots",
+      commenceTime: kickoff,
+      env: {},
+      now: () => new Date("2026-10-04T12:00:00Z"),
+    } as never);
+    expect(tilt.votes[0]?.rawValue).toBeCloseTo((36.2 - 26.5) / 10, 4);
   });
 
   it("abstains when the snap leader is not in the 2025 file", async () => {
