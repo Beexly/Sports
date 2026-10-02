@@ -701,4 +701,43 @@ describe("/api/ops/public-surface-truth — P13-03 rate limiting + Stripe gating
       expect(body).toHaveProperty("oddsLineArchiveFreshness");
     });
   });
+
+  // ── signals ledger writer freshness ─────────────────────────────────────
+  //
+  // Same failure class, second table. The `signals` write cron runs hourly at
+  // :23 and carries a wall-clock deadline that legitimately leaves rows
+  // unwritten on a big tick (measured 2026-09-28: 33,583 of 118,083). Nothing
+  // watched the table, so a stalled ledger looked identical to a converging
+  // one — the exact condition that hid the line archive's three-week outage.
+  //
+  // NOTE ON THE MOCK: `dbMock` has no `signal` delegate, so the real reader
+  // THROWS here. That is the fail-closed path and it is asserted deliberately —
+  // a monitoring field that renders "healthy" when it cannot read is worse than
+  // no field at all.
+  describe("signalsLedgerFreshness", () => {
+    it("fails closed to stale, never healthy, when the signals read cannot complete", async () => {
+      delete process.env.CRON_SECRET;
+      const mod = await import("@/app/api/ops/public-surface-truth/route");
+      const req = makeRequest("http://localhost/api/ops/public-surface-truth");
+      const body = await mod.GET(req).then((r) => r.json());
+
+      expect(body).toHaveProperty("signalsLedgerFreshness");
+      expect(body.signalsLedgerFreshness.verdict).toBe("stale");
+      expect(body.signalsLedgerFreshness.verdict).not.toBe("healthy");
+      expect(body.signalsLedgerFreshness.mostRecentFetchedAt).toBeNull();
+    });
+
+    it("is additive: the existing odds freshness field is unchanged alongside it", async () => {
+      dbMock.oddsLineSnapshot.findFirst.mockResolvedValue({ capturedAt: new Date() });
+      dbMock.oddsLineSnapshot.count.mockResolvedValue(1);
+
+      delete process.env.CRON_SECRET;
+      const mod = await import("@/app/api/ops/public-surface-truth/route");
+      const req = makeRequest("http://localhost/api/ops/public-surface-truth");
+      const body = await mod.GET(req).then((r) => r.json());
+
+      expect(body.oddsLineArchiveFreshness.verdict).toBe("healthy");
+      expect(body).toHaveProperty("signalsLedgerFreshness");
+    });
+  });
 });

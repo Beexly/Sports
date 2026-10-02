@@ -33,8 +33,8 @@ function fakeDb(overrides: Record<string, unknown> = {}) {
           week: 1,
           targetShare: v,
           fantasyPointsPpr: 5 + v,
-          passingEpa: null,
-          rushingEpa: null,
+          passingEpa: 0.1 + v,
+          rushingEpa: 0.05 + v,
           receivingEpa: 0.05 + v / 100,
           fetchedAt: now(),
         })),
@@ -48,7 +48,7 @@ function fakeDb(overrides: Record<string, unknown> = {}) {
           week: 1,
           offensePct: v,
           stPct: v / 2,
-          defensePct: null,
+          defensePct: 0.3 + v,
           fetchedAt: now(),
         })),
     },
@@ -155,15 +155,45 @@ describe("LEDGER_KEYS matches what the adapters actually emit", () => {
     expect([...emitted].filter((k) => !LEDGER_KEYS.includes(k))).toEqual([]);
   });
 
-  it("lists no key the loader can never feed", () => {
-    const feedable = new Set([
-      "pgs.target_share", "pgs.fantasy_ppr", "pgs.passing_epa", "pgs.rushing_epa", "pgs.receiving_epa",
-      "snap.offense_pct", "snap.st_pct", "snap.defense_pct",
-      "ngs.passing.cpoe", "ngs.passing.avg_separation", "ngs.passing.yac_above_expectation", "ngs.passing.air_yards_to_sticks",
-      "ngs.receiving.cpoe", "ngs.receiving.avg_separation", "ngs.receiving.yac_above_expectation", "ngs.receiving.air_yards_to_sticks",
-      "ngs.rushing.cpoe", "ngs.rushing.avg_separation", "ngs.rushing.yac_above_expectation", "ngs.rushing.air_yards_to_sticks",
-      "injury.availability",
-    ]);;
-    expect(LEDGER_KEYS.filter((k) => !feedable.has(k))).toEqual([]);
+  it("lists no key the loader can never feed", async () => {
+    // DERIVED, NOT TYPED BY HAND. The previous version declared its own
+    // `feedable` set inline, so it compared LEDGER_KEYS against a list a human
+    // typed — and passed 7/7 while `ngs.rushing.*` (four keys) was emitted by
+    // nothing in the repo. It could catch a typo; it could never catch a key
+    // the loader lists but does not produce, which is the exact failure its own
+    // header says this file exists to prevent.
+    //
+    // This drives the REAL loader with a fixture large enough to clear
+    // `censusAnchors`' own MIN_CENSUS_ROWS floor (30). That floor is the reason a
+    // small fixture emits no NGS key at all: `emit()` returns null without a
+    // measured anchor, and the census only builds one past 30 rows. So the
+    // fixture supplies 40 per statType. `minCensusRows` is NOT lowered to make
+    // this pass — that would be loosening a floor to satisfy a test.
+    const perType = ramp(40, 0, 0.001);
+    const r = await loadSignalLedger(
+      fakeDb({
+        nextGenStat: {
+          findMany: async () =>
+            (["passing", "receiving", "rushing"] as const).flatMap((statType) =>
+              perType.map((v) => ({
+                gsisId: `g-${statType}-${v}`,
+                season: 2026,
+                week: 1,
+                statType,
+                cpoe: v,
+                avgSeparation: 0.1 + v,
+                avgYacAboveExpectation: 0.2 + v,
+                avgAirYardsToSticks: 8 + v,
+                fetchedAt: now(),
+              })),
+            ),
+        },
+      }),
+    );
+    const emitted = new Set(r.candidates.map((c) => c.key));
+    // Negative control: this must FAIL on an empty projection, or the assertion
+    // below is vacuous — which is how the line-archive suite passed for a month.
+    expect(emitted.size).toBeGreaterThan(10);
+    expect(LEDGER_KEYS.filter((k) => !emitted.has(k))).toEqual([]);
   });
 });

@@ -31,6 +31,12 @@ import {
   type OddsLineArchiveFreshnessResult,
   type OddsLineArchiveFreshnessThresholds,
 } from "@/lib/ops/odds-line-archive-freshness";
+import {
+  assessSignalsFreshness,
+  readSignalsFreshness,
+  type SignalsFreshnessReaderDb,
+  type SignalsFreshnessResult,
+} from "@/lib/ops/signals-ledger-freshness";
 
 /** A read-only posture field must never take the whole truth surface down: any
  *  throw (including a synchronous one from a partial client) reads as null. */
@@ -229,6 +235,25 @@ async function readOddsLineArchiveFreshnessSafely(): Promise<OddsLineArchiveFres
       { mostRecentCapturedAt: null },
       ODDS_LINE_ARCHIVE_FRESHNESS_THRESHOLDS,
     );
+  }
+}
+
+/**
+ * `signals` ledger writer freshness. Additive observability only, and built to
+ * the same fail-closed contract as the line archive above: stub mode, a thrown
+ * reader, or absent data all resolve to the SAME absent input, which the
+ * assessor's rule 1 judges `stale` — never healthy. A monitoring read that
+ * cannot complete must not render as "everything is fine", which is the exact
+ * condition that let the archive sit dead for three weeks.
+ */
+async function readSignalsFreshnessSafely(): Promise<SignalsFreshnessResult> {
+  if (isStubMode()) {
+    return assessSignalsFreshness({ mostRecentFetchedAt: null });
+  }
+  try {
+    return await readSignalsFreshness(db as unknown as SignalsFreshnessReaderDb);
+  } catch {
+    return assessSignalsFreshness({ mostRecentFetchedAt: null });
   }
 }
 
@@ -736,6 +761,7 @@ export async function GET(request: Request) {
   // Line-archive freshness (see readOddsLineArchiveFreshnessSafely above).
   // Read-only, fail-closed, never gates anything on this surface.
   const oddsLineArchiveFreshness = await readOddsLineArchiveFreshnessSafely();
+  const signalsLedgerFreshness = await readSignalsFreshnessSafely();
 
   // Line integrity (C-283; ledger C-197/C-281/C-282): how many published picks
   // carry a `line` no bookmaker quoted. Read-only, writes nothing.
@@ -1059,6 +1085,14 @@ export async function GET(request: Request) {
        * error, stub mode, or absent data (never "healthy" by default).
        */
       oddsLineArchiveFreshness,
+      /**
+       * `signals` ledger writer freshness. The hourly write cron at :23 carries
+       * a wall-clock deadline that legitimately leaves rows unwritten on a large
+       * tick, and until now nothing compared the table's newest row against the
+       * clock — the same gap that hid the line archive's three-week outage. Same
+       * fail-closed contract: any error, stub mode, or absent row reads `stale`.
+       */
+      signalsLedgerFreshness,
       lineIntegrity,
       ...(detailed ? { mainFeatureMarkers: MAIN_FEATURE_MARKERS } : {}),
       /**
