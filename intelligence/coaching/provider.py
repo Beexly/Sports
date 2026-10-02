@@ -31,6 +31,146 @@ from integration.types import Verification
 from coaching import fingerprint as FP
 from coaching import tenures as TN
 
+# ---------------------------------------------------------------------------
+# τ̂ fitted-artifact loaders (c04 BS-1).
+#
+# The fitted table and the fitters built from it are CACHED at module level:
+# TauFitter.fit() is expensive and _build_data_context runs per game. Keyed
+# by the resolved path so a test that points GSE_COACHING_DATA_DIR elsewhere
+# gets its own cache entry rather than a stale one.
+#
+# Every loader returns None (or raises) when the artifact is missing. None of
+# them synthesizes a default: a τ̂ of 0.5 with fallback_level "prior" would be
+# indistinguishable from a real fitted estimate at the call site, which is
+# precisely the failure this wiring exists to close.
+# ---------------------------------------------------------------------------
+_TAU_CACHE: dict[str, Any] = {}
+
+
+def _tau_table_path() -> Optional[str]:
+    """Path to a fitted tau_hat.csv, or None when it is not present."""
+    from coaching import base_data as _BD
+    for d in _BD.candidate_dirs():
+        p = os.path.join(d, "tau_hat.csv")
+        if os.path.exists(p):
+            return p
+    return None
+
+
+def _wp_bin_label(wp: float) -> str:
+    """Map a WP in [0,1] to the five coarse bins the τ̂ table is keyed on."""
+    import numpy as np
+    from coaching.coach_risk import WP_BINS, WP_BIN_LABELS
+    return WP_BIN_LABELS[int(np.clip(np.digitize(wp, WP_BINS) - 1, 0, 4))]
+
+
+def _tau_table() -> Optional[dict]:
+    """{(team, season, region, wp_bin): row} from tau_hat.csv, or None."""
+    path = _tau_table_path()
+    if path is None:
+        return None
+    if path in _TAU_CACHE:
+        return _TAU_CACHE[path]
+    import csv as _csv
+    table: dict[tuple, dict] = {}
+    with open(path, newline="") as fh:
+        for r in _csv.DictReader(fh):
+            try:
+                key = (r["team"], int(r["season"]), r["region"], r["wp_bin"])
+                table[key] = {
+                    "team": r["team"],
+                    "season": int(r["season"]),
+                    "region": r["region"],
+                    "wp_bin": r["wp_bin"],
+                    "tau_hat": float(r["tau_hat_served"]),
+                    "fallback_level": r.get("fallback_level"),
+                    "n_decisions": (int(r["n_decisions"])
+                                    if r.get("n_decisions") not in (None, "")
+                                    else None),
+                    "window": r.get("window"),
+                    "verification": "COMPUTED",
+                }
+            except (KeyError, TypeError, ValueError):
+                # A malformed row is a loud omission, not a silent skip of
+                # the whole table — but it is never turned into a 0.5.
+                continue
+    _TAU_CACHE[path] = table
+    return table
+
+
+def _fitted_fitter():
+    """A fitted TauFitter, or DataGapError when pbp is unavailable.
+
+    The fitter is built from nflverse pbp parquet, which is NOT in the repo
+    (only 5–144-row test fixtures live in temp dirs, and the loader rejects
+    them for missing columns). Building one from a fixture would produce a
+    confident, meaningless τ̂ — the fabrication line. So: no pbp, no fitter.
+    """
+    from integration.providers import DataGapError
+    from coaching import base_data as _BD
+    from coaching import coach_risk as _CR
+
+    for d in _BD.candidate_dirs():
+        import glob as _glob
+        paths = sorted(_glob.glob(os.path.join(d, "pbp_*.parquet")))
+        if not paths:
+            continue
+        cache_key = "fitter:" + "|".join(paths)
+        if cache_key in _TAU_CACHE:
+            return _TAU_CACHE[cache_key]
+        fd = _CR.load_fourth_downs(paths)
+        fitter = _CR.TauFitter(fd)
+        fitter.fit(seasons=sorted({int(s) for s in fd["season"].unique()}))
+        _TAU_CACHE[cache_key] = fitter
+        return fitter
+    raise DataGapError(
+        "coaching",
+        "no nflverse pbp parquet found, so TauFitter cannot be fitted. Tried: "
+        + ", ".join(_BD.candidate_dirs())
+        + ". Download with nflreadpy/nflverse and point "
+        f"{_BD.ENV_VAR} at the directory holding pbp_YYYY.parquet. See "
+        "intelligence/REAL-DATA-VALIDATION.md.",
+    )
+
+
+def _fitted_engine():
+    """A fitted SituationalEngine, or DataGapError when pbp is unavailable."""
+    from integration.providers import DataGapError
+    from coaching import base_data as _BD
+    from coaching import situational_wp as _SW
+
+    for d in _BD.candidate_dirs():
+        import glob as _glob
+        paths = sorted(_glob.glob(os.path.join(d, "pbp_*.parquet")))
+        if not paths:
+            continue
+        cache_key = "engine:" + "|".join(paths)
+        if cache_key in _TAU_CACHE:
+            return _TAU_CACHE[cache_key]
+        import pandas as pd
+        frames = []
+        for p in paths:
+            import pyarrow.parquet as pq
+            have = set(pq.read_schema(p).names)
+            need = [c for c in ("down", "play_type", "yardline_100", "ydstogo",
+                                "score_differential", "game_seconds_remaining",
+                                "qtr", "posteam", "defteam", "season", "week",
+                                "game_id", "drive", "wpa") if c in have]
+            frames.append(pd.read_parquet(p, columns=need))
+        pbp = pd.concat(frames, ignore_index=True)
+        # SituationalEngine derives its own 4th-down / FG / state frames from
+        # the full pbp frame in __init__ — there is no separate fit() step.
+        engine = _SW.SituationalEngine(pbp)
+        _TAU_CACHE[cache_key] = engine
+        return engine
+    raise DataGapError(
+        "coaching",
+        "no nflverse pbp parquet found, so SituationalEngine cannot be fitted. "
+        "Tried: " + ", ".join(_BD.candidate_dirs())
+        + f". Download with nflreadpy/nflverse and point {_BD.ENV_VAR} at it. "
+        "See intelligence/REAL-DATA-VALIDATION.md.",
+    )
+
 
 def _fnum(v) -> Optional[float]:
     try:
@@ -153,6 +293,86 @@ class CoachingEngineProvider(CoachingProvider):
         """
         from coaching import adjustments as ADJ
         return ADJ.get_adjustment(season, team, week)
+
+    # -- τ̂ risk preference (c04 BS-1; the VALIDATED gate) --------------------
+    #
+    # P1 audit item: coach_risk.TauFitter / situational_wp.SituationalEngine /
+    # behavior.expected_wp_given_coach were never called from the live path.
+    # The only validated gate sat beside the engine instead of inside it.
+    #
+    # The gate was validated on nflverse pbp (G_tau +6.77pp Hamming, n=3,988)
+    # but neither the pbp parquet nor the fitted tau_hat.csv was ever
+    # committed — see REAL-DATA-VALIDATION.md. So this method is wired and
+    # real, and it raises DataGapError naming the refit command when the
+    # artifact is absent. It does NOT return 0.5, a league mean, or any
+    # stand-in value: an unfitted τ̂ that looks fitted is the exact failure
+    # mode this audit is about.
+    def get_tau_hat(self, team: str, season: int, region: str,
+                    wp: float) -> dict[str, Any]:
+        """Served τ̂ for one (team, season, region, wp_bin) cell.
+
+        `region` is "opp" or "own"; wp is the live win probability of the
+        team in possession. Returns the served value plus the fallback level
+        that produced it (unit / pooled / league / league_region / prior) so
+        a caller can tell a real per-team estimate from a backed-off one.
+
+        Raises DataGapError when the fitted table is absent. See module note.
+        """
+        import os as _os
+        from coaching import base_data as _BD
+
+        table = _tau_table()
+        if table is None:
+            tried = ", ".join(_BD.candidate_dirs())
+            raise DataGapError(
+                "coaching",
+                "tau_hat.csv (fitted 4th-down risk preference) is not present. "
+                f"Tried: {tried}. Regenerate with: python -m coaching.refit_tau "
+                "--seasons 2022-2026 --out "
+                f"{_os.path.join(_BD.REPO_DATA_DIR, 'tau_hat.csv')} "
+                "(requires nflverse pbp parquet, which is not in the repo). "
+                "Until then tau_hat is UNVALIDATED at serving time — see "
+                "intelligence/REAL-DATA-VALIDATION.md. Never defaulted to a "
+                "league mean: an unfitted tau that reads as fitted is the "
+                "silent-degradation failure this gate exists to prevent.",
+            )
+        wpb = _wp_bin_label(wp)
+        key = (team, int(season), region, wpb)
+        row = table.get(key)
+        if row is None:
+            raise DataGapError(
+                "coaching",
+                f"no tau_hat cell for team={team} season={season} "
+                f"region={region} wp_bin={wpb} (wp={wp:.3f}). The fitted table "
+                f"holds {len(table)} cells; this one was never served.",
+            )
+        return dict(row)
+
+    def expected_wp_given_coach(self, team: str, season: int, yardline_100: int,
+                                ydstogo: int, score_differential: int,
+                                game_seconds_remaining: int, qtr: int,
+                                wp: float,
+                                timeouts_rem: int = 3) -> dict[str, Any]:
+        """Behavior-conditioned WP (c04 BS-4) — WP of the action the coach is
+        PREDICTED to take, not the WP-maximizing one. This is the L3 causal
+        hook: drive-outcome probability conditioned on coach behavior.
+
+        Composition only (TauFitter + SituationalEngine); no new fitting.
+        Raises DataGapError when either fitted artifact is absent.
+        """
+        from coaching import coach_risk as _CR
+        from coaching import situational_wp as _SW
+        from coaching import behavior as _BH
+
+        fitter = _fitted_fitter()
+        engine = _fitted_engine()
+        out = _BH.expected_wp_given_coach(
+            engine, fitter, team, int(season), int(yardline_100), int(ydstogo),
+            int(score_differential), int(game_seconds_remaining), int(qtr),
+            float(wp), int(timeouts_rem))
+        out["verification"] = "COMPUTED"
+        out["tau_input_verification"] = "CORPUS"
+        return out
 
 
 def real_registry(qb=None, trust=None, ol=None) -> ProviderRegistry:

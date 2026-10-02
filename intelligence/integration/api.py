@@ -227,6 +227,27 @@ def _build_data_context(game: dict[str, Any], providers: ProviderRegistry,
                     except DataGapError as e:
                         _note_gap("qb_behavior", qb_id, e.reason,
                                   f"{p.name} scheme-regime history")
+                # τ̂ 4th-down risk preference (P1: wire the validated gate into
+                # the live path). Served at a neutral mid-bin WP because a
+                # pre-game context has no live state; the real call site is
+                # expected_wp_given_coach below, which takes the actual state.
+                # A DataGapError here is EXPECTED while tau_hat.csv is
+                # uncommitted — it is recorded as a gap, never swallowed.
+                get_tau = getattr(providers.coaching, "get_tau_hat", None)
+                if callable(get_tau):
+                    try:
+                        t = get_tau(team, season, "opp", 0.50)
+                        if t.get("tau_hat") is not None:
+                            ctx.observations[f"coaching.{team}.tau_hat"] = \
+                                float(t["tau_hat"])
+                            ev("coaching_scheme",
+                               f"{team} 4th-down risk preference tau-hat "
+                               f"{t['tau_hat']:.3f} ({t.get('fallback_level')}"
+                               f", {t.get('n_decisions')} decisions)",
+                               R.Verification.COMPUTED)
+                    except DataGapError as e:
+                        _note_gap("coaching_scheme", qb_id, e.reason,
+                                  f"{team} tau-hat (4th-down risk preference)")
             # CLEAR only when the track was actually served. An empty qbs map
             # checked nothing, and a QB whose every sub-provider came back
             # withheld is a gap, not a clean read. Per checklist semantics:
