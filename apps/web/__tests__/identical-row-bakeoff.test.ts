@@ -154,11 +154,14 @@ describe("scoreIdenticalRows — hand-worked fixture", () => {
     for (const s of empty.scores) {
       expect(s.brier).toBeNull();
       expect(s.ece).toBeNull();
+      expect(s.eceDebiased).toBeNull();
       expect(s.brierCi95).toBeNull();
     }
     const one = scoreIdenticalRows([row(0.6, 0.7, 0.8, 1)]);
     expect(one.n).toBe(1);
     expect(one.scores[0]!.brier).toBeCloseTo(0.16, 4);
+    expect(one.scores[0]!.ece).toEqual(expect.any(Number));
+    expect(one.scores[0]!.eceDebiased).toEqual(expect.any(Number));
     expect(one.scores[0]!.brierCi95).toBeNull();
     expect(one.scores[0]!.separation).toBeNull();
   });

@@ -55,6 +55,7 @@ import {
   expectedCalibrationError,
   type CalibrationSample,
 } from "@sports/prediction-engine";
+import { debiasedExpectedCalibrationError } from "./ece-debiased";
 import type { RankingScoreKind } from "@/lib/calibration/proven-path-engine";
 import { mulberry32 } from "@/lib/calibration/bootstrap-calib-ci";
 import { DEFAULT_METRIC_CI_RESAMPLES, type MetricCi95 } from "@/lib/calibration/bootstrap-metric-ci";
@@ -125,6 +126,8 @@ export type IdenticalRowScoreRow = {
   readonly n: number;
   readonly brier: number | null;
   readonly ece: number | null;
+  /** Variance-corrected ECE. Raw `ece` is unchanged. Diagnostic only. */
+  readonly eceDebiased: number | null;
   readonly murphyReliability: number | null;
   readonly murphyResolution: number | null;
   readonly murphyUncertainty: number | null;
@@ -333,6 +336,7 @@ export function scoreIdenticalRows(
         n: 0,
         brier: null,
         ece: null,
+        eceDebiased: null,
         murphyReliability: null,
         murphyResolution: null,
         murphyUncertainty: null,
@@ -384,6 +388,7 @@ export function scoreIdenticalRows(
       n,
       brier: d.brier,
       ece: expectedCalibrationError(samples),
+      eceDebiased: debiasedExpectedCalibrationError(samples).debiased,
       murphyReliability: d.reliability,
       murphyResolution: d.resolution,
       murphyUncertainty: d.uncertainty,
