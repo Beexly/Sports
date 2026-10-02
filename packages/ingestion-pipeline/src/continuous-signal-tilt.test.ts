@@ -155,8 +155,10 @@ describe("nfl_age_conditioned_rest homeSign wiring", () => {
     // The producer is real: +2.90 margin points (2.45 base + 0.45 OL bonus),
     // not a hardcoded constant.
     expect(r.votes).toHaveLength(1);
-    expect(r.votes[0].signalId).toBe("nfl_age_conditioned_rest");
-    expect(r.votes[0].rawValue).toBe(2.9);
+    const up = r.votes[0];
+    if (!up) throw new Error("expected a vote");
+    expect(up.signalId).toBe("nfl_age_conditioned_rest");
+    expect(up.rawValue).toBe(2.9);
     expect(r.refused).toHaveLength(0);
 
     // Positive home margin adjustment must raise the home probability.
@@ -174,7 +176,9 @@ describe("nfl_age_conditioned_rest homeSign wiring", () => {
     const r = await applyContinuousSignalTilt(0.5, [nflAgeConditionedRestSignal], realCtx);
 
     expect(r.votes).toHaveLength(1);
-    expect(r.votes[0].rawValue).toBe(-2.85);
+    const down = r.votes[0];
+    if (!down) throw new Error("expected a vote");
+    expect(down.rawValue).toBe(-2.85);
 
     // Negative home margin adjustment must lower the home probability.
     expect(r.netTilt).toBeLessThan(0);
