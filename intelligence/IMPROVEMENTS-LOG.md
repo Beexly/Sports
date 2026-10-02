@@ -311,3 +311,25 @@ data tables per module with READMEs updated.
 
 Lane is at a natural resting point: every in-scope high-value item is built,
 wired, tested, real-data-verified where data exists, and documented.
+
+## Batch 6 — 2026-10-02 (~16:00 UTC): T1 e2e through analyze() committed; the 14 failures decomposed
+
+**T1 e2e (P1 audit item).** `tests/e2e/test_t1_real_e2e.py` (8 tests) drives the
+real entry point `analyze()` instead of a hand-built trace. Three stub-control
+tests failed with `AttributeError: 'FixtureFunctionDefinition' object has no
+attribute 'depth'/'levels'` because they read the module-level `trace` fixture
+function instead of their `stub_trace` argument. Fixed; the file now passes
+8/8. `tests/probe_t1_real.py` reproduces the real-provider run (scratch, not a
+test). Observed output: label INVALID, depth L1, checklist qb_behavior
+DATA-GAP / coaching_scheme DATA-GAP / offensive_line UNCHECKED / trust_signals
+UNCHECKED / scheme_matchup NOTHING-MATERIAL, levels [].
+
+**Full suite** (`python tests/run_all.py`, 224.8s): 803 tests — 783 PASS,
+14 FAIL, 6 SKIP. NOT GREEN, and the 14 are TWO different data gaps, not one:
+- 10 coaching tests: `coach_offense.csv`, `coach_defense.csv`,
+  `off_tendencies.csv` do not exist. A name search of the home subtrees found
+  0 files with those names, and they were never in git history. They were
+  produced by a sandbox pipeline that was not shipped. nflverse pbp carries
+  head coaches only, so coordinator tenures cannot be rebuilt from it.
+- 4 gate tests (`tests/test_coaching_gates.py`): no real pbp parquet and no
+  `tau_hat.csv`. This gap has a producer path (nflverse pbp, CC-BY-4.0).

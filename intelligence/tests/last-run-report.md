@@ -1,8 +1,8 @@
 # GSE Intelligence Build — Last Full-Suite Run
 
-**Date (UTC):** 2026-10-02 09:35:42
-**Duration:** 80.1s
-**Totals:** 777 tests — 757 PASS, 14 FAIL, 0 MISSING, 6 SKIP
+**Date (UTC):** 2026-10-02 16:08:02
+**Duration:** 224.8s
+**Totals:** 803 tests — 783 PASS, 14 FAIL, 0 MISSING, 6 SKIP
 **Verdict:** NOT GREEN — see failures below
 
 ## Per-module scoreboard
@@ -16,8 +16,8 @@
 | `qb-behavior` | 175 | 0 | 0 | 6 |
 | `ratings` | 28 | 0 | 0 | 0 |
 | `staking` | 24 | 0 | 0 | 0 |
-| `tests` | 290 | 4 | 0 | 0 |
-| `tests/e2e` | 65 | 0 | 0 | 0 |
+| `tests` | 308 | 4 | 0 | 0 |
+| `tests/e2e` | 73 | 0 | 0 | 0 |
 | `trust` | 40 | 0 | 0 | 0 |
 
 ## Failures / missing (must fix)
