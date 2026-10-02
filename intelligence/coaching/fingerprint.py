@@ -15,11 +15,12 @@ import math
 import os
 from typing import Any, Optional
 
+from . import base_data as BD
 from . import common as C
 from . import load as L
 from . import proe as PROE
 
-BASE_DATA = os.path.expanduser("~/workspace/coaching-tendencies/data")
+BASE_DATA = BD.REPO_DATA_DIR
 
 _FPRINT_KEYS = ["pass_rate_early", "shotgun_rate", "no_huddle_rate",
                 "quick_game_rate", "avg_air_yards", "pace_sec_median"]
@@ -30,7 +31,8 @@ _base_rows: Optional[list[dict[str, Any]]] = None
 def _base() -> list[dict[str, Any]]:
     global _base_rows
     if _base_rows is None:
-        with open(os.path.join(BASE_DATA, "off_tendencies.csv"), newline="") as fh:
+        base = BD.resolve(("off_tendencies.csv",))
+        with open(os.path.join(base, "off_tendencies.csv"), newline="") as fh:
             _base_rows = list(csv.DictReader(fh))
     return _base_rows
 

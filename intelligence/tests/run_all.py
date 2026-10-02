@@ -49,7 +49,14 @@ class Scoreboard:
                 self.rows.append((nodeid, self._module_of(nodeid), "FAIL",
                                   self._first_error_line(str(report.longrepr))))
             return
-        if report.when == "setup" and not report.failed:
+        # A SKIP raised during SETUP (e.g. unittest.SkipTest in setUpClass
+        # when real pipeline data is absent) is reported by pytest with
+        # when == "setup" and skipped == True. The old code returned early on
+        # every non-failed setup, so those skips never reached `self.rows` and
+        # run_all.py reported "0 SKIP" while pytest counted 6. A skip that
+        # vanishes from the scoreboard is the silent-degradation trap wearing
+        # a green hat — record it.
+        if report.when == "setup" and not (report.failed or report.skipped):
             return
         if report.when not in ("setup", "call"):
             return
@@ -58,7 +65,7 @@ class Scoreboard:
         if report.passed:
             self.rows.append((nodeid, module, "PASS", ""))
         elif report.skipped:
-            self.rows.append((nodeid, module, "SKIP", str(report.wasxfail or "")))
+            self.rows.append((nodeid, module, "SKIP", self._skip_reason(report)))
         else:
             text = str(report.longrepr)
             if MISSING_MARKER in text:
@@ -66,6 +73,17 @@ class Scoreboard:
             else:
                 outcome, detail = "FAIL", self._first_error_line(text)
             self.rows.append((nodeid, module, outcome, detail))
+
+    @staticmethod
+    def _skip_reason(report):
+        """Why a test skipped. A blank reason hides the cause; the scoreboard
+        is a receipt, and 'SKIP with no reason' is not a receipt."""
+        if getattr(report, "wasxfail", None):
+            return str(report.wasxfail)
+        lr = report.longrepr
+        if isinstance(lr, tuple) and len(lr) == 3:
+            return str(lr[2])
+        return str(lr)[:200] if lr else "no reason reported"
 
     @staticmethod
     def _first_missing_line(text):
@@ -127,6 +145,15 @@ def write_report(board, elapsed_s):
         lines.append("")
     else:
         lines.append("## No failures. The gate holds.")
+        lines.append("")
+    # Skips are listed individually. A skip is not a pass, and a skip whose
+    # reason is invisible is how a suite rots while still printing green.
+    skips = [(n, m, d) for n, m, o, d in board.rows if o == "SKIP"]
+    if skips:
+        lines.append(f"## Skipped ({len(skips)}) — not passing, not failing")
+        lines.append("")
+        for nodeid, module, detail in skips:
+            lines.append(f"- **SKIP** `{nodeid}` — {detail}")
         lines.append("")
     with open(REPORT_PATH, "w") as f:
         f.write("\n".join(lines))

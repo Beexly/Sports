@@ -17,9 +17,13 @@ import csv
 import os
 from typing import Any, Optional
 
+from . import base_data as BD
 from . import common as C
 
-BASE_DATA = os.path.expanduser("~/workspace/coaching-tendencies/data")
+# The seed data location is resolved through base_data.py (env override ->
+# in-repo -> legacy) so a fresh checkout fails loudly instead of silently
+# returning an empty registry. Kept as a module attribute for back-compat.
+BASE_DATA = BD.REPO_DATA_DIR
 
 # coach_slug -> list of tenure records (verified seed only)
 _REGISTRY: Optional[dict[str, list[dict[str, Any]]]] = None
@@ -29,11 +33,15 @@ def _load() -> dict[str, list[dict[str, Any]]]:
     global _REGISTRY
     if _REGISTRY is not None:
         return _REGISTRY
+    # Raises DataGapError when the seed CSVs are absent — never an empty dict.
+    base = BD.resolve(("coach_offense.csv", "coach_defense.csv"))
     reg: dict[str, list[dict[str, Any]]] = {}
     for fname, side in (("coach_offense.csv", "offense"), ("coach_defense.csv", "defense")):
-        path = os.path.join(BASE_DATA, fname)
+        path = os.path.join(base, fname)
         if not os.path.exists(path):
-            continue
+            # Unreachable after resolve(); kept as a loud guard, not a skip.
+            raise FileNotFoundError(
+                f"coaching seed file vanished between resolve and read: {path}")
         with open(path, newline="") as fh:
             for r in csv.DictReader(fh):
                 name = (r.get("coach") or "").strip()
