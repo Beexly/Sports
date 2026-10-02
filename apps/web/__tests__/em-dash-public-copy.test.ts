@@ -124,7 +124,7 @@ const BASELINE: Readonly<Record<string, number>> = {
   "apps/web/components/parlay/parlay-genome.tsx": 1,
   "apps/web/components/performance/verdict-line.tsx": 2,
   "apps/web/components/picks/devig-method-disclosure.tsx": 1,
-  "apps/web/components/picks/evidence-audit-drawer.tsx": 2,
+  "apps/web/components/picks/evidence-audit-drawer.tsx": 1,
   "apps/web/components/picks/pick-card.tsx": 3,
   "apps/web/components/picks/value-gap.tsx": 1,
   "apps/web/components/players/player-lab-table.tsx": 9,

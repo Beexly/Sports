@@ -336,9 +336,15 @@ export async function GET(
     generatedAt: pick.generatedAt.toISOString(),
     modelVersion: snapshot?.modelVersion ?? "",
     isBootstrap: snapshot?.isBootstrap ?? false,
-    confidenceAtPrediction: snapshot?.confidenceAtPrediction ?? 0,
-    dataQualityScore: snapshot?.dataQualityScore ?? 0,
-    bookmakerCount: snapshot?.bookmakerCount ?? 0,
+    // null, NOT 0. `PickSignalSnapshot` is optional; a pick with no snapshot has
+    // no confidence-at-scoring and no data quality, and rendering those as 0
+    // asserted a measurement that was never taken. The sibling rows immediately
+    // below (lineMovementDelta, restAdvantageNet, the sample sizes) already used
+    // `?? null`; these three were the inconsistency, and the route's own header
+    // claimed "NULL for both" when the code did not.
+    confidenceAtPrediction: snapshot?.confidenceAtPrediction ?? null,
+    dataQualityScore: snapshot?.dataQualityScore ?? null,
+    bookmakerCount: snapshot?.bookmakerCount ?? null,
     lineMovementDelta: snapshot?.lineMovementDelta ?? null,
     restAdvantageNet: snapshot?.restAdvantageNet ?? null,
     atsFormSampleSize: snapshot?.atsFormSampleSize ?? null,

@@ -699,7 +699,19 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     depthFactor,
     edgeFactor,
     ...(volatilityFactor ? [volatilityFactor] : []),
-    ...contextFactors,
+    // The zeroed copy, NOT `contextFactors`. Spreading the raw array here
+    // discarded the market-echo guard computed above at line 643 and published
+    // "Cross-Market Alignment" at weight 4 / impact "positive" while
+    // crossMarketScore contributes 0 to the confidence sum — a claim the number
+    // does not support, on a customer-facing factor trail. The row still renders
+    // (weight 0, impact "neutral") rather than vanishing, which is the honest
+    // direction: omit the factor vs. claim a factor that did nothing.
+    //
+    // MONEYLINE was already correct (it spreads `...marketEchoFactors`);
+    // SPREAD is the only scorer that can emit a cross-market factor at all,
+    // because `computeCrossMarketScore` gates on marketType === "SPREAD".
+    // TOTAL returns early for non-SPREAD, so this is the one path that needed it.
+    ...marketEchoFactors,
     ...shadowEvidenceFactors,
     ...independentEdgeFactors,
   ];

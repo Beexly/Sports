@@ -818,9 +818,19 @@ export interface AuditPayloadDetailed {
   generatedAt: string;
   modelVersion: string;
   isBootstrap: boolean;
-  confidenceAtPrediction: number;
-  dataQualityScore: number;
-  bookmakerCount: number;
+  /**
+   * Null when NO signal snapshot exists for this pick. NOT 0.
+   *
+   * A snapshot is optional (`PickSignalSnapshot?`), and these three were
+   * declared `number` and coerced with `?? 0`, so a pick nobody ever snapshotted
+   * rendered "Confidence at scoring 0" and "Data quality 0" in the evidence
+   * drawer — on a component whose own header says "No fabrications", directly
+   * above rows that correctly sent null for absence. Absence is not a
+   * measurement of zero.
+   */
+  confidenceAtPrediction: number | null;
+  dataQualityScore: number | null;
+  bookmakerCount: number | null;
   lineMovementDelta: number | null;
   restAdvantageNet: number | null;
   atsFormSampleSize: number | null;

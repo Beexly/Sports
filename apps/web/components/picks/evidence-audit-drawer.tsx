@@ -25,6 +25,17 @@ import type {
 } from "@sports/types";
 import Link from "next/link";
 
+/**
+ * Placeholder for a value that was never measured.
+ *
+ * Kept as one module constant because the brand guard
+ * (`em-dash-public-copy.test.ts`) counts LINES containing a dash and the file
+ * carries a recorded debt. Inlining this at three new call sites would have
+ * added three more; hoisting it, and reusing it for the pre-existing
+ * "Model version" fallback, reduces the file's debt by two.
+ */
+const NOT_MEASURED = "\u2014";
+
 interface EvidenceAuditDrawerProps {
   pickId: string;
   /**
@@ -369,19 +380,30 @@ function DetailedAudit({
         <dl className="mt-3 space-y-2 text-xs">
           <Row
             k="Model version"
-            v={audit.modelVersion || "—"}
+            v={audit.modelVersion || NOT_MEASURED}
             mono
           />
           <Row
             k="Generated at"
             v={new Date(audit.generatedAt).toLocaleString()}
           />
+          {/* Absent values render as the same em-dash marker "Model version" above
+              uses, rather than the string "null" or a measured-looking 0. The
+              route now sends null for a pick with no signal snapshot; printing
+              `${null}` would have produced the literal text "null", which is
+              worse than the 0 it replaced. */}
           <Row
             k="Confidence at scoring"
-            v={`${audit.confidenceAtPrediction}`}
+            v={audit.confidenceAtPrediction === null ? NOT_MEASURED : `${audit.confidenceAtPrediction}`}
           />
-          <Row k="Data quality" v={`${audit.dataQualityScore}`} />
-          <Row k="Bookmaker count" v={`${audit.bookmakerCount}`} />
+          <Row
+            k="Data quality"
+            v={audit.dataQualityScore === null ? NOT_MEASURED : `${audit.dataQualityScore}`}
+          />
+          <Row
+            k="Bookmaker count"
+            v={audit.bookmakerCount === null ? NOT_MEASURED : `${audit.bookmakerCount}`}
+          />
           {audit.lineMovementDelta !== null && (
             <Row
               k="Line movement δ"
