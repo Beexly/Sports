@@ -18,6 +18,7 @@ import {
 import { evalShortWeekRoadDeficit, evalLinearWindPassImpact } from "./signals-bridge.js";
 import { nflTeamAbbr } from "./nfl-team-abbr.js";
 import { NFL_SCHEME_PRIOR, NFL_SCHEME_PRIOR_SEASON } from "./priors/nfl-2025-scheme.js";
+import { ENTERING_DEFENSE_SIGNALS } from "./nfl-entering-defense.js";
 import { ENTERING_RATE_SIGNALS } from "./nfl-entering-rates.js";
 import { SCHEME_MEASURED_SIGNALS } from "./scheme-measured-signals.js";
 import { NFL_INJURY_SIGNALS } from "./nfl-injury-signals.js";
@@ -1199,6 +1200,7 @@ export const EXTENDED_SIGNALS: readonly SignalDefinition[] = [
   nflPressureMatchupSignal,
   ...SCHEME_MEASURED_SIGNALS,
   ...ENTERING_RATE_SIGNALS,
+  ...ENTERING_DEFENSE_SIGNALS,
   ...NFL_INJURY_SIGNALS,
   nflEspnEnteringRecordSignal,
   nflHomeRoadSplitSignal,
