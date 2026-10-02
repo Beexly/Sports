@@ -7,7 +7,7 @@ if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
 from research.iwinrnfl import StandardizationMissing, home_win_probability
-from research.iwinrnfl_ratings import RatingGap, before, expected_margin, fit, paper_normal_approx
+from research.iwinrnfl_ratings import RatingGap, before, card_before, expected_margin, fit, paper_normal_approx
 
 
 def test_known_system_is_recovered():
@@ -42,6 +42,20 @@ def test_week_w_cannot_see_week_w():
     visible = before(games, 2026, 4)
     assert all(int(g["week"]) < 4 or int(g["season"]) < 2026 for g in visible)
     assert len(visible) == 3
+
+
+def test_week4_card_matches_the_frozen_fit_and_week5_is_not_a_pick():
+    import json
+    games = json.load(open(os.path.join(ROOT, "research", "data", "game_results_2022_2026.json"), encoding="utf-8"))
+    card = card_before(games["games"], 2026, 4, "CLE", "PIT")
+    assert abs(float(card["expected_margin"]) - (-0.956)) < 0.02
+    assert card["n_games"] == 1187
+    assert card["publishes_pick"] is False
+    week5 = json.load(open(os.path.join(ROOT, "research", "data", "iwinrnfl_week5_2026_margins.json"), encoding="utf-8"))
+    assert week5["publishes_pick"] is False
+    assert len(week5["week4_finished_in_window"]) == 1
+    assert week5["week4_finished_in_window"][0]["home"] == "CLE"
+    assert len(week5["cards"]) == 15
 
 
 def test_empty_window_raises():

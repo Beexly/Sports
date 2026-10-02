@@ -140,3 +140,13 @@ def paper_normal_approx(expected_home_margin: float) -> dict[str, object]:
 
 def fit(games: Sequence[Mapping[str, object]]) -> dict[str, object]:
     return _solve(games)
+
+
+def card_before(games: Sequence[Mapping[str, object]], season: int, week: int, home: str, away: str) -> dict[str, object]:
+    """Fit only on games before this week. Table 1 is not applied."""
+    visible = before(games, season, week)
+    solved = fit(visible)
+    margin = expected_margin(solved, home, away)
+    margin["as_of"] = f"before {season} week {week}"
+    margin["paper_normal_approx"] = paper_normal_approx(float(margin["expected_margin"]))
+    return margin
