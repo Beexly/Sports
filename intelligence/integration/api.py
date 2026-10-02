@@ -109,9 +109,23 @@ def _build_data_context(game: dict[str, Any], providers: ProviderRegistry,
     week, season = int(game.get("week", 0)), int(game.get("season", 0))
     hints: dict[str, str] = {}
     evidence: dict[str, list[tuple[str, R.Verification]]] = {}
+    gap_flags: dict[str, list[str]] = {}  # qb_id -> withheld/failed sub-providers
+    checked_qbs = 0                    # QBs actually inspected this call
 
     def ev(track: str, text: str, v: R.Verification) -> None:
         evidence.setdefault(track, []).append((text, v))
+
+    # A withheld or failed sub-provider must leave a trace the adversary can
+    # see. Swallowing it lets the enclosing track keep reading CLEAR, which is
+    # how a gap becomes an invisible gap. Recorded as INFERENCE gap evidence —
+    # it is an absence of measurement, never a measurement. Keyed by qb_id so
+    # the track verdict can be decided per QB rather than by counting flags.
+    def _note_gap(track: str, qb_id: str, gap_note: Optional[str],
+                  what: str) -> None:
+        detail = f": {gap_note}" if gap_note else ""
+        ev(track, f"DATA-GAP — {what} (not observed){detail}",
+           R.Verification.INFERENCE)
+        gap_flags.setdefault(qb_id, []).append(what)
 
     # --- qb_behavior ---
     if providers.qb is None:
@@ -120,6 +134,7 @@ def _build_data_context(game: dict[str, Any], providers: ProviderRegistry,
         try:
             for team, qb_id in (game.get("qbs") or {}).items():
                 p = providers.qb.get_qb_profile(qb_id, week, season)
+                checked_qbs += 1
                 ev("qb_behavior",
                    f"QB profile {p.name} ({team}): EPA/db {p.epa_per_dropback}, "
                    f"pressure-to-sack {p.pressure_to_sack_rate}, HHI {p.target_hhi}",
@@ -129,8 +144,9 @@ def _build_data_context(game: dict[str, Any], providers: ProviderRegistry,
                     ev("qb_behavior",
                        f"{p.name} INT clean {s.int_rate_clean} / pressured {s.int_rate_pressure}",
                        R.Verification(s.verification.value))
-                except DataGapError:
-                    pass
+                except DataGapError as e:
+                    _note_gap("qb_behavior", qb_id, e.reason,
+                              f"{p.name} pressure splits")
                 # Rolling form (buildable-systems.md #1): trailing-16-game
                 # EPA/db, anti-leakage, trade-following. Additive: providers
                 # without get_form are skipped, never failed.
@@ -145,8 +161,15 @@ def _build_data_context(game: dict[str, Any], providers: ProviderRegistry,
                                f"(availability {f['availability']:.2f})",
                                R.Verification.LIVE_VERIFIED)
                             ctx.observations[f"form.{qb_id}.epa"] = f["form_epa"]
-                    except DataGapError:
-                        pass
+                        elif f:
+                            # Withheld below the 100-dropback gate. The note
+                            # must reach L4: "not enough games" is context the
+                            # adversary discounts form with, not a silent zero.
+                            _note_gap("qb_behavior", qb_id, f.get("gap_note"),
+                                      f"{p.name} rolling form withheld")
+                    except DataGapError as e:
+                        _note_gap("qb_behavior", qb_id, e.reason,
+                                  f"{p.name} rolling form")
                 # QB familiarity (#28, additive): starter stability feeds the
                 # weak-link check — an unstable QB situation is load-bearing
                 # context the L4 adversary must see.
@@ -171,8 +194,17 @@ def _build_data_context(game: dict[str, Any], providers: ProviderRegistry,
                         top = tt["shares"][0]
                         ctx.observations[f"trust.{qb_id}.top_target_share"] = \
                             float(top["share"])
-                        ctx.observations[f"trust.{qb_id}.target_hhi"] = \
-                            float(tt["hhi"]) if tt.get("hhi") else 0.0
+                        # Withheld, never zeroed. trust_target.target_profile()
+                        # returns hhi=None when the split is too thin; writing
+                        # 0.0 here would publish "perfectly unconcentrated"
+                        # as a measurement and let L4 read a gap as a fact.
+                        # Matches specialists.py:126 (is not None, not truthiness).
+                        if tt.get("hhi") is not None:
+                            ctx.observations[f"trust.{qb_id}.target_hhi"] = \
+                                float(tt["hhi"])
+                        else:
+                            _note_gap("qb_behavior", qb_id, tt.get("gap_note"),
+                                      f"{p.name} trust-target HHI withheld")
                 # Scheme-regime staleness (coaching adjustments -> QB form):
                 # a top-decile scheme adjustment inside the trailing window
                 # means the QB's rolling form spans two regimes — flag it so
@@ -192,9 +224,23 @@ def _build_data_context(game: dict[str, Any], providers: ProviderRegistry,
                                f"{min(adj_weeks)}); form is stale-prone",
                                R.Verification.INFERENCE)
                             ctx.observations[f"form.{qb_id}.regime_stale"] = 1.0
-                    except DataGapError:
-                        pass
-            hints["qb_behavior"] = "CLEAR"
+                    except DataGapError as e:
+                        _note_gap("qb_behavior", qb_id, e.reason,
+                                  f"{p.name} scheme-regime history")
+            # CLEAR only when the track was actually served. An empty qbs map
+            # checked nothing, and a QB whose every sub-provider came back
+            # withheld is a gap, not a clean read. Per checklist semantics:
+            # UNCHECKED = never checked, DATA-GAP = checked, nothing usable.
+            if checked_qbs == 0:
+                hints["qb_behavior"] = "UNCHECKED"
+                ev("qb_behavior",
+                   "DATA-GAP — no QBs supplied for this game; qb_behavior "
+                   "was never checked", R.Verification.INFERENCE)
+            elif all(qb_id in gap_flags for qb_id in
+                     ((game.get("qbs") or {}).values())):
+                hints["qb_behavior"] = "DATA-GAP"
+            else:
+                hints["qb_behavior"] = "CLEAR"
         except DataGapError as e:
             hints["qb_behavior"] = "DATA-GAP"
             ev("qb_behavior", f"DATA-GAP: {e.reason}", R.Verification.INFERENCE)
