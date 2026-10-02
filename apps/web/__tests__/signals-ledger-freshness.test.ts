@@ -86,7 +86,8 @@ describe("readSignalsFreshness", () => {
   function fakeDb(fetchedAt: Date | null, count: number): SignalsFreshnessReaderDb {
     return {
       signal: {
-        aggregate: async () => ({ _max: { fetchedAt }, _count: count }),
+        aggregate: async () => ({ fetchedAt }),
+        count: async () => count,
       },
     };
   }
@@ -105,10 +106,28 @@ describe("readSignalsFreshness", () => {
     expect(r.rowCount).toBe(0);
   });
 
-  it("does not write: the reader's only db call is an aggregate", async () => {
-    // Structurally guaranteed — the interface has exactly one method — so this
-    // asserts the surface exists rather than calling anything extra.
+  it("asks for the newest row with a TYPED filter, not an empty bag of unknowns", async () => {
+    // Pins the wire shape. The line-archive outage happened because a loose
+    // filter type let a call Prisma rejects compile; a wrong orderBy/select here
+    // must fail this test rather than throw silently inside the cron.
+    const seen: unknown[] = [];
+    const db: SignalsFreshnessReaderDb = {
+      signal: {
+        aggregate: async (args) => {
+          seen.push(args);
+          return { fetchedAt: new Date(NOW.getTime() - 60_000) };
+        },
+        count: async () => 7,
+      },
+    };
+    await readSignalsFreshness(db, { now: NOW });
+    expect(seen[0]).toEqual({ orderBy: { fetchedAt: "desc" }, select: { fetchedAt: true } });
+  });
+
+  it("does not write: the reader's only db calls are reads", async () => {
+    // Structurally guaranteed — the interface exposes only `aggregate` and
+    // `count`, neither of which writes — so this asserts the surface is narrow.
     const db = fakeDb(new Date(), 1);
-    expect(Object.keys(db.signal)).toEqual(["aggregate"]);
+    expect(Object.keys(db.signal).sort()).toEqual(["aggregate", "count"]);
   });
 });

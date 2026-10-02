@@ -154,17 +154,25 @@ export function assessSignalsFreshness(input: SignalsFreshnessInput): SignalsFre
 }
 
 /**
- * Minimal reader surface. Declared structurally so a test can pass a fake and
- * production can pass the real Prisma client without either depending on the
- * other's types.
+ * Minimal Prisma-delegate-shaped surface this reader depends on.
+ *
+ * The filter is typed SPECIFICALLY, not as `Record<string, unknown>`. That is the
+ * lesson of the line-archive outage (2026-08-22, three weeks dead): a local
+ * interface written as a loose bag of unknowns will accept a filter Prisma
+ * rejects, the call throws at runtime, and a swallowing catch makes it silent.
+ * The sibling `OddsLineArchiveReaderDb` pins its own filter the same way. Typed
+ * narrowly, a wrong filter is a COMPILE error instead of a three-week outage.
+ *
+ * Declared structurally so a test can pass a fake and production can pass the
+ * real Prisma client without either depending on the other's types.
  */
 export interface SignalsFreshnessReaderDb {
   readonly signal: {
     aggregate(args: {
-      where: Record<string, unknown>;
-      _max: Record<string, unknown>;
-      _count: true;
-    }): Promise<{ _max: { fetchedAt: Date | null }; _count: number }>;
+      orderBy: { fetchedAt: "desc" };
+      select: { fetchedAt: true };
+    }): Promise<{ fetchedAt: Date | null } | null>;
+    count(args: { where: { fetchedAt: { gte: Date } } }): Promise<number>;
   };
 }
 
@@ -179,17 +187,30 @@ export interface ReadSignalsFreshnessResult {
 
 /**
  * Read the newest `fetchedAt` and judge freshness. Write-free by construction:
- * `aggregate` only.
+ * two reads only (`findFirst`-shaped aggregate and a bounded `count`).
  */
 export async function readSignalsFreshness(
   db: SignalsFreshnessReaderDb,
   options: { readonly now?: Date } = {},
 ): Promise<ReadSignalsFreshnessResult> {
-  const agg = await db.signal.aggregate({ where: {}, _max: { fetchedAt: true }, _count: true });
+  // Newest row, read through the typed filter rather than an empty `where: {}` so
+  // a wrong shape is a compile error (see the interface doc for why).
+  const newest = await db.signal.aggregate({
+    orderBy: { fetchedAt: "desc" },
+    select: { fetchedAt: true },
+  });
+  const mostRecent = newest?.fetchedAt ?? null;
+  // Bounded to the healthy window, so the count answers "how many rows landed
+  // in the last hour" — the question the verdict is actually about.
+  const windowStart = new Date(
+    (options.now ?? new Date()).getTime() -
+      DEFAULT_SIGNALS_FRESHNESS_THRESHOLDS.degradedAfterHours * 60 * 60 * 1000,
+  );
+  const rowCount = await db.signal.count({ where: { fetchedAt: { gte: windowStart } } });
   const result = assessSignalsFreshness({
-    mostRecentFetchedAt: agg._max.fetchedAt,
-    rowCount: agg._count,
+    mostRecentFetchedAt: mostRecent,
+    rowCount,
     ...(options.now !== undefined ? { now: options.now } : {}),
   });
-  return { ...result, rowCount: agg._count };
+  return { ...result, rowCount };
 }
