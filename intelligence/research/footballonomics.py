@@ -75,11 +75,43 @@ def _bin_name(value: int, width: int) -> str:
     return f"{lo}-{lo + width - 1}"
 
 
+def ytg_bucket(yards_to_go: int) -> str:
+    y = int(yards_to_go)
+    if y <= 0:
+        raise FourthDownGap(f"{PAPER}: yards to go {yards_to_go} is not a go-play distance")
+    if y <= 3:
+        return str(y)
+    if y <= 6:
+        return "4-6"
+    if y <= 10:
+        return "7-10"
+    return "11+"
+
+
+def conversion_cell(cells: dict, yards_to_go: int, offense_yards_to_goal: int) -> dict:
+    """The crossed cell, or a raise. The league rate is not a fill-in."""
+    bucket = ytg_bucket(yards_to_go)
+    field = _bin_name(int(offense_yards_to_goal), 10)
+    row = next(
+        (
+            r for r in cells.get("by_yards_and_field", [])
+            if r.get("ytg_bucket") == bucket and r.get("field_bin") == field
+        ),
+        None,
+    )
+    if row is None or row.get("status") != "measured" or row.get("conversion_rate") is None:
+        raise FourthDownGap(
+            f"{PAPER}: conversion cell {bucket} at {field} is withheld. The league rate is not used."
+        )
+    return row
+
+
 def net_from_measurement(
     table: dict,
     offense_yards_to_goal: int,
     kick_distance: int,
-    conversion_rate: float,
+    yards_to_go: int,
+    cells: dict,
 ) -> dict[str, object]:
     """Apply equations (4) and (5) to a measured bin. Missing bins raise.
 
@@ -100,17 +132,22 @@ def net_from_measurement(
         raise FourthDownGap(f"{PAPER}: field-goal bin {kick_bin} is withheld")
     # l is yards from the offense's own goal.
     field_l = 100 - int(offense_yards_to_goal)
+    cell = conversion_cell(cells, yards_to_go, offense_yards_to_goal)
     out = net_benefit(
-        conversion_rate,
+        float(cell["conversion_rate"]),
         field_l,
         float(fg["make_rate"]),
         float(row["delta_pi_fg"]),
         float(row["delta_pi_td"]),
     )
     out["offense_yards_to_goal"] = int(offense_yards_to_goal)
+    out["yards_to_go"] = int(yards_to_go)
+    out["conversion_rate"] = float(cell["conversion_rate"])
+    out["conversion_n"] = cell["n"]
+    out["conversion_grain"] = "yards_to_go x field"
     out["opponent_start_bin"] = wanted
     out["kick_bin"] = kick_bin
     out["delta_pi_n"] = row["n"]
     out["field_goal_n"] = fg["n"]
-    out["note"] = "Measured inputs in the paper's equation. Not a go-for-it call."
+    out["note"] = "Cell conversion rate, not the league rate. Not a go-for-it call."
     return out

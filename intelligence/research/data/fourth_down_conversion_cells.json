@@ -1,0 +1,511 @@
+{
+  "paper": "1601.04302",
+  "input": "s_4conv",
+  "window": "2022-2025 plus 2026 weeks 1-3",
+  "min_n": 40,
+  "definition": "down == 4 and play_type in (pass, run). A thin cell is withheld. The league rate is not filled in.",
+  "n_go_plays": 3464,
+  "by_yards_to_go": [
+    {
+      "ytg_bucket": "1",
+      "n": 1383,
+      "converted": 940,
+      "conversion_rate": 0.6796818510484454,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "11+",
+      "n": 259,
+      "converted": 44,
+      "conversion_rate": 0.16988416988416988,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "2",
+      "n": 516,
+      "converted": 300,
+      "conversion_rate": 0.5813953488372093,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "3",
+      "n": 368,
+      "converted": 192,
+      "conversion_rate": 0.5217391304347826,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "4-6",
+      "n": 579,
+      "converted": 278,
+      "conversion_rate": 0.48013816925734026,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "7-10",
+      "n": 359,
+      "converted": 112,
+      "conversion_rate": 0.31197771587743733,
+      "status": "measured"
+    }
+  ],
+  "by_yards_and_field": [
+    {
+      "ytg_bucket": "1",
+      "field_bin": "0-9",
+      "n": 251,
+      "converted": 156,
+      "conversion_rate": 0.6215139442231076,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "1",
+      "field_bin": "10-19",
+      "n": 165,
+      "converted": 114,
+      "conversion_rate": 0.6909090909090909,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "1",
+      "field_bin": "20-29",
+      "n": 146,
+      "converted": 102,
+      "conversion_rate": 0.6986301369863014,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "1",
+      "field_bin": "30-39",
+      "n": 207,
+      "converted": 143,
+      "conversion_rate": 0.6908212560386473,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "1",
+      "field_bin": "40-49",
+      "n": 196,
+      "converted": 134,
+      "conversion_rate": 0.6836734693877551,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "1",
+      "field_bin": "50-59",
+      "n": 196,
+      "converted": 135,
+      "conversion_rate": 0.6887755102040817,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "1",
+      "field_bin": "60-69",
+      "n": 173,
+      "converted": 117,
+      "conversion_rate": 0.6763005780346821,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "1",
+      "field_bin": "70-79",
+      "n": 36,
+      "converted": 28,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "1",
+      "field_bin": "80-89",
+      "n": 13,
+      "converted": 11,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "11+",
+      "field_bin": "10-19",
+      "n": 23,
+      "converted": 3,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "11+",
+      "field_bin": "20-29",
+      "n": 21,
+      "converted": 3,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "11+",
+      "field_bin": "30-39",
+      "n": 32,
+      "converted": 4,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "11+",
+      "field_bin": "40-49",
+      "n": 44,
+      "converted": 4,
+      "conversion_rate": 0.09090909090909091,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "11+",
+      "field_bin": "50-59",
+      "n": 41,
+      "converted": 12,
+      "conversion_rate": 0.2926829268292683,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "11+",
+      "field_bin": "60-69",
+      "n": 39,
+      "converted": 6,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "11+",
+      "field_bin": "70-79",
+      "n": 28,
+      "converted": 8,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "11+",
+      "field_bin": "80-89",
+      "n": 25,
+      "converted": 3,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "11+",
+      "field_bin": "90-99",
+      "n": 6,
+      "converted": 1,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "2",
+      "field_bin": "0-9",
+      "n": 110,
+      "converted": 60,
+      "conversion_rate": 0.5454545454545454,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "2",
+      "field_bin": "10-19",
+      "n": 48,
+      "converted": 37,
+      "conversion_rate": 0.7708333333333334,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "2",
+      "field_bin": "20-29",
+      "n": 69,
+      "converted": 40,
+      "conversion_rate": 0.5797101449275363,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "2",
+      "field_bin": "30-39",
+      "n": 76,
+      "converted": 42,
+      "conversion_rate": 0.5526315789473685,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "2",
+      "field_bin": "40-49",
+      "n": 109,
+      "converted": 65,
+      "conversion_rate": 0.5963302752293578,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "2",
+      "field_bin": "50-59",
+      "n": 55,
+      "converted": 32,
+      "conversion_rate": 0.5818181818181818,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "2",
+      "field_bin": "60-69",
+      "n": 33,
+      "converted": 15,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "2",
+      "field_bin": "70-79",
+      "n": 9,
+      "converted": 4,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "2",
+      "field_bin": "80-89",
+      "n": 7,
+      "converted": 5,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "3",
+      "field_bin": "0-9",
+      "n": 63,
+      "converted": 27,
+      "conversion_rate": 0.42857142857142855,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "3",
+      "field_bin": "10-19",
+      "n": 31,
+      "converted": 18,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "3",
+      "field_bin": "20-29",
+      "n": 35,
+      "converted": 16,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "3",
+      "field_bin": "30-39",
+      "n": 88,
+      "converted": 48,
+      "conversion_rate": 0.5454545454545454,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "3",
+      "field_bin": "40-49",
+      "n": 76,
+      "converted": 43,
+      "conversion_rate": 0.5657894736842105,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "3",
+      "field_bin": "50-59",
+      "n": 33,
+      "converted": 14,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "3",
+      "field_bin": "60-69",
+      "n": 28,
+      "converted": 15,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "3",
+      "field_bin": "70-79",
+      "n": 8,
+      "converted": 6,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "3",
+      "field_bin": "80-89",
+      "n": 5,
+      "converted": 5,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "3",
+      "field_bin": "90-99",
+      "n": 1,
+      "converted": 0,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "4-6",
+      "field_bin": "0-9",
+      "n": 66,
+      "converted": 27,
+      "conversion_rate": 0.4090909090909091,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "4-6",
+      "field_bin": "10-19",
+      "n": 47,
+      "converted": 22,
+      "conversion_rate": 0.46808510638297873,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "4-6",
+      "field_bin": "20-29",
+      "n": 51,
+      "converted": 26,
+      "conversion_rate": 0.5098039215686274,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "4-6",
+      "field_bin": "30-39",
+      "n": 129,
+      "converted": 58,
+      "conversion_rate": 0.4496124031007752,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "4-6",
+      "field_bin": "40-49",
+      "n": 126,
+      "converted": 66,
+      "conversion_rate": 0.5238095238095238,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "4-6",
+      "field_bin": "50-59",
+      "n": 74,
+      "converted": 36,
+      "conversion_rate": 0.4864864864864865,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "4-6",
+      "field_bin": "60-69",
+      "n": 43,
+      "converted": 20,
+      "conversion_rate": 0.46511627906976744,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "4-6",
+      "field_bin": "70-79",
+      "n": 36,
+      "converted": 20,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "4-6",
+      "field_bin": "80-89",
+      "n": 6,
+      "converted": 3,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "4-6",
+      "field_bin": "90-99",
+      "n": 1,
+      "converted": 0,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "7-10",
+      "field_bin": "0-9",
+      "n": 20,
+      "converted": 10,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "7-10",
+      "field_bin": "10-19",
+      "n": 31,
+      "converted": 5,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "7-10",
+      "field_bin": "20-29",
+      "n": 37,
+      "converted": 9,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "7-10",
+      "field_bin": "30-39",
+      "n": 64,
+      "converted": 20,
+      "conversion_rate": 0.3125,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "7-10",
+      "field_bin": "40-49",
+      "n": 57,
+      "converted": 19,
+      "conversion_rate": 0.3333333333333333,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "7-10",
+      "field_bin": "50-59",
+      "n": 61,
+      "converted": 17,
+      "conversion_rate": 0.2786885245901639,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "7-10",
+      "field_bin": "60-69",
+      "n": 48,
+      "converted": 18,
+      "conversion_rate": 0.375,
+      "status": "measured"
+    },
+    {
+      "ytg_bucket": "7-10",
+      "field_bin": "70-79",
+      "n": 36,
+      "converted": 13,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "7-10",
+      "field_bin": "80-89",
+      "n": 4,
+      "converted": 1,
+      "conversion_rate": null,
+      "status": "withheld"
+    },
+    {
+      "ytg_bucket": "7-10",
+      "field_bin": "90-99",
+      "n": 1,
+      "converted": 0,
+      "conversion_rate": null,
+      "status": "withheld"
+    }
+  ],
+  "publishes_pick": false
+}

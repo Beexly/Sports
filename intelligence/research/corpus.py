@@ -37,7 +37,7 @@ BINDINGS: dict[str, dict[str, str]] = {
     "1601.04302": {
         "module": "research.footballonomics",
         "status": "net_when_measured",
-        "claim": "Fourth-down net uses measured delta_pi and field-goal rates. Thin bins raise. Not a go-for-it call.",
+        "claim": "Fourth-down net uses the crossed conversion cell, measured delta_pi, and field-goal rates. A thin cell raises. The league rate is not a fill-in.",
     },
     "2604.08885": {
         "module": "staking.screening",
