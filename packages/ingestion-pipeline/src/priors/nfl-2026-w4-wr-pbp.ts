@@ -1,0 +1,38 @@
+/**
+ * 2026 weeks 1-3 target leader. adot is mean air_yards on targets with a recorded air yard.
+ * yac is mean yards_after_catch on completions. Week 4 only.
+ */
+export const NFL_2026_W4_WR_PBP: Readonly<Record<string, { readonly player: string; readonly adot: number; readonly yacPerReception: number; readonly targets: number }>> = {
+  ARI: { player: "T.McBride", adot: 5.35, yacPerReception: 2.65, targets: 34 },
+  ATL: { player: "D.London", adot: 7.47, yacPerReception: 10.13, targets: 19 },
+  BAL: { player: "M.Andrews", adot: 7.33, yacPerReception: 2.46, targets: 18 },
+  BUF: { player: "D.Moore", adot: 15.83, yacPerReception: 4.27, targets: 18 },
+  CAR: { player: "T.McMillan", adot: 12.83, yacPerReception: 3.25, targets: 23 },
+  CHI: { player: "L.Burden", adot: 7.78, yacPerReception: 4.07, targets: 23 },
+  CIN: { player: "J.Chase", adot: 8.56, yacPerReception: 2.5, targets: 25 },
+  CLE: { player: "K.Concepcion", adot: 5.55, yacPerReception: 2.58, targets: 20 },
+  DAL: { player: "C.Lamb", adot: 12.44, yacPerReception: 4.3, targets: 26 },
+  DEN: { player: "J.Waddle", adot: 12.35, yacPerReception: 3.45, targets: 21 },
+  DET: { player: "A.St. Brown", adot: 7.86, yacPerReception: 3.17, targets: 35 },
+  GB: { player: "M.Golden", adot: 13.87, yacPerReception: 6.47, targets: 30 },
+  HOU: { player: "D.Schultz", adot: 6.28, yacPerReception: 4.89, targets: 25 },
+  IND: { player: "J.Downs", adot: 11.71, yacPerReception: 4.93, targets: 24 },
+  JAX: { player: "P.Washington", adot: 14.3, yacPerReception: 0.87, targets: 23 },
+  KC: { player: "T.Kelce", adot: 6.56, yacPerReception: 11.07, targets: 18 },
+  LA: { player: "D.Adams", adot: 17.17, yacPerReception: 5.89, targets: 29 },
+  LAC: { player: "Q.Johnston", adot: 10.06, yacPerReception: 6.83, targets: 17 },
+  LV: { player: "A.Jeanty", adot: 2.06, yacPerReception: 5.85, targets: 17 },
+  MIA: { player: "M.Washington", adot: 11.96, yacPerReception: 7.33, targets: 23 },
+  MIN: { player: "J.Jefferson", adot: 11.12, yacPerReception: 4.0, targets: 18 },
+  NE: { player: "M.Hollins", adot: 12.12, yacPerReception: 2.83, targets: 16 },
+  NO: { player: "C.Olave", adot: 13.11, yacPerReception: 3.0, targets: 36 },
+  NYG: { player: "I.Likely", adot: 5.78, yacPerReception: 1.53, targets: 23 },
+  NYJ: { player: "G.Wilson", adot: 10.52, yacPerReception: 1.86, targets: 28 },
+  PHI: { player: "D.Smith", adot: 11.96, yacPerReception: 2.05, targets: 27 },
+  PIT: { player: "D.Metcalf", adot: 14.12, yacPerReception: 2.55, targets: 24 },
+  SEA: { player: "J.Smith-Njigba", adot: 9.67, yacPerReception: 4.48, targets: 36 },
+  SF: { player: "C.McCaffrey", adot: 2.35, yacPerReception: 6.62, targets: 17 },
+  TB: { player: "E.Egbuka", adot: 12.5, yacPerReception: 3.08, targets: 20 },
+  TEN: { player: "C.Tate", adot: 10.95, yacPerReception: 2.0, targets: 20 },
+  WAS: { player: "T.McLaurin", adot: 13.0, yacPerReception: 4.5, targets: 22 },
+};

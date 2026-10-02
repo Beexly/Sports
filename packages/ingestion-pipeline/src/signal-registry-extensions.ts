@@ -30,6 +30,7 @@ import { sameDivision2026 } from "./nfl-division.js";
 import { elevationAboveThreshold, roofAcclimationMismatch, surfaceAcclimationMismatch } from "./nfl-venue-facts.js";
 import { kalshiHomeMid } from "./nfl-kalshi-mid.js";
 import { pregameMarketAnchor } from "./nfl-pregame-market.js";
+import { PBP_ENTERING_SIGNALS } from "./nfl-pbp-entering.js";
 import { penaltyMatchup } from "./nfl-penalty-matchup.js";
 import { nflQbRushRateSignal, nflQbRushYardsSignal } from "./nfl-qb-rush.js";
 import { PERSONNEL_SIGNALS } from "./nfl-personnel.js";
@@ -1215,6 +1216,7 @@ export const EXTENDED_SIGNALS: readonly SignalDefinition[] = [
   nflWrDropRateSignal,
   ...PERSONNEL_SIGNALS,
   ...RAW_COLUMN_SIGNALS,
+  ...PBP_ENTERING_SIGNALS,
   ...NFL_INJURY_SIGNALS,
   nflEspnEnteringRecordSignal,
   nflHomeRoadSplitSignal,

@@ -1,0 +1,38 @@
+/**
+ * 2026 weeks 1-3 rush rate of the dropback leader. Measured on the play file.
+ * Week 4 only. Not the 2025 file join.
+ */
+export const NFL_2026_W4_QB_RUSH_PBP: Readonly<Record<string, { readonly qb: string; readonly rushAttPerGame: number; readonly rushYardsPerGame: number }>> = {
+  ARI: { qb: "J.Brissett", rushAttPerGame: 3.67, rushYardsPerGame: 8.33 },
+  ATL: { qb: "C.Rush", rushAttPerGame: 1.0, rushYardsPerGame: 10.0 },
+  BAL: { qb: "L.Jackson", rushAttPerGame: 5.67, rushYardsPerGame: 41.33 },
+  BUF: { qb: "J.Allen", rushAttPerGame: 9.33, rushYardsPerGame: 38.0 },
+  CAR: { qb: "B.Young", rushAttPerGame: 1.0, rushYardsPerGame: 5.33 },
+  CHI: { qb: "C.Williams", rushAttPerGame: 7.5, rushYardsPerGame: 53.5 },
+  CIN: { qb: "J.Burrow", rushAttPerGame: 2.67, rushYardsPerGame: 10.67 },
+  CLE: { qb: "D.Watson", rushAttPerGame: 8.0, rushYardsPerGame: 35.0 },
+  DAL: { qb: "D.Prescott", rushAttPerGame: 3.33, rushYardsPerGame: 19.67 },
+  DEN: { qb: "B.Nix", rushAttPerGame: 4.0, rushYardsPerGame: 5.0 },
+  DET: { qb: "J.Goff", rushAttPerGame: 3.0, rushYardsPerGame: 5.0 },
+  GB: { qb: "J.Love", rushAttPerGame: 0.67, rushYardsPerGame: 0.0 },
+  HOU: { qb: "C.Stroud", rushAttPerGame: 2.33, rushYardsPerGame: 18.0 },
+  IND: { qb: "D.Jones", rushAttPerGame: 2.33, rushYardsPerGame: 6.33 },
+  JAX: { qb: "T.Lawrence", rushAttPerGame: 2.67, rushYardsPerGame: 11.33 },
+  KC: { qb: "P.Mahomes", rushAttPerGame: 3.33, rushYardsPerGame: 13.67 },
+  LA: { qb: "M.Stafford", rushAttPerGame: 2.67, rushYardsPerGame: 3.67 },
+  LAC: { qb: "J.Herbert", rushAttPerGame: 4.0, rushYardsPerGame: 16.0 },
+  LV: { qb: "K.Cousins", rushAttPerGame: 4.0, rushYardsPerGame: -0.67 },
+  MIA: { qb: "M.Willis", rushAttPerGame: 5.67, rushYardsPerGame: 33.67 },
+  MIN: { qb: "C.Wentz", rushAttPerGame: 4.0, rushYardsPerGame: 2.5 },
+  NE: { qb: "D.Maye", rushAttPerGame: 5.0, rushYardsPerGame: 27.33 },
+  NO: { qb: "T.Shough", rushAttPerGame: 4.67, rushYardsPerGame: 22.33 },
+  NYG: { qb: "J.Winston", rushAttPerGame: 2.0, rushYardsPerGame: 7.5 },
+  NYJ: { qb: "G.Smith", rushAttPerGame: 4.33, rushYardsPerGame: 12.0 },
+  PHI: { qb: "J.Hurts", rushAttPerGame: 5.33, rushYardsPerGame: 29.0 },
+  PIT: { qb: "A.Rodgers", rushAttPerGame: 2.33, rushYardsPerGame: 4.0 },
+  SEA: { qb: "D.Lock", rushAttPerGame: 1.0, rushYardsPerGame: 6.5 },
+  SF: { qb: "B.Purdy", rushAttPerGame: 3.33, rushYardsPerGame: 31.0 },
+  TB: { qb: "B.Mayfield", rushAttPerGame: 3.67, rushYardsPerGame: 21.67 },
+  TEN: { qb: "C.Ward", rushAttPerGame: 3.0, rushYardsPerGame: 10.0 },
+  WAS: { qb: "J.Daniels", rushAttPerGame: 6.0, rushYardsPerGame: 50.0 },
+};
