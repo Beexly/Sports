@@ -2483,6 +2483,26 @@ export type {
   SegmentedOosSplit,
 } from "./oos-split.js";
 
+export {
+  getMlbIndependentModelProb,
+  MLB_INDEPENDENT_MODEL_ENABLED,
+  MLB_INDEPENDENT_MODEL_MODE,
+  MLB_INDEPENDENT_MODEL_VERSION,
+} from "./mlb-independent-model.js";
+export type {
+  MlbIndependentModelInput,
+  MlbIndependentModelResult,
+  MlbLineupInput,
+  MlbLineupStatus,
+  MlbModelTarget,
+  MlbParkInput,
+  MlbPitcherInput,
+  MlbPrecipitationType,
+  MlbRoofStatus,
+  MlbTeamRatingInput,
+  MlbWeatherInput,
+} from "./mlb-independent-model.js";
+
 // Canonical model version (frozen at v5.2.7 per founder invariant)
 export { MODEL_VERSION } from "./constants.js";
 
