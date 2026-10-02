@@ -36,8 +36,8 @@ BINDINGS: dict[str, dict[str, str]] = {
     },
     "1601.04302": {
         "module": "research.footballonomics",
-        "status": "benefit_only",
-        "claim": "Fourth-down benefit equation loads. Net benefit is refused until delta_pi is measured. Not a go-for-it call.",
+        "status": "net_when_measured",
+        "claim": "Fourth-down net uses measured delta_pi and field-goal rates. Thin bins raise. Not a go-for-it call.",
     },
     "2604.08885": {
         "module": "staking.screening",
