@@ -405,6 +405,13 @@ async function writeBackfill(settled: SettledHistoricalPick[]): Promise<void> {
           marketFairProb: pick.marketFairProb,
           confidence: pick.confidence,
           edgeScore: pick.edgeScore,
+          // DELIBERATELY null here, unlike the live mint (process-sport.ts), which
+          // now commits a real independent modelProb. A proof receipt is a PRE-RESULT
+          // commitment; this backfill reconstructs receipts for games that have
+          // ALREADY settled, so any probability written here would be fitted after
+          // the outcome was known — it would grade itself perfectly and make the
+          // whole audit spine worthless. These rows are isBootstrap=true and excluded
+          // from canonical metrics anyway; "none" is the honest claim.
           modelProb: null,
           modelVersion: pick.modelVersion,
           asOf: pick.asOf,

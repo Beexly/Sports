@@ -1,5 +1,12 @@
 # Galaxy Sports Edge (GSE)
 
+> **⚠️ NOT OPEN SOURCE. All rights reserved.**
+> This repository is publicly viewable for transparency only.
+> Code is licensed under the PolyForm Noncommercial License 1.0.0 — commercial use prohibited.
+> Data GSE generates is licensed under CC BY-NC 4.0 — commercial use prohibited.
+> Third-party data (NGS, odds, injury reports) is **not** covered by either
+> license; see [NOTICE](NOTICE) for scope and [LICENSE](LICENSE) / [DATA_LICENSE](DATA_LICENSE).
+
 [![CI](https://github.com/Beexly/Sports/actions/workflows/ci.yml/badge.svg)](https://github.com/Beexly/Sports/actions/workflows/ci.yml)
 
 Sports picks platform with real data ingestion, deterministic factor-model

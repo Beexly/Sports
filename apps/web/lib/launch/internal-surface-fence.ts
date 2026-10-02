@@ -21,6 +21,11 @@
  * true. `isStatsPublic` is the existing precedent: opt-in, default dark, 404
  * when shut. This file is that pattern applied to the doctrine.
  *
+ * NGS SURFACES HAVE NO FLAG. Under the NGS internal-only doctrine (Garrett,
+ * 2026-09-28, HARD) there is no public NGS opt-in: the serving routes were
+ * deleted outright, and `/intelligence/reconstruction` is permanently dark
+ * (`env: null`). No environment variable can re-expose them.
+ *
  * FAIL CLOSED, NEVER PARTIAL. An unknown path is not on the list, so it is
  * public — this registry is an ALLOW-LIST of internal surfaces, not a
  * deny-list. That direction is deliberate: a new internal page written today is
@@ -72,7 +77,19 @@ export const INTERNAL_SURFACES = {
     env: "PARLAY_MRI_PUBLIC",
     exposes: "per-leg risk, survivability, expected value, house-edge compounding",
   },
-} as const satisfies Readonly<Record<string, { env: string; exposes: string }>>;
+  /**
+   * R&D exhibit whose premise names Next Gen Stats (reconstruction from NGS
+   * aggregates). NGS internal-only doctrine (Garrett, 2026-09-28, HARD):
+   * no NGS data, metric names, or discussion on the public site.
+   *
+   * PERMANENTLY dark: `env` is null, so no flag can re-expose this surface.
+   * isPagePublic() returns false unconditionally for it.
+   */
+  "/intelligence/reconstruction": {
+    env: null,
+    exposes: "separation-reconstruction exhibit naming Next Gen Stats",
+  },
+} as const satisfies Readonly<Record<string, { env: string | null; exposes: string }>>;
 
 export type InternalSurfacePath = keyof typeof INTERNAL_SURFACES;
 
@@ -109,14 +126,18 @@ export const INTERNAL_API_ROUTES = {
     env: "SOURCES_CATALOG_PUBLIC",
     exposes: "the full source stack, refused-source status, and provider envVar names",
   },
+  // NOTE (2026-10-01): the NGS API routes that used to live here —
+  // /api/nflverse/next-gen-stats and /api/nflverse/expected-metrics —
+  // were DELETED under the NGS internal-only doctrine (Garrett, 2026-09-28,
+  // HARD). No public NGS opt-in remains; no env flag can re-expose them.
 } as const satisfies Readonly<Record<string, { env: string; exposes: string }>>;
 
 export type InternalApiRoute = keyof typeof INTERNAL_API_ROUTES;
 
-const PAGE_FLAGS: Readonly<Record<InternalSurfacePath, string>> = Object.freeze(
+const PAGE_FLAGS: Readonly<Record<InternalSurfacePath, string | null>> = Object.freeze(
   Object.fromEntries(
     Object.entries(INTERNAL_SURFACES).map(([p, v]) => [p, v.env]),
-  ) as Record<InternalSurfacePath, string>,
+  ) as Record<InternalSurfacePath, string | null>,
 );
 
 const API_FLAGS: Readonly<Record<InternalApiRoute, string>> = Object.freeze(
@@ -140,7 +161,8 @@ export function isInternalApiRoute(path: string): boolean {
  */
 export function isPagePublic(path: string): boolean {
   const flag = PAGE_FLAGS[path as InternalSurfacePath];
-  if (!flag) return true; // not internal
+  if (flag === undefined) return true; // not internal
+  if (flag === null) return false; // permanently internal — no opt-in exists
   return truthy(process.env[flag]);
 }
 
@@ -187,6 +209,7 @@ export const INTERNAL_SURFACE_POLICY = {
   "/api/calibration": "internal — calibration internals (opt-in CALIBRATION_JSON_PUBLIC)",
   "/api/gse/v1/truth": "internal — truth topology (opt-in TRUTH_TOPOLOGY_PUBLIC)",
   "/api/sources/catalog": "internal — source stack, refused-source status, provider envVar names (opt-in SOURCES_CATALOG_PUBLIC)",
+  "/intelligence/reconstruction": "internal — NGS-naming reconstruction exhibit (PERMANENTLY dark, no opt-in)",
   "/clv": "public — gated proof surface, 503 until canExposePerformanceStats (UNCHANGED)",
   "/stats": "public — gated proof surface, 404 until STATS_PUBLIC (UNCHANGED)",
   "/api/projections": "public — projections are the allowed surface (UNCHANGED)",

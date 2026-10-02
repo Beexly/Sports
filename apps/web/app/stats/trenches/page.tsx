@@ -23,7 +23,7 @@ export default function Page() {
       <InsightCard
         eyebrow="About Trenches Data"
         headline="Snap-level OL/DL data is license-gated. Here's the honest proxy"
-        body="Direct snap-level charting (NGS, PFF grades) requires licensing we don't hold yet. Protection Proxy = team offensive environment scaled to line-performance signal. Pressure Proxy = team defensive environment. These are real team-level signals, not fabricated, just not yet drill-down line grades."
+        body="Direct snap-level charting requires licensing we don't hold yet. Protection Proxy = team offensive environment scaled to line-performance signal. Pressure Proxy = team defensive environment. These are real team-level signals, not fabricated, just not yet drill-down line grades."
         tone="warn"
       />
       <SectionHeader title="Teams by Protection Score" eyebrow="Proxy ranking" />

@@ -295,7 +295,33 @@ const LOCKFILE_SAFE_CONTEXT =
 // touched neither. Same narrow blank-then-recheck approach as the two contexts
 // above: only these exact strings are blanked, and a residual standalone "lock"
 // anywhere else in the same line still hits.
-const LOCK_PROPER_NOUN_SAFE_CONTEXT = /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b/gi;
+//
+// BARE SURNAME, added 2026-10-01. `af23ffc76` appended a verbatim Route-IQ digest
+// to AGENTS.md line 5201 whose roster clause names two Jets quarterbacks:
+// "JSN — split spans two QBs (Lock started W2, Darnold returned W3)". That is
+// Drew Lock by surname, a data value — the same false positive as "Drew Lock"
+// above — but the abbreviated roster form does not match `\bDrew\s+Lock\b`, so
+// the gate failed and turned EVERY pull request red via `pull/<n>/merge`, all
+// the way through the three suites that assert it (calibration-cockpit,
+// docs-public-copy-scan, guardrails).
+//
+// The two added patterns are deliberately anchored to SPORTS prose so they
+// cannot swallow the slang: `Lock` only when immediately inside a
+// "QB"/"QBs(" roster parenthetical, or when followed by a season-week verb
+// ("started/returned/was/is [in|for] W<n>"). Verified by probe against this
+// tree: "my LOCK of the day", "I guarantee it", "guaranteed profit", "beat the
+// book", "a lock is a sure thing, risk-free", a standalone "I picked that lock",
+// and "The lock and the lock both hit" ALL still fail, while "Drew Lock",
+// "D. Lock", "server-side lock", "at lock", the QB-roster clause, and
+// "Lock started W2 for the Jets" all pass.
+//
+// KNOWN GAP, NOT INTRODUCED HERE: "I locked in on that bet" is NOT caught —
+// `BANNED_PHRASES` matches `lock` with a word boundary, and `locked` is a
+// different token. Confirmed pre-existing on unpatched `af23ffc76`. Left alone
+// deliberately: widening the ban is a separate decision from this false
+// positive, and belongs in its own PR with its own evidence.
+const LOCK_PROPER_NOUN_SAFE_CONTEXT =
+  /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b|(?<=QBs?\s*\()\s*Lock\b|\bLock\s+(?:started|returned|was|is)\s+(?:in\s+|for\s+)?W\d/gi;
 
 // DraftKings' own Pick6 API field is literally named `guaranteedMultiplier` —
 // it is a property key on the upstream payout-tier payload, parsed in

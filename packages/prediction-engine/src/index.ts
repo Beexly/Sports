@@ -232,8 +232,13 @@ export {
   isPlausibleEntryOdds,
   ENTRY_ODDS_MIN_ABS,
   MARKET_FAIR_METHOD_TAG,
+  modelProbForReceipt,
 } from "./pick-proof-receipt.js";
-export type { PickProofInput, PickProofReceipt } from "./pick-proof-receipt.js";
+export type {
+  PickProofInput,
+  PickProofReceipt,
+  ReceiptModelProbSource,
+} from "./pick-proof-receipt.js";
 // Slate commitment (commit-reveal) ÃƒÆ’Ã†â€™Ãƒâ€ Ã¢â‚¬â„¢ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â‚¬Å¡Ã‚Â¬Ãƒâ€¦Ã‚Â¡ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã†â€™Ãƒâ€šÃ‚Â¢ÃƒÆ’Ã‚Â¢ÃƒÂ¢Ã¢â€šÂ¬Ã…Â¡Ãƒâ€šÃ‚Â¬ÃƒÆ’Ã¢â‚¬Å¡Ãƒâ€šÃ‚Â pre-register the whole population; kills cherry-picking.
 export {
   buildSlateCommitment,
@@ -1038,6 +1043,7 @@ export type { LedgerSignalRow, ComposeLedgerOptions } from "./signal-ledger.js";
 export {
   buildCandidate,
   categoryPrior,
+  composeByEntity,
   normalizeReading,
   CATEGORY_PRIORS,
 } from "./signal-ledger-populator.js";
@@ -1111,6 +1117,34 @@ export type {
   CensusReport,
   CensusObservation,
 } from "./signal-anchor-census.js";
+
+// Per-key SCALE + WEIGHT fit, and the committed table of the numbers it
+// produced on prod. This is what replaces the uniform `weight = 1` that shipped
+// on all 118,462 persisted rows: the raw values span a 103x range of standard
+// deviations, so a uniform weight over them was an arithmetic average of ten
+// different units. The fit is within-player (fixed effect removed) against a
+// settled outcome, because the between-player number is mostly player identity.
+export {
+  fitSignalScales,
+  formatScaleReport,
+  normalizeWithScale,
+  MIN_SCALE_FIXTURES,
+} from "./signal-scale-fit.js";
+export type {
+  SignalScale,
+  SignalScaleTable,
+  ScaleVerdict,
+  SignalScaleObservation,
+  SignalOutcomeObservation,
+  FitSignalScalesOptions,
+} from "./signal-scale-fit.js";
+export {
+  SIGNAL_SCALES,
+  SIGNAL_SCALE_KEYS,
+  signalScaleFor,
+  SIGNAL_SCALE_TABLE_VERSION,
+  SIGNAL_SCALE_TABLE_SOURCE,
+} from "./signal-scale-table.js";
 
 // Player usage archetype (receiving lean / workload) from rushing/receiving usage.
 export { classifyUsageProfile } from "./player-archetype.js";
@@ -4083,3 +4117,19 @@ export {
   type BridgePrediction,
   type BridgeFeature,
 } from "./bridge/bridge-model.js";
+
+// CV watch-loop game-window scheduler (motif/watch-loop-2026-10-01).
+export {
+  ARM_LEAD_MS,
+  STAND_DOWN_MS,
+  FALLBACK_WINDOW_MS,
+  windowStartFor,
+  windowEndFor,
+  eventToWindow,
+  fetchWindowsForDate,
+  chicagoYmd,
+  getActiveWindows,
+  nextWindow,
+  fetchUpcomingWindows,
+  type GameWindow,
+} from "./watch/watch-scheduler.js";

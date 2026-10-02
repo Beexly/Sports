@@ -22,7 +22,12 @@ import { NextRequest, NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { captureError } from "@/lib/observability/sentry";
 import { isLiveDfs, resolveDfsSlateProvider } from "@/lib/integrations/dfs";
-import { buildEngineSlate, type EngineSlateReport } from "@/lib/fantasy/engine-slate";
+import { isConfigured } from "@/lib/integrations/providers";
+import {
+  buildEngineSlate,
+  registerEngineDfsProvider,
+  type EngineSlateReport,
+} from "@/lib/fantasy/engine-slate";
 
 export const dynamic = "force-dynamic";
 const MAX_TAKE = 20;
@@ -66,6 +71,22 @@ export async function GET(request: NextRequest): Promise<NextResponse> {
       },
       { status: 200 },
     );
+  }
+
+  // WIRE-UP (motif/audit-fix-props-2026-10-01): this route's header has always
+  // claimed to be "the call site `registerDfsSlateProvider` never had" — now
+  // it actually is one. Register the engine-backed provider with the freshly
+  // built slate so `activeDfsSlate()` can serve measured data instead of the
+  // illustrative fixture.
+  //
+  // Law 3 is respected: registration happens ONLY when the founder's
+  // DFS_PROVIDER flag is set (`isConfigured("dfs")`). Without it,
+  // `resolveDfsSlateProvider` keeps returning the illustrative slate, so
+  // registration alone flips nothing live. The route stays read-only: no DB
+  // write, no flag set, no published number moves.
+  if (isConfigured("dfs", process.env)) {
+    const handle = registerEngineDfsProvider({ season, week, now });
+    handle.cache = report;
   }
 
   const provider = resolveDfsSlateProvider();

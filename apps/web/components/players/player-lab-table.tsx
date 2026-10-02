@@ -15,12 +15,6 @@ import {
   statStabilityGrade,
 } from "@/lib/players/stat-stability";
 import type { ReceivingOpportunityRow } from "@/lib/intelligence/receiving-opportunity";
-import type { RushingEfficiencyRow } from "@/lib/intelligence/rushing-efficiency";
-import type {
-  NgsPassingLine,
-  NgsReceivingLine,
-  NgsRushingLine,
-} from "@/lib/nflverse/next-gen-stats";
 import type { CoverageRow, QbPressureRow } from "@/lib/nflverse/pressure-coverage";
 import {
   PROTECTION_STRESS_TOOLTIP,
@@ -28,8 +22,6 @@ import {
 } from "@/lib/nflverse/protection-stress";
 import type { CombineRow } from "@/lib/nflverse/combine";
 import type { QbrRow } from "@/lib/nflverse/qbr";
-import type { QbConsensusRow, Divergence } from "@/lib/intelligence/qb-consensus";
-import type { EdgeSignalRow } from "@/lib/nflverse/edge-signals";
 import type { InjuryRow, ReportStatus } from "@/lib/nflverse/injury-report";
 import type { SleeperTrendingPlayer } from "@/lib/sleeper/market-signal";
 import type { DfsSalaryRow } from "@/lib/dfs/salaries";
@@ -245,67 +237,6 @@ function opportunityColumns(tok: Tok): ReadonlyArray<Column<ReceivingOpportunity
   ];
 }
 
-function rushingColumns(tok: Tok): ReadonlyArray<Column<RushingEfficiencyRow>> {
-  const READ_LABEL: Record<RushingEfficiencyRow["read"], string> = {
-    "bell-cow": "Bell-cow",
-    "buy-low": "Buy-low",
-    "volume-dependent": "Volume-dep",
-    limited: "Limited",
-  };
-  return [
-    { key: "name", label: "Player", render: (r) => playerCell(r.name, tok) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
-    { key: "attempts", label: "Att", align: "right", numeric: true, tooltip: "rush attempts (volume)" },
-    { key: "ryoePerAtt", label: "RYOE/att", align: "right", numeric: true, tooltip: "rush yards over expected per attempt", render: (r) => signedCell(r.ryoePerAtt, tok, 2) },
-    { key: "pctStackedBox", label: "Box%", align: "right", numeric: true, tooltip: "% of carries vs an 8+ man box", render: (r) => fmtPercent(r.pctStackedBox) },
-    {
-      key: "read",
-      label: "The read",
-      sortValue: (r) => READ_LABEL[r.read],
-      render: (r) => <span className={`font-semibold ${tok.rushRead}`}>{READ_LABEL[r.read]}</span>,
-    },
-  ];
-}
-
-// ── NEXT GEN ──────────────────────────────────────────────────────────────────
-
-function ngsReceivingColumns(tok: Tok): ReadonlyArray<Column<NgsReceivingLine>> {
-  return [
-    { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, tok, r.position) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
-    { key: "targets", label: "Tgt", align: "right", numeric: true },
-    { key: "avgSeparation", label: "Sep", align: "right", numeric: true, tooltip: "yards of space at the catch point", render: (r) => r.avgSeparation.toFixed(2) },
-    { key: "avgCushion", label: "Cush", align: "right", numeric: true, tooltip: "pre-snap cushion", render: (r) => r.avgCushion.toFixed(2) },
-    { key: "avgYacAboveExpectation", label: "YAC+/-", align: "right", numeric: true, tooltip: "yards after catch over expected", render: (r) => signedCell(r.avgYacAboveExpectation, tok, 1) },
-    { key: "shareOfIntendedAirYards", label: "Air sh", align: "right", numeric: true, render: (r) => fmtPercent(r.shareOfIntendedAirYards) },
-    { key: "catchPct", label: "Catch%", align: "right", numeric: true, render: (r) => fmtPercent(r.catchPct) },
-  ];
-}
-function ngsPassingColumns(tok: Tok): ReadonlyArray<Column<NgsPassingLine>> {
-  return [
-    { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, tok) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
-    { key: "attempts", label: "Att", align: "right", numeric: true },
-    { key: "cpoe", label: "CPOE", align: "right", numeric: true, tooltip: "completion % over expected", render: (r) => signedCell(r.cpoe, tok, 1) },
-    { key: "completionPct", label: "Comp%", align: "right", numeric: true, render: (r) => r.completionPct.toFixed(1) },
-    { key: "expectedCompletionPct", label: "xComp%", align: "right", numeric: true, render: (r) => r.expectedCompletionPct.toFixed(1) },
-    { key: "avgTimeToThrow", label: "TT throw", align: "right", numeric: true, render: (r) => r.avgTimeToThrow.toFixed(2) },
-    { key: "aggressiveness", label: "Aggr", align: "right", numeric: true, render: (r) => r.aggressiveness.toFixed(1) },
-    { key: "passerRating", label: "Rating", align: "right", numeric: true, render: (r) => r.passerRating.toFixed(1) },
-  ];
-}
-function ngsRushingColumns(tok: Tok): ReadonlyArray<Column<NgsRushingLine>> {
-  return [
-    { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, tok) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
-    { key: "rushAttempts", label: "Att", align: "right", numeric: true },
-    { key: "ryoePerAtt", label: "RYOE/att", align: "right", numeric: true, tooltip: "rush yards over expected per attempt", render: (r) => signedCell(r.ryoePerAtt, tok, 2) },
-    { key: "efficiency", label: "Eff", align: "right", numeric: true, render: (r) => r.efficiency.toFixed(2) },
-    { key: "pctStackedBox", label: "Stacked%", align: "right", numeric: true, tooltip: "% carries vs 8+ defenders", render: (r) => fmtPercent(r.pctStackedBox) },
-    { key: "avgTimeToLos", label: "TT LOS", align: "right", numeric: true, render: (r) => r.avgTimeToLos.toFixed(2) },
-  ];
-}
-
 // ── TRENCHES (pressure & coverage) ────────────────────────────────────────────
 
 function qbPressureColumns(tok: Tok): ReadonlyArray<Column<QbPressureRow>> {
@@ -379,55 +310,6 @@ function qbrColumns(tok: Tok): ReadonlyArray<Column<QbrRow>> {
     { key: "epaTotal", label: "EPA", align: "right", numeric: true, tooltip: "total expected points added", render: (r) => signedCell(r.epaTotal, tok, 1) },
     { key: "ptsAdded", label: "Pts added", align: "right", numeric: true, render: (r) => signedCell(r.ptsAdded, tok, 1) },
     { key: "plays", label: "Plays", align: "right", numeric: true },
-  ];
-}
-
-const DIVERGENCE_LABEL: Record<Divergence, string> = {
-  aligned: "Aligned",
-  "results-over-accuracy": "Results › accuracy",
-  "accuracy-over-results": "Accuracy › results",
-  "single-source": "Single source",
-};
-function divergenceTone(d: Divergence): SignalTone {
-  return d === "aligned" ? "good" : d === "single-source" ? "neutral" : "neutral";
-}
-function consensusColumns(tok: Tok): ReadonlyArray<Column<QbConsensusRow>> {
-  return [
-    { key: "name", label: "Player", render: (r) => playerCell(r.name, tok) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
-    { key: "qbrPct", label: "QBR %ile", align: "right", numeric: true, tooltip: "QBR percentile within the pool", sortValue: (r) => r.qbrPct, render: (r) => (r.qbrPct === null ? "—" : r.qbrPct.toFixed(0)) },
-    { key: "cpoePct", label: "CPOE %ile", align: "right", numeric: true, tooltip: "CPOE (Next Gen accuracy) percentile", sortValue: (r) => r.cpoePct, render: (r) => (r.cpoePct === null ? "—" : r.cpoePct.toFixed(0)) },
-    { key: "consensus", label: "Consensus", align: "right", numeric: true, tooltip: "mean of available percentiles", render: (r) => r.consensus.toFixed(0) },
-    {
-      key: "divergence",
-      label: "The read",
-      sortValue: (r) => DIVERGENCE_LABEL[r.divergence],
-      render: (r) => {
-        const tone = divergenceTone(r.divergence);
-        const cls = tone === "good" ? tok.good : tok.consensusRead;
-        return <span className={`font-semibold ${cls}`}>{DIVERGENCE_LABEL[r.divergence]}</span>;
-      },
-    },
-  ];
-}
-
-// ── EDGE ──────────────────────────────────────────────────────────────────────
-
-function edgeColumns(tok: Tok, tone: "buy" | "sell"): ReadonlyArray<Column<EdgeSignalRow>> {
-  const gapCls = tone === "buy" ? tok.good : tok.bad;
-  return [
-    { key: "playerName", label: "Player", render: (r) => playerCell(r.playerName, tok, r.position) },
-    { key: "team", label: "Tm", render: (r) => teamCell(r.team, tok) },
-    { key: "games", label: "G", align: "right", numeric: true },
-    { key: "stability", label: "Stab", align: "right", tooltip: STABILITY_TOOLTIP, sortValue: (r) => r.games, render: (r) => stabilityCell(r.games) },
-    { key: "pprPerGame", label: "PPR/G", align: "right", numeric: true, render: (r) => r.pprPerGame.toFixed(1) },
-    { key: "targetShare", label: "Tgt sh", align: "right", numeric: true, sortValue: (r) => r.targetShare, render: (r) => fmtPercent(r.targetShare) },
-    { key: "avgSeparation", label: "Sep", align: "right", numeric: true, render: (r) => r.avgSeparation.toFixed(2) },
-    { key: "yacAboveExpectation", label: "YAC+/-", align: "right", numeric: true, render: (r) => formatSigned(r.yacAboveExpectation, 2) },
-    { key: "shareIntendedAirYards", label: "Air sh", align: "right", numeric: true, render: (r) => fmtPercent(r.shareIntendedAirYards) },
-    { key: "underlyingZ", label: "Undr z", align: "right", numeric: true, tooltip: "z-score of the underlying tracking signal", render: (r) => formatSigned(r.underlyingZ, 2) },
-    { key: "productionZ", label: "Prod z", align: "right", numeric: true, tooltip: "z-score of actual production", render: (r) => formatSigned(r.productionZ, 2) },
-    { key: "gap", label: "Gap", align: "right", numeric: true, tooltip: "underlying z minus production z", render: (r) => <span className={`font-semibold ${gapCls}`}>{formatSigned(r.gap, 2)}</span> },
   ];
 }
 
@@ -574,56 +456,6 @@ function resolveBinding(section: SectionData, tok: Tok): SectionBinding {
         rowTone: (row) => oppTone((row as ReceivingOpportunityRow).signal),
       };
     }
-    case "opportunity-rushing": {
-      return {
-        columns: rushingColumns(tok) as ReadonlyArray<Column<unknown>>,
-        rowKey: (row) => (row as RushingEfficiencyRow).playerId,
-        searchAccessor: (row) => {
-          const r = row as RushingEfficiencyRow;
-          return `${r.name} ${r.team}`;
-        },
-        rowTitle: (row) => (row as RushingEfficiencyRow).note,
-      };
-    }
-    case "nextgen-receiving": {
-      return {
-        columns: ngsReceivingColumns(tok) as ReadonlyArray<Column<unknown>>,
-        rowKey: (row) => {
-          const r = row as NgsReceivingLine;
-          return `${r.playerId}-${r.team}`;
-        },
-        searchAccessor: (row) => {
-          const r = row as NgsReceivingLine;
-          return `${r.playerName} ${r.team} ${r.position}`;
-        },
-      };
-    }
-    case "nextgen-passing": {
-      return {
-        columns: ngsPassingColumns(tok) as ReadonlyArray<Column<unknown>>,
-        rowKey: (row) => {
-          const r = row as NgsPassingLine;
-          return `${r.playerId}-${r.team}`;
-        },
-        searchAccessor: (row) => {
-          const r = row as NgsPassingLine;
-          return `${r.playerName} ${r.team}`;
-        },
-      };
-    }
-    case "nextgen-rushing": {
-      return {
-        columns: ngsRushingColumns(tok) as ReadonlyArray<Column<unknown>>,
-        rowKey: (row) => {
-          const r = row as NgsRushingLine;
-          return `${r.playerId}-${r.team}`;
-        },
-        searchAccessor: (row) => {
-          const r = row as NgsRushingLine;
-          return `${r.playerName} ${r.team}`;
-        },
-      };
-    }
     case "trenches-qb": {
       return {
         columns: qbPressureColumns(tok) as ReadonlyArray<Column<unknown>>,
@@ -666,37 +498,6 @@ function resolveBinding(section: SectionData, tok: Tok): SectionBinding {
           const r = row as QbrRow;
           return `${r.name} ${r.team}`;
         },
-      };
-    }
-    case "qbr-consensus": {
-      return {
-        columns: consensusColumns(tok) as ReadonlyArray<Column<unknown>>,
-        rowKey: (row, index) => {
-          const r = row as QbConsensusRow;
-          return `${r.name}-${index}`;
-        },
-        searchAccessor: (row) => {
-          const r = row as QbConsensusRow;
-          return `${r.name} ${r.team}`;
-        },
-        rowTitle: (row) => (row as QbConsensusRow).note,
-        rowTone: (row) => ((row as QbConsensusRow).divergence === "aligned" ? "good" : null),
-      };
-    }
-    case "edge": {
-      const edgeTone: "buy" | "sell" = variant === "sell" ? "sell" : "buy";
-      const fixedTone: SignalTone = edgeTone === "buy" ? "good" : "bad";
-      return {
-        columns: edgeColumns(tok, edgeTone) as ReadonlyArray<Column<unknown>>,
-        rowKey: (row) => {
-          const r = row as EdgeSignalRow;
-          return `${r.playerId}-${r.team}`;
-        },
-        searchAccessor: (row) => {
-          const r = row as EdgeSignalRow;
-          return `${r.playerName} ${r.team} ${r.position}`;
-        },
-        rowTone: () => fixedTone,
       };
     }
     case "injuries": {

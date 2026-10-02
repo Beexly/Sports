@@ -21,7 +21,11 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 
 const runBoardFillPipeline = vi.fn();
 
-vi.mock("@/lib/cron/authorize", () => ({ cronAuthError: () => null }));
+// Controllable auth gate: the contract promises unauthorized callers are
+// refused, which is untestable when the mock hard-wires auth to null.
+const authState = vi.hoisted(() => ({ denied: null as null | Response }));
+
+vi.mock("@/lib/cron/authorize", () => ({ cronAuthError: () => authState.denied }));
 vi.mock("@/lib/observability/sentry", () => ({ captureError: () => {} }));
 vi.mock("@sports/ingestion-pipeline", () => ({
   runBoardFillPipeline: (...args: unknown[]) => runBoardFillPipeline(...args),
@@ -44,6 +48,7 @@ async function invoke(): Promise<Response> {
 
 describe("GET /api/cron/board-fill", () => {
   beforeEach(() => {
+    authState.denied = null;
     runBoardFillPipeline.mockReset();
     runBoardFillPipeline.mockResolvedValue(OK_RESULT);
   });
@@ -92,5 +97,21 @@ describe("GET /api/cron/board-fill", () => {
   it("calls the pipeline exactly once", async () => {
     await invoke();
     expect(runBoardFillPipeline).toHaveBeenCalledTimes(1);
+  });
+
+  it("refuses unauthorized callers before the pipeline runs", async () => {
+    // The contract above promises this; the mock used to make it untestable
+    // by hard-wiring auth to null. An unauthenticated hit must never reach
+    // the pipeline.
+    authState.denied = new Response(JSON.stringify({ error: "Unauthorized" }), {
+      status: 401,
+    });
+    try {
+      const res = await invoke();
+      expect(res.status).toBe(401);
+      expect(runBoardFillPipeline).not.toHaveBeenCalled();
+    } finally {
+      authState.denied = null;
+    }
   });
 });

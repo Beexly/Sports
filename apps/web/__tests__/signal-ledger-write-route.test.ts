@@ -11,6 +11,11 @@
  * i.e. 84,500 rows went to 0 and the route still returned 200. Nothing in the
  * unit suite called the route, so 17 writer tests all passed over a route that
  * wrote nothing. This is the test that would have caught it.
+ *
+ * A second gap the same incident exposed: the route returned 200 with
+ * success:true whenever `skipped` was 0, even with errors present and 0 rows
+ * written — `skipped === 0` is not "the write worked". The loud-failure tests
+ * below pin a 500 for any fault the report carries.
  */
 import { beforeEach, describe, expect, it, vi } from "vitest";
 
@@ -30,7 +35,9 @@ vi.mock("@/sports/db", () => ({
 }));
 vi.mock("@/lib/observability/sentry", () => ({ captureError: () => {} }));
 vi.mock("@/lib/ops/signal-ledger-writer", () => ({
-  projectSignalCandidates: () => [CANDIDATE],
+  // The real projector returns { candidates, dropped }: rows it refused for want
+  // of a fitted scale are counted per key rather than vanishing silently.
+  projectSignalCandidates: () => ({ candidates: [CANDIDATE], dropped: { "snap.offense_pct": 3 } }),
   writeSignalCandidates: (...args: unknown[]) => writeSignalCandidates(...args),
 }));
 
@@ -43,6 +50,10 @@ const CANDIDATE = {
   valueRaw: 0.5,
   season: 2026,
   week: 1,
+  // The FITTED weight for pgs.target_share, not a uniform 1. A mock that still
+  // says 1 would let the weight regression this PR fixes pass unnoticed here.
+  weight: 0.101859,
+  confidence: 1,
   capturedAt: new Date("2026-09-28T00:00:00Z"),
   fetchedAt: new Date("2026-09-28T00:00:00Z"),
   sourceId: "nflverse",
@@ -82,6 +93,24 @@ describe("GET /api/cron/signal-ledger-write", () => {
       { deadline?: Date } | undefined,
     ];
     expect(options?.deadline).toBeInstanceOf(Date);
+  });
+
+  it("REPORTS rows dropped for want of a fitted scale, keyed, not silently", async () => {
+    // The projector refuses a row it cannot place on the shared scale. That is a
+    // finding (on prod: every snap_counts row, for want of a playerId), and a
+    // 200 that quietly omits it is exactly the "green cron that was writing
+    // nothing" failure this route's stderr line was added to prevent.
+    const res = await invoke();
+    const body = (await res.json()) as { data: { dropped: Record<string, number> } };
+    expect(body.data.dropped).toEqual({ "snap.offense_pct": 3 });
+  });
+
+  it("STATES the fitted-weight policy rather than the old 'all 1' string", async () => {
+    const res = await invoke();
+    const body = (await res.json()) as { data: { weights: string; value: string } };
+    expect(body.data.weights).not.toContain("all 1");
+    expect(body.data.weights).toContain("FITTED");
+    expect(body.data.value).toContain("NORMALIZED");
   });
 
   it("writes the whole candidate set when the shard is 0/1", async () => {
@@ -150,5 +179,46 @@ describe("GET /api/cron/signal-ledger-write", () => {
     } finally {
       delete process.env["SIGNAL_LEDGER_SHARD"];
     }
+  });
+
+  it("returns 500 — never 200 — when the deadline stops the write with 0 rows written", async () => {
+    // The exact incident shape (dpl_8hKqsyXxb1KDLm4kgBw6ffEBEq9e): the second
+    // write call saw an already-past deadline, wrote nothing, skipped nothing,
+    // and the route returned 200 with success:true. `skipped === 0` is not the
+    // same as "the write worked" — a monitor that only checks the status code
+    // must not read a broken tick as healthy.
+    delete process.env["SIGNAL_LEDGER_SHARD"];
+    writeSignalCandidates.mockResolvedValue({
+      candidates: 118083,
+      written: 0,
+      skipped: 0,
+      batches: 0,
+      errors: [
+        "deadline reached with 118083 candidates unwritten; the next run resumes and converges (upserts are idempotent)",
+      ],
+    });
+    const res = await invoke();
+    expect(res.status).toBe(500);
+    const body = (await res.json()) as { success: boolean };
+    expect(body.success).toBe(false);
+  });
+
+  it("returns 500 when rows were skipped, even if some were written", async () => {
+    delete process.env["SIGNAL_LEDGER_SHARD"];
+    writeSignalCandidates.mockResolvedValue({
+      candidates: 10,
+      written: 7,
+      skipped: 3,
+      batches: 1,
+      errors: [
+        "pgs.target_share/p1: boom",
+        "pgs.target_share/p2: boom",
+        "pgs.target_share/p3: boom",
+      ],
+    });
+    const res = await invoke();
+    expect(res.status).toBe(500);
+    const body = (await res.json()) as { success: boolean };
+    expect(body.success).toBe(false);
   });
 });

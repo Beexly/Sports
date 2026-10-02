@@ -36,7 +36,74 @@ export default defineConfig({
   resolve: {
     alias: {
       "@": resolve(__dirname, "."),
+      // Workspace packages resolve their own internal imports with the
+      // TypeScript ESM `.js` extension convention (88 specifiers in
+      // packages/data-ingestion/src/index.ts). Vitest's resolver cannot map a
+      // `.js` specifier to the `.ts` source, so `@sports/data-ingestion`
+      // loaded as `undefined` and every test importing `calibratedWinProb`
+      // died with "calibratedWinProb is not a function". Map the package
+      // ROOT, not `src/index.ts`: callers deep-import it too (e.g.
+      // `@sports/data-ingestion/src/source-registry`), and a file-exact
+      // alias silently breaks those.
+      "@sports/ingestion-pipeline": resolve(
+        __dirname,
+        "../../packages/ingestion-pipeline/src/index.ts",
+      ),
+      // Deep `.js` specifiers INTO a workspace package must resolve to `.ts`.
+      // Same class of bug as #969: a specifier like
+      // `@sports/prediction-engine/src/hierarchical-pool.js` resolves to nothing
+      // because no such `.js` exists on disk. Aliasing the package ROOT (rather
+      // than a bare specifier) lets Vite map `.js` to `.ts` inside a package it
+      // transforms. Each root needs its own entry; the previous attempt used a
+      // regex alias, which this config's alias type rejects.
+      "@sports/prediction-engine": resolve(
+        __dirname,
+        "../../packages/prediction-engine",
+      ),
+      "@sports/data-ingestion": resolve(
+        __dirname,
+        "../../packages/data-ingestion",
+      ),
       "next/server": nextServerEntry,
+      // Every remaining workspace package root, for the same reason as the three
+      // above. Without this, `@sports/db` and friends resolve through the root
+      // `node_modules`, where they are symlinks into a SEPARATE checkout of the
+      // packages that is not this worktree's HEAD — so a test that asserts on
+      // package behaviour silently reads stale sources, and a green run certifies
+      // code the PR never touched. Roots, not `src/index.ts`: callers deep-import
+      // (`@sports/db/src/...`) and a file-exact alias breaks those.
+      ...Object.fromEntries(
+        [
+          "ai-council",
+          "compliance",
+          "crypto",
+          "db",
+          "epistemic-twin",
+          "feature-store",
+          "genesis-kernel",
+          "governed",
+          "ops",
+          "partner-stack",
+          "phase-c",
+          "quote-plane",
+          "stats-api",
+          "types",
+          "util",
+        ].map((name) => [`@sports/${name}`, resolve(__dirname, "../../packages", name)]),
+      ),
+      "@sports/worker-pick-generation": resolve(
+        __dirname,
+        "../../workers/pick-generation",
+      ),
+      "@sports/worker-data-refresh": resolve(__dirname, "../../workers/data-refresh"),
+      "@sports/worker-content-publishing": resolve(
+        __dirname,
+        "../../workers/content-publishing",
+      ),
+      "@sports/worker-airwave-listener": resolve(
+        __dirname,
+        "../../workers/airwave-listener",
+      ),
     },
   },
 });
