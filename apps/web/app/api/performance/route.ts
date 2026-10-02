@@ -2,10 +2,15 @@ import { NextRequest, NextResponse } from "next/server";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
 import { clientIp, consumeRateLimit } from "@/lib/api/rate-limit";
+import { captureRouteError } from "@/lib/observability/capture-route-error";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
+  // /api/performance is a error surface: an unhandled throw here was
+  // invisible to ops. Capture, then RE-THROW so the response and the
+  // Next.js error boundary behave exactly as they did before.
+  try {
   const gates = getReadinessGates();
   if (!gates.canExposePerformanceStats) {
     return NextResponse.json(bootstrapGateResponse("Performance stats"), { status: 503 });
@@ -153,4 +158,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
         "Past performance does not guarantee future results. For informational purposes only.",
     },
   });
+  } catch (err) {
+    captureRouteError(err, "/api/performance", "error");
+    throw err;
+  }
 }

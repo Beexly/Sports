@@ -37,10 +37,15 @@ import {
   loadPublishTimeConsensusByPickId,
 } from "@/lib/claims/load-publish-time-consensus";
 import { projectPublicConsensusReasoning } from "@/lib/claims/project-public-consensus-reasoning";
+import { captureRouteError } from "@/lib/observability/capture-route-error";
 
 export const dynamic = "force-dynamic";
 
 export async function GET(req: NextRequest): Promise<NextResponse> {
+  // /api/picks is a error surface: an unhandled throw here was
+  // invisible to ops. Capture, then RE-THROW so the response and the
+  // Next.js error boundary behave exactly as they did before.
+  try {
   // Public, anonymous, DB-heavy route (findMany + count + per-pick selective
   // filter). DURABLE (Postgres) rate limit: the previous in-memory limiter was
   // per-process, so on serverless the real ceiling was 60/min × warm-instance
@@ -497,4 +502,8 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       containsSeedData,
     },
   });
+  } catch (err) {
+    captureRouteError(err, "/api/picks", "error");
+    throw err;
+  }
 }

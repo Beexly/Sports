@@ -36,6 +36,7 @@ import {
   classifyStripeSessionCreateError,
   transitionForOutcome,
 } from "@/lib/billing/stripe-outcome";
+import { captureRouteError } from "@/lib/observability/capture-route-error";
 const CheckoutSchema = z.object({
   tier: z.enum(["FANTASY", "PRO", "ELITE"]),
   interval: z.enum(["month", "year"]).default("month"),
@@ -60,6 +61,10 @@ const CHECKOUT_CURRENCY = "usd";
  * would store them today — this says it rather than relying on that.
  */
 export async function POST(req: NextRequest): Promise<NextResponse> {
+  // /api/subscriptions/checkout is a critical surface: an unhandled throw here was
+  // invisible to ops. Capture, then RE-THROW so the response and the
+  // Next.js error boundary behave exactly as they did before.
+  try {
   // PART 4 (C12) free-only switch: one server-side choke for NEW paid
   // checkouts. Default open — PAID_CHECKOUT_OPEN=false in the console closes
   // it; deleting the var is the one-line revert. Placed BEFORE the session
@@ -586,5 +591,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const message = err instanceof Error ? err.message : "Checkout failed";
     console.error(`Checkout error: ${message}`);
     return jsonNoStore({ error: "Checkout could not be started." }, { status: 500 });
+  }
+  } catch (err) {
+    captureRouteError(err, "/api/subscriptions/checkout", "critical");
+    throw err;
   }
 }
