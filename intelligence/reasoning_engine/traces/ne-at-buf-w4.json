@@ -58,11 +58,84 @@
       "fired": false,
       "weight": null,
       "weight_status": "prior-not-applied-unless-wind-over-15"
+    },
+    {
+      "signal": "iwinrnfl_expected_margin",
+      "value": {
+        "margin": {
+          "paper": "1704.00197v3",
+          "equation": "h + R_home - R_away",
+          "home": "BUF",
+          "away": "NE",
+          "home_edge": 2.1777749196602363,
+          "home_rating": 7.842438902844225,
+          "away_rating": -1.032658908597062,
+          "expected_margin": 11.052872731101523,
+          "n_games": 1187.0,
+          "weight": null,
+          "weight_status": "withheld",
+          "publishes_pick": false
+        },
+        "paper_normal_approx": {
+          "paper": "1704.00197v3",
+          "equation": "Phi((h + R_home - R_away) / 14)",
+          "sigma_points": 14.0,
+          "sigma_source": "paper stated approximation, citation [16], not fitted on this book",
+          "probability": 0.7850874295556259,
+          "weight": null,
+          "weight_status": "withheld",
+          "publishes_pick": false,
+          "note": "Paper approximation for a pre-game normal. Not Table 1. Not a published pick."
+        }
+      },
+      "source": "real",
+      "license": "paper equation on nflverse CC-BY-4.0",
+      "fired": true,
+      "weight": null,
+      "weight_status": "withheld",
+      "note": "Least-squares margin. Table 1 was not applied. Not a pick."
     }
   ],
   "gaps": [
     "no published pick",
-    "tau served table is a point fit, not used as a probability"
+    "tau served table is a point fit, not used as a probability",
+    "01: no market-strength producer. player opportunity is not joined to a game-level prior",
+    "03: charting feed absent. shell mix is not filled with a league rate"
   ],
-  "fit_stamp": "point fit \u2014 not pre-kickoff. 2026 unit cells pool in-season weeks."
+  "fit_stamp": "point fit \u2014 not pre-kickoff. 2026 unit cells pool in-season weeks.",
+  "paper_index": {
+    "window": "2026-10-02T10:00-13:35",
+    "n": 105,
+    "weight": null,
+    "weight_status": "withheld",
+    "bindings": {
+      "1704.00197": {
+        "module": "research.iwinrnfl_ratings",
+        "status": "margin_only",
+        "claim": "Least-squares margin is loaded. Table 1 win probability is refused. Sigma 14 is the paper's statement, not a fitted weight."
+      },
+      "1601.04302": {
+        "module": "research.footballonomics",
+        "status": "benefit_only",
+        "claim": "Fourth-down benefit equation loads. Net benefit is refused until delta_pi is measured. Not a go-for-it call."
+      },
+      "2604.08885": {
+        "module": "staking.screening",
+        "status": "not_run",
+        "claim": "KellyBench was not run on this book. The fixture screen is not that benchmark."
+      },
+      "2607.00164": {
+        "module": "reasoning_engine.facets",
+        "status": "method_only",
+        "claim": "H-VAEP is a handball method. It is not an NFL EPA number."
+      },
+      "2606.23598": {
+        "module": "trust.enbpi",
+        "status": "intervals_required",
+        "claim": "EnbPI coverage is not claimed. No interval file was checked for this trace."
+      }
+    },
+    "reason": "An abstract is not a fitted weight."
+  },
+  "calibration_applied": false
 }

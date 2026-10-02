@@ -6,6 +6,7 @@ import sys
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, ROOT)
 from reasoning_engine.facets import epa_facets
+from reasoning_engine.seal import seal_trace
 
 GAMES = (("CLE", "PIT"), ("BUF", "NE"), ("CHI", "NYJ"))
 PBP = os.path.join(ROOT, "coaching", "data", "play_by_play_2026.parquet")
@@ -38,6 +39,19 @@ def main() -> None:
             "weight": None,
             "weight_status": "prior-not-applied-unless-wind-over-15",
         })
+        rating_path = os.path.join(ROOT, "research", "data", "iwinrnfl_ratings_2026_w4.json")
+        rating_doc = json.load(open(rating_path, encoding="utf-8"))
+        card = next(c for c in rating_doc["cards"] if c["margin"]["home"] == home and c["margin"]["away"] == away)
+        facts.append({
+            "signal": "iwinrnfl_expected_margin",
+            "value": card,
+            "source": "real",
+            "license": "paper equation on nflverse CC-BY-4.0",
+            "fired": True,
+            "weight": None,
+            "weight_status": "withheld",
+            "note": "Least-squares margin. Table 1 was not applied. Not a pick.",
+        })
         doc = {
             "game_id": f"{away}-at-{home}-2026-w4",
             "bet_type": None,
@@ -49,6 +63,7 @@ def main() -> None:
             "gaps": ["no published pick", "tau served table is a point fit, not used as a probability"],
             "fit_stamp": "point fit — not pre-kickoff. 2026 unit cells pool in-season weeks.",
         }
+        doc = seal_trace(doc)
         path = os.path.join(OUT, f"{away.lower()}-at-{home.lower()}-w4.json")
         json.dump(doc, open(path, "w", encoding="utf-8"), indent=2)
         print("wrote", path)
