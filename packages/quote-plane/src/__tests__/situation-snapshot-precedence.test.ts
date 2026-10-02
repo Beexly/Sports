@@ -3,6 +3,7 @@ import type { QuoteLine } from "../types";
 import {
   FREE_QUOTE_PRECEDENCE,
   citeAllowed,
+  citeEligibleSources,
   certifiableForLiveGate,
   earlierWins,
   isTierBOnly,
@@ -65,6 +66,19 @@ describe("FREE_QUOTE_PRECEDENCE helpers", () => {
   it("parlay is off cite and off live-gate (market-state only)", () => {
     expect(citeAllowed("parlay")).toBe(false);
     expect(certifiableForLiveGate("parlay")).toBe(false);
+  });
+
+  it("citeEligibleSources keeps Tier-A in ladder order and never cites Tier-B", () => {
+    expect(
+      citeEligibleSources([
+        "apify",
+        "oddspapi",
+        "unknown",
+        "rundown",
+        "parlay",
+        "rundown",
+      ]),
+    ).toEqual(["rundown", "oddspapi"]);
   });
 });
 
