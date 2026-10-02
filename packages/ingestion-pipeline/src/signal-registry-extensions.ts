@@ -36,6 +36,7 @@ import { PERSONNEL_SIGNALS } from "./nfl-personnel.js";
 import { pressureMatchup } from "./nfl-pressure-matchup.js";
 import { RAW_COLUMN_SIGNALS } from "./nfl-raw-columns.js";
 import { restDays2026 } from "./nfl-rest.js";
+import { nflWrDropRateSignal, nflWrYacSignal } from "./nfl-wr-skill.js";
 import { nflWrAdotSignal } from "./nfl-wr-adot.js";
 import { nflWeekOf } from "./nfl-week.js";
 import { classifyNflBroadcast, isStandalonePrimetime } from "./nfl-broadcast.js";
@@ -1209,6 +1210,8 @@ export const EXTENDED_SIGNALS: readonly SignalDefinition[] = [
   ...INTEL_PRIOR_SIGNALS,
   nflQbRushRateSignal,
   nflWrAdotSignal,
+  nflWrYacSignal,
+  nflWrDropRateSignal,
   ...PERSONNEL_SIGNALS,
   ...RAW_COLUMN_SIGNALS,
   ...NFL_INJURY_SIGNALS,
