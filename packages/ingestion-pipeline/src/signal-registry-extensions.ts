@@ -27,6 +27,7 @@ import { sameDivision2026 } from "./nfl-division.js";
 import { elevationAboveThreshold, roofAcclimationMismatch, surfaceAcclimationMismatch } from "./nfl-venue-facts.js";
 import { kalshiHomeMid } from "./nfl-kalshi-mid.js";
 import { pregameMarketAnchor } from "./nfl-pregame-market.js";
+import { penaltyMatchup } from "./nfl-penalty-matchup.js";
 import { pressureMatchup } from "./nfl-pressure-matchup.js";
 import { restDays2026 } from "./nfl-rest.js";
 import { nflWeekOf } from "./nfl-week.js";
@@ -616,7 +617,7 @@ export const nflPenaltyDifferentialSignal: SignalDefinition = {
   outputKind: "CONTINUOUS_VALUE",
   validSports: ["americanfootball_nfl"],
   owner: "quant-discipline",
-  dataDependencies: ["nfl_pbp"],
+  dataDependencies: ["nflverse_pbp_2025_reg_weeks_17_18", "nflverse_pbp_2026_weeks_1_3"],
   activationStatus: "ACTIVE",
   trustWeight: 0.07,
   killLine: KILL_LINE,
@@ -624,18 +625,18 @@ export const nflPenaltyDifferentialSignal: SignalDefinition = {
   acquisitionTask: null,
   blockedReason: null,
   // DIRECTION: homeSign +1, neutral 0. expected spread adjustment from penalties.
-  // The evaluator's own field is `expectedSpreadAdjustmentPoints`; the registry previously read
-  // a field this result does not return, so `?? 0` made it silently emit nothing.
+  // The bridge field is expectedSpreadTiltPoints. A sample under five abstains.
   homeSign: 1 as const,
   neutralValue: 0,
-  evaluate: async () => {
-    // The kernel's input contract does not match the env keys this wrapper
-    // used to pass, and the result was read off a field the kernel does not
-    // return. That read emits 0, which is a vote the measurement never made.
-    // Abstain. The sanctioned call is the matching function in
-    // signals-bridge.ts, and it stays unwired until its real inputs exist in
-    // the schema. Do not restore a type-erasing call.
-    return null;
+  evaluate: async (ctx) => {
+    if (ctx.sportKey !== "americanfootball_nfl") return null;
+    const reading = penaltyMatchup({
+      homeTeam: teamLabel(ctx.homeTeam) ?? "",
+      awayTeam: teamLabel(ctx.awayTeam) ?? "",
+      commenceTime: ctx.commenceTime,
+    });
+    if (reading == null) return null;
+    return { value: reading.value, capturedAt: "2026-10-01", metadata: reading.metadata };
   },
 };
 
