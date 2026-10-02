@@ -1,75 +1,41 @@
-# PROVENANCE: implements reasoning-depth-spec.md §6 (data structures), §6.2 (verification
-# enum), §6.3 (checklist verdicts), §7 (API shape). Research basis: corpus-intelligence/maps/c09-map.md
-# (calibration-over-accuracy doctrine, checklist/verification discipline from ops/HERMES_ALL_NIGHT_2026-09-04
-# and ops/ISOTONIC_LOGLOSS_DEBUG_2026-08-10: never present uncalibrated numbers as signal).
-"""Core types for the unified NFL intelligence API."""
+# PROVENANCE: reasoning-depth-spec.md §6 (data structures), §6.2 (verification
+# enum), §6.3 (checklist verdicts), §7 (API shape). Converged 2026-10-02: the
+# closed enums (ReasoningDepth, Verification, ChecklistVerdict, Exposure),
+# TRACKS, and VERIFICATION_PRECEDENCE are the CANONICAL contract from
+# reasoning/enums.py — this module re-exports them so the whole build shares
+# one vocabulary. (LIVE_VERIFIED was added to the canonical enum during this
+# convergence; it was previously an integration-only SPEC extension.)
+#
+# The dataclasses below are the integration façade's input/output vocabulary
+# (provider-wired analyze()). The engine itself operates on reasoning's
+# canonical types; the façade (api.py) converts at the boundary.
+"""Core types for the unified NFL intelligence API (façade vocabulary).
+
+Canonical enums live in reasoning/enums.py and are re-exported here.
+"""
 from __future__ import annotations
 
 from dataclasses import dataclass, field
-from enum import Enum
 from typing import Any, Optional
 
-
-class ReasoningDepth(str, Enum):
-    """L1-L5 reasoning levels (spec §4). Ordered; escalation only moves up."""
-    L1 = "L1"
-    L2 = "L2"
-    L3 = "L3"
-    L4 = "L4"
-    L5 = "L5"
-
-    def __lt__(self, other: "ReasoningDepth") -> bool:  # type: ignore[override]
-        order = ["L1", "L2", "L3", "L4", "L5"]
-        return order.index(self.value) < order.index(other.value)
-
-
-class Verification(str, Enum):
-    """Closed verification statuses (spec §6.2), plus LIVE_VERIFIED as the §5
-    precedence top rank (SPEC extension: §5 names live-verified as outranking
-    computed, but §6.2's enum omits it)."""
-    CORPUS = "CORPUS"            # ingested from a sourced dataset or document
-    COMPUTED = "COMPUTED"        # derived by engine code from CORPUS inputs, reproducible
-    SINGLE_SOURCE = "SINGLE_SOURCE"  # one outlet, uncorroborated
-    INFERENCE = "INFERENCE"      # model judgment; must carry a breaking condition at L3+
-    LIVE_VERIFIED = "LIVE_VERIFIED"  # observed in a live/completed game feed (SPEC)
-
-
-# Precedence for conflict resolution (spec §5): live-verified > computed > corpus >
-# single-source > inference. Higher number wins.
-VERIFICATION_PRECEDENCE: dict[Verification, int] = {
-    Verification.LIVE_VERIFIED: 5,
-    Verification.COMPUTED: 4,
-    Verification.CORPUS: 3,
-    Verification.SINGLE_SOURCE: 2,
-    Verification.INFERENCE: 1,
-}
-
-
-class ChecklistVerdict(str, Enum):
-    """Per-track checklist verdicts (spec §5, §6.3)."""
-    CLEAR = "CLEAR"
-    NOTHING_MATERIAL = "NOTHING-MATERIAL"
-    DATA_GAP = "DATA-GAP"
-    CONFLICT = "CONFLICT"
-    UNCHECKED = "UNCHECKED"
-
-
-# The five mandatory tracks (spec §5).
-TRACKS: tuple[str, ...] = (
-    "qb_behavior",
-    "coaching_scheme",
-    "offensive_line",
-    "trust_signals",
-    "scheme_matchup",
+# Canonical contract — one vocabulary for the whole build.
+from reasoning.enums import (
+    TRACKS,
+    VERIFICATION_PRECEDENCE,
+    ChecklistVerdict,
+    Exposure,
+    ReasoningDepth,
+    Verification,
 )
 
-
-class Exposure(str, Enum):
-    """What the analysis will be used for. Drives the depth floor (spec §4, §7)."""
-    NONE = "none"
-    ANALYSIS = "analysis"
-    PUBLISHED_PICK = "published_pick"
-    CARD = "card"
+__all__ = [
+    "TRACKS", "VERIFICATION_PRECEDENCE",
+    "ChecklistVerdict", "Exposure", "ReasoningDepth", "Verification",
+    "Claim", "CausalLink", "CausalChain", "Correlation", "BreakingCondition",
+    "BetLeg", "ThesisBundle", "AdversaryReport", "SpecialistOutput",
+    "ChecklistResult", "AnalysisRequest", "EscalationEntry", "ReasoningTrace",
+    "ContractViolation",
+]
 
 
 @dataclass(frozen=True)
@@ -90,6 +56,7 @@ class CausalLink:
     outcome: str
     verification: Verification
     breaking_condition: Optional[str] = None  # observable fact that falsifies this link
+    id: str = ""                     # canonical link id, e.g. "pit_pressure_lands"
 
 
 @dataclass(frozen=True)
@@ -190,8 +157,9 @@ class EscalationEntry:
 
 @dataclass
 class ReasoningTrace:
-    """The unit of coherence (spec §2.5, §6.1). Mutable during construction;
-    treated as immutable once labeled FINAL."""
+    """Façade trace DTO (storage/test vocabulary). The engine returns
+    reasoning's canonical ReasoningTrace; the façade may convert to this
+    shape for persistence. Mutable during construction."""
     trace_id: str
     game: dict[str, Any]
     depth: ReasoningDepth
@@ -217,6 +185,6 @@ class ReasoningTrace:
         }
 
 
-class ContractViolation(Exception):
-    """Raised when the API contract is violated (spec §7 SPEC notes)."""
-    pass
+# Canonical ContractViolation: the engine raises reasoning's; the façade's
+# public surface re-exports it so `except ContractViolation` catches it.
+from reasoning import ContractViolation  # noqa: E402  (re-exported)

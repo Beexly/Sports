@@ -103,6 +103,13 @@ class AnalysisEngine:
         # L4 — checklist + adversary (the adversarial layer is c08's).
         if trace.depth.is_at_least(ReasoningDepth.L4):
             self._run_l4(req, ctx, trace)
+            # Post-L4 escalation re-check: the completed L4 can fire L4 → L5
+            # triggers (three_plus_legs, thesis_survived, two_plus_conflicts).
+            # Without this, a genuine L3 → L4 walk never reaches L5. Added
+            # 2026-10-02 during contract convergence (the provider façade's
+            # pinned T3 behavior requires it).
+            if trace.depth == ReasoningDepth.L4:
+                self._maybe_escalate(trace, ReasoningDepth.L4, set(), req, ctx)
 
         # L5 — synthesis.
         if trace.depth == ReasoningDepth.L5:
@@ -156,6 +163,15 @@ class AnalysisEngine:
             weak_links=count_weak_links(trace),
             legs=len(req.legs),
         )
+        # Request-derived triggers (spec §4 escalation summary: "bet requested,
+        # causal claim made, or signal conflict" escalates L2 → L3; a bet
+        # request implies a matchup for L1 → L2). Added 2026-10-02 during
+        # contract convergence — the provider façade's bet requests must drive
+        # escalation the same way the old integration layer did.
+        if req.legs:
+            signal.triggers.add("bet_requested")
+            if depth == ReasoningDepth.L1:
+                signal.triggers.add("matchup")
         # Exposure-driven triggers (spec §4 / §7 contract).
         if depth == ReasoningDepth.L3:
             if req.exposure.requires_l5():

@@ -74,6 +74,16 @@ tfl_rate_vs_rush_proxy is reserved (empty until sourced).
 (before = not (qtr in (2,4) and <=120s left)); n_games. challenge_note records
 that challenge fields are absent from nflverse pbp — nothing is emitted for them.
 
+**schedule.csv** — (season, week, team): opponent. Built by
+`coaching/build/build_pressure_answer.py` from game_id (2022–2026).
+
+**def_pressure_weekly.csv** — (season, week, team): defensive pressure proxy.
+db = dropbacks faced; pressures = sacks + qb_hits (outcome-not-frequency —
+charted per-play pressure is NULL in nflverse); proxy_rate = pressures/db;
+trail4_proxy = trailing-4-week rate (the pass-rush rank input for the
+pressure-answer adaptation, buildable-systems.md #24). n_teams_charted flags
+partial weeks (bye weeks are normal; 0 true gaps vs the schedule).
+
 ## Honest gaps (None in the provider, never zero)
 
 motion_rate, play_action_rate, rpo_rate, ttt_seconds, blitz_rate,

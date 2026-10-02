@@ -1,8 +1,10 @@
 # PROVENANCE: c09 integration module — the unified NFL intelligence API.
-# Implements reasoning-depth-spec.md §7 (API shape); research basis c09-map.md,
-# tnf-intelligence-program-2026-10-01.md, x-intake-registry.md.
-"""Unified intelligence API: qb-behavior + coaching + trust-signals + reasoning,
-one callable interface. See contracts/integration-contracts.md."""
+# Converged 2026-10-02: this package is a THIN FAÇADE over reasoning/ (the
+# canonical contract). analyze/adversary_review/correlated_theses/
+# validate_checklist delegate to reasoning's engine and adversarial layer;
+# the ProviderRegistry vocabulary (providers.py, stubs.py) stays as the
+# provider-wiring input. See contracts/integration-contracts.md.
+"""Unified intelligence API: provider-wired façade over the canonical engine."""
 from .api import (
     adversary_review,
     analyze,

@@ -266,6 +266,11 @@ class ChecklistResult:
     # forced to DATA-GAP (JARVIS isStubMode() port — lane D §3.2.6).
     stub_downgraded: list[str] = field(default_factory=list)
 
+    @property
+    def escalated_to_l5(self) -> bool:
+        """Alias for requires_l5 (integration façade vocabulary)."""
+        return self.requires_l5
+
 
 # ---------------------------------------------------------------------------
 # Trace — the unit of coherence (spec §2.5, §6.1). c07's builder constructs

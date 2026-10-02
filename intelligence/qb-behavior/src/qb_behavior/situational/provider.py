@@ -38,6 +38,14 @@ from .protection import ProtectionStressIndex  # noqa: E402
 from .serve import SituationalStore  # noqa: E402
 from .trust import TrustSeries  # noqa: E402
 
+import csv as _csv  # noqa: E402
+from qb_behavior.form import form_ahead_of as _form_ahead_of  # noqa: E402
+from qb_behavior.familiarity import familiarity as _familiarity  # noqa: E402
+from qb_behavior.trust_target import (  # noqa: E402
+    absence_delta as _absence_delta,
+    target_profile as _target_profile,
+)
+
 DEFAULT_DATA_DIR = os.path.join(_BUILD_ROOT, "qb-behavior", "data")
 
 TRACK = "qb_behavior"
@@ -74,6 +82,9 @@ class SituationalQBProvider(QBBehaviorProvider):
         self.store = SituationalStore(data_dir)
         self.trust = TrustSeries(data_dir)
         self.protection = ProtectionStressIndex(data_dir)
+        self._form_rows: list[dict] | None = None  # lazy qb_weekly.csv
+        self._starts_rows: list[dict] | None = None  # lazy qb_starts.csv
+        self._trust_rows: list[dict] | None = None  # lazy trust_targets.csv
 
     # -- internal helpers -------------------------------------------------
     def _qb_week(self, qb_id: str, week: int, season: int) -> tuple[dict, list[str]]:
@@ -198,6 +209,115 @@ class SituationalQBProvider(QBBehaviorProvider):
                               week: int) -> dict[str, Any] | None:
         """Team-week Protection Stress (analyst/display use only — PRESS-5)."""
         return self.protection.get(team, season, week)
+
+    def get_form(self, qb_id: str, season: int,
+                 week: int) -> dict[str, Any] | None:
+        """Per-QB rolling form: trailing-16-game EPA/dropback + availability.
+
+        corpus buildable-systems.md #1 (largest measured gain: log loss
+        0.633→0.625, AUC 0.690→0.700). Anti-leakage: strictly-before weeks
+        only; trade-following (keyed by qb_id). Returns None when the QB has
+        no prior charted games — never a guess. Additive: not on the ABC.
+        """
+        if self._form_rows is None:
+            path = os.path.join(self.data_dir, "qb_weekly.csv")
+            try:
+                with open(path, newline="") as f:
+                    self._form_rows = list(_csv.DictReader(f))
+            except OSError:
+                self._form_rows = []
+        f = _form_ahead_of(qb_id, season, week, self._form_rows)
+        if f is None:
+            return None
+        return {
+            "qb_id": f.qb_id, "season": f.season, "week": f.week,
+            "form_epa": f.form_epa, "n_dropbacks": f.n_dropbacks,
+            "n_games": f.n_games, "availability": f.availability,
+            "gap_note": f.gap_note,
+        }
+
+    def get_familiarity(self, team: str, season: int, week: int,
+                        qb_id: str | None = None) -> dict[str, Any] | None:
+        """QB familiarity: share of the team's trailing-16 starts by the
+        listed starter + backup flag (buildable-systems.md #28).
+
+        "Starter" is inferred (most dropbacks in the team-week) — the result
+        is labeled inference, never asserted as an official start. Returns
+        None when the team has no charted starts before `week`.
+        Additive: not on the ABC.
+        """
+        if self._starts_rows is None:
+            path = os.path.join(self.data_dir, "qb_starts.csv")
+            try:
+                with open(path, newline="") as fh:
+                    self._starts_rows = list(_csv.DictReader(fh))
+            except OSError:
+                self._starts_rows = []
+        f = _familiarity(team, season, week, qb_id, self._starts_rows)
+        if f is None:
+            return None
+        return {
+            "team": f.team, "season": f.season, "week": f.week,
+            "qb_id": f.qb_id, "familiarity": f.familiarity,
+            "n_starts": f.n_starts, "backup_flag": f.backup_flag,
+            "gap_note": f.gap_note,
+        }
+
+    def get_trust_targets(self, qb_id: str, season: int,
+                         week: int) -> dict[str, Any] | None:
+        """Per-QB trust-target profile: trailing-8-week P(target) per
+        receiver + HHI (buildable-systems.md #3).
+
+        First-read share / TPRR / air-yard share need FTN charting and are
+        NOT included — n is reported alongside every share. None when the QB
+        has no charted targets before `week`. Additive: not on the ABC.
+        """
+        if self._trust_rows is None:
+            path = os.path.join(self.data_dir, "trust_targets.csv")
+            try:
+                with open(path, newline="") as fh:
+                    self._trust_rows = list(_csv.DictReader(fh))
+            except OSError:
+                self._trust_rows = []
+        p = _target_profile(qb_id, season, week, self._trust_rows)
+        if p is None:
+            return None
+        return {
+            "qb_id": p.qb_id, "season": p.season, "week": p.week,
+            "n_targets": p.n_targets, "n_weeks": p.n_weeks, "hhi": p.hhi,
+            "gap_note": p.gap_note,
+            "shares": [{"receiver_id": s.receiver_id,
+                        "receiver_name": s.receiver_name,
+                        "targets": s.targets, "share": s.share}
+                       for s in p.shares],
+        }
+
+    def get_absence_delta(self, qb_id: str, receiver_id: str, season: int,
+                          week: int) -> dict[str, Any] | None:
+        """Trust_delta_absent[qb][receiver]: the Pitts template — target
+        distribution with vs without the receiver. None when either side of
+        the split is too thin. Additive: not on the ABC.
+        """
+        if self._trust_rows is None:
+            path = os.path.join(self.data_dir, "trust_targets.csv")
+            try:
+                with open(path, newline="") as fh:
+                    self._trust_rows = list(_csv.DictReader(fh))
+            except OSError:
+                self._trust_rows = []
+        d = _absence_delta(qb_id, receiver_id, season, week, self._trust_rows)
+        if d is None:
+            return None
+        return {
+            "qb_id": d.qb_id, "receiver_id": d.receiver_id,
+            "receiver_name": d.receiver_name,
+            "weeks_present": d.weeks_present, "weeks_absent": d.weeks_absent,
+            "leader_share_with": d.leader_share_with,
+            "leader_share_without": d.leader_share_without,
+            "hhi_with": d.hhi_with, "hhi_without": d.hhi_without,
+            "trust_delta_absent": d.trust_delta_absent,
+            "gap_note": d.gap_note,
+        }
 
     def build_info(self) -> dict[str, str]:
         """Build provenance for citation by the reasoning layer."""

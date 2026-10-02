@@ -40,10 +40,17 @@ _CLASSIFIERS: list[tuple[SignalType, tuple[str, ...]]] = [
         "snap share", "role", "demoted", "named the starter",
     )),
     (SignalType.SCHEME, _kw(
-        "scheme", "play-action", "play action", "blitz", "coverage",
-        "man coverage", "zone coverage", "quick game", "tempo", "no-huddle",
-        "no huddle", "personnel", "formation", "motion", "rpo",
-        "under center", "shotgun", "island rate", "pass-blocking",
+        "scheme", "play-action", "play action", "blitz", "blitz pickup",
+        "coverage", "man coverage", "zone coverage", "quick game", "tempo",
+        "no-huddle", "no huddle", "personnel", "formation", "motion", "rpo",
+        "under center", "shotgun",
+        # OL lane (the registry's primary lane; real-desk misses 2026-10-02):
+        # hyphenated AND unhyphenated forms, plurals, charting language.
+        "island rate", "island rates", "pass-blocking", "pass blocking",
+        "pass protection", "pass pro", "pressure", "pressures",
+        "pressures allowed", "pressure allowed", "pressure rate",
+        "1-on-1", "one-on-one", "true pass set", "stunt", "twist",
+        "pocket", "percentile grade", "assignment success",
     )),
     (SignalType.WEATHER, _kw(
         "weather", "rain", "snow", "wind", "windy", "cold", "freezing",

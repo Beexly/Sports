@@ -61,6 +61,17 @@ fit-quality gate the owner may add later.
 ### meta.csv — build provenance
 Built-at, code version, source, filters, guards, rights statement.
 
+### qb_starts.csv — team × season × week starter (buildable-systems.md #28)
+Built by `../build/build_starts.py`. starter = most dropbacks in the
+team-week (tiebreak: EPA) — INFERRED, not an official league start.
+Columns: starter_qb_id/name, starter_db, team_db, starter_share.
+
+### trust_targets.csv — QB × receiver × season × week targets (#3)
+Built by `../build/build_trust_targets.py` from nflverse pass_attempt plays
+with a charted receiver (throwaways/spikes/batted balls excluded, not
+zeroed). First-read share / TPRR / air-yard share need FTN charting and are
+intentionally absent.
+
 ## Rights
 T1 nflverse only (CC-BY-4.0). No FTN charting, no NGS in these tables.
 `first_read_rate` has no pbp source and is intentionally absent.

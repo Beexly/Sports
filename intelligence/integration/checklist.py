@@ -3,7 +3,17 @@
 # - tnf-intelligence-program-2026-10-01.md §2 (OL → scheme → QB hierarchy)
 # - c09-map.md #13 (confidence has ~zero resolution: UNCHECKED/DATA-GAP must never pass
 #   silently) and §3 contradictions (conflict-resolution discipline).
-"""The blocking checklist validator: every L3+ analysis must check all five tracks."""
+#
+# LEGACY STATUS (2026-10-02, Batch 2): this module is a TEST-PINNED reference
+# implementation of spec §5. The production checklist path is
+# reasoning/checklist.py (validate_checklist with stub-track downgrading and
+# no-bet governor codes), driven by reasoning/engine.py and exposed via the
+# integration façade (integration/api.py::validate_checklist). This module's
+# API is kept ONLY because tests/test_units.py and
+# tests/test_reasoning_spec.py pin it; no production code may import it.
+# The closed enums it uses are converged with reasoning/enums.py via
+# integration/types.py (one vocabulary). Do not extend.
+"""The blocking checklist validator (legacy test-pinned reference)."""
 from __future__ import annotations
 
 from .types import (

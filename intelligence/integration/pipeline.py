@@ -124,6 +124,7 @@ def build_causal_chains(game: dict[str, Any], providers: ProviderRegistry,
         out_list = ", ".join(ol.starters_out)
         caller = playcallers.get(team, f"{team} playcaller")
         ay = f", {fp.avg_air_yards:.2f} air yards" if fp.avg_air_yards is not None else ""
+        link_id = f"{opp.lower()}_pressure_lands"
         link = CausalLink(
             cause=f"{team} missing {n_out} interior OL starter(s) ({out_list})",
             mechanism=f"{caller} compensates with quick game "
@@ -132,13 +133,13 @@ def build_causal_chains(game: dict[str, Any], providers: ProviderRegistry,
             verification=weakest_verification(ol.verification, fp.verification,
                                               Verification.INFERENCE),
             breaking_condition=f"TTT > {CHAIN_BREAK_TTT_S}s or quick-game < {CHAIN_BREAK_QUICKGAME}",
+            id=link_id,
         )
         chains.append(CausalChain(
             links=(link,),
             conclusion=f"{opp}'s pass rush is neutralized by {team}'s quick-game adjustment; "
                        f"any 'pressure lands' thesis on this game is suspect."))
 
-        link_id = f"{opp.lower()}_pressure_lands"
         conditions = [BreakingCondition(
             description="quick game fast enough to beat the rush (spec §3 step 4)",
             metric="quickgame_rate", operator=">=",

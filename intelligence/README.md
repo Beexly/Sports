@@ -37,7 +37,8 @@ Requires: Python 3.10+, numpy, pandas, pyarrow, scikit-learn (see each module's 
 - Backtests ran on seeded synthetic DGPs — real NFL validation is owed when data lands.
 - No live X feed — extractors consume stored items; needs an X-accessible environment.
 - NGS material is internal reasoning fuel only — never surfaces publicly.
-- `reasoning/` and `integration/` both implement the reasoning contract; converge on one owner before wiring into the engine.
+- Contract converged 2026-10-02: `reasoning/` is the canonical engine contract;
+  `integration/` is its provider-wired façade (no parallel implementation).
 
 ## Research
 

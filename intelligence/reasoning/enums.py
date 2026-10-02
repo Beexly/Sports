@@ -48,12 +48,18 @@ class Verification(str, Enum):
     SINGLE_SOURCE — one outlet, uncorroborated. Cannot be load-bearing at L4+
                     without an explicit flag.
     INFERENCE    — model judgment. Must carry its breaking condition (spec §4 L3).
+    LIVE_VERIFIED — observed in a live/completed game feed. SPEC extension: spec §5
+                    names live-verified as outranking computed in conflict
+                    resolution, but §6.2's closed enum omits it. Added 2026-10-02
+                    during the reasoning-contract convergence (integration/types.py
+                    already used it); the top precedence rank.
     """
 
     CORPUS = "CORPUS"
     COMPUTED = "COMPUTED"
     SINGLE_SOURCE = "SINGLE_SOURCE"
     INFERENCE = "INFERENCE"
+    LIVE_VERIFIED = "LIVE_VERIFIED"
 
 
 class ChecklistVerdict(str, Enum):
@@ -104,6 +110,7 @@ TRACKS: tuple[str, ...] = (
 # Conflict-resolution precedence, spec §5: live-verified > computed > corpus >
 # single-source > inference. Maps Verification → precedence rank (higher wins).
 VERIFICATION_PRECEDENCE: dict[Verification, int] = {
+    Verification.LIVE_VERIFIED: 5,  # observed in a live/completed feed
     Verification.COMPUTED: 4,   # live-verified/computed from corpus inputs
     Verification.CORPUS: 3,     # corpus-sourced
     Verification.SINGLE_SOURCE: 2,

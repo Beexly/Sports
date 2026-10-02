@@ -15,7 +15,7 @@ from __future__ import annotations
 
 import sys
 import os
-from typing import Optional
+from typing import Any, Optional
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
@@ -116,6 +116,43 @@ class CoachingEngineProvider(CoachingProvider):
             verification=Verification.COMPUTED,
             data_gap="; ".join(gaps),
         )
+
+    # -- Pressure-answer adaptation (buildable-systems.md #24, additive) -----
+    def get_pressure_answer(self, team: str, week: int,
+                            season: int) -> dict | None:
+        """Pressure-answer signal ahead of (season, week).
+
+        Predictive read: `faced_elite_last_week` = the team just faced a
+        top-5 pass rush in week-1; teams with a positive answer profile
+        (`profile_hit_rate`) systematically respond with elevated quick-game
+        the following week (the Monken template). `last_week_delta` is the
+        already-observed answer (None when week-1 is unplayed). All-None
+        when nothing is known — never a guess.
+        """
+        from coaching import pressure_answer as PA
+        faced = PA.faced_top5_rush(season, week - 1, team) if week > 1 else None
+        delta = PA.answer_delta(season, week - 1, team) if week > 1 else None
+        prof = PA.pressure_answer_profile(season, team)
+        if faced is None and delta is None and not prof["weeks"]:
+            return None
+        return {"team": team, "season": season, "week": week,
+                "faced_elite_last_week": faced,
+                "last_week_opponent": PA.opponent(season, week - 1, team)
+                if week > 1 else None,
+                "last_week_delta": delta,
+                "profile_hit_rate": prof["hit_rate"],
+                "profile_n": prof["n_post_rush_weeks"]}
+
+    # -- In-game adjustment quantifier (M10, additive) -----------------------
+    def get_adjustment(self, season: int, team: str,
+                       week: int) -> dict[str, Any] | None:
+        """Week-to-week scheme adjustment: Mahalanobis distance of the week's
+        tendency vector vs the season-to-date baseline (M10). Returns the
+        row with the top_decile flag, or None when uncharted. Used by the
+        façade to mark QB trailing form as spanning a scheme-regime change.
+        """
+        from coaching import adjustments as ADJ
+        return ADJ.get_adjustment(season, team, week)
 
 
 def real_registry(qb=None, trust=None, ol=None) -> ProviderRegistry:

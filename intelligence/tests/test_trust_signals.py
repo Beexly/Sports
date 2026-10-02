@@ -130,6 +130,35 @@ class TestClassify(unittest.TestCase):
         t = C.classify("Monken leaning into quick game and play-action on early downs")
         self.assertEqual(t, SignalType.SCHEME)
 
+    def test_scheme_ol_keyword_variants(self):
+        # Real-desk misses (2026-10-02 validation): unhyphenated "pass
+        # blocking", plural "island rates", and "pressures allowed" fell
+        # through to the MOTIVATION default.
+        for text in ("Giants pass blocking grades are elite",
+                     "highest island rates in the league",
+                     "pressures allowed are down since the bye"):
+            self.assertEqual(C.classify(text), SignalType.SCHEME, text)
+
+    def test_waldman_lane_hint_rescues_default(self):
+        src = S.get_source("@the_waldman")
+        item = _item("Week 4 rushing numbers are out", handle="@the_waldman")
+        self.assertTrue(C.is_default_classification(item.raw_text))
+        signals = P.process_item(item, src, ROSTER)
+        self.assertEqual(signals[0].signal_type, SignalType.PROJECTION_DIVERGENCE)
+
+    def test_clawson_lane_hint_rescues_default(self):
+        src = S.get_source("@doug_clawson")
+        item = _item("Full season charting is complete", handle="@doug_clawson")
+        self.assertTrue(C.is_default_classification(item.raw_text))
+        signals = P.process_item(item, src, ROSTER)
+        self.assertEqual(signals[0].signal_type, SignalType.HISTORICAL_COMP)
+
+    def test_unknown_source_keeps_motivation_default(self):
+        src = S.get_source("@mysportsupdate")
+        item = _item("Week 4 rushing numbers are out")
+        signals = P.process_item(item, src, ROSTER)
+        self.assertEqual(signals[0].signal_type, SignalType.MOTIVATION)
+
     def test_trust_dynamics_negative(self):
         note = C.detect_trust_dynamics("Rodgers burying Metcalf on the sideline: this mfer sucks ass")
         self.assertIsNotNone(note)

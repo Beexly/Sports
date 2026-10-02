@@ -64,11 +64,19 @@ def run_l2(req, ctx, trace, registry) -> set[str]:
     correlations = [c for o in outputs for c in o.correlations]
     trace.levels[ReasoningDepth.L2.value] = {"correlations": correlations}
     triggers = _collect_triggers(outputs)
-    for o in outputs:
-        for c in o.claims:
-            text = c.text.lower()
-            if any(w in text for w in ("will overwhelm", "will cause", "because")):
-                triggers.add("causal_claim")
+    # Causal-language scan (spec §4: "a causal claim" in L2 escalates to L3).
+    # Scans specialist claims AND the analysis question itself — a question like
+    # "will pressure overwhelm the OL?" IS the causal claim L2 must address.
+    # (Question scanning added 2026-10-02 during contract convergence; the
+    # question word list mirrors the provider façade's pinned behavior.)
+    claim_texts = [c.text for o in outputs for c in o.claims]
+    if any(w in t.lower() for t in claim_texts
+           for w in ("will overwhelm", "will cause", "because")):
+        triggers.add("causal_claim")
+    q = (req.question or "").lower()
+    if any(w in q for w in ("because", "lead to", "leads to", "caus",
+                            "->", "→", "overwhelm", "neutraliz")):
+        triggers.add("causal_claim")
     return triggers
 
 

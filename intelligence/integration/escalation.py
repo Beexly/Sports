@@ -1,7 +1,15 @@
 # PROVENANCE: implements reasoning-depth-spec.md §4 (reasoning levels L1–L5, escalation
 # triggers, escalation summary table) and §7 SPEC notes (escalation as a state machine;
 # level-skipping is a logged exception, never silent).
-"""Escalation state machine for reasoning depth."""
+#
+# LEGACY STATUS (2026-10-02, Batch 2): this module is a TEST-PINNED reference
+# implementation of spec §4. The production escalation path is
+# reasoning/escalation.py (EscalationSignal/next_depth/escalate_to), driven by
+# reasoning/engine.py. This module's compute_depth/AnalysisContext API is kept
+# ONLY because tests/test_units.py pins it; no production code may import it.
+# The closed enums it uses (ReasoningDepth, Exposure) are converged with
+# reasoning/enums.py via integration/types.py (one vocabulary). Do not extend.
+"""Escalation state machine for reasoning depth (legacy test-pinned reference)."""
 from __future__ import annotations
 
 from dataclasses import dataclass

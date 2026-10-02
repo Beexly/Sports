@@ -44,6 +44,20 @@ class OLProvider(ABC):
 - Missing data is `None` with a `data_gap: str` reason — never a zero, never an omitted field.
   (Map finding #13: zero-resolution confidence must not masquerade as signal.)
 
+### ID-vocabulary contract (2026-10-02, real-data validation)
+- **Production `qb_id` is the nflverse GSIS id** (`00-0033537`). Real providers
+  (`SituationalQBProvider`, the `qb_weekly.csv` / `qb_starts.csv` /
+  `trust_targets.csv` tables) are keyed on GSIS ids only.
+- **Fixture slugs** (`deshaun-watson`) exist ONLY in `integration/stubs.py`
+  and the pinned e2e fixtures, which run against stub providers. Slugs are
+  never resolved against the real store: the store's `name` column holds
+  first-initial forms (`D.Watson`) that cannot reliably invert a slug, and a
+  fuzzy matcher would manufacture identity — the exact failure the
+  no-guessing rule exists to prevent.
+- Callers crossing the fixture→production boundary MUST translate ids
+  explicitly (GSIS id in, GSIS id out). A `DataGapError` naming an unresolvable
+  qb_id is the correct response to a slug on the production path.
+
 ## 2. Garrett's hierarchy — evaluation order (hard contract)
 
 L5 synthesis MUST evaluate in this order and record a verdict per layer
@@ -115,7 +129,11 @@ analyze(req: AnalysisRequest) -> ReasoningTrace
   `ContractViolation`.
 - Never returns a pick below L5. Shallower outputs are labeled `ANALYSIS-DRAFT`.
 
-## 8. Python API (as implemented in `integration/`)
+## 8. Python API (façade over the canonical engine, converged 2026-10-02)
+
+`reasoning/` owns the canonical contract (engine, types, adversarial layer,
+checklist). `integration/` is its provider-wired façade: same public
+signatures, every reasoning operation delegated to `reasoning/`.
 
 The TypeScript sketch in the spec maps to these Python signatures:
 
@@ -126,14 +144,14 @@ analyze(req: AnalysisRequest,
         providers: ProviderRegistry,
         store: TraceStore | None = None,
         league_avgs: dict[str, float] | None = None,
-        now_iso: str | None = None) -> ReasoningTrace
+        now_iso: str | None = None) -> reasoning.ReasoningTrace  # canonical trace
 
 adversary_review(legs: tuple[BetLeg, ...],
                 link_conditions: dict[str, list[BreakingCondition]],
                 chains: list[CausalChain],
-                outputs: dict[str, SpecialistOutput]) -> AdversaryReport
+                outputs: dict | None = None) -> reasoning.AdversaryReport  # canonical
 
-validate_checklist(trace: ReasoningTrace) -> ChecklistResult   # re-exported from checklist.py
+validate_checklist(trace) -> reasoning.ChecklistResult  # canonical validator
 
 correlated_theses(legs: tuple[BetLeg, ...],
                   link_conditions: dict[str, list[BreakingCondition]]) -> list[ThesisBundle]
