@@ -97,6 +97,11 @@ the only copy, and nobody else can verify or build on it.
 
 | ID | Title | Owner | Status | Evidence |
 |---|---|---|---|---|
+| CAB-1 | Reasoning trace is computed and dropped: no persistence, no renderer | — | OPEN | measured 2026-10-02: 414 LOC, 5 prod refs, all producers; no schema column, no apps/ consumer |
+| CAB-2 | LLM plane: ~15k LOC of governance, one consumer, no frontier model in the router | founder | BLOCKED | provider-registry.data.ts self-declares NOT_MERGED; catalogue is claude-opus-4-8 / sonnet-4-6 / haiku-4-5 / gpt-oss-120b |
+| CAB-3 | public-roi-policy.ts (361L honest-ROI layer) is wired to nothing | — | OPEN | only 2 test importers; 2 live modules cite it in comments; build-performance-summaries.ts imports neither |
+| CAB-4 | BlogPost: 8 readers, 0 writers | — | OPEN | git grep for every blogPost write verb returns 0 matches in apps/ packages/ scripts/ |
+| CAB-5 | props-hb-bridge.ts (775L) not barrel-exported; buildModelProbOver has 0 callers | — | OPEN | 3095da0 shipped the props route; this producer stayed dark |
 | H-A | Isotonic PAV calibration | hermes | DONE | 62e32730 on origin/hermes/sprint-backup-20260819, verified ancestor 2026-08-19 |
 | H-B | Cron matrix generator | hermes | DONE | 4b961782 on origin/hermes/sprint-backup-20260819, verified ancestor 2026-08-19 |
 | H-C | E-process sequential test | hermes | DONE | f53b229e on origin/hermes/sprint-backup-20260819, verified ancestor 2026-08-19 |
