@@ -224,8 +224,9 @@ describe("tuneSignalWeightsFromLedger — an unjoinable key is named, not defaul
     expect(report.droppedNoEntityStats).toBe(1);
     expect(report.keysPresent).toEqual(["ngs.cpoe"]);
     // The key is PRESENT in the ledger and UNJOINED to an outcome. Those are
-    // different problems with different fixes, so the report separates them.
-    expect(report.unjoinableKeys).toEqual([]);
+    // different problems with different fixes, so the report names the key
+    // instead of reporting an empty list that looks like "nothing was dropped".
+    expect(report.unjoinableKeys).toEqual(["ngs.cpoe"]);
     expect(report.weights["ngs.cpoe"]).toBeUndefined();
   });
 });

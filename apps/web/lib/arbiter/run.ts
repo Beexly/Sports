@@ -46,7 +46,7 @@ import {
   getCurrentMonthClaudeSpendUsd,
   recordClaudeApiCall,
 } from "@/lib/claude-api/usage-store";
-import { db } from "@sports/db";
+import { db, type PickType, type Prisma } from "@sports/db";
 import { selectionIsHomeSide } from "@sports/prediction-engine";
 import {
   detectDisagreement,
@@ -61,7 +61,7 @@ import {
   SYSTEM_PROMPT,
   type RulingOutcome,
 } from "./verdict";
-import { recordArbiterDecision } from "./ledger";
+import { ARBITER_DECISION_TYPE, recordArbiterDecision, terminalArbiterPairKey } from "./ledger";
 
 /**
  * The budget surface the arbiter spends against.
@@ -120,6 +120,8 @@ export type ArbiterPassResult = {
   readonly pairsFound: number;
   /** Pairs the detector actually called SIDE_CONFLICT or CONFIDENCE_CLASH. */
   readonly disagreementsFound: number;
+  /** Disagreements skipped because a terminal ruling is already on the ledger. */
+  readonly alreadyRecorded: number;
   /** Model calls actually issued. Zero when the budget refused. */
   readonly modelCalls: number;
   /** Rulings that parsed and validated. */
@@ -179,21 +181,24 @@ function toClaim(row: PickRow, path: PathClaim["path"]): PathClaim {
  * suppresses at display time; this is where it becomes visible and gradable.
  *
  * The `mergedIntoGameId: null` filter is the database's own canonicity marker
- * (C-117), so an alias row never contributes a pair here. The cap is a safety
- * bound on a cron, and it is applied AFTER the pairing, so a full window
- * reports that it was full rather than silently adjudicating a prefix.
+ * (C-117), so an alias row never contributes a pair here. `limit` caps how many
+ * disagreements one pass will pay to adjudicate. The read is sized from that
+ * cap and then backfilled: `take` on the ordered scan can land between the two
+ * rows of one pair, and dropping that pair without saying so is how a collision
+ * disappears. A partner that shares the orphan's game and market is fetched
+ * before pairing. The cap is applied to complete disagreements afterwards.
  */
-export async function loadDisagreementPairs(
-  from: Date,
-  to: Date,
-  limit: number,
-): Promise<readonly PickRow[]> {
+function windowWhere(from: Date, to: Date): Prisma.PickWhereInput {
+  return {
+    generatedAt: { gte: from, lt: to },
+    isPublished: true,
+    game: { mergedIntoGameId: null },
+  };
+}
+
+function scanPicks(where: Prisma.PickWhereInput, take?: number): Promise<PickRow[]> {
   return db.pick.findMany({
-    where: {
-      generatedAt: { gte: from, lt: to },
-      isPublished: true,
-      game: { mergedIntoGameId: null },
-    },
+    where,
     select: {
       id: true,
       gameId: true,
@@ -207,8 +212,100 @@ export async function loadDisagreementPairs(
       game: { select: { id: true, homeTeamName: true, awayTeamName: true } },
     },
     orderBy: { generatedAt: "desc" },
-    take: limit,
+    ...(take === undefined ? {} : { take }),
   });
+}
+
+/** One-sided groups. Their partner may have sorted past the row ceiling. */
+function orphanedPairSlots(
+  rows: readonly PickRow[],
+): ReadonlyArray<{ readonly gameId: string; readonly pickType: PickType; readonly presentId: string }> {
+  const groups = new Map<
+    string,
+    { gameId: string; pickType: string; reasoning?: PickRow; legacy?: PickRow }
+  >();
+  for (const row of rows) {
+    const key = `${row.gameId}|${row.pickType}`;
+    const bucket = groups.get(key) ?? { gameId: row.gameId, pickType: row.pickType };
+    if (isReasoningPathRow(row)) bucket.reasoning ??= row;
+    else bucket.legacy ??= row;
+    groups.set(key, bucket);
+  }
+  const orphans: Array<{ gameId: string; pickType: PickType; presentId: string }> = [];
+  for (const bucket of groups.values()) {
+    const present = bucket.reasoning ?? bucket.legacy;
+    if (!present || (bucket.reasoning && bucket.legacy)) continue;
+    orphans.push({
+      gameId: bucket.gameId,
+      pickType: present.pickType as PickType,
+      presentId: present.id,
+    });
+  }
+  return orphans;
+}
+
+export type DisagreementScan = {
+  readonly rows: readonly PickRow[];
+  /** True when the ordered read hit its ceiling and a partner backfill ran. */
+  readonly saturated: boolean;
+  readonly readCeiling: number;
+};
+
+export async function loadDisagreementPairs(
+  from: Date,
+  to: Date,
+  limit: number,
+): Promise<DisagreementScan> {
+  const readCeiling = Math.max(1, limit) * 2;
+  const first = await scanPicks(windowWhere(from, to), readCeiling);
+  if (first.length < readCeiling) {
+    return { rows: first, saturated: false, readCeiling };
+  }
+
+  const orphans = orphanedPairSlots(first);
+  if (orphans.length === 0) {
+    return { rows: first, saturated: true, readCeiling };
+  }
+
+  const partners = await scanPicks({
+    ...windowWhere(from, to),
+    OR: orphans.map((slot) => ({
+      gameId: slot.gameId,
+      pickType: slot.pickType,
+      id: { not: slot.presentId },
+    })),
+  });
+  const seen = new Set(first.map((row) => row.id));
+  const rows = [...first];
+  for (const row of partners) {
+    if (seen.has(row.id)) continue;
+    seen.add(row.id);
+    rows.push(row);
+  }
+  return { rows, saturated: true, readCeiling };
+}
+
+/**
+ * Pair keys that already have a terminal ruling inside this window.
+ *
+ * `decision_date >= from` is enough: a pick only stays in the scan while
+ * `generatedAt >= from`, and a ruling is written after that pick exists, so
+ * the earlier hourly pass's row is still inside the window.
+ */
+async function loadTerminalPairKeys(since: Date): Promise<Set<string>> {
+  const stored = await db.jarvisDecision.findMany({
+    where: {
+      decision_type: ARBITER_DECISION_TYPE,
+      decision_date: { gte: since },
+    },
+    select: { source_refs: true, status: true, rationale: true },
+  });
+  const keys = new Set<string>();
+  for (const row of stored) {
+    const key = terminalArbiterPairKey(row);
+    if (key) keys.add(key);
+  }
+  return keys;
 }
 
 /** Group rows by fixture + market, keeping the two producers apart. */
@@ -417,15 +514,16 @@ export async function runArbiterPass(
   const env = options.env ?? process.env;
   const notes: string[] = [];
 
-  const rows = await loadDisagreementPairs(options.from, to, limit);
-  if (rows.length >= limit) {
+  const scan = await loadDisagreementPairs(options.from, to, limit);
+  if (scan.saturated) {
     notes.push(
-      `Pair scan filled its ${limit}-row cap, so the window may hold pairs this ` +
-        "pass did not examine. Raise the cap or shorten the window.",
+      `Pair scan hit its ${scan.readCeiling}-row read ceiling. Partners of a ` +
+        "split pair were backfilled; a pair whose both rows sat past the ceiling was not.",
     );
   }
 
-  const pairs = pairByFixtureAndMarket(rows);
+  const pairs = pairByFixtureAndMarket(scan.rows);
+  const recordedKeys = await loadTerminalPairKeys(options.from);
   let modelCalls = 0;
   let accepted = 0;
   let rejected = 0;
@@ -433,6 +531,8 @@ export async function runArbiterPass(
   let recordFailures = 0;
   let budgetRefused = false;
   let disagreementsFound = 0;
+  let alreadyRecorded = 0;
+  let adjudicated = 0;
 
   for (const pair of pairs) {
     const verdict = detectDisagreement(
@@ -444,6 +544,16 @@ export async function runArbiterPass(
       continue;
     }
     disagreementsFound += 1;
+
+    const pairKey = `${pair.reasoning.id}|${pair.legacy.id}`;
+    if (recordedKeys.has(pairKey)) {
+      alreadyRecorded += 1;
+      continue;
+    }
+    if (adjudicated >= limit) {
+      continue;
+    }
+    adjudicated += 1;
 
     const result = await adjudicateOne(pair.reasoning.gameId, verdict, {
       env,
@@ -474,10 +584,18 @@ export async function runArbiterPass(
     }
   }
 
+  if (disagreementsFound - alreadyRecorded > limit) {
+    notes.push(
+      `Adjudication cap of ${limit} held. ${disagreementsFound - alreadyRecorded - limit} ` +
+        "new disagreement(s) were left for the next pass.",
+    );
+  }
+
   return {
-    pairsExamined: rows.length,
+    pairsExamined: scan.rows.length,
     pairsFound: pairs.length,
     disagreementsFound,
+    alreadyRecorded,
     modelCalls,
     rulingsAccepted: accepted,
     rulingsRejected: rejected,

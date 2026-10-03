@@ -168,9 +168,12 @@ export interface SignalWeightTuningReport extends SignalWeightTable {
   /** Keys with at least one reading, whether or not any outcome joined. */
   readonly keysPresent: readonly string[];
   /**
-   * Keys present in `signals` that earned weight 0 for want of evidence. The
-   * point of the report: a key here is not a dead producer, it is an UNJOINED
-   * one, and the two have opposite fixes.
+   * Keys present in the `signals` read that never produced a joined sample, so
+   * they have no measured entry. A key here is not a dead producer and it is
+   * not a key the tuner weighed and set to 0: it was dropped before the fit
+   * (team-level, no stats, season rollover, or no next-week outcome). Those
+   * drops and a measured weight of 0 have opposite fixes, so they are not the
+   * same list.
    */
   readonly unjoinableKeys: readonly string[];
 }
@@ -290,10 +293,11 @@ export async function tuneSignalWeightsFromLedger(
     ...(options.source !== undefined ? { source: options.source } : {}),
   });
 
-  const unjoinableKeys = table.entries
-    .filter((e) => e.fixtures === 0)
-    .map((e) => e.key)
-    .sort();
+  const measuredKeys = new Set(table.entries.map((e) => e.key));
+  // `table.entries` only contains keys that reached the tuner, and every such
+  // key has at least one usable sample, so `fixtures === 0` never matches.
+  // An unjoinable key is one we saw and then dropped before the fit.
+  const unjoinableKeys = [...keysPresent].filter((k) => !measuredKeys.has(k)).sort();
 
   return {
     ...table,

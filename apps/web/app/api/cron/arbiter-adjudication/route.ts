@@ -44,14 +44,15 @@ export const runtime = "nodejs";
 export const maxDuration = 300;
 
 /**
- * How far back to look for the collision. The collision is created by ingestion
- * (board-fill / refresh-odds / generate-signal-slate), so a 6-hour window covers
- * the slate plus one full ingestion cycle and cannot re-adjudicate a pair the
- * previous hourly run already recorded.
+ * LOOKBACK. Six hours covers the slate plus one ingestion cycle. That window
+ * overlaps the hourly schedule, so a pair is visible to about six passes. The
+ * runner skips a pair whose reasoning and legacy pick ids are already on the
+ * ledger as a terminal ruling. An infrastructure refusal (budget, missing key,
+ * transport) is not a ruling and is retried.
  */
 const ARBITER_LOOKBACK_HOURS = 6;
 
-/** Row cap on the pair scan. See `loadDisagreementPairs` for what filling it means. */
+/** Cap on disagreements adjudicated in one pass. The row read is sized from this and then backfilled so the cap cannot split a pair. */
 const ARBITER_SCAN_LIMIT = 500;
 
 export async function GET(request: Request) {

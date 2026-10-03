@@ -28,22 +28,45 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 type DbCall = { readonly op: string; readonly args: unknown };
 
 const dbCalls: DbCall[] = [];
-let pickRows: readonly unknown[] = [];
+let pickRows: readonly Record<string, unknown>[] = [];
 let jarvisWrites: Array<Record<string, unknown>> = [];
 let budgetRow: unknown = undefined;
 /** Spend the budget gate reads for the current month, in USD. */
 let monthSpendUsd = 0;
+/** Ledger rows already stored before this pass. Empty means nothing was recorded. */
+let priorDecisions: readonly Record<string, unknown>[] = [];
+
+function pickScan(args: unknown): readonly Record<string, unknown>[] {
+  const query = args as {
+    take?: number;
+    where?: { OR?: ReadonlyArray<{ gameId?: string; pickType?: string; id?: { not?: string } }> };
+  };
+  if (query.where?.OR) {
+    return pickRows.filter((row) =>
+      query.where!.OR!.some((slot) => {
+        if (slot.gameId !== undefined && row.gameId !== slot.gameId) return false;
+        if (slot.pickType !== undefined && row.pickType !== slot.pickType) return false;
+        if (slot.id?.not !== undefined && row.id === slot.id.not) return false;
+        return true;
+      }),
+    );
+  }
+  return typeof query.take === "number" ? pickRows.slice(0, query.take) : pickRows;
+}
 
 vi.mock("@sports/db", () => ({
   db: {
     pick: {
       findMany: (args: unknown) => {
         dbCalls.push({ op: "pick.findMany", args });
-        return Promise.resolve(pickRows);
+        return Promise.resolve(pickScan(args));
       },
     },
     jarvisDecision: {
-      findMany: () => Promise.resolve([]),
+      findMany: (args: unknown) => {
+        dbCalls.push({ op: "jarvisDecision.findMany", args });
+        return Promise.resolve(priorDecisions);
+      },
       updateMany: () => Promise.resolve({ count: 0 }),
     },
     claudeApiCallRecord: {
@@ -129,6 +152,7 @@ beforeEach(() => {
   pickRows = [];
   budgetRow = undefined;
   monthSpendUsd = 0;
+  priorDecisions = [];
 });
 
 afterEach(() => {
@@ -411,6 +435,119 @@ describe("runArbiterPass: the model is never hardcoded", () => {
     // a tier promotion visible in the accuracy record rather than invisible.
     expect(result.modelName).toBe("claude-opus-5-5-mapped");
     expect(jarvisWrites[0]?.["owner"]).toBe("arbiter:claude-opus-5-5-mapped");
+    spy.mockRestore();
+  });
+});
+
+describe("runArbiterPass: a recorded pair is not paid for again", () => {
+  const ruling = {
+    source_refs: {
+      gameId: "g1",
+      reasoningPickId: "p1",
+      legacyPickId: "p2",
+      modelName: "opus-tier",
+      schema: "arbiter-decision.v1",
+    },
+    status: "open",
+    rationale: "The legacy row's own top band is measured inverted.",
+  };
+
+  it("skips the model when the reasoning and legacy pick ids are already on the ledger", async () => {
+    pickRows = [row(), legacyRow()];
+    priorDecisions = [ruling];
+    const spy = await captureLedger();
+    let fetches = 0;
+    const countingFetch = (async () => {
+      fetches += 1;
+      return { ok: true, status: 200, json: async () => ({}) };
+    }) as unknown as typeof fetch;
+
+    const result = await runArbiterPass({
+      ...WINDOW,
+      env: { ANTHROPIC_API_KEY: "k", MODEL_OPUS: "opus-tier" },
+      fetchImpl: countingFetch,
+    });
+
+    expect(fetches).toBe(0);
+    expect(result.modelCalls).toBe(0);
+    expect(result.alreadyRecorded).toBe(1);
+    expect(result.disagreementsFound).toBe(1);
+    expect(result.recorded).toBe(0);
+    expect(jarvisWrites).toHaveLength(0);
+    spy.mockRestore();
+  });
+
+  it("retries an infrastructure refusal, which spent no adjudication", async () => {
+    pickRows = [row(), legacyRow()];
+    priorDecisions = [{ ...ruling, status: "rejected", rationale: "REJECTED: BUDGET_REFUSED" }];
+    const spy = await captureLedger();
+
+    const result = await runArbiterPass({
+      ...WINDOW,
+      env: { ANTHROPIC_API_KEY: "k", MODEL_OPUS: "opus-tier" },
+      fetchImpl: fakeFetch(
+        JSON.stringify({ winner: "UPHOLD_LEGACY", confidence: 0.6, reasoning: "Because." }),
+      ),
+    });
+
+    expect(result.modelCalls).toBe(1);
+    expect(result.alreadyRecorded).toBe(0);
+    expect(result.recorded).toBe(1);
+    spy.mockRestore();
+  });
+
+  it("does not retry a content rejection, which already spent a call", async () => {
+    pickRows = [row(), legacyRow()];
+    priorDecisions = [{ ...ruling, status: "rejected", rationale: "REJECTED: UNGROUNDED_NUMBERS" }];
+    const spy = await captureLedger();
+    let fetches = 0;
+    const countingFetch = (async () => {
+      fetches += 1;
+      return { ok: true, status: 200, json: async () => ({}) };
+    }) as unknown as typeof fetch;
+
+    const result = await runArbiterPass({
+      ...WINDOW,
+      env: { ANTHROPIC_API_KEY: "k", MODEL_OPUS: "opus-tier" },
+      fetchImpl: countingFetch,
+    });
+
+    expect(fetches).toBe(0);
+    expect(result.alreadyRecorded).toBe(1);
+    expect(result.modelCalls).toBe(0);
+    spy.mockRestore();
+  });
+
+  it("backfills the older side of a pair that the row ceiling would have cut", async () => {
+    // limit 1 reads two rows. The legacy mate sorts third, so a take-before-pair
+    // scan drops the collision. The partner query has to bring it back.
+    pickRows = [
+      row({ id: "p1" }),
+      row({
+        id: "filler",
+        gameId: "g2",
+        selection: "Green Bay Packers ML",
+        bookmakerCount: 4,
+        game: { id: "g2", homeTeamName: "Chicago Bears", awayTeamName: "Green Bay Packers" },
+      }),
+      legacyRow({ id: "p2" }),
+    ];
+    const spy = await captureLedger();
+
+    const result = await runArbiterPass({
+      ...WINDOW,
+      limit: 1,
+      env: { ANTHROPIC_API_KEY: "k", MODEL_OPUS: "opus-tier" },
+      fetchImpl: fakeFetch(
+        JSON.stringify({ winner: "UPHOLD_REASONING", confidence: 0.7, reasoning: "Because." }),
+      ),
+    });
+
+    expect(result.pairsFound).toBe(1);
+    expect(result.modelCalls).toBe(1);
+    expect(result.recorded).toBe(1);
+    const reads = dbCalls.filter((c) => c.op === "pick.findMany");
+    expect(reads.length).toBe(2);
     spy.mockRestore();
   });
 });

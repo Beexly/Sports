@@ -182,6 +182,40 @@ function sourceRefsFor(
   };
 }
 
+const INFRA_REJECTION = /^(?:BUDGET_REFUSED|NO_API_KEY|TRANSPORT_.+)$/;
+
+/**
+ * Identity of a pair that already has a terminal ruling.
+ *
+ * Returns null when the row is not an arbiter source-ref, or when the only
+ * thing stored is an infrastructure refusal. Those refusals spent no successful
+ * adjudication (budget, missing key, transport) and must be retried. A content
+ * rejection did spend a call and is terminal: paying again would buy the same
+ * refusal.
+ */
+export function terminalArbiterPairKey(row: {
+  readonly status: string;
+  readonly rationale: string;
+  readonly source_refs: unknown;
+}): string | null {
+  if (!row.source_refs || typeof row.source_refs !== "object") return null;
+  const refs = row.source_refs as {
+    reasoningPickId?: unknown;
+    legacyPickId?: unknown;
+    schema?: unknown;
+  };
+  if (refs.schema !== "arbiter-decision.v1") return null;
+  if (typeof refs.reasoningPickId !== "string" || typeof refs.legacyPickId !== "string") {
+    return null;
+  }
+  if (row.status === "rejected") {
+    const rationale = row.rationale ?? "";
+    const code = rationale.startsWith("REJECTED: ") ? rationale.slice("REJECTED: ".length) : "";
+    if (INFRA_REJECTION.test(code)) return null;
+  }
+  return `${refs.reasoningPickId}|${refs.legacyPickId}`;
+}
+
 /**
  * Persist one arbiter decision. Returns `persisted: false` with the error rather
  * than throwing, so a caller adjudicating a batch of fixtures can finish the
