@@ -18,6 +18,7 @@ from integration.providers import DataGapError, ProviderRegistry
 from integration.stubs import fixture_league_avgs
 from qb_behavior.situational.provider import SituationalQBProvider
 from reasoning_engine.facets import epa_facets
+from reasoning_engine.mint_gate import mint_after_mind
 from tests.helpers import card_request
 
 
@@ -65,19 +66,9 @@ def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int
             gaps.append(f"ol {team}: {e.reason}")
 
     coaching = CoachingEngineProvider()
-    for team in (home, away):
-        try:
-            tau = coaching.get_tau_hat(team, season, "opp", 0.50)
-            facts.append({
-                "signal": f"{team}.tau_hat",
-                "value": tau,
-                "fired": True,
-                "source": "real",
-                "license": "nflverse CC-BY-4.0 derivative",
-                "point_in_time": False,
-            })
-        except DataGapError as e:
-            gaps.append(f"tau {team}: {e.reason}")
+    # No live win probability on this host. 0.5 would be a coin flip wearing
+    # a tau cell. Refuse it. A fitted tau is not served until a real wp exists.
+    gaps.append("tau: no live win probability; refused a 0.5 stand-in")
 
     if weather is None:
         gaps.append("weather: not fetched for this run")
@@ -87,20 +78,29 @@ def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int
 
     reg = ProviderRegistry(qb=SituationalQBProvider(), coaching=coaching, trust=None, ol=ol)
     trace = analyze(card_request(), reg, league_avgs=fixture_league_avgs())
+    label = _label(trace)
+    checklist = _checklist(trace)
+    decision = mint_after_mind(label, checklist, asked=True)
+    withheld = decision["action"] == "withhold"
     return {
         "game_id": f"{away}-{home}-{season}-w{week}",
         "bet_type": "CARD",
         "facts": facts,
         "gaps": gaps,
-        "trace_label": _label(trace),
+        "trace_label": label,
         "trace_depth": str(trace.depth),
-        "checklist": _checklist(trace),
+        "checklist": checklist,
         "levels": list(trace.levels.keys()),
+        "mint": decision["action"],
         "pick": None,
         "confidence": None,
         "probability_before_calibration": None,
         "probability_after_calibration": None,
-        "note": "No pick was emitted. The façade refused or did not reach a publishable card. Facts above are measurements. They are not a probability.",
+        "note": (
+            f"Withheld. {decision['reason']}."
+            if withheld
+            else "Mind was asked and the trace was not INVALID or DATA-GAP. A trace still does not mint a probability."
+        ),
     }
 
 
