@@ -55,3 +55,83 @@ def air_yard_share(receiver_air: float | None, team_air: float | None) -> float 
     if team_air is None or team_air != team_air or team_air <= 0:
         return None
     return float(receiver_air) / float(team_air)
+
+
+def int_danger_volume(expected_dropbacks: float | None, worthy_rate: float | None, conversion: float = 0.523) -> float | None:
+    """a03 and c02 System 2 display lane: expected_dropbacks × worthy_rate × 0.523. A missing input stays null."""
+    if expected_dropbacks is None or expected_dropbacks != expected_dropbacks:
+        return None
+    if worthy_rate is None or worthy_rate != worthy_rate:
+        return None
+    if conversion != conversion:
+        return None
+    return float(expected_dropbacks) * float(worthy_rate) * float(conversion)
+
+
+def sensitivity_epa_floor(
+    clean_epa: float | None,
+    pressured_epa: float | None,
+    n_pressured: float | None,
+    floor: float = 100.0,
+) -> float | None:
+    """c02 System 1: mean(epa | clean) − mean(epa | pressured_floor). Fewer than 100 pressured dropbacks is null."""
+    if n_pressured is None or n_pressured != n_pressured or n_pressured < floor:
+        return None
+    if clean_epa is None or clean_epa != clean_epa:
+        return None
+    if pressured_epa is None or pressured_epa != pressured_epa:
+        return None
+    return float(clean_epa) - float(pressured_epa)
+
+
+def garbage_time(qtr: float | None, wp: float | None) -> bool | None:
+    """c02 INT-5: qtr == 4 and (wp > 0.95 or wp < 0.05). A missing quarter or win probability stays null."""
+    if qtr is None or qtr != qtr or wp is None or wp != wp:
+        return None
+    return qtr == 4 and (wp > 0.95 or wp < 0.05)
+
+
+def score_bucket(score_differential: float | None) -> str | None:
+    """c02 System 2: trail_8+, trail_1_7, tied, lead_1_7, lead_8+ from score_differential. A missing differential stays null."""
+    if score_differential is None or score_differential != score_differential:
+        return None
+    d = float(score_differential)
+    if d <= -8:
+        return "trail_8+"
+    if -7 <= d <= -1:
+        return "trail_1_7"
+    if d == 0:
+        return "tied"
+    if 1 <= d <= 7:
+        return "lead_1_7"
+    if d >= 8:
+        return "lead_8+"
+    return None
+
+
+def down_distance_cell(down: float | None, ydstogo: float | None) -> str | None:
+    """c02 System 2: {early 1-2, late 3-4} × {short ≤3, mid 4-7, long 8+}. A down outside 1-4, or a missing distance, stays null."""
+    if down is None or down != down or ydstogo is None or ydstogo != ydstogo:
+        return None
+    if down in (1, 2):
+        side = "early"
+    elif down in (3, 4):
+        side = "late"
+    else:
+        return None
+    if ydstogo <= 3:
+        dist = "short"
+    elif 4 <= ydstogo <= 7:
+        dist = "mid"
+    elif ydstogo >= 8:
+        dist = "long"
+    else:
+        return None
+    return f"{side}_{dist}"
+
+
+def aggressiveness_proxy_deep(air_yards: float | None) -> int | None:
+    """c02 NGS-8: the observable correlate is P(air_yards ≥ 20). A missing air yardage stays null. This is not the 15-yard deep flag."""
+    if air_yards is None or air_yards != air_yards:
+        return None
+    return 1 if float(air_yards) >= 20 else 0
