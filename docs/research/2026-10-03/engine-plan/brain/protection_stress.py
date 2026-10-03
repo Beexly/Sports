@@ -59,8 +59,8 @@ path = os.path.join(R, 'brain', 'protection_stress.json')
 live = out[(out.season == 2026) & (out.week == 4)].sort_values('stress', ascending=False)
 doc = dict(
     formula='stress = pressure_rate_allowed - (a + b * blitz_rate_faced)',
-    cite='corpus-deep/deep/c02/verified-claims.md PRESS-3 PRESS-4 PRESS-5 PRESS-10',
-    use='display and research only until walk-forward calibration. Not a pick input.',
+    cite='corpus-deep/deep/c02/verified-claims.md PRESS-3 PRESS-4 PRESS-10',
+    use='On the engine. Point-in-time feature, home minus away, in the mint and the walk-forward. Not a side table.',
     denominator='UNVERIFIED: times_pressured / times_pressured_pct, bad-throw rate when pressure rate is 0',
     n_rows=int(len(out)),
     seasons=sorted(map(int, out.season.unique())),
@@ -69,4 +69,5 @@ doc = dict(
 json.dump(doc, open(path, 'w'), indent=1)
 print('rows', len(out), 'live', len(live))
 print(live[['team', 'n_games', 'pressure_rate', 'blitz_rate', 'expected', 'stress']].to_string(index=False))
-print('wrote', path)
+out.to_parquet(os.path.join(R, 'brain', 'protection_stress.parquet'), index=False)
+print('wrote', path, 'and parquet', len(out))

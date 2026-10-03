@@ -7,6 +7,10 @@ R = os.path.dirname(os.path.dirname(os.path.abspath(__file__))); sys.path.insert
 from teams import ABBR
 import scoredist as SD
 F = pd.read_parquet(os.path.join(R, 'eng', 'features_v1.parquet'))
+C = pd.read_parquet(os.path.join(R, 'eng', 'corpus_features.parquet'))
+F = F.merge(C, on='game_id', how='left')
+for c in ('stress', 'int_rate', 'int_hit', 'top_share', 'deep_rate'):
+    F[c] = F[c].fillna(0.0)
 S = F[F.y.notna()].copy(); S['y'] = S.y.astype(float)
 U = F[(F.season == 2026) & (F.week == 4) & F.y.isna()].copy()
 def lg(p): p = np.clip(p, 1e-6, 1 - 1e-6); return np.log(p / (1 - p))
@@ -18,7 +22,7 @@ def fit(X, y, off, lam):
     return w, mu, sd
 def pred(m, X, off): w, mu, sd = m; return sig(off + ((X - mu) / sd) @ w)
 def ll(p, y): p = np.clip(p, 1e-6, 1 - 1e-6); return float(np.mean(-(y * np.log(p) + (1 - y) * np.log(1 - p))))
-FEATS = ['home_flag', 'qb_pit', 'elo_res']
+FEATS = ['home_flag', 'qb_pit', 'elo_res', 'stress', 'int_rate', 'int_hit']
 LAMS = [1, 3, 10, 30, 100, 300, 1000, 3000]
 a, b = S[S.season < 2025], S[S.season == 2025]
 X = lambda d: d[FEATS].values.astype(float)
@@ -91,7 +95,7 @@ for g in U.itertuples():
     if not L or L['q'] is None or L['spread'] is None or L['total'] is None:
         gate['issues'].append(f'{g.game_id}: no live market'); continue
     mkt = float(lg(L['q'])); elo_res = float(g.elo - mkt)
-    x = np.array([[g.home_flag, g.qb_pit, elo_res]], dtype=float)
+    x = np.array([[g.home_flag, g.qb_pit, elo_res, g.stress, g.int_rate, g.int_hit]], dtype=float)
     p = float(pred(M, x, np.array([mkt]))[0])
     m, t = SD.neighborhood(HIST, L['spread'], L['total'])
     # Anchor to the quoted spread and total. Do not shift the lattice to force P(win)=p:
@@ -117,6 +121,9 @@ for g in U.itertuples():
                     margin_shift_engine=round(sh_eng, 2), total_shift_anchor=round(sh_tot, 2)),
         starters=dict(home=dict(qb=hq, source=g.h_qb_src), away=dict(qb=aq, source=g.a_qb_src)),
         injuries=dict(home=team_inj.get(g.home, [])[:6], away=team_inj.get(g.away, [])[:6]),
+        corpus=dict(stress=round(float(g.stress), 4), int_rate=round(float(g.int_rate), 4), int_hit=round(float(g.int_hit), 4),
+                    top_share=round(float(g.top_share), 4), deep_rate=round(float(g.deep_rate), 4),
+                    cite='c02 PRESS-3 SIT-6 TRUST-7'),
         outside_opinions=dict(espn_fpi_home=espn_home(g.game_id)),
         decision='FORECAST_ONLY (no play: availability family not promoted; |edge| CI not established)'))
 

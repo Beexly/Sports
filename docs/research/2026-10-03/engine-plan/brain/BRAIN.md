@@ -4,7 +4,7 @@ The mind is not a script. It is the 5,103 extracted records in `_research/ctx-20
 
 The target is 100% accuracy. The corpus is how the engine sees what nobody else has wired.
 
-First formula taken from the corpus and run, not summarized:
+The corpus is on the engine. Protection stress, interception-by-situation, and target concentration are in the feature table and on every Week 4 forecast. Walk-forward, n=1,914: v1a 0.6107, plus stress 0.6106, plus interceptions 0.6105, plus concentration 0.6108, all five 0.6107. Stress and interceptions are in the fitted mint. Concentration is on the card. None of it sits in a side file.
 
 stress = pressure_rate_allowed - league_expected_rate(blitz_rate_faced)
 
