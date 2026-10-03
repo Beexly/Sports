@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>GSE intelligence chart</title>
+<style>
+body { margin: 0; background: #0e1116; color: #e7ecf3; font: 15px/1.45 "Segoe UI", sans-serif; }
+main { max-width: 1100px; margin: 0 auto; padding: 28px 20px 64px; }
+h1 { font-size: 28px; font-weight: 650; letter-spacing: -0.03em; margin: 0 0 6px; }
+h2 { font-size: 16px; margin: 28px 0 8px; }
+p, li { color: #b7c0cc; }
+.tag { display: inline-block; border: 1px solid #3a4454; border-radius: 99px; padding: 2px 8px; font-size: 12px; color: #9aa6b6; margin-right: 6px; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { text-align: right; padding: 7px 8px; border-bottom: 1px solid #232a34; }
+th:first-child, td:first-child, td:last-child { text-align: left; }
+th { color: #8b97a8; font-weight: 600; }
+.note { border-left: 3px solid #c4a35a; padding: 8px 12px; color: #e6d7b0; background: #1a170f; }
+.bin { display: grid; grid-template-columns: 110px 1fr; gap: 6px; align-items: center; margin: 4px 0; font-size: 12px; color: #8b97a8; }
+.track { height: 6px; background: #1c232d; border-radius: 99px; }
+.track i { display: block; height: 6px; background: #7aa2ff; border-radius: 99px; }
+.track.real i { background: #d2a15a; }
+.legend i { display: inline-block; width: 10px; height: 10px; margin-right: 4px; }
+.blue { background: #7aa2ff; }
+.gold { background: #d2a15a; }
+</style>
+</head>
+<body>
+<main>
+<p class="tag">internally measured</p><p class="tag">not independently verified</p><p class="tag">no LLM judge</p>
+<h1>GSE intelligence chart</h1>
+<p>Generated 2026-10-03T08:01:37 UTC. The close is a reference line. This page does not claim the engine beat it.</p>
+<p class="note">Engine v1 log loss 0.6107 vs close 0.6098 on n=1914. Gap CI -1e-05 to 0.00196. The interval covers zero. ECE is 0.0216 vs 0.0224. A lower ECE is not a win on the proper score.</p>
+<h2>Rules</h2>
+<ul><li>A question is a game whose outcome was not known when the probability was written.</li>
+<li>The score is log loss and Brier against the nflverse result. No LLM judge.</li>
+<li>A row is contaminated if it uses the actual starter, a post-kickoff feature, or an in-sample fit.</li>
+<li>The leaky 0.6072 figure used the actual starter. It is not on this chart.</li>
+<li>New questions drop every week. The current drop is 2026 week 4, 15 games, unscored.</li>
+<li>Every number is internally measured unless a row says independently verified. None do.</li>
+<li>The close is a reference line. This chart does not claim the engine beat it.</li></ul>
+<h2>Moneyline, walk-forward 2019–2026</h2>
+<p>Lower log loss is better. Season cells are that year's log loss.</p>
+<table>
+<thead><tr><th>System</th><th>n</th><th>log loss</th><th>Brier</th><th>ECE</th><th>2019</th><th>2020</th><th>2021</th><th>2022</th><th>2023</th><th>2024</th><th>2025</th><th>2026</th><th>contamination</th></tr></thead>
+<tbody>
+<tr><td>de-vigged close</td><td>1914</td><td>0.6098</td><td>0.2112</td><td>0.0224</td><td>0.6136</td><td>0.5901</td><td>0.6216</td><td>0.6085</td><td>0.6273</td><td>0.5875</td><td>0.6094</td><td>0.6634</td><td>market price, not a model</td></tr>
+<tr><td>engine v1 (offset + home/neutral + PIT QB + Elo residual)</td><td>1914</td><td>0.6107</td><td>0.2116</td><td>0.0216</td><td>0.6137</td><td>0.5899</td><td>0.6249</td><td>0.6085</td><td>0.6279</td><td>0.5873</td><td>0.6123</td><td>0.6642</td><td>clean: pre-game starters, walk-forward, no post-kickoff inputs</td></tr>
+<tr><td>coin flip</td><td>1914</td><td>0.6931</td><td>0.25</td><td>0.0334</td><td>0.6931</td><td>0.6931</td><td>0.6931</td><td>0.6931</td><td>0.6931</td><td>0.6931</td><td>0.6931</td><td>0.6931</td><td>constant</td></tr>
+</tbody>
+</table>
+<h2>Reliability, engine v1</h2>
+<p class="legend"><i class="blue"></i> stated probability <i class="gold"></i> realized win rate</p>
+<div class='bin'><span>0.0–0.1 n=2</span><div class='track'><i style='width:9.2%'></i></div><div class='track real'><i style='width:0.0%'></i></div></div>
+<div class='bin'><span>0.1–0.2 n=59</span><div class='track'><i style='width:16.1%'></i></div><div class='track real'><i style='width:22.0%'></i></div></div>
+<div class='bin'><span>0.2–0.3 n=161</span><div class='track'><i style='width:25.7%'></i></div><div class='track real'><i style='width:20.5%'></i></div></div>
+<div class='bin'><span>0.3–0.4 n=267</span><div class='track'><i style='width:35.4%'></i></div><div class='track real'><i style='width:35.6%'></i></div></div>
+<div class='bin'><span>0.4–0.5 n=278</span><div class='track'><i style='width:44.8%'></i></div><div class='track real'><i style='width:42.8%'></i></div></div>
+<div class='bin'><span>0.5–0.6 n=317</span><div class='track'><i style='width:55.6%'></i></div><div class='track real'><i style='width:53.9%'></i></div></div>
+<div class='bin'><span>0.6–0.7 n=364</span><div class='track'><i style='width:64.7%'></i></div><div class='track real'><i style='width:60.7%'></i></div></div>
+<div class='bin'><span>0.7–0.8 n=312</span><div class='track'><i style='width:75.0%'></i></div><div class='track real'><i style='width:75.6%'></i></div></div>
+<div class='bin'><span>0.8–0.9 n=136</span><div class='track'><i style='width:84.5%'></i></div><div class='track real'><i style='width:85.3%'></i></div></div>
+<div class='bin'><span>0.9–1.0 n=18</span><div class='track'><i style='width:91.4%'></i></div><div class='track real'><i style='width:94.4%'></i></div></div>
+<h2>Score distribution</h2>
+<p>Neighbourhood joint, unshifted, n=1914. Predicted cover 0.4875 vs realized 0.4882. Predicted over 0.485 vs realized 0.4905. Moneyline read off the spread is 0.6117 vs the close 0.6098. It does not beat the close. Neighbourhood joint, unshifted. Calibrated. Does not beat the moneyline close.</p>
+<h2>Current question drop: 2026-W4</h2>
+<p>15 games minted before kickoff. Scored: 0. File w4_mint_v1_20261003T0757Z.json. sha256 b67c48f988f072e65119864bcb49ac6478960b3f181bf5bbef12acdda174099e.</p>
+<table>
+<thead><tr><th>Game</th><th>p home</th><th>q home</th><th>fair cover</th><th>fair over</th><th>score</th></tr></thead>
+<tbody>
+<tr><td>2026_04_IND_WAS</td><td>0.3532</td><td>0.3528</td><td>0.5133</td><td>0.5019</td><td>unscored</td></tr>
+<tr><td>2026_04_ARI_NYG</td><td>0.4336</td><td>0.4344</td><td>0.5046</td><td>0.493</td><td>unscored</td></tr>
+<tr><td>2026_04_DAL_HOU</td><td>0.5885</td><td>0.5906</td><td>0.4977</td><td>0.4954</td><td>unscored</td></tr>
+<tr><td>2026_04_GB_TB</td><td>0.3756</td><td>0.3789</td><td>0.4856</td><td>0.497</td><td>unscored</td></tr>
+<tr><td>2026_04_JAX_CIN</td><td>0.5659</td><td>0.5657</td><td>0.4861</td><td>0.5</td><td>unscored</td></tr>
+<tr><td>2026_04_LA_PHI</td><td>0.3682</td><td>0.3699</td><td>0.4856</td><td>0.4909</td><td>unscored</td></tr>
+<tr><td>2026_04_NE_BUF</td><td>0.7346</td><td>0.7335</td><td>0.4833</td><td>0.4981</td><td>unscored</td></tr>
+<tr><td>2026_04_NYJ_CHI</td><td>0.6264</td><td>0.6268</td><td>0.5022</td><td>0.5077</td><td>unscored</td></tr>
+<tr><td>2026_04_TEN_BAL</td><td>0.842</td><td>0.84</td><td>0.5021</td><td>0.4895</td><td>unscored</td></tr>
+<tr><td>2026_04_MIA_MIN</td><td>0.8256</td><td>0.8258</td><td>0.4916</td><td>0.5</td><td>unscored</td></tr>
+<tr><td>2026_04_DEN_SF</td><td>0.5737</td><td>0.5711</td><td>0.4861</td><td>0.5</td><td>unscored</td></tr>
+<tr><td>2026_04_KC_LV</td><td>0.339</td><td>0.3411</td><td>0.4971</td><td>0.4942</td><td>unscored</td></tr>
+<tr><td>2026_04_LAC_SEA</td><td>0.746</td><td>0.7459</td><td>0.4833</td><td>0.5074</td><td>unscored</td></tr>
+<tr><td>2026_04_DET_CAR</td><td>0.3633</td><td>0.3655</td><td>0.4856</td><td>0.4909</td><td>unscored</td></tr>
+<tr><td>2026_04_ATL_NO</td><td>0.5515</td><td>0.5522</td><td>0.4861</td><td>0.5</td><td>unscored</td></tr>
+</tbody>
+</table>
+<h2>External boards</h2>
+<table>
+<thead><tr><th>Board</th><th>Status</th><th>Next</th></tr></thead>
+<tbody>
+<tr><td>Prophet Arena</td><td>NOT SUBMITTED</td><td>Read the rules and terms before any submission.</td></tr>
+<tr><td>Metaculus FutureEval</td><td>NOT SUBMITTED</td><td>Read the rules and terms before any submission.</td></tr>
+<tr><td>ForecastBench</td><td>NOT SUBMITTED</td><td>Read the rules and terms before any submission.</td></tr>
+<tr><td>llm-stats.com</td><td>NOT LISTED</td><td>A public chart of our own comes first. Their index is for LLM benchmarks, not this sports replay.</td></tr>
+</tbody>
+</table>
+</main>
+</body>
+</html>

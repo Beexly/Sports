@@ -59,6 +59,19 @@ Do not open these as pricing inputs. A new estimand is required before any of th
 - Odds API featured backfill: 84,240 credits, us+eu, T-90 and close, 2020 through 2026 W4. One month at $59. Do not buy before Sunday. Neon covers the live slate. Props push the bill to the $119 plan. Circa in that feed: UNVERIFIED.
 - Wind residual, previous-run only, and only on a paid Open-Meteo plan. The free tier is non-commercial.
 
+## 7. Intelligence charts are a completion gate
+
+v2 §2.20 is superseded. The engine is not complete while the charts are deferred to after W6.
+
+Completion requires all four:
+
+1. The chart exists and is regenerated from graded rows on every grade. Current file: charts/index.html, data charts/gse_intelligence_chart.json, generator eng/chart.py. The generator refuses to write if the refit does not match published v1a log loss 0.6107.
+2. Every number is labeled internally measured or independently verified. None on the current chart are independently verified.
+3. The week's unplayed games are on the chart before kickoff and scored after, against the nflverse result. No LLM judge. 2026 W4 is that drop: 15 games, scored 0.
+4. External boards are in progress, not parked. Prophet Arena, Metaculus FutureEval and ForecastBench are NOT SUBMITTED. The next action is to read each board's rules. Do not submit before that. llm-stats.com is an LLM index, not a sports replay. Our own chart is the thing we publish. Their shape is the standard: one row per system, one column per benchmark, contamination stated, uncertainty shown, no judge model on a question that has a ground truth.
+
+Measured on the chart, 2026-10-03: engine v1 log loss 0.6107, Brier 0.2116, ECE 0.0216. Close log loss 0.6098, Brier 0.2112, ECE 0.0224. Gap CI -0.00001 to 0.00196. Do not rank the engine above the close because ECE is 0.0008 lower. Log loss is the score.
+
 ## 6. Not done
 
 - Corpus per-component briefings are incomplete. Several synth shards returned empty. Do not cite SYNTH_* as a finished read.

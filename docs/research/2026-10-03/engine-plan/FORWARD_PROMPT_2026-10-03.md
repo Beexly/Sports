@@ -35,8 +35,8 @@ Wire per-QB EPA into the independent engine first. Then, one at a time: OL/DL (#
 LANE 4: Learning loop (needs 1, 2).
 Nightly job: grade every engine output from replay and from new as-of runs against nflverse outcomes (never Neon prod picks), append to graded rows, refit calibration and weights walk-forward, run champion vs challenger on the same held-out window, promote only if the challenger wins on log loss and the placebo fails. Version-stamp every promotion. Receipt: the first two nightly runs with promotion decisions.
 
-LANE 5: Engine intelligence charts (needs 1).
-apps/web: learning curve per family by week and version, close drawn as a reference line; reliability diagram; signal contribution bars with placebo; reasoning-trace validity rate; champion vs challenger ladder. Graded rows only. n and interval on every chart. Copy stays "math you can read."
+LANE 5: Engine intelligence charts. This is a completion gate, not a later lane.
+The chart already exists at docs/research/2026-10-03/engine-plan/charts/index.html. Keep it generated from graded rows. Regenerate it on every grade with eng/chart.py. Do not hand-edit the numbers. A question is a game unknown at mint time. Score log loss and Brier against the nflverse result. No LLM judge. Show n and the interval. The close is a reference line. Do not claim we beat it.
 
 LANE 6: Props, DFS, fantasy scorecard (needs 1).
 Same loop per player market: projection MAE and CRPS, over/under Brier, DFS lineup percentile. Use the existing signals (118k rows), snap_counts and injuries.
@@ -53,8 +53,8 @@ Triage the 30 open PRs: merge if green and still relevant, otherwise close with 
 LANE 10: Grade W4 after the Monday-night game ends (MNF is Monday 2026-10-05; grade early Tuesday 2026-10-06). Store the date logic in tests.
 This is an nflverse-only engine test, not a Neon pick. Verify the sha256 of docs/research/2026-10-03/engine-plan/w4_2026_sealed.json (d6e03aaf18cebd5ee0e940e710e9948208d610212acf013687448bb3b66b6d2e). Score log loss and Brier for the independent and Elo-only columns. Show the close as reference.
 
-LANE 11: External intelligence leaderboards (after 2 and 4).
-Wrap the engine's ingest → reason → probability loop as a forecasting agent. Enter Prophet Arena first (Kalshi, sports overlap), then the Metaculus FutureEval bot tournament, then ForecastBench. Read each one's rules and terms before submitting.
+LANE 11: External intelligence boards. Start now. Do not wait for W6.
+Read the rules and terms of Prophet Arena, the Metaculus FutureEval bot tournament, and ForecastBench before any submission. Status on the chart is NOT SUBMITTED. A submission without the rules read is a failed lane. Sports is the floor. The same loop pointed at their questions is how GSE gets onto an outside index.
 
 LANE 12: Foundation pretraining, the 1M-signal layer (needs 1 for the downstream test).
 Pretrain a play-level model on nflverse pbp 1999–2026 (every play, all 372 columns, as-of state only). Objectives: next-play EPA, drive outcome, player stat line. Export per-entity encodings (player state, unit-vs-unit matchup, situational context) as engine features. Hold out 2025 and 2026 entirely from pretraining. Downstream test: engine log loss with vs without the encodings, walk-forward, plus a placebo. Free compute only (local GPU/CPU, ZeroGPU). Receipt: pretraining loss curve, downstream Δ with CI, plus the param count and wall-clock time.
