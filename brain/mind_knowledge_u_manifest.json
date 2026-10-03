@@ -1,7 +1,7 @@
 {
-  "rows": 68040,
-  "shards": 54,
-  "recount_notes": "2026-10-03 recount: manifest previously claimed u_00=23,743 rows; branch file actually holds 22,282 valid rows and u_01 holds 1,461 (22,282+1,461=23,743 \u2014 the original figure was u_00+u_01 combined, misattributed to u_00 alone). u_02/u_04 sports rows (9,650) and u_03 (536) are as-reported, not yet recounted. Only u_05/u_06/u_07 are full-fidelity; u_00-u_04 bodies truncated ~4-5k chars.",
+  "rows": 68074,
+  "shards": 13,
+  "recount_notes": "2026-10-03 recount: manifest previously claimed u_00=23,743 rows; branch file actually holds 22,282 valid rows and u_01 holds 1,461 (22,282+1,461=23,743 — the original figure was u_00+u_01 combined, misattributed to u_00 alone). u_02/u_04 sports rows (9,650) and u_03 (536) are as-reported, not yet recounted. Only u_05/u_06/u_07 are full-fidelity; u_00-u_04 bodies truncated ~4-5k chars.",
   "shards_detail": [
     {
       "files": "brain/mind_knowledge_u_00.jsonl",
@@ -49,7 +49,7 @@
       "rows": 4794,
       "bytes": 8703567,
       "source": "full-depth re-feed: 110 IG JSONs complete (371 records), X sweep 25 rows (5 CSV tables verbatim), HTML artifacts embedded data 9 rows, Grok Heavy 27 rows, arXiv program tracker 4,362 rows incl. 2,806 candidate records",
-      "integrity_note": "arXiv audit catch: 2603.04864v1 recorded ADAPT but ledger verdict is REJECT \u2014 verified valuable count is 579 (not 585), 171 remain to 750",
+      "integrity_note": "arXiv audit catch: 2603.04864v1 recorded ADAPT but ledger verdict is REJECT — verified valuable count is 579 (not 585), 171 remain to 750",
       "extraction_script": "docs/research/2026-10-03/engine-plan/tools/fulldepth_extract.py",
       "commit": "0e4f9e5"
     },
@@ -65,7 +65,7 @@
       "files": "brain/mind_knowledge_u_08_local_00..08.jsonl",
       "rows": 9085,
       "bytes": 67455986,
-      "source": "local GSE dirs deep: 3,802 files full content (gse-discovery 1,062, mimo-verl 1,332, gse-intelligence-build 265, gse-repo-intel 199, wiring-wave2 279, improve-ledger-work 221, qb-behavioral-profiles 216, Kumo 22, IG 110, home JSONs) \u2014 binaries as schema+stats+sample, venv junk excluded",
+      "source": "local GSE dirs deep: 3,802 files full content (gse-discovery 1,062, mimo-verl 1,332, gse-intelligence-build 265, gse-repo-intel 199, wiring-wave2 279, improve-ledger-work 221, qb-behavioral-profiles 216, Kumo 22, IG 110, home JSONs) — binaries as schema+stats+sample, venv junk excluded",
       "commit": "48fc2e4"
     },
     {
@@ -80,8 +80,16 @@
       "files": "brain/mind_knowledge_raw_00..06.jsonl",
       "rows": 5102,
       "bytes": 134721317,
-      "source": "raw preservation corpus: complete full text of all 5,102 research-corpus files, 127M chars \u2014 the every-word foundation (was local-only, now on branch)",
+      "source": "raw preservation corpus: complete full text of all 5,102 research-corpus files, 127M chars — the every-word foundation (was local-only, now on branch)",
       "commit": "4effa14"
+    },
+    {
+      "file": "brain/mind_knowledge_u_13_tinkabot_eq.jsonl",
+      "rows": 34,
+      "bytes": 24075,
+      "source": "tinkabot column-backed eq helpers packed for mind; inputs already on features_v1/learn_joined/learn_wide; no score; no mint",
+      "extraction_script": "docs/research/2026-10-03/engine-plan/tools/tinkabot_eq_mind_pack.py",
+      "identity": "tinkabot"
     }
   ],
   "authoritative_ledger": "docs/research/2026-10-03/engine-plan/COVERAGE-LEDGER.md"
