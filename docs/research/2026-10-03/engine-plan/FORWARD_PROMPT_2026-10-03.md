@@ -4,7 +4,9 @@ Paste this whole block to the coding agent (Hermes / Codex / Claude Code on Beex
 
 ---
 
-SPRINT CLOCK AND BINDING RULES: GSE_V2_DECISIONS_SPRINT_2026-10-03.md is in the same folder. It overrides any conflicting text below. Nothing waits weeks. All lanes run in parallel on the hour-level clock in its §1 (W4 live Sunday 10/04, v1 champion before TNF 10/08). Use its single decision function (§2.1), bitemporal contract (§2.3), reasoner interface (§2.6), ownership (§2.15) and escalation rule (§2.13). Do not stop work.
+SPRINT CLOCK AND BINDING RULES: GSE_V3_DECISIONS_2026-10-03.md overrides this prompt and GSE_V2_DECISIONS_SPRINT_2026-10-03.md wherever they conflict. v2 still supplies the decision function (§2.1), the bitemporal contract (§2.3), the reasoner interface (§2.6), ownership (§2.15) and the escalation rule (§2.13). Nothing waits weeks. Do not stop work.
+
+STOP, from v3. Do not build these even if a lane below still names them: a moneyline model aimed at beating 0.6098; the leaky 0.6072 champion; availability as a moneyline add; open-to-close as a bet; Kalshi as the sharp price; travel, referee totals, OL continuity, contract-year, or firing ATS as pricing inputs; Madden or CV as a price this week; an LLM that outputs p; bivariate Poisson; foundation pretraining. The next build is alt-line and team-total capture at the same timestamp as the main line, then the joint scored against those prices. The W4 mint is eng/w4_mint_v1_20261003T0757Z.json (sha256 b67c48f988f072e65119864bcb49ac6478960b3f181bf5bbef12acdda174099e). Forecast only. Do not write Neon picks.
 
 You are building the GSE reasoning engine on Beexly/Sports. GSE ingests every signal, reasons over it, and emits picks, props, parlays, fantasy/DFS and analysis. We grade the engine on its own metrics: log loss, Brier, ECE, hit rate, projection error. The engine learns from every graded row. The de-vigged close is drawn as a reference line on charts. It is not the target and not a merge gate. Never claim we beat it.
 
@@ -66,9 +68,8 @@ For each pick, retrieve the relevant slice of raw signals plus encodings, write 
 LANE 15: Fix the watch relay before buying GPU.
 The gse-watch-pipeline Space ran 6h on a T4 and watch.games has 0 frames ingested. Trace the path Windows watcher → /process-frame → Vercel /api/ops/watch-ingest → Neon watch.* and find where the frames drop. Stay on cpu-basic until a test frame lands in watch.frames.
 
-LANE 0: Go live for W4, Sunday 2026-10-04 (do this first; GSE_MASTER_INTEGRATION_2026-10-03.md §4).
-Champion = market as a fixed offset + per-QB EPA16 + Elo residual + snap-weighted injury availability, shrunk, with a walk-forward calibration map. Backtest: log loss 0.6072 vs close 0.6070.
-Saturday: refresh nfl-com injuries, team news, weather, Kalshi and the ESPN predictor. Resolve starters from the injury report crossed with nflverse projections; this feed-agreement check must pass. Mint p, trace and observed_at for every W4 game before kickoff. Publish a play only where |p − q| clears its CI bound. Grade Sunday night and refit. Do not touch existing Neon picks.
+LANE 0: Go live for W4, Sunday 2026-10-04 (do this first).
+The mint already exists. Champion for the moneyline is the market offset plus home/neutral plus PIT QB plus Elo residual. Log loss 0.6107 vs the close 0.6098, n=1,914. That is a tie. Do not cite 0.6072. The joint is market-anchored (v3 §2). Publish a play only where §2.1 passes; at this mint expect none. Refresh injuries and odds before the London kickoff. The 06:45 CT cron does that. Do not touch existing Neon picks.
 
 LANE 16: Computer vision, wired, optimized, fine-tuned (§3.3).
 (a) Deploy watcher/watcher.py with a real config.json as a Windows scheduled task. Run the detector locally with OpenVINO on the Iris Xe; the HF Space stays on cpu-basic. Receipt: a test frame in watch.frames, then a full game.
@@ -105,9 +106,8 @@ LANE 20: Activate what is already built, before building anything new (GSE_MASTE
 (g) Give every sport (MLB, NCAAF, MLS, NHL, NBA) its own replay with the same gate. NCAAF has 1.44M line snapshots.
 Receipt per item: before/after row counts, the gate result, and the PR.
 
-LANE 21: Joint distribution engine (20K review §A1).
-One model per game: a score/drive simulator, or a bivariate points distribution plus player-share models. ML, spread, total, team totals, halves, quarters, every player prop, fantasy and DFS are all read off that one distribution, so markets never contradict each other. Same-game parlays use the model's real correlation.
-Test: the gate on every target. Calibration is learned on the pooled targets (about 100x the rows).
+LANE 21: Joint distribution, phase 1 is the neighbourhood PMF already measured. Do not build a drive simulator this week.
+Anchor it to the quoted spread and total (v3 §2). The test is game-blocked log loss against the book's alt spreads, alt totals and team totals at the same timestamp. Those prices are not in the live Neon snapshot. First step is capture, then the test. Kill if the interval covers 0 after 200 games. Do not pool targets and call the rows independent.
 
 LANE 22: Line movement as a minute-by-minute grader (§A2).
 From odds_line_snapshots, compute post-mint movement toward or away from the engine at sharp books. Add it as an auxiliary low-variance learning signal in the nightly refit.

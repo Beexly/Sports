@@ -1,6 +1,6 @@
 """Score-distribution engine v1: joint (margin, total) from the market lines plus empirical joint residuals.
 P(margin=m, total=t | spread s, total line L) = P_resid(m - s, t - L), estimated from prior seasons (key numbers come for free).
-Engine adjustment: shift the margin location so P(home win) equals the engine's ML probability; every market is read off one table.
+Market anchor: location-shift the margin sample so fair cover at the quoted spread is 0.5, and the total sample so fair over is 0.5. Key-number mass moves with the mean. An engine point-shift is added only when |p-q| >= 0.01. Reweighting the moneyline alone is not allowed.
 Test: ML implied by (spread, residuals) vs the de-vigged ML, walk-forward 2019-2026."""
 import os, json, numpy as np, pandas as pd
 R = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -17,8 +17,24 @@ def neighborhood(hist, spread, total, bw_s=1.0, bw_t=1.5, min_n=150):
     m = nb.result.values.astype(float)
     t = np.round(nb.total.values + (total - nb.total_line.values)).astype(float)
     return m, t
-def mk(m, t, spread, total, shift=0.0):
+def fair_side(values, line, shift=0.0):
+    v = values + shift
+    return float(((v > line).sum() + 0.5 * (v == line).sum()) / len(v))
+def shift_to_fair(values, line):
+    """Location shift closest to fair 0.5. Margins are discrete, so search the shifts that put a
+    sample point on the line and keep the closer side of that jump. A continuous search lands on
+    the wrong side of the step and the published cover drifts."""
+    import numpy as np
+    best_s, best_d = 0.0, abs(fair_side(values, line, 0.0) - 0.5)
+    for c in np.unique(line - values):
+        for s in (float(c), float(c) + 1e-6):
+            d = abs(fair_side(values, line, s) - 0.5)
+            if d < best_d - 1e-12 or (abs(d - best_d) <= 1e-12 and abs(s) < abs(best_s)):
+                best_s, best_d = s, d
+    return best_s
+def mk(m, t, spread, total, shift=0.0, total_shift=0.0):
     m = m + shift
+    t = t + total_shift
     hp, ap = (t + m) / 2, (t - m) / 2
     home_win = float(((m > 0).sum() + 0.5 * (m == 0).sum()) / len(m))
     return dict(p_home_win=home_win, p_home_cover=float((m > spread).mean()), p_push_spread=float((m == spread).mean()),

@@ -94,7 +94,16 @@ for g in U.itertuples():
     x = np.array([[g.home_flag, g.qb_pit, elo_res]], dtype=float)
     p = float(pred(M, x, np.array([mkt]))[0])
     m, t = SD.neighborhood(HIST, L['spread'], L['total'])
-    sh = SD.shift_to(m, p); D = SD.mk(m, t, L['spread'], L['total'], shift=sh)
+    # Anchor to the quoted spread and total. Do not shift the lattice to force P(win)=p:
+    # that gap is the neighborhood's win rate vs q, not an engine edge, and it breaks cover.
+    sh_anchor = SD.shift_to_fair(m, L['spread']); sh_tot = SD.shift_to_fair(t, L['total'])
+    edge = p - L['q']
+    sh_eng = 0.0
+    if abs(edge) >= 0.01:
+        base = m + sh_anchor
+        sh_eng = SD.shift_to(base, p) - SD.shift_to(base, L['q'])
+    sh = sh_anchor + sh_eng
+    D = SD.mk(m, t, L['spread'], L['total'], shift=sh, total_shift=sh_tot)
     contrib = dict(zip(FEATS, np.round(((x[0] - M[1]) / M[2]) * M[0], 4)))
     hq, aq = name_of.get(g.h_qb, g.h_qb), name_of.get(g.a_qb, g.a_qb)
     out.append(dict(game_id=g.game_id, kickoff_utc=L['commence'], neutral_site=bool(g.neutral),
@@ -102,7 +111,10 @@ for g in U.itertuples():
         engine=dict(p_home_win=round(p, 4), edge_vs_market=round(p - L['q'], 4), logit_contrib=contrib,
                     p_home_cover=round(D['p_home_cover'], 4), p_push_spread=round(D['p_push_spread'], 4), p_over=round(D['p_over'], 4),
                     p_push_total=round(D['p_push_total'], 4), home_pts_median=D['home_pts_median'], away_pts_median=D['away_pts_median'],
-                    margin_shift_pts=round(sh, 2)),
+                    fair_cover=round(D['p_home_cover'] + 0.5 * D['p_push_spread'], 4),
+                    fair_over=round(D['p_over'] + 0.5 * D['p_push_total'], 4),
+                    margin_shift_pts=round(sh, 2), margin_shift_anchor=round(sh_anchor, 2),
+                    margin_shift_engine=round(sh_eng, 2), total_shift_anchor=round(sh_tot, 2)),
         starters=dict(home=dict(qb=hq, source=g.h_qb_src), away=dict(qb=aq, source=g.a_qb_src)),
         injuries=dict(home=team_inj.get(g.home, [])[:6], away=team_inj.get(g.away, [])[:6]),
         outside_opinions=dict(espn_fpi_home=espn_home(g.game_id)),
@@ -115,11 +127,15 @@ if (now - newest_dt).total_seconds() > 12 * 3600: gate['issues'].append(f'odds s
 if len(out) != len(U): gate['issues'].append(f'coverage {len(out)}/{len(U)}')
 for o in out:
     if abs(o['engine']['edge_vs_market']) > 0.08: gate['issues'].append(f"{o['game_id']}: |edge| > 0.08, check inputs")
-bad = [o['game_id'] for o in out if abs(o['engine']['edge_vs_market']) < 0.01 and abs(o['engine']['p_home_cover'] + 0.5 * o['engine']['p_push_spread'] - 0.5) > 0.06]
+bad = [o['game_id'] for o in out if abs(o['engine']['edge_vs_market']) < 0.01 and (abs(o['engine']['fair_cover'] - 0.5) > 0.02 or abs(o['engine']['fair_over'] - 0.5) > 0.02)]
 if bad:
-    gate['derived_markets'] = 'WITHHELD: spread/total read-offs fail the coherence check (cover at the market spread should be ~0.5 when p~q): ' + ','.join(bad)
+    gate['derived_markets'] = 'WITHHELD: spread/total read-offs fail the coherence check (fair cover and fair over at the market line should be within 0.02 of 0.5 when |p-q|<0.01): ' + ','.join(bad)
     for o in out:
         if o['game_id'] in bad: o['engine']['derived_withheld'] = True
+else:
+    gate['derived_markets'] = 'published'
+if out:
+    gate['fair_worst'] = round(max(max(abs(o['engine']['fair_cover'] - 0.5), abs(o['engine']['fair_over'] - 0.5)) for o in out), 4)
 gate['pass'] = len(gate['issues']) == 0
 src = open(__file__, encoding='utf-8').read()
 doc = dict(engine='GSE engine v1 (market offset + home/neutral + PIT QB + Elo residual)', lam=lam, coef_per_unit=coef,
@@ -133,4 +149,4 @@ open(fn + '.sha256', 'w', newline='\n').write(f'{h}  {os.path.basename(fn)}\n')
 print('gate', gate, '\nfile', fn, h[:16])
 for o in out:
     e = o['engine']; mk = o['market']
-    print(f"{o['game_id']:17s} q {mk['q_home_devig_median']:.3f} p {e['p_home_win']:.3f} edge {e['edge_vs_market']:+.3f} | cover {e['p_home_cover']:.3f} over {e['p_over']:.3f} | {o['starters']['away']['qb']} @ {o['starters']['home']['qb']}{' [NEUTRAL]' if o['neutral_site'] else ''}")
+    print(f"{o['game_id']:17s} q {mk['q_home_devig_median']:.3f} p {e['p_home_win']:.3f} edge {e['edge_vs_market']:+.3f} | fairC {e['fair_cover']:.3f} fairO {e['fair_over']:.3f} | {o['starters']['away']['qb']} @ {o['starters']['home']['qb']}{' [NEUTRAL]' if o['neutral_site'] else ''}")
