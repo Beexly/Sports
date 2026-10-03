@@ -3,11 +3,21 @@
   "equations_file": "C:\\Users\\Garrett\\_research\\ctx-2026-10-03\\eng\\equations_stated.jsonl",
   "files_scanned": 3667,
   "owned_statements": 12722,
-  "functions_coded": 0,
-  "complex_blocked": 12210,
+  "functions_coded": 1,
+  "complex_blocked": 12209,
   "not_complex_recorded": 512,
-  "blocked_file_rows": 12722,
-  "coded": [],
+  "blocked_file_rows": 12721,
+  "coded": [
+    {
+      "name": "score_drive",
+      "columns": [
+        "yardline_100",
+        "ydstogo"
+      ],
+      "statement": "score_drive ≈ sin( | -0.2007*ydstogo + min(0.0446*yardline_100 - 2.3621, 0.2007*ydstogo - 1.0574) + 1.0574 |^0.5 )",
+      "source_path": "corpus-deep / agent-bus sports briefs"
+    }
+  ],
   "top_missing": [
     [
       "OTHER",

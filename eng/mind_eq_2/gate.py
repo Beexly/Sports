@@ -334,12 +334,12 @@ def main():
             if note:
                 rec["note"] = note
             out.write(json.dumps(rec, ensure_ascii=False) + "\n")
-    fn_lines.append("FUNCTIONS = {")
+    reg = ["", "FUNCTIONS = {"]
     for c in coded:
-        fn_lines.append("    %r: %s," % (c["name"], c["name"]))
-    fn_lines.append("}")
-    fn_lines.append("")
-    text = "\n".join(fn_lines + body)
+        reg.append("    %r: %s," % (c["name"], c["name"]))
+    reg.append("}")
+    reg.append("")
+    text = "\n".join(fn_lines + body + reg)
     with open(os.path.join(OUT, "functions.py"), "w", encoding="utf-8", newline="\n") as f:
         f.write(text)
     summary = {
