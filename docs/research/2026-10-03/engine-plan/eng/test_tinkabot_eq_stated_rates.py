@@ -30,8 +30,8 @@ class TestIdentity(unittest.TestCase):
 
 class TestRates(unittest.TestCase):
     def test_rate_residual(self):
-        self.assertEqual(m.rate_residual(0.55, 0.40), 0.15)
-        self.assertEqual(m.rate_residual(0.30, 0.40), -0.10)
+        self.assertAlmostEqual(m.rate_residual(0.55, 0.40), 0.15)
+        self.assertAlmostEqual(m.rate_residual(0.30, 0.40), -0.10)
         self.assertIsNone(m.rate_residual(None, 0.4))
         self.assertIsNone(m.rate_residual(0.5, None))
 
