@@ -1,0 +1,22 @@
+[
+  {
+    "signal": "epa_facets",
+    "fitted": false,
+    "reason": "Week-to-next pass EPA correlation is 0.1425 on 2012 pairs, 2022-2025. Descriptive. No map fitted."
+  },
+  {
+    "signal": "tau_hat_served",
+    "fitted": false,
+    "reason": "Served table is a point fit. Walk-forward passed and was not swapped. BLOCKED-ON-PRECISION."
+  },
+  {
+    "signal": "weather_prior",
+    "fitted": false,
+    "reason": "Wind over 15 is a labeled prior of -1.5 total points. No season was used to fit that number."
+  },
+  {
+    "signal": "nfl_age_conditioned_rest",
+    "fitted": false,
+    "reason": "homeSign is wired. No live writer. No calibration row fitted."
+  }
+]
