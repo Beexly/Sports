@@ -25,8 +25,13 @@ def test_runner_records_facts_and_does_not_invent_a_pick():
     doc = reason_game()
     assert doc["pick"] is None
     assert doc["probability_before_calibration"] is None
+    assert doc["probability_after_calibration"] is None
+    assert doc["mint"] in ("withhold", "pass")
+    assert "0.5" not in str(doc["probability_before_calibration"])
     ids = [f["signal"] for f in doc["facts"]]
     assert "CLE.epa_facets" in ids
     assert "CLE.ol" in ids
+    assert not any(s.endswith(".tau_hat") for s in ids)
+    assert any("refused a 0.5 stand-in" in g for g in doc["gaps"])
     assert doc["checklist"].get("offensive_line") != "UNCHECKED"
     assert doc["trace_label"] != "FINAL"

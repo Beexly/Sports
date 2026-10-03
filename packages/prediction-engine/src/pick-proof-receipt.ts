@@ -59,6 +59,12 @@ export interface PickProofInput {
   readonly marketFairMethodTag?: string | null;
   /** ISO timestamp the pick + odds snapshot were frozen at (must be before kickoff). */
   readonly asOf: string;
+  /**
+   * SHA-256 of the mint-time feature vector. Omitted on receipts minted before
+   * the field existed, so those payloads re-derive unchanged. Passed as null
+   * when the mint has no feature vector: the receipt commits "none".
+   */
+  readonly featureHash?: string | null;
 }
 
 /**
@@ -132,7 +138,35 @@ function committedFields(i: PickProofInput): Readonly<Record<string, string | nu
         ? "none"
         : String(i.marketFairMethodTag).trim(),
     asOf: i.asOf,
+    ...("featureHash" in i
+      ? { featureHash: featureHashCommitment(i.featureHash) }
+      : {}),
   };
+}
+
+function featureHashCommitment(value: string | null | undefined): string {
+  if (value == null || value.trim() === "" || value.trim() === "none") return "none";
+  const hash = value.trim().toLowerCase();
+  if (!/^[0-9a-f]{64}$/.test(hash)) {
+    throw new Error("pick-proof-receipt: featureHash must be a sha256 hex digest or none");
+  }
+  return hash;
+}
+
+/**
+ * The only way a feature hash reaches a public surface. The founder gate is
+ * the Glass Ledger flag, passed in by the caller. A missing hash, the
+ * committed word "none", and a shut gate all render nothing.
+ */
+export function featureHashForDisplay(
+  committed: string | null | undefined,
+  founderGateOpen: boolean,
+): string | null {
+  if (!founderGateOpen) return null;
+  if (typeof committed !== "string") return null;
+  const hash = committed.trim().toLowerCase();
+  if (!/^[0-9a-f]{64}$/.test(hash)) return null;
+  return hash;
 }
 
 /**

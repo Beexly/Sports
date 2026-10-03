@@ -208,7 +208,18 @@ function assessIndependentEdge(
   homeIsChosen: boolean,
   marketFairProb: number,
   dataQualityScore: number,
-  marketConsistent: boolean
+  marketConsistent: boolean,
+  /**
+   * OPTIONAL offline-fitted recalibrator for the published `trueProb`.
+   *
+   * This is the seam that makes the engine's calibration reachable in
+   * production. `edge-engine.ts` can apply a map, but nothing passed one, so the
+   * published probability stayed uncalibrated no matter how good the fits were.
+   * Optional on purpose: with no map this call is byte-identical to before, so
+   * every existing caller keeps its exact behaviour and the change cannot move a
+   * published number until a map is deliberately supplied.
+   */
+  calibrator?: { readonly predict: (p: number) => number },
 ): IndependentEdgeSummary | null {
   if (!fairValues || fairValues.length === 0) return null;
 
@@ -226,6 +237,7 @@ function assessIndependentEdge(
     // Real evidence health shrinks the edge; absent → edge engine's full default.
     evidenceScore: dataQualityScore > 0 ? dataQualityScore : undefined,
     marketConsistent,
+    calibrator,
   });
 
   return {
@@ -663,6 +675,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     fairProb,
     dataQualityScore,
     twoSidedImpliedSum >= 1,
+    input.context?.probabilityCalibrator,
   );
 
   // Our own model prices this side worse than the book. Do not sell it.
@@ -676,7 +689,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     rankOnAnyTrueProb: true,
   });
   const independentEdge: IndependentEdgeSummary | null = independentEdgeRaw
-    ? { ...independentEdgeRaw, priced: rank.priced }
+    ? { ...independentEdgeRaw, priced: rank.priced, trueProbBasis: "mint" }
     : null;
   const independentEdgeFactors: FactorDetail[] = independentEdge
     ? [
@@ -1296,7 +1309,8 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     homeIsChosen,
     fairProb,
     dataQualityScore,
-    twoSidedImpliedSum >= 1
+    twoSidedImpliedSum >= 1,
+    input.context?.probabilityCalibrator,
   );
 
   // Our own model prices this side worse than the book. Do not sell it.
@@ -1319,7 +1333,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     rankOnAnyTrueProb: true,
   });
   const independentEdge: IndependentEdgeSummary | null = independentEdgeRaw
-    ? { ...independentEdgeRaw, priced: rank.priced }
+    ? { ...independentEdgeRaw, priced: rank.priced, trueProbBasis: "mint" }
     : null;
 
   const independentEdgeFactors: FactorDetail[] = independentEdge

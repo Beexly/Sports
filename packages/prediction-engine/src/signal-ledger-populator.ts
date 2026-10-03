@@ -82,6 +82,54 @@ export function categoryPrior(category: string): { weight: number; confidence: n
   return CATEGORY_PRIORS[category] ?? { weight: 0.5, confidence: 0.4 };
 }
 
+/** Where a candidate's weight came from. Carried so a residual is COUNTABLE. */
+export type WeightSource = "measured" | "prior-unmeasured";
+
+export interface ResolvedWeight {
+  readonly weight: number;
+  readonly source: WeightSource;
+}
+
+/**
+ * Resolve a candidate's weight from MEASURED predictive power when it exists.
+ *
+ * THE PROBLEM THIS FIXES. Every candidate above was built with
+ * `categoryPrior(category).weight`, which is a flat HEALTH 1.0 / PRODUCTION 1.0.
+ * `signal-scale-fit.ts` measured that this uniform 1 asserts ten keys whose raw
+ * readings span a 103x range of standard deviations contribute equally — a
+ * number that was never a measurement of anything. `tune-signal-weights.ts`
+ * (#924) can produce a real one but had zero non-test callers, so the prior was
+ * the only value the composer ever saw.
+ *
+ * THE HONEST PART. A measured table covers the keys it was fitted over. A key
+ * that is NOT in it is not thereby proven useless — it may be unjoinable to a
+ * settled outcome, which is a missing-evidence problem, not a zero-effect one.
+ * So an unmeasured key falls back to its prior and is RETURNED TAGGED
+ * `"prior-unmeasured"` rather than being silently zeroed or silently passed
+ * through. That makes the residual countable, which is the difference between
+ * "the weights are measured" and "the weights are measured and I can see exactly
+ * which ones still are not".
+ *
+ * `measured` is optional on purpose. A caller with no fitted table must get
+ * today's behavior byte-identical rather than an accidental second code path.
+ */
+export function resolveWeight(
+  key: string,
+  category: string,
+  measured?: Readonly<Record<string, number>>,
+): ResolvedWeight {
+  const prior = categoryPrior(category);
+  if (!measured) return { weight: prior.weight, source: "prior-unmeasured" };
+  const m = measured[key];
+  // `undefined` is "never fitted"; 0 is "measured, earns nothing". The second
+  // must NOT fall through to the prior — that is the entire defect, reintroduced
+  // through a nullish check. Explicitly guarded rather than `?? prior`.
+  if (typeof m === "number" && Number.isFinite(m)) {
+    return { weight: Math.max(0, m), source: "measured" };
+  }
+  return { weight: prior.weight, source: "prior-unmeasured" };
+}
+
 /**
  * Build a candidate ledger row from a raw source reading.
  * A row with a non-finite value or a malformed timestamp is DROPPED rather

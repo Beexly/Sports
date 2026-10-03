@@ -243,6 +243,7 @@ export async function backfillIndependentTrueProb(opts?: {
         ? { marketFairProb: marketFair }
         : { marketFairProb: null }),
       trueProb,
+      trueProbBasis: "backfill",
       rawEdge,
       shrunkEdge: rawEdge * 0.7,
       expectedClv: typeof prevEdge["expectedClv"] === "number" ? prevEdge["expectedClv"] : 0,

@@ -57,6 +57,31 @@ export interface IndependentEdgeSummary {
   sources: string[];            // independent estimators used, e.g. ["kalshi"]
   priced: boolean;              // true = drove ranking path (finite trueProb, incl. PASS)
   rationale: string;            // plain-language "why"
+  /**
+   * Where `trueProb` was written. `mint` is the publish-time value.
+   * `backfill` was written after settlement and is not a training label.
+   * Absent on rows minted before the stamp existed.
+   */
+  trueProbBasis?: "mint" | "backfill";
+}
+
+export type TrueProbBasis = NonNullable<IndependentEdgeSummary["trueProbBasis"]>;
+
+const RETROSPECTIVE_TRUEPROB_PREFIX = "Retrospective independent blend";
+
+/**
+ * A post-settlement rewrite. Stamped `backfill`, or the older prose marker
+ * on rows written before the stamp. A `mint` stamp wins over that prose:
+ * the basis field is the contract, the sentence is only the legacy trail.
+ */
+export function trueProbIsBackfill(edge: {
+  readonly trueProbBasis?: string | null;
+  readonly rationale?: string | null;
+} | null | undefined): boolean {
+  if (edge == null) return false;
+  if (edge.trueProbBasis === "backfill") return true;
+  if (edge.trueProbBasis === "mint") return false;
+  return (edge.rationale ?? "").startsWith(RETROSPECTIVE_TRUEPROB_PREFIX);
 }
 
 /**
@@ -425,6 +450,36 @@ export interface GameContextInput {
    * publishes exactly as before. A history the screen cannot read withholds.
    */
   calibrationHistory?: CalibrationHistoryRow[];
+  /**
+   * OPTIONAL offline-fitted probability recalibrator for this market family.
+   *
+   * THE GAP THIS CLOSES. Measured on 1,823 settled prod picks (2026-09-30): the
+   * engine DISCRIMINATES (realized win rate rises monotonically with stated
+   * probability — 43.4% / 58.2% / 61.8% across low/mid/high buckets, an 18.4pt
+   * spread) but is ~5.2pt OVERCONFIDENT in the high bucket (states 0.618, reality
+   * 0.5666). Ranking is real; the scale is not. The fix is a calibration map, and
+   * this repo already fits them properly (`selectCalibrator` / `plattScaling` /
+   * `betaCalibration`), but that machinery sat DOWNSTREAM of the published
+   * number — `edge-engine.ts`, the sole producer of `independentEdge.trueProb`,
+   * imported none of it. A perfect fit could not move a single published
+   * probability.
+   *
+   * A fitted map is passed here so the published `trueProb` — and therefore the
+   * edge, the conviction ladder and the ranking derived from it — is calibrated
+   * rather than merely reportable.
+   *
+   * LAWS:
+   * - ABSENT = UNCHANGED. No map means byte-identical output to before this
+   *   field existed. Nothing moves until a map is deliberately supplied.
+   * - FITTED OFFLINE from settled history, never here. A map fitted on the same
+   *   picks it is scored against is a self-fulfilling number, not a measurement.
+   * - A map that throws or returns a non-finite / out-of-range value is REFUSED
+   *   and the uncalibrated probability is published unchanged.
+   */
+  probabilityCalibrator?: {
+    /** Map a stated probability in [0,1] to its calibrated equivalent. */
+    readonly predict: (p: number) => number;
+  };
   // Totals side-selection tie-break (Wave 5 proposal — NOT yet the default).
   // "strict": only books whose over/under prices DISCRIMINATE
   // (overPrice !== underPrice) count as consensus votes; equal-juice books

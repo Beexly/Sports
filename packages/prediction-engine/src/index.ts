@@ -233,6 +233,7 @@ export {
   ENTRY_ODDS_MIN_ABS,
   MARKET_FAIR_METHOD_TAG,
   modelProbForReceipt,
+  featureHashForDisplay,
 } from "./pick-proof-receipt.js";
 export type {
   PickProofInput,
@@ -1045,12 +1046,15 @@ export {
   categoryPrior,
   composeByEntity,
   normalizeReading,
+  resolveWeight,
   CATEGORY_PRIORS,
 } from "./signal-ledger-populator.js";
 export type {
   LedgerCandidate,
   CandidateSourceRow,
   EntityType,
+  WeightSource,
+  ResolvedWeight,
 } from "./signal-ledger-populator.js";
 export {
   projectPlayerGameStats,
@@ -1062,6 +1066,7 @@ export {
 } from "./signal-ledger-sources.js";
 export type {
   AnchorTable,
+  MeasuredWeightTable,
   SignalAnchor,
   PlayerGameStatRow,
   SnapCountRow,
@@ -1070,6 +1075,28 @@ export type {
 } from "./signal-ledger-sources.js";
 export { pointBiserial, correlationToMultiplier, tuneSignalWeights, MIN_SAMPLES } from "./tune-signal-weights.js";
 export type { KeyOutcome, TunedWeight } from "./tune-signal-weights.js";
+
+// The CALL SITE for `tuneSignalWeights` above. Until this module existed the
+// tuner had zero non-test callers, so every signal reaching the composer carried
+// the flat CATEGORY_PRIORS weight (HEALTH 1.0, PRODUCTION 1.0) — a uniform 1
+// asserted across ten keys whose raw readings span 103x in standard deviation.
+// This module calls the tuner and pays the evidence floor in DISTINCT FIXTURES,
+// because #924's row-counted floor was measured to be inflated by fixture
+// triplication (see tune-signal-weights-grouped.ts).
+export {
+  measureSignalWeights,
+  measuredWeightFor,
+  formatWeightReport,
+  MIN_FIXTURES,
+} from "./tune-signal-weights-table.js";
+export type {
+  FixtureKeyOutcome,
+  MeasuredKeyWeight,
+  MeasuredVerdict,
+  ReadingShape,
+  SignalWeightTable,
+  MeasureSignalWeightsOptions,
+} from "./tune-signal-weights-table.js";
 
 // The FAMILY-weight evidence census. Every signal in the registry carries a
 // hand-assigned `trustWeight`, and the hierarchical pool carries
