@@ -1,5 +1,15 @@
 {
-  "rows": 23743,
+  "rows": 23885,
   "files": 5311,
-  "shards": 2
+  "shards": 3,
+  "shards_detail": [
+    {
+      "file": "brain/mind_knowledge_u_06_agents.jsonl",
+      "rows": 142,
+      "bytes": 5869590,
+      "source": "29 AGENTS.md files, full-body ingestion (closes 15k-char truncation gap)",
+      "extraction_script": "docs/research/2026-10-03/engine-plan/tools/agents_extract.py",
+      "commit": "4701a56"
+    }
+  ]
 }
