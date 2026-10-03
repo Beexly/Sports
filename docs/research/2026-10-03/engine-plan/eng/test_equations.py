@@ -7,14 +7,20 @@ from equations import (
     air_yards_to_sticks,
     american_implied,
     brier,
+    clears_half,
     complete_minus_probability,
     completion_base_offset,
     completion_residual,
     decay_weight,
+    derived_markets_withheld,
     deep_rate,
     devig,
     drive_state_line,
     ece,
+    edge_needs_check,
+    engine_point_shift,
+    espn_home_projection,
+    expected_snap_loss,
     elo_margin,
     elo_points,
     elo_residual,
@@ -22,12 +28,16 @@ from equations import (
     encoder_age_weeks,
     explosive_play,
     fair_side,
+    fair_with_push,
+    fair_worst,
     finite_weighted_mean,
     four_week_cv,
     home_epa_edge,
+    glazer_play_rate,
     home_flag_from_neutral,
     home_minus_away,
     injury_out_weight,
+    injury_report_stale,
     int_on_pressure,
     int_rate,
     is_deep,
@@ -35,19 +45,26 @@ from equations import (
     lagged_latest,
     leaf_served_rate,
     league_expected_pressure,
+    league_pool_ready,
     log_loss,
     logistic_probability,
     logit,
+    logit_contribution,
     margin_residual,
     mean_or_null,
     mov_multiplier,
+    nflverse_home_spread,
     n_plays_weighted_mean,
     parse_season_key,
+    odds_snapshot_stale,
+    play_published,
     point_shift_applies,
     present_filled,
     pressure_matchup,
     pressure_on_dropback,
+    prior4_snap_share,
     prior_four_shares,
+    prior_window_mean,
     prior_season_key,
     promoted,
     protection_stress,
@@ -61,8 +78,11 @@ from equations import (
     reconstructed_dropbacks,
     rest_diff,
     result_share,
+    sample_median,
+    scaled_weight,
     season_key_sort_key,
     season_regress,
+    settled_side,
     shift_to_fair,
     shift_to_target,
     shifted_total,
@@ -250,6 +270,57 @@ class EquationTests(unittest.TestCase):
         self.assertEqual(is_dome("closed"), 1)
         self.assertEqual(is_dome("outdoors"), 0)
 
+
+
+    def test_mint_gates_and_glazer(self):
+        self.assertEqual(glazer_play_rate("OUT"), 0.0)
+        self.assertEqual(glazer_play_rate("DOUBTFUL"), 0.002)
+        self.assertEqual(glazer_play_rate("QUESTIONABLE"), 0.72)
+        self.assertEqual(glazer_play_rate(None), 0.981)
+        self.assertEqual(glazer_play_rate("Out"), 0.981)
+        self.assertAlmostEqual(expected_snap_loss(0.5, 0.72), 0.14)
+        self.assertAlmostEqual(fair_with_push(0.44, 0.10), 0.49)
+        self.assertIsNone(sample_median([]))
+        self.assertEqual(sample_median([1, 3, 2]), 2)
+        self.assertEqual(sample_median([1, 2, 3, 4]), 2.5)
+        self.assertAlmostEqual(prior4_snap_share([0.2, 0.4, 0.6, 0.8, 1.0], [0.1, 0.1]), 0.7)
+        self.assertIsNone(prior4_snap_share([], [0.1]))
+        self.assertEqual(nflverse_home_spread(3), -3)
+        self.assertEqual(nflverse_home_spread(-2.5), 2.5)
+        self.assertEqual(engine_point_shift([1.0, -1.0], 0.50, 0.504), 0.0)
+        self.assertAlmostEqual(
+            engine_point_shift([0.0, 0.0], 0.8, 0.2),
+            shift_to_target([0.0, 0.0], 0.8) - shift_to_target([0.0, 0.0], 0.2),
+        )
+        self.assertEqual(logit_contribution(3, 1, 2, 0.5), 0.5)
+        self.assertEqual(scaled_weight(1, 3), round(1 / 3, 5))
+        self.assertFalse(derived_markets_withheld(0.5, 0.5, 0.5, 0.5))
+        self.assertFalse(derived_markets_withheld(0.5, 0.5, 0.51, 0.5))
+        self.assertTrue(derived_markets_withheld(0.5, 0.5, 0.53, 0.5))
+        self.assertFalse(derived_markets_withheld(0.52, 0.50, 0.9, 0.9))
+        self.assertAlmostEqual(fair_worst([0.51, 0.60], [0.49, 0.50]), 0.10)
+        self.assertIsNone(fair_worst([], []))
+        self.assertFalse(injury_report_stale(24 * 3600))
+        self.assertTrue(injury_report_stale(24 * 3600 + 1))
+        self.assertFalse(odds_snapshot_stale(12 * 3600))
+        self.assertTrue(odds_snapshot_stale(12 * 3600 + 1))
+        self.assertFalse(edge_needs_check(0.08))
+        self.assertTrue(edge_needs_check(-0.081))
+        self.assertIsNone(espn_home_projection(None))
+        self.assertAlmostEqual(espn_home_projection(55.5), 0.555)
+        self.assertTrue(play_published(0.05, 0.04))
+        self.assertFalse(play_published(0.04, 0.04))
+        self.assertTrue(clears_half(0.62, 0.10))
+        self.assertFalse(clears_half(0.55, 0.10))
+        self.assertTrue(clears_half(0.5, 0.0))
+        self.assertIsNone(settled_side(3, 3))
+        self.assertEqual(settled_side(4, 3), 1)
+        self.assertEqual(settled_side(2, 3), 0)
+        self.assertTrue(league_pool_ready(100))
+        self.assertFalse(league_pool_ready(99))
+        self.assertIsNone(prior_window_mean([]))
+        self.assertEqual(prior_window_mean([7]), 7)
+        self.assertEqual(prior_window_mean([1, 2, 3, 4, 5]), 3.5)
 
 if __name__ == "__main__":
     unittest.main()

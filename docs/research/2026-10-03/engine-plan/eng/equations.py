@@ -642,3 +642,141 @@ def rest_diff(home_rest: float | None, away_rest: float | None) -> float | None:
 def is_dome(roof: str | None) -> float:
     """engine_v1.py: 1 when roof is dome or closed, else 0."""
     return 1.0 if roof in ("dome", "closed") else 0.0
+
+
+def glazer_play_rate(status: str | None) -> float:
+    """mint_w4.py: OUT 0.0, DOUBTFUL 0.002, QUESTIONABLE 0.72, missing 0.981. Any status not in that map is also 0.981."""
+    table = {"OUT": 0.0, "DOUBTFUL": 0.002, "QUESTIONABLE": 0.72, None: 0.981}
+    if status in table:
+        return table[status]
+    return 0.981
+
+
+def expected_snap_loss(snap_share: float, play_rate: float) -> float:
+    """mint_w4.py: snap_share * (1 - play_rate)."""
+    return snap_share * (1.0 - play_rate)
+
+
+def fair_with_push(p_side: float, p_push: float) -> float:
+    """mint_w4.py: p_side + 0.5 * p_push. Fair cover and fair over both use this."""
+    return p_side + 0.5 * p_push
+
+
+def sample_median(values: Sequence[float]) -> float | None:
+    """mint_w4.py: median of the quoted lines. Empty is null. scoredist.py mk uses the same median for team points."""
+    if len(values) == 0:
+        return None
+    ordered = sorted(values)
+    n = len(ordered)
+    mid = n // 2
+    if n % 2:
+        return float(ordered[mid])
+    return (float(ordered[mid - 1]) + float(ordered[mid])) / 2.0
+
+
+def prior4_snap_share(offense: Sequence[float], defense: Sequence[float]) -> float | None:
+    """mint_w4.py: max of the mean of the last 4 offense snap percents and the last 4 defense snap percents. Either side empty is null."""
+    def tail_mean(rows: Sequence[float]) -> float | None:
+        if len(rows) == 0:
+            return None
+        chunk = list(rows)[-4:]
+        return sum(chunk) / len(chunk)
+
+    off = tail_mean(offense)
+    deff = tail_mean(defense)
+    if off is None or deff is None:
+        return None
+    return max(off, deff)
+
+
+def nflverse_home_spread(home_line: float) -> float:
+    """mint_w4.py: negate the home spread. Plus means the home team is favoured."""
+    return -home_line
+
+
+def engine_point_shift(anchored_margins: Sequence[float], p: float, q: float) -> float:
+    """mint_w4.py: 0 when abs(p - q) < 0.01. Otherwise shift_to(anchored margins, p) minus shift_to(anchored margins, q)."""
+    if abs(p - q) < 0.01:
+        return 0.0
+    return shift_to_target(anchored_margins, p) - shift_to_target(anchored_margins, q)
+
+
+def logit_contribution(x: float, mu: float, sd: float, weight: float) -> float:
+    """mint_w4.py and w4_champion.py: round(((x - mu) / sd) * weight, 4)."""
+    return round(((x - mu) / sd) * weight, 4)
+
+
+def scaled_weight(weight: float, sd: float) -> float:
+    """mint_w4.py: round(weight / sd, 5)."""
+    return round(weight / sd, 5)
+
+
+def derived_markets_withheld(p: float, q: float, fair_cover: float, fair_over: float) -> bool:
+    """mint_w4.py and GSE_V3_DECISIONS section 2: withhold when abs(p - q) < 0.01 and either fair rate is more than 0.02 from 0.5."""
+    if abs(p - q) >= 0.01:
+        return False
+    return abs(fair_cover - 0.5) > 0.02 or abs(fair_over - 0.5) > 0.02
+
+
+def fair_worst(fair_covers: Sequence[float], fair_overs: Sequence[float]) -> float | None:
+    """mint_w4.py: the largest abs(fair - 0.5) across cover and over. No games is null."""
+    if len(fair_covers) != len(fair_overs):
+        raise ValueError("fair_worst: cover and over must be the same length")
+    if len(fair_covers) == 0:
+        return None
+    worst = 0.0
+    for cover, over in zip(fair_covers, fair_overs):
+        worst = max(worst, abs(cover - 0.5), abs(over - 0.5))
+    return worst
+
+
+def injury_report_stale(age_seconds: float) -> bool:
+    """mint_w4.py: the injury report is stale when it was observed more than 24 hours ago."""
+    return age_seconds > 24 * 3600
+
+
+def odds_snapshot_stale(age_seconds: float) -> bool:
+    """mint_w4.py: the odds snapshot is stale when it is older than 12 hours."""
+    return age_seconds > 12 * 3600
+
+
+def edge_needs_check(edge: float) -> bool:
+    """mint_w4.py: abs(edge) > 0.08 is an input-check issue."""
+    return abs(edge) > 0.08
+
+
+def espn_home_projection(game_projection: float | None) -> float | None:
+    """mint_w4.py: ESPN gameProjection / 100. Missing is null."""
+    if game_projection is None:
+        return None
+    return float(game_projection) / 100.0
+
+
+def play_published(abs_edge_ci_low: float, vig: float) -> bool:
+    """GSE_V2_DECISIONS section 2.1: a play is published when the lower CI bound of |p - q_exec| exceeds the vig."""
+    return abs_edge_ci_low > vig
+
+
+def clears_half(p: float, delta: float) -> bool:
+    """GSE_ENGINE_PLAN M7: abs(p - 0.5) >= delta. The stated sweep is 0, 0.08, 0.10, 0.12, 0.15, 0.18."""
+    return abs(p - 0.5) >= delta
+
+
+def settled_side(result: float, line: float) -> float | None:
+    """scoredist.py: null when result equals the line. Otherwise 1 if result is over the line, else 0."""
+    if result == line:
+        return None
+    return 1.0 if result > line else 0.0
+
+
+def league_pool_ready(attempts: float, floor: float = 100.0) -> bool:
+    """qb_air_cpoe.py: a week is skipped when pooled attempts are under 100."""
+    return attempts >= floor
+
+
+def prior_window_mean(values: Sequence[float], window: int = 4) -> float | None:
+    """injury_signal.py: mean of the last window observations, minimum one. The kept line is rolling(4, min_periods=1). Empty is null."""
+    if len(values) == 0:
+        return None
+    chunk = list(values)[-window:]
+    return sum(chunk) / len(chunk)
