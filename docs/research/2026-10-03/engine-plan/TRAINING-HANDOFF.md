@@ -24,7 +24,7 @@ Total: **68,694 rows** across 14 shard groups.
 | mind_knowledge_u_11_dataassets_00.jsonl | 247 | 1,498,112 | schema/stats only, no raw bytes |
 | mind_knowledge_raw_00..06.jsonl | 5,102 | 134,721,317 | FULL raw text, 127M chars |
 | mind_knowledge_u_12_drive_00..06.jsonl | 649 | 20,066,880 | FULL — Drive deep feed, secrets redacted |
-| mind_knowledge_u_13_tinkabot_eq.jsonl | 5 | 3,543 | column-backed equations |
+| mind_knowledge_u_13_tinkabot_eq.jsonl | 3 | 2,089 | column-backed equations |
 
 ## What the trainer must do
 1. `mind_train.py` / `mind_train_b.py` MUST read every sidecar above (not just u_00).
