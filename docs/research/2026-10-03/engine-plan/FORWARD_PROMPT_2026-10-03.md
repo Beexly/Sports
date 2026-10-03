@@ -8,6 +8,8 @@ You are building the GSE reasoning engine on Beexly/Sports. GSE ingests every si
 
 Neon production picks are frozen history. Do not settle, re-grade, tag, edit, or train on any existing pick until the founder declares the engine complete. All engine testing runs on the replay against nflverse outcomes.
 
+The architecture is GSE_MASTER_INTEGRATION_2026-10-03.md, in the same folder. Read it first: one loop (ingest → encode → perceive → reason → price → decide → grade → learn → chart), with every component wired into it. Wiring is immediate; weight is earned. Each family goes live the day it is wired, and the nightly grader sets its weight from walk-forward results. Measured today: 33 flat features made the engine worse than 2. Do not dump raw signals into the pricer; use the hierarchy and the gate. Lane 0 runs first; lanes 16–19 start in parallel with it.
+
 Ground truth before you start (measured 2026-10-03, receipts in docs/research/2026-10-03/engine-plan/):
 - Prod NFL has 29 scorable graded picks. That is the bottleneck. The engine cannot learn from 29 rows.
 - Per-QB EPA/dropback (16-game rolling, passer_player_id, shrunk to −0.05 with 150 pseudo-dropbacks) improves the independent engine: walk-forward log loss 0.6392 → 0.6302, n=1,185. Wire it.
@@ -61,6 +63,35 @@ For each pick, retrieve the relevant slice of raw signals plus encodings, write 
 
 LANE 15: Fix the watch relay before buying GPU.
 The gse-watch-pipeline Space ran 6h on a T4 and watch.games has 0 frames ingested. Trace the path Windows watcher → /process-frame → Vercel /api/ops/watch-ingest → Neon watch.* and find where the frames drop. Stay on cpu-basic until a test frame lands in watch.frames.
+
+LANE 0: Go live for W4, Sunday 2026-10-04 (do this first; GSE_MASTER_INTEGRATION_2026-10-03.md §4).
+Champion = market as a fixed offset + per-QB EPA16 + Elo residual + snap-weighted injury availability, shrunk, with a walk-forward calibration map. Backtest: log loss 0.6072 vs close 0.6070.
+Saturday: refresh nfl-com injuries, team news, weather, Kalshi and the ESPN predictor. Resolve starters from the injury report crossed with nflverse projections; this feed-agreement check must pass. Mint p, trace and observed_at for every W4 game before kickoff. Publish a play only where |p − q| clears its CI bound. Grade Sunday night and refit. Do not touch existing Neon picks.
+
+LANE 16: Computer vision, wired, optimized, fine-tuned (§3.3).
+(a) Deploy watcher/watcher.py with a real config.json as a Windows scheduled task. Run the detector locally with OpenVINO on the Iris Xe; the HF Space stays on cpu-basic. Receipt: a test frame in watch.frames, then a full game.
+(b) Scorebug OCR → nflverse play_id join. Every perceived play is auto-labelled from participation and FTN: formation, personnel, route, coverage, man/zone, pressure, time to throw, play action, motion, RPO.
+(c) Pseudo-label frames with an open-vocabulary teacher (YOLO-World / Grounding-DINO + SAM2) and distill into YOLO11n/s football classes plus jersey OCR, on Kaggle's free GPU. Target recall ≥ 0.90 in piles.
+(d) Motion-compensated tracking with a 10 fps burst. Keypoint homography from yard numbers and hash marks.
+(e) Merge #1009 once CI is green.
+CV features enter the pricer through the Lane 3 gate. Receipt: recall/precision on 200 hand-checked boxes, median tracklet life, homography reprojection error, Δ log loss.
+
+LANE 17: Madden into coaching schemes (§3.4).
+Import the Madden 26/27 playbooks as a private ontology (formation × concept × per-receiver route). Find the source and record its terms; store structure and names only, no EA art. Map every real play (nflverse plus CV) to its nearest concept and build team concept-frequency tables by situation and opponent coverage. These feed the coaching-scheme encoder.
+Wire weekly Madden ratings as player priors through the existing 1810.08032 MPPV module. Test on backups and rookies first.
+Capture Madden gameplay with known calls as synthetic CV training data.
+
+LANE 18: Lake and forward archive (§3.1).
+Turn pull_lake.py into scheduled jobs writing the as-of signal store:
+- Alexandria nfl-com injuries (Wed/Thu/Fri/game day), rosters (daily), news (twice daily), CBS and startwho projections (weekly)
+- ESPN summary/predictor, all leagues
+- Kalshi game, spread, total and player markets (hourly on game days)
+- Open-Meteo forecasts
+- nflverse daily
+Log credits per call in the manifest, with a hard credit budget per week. ESPN's predictor and Kalshi prices are not kept by their sources: archive them from today.
+
+LANE 19: Outside-sports intelligence families (§3.1).
+Build each as a signal family with source and observed_at: travel distance and time zones, circadian kickoff hour, altitude, short week and rest, referee crew tendencies, contract/incentive context, press-conference and beat-reporter text events, social/personal events, crowd/noise, prediction-market crowd, search-interest spikes. Every family goes through the Lane 3 gate with a placebo. Receipt per family: n, Δ log loss with CI, placebo result.
 
 Final receipt: per lane, the files, tests, remote SHA, PR number, the metric with n and CI, what was excluded, and what was not done.
 
