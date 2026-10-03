@@ -1,0 +1,357 @@
+{
+ "model": "offset(mkt)+qb+elo_res+inj_off+inj_def",
+ "lam": 300,
+ "n_train": 1986,
+ "coefs": {
+  "intercept": -0.0596,
+  "qb": 0.0372,
+  "elo_res": -0.0224,
+  "inj_off": -0.0418,
+  "inj_def": -0.0077
+ },
+ "note": "Lane 0 champion. Refresh injuries/lines Sunday morning and re-mint before kickoff.",
+ "games": [
+  {
+   "game_id": "2026_04_IND_WAS",
+   "home": "WAS",
+   "away": "IND",
+   "p_home": 0.3198,
+   "q_home_market": 0.3553,
+   "deviation": -0.0355,
+   "logit_contrib": {
+    "qb": -0.0004,
+    "elo_res": -0.0244,
+    "inj_off": -0.0656,
+    "inj_def": -0.0087
+   },
+   "home_out": [
+    "Nick Cross (S, 100% snaps)",
+    "Sam Cosmi (G, 97% snaps)",
+    "Rachaad White (RB, 42% snaps)"
+   ],
+   "away_out": [],
+   "trace": "Market 0.355. Engine 0.320. Drivers (logit): inj_off -0.066, elo_res -0.024, inj_def -0.009, qb -0.000"
+  },
+  {
+   "game_id": "2026_04_TEN_BAL",
+   "home": "BAL",
+   "away": "TEN",
+   "p_home": 0.8184,
+   "q_home_market": 0.8371,
+   "deviation": -0.0187,
+   "logit_contrib": {
+    "qb": -0.0004,
+    "elo_res": -0.0024,
+    "inj_off": -0.0637,
+    "inj_def": -0.005
+   },
+   "home_out": [
+    "Jovaughn Gwyn (C, 68% snaps)",
+    "Ethan Pocic (C, 68% snaps)",
+    "Trey Hendrickson (LB, 55% snaps)"
+   ],
+   "away_out": [],
+   "trace": "Market 0.837. Engine 0.818. Drivers (logit): inj_off -0.064, inj_def -0.005, elo_res -0.002, qb -0.000"
+  },
+  {
+   "game_id": "2026_04_NE_BUF",
+   "home": "BUF",
+   "away": "NE",
+   "p_home": 0.7137,
+   "q_home_market": 0.7221,
+   "deviation": -0.0084,
+   "logit_contrib": {
+    "qb": -0.0004,
+    "elo_res": 0.0114,
+    "inj_off": -0.0017,
+    "inj_def": 0.0089
+   },
+   "home_out": [
+    "T.J. Sanders (DE, 52% snaps)"
+   ],
+   "away_out": [
+    "Christian Gonzalez (CB, 92% snaps)",
+    "Christian Barmore (DT, 54% snaps)",
+    "Brenden Schooler (S, 16% snaps)"
+   ],
+   "trace": "Market 0.722. Engine 0.714. Drivers (logit): elo_res +0.011, inj_def +0.009, inj_off -0.002, qb -0.000"
+  },
+  {
+   "game_id": "2026_04_NYJ_CHI",
+   "home": "CHI",
+   "away": "NYJ",
+   "p_home": 0.62,
+   "q_home_market": 0.6225,
+   "deviation": -0.0024,
+   "logit_contrib": {
+    "qb": -0.0004,
+    "elo_res": -0.0405,
+    "inj_off": 0.1043,
+    "inj_def": -0.0142
+   },
+   "home_out": [
+    "Cam Lewis (S, 76% snaps)",
+    "Kyler Gordon (CB, 70% snaps)",
+    "Braxton Jones (T, 49% snaps)",
+    "Shemar Turner (DE, 22% snaps)",
+    "Noah Sewell (LB, 6% snaps)"
+   ],
+   "away_out": [
+    "Dylan Parham (G, 90% snaps)",
+    "Adonai Mitchell (WR, 71% snaps)",
+    "Mason Taylor (TE, 65% snaps)",
+    "Breece Hall (RB, 55% snaps)",
+    "Francisco Mauigoa (LB, 9% snaps)"
+   ],
+   "trace": "Market 0.622. Engine 0.620. Drivers (logit): inj_off +0.104, elo_res -0.041, inj_def -0.014, qb -0.000"
+  },
+  {
+   "game_id": "2026_04_JAX_CIN",
+   "home": "CIN",
+   "away": "JAX",
+   "p_home": 0.5521,
+   "q_home_market": 0.5635,
+   "deviation": -0.0114,
+   "logit_contrib": {
+    "qb": -0.0004,
+    "elo_res": 0.0234,
+    "inj_off": -0.0068,
+    "inj_def": -0.0029
+   },
+   "home_out": [
+    "Kyle Dugger (S, 31% snaps)",
+    "Colbie Young (WR, 11% snaps)"
+   ],
+   "away_out": [],
+   "trace": "Market 0.563. Engine 0.552. Drivers (logit): elo_res +0.023, inj_off -0.007, inj_def -0.003, qb -0.000"
+  },
+  {
+   "game_id": "2026_04_DAL_HOU",
+   "home": "HOU",
+   "away": "DAL",
+   "p_home": 0.5743,
+   "q_home_market": 0.5934,
+   "deviation": -0.0191,
+   "logit_contrib": {
+    "qb": -0.0004,
+    "elo_res": -0.0157,
+    "inj_off": -0.0017,
+    "inj_def": -0.0011
+   },
+   "home_out": [
+    "Azeez Al-Shaair (LB, 79% snaps)",
+    "M.J. Stewart (S, 62% snaps)"
+   ],
+   "away_out": [
+    "Cobie Durant (CB, 68% snaps)",
+    "DeMarvion Overshown (LB, 63% snaps)"
+   ],
+   "trace": "Market 0.593. Engine 0.574. Drivers (logit): elo_res -0.016, inj_off -0.002, inj_def -0.001, qb -0.000"
+  },
+  {
+   "game_id": "2026_04_ARI_NYG",
+   "home": "NYG",
+   "away": "ARI",
+   "p_home": 0.4151,
+   "q_home_market": 0.4365,
+   "deviation": -0.0214,
+   "logit_contrib": {
+    "qb": -0.0004,
+    "elo_res": -0.0304,
+    "inj_off": -0.0017,
+    "inj_def": 0.0047
+   },
+   "home_out": [],
+   "away_out": [
+    "Dadrion Taylor-Demerson (S, 59% snaps)"
+   ],
+   "trace": "Market 0.437. Engine 0.415. Drivers (logit): elo_res -0.030, inj_def +0.005, inj_off -0.002, qb -0.000"
+  },
+  {
+   "game_id": "2026_04_LA_PHI",
+   "home": "PHI",
+   "away": "LA",
+   "p_home": 0.3348,
+   "q_home_market": 0.3775,
+   "deviation": -0.0428,
+   "logit_contrib": {
+    "qb": -0.0004,
+    "elo_res": -0.0294,
+    "inj_off": -0.0951,
+    "inj_def": -0.0023
+   },
+   "home_out": [
+    "Zack Baun (LB, 98% snaps)",
+    "DeVonta Smith (WR, 74% snaps)",
+    "Marcus Epps (S, 72% snaps)",
+    "Dallas Goedert (TE, 72% snaps)",
+    "Marquise Brown (WR, 54% snaps)"
+   ],
+   "away_out": [
+    "Jaylen Watson (CB, 76% snaps)",
+    "Aaron Donald (DT, 71% snaps)",
+    "Terrance Ferguson (TE, 46% snaps)"
+   ],
+   "trace": "Market 0.378. Engine 0.335. Drivers (logit): inj_off -0.095, elo_res -0.029, inj_def -0.002, qb -0.000"
+  },
+  {
+   "game_id": "2026_04_GB_TB",
+   "home": "TB",
+   "away": "GB",
+   "p_home": 0.386,
+   "q_home_market": 0.3908,
+   "deviation": -0.0048,
+   "logit_contrib": {
+    "qb": -0.0004,
+    "elo_res": -0.0191,
+    "inj_off": 0.0653,
+    "inj_def": -0.0064
+   },
+   "home_out": [
+    "Benjamin Morrison (CB, 67% snaps)",
+    "Rueben Bain Jr. (LB, 62% snaps)",
+    "Ko Kieft (TE, 7% snaps)"
+   ],
+   "away_out": [
+    "Jacob Monk (C, 97% snaps)",
+    "Aaron Banks (G, 56% snaps)",
+    "Warren Brinson (DT, 45% snaps)",
+    "Anthony Campbell (DT, 12% snaps)"
+   ],
+   "trace": "Market 0.391. Engine 0.386. Drivers (logit): inj_off +0.065, elo_res -0.019, inj_def -0.006, qb -0.000"
+  },
+  {
+   "game_id": "2026_04_MIA_MIN",
+   "home": "MIN",
+   "away": "MIA",
+   "p_home": 0.8046,
+   "q_home_market": 0.8119,
+   "deviation": -0.0073,
+   "logit_contrib": {
+    "qb": -0.0004,
+    "elo_res": -0.0004,
+    "inj_off": 0.0067,
+    "inj_def": 0.0065
+   },
+   "home_out": [
+    "Justin Jefferson (WR, 70% snaps)",
+    "Charles Demmings (CB, 1% snaps)",
+    "Brett Thorson (P, 0% snaps)"
+   ],
+   "away_out": [
+    "Caleb Douglas (WR, 88% snaps)",
+    "Storm Duck (CB, 56% snaps)",
+    "Rob Beal Jr. (LB, 26% snaps)"
+   ],
+   "trace": "Market 0.812. Engine 0.805. Drivers (logit): inj_off +0.007, inj_def +0.006, qb -0.000, elo_res -0.000"
+  },
+  {
+   "game_id": "2026_04_KC_LV",
+   "home": "LV",
+   "away": "KC",
+   "p_home": 0.3283,
+   "q_home_market": 0.3425,
+   "deviation": -0.0142,
+   "logit_contrib": {
+    "qb": -0.0004,
+    "elo_res": -0.0064,
+    "inj_off": 0.0031,
+    "inj_def": -0.0003
+   },
+   "home_out": [
+    "Jackson Powers-Johnson (G, 82% snaps)"
+   ],
+   "away_out": [
+    "Josh Simmons (T, 92% snaps)"
+   ],
+   "trace": "Market 0.343. Engine 0.328. Drivers (logit): elo_res -0.006, inj_off +0.003, qb -0.000, inj_def -0.000"
+  },
+  {
+   "game_id": "2026_04_LAC_SEA",
+   "home": "SEA",
+   "away": "LAC",
+   "p_home": 0.7459,
+   "q_home_market": 0.7572,
+   "deviation": -0.0113,
+   "logit_contrib": {
+    "qb": -0.0004,
+    "elo_res": -0.0189,
+    "inj_off": 0.0146,
+    "inj_def": 0.0038
+   },
+   "home_out": [
+    "Zach Charbonnet (RB, 55% snaps)",
+    "Jadarian Price (RB, 37% snaps)"
+   ],
+   "away_out": [
+    "Kayode Awosika (G, 62% snaps)",
+    "Dalvin Tomlinson (DT, 49% snaps)",
+    "Charlie Kolar (TE, 48% snaps)",
+    "Brenen Thompson (WR, 18% snaps)"
+   ],
+   "trace": "Market 0.757. Engine 0.746. Drivers (logit): elo_res -0.019, inj_off +0.015, inj_def +0.004, qb -0.000"
+  },
+  {
+   "game_id": "2026_04_DEN_SF",
+   "home": "SF",
+   "away": "DEN",
+   "p_home": 0.555,
+   "q_home_market": 0.5721,
+   "deviation": -0.0171,
+   "logit_contrib": {
+    "qb": -0.0004,
+    "elo_res": 0.0023,
+    "inj_off": -0.0017,
+    "inj_def": -0.0101
+   },
+   "home_out": [
+    "Mykel Williams (DE, 64% snaps)",
+    "Nick Bosa (DE, 58% snaps)",
+    "James Thompson Jr. (DT, 35% snaps)"
+   ],
+   "away_out": [
+    "Dondrea Tillman (LB, 40% snaps)"
+   ],
+   "trace": "Market 0.572. Engine 0.555. Drivers (logit): inj_def -0.010, elo_res +0.002, inj_off -0.002, qb -0.000"
+  },
+  {
+   "game_id": "2026_04_DET_CAR",
+   "home": "CAR",
+   "away": "DET",
+   "p_home": 0.3558,
+   "q_home_market": 0.3775,
+   "deviation": -0.0217,
+   "logit_contrib": {
+    "qb": -0.0004,
+    "elo_res": 0.0015,
+    "inj_off": -0.0348,
+    "inj_def": -0.0003
+   },
+   "home_out": [
+    "Damien Lewis (G, 92% snaps)",
+    "Xavier Legette (WR, 47% snaps)"
+   ],
+   "away_out": [
+    "Ben Bartch (G, 67% snaps)"
+   ],
+   "trace": "Market 0.378. Engine 0.356. Drivers (logit): inj_off -0.035, elo_res +0.002, qb -0.000, inj_def -0.000"
+  },
+  {
+   "game_id": "2026_04_ATL_NO",
+   "home": "NO",
+   "away": "ATL",
+   "p_home": 0.5373,
+   "q_home_market": 0.5514,
+   "deviation": -0.0141,
+   "logit_contrib": {
+    "qb": -0.0004,
+    "elo_res": 0.0052,
+    "inj_off": -0.0017,
+    "inj_def": -0.0003
+   },
+   "home_out": [],
+   "away_out": [],
+   "trace": "Market 0.551. Engine 0.537. Drivers (logit): elo_res +0.005, inj_off -0.002, qb -0.000, inj_def -0.000"
+  }
+ ]
+}
