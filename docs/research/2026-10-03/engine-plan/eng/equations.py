@@ -1255,3 +1255,97 @@ def game_played(result: str | None) -> bool:
     """baseline.py: played when result is not an empty string. A missing result is not played."""
     return result is not None and result != ""
 
+
+def team_form_games(rows: Sequence[tuple], cutoff, k: int = 10) -> list | None:
+    """engine_v1.py team_form: last 10 rows dated strictly before the cutoff. Fewer than 3 is null."""
+    prior = [row for row in rows if row[0] < cutoff][-k:]
+    if len(prior) < 3:
+        return None
+    return prior
+
+
+def division_game(div_game: float | None) -> float:
+    """engine_v1.py: 1 when div_game is 1, else 0."""
+    return 1.0 if div_game == 1 else 0.0
+
+
+def qb_edge_or_zero(rating: float | None) -> float:
+    """engine_v1.py: the per-QB edge is 0 when the game is absent from the per-QB table. This is not the unknown-starter prior."""
+    if rating is None or rating != rating:
+        return 0.0
+    return float(rating)
+
+
+def engine_v1_game(season: int, game_type: str) -> bool:
+    """engine_v1.py and baseline.py: season >= 2019 and game_type in REG, WC, DIV, CON, SB."""
+    return season >= 2019 and game_type in ("REG", "WC", "DIV", "CON", "SB")
+
+
+def feature_table_game(season: int, game_type: str) -> bool:
+    """data.py: the feature table keeps season >= 2012 and game_type REG."""
+    return season >= 2012 and game_type == "REG"
+
+
+def snap_lookup_order(event_order: int) -> int:
+    """data.py and injury_signal.py: snaps are looked up at event order minus 1."""
+    return event_order - 1
+
+
+def in_encoder_window(row_season: int, row_week: int, cutoff_season: int, cutoff_week: int) -> bool:
+    """encoder_adj.py: the play order is strictly before the cutoff, and the season is the cutoff season or the one before. Not the two-season feature lag."""
+    order = int(row_season) * 100 + int(row_week)
+    cut = int(cutoff_season) * 100 + int(cutoff_week)
+    return order < cut and row_season >= cutoff_season - 1
+
+
+def offense_is_home(posteam: str | None, home_team: str | None) -> float:
+    """encoder_adj.py: 1 when the possession team is the home team, else 0."""
+    return 1.0 if posteam == home_team else 0.0
+
+
+def rating_sums(rows: Sequence[tuple]) -> tuple[float, float]:
+    """data.py qb_rating and perqb.py: sum of dropbacks and sum of epa over the already-cut history. Empty is (0, 0)."""
+    return sum(row[1] for row in rows), sum(row[2] for row in rows)
+
+
+def actual_starter_ids(home_id, away_id) -> bool:
+    """features.py: the actual-starter edge is computed only when both qb ids are strings. Otherwise that edge is null."""
+    return isinstance(home_id, str) and isinstance(away_id, str)
+
+
+def total_margin_shift(anchor: float, engine: float) -> float:
+    """mint_w4.py: the margin shift is the fair anchor plus the engine shift."""
+    return anchor + engine
+
+
+def deep_filled(air_yards: float | None) -> int:
+    """corpus_on_engine.py: missing air_yards is 0, then 1 when that value is at least 15."""
+    air = 0.0 if air_yards is None or air_yards != air_yards else float(air_yards)
+    return 1 if air >= 15 else 0
+
+
+def completed_air_kept(complete_pass: float | None, air_yards: float | None) -> bool:
+    """completed_air_yards.py: kept when complete_pass is 1 and air_yards is present."""
+    if complete_pass != 1:
+        return False
+    return air_yards is not None and air_yards == air_yards
+
+
+def sticks_play_kept(pass_attempt: float | None, air_yards: float | None, ydstogo: float | None) -> bool:
+    """air_yards_to_sticks.py: kept when pass_attempt is 1 and air_yards and ydstogo are present."""
+    if pass_attempt != 1:
+        return False
+    if air_yards is None or air_yards != air_yards:
+        return False
+    return ydstogo is not None and ydstogo == ydstogo
+
+
+def injury_signal_row(report_status: str | None, position: str | None) -> bool:
+    """injury_signal.py: Out or Doubtful, and the position is not QB. Questionable is not in this sum."""
+    return report_status in ("Out", "Doubtful") and position != "QB"
+
+
+def rounded_refit_matches(got: float, published: float, tol: float = 0.00015) -> bool:
+    """chart.py: the refit mean is rounded to 4 decimals, then rejected when abs(got - published) > 0.00015."""
+    return abs(round(got, 4) - published) <= tol
+

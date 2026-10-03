@@ -4,6 +4,7 @@ import unittest
 
 from equations import (
     actual_or_pit,
+    actual_starter_ids,
     air_bin,
     air_yards_to_sticks,
     american_implied,
@@ -18,14 +19,17 @@ from equations import (
     clears_half,
     clipped_eta,
     complete_minus_probability,
+    completed_air_kept,
     completion_base_offset,
     completion_residual,
     counted_attempt,
     decay_weight,
     decision_accuracy,
+    deep_filled,
     deep_rate,
     derived_markets_withheld,
     devig,
+    division_game,
     drive_play_kept,
     drive_state_line,
     duplicate_rate_mean,
@@ -38,6 +42,7 @@ from equations import (
     encoder_age_weeks,
     encoder_pool_ready,
     engine_point_shift,
+    engine_v1_game,
     espn_home_projection,
     evidence_score,
     expected_bin_completions,
@@ -47,6 +52,7 @@ from equations import (
     fair_side,
     fair_with_push,
     fair_worst,
+    feature_table_game,
     finite_weighted_mean,
     four_week_cv,
     four_week_mean,
@@ -60,9 +66,11 @@ from equations import (
     home_epa_edge,
     home_flag_from_neutral,
     home_minus_away,
+    in_encoder_window,
     in_prior_season_window,
     injury_out_weight,
     injury_report_stale,
+    injury_signal_row,
     int_on_pressure,
     int_rate,
     is_deep,
@@ -86,6 +94,7 @@ from equations import (
     nflverse_join_date,
     normal_ci,
     odds_snapshot_stale,
+    offense_is_home,
     offset_log_odds,
     out_or_doubtful,
     parse_season_key,
@@ -107,9 +116,11 @@ from equations import (
     published_side,
     push_adjusted,
     push_fraction,
+    qb_edge_or_zero,
     qb_epa_rating,
     questionable_weight,
     quick_game_expanding_mean,
+    rating_sums,
     raw_rate_or_null,
     recency_weights,
     reconstructed_dropbacks,
@@ -117,6 +128,7 @@ from equations import (
     rest_diff,
     result_share,
     retrospective_rationale,
+    rounded_refit_matches,
     sample_median,
     scaled_weight,
     score_history_season,
@@ -131,19 +143,23 @@ from equations import (
     shifted_total,
     shrunk_cell,
     sigmoid,
+    snap_lookup_order,
     snap_share,
     snap_share_skipna,
     snap_within_window,
     source_name_key,
     spread_neighborhood_k,
     standardize,
+    sticks_play_kept,
     stress_or_null,
     strict_asof_index,
     strict_side,
     target_share,
+    team_form_games,
     team_points,
     temp_or_default,
     text_column_is_numeric,
+    total_margin_shift,
     total_residual,
     trust_share_or_null,
     typed_epa,
@@ -551,6 +567,51 @@ class EquationTests(unittest.TestCase):
         self.assertTrue(game_played("0"))
         self.assertFalse(game_played(""))
         self.assertFalse(game_played(None))
+
+
+
+    def test_form_window_and_encoder_lag(self):
+        rows = [(i, 1, 0.1 * i) for i in range(1, 13)]
+        kept = team_form_games(rows, 100)
+        self.assertEqual([row[0] for row in kept], list(range(3, 13)))
+        self.assertIsNone(team_form_games(rows[:2], 100))
+        self.assertEqual(division_game(1), 1.0)
+        self.assertEqual(division_game(0), 0.0)
+        self.assertEqual(qb_edge_or_zero(None), 0.0)
+        self.assertEqual(qb_edge_or_zero(1.5), 1.5)
+        self.assertTrue(engine_v1_game(2019, "WC"))
+        self.assertFalse(engine_v1_game(2018, "REG"))
+        self.assertFalse(engine_v1_game(2019, "PRE"))
+        self.assertTrue(feature_table_game(2012, "REG"))
+        self.assertFalse(feature_table_game(2012, "WC"))
+        self.assertFalse(feature_table_game(2011, "REG"))
+        self.assertEqual(snap_lookup_order(202604), 202603)
+        self.assertTrue(in_encoder_window(2025, 18, 2026, 1))
+        self.assertFalse(in_encoder_window(2024, 18, 2026, 1))
+        self.assertFalse(in_encoder_window(2026, 1, 2026, 1))
+        self.assertTrue(in_prior_season_window(2024, 18, 2026, 1))
+        self.assertEqual(offense_is_home("KC", "KC"), 1.0)
+        self.assertEqual(offense_is_home("BUF", "KC"), 0.0)
+        self.assertEqual(rating_sums([]), (0, 0))
+        self.assertEqual(rating_sums([("d", 10, 1.5), ("e", 5, -0.5)]), (15, 1.0))
+        self.assertTrue(actual_starter_ids("00-1", "00-2"))
+        self.assertFalse(actual_starter_ids(None, "00-2"))
+        self.assertEqual(total_margin_shift(0.2, -0.1), 0.1)
+        self.assertEqual(deep_filled(None), 0)
+        self.assertEqual(deep_filled(15), 1)
+        self.assertEqual(deep_filled(14), 0)
+        self.assertTrue(completed_air_kept(1, 12.0))
+        self.assertFalse(completed_air_kept(0, 12.0))
+        self.assertFalse(completed_air_kept(1, None))
+        self.assertTrue(sticks_play_kept(1, 10, 7))
+        self.assertFalse(sticks_play_kept(0, 10, 7))
+        self.assertFalse(sticks_play_kept(1, None, 7))
+        self.assertTrue(injury_signal_row("Out", "WR"))
+        self.assertFalse(injury_signal_row("Questionable", "WR"))
+        self.assertFalse(injury_signal_row("Out", "QB"))
+        self.assertTrue(availability_report("Questionable", "WR"))
+        self.assertTrue(rounded_refit_matches(0.61074, 0.6107))
+        self.assertFalse(rounded_refit_matches(0.61086, 0.6107))
 
 
 if __name__ == "__main__":
