@@ -3,13 +3,25 @@ import math
 import unittest
 
 from equations import (
+    air_yards_to_sticks,
+    complete_minus_probability,
+    completion_residual,
+    drive_state_line,
     fair_side,
+    home_minus_away,
     league_expected_pressure,
     log_loss,
+    logistic_probability,
     logit,
+    margin_residual,
+    mean_or_null,
     promoted,
     protection_stress,
+    push_adjusted,
+    raw_rate_or_null,
+    shrunk_cell,
     team_points,
+    total_residual,
 )
 
 
@@ -39,6 +51,30 @@ class EquationTests(unittest.TestCase):
         self.assertFalse(promoted(0.0, 0.10, 0.10))
         self.assertFalse(promoted(-0.001, 0.11, 0.10))
         self.assertFalse(promoted(-0.001, 0.10, 0.11))
+
+    def test_drive_line_and_floor(self):
+        self.assertAlmostEqual(drive_state_line(10, 50), 0.2007 * 10 - 0.0446 * 50)
+        self.assertIsNone(mean_or_null(100, 29))
+        self.assertAlmostEqual(mean_or_null(100, 30), 100 / 30)
+
+    def test_cell_does_not_invent_a_parent(self):
+        self.assertIsNone(raw_rate_or_null(1, 0))
+        self.assertIsNone(shrunk_cell(2, 10, None))
+        self.assertAlmostEqual(shrunk_cell(2, 10, 0.04), (2 + 25 * 0.04) / 35)
+
+    def test_sticks_and_completion_residual(self):
+        self.assertEqual(air_yards_to_sticks(12, 7), 5)
+        self.assertIsNone(completion_residual(20, 18, 29))
+        self.assertAlmostEqual(completion_residual(20, 18, 30), 2 / 30)
+        self.assertAlmostEqual(complete_minus_probability(1, 0.6), 0.4)
+        self.assertAlmostEqual(logistic_probability(0, 0, 0), 0.5)
+
+    def test_residuals_and_push(self):
+        self.assertEqual(margin_residual(7, 3), 4)
+        self.assertEqual(total_residual(44, 47), -3)
+        self.assertAlmostEqual(push_adjusted(0.5, 0.0), 0.5)
+        self.assertIsNone(home_minus_away(1.0, None))
+        self.assertEqual(home_minus_away(3.0, 1.0), 2.0)
 
 
 if __name__ == "__main__":

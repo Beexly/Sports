@@ -74,3 +74,73 @@ def promoted(delta_logloss_ci_high: float, placebo_fraction: float, fdr_q: float
     placebo fraction <= 0.10, and BH-FDR q <= 0.10.
     """
     return delta_logloss_ci_high < 0.0 and placebo_fraction <= 0.10 and fdr_q <= 0.10
+
+
+def drive_state_line(ydstogo: float, yardline_100: float) -> float:
+    """drive_linear.py: 0.2007*ydstogo - 0.0446*yardline_100."""
+    return 0.2007 * ydstogo - 0.0446 * yardline_100
+
+
+def mean_or_null(total: float, n: int, floor: int = 30) -> float | None:
+    """Prior-play mean. drive_linear.py and the air-yards files: null under the floor (30)."""
+    if n < floor:
+        return None
+    return total / n
+
+
+def shrunk_cell(w: float, n: float, p_hat_parent: float | None, m: float = 25.0) -> float | None:
+    """int_parent.py: (w + 25 * p_hat_parent) / (n + 25). No invented parent rate."""
+    if p_hat_parent is None:
+        return None
+    return (w + m * p_hat_parent) / (n + m)
+
+
+def raw_rate_or_null(w: float, n: float) -> float | None:
+    """int_parent.py: p_hat is w/n when n > 0 else null."""
+    if n <= 0:
+        return None
+    return w / n
+
+
+def air_yards_to_sticks(air_yards: float, ydstogo: float) -> float:
+    """air_yards_to_sticks.py: air_yards - ydstogo."""
+    return air_yards - ydstogo
+
+
+def completion_residual(completions: float, expected: float, attempts: int, floor: int = 30) -> float | None:
+    """qb_air_cpoe.py: (completions - expected) / attempts. Null under 30 attempts."""
+    if attempts < floor:
+        return None
+    return (completions - expected) / attempts
+
+
+def complete_minus_probability(complete_pass: float, probability: float) -> float:
+    """independent_cpoe.py: residual is complete_pass minus the fitted probability."""
+    return complete_pass - probability
+
+
+def logistic_probability(offset: float, weight: float, z: float) -> float:
+    """independent_cpoe.py fit step: 1 / (1 + exp(-(offset + weight * z)))."""
+    return 1.0 / (1.0 + math.exp(-(offset + weight * z)))
+
+
+def margin_residual(result: float, spread_line: float) -> float:
+    """scoredist.py: result - spread_line."""
+    return result - spread_line
+
+
+def total_residual(total: float, total_line: float) -> float:
+    """scoredist.py: total - total_line."""
+    return total - total_line
+
+
+def push_adjusted(p_side: float, p_push: float) -> float:
+    """scoredist.py: p_side / max(1e-9, 1 - p_push)."""
+    return p_side / max(1e-9, 1.0 - p_push)
+
+
+def home_minus_away(home: float | None, away: float | None) -> float | None:
+    """Stated on the drive, sticks, and completion features: home minus away, null if either side is null."""
+    if home is None or away is None:
+        return None
+    return home - away
