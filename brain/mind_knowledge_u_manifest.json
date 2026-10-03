@@ -1,6 +1,6 @@
 {
-  "rows": 62691,
-  "shards": 46,
+  "rows": 68040,
+  "shards": 54,
   "recount_notes": "2026-10-03 recount: manifest previously claimed u_00=23,743 rows; branch file actually holds 22,282 valid rows and u_01 holds 1,461 (22,282+1,461=23,743 \u2014 the original figure was u_00+u_01 combined, misattributed to u_00 alone). u_02/u_04 sports rows (9,650) and u_03 (536) are as-reported, not yet recounted. Only u_05/u_06/u_07 are full-fidelity; u_00-u_04 bodies truncated ~4-5k chars.",
   "shards_detail": [
     {
@@ -67,6 +67,21 @@
       "bytes": 67455986,
       "source": "local GSE dirs deep: 3,802 files full content (gse-discovery 1,062, mimo-verl 1,332, gse-intelligence-build 265, gse-repo-intel 199, wiring-wave2 279, improve-ledger-work 221, qb-behavioral-profiles 216, Kumo 22, IG 110, home JSONs) \u2014 binaries as schema+stats+sample, venv junk excluded",
       "commit": "48fc2e4"
+    },
+    {
+      "file": "brain/mind_knowledge_u_11_dataassets_00.jsonl",
+      "rows": 247,
+      "bytes": 1498112,
+      "source": "binary data-asset inventories: 21 pickle estimator structures, 159+ parquets schema+stats (pbp 1999-2025, depth charts, injuries, officials), FTN charting schema-only engine-excluded, qb-behavioral 19, TRAIN-NOW 5, whalelay 3, vendor gse-dataset 35 (no diff vs main)",
+      "extraction_script": "docs/research/2026-10-03/engine-plan/tools/dataassets_inventory.py",
+      "commit": "1330c3b"
+    },
+    {
+      "files": "brain/mind_knowledge_raw_00..06.jsonl",
+      "rows": 5102,
+      "bytes": 134721317,
+      "source": "raw preservation corpus: complete full text of all 5,102 research-corpus files, 127M chars \u2014 the every-word foundation (was local-only, now on branch)",
+      "commit": "4effa14"
     }
   ],
   "authoritative_ledger": "docs/research/2026-10-03/engine-plan/COVERAGE-LEDGER.md"
