@@ -186,5 +186,12 @@
  "clears_zero": [
   "cpoe_pbp",
   "adot"
- ]
+ ],
+ "season_split_adot": {
+  "2023": {"n": 239, "delta_ll": 0.001309},
+  "2024": {"n": 254, "delta_ll": -0.010545},
+  "2025": {"n": 243, "delta_ll": -0.000014},
+  "2026": {"n": 43, "delta_ll": -0.0009}
+ },
+ "not_mint": "The pooled present-row interval excludes 0 because 2024 carries it. 2023 is worse. 2025 is flat. Full-sample present-flag delta is +0.000219 and the interval covers 0. Not added."
 }
