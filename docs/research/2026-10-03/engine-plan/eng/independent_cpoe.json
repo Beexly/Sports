@@ -1,0 +1,44 @@
+{
+ "formula": "complete_pass - logistic(air_yards), fit on prior seasons only",
+ "source": "docs/engine/research/2026-10-02/corpus-deep/deep/c02/work/a04-completion-model.md",
+ "not_ngs": true,
+ "cp_cpoe_unread": true,
+ "excluded": [
+  "sack",
+  "qb_spike"
+ ],
+ "not_excluded": "throwaways have no column in this pull",
+ "floor_attempts": 30,
+ "pit": "season*100+week strictly before the game, lag 2 seasons, home minus away",
+ "coverage": 0.5349,
+ "champion_ll": 0.610621,
+ "champion_brier": 0.211529,
+ "n": 1914,
+ "tests": [
+  {
+   "name": "fillna0",
+   "n": 1914,
+   "ll": 0.610292,
+   "brier": 0.211389,
+   "delta_ll": -0.000328,
+   "ci95_ll": [
+    -0.000919,
+    0.000309
+   ],
+   "clears_zero": false
+  },
+  {
+   "name": "present_flag",
+   "n": 1914,
+   "ll": 0.610352,
+   "brier": 0.211405,
+   "delta_ll": -0.000269,
+   "ci95_ll": [
+    -0.000917,
+    0.000334
+   ],
+   "clears_zero": false
+  }
+ ],
+ "wired_into_mint": false
+}
