@@ -8,9 +8,11 @@ from equations import (
     air_yards_to_sticks,
     american_implied,
     availability_mass,
+    availability_report,
     availability_total,
     binary_completion,
     brier,
+    build_score,
     canonical_team,
     cell_token,
     clears_half,
@@ -24,6 +26,7 @@ from equations import (
     deep_rate,
     derived_markets_withheld,
     devig,
+    drive_play_kept,
     drive_state_line,
     duplicate_rate_mean,
     ece,
@@ -33,6 +36,7 @@ from equations import (
     elo_residual,
     elo_win_prob,
     encoder_age_weeks,
+    encoder_pool_ready,
     engine_point_shift,
     espn_home_projection,
     evidence_score,
@@ -45,6 +49,9 @@ from equations import (
     fair_worst,
     finite_weighted_mean,
     four_week_cv,
+    four_week_mean,
+    four_week_sd,
+    game_played,
     game_price_key,
     games_before,
     generated_before_kick,
@@ -70,6 +77,7 @@ from equations import (
     logit_contribution,
     margin_residual,
     market_log_odds,
+    market_pair_present,
     mean_or_null,
     mov_multiplier,
     n_plays_weighted_mean,
@@ -79,6 +87,7 @@ from equations import (
     normal_ci,
     odds_snapshot_stale,
     offset_log_odds,
+    out_or_doubtful,
     parse_season_key,
     placebo_fraction,
     play_published,
@@ -110,6 +119,7 @@ from equations import (
     retrospective_rationale,
     sample_median,
     scaled_weight,
+    score_history_season,
     season_aggregate_order,
     season_key_sort_key,
     season_regress,
@@ -124,6 +134,7 @@ from equations import (
     snap_share,
     snap_share_skipna,
     snap_within_window,
+    source_name_key,
     spread_neighborhood_k,
     standardize,
     stress_or_null,
@@ -138,6 +149,7 @@ from equations import (
     typed_epa,
     under_center_diff,
     under_center_rate,
+    unique_team,
     unknown_qb_rating,
     unscaled_z,
     varying_column,
@@ -501,6 +513,44 @@ class EquationTests(unittest.TestCase):
         self.assertTrue(retrospective_rationale("Retrospective look"))
         self.assertFalse(retrospective_rationale(None))
         self.assertEqual(game_price_key("2026_04_KC_BUF", 0.12344), ("2026_04_KC_BUF", 0.1234))
+
+
+
+    def test_windows_sd_and_report_filters(self):
+        self.assertIsNone(four_week_mean([1.0, 2.0, 3.0]))
+        self.assertEqual(four_week_mean([0.0, 0.0, 0.0, 0.0]), 0.0)
+        self.assertEqual(four_week_mean([1.0, 2.0, 3.0, 4.0]), 2.5)
+        self.assertIsNone(four_week_sd([1.0, 2.0]))
+        self.assertEqual(four_week_sd([0.0, 0.0, 0.0, 0.0]), 0.0)
+        self.assertIsNone(four_week_cv([0.0, 0.0, 0.0, 0.0]))
+        self.assertAlmostEqual(four_week_sd([1.0, 1.0, 1.0, 5.0]), (sum((v - 2.0) ** 2 for v in (1, 1, 1, 5)) / 3) ** 0.5)
+        self.assertEqual(unique_team(["KC"]), "KC")
+        self.assertIsNone(unique_team(["KC", "BUF"]))
+        self.assertIsNone(unique_team(None))
+        self.assertEqual(source_name_key("NGS/Passing"), "ngs passing")
+        self.assertEqual(build_score(2, "claimed"), 1.2)
+        self.assertEqual(build_score(None, "measured"), 0.0)
+        self.assertTrue(score_history_season(2018, 2026))
+        self.assertFalse(score_history_season(2017, 2026))
+        self.assertFalse(score_history_season(2026, 2026))
+        self.assertTrue(encoder_pool_ready(5000))
+        self.assertFalse(encoder_pool_ready(4999))
+        self.assertTrue(out_or_doubtful("Out"))
+        self.assertFalse(out_or_doubtful("Questionable"))
+        self.assertTrue(availability_report("Questionable", "WR"))
+        self.assertFalse(availability_report("Out", "QB"))
+        self.assertFalse(availability_report(None, "WR"))
+        self.assertTrue(drive_play_kept("KC", 4, 1, 1))
+        self.assertFalse(drive_play_kept("KC", 0, 10, 75))
+        self.assertFalse(drive_play_kept(None, 1, 10, 75))
+        self.assertFalse(drive_play_kept("KC", 2, None, 75))
+        self.assertTrue(market_pair_present("-110", "110"))
+        self.assertFalse(market_pair_present("", "-110"))
+        self.assertFalse(market_pair_present(None, "-110"))
+        self.assertTrue(game_played("3"))
+        self.assertTrue(game_played("0"))
+        self.assertFalse(game_played(""))
+        self.assertFalse(game_played(None))
 
 
 if __name__ == "__main__":

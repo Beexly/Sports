@@ -1173,3 +1173,85 @@ def game_price_key(game_id: str, q: float) -> tuple[str, float]:
     """gse_eval.py: one row per game and de-vigged price rounded to 4 decimals."""
     return (game_id, round(q, 4))
 
+
+def four_week_mean(prior: Sequence[float]) -> float | None:
+    """roll_trust.py: mean of exactly four prior shares. Fewer than four is null. A zero mean is kept; the cv is what becomes null."""
+    if len(prior) != 4:
+        return None
+    if any(value is None or value != value for value in prior):
+        return None
+    return sum(prior) / 4.0
+
+
+def four_week_sd(prior: Sequence[float]) -> float | None:
+    """roll_trust.py: sample standard deviation with divisor 3 on exactly four prior shares. Fewer than four is null. A zero mean still has an sd."""
+    if len(prior) != 4:
+        return None
+    if any(value is None or value != value for value in prior):
+        return None
+    mean = sum(prior) / 4.0
+    var = sum((value - mean) ** 2 for value in prior) / 3.0
+    return math.sqrt(var)
+
+
+def unique_team(teams: Sequence[str] | None) -> str | None:
+    """int_parent.py team_for: the team only when exactly one id is listed. None or more than one is null."""
+    if teams is None or len(teams) != 1:
+        return None
+    return teams[0]
+
+
+def source_name_key(name: str) -> str:
+    """corpus_reduce.py: lowercase, each run of non-word characters becomes one space, then strip."""
+    import re
+
+    return re.sub(r"\W+", " ", name.lower()).strip()
+
+
+def build_score(relevance: float | None, evidence: str | None) -> float:
+    """corpus_reduce.py: the evidence score rounded to 2 decimals."""
+    return round(evidence_score(relevance, evidence), 2)
+
+
+def score_history_season(row_season: int, target_season: int, window: int = 8) -> bool:
+    """scoredist.py: a training season is strictly before T and no older than T - 8."""
+    return row_season < target_season and row_season >= target_season - window
+
+
+def encoder_pool_ready(n_plays: float, floor: float = 5000.0) -> bool:
+    """encoder_adj.py: a week is skipped when plays before the cutoff are under 5000."""
+    return n_plays >= floor
+
+
+def out_or_doubtful(report_status: str | None) -> bool:
+    """injury_signal.py: the snap-weighted sum keeps Out and Doubtful only."""
+    return report_status in ("Out", "Doubtful")
+
+
+def availability_report(report_status: str | None, position: str | None) -> bool:
+    """data.py: Out, Doubtful, or Questionable, and the position is not QB. A missing status is false."""
+    return report_status in ("Out", "Doubtful", "Questionable") and position != "QB"
+
+
+def drive_play_kept(posteam: str | None, down: float | None, ydstogo: float | None, yardline_100: float | None) -> bool:
+    """drive_linear.py: posteam is present, down is from 1 through 4, and ydstogo and yardline_100 are present."""
+    if posteam is None or posteam == "":
+        return False
+    if down is None or down != down or not (1 <= down <= 4):
+        return False
+    if ydstogo is None or ydstogo != ydstogo:
+        return False
+    if yardline_100 is None or yardline_100 != yardline_100:
+        return False
+    return True
+
+
+def market_pair_present(home_ml, away_ml) -> bool:
+    """baseline.py: a de-vigged price is computed only when both moneylines are present and not blank."""
+    return bool(home_ml) and bool(away_ml)
+
+
+def game_played(result: str | None) -> bool:
+    """baseline.py: played when result is not an empty string. A missing result is not played."""
+    return result is not None and result != ""
+
