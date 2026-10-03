@@ -4,24 +4,42 @@ import unittest
 
 from equations import (
     air_yards_to_sticks,
+    american_implied,
+    brier,
     complete_minus_probability,
     completion_residual,
+    decay_weight,
+    devig,
     drive_state_line,
+    ece,
+    elo_margin,
+    elo_points,
+    elo_residual,
+    elo_win_prob,
+    encoder_age_weeks,
     fair_side,
+    four_week_cv,
     home_minus_away,
+    int_on_pressure,
+    int_rate,
+    is_deep,
     league_expected_pressure,
     log_loss,
     logistic_probability,
     logit,
     margin_residual,
     mean_or_null,
+    mov_multiplier,
     promoted,
     protection_stress,
     push_adjusted,
     raw_rate_or_null,
+    season_regress,
     shrunk_cell,
+    target_share,
     team_points,
     total_residual,
+    weighted_mean,
 )
 
 
@@ -75,6 +93,37 @@ class EquationTests(unittest.TestCase):
         self.assertAlmostEqual(push_adjusted(0.5, 0.0), 0.5)
         self.assertIsNone(home_minus_away(1.0, None))
         self.assertEqual(home_minus_away(3.0, 1.0), 2.0)
+
+    def test_market_and_elo(self):
+        self.assertAlmostEqual(american_implied(100), 0.5)
+        self.assertAlmostEqual(american_implied(-110), 110 / 210)
+        self.assertAlmostEqual(devig(0.6, 0.4), 0.6)
+        self.assertEqual(elo_margin(1500, 1500, True), 0)
+        self.assertEqual(elo_margin(1500, 1500, False), 48)
+        self.assertAlmostEqual(elo_win_prob(0), 0.5)
+        self.assertAlmostEqual(season_regress(1800), 1700)
+        self.assertAlmostEqual(mov_multiplier(0, 0), 0)
+        self.assertAlmostEqual(elo_points(20, 1, 1, 0.5), 10)
+
+    def test_brier_ece_decay(self):
+        self.assertEqual(brier(1, 1), 0)
+        self.assertEqual(ece([1.0] * 4, [1.0] * 4), 0)
+        self.assertAlmostEqual(decay_weight(8), 0.5)
+        self.assertEqual(encoder_age_weeks(2026, 4, 2026, 1), 3)
+        self.assertAlmostEqual(elo_residual(0.2, 0.05), 0.15)
+
+    def test_rates_need_their_floors(self):
+        self.assertIsNone(int_rate(1, 29))
+        self.assertAlmostEqual(int_rate(3, 30), 0.1)
+        self.assertIsNone(int_on_pressure(1, 19))
+        self.assertAlmostEqual(int_on_pressure(2, 20), 0.1)
+        self.assertIsNone(target_share(3, 0))
+        self.assertEqual(is_deep(15), 1)
+        self.assertEqual(is_deep(14), 0)
+        self.assertAlmostEqual(weighted_mean([1, 3], [1, 1]), 2)
+        self.assertIsNone(weighted_mean([1], [0]))
+        self.assertIsNone(four_week_cv([1, 1, 1]))
+        self.assertEqual(four_week_cv([1, 1, 1, 1]), 0)
 
 
 if __name__ == "__main__":
