@@ -461,6 +461,8 @@ function blockedActivationReason(status: EvidenceActivationStatus): string {
       return "Activation is blocked by low-trust evidence.";
     case "BLOCKED_SMALL_SAMPLE":
       return "Activation is blocked by insufficient sample size.";
+    case "DARK":
+      return "Dark: no point-in-time producer, so the evaluator does not vote.";
     case "ACTIVE":
     case "SHADOW_ONLY":
       return "";
