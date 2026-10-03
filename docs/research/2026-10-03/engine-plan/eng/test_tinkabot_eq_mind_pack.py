@@ -51,22 +51,21 @@ class TestTinkabotEqMindPack(unittest.TestCase):
         pack.write_shard(self.rows, out)
         text = out.read_text(encoding="utf-8")
         self.assertNotIn("placeholder", text.lower())
-        self.assertGreater(out.stat().st_size, 500)
+        self.assertGreater(out.stat().st_size, 200)
         lines = [ln for ln in text.splitlines() if ln.strip()]
         self.assertEqual(len(lines), len(self.rows))
-        self.assertEqual(len(lines), 5)
+        self.assertEqual(len(lines), 3)
 
     def test_required_columns_present(self):
-        self.assertIn("REQUIRED_FEATURES_V1", self.required)
         self.assertIn("REQUIRED_LEARN_WIDE", self.required)
         known = set()
         for cols in self.required.values():
             known.update(cols)
-        self.assertIn("mkt", known)
-        self.assertIn("elo", known)
         self.assertIn("weekly_tendencies__shotgun_rate", known)
         self.assertIn("proe_early_neutral__n_plays", known)
         self.assertNotIn("qb_pit", known)
+        self.assertNotIn("mkt", known)
+        self.assertNotIn("elo", known)
 
     def test_inputs_exist_flag(self):
         for row in self.rows:
@@ -76,23 +75,18 @@ class TestTinkabotEqMindPack(unittest.TestCase):
         out = ROOT / pack.SHARD_NAME
         pack.write_shard(self.rows, out)
         parsed = [json.loads(ln) for ln in out.read_text(encoding="utf-8").splitlines() if ln.strip()]
-        self.assertEqual(len(parsed), 5)
+        self.assertEqual(len(parsed), 3)
         names = {r["function"] for r in parsed}
         self.assertEqual(
             names,
-            {
-                "home_minus_away",
-                "under_center_rate",
-                "under_center_diff",
-                "market_elo_residual",
-                "proe_or_null",
-            },
+            {"home_minus_away", "under_center_rate", "proe_or_null"},
         )
         for gone in (
+            "under_center_diff",
+            "market_elo_residual",
             "offset_family_eta",
             "qb_pit_plus_elo_res",
             "row_column_edges",
-            "availability_group_sum",
         ):
             self.assertNotIn(gone, names)
 
