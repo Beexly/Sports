@@ -27,7 +27,7 @@ interface LossDetail {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Loss Room Detail - Galaxy Sports Edge",
+  title: "Loss Room Detail",
   description: "A canonical loss record with the original reasoning, signal receipt, and post-mortem status.",
 };
 

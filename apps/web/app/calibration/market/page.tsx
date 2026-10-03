@@ -30,13 +30,12 @@ import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { ReliabilityChart } from "@/components/calibration/reliability-chart";
 import { MetricHonesty } from "@/components/ui/metric-honesty";
-import { BRAND_NAME } from "@/lib/brand";
 import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 import { loadMarketCalibrationBacktest } from "@/lib/calibration/market-backtest";
 import { loadEloVsMarketBacktest } from "@/lib/calibration/elo-backtest";
 
 export const metadata: Metadata = {
-  title: `Market calibration baseline · ${BRAND_NAME}`,
+  title: `Market calibration baseline`,
   description:
     "The closing line's own Brier score, ECE, and reliability curve over the full historical archive — the efficient-market baseline the platform model must beat, and an Elo-vs-market comparison. No picks, no fabricated stats.",
   alternates: { canonical: "/calibration/market" },

@@ -26,15 +26,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
-import { BRAND_NAME } from "@/lib/brand";
 import { evaluateBoardGate, type GateOutcome, type GateOutcomeCode } from "@/lib/board/gate-consumer";
 import { resolveGateSlate, type GateMode } from "@/lib/board/gate-page-mode";
 
 export const metadata: Metadata = {
-  title: `How the gate decides · ${BRAND_NAME}`,
+  title: `How the gate decides`,
   description:
     "The selective gate, run live: which calls clear the bar, which are refused, and which we decline to judge at all because the evidence is not there yet.",
   alternates: { canonical: "/board/gate" },
+  robots: { index: false, follow: false },
 };
 
 // Runs the gate per request; never statically frozen. Required in live mode —

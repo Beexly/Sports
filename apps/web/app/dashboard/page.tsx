@@ -15,6 +15,7 @@ import { reconcileUserEntitlement } from "@/lib/billing/reconcile-entitlements";
 import { BRAND_NAME } from "@/lib/brand";
 import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
 import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
+import { PICK_GRADE_LABELS, RISK_LEVEL_LABELS, type PickGrade, type RiskLevel } from "@sports/types";
 import { subDays, format, startOfDay, endOfDay } from "date-fns";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
 
@@ -447,11 +448,13 @@ export default async function DashboardPage({
                 settle. We do not publish a win rate until we have a
                 meaningful sample.
               </p>
+              {/* FE-11: this is the moment the page rendered, not a data sync
+                  timestamp — it must not read as one. */}
               <p
                 data-testid="dashboard-last-sync"
                 className="mt-3 font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2"
               >
-                As of {format(new Date(), "MMM d, yyyy · h:mm a")}
+                Rendered {format(new Date(), "MMM d, yyyy · h:mm a")}
               </p>
             </section>
           </div>
@@ -565,7 +568,7 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
           </span>
         )}
         <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-          {pick.riskLevel}
+          {RISK_LEVEL_LABELS[pick.riskLevel as RiskLevel]?.label ?? pick.riskLevel}
         </span>
       </div>
     </li>
@@ -573,10 +576,15 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
 }
 
 function GradeBadge({ grade }: { grade: string }) {
+  // FE-11: grades are the Prisma PickGrade enum; render the shared human label,
+  // never the raw enum name. Unknown values keep a neutral badge with the raw
+  // value rather than an empty badge.
+  const info = PICK_GRADE_LABELS[grade as PickGrade];
   const styles: Record<string, string> = {
-    A: "bg-verify/15 text-verify",
-    B: "bg-orbital-cyan/15 text-orbital-cyan",
-    C: "bg-titanium text-ion-2",
+    ELITE_PLAY: "bg-verify/15 text-verify",
+    STRONG_PLAY: "bg-verify/15 text-verify",
+    SOLID_PLAY: "bg-orbital-cyan/15 text-orbital-cyan",
+    LEAN: "bg-titanium text-ion-2",
   };
   return (
     <span
@@ -585,7 +593,7 @@ function GradeBadge({ grade }: { grade: string }) {
         styles[grade] ?? "bg-titanium text-ion-2",
       ].join(" ")}
     >
-      {grade}
+      {info ? info.label : grade}
     </span>
   );
 }

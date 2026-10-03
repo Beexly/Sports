@@ -1,10 +1,9 @@
 "use client";
 
-import { HoloTilt } from "@/components/motion/holo-tilt";
 
-import { useState, type ReactNode } from "react";
+import { useEffect, useState, type ReactNode } from "react";
 import Link from "next/link";
-import { SubscribeButton } from "./subscribe-button";
+import { SubscribeButton, readCheckoutResume } from "./subscribe-button";
 
 /**
  * Pricing plan cards with a monthly/annual billing toggle.
@@ -41,6 +40,23 @@ export function PricingPlans({
   const [interval, setInterval] = useState<Interval>("month");
   const annual = interval === "year";
 
+  // FE-08: a visitor returning from the sign-in bounce resumes the billing
+  // interval they checked out with. Tier/DOB restore inside SubscribeButton.
+  useEffect(() => {
+    const resume = readCheckoutResume();
+    if (resume) {
+      setInterval(resume.interval === "year" ? "year" : "month");
+    }
+  }, []);
+
+  // FE-18: the headline savings figure is computed from the same plan data the
+  // cards render, never a hardcoded percent. With no computable number (e.g. a
+  // phase before annual pricing exists) the line disappears instead of guessing.
+  const savingsPcts = plans
+    .map((plan) => plan.annualSavingsPct)
+    .filter((value): value is number => typeof value === "number" && value > 0);
+  const maxSavingsPct = savingsPcts.length > 0 ? Math.max(...savingsPcts) : null;
+
   return (
     <div>
       {/* Billing toggle */}
@@ -57,7 +73,11 @@ export function PricingPlans({
             Annual
           </ToggleButton>
         </div>
-        <span className="text-xs font-medium text-brand-400">Save up to 45% annually</span>
+        {maxSavingsPct !== null && (
+          <span className="text-xs font-medium text-brand-400">
+            Save up to {maxSavingsPct}% annually
+          </span>
+        )}
       </div>
 
       {/* Plan cards */}
@@ -67,7 +87,7 @@ export function PricingPlans({
           const isElite = plan.id === "ELITE";
           const isPaid = plan.id !== "FREE";
           return (
-            <HoloTilt key={plan.id} className="h-full">
+            <div key={plan.id} className="h-full">
             <div
               className={[
                 "relative flex h-full flex-col rounded-2xl border p-6",
@@ -136,7 +156,7 @@ export function PricingPlans({
               <div className="mt-auto">
                 {plan.id === "FREE" ? (
                   <Link
-                    href="/auth/signin"
+                    href="/dashboard"
                     className="block w-full rounded-xl border border-titanium bg-titanium py-2.5 text-center text-sm font-semibold text-ion-1 transition-colors hover:bg-titanium"
                   >
                     {plan.cta}
@@ -153,7 +173,7 @@ export function PricingPlans({
                 )}
               </div>
             </div>
-            </HoloTilt>
+            </div>
           );
         })}
       </div>

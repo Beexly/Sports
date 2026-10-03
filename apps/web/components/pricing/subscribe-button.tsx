@@ -1,6 +1,6 @@
 "use client";
 
-import { useId, useRef, useState } from "react";
+import { useEffect, useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { track } from "@/lib/analytics/events";
@@ -42,6 +42,63 @@ const PRIMARY_CLASSES =
   "w-full rounded-xl bg-brand-600 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-brand-500 disabled:cursor-not-allowed disabled:opacity-60";
 const GHOST_CLASSES =
   "w-full rounded-xl border border-ultraviolet/60 bg-ultraviolet/10 py-2.5 text-sm font-semibold text-ultraviolet-glow transition-colors hover:bg-ultraviolet/25 disabled:cursor-not-allowed disabled:opacity-60";
+
+// ─────────────────────────────────────────────
+// FE-08: checkout resume across the sign-in bounce
+// ─────────────────────────────────────────────
+// An anonymous visitor who clicks a paid CTA gets bounced to /auth/signin
+// (401 → callbackUrl=/pricing). Without persistence the returned visitor
+// finds every choice reset. We persist tier/interval/DOB at click time in
+// sessionStorage (per-tab, dies with the tab — never localStorage) and
+// restore them on return. TTL bounds staleness; the entry is cleared once
+// checkout actually opens. No server schema change, no new durable state.
+
+const RESUME_KEY = "gse.checkoutResume";
+const RESUME_TTL_MS = 30 * 60 * 1000;
+
+export type CheckoutResume = {
+  tier: string;
+  interval: string;
+  dateOfBirth: string;
+  at: number;
+};
+
+export function readCheckoutResume(): CheckoutResume | null {
+  try {
+    const raw = sessionStorage.getItem(RESUME_KEY);
+    if (!raw) return null;
+    const parsed = JSON.parse(raw) as Partial<CheckoutResume>;
+    if (
+      typeof parsed.tier !== "string" ||
+      typeof parsed.dateOfBirth !== "string" ||
+      (parsed.interval !== "month" && parsed.interval !== "year") ||
+      typeof parsed.at !== "number" ||
+      Date.now() - parsed.at > RESUME_TTL_MS
+    ) {
+      return null;
+    }
+    return parsed as CheckoutResume;
+  } catch {
+    return null;
+  }
+}
+
+export function writeCheckoutResume(entry: Omit<CheckoutResume, "at">): void {
+  try {
+    sessionStorage.setItem(RESUME_KEY, JSON.stringify({ ...entry, at: Date.now() }));
+  } catch {
+    // Storage unavailable (private mode, quota): resume simply does not
+    // happen. The primary checkout flow does not depend on it.
+  }
+}
+
+export function clearCheckoutResume(): void {
+  try {
+    sessionStorage.removeItem(RESUME_KEY);
+  } catch {
+    // same as above — best effort only
+  }
+}
 
 /**
  * Per-click checkout-intent id, with a fallback.
@@ -92,6 +149,15 @@ export function SubscribeButton({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [dateOfBirth, setDateOfBirth] = useState("");
+  // FE-08: this button only mounts on /pricing, so an entry whose tier matches
+  // this card is this card's own bounced checkout. Restore the DOB the visitor
+  // already typed; the parent restores the shared billing interval.
+  useEffect(() => {
+    const resume = readCheckoutResume();
+    if (resume && resume.tier === tier) {
+      setDateOfBirth(resume.dateOfBirth);
+    }
+  }, [tier]);
   // Unique id so assistive tech can announce the recurring-billing disclosure as
   // the button's description (aria-describedby). useId keeps it unique even when
   // several SubscribeButtons render on the same /pricing page.
@@ -118,6 +184,9 @@ export function SubscribeButton({
       setError("Enter your date of birth. You must be 21 or older to subscribe.");
       return;
     }
+    // FE-08: persist before the network round-trip so the sign-in bounce
+    // (401 below) returns the visitor to a card that remembers their choices.
+    writeCheckoutResume({ tier, interval, dateOfBirth });
     setLoading(true);
     // Intent signal — the user committed to moving up a tier (before the
     // network round-trip). Inert no-op until a provider is wired.
@@ -160,6 +229,8 @@ export function SubscribeButton({
         return;
       }
 
+      // Checkout is opening — the resume entry has served its purpose.
+      clearCheckoutResume();
       window.location.href = data.url;
     } catch {
       setError(

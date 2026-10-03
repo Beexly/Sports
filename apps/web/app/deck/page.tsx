@@ -58,7 +58,7 @@ export default function DeckPage(): JSX.Element {
   const jarvisPlate = getPlate("jarvis-speaking");
 
   return (
-    <div className="relative min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
+    <div id="main-content" className="relative min-h-screen w-full overflow-x-hidden bg-carbon text-ion">
       <SentientWeather state="active" intensity={0.7} />
       <Nav />
       <SignalSpine />

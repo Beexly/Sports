@@ -155,6 +155,10 @@ describe("/board/gate — illustrative mode (the default)", () => {
   it("sets a canonical metadata entry", () => {
     expect(metadata.alternates?.canonical).toBe("/board/gate");
   });
+
+  it("stays out of search indexes while it runs on illustrative data (FE-12)", () => {
+    expect(metadata.robots).toEqual({ index: false, follow: false });
+  });
 });
 
 /**

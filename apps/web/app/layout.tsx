@@ -12,7 +12,6 @@ import {
   SUPPORT_EMAIL,
 } from "@/lib/brand";
 import { CommandPalette } from "@/components/ui/command-palette";
-import { GalaxyCursor } from "@/components/ui/galaxy-cursor";
 import { SentryClientInit } from "@/components/observability/SentryClientInit";
 import { PageExplainerAuto } from "@/components/explainers/page-explainer";
 import {
@@ -210,7 +209,6 @@ export default function RootLayout({
         </a>
         {children}
         <CommandPalette />
-        <GalaxyCursor />
         {/* SentientShell (GhostJarvis "machine thoughts", a coin-flip "data
             uncertainty" glitch, dream mode, thermal toggle) is no longer mounted
             on public routes: first-person machine narration and a random
