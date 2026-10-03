@@ -57,6 +57,8 @@ export type ConsensusClaimPickSlice = {
   readonly consensusPct?: number | null;
   readonly bookmakerCount?: number | null;
   readonly dataFreshnessAt?: Date | string | null;
+  /** Sport key when known — used to suppress fixed-ladder tautologies (Lane C). */
+  readonly sportKey?: string | null;
 };
 
 /** True when the free teaser asserts a quantified bookmaker-consensus claim. */
@@ -66,10 +68,23 @@ export function isBookmakerConsensusClaim(text: string | null | undefined): bool
 }
 
 /**
+ * Lane C — MLB run-line consensus tautology.
+ * Every baseball book quotes the same fixed ladder (1.5 / 2.5 / 3.5), so
+ * "100% bookmaker consensus" is true by construction and is NOT evidence of
+ * agreement. Public copy that asserts a consensus percentage on these sports
+ * is suppressed (bind returns null) even when the numbers look valid.
+ */
+export function isFixedLadderConsensusSport(sportKey: string | null | undefined): boolean {
+  if (!sportKey) return false;
+  return sportKey.toLowerCase().startsWith("baseball");
+}
+
+/**
  * Bind a public consensus claim to evidence, or return null (do not render).
  *
  * Rules:
  * - Must match the consensus teaser pattern.
+ * - Not a fixed-ladder sports consensus tautology (baseball run lines).
  * - bookmakerCount ≥ 2 (MIN_BOOKMAKERS in prediction-engine).
  * - dataFreshnessAt present and parseable.
  * - consensusPct in (0, 1].
@@ -80,6 +95,9 @@ export function bindPublicConsensusClaim(
 ): PublicConsensusEvidence | null {
   const text = pick.reasoningShort?.trim() ?? "";
   if (!isBookmakerConsensusClaim(text)) return null;
+  // Fixed-ladder tautology: a 1.0 consensus on baseball run lines is structural.
+  // Never bind it as a bookmaker-agreement claim.
+  if (isFixedLadderConsensusSport(pick.sportKey)) return null;
 
   const bookmakerCount = Math.floor(Number(pick.bookmakerCount ?? 0));
   if (!Number.isFinite(bookmakerCount) || bookmakerCount < 2) return null;
@@ -109,6 +127,7 @@ export type ConsensusEvidenceSource = {
   readonly consensusPct?: number | null;
   readonly bookmakerCount?: number | null;
   readonly dataFreshnessAt?: Date | string | null;
+  readonly sportKey?: string | null;
 };
 
 export type GatedConsensusClaim = {

@@ -172,6 +172,21 @@ export type { FixtureCollapseRow } from "./fixture-collapse.js";
 // the stale backfill) can stamp the close after a successful grade (C-95).
 export { markClosingSnapshotsIfEnabled } from "./line-archive.js";
 export type { MarkClosingSnapshotsIfEnabledResult } from "./line-archive.js";
+// PR #868 — cursor bounds + settle closer (tests / ops). Filter shape is
+// `market: { in: markets }` on main — the 2026-08-22 scalar-column outage fix.
+export {
+  markClosingSnapshots,
+  LINE_ARCHIVE_PAGE_TAKE,
+  LINE_ARCHIVE_PAGE_MAX,
+} from "./line-archive.js";
+export type { MarkClosingSnapshotsResult } from "./line-archive.js";
+// Lane C — fail-closed B2B tier stamp (generation → Pick.tier).
+export {
+  resolveStoredPickTier,
+  isPremiumPickRow,
+  PREMIUM_CONFIDENCE_THRESHOLD,
+} from "./pick-tier.js";
+export type { TierStampablePick } from "./pick-tier.js";
 // The flag predicate itself, so a reader (e.g. the ops freshness surface)
 // asks the same question the capture path does instead of restating it.
 export { isLineArchiveEnabled } from "./line-archive.js";

@@ -32,6 +32,7 @@ import {
 import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
 import { collapseGameRowsToFixtures } from "./fixture-collapse.js";
 import { isNflPreseasonKickoff, logMintWithhold } from "./mint-withhold.js";
+import { resolveStoredPickTier } from "./pick-tier.js";
 
 /**
  * Rows read from `games` before the per-fixture collapse. Sized well above the
@@ -454,7 +455,9 @@ export async function generateSignalSlate(opts?: {
     const edgePts = Math.max(0, Math.round((trueProb - 0.5) * 100));
     mintedMatchups.add(matchupKey);
     const pickGrade = MODEL_SIGNAL_GRADE;
-    const tier = confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE";
+    // Lane C — same fail-closed stamp as process-sport (never store FREE on
+    // a PREMIUM-confidence row just because tier was missing).
+    const tier = resolveStoredPickTier({ confidence, tier: confidence >= PREMIUM_CONFIDENCE_THRESHOLD ? "PREMIUM" : "FREE" });
     const sources = blend.sources;
     const sourcesLabel = sources.join(", ");
 

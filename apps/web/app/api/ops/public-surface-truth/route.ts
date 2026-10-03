@@ -59,6 +59,7 @@ import { selectiveRuntimePosture } from "@/lib/calibration/selective-publish-run
 import { loadRankingPauseApply } from "@/lib/ops/ranking-pause-durable";
 import { assessSchedulerLiveness } from "@/lib/ops/scheduler-liveness";
 import { maybeRunTrafficHeartbeat } from "@/lib/ops/traffic-heartbeat";
+import { runInBackground } from "@/lib/ops/waitUntil";
 import {
   FREE_SPINE_DURABLE_SLA_MS,
   freeSpineSnapAgeMs,
@@ -411,7 +412,7 @@ export async function GET(request: Request) {
   // API route in production (~every 7 min), which makes it the best available
   // trigger while both schedulers are down. Fire-and-forget: never awaited,
   // never allowed to fail this response.
-  void maybeRunTrafficHeartbeat().catch(() => undefined);
+  runInBackground(maybeRunTrafficHeartbeat());
 
   const creditStack = loadCreditStackPosture();
   const billingMoney = loadBillingMoneyPosture();

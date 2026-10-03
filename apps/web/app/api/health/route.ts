@@ -4,6 +4,7 @@ import { computeLiveCapabilityProbes } from "@/lib/health/live-capability-probes
 import { composeCapabilityGraph, projectCapabilityGraph } from "@/lib/health/capability-graph";
 import { assessSchedulerLiveness } from "@/lib/ops/scheduler-liveness";
 import { maybeRunTrafficHeartbeat } from "@/lib/ops/traffic-heartbeat";
+import { runInBackground } from "@/lib/ops/waitUntil";
 
 // A no-arg GET handler is statically cached by Next 14 unless it opts out —
 // which served hours-old "healthy" snapshots from the Vercel edge (observed
@@ -64,10 +65,11 @@ export async function GET(request: Request): Promise<NextResponse> {
 
   // Ingestion failsafe. Fires ONLY when the spine is already past the staleness
   // SLA and no isolate has attempted within the cooldown, so a healthy system
-  // never reaches the work. Deliberately NOT awaited: health must stay fast and
-  // must never fail because a background repair failed. See traffic-heartbeat.ts
-  // for why organic traffic is currently the only reliable trigger available.
-  void maybeRunTrafficHeartbeat().catch(() => undefined);
+  // never reaches the work. Registered via waitUntil (@vercel/functions) so the
+  // isolate does not freeze when this HTTP response closes — a bare void
+  // promise dies on Vercel mid-run. Health must still stay fast and must never
+  // fail because a background repair failed. See traffic-heartbeat.ts.
+  runInBackground(maybeRunTrafficHeartbeat());
 
   const strictOk = allOk && !settlementImpaired;
   return NextResponse.json(

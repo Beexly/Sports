@@ -51,6 +51,26 @@ export const LAYER_1_PLATFORM_BANS: ComplianceRule[] = [
     suggestion: "Use 'deterministic scoring' or 'factor model' instead.",
   },
   {
+    id: "L1-AI-POWERED-EDGE",
+    layer: 1,
+    severity: "block",
+    // Explicit lane-C copy ban: "AI-powered edge" is tout-coded and also covered
+    // by the AI-powered family above; named here so scanners that only read this
+    // rule list still fail the phrase.
+    pattern: /\bAI[- ]powered edge\b/i,
+    message: "Banned: 'AI-powered edge'. Tout vocabulary + banned AI framing.",
+    suggestion: "Use 'measured factor signal' or 'deterministic scoring'.",
+  },
+  {
+    id: "L1-TOUT-VOCAB",
+    layer: 1,
+    severity: "block",
+    // Rule-8 family: tout / certainty betting vocabulary on commercial copy.
+    pattern: /\b(lock of the day|free money|insider information|guaranteed profit)\b/i,
+    message: "Banned: tout vocabulary (lock / free money / insider information / guaranteed profit).",
+    suggestion: "Use the trust-claims safe replacements or omit the claim.",
+  },
+  {
     id: "L1-MULTIMODAL-INTELLIGENCE",
     layer: 1,
     severity: "block",

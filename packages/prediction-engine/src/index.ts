@@ -10,6 +10,7 @@ export {
   isThreeWayMoneylineSport,
   isPublishableSpreadLine,
   isBaseballSport,
+  isFixedLadderSpreadMarket,
   BASEBALL_RUN_LINES,
   isQuotedBookLine,
   lineIntegrityPublishGuardEnabled,
@@ -267,6 +268,17 @@ export {
   eloHomeWinFromRatings,
 } from "./elo-from-results.js";
 export type { EloResultGame } from "./elo-from-results.js";
+// Engine constants (PR #867). Founder-gated when a priced path consumes them.
+export {
+  SCALE_CONSTANT,
+  HFA_POINTS,
+  NFL_EPA_MIN_GAMES as ENGINE_NFL_EPA_MIN_GAMES,
+} from "./engine-constants.js";
+// A25 weather — wind on passing props ONLY (not game totals).
+export {
+  WIND_YDS_PER_MPH_PASSING_PROPS,
+  applyWindToPassingPropYards,
+} from "./edge-lab/features/nfl-weather.js";
 // ESPN PowerIndex → independent win probability (logistic). Model-fair only.
 export {
   powerIndexToWinProbs,

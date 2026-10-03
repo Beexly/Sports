@@ -1180,6 +1180,17 @@ export function isBaseballSport(sportKey: string): boolean {
   return sportKey.toLowerCase().startsWith("baseball");
 }
 
+/**
+ * Is this sport's SPREAD market a fixed ladder (every book quotes the same
+ * short set of run lines)? When true, `consensusPct ≈ 1.0` is a TAUTOLOGY of
+ * the market structure, not evidence of bookmaker agreement. Customer copy
+ * must never claim "100% bookmaker consensus" on these rows — the number is
+ * true by construction and therefore uninformative.
+ */
+export function isFixedLadderSpreadMarket(sportKey: string): boolean {
+  return isBaseballSport(sportKey);
+}
+
 /** Is `line` a run line a baseball book actually offers? Non-baseball: always true. */
 export function isPublishableSpreadLine(sportKey: string, line: number): boolean {
   if (!isBaseballSport(sportKey)) return true;

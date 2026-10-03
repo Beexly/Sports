@@ -14,6 +14,7 @@
 
 import type { IndependentMarketFairValue } from "@sports/types";
 import { sigmoidMargin } from "./espn-powerindex.js";
+import { NFL_EPA_MIN_GAMES as ENGINE_NFL_EPA_MIN_GAMES } from "./engine-constants.js";
 
 const EPS = 1e-6;
 
@@ -25,8 +26,9 @@ function clipProb(p: number): number {
 export const NFL_EPA_MARGIN_SCALE = 0.12;
 /** Default home-field advantage in EPA/play units. */
 export const NFL_EPA_HFA = 0.025;
-/** Minimum games of efficiency history per team before we opine. */
-export const NFL_EPA_MIN_GAMES = 4;
+/** Minimum games of efficiency history per team before we opine.
+ *  Wired to engine-constants.ts (PR #867). */
+export const NFL_EPA_MIN_GAMES = ENGINE_NFL_EPA_MIN_GAMES;
 
 export type NflEpaFairValueInput = {
   readonly homeOverall: number;

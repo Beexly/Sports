@@ -214,6 +214,11 @@ export function bindTeamContext(args: {
       return null;
     }
     if (field === "wx_total_suppression") {
+      // Lane C: this cell is the GAME-ENVIRONMENT prior for team-total context.
+      // Passing/receiving prop yards must use WIND_YDS_PER_MPH_PASSING_PROPS
+      // (applyWindToPassingPropYards) instead of — not in addition to — this
+      // index. Callers that already applied the props wind coefficient must
+      // not request wx_total_suppression on the same yards baseline.
       if (!wx) return refuse("no_forecast", "wx_total_suppression");
       const issuedMs = Date.parse(wx.forecastIssuedAt);
       if (!Number.isFinite(issuedMs) || issuedMs > decisionMs) {

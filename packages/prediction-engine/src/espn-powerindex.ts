@@ -14,6 +14,7 @@
  */
 
 import type { IndependentMarketFairValue } from "@sports/types";
+import { HFA_POINTS } from "./engine-constants.js";
 
 const EPS = 1e-6;
 
@@ -32,9 +33,11 @@ export const POWERINDEX_MARGIN_SCALE: Readonly<Record<PowerIndexSport, number>> 
   basketball_ncaab: 11.5,
 };
 
-/** Home field advantage in power-index points (same units as FPI). */
+/** Home field advantage in power-index points (same units as FPI).
+ *  NFL HFA is wired to HFA_POINTS (engine-constants.ts, PR #867). Changing
+ *  this feeds independent fair values and is MODEL_VERSION-affecting. */
 export const POWERINDEX_HFA: Readonly<Record<PowerIndexSport, number>> = {
-  americanfootball_nfl: 2.0,
+  americanfootball_nfl: HFA_POINTS,
   americanfootball_ncaaf: 2.5,
   basketball_nba: 2.5,
   basketball_ncaab: 3.0,

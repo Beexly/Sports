@@ -256,8 +256,11 @@ describe("markClosingSnapshots", () => {
 
     const result = await markClosingSnapshots(db, "game_1", kickoff);
 
+    // Cursor-chunked (PR #868): first page is take=5000, orderBy capturedAt asc.
     expect(db.oddsLineSnapshot.findMany).toHaveBeenCalledWith({
       where: { gameId: "game_1", capturedAt: { lte: kickoff } },
+      orderBy: { capturedAt: "asc" },
+      take: 5000,
     });
     // Only s2 (latest SPREAD/fanduel/home) and s3 (only SPREAD/fanduel/away
     // row) are updated; s1 is superseded, s4 is already CLOSE.

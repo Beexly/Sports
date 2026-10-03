@@ -37,3 +37,14 @@ export {
   type MaterializePlanInput,
   type MaterializePlan,
 } from "./feast-arch.js";
+
+// Lane C — simulated-column denylist (dataset / feature-store integrity).
+export {
+  BANNED_FEATURE_SOURCES,
+  BANNED_FEATURE_KEY_PATTERNS,
+  isBannedFeatureSource,
+  isBannedFeatureKey,
+  scanFeatureDescriptors,
+  filterVerifiedFeatureColumns,
+  type FeatureIntegrityScanResult,
+} from "./simulated-column-denylist.js";

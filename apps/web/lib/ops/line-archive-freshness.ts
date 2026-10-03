@@ -84,6 +84,15 @@ export interface LineArchiveFreshness {
 /** Generous default: the refresh path runs every 15 minutes, so 6h is ~24 missed cycles. */
 export const LINE_ARCHIVE_STALE_AFTER_HOURS = 6;
 
+/**
+ * Data-freshness cron alert threshold (PR #866, Hermes Lane B).
+ * The 2026-08-23 → 2026-09-12 odds_line_snapshots gap went undetected for
+ * weeks. Health-alert now treats archive/capture data older than 120 minutes
+ * as unhealthy when the archive flag is on — tighter than the 6h operator
+ * default above, which is still used for long-window operator reporting.
+ */
+export const DATA_FRESHNESS_ALERT_MINUTES = 120;
+
 const MS_PER_HOUR = 3_600_000;
 
 export async function loadLineArchiveFreshness(

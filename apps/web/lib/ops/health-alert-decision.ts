@@ -6,6 +6,12 @@
 export const HEALTH_ALERT_QUIET_MS = 4 * 60 * 60 * 1000; // 4 hours
 
 /**
+ * PR #866 data-freshness floor (minutes). Shared with line-archive-freshness
+ * so the cron and the loader cannot disagree about when capture data is late.
+ */
+export const DATA_FRESHNESS_ALERT_MINUTES = 120;
+
+/**
  * Post-publish calibration drift, as the durable marker exposes it
  * (lib/ops/calibration-eligibility-durable.ts, scope ops.calibration.drift).
  * Structural on purpose: this module stays pure and free of database imports.
@@ -48,6 +54,8 @@ export type HealthAlertSnapshot = {
    * Optional so older callers keep compiling; DISABLED must never alert.
    */
   readonly lineArchive?: HealthAlertLineArchive | null;
+  /** Override for the PR #866 data-freshness floor (minutes). Defaults to 120. */
+  readonly dataFreshnessAlertMinutes?: number;
 };
 
 export type HealthAlertState = {
@@ -101,6 +109,8 @@ export function classifyHealthAlertSnapshot(input: {
    * the caller did not load it. DISABLED never contributes to unhealthy.
    */
   lineArchive?: HealthAlertLineArchive | null;
+  /** Override PR #866 data-freshness minutes (default 120). */
+  dataFreshnessAlertMinutes?: number;
 }): HealthAlertSnapshot {
   const checkErrors = Object.entries(input.checks)
     .filter(([, c]) => c.status !== "ok")
@@ -123,10 +133,18 @@ export function classifyHealthAlertSnapshot(input: {
   // a report, never a page (law 3); UNKNOWN is not a measurement and is
   // carried, not treated as proof of health or of failure.
   const lineArchive = input.lineArchive ?? null;
+  const dataFreshnessAlertMinutes =
+    input.dataFreshnessAlertMinutes ?? DATA_FRESHNESS_ALERT_MINUTES;
   const lineArchiveQuiet =
     lineArchive !== null &&
     lineArchive.enabled &&
-    (lineArchive.status === "STALE" || lineArchive.status === "SILENT");
+    (lineArchive.status === "STALE" ||
+      lineArchive.status === "SILENT" ||
+      // PR #866: alert when the archive is writing but its newest capture is
+      // already past the data-freshness floor — the Aug 23→Sep 12 silent gap
+      // class that a 6h operator threshold alone did not page on quickly enough.
+      (lineArchive.hoursSinceNewest != null &&
+        lineArchive.hoursSinceNewest * 60 > dataFreshnessAlertMinutes));
 
   // Unhealthy if any check fails, ingestion > 90m, settlement critically behind,
   // a published calibration claim has drifted below its floors, or the line

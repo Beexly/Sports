@@ -42,6 +42,30 @@ export const WEATHER_FEATURE_KEYS = [
   "wx:total_suppression",
 ] as const;
 
+/**
+ * A25 (Lane C) — kickoff wind coefficient for PASSING / RECEIVING player props
+ * only, yards of residual per mph. Validate-era primary effect was on receiving
+ * yards residual vs trailing baseline (C-406). Do NOT apply this to game
+ * totals: A5 (wind→totals under) is DEAD on the current-era validate window,
+ * and double-counting wind on both the team total and the player prop is the
+ * defect this constant exists to isolate.
+ */
+export const WIND_YDS_PER_MPH_PASSING_PROPS = -3.007;
+
+/**
+ * Baseline-adjust a passing/receiving prop yards estimate for kickoff wind.
+ * Returns null when wind is unknown — never invent 0 mph. Props path only;
+ * game-total consumers must not call this.
+ */
+export function applyWindToPassingPropYards(
+  baselineYds: number,
+  windMph: number | null | undefined,
+): number | null {
+  if (windMph == null || !Number.isFinite(windMph)) return null;
+  if (!Number.isFinite(baselineYds)) return null;
+  return baselineYds + WIND_YDS_PER_MPH_PASSING_PROPS * windMph;
+}
+
 /** Decision cutoff: features frozen this long before kickoff (mirrors schedule-features). */
 const DECISION_LEAD_MS = 60 * 60_000;
 /** Assumed game duration when stamping "this result is now knowable". */
@@ -84,6 +108,12 @@ function clamp01(x: number): number {
  * the deep passing + kicking game); precip and cold add. This is a documented
  * PRIOR, not a fitted edge — the trials registry decides whether it carries any.
  * Domes → 0 (climate-controlled).
+ *
+ * Lane C isolation: this GAME-TOTAL prior must never be combined with
+ * WIND_YDS_PER_MPH_PASSING_PROPS on the same yards estimate. Totals use this
+ * index (and A5 is DEAD on current-era validate). Passing/receiving props use
+ * applyWindToPassingPropYards only. Double-counting wind on both paths is the
+ * defect this split prevents.
  */
 export function totalSuppressionIndex(f: {
   isDome: boolean;

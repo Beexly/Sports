@@ -79,11 +79,21 @@ export interface LineArchiveDb {
         capturedAt?: { lte: Date };
       };
       select?: { market?: boolean };
+      /** Cursor pagination (PR #868) — bounds markClosingSnapshots loads. */
+      orderBy?: { readonly capturedAt: "asc" };
+      take?: number;
+      cursor?: { readonly id: string };
+      skip?: number;
     }): Promise<StoredSnapshot[]>;
     createMany(args: { data: Record<string, unknown>[] }): Promise<{ count: number }>;
     update(args: { where: { id: string }; data: { phase: LineArchivePhase } }): Promise<unknown>;
   };
 }
+
+/** Per-page size for odds_line_snapshots cursor reads (PR #868). */
+export const LINE_ARCHIVE_PAGE_TAKE = 5_000;
+/** Hard ceiling on rows markClosingSnapshots will load for one game. */
+export const LINE_ARCHIVE_PAGE_MAX = 50_000;
 
 export interface CaptureLineSnapshotsArgs {
   /** Prisma-like db handle — see the module doc comment for why this is
@@ -236,6 +246,11 @@ export interface MarkClosingSnapshotsResult {
  * Wired into settle-sport.ts via markClosingSnapshotsIfEnabled (hermes-H-D,
  * commit 0a447f98). Never throws — any DB error is caught and returned as
  * `{ error }`.
+ *
+ * Cursor-chunked (PR #868): odds_line_snapshots has exceeded 1.64M rows in
+ * production. An unbounded findMany on a dense game OOMs the serverless
+ * isolate. Pages of LINE_ARCHIVE_PAGE_TAKE walk `capturedAt asc` by id cursor
+ * until empty or LINE_ARCHIVE_PAGE_MAX.
  */
 export async function markClosingSnapshots(
   dbArg: unknown,
@@ -244,9 +259,26 @@ export async function markClosingSnapshots(
 ): Promise<MarkClosingSnapshotsResult> {
   const db = dbArg as LineArchiveDb;
   try {
-    const rows = await db.oddsLineSnapshot.findMany({
-      where: { gameId, capturedAt: { lte: asOf } },
-    });
+    const rows: StoredSnapshot[] = [];
+    let cursorId: string | undefined;
+    for (;;) {
+      if (rows.length >= LINE_ARCHIVE_PAGE_MAX) break;
+      const take = Math.min(
+        LINE_ARCHIVE_PAGE_TAKE,
+        LINE_ARCHIVE_PAGE_MAX - rows.length,
+      );
+      const page = await db.oddsLineSnapshot.findMany({
+        where: { gameId, capturedAt: { lte: asOf } },
+        orderBy: { capturedAt: "asc" },
+        take,
+        ...(cursorId ? { cursor: { id: cursorId }, skip: 1 } : {}),
+      });
+      if (page.length === 0) break;
+      rows.push(...page);
+      const last = page[page.length - 1];
+      if (!last?.id || page.length < take) break;
+      cursorId = last.id;
+    }
 
     // Latest pre-kickoff row per (market, book, side): sort ascending by
     // capturedAt so the last write into the map for a given key is the
