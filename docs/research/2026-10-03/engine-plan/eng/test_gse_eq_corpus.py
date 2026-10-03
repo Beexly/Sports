@@ -37,10 +37,6 @@ class CorpusTrustTests(unittest.TestCase):
         self.assertIsNone(air_yard_share(None, 100.0))
 
 
-if __name__ == "__main__":
-    unittest.main()
-
-
 from gse_eq_corpus import (
     aggressiveness_proxy_deep,
     down_distance_cell,
@@ -154,3 +150,6 @@ class CorpusCoachingTests(unittest.TestCase):
         self.assertIsNone(era_aggregate_weight(3))
         self.assertIsNone(era_aggregate_weight(None))
         self.assertIsNone(era_aggregate_weight(0))
+
+if __name__ == "__main__":
+    unittest.main()
