@@ -291,3 +291,25 @@ def average_hamming_loss(observed: list | None, reference: list | None) -> float
         if left != right:
             mismatches += 1
     return mismatches / len(observed)
+
+
+def ensemble_crps(members: list[float] | None, observation: float | None) -> float | None:
+    """c10 SYS-07, paper Eq. 3: CRPS = (1/M) sum |x_j - y| - (1/(2 M^2)) sum_{j,k} |x_j - x_k|.
+
+    The afCRPS alpha mix is not this identity. A missing member or observation stays null.
+    """
+    if not members or observation is None or observation != observation:
+        return None
+    clean: list[float] = []
+    for member in members:
+        if member is None or member != member:
+            return None
+        clean.append(float(member))
+    count = len(clean)
+    y = float(observation)
+    mean_abs = sum(abs(member - y) for member in clean) / count
+    pair_abs = 0.0
+    for left in clean:
+        for right in clean:
+            pair_abs += abs(left - right)
+    return mean_abs - pair_abs / (2.0 * count * count)

@@ -244,5 +244,21 @@ class CorpusHammingTests(unittest.TestCase):
         self.assertIsNone(average_hamming_loss([None], [1]))
 
 
+
+from gse_eq_corpus import ensemble_crps
+
+
+class CorpusCrpsTests(unittest.TestCase):
+    def test_ensemble_crps(self):
+        members = [0.0, 2.0]
+        observation = 1.0
+        mean_abs = (abs(0.0 - 1.0) + abs(2.0 - 1.0)) / 2
+        pair_abs = 0.0 + 2.0 + 2.0 + 0.0
+        self.assertAlmostEqual(ensemble_crps(members, observation), mean_abs - pair_abs / (2.0 * 4))
+        self.assertIsNone(ensemble_crps([], 1.0))
+        self.assertIsNone(ensemble_crps([0.0, None], 1.0))
+        self.assertIsNone(ensemble_crps([0.0], None))
+
+
 if __name__ == "__main__":
     unittest.main()
