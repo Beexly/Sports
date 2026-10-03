@@ -146,6 +146,7 @@ export interface FactorDetail {
 export type EvidenceActivationStatus =
   | "ACTIVE"
   | "SHADOW_ONLY"
+  | "DARK"
   | "BLOCKED_MISSING_SOURCE"
   | "BLOCKED_STALE"
   | "BLOCKED_LOW_TRUST"
