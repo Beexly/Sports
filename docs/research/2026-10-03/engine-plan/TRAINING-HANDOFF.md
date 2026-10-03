@@ -7,7 +7,7 @@ The corpus below is training MATERIAL. No model has been trained on it.
 
 ## The corpus (exact, from branch manifest — verify before training)
 Branch: `Beexly/Sports@research/engine-plan-2026-10-03`, dir `brain/`.
-Total: **68,694 rows** across 14 shard groups.
+Total: **68,692 rows** across 14 shard groups.
 
 | Shards | Rows | Bytes | Fidelity |
 |---|---|---|---|
