@@ -14,8 +14,9 @@ Equation (4.1), PDF page 147, Section IV:
 Equation (5.1), PDF page 149:
     JS_pi(p1, ..., pn) = H(sum_i pi_i p_i) - sum_i pi_i H(p_i)
 
-H is Shannon entropy with the natural log, the same convention as the
-equal-weight slice of this paper already on the branch. 0*log 0 is 0.
+H is Shannon entropy in bits. Lin 1991 footer page 145 states that the
+logarithmic base is 2 throughout unless otherwise stated. 0*log 0 is 0.
+The equal-weight file is left on its own log and is not edited here.
 The equal-weight identity L = 2H((p1+p2)/2) - H(p1) - H(p2) is not
 reimplemented here.
 """
@@ -48,7 +49,7 @@ def _entropy(probs: Sequence[float]) -> float | None:
         mass += p
         if p == 0.0:
             continue
-        total -= p * math.log(p)
+        total -= p * math.log2(p)
     if abs(mass - 1.0) > _SUM_TOL:
         return None
     return total
@@ -76,7 +77,7 @@ def js_pi(
     pi1: float | None,
     pi2: float | None,
 ) -> float | None:
-    """Equation (4.1), Lin 1991 PDF page 147. Natural log."""
+    """Equation (4.1), Lin 1991 PDF page 147. Log base 2."""
     if p1 is None or p2 is None or pi1 is None or pi2 is None:
         return None
     if len(p1) == 0 or len(p1) != len(p2):
@@ -101,7 +102,7 @@ def js_pi_n(
     distributions: Sequence[Sequence[float]] | None,
     weights: Sequence[float] | None,
 ) -> float | None:
-    """Equation (5.1), Lin 1991 PDF page 149. Natural log."""
+    """Equation (5.1), Lin 1991 PDF page 149. Log base 2."""
     if distributions is None or weights is None:
         return None
     parsed = _weights(weights)
