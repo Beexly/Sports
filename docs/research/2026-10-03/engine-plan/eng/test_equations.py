@@ -8,34 +8,40 @@ from equations import (
     american_implied,
     brier,
     clears_half,
+    clipped_eta,
     complete_minus_probability,
     completion_base_offset,
     completion_residual,
     decay_weight,
-    derived_markets_withheld,
     deep_rate,
+    derived_markets_withheld,
     devig,
     drive_state_line,
     ece,
     edge_needs_check,
-    engine_point_shift,
-    espn_home_projection,
-    expected_snap_loss,
     elo_margin,
     elo_points,
     elo_residual,
     elo_win_prob,
     encoder_age_weeks,
+    engine_point_shift,
+    espn_home_projection,
+    evidence_score,
+    expected_snap_loss,
     explosive_play,
     fair_side,
     fair_with_push,
     fair_worst,
     finite_weighted_mean,
     four_week_cv,
-    home_epa_edge,
+    games_before,
+    generated_before_kick,
     glazer_play_rate,
+    hit_interception,
+    home_epa_edge,
     home_flag_from_neutral,
     home_minus_away,
+    in_prior_season_window,
     injury_out_weight,
     injury_report_stale,
     int_on_pressure,
@@ -53,19 +59,24 @@ from equations import (
     margin_residual,
     mean_or_null,
     mov_multiplier,
-    nflverse_home_spread,
     n_plays_weighted_mean,
-    parse_season_key,
+    nflverse_home_spread,
+    normal_ci,
     odds_snapshot_stale,
+    offset_log_odds,
+    parse_season_key,
+    placebo_fraction,
     play_published,
     point_shift_applies,
     present_filled,
+    pressure_event,
     pressure_matchup,
     pressure_on_dropback,
     prior4_snap_share,
     prior_four_shares,
-    prior_window_mean,
     prior_season_key,
+    prior_window_mean,
+    proe_or_null,
     promoted,
     protection_stress,
     push_adjusted,
@@ -80,8 +91,11 @@ from equations import (
     result_share,
     sample_median,
     scaled_weight,
+    season_aggregate_order,
     season_key_sort_key,
     season_regress,
+    selected_side_prob,
+    selected_side_won,
     settled_side,
     shift_to_fair,
     shift_to_target,
@@ -96,11 +110,19 @@ from equations import (
     target_share,
     team_points,
     temp_or_default,
+    text_column_is_numeric,
     total_residual,
+    trust_share_or_null,
+    under_center_diff,
+    under_center_rate,
     unknown_qb_rating,
+    unscaled_z,
+    varying_column,
     week_order,
     weighted_mean,
     wind_or_zero,
+    within_season_lag,
+    zero_filled_diff,
 )
 
 
@@ -321,6 +343,61 @@ class EquationTests(unittest.TestCase):
         self.assertIsNone(prior_window_mean([]))
         self.assertEqual(prior_window_mean([7]), 7)
         self.assertEqual(prior_window_mean([1, 2, 3, 4, 5]), 3.5)
+
+
+    def test_join_floors_and_offset(self):
+        self.assertIsNone(under_center_rate(None))
+        self.assertAlmostEqual(under_center_rate(0.25), 0.75)
+        self.assertIsNone(under_center_diff(None))
+        self.assertEqual(under_center_diff(0.2), -0.2)
+        self.assertIsNone(proe_or_null(0.1, 24))
+        self.assertIsNone(proe_or_null(0.1, None))
+        self.assertIsNone(proe_or_null(None, 30))
+        self.assertEqual(proe_or_null(0.1, 25), 0.1)
+        self.assertIsNone(trust_share_or_null(0.4, 24))
+        self.assertEqual(trust_share_or_null(0.4, 25), 0.4)
+        self.assertEqual(season_aggregate_order(2025), 202599)
+        self.assertTrue(within_season_lag(2026, 2024))
+        self.assertFalse(within_season_lag(2026, 2023))
+        self.assertFalse(within_season_lag(2026, 2027))
+        self.assertFalse(text_column_is_numeric(2, 10))
+        self.assertTrue(text_column_is_numeric(5, 10))
+        self.assertTrue(text_column_is_numeric(3, 2))
+        self.assertAlmostEqual(offset_log_odds(0.2, 0.1, [0.5, -0.25], [1.0, 2.0]), 0.3)
+        self.assertEqual(clipped_eta(25), 20)
+        self.assertEqual(clipped_eta(-25), -20)
+        self.assertEqual(clipped_eta(3), 3)
+        self.assertEqual(unscaled_z(3, 1, 2), 1)
+        self.assertTrue(in_prior_season_window(2026, 3, 2026, 4))
+        self.assertFalse(in_prior_season_window(2026, 4, 2026, 4))
+        self.assertTrue(in_prior_season_window(2024, 18, 2026, 1))
+        self.assertFalse(in_prior_season_window(2023, 1, 2026, 1))
+        self.assertEqual(games_before([("a", 1), ("c", 3), ("b", 2)], "c", 2), [("a", 1), ("b", 2)])
+        self.assertEqual(zero_filled_diff(None, 2), -2)
+        self.assertEqual(zero_filled_diff(3, None), 3)
+        self.assertEqual(pressure_event(None, 1), 1)
+        self.assertEqual(pressure_event(0, 0), 0)
+        self.assertEqual(hit_interception(1, 1), 1)
+        self.assertEqual(hit_interception(1, 0), 0)
+        self.assertEqual(evidence_score(None, "measured"), 0)
+        self.assertAlmostEqual(evidence_score(2, "claimed"), 1.2)
+        self.assertAlmostEqual(evidence_score(2, "weird"), 0.6)
+        self.assertAlmostEqual(evidence_score(2, None), 0.4)
+        lo, hi = normal_ci(1, 0.5)
+        self.assertAlmostEqual(lo, 0.02)
+        self.assertAlmostEqual(hi, 1.98)
+        self.assertIsNone(placebo_fraction([], 1))
+        self.assertAlmostEqual(placebo_fraction([1, 2, 3], 2), 2 / 3)
+        self.assertEqual(selected_side_prob(0.6, "away"), 0.4)
+        self.assertIsNone(selected_side_prob(0.6, "draw"))
+        self.assertIsNone(selected_side_won(0, "home"))
+        self.assertEqual(selected_side_won(3, "home"), 1)
+        self.assertEqual(selected_side_won(-1, "away"), 1)
+        self.assertFalse(generated_before_kick(None, "2026-10-05"))
+        self.assertTrue(generated_before_kick("2026-10-01", "2026-10-05"))
+        self.assertFalse(generated_before_kick("2026-10-05", "2026-10-05"))
+        self.assertFalse(varying_column(1e-8))
+        self.assertTrue(varying_column(1e-8 + 1e-12))
 
 if __name__ == "__main__":
     unittest.main()

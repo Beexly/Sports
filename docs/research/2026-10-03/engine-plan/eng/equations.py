@@ -780,3 +780,156 @@ def prior_window_mean(values: Sequence[float], window: int = 4) -> float | None:
         return None
     chunk = list(values)[-window:]
     return sum(chunk) / len(chunk)
+
+
+def under_center_rate(shotgun_rate: float | None) -> float | None:
+    """join_rest.py: under_center_rate = 1 - shotgun_rate. A null shotgun rate stays null."""
+    if shotgun_rate is None or shotgun_rate != shotgun_rate or shotgun_rate in (float("inf"), float("-inf")):
+        return None
+    return 1.0 - shotgun_rate
+
+
+def under_center_diff(shotgun_diff: float | None) -> float | None:
+    """join_rest.py: after home minus away the +1 cancels, so the diff is the negation of the shotgun diff. A null diff stays null."""
+    if shotgun_diff is None or shotgun_diff != shotgun_diff or shotgun_diff in (float("inf"), float("-inf")):
+        return None
+    return -shotgun_diff
+
+
+def proe_or_null(proe: float | None, n_plays: float | None, floor: float = 25.0) -> float | None:
+    """join_rest.py: proe is null when n_plays < 25. A missing play count is 0. A null proe stays null."""
+    plays = 0.0 if n_plays is None or n_plays != n_plays else float(n_plays)
+    if plays < floor or proe is None or proe != proe:
+        return None
+    return float(proe)
+
+
+def trust_share_or_null(share: float | None, targets: float | None, floor: float = 25.0) -> float | None:
+    """join_rest.py: hhi and the share columns are null when targets < 25. A missing target count is 0. A null share stays null."""
+    n = 0.0 if targets is None or targets != targets else float(targets)
+    if n < floor or share is None or share != share:
+        return None
+    return float(share)
+
+
+def season_aggregate_order(season: int, season_end: int = 99) -> int:
+    """join_rest.py: a season aggregate with no week is stamped season * 100 + 99."""
+    return int(season) * 100 + season_end
+
+
+def within_season_lag(game_season: int, source_season: int, max_lag: int = 2) -> bool:
+    """join_rest.py: keep the row only when 0 <= game season - source season <= 2."""
+    gap = game_season - source_season
+    return gap >= 0 and gap <= max_lag
+
+
+def text_column_is_numeric(non_null: int, n: int) -> bool:
+    """join_rest.py: a text column is numeric when the non-null count is at least max(3, half the rows)."""
+    return non_null >= max(3, int(0.5 * n))
+
+
+def offset_log_odds(market_logit: float, intercept: float, weights: Sequence[float], zs: Sequence[float]) -> float:
+    """offset_engine.py: logit(q) + a + sum of w_i z_i. This is the stated equation, not the fit."""
+    if len(weights) != len(zs):
+        raise ValueError("offset_log_odds: weights and z must be the same length")
+    return market_logit + intercept + sum(w * z for w, z in zip(weights, zs))
+
+
+def clipped_eta(eta: float, limit: float = 20.0) -> float:
+    """score_present_flag.py: clip the linear predictor to [-20, 20] before the sigmoid."""
+    if eta < -limit:
+        return -limit
+    if eta > limit:
+        return limit
+    return eta
+
+
+def unscaled_z(x: float, mu: float, sd: float) -> float:
+    """independent_cpoe.py pred_air: (x - mu) / sd. This step does not add 1e-9."""
+    return (x - mu) / sd
+
+
+def in_prior_season_window(row_season: int, row_week: int, season: int, week: int, lag: int = 2) -> bool:
+    """corpus_on_engine.py: same season and week strictly before W, or an earlier season no older than season - 2."""
+    if row_season == season and row_week < week:
+        return True
+    return row_season < season and row_season >= season - lag
+
+
+def games_before(rows: Sequence[tuple], cutoff, k: int = 16) -> list:
+    """data.py qb_rating and perqb.py: rows dated strictly before the cutoff, then the last k. k is 16."""
+    prior = [row for row in rows if row[0] < cutoff]
+    return prior[-k:]
+
+
+def zero_filled_diff(home: float | None, away: float | None) -> float:
+    """features.py: (home or 0) - (away or 0). A missing side is 0, not null."""
+    return float(home or 0.0) - float(away or 0.0)
+
+
+def pressure_event(qb_hit: float | None, sack: float | None) -> int:
+    """corpus_on_engine.py: 1 when qb_hit or sack is 1. A missing flag is 0. Dropback is not required."""
+    hit = 0.0 if qb_hit is None else qb_hit
+    sk = 0.0 if sack is None else sack
+    return 1 if hit == 1 or sk == 1 else 0
+
+
+def hit_interception(pressure: float, interception: float) -> int:
+    """corpus_on_engine.py: 1 only when the pressure flag and the interception flag are both 1."""
+    return 1 if pressure == 1 and interception == 1 else 0
+
+
+def evidence_score(relevance: float | None, evidence: str | None) -> float:
+    """corpus_reduce.py: relevance times the evidence weight. Missing relevance is 0. measured 1, claimed 0.6, speculative 0.35, none 0.2, any other label 0.3."""
+    try:
+        rel = float(relevance or 0)
+    except (TypeError, ValueError):
+        rel = 0.0
+    weights = {"measured": 1.0, "claimed": 0.6, "speculative": 0.35, "none": 0.2}
+    key = "none" if evidence is None else str(evidence).lower()
+    return rel * weights.get(key, 0.3)
+
+
+def normal_ci(estimate: float, se: float, z: float = 1.96) -> tuple[float, float]:
+    """perqb.py: estimate ± 1.96 * standard error."""
+    return estimate - z * se, estimate + z * se
+
+
+def placebo_fraction(placebo: Sequence[float], observed: float) -> float | None:
+    """perqb.py: fraction of placebo scores that are <= the observed score. An empty draw is null."""
+    if len(placebo) == 0:
+        return None
+    return sum(1.0 for value in placebo if value <= observed) / len(placebo)
+
+
+def selected_side_prob(home_prob: float, side: str) -> float | None:
+    """gse_eval.py: the home side keeps the de-vigged home price. The away side is 1 minus that price."""
+    if side == "home":
+        return home_prob
+    if side == "away":
+        return 1.0 - home_prob
+    return None
+
+
+def selected_side_won(result: float | None, side: str) -> int | None:
+    """gse_eval.py: a tie or a missing result is null. Home won when the result is positive. Away is the opposite."""
+    if result is None or result != result or result == 0:
+        return None
+    home_won = result > 0
+    if side == "home":
+        return 1 if home_won else 0
+    if side == "away":
+        return 0 if home_won else 1
+    return None
+
+
+def generated_before_kick(generated, commence) -> bool:
+    """gse_eval.py: premint when generated_at is present and strictly before commence. A missing generated_at is false."""
+    if generated is None:
+        return False
+    return generated < commence
+
+
+def varying_column(sd: float, floor: float = 1e-8) -> bool:
+    """score_present_flag.py: a column is kept only when its standard deviation is above 1e-8."""
+    return sd > floor
