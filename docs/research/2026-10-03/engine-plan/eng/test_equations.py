@@ -3,21 +3,26 @@ import math
 import unittest
 
 from equations import (
+    absolute_margin,
     actual_or_pit,
     actual_starter_ids,
+    air_attempt_kept,
     air_bin,
     air_yards_to_sticks,
     american_implied,
     availability_mass,
     availability_report,
     availability_total,
+    baseline_pool_season,
     binary_completion,
     brier,
     build_score,
     canonical_team,
     cell_token,
+    chosen_parent,
     clears_half,
     clipped_eta,
+    column_candidate,
     complete_minus_probability,
     completed_air_kept,
     completion_base_offset,
@@ -35,11 +40,13 @@ from equations import (
     duplicate_rate_mean,
     ece,
     edge_needs_check,
+    edge_vs_market,
     elo_margin,
     elo_points,
     elo_residual,
     elo_win_prob,
     encoder_age_weeks,
+    encoder_play_kept,
     encoder_pool_ready,
     engine_point_shift,
     engine_v1_game,
@@ -78,6 +85,7 @@ from equations import (
     lagged_latest,
     leaf_served_rate,
     league_expected_pressure,
+    league_fit_ready,
     league_pool_ready,
     log_loss,
     logistic_probability,
@@ -93,12 +101,15 @@ from equations import (
     nflverse_home_spread,
     nflverse_join_date,
     normal_ci,
+    observed_at_seconds,
     odds_snapshot_stale,
     offense_is_home,
     offset_log_odds,
     out_or_doubtful,
     parse_season_key,
+    per_dropback_rate,
     placebo_fraction,
+    play_kind,
     play_published,
     point_shift_applies,
     position_group,
@@ -107,6 +118,7 @@ from equations import (
     pressure_matchup,
     pressure_on_dropback,
     prior4_snap_share,
+    prior_beta_season,
     prior_four_shares,
     prior_season_key,
     prior_window_mean,
@@ -120,6 +132,7 @@ from equations import (
     qb_epa_rating,
     questionable_weight,
     quick_game_expanding_mean,
+    rating_play_kept,
     rating_sums,
     raw_rate_or_null,
     recency_weights,
@@ -156,6 +169,7 @@ from equations import (
     strict_side,
     target_share,
     team_form_games,
+    team_form_play,
     team_points,
     temp_or_default,
     text_column_is_numeric,
@@ -612,6 +626,48 @@ class EquationTests(unittest.TestCase):
         self.assertTrue(availability_report("Questionable", "WR"))
         self.assertTrue(rounded_refit_matches(0.61074, 0.6107))
         self.assertFalse(rounded_refit_matches(0.61086, 0.6107))
+
+
+
+    def test_parent_choice_and_play_filters(self):
+        self.assertEqual(absolute_margin(-7), 7)
+        self.assertEqual(absolute_margin(0), 0)
+        self.assertTrue(baseline_pool_season(2006, 2026))
+        self.assertFalse(baseline_pool_season(2005, 2026))
+        self.assertFalse(baseline_pool_season(2026, 2026))
+        self.assertEqual(chosen_parent(0.04, 0.02), (0.04, "team_prior_season_key"))
+        self.assertEqual(chosen_parent(None, 0.02), (0.02, "league_prior_season_key"))
+        self.assertEqual(chosen_parent(None, None), (None, None))
+        self.assertEqual(chosen_parent(float("nan"), 0.02), (0.02, "league_prior_season_key"))
+        self.assertEqual(play_kind(1), "p")
+        self.assertEqual(play_kind(0), "r")
+        self.assertTrue(encoder_play_kept("REG", 0.1, "KC", 1, 0))
+        self.assertFalse(encoder_play_kept("POST", 0.1, "KC", 1, 0))
+        self.assertFalse(encoder_play_kept("REG", None, "KC", 1, 0))
+        self.assertFalse(encoder_play_kept("REG", 0.1, "KC", 0, 0))
+        self.assertTrue(team_form_play("pass", 0.2, "KC"))
+        self.assertFalse(team_form_play("kickoff", 0.2, "KC"))
+        self.assertFalse(team_form_play("run", None, "KC"))
+        self.assertFalse(team_form_play("run", 0.2, None))
+        self.assertEqual(per_dropback_rate(4, 10), 0.4)
+        self.assertIsNone(per_dropback_rate(4, 0))
+        self.assertIsNone(per_dropback_rate(None, 10))
+        self.assertTrue(league_fit_ready(32))
+        self.assertFalse(league_fit_ready(31))
+        self.assertTrue(rating_play_kept(1, "00-1", 0.2))
+        self.assertFalse(rating_play_kept(0, "00-1", 0.2))
+        self.assertFalse(rating_play_kept(1, None, 0.2))
+        self.assertFalse(rating_play_kept(1, "00-1", None))
+        self.assertTrue(air_attempt_kept(1, "00-1", 8, 0))
+        self.assertFalse(air_attempt_kept(0, "00-1", 8, 0))
+        self.assertFalse(air_attempt_kept(1, "00-1", None, 1))
+        self.assertFalse(air_attempt_kept(1, None, 8, 1))
+        self.assertEqual(observed_at_seconds(1500), 1.5)
+        self.assertEqual(prior_beta_season(2026), 2025)
+        self.assertTrue(column_candidate(0.25, 0.01))
+        self.assertFalse(column_candidate(0.24, 0.01))
+        self.assertFalse(column_candidate(0.5, 0))
+        self.assertEqual(edge_vs_market(0.51234, 0.5), 0.0123)
 
 
 if __name__ == "__main__":

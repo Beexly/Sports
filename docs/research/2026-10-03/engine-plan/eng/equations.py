@@ -1349,3 +1349,104 @@ def rounded_refit_matches(got: float, published: float, tol: float = 0.00015) ->
     """chart.py: the refit mean is rounded to 4 decimals, then rejected when abs(got - published) > 0.00015."""
     return abs(round(got, 4) - published) <= tol
 
+
+def absolute_margin(result: float) -> float:
+    """baseline.py: mov = abs(result). A tie is 0. The Elo update uses it only after the game is played."""
+    return abs(result)
+
+
+def baseline_pool_season(row_season: int, target_season: int, start: int = 2006) -> bool:
+    """baseline.py: a logit-pool training season satisfies 2006 <= season < T. The pool is not fit. Not the two-season feature lag and not the eight-season score window."""
+    return start <= row_season < target_season
+
+
+def chosen_parent(team_rate: float | None, league_rate: float | None) -> tuple[float | None, str | None]:
+    """int_parent.py: the team prior-cell rate when it is present, else the league prior-cell rate. Both missing is (None, None). No lookup and no join."""
+    def missing(value) -> bool:
+        return value is None or value != value
+
+    if not missing(team_rate):
+        return float(team_rate), "team_prior_season_key"
+    if not missing(league_rate):
+        return float(league_rate), "league_prior_season_key"
+    return None, None
+
+
+def play_kind(is_pass: float) -> str:
+    """encoder_adj.py: 'p' when pass is 1, else 'r'."""
+    return "p" if is_pass == 1 else "r"
+
+
+def encoder_play_kept(season_type: str | None, epa: float | None, posteam: str | None, is_pass: float, is_rush: float) -> bool:
+    """encoder_adj.py: season_type is REG, epa is present, posteam is present, and pass or rush is 1."""
+    if season_type != "REG":
+        return False
+    if epa is None or epa != epa:
+        return False
+    if posteam is None or posteam == "":
+        return False
+    return is_pass == 1 or is_rush == 1
+
+
+def team_form_play(play_type: str | None, epa: float | None, posteam: str | None) -> bool:
+    """engine_v1.py: play_type is pass or run, epa is present, and posteam is present."""
+    if play_type not in ("pass", "run"):
+        return False
+    if epa is None or epa != epa:
+        return False
+    return posteam is not None and posteam != ""
+
+
+def per_dropback_rate(count: float | None, dropbacks: float | None) -> float | None:
+    """protection_stress.py: pressures / dropbacks and blitzes / dropbacks. A non-positive dropback count is null, and so is a missing count."""
+    if dropbacks is None or dropbacks != dropbacks or dropbacks <= 0:
+        return None
+    if count is None or count != count:
+        return None
+    return count / dropbacks
+
+
+def league_fit_ready(team_weeks: int, floor: int = 32) -> bool:
+    """protection_stress.py: the league pool is skipped when team-weeks are under 32. The OLS is not run."""
+    return team_weeks >= floor
+
+
+def rating_play_kept(qb_dropback: float | None, passer_id, qb_epa: float | None) -> bool:
+    """data.py: qb_dropback is 1, passer_player_id is present, and qb_epa is present."""
+    if qb_dropback != 1:
+        return False
+    if passer_id is None or (isinstance(passer_id, float) and passer_id != passer_id):
+        return False
+    return qb_epa is not None and qb_epa == qb_epa
+
+
+def air_attempt_kept(pass_attempt: float | None, passer_id, air_yards: float | None, complete_pass: float | None) -> bool:
+    """qb_air_cpoe.py: pass_attempt is 1, the passer id is present, and air_yards and complete_pass are present."""
+    if pass_attempt != 1:
+        return False
+    if passer_id is None or (isinstance(passer_id, float) and passer_id != passer_id):
+        return False
+    if air_yards is None or air_yards != air_yards:
+        return False
+    return complete_pass is not None and complete_pass == complete_pass
+
+
+def observed_at_seconds(observed_at_ms: float) -> float:
+    """mint_w4.py and refresh_live.py: observed_at_ms / 1000."""
+    return observed_at_ms / 1000.0
+
+
+def prior_beta_season(season: int) -> int:
+    """league_baselines.py: beta_league for season S is taken from season S-1 only. Same-season beta is not emitted. The rate is not looked up."""
+    return season - 1
+
+
+def column_candidate(coverage: float, sd: float) -> bool:
+    """score_joined_singles.py: coverage is at least 0.25 and the standard deviation is above 0. The column is not scored."""
+    return coverage >= 0.25 and sd > 0
+
+
+def edge_vs_market(p: float, q: float) -> float:
+    """mint_w4.py: round(p - q, 4). The margin shift is not applied."""
+    return round(p - q, 4)
+
