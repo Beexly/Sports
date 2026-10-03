@@ -1,5 +1,5 @@
 {
-  "rows": 68074,
+  "rows": 68045,
   "shards": 13,
   "recount_notes": "2026-10-03 recount: manifest previously claimed u_00=23,743 rows; branch file actually holds 22,282 valid rows and u_01 holds 1,461 (22,282+1,461=23,743 — the original figure was u_00+u_01 combined, misattributed to u_00 alone). u_02/u_04 sports rows (9,650) and u_03 (536) are as-reported, not yet recounted. Only u_05/u_06/u_07 are full-fidelity; u_00-u_04 bodies truncated ~4-5k chars.",
   "shards_detail": [
@@ -85,8 +85,8 @@
     },
     {
       "file": "brain/mind_knowledge_u_13_tinkabot_eq.jsonl",
-      "rows": 34,
-      "bytes": 24075,
+      "rows": 5,
+      "bytes": 3543,
       "source": "tinkabot column-backed eq helpers packed for mind; inputs already on features_v1/learn_joined/learn_wide; no score; no mint",
       "extraction_script": "docs/research/2026-10-03/engine-plan/tools/tinkabot_eq_mind_pack.py",
       "identity": "tinkabot"
