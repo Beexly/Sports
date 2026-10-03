@@ -194,3 +194,49 @@ def era_aggregate_weight(attribution_confidence: int | None) -> float | None:
     if attribution_confidence == 3:
         return None
     return None
+
+
+def fourth_down_gamma(yardline: float | None) -> float | None:
+    """c04 verified: gamma(l) = (100 - l) / 29. A missing line stays null."""
+    if yardline is None or yardline != yardline:
+        return None
+    return (100.0 - float(yardline)) / 29.0
+
+
+def expected_points_go(fourth_conv: float | None, gamma: float | None) -> float | None:
+    """c04 verified: E[P+] = 6 * s_4conv ** gamma(l). A missing input stays null."""
+    if fourth_conv is None or fourth_conv != fourth_conv or gamma is None or gamma != gamma:
+        return None
+    if float(fourth_conv) < 0:
+        return None
+    return 6.0 * (float(fourth_conv) ** float(gamma))
+
+
+def expected_points_fail(fg_success: float | None, delta_pi_fg: float | None, delta_pi_td: float | None) -> float | None:
+    """c04 verified: E[P-] = 3 * s_fg + (3 * delta_pi_fg + 6 * delta_pi_td). A missing input stays null."""
+    if fg_success is None or fg_success != fg_success:
+        return None
+    if delta_pi_fg is None or delta_pi_fg != delta_pi_fg or delta_pi_td is None or delta_pi_td != delta_pi_td:
+        return None
+    return 3.0 * float(fg_success) + (3.0 * float(delta_pi_fg) + 6.0 * float(delta_pi_td))
+
+
+def expected_points_net(points_go: float | None, points_fail: float | None) -> float | None:
+    """c04 verified: E[P] = E[P+] - E[P-]. A missing side stays null."""
+    if points_go is None or points_go != points_go or points_fail is None or points_fail != points_fail:
+        return None
+    return float(points_go) - float(points_fail)
+
+
+def two_point_expected_points(success_rate: float | None) -> float | None:
+    """c04 verified: 2-pt success 51% (235/460) is 1.02 expected points, success_rate * 2. A missing rate stays null."""
+    if success_rate is None or success_rate != success_rate:
+        return None
+    return float(success_rate) * 2.0
+
+
+def extra_point_expected_points(success_rate: float | None) -> float | None:
+    """c04 verified: XP success 98.4% (8425/8561) is 0.984 expected points, success_rate * 1. A missing rate stays null."""
+    if success_rate is None or success_rate != success_rate:
+        return None
+    return float(success_rate)

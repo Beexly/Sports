@@ -151,5 +151,45 @@ class CorpusCoachingTests(unittest.TestCase):
         self.assertIsNone(era_aggregate_weight(None))
         self.assertIsNone(era_aggregate_weight(0))
 
+
+from gse_eq_corpus import (
+    expected_points_fail,
+    expected_points_go,
+    expected_points_net,
+    extra_point_expected_points,
+    fourth_down_gamma,
+    two_point_expected_points,
+)
+
+
+class CorpusFourthDownTests(unittest.TestCase):
+    def test_fourth_down_gamma(self):
+        self.assertAlmostEqual(fourth_down_gamma(71), (100 - 71) / 29)
+        self.assertAlmostEqual(fourth_down_gamma(100), 0.0)
+        self.assertIsNone(fourth_down_gamma(None))
+
+    def test_expected_points_go(self):
+        gamma = fourth_down_gamma(71)
+        self.assertAlmostEqual(expected_points_go(0.5, gamma), 6.0 * (0.5 ** gamma))
+        self.assertIsNone(expected_points_go(None, gamma))
+        self.assertIsNone(expected_points_go(-0.1, gamma))
+
+    def test_expected_points_fail(self):
+        self.assertAlmostEqual(expected_points_fail(0.8, 0.1, 0.05), 3 * 0.8 + (3 * 0.1 + 6 * 0.05))
+        self.assertIsNone(expected_points_fail(0.8, None, 0.05))
+
+    def test_expected_points_net(self):
+        self.assertAlmostEqual(expected_points_net(2.5, 1.1), 1.4)
+        self.assertIsNone(expected_points_net(2.5, None))
+
+    def test_pat_expected_points(self):
+        self.assertAlmostEqual(two_point_expected_points(0.51), 1.02)
+        self.assertAlmostEqual(two_point_expected_points(235 / 460), (235 / 460) * 2)
+        self.assertAlmostEqual(extra_point_expected_points(0.984), 0.984)
+        self.assertAlmostEqual(extra_point_expected_points(8425 / 8561), 8425 / 8561)
+        self.assertIsNone(two_point_expected_points(None))
+        self.assertIsNone(extra_point_expected_points(None))
+
+
 if __name__ == "__main__":
     unittest.main()
