@@ -278,3 +278,16 @@ def two_sample_denominator(k_p: float | None, k_q: float | None) -> float | None
     kp = float(k_p)
     kq = float(k_q)
     return (kp - 1.0) * (kq - 1.0) * (kp + kq)
+
+
+def average_hamming_loss(observed: list | None, reference: list | None) -> float | None:
+    """c04 Eq. 4.11: (1/N) sum 1(a_j != a*_j). A missing label or unequal lengths stays null."""
+    if not observed or not reference or len(observed) != len(reference):
+        return None
+    mismatches = 0
+    for left, right in zip(observed, reference):
+        if left is None or right is None:
+            return None
+        if left != right:
+            mismatches += 1
+    return mismatches / len(observed)

@@ -231,5 +231,18 @@ class CorpusTwoSampleTests(unittest.TestCase):
         self.assertIsNone(two_sample_denominator(3, None))
 
 
+
+from gse_eq_corpus import average_hamming_loss
+
+
+class CorpusHammingTests(unittest.TestCase):
+    def test_average_hamming_loss(self):
+        self.assertAlmostEqual(average_hamming_loss([1, 0, 1], [1, 1, 1]), 1 / 3)
+        self.assertEqual(average_hamming_loss(["go", "punt"], ["go", "punt"]), 0.0)
+        self.assertIsNone(average_hamming_loss([], []))
+        self.assertIsNone(average_hamming_loss([1], [1, 0]))
+        self.assertIsNone(average_hamming_loss([None], [1]))
+
+
 if __name__ == "__main__":
     unittest.main()
