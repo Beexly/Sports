@@ -261,5 +261,23 @@ class CorpusCrpsTests(unittest.TestCase):
         self.assertIsNone(ensemble_crps([0.0], None))
 
 
+
+import math
+
+from gse_eq_corpus import k0_minus_k1
+
+
+class CorpusEinsteinTests(unittest.TestCase):
+    def test_k0_minus_k1(self):
+        self.assertEqual(k0_minus_k1(1.0, 0.0, 1.0), 0.0)
+        ratio = 0.6 ** 2
+        self.assertAlmostEqual(k0_minus_k1(2.0, 0.6, 1.0), 2.0 * (1.0 / math.sqrt(1.0 - ratio) - 1.0))
+        self.assertIsNone(k0_minus_k1(None, 0.6, 1.0))
+        self.assertIsNone(k0_minus_k1(1.0, 0.6, 0.0))
+        self.assertIsNone(k0_minus_k1(1.0, 0.6, -1.0))
+        self.assertIsNone(k0_minus_k1(1.0, 1.0, 1.0))
+        self.assertIsNone(k0_minus_k1(1.0, 2.0, 1.0))
+
+
 if __name__ == "__main__":
     unittest.main()

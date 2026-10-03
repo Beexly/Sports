@@ -313,3 +313,19 @@ def ensemble_crps(members: list[float] | None, observation: float | None) -> flo
         for right in clean:
             pair_abs += abs(left - right)
     return mean_abs - pair_abs / (2.0 * count * count)
+
+
+def k0_minus_k1(length: float | None, velocity: float | None, light_speed: float | None) -> float | None:
+    """Einstein 1905, Perrett-Jeffery translation, https://courses.physics.ucsd.edu/2025/Winter/physics2d/einstein19052.pdf printed page 2.
+
+    K0 - K1 = L * (1/sqrt(1 - v^2/c^2) - 1).
+    Null if L is missing, if c is not positive, or if v^2/c^2 is not strictly below 1.
+    """
+    if length is None or length != length or velocity is None or velocity != velocity:
+        return None
+    if light_speed is None or light_speed != light_speed or float(light_speed) <= 0:
+        return None
+    ratio = (float(velocity) ** 2) / (float(light_speed) ** 2)
+    if ratio >= 1:
+        return None
+    return float(length) * (1.0 / math.sqrt(1.0 - ratio) - 1.0)
