@@ -1,31 +1,31 @@
 {
   "author": "tinkabot",
+  "identity": "tinkabot",
   "branch": "research/engine-plan-2026-10-03",
-  "purpose": "Column-backed equation helpers for mind ingestion. New files only. No score. No mint. Does not edit equations.py.",
+  "purpose": "Column-backed equation helpers for mind ingestion. HOLD-trimmed: no composed unrelated columns; no home_minus_away rename wrappers. No score. No mint. Does not edit equations.py.",
   "module": "docs/research/2026-10-03/engine-plan/eng/tinkabot_eq_column.py",
   "tests": "docs/research/2026-10-03/engine-plan/eng/test_tinkabot_eq_column.py",
-  "n_funcs": 34,
-  "required_features_v1": [
-    "mkt", "elo", "elo_res", "qb_pit", "home_flag", "neutral",
-    "spread_line", "total_line", "av_OL", "av_SKILL", "av_FRONT", "av_DB", "av_Q"
+  "n_funcs": 5,
+  "kept": [
+    "home_minus_away",
+    "under_center_rate",
+    "under_center_diff",
+    "market_elo_residual",
+    "proe_or_null"
   ],
-  "required_learn_joined": [
-    "sens_epa_floor", "clean_epa_baseline", "p2s_eb", "cpoe_pbp", "adot",
-    "deep_rate_20", "scramble_rate", "epa", "hhi", "n_eff", "top_share",
-    "top2_share", "top_ay_share", "protection_stress"
-  ],
+  "proe_floor": {
+    "value": 25,
+    "source": "docs/research/2026-10-03/engine-plan/eng/learn_wide_coverage.json",
+    "key": "floors.proe_early_neutral",
+    "text": "n_plays < 25 nulls proe, proe_raw, proe_se, pass_rate_actual, pass_rate_expected"
+  },
+  "required_features_v1": ["mkt", "elo", "elo_res"],
+  "required_learn_joined": [],
   "required_learn_wide": [
-    "weekly_tendencies__shotgun_rate", "weekly_tendencies__under_center_rate",
-    "weekly_tendencies__quick_game_rate", "weekly_tendencies__avg_air_yards",
-    "weekly_tendencies__pass_rate_all", "weekly_tendencies__early_down_pass_rate",
-    "weekly_tendencies__no_huddle_rate", "off_tendencies__shotgun_rate",
-    "off_tendencies__under_center_rate", "off_tendencies__quick_game_rate",
-    "off_tendencies__deep_rate", "off_tendencies__avg_air_yards",
-    "proe_early_neutral__proe", "proe_early_neutral__n_plays",
-    "def_pressure_weekly__proxy_rate", "def_tendencies__pressure_proxy",
-    "def_tendencies__sack_rate_vs", "tempo__pace_med", "tempo__hurryup_rate",
-    "rz_mix__rz_pass_rate", "rz_mix__rz_proe", "script_elasticity__beta_script",
-    "sequencing__2__contrast", "adjustments__mahal_dist"
+    "weekly_tendencies__shotgun_rate",
+    "off_tendencies__shotgun_rate",
+    "proe_early_neutral__proe",
+    "proe_early_neutral__n_plays"
   ],
   "do_not_touch": [
     "equations.py",
