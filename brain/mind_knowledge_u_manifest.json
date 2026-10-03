@@ -1,6 +1,6 @@
 {
-  "rows": 53606,
-  "shards": 37,
+  "rows": 62691,
+  "shards": 46,
   "recount_notes": "2026-10-03 recount: manifest previously claimed u_00=23,743 rows; branch file actually holds 22,282 valid rows and u_01 holds 1,461 (22,282+1,461=23,743 \u2014 the original figure was u_00+u_01 combined, misattributed to u_00 alone). u_02/u_04 sports rows (9,650) and u_03 (536) are as-reported, not yet recounted. Only u_05/u_06/u_07 are full-fidelity; u_00-u_04 bodies truncated ~4-5k chars.",
   "shards_detail": [
     {
@@ -60,6 +60,13 @@
       "source": "sports repo deep: 1,323 non-Markdown files (564 CSV, 285 py, 167 JSON, 112 JSONL, 11 parquet schema+stats+sample), 20/20 packages evaluated, X full-tables cell-by-cell incl. 445 full-table CSVs, ftn_charting_2025 + int_cells complete (1,811 equations)",
       "extraction_script": "docs/research/2026-10-03/engine-plan/tools/sportsdeep_extract.py",
       "commit": "c5a3e5f"
+    },
+    {
+      "files": "brain/mind_knowledge_u_08_local_00..08.jsonl",
+      "rows": 9085,
+      "bytes": 67455986,
+      "source": "local GSE dirs deep: 3,802 files full content (gse-discovery 1,062, mimo-verl 1,332, gse-intelligence-build 265, gse-repo-intel 199, wiring-wave2 279, improve-ledger-work 221, qb-behavioral-profiles 216, Kumo 22, IG 110, home JSONs) \u2014 binaries as schema+stats+sample, venv junk excluded",
+      "commit": "48fc2e4"
     }
   ],
   "authoritative_ledger": "docs/research/2026-10-03/engine-plan/COVERAGE-LEDGER.md"
