@@ -643,6 +643,23 @@ export const SOURCE_REGISTRY: Readonly<Record<string, LegalSource>> = {
     datasets: [],
     docsUrl: "https://convokit.cornell.edu/",
   },
+  "rapidapi-sportsbook2": {
+    id: "rapidapi-sportsbook2",
+    provider: "Sportsbook API v2 via RapidAPI (sportsbook-api2.p.rapidapi.com)",
+    kind: "licensed-api",
+    license: { spdx: null, name: "RapidAPI marketplace subscription + provider terms", url: "https://rapidapi.com/" },
+    commercialUse: true,
+    attributionRequired: false,
+    attributionText: null,
+    robotsRespected: true,
+    rateLimit: "Credit-metered RapidAPI plan; responses carry x-ratelimit-requests-remaining.",
+    verdict: "use-with-caution",
+    reason:
+      "Marketplace aggregator serving cross-source ADVANTAGES (observed type=ARBITRAGE) whose outcomes carry per-source provenance (observed source=PROPHET_X with decimal payout + modifier). VERIFIED LIVE 2026-09-20: GET /v0/advantages/?type=ARBITRAGE returned HTTP 200 with structured market/event/outcome entries; GET /v0/sports returned 404 (not an endpoint of this API). Underlying book-price redistribution rights ride the provider's plan terms: display pricing in the product requires checking those terms first, so default OFF behind RAPIDAPI_SPORTSBOOK2_INGEST. HOW: RAPIDAPI_KEY + host override RAPIDAPI_SPORTSBOOK2_HOST (default sportsbook-api2.p.rapidapi.com). Not a scrape.",
+    baseUrl: "https://sportsbook-api2.p.rapidapi.com",
+    datasets: ["advantages-arbitrage"],
+    docsUrl: "https://rapidapi.com/",
+  },
   "sharp-api": {
     id: "sharp-api",
     provider: "SharpAPI (api.sharpapi.io)",
