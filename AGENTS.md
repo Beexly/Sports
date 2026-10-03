@@ -7375,3 +7375,163 @@ log. Nothing was inventoried without verbatim evidence.
   (this run's close) to avoid double-covering. Near-window flag:
   @Data_Over_Degen EPA thread ~9:55-9:58 PM CDT Oct 2 (just after
   close).
+
+
+### ADDENDUM — Task B full report delivered late
+
+Task B's original final report was not auto-delivered during the run;
+the section above was built from chunked successor reads. The complete
+report arrived after the initial push. Corrections and additions:
+
+1. Item 22 (@EstablishTheRun): full URL recovered —
+   https://x.com/EstablishTheRun/status/2106044236437275005 (~11:20 AM
+   CDT Oct 2). Verbatim: "3.) Lions DL (9th) > Panthers OL (26th)
+   @BrandonThornNFL's biggest OL/DL mismatches in Week 4, complete
+   with his full rankings for every squad". Verdict stands:
+   RE-SIGHTING of the recurring weekly @BrandonThornNFL OL/DL
+   mismatch-rankings article promo.
+
+2. Item 23 (@FantasyPtsData Shadow Index): full 11-row table recovered
+   — the CSV was replaced with the complete transcription (columns:
+   ROW, WK, RECEIVER, OFF, POS, DEFENDER, DEF, DEF_POS, LWR, RWR, SLOT,
+   RTES, TOT, SHADOW_PCT, TGT, REC, YDS, TD, FP, FP_PER_T). Rows added
+   vs the chunk version: Marcus Jones (NE DB, 28.6%), Pat Surtain
+   (27.3%, 2/1/9), Carlton Davis (21.4%, 1/1/8), Myles Harden (16.7%),
+   Ja'Quan McMillian (13.6%, 1/1/9), Alex Singleton (4.5%), Justin
+   Strnad (4.5%, 1/1/22). Verbatim post text: ""Brian Thomas Jr.
+   still gets treated like Jacksonville's WR1 and that's why he's not
+   producing." *checks notes* 50% of his routes vs. Riley Moss in
+   Week 2" (6 replies, 2 reposts, 143 likes, 21.4K views). Data
+   source: Fantasy Points Data Suite 2.0 (hand-charted; bio:
+   "Hand-charted NFL analytics from @TampaBayTre and @JP_Mets").
+
+3. Item 24 (@DynatyzeFF WAR Board): verbatim post text recovered: "The
+   WAR Board is starting to ask so difficult questions: Is Josh Allen
+   losing his claim as the #1 QB? Is Jahmyr Gibbs that much better
+   than Bijan? How high can Jaxson Smith-Njigba climb? Do Tight Ends
+   matter anymore? The answers might surprise you." Chart text: "THE
+   WAR BOARD — 2026 · All positions · PPR. Jaxon Smith-Njigba was
+   worth +0.9 wins over a waiver-wire WR across 3 games in 2026 — the
+   most valuable PPR season at any position." Methodology (their
+   words): "each week a player's score is compared to the best typical
+   waiver pickup at his position in a 12-team league — the week's
+   QB13, RB29, WR41, or TE13"; "Built from our weekly stat archive,
+   1999 to today. 2002 and 2019 are missing upstream and are skipped
+   honestly rather than estimated." Site verified public (no login):
+   "The WAR Board — Every fantasy season since 1999, graded in wins —
+   not points." Filters All/QB/RB/WR/TE, PPR/Half/Standard. "Free ·
+   37 of 37 open". Thread replies: Allen still leads QBs, Purdy
+   "climbed into his own tier behind Allen"; Gibbs "slightly behind
+   JSN in WAR but within the same tier"; JSN at .31 WAR/game pace →
+   5.27 season; only one 4.0 WAR player since 1999 (Marshall Faulk
+   2000: 1,359 rush yds / 18 rush TD / 81 rec / 830 rec yds / 8 rec
+   TD).
+
+4. Item 25 (@NFL_Researcher 1-on-1 pressures): data source confirmed
+   — verbatim: "Most QB pressures when blocked 1-on-1 this season,
+   per @NextGenStats". CSV note updated accordingly.
+
+5. @NFL_Researcher OL pressure by position (different-angle item):
+   verbatim recovered: "Lowest QB pressures rate allowed by position,
+   per @NextGenStats: LT Will Campbell – 2.8% / LG Kingsley Suamataia
+   – 3.8% / C Creed Humphrey – 0.9% / RG Cesar Ruiz – 0.7% / RT
+   Amarius Mims – 4.5% > Minimum 100 pass block snaps" (30 replies, 14
+   reposts, 165 likes, 12.2K views). Data-source hunt: reply from
+   @uwupandaXD asks "are we able to see individual OL stats on NFL
+   pro? Or are they for people who work with NFL?" — no answer
+   observed; suggests per-player OL pressure data may sit behind NFL
+   Pro rather than the public NGS site. Also excluded as
+   out-of-window: "Lowest passer rating allowed in coverage among CB
+   … Trent McDuffie – 13.7 …" (7:30 PM Oct 1, before the 9:25 PM
+   window start).
+
+6. Item 26 (@SethWalder CB metric): full thread detail recovered.
+   Quote-posts his Sep 8 post: "This isn't quite ready for primetime
+   yet, but I want to share progress on a player-tracking cornerback
+   metric I've been working on this offseason I'm really excited
+   about…." Thread replies (verbatim): "Above, we have the leaderboard
+   sorted by Phase 1 (pre-throw positioning), but it lists Phase 2
+   (throw to ball arrival on targets) and Phase 1+2 combined. Of the
+   two, Phase 1 is significantly more stable but Phase 2 is more
+   explanatory of what happened when targeted." / "I do want to
+   stress how fickle a complex player-tracking metric (shoutout to
+   the data from @NextGenStats) like this is, and that three weeks of
+   play is a small sample. Still, certainly worth looking at I…" /
+   "Dax Hill leads all corners in Phase 1. Here's an example play the
+   metric loved." / "@NextGenStats The Puka play was incomplete! So
+   "regular" advanced CB metrics like yards per coverage snap, EPA
+   allowed, CPOE, etc. would all pick up that as a positive play for
+   Lenoir. But the player-tracking picks up that it wasn't." / "if
+   the model had zone as an input, the ghost defender would have
+   played it differently" (their transparency note on model limits).
+   Full 80-row leaderboard (PLAYER, TEAM, P1/P2/P1+2 percentiles) in
+   `docs/dfs/research/2026-10-02/full-tables/sethwalder-cb-prethrow-positioning.csv`:
+   P1 leader Daxton Hill (CIN) 100; P1+2 leader Mekhi Blackmon (CLE)
+   100; Jaycee Horn 94/100/99; Sauce Gardner 99/68/95; Trent McDuffie
+   89/95/97; Devon Witherspoon (SEA) 0 P1 (bottom).
+
+7. @32BeatWriters (different-angle): verbatim recovered: ""Per Next
+   Gen Stats, Henry actually leads the Patriots' pass-catchers in
+   missed tackles forced this year, with 1 (one). There's no tie
+   there, either. That's right, the Patriots' wide receivers have
+   forced the same amount of missed tackles this year as you, dear
+   reader. They have""
+
+8. PFF re-sightings: 5 URLs captured —
+   https://x.com/PFF/status/2106172462274842939 ("These defenses have
+   been getting feasted on");
+   https://x.com/PFF/status/2106167847596462150 ("Highest pass rush
+   win rate among rookie edge this season: Malachi Lawrence 24.1%,
+   Cashius Howe…");
+   https://x.com/PFF/status/2106160297849344224 ("Darnell Wright has
+   been at the head of the class for run blocking this season");
+   https://x.com/PFF/status/2106140416894701934 ("Highest pass block
+   win rate this season (min 75 pass snaps): Jake Brendel 97.8%, Erik
+   McCoy…");
+   https://x.com/PFF/status/2106131105426403792 ("Lowest pressure
+   rate allowed this season (min 75 pass snaps): Amarius Mims 0.0%,
+   Evan Brown…"). Also in window (URLs not captured): lowest missed
+   tackle rate among RB / highest rush yards over expected among RB /
+   lowest pass blocking efficiency allowed by guard (all "heading
+   into Week 4"); highest career passer rating vs single coverage
+   among active QBs; most career sacks taken among active starting QBs
+   (Rodgers 613, Stafford…).
+
+9. NEW GAP-FILL ITEM — @KyleM_FF "WR EFFICIENCY — WEEKS 1-3 2026"
+   (original posted 6:16 PM CDT Oct 1 — OUT OF WINDOW; surfaced via
+   in-window @AjayTakes quote-post ~21h ago). Verbatim: "This chart
+   outlines WR efficiency in several predictive metrics through the
+   first three weeks (per @FantasyPtsData)". Bullets: "Jaxon
+   Smith-Njigba is in a league of his own and is out-pacing Cooper
+   Kupp's record-breaking 2021 campaign"; "DJ Moore is one of the
+   best 'buy lows' this week"; "Deebo Samuel is a fantastic sell if
+   you can pair him with another asset to tier up"; "Mike Evans still
+   has league-winning upside if he can get and stay healthy";
+   "Dontayvion Wicks and Romeo Doubs deserve more targets"; "Josh
+   Downs is also a fantastic buy right now". Chart: "WR EFFICIENCY —
+   WEEKS 1-3 2026 · WRs RANKED 1-90 BY YPRR", columns PLAYER, YPRR,
+   TPRR, TM YDS%, 1D/RR, FP/RR, AVG SEP, footer FANTASY POINTS logo.
+   Full 90-row table in
+   `docs/dfs/research/2026-10-02/full-tables/kylemff-wr-efficiency-weeks1-3.csv`:
+   JSN 4.66 YPRR #1; D. London 4.15; D. Adams 3.81; … KC Concepcion
+   0.99 (#73); X. Smith 0.00 (#90). Flagged: original post predates
+   the window and the 10/01 PM sweep did not capture it — archived
+   here as a gap-fill, not as an in-window item. Data source:
+   @FantasyPtsData.
+
+10. CPOE search additions:
+    https://x.com/EthanKreagerFF/status/2106006245786153362 (12:59 PM
+    CDT Oct 2): "My week 4 MUST-SITS" — Herbert: "third-worst among
+    all QBs with 7 turnover-worthy plays and sixth-worst with a -4.2%
+    CPOE"; "All data in this thread was taken from @DynatyzeFF".
+    https://x.com/DynastyIsland/status/2105956361276424281 (9:41 AM
+    CDT Oct 2): Kyler Murray £4800 DFS — "5.0 PPR/G. 52.9%
+    completions. -2.5 CPOE." Both routine fantasy/DFS usage of CPOE,
+    not new metrics.
+
+11. @PattonAnalytics timestamp note: the chunk read gave "6:22 PM CDT
+    Oct 1" for the Checkdown % post; the 10/01 PM section recorded it
+    as 1:22 PM CDT with the identical URL
+    (x.com/PattonAnalytics/status/2105724929085776001) — same post;
+    6:22 PM matches 18:22 UTC (1:22 PM CDT), i.e. a timezone display
+    difference, not a new post. No gap.
