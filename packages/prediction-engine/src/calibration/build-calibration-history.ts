@@ -9,7 +9,7 @@
  * the screen withholds rather than treating unreadable history as calm.
  */
 
-import type { CalibrationHistoryRow } from "@sports/types";
+import { trueProbIsBackfill, type CalibrationHistoryRow } from "@sports/types";
 
 /** Minimal settled-pick shape the builder needs. Pure — no db, no I/O. */
 export interface SettledPickHistorySource {
@@ -49,13 +49,27 @@ function factorField(factorBreakdown: unknown, key: string): number | null {
   return finiteNumber((factorBreakdown as Record<string, unknown>)[key]);
 }
 
-function factorIndependentTrueProb(factorBreakdown: unknown): number | null {
+function edgeRecord(factorBreakdown: unknown): Record<string, unknown> | null {
   if (factorBreakdown == null || typeof factorBreakdown !== "object" || Array.isArray(factorBreakdown)) {
     return null;
   }
   const edge = (factorBreakdown as Record<string, unknown>)["independentEdge"];
   if (edge == null || typeof edge !== "object" || Array.isArray(edge)) return null;
-  return finiteNumber((edge as Record<string, unknown>)["trueProb"]);
+  return edge as Record<string, unknown>;
+}
+
+function factorIndependentTrueProb(factorBreakdown: unknown): number | null {
+  const edge = edgeRecord(factorBreakdown);
+  if (edge == null || trueProbIsBackfill(stampOf(edge))) return null;
+  return finiteNumber(edge["trueProb"]);
+}
+
+function stampOf(edge: Record<string, unknown> | null): { trueProbBasis?: string | null; rationale?: string | null } | null {
+  if (edge == null) return null;
+  return {
+    trueProbBasis: typeof edge["trueProbBasis"] === "string" ? edge["trueProbBasis"] : null,
+    rationale: typeof edge["rationale"] === "string" ? edge["rationale"] : null,
+  };
 }
 
 /**
@@ -67,8 +81,13 @@ function soldProbability(source: SettledPickHistorySource): number {
   const market =
     finiteNumber(source.marketFairProb) ?? factorField(source.factorBreakdown, "marketFairProb");
   if (market != null) return market;
-  const trueProb = finiteNumber(source.trueProb) ?? factorIndependentTrueProb(source.factorBreakdown);
-  if (trueProb != null) return trueProb;
+  // A backfill trueProb was written after settlement. It is not the price the
+  // pick was sold at, and the top-level copy is the same rewrite. Fall through
+  // to published confidence rather than train the withhold screen on it.
+  if (!trueProbIsBackfill(stampOf(edgeRecord(source.factorBreakdown)))) {
+    const trueProb = finiteNumber(source.trueProb) ?? factorIndependentTrueProb(source.factorBreakdown);
+    if (trueProb != null) return trueProb;
+  }
   const confidence = finiteNumber(source.confidence);
   if (confidence != null) return confidence / 100;
   return Number.NaN;
