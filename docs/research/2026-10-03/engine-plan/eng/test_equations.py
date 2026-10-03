@@ -3,6 +3,7 @@ import math
 import unittest
 
 from equations import (
+    air_bin,
     air_yards_to_sticks,
     american_implied,
     brier,
@@ -34,8 +35,14 @@ from equations import (
     protection_stress,
     push_adjusted,
     raw_rate_or_null,
+    result_share,
     season_regress,
+    shift_to_target,
+    shifted_total,
     shrunk_cell,
+    sigmoid,
+    standardize,
+    strict_side,
     target_share,
     team_points,
     total_residual,
@@ -124,6 +131,23 @@ class EquationTests(unittest.TestCase):
         self.assertIsNone(weighted_mean([1], [0]))
         self.assertIsNone(four_week_cv([1, 1, 1]))
         self.assertEqual(four_week_cv([1, 1, 1, 1]), 0)
+
+    def test_bins_sigmoid_and_shift(self):
+        self.assertEqual(air_bin(-1), 0)
+        self.assertEqual(air_bin(5), 1)
+        self.assertEqual(air_bin(10), 2)
+        self.assertEqual(air_bin(15), 3)
+        self.assertEqual(air_bin(20), 4)
+        self.assertEqual(air_bin(21), 5)
+        self.assertEqual(air_bin(float("nan")), -1)
+        self.assertAlmostEqual(sigmoid(0), 0.5)
+        self.assertAlmostEqual(standardize(3, 1, 2), 2 / (2 + 1e-9))
+        self.assertEqual(result_share(0), 0.5)
+        self.assertEqual(strict_side([1, 0, -1], 0), 1 / 3)
+        self.assertEqual(shifted_total(44, 47, 41), 38)
+        # Equality takes the high branch, so a balanced sample lands one step under zero.
+        self.assertAlmostEqual(shift_to_target([1.0, -1.0], 0.5), -1.0, places=5)
+        self.assertLess(shift_to_target([3.0, 5.0, 7.0], 0.5), 0)
 
 
 if __name__ == "__main__":

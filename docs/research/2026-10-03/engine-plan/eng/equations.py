@@ -276,3 +276,74 @@ def four_week_cv(prior: list[float]) -> float | None:
         return None
     var = sum((v - mean) ** 2 for v in prior) / 3.0
     return math.sqrt(var) / mean
+
+
+def air_bin(air_yards: float) -> int:
+    """qb_air_cpoe.py: bins behind the line, 0-5, 6-10, 11-15, 16-20, and beyond. Non-finite is -1."""
+    if air_yards != air_yards or air_yards in (float("inf"), float("-inf")):
+        return -1
+    if air_yards < 0:
+        return 0
+    if air_yards <= 5:
+        return 1
+    if air_yards <= 10:
+        return 2
+    if air_yards <= 15:
+        return 3
+    if air_yards <= 20:
+        return 4
+    return 5
+
+
+def sigmoid(x: float) -> float:
+    """mint_w4.py: 1 / (1 + exp(-x))."""
+    return 1.0 / (1.0 + math.exp(-x))
+
+
+def standardize(x: float, mu: float, sd: float) -> float:
+    """The fit step in test_v1.py and mint_w4.py: (x - mu) / (sd + 1e-9)."""
+    return (x - mu) / (sd + 1e-9)
+
+
+def result_share(result: float) -> float:
+    """baseline.py: 1 if the margin is positive, 0.5 on a tie, else 0."""
+    if result > 0:
+        return 1.0
+    if result == 0:
+        return 0.5
+    return 0.0
+
+
+def strict_side(values: list[float], line: float) -> float:
+    """scoredist.py mk: fraction strictly greater than the line. Pushes are not half-credited."""
+    if len(values) == 0:
+        raise ValueError("strict_side: empty sample")
+    return sum(1.0 for v in values if v > line) / len(values)
+
+
+def shifted_total(historical_total: float, historical_line: float, quoted_line: float) -> float:
+    """scoredist.py neighborhood: round(historical total + (quoted line - historical line))."""
+    return float(round(historical_total + (quoted_line - historical_line)))
+
+
+def shift_to_target(margins: list[float], target: float) -> float:
+    """scoredist.py shift_to: 40-step search on [-14, 14] so the tie-halved home-win rate meets the target."""
+    if len(margins) == 0:
+        raise ValueError("shift_to_target: empty sample")
+    lo, hi = -14.0, 14.0
+    n = len(margins)
+    for _ in range(40):
+        mid = (lo + hi) / 2.0
+        above = 0.0
+        for m in margins:
+            v = m + mid
+            if v > 0:
+                above += 1.0
+            elif v == 0:
+                above += 0.5
+        ph = above / n
+        if ph < target:
+            lo = mid
+        else:
+            hi = mid
+    return (lo + hi) / 2.0
