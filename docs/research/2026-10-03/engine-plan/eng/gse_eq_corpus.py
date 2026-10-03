@@ -269,3 +269,12 @@ def marginal_probability(conditionals: list[float] | None, priors: list[float] |
             return None
         total += float(conditional) * float(prior)
     return total
+
+
+def two_sample_denominator(k_p: float | None, k_q: float | None) -> float | None:
+    """0598 Rastogi et al. 2021 Eq. 8: (k^p - 1) * (k^q - 1) * (k^p + k^q). A missing count stays null."""
+    if k_p is None or k_p != k_p or k_q is None or k_q != k_q:
+        return None
+    kp = float(k_p)
+    kq = float(k_q)
+    return (kp - 1.0) * (kq - 1.0) * (kp + kq)

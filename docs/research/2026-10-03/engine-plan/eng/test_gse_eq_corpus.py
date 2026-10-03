@@ -219,5 +219,17 @@ class CorpusTotalProbabilityTests(unittest.TestCase):
         self.assertIsNone(marginal_probability([None], [0.4]))
 
 
+
+from gse_eq_corpus import two_sample_denominator
+
+
+class CorpusTwoSampleTests(unittest.TestCase):
+    def test_two_sample_denominator(self):
+        self.assertEqual(two_sample_denominator(3, 4), (3 - 1) * (4 - 1) * (3 + 4))
+        self.assertEqual(two_sample_denominator(1, 4), 0.0)
+        self.assertIsNone(two_sample_denominator(None, 4))
+        self.assertIsNone(two_sample_denominator(3, None))
+
+
 if __name__ == "__main__":
     unittest.main()
