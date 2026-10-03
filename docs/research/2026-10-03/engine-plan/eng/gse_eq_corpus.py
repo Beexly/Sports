@@ -257,3 +257,15 @@ def metropolis_acceptance(delta: float | None, temperature: float | None) -> flo
     if float(delta) > 0:
         return 1.0
     return math.exp(float(delta) / float(temperature))
+
+
+def marginal_probability(conditionals: list[float] | None, priors: list[float] | None) -> float | None:
+    """a04 paper Eq. 15: P(C) = sum_i P(C|T=i) * P(T=i). A missing factor or unequal lengths stays null."""
+    if not conditionals or not priors or len(conditionals) != len(priors):
+        return None
+    total = 0.0
+    for conditional, prior in zip(conditionals, priors):
+        if conditional is None or conditional != conditional or prior is None or prior != prior:
+            return None
+        total += float(conditional) * float(prior)
+    return total

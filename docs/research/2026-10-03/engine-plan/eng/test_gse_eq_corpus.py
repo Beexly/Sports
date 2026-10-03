@@ -207,5 +207,17 @@ class CorpusMetropolisTests(unittest.TestCase):
         self.assertIsNone(metropolis_acceptance(-1.0, None))
 
 
+
+from gse_eq_corpus import marginal_probability
+
+
+class CorpusTotalProbabilityTests(unittest.TestCase):
+    def test_marginal_probability(self):
+        self.assertAlmostEqual(marginal_probability([0.5, 0.25], [0.4, 0.6]), 0.5 * 0.4 + 0.25 * 0.6)
+        self.assertIsNone(marginal_probability([], []))
+        self.assertIsNone(marginal_probability([0.5], [0.4, 0.6]))
+        self.assertIsNone(marginal_probability([None], [0.4]))
+
+
 if __name__ == "__main__":
     unittest.main()
