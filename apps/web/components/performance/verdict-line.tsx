@@ -14,6 +14,7 @@
  */
 
 import { readRate } from "@/lib/tracker/inconclusive";
+import { publicRateOrNull } from "@/lib/ledger/display-guard";
 
 export function VerdictLine({
   wins,
@@ -29,6 +30,16 @@ export function VerdictLine({
 }) {
   const n = wins + losses;
   const read = readRate(wins, n, { threshold, minSample });
+  const guarded = publicRateOrNull({
+    label: "calibration verdict",
+    valuePct: read.rate == null ? null : read.rate * 100,
+    fired: wins,
+    eligible: n,
+    lowerBound: { method: "wilson", value: read.low },
+    clv: null,
+    provenance: null,
+  });
+  const numeric = guarded != null;
   const inconclusive = read.confidence === "inconclusive";
 
   return (
@@ -37,14 +48,7 @@ export function VerdictLine({
       data-verdict={read.confidence}
       className="mt-1 text-xs text-ion-2"
     >
-      {read.rate === null ? (
-        <>
-          <span className="font-mono uppercase tracking-wider text-ion-3">
-            No verdict
-          </span>{" "}
-          — {read.reason}
-        </>
-      ) : (
+      {numeric ? (
         <>
           <span
             className={`font-mono uppercase tracking-wider ${
@@ -54,6 +58,15 @@ export function VerdictLine({
             {inconclusive ? "Inconclusive" : "Conclusive"}
           </span>{" "}
           — {read.reason}
+        </>
+      ) : (
+        <>
+          <span className="font-mono uppercase tracking-wider text-ion-3">
+            No verdict
+          </span>{" "}
+          — {read.rate == null
+            ? read.reason
+            : "not rendered. Coverage, a lower bound, CLV, and walk-forward lineage are required."}
         </>
       )}
     </p>
