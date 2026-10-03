@@ -46,6 +46,7 @@ th { color: #8b97a8; font-weight: 600; }
 <tr><td>de-vigged close</td><td>1914</td><td>0.6098</td><td>0.2112</td><td>0.0224</td><td>0.6136</td><td>0.5901</td><td>0.6216</td><td>0.6085</td><td>0.6273</td><td>0.5875</td><td>0.6094</td><td>0.6634</td><td>market price, not a model</td></tr>
 <tr><td>engine v1 (offset + home/neutral + PIT QB + Elo residual)</td><td>1914</td><td>0.6107</td><td>0.2116</td><td>0.0216</td><td>0.6137</td><td>0.5899</td><td>0.6249</td><td>0.6085</td><td>0.6279</td><td>0.5873</td><td>0.6123</td><td>0.6642</td><td>clean: pre-game starters, walk-forward, no post-kickoff inputs</td></tr>
 <tr><td>coin flip</td><td>1914</td><td>0.6931</td><td>0.25</td><td>0.0334</td><td>0.6931</td><td>0.6931</td><td>0.6931</td><td>0.6931</td><td>0.6931</td><td>0.6931</td><td>0.6931</td><td>0.6931</td><td>constant</td></tr>
+<tr><td>champion plus air-yard completion residual</td><td>1914</td><td>0.6105</td><td>0.2115</td><td>not split</td><td>not split</td><td>not split</td><td>not split</td><td>not split</td><td>not split</td><td>not split</td><td>not split</td><td>not split</td><td>clean prior-week air yards. Delta vs stress+INT champion -0.000131, 95% interval -0.000343 to 0.000063, covers 0. Source eng/qb_air_cpoe_results.json</td></tr>
 </tbody>
 </table>
 <h2>Reliability, engine v1</h2>
@@ -63,25 +64,25 @@ th { color: #8b97a8; font-weight: 600; }
 <h2>Score distribution</h2>
 <p>Neighbourhood joint, unshifted, n=1914. Predicted cover 0.4875 vs realized 0.4882. Predicted over 0.485 vs realized 0.4905. Moneyline read off the spread is 0.6117 vs the close 0.6098. It does not beat the close. Neighbourhood joint, unshifted. Calibrated. Does not beat the moneyline close.</p>
 <h2>Current question drop: 2026-W4</h2>
-<p>15 games minted before kickoff. Scored: 0. File w4_mint_v1_20261003T0757Z.json. sha256 b67c48f988f072e65119864bcb49ac6478960b3f181bf5bbef12acdda174099e.</p>
+<p>15 games minted before kickoff. Scored: 0. File w4_mint_v1_20261003T0857Z.json. sha256 d31f9516b8ae81bd349b56b5c59ad8af2aabc60c294c545540f8d7e34d32ae74.</p>
 <table>
 <thead><tr><th>Game</th><th>p home</th><th>q home</th><th>fair cover</th><th>fair over</th><th>score</th></tr></thead>
 <tbody>
-<tr><td>2026_04_IND_WAS</td><td>0.3532</td><td>0.3528</td><td>0.5133</td><td>0.5019</td><td>unscored</td></tr>
-<tr><td>2026_04_ARI_NYG</td><td>0.4336</td><td>0.4344</td><td>0.5046</td><td>0.493</td><td>unscored</td></tr>
-<tr><td>2026_04_DAL_HOU</td><td>0.5885</td><td>0.5906</td><td>0.4977</td><td>0.4954</td><td>unscored</td></tr>
-<tr><td>2026_04_GB_TB</td><td>0.3756</td><td>0.3789</td><td>0.4856</td><td>0.497</td><td>unscored</td></tr>
-<tr><td>2026_04_JAX_CIN</td><td>0.5659</td><td>0.5657</td><td>0.4861</td><td>0.5</td><td>unscored</td></tr>
-<tr><td>2026_04_LA_PHI</td><td>0.3682</td><td>0.3699</td><td>0.4856</td><td>0.4909</td><td>unscored</td></tr>
-<tr><td>2026_04_NE_BUF</td><td>0.7346</td><td>0.7335</td><td>0.4833</td><td>0.4981</td><td>unscored</td></tr>
-<tr><td>2026_04_NYJ_CHI</td><td>0.6264</td><td>0.6268</td><td>0.5022</td><td>0.5077</td><td>unscored</td></tr>
-<tr><td>2026_04_TEN_BAL</td><td>0.842</td><td>0.84</td><td>0.5021</td><td>0.4895</td><td>unscored</td></tr>
-<tr><td>2026_04_MIA_MIN</td><td>0.8256</td><td>0.8258</td><td>0.4916</td><td>0.5</td><td>unscored</td></tr>
-<tr><td>2026_04_DEN_SF</td><td>0.5737</td><td>0.5711</td><td>0.4861</td><td>0.5</td><td>unscored</td></tr>
-<tr><td>2026_04_KC_LV</td><td>0.339</td><td>0.3411</td><td>0.4971</td><td>0.4942</td><td>unscored</td></tr>
-<tr><td>2026_04_LAC_SEA</td><td>0.746</td><td>0.7459</td><td>0.4833</td><td>0.5074</td><td>unscored</td></tr>
-<tr><td>2026_04_DET_CAR</td><td>0.3633</td><td>0.3655</td><td>0.4856</td><td>0.4909</td><td>unscored</td></tr>
-<tr><td>2026_04_ATL_NO</td><td>0.5515</td><td>0.5522</td><td>0.4861</td><td>0.5</td><td>unscored</td></tr>
+<tr><td>2026_04_IND_WAS</td><td>0.3517</td><td>0.3528</td><td>0.5133</td><td>0.5019</td><td>unscored</td></tr>
+<tr><td>2026_04_ARI_NYG</td><td>0.4332</td><td>0.4344</td><td>0.5046</td><td>0.493</td><td>unscored</td></tr>
+<tr><td>2026_04_DAL_HOU</td><td>0.589</td><td>0.5906</td><td>0.4977</td><td>0.4954</td><td>unscored</td></tr>
+<tr><td>2026_04_GB_TB</td><td>0.3788</td><td>0.3789</td><td>0.4856</td><td>0.497</td><td>unscored</td></tr>
+<tr><td>2026_04_JAX_CIN</td><td>0.5674</td><td>0.5657</td><td>0.4861</td><td>0.5</td><td>unscored</td></tr>
+<tr><td>2026_04_LA_PHI</td><td>0.3692</td><td>0.3699</td><td>0.4856</td><td>0.4909</td><td>unscored</td></tr>
+<tr><td>2026_04_NE_BUF</td><td>0.7361</td><td>0.7335</td><td>0.4833</td><td>0.4981</td><td>unscored</td></tr>
+<tr><td>2026_04_NYJ_CHI</td><td>0.6247</td><td>0.6268</td><td>0.5022</td><td>0.5077</td><td>unscored</td></tr>
+<tr><td>2026_04_TEN_BAL</td><td>0.8441</td><td>0.84</td><td>0.5021</td><td>0.4895</td><td>unscored</td></tr>
+<tr><td>2026_04_MIA_MIN</td><td>0.8253</td><td>0.8258</td><td>0.4916</td><td>0.5</td><td>unscored</td></tr>
+<tr><td>2026_04_DEN_SF</td><td>0.5734</td><td>0.5711</td><td>0.4861</td><td>0.5</td><td>unscored</td></tr>
+<tr><td>2026_04_KC_LV</td><td>0.3372</td><td>0.3411</td><td>0.4971</td><td>0.4942</td><td>unscored</td></tr>
+<tr><td>2026_04_LAC_SEA</td><td>0.7406</td><td>0.7459</td><td>0.4833</td><td>0.5074</td><td>unscored</td></tr>
+<tr><td>2026_04_DET_CAR</td><td>0.3627</td><td>0.3655</td><td>0.4856</td><td>0.4909</td><td>unscored</td></tr>
+<tr><td>2026_04_ATL_NO</td><td>0.5541</td><td>0.5522</td><td>0.4861</td><td>0.5</td><td>unscored</td></tr>
 </tbody>
 </table>
 <h2>External boards</h2>
