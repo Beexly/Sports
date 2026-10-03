@@ -933,3 +933,120 @@ def generated_before_kick(generated, commence) -> bool:
 def varying_column(sd: float, floor: float = 1e-8) -> bool:
     """score_present_flag.py: a column is kept only when its standard deviation is above 1e-8."""
     return sd > floor
+
+
+def decision_accuracy(probs: Sequence[float], outcomes: Sequence[float]) -> float:
+    """baseline.py metrics: clip each probability to [1e-6, 1 - 1e-6], then the mean of (p > 0.5) == y."""
+    if len(probs) == 0 or len(probs) != len(outcomes):
+        raise ValueError("decision_accuracy: probs and outcomes must be the same non-empty length")
+    hits = 0
+    for p, y in zip(probs, outcomes):
+        clipped = min(max(p, 1e-6), 1.0 - 1e-6)
+        if (clipped > 0.5) == y:
+            hits += 1
+    return hits / len(probs)
+
+
+def duplicate_rate_mean(rates: Sequence[float | None]) -> float | None:
+    """league_baselines.py: mean of duplicate quick_game_rate values on one key. Nulls are dropped. None left is null."""
+    chosen = [float(r) for r in rates if r is not None and r == r]
+    if not chosen:
+        return None
+    return sum(chosen) / len(chosen)
+
+
+def expected_bin_completions(attempts: float, league_rate: float | None) -> float | None:
+    """qb_air_cpoe.py: expected completions in a bin are attempts times the league rate. A null rate stays null."""
+    if league_rate is None or league_rate != league_rate:
+        return None
+    return attempts * league_rate
+
+
+def typed_epa(flag: float, epa: float | None) -> float | None:
+    """engine_v1.py: epa when the play flag is 1, else null. A null epa on a flagged play stays null."""
+    if flag != 1:
+        return None
+    if epa is None or epa != epa:
+        return None
+    return float(epa)
+
+
+def counted_attempt(sack: float | None, qb_spike: float | None) -> bool:
+    """independent_cpoe.py: a play is kept when sack and qb_spike are not 1. A missing flag is 0."""
+    sack_v = 0.0 if sack is None or sack != sack else float(sack)
+    spike_v = 0.0 if qb_spike is None or qb_spike != qb_spike else float(qb_spike)
+    return sack_v == 0.0 and spike_v == 0.0
+
+
+def snap_share_skipna(offense_pct: float | None, defense_pct: float | None) -> float | None:
+    """w4_champion.py: max of the two prior-4 snap percents, skipping a missing side. Both missing is null."""
+    present = [float(v) for v in (offense_pct, defense_pct) if v is not None and v == v]
+    if not present:
+        return None
+    return max(present)
+
+
+def nflverse_join_date(commence, day_offset: int, hours: int = 5):
+    """gse_eval.py: commence plus a day offset, minus 5 hours, as a calendar date. The offsets tried are 0, -1, and 1."""
+    from datetime import timedelta
+
+    return (commence + timedelta(days=day_offset) - timedelta(hours=hours)).date()
+
+
+def expected_starter(
+    previous: str | None,
+    has_prior_game: bool,
+    previous_is_out: bool,
+    history: Sequence[tuple],
+    out_ids: set[str],
+    row_cap: int = 60,
+) -> tuple[str | None, str]:
+    """data.py pit_starter: the last game's starter unless that starter is Out or Doubtful.
+    history rows are (date, qb, dropbacks) already limited to dates before the game.
+    The last 60 of those rows are kept, then the last 4 distinct dates, then the QB with the most
+    dropbacks excluding the previous starter and anyone in out_ids.
+    No prior game is (None, 'no-prior-game'). No eligible backup is (None, 'backup-unknown').
+    """
+    import collections
+
+    if not has_prior_game:
+        return None, "no-prior-game"
+    if not previous_is_out:
+        return previous, "prev-starter"
+    recent = list(history)[-row_cap:]
+    dates = set(sorted({row[0] for row in recent})[-4:])
+    totals: collections.Counter = collections.Counter()
+    for date, qb, dropbacks in recent:
+        if date in dates and qb != previous and qb not in out_ids:
+            totals[qb] += dropbacks
+    if totals:
+        return totals.most_common(1)[0][0], "backup-most-dropbacks"
+    return None, "backup-unknown"
+
+
+def refit_matches(got: float, published: float, tol: float = 0.00015) -> bool:
+    """chart.py: the refit is rejected when abs(got - published) > 0.00015."""
+    return abs(got - published) <= tol
+
+
+def market_log_odds(q: float | None) -> float | None:
+    """engine_v1.py: log(q / (1 - q)) when q is present and not zero. A missing or zero price is null."""
+    if not q or q != q:
+        return None
+    return math.log(q / (1.0 - q))
+
+
+def stress_or_null(
+    stress: float | None,
+    games: float | None,
+    null_reason: str | None,
+    floor: float = 3.0,
+) -> float | None:
+    """join_rest.py: stress is null when null_reason is non-empty, or when games < 3. A missing game count is 0. A null stress stays null."""
+    if null_reason is not None and str(null_reason).strip() != "":
+        return None
+    n = 0.0 if games is None or games != games else float(games)
+    if n < floor or stress is None or stress != stress:
+        return None
+    return float(stress)
+

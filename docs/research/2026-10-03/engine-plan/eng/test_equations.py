@@ -12,11 +12,14 @@ from equations import (
     complete_minus_probability,
     completion_base_offset,
     completion_residual,
+    counted_attempt,
     decay_weight,
+    decision_accuracy,
     deep_rate,
     derived_markets_withheld,
     devig,
     drive_state_line,
+    duplicate_rate_mean,
     ece,
     edge_needs_check,
     elo_margin,
@@ -27,7 +30,9 @@ from equations import (
     engine_point_shift,
     espn_home_projection,
     evidence_score,
+    expected_bin_completions,
     expected_snap_loss,
+    expected_starter,
     explosive_play,
     fair_side,
     fair_with_push,
@@ -57,10 +62,12 @@ from equations import (
     logit,
     logit_contribution,
     margin_residual,
+    market_log_odds,
     mean_or_null,
     mov_multiplier,
     n_plays_weighted_mean,
     nflverse_home_spread,
+    nflverse_join_date,
     normal_ci,
     odds_snapshot_stale,
     offset_log_odds,
@@ -87,6 +94,7 @@ from equations import (
     raw_rate_or_null,
     recency_weights,
     reconstructed_dropbacks,
+    refit_matches,
     rest_diff,
     result_share,
     sample_median,
@@ -103,9 +111,11 @@ from equations import (
     shrunk_cell,
     sigmoid,
     snap_share,
+    snap_share_skipna,
     snap_within_window,
     spread_neighborhood_k,
     standardize,
+    stress_or_null,
     strict_side,
     target_share,
     team_points,
@@ -113,6 +123,7 @@ from equations import (
     text_column_is_numeric,
     total_residual,
     trust_share_or_null,
+    typed_epa,
     under_center_diff,
     under_center_rate,
     unknown_qb_rating,
@@ -398,6 +409,48 @@ class EquationTests(unittest.TestCase):
         self.assertFalse(generated_before_kick("2026-10-05", "2026-10-05"))
         self.assertFalse(varying_column(1e-8))
         self.assertTrue(varying_column(1e-8 + 1e-12))
+
+
+    def test_starter_join_and_attempt_filters(self):
+        from datetime import datetime, date
+
+        self.assertEqual(decision_accuracy([0.9, 0.1], [1, 0]), 1.0)
+        self.assertEqual(decision_accuracy([0.6], [0]), 0.0)
+        self.assertIsNone(duplicate_rate_mean([None, None]))
+        self.assertAlmostEqual(duplicate_rate_mean([0.2, None, 0.4]), 0.3)
+        self.assertIsNone(expected_bin_completions(10, None))
+        self.assertEqual(expected_bin_completions(10, 0.6), 6.0)
+        self.assertIsNone(typed_epa(0, 1.5))
+        self.assertIsNone(typed_epa(1, None))
+        self.assertEqual(typed_epa(1, -0.2), -0.2)
+        self.assertTrue(counted_attempt(None, None))
+        self.assertFalse(counted_attempt(1, 0))
+        self.assertFalse(counted_attempt(0, 1))
+        self.assertIsNone(snap_share_skipna(None, None))
+        self.assertEqual(snap_share_skipna(None, 0.4), 0.4)
+        self.assertEqual(snap_share(None, None), 0.0)
+        kick = datetime(2026, 10, 5, 1, 0)
+        self.assertEqual(nflverse_join_date(kick, 0), date(2026, 10, 4))
+        self.assertEqual(nflverse_join_date(kick, 1), date(2026, 10, 5))
+        self.assertEqual(expected_starter(None, False, False, [], set()), (None, "no-prior-game"))
+        self.assertEqual(expected_starter("QB1", True, False, [], set()), ("QB1", "prev-starter"))
+        history = [("d1", "QB2", 10), ("d2", "QB3", 4), ("d2", "QB2", 3)]
+        self.assertEqual(expected_starter("QB1", True, True, history, set()), ("QB2", "backup-most-dropbacks"))
+        self.assertEqual(expected_starter("QB1", True, True, history, {"QB2"}), ("QB3", "backup-most-dropbacks"))
+        self.assertEqual(expected_starter("QB1", True, True, [], set()), (None, "backup-unknown"))
+        self.assertTrue(refit_matches(0.6107, 0.6107))
+        self.assertTrue(refit_matches(0.61085, 0.6107))
+        self.assertFalse(refit_matches(0.61086, 0.6107))
+        self.assertIsNone(market_log_odds(None))
+        self.assertIsNone(market_log_odds(0))
+        self.assertAlmostEqual(market_log_odds(0.6), __import__("math").log(0.6 / 0.4))
+        self.assertIsNone(stress_or_null(0.2, 2, None))
+        self.assertIsNone(stress_or_null(0.2, 5, "pool<32"))
+        self.assertIsNone(stress_or_null(None, 5, None))
+        self.assertIsNone(stress_or_null(0.2, None, "  "))
+        self.assertEqual(stress_or_null(0.2, 3, "  "), 0.2)
+        self.assertEqual(stress_or_null(0.2, 3, ""), 0.2)
+
 
 if __name__ == "__main__":
     unittest.main()
