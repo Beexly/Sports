@@ -204,6 +204,7 @@ class CorpusMetropolisTests(unittest.TestCase):
         self.assertAlmostEqual(metropolis_acceptance(-1.0, 2.0), math.exp(-0.5))
         self.assertIsNone(metropolis_acceptance(None, 1.0))
         self.assertIsNone(metropolis_acceptance(-1.0, 0.0))
+        self.assertIsNone(metropolis_acceptance(-1.0, -0.5))
         self.assertIsNone(metropolis_acceptance(-1.0, None))
 
 

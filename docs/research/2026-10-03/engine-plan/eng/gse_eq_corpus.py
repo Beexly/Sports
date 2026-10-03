@@ -245,10 +245,10 @@ import math
 
 
 def metropolis_acceptance(delta: float | None, temperature: float | None) -> float | None:
-    """c04 verified, Metropolis rule: A(delta, T) = 1 if delta > 0 else exp(delta / T).
+    """c04 VC-3 cricket ADAPT note, not a verified NFL result: A(delta, T) = 1 if delta > 0 else exp(delta / T).
 
-    The annealing schedule is not part of this identity. A missing input, or a
-    non-positive temperature, stays null.
+    The source paper is cricket-only (0207). The annealing schedule is not part of this identity.
+    A missing input, or a non-positive temperature, stays null.
     """
     if delta is None or delta != delta or temperature is None or temperature != temperature:
         return None
