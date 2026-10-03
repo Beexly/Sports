@@ -1,7 +1,7 @@
 {
-  "rows": 24518,
+  "rows": 37036,
   "files": 5311,
-  "shards": 4,
+  "shards": 23,
   "shards_detail": [
     {
       "file": "brain/mind_knowledge_u_06_agents.jsonl",
@@ -17,6 +17,15 @@
       "bytes": 2648655,
       "source": "NFL_Analytics_Reverse-Engineering__3.html full page + 1.45MB consolidated knowledge base + sweep catalog + Firecrawl prompt + intake doc (144 NFL-measured equations)",
       "commit": "1de0a35"
+    },
+    {
+      "file": "brain/mind_knowledge_u_07_compintel_deep_00..18.jsonl",
+      "shard_count": 19,
+      "rows": 12518,
+      "bytes": 153284548,
+      "source": "gse-competitive-intel deep: 572 code catalogs, 215 JSON, 159 sitemap XML, 210 HTML, 221 JS endpoint inventories, 13 CSV, 87 code files, fp-openapi 12 endpoints, MASTER_MATRIX 23 domains (1,915 rows with equations)",
+      "extraction_script": "docs/research/2026-10-03/engine-plan/tools/compintel_deep_extract.py",
+      "commit": "cacaba3"
     }
   ]
 }
