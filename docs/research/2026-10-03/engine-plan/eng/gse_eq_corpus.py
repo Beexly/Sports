@@ -186,7 +186,7 @@ def two_minute(half_seconds_remaining: float | None) -> bool | None:
 
 
 def era_aggregate_weight(attribution_confidence: int | None) -> float | None:
-    """c03: sole caller is 1, shared is 0.5, unknown is excluded. Any other code stays null."""
+    """c03: sole caller is code 1, shared is code 2 with weight 0.5, unknown is code 3 and is excluded. Any other code stays null."""
     if attribution_confidence == 1:
         return 1.0
     if attribution_confidence == 2:

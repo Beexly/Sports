@@ -25,6 +25,8 @@ class CorpusTrustTests(unittest.TestCase):
         self.assertIsNone(top_two_share([20.0, 4.0]))
         self.assertIsNone(top_two_share([30.0]))
         self.assertIsNone(top_two_share([30.0, 0.0]))
+        self.assertEqual(top_two_share([15.0, 10.0]), 1.0)
+        self.assertEqual(top_two_share([20.0, 10.0]), 1.0)
         self.assertIsNone(top_two_share([10.0, None, 20.0]))
 
     def test_air_yard_share(self):
@@ -123,6 +125,8 @@ class CorpusCoachingTests(unittest.TestCase):
 
     def test_binomial_cell_se(self):
         self.assertAlmostEqual(binomial_cell_se(0.5, 100), (0.25 / 100) ** 0.5)
+        self.assertEqual(binomial_cell_se(0, 30), 0.0)
+        self.assertEqual(binomial_cell_se(1, 30), 0.0)
         self.assertIsNone(binomial_cell_se(0.5, 0))
         self.assertIsNone(binomial_cell_se(None, 100))
 
