@@ -1,7 +1,7 @@
 {
-  "rows": 23885,
+  "rows": 24518,
   "files": 5311,
-  "shards": 3,
+  "shards": 4,
   "shards_detail": [
     {
       "file": "brain/mind_knowledge_u_06_agents.jsonl",
@@ -10,6 +10,13 @@
       "source": "29 AGENTS.md files, full-body ingestion (closes 15k-char truncation gap)",
       "extraction_script": "docs/research/2026-10-03/engine-plan/tools/agents_extract.py",
       "commit": "4701a56"
+    },
+    {
+      "file": "brain/mind_knowledge_u_05_reveng.jsonl",
+      "rows": 633,
+      "bytes": 2648655,
+      "source": "NFL_Analytics_Reverse-Engineering__3.html full page + 1.45MB consolidated knowledge base + sweep catalog + Firecrawl prompt + intake doc (144 NFL-measured equations)",
+      "commit": "1de0a35"
     }
   ]
 }
