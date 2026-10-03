@@ -233,6 +233,7 @@ export {
   ENTRY_ODDS_MIN_ABS,
   MARKET_FAIR_METHOD_TAG,
   modelProbForReceipt,
+  featureHashForDisplay,
 } from "./pick-proof-receipt.js";
 export type {
   PickProofInput,

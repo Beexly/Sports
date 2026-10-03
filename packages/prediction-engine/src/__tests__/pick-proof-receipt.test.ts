@@ -4,6 +4,7 @@ import {
   verifyPickProofReceipt,
   isPlausibleEntryOdds,
   modelProbForReceipt,
+  featureHashForDisplay,
   ENTRY_ODDS_MIN_ABS,
   ENTRY_ODDS_MAX_ABS,
   type PickProofInput,
@@ -269,5 +270,31 @@ describe("modelProbForReceipt — the model probability a receipt may honestly c
   it("the builder still rejects an out-of-range modelProb", () => {
     expect(() => buildPickProofReceipt(base({ modelProb: 1.5 }), testHash)).toThrow();
     expect(() => buildPickProofReceipt(base({ modelProb: Number.NaN }), testHash)).toThrow();
+  });
+
+  it("omitting featureHash leaves the payload unchanged, and null commits none", () => {
+    const before = buildPickProofReceipt(base(), testHash);
+    expect(before.payload).not.toContain("featureHash");
+    const none = buildPickProofReceipt(base({ featureHash: null }), testHash);
+    expect(none.payload).toContain("featureHash=none");
+    expect(none.contentHash).not.toBe(before.contentHash);
+    expect(verifyPickProofReceipt(none, testHash)).toBe(true);
+    expect(verifyPickProofReceipt(before, testHash)).toBe(true);
+  });
+
+  it("commits a sha256 feature hash and refuses anything else", () => {
+    const sha = "ab".repeat(32);
+    const r = buildPickProofReceipt(base({ featureHash: sha }), testHash);
+    expect(r.payload).toContain(`featureHash=${sha}`);
+    expect(() => buildPickProofReceipt(base({ featureHash: "not-a-hash" }), testHash)).toThrow();
+    const tampered = { ...r, fields: { ...r.fields, featureHash: "cd".repeat(32) } };
+    expect(verifyPickProofReceipt(tampered, testHash)).toBe(false);
+  });
+
+  it("does not display a feature hash unless the founder gate is open", () => {
+    const sha = "ab".repeat(32);
+    expect(featureHashForDisplay(sha, false)).toBeNull();
+    expect(featureHashForDisplay("none", true)).toBeNull();
+    expect(featureHashForDisplay(sha, true)).toBe(sha);
   });
 });
