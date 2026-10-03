@@ -24,10 +24,12 @@ class CorpusTrustTests(unittest.TestCase):
         self.assertAlmostEqual(top_two_share([15.0, 10.0, 5.0]), 25.0 / 30.0)
         self.assertIsNone(top_two_share([20.0, 4.0]))
         self.assertIsNone(top_two_share([30.0]))
+        self.assertIsNone(top_two_share([30.0, 0.0]))
         self.assertIsNone(top_two_share([10.0, None, 20.0]))
 
     def test_air_yard_share(self):
         self.assertAlmostEqual(air_yard_share(35.0, 100.0), 0.35)
+        self.assertEqual(air_yard_share(80.0, 80.0), 1.0)
         self.assertIsNone(air_yard_share(35.0, 0.0))
         self.assertIsNone(air_yard_share(35.0, None))
         self.assertIsNone(air_yard_share(None, 100.0))

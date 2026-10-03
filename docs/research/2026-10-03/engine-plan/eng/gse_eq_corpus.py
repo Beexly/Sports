@@ -39,12 +39,15 @@ def effective_targets(hhi: float | None) -> float | None:
 def top_two_share(counts: Sequence[float], floor: float = 25.0) -> float | None:
     """c02 System 3: top2_share is the sum of the two largest s_i. T under 25, or fewer than two receivers, is null."""
     clean = _counts(counts)
-    if clean is None or len(clean) < 2:
+    if clean is None:
         return None
-    total = sum(clean)
+    receivers = [count for count in clean if count > 0]
+    if len(receivers) < 2:
+        return None
+    total = sum(receivers)
     if total < floor or total <= 0:
         return None
-    largest = sorted(clean, reverse=True)
+    largest = sorted(receivers, reverse=True)
     return (largest[0] + largest[1]) / total
 
 
