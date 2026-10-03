@@ -6,8 +6,8 @@ Every input name must already exist on features_v1, learn_joined, or learn_wide.
 NULL stays NULL. Inputs that fail floors stay NULL.
 
 HOLD trim (Red Team via GSE Main): no composed sums/products of unrelated
-columns; no home_minus_away rename wrappers. Kept primitives + documented
-under_center / proe floor from corpus.
+columns; no home_minus_away rename wrappers; no under_center_diff /
+market_elo_residual. Kept: home_minus_away, under_center_rate, proe_or_null.
 """
 from __future__ import annotations
 
@@ -16,17 +16,12 @@ from collections.abc import Sequence
 IDENTITY = "tinkabot"
 
 # Columns this module may read (receipt for mind). Do not invent others.
-REQUIRED_FEATURES_V1: tuple[str, ...] = (
-    "mkt",
-    "elo",
-    "elo_res",
-)
+REQUIRED_FEATURES_V1: tuple[str, ...] = ()
 
 REQUIRED_LEARN_JOINED: tuple[str, ...] = ()
 
 REQUIRED_LEARN_WIDE: tuple[str, ...] = (
     "weekly_tendencies__shotgun_rate",
-    "off_tendencies__shotgun_rate",
     "proe_early_neutral__proe",
     "proe_early_neutral__n_plays",
 )
@@ -54,24 +49,6 @@ def under_center_rate(shotgun_rate: float | None) -> float | None:
     return 1.0 - float(shotgun_rate)
 
 
-def under_center_diff(home_shotgun: float | None, away_shotgun: float | None) -> float | None:
-    """-(home_shotgun - away_shotgun); the +1 cancels.
-
-    Source: eng/learn_wide_coverage.json derived.formula / on_diff.
-    """
-    d = home_minus_away(home_shotgun, away_shotgun)
-    if d is None:
-        return None
-    return -d
-
-
-def market_elo_residual(elo_logit: float | None, market_logit: float | None) -> float | None:
-    """elo_res = elo - mkt. Prefer features_v1.elo_res when present."""
-    if _null(elo_logit) or _null(market_logit):
-        return None
-    return float(elo_logit) - float(market_logit)
-
-
 def proe_or_null(
     proe: float | None,
     n_plays: float | None,
@@ -92,13 +69,13 @@ def proe_or_null(
 COLUMN_BACKED_FUNCS: Sequence[str] = (
     "home_minus_away",
     "under_center_rate",
-    "under_center_diff",
-    "market_elo_residual",
     "proe_or_null",
 )
 
 # Functions removed under Red Team HOLD (do not reintroduce without CLEAR).
 HOLD_DELETED: Sequence[str] = (
+    "under_center_diff",
+    "market_elo_residual",
     "qb_pit_plus_elo_res",
     "cpoe_plus_p2s",
     "adot_minus_deep",
