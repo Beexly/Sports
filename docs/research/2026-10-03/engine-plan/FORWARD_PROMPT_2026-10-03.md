@@ -4,11 +4,13 @@ Paste this whole block to the coding agent (Hermes / Codex / Claude Code on Beex
 
 ---
 
+SPRINT CLOCK AND BINDING RULES: GSE_V2_DECISIONS_SPRINT_2026-10-03.md is in the same folder. It overrides any conflicting text below. Nothing waits weeks. All lanes run in parallel on the hour-level clock in its §1 (W4 live Sunday 10/04, v1 champion before TNF 10/08). Use its single decision function (§2.1), bitemporal contract (§2.3), reasoner interface (§2.6), ownership (§2.15) and escalation rule (§2.13). Do not stop work.
+
 You are building the GSE reasoning engine on Beexly/Sports. GSE ingests every signal, reasons over it, and emits picks, props, parlays, fantasy/DFS and analysis. We grade the engine on its own metrics: log loss, Brier, ECE, hit rate, projection error. The engine learns from every graded row. The de-vigged close is drawn as a reference line on charts. It is not the target and not a merge gate. Never claim we beat it.
 
 Neon production picks are frozen history. Do not settle, re-grade, tag, edit, or train on any existing pick until the founder declares the engine complete. All engine testing runs on the replay against nflverse outcomes.
 
-The architecture is GSE_MASTER_INTEGRATION_2026-10-03.md, in the same folder. Read it first: one loop (ingest → encode → perceive → reason → price → decide → grade → learn → chart), with every component wired into it. Wiring is immediate; weight is earned. Each family goes live the day it is wired, and the nightly grader sets its weight from walk-forward results. Measured today: 33 flat features made the engine worse than 2. Do not dump raw signals into the pricer; use the hierarchy and the gate. Lane 0 runs first. Lane 20 (activate what already exists) and lanes 16–19 start in parallel with it.
+The architecture is GSE_MASTER_INTEGRATION_2026-10-03.md, in the same folder. Read it first: one loop (ingest → encode → perceive → reason → price → decide → grade → learn → chart), with every component wired into it. Wiring is immediate; weight is earned. Each family goes live the day it is wired, and the nightly grader sets its weight from walk-forward results. Measured today: 33 flat features made the engine worse than 2. Do not dump raw signals into the pricer; use the hierarchy and the gate. Lane 0 runs first. Lane 20 (activate what already exists) and lanes 16–19 start in parallel with it. The coding-agent kit (contracts, gate, definition of done, directory ownership, order) is GSE_20K_REVIEW_2026-10-03.md §G. Follow it exactly; if it does not cover something, comment on the card instead of deciding.
 
 Ground truth before you start (measured 2026-10-03, receipts in docs/research/2026-10-03/engine-plan/):
 - Prod NFL has 29 scorable graded picks. That is the bottleneck. The engine cannot learn from 29 rows.
@@ -46,7 +48,7 @@ The engine mints only inside T−7d of kickoff. Do not touch existing picks. Rec
 LANE 9: Hygiene.
 Triage the 30 open PRs: merge if green and still relevant, otherwise close with a reason. Prune merged Sports-wt-* worktrees. Receipt: a before/after list.
 
-LANE 10: Grade W4 (Monday 2026-10-06).
+LANE 10: Grade W4 after the Monday-night game ends (MNF is Monday 2026-10-05; grade early Tuesday 2026-10-06). Store the date logic in tests.
 This is an nflverse-only engine test, not a Neon pick. Verify the sha256 of docs/research/2026-10-03/engine-plan/w4_2026_sealed.json (d6e03aaf18cebd5ee0e940e710e9948208d610212acf013687448bb3b66b6d2e). Score log loss and Brier for the independent and Elo-only columns. Show the close as reference.
 
 LANE 11: External intelligence leaderboards (after 2 and 4).
@@ -102,6 +104,46 @@ LANE 20: Activate what is already built, before building anything new (GSE_MASTE
 (f) Extend prop capture beyond receptions and pass TDs to every player market on every book already ingested.
 (g) Give every sport (MLB, NCAAF, MLS, NHL, NBA) its own replay with the same gate. NCAAF has 1.44M line snapshots.
 Receipt per item: before/after row counts, the gate result, and the PR.
+
+LANE 21: Joint distribution engine (20K review §A1).
+One model per game: a score/drive simulator, or a bivariate points distribution plus player-share models. ML, spread, total, team totals, halves, quarters, every player prop, fantasy and DFS are all read off that one distribution, so markets never contradict each other. Same-game parlays use the model's real correlation.
+Test: the gate on every target. Calibration is learned on the pooled targets (about 100x the rows).
+
+LANE 22: Line movement as a minute-by-minute grader (§A2).
+From odds_line_snapshots, compute post-mint movement toward or away from the engine at sharp books. Add it as an auxiliary low-variance learning signal in the nightly refit.
+Receipt: weeks needed to detect a fixed Δ log loss improvement, outcomes alone vs outcomes plus movement.
+
+LANE 23: Multi-mint decision points (§A6).
+Mint at Tuesday open, at each of Wed/Thu/Fri practice reports, Saturday status, inactives (about 90 minutes pre-kick) and the final pre-kick price. Grade each mint. Add an inactives feed; check the Alexandria nfl-com game endpoint first and record the result if it lacks inactives.
+
+LANE 24: Live in-game engine (§A7).
+Live win probability and live props from pbp plus CV, using the in-game modules already in packages/prediction-engine (2410.09068, 2601.07980). Weight earned on live 2026 data only.
+
+LANE 25: Invalidator guards (§B), land with Lane 3:
+(a) llm_cutoffs.json, and the gate refuses LLM-in-loop scoring before cutoff + 30 days
+(b) PIT audit of every family. Pre-game QB comes from depth chart/injury vintage, not games.csv qb_id. Re-run the per-QB test this way and record the corrected number.
+(c) FDR correction plus an untouched final holdout (2026 W5+ live)
+(d) CLV graded at sharp books only
+
+LANE 26: Decision layer (§D).
+Portfolio selection with correlation and exposure caps, fractional Kelly on calibrated p with uncertainty shrinkage, and conformal abstention. DFS: projections plus projected ownership plus stack correlation, graded on projection error and contest results.
+
+LANE 27: Engine memory (§E).
+Write a structured autopsy into loss_autopsies after every graded game: wrong input / wrong weight / variance / missing family. Counts of the taxonomy become the family backlog. Populate entities and entity_edges for reasoner retrieval.
+
+LANE 28: Signal-universe families not yet built (§C). One family per PR through G1–G3:
+- travel and body clock
+- altitude
+- playoff-leverage simulator
+- special teams
+- turnover luck
+- officials crews
+- coverage-matchup encoder (participation coverage columns, currently 0 code files)
+- OL continuity
+- venue and crowd
+- contracts and incentives
+- coaching changes
+- public attention
 
 Final receipt: per lane, the files, tests, remote SHA, PR number, the metric with n and CI, what was excluded, and what was not done.
 

@@ -89,7 +89,7 @@ More measured today (data pulled into the lake, then tested):
 - Archive forward, starting tonight: ESPN predictor, Kalshi prices, news text and injury snapshots. These sources do not keep their history; whatever isn't captured is gone.
 
 ### 3.2 Encode: pretraining, which is where a million signals become usable
-- Pretrain on every play: nflverse pbp 1999–2026, about 1.2M plays (estimated from the measured 397,855 for 2018–2026) × 372 columns, plus participation and FTN.
+- Pretrain on every play: nflverse pbp 1999–2026, 1,288,125 plays (measured, 28 seasons downloaded to the lake) × 372 columns, plus participation and FTN.
   - Objectives: next play, EPA, success, drive outcome, player stat lines.
   - Output: embeddings for each player, unit, coaching scheme and team-week.
 - Fine-tune on graded games, props and DFS from the replay.
