@@ -161,3 +161,34 @@ Champion for the day: market offset + QB + Elo residual + injury availability, s
 4. Sunday night: grade, refit and log the week on the learning curve. Every week after that adds 16 graded games plus props, and every new family wired joins the gate on the next refit.
 
 Not done yet, and named: pretraining (3.2), CV labels and fine-tune (3.3), Madden import (3.4) and the reasoner (3.5) are build work starting now. They are not live today. Madden 26/27 playbooks need a source; the founder has said one exists, and the coding agent must find it and record its terms.
+
+## 5. What is already built: status matrix (Neon prod + repo, read-only, 2026-10-03)
+
+The repo already contains most of the loop; most of it is starved, unweighted or not live. Lane 20 activates what exists before anything new is built.
+
+Scale:
+- 21 packages; 231 top-level prediction-engine modules; 31 scheduled crons.
+- Neon: 135 tables, 34 with rows (4.2M rows total), 101 empty.
+
+| Asset | Rows / state | Wired | Weighted | Calibrated | Tested | Live |
+|---|---|---|---|---|---|---|
+| odds_line_snapshots (13 books, OPEN/INTERIM/CLOSE, Aug 19 → now) | 3,499,830; NFL 1,104,900 across 299 games | yes | no | no | no | ingest only |
+| NFL CLOSE-phase snapshots | 60 of 299 games | partial | | | | |
+| closing_lines table | **0**, even with 3.5M snapshots | starved | | | | |
+| NFL player-prop snapshots | 2 markets only (receptions, pass TDs), 3 books | thin | no | no | no | no |
+| signals (PRODUCTION 115,458 / HEALTH 7,090; pgs.*, ngs.*, injury.availability) | 122,548 | yes | no | no | no | no |
+| intelligence/signals/registry.json | 47 signals: wired_state no=46, partial=1 | registry only | priors=1.0 | no | no | no |
+| game_signals | weather 10 rows per key (cron runs 3×/day); schedule density 2,674 | starved | | | | |
+| player_game_stats / snap_counts / injuries / next_gen_stats / depth_chart_entries | 35,536 / 31,100 / 7,093 / 2,867 / 2,274 | yes | no | no | no | no |
+| team_game_efficiency | 668 | yes | partial | | | |
+| prediction-market-snapshot cron | no populated market table found | starved? | | | | |
+| props-slate-shadow / engine-dfs-slate / arbiter crons | no populated output tables found | shadow | | | | |
+| empty but designed: historical_games, team_week_stats, team_game_logs, pfr_adv_stats, player_rush_profiles, gse_player_sentiment, entities + entity_edges (knowledge graph), shadow_signals, film_shadow_ledger, watch_plays + watch.frames/tracklets/field_positions/derived_metrics, gse_ml_experiments, calibration_proposals, loss_autopsies, pick_memories, model_journal_entries | 0 | schema only | | | | |
+
+Under-leveraged, and worth more than any new source:
+1. **3.5M line snapshots.** Opening line, movement, steam, book disagreement and time-to-close, across 13 books and every sport. Derive closing_lines from them now (CLOSE phase exists for only 60 of 299 NFL games), then expose movement as a signal family.
+2. **122k player signals** (target share, EPA, NGS separation/CPOE/YAC, availability). These are the props and DFS encoders' inputs. Today they feed nothing that is weighted.
+3. **The 47-signal registry.** Each entry goes through the Lane 3 gate. wired_state changes only with a production caller plus a calibration row.
+4. **The empty knowledge graph** (entities, entity_edges). This is where player–coach–scheme–team–event relations live for the reasoner's retrieval.
+5. **Props.** Only 2 prop markets are captured. Extend the odds pull to all player markets the books offer (yards, attempts, anytime TD, longest) on every book already ingested.
+6. **Every sport.** MLB 2,639 picks, NCAAF 829, MLS 385, NHL 67, NBA 55, NFL 296. NCAAF has 1.44M line snapshots, more than NFL. The loop is sport-agnostic. Each sport gets its own replay (Retrosheet/Statcast for MLB, cfbfastR for NCAAF, NHL/NBA public APIs) and the same gate.

@@ -8,7 +8,7 @@ You are building the GSE reasoning engine on Beexly/Sports. GSE ingests every si
 
 Neon production picks are frozen history. Do not settle, re-grade, tag, edit, or train on any existing pick until the founder declares the engine complete. All engine testing runs on the replay against nflverse outcomes.
 
-The architecture is GSE_MASTER_INTEGRATION_2026-10-03.md, in the same folder. Read it first: one loop (ingest → encode → perceive → reason → price → decide → grade → learn → chart), with every component wired into it. Wiring is immediate; weight is earned. Each family goes live the day it is wired, and the nightly grader sets its weight from walk-forward results. Measured today: 33 flat features made the engine worse than 2. Do not dump raw signals into the pricer; use the hierarchy and the gate. Lane 0 runs first; lanes 16–19 start in parallel with it.
+The architecture is GSE_MASTER_INTEGRATION_2026-10-03.md, in the same folder. Read it first: one loop (ingest → encode → perceive → reason → price → decide → grade → learn → chart), with every component wired into it. Wiring is immediate; weight is earned. Each family goes live the day it is wired, and the nightly grader sets its weight from walk-forward results. Measured today: 33 flat features made the engine worse than 2. Do not dump raw signals into the pricer; use the hierarchy and the gate. Lane 0 runs first. Lane 20 (activate what already exists) and lanes 16–19 start in parallel with it.
 
 Ground truth before you start (measured 2026-10-03, receipts in docs/research/2026-10-03/engine-plan/):
 - Prod NFL has 29 scorable graded picks. That is the bottleneck. The engine cannot learn from 29 rows.
@@ -92,6 +92,16 @@ Log credits per call in the manifest, with a hard credit budget per week. ESPN's
 
 LANE 19: Outside-sports intelligence families (§3.1).
 Build each as a signal family with source and observed_at: travel distance and time zones, circadian kickoff hour, altitude, short week and rest, referee crew tendencies, contract/incentive context, press-conference and beat-reporter text events, social/personal events, crowd/noise, prediction-market crowd, search-interest spikes. Every family goes through the Lane 3 gate with a placebo. Receipt per family: n, Δ log loss with CI, placebo result.
+
+LANE 20: Activate what is already built, before building anything new (GSE_MASTER_INTEGRATION §5). One PR per item:
+(a) Derive closing_lines from odds_line_snapshots: last pre-kickoff snapshot per book × market. Today the CLOSE phase covers only 60 of 299 NFL games and the closing_lines table has 0 rows. Then build the line-movement family (open→close, steam, book disagreement, time-to-close) for every sport.
+(b) Fix the starved crons. game-weather-capture has written 10 rows per key. Find where prediction-market-snapshot, props-slate-shadow and engine-dfs-slate write; if the target is empty, fix the writer.
+(c) Route the 122,548 PRODUCTION/HEALTH signals into the props and DFS encoders and through the Lane 3 gate.
+(d) Run each of the 47 registry signals through the gate. Change wired_state only with a production caller plus a calibration row.
+(e) Populate the knowledge graph (entities, entity_edges: player, coach, scheme, team, event) for the reasoner's retrieval.
+(f) Extend prop capture beyond receptions and pass TDs to every player market on every book already ingested.
+(g) Give every sport (MLB, NCAAF, MLS, NHL, NBA) its own replay with the same gate. NCAAF has 1.44M line snapshots.
+Receipt per item: before/after row counts, the gate result, and the PR.
 
 Final receipt: per lane, the files, tests, remote SHA, PR number, the metric with n and CI, what was excluded, and what was not done.
 
