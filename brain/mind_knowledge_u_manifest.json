@@ -1,6 +1,6 @@
 {
-  "rows": 47222,
-  "shards": 28,
+  "rows": 52016,
+  "shards": 30,
   "recount_notes": "2026-10-03 recount: manifest previously claimed u_00=23,743 rows; branch file actually holds 22,282 valid rows and u_01 holds 1,461 (22,282+1,461=23,743 \u2014 the original figure was u_00+u_01 combined, misattributed to u_00 alone). u_02/u_04 sports rows (9,650) and u_03 (536) are as-reported, not yet recounted. Only u_05/u_06/u_07 are full-fidelity; u_00-u_04 bodies truncated ~4-5k chars.",
   "shards_detail": [
     {
@@ -43,6 +43,15 @@
       "bytes": 153284548,
       "note": "comp-intel deep full-fidelity",
       "commit": "cacaba3"
+    },
+    {
+      "files": "brain/mind_knowledge_u_10_fulldepth_00..01.jsonl",
+      "rows": 4794,
+      "bytes": 8703567,
+      "source": "full-depth re-feed: 110 IG JSONs complete (371 records), X sweep 25 rows (5 CSV tables verbatim), HTML artifacts embedded data 9 rows, Grok Heavy 27 rows, arXiv program tracker 4,362 rows incl. 2,806 candidate records",
+      "integrity_note": "arXiv audit catch: 2603.04864v1 recorded ADAPT but ledger verdict is REJECT \u2014 verified valuable count is 579 (not 585), 171 remain to 750",
+      "extraction_script": "docs/research/2026-10-03/engine-plan/tools/fulldepth_extract.py",
+      "commit": "0e4f9e5"
     }
   ],
   "authoritative_ledger": "docs/research/2026-10-03/engine-plan/COVERAGE-LEDGER.md"
