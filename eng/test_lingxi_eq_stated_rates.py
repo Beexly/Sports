@@ -1,5 +1,4 @@
 """Identity checks for lingxi_eq_stated_rates.py. Not an engine score."""
-import math
 import unittest
 
 from lingxi_eq_stated_rates import (
@@ -7,7 +6,6 @@ from lingxi_eq_stated_rates import (
     early_long_rush_share,
     proe_raw_from_rates,
     tempo_pace_iqr,
-    wopr_from_shares,
 )
 
 
@@ -21,10 +19,6 @@ class TestStatedRates(unittest.TestCase):
 
     def test_proe_raw_null(self):
         self.assertIsNone(proe_raw_from_rates({"proe_early_neutral__pass_rate_actual": 0.5}))
-
-    def test_wopr(self):
-        row = {"top_share": 0.30, "top_ay_share": 0.40}
-        self.assertAlmostEqual(wopr_from_shares(row), 1.5 * 0.30 + 0.7 * 0.40)
 
     def test_pace_iqr(self):
         row = {"tempo__pace_p75": 30.0, "tempo__pace_p25": 22.0}

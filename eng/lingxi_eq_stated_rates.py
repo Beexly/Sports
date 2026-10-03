@@ -2,10 +2,11 @@
 
 Sources:
 - c03 buildable-systems: PROE_raw = pass_rate_actual - pass_rate_expected
-- NFL-RevEng / NGS: WOPR = 1.5 * target_share + 0.7 * air_yards_share
 - tempo columns: IQR = pace_p75 - pace_p25
+- pass_rate_cells early|long: n_pass|n_rush / n_plays
 
-Not in equations.py. Not recoding prior lingxi_eq_*. No score. No mint. Never main.
+WOPR (1.5/0.7) removed — no paper-page cite yet (HOLD 78fd05dc).
+Not in equations.py. No score. No mint. Never main.
 """
 from __future__ import annotations
 
@@ -32,15 +33,6 @@ def proe_raw_from_rates(row: dict) -> float | None:
     if actual is None or expected is None:
         return None
     return actual - expected
-
-
-def wopr_from_shares(row: dict) -> float | None:
-    """WOPR = 1.5 * top_share + 0.7 * top_ay_share (stated WOPR; columns are the shares)."""
-    ts = _num(row, "top_share")
-    ay = _num(row, "top_ay_share")
-    if ts is None or ay is None:
-        return None
-    return 1.5 * ts + 0.7 * ay
 
 
 def tempo_pace_iqr(row: dict) -> float | None:
@@ -72,7 +64,6 @@ def early_long_rush_share(row: dict) -> float | None:
 
 FUNCTIONS = {
     "proe_raw_from_rates": proe_raw_from_rates,
-    "wopr_from_shares": wopr_from_shares,
     "tempo_pace_iqr": tempo_pace_iqr,
     "early_long_pass_share": early_long_pass_share,
     "early_long_rush_share": early_long_rush_share,
