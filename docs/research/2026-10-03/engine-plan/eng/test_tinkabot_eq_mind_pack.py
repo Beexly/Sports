@@ -7,7 +7,6 @@ import unittest
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-# eng/test_* may live beside tools/ under engine-plan/
 CANDIDATES = [
     ROOT,
     ROOT / "tools",
@@ -55,32 +54,47 @@ class TestTinkabotEqMindPack(unittest.TestCase):
         self.assertGreater(out.stat().st_size, 500)
         lines = [ln for ln in text.splitlines() if ln.strip()]
         self.assertEqual(len(lines), len(self.rows))
-        self.assertGreaterEqual(len(lines), 10)
+        self.assertEqual(len(lines), 5)
 
     def test_required_columns_present(self):
         self.assertIn("REQUIRED_FEATURES_V1", self.required)
-        self.assertIn("REQUIRED_LEARN_JOINED", self.required)
         self.assertIn("REQUIRED_LEARN_WIDE", self.required)
         known = set()
         for cols in self.required.values():
             known.update(cols)
-        self.assertIn("qb_pit", known)
-        self.assertIn("protection_stress", known)
+        self.assertIn("mkt", known)
+        self.assertIn("elo", known)
         self.assertIn("weekly_tendencies__shotgun_rate", known)
+        self.assertIn("proe_early_neutral__n_plays", known)
+        self.assertNotIn("qb_pit", known)
 
     def test_inputs_exist_flag(self):
         for row in self.rows:
             self.assertTrue(row["inputs_exist"])
 
-    def test_jsonl_roundtrip(self):
+    def test_jsonl_roundtrip_kept_only(self):
         out = ROOT / pack.SHARD_NAME
         pack.write_shard(self.rows, out)
         parsed = [json.loads(ln) for ln in out.read_text(encoding="utf-8").splitlines() if ln.strip()]
-        self.assertEqual(len(parsed), len(self.rows))
+        self.assertEqual(len(parsed), 5)
         names = {r["function"] for r in parsed}
-        self.assertIn("under_center_rate", names)
-        self.assertIn("offset_family_eta", names)
-        self.assertIn("protection_stress_edge", names)
+        self.assertEqual(
+            names,
+            {
+                "home_minus_away",
+                "under_center_rate",
+                "under_center_diff",
+                "market_elo_residual",
+                "proe_or_null",
+            },
+        )
+        for gone in (
+            "offset_family_eta",
+            "qb_pit_plus_elo_res",
+            "row_column_edges",
+            "availability_group_sum",
+        ):
+            self.assertNotIn(gone, names)
 
 
 if __name__ == "__main__":
