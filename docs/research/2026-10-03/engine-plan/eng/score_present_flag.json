@@ -1,0 +1,41 @@
+{
+ "not_a_mint": true,
+ "pit": "join_learn.py latest row with week < W, lag <= 2 seasons, home minus away",
+ "corr_adot_cpoe_filled": -0.0317,
+ "rows": {
+  "champion": {
+   "n": 1914,
+   "ll": 0.610621
+  },
+  "adot_flag": {
+   "n": 1914,
+   "ll": 0.61084,
+   "delta_ll": 0.000219,
+   "ci95_ll": [
+    -0.000655,
+    0.001128
+   ],
+   "clears_zero": false
+  },
+  "cpoe_flag": {
+   "n": 1914,
+   "ll": 0.611184,
+   "delta_ll": 0.000563,
+   "ci95_ll": [
+    -9.9e-05,
+    0.00124
+   ],
+   "clears_zero": false
+  },
+  "both_flag": {
+   "n": 1914,
+   "ll": 0.611323,
+   "delta_ll": 0.000702,
+   "ci95_ll": [
+    -0.000286,
+    0.001718
+   ],
+   "clears_zero": false
+  }
+ }
+}
