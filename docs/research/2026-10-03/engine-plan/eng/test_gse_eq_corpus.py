@@ -93,3 +93,58 @@ class CorpusSituationTests(unittest.TestCase):
         self.assertEqual(aggressiveness_proxy_deep(15), 0)
         self.assertIsNone(aggressiveness_proxy_deep(None))
         self.assertIsNone(aggressiveness_proxy_deep(float("nan")))
+
+
+from gse_eq_corpus import (
+    binomial_cell_se,
+    epa_success,
+    era_aggregate_weight,
+    neutral_wp,
+    red_zone,
+    shrunk_proe,
+    two_minute,
+)
+
+
+class CorpusCoachingTests(unittest.TestCase):
+    def test_neutral_wp(self):
+        self.assertTrue(neutral_wp(0.35))
+        self.assertTrue(neutral_wp(0.65))
+        self.assertFalse(neutral_wp(0.349))
+        self.assertFalse(neutral_wp(0.66))
+        self.assertIsNone(neutral_wp(None))
+
+    def test_shrunk_proe(self):
+        self.assertAlmostEqual(shrunk_proe(0.10, 20, 20), 0.05)
+        self.assertIsNone(shrunk_proe(0.10, None, 20))
+        self.assertIsNone(shrunk_proe(0.10, 0, 0))
+
+    def test_binomial_cell_se(self):
+        self.assertAlmostEqual(binomial_cell_se(0.5, 100), (0.25 / 100) ** 0.5)
+        self.assertIsNone(binomial_cell_se(0.5, 0))
+        self.assertIsNone(binomial_cell_se(None, 100))
+
+    def test_epa_success(self):
+        self.assertTrue(epa_success(0.01))
+        self.assertFalse(epa_success(0.0))
+        self.assertFalse(epa_success(-1))
+        self.assertIsNone(epa_success(None))
+
+    def test_red_zone(self):
+        self.assertTrue(red_zone(20))
+        self.assertTrue(red_zone(1))
+        self.assertFalse(red_zone(21))
+        self.assertIsNone(red_zone(None))
+
+    def test_two_minute(self):
+        self.assertTrue(two_minute(120))
+        self.assertTrue(two_minute(0))
+        self.assertFalse(two_minute(121))
+        self.assertIsNone(two_minute(None))
+
+    def test_era_aggregate_weight(self):
+        self.assertEqual(era_aggregate_weight(1), 1.0)
+        self.assertEqual(era_aggregate_weight(2), 0.5)
+        self.assertIsNone(era_aggregate_weight(3))
+        self.assertIsNone(era_aggregate_weight(None))
+        self.assertIsNone(era_aggregate_weight(0))

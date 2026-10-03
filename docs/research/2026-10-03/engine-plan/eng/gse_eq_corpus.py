@@ -135,3 +135,59 @@ def aggressiveness_proxy_deep(air_yards: float | None) -> int | None:
     if air_yards is None or air_yards != air_yards:
         return None
     return 1 if float(air_yards) >= 20 else 0
+
+
+def neutral_wp(wp: float | None) -> bool | None:
+    """c03 buildable-systems: neutral_mask is 0.35 ≤ wp ≤ 0.65. A missing win probability stays null."""
+    if wp is None or wp != wp:
+        return None
+    return 0.35 <= float(wp) <= 0.65
+
+
+def shrunk_proe(proe_raw: float | None, n: float | None, k: float | None) -> float | None:
+    """c03: PROE = PROE_raw · n / (n + k), with k the league-median cell n. A missing input, or a non-positive denominator, stays null."""
+    if proe_raw is None or proe_raw != proe_raw or n is None or n != n or k is None or k != k:
+        return None
+    denom = float(n) + float(k)
+    if denom == 0:
+        return None
+    return float(proe_raw) * float(n) / denom
+
+
+def binomial_cell_se(p_hat: float | None, n: float | None) -> float | None:
+    """c03: SE = sqrt(p_hat * (1 - p_hat) / n). A missing input or a non-positive n stays null."""
+    if p_hat is None or p_hat != p_hat or n is None or n != n or n <= 0:
+        return None
+    return (float(p_hat) * (1.0 - float(p_hat)) / float(n)) ** 0.5
+
+
+def epa_success(epa: float | None) -> bool | None:
+    """c03 sequencing: success = epa > 0. A missing epa stays null. Zero is not a success."""
+    if epa is None or epa != epa:
+        return None
+    return float(epa) > 0
+
+
+def red_zone(yardline_100: float | None) -> bool | None:
+    """c02 System 2 and a05: red zone is yardline_100 <= 20. A missing line stays null."""
+    if yardline_100 is None or yardline_100 != yardline_100:
+        return None
+    return float(yardline_100) <= 20
+
+
+def two_minute(half_seconds_remaining: float | None) -> bool | None:
+    """a05: last 2:00 of either half is half_seconds_remaining <= 120. A missing clock stays null."""
+    if half_seconds_remaining is None or half_seconds_remaining != half_seconds_remaining:
+        return None
+    return float(half_seconds_remaining) <= 120
+
+
+def era_aggregate_weight(attribution_confidence: int | None) -> float | None:
+    """c03: sole caller is 1, shared is 0.5, unknown is excluded. Any other code stays null."""
+    if attribution_confidence == 1:
+        return 1.0
+    if attribution_confidence == 2:
+        return 0.5
+    if attribution_confidence == 3:
+        return None
+    return None
