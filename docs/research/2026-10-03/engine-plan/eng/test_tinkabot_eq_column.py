@@ -38,6 +38,12 @@ class TestPrimitives(unittest.TestCase):
         self.assertIsNone(m.home_minus_away(1.0, None))
         self.assertEqual(m.home_minus_away(2.0, 0.5), 1.5)
 
+    def test_home_minus_away_identity_vs_zero(self):
+        """Identity: home_minus_away(x, 0) == x for finite x."""
+        for x in (0.0, 1.0, -2.5, 0.125, 17.0):
+            self.assertEqual(m.home_minus_away(x, 0.0), x)
+        self.assertIsNone(m.home_minus_away(None, 0.0))
+
     def test_under_center_rate(self):
         self.assertEqual(m.under_center_rate(0.6), 0.4)
         self.assertIsNone(m.under_center_rate(None))
