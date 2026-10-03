@@ -49,6 +49,18 @@ Verify the sha256 of docs/research/2026-10-03/engine-plan/w4_2026_sealed.json (d
 LANE 11: External intelligence leaderboards (after 2 and 4).
 Wrap the engine's ingest → reason → probability loop as a forecasting agent. Enter Prophet Arena first (Kalshi, sports overlap), then the Metaculus FutureEval bot tournament, then ForecastBench. Read each one's rules and terms before submitting.
 
+LANE 12: Foundation pretraining, the 1M-signal layer (needs 1 for the downstream test).
+Pretrain a play-level model on nflverse pbp 1999–2026 (every play, all 372 columns, as-of state only). Objectives: next-play EPA, drive outcome, player stat line. Export per-entity encodings (player state, unit-vs-unit matchup, situational context) as engine features. Hold out 2025 and 2026 entirely from pretraining. Downstream test: engine log loss with vs without the encodings, walk-forward, plus a placebo. Free compute only (local GPU/CPU, ZeroGPU). Receipt: pretraining loss curve, downstream Δ with CI, plus the param count and wall-clock time.
+
+LANE 13: Social/cognitive signal capture.
+Start a daily archiver now. Sources: beat reporters, pressers, injury designations, team social, X. Store raw text with first-seen timestamp and source. Use the LLM layer (local Ollama for bulk, MiMo on ZeroGPU for the live slate) to extract structured timestamped events: injury hints, role changes, motivation and situational context, locker-room state. Each event carries source, as-of time and a confidence field. The LLM writes events, never probabilities. Events enter the engine through Lane 3's ablation like any other signal. Receipt: sources, rows per day, an extraction schema, 50 hand-checked events.
+
+LANE 14: Reasoner (needs 2, 12).
+For each pick, retrieve the relevant slice of raw signals plus encodings, write a trace (cited rows, rejected facts), sample k traces, and aggregate to p. Train with RL on as-of evidence episodes, with log loss of the outcome as the reward. Gate: the reasoner's held-out log loss must beat the non-reasoner engine on the same rows. Receipt: the comparison, k, and cost per pick.
+
+LANE 15: Fix the watch relay before buying GPU.
+The gse-watch-pipeline Space ran 6h on a T4 and watch.games has 0 frames ingested. Trace the path Windows watcher → /process-frame → Vercel /api/ops/watch-ingest → Neon watch.* and find where the frames drop. Stay on cpu-basic until a test frame lands in watch.frames.
+
 Final receipt: per lane, the files, tests, remote SHA, PR number, the metric with n and CI, what was excluded, and what was not done.
 
 ---

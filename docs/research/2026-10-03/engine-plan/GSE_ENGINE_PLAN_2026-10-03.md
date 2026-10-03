@@ -73,6 +73,31 @@ Sports is the floor. The same ingest → reason → probability → grade loop, 
 
 ---
 
+## 3.5 Signal architecture: 1,000,000 signals into one pick
+
+The engine reads everything: on-field, situational, social, cognitive, physical, environmental, books. Books are one family out of many. The hard constraint is that we have about 2,300 graded NFL games for 2018–2026. A model that weights 1M signals directly against 2,300 labels memorizes noise. Frontier LLMs face the same problem (few labels, enormous data), and they solve it in four steps. GSE copies all four:
+
+1. Pretrain on unlabeled data. This is where the intelligence comes from. LLMs learn by predicting the next token over trillions of tokens. GSE learns by predicting the next play, drive, and player stat line from the as-of state. nflverse pbp 2018–2026 alone is 397,855 plays × 372 columns = 148M values (measured); 1999–2026 is roughly three times that. Every play is a training example and needs no graded pick. This is how 1M signals get learned instead of guessed.
+2. Fine-tune on scarce labels: replay games, props and DFS outcomes (Lane 1).
+3. Reinforcement learning with a verifiable reward. Sports gives a free verifier every week: the outcome. The reward is a proper scoring rule (log loss), so the engine cannot game it by being overconfident. Episodes are full as-of evidence, never schedule-only.
+4. Test-time reasoning. For each pick, the reasoner retrieves the relevant slice of the 1M signals, writes a trace, samples it several times, and aggregates.
+
+The stack for one pick:
+- Raw layer (~1M per game): every play in both rosters' history, snaps, injuries, depth, OL/DL matchups, coaching tendencies (tau), travel/rest, weather, venue, officials, books, plus timestamped text: beat reports, pressers, injury designations, social posts.
+- Encoders (pretrained): one per entity. Player state, unit-vs-unit matchup, situational context (script, leverage, motivation, letdown/lookahead), team social/cognitive state (from text, LLM-extracted into timestamped structured events with source and as-of time).
+- Reasoner: reads the encoded concepts and the retrieved evidence, writes a trace that cites feed rows and names rejected facts, and outputs p for ML/spread/total/props/DFS.
+- Grader: every layer is ablated. An encoder or text family earns weight only when it improves the engine's held-out log loss and beats a shuffled placebo.
+
+Gaps this exposes:
+- Historical social/cognitive text is not archived as-of. Without timestamps it cannot be replayed or graded. Start capturing every source daily now; every day not archived is lost.
+- LLM compute. MiMo-9B on ZeroGPU is capped at 40 GPU-min/day (24.1 used today), shared with studio-chat and the qwen demo. That is enough for a weekly NFL slate. It is not enough to replay 2,300 games. Replay text extraction runs on local Ollama, which is free.
+
+## 3.6 Hugging Face spend (from the billing page, 2026-10-03)
+
+- gse-watch-pipeline ran 6h07m on T4 small ($2.45 of $19.56 credits). It is now on cpu-basic. watch.games holds 15 rows with 0 frames ingested, so the T4 hours produced nothing in Neon. Fix the relay before paying for GPU again.
+- Three other ZeroGPU Spaces are running and share the 40-minute daily quota: mimo-brain-engine, studio-chat, and qwen3.8-27b-obliterated-demo. Pausing the two non-GSE ones gives the brain engine the whole quota.
+- Auto-recharge is off. Overage can only draw prepaid credits.
+
 ## 4. Order of work
 
 Done tonight: sweep on prod (M7, unpowered), per-QB vs close (M3/M4), tracking gate (M9), W4 sealed.
@@ -85,6 +110,7 @@ Unlocked now: paging the brief tree (3,457 briefs, 1,115 fulltexts, waves, score
 5. Engine charts A1–A5 from graded rows (§3A).
 6. Props/DFS scorecard (G5). Reasoning-trace grading (G6).
 7. Prophet Arena agent entry (§3B).
+Start immediately, independent of 1: social/cognitive text archiver (Lane 13, because history that isn't captured is lost) and the play-level pretraining run (Lane 12). Reasoner (Lane 14) follows 2 and 12. Watch relay fix (Lane 15) comes before any further GPU spend.
 In parallel: brief-tree promotion ledger (grok bot), PR/worktree cleanup (G8), far-future mint guard (G7).
 Monday: grade the sealed W4 file.
 
