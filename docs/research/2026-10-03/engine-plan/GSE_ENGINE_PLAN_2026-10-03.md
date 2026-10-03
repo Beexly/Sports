@@ -28,6 +28,8 @@ Data: nflverse games.csv + pbp 2018–2026 (CC-BY), GSE prod Neon (read-only her
 
 W4 test, sealed before kickoff: `w4_2026_sealed.json`, sha256 `d6e03aaf18cebd5ee0e940e710e9948208d610212acf013687448bb3b66b6d2e`, sealed 2026-10-03T05:30:20Z. 15 games, Elo + per-QB model. This is an internal pre-registration so Monday's grade is honest. It is not a public surface. Grade it Monday.
 
+Production picks in Neon are frozen history. Picks already called do not change. M5–M8 were read once, read-only, as observations. These picks are not re-graded, re-settled, tagged, or used for training or tuning until the engine is complete. Every engine test runs on replay against nflverse outcomes.
+
 What this tells us:
 - The engine's learning bottleneck is GRADED HISTORY, not ideas. 29 graded NFL rows cannot teach anything or support any chart. M5 is the biggest gap in the project.
 - Reasoning-level signals measurably make the engine smarter (M3). That is the progress we chart.
@@ -49,7 +51,7 @@ G5. Props/DFS/fantasy grading. Same scorecard per player market: projection erro
 
 G6. Reasoning trace that is graded. analyze() returns INVALID today. A trace must cite feed rows, name rejected facts, and be scored: did the reasons that moved p move it the right way? Reasoning quality becomes a chart, not prose.
 
-G7. Far-future mints (M8). A pick for a January game made in September carries no starter or injury information. Withhold until a T−7d window, or tag it so it can never enter grading as if it were informed.
+G7. Far-future mints (M8). A pick for a January game made in September carries no starter or injury information. Going forward, the engine mints inside a T−7d window. Existing picks are history and are left untouched.
 
 G8. Repo hygiene. 30 open PRs, most with red CI, and 40+ Sports-wt-* worktrees. Close or merge before new lanes, or every lane collides.
 
@@ -111,7 +113,7 @@ Unlocked now: paging the brief tree (3,457 briefs, 1,115 fulltexts, waves, score
 6. Props/DFS scorecard (G5). Reasoning-trace grading (G6).
 7. Prophet Arena agent entry (§3B).
 Start immediately, independent of 1: social/cognitive text archiver (Lane 13, because history that isn't captured is lost) and the play-level pretraining run (Lane 12). Reasoner (Lane 14) follows 2 and 12. Watch relay fix (Lane 15) comes before any further GPU spend.
-In parallel: brief-tree promotion ledger (grok bot), PR/worktree cleanup (G8), far-future mint guard (G7).
+In parallel: brief-tree promotion ledger (grok bot), PR/worktree cleanup (G8), T−7d mint window for new mints only (G7).
 Monday: grade the sealed W4 file.
 
 Excluded on purpose: Glass Ledger (founder said no). No public accuracy claims until the charts carry n and intervals.
