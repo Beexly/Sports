@@ -1,96 +1,105 @@
 {
-  "rows": 68045,
-  "shards": 13,
-  "recount_notes": "2026-10-03 recount: manifest previously claimed u_00=23,743 rows; branch file actually holds 22,282 valid rows and u_01 holds 1,461 (22,282+1,461=23,743 — the original figure was u_00+u_01 combined, misattributed to u_00 alone). u_02/u_04 sports rows (9,650) and u_03 (536) are as-reported, not yet recounted. Only u_05/u_06/u_07 are full-fidelity; u_00-u_04 bodies truncated ~4-5k chars.",
-  "shards_detail": [
-    {
-      "files": "brain/mind_knowledge_u_00.jsonl",
-      "rows": 22282,
-      "note": "core research/local feed, bodies truncated ~4-5k chars (recounted)"
-    },
-    {
-      "files": "brain/mind_knowledge_u_01.jsonl",
-      "rows": 1461,
-      "note": "HTML/X/IG/AGENTS supplement, truncated (recounted)"
-    },
-    {
-      "files": "brain/mind_knowledge_u_02.jsonl + brain/mind_knowledge_u_04_00..02.jsonl",
-      "rows": 9650,
-      "note": "sports docs/intel, markdown only (as-reported)"
-    },
-    {
-      "files": "brain/mind_knowledge_u_03.jsonl",
-      "rows": 536,
-      "note": "comp-intel dossiers, selected fields (as-reported)"
-    },
-    {
-      "file": "brain/mind_knowledge_u_05_reveng.jsonl",
-      "rows": 633,
-      "bytes": 2648655,
-      "note": "reverse-engineering page full-fidelity",
-      "commit": "1de0a35"
-    },
-    {
-      "file": "brain/mind_knowledge_u_06_agents.jsonl",
-      "rows": 142,
-      "bytes": 5869590,
-      "note": "29 AGENTS.md full-fidelity",
-      "commit": "4701a56"
-    },
-    {
-      "files": "brain/mind_knowledge_u_07_compintel_deep_00..18.jsonl",
-      "rows": 12518,
-      "bytes": 153284548,
-      "note": "comp-intel deep full-fidelity",
-      "commit": "cacaba3"
-    },
-    {
-      "files": "brain/mind_knowledge_u_10_fulldepth_00..01.jsonl",
-      "rows": 4794,
-      "bytes": 8703567,
-      "source": "full-depth re-feed: 110 IG JSONs complete (371 records), X sweep 25 rows (5 CSV tables verbatim), HTML artifacts embedded data 9 rows, Grok Heavy 27 rows, arXiv program tracker 4,362 rows incl. 2,806 candidate records",
-      "integrity_note": "arXiv audit catch: 2603.04864v1 recorded ADAPT but ledger verdict is REJECT — verified valuable count is 579 (not 585), 171 remain to 750",
-      "extraction_script": "docs/research/2026-10-03/engine-plan/tools/fulldepth_extract.py",
-      "commit": "0e4f9e5"
-    },
-    {
-      "files": "brain/mind_knowledge_u_09_sportsdeep_00..06.jsonl",
-      "rows": 1590,
-      "bytes": 57147392,
-      "source": "sports repo deep: 1,323 non-Markdown files (564 CSV, 285 py, 167 JSON, 112 JSONL, 11 parquet schema+stats+sample), 20/20 packages evaluated, X full-tables cell-by-cell incl. 445 full-table CSVs, ftn_charting_2025 + int_cells complete (1,811 equations)",
-      "extraction_script": "docs/research/2026-10-03/engine-plan/tools/sportsdeep_extract.py",
-      "commit": "c5a3e5f"
-    },
-    {
-      "files": "brain/mind_knowledge_u_08_local_00..08.jsonl",
-      "rows": 9085,
-      "bytes": 67455986,
-      "source": "local GSE dirs deep: 3,802 files full content (gse-discovery 1,062, mimo-verl 1,332, gse-intelligence-build 265, gse-repo-intel 199, wiring-wave2 279, improve-ledger-work 221, qb-behavioral-profiles 216, Kumo 22, IG 110, home JSONs) — binaries as schema+stats+sample, venv junk excluded",
-      "commit": "48fc2e4"
-    },
-    {
-      "file": "brain/mind_knowledge_u_11_dataassets_00.jsonl",
-      "rows": 247,
-      "bytes": 1498112,
-      "source": "binary data-asset inventories: 21 pickle estimator structures, 159+ parquets schema+stats (pbp 1999-2025, depth charts, injuries, officials), FTN charting schema-only engine-excluded, qb-behavioral 19, TRAIN-NOW 5, whalelay 3, vendor gse-dataset 35 (no diff vs main)",
-      "extraction_script": "docs/research/2026-10-03/engine-plan/tools/dataassets_inventory.py",
-      "commit": "1330c3b"
-    },
-    {
-      "files": "brain/mind_knowledge_raw_00..06.jsonl",
-      "rows": 5102,
-      "bytes": 134721317,
-      "source": "raw preservation corpus: complete full text of all 5,102 research-corpus files, 127M chars — the every-word foundation (was local-only, now on branch)",
-      "commit": "4effa14"
-    },
-    {
-      "file": "brain/mind_knowledge_u_13_tinkabot_eq.jsonl",
-      "rows": 5,
-      "bytes": 3543,
-      "source": "tinkabot column-backed eq helpers packed for mind; inputs already on features_v1/learn_joined/learn_wide; no score; no mint",
-      "extraction_script": "docs/research/2026-10-03/engine-plan/tools/tinkabot_eq_mind_pack.py",
-      "identity": "tinkabot"
-    }
-  ],
-  "authoritative_ledger": "docs/research/2026-10-03/engine-plan/COVERAGE-LEDGER.md"
+ "rows": 68694,
+ "shards": 14,
+ "recount_notes": "2026-10-03 recount: manifest previously claimed u_00=23,743 rows; branch file actually holds 22,282 valid rows and u_01 holds 1,461 (22,282+1,461=23,743 \u2014 the original figure was u_00+u_01 combined, misattributed to u_00 alone). u_02/u_04 sports rows (9,650) and u_03 (536) are as-reported, not yet recounted. Only u_05/u_06/u_07 are full-fidelity; u_00-u_04 bodies truncated ~4-5k chars.",
+ "shards_detail": [
+  {
+   "files": "brain/mind_knowledge_u_00.jsonl",
+   "rows": 22282,
+   "note": "core research/local feed, bodies truncated ~4-5k chars (recounted)"
+  },
+  {
+   "files": "brain/mind_knowledge_u_01.jsonl",
+   "rows": 1461,
+   "note": "HTML/X/IG/AGENTS supplement, truncated (recounted)"
+  },
+  {
+   "files": "brain/mind_knowledge_u_02.jsonl + brain/mind_knowledge_u_04_00..02.jsonl",
+   "rows": 9650,
+   "note": "sports docs/intel, markdown only (as-reported)"
+  },
+  {
+   "files": "brain/mind_knowledge_u_03.jsonl",
+   "rows": 536,
+   "note": "comp-intel dossiers, selected fields (as-reported)"
+  },
+  {
+   "file": "brain/mind_knowledge_u_05_reveng.jsonl",
+   "rows": 633,
+   "bytes": 2648655,
+   "note": "reverse-engineering page full-fidelity",
+   "commit": "1de0a35"
+  },
+  {
+   "file": "brain/mind_knowledge_u_06_agents.jsonl",
+   "rows": 142,
+   "bytes": 5869590,
+   "note": "29 AGENTS.md full-fidelity",
+   "commit": "4701a56"
+  },
+  {
+   "files": "brain/mind_knowledge_u_07_compintel_deep_00..18.jsonl",
+   "rows": 12518,
+   "bytes": 153284548,
+   "note": "comp-intel deep full-fidelity",
+   "commit": "cacaba3"
+  },
+  {
+   "files": "brain/mind_knowledge_u_10_fulldepth_00..01.jsonl",
+   "rows": 4794,
+   "bytes": 8703567,
+   "source": "full-depth re-feed: 110 IG JSONs complete (371 records), X sweep 25 rows (5 CSV tables verbatim), HTML artifacts embedded data 9 rows, Grok Heavy 27 rows, arXiv program tracker 4,362 rows incl. 2,806 candidate records",
+   "integrity_note": "arXiv audit catch: 2603.04864v1 recorded ADAPT but ledger verdict is REJECT \u2014 verified valuable count is 579 (not 585), 171 remain to 750",
+   "extraction_script": "docs/research/2026-10-03/engine-plan/tools/fulldepth_extract.py",
+   "commit": "0e4f9e5"
+  },
+  {
+   "files": "brain/mind_knowledge_u_09_sportsdeep_00..06.jsonl",
+   "rows": 1590,
+   "bytes": 57147392,
+   "source": "sports repo deep: 1,323 non-Markdown files (564 CSV, 285 py, 167 JSON, 112 JSONL, 11 parquet schema+stats+sample), 20/20 packages evaluated, X full-tables cell-by-cell incl. 445 full-table CSVs, ftn_charting_2025 + int_cells complete (1,811 equations)",
+   "extraction_script": "docs/research/2026-10-03/engine-plan/tools/sportsdeep_extract.py",
+   "commit": "c5a3e5f"
+  },
+  {
+   "files": "brain/mind_knowledge_u_08_local_00..08.jsonl",
+   "rows": 9085,
+   "bytes": 67455986,
+   "source": "local GSE dirs deep: 3,802 files full content (gse-discovery 1,062, mimo-verl 1,332, gse-intelligence-build 265, gse-repo-intel 199, wiring-wave2 279, improve-ledger-work 221, qb-behavioral-profiles 216, Kumo 22, IG 110, home JSONs) \u2014 binaries as schema+stats+sample, venv junk excluded",
+   "commit": "48fc2e4"
+  },
+  {
+   "file": "brain/mind_knowledge_u_11_dataassets_00.jsonl",
+   "rows": 247,
+   "bytes": 1498112,
+   "source": "binary data-asset inventories: 21 pickle estimator structures, 159+ parquets schema+stats (pbp 1999-2025, depth charts, injuries, officials), FTN charting schema-only engine-excluded, qb-behavioral 19, TRAIN-NOW 5, whalelay 3, vendor gse-dataset 35 (no diff vs main)",
+   "extraction_script": "docs/research/2026-10-03/engine-plan/tools/dataassets_inventory.py",
+   "commit": "1330c3b"
+  },
+  {
+   "files": "brain/mind_knowledge_raw_00..06.jsonl",
+   "rows": 5102,
+   "bytes": 134721317,
+   "source": "raw preservation corpus: complete full text of all 5,102 research-corpus files, 127M chars \u2014 the every-word foundation (was local-only, now on branch)",
+   "commit": "4effa14"
+  },
+  {
+   "file": "brain/mind_knowledge_u_13_tinkabot_eq.jsonl",
+   "rows": 5,
+   "bytes": 3543,
+   "source": "tinkabot column-backed eq helpers packed for mind; inputs already on features_v1/learn_joined/learn_wide; no score; no mint",
+   "extraction_script": "docs/research/2026-10-03/engine-plan/tools/tinkabot_eq_mind_pack.py",
+   "identity": "tinkabot"
+  },
+  {
+   "files": "brain/mind_knowledge_u_12_drive_00..06.jsonl",
+   "rows": 649,
+   "bytes": 20066880,
+   "source": "Google Drive GSE.10.2.26 deep feed (340 files, 2.1GB): 149 md + 115 PDFs full-text + 30 Google Docs + 18 TS tools (sportsbook-mispricing-audit, sports-lexicon-sentiment, sports-cv, fantasy optimizer, sports-taxonomy) + EYI workspace export (25-day Motif-Garrett conversation transcript, 4 podcast transcripts, DFS render pipeline, goal files); 47 skip-log entries (12 md5-dupes, 14 name-dupes, 14 already-in-mind, 7 zip-snapshot-dupes)",
+   "extraction_script": "docs/research/2026-10-03/engine-plan/tools/drive_*.py (walk, dl_all, read_docs, extract_pdfs, extract_u12, extract_zipsmall, extract_eyi)",
+   "skip_log": "docs/research/2026-10-03/engine-plan/u12_drive_skip_log.json",
+   "security_note": "first push blocked by GitHub secret scanning; 17 pasted API keys in conversation transcript redacted in place (github/vecel/openai/gcp/nvidia/opencode/oma_live) before landing; 2 token-file rows (space-api-token.txt, hf_env.txt) excluded from feed"
+  }
+ ],
+ "authoritative_ledger": "docs/research/2026-10-03/engine-plan/COVERAGE-LEDGER.md"
 }
