@@ -1,0 +1,40 @@
+# QB Lane — Phase 3 (Adversarial + fresh-news review)
+Research date: Saturday, September 19, 2026. All searches below were run fresh on 9/19 unless noted.
+
+## Fresh-news sweep results (9/19) — confirm / refute per major read
+1. **Burrow will play (CONFIRMED, 2nd+ source).** Zac Taylor: "good to go" after full practice Friday (cincinnati.com 9/18; rotoballer/ESPN's Ben Baby 9/18). Listed Q is a formality. TEE HIGGINS note: Burrow "not at 100%" per one aggregator (leverageonheroesmedia 9/19) but Higgins said he threw the full playbook — treat as noise, not a downgrade.
+2. **Flowers doubtful, not expected to play (CONFIRMED, official).** baltimoreravens.com 9/18: DNP Wed/Thu, limited Fri, DOUBTFUL; Jeff Zrebiec (Athletic) reports he's not expected to be available. Also: BAL without Madubuike/Buchanan/Tampa; Stanley/Simpson/Hendrickson Q. Lamar's WR corps: Bateman, Walker (full week), Wester, Moore, Sarratt.
+3. **McConkey Q, genuinely 50/50 (REFINED).** Schefter 9/17: "unlikely." But: limited practice Friday, final tag QUESTIONABLE (chargerswire 9/18); FantasyPros model 44% to play (9/19). He had 85% route / 46.7% target share before exiting W1. Herbert's projection splits in two: with McConkey he's the 84.3%-motion bounce-back; without him it's Johnston/Harris/MVS vs a LV D that allowed 6.5% pressure. Decision: keep Herbert playable but flag as news-dependent; downgrade if McConkey is inactive.
+4. **Olave Q but expected full-go (CONFIRMED positive).** Nick Underhill (NewOrleans.Football) via rotoballer 9/17: left Thursday early as precaution, "nothing expected to be a problem." FantasyPros model 83% (9/19). Shough's stack intact (Olave 10/182 W1, Juwan Johnson FP, Kamara debut).
+5. **Pittman = PITTSBURGH Steeler, Q foot (CORRECTION of briefing).** The briefing's "Michael Pittman Jr. (IND WR)" is wrong — sportradar bio + PIT's W1 box score (3/3/58 vs ATL) confirm he's on PIT. LP Wed → DNP Thu/Fri, QUESTIONABLE; Friday was a walkthrough so the tag is an estimation (steelersdepot 9/18). Rodgers' underneath outlet at real risk.
+6. **Wentz confirmed starter (CONFIRMED).** Reuters 9/18 (Murray in protocol, ruled out Friday). Jefferson 8/9/92/2 TDs with Wentz; needs 1 catch to pass Moss (587) for #2 in MIN history (vikingswire 9/19). "No other Minnesota receiver caught a pass" in W1 — Wentz is Jefferson-or-bust, which concentrates the stack but raises bust risk if CHI brackets Jefferson (Addison was open twice; Wentz missed both — CPOE -6.7 shows).
+7. **Chicago weather is the slate's biggest risk (CONFIRMED, multiple).** weather.com 9/19: 80% rain, 0.27", gusts to 30 mph; NWS Chicago via purpleptsd 9/18: possible ~1" 7am-7pm, half-inch in the 1-7pm window; Vikings ST coach had players dunking footballs in water (vikingswire 9/15). 2025: MIN led NFL in turnovers (30), CHI led in takeaways (33). Both passing games get a weather tax — **Caleb and Wentz both downgraded a half-tier pending Sunday AM recheck.**
+8. **NE rain 2nd half (CONFIRMED).** 90%, 0.56", may start dry (patriotswire 9/18). Rodgers/Maye both taxed; Maye's legs (27.5% scramble) survive better.
+9. **Willis full-go (CONFIRMED).** Full practice all week, off the injury report (USA Today/ESPN 9/18). Toe is non-issue.
+10. **Mahomes brace/ACL story (DEBUNKED as actionable).** hellorookie's "first game since ACL/LCL tear" conflicts with KC's W1 game (31-10 over DEN, Mahomes played) and DKN's 23.9 projection. Stale/misdated aggregator content — do not use.
+11. **RotoGrinders "Lawrence 10.51% most popular QB" (DEBUNKED as stale).** Article's game details (JAX home opener vs KC, "AFC Divisional rematch") don't match W2 2026 (JAX @ DEN). Do not cite.
+12. **A.J. Brown on IR (NEW, confirmed).** steelcurtainnetwork 9/18: high-ankle IR. Maye's WR1 gone — downgrade Maye a notch; Henderson full-go helps the run game, not the pass.
+13. **Drake London OUT (NEW, via Huddle 9/19).** Rush's WR1 gone; ATL offense = Bijan (45% target share) + scraps. Rush fade strengthened.
+14. **Kenneth Walker III on KC (CONFIRMED, 2nd source).** SI 9/19 RB rankings list "Kenneth Walker III, KC, vs IND." KC backfield target competition for Mahomes' TDs — mild downgrade to Mahomes' rushing-TD equity.
+15. **49ers played in Australia W1 (NEW context).** USA Today 9/19: Purdy "had three touchdowns and an interception in Australia as the 49ers trounced the Rams." Long travel → SF, but a week to recover; minor note only.
+16. **Bears 59, Panthers 37 W1 (CONFIRMED, 3 sources).** Athlon, SI, FantasyPros all confirm. This reframes: (a) Caleb's 37.26 is real but came in a track meet vs a CAR D that also gave up 100+ rush yds to two Bears RBs; (b) Young's 361/3 came in garbage/shootout script, not sustainable efficiency — but it does prove the weapons (Coker 8/138/2) are live; (c) CHI's D allowed 37 to CAR — Wentz's path is real if weather allows.
+
+## X-side sweep (48h, public web search per brief rules)
+Target accounts: @sfdata9ers, @tejfbanalytics, @MagicSportsGuy, @SumerSports, @Shauncore, @samhoppen, @benbbaldwin, @thunderdandfs, @ryanj_heath, @jjcrosschop, @cmain7, @jmthrivept, @JMac_FF, @ScottBarrettDFB, @LateRoundQB, @AdamLevitan, @EstablishTheRun.
+Result: no fresh (9/17–9/19) posts from these accounts surfaced via public web search. Hits for @thunderdandfs (RotoBaller 2022) and @samhoppen (Substack 2025) were stale. Breaking news was instead captured via beat reporters (Schefter, Underhill, ESPN, official team sites) and the internal corpus (9/17–9/19 tables). Gap: real-time X sentiment/ownership chatter is not observable from this lane — flag to parent that late-night X scans (especially @LateRoundQB, @AdamLevitan/ETR) should be re-attempted by a lane with X access before lock.
+
+## Contrarian scenarios that break the slate
+1. **Chicago monsoon:** If the 1"-rain scenario hits, MIN@CHI (48.5 total) collapses to a 20-17 slog. Both QBs bust; the field's Caleb/Wentz exposure dies; leverage flows to dome games (WAS@DAL, CIN@HOU) and to Lock/Brissett indoors. Wentz at $4,600 becomes the most-owned bust.
+2. **McConkey inactive + Herbert sinks:** Without his 46.7% target-share WR1, Herbert's 84.3% motion generates empty yards; LV's 6.5% pressure allowed means Cousins has all day in a -6.5 game that stays closer than spread — Cousins $5,000 becomes the accidental value.
+3. **Flowers out + BAL run-heavy:** Lamar's ~28 implied total flows to Henry (144/3 W1) and Lamar's legs; Lamar throws 25x for 220/1 — a 17-point day at $7,300 that kills premium spenders. The pivot: Shough's volume (61 dropbacks W1) vs a BAL D missing 3 starters.
+4. **Burrow's back re-tightens mid-game:** In-domed, no weather excuse — if he's pulled, CIN's backup (Josh Johnson potentially elevated per atozsports) nukes CIN stacks and HOU's script flips run-heavy. Low probability, slate-breaking impact.
+5. **Purdy/KC-style no-show:** SF -13.5 with a 29.5 implied total is the week's most popular QB spot; if MIA's defense (new staff, Hafley) is even average and SF leads 24-3 at half, Purdy finishes 18/26 for 210/2 — fine but not slate-winning at $6,200 and high ownership.
+6. **Dak/Daniels shootout fails:** Divisional familiarity + WAS's 42.9% market-implied (benbbaldwin, below average) offense stalls; the 50.5 total lands 24-20. Leverage shifts to Mahomes, Lawrence, Stroud, or the weather-discounted MIN@CHI pieces.
+
+## What P3 overturned or refined from P1/P2
+- P1's "Mahomes best value" → refined: price-only case; W1 was genuinely bad (CPOE -12.3) and Walker caps TD equity. Still playable, no longer the lane's top value — Wentz (if weather holds) and Lawrence own that.
+- P1 treated Pittman as IND's WR → corrected: PIT's WR, Q, real downgrade to Rodgers.
+- P2's Geno enthusiasm → tempered: 9.3 DK pts on 26 dropbacks is a volume problem, not just TD luck. He's a GPP stab, not a core value.
+- P1's neutral Maye → downgraded: A.J. Brown to IR + PIT's -0.85 motion EPA allowed + rain.
+- P2's Herbert note → now news-dependent on McConkey (game-time call).
+- Caleb/Wentz: both carry a weather tax pending Sunday AM recheck — the single biggest pre-lock action item for the QB lane.
