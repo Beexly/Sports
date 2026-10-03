@@ -1,43 +1,29 @@
-"""Offline identity tests for tinkabot_eq_ml_jensen_shannon. No score. No mint."""
+"""Tests for jensen_shannon (Nowozin et al. arXiv:1606.00709 Table 1)."""
 from __future__ import annotations
 
 import math
 import unittest
 
-import tinkabot_eq_ml_jensen_shannon as m
+from tinkabot_eq_ml_jensen_shannon import COLUMN_BACKED_FUNCS, IDENTITY, jensen_shannon
 
 
-class TestIdentity(unittest.TestCase):
-    def test_stated_identity(self):
-        self.assertEqual(m.IDENTITY, "tinkabot")
+class TestJensenShannon(unittest.TestCase):
+    def test_identity_and_column(self) -> None:
+        self.assertEqual(IDENTITY, "tinkabot")
+        self.assertIn("jensen_shannon", COLUMN_BACKED_FUNCS)
 
-    def test_only_one_func(self):
-        self.assertEqual(tuple(m.COLUMN_BACKED_FUNCS), ("jensen_shannon_divergence",))
-        self.assertTrue(callable(m.jensen_shannon_divergence))
+    def test_identical(self) -> None:
+        self.assertAlmostEqual(jensen_shannon([0.5, 0.5], [0.5, 0.5]), 0.0)
 
-    def test_no_forbidden_copies(self):
-        for name in ("shannon_entropy", "kl_divergence", "contrastive_loss"):
-            self.assertFalse(hasattr(m, name), name)
+    def test_disjoint(self) -> None:
+        # p=[1,0], q=[0,1] → each term: 1*log(2)+0 + 0 + 1*log(2) = 2 log 2; /2 = log 2
+        self.assertAlmostEqual(jensen_shannon([1.0, 0.0], [0.0, 1.0]), math.log(2.0))
 
-
-class TestJS(unittest.TestCase):
-    def test_stated_form(self):
-        # Identical → 0
-        self.assertAlmostEqual(m.jensen_shannon_divergence([0.5, 0.5], [0.5, 0.5]), 0.0)
-        # P=(1,0), Q=(0,1): M=(0.5,0.5); H(P)=H(Q)=0; H(M)=log(2)
-        self.assertAlmostEqual(
-            m.jensen_shannon_divergence([1.0, 0.0], [0.0, 1.0]),
-            math.log(2.0),
-        )
-
-    def test_null_missing(self):
-        self.assertIsNone(m.jensen_shannon_divergence(None, [0.5, 0.5]))
-        self.assertIsNone(m.jensen_shannon_divergence([0.5, 0.5], None))
-
-    def test_null_bad(self):
-        self.assertIsNone(m.jensen_shannon_divergence([0.5], [0.5, 0.5]))
-        self.assertIsNone(m.jensen_shannon_divergence([0.6, 0.6], [0.5, 0.5]))
-        self.assertIsNone(m.jensen_shannon_divergence([-0.1, 1.1], [0.5, 0.5]))
+    def test_null_guards(self) -> None:
+        self.assertIsNone(jensen_shannon(None, [0.5, 0.5]))
+        self.assertIsNone(jensen_shannon([0.5], [0.5, 0.5]))
+        self.assertIsNone(jensen_shannon([-0.1, 1.1], [0.5, 0.5]))
+        self.assertIsNone(jensen_shannon([], []))
 
 
 if __name__ == "__main__":

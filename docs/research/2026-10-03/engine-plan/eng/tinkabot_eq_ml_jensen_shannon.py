@@ -1,15 +1,9 @@
-"""Stated ML identity: Jensen–Shannon divergence (tinkabot lane).
+"""Jensen–Shannon divergence (Nowozin et al. f-GAN / arXiv:1606.00709).
 
-Stated identity: tinkabot.
-One function. Not sports. Does not edit equations.py, gse_eq_corpus.py,
-or Lingxi files. Does not score or mint. Does not touch mind.jsonl or trainers.
-
-Source:
-- Lin, J., "Divergence Measures Based on the Shannon Entropy,"
-  IEEE Transactions on Information Theory, vol. 37, no. 1, Jan. 1991,
-  pp. 145–151, Section IV (Jensen–Shannon divergence). Printed form:
-  JS(P, Q) = H(M) − ½ H(P) − ½ H(Q), with M = ½(P + Q) and
-  H(R) = −Σ r_i log r_i (natural log; 0·log 0 taken as 0).
+Printed Table 1 PDF p.3 (Jensen-Shannon Df):
+  (1/2) Σ_i [ p_i log(2 p_i/(p_i+q_i)) + q_i log(2 q_i/(p_i+q_i)) ]
+Discrete equal-length non-negative masses (caller-normalized).
+Not Hellinger. Not KL. Does not edit grok_eq_adam.
 """
 from __future__ import annotations
 
@@ -17,48 +11,52 @@ import math
 from collections.abc import Sequence
 
 IDENTITY = "tinkabot"
+COLUMN_BACKED_FUNCS: Sequence[str] = ("jensen_shannon",)
 
-_SUM_TOL = 1e-9
 
-
-def _entropy(probs: Sequence[float]) -> float | None:
-    h = 0.0
-    s = 0.0
-    for raw in probs:
-        p = float(raw)
-        if p < 0.0 or p > 1.0:
-            return None
-        s += p
-        if p == 0.0:
-            continue
-        h -= p * math.log(p)
-    if abs(s - 1.0) > _SUM_TOL:
+def _as_finite_nonneg(value: object) -> float | None:
+    if value is None or isinstance(value, (str, bytes, bool)):
         return None
-    return h
+    try:
+        number = float(value)  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        return None
+    if not math.isfinite(number) or number < 0.0:
+        return None
+    return number
 
 
-def jensen_shannon_divergence(
-    p: Sequence[float] | None,
-    q: Sequence[float] | None,
-) -> float | None:
-    """JS(P,Q) = H(M) − ½ H(P) − ½ H(Q), M = ½(P+Q) (Lin 1991 §IV).
+def _term(a: float, b: float) -> float | None:
+    """a log(2a/(a+b)); 0 when a=0."""
+    if a == 0.0:
+        return 0.0
+    s = a + b
+    if s == 0.0:
+        return None
+    return a * math.log((2.0 * a) / s)
 
-    Missing → null. Unequal lengths → null. Any mass outside [0,1] or
-    either vector not summing to 1 (±1e-9) → null.
+
+def jensen_shannon(p: object, q: object) -> float | None:
+    """JS = (1/2) Σ [p log(2p/(p+q)) + q log(2q/(p+q))] (Nowozin Table 1).
+
+    Missing / non-finite / negative, length mismatch, or empty → null.
     """
-    if p is None or q is None:
+    if not isinstance(p, (list, tuple)) or not isinstance(q, (list, tuple)):
         return None
     if len(p) == 0 or len(p) != len(q):
         return None
-    hp = _entropy(p)
-    hq = _entropy(q)
-    if hp is None or hq is None:
+    total = 0.0
+    for pi, qi in zip(p, q):
+        a = _as_finite_nonneg(pi)
+        b = _as_finite_nonneg(qi)
+        if a is None or b is None:
+            return None
+        t1 = _term(a, b)
+        t2 = _term(b, a)
+        if t1 is None or t2 is None:
+            return None
+        total += t1 + t2
+    out = 0.5 * total
+    if not math.isfinite(out):
         return None
-    m = [0.5 * (float(pi) + float(qi)) for pi, qi in zip(p, q)]
-    hm = _entropy(m)
-    if hm is None:
-        return None
-    return hm - 0.5 * hp - 0.5 * hq
-
-
-COLUMN_BACKED_FUNCS: Sequence[str] = ("jensen_shannon_divergence",)
+    return out
