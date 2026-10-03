@@ -3,10 +3,16 @@ import math
 import unittest
 
 from equations import (
+    actual_or_pit,
     air_bin,
     air_yards_to_sticks,
     american_implied,
+    availability_mass,
+    availability_total,
+    binary_completion,
     brier,
+    canonical_team,
+    cell_token,
     clears_half,
     clipped_eta,
     complete_minus_probability,
@@ -39,6 +45,7 @@ from equations import (
     fair_worst,
     finite_weighted_mean,
     four_week_cv,
+    game_price_key,
     games_before,
     generated_before_kick,
     glazer_play_rate,
@@ -66,6 +73,7 @@ from equations import (
     mean_or_null,
     mov_multiplier,
     n_plays_weighted_mean,
+    neutral_site,
     nflverse_home_spread,
     nflverse_join_date,
     normal_ci,
@@ -75,6 +83,7 @@ from equations import (
     placebo_fraction,
     play_published,
     point_shift_applies,
+    position_group,
     present_filled,
     pressure_event,
     pressure_matchup,
@@ -86,6 +95,7 @@ from equations import (
     proe_or_null,
     promoted,
     protection_stress,
+    published_side,
     push_adjusted,
     push_fraction,
     qb_epa_rating,
@@ -97,6 +107,7 @@ from equations import (
     refit_matches,
     rest_diff,
     result_share,
+    retrospective_rationale,
     sample_median,
     scaled_weight,
     season_aggregate_order,
@@ -116,6 +127,7 @@ from equations import (
     spread_neighborhood_k,
     standardize,
     stress_or_null,
+    strict_asof_index,
     strict_side,
     target_share,
     team_points,
@@ -450,6 +462,45 @@ class EquationTests(unittest.TestCase):
         self.assertIsNone(stress_or_null(0.2, None, "  "))
         self.assertEqual(stress_or_null(0.2, 3, "  "), 0.2)
         self.assertEqual(stress_or_null(0.2, 3, ""), 0.2)
+
+
+
+    def test_cell_asof_and_group_maps(self):
+        self.assertEqual(cell_token(None), "na")
+        self.assertEqual(cell_token(float("nan")), "na")
+        self.assertEqual(cell_token(3.0), "3")
+        self.assertEqual(cell_token("2.0"), "2")
+        self.assertEqual(cell_token("early down"), "earlydown")
+        self.assertIsNone(strict_asof_index([1, 3, 5], 1))
+        self.assertEqual(strict_asof_index([1, 3, 5], 4), 1)
+        self.assertEqual(strict_asof_index([1, 3, 5], 5), 1)
+        self.assertEqual(strict_asof_index([1, 3, 5], 6), 2)
+        self.assertEqual(canonical_team(" AZ "), "ARI")
+        self.assertEqual(canonical_team("KC"), "KC")
+        self.assertIsNone(canonical_team(None))
+        self.assertEqual(position_group("WR"), "SKILL")
+        self.assertEqual(position_group("EDGE"), "FRONT")
+        self.assertEqual(position_group("QB"), "OTHER")
+        self.assertEqual(position_group(None), "OTHER")
+        self.assertEqual(neutral_site("Neutral"), 1.0)
+        self.assertEqual(neutral_site("Home"), 0.0)
+        self.assertEqual(availability_mass(0.4, 1.0), 0.4)
+        self.assertEqual(availability_mass(0.4, 0.0), 0.0)
+        self.assertEqual(actual_or_pit(None, 1.2), 1.2)
+        self.assertEqual(actual_or_pit(0.4, 9.0), 0.4)
+        self.assertIsNone(actual_or_pit(None, None))
+        self.assertEqual(availability_total(1.0, None, 2.0, None), 3.0)
+        self.assertEqual(availability_total(None, None, None, None), 0.0)
+        self.assertTrue(binary_completion(0))
+        self.assertTrue(binary_completion(1.0))
+        self.assertFalse(binary_completion(2))
+        self.assertFalse(binary_completion(None))
+        self.assertEqual(published_side("Kansas City Chiefs -3", "Kansas City Chiefs", "Buffalo Bills"), "home")
+        self.assertEqual(published_side("Buffalo Bills", "Kansas City Chiefs", "Buffalo Bills"), "away")
+        self.assertIsNone(published_side("the over", "Kansas City Chiefs", "Buffalo Bills"))
+        self.assertTrue(retrospective_rationale("Retrospective look"))
+        self.assertFalse(retrospective_rationale(None))
+        self.assertEqual(game_price_key("2026_04_KC_BUF", 0.12344), ("2026_04_KC_BUF", 0.1234))
 
 
 if __name__ == "__main__":

@@ -1050,3 +1050,126 @@ def stress_or_null(
         return None
     return float(stress)
 
+
+def cell_token(value) -> str:
+    """join_rest.py _cell_token: missing is 'na'. An integer-valued float drops the decimal. Trailing '.0' text becomes an int. Other text is stripped and spaces are removed."""
+    if value is None:
+        return "na"
+    if isinstance(value, float) and value != value:
+        return "na"
+    if isinstance(value, float) and value.is_integer():
+        return str(int(value))
+    text = str(value).strip()
+    if text.endswith(".0"):
+        try:
+            return str(int(float(text)))
+        except ValueError:
+            return text
+    return text.replace(" ", "")
+
+
+def strict_asof_index(asofs: Sequence, gk) -> int | None:
+    """join_rest.py _asof_side: index of the last sorted asof strictly before gk. searchsorted side left, then minus one. No earlier row is null."""
+    lo = 0
+    hi = len(asofs)
+    while lo < hi:
+        mid = (lo + hi) // 2
+        if asofs[mid] < gk:
+            lo = mid + 1
+        else:
+            hi = mid
+    pos = lo - 1
+    if pos < 0:
+        return None
+    return pos
+
+
+def canonical_team(team: str | None) -> str | None:
+    """join_rest.py TEAM_MAP after strip: AZ ARI, LAR LA, OAK LV, SD LAC, STL LA, JAC JAX, WSH WAS. Any other code is unchanged. Null stays null."""
+    if team is None:
+        return None
+    table = {
+        "AZ": "ARI",
+        "LAR": "LA",
+        "OAK": "LV",
+        "SD": "LAC",
+        "STL": "LA",
+        "JAC": "JAX",
+        "WSH": "WAS",
+    }
+    text = str(team).strip()
+    return table.get(text, text)
+
+
+def position_group(position: str | None) -> str:
+    """data.py GROUPS: OL, SKILL, FRONT, or DB. A position in none of those sets, including a missing one, is OTHER."""
+    groups = {
+        "OL": {"T", "G", "C", "OL", "OT", "OG"},
+        "SKILL": {"WR", "TE", "RB", "FB"},
+        "FRONT": {"DE", "DT", "NT", "DL", "LB", "ILB", "OLB", "MLB", "EDGE"},
+        "DB": {"CB", "S", "FS", "SS", "DB", "SAF"},
+    }
+    for name, members in groups.items():
+        if position in members:
+            return name
+    return "OTHER"
+
+
+def neutral_site(location: str | None) -> float:
+    """data.py: 1 when location is Neutral, else 0."""
+    return 1.0 if location == "Neutral" else 0.0
+
+
+def availability_mass(share: float, weight: float) -> float:
+    """data.py: share times the report weight. Out and Doubtful use injury_out_weight. Questionable uses questionable_weight."""
+    return share * weight
+
+
+def actual_or_pit(actual: float | None, pit: float | None) -> float | None:
+    """test_v1.py: qb_act is filled with qb_pit when the actual rating is missing. A missing pit stays null."""
+    if actual is None or actual != actual:
+        if pit is None or pit != pit:
+            return None
+        return float(pit)
+    return float(actual)
+
+
+def availability_total(
+    ol: float | None,
+    skill: float | None,
+    front: float | None,
+    db: float | None,
+) -> float:
+    """test_v1.py: av_OL + av_SKILL + av_FRONT + av_DB. A missing group is skipped. All missing is 0."""
+    total = 0.0
+    for value in (ol, skill, front, db):
+        if value is None or value != value:
+            continue
+        total += float(value)
+    return total
+
+
+def binary_completion(complete_pass) -> bool:
+    """independent_cpoe.py: a play is kept only when complete_pass is 0 or 1."""
+    return complete_pass in (0, 1, 0.0, 1.0)
+
+
+def published_side(selection: str | None, home_name: str | None, away_name: str | None) -> str | None:
+    """gse_eval.py: home when the home name is in the selection, else away when the away name is. Otherwise null."""
+    sel = selection or ""
+    if home_name and home_name in sel:
+        return "home"
+    if away_name and away_name in sel:
+        return "away"
+    return None
+
+
+def retrospective_rationale(rationale: str | None) -> bool:
+    """gse_eval.py: true when the rationale contains Retrospective. A missing rationale is false."""
+    return "Retrospective" in (rationale or "")
+
+
+def game_price_key(game_id: str, q: float) -> tuple[str, float]:
+    """gse_eval.py: one row per game and de-vigged price rounded to 4 decimals."""
+    return (game_id, round(q, 4))
+
