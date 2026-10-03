@@ -347,3 +347,298 @@ def shift_to_target(margins: list[float], target: float) -> float:
         else:
             hi = mid
     return (lo + hi) / 2.0
+
+
+def quick_game_expanding_mean(rows: Sequence[tuple[int, float | None]], week: int) -> float | None:
+    """league_baselines.py: unweighted mean of rates whose week is strictly less than W. Null rates dropped. No prior week yields null."""
+    chosen: list[float] = []
+    for row_week, rate in rows:
+        if row_week >= week or rate is None or rate != rate:
+            continue
+        chosen.append(float(rate))
+    if not chosen:
+        return None
+    return sum(chosen) / len(chosen)
+
+
+def n_plays_weighted_mean(rows: Sequence[tuple[float | None, float | None]]) -> float | None:
+    """league_baselines.py: n_plays-weighted mean of beta_script. Null beta or n_plays <= 0 dropped. No remaining rows yields null."""
+    num = 0.0
+    den = 0.0
+    for beta, n_plays in rows:
+        if beta is None or n_plays is None or beta != beta or n_plays != n_plays:
+            continue
+        if n_plays <= 0:
+            continue
+        num += float(beta) * float(n_plays)
+        den += float(n_plays)
+    if den == 0.0:
+        return None
+    return num / den
+
+
+def leaf_served_rate(
+    w: float,
+    n: float,
+    p_hat_parent: float | None,
+    m: float = 25.0,
+    floor: float = 30.0,
+) -> float | None:
+    """int_parent.py: (w + 25 * p_hat_parent) / (n + 25) only when n >= 30 and p_hat_parent is not null. Otherwise null. Not a parent lookup."""
+    if n < floor or p_hat_parent is None:
+        return None
+    return (w + m * p_hat_parent) / (n + m)
+
+
+def parse_season_key(season_key: str) -> tuple[int, int | None]:
+    """int_parent.py: '2026_w3' is (2026, 3). A bare season is (season, None)."""
+    text = str(season_key)
+    if "_w" in text:
+        season_s, week_s = text.split("_w", 1)
+        return int(season_s), int(week_s)
+    return int(text), None
+
+
+def season_key_sort_key(season_key: str) -> tuple[int, int]:
+    """int_parent.py: a season-only key sorts as week 0, before that season's week keys."""
+    season, week = parse_season_key(season_key)
+    return (season, 0 if week is None else week)
+
+
+def prior_season_key(keys: Sequence[str], season_key: str) -> str | None:
+    """int_parent.py build_prior_map: the single immediately preceding key. The first key has none. No rate is looked up."""
+    ordered = sorted(set(keys), key=season_key_sort_key)
+    prior: dict[str, str | None] = {}
+    for i, key in enumerate(ordered):
+        prior[key] = ordered[i - 1] if i else None
+    return prior.get(season_key)
+
+
+def spread_neighborhood_k(
+    abs_gaps: Sequence[float],
+    bw_s: float = 1.0,
+    min_n: int = 150,
+) -> float:
+    """scoredist.py neighborhood: first k in (1, 1.5, 2, 3, 4, 6) with at least min_n gaps inside bw_s * k. If none, the last k is kept."""
+    steps = (1.0, 1.5, 2.0, 3.0, 4.0, 6.0)
+    chosen = steps[-1]
+    for k in steps:
+        chosen = k
+        n = sum(1 for gap in abs_gaps if gap <= bw_s * k)
+        if n >= min_n:
+            break
+    return chosen
+
+
+def push_fraction(values: Sequence[float], line: float) -> float:
+    """scoredist.py mk: fraction of the sample exactly equal to the line."""
+    if len(values) == 0:
+        raise ValueError("push_fraction: empty sample")
+    return sum(1.0 for v in values if v == line) / len(values)
+
+
+def shift_to_fair(values: Sequence[float], line: float) -> float:
+    """scoredist.py: shift closest to a tie-halved rate of 0.5. Candidates put a sample point on the line, and that shift plus 1e-6. Equal distances keep the smaller absolute shift."""
+    if len(values) == 0:
+        raise ValueError("shift_to_fair: empty sample")
+    best_s = 0.0
+    best_d = abs(fair_side(values, line, 0.0) - 0.5)
+    for c in sorted({float(line - v) for v in values}):
+        for s in (c, c + 1e-6):
+            d = abs(fair_side(values, line, s) - 0.5)
+            if d < best_d - 1e-12 or (abs(d - best_d) <= 1e-12 and abs(s) < abs(best_s)):
+                best_s, best_d = s, d
+    return best_s
+
+
+def point_shift_applies(p: float, q: float, gap: float = 0.01) -> bool:
+    """scoredist.py: an engine point-shift is added only when abs(p - q) >= 0.01."""
+    return abs(p - q) >= gap
+
+
+def week_order(season: int, week: int) -> int:
+    """completed_air_yards.py: season * 100 + week."""
+    return int(season) * 100 + int(week)
+
+
+def lagged_latest(
+    rows: Sequence[tuple[int, float]],
+    season: int,
+    week: int,
+    lag_seasons: int = 2,
+) -> float | None:
+    """completed_air_yards.py latest: last row with order strictly before the game and at least (season - lag) * 100. No such row is null. The completion mean itself is mean_or_null."""
+    game_ord = week_order(season, week)
+    lo = (int(season) - lag_seasons) * 100
+    hit = [(order, value) for order, value in rows if order < game_ord and order >= lo]
+    if not hit:
+        return None
+    hit.sort()
+    return hit[-1][1]
+
+
+def completion_base_offset(mean_complete: float) -> float:
+    """independent_cpoe.py fit_air start: log(mean / (1 - mean + 1e-9)). Not the Newton update."""
+    return math.log(mean_complete / (1.0 - mean_complete + 1e-9))
+
+
+def reconstructed_dropbacks(
+    times_pressured: float,
+    times_pressured_pct: float,
+    passing_bad_throws: float | None = None,
+    passing_bad_throw_pct: float | None = None,
+) -> float | None:
+    """protection_stress.py: times_pressured / times_pressured_pct. A zero percent is missing. Then passing_bad_throws / passing_bad_throw_pct, and a zero bad-throw percent is missing too."""
+    if times_pressured_pct != 0:
+        return times_pressured / times_pressured_pct
+    if passing_bad_throws is None or passing_bad_throw_pct is None or passing_bad_throw_pct == 0:
+        return None
+    return passing_bad_throws / passing_bad_throw_pct
+
+
+def deep_rate(deep: float, attempts: float, floor: float = 30.0) -> float | None:
+    """corpus_on_engine.py: deep / attempts when attempts are at least 30, else null."""
+    if attempts < floor:
+        return None
+    return deep / attempts
+
+
+def home_epa_edge(home_offense: float, away_defense: float, away_offense: float, home_defense: float) -> float:
+    """encoder_adj.py: (home offense + away defense) - (away offense + home defense)."""
+    return (home_offense + away_defense) - (away_offense + home_defense)
+
+
+def pressure_matchup(home_off: float, home_def: float, away_off: float, away_def: float) -> float:
+    """engine_v1.py: (away defense pressure - home offense pressure) - (home defense pressure - away offense pressure)."""
+    return (away_def - home_off) - (home_def - away_off)
+
+
+def explosive_play(is_pass: float, is_rush: float, yards_gained: float) -> float:
+    """engine_v1.py: 1 when a pass gains at least 20 or a rush gains at least 10."""
+    if (is_pass == 1 and yards_gained >= 20) or (is_rush == 1 and yards_gained >= 10):
+        return 1.0
+    return 0.0
+
+
+def pressure_on_dropback(sack: float, qb_hit: float, qb_dropback: float) -> float:
+    """engine_v1.py: 1 when sack or qb_hit is 1 and the play is a dropback."""
+    if (sack == 1 or qb_hit == 1) and qb_dropback == 1:
+        return 1.0
+    return 0.0
+
+
+def qb_epa_rating(dropbacks: float, epa_sum: float, prior_mean: float = -0.05, prior_n: float = 150.0) -> float:
+    """data.py and perqb.py: (epa + prior_mean * prior_n) / (dropbacks + prior_n). The stated prior is -0.05 over 150 dropbacks."""
+    return (epa_sum + prior_mean * prior_n) / (dropbacks + prior_n)
+
+
+def unknown_qb_rating(prior_mean: float = -0.05) -> float:
+    """data.py: an unknown starter is prior_mean - 0.05."""
+    return prior_mean - 0.05
+
+
+def home_flag_from_neutral(neutral: float) -> float:
+    """data.py: home_flag = 1 - neutral."""
+    return 1.0 - neutral
+
+
+def prior_four_shares(
+    history: Sequence[tuple[int, int, float | None]],
+    season: int,
+    week: int,
+) -> list[float] | None:
+    """roll_trust.py: four most recent non-null shares strictly before this week, inside the current and previous season. Fewer than four is null."""
+    ordered = sorted(history, key=lambda row: (row[0], row[1]))
+    prior: list[float] = []
+    for row_season, row_week, value in reversed(ordered):
+        if row_season < season - 1:
+            break
+        if not (row_season < season or (row_season == season and row_week < week)):
+            continue
+        if value is None or value != value:
+            continue
+        prior.append(float(value))
+        if len(prior) == 4:
+            break
+    if len(prior) < 4:
+        return None
+    return prior
+
+
+def present_filled(value: float | None) -> tuple[float, float]:
+    """score_present_flag.py: flag is 1 when the value is non-null, else 0. A missing value is filled with 0."""
+    if value is None or value != value:
+        return 0.0, 0.0
+    return 1.0, float(value)
+
+
+def injury_out_weight(report_status: str) -> float:
+    """data.py: Questionable weight is 0. Out and Doubtful weight is 1."""
+    return 0.0 if report_status == "Questionable" else 1.0
+
+
+def questionable_weight(report_status: str) -> float:
+    """data.py: 1 only when the report is Questionable, else 0."""
+    return 1.0 if report_status == "Questionable" else 0.0
+
+
+def snap_share(offense_pct: float | None, defense_pct: float | None) -> float:
+    """data.py: max of the two snap percents. A missing percent is 0."""
+    offense = 0.0 if offense_pct is None or offense_pct != offense_pct else float(offense_pct)
+    defense = 0.0 if defense_pct is None or defense_pct != defense_pct else float(defense_pct)
+    return max(offense, defense)
+
+
+def snap_within_window(event_order: int, snap_order: int, window: int = 200) -> bool:
+    """data.py: the as-of snap is kept only when (event order - snap order) < 200."""
+    return (event_order - snap_order) < window
+
+
+def recency_weights(n: int) -> list[float] | None:
+    """engine_v1.py team_form: linspace from 0.5 to 1.0 across the kept games. Fewer than 3 games is null."""
+    if n < 3:
+        return None
+    step = 0.5 / (n - 1)
+    return [0.5 + i * step for i in range(n)]
+
+
+def finite_weighted_mean(values: Sequence[float | None], weights: Sequence[float]) -> float:
+    """engine_v1.py: sum of finite value * weight over the sum of those weights. Every value missing returns 0, not null."""
+    num = 0.0
+    den = 0.0
+    for value, weight in zip(values, weights):
+        if value is None or value != value:
+            continue
+        num += float(value) * float(weight)
+        den += float(weight)
+    if den == 0.0:
+        return 0.0
+    return num / den
+
+
+def temp_or_default(temp: float | None) -> float:
+    """engine_v1.py: temperature when present, else 65."""
+    if temp is None or temp != temp:
+        return 65.0
+    return float(temp)
+
+
+def wind_or_zero(wind: float | None) -> float:
+    """engine_v1.py: wind when present, else 0."""
+    if wind is None or wind != wind:
+        return 0.0
+    return float(wind)
+
+
+def rest_diff(home_rest: float | None, away_rest: float | None) -> float | None:
+    """engine_v1.py: home_rest - away_rest when home_rest is present, else 0. A missing away side stays null."""
+    if home_rest is None or home_rest != home_rest:
+        return 0.0
+    if away_rest is None or away_rest != away_rest:
+        return None
+    return home_rest - away_rest
+
+
+def is_dome(roof: str | None) -> float:
+    """engine_v1.py: 1 when roof is dome or closed, else 0."""
+    return 1.0 if roof in ("dome", "closed") else 0.0
