@@ -116,3 +116,37 @@ export function assertSubstantiated(metric: SubstantiatedMetric): void {
 export function renderableMetricOrNull(metric: SubstantiatedMetric): SubstantiatedMetric | null {
   return collectDefects(metric).length === 0 ? metric : null;
 }
+
+/**
+ * The only door a public rate has. A percent is returned only when coverage,
+ * a Wilson or Clopper-Pearson lower bound, CLV backing, and walk-forward
+ * provenance all survive the guard. Anything missing returns null. Callers
+ * render a refusal, not the number.
+ */
+export interface PublicRateClaim {
+  readonly label: string;
+  /** Point estimate in percent, 0–100. Null means already withheld. */
+  readonly valuePct: number | null;
+  readonly fired: number;
+  readonly eligible: number;
+  readonly lowerBound: {
+    readonly method: "wilson" | "clopper-pearson";
+    readonly value: number;
+  } | null;
+  readonly clv: { readonly meanBps: number; readonly settledCount: number } | null;
+  readonly provenance: SubstantiatedMetric["provenance"] | null;
+}
+
+export function publicRateOrNull(claim: PublicRateClaim): number | null {
+  if (claim.valuePct == null || !Number.isFinite(claim.valuePct)) return null;
+  if (claim.lowerBound == null || claim.clv == null || claim.provenance == null) return null;
+  const metric: SubstantiatedMetric = {
+    label: claim.label,
+    value: claim.valuePct / 100,
+    coverage: { fired: claim.fired, eligible: claim.eligible },
+    lowerBound: claim.lowerBound,
+    clv: claim.clv,
+    provenance: claim.provenance,
+  };
+  return renderableMetricOrNull(metric) == null ? null : claim.valuePct;
+}

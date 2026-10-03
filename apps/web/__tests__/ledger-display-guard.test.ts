@@ -10,6 +10,7 @@ import {
   assertSubstantiated,
   DisplayGuardError,
   renderableMetricOrNull,
+  publicRateOrNull,
   type SubstantiatedMetric,
 } from "@/lib/ledger/display-guard";
 
@@ -81,5 +82,32 @@ describe("display guard — every statutory leg is load-bearing", () => {
       const guard = err as DisplayGuardError;
       expect(guard.missing.length).toBeGreaterThanOrEqual(2);
     }
+  });
+});
+
+describe("publicRateOrNull — a public percent cannot skip a leg", () => {
+  const claim = {
+    label: "win rate",
+    valuePct: 58.3,
+    fired: 112,
+    eligible: 940,
+    lowerBound: { method: "wilson" as const, value: 0.507 },
+    clv: { meanBps: 141, settledCount: 112 },
+    provenance: VALID.provenance,
+  };
+
+  it("returns the percent only when every leg is present", () => {
+    expect(publicRateOrNull(claim)).toBe(58.3);
+  });
+
+  it("returns null with no CLV, no provenance, or no bound", () => {
+    expect(publicRateOrNull({ ...claim, clv: null })).toBeNull();
+    expect(publicRateOrNull({ ...claim, provenance: null })).toBeNull();
+    expect(publicRateOrNull({ ...claim, lowerBound: null })).toBeNull();
+    expect(publicRateOrNull({ ...claim, valuePct: null })).toBeNull();
+  });
+
+  it("returns null when coverage is not a real denominator", () => {
+    expect(publicRateOrNull({ ...claim, eligible: 0 })).toBeNull();
   });
 });
