@@ -109,6 +109,11 @@ describe("loadSignalLedger", () => {
 
   it("never writes: the loader exposes no mutation surface", async () => {
     const r = await loadSignalLedger(fakeDb());
+    // The exact key list is the assertion: anything a future edit adds here has
+    // to be deliberate, and a mutation surface cannot appear without changing
+    // this list. `weightSources` is a READ-ONLY count of where each candidate's
+    // weight came from — added so the residual still on the category prior is
+    // visible instead of assumed — so it is listed rather than forbidden.
     expect(Object.keys(r).sort()).toEqual([
       "anchors",
       "candidates",
@@ -116,7 +121,56 @@ describe("loadSignalLedger", () => {
       "censusText",
       "observations",
       "rowsRead",
+      "weightSources",
     ]);
+  });
+
+  it("reports every candidate as prior-weighted when no measured table is supplied", async () => {
+    // The no-table path must be byte-identical to before this change: same
+    // candidates, and the report says where the weight came from instead of
+    // leaving the caller to assume.
+    const r = await loadSignalLedger(fakeDb());
+    expect(r.weightSources.measured).toBe(0);
+    expect(r.weightSources.priorWeighted).toBe(r.candidates.length);
+    expect(r.weightSources.uncoveredKeys).toEqual([]);
+  });
+
+  it("separates measured from prior-weighted candidates when a table is supplied", async () => {
+    const covered = "injury.availability";
+    const r = await loadSignalLedger(fakeDb(), { measuredWeights: { [covered]: 0.42 } });
+    const coveredCount = r.candidates.filter((c) => c.key === covered).length;
+    expect(coveredCount).toBeGreaterThan(0);
+
+    expect(r.weightSources.measured).toBe(coveredCount);
+    expect(r.weightSources.priorWeighted).toBe(r.candidates.length - coveredCount);
+    // And the fitted weight is the one that reaches the candidate, not the
+    // HEALTH prior of 1.0.
+    for (const c of r.candidates.filter((x) => x.key === covered)) {
+      expect(c.weight).toBeCloseTo(0.42, 6);
+      expect(c.weight).not.toBe(1);
+    }
+  });
+
+  it("names the keys a supplied table did not cover", async () => {
+    // Measured against what the fake db actually emits, not against a guess:
+    // this db carries pgs, snap, ngs AND injury rows, so a one-key table covers
+    // only the family it names and leaves the rest on the prior.
+    const baseline = await loadSignalLedger(fakeDb());
+    const emitted = [...new Set(baseline.candidates.map((c) => c.key))].sort();
+    expect(emitted.length).toBeGreaterThan(1);
+
+    const r = await loadSignalLedger(fakeDb(), {
+      measuredWeights: { "pgs.target_share": 0.3 },
+    });
+    const covered = "pgs.target_share";
+    const expectedMeasured = r.candidates.filter((c) => c.key === covered).length;
+    expect(expectedMeasured).toBeGreaterThan(0);
+
+    expect(r.weightSources.measured).toBe(expectedMeasured);
+    expect(r.weightSources.priorWeighted).toBe(r.candidates.length - expectedMeasured);
+    // The residual is NAMED, not just counted.
+    expect(r.weightSources.uncoveredKeys).toEqual(emitted.filter((k) => k !== covered));
+    expect(r.weightSources.uncoveredKeys).not.toContain(covered);
   });
 });
 

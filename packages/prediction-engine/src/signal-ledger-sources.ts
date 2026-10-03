@@ -38,6 +38,7 @@ import {
   buildCandidate,
   categoryPrior,
   normalizeReading,
+  resolveWeight,
   type CandidateSourceRow,
   type EntityType,
   type LedgerCandidate,
@@ -56,6 +57,16 @@ export interface SignalAnchor {
 
 /** Anchors keyed by signal key, e.g. `{ "ngs.cpoe": { anchor, spread } }`. */
 export type AnchorTable = Readonly<Record<string, SignalAnchor>>;
+
+/**
+ * Measured weights keyed by signal key, from `measureSignalWeights`.
+ *
+ * When supplied to a projection, the candidate's weight comes from the fitted
+ * table rather than the flat `CATEGORY_PRIORS` 1.0. See `resolveWeight` for what
+ * happens to a key the table does not cover (it falls back to the prior, tagged,
+ * never silently) and why that is the honest reading rather than a hole.
+ */
+export type MeasuredWeightTable = Readonly<Record<string, number>>;
 
 /**
  * A row's capture instant as Prisma hands it back: a `Date` on a normal
@@ -167,6 +178,7 @@ function emit(
   row: CandidateSourceRow,
   anchors: AnchorTable,
   entityType: EntityType,
+  measured?: MeasuredWeightTable,
 ): LedgerCandidate | null {
   const key = row.key;
   if (!key) return null;
@@ -176,7 +188,12 @@ function emit(
   // average from being invented as a hardcoded constant.
   if (!a) return null;
   const value = normalizeReading(row.value, a.anchor, a.spread);
-  return buildCandidate({ ...row, value }, entityType);
+  // The row arrives with the CATEGORY prior's weight stamped on it. When the
+  // caller has fitted a table, that flat prior is REPLACED by the measured
+  // weight — which is the entire point: the composer's vote used to be the
+  // category's guess and is now the key's measured predictive power.
+  const resolved = resolveWeight(key, row.category, measured);
+  return buildCandidate({ ...row, value, weight: resolved.weight }, entityType);
 }
 
 /**
@@ -188,6 +205,7 @@ function emit(
 export function projectPlayerGameStats(
   rows: readonly PlayerGameStatRow[],
   anchors: AnchorTable,
+  measured?: MeasuredWeightTable,
 ): LedgerCandidate[] {
   const out: LedgerCandidate[] = [];
   for (const r of rows) {
@@ -216,6 +234,7 @@ export function projectPlayerGameStats(
         },
         anchors,
         "player",
+        measured,
       );
       if (c) out.push(c);
     }
@@ -231,6 +250,7 @@ export function projectPlayerGameStats(
 export function projectSnapCounts(
   rows: readonly SnapCountRow[],
   anchors: AnchorTable,
+  measured?: MeasuredWeightTable,
 ): LedgerCandidate[] {
   const out: LedgerCandidate[] = [];
   for (const r of rows) {
@@ -259,6 +279,7 @@ export function projectSnapCounts(
         },
         anchors,
         "player",
+        measured,
       );
       if (c) out.push(c);
     }
@@ -275,6 +296,7 @@ export function projectSnapCounts(
 export function projectNextGenStats(
   rows: readonly NextGenStatRow[],
   anchors: AnchorTable,
+  measured?: MeasuredWeightTable,
 ): LedgerCandidate[] {
   const out: LedgerCandidate[] = [];
   for (const r of rows) {
@@ -304,6 +326,7 @@ export function projectNextGenStats(
         },
         anchors,
         "player",
+        measured,
       );
       if (c) out.push(c);
     }
@@ -324,6 +347,7 @@ export function projectNextGenStats(
 export function projectInjuries(
   rows: readonly InjuryRow[],
   anchors: AnchorTable,
+  measured?: MeasuredWeightTable,
 ): LedgerCandidate[] {
   const out: LedgerCandidate[] = [];
   for (const r of rows) {
@@ -354,6 +378,7 @@ export function projectInjuries(
       },
       anchors,
       "player",
+      measured,
     );
     if (c) out.push(c);
   }
@@ -370,12 +395,12 @@ export function projectAllSources(sources: {
   readonly snapCounts?: readonly SnapCountRow[];
   readonly nextGenStats?: readonly NextGenStatRow[];
   readonly injuries?: readonly InjuryRow[];
-}, anchors: AnchorTable): LedgerCandidate[] {
+}, anchors: AnchorTable, measured?: MeasuredWeightTable): LedgerCandidate[] {
   return [
-    ...projectPlayerGameStats(sources.playerGameStats ?? [], anchors),
-    ...projectSnapCounts(sources.snapCounts ?? [], anchors),
-    ...projectNextGenStats(sources.nextGenStats ?? [], anchors),
-    ...projectInjuries(sources.injuries ?? [], anchors),
+    ...projectPlayerGameStats(sources.playerGameStats ?? [], anchors, measured),
+    ...projectSnapCounts(sources.snapCounts ?? [], anchors, measured),
+    ...projectNextGenStats(sources.nextGenStats ?? [], anchors, measured),
+    ...projectInjuries(sources.injuries ?? [], anchors, measured),
   ];
 }
 
