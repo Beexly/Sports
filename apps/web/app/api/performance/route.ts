@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@sports/db";
 import { getReadinessGates, bootstrapGateResponse } from "@sports/prediction-engine";
+import { resolveEffectivePerformanceGate } from "@/lib/ops/effective-performance-gate";
 import { clientIp, consumeRateLimit } from "@/lib/api/rate-limit";
 
 export const dynamic = "force-dynamic";
@@ -9,6 +10,25 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
   const gates = getReadinessGates();
   if (!gates.canExposePerformanceStats) {
     return NextResponse.json(bootstrapGateResponse("Performance stats"), { status: 503 });
+  }
+
+  // Effective gate (G2): PERFORMANCE_STATS_ENABLED alone is not enough. The
+  // CalibrationPanel on /performance gates on published ∩ eligibility GREEN
+  // via resolveEffectivePerformanceGate(); this route must agree with that
+  // panel, so it applies the SAME gate before publishing any headline number.
+  // Without it, the numbers keep publishing after eligibility flips RED and
+  // calibration-publish-policy auto-unpublish fires, and the page contradicts
+  // its own panel.
+  const effective = await resolveEffectivePerformanceGate();
+  if (!effective.canExposePerformanceStats) {
+    return NextResponse.json(
+      {
+        error: "Performance stats are not published.",
+        eligibilityStatus: effective.eligibilityStatus,
+        operatorHint: effective.operatorHint,
+      },
+      { status: 503 }
+    );
   }
 
   // Rate limit: 30 requests per minute per IP for public performance stats

@@ -3,6 +3,7 @@ import type { ReactNode } from "react";
 import { db, isStubMode, isDemoPicksEnabled } from "@sports/db";
 import Link from "next/link";
 import { getReadinessGates } from "@sports/prediction-engine";
+import { resolveEffectivePerformanceGate } from "@/lib/ops/effective-performance-gate";
 import { Nav } from "@/components/ui/nav";
 import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
@@ -167,6 +168,30 @@ export default async function PerformancePage() {
             </Link>
           </div>
         )}
+        <PerformanceBootstrapState
+          gateEnabled={false}
+          minSettledPicksForLearning={gates.minSettledPicksForLearning}
+        />
+        <div className="mt-12">
+          <h2 className="mb-4 text-center font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
+            How we&apos;ll prove it
+          </h2>
+          <CalibrationPanel />
+        </div>
+      </BootstrapShell>
+    );
+  }
+
+  // Effective gate (G2): PERFORMANCE_STATS_ENABLED alone is not enough. The
+  // CalibrationPanel rendered DIRECTLY BELOW the headline numbers gates on
+  // published ∩ eligibility GREEN via resolveEffectivePerformanceGate() — this
+  // page must agree with its own panel. Without this check the headline
+  // numbers keep publishing after eligibility flips RED and
+  // calibration-publish-policy auto-unpublish fires.
+  const effective = await resolveEffectivePerformanceGate();
+  if (!effective.canExposePerformanceStats) {
+    return (
+      <BootstrapShell>
         <PerformanceBootstrapState
           gateEnabled={false}
           minSettledPicksForLearning={gates.minSettledPicksForLearning}

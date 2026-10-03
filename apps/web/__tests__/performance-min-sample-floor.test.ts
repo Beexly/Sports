@@ -27,6 +27,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 const mocks = vi.hoisted(() => ({
   minSettledPicksForLearning: 100,
   queryRaw: vi.fn<(args: unknown) => Promise<unknown[]>>(),
+  effectiveGate: vi.fn<
+    () => Promise<{
+      canExposePerformanceStats: boolean;
+      calibrationPublished: boolean;
+      eligibilityStatus: "GREEN" | "RED" | "UNKNOWN";
+      operatorHint: string;
+    }>
+  >(),
 }));
 
 vi.mock("@sports/db", () => ({
@@ -45,6 +53,15 @@ vi.mock("@sports/prediction-engine", async (importOriginal) => {
     }),
   };
 });
+
+// G2 (2026-09-03): the route additionally consults the effective performance
+// gate (resolveEffectivePerformanceGate) after the env-flag gate. These tests
+// exercise the sample floor for a publishing-eligible surface, so the mock
+// defaults to GREEN (published ∩ eligibility GREEN) in beforeEach. No
+// assertion below is weakened; the floor logic under test is unchanged.
+vi.mock("@/lib/ops/effective-performance-gate", () => ({
+  resolveEffectivePerformanceGate: mocks.effectiveGate,
+}));
 
 /**
  * Build pre-aggregated rows for one sport with the given win/loss/push
@@ -90,6 +107,13 @@ describe("/api/performance — minimum-sample floor", () => {
   beforeEach(() => {
     mocks.minSettledPicksForLearning = 100;
     mocks.queryRaw.mockReset();
+    mocks.effectiveGate.mockReset();
+    mocks.effectiveGate.mockResolvedValue({
+      canExposePerformanceStats: true,
+      calibrationPublished: true,
+      eligibilityStatus: "GREEN",
+      operatorHint: "",
+    });
   });
 
   afterEach(() => {
