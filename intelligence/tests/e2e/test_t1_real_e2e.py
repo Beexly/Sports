@@ -56,6 +56,7 @@ for p in (ROOT, os.path.join(ROOT, "qb-behavior", "src")):
     if p not in sys.path:
         sys.path.insert(0, p)
 
+from integration import AnalysisRequest, Exposure, ReasoningDepth
 from integration.api import analyze
 from integration.providers import ProviderRegistry
 from integration.stubs import fixture_league_avgs, fixture_registry
@@ -171,4 +172,37 @@ def test_ol_provider_moves_the_track_off_unchecked():
     ol = (traced.checklist or {}).get("offensive_line")
     val = ol.value if hasattr(ol, "value") else ol
     assert val != "UNCHECKED", val
+    assert traced.label != "FINAL"
+
+
+def test_gsis_ids_make_the_qb_track_a_real_verdict_and_do_not_publish():
+    """Slug ids are a vocabulary miss. GSIS ids are the contract. The trace
+    may still be INVALID (scheme or trust). It is not FINAL, and the founder
+    gate is not this test's to open.
+    """
+    req = AnalysisRequest(
+        game={
+            "away": "PIT", "home": "CLE", "week": 4, "season": 2026,
+            "qbs": {"CLE": "00-0033537", "PIT": "00-0023459"},
+            "playcallers": {"CLE": "Todd Monken"},
+            "defense": {"PIT": {"pass_rush_rank": 5}},
+        },
+        question="should we bet the pressure-funnel card?",
+        exposure=Exposure.CARD,
+        requested_depth=ReasoningDepth.L1,
+        legs=funnel_legs(),
+    )
+    reg = ProviderRegistry(
+        qb=SituationalQBProvider(),
+        coaching=CoachingEngineProvider(),
+        trust=None,
+        ol=NflverseOLProvider(),
+    )
+    traced = analyze(req, reg, league_avgs=fixture_league_avgs())
+    checklist = {
+        key: (value.value if hasattr(value, "value") else value)
+        for key, value in (traced.checklist or {}).items()
+    }
+    assert checklist.get("qb_behavior") == "CLEAR"
+    assert checklist.get("offensive_line") != "UNCHECKED"
     assert traced.label != "FINAL"

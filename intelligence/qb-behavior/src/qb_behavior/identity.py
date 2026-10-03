@@ -5,6 +5,16 @@
 """QB identity: the stable key is the GSIS id, never the name string."""
 from __future__ import annotations
 
+import re
+from collections import Counter
+
+GSIS_ID = re.compile(r"^00-\d{7}$")
+
+
+def is_gsis_id(qb_id: str | None) -> bool:
+    """Production qb_id is an nflverse GSIS id. A slug is not one."""
+    return isinstance(qb_id, str) and GSIS_ID.fullmatch(qb_id) is not None
+
 
 def backfill_scramble_passer(passer_id: str | None, rusher_id: str | None,
                              is_scramble: bool) -> str | None:
@@ -49,7 +59,6 @@ def build_name_map_from_pbp(pbp_id_name_pairs: list[tuple[str | None, str | None
     this way are nflverse display names, not roster canonical names —
     callers that need roster-canonical names should pass an explicit map.
     """
-    from collections import Counter
     votes: dict[str, Counter] = {}
     for pid, pname in pbp_id_name_pairs:
         if pid and pname:

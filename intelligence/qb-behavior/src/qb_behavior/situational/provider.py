@@ -39,6 +39,7 @@ from .serve import SituationalStore  # noqa: E402
 from .trust import TrustSeries  # noqa: E402
 
 import csv as _csv  # noqa: E402
+from qb_behavior.identity import is_gsis_id  # noqa: E402
 from qb_behavior.form import form_ahead_of as _form_ahead_of  # noqa: E402
 from qb_behavior.familiarity import familiarity as _familiarity  # noqa: E402
 from qb_behavior.trust_target import (  # noqa: E402
@@ -104,7 +105,16 @@ class SituationalQBProvider(QBBehaviorProvider):
         return row, notes
 
     # -- ABC: QB profile ----------------------------------------------------
+    def _require_gsis(self, qb_id: str) -> None:
+        if not is_gsis_id(qb_id):
+            raise DataGapError(
+                TRACK,
+                f"qb_id {qb_id!r} is not an nflverse GSIS id (00-#######). "
+                "Slugs are not resolved against the real store.",
+            )
+
     def get_qb_profile(self, qb_id: str, week: int, season: int) -> QBBehaviorProfile:
+        self._require_gsis(qb_id)
         row, notes = self._qb_week(qb_id, week, season)
         gaps = list(notes)
         gaps.append(FIRST_READ_GAP)
@@ -142,6 +152,7 @@ class SituationalQBProvider(QBBehaviorProvider):
 
     # -- ABC: pressure splits (UNPARKED — sourced by c02 research) ------------
     def get_pressure_splits(self, qb_id: str, week: int, season: int) -> PressureSplits:
+        self._require_gsis(qb_id)
         row, notes = self._qb_week(qb_id, week, season)
         gaps = list(notes)
         gaps.append(FLOOR_NOTE)

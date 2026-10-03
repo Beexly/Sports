@@ -18,6 +18,7 @@ from integration.providers import DataGapError, ProviderRegistry
 from integration.stubs import fixture_league_avgs
 from qb_behavior.situational.provider import SituationalQBProvider
 from reasoning_engine.facets import epa_facets
+from reasoning_engine.publish_gate import reasoning_publish_allowed
 from tests.helpers import card_request
 
 
@@ -87,20 +88,23 @@ def reason_game(home: str = "CLE", away: str = "PIT", week: int = 4, season: int
 
     reg = ProviderRegistry(qb=SituationalQBProvider(), coaching=coaching, trust=None, ol=ol)
     trace = analyze(card_request(), reg, league_avgs=fixture_league_avgs())
+    label = _label(trace)
+    checklist = _checklist(trace)
     return {
         "game_id": f"{away}-{home}-{season}-w{week}",
         "bet_type": "CARD",
         "facts": facts,
         "gaps": gaps,
-        "trace_label": _label(trace),
+        "trace_label": label,
         "trace_depth": str(trace.depth),
-        "checklist": _checklist(trace),
+        "checklist": checklist,
         "levels": list(trace.levels.keys()),
+        "publish": reasoning_publish_allowed(label, checklist),
         "pick": None,
         "confidence": None,
         "probability_before_calibration": None,
         "probability_after_calibration": None,
-        "note": "No pick was emitted. The façade refused or did not reach a publishable card. Facts above are measurements. They are not a probability.",
+        "note": "No pick was emitted. The founder gate is shut unless PUBLISH_REASONING_TRACE=true and the trace is not INVALID. A trace is not a probability.",
     }
 
 

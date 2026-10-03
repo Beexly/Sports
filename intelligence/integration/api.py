@@ -360,7 +360,11 @@ def _build_data_context(game: dict[str, Any], providers: ProviderRegistry,
             for team in (game.get("away"), game.get("home")):
                 if not team:
                     continue
-                ol = providers.ol.get_ol_state(team, week, season)
+                deadline = game.get("deadline")
+                if isinstance(deadline, str) and deadline:
+                    ol = providers.ol.get_ol_state(team, week, season, deadline=deadline)
+                else:
+                    ol = providers.ol.get_ol_state(team, week, season)
                 ctx.observations[f"ol.{team}.starters_out_n"] = float(len(ol.starters_out))
                 ev("offensive_line",
                    f"{team} OL: {len(ol.starters_out)} starters out "
