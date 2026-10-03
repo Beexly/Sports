@@ -191,5 +191,21 @@ class CorpusFourthDownTests(unittest.TestCase):
         self.assertIsNone(extra_point_expected_points(None))
 
 
+
+import math
+
+from gse_eq_corpus import metropolis_acceptance
+
+
+class CorpusMetropolisTests(unittest.TestCase):
+    def test_metropolis_acceptance(self):
+        self.assertEqual(metropolis_acceptance(0.2, 1.0), 1.0)
+        self.assertEqual(metropolis_acceptance(0.0, 1.0), 1.0)
+        self.assertAlmostEqual(metropolis_acceptance(-1.0, 2.0), math.exp(-0.5))
+        self.assertIsNone(metropolis_acceptance(None, 1.0))
+        self.assertIsNone(metropolis_acceptance(-1.0, 0.0))
+        self.assertIsNone(metropolis_acceptance(-1.0, None))
+
+
 if __name__ == "__main__":
     unittest.main()
