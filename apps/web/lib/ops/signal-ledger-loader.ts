@@ -29,6 +29,8 @@ import {
   type AnchorTable,
   type CensusObservation,
   type CensusReport,
+  resolveWeight,
+  type MeasuredWeightTable,
 } from "@sports/prediction-engine";
 
 /**
@@ -155,6 +157,19 @@ export interface LedgerLoadReport {
   /** Candidates that survived anchor gating. Zero is a legitimate, reportable answer. */
   readonly candidates: readonly LedgerCandidate[];
   readonly anchors: AnchorTable;
+  /**
+   * How the candidates' weights were sourced, counted. A caller that supplies
+   * `measuredWeights` and receives a non-zero `priorWeighted` is being told, in
+   * a number, exactly which signals are STILL unmeasured — the residual made
+   * visible instead of assumed. Zero when no table was supplied (every candidate
+   * then used the category prior, which is why the count is reported either way).
+   */
+  readonly weightSources: {
+    readonly measured: number;
+    readonly priorWeighted: number;
+    /** Keys the supplied table did not cover, sorted. */
+    readonly uncoveredKeys: readonly string[];
+  };
   /** Plain-text census, for the ops artifact. */
   readonly censusText: string;
 }
@@ -164,6 +179,13 @@ export interface LoadOptions {
   readonly maxRowsPerTable?: number;
   /** Census row floor; defaults to the module's own MIN_CENSUS_ROWS. */
   readonly minCensusRows?: number;
+  /**
+   * Measured weights per key, from `measureSignalWeights`. When supplied the
+   * projected candidates carry the key's MEASURED predictive power instead of
+   * the flat `CATEGORY_PRIORS` 1.0. Omitting it reproduces today's behavior
+   * byte-for-byte, which is what keeps this additive.
+   */
+  readonly measuredWeights?: MeasuredWeightTable;
 }
 
 const DEFAULT_MAX_ROWS = 20_000;
@@ -183,6 +205,7 @@ export async function loadSignalLedger(
   options: LoadOptions = {},
 ): Promise<LedgerLoadReport> {
   const maxRows = options.maxRowsPerTable ?? DEFAULT_MAX_ROWS;
+  const measuredWeights = options.measuredWeights;
   const rowsRead = { playerGameStats: 0, snapCounts: 0, nextGenStats: 0, injuries: 0 };
 
   const observations: CensusObservation[] = [];
@@ -265,6 +288,7 @@ export async function loadSignalLedger(
         fetchedAt: toIso(r.fetchedAt),
       })),
       anchors,
+      measuredWeights,
     ),
     ...projectSnapCounts(
       snaps.map((r) => ({
@@ -278,6 +302,7 @@ export async function loadSignalLedger(
         fetchedAt: toIso(r.fetchedAt),
       })),
       anchors,
+      measuredWeights,
     ),
     ...projectNextGenStats(
       ngs.map((r) => ({
@@ -296,6 +321,7 @@ export async function loadSignalLedger(
         fetchedAt: toIso(r.fetchedAt),
       })),
       anchors,
+      measuredWeights,
     ),
     ...projectInjuries(
       injuries.map((r) => ({
@@ -308,8 +334,26 @@ export async function loadSignalLedger(
         fetchedAt: toIso(r.fetchedAt),
       })),
       anchors,
+      measuredWeights,
     ),
   ];
+
+  // COUNT THE RESIDUAL rather than assume it away. Re-derived through the same
+  // `resolveWeight` the projections used, so the count cannot drift from the
+  // behavior it describes.
+  const categoryOf = new Map<string, string>();
+  for (const c of candidates) categoryOf.set(c.key, c.category);
+  let measured = 0;
+  let priorWeighted = 0;
+  const uncovered = new Set<string>();
+  for (const c of candidates) {
+    const r = resolveWeight(c.key, c.category, measuredWeights);
+    if (r.source === "measured") measured += 1;
+    else {
+      priorWeighted += 1;
+      if (measuredWeights) uncovered.add(c.key);
+    }
+  }
 
   return {
     rowsRead,
@@ -317,6 +361,11 @@ export async function loadSignalLedger(
     census,
     candidates,
     anchors: Object.freeze(anchors),
+    weightSources: {
+      measured,
+      priorWeighted,
+      uncoveredKeys: [...uncovered].sort(),
+    },
     censusText: formatCensusReport(census),
   };
 }

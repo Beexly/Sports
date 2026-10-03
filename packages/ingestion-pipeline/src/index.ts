@@ -121,6 +121,8 @@ export type {
   IndependentFairValueBuildInput,
   EloRatingsCache,
 } from "./build-independent-fair-values.js";
+export { mintAfterMind } from "./mint-gate.js";
+export type { MindVerdict, MintAfterMind } from "./mint-gate.js";
 export {
   ESPN_POWERINDEX_LICENSE_ENV,
   isEspnPowerIndexCleared,
