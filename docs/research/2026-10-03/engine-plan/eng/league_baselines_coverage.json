@@ -1,0 +1,35 @@
+{
+  "rows": 2374,
+  "columns": [
+    "season",
+    "week",
+    "team",
+    "beta_league",
+    "quick_game_rate_season_prior"
+  ],
+  "pit_rule": "script_elasticity.csv is (season, team) with no week. coaching/data/README.md does not call it point-in-time or pre-kickoff (full-season OLS of early-down pass rate on WP bin). Same-season beta_league is not emitted. beta_league for season S is the n_plays-weighted mean of beta_script across teams in season S-1 only (null beta_script or n_plays<=0 dropped). The value is constant for every team-week in season S. Season 2022 has no prior season in this file, so beta_league is null. quick_game_rate_season_prior at (season, team, week W) is the unweighted mean of that team's quick_game_rate on weekly_tendencies rows in the same season with week strictly less than W (null rates dropped). No prior week yields null. The current week is never included.",
+  "same_season_beta_league_emitted": false,
+  "beta_league_source": "script_elasticity.csv season S-1, n_plays-weighted mean of beta_script across teams",
+  "quick_game_rate_season_prior_source": "weekly_tendencies.csv unweighted mean of quick_game_rate, same team-season, week < W",
+  "beta_league_by_target_season": {
+    "2022": null,
+    "2023": -0.3687723699209413,
+    "2024": -0.35130203983769825,
+    "2025": -0.3644834382566586,
+    "2026": -0.3567443546244639
+  },
+  "beta_league_nonnull": 1806,
+  "beta_league_null": 568,
+  "quick_game_rate_season_prior_nonnull": 2214,
+  "quick_game_rate_season_prior_null": 160,
+  "seasons": [
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+  ],
+  "teams": 32,
+  "script_elasticity_rows": 160,
+  "weekly_tendencies_rows_in": 2374
+}
