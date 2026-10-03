@@ -1,5 +1,0 @@
-{"grain_id":"dataset_manifest","tier":"meta","evidence_file":"data/gse-dataset/nflverse-ingest-manifest.json","key_fields":["datasets","generated_at","package","pbp_probe","publishes_pick","seasons"],"source":"data"}
-{"grain_id":"game","tier":"game","evidence_file":"data/gse-dataset/games.jsonl","key_fields":["game_id","season","week"],"source":"data"}
-{"grain_id":"market","tier":"market","evidence_file":"packages/prediction-engine/src/clv-harness.ts","key_fields":["game_id","season"],"source":"code"}
-{"grain_id":"play","tier":"play","evidence_file":"data/gse-dataset/fourth-down.jsonl","key_fields":["game_id","play_id","season"],"source":"data"}
-{"grain_id":"player_week","tier":"player_week","evidence_file":"data/gse-dataset/snap-counts.jsonl","key_fields":["game_id","pfr_player_id","season","team","week"],"source":"data"}

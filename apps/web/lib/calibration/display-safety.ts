@@ -1,1 +1,0 @@
-export function isDisplaySafe(input: { readonly sampleSize: number; readonly displaySafe: boolean; readonly minimumSample?: number }): boolean { return input.displaySafe && input.sampleSize >= (input.minimumSample ?? 25); }

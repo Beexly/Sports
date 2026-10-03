@@ -1,4 +1,0 @@
-#!/bin/bash
-# compact github search: $1 = query
-cd ~/workspace/skills/github
-bin/github-api GET "/search/repositories?q=$(echo "$1" | sed 's/ /+/g')&sort=stars&order=desc&per_page=20" 2>/dev/null | jq -r '.items[] | [.full_name, (.stargazers_count|tostring), (.pushed_at|tostring), (.license.key//"none"), (.fork|tostring), (.description//"" | .[0:120])] | @tsv'
