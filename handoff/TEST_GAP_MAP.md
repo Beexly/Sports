@@ -18,9 +18,9 @@ descending — biggest untested files first.
 | apps/web/lib/billing/price-ids.ts | 248 | COVERED | 58 tests across 3 files |
 | apps/web/lib/claude-api/response-cache.ts | 238 | COVERED | 24 tests across 2 files |
 | apps/web/lib/billing/notice.ts | 69 | COVERED | 110 tests across 15 files |
-| apps/web/lib/claude-api/open-weight-catalog.ts | 182 | THIN | 1 file, 4 tests — next candidate |
-| apps/web/lib/billing/stripe-outcome.ts | 126 | THIN | 1 file, 4 tests |
-| apps/web/lib/claude-api/numeric-guard.ts | 67 | THIN | 1 file, 4 tests |
+| apps/web/lib/claude-api/open-weight-catalog.ts | 182 | DEAD | 0 product consumers (SO-1e) — test-only, see note below |
+| apps/web/lib/billing/stripe-outcome.ts | 126 | COVERED | accessors: 2026-10-02, 50 invariant tests |
+| apps/web/lib/billing/stripe-outcome.ts | 126 | COVERED | labels: 12 tests (billing money path) |
 | apps/web/lib/billing/checkout-repair-owner-queue.ts | 84 | 1 | apps/web/__tests__/checkout-repair-owner-queue.test.ts |
 | apps/web/lib/claude-api/budget-store.ts | 75 | 1 | apps/web/__tests__/claude-api-budget-store.test.ts |
 | apps/web/lib/claude-api/jynx-errors.ts | 75 | 1 | apps/web/lib/claude-api/jynx-errors.test.ts |
@@ -64,9 +64,19 @@ naming each module is enough to avoid spending a cycle on a 41-test file.
 
 Remaining genuinely thin files, by measured test count:
 
-1. `apps/web/lib/claude-api/open-weight-catalog.ts` — 182 lines, 4 tests — next candidate
-2. `apps/web/lib/billing/stripe-outcome.ts` — 126 lines, 4 tests (BILLING: money path)
-3. `apps/web/lib/claude-api/numeric-guard.ts` — 67 lines, 4 tests
+1. ~~`apps/web/lib/claude-api/open-weight-catalog.ts`~~ — **DEAD, not a gap.** SO-1e
+   measured ZERO product consumers (grep across `apps/web` and `packages`,
+   tests excluded: the only hit is its own test file). Its 4 tests are not a
+   live risk because nothing reads it. Adding tests here would be effort spent
+   on unreachable code — the finding is the dead export, not the coverage.
+2. ~~`apps/web/lib/billing/stripe-outcome.ts`~~ — DONE 2026-10-02 (SO-1e): 50
+   invariant tests + the 12 existing label tests. Money path.
+3. ~~`apps/web/lib/claude-api/numeric-guard.ts`~~ — DONE 2026-10-02 (SO-1d):
+   25 invariant tests, 5 live consumers.
+
+**The revenue-core list is now exhausted on reach.** No remaining row is both
+thin AND reachable; the next work in this lane should come from a fresh
+measurement over a different directory, not from re-walking this table.
 
 **Pattern worth reusing:** the useful gaps in this list were not the biggest
 files, they were the files whose accessors feed a CUSTOMER-FACING surface with
