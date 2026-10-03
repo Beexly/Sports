@@ -57,6 +57,31 @@ export interface IndependentEdgeSummary {
   sources: string[];            // independent estimators used, e.g. ["kalshi"]
   priced: boolean;              // true = drove ranking path (finite trueProb, incl. PASS)
   rationale: string;            // plain-language "why"
+  /**
+   * Where `trueProb` was written. `mint` is the publish-time value.
+   * `backfill` was written after settlement and is not a training label.
+   * Absent on rows minted before the stamp existed.
+   */
+  trueProbBasis?: "mint" | "backfill";
+}
+
+export type TrueProbBasis = NonNullable<IndependentEdgeSummary["trueProbBasis"]>;
+
+const RETROSPECTIVE_TRUEPROB_PREFIX = "Retrospective independent blend";
+
+/**
+ * A post-settlement rewrite. Stamped `backfill`, or the older prose marker
+ * on rows written before the stamp. A `mint` stamp wins over that prose:
+ * the basis field is the contract, the sentence is only the legacy trail.
+ */
+export function trueProbIsBackfill(edge: {
+  readonly trueProbBasis?: string | null;
+  readonly rationale?: string | null;
+} | null | undefined): boolean {
+  if (edge == null) return false;
+  if (edge.trueProbBasis === "backfill") return true;
+  if (edge.trueProbBasis === "mint") return false;
+  return (edge.rationale ?? "").startsWith(RETROSPECTIVE_TRUEPROB_PREFIX);
 }
 
 /**

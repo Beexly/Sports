@@ -62,6 +62,40 @@ describe("extractProvenPathProbs — honest independent load", () => {
     expect(r.marketP).toBeCloseTo(0.48, 5);
     expect(r.pIndependent).toBeNull();
   });
+
+  it("does not train on a backfill trueProb, including the rankingP side door", () => {
+    const stamped = extractProvenPathProbs({
+      rankingP: 0.77,
+      rankingSource: "independent_trueProb",
+      fairProbability: 0.81,
+      marketFairProb: 0.54,
+      independentEdge: {
+        trueProb: 0.81,
+        priced: true,
+        marketFairProb: 0.54,
+        trueProbBasis: "backfill",
+      },
+    });
+    expect(stamped.pIndependent).toBeNull();
+    expect(stamped.marketP).toBeCloseTo(0.54, 5);
+
+    const legacy = extractProvenPathProbs({
+      rankingP: 0.77,
+      rankingSource: "independent_trueProb",
+      independentEdge: {
+        trueProb: 0.81,
+        rationale: "Retrospective independent blend (elo) prices published team side",
+      },
+    });
+    expect(legacy.pIndependent).toBeNull();
+  });
+
+  it("keeps a mint-stamped trueProb", () => {
+    const r = extractProvenPathProbs({
+      independentEdge: { trueProb: 0.63, trueProbBasis: "mint" },
+    });
+    expect(r.pIndependent).toBeCloseTo(0.63, 5);
+  });
 });
 
 describe("toProvenPathPickRow", () => {
