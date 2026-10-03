@@ -9,16 +9,19 @@ from equations import (
     air_attempt_kept,
     air_bin,
     air_yards_to_sticks,
+    alexandria_out,
     american_implied,
     availability_mass,
     availability_report,
     availability_total,
     baseline_pool_season,
+    before_cutoff_margin,
     binary_completion,
     brier,
     build_score,
     canonical_team,
     cell_token,
+    champion_train_row,
     chosen_parent,
     clears_half,
     clipped_eta,
@@ -48,6 +51,7 @@ from equations import (
     encoder_age_weeks,
     encoder_play_kept,
     encoder_pool_ready,
+    encoder_team,
     engine_point_shift,
     engine_v1_game,
     espn_home_projection,
@@ -60,6 +64,7 @@ from equations import (
     fair_with_push,
     fair_worst,
     feature_table_game,
+    fetched_after_asof,
     finite_weighted_mean,
     four_week_cv,
     four_week_mean,
@@ -68,6 +73,7 @@ from equations import (
     game_price_key,
     games_before,
     generated_before_kick,
+    glazer_miss_rate,
     glazer_play_rate,
     hit_interception,
     home_epa_edge,
@@ -78,6 +84,7 @@ from equations import (
     injury_out_weight,
     injury_report_stale,
     injury_signal_row,
+    injury_signal_team,
     int_on_pressure,
     int_rate,
     is_deep,
@@ -95,6 +102,7 @@ from equations import (
     market_log_odds,
     market_pair_present,
     mean_or_null,
+    mint_report_team,
     mov_multiplier,
     n_plays_weighted_mean,
     neutral_site,
@@ -122,11 +130,13 @@ from equations import (
     prior_four_shares,
     prior_season_key,
     prior_window_mean,
+    prod_team_code,
     proe_or_null,
     promoted,
     protection_stress,
     published_side,
     push_adjusted,
+    push_chart_weight,
     push_fraction,
     qb_edge_or_zero,
     qb_epa_rating,
@@ -141,7 +151,9 @@ from equations import (
     rest_diff,
     result_share,
     retrospective_rationale,
+    rounded_prior_share,
     rounded_refit_matches,
+    rounded_snap_loss,
     sample_median,
     scaled_weight,
     score_history_season,
@@ -170,6 +182,7 @@ from equations import (
     target_share,
     team_form_games,
     team_form_play,
+    team_pass_kept,
     team_points,
     temp_or_default,
     text_column_is_numeric,
@@ -184,6 +197,7 @@ from equations import (
     unscaled_z,
     varying_column,
     week_order,
+    weight_stays_zero,
     weighted_mean,
     wind_or_zero,
     within_season_lag,
@@ -668,6 +682,54 @@ class EquationTests(unittest.TestCase):
         self.assertFalse(column_candidate(0.24, 0.01))
         self.assertFalse(column_candidate(0.5, 0))
         self.assertEqual(edge_vs_market(0.51234, 0.5), 0.0123)
+
+
+
+    def test_gates_maps_and_champion_cut(self):
+        from datetime import date
+
+        self.assertTrue(weight_stays_zero(0.11, 0.0))
+        self.assertTrue(weight_stays_zero(0.0, 0.21))
+        self.assertFalse(weight_stays_zero(0.10, 0.2))
+        self.assertTrue(before_cutoff_margin(date(2026, 1, 1), date(2026, 1, 1)))
+        self.assertFalse(before_cutoff_margin(date(2026, 2, 1), date(2026, 1, 1)))
+        self.assertTrue(fetched_after_asof(2, 1))
+        self.assertFalse(fetched_after_asof(1, 1))
+        self.assertEqual(push_chart_weight(3), 20.0)
+        self.assertEqual(push_chart_weight(7), 15.0)
+        self.assertEqual(push_chart_weight(10), 11.0)
+        self.assertEqual(push_chart_weight(14), 11.0)
+        self.assertIsNone(push_chart_weight(6))
+        self.assertIsNone(push_chart_weight(float("nan")))
+        self.assertEqual(glazer_miss_rate("Questionable"), 0.28)
+        self.assertEqual(glazer_miss_rate("DOUBTFUL"), 0.998)
+        self.assertEqual(glazer_miss_rate(None), 0.019)
+        self.assertEqual(glazer_miss_rate("Blank"), 0.019)
+        self.assertIsNone(glazer_miss_rate("OUT"))
+        self.assertEqual(rounded_snap_loss(0.8, 0.72), round(0.8 * 0.28, 3))
+        self.assertEqual(rounded_prior_share(0.333), 0.33)
+        self.assertTrue(champion_train_row(2019, 1))
+        self.assertFalse(champion_train_row(2018, 17))
+        self.assertFalse(champion_train_row(2026, 4))
+        self.assertTrue(champion_train_row(2026, 3))
+        self.assertTrue(alexandria_out("out"))
+        self.assertTrue(alexandria_out("Doubtful"))
+        self.assertFalse(alexandria_out("Questionable"))
+        self.assertFalse(alexandria_out(None))
+        self.assertEqual(prod_team_code("Kansas City Chiefs"), "KC")
+        self.assertIsNone(prod_team_code("London"))
+        self.assertIsNone(prod_team_code(None))
+        self.assertEqual(mint_report_team("AZ"), "ARI")
+        self.assertEqual(mint_report_team("KC"), "KC")
+        self.assertIsNone(mint_report_team(None))
+        self.assertEqual(encoder_team("OAK"), "LV")
+        self.assertEqual(encoder_team("AZ"), "AZ")
+        self.assertEqual(injury_signal_team("STL"), "LA")
+        self.assertEqual(injury_signal_team("AZ"), "AZ")
+        self.assertTrue(team_pass_kept(1, "KC"))
+        self.assertFalse(team_pass_kept(0, "KC"))
+        self.assertFalse(team_pass_kept(1, None))
+        self.assertFalse(team_pass_kept(1, ""))
 
 
 if __name__ == "__main__":

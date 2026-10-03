@@ -1450,3 +1450,132 @@ def edge_vs_market(p: float, q: float) -> float:
     """mint_w4.py: round(p - q, 4). The margin shift is not applied."""
     return round(p - q, 4)
 
+
+
+def weight_stays_zero(fdr_q: float, placebo_fraction: float) -> bool:
+    """GSE_20K_REVIEW G2: a family with q > 0.10 or placebo fraction > 0.2 stays wired at weight 0. This does not set a weight."""
+    return fdr_q > 0.10 or placebo_fraction > 0.2
+
+
+def before_cutoff_margin(game_date, cutoff_date, margin_days: int = 30) -> bool:
+    """GSE_20K_REVIEW G5: true when the game date is before the cutoff plus a 30-day margin. The receipt is not scored."""
+    from datetime import timedelta
+
+    return game_date < cutoff_date + timedelta(days=margin_days)
+
+
+def fetched_after_asof(fetched_at, as_of) -> bool:
+    """GSE_20K_REVIEW G1: true when fetchedAt is after asOf. The row is not joined."""
+    return fetched_at > as_of
+
+
+def push_chart_weight(margin: float) -> float | None:
+    """GSE_SUPER_GROK_HEAVY_ROUND2: Holzhauer NFL push-chart weights. Margin 3 is 20, 7 is 15, and 10 and 14 are 11. Any other margin is null."""
+    if margin != margin:
+        return None
+    key = int(margin) if float(margin) == int(margin) else None
+    table = {3: 20.0, 7: 15.0, 10: 11.0, 14: 11.0}
+    if key not in table:
+        return None
+    return table[key]
+
+
+def glazer_miss_rate(status: str | None) -> float | None:
+    """GSE_V3_DECISIONS section 3: Questionable miss is 0.28, Doubtful is 0.998, and Blank is 0.019. A status that sentence does not name is null."""
+    if status is None or str(status).strip() == "" or str(status).strip().lower() == "blank":
+        return 0.019
+    key = str(status).strip().lower()
+    if key == "questionable":
+        return 0.28
+    if key == "doubtful":
+        return 0.998
+    return None
+
+
+def rounded_snap_loss(snap_share: float, play_rate: float) -> float:
+    """mint_w4.py: round(snap_share * (1 - play_rate), 3)."""
+    return round(snap_share * (1.0 - play_rate), 3)
+
+
+def rounded_prior_share(share: float) -> float:
+    """mint_w4.py: the prior-4 snap share rounded to 2 decimals."""
+    return round(share, 2)
+
+
+def champion_train_row(season: int, week: int) -> bool:
+    """w4_champion.py: season >= 2019, excluding 2026 week 4 and later. Not the two-season feature lag."""
+    return season >= 2019 and not (season == 2026 and week >= 4)
+
+
+def alexandria_out(injury_status: str | None) -> bool:
+    """w4_champion.py: the uppercased injury_status is OUT or DOUBTFUL. A missing status is false."""
+    return (injury_status or "").upper() in ("OUT", "DOUBTFUL")
+
+
+def prod_team_code(name: str | None) -> str | None:
+    """gse_eval.py: the prod team name maps to its abbreviation. A name not in that table is null."""
+    names = {
+        "Arizona Cardinals": "ARI",
+        "Atlanta Falcons": "ATL",
+        "Baltimore Ravens": "BAL",
+        "Buffalo Bills": "BUF",
+        "Carolina Panthers": "CAR",
+        "Chicago Bears": "CHI",
+        "Cincinnati Bengals": "CIN",
+        "Cleveland Browns": "CLE",
+        "Dallas Cowboys": "DAL",
+        "Denver Broncos": "DEN",
+        "Detroit Lions": "DET",
+        "Green Bay Packers": "GB",
+        "Houston Texans": "HOU",
+        "Indianapolis Colts": "IND",
+        "Jacksonville Jaguars": "JAX",
+        "Kansas City Chiefs": "KC",
+        "Las Vegas Raiders": "LV",
+        "Los Angeles Chargers": "LAC",
+        "Los Angeles Rams": "LA",
+        "Miami Dolphins": "MIA",
+        "Minnesota Vikings": "MIN",
+        "New England Patriots": "NE",
+        "New Orleans Saints": "NO",
+        "New York Giants": "NYG",
+        "New York Jets": "NYJ",
+        "Philadelphia Eagles": "PHI",
+        "Pittsburgh Steelers": "PIT",
+        "San Francisco 49ers": "SF",
+        "Seattle Seahawks": "SEA",
+        "Tampa Bay Buccaneers": "TB",
+        "Tennessee Titans": "TEN",
+        "Washington Commanders": "WAS",
+    }
+    if name is None:
+        return None
+    return names.get(name)
+
+
+def mint_report_team(team: str | None) -> str | None:
+    """mint_w4.py and w4_champion.py: AZ ARI, LAR LA, JAC JAX, WSH WAS. Any other code is unchanged. Null stays null."""
+    if team is None:
+        return None
+    return {"AZ": "ARI", "LAR": "LA", "JAC": "JAX", "WSH": "WAS"}.get(team, team)
+
+
+def encoder_team(team: str | None) -> str | None:
+    """encoder_adj.py: OAK LV, SD LAC, STL LA, LAR LA. Any other code is unchanged. Null stays null."""
+    if team is None:
+        return None
+    return {"OAK": "LV", "SD": "LAC", "STL": "LA", "LAR": "LA"}.get(team, team)
+
+
+def injury_signal_team(team: str | None) -> str | None:
+    """injury_signal.py: LA LA, LAR LA, OAK LV, SD LAC, STL LA. Any other code is unchanged. Null stays null."""
+    if team is None:
+        return None
+    return {"LA": "LA", "LAR": "LA", "OAK": "LV", "SD": "LAC", "STL": "LA"}.get(team, team)
+
+
+def team_pass_kept(pass_attempt: float | None, posteam: str | None) -> bool:
+    """corpus_on_engine.py: pass_attempt is 1 and posteam is present."""
+    if pass_attempt != 1:
+        return False
+    return posteam is not None and posteam != ""
