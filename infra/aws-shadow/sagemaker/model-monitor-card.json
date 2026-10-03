@@ -1,0 +1,29 @@
+{
+  "schema_version": "gse-shadow-sagemaker-monitor-card-v1",
+  "status": "local_fixture_only",
+  "canonical_artifact": "docs/fable/aws/AWS_SAGEMAKER_MLOPS_PLAN.md",
+  "live_aws_action": false,
+  "deploy_allowed": false,
+  "credentials_required": false,
+  "paid_resource_required": false,
+  "mapped_services": [
+    "SageMaker Model Monitor",
+    "SageMaker Clarify",
+    "SageMaker Model Registry"
+  ],
+  "monitor_card": {
+    "metric_family": "gse_shadow_metrics",
+    "tracked_risks": [
+      "source freshness drift",
+      "calibration debt",
+      "segment parity warning",
+      "feature distribution shift"
+    ],
+    "promotion_rule": "owner-approved model card and drift card required before any hosted inference"
+  },
+  "well_architected_pillars": [
+    "reliability",
+    "performance_efficiency",
+    "operational_excellence"
+  ]
+}

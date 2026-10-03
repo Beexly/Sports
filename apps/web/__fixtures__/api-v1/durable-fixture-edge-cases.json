@@ -1,0 +1,90 @@
+{
+  "schemaVersion": "api-v1-durable-fixture-simulator-v1",
+  "fixtureId": "api-v1-durable-edge-synthetic-v1",
+  "source": "local_synthetic_fixture",
+  "routeExposed": false,
+  "databaseTouched": false,
+  "providerCalled": false,
+  "operations": [
+    {
+      "id": "resolve-suspended-consumer",
+      "operation": "resolve_consumer",
+      "result": "read_only",
+      "observedReads": ["api_v1_consumers"],
+      "observedWrites": [],
+      "observedCommitOrder": [],
+      "observedRollbackOrder": [],
+      "before": {
+        "api_v1_consumers": 3,
+        "api_v1_audit_events": 4,
+        "api_v1_quota_months": 3
+      },
+      "after": {
+        "api_v1_consumers": 3,
+        "api_v1_audit_events": 4,
+        "api_v1_quota_months": 3
+      },
+      "notes": ["Synthetic suspended consumer resolution stays read-only and fail-closed upstream."]
+    },
+    {
+      "id": "resolve-expired-key",
+      "operation": "resolve_consumer",
+      "result": "read_only",
+      "observedReads": ["api_v1_consumers"],
+      "observedWrites": [],
+      "observedCommitOrder": [],
+      "observedRollbackOrder": [],
+      "before": {
+        "api_v1_consumers": 3,
+        "api_v1_audit_events": 4,
+        "api_v1_quota_months": 3
+      },
+      "after": {
+        "api_v1_consumers": 3,
+        "api_v1_audit_events": 4,
+        "api_v1_quota_months": 3
+      },
+      "notes": ["Synthetic expired key resolution reads the consumer table only."]
+    },
+    {
+      "id": "record-quota-exhaustion-denial",
+      "operation": "record_quota_and_audit",
+      "result": "committed",
+      "observedReads": ["api_v1_consumers", "api_v1_quota_months", "api_v1_audit_events"],
+      "observedWrites": ["api_v1_quota_months", "api_v1_audit_events"],
+      "observedCommitOrder": ["api_v1_quota_months", "api_v1_audit_events"],
+      "observedRollbackOrder": [],
+      "before": {
+        "api_v1_consumers": 3,
+        "api_v1_audit_events": 4,
+        "api_v1_quota_months": 3
+      },
+      "after": {
+        "api_v1_consumers": 3,
+        "api_v1_audit_events": 5,
+        "api_v1_quota_months": 3
+      },
+      "notes": ["Synthetic quota exhaustion records one deny audit event without adding quota rows."]
+    },
+    {
+      "id": "append-malformed-audit-chain-rollback",
+      "operation": "append_audit_event",
+      "result": "rolled_back",
+      "observedReads": ["api_v1_audit_events"],
+      "observedWrites": ["api_v1_audit_events"],
+      "observedCommitOrder": [],
+      "observedRollbackOrder": ["api_v1_audit_events"],
+      "before": {
+        "api_v1_consumers": 3,
+        "api_v1_audit_events": 5,
+        "api_v1_quota_months": 3
+      },
+      "after": {
+        "api_v1_consumers": 3,
+        "api_v1_audit_events": 5,
+        "api_v1_quota_months": 3
+      },
+      "notes": ["Synthetic malformed audit chain rollback leaves table counts unchanged."]
+    }
+  ]
+}

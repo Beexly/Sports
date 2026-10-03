@@ -1,0 +1,2023 @@
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["driverAdapters"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               String                @id @default(cuid())
+  name             String?
+  email            String                @unique
+  emailVerified    DateTime?
+  image            String?
+  role             UserRole              @default(USER)
+  createdAt        DateTime              @default(now())
+  updatedAt        DateTime              @updatedAt
+  accounts         Account[]
+  alerts           Alert[]
+  claudeApiCalls   ClaudeApiCallRecord[]
+  sessions         Session[]
+  subscription     Subscription?
+  watchlistEntries Watchlist[]
+
+  @@index([email])
+  @@map("users")
+}
+
+model Account {
+  id                String  @id @default(cuid())
+  userId            String
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+  @@index([userId])
+  @@map("accounts")
+}
+
+model Session {
+  id           String   @id @default(cuid())
+  sessionToken String   @unique
+  userId       String
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("sessions")
+}
+
+model VerificationToken {
+  identifier String
+  token      String   @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
+  @@map("verification_tokens")
+}
+
+model Subscription {
+  id                   String             @id @default(cuid())
+  userId               String             @unique
+  stripeCustomerId     String             @unique
+  stripeSubscriptionId String?            @unique
+  stripePriceId        String?
+  tier                 SubscriptionTier   @default(FREE)
+  status               SubscriptionStatus @default(ACTIVE)
+  currentPeriodStart   DateTime?
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean            @default(false)
+  canceledAt           DateTime?
+  pastDueSince         DateTime?
+  trialStart           DateTime?
+  trialEnd             DateTime?
+  createdAt            DateTime           @default(now())
+  updatedAt            DateTime           @updatedAt
+  user                 User               @relation(fields: [userId], references: [id], onDelete: Cascade)
+  webhookEvents        WebhookEvent[]
+
+  @@index([stripeCustomerId])
+  @@index([stripeSubscriptionId])
+  @@map("subscriptions")
+}
+
+model WebhookEvent {
+  id             String        @id @default(cuid())
+  stripeEventId  String        @unique
+  type           String
+  subscriptionId String?
+  payload        Json
+  processedAt    DateTime      @default(now())
+  subscription   Subscription? @relation(fields: [subscriptionId], references: [id])
+
+  @@index([stripeEventId])
+  @@map("webhook_events")
+}
+
+model Sport {
+  id          String   @id @default(cuid())
+  key         String   @unique
+  name        String
+  displayName String
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  games       Game[]
+  leagues     League[]
+
+  @@map("sports")
+}
+
+model League {
+  id          String   @id @default(cuid())
+  sportId     String
+  key         String   @unique
+  name        String
+  displayName String
+  country     String?
+  season      String?
+  active      Boolean  @default(true)
+  createdAt   DateTime @default(now())
+  games       Game[]
+  sport       Sport    @relation(fields: [sportId], references: [id])
+  teams       Team[]
+
+  @@index([sportId])
+  @@map("leagues")
+}
+
+model Team {
+  id           String   @id @default(cuid())
+  leagueId     String?
+  name         String
+  abbreviation String?
+  city         String?
+  logoUrl      String?
+  createdAt    DateTime @default(now())
+  awayGames    Game[]   @relation("AwayTeam")
+  homeGames    Game[]   @relation("HomeTeam")
+  league       League?  @relation(fields: [leagueId], references: [id])
+
+  @@index([leagueId])
+  @@index([name])
+  @@map("teams")
+}
+
+model Game {
+  id                   String                @id @default(cuid())
+  externalId           String                @unique
+  sportId              String
+  leagueId             String?
+  homeTeamId           String?
+  awayTeamId           String?
+  homeTeamName         String
+  awayTeamName         String
+  commenceTime         DateTime
+  status               GameStatus            @default(SCHEDULED)
+  homeScore            Int?
+  awayScore            Int?
+  resultFetched        Boolean               @default(false)
+  createdAt            DateTime              @default(now())
+  updatedAt            DateTime              @updatedAt
+  restDaysHome         Int?
+  restDaysAway         Int?
+  isBackToBackHome     Boolean               @default(false)
+  isBackToBackAway     Boolean               @default(false)
+  scheduleDensityHome  Int?
+  scheduleDensityAway  Int?
+  openingSpread        Float?
+  openingTotal         Float?
+  lineMovementSpread   Float?
+  lineMovementTotal    Float?
+  bookmakerCoverageMax Int                   @default(0)
+  dataQualityScore     Float                 @default(0)
+  currentEdgeIndex     Float?
+  contextComputedAt    DateTime?
+  claudeApiCalls       ClaudeApiCallRecord[]
+  creatorAssets        CreatorAsset[]
+  gameSignals          GameSignal[]
+  awayTeam             Team?                 @relation("AwayTeam", fields: [awayTeamId], references: [id])
+  homeTeam             Team?                 @relation("HomeTeam", fields: [homeTeamId], references: [id])
+  league               League?               @relation(fields: [leagueId], references: [id])
+  sport                Sport                 @relation(fields: [sportId], references: [id])
+  gateDecisions        GateDecision[]
+  odds                 Odds[]
+  oddsLineSnapshots    OddsLineSnapshot[]
+  openingLines         OpeningLine[]
+  pickSignalSnapshots  PickSignalSnapshot[]
+  picks                Pick[]
+  teamGameLogs         TeamGameLog[]
+
+  @@index([sportId])
+  @@index([commenceTime])
+  @@index([status])
+  @@map("games")
+}
+
+model OpeningLine {
+  id          String     @id @default(cuid())
+  gameId      String
+  market      OddsMarket
+  spread      Float?
+  total       Float?
+  homePrice   Float?
+  awayPrice   Float?
+  firstSeenAt DateTime   @default(now())
+  game        Game       @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, market])
+  @@index([gameId])
+  @@map("opening_lines")
+}
+
+model TeamGameLog {
+  id            String        @id @default(cuid())
+  teamName      String
+  sport         String
+  gameId        String
+  opponentName  String
+  isHome        Boolean
+  gameDate      DateTime
+  teamScore     Int?
+  opponentScore Int?
+  result        GameLogResult @default(TBD)
+  spread        Float?
+  atsResult     AtsResult     @default(TBD)
+  createdAt     DateTime      @default(now())
+  isBootstrap   Boolean       @default(true)
+  game          Game          @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, teamName])
+  @@index([teamName, sport, gameDate])
+  @@index([gameId])
+  @@map("team_game_logs")
+}
+
+model Odds {
+  id              String       @id @default(cuid())
+  gameId          String
+  ingestionRunId  String
+  bookmaker       String
+  market          OddsMarket
+  homePrice       Float?
+  awayPrice       Float?
+  drawPrice       Float?
+  spread          Float?
+  homeSpreadPrice Float?
+  awaySpreadPrice Float?
+  total           Float?
+  overPrice       Float?
+  underPrice      Float?
+  fetchedAt       DateTime
+  createdAt       DateTime     @default(now())
+  game            Game         @relation(fields: [gameId], references: [id])
+  ingestionRun    IngestionRun @relation(fields: [ingestionRunId], references: [id])
+
+  @@index([gameId])
+  @@index([ingestionRunId])
+  @@index([fetchedAt])
+  @@index([gameId, fetchedAt])
+  @@map("odds")
+}
+
+model OddsLineSnapshot {
+  id         String   @id @default(cuid())
+  gameId     String
+  capturedAt DateTime
+  phase      String
+  book       String
+  market     String
+  side       String
+  price      Float
+  line       Float?
+  source     String
+  createdAt  DateTime @default(now())
+  game       Game     @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@index([gameId, market, capturedAt])
+  @@index([phase, capturedAt])
+  @@map("odds_line_snapshots")
+}
+
+model IngestionRun {
+  id              String           @id @default(cuid())
+  sport           String?
+  status          IngestionStatus  @default(RUNNING)
+  gamesUpserted   Int              @default(0)
+  oddsInserted    Int              @default(0)
+  errorMessage    String?
+  startedAt       DateTime         @default(now())
+  completedAt     DateTime?
+  odds            Odds[]
+  sourceSnapshots SourceSnapshot[]
+
+  @@index([status])
+  @@index([startedAt])
+  @@index([status, completedAt])
+  @@map("ingestion_runs")
+}
+
+model Pick {
+  id                     String              @id @default(cuid())
+  gameId                 String
+  ingestionRunId         String?
+  pickType               PickType
+  selection              String
+  line                   Float
+  confidence             Int
+  edgeScore              Float               @default(0)
+  consensusPct           Float               @default(0)
+  bookmakerCount         Int                 @default(0)
+  tier                   PickTier            @default(FREE)
+  pickGrade              PickGrade           @default(LEAN)
+  riskLevel              RiskLevel           @default(MODERATE)
+  reasoning              String
+  reasoningShort         String              @default("")
+  factorBreakdown        Json?
+  modelVersion           String
+  generatedAt            DateTime            @default(now())
+  dataFreshnessAt        DateTime?
+  result                 PickResult          @default(PENDING)
+  settledAt              DateTime?
+  isPublished            Boolean             @default(true)
+  isFeatured             Boolean             @default(false)
+  clvLockLine            Float?
+  clvLockPrice           Int?
+  clvCloseLine           Float?
+  clvClosePrice          Int?
+  clvKind                String?
+  clvValue               Float?
+  clvVerdict             String?
+  clvCapturedAt          DateTime?
+  clvGradedAt            DateTime?
+  bookDisagreementAtLock Float?
+  isBootstrap            Boolean             @default(true)
+  creatorAssets          CreatorAsset[]
+  gateDecisions          GateDecision[]
+  lossAutopsy            LossAutopsy?
+  proofReceipt           PickProofReceipt?
+  signalSnapshot         PickSignalSnapshot?
+  game                   Game                @relation(fields: [gameId], references: [id])
+
+  @@unique([gameId, pickType])
+  @@index([tier])
+  @@index([pickGrade])
+  @@index([generatedAt])
+  @@index([result])
+  @@index([isFeatured])
+  @@index([clvVerdict])
+  @@index([settledAt])
+  @@map("picks")
+}
+
+model PickProofReceipt {
+  id             String           @id @default(cuid())
+  pickId         String           @unique
+  payload        String
+  contentHash    String
+  marketFairProb Float
+  confidence     Int
+  edgeScore      Float
+  modelProb      Float?
+  entryOdds      Int
+  line           Float
+  modelVersion   String
+  asOf           DateTime
+  frozenAt       DateTime         @default(now())
+  slateKey       String?
+  pick           Pick             @relation(fields: [pickId], references: [id])
+  slate          SlateCommitment? @relation(fields: [slateKey], references: [slateKey])
+
+  @@index([contentHash])
+  @@index([slateKey])
+  @@map("pick_proof_receipts")
+}
+
+model SlateCommitment {
+  id                     String             @id @default(cuid())
+  slateKey               String             @unique
+  root                   String
+  count                  Int
+  committedAt            DateTime
+  pedersenAggregateHex   String?
+  pedersenAggregateValue String?
+  pedersenBlindingSum    String?
+  createdAt              DateTime           @default(now())
+  receipts               PickProofReceipt[]
+
+  @@index([committedAt])
+  @@map("slate_commitments")
+}
+
+model GateDecision {
+  id           String             @id @default(cuid())
+  gameId       String
+  pickId       String?
+  status       GateDecisionStatus
+  reason       String             @db.VarChar(240)
+  reasonCode   String             @db.VarChar(80)
+  edgeIndex    Float?
+  confidence   Int?
+  modelVersion String
+  isBootstrap  Boolean            @default(true)
+  evaluatedAt  DateTime           @default(now())
+  evidenceRefs Json?
+  game         Game               @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  pick         Pick?              @relation(fields: [pickId], references: [id])
+
+  @@index([gameId])
+  @@index([pickId])
+  @@index([status, evaluatedAt])
+  @@index([isBootstrap])
+  @@map("gate_decisions")
+}
+
+model LossAutopsy {
+  id            String            @id @default(cuid())
+  pickId        String            @unique
+  authorEmail   String
+  authoredAt    DateTime          @default(now())
+  status        LossAutopsyStatus @default(DRAFT)
+  headline      String            @db.VarChar(140)
+  whatWeSaw     String
+  whatHappened  String
+  whatWeLearned String
+  rootCause     LossRootCause
+  lessonTags    String[]
+  modelVersion  String?
+  isPublic      Boolean           @default(false)
+  evidenceRefs  Json?
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+  pick          Pick              @relation(fields: [pickId], references: [id])
+
+  @@index([authoredAt])
+  @@index([status])
+  @@index([rootCause])
+  @@map("loss_autopsies")
+}
+
+model SourceSnapshot {
+  id             String             @id @default(cuid())
+  provider       String
+  sourceKind     SourceSnapshotKind
+  sport          String?
+  externalId     String?
+  ingestionRunId String?
+  fetchedAt      DateTime
+  payload        Json
+  payloadHash    String
+  payloadBytes   Int                @default(0)
+  createdAt      DateTime           @default(now())
+  ingestionRun   IngestionRun?      @relation(fields: [ingestionRunId], references: [id])
+
+  @@index([provider, sourceKind])
+  @@index([sport])
+  @@index([externalId])
+  @@index([fetchedAt])
+  @@index([payloadHash])
+  @@map("source_snapshots")
+}
+
+model GameSignal {
+  id             String         @id @default(cuid())
+  gameId         String
+  sourceCategory SignalCategory
+  sourceName     String
+  signalKey      String
+  signalValue    Json
+  fetchedAt      DateTime
+  expiresAt      DateTime?
+  trustLevel     Float          @default(1.0)
+  isBootstrap    Boolean        @default(true)
+  createdAt      DateTime       @default(now())
+  game           Game           @relation(fields: [gameId], references: [id], onDelete: Cascade)
+
+  @@unique([gameId, sourceName, signalKey])
+  @@index([gameId, sourceCategory])
+  @@index([fetchedAt])
+  @@map("game_signals")
+}
+
+model PickSignalSnapshot {
+  id                        String    @id @default(cuid())
+  pickId                    String    @unique
+  gameId                    String
+  capturedAt                DateTime  @default(now())
+  hadOddsSignal             Boolean   @default(false)
+  hadLineMovementSignal     Boolean   @default(false)
+  hadRestSignal             Boolean   @default(false)
+  hadScheduleSignal         Boolean   @default(false)
+  hadAtsFormSignal          Boolean   @default(false)
+  hadH2HSignal              Boolean   @default(false)
+  hadVenueSignal            Boolean   @default(false)
+  hadWeatherSignal          Boolean   @default(false)
+  hadInjurySignal           Boolean   @default(false)
+  hadRatingsSignal          Boolean   @default(false)
+  hadPlayerSignal           Boolean   @default(false)
+  hadOfficialsSignal        Boolean   @default(false)
+  hadVenueEnvironmentSignal Boolean   @default(false)
+  hadPaceSignal             Boolean   @default(false)
+  hadMilestoneSignal        Boolean   @default(false)
+  bookmakerCount            Int       @default(0)
+  dataQualityScore          Float     @default(0)
+  confidenceAtPrediction    Int       @default(0)
+  lineMovementDelta         Float?
+  restAdvantageNet          Int?
+  atsFormSampleSize         Int?
+  h2hSampleSize             Int?
+  scheduleDensityHome       Int?
+  scheduleDensityAway       Int?
+  isBootstrap               Boolean   @default(true)
+  usedDerivedHistory        Boolean   @default(false)
+  usedScheduleSignal        Boolean   @default(false)
+  modelVersion              String    @default("")
+  settlementResult          String?
+  settledAt                 DateTime?
+  eligibleForLearning       Boolean   @default(false)
+  learningEligibleAt        DateTime?
+  game                      Game      @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  pick                      Pick      @relation(fields: [pickId], references: [id], onDelete: Cascade)
+
+  @@index([gameId])
+  @@index([capturedAt])
+  @@index([eligibleForLearning])
+  @@index([isBootstrap])
+  @@map("pick_signal_snapshots")
+}
+
+model BlogPost {
+  id             String        @id @default(cuid())
+  title          String
+  slug           String        @unique
+  excerpt        String
+  content        String
+  sport          String?
+  tags           String[]
+  seoTitle       String?
+  seoDescription String?
+  isFeatured     Boolean       @default(false)
+  status         ContentStatus @default(DRAFT)
+  relatedPickIds String[]
+  generatedBy    String        @default("system")
+  modelVersion   String?
+  publishedAt    DateTime?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  @@index([status])
+  @@index([publishedAt])
+  @@index([sport])
+  @@map("blog_posts")
+}
+
+model Alert {
+  id        String       @id @default(cuid())
+  userId    String
+  sport     String?
+  league    String?
+  threshold Int          @default(70)
+  channel   AlertChannel @default(EMAIL)
+  active    Boolean      @default(true)
+  createdAt DateTime     @default(now())
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@map("alerts")
+}
+
+model Watchlist {
+  id         String   @id @default(cuid())
+  userId     String
+  entityType String
+  entityId   String
+  createdAt  DateTime @default(now())
+  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, entityType, entityId])
+  @@index([userId])
+  @@map("watchlist_entries")
+}
+
+model PerformanceSummary {
+  id           String    @id @default(cuid())
+  sport        String
+  league       String?
+  pickType     PickType?
+  tier         PickTier?
+  modelVersion String
+  totalPicks   Int       @default(0)
+  wins         Int       @default(0)
+  losses       Int       @default(0)
+  pushes       Int       @default(0)
+  winRate      Float     @default(0)
+  period       String
+  computedAt   DateTime  @default(now())
+
+  @@unique([sport, pickType, tier, modelVersion, period])
+  @@index([sport])
+  @@map("performance_summaries")
+}
+
+model JarvisMemoryEvent {
+  id                   String              @id @default(cuid())
+  memory_type          MemoryType
+  memory_state         MemoryState         @default(candidate)
+  scope                String
+  title                String
+  summary              String
+  full_text            String?
+  source_type          String
+  source_ref           String?
+  source_timestamp     DateTime?
+  actor                String
+  owner                String
+  confidence           Int
+  sensitivity          String              @default("normal")
+  tags                 String[]
+  related_decision_id  String?
+  related_agent_id     String?
+  supersedes_memory_id String?
+  expires_at           DateTime?
+  created_at           DateTime            @default(now())
+  updated_at           DateTime            @updatedAt
+  confirmed_at         DateTime?
+  rejected_at          DateTime?
+  embedding_ref        String?
+  metadata             Json?
+  owner_approval       Boolean             @default(false)
+  /// Optional link to the SubagentRun that created this memory candidate.
+  related_agent_run_id String?
+  agent_run            SubagentRun?        @relation("MemoryAgentRunLink", fields: [related_agent_run_id], references: [id])
+  supersedes           JarvisMemoryEvent?  @relation("MemorySupersession", fields: [supersedes_memory_id], references: [id])
+  superseded_by        JarvisMemoryEvent[] @relation("MemorySupersession")
+  decisions            JarvisDecision[]    @relation("MemoryDecisionLink")
+
+  @@index([memory_state])
+  @@index([memory_type])
+  @@index([scope])
+  @@index([created_at])
+  @@map("jarvis_memory_events")
+}
+
+model JarvisDecision {
+  id                    String              @id @default(cuid())
+  decision_title        String
+  decision_summary      String
+  decision_type         String
+  rationale             String
+  evidence              Json?
+  alternatives_rejected Json?
+  owner                 String
+  decision_date         DateTime
+  revisit_date          DateTime?
+  outcome               String?
+  status                String              @default("open")
+  source_refs           Json?
+  created_at            DateTime            @default(now())
+  updated_at            DateTime            @updatedAt
+  memory_events         JarvisMemoryEvent[] @relation("MemoryDecisionLink")
+
+  @@index([decision_date])
+  @@index([status])
+  @@map("jarvis_decisions")
+}
+
+model AgentHandoff {
+  id                      String                @id @default(cuid())
+  /// Codename of the council seat initiating the handoff.
+  source_seat             String
+  /// Codename of the council seat receiving the handoff.
+  target_seat             String
+  /// Human-readable reason for the handoff.
+  reason                  String
+  /// Task type from the routing rules (e.g. "pick-research", "settlement").
+  task_type               String
+  /// Supporting evidence text (urls, data references, test ids).
+  evidence_text           String
+  risk_level              AgentHandoffRiskLevel @default(low)
+  /// Authority tier of the initiating seat (0–4).
+  authority_tier          Int
+  status                  AgentHandoffStatus    @default(pending)
+  /// Whether this handoff requires explicit owner approval before proceeding.
+  owner_approval_required Boolean               @default(false)
+  /// Outcome narrative once the handoff is resolved — null until then.
+  outcome                 String?
+  created_at              DateTime              @default(now())
+  updated_at              DateTime              @updatedAt
+
+  @@index([source_seat, created_at])
+  @@index([target_seat, created_at])
+  @@index([status])
+  @@index([created_at])
+  @@map("agent_handoffs")
+}
+
+model SubagentRun {
+  id                         String                     @id @default(cuid())
+  /// Id of the subagent template that ran (matches SubagentTemplate.id).
+  subagent_id                String
+  /// Codename of the parent council seat that spawned this subagent.
+  parent_seat                String
+  /// Narrow task the subagent was given.
+  task                       String
+  /// Context provided as input to the subagent.
+  input_context              String
+  /// Reference to the draft artifact the subagent produced (path, id, or url).
+  output_artifact_ref        String
+  /// Confidence score 0–100 in the output.
+  confidence                 Int
+  /// Explicit uncertainty statement about the output.
+  uncertainty                String
+  /// Supporting evidence for the output.
+  evidence                   String[]
+  /// True = prohibited-actions check passed; false = violation detected.
+  prohibited_actions_checked Boolean                    @default(false)
+  /// Parent seat's review status — pending until parent explicitly reviews.
+  parent_review_status       SubagentParentReviewStatus @default(pending_review)
+  created_at                 DateTime                   @default(now())
+  updated_at                 DateTime                   @updatedAt
+  memory_events              JarvisMemoryEvent[]        @relation("MemoryAgentRunLink")
+
+  @@index([subagent_id, created_at])
+  @@index([parent_seat, created_at])
+  @@index([parent_review_status])
+  @@index([created_at])
+  @@map("subagent_runs")
+}
+
+model CockpitTask {
+  id               String                  @id @default(cuid())
+  title            String
+  description      String
+  assignedAgent    OperatorAgent
+  status           CockpitTaskStatus       @default(NEW)
+  priority         Int                     @default(50)
+  riskLevel        CockpitRiskLevel        @default(LOW)
+  complianceStatus CockpitComplianceStatus @default(NOT_APPLICABLE)
+  source           String
+  payload          Json?
+  decisionNotes    String?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+  decisions        CockpitDecision[]
+
+  @@index([assignedAgent])
+  @@index([status])
+  @@index([priority])
+  @@index([createdAt])
+  @@map("cockpit_tasks")
+}
+
+model CockpitDecision {
+  id        String            @id @default(cuid())
+  taskId    String
+  toStatus  CockpitTaskStatus
+  reviewer  String
+  note      String?
+  evidence  Json?
+  createdAt DateTime          @default(now())
+  task      CockpitTask       @relation(fields: [taskId], references: [id], onDelete: Cascade)
+
+  @@index([taskId, createdAt])
+  @@map("cockpit_decisions")
+}
+
+model CockpitMediaItem {
+  id               String                  @id @default(cuid())
+  briefTitle       String
+  briefBody        String
+  channel          String
+  draftBody        String?
+  qaStatus         String                  @default("DRAFT")
+  complianceStatus CockpitComplianceStatus @default(REVIEW_REQUIRED)
+  approved         Boolean                 @default(false)
+  scheduledFor     DateTime?
+  relatedTaskId    String?
+  createdAt        DateTime                @default(now())
+  updatedAt        DateTime                @updatedAt
+
+  @@index([qaStatus])
+  @@index([complianceStatus])
+  @@map("cockpit_media_items")
+}
+
+model CreatorAsset {
+  id               String                       @id @default(cuid())
+  gameId           String
+  pickId           String?
+  templateKind     CreatorAssetKind
+  status           CreatorAssetStatus           @default(DRAFT)
+  complianceStatus CreatorAssetComplianceStatus @default(YELLOW)
+  title            String
+  body             String
+  markdown         String
+  gateState        String                       @db.VarChar(24)
+  citations        Json                         @default("[]")
+  complianceFlags  Json                         @default("[]")
+  modelVersion     String
+  generatedBy      String
+  generatedAt      DateTime                     @default(now())
+  exportedAt       DateTime?
+  createdAt        DateTime                     @default(now())
+  updatedAt        DateTime                     @updatedAt
+  game             Game                         @relation(fields: [gameId], references: [id], onDelete: Cascade)
+  pick             Pick?                        @relation(fields: [pickId], references: [id])
+
+  @@index([gameId, generatedAt])
+  @@index([pickId])
+  @@index([templateKind])
+  @@index([status])
+  @@index([complianceStatus])
+  @@map("creator_assets")
+}
+
+model ModelJournalEntry {
+  id                      String                  @id @default(cuid())
+  isoWeek                 Int
+  isoYear                 Int
+  status                  ModelJournalEntryStatus @default(DRAFT)
+  title                   String
+  slug                    String                  @unique
+  body                    String
+  bodyMarkdown            String
+  modelVersion            String
+  referencedPickIds       String[]
+  referencedAutopsyIds    String[]
+  referencedFactorChanges Json?
+  authorEmail             String
+  draftedAt               DateTime                @default(now())
+  reviewedAt              DateTime?
+  publishedAt             DateTime?
+  emailedAt               DateTime?
+  twitterTeasedAt         DateTime?
+  retractedAt             DateTime?
+  retractionReason        String?
+  createdAt               DateTime                @default(now())
+  updatedAt               DateTime                @updatedAt
+
+  @@unique([isoYear, isoWeek])
+  @@index([status])
+  @@index([publishedAt])
+  @@map("model_journal_entries")
+}
+
+model ClaudeApiCallRecord {
+  id               String   @id @default(cuid())
+  surface          String
+  modelName        String
+  inputTokens      Int
+  outputTokens     Int
+  estimatedCostUsd Decimal  @db.Decimal(10, 6)
+  userId           String?
+  gameId           String?
+  templateKind     String?
+  durationMs       Int
+  success          Boolean
+  errorKind        String?
+  observedAt       DateTime @default(now())
+  game             Game?    @relation(fields: [gameId], references: [id])
+  user             User?    @relation(fields: [userId], references: [id])
+
+  @@index([observedAt])
+  @@index([surface, observedAt])
+  @@index([userId])
+  @@index([gameId])
+  @@map("claude_api_call_records")
+}
+
+model ClaudeApiBudget {
+  id                String    @id @default(cuid())
+  surface           String    @unique
+  monthlyBudgetUsd  Decimal   @db.Decimal(10, 2)
+  alertThresholds   Json
+  overrideActive    Boolean   @default(false)
+  overrideExpiresAt DateTime?
+  createdAt         DateTime  @default(now())
+  updatedAt         DateTime  @updatedAt
+
+  @@map("claude_api_budgets")
+}
+
+model Promotion {
+  id                    String                    @id @default(cuid())
+  slug                  String                    @unique
+  sportsbookKey         String
+  operatorName          String
+  headline              String
+  offerSummary          String
+  offerCategory         PromotionOfferCategory
+  affiliateType         PromotionAffiliateType    @default(NONE)
+  affiliateUrl          String?
+  termsUrl              String?
+  promoCode             String?
+  eligibleStates        Json                      @default("[]")
+  restrictedStates      Json                      @default("[]")
+  country               String                    @default("US")
+  minimumAge            Int                       @default(21)
+  status                PromotionStatus           @default(DRAFT)
+  complianceStatus      PromotionComplianceStatus @default(UNREVIEWED)
+  disclosureText        String?
+  responsibleGamingText String?
+  lastReviewedAt        DateTime?
+  reviewedBy            String?
+  expiresAt             DateTime?
+  createdAt             DateTime                  @default(now())
+  updatedAt             DateTime                  @updatedAt
+
+  @@index([status])
+  @@index([complianceStatus])
+  @@index([sportsbookKey])
+  @@index([expiresAt])
+  @@map("promotions")
+}
+
+model SourceCoverageReport {
+  id           String                 @id @default(cuid())
+  artifactKind SourceArtifactKind
+  artifactId   String
+  readiness    PublishReadinessStatus
+  qualityScore Int
+  generatedAt  DateTime               @default(now())
+  /// Snapshot of per-category status: { ODDS: "FRESH", INJURIES: "AGING", ... }
+  /// Stored as JSON so categories can evolve without a migration.
+  categories   Json
+  /// Free-text rationale: which sources backed the readiness decision,
+  /// what is missing, and what the operator should do next.
+  rationale    String
+  blockers     Json                   @default("[]")
+
+  @@index([artifactKind, artifactId])
+  @@index([readiness])
+  @@index([generatedAt])
+  @@map("source_coverage_reports")
+}
+
+model DailyBrief {
+  id                    String              @id @default(cuid())
+  briefDate             DateTime            @unique
+  status                BriefStatus         @default(DRAFT)
+  visibility            BriefVisibility     @default(INTERNAL)
+  title                 String
+  summary               String
+  slateSummary          String
+  dataQualitySummary    String?
+  manualReviewNotes     String?
+  responsibleGamingText String
+  generatedBy           String
+  reviewedBy            String?
+  reviewedAt            DateTime?
+  publishedAt           DateTime?
+  createdAt             DateTime            @default(now())
+  updatedAt             DateTime            @updatedAt
+  items                 DailyBriefItem[]
+  sections              DailyBriefSection[]
+
+  @@index([status])
+  @@index([visibility])
+  @@map("daily_briefs")
+}
+
+model DailyBriefSection {
+  id             String           @id @default(cuid())
+  briefId        String
+  sectionType    BriefSectionType
+  title          String
+  content        String
+  sortOrder      Int              @default(0)
+  visibility     BriefVisibility  @default(INTERNAL)
+  sourceStatus   String           @default("PENDING")
+  requiresReview Boolean          @default(false)
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+  brief          DailyBrief       @relation(fields: [briefId], references: [id], onDelete: Cascade)
+
+  @@index([briefId, sortOrder])
+  @@map("daily_brief_sections")
+}
+
+model DailyBriefItem {
+  id         String          @id @default(cuid())
+  briefId    String
+  itemType   String
+  label      String
+  value      String
+  metadata   Json?
+  sourceId   String?
+  riskLevel  String          @default("LOW")
+  visibility BriefVisibility @default(INTERNAL)
+  sortOrder  Int             @default(0)
+  createdAt  DateTime        @default(now())
+  updatedAt  DateTime        @updatedAt
+  brief      DailyBrief      @relation(fields: [briefId], references: [id], onDelete: Cascade)
+
+  @@index([briefId, sortOrder])
+  @@map("daily_brief_items")
+}
+
+model CalibrationProposal {
+  id             String                    @id @default(cuid())
+  modelVersion   String
+  kind           CalibrationProposalKind
+  observation    String
+  proposedChange String
+  evidence       Json
+  status         CalibrationProposalStatus @default(OPEN)
+  createdAt      DateTime                  @default(now())
+  acknowledgedBy String?
+  acknowledgedAt DateTime?
+
+  @@index([modelVersion])
+  @@index([status])
+  @@index([createdAt])
+  @@map("calibration_proposals")
+}
+
+model LadderEvent {
+  id             String   @id @default(cuid())
+  type           String
+  track          String?
+  modelVersion   String
+  sourceEventId  String?
+  idempotencyKey String?  @unique
+  occurredAt     DateTime @default(now())
+  payload        Json
+  createdAt      DateTime @default(now())
+
+  @@index([type])
+  @@index([track])
+  @@index([modelVersion])
+  @@index([sourceEventId])
+  @@index([occurredAt])
+  @@map("ladder_events")
+}
+
+model ContentDraft {
+  id                          String                       @id @default(cuid())
+  title                       String
+  slug                        String                       @unique
+  contentType                 ContentDraftType
+  status                      ContentDraftStatus           @default(DRAFT)
+  visibility                  ContentDraftVisibility       @default(INTERNAL)
+  sport                       String?
+  league                      String?
+  relatedPickIds              Json                         @default("[]")
+  relatedPromotionIds         Json                         @default("[]")
+  relatedBriefIds             Json                         @default("[]")
+  sourceCoverageStatus        ContentSourceCoverageStatus  @default(NEEDS_SOURCE)
+  complianceStatus            ContentComplianceStatus      @default(REVIEW_REQUIRED)
+  responsibleGamingIncluded   Boolean                      @default(false)
+  affiliateDisclosureIncluded Boolean                      @default(false)
+  performanceGateStatus       ContentPerformanceGateStatus @default(NOT_APPLICABLE)
+  bannedPhraseScanClean       Boolean                      @default(false)
+  draftBody                   String
+  excerpt                     String?
+  metadata                    Json?
+  generatedBy                 String
+  reviewedBy                  String?
+  reviewedAt                  DateTime?
+  publishedAt                 DateTime?
+  createdAt                   DateTime                     @default(now())
+  updatedAt                   DateTime                     @updatedAt
+  reviews                     ContentReview[]
+  sources                     ContentSource[]
+
+  @@index([status])
+  @@index([contentType])
+  @@index([visibility])
+  @@index([sourceCoverageStatus])
+  @@index([complianceStatus])
+  @@index([createdAt])
+  @@map("content_drafts")
+}
+
+model ContentSource {
+  id           String                  @id @default(cuid())
+  draftId      String
+  sourceType   ContentSourceType
+  sourceLabel  String
+  sourceUrl    String?
+  sourceStatus ContentSourceStatus     @default(PENDING)
+  trustLevel   ContentSourceTrustLevel @default(UNVERIFIED)
+  fetchedAt    DateTime?
+  notes        String?
+  createdAt    DateTime                @default(now())
+  draft        ContentDraft            @relation(fields: [draftId], references: [id], onDelete: Cascade)
+
+  @@index([draftId])
+  @@index([sourceType])
+  @@index([trustLevel])
+  @@map("content_sources")
+}
+
+model ContentReview {
+  id        String                @id @default(cuid())
+  draftId   String
+  reviewer  String
+  decision  ContentReviewDecision
+  notes     String?
+  evidence  Json?
+  createdAt DateTime              @default(now())
+  draft     ContentDraft          @relation(fields: [draftId], references: [id], onDelete: Cascade)
+
+  @@index([draftId, createdAt])
+  @@map("content_reviews")
+}
+
+model ModerationReport {
+  id             String                 @id @default(cuid())
+  reporterUserId String?
+  targetUserId   String
+  contentRef     String
+  surface        String
+  reason         ModerationReasonCode
+  notes          String?
+  status         ModerationReportStatus @default(OPEN)
+  resolvedBy     String?
+  resolvedAt     DateTime?
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+  actions        ModerationAction[]
+
+  @@index([targetUserId])
+  @@index([status, createdAt])
+  @@index([surface])
+  @@index([reason])
+  @@map("moderation_reports")
+}
+
+model ModerationAction {
+  id           String               @id @default(cuid())
+  actor        String
+  targetUserId String
+  contentRef   String?
+  surface      String?
+  action       ModerationActionKind
+  reason       ModerationReasonCode
+  notes        String?
+  reportId     String?
+  expiresAt    DateTime?
+  createdAt    DateTime             @default(now())
+  report       ModerationReport?    @relation(fields: [reportId], references: [id])
+  appeal       ModerationAppeal?
+
+  @@index([targetUserId, createdAt])
+  @@index([action])
+  @@index([reportId])
+  @@index([expiresAt])
+  @@map("moderation_actions")
+}
+
+model ModerationAppeal {
+  id          String                 @id @default(cuid())
+  actionId    String                 @unique
+  appellantId String
+  grounds     String
+  status      ModerationAppealStatus @default(PENDING)
+  decidedBy   String?
+  decision    String?
+  decidedAt   DateTime?
+  slaDeadline DateTime
+  createdAt   DateTime               @default(now())
+  updatedAt   DateTime               @updatedAt
+  action      ModerationAction       @relation(fields: [actionId], references: [id], onDelete: Cascade)
+
+  @@index([status, slaDeadline])
+  @@index([appellantId])
+  @@map("moderation_appeals")
+}
+
+model Player {
+  id           String            @id @default(cuid())
+  gsisId       String            @unique
+  fullName     String
+  position     String?
+  recentTeam   String?
+  headshotUrl  String?
+  createdAt    DateTime          @default(now())
+  updatedAt    DateTime          @updatedAt
+  depthEntries DepthChartEntry[]
+  injuries     Injury[]
+  gameStats    PlayerGameStat[]
+  snapCounts   SnapCount[]
+
+  @@index([position])
+  @@index([recentTeam])
+  @@map("players")
+}
+
+model PlayerGameStat {
+  id               String   @id @default(cuid())
+  playerId         String
+  season           Int
+  week             Int
+  seasonType       String   @default("REG")
+  team             String?
+  opponent         String?
+  attempts         Int?
+  carries          Int?
+  receptions       Int?
+  targets          Int?
+  targetShare      Float?
+  receivingYards   Float?
+  rushingYards     Float?
+  fantasyPointsPpr Float?
+  passingEpa       Float?
+  rushingEpa       Float?
+  receivingEpa     Float?
+  sourceId         String   @default("nflverse")
+  rightsSnapshot   Json
+  fetchedAt        DateTime
+  player           Player   @relation(fields: [playerId], references: [id], onDelete: Cascade)
+
+  @@unique([playerId, season, week, seasonType])
+  @@index([season, week])
+  @@index([playerId])
+  @@map("player_game_stats")
+}
+
+model SnapCount {
+  id             String   @id @default(cuid())
+  playerId       String?
+  pfrPlayerId    String?
+  playerName     String
+  season         Int
+  week           Int
+  seasonType     String   @default("REG")
+  team           String?
+  opponent       String?
+  position       String?
+  offenseSnaps   Int?
+  offensePct     Float?
+  defenseSnaps   Int?
+  defensePct     Float?
+  stSnaps        Int?
+  stPct          Float?
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+  player         Player?  @relation(fields: [playerId], references: [id])
+
+  @@index([season, week])
+  @@index([playerId])
+  @@map("snap_counts")
+}
+
+model Injury {
+  id             String   @id @default(cuid())
+  playerId       String?
+  gsisId         String?
+  playerName     String
+  season         Int
+  week           Int
+  team           String?
+  position       String?
+  reportStatus   String?
+  practiceStatus String?
+  primaryInjury  String?
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+  player         Player?  @relation(fields: [playerId], references: [id])
+
+  @@index([season, week])
+  @@index([playerId])
+  @@map("injuries")
+}
+
+model DepthChartEntry {
+  id             String   @id @default(cuid())
+  playerId       String?
+  gsisId         String?
+  playerName     String
+  season         Int
+  week           Int
+  team           String?
+  position       String?
+  depthRank      Int?
+  role           String?
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+  player         Player?  @relation(fields: [playerId], references: [id])
+
+  @@index([season, week, team])
+  @@index([playerId])
+  @@map("depth_chart_entries")
+}
+
+model HistoricalGame {
+  id             String   @id @default(cuid())
+  gameKey        String   @unique
+  season         Int
+  week           Int
+  gameType       String   @default("REG")
+  awayTeam       String
+  homeTeam       String
+  awayScore      Int?
+  homeScore      Int?
+  result         Float?
+  spreadLine     Float?
+  totalLine      Float?
+  awayMoneyline  Int?
+  homeMoneyline  Int?
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  @@index([season, week])
+  @@index([season])
+  @@map("historical_games")
+}
+
+model TeamGameEfficiency {
+  id             String   @id @default(cuid())
+  gameKey        String
+  season         Int
+  week           Int
+  seasonType     String   @default("REG")
+  team           String
+  opponent       String
+  isHome         Boolean
+  plays          Int
+  offEpaPerPlay  Float
+  offSuccess     Float
+  defEpaPerPlay  Float
+  defSuccess     Float
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  @@unique([team, gameKey])
+  @@index([season, week])
+  @@index([team, season])
+  @@map("team_game_efficiency")
+}
+
+model PlayerRushProfile {
+  id             String   @id @default(cuid())
+  gsisId         String
+  playerName     String
+  season         Int
+  team           String?
+  runs           Int
+  guardRuns      Int      @default(0)
+  tackleRuns     Int      @default(0)
+  endRuns        Int      @default(0)
+  leftRuns       Int      @default(0)
+  middleRuns     Int      @default(0)
+  rightRuns      Int      @default(0)
+  epaPerRun      Float
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  @@unique([gsisId, season])
+  @@index([season])
+  @@map("player_rush_profiles")
+}
+
+model NextGenStat {
+  id                          String   @id @default(cuid())
+  gsisId                      String
+  playerName                  String
+  position                    String?
+  season                      Int
+  week                        Int
+  seasonType                  String   @default("REG")
+  team                        String?
+  statType                    String
+  avgTimeToThrow              Float?
+  avgCompletedAirYards        Float?
+  avgIntendedAirYards         Float?
+  aggressiveness              Float?
+  avgAirYardsToSticks         Float?
+  completionPct               Float?
+  expectedCompletionPct       Float?
+  cpoe                        Float?
+  passerRating                Float?
+  avgCushion                  Float?
+  avgSeparation               Float?
+  pctShareIntendedAirYards    Float?
+  catchPct                    Float?
+  avgYac                      Float?
+  avgExpectedYac              Float?
+  avgYacAboveExpectation      Float?
+  rushEfficiency              Float?
+  pctAttemptsGte8Defenders    Float?
+  avgTimeToLos                Float?
+  expectedRushYards           Float?
+  rushYardsOverExpected       Float?
+  rushYardsOverExpectedPerAtt Float?
+  rushPctOverExpected         Float?
+  sourceId                    String   @default("nflverse")
+  rightsSnapshot              Json
+  fetchedAt                   DateTime
+
+  @@unique([gsisId, season, week, seasonType, statType])
+  @@index([season, week])
+  @@index([statType, season])
+  @@map("next_gen_stats")
+}
+
+model PfrAdvStat {
+  id                           String   @id @default(cuid())
+  pfrPlayerId                  String
+  playerName                   String
+  season                       Int
+  week                         Int
+  seasonType                   String   @default("REG")
+  team                         String?
+  opponent                     String?
+  gameKey                      String
+  statType                     String
+  timesSacked                  Int?
+  timesBlitzed                 Int?
+  timesHurried                 Int?
+  timesHit                     Int?
+  timesPressured               Int?
+  timesPressuredPct            Float?
+  passingBadThrows             Int?
+  passingBadThrowPct           Float?
+  passingDrops                 Int?
+  passingDropPct               Float?
+  receivingBrokenTackles       Int?
+  receivingDrop                Int?
+  receivingDropPct             Float?
+  receivingInt                 Int?
+  receivingRat                 Float?
+  carries                      Int?
+  rushingYardsBeforeContact    Float?
+  rushingYardsBeforeContactAvg Float?
+  rushingYardsAfterContact     Float?
+  rushingYardsAfterContactAvg  Float?
+  rushingBrokenTackles         Int?
+  sourceId                     String   @default("nflverse")
+  rightsSnapshot               Json
+  fetchedAt                    DateTime
+
+  @@unique([pfrPlayerId, gameKey, statType])
+  @@index([season, week])
+  @@index([statType, season])
+  @@map("pfr_adv_stats")
+}
+
+model TeamWeekStat {
+  id                String   @id @default(cuid())
+  season            Int
+  week              Int
+  seasonType        String   @default("REG")
+  team              String
+  opponent          String?
+  completions       Int?
+  attempts          Int?
+  passYards         Float?
+  passTds           Int?
+  passInt           Int?
+  sacksSuffered     Int?
+  passAirYards      Float?
+  passYac           Float?
+  passFirstDowns    Int?
+  passEpa           Float?
+  passCpoe          Float?
+  carries           Int?
+  rushYards         Float?
+  rushTds           Int?
+  rushFirstDowns    Int?
+  rushEpa           Float?
+  receptions        Int?
+  targets           Int?
+  recYards          Float?
+  recEpa            Float?
+  defSacks          Float?
+  defInterceptions  Int?
+  defQbHits         Int?
+  defTacklesForLoss Int?
+  defPassDefended   Int?
+  defTds            Int?
+  sourceId          String   @default("nflverse")
+  rightsSnapshot    Json
+  fetchedAt         DateTime
+
+  @@unique([team, season, week, seasonType])
+  @@index([season, week])
+  @@map("team_week_stats")
+}
+
+model Signal {
+  id             String   @id @default(cuid())
+  entityType     String
+  entityId       String
+  key            String
+  category       String
+  valueRaw       Float?
+  value          Float
+  weight         Float    @default(1)
+  confidence     Float    @default(1)
+  capturedAt     DateTime
+  season         Int      @default(0)
+  week           Int      @default(0)
+  sourceId       String   @default("nflverse")
+  rightsSnapshot Json
+  fetchedAt      DateTime
+
+  @@unique([entityType, entityId, key, season, week])
+  @@index([entityType, entityId])
+  @@index([category])
+  @@map("signals")
+}
+
+enum LossAutopsyStatus {
+  DRAFT
+  PEER_REVIEW
+  PUBLISHED
+  RETRACTED
+}
+
+enum LossRootCause {
+  DATA_GAP
+  STALE_LINE
+  INJURY_SHOCK
+  WEATHER
+  OFFICIATING
+  VARIANCE
+  MODEL_DRIFT
+  HUMAN_OVERRIDE
+  OTHER
+}
+
+enum UserRole {
+  USER
+  ADMIN
+}
+
+enum SubscriptionTier {
+  FREE
+  FANTASY
+  PRO
+  ELITE
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  TRIALING
+  PAST_DUE
+  CANCELED
+  INCOMPLETE
+  PAUSED
+}
+
+enum GameStatus {
+  SCHEDULED
+  LIVE
+  FINAL
+  POSTPONED
+  CANCELED
+}
+
+enum OddsMarket {
+  H2H
+  SPREADS
+  TOTALS
+}
+
+enum PickType {
+  SPREAD
+  MONEYLINE
+  TOTAL
+}
+
+enum PickTier {
+  FREE
+  PREMIUM
+}
+
+enum PickGrade {
+  ELITE_PLAY
+  STRONG_PLAY
+  SOLID_PLAY
+  LEAN
+}
+
+enum RiskLevel {
+  LOW_RISK
+  MODERATE
+  HIGH_VARIANCE
+  INJURY_RISK
+  LINE_STEAM
+}
+
+enum PickResult {
+  PENDING
+  WIN
+  LOSS
+  PUSH
+  VOID
+}
+
+enum GateDecisionStatus {
+  SCORING
+  PUBLISHED
+  GATED
+}
+
+enum IngestionStatus {
+  RUNNING
+  SUCCESS
+  FAILED
+  PARTIAL
+}
+
+enum ContentStatus {
+  DRAFT
+  PUBLISHED
+  ARCHIVED
+}
+
+enum AlertChannel {
+  EMAIL
+  PUSH
+}
+
+enum GameLogResult {
+  WIN
+  LOSS
+  TBD
+}
+
+enum SignalCategory {
+  ODDS
+  SCHEDULE
+  WEATHER
+  INJURIES
+  RATINGS
+  MARKET_SENTIMENT
+  PLAYER_AVAILABILITY
+  OFFICIALS
+  VENUE_ENVIRONMENT
+  TEAM_RATES
+  STANDINGS
+  DIVISION_CONTEXT
+  MILESTONES
+  PACE
+}
+
+enum SourceSnapshotKind {
+  ODDS_EVENTS
+  ODDS_SCORES
+  CONTEXT_FIXTURES
+  CONTEXT_TEAM_STATS
+  CONTEXT_PLAYER_AVAILABILITY
+  CONTEXT_OFFICIALS
+  CONTEXT_VENUE
+  CONTEXT_WEATHER
+  CONTEXT_STANDINGS
+  CONTEXT_MILESTONES
+}
+
+enum AtsResult {
+  WIN
+  LOSS
+  PUSH
+  TBD
+}
+
+enum MemoryType {
+  episodic
+  semantic
+  procedural
+  preference
+  decision
+  failure
+  source
+  agent_performance
+  escalation_rule
+  public_claim_rule
+}
+
+enum MemoryState {
+  candidate
+  confirmed
+  repeated_pattern
+  conflicted
+  stale
+  superseded
+  rejected
+  expired
+}
+
+enum AgentHandoffStatus {
+  pending
+  accepted
+  rejected
+  escalated
+}
+
+enum AgentHandoffRiskLevel {
+  low
+  medium
+  high
+  critical
+}
+
+enum SubagentParentReviewStatus {
+  pending_review
+  accepted
+  rejected
+  edited
+}
+
+enum OperatorAgent {
+  JARVIS
+  SARAH
+  TAL
+  SCOUT
+  AVA
+  BOBBY
+}
+
+enum CockpitTaskStatus {
+  NEW
+  ROUTED
+  DRAFTED
+  NEEDS_REVIEW
+  APPROVED
+  REJECTED
+  BLOCKED
+  ARCHIVED
+}
+
+enum CockpitRiskLevel {
+  LOW
+  MODERATE
+  HIGH
+  COMPLIANCE_HOLD
+}
+
+enum CockpitComplianceStatus {
+  NOT_APPLICABLE
+  CLEAR
+  REVIEW_REQUIRED
+  HOLD
+  REJECTED
+}
+
+enum CreatorAssetKind {
+  FAN_EXPLAINER
+  FANTASY_ANGLE
+  BETTING_EDUCATION
+  X_THREAD
+  TIKTOK_REELS_SCRIPT
+  NEWSLETTER_BLOCK
+  SPONSOR_SAFE_BLURB
+  YOUTUBE_TITLE_IDEAS
+}
+
+enum CreatorAssetStatus {
+  DRAFT
+  EXPORTED
+  ARCHIVED
+  BLOCKED
+}
+
+enum CreatorAssetComplianceStatus {
+  GREEN
+  YELLOW
+  RED
+}
+
+enum ModelJournalEntryStatus {
+  DRAFT
+  REVIEW_PENDING
+  PUBLISHED
+  RETRACTED
+}
+
+enum PromotionStatus {
+  DRAFT
+  NEEDS_REVIEW
+  ACTIVE
+  PAUSED
+  EXPIRED
+  ARCHIVED
+  BLOCKED
+}
+
+enum PromotionComplianceStatus {
+  UNREVIEWED
+  APPROVED
+  NEEDS_TERMS
+  NEEDS_STATE_REVIEW
+  NEEDS_DISCLOSURE
+  BLOCKED
+}
+
+enum PromotionOfferCategory {
+  DEPOSIT_MATCH
+  RISK_FREE_BET
+  ODDS_BOOST
+  BONUS_BET
+  SIGNUP_BONUS
+  REFERRAL
+  OTHER
+}
+
+enum PromotionAffiliateType {
+  CPA
+  REVSHARE
+  HYBRID
+  NONE
+}
+
+enum SourceArtifactKind {
+  PICK
+  PROMOTION
+  BRIEF
+  CONTENT_DRAFT
+}
+
+enum SourceFreshnessStatus {
+  FRESH
+  AGING
+  STALE
+  MISSING
+  CONTRADICTORY
+}
+
+enum PublishReadinessStatus {
+  PUBLISH_READY
+  HOLD
+  REVIEW
+  BLOCKED
+}
+
+enum CalibrationProposalKind {
+  CONFIDENCE_BUCKET_DRIFT
+  GRADE_DRIFT
+  PICK_TYPE_DRIFT
+  SPORT_DRIFT
+  DATA_QUALITY_DRIFT
+  RISK_LEVEL_DRIFT
+}
+
+enum CalibrationProposalStatus {
+  OPEN
+  ACKNOWLEDGED
+  IMPLEMENTED
+  REJECTED
+}
+
+enum BriefStatus {
+  DRAFT
+  NEEDS_REVIEW
+  APPROVED
+  PUBLISHED
+  ARCHIVED
+  BLOCKED
+}
+
+enum BriefVisibility {
+  INTERNAL
+  PUBLIC
+  PREMIUM
+}
+
+enum BriefSectionType {
+  SLATE_OVERVIEW
+  TOP_PICKS
+  DATA_QUALITY
+  LINE_MOVEMENT
+  SCHEDULE_REST
+  PERFORMANCE_CONTEXT
+  PROMOTIONS
+  MANUAL_REVIEW
+  CONTENT_IDEAS
+  RESPONSIBLE_GAMING
+  WHAT_CHANGED
+}
+
+enum ContentDraftStatus {
+  DRAFT
+  NEEDS_SOURCE
+  NEEDS_REVIEW
+  NEEDS_COMPLIANCE
+  APPROVED
+  REJECTED
+  ARCHIVED
+  BLOCKED
+}
+
+enum ContentDraftVisibility {
+  INTERNAL
+  PUBLIC
+  PREMIUM
+}
+
+enum ContentDraftType {
+  DAILY_BRIEF
+  MATCHUP_PREVIEW
+  METHODOLOGY_EDUCATION
+  PROMOTION_ROUNDUP
+  WEEKLY_RECAP
+  PERFORMANCE_TRANSPARENCY
+  RESPONSIBLE_BETTING_EDUCATION
+  MODEL_ACCOUNTABILITY_NOTE
+  LINE_MOVEMENT_WATCH
+  BLOG_POST
+  SOCIAL_DRAFT
+  NEWSLETTER_DRAFT
+}
+
+enum ContentSourceType {
+  ODDS
+  PICK
+  PERFORMANCE
+  PROMOTION_TERMS
+  RESPONSIBLE_GAMING
+  METHODOLOGY
+  CALIBRATION
+  DAILY_BRIEF
+  INTERNAL_REVIEW
+}
+
+enum ContentSourceTrustLevel {
+  AUTHORITATIVE
+  PLATFORM
+  REVIEWED
+  UNVERIFIED
+  BLOCKED
+}
+
+enum ContentSourceStatus {
+  FRESH
+  AGING
+  STALE
+  MISSING
+  PENDING
+}
+
+enum ContentSourceCoverageStatus {
+  COVERED
+  PARTIAL
+  NEEDS_SOURCE
+  BLOCKED
+}
+
+enum ContentComplianceStatus {
+  NOT_APPLICABLE
+  CLEAR
+  REVIEW_REQUIRED
+  NEEDS_DISCLOSURE
+  NEEDS_RG_LANGUAGE
+  BLOCKED
+}
+
+enum ContentPerformanceGateStatus {
+  NOT_APPLICABLE
+  GATE_ON
+  GATE_OFF_REQUIRED
+  GATE_OFF_BLOCKED
+}
+
+enum ContentReviewDecision {
+  APPROVED
+  CHANGES_REQUESTED
+  REJECTED
+  ESCALATED
+  INTERNAL_ONLY
+}
+
+enum ModerationReasonCode {
+  HARASSMENT
+  HATE_SPEECH
+  THREATS
+  DOXXING
+  TOUT_BEHAVIOR
+  GUARANTEED_WINNER_LANGUAGE
+  PRESSURE_TO_BET
+  BEGINNER_MOCKING
+  LOSS_SHAMING
+  CHASING_LOSSES_ENCOURAGEMENT
+  SELF_EXCLUSION_CIRCUMVENTION
+  UNDERAGE_PARTICIPATION
+  PIRATED_CONTENT
+  PERSONAL_DATA_SHARING
+  SPAM_REFERRAL_FLOOD
+  OTHER
+}
+
+enum ModerationReportStatus {
+  OPEN
+  UNDER_REVIEW
+  ACTIONED
+  DISMISSED
+  ESCALATED
+}
+
+enum ModerationActionKind {
+  NUDGE
+  REMOVE
+  MUTE_24H
+  MUTE_7D
+  SUSPEND
+  BAN
+}
+
+enum ModerationAppealStatus {
+  PENDING
+  UNDER_REVIEW
+  UPHELD
+  OVERTURNED
+  EXPIRED
+}

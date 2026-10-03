@@ -1,0 +1,19 @@
+# Normalize all text to LF in the repo and in the working tree on every OS.
+# Without this, a Windows checkout CRLF-converts files, which (a) breaks any
+# byte-exact fixture (e.g. the resource-intelligence verified SHA-256) and
+# (b) can corrupt script parsing. LF everywhere keeps the baseline identical
+# on Windows, macOS, Linux, and CI.
+* text=auto eol=lf
+
+# Binary assets must never be line-ending converted.
+*.png  binary
+*.jpg  binary
+*.jpeg binary
+*.gif  binary
+*.webp binary
+*.ico  binary
+*.mp4  binary
+*.mov  binary
+*.woff  binary
+*.woff2 binary
+*.pdf  binary

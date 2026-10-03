@@ -1,0 +1,280 @@
+{
+  "slice": "corpus-intelligence and sports only",
+  "equations_file": "C:\\Users\\Garrett\\_research\\ctx-2026-10-03\\eng\\equations_stated.jsonl",
+  "owned_lines": 1421,
+  "functions_coded": 14,
+  "complex_blocked": 1061,
+  "not_complex_recorded": 360,
+  "blocked_file_rows": 1421,
+  "coded": [
+    {
+      "name": "drive_state_line",
+      "columns": [
+        "ydstogo",
+        "yardline_100"
+      ]
+    },
+    {
+      "name": "air_yards_to_sticks",
+      "columns": [
+        "air_yards",
+        "ydstogo"
+      ]
+    },
+    {
+      "name": "margin_residual",
+      "columns": [
+        "result",
+        "spread_line"
+      ]
+    },
+    {
+      "name": "total_residual",
+      "columns": [
+        "total",
+        "total_line"
+      ]
+    },
+    {
+      "name": "complete_minus_cp",
+      "columns": [
+        "complete_pass",
+        "cp"
+      ]
+    },
+    {
+      "name": "home_wp_minus_away_wp",
+      "columns": [
+        "home_wp",
+        "away_wp"
+      ]
+    },
+    {
+      "name": "h_minus_a_o_epa",
+      "columns": [
+        "h_o_epa",
+        "a_o_epa"
+      ]
+    },
+    {
+      "name": "h_minus_a_d_epa",
+      "columns": [
+        "h_d_epa",
+        "a_d_epa"
+      ]
+    },
+    {
+      "name": "h_minus_a_o_press",
+      "columns": [
+        "h_o_press",
+        "a_o_press"
+      ]
+    },
+    {
+      "name": "h_minus_a_d_press",
+      "columns": [
+        "h_d_press",
+        "a_d_press"
+      ]
+    },
+    {
+      "name": "h_minus_a_o_sr",
+      "columns": [
+        "h_o_sr",
+        "a_o_sr"
+      ]
+    },
+    {
+      "name": "epa_minus_clean_baseline",
+      "columns": [
+        "epa",
+        "clean_epa_baseline"
+      ]
+    },
+    {
+      "name": "team_points_from_lines",
+      "columns": [
+        "total_line",
+        "spread_line"
+      ]
+    },
+    {
+      "name": "comp_air_epa_minus_yac_epa",
+      "columns": [
+        "comp_air_epa",
+        "yac_epa"
+      ]
+    }
+  ],
+  "top_missing": [
+    [
+      "Σ_i",
+      34
+    ],
+    [
+      "Σ_j",
+      23
+    ],
+    [
+      "Σ_k",
+      17
+    ],
+    [
+      "p_",
+      16
+    ],
+    [
+      "otherwise",
+      10
+    ],
+    [
+      "x_",
+      9
+    ],
+    [
+      "y_",
+      8
+    ],
+    [
+      "y_t",
+      8
+    ],
+    [
+      "y_i",
+      7
+    ],
+    [
+      "w_i",
+      7
+    ],
+    [
+      "p_i",
+      7
+    ],
+    [
+      "X_t",
+      7
+    ],
+    [
+      "b_",
+      7
+    ],
+    [
+      "team",
+      7
+    ],
+    [
+      "S_",
+      7
+    ],
+    [
+      "x_i",
+      7
+    ],
+    [
+      "μ_i",
+      7
+    ],
+    [
+      "π_j",
+      7
+    ],
+    [
+      "f_r",
+      7
+    ],
+    [
+      "π_i",
+      7
+    ],
+    [
+      "runs",
+      6
+    ],
+    [
+      "x_t",
+      6
+    ],
+    [
+      "win",
+      6
+    ],
+    [
+      "Σ_t",
+      6
+    ],
+    [
+      "α_i",
+      6
+    ],
+    [
+      "S_c",
+      6
+    ],
+    [
+      "p_c",
+      6
+    ],
+    [
+      "τ_Out",
+      6
+    ],
+    [
+      "IN_1",
+      6
+    ],
+    [
+      "IN_2",
+      6
+    ],
+    [
+      "Y_t",
+      5
+    ],
+    [
+      "x_j",
+      5
+    ],
+    [
+      "max_",
+      5
+    ],
+    [
+      "games",
+      5
+    ],
+    [
+      "p_j",
+      5
+    ],
+    [
+      "P_",
+      5
+    ],
+    [
+      "s_",
+      5
+    ],
+    [
+      "s_t",
+      5
+    ],
+    [
+      "a_t",
+      5
+    ],
+    [
+      "baseline",
+      5
+    ]
+  ],
+  "refused_mappings": [
+    "EPA_no-pressure -> clean_epa_baseline",
+    "EPA_o -> epa or epa_press",
+    "EPA_sack -> sack",
+    "Elo_ij / Elo_O -> elo"
+  ],
+  "pit_rule_unused": "no function was coded, so no home-minus-away lag was applied",
+  "coded_source": "exact on-disk columns only; formulas from engine-plan equations.py + h_/a_ diffs; no score; no Hermes mind",
+  "scored": false
+}

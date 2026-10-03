@@ -1,0 +1,26 @@
+{
+  "status": "blocked",
+  "built": false,
+  "parquet": null,
+  "source_file": "C:\\Users\\Garrett\\Sports-wt-engineplan\\docs\\engine\\research\\2026-10-02\\corpus-deep\\deep\\c10\\buildable-systems.md",
+  "section": "SYS-24 Luck-layer margin pricer (edge-sheet)",
+  "lines": {
+    "inputs": "265-266",
+    "fair_margin": "268"
+  },
+  "quote_fair_margin": "fair_margin = (home_netEPA − away_netEPA) × 63 + 2.0.",
+  "quote_inputs": "home/away net EPA/play (garbage-time, kneel/spike, WP<0.05 excluded; OT retained), nflfastR cp/ep-family expected turnovers.",
+  "what_the_file_does_say": [
+    "Names home_netEPA and away_netEPA inside the fair_margin equation.",
+    "Calls the input home/away net EPA/play.",
+    "Names play filters: garbage-time excluded, kneel/spike excluded, WP<0.05 excluded, OT retained."
+  ],
+  "missing_definition": [
+    "Does not say how netEPA is computed from play-by-play or from an existing table.",
+    "Does not say the aggregation: per-play pool versus per-game rates; offense only versus net of opponent. The word net is a label, not a formula (no offense EPA minus EPA allowed, no opponent netting).",
+    "Does not name the EPA column or which plays are offensive versus defensive.",
+    "Names garbage-time but does not define it (no score differential, no separate WP cutoff beyond the listed WP<0.05 exclusion).",
+    "Does not state the team-week window (season-to-date, rolling, or otherwise)."
+  ],
+  "decision": "No netepa_pit.parquet. Definition was not invented."
+}

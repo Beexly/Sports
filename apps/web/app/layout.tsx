@@ -1,0 +1,277 @@
+import type { Metadata, Viewport } from "next";
+import Script from "next/script";
+import { jsonLdScript } from "@/lib/seo/json-ld";
+import { SITE_URL } from "@/lib/seo/site-url";
+import { Inter, Barlow_Condensed, Chakra_Petch } from "next/font/google";
+import "./globals.css";
+import {
+  BRAND_META,
+  BRAND_NAME,
+  BRAND_TAGLINE,
+  SOCIAL,
+  SUPPORT_EMAIL,
+} from "@/lib/brand";
+import { CommandPalette } from "@/components/ui/command-palette";
+import { SentryClientInit } from "@/components/observability/SentryClientInit";
+import {
+  shouldRenderCloudflareAnalytics,
+  shouldRenderMicrosoftClarity,
+} from "@/lib/analytics/provider-gating";
+
+// ONE FAMILY — design contract Law 1: evidence sets the rendering.
+//
+// A figure and its sample size must sit at the SAME optical size at n=10-29, so
+// the claim and its weakness are read in one glance. That is unachievable across
+// two families: a mono figure beside a sans caption reads as machine output
+// annotated by a human, which silently rebuilds the exact hierarchy Law 1 exists
+// to destroy, at the one moment it matters most.
+//
+// Inter carries every role. Tabular figures are enabled globally on `body` in
+// styles/design-tokens.css, which is what the numerals role actually needed —
+// column alignment, not a second typeface.
+//
+// Only --f-body is bound here. The remaining family vars (--f-display, --f-arch,
+// --f-display-tech, --f-numerals, --f-mono, --f-editorial) derive from it in
+// styles/design-tokens.css, so the 245 files using font-display / font-mono /
+// font-numerals / font-arch need no change.
+//
+// Retiring Exo 2, JetBrains Mono and Instrument Serif also removes three Google
+// font downloads from every route. Do not re-introduce a second family without
+// re-opening Law 1.
+const brandFont = Inter({
+  subsets: ["latin"],
+  weight: ["400", "500", "600"],
+  variable: "--f-body",
+  display: "swap",
+});
+
+// NEBULA v7 display faces (owner-approved 2026-09-10): Barlow Condensed
+// carries DISPLAY HEADLINES ONLY via --f-display; Chakra Petch carries the
+// wordmark via --f-word. Body, figures and numerals stay Inter with global
+// tabular figures — Law 1's evidence requirement (claim + sample size at the
+// same optical size) is untouched. next/font, zero added network requests.
+const displayFont = Barlow_Condensed({
+  subsets: ["latin"],
+  weight: ["500", "600", "700"],
+  variable: "--f-cond",
+  display: "swap",
+});
+
+const wordmarkFont = Chakra_Petch({
+  subsets: ["latin"],
+  weight: ["600", "700"],
+  variable: "--f-word",
+  display: "swap",
+});
+
+export const viewport: Viewport = {
+  themeColor: "#08090C",
+  width: "device-width",
+  initialScale: 1,
+};
+
+/**
+ * Root layout.
+ *
+ * Fonts are loaded through next/font and bound directly to the design-system
+ * CSS variables consumed by `styles/design-tokens.css` and Tailwind:
+ *   --f-display, --f-body, --f-numerals, --f-editorial (loaded here);
+ *   --f-arch and --f-mono are aliases in design-tokens.css so each family is
+ *   fetched exactly once.
+ *
+ * SEO foundation:
+ *  - Per-page <title>/<description> override the defaults below via each
+ *    page.tsx exporting its own `metadata`.
+ *  - JSON-LD (Organization + WebSite) is rendered in <head> so search engines
+ *    have a verified entity to attach signals to from day one.
+ *  - X handle wired in twitter.site/creator so attribution survives reshares.
+ */
+
+// SITE_URL is the single canonical base (lib/seo/site-url.ts): NEXT_PUBLIC_APP_URL
+// when set, else the www host. metadataBase + per-page canonicals resolve off it.
+const ORG_HANDLE = "@GalaxySportsAI";
+
+export const metadata: Metadata = {
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: BRAND_META.defaultTitle,
+    template: BRAND_META.titleTemplate,
+  },
+  description: BRAND_META.description,
+  keywords: [
+    "sports betting model",
+    "sports analytics platform",
+    "transparent sports picks",
+    "audited sports picks",
+    "calibrated betting confidence",
+    "sports betting intelligence",
+    "sports pick reasoning",
+    "sharp sports analytics",
+    "anti-tout sports model",
+  ],
+  alternates: {
+    canonical: "/",
+    types: {
+      "application/rss+xml": [
+        { url: "/podcast/feed.xml", title: "GSE Board Meeting podcast" },
+        { url: "/journal/rss.xml", title: "GSE Journal" },
+      ],
+    },
+  },
+  openGraph: {
+    type: "website",
+    title: BRAND_META.defaultTitle,
+    description: BRAND_TAGLINE,
+    siteName: BRAND_NAME,
+    // No url here on purpose: children inherit this whole object, and a
+    // hardcoded og:url would stamp every page's share card with the homepage
+    // URL. metadataBase + per-page canonicals resolve og:url correctly.
+    images: [
+      {
+        url: "/opengraph-image",
+        width: 1200,
+        height: 630,
+        alt: `${BRAND_NAME} · ${BRAND_TAGLINE}`,
+      },
+    ],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: BRAND_META.defaultTitle,
+    description: BRAND_TAGLINE,
+    site: ORG_HANDLE,
+    creator: ORG_HANDLE,
+    images: ["/opengraph-image"],
+  },
+  icons: {
+    // Official chrome emblem (Brand Bible v1.0) is the primary app/tab icon;
+    // the SVG fallback keeps a vector tab icon for browsers that prefer it.
+    icon: [
+      { url: "/brand/gse-emblem-64.png", type: "image/png", sizes: "64x64" },
+      { url: "/brand/gse-emblem.png", type: "image/png", sizes: "512x512" },
+      { url: "/favicon.svg", type: "image/svg+xml" },
+    ],
+    apple: [{ url: "/brand/gse-emblem-180.png", sizes: "180x180" }],
+  },
+  manifest: "/site.webmanifest",
+};
+
+// ──────────────────────────────────────────────────────────────────────────
+// JSON-LD — Organization + WebSite
+// ──────────────────────────────────────────────────────────────────────────
+
+const organizationJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "Organization",
+  name: BRAND_NAME,
+  alternateName: "GSE",
+  url: SITE_URL,
+  logo: `${SITE_URL}/brand/gse-emblem.png`,
+  description: BRAND_META.description,
+  sameAs: [
+    SOCIAL.x,
+    SOCIAL.instagram,
+    SOCIAL.threads,
+    SOCIAL.facebook,
+  ].filter(Boolean),
+  contactPoint: {
+    "@type": "ContactPoint",
+    contactType: "customer support",
+    email: SUPPORT_EMAIL,
+    availableLanguage: ["en"],
+  },
+};
+
+// No SearchAction: we do not ship a site-wide search endpoint. Pointing Google
+// at /picks would be dishonest while PUBLIC_PICKS is gated (503 feature_gate).
+const websiteJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: BRAND_NAME,
+  url: SITE_URL,
+};
+
+export default function RootLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  // One family for body/data, display faces for headlines/wordmark. Every
+  // other family token derives from --f-body in styles/design-tokens.css;
+  // --f-display resolves to --f-cond (Barlow Condensed). See above.
+  const fontVariables = `${brandFont.variable} ${displayFont.variable} ${wordmarkFont.variable}`;
+
+  return (
+    <html lang="en" className={`scroll-smooth ${fontVariables}`}>
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="" />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: jsonLdScript(organizationJsonLd),
+          }}
+        />
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: jsonLdScript(websiteJsonLd),
+          }}
+        />
+      </head>
+      <body className="min-h-screen antialiased">
+        <a
+          href="#main-content"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-[200] focus:rounded-md focus:bg-white focus:px-4 focus:py-2 focus:text-sm focus:font-semibold focus:text-black"
+        >
+          Skip to content
+        </a>
+        {children}
+        <CommandPalette />
+        {/* GalaxyCursor (FE-17) is mounted on the home hero only
+            (app/page.tsx), not globally — a custom cursor overlay on
+            data-dense surfaces (dashboard, board, stats) is a distraction
+            this product's "math you can read" positioning does not need. */}
+        {/* SentientShell (GhostJarvis "machine thoughts", a coin-flip "data
+            uncertainty" glitch, dream mode, thermal toggle) is no longer mounted
+            on public routes: first-person machine narration and a random
+            interference effect that claims uncertainty without a data signal
+            contradict "not AI, math you can read" and rule 1 (no fabricated
+            signals). The components remain for /cockpit use. */}
+        {/* Field: Nova explainer launcher hidden � chrome fought the instrument look */}
+        <SentryClientInit />
+
+        {/* ── Free analytics (prod-only, cookieless / consent-free) ────────── */}
+        {/* Each provider gates on its OWN identifier, not just the master flag
+            (OP-004): a missing token must fail that provider silently, never
+            emit a malformed request (e.g. a Clarity tag literally named
+            "undefined") and never take down a sibling provider whose token
+            IS configured. See lib/analytics/provider-gating.ts. */}
+        {shouldRenderCloudflareAnalytics(
+          process.env["NEXT_PUBLIC_ANALYTICS_ENABLED"],
+          process.env["NEXT_PUBLIC_CF_BEACON_TOKEN"],
+        ) && (
+          <Script
+            id="cf-beacon"
+            src="https://static.cloudflareinsights.com/beacon.min.js"
+            data-cf-beacon={`{"token":"${process.env["NEXT_PUBLIC_CF_BEACON_TOKEN"]}"}`}
+            strategy="afterInteractive"
+          />
+        )}
+
+        {shouldRenderMicrosoftClarity(
+          process.env["NEXT_PUBLIC_ANALYTICS_ENABLED"],
+          process.env["NEXT_PUBLIC_CLARITY_PROJECT_ID"],
+        ) && (
+          <Script id="ms-clarity" strategy="afterInteractive">
+            {`(function(c,l,a,r,i,t,y){
+                c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+                t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+                y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+              })(window,document,"clarity","script","${process.env["NEXT_PUBLIC_CLARITY_PROJECT_ID"]}");`}
+          </Script>
+        )}
+      </body>
+    </html>
+  );
+}

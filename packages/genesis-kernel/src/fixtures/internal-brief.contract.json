@@ -1,0 +1,43 @@
+{
+  "contractId": "genesis-fixture-internal-brief",
+  "version": "0.1.0",
+  "question": "Produce a source-grounded internal game brief from already-vetted evidence without public publication.",
+  "requiredOutputs": [
+    {
+      "type": "INTERNAL_EVIDENCE_BRIEF",
+      "schemaVersion": "0.1.0",
+      "requiresSourceAttribution": true
+    }
+  ],
+  "temporalCutoff": {
+    "mode": "KNOWLEDGE_TIME",
+    "asOf": "2026-07-17T12:00:00.000Z"
+  },
+  "evidencePolicy": {
+    "minimumTier": 2,
+    "requireClearance": true,
+    "allowSyntheticEvidence": false,
+    "requireIndependentOrigins": 1
+  },
+  "privacy": {
+    "dataClass": "INTERNAL_NON_PERSONAL",
+    "remoteExecutionAllowed": true,
+    "retention": "EPHEMERAL"
+  },
+  "uncertainty": {
+    "allowAbstention": true,
+    "requireLimitationDisclosure": true,
+    "maximumUnsupportedClaimCount": 0
+  },
+  "proof": {
+    "requirePlanReceipt": true,
+    "requireCapabilityRevisions": true,
+    "requireInputHashes": true
+  },
+  "budget": {
+    "maximumCostUsd": 0.05,
+    "maximumLatencyMs": 10000,
+    "maximumExternalCalls": 1
+  },
+  "audience": "COCKPIT_DRAFT"
+}

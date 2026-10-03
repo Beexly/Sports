@@ -1,0 +1,197 @@
+{
+ "not_a_mint": true,
+ "rule": "score only rows where the added column is non-null",
+ "rows": [
+  {
+   "column": "weekly_tendencies__shotgun_rate",
+   "n_present": 1118,
+   "n_scored": 592,
+   "seasons": [
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "delta_ll": 0.000731,
+   "ci95_ll": [
+    -0.000653,
+    0.002211
+   ],
+   "clears_zero": false
+  },
+  {
+   "column": "def_pressure_weekly__db",
+   "n_present": 1118,
+   "n_scored": 592,
+   "seasons": [
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "delta_ll": 0.002567,
+   "ci95_ll": [
+    0.000195,
+    0.005107
+   ],
+   "clears_zero": false
+  },
+  {
+   "column": "weekly_tendencies__n_plays",
+   "n_present": 1118,
+   "n_scored": 592,
+   "seasons": [
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "delta_ll": -6.4e-05,
+   "ci95_ll": [
+    -0.000556,
+    0.000405
+   ],
+   "clears_zero": false
+  },
+  {
+   "column": "n_eff",
+   "n_present": 992,
+   "n_scored": 533,
+   "seasons": [
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "delta_ll": 0.000679,
+   "ci95_ll": [
+    -0.000824,
+    0.002238
+   ],
+   "clears_zero": false
+  },
+  {
+   "column": "hhi",
+   "n_present": 992,
+   "n_scored": 533,
+   "seasons": [
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "delta_ll": 0.000667,
+   "ci95_ll": [
+    -0.000858,
+    0.002048
+   ],
+   "clears_zero": false
+  },
+  {
+   "column": "weekly_tendencies__quick_game_rate",
+   "n_present": 1118,
+   "n_scored": 592,
+   "seasons": [
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "delta_ll": -8e-05,
+   "ci95_ll": [
+    -0.000382,
+    0.000244
+   ],
+   "clears_zero": false
+  },
+  {
+   "column": "top2_share",
+   "n_present": 992,
+   "n_scored": 533,
+   "seasons": [
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "delta_ll": 0.000318,
+   "ci95_ll": [
+    -0.00087,
+    0.001463
+   ],
+   "clears_zero": false
+  },
+  {
+   "column": "adjustments__mahal_dist",
+   "n_present": 1102,
+   "n_scored": 592,
+   "seasons": [
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "delta_ll": -6.9e-05,
+   "ci95_ll": [
+    -0.000396,
+    0.000186
+   ],
+   "clears_zero": false
+  },
+  {
+   "column": "cpoe_pbp",
+   "n_present": 977,
+   "n_scored": 540,
+   "seasons": [
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "delta_ll": -0.003645,
+   "ci95_ll": [
+    -0.006814,
+    -0.000775
+   ],
+   "clears_zero": true
+  },
+  {
+   "column": "adot",
+   "n_present": 977,
+   "n_scored": 540,
+   "seasons": [
+    2022,
+    2023,
+    2024,
+    2025,
+    2026
+   ],
+   "delta_ll": -0.005038,
+   "ci95_ll": [
+    -0.008093,
+    -0.00202
+   ],
+   "clears_zero": true
+  }
+ ],
+ "clears_zero": [
+  "cpoe_pbp",
+  "adot"
+ ],
+ "season_split_adot": {
+  "2023": {"n": 239, "delta_ll": 0.001309},
+  "2024": {"n": 254, "delta_ll": -0.010545},
+  "2025": {"n": 243, "delta_ll": -0.000014},
+  "2026": {"n": 43, "delta_ll": -0.0009}
+ },
+ "not_mint": "The pooled present-row interval excludes 0 because 2024 carries it. 2023 is worse. 2025 is flat. Full-sample present-flag delta is +0.000219 and the interval covers 0. Not added."
+}

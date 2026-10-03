@@ -1,0 +1,54 @@
+# FABLE/NFL Evidence Layer
+
+This folder is the repo-visible evidence layer for the FABLE/NFL work in the real BeeXly/Sports checkout. It records what exists, what was added, what remains unverified, and which claims must stay blocked until there is code, test, doc, or command output proof.
+
+## Reviewer Start Here
+
+This system is a repo-native evidence machine for FABLE/NFL and AWS research. It separates lawful, measured, falsifiable work from unsupported claims.
+
+What is proven:
+- Source status can be adapted from the existing rights registry.
+- FABLE uncertainty, labeling, drift, parity, AWS gate, and evidence harness primitives have targeted tests.
+- AWS deploy, paid-resource, and decision-engine gates default off for risky AWS action.
+- GitHub navigation exists from the root README into this folder.
+- A public app route at `/fable` can summarize the local evidence ledgers without live AWS calls or unsupported claims.
+
+What is not proven:
+- Any model-performance gain.
+- Any broad competitive claim.
+- Any live AWS deployment or paid labeling setup.
+- Any legal clearance beyond source-specific registry evidence.
+
+How to verify locally:
+
+```bash
+npm run fable:evidence
+npm run test --workspace=apps/web -- lib/fable/evidence/evidence-harness.test.ts
+npm run test --workspace=apps/web -- lib/fable/public-summary.test.ts lib/fable/evidence/evidence-harness.test.ts __tests__/next-config-policy.test.ts __tests__/public-copy-scan-strong.test.ts
+```
+
+AWS posture:
+- AWS docs here are research and decision records only.
+- All AWS work is no-cost/local unless the owner explicitly approves a gated spike.
+
+Needs approval:
+- AWS deploys, paid resources, external-source automation, ML runtime additions, partner demos, and any public claim using unsupported historical phrases.
+
+Current scope:
+- NFL data and metrics are anchored to existing repo surfaces in `apps/web/lib/nflverse`, `apps/web/lib/metrics`, and `packages/data-ingestion/src/nflverse-*`.
+- Calibration and drift are anchored to `packages/prediction-engine/src/probability-calibration.ts`, `calibration-map.ts`, and `calibration-drift.ts`.
+- Source rights are anchored to `apps/web/lib/scraping/source-rights-registry.ts`.
+- New FABLE primitives live in `apps/web/lib/fable`.
+- Public evidence summary code lives in `apps/web/lib/fable/public-summary.ts` and renders through `apps/web/app/fable/page.tsx`.
+- AWS work is design, local guardrails, and zero-cost skeletons only.
+
+Nothing in this folder changes provider accounts, deploys infrastructure, creates paid labeling jobs, or grants rights beyond the existing registry.
+
+Navigation:
+Root README -> `docs/fable/README.md` -> `docs/fable/INDEX.md` -> `docs/fable/evidence/EVIDENCE_INDEX.md` -> `docs/fable/master/MASTER_FINAL_REPORT.md`.
+
+Personal AWS learning bridge:
+- Public-safe learning proof lives under `docs/personal/aws/`.
+- Learning evidence validates through `schemas/fable/personal-learning-evidence.schema.json`.
+- Badge/course proof is not public evidence until owner-approved.
+- The bridge improves AWS service-fit, cost, IAM, agent, and partner architecture judgment without touching AWS accounts.

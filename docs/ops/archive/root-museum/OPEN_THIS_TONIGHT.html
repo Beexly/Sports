@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Open this — Sports Intelligence OS · Picks are rendering</title>
+<style>
+  body { font-family: ui-sans-serif, system-ui, -apple-system, sans-serif; background: #0a0a0a; color: #e5e5e5; margin: 0; padding: 3rem 2rem; }
+  .wrap { max-width: 42rem; margin: 0 auto; text-align: center; }
+  h1 { color: #fff; font-size: 1.6rem; margin: 0 0 1rem 0; }
+  .lede { color: #a3a3a3; line-height: 1.55; margin: 0 0 1.25rem 0; }
+  .pills { margin-bottom: 1.25rem; }
+  .pill { display: inline-block; padding: 0.2rem 0.55rem; border-radius: 999px; font-size: 0.7rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; margin-right: 0.4rem; margin-bottom: 0.4rem; }
+  .pill.green { background: #0f3920; color: #6ee7b7; }
+  .pill.warn { background: #4a3500; color: #fcd34d; }
+  .cta { display: inline-block; margin-top: 1.25rem; background: #1e40af; color: #fff; padding: 0.85rem 1.7rem; border-radius: 0.5rem; font-weight: 600; text-decoration: none; font-size: 0.95rem; }
+  .cta:hover { background: #2563eb; }
+  .alt { display: inline-block; margin: 0.5rem 0 0 0.5rem; background: transparent; color: #93c5fd; padding: 0.85rem 1.2rem; border-radius: 0.5rem; border: 1px solid #1e3a8a; text-decoration: none; font-size: 0.85rem; }
+  .quiet { color: #71717a; font-size: 0.75rem; margin-top: 2rem; }
+  code { background: #18181b; padding: 0.15rem 0.4rem; border-radius: 0.25rem; color: #fcd34d; font-size: 0.85em; }
+  .summary { background: #171717; border: 1px solid #262626; border-radius: 0.75rem; padding: 1rem 1.25rem; margin: 1.5rem 0; text-align: left; }
+  .summary p { margin: 0.4rem 0; font-size: 0.85rem; color: #d4d4d4; }
+  .summary strong { color: #fff; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>Picks are rendering — dashboard + Jarvis ready</h1>
+  <p class="lede">
+    Open the snapshot landing for a one-click tour. Or boot the live dev
+    server with the flags noted below.
+  </p>
+
+  <div class="pills">
+    <span class="pill green">10 sample picks</span>
+    <span class="pill green">13 / 13 routes 200</span>
+    <span class="pill green">303 / 303 tests</span>
+    <span class="pill green">Build pass</span>
+    <span class="pill warn">Stub mode</span>
+  </div>
+
+  <a class="cta" href="reports/launch-night/snapshots/index.html">View snapshots →</a>
+  <a class="alt" href="reports/launch-night/run-dashboard-tonight.md">Read the report</a>
+
+  <div class="summary">
+    <p><strong>What you'll see:</strong> /dashboard with a "Today's picks" list and a "Sample mode" pill; /picks rendering the full 10-pick slate; /cockpit (Jarvis) with launch status, sport breakdown ("NBA 3 · MLB 3 · NFL 2 · NHL 2"), today's-picks pill, recommended next actions, and explicit safety warnings for stub-mode + demo.</p>
+    <p><strong>What's gated:</strong> "Verified Record" still reads "Collecting…" and the past-performance disclaimer is intact. <code>publicWinRate</code> stays null. No fake performance claim is published.</p>
+    <p><strong>To switch to live:</strong> set <code>DATABASE_URL</code>, <code>FORCE_REAL_PRISMA=true</code>, unset <code>DEMO_PICKS_ENABLED</code>, run ingestion, wait for canonical settled picks.</p>
+  </div>
+
+  <div class="summary" style="border-color:#1e3a8a;background:#0c1729;">
+    <p><strong>To launch for real (in order):</strong></p>
+    <p>1. Stand up real Postgres → set <code>DATABASE_URL</code> + <code>DIRECT_URL</code>, run <code>npm run db:push</code> to create the schema, <code>npm run db:generate</code> for the client.</p>
+    <p>2. Set <code>FORCE_REAL_PRISMA=true</code> and unset <code>DEMO_PICKS_ENABLED</code> in <code>apps/web/.env.local</code>.</p>
+    <p>3. Add <code>THE_ODDS_API_KEY</code>, <code>STRIPE_SECRET_KEY</code> + <code>STRIPE_WEBHOOK_SECRET</code>, <code>GOOGLE_CLIENT_ID</code> + <code>GOOGLE_CLIENT_SECRET</code>, <code>ANTHROPIC_API_KEY</code>.</p>
+    <p>4. Run the ingestion worker. Wait for the canonical settled pick count to reach 100. Jarvis will switch from <strong>NOT_READY_VALIDATION</strong> to <strong>LAUNCH_READY_PENDING_EXTERNAL_CONFIG</strong> to <strong>LAUNCH_READY</strong>.</p>
+    <p>5. Flip <code>PERFORMANCE_STATS_ENABLED=true</code>. Then <code>git add -A &amp;&amp; git commit -m "feat: launch-night observability" &amp;&amp; git push</code>.</p>
+    <p>6. Delete <code>_overnight_quarantine/</code> from the workspace folder.</p>
+  </div>
+
+  <p class="quiet">Live dev server: <code>npm install &amp;&amp; npm run dev</code> from this folder with <code>apps/web/.env.local</code> containing <code>DEV_FAKE_ADMIN=true</code>, <code>DATABASE_URL=stub</code>, <code>DEMO_PICKS_ENABLED=true</code>, <code>PUBLIC_PICKS_ENABLED=true</code>. Then open <code>http://localhost:3000/cockpit</code>.</p>
+</div>
+</body>
+</html>

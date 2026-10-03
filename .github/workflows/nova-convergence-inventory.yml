@@ -1,0 +1,100 @@
+name: NOVA convergence inventory
+
+# Deterministic branch inventory + receipt verification (directive section 3).
+#
+# Deliberately NOT on push: this is an on-demand evidence tool, not a per-push
+# gate. It runs when
+#   1. manually dispatched with explicit base/head refs, or
+#   2. a PR is labeled `nova-convergence-inventory` (label-gated so it never
+#      fires on every PR update).
+on:
+  workflow_dispatch:
+    inputs:
+      base:
+        description: "Base ref (branch or SHA)"
+        required: true
+        default: "main"
+      head:
+        description: "Head ref (branch or SHA)"
+        required: true
+        default: "HEAD"
+  pull_request:
+    types: [labeled]
+
+concurrency:
+  group: nova-convergence-inventory-${{ github.head_ref || github.ref_name }}
+  cancel-in-progress: true
+
+jobs:
+  inventory:
+    name: Build + verify convergence inventory
+    # Label gate: for PR events only run when the inventory label was applied.
+    if: github.event_name == 'workflow_dispatch' || github.event.label.name == 'nova-convergence-inventory'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # full history: merge-base needs both sides
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+
+      - name: Install dependencies (typescript compiler API)
+        run: npm ci --no-audit --no-fund
+
+      - name: Resolve refs
+        id: refs
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            echo "base=${{ github.event.inputs.base }}" >> "$GITHUB_OUTPUT"
+            echo "head=${{ github.event.inputs.head }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "base=${{ github.event.pull_request.base.sha }}" >> "$GITHUB_OUTPUT"
+            echo "head=${{ github.event.pull_request.head.sha }}" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build inventory (exit 1 = collisions, exit 2 = incomplete scan)
+        id: build
+        run: |
+          set +e
+          node scripts/nova/build-convergence-inventory.mjs \
+            --base "${{ steps.refs.outputs.base }}" \
+            --head "${{ steps.refs.outputs.head }}" \
+            --out reports/nova/convergence-ci
+          code=$?
+          echo "exit_code=$code" >> "$GITHUB_OUTPUT"
+          # Fail the job on incomplete scan or internal error immediately;
+          # collisions (1) still upload evidence first and fail at the end.
+          if [ "$code" -ge 2 ]; then exit "$code"; fi
+
+      - name: Verify committed evidence (if present on this ref)
+        run: |
+          if [ ! -f reports/nova/convergence/NOVA_CONVERGENCE_RECEIPT.json ]; then
+            echo "no committed receipt on this ref; skipping evidence verification"
+            exit 0
+          fi
+          base_sha=$(node -p "require('./reports/nova/convergence/NOVA_CONVERGENCE_RECEIPT.json').refs.baseSha")
+          head_sha=$(node -p "require('./reports/nova/convergence/NOVA_CONVERGENCE_RECEIPT.json').refs.headSha")
+          if ! git cat-file -e "$base_sha" 2>/dev/null || ! git cat-file -e "$head_sha" 2>/dev/null; then
+            # Environment limitation (SHA not reachable on this runner), not an
+            # evidence judgment. Never treated as verification success.
+            echo "receipt SHAs ($base_sha / $head_sha) not reachable on this runner; evidence NOT verified here"
+            exit 0
+          fi
+          node scripts/nova/verify-convergence-inventory.mjs
+
+      - name: Upload inventory artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: nova-convergence-inventory
+          path: reports/nova/convergence-ci/
+          if-no-files-found: error
+
+      - name: Fail on collisions
+        if: steps.build.outputs.exit_code != '0'
+        run: |
+          echo "convergence inventory exited ${{ steps.build.outputs.exit_code }} (1 = collisions found)"
+          exit 1

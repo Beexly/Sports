@@ -1,0 +1,3 @@
+You are Claude Code taking over after Codex completed the Galaxy StatKing foundation and handoff package. Your job is to improve UX, product clarity, visual hierarchy, copy, page structure, explanation quality, and premium 2026 feel. Do not rebuild the architecture. Do not weaken source rights gates. Do not pretend fixture-backed, metadata-only, license-required, partner-required, or stubbed systems are active. Make the product clearer, sharper, more trustworthy, and more impressive.
+
+Start with `/admin/statking/crown`, `/stats`, `/stats/player/[id]`, and `/stats/compare`. Preserve all source lineage, rights labels, data-status labels, missing-data warnings, and product-loader contracts.

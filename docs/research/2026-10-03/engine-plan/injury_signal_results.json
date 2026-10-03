@@ -1,0 +1,37 @@
+{
+ "results": {
+  "indep elo+qb": {
+   "ll": 0.6309,
+   "coefs_last": {
+    "elo": 0.501,
+    "qb": 0.383
+   }
+  },
+  "indep elo+qb+inj": {
+   "ll": 0.6286,
+   "coefs_last": {
+    "elo": 0.492,
+    "qb": 0.386,
+    "inj_off": -0.121,
+    "inj_def": -0.06
+   }
+  },
+  "offset qb+elo_res": {
+   "ll": 0.6078,
+   "coefs_last": {
+    "qb": 0.049,
+    "elo_res": -0.019
+   }
+  },
+  "offset qb+elo_res+inj": {
+   "ll": 0.6072,
+   "coefs_last": {
+    "qb": 0.023,
+    "elo_res": -0.01,
+    "inj_off": -0.016,
+    "inj_def": -0.002
+   }
+  }
+ },
+ "close": 0.6070395437731116
+}

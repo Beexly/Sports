@@ -1,0 +1,1 @@
+export function detectConflicts(records:any[]){return records.filter((r,i)=>records.findIndex(x=>x.entity_id===r.entity_id&&x.value!==r.value)!==i).map((r,i)=>({conflict_id:`conflict_${i+1}`,entity_type:r.entity_type,entity_id:r.entity_id,conflict_type:r.type||"value_mismatch",severity:"review",recommended_resolution:"prefer higher trust source",confidence:0.7}))}

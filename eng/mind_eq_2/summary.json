@@ -1,0 +1,150 @@
+{
+  "slice": "mind_eq_2 corpus-deep docs plus agent-bus sports and corpus-intelligence; not arxiv-sweep",
+  "equations_file": "C:\\Users\\Garrett\\_research\\ctx-2026-10-03\\eng\\equations_stated.jsonl",
+  "files_scanned": 3667,
+  "owned_statements": 12722,
+  "functions_coded": 1,
+  "complex_blocked": 12209,
+  "not_complex_recorded": 512,
+  "blocked_file_rows": 12721,
+  "coded": [
+    {
+      "name": "score_drive",
+      "columns": [
+        "yardline_100",
+        "ydstogo"
+      ],
+      "statement": "score_drive ≈ sin( | -0.2007*ydstogo + min(0.0446*yardline_100 - 2.3621, 0.2007*ydstogo - 1.0574) + 1.0574 |^0.5 )",
+      "source_path": "corpus-deep / agent-bus sports briefs"
+    }
+  ],
+  "top_missing": [
+    [
+      "OTHER",
+      280
+    ],
+    [
+      "test",
+      251
+    ],
+    [
+      "data",
+      249
+    ],
+    [
+      "calibration",
+      243
+    ],
+    [
+      "games",
+      224
+    ],
+    [
+      "VERIFIED",
+      222
+    ],
+    [
+      "team",
+      219
+    ],
+    [
+      "never",
+      201
+    ],
+    [
+      "gate",
+      198
+    ],
+    [
+      "NFL",
+      190
+    ],
+    [
+      "error",
+      189
+    ],
+    [
+      "TRUST-SIGNAL",
+      188
+    ],
+    [
+      "score",
+      185
+    ],
+    [
+      "one",
+      184
+    ],
+    [
+      "win",
+      180
+    ],
+    [
+      "market",
+      178
+    ],
+    [
+      "GSE",
+      175
+    ],
+    [
+      "coverage",
+      173
+    ],
+    [
+      "baseline",
+      168
+    ],
+    [
+      "best",
+      162
+    ],
+    [
+      "game",
+      159
+    ],
+    [
+      "Brier",
+      155
+    ],
+    [
+      "home",
+      153
+    ],
+    [
+      "any",
+      153
+    ],
+    [
+      "rule",
+      152
+    ],
+    [
+      "average",
+      144
+    ],
+    [
+      "season",
+      144
+    ],
+    [
+      "engine",
+      143
+    ],
+    [
+      "edge",
+      142
+    ],
+    [
+      "total",
+      138
+    ]
+  ],
+  "refused_mappings": [
+    "EPA_no-pressure -> clean_epa_baseline",
+    "EPA_o -> epa or epa_press",
+    "EPA_sack -> sack",
+    "Elo subscript -> elo"
+  ],
+  "scored": false
+}

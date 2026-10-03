@@ -1,0 +1,15 @@
+#!/usr/bin/env sh
+# Pre-commit guardrail (BS-040): block commits that contain a real secret.
+# Registered via `core.hooksPath=.githooks` (set automatically by the repo's
+# `prepare` npm script; or run `node scripts/setup-git-hooks.mjs` manually).
+#
+# Scans only the STAGED files, so it is fast. To bypass in a genuine
+# emergency: `git commit --no-verify` (do not make a habit of it).
+
+node scripts/guardrails/secret-scan.mjs
+status=$?
+if [ "$status" -ne 0 ]; then
+  echo "pre-commit: secret-scan blocked this commit (see above)." 1>&2
+  exit "$status"
+fi
+exit 0

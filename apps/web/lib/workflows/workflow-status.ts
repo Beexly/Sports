@@ -1,0 +1,3 @@
+export const WORKFLOW_STATUSES = ["DESIGNED", "DRAFT_ONLY", "MANUAL", "PARTIAL", "BLOCKED_BY_DATA", "BLOCKED_BY_RIGHTS", "BLOCKED_BY_INFRA", "NEEDS_OWNER_APPROVAL", "NEEDS_CLAUDE_REVIEW"] as const;
+export type WorkflowStatus = (typeof WORKFLOW_STATUSES)[number];
+export type SafeAutomationLevel = "OBSERVE_ONLY" | "DRAFT_AND_ROUTE" | "MANUAL_REVIEW";

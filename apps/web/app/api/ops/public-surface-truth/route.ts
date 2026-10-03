@@ -1,0 +1,1127 @@
+import { NextRequest, NextResponse } from "next/server";
+// isContestsPublic is still reported below. The contests SURFACE is gone, but
+// this endpoint is the operator truth surface: saying "contests is dark" is
+// exactly the fact an operator needs, and a silently-missing key would read as
+// "unknown" rather than "deliberately off". The gate itself stays in
+// public-surface-gate.ts for the same reason.
+import { isContestsPublic, isStatsPublic, PUBLIC_NAV_POLICY } from "@/lib/launch/public-surface-gate";
+import { resolveWaitlistStorageMode } from "@/lib/gse/waitlist-store";
+import { consumeRateLimit, clientIp } from "@/lib/api/rate-limit";
+import { HANDLED_STRIPE_WEBHOOK_EVENTS } from "@/lib/billing/stripe-webhook-events";
+import { isStubMode, isDemoPicksEnabled, db } from "@sports/db";
+import { getReadinessGates, getPlatformConfig } from "@sports/prediction-engine";
+import { listEpisodes } from "@/lib/podcast/episodes";
+import { listIssues } from "@/lib/newsletter/issues";
+import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
+import { loadSettlementBreakdown } from "@/lib/performance/settlement-breakdown";
+import { loadCreditStackPosture } from "@/lib/ops/credit-stack-posture";
+import { evaluateRevenueLadder } from "@/lib/autonomy/revenue-ladder";
+import { loadPublicClvPolicy, computeClvPushDoctrineRates } from "@/lib/performance/public-clv-policy";
+import { evaluatePhaseAdvance } from "@/lib/pricing/phase-readiness";
+import {
+  STALE_PENDING_PICK_MAX_AGE_DAYS,
+  staleUnstartedPublishedPendingWhere,
+} from "@/lib/board/stale-pick-policy";
+import { loadMarketCoverage } from "@/lib/board/market-coverage";
+import { loadConfidenceTail } from "@/lib/calibration/confidence-tail";
+import { loadRankingBasisCensus } from "@/lib/calibration/ranking-basis-census";
+import {
+  assessOddsLineArchiveFreshness,
+  readOddsLineArchiveFreshnessInput,
+  type OddsLineArchiveFreshnessResult,
+  type OddsLineArchiveFreshnessThresholds,
+} from "@/lib/ops/odds-line-archive-freshness";
+
+/** A read-only posture field must never take the whole truth surface down: any
+ *  throw (including a synchronous one from a partial client) reads as null. */
+async function safeRead<T>(fn: () => Promise<T>): Promise<T | null> {
+  try {
+    return await fn();
+  } catch {
+    return null;
+  }
+}
+import { buildFounderNextSteps } from "@/lib/ops/founder-next-steps";
+import { isSignalBoardSlateStale, isMarketBoardOddsStale } from "@/lib/data-reliability/public-freshness-gate";
+import { boardSurfacePosture } from "@/lib/board/board-surface-policy";
+import { loadBillingMoneyPosture } from "@/lib/ops/billing-money-posture";
+import { loadAutonomyPosture } from "@/lib/ops/autonomy-posture";
+import { surveyLineIntegrity } from "@/lib/settlement/line-integrity-lane";
+import { loadStripeWebhookHostsPosture } from "@/lib/ops/stripe-webhook-hosts";
+import { loadWaitlistPosture } from "@/lib/ops/waitlist-posture";
+import { summarizeFreeSpineOddsPath } from "@/lib/ops/free-spine-odds-path";
+import { loadCanonicalSamplePosture } from "@/lib/ops/canonical-sample-posture";
+import {
+  calibrationDriftPosture,
+  loadCalibrationOpsSurface,
+} from "@/lib/ops/calibration-eligibility-durable";
+import { aciPublicPosture } from "@/lib/calibration/aci-durable";
+import { loadProvenPathSurface } from "@/lib/ops/proven-path-seed";
+import { buildMurphyResSnapshot } from "@/lib/calibration/murphy-res-definition";
+import { conformalRdPosture } from "@/lib/calibration/conformal-calibration";
+import { ISOTONIC_ALTERNATIVES } from "@/lib/calibration/isotonic-alternatives";
+import { loadMapBakeoff, summarizeMapBakeoff } from "@/lib/ops/map-bakeoff-durable";
+import { productBoardSurfaces } from "@/lib/product/board-surfaces";
+import { rankingPauseApplyPosture } from "@/lib/calibration/ranking-pause-apply";
+import { selectiveRuntimePosture } from "@/lib/calibration/selective-publish-runtime";
+import { loadRankingPauseApply } from "@/lib/ops/ranking-pause-durable";
+import { assessSchedulerLiveness } from "@/lib/ops/scheduler-liveness";
+import { maybeRunTrafficHeartbeat } from "@/lib/ops/traffic-heartbeat";
+import {
+  FREE_SPINE_DURABLE_SLA_MS,
+  freeSpineSnapAgeMs,
+  freeSpineWithinSla,
+  resolveBestFreeSpineSnapshot,
+} from "@/lib/data-sources/free-spine-durable";
+import { timingSafeEqual } from "node:crypto";
+import {
+  oddsApiKeyPresence,
+  rundownApiKeyPresence,
+  emptyOddsCreditTruth,
+  loadOddsCreditTruth,
+  type OddsCreditLedgerDb,
+  type OddsCreditTruth,
+} from "@sports/data-ingestion";
+
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+/**
+ * This route was DOWN in production before this was set.
+ *
+ * Measured 2026-09-13 18:5x UTC, seven consecutive requests: no response inside
+ * 45s (curl exit 28, HTTP 000) while / , /board and /picks all returned 200 and
+ * /api/board/state returned 200 in 14.7s. With no `maxDuration` export a Vercel
+ * Node function takes the account default, and this handler does 21 awaits —
+ * most of them database round trips — across 1000 lines. It was being killed
+ * mid-flight every time.
+ *
+ * 120s matches its sibling ops route, api/ops/settlement-rca. That is the
+ * precedent in this directory; every cron route sets its own ceiling too, and
+ * vercel.json declares no global `functions` config, so an unset export means
+ * the default and nothing else.
+ *
+ * Raising the ceiling is not a fix for the handler being slow. This is the
+ * surface that reports whether the product is telling the truth about itself,
+ * so it failing silently is the worst possible thing for it to do — the ceiling
+ * buys back visibility. If it starts returning 500 rather than timing out, the
+ * cause is memory, not duration, and that is a different fix.
+ */
+export const maxDuration = 120;
+
+/** Features expected on main that older deploys may lack — diagnose lag. */
+const MAIN_FEATURE_MARKERS = [
+  "free-path-clv-grade",
+  "free-path-clv-repair",
+  "free-path-snapshot-outcome",
+  "free-path-date-targeted-scores",
+  "settle-picks-hourly",
+  "overdue-first-stp",
+  "postgres-public-form-rate-limit",
+  "ops-truth-detail-auth",
+  "gate-honesty-feature-gate",
+  "free-lane-content-wire",
+  "credit-stack-posture",
+  "jynx-unified-intelligence",
+  "azure-foundry-provider",
+  "cipher-claim-reward-honesty",
+  "open-weight-free-lane-secondary",
+  "founder-next-steps-queue",
+  "web-standards-trust-surfaces",
+  "free-lane-content-smoke",
+  "jynx-multicloud-failover-smoke",
+  "free-path-team-game-log-repair",
+  "revenue-ladder-ops-surface",
+  "free-spine-durable-i3-i8",
+  "autonomy-free-spine-age",
+  "free-spine-empty-not-critical-i5",
+  "impeccable-probe-harness",
+  "checkout-revenue-capability-probe",
+  "billing-money-posture-ops-surface",
+  "autonomy-resolve-best-free-spine",
+  "free-spine-prefer-fresher-durable",
+  "free-spine-coverage-founder-queue",
+  "autonomy-posture-ops-surface",
+  "free-spine-odds-path-summary",
+  "impeccable-multi-path-probe",
+  "checkout-pricing-alias",
+  "stripe-webhook-hosts-posture",
+  "founder-queue-low-noise",
+  "waitlist-posture-ops-surface",
+  "free-spine-parallel-probes",
+  "canonical-sample-ops-truth",
+  "odds-inserting-freshness-ops",
+  "calibration-eligibility-engine",
+  "calibration-auto-publish-policy",
+  "ranking-surface-sort",
+  "independent-ranking-v5.2.2",
+  "public-dark-reason-taxonomy",
+  "news-rss-curated-defaults",
+  "b2b-signals-rankingp",
+  "tools-line-movement",
+  "session-leverage-atlas",
+  "ranking-power-control-plane",
+  "rpcp-conformal-bridge-offline",
+  "product-board-surfaces-posture",
+  "ranking-pause-apply-default-off",
+  "why-board-quiet-draft",
+  "b2b-experimental-openapi",
+  "pick-card-rankingp",
+  "generate-signal-slate",
+  "signal-board-launch-path",
+] as const;
+
+function hasOpsAuth(request: Request): boolean {
+  const secret = process.env.CRON_SECRET?.trim();
+  if (!secret) return false;
+  const auth = request.headers.get("authorization") ?? "";
+  const expected = `Bearer ${secret}`;
+  try {
+    const a = Buffer.from(auth);
+    const b = Buffer.from(expected);
+    return a.length === b.length && timingSafeEqual(a, b);
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * 2026-09-19: read-only observability field. odds_line_snapshots silently
+ * stopped being written for three weeks (2026-08-22 to 2026-09-13, see
+ * AGENTS.md), and nothing here would have caught it: a grep proves nothing
+ * in the repo calls lib/ops/odds-line-archive-freshness.ts. This wires it in.
+ *
+ * ADDITIVE ONLY: this field reports a state, it never gates
+ * PUBLIC_PICKS / STATS_PUBLIC / LIVE_BOARD / PERFORMANCE_STATS or any other
+ * existing gate, floor, or published number on this surface.
+ *
+ * Thresholds are THIS CALL SITE'S OWN CHOICE, not a library default. The
+ * assessor deliberately refuses to default them (see that module's header).
+ * degradedAfterMinutes: 60, staleAfterMinutes: 360 (6h) are stated here.
+ */
+const ODDS_LINE_ARCHIVE_FRESHNESS_THRESHOLDS: OddsLineArchiveFreshnessThresholds = {
+  degradedAfterMinutes: 60,
+  staleAfterMinutes: 360,
+};
+
+/**
+ * Fail-closed read: stub mode (no live DB to read), a DB error inside the
+ * reader, or any unexpected synchronous throw all resolve to the same
+ * "absent" input, which the assessor's own rule 3 judges STALE, never
+ * healthy. Mirrors the `isMarketBoardOddsStale().catch(() => true)` pattern
+ * already used on this route: an absent reading must never render as
+ * "everything is fine".
+ */
+async function readOddsLineArchiveFreshnessSafely(): Promise<OddsLineArchiveFreshnessResult> {
+  if (isStubMode()) {
+    return assessOddsLineArchiveFreshness(
+      { mostRecentCapturedAt: null },
+      ODDS_LINE_ARCHIVE_FRESHNESS_THRESHOLDS,
+    );
+  }
+  try {
+    const read = await readOddsLineArchiveFreshnessInput({
+      db,
+      recentWindowMinutes: ODDS_LINE_ARCHIVE_FRESHNESS_THRESHOLDS.degradedAfterMinutes,
+    });
+    return assessOddsLineArchiveFreshness(read.input, ODDS_LINE_ARCHIVE_FRESHNESS_THRESHOLDS);
+  } catch {
+    return assessOddsLineArchiveFreshness(
+      { mostRecentCapturedAt: null },
+      ODDS_LINE_ARCHIVE_FRESHNESS_THRESHOLDS,
+    );
+  }
+}
+
+/**
+ * Surface truth snapshot.
+ * - Public: gates, storage modes, settlement band counts, deploymentSha, sample.
+ * - Bearer CRON_SECRET: bySport + operatorNext (internal remediation).
+ */
+export async function GET(request: Request) {
+  const detailed = hasOpsAuth(request);
+
+  // Anonymous GETs hit ~31 DB loaders and (when STIPE_SECRET_KEY is set) a live
+  // Stripe API call every request. Rate-limit the public (non-authenticated)
+  // branch to prevent pool exhaustion / Stripe read-quota abuse. Authenticated
+  // operator calls are CRON_SECRET-gated already and are not throttled here.
+  if (!detailed) {
+    const limit = consumeRateLimit("public-ops-surfaces", clientIp(request as NextRequest), 60, 60_000);
+    if (!limit.ok) {
+      return NextResponse.json(
+        {
+          success: false,
+          error: "Too many requests. Please wait and try again.",
+          code: "rate_limited",
+        },
+        { status: 429, headers: { "Retry-After": String(limit.retryAfterSec) } },
+      );
+    }
+  }
+
+  const gates = getReadinessGates();
+  const deploymentSha =
+    process.env.VERCEL_GIT_COMMIT_SHA?.trim() ||
+    process.env.NEXT_PUBLIC_VERCEL_GIT_COMMIT_SHA?.trim() ||
+    null;
+
+  let settlement: {
+    health: string;
+    commencedTotal: number;
+    overduePending: number;
+    operatorMessage: string;
+    bySport?: readonly { sportKey: string; overduePending: number }[];
+    operatorNext?: readonly string[];
+  } | null = null;
+  try {
+    if (!isStubMode()) {
+      const s = await loadSettlementHealth(db, { graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS });
+      settlement = {
+        health: s.health,
+        commencedTotal: s.commencedTotal,
+        overduePending: s.overduePending,
+        operatorMessage: detailed
+          ? s.operatorMessage
+          : `${s.overduePending} of ${s.commencedTotal} commenced picks overdue past grace (${s.health}).`,
+      };
+      if (detailed) {
+        try {
+          const b = await loadSettlementBreakdown(db, { graceHours: SETTLEMENT_DEFAULT_GRACE_HOURS });
+          settlement = {
+            ...settlement,
+            bySport: [...b.overdueBySport],
+            operatorNext: [...b.operatorNext],
+          };
+        } catch {
+          /* optional */
+        }
+      }
+    }
+  } catch {
+    settlement = null;
+  }
+
+  // Canonical sample via loadPublicPerformancePolicy — not commencedTotal.
+  let sample: Awaited<ReturnType<typeof loadCanonicalSamplePosture>> | null = null;
+  if (!isStubMode()) {
+    try {
+      sample = await loadCanonicalSamplePosture(db, {
+        commencedTotal: settlement?.commencedTotal ?? 0,
+        canExposePerformanceStats: gates.canExposePerformanceStats,
+        minSettledPicksForLearning: gates.minSettledPicksForLearning,
+      });
+    } catch {
+      sample = null;
+    }
+  }
+
+  // Kill-switch clock: last SUCCESS with oddsInserted > 0 (not free-spine zeros).
+  // Dual-path visibility: keys present + last zero-odds SUCCESS (often quiet/empty provider).
+  const oddsKeySlot = oddsApiKeyPresence();
+  const rundownKeySlot = rundownApiKeyPresence();
+  let oddsInserting: {
+    lastSuccessAt: string | null;
+    ageMinutes: number | null;
+    withinRefreshSla: boolean | null;
+    oddsInserted: number | null;
+    sport: string | null;
+    dualPath: {
+      oddsKeyPresent: boolean;
+      oddsMatchedEnv: string | null;
+      rundownKeyPresent: boolean;
+      rundownMatchedEnv: string | null;
+      /** Zero-key ESPN public odds tertiary path (always code-available). */
+      espnPublicTertiary: true;
+      /**
+       * C-109 credit governor: latest The Odds API quota headers from the
+       * durable ledger (remaining, used, observedAt), the 600-a-day budget,
+       * a linear exhaustion projection from the last 24h of observations
+       * (null with fewer than two), and whether the reserve pace holds.
+       * All null before the first paid call is observed; never invented.
+       */
+      credits: OddsCreditTruth;
+    };
+    lastZeroOddsSuccessAt: string | null;
+    lastZeroOddsSport: string | null;
+    lastZeroOddsNote: string | null;
+    operatorHint: string;
+  } = {
+    lastSuccessAt: null,
+    ageMinutes: null,
+    withinRefreshSla: null,
+    oddsInserted: null,
+    sport: null,
+    dualPath: {
+      oddsKeyPresent: oddsKeySlot.present,
+      oddsMatchedEnv: oddsKeySlot.matchedEnv,
+      rundownKeyPresent: rundownKeySlot.present,
+      rundownMatchedEnv: rundownKeySlot.matchedEnv,
+      espnPublicTertiary: true,
+      credits: emptyOddsCreditTruth(),
+    },
+    lastZeroOddsSuccessAt: null,
+    lastZeroOddsSport: null,
+    lastZeroOddsNote: null,
+    operatorHint:
+      "No odds-inserting SUCCESS found yet. Market board stays dark until oddsInserted>0 within Refresh SLA. Signal board is independent.",
+  };
+  if (!isStubMode()) {
+    try {
+      const [run, zeroRun] = await Promise.all([
+        db.ingestionRun.findFirst({
+          where: { status: "SUCCESS", oddsInserted: { gt: 0 } },
+          orderBy: { completedAt: "desc" },
+          select: { completedAt: true, oddsInserted: true, sport: true },
+        }),
+        db.ingestionRun.findFirst({
+          where: {
+            status: "SUCCESS",
+            oddsInserted: 0,
+            sport: { not: "free-spine" },
+          },
+          orderBy: { completedAt: "desc" },
+          select: { completedAt: true, oddsInserted: true, sport: true, errorMessage: true },
+        }),
+      ]);
+      if (zeroRun?.completedAt) {
+        oddsInserting.lastZeroOddsSuccessAt = zeroRun.completedAt.toISOString();
+        oddsInserting.lastZeroOddsSport = zeroRun.sport ?? null;
+        const err = (zeroRun.errorMessage ?? "").toLowerCase();
+        const rateLimited =
+          err.includes("429") ||
+          err.includes("rate_limited") ||
+          err.includes("rate limit");
+        oddsInserting.lastZeroOddsNote = rateLimited
+          ? "Recent SUCCESS with oddsInserted=0 — provider HTTP 429 / rate_limited. Does NOT advance market kill-switch clock. Wait out free-tier window or set THE_ODDS_API_KEY (dual path)."
+          : "Recent SUCCESS with oddsInserted=0 (quiet board, empty provider events, or mapping drop) — does NOT advance market kill-switch clock.";
+      }
+      if (run?.completedAt) {
+        const ageMinutes = Math.round((Date.now() - run.completedAt.getTime()) / 60000);
+        const withinRefreshSla = ageMinutes <= 240;
+        const zeroErr = (zeroRun?.errorMessage ?? "").toLowerCase();
+        const rateLimited =
+          zeroErr.includes("429") ||
+          zeroErr.includes("rate_limited") ||
+          zeroErr.includes("rate limit");
+        let keyHint = !oddsKeySlot.present && !rundownKeySlot.present
+          ? " No Odds/Rundown keys visible — ESPN public free path still available (tertiary)."
+          : !oddsKeySlot.present && rundownKeySlot.present
+            ? ` Rundown key present (${rundownKeySlot.matchedEnv}); Odds API ABSENT; ESPN public tertiary if Rundown empty/429.`
+            : oddsKeySlot.present
+              ? ` Odds key present (${oddsKeySlot.matchedEnv}).`
+              : "";
+        if (rateLimited && !oddsKeySlot.present) {
+          keyHint +=
+            " Rundown free-tier 429 active — cascade to ESPN public odds (zero keys) or wait cool-off / add THE_ODDS_API_KEY.";
+        }
+        oddsInserting = {
+          ...oddsInserting,
+          lastSuccessAt: run.completedAt.toISOString(),
+          ageMinutes,
+          withinRefreshSla,
+          oddsInserted: run.oddsInserted ?? null,
+          sport: run.sport ?? null,
+          operatorHint: withinRefreshSla
+            ? `Last odds insert ${ageMinutes}m ago (within 240m SLA).${keyHint}`
+            : `Last odds insert ${ageMinutes}m ago (outside 240m SLA) — market board dark until refresh-odds inserts odds again (quiet/empty SUCCESS does not clear this).${keyHint} Signal board independent.`,
+        };
+      } else {
+        const keyHint = !oddsKeySlot.present && !rundownKeySlot.present
+          ? "No quote keys visible."
+          : rundownKeySlot.present
+            ? `Rundown key present (${rundownKeySlot.matchedEnv}) but no oddsInserted>0 run yet — provider empty/mapping, 429, or multi-day lag.`
+            : `Odds key present (${oddsKeySlot.matchedEnv}) but no oddsInserted>0 run yet.`;
+        oddsInserting = {
+          ...oddsInserting,
+          operatorHint: `${keyHint} Market board stays dark until oddsInserted>0. Signal board independent.`,
+        };
+      }
+    } catch {
+      /* leave default */
+    }
+    // C-109: credit posture rides under dualPath; a ledger failure leaves the
+    // all-null block rather than taking the surface down.
+    const credits = await safeRead(() =>
+      loadOddsCreditTruth(db as unknown as OddsCreditLedgerDb, new Date()),
+    );
+    if (credits) {
+      oddsInserting = {
+        ...oddsInserting,
+        dualPath: { ...oddsInserting.dualPath, credits },
+      };
+    }
+  }
+
+  // Distinguishes "platform cron stopped firing" from "quiet board" — see
+  // lib/ops/scheduler-liveness.ts for the 2026-08-10 incident this exists for.
+  const schedulerLiveness = await assessSchedulerLiveness().catch(() => null);
+
+  // Ingestion failsafe (see traffic-heartbeat.ts). This is the most-requested
+  // API route in production (~every 7 min), which makes it the best available
+  // trigger while both schedulers are down. Fire-and-forget: never awaited,
+  // never allowed to fail this response.
+  void maybeRunTrafficHeartbeat().catch(() => undefined);
+
+  const creditStack = loadCreditStackPosture();
+  const billingMoney = loadBillingMoneyPosture();
+  const autonomy = loadAutonomyPosture();
+  const waitlist = loadWaitlistPosture();
+  // Gated behind hasOpsAuth: the live Stripe webhook list hit is operator-only.
+  // Anonymous callers have no use for it and each call reads quota + spawns a
+  // network round-trip on EVERY anonymous GET (~every 7 min in production).
+  let stripeWebhookHosts: Awaited<
+    ReturnType<typeof loadStripeWebhookHostsPosture>
+  > = null;
+  if (detailed) {
+    try {
+      stripeWebhookHosts = await loadStripeWebhookHostsPosture();
+    } catch {
+      stripeWebhookHosts = null;
+    }
+  }
+  const jynx = creditStack.jynx;
+
+  let freeSpine: {
+    present: boolean;
+    source: "process" | "durable" | "none";
+    ageMinutes: number | null;
+    withinSla: boolean;
+    sportsProbed: number | null;
+    sportsWithGames: number | null;
+    criticalGaps: number | null;
+    freeCovered: number | null;
+    requireSpend: number | null;
+    oddsPath: ReturnType<typeof summarizeFreeSpineOddsPath>;
+    probedAt: string | null;
+    slaMinutes: number;
+  } = {
+    present: false,
+    source: "none",
+    ageMinutes: null,
+    withinSla: false,
+    sportsProbed: null,
+    sportsWithGames: null,
+    criticalGaps: null,
+    freeCovered: null,
+    requireSpend: null,
+    oddsPath: null,
+    probedAt: null,
+    slaMinutes: Math.round(FREE_SPINE_DURABLE_SLA_MS / 60000),
+  };
+  try {
+    const { snap, source } = await resolveBestFreeSpineSnapshot();
+    if (snap) {
+      const ageMs = freeSpineSnapAgeMs(snap);
+      freeSpine = {
+        present: true,
+        source,
+        ageMinutes: ageMs == null ? null : Math.round(ageMs / 60000),
+        withinSla: freeSpineWithinSla(snap),
+        sportsProbed: snap.sportsProbed,
+        sportsWithGames: snap.sportsWithGames,
+        criticalGaps: snap.criticalGaps,
+        freeCovered: snap.freeCovered,
+        requireSpend: snap.requireSpend,
+        oddsPath: summarizeFreeSpineOddsPath({
+          criticalGaps: snap.criticalGaps,
+          requireSpend: snap.requireSpend,
+          freeCovered: snap.freeCovered,
+        }),
+        probedAt: snap.probedAt,
+        slaMinutes: Math.round(FREE_SPINE_DURABLE_SLA_MS / 60000),
+      };
+    }
+  } catch {
+    /* honest empty */
+  }
+
+  // Calibration eligibility + publish policy (durable; never invent metrics).
+  let calibrationEligibility: Awaited<
+    ReturnType<typeof loadCalibrationOpsSurface>
+  >["eligibility"] | null = null;
+  let calibrationPublish: Awaited<
+    ReturnType<typeof loadCalibrationOpsSurface>
+  >["publish"] | null = null;
+  // The durable metrics artifact itself: pBasis, exclusions, bySport,
+  // byModelVersion and the bootstrap intervals (v5.2.8 Phase 2). Plain numbers.
+  let calibrationMetricsArtifact: Awaited<
+    ReturnType<typeof loadCalibrationOpsSurface>
+  >["metrics"] | null = null;
+  // Open post-publish drift marker (GREEN fell to RED, or the streak reset,
+  // while a publish receipt was live). Null when no drift is open.
+  let calibrationDrift: ReturnType<typeof calibrationDriftPosture> = null;
+  if (!isStubMode()) {
+    try {
+      const cal = await loadCalibrationOpsSurface({
+        canonicalSettled: sample?.canonicalSettled ?? 0,
+        minSettledForLearning:
+          sample?.minSettledForLearning ?? gates.minSettledPicksForLearning,
+        settlementHealthy: settlement?.health === "HEALTHY",
+      });
+      calibrationEligibility = cal.eligibility;
+      calibrationPublish = cal.publish;
+      calibrationMetricsArtifact = cal.metrics ?? null;
+      calibrationDrift = calibrationDriftPosture(cal.drift ?? null);
+    } catch {
+      calibrationEligibility = null;
+      calibrationPublish = null;
+      calibrationMetricsArtifact = null;
+      calibrationDrift = null;
+    }
+  }
+
+  // Ladder + public performance only when published AND eligibility GREEN.
+  const effectivePerformanceStats =
+    calibrationPublish?.canExposePerformanceStats === true;
+  const calibrationPublished = effectivePerformanceStats;
+
+  const oddsStaleForSurface = await isMarketBoardOddsStale().catch(() => true);
+  const boardSurface = boardSurfacePosture(process.env, { oddsFresh: !oddsStaleForSurface });
+  const signalSlateStale =
+    boardSurface.surface === "signal"
+      ? await isSignalBoardSlateStale().catch(() => true)
+      : false;
+
+  const founderNextSteps = buildFounderNextSteps({
+    schedulerStatus: schedulerLiveness?.status,
+    schedulerAgeMinutes: schedulerLiveness?.ageMinutes ?? null,
+    overduePending: settlement?.overduePending ?? null,
+    settlementHealth: settlement?.health ?? null,
+    freeLaneConfigured: creditStack.freeLaneConfigured,
+    claudeProvider: creditStack.claudeProvider,
+    anyCloudConfigured:
+      creditStack.bedrockConfigured ||
+      creditStack.azureFoundryConfigured ||
+      creditStack.vertexConfigured,
+    jynxAuto: Boolean(jynx?.auto),
+    statsPublic: isStatsPublic(),
+    canExposePublicPicks: gates.canExposePublicPicks,
+    podcastEpisodes: listEpisodes().length,
+    newsletterIssues: listIssues().length,
+    markerCount: MAIN_FEATURE_MARKERS.length,
+    expectedMarkerFloor: MAIN_FEATURE_MARKERS.length,
+    stripeSecretConfigured: billingMoney.stripeSecretConfigured,
+    webhookSecretConfigured: billingMoney.webhookSecretConfigured,
+    stripeWebhookProbed: stripeWebhookHosts?.probed === true,
+    stripeWebhookAuditRequired: stripeWebhookHosts?.auditRequired === true,
+    stripeWebhookGseHealthy: stripeWebhookHosts?.gsePrimaryHealthy === true,
+    stripeWebhookForeignHosts: stripeWebhookHosts?.enabledForeignHosts,
+    freeSpinePresent: freeSpine.present,
+    freeSpineWithinSla: freeSpine.withinSla,
+    freeSpineCriticalGaps: freeSpine.criticalGaps,
+    freeSpineRequireSpend: freeSpine.requireSpend,
+    waitlistGateEnabled: waitlist.gateEnabled,
+    nonSeedSettled: sample?.canonicalSettled ?? null,
+    nonSeedFloorProven: sample?.minSettledForLearning ?? gates.minSettledPicksForLearning,
+    oddsInsertingStale: oddsInserting.withinRefreshSla === false,
+    boardSurface: boardSurface.surface,
+    signalSlateStale,
+    calibrationEligibilityStatus: calibrationEligibility?.status ?? null,
+    calibrationPublished,
+    calibrationAutoPublish: calibrationPublish?.autoPublish ?? false,
+    remainingToFloor: sample?.remainingToFloor ?? null,
+  });
+
+  // Closing-line value, counted from the canonical graded picks (BEAT_CLOSE /
+  // MATCHED_CLOSE / LOST_TO_CLOSE verdicts). The ladder's ESTABLISHED rung is
+  // "verified CLV ≥ 52.4%"; until this was wired the evaluator received null
+  // and could never observe that milestone. Rate = beat / graded (matched
+  // counts against, same as the public policy and summarizeClv). Null until
+  // the graded sample clears the public floor so a handful of picks cannot
+  // read as a rate.
+  const clvPolicy = isStubMode()
+    ? null
+    : await safeRead(() =>
+        loadPublicClvPolicy(db, {
+          canExposePerformanceStats: effectivePerformanceStats,
+          minGradedForPublic: 25,
+        }),
+      );
+  const clvBeatCloseRate =
+    clvPolicy && clvPolicy.gradedSampleSize >= 25
+      ? clvPolicy.beatCloseCount / clvPolicy.gradedSampleSize
+      : null;
+  // The three push-doctrine readings (decided-only / all-graded / push rate),
+  // computed by the shared helper in @sports/types so every surface states the
+  // same numbers. Additive disclosure: evaluatePublicClvPolicy above is
+  // untouched and the gate's beatCloseRate keeps its existing denominator —
+  // which reading the ESTABLISHED 0.524 floor means remains a founder call.
+  const clvDoctrineRates = clvPolicy
+    ? computeClvPushDoctrineRates({
+        beatCloseCount: clvPolicy.beatCloseCount,
+        lostToCloseCount: clvPolicy.lostToCloseCount,
+        matchedCloseCount: clvPolicy.matchedCloseCount,
+      })
+    : null;
+  // The rate feeds the pricing-ladder evaluator internally regardless; this is
+  // a public endpoint, so the split counts and the rate are only PUBLISHED when
+  // the CLV policy says they may be (canExposeClv). Gated → sample size and the
+  // reason only; the owner reads the numbers from the database / the ops report.
+  const clvPosture = clvPolicy
+    ? clvPolicy.canExposeClv
+      ? {
+          gradedSampleSize: clvPolicy.gradedSampleSize,
+          beatCloseCount: clvPolicy.beatCloseCount,
+          matchedCloseCount: clvPolicy.matchedCloseCount,
+          lostToCloseCount: clvPolicy.lostToCloseCount,
+          beatCloseRate: clvBeatCloseRate,
+          // The push-doctrine readings beside the system rate: a reader can
+          // reproduce every denominator from the three counts on this object.
+          decidedClvBeatRate: clvDoctrineRates?.decidedClvBeatRate ?? null,
+          decidedClvBeatDenominator: clvDoctrineRates?.decidedClvBeatDenominator ?? 0,
+          clvPushRate: clvDoctrineRates?.clvPushRate ?? null,
+          clvPushRateDenominator: clvDoctrineRates?.clvPushRateDenominator ?? 0,
+          clearsBreakEven: clvPolicy.clearsBreakEven,
+          canExposeClv: true as const,
+          blockers: clvPolicy.blockers,
+          operatorMessage: clvPolicy.operatorMessage,
+        }
+      : {
+          gradedSampleSize: clvPolicy.gradedSampleSize,
+          beatCloseCount: null,
+          matchedCloseCount: null,
+          lostToCloseCount: null,
+          beatCloseRate: null,
+          decidedClvBeatRate: null,
+          decidedClvBeatDenominator: 0,
+          clvPushRate: null,
+          clvPushRateDenominator: 0,
+          clearsBreakEven: null,
+          canExposeClv: false as const,
+          blockers: clvPolicy.blockers,
+          operatorMessage: clvPolicy.operatorMessage,
+        }
+    : null;
+
+  // Named pricing ladder (pricing-phases.ts) checked against the same live
+  // proof: this is the evaluator the ladder was designed around; it never
+  // advances the phase (PRICING_PHASE stays an operator action).
+  const pricingPhaseReadiness = evaluatePhaseAdvance({
+    canonicalSettledPicks: sample?.canonicalSettled ?? 0,
+    calibrationPublished,
+    beatCloseRate: clvBeatCloseRate,
+    beatCloseRateDecided: clvDoctrineRates?.decidedClvBeatRate ?? null,
+  });
+
+  // Published PENDING picks on games that have not started whose row the
+  // pipeline has not refreshed in 14 days (observed 2026-09-02: 18 picks from
+  // model v5.0.0 written in May on September/November lines). They are not on
+  // the public daily slate (day-bound by generatedAt) but they would grade at
+  // kickoff on a stale line. Since WP-29 (C-106) the settle-picks cron
+  // unpublishes exactly this selection at the end of every cycle (zero-sit
+  // lane), so the count reads 0 once a cycle has run; the where is the shared
+  // builder in lib/board/stale-pick-policy.ts so count and cron cannot drift.
+  // Unpublished rows leave this count by construction (isPublished: true).
+  const stalePendingPicks = isStubMode()
+    ? null
+    : await safeRead(() =>
+        db.pick.count({
+          where: staleUnstartedPublishedPendingWhere(new Date()),
+        }),
+      );
+
+  // Market coverage over the next 72h: which markets the published slate
+  // actually carries per sport. A sport with games but no TOTAL picks is a
+  // visible degradation (the zero-key pipeline is moneyline-only), never a
+  // silent zero. Confidence tail: whether picks at ≥80 stated confidence earn
+  // it (observed 2026-09-02: they did not). Both are read-only postures.
+  const marketCoverage = isStubMode() ? null : await safeRead(() => loadMarketCoverage(db as never));
+  const confidenceTail = isStubMode() ? null : await safeRead(() => loadConfidenceTail(db as never));
+  // Which branch of the ranking cascade actually orders published picks. This
+  // closes the open question in sort-key.ts: the public board payload nulls
+  // rankingP for non-premium viewers (GSE-SEC-026), so the public surface CANNOT
+  // answer whether the board ranks on the monotone key or falls through to the
+  // anti-predictive one. Read-only, reports, never gates.
+  const rankingBasis = isStubMode() ? null : await safeRead(() => loadRankingBasisCensus(db as never));
+
+  // Line-archive freshness (see readOddsLineArchiveFreshnessSafely above).
+  // Read-only, fail-closed, never gates anything on this surface.
+  const oddsLineArchiveFreshness = await readOddsLineArchiveFreshnessSafely();
+
+  // Line integrity (C-283; ledger C-197/C-281/C-282): how many published picks
+  // carry a `line` no bookmaker quoted. Read-only, writes nothing.
+  //
+  // READ THE FIELD NAMES, NOT THE SHAPE. Two different populations are counted
+  // here and they are NOT interchangeable:
+  //   publishedUnsettledOffGridOrBadRunline  exact, no odds join, a LOWER BOUND
+  //     (off-grid is certainly not a book line; on-grid may still be unquoted)
+  //   publishedUnsettledNotQuoted / remainingToVoid  exact against the odds
+  //     table, but only over the rows this call INSPECTED — each carries its
+  //     own `*Inspected` denominator and `*CapReached` flag, and a count whose
+  //     denominator is not stated is the C-241/C-246/C-250 defect class.
+  //
+  // THE FLIP PRECONDITION IS `lineIntegrity.sweep.voidSweepComplete`, not
+  // `remainingToVoid === 0` (C-287). `remainingCapReached` is true on every
+  // production call — the survey samples the oldest 300 of a settled population
+  // in the thousands, and remediation only removes the DEFECTIVE ones — so the
+  // wording this comment used to carry could never be satisfied by any amount
+  // of correct remediation. `sweep` proves completeness from the actor's own
+  // full passes over the population; `remainingToVoid` is a spot check on the
+  // sample. See docs/ops/LINE_INTEGRITY_DECISION_2026-09-08.md §3c.
+  //
+  // OPERATOR-ONLY, and for the same reason `stripeWebhookHosts` above is:
+  // `surveyLineIntegrity` runs three capped pick scans plus counts on EVERY
+  // call. The public branch is rate-limited per IP, which bounds one caller,
+  // not the aggregate database work anonymous callers can provoke (CodeRabbit,
+  // #733). Nothing is lost by gating it — these are numbers the operator reads
+  // before a flip, not public claims — but reading them now needs
+  // the CRON_SECRET bearer. `docs/ops/OPERATOR.md` §5-LI says so.
+  const lineIntegrity =
+    !detailed || isStubMode() ? null : await safeRead(() => surveyLineIntegrity(db as never));
+
+  // Proof-gated ladder — canonical settled; publish from eligibility policy.
+  const revenueLadder = evaluateRevenueLadder({
+    canonicalSettled: sample?.canonicalSettled ?? 0,
+    calibrationPublished,
+    clvBeatCloseRate,
+    clvBeatCloseRateDecided: clvDoctrineRates?.decidedClvBeatRate ?? null,
+    settlementHealthy: settlement?.health === "HEALTHY",
+    boardNotSuppressed:
+      boardSurface.surface === "signal"
+        ? signalSlateStale === false
+        : oddsInserting.withinRefreshSla === true,
+    liveBoardEnabled: process.env["LIVE_BOARD"]?.trim().toLowerCase() === "true",
+    publicPicksEnabled: process.env["PUBLIC_PICKS_ENABLED"]?.trim().toLowerCase() === "true",
+    performanceStatsEnabled: effectivePerformanceStats,
+    minSettledProven: gates.minSettledPicksForLearning,
+  });
+
+  const productBoards = productBoardSurfaces(process.env);
+
+  return NextResponse.json(
+    {
+      ok: true,
+      generatedAt: new Date().toISOString(),
+      detail: detailed ? "operator" : "public",
+      deployment: {
+        sha: deploymentSha,
+        note: "Redeploy after main merges (honesty/Jynx/free-lane). Settlement CRITICAL or SHA lag → redeploy before matching code.",
+        expectedMainFeatures: MAIN_FEATURE_MARKERS,
+      },
+      host: {
+        stubMode: isStubMode(),
+        demoPicksEnabled: isDemoPicksEnabled(),
+        vercel: process.env.VERCEL === "1",
+        nodeEnv: process.env.NODE_ENV ?? "unknown",
+      },
+      gates: {
+        statsPublic: isStatsPublic(),
+        contestsPublic: isContestsPublic(),
+        canExposePublicPicks: gates.canExposePublicPicks,
+        isBootstrapMode: gates.isBootstrapMode,
+        canExposePerformanceStats: effectivePerformanceStats,
+        envPerformanceStatsEnabled: gates.canExposePerformanceStats,
+        // Stale-data kill switch (FORCE_NO_BET_IF_STALE). The gate runbook pairs
+        // it with public picks; reported here so launch:ready can warn when
+        // picks are public and the switch is off, instead of trusting memory.
+        forceNoBetIfStale: getPlatformConfig().forceNoBetIfStale,
+        minSettledPicksForLearning: gates.minSettledPicksForLearning,
+        calibrationPublished,
+      },
+      waitlistStorage: resolveWaitlistStorageMode(),
+      waitlist,
+      settlement,
+      /**
+       * Canonical sample (publish/learning SoT).
+       * commenced ≠ settled. Excludes bootstrap + modelVersion v5.0.0-seed.
+       * settle = grade; filter = these counts; publish = eligibility GREEN + policy (AUTO_PUBLISH or PUBLISHED).
+       */
+      sample,
+      oddsInserting,
+      calibrationEligibility: calibrationEligibility
+        ? {
+            status: calibrationEligibility.status,
+            reasons: calibrationEligibility.reasons,
+            n: calibrationEligibility.n,
+            brier: calibrationEligibility.brier,
+            ece: calibrationEligibility.ece,
+            /** C-290: what the ECE floor reads, and the sampling noise it corrects for. */
+            eceNoise: calibrationEligibility.eceNoise,
+            eceDebiased: calibrationEligibility.eceDebiased,
+            mce: calibrationEligibility.mce,
+            murphy: calibrationEligibility.murphy,
+            floors: calibrationEligibility.floors,
+            consecutiveGreen: calibrationEligibility.consecutiveGreen,
+            streakRequired: calibrationEligibility.streakRequired,
+            /**
+             * C-275. The pooled ECE the floors are scored on can sit BELOW every
+             * stratum it is built from, so a pooled pass does not imply the
+             * DEPLOYED model is calibrated. These say whether the deployed
+             * version was additionally checked on its own rows, and on which
+             * slice.
+             *
+             * `?? false` / `?? null` are load-bearing, not defensive noise: a
+             * report replayed from a snap persisted before C-275 carries neither
+             * field, and `loadLatestEligibilitySnap` casts stored JSON without
+             * validating it. Reading them raw would surface `undefined` as if it
+             * were a measurement. Absent means "not checked", never "passed".
+             */
+            deployedVersionChecked: calibrationEligibility.deployedVersionChecked ?? false,
+            deployedVersion: calibrationEligibility.deployedVersion ?? null,
+            modelVersion: calibrationEligibility.modelVersion,
+            dateRange: calibrationEligibility.dateRange,
+            generatedAt: calibrationEligibility.generatedAt,
+            operatorHint: calibrationEligibility.operatorHint,
+            /** Which probability the floors were scored on; null on a pre-Phase-2 artifact. */
+            pBasis: calibrationMetricsArtifact?.pBasis ?? null,
+            /** Settled WIN/LOSS picks left out of the sample, by reason. */
+            exclusions: calibrationMetricsArtifact?.exclusions ?? null,
+            /** WP-28: scored probabilities by origin (receipts versus the odds table). */
+            pSources: calibrationMetricsArtifact?.pSources ?? null,
+            /** WP-28: odds-table recompute coverage; null on a pre-WP-28 artifact. */
+            marketPFromOddsTable: calibrationMetricsArtifact?.marketPFromOddsTable ?? null,
+            bySport: calibrationMetricsArtifact?.bySport ?? null,
+            byModelVersion: calibrationMetricsArtifact?.byModelVersion ?? null,
+            /** Per pick type; the pooled floors sample holds every market with a market-anchored p. */
+            byMarket: calibrationMetricsArtifact?.byMarket ?? null,
+            brierCi95: calibrationMetricsArtifact?.brierCi95 ?? null,
+            eceCi95: calibrationMetricsArtifact?.eceCi95 ?? null,
+          }
+        : null,
+      calibrationPublish: calibrationPublish
+        ? {
+            published: calibrationPublish.published,
+            publishedEffective: calibrationPublish.publishedEffective ?? calibrationPublish.published,
+            source: calibrationPublish.source,
+            autoPublish: calibrationPublish.autoPublish,
+            autoUnpublish: calibrationPublish.autoUnpublish,
+            canExposePerformanceStats: calibrationPublish.canExposePerformanceStats,
+            operatorHint: calibrationPublish.operatorHint,
+          }
+        : null,
+      /**
+       * Post-publish drift: the eligibility streak fell (GREEN to RED, or reset)
+       * while a publish receipt was live. Durable marker in scope
+       * ops.calibration.drift; the health-alert cron pages on it. Null when no
+       * drift is open (never written, or cleared by a later GREEN).
+       */
+      calibrationDrift: calibrationDrift
+        ? {
+            since: calibrationDrift.since,
+            previousStatus: calibrationDrift.previousStatus,
+            currentStatus: calibrationDrift.currentStatus,
+            failingFloors: calibrationDrift.failingFloors,
+            reasons: calibrationDrift.reasons,
+            publishedAt: calibrationDrift.publishedAt,
+            observedAt: calibrationDrift.observedAt,
+            operatorHint: calibrationDrift.operatorHint,
+          }
+        : null,
+      content: {
+        podcastEpisodes: listEpisodes().length,
+        newsletterIssues: listIssues().length,
+      },
+      creditStack,
+      billingMoney,
+      ...(detailed ? { stripeWebhookHosts } : {}),
+      autonomy,
+      boardSurface: boardSurfacePosture(process.env, {
+        oddsFresh: oddsInserting?.withinRefreshSla === true,
+      }),
+      /** STATKING / HELM / PICKPILOT / CLUBHOUSE / GSE board honesty map. */
+      productBoards: {
+        surfaces: productBoards.surfaces,
+        liveProductionIds: productBoards.liveProductionIds,
+        darkByLawIds: productBoards.darkByLawIds,
+        designPreviewOnly: productBoards.designPreviewOnly,
+        operatorHint: productBoards.operatorHint,
+      },
+      aciPosture: aciPublicPosture(),
+      ...(await (async () => {
+        const surface = await loadProvenPathSurface();
+        const murphySnap =
+          calibrationEligibility?.murphy != null &&
+          calibrationEligibility.brier != null
+            ? buildMurphyResSnapshot({
+                brier: calibrationEligibility.brier,
+                reliability: calibrationEligibility.murphy.reliability,
+                resolution: calibrationEligibility.murphy.resolution,
+                uncertainty: calibrationEligibility.murphy.uncertainty,
+              })
+            : null;
+        const durablePause = await loadRankingPauseApply();
+        const pausePosture = rankingPauseApplyPosture(
+          process.env,
+          surface?.plan ?? null,
+          durablePause,
+        );
+        const selectivePosture = selectiveRuntimePosture(
+          process.env,
+          surface?.plan ?? null,
+          durablePause,
+        );
+        return {
+          provenPath: surface?.plan ?? null,
+          provenPathProjection: surface?.projection ?? null,
+          /** Settled WIN/LOSS picks dropped before the bake-off rows (three_way_market). */
+          provenPathExclusions: surface?.exclusions ?? null,
+          /** Ranking Power Control Plane — residual + operatorHint for founder ops. */
+          rankingPower: surface?.rankingPowerPosture ?? {
+            present: false,
+            bestScore: null,
+            rankingSignal: null,
+            pathViable: null,
+            liveRes: null,
+            projectedRes: null,
+            deltaRes: null,
+            pauseGroupCount: null,
+            independentCoverage: null,
+            primaryBottleneck: null,
+            mapsApplyGateOpen: null,
+            residualOperatorHint: null,
+            operatorHint: "Ranking Power Control Plane not seeded.",
+            rankingPolarityLaw: "positive_separation_required",
+          },
+          /** Offline conformal bridge posture (never eligibility). */
+          rpcpConformalBridge: surface?.conformalBridgeEnv ?? {
+            computeEnabled: false,
+            productFlags: {
+              conformalAbstainEnabled: false,
+              calibrationAdjustmentsEnabled: false,
+              autoPublish: false,
+            },
+            unlocksProven: false,
+            raisesRes: false,
+            operatorHint:
+              "RPCP–conformal bridge default offline (not seeded).",
+          },
+          /** Pause list apply — default OFF; plan pause is advisory until RANKING_PAUSE_APPLY. */
+          rankingPauseApply: pausePosture,
+          selectiveRuntime: selectivePosture,
+          // Top-level polarity glance (also nested under provenPath*)
+          rankingPolarityLaw:
+            surface?.plan?.rankingPolarityLaw ?? "positive_separation_required",
+          bestScore: surface?.plan?.bestScore ?? null,
+          bestSeparation: surface?.projection?.bestSeparation ?? null,
+          pathViable: surface?.projection?.pathViable ?? null,
+          murphyExplain: murphySnap?.explain ?? null,
+          murphyRes: murphySnap,
+          conformalRd: conformalRdPosture(process.env),
+          isotonicAlternatives: ISOTONIC_ALTERNATIVES.map((a) => ({
+            situation: a.situation,
+            prefer: a.prefer,
+            module: a.existingModule,
+            raisesRes: a.raisesRes,
+          })),
+          mapBakeoff: summarizeMapBakeoff(await loadMapBakeoff()),
+        };
+      })()),
+      mapVsCanonical: {
+        canonicalSettled: sample?.canonicalSettled ?? null,
+        mapN: calibrationEligibility?.n ?? null,
+        note:
+          "canonicalSettled includes WIN|LOSS|PUSH; map n is learning-eligible WIN|LOSS only (eligibleForLearning). Gap is expected — see docs/ops/SAMPLE_N_VS_MAP_N.md",
+      },
+      bayesianRd: {
+        adjustmentsEnabled: false,
+        hierarchicalEbTau: true,
+        dirichletProcessInPath: false,
+        note: "Bayesian/hierarchical MAP Platt is offline R&D only (EB τ clamped). Eligibility stays frequentist. DP clustering not in prod path.",
+      },
+      freeSpine,
+      policy: PUBLIC_NAV_POLICY,
+      law: {
+        liveBoardDefault: "off",
+        statsDefault: "dark",
+        contestsDefault: "public free paper skill",
+        refuseEphemeralWrites: true,
+        rankingPauseApplyDefault: "off",
+        mapsDefault: "off",
+      },
+      founderNextSteps,
+      schedulerLiveness,
+      revenueLadder: {
+        currentStep: revenueLadder.currentStep,
+        nextStep: revenueLadder.nextStep,
+        canHonestlyMonetizePublicTrackRecord: revenueLadder.canHonestlyMonetizePublicTrackRecord,
+        operatorMessage: revenueLadder.operatorMessage,
+        blockersToNext: revenueLadder.blockersToNext,
+        milestones: revenueLadder.milestones,
+      },
+      clvPosture,
+      pricingPhaseReadiness,
+      stalePendingPicks: {
+        count: stalePendingPicks,
+        maxAgeDays: STALE_PENDING_PICK_MAX_AGE_DAYS,
+        operatorHint:
+          stalePendingPicks === null
+            ? "unknown (stub DB or query failed)"
+            : stalePendingPicks > 0
+              ? `${stalePendingPicks} published PENDING pick(s) on unstarted games not refreshed in ${STALE_PENDING_PICK_MAX_AGE_DAYS}d. The settle-picks cron unpublishes them automatically at the end of its next cycle (zero-sit lane, WP-29) and records each action as a memory event; a count that persists across cycles means the lane is not running. Manual override only: npm run ops:stale-picks:unpublish.`
+              : "none (the zero-sit lane unpublishes stale unstarted picks every settle cycle)",
+      },
+      marketCoverage,
+      confidenceTail,
+      rankingBasis,
+      /**
+       * odds_line_snapshots writer freshness (2026-09-19). Additive
+       * observability only: see readOddsLineArchiveFreshnessSafely above.
+       * verdict is "healthy" | "degraded" | "stale"; fail-closed on any
+       * error, stub mode, or absent data (never "healthy" by default).
+       */
+      oddsLineArchiveFreshness,
+      lineIntegrity,
+      ...(detailed ? { mainFeatureMarkers: MAIN_FEATURE_MARKERS } : {}),
+      /**
+       * Stripe posture, operator-detail only (C-182, the code half of F-18,
+       * F-19 and F-20). Those three founder rows have stayed OPEN because
+       * checking them meant opening the Dashboard; this block reports the part
+       * the SERVER can honestly know and says NOT_READABLE for the rest rather
+       * than guessing a Dashboard state.
+       *
+       * Gated behind ops auth alongside mainFeatureMarkers: the anonymous
+       * surface should not enumerate which billing variables this deployment
+       * does and does not have set (C-102's finding about env-var names on the
+       * public payload).
+       */
+      ...(detailed
+        ? {
+            stripe: {
+              /**
+               * F-20. What this deployment CAN handle, read from the handler's
+               * own switch (stripe-webhook-handled-events.test.ts fails if the
+               * list and the switch disagree). Compare against the Dashboard's
+               * subscribed list: an event handled here but not subscribed there
+               * is silent — the code is right, the delivery never arrives, and
+               * the entitlement it would have written never happens.
+               */
+              handledEvents: HANDLED_STRIPE_WEBHOOK_EVENTS,
+              handledEventCount: HANDLED_STRIPE_WEBHOOK_EVENTS.length,
+              /**
+               * NOT_READABLE by construction: what the endpoint is SUBSCRIBED to
+               * lives in the Stripe account, and this surface makes no Stripe
+               * API call. Never infer it from the handler — that inference is
+               * precisely the error F-20 records.
+               */
+              dashboardSubscribedEvents: "NOT_READABLE",
+              /**
+               * F-18. Whether the consent checkbox is armed in THIS deployment's
+               * environment. Note the ordering rule in docs/ops/OPERATOR.md § 5:
+               * the Terms URL must be set in the Dashboard BEFORE this is turned
+               * on, and whether that URL is set is itself NOT_READABLE here.
+               */
+              termsConsentEnabled: process.env["STRIPE_TERMS_CONSENT_ENABLED"] === "true",
+              termsUrlConfigured: "NOT_READABLE",
+              /**
+               * F-19. Payment Links charge WITHOUT granting access by
+               * construction (no checkout session, so no
+               * checkout.session.completed and no entitlement write). Nothing in
+               * this codebase stores a link: scripts/ops/create-founding-payment-link.mjs
+               * CREATES one and prints it, and reads only STRIPE_SECRET_KEY. So
+               * the server genuinely cannot see whether one is live — this is a
+               * Dashboard read, and reporting anything else here would be an
+               * invented state.
+               */
+              foundingPaymentLinkActive: "NOT_READABLE",
+              operatorHint:
+                "handledEvents is the server-knowable half only. Confirm in the Stripe Dashboard: " +
+                "(F-20) the endpoint subscribes to every event in handledEvents; " +
+                "(F-18) the public Terms URL is set BEFORE STRIPE_TERMS_CONSENT_ENABLED is turned on; " +
+                "(F-19) no Founding Payment Link is active or shared — a Payment Link charges " +
+                "without granting access, because it never emits checkout.session.completed.",
+            },
+          }
+        : {}),
+    },
+    { headers: { "Cache-Control": "no-store" } },
+  );
+}

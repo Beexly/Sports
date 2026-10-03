@@ -1,0 +1,1033 @@
+{
+  "generatedAt": "2026-07-30T03:34:41.636Z",
+  "source": "Beexly/Sports sports-repo snapshot",
+  "capabilities": [
+    {
+      "id": "picks-intelligence",
+      "name": "Picks Intelligence",
+      "category": "INTELLIGENCE_CORE",
+      "status": "DRAFT_ONLY",
+      "riskLevel": "MEDIUM",
+      "ownerMode": "OWNER_DECISION_REQUIRED",
+      "nextAction": "Open PUBLIC_PICKS_ENABLED gate when data quality and trust gates are satisfied.",
+      "requiresHumanApproval": true
+    },
+    {
+      "id": "market-line-intelligence",
+      "name": "Market / Line Intelligence",
+      "category": "INTELLIGENCE_CORE",
+      "status": "DESIGNED",
+      "riskLevel": "MEDIUM",
+      "ownerMode": "NOT_WIRED",
+      "nextAction": "Build CLV tracking layer: capture opening line, closing line, and actual result per pick.",
+      "requiresHumanApproval": true
+    },
+    {
+      "id": "data-reliability",
+      "name": "Data Reliability",
+      "category": "INTELLIGENCE_CORE",
+      "status": "DRAFT_ONLY",
+      "riskLevel": "HIGH",
+      "ownerMode": "DRAFT_AWAITS_APPROVAL",
+      "nextAction": "Wire auto-alerting on stale ingestion (>4h) to cockpit decision queue.",
+      "requiresHumanApproval": true
+    },
+    {
+      "id": "settlement-results",
+      "name": "Settlement & Results",
+      "category": "PLATFORM_OPERATIONS",
+      "status": "MANUAL",
+      "riskLevel": "HIGH",
+      "ownerMode": "MANUAL_OPERATOR",
+      "nextAction": "Wire external score data source (ESPN/The Odds API results) for auto-settlement.",
+      "requiresHumanApproval": true
+    },
+    {
+      "id": "performance-calibration",
+      "name": "Performance Calibration",
+      "category": "PLATFORM_OPERATIONS",
+      "status": "MANUAL",
+      "riskLevel": "HIGH",
+      "ownerMode": "MANUAL_OPERATOR",
+      "nextAction": "Accumulate 25 canonical settled picks. Then review win rate. Open gate if accurate.",
+      "requiresHumanApproval": true
+    },
+    {
+      "id": "risk-public-claims",
+      "name": "Risk & Public Claims",
+      "category": "PLATFORM_OPERATIONS",
+      "status": "DRAFT_ONLY",
+      "riskLevel": "CRITICAL",
+      "ownerMode": "OWNER_DECISION_REQUIRED",
+      "nextAction": "Resolve any active safety warnings before expanding public reach.",
+      "requiresHumanApproval": true
+    },
+    {
+      "id": "customer-surface",
+      "name": "Customer Surface",
+      "category": "GROWTH_REVENUE",
+      "status": "DRAFT_ONLY",
+      "riskLevel": "HIGH",
+      "ownerMode": "DRAFT_AWAITS_APPROVAL",
+      "nextAction": "Open PUBLIC_PICKS_ENABLED gate to serve public picks to all tiers.",
+      "requiresHumanApproval": true
+    },
+    {
+      "id": "content-media",
+      "name": "Content & Media",
+      "category": "GROWTH_REVENUE",
+      "status": "DRAFT_ONLY",
+      "riskLevel": "HIGH",
+      "ownerMode": "DRAFT_AWAITS_APPROVAL",
+      "nextAction": "Review draft content queue at /cockpit/content before expanding to newsletter.",
+      "requiresHumanApproval": true
+    },
+    {
+      "id": "revenue-subscriptions",
+      "name": "Revenue & Subscriptions",
+      "category": "GROWTH_REVENUE",
+      "status": "DESIGNED",
+      "riskLevel": "HIGH",
+      "ownerMode": "OWNER_DECISION_REQUIRED",
+      "nextAction": "Build BOBBY subscription intelligence layer: churn signals, tier migration triggers.",
+      "requiresHumanApproval": true
+    },
+    {
+      "id": "ai-ops-token-discipline",
+      "name": "AI Ops / Token Discipline",
+      "category": "AI_INFRASTRUCTURE",
+      "status": "MANUAL",
+      "riskLevel": "MEDIUM",
+      "ownerMode": "MANUAL_OPERATOR",
+      "nextAction": "Wire ccusage daily totals to /cockpit/api-costs. Then add Langfuse.",
+      "requiresHumanApproval": false
+    },
+    {
+      "id": "memory-knowledge-base",
+      "name": "Memory / Knowledge Base",
+      "category": "AI_INFRASTRUCTURE",
+      "status": "NOT_WIRED",
+      "riskLevel": "LOW",
+      "ownerMode": "NOT_WIRED",
+      "nextAction": "Wire mem0 or Postgres-based episodic memory to capture owner decisions.",
+      "requiresHumanApproval": false
+    },
+    {
+      "id": "tool-router-mcp-layer",
+      "name": "Tool Router / MCP Layer",
+      "category": "AI_INFRASTRUCTURE",
+      "status": "NOT_WIRED",
+      "riskLevel": "MEDIUM",
+      "ownerMode": "NOT_WIRED",
+      "nextAction": "Wire Claude MCP SDK. Register The Odds API as first approved tool.",
+      "requiresHumanApproval": true
+    },
+    {
+      "id": "agent-orchestration",
+      "name": "Agent Orchestration",
+      "category": "AI_INFRASTRUCTURE",
+      "status": "DESIGNED",
+      "riskLevel": "MEDIUM",
+      "ownerMode": "NOT_WIRED",
+      "nextAction": "Implement BullMQ-based orchestration layer: task routing from Jarvis to agent queues.",
+      "requiresHumanApproval": true
+    },
+    {
+      "id": "browser-computer-control",
+      "name": "Browser / Computer Control",
+      "category": "AI_INFRASTRUCTURE",
+      "status": "NOT_WIRED",
+      "riskLevel": "HIGH",
+      "ownerMode": "NOT_WIRED",
+      "nextAction": "NOT YET: wire MCP tool bus first. Browser control comes after tool routing.",
+      "requiresHumanApproval": true
+    },
+    {
+      "id": "voice-interface",
+      "name": "Voice Interface",
+      "category": "AI_INFRASTRUCTURE",
+      "status": "NOT_WIRED",
+      "riskLevel": "MEDIUM",
+      "ownerMode": "NOT_WIRED",
+      "nextAction": "NOT YET: wire Ask Jarvis console fully first. Voice layer is Phase 4+.",
+      "requiresHumanApproval": true
+    },
+    {
+      "id": "workflow-automation",
+      "name": "Workflow Automation",
+      "category": "AI_INFRASTRUCTURE",
+      "status": "NOT_WIRED",
+      "riskLevel": "MEDIUM",
+      "ownerMode": "NOT_WIRED",
+      "nextAction": "Wire BullMQ workflow coordinator: ingestion → scoring → quality check → picks routing.",
+      "requiresHumanApproval": true
+    }
+  ],
+  "surfaces": [
+    {
+      "pageName": "Overview",
+      "route": "/cockpit",
+      "owningAgent": "jarvis",
+      "supportingAgents": [
+        "tal",
+        "audit"
+      ],
+      "primaryWorkflow": "daily-intelligence-brief",
+      "outputArtifact": "Jarvis launch assessment",
+      "riskLevel": "HIGH",
+      "currentStatus": "DRAFT_ONLY",
+      "audience": "owner-facing"
+    },
+    {
+      "pageName": "History",
+      "route": "/cockpit/history",
+      "owningAgent": "ledger",
+      "supportingAgents": [
+        "audit"
+      ],
+      "primaryWorkflow": "settlement",
+      "outputArtifact": "Pick forensic ledger",
+      "riskLevel": "HIGH",
+      "currentStatus": "MANUAL",
+      "audience": "internal"
+    },
+    {
+      "pageName": "Agents",
+      "route": "/cockpit/agents",
+      "owningAgent": "jarvis",
+      "supportingAgents": [
+        "tal"
+      ],
+      "primaryWorkflow": "claude-handoff",
+      "outputArtifact": "Agent council status",
+      "riskLevel": "MEDIUM",
+      "currentStatus": "DRAFT_ONLY",
+      "audience": "internal"
+    },
+    {
+      "pageName": "Tasks",
+      "route": "/cockpit/tasks",
+      "owningAgent": "chain",
+      "supportingAgents": [
+        "jarvis"
+      ],
+      "primaryWorkflow": "daily-intelligence-brief",
+      "outputArtifact": "Queue by status",
+      "riskLevel": "HIGH",
+      "currentStatus": "DESIGNED",
+      "audience": "owner-facing"
+    },
+    {
+      "pageName": "Review",
+      "route": "/cockpit/review",
+      "owningAgent": "sarah",
+      "supportingAgents": [
+        "gauge"
+      ],
+      "primaryWorkflow": "support-trust",
+      "outputArtifact": "Needs-review + blocked",
+      "riskLevel": "HIGH",
+      "currentStatus": "DRAFT_ONLY",
+      "audience": "owner-facing"
+    },
+    {
+      "pageName": "Media",
+      "route": "/cockpit/media",
+      "owningAgent": "ava",
+      "supportingAgents": [
+        "sarah",
+        "quill",
+        "gauge"
+      ],
+      "primaryWorkflow": "content",
+      "outputArtifact": "Draft content workflow",
+      "riskLevel": "HIGH",
+      "currentStatus": "DRAFT_ONLY",
+      "audience": "public-adjacent"
+    },
+    {
+      "pageName": "Promotions",
+      "route": "/cockpit/promotions",
+      "owningAgent": "bobby",
+      "supportingAgents": [
+        "flare",
+        "gauge"
+      ],
+      "primaryWorkflow": "revenue",
+      "outputArtifact": "Sportsbook offers",
+      "riskLevel": "CRITICAL",
+      "currentStatus": "DRAFT_ONLY",
+      "audience": "public-adjacent"
+    },
+    {
+      "pageName": "Promo Desk",
+      "route": "/cockpit/promo-desk",
+      "owningAgent": "bobby",
+      "supportingAgents": [
+        "flare"
+      ],
+      "primaryWorkflow": "revenue",
+      "outputArtifact": "Operator registry",
+      "riskLevel": "HIGH",
+      "currentStatus": "DRAFT_ONLY",
+      "audience": "public-adjacent"
+    },
+    {
+      "pageName": "Market Twin",
+      "route": "/cockpit/market-twin",
+      "owningAgent": "delta",
+      "supportingAgents": [
+        "scout",
+        "tal"
+      ],
+      "primaryWorkflow": "market-intelligence",
+      "outputArtifact": "Upcoming board posture",
+      "riskLevel": "HIGH",
+      "currentStatus": "DESIGNED",
+      "audience": "internal"
+    },
+    {
+      "pageName": "Losses",
+      "route": "/cockpit/losses",
+      "owningAgent": "audit",
+      "supportingAgents": [
+        "ledger"
+      ],
+      "primaryWorkflow": "calibration",
+      "outputArtifact": "Autopsy queue",
+      "riskLevel": "HIGH",
+      "currentStatus": "MANUAL",
+      "audience": "internal"
+    },
+    {
+      "pageName": "Studio",
+      "route": "/cockpit/studio",
+      "owningAgent": "ava",
+      "supportingAgents": [
+        "gauge"
+      ],
+      "primaryWorkflow": "film-room",
+      "outputArtifact": "Creator asset workspace",
+      "riskLevel": "HIGH",
+      "currentStatus": "DRAFT_ONLY",
+      "audience": "public-adjacent"
+    },
+    {
+      "pageName": "Journal",
+      "route": "/cockpit/journal",
+      "owningAgent": "audit",
+      "supportingAgents": [
+        "prism"
+      ],
+      "primaryWorkflow": "calibration",
+      "outputArtifact": "Weekly model essay",
+      "riskLevel": "HIGH",
+      "currentStatus": "DRAFT_ONLY",
+      "audience": "public-adjacent"
+    },
+    {
+      "pageName": "API Costs",
+      "route": "/cockpit/api-costs",
+      "owningAgent": "meter",
+      "supportingAgents": [
+        "mint",
+        "jarvis"
+      ],
+      "primaryWorkflow": "daily-intelligence-brief",
+      "outputArtifact": "Claude budget monitor",
+      "riskLevel": "MEDIUM",
+      "currentStatus": "MANUAL",
+      "audience": "internal"
+    },
+    {
+      "pageName": "Synthetic Monitoring",
+      "route": "/cockpit/synthetic-monitoring",
+      "owningAgent": "tal",
+      "supportingAgents": [
+        "gauge"
+      ],
+      "primaryWorkflow": "source-intelligence",
+      "outputArtifact": "Production probes",
+      "riskLevel": "HIGH",
+      "currentStatus": "DRAFT_ONLY",
+      "audience": "internal"
+    },
+    {
+      "pageName": "Bot Outbox",
+      "route": "/cockpit/bot-outbox",
+      "owningAgent": "ava",
+      "supportingAgents": [
+        "flare"
+      ],
+      "primaryWorkflow": "content",
+      "outputArtifact": "Draft event planner",
+      "riskLevel": "HIGH",
+      "currentStatus": "DRAFT_ONLY",
+      "audience": "public-adjacent"
+    },
+    {
+      "pageName": "Daily Brief",
+      "route": "/cockpit/brief",
+      "owningAgent": "jarvis",
+      "supportingAgents": [
+        "scout"
+      ],
+      "primaryWorkflow": "daily-intelligence-brief",
+      "outputArtifact": "Today slate snapshot",
+      "riskLevel": "MEDIUM",
+      "currentStatus": "DRAFT_ONLY",
+      "audience": "owner-facing"
+    },
+    {
+      "pageName": "Calibration",
+      "route": "/cockpit/calibration",
+      "owningAgent": "audit",
+      "supportingAgents": [
+        "prism",
+        "ledger"
+      ],
+      "primaryWorkflow": "calibration",
+      "outputArtifact": "Model accountability",
+      "riskLevel": "CRITICAL",
+      "currentStatus": "MANUAL",
+      "audience": "internal"
+    },
+    {
+      "pageName": "Content",
+      "route": "/cockpit/content",
+      "owningAgent": "ava",
+      "supportingAgents": [
+        "gauge",
+        "sarah"
+      ],
+      "primaryWorkflow": "content",
+      "outputArtifact": "Draft-only engine",
+      "riskLevel": "HIGH",
+      "currentStatus": "DRAFT_ONLY",
+      "audience": "public-adjacent"
+    },
+    {
+      "pageName": "Sources",
+      "route": "/cockpit/sources",
+      "owningAgent": "tal",
+      "supportingAgents": [
+        "relay"
+      ],
+      "primaryWorkflow": "source-intelligence",
+      "outputArtifact": "Source intelligence",
+      "riskLevel": "CRITICAL",
+      "currentStatus": "DRAFT_ONLY",
+      "audience": "internal"
+    },
+    {
+      "pageName": "Airwave",
+      "route": "/cockpit/airwave",
+      "owningAgent": "scout",
+      "supportingAgents": [
+        "gauge"
+      ],
+      "primaryWorkflow": "airwave-claim",
+      "outputArtifact": "Pundit claim review",
+      "riskLevel": "HIGH",
+      "currentStatus": "MANUAL",
+      "audience": "internal"
+    },
+    {
+      "pageName": "Listener Log",
+      "route": "/cockpit/listener-log",
+      "owningAgent": "scout",
+      "supportingAgents": [
+        "gauge"
+      ],
+      "primaryWorkflow": "airwave-claim",
+      "outputArtifact": "Manual broadcast claim entry",
+      "riskLevel": "MEDIUM",
+      "currentStatus": "MANUAL",
+      "audience": "internal"
+    },
+    {
+      "pageName": "Moderation",
+      "route": "/cockpit/moderation",
+      "owningAgent": "pulse",
+      "supportingAgents": [
+        "sarah"
+      ],
+      "primaryWorkflow": "support-trust",
+      "outputArtifact": "Community room queue",
+      "riskLevel": "HIGH",
+      "currentStatus": "DESIGNED",
+      "audience": "internal"
+    },
+    {
+      "pageName": "Memory",
+      "route": "/cockpit/memory",
+      "owningAgent": "archive",
+      "supportingAgents": [
+        "jarvis"
+      ],
+      "primaryWorkflow": "memory",
+      "outputArtifact": "Memory review queue",
+      "riskLevel": "HIGH",
+      "currentStatus": "NOT_WIRED",
+      "audience": "future"
+    },
+    {
+      "pageName": "Film Room",
+      "route": "/cockpit/film-room",
+      "owningAgent": "ava",
+      "supportingAgents": [
+        "gauge"
+      ],
+      "primaryWorkflow": "film-room",
+      "outputArtifact": "Visual production",
+      "riskLevel": "HIGH",
+      "currentStatus": "DESIGNED",
+      "audience": "public-adjacent"
+    }
+  ],
+  "council": [
+    {
+      "id": "jarvis",
+      "codename": "JARVIS",
+      "name": "JARVIS",
+      "status": "DRAFT_ONLY",
+      "wiringState": "wired",
+      "department": "Command & Governance",
+      "isRegisteredCockpitAgent": true
+    },
+    {
+      "id": "scout",
+      "codename": "SCOUT",
+      "name": "SCOUT",
+      "status": "DRAFT_ONLY",
+      "wiringState": "wired",
+      "department": "Sports Intelligence",
+      "isRegisteredCockpitAgent": true
+    },
+    {
+      "id": "tal",
+      "codename": "TAL",
+      "name": "TAL",
+      "status": "DRAFT_ONLY",
+      "wiringState": "wired",
+      "department": "Data & Automation Platform",
+      "isRegisteredCockpitAgent": true
+    },
+    {
+      "id": "sarah",
+      "codename": "SARAH",
+      "name": "SARAH",
+      "status": "DRAFT_ONLY",
+      "wiringState": "wired",
+      "department": "Customer Surface & Quality",
+      "isRegisteredCockpitAgent": true
+    },
+    {
+      "id": "ava",
+      "codename": "AVA",
+      "name": "AVA",
+      "status": "DRAFT_ONLY",
+      "wiringState": "wired",
+      "department": "Customer Surface & Quality",
+      "isRegisteredCockpitAgent": true
+    },
+    {
+      "id": "bobby",
+      "codename": "BOBBY",
+      "name": "BOBBY",
+      "status": "DRAFT_ONLY",
+      "wiringState": "wired",
+      "department": "Growth, Community & Finance",
+      "isRegisteredCockpitAgent": true
+    },
+    {
+      "id": "settlement-officer",
+      "codename": "LEDGER",
+      "name": "LEDGER",
+      "status": "MANUAL",
+      "wiringState": "manual",
+      "department": "Results & Calibration",
+      "isRegisteredCockpitAgent": false
+    },
+    {
+      "id": "performance-auditor",
+      "codename": "AUDIT",
+      "name": "AUDIT",
+      "status": "MANUAL",
+      "wiringState": "manual",
+      "department": "Results & Calibration",
+      "isRegisteredCockpitAgent": false
+    },
+    {
+      "id": "ai-ops-officer",
+      "codename": "METER",
+      "name": "METER",
+      "status": "MANUAL",
+      "wiringState": "manual",
+      "department": "Command & Governance",
+      "isRegisteredCockpitAgent": false
+    },
+    {
+      "id": "market-analyst",
+      "codename": "DELTA",
+      "name": "DELTA",
+      "status": "NOT_WIRED",
+      "wiringState": "not_connected",
+      "department": "Sports Intelligence",
+      "isRegisteredCockpitAgent": false
+    },
+    {
+      "id": "memory-librarian",
+      "codename": "ARCHIVE",
+      "name": "ARCHIVE",
+      "status": "NOT_WIRED",
+      "wiringState": "not_connected",
+      "department": "Command & Governance",
+      "isRegisteredCockpitAgent": false
+    },
+    {
+      "id": "tool-router",
+      "codename": "RELAY",
+      "name": "RELAY",
+      "status": "NOT_WIRED",
+      "wiringState": "not_connected",
+      "department": "Data & Automation Platform",
+      "isRegisteredCockpitAgent": false
+    },
+    {
+      "id": "browser-operator",
+      "codename": "PILOT",
+      "name": "PILOT",
+      "status": "NOT_WIRED",
+      "wiringState": "not_connected",
+      "department": "Data & Automation Platform",
+      "isRegisteredCockpitAgent": false
+    },
+    {
+      "id": "voice-operator",
+      "codename": "ECHO",
+      "name": "ECHO",
+      "status": "NOT_WIRED",
+      "wiringState": "not_connected",
+      "department": "Data & Automation Platform",
+      "isRegisteredCockpitAgent": false
+    },
+    {
+      "id": "workflow-coordinator",
+      "codename": "CHAIN",
+      "name": "CHAIN",
+      "status": "NOT_WIRED",
+      "wiringState": "not_connected",
+      "department": "Data & Automation Platform",
+      "isRegisteredCockpitAgent": false
+    },
+    {
+      "id": "quality-officer",
+      "codename": "GAUGE",
+      "name": "GAUGE",
+      "status": "NOT_WIRED",
+      "wiringState": "not_connected",
+      "department": "Customer Surface & Quality",
+      "isRegisteredCockpitAgent": false
+    },
+    {
+      "id": "voice-humanizer",
+      "codename": "QUILL",
+      "name": "QUILL",
+      "status": "NOT_WIRED",
+      "wiringState": "not_connected",
+      "department": "Customer Surface & Quality",
+      "isRegisteredCockpitAgent": false
+    },
+    {
+      "id": "growth-marketer",
+      "codename": "FLARE",
+      "name": "FLARE",
+      "status": "NOT_WIRED",
+      "wiringState": "not_connected",
+      "department": "Growth, Community & Finance",
+      "isRegisteredCockpitAgent": false
+    },
+    {
+      "id": "engagement-officer",
+      "codename": "PULSE",
+      "name": "PULSE",
+      "status": "NOT_WIRED",
+      "wiringState": "not_connected",
+      "department": "Growth, Community & Finance",
+      "isRegisteredCockpitAgent": false
+    },
+    {
+      "id": "forecast-planner",
+      "codename": "VECTOR",
+      "name": "VECTOR",
+      "status": "NOT_WIRED",
+      "wiringState": "not_connected",
+      "department": "Growth, Community & Finance",
+      "isRegisteredCockpitAgent": false
+    },
+    {
+      "id": "financial-controller",
+      "codename": "MINT",
+      "name": "MINT",
+      "status": "NOT_WIRED",
+      "wiringState": "not_connected",
+      "department": "Growth, Community & Finance",
+      "isRegisteredCockpitAgent": false
+    },
+    {
+      "id": "stat-rd-lead",
+      "codename": "PRISM",
+      "name": "PRISM",
+      "status": "NOT_WIRED",
+      "wiringState": "not_connected",
+      "department": "Sports Intelligence",
+      "isRegisteredCockpitAgent": false
+    },
+    {
+      "id": "gse-score-optimizer",
+      "codename": "ASCEND",
+      "name": "ASCEND",
+      "status": "NOT_WIRED",
+      "wiringState": "not_connected",
+      "department": "Sports Intelligence",
+      "isRegisteredCockpitAgent": false
+    }
+  ],
+  "apis": [
+    "admin/dashboard",
+    "admin/losses/[pickId]/draft",
+    "admin/promotions",
+    "admin/trigger-refresh",
+    "airwave/intake-readiness",
+    "airwave/intelligence-readiness",
+    "airwave/readiness",
+    "airwave/review-queue",
+    "auth/[...nextauth]",
+    "blog",
+    "board/passes",
+    "board/state",
+    "brief",
+    "calibration",
+    "calibration/elo-backtest",
+    "calibration/market-backtest",
+    "calibration/replay-provenance",
+    "cipher/verify",
+    "clv",
+    "cockpit/agents",
+    "cockpit/api-costs/override",
+    "cockpit/bot-outbox/preview",
+    "cockpit/brief",
+    "cockpit/calibration",
+    "cockpit/command-center",
+    "cockpit/content",
+    "cockpit/content/[id]",
+    "cockpit/content/[id]/review",
+    "cockpit/free-coverage",
+    "cockpit/history/export",
+    "cockpit/jarvis",
+    "cockpit/jarvis/trend",
+    "cockpit/journal",
+    "cockpit/journal/[id]",
+    "cockpit/journal/[id]/retract",
+    "cockpit/journal/[id]/scan",
+    "cockpit/journal/[id]/submit",
+    "cockpit/journal/week-data",
+    "cockpit/listener-log",
+    "cockpit/market-twin",
+    "cockpit/operator-registry",
+    "cockpit/readiness",
+    "cockpit/resource-intelligence",
+    "cockpit/studio/generate",
+    "cockpit/tasks",
+    "cockpit/tasks/[id]",
+    "cockpit/tasks/[id]/decisions",
+    "cron/backfill-historical-games",
+    "cron/backfill-player-data",
+    "cron/backfill-team-efficiency",
+    "cron/backtest-calibration",
+    "cron/deliver-settlement-alerts",
+    "cron/drain-ai-telemetry-recovery",
+    "cron/gamma",
+    "cron/generate-drafts",
+    "cron/hydrate-cold-plane",
+    "cron/ingest-player-stats",
+    "cron/jarvis-snapshot",
+    "cron/prune-rate-limits",
+    "cron/reconcile-entitlements",
+    "cron/refresh-odds",
+    "cron/refresh-player-stats",
+    "cron/repair-checkout-attempts",
+    "cron/run-formal-receipt",
+    "cron/settle-picks",
+    "decision-genome",
+    "dev/state",
+    "dfs/salaries",
+    "gse/v1/catalog",
+    "gse/v1/entitlements",
+    "gse/v1/external",
+    "gse/v1/hydration/plan",
+    "gse/v1/hydration/strategies",
+    "gse/v1/metrics",
+    "gse/v1/metrics/[metricId]",
+    "gse/v1/openapi",
+    "gse/v1/own/values",
+    "gse/v1/rights/classify-export",
+    "gse/v1/source-matrix",
+    "gse/v1/truth",
+    "gse/v1/truth/edge",
+    "gse/v1/truth/fire",
+    "gse/v1/truth/health",
+    "gse/v1/values/[metricId]",
+    "health",
+    "health/synthetic-monitoring",
+    "human/availability",
+    "human/environment",
+    "human/readiness",
+    "human/roster-availability",
+    "intelligence/clv-calibration",
+    "intelligence/expected-points",
+    "intelligence/graded-pool",
+    "intelligence/opportunity-transfer",
+    "intelligence/player-archetypes",
+    "intelligence/player-model",
+    "intelligence/player-movers",
+    "intelligence/predictiveness",
+    "intelligence/qb-consensus",
+    "intelligence/qb-forward",
+    "intelligence/receiving-opportunity",
+    "intelligence/roster-advice",
+    "intelligence/route-rate",
+    "intelligence/rush-schemes",
+    "intelligence/rushing-contact",
+    "intelligence/rushing-efficiency",
+    "intelligence/scoring-zone",
+    "intelligence/sleeper-trending",
+    "intelligence/team-environment",
+    "intelligence/team-ratings",
+    "legal/sources",
+    "media/readiness",
+    "mlb/teams",
+    "moderation/anonymous-report",
+    "moneypuck/nhl",
+    "nflverse/birthday-usage-trend",
+    "nflverse/combine",
+    "nflverse/edge-signals",
+    "nflverse/expected-metrics",
+    "nflverse/injuries",
+    "nflverse/next-gen-stats",
+    "nflverse/player-lab",
+    "nflverse/pressure-coverage",
+    "nflverse/qb-age-rb-trend",
+    "nflverse/qbr",
+    "nflverse/snap-share",
+    "nflverse/usage-pulse",
+    "performance",
+    "picks",
+    "picks/[id]/audit",
+    "picks/[id]/explain",
+    "picks/daily-slate",
+    "projections",
+    "promotions",
+    "proof/ledger",
+    "proof/openapi.json",
+    "proof/receipts",
+    "proof/verification-spec.json",
+    "push/subscribe",
+    "push/unsubscribe",
+    "receipts/[id]",
+    "receipts/verify",
+    "room/[gameId]/model-court",
+    "scoring/player-index",
+    "sleeper/league",
+    "sleeper/leagues",
+    "sleeper/market-signal",
+    "sources/catalog",
+    "subscriptions/checkout",
+    "subscriptions/portal",
+    "tools/lineup",
+    "trends/nflverse-readiness",
+    "verify",
+    "verify/slate",
+    "verify/slate/opening",
+    "waitlist",
+    "watchlist",
+    "watchlist/follow",
+    "watchlist/unfollow",
+    "weather/game",
+    "webhooks/stripe"
+  ],
+  "crons": [
+    {
+      "route": "/api/cron/backfill-historical-games",
+      "auth": "cronAuthError",
+      "vercel": "manual-only",
+      "schedule": "—"
+    },
+    {
+      "route": "/api/cron/backfill-player-data",
+      "auth": "cronAuthError",
+      "vercel": "manual-only",
+      "schedule": "—"
+    },
+    {
+      "route": "/api/cron/backfill-team-efficiency",
+      "auth": "cronAuthError",
+      "vercel": "manual-only",
+      "schedule": "—"
+    },
+    {
+      "route": "/api/cron/backtest-calibration",
+      "auth": "cronAuthError",
+      "vercel": "manual-only",
+      "schedule": "—"
+    },
+    {
+      "route": "/api/cron/deliver-settlement-alerts",
+      "auth": "cronAuthError",
+      "vercel": "scheduled",
+      "schedule": "30 7 * * *"
+    },
+    {
+      "route": "/api/cron/drain-ai-telemetry-recovery",
+      "auth": "cronAuthError",
+      "vercel": "scheduled",
+      "schedule": "30 * * * *"
+    },
+    {
+      "route": "/api/cron/gamma",
+      "auth": "cronAuthError",
+      "vercel": "scheduled",
+      "schedule": "*/30 * * * *"
+    },
+    {
+      "route": "/api/cron/generate-drafts",
+      "auth": "cronAuthError",
+      "vercel": "scheduled",
+      "schedule": "0 11 * * *"
+    },
+    {
+      "route": "/api/cron/hydrate-cold-plane",
+      "auth": "cronAuthError",
+      "vercel": "scheduled",
+      "schedule": "30 9 * * *"
+    },
+    {
+      "route": "/api/cron/ingest-player-stats",
+      "auth": "cronAuthError",
+      "vercel": "scheduled",
+      "schedule": "0 9 * * *"
+    },
+    {
+      "route": "/api/cron/jarvis-snapshot",
+      "auth": "cronAuthError",
+      "vercel": "manual-only",
+      "schedule": "—"
+    },
+    {
+      "route": "/api/cron/prune-rate-limits",
+      "auth": "cronAuthError",
+      "vercel": "scheduled",
+      "schedule": "30 6 * * *"
+    },
+    {
+      "route": "/api/cron/reconcile-entitlements",
+      "auth": "cronAuthError",
+      "vercel": "scheduled",
+      "schedule": "0 8 * * *"
+    },
+    {
+      "route": "/api/cron/refresh-odds",
+      "auth": "cronAuthError",
+      "vercel": "scheduled",
+      "schedule": "*/30 * * * *"
+    },
+    {
+      "route": "/api/cron/refresh-player-stats",
+      "auth": "cronAuthError",
+      "vercel": "manual-only",
+      "schedule": "—"
+    },
+    {
+      "route": "/api/cron/repair-checkout-attempts",
+      "auth": "cronAuthError",
+      "vercel": "scheduled",
+      "schedule": "30 8 * * *"
+    },
+    {
+      "route": "/api/cron/run-formal-receipt",
+      "auth": "cronAuthError",
+      "vercel": "scheduled",
+      "schedule": "45 9 * * *"
+    },
+    {
+      "route": "/api/cron/settle-picks",
+      "auth": "cronAuthError",
+      "vercel": "scheduled",
+      "schedule": "0 7 * * *"
+    }
+  ],
+  "freePath": {
+    "gammaCron": "/api/cron/gamma",
+    "oddsApiRequired": false,
+    "liveBoard": "off"
+  },
+  "packages": [
+    "ai-council",
+    "compliance",
+    "crypto",
+    "data-ingestion",
+    "db",
+    "dev-tools",
+    "epistemic-twin",
+    "feature-store",
+    "genesis-kernel",
+    "governed",
+    "ingestion-pipeline",
+    "ops",
+    "partner-stack",
+    "phase-c",
+    "prediction-engine",
+    "quote-plane",
+    "sql",
+    "stats-api",
+    "types",
+    "util"
+  ],
+  "humanOnly": [
+    "DATABASE_URL + DIRECT_URL (Neon gse-postgres)",
+    "CRON_SECRET (re-verify if already set)",
+    "Free AI keys optional for volume; free path runs without",
+    "Explicit YES for LIVE_BOARD / PUBLISH_LEDGER / #226 / Phase C",
+    "Stripe live only when taking payments"
+  ],
+  "agentAuto": [
+    "All 18 cron handlers code-ready (auth via CRON_SECRET when present)",
+    "Jarvis assessment on /cockpit load",
+    "Agent council + capability registry truthful status",
+    "Gamma free quote path without Odds API",
+    "Trust-gate / AI Council CI",
+    "GSE v1 truth/own/values APIs refuse-default",
+    "nflverse / free ingestion adapters in packages"
+  ],
+  "counts": {
+    "capabilities": 16,
+    "surfaces": 24,
+    "council": 23,
+    "registeredAgents": 6,
+    "apis": 161,
+    "crons": 18,
+    "capabilityByStatus": {
+      "DRAFT_ONLY": 5,
+      "DESIGNED": 3,
+      "MANUAL": 3,
+      "NOT_WIRED": 5
+    },
+    "surfaceByStatus": {
+      "DRAFT_ONLY": 13,
+      "MANUAL": 6,
+      "DESIGNED": 4,
+      "NOT_WIRED": 1
+    }
+  }
+}

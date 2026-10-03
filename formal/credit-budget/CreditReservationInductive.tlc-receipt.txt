@@ -1,0 +1,105 @@
+==============================================================================
+RUN 1 — INDUCTIVE STEP: INIT = IndInv (the candidate itself), NEXT = Next.
+TLC enumerates every state satisfying IndInv and checks one-step closure.
+Verbatim TLC output:
+==============================================================================
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=46847 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|anthropic.com|*.anthropic.com|*.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+TLC2 Version 2026.07.18.145032 (rev: 30cc360)
+Warning: Please run the Java VM, which executes TLC with a throughput optimized garbage collector, by passing the "-XX:+UseParallelGC" property.
+(Use the -nowarning option to disable this warning.)
+Running breadth-first search Model-Checking with fp 85 and seed -1515233487619218891 with 4 workers on 4 cores with 4020MB heap and 64MB offheap memory [pid: 22082] (Linux 6.18.5 amd64, Ubuntu 21.0.10 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /workspace/wt/inductive/formal/credit-budget/CreditReservationInductive.tla
+Parsing file /workspace/wt/inductive/formal/credit-budget/CreditReservation.tla
+Parsing file /tmp/tlc-5697251096867279463/_TLCTrace.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-5697251096867279463/Naturals.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-5697251096867279463/FiniteSets.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /tmp/tlc-5697251096867279463/TLC.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-5697251096867279463/Sequences.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-5697251096867279463/TLCExt.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-5697251096867279463/Integers.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module CreditReservation
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module CreditReservationInductive
+Linting of module CreditReservation
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module CreditReservationInductive
+Starting... (2026-07-22 16:01:05)
+Computing initial states...
+Computed 2 initial states...
+Computed 4 initial states...
+Computed 8 initial states...
+Computed 16 initial states...
+Computed 32 initial states...
+Computed 64 initial states...
+Computed 128 initial states...
+Computed 256 initial states...
+Computed 512 initial states...
+Computed 1024 initial states...
+Computed 2048 initial states...
+Computed 4096 initial states...
+Finished computing initial states: 6100 distinct states generated at 2026-07-22 16:01:05.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 4.1E-12
+18420 states generated, 6100 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 1.
+The average outdegree of the complete state graph is 0 (minimum is 0, the maximum 0 and the 95th percentile is 0).
+Finished in 00s at (2026-07-22 16:01:05)
+
+--- command used (RUN 1) ---
+java -cp tla2tools.jar tlc2.TLC -workers auto -deadlock -config CreditReservationInductive.cfg CreditReservationInductive.tla
+
+==============================================================================
+RUN 2 — BASE CASE / REACHABLE TRUTH: SPECIFICATION Spec (original Init/Next),
+every IndInv conjunct as INVARIANT. Subsumes Init => IndInv.
+Verbatim TLC output:
+==============================================================================
+Picked up JAVA_TOOL_OPTIONS: -Djavax.net.ssl.trustStore=/root/.ccr/java-truststore.p12 -Djavax.net.ssl.trustStorePassword=changeit -Djavax.net.ssl.trustStoreType=PKCS12 -Dhttps.proxyHost=127.0.0.1 -Dhttps.proxyPort=46847 -Dhttp.nonProxyHosts=localhost|127.0.0.1|::1|127.*|0.*|::|169.254.*|anthropic.com|*.anthropic.com|*.anthropic.com|registry.npmjs.org|jsr.io|npm.jsr.io|pypi.org|files.pythonhosted.org|index.crates.io|proxy.golang.org|host.docker.internal|10.*|172.16.*|172.17.*|172.18.*|172.19.*|172.20.*|172.21.*|172.22.*|172.23.*|172.24.*|172.25.*|172.26.*|172.27.*|172.28.*|172.29.*|172.30.*|172.31.*|192.168.*|100.64.0.0/10|*.svc.cluster.local|*.svc.cluster.local -Djdk.http.auth.tunneling.disabledSchemes= -Djdk.http.auth.proxying.disabledSchemes=
+TLC2 Version 2026.07.18.145032 (rev: 30cc360)
+Warning: Please run the Java VM, which executes TLC with a throughput optimized garbage collector, by passing the "-XX:+UseParallelGC" property.
+(Use the -nowarning option to disable this warning.)
+Running breadth-first search Model-Checking with fp 71 and seed -7050039795446694275 with 4 workers on 4 cores with 4020MB heap and 64MB offheap memory [pid: 22115] (Linux 6.18.5 amd64, Ubuntu 21.0.10 64bit, MSBDiskFPSet, DiskStateQueue).
+Parsing file /workspace/wt/inductive/formal/credit-budget/CreditReservationInductive.tla
+Parsing file /workspace/wt/inductive/formal/credit-budget/CreditReservation.tla
+Parsing file /tmp/tlc-8961539607755315226/_TLCTrace.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/_TLCTrace.tla)
+Parsing file /tmp/tlc-8961539607755315226/Naturals.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Naturals.tla)
+Parsing file /tmp/tlc-8961539607755315226/FiniteSets.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/FiniteSets.tla)
+Parsing file /tmp/tlc-8961539607755315226/TLC.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/TLC.tla)
+Parsing file /tmp/tlc-8961539607755315226/Sequences.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Sequences.tla)
+Parsing file /tmp/tlc-8961539607755315226/TLCExt.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/TLCExt.tla)
+Parsing file /tmp/tlc-8961539607755315226/Integers.tla (jar:file:/tmp/claude-0/-home-user-gse-competitive-intel/10e65292-b2de-54ca-aba7-ed577afacfaa/scratchpad/tla/tla2tools.jar!/tla2sany/StandardModules/Integers.tla)
+Semantic processing of module Naturals
+Semantic processing of module Sequences
+Semantic processing of module FiniteSets
+Semantic processing of module TLC
+Semantic processing of module CreditReservation
+Semantic processing of module Integers
+Semantic processing of module TLCExt
+Semantic processing of module _TLCTrace
+Semantic processing of module CreditReservationInductive
+Linting of module CreditReservation
+Linting of module TLCExt
+Linting of module _TLCTrace
+Linting of module CreditReservationInductive
+Starting... (2026-07-22 16:01:06)
+Computing initial states...
+Finished computing initial states: 1 distinct state generated at 2026-07-22 16:01:06.
+Model checking completed. No error has been found.
+  Estimates of the probability that TLC did not check all reachable states
+  because two distinct states had the same fingerprint:
+  calculated (optimistic):  val = 1.1E-14
+921 states generated, 348 distinct states found, 0 states left on queue.
+The depth of the complete state graph search is 9.
+The average outdegree of the complete state graph is 1 (minimum is 0, the maximum 7 and the 95th percentile is 4).
+Finished in 00s at (2026-07-22 16:01:06)
+
+--- command used (RUN 2) ---
+java -cp tla2tools.jar tlc2.TLC -workers auto -deadlock -config CreditReservationInductive.base.cfg CreditReservationInductive.tla

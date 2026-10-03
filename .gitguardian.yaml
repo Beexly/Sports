@@ -1,0 +1,14 @@
+# GitGuardian secret-scanning configuration.
+#
+# Excludes test fixtures from scanning, not production code. Test files
+# routinely contain deliberately fake-looking credentials (e.g. "sk_test_..."
+# stripe fixtures, mock API keys) that are not real secrets but read as
+# high-confidence matches to a generic scanner. This repo already has its own
+# secret-scan guardrail (scripts/guardrails/secret-scan.mjs, run pre-commit)
+# covering the real repository; this exclusion narrows GitGuardian to reduce
+# noise, not to widen what either scanner actually protects.
+paths-ignore:
+  - "**/__tests__/**"
+  - "**/*.test.ts"
+  - "**/*.test.mjs"
+  - "**/fixtures/**"

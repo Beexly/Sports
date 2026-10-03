@@ -1,0 +1,270 @@
+{
+  "acceptanceConditions": [
+    {
+      "checkCommand": "npx tsc --noEmit -p apps/web/tsconfig.json",
+      "statement": "\"apps/web/lib/jarvis/ledgers.ts\" type-checks with no new errors at the compiled sha's tsconfig."
+    },
+    {
+      "checkCommand": "npm run test --workspace=apps/web -- council-ledgers.test.ts",
+      "statement": "Relevant test \"apps/web/__tests__/council-ledgers.test.ts\" passes."
+    },
+    {
+      "statement": "The objective's change ships with a passing, non-trivial automated test covering the fixed behavior."
+    }
+  ],
+  "contentHash": "12c58130cbeb166ca3ee5b8943bba191416827baa7dd541208a1b9fbdb994710",
+  "dependencyEdges": [
+    {
+      "from": "apps/web/__tests__/council-ledgers.test.ts",
+      "kind": "imported-by",
+      "to": "apps/web/lib/jarvis/ledgers.ts"
+    },
+    {
+      "from": "apps/web/__tests__/council-ledgers.test.ts",
+      "kind": "tests",
+      "to": "apps/web/lib/jarvis/ledgers.ts"
+    },
+    {
+      "from": "apps/web/lib/jarvis/ledgers.ts",
+      "kind": "tested-by",
+      "to": "apps/web/__tests__/council-ledgers.test.ts"
+    },
+    {
+      "from": "apps/web/lib/jarvis/ledgers.ts",
+      "kind": "imports",
+      "to": "apps/web/lib/jarvis/agent-council.ts"
+    }
+  ],
+  "forbiddenActions": [
+    {
+      "source": "compiler-derived: scope fence over targetFiles",
+      "statement": "Do not modify files outside {apps/web/lib/jarvis/ledgers.ts} and their captured dependency edges without recompiling this pack to expand scope."
+    },
+    {
+      "source": "compiler-derived: symbol-text heuristic scan of the target file at the compiled sha",
+      "statement": "\"apps/web/lib/jarvis/ledgers.ts\" contains auth/guard/assertion logic (matched /auth|guard|assert|valid/i) — do not change the pass/fail outcome of any existing guard, only its ordering/execution context, unless the objective explicitly requires a behavior change."
+    },
+    {
+      "source": "lab charter: security non-negotiables governing this compile run",
+      "statement": "No fake or fabricated data/stats anywhere in the change."
+    },
+    {
+      "source": "lab charter: security non-negotiables governing this compile run",
+      "statement": "Authorization/entitlement enforcement must be server-side only, never a frontend-only gate."
+    },
+    {
+      "source": "lab charter: security non-negotiables governing this compile run",
+      "statement": "No secrets committed to code; environment variables only."
+    },
+    {
+      "source": "lab charter: additive-only lab work constraints governing this compile run",
+      "statement": "No destructive git operations (force-push, reset --hard on shared branches) and no `prisma migrate deploy` against a non-disposable database."
+    }
+  ],
+  "knownCollisions": [],
+  "objective": "Reorder input validation before the admin auth check in council ledger write paths (logHandoff/logSubagentRun/reviewSubagentRun) so seat/confidence guards fire before LedgerStoreUnavailableError in test environments",
+  "priorDecisionsAndFailures": [
+    {
+      "category": "decision",
+      "date": "2026-07-07T18:48:14-05:00",
+      "sha": "2e1581ca93691360e63c9807bc7814f32d73d28c",
+      "subject": "Consolidate GSE program + NGS-validated expected-metrics IP onto main (#65)",
+      "touchedFiles": [
+        "apps/web/lib/jarvis/ledgers.ts"
+      ]
+    },
+    {
+      "category": "decision",
+      "date": "2026-06-13T00:44:06+00:00",
+      "sha": "5373682e9c147e203f5209dcc93f4dd9e30ad91f",
+      "subject": "feat(jarvis): the council ledgers get a real store — handoffs and subagent runs",
+      "touchedFiles": [
+        "apps/web/lib/jarvis/ledgers.ts"
+      ]
+    },
+    {
+      "category": "failure",
+      "date": "2026-06-13T01:13:12+00:00",
+      "sha": "598eb134552ee2938cf1c013b2a34fbe116d083b",
+      "subject": "fix(audit): seven review findings across wave 1-2 — one critical",
+      "touchedFiles": [
+        "apps/web/lib/jarvis/ledgers.ts"
+      ]
+    },
+    {
+      "category": "failure",
+      "date": "2026-07-21T08:18:35+00:00",
+      "sha": "8e1807289d11528d24e5eb5c8a61551d56b2f436",
+      "subject": "fix: resolve CRITICAL and HIGH security audit findings",
+      "touchedFiles": [
+        "apps/web/lib/jarvis/ledgers.ts"
+      ]
+    },
+    {
+      "category": "failure",
+      "date": "2026-07-21T09:37:41+00:00",
+      "sha": "fcec492cb8d286be19f1f3f6ea739cdb5076ad10",
+      "subject": "fix(ledgers): validate inputs before auth check in council ledger write paths",
+      "touchedFiles": [
+        "apps/web/lib/jarvis/ledgers.ts"
+      ]
+    }
+  ],
+  "relevantPrHeads": [
+    {
+      "number": 65,
+      "relevance": "touches target file \"apps/web/lib/jarvis/ledgers.ts\" (git log --follow-equivalent path history)",
+      "sha": "2e1581ca93691360e63c9807bc7814f32d73d28c",
+      "subject": "Consolidate GSE program + NGS-validated expected-metrics IP onto main (#65)"
+    }
+  ],
+  "relevantSymbols": [
+    {
+      "contentSha256": "1bbca8436ef2b775953b8f19c9c8b2b0e79c84480c605d3924cff766998e8e5f",
+      "endLine": 43,
+      "exported": true,
+      "file": "apps/web/lib/jarvis/ledgers.ts",
+      "kind": "class",
+      "startLine": 30,
+      "symbolName": "LedgerStoreUnavailableError"
+    },
+    {
+      "contentSha256": "ed5a14d2ea39db3e2acd106fd6d3e651e73085b3a2bd7e5bee83d9d9fa9f88a5",
+      "endLine": 104,
+      "exported": true,
+      "file": "apps/web/lib/jarvis/ledgers.ts",
+      "kind": "interface",
+      "startLine": 89,
+      "symbolName": "LogHandoffInput"
+    },
+    {
+      "contentSha256": "08145607f6bff8053fc275f9be8e2ea3b82808801eee0a177f56b18a907421c0",
+      "endLine": 177,
+      "exported": true,
+      "file": "apps/web/lib/jarvis/ledgers.ts",
+      "kind": "interface",
+      "startLine": 158,
+      "symbolName": "LogSubagentRunInput"
+    },
+    {
+      "contentSha256": "1c8d152bcc061e8d6287f1a62160046e9c46562c7c9746198dc4d7325d637b9a",
+      "endLine": 215,
+      "exported": true,
+      "file": "apps/web/lib/jarvis/ledgers.ts",
+      "kind": "type",
+      "startLine": 215,
+      "symbolName": "SubagentReviewDecision"
+    },
+    {
+      "contentSha256": "4c1840935683aba2fca2314aea1af6ab5c28340c1e2b353ecbaed42acc57dd53",
+      "endLine": 50,
+      "exported": false,
+      "file": "apps/web/lib/jarvis/ledgers.ts",
+      "kind": "const",
+      "startLine": 50,
+      "symbolName": "VALID_CODENAMES"
+    },
+    {
+      "contentSha256": "aa78653756c86f6a709f8188c574bf7e4c818960476f6a228c46c31b666022d9",
+      "endLine": 48,
+      "exported": false,
+      "file": "apps/web/lib/jarvis/ledgers.ts",
+      "kind": "const",
+      "startLine": 48,
+      "symbolName": "VALID_SEAT_IDS"
+    },
+    {
+      "contentSha256": "d29e36030228c29632ec927b821738b83ff806072097bccca513fdf9c9d20ee3",
+      "endLine": 79,
+      "exported": false,
+      "file": "apps/web/lib/jarvis/ledgers.ts",
+      "kind": "function",
+      "startLine": 75,
+      "symbolName": "assertValidConfidence"
+    },
+    {
+      "contentSha256": "100e519c2290a2f088a2895dec4f9ccad23bd028426d3a6a57073955fa71f783",
+      "endLine": 65,
+      "exported": false,
+      "file": "apps/web/lib/jarvis/ledgers.ts",
+      "kind": "function",
+      "startLine": 61,
+      "symbolName": "assertValidSeat"
+    },
+    {
+      "contentSha256": "f8905c771dc4920607dd1e675a7b056914aeafa8828e590ab8d56e6965f91376",
+      "endLine": 59,
+      "exported": false,
+      "file": "apps/web/lib/jarvis/ledgers.ts",
+      "kind": "function",
+      "startLine": 57,
+      "symbolName": "isValidSeat"
+    },
+    {
+      "contentSha256": "6fdec089f71f0ade2f76fb0f3a2415f71e4921618c5941e264e5d8a8055015eb",
+      "endLine": 289,
+      "exported": true,
+      "file": "apps/web/lib/jarvis/ledgers.ts",
+      "kind": "function",
+      "startLine": 279,
+      "symbolName": "listPendingSubagentReviews"
+    },
+    {
+      "contentSha256": "580f485d5836c382c3a330b50017c754c98793a4d1ad5efdbfa9c2feec87cada",
+      "endLine": 154,
+      "exported": true,
+      "file": "apps/web/lib/jarvis/ledgers.ts",
+      "kind": "function",
+      "startLine": 145,
+      "symbolName": "listRecentHandoffs"
+    },
+    {
+      "contentSha256": "f0eec38bc5460948cdd1b0fc16d4ea0a6fe2cdd3fc850dfaab1db3269d189ef7",
+      "endLine": 138,
+      "exported": true,
+      "file": "apps/web/lib/jarvis/ledgers.ts",
+      "kind": "function",
+      "startLine": 112,
+      "symbolName": "logHandoff"
+    },
+    {
+      "contentSha256": "219b8ad37ba8f9c8daf40ac30dcece74c6a655a6133a15d4cd34d16cc28df87a",
+      "endLine": 213,
+      "exported": true,
+      "file": "apps/web/lib/jarvis/ledgers.ts",
+      "kind": "function",
+      "startLine": 186,
+      "symbolName": "logSubagentRun"
+    },
+    {
+      "contentSha256": "91ad456e34b9c64d94d5f7d3477aaaa2417ac08564a75839285bab330c6416d8",
+      "endLine": 272,
+      "exported": true,
+      "file": "apps/web/lib/jarvis/ledgers.ts",
+      "kind": "function",
+      "startLine": 225,
+      "symbolName": "reviewSubagentRun"
+    },
+    {
+      "contentSha256": "4f633cf92ffa59098f5f9da85fa68a640c63c1e33a191e46486896712db66548",
+      "endLine": 85,
+      "exported": false,
+      "file": "apps/web/lib/jarvis/ledgers.ts",
+      "kind": "function",
+      "startLine": 83,
+      "symbolName": "wrapDbError"
+    }
+  ],
+  "relevantTests": [
+    {
+      "file": "apps/web/__tests__/council-ledgers.test.ts",
+      "matchedBy": "imports target via \"jarvis/ledgers\" (git grep at fcec492cb8d2)"
+    }
+  ],
+  "repoHead": {
+    "branch": "fcec492c",
+    "remote": "http://local_proxy@127.0.0.1:41729/git/beexly/sports",
+    "sha": "fcec492cb8d286be19f1f3f6ea739cdb5076ad10"
+  },
+  "schemaVersion": "0.1.0"
+}

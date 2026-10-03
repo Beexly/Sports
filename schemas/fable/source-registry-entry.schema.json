@@ -1,0 +1,15 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beexly.local/schemas/fable/source-registry-entry.schema.json",
+  "type": "object",
+  "required": ["source_id", "source_name", "commercial_use_status", "storage_status", "redistribution_status", "last_reviewed", "owner_decision_needed"],
+  "properties": {
+    "source_id": { "type": "string" },
+    "source_name": { "type": "string" },
+    "commercial_use_status": { "type": "string" },
+    "storage_status": { "type": "string" },
+    "redistribution_status": { "type": "string" },
+    "last_reviewed": { "type": "string" },
+    "owner_decision_needed": { "type": "boolean" }
+  }
+}

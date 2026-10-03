@@ -1,0 +1,36 @@
+{
+  "schema_version": "fable-cdk-synth-fixture-v1",
+  "generated_at": "2026-07-03T00:00:00.000Z",
+  "scope_note": "CDK-style fixture only. No aws-cdk-lib import, bootstrap, account, region, synth command, or deploy action is included.",
+  "stack_name": "GseShadowControlTowerLocalFixture",
+  "synth_only": true,
+  "deploy_allowed": false,
+  "resources": [
+    {
+      "logical_id": "EvidenceOrganizationalUnit",
+      "type": "Mock::Organizations::OrganizationalUnit",
+      "properties": {
+        "name": "evidence"
+      }
+    },
+    {
+      "logical_id": "PreventiveNoMutationControl",
+      "type": "Mock::ControlTower::Guardrail",
+      "properties": {
+        "controlType": "preventive",
+        "effect": "block",
+        "pillar": "security"
+      }
+    },
+    {
+      "logical_id": "DetectiveDriftCardControl",
+      "type": "Mock::Config::Rule",
+      "properties": {
+        "controlType": "detective",
+        "effect": "flag",
+        "pillar": "reliability"
+      }
+    }
+  ],
+  "forbidden_commands": ["cdk bootstrap", "cdk deploy", "aws cloudformation deploy"]
+}

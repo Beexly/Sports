@@ -1,0 +1,48 @@
+name: Weekly Shadow vs Live Comparison
+
+# Read-only against ShadowSignal; never touches a Pick, never routes traffic.
+# Weekly cadence is deliberate: this repo's Actions runner-minutes were
+# exhausted once already this cycle (see the scheduler-liveness /
+# traffic-heartbeat ops modules), which caused a real production outage — a
+# once-a-week job costs nothing meaningful against that budget where a
+# per-push one would.
+#
+# ALWAYS posts, win or lose or insufficient-sample. Posting only on a
+# favorable verdict would be exactly the cherry-picking this repo's own
+# slate-commitment / proof-receipt machinery exists to prevent elsewhere.
+on:
+  schedule:
+    - cron: "0 13 * * 1" # Monday 13:00 UTC
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  issues: write
+
+jobs:
+  compare:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: "npm"
+
+      - run: npm ci
+
+      - name: Run offline comparison
+        run: npx tsx scripts/ops/compare-shadow-vs-live.ts
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          DIRECT_URL: ${{ secrets.DIRECT_URL }}
+
+      - name: Post report as an issue
+        if: always() # post even on a script failure — see compare-shadow-vs-live.ts's catch path
+        uses: peter-evans/create-issue-from-file@v5
+        with:
+          title: "Weekly shadow-vs-live comparison — ${{ github.run_id }}"
+          content-filepath: comparison-report.md
+          labels: shadow-engine-report

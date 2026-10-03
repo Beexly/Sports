@@ -1,0 +1,809 @@
+You are one of fifteen independent expert panels. You are answering in parallel with fourteen others who cannot see your answer and whose answers you cannot see. Where you all converge, the founder acts immediately. Where you diverge, he investigates. Your job is to be RIGHT, not agreeable, and to be COMPLETE, not brief.
+
+This is a SECOND PASS. A first pass already happened: a thirteen-agent audit read this codebase and produced the inventory in PART 2. Your job is not to redo it. Your job is to go THROUGH it — every line — and make sure nothing in it was under-leveraged, undervalued, mis-ranked, or forgotten, and then to take it all the way to a shipped, defensible, world-class product.
+
+Do not be encouraging. Do not congratulate. Do not pad. Do not restate the briefing back to us — we wrote it. Do not ask clarifying questions: decide, and state the assumption you decided under. Do not stop early. Do not summarise instead of doing. Do not compress, condense, or set anything aside because it is large.
+
+The standard is not "good enough to launch." The standard is: a top-tier security team, a plaintiff's lawyer, and a sceptical paying customer all look at this and find nothing to take. World-class. Frontier. Nobody has seen better.
+
+================================================================
+PART 0 — HOW TO ANSWER. Checked mechanically. Violations are discarded.
+================================================================
+
+MARK EVERY LOAD-BEARING CLAIM with one of:
+    [VERIFIED: <the specific thing observed, and where>]
+    [INFERRED: <the specific test or file that would confirm it>]
+An unmarked claim is treated as [INFERRED] and discounted.
+
+This rule is not decoration. It exists because of four real failures on this project in one day:
+  1. A boundary was reported as "verified" when what had actually been tested was that a
+     VALIDATOR ACCEPTED a value — not that the value WORKED. It did not work.
+  2. A statistical claim ("a single league-wide cause is rejected") overstated what the test
+     licensed. Cochran's Q rejects a UNIFORM COMMON-DRIFT MODEL. It does not rule out a
+     league-wide effect, because a league-wide component can coexist with leaf-specific ones.
+  3. A confidence-discrimination surface was described as "already telling the truth on the
+     site." It is built but DARK by default, and its verdict is a different statistic entirely.
+  4. Worst: a TRUE claim was retracted because a reviewer objected using a mismatched baseline,
+     and the retraction shipped as fact. A retraction is a claim too, and it went out unchecked.
+
+Take the lesson: check the objection as hard as the claim. Both are claims.
+
+NEVER GIVE OPTIONS WITHOUT PICKING ONE. "It depends" is a failed answer. If a decision forks on a
+fact you do not have, name the fact, pick the branch you would bet on, and say what would flip you.
+
+STATE CONFIDENCE as a percentage on every decision and every score. Fifteen panels are being run
+and answers are weighted by stated confidence. Overclaiming costs you more than admitting a
+coin-flip.
+
+SCORING RULE, applies everywhere you are asked for a number:
+    10 = genuinely nothing to add. You attacked it and could not break it. A standard nobody
+         in this market has reached.
+    7-9 = strong, with specific named gaps.
+    4-6 = works, but has real holes a serious reviewer would call out.
+    1-3 = would not survive contact with a motivated attacker, a regulator, or a churned customer.
+Most real production codebases score 4-7 on most surfaces. If you find yourself writing 8s across
+the board, you are being polite, and polite is worthless here. A 4 with three concrete reasons is
+worth more than a 9 with adjectives. Never give a score without naming what specifically costs it
+the points and what specifically would earn a 10. NO FILLER. NO FLUFF. NO FEEL-GOOD NUMBERS.
+
+================================================================
+PART 1 — THE BUSINESS, AS MEASURED. Every number came from a command
+actually run against real data. None are projections or estimates.
+Treat as ground truth. Do not re-derive.
+================================================================
+
+Galaxy Sports Edge. Sports betting picks platform. Solo founder. Launching TODAY.
+Positioning: "We're not AI. We're math you can read."
+
+The engine is a DETERMINISTIC FACTOR MODEL — explicit weighted factors, frozen model version,
+readable factor breakdown per pick. It is NOT a language model and is NEVER described as AI. A
+language model drafts written content only and never chooses a pick. This is enforced by a CI
+linter and a copy scanner; a violation is a build failure.
+
+Stack: Next.js 14 App Router (no pages/), TypeScript strict, Prisma 5.22, NextAuth v5 (Auth.js
+beta, Google provider ONLY, session strategy jwt), Stripe with LIVE KEYS since 2026-07-09,
+Vercel + Neon Postgres, Redis for a Claude response cache only, Vitest, 22 Vercel Cron schedules,
+26 CI guardrails. 23 workspace packages. ~235 page.tsx files, ~160 customer-facing.
+
+Sports: NFL, NCAAF, NBA, NCAAB, MLB, NHL, MLS.
+
+PRICING (live Stripe — real cards can be charged today)
+  Free      $0                     tools + methodology, no confidence scores
+  Fantasy   $4.99/mo  | $49/yr     fantasy suite; same free teaser on betting picks
+  Pro       $14.99/mo | $99/yr     full board, confidence scores, factor trail, line movement,
+                                   Trend Lab, Parlay MRI, 7 sports
+  Elite     $24.99/mo | $179/yr    all Pro + real-time email/push alerts + CLV ledger
+Founding rates, grandfathered for life. Named proof-gated ladder: FOUNDING -> PROVEN (>=100
+settled + published calibration) -> ESTABLISHED (>=500 settled + verified CLV >=52.4%) ->
+AUTHORITY (multi-season ROI).
+
+WHAT THE MODEL DOES — frozen model, historical replay, 1999-2025 NFL regular season, 6,967 games,
+15,939 settled picks, ZERO lookahead errors, graded against real closing lines. Note the two
+denominators before you reconcile them yourself: the market rows below sum to 15,647, which is
+also the OVERALL row. The 292-pick difference between that and 15,939 is not broken out in the
+reproduction output, so do not assume what it is:
+
+    SPREAD     n=6778   48.86%   Wilson CI [47.67%, 50.05%]   ROI  -6.53%
+    TOTAL      n=6868   49.49%   Wilson CI [48.31%, 50.67%]   ROI  -5.44%
+    MONEYLINE  n=2001   76.71%   Wilson CI [74.81%, 78.51%]   ROI  -1.96%
+    OVERALL    n=15647  52.70%   Wilson CI [51.92%, 53.48%]   ROI  -5.48% per unit staked
+
+Break-even at -110 is 52.38%. We do not clear it on a lower confidence bound anywhere. The
+moneyline row is the instructive one: it wins three bets in four and STILL LOSES MONEY, because it
+picks heavy favourites at prices that already contain the edge. Remember this whenever you are
+tempted to use a win rate as a success threshold.
+
+NO EVIDENCE THAT CONFIDENCE RANKS OUTCOMES. AUC 0.4965, p=0.4113, on 13,646 picks. Controls
+(line magnitude, rest days, week of season) all sit at ~0.50 too.
+
+State this precisely, because the loose version is a real statistical error and it was in an
+earlier draft of this brief: p=0.4113 means we FAILED TO REJECT the null of no discrimination. It
+does NOT establish the null. "The confidence score carries no information" is accepting the null
+hypothesis and this test does not license it.
+
+What IS licensed is narrower than an interval. The p is a PERMUTATION p-value
+(scripts/analytics/replay-discrimination.ts:74-88): 2000 seeded label shuffles, scored as
+(atLeastAsExtreme + 1) / (PERMUTATIONS + 1), with the script's own header noting it "assumes
+nothing about the distribution." So p = 0.4113 means 822 of 2000 shuffles produced an AUC at
+least as extreme as the observed one. The observed value is unremarkable under the null. That is
+the whole finding.
+
+An earlier draft of this brief inverted that p through the normal CDF to get SE ~ 0.0043, and
+published a 95% CI of [0.4882, 0.5048] and an "80% power to detect AUC 0.512" threshold. BOTH ARE
+WITHDRAWN. A permutation p is not a normal-tail probability, so the inversion was the wrong
+method — not merely an unconfirmed number, an invalid one. Marking it INFERRED did not save it,
+which is the lesson: a label on a claim does not repair the method that produced it.
+
+One further limitation, which does NOT overturn the finding but belongs on the record. The
+permutation shuffles pick labels INDEPENDENTLY, while a single game can contribute more than one
+pick — so strict exchangeability does not hold. Two things bound how much that matters here:
+replay-discrimination.ts:135 excludes MONEYLINE entirely (`if (p.pickType === "MONEYLINE")
+continue`), which removes the strongest within-game dependence, and 6778 spread + 6868 total =
+13,646 confirms the set is spread and total only — clusters of at most two, whose outcomes are
+only weakly related. Positive within-game correlation inflates the true variance, which makes the
+true p LARGER than the one reported. A non-significant result therefore stays non-significant
+under clustering; this could only have threatened a SIGNIFICANT finding, and there isn't one.
+
+So: NO published interval on this AUC, and NO power statement. To get either, extend
+replay-discrimination.ts to retain a game key and use a CLUSTERED resampling method — game-level
+permutation, and a game-level bootstrap or DeLong variant rather than pick-level — handling ties
+as the AUC already does with average ranks. Until that is run, the defensible statement is
+exactly: observed AUC 0.4965 on 13,646 spread-and-total picks, permutation p = 0.4113, no
+evidence of discrimination, magnitude of any true effect UNQUANTIFIED. Do not write copy, or
+build an argument, that depends on the effect being exactly zero — or on it being bounded.
+
+A SECOND, WEAKER SIGNAL FROM LIVE PRODUCTION PICKS, via a different code path: the
+>=80-confidence tail is 152 graded picks, 61 wins, 40.1%. Brier resolution 0.005 on 1,663 graded
+picks.
+
+Do not lean on this the way an earlier draft did. It said the tail was "worse than the average
+pick" and that "live and replay agree" — both unsupported as written. The first needs the LIVE
+all-pick win rate over the same window, which is not published here; comparing 40.1% against the
+REPLAY's 52.70% is a different population, a different era and a different code path. The second
+calls two different statistics agreeing when one is an AUC over 13,646 NFL replay picks and the
+other is a raw tail win rate over 152 live picks across all sports. What the live number
+independently supports is narrow and still useful: a resolution of 0.005 on 1,663 picks means the
+confidence buckets barely separate outcomes in production either. State it that way. To make the
+tail claim properly, print the live all-pick win rate for the same window alongside it.
+
+PRECISION NOTE, because this was gotten wrong once: the AUC 0.4965 came from a standalone no-DB
+script over 13,646 NFL-only picks. The product's OWN confidence-discrimination surface is a
+DIFFERENT statistic — a two-bucket win-rate spread over the last 500 live settled picks, all
+sports pooled (compute.ts:430-474) — and it is BUILT BUT DARK: it needs CALIBRATION_PUBLISHED or
+CALIBRATION_AUTO_PUBLISH (both default false, calibration-publish-policy.ts:54-60) plus eligibility
+GREEN, and report.ts:18-33 short-circuits before touching the database when the gate is closed,
+rendering "Building discrimination history". The site does not today show a visitor what the
+replay found.
+
+11 MARKET SLICES TESTED (favourite/underdog, four spread bands, over/under, four total bands).
+ZERO cleared break-even on the Wilson lower bound.
+
+THE MARKET CLOSE IS ALREADY THE CALIBRATION. Walk-forward pooled Brier 0.2106, CI [0.2050,
+0.2172], n=2,750. Mean held-out Brier delta vs identity, SIGNED SO POSITIVE = BETTER (this is the
+convention the run printed; Brier itself is lower-is-better, so read the sign not the raw score):
+isotonic +0.00007, Platt -0.00003, beta -0.00014. The best calibrator we could fit beats doing
+nothing by seven hundred-thousandths of a Brier point, and two of three are worse than nothing.
+NONE beats identity by more than 0.0005.
+
+CLV IS UNMEASURED, NOT DISPROVEN. Our entry line IS the closing line by construction, so every
+pick grades MATCHED_CLOSE. No opening-line archive exists, for any sport.
+
+THE 6.5-9.5 CALIBRATION LEAF. Drifts 65.86% -> 57.12% (n=576, z=-4.42). Cochran's Q across five
+leaves = 19.57 on 4 df, p=6.07e-04, I-squared 79.6%, which rejects the UNIFORM COMMON-DRIFT MODEL
+— the leaves did not all move by the same amount. It does NOT rule out a league-wide effect; a
+league-wide component can coexist with leaf-specific ones and Q cannot separate them. The z-values
+treat the training base rate as fixed, so they are optimistic and the p-values are lower bounds.
+
+On the VALUE of the leaf model — what IS established, and what is OPEN. Treat the boundary between
+these two as itself instructive; it is the third time this particular comparison has been gotten
+wrong on this project, twice by asserting more than the data licensed.
+
+    ESTABLISHED, straight from the run:
+      per-leaf test n, test outcome rate, and leaf Brier as tabled above
+      weighted leaf Brier          0.2440
+      single global mean Brier     0.2478
+      so the leaf model beats the global mean IN AGGREGATE by 0.0038
+      against the 0.25 coin-flip line: NO LEAF IS DISTINGUISHABLY WORSE THAN A
+      COIN FLIP, and the only significant result in the column is that 10+ is
+      BETTER. Comparing a leaf's Brier to 0.25 is valid as an arithmetic fact
+      (0.25 is the coin-flip Brier on any segment regardless of its rate) but a
+      point estimate is not a verdict. The paired per-observation difference
+      d = (q-y)^2 - (0.5-y)^2, with q the leaf's forecast and p its outcome rate:
+
+        leaf        n    Brier    mean d      SE       95% CI              verdict
+        PK-1      188   0.2490   -0.00102  0.00232  [-0.0056, +0.0035]  not distinguishable
+        1.5-2.5   447   0.2501   +0.00007  0.00044  [-0.0008, +0.0009]  not distinguishable
+        3-6      1196   0.2500    0.00000  0.00000   see note            INDETERMINATE
+        6.5-9.5   576   0.2526   +0.00257  0.00654  [-0.0103, +0.0154]  not distinguishable
+        10+       343   0.1979   -0.05216  0.01173  [-0.0751, -0.0292]  BETTER than coin flip
+
+      ROUNDED INPUTS. Every forecast and outcome rate above is published to two
+      decimals, so each d, SE and interval derives from a rounded q and p. The
+      3-6 row is INDETERMINATE because of it — neither degenerate nor a null
+      test, because its rounding interval contains BOTH cases:
+
+          true q       mean d        z
+          0.499950    +2.01e-6     +1.393
+          0.500000     0           UNDEFINED (0/0)
+          0.500050    -2.01e-6     -1.390
+
+      At exactly q = 0.5 the variance is zero and the statistic is 0/0 —
+      undefined, not a value sitting inside a range. Anywhere else in the
+      interval |z| <= 1.393. Two published decimals cannot tell us which case
+      holds, and it does not matter: both branches say this row is not evidence
+      of anything.
+
+      EVERY OTHER CONCLUSION IS ROBUST to the rounding. Sweeping each row over
+      its full q +/- 0.00005, p +/- 0.00005 interval: PK-1 z in [-0.440, -0.436],
+      1.5-2.5 in [+0.149, +0.155], 6.5-9.5 in [+0.389, +0.396] — insignificant
+      throughout — and 10+ in [-4.451, -4.444], significant throughout. No
+      verdict flips anywhere in the rounding space.
+
+      MULTIPLICITY: the Bonferroni family is either 5 (if 3-6 is a real test) or
+      4 (if it is degenerate). The 10+ result survives BOTH: raw p = 8.7e-06,
+      x5 = 4.4e-05, x4 = 3.5e-05.
+
+      So 6.5-9.5's 0.2526 is a real point estimate and NOT a demonstrated
+      shortfall — its interval spans zero comfortably at n=576. Do not tell the
+      founder any leaf has been shown to underperform a coin flip. What HAS been
+      shown, and survives correction, is that 10+ beats one.
+
+    OPEN — do not assert either way:
+      WHICH leaves individually beat the global predictor on their own segment.
+      A leaf's Brier is conditional on that leaf, so it cannot be compared against the
+      global predictor's ALL-LEAF aggregate of 0.2478. The like-for-like question is what
+      the global predictor scores ON THAT LEAF. Computing that needs the constant the
+      predictor actually emits, and scripts/analytics/replay-calibration.ts:439 fits it as
+      the mean of the TRAINING set (seasons <= 2015), evaluated on test:
+          brierOf(testAll, () => trainAll.reduce((s,x) => s + x.y, 0) / trainAll.length)
+      That training mean is not printed anywhere in the reproduction output, and inverting
+      the published 0.2478 for it yields two admissible roots (~0.5323 and ~0.5681) and is
+      unstable to rounding at the fourth decimal. So the per-leaf verdict is NOT
+      RECOVERABLE from what has been published.
+
+    TO SETTLE IT: print the training-set mean and n_train per leaf from replay-calibration.ts,
+    then recompute per-leaf global Brier as p_test(1-q_train)^2 + (1-p_test)q_train^2. Until
+    that is run, any statement of the form "N leaves beat/lose to the global mean" is
+    unsupported. Do not build a recommendation on one.
+
+WHAT WE HAVE THAT IS GOOD
+- Frozen, versioned, auditable model. Every pick carries sport, game, pick type, line, confidence,
+  tier, generated_at, model_version, and a readable factor breakdown.
+- Settlement and grading against real final scores. SCOPE THIS CAREFULLY, because an earlier
+  draft of this brief overstated it and contradicted its own PART 2: what is immutable is the
+  PUBLISHED PICK — hashed and committed before kickoff, with no un-publish and no retro-edit. The
+  GRADE is not equally protected: PART 2 records that `?path=free` can overwrite an
+  already-settled score from a disagreeing source, and that the free path matches finals by team
+  plus calendar day with no game ID. Pick publication is tamper-evident; settlement is not yet.
+- Tamper-evident pre-kickoff commitments: picks hashed and committed before kickoff.
+- 26 CI guardrails: brand linter, banned-phrase trust gate, compliance scanner, model-freeze
+  guard, rights-clearance engine every extraction must pass.
+- Free-first ingestion: nflverse (CC-BY-4.0), ESPN public endpoints, CFB sources. No mandatory
+  paid odds vendor.
+
+WHAT WE DO NOT HAVE
+- Any evidence the picks beat the closing line. We have the opposite.
+- Any evidence the confidence score means anything.
+- Any opening-line archive, so CLV cannot be measured for any sport.
+- Any settled live track record beyond 1,663 graded picks with resolution ~0.
+- Any paying customers. Any marketing channel, list, or audience.
+
+================================================================
+PART 2 — THE CODEBASE, AS READ. A thirteen-agent audit read this
+repository. Every line below cites a file. Nothing here is a guess
+about what exists. This is the material for your second pass.
+================================================================
+
+--- 2A. SHIPS-BLOCKING DEFECTS ----------------------------------------------
+
+- Premium analytics (snap share, Next Gen, combine, QBR, DFS salaries) served FREE as HTML to
+  anonymous visitors while the identical JSON API is PRO/ELITE-gated. The page even links "Raw
+  data (JSON)" to the gated endpoint, so an anonymous reader reads the table and gets a 401
+  clicking its source (apps/web/app/players/page.tsx; apps/web/lib/players/views.tsx)
+- Elite's headline "real-time email & push alerts" CAN NEVER DELIVER TO ANY ACCOUNT. Two
+  independent reasons: User.emailVerified is never written by any code path, and the only auth
+  provider is Google, whose Auth.js OAuth branch creates users with emailVerified: null — so
+  `verifiedEmail = user.emailVerified ? user.email : null` is always null. And the push opt-in
+  component has ZERO mount sites with no /settings or /account page, so push_subscriptions can
+  only be populated by hand-posting to the API. Neither is gated by WATCHLIST_ALERTS_ENABLED:
+  provisioning Resend + VAPID and flipping the flag still delivers zero alerts to zero people.
+  The operator smoke test only checks env vars, so it passes while nothing ships
+  (apps/web/lib/settlement-outbox/worker.ts:942,1082; apps/web/components/push/push-alert-opt-in.tsx)
+- "Real-time" is false regardless: the delivery cron is every 3 hours (15 */3 * * *), and payloads
+  older than 24h are suppressed as expired (apps/web/vercel.json:25-26; worker.ts:80)
+- Elite therefore delivers EXACTLY Pro today: alerts cannot fire and CLV cannot be computed.
+  A $24.99 tier whose two differentiators are both dark.
+- FAQ sells pre-game alerts on "high-Edge-Index signals as they ship". The doctrine is GRADED-only
+  and no such path exists. Every other surface says it correctly; the FAQ is the outlier, and it
+  is the page a prospect reads before paying (apps/web/app/faq/page.tsx:93)
+- Advertised "3-day money-back window" has no code behind it: no in-app refund request, no
+  automated revocation (apps/web/app/terms/page.tsx:82-85; apps/web/app/pricing/page.tsx:47,208,636)
+- REFUND_REVOKES_ACCESS defaults off — an issued Stripe refund revokes zero access; the member
+  keeps paid access indefinitely (apps/web/app/api/webhooks/stripe/route.ts)
+- No 21+ age gate anywhere except the checkout POST. Homepage, /picks, /board, /promotions and
+  sign-in are all reachable with zero age check (apps/web/app/api/subscriptions/checkout/route.ts:76)
+- Date of birth is validated once at checkout and NEVER PERSISTED — no schema field. The business
+  cannot later prove any subscriber attested to 21+ (apps/web/lib/auth/age-gate.ts; schema.prisma)
+- The root layout renders NO <Footer>, so legal chrome is opt-in per page. 54 of 158 public
+  page.tsx files carry neither <Footer/> nor FantasyShell, and therefore NO Terms, Privacy,
+  responsible-play or 1-800-GAMBLER link at all. Includes /dashboard, /contests, all 12
+  /intelligence/*, all 10 /players/*, every /stats/* (apps/web/app/layout.tsx)
+- Responsible-gambling distress detection is fully written (300+ lines, CHASING/PANIC/RENT_MONEY,
+  a typed neverUpsell flag, a documented policy source) and NEVER CALLED — no importer outside its
+  own test (apps/web/lib/community/distress-signals.ts)
+- The prediction engine has a RESPONSIBLE_GAMING refusal input (weight 60) that nothing ever
+  feeds; it defaults to 0 and only fixtures set it, to 0
+  (packages/prediction-engine/src/metrics/decision/no-bet-pressure.ts:127)
+- CONFIRMED settlement mis-grading: the free path matches finals by team + calendar day with NO
+  game ID, so a doubleheader pick can grade against the wrong game via candidates[0]; and
+  ?path=free can overwrite an already-settled score from a disagreeing source. Zero test coverage
+  (docs/data/LAUNCH_RUNBOOK.md:369-376)
+- THE PERMANENT DATA-LOSS TRAP. PickSignalSnapshot.eligibleForLearning is stamped ONCE at
+  settlement as `canLearnFromOutcomes && !isBootstrap && isDecisive`, and there is NO BACKFILL
+  anywhere in the repo. With CANONICAL_HISTORY_ENABLED and OUTCOME_LEARNING_ENABLED both
+  defaulting false, it is false on two independent counts. Every pick settled before both flags
+  are on is PERMANENTLY excluded from the public calibration report and from the 100-settled floor
+  — which is the PROVEN rung of the pricing ladder. Flipping the flags later does not recover
+  them. The repo says so itself: "picks settled while the flag is off stay eligibleForLearning
+  =false and must NOT count toward the 100 floor"
+  (packages/ingestion-pipeline/src/settle-sport.ts:630; apps/web/lib/board/gate-rows.ts:75;
+  apps/web/app/cockpit/calibration/page.tsx:87)
+- Vercel Hobby caps crons at 1/day and 2 TOTAL. vercel.json declares 22 schedules: 6 sub-hourly,
+  7 hourly or every-N-hours, 9 daily — so 13 run more often than once a day, and the count alone
+  is 11x the Hobby cap regardless of cadence. The GitHub-Actions fallback is documented idle. The
+  repo calls this "the one RED spine item". Every cron route also sets maxDuration=300, which
+  requires Pro (apps/web/vercel.json; docs/data/CARDS_LAUNCH_QA.md:913-923;
+  .github/workflows/external-cron.yml:8-12)
+- Dead branch in the fallback scheduler: refresh-odds is gated `if: github.event.schedule ==
+  '*/30 * * * *'` but that schedule is not in the workflow's on.schedule list, so it can never
+  fire on schedule even with Actions minutes restored (.github/workflows/external-cron.yml:130)
+- PUBLIC_PICKS_ENABLED defaults false — /api/picks 503s EVERY tier including paying members. A
+  buyer can pay and land on a dark board, with nothing in checkout warning them
+  (packages/prediction-engine/src/platform-config.ts:166)
+- The /dashboard?upgraded=true banner renders on the URL parameter ALONE with no tier check,
+  telling every buyer that confidence scores, factor trail and line movement are now live —
+  including a FANTASY subscriber, who gets none of them (apps/web/app/dashboard/page.tsx)
+- The per-user entitlement reconcile only runs when searchParams.upgraded === 'true'. A buyer who
+  closes the Stripe tab or bookmarks /dashboard skips the self-heal and depends on the webhook,
+  with a daily 08:00 UTC cron as the only backstop — up to ~24h paid-but-locked-out
+  (apps/web/app/dashboard/page.tsx:94)
+- getBillingNotice() returns null for anything not PRO or ELITE, so a FANTASY subscriber in
+  dunning gets NO past-due banner anywhere (apps/web/lib/billing/notice.ts:38)
+- STRIPE_TERMS_CONSENT_ENABLED ordering trap: flipping it before setting a public Terms URL in the
+  Stripe Dashboard makes Stripe REJECT EVERY CHECKOUT SESSION — a total checkout outage. The
+  dependency exists only as a code comment (apps/web/lib/stripe.ts:318-328)
+- A user holding any live paid subscription gets a hard 409 from checkout, so the FANTASY -> PRO
+  upsell has NO in-app path; it depends entirely on Stripe Customer Portal configuration outside
+  this repo (checkout route.ts:166-174)
+- /deck published fabricated live health scores and agent states with no label, full public
+  chrome, no gate. FIXED 2026-09-04 — now labelled illustrative with a regression test
+  (apps/web/app/deck/page.tsx)
+- espn-odds-client.ts and espn-schedule-seed.ts — the fetchers writing every Game row and the free
+  odds path — BYPASS THE CLEARANCE ENGINE entirely, no assertIngestible/isIngestible guard
+  (packages/data-ingestion/src/)
+- The public /data page lists ESPN as "Refused" while ESPN is the live primary source for scores,
+  odds and settlement across all 7 sports. ESPN's own rights row says storage_allowed:false and
+  commercial_display_allowed:false, yet its data is persisted to Postgres and displayed on the
+  paid board. The clearance call requests only ['derived_analytics'], never 'storage', so the
+  false flag is never evaluated (apps/web/app/data/page.tsx;
+  apps/web/lib/scraping/source-rights-registry.ts:241-242; multi-source-scores.ts:90)
+- Up to ~12 board-fill/signal passes per hour hit ESPN's undocumented endpoints, against a source
+  the repo's own registry classifies as prohibiting high-volume automated access
+- The free score/settlement chain resolves to ESPN ALONE for every sport — declared secondaries
+  (henrygd-ncaa, mlb-statsapi, balldontlie-nba, nhl-web-api) have no clearance registry row and
+  are refused at runtime (apps/web/lib/data-sources/multi-source-scores.ts:67-83)
+- Kalshi, the first-listed independent estimator, is PERMANENTLY OFF: guarded by
+  isIngestible('kalshi') while the registry gives it verdict 'paid-required', which is not in
+  INGESTIBLE_VERDICTS (build-independent-fair-values.ts:199)
+- THE STALE-DATA KILL SWITCH SHIPS OFF. FORCE_NO_BET_IF_STALE defaults false; with it off,
+  isPublicPicksSurfaceStale is never consulted for suppression, and the staleDetected probe runs
+  ONLY when the board loads zero rows. A board serving hours-old rows shows NO staleness banner
+  (platform-config.ts:175; apps/web/lib/board/state.ts)
+- THE BOARD SILENTLY SWITCHES PRODUCTS WHEN ODDS GO STALE. resolveBoardSurface defaults to
+  'signal' whenever PUBLIC_BOARD_SURFACE is unset and odds are not fresh. In signal mode the board
+  publishes MONEYLINE-ONLY picks blended from Elo/Poisson/FPI instead of book lines, and the
+  staleness clock changes from 'odds inserted' to 'pick generated'. The customer-visible
+  difference is carried only in 503 hint text, not on a healthy board
+  (apps/web/lib/board/board-surface-policy.ts:15-25)
+- SEASON WINDOWS MEAN 3 OF 7 SPORTS HAVE ZERO ODDS INGESTION TODAY (2026-09-04): NBA, NCAAB and
+  NHL are out of season. Settlement still covers all 7 and the ESPN seed still writes their Game
+  rows, so those sports can appear on the board with signal picks but NO BOOK LINES AT ALL
+- HEALTH_ALERT_WEBHOOK_URL "confirmed ABSENT in Vercel production" per a prior audit — ops paging
+  is dark. TELEGRAM_BOT_TOKEN/CHAT_ID are not in .env.example either
+  (handoff/LAUNCH_BLOCKERS.md:79)
+- No cookie-consent banner and no CCPA "Do Not Sell" mechanism, despite setting NextAuth session
+  cookies (apps/web/middleware.ts:24-29; apps/web/app/privacy/page.tsx)
+- terms/page.tsx carries a header comment saying the copy MUST be reviewed by counsel before paid
+  checkout is enabled. Stripe live keys have been in production since 2026-07-09, so its own
+  precondition is unmet, and nothing in the repo records that a review happened
+- auth() swallows session-store exceptions and returns null. The file's own comment says this is
+  exactly how a broken session store becomes "every paying member is treated as anonymous", and
+  the only signal is one log line — not an alert (apps/web/lib/auth.ts:120-142)
+- The middleware gate is COOKIE-PRESENCE ONLY and excludes api/ from its matcher, so a forged or
+  expired cookie passes middleware and is caught only by the page's own auth() call. Every
+  /admin and /cockpit surface does re-check — but any new route added to PROTECTED_ROUTES without
+  its own page-level check is effectively open
+- Two Prisma models on the auth path are DEAD under the current config: Session (jwt strategy
+  means the adapter never writes rows) and VerificationToken (no Email provider configured)
+- The DOB input at checkout is uncontrolled-per-mount with no persistence, so an existing member
+  re-entering checkout must retype it, and a 21+ answer leaves no record anywhere
+- All 16 /api/gse/v1/* routes are COMPLETELY UNAUTHENTICATED. Most are catalog reads and the two
+  value routes are demo-backed today, but /api/gse/v1/entitlements?tier=ELITE publicly returns the
+  full surface map for any tier, and the value routes are wired to become the real store
+- THE HAND-ROLLED FREE ENTITLEMENT THE PICKS ROUTE WARNS ABOUT STILL EXISTS. /api/picks documents
+  that anonymous viewers must resolve through getEntitlements('FREE') because "a hand-rolled
+  fallback here is exactly how the two FREE definitions drifted apart". Two blog surfaces inline a
+  literal object with dailyPickLimit: 1 — the canonical FREE value is 2 — and omit
+  canSeeFactorBreakdown, canSeeEdgeScore, canUseTrendLab, canUseParlayMri, canUseClvLedger,
+  canUseFantasyFull and the four honesty flags entirely
+  (apps/web/app/api/blog/route.ts:27-36; apps/web/app/blog/[slug]/page.tsx:47)
+- Every gate helper fails closed to FREE, but getUserEntitlements called DIRECTLY does not — its
+  catch handles only Prisma P1001 and rethrows everything else, so 8 routes and several pages 500
+  on an unclassified lookup fault instead of downgrading (apps/web/lib/entitlements.ts:86-94)
+- FANTASY is the tier most likely to be mis-gated and the codebase knows it: keying on
+  `tier !== 'FREE'` previously leaked the whole Pro analytics slate to FANTASY subscribers. Nothing
+  structural enforces reuse of isPremium — rule 5 of .claude/rules/api-gating.md asks for it in
+  prose only
+- /fantasy/dfs and /fantasy/props have NO server-side entitlement check while their five siblings
+  are paywalled. /fantasy/dfs calls loadDfsSalaries() ungated and renders up to 24 real reconciled
+  DraftKings rows — today it shows the honest "feed not connected" state, so nothing leaks, but it
+  opens the moment a licensed salary feed is connected. Gated dark, not gated safe
+- FOUR ENTITLEMENT FLAGS ARE DEAD CODE: canSeeMultiprob, canSeeGlassLedger, canSeeRecompute,
+  canUseFantasyDraftSuite are declared, typed and test-pinned with NO consumer anywhere. The three
+  honesty-surface flags carry a 15-line comment describing a deliberate free/paid split that
+  nothing implements. /glass-ledger (665 lines) has NO entitlement check of any kind despite
+  canSeeGlassLedger existing as a PRO+ flag (packages/types/src/index.ts)
+
+--- 2B. DEAD GATES AND FALSE STATES -----------------------------------------
+
+- DEAD GATE: `liveBoardOn` is HARDCODED false at all four buildBoardMeta call sites; nothing reads
+  a LIVE_BOARD env var into it. classifyBoardState's precedence is DB error -> suppression ->
+  bootstrap -> !liveBoardOn -> rows, so once CANONICAL_HISTORY_ENABLED is turned on (clearing the
+  bootstrap branch) the board class is PERMANENTLY 'HONEST_EMPTY_LIVE_BOARD_OFF' with
+  honestEmpty:true EVEN WITH REAL PUBLISHED ROWS. /board gates its banner on honestEmpty, so a
+  fully-populated board renders "Live board is held (founder gate). Empty slate is the
+  honesty-correct default — not a claim that no edges exist" DIRECTLY ABOVE REAL PICK ROWS. The
+  states HAS_ROWS and HONEST_EMPTY_NO_ELIGIBLE are unreachable in production, and
+  classifyDegradationCharacter can never return 'healthy'
+  (apps/web/lib/board/state.ts:261,351,469,499; apps/web/app/board/page.tsx:159;
+  degradation-character.ts:84)
+- OPERATOR LANGUAGE ON THE PUBLIC BOARD. BoardHealthBadge renders, beside the /board H1, the raw
+  enum meta.boardClass.state, a Trace hash, the literal string "public fire held", and the raw
+  degradation message. Day one with zero picks, a visitor reads: "Board health · Degraded · 0 rows
+  · Trace a1b2c3d4 · BOOTSTRAP · public fire held · No active board rows are available for this
+  request." (apps/web/components/board/board-health-badge.tsx:34-41)
+- ENV VAR NAMES IN CUSTOMER COPY. /picks renders "Public picks are still gated. LIVE_BOARD stays
+  off until founder enable."; /board renders "No public fires — LIVE_BOARD / gate held by law.";
+  bootstrap-state.tsx shows visitors `isBootstrap=false` and `PERFORMANCE_STATS_ENABLED` in <code>
+  tags; /board prints the enum through .replaceAll("_"," ") producing the eyebrow "HONEST EMPTY
+  LIVE BOARD OFF" (picks/page.tsx:404; board/page.tsx:168,235;
+  components/performance/bootstrap-state.tsx:80,98)
+- TWO DIFFERENT GATES ON ONE PAGE: /performance branches on canExposePerformanceStats (env only)
+  while the CalibrationPanel inside it resolves through resolveEffectivePerformanceGate (published
+  AND eligibility GREEN). With PERFORMANCE_STATS_ENABLED=true but eligibility RED, the page renders
+  win/loss tables while its own calibration panel says metrics stay dark
+  (apps/web/app/performance/page.tsx:131; lib/ops/effective-performance-gate.ts)
+- INCONSISTENT GATE SOURCES: /performance and the calibration report use the strict
+  resolveEffectivePerformanceGate (published AND GREEN), but /clv/page.tsx:38, /api/clv:38 and
+  /api/performance:10 read the RAW env flag. Flipping PERFORMANCE_STATS_ENABLED alone opens the
+  CLV page and both APIs while /performance stays dark
+- RAW ERROR MESSAGES ON TWO PUBLIC SURFACES. /performance renders {fetchError} — err.message
+  straight from a failed Prisma query — inside a role=alert card. /players passes error.message
+  into SourceError, printed verbatim under the fixed headline "This board is intentionally empty."
+  so a Prisma failure is presented to the visitor as a deliberate empty state. Both bypass the
+  digest redaction that error.tsx boundaries apply
+  (performance/page.tsx:273; players/page.tsx:121-122,164-169; ui/source-error.tsx:57)
+- STALE-SUPPRESSED SLATE STILL RENDERS ZEROED STAT PILLS. When FORCE_NO_BET_IF_STALE fires,
+  /api/picks returns 503 but /api/picks/daily-slate returns HTTP 200 with totalGames:0,
+  totalPicks:0, premiumPickCount:0, and /picks renders SlateBar unconditionally — so "Games Today
+  0 / Total Picks 0 / Premium Picks 0" sits above the quiet-board card, reading as a factual
+  zero-game claim when the truth is suppression (api/picks/daily-slate/route.ts:78-92)
+- DB-UNREACHABLE IS CLASSIFIED AS 'genuinely_quiet' by classifyDegradationCharacter. /board happens
+  to render its separate dbUnreachable banner first, so the visitor still sees the truth — but any
+  future consumer of degradationCharacter alone reads an outage as restraint
+  (lib/board/degradation-character.ts:80)
+- LOADING SKELETONS DROP THE SITE CHROME. ToolPageSkeleton renders only a bare <main> — no Nav, no
+  Footer, no risk disclosure. Navigating to /board or /picks makes the header vanish for the load
+  duration, then reappear (components/ui/tool-page-skeleton.tsx)
+- /stats IS LIVE, UNLINKED AND FIXTURE-BACKED. STATS_PUBLIC only removes the FOOTER LINK; there is
+  no middleware rule, so every one of the 26 URLs is live and indexable to anyone who has it. All
+  numbers come from checked-in JSON stamped generated_at 2026-06-13 — ~3 months stale — while
+  /stats/players ships a ribbon reading "Player snapshot updated every sync cycle"
+  (apps/web/lib/launch/public-surface-gate.ts:20; lib/statking/product.ts)
+- /stats WOULD 500 IF A SNAPSHOT FILE WERE ABSENT: readJson() throws for any caller passing no
+  fallback, and loadSummary, loadActiveMetricManifest and loadPlayers all pass none. On Vercel the
+  files arrive via outputFileTracingIncludes, so a tracing miss turns the whole tree into the error
+  boundary (lib/statking/product.ts:61,65,68)
+- /today ("Mission Control", a top-level nav item) is ENTIRELY ILLUSTRATIVE — DEMO_WIRE,
+  SCHEME_SCENARIOS, DFS_SLATE and PROPS are all fictional. It is labelled (per-card sample:true and
+  a "Sample · " eyebrow) but the hero reads "What matters now" with a pulsing live-dot
+- /vault is a permanent static placeholder, 68 lines, no data loading, hardcoded "Status:
+  Collecting" — and it is one of the two CTAs on the /picks gated empty state, so a day-one
+  visitor who hits the empty board and follows the escape hatch lands on a SECOND placeholder
+  (apps/web/app/picks/page.tsx:423)
+- /the-beat is linked from BOTH nav and footer and by default (NEWS_RSS_FEEDS unset) renders
+  DEMO_WIRE — invented sources, players and headlines ("Dana Frost", "Marcus Vale"). Honestly
+  disclaimed, but a visitor arriving from the footer lands on fictional newsroom content. /gsn
+  behaves similarly with SAMPLE_TRANSMISSION
+- /admin/statking/alerts renders a "fixture snapshot" ribbon over loadPlayers() data and says
+  delivery channels are owner-gated. lib/statking/alerts/index.ts is a ONE-LINE file exporting
+  { status: "foundation" } with zero importers
+- /stats/proof is a PROOF-BRANDED page whose entire content is fixture data, sitting at sitemap
+  priority 0.5 behind the STATS_PUBLIC gate, with an explicit banner saying the rows are not real
+  settled predictions
+
+--- 2C. THE CONTENT STACK IS AN ILLUSION ------------------------------------
+
+- The blog is not merely gated dark — it is STRUCTURALLY UNWRITABLE. Nothing in the entire
+  repository (app code, workers, scripts, or the Prisma seed) EVER CREATES A BlogPost ROW.
+  Flipping PUBLIC_BLOG_ENABLED=true today changes /blog from "No posts yet" to... "No posts yet".
+  The gate is a red herring; the missing piece is a writer.
+- /admin/posts tells the operator "No posts yet. Posts are generated automatically after picks are
+  created." That is FALSE — no generator exists. An operator reading it waits indefinitely
+  (apps/web/app/admin/posts/page.tsx:102)
+- The Model Journal is the more expensive illusion: full admin CRUD, an RSS 2.0 feed, schema.org
+  Blog + BlogPosting JSON-LD, sitemap and news-sitemap inclusion, and a public-copy claim guard —
+  yet the status machine TOPS OUT AT REVIEW_PENDING because no route writes 'PUBLISHED'. /journal
+  permanently reads "No Journal entries published yet.", the RSS feed permanently emits zero
+  items, and the retract route (which requires status==='PUBLISHED') is unreachable dead code
+- The Monday WEEKLY_RECAP draft the cron generates CAN NEVER BE APPROVED: WEEKLY_RECAP is in
+  PERFORMANCE_GATED_TYPES, so with PERFORMANCE_STATS_ENABLED off it evaluates GATE_OFF_BLOCKED,
+  and the review route refuses APPROVED unless readiness is READY_FOR_REVIEW. A permanently
+  unapprovable draft accrues every Monday (lib/content-engine/readiness.ts:48)
+- SLUG COLLISION between seed and cron: the seed creates a draft with slug
+  `daily-slate-brief-${today}`, the exact pattern generate-drafts uses. On any DB seeded the same
+  UTC day, the cron's findFirst hits the demo row and SKIPS generating the real brief, returning
+  "already generated today" (packages/db/prisma/seed.ts:758; generate-drafts route.ts:152)
+- workers/content-publishing IS NOT A RUNNING WORKER. Not referenced by any of the 22 cron
+  entries, no queue consumer (there is no queue library in this stack), and its 69 lines exist
+  solely to refuse. Its package.json and Dockerfile make it look like a deployed service; it is an
+  executable no-op
+- apps/web/lib/content-generator.ts is a COMPLETE, SOPHISTICATED pipeline — free-lane routing,
+  monthly budget enforcement, JSON parsing, certainty-language rejection, and a numeric-grounding
+  check that blocks any stat not present in the source prompt — with ZERO production callers. It
+  is the most finished piece of the content stack and it is wired to nothing
+- The only content a visitor can actually read is HARDCODED TYPESCRIPT: 3 newsletter issues and 3
+  podcast episodes, dated 2026-08-01 to 2026-08-06, ~a month stale. Publishing a new one requires
+  a code change and a deploy. Because news-sitemap enforces a 48-hour window, all six are excluded
+  from Google News; the endpoint is valid but empty
+- The podcast is TRANSCRIPT-ONLY shipped as a feed: no audioUrl field, no <enclosure>, no audio in
+  public/audio — yet the root layout declares it to browsers as an RSS alternate titled "GSE Board
+  Meeting podcast". Anyone who subscribes gets a feed with no playable media
+- /brief is a live route whose own metadata says "The daily brief composer is being rebuilt." It is
+  noindex'd and robots-disallowed, while the actual 275-line composer is complete and wired only
+  into admin cockpit routes
+- GUARDRAIL BYPASS BY INDIRECTION: draft-only.mjs's `resend` rule matches only the SDK IMPORT and
+  whitelists exactly one file. waitlist-welcome-email.ts sends marketing-adjacent mail by importing
+  sendAlertEmail from the whitelisted transactional module, so it passes the guard without ever
+  being reviewed against it. The guard cannot see a second sender reached through the first
+
+--- 2D. BUILT BUT INVISIBLE — latent value, cheap to switch on ---------------
+
+- /watchlist: a shipped, DB-backed, tier-aware follow feature — and THE ENTRY POINT for the Elite
+  alerts being sold — with ZERO inbound links from nav, footer, palette or sitemap. Reachable only
+  by typing the URL. The picks-page and dashboard alert CTAs link to /pricing, not /watchlist
+- /calibration/market: real Brier/ECE/reliability on the de-vigged closing moneyline over the
+  nflverse 1999-present archive — THE ONE CREDIBLE NUMBER SHOWABLE ON DAY ZERO with no settled
+  picks — with zero inbound links and absent from the sitemap. Its data source
+  (backfill-historical-games) is an unscheduled manual cron
+- /journal: a research-notes hub feeding sitemap.xml, news-sitemap.xml and an RSS alternate
+  declared in the root layout, with zero inbound internal links from nav, footer, mobile nav or
+  command palette
+- /preview/[sport]/[slug]: up to 120 programmatic-SEO matchup pages, sitemap-only orphans with no
+  internal UI link anywhere. Also force-dynamic with a take:500 candidate query per request, so
+  every crawler hit is an uncached 500-row query
+- /edge-index, the free-badge distribution and backlink play: TRIPLE-orphaned (no inbound links,
+  absent from sitemap) and its embed snippet ships a hardcoded EXAMPLE_ID the visitor is told to
+  replace by hand. There is no game picker. The /embed target it advertises is correctly built
+  (index:true, frame-ancestors *), so the plumbing works and only the funnel is missing
+- /blog, /deck, /sealed, /case-studies/aws-governed-sports-intelligence, /media-kit, /launch,
+  /human, /partners, /integrations, /live, /ledger and 14 /fantasy/* sub-pages are absent from the
+  sitemap; several have zero inbound links from anywhere
+- /promotions is a fully-built sportsbook-promotions directory (240 lines, state selector, per-card
+  21+/eligible-states/RG text) that CAN NEVER RENDER A ROW: the operator registry holds ZERO
+  APPROVED_PARTNER entries. Orphaned but crawlable — robots.ts does not disallow it
+- alert-dispatch.ts (205 lines) and settlement-hook.ts (223 lines) are DEAD in production —
+  worker.ts bypasses both and calls sendWebPushAlert/sendAlertEmail directly. settlement-hook.ts's
+  own header CLAIMS the worker invokes it. It was written to fix the exact problem it now has
+- alert-eligibility.ts calls itself "intentionally the ONE place that decides is this event allowed
+  to alert" and says callers must route through it "so the doctrine can never drift". The live path
+  never imports it — it inlines its own checks and never checks settledAt at all
+- model Alert + enum AlertChannel — the confidence-threshold alert product the FAQ describes — has
+  ZERO code references anywhere in the repo (schema.prisma:894-910,1479-1482)
+- The command palette exposes 30 routes globally (fantasy/connect, autopilot, league-twin,
+  gm-ledger, academy, scheme) that are absent from the visible nav entirely
+- capture-route-error.ts's "3-route pilot" for posting route errors to the health webhook has ZERO
+  call sites — the pilot never happened. Unhandled route errors post to no webhook
+- /glass-ledger is shipped and PERMANENTLY EMPTY: even with PUBLISH_LEDGER on it hardcodes
+  seasons: [], calibration: null, significance: null — the flag unlocks only the SHAPE. It is
+  noindex when unpublished yet still listed in the sitemap
+- PUSH DEEP LINKS ARE SILENTLY DROPPED: sw.js reads parsed.url and opens it on notificationclick,
+  and the payload type declares an optional url — but the live sender passes only {title, body} and
+  pastes the deep link into the body TEXT. Every notification click opens '/'
+- /api/proof/ledger and /llms.txt inherit their honesty from the PUBLISH_LEDGER stub, so the
+  machine-readable proof manifest reports the ledger unpublished even when /proof is serving a real
+  Merkle root over real settled picks. Human and machine proof surfaces read different sources
+- Two different things are both called "receipts": PickProofReceipt (pre-kickoff commitment,
+  verified at /verify) and the signed GovernedReceipt/AgentReceipt system. They share no schema and
+  no verifier. Within /proof, leafHash and receiptHash are DIFFERENT fingerprints
+- Receipt coverage is structurally PARTIAL and nothing surfaces the gap: a receipt is minted only
+  when a real marketFairProb in (0,1) AND non-zero entryOdds exist, wrapped in a non-fatal
+  try/catch. Some settled picks appear on /proof with a Merkle leaf but no "Verify receipt" link,
+  and there is no published receipt-coverage percentage the way CLV has clv-coverage.ts
+- /ledger's Merkle demo is ILLUSTRATIVE: it hardcodes six fake picks ("NFL · Game 01", WIN/LOSS/
+  PUSH, confidences 52-67). The crypto is real; the records are synthetic. It is labelled
+  illustrative:true but it sits on the SAME PAGE as the real settled-receipt table
+- /stats: 26 fully-built StatKing pages. 16 of ~160 customer routes are pure redirect stubs; 11 of
+  them have no inbound reference anywhere and exist purely as legacy-URL insurance
+- SEO: /glass-ledger is in the sitemap while its own generateMetadata sets robots:{index:false}
+  when PUBLISH_LEDGER is off, so the sitemap submits a noindex URL. The footer links to /stats
+  which robots.ts DISALLOWS. The sitemap lists /contests, a redirect stub, AND its destination
+
+--- 2E. GATES AND FLAGS THAT DECIDE WHAT A VISITOR SEES ----------------------
+
+Every one defaults OFF in code. Which are actually set in the production Vercel environment is NOT
+verifiable from the repository — .env* files are Read-denied to agents — so the live state must be
+confirmed from the Vercel console before anything asserts what a real visitor sees.
+
+- PUBLIC_PICKS_ENABLED (default false, platform-config.ts:166) — off: /api/picks and /picks 503 to
+  every tier; the entire paid board is dark
+- CANONICAL_HISTORY_ENABLED (default false, platform-config.ts:164) — off: picks stamped
+  isBootstrap=true; /proof, /ledger, /performance, /clv, /performance/losses, calibration report
+  and the Edge Index badge all read empty
+- OUTCOME_LEARNING_ENABLED (default false, platform-config.ts:172) — off: eligibleForLearning never
+  true. NOT RETROACTIVE. No backfill. This is the permanent-loss trap in 2A
+- PERFORMANCE_STATS_ENABLED (default false, platform-config.ts:168) — off: /performance, /clv,
+  /api/performance dark
+- CALIBRATION_PUBLISHED / CALIBRATION_AUTO_PUBLISH (both default false,
+  calibration-publish-policy.ts:54-60) — off: the discrimination panel renders "Building
+  discrimination history" and short-circuits before the database
+- PUBLIC_BLOG_ENABLED (default false, platform-config.ts:167) — off: /blog empty, /blog/[slug]
+  404s. On: still empty; nothing writes posts
+- FORCE_NO_BET_IF_STALE (default false, platform-config.ts:175) — off: a board serving hours-old
+  rows shows no staleness banner
+- WATCHLIST_ALERTS_ENABLED (default false, alert-dispatch.ts:92-96) — off: no settlement email or
+  push dispatches. On: STILL ZERO, see the recipient-layer defect in 2A
+- STATS_PUBLIC (default false, public-surface-gate.ts:20) — off: removes the FOOTER LINK ONLY. The
+  26 pages stay live and indexable
+- CONTESTS_PUBLIC (default false) — off: Contest Bay and /contests both notFound()
+- PUBLISH_LEDGER (default false, glass-ledger/page.tsx:158) — off: sealed refusal state + noindex,
+  while the sitemap still lists it
+- REFUND_REVOKES_ACCESS (default off, log-only) — off: an issued refund revokes zero access
+- STRIPE_TERMS_CONSENT_ENABLED (default off, stripe.ts:326) — off: checkout records no ToS
+  acceptance. On before a Stripe-side Terms URL: checkout breaks entirely
+- LIVE_BOARD — READ BY NOTHING. See the dead gate in 2B
+- PUBLIC_BOARD_SURFACE (unset) — unset + stale odds silently switches the board to moneyline-only
+  signal picks
+
+--- 2F. GENUINELY STRONG — do not propose rebuilding these ------------------
+
+- The outage-vs-absence distinction is implemented consistently and separately across /proof, /clv,
+  CalibrationPanel, /api/verify and /api/verify/slate, so a DB blip can never be misread as "no
+  record exists" — the exact failure mode that would destroy this product's premise. Almost nobody
+  builds this
+- VerifyConsole recomputes the receipt hash CLIENT-SIDE via WebCrypto, so verification does not
+  depend on trusting the server's response (components/trust-ledger/verify-console.tsx:161)
+- Free-first zero-key data spine: a 3-tier odds chain (Odds API -> TheRundown -> ESPN public) plus
+  an ESPN free schedule seed keeps board and settlement running with no paid keys
+- A starved-cycle detector marks a settle-picks run ok:false if it executes but grades nothing
+  while picks are overdue, instead of reporting false-green (api/cron/settle-picks/route.ts:186-208)
+- Every entitlement gate HELPER fails closed to FREE on unclassified errors, with a throttled audit
+  log making a silent downgrade of paying members observable (lib/entitlement-observability.ts)
+- /preview strips the confidence number from BOTH the meta description AND the FAQPage JSON-LD for
+  anonymous/FREE viewers, with freeSafeDescription() reproducing the template minus the paid
+  clause. Most sites leak the paid metric into the SERP snippet; this one does not
+- Admin/cockpit role-gating is 33/33 on API routes, enforced by a filesystem-sweep test over every
+  admin page.tsx (__tests__/admin-routes-gating.test.ts)
+- The checkout money path uses a durable CheckoutAttempt table with idempotency keys, fingerprinting
+  and a repair cron, and the webhook always RE-RETRIEVES the subscription rather than trusting the
+  embedded snapshot
+- Public metadata coverage is 100% on real public pages, enforced by public-metadata-coverage.test.ts
+- 26 CI guardrails run on every PR and fail the build, including a model-freeze guard, a
+  banned-phrase trust gate, a rights-clearance scan and a secret scan
+
+================================================================
+PART 3 — YOUR WORK. Nine stages. Do them IN ORDER. Do not skip.
+Do not summarise a stage instead of doing it. Do not compress.
+================================================================
+
+STAGE 1 — THE TRUE SECOND PASS.
+Go through PART 2 line by line. For EVERY entry, decide and record:
+  (a) Is it correctly SEVERITY-RANKED, or has it been under-leveraged / undervalued?
+  (b) Does it INTERACT with another entry in a way neither entry states? Compound failures are
+      where the real damage is. Example to calibrate you: the alerts recipient-layer defect plus
+      the unmeasurable CLV together mean Elite has no differentiator at all — neither entry says
+      that alone.
+  (c) Is anything MISSING that the presence of this entry implies should have been checked?
+Output a table of every entry you re-ranked, every interaction you found, and every gap the
+inventory itself left. This stage is the difference between a second pass and a re-read. If you
+finish it having changed nothing, you did not do it.
+
+STAGE 2 — ADVERSARIAL SECURITY PASS OVER THE WHOLE CODEBASE.
+Attack it. You are not reviewing, you are trying to get in, escalate, read what you should not, or
+make the business liable. If you have the ability to fetch, clone, or run tooling, use it: pull
+current OWASP guidance, known-vulnerable-pattern corpora, Next.js and NextAuth and Prisma and
+Stripe advisory lists, and any penetration-testing toolkit you can actually execute, and run
+everything you can against the described architecture. If you CANNOT execute anything, say so in
+one line and do the analysis from the code facts in PART 2 — but do NOT describe a scan you did
+not run. A fabricated security result is the single most dangerous thing you can hand this founder.
+Cover at minimum: authentication and session handling; authorization and tier escalation; IDOR;
+injection (SQL via Prisma raw, XSS via dangerouslySetInnerHTML and JSON-LD script injection,
+command injection); SSRF in the outbound data fetchers; secret exposure in the client bundle, RSC
+payloads, logs and error messages; unauthenticated API surface, rate limiting and CORS; webhook
+signature verification and replay; cron authentication and timing-safe comparison; caching as a
+paywall bypass at the edge; supply chain and CI workflow injection.
+For each finding: severity, the concrete attack sequence, the file, and the smallest fix.
+
+STAGE 3 — FRONT END ALIGNMENT.
+Everything customer-facing, aligned. Broken links, dead CTAs, pages promising what another page
+denies, tier naming inconsistent across pricing/FAQ/terms/dashboard, empty states that read as
+errors, loading states that drop chrome, mobile/desktop nav parity, operator language leaking to
+visitors, orphaned pages, and every paid feature named on /pricing that has no real destination.
+
+STAGE 4 — BACK END ALIGNMENT, CALIBRATION, AND WHAT MUST BE TURNED ON.
+Cross-check the 22 cron schedules against the routes that exist, both directions. Which workers are
+actually invoked and which are orphaned. Which modules claim an integration in their own doc
+comment that does not exist in code. Flag coherence: name every pair where one flag on and another
+off produces an incoherent public state. Then give the EXACT ORDERED SEQUENCE of environment flags
+to set, and say for each one what breaks if it is set out of order. The
+CANONICAL_HISTORY_ENABLED / OUTCOME_LEARNING_ENABLED ordering is the one that permanently destroys
+data if gotten wrong; treat ordering as a first-class deliverable.
+
+STAGE 5 — RANK EVERY SECTION 1 TO 10.
+Score each of these against the PART 0 rule. No filler. No fluff. No feel-good numbers. For each:
+the score, what specifically costs it the points, and what specifically earns a 10.
+   1. Authentication and session          2. Authorization, tiers and paywall
+   3. Injection and XSS                   4. SSRF and outbound fetch
+   5. Secrets and credential handling     6. Unauthenticated API surface
+   7. Webhook and cron authentication     8. Caching and data leakage
+   9. Supply chain and CI                10. Data ingestion and source rights
+  11. Settlement and grading correctness 12. Proof, receipts and verifiability
+  13. Calibration and gate honesty       14. Front-end coherence
+  15. Copy, brand and positioning        16. Legal and compliance floor
+  17. Responsible gambling               18. Billing, refunds and entitlement sync
+  19. Alerts and notifications           20. Content pipeline
+  21. SEO and discoverability            22. Observability and ops paging
+  23. Test coverage and guardrails       24. The offer and pricing
+  25. Onboarding and first-run experience
+Then give ONE overall score for launch-readiness, and say plainly whether this ships today.
+
+STAGE 6 — THE ACTION PLAN.
+Every item from stages 1-5, nothing dropped, nothing merged away to make the list look shorter.
+For each: what to change, which file, the smallest correct fix, the risk of the fix itself, how to
+verify it, and which bucket — BEFORE DEPLOY / WEEK 1 / BACKLOG / DELIBERATELY NEVER. NEVER is a
+real and respectable bucket; a solo founder cannot do everything and pretending otherwise is how
+nothing ships. Put real things in it and defend them. Order the BEFORE DEPLOY bucket by
+dependency, not by severity — some fixes have to happen before others are even possible.
+
+STAGE 7 — EXECUTE.
+Work the plan. For every BEFORE DEPLOY item and every WEEK 1 item, produce the actual deliverable:
+the literal replacement copy, the exact code change as a diff or a complete function, the exact
+env sequence, the exact test. Not a description of the change — the change. Do not minimise, do
+not condense, do not set anything aside because the answer is long. If you run out of room, say
+which items remain and hand them over cleanly rather than thinning everything.
+
+STAGE 8 — REVIEW.
+Go back over your own stages 1-7 adversarially. What did you get wrong? What did you assert without
+marking? What did you under-rank on the first pass and now see differently? What did you leave out
+because it was inconvenient? Where did your own fix introduce a new problem? Name them.
+
+STAGE 9 — POLISH, SUMMARY, HANDOFF.
+Fix what stage 8 found. Then produce:
+  - A one-page summary the founder reads in two minutes to know exactly where he stands.
+  - A handoff: the ordered checklist he executes, the flags in the exact order he sets them, what
+    he must confirm in the Vercel console himself, what he must NOT do, and what he should watch
+    in the first 48 hours with the specific signal that means it is going wrong.
+
+================================================================
+PART 4 — RULES. Breaking one voids your entire answer.
+================================================================
+
+- NEVER propose fabricating, cherry-picking, backfilling, or selectively publishing a performance
+  number, or presenting the historical replay as a live track record. The premise of this business
+  is that it does not lie about its own performance. One invented number makes every other number
+  suspect. An answer that softens this is worse than no answer.
+- NEVER propose anything that requires the picks to beat the close. That assumption currently fails.
+- NEVER describe the engine as AI, machine learning, or a neural network in customer-facing copy.
+  It is a deterministic factor model. Enforced by a CI linter; a violation is a build failure.
+- NEVER invent a URL, a licence clause, a price, a statute, a CVE, or a citation. Every one will be
+  opened and read. Write LICENCE UNKNOWN, PRICE UNKNOWN, or NOT SURE.
+- NEVER describe a scan, a clone, or a command you did not actually run.
+- NEVER recommend flipping a gate to make a number appear. The gates are the honesty boundary.
+  Recommending one be opened is legitimate ONLY when you say what earns it.
+- NEVER weaken a guard, delete a phrase from a forbidden-copy list, loosen an assertion, or skip a
+  test to make something pass. If a guard is red, the code is wrong or the guard needs NARROWER
+  context — never less power.
+- NEVER answer "wait until there is a track record." That is a plan to have no business for a
+  year. If that is genuinely your answer to a section, say it in one sentence and move on.
+
+================================================================
+PART 5 — FINISH WITH THIS
+================================================================
+
+RANK YOUR OWN PACKAGE HONESTLY. Most "honest analytics" plays in sports betting die because honesty
+is not a feature anyone pays for: customers say they want transparency and buy confidence. If your
+package is a version of that dead idea, say so, and either fix it or concede the point. A panel that
+concedes and explains why is more useful than one that does not notice.
+
+Then: the single sentence you would say to this founder if you had five seconds and he was about to
+press deploy.

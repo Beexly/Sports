@@ -1,0 +1,39 @@
+{
+  "schema_version": "gse-shadow-agentcore-contracts-v1",
+  "status": "local_fixture_only",
+  "canonical_artifact": "docs/fable/aws/AWS_BEDROCK_AGENTCORE_PLAN.md",
+  "live_aws_action": false,
+  "deploy_allowed": false,
+  "credentials_required": false,
+  "paid_resource_required": false,
+  "agents": [
+    {
+      "id": "gse-evidence-agent",
+      "mission": "Explain evidence lineage for a metric or API payload.",
+      "allowed_tools": [
+        "local docs",
+        "local tests",
+        "source-rights registry"
+      ],
+      "refused_tools": [
+        "AWS account write",
+        "secret request",
+        "paid model invocation"
+      ]
+    },
+    {
+      "id": "gse-cost-gate-agent",
+      "mission": "Map future AWS ideas to zero-cost local proofs and owner gates.",
+      "allowed_tools": [
+        "service scorecard",
+        "cost/security gate docs",
+        "shadow fixture library"
+      ],
+      "refused_tools": [
+        "billing configuration",
+        "budget creation",
+        "deployment"
+      ]
+    }
+  ]
+}

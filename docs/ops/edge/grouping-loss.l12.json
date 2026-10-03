@@ -1,0 +1,47 @@
+{
+  "step": "L-12 grouping-loss gate",
+  "recon": {
+    "graded_n_expected": 909,
+    "artifacts_examined": [],
+    "score_available": false,
+    "outcome_available": true,
+    "features_available": true,
+    "can_compute": false,
+    "missing": [
+      "model probability p_hat per pick (in (0,1))"
+    ],
+    "notes": [
+      "census has NO model probability field. `confidence_pct` is a 0-100 heuristic composite, NOT a calibrated probability and cannot stand in for p_hat. `market_fair_prob` is the market's de-vigged probability, NOT the model's, and is populated on only ~561/1161 rows anyway."
+    ],
+    "outcome_field": "result",
+    "feature_fields": [
+      "close_line",
+      "close_price",
+      "closing_batch_books",
+      "clv_close_line",
+      "clv_close_price",
+      "clv_lock_line",
+      "clv_lock_price",
+      "line_archive_close_n",
+      "line_archive_close_rows",
+      "line_archive_n",
+      "lock_line",
+      "lock_price",
+      "market_fair_prob",
+      "model_version",
+      "pick_type",
+      "published_line",
+      "receipt_line",
+      "sport",
+      "sport_key"
+    ],
+    "graded_picks_with_score": null,
+    "graded_picks_with_outcome": null,
+    "graded_picks_with_features": null
+  },
+  "computation": {
+    "blocked": "RECON BLOCKED grouping loss \u2014 missing: model probability p_hat per pick (in (0,1))"
+  },
+  "verdict": "BLOCKED \u2014 grouping loss is NOT computable from local artifacts",
+  "interpretation": null
+}

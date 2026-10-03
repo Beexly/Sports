@@ -1,0 +1,540 @@
+{
+  "complete": false,
+  "contentHash": "0128197ff623381eeacb8b273c7f27b9085c9b3d44f79442b95baa449bb61628",
+  "draftState": "IMPLEMENTED_ON_DRAFT_BRANCH / NOT_MERGED",
+  "findings": {
+    "callSites": [
+      {
+        "audience": "internal-lib",
+        "callerExported": true,
+        "cost": "UNKNOWN_STATIC",
+        "exportedCaller": "generateCalibrationWeeklyInsight",
+        "file": "apps/web/lib/calibration-training/claude.ts",
+        "inputSource": "caller-arguments",
+        "line": 99,
+        "localName": "callClaude",
+        "migrationRisk": {
+          "level": "MED",
+          "ruleId": "unvalidated-internal"
+        },
+        "retentionNotes": "usage-ledger write available in-file; budget/cost evaluation in-file",
+        "symbol": "callClaude",
+        "taskClass": {
+          "basis": "module-path",
+          "value": "calibration-insight"
+        },
+        "validation": {
+          "evidence": "no zod/schema-module import in file",
+          "present": false
+        },
+        "via": "named-import",
+        "volume": "UNKNOWN_STATIC"
+      },
+      {
+        "audience": "internal-lib",
+        "callerExported": true,
+        "cost": "UNKNOWN_STATIC",
+        "exportedCaller": "generateBlogPost",
+        "file": "apps/web/lib/content-generator.ts",
+        "inputSource": "caller-arguments",
+        "line": 132,
+        "localName": "callClaude",
+        "migrationRisk": {
+          "level": "MED",
+          "ruleId": "unvalidated-internal"
+        },
+        "retentionNotes": "usage-ledger write available in-file; budget/cost evaluation in-file",
+        "symbol": "callClaude",
+        "taskClass": {
+          "basis": "module-path",
+          "value": "content"
+        },
+        "validation": {
+          "evidence": "no zod/schema-module import in file",
+          "present": false
+        },
+        "via": "named-import",
+        "volume": "UNKNOWN_STATIC"
+      },
+      {
+        "audience": "internal-lib",
+        "callerExported": true,
+        "cost": "UNKNOWN_STATIC",
+        "exportedCaller": "answerModelCourtQuestion",
+        "file": "apps/web/lib/intelligence-graph/model-court/answer.ts",
+        "inputSource": "caller-arguments",
+        "line": 138,
+        "localName": "callClaude",
+        "migrationRisk": {
+          "level": "MED",
+          "ruleId": "unvalidated-internal"
+        },
+        "retentionNotes": "usage-ledger write available in-file; budget/cost evaluation in-file",
+        "symbol": "callClaude",
+        "taskClass": {
+          "basis": "module-path",
+          "value": "model-court"
+        },
+        "validation": {
+          "evidence": "no zod/schema-module import in file",
+          "present": false
+        },
+        "via": "named-import",
+        "volume": "UNKNOWN_STATIC"
+      },
+      {
+        "audience": "internal-lib",
+        "callerExported": true,
+        "cost": "UNKNOWN_STATIC",
+        "exportedCaller": "generateModelJournalDraftMarkdown",
+        "file": "apps/web/lib/journal/claude.ts",
+        "inputSource": "caller-arguments",
+        "line": 83,
+        "localName": "callClaude",
+        "migrationRisk": {
+          "level": "MED",
+          "ruleId": "unvalidated-internal"
+        },
+        "retentionNotes": "usage-ledger write available in-file; budget/cost evaluation in-file",
+        "symbol": "callClaude",
+        "taskClass": {
+          "basis": "module-path",
+          "value": "journal"
+        },
+        "validation": {
+          "evidence": "no zod/schema-module import in file",
+          "present": false
+        },
+        "via": "named-import",
+        "volume": "UNKNOWN_STATIC"
+      },
+      {
+        "audience": "internal-lib",
+        "callerExported": true,
+        "cost": "UNKNOWN_STATIC",
+        "exportedCaller": "draftLossAutopsy",
+        "file": "apps/web/lib/loss-autopsy/draft.ts",
+        "inputSource": "caller-arguments",
+        "line": 118,
+        "localName": "callClaude",
+        "migrationRisk": {
+          "level": "MED",
+          "ruleId": "unvalidated-internal"
+        },
+        "retentionNotes": "usage-ledger write available in-file; budget/cost evaluation in-file",
+        "symbol": "callClaude",
+        "taskClass": {
+          "basis": "module-path",
+          "value": "loss-autopsy"
+        },
+        "validation": {
+          "evidence": "no zod/schema-module import in file",
+          "present": false
+        },
+        "via": "named-import",
+        "volume": "UNKNOWN_STATIC"
+      },
+      {
+        "audience": "internal-lib",
+        "callerExported": true,
+        "cost": "UNKNOWN_STATIC",
+        "exportedCaller": "explainPick",
+        "file": "apps/web/lib/pick-explainer/explain.ts",
+        "inputSource": "caller-arguments",
+        "line": 122,
+        "localName": "callClaude",
+        "migrationRisk": {
+          "level": "MED",
+          "ruleId": "unvalidated-internal"
+        },
+        "retentionNotes": "usage-ledger write available in-file; budget/cost evaluation in-file",
+        "symbol": "callClaude",
+        "taskClass": {
+          "basis": "module-path",
+          "value": "pick-explainer"
+        },
+        "validation": {
+          "evidence": "no zod/schema-module import in file",
+          "present": false
+        },
+        "via": "named-import",
+        "volume": "UNKNOWN_STATIC"
+      },
+      {
+        "audience": "internal-lib",
+        "callerExported": true,
+        "cost": "UNKNOWN_STATIC",
+        "exportedCaller": "callClaudeForStudioAsset",
+        "file": "apps/web/lib/studio/claude.ts",
+        "inputSource": "caller-arguments",
+        "line": 68,
+        "localName": "callClaude",
+        "migrationRisk": {
+          "level": "MED",
+          "ruleId": "unvalidated-internal"
+        },
+        "retentionNotes": "usage-ledger write available in-file; budget/cost evaluation in-file",
+        "symbol": "callClaude",
+        "taskClass": {
+          "basis": "module-path",
+          "value": "studio"
+        },
+        "validation": {
+          "evidence": "no zod/schema-module import in file",
+          "present": false
+        },
+        "via": "named-import",
+        "volume": "UNKNOWN_STATIC"
+      }
+    ],
+    "transportImports": [
+      {
+        "errorOnly": true,
+        "file": "apps/web/lib/calibration-training/claude.ts",
+        "importKind": "static",
+        "line": 6,
+        "moduleId": "raw-transport(messages)",
+        "specifier": "@/lib/claude-api/messages",
+        "symbols": [
+          {
+            "imported": "ClaudeMessagesError",
+            "local": "ClaudeMessagesError",
+            "typeOnly": false
+          }
+        ],
+        "transportReaching": false,
+        "wholeModule": false
+      },
+      {
+        "errorOnly": false,
+        "file": "apps/web/lib/calibration-training/claude.ts",
+        "importKind": "static",
+        "line": 7,
+        "moduleId": "provider-dispatch",
+        "specifier": "@/lib/claude-api/provider-dispatch",
+        "symbols": [
+          {
+            "imported": "callClaude",
+            "local": "callClaude",
+            "typeOnly": false
+          }
+        ],
+        "transportReaching": true,
+        "wholeModule": false
+      },
+      {
+        "errorOnly": true,
+        "file": "apps/web/lib/content-generator.ts",
+        "importKind": "static",
+        "line": 18,
+        "moduleId": "raw-transport(messages)",
+        "specifier": "@/lib/claude-api/messages",
+        "symbols": [
+          {
+            "imported": "ClaudeMessagesError",
+            "local": "ClaudeMessagesError",
+            "typeOnly": false
+          }
+        ],
+        "transportReaching": false,
+        "wholeModule": false
+      },
+      {
+        "errorOnly": false,
+        "file": "apps/web/lib/content-generator.ts",
+        "importKind": "static",
+        "line": 19,
+        "moduleId": "provider-dispatch",
+        "specifier": "@/lib/claude-api/provider-dispatch",
+        "symbols": [
+          {
+            "imported": "callClaude",
+            "local": "callClaude",
+            "typeOnly": false
+          }
+        ],
+        "transportReaching": true,
+        "wholeModule": false
+      },
+      {
+        "errorOnly": true,
+        "file": "apps/web/lib/intelligence-graph/model-court/answer.ts",
+        "importKind": "static",
+        "line": 6,
+        "moduleId": "raw-transport(messages)",
+        "specifier": "@/lib/claude-api/messages",
+        "symbols": [
+          {
+            "imported": "ClaudeMessagesError",
+            "local": "ClaudeMessagesError",
+            "typeOnly": false
+          }
+        ],
+        "transportReaching": false,
+        "wholeModule": false
+      },
+      {
+        "errorOnly": false,
+        "file": "apps/web/lib/intelligence-graph/model-court/answer.ts",
+        "importKind": "static",
+        "line": 7,
+        "moduleId": "provider-dispatch",
+        "specifier": "@/lib/claude-api/provider-dispatch",
+        "symbols": [
+          {
+            "imported": "callClaude",
+            "local": "callClaude",
+            "typeOnly": false
+          }
+        ],
+        "transportReaching": true,
+        "wholeModule": false
+      },
+      {
+        "errorOnly": true,
+        "file": "apps/web/lib/journal/claude.ts",
+        "importKind": "static",
+        "line": 6,
+        "moduleId": "raw-transport(messages)",
+        "specifier": "@/lib/claude-api/messages",
+        "symbols": [
+          {
+            "imported": "ClaudeMessagesError",
+            "local": "ClaudeMessagesError",
+            "typeOnly": false
+          }
+        ],
+        "transportReaching": false,
+        "wholeModule": false
+      },
+      {
+        "errorOnly": false,
+        "file": "apps/web/lib/journal/claude.ts",
+        "importKind": "static",
+        "line": 7,
+        "moduleId": "provider-dispatch",
+        "specifier": "@/lib/claude-api/provider-dispatch",
+        "symbols": [
+          {
+            "imported": "callClaude",
+            "local": "callClaude",
+            "typeOnly": false
+          }
+        ],
+        "transportReaching": true,
+        "wholeModule": false
+      },
+      {
+        "errorOnly": true,
+        "file": "apps/web/lib/loss-autopsy/draft.ts",
+        "importKind": "static",
+        "line": 14,
+        "moduleId": "raw-transport(messages)",
+        "specifier": "@/lib/claude-api/messages",
+        "symbols": [
+          {
+            "imported": "ClaudeMessagesError",
+            "local": "ClaudeMessagesError",
+            "typeOnly": false
+          }
+        ],
+        "transportReaching": false,
+        "wholeModule": false
+      },
+      {
+        "errorOnly": false,
+        "file": "apps/web/lib/loss-autopsy/draft.ts",
+        "importKind": "static",
+        "line": 15,
+        "moduleId": "provider-dispatch",
+        "specifier": "@/lib/claude-api/provider-dispatch",
+        "symbols": [
+          {
+            "imported": "callClaude",
+            "local": "callClaude",
+            "typeOnly": false
+          }
+        ],
+        "transportReaching": true,
+        "wholeModule": false
+      },
+      {
+        "errorOnly": true,
+        "file": "apps/web/lib/pick-explainer/explain.ts",
+        "importKind": "static",
+        "line": 13,
+        "moduleId": "raw-transport(messages)",
+        "specifier": "@/lib/claude-api/messages",
+        "symbols": [
+          {
+            "imported": "ClaudeMessagesError",
+            "local": "ClaudeMessagesError",
+            "typeOnly": false
+          }
+        ],
+        "transportReaching": false,
+        "wholeModule": false
+      },
+      {
+        "errorOnly": false,
+        "file": "apps/web/lib/pick-explainer/explain.ts",
+        "importKind": "static",
+        "line": 14,
+        "moduleId": "provider-dispatch",
+        "specifier": "@/lib/claude-api/provider-dispatch",
+        "symbols": [
+          {
+            "imported": "callClaude",
+            "local": "callClaude",
+            "typeOnly": false
+          }
+        ],
+        "transportReaching": true,
+        "wholeModule": false
+      },
+      {
+        "errorOnly": true,
+        "file": "apps/web/lib/studio/claude.ts",
+        "importKind": "static",
+        "line": 11,
+        "moduleId": "raw-transport(messages)",
+        "specifier": "@/lib/claude-api/messages",
+        "symbols": [
+          {
+            "imported": "ClaudeMessagesError",
+            "local": "ClaudeMessagesError",
+            "typeOnly": false
+          }
+        ],
+        "transportReaching": false,
+        "wholeModule": false
+      },
+      {
+        "errorOnly": false,
+        "file": "apps/web/lib/studio/claude.ts",
+        "importKind": "static",
+        "line": 12,
+        "moduleId": "provider-dispatch",
+        "specifier": "@/lib/claude-api/provider-dispatch",
+        "symbols": [
+          {
+            "imported": "callClaude",
+            "local": "callClaude",
+            "typeOnly": false
+          }
+        ],
+        "transportReaching": true,
+        "wholeModule": false
+      }
+    ]
+  },
+  "ruleset": {
+    "audience": [
+      "path starts with \"apps/web/app/\" => \"user-facing\" (Next.js app-router surface)",
+      "path starts with \"apps/web/lib/\" => \"internal-lib\" (may back user-facing routes; import-graph attribution is out of scope for this static pass)",
+      "path starts with \"workers/\" => \"internal-worker\"",
+      "path starts with \"scripts/\" => \"internal-script\"",
+      "anything else => \"internal-other\""
+    ],
+    "inputSource": [
+      "path under \"apps/web/app/api/\" => \"http-request-derived\" (route handler input)",
+      "file imports a db module (@sports/db, @prisma/client, or a specifier containing \"/db\" or \"prisma\") => \"db-derived+caller-arguments\"",
+      "otherwise \"caller-arguments\" (the enclosing function's parameters)"
+    ],
+    "migrationRisk": [
+      {
+        "description": "the file imports the raw transport symbol (callClaudeMessages), a raw provider module, or takes whole-module access to the messages module: it bypasses the sanctioned dispatcher and must be rewired first",
+        "level": "HIGH",
+        "ruleId": "raw-transport-reach"
+      },
+      {
+        "description": "user-facing audience AND no validation evidence in file",
+        "level": "HIGH",
+        "ruleId": "user-facing-unvalidated"
+      },
+      {
+        "description": "user-facing audience (output quality is directly user-visible)",
+        "level": "MED",
+        "ruleId": "user-facing"
+      },
+      {
+        "description": "internal audience with no validation evidence in file",
+        "level": "MED",
+        "ruleId": "unvalidated-internal"
+      },
+      {
+        "description": "internal audience with validation evidence in file",
+        "level": "LOW",
+        "ruleId": "validated-internal"
+      }
+    ],
+    "retention": [
+      "file imports claude-api/usage-store => \"usage-ledger write available in-file\"",
+      "file imports claude-api/cost-monitor => adds \"budget/cost evaluation in-file\"",
+      "otherwise: no in-file usage-ledger/budget reference (the call may still be recorded by a caller; cross-file attribution is out of scope)"
+    ],
+    "taskClass": [
+      "a statically visible `surface: \"<literal>\"` property in the call arguments wins (basis \"surface-literal\")",
+      "otherwise the first matching path segment maps: studio=>studio, journal=>journal, calibration-training=>calibration-insight, model-court=>model-court, content-generator|content-engine|content=>content, brief=>brief, pick-explainer=>pick-explainer, loss-autopsy=>loss-autopsy (basis \"module-path\")",
+      "otherwise \"unknown\" (basis \"none\") -- never guessed"
+    ],
+    "validation": [
+      "file imports \"zod\" => validation present (evidence: zod import)",
+      "file imports a module whose specifier contains \"schema\" => validation present (evidence: schema-module import)",
+      "otherwise validation is recorded ABSENT for this file; the heuristic does not inspect callee modules"
+    ],
+    "volumeAndCost": "UNKNOWN_STATIC by design: volume and cost are runtime-ledger facts; this static scan does not fabricate them"
+  },
+  "scan": {
+    "excludedAdapterLayer": [
+      "apps/web/lib/claude-api/messages.ts",
+      "apps/web/lib/claude-api/provider-dispatch.ts",
+      "apps/web/lib/claude-api/free-lane.ts",
+      "apps/web/lib/claude-api/internal-llm.ts",
+      "apps/web/lib/claude-api/providers/*"
+    ],
+    "exclusionRules": [
+      "adapter/transport layer files (they ARE the transport, not call sites)",
+      "test/spec files",
+      "fixtures directories",
+      "skipped directories: node_modules, .next, dist, coverage, .git, __tests__, tests, test, _speedtest, fixtures"
+    ],
+    "scanDirs": [
+      "apps",
+      "packages",
+      "workers",
+      "scripts"
+    ]
+  },
+  "summary": {
+    "callSiteCount": 7,
+    "filesWithFindings": 7,
+    "riskCounts": {
+      "HIGH": 0,
+      "LOW": 0,
+      "MED": 7
+    },
+    "taskClassCounts": {
+      "calibration-insight": 1,
+      "content": 1,
+      "journal": 1,
+      "loss-autopsy": 1,
+      "model-court": 1,
+      "pick-explainer": 1,
+      "studio": 1
+    },
+    "transportImportCount": 14
+  },
+  "tool": {
+    "name": "ai-call-site-inventory",
+    "typescriptVersion": "5.9.3",
+    "version": "1.0.0"
+  },
+  "unparsedFiles": [
+    {
+      "file": "packages/db/prisma/seed.ts",
+      "reason": "Failed to parse packages/db/prisma/seed.ts: Expression expected.",
+      "textProbe": "raw text matches no AI surface pattern (best-effort, not proof)"
+    }
+  ]
+}

@@ -1,0 +1,50 @@
+{
+  "generated_at": "2026-06-13T00:00:00Z",
+  "commands": [
+    {
+      "command": "npm run statking:all",
+      "result": "pass",
+      "statking_related": true,
+      "exact_failure": "",
+      "fix_attempted": "Regenerates product-depth snapshots before report scripts.",
+      "remaining_risk": "Snapshot fallback data until live open ingestion is activated."
+    },
+    {
+      "command": "npm run test:statking",
+      "result": "pass",
+      "statking_related": true,
+      "exact_failure": "",
+      "fix_attempted": "Expanded tests for rights, ROI, proof, explanations, readiness, and media fixtures.",
+      "remaining_risk": "Route render tests are still lightweight."
+    },
+    {
+      "command": "npm run typecheck --workspace=apps/web",
+      "result": "fail_warning",
+      "statking_related": false,
+      "exact_failure": "Pre-existing Prisma/generated-type drift and implicit-any errors outside StatKing.",
+      "fix_attempted": "Confirmed no StatKing path errors in final typecheck failure list.",
+      "remaining_risk": "Repo-wide typecheck stays red until separate cleanup."
+    },
+    {
+      "command": "npm run dev --workspace=apps/web",
+      "result": "pass",
+      "statking_related": true,
+      "exact_failure": "",
+      "fix_attempted": "Validated Next dev reaches Ready and Sentry/observability does not crash without DSN.",
+      "remaining_risk": "No browser screenshot captured in terminal-only run."
+    },
+    {
+      "command": "git diff --check",
+      "result": "pass",
+      "statking_related": true,
+      "exact_failure": "",
+      "fix_attempted": "Whitespace clean.",
+      "remaining_risk": "None."
+    }
+  ],
+  "dev_startup_result": "Next Ready in 8.1s; instrumentation compiled; no Sentry crash.",
+  "test_result": "StatKing tests pass.",
+  "typecheck_result": "Fails only on unrelated repo-wide Prisma/generated-type drift and implicit-any debt.",
+  "merge_safety": "Safe as autonomous foundation; not safe to market as fully live-data product.",
+  "final_recommendation": "Merge after review, then send to Claude for premium UX while preserving rights gates."
+}

@@ -1,0 +1,203 @@
+{
+  "report": {
+    "phase": "3",
+    "startedAt": "2026-07-16T16:55:56.765Z",
+    "finishedAt": "2026-07-16T16:55:58.398Z",
+    "sealedHoldout": {
+      "season": 2025,
+      "count": 272,
+      "from": "2025-09-05T00:20:00.000Z",
+      "to": "2026-01-05T01:20:00.000Z"
+    },
+    "distillation": {
+      "folds": [
+        {
+          "fold": 0,
+          "n": 176,
+          "maeModel": 0.08584095007579942,
+          "maeBaseline": 0.161448774948149,
+          "r2VsBaseline": 0.6475283638631468
+        },
+        {
+          "fold": 1,
+          "n": 176,
+          "maeModel": 0.10684833535221414,
+          "maeBaseline": 0.16225365606635395,
+          "r2VsBaseline": 0.5463682573069366
+        },
+        {
+          "fold": 2,
+          "n": 176,
+          "maeModel": 0.07880644539817654,
+          "maeBaseline": 0.14448433779512612,
+          "r2VsBaseline": 0.6800621025215643
+        },
+        {
+          "fold": 3,
+          "n": 176,
+          "maeModel": 0.07192967786403084,
+          "maeBaseline": 0.14479531759913197,
+          "r2VsBaseline": 0.7403395793350351
+        },
+        {
+          "fold": 4,
+          "n": 176,
+          "maeModel": 0.10508146435871417,
+          "maeBaseline": 0.1283238331223736,
+          "r2VsBaseline": 0.3198080856073443
+        },
+        {
+          "fold": 5,
+          "n": 176,
+          "maeModel": 0.09132434956893863,
+          "maeBaseline": 0.16372154570929376,
+          "r2VsBaseline": 0.6408567884041823
+        }
+      ],
+      "beatingFolds": 6,
+      "totalFolds": 6,
+      "meanR2VsBaseline": 0.5958271961730349,
+      "passed": true
+    },
+    "propsHb": {
+      "reportPresent": true,
+      "passed": true,
+      "summary": {
+        "validation": "props-hb-props-machinery",
+        "scopeNote": "NOT a prop-line CLV claim. This validates the posterior-predictive machinery's calibration against real player receptions outcomes under an honest walk-forward protocol. A prop-line edge claim requires an archived prop-price history this repo does not yet have.",
+        "startedAt": "2026-07-16T16:53:25.425Z",
+        "finishedAt": "2026-07-16T16:53:28.906Z",
+        "data": {
+          "source": "nflverse player_stats_week (CC-BY-4.0)",
+          "seasons": [
+            2022,
+            2023,
+            2024
+          ],
+          "positionGroups": [
+            "WR",
+            "TE",
+            "RB"
+          ],
+          "statTarget": "receptions",
+          "playerWeekRowsLoaded": 111329,
+          "predictionsScored": 12571,
+          "bySeasonGroup": {
+            "2022|WR": 1912,
+            "2022|TE": 965,
+            "2022|RB": 1321,
+            "2023|WR": 1999,
+            "2023|TE": 959,
+            "2023|RB": 1273,
+            "2024|WR": 1905,
+            "2024|TE": 969,
+            "2024|RB": 1268
+          }
+        },
+        "notes": [],
+        "calibration": {
+          "deciles": [
+            {
+              "decile": 1,
+              "n": 1257,
+              "meanPredicted": 0.19218372618182655,
+              "realizedRate": 0.1949085123309467,
+              "wilsonLower": 0.17719337624094467
+            },
+            {
+              "decile": 2,
+              "n": 1257,
+              "meanPredicted": 0.2511010805753371,
+              "realizedRate": 0.26968973747016706,
+              "wilsonLower": 0.2496105249849996
+            },
+            {
+              "decile": 3,
+              "n": 1257,
+              "meanPredicted": 0.2847226202002766,
+              "realizedRate": 0.3046937151949085,
+              "wilsonLower": 0.28377741898203257
+            },
+            {
+              "decile": 4,
+              "n": 1257,
+              "meanPredicted": 0.3125971847393747,
+              "realizedRate": 0.30787589498806683,
+              "wilsonLower": 0.28689092990103016
+            },
+            {
+              "decile": 5,
+              "n": 1257,
+              "meanPredicted": 0.3422633451756669,
+              "realizedRate": 0.30787589498806683,
+              "wilsonLower": 0.28689092990103016
+            },
+            {
+              "decile": 6,
+              "n": 1257,
+              "meanPredicted": 0.3710462243413828,
+              "realizedRate": 0.35719968178202066,
+              "wilsonLower": 0.33529684011408994
+            },
+            {
+              "decile": 7,
+              "n": 1257,
+              "meanPredicted": 0.403203037462571,
+              "realizedRate": 0.375497215592681,
+              "wilsonLower": 0.3533203187499307
+            },
+            {
+              "decile": 8,
+              "n": 1257,
+              "meanPredicted": 0.4404861233774649,
+              "realizedRate": 0.4025457438345266,
+              "wilsonLower": 0.38002590724242985
+            },
+            {
+              "decile": 9,
+              "n": 1257,
+              "meanPredicted": 0.49698723273127343,
+              "realizedRate": 0.43675417661097854,
+              "wilsonLower": 0.41390313929408784
+            },
+            {
+              "decile": 10,
+              "n": 1258,
+              "meanPredicted": 0.6019462736550016,
+              "realizedRate": 0.575516693163752,
+              "wilsonLower": 0.5524563447234572
+            }
+          ],
+          "inversions": 0,
+          "monotoneOk": true
+        },
+        "brier": {
+          "model": 0.21890336825472806,
+          "climatology": 0.22847130692068118,
+          "baseRate": 0.35327340704796756,
+          "modelBeatsClimatology": true
+        },
+        "criteria": {
+          "monotoneOk": true,
+          "brierOk": true
+        },
+        "passed": true
+      }
+    },
+    "residualGbm": {
+      "note": "structural acceptance is test-pinned in residual-gbm.test.ts: line-as-fixed-offset, market-key refusal at train+predict, anti-rediscovery at the noise floor (val pinball 0.978x noise floor, max|f(x)| 0.126 vs 2.4 line swing)."
+    },
+    "priceClv": {
+      "status": "PENDING_LINE_ARCHIVE_DATA",
+      "note": "CLV vs obtainable price requires decision-time prices, which no free licensed historical source provides. The line archive (built, inert, founder-applied migration + LINE_ARCHIVE_ENABLED flip) accumulates them forward; the selective gate, logit-pool test, and predictedMoveEdge consumer are wired and will grade on real archived prices only. No proxy is claimed as CLV."
+    },
+    "passed": true
+  },
+  "provenance": {
+    "inputsHash": "f3c7924af7642ad30a9c800be95055a0eac7365654c552c7ed641e993dafeffe",
+    "outputHash": "75b29ba146e1d9a0a55680de1490075c7cca50fcdbf4a053802243f3c9f35f4d",
+    "modelVersion": "v5.1.0",
+    "producer": "edge-lab/phase3-acceptance",
+    "asOf": "2026-07-16T16:55:56.765Z"
+  }
+}

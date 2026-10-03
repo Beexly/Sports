@@ -1,0 +1,41 @@
+/**
+ * Tests for ./1906-03671v2-active-learning (arXiv:1906.03671v2, lane=active_learning).
+ *
+ * ACCEPTANCE GATE: ADOPT the acquisition rule iff BADGE-selected 20% charting budget achieves held-out log-loss within
+ * 0.005 of (or better than) random-selected 40% budget on the 2024 holdout, in two consecutive
+ * simulated seasons (2024 and 2025 when data complete).
+ */
+import { describe, expect, it } from "vitest";
+import * as mod from "./1906-03671v2-active-learning";
+
+describe("info-per-cost active learning (arXiv:1906.03671v2)", () => {
+  it("scores delta over cost", () => {
+    expect(mod.infoPerCostScore(10, 5)).toBeCloseTo(2, 10);
+    expect(mod.infoPerCostScore(10, 5, 2)).toBeCloseTo(4, 10);
+    expect(mod.infoPerCostScore(10, 0)).toBeNull();
+    expect(mod.infoPerCostScore(-1, 5)).toBeNull();
+    expect(mod.infoPerCostScore(10, 5, -1)).toBeNull();
+  });
+
+  it("greedy acquisition by ratio under a budget", () => {
+    const cands = [
+      { id: "a", delta: 10, cost: 5 },
+      { id: "b", delta: 6, cost: 4 },
+      { id: "c", delta: 9, cost: 3 },
+    ];
+    const r = mod.greedyAcquireByRatio(cands, 8)!;
+    expect(r.selected).toEqual(["c", "a"]);
+    expect(r.totalCost).toBe(8);
+    expect(r.totalDelta).toBe(19);
+    expect(mod.greedyAcquireByRatio(cands, -1)).toBeNull();
+    expect(mod.greedyAcquireByRatio([{ id: "x", delta: 1, cost: 0 }], 8)).toBeNull();
+  });
+
+  it("subadditive batch cost stays below the sum of parts", () => {
+    const c = mod.subadditiveBatchCost([5, 5], 0.25)!;
+    expect(c).toBeCloseTo(8.75, 10);
+    expect(c).toBeLessThanOrEqual(10);
+    expect(mod.subadditiveBatchCost([5], 0.25)).toBeCloseTo(5, 10);
+    expect(mod.subadditiveBatchCost([], 0.25)).toBeNull();
+  });
+});

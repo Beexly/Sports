@@ -1,0 +1,223 @@
+{
+ "not_a_mint": true,
+ "champion": [
+  "home_flag",
+  "qb_pit",
+  "elo_res",
+  "stress",
+  "int_rate",
+  "int_hit"
+ ],
+ "champion_ll": 0.610621,
+ "champion_brier": 0.211529,
+ "n": 1914,
+ "fillna": 0,
+ "beta_league_diff_coverage": 0.2334,
+ "beta_league_note": "home minus away is identically 0 on every non-null row. league_baselines.py emits one number per season, the same for every team, so the diff cancels. Not a feature.",
+ "families": [
+  {
+   "family": "weekly_tendencies",
+   "columns": [
+    "weekly_tendencies__early_down_pass_rate",
+    "weekly_tendencies__shotgun_rate",
+    "weekly_tendencies__no_huddle_rate",
+    "weekly_tendencies__quick_game_rate",
+    "weekly_tendencies__avg_air_yards",
+    "weekly_tendencies__pass_rate_all",
+    "weekly_tendencies__under_center_rate"
+   ],
+   "coverage": {
+    "weekly_tendencies__early_down_pass_rate": 0.3023,
+    "weekly_tendencies__shotgun_rate": 0.3023,
+    "weekly_tendencies__no_huddle_rate": 0.3023,
+    "weekly_tendencies__quick_game_rate": 0.3023,
+    "weekly_tendencies__avg_air_yards": 0.3023,
+    "weekly_tendencies__pass_rate_all": 0.3023,
+    "weekly_tendencies__under_center_rate": 0.3023
+   },
+   "n": 1914,
+   "ll": 0.613177,
+   "brier": 0.212514,
+   "delta_ll": 0.002556,
+   "ci95_ll": [
+    -0.001043,
+    0.006351
+   ],
+   "delta_brier": 0.000985,
+   "ci95_brier": [
+    -0.000632,
+    0.002631
+   ],
+   "clears_zero": false
+  },
+  {
+   "family": "qb_pbp",
+   "columns": [
+    "cpoe_pbp",
+    "adot",
+    "deep_rate_20",
+    "scramble_rate",
+    "epa",
+    "p2s_eb"
+   ],
+   "coverage": {
+    "cpoe_pbp": 0.2642,
+    "adot": 0.2642,
+    "deep_rate_20": 0.2642,
+    "scramble_rate": 0.2642,
+    "epa": 0.2642,
+    "p2s_eb": 0.2642
+   },
+   "n": 1914,
+   "ll": 0.615237,
+   "brier": 0.212969,
+   "delta_ll": 0.004617,
+   "ci95_ll": [
+    -0.000365,
+    0.009813
+   ],
+   "delta_brier": 0.00144,
+   "ci95_brier": [
+    -0.000377,
+    0.003342
+   ],
+   "clears_zero": false
+  },
+  {
+   "family": "target_share",
+   "columns": [
+    "hhi",
+    "n_eff",
+    "top_share",
+    "top2_share",
+    "top_ay_share"
+   ],
+   "coverage": {
+    "hhi": 0.2683,
+    "n_eff": 0.2683,
+    "top_share": 0.2683,
+    "top2_share": 0.2683,
+    "top_ay_share": 0.2683
+   },
+   "n": 1914,
+   "ll": 0.610676,
+   "brier": 0.211564,
+   "delta_ll": 5.5e-05,
+   "ci95_ll": [
+    -0.001511,
+    0.001755
+   ],
+   "delta_brier": 3.5e-05,
+   "ci95_brier": [
+    -0.000632,
+    0.000788
+   ],
+   "clears_zero": false
+  },
+  {
+   "family": "protection_stress",
+   "columns": [
+    "protection_stress"
+   ],
+   "coverage": {
+    "protection_stress": 0.4973
+   },
+   "n": 1914,
+   "ll": 0.612081,
+   "brier": 0.212156,
+   "delta_ll": 0.00146,
+   "ci95_ll": [
+    0.000244,
+    0.002711
+   ],
+   "delta_brier": 0.000627,
+   "ci95_brier": [
+    0.000126,
+    0.001147
+   ],
+   "clears_zero": false
+  },
+  {
+   "family": "def_pressure",
+   "columns": [
+    "def_pressure_weekly__db",
+    "def_pressure_weekly__pressures",
+    "def_pressure_weekly__proxy_rate",
+    "def_pressure_weekly__trail4_proxy"
+   ],
+   "coverage": {
+    "def_pressure_weekly__db": 0.3023,
+    "def_pressure_weekly__pressures": 0.3023,
+    "def_pressure_weekly__proxy_rate": 0.3023,
+    "def_pressure_weekly__trail4_proxy": 0.3023
+   },
+   "n": 1914,
+   "ll": 0.613169,
+   "brier": 0.212648,
+   "delta_ll": 0.002548,
+   "ci95_ll": [
+    -0.000696,
+    0.005598
+   ],
+   "delta_brier": 0.001118,
+   "ci95_brier": [
+    -0.000346,
+    0.002603
+   ],
+   "clears_zero": false
+  },
+  {
+   "family": "plus_windows",
+   "columns": [
+    "top_share_4wk_mean",
+    "top_share_4wk_sd",
+    "top_share_cv_4wk",
+    "quick_game_rate_season_prior"
+   ],
+   "coverage": {
+    "top_share_4wk_mean": 0.1552,
+    "top_share_4wk_sd": 0.1552,
+    "top_share_cv_4wk": 0.1552,
+    "quick_game_rate_season_prior": 0.2807
+   },
+   "n": 1914,
+   "ll": 0.614541,
+   "brier": 0.213031,
+   "delta_ll": 0.00392,
+   "ci95_ll": [
+    0.000142,
+    0.008092
+   ],
+   "delta_brier": 0.001502,
+   "ci95_brier": [
+    -7e-06,
+    0.003087
+   ],
+   "clears_zero": false
+  },
+  {
+   "family": "beta_league",
+   "columns": [
+    "beta_league_diff"
+   ],
+   "coverage": {
+    "beta_league_diff": 0.2334
+   },
+   "n": 1914,
+   "ll": 0.610621,
+   "brier": 0.211529,
+   "delta_ll": -0.0,
+   "ci95_ll": [
+    -0.0,
+    0.0
+   ],
+   "delta_brier": 0.0,
+   "ci95_brier": [
+    -0.0,
+    0.0
+   ],
+   "clears_zero": false
+  }
+ ],
+ "wired_into_mint": []
+}

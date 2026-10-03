@@ -1,0 +1,450 @@
+/**
+ * Vercel cron — generate content DRAFTS from the live slate.
+ *
+ * Turns the day's real games + published picks into a Daily Slate Brief draft
+ * and persists it with status DRAFT. It NEVER publishes: `publishedAt` stays
+ * null and no status is ever PUBLISHED — publishing is a human action through
+ * the cockpit review flow (/api/cockpit/content/[id]/review). (The Daily Slate
+ * Brief template is PUBLIC-visibility by design — meant for eventual publication
+ * after review — so the draft-only guarantee rides on status/publishedAt, not
+ * visibility.) The draft-only CI guardrail (scripts/guardrails/draft-only.mjs)
+ * enforces this mechanically.
+ *
+ * The body is built by the pure, non-fabricating builder in
+ * `content-engine/build-draft.ts` — every number in the brief comes from a real
+ * DB count (game count, published pick count), so there is no ungrounded stat to
+ * guard. Idempotent per day: a second run finds the date-slugged draft and skips,
+ * and a create that races another invocation is caught (unique-slug) and treated
+ * as already generated rather than throwing.
+ *
+ * The daily brief and the Monday weekly recap are INDEPENDENT: the weekly recap
+ * is attempted every Monday regardless of whether the daily brief already exists
+ * (so a retry where the daily landed but the weekly failed still gets its recap).
+ *
+ * Auth mirrors the other crons: Vercel calls with `Authorization: Bearer
+ * <CRON_SECRET>` (see apps/web/app/api/cron/refresh-odds/route.ts).
+ */
+
+import { NextResponse } from "next/server";
+import { db } from "@sports/db";
+import { startOfDay, endOfDay, subDays } from "date-fns";
+import { cronAuthError } from "@/lib/cron/authorize";
+import { getReadinessGates } from "@sports/prediction-engine";
+import {
+  buildDailyBriefDraft,
+  buildWeeklyRecapDraft,
+  buildWhyBoardQuietDraft,
+  type SlateSummary,
+  type WeeklyRecapSummary,
+} from "@/lib/content-engine/build-draft";
+import {
+  buildHonestRecordDraft,
+  rotateBookGradeHighlight,
+  rotateKillLedgerFeature,
+  type YesterdaySettledRecord,
+} from "@/lib/content-engine/honest-record";
+import { boardSurfacePosture } from "@/lib/board/board-surface-policy";
+import { classifyPublicDarkHint } from "@/lib/public/dark-reason";
+import { contentDraftToCreateData } from "@/lib/content-engine/persist-draft";
+import type { ContentSourceRecord } from "@/lib/content-engine/types";
+
+export const dynamic = "force-dynamic";
+export const runtime = "nodejs";
+export const maxDuration = 60;
+
+type DraftOutcome = { slug: string; created: boolean; skipped?: boolean; reason?: string };
+
+/**
+ * True for Prisma's P2002 unique-constraint violation. Under stub mode (no
+ * DATABASE_URL) writes are no-ops, so this only fires against a real DB — a
+ * concurrent invocation that inserted the same date-slug between our findFirst
+ * and create. Checked structurally so the pure route stays decoupled from the
+ * generated Prisma error class.
+ */
+function isUniqueConstraintError(err: unknown): boolean {
+  return (
+    typeof err === "object" &&
+    err !== null &&
+    "code" in err &&
+    (err as { code?: unknown }).code === "P2002"
+  );
+}
+
+/**
+ * Persist a draft, treating a raced unique-slug create as "already generated"
+ * rather than an error — so overlapping cron/manual invocations both return the
+ * documented skipped shape instead of one throwing a 500.
+ */
+async function createDraftIdempotent(
+  createData: unknown,
+  slug: string,
+  onCreated: DraftOutcome,
+): Promise<DraftOutcome> {
+  try {
+    await db.contentDraft.create({
+      data: createData as Parameters<typeof db.contentDraft.create>[0]["data"],
+    });
+    return onCreated;
+  } catch (err) {
+    if (isUniqueConstraintError(err)) {
+      return { slug, created: false, skipped: true, reason: "already generated today (raced)" };
+    }
+    throw err;
+  }
+}
+
+export async function GET(request: Request): Promise<NextResponse> {
+  const denied = cronAuthError(request);
+  if (denied) return denied;
+
+  const now = new Date();
+  const dayStart = startOfDay(now);
+  const dayEnd = endOfDay(now);
+
+  const daily = await generateDailyBrief(now, dayStart, dayEnd);
+
+  // Mondays: the weekly transparency recap runs INDEPENDENTLY of the daily
+  // result. A retry where the daily already exists but the weekly failed (the
+  // catch below), a manual daily backfill, or a concurrent duplicate must still
+  // get the recap attempted. Isolated catch: a recap failure never fails the
+  // route or the daily brief.
+  let weeklyRecap: DraftOutcome | null = null;
+  if (now.getUTCDay() === 1) {
+    try {
+      weeklyRecap = await generateWeeklyRecap(now, dayStart);
+    } catch (err) {
+      console.error(
+        `[cron:generate-drafts] weekly recap failed: ${err instanceof Error ? err.message : err}`,
+      );
+    }
+  }
+
+  let quietBoard: DraftOutcome | null = null;
+  try {
+    quietBoard = await generateQuietBoardDraft(now, dayStart, dayEnd);
+  } catch (err) {
+    console.error(
+      `[cron:generate-drafts] quiet board draft failed: ${err instanceof Error ? err.message : err}`,
+    );
+  }
+
+  // Daily honest-record is independent of the slate brief: yesterday's settled
+  // counts (or an honest empty), one Kill Ledger rotation, one BookGrade
+  // highlight. Isolated catch so a persist failure never fails the route.
+  let honestRecord: DraftOutcome | null = null;
+  try {
+    honestRecord = await generateHonestRecord(now);
+  } catch (err) {
+    console.error(
+      `[cron:generate-drafts] honest-record draft failed: ${err instanceof Error ? err.message : err}`,
+    );
+  }
+
+  return NextResponse.json({ ok: true, daily, weeklyRecap, quietBoard, honestRecord });
+}
+
+async function generateDailyBrief(
+  now: Date,
+  dayStart: Date,
+  dayEnd: Date,
+): Promise<DraftOutcome> {
+  const isoDate = now.toISOString().slice(0, 10);
+  const slug = `daily-slate-brief-${isoDate}`;
+
+  const existing = await db.contentDraft
+    .findFirst({ where: { slug }, select: { id: true } })
+    .catch(() => null);
+  if (existing) {
+    return { slug, created: false, skipped: true, reason: "already generated today" };
+  }
+
+  const [gameCount, publishedPickCount] = await Promise.all([
+    db.game.count({ where: { commenceTime: { gte: dayStart, lte: dayEnd } } }),
+    db.pick.count({
+      where: {
+        isPublished: true,
+        isBootstrap: false,
+        NOT: { modelVersion: "v5.0.0-seed" },
+        generatedAt: { gte: dayStart, lte: dayEnd },
+      },
+    }),
+  ]);
+
+  const slate: SlateSummary = {
+    briefDate: now,
+    gameCount,
+    publishedPickCount,
+    dataQualityWarnings: [],
+    lineMovementNotes: [],
+  };
+
+  const sources: ContentSourceRecord[] = [
+    {
+      sourceType: "ODDS",
+      sourceLabel: "Live odds (Game / Odds tables)",
+      sourceUrl: null,
+      sourceStatus: "FRESH",
+      trustLevel: "PLATFORM",
+      fetchedAt: now,
+      notes: `Composed from ${gameCount} games scheduled for ${isoDate}.`,
+    },
+    {
+      sourceType: "DAILY_BRIEF",
+      sourceLabel: "Published pick slate (today)",
+      sourceUrl: null,
+      sourceStatus: "FRESH",
+      trustLevel: "PLATFORM",
+      fetchedAt: now,
+      notes: null,
+    },
+  ];
+
+  const record = buildDailyBriefDraft({
+    slate,
+    generatedBy: "cron:generate-drafts",
+    slug,
+    sources,
+  });
+
+  return createDraftIdempotent(contentDraftToCreateData(record, now), slug, {
+    slug,
+    created: true,
+    reason: "DRAFT",
+  });
+}
+
+async function generateWeeklyRecap(now: Date, dayStart: Date): Promise<DraftOutcome> {
+  const isoDate = now.toISOString().slice(0, 10);
+  const slug = `weekly-transparency-recap-${isoDate}`;
+
+  const existing = await db.contentDraft
+    .findFirst({ where: { slug }, select: { id: true } })
+    .catch(() => null);
+  if (existing) return { slug, created: false, skipped: true, reason: "already generated" };
+
+  const weekStart = subDays(dayStart, 7);
+  const canonicalSettledWhere = {
+    isPublished: true,
+    isBootstrap: false,
+    NOT: { modelVersion: "v5.0.0-seed" },
+    settledAt: { gte: weekStart, lt: dayStart },
+  } as const;
+
+  const [winCount, lossCount, pushCount] = await Promise.all([
+    db.pick.count({ where: { ...canonicalSettledWhere, result: "WIN" } }),
+    db.pick.count({ where: { ...canonicalSettledWhere, result: "LOSS" } }),
+    db.pick.count({ where: { ...canonicalSettledWhere, result: "PUSH" } }),
+  ]);
+  const settledCount = winCount + lossCount + pushCount;
+
+  const summary: WeeklyRecapSummary = {
+    weekStart,
+    weekEnd: dayStart,
+    settledCount,
+    winCount,
+    lossCount,
+    pushCount,
+    bootstrapExcluded: true,
+    performanceGateOn: getReadinessGates().canExposePerformanceStats,
+  };
+
+  // WEEKLY_RECAP requires BOTH a PERFORMANCE and a PICK source
+  // (source-coverage.ts: WEEKLY_RECAP: ["PERFORMANCE", "PICK"]). Attaching only
+  // PERFORMANCE left every recap stuck at NEEDS_SOURCE, un-approvable without a
+  // manual patch. Both are the same real settled-pick window, sourced honestly.
+  const sources: ContentSourceRecord[] = [
+    {
+      sourceType: "PERFORMANCE",
+      sourceLabel: "Settled canonical record (7-day window)",
+      sourceUrl: null,
+      sourceStatus: "FRESH",
+      trustLevel: "PLATFORM",
+      fetchedAt: now,
+      notes: `W ${winCount} / L ${lossCount} / Push ${pushCount}, bootstrap + seed excluded.`,
+    },
+    {
+      sourceType: "PICK",
+      sourceLabel: "Settled canonical picks (7-day window)",
+      sourceUrl: null,
+      sourceStatus: "FRESH",
+      trustLevel: "PLATFORM",
+      fetchedAt: now,
+      notes: `${settledCount} settled canonical picks graded in the window.`,
+    },
+  ];
+
+  const record = buildWeeklyRecapDraft({
+    summary,
+    generatedBy: "cron:generate-drafts",
+    slug,
+    sources,
+  });
+
+  return createDraftIdempotent(contentDraftToCreateData(record, now), slug, {
+    slug,
+    created: true,
+    reason: "DRAFT",
+  });
+}
+
+
+async function generateQuietBoardDraft(
+  now: Date,
+  dayStart: Date,
+  dayEnd: Date,
+): Promise<DraftOutcome> {
+  const isoDate = now.toISOString().slice(0, 10);
+  const slug = `why-board-quiet-${isoDate}`;
+
+  const existing = await db.contentDraft
+    .findFirst({ where: { slug }, select: { id: true } })
+    .catch(() => null);
+  if (existing) {
+    return { slug, created: false, skipped: true, reason: "already generated today" };
+  }
+
+  const [gameCount, publishedPickCount] = await Promise.all([
+    db.game.count({ where: { commenceTime: { gte: dayStart, lte: dayEnd } } }),
+    db.pick.count({
+      where: {
+        isPublished: true,
+        isBootstrap: false,
+        NOT: { modelVersion: "v5.0.0-seed" },
+        generatedAt: { gte: dayStart, lte: dayEnd },
+      },
+    }),
+  ]);
+
+  // Only auto-draft when the public slate is empty (quiet / gated day).
+  if (publishedPickCount > 0) {
+    return {
+      slug,
+      created: false,
+      skipped: true,
+      reason: "slate has published picks — quiet explainer not needed",
+    };
+  }
+
+  const surface = boardSurfacePosture(process.env);
+  const darkHint =
+    surface.surface === "signal"
+      ? "quiet board no recent published model signals"
+      : "stale odds insert outside Refresh SLA or market board dark";
+  const darkReason = classifyPublicDarkHint(darkHint);
+
+  const sources: ContentSourceRecord[] = [
+    {
+      sourceType: "DAILY_BRIEF",
+      sourceLabel: "Ops board posture (counts only)",
+      sourceUrl: null,
+      sourceStatus: "FRESH",
+      trustLevel: "PLATFORM",
+      fetchedAt: now,
+      notes: `games=${gameCount} publishedPicks=${publishedPickCount} surface=${surface.surface}`,
+    },
+  ];
+
+  const record = buildWhyBoardQuietDraft({
+    darkReason,
+    boardSurface: surface.surface,
+    oddsInsertAgeMinutes: null,
+    publishedPickCount,
+    gameCount,
+    calibrationStatus: getReadinessGates().canExposePerformanceStats ? "GREEN" : "RED",
+    generatedBy: "cron:generate-drafts",
+    slug,
+    sources,
+  });
+
+  return createDraftIdempotent(contentDraftToCreateData(record, now), slug, {
+    slug,
+    created: true,
+    reason: "DRAFT quiet-board honesty",
+  });
+}
+
+async function generateHonestRecord(now: Date): Promise<DraftOutcome> {
+  const yesterday = subDays(now, 1);
+  const dateIso = yesterday.toISOString().slice(0, 10);
+  const slug = `honest-record-${dateIso}`;
+
+  const existing = await db.contentDraft
+    .findFirst({ where: { slug }, select: { id: true } })
+    .catch(() => null);
+  if (existing) {
+    return { slug, created: false, skipped: true, reason: "already generated" };
+  }
+
+  const yStart = startOfDay(yesterday);
+  const yEnd = endOfDay(yesterday);
+  const canonicalSettledWhere = {
+    isPublished: true,
+    isBootstrap: false,
+    NOT: { modelVersion: "v5.0.0-seed" },
+    settledAt: { gte: yStart, lte: yEnd },
+  } as const;
+
+  let winCount = 0;
+  let lossCount = 0;
+  let pushCount = 0;
+  try {
+    [winCount, lossCount, pushCount] = await Promise.all([
+      db.pick.count({ where: { ...canonicalSettledWhere, result: "WIN" } }),
+      db.pick.count({ where: { ...canonicalSettledWhere, result: "LOSS" } }),
+      db.pick.count({ where: { ...canonicalSettledWhere, result: "PUSH" } }),
+    ]);
+  } catch {
+    // Table-absent / stub: honest empty. Never invent a record.
+    winCount = 0;
+    lossCount = 0;
+    pushCount = 0;
+  }
+
+  const settled: YesterdaySettledRecord = {
+    dateIso,
+    winCount,
+    lossCount,
+    pushCount,
+  };
+  const settledCount = winCount + lossCount + pushCount;
+
+  const sources: ContentSourceRecord[] = [
+    {
+      sourceType: "METHODOLOGY",
+      sourceLabel: "Kill Ledger + BookGrade public catalog",
+      sourceUrl: null,
+      sourceStatus: "FRESH",
+      trustLevel: "PLATFORM",
+      fetchedAt: now,
+      notes: "Rotation from published /kill-ledger and /bookgrade catalogs.",
+    },
+    {
+      sourceType: "PICK",
+      sourceLabel: "Settled canonical picks (yesterday UTC window)",
+      sourceUrl: null,
+      sourceStatus: "FRESH",
+      trustLevel: "PLATFORM",
+      fetchedAt: now,
+      notes:
+        settledCount === 0
+          ? "Zero settled canonical picks yesterday — honest empty, no fabricated record."
+          : `W ${winCount} / L ${lossCount} / Push ${pushCount}, bootstrap + seed excluded.`,
+    },
+  ];
+
+  const record = buildHonestRecordDraft({
+    yesterday: settled,
+    killLedger: rotateKillLedgerFeature(yesterday),
+    bookGrade: rotateBookGradeHighlight(yesterday),
+    generatedBy: "cron:generate-drafts",
+    slug,
+    sources,
+  });
+
+  return createDraftIdempotent(contentDraftToCreateData(record, now), slug, {
+    slug,
+    created: true,
+    reason: settledCount === 0 ? "DRAFT honest-empty" : "DRAFT",
+  });
+}
+

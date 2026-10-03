@@ -1,0 +1,39 @@
+CONTEXT — all verified, all from commands actually run:
+- Deterministic factor model, NFL/NCAAF/NBA/NCAAB/MLB/NHL/MLS. Not an LLM.
+- Historical replay, frozen model, 1999-2025 NFL REG, 6,967 games, 15,939 settled picks, ZERO lookahead errors, graded against real closing lines:
+    SPREAD    n=6778  48.86%  ROI -6.53%
+    TOTAL     n=6868  49.49%  ROI -5.44%
+    MONEYLINE n=2001  76.71%  ROI -1.96%   (wins 3 of 4 and still loses money)
+    overall   n=15647 52.70%  ROI -5.48% per unit staked
+- Confidence does NOT rank outcomes: AUC 0.4965, p=0.41 on 13,646 picks. Controls |line|, rest, week all ~0.50 too.
+- Independently corroborated on LIVE production picks: the >=80 confidence tail is 152 graded picks, 61 wins, 40%, INVERTED; resolution 0.005 on 1,663 graded picks.
+- 11 market slices tested (favourite/dog, 4 spread bands, over/under, 4 total bands). ZERO cleared break-even on the Wilson LOWER bound.
+- Market closing line walk-forward: pooled Brier 0.2106, CI [0.2050, 0.2172], n=2,750. Best calibrator isotonic, +0.00007 — the close is already near-perfectly calibrated, there is essentially nothing to recalibrate.
+- CLV is UNMEASURED, not disproven: our entry line IS the close by construction, so every pick grades MATCHED_CLOSE. We hold no opening-line archive.
+
+You are a quantitative sports-betting researcher being paid to find a real, exploitable edge. Read the CONTEXT above. Then answer ONE question:
+
+What is the single most promising thing we have NOT yet tested that could produce a positive-ROI edge, given the data we actually hold?
+
+BANNED — we have already tested these and they returned nothing. Proposing any of them marks your answer as unread:
+- confidence-based selection
+- line-magnitude bands
+- favourite vs underdog
+- over vs under
+- total-size bands
+- rest differential
+- week of season
+- "recalibrate the model" (the close is already calibrated; isotonic gains +0.00007)
+- "collect more data"
+- "use machine learning"
+- "ensemble more models"
+
+Your answer MUST contain all five of these, or it is discarded:
+
+1. THE HYPOTHESIS — one sentence, mechanistic. Why would this edge EXIST? Who is on the other side of the bet and why are they wrong?
+2. THE TEST — computable on 1999-2025 nflverse games.csv (columns available: game_id, season, week, gameday, gametime, home_team, away_team, spread_line, total_line, home_moneyline, away_moneyline, home_score, away_score, result, home_rest, away_rest, roof, surface, div_game) OR name the exact additional free, legally-redistributable dataset required.
+3. THE THRESHOLD — the pass criterion, pre-registered, stated as a Wilson LOWER bound against the 52.38% break-even at -110. "It looks promising" is not a threshold.
+4. THE PRE-REGISTERED FAILURE — what the result looks like if you are WRONG. If you cannot describe the failure, you have not made a falsifiable claim.
+5. YOUR PRIOR — probability this survives an honest out-of-sample test, 0-100%, and what specifically would move it.
+
+Rank your own answer against the base rate: most proposed sports edges are dead on arrival because the closing line already prices them. If your idea is priced into the close, say so and give a different one. Do not be encouraging. Do not pad. UNSURE is respectable; invention is not.

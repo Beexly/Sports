@@ -1,0 +1,489 @@
+{
+ "title": "GSE intelligence chart",
+ "generated_at_utc": "2026-10-03T08:59:17",
+ "rules": [
+  "A question is a game whose outcome was not known when the probability was written.",
+  "The score is log loss and Brier against the nflverse result. No LLM judge.",
+  "A row is contaminated if it uses the actual starter, a post-kickoff feature, or an in-sample fit.",
+  "The leaky 0.6072 figure used the actual starter. It is not on this chart.",
+  "New questions drop every week. The current drop is 2026 week 4, 15 games, unscored.",
+  "Every number is internally measured unless a row says independently verified. None do.",
+  "The close is a reference line. This chart does not claim the engine beat it."
+ ],
+ "moneyline": [
+  {
+   "name": "de-vigged close",
+   "n": 1914,
+   "contamination": "market price, not a model",
+   "note": "Reference line. Not a target and not a merge gate.",
+   "log_loss": 0.6098,
+   "brier": 0.2112,
+   "ece": 0.0224,
+   "by_season": {
+    "2019": 0.6136,
+    "2020": 0.5901,
+    "2021": 0.6216,
+    "2022": 0.6085,
+    "2023": 0.6273,
+    "2024": 0.5875,
+    "2025": 0.6094,
+    "2026": 0.6634
+   },
+   "reliability": [
+    {
+     "lo": 0.0,
+     "hi": 0.1,
+     "n": 3,
+     "stated": 0.0943,
+     "realized": 0.0
+    },
+    {
+     "lo": 0.1,
+     "hi": 0.2,
+     "n": 49,
+     "stated": 0.1608,
+     "realized": 0.2041
+    },
+    {
+     "lo": 0.2,
+     "hi": 0.3,
+     "n": 160,
+     "stated": 0.254,
+     "realized": 0.2
+    },
+    {
+     "lo": 0.3,
+     "hi": 0.4,
+     "n": 264,
+     "stated": 0.3522,
+     "realized": 0.3561
+    },
+    {
+     "lo": 0.4,
+     "hi": 0.5,
+     "n": 283,
+     "stated": 0.4454,
+     "realized": 0.4205
+    },
+    {
+     "lo": 0.5,
+     "hi": 0.6,
+     "n": 331,
+     "stated": 0.5558,
+     "realized": 0.5438
+    },
+    {
+     "lo": 0.6,
+     "hi": 0.7,
+     "n": 361,
+     "stated": 0.6464,
+     "realized": 0.6066
+    },
+    {
+     "lo": 0.7,
+     "hi": 0.8,
+     "n": 320,
+     "stated": 0.7491,
+     "realized": 0.7562
+    },
+    {
+     "lo": 0.8,
+     "hi": 0.9,
+     "n": 130,
+     "stated": 0.8462,
+     "realized": 0.8692
+    },
+    {
+     "lo": 0.9,
+     "hi": 1.0,
+     "n": 13,
+     "stated": 0.9152,
+     "realized": 0.9231
+    }
+   ],
+   "verification": "internally_measured"
+  },
+  {
+   "name": "engine v1 (offset + home/neutral + PIT QB + Elo residual)",
+   "n": 1914,
+   "contamination": "clean: pre-game starters, walk-forward, no post-kickoff inputs",
+   "note": "Does not beat the close. CI on the log-loss gap includes values on both sides of zero.",
+   "log_loss": 0.6107,
+   "brier": 0.2116,
+   "ece": 0.0216,
+   "by_season": {
+    "2019": 0.6137,
+    "2020": 0.5899,
+    "2021": 0.6249,
+    "2022": 0.6085,
+    "2023": 0.6279,
+    "2024": 0.5873,
+    "2025": 0.6123,
+    "2026": 0.6642
+   },
+   "reliability": [
+    {
+     "lo": 0.0,
+     "hi": 0.1,
+     "n": 2,
+     "stated": 0.0922,
+     "realized": 0.0
+    },
+    {
+     "lo": 0.1,
+     "hi": 0.2,
+     "n": 59,
+     "stated": 0.1607,
+     "realized": 0.2203
+    },
+    {
+     "lo": 0.2,
+     "hi": 0.3,
+     "n": 161,
+     "stated": 0.2566,
+     "realized": 0.205
+    },
+    {
+     "lo": 0.3,
+     "hi": 0.4,
+     "n": 267,
+     "stated": 0.3538,
+     "realized": 0.3558
+    },
+    {
+     "lo": 0.4,
+     "hi": 0.5,
+     "n": 278,
+     "stated": 0.4482,
+     "realized": 0.4281
+    },
+    {
+     "lo": 0.5,
+     "hi": 0.6,
+     "n": 317,
+     "stated": 0.5559,
+     "realized": 0.5394
+    },
+    {
+     "lo": 0.6,
+     "hi": 0.7,
+     "n": 364,
+     "stated": 0.6472,
+     "realized": 0.6071
+    },
+    {
+     "lo": 0.7,
+     "hi": 0.8,
+     "n": 312,
+     "stated": 0.7504,
+     "realized": 0.7564
+    },
+    {
+     "lo": 0.8,
+     "hi": 0.9,
+     "n": 136,
+     "stated": 0.8454,
+     "realized": 0.8529
+    },
+    {
+     "lo": 0.9,
+     "hi": 1.0,
+     "n": 18,
+     "stated": 0.914,
+     "realized": 0.9444
+    }
+   ],
+   "verification": "internally_measured"
+  },
+  {
+   "name": "coin flip",
+   "n": 1914,
+   "contamination": "constant",
+   "note": "Not a fitted system.",
+   "log_loss": 0.6931,
+   "brier": 0.25,
+   "ece": 0.0334,
+   "by_season": {
+    "2019": 0.6931,
+    "2020": 0.6931,
+    "2021": 0.6931,
+    "2022": 0.6931,
+    "2023": 0.6931,
+    "2024": 0.6931,
+    "2025": 0.6931,
+    "2026": 0.6931
+   },
+   "reliability": [
+    {
+     "lo": 0.0,
+     "hi": 0.1,
+     "n": 0,
+     "stated": null,
+     "realized": null
+    },
+    {
+     "lo": 0.1,
+     "hi": 0.2,
+     "n": 0,
+     "stated": null,
+     "realized": null
+    },
+    {
+     "lo": 0.2,
+     "hi": 0.3,
+     "n": 0,
+     "stated": null,
+     "realized": null
+    },
+    {
+     "lo": 0.3,
+     "hi": 0.4,
+     "n": 0,
+     "stated": null,
+     "realized": null
+    },
+    {
+     "lo": 0.4,
+     "hi": 0.5,
+     "n": 0,
+     "stated": null,
+     "realized": null
+    },
+    {
+     "lo": 0.5,
+     "hi": 0.6,
+     "n": 1914,
+     "stated": 0.5,
+     "realized": 0.5334
+    },
+    {
+     "lo": 0.6,
+     "hi": 0.7,
+     "n": 0,
+     "stated": null,
+     "realized": null
+    },
+    {
+     "lo": 0.7,
+     "hi": 0.8,
+     "n": 0,
+     "stated": null,
+     "realized": null
+    },
+    {
+     "lo": 0.8,
+     "hi": 0.9,
+     "n": 0,
+     "stated": null,
+     "realized": null
+    },
+    {
+     "lo": 0.9,
+     "hi": 1.0,
+     "n": 0,
+     "stated": null,
+     "realized": null
+    }
+   ],
+   "verification": "internally_measured"
+  }
+ ],
+ "published_ci_v1_minus_close": [
+  -1e-05,
+  0.00196
+ ],
+ "score_distribution": {
+  "n": 1914,
+  "note": "Neighbourhood joint, unshifted. Calibrated. Does not beat the moneyline close.",
+  "ats_predicted": 0.4875,
+  "ats_realized": 0.4882,
+  "ats_log_loss": 0.697,
+  "over_predicted": 0.485,
+  "over_realized": 0.4905,
+  "over_log_loss": 0.696,
+  "ml_from_spread": 0.6117,
+  "ml_close": 0.6098,
+  "verification": "internally_measured"
+ },
+ "prospective_drop": {
+  "id": "2026-W4",
+  "n": 15,
+  "scored": 0,
+  "mint": "w4_mint_v1_20261003T0857Z.json",
+  "sha256": "d31f9516b8ae81bd349b56b5c59ad8af2aabc60c294c545540f8d7e34d32ae74",
+  "games": [
+   {
+    "game_id": "2026_04_IND_WAS",
+    "kickoff_utc": "2026-10-04 13:30:00",
+    "p_home": 0.3517,
+    "q_home": 0.3528,
+    "fair_cover": 0.5133,
+    "fair_over": 0.5019,
+    "scored": false,
+    "ground_truth": "nflverse result after the game. No LLM judge."
+   },
+   {
+    "game_id": "2026_04_ARI_NYG",
+    "kickoff_utc": "2026-10-04 17:00:00",
+    "p_home": 0.4332,
+    "q_home": 0.4344,
+    "fair_cover": 0.5046,
+    "fair_over": 0.493,
+    "scored": false,
+    "ground_truth": "nflverse result after the game. No LLM judge."
+   },
+   {
+    "game_id": "2026_04_DAL_HOU",
+    "kickoff_utc": "2026-10-04 17:00:00",
+    "p_home": 0.589,
+    "q_home": 0.5906,
+    "fair_cover": 0.4977,
+    "fair_over": 0.4954,
+    "scored": false,
+    "ground_truth": "nflverse result after the game. No LLM judge."
+   },
+   {
+    "game_id": "2026_04_GB_TB",
+    "kickoff_utc": "2026-10-04 17:00:00",
+    "p_home": 0.3788,
+    "q_home": 0.3789,
+    "fair_cover": 0.4856,
+    "fair_over": 0.497,
+    "scored": false,
+    "ground_truth": "nflverse result after the game. No LLM judge."
+   },
+   {
+    "game_id": "2026_04_JAX_CIN",
+    "kickoff_utc": "2026-10-04 17:00:00",
+    "p_home": 0.5674,
+    "q_home": 0.5657,
+    "fair_cover": 0.4861,
+    "fair_over": 0.5,
+    "scored": false,
+    "ground_truth": "nflverse result after the game. No LLM judge."
+   },
+   {
+    "game_id": "2026_04_LA_PHI",
+    "kickoff_utc": "2026-10-04 17:00:00",
+    "p_home": 0.3692,
+    "q_home": 0.3699,
+    "fair_cover": 0.4856,
+    "fair_over": 0.4909,
+    "scored": false,
+    "ground_truth": "nflverse result after the game. No LLM judge."
+   },
+   {
+    "game_id": "2026_04_NE_BUF",
+    "kickoff_utc": "2026-10-04 17:00:00",
+    "p_home": 0.7361,
+    "q_home": 0.7335,
+    "fair_cover": 0.4833,
+    "fair_over": 0.4981,
+    "scored": false,
+    "ground_truth": "nflverse result after the game. No LLM judge."
+   },
+   {
+    "game_id": "2026_04_NYJ_CHI",
+    "kickoff_utc": "2026-10-04 17:00:00",
+    "p_home": 0.6247,
+    "q_home": 0.6268,
+    "fair_cover": 0.5022,
+    "fair_over": 0.5077,
+    "scored": false,
+    "ground_truth": "nflverse result after the game. No LLM judge."
+   },
+   {
+    "game_id": "2026_04_TEN_BAL",
+    "kickoff_utc": "2026-10-04 17:00:00",
+    "p_home": 0.8441,
+    "q_home": 0.84,
+    "fair_cover": 0.5021,
+    "fair_over": 0.4895,
+    "scored": false,
+    "ground_truth": "nflverse result after the game. No LLM judge."
+   },
+   {
+    "game_id": "2026_04_MIA_MIN",
+    "kickoff_utc": "2026-10-04 20:05:00",
+    "p_home": 0.8253,
+    "q_home": 0.8258,
+    "fair_cover": 0.4916,
+    "fair_over": 0.5,
+    "scored": false,
+    "ground_truth": "nflverse result after the game. No LLM judge."
+   },
+   {
+    "game_id": "2026_04_DEN_SF",
+    "kickoff_utc": "2026-10-04 20:25:00",
+    "p_home": 0.5734,
+    "q_home": 0.5711,
+    "fair_cover": 0.4861,
+    "fair_over": 0.5,
+    "scored": false,
+    "ground_truth": "nflverse result after the game. No LLM judge."
+   },
+   {
+    "game_id": "2026_04_KC_LV",
+    "kickoff_utc": "2026-10-04 20:25:00",
+    "p_home": 0.3372,
+    "q_home": 0.3411,
+    "fair_cover": 0.4971,
+    "fair_over": 0.4942,
+    "scored": false,
+    "ground_truth": "nflverse result after the game. No LLM judge."
+   },
+   {
+    "game_id": "2026_04_LAC_SEA",
+    "kickoff_utc": "2026-10-04 20:25:00",
+    "p_home": 0.7406,
+    "q_home": 0.7459,
+    "fair_cover": 0.4833,
+    "fair_over": 0.5074,
+    "scored": false,
+    "ground_truth": "nflverse result after the game. No LLM judge."
+   },
+   {
+    "game_id": "2026_04_DET_CAR",
+    "kickoff_utc": "2026-10-05 00:20:00",
+    "p_home": 0.3627,
+    "q_home": 0.3655,
+    "fair_cover": 0.4856,
+    "fair_over": 0.4909,
+    "scored": false,
+    "ground_truth": "nflverse result after the game. No LLM judge."
+   },
+   {
+    "game_id": "2026_04_ATL_NO",
+    "kickoff_utc": "2026-10-06 00:15:00",
+    "p_home": 0.5541,
+    "q_home": 0.5522,
+    "fair_cover": 0.4861,
+    "fair_over": 0.5,
+    "scored": false,
+    "ground_truth": "nflverse result after the game. No LLM judge."
+   }
+  ]
+ },
+ "external_boards": [
+  {
+   "name": "Prophet Arena",
+   "status": "NOT SUBMITTED",
+   "next": "Read the rules and terms before any submission."
+  },
+  {
+   "name": "Metaculus FutureEval",
+   "status": "NOT SUBMITTED",
+   "next": "Read the rules and terms before any submission."
+  },
+  {
+   "name": "ForecastBench",
+   "status": "NOT SUBMITTED",
+   "next": "Read the rules and terms before any submission."
+  },
+  {
+   "name": "llm-stats.com",
+   "status": "NOT LISTED",
+   "next": "A public chart of our own comes first. Their index is for LLM benchmarks, not this sports replay."
+  }
+ ]
+}

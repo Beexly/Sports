@@ -1,0 +1,99 @@
+name: External Watchdog (Galaxy Sports Edge)
+
+# Why this exists (added 2026-08-16, blind-spot sweep finding):
+# Every existing health signal for this product lives INSIDE the same
+# platform whose failure it's supposed to detect. /api/cron/health-alert
+# is itself a Vercel cron -- when the Vercel scheduler stops firing, the
+# alarm dies with it. That is exactly what happened: production sat with
+# a dead scheduler (schedulerLiveness: "dead") for ~20+ hours, fully
+# self-diagnosed in a public JSON endpoint, and paged no one, because
+# nothing OUTSIDE Vercel was ever watching.
+#
+# This workflow is deliberately NOT a scheduler backstop (that's
+# external-cron.yml, which is intentionally idle pending Actions billing
+# and requires CRON_SECRET). This is a pure, read-only health poll of the
+# ALREADY-PUBLIC, unauthenticated /api/ops/public-surface-truth endpoint.
+# No secrets required. If schedulerLiveness or settlement health is not
+# "ok"/healthy, the job fails -- which GitHub can notify on (email/Slack
+# per your notification settings) independent of whether Vercel itself
+# is able to tell anyone.
+#
+# This does not fix the scheduler. It fixes the fact that nobody would
+# otherwise find out it died.
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch: {}
+
+jobs:
+  check-scheduler-health:
+    name: Poll public-surface-truth for scheduler/settlement health
+    runs-on: ubuntu-latest
+    timeout-minutes: 3
+    steps:
+      - name: Fetch and evaluate live status
+        env:
+          HEALTH_ALERT_WEBHOOK_URL: ${{ secrets.HEALTH_ALERT_WEBHOOK_URL }}
+        run: |
+          # No `set -e`: every failure below must reach the paging block instead
+          # of aborting before it (2026-09-03 review). -u and pipefail stay.
+          set -uo pipefail
+          fail=0
+          scheduler_status="unknown"
+          settlement_health="unknown"
+          age_minutes="unknown"
+          response=$(curl -sS -o /tmp/status.json -w "%{http_code}" \
+            --location --max-time 30 \
+            "https://www.galaxysportsedge.com/api/ops/public-surface-truth") || response="000"
+          echo "HTTP ${response}"
+
+          if [ "${response}" != "200" ]; then
+            echo "::error::public-surface-truth returned HTTP ${response}, not 200"
+            fail=1
+          elif ! jq -e . /tmp/status.json >/dev/null 2>&1; then
+            echo "::error::public-surface-truth returned invalid JSON"
+            fail=1
+          else
+            jq . /tmp/status.json
+
+            scheduler_status=$(jq -r '.schedulerLiveness.status // "unknown"' /tmp/status.json)
+            settlement_health=$(jq -r '.settlement.health // "unknown"' /tmp/status.json)
+            age_minutes=$(jq -r '.schedulerLiveness.ageMinutes // "unknown"' /tmp/status.json)
+
+            echo "schedulerLiveness.status = ${scheduler_status}"
+            echo "settlement.health = ${settlement_health}"
+            echo "schedulerLiveness.ageMinutes = ${age_minutes}"
+
+            # Vocabulary: SCHEDULER_LIVENESS_STATUSES in
+            # apps/web/lib/ops/scheduler-liveness.ts (healthy | degraded | dead |
+            # unknown), pinned by apps/web/__tests__/github-workflow-contract.test.ts.
+            # "ok" was never a member, so the old `!= "ok"` failed every poll.
+            # dead/unknown page; degraded is a heads-up, not an outage.
+            if [ "${scheduler_status}" != "healthy" ] && [ "${scheduler_status}" != "degraded" ]; then
+              echo "::error::Scheduler is not healthy: status=${scheduler_status}, ageMinutes=${age_minutes}"
+              fail=1
+            fi
+            if [ "${scheduler_status}" = "degraded" ]; then
+              echo "::warning::Scheduler degraded: ageMinutes=${age_minutes}"
+            fi
+            if [ "${settlement_health}" = "CRITICAL" ]; then
+              echo "::error::Settlement health is CRITICAL"
+              fail=1
+            fi
+          fi
+
+          # Page somebody. GitHub only emails the workflow owner on failure; a Slack/
+          # Discord/generic webhook in the repo secret HEALTH_ALERT_WEBHOOK_URL (the
+          # same value the platform uses for /api/cron/health-alert) makes this
+          # poll an actual alarm. Absent secret → the job still fails visibly.
+          if [ "${fail}" = "1" ] && [ -n "${HEALTH_ALERT_WEBHOOK_URL:-}" ]; then
+            msg="Galaxy Sports Edge external watchdog: http=${response}, scheduler=${scheduler_status} (age ${age_minutes}m), settlement=${settlement_health}. https://www.galaxysportsedge.com/api/ops/public-surface-truth"
+            payload=$(jq -cn --arg t "${msg}" '{text: $t, content: $t}')
+            # --fail: a 4xx/5xx from the webhook is a lost page, not a delivery.
+            curl -sS --fail --max-time 15 -X POST -H "Content-Type: application/json" \
+              --data "${payload}" "${HEALTH_ALERT_WEBHOOK_URL}" >/dev/null \
+              || echo "::warning::webhook delivery failed (alert still recorded as a failed run)"
+          fi
+
+          exit "${fail}"

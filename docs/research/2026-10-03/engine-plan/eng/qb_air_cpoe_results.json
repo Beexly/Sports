@@ -1,0 +1,36 @@
+{
+ "v1a": {
+  "n": 1914,
+  "ll": 0.610745,
+  "brier": 0.211564
+ },
+ "champion_stress_int": {
+  "n": 1914,
+  "ll": 0.610621,
+  "brier": 0.211529
+ },
+ "champion_plus_air_cpoe": {
+  "n": 1914,
+  "ll": 0.61049,
+  "brier": 0.211475
+ },
+ "delta_ll_vs_champion": -0.000131,
+ "ci95_ll_vs_champion": [
+  -0.000343,
+  6.3e-05
+ ],
+ "delta_brier_vs_champion": -5.4e-05,
+ "ci95_brier_vs_champion": [
+  -0.000149,
+  3.2e-05
+ ],
+ "definition": {
+  "formula": "(completions - sum(n_bin * league_rate_bin)) / n_attempts",
+  "bins": "air_yards <0, 0-5, 6-10, 11-15, 16-20, 21+",
+  "pool": "seasons T-2, T-1, and weeks < W of T",
+  "min_n": 30,
+  "starters": "features_v1 h_qb/a_qb point-in-time, not actual",
+  "paper": "arXiv:2109.08051 tracking identity not coded; pbp air-yard substitute from c02/work/a04",
+  "champion": "home_flag + qb_pit + elo_res + stress + int_rate + int_hit"
+ }
+}

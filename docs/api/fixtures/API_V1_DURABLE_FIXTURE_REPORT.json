@@ -1,0 +1,93 @@
+{
+  "schemaVersion": "api-v1-durable-fixture-report-v1",
+  "generatedAt": "2026-07-04T00:00:00.000Z",
+  "status": "shadow_report_ready",
+  "livePromotionAllowed": false,
+  "fixture": {
+    "fixtureId": "api-v1-durable-local-synthetic-v1",
+    "passed": true,
+    "operationCount": 5,
+    "caseIds": [
+      "resolve-known-consumer",
+      "put-new-shadow-consumer",
+      "append-allow-audit-event",
+      "record-quota-and-audit-commit",
+      "record-quota-and-audit-rollback"
+    ],
+    "boundary": {
+      "routeExposed": false,
+      "databaseTouched": false,
+      "providerCalled": false,
+      "executable": false
+    }
+  },
+  "conformance": {
+    "adapterName": "mock_transactional_store",
+    "passed": true,
+    "caseCount": 5,
+    "requiredBehaviorCount": 7
+  },
+  "checklist": [
+    {
+      "id": "fixture-simulator-passed",
+      "passed": true,
+      "livePromotionBlocker": false,
+      "evidence": "Fixture api-v1-durable-local-synthetic-v1 passed=true."
+    },
+    {
+      "id": "durable-harness-conformance-passed",
+      "passed": true,
+      "livePromotionBlocker": false,
+      "evidence": "Harness mock_transactional_store passed=true."
+    },
+    {
+      "id": "fixture-operation-coverage-present",
+      "passed": true,
+      "livePromotionBlocker": false,
+      "evidence": "operationCount=5; caseIds=resolve-known-consumer,put-new-shadow-consumer,append-allow-audit-event,record-quota-and-audit-commit,record-quota-and-audit-rollback."
+    },
+    {
+      "id": "route-free",
+      "passed": true,
+      "livePromotionBlocker": false,
+      "evidence": "Fixture boundary says routeExposed=false."
+    },
+    {
+      "id": "database-free",
+      "passed": true,
+      "livePromotionBlocker": false,
+      "evidence": "Fixture boundary says databaseTouched=false."
+    },
+    {
+      "id": "provider-free",
+      "passed": true,
+      "livePromotionBlocker": false,
+      "evidence": "Fixture boundary says providerCalled=false."
+    },
+    {
+      "id": "non-executable",
+      "passed": true,
+      "livePromotionBlocker": false,
+      "evidence": "Fixture boundary says executable=false."
+    },
+    {
+      "id": "live-promotion-blocked",
+      "passed": true,
+      "livePromotionBlocker": true,
+      "evidence": "Live promotion remains blocked even when shadow evidence passes."
+    }
+  ],
+  "promotionBlockers": [
+    "Owner approval for live API use is not present in this archive.",
+    "No Prisma schema edit or migration exists for API v1 durable tables.",
+    "No API v1 route tree exists.",
+    "No disposable database rollback rehearsal has been recorded.",
+    "No production credential, partner onboarding, billing, or provider path exists."
+  ],
+  "nextRequiredProof": [
+    "Replay fixture reports against any future disposable database adapter before schema mutation.",
+    "Run the durable conformance harness against a real adapter in a non-production database.",
+    "Record rollback rehearsal output with row counts and audit tip hash before owner promotion review.",
+    "Keep OpenAPI generation, guardrails, typecheck, lint, and focused API v1 tests green before route exposure."
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "generated_at": "2026-09-27T04:41:17.911Z",
+  "family": "officials",
+  "grain": "game_referee_prior_home_rate",
+  "construction": "x = the official's pre-2025 home-win rate, shrunk toward the era mean by k=10 and a minimum of 20 prior games, minus the era mean. y = home_win on 2025. Train = seasons strictly before 2025. Out-of-sample by construction.",
+  "train": {
+    "seasons": "< 2025",
+    "settled_games_with_referee": 6990,
+    "era_home_rate": 0.5642346208869814,
+    "distinct_officials": 90
+  },
+  "holdout": {
+    "season": 2025,
+    "settled_games_with_referee": 285,
+    "scored": 269,
+    "excluded_official_unseen": 16,
+    "excluded_official_too_few_prior_games": 0,
+    "excluded_examples": [
+      "Alex Moore (unseen before 2025)",
+      "Alex Moore (unseen before 2025)",
+      "Alex Moore (unseen before 2025)",
+      "Alex Moore (unseen before 2025)",
+      "Alex Moore (unseen before 2025)",
+      "Alex Moore (unseen before 2025)",
+      "Alex Moore (unseen before 2025)",
+      "Alex Moore (unseen before 2025)",
+      "Alex Moore (unseen before 2025)",
+      "Alex Moore (unseen before 2025)"
+    ]
+  },
+  "fit_shrunk": {
+    "n": 269,
+    "r": 0.027366127790811826,
+    "slope": 0.2089194638378445,
+    "se": 0.4670326444068735
+  },
+  "fit_unshrunk_raw": {
+    "n": 269,
+    "r": 0.026783260281478993,
+    "slope": 0.17480421165255872,
+    "se": 0.3992794831130274
+  },
+  "prior_strength": 10,
+  "min_prior_games": 20,
+  "honesty_bars": {
+    "r_bar": 0.08,
+    "slope_must_exceed_se": true,
+    "r_clears": false,
+    "slope_clears": false
+  },
+  "scalarizer": {
+    "family": "officials",
+    "grain": "game_referee_prior_home_rate",
+    "status": "DARK",
+    "winning_term": "f1",
+    "g": 0.5,
+    "f1": 1,
+    "f2": 0,
+    "f3": 1,
+    "why": "officials DARK. grain game_referee_prior_home_rate. winning term f1. |r| 0.027 is under 0.08. |slope| 0.2089194638378445 is not greater than se 0.4670326444068735. no week-3 row",
+    "reactivates_when": "only if a later holdout has |r| >= 0.08 and |slope| > se. Naming the referee does not flip f1"
+  },
+  "prior_verdict_for_reference": {
+    "n": 113,
+    "r": -0.09257409956668071,
+    "slope": -0.010071677456738428,
+    "se": 0.01028210084979805,
+    "note": "the standing DARK verdict this measurement was asked to try to move"
+  }
+}

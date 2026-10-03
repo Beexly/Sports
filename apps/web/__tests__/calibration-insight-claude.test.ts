@@ -1,0 +1,201 @@
+import { describe, expect, it, vi } from "vitest";
+import { DEFAULT_CLAUDE_API_BUDGETS } from "@/lib/claude-api/cost-monitor";
+import {
+  evaluateCalibrationInsightPolicy,
+  generateCalibrationWeeklyInsight,
+  MIN_CALIBRATION_INSIGHT_ESTIMATES,
+} from "@/lib/calibration-training/claude";
+import type { CalibrationInsightInput } from "@/lib/calibration-training/insight-prompt";
+
+const input: CalibrationInsightInput = {
+  userId: "user-1",
+  weekOfYear: 21,
+  yearOf: 2026,
+  totalEstimates: 18,
+  bandData: {
+    "60-69": { sampleSize: 8, actualWinRate: 63, userMidpoint: 65 },
+    "70-79": { sampleSize: 10, actualWinRate: 61, userMidpoint: 75 },
+  },
+  perSportData: {
+    NBA: { sampleSize: 12, calibrationDelta: 14.2, direction: "OVER" },
+    MLB: { sampleSize: 6, calibrationDelta: 1.4, direction: "WELL_CALIBRATED" },
+  },
+  perPickKindData: {
+    SPREAD: { sampleSize: 11, calibrationDelta: 9.1, direction: "OVER" },
+    TOTAL: { sampleSize: 7, calibrationDelta: -2.5, direction: "WELL_CALIBRATED" },
+  },
+};
+
+describe("Calibration weekly insight Claude generation", () => {
+  it("blocks calibration insight text that becomes betting advice or a CTA", () => {
+    expect(evaluateCalibrationInsightPolicy("You should bet less on NBA spreads next week.")).toEqual({
+      allowed: false,
+      reason: "BETTING_ADVICE",
+    });
+    expect(evaluateCalibrationInsightPolicy("You were calibrated on NFL spreads; upgrade for more insights.")).toEqual({
+      allowed: false,
+      reason: "CTA",
+    });
+    expect(evaluateCalibrationInsightPolicy("You were 9% overconfident on NBA spreads while MLB totals stayed calibrated.")).toEqual({
+      allowed: true,
+      reason: null,
+    });
+  });
+
+  describe("UNGROUNDED_NUMERIC (LQ13 — numeric grounding against the USER prompt only)", () => {
+    const promptText = "MLB: OVER, delta 23.0% (sample 12)";
+
+    it("allows a numeric claim grounded in the user prompt", () => {
+      expect(
+        evaluateCalibrationInsightPolicy("You were 23% overconfident on MLB totals this week.", { promptText }),
+      ).toEqual({ allowed: true, reason: null });
+    });
+
+    it("rejects a numeric claim the user prompt never stated", () => {
+      expect(
+        evaluateCalibrationInsightPolicy("You were 31% overconfident on MLB totals this week.", { promptText }),
+      ).toEqual({ allowed: false, reason: "UNGROUNDED_NUMERIC" });
+    });
+
+    it("rejects a record-shaped claim absent from the prompt", () => {
+      expect(
+        evaluateCalibrationInsightPolicy("Your picks went 8-2 this week.", { promptText }),
+      ).toEqual({ allowed: false, reason: "UNGROUNDED_NUMERIC" });
+    });
+
+    it("single-arg legacy call is unchanged (no grounding, no numeric check)", () => {
+      expect(
+        evaluateCalibrationInsightPolicy("You were 31% overconfident on MLB totals this week."),
+      ).toEqual({ allowed: true, reason: null });
+    });
+  });
+
+  it("returns a deterministic thin-week sentence without calling Claude", async () => {
+    const fetchImpl = vi.fn();
+
+    const result = await generateCalibrationWeeklyInsight(
+      {
+        ...input,
+        totalEstimates: MIN_CALIBRATION_INSIGHT_ESTIMATES - 1,
+      },
+      {
+        apiKey: "test-key",
+        fetchImpl: fetchImpl as unknown as typeof fetch,
+      }
+    );
+
+    expect(result).toEqual({
+      insightText: "Not enough calibration estimates were logged this week to produce a reliable pattern.",
+      usedClaude: false,
+      modelName: null,
+    });
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it("enforces the calibration insight budget before calling Claude", async () => {
+    const fetchImpl = vi.fn();
+
+    await expect(
+      generateCalibrationWeeklyInsight(input, {
+        apiKey: "test-key",
+        fetchImpl: fetchImpl as unknown as typeof fetch,
+        monthlySpendUsd: 50,
+        budgetPolicy: DEFAULT_CLAUDE_API_BUDGETS.CALIBRATION_WEEKLY_INSIGHT,
+      })
+    ).rejects.toThrow("weekly calibration insight is pending");
+    expect(fetchImpl).not.toHaveBeenCalled();
+  });
+
+  it("calls Claude and records usage for a populated week", async () => {
+    const fetchImpl = vi.fn(async () =>
+      new Response(
+        JSON.stringify({
+          content: [
+            {
+              type: "text",
+              text: '"You were overconfident in the 60-69 band this week, calling 65% when the actual rate was 63%."',
+            },
+          ],
+          usage: { input_tokens: 700, output_tokens: 40 },
+        }),
+        { status: 200 }
+      )
+    );
+    const create = vi.fn().mockResolvedValue({ id: "record-1" });
+
+    const result = await generateCalibrationWeeklyInsight(input, {
+      apiKey: "test-key",
+      fetchImpl,
+      monthlySpendUsd: 0,
+      budgetPolicy: DEFAULT_CLAUDE_API_BUDGETS.CALIBRATION_WEEKLY_INSIGHT,
+      recordUsage: true,
+      usageClient: {
+        claudeApiCallRecord: {
+          aggregate: vi.fn(),
+          create,
+        },
+      },
+    });
+
+    expect(result).toEqual({
+      insightText: "You were overconfident in the 60-69 band this week, calling 65% when the actual rate was 63%.",
+      usedClaude: true,
+      modelName: "claude-sonnet-4-6",
+    });
+    expect(create).toHaveBeenCalledOnce();
+    expect(create.mock.calls[0]?.[0].data).toMatchObject({
+      surface: "CALIBRATION_WEEKLY_INSIGHT",
+      modelName: "claude-sonnet-4-6",
+      inputTokens: 700,
+      outputTokens: 40,
+      estimatedCostUsd: 0.0027,
+      userId: "user-1",
+      gameId: null,
+      templateKind: "CALIBRATION_WEEKLY_INSIGHT",
+      success: true,
+      errorKind: null,
+    });
+  });
+
+  it("records a policy failure when Claude returns invalid calibration advice", async () => {
+    const fetchImpl = vi.fn(async () =>
+      new Response(
+        JSON.stringify({
+          content: [
+            {
+              type: "text",
+              text: "You should bet less on NBA spreads next week.",
+            },
+          ],
+          usage: { input_tokens: 700, output_tokens: 12 },
+        }),
+        { status: 200 }
+      )
+    );
+    const create = vi.fn().mockResolvedValue({ id: "record-1" });
+
+    await expect(
+      generateCalibrationWeeklyInsight(input, {
+        apiKey: "test-key",
+        fetchImpl,
+        monthlySpendUsd: 0,
+        budgetPolicy: DEFAULT_CLAUDE_API_BUDGETS.CALIBRATION_WEEKLY_INSIGHT,
+        recordUsage: true,
+        usageClient: {
+          claudeApiCallRecord: {
+            aggregate: vi.fn(),
+            create,
+          },
+        },
+      })
+    ).rejects.toThrow("Calibration insight failed policy validation.");
+
+    expect(create).toHaveBeenCalledOnce();
+    expect(create.mock.calls[0]?.[0].data).toMatchObject({
+      surface: "CALIBRATION_WEEKLY_INSIGHT",
+      success: false,
+      errorKind: "POLICY_BETTING_ADVICE",
+      templateKind: "CALIBRATION_WEEKLY_INSIGHT",
+    });
+  });
+});

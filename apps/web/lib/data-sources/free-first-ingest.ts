@@ -1,0 +1,194 @@
+/**
+ * Free-first ingestion entrypoints.
+ *
+ * Ties the source-router (planning brain) to the verified free adapters (ESPN scores,
+ * Open-Meteo weather). The pipeline calls these to get FREE, cleared facts first; each
+ * result carries provenance and a spend guard so a paid call only happens when no free
+ * cleared source covers the need.
+ */
+
+import { checkClearance } from "@/lib/scraping/clearance-engine";
+import type { ExtractionMode } from "@/lib/scraping/extraction-modes";
+import {
+  planIngestion,
+  bestFreeClearedSource,
+  type Sport,
+  type StatNeed,
+  type IngestionPlan,
+} from "./source-router";
+import { fetchEspnScoreboard, type NormalizedGame, type FetchOptions as EspnOpts } from "./free-adapters/espn-scores";
+import { fetchWeather, weatherAtKickoff, type WeatherResult, type HourlyWeather, type FetchOptions as MeteoOpts } from "./free-adapters/open-meteo";
+
+/** Source ids we have a working free adapter for (drives free-first selection). */
+export const SOURCES_WITH_FREE_ADAPTER: ReadonlySet<string> = new Set([
+  "espn-public-api",
+  "open-meteo",
+  "henrygd-ncaa",
+  "polymarket-gamma",
+  "kalshi-public",
+  "mlb-statsapi",
+  "nhl-web-api",
+  "balldontlie-nba",
+  "espn-boxscore",
+  "nflverse",
+]);
+
+export type FreeFirstOutcome<T> = {
+  readonly need: StatNeed;
+  readonly sport: Sport | null;
+  /** Source actually used, or null when no free adapter could serve it. */
+  readonly usedSourceId: string | null;
+  readonly usedFree: boolean;
+  /** True when the only cleared coverage costs money (caller may escalate to paid). */
+  readonly mustSpend: boolean;
+  readonly plan: IngestionPlan;
+  readonly data: T | null;
+  readonly attribution: string | null;
+};
+
+/**
+ * Pick the cheapest free, cleared source that we ALSO have an adapter for.
+ * Returns undefined when none — the caller consults `plan.mustSpend`.
+ */
+/** Live scoreboard adapters (not deep-stats-only sources like nflverse). */
+const SCOREBOARD_ADAPTERS: ReadonlySet<string> = new Set([
+  "espn-public-api",
+  "henrygd-ncaa",
+  "mlb-statsapi",
+  "nhl-web-api",
+  "balldontlie-nba",
+]);
+
+function freeAdapterSourceId(need: StatNeed, sport: Sport): string | null {
+  const fromPlan = planIngestion(need, sport);
+  const ordered = [fromPlan.primary, ...fromPlan.fallbacks].filter(Boolean);
+  // For scores/results, prefer live scoreboard adapters over deep-stats free spines.
+  if (need === "scores" || need === "results") {
+    const board = ordered.find((s) => s && SCOREBOARD_ADAPTERS.has(s.id));
+    if (board) return board.id;
+  }
+  const best = bestFreeClearedSource(need, sport);
+  if (best && SOURCES_WITH_FREE_ADAPTER.has(best.id)) return best.id;
+  const candidate = ordered.find((s) => s && SOURCES_WITH_FREE_ADAPTER.has(s.id));
+  return candidate?.id ?? null;
+}
+
+/** Free-first scores for a sport (ESPN public — facts only, attributed). */
+export async function fetchScoresFreeFirst(
+  sport: Sport,
+  opts: EspnOpts = {},
+): Promise<FreeFirstOutcome<readonly NormalizedGame[]>> {
+  const plan = planIngestion("scores", sport);
+  const sourceId = freeAdapterSourceId("scores", sport);
+
+  // Live scoreboard path: ESPN is the universal free adapter.
+  // Multi-source failover lives in multi-source-scores.ts (used by free settle/persist).
+  if (
+    sourceId === "espn-public-api" ||
+    sourceId === "henrygd-ncaa" ||
+    sourceId === "mlb-statsapi" ||
+    sourceId === "nhl-web-api" ||
+    sourceId === "balldontlie-nba"
+  ) {
+    // GSE-SEC-051: ESPN scores carry storage_allowed=false in the rights registry.
+    // Before fetching, confirm the storage intent is cleared for this source. If
+    // not cleared, refuse the fetch — facts-only mode still permits transient display
+    // but not DB persistence. Callers that still need the data can use the returned
+    // clearance block to route to a paid/cleared source instead.
+    const storageMode: ExtractionMode = "public_logged_off_fact_extract";
+    const clearance = checkClearance({
+      source_id: "espn-public-api",
+      mode: storageMode,
+      tool_id: "fetch-native",
+      intents: ["derived_analytics"],
+    });
+    if (!clearance.allowed) {
+      return {
+        need: "scores",
+        sport,
+        usedSourceId: null,
+        usedFree: false,
+        mustSpend: plan.mustSpend,
+        plan,
+        data: null,
+        attribution: null,
+      };
+    }
+    const games = await fetchEspnScoreboard(sport, opts);
+    return {
+      need: "scores",
+      sport,
+      usedSourceId: "espn-public-api",
+      usedFree: true,
+      mustSpend: false,
+      plan,
+      data: games,
+      attribution: games[0]?.attribution ?? "Scores data via ESPN",
+    };
+  }
+
+  return { need: "scores", sport, usedSourceId: null, usedFree: false, mustSpend: plan.mustSpend, plan, data: null, attribution: null };
+}
+
+export type GameWeather = {
+  readonly result: WeatherResult;
+  readonly atKickoff: HourlyWeather | null;
+};
+
+/** Free weather for a venue (Open-Meteo — open license, attributed). */
+export async function fetchWeatherFreeFirst(
+  latitude: number,
+  longitude: number,
+  kickoffIso?: string,
+  opts: MeteoOpts = {},
+): Promise<FreeFirstOutcome<GameWeather>> {
+  // Weather is sport-agnostic; use any sport for the plan lookup.
+  const plan = planIngestion("weather", "nfl");
+
+  // GSE-SEC-076: enforce the runtime clearance gate before hitting any
+  // external endpoint. Open-Meteo is approved_open_license (CC-BY-4.0), so
+  // this gate returns allowed=true in the current registry — but if the
+  // source's rights posture changes (e.g. storage_allowed revoked, or a
+  // cease-and-desist flips status to permission_required), this is the
+  // enforcement point that stops the fetch instead of letting it continue
+  // silently on an advisory-only basis.
+  const weatherMode: ExtractionMode = "open_dataset_ingest";
+  const clearance = checkClearance({
+    source_id: "open-meteo",
+    mode: weatherMode,
+    tool_id: "fetch-native",
+    intents: ["storage", "derived_analytics"],
+  });
+  if (!clearance.allowed) {
+    return {
+      need: "weather",
+      sport: null,
+      usedSourceId: null,
+      usedFree: false,
+      mustSpend: plan.mustSpend,
+      plan,
+      data: null,
+      attribution: null,
+    };
+  }
+
+  const result = await fetchWeather(latitude, longitude, opts);
+  return {
+    need: "weather",
+    sport: null,
+    usedSourceId: "open-meteo",
+    usedFree: true,
+    mustSpend: false,
+    plan,
+    data: { result, atKickoff: kickoffIso ? weatherAtKickoff(result, kickoffIso) : null },
+    attribution: result.attribution,
+  };
+}
+
+/**
+ * Spend guard for the pipeline: returns true ONLY when a paid call is justified
+ * (no cleared free source covers the need). Call before any paid API request.
+ */
+export function paidCallJustified(need: StatNeed, sport: Sport): boolean {
+  return planIngestion(need, sport).mustSpend;
+}

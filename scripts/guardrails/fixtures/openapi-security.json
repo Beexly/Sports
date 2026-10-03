@@ -1,0 +1,33 @@
+{
+  "requiredFragments": {
+    "apps/web/lib/api/v1/openapi.ts": [
+      "openapi: \"3.1.0\"",
+      "\"x-gse-live-routes-exposed\": false",
+      "\"x-gse-shadow-only\": true",
+      "\"x-gse-required-scopes\"",
+      "\"x-gse-data-classes\"",
+      "security: [{ ApiKeyAuth: contract.requiredScopes }]",
+      "\"401\": { description:",
+      "\"403\": { description:",
+      "securitySchemes",
+      "scheme: \"bearer\""
+    ],
+    "apps/web/lib/api/v1/scopes.ts": [
+      "requiredScopes:",
+      "status: \"shadow_only\""
+    ],
+    "apps/web/lib/api-v1/openapi.ts": [
+      "buildApiV1ShadowOpenApi"
+    ]
+  },
+  "forbiddenFragments": {
+    "apps/web/lib/api/v1/openapi.ts": [
+      "\"x-gse-live-routes-exposed\": true",
+      "security: []"
+    ],
+    "apps/web/lib/api/v1/scopes.ts": [
+      "requiredScopes: []",
+      "status: \"live\""
+    ]
+  }
+}

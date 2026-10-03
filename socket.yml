@@ -1,0 +1,31 @@
+# Socket Security — supply-chain hardening via GitHub App.
+#
+# This file configures the installed Socket GitHub App (free tier, no secret needed).
+# Socket detects typosquatting, malicious dependencies, and exfiltration behavior —
+# capabilities complementary to the ci.yml dependency-audit guardrail (which only
+# runs `npm audit` for CVE detection).
+#
+# Scope: this config is inert until the Socket GitHub App is installed on the repo.
+# It requires NO repository secret. Verified 2026-08-17 via P15-01 inventory.
+#
+# Pull-request-only behavior is the Socket App's default (it posts on PRs); this
+# config tunes it DOWN to summary-level output per sprint doctrine: ~290 commits
+# on the eventual PR would produce an unreadable flood with line-by-line defaults.
+version: 2
+
+# Only scan PRs, never push events or schedules that could fight existing crons.
+githubApp:
+  enabled: true
+  # Summary-level review, not line-by-line nitpicks.
+  dependencyOverviewEnabled: true
+  # Suppress per-file comments on huge diffs; surface a single summary instead.
+  pullRequestAlertsEnabled: false
+  disableCommentsAndCheckRuns: false
+
+# Ignore generated/vendor dirs so the app doesn't waste its free budget.
+projectIgnorePaths:
+  - "**/*.min.js"
+  - "**/dist/**"
+  - "**/node_modules/**"
+  - "**/.next/**"
+  - "**/build/**"

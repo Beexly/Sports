@@ -1,0 +1,23 @@
+{
+  "name": "@sports-labs/context-compiler",
+  "version": "0.1.0",
+  "private": true,
+  "description": "W2-04: Context Compiler v0 — compiles a content-addressed ContextPackManifest for a small objective, instead of loading the whole repo into an agent's context.",
+  "type": "module",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "compile": "tsx src/cli.ts",
+    "test": "vitest run",
+    "benchmark": "tsx src/benchmark.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.30",
+    "tsx": "^4.22.4",
+    "typescript": "^5.4.5",
+    "vitest": "^2.1.1"
+  },
+  "dependencies": {
+    "gpt-tokenizer": "^3.4.0"
+  }
+}

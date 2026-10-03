@@ -1,0 +1,146 @@
+{
+  "schema_version": "fable-shadow-control-tower-v1",
+  "generated_at": "2026-07-03T00:00:00.000Z",
+  "scope_note": "Local Shadow Control Tower mock for GSE/FABLE. It simulates landing-zone guardrails, Well-Architected checks, agent refusals, SageMaker drift cards, Clean Rooms scenarios, and CDK synth fixtures without AWS credentials, deploy, or spend.",
+  "live_aws_action": false,
+  "paid_resource_used": false,
+  "landing_zone": "gse-shadow-local",
+  "organizational_units": [
+    "evidence",
+    "agents",
+    "model-governance",
+    "partner-collaboration"
+  ],
+  "guard_rule_files": [
+    "docs/fable/aws/governance-os/guard-rules/fable-shadow-control.guard"
+  ],
+  "guardrails": [
+    {
+      "guardrail_id": "CT-FABLE-001",
+      "name": "Block live AWS mutation by default",
+      "control_type": "preventive",
+      "pillar": "security",
+      "mapped_aws_concepts": ["Control Tower preventive guardrail", "Service Control Policy", "IAM Access Analyzer"],
+      "fable_gate": "FABLE_AWS_ALLOW_DEPLOY=false and AWS decision engine allowed=false for mutating actions",
+      "default_effect": "block",
+      "local_evaluator": "validateAwsDecisionEngineDefaults",
+      "zero_cost": true
+    },
+    {
+      "guardrail_id": "CT-FABLE-002",
+      "name": "Command evidence and rollback required",
+      "control_type": "detective",
+      "pillar": "operational_excellence",
+      "mapped_aws_concepts": ["AWS Config custom rule", "CloudTrail audit posture"],
+      "fable_gate": "CODEX_FINAL_REPORT and COMMAND_LOG must record commands, outcomes, blockers, and rollback notes",
+      "default_effect": "flag",
+      "local_evaluator": "validateGithubVisibility plus final-report scan",
+      "zero_cost": true
+    },
+    {
+      "guardrail_id": "CT-FABLE-003",
+      "name": "Zero spend until owner-approved budget exists",
+      "control_type": "proactive",
+      "pillar": "cost_optimization",
+      "mapped_aws_concepts": ["AWS Budgets", "Cost Explorer", "Cost Anomaly Detection"],
+      "fable_gate": "FABLE_AWS_MAX_MONTHLY_COST_USD=0 blocks paid-resource estimates",
+      "default_effect": "block",
+      "local_evaluator": "validateAwsGateDefaults",
+      "zero_cost": true
+    },
+    {
+      "guardrail_id": "CT-FABLE-004",
+      "name": "Model drift cards required before hosted ML",
+      "control_type": "detective",
+      "pillar": "reliability",
+      "mapped_aws_concepts": ["SageMaker Model Monitor", "SageMaker Clarify"],
+      "fable_gate": "local drift cards must map PSI, KL, calibration drift, and parity checks before SageMaker adoption",
+      "default_effect": "flag",
+      "local_evaluator": "validateAwsFixtureLibraryEvidence and drift tests",
+      "zero_cost": true
+    },
+    {
+      "guardrail_id": "CT-FABLE-005",
+      "name": "Managed compute needs measured local bottleneck",
+      "control_type": "proactive",
+      "pillar": "performance_efficiency",
+      "mapped_aws_concepts": ["EC2", "Lambda", "SageMaker Processing"],
+      "fable_gate": "local benchmark, queue depth, or replay runtime must justify managed compute",
+      "default_effect": "require_owner_approval",
+      "local_evaluator": "AWS service scorecard adoption trigger",
+      "zero_cost": true
+    },
+    {
+      "guardrail_id": "CT-FABLE-006",
+      "name": "Synthetic and minimal by default",
+      "control_type": "preventive",
+      "pillar": "sustainability",
+      "mapped_aws_concepts": ["S3 lifecycle", "batch scheduling", "Clean Rooms aggregate-only workflow"],
+      "fable_gate": "fixture-only demos, bounded retention, and no always-on service before measured need",
+      "default_effect": "block",
+      "local_evaluator": "fixture library sustainability checks",
+      "zero_cost": true
+    }
+  ],
+  "bedrock_agentcore_agents": [
+    {
+      "agent_id": "agent-evidence-librarian",
+      "purpose": "Explain claim status and cite local evidence before public copy changes.",
+      "self_explanation": "I can summarize checked-in evidence and must say when a claim is unsupported, owner-gated, or blocked.",
+      "allowed_tools": ["local docs read", "fable:evidence", "fable:claims"],
+      "refused_actions": ["paid model call", "secret request", "publish unsupported claim", "AWS deploy"],
+      "evidence_output_required": true
+    },
+    {
+      "agent_id": "agent-guardrail-sentinel",
+      "purpose": "Explain why an AWS action is blocked or owner-gated.",
+      "self_explanation": "I map each requested AWS action to cost, IAM, data-rights, production, and reversibility risk before any live step.",
+      "allowed_tools": ["local decision engine", "local fixture library", "guardrail docs"],
+      "refused_actions": ["mutating AWS call", "DNS change", "IAM write", "model invocation"],
+      "evidence_output_required": true
+    }
+  ],
+  "sagemaker_drift_cards": [
+    {
+      "card_id": "drift-card-nfl-calibration-psi",
+      "model_surface": "NFL probability calibration",
+      "drift_signal": "PSI and ECE movement across safe football segments",
+      "local_metric": "apps/web/lib/fable/drift.ts",
+      "aws_mapping": "SageMaker Model Monitor baseline and SageMaker Clarify report shape",
+      "blocked_until": "local replay windows, rights-cleared features, owner-approved ML runtime, and budget approval exist"
+    },
+    {
+      "card_id": "drift-card-source-freshness",
+      "model_surface": "source freshness and evidence claims",
+      "drift_signal": "source staleness or unknown-rights status",
+      "local_metric": "source registry and FABLE evidence harness",
+      "aws_mapping": "AWS Config detective rule and CloudWatch-style freshness metric",
+      "blocked_until": "live AWS observability path is approved"
+    }
+  ],
+  "clean_rooms_nfl_scenarios": [
+    {
+      "scenario_id": "clean-nfl-synthetic-media-aggregate",
+      "synthetic_parties": ["synthetic media partner", "synthetic GSE evidence table"],
+      "allowed_output": "weekly aggregate topic bins with no row-level export",
+      "disallowed_output": "article-level, user-level, player-health, or bettor-level rows",
+      "minimum_aggregation_rule": "n >= 25 synthetic rows per output cell"
+    },
+    {
+      "scenario_id": "clean-nfl-synthetic-rights-holder",
+      "synthetic_parties": ["synthetic rights holder", "synthetic GSE model-audit table"],
+      "allowed_output": "aggregate source freshness and claim downgrade counts",
+      "disallowed_output": "raw partner data, identity joins, or external redistribution",
+      "minimum_aggregation_rule": "no export below weekly aggregate grain"
+    }
+  ],
+  "cdk_iac_fixtures": [
+    {
+      "fixture_id": "cdk-shadow-control-tower-synth",
+      "synth_only": true,
+      "deploy_allowed": false,
+      "stack_shape": "local synth fixture for OU names, guardrail IDs, tags, and zero-spend gates",
+      "fixture_path": "infrastructure/aws/cdk/shadow-control-tower-synth.fixture.json"
+    }
+  ]
+}

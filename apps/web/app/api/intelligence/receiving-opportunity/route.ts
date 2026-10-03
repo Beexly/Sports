@@ -1,0 +1,12 @@
+import { NextResponse } from "next/server";
+import { loadReceivingOpportunity } from "@/lib/intelligence/receiving-opportunity";
+import { requirePremiumApiRateLimited } from "@/lib/api-entitlement";
+
+export const dynamic = "force-dynamic";
+
+export async function GET(): Promise<NextResponse> {
+  const denied = await requirePremiumApiRateLimited("intelligence/receiving-opportunity");
+  if (denied) return denied;
+  const data = await loadReceivingOpportunity();
+  return NextResponse.json({ success: data.status !== "source-error", data });
+}

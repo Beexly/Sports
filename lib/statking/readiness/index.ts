@@ -1,0 +1,1 @@
+export function pageReadinessLevel(score: number): 'launchable foundation' | 'needs polish' | 'not ready' { if (score >= 70) return 'launchable foundation'; if (score >= 50) return 'needs polish'; return 'not ready'; }

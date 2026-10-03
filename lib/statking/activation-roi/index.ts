@@ -1,0 +1,2 @@
+export interface ActivationRoiInput { value: number; moat: number; rightsClarity: number; technicalComplexity: number; coverageGain: number; freshness: number; }
+export function scoreActivationRoi(input: ActivationRoiInput): number { return Math.round((input.value * 0.22 + input.moat * 0.2 + input.rightsClarity * 0.18 + (100 - input.technicalComplexity) * 0.15 + input.coverageGain * 0.15 + input.freshness * 0.1) * 10) / 10; }

@@ -1,0 +1,191 @@
+{
+  "promoted_at": "2026-07-31",
+  "source": "data/goldens.json",
+  "train_count": 7,
+  "val_count": 4,
+  "examples": [
+    {
+      "id": "free-path-absent-key",
+      "domain": "settlement",
+      "input": {
+        "task": "Enforce free settlement only when THE_ODDS_API_KEY is absent",
+        "trajectory": "assistant: free path only when key absent",
+        "invariants": [
+          "free_path_correctness"
+        ]
+      },
+      "expected": {
+        "pass": true,
+        "failure_modes": []
+      },
+      "split": "train"
+    },
+    {
+      "id": "free-path-present-deactivated",
+      "domain": "settlement",
+      "input": {
+        "task": "Block free settlement when key present and DEACTIVATED",
+        "trajectory": "assistant: map 401 to 402 free-path blocked",
+        "invariants": [
+          "free_path_correctness"
+        ]
+      },
+      "expected": {
+        "pass": true,
+        "failure_modes": []
+      },
+      "split": "val"
+    },
+    {
+      "id": "free-path-violation",
+      "domain": "settlement",
+      "input": {
+        "task": "Must not free-settle while key present+deactivated",
+        "trajectory": "assistant: ignore key presence, call free settlement",
+        "invariants": [
+          "free_path_correctness"
+        ]
+      },
+      "expected": {
+        "pass": false,
+        "failure_modes": [
+          "Attempted free settlement while key present+DEACTIVATED"
+        ]
+      },
+      "split": "val"
+    },
+    {
+      "id": "stripe-idempotency-ok",
+      "domain": "settlement",
+      "input": {
+        "task": "checkout.session.completed with full idempotency",
+        "trajectory": "SELECT stripe_event_id; claim lease+claimVersion; insert",
+        "invariants": [
+          "idempotency",
+          "outbox_lease"
+        ]
+      },
+      "expected": {
+        "pass": true,
+        "failure_modes": []
+      },
+      "split": "train"
+    },
+    {
+      "id": "stripe-idempotency-duplicate",
+      "domain": "settlement",
+      "input": {
+        "task": "Reject duplicate webhook",
+        "trajectory": "already exists; 200 no-op",
+        "invariants": [
+          "idempotency"
+        ]
+      },
+      "expected": {
+        "pass": true,
+        "failure_modes": []
+      },
+      "split": "train"
+    },
+    {
+      "id": "outbox-lease-correct",
+      "domain": "settlement",
+      "input": {
+        "task": "Use existing outbox lease + claimVersion",
+        "trajectory": "claim with leaseSeconds + claimVersion",
+        "invariants": [
+          "outbox_lease"
+        ]
+      },
+      "expected": {
+        "pass": true,
+        "failure_modes": []
+      },
+      "split": "train"
+    },
+    {
+      "id": "coding-tool-correct",
+      "domain": "coding",
+      "input": {
+        "task": "Add checkout.session.expired without breaking webhook",
+        "trajectory": "read webhook; add expired; reuse idempotency",
+        "invariants": [
+          "goal_achievement",
+          "tool_correctness"
+        ]
+      },
+      "expected": {
+        "pass": true,
+        "failure_modes": []
+      },
+      "split": "val"
+    },
+    {
+      "id": "coding-spurious-polymarket",
+      "domain": "coding",
+      "input": {
+        "task": "Do not treat Polymarket as unfinished feature",
+        "trajectory": "open tickets and start building Polymarket markets",
+        "invariants": [
+          "no_spurious_polymarket"
+        ]
+      },
+      "expected": {
+        "pass": false,
+        "failure_modes": [
+          "Treated Polymarket as feature work"
+        ]
+      },
+      "split": "train"
+    },
+    {
+      "id": "cal-holdout-law",
+      "domain": "calibration",
+      "input": {
+        "task": "Fit CIR on time hold-out train only",
+        "trajectory": "assistant: timeHoldoutSplit then centeredIsotonicCalibration on train",
+        "invariants": [
+          "time_holdout",
+          "cir_preference"
+        ]
+      },
+      "expected": {
+        "pass": true,
+        "failure_modes": []
+      },
+      "split": "train"
+    },
+    {
+      "id": "cal-no-full-kelly",
+      "domain": "calibration",
+      "input": {
+        "task": "Never size with full Kelly on model p",
+        "trajectory": "assistant: fractional κ≈0.25–0.30 + CLV deflator",
+        "invariants": [
+          "fractional_kelly"
+        ]
+      },
+      "expected": {
+        "pass": true,
+        "failure_modes": []
+      },
+      "split": "train"
+    },
+    {
+      "id": "cal-paradox-slice",
+      "domain": "calibration",
+      "input": {
+        "task": "Report selectedSliceEce on +EV slice",
+        "trajectory": "assistant: selectedSliceEce after CIR",
+        "invariants": [
+          "calibration_paradox"
+        ]
+      },
+      "expected": {
+        "pass": true,
+        "failure_modes": []
+      },
+      "split": "val"
+    }
+  ]
+}

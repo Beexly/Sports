@@ -1,0 +1,25 @@
+We need a HISTORICAL OPENING-LINE archive for US sports, in order to measure closing-line value (CLV).
+
+We already have CLOSING lines for free: nflverse games.csv (CC-BY-4.0) carries spread_line, total_line, home_moneyline and away_moneyline as the closing market, 1999-present, with final scores. What we do NOT have is the OPEN, or any timestamped pre-close snapshot, for those same games. Without it, an entry line equals the close by construction and CLV is unmeasurable.
+
+Hard constraints. An answer violating any of these is worthless to us:
+- Must permit COMMERCIAL use of DERIVED outputs. We publish our own analysis and models, never the raw data. A source that forbids commercial derived use is disqualified, however good it is.
+- Must be obtainable WITHOUT scraping behind a login, a paywall, or a click-through licence, and without violating the site's terms of service. No evasion of any kind.
+- Must have per-game granularity and at least 3 seasons of history to be worth the integration.
+
+For EACH candidate you name, give exactly:
+- name
+- URL
+- the licence BY NAME, and the actual clause text on commercial and derivative use
+- exact seasons covered
+- whether it carries a TRUE OPENING line, or only a "latest"/unlabelled line
+- format (csv / parquet / API / release assets)
+- how to obtain it legally, in one line
+
+If you do not KNOW a source's licence, write LICENCE UNKNOWN. Do not infer a licence from the project's reputation or from the fact that it is on GitHub. Do not invent a URL or a clause.
+
+A short list of three real sources beats twenty plausible ones. We will open every URL you give and read every clause you quote, and a single fabricated one destroys the credibility of your entire answer.
+
+Sports of interest, in priority order: NFL, NCAAF, NBA, NCAAB, MLB, NHL.
+
+Finally, and importantly: if you believe no free source meeting these constraints exists, say so plainly rather than reaching for a weak one. In that case name the cheapest PAID source that does meet them, with its actual current price and its actual licence terms on derived commercial use.

@@ -1,0 +1,33 @@
+Compiling: T1: guard-order fix (council ledgers) ...
+  naive: 2 files, 28905 bytes, 6647 tokens (cl100k_base)
+  pack:  9341 bytes, 3074 tokens (cl100k_base)
+  reduction factor: 2.16x
+  deterministic (2 runs, byte-identical + equal contentHash): true
+  contentHash: 104e3d60204c280934ee27d04860abe7a63798a8053e62069b983276e76d4fb2
+
+Compiling: T2: S3 field-rename rebase fix (opportunity-engine evidence) ...
+  naive: 1 files, 4544 bytes, 1133 tokens (cl100k_base)
+  pack:  4388 bytes, 1337 tokens (cl100k_base)
+  reduction factor: 0.85x
+  deterministic (2 runs, byte-identical + equal contentHash): true
+  contentHash: 609b8562361e40ad9b306509fdda66151130010cf2a4b11fad3b943879e9dde2
+
+Compiling: T3: seed.ts parse-blocker fix (W2-01) ...
+  naive: 4 files, 79137 bytes, 19136 tokens (cl100k_base)
+  pack:  10941 bytes, 3500 tokens (cl100k_base)
+  reduction factor: 5.47x
+  deterministic (2 runs, byte-identical + equal contentHash): true
+  contentHash: 201a0d3ec55665155b25f2ad5be8b3240091d9c9850705503c283ae7b83fc3bb
+
+=== SUMMARY (real measured numbers) ===
+┌─────────┬────────────────────────────────────────────────────────────────┬─────────────┬────────────┬───────────┬───────────────┐
+│ (index) │ task                                                           │ naiveTokens │ packTokens │ reduction │ deterministic │
+├─────────┼────────────────────────────────────────────────────────────────┼─────────────┼────────────┼───────────┼───────────────┤
+│ 0       │ 'T1: guard-order fix (council ledgers)'                        │ 6647        │ 3074       │ '2.16x'   │ true          │
+│ 1       │ 'T2: S3 field-rename rebase fix (opportunity-engine evidence)' │ 1133        │ 1337       │ '0.85x'   │ true          │
+│ 2       │ 'T3: seed.ts parse-blocker fix (W2-01)'                        │ 19136       │ 3500       │ '5.47x'   │ true          │
+└─────────┴────────────────────────────────────────────────────────────────┴─────────────┴────────────┴───────────┴───────────────┘
+
+Total naive tokens across 3 tasks: 26916
+Total pack tokens across 3 tasks:  7911
+Tokens saved: 19005 (70.6%)

@@ -1,0 +1,58 @@
+legality: nflverse OK (cleared-with-attribution). Data via nflverse (nflverse-data), licensed CC BY 4.0.
+Fetching https://github.com/nflverse/nflverse-data/releases/download/schedules/games.csv ...
+corpus: 5281 settled games, seasons 2006-2025
+note: this is the MARKET-moneyline corpus (games.csv closing MLs exist from 2006), NOT the 15,939-pick replay corpus (spreads/totals, 1999-2025) — the two are different populations.
+
+=== Walk-forward market calibration (train <= N, evaluate N+1) ===
+per-fold numbers; never one pooled number for the fit comparisons.
+
+fold 2016: n= 265  raw Brier 0.2170 (rel 0.0232 / res 0.0298 / unc 0.2428)  iso +0.0006  platt +0.0003  beta +0.0003  post-iso ECE eq/adaptive 0.0318/0.0077
+fold 2017: n= 266  raw Brier 0.2031 (rel 0.0324 / res 0.0481 / unc 0.2454)  iso -0.0005  platt +0.0003  beta +0.0006  post-iso ECE eq/adaptive 0.0419/0.0074
+fold 2018: n= 265  raw Brier 0.2124 (rel 0.0313 / res 0.0285 / unc 0.2407)  iso +0.0004  platt +0.0003  beta +0.0003  post-iso ECE eq/adaptive 0.0172/0.0032
+fold 2019: n= 266  raw Brier 0.2141 (rel 0.0366 / res 0.0373 / unc 0.2495)  iso -0.0024  platt -0.0002  beta -0.0003  post-iso ECE eq/adaptive 0.0687/0.0518
+fold 2020: n= 268  raw Brier 0.2019 (rel 0.0378 / res 0.0531 / unc 0.2500)  iso +0.0012  platt -0.0002  beta +0.0000  post-iso ECE eq/adaptive 0.0741/0.0418
+fold 2021: n= 284  raw Brier 0.2177 (rel 0.0399 / res 0.0418 / unc 0.2497)  iso +0.0021  platt -0.0007  beta -0.0010  post-iso ECE eq/adaptive 0.0888/0.0391
+fold 2022: n= 282  raw Brier 0.2093 (rel 0.0289 / res 0.0349 / unc 0.2455)  iso +0.0015  platt +0.0002  beta +0.0003  post-iso ECE eq/adaptive 0.0307/0.0091
+fold 2023: n= 285  raw Brier 0.2186 (rel 0.0294 / res 0.0315 / unc 0.2458)  iso -0.0048  platt +0.0003  beta +0.0002  post-iso ECE eq/adaptive 0.0859/0.0112
+fold 2024: n= 285  raw Brier 0.2010 (rel 0.0293 / res 0.0532 / unc 0.2478)  iso +0.0003  platt +0.0002  beta +0.0009  post-iso ECE eq/adaptive 0.0839/0.0089
+fold 2025: n= 284  raw Brier 0.2109 (rel 0.0377 / res 0.0404 / unc 0.2488)  iso +0.0024  platt -0.0001  beta +0.0001  post-iso ECE eq/adaptive 0.0342/0.0159
+
+=== Pooled market closing line, held-out eval seasons 2016-2025 (raw de-vig, no recalibration) ===
+n=2750  base rate 55.02%
+Brier 0.2106  95% CI [0.2050, 0.2172]
+reliability 0.0324  CI [0.0311, 0.0339]
+resolution 0.0361  CI [0.0303, 0.0424]
+uncertainty 0.2475  CI [0.2453, 0.2490]
+ECE equal-width 0.0180  CI [0.0148, 0.0400]
+ECE adaptive    0.0126  CI [0.0099, 0.0332]
+
+Reliability curve (equal-count bins of ~500):
+      9-37%  n=  500  pred 28.0%  obs 26.6%
+     37-49%  n=  500  pred 42.7%  obs 41.2%
+     49-60%  n=  500  pred 55.1%  obs 55.4%
+     60-69%  n=  500  pred 64.2%  obs 62.0%
+     69-79%  n=  500  pred 73.8%  obs 74.0%
+     79-94%  n=  250  pred 84.1%  obs 86.8%
+
+=== Calibrator comparison, mean held-out Brier delta vs identity (positive = better) ===
+isotonic +0.00007 over 10 folds
+platt    -0.00003
+beta     -0.00014
+NONE of the calibrators beats the identity by more than 0.0005 mean Brier on held-out folds — the market is already the calibration.
+
+=== Variable-based calibration (train <= 2015 mean per leaf, evaluate 2016-2025) ===
+note: era split trains on 2006-2015 only (corpus limit); the pre-2006 era has no closing moneylines in games.csv, so era-as-a-variable is only partially testable.
+-- split: favourite strength
+  leaf 1.5-2.5    test n=  447  train base 50.94%  test actual 50.11%  leaf Brier 0.2501
+  leaf 10+        test n=  343  train base 74.43%  test actual 72.89%  leaf Brier 0.1979
+  leaf 3-6        test n= 1196  train base 50.00%  test actual 52.01%  leaf Brier 0.2500
+  leaf 6.5-9.5    test n=  576  train base 65.86%  test actual 57.12%  leaf Brier 0.2526
+  leaf PK-1       test n=  188  train base 46.81%  test actual 46.81%  leaf Brier 0.2490
+  weighted leaf Brier 0.2440 vs single global mean 0.2478
+-- split: season era
+  leaf 2014-2020  test n= 1330  train base 55.91%  test actual 55.41%  leaf Brier 0.2471
+  weighted leaf Brier 0.2471 vs single global mean 0.2478
+
+Honest expected outcome (per the work order): the market IS well calibrated;
+any calibrator gain should be ~0 on held-out folds. If the numbers above say
+otherwise, check twice, then report loudly with this command.

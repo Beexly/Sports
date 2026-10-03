@@ -1,0 +1,56 @@
+[
+  {
+    "id": "approved-primary-content-route",
+    "version": "fixture-1",
+    "kind": "MODEL",
+    "implementationState": "LIVE_INTERNAL",
+    "permittedAudiences": ["COCKPIT_DRAFT"],
+    "requiresVettedEvidence": true,
+    "remoteExecution": true,
+    "estimatedCostUsd": 0.04,
+    "estimatedLatencyMs": 2500,
+    "qualityClass": 0.95,
+    "hardPolicyEligible": true
+  },
+  {
+    "id": "cheaper-shadow-content-route",
+    "version": "fixture-1",
+    "kind": "MODEL",
+    "implementationState": "SHADOW_ONLY",
+    "permittedAudiences": ["COCKPIT_DRAFT"],
+    "requiresVettedEvidence": true,
+    "remoteExecution": true,
+    "estimatedCostUsd": 0.005,
+    "estimatedLatencyMs": 900,
+    "qualityClass": 0.82,
+    "hardPolicyEligible": true
+  },
+  {
+    "id": "unapproved-source-fast-path",
+    "version": "fixture-1",
+    "kind": "SOURCE",
+    "implementationState": "IMPLEMENTED_PURE",
+    "permittedAudiences": ["COCKPIT_DRAFT"],
+    "requiresVettedEvidence": false,
+    "remoteExecution": true,
+    "estimatedCostUsd": 0.0,
+    "estimatedLatencyMs": 100,
+    "qualityClass": 0.99,
+    "hardPolicyEligible": false,
+    "hardPolicyFailure": "SOURCE_CLEARANCE_REQUIRED"
+  },
+  {
+    "id": "human-review-abstention",
+    "version": "fixture-1",
+    "kind": "HUMAN_REVIEW",
+    "implementationState": "LIVE_INTERNAL",
+    "permittedAudiences": ["COCKPIT_DRAFT"],
+    "requiresVettedEvidence": true,
+    "remoteExecution": false,
+    "estimatedCostUsd": 0.0,
+    "estimatedLatencyMs": 0,
+    "qualityClass": 1.0,
+    "hardPolicyEligible": true,
+    "abstentionFallback": true
+  }
+]

@@ -1,0 +1,23 @@
+{
+    "nodeEnv": "development",
+    "appVersion": "dev",
+    "timestamp": "2026-05-19T10:13:48.269Z",
+    "stubMode": true,
+    "demoPicksEnabled": true,
+    "samplePickCount": 10,
+    "devFakeAdmin": true,
+    "gates": {
+        "canExposePublicPicks": true,
+        "canExposePerformanceStats": false,
+        "canPersistCanonicalHistory": false,
+        "isBootstrapMode": true,
+        "minSettledPicksForLearning": 100
+    },
+    "externalConfig": {
+        "databaseUrlSet": false,
+        "theOddsApiKeySet": false,
+        "anthropicApiKeySet": false,
+        "googleOauthSet": false,
+        "stripeSet": false
+    }
+}

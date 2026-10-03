@@ -1,0 +1,64 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://galaxy-sports-edge.local/schemas/fable/personal-learning-evidence.schema.json",
+  "title": "FABLE Personal AWS Learning Evidence",
+  "type": "object",
+  "required": ["schema_version", "generated_at", "scope_note", "evidence"],
+  "properties": {
+    "schema_version": { "const": "fable-personal-learning-evidence-v1" },
+    "generated_at": { "type": "string", "format": "date-time" },
+    "scope_note": { "type": "string", "minLength": 1 },
+    "evidence": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "learning_provider",
+          "course_or_badge_name",
+          "completion_status",
+          "date_completed",
+          "proof_type",
+          "proof_link_or_path",
+          "public_safe",
+          "gse_relevance",
+          "repo_action",
+          "no_secrets_confirmed",
+          "no_paid_resource_confirmed",
+          "owner_approved_for_public_use"
+        ],
+        "properties": {
+          "learning_provider": { "type": "string", "minLength": 1 },
+          "course_or_badge_name": { "type": "string", "minLength": 1 },
+          "completion_status": {
+            "enum": ["planned", "in_progress", "completed", "verified_public"]
+          },
+          "date_completed": {
+            "anyOf": [
+              { "type": "string", "pattern": "^\\d{4}-\\d{2}-\\d{2}$" },
+              { "type": "null" }
+            ]
+          },
+          "proof_type": {
+            "enum": [
+              "course_name_only",
+              "learning_summary",
+              "approved_screenshot_path",
+              "public_badge_url",
+              "not_yet_public"
+            ]
+          },
+          "proof_link_or_path": { "type": "string", "minLength": 1 },
+          "public_safe": { "type": "boolean" },
+          "gse_relevance": { "type": "string", "minLength": 1 },
+          "repo_action": { "type": "string", "minLength": 1 },
+          "no_secrets_confirmed": { "type": "boolean" },
+          "no_paid_resource_confirmed": { "type": "boolean" },
+          "owner_approved_for_public_use": { "type": "boolean" }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

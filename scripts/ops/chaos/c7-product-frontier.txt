@@ -1,0 +1,44 @@
+You are being paid to tell a founder something he does not want to hear, on launch day. Do not be encouraging. Do not pad. Do not congratulate.
+
+CONTEXT — every number below was produced by a command that was actually run. None are projections.
+
+THE PRODUCT: a sports betting picks platform. Deterministic factor model, not an LLM, across NFL / NCAAF / NBA / NCAAB / MLB / NHL / MLS. Positioning to date: "We're not AI. We're math you can read." Free tier gets 2 picks/day with no confidence scores. Pro $14.99/mo gets the full board, confidence scores, factor trail, line movement. Elite $24.99/mo adds real-time alerts and a CLV ledger.
+
+WHAT WE MEASURED, on a frozen model, 1999-2025 NFL regular season, 6,967 games, 15,939 settled picks, zero lookahead errors, graded against real closing lines:
+
+    SPREAD     n=6778   48.86%   ROI  -6.53%
+    TOTAL      n=6868   49.49%   ROI  -5.44%
+    MONEYLINE  n=2001   76.71%   ROI  -1.96%    (wins 3 of 4 and still loses money)
+    OVERALL    n=15647  52.70%   ROI  -5.48% per unit staked
+
+Break-even at -110 is 52.38%. We do not clear it on a lower confidence bound anywhere.
+
+- Confidence does not rank outcomes. AUC 0.4965, p=0.41, on 13,646 picks. Not inverted — inert. Control variables (line magnitude, rest, week) all sit at ~0.50 too.
+- Independently corroborated on LIVE production picks, a different code path: the >=80-confidence tail is 152 graded picks, 61 wins, 40%. Resolution 0.005 on 1,663 graded picks. The live data and the historical replay agree.
+- 11 market slices tested (favourite/dog, four spread bands, over/under, four total bands). ZERO cleared break-even on the Wilson lower bound.
+- The market closing line is already near-perfectly calibrated: pooled Brier 0.2106, CI [0.2050, 0.2172], n=2,750, walk-forward. The best recalibrator we could fit (isotonic) improves it by +0.00007. There is essentially nothing left to recalibrate.
+- CLV is UNMEASURED, not disproven. Our entry line IS the close by construction, so every pick grades MATCHED_CLOSE. We hold no opening-line archive.
+
+Read that again before answering. We are not asking you to fix the model.
+
+THE QUESTION — answer only this one:
+
+A paying customer is about to be charged $14.99/month. What is he buying, that is worth $14.99/month, that we can prove today, given we cannot claim the picks win?
+
+CONSTRAINTS ON YOUR ANSWER. Violate one and the answer is discarded:
+
+- You may not propose anything that requires the picks to beat the close. That is the assumption under test, and it currently fails.
+- You may not propose "wait until we have a track record." That is a plan to have no product for a year. If your real answer is that there is no product until then, say exactly that, in one sentence, and stop — that is a legitimate and useful answer, and it is better than a plausible one you invented.
+- You may not propose fabricating, cherry-picking, backfilling, or selectively publishing any performance number. The entire premise of this business is that it does not lie about its own performance. Any answer that softens this is worse than no answer.
+- "Community", "education", "entertainment" and "gamification" are only acceptable if you name the specific mechanic, who pays for it, and what stops a competitor shipping it in a week.
+
+YOUR ANSWER MUST CONTAIN ALL SIX:
+
+1. THE THING BEING SOLD — one sentence. Not a feature list. What is the customer's job-to-be-done, and why does he wake up wanting it?
+2. WHY IT IS DEFENSIBLE FOR 24 MONTHS — what specifically stops a funded competitor from copying it? "We move faster" is not a moat. Name the asset, the switching cost, or the compounding loop.
+3. THE PROOF WE CAN SHOW ON DAY ONE — what verifiable artifact does a sceptical customer look at in the first 60 seconds that makes him believe us? It must be something we can generate from what is described in CONTEXT. If it requires data we do not have, say which data and stop.
+4. THE PRICE THAT ACTUALLY CLEARS — is $14.99/mo right for what you just described, or is this a $4/mo product, or a $200/mo product sold to 40 people? Give a number and the reasoning.
+5. THE STRONGEST ARGUMENT AGAINST YOUR OWN ANSWER — the thing that kills it. Not a soft caveat. The real objection a hostile investor raises in the first minute.
+6. YOUR CONFIDENCE — 0-100%, that a real customer pays for this twice, i.e. does not churn after month one. And say specifically what evidence would move that number.
+
+FINALLY: rank your own answer honestly against the base rate. Most "honest analytics" plays in sports betting die because honesty is not a feature anyone pays for — customers say they want transparency and buy confidence. If your answer is a version of that dead idea, say so and give a different one, or concede the point. UNSURE is respectable. Invention is disqualifying.

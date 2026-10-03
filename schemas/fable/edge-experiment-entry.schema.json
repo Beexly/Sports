@@ -1,0 +1,11 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://beexly.local/schemas/fable/edge-experiment-entry.schema.json",
+  "type": "object",
+  "required": ["candidate_id", "hypothesis", "source_type", "legal_tos_risk", "cost_to_test_usd", "metric_affected", "expected_improvement", "minimum_detectable_effect", "sample_size_needed", "overfit_risk", "measurement_method", "falsification_rule", "decision"],
+  "properties": {
+    "candidate_id": { "type": "string" },
+    "hypothesis": { "type": "string" },
+    "decision": { "type": "string" }
+  }
+}
