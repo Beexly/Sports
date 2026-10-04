@@ -125,7 +125,7 @@ def trim_prose(s):
 
 def acceptable(s):
     """Verbatim + balanced + math-bearing + not a fragment."""
-    if not s or len(s) < 8 or len(s) > 320:
+    if not s or len(s) < 8 or len(s) > 3000:   # runaway guard, not a truncation
         return False
     if JUNK.search(s) or SECRET.search(s):
         return False
@@ -175,8 +175,11 @@ def latex_arg(text):
                         k += 1
                         break
                 k += 1
-                if k - j > 320:
+                if k - j > 2000:          # runaway, not a long equation
+                    k = -1
                     break
+            if k < 0 or k >= len(text) or text[k - 1] != '}':
+                continue                   # group never closed: drop the span
             # include any trailing '^{...}' / '_' group right after
             out.append(text[i:k])
             continue
@@ -186,10 +189,14 @@ def latex_arg(text):
         end = j
         while end < len(text):
             ch = text[end]
+            # real sentence boundary
             if ch in '.!?' and end + 1 < len(text) and text[end + 1] in ' \n':
                 break
+            # a trailing equation number marks the end of this expression
+            if ch in ' \t' and re.match(r'\(\d{1,3}\)', text[end + 1:end + 8] or ''):
+                break
             end += 1
-            if end - j > 220:
+            if end - j > 4000:            # runaway guard only, not a truncation
                 break
         out.append(text[i:end])
     return out

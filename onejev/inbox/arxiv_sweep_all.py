@@ -14,7 +14,7 @@ sys.path.insert(0, HERE)
 import arxiv_extract as A
 
 OUTDIR = os.path.join(HERE, 'mind-queue')
-WAVE0 = 9300
+WAVE0 = 9400
 CHUNK = 40
 MARKER = 'corpus-roots:'
 
