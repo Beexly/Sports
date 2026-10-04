@@ -45,7 +45,7 @@ IN_EQ = re.compile(
     r"(?:\\le(?:q)?\b|\\ge(?:q)?\b|\\neq\b|\\approx\b|\\equiv\b|\u2264|\u2265|\u2260|\u2248|!=|~=|==)"
 )
 INEQ_SPAN = re.compile(
-    r"[A-Za-z\u03b8\u03bc\u03c4\u03c3\u03b1-\u03c9\u0391-\u03a9\u03ba][A-Za-z0-9_\u03b8\u03bc\u03c4\u03c3\u2202^{},\\\\\u2212\-()]*"
+    r"[\[(*A-Za-z\u03b8\u03bc\u03c4\u03c3\u03b1-\u03c9\u0391-\u03a9\u03ba][A-Za-z0-9_\u03b8\u03bc\u03c4\u03c3\u2202^{},\\\\\u2212\-()]*"
     r"\s*(?:" + IN_EQ.pattern + r"|=)\s*"
     r"[^\n]+"
 )
