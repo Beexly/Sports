@@ -1,0 +1,51 @@
+{
+ "status": "BLOCKED",
+ "phase": "2 (train.jsonl assembly)",
+ "ts": "2026-10-04T03:21:59.326741-05:00",
+ "block_reason": "Port 8000 is a Decisions-API server, not a text generator. It exposes only GET /, /health, /v1/models and POST /v1/systemone. v1/systemone takes {questions:{name:{type:noul|choice|score,...}}} and returns probabilities (noul/score/legend/confidence) with usage.output_tokens=1. /v1/models describes OneJev-9B.IQ4_XS as 'Qev decision model (qwen3_5)'. It therefore cannot emit reasoning or content prose, which train.jsonl requires.",
+ "measured_evidence": {
+  "routes": [
+   "GET /",
+   "GET /health",
+   "GET /v1/models",
+   "POST /v1/systemone"
+  ],
+  "chat_completions": 404,
+  "v1_chat_completions": 404,
+  "api_generate": 404,
+  "completion": 404,
+  "noul_probe": {
+   "explain": {
+    "type": "noul",
+    "noul": 0.355942
+   }
+  },
+  "score_probe": {
+   "type": "score",
+   "score": 0.322817,
+   "confidence": 0.515774
+  },
+  "output_tokens": 1,
+  "model_description": "Qev decision model (qwen3_5)"
+ },
+ "what_did_work": {
+  "rule3_gate": "built; measurements-priced.jsonl = 3819 rows (honest count)",
+  "flash_suite_validation": "47/50 agreement (94%), 96% junk recall",
+  "trace_queue": "night/trace-queue.jsonl = 200 equations + 200 measurements"
+ },
+ "not_done_reason": "maybe_submit requires model exactly Qwen/Qwen3.5-9B; no 9B adapter was trained and none may be launched. Downstream submit gate is unreachable regardless.",
+ "retry": "not attempted; do not retry",
+ "bans_honoured": {
+  "opened_brain_mind_jsonl": false,
+  "read_turner_quarantine": false,
+  "trained_on_quarantine_files": false,
+  "git_add_A": false,
+  "killed_port_8000": false,
+  "printed_api_key": false,
+  "local_train_launched": false,
+  "loads_DeepSeek_V4_Flash": false,
+  "twinspark_or_ktransformers": false
+ },
+ "picks": 0,
+ "kills": 0
+}
