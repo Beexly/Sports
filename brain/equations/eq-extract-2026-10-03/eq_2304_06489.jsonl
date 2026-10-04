@@ -1,0 +1,6 @@
+{"source_path": "arxiv/2304.06489", "claim": "Defines a transfer-learning domain as the two-tuple of feature space X and its marginal probability distribution P(X).", "equation": "\\langle X, P(X)\\rangle"}
+{"source_path": "arxiv/2304.06489", "claim": "Defines a transfer-learning task as the two-tuple of label space Y and the predictor function P(y|x).", "equation": "\\langle Y, P(y|x) \\rangle"}
+{"source_path": "arxiv/2304.06489", "claim": "States the domain-similarity condition of the usual learning setting: source and target marginal distributions are equal.", "equation": "P(X_S) = P(X_T)"}
+{"source_path": "arxiv/2304.06489", "claim": "States the task-similarity condition of the usual learning setting: source and target conditional distributions are equal.", "equation": "P(Y_S|X_S) = P(Y_T|X_T)"}
+{"source_path": "arxiv/2304.06489", "claim": "States the task-dissimilarity condition of inductive transfer learning: source and target conditional distributions differ.", "equation": "P(Y_S|X_S) \\neq P(Y_T|X_T)"}
+{"source_path": "arxiv/2304.06489", "claim": "States the domain-dissimilarity condition of transductive transfer learning: source and target marginal distributions differ.", "equation": "P(X_S) \\neq P(X_T)"}
