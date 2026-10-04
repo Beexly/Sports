@@ -24,6 +24,13 @@ always. Never at a bucket root, never in `docs/research/`, never in a new
 top-level folder. Bucket by main topic; if none fits, closest bucket + say so
 in the commit message.
 
+---
+
+## STANDING DOCTRINES — read before any other work
+
+### DIRECT-TO-MIND/ENGINE (Garrett, 2026-10-04 — HARD)
+Nothing stays local, ever. Every result lands same-day on the remote (branch or agent bus): no local-only workspace hoarding, no back-and-forth, nothing lost. Mind feeds go trainer-ready onto the branch as the direct pipe into the mind (no agent writes `brain/mind.jsonl` itself — single-writer: the Windows trainer owns it). Engine work lands as code on Beexly/Sports, not specs or handoffs. Every completion gets an agent-bus note the same run so the whole fleet is aware. Nothing hidden, nothing lost, nothing is forgotten.
+
 
 **UPDATED 2026-09-13 (Motif — game-day calibration pass + v5.3.0 spec).** Founder ordered a full
 review/rebuild of the prediction engine ("extremely in depth", "trust no claims", ship direct to
