@@ -1,0 +1,20 @@
+{
+  "model": "Qwen/Qwen3.8-27B",
+  "training_file": "night/phase2_master_corpus.jsonl",
+  "n_epochs": 3,
+  "batch_size": 4,
+  "learning_rate": 2e-05,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "lora_dropout": 0.05,
+  "suffix": "phase2-reasoning-27b",
+  "cost_estimate": {
+    "rate_per_million": "$1.05",
+    "floor_price": "$4.00",
+    "estimated_tokens": 1800000,
+    "projected_cost": "$4.00",
+    "initial_balance": "$26.00",
+    "remaining_balance": "$22.00"
+  },
+  "budget_check": "APPROVED_UNDER_BUDGET"
+}

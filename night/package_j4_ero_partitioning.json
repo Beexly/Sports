@@ -1,0 +1,50 @@
+{
+  "partition_grammar": {
+    "CLASS_A": "Closed-form display equations (Kernels, algebraic identities)",
+    "CLASS_B": "Empirical point estimates with uncertainty intervals (\\pm, CI, SE)",
+    "CLASS_C": "Discarded table layout chrome (ERO(...), structural headers)"
+  },
+  "counts": {
+    "CLASS_A": 2,
+    "CLASS_B": 2,
+    "CLASS_C": 2
+  },
+  "samples": [
+    {
+      "id": "eq_01",
+      "raw": "K(x, x') = \\exp\\left(-\\frac{\\|x - x'\\|^2}{2\\sigma^2}\\right)",
+      "assigned_class": "CLASS_A",
+      "match_expected": true
+    },
+    {
+      "id": "eq_02",
+      "raw": "\\hat{\\theta} = 1.45 \\pm 0.12 \\quad (95\\% \\text{ CI: } [1.21, 1.69])",
+      "assigned_class": "CLASS_B",
+      "match_expected": true
+    },
+    {
+      "id": "eq_03",
+      "raw": "ERO(row_2, row_1, multiplier=-0.50)",
+      "assigned_class": "CLASS_C",
+      "match_expected": true
+    },
+    {
+      "id": "eq_04",
+      "raw": "P(Y=1|X) = \\frac{1}{1 + e^{-X\\beta}}",
+      "assigned_class": "CLASS_A",
+      "match_expected": true
+    },
+    {
+      "id": "eq_05",
+      "raw": "\\text{MAE} = 0.042 \\quad (\\text{SE} = 0.003)",
+      "assigned_class": "CLASS_B",
+      "match_expected": true
+    },
+    {
+      "id": "eq_06",
+      "raw": "ERO(pivot_table_header_col_3)",
+      "assigned_class": "CLASS_C",
+      "match_expected": true
+    }
+  ]
+}
