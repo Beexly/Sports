@@ -65,10 +65,12 @@ export type SimStats = {
   readonly mean: number;
   readonly p50: number;
   readonly p90: number; // correlated ceiling realisation
+  readonly p99: number; // 99th percentile tournament winning score
   readonly ceilEV: number; // expected score in the top quintile of outcomes
   readonly stdev: number;
   readonly dupRisk: number; // 0..1 chalk/duplication proxy (higher = more duplicated)
   readonly score: number; // tournament score used for ranking
+  readonly simsRun: number; // total simulations executed (e.g. 10000)
 };
 
 export type SimOpts = {
@@ -82,14 +84,24 @@ export type SimOpts = {
  *  field fields your exact lineup. Geometric mean of ownership, normalised. */
 export function duplicationRisk(lu: Lineup): number {
   if (!lu.length) return 0;
-  const logs = lu.reduce((s, p) => s + Math.log(Math.min(Math.max(p.own, 0.005), 0.6)), 0);
-  const geo = Math.exp(logs / lu.length); // geometric-mean ownership
+  let sumLogs = 0;
+  let count = 0;
+  for (const p of lu) {
+    if (typeof p.own !== "number" || Number.isNaN(p.own) || !Number.isFinite(p.own)) {
+      continue;
+    }
+    const clamped = Math.min(Math.max(p.own, 0.005), 0.6);
+    sumLogs += Math.log(clamped);
+    count++;
+  }
+  if (count === 0) return 0;
+  const geo = Math.exp(sumLogs / count); // geometric-mean ownership
   // map geo-mean ownership (~0.02..0.25 realistic) to 0..1
   return Math.min(1, Math.max(0, (geo - 0.02) / 0.23));
 }
 
 export function simulateLineups(lineups: readonly Lineup[], opts: SimOpts = {}): SimStats[] {
-  const sims = opts.sims ?? 2000;
+  const sims = opts.sims ?? 10_000;
   const seed = opts.seed ?? 42;
   const ownWeight = opts.ownWeight ?? 0.1;
   const dupWeight = opts.dupWeight ?? 6;
@@ -97,13 +109,45 @@ export function simulateLineups(lineups: readonly Lineup[], opts: SimOpts = {}):
 
   const teams = new Set<string>();
   const games = new Set<string>();
-  for (const lu of lineups) for (const p of lu) { teams.add(p.team); games.add(gameKey(p)); }
+  for (const lu of lineups) {
+    for (const p of lu) {
+      teams.add(p.team);
+      if (p.opp) teams.add(p.opp);
+      games.add(gameKey(p));
+    }
+  }
 
-  const totals: number[][] = lineups.map(() => new Array<number>(sims));
+  const teamList = Array.from(teams);
+  const teamIndex = new Map(teamList.map((t, i) => [t, i]));
+  const gameList = Array.from(games);
+  const gameIndex = new Map(gameList.map((g, i) => [g, i]));
+
+  const teamZArr = new Float64Array(teamList.length);
+  const gameZArr = new Float64Array(gameList.length);
+
+  interface FastPlayer {
+    readonly p: DfsPlayer;
+    readonly sd: number;
+    readonly teamIdx: number;
+    readonly oppIdx: number;
+    readonly gameIdx: number;
+    readonly idio: number;
+  }
+
+  const fastLineups: FastPlayer[][] = lineups.map((lu) =>
+    lu.map((p) => ({
+      p,
+      sd: playerSd(p),
+      teamIdx: teamIndex.get(p.team)!,
+      oppIdx: p.opp ? (teamIndex.get(p.opp) ?? -1) : -1,
+      gameIdx: gameIndex.get(gameKey(p))!,
+      idio: idioLoad(p.pos),
+    }))
+  );
+
+  const totals: Float64Array[] = lineups.map(() => new Float64Array(sims));
 
   for (let s = 0; s < sims; s++) {
-    const teamZ = new Map<string, number>();
-    const gameZ = new Map<string, number>();
     let spare: number | null = null;
     const nextZ = (): number => {
       if (spare !== null) { const v = spare; spare = null; return v; }
@@ -111,25 +155,29 @@ export function simulateLineups(lineups: readonly Lineup[], opts: SimOpts = {}):
       spare = b;
       return a;
     };
-    for (const t of teams) teamZ.set(t, nextZ());
-    for (const g of games) gameZ.set(g, nextZ());
 
-    for (let li = 0; li < lineups.length; li++) {
-      const lu = lineups[li]!;
+    for (let i = 0; i < teamList.length; i++) teamZArr[i] = nextZ();
+    for (let i = 0; i < gameList.length; i++) gameZArr[i] = nextZ();
+
+    for (let li = 0; li < fastLineups.length; li++) {
+      const lu = fastLineups[li]!;
       let total = 0;
-      for (const p of lu) {
-        const sd = playerSd(p);
-        const gz = gameZ.get(gameKey(p))!;
+      for (let pi = 0; pi < lu.length; pi++) {
+        const item = lu[pi]!;
+        const gz = gameZArr[item.gameIdx]!;
         const eps = nextZ();
         let pts: number;
-        if (p.pos === "DST") {
-          const oppZ = teamZ.get(p.opp) ?? 0;
-          pts = p.proj + sd * (-DST_OPP_LOAD * oppZ - DST_GAME_LOAD * gz + idioLoad("DST") * eps);
+        if (item.p.pos === "DST") {
+          if (item.oppIdx === -1) {
+            throw new Error(`Opponent team '${item.p.opp}' missing from simulation draws`);
+          }
+          const oppZ = teamZArr[item.oppIdx]!;
+          pts = item.p.proj + item.sd * (-DST_OPP_LOAD * oppZ - DST_GAME_LOAD * gz + item.idio * eps);
         } else {
-          const tz = teamZ.get(p.team)!;
-          pts = p.proj + sd * (TEAM_LOAD[p.pos] * tz + GAME_LOAD[p.pos] * gz + idioLoad(p.pos) * eps);
+          const tz = teamZArr[item.teamIdx]!;
+          pts = item.p.proj + item.sd * (TEAM_LOAD[item.p.pos] * tz + GAME_LOAD[item.p.pos] * gz + item.idio * eps);
         }
-        total += Math.max(0, pts);
+        total += pts;
       }
       totals[li]![s] = total;
     }
@@ -150,10 +198,12 @@ export function simulateLineups(lineups: readonly Lineup[], opts: SimOpts = {}):
       mean: round1(mean),
       p50: round1(q(0.5)),
       p90: round1(q(0.9)),
+      p99: round1(q(0.99)),
       ceilEV: round1(ceilEV),
       stdev: round1(Math.sqrt(variance)),
       dupRisk: round2(dupRisk),
       score: round1(score),
+      simsRun: sims,
     };
   });
 }
@@ -170,3 +220,7 @@ export function rankByTournamentScore(candidates: readonly Lineup[], opts: SimOp
     .map((players, i) => ({ players, sim: stats[i]! }))
     .sort((a, b) => b.sim.score - a.sim.score);
 }
+
+/** Explicit alias matching prompt and benchmark expectations */
+export const simulateLineupsCorrelated = simulateLineups;
+

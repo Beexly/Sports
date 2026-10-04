@@ -4,6 +4,50 @@ Auto-loaded by Grok Build, Codex, and Copilot at workspace root; Claude Code loa
 
 ---
 
+## STANDING DOCTRINES — READ BEFORE ANY OTHER WORK (Garrett, 2026-10-04)
+
+1. **DIRECT-TO-MIND/ENGINE:**
+   - **Nothing Stays Local, Ever:** Every result lands same-day on the remote (branch or agent bus `outbox/from-motif/`). No local-only hoarding.
+   - **Mind Feeds Are Single-Writer:** Mind feeds go trainer-ready onto the branch as the direct pipe into the mind. Windows trainer owns `brain/mind.jsonl`.
+   - **Engine Work Lands as Executable Code:** Shipped as tests + implementation on `Beexly/Sports` and `frontier/sports`, not specs or handoffs.
+   - **Immediate Fleet Notification:** Every completion gets an agent-bus note in the same run so Hermes, Grok Build, Codex, Copilot, and Claude Code stay synchronized.
+   - **No Amnesia:** Every lesson learned from every slate is permanently encoded into signals, invariants, and tests.
+
+2. **WIRE-FIRST SEQUENCING (Garrett, 2026-09-30):**
+   - Research -> Wire -> Weight -> Calibrate -> Test -> Polish. Never re-sequenced.
+
+3. **MIND-FIRST (Garrett, 2026-10-03):**
+   - The mind is the entire corpus (all math, all equations, theories, papers). Corpus + equations enter the mind before picks are emitted.
+
+4. **INGEST-AND-LEARN (Garrett, 2026-09-28):**
+   - Continuous learning through verified instincts and permanent retention. Every winning and losing slate updates the model parameters.
+
+5. **FAIL-CLOSED LAW 9:**
+   - Any pick or prop with negative Bayesian 95% Lower Credible Bound (LCB <= 0%) must fail closed to `ABSTAIN`. Zero forced picks.
+
+6. **ZERO-TOLERANCE INACTIVE GATE (Week 4 Lessons):**
+   - Never evaluate, simulate, or roster inactive players (Barkley, Lamar, Jefferson, Achane verified OUT). Stale player props are banned.
+
+7. **THE HIGH-SVI SHOOTOUT & MANDATORY RUNBACK LAW (Week 4 Autopsy):**
+   - In high Shootout Velocity Index (SVI > 75) environments (such as in-state rivalry dome games with high PROE and fast neutral pace), opposing pass offenses feed on each other via self-exciting Hawkes processes. Incomplete passes freeze the clock (5.5s), expanding total plays by +25% to +35%.
+   - **Roster Construction Mandate:** Double stack (QB + 2 WR/TE) with mandatory opposing bring-back is REQUIRED for GPP tournament lineups.
+
+8. **ALPHA TARGET CEILING & DURESS FUNNELING (The CeeDee Lamb Law):**
+   - Pocket collapse hazard ($P_{\text{duress}} \ge 0.40$, $T_{\text{ttp}} \le 2.4\text{s}$) destroys ancillary deep routes but funnels an extreme target surge ($\psi = 1.58$) to the Alpha WR on quick first-read options. Modeled via WOPR, TPRR, First-Read Share, and Ceiling Funnel Score (CFS).
+
+9. **UNIVERSAL 10,000+ CORRELATED MONTE CARLO SIMULATION MANDATE:**
+   - Every single lineup generated for internal evaluation or external customers must run 10,000 correlated simulations under joint team, game, and duress shocks. Evaluates p90, p99, CeilEV, and Duplication Risk (DupRisk).
+
+10. **CENTRAL TIME ANCHORING:**
+    - All game schedules, lock times, and logs must remain anchored to Central Time (CT).
+
+11. **GROUND-TRUTH BOX SCORE AUDIT & ZERO-TOUT COMPLACENCY (The Henry/Washington/Javonte Law):**
+    - **Never Confuse Pre-Game Tout Consensus with Empirical Reality:** Pre-game analyst agreement counts quantify *market ownership / chalk density*, NEVER empirical truth or model accuracy. Super-consensus (>90% tout agreement, e.g., Derrick Henry 93%, Parker Washington 92%) is precisely where catastrophic chalk traps concentrate.
+    - **Zero Hallucination / Mandatory Box-Score Verification:** Never evaluate, report, or praise a play based on pre-game cheat sheets. All slate post-mortems must audit verified, official box scores. (Henry ~14.0 DK pts at $8,000+ salary was a 1.75x tournament killer; Javonte Williams 34.0+ DK pts was the true slate-breaking RB; Parker Washington sub-5 pts was a total bust).
+    - **Asymmetric Rushing Tail Modeling:** Pay-up RBs ($8,000+) must hit 28.0+ DK points (3.5x value) to pay off. Non-receiving, script-dependent rushers hold extreme left-tail crash risk under neutral/negative script, while multi-purpose bellcows with goal-line conversion dominance (Javonte Williams) command the winning 99th-percentile right tail.
+
+---
+
 ## DOCS BUCKETS — where research lives (2026-09-27 reorg)
 
 `docs/research/<date>/` is retired as a dumping ground. Every bucket owns its

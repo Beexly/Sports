@@ -227,6 +227,14 @@ describe("dfs optimizer", () => {
     expect(lu!.some((p) => p.id === fadeId)).toBe(false);
   });
 
+  it("respects GSIS inactive filter via inactiveGsisIds", () => {
+    const slateWithGsis = DFS_SLATE.map((p) =>
+      p.id === "drb1" ? { ...p, gsisId: "00-0034844" } : p
+    );
+    const lu = optimizeOne(base({ inactiveGsisIds: new Set(["00-0034844"]) }), () => 0, 60, slateWithGsis);
+    expect(lu!.some((p) => p.id === "drb1")).toBe(false);
+  });
+
   it("enforces a QB stack when asked, exactly (best stackable team wins)", () => {
     const lu = optimizeOne(base({ stack: true }));
     const m = metrics(lu!);

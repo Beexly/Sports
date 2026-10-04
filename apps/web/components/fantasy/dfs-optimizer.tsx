@@ -163,7 +163,7 @@ export function DfsOptimizer() {
             return (
               <div key={idx} className="surface-card overflow-hidden p-0">
                 <div className="flex flex-wrap items-center justify-between gap-3 border-b border-mineral px-4 py-2.5">
-                  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Lineup {idx + 1}{m.stacked > 0 && <span className="text-ultraviolet"> · {m.stackTeam} stack ×{m.stacked}</span>}</p>
+                  <p className="font-mono text-[11px] uppercase tracking-[0.16em] text-ion-2">Lineup {idx + 1}{m.stacked > 0 && <span className="text-ultraviolet"> · {m.stackTeam} stack ×{m.stacked}</span>}{m.runbacks > 0 && <span className="text-solar-flare"> + {m.runbacks} runback</span>}</p>
                   <div className="flex items-center gap-4 font-mono text-[11px] tabular-nums">
                     {/* over the cap is a broken lineup — alert, never plasma */}
                     <span className="text-ion-1">${m.salary.toLocaleString()} <span className={left < 0 ? "text-alert" : "text-ion-2"}>(${left.toLocaleString()} left)</span></span>
@@ -181,11 +181,16 @@ export function DfsOptimizer() {
                   {lu.players.map((p, j) => {
                     const c = DFS_POS_HEX[p.pos];
                     const inStack = m.stackTeam && p.team === m.stackTeam && p.pos !== "DST";
+                    const inRunback = m.stackTeam && p.opp === m.stackTeam && (p.pos === "WR" || p.pos === "TE" || p.pos === "RB");
                     return (
                       <div key={p.id + j} className="flex items-center gap-2 border-b border-r border-mineral/50 px-3 py-2">
                         <span className="w-8 shrink-0 font-mono text-[9px] font-bold" style={{ color: c }}>{DFS_SLOTS[j]}</span>
                         <div className="min-w-0 flex-1">
-                          <p className="truncate text-xs font-semibold text-ion-white">{p.name}{inStack && <span title="stack" className="text-ultraviolet"> ◆</span>}</p>
+                          <p className="truncate text-xs font-semibold text-ion-white">
+                            {p.name}
+                            {inStack && <span title="primary stack" className="text-ultraviolet"> ◆</span>}
+                            {inRunback && <span title="opposing bring-back" className="text-solar-flare"> ⇄</span>}
+                          </p>
                           <p className="font-mono text-[9px] tabular-nums text-ion-2">${p.salary} · {Math.round(p.own * 100)}%own</p>
                         </div>
                       </div>
@@ -197,6 +202,16 @@ export function DfsOptimizer() {
                   {/* leverage is the upside read — plasma celebrates, it never warns */}
                   <span>Leverage <strong className="text-plasma">{m.leverageScore}</strong></span>
                   <span>Floor-ceiling <strong className="text-ion-white">{m.floor}-{m.ceiling}</strong></span>
+                  {m.p90 !== undefined && (
+                    <span className="font-mono text-orbital-cyan" title="10,000 correlated Monte Carlo simulations">
+                      10k Sim 90th% <strong className="text-ion-white">{m.p90}</strong> · CeilEV <strong className="text-ion-white">{m.ceilEV}</strong>
+                    </span>
+                  )}
+                  {m.dupRisk !== undefined && (
+                    <span className="font-mono text-ion-2" title="Chalk duplication probability against the field">
+                      DupRisk <strong className={m.dupRisk > 0.4 ? "text-solar-flare" : "text-ion-white"}>{Math.round(m.dupRisk * 100)}%</strong>
+                    </span>
+                  )}
                 </div>
               </div>
             );

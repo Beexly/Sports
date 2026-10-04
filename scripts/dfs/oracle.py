@@ -85,6 +85,15 @@ def stacks(lineup: list[dict]) -> int:
                if p["id"] != qb["id"] and p["team"] == qb["team"] and p["pos"] in ("WR", "TE"))
 
 
+def runbacks(lineup: list[dict]) -> int:
+    """Opposing team skill player count for the lineup's QB (bring-back)."""
+    qb = next((p for p in lineup if p["pos"] == "QB"), None)
+    if not qb or "opp" not in qb:
+        return 0
+    return sum(1 for p in lineup
+               if p["id"] != qb["id"] and p.get("team") == qb["opp"] and p["pos"] in ("WR", "TE", "RB"))
+
+
 def solve_optimum(slate: list[dict], mode: str, stack: bool,
                   locks: set[str], excludes: set[str], cap: int = CAP,
                   time_limit: float = 30.0) -> tuple[float, list[dict]]:

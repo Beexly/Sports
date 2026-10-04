@@ -19,6 +19,7 @@
 
 import { DFS_SLOTS, SALARY_CAP, leverage, type DfsPlayer, type DfsPos } from "./dfs-slate";
 import { activeDfsSlate } from "@/lib/integrations/dfs";
+import { simulateLineups, type SimStats } from "./dfs-correlation";
 
 export type Mode = "cash" | "gpp" | "leverage";
 export type OptOpts = {
@@ -26,6 +27,13 @@ export type OptOpts = {
   readonly stack: boolean;
   readonly locks: ReadonlySet<string>;
   readonly excludes: ReadonlySet<string>;
+  readonly inactiveGsisIds?: ReadonlySet<string>;
+};
+
+export const isPlayerAllowed = (p: DfsPlayer, opts: OptOpts): boolean => {
+  if (opts.excludes.has(p.id)) return false;
+  if (opts.inactiveGsisIds && p.gsisId && opts.inactiveGsisIds.has(p.gsisId)) return false;
+  return true;
 };
 
 /**
@@ -60,6 +68,12 @@ function qbStackCount(lu: Lineup): { team: string | null; stacked: number } {
   return { team: qb.team, stacked };
 }
 
+export function qbRunbackCount(lu: Lineup): number {
+  const qb = lu.find((p) => p.pos === "QB");
+  if (!qb || !qb.opp) return 0;
+  return lu.filter((p) => p.id !== qb.id && p.team === qb.opp && (p.pos === "WR" || p.pos === "TE" || p.pos === "RB")).length;
+}
+
 /**
  * Deterministic 32-bit PRNG (mulberry32), because the multi-start heuristic
  * needs a SPREAD of starting points, not unpredictability.
@@ -88,7 +102,7 @@ function rng32(seed: number): () => number {
 }
 
 function buildRandom(pool: readonly DfsPlayer[], opts: OptOpts, pen: (p: DfsPlayer) => number, rand: () => number): DfsPlayer[] | null {
-  const cand = pool.filter((p) => !opts.excludes.has(p.id));
+  const cand = pool.filter((p) => isPlayerAllowed(p, opts));
   if (!cand.length) return null;
   const minSal = Math.min(...cand.map((p) => p.salary));
   const lineup: (DfsPlayer | null)[] = DFS_SLOTS.map(() => null);
@@ -120,7 +134,7 @@ function buildRandom(pool: readonly DfsPlayer[], opts: OptOpts, pen: (p: DfsPlay
 }
 
 function hillClimb(lu: DfsPlayer[], pool: readonly DfsPlayer[], opts: OptOpts): DfsPlayer[] {
-  const cand = pool.filter((p) => !opts.excludes.has(p.id));
+  const cand = pool.filter((p) => isPlayerAllowed(p, opts));
   const cur = [...lu];
   let improving = true;
   let guard = 0;
@@ -150,7 +164,7 @@ function stackToQb(lu: DfsPlayer[], pool: readonly DfsPlayer[], opts: OptOpts): 
   const qb = lu.find((p) => p.pos === "QB");
   if (!qb) return null;
   const cand = pool
-    .filter((p) => !opts.excludes.has(p.id) && p.team === qb.team && (p.pos === "WR" || p.pos === "TE"))
+    .filter((p) => isPlayerAllowed(p, opts) && p.team === qb.team && (p.pos === "WR" || p.pos === "TE"))
     .sort((a, b) => objVal(b, opts.mode) - objVal(a, opts.mode));
   if (!cand.length) return null;
   const inLineup = new Set(lu.map((p) => p.id));
@@ -181,8 +195,8 @@ function enforceStack(lu: DfsPlayer[], pool: readonly DfsPlayer[], opts: OptOpts
   if (qbIdx < 0 || opts.locks.has(lu[qbIdx]!.id)) return lu;
   const inLineup = new Set(lu.map((p) => p.id));
   const altQbs = pool
-    .filter((p) => p.pos === "QB" && !opts.excludes.has(p.id) && !inLineup.has(p.id))
-    .filter((q) => pool.some((c) => c.team === q.team && (c.pos === "WR" || c.pos === "TE") && !opts.excludes.has(c.id)))
+    .filter((p) => p.pos === "QB" && isPlayerAllowed(p, opts) && !inLineup.has(p.id))
+    .filter((q) => pool.some((c) => c.team === q.team && (c.pos === "WR" || c.pos === "TE") && isPlayerAllowed(c, opts)))
     .sort((a, b) => objVal(b, opts.mode) - objVal(a, opts.mode));
   for (const q of altQbs) {
     const swapped = [...lu]; swapped[qbIdx] = q;
@@ -311,7 +325,7 @@ export function solveExact(
   cap = SALARY_CAP,
   costBudget = DEFAULT_COST_BUDGET,
 ): SolveResult {
-  const cand = slate.filter((p) => !opts.excludes.has(p.id));
+  const cand = slate.filter((p) => isPlayerAllowed(p, opts));
   // Nothing to search. The answer "no feasible lineup" is PROVEN, not guessed.
   if (!cand.length) return { lineup: null, optimal: true, nodes: 0, work: 0 };
 
@@ -560,9 +574,17 @@ export type LineupMetrics = {
   readonly leverageScore: number; // avg leverage
   readonly stackTeam: string | null;
   readonly stacked: number;
+  readonly runbacks: number;
+  readonly sim?: SimStats;
+  readonly p90?: number;
+  readonly p99?: number;
+  readonly ceilEV?: number;
+  readonly dupRisk?: number;
+  readonly simScore?: number;
+  readonly simsRun?: number;
 };
 
-export function metrics(lu: Lineup): LineupMetrics {
+export function metrics(lu: Lineup, sim?: SimStats): LineupMetrics {
   const { team, stacked } = qbStackCount(lu);
   return {
     salary: salaryOf(lu),
@@ -573,6 +595,14 @@ export function metrics(lu: Lineup): LineupMetrics {
     leverageScore: Math.round((lu.reduce((s, p) => s + leverage(p), 0) / lu.length) * 100) / 100,
     stackTeam: team,
     stacked,
+    runbacks: qbRunbackCount(lu),
+    sim,
+    p90: sim?.p90,
+    p99: sim?.p99,
+    ceilEV: sim?.ceilEV,
+    dupRisk: sim?.dupRisk,
+    simScore: sim?.score,
+    simsRun: sim?.simsRun,
   };
 }
 
@@ -601,8 +631,7 @@ export type GenResult = {
 export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6, slate: readonly DfsPlayer[] = activeDfsSlate()): GenResult {
   const usage = new Map<string, number>();
   const seen = new Set<string>();
-  const lineups: { players: Lineup; metrics: LineupMetrics }[] = [];
-
+  const rawLineups: Lineup[] = [];
   const key = (lu: Lineup) => lu.map((p) => p.id).sort().join(",");
 
   for (let n = 0; n < count; n++) {
@@ -622,9 +651,18 @@ export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6,
     }
     if (!lu) break;
     seen.add(key(lu));
-    lineups.push({ players: lu, metrics: metrics(lu) });
+    rawLineups.push(lu);
     for (const p of lu) usage.set(p.id, (usage.get(p.id) ?? 0) + 1);
   }
+
+  // Correlated 10,000+ Monte Carlo simulation engine: executes every single time
+  // for all users, customers, and internal optimizer calls behind the scenes.
+  const simStatsList = rawLineups.length > 0 ? simulateLineups(rawLineups, { sims: 10_000 }) : [];
+
+  const lineups = rawLineups.map((lu, idx) => ({
+    players: lu,
+    metrics: metrics(lu, simStatsList[idx]),
+  }));
 
   const byId = new Map(slate.map((p) => [p.id, p]));
   const exposure = [...usage.entries()]
