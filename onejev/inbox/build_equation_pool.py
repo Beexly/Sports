@@ -29,14 +29,13 @@ ZWSP = '\u200b'
 # corpus actually held far more. git-gse_comp_intel is deliberately ABSENT -- it
 # measured 84% junk (58% web furniture, 26% binary mojibake) and was purged.
 SOURCES = [
-    ('arxiv_clean', 'arxiv-clean.jsonl'),
-    ('markdown_clean', 'markdown-clean-v3.jsonl'),
-    ('git_tree', 'git-tree-clean.jsonl'),
-    ('unverified_recovered', 'unverified-recoverable.jsonl'),
     ('agree_drain', 'agree-drain.jsonl'),
+    ('unverified_recovered', 'unverified-recoverable.jsonl'),
+    ('arxiv_clean', 'arxiv-clean.jsonl'),
+    ('git_tree', 'git-tree-equations.jsonl'),
+    ('markdown_clean', 'markdown-clean-v3.jsonl'),
     ('corpus_intel', 'corpus-intelligence-clean.jsonl'),
     ('downloads', 'downloads-research.jsonl'),
-    ('index', 'wave-index.jsonl'),
 ]
 
 HAS_REL = re.compile(r'[=<>\u2264\u2265\u2248\u2190]|:=|\\to|\\rightarrow|\\le\b|\\ge\b|\\approx')
