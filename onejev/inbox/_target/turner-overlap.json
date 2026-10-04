@@ -1,0 +1,25 @@
+{
+  "quarantine_A": {
+    "files": 622,
+    "unique_contents": 534,
+    "skipped_oversize": 14,
+    "path": "C:\\Users\\Garrett\\Turner_Case_AI\\03_quarantine_DO_NOT_INGEST"
+  },
+  "bigtree_B": {
+    "files": 45193,
+    "unique_contents": 12986,
+    "skipped_oversize": 28,
+    "path": "C:\\Users\\Garrett\\Documents\\Codex\\2026-06-05\\files-mentioned-by-the-user-codex\\outputs\\Turner_Attorney_REBUILD_MAX_CONTEXT_2026-06-05"
+  },
+  "shared_content_hashes": 58,
+  "only_in_quarantine_A": {
+    "contents": 476,
+    "files": 476
+  },
+  "only_in_B": {
+    "contents": 12928,
+    "files": 12928
+  },
+  "A_is_subset_of_B": false,
+  "VERDICT": "A holds 476 content-hashes absent from B -- deleting A would lose material"
+}

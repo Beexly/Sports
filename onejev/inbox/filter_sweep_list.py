@@ -6,22 +6,34 @@ from collections import Counter
 P = os.path.join(os.environ["LOCALAPPDATA"], "Temp", "corpus_probe", "sweep_list.txt")
 SEP = chr(92)
 
-# Trees the user told me to leave, plus ones already swept or quarantined.
-BLOCK = (
-    "Turner_Case_AI",                 # privileged attorney matter, user said leave
-    "Documents/Codex",                # contains the Turner_Attorney_REBUILD tree
-    "gse-competitive-intel-export",   # measured 43-58% web furniture
-    "firecrawl-scores24",             # measured 91% web furniture
-    "OneDrive/academy-corpus",        # measured 74% web furniture
-    "_research/gse-competitive-intel",# measured 58% junk / 26% binary
-    "Sports/docs",                    # already swept
-    "Sports-wt-engineplan/docs",      # already swept
+# EXCLUSION IS BY KEYWORD, NOT BY TREE PREFIX.
+#
+# The first version blocked only "Turner_Case_AI/" and "Documents/Codex". The
+# session audit then found 83 Turner paths still in the filtered sweep list,
+# because the same matter is scattered across FIVE unrelated trees:
+#   .claude/GHuman/Turner/...          OneDrive/Desktop/Turner1/...
+#   Claude/Projects/Turner/...         + two more
+# Case-insensitive substring match on the whole path, so a new copy anywhere is
+# still caught.
+
+BLOCK_TOKENS = (
+    "turner",                       # the whole matter, wherever it is copied
+    "attorney", "counsel", "case_status",
+    "baxley", "corina", "pruzansky",
+    "rob wiley", "wiley wheeler", "settlement letter",
+    "gse-competitive-intel-export",  # measured 43-58% web furniture
+    "firecrawl-scores24",            # measured 91% web furniture
+    "onedrive/academy-corpus",       # measured 74% web furniture
+    "gse-competitive-intel",         # measured 58% junk / 26% binary
+    "sports/docs",                   # already swept
+    "sports-wt-engineplan/docs",     # already swept
 )
 
 paths = [l.strip() for l in open(P, encoding="utf-8", errors="replace") if l.strip()]
 norm = [p.replace(SEP, "/") for p in paths]
 
-blocked = [p for p, n in zip(paths, norm) if any(n.startswith(b) for b in BLOCK)]
+blocked = [p for p, n in zip(paths, norm)
+           if any(tok in n.lower() for tok in BLOCK_TOKENS)]
 bset = set(blocked)
 clean = [p for p in paths if p not in bset]
 

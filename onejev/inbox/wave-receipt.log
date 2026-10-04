@@ -92,3 +92,8 @@ drain kept=7125 junk=1476 truncated=1956 jsx_dropped=44 dups=541 nonverbatim=0 a
 drain kept=7128 junk=1480 truncated=1960 jsx_dropped=44 dups=549 nonverbatim=0 agree_in=11117 ram_gb=2.63 port_8000=LISTENING kills=0 picks=0 ts=2026-10-03T23:03:03
 drain kept=12894 junk=2457 truncated=4469 jsx_dropped=44 dups=818 nonverbatim=0 agree_in=20638 ram_gb=2.69 port_8000=LISTENING kills=0 picks=0 ts=2026-10-03T23:47:45
 arxiv_sweep papers=1113 equations=37887 verbatim=37887 waves=9300-9327 index=45944 agreed=20638 unverified=33913 drain=12894 coverage_missing=0 ram_gb=2.61 port_8000=LISTENING kills=0 picks=0 ts=2026-10-03T23:47:55
+agree_in=20638 kept=12946 jsx_dropped=3276 truncated=4416 dups=0 port_8000=28492 kills=0 picks=0 audit_pass=True ts=2026-10-04T00:53:00
+agree_in=20638 kept=12946 jsx_dropped=44 truncated=4416 dups=819 port_8000=28492 kills=0 picks=0 ts=2026-10-04T00:53:16
+reconsidered=204 recovered=0 still_truncated=202 appended=0 span_regex_cannot_fix=4415 drain_rows=12946 port_8000=28492 kills=0 picks=0 ts=2026-10-04T01:00:22
+in=27443 real_math=17814 weak_dropped=4937 junk=4937 truncated=4565 quarantine=0 dups=125 web_furniture=2 binary=0 over_cap_kept=473 port_8000=28492 kills=0 picks=0 ts=2026-10-04T01:39:16
+dropped=0 remaining=21719 port_8000=28492 kills=0 picks=0 note=eq_recover(4) END_CUT removed the 7 tails on rebuild; 87 rows reclassify JUNK on re-read (recover not idempotent, reported not dropped) ts=2026-10-04T01:45:11
