@@ -113,3 +113,19 @@ def main():
 
 if __name__ == "__main__":
     raise SystemExit(main())
+
+# WHY ANCHOR WIDENING WAS NOT THE FIX  (derive_anchor_class.py, measured)
+# EQ_SPAN's leading class [A-Za-z<greek><kappa>] cannot anchor 'f*' or 'max_'.
+# Five candidate classes were measured against the 2 losses, 6 positives and 5
+# leaks:
+#     class              fixes losses   keeps positives   leaks still matched
+#     current                  0/2            5/6               5/5
+#     star_underscore          1/2            5/6               5/5
+#     backslash_macro          0/2            5/6               5/5
+#     latin_ext_star           1/2            5/6               5/5
+#     mathbold                 1/2            5/6               5/5
+# No class fixes both losses, and every one leaves all 5 leaks matching -- the
+# leaks already match the span, so the anchor is not where they come from. The
+# two defects need SEPARATE fixes: the leaks are a content problem for the junk
+# guards; the losses need an anchor that permits '*' plus a max_/min_/argmax_
+# form, which is a body change rather than a first-character change.
