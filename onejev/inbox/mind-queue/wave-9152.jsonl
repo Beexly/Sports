@@ -1,0 +1,118 @@
+corpus-roots: C:/Users/Garrett/Sports-wt-engineplan/docs,C:/Users/Garrett/Sports/docs
+{"file": "C:/Users/Garrett/Sports/docs/personal/aws/AWS_PERSONAL_PROGRESS_TEMPLATE.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/personal/aws/AWS_PORTFOLIO_CASE_STUDY.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/personal/aws/AWS_RESTART_APPLICATION_BOUNDARY.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/personal/aws/AWS_TO_GSE_CROSSWALK.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/personal/aws/README.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/phase-4-promotions-report.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/plans/KERNEL_VS_RR_READER.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/player-archetypes.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/player-comp-engine.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/podcast-feed-engine.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/positioning.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/prediction-engine.md", "equation": "confidence = base_score + movement_bonus + consensus_bonus + market_depth_bonus", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/prediction-engine.md", "equation": "base_score = normalize(implied_probability, 0, 100)", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/prediction-engine.md", "equation": "movement_bonus = abs(line_movement) * movement_weight (max +15)", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/prediction-engine.md", "equation": "consensus_bonus = (consensus_pct - 0.5) * 2 * 20 (max +20, only if > 60%)", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/prediction-engine.md", "equation": "market_depth_bonus = min(bookmaker_count / 10, 1) * 10 (max +10)", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/prediction-engine.md", "equation": "CONSENSUS_COMPONENT_MAX = 30 (doc said max +20),", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/prediction-engine.md", "equation": "MARKET_DEPTH_COMPONENT_MAX = 20 (doc said max +10),", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/prediction-engine.md", "equation": "EDGE_COMPONENT_MAX = 25, LINE_MOVEMENT_COMPONENT_MAX = 15,", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/prediction-engine.md", "equation": "VOLATILITY_PENALTY_MAX = -15. The doc also omits the v4/v5 intelligence", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/prediction-engine.md", "equation": "terms now in WEIGHTS: HEAD_TO_HEAD_COMPONENT_MAX = 5,", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/prediction-engine.md", "equation": "VENUE_FORM_COMPONENT_MAX = 5, UNCERTAINTY_PENALTY_MAX = -8,", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/prediction-engine.md", "equation": "CROSS_MARKET_AGREE_BONUS = 4, CROSS_MARKET_DISAGREE_PENALTY = -3, and", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/prediction-engine.md", "equation": "PREMIUM_CONFIDENCE_THRESHOLD = 70 (>= 70 → PREMIUM),", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/prediction-engine.md", "equation": "MIN_PUBLISH_CONFIDENCE = 50 (50–69 → FREE, < 50 → not published). Leave", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/anti-galaxy-spec.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/b2b-widgets-and-api-spec.md", "equation": "GET /api/intelligence/slate?date=YYYY-MM-DD", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/b2b-widgets-and-api-spec.md", "equation": "GET /api/intelligence/creator-pack?gameId=...", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/b2b-widgets-and-api-spec.md", "equation": "GET /api/intelligence/ledger?from=...&to=...&filters=...", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/board-page-spec.md", "equation": "type BoardState = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/board-page-spec.md", "equation": "type GameSummary = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/board-page-spec.md", "equation": "type PublishedPickSummary = GameSummary & {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/board-page-spec.md", "equation": "type GatedGameSummary = GameSummary & {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/board-page-spec.md", "equation": "type PassListResponse = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/board-page-spec.md", "equation": "type CalibrationData = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/board-page-spec.md", "equation": "type CalibrationBand = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/calibration-training-spec.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/chrome-extension-spec.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/claude-api-cost-monitoring-spec.md", "equation": "type ClaudeApiCallRecord = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/cockpit-api-costs-spec.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/cockpit-journal-spec.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/cockpit-losses-spec.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/cockpit-studio-spec.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/cockpit-synthetic-monitoring-spec.md", "equation": "│ [Per-check sparkline: green = pass, yellow = warn, red = │", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/cockpit-synthetic-monitoring-spec.md", "equation": "│ fail. One line per check ID. Last 96 data points = 24h at │", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/cross-sport-correlation-engine-spec.md", "equation": "type CorrelationResult = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/cross-sport-correlation-engine-spec.md", "equation": "\"When MLB sharp money fired on day 3 of a 4-game series (N=42 events), NHL overs the same night hit 56% (CI: 41% – 71%, MODERATE).\"*", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/cross-sport-correlation-engine-spec.md", "equation": "\"Sample is too small (N=8) to draw conclusions. Try widening the date range.\"*", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/discord-bot-spec.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/edge-lab-expansion-spec.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/engine-versioning-policy.md", "equation": "The essay's modelVersion = v6.0.4.", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/galaxy-memory-persistence-spec.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/galaxy-studio-spec.md", "equation": "type StudioTemplate = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/galaxy-studio-spec.md", "equation": "type ComplianceScanResult = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/galaxy-studio-spec.md", "equation": "type ComplianceFlag = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/game-room-spec.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/github-issues-for-model-spec.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/intelligence-graph-spec.md", "equation": "type GameIntelligenceNode = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/intelligence-graph-spec.md", "equation": "type MarketPulse = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/intelligence-graph-spec.md", "equation": "type SlateWeather = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/intelligence-graph-spec.md", "equation": "type EvidenceHealth = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/intelligence-graph-spec.md", "equation": "EvidenceHealth.overall = 'F' is a hard gate. The graph refuses to mark a game as publishThresholdCleared if evidence health is F, regardless of edge.", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/intelligence-graph-spec.md", "equation": "type ModelCourtCase = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/intelligence-graph-spec.md", "equation": "type CreatorAsset = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/ledger-and-loss-room-spec.md", "equation": "type LedgerResponse = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/ledger-and-loss-room-spec.md", "equation": "type LedgerRow = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/live-war-room-spec.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/migration-sequence-spec.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/model-court-prompts.md", "equation": "type ModelCourtAnswer = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/model-journal-spec.md", "equation": "we...\" constructions. Cold = direct.", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/monetization-map.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/phase-6-plus-planning.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/pre-mortem-pipeline-spec.md", "equation": "type FailureModeTemplate = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/pre-mortem-pipeline-spec.md", "equation": "severityRank: number; // 1 = highest, used to order bullets", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/pre-mortem-pipeline-spec.md", "equation": "type PreMortemContent = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/pre-mortem-pipeline-spec.md", "equation": "type PreMortemBullet = {", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/programmable-dsl-spec.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/synthetic-monitoring-spec.md", "equation": "SYNTHETIC_MONITORING_CHECKS=v1,v2,a1,a2,... — comma-separated check IDs (default: all).", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/synthetic-monitoring-spec.md", "equation": "SYNTHETIC_MONITORING_OWNER_CHANNEL=discord", "page_or_eqnum": null, "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/trust-compliance-toolkit-spec.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/product/twitter-bot-voice-spec.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/reddit-feed-engine.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/rejected-data-sources.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/revenue/CONTENT_AFFILIATE_OS.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/revenue/FTC_DISCLOSURE_POLICY.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/revenue/OFFER_COMPLIANCE_CHECKLIST.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/revenue/PARTNER_OUTREACH_PLAYBOOK.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/revenue/PARTNER_POLICY.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/revenue/PARTNER_SPONSOR_REVIEW_FIXTURES.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/revenue/PARTNER_TARGET_LIST_TEMPLATE.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/revenue/RESPONSIBLE_GAMING_PARTNER_POLICY.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/revenue/REVENUE_OPERATING_LEDGER.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/revenue/SPONSOR_MEDIA_KIT.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/rss-news-engine.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/scheduler-strategy.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/scheme-personnel-formation-intelligence.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/source-activation-roi.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/source-atlas.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/source-candidate-triage.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/source-conflict-resolution.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/source-discovery-at-scale.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/source-freshness-slas.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/source-graph.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/source-trust-model.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/statking-alerts.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/statking-autonomous-sprint-final-report.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/statking-backtesting.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/statking-blind-spots.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/statking-coverage-map.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/statking-crown-metrics.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/statking-debugging-guide.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/statking-enterprise-opportunities.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/statking-explanation-engine.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/statking-failure-modes.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/statking-gap-audit.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/statking-integrity-status.md", "status": "NO_EQUATION", "wave": 9152}
+{"file": "C:/Users/Garrett/Sports/docs/statking-merge-readiness.md", "status": "NO_EQUATION", "wave": 9152}

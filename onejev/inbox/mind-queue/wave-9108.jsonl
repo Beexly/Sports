@@ -1,0 +1,120 @@
+corpus-roots: C:/Users/Garrett/Sports-wt-engineplan/docs,C:/Users/Garrett/Sports/docs
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/final-owner-decision-packet.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/finish-line-branch-status.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/finish-line-no-claim-scan.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/finish-line-validation-results.md", "equation": "tsc resolves it (typecheck = 0), confirming this is **invocation/CWD**, not SOURCE.", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/follow-up-sequence.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/gate-decision-packet.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/local-completion-status.md", "equation": "aria-invalid/describedby/required, error-summary (role=alert, focus-on-error), aria-busy", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/next-safe-queue.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/no-claim-rules.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/overnight-audit-report.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/owner-approval-queue.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/owner-decision-packet.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/pr-open-packet.md", "equation": "= **55 passed (49 waitlist + 6 guardrails)** — run this session on the pushed code.", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/pr-open-prep.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/pr2-implementation-report.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/pr2-owner-review-packet.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/pr2-waitlist-implementation-readiness.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/pr2-waitlist-plan.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/pr3-analytics-provider-plan.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/pr3-build-artifacts.md", "equation": "3. **File store stays the default.** DB path is reachable ONLY when WAITLIST_STORAGE=db.", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/pr3-build-artifacts.md", "equation": "9. Run the suite incl. DB-store contract tests against a test DB with WAITLIST_STORAGE=db; then again unset (file). → both green; **49/49 + 6/6 stays green**.", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/pr3-durable-storage-plan.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/pr3-migration-runbook.md", "equation": "run the store contract tests against BOTH stores (WAITLIST_STORAGE unset and =db)", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/pr3-migration-runbook.md", "equation": "WAITLIST_STORAGE=file reverts to the file store instantly (no call-site change).", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/pr3-tlaps-runbook.md", "equation": "Reversion is a single env flag (WAITLIST_STORAGE=file) — zero code change.", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/pr3-tlaps-runbook.md", "equation": "Inv_FileDefaultSafe == (storageMode = \"db\") => (wiringApplied /\\ migrationApplied)", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/pr3-tlaps-runbook.md", "equation": "(storageMode=\"file\", noClaimGreen=TRUE, all others FALSE).", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/pr3-tlaps-runbook.md", "equation": "Need to revert at runtime** → ToggleFile (WAITLIST_STORAGE=file) — always", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/pr3-tlaps-runbook.md", "equation": "3. **Push / open PR / merge / deploy** — Level 2A (push/PR) and Level 3 (merge=production)", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/preview-ci-status.md", "equation": "this run) · **state = CANCELED** · **target = null (preview, NOT production)**.", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/preview-ci-status.md", "equation": "Deployment dpl_6MnfjEU2sbtLuTPxoJmp27V9nwYC** · commit c6dd911f · **state = READY**", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/release-gate-plan.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/research-brief-rest-travel.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/research-brief-template.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/waitlist-access-gate.md", "equation": "GSE_WAITLIST_BASIC_USER=localuser", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/waitlist-access-gate.md", "equation": "GSE_WAITLIST_BASIC_PASSWORD=localpass", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/waitlist-architecture.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/gse/waitlist-spec.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/injury-depth-chart-intelligence.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/innovation-os-current-state.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/intelligence/CAPABILITY_RECOVERY_MATRIX.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/intelligence/LEVERAGE_STATUS.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/intelligence/NEXT_LEVEL_BUILD_SPEC.md", "equation": "Qwen2.5-Coder-32B/7B, DeepSeek-Coder-V2, (GLM-5.2 = localRunnable but flag", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/intelligence/NEXT_LEVEL_INTELLIGENCE_MASTER_PLAN.md", "equation": "Real and on-point:** ruflo (= ruvnet/claude-flow), claude-mem,", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/intelligence/NEXT_LEVEL_INTELLIGENCE_MASTER_PLAN.md", "equation": "@langchain/langgraph; LiteLLM = **pip** litellm; Aider = **pip** aider-chat;", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/intelligence/NEXT_LEVEL_INTELLIGENCE_MASTER_PLAN.md", "equation": "opencode = opencode-ai; AutoGen = **pip** autogen-agentchat; MemGPT = **Letta**.", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/intelligence/SPORTS_OS_INTELLIGENCE_NETWORK_MASTER_PLAN.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/intelligence/ai-search-geo-strategy.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/intelligence/design-experience-system.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/intelligence/developer-innovation-layer.md", "equation": "type AgentToolContract = {", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/intelligence/monetization-lanes.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/intelligence/product-ecosystem.md", "equation": "type EvidenceItem = {", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/ip/GSE_METRIC_IP_LEDGER.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/king-standard-scorecard.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/launch-observatory.md", "equation": "canonicalHistoryStatus=GREEN and the canonical sample exceeds the", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/launch-prep/01-account-setup.md", "equation": "CONFIDENCE_DISPLAY_MODE=labels", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/launch-prep/01-account-setup.md", "equation": "NODE_ENV=production", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/launch-prep/02-sandbox-cleanup.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/launch-prep/03-this-pass-report.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/launch-prep/30-day-campaign-plan.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/launch-prep/founder-outreach-onepager.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/launch-prep/post-launch-neon-serverless-swap.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/launch-qa-addendum.md", "equation": "tests covering: identity prediction = 0, anti-correlated = 1,", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/launch-qa-checklist.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/launch-runbook.md", "equation": "Synthetic picks carry modelVersion='v5.0.0-seed' so the operator can", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/launch-runbook.md", "equation": "1. Visit /cockpit. Confirm launchStatus = LAUNCH_READY.", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/launch/PROVEN_LAUNCH_KIT_2026-09-09.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/legal/CFB_NFL_DATA_SOURCE_CANDIDATES.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/legal/COMMUNITY_MODERATION_POLICY.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/legal/PRIVACY_REVIEW_PROFILES_PRESENCE.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/legal/SIRIUSXM_CONNECTION.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/legal/VENDOR_QUESTIONNAIRE_CFBD.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/legal/VENDOR_QUESTIONNAIRE_JEFF_MANS.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/legal/community-moderation-policy.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/managed-leagues-vision.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "400 iterations, learning rate 0.3, L2 = 1e-3) — same plays → same coefficients.", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "charted pass with complete_pass=1 or incomplete_pass=1 and air_yards", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "GSE-CPOE(passer) = 100 × mean(complete − P̂(complete))", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "reportScale = 100, matching NGS units). overExpectedTotal is completions", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "Sample floors:** MIN_DROPBACKS_TO_FIT = 200 to fit the model at all;", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "DEFAULT_MIN_PASSER_ATTEMPTS = 100 for a passer to appear in the rollup", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "equations β = (ZᵀZ + λR)⁻¹ Zᵀy on a **standardized** design with a leading", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "intercept column; R = diag(0, 1, 1, …) leaves the intercept **unpenalized**.", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "no randomness (default λ = 1).", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "Play type:** one designed rush per row (RushPlay): rush=1,", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "GSE-RYOE(rusher) = mean(rushingYards − ŷ(rushingYards))", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "reported in **yards over expected per attempt** (reportScale = 1).", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "Sample floors:** MIN_RUSHES_TO_FIT = 200;", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "DEFAULT_MIN_RUSHER_ATTEMPTS = 50 (matches NGS rushing grain).", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "method tag \"ridge-linear\", default λ = 1.", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "Play type:** one completed reception per row (CatchPlay): complete_pass=1", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "GSE-xYAC(receiver) = mean(yardsAfterCatch − ŷ(yardsAfterCatch))", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "reported in **YAC over expected per catch** (yards, reportScale = 1).", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "Sample floors:** MIN_CATCHES_TO_FIT = 200;", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "DEFAULT_MIN_RECEIVER_CATCHES = 30 (aligned to NGS receiving grain).", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_METRICS.md", "equation": "bias (= ourMean − truthMean, the systematic offset), ourMean, truthMean.", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_POINTS.md", "equation": "Math**: EP(state) = Σ_k P(next-score = k) · value(k), provably in **[−7, 7]**", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_POINTS.md", "equation": "Sample floor**: MIN_EP_PLAYS_TO_FIT = 1000 usable plays; below it, null.", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_POINTS.md", "equation": "Math**: WP(state) = σ(β · features), already in the open interval **(0, 1)**", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_POINTS.md", "equation": "Sample floor**: MIN_WP_PLAYS_TO_FIT = 1000.", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_EXPECTED_POINTS.md", "equation": "Rule**: success = touchdown (forced) **OR** (not a turnover **AND** yards", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md", "equation": "phi(x) = [", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md", "equation": "coverage_score = min(1, source_count / expected_source_count)", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md", "equation": "contradiction_penalty = min(0.50, 0.20 * contradiction_count)", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_PROPRIETARY_METRIC_BIBLE.md", "equation": "missing_penalty = min(0.40, 0.08 * missing_required_fields)", "page_or_eqnum": null, "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_SCORE_ENGINE.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/math/GSE_SHADOW_METRIC_EVIDENCE_REPORTS.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/media-intelligence-engine.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/media/CODEX_MEDIA_REVENUE_STUDIO_AUDIT.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/media/CONTENT_COMPLIANCE_POLICY.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/media/CONTENT_PILLAR_MAP.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/media/FIRST_90_DAYS_MEDIA_PLAN.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/media/FIRST_MONTH_CONTENT_QUEUE_FIXTURES.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/media/FIRST_MONTH_REVIEW_QUEUE_EXPORT.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/media/FOUNDER_MEDIA_STRATEGY.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/media/GSE_MEDIA_REVENUE_OS.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/media/MEDIA_REVENUE_STUDIO_COMPLETION_AUDIT.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/media/PARTNERSHIP_REVENUE_PLAYBOOK.md", "status": "NO_EQUATION", "wave": 9108}
+{"file": "C:/Users/Garrett/Sports-wt-engineplan/docs/media/PLATFORM_PLAYBOOK.md", "status": "NO_EQUATION", "wave": 9108}
