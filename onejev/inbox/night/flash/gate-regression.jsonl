@@ -1,0 +1,50 @@
+{"id": 1, "verdict": "DIE", "input": "https://ad.tracking.internal/pixel.gif?uid=9481&time=178709", "reason": "Tracking pixel image URL; web telemetry artifact.", "rule": "pixel_url"}
+{"id": 2, "verdict": "DIE", "input": "{\"slate_id\": 9042, \"priced\": true, \"engine\": \"nfl\"}", "reason": "Structured JSON payload flag matching priced=true; not an equation.", "rule": "priced_true_attribute"}
+{"id": 3, "verdict": "DIE", "input": "className=\"flex flex-col items-center justify-between p-4\"", "reason": "React JSX className attribute scrap.", "rule": "jsx_code_attribute"}
+{"id": 4, "verdict": "DIE", "input": "entityId=\"team_nfl_dal_2026\"", "reason": "Database entity string identifier.", "rule": "entity_id_attribute"}
+{"id": 5, "verdict": "DIE", "input": "style={{ width: '100%', height: 320, opacity: 0.8 }}", "reason": "JSX inline stylesheet object markup.", "rule": "style_jsx_artifact"}
+{"id": 6, "verdict": "DIE", "input": "pick={ id: \"P-4019\", line: -3.5, juice: -110 }", "reason": "Component prop binding dictionary.", "rule": "pick_prop_artifact"}
+{"id": 7, "verdict": "DIE", "input": "href=\"/odds/nfl/spreads/superbowl-2026\"", "reason": "HTML anchor tag hyperlink reference.", "rule": "href_attribute"}
+{"id": 8, "verdict": "DIE", "input": "const computeKellyStake = (prob, odds) => (prob * odds - 1) / (odds - 1);", "reason": "JavaScript ECMAScript arrow function definition.", "rule": "code_arrow_function"}
+{"id": 9, "verdict": "DIE", "input": "import { useLiveOdds } from '@gse/market-feed';", "reason": "JavaScript module import declaration.", "rule": "code_import"}
+{"id": 10, "verdict": "DIE", "input": "export default function GameScoreBoard({ game }) {", "reason": "JavaScript module component export header.", "rule": "code_export"}
+{"id": 11, "verdict": "DIE", "input": "L_ij =", "reason": "Empty right-hand side; truncated incomplete relation.", "rule": "empty_rhs"}
+{"id": 12, "verdict": "DIE", "input": "... \\frac{d}{dx} \\left[ \\theta_i - \\theta_j \\right]", "reason": "Leading ellipsis indicating chopped fragment.", "rule": "leading_ellipsis"}
+{"id": 13, "verdict": "DIE", "input": "\\frac{\\partial P}{\\partial t} +", "reason": "Dangling operator with missing operand.", "rule": "dangling_derivative_operator"}
+{"id": 14, "verdict": "DIE", "input": "Q(s) = \\exp{ - \\beta \\sum_{i=1}^n (x_i - \\bar{x})", "reason": "Unbalanced curly braces; truncated mathematical syntax.", "rule": "unbalanced_braces"}
+{"id": 15, "verdict": "DIE", "input": "### 4. Empirical Evaluation of Team Defense Ratings", "reason": "Markdown document header tag.", "rule": "heading_markdown"}
+{"id": 16, "verdict": "DIE", "input": "The market consensus probability reflects both public money and sharper bookmaker limits.", "reason": "Narrative prose sentence with four or more words and zero math operators.", "rule": "prose_sentence_no_operator"}
+{"id": 17, "verdict": "DIE", "input": "TABLE VI: AVERAGE YARDS PER PLAY BY QUARTERBACK TIER", "reason": "Academic table title chrome.", "rule": "table_chrome"}
+{"id": 18, "verdict": "DIE", "input": "Error! Reference source not found. See section 2.1.", "reason": "Corrupt word processor reference error message.", "rule": "broken_ref_chrome"}
+{"id": 19, "verdict": "DIE", "input": "ERO(x) is defined in section 3 as the expected return on wager x.", "reason": "Glossary definition sentence matched by crude substring rule.", "rule": "glossary_sentence"}
+{"id": 20, "verdict": "DIE", "input": "P(win) = NaN +/- NaN (Runtime optimizer diverged)", "reason": "Degenerate floating point NaN divergence string.", "rule": "nan_degenerate"}
+{"id": 21, "verdict": "DIE", "input": "margin-top: 12px; font-weight: bold; color: #111;", "reason": "CSS stylesheet formatting scrap.", "rule": "css_snippet"}
+{"id": 22, "verdict": "DIE", "input": "git checkout -b feature/rating-unification && git status", "reason": "Bash / shell version control invocation.", "rule": "shell_command"}
+{"id": 23, "verdict": "DIE", "input": "(continued from previous table on page 42)", "reason": "Document pagination footer note.", "rule": "pagination_artifact"}
+{"id": 24, "verdict": "DIE", "input": "user_id=1024&session_token=sk-9948271049281", "reason": "HTTP URL query parameter secret token string.", "rule": "secret_query_string"}
+{"id": 25, "verdict": "DIE", "input": "\\sum_{k=1}^m \\prod_{j=1}^k", "reason": "Isolated operator sequence without relation, LHS, or RHS evaluation.", "rule": "dangling_operator_sequence"}
+{"id": 26, "verdict": "LIVE", "input": "f*(x) = \\arg\\min_{c \\in \\mathcal{Y}} \\mathbb{E}_{Y|X}[L(Y, c) \\mid X=x]", "reason": "Optimal Bayes decision function denoted by f*; canonical estimation theory relation.", "rule": "optimal_bayes_f_star"}
+{"id": 27, "verdict": "LIVE", "input": "V_{max} = \\max_{a \\in \\mathcal{A}} Q(s, a)", "reason": "State-value Bellman optimality operator with max_ indexation.", "rule": "bellman_max_subscript"}
+{"id": 28, "verdict": "LIVE", "input": "q̂ = \\frac{1}{N} \\sum_{i=1}^N y_i", "reason": "Sample estimator q_hat for Bernoulli event probability.", "rule": "estimator_q_hat"}
+{"id": 29, "verdict": "LIVE", "input": "\\sum_{j=1}^m w_j \\ge U", "reason": "Linear capacity threshold inequality constraint: sum >= U.", "rule": "capacity_constraint_sum_ge_u"}
+{"id": 30, "verdict": "LIVE", "input": "L_ij = \\theta_i - \\theta_j", "reason": "Bradley-Terry pairwise log-odds linear kernel.", "rule": "bradley_terry_kernel"}
+{"id": 31, "verdict": "LIVE", "input": "E[\\pi(s)] = (1+\\phi)Q(s) - \\phi", "reason": "Analytical market profit-bias relation with Greek parameters.", "rule": "profit_bias_identity"}
+{"id": 32, "verdict": "LIVE", "input": "Q(s) = b_{h,L}(s)P(M<s) + b_{v,L}(s)P(M>s)", "reason": "Two-state boundary equilibrium equation with compound subscripts.", "rule": "pricing_equilibrium"}
+{"id": 33, "verdict": "LIVE", "input": "Ĉ(p) = \\sigma(a \\cdot \\text{logit}(p) + b)", "reason": "Beta recalibration sigmoid function on logit probability.", "rule": "probability_calibration"}
+{"id": 34, "verdict": "LIVE", "input": "\\kappa = \\frac{p_o - p_e}{1 - p_e}", "reason": "Cohen's kappa inter-rater agreement relation.", "rule": "cohen_kappa"}
+{"id": 35, "verdict": "LIVE", "input": "w(p) = \\exp(-\\beta (-\\ln p)^\\alpha)", "reason": "Prelec two-parameter probability weighting function.", "rule": "prelec_weighting"}
+{"id": 36, "verdict": "LIVE", "input": "\\phi = \\frac{s^2 - \\sigma_{2k}^2}{s^2}", "reason": "Variance-ratio skill decomposition formula.", "rule": "variance_skill_fraction"}
+{"id": 37, "verdict": "LIVE", "input": "BS = \\frac{1}{N} \\sum_{t=1}^N (f_t - o_t)^2", "reason": "Mean squared probability error Brier Score definition.", "rule": "brier_score"}
+{"id": 38, "verdict": "LIVE", "input": "BSS = 1 - \\frac{BS}{BS_{ref}}", "reason": "Brier Skill Score benchmark ratio.", "rule": "brier_skill_score"}
+{"id": 39, "verdict": "LIVE", "input": "L = u \\cdot v^T - v \\cdot u^T + \\theta \\cdot 1^T - 1 \\cdot \\theta^T", "reason": "Rank-2 antisymmetric matrix decomposition for paired choice.", "rule": "paired_choice_matrix"}
+{"id": 40, "verdict": "LIVE", "input": "\\lambda(t) = \\mu_0 + \\sum_{t_i < t} \\alpha e^{-\\beta(t - t_i)}", "reason": "Hawkes self-exciting point process conditional intensity function.", "rule": "hawkes_process"}
+{"id": 41, "verdict": "LIVE", "input": "y_k = C h_k + v_k", "reason": "State-space Kalman filter linear observation equation.", "rule": "state_space_observation"}
+{"id": 42, "verdict": "LIVE", "input": "h_k = A h_{k-1} + B u_k + w_k", "reason": "State-space Markovian state transition equation.", "rule": "state_space_transition"}
+{"id": 43, "verdict": "LIVE", "input": "P(Y_{ij} = 1) = \\frac{1}{1 + e^{-(\\theta_i - \\theta_j + h)}}", "reason": "Elo model logistic victory function with home ground advantage parameter.", "rule": "elo_home_advantage"}
+{"id": 44, "verdict": "LIVE", "input": "D_{KL}(P \\parallel Q) = \\sum_{x \\in \\mathcal{X}} P(x) \\log\\frac{P(x)}{Q(x)}", "reason": "Kullback-Leibler relative entropy divergence definition.", "rule": "kl_divergence"}
+{"id": 45, "verdict": "LIVE", "input": "g(b) = \\sum_{i=1}^n p_i \\log(b_i O_i)", "reason": "Logarithmic capital growth rate under Kelly betting distribution.", "rule": "kelly_growth_rate"}
+{"id": 46, "verdict": "LIVE", "input": "b^* = \\frac{p \\cdot b - (1 - p)}{b}", "reason": "Optimal fractional Kelly stake allocation equation.", "rule": "kelly_optimal_stake"}
+{"id": 47, "verdict": "LIVE", "input": "\\text{ECE} = \\sum_{m=1}^M \\frac{|B_m|}{N} |\\text{acc}(B_m) - \\text{conf}(B_m)|", "reason": "Binned Expected Calibration Error mathematical formulation.", "rule": "ece_formula"}
+{"id": 48, "verdict": "LIVE", "input": "\\text{MAE} = \\frac{1}{n} \\sum_{i=1}^n |y_i - \\hat{y}_i|", "reason": "Mean absolute error risk definition.", "rule": "mae_formula"}
+{"id": 49, "verdict": "LIVE", "input": "\\sigma^2_{pooled} = \\frac{(n_1 - 1)s_1^2 + (n_2 - 1)s_2^2}{n_1 + n_2 - 2}", "reason": "Unbiased pooled sample variance calculation.", "rule": "pooled_variance"}
+{"id": 50, "verdict": "LIVE", "input": "R = \\frac{P_{exec}}{P_{ind}}", "reason": "Joint parlay pricing ratio relative to independent leg product.", "rule": "parlay_execution_ratio"}
