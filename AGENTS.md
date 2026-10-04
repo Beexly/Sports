@@ -31,6 +31,15 @@ in the commit message.
 ### DIRECT-TO-MIND/ENGINE (Garrett, 2026-10-04 — HARD)
 Nothing stays local, ever. Every result lands same-day on the remote (branch or agent bus): no local-only workspace hoarding, no back-and-forth, nothing lost. Mind feeds go trainer-ready onto the branch as the direct pipe into the mind (no agent writes `brain/mind.jsonl` itself — single-writer: the Windows trainer owns it). Engine work lands as code on Beexly/Sports, not specs or handoffs. Every completion gets an agent-bus note the same run so the whole fleet is aware. Nothing hidden, nothing lost, nothing is forgotten.
 
+### WIRE-FIRST SEQUENCING (Garrett, 2026-09-30 — HARD, not up for debate)
+The engine order is research → wire → weight → calibrate → test → polish. Never re-sequenced. Scoring calibration (Brier or otherwise) on old-model picks is rejected as a progress measure — "of course the numbers aren't going to change, history never changes." Calibration judgment happens only after the engine is fully wired, weighted, and calibrated.
+
+### MIND-FIRST (Garrett, 2026-10-03 — HARD)
+The mind is the ENTIRE corpus — all the math, all deep and complex equations, all theories, all research papers, every domain. NOT sports-only. Corpus + equations go into the mind BEFORE anything else: before picks, before engine wiring, before sports-specific work.
+
+### INGEST-AND-LEARN (Garrett, 2026-09-28 — HARD)
+DO NOT CLAIM THINGS ARE DEAD UNTIL TESTED AND CITED AND CONFIRMED. Untested items default to UNTESTED — QUEUED FOR EVALUATION, never SKIP/DEAD. WE INGEST, WE LEARN: commercial data is never used commercially — it is learned from with intelligence and reasoning, then GSE gives its own analysis. A restrictive license means research/learn-only, not "throw it away."
+
 
 **UPDATED 2026-09-13 (Motif — game-day calibration pass + v5.3.0 spec).** Founder ordered a full
 review/rebuild of the prediction engine ("extremely in depth", "trust no claims", ship direct to
