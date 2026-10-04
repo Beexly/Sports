@@ -16,7 +16,10 @@ import sys
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 sys.path.insert(0, HERE)
-from eq_recover import recover
+# MUST match the gate that WROTE the file. build_drain/corpus_gate/audit_drain
+# all use eq_recover_ineq; importing eq_recover here silently judged 357
+# inequality rows as junk and deleted them.
+from eq_recover_ineq import recover
 
 DRAIN = os.path.join(HERE, 'mind-queue', 'agree-drain.jsonl')
 

@@ -23,6 +23,7 @@ untouched. So the set of rows this module newly classifies as EQUATION is a stri
 subset of rows the original called JUNK or TRUNCATED: regressions are impossible
 by construction, not by testing.
 """
+import json
 import re
 
 import eq_recover as base
@@ -90,3 +91,53 @@ def recover(raw):
     if not any(ch in OPS for ch in equation):
         return got
     return {"status": "EQUATION", "equation": equation, "reason": "verbatim_span_ineq"}
+
+# --- write_drain: same contract as eq_recover.write_drain, but calling THIS
+# module's recover. Copied structurally rather than re-exported so the two
+# cannot drift: if write_drain called base.recover the wrapper would be inert.
+def drain_row(row):
+    printed = row.get("printed_equation") or row.get("equation") or ""
+    got = recover(printed)
+    if got["status"] != "EQUATION":
+        return None
+    if not row.get("path") and not row.get("source_path"):
+        return None
+    return {
+        "equation": got["equation"],
+        "path": row.get("path") or row.get("source_path"),
+        "page": row.get("page"),
+        "status": "AGREE_RECOVERED",
+        "verbatim": got["equation"] in printed,
+    }
+
+
+def write_drain(rows, dest):
+    kept, junk, truncated, dups, jsx_dropped = [], 0, 0, 0, 0
+    seen = set()
+    for row in rows:
+        printed = row.get("printed_equation") or row.get("equation") or ""
+        if JSX.search(str(printed)) or CODE.match(str(printed).strip()):
+            jsx_dropped += 1
+            continue
+        got = recover(printed)
+        if got["status"] == "JUNK":
+            junk += 1
+            continue
+        if got["status"] == "TRUNCATED":
+            truncated += 1
+            continue
+        item = drain_row(row)
+        if not item:
+            junk += 1
+            continue
+        key = (item["path"], item["equation"])
+        if key in seen:
+            dups += 1
+            continue
+        seen.add(key)
+        kept.append(item)
+    with open(dest, "w", encoding="utf-8") as fh:
+        for line in kept:
+            fh.write(json.dumps(line, ensure_ascii=False) + "\n")
+    return {"kept": len(kept), "junk": junk, "truncated": truncated,
+            "dups": dups, "jsx_dropped": jsx_dropped}

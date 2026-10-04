@@ -12,7 +12,7 @@ import json
 import re
 from pathlib import Path
 
-from eq_recover import recover
+from eq_recover_ineq import recover
 
 QUARANTINE = "03_quarantine_DO_NOT_INGEST"
 NOISE = re.compile(

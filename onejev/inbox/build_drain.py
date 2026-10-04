@@ -11,7 +11,7 @@ import sys
 from pathlib import Path
 
 from audit_drain import audit
-from eq_recover import write_drain
+from eq_recover_ineq import write_drain
 
 
 def load_agree(path: Path) -> list[dict]:
