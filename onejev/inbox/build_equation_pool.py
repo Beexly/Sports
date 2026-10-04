@@ -20,12 +20,23 @@ SEP = chr(92)
 FN_APP = '\u2061'
 ZWSP = '\u200b'
 
+# Ordered by trust. The CLEANED pools come first because they have already had
+# prose stripped and junk rejected; wave-index is the raw pre-clean extraction and
+# is kept last so its rows only survive if nothing better claimed them.
+#
+# Retargeted 2026-10-04: the previous pool predated arxiv-clean, git-tree-clean,
+# corpus-intelligence-clean and downloads-research, so it reported 69,377 while the
+# corpus actually held far more. git-gse_comp_intel is deliberately ABSENT -- it
+# measured 84% junk (58% web furniture, 26% binary mojibake) and was purged.
 SOURCES = [
-    ('index', 'wave-index.jsonl'),
-    ('agree_drain', 'agree-drain.jsonl'),
+    ('arxiv_clean', 'arxiv-clean.jsonl'),
+    ('markdown_clean', 'markdown-clean-v3.jsonl'),
+    ('git_tree', 'git-tree-clean.jsonl'),
     ('unverified_recovered', 'unverified-recoverable.jsonl'),
-    ('corpus_equations', 'corpus-equations.jsonl'),
-    ('corpus_recovered', 'corpus-recovered.jsonl'),
+    ('agree_drain', 'agree-drain.jsonl'),
+    ('corpus_intel', 'corpus-intelligence-clean.jsonl'),
+    ('downloads', 'downloads-research.jsonl'),
+    ('index', 'wave-index.jsonl'),
 ]
 
 HAS_REL = re.compile(r'[=<>\u2264\u2265\u2248\u2190]|:=|\\to|\\rightarrow|\\le\b|\\ge\b|\\approx')
