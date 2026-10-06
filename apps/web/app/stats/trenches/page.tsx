@@ -26,10 +26,10 @@ export default function Page() {
         body="Direct snap-level charting requires licensing we don't hold yet. Protection Proxy = team offensive environment scaled to line-performance signal. Pressure Proxy = team defensive environment. These are real team-level signals, not fabricated, just not yet drill-down line grades."
         tone="warn"
       />
-      <SectionHeader title="Teams by Protection Score" eyebrow="Proxy ranking" />
+      <SectionHeader title="Teams by Protection Score" eyebrow="Proxy list" />
       {byProtection.length === 0 ? (
         <p className="border border-mineral bg-eclipse/40 px-4 py-6 text-center text-sm text-ion-1">
-          No teams in the current snapshot. Rankings appear once the team sync populates.
+          No teams in the current snapshot. Data will appear once the team sync populates.
         </p>
       ) : (
         <div className="border border-mineral bg-eclipse p-4">
