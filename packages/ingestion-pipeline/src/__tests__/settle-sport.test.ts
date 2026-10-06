@@ -190,6 +190,7 @@ vi.mock("@sports/data-ingestion", async () => {
     PAID_CALL_MIN_INTERVAL_MS: actual.PAID_CALL_MIN_INTERVAL_MS,
     PAID_CALL_PURPOSES: actual.PAID_CALL_PURPOSES,
   };
+  mocks.isResearchPowerRatingsEnabled = vi.fn().mockReturnValue(false);
 });
 
 vi.mock("@sports/prediction-engine", () => ({

@@ -55,6 +55,7 @@ vi.mock("@sports/data-ingestion", () => ({
   fetchMlbStandings: vi.fn().mockResolvedValue([]),
   buildMlbWinPctLookup: vi.fn().mockReturnValue(new Map()),
   lookupMlbWinPct: vi.fn().mockReturnValue(null),
+  isResearchPowerRatingsEnabled: vi.fn().mockReturnValue(false),
 }));
 
 vi.mock("@sports/prediction-engine", () => ({
