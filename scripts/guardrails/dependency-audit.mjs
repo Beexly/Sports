@@ -41,7 +41,13 @@ const ACCEPTED = [
       "by the same next@16 major upgrade. The top-level postcss is already patched.",
     reviewBy: "2027-01-15",
   },
+  {
+    package: "source-map-js",
+    reason: "Fix requires updating Vite, but an update will conflict with the current pinned version. Waiting for an upstream patch or planning a major upgrade.",
+    reviewBy: "2027-01-15",
+  },
 ];
+
 
 const args = new Set(process.argv.slice(2));
 const includeDev = args.has("--all");

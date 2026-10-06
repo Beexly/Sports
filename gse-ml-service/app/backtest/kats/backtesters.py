@@ -53,12 +53,12 @@ except ImportError:  # pragma: no cover
 import numpy as np
 import numpy.typing as npt
 import pandas as pd
-from .consts import _log_error, Params, TimeSeriesData
-from .metrics.metrics import core_metric, CoreMetric
-from .datapartition import DataPartitionBase
+from kats.consts import _log_error, Params, TimeSeriesData
+from kats.metrics.metrics import core_metric, CoreMetric
+from kats.utils.datapartition import DataPartitionBase
 
 if TYPE_CHECKING:
-    from .models.model import Model
+    from kats.models.model import Model
 
 
 DataPartition = Union[

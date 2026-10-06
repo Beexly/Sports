@@ -1,0 +1,3 @@
+Plan:
+1. Extract Kats backtesting and datapartition code from `/tmp/kats` and place in `packages/prediction-engine/src/backtest/kats` (already done). Make sure to include MIT License attribution. (Also `emp_confidence_int.py`). Note: The constraints say "VENDOR, NEVER PIP INSTALL", so we will keep these as vendored python modules. But wait, the repo has `packages/prediction-engine/src/backtest` which seems to be a TypeScript project?
+2. Let's look at `packages/prediction-engine/src/backtest` and `gse-ml-service`. The prompt says: "Build the Kats walk-forward backtesting harness for the GSE engine... wired into the test/benchmark lane". The GSE engine might be Python? Let's check where to put the Python code.
