@@ -8,7 +8,7 @@ try:
 except ImportError:
     HAVE_PROPHET = False
 
-from app.models.prophet_preset import ProphetSportsPredictor, _require_kats
+from app.models.prophet_preset import ProphetSportsPredictor
 
 @pytest.mark.skipif(not HAVE_PROPHET, reason="Prophet/pandas not installed")
 def test_prophet_sports_predictor_presets():
