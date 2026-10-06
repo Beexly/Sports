@@ -27,12 +27,6 @@ const FAIL_ON = new Set(["critical", "high"]);
  * the run — suppressions are not allowed to outlive the vulnerability.
  */
 const ACCEPTED = [
-  {
-    package: "source-map-js",
-    reason:
-      "Wait until next/postcss deps sort it out. source-map-js is bundled.",
-    reviewBy: "2027-01-15",
-  },
 
   {
     package: "next",
