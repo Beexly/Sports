@@ -13,6 +13,16 @@ vi.mock("@sports/db", () => ({
   },
 }));
 
+type DeployLogRow = {
+  id: string;
+  env: string;
+  prNumber: number | null;
+  requiredChecksOk: boolean;
+  deployedAt: Date | null;
+  payload: unknown;
+  createdAt: Date;
+};
+
 describe("Deploy Webhook & CCM Deploy Loading", () => {
   beforeEach(() => {
     vi.clearAllMocks();
@@ -43,7 +53,7 @@ describe("Deploy Webhook & CCM Deploy Loading", () => {
     });
 
     it("accepts delivery ID from body id field", async () => {
-      const mockLogRow = {
+      const mockLogRow: DeployLogRow = {
         id: "deliv-101",
         env: "production",
         prNumber: 42,
@@ -53,7 +63,9 @@ describe("Deploy Webhook & CCM Deploy Loading", () => {
         createdAt: new Date("2026-10-06T10:01:00.000Z"),
       };
 
-      vi.mocked(db.deployWebhookLog.upsert).mockResolvedValueOnce(mockLogRow as any);
+      vi.mocked(db.deployWebhookLog.upsert).mockResolvedValueOnce(
+        mockLogRow as unknown as Awaited<ReturnType<typeof db.deployWebhookLog.upsert>>
+      );
 
       const req = new NextRequest("http://localhost/api/webhooks/deploy", {
         method: "POST",
@@ -113,7 +125,7 @@ describe("Deploy Webhook & CCM Deploy Loading", () => {
     });
 
     it("accepts delivery ID from header x-delivery-id (idempotent redelivery)", async () => {
-      const mockLogRow = {
+      const mockLogRow: DeployLogRow = {
         id: "header-deliv-200",
         env: "staging",
         prNumber: null,
@@ -123,7 +135,9 @@ describe("Deploy Webhook & CCM Deploy Loading", () => {
         createdAt: new Date("2026-10-06T12:00:00.000Z"),
       };
 
-      vi.mocked(db.deployWebhookLog.upsert).mockResolvedValue(mockLogRow as any);
+      vi.mocked(db.deployWebhookLog.upsert).mockResolvedValue(
+        mockLogRow as unknown as Awaited<ReturnType<typeof db.deployWebhookLog.upsert>>
+      );
 
       const req = new NextRequest("http://localhost/api/webhooks/deploy", {
         method: "POST",
@@ -156,13 +170,14 @@ describe("Deploy Webhook & CCM Deploy Loading", () => {
 
   describe("loadRecentDeploys", () => {
     it("fetches recent deploy logs and maps them 1:1 to DeployEvent", async () => {
-      const mockRows = [
+      const mockRows: DeployLogRow[] = [
         {
           id: "d1",
           env: "production",
           prNumber: 99,
           requiredChecksOk: true,
           deployedAt: new Date("2026-10-06T08:00:00.000Z"),
+          payload: {},
           createdAt: new Date("2026-10-06T08:00:01.000Z"),
         },
         {
@@ -171,11 +186,14 @@ describe("Deploy Webhook & CCM Deploy Loading", () => {
           prNumber: null,
           requiredChecksOk: false,
           deployedAt: null,
+          payload: {},
           createdAt: new Date("2026-10-06T09:00:00.000Z"),
         },
       ];
 
-      vi.mocked(db.deployWebhookLog.findMany).mockResolvedValueOnce(mockRows as any);
+      vi.mocked(db.deployWebhookLog.findMany).mockResolvedValueOnce(
+        mockRows as unknown as Awaited<ReturnType<typeof db.deployWebhookLog.findMany>>
+      );
 
       const events = await loadRecentDeploys();
 
