@@ -96,6 +96,8 @@ export function declarePrereg(d: PreregDeclaration, declaredAt?: string): Prereg
 /** Recompute the seal — true iff the record is exactly as declared. */
 export function verifySeal(record: PreregRecord): boolean {
   const { declaredAt: _d, seal: _s, ...decl } = record;
+  void _d;
+  void _s;
   return fnv1a(canonical(decl as PreregDeclaration)) === record.seal;
 }
 
