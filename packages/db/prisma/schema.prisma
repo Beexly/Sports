@@ -3831,6 +3831,20 @@ model ComplianceException {
   @@map("compliance_exception")
 }
 
+model DeployWebhookLog {
+  id               String    @id
+  env              String
+  prNumber         Int?
+  requiredChecksOk Boolean   @default(false)
+  deployedAt       DateTime?
+  payload          Json
+  createdAt        DateTime  @default(now())
+
+  @@index([env, createdAt])
+  @@map("deploy_webhook_logs")
+}
+
+
 // ============================================================
 // ENTITY GRAPH (ADR 005 — additive, not yet read by any surface)
 // Canonical reference for named things + typed, provenanced relations.

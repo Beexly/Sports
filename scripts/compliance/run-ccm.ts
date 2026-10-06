@@ -9,10 +9,8 @@
  *   - REAL receipts: loadRecentReceipts + verifyReceipt read the AgentReceipt
  *     table (merged in #188) and verify signatures against the same
  *     process-local governed keyring apps/web's own receipt routes use.
- *   - STILL-STUBBED data sources: deploys and access snapshots have no real
- *     feed in this repo yet. Each stub below is explicit about what it
- *     stands in for. Wiring them up is follow-on work, not silently assumed
- *     to be done.
+ *   - REAL deploys: loadRecentDeploys reads the DeployWebhookLog table.
+ *   - STILL-STUBBED data source: access snapshots have no real feed in this repo yet.
  */
 import { runCcm, type ReceiptRow, type VerifyFn, type DeployEvent, type AccessSnapshotRow } from "@sports/compliance";
 import { persistEvidence, saveRun, openException } from "../../apps/web/lib/compliance/store";
@@ -22,6 +20,8 @@ import { getGovernedKeyring } from "../../apps/web/lib/governed/keyring-singleto
 
 /** How far back to scope the receipt-logging/signature monitoring window. */
 const RECEIPT_WINDOW_MS = 24 * 60 * 60 * 1000;
+/** How far back to scope the deploy monitoring window. */
+const DEPLOY_WINDOW_MS = 24 * 60 * 60 * 1000;
 
 /**
  * Reconstruct the SignedGovernedReceipt shape from an AgentReceipt row's
@@ -82,11 +82,19 @@ export const verifyReceipt: VerifyFn = async (row) => {
   return verifyReceiptAgainstKeyring(store, signed);
 };
 
-// TODO: source from the deploy webhook log (no such table/integration
-// exists in this repo yet). Returns empty — no deploys observed, not "all
-// deploys compliant".
-async function loadRecentDeploys(): Promise<DeployEvent[]> {
-  return [];
+export async function loadRecentDeploys(): Promise<DeployEvent[]> {
+  const since = new Date(Date.now() - DEPLOY_WINDOW_MS);
+  const rows = await db.deployWebhookLog.findMany({
+    where: { createdAt: { gte: since } },
+    orderBy: { createdAt: "desc" },
+  });
+  return rows.map((row) => ({
+    id: row.id,
+    env: row.env,
+    prNumber: row.prNumber ?? undefined,
+    requiredChecksOk: row.requiredChecksOk,
+    deployedAt: (row.deployedAt ?? row.createdAt).toISOString(),
+  }));
 }
 
 // TODO: source from the IdP integration (no such integration exists in this
