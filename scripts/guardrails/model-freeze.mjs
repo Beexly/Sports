@@ -122,6 +122,21 @@ async function main() {
   const okSeed = await hasSeedImplementedProposal(version);
   const okDoc = await hasDocProposal(version);
 
+  if ((okSeed || okDoc) && !frozenMarkerLocks) {
+    const { execFileSync } = await import("node:child_process");
+    try {
+      execFileSync("npx", ["tsx", "packages/verifier/src/cli/verify-holdout.ts"], {
+        stdio: "inherit",
+        cwd: ROOT,
+        shell: process.platform === "win32",
+      });
+      console.log("[model-freeze] verify:holdout scorecard PASS");
+    } catch {
+      console.error("[model-freeze] FAIL — packages/verifier verify:holdout did not pass (L11).");
+      process.exit(1);
+    }
+  }
+
   if (okSeed || okDoc || frozenMarkerLocks) {
     console.log(
       `[model-freeze] OK — MODEL_VERSION ${version} backed by ${
