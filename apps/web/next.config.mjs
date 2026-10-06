@@ -107,7 +107,6 @@ const nextConfig = {
       { source: "/players/edge", destination: "/players?view=edge", permanent: false },
       { source: "/players/injuries", destination: "/players?view=injuries", permanent: false },
       { source: "/players/market", destination: "/players?view=market", permanent: false },
-      { source: "/players/nextgen", destination: "/players?view=nextgen", permanent: false },
       { source: "/players/opportunity", destination: "/players?view=opportunity", permanent: false },
       { source: "/players/qbr", destination: "/players?view=qbr", permanent: false },
       { source: "/players/snaps", destination: "/players?view=snaps", permanent: false },
