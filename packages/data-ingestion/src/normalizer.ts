@@ -16,6 +16,17 @@ import { freshnessMode, resolveFreshnessThresholdMs } from "./freshness-schedule
 // classified live.
 const MAX_CLOCK_SKEW_MS = 5 * 60 * 1000; // 5 minutes
 
+/**
+ * An absent upstream timestamp is NOT "now" — it is unknown. Collapse it to an
+ * Invalid Date so every downstream freshness check treats it exactly like an
+ * unparseable timestamp (not provably fresh). Returning `new Date()` here would
+ * reintroduce the tautology the freshness gate exists to prevent.
+ */
+function toUpstreamDate(raw: string | undefined): Date {
+  if (raw === undefined) return new Date(Number.NaN);
+  return new Date(raw);
+}
+
 export class DataNormalizer {
   /**
    * Guard the odds-format boundary.
@@ -73,7 +84,16 @@ export class DataNormalizer {
             // level field, and without the fallback every row parsed as Invalid
             // Date -> every game dropped as "not provably fresh" -> the whole run
             // failed "Upstream odds are stale" even on a live slate.
-            bookmakerLastUpdate: new Date(bookmaker.last_update ?? market.last_update),
+            //
+            // When BOTH are absent the source simply has no upstream timestamp
+            // (free-path adapters: ESPN public JSON, TheRundown v1 blobs). That
+            // must stay an Invalid Date so `freshGameIds` skips the row as
+            // not-provably-fresh. Adapters must NOT paper over this with
+            // `new Date()` — a locally-stamped row is fresh by construction and
+            // would let a stale primary book pass the gate.
+            bookmakerLastUpdate: toUpstreamDate(
+              bookmaker.last_update ?? market.last_update,
+            ),
             market: this.mapMarket(market.key),
             fetchedAt,
           };
