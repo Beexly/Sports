@@ -1,5 +1,8 @@
 # Dependencies
-node_modules/
+# NOTE: no trailing slash. `node_modules/` matches DIRECTORIES only, so a
+# node_modules SYMLINK (a blob, not a dir) is not matched by it and can be
+# staged by accident. The bare form matches both.
+node_modules
 .pnp
 .pnp.js
 
