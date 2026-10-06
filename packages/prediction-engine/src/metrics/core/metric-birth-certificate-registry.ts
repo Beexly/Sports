@@ -741,12 +741,12 @@ export const GSE_METRIC_BIRTH_CERTIFICATES: readonly GseMetricBirthCertificate[]
       "a high failure rate might reflect one heavily disrupted game (e.g., weather) in a small window",
       "special teams fumbles on punts can skew possession metrics"
     ],
-    family: "situational",
+    family: "team",
     forbiddenInputs: [
       "game outcomes",
       "model fitting"
     ],
-    formulaClass: "pure_measurement",
+    formulaClass: "linear",
     formulaSummary: "Share of drives that die without scoring (punt, turnover, turnover on downs, missed FG, safety), excluding end of half/game or other.",
     historicalPrecedent: [
       {
