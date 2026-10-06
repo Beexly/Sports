@@ -22,8 +22,7 @@ import {
   EMOTIONAL_VALUE,
 } from "@/lib/pricing/value-architecture";
 import { getFeature } from "@/lib/pricing/feature-gates";
-import { getReadinessGates } from "@sports/prediction-engine";
-import {
+import { getReadinessGates } from "@sports/prediction-engine";import {
   honestyContrastStrip,
   WHY_PAY_FOR_HONESTY_LEAD,
 } from "@/lib/competitive/honesty-contrast";
@@ -75,7 +74,6 @@ const FREE_FEATURES = [
   // Free still delivers tools and transparent process — not invented free picks.
   { label: "Free calculators & intelligence tools (no account wall)", included: true },
   { label: "Public methodology + calibration status (building honestly)", included: true },
-  { label: "Contest Bay paper skills (no fees, no prizes, no wagering)", included: true },
   { label: "Founding waitlist for early operator updates", included: true },
   { label: "The full daily board, every signal (Pro)", included: false },
   { label: "Confidence rating on every pick (Pro)", included: false },
@@ -84,7 +82,6 @@ const FREE_FEATURES = [
   { label: "Graded-pick alerts (Elite)", included: false },
   { label: "Line-value tracker + staking toolkit (Elite)", included: false },
 ] as const;
-
 const PRO_FEATURES = [
   // Honesty leads, deliberately. The product's claim is that it refuses to
   // guess; what a subscription unlocks is the REASONING behind each refusal,
@@ -186,7 +183,6 @@ const PLANS: PlanView[] = [
     features: [...ELITE_FEATURES],
   },
 ];
-
 const COMPARISON_FEATURES = [
   "Signals per day",
   "Sports covered",
@@ -296,7 +292,7 @@ const productJsonLd = {
   "@type": "Product",
   name: `${BRAND_NAME} Membership`,
   description:
-    "Free calculators, methodology, and paper contests. Paid tiers unlock the full board, confidence ratings, factor trails, and alerts.",
+    "Free calculators, methodology, and the Academy. Paid tiers unlock the full board, confidence ratings, factor trails, and alerts.",
   brand: { "@type": "Brand", name: BRAND_NAME },
   offers: PLANS.filter((p) => p.monthly !== null).map((p) => ({
     "@type": "Offer",
@@ -307,7 +303,6 @@ const productJsonLd = {
     availability: "https://schema.org/InStock",
   })),
 };
-
 // ─────────────────────────────────────────────
 // Page
 // ─────────────────────────────────────────────
@@ -318,7 +313,6 @@ export default function PricingPage() {
   const publicPicksOpen = getReadinessGates().canExposePublicPicks;
   const plans = plansForGate(publicPicksOpen);
   const cells = comparisonCellsForGate(publicPicksOpen);
-
   return (
     <div className="flex min-h-screen flex-col" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Nav />

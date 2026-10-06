@@ -37,7 +37,6 @@ export function generateMetadata(): Metadata {
     alternates: { canonical: "/picks" },
   };
 }
-
 // ─────────────────────────────────────────────
 // Types
 // ─────────────────────────────────────────────
