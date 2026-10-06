@@ -4,6 +4,7 @@ import {
   type ClaudeApiBudgetPolicy,
 } from "@/lib/claude-api/cost-monitor";
 import { ClaudeMessagesError } from "@/lib/claude-api/messages";
+import { captureError } from "@/lib/observability/sentry";
 import { callClaude } from "@/lib/claude-api/provider-dispatch";
 import {
   getCurrentMonthClaudeSpendUsd,
@@ -13,15 +14,19 @@ import {
 import { loadClaudeBudgetPolicy } from "@/lib/claude-api/budget-store";
 import type { GameIntelligenceNode, UserLens } from "@/lib/intelligence-graph";
 import {
+  buildAskTheSlateContext,
   buildAskTheSlatePrelude,
+  buildAskThisGameContext,
   buildAskThisGamePrelude,
+  buildExplainForMyLensContext,
   buildExplainForMyLensPrelude,
   REFUSAL_TEMPLATES,
   SYSTEM_PROMPT,
   type ModelCourtMode,
   type RefusalKind,
 } from "@/lib/intelligence-graph/model-court/prompts";
-import { extractNumericClaims, validateNumericClaims } from "@/lib/claude-api/numeric-guard";
+import { validateNumericClaims } from "@/lib/claude-api/numeric-guard";
+import { sanitizePromptInput } from "@/lib/claude-api/prompt-sanitize";
 
 export interface ModelCourtLensContext {
   readonly kind: UserLens;
@@ -101,10 +106,27 @@ export async function answerModelCourtQuestion(
   input: ModelCourtAnswerInput,
   options: ModelCourtAnswerOptions
 ): Promise<ModelCourtAnswer> {
-  const refusalKind = detectModelCourtRefusal(input);
+  // SECURITY (GSE-SEC-057, Model Court): the reader's question is interpolated
+  // raw at `User question:\n${question}` in every prelude builder. Unsanitized,
+  // a Pro user can forge headings and fences inside the user turn and restructure
+  // the instruction around the grounded evidence. The pick explainer has escaped
+  // this input since GSE-SEC-057; the Model Court did not. Sanitize ONCE, here,
+  // so refusal detection and the prompt see the same text — a question cannot use
+  // a control character to split a banned phrase past `detectModelCourtRefusal`
+  // and then reassemble it inside the prompt.
+  //
+  // This closes the STRUCTURE half of the injection. The GROUNDING half — a
+  // question seeding numbers into the allowed set — is closed separately by
+  // `buildPromptParts`, which keeps the question out of `groundingContext`.
+  const safeInput: ModelCourtAnswerInput = {
+    ...input,
+    question: sanitizePromptInput(input.question),
+  };
+
+  const refusalKind = detectModelCourtRefusal(safeInput);
   if (refusalKind) {
     return {
-      bodyMarkdown: renderRefusal(refusalKind, input),
+      bodyMarkdown: renderRefusal(refusalKind, safeInput),
       refusalKind,
       usedClaude: false,
       modelName: null,
@@ -136,7 +158,7 @@ export async function answerModelCourtQuestion(
   }
 
   try {
-    const promptUser = buildPromptUser(input);
+    const { promptUser, groundingContext } = buildPromptParts(safeInput);
     const result = await callClaude({
       apiKey: options.apiKey,
       fetchImpl: options.fetchImpl,
@@ -147,14 +169,13 @@ export async function answerModelCourtQuestion(
       user: promptUser,
       cache: { system: true },
     });
-    // Residual (accepted for launch): promptUser embeds the user's raw QUESTION
-    // alongside the grounded node/slate data, so a number the user seeds ("did
-    // you hit 68%?") is whitelisted for echo. That's an echo of the user's own
-    // text, not a fabricated MODEL stat, and the tout-shaped families (win
-    // rate/ROI/+EV) stay banned outright by EV_PATTERNS regardless of
-    // grounding. Splitting context-only grounding out of the prelude builders
-    // is a follow-up, not required for this gate.
-    const policyFailures = evaluateModelCourtAnswerPolicy(result.text, promptUser);
+    // GROUNDING: validate numbers against `groundingContext` — the evidence
+    // ONLY — never against `promptUser`, which also carries the user's raw
+    // question. Grounding on the prelude let a user seed their own statistic
+    // ("why are they 11-1 ATS?") and have the model echo it back as fact.
+    // A question is not evidence. Mirrors explainPick, which grounds on
+    // `grounded.context` and deliberately excludes the reader's question.
+    const policyFailures = evaluateModelCourtAnswerPolicy(result.text, groundingContext);
     if (policyFailures.length > 0) {
       await maybeRecordModelCourtUsage({
         input,
@@ -187,6 +208,7 @@ export async function answerModelCourtQuestion(
       modelName: result.modelName,
     };
   } catch (error) {
+    if (error instanceof ModelCourtAnswerError) throw error;
     if (error instanceof ClaudeMessagesError) {
       await maybeRecordModelCourtUsage({
         input,
@@ -199,7 +221,24 @@ export async function answerModelCourtQuestion(
         errorKind: `HTTP_${error.status}`,
       });
     }
-    throw new ModelCourtAnswerError(error instanceof Error ? error.message : "Model Court answer failed.");
+
+    // SECURITY (GSE-SEC-071, ported from explainPick): do NOT put `error.message`
+    // on the thrown error. `ClaudeMessagesError` is constructed as
+    // `Claude API error: ${status} - ${await response.text()}` (messages.ts), so its
+    // message carries the RAW upstream Anthropic response body — request ids,
+    // account/quota detail, model names, internal error text. The Model Court route
+    // returns `error.message` verbatim as a 422 body, which would hand all of that
+    // to any authenticated Pro user who can open a game room.
+    //
+    // The detail is not lost: the status is ledgered above as `HTTP_<status>` and
+    // the full error goes to Sentry here. The CALLER gets a generic message.
+    captureError(error, {
+      surface: "MODEL_COURT_ANSWER",
+      upstreamStatus: error instanceof ClaudeMessagesError ? error.status : null,
+      modelName: error instanceof ClaudeMessagesError ? error.modelName : null,
+    });
+
+    throw new ModelCourtAnswerError("The Model Court is temporarily unavailable. Please try again shortly.");
   }
 }
 
@@ -260,27 +299,49 @@ export function evaluateModelCourtAnswerPolicy(bodyMarkdown: string, groundingTe
     failures.push("COMPETITOR_COMPARE");
   }
   if (groundingText !== undefined) {
-    const allowed = extractNumericClaims(groundingText).map((c) => c.value);
-    if (!validateNumericClaims(text, { allowed }).grounded) failures.push("UNGROUNDED_NUMERIC");
+    // Hand the guard the grounding TEXT, not a flattened list of values — the
+    // KIND of each number lives in its label. See lib/claude-api/numeric-guard.ts.
+    if (!validateNumericClaims(text, { text: groundingText }).grounded) {
+      failures.push("UNGROUNDED_NUMERIC");
+    }
   }
 
   return failures;
 }
 
-function buildPromptUser(input: ModelCourtAnswerInput): string {
+export interface ModelCourtPromptParts {
+  /** Full user turn sent to the model: grounded context + the user's question. */
+  readonly promptUser: string;
+  /** Grounded evidence ONLY — the question is excluded. Guard against this. */
+  readonly groundingContext: string;
+}
+
+export function buildPromptParts(input: ModelCourtAnswerInput): ModelCourtPromptParts {
   if (input.mode === "ASK_THE_SLATE") {
-    return buildAskTheSlatePrelude(input.slate ?? {}, input.question);
+    const slate = input.slate ?? {};
+    return {
+      promptUser: buildAskTheSlatePrelude(slate, input.question),
+      groundingContext: buildAskTheSlateContext(slate),
+    };
   }
   if (input.mode === "EXPLAIN_FOR_MY_LENS") {
     if (!input.node || !input.lens) {
       throw new ModelCourtAnswerError("Model Court lens mode requires a game and lens context.");
     }
-    return buildExplainForMyLensPrelude(toCourtNodeContext(input.node), input.question, input.lens);
+    const nodeContext = toCourtNodeContext(input.node);
+    return {
+      promptUser: buildExplainForMyLensPrelude(nodeContext, input.question, input.lens),
+      groundingContext: buildExplainForMyLensContext(nodeContext, input.lens),
+    };
   }
   if (!input.node) {
     throw new ModelCourtAnswerError("Model Court game mode requires a game context.");
   }
-  return buildAskThisGamePrelude(toCourtNodeContext(input.node), input.question);
+  const nodeContext = toCourtNodeContext(input.node);
+  return {
+    promptUser: buildAskThisGamePrelude(nodeContext, input.question),
+    groundingContext: buildAskThisGameContext(nodeContext),
+  };
 }
 
 function toCourtNodeContext(node: GameIntelligenceNode): Record<string, unknown> {
