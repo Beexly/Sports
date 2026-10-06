@@ -166,7 +166,7 @@ describe("nfl_age_conditioned_rest stays dark without a point-in-time producer",
 
   it("the formula is still home-anchored when called directly", async () => {
     const realCtx: SignalEvaluationContext = { ...ctx, env: homeFavourableEnv };
-    const val = await nflAgeConditionedRestSignal.evaluate(realCtx);
+    const val = await nflAgeConditionedRestSignal.evaluate?.(realCtx);
     expect(val).not.toBeNull();
     if (val == null || !("value" in val)) throw new Error("expected a continuous value");
     expect(val.value).toBe(2.9);
