@@ -1,0 +1,20 @@
+id: A8
+title: Boltzmann recalibration of model probability
+hypothesis: A Boltzmann temperature transform of our own p improves calibration on PICKS-H1 versus isotonic.
+estimand: Brier of Boltzmann-calibrated p vs isotonic-calibrated p on identical holdout rows
+unit: ΔBrier versus isotonic
+data: [verifier.picks-h1]
+discover_era: pre-PICKS-H1 ad-hoc splits
+validate_era: PICKS-H1 (generatedAt >= 2026-08-01)
+kill_line: "validate-era Brier >= isotonic Brier on PICKS-H1"
+mde_80pct_power: 0.05573
+script: scripts/factors/A8.mjs
+status: BLOCKED
+number: 0.04097
+ci: [0.00198, 0.07995]
+n: 20
+run_sha: "3b35c099e2a437bce75f50550f05b28881c27dbc"
+run_at: "2026-09-15T22:37:41.443Z"
+blocked_on: "verifier/picks-h1.json real export (fixture smoke only; synthetic rows must not kill A8)"
+notes: >
+  A transform, not a new signal. Scored vs isotonic on PICKS-H1 only. Boltzmann p_T = sigmoid(logit(p)/T); isotonic via PAVA. Both fit on a chronological train slice (first 40%); scored on the remainder. C-372. C-372 run 2026-09-15: source=FIXTURE n=20. T=3 trainBrier=0.25042. Validate Brier: boltz=0.25578 iso=0.21481 raw=0.28147 market=0.23433. ΔBrier boltz−iso=0.04097 CI[0.00198,0.07995] MDE80=0.05573 P(better)=0.014. HONEST LIMIT: committed synthetic fixture. Fixture must not CANDIDATE/DEAD A8 (A2 precedent). Real-export scorecard is the DoD.

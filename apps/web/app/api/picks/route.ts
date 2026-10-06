@@ -9,12 +9,18 @@ import { freshPickWhere } from "@/lib/board/stale-pick-policy";
 import { gameInSlateWindow, resolveSlateWindow } from "@/lib/picks/slate-window";
 import { MIN_PUBLIC_PICK_DATA_QUALITY_SCORE } from "@/lib/public-picks-quality";
 import {
+  enrichPickWithIntelligence,
+  projectPickIntelligenceForViewer,
+  universalSignalsFromPick,
+} from "@/lib/picks/intelligence-enrichment";
+import { loadBundleSurfaces } from "@/lib/intelligence-core/db-loaders";
+import { shadowOnly } from "@/lib/intelligence-core";
+import {
   isPublicPicksSurfaceStale,
   staleDataGateResponse,
 } from "@/lib/data-reliability/public-freshness-gate";
 import { passesPublicSelectiveFilterAsync } from "@/lib/calibration/selective-publish-runtime";
 import { parseFactorBreakdown } from "@/lib/picks/parse-factor-breakdown";
-import { teaserForViewer } from "@/lib/picks/teaser-text";
 import { displaySelection } from "@/lib/picks/display-selection";
 import { resolveMarketImplied, resolveWinProbability } from "@/lib/picks/market-implied-display";
 import { publicEdgeScore } from "@/lib/picks/public-edge-score";
@@ -25,11 +31,14 @@ import { dropAdverseEdgePicks } from "@/lib/picks/adverse-edge-suppression";
 import { clientIp } from "@/lib/api/rate-limit";
 import { consumePublicFormRateLimit } from "@/lib/api/public-form-rate-limit";
 import {
-  bindPublicConsensusClaim,
   consensusEvidenceCaption,
-  isBookmakerConsensusClaim,
   type PublicConsensusPick,
 } from "@/lib/claims/public-consensus-claim";
+import {
+  consensusSliceFromResolved,
+  loadPublishTimeConsensusByPickId,
+} from "@/lib/claims/load-publish-time-consensus";
+import { projectPublicConsensusReasoning } from "@/lib/claims/project-public-consensus-reasoning";
 
 export const dynamic = "force-dynamic";
 
@@ -238,38 +247,55 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       ? rankedPicks.slice(0, entitlements.dailyPickLimit)
       : rankedPicks;
 
-  const consensusProviderByRun = new Map<string, string>();
-  const ingestionRunIds = limitedPicks
-    .map((pick) => pick.ingestionRunId)
-    .filter((id): id is string => Boolean(id));
-  if (
-    ingestionRunIds.length > 0 &&
-    typeof db.ingestionRun?.findMany === "function"
-  ) {
-    const runs = await db.ingestionRun
-      .findMany({
-        where: { id: { in: ingestionRunIds } },
-        select: {
-          id: true,
-          sourceSnapshots: {
-            where: { sourceKind: "ODDS_EVENTS" },
-            orderBy: { fetchedAt: "desc" },
-            take: 1,
-            select: { provider: true },
-          },
-        },
-      })
-      .catch(() => []);
-    for (const run of runs) {
-      const provider = run.sourceSnapshots[0]?.provider;
-      if (provider) consensusProviderByRun.set(run.id, provider);
-    }
-  }
+  // Shared mint-time book-set loader (same path as preview/dashboard — #901 IMPROVE).
+  const consensusResolvedByPick = await loadPublishTimeConsensusByPickId(
+    limitedPicks.map((pick) => ({
+      id: pick.id,
+      gameId: pick.gameId,
+      pickType: pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL",
+      generatedAt: pick.generatedAt,
+      bookmakerCount: pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount,
+      ingestionRunId: pick.ingestionRunId ?? null,
+    })),
+  );
 
   // Thread 2: honest calibrated confidence. Built once (memoised) and only when
   // the audited calibrator is on; the calibrator is self-suppressing if the
   // sample is insufficient/non-improving, so this is null-safe by construction.
   const calibrator = gates.canApplyCalibrationAdjustments ? await getPublicCalibrator() : null;
+
+  // THE WIRING: load the real DB surfaces (injuries, team_game_efficiency,
+  // snap_counts, next_gen_stats, player_game_stats, game_signals) for every
+  // pick on the slate BEFORE the synchronous projection below. Previously
+  // this call site ran the reasoning spine on market context alone — all
+  // twelve raw bundle surfaces were undefined on every pick.
+  //
+  // The surfaces are loaded here (parallel, once per pick) and the engine is
+  // run once inside the projection below, where `factorBreakdown` is already
+  // parsed. Splitting it this way keeps a single engine run per pick.
+  // Fail-open per surface: an unresolved or failing surface contributes zero
+  // rows and a note; it never throws and never blanks `intelligence`.
+  const surfacesByPickId = new Map<string, Awaited<ReturnType<typeof loadBundleSurfaces>>>();
+  await Promise.all(
+    limitedPicks.map(async (pick) => {
+      const commence = new Date(pick.game.commenceTime);
+      if (!Number.isFinite(commence.getTime())) return;
+      try {
+        surfacesByPickId.set(
+          pick.id,
+          await loadBundleSurfaces({
+            gameId: pick.gameId,
+            homeTeamName: pick.game.homeTeamName,
+            awayTeamName: pick.game.awayTeamName,
+            commenceTime: commence,
+            asOf: now,
+          }),
+        );
+      } catch {
+        // no surfaces for this pick; the engine falls back to market context
+      }
+    }),
+  );
 
   const publicPicks: PublicConsensusPick[] = limitedPicks.map((pick) => {
     // Parse + validate factorBreakdown from JSON storage. The Prisma column is
@@ -305,30 +331,23 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
     // cycle). Reading the pill from the live column while the percentage read
     // the snapshot let a transient feed gap render the pill beside a percentage.
     const bookmakerCount = pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount;
-    const consensusProvider = pick.ingestionRunId
-      ? consensusProviderByRun.get(pick.ingestionRunId) ?? null
-      : null;
-    const consensusSlice = {
+    const mint = consensusResolvedByPick.get(pick.id) ?? null;
+    const consensusSlice = consensusSliceFromResolved(mint, {
       consensusPct: pick.consensusPct,
       bookmakerCount,
       dataFreshnessAt: pick.dataFreshnessAt,
-      consensusProvider,
-    };
-    const projectReasoning = (text: string) => {
-      const source = text.trim();
-      if (!source) return { text: null, bound: null };
-      const bound = bindPublicConsensusClaim({
-        ...consensusSlice,
-        reasoningShort: source,
-      }, now);
-      if (isBookmakerConsensusClaim(source) && !bound) {
-        return { text: null, bound: null };
-      }
-      return {
-        text: teaserForViewer(source, entitlements.canSeeConfidence),
-        bound,
-      };
-    };
+    });
+    const consensusProvider = consensusSlice.consensusProvider;
+    // Full reasoning and reasoningShort are gated independently via the shared
+    // fail-closed projector (same path as preview/dashboard). The first
+    // consensus claim in a full explanation is enough to withhold that whole
+    // field, even if the rest contains no other market phrase.
+    const projectReasoning = (text: string) =>
+      projectPublicConsensusReasoning(text, consensusSlice, {
+        scrubConfidence: true,
+        canSeeConfidence: entitlements.canSeeConfidence,
+        now,
+      });
     const shortReasoning = projectReasoning(pick.reasoningShort);
     const reasoningSource = entitlements.canSeeFactorBreakdown
       ? pick.reasoning
@@ -411,9 +430,14 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       // inside the teaser (lib/picks/teaser-text.ts).
       reasoning: projectedReasoning.text,
       reasoningShort: shortReasoning.text,
-      consensusPct: pick.consensusPct,
+      // Unbound mint-time book set → withhold consensusPct (#901 IMPROVE).
+      consensusPct: consensusBound ? pick.consensusPct : null,
       bookmakerCount,
       consensusProvider,
+      consensusSourceId: consensusBound?.consensusSourceId ?? null,
+      consensusBooks: consensusBound?.consensusBooks ?? null,
+      consensusBookSetId: consensusBound?.consensusBookSetId ?? null,
+      consensusCapturedAt: consensusBound?.consensusCapturedAt ?? null,
       consensusEvidence: consensusBound
         ? consensusEvidenceCaption(consensusBound)
         : null,
@@ -425,6 +449,69 @@ export async function GET(req: NextRequest): Promise<NextResponse> {
       dataFreshnessAt: pick.dataFreshnessAt?.toISOString() ?? null,
       result: pick.result as PickResult,
       receiptHash: pick.proofReceipt?.contentHash ?? null,
+      // Live intelligence spine (lib/intelligence-core + universal-wiring),
+      // against the real DB surfaces loaded above.
+      // Fail-open: nulls when the engine abstains. Six questions + family
+      // weights + the ALL-knowing observation map are the trust surface.
+      intelligence: (() => {
+        try {
+          const pickForIntel = {
+            id: pick.id,
+            // Same stripped selection the public payload ships (no "(model signal)" marker).
+            selection: displaySelection(pick.selection),
+            pickType: pick.pickType,
+            confidence: pick.confidence,
+            reasoning: pick.reasoning,
+            sportKey: pick.game.sport?.key ?? null,
+            commenceTime: pick.game.commenceTime,
+            homeTeamName: pick.game.homeTeamName,
+            awayTeamName: pick.game.awayTeamName,
+            homeFairProb: (pick as { homeFairProb?: number | null }).homeFairProb ?? null,
+            awayFairProb: (pick as { awayFairProb?: number | null }).awayFairProb ?? null,
+            marketFairProb: factorBreakdown?.marketFairProb ?? null,
+            line: pick.line,
+            consensusPct: pick.consensusPct,
+            bookmakerCount: pick.bookmakerCount ?? null,
+            modelVersion: pick.modelVersion,
+            pickGrade: pick.pickGrade,
+            // The scheduling columns the picks query already selects. Passing
+            // them costs no extra read and turns on the spine's rest, back-to-back
+            // and schedule-density branches, which had no caller anywhere.
+            scheduleContext: {
+              restDaysHome: pick.game.restDaysHome,
+              restDaysAway: pick.game.restDaysAway,
+              isBackToBackHome: pick.game.isBackToBackHome,
+              isBackToBackAway: pick.game.isBackToBackAway,
+              scheduleDensityHome: pick.game.scheduleDensityHome,
+              scheduleDensityAway: pick.game.scheduleDensityAway,
+            },
+          };
+          const raw = enrichPickWithIntelligence(
+            pickForIntel,
+            now,
+            universalSignalsFromPick(pickForIntel),
+            surfacesByPickId.get(pick.id),
+            // WEATHER_TRAVEL is newly fed (the game-weather-capture cron now
+            // writes the `weather` surface the bundle always read empty), and
+            // its lean math is asserted, not fitted — so it computes in shadow
+            // per the wire-first doctrine: counted and reported, never moving
+            // the calibrated number until it is weighted and calibrated.
+            // No-op today: with zero weather rows the policy holds out nothing.
+            shadowOnly(
+              ["WEATHER_TRAVEL"],
+              "Weather observations are newly wired (2026-10-01: game-weather-capture cron fills the surface); the wind/temp lean is asserted, not fitted. Shadow until weighted + calibrated.",
+            ),
+          );
+          // FREE: numeric spine only — no percent-formatted model prose /
+          // "(model signal)" leak in intelligence.summary or sixQuestions.
+          return projectPickIntelligenceForViewer(
+            raw,
+            entitlements.canSeeConfidence,
+          );
+        } catch {
+          return null;
+        }
+      })(),
     };
   });
 

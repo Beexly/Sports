@@ -2,6 +2,18 @@ import { describe, expect, it } from "vitest";
 import { render, screen } from "@testing-library/react";
 import { VerdictLine } from "@/components/performance/verdict-line";
 
+const WITHHELD =
+  "not rendered. Coverage, a lower bound, CLV, and walk-forward lineage are required.";
+
+function expectWithheld(el: HTMLElement) {
+  expect(el.textContent).toContain("No verdict");
+  expect(el.textContent).toContain(WITHHELD);
+  expect(el.textContent).not.toMatch(/\d+\.\d%/);
+  expect(el.textContent).not.toContain("lies entirely");
+  expect(el.textContent).not.toContain("Conclusive");
+  expect(el.textContent).not.toContain("Inconclusive");
+}
+
 describe("VerdictLine — the interval gets a vote on the public report", () => {
   it("withholds a verdict entirely below the sample floor", () => {
     render(<VerdictLine wins={7} losses={3} minSample={30} />);
@@ -13,28 +25,25 @@ describe("VerdictLine — the interval gets a vote on the public report", () => 
     expect(el.textContent).not.toMatch(/\d+\.\d%/);
   });
 
-  it("labels a straddling band inconclusive and prints the band", () => {
+  it("withholds a straddling band until coverage, a bound, CLV, and lineage exist", () => {
     render(<VerdictLine wins={18} losses={12} minSample={30} />);
     const el = screen.getByTestId("verdict-line");
     expect(el.dataset.verdict).toBe("inconclusive");
-    expect(el.textContent).toContain("Inconclusive");
-    expect(el.textContent).toContain("contains the");
-    expect(el.textContent).toContain("n=30");
+    expectWithheld(el);
   });
 
-  it("labels a decisive record conclusive", () => {
+  it("withholds a decisive record until coverage, a bound, CLV, and lineage exist", () => {
     render(<VerdictLine wins={400} losses={100} minSample={30} />);
     const el = screen.getByTestId("verdict-line");
     expect(el.dataset.verdict).toBe("conclusive");
-    expect(el.textContent).toContain("Conclusive");
-    expect(el.textContent).toContain("lies entirely above");
+    expectWithheld(el);
   });
 
-  it("calls a decisively losing record conclusive below the line, not hopeful", () => {
+  it("withholds a losing record until coverage, a bound, CLV, and lineage exist", () => {
     render(<VerdictLine wins={100} losses={400} minSample={30} />);
     const el = screen.getByTestId("verdict-line");
     expect(el.dataset.verdict).toBe("conclusive");
-    expect(el.textContent).toContain("lies entirely below");
+    expectWithheld(el);
   });
 
   it("honours the page's own floor as the single source of truth", () => {
@@ -42,16 +51,18 @@ describe("VerdictLine — the interval gets a vote on the public report", () => 
     expect(screen.getByTestId("verdict-line").textContent).toContain("No verdict");
   });
 
-  it("accepts a custom threshold", () => {
+  it("does not print a custom threshold when the rate is withheld", () => {
     // 400/500 has a band of roughly [76%, 83%], so an 80% line sits inside it.
     render(<VerdictLine wins={400} losses={100} minSample={30} threshold={0.8} />);
     const el = screen.getByTestId("verdict-line");
     expect(el.dataset.verdict).toBe("inconclusive");
-    expect(el.textContent).toContain("80.0%");
+    expectWithheld(el);
   });
 
-  it("calls the same record conclusive when the threshold sits outside the band", () => {
+  it("keeps the interval on the attribute when the threshold sits outside the band", () => {
     render(<VerdictLine wins={400} losses={100} minSample={30} threshold={0.9} />);
-    expect(screen.getByTestId("verdict-line").dataset.verdict).toBe("conclusive");
+    const el = screen.getByTestId("verdict-line");
+    expect(el.dataset.verdict).toBe("conclusive");
+    expectWithheld(el);
   });
 });

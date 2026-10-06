@@ -1,0 +1,60 @@
+{
+  "generated_at": "2026-09-27T04:59:03.048Z",
+  "source": "nflverse nflverse-data release tag `players`, asset players.csv",
+  "source_url": "https://github.com/nflverse/nflverse-data/releases/download/players/players.csv",
+  "attribution": "nflverse, CC-BY 4.0. Internal storage, not a commercial display.",
+  "players_rows": 24833,
+  "fix_a_participation_identifier": {
+    "problem": "participation 2018-2022 carries a bare numeric id that matches no roster gsis_id",
+    "identification": "nfl_id. Measured 401/401 match; gsis_id, esb_id, espn_id, otc_id and smart_id all matched 0/401.",
+    "crosswalk_rows": 11903,
+    "ambiguous_nfl_ids_dropped": 0,
+    "participation_slots_2018_2022": 4932894,
+    "participation_slots_resolvable": 4932894,
+    "participation_recovery_rate": 1,
+    "per_season": {
+      "2018": {
+        "slots": 961779,
+        "resolvable": 961779,
+        "rate": 1
+      },
+      "2019": {
+        "slots": 967350,
+        "resolvable": 967350,
+        "rate": 1
+      },
+      "2020": {
+        "slots": 975877,
+        "resolvable": 975877,
+        "rate": 1
+      },
+      "2021": {
+        "slots": 1019091,
+        "resolvable": 1019091,
+        "rate": 1
+      },
+      "2022": {
+        "slots": 1008797,
+        "resolvable": 1008797,
+        "rate": 1
+      }
+    }
+  },
+  "fix_b_roster_pfr_id": {
+    "problem": "roster pfr_id present on only 44-75% of rows, capping the snap join at 0.6613",
+    "roster_rows": 404653,
+    "rows_with_blank_pfr_id": 180775,
+    "blank_rows_recoverable_from_players_csv": 168652,
+    "recoverable_share_of_blanks": 0.9329387359977873,
+    "conflicting_pfr_per_gsis_dropped": 0,
+    "crosswalk_pfr_coverage": 0.9126968147223453
+  },
+  "validation": {
+    "checked": 0,
+    "nameMatch": 0,
+    "nameMismatch": 0,
+    "examples": [],
+    "ran": false,
+    "note": "no name sidecar present; the name cross-check did not run and is reported as not-run rather than assumed"
+  }
+}

@@ -109,6 +109,49 @@ describe("copula", () => {
     expect(gaussCopulaJoint(0.5, 0.5, 0)).toBeCloseTo(0.25, 2);
     expect(gaussCopulaJoint(0.5, 0.5, 0.9)).toBeGreaterThan(0.25);
   });
+  // Regression: the old implementation used a first-order term about t=0,
+  // which returned a NEGATIVE probability at p1=p2=0.1, rho=-0.9 (~-0.019).
+  // These assertions fail against it.
+  it("copula joint is a real joint probability under strong negative correlation", () => {
+    const j = gaussCopulaJoint(0.1, 0.1, -0.9);
+    expect(j).toBeGreaterThan(0);
+    // Negative correlation must push the joint BELOW the independent 0.01.
+    expect(j).toBeLessThan(0.01);
+  });
+  it("copula joint stays within [0, 1] across the correlation range", () => {
+    for (const p of [0.05, 0.1, 0.3, 0.5, 0.7, 0.9]) {
+      for (const rho of [-0.95, -0.9, -0.5, 0, 0.5, 0.9, 0.95]) {
+        const j = gaussCopulaJoint(p, p, rho);
+        expect(j).toBeGreaterThanOrEqual(0);
+        expect(j).toBeLessThanOrEqual(1);
+      }
+    }
+  });
+  it("copula joint respects the Fréchet bounds", () => {
+    // Fréchet-Hoeffding: max(0, p1+p2-1) <= joint <= min(p1, p2)
+    for (const p1 of [0.1, 0.4, 0.6, 0.9]) {
+      for (const p2 of [0.2, 0.5, 0.8]) {
+        for (const rho of [-0.9, 0, 0.9]) {
+          const j = gaussCopulaJoint(p1, p2, rho);
+          expect(j).toBeGreaterThanOrEqual(Math.max(0, p1 + p2 - 1) - 1e-9);
+          expect(j).toBeLessThanOrEqual(Math.min(p1, p2) + 1e-9);
+        }
+      }
+    }
+  });
+  it("copula joint is monotone in rho", () => {
+    const lo = gaussCopulaJoint(0.3, 0.4, -0.8);
+    const mid = gaussCopulaJoint(0.3, 0.4, 0);
+    const hi = gaussCopulaJoint(0.3, 0.4, 0.8);
+    expect(lo).toBeLessThan(mid);
+    expect(mid).toBeLessThan(hi);
+  });
+  it("copula joint throws on unsound inputs rather than clamping", () => {
+    expect(() => gaussCopulaJoint(-0.1, 0.5, 0)).toThrow(/margins must lie in \[0, 1\]/);
+    expect(() => gaussCopulaJoint(0.5, 1.5, 0)).toThrow(/margins must lie in \[0, 1\]/);
+    expect(() => gaussCopulaJoint(0.5, 0.5, 1)).toThrow(/rho must lie in \(-1, 1\)/);
+    expect(() => gaussCopulaJoint(0.5, 0.5, -1)).toThrow(/rho must lie in \(-1, 1\)/);
+  });
 });
 
 describe("negbin", () => {

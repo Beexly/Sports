@@ -2,11 +2,16 @@ import { describe, it, expect } from "vitest";
 import { scoreGame } from "../scoring.js";
 import type { OddsInput, ScoredPick, IndependentMarketFairValue } from "@sports/types";
 
-// A moneyline-publishable game: 10 books, a heavy home favorite (~75% de-vigged
-// fair) so consensus + depth clear the publish gate (ML pricing edge is
-// structurally ≤0 when you back a favorite at its own price). A fixed `context`
-// is shared so that — apart from independentFairValues — every scoring input is
-// identical, isolating the wire-in's effect.
+// A moneyline-publishable game: 10 books, a heavy home favorite (~87% de-vigged
+// fair) so consensus + depth clear the publish gate. NOTE: the fixture was
+// -350 (~75% fair) before the 2026-09-27 market-echo rewire removed the
+// market-internal edgeComponent from the confidence sum; with MIN_PUBLISH_
+// CONFIDENCE unchanged at 50, a publishable ML pick absent context now needs
+// de-vigged fair ≳ 0.83 (consensus 30-max + depth 20 + base 10). The heavier
+// favorite preserves the fixture's intent — a publishable moneyline pick —
+// under the post-rewire scale. A fixed `context` is shared so that — apart
+// from independentFairValues — every scoring input is identical, isolating the
+// wire-in's effect.
 const baseContext = { bookmakerCoverageMax: 10 } as const;
 
 const TEN_BOOKS = [
@@ -24,8 +29,8 @@ function makeInput(independentFairValues?: IndependentMarketFairValue[]): OddsIn
     bookmakerOdds: TEN_BOOKS.map((bookmaker) => ({
       bookmaker,
       market: "H2H" as const,
-      homePrice: -350,
-      awayPrice: 290,
+      homePrice: -800,
+      awayPrice: 650,
     })),
     context: { ...baseContext, independentFairValues },
   };
@@ -48,8 +53,8 @@ describe("scoreMoneylinePick — independent-edge wire-in (honest, additive)", (
     const withEdge = ml(
       scoreGame(
         makeInput([
-          { source: "kalshi", homeFairProb: 0.85, awayFairProb: 0.15 },
-          { source: "poisson", homeFairProb: 0.84, awayFairProb: 0.16 },
+          { source: "kalshi", homeFairProb: 0.93, awayFairProb: 0.07 },
+          { source: "poisson", homeFairProb: 0.92, awayFairProb: 0.08 },
         ]),
       ),
     );
@@ -85,7 +90,7 @@ describe("scoreMoneylinePick — independent-edge wire-in (honest, additive)", (
     const withEdge = ml(
       scoreGame(
         makeInput([
-          { source: "kalshi", homeFairProb: 0.85, awayFairProb: 0.15 }, // loves the side
+          { source: "kalshi", homeFairProb: 0.93, awayFairProb: 0.07 }, // loves the side
           { source: "poisson", homeFairProb: 0.60, awayFairProb: 0.40 }, // disagrees, below the book
         ]),
       ),

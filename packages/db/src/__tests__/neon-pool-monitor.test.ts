@@ -115,6 +115,59 @@ describe("probeNeonPool", () => {
     expect(r.stubSuspected).toBe(false);
   });
 
+  // ── F2: an outage that RESOLVES is still an outage ────────────────────────
+  // The stub Prisma client ($queryRaw → []) is the real shape of this failure:
+  // the query succeeds, there is no database, and the old code counted it as a
+  // success with status "ok". A probe that measured nothing has not passed.
+  it("a clock probe that returns zero rows is 'down', not 'ok'", async () => {
+    const r = await probeNeonPool(fakeDb({ clock: async () => [] }));
+    expect(r.status).toBe("down");
+    expect(r.error).toMatch(/no rows/i);
+    expect(r.serverTime).toBeNull();
+    expect(r.stubSuspected).toBe(true);
+  });
+
+  it("an empty clock result is counted as a FAILURE and never as a success", async () => {
+    await probeNeonPool(fakeDb({ clock: async () => [] }));
+    const c = getNeonPoolCounters();
+    expect(c.successes).toBe(0);
+    expect(c.failures).toBe(1);
+    // The dangerous field: the old code refreshed lastOkAt on an empty result,
+    // so the incident timestamp advanced while the database was gone.
+    expect(c.lastOkAt).toBeNull();
+    expect(c.lastError).toMatch(/no rows/i);
+  });
+
+  it("an empty clock result does not poison a previously healthy lastOkAt", async () => {
+    await probeNeonPool(fakeDb({}), { sampleActivity: false });
+    const healthy = getNeonPoolCounters().lastOkAt;
+    expect(healthy).not.toBeNull();
+    await probeNeonPool(fakeDb({ clock: async () => [] }));
+    expect(getNeonPoolCounters().lastOkAt).toBe(healthy);
+  });
+
+  it("a row whose timestamp is unusable is 'down' — no evidence is not a pass", async () => {
+    const r = await probeNeonPool(fakeDb({ clock: async () => [{ t: null }] }));
+    expect(r.status).toBe("down");
+    expect(getNeonPoolCounters().successes).toBe(0);
+  });
+
+  it("a healthy database that answers is still 'ok' (the fix is not red-by-default)", async () => {
+    const r = await probeNeonPool(
+      fakeDb({ activity: async () => [{ total: 2, active: 1, idle: 1, waiting: 0 }] }),
+    );
+    expect(r.status).toBe("ok");
+    expect(r.serverTime).toBe("2026-07-28T12:00:00.000Z");
+    expect(getNeonPoolCounters().successes).toBe(1);
+  });
+
+  it("classifyLatency agrees: no evidence is never 'ok'", () => {
+    // The classifier already refused a null latency; the probe now refuses the
+    // same thing one layer earlier, so both agree that unmeasured ≠ healthy.
+    expect(classifyLatency(null, null)).toBe("down");
+    expect(classifyLatency(0, "clock probe returned no rows")).toBe("down");
+  });
+
   it("an activity-sample failure degrades to nulls without failing the whole probe", async () => {
     const r = await probeNeonPool(
       fakeDb({

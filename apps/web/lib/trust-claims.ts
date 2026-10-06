@@ -137,14 +137,14 @@ export const TRUST_CLAIMS: readonly TrustClaim[] = [
   {
     id: "methodology.confidence-presentation",
     copy:
-      "Confidence is a 0-100 selection score, shown as \"NN/100\" and never as a percentage. It ranks how much value we think is on the board, and it is not a win probability. The only win probability we publish is the market-implied one, taken from the book prices on the pick.",
+      "Confidence is a 0-100 selection score, shown as \"NN/100\" and never as a percentage. It ranks how much value we think is on the board, and it is not a win probability. On spreads and totals it is built from board signals — book agreement, market depth, line movement, game context — and does not include the market's probability of the outcome. On moneylines it is anchored on the market's win probability, labeled as such in the factor trail. The only win probability we publish as a probability is the market-implied one, taken from the book prices on the pick.",
     category: "METHODOLOGY",
     status: "APPROVED",
     evidence: "ENGINE_BEHAVIOR",
     visibility: "PUBLIC",
     lastReviewedAt: LAST_REVIEW,
     reviewNote:
-      "Corrected v5.2.8 Phase 2. The previous copy claimed a CONFIDENCE_DISPLAY_MODE that does not exist in platform-config.ts (verified by grep), and claimed numeric scores appear only once calibrated - pick-card.tsx renders NN/100 unconditionally. Both halves were unobservable claims on a PUBLIC surface. The copy now describes what the code does: a 0-100 score rendered NN/100, never a percent.",
+      "Corrected v5.2.8 Phase 2. The previous copy claimed a CONFIDENCE_DISPLAY_MODE that does not exist in platform-config.ts (verified by grep), and claimed numeric scores appear only once calibrated - pick-card.tsx renders NN/100 unconditionally. Both halves were unobservable claims on a PUBLIC surface. 2026-09-27 red team: Session A measured the market echo (confidence moved 7 points on an identical bet when marketFairProb moved). Owner authorized the rewire: the market-internal edge component and the cross-market bonus no longer feed the spread/total confidence sum (market-echo guard in scoring.ts, invariance tests in confidence-market-independence.test.ts); the moneyline path stays market-anchored by design and says so. Copy describes the post-rewire mechanics.",
   },
   {
     id: "methodology.risk-levels",
@@ -288,7 +288,7 @@ export const TRUST_CLAIMS: readonly TrustClaim[] = [
     evidence: "NONE",
     visibility: "INTERNAL",
     lastReviewedAt: LAST_REVIEW,
-    reviewNote: "Sports-betting slang for a 'guaranteed' pick (a lock, lock of the day). This library scanner uses word boundaries to avoid matching 'block', 'unlock', 'clock', but is deliberately CONSERVATIVE: it does NOT carve out the temporal idiom ('at lock', 'lock time'), so that copy is also flagged — phrase line-locking timing with the safeReplacement or 'line close' instead. (The CI trust-gate guardrail blanks the temporal idiom; the public-copy gate intentionally does not, since over-blocking is safe and under-blocking is not.) Claim forms ('a lock', 'it's a lock') fail as intended.",
+    reviewNote: "Sports-betting slang for a 'guaranteed' pick (a lock, lock of the day). This library scanner uses word boundaries to avoid matching 'block', 'unlock', 'clock', and blanks the same proper-noun contexts the CI trust-gate does (Drew Lock / D.Lock / server-side lock). It is deliberately CONSERVATIVE on the temporal idiom ('at lock', 'lock time') — that copy is still flagged; phrase line-locking timing with the safeReplacement or 'line close' instead. Callers scanning root memory docs may pass lockDigestExempt to skip dated @handle digest lines (trust-gate SCAN_FILES parity). Claim forms ('a lock', 'it's a lock') fail as intended.",
     safeReplacement: "high-confidence pick",
   },
   {
@@ -567,9 +567,50 @@ function slugForPositioningPhrase(phrase: string): string {
  *
  * Returns every hit; the caller decides how to report them.
  */
-export function scanForBannedPhrases(input: string): BannedPhraseHit[] {
+
+// Mirror scripts/guardrails/trust-gate.mjs LOCK_PROPER_NOUN_SAFE_CONTEXT:
+// Drew Lock / D.Lock are an NFL QB surname; "server-side lock" is mutex prose.
+// Blank-then-recheck so residual standalone "lock" slang still hits.
+//
+// BARE SURNAME, added 2026-10-01, kept in lock-step with trust-gate.mjs. The
+// Route-IQ digest in AGENTS.md is headed by a dated `@handle` line, but the
+// roster clause sits on a CONTINUATION line that carries the date and no
+// handle, so `isVerbatimSocialDigestLine` (which needs BOTH @handle and date on
+// the SAME line) does not exempt it. That is what turned `docs-public-copy-scan`
+// red on `af23ffc76` — "JSN — split spans two QBs (Lock started W2," — where
+// "Lock" is Drew Lock by surname. Fixed in the shared scanner rather than by
+// loosening the digest test, which would widen an exemption across every root
+// memory doc. The added patterns are anchored to SPORTS prose — `Lock` only
+// inside a "QB"/"QBs(" roster parenthetical or before a season-week verb — so
+// verified slang ("my LOCK of the day", "guaranteed profit", "beat the book", a
+// standalone "I picked that lock") still hits.
+const LOCK_PROPER_NOUN_SAFE_CONTEXT =
+  /\bDrew\s+Lock\b|\bD\.\s?Lock\b|\bserver[- ]side\s+lock\b|(?<=QBs?\s*\()\s*Lock\b|\bLock\s+(?:started|returned|was|is)\s+(?:in\s+|for\s+)?W\d/gi;
+
+/** Dated @handle social-digest lines (verbatim third-party data in memory docs). */
+export function isVerbatimSocialDigestLine(line: string): boolean {
+  return /@\w+/.test(line) && /\d{4}-\d{2}-\d{2}/.test(line);
+}
+
+/**
+ * Options for {@link scanForBannedPhrases}.
+ *
+ * `lockDigestExempt` mirrors trust-gate's SCAN_FILES digest exemption: on a
+ * dated @handle line, bare "Lock" in a quoted leaderboard is surname data, not
+ * betting slang. Only enable for root memory docs (AGENTS.md / README.md / …) —
+ * never for marketing surfaces.
+ */
+export interface ScanBannedPhrasesOptions {
+  readonly lockDigestExempt?: boolean;
+}
+
+export function scanForBannedPhrases(
+  input: string,
+  options: ScanBannedPhrasesOptions = {},
+): BannedPhraseHit[] {
   const hits: BannedPhraseHit[] = [];
   const lines = input.split(/\r?\n/);
+  const lockDigestExempt = options.lockDigestExempt === true;
 
   for (const claim of getBannedClaims()) {
     const phrase = claim.copy;
@@ -583,7 +624,20 @@ export function scanForBannedPhrases(input: string): BannedPhraseHit[] {
       : new RegExp(escapeRegex(normPhrase), "i");
 
     lines.forEach((line, idx) => {
-      if (pattern.test(normalizeForScan(line))) {
+      // Trust-gate parity: skip the lock slang ban on verbatim social digests
+      // when the caller scoped this scan to a root memory doc.
+      if (
+        claim.id === "banned.lock" &&
+        lockDigestExempt &&
+        isVerbatimSocialDigestLine(line)
+      ) {
+        return;
+      }
+      let subject = normalizeForScan(line);
+      if (claim.id === "banned.lock") {
+        subject = subject.replace(LOCK_PROPER_NOUN_SAFE_CONTEXT, " ");
+      }
+      if (pattern.test(subject)) {
         hits.push({
           phrase,
           claimId: claim.id,
@@ -593,6 +647,7 @@ export function scanForBannedPhrases(input: string): BannedPhraseHit[] {
       }
     });
   }
+
 
   for (const rawPhrase of FORBIDDEN_PHRASES) {
     if (CLAIM_COVERED_POSITIONING_PHRASES.has(rawPhrase.toLowerCase())) continue;

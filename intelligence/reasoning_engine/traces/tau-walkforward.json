@@ -1,0 +1,36 @@
+{
+  "protocol": "fit seasons < eval year, hamming on that year, opponent half",
+  "results": [
+    {
+      "eval_year": 2023,
+      "train": [
+        2022
+      ],
+      "n": 1973,
+      "delta_pp": 4.4602,
+      "pass": true
+    },
+    {
+      "eval_year": 2024,
+      "train": [
+        2022,
+        2023
+      ],
+      "n": 1974,
+      "delta_pp": 8.308,
+      "pass": true
+    },
+    {
+      "eval_year": 2025,
+      "train": [
+        2022,
+        2023,
+        2024
+      ],
+      "n": 2014,
+      "delta_pp": 14.2006,
+      "pass": true
+    }
+  ],
+  "served_table_replaced": false
+}

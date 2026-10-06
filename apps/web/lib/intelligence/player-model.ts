@@ -19,7 +19,7 @@
  * point projection).
  */
 
-import { assertIngestible, decodeDatasetText, fetchWithFailover, nflverseUrl, parseCsv, withMirrors } from "@sports/data-ingestion";
+import { assertIngestible, decodeDatasetText, fetchWithFailover, mergePlayerStatsWeekCurrency, nflverseUrl, parseCsv, withMirrors } from "@sports/data-ingestion";
 import { latestNflverseInspectionSeason } from "@/lib/trends/nflverse-readiness";
 import { percentileRanks } from "./qb-consensus";
 
@@ -224,11 +224,37 @@ export async function loadPlayerModel({
     // cache:no-store — these assets are multi-MB and refresh weekly; they must
     // never enter Next's data cache (>2MB items error and aren't cached anyway).
     const { response } = await fetchWithFailover(withMirrors(url), fetcher, { timeoutMs, init: { cache: "no-store" } });
-    const { records } = parseCsv(await decodeDatasetText(response));
+    const { header, records } = parseCsv(await decodeDatasetText(response));
     if (records.length === 0) throw new Error("empty player_stats_week");
-    const hasSeason = records.some((r) => r["season"] === String(season) && r["season_type"] === "REG");
-    const activeSeason = hasSeason ? season : records.reduce((m, r) => Math.max(m, num(r["season"])), 0);
-    const { profiles, throughWeek } = buildPlayerModel(records, activeSeason);
+
+    // CURRENCY BACKFILL. The combined `player_stats.csv.gz` asset LAGS: measured
+    // 2026-09-28 it ends at season 2024, with no 2025 and no 2026, while the
+    // per-season assets carry all three. `packages/data-ingestion` already solves
+    // this for its own callers via `mergePlayerStatsWeekCurrency`, and its tests
+    // pin the semantics (offense only, REG/POST only, best-effort per season).
+    // This web loader was NOT calling it, so it silently fell through to
+    // `activeSeason = 2024` and the fantasy graded pool was two seasons stale
+    // while reporting status "live". Reusing the shared merge rather than
+    // re-implementing it keeps one definition of "current" in the codebase.
+    const currency = await mergePlayerStatsWeekCurrency(
+      { header, records },
+      season,
+      async (perSeasonUrl) => {
+        const r = await fetchWithFailover(withMirrors(perSeasonUrl), fetcher, {
+          timeoutMs,
+          init: { cache: "no-store" },
+        });
+        return decodeDatasetText(r.response);
+      },
+    );
+    const mergedRecords = currency.records;
+    if (mergedRecords.length === 0) throw new Error("empty player_stats_week after currency merge");
+
+    const hasSeason = mergedRecords.some((r) => r["season"] === String(season) && r["season_type"] === "REG");
+    const activeSeason = hasSeason
+      ? season
+      : mergedRecords.reduce((m, r) => Math.max(m, num(r["season"])), 0);
+    const { profiles, throughWeek } = buildPlayerModel(mergedRecords, activeSeason);
     return {
       generatedAt: new Date().toISOString(),
       status: "live",

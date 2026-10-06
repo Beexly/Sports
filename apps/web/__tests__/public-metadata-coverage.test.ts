@@ -31,11 +31,24 @@ function isRedirectStub(file: string): boolean {
   return /from\s+["']next\/navigation["']/.test(src) && /\bredirect\(/.test(src);
 }
 
+/**
+ * A notFound-only stub (e.g. /intelligence/reconstruction, permanently dark per
+ * the NGS internal-only doctrine) 404s unconditionally and renders no content
+ * to describe — same exemption rationale as redirect stubs.
+ */
+function isNotFoundStub(file: string): boolean {
+  const src = readFileSync(file, "utf8");
+  return (
+    /from\s+["']next\/navigation["']/.test(src) && /\bnotFound\(/.test(src)
+  );
+}
+
 const publicPages = findPageFiles(appDir).filter(
   (f) =>
     f !== HOMEPAGE &&
     !EXEMPT.some((re) => re.test(f.replace(/\\/g, "/"))) &&
-    !isRedirectStub(f)
+    !isRedirectStub(f) &&
+    !isNotFoundStub(f)
 );
 
 describe("public route metadata coverage", () => {

@@ -1,0 +1,229 @@
+{
+  "schemaVersion": 2,
+  "generatedFrom": "LIVE Neon picks table (4,030 rows)",
+  "generatedAt": "2026-09-25T05:45:00.371Z",
+  "overall": {
+    "n_graded": 3263,
+    "wins": 1782,
+    "losses": 1481,
+    "base_rate": 0.5461,
+    "note": "Live DB supersedes settled-picks.jsonl. Brier from proof receipts modelProb is unavailable (0 rows)."
+  },
+  "confidence_recalibration": {
+    "50": {
+      "statedConfidence": 50,
+      "empiricalPWin": 0.5193,
+      "n": 1063,
+      "wins": 552,
+      "losses": 511,
+      "recalibratedConfidence": 51.9
+    },
+    "60": {
+      "statedConfidence": 60,
+      "empiricalPWin": 0.5632,
+      "n": 1257,
+      "wins": 708,
+      "losses": 549,
+      "recalibratedConfidence": 56.3
+    },
+    "70": {
+      "statedConfidence": 70,
+      "empiricalPWin": 0.5656,
+      "n": 640,
+      "wins": 362,
+      "losses": 278,
+      "recalibratedConfidence": 56.6
+    },
+    "80": {
+      "statedConfidence": 80,
+      "empiricalPWin": 0.5126,
+      "n": 238,
+      "wins": 122,
+      "losses": 116,
+      "recalibratedConfidence": 51.3
+    },
+    "90": {
+      "statedConfidence": 90,
+      "empiricalPWin": 0.5294,
+      "n": 51,
+      "wins": 27,
+      "losses": 24,
+      "recalibratedConfidence": 52.9
+    }
+  },
+  "signal_weights": {
+    "by_pick_type": {
+      "TOTAL": {
+        "winRate": 0.4878,
+        "n": 1025,
+        "wins": 500,
+        "losses": 525,
+        "signalWeight": 0.8932
+      },
+      "MONEYLINE": {
+        "winRate": 0.6661,
+        "n": 1162,
+        "wins": 774,
+        "losses": 388,
+        "signalWeight": 1.2197
+      },
+      "SPREAD": {
+        "winRate": 0.4721,
+        "n": 1076,
+        "wins": 508,
+        "losses": 568,
+        "signalWeight": 0.8645
+      }
+    },
+    "by_sport": {
+      "MLB": {
+        "winRate": 0.5245,
+        "n": 2124,
+        "wins": 1114,
+        "losses": 1010,
+        "signalWeight": 0.9604
+      },
+      "NCAAF": {
+        "winRate": 0.6501,
+        "n": 663,
+        "wins": 431,
+        "losses": 232,
+        "signalWeight": 1.1903
+      },
+      "MLS": {
+        "winRate": 0.5196,
+        "n": 306,
+        "wins": 159,
+        "losses": 147,
+        "signalWeight": 0.9514
+      },
+      "NFL": {
+        "winRate": 0.4774,
+        "n": 155,
+        "wins": 74,
+        "losses": 81,
+        "signalWeight": 0.8742
+      }
+    },
+    "by_model_version": {
+      "v5.2.7": {
+        "winRate": 0.5676,
+        "n": 1945,
+        "wins": 1104,
+        "losses": 841,
+        "signalWeight": 1.0393
+      },
+      "v5.1.0": {
+        "winRate": 0.5171,
+        "n": 586,
+        "wins": 303,
+        "losses": 283,
+        "signalWeight": 0.9468
+      },
+      "v5.0.0": {
+        "winRate": 0.4942,
+        "n": 431,
+        "wins": 213,
+        "losses": 218,
+        "signalWeight": 0.9049
+      },
+      "v5.2.6": {
+        "winRate": 0.5421,
+        "n": 297,
+        "wins": 161,
+        "losses": 136,
+        "signalWeight": 0.9926
+      }
+    },
+    "by_grade": {
+      "LEAN": {
+        "winRate": 0.5348,
+        "n": 2386,
+        "wins": 1276,
+        "losses": 1110,
+        "signalWeight": 0.9792
+      },
+      "SOLID_PLAY": {
+        "winRate": 0.5831,
+        "n": 650,
+        "wins": 379,
+        "losses": 271,
+        "signalWeight": 1.0677
+      },
+      "STRONG_PLAY": {
+        "winRate": 0.6108,
+        "n": 167,
+        "wins": 102,
+        "losses": 65,
+        "signalWeight": 1.1184
+      },
+      "ELITE_PLAY": {
+        "winRate": 0.4167,
+        "n": 60,
+        "wins": 25,
+        "losses": 35,
+        "signalWeight": 0.763
+      }
+    }
+  },
+  "publish_actions": [
+    {
+      "dimension": "pickType",
+      "value": "MONEYLINE",
+      "winRate": 0.6661,
+      "n": 1162,
+      "action": "boost-shadow-priority",
+      "reason": "win_rate 0.666 above 0.58 on n=1162 (live)"
+    },
+    {
+      "dimension": "pickType",
+      "value": "SPREAD",
+      "winRate": 0.4721,
+      "n": 1076,
+      "action": "suppress-or-shrink",
+      "reason": "win_rate 0.472 below 0.48 on n=1076 (live)"
+    },
+    {
+      "dimension": "sport",
+      "value": "NCAAF",
+      "winRate": 0.6501,
+      "n": 663,
+      "action": "boost-shadow-priority",
+      "reason": "win_rate 0.650 above 0.58 on n=663 (live)"
+    },
+    {
+      "dimension": "sport",
+      "value": "NFL",
+      "winRate": 0.4774,
+      "n": 155,
+      "action": "suppress-or-shrink",
+      "reason": "win_rate 0.477 below 0.48 on n=155 (live)"
+    },
+    {
+      "dimension": "grade",
+      "value": "SOLID_PLAY",
+      "winRate": 0.5831,
+      "n": 650,
+      "action": "boost-shadow-priority",
+      "reason": "win_rate 0.583 above 0.58 on n=650 (live)"
+    },
+    {
+      "dimension": "grade",
+      "value": "STRONG_PLAY",
+      "winRate": 0.6108,
+      "n": 167,
+      "action": "boost-shadow-priority",
+      "reason": "win_rate 0.611 above 0.58 on n=167 (live)"
+    }
+  ],
+  "signal_coverage_gaps": {
+    "hadInjurySignal": 0,
+    "hadWeatherSignal": 0,
+    "hadNgsSignal": 0,
+    "hadRatingsSignal": 0,
+    "hadPlayerSignal": 0,
+    "hadPaceSignal": 0,
+    "hadOfficialsSignal": 0,
+    "note": "These signals exist in the DB (injuries=6501, next_gen_stats=2718) but are NEVER attached to picks. Wire them."
+  }
+}

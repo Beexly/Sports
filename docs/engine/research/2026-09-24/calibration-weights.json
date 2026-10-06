@@ -1,0 +1,305 @@
+{
+  "schemaVersion": 1,
+  "generatedFrom": "settled-picks.jsonl (3323 rows, 2826 W/L graded)",
+  "sourcePath": "C:\\Users\\Garrett\\Sports-flash-0918\\reports\\venn-stratified\\settled-picks.jsonl",
+  "generatedAt": "2026-09-25T05:30:00Z",
+  "overall": {
+    "n_graded": 2826,
+    "wins": 1541,
+    "losses": 1285,
+    "base_rate": 0.5453,
+    "brier_stated": 0.2675,
+    "ece_stated": 0.2339,
+    "brier_floor": 0.22,
+    "ece_green": 0.04,
+    "note": "Stated confidence is ANTI-calibrated (higher conf \u2192 lower win%). Recalibrate before any publish."
+  },
+  "confidence_recalibration": {
+    "50": {
+      "stated_confidence": 50,
+      "empirical_p_win": 0.5171,
+      "n": 936,
+      "wins": 484,
+      "losses": 452,
+      "recalibrated_confidence": 51.7
+    },
+    "60": {
+      "stated_confidence": 60,
+      "empirical_p_win": 0.5585,
+      "n": 1042,
+      "wins": 582,
+      "losses": 460,
+      "recalibrated_confidence": 55.9
+    },
+    "70": {
+      "stated_confidence": 70,
+      "empirical_p_win": 0.5761,
+      "n": 578,
+      "wins": 333,
+      "losses": 245,
+      "recalibrated_confidence": 57.6
+    },
+    "80": {
+      "stated_confidence": 80,
+      "empirical_p_win": 0.5,
+      "n": 208,
+      "wins": 104,
+      "losses": 104,
+      "recalibrated_confidence": 50.0
+    },
+    "90": {
+      "stated_confidence": 90,
+      "empirical_p_win": 0.551,
+      "n": 49,
+      "wins": 27,
+      "losses": 22,
+      "recalibrated_confidence": 55.1
+    }
+  },
+  "signal_weights": {
+    "by_sport": {
+      "baseball_mlb": {
+        "win_rate": 0.5221,
+        "n": 1925,
+        "wins": 1005,
+        "losses": 920,
+        "signal_weight": 0.9574
+      },
+      "soccer_usa_mls": {
+        "win_rate": 0.5246,
+        "n": 284,
+        "wins": 149,
+        "losses": 135,
+        "signal_weight": 0.9621
+      },
+      "americanfootball_nfl": {
+        "win_rate": 0.5135,
+        "n": 111,
+        "wins": 57,
+        "losses": 54,
+        "signal_weight": 0.9417
+      },
+      "americanfootball_ncaaf": {
+        "win_rate": 0.664,
+        "n": 491,
+        "wins": 326,
+        "losses": 165,
+        "signal_weight": 1.2176
+      }
+    },
+    "by_pick_type": {
+      "TOTAL": {
+        "win_rate": 0.4846,
+        "n": 844,
+        "wins": 409,
+        "losses": 435,
+        "signal_weight": 0.8887
+      },
+      "SPREAD": {
+        "win_rate": 0.4697,
+        "n": 941,
+        "wins": 442,
+        "losses": 499,
+        "signal_weight": 0.8614
+      },
+      "MONEYLINE": {
+        "win_rate": 0.6628,
+        "n": 1041,
+        "wins": 690,
+        "losses": 351,
+        "signal_weight": 1.2155
+      }
+    },
+    "by_model_version": {
+      "v5.0.0": {
+        "win_rate": 0.4942,
+        "n": 431,
+        "wins": 213,
+        "losses": 218,
+        "signal_weight": 0.9063
+      },
+      "v5.1.0": {
+        "win_rate": 0.5171,
+        "n": 586,
+        "wins": 303,
+        "losses": 283,
+        "signal_weight": 0.9482
+      },
+      "v5.2.6": {
+        "win_rate": 0.5421,
+        "n": 297,
+        "wins": 161,
+        "losses": 136,
+        "signal_weight": 0.9941
+      },
+      "v5.2.7": {
+        "win_rate": 0.5723,
+        "n": 1508,
+        "wins": 863,
+        "losses": 645,
+        "signal_weight": 1.0495
+      }
+    },
+    "by_grade": {
+      "LEAN": {
+        "win_rate": 0.5295,
+        "n": 1998,
+        "wins": 1058,
+        "losses": 940,
+        "signal_weight": 0.9711
+      },
+      "ELITE_PLAY": {
+        "win_rate": 0.431,
+        "n": 58,
+        "wins": 25,
+        "losses": 33,
+        "signal_weight": 0.7905
+      },
+      "STRONG_PLAY": {
+        "win_rate": 0.6291,
+        "n": 151,
+        "wins": 95,
+        "losses": 56,
+        "signal_weight": 1.1537
+      },
+      "SOLID_PLAY": {
+        "win_rate": 0.5864,
+        "n": 619,
+        "wins": 363,
+        "losses": 256,
+        "signal_weight": 1.0754
+      }
+    },
+    "by_tier": {
+      "FREE": {
+        "win_rate": 0.5389,
+        "n": 1978,
+        "wins": 1066,
+        "losses": 912,
+        "signal_weight": 0.9883
+      },
+      "PREMIUM": {
+        "win_rate": 0.5601,
+        "n": 848,
+        "wins": 475,
+        "losses": 373,
+        "signal_weight": 1.0272
+      }
+    },
+    "by_sport_pick_type": {
+      "baseball_mlb|TOTAL": {
+        "win_rate": 0.4707,
+        "n": 597,
+        "wins": 281,
+        "losses": 316,
+        "signal_weight": 0.8632
+      },
+      "baseball_mlb|SPREAD": {
+        "win_rate": 0.4508,
+        "n": 630,
+        "wins": 284,
+        "losses": 346,
+        "signal_weight": 0.8267
+      },
+      "baseball_mlb|MONEYLINE": {
+        "win_rate": 0.6304,
+        "n": 698,
+        "wins": 440,
+        "losses": 258,
+        "signal_weight": 1.156
+      },
+      "soccer_usa_mls|SPREAD": {
+        "win_rate": 0.4321,
+        "n": 81,
+        "wins": 35,
+        "losses": 46,
+        "signal_weight": 0.7924
+      },
+      "soccer_usa_mls|TOTAL": {
+        "win_rate": 0.5352,
+        "n": 71,
+        "wins": 38,
+        "losses": 33,
+        "signal_weight": 0.9815
+      },
+      "soccer_usa_mls|MONEYLINE": {
+        "win_rate": 0.5758,
+        "n": 132,
+        "wins": 76,
+        "losses": 56,
+        "signal_weight": 1.0559
+      },
+      "americanfootball_nfl|MONEYLINE": {
+        "win_rate": 0.6346,
+        "n": 52,
+        "wins": 33,
+        "losses": 19,
+        "signal_weight": 1.1638
+      },
+      "americanfootball_ncaaf|TOTAL": {
+        "win_rate": 0.5357,
+        "n": 140,
+        "wins": 75,
+        "losses": 65,
+        "signal_weight": 0.9824
+      },
+      "americanfootball_ncaaf|SPREAD": {
+        "win_rate": 0.5699,
+        "n": 193,
+        "wins": 110,
+        "losses": 83,
+        "signal_weight": 1.0452
+      },
+      "americanfootball_ncaaf|MONEYLINE": {
+        "win_rate": 0.8924,
+        "n": 158,
+        "wins": 141,
+        "losses": 17,
+        "signal_weight": 1.5
+      }
+    }
+  },
+  "publish_actions": [
+    {
+      "dimension": "sport",
+      "value": "americanfootball_ncaaf",
+      "win_rate": 0.664,
+      "n": 491,
+      "action": "boost-shadow-priority",
+      "reason": "win_rate 0.664 above 0.58 on n=491"
+    },
+    {
+      "dimension": "pickType",
+      "value": "MONEYLINE",
+      "win_rate": 0.6628,
+      "n": 1041,
+      "action": "boost-shadow-priority",
+      "reason": "win_rate 0.663 above 0.58 on n=1041"
+    },
+    {
+      "dimension": "grade",
+      "value": "ELITE_PLAY",
+      "win_rate": 0.431,
+      "n": 58,
+      "action": "suppress-or-shrink",
+      "reason": "win_rate 0.431 below 0.45 floor on n=58"
+    },
+    {
+      "dimension": "grade",
+      "value": "STRONG_PLAY",
+      "win_rate": 0.6291,
+      "n": 151,
+      "action": "boost-shadow-priority",
+      "reason": "win_rate 0.629 above 0.58 on n=151"
+    },
+    {
+      "dimension": "grade",
+      "value": "SOLID_PLAY",
+      "win_rate": 0.5864,
+      "n": 619,
+      "action": "boost-shadow-priority",
+      "reason": "win_rate 0.586 above 0.58 on n=619"
+    }
+  ],
+  "calibration_fn": "calibrated_p(stated_conf) = empirical win-rate of stated_conf's 10-pt bin; linear fallback 0.42+0.001*conf"
+}

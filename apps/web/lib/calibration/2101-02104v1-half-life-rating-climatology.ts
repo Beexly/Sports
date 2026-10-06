@@ -38,8 +38,8 @@ export function halfLifeWeightedRate(
   let ws = 0;
   let wt = 0;
   for (let i = 0; i < successes.length; i++) {
-    ws += w[i] * successes[i];
-    wt += w[i] * trials[i];
+    ws += w[i]! * successes[i]!;
+    wt += w[i]! * trials[i]!;
   }
   return wt > 0 ? ws / wt : 0.5;
 }
@@ -54,8 +54,8 @@ function meanIgnoranceLocal(probs: readonly number[], ys: readonly number[]): nu
   const n = probs.length;
   let s = 0;
   for (let i = 0; i < n; i++) {
-    const q = Math.min(Math.max(probs[i], eps), 1 - eps);
-    s += -(ys[i] * Math.log2(q) + (1 - ys[i]) * Math.log2(1 - q));
+    const q = Math.min(Math.max(probs[i]!, eps), 1 - eps);
+    s += -(ys[i]! * Math.log2(q) + (1 - ys[i]!) * Math.log2(1 - q));
   }
   return s / Math.max(n, 1);
 }
@@ -73,7 +73,7 @@ export function fitBlendAlpha(
   let best = { alpha: 1, ignorance: Infinity };
   for (let g = 0; g < nGrid; g++) {
     const alpha = g / (nGrid - 1);
-    const blended = pModel.map((p, i) => climatologyBlend(p, pClim[i], alpha));
+    const blended = pModel.map((p, i) => climatologyBlend(p, pClim[i]!, alpha));
     const ign = meanIgnoranceLocal(blended, ys);
     if (ign < best.ignorance) best = { alpha, ignorance: ign };
   }
@@ -105,7 +105,7 @@ export function sweepHalfLife(
   ys: readonly number[],
   ps: readonly number[],
 ): { halfLife: number; ignorance: number } {
-  let best = { halfLife: HALF_LIFE_SWEEP[0], ignorance: Infinity };
+  let best = { halfLife: HALF_LIFE_SWEEP[0]!, ignorance: Infinity };
   for (const h of HALF_LIFE_SWEEP) {
     void h;
     // The sweep is over the rating half-life; ignorance is evaluated on the

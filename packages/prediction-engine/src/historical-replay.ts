@@ -391,8 +391,15 @@ export function settleHistoricalPick(
 
   const { clvValue, clvVerdict } = gradeHistoricalClv(pick, homeTeam, awayTeam);
 
-  const entryOdds =
-    pick.entryPrice ?? (pick.pickType === "MONEYLINE" ? Math.round(pick.line) : STD_VIG_PRICE);
+  // No fallback. The old chain minted `Math.round(pick.line)` as ML entry odds
+  // — a LINE used as a PRICE, the exact shape that poisoned the 199 frozen
+  // receipt rows (launch audit 2026-09-08) — and substituted a synthetic -110
+  // for spread/total picks with no quoted price. A pick without an entry price
+  // has no entry odds: the field is `number | null` and null is the honest
+  // value. Downstream write paths gate on isPlausibleEntryOdds; a null here
+  // means the CLV graders below return null too, instead of grading against a
+  // price no book ever offered.
+  const entryOdds = pick.entryPrice ?? null;
 
   return {
     gameKey: facts.gameKey,
@@ -439,8 +446,12 @@ function gradeHistoricalClv(
     return { clvValue: r.clvPoints, clvVerdict: r.verdict };
   }
   if (pick.pickType === "MONEYLINE") {
-    const price = pick.entryPrice ?? Math.round(pick.line);
-    if (!Number.isFinite(price) || price === 0) return { clvValue: null, clvVerdict: null };
+    // No line-as-odds fallback (see the entryOdds note above): a pick with no
+    // entry price has no CLV, not a CLV against a fabricated price.
+    const price = pick.entryPrice;
+    if (price === null || price === undefined || !Number.isFinite(price) || price === 0) {
+      return { clvValue: null, clvVerdict: null };
+    }
     const r = computeMoneylineClv(price, price);
     return { clvValue: r.clvProbability, clvVerdict: r.verdict };
   }

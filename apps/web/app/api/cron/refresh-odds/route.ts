@@ -68,8 +68,11 @@ export async function GET(request: Request) {
   const rundownKey = resolveRundownApiKey();
   if (!apiKey && !rundownKey) {
     // Free mode: no quote key. Still try signal slate so board can open without books.
-    const { generateSignalSlate } = await import("@sports/ingestion-pipeline");
-    const signals = await generateSignalSlate({ logPrefix: "[cron:refresh-odds:signal-only]" });
+    const { generateSignalSlate, slateAssociationTrace } = await import("@sports/ingestion-pipeline");
+    const signals = await generateSignalSlate({
+      logPrefix: "[cron:refresh-odds:signal-only]",
+      trace: await slateAssociationTrace(),
+    });
     return NextResponse.json({
       ok: true,
       skipped: "no-odds-key",
@@ -119,8 +122,11 @@ export async function GET(request: Request) {
   // Autonomous board fill: independent signals in same tick (no founder cron wait).
   let signalFill: Awaited<ReturnType<typeof import("@sports/ingestion-pipeline").generateSignalSlate>> | null = null;
   try {
-    const { generateSignalSlate } = await import("@sports/ingestion-pipeline");
-    signalFill = await generateSignalSlate({ logPrefix: "[cron:refresh-odds:signal]" });
+    const { generateSignalSlate, slateAssociationTrace } = await import("@sports/ingestion-pipeline");
+    signalFill = await generateSignalSlate({
+      logPrefix: "[cron:refresh-odds:signal]",
+      trace: await slateAssociationTrace(),
+    });
   } catch (sigErr) {
     console.warn(
       `[cron:refresh-odds] signal slate failed: ${sigErr instanceof Error ? sigErr.message : sigErr}`,

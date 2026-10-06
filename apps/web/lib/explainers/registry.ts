@@ -65,7 +65,7 @@ export const PAGE_EXPLAINERS: readonly PageExplainer[] = [
     durationLabel: "0:50",
     intro: "One lab, every player, every signal. Here's how to make it yours.",
     beats: [
-      { tag: "Filter", body: "Use the lenses to focus. Opportunity, snaps, Next Gen, DFS value. Same data, the angle you care about right now." },
+      { tag: "Filter", body: "Use the lenses to focus. Opportunity, snaps, DFS value. Same data, the angle you care about right now." },
       { tag: "Sort", body: "Tap any column to rank by it. Search by name, team, or position to cut straight to who you're weighing." },
       { tag: "Expand", body: "Click a row to open the read: the trend, the plain-English edge, and where the number came from." },
       { tag: "Edge Signals", body: "Want the distilled buy/sell? The Edge view turns the advanced stats into one tradeable read." },

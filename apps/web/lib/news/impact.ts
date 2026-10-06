@@ -35,7 +35,10 @@ export type SignalType =
   | "coach-report";
 
 /** Base fantasy magnitude (−100..100) and how fast it decays (half-life, minutes). */
-const SIGNAL: Record<SignalType, { fantasy: number; market: number; halfLife: number; label: string }> = {
+export const SIGNAL_MAGNITUDES: Record<
+  SignalType,
+  { fantasy: number; market: number; halfLife: number; label: string }
+> = {
   "injury-out": { fantasy: -88, market: -55, halfLife: 90, label: "Ruled out" },
   "injury-return": { fantasy: 64, market: 40, halfLife: 120, label: "Returning" },
   "role-up": { fantasy: 52, market: 30, halfLife: 240, label: "Role up" },
@@ -73,7 +76,7 @@ export type ImpactRead = {
 
 /** Exponential decay by the signal's half-life. */
 function freshnessFor(signal: SignalType, minutesAgo: number): number {
-  const { halfLife } = SIGNAL[signal];
+  const { halfLife } = SIGNAL_MAGNITUDES[signal];
   return Math.pow(0.5, Math.max(0, minutesAgo) / halfLife);
 }
 
@@ -107,14 +110,14 @@ function actionFor(item: NewsItem, fantasyDelta: number, reliability: number): s
 export function readImpact(item: NewsItem): ImpactRead {
   const reliability = TIER_WEIGHT[item.tier];
   const freshness = freshnessFor(item.signal, item.minutesAgo);
-  const base = SIGNAL[item.signal];
+  const base = SIGNAL_MAGNITUDES[item.signal];
   const fantasyDelta = Math.round(base.fantasy * reliability);
   const marketDelta = Math.round(base.market * reliability);
   const urgency = Math.round(Math.abs(base.fantasy) * reliability * freshness);
   return { item, reliability, freshness, fantasyDelta, marketDelta, urgency, action: actionFor(item, fantasyDelta, reliability) };
 }
 
-export const signalLabel = (s: SignalType): string => SIGNAL[s].label;
+export const signalLabel = (s: SignalType): string => SIGNAL_MAGNITUDES[s].label;
 
 /** Rank a wire of items by what deserves attention right now. */
 export function rankWire(items: readonly NewsItem[]): ImpactRead[] {

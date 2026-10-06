@@ -24,8 +24,14 @@ describe("splitConformalQuantile", () => {
     expect(splitConformalQuantile(values, 0.5)).toBe(3);
   });
 
-  it("returns 0 on empty input", () => {
-    expect(splitConformalQuantile([], 0.9)).toBe(0);
+  it("FAIL CLOSED when ceil((n+1)p) > n — +Infinity, never clamp to max", () => {
+    const values = [1, 2, 3, 4];
+    // p=0.9 → ceil(5*0.9)=5 > 4
+    expect(splitConformalQuantile(values, 0.9)).toBe(Number.POSITIVE_INFINITY);
+  });
+
+  it("returns +Infinity on empty input (cannot certify coverage)", () => {
+    expect(splitConformalQuantile([], 0.9)).toBe(Number.POSITIVE_INFINITY);
   });
 });
 
@@ -89,5 +95,24 @@ describe("conformalMarginSet", () => {
     expect(set.status).toBe("ok");
     expect(set.halfWidth).toBe(0);
     expect(set.integers).toEqual([2]);
+  });
+
+  it("fail-closed when quantile rank exceeds n — empty set, no fake band", () => {
+    // n=70 residuals all 0 → p=0.99: k=ceil(71*0.99)=71 > 70 → Inf
+    const calibration: MarginCalibrationRow[] = Array.from({ length: 70 }, () => ({
+      predictedMean: 1,
+      actualMargin: 1,
+      sportKey: "baseball_mlb",
+    }));
+    const set = conformalMarginSet({
+      predictedMean: 1,
+      sportKey: "baseball_mlb",
+      calibration,
+      alpha: 0.01,
+    });
+    expect(set.status).toBe("fail_closed_insufficient_n");
+    expect(set.qhatInfinite).toBe(true);
+    expect(set.integers).toEqual([]);
+    expect(marginSetCovers(set, 1)).toBe(false);
   });
 });

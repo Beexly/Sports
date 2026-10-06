@@ -3,7 +3,8 @@ import { loadPublicJournalEntries } from "@/lib/journal/load";
 import { SITE_URL } from "@/lib/seo/site-url";
 import { slugify } from "@/lib/seo/sports-jsonld";
 import { db } from "@sports/db";
-import { isContestsPublic, isStatsPublic } from "@/lib/launch/public-surface-gate";
+import { isStatsPublic } from "@/lib/launch/public-surface-gate";
+import { isPagePublic } from "@/lib/launch/internal-surface-fence";
 import { listEpisodes } from "@/lib/podcast/episodes";
 import { listIssues } from "@/lib/newsletter/issues";
 
@@ -148,15 +149,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
           { path: "/stats/expert-board", priority: 0.5, changeFrequency: "weekly" as const },
         ] as const)
       : []),
-    ...(isContestsPublic()
-      ? ([
-          { path: "/fantasy/contests", priority: 0.6, changeFrequency: "weekly" as const },
-          { path: "/contests", priority: 0.65, changeFrequency: "daily" as const },
-        ] as const)
-      : []),
   ];
 
-  const staticRoutes = routes.map(({ path, priority, changeFrequency }) => ({
+  // Internal surfaces are filtered here rather than deleted from ROUTES.
+  // Advertising a 404 in the sitemap tells a crawler the page exists and
+  // should be indexed, which is the opposite of what the doctrine needs. The
+  // route stays in ROUTES so re-opening a surface is a flag, not an edit.
+  const publicRoutes = routes.filter((r) => isPagePublic(r.path));
+
+  const staticRoutes = publicRoutes.map(({ path, priority, changeFrequency }) => ({
     url: `${baseUrl}${path}`,
     changeFrequency,
     priority,

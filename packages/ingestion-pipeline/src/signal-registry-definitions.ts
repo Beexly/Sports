@@ -56,6 +56,7 @@ import {
   evaluateContractMilestones,
   evaluateWr1OutRedistribution,
 } from "@sports/prediction-engine";
+import { EXTENDED_SIGNALS } from "./signal-registry-extensions.js";
 
 export const DEFAULT_KILL_LINE = {
   maxBrierScoreVsMarket: 0.250,
@@ -911,6 +912,7 @@ export const SIGNAL_REGISTRY: readonly SignalDefinition[] = [
   nflCircadianTravelFatigueSignal,
   nflContractMilestonesSignal,
   nflWr1OutRedistributionSignal,
+  ...EXTENDED_SIGNALS,
   ...BLOCKED_SIGNALS,
 ];
 

@@ -96,6 +96,13 @@ export {
   decodeDatasetText,
   fetchNflverseText,
   fetchNflverse,
+  fetchNflversePlayerStatsWeek,
+  // Exported 2026-09-28: the web player-model loader needs the SAME currency
+  // backfill the ingestion callers use, because the combined
+  // `player_stats.csv.gz` asset lags (measured: ends at season 2024 while the
+  // per-season assets carry 2025 and 2026). Two copies of this logic is how the
+  // web pool silently stayed two seasons stale while reporting status "live".
+  mergePlayerStatsWeekCurrency,
   type CsvTable,
   type NflverseDataset,
   type NflverseDatasetKey,
@@ -249,6 +256,10 @@ export {
   PREDEXON_SOURCE_ID,
   type PredExonKalshiMarket,
   type PredExonKalshiMarketsPage,
+  PREDEXON_PAID_TICK_PATH_PREFIX,
+  type PredExonKalshiTrade,
+  type PredExonKalshiTradesPage,
+  type PredExonKalshiOutcome,
 } from "./predexon-client.js";
 export { SharpApiClient, SharpApiError, isSharpApiIngestEnabled, SHARP_API_BASE, SHARP_API_SOURCE_ID } from "./sharp-api-client.js";
 export {
@@ -502,10 +513,12 @@ export {
   paidCallMutexKey,
   resetPaidCallReservationWarning,
   loadOddsCreditTruth,
+  loadOddsCreditTruthOutcome,
 } from "./odds-credit-ledger.js";
 export type {
   OddsCreditLedgerDb,
   OddsCreditLedgerRows,
+  OddsCreditTruthOutcome,
   OddsCreditLedgerTx,
   PaidCallMarker,
   ReservePaidCallSlotInput,
@@ -771,4 +784,21 @@ export {
   type SourceAtlasEntry,
   type SourceAtlasRegistryData,
 } from "./source-atlas-harvester.js";
+
+// Calibration weights — empirical P(WIN) recalibration + signal weights from 2,826 graded picks
+export {
+  CONFIDENCE_RECALIBRATION,
+  WEIGHT_BY_PICK_TYPE,
+  WEIGHT_BY_SPORT,
+  WEIGHT_BY_GRADE,
+  WEIGHT_BY_MODEL_VERSION,
+  PUBLISH_ACTIONS,
+  SIGNAL_COVERAGE_LIVE,
+  calibratedWinProb,
+  combinedSignalWeight,
+  shouldSuppress,
+  type ConfidenceRecalibration,
+  type SignalWeight,
+  type PublishAction,
+} from "./calibration-weights.js";
 

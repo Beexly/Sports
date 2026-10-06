@@ -33,16 +33,16 @@ export function weightedQuantile(
 ): number {
   const n = values.length;
   if (n === 0) return Number.POSITIVE_INFINITY;
-  const order = values.map((_, i) => i).sort((a, b) => values[a] - values[b]);
+  const order = values.map((_, i) => i).sort((a, b) => values[a]! - values[b]!);
   const wTotal = weights.reduce((a, b) => a + b, 0);
   if (wTotal <= 0) return Number.POSITIVE_INFINITY;
   const level = q * (1 + 1 / n);
   let cum = 0;
   for (const i of order) {
-    cum += weights[i] / wTotal;
-    if (cum >= level) return values[i];
+    cum += weights[i]! / wTotal;
+    if (cum >= level) return values[i]!;
   }
-  return values[order[order.length - 1]];
+  return values[order[order.length - 1]!]!;
 }
 
 /** Unweighted split-conformal interval around a point prediction. */

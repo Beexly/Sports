@@ -193,5 +193,24 @@ describe("Signals & Hierarchical Pooling Suite", () => {
       expect(pool.blendedEdge).toBeGreaterThan(0.02);
       expect(pool.calibratedWinProbability).toBeGreaterThan(0.50);
     });
+
+    it("does not treat a missing sample as 100 observations", () => {
+      const named = poolSignalsHierarchically(
+        [
+          { signalId: "named", family: "EFFICIENCY", estimatedEdge: 0.2, sampleSize: 100, isEligible: true },
+          { signalId: "other", family: "EFFICIENCY", estimatedEdge: -0.2, sampleSize: 100, isEligible: true },
+        ],
+        0.5,
+      );
+      const missing = poolSignalsHierarchically(
+        [
+          { signalId: "named", family: "EFFICIENCY", estimatedEdge: 0.2, sampleSize: 100, isEligible: true },
+          { signalId: "other", family: "EFFICIENCY", estimatedEdge: -0.2, isEligible: true },
+        ],
+        0.5,
+      );
+      expect(Math.abs(named.families.EFFICIENCY?.pooledEdge ?? 0)).toBeLessThan(0.02);
+      expect(missing.families.EFFICIENCY?.pooledEdge ?? 0).toBeGreaterThan(0.1);
+    });
   });
 });

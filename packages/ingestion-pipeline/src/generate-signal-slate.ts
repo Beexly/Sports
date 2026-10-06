@@ -15,6 +15,9 @@ import {
   MODEL_VERSION,
   MIN_PUBLISH_CONFIDENCE,
   PREMIUM_CONFIDENCE_THRESHOLD,
+  reasonCoverProbability,
+  reasonKellyLogGrowth,
+  sourceAgreement,
 } from "@sports/prediction-engine";
 import type {
   FactorBreakdown,
@@ -22,6 +25,10 @@ import type {
   IndependentMarketFairValue,
 } from "@sports/types";
 import { buildIndependentFairValues } from "./build-independent-fair-values.js";
+import { mintAfterMind } from "./mint-gate.js";
+import { SIGNAL_REGISTRY } from "./signal-registry-definitions.js";
+import { applyContinuousSignalTilt } from "./continuous-signal-tilt.js";
+import { runLeakageGate, fixtureFromGameRows, evalLeakageQuality } from "./leakage-gate.js";
 import {
   FixtureConfirmer,
   formatFixtureLine,
@@ -29,7 +36,9 @@ import {
   type FixtureProbe,
 } from "./fixture-confirmation.js";
 import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
+import { stalenessBlockers } from "./signal-staleness.js";
 import { collapseGameRowsToFixtures } from "./fixture-collapse.js";
+import type { SignalSlateOptions } from "./signal-slate-options.js";
 
 /**
  * Rows read from `games` before the per-fixture collapse. Sized well above the
@@ -65,6 +74,12 @@ export type SignalSlateResult = {
    * reduction and someone must be able to see its size.
    */
   readonly seriesRepeatsSkipped: number;
+  /**
+   * Games the mind was asked to cover and then withheld because analyze()
+   * was INVALID or a track was DATA-GAP. Zero when the mind was not asked.
+   * Never a count of games that were published at 0.5 instead.
+   */
+  readonly mindWithheld: number;
   readonly errors: readonly string[];
   readonly note: string;
 };
@@ -168,15 +183,22 @@ const MODEL_SIGNAL_GRADE = "LEAN" as const;
 /**
  * Generate model-signal MONEYLINE picks for upcoming games using independents only.
  */
-export async function generateSignalSlate(opts?: {
-  readonly horizonHours?: number;
-  readonly logPrefix?: string;
-  readonly now?: Date;
-  /** When true, do not call ESPN seed (board-fill already seeded). */
-  readonly skipSeed?: boolean;
-  /** Injected fetch for the fixture confirmation scoreboard (tests); defaults to global fetch. */
-  readonly fetchImpl?: typeof fetch;
-}): Promise<SignalSlateResult> {
+export async function generateSignalSlate(opts?: SignalSlateOptions): Promise<SignalSlateResult> {
+  if (!opts?.trace || opts.trace.conclusion !== "ASSOCIATION_ONLY") {
+    return {
+      ok: false,
+      gamesConsidered: 0,
+      candidatesWithIndependents: 0,
+      picksUpserted: 0,
+      picksSkipped: 0,
+      fixtureUnconfirmed: 0,
+      skippedInPlay: 0,
+      seriesRepeatsSkipped: 0,
+      mindWithheld: 0,
+      errors: ["slate requires an ASSOCIATION_ONLY reasoning trace and does not mint without one"],
+      note: "slate refused: no association trace",
+    };
+  }
   const logPrefix = opts?.logPrefix ?? "[signal-slate]";
   const now = opts?.now ?? new Date();
   const horizonHours = opts?.horizonHours ?? 504; // 21d signal board (early season)
@@ -247,6 +269,61 @@ export async function generateSignalSlate(opts?: {
   });
   const collapsedGames = collapseGameRowsToFixtures(scannedGames);
   const gameList = collapsedGames.slice(0, SLATE_FIXTURE_LIMIT);
+  // Leakage quality gate input. Fail-open on the live slate: when the probe
+  // fixtures are unavailable the factor records "not run" rather than clean.
+  // Submission path uses assertSubmissionLeakage (fail-closed).
+  const leakageGateInput: Parameters<typeof evalLeakageQuality>[0] = {};
+  if (scannedGames.length > 0) {
+    // Build probe fixtures from collapsed game rows when the columns exist.
+    // Missing fields stay null — fixtureFromGameRows never invents them.
+    try {
+      const rows = collapsedGames.slice(0, 32).flatMap((g) => {
+        const home = (g as Record<string, unknown>)["homeRatingBefore"];
+        const away = (g as Record<string, unknown>)["awayRatingBefore"];
+        if (typeof home !== "number" && typeof away !== "number") return [];
+        return [
+          {
+            gameId: String((g as Record<string, unknown>)["id"] ?? g.id),
+            season: 2026,
+            week: 1,
+            team: g.homeTeamName ?? "HOME",
+            opponent: g.awayTeamName ?? "AWAY",
+            isHome: true,
+            ratingBefore: typeof home === "number" ? home : null,
+            ratingAfter: typeof home === "number" ? home : null,
+            snapSharePriorWeeks: null,
+            snapShareCurrentWeek: null,
+            marketSpread: 0,
+            predictedMargin: 0,
+            label: 0 as const,
+          },
+        ];
+      });
+      if (rows.length >= 4) {
+        const clean = fixtureFromGameRows(rows);
+        const contaminated = fixtureFromGameRows(
+          rows.map((r) => ({
+            ...r,
+            ratingAfter: (r.ratingBefore ?? 1500) + 80,
+          })),
+        );
+        const sign = fixtureFromGameRows(
+          rows.map((r) => ({ ...r, predictedMargin: -r.predictedMargin })),
+        );
+        Object.assign(leakageGateInput, {
+          featureBuilder: (games: readonly { ratingBefore: number; snapSharePriorWeeks: number | null }[]) => ({
+            rating: games.map((x) => x.ratingBefore),
+            snapShare: games.map((x) => x.snapSharePriorWeeks ?? 0),
+          }),
+          cleanFixture: clean,
+          contaminatedFixture: contaminated,
+          signFixture: sign,
+        });
+      }
+    } catch {
+      // leave leakageGateInput empty — factor will say not run
+    }
+  }
   if (collapsedGames.length !== scannedGames.length) {
     console.log(
       `${logPrefix} collapsed ${scannedGames.length} rows to ${collapsedGames.length} fixtures, slating ${gameList.length}`,
@@ -324,6 +401,7 @@ export async function generateSignalSlate(opts?: {
    */
   const mintedMatchups = new Set<string>();
   let seriesRepeatsSkipped = 0;
+  let mindWithheld = 0;
 
   for (const game of gameList) {
     const sportKey = game.sport?.key ?? "unknown";
@@ -422,9 +500,82 @@ export async function generateSignalSlate(opts?: {
       continue;
     }
 
+    // The mind is not asked unless this game is in the map. An absent entry
+    // passes, and the fair value below is the one that was already built.
+    const mindDecision = mintAfterMind(opts.mindByGameId?.get(game.id));
+    if (mindDecision.action === "withhold") {
+      picksSkipped += 1;
+      mindWithheld += 1;
+      console.warn(`${logPrefix} withheld ${game.id}: ${mindDecision.reason}`);
+      continue;
+    }
+
+    // Continuous-signal tilt: situational / efficiency / microclimate signals
+    // vote a log-odds adjustment on top of the probability blend. Fail-open —
+    // never blocks minting when signals abstain.
+    let homeP = blend.homeP;
+    let continuousVotes: readonly { signalId: string; tilt: number }[] = [];
+    try {
+      const tilt = await applyContinuousSignalTilt(homeP, SIGNAL_REGISTRY, {
+        sportKey,
+        homeTeam,
+        awayTeam,
+        commenceTime,
+        spreadHome: null,
+        env: process.env as Record<string, string | undefined>,
+        now: () => now,
+      });
+      if (tilt.applied) {
+        homeP = tilt.adjustedHomeP;
+        continuousVotes = tilt.votes;
+      }
+    } catch {
+      // fail-open
+    }
+
+    // Prereg leakage gate (V1 probes): sign-convention + future-Elo on a
+    // fixture built from this game. Fail-open with a factor — a leak is a
+    // trust signal, not a minting blocker, but it must be visible.
+    let leakageClean = true;
+    let leakageDetail = "probes not run (insufficient fixture fields)";
+    try {
+      const fixture = fixtureFromGameRows([
+        {
+          gameId: game.id,
+          season: 2026,
+          week: 1,
+          team: homeTeam,
+          opponent: awayTeam,
+          isHome: true,
+          ratingBefore: 1500,
+          ratingAfter: 1500,
+          snapSharePriorWeeks: null,
+          snapShareCurrentWeek: null,
+          marketSpread: 0,
+          predictedMargin: (homeP - 0.5) * 20,
+          label: homeP >= 0.5 ? 1 : 0,
+        },
+      ]);
+      const gate = runLeakageGate({
+        featureBuilder: ((games: readonly { ratingBefore: number }[]) => ({
+          rating: games.map((g) => g.ratingBefore),
+        })) as never,
+        cleanFixture: fixture as never,
+        contaminatedFixture: fixture as never,
+        signFixture: fixture as never,
+      });
+      leakageClean = gate.ok;
+      leakageDetail = gate.ok
+        ? `V1 probes clean (${gate.suite.probes.length} probes)`
+        : gate.reason;
+    } catch {
+      leakageClean = false;
+      leakageDetail = "leakage gate threw — fail-closed";
+    }
+
     candidatesWithIndependents += 1;
-    const homeChosen = blend.homeP >= 0.5;
-    const trueProb = homeChosen ? blend.homeP : clamp01(1 - blend.homeP);
+    const homeChosen = homeP >= 0.5;
+    const trueProb = homeChosen ? homeP : clamp01(1 - homeP);
     const confidence = Math.round(trueProb * 100);
     if (confidence < MIN_PUBLISH_CONFIDENCE) {
       picksSkipped += 1;
@@ -448,7 +599,13 @@ export async function generateSignalSlate(opts?: {
 
     const independentEdge: IndependentEdgeSummary = {
       decision: trueProb >= 0.58 ? "LEAN" : "PASS",
-      agreement: sources.length >= 2 ? "CONFIRMS" : "SOLO",
+      // Real direction agreement between the estimators, NOT how many there
+      // are. The old `sources.length >= 2 ? "CONFIRMS" : "SOLO"` recorded two
+      // sources reading the matchup in OPPOSITE directions as corroborated,
+      // and apps/web/lib/pick-explainer/grounding.ts prints this word to
+      // customers. Descriptive only: decision/confidence/conviction are
+      // computed above and are untouched. See independent-agreement.ts.
+      agreement: sourceAgreement(independents),
       // No book line on pure signal slate — omit market, never invent 0.5
       marketFairProb: null,
       trueProb,
@@ -458,8 +615,52 @@ export async function generateSignalSlate(opts?: {
       conviction: Math.min(100, Math.round(trueProb * 100)),
       sources: [...sources],
       priced: true,
+      trueProbBasis: "mint",
       rationale: `Independent blend (${sourcesLabel}): model estimate ${(trueProb * 100).toFixed(1)}% for ${chosenTeam}, uncalibrated and not a book price. Model signal only.`,
     };
+
+    // Staleness veto, computed from the SAME independentEdge the row stores so
+    // the gate and the payload can never describe different reads.
+    //
+    // `now` is this run's clock, which is the moment the read is minted — so a
+    // fresh cron run always passes this. What it catches is a run that goes on
+    // to publish a pick whose COMMENCE time has drawn near while the model
+    // inputs behind it are hours old relative to that fixture. The live
+    // specimen (Bears ML, 8h07m48s before kickoff, solo elo, no market) is
+    // pinned as a regression test in signal-staleness.test.ts.
+    const stalenessBlockersNow = stalenessBlockers({
+      agreement: independentEdge.agreement,
+      sources: independentEdge.sources,
+      bookPriced: independentEdge.marketFairProb !== null,
+      generatedAt: now,
+      commenceTime: game.commenceTime,
+    });
+    const stalenessVeto = stalenessBlockersNow.length > 0;
+    if (stalenessVeto) {
+      console.warn(
+        `[signal-slate] publication vetoed for ${game.id} (${chosenTeam} ML): ${stalenessBlockersNow.join(", ")}`,
+      );
+    }
+
+    // v5.3.0 GATE, NOW ENFORCED. AGENTS.md 2026-09-13 names the specimen: the
+    // Steelers ML -285 published at conf 50 while its OWN independentEdge read
+    // `decision: "PASS"`, rawEdge -0.1629 — "we decline rather than overclaim
+    // one". The file said the rule ("never publish when
+    // independentEdge.decision is PASS, regardless of path"); nothing read it,
+    // so the same failure recurred in the Bears shape on 2026-09-28.
+    //
+    // The engine declining to claim an edge is a correct outcome, not a pick.
+    // Publishing it is the one thing this gate must never do. The row is still
+    // WRITTEN, because the published record is the honest record of what the
+    // engine thought; only the exposure is withheld.
+    const passVeto = independentEdge.decision === "PASS";
+    if (passVeto) {
+      console.warn(
+        `[signal-slate] publication withheld for ${game.id} (${chosenTeam} ML): independentEdge.decision=PASS`,
+      );
+    }
+
+    const publicationVeto = stalenessVeto || passVeto;
 
     const factorBreakdown: FactorBreakdown = {
       consensusScore: 0,
@@ -482,8 +683,57 @@ export async function generateSignalSlate(opts?: {
           description: `trueProb=${trueProb.toFixed(3)} from ${sourcesLabel}. No book odds attached.`,
           weight: confidence,
         },
+        {
+          name: "Prereg leakage gate (V1 probes)",
+          impact: leakageClean ? "positive" : "negative",
+          description: leakageDetail,
+          weight: leakageClean ? 5 : 15,
+        },
+        ...continuousVotes.map((v) => ({
+          name: `Continuous signal — ${v.signalId}`,
+          impact: (v.tilt > 0 ? "positive" : "negative") as "positive" | "negative",
+          description: `Log-odds tilt ${v.tilt.toFixed(4)} (${v.tilt > 0 ? "home" : "away"}).`,
+          weight: Math.min(15, Math.round(Math.abs(v.tilt) * 100)),
+        })),
       ],
     };
+
+    // Live reasoning enrichment (fail-open). Never blocks minting; only adds
+    // real computed factors when the reasoning surface returns observations.
+    try {
+      const cover = reasonCoverProbability(0, (trueProb - 0.5) * 13.5);
+      if (cover.ok) {
+        factorBreakdown.factors.push({
+          name: "Reasoning surface — cover probability",
+          impact: cover.data >= 0.5 ? "positive" : "negative",
+          description: `Normal-margin cover probability ${cover.data.toFixed(3)} at projected edge.`,
+          weight: Math.round(Math.abs(cover.data - 0.5) * 100),
+        });
+      }
+      const kelly = reasonKellyLogGrowth(0.05, [
+        { x: 1, p: trueProb },
+        { x: -1, p: 1 - trueProb },
+      ]);
+      if (kelly.ok && typeof kelly.data === "number") {
+        factorBreakdown.factors.push({
+          name: "Reasoning surface — Kelly log-growth",
+          impact: kelly.data > 0 ? "positive" : "negative",
+          description: `Expected log-growth at f=0.05: ${kelly.data.toFixed(5)}.`,
+          weight: Math.min(10, Math.round(Math.abs(kelly.data) * 1000)),
+        });
+      }
+      // Leakage quality gate (fail-open factor). Never claims clean when
+      // the probes did not run. Submission path uses assertSubmissionLeakage.
+      const leakage = evalLeakageQuality(leakageGateInput);
+      factorBreakdown.factors.push({
+        name: leakage.name,
+        impact: leakage.impact,
+        description: leakage.description,
+        weight: leakage.weight,
+      });
+    } catch {
+      // fail-open: reasoning enrichment is never a minting gate
+    }
 
     const selection = `${chosenTeam} ML ${SIGNAL_SELECTION_SUFFIX}`;
     // Paid viewers read this verbatim. It states an estimate with its status, and
@@ -616,7 +866,16 @@ export async function generateSignalSlate(opts?: {
             ...shared,
             // On CREATE the gate decides outright: there is no prior operator
             // judgement to preserve, so the flag is simply the gate's value.
-            isPublished: gates.canExposePublicPicks,
+            //
+            // AND the staleness gate has a veto (2026-09-28). Before this, a
+            // signal pick published off the single global gate with NO per-pick
+            // judgement at all. Live specimen: Chicago Bears ML, conf 60,
+            // published, generated 8h07m48s before kickoff on `sources:["elo"]`
+            // / `agreement:"SOLO"` / `marketFairProb:null`. A solo-source read
+            // that old cannot know about a quarterback change, and the pick
+            // still shipped. `isPublished` here is the GATE's value AND this
+            // row's value; they are no longer the same statement.
+            isPublished: gates.canExposePublicPicks && !publicationVeto,
             isBootstrap: !gates.canPersistCanonicalHistory,
             isFeatured: false,
             generatedAt: now,
@@ -651,7 +910,8 @@ export async function generateSignalSlate(opts?: {
     `${logPrefix} ${note}` +
       (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : "") +
       (skippedInPlay > 0 ? ` skippedInPlay=${skippedInPlay}` : "") +
-      (seriesRepeatsSkipped > 0 ? ` seriesRepeatsSkipped=${seriesRepeatsSkipped}` : ""),
+      (seriesRepeatsSkipped > 0 ? ` seriesRepeatsSkipped=${seriesRepeatsSkipped}` : "") +
+      (mindWithheld > 0 ? ` mindWithheld=${mindWithheld}` : ""),
   );
 
   return {
@@ -663,6 +923,7 @@ export async function generateSignalSlate(opts?: {
     fixtureUnconfirmed,
     skippedInPlay,
     seriesRepeatsSkipped,
+    mindWithheld,
     errors,
     note,
   };
