@@ -28,11 +28,6 @@ const FAIL_ON = new Set(["critical", "high"]);
  */
 const ACCEPTED = [
   {
-    package: "source-map-js",
-    reason: "source-map-js bump is blocked right now, tracked as known issue.",
-    reviewBy: "2027-01-15",
-  },
-  {
     package: "next",
     reason:
       "Fix requires next@16.3.0, a semver-major jump from the pinned 14.2.x line. " +
