@@ -20,6 +20,8 @@
  * owner: Mimo | bucket: MODEL | lane: experimental | verdict: ADAPT | doctrine: INFRA
  */
 
+import { gaussCopulaJoint as gaussCopulaJointIntegral } from "../markets/2106-05799v1-hybrid-ability-xgboost.js";
+
 export const ENABLED = false;
 
 /** Poisson PMF (log-space for stability). */
@@ -208,15 +210,10 @@ export function gaussCopulaSample(rand: () => number, rho: number, randnFn: () =
   return [normalCdf(z1), normalCdf(w2)];
 }
 
-/** Gaussian-copula joint CDF for binary-thresholded margins. */
+/**
+ * Direct-import name. The local Taylor term returned a negative number at
+ * p1 = p2 = 0.1, rho = -0.9. The only sound body is the markets integral.
+ */
 export function gaussCopulaJoint(p1: number, p2: number, rho: number): number {
-  // P(U1 <= p1, U2 <= p2) via bivariate normal CDF (Drezner-Wesolowsky approx)
-  const x = normalQuantile(p1);
-  const y = normalQuantile(p2);
-  const a = x;
-  const b = y;
-  const r = Math.min(0.999999, Math.max(-0.999999, rho));
-  // tetrachoric series (first-order is enough for the demo)
-  void a; void b;
-  return normalCdf(x) * normalCdf(y) + (r / (2 * Math.PI)) * Math.exp(-(x * x + y * y) / 2);
+  return gaussCopulaJointIntegral(p1, p2, rho);
 }

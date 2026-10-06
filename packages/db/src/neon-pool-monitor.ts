@@ -41,6 +41,21 @@ const counters: NeonPoolMonitorCounters = {
   lastOkAt: null,
 };
 
+/**
+ * `SELECT clock_timestamp()` returned zero rows.
+ *
+ * This is the silent-failure case: the stub Prisma client (`@sports/db` when
+ * DATABASE_URL is unset/sentinel) answers EVERY `$queryRaw` with `[]` instead
+ * of throwing, so the query "succeeded" in a few milliseconds against a database
+ * that does not exist. Recording that as a success gave a total outage
+ * `status: "ok"`, `error: null`, a refreshed `lastOkAt`, and a `successes`
+ * counter that climbed during the incident — the exact opposite of the truth.
+ * An unmeasured probe is a failed probe.
+ */
+const EMPTY_PROBE_ERROR =
+  "clock probe returned no rows: no database answered the query " +
+  "(stub Prisma client, or a pooler that silently dropped it)";
+
 export function getNeonPoolCounters(): Readonly<NeonPoolMonitorCounters> {
   return { ...counters };
 }
@@ -84,6 +99,31 @@ export async function probeNeonPool(
     const raw = rows?.[0]?.t;
     serverTime =
       raw instanceof Date ? raw.toISOString() : raw != null ? String(raw) : null;
+
+    // A query that resolved is not evidence that a database is there. Require
+    // the server clock before claiming the pool is healthy — otherwise the
+    // stub client (and any pooler that swallows a query) reports "ok" with no
+    // database, and the counters record the outage as a success.
+    if (serverTime === null) {
+      counters.failures += 1;
+      counters.lastLatencyMs = latencyMs;
+      counters.lastError = EMPTY_PROBE_ERROR;
+      // `lastOkAt` is deliberately left untouched: no successful probe happened.
+      return {
+        status: "down",
+        latencyMs,
+        error: EMPTY_PROBE_ERROR,
+        stubSuspected: true,
+        serverTime: null,
+        activity: {
+          totalBackends: null,
+          active: null,
+          idle: null,
+          waiting: null,
+        },
+        observedAt,
+      };
+    }
 
     counters.successes += 1;
     counters.lastLatencyMs = latencyMs;

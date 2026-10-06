@@ -323,7 +323,7 @@ export function evalClvNonInferiority(input: {
       ok: true,
       data: {
         pass: r.pass,
-        reason: r.reason,
+        reason: r.reason ?? "",
         z: Number(r.z.toFixed(6)),
         oneSidedP: Number(r.oneSidedP.toFixed(6)),
       },

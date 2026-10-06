@@ -273,5 +273,25 @@ describe("computeOpponentAdjustedEpa", () => {
       expect(tight.converged).toBe(true);
       expect(loose.iterations).toBeLessThanOrEqual(tight.iterations);
     });
+
+    it("converges on a balanced round robin of unequal teams", () => {
+      // Each team plays the other two twice. The opponent-weight matrix is
+      // doubly stochastic. Without pinning the additive gauge, under-relaxation
+      // leaves that mode uncontracted and 1000 iterations stay short of 1e-4.
+      const games: TeamGameEpaSplit[] = [
+        ...matchup("A", "B", { db: 0.2, rush: 0.02 }, { db: 0.05, rush: -0.01 }),
+        ...matchup("A", "C", { db: 0.24, rush: 0.03 }, { db: 0.02, rush: -0.03 }),
+        ...matchup("B", "C", { db: 0.07, rush: 0.0 }, { db: 0.0, rush: -0.05 }),
+        ...matchup("A", "B", { db: 0.18, rush: 0.01 }, { db: 0.04, rush: -0.02 }),
+        ...matchup("A", "C", { db: 0.22, rush: 0.02 }, { db: 0.01, rush: -0.04 }),
+        ...matchup("B", "C", { db: 0.06, rush: -0.01 }, { db: 0.03, rush: -0.02 }),
+      ];
+      const solve = computeOpponentAdjustedEpa(games, { minGames: 4, maxIterations: 1000 });
+      expect(solve.converged).toBe(true);
+      expect(solve.iterations).toBeLessThan(1000);
+      const a = solve.results.find((r) => r.team === "A")!.rating!;
+      const c = solve.results.find((r) => r.team === "C")!.rating!;
+      expect(a.adjOffDropbackEpaPerPlay).toBeGreaterThan(c.adjOffDropbackEpaPerPlay);
+    });
   });
 });

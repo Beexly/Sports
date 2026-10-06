@@ -197,7 +197,12 @@ export const nflAgeConditionedRestSignal: SignalDefinition = {
     return {
       value: res.expectedMarginAdjustment,
       capturedAt: ctx.now().toISOString(),
-      metadata: { ...res },
+      // homeSign +1: expectedMarginAdjustment is a spread-point margin shift
+      // computed for ctx.homeTeam only (see evaluateAgeConditionedRest in
+      // packages/prediction-engine/src/signals/situational/age-conditioned-rest.ts:115),
+      // so a positive value is home-implied points and a negative value is
+      // home-lost points. There is no away-team branch in the number.
+      metadata: { ...res, homeSign: 1 },
     };
   },
 };

@@ -36,6 +36,7 @@ const NAV: ReadonlyArray<CockpitNavGroup> = [
   {
     section: "Picks & proof",
     items: [
+      { href: "/cockpit/founder-picks", label: "Founder Picks", hint: "Enter your own call" },
       { href: "/cockpit/history", label: "History", hint: "Pick forensic ledger" },
       { href: "/cockpit/market-twin", label: "Market Twin", hint: "Upcoming board posture" },
       { href: "/cockpit/losses", label: "Losses", hint: "Autopsy authoring queue" },

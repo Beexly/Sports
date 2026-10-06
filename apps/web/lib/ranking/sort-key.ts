@@ -102,7 +102,39 @@ export function rankingBasisCensus(
   };
 }
 
-/** Higher ranking first; optional featured pin; then newer generatedAt. */
+/**
+ * The engine's own signed edge for the chosen side, in probability points, or
+ * null when the row carries no finite estimate.
+ *
+ * WHY IT EXISTS. `readRankingKey` answers "which branch of the 0-1 cascade
+ * orders this row", and its answer for a row with no `rankingP` is
+ * `confidence/100` — a number MEASURED ANTI-PREDICTIVE (AGENTS.md: n 2,385, conf
+ * 80+ claims 0.8663 and realizes 0.5191, z = -10.7, peaking at 75-79). Ranking
+ * the positives on that key is the open half of the confidence-inversion
+ * defect that `adverse-edge-suppression.ts` only half-closed: suppression
+ * removes the negatives, it does not reorder the positives.
+ *
+ * `expectedClv` is the same signed number the MINT gate and the display
+ * suppression already trust (`pricesWorseThanMarket`), so ranking on it cannot
+ * disagree with the gate that decides what is published at all. It is read
+ * through that predicate's own field, NOT a re-derivation of the rule.
+ *
+ * ABSENCE IS NEUTRAL, never a fallback to confidence. A row with no estimate
+ * is not worse and not better, so it keeps its place in the secondary order
+ * instead of being silently promoted or demoted by a number nobody measured.
+ */
+export function readSignedEdge(pick: { readonly factorBreakdown?: unknown }): number | null {
+  const fb = pick.factorBreakdown;
+  if (!fb || typeof fb !== "object") return null;
+  const edge = (fb as Record<string, unknown>)["independentEdge"];
+  if (!edge || typeof edge !== "object") return null;
+  const clv = (edge as Record<string, unknown>)["expectedClv"];
+  return typeof clv === "number" && Number.isFinite(clv) ? clv : null;
+}
+
+/**
+ * Higher ranking first; optional featured pin; then newer generatedAt.
+ */
 export function comparePicksByRanking(
   a: {
     readonly confidence: number;
@@ -120,6 +152,21 @@ export function comparePicksByRanking(
   const fa = a.isFeatured ? 1 : 0;
   const fb = b.isFeatured ? 1 : 0;
   if (fa !== fb) return fb - fa;
+
+  // PRIMARY: the engine's own signed edge. AGENTS.md "Rank public boards on
+  // expectedClv / trueProb vs marketFairProb, never on confidence alone" — this
+  // is that instruction, and `rankingSortKey` below remains the SECONDARY order
+  // for rows whose edge is absent or tied.
+  //
+  // A row carrying an estimate always outranks one without, whatever the
+  // secondary key says. Absence is not a weak score; it is no measurement, and
+  // letting a confidence number stand in for it is exactly the substitution
+  // that made the top of the board the worst of it.
+  const ea = readSignedEdge(a);
+  const eb = readSignedEdge(b);
+  if (ea !== null && eb === null) return -1;
+  if (ea === null && eb !== null) return 1;
+  if (ea !== null && eb !== null && ea !== eb) return eb - ea;
 
   const ra = rankingSortKey(a);
   const rb = rankingSortKey(b);

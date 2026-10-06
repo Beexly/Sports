@@ -96,6 +96,13 @@ export {
   decodeDatasetText,
   fetchNflverseText,
   fetchNflverse,
+  fetchNflversePlayerStatsWeek,
+  // Exported 2026-09-28: the web player-model loader needs the SAME currency
+  // backfill the ingestion callers use, because the combined
+  // `player_stats.csv.gz` asset lags (measured: ends at season 2024 while the
+  // per-season assets carry 2025 and 2026). Two copies of this logic is how the
+  // web pool silently stayed two seasons stale while reporting status "live".
+  mergePlayerStatsWeekCurrency,
   type CsvTable,
   type NflverseDataset,
   type NflverseDatasetKey,
@@ -506,10 +513,12 @@ export {
   paidCallMutexKey,
   resetPaidCallReservationWarning,
   loadOddsCreditTruth,
+  loadOddsCreditTruthOutcome,
 } from "./odds-credit-ledger.js";
 export type {
   OddsCreditLedgerDb,
   OddsCreditLedgerRows,
+  OddsCreditTruthOutcome,
   OddsCreditLedgerTx,
   PaidCallMarker,
   ReservePaidCallSlotInput,

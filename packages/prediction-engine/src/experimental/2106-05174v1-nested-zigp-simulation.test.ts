@@ -133,5 +133,8 @@ describe("copula", () => {
   it("copula joint nests independence at rho=0", () => {
     expect(gaussCopulaJoint(0.5, 0.5, 0)).toBeCloseTo(0.25, 2);
     expect(gaussCopulaJoint(0.5, 0.5, 0.9)).toBeGreaterThan(0.25);
+    const low = gaussCopulaJoint(0.1, 0.1, -0.9);
+    expect(low).toBeGreaterThan(0);
+    expect(low).toBeLessThan(0.1);
   });
 });

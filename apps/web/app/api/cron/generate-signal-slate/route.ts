@@ -5,7 +5,7 @@
  */
 import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
-import { generateSignalSlate } from "@sports/ingestion-pipeline";
+import { generateSignalSlate, slateAssociationTrace } from "@sports/ingestion-pipeline";
 
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -19,7 +19,10 @@ export async function GET(request: Request): Promise<NextResponse> {
   if (denied) return denied;
 
   try {
-    const result = await generateSignalSlate({ logPrefix: "[cron:generate-signal-slate]" });
+    const result = await generateSignalSlate({
+      logPrefix: "[cron:generate-signal-slate]",
+      trace: await slateAssociationTrace(),
+    });
     return NextResponse.json({
       ...result,
       oddsApiRequired: false as const,

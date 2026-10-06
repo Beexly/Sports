@@ -53,15 +53,16 @@ export function computeMetrics(
   // Brier
   let brierSum = 0;
   for (let i = 0; i < n; i++) {
-    brierSum += Math.pow(probs[i] - outcomes[i], 2);
+    brierSum += Math.pow((probs[i] as number) - (outcomes[i] as number), 2);
   }
   const brier = brierSum / n;
 
   // Log-loss
   let llSum = 0;
   for (let i = 0; i < n; i++) {
-    const p = Math.max(1e-15, Math.min(1 - 1e-15, probs[i]));
-    llSum += -(outcomes[i] * Math.log(p) + (1 - outcomes[i]) * Math.log(1 - p));
+    const p = Math.max(1e-15, Math.min(1 - 1e-15, probs[i] as number));
+    const y = outcomes[i] as number;
+    llSum += -(y * Math.log(p) + (1 - y) * Math.log(1 - p));
   }
   const logLoss = llSum / n;
 
@@ -69,8 +70,10 @@ export function computeMetrics(
   const pos: number[] = [];
   const neg: number[] = [];
   for (let i = 0; i < n; i++) {
-    if (outcomes[i] === 1) pos.push(probs[i]);
-    else neg.push(probs[i]);
+    const y = outcomes[i] as number;
+    const p = probs[i] as number;
+    if (y === 1) pos.push(p);
+    else neg.push(p);
   }
   let auc = 0.5;
   if (pos.length > 0 && neg.length > 0) {
@@ -87,10 +90,12 @@ export function computeMetrics(
   // ECE (10 bins)
   const bins = new Map<number, { conf: number[]; out: number[] }>();
   for (let i = 0; i < n; i++) {
-    const bin = Math.min(9, Math.floor(probs[i] * 10));
+    const p = probs[i] as number;
+    const y = outcomes[i] as number;
+    const bin = Math.min(9, Math.floor(p * 10));
     if (!bins.has(bin)) bins.set(bin, { conf: [], out: [] });
-    bins.get(bin)!.conf.push(probs[i]);
-    bins.get(bin)!.out.push(outcomes[i]);
+    bins.get(bin)!.conf.push(p);
+    bins.get(bin)!.out.push(y);
   }
   let ece = 0;
   for (const [_, b] of bins) {
@@ -119,18 +124,20 @@ export function tryIsotonic(
   holdoutOutcomes: readonly number[],
 ): IsotonicResult {
   // Fit isotonic regression on train (pool adjacent violators)
-  const pairs = trainProbs.map((p, i) => ({ p, y: trainOutcomes[i] }));
+  const pairs = trainProbs.map((p, i) => ({ p, y: trainOutcomes[i] as number }));
   pairs.sort((a, b) => a.p - b.p);
 
   // PAV algorithm
   const blocks: { p: number; y: number; w: number }[] = pairs.map((x) => ({ p: x.p, y: x.y, w: 1 }));
   for (let i = 0; i < blocks.length - 1; i++) {
-    if (blocks[i].y > blocks[i + 1].y) {
+    const cur = blocks[i] as { p: number; y: number; w: number };
+    const nxt = blocks[i + 1] as { p: number; y: number; w: number };
+    if (cur.y > nxt.y) {
       // Merge
       const merged = {
-        p: (blocks[i].p * blocks[i].w + blocks[i + 1].p * blocks[i + 1].w) / (blocks[i].w + blocks[i + 1].w),
-        y: (blocks[i].y * blocks[i].w + blocks[i + 1].y * blocks[i + 1].w) / (blocks[i].w + blocks[i + 1].w),
-        w: blocks[i].w + blocks[i + 1].w,
+        p: (cur.p * cur.w + nxt.p * nxt.w) / (cur.w + nxt.w),
+        y: (cur.y * cur.w + nxt.y * nxt.w) / (cur.w + nxt.w),
+        w: cur.w + nxt.w,
       };
       blocks.splice(i, 2, merged);
       i = Math.max(-1, i - 2);
@@ -141,7 +148,7 @@ export function tryIsotonic(
   const calibrate = (p: number): number => {
     if (blocks.length === 0) return p;
     // Find nearest block
-    let best = blocks[0];
+    let best = blocks[0] as { p: number; y: number; w: number };
     let bestDist = Math.abs(p - best.p);
     for (const b of blocks) {
       const d = Math.abs(p - b.p);

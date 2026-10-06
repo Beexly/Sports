@@ -29,12 +29,12 @@ describe("edge-lab-bridge", () => {
 
   it("evalLogisticTrain fits on real examples", () => {
     const train = [
-      { label: 1, features: new Map([["a", 1], ["b", 2]]) },
-      { label: 0, features: new Map([["a", -1], ["b", -2]]) },
-      { label: 1, features: new Map([["a", 1.5], ["b", 1]]) },
-      { label: 0, features: new Map([["a", -1.5], ["b", -1]]) },
-      { label: 1, features: new Map([["a", 2], ["b", 0]]) },
-      { label: 0, features: new Map([["a", -2], ["b", 0]]) },
+      { y: 1 as const, features: new Map([["a", 1], ["b", 2]]) },
+      { y: 0 as const, features: new Map([["a", -1], ["b", -2]]) },
+      { y: 1 as const, features: new Map([["a", 1.5], ["b", 1]]) },
+      { y: 0 as const, features: new Map([["a", -1.5], ["b", -1]]) },
+      { y: 1 as const, features: new Map([["a", 2], ["b", 0]]) },
+      { y: 0 as const, features: new Map([["a", -2], ["b", 0]]) },
     ];
     const r = evalLogisticTrain({ featureKeys: ["a", "b"] }, train);
     expect(r.ok, r.ok ? "" : `reason=${r.reason}`).toBe(true);

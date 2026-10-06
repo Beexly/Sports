@@ -101,7 +101,7 @@ export type { SeasonGame, ClosingLines, WalkForwardResult, PredictFn };
  */
 export function runTaxonomyReport(
   rows: readonly WalkForwardTaxonomyRow[],
-  opts?: { readonly level?: number; readonly minSamplesForTrust?: number },
+  opts?: { readonly level?: 1 | 2; readonly minSamplesForTrust?: number },
 ): { readonly ok: true; readonly data: WalkForwardTaxonomyReport } | { readonly ok: false; readonly reason: string } {
   if (!Array.isArray(rows) || rows.length === 0) {
     return { ok: false, reason: "taxonomy requires at least one row" };

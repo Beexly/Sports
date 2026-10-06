@@ -30,9 +30,12 @@ import type { OddsInput } from "@sports/types";
  */
 
 // Moneyline publishes only for a DEEP book set AND a heavy favourite. Probed
-// empirically against this engine: -180, -200, -250 and -300 all yield no ML
-// pick at ten books; -350 yields one at confidence 51. That narrowness is why
-// this defect is HIGH rather than a launch blocker -- it needs both conditions.
+// empirically against this engine: before the 2026-09-27 market-echo rewire,
+// -350 yielded a pick at ten books (confidence 51); the rewire removed the
+// market-internal edge component from the sum, so -350 now lands at 45 and the
+// publishable ladder is heavier — -800/+650 (~87% de-vigged fair) yields one.
+// That narrowness is why this defect is HIGH rather than a launch blocker --
+// it needs both conditions.
 const BOOKS = [
   "fanduel", "draftkings", "betmgm", "caesars", "pointsbet",
   "betrivers", "wynn", "bet365", "espnbet", "fanatics",
@@ -47,8 +50,8 @@ const fullBook = (overrides: Partial<OddsInput> = {}): OddsInput => ({
   bookmakerOdds: BOOKS.map((bookmaker) => ({
     bookmaker,
     market: "H2H" as const,
-    homePrice: -350,
-    awayPrice: 290,
+    homePrice: -800,
+    awayPrice: 650,
   })),
   context: { bookmakerCoverageMax: BOOKS.length },
   ...overrides,

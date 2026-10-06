@@ -64,6 +64,10 @@ describe("/api/sources/catalog", () => {
 
   it("returns the public source ledger without leaking configured env values", async () => {
     process.env["THE_ODDS_API_KEY"] = "super-secret-test-value";
+    // Internal-surface fence (2026-09-28): the catalog is dark by default.
+    // Open it here so this test exercises the payload, not the 404 — the
+    // fence itself is pinned by source-catalog-fence.test.ts.
+    process.env["SOURCES_CATALOG_PUBLIC"] = "true";
 
     const { status, body } = await callRoute();
     expect(status).toBe(200);

@@ -167,6 +167,44 @@ export const CRON_MANIFEST: readonly CronManifestEntry[] = [
   // sample, scheduler liveness). Bearer CRON_SECRET like every cron; it was
   // built 2026-08 but never scheduled, so nothing ever read it.
   cronEntry("/api/ops/daily-truth", "5 12 * * *"),
+  // Spec item 4's writer. Without a schedule the `signals` table stays at 0
+  // rows, which is the state this cron exists to end. Hourly at :23, off the
+  // :02/:17/:32/:47 board ticks so it never competes with the public board.
+  cronEntry("/api/cron/signal-ledger-write", "23 * * * *"),
+  // Game-keyed weather writer (motif/ledger-shadow-2026-10-01, Tier 1 #3).
+  // 3x daily: persists weather snapshot keyed to game for the WEATHER_TRAVEL
+  // shadow gate. CRON_SECRET-gated, idempotent.
+  cronEntry("/api/cron/game-weather-capture", "10 6,12,18 * * *"),
+  // Prediction-market snapshot persistence (motif/ledger-shadow-2026-10-01,
+  // Tier 2 #3). 3x daily: Kalshi/Polymarket fetch -> persist loop, rights
+  // gates enforced, read-only shadow observation.
+  cronEntry("/api/cron/prediction-market-snapshot", "20 6,12,18 * * *"),
+  // Weekly NGS ingestion into signals (motif/ledger-shadow-2026-10-01).
+  // Wednesdays 11:30 UTC: internal-only, weight 0 until validated.
+  cronEntry("/api/cron/ngs-ingest", "30 11 * * 3"),
+  // CV watch-loop game-window scheduler (motif/watch-loop-2026-10-01). Every
+  // 10 min: ESPN scoreboard poll -> watch.games upsert -> Space warm-ping ->
+  // scheduler_runs heartbeat. Bearer-only cron auth, like every mutating cron.
+  cronEntry("/api/cron/watch-scheduler", "*/10 * * * *"),
+  // CV watch-loop Space warm ping (motif/watch-loop-2026-10-01). Every 3 min:
+  // warm-pings the HF Space /health while a window is active or arming, so it
+  // never cold-starts mid-drive. Writes only the scheduler_runs heartbeat.
+  cronEntry("/api/cron/watch-warm", "*/3 * * * *"),
+  // Props slate shadow runner (motif/audit-fix-props-2026-10-01). Hourly at
+  // :25: runs the GSE 4-Beat props pipeline in shadow mode. Env-gated
+  // (default OFF), never persists, never publishes.
+  cronEntry("/api/cron/props-slate-shadow", "25 * * * *"),
+  // Engine DFS slate provider registration (motif/audit-fix-props-2026-10-01).
+  // Hourly at :55: builds the engine slate and registers it as the DFS
+  // provider when the founder's DFS_PROVIDER flag is set; read-only.
+  cronEntry("/api/cron/engine-dfs-slate", "55 * * * *"),
+  // Path-disagreement arbitration (Opus tier). Reads published picks written in
+  // the last 6h, pairs the reasoning path against the legacy book path per
+  // fixture + market, and appends every ruling to the decision ledger. At :41 so
+  // a paid Opus pass never competes with the :02/:17/:32/:47 board ticks or the
+  // :05/:20/:35/:50 signal-slate ticks for the cron's time budget. Writes no
+  // Pick: it rules on which of two recorded claims stands, nothing more.
+  cronEntry("/api/cron/arbiter-adjudication", "41 * * * *"),
 ];
 
 /** Manifest entry for a path, or null when the path is not a declared cron. */

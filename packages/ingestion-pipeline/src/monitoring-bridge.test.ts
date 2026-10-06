@@ -34,7 +34,7 @@ describe("monitoring-bridge runEcdd", () => {
 
 describe("monitoring-bridge runDriftEnsemble", () => {
   it("fail-closes on empty alarms", () => {
-    const r = runDriftEnsemble({ alarms: [] });
+    const r = runDriftEnsemble({ alarms: [], regimeWeeks: [1, 2], totalWeeks: 4, graceWeeks: 1 });
     expect(r.ok).toBe(false);
     if (!r.ok) expect(r.reason).toContain("at least one");
   });

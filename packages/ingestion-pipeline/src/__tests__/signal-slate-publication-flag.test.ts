@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { associationTrace } from "./slate-trace-fixture.js";
 
 /**
  * C-92: A SLATE REFRESH MUST NOT RE-PUBLISH WHAT AN OPERATOR WITHDREW.
@@ -83,7 +84,7 @@ const CFB_BOARD = {
 const espnFetch = vi.fn<(url: string) => Promise<Response>>();
 
 function runSlate() {
-  return generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch });
+  return generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch, trace: associationTrace() });
 }
 
 /** The row an operator has already withdrawn: still PENDING, no longer public. */

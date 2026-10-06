@@ -36,14 +36,44 @@ const ALLOWED_PREFIX = "packages/prediction-engine/src/edge-lab/";
 // guard test lives outside that guard's (narrower) scan targets entirely.
 const SELF_PATHS = new Set([
   "scripts/guardrails/sealed-holdout-open-scan.mjs",
+  "scripts/guardrails/sealed-holdout-open-scan.test.mjs",
   "apps/web/__tests__/sealed-holdout-open-scan-guard.test.ts",
 ]);
 
 // Matches a CALL, not the property definition (`openHoldout: (token) => ...`
 // in walk-forward.ts has a colon between the name and the parenthesis, so it
 // never matches this pattern) — `.openHoldout(`, `openHoldout(` (destructured
-// call), optional whitespace before the parenthesis.
+// call), optional whitespace before the parenthesis. Applied to the line
+// after comments are removed, so a comment or JSDoc that mentions the token
+// is not a call site. `://` is not the start of a line comment.
 const CALL_RE = /\bopenHoldout\s*\(/;
+
+function stripComments(text) {
+  const lines = text.split(/\r?\n/);
+  let inBlock = false;
+  return lines.map((line) => {
+    let out = "";
+    let i = 0;
+    while (i < line.length) {
+      if (inBlock) {
+        const end = line.indexOf("*/", i);
+        if (end === -1) return out;
+        i = end + 2;
+        inBlock = false;
+        continue;
+      }
+      if (line.startsWith("/*", i)) {
+        inBlock = true;
+        i += 2;
+        continue;
+      }
+      if (line.startsWith("//", i) && (i === 0 || line[i - 1] !== ":")) break;
+      out += line[i];
+      i += 1;
+    }
+    return out;
+  });
+}
 
 function rel(root, filePath) {
   return relative(root, filePath).split(sep).join("/");
@@ -90,7 +120,7 @@ export async function collectSealedHoldoutOpenViolations(root = DEFAULT_ROOT) {
       } catch {
         continue;
       }
-      text.split(/\r?\n/).forEach((line, index) => {
+      stripComments(text).forEach((line, index) => {
         if (CALL_RE.test(line)) {
           hits.push({
             file: relPath,
