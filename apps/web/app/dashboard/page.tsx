@@ -275,7 +275,7 @@ export default async function DashboardPage({
     clv: null,
     provenance: null,
   });
-  const recordDisplay = guardedWinRate !== null ? performancePolicy.publicRecord : "Collecting…";
+  const recordDisplay = performanceVisible ? performancePolicy.publicRecord : "Collecting…";
   const winRateDisplay = guardedWinRate !== null ? `${guardedWinRate}%` : "—";
   const winRateHighlight = guardedWinRate !== null && guardedWinRate >= 55;
   const winRateSubtext = guardedWinRate !== null ? performancePolicy.publicWinRateCiLabel : null;
