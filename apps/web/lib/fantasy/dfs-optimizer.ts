@@ -597,8 +597,25 @@ export type GenResult = {
   readonly exposureTarget: number;
 };
 
-/** Generate N unique lineups with exposure control. */
-export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6, slate: readonly DfsPlayer[] = activeDfsSlate()): GenResult {
+/**
+ * Generate N unique lineups with exposure control.
+ *
+ * `signalPen` is the environment penalty from `dfs-signals.ts` — weather, implied
+ * team totals, backup quarterbacks, airwave fades. It is ADDED to the internal
+ * diversity penalty rather than replacing it, so exposure control and world
+ * knowledge compose instead of overwriting each other. It defaults to zero, so
+ * callers that do not pass one behave exactly as before.
+ *
+ * This module deliberately does NOT import dfs-signals; the penalty arrives as a
+ * plain function so the dependency stays one-way (signals -> optimizer).
+ */
+export function generateLineups(
+  opts: OptOpts,
+  count: number,
+  maxExposure = 0.6,
+  slate: readonly DfsPlayer[] = activeDfsSlate(),
+  signalPen: (p: DfsPlayer) => number = () => 0,
+): GenResult {
   const usage = new Map<string, number>();
   const seen = new Set<string>();
   const lineups: { players: Lineup; metrics: LineupMetrics }[] = [];
@@ -610,7 +627,8 @@ export function generateLineups(opts: OptOpts, count: number, maxExposure = 0.6,
     const overexposed = new Set<string>();
     for (const [id, c] of usage) if (c / count >= maxExposure) overexposed.add(id);
     const dynOpts: OptOpts = { ...opts, excludes: new Set([...opts.excludes, ...overexposed]) };
-    const pen = (p: DfsPlayer) => ((usage.get(p.id) ?? 0) / Math.max(1, n)) * 9; // soft diversity penalty
+    // soft diversity penalty, plus whatever the world says about this player
+    const pen = (p: DfsPlayer) => ((usage.get(p.id) ?? 0) / Math.max(1, n)) * 9 + signalPen(p);
 
     let lu: DfsPlayer[] | null = null;
     for (let tries = 0; tries < 6; tries++) {

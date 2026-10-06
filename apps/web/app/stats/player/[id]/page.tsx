@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Shell, Cards, DataTable, Badge, ScoreRing, BarChart, StatusRibbon, InsightCard, SectionHeader } from "../../_components";
 import { getPlayer, loadWeeklyStats, loadComps, loadArchetypes } from "@/lib/statking/product";
+import { isLineageClearedForDisplay, unclearedSourcesIn } from "@/lib/statking/commercial-gate";
 export const metadata = {
   title: "Player Profile: StatKing Metrics & Lineage",
   description: "A full StatKing metric profile with source lineage and data-confidence for an NFL player.",
@@ -23,32 +24,53 @@ export default function Page({ params }: { params: { id: string } }) {
   const arch = loadArchetypes().find(a => a.player_id === p.player_id);
   const gpiClamped = Math.min(100, Math.max(0, Number(p.galaxy_player_index ?? 0)));
   const hasMissingData = Array.isArray(p.missing_data) && p.missing_data.length > 0;
+  // Commercial-display rights gate (docs/ops/GATE_MATRIX_2026-09-08.md §2):
+  // derived scores and the raw source list only render when every real
+  // (non-fixture) source in this player's lineage is registry-cleared for
+  // commercial display. No-op today — current snapshots carry only fixture
+  // sentinel source ids — and starts redacting the moment real ingestion
+  // writes an uncleared source id into a player's lineage.
+  const sourcesCleared = isLineageClearedForDisplay(p.source_lineage);
+  const blockedSources = unclearedSourcesIn(p.source_lineage);
 
   return (
     <Shell title={p.name} eyebrow={`${p.team} · ${p.position} · ${p.status}`}>
       <Link href="/stats/players" className="text-sm text-orbital-cyan hover:text-ion-white transition-colors">← Players</Link>
       <StatusRibbon status="fixture" label="Player metrics updated every sync cycle" />
-      <Cards items={[
-        { label: "Galaxy Player Index", value: p.galaxy_player_index },
-        { label: "Fantasy Edge", value: p.fantasy_edge },
-        { label: "Usage", value: p.usage_score },
-        { label: "Confidence", value: p.data_confidence + "%" }
-      ]} />
-      <div className="grid gap-4 md:grid-cols-2">
-        <div className="border border-mineral bg-eclipse p-4">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Galaxy Player Index</p>
-          <div className="flex justify-center">
-            <ScoreRing score={gpiClamped} label="GPI" size={120} />
-          </div>
-        </div>
-        <div className="border border-mineral bg-eclipse p-4">
-          <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Efficiency & Usage Scores</p>
-          <BarChart items={[
-            { label: "Usage", value: Number(p.usage_score ?? 0), max: 100, tone: "cyan" },
-            { label: "Efficiency", value: Number(p.efficiency_score ?? 0), max: 100, tone: "amber" }
+      {sourcesCleared ? (
+        <>
+          <Cards items={[
+            { label: "Galaxy Player Index", value: p.galaxy_player_index },
+            { label: "Fantasy Edge", value: p.fantasy_edge },
+            { label: "Usage", value: p.usage_score },
+            { label: "Confidence", value: p.data_confidence + "%" }
           ]} />
-        </div>
-      </div>
+          <div className="grid gap-4 md:grid-cols-2">
+            <div className="border border-mineral bg-eclipse p-4">
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Galaxy Player Index</p>
+              <div className="flex justify-center">
+                <ScoreRing score={gpiClamped} label="GPI" size={120} />
+              </div>
+            </div>
+            <div className="border border-mineral bg-eclipse p-4">
+              <p className="font-mono text-xs uppercase tracking-[0.2em] text-ion-2 mb-3">Efficiency & Usage Scores</p>
+              <BarChart items={[
+                { label: "Usage", value: Number(p.usage_score ?? 0), max: 100, tone: "cyan" },
+                { label: "Efficiency", value: Number(p.efficiency_score ?? 0), max: 100, tone: "amber" }
+              ]} />
+            </div>
+          </div>
+        </>
+      ) : (
+        <InsightCard
+          eyebrow="Rights-gated"
+          headline="Derived metrics not cleared for public display"
+          body="This player's snapshot draws on a source without commercial-display rights. Scores stay hidden here until that source clears or is replaced."
+          tone="warn"
+        >
+          <Badge tone="warn">{blockedSources.length} source(s) not cleared</Badge>
+        </InsightCard>
+      )}
       <section className="grid gap-4 md:grid-cols-2">
         <div className="border border-mineral bg-eclipse p-4">
           <h2 className="text-lg font-semibold text-ion-white mb-3">Archetype</h2>
@@ -67,9 +89,11 @@ export default function Page({ params }: { params: { id: string } }) {
           body={
             hasMissingData
               ? `Missing ${p.missing_data.length} data point(s). Confidence is capped until these are resolved.`
-              : `Sources: ${Array.isArray(p.source_lineage) && p.source_lineage.length > 0 ? p.source_lineage.join(", ") : "—"}`
+              : sourcesCleared
+                ? `Sources: ${Array.isArray(p.source_lineage) && p.source_lineage.length > 0 ? p.source_lineage.join(", ") : "—"}`
+                : "Source list withheld: includes a source not cleared for public commercial display."
           }
-          tone={hasMissingData ? "warn" : "good"}
+          tone={hasMissingData ? "warn" : sourcesCleared ? "good" : "warn"}
         >
           {hasMissingData && (
             <div className="mt-2">
@@ -78,10 +102,12 @@ export default function Page({ params }: { params: { id: string } }) {
                   <Badge key={String(m)} tone="warn">{String(m ?? "")}</Badge>
                 ))}
               </div>
-              <p className="text-sm text-ion-1 mt-2">Sources: {Array.isArray(p.source_lineage) && p.source_lineage.length > 0 ? p.source_lineage.join(", ") : "—"}</p>
+              {sourcesCleared && (
+                <p className="text-sm text-ion-1 mt-2">Sources: {Array.isArray(p.source_lineage) && p.source_lineage.length > 0 ? p.source_lineage.join(", ") : "—"}</p>
+              )}
             </div>
           )}
-          {!hasMissingData && (
+          {!hasMissingData && sourcesCleared && (
             <Badge tone="good">All sources active</Badge>
           )}
         </InsightCard>

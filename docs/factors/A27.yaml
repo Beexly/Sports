@@ -1,0 +1,20 @@
+id: A27
+title: Referee crew penalty rate to totals (A3 extended)
+hypothesis: A discover-era referee crew identified by an extreme game-total over/under rate keeps that lean out of sample, and the lean's direction is consistent with that crew's penalty-yardage rate.
+estimand: validate-era total-over-rate residual (pp) for the discover-era most-extreme-|effect| referee, Bonferroni over crews tested (same selection rule as A3)
+unit: percentage points of over-rate
+data: [nflverse.schedules, nflverse.pbp]
+discover_era: 2009-2019
+validate_era: 2020-2025
+kill_line: "validate-era |effect| for the discover-selected crew <= 0 in the discover direction, or the Bonferroni-adjusted 95% CI includes 0, with n >= 30 validate games for that crew"
+mde_80pct_power: null
+script: scripts/factors/A27.mjs
+status: DEAD
+number: 0.0378
+ci: [-0.2033, 0.2789]
+n: 92
+run_sha: "7a474a6b557bb20e34fa8b826f5d1c3ebe94c57d"
+run_at: "2026-09-15T23:24:11.636Z"
+blocked_on: null
+notes: >
+  C-408. Reuses A3's crew-selection method (games.csv referee field) on game-total over-rate instead of home-cover rate. Discover: 14 crews with >=20 games; league rate=0.4922; selected=Clay Martin n=30 rate=0.3667 residual=-0.1255. Validate: selected crew n=92 rate=0.5217 league rate=0.4839 residual=0.0378 Bonferroni-CI[-0.2033,0.2789] (z=4.503 over 14 crews). Secondary (sampled seasons 2019,2025 only, cost-bounded): league-wide average total penalty yards/game = 106.59 over 552 games (not broken out per-crew this run; a full per-crew penalty-yards join is future work, not invented here). Data: nfldata games.csv (CC BY 4.0) + nflverse pbp (secondary), local cache; no DB.
