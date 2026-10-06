@@ -1,0 +1,20 @@
+id: A25
+title: Weather on pass-yardage props (A5 extended to players)
+hypothesis: High wind at kickoff suppresses passing and receiving yardage relative to each player's trailing baseline, the same direction as A5's team-total effect.
+estimand: passing/receiving-yards residual (actual minus trailing-3-game mean) for games with wind >= 15 mph and an open/outdoors roof vs the indoor baseline, cluster-robust by player
+unit: yards below trailing baseline
+data: [nflverse.schedules, nflverse.player_stats]
+discover_era: 1999-2019
+validate_era: 2020-2025
+kill_line: "validate-era wind-vs-indoor residual difference >= 0 (no suppression) or 95% CI includes 0 with n >= 200"
+mde_80pct_power: 2.1583
+script: scripts/factors/A25.mjs
+status: CANDIDATE
+number: -4.2374
+ci: [-5.7473, -2.7275]
+n: 7196
+run_sha: "7a474a6b557bb20e34fa8b826f5d1c3ebe94c57d"
+run_at: "2026-09-15T23:22:33.470Z"
+blocked_on: null
+notes: >
+  C-406. Primary: receiving yards (WR/TE/RB) residual vs trailing 3-game mean, wind>=15mph+open/outdoors vs dome/closed. Validate REC nWind=1335 nIndoor=5861 Δ=-4.2374 CI[-5.7473,-2.7275] MDE80=2.1583; windMean=-3.228 indoorMean=1.0094. Discover REC nWind=808 nIndoor=2365 Δ=-3.046. Secondary QB passing_yards: validate nWind=190 nIndoor=808 Δ=-25.7021 CI[-38.6896,-12.7145]. No posted player prop line exists in the free spine for any historical season; this is a trailing-baseline residual, not a book-line comparison. YAML lists 1999-2019/2020-2024 (A5's convention); this run uses 2017-2024 (discover 2017-2019) since player_stats/games.csv rest fields are only reliable from 2017 in _lib.mjs's eraOf(). Data: nfldata games.csv + nflverse player_stats (CC BY 4.0), local cache; no DB.
