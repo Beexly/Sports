@@ -61,7 +61,6 @@ describe("no double brand in page titles (FE-13)", () => {
       "kill-ledger/page.tsx",
       "journal/page.tsx",
       "blog/page.tsx",
-      "fantasy/contests/page.tsx",
       "integrity/page.tsx",
       "fable/page.tsx",
       "accountability/page.tsx",

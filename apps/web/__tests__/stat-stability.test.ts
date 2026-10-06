@@ -42,13 +42,15 @@ describe("statStabilityGrade", () => {
 describe("Player Lab wiring", () => {
   it("production, snaps, and edge tables carry the Stab column with tooltip", () => {
     const table = read("components/players/player-lab-table.tsx");
-    expect(table.match(/label: "Stab"/g)?.length).toBe(3);
+    // 2026-10-01: NGS privacy hardening (f0198c68) removed one Stab column; 2 remain.
+    expect(table.match(/label: "Stab"/g)?.length).toBe(2);
     expect(table).toContain("STABILITY_TOOLTIP");
     expect(table).toContain("stabilityCell");
   });
 
   it("the view explainers define the grade for readers", () => {
     const views = read("lib/players/views.tsx");
-    expect(views.match(/Stat Stability Grade/g)?.length).toBe(3);
+    // 2026-10-01: NGS privacy hardening (f0198c68) removed one explainer; 2 remain.
+    expect(views.match(/Stat Stability Grade/g)?.length).toBe(2);
   });
 });

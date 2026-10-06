@@ -20,7 +20,8 @@
  * docs/data-analytics-strategy.md.
  */
 
-import { gunzipSync } from "node:zlib";
+import { createGunzip, gunzipSync } from "node:zlib";
+import { once } from "node:events";
 import { noStoreFetch } from "./no-store-fetch.js";
 
 export const NFLVERSE_BASE = "https://github.com/nflverse/nflverse-data/releases/download";
@@ -222,6 +223,37 @@ export type ParseCsvOptions = {
    * the full per-cell string explosion.
    */
   readonly columns?: readonly string[];
+  /**
+   * Row predicate, evaluated DURING the streaming scan against the projected
+   * values. A row that returns false is never materialized as an object, so its
+   * cells are discarded as the scanner passes them.
+   *
+   * This is the second half of the OOM defense for the `player_stats_week` cron.
+   * Column projection alone was not enough: the combined nflverse asset spans
+   * every season since 1999 in ONE 33,447,747-byte file, so even a 18-column
+   * projection retains ~26 seasons of records when the contract is exactly ONE
+   * season per invocation. Measured 2026-09-27 on
+   * dpl_DU9K91tetxKe8oa5YdLvKBaBRJd7: `/api/cron/refresh-player-stats` still
+   * returned "instance was killed because it ran out of available memory" AFTER
+   * the #929 streaming-decode fix, because the season filter ran only AFTER a
+   * full table had been built. Filtering during the scan means peak heap is the
+   * text plus ONE season of projected records.
+   *
+   * Only honored on the projecting path; the full-record path ignores it, so a
+   * caller that forgets `columns` gets no silent partial filtering.
+   */
+  readonly rowFilter?: (row: Readonly<Record<string, string>>) => boolean;
+  /**
+   * Observer called for EVERY row during the scan, before {@link rowFilter},
+   * and retaining nothing. This is how a caller learns a whole-file fact (a
+   * coverage watermark, a row count) without paying to keep the rows it is
+   * about to reject — the season-scoped fetch needs `max(season)` to decide
+   * whether to backfill per-season files, and a filtered table alone would
+   * report the TARGET season and hide the fact that the asset stops short of it.
+   *
+   * Projecting path only, for the same reason as {@link rowFilter}.
+   */
+  readonly onRow?: (row: Readonly<Record<string, string>>) => void;
 };
 
 /**
@@ -234,7 +266,9 @@ export type ParseCsvOptions = {
  * scan that avoids the intermediate token matrix entirely.
  */
 export function parseCsv(text: string, options: ParseCsvOptions = {}): CsvTable {
-  if (options.columns !== undefined) return parseCsvProjected(text, options.columns);
+  if (options.columns !== undefined) {
+    return parseCsvProjected(text, options.columns, options.rowFilter, options.onRow);
+  }
 
   const rows: string[][] = [];
   let field = "";
@@ -280,7 +314,12 @@ export function parseCsv(text: string, options: ParseCsvOptions = {}): CsvTable 
  * short row default to ""), full `header` returned intact, columns absent from
  * the header silently ignored.
  */
-function parseCsvProjected(text: string, columns: readonly string[]): CsvTable {
+function parseCsvProjected(
+  text: string,
+  columns: readonly string[],
+  rowFilter?: (row: Readonly<Record<string, string>>) => boolean,
+  onRow?: (row: Readonly<Record<string, string>>) => void,
+): CsvTable {
   // First pass: read just the header line (quote-aware) to learn column order.
   const header: string[] = [];
   let i = 0;
@@ -337,7 +376,14 @@ function parseCsvProjected(text: string, columns: readonly string[]): CsvTable {
   const endRow = (): void => {
     endField();
     // Mirror the full parser's blank-line skip: a single empty cell is dropped.
-    if (rowHasContent || cells > 1) records.push(rec);
+    if (rowHasContent || cells > 1) {
+      // The observer sees EVERY row (it is how a caller measures coverage of a
+      // file it is filtering down), then the predicate decides retention. A
+      // rejected row's cells are eligible for GC immediately rather than after
+      // a whole multi-season table has been accumulated.
+      if (onRow !== undefined) onRow(rec);
+      if (rowFilter === undefined || rowFilter(rec)) records.push(rec);
+    }
     rec = {};
     col = 0;
     cells = 0;
@@ -375,6 +421,103 @@ function parseCsvProjected(text: string, columns: readonly string[]): CsvTable {
  * (Buffer / node:zlib); use on the Node.js runtime.
  */
 export async function decodeDatasetText(response: Response): Promise<string> {
+  // MEMORY. This decodes one asset at a time but the whole body is resident:
+  // the compressed buffer AND the decompressed string AND the parsed row objects.
+  // `player_stats.csv` measures 33,447,747 bytes uncompressed (Content-Length
+  // from the nflverse release), so `gunzipSync` over it briefly holds the gz
+  // buffer, the full decompressed Buffer, AND its utf8 string at once, and the
+  // caller then builds a row object per record on top of that. Measured
+  // consequence in production on dpl_5w9WsXUHtYq3KbMiX58gTZzKZjZR:
+  // `/api/cron/refresh-player-stats` returned 500 sixteen times at 21:30-21:33
+  // UTC with "instance was killed because it ran out of available memory" —
+  // and NOT in the 10:00 satellite window, so the PRIMARY path alone is over the
+  // ceiling. The same path also succeeded at 2026-09-28T02:00:03Z
+  // (`player_game_stats` max fetchedAt), so this is a MARGIN problem, not a
+  // hard limit: it fits sometimes and dies sometimes.
+  //
+  // The fix is to stop holding the compressed copy. Decoding the RESPONSE BODY
+  // STREAM with an incremental TextDecoder means the gz bytes are consumed and
+  // released chunk by chunk and never sit in memory alongside the output. The
+  // returned string is byte-identical, the gzip magic-byte detection is
+  // unchanged, and no row is dropped or sampled — this reduces peak memory
+  // without changing a single record.
+  if (response.body) {
+    const reader = response.body.getReader();
+    // Peek the first TWO bytes to detect gzip by MAGIC rather than by URL, so
+    // an uncompressed asset or a test mock still works exactly as before. Two
+    // separate reads are required: a stream may hand back a single byte, and
+    // testing magic on one byte would misread every gzipped asset as plain and
+    // emit raw binary — which is exactly what this test caught.
+    const decoder = new TextDecoder("utf-8");
+    const r1 = await reader.read();
+    if (r1.done) return "";
+    const b0 = new Uint8Array(r1.value);
+    let head: Uint8Array;
+    let isGzip: boolean;
+    if (b0.length >= 2) {
+      head = b0;
+      isGzip = b0[0] === 0x1f && b0[1] === 0x8b;
+    } else {
+      const r2 = await reader.read();
+      if (r2.done) {
+        // A one-byte body: no magic number is possible, so it is plain text.
+        return decoder.decode(b0);
+      }
+      const b1 = new Uint8Array(r2.value);
+      head = new Uint8Array(b0.length + b1.length);
+      head.set(b0, 0);
+      head.set(b1, b0.length);
+      isGzip = head.length > 1 && head[0] === 0x1f && head[1] === 0x8b;
+    }
+
+    if (!isGzip) {
+      let out = decoder.decode(head, { stream: true });
+      for (;;) {
+        const next = await reader.read();
+        if (next.done) break;
+        out += decoder.decode(next.value, { stream: true });
+      }
+      out += decoder.decode();
+      return out;
+    }
+
+    // Gzip: pipe each chunk into an ASYNC gunzip AS IT ARRIVES, so the
+    // compressed bytes are released chunk by chunk and never sit in memory
+    // alongside the output. Buffering the chunks into an array first (the
+    // obvious way to write this) would save nothing at all — that is exactly
+    // the residency the original `gunzipSync` had.
+    const gunzip = createGunzip();
+    const done = new Promise<void>((resolvePromise, rejectPromise) => {
+      gunzip.on("end", resolvePromise);
+      gunzip.on("finish", resolvePromise);
+      gunzip.on("error", rejectPromise);
+    });
+    let out = "";
+    // Consume the gunzip output while chunks are still being written.
+    const pump = (async () => {
+      for await (const piece of gunzip) {
+        out += decoder.decode(piece as Uint8Array, { stream: true });
+      }
+    })();
+
+    gunzip.write(Buffer.from(head));
+    for (;;) {
+      const next = await reader.read();
+      if (next.done) break;
+      if (!gunzip.write(Buffer.from(next.value))) {
+        // Respect backpressure so a slow decompressor cannot balloon the queue.
+        await once(gunzip, "drain");
+      }
+    }
+    gunzip.end();
+    await done;
+    await pump;
+    out += decoder.decode();
+    return out;
+  }
+
+  // No streaming body (a mock, or a runtime without ReadableStream): the
+  // original buffered path, unchanged.
   const buf = Buffer.from(await response.arrayBuffer());
   const isGzip = buf.length > 1 && buf[0] === 0x1f && buf[1] === 0x8b;
   return isGzip ? gunzipSync(buf).toString("utf8") : buf.toString("utf8");
@@ -482,4 +625,99 @@ export async function fetchNflverse(key: NflverseDatasetKey, season: number, var
     if (!res.ok) throw new Error(`nflverse fetch failed (${res.status}) for ${url}`);
     return decodeDatasetText(res);
   });
+}
+
+/**
+ * The 18 `player_stats_week` columns `ingestPlayerWeeklyStats` actually reads.
+ * Named from that caller's field access, not from the full nflverse header —
+ * a column absent from the asset is silently ignored by the projection, so
+ * this list cannot drift into an error, only into a narrower record.
+ */
+const PLAYER_STATS_WEEK_COLUMNS = [
+  "player_id",
+  "player_display_name",
+  "player_name",
+  "headshot_url",
+  "position",
+  "recent_team",
+  "opponent_team",
+  "season",
+  "week",
+  "season_type",
+  "attempts",
+  "carries",
+  "receptions",
+  "targets",
+  "target_share",
+  "receiving_yards",
+  "rushing_yards",
+  "fantasy_points_ppr",
+] as const;
+
+/**
+ * `fetchNflverse` for the weekly player-stats asset, scoped to ONE season and
+ * projected to the columns the ingest reads.
+ *
+ * WHY THIS EXISTS. `fetchNflverse` builds the WHOLE combined asset into memory
+ * before the caller's season filter runs. `player_stats_week` is a single
+ * 33,447,747-byte file spanning every season since 1999, so the primary cron
+ * held ~26 seasons of full row objects on a 1GB serverless heap and was killed
+ * for memory — measured repeatedly, and STILL on
+ * dpl_DU9K91tetxKe8oa5YdLvKBaBRJd7 after the #929 streaming-decode fix, because
+ * that fix removed the retained gz bytes and left the retained records.
+ *
+ * Filtering DURING the scan means peak heap is the decoded text plus one season
+ * of 18-column records. Nothing is sampled or dropped: the rows returned are
+ * exactly the rows a post-hoc `filter(r => r.season === season)` would have
+ * kept, which is what the caller already did. The currency merge still runs, so
+ * a season newer than the combined asset is backfilled exactly as before.
+ */
+export async function fetchNflversePlayerStatsWeek(
+  key: NflverseDatasetKey,
+  season: number,
+  variant?: string,
+): Promise<CsvTable> {
+  // Coverage is measured over EVERY row via `onRow`, never inferred from the
+  // filtered result. `mergePlayerStatsWeekCurrency` decides whether to backfill
+  // per-season files from `maxSeasonIn(table)`; if it read a table already
+  // filtered to the target season it would always see `season <= covered`,
+  // decide no backfill was needed, and silently stop advancing the current
+  // season — the exact failure the merge exists to prevent. So we hand the
+  // merge a coverage number we measured, and keep the filter for retention only.
+  let covered = 0;
+  const options: ParseCsvOptions = Number.isFinite(season)
+    ? {
+        columns: PLAYER_STATS_WEEK_COLUMNS,
+        rowFilter: (row) => row["season"] === String(season),
+        onRow: (row) => {
+          const value = Number(row["season"]);
+          if (Number.isFinite(value) && value > covered) covered = value;
+        },
+      }
+    : { columns: PLAYER_STATS_WEEK_COLUMNS };
+  const table = parseCsv(await fetchNflverseText(key, season, variant), options);
+  if (key !== "player_stats_week" || !Number.isFinite(season)) return table;
+
+  // Re-derive the merge decision from the MEASURED watermark instead of from
+  // the filtered table, preserving the documented bail-outs: covered===0 means
+  // no row had a parseable season (untrustworthy table, skip the backfill), and
+  // season <= covered means the combined asset already carries the season.
+  if (!Number.isFinite(covered) || covered === 0 || season <= covered) return table;
+  const records = [...table.records];
+  for (let extraSeason = covered + 1; extraSeason <= season; extraSeason++) {
+    const perSeason = await fetchPerSeasonPlayerStatsWeekWith(
+      extraSeason,
+      async (url) => {
+        const res = await noStoreFetch(url);
+        if (!res.ok) throw new Error(`nflverse fetch failed (${res.status}) for ${url}`);
+        return decodeDatasetText(res);
+      },
+      // Same projection, and NO season filter: a per-season file is already
+      // scoped to its own season, and the existing REG/POST + offense-position
+      // filter in that helper is part of the merge's documented semantics.
+      { columns: PLAYER_STATS_WEEK_COLUMNS },
+    );
+    if (perSeason && perSeason.records.length > 0) records.push(...perSeason.records);
+  }
+  return { header: table.header, records };
 }

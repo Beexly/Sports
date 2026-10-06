@@ -22,7 +22,7 @@ describe("bayesian-bridge hierarchical shrinkage", () => {
     if (r.ok) {
       expect(r.data).toHaveLength(3);
       // Small-n group should shrink most toward the grand mean
-      expect(r.data[1]!.posterior).not.toBe(1.2);
+      expect(r.data[1]!.posteriorMean).not.toBe(1.2);
     }
   });
 

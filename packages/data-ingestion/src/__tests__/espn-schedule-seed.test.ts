@@ -27,7 +27,7 @@ describe("parseEspnScoreboardForSeed", () => {
       ],
     });
     expect(games).toHaveLength(1);
-    expect(games[0]!.externalId).toBe("espn:ncaaf:401628000");
+    expect(games[0]!.externalId).toBe("espn:americanfootball_ncaaf:401628000");
     expect(games[0]!.sportKey).toBe("americanfootball_ncaaf");
     expect(games[0]!.homeTeamName).toBe("Alabama Crimson Tide");
     expect(games[0]!.awayTeamName).toBe("Western Kentucky");

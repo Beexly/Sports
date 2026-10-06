@@ -1,0 +1,28 @@
+{
+  "primary": {
+    "n_tr": 70912,
+    "n_te": 35474,
+    "gate": {
+      "ceiling": 0.0527,
+      "tier": "standard",
+      "action": "standard SR run \u2014 expected discovery range",
+      "ols_linear_r2": 0.04,
+      "structure": null
+    },
+    "tail_kurt": -1.036,
+    "verdict": "CONTINUE \u2014 SR gate cleared"
+  },
+  "replication": {
+    "n_tr": 106386,
+    "n_te": 34902,
+    "gate": {
+      "ceiling": 0.0375,
+      "tier": "low-signal",
+      "action": "SR with low-signal flag; any discovery needs extra validation",
+      "ols_linear_r2": 0.0264,
+      "structure": null
+    },
+    "tail_kurt": -1.038,
+    "verdict": "CONTINUE \u2014 SR gate cleared"
+  }
+}

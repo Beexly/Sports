@@ -48,6 +48,9 @@ import {
 import {
   replayAndSettleGame,
   buildPickProofReceipt,
+  isPlausibleEntryOdds,
+  ENTRY_ODDS_MIN_ABS,
+  ENTRY_ODDS_MAX_ABS,
   type RawScheduleRow,
   type SettledHistoricalPick,
 } from "../../packages/prediction-engine/src/index.js";
@@ -247,7 +250,7 @@ async function main(): Promise<void> {
       pick.marketFairProb > 0 &&
       pick.marketFairProb < 1 &&
       pick.entryOdds !== null &&
-      pick.entryOdds !== 0
+      isPlausibleEntryOdds(pick.entryOdds)
     ) {
       try {
         buildPickProofReceipt(
@@ -331,6 +334,8 @@ async function writeBackfill(settled: SettledHistoricalPick[]): Promise<void> {
 
   let written = 0;
   let skippedNoGame = 0;
+  let receiptsRefusedBadOdds = 0;
+  const refusedOddsValues: number[] = [];
   for (const pick of settled) {
     // The backfill keys on the nflverse game_id. The live Pick.gameId is a Game.id
     // (FK). We resolve via Game.externalId == nflverse game_id; the Game row must
@@ -377,7 +382,18 @@ async function writeBackfill(settled: SettledHistoricalPick[]): Promise<void> {
     });
 
     // Immutable proof receipt (create-once).
-    if (pick.marketFairProb !== null && pick.entryOdds !== null) {
+    //
+    // The live path guards entryOdds with isPlausibleEntryOdds before minting
+    // (process-sport.ts). This backfill did not, so a historical pick carrying an
+    // invalid American price such as -33 would have created a NEW receipt holding
+    // it. The upsert below carries `update: {}`, so this guard can never rewrite a
+    // frozen receipt; refusing here only stops a new bad row, which is exactly what
+    // AGENTS.md law 10 asks for. Refusals are counted and printed, never silent.
+    if (
+      pick.marketFairProb !== null &&
+      pick.entryOdds !== null &&
+      isPlausibleEntryOdds(pick.entryOdds)
+    ) {
       const receipt = buildPickProofReceipt(
         {
           pickId: upserted.id,
@@ -389,6 +405,13 @@ async function writeBackfill(settled: SettledHistoricalPick[]): Promise<void> {
           marketFairProb: pick.marketFairProb,
           confidence: pick.confidence,
           edgeScore: pick.edgeScore,
+          // DELIBERATELY null here, unlike the live mint (process-sport.ts), which
+          // now commits a real independent modelProb. A proof receipt is a PRE-RESULT
+          // commitment; this backfill reconstructs receipts for games that have
+          // ALREADY settled, so any probability written here would be fitted after
+          // the outcome was known — it would grade itself perfectly and make the
+          // whole audit spine worthless. These rows are isBootstrap=true and excluded
+          // from canonical metrics anyway; "none" is the honest claim.
           modelProb: null,
           modelVersion: pick.modelVersion,
           asOf: pick.asOf,
@@ -412,11 +435,19 @@ async function writeBackfill(settled: SettledHistoricalPick[]): Promise<void> {
         },
         update: {},
       });
+    } else if (pick.entryOdds !== null && !isPlausibleEntryOdds(pick.entryOdds)) {
+      receiptsRefusedBadOdds++;
+      if (refusedOddsValues.length < 10) refusedOddsValues.push(pick.entryOdds);
     }
     written++;
   }
 
   console.log(`\nWRITE complete: ${written} picks persisted (isBootstrap=true), ${skippedNoGame} skipped (no matching Game row).`);
+  console.log(
+    `proof receipts refused for implausible entryOdds: ${receiptsRefusedBadOdds}` +
+      (receiptsRefusedBadOdds > 0 ? ` (first values: ${refusedOddsValues.join(", ")})` : "") +
+      ` — a price outside ${ENTRY_ODDS_MIN_ABS} <= |value| <= ${ENTRY_ODDS_MAX_ABS} is not a valid American price. The pick was still written; only the receipt was not minted. Existing receipts were not touched.`,
+  );
   if (skippedNoGame > 0) {
     console.log(
       "Skipped games have no Game.externalId == nflverse game_id. Promote the HistoricalGame archive " +

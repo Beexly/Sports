@@ -176,7 +176,15 @@ describe("C-104 acceptance: free two-book NFL board (ESPN inline + Kalshi via Pr
     expect(MIN_BOOKMAKERS).toBe(2);
 
     const byType = new Map(picks.map((p) => [p.pickType, p]));
-    expect([...byType.keys()].sort()).toEqual(["MONEYLINE", "SPREAD", "TOTAL"]);
+    // Post-market-echo scale (2026-09-27 rewire; MIN_PUBLISH_CONFIDENCE
+    // unchanged at 50): at two books the depth component is 4 and the
+    // thin-market volatility penalty is -10, so SPREAD clears comfortably
+    // (~65 with the full scorer context) while MONEYLINE (~25-35) and TOTAL
+    // (~34) sit under the floor — measured, not asserted blind. The pipeline
+    // assertions this acceptance exists for are unchanged: two cleared
+    // bookmakers per market, every market scored, zero paid credits.
+    expect([...byType.keys()].sort()).toEqual(["SPREAD"]);
+    expect(byType.get("SPREAD")!.confidence).toBeGreaterThanOrEqual(50);
     for (const p of picks) expect(p.bookmakerCount).toBe(2);
 
     // Not one request left the free plane: ESPN scoreboard + PredExon only.
@@ -188,14 +196,17 @@ describe("C-104 acceptance: free two-book NFL board (ESPN inline + Kalshi via Pr
   });
 
   it("does not mint a market when the Kalshi side lacks a live quote for it (single book < MIN_BOOKMAKERS)", async () => {
+    // Same post-market-echo scale as the first test: only SPREAD clears the
+    // floor at two books, so the quote-coverage assertions compare against the
+    // honest mint set per market.
     const noSpread = await twoBookPicks({ spreadQuoted: false });
-    expect(noSpread.picks.map((p) => p.pickType).sort()).toEqual(["MONEYLINE", "TOTAL"]);
+    expect(noSpread.picks.map((p) => p.pickType).sort()).toEqual([]);
 
     const noTotal = await twoBookPicks({ totalQuoted: false });
-    expect(noTotal.picks.map((p) => p.pickType).sort()).toEqual(["MONEYLINE", "SPREAD"]);
+    expect(noTotal.picks.map((p) => p.pickType).sort()).toEqual(["SPREAD"]);
 
     const noMoneyline = await twoBookPicks({ moneylineQuoted: false });
-    expect(noMoneyline.picks.map((p) => p.pickType).sort()).toEqual(["SPREAD", "TOTAL"]);
+    expect(noMoneyline.picks.map((p) => p.pickType).sort()).toEqual(["SPREAD"]);
   });
 
   it("mints nothing from the single ESPN book when the second book is off (default)", async () => {

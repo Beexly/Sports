@@ -30,4 +30,25 @@ describe("oo-epc", () => {
     expect(() => ooEpc([1.0])).toThrow();
     expect(() => flGlm([2], 0)).toThrow();
   });
+  // Regression: ooEpc used to renormalize its output to sum 1, which silently
+  // discarded a non-unit target. These fail against the old implementation.
+  it("honours a non-unit target instead of renormalizing to 1", () => {
+    const out = ooEpc([2.0, 3.0, 4.0], 0.9);
+    expect(out.reduce((s, v) => s + v, 0)).toBeCloseTo(0.9, 10);
+    expect(out.reduce((s, v) => s + v, 0)).not.toBeCloseTo(1, 6);
+  });
+  it("rejects a non-positive target", () => {
+    expect(() => ooEpc([2.0, 3.0], 0)).toThrow(/target must be positive/);
+    expect(() => ooEpc([2.0, 3.0], -1)).toThrow(/target must be positive/);
+  });
+  // Regression: the old implementation clamped negative shifted components to
+  // zero with Math.max(v, 0), fabricating a simplex point from an infeasible
+  // shift. It must throw instead.
+  it("throws rather than clamping when the z-shift leaves the simplex", () => {
+    // One heavy favourite plus several longshots: the longshots have a large
+    // sigma, so a hard z-shift drives them negative. Uniform odds would NOT do
+    // this (they are degenerate — every component lands on target/n).
+    const skewed = [1.01, 10, 10, 10, 10, 10];
+    expect(() => ooEpc(skewed, 0.2)).toThrow(/infeasible|negative/);
+  });
 });

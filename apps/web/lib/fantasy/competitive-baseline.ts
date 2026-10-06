@@ -53,14 +53,14 @@ export const FANTASY_BASELINE_MODULES: readonly FantasyBaselineModule[] = [
     currentTruth: "No public projection claims are live. The page reports the gate instead of inventing numbers.",
   },
   {
-    key: "rankings-cheatsheets",
-    module: "Rankings and cheat sheets",
+    key: "draft-cheatsheets",
+    module: "Draft and cheat sheets",
     competitorBaseline: ["Fantasy Guru / Elite Sports"],
     gseSurface: "/fantasy/draft + /fantasy/baseline",
     status: "gated-data",
     userValue: "Tiered ranks, positional cliffs, draft sheets, and slate cheat sheets.",
     dataRequired: "Projection feed, ADP, salaries, injuries, depth charts, scoring settings, and update timestamps.",
-    currentTruth: "Draft math exists on sample data; public rankings stay gated until live inputs exist.",
+    currentTruth: "Draft math exists on sample data; public draft views stay gated until live inputs exist.",
   },
   {
     key: "dfs-optimizer",

@@ -1,7 +1,9 @@
 import type { Metadata } from "next";
+import { notFound } from "next/navigation";
 import Link from "next/link";
 import { Attribution } from "@/components/ui/attribution";
 import { Footer } from "@/components/ui/footer";
+import { isPagePublic } from "@/lib/launch/internal-surface-fence";
 import { Nav } from "@/components/ui/nav";
 import { GeneratedPlate } from "@/components/immersive/generated-plate";
 import { NUMERIC_TEXT_CLASS, STAT_PLACEHOLDER } from "@/lib/format/stat";
@@ -65,6 +67,10 @@ function qbBucketLabel(row: NflverseQbAgeRow): string {
 }
 
 export default async function NflversePage(): Promise<JSX.Element> {
+  // Public/private surface doctrine: live player-week rows (target share, WOPR,
+  // opportunity counts) are raw data rows, which are internal.
+  if (!isPagePublic("/nflverse")) notFound();
+
   const [pulse, qbAgeTrend, birthdayTrend] = await Promise.all([
     loadNflverseUsagePulse(),
     loadQbAgeRbTrendReport(),

@@ -22,6 +22,7 @@ import {
   loadLatestPaidCallAnyPurposeAt,
   loadLatestPaidCallAt,
   loadOddsCreditTruth,
+  loadOddsCreditTruthOutcome,
   paidCallMutexKey,
   recordCreditObservation,
   recordPaidCall,
@@ -619,6 +620,76 @@ describe("ledger (append-only JarvisMemoryEvent rows)", () => {
       await recordCreditObservation(db, { remaining: 1, used: null, observedAt: SEP_6.toISOString(), source: "t" }),
     ).toBe("error");
     expect(await recordPaidCall(db, { sport: "x", purpose: "odds", at: SEP_6.toISOString() })).toBe("error");
+  });
+
+  // ── F1: a failed READ must be distinguishable from an EMPTY ledger ───────
+  // `loadOddsCreditTruth` returns remaining=null for both, which is safe for a
+  // pacing gate and wrong for a health report: the health-alert cron read that
+  // null as "quota fine" while the database was down. The outcome loader is the
+  // version that can say which one happened.
+  it("loadOddsCreditTruthOutcome reports a failed read instead of an empty ledger", async () => {
+    const db: OddsCreditLedgerDb = {
+      jarvisMemoryEvent: {
+        create: vi.fn(async () => {
+          throw new Error("db down");
+        }),
+        findFirst: vi.fn(async () => {
+          throw new Error("db down");
+        }),
+        findMany: vi.fn(async () => {
+          throw new Error("db down");
+        }),
+      },
+    };
+    const outcome = await loadOddsCreditTruthOutcome(db, SEP_6);
+    expect(outcome.readFailed).toBe(true);
+    expect(outcome.error).toContain("db down");
+    // Same neutral value the old loader returned, so nothing downstream that
+    // only wants the numbers changes behaviour.
+    expect(outcome.truth.remaining).toBeNull();
+  });
+
+  it("loadOddsCreditTruthOutcome reports an EMPTY-but-readable ledger as not failed", async () => {
+    const db: OddsCreditLedgerDb = {
+      jarvisMemoryEvent: {
+        create: vi.fn(async () => ({ id: "x" })),
+        findFirst: vi.fn(async () => null),
+        findMany: vi.fn(async () => []),
+      },
+    };
+    const outcome = await loadOddsCreditTruthOutcome(db, SEP_6);
+    expect(outcome.readFailed).toBe(false);
+    expect(outcome.error).toBeNull();
+    expect(outcome.truth.remaining).toBeNull();
+  });
+
+  it("loadOddsCreditTruthOutcome is not failed when a real reading comes back", async () => {
+    const { db, findFirst, findMany } = fakeDb();
+    const latest = { remaining: 2280, used: 17720, observedAt: "2026-09-06T11:00:00.000Z", source: "refresh-odds" };
+    findFirst.mockResolvedValueOnce({ full_text: null, metadata: latest });
+    findMany.mockResolvedValueOnce([{ full_text: null, metadata: latest }]);
+    const outcome = await loadOddsCreditTruthOutcome(db, SEP_6);
+    expect(outcome.readFailed).toBe(false);
+    expect(outcome.truth.remaining).toBe(2280);
+  });
+
+  it("loadOddsCreditTruth still never throws and still returns the truth block", async () => {
+    // The original never-throws contract is preserved for every existing caller.
+    const db: OddsCreditLedgerDb = {
+      jarvisMemoryEvent: {
+        create: vi.fn(async () => {
+          throw new Error("db down");
+        }),
+        findFirst: vi.fn(async () => {
+          throw new Error("db down");
+        }),
+        findMany: vi.fn(async () => {
+          throw new Error("db down");
+        }),
+      },
+    };
+    const truth = await loadOddsCreditTruth(db, SEP_6);
+    expect(truth.remaining).toBeNull();
   });
 
   it("loadOddsCreditTruth assembles the truth block from the latest reading and the 24h window", async () => {

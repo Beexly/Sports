@@ -34,9 +34,9 @@ export function caScores(
     let s = 0;
     for (let g = 0; g < n; g++) {
       let others = 0;
-      for (let k = 0; k < m; k++) if (k !== j) others += predMatrix[k][g];
+      for (let k = 0; k < m; k++) if (k !== j) others += predMatrix[k]![g]!;
       const meanOthers = m > 1 ? others / (m - 1) : 0.5;
-      s += (preds[g] - meanOthers) * (ys[g] - meanOthers);
+      s += (preds[g]! - meanOthers) * (ys[g]! - meanOthers);
     }
     return s / n;
   });
@@ -55,16 +55,17 @@ export function aggregateProbs(
   predMatrix: readonly (readonly number[])[],
   weights: readonly number[],
 ): number[] {
-  const n = predMatrix[0].length;
+  if (predMatrix.length === 0) return [];
+  const n = predMatrix[0]!.length;
   return Array.from({ length: n }, (_, g) =>
-    predMatrix.reduce((a, preds, j) => a + weights[j] * preds[g], 0),
+    predMatrix.reduce((a, preds, j) => a + weights[j]! * preds[g]!, 0),
   );
 }
 
 /** Spearman rank correlation (skill-persistence check on PAS rankings). */
 export function spearman(a: readonly number[], b: readonly number[]): number {
   const rank = (xs: readonly number[]): number[] => {
-    const order = xs.map((_, i) => i).sort((x, y) => xs[x] - xs[y]);
+    const order = xs.map((_, i) => i).sort((x, y) => xs[x]! - xs[y]!);
     const r = new Array(xs.length).fill(0);
     order.forEach((idx, pos) => { r[idx] = pos; });
     return r;
@@ -77,14 +78,14 @@ export function spearman(a: readonly number[], b: readonly number[]): number {
   let da = 0;
   let db = 0;
   for (let i = 0; i < n; i++) {
-    num += (ra[i] - mean) * (rb[i] - mean);
-    da += (ra[i] - mean) * (ra[i] - mean);
-    db += (rb[i] - mean) * (rb[i] - mean);
+    num += (ra[i]! - mean) * (rb[i]! - mean);
+    da += (ra[i]! - mean) * (ra[i]! - mean);
+    db += (rb[i]! - mean) * (rb[i]! - mean);
   }
   return da > 0 && db > 0 ? num / Math.sqrt(da * db) : 0;
 }
 
 /** Mean Brier of a forecast set. */
 export function meanBrier(probs: readonly number[], ys: readonly number[]): number {
-  return probs.reduce((a, p, i) => a + (p - ys[i]) * (p - ys[i]), 0) / probs.length;
+  return probs.reduce((a, p, i) => a + (p - ys[i]!) * (p - ys[i]!), 0) / probs.length;
 }

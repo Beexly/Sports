@@ -60,10 +60,10 @@ export function murphyCurve(
   return grid.map((theta) => {
     let s = 0;
     for (let i = 0; i < intervals.length; i++) {
-      const { l, u } = intervals[i];
+      const { l, u } = intervals[i]!;
       s +=
-        elementaryQuantileScore(l, ys[i], theta, half) +
-        elementaryQuantileScore(u, ys[i], theta, 1 - half);
+        elementaryQuantileScore(l, ys[i]!, theta, half) +
+        elementaryQuantileScore(u, ys[i]!, theta, 1 - half);
     }
     return s / intervals.length;
   });
@@ -76,7 +76,7 @@ export function dominanceCount(
 ): number {
   let n = 0;
   for (let i = 0; i < challengerCurve.length; i++) {
-    if (challengerCurve[i] <= incumbentCurve[i] + 1e-12) n++;
+    if (challengerCurve[i]! <= incumbentCurve[i]! + 1e-12) n++;
   }
   return n;
 }

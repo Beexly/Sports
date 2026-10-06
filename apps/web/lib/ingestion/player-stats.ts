@@ -14,6 +14,7 @@
  */
 import {
   fetchNflverse,
+  fetchNflversePlayerStatsWeek,
   ingestionTargetNflSeason as ingestionTargetSeasonFromLabel,
   resolveFootballStatsSeason,
   type NflverseDatasetKey,
@@ -80,7 +81,17 @@ export async function ingestPlayerWeeklyStats(
   options: { now?: Date; fetcher?: TableFetcher } = {},
 ): Promise<PlayerStatsIngestResult> {
   const now = options.now ?? new Date();
-  const fetchTable: TableFetcher = options.fetcher ?? fetchNflverse;
+  // The season-scoped fetcher is the DEFAULT for this asset and only for it:
+  // `player_stats_week` is one 33MB file spanning every season since 1999, so
+  // the unfiltered fetch built ~26 seasons of records and the cron was killed
+  // for memory. An injected `options.fetcher` (tests, and any other consumer)
+  // still wins, so this changes no test's wire format.
+  const fetchTable: TableFetcher =
+    options.fetcher ??
+    ((key: NflverseDatasetKey, s: number, variant?: string) =>
+      key === "player_stats_week"
+        ? fetchNflversePlayerStatsWeek(key, s, variant)
+        : fetchNflverse(key, s, variant));
 
   // 1. Clearance gate. A denied result MUST stop the job (CLAUDE.md invariant).
   const gate = nflverseIngestionGate(now);

@@ -140,17 +140,90 @@ export function gaussCopulaSample(rand: () => number, rho: number, randnFn: () =
   return [normalCdf(z1), normalCdf(w2)];
 }
 
-/** Gaussian-copula joint CDF for binary-thresholded margins. */
+/**
+ * Gauss-Legendre nodes/weights on [-1, 1] via Newton iteration on P_n.
+ * Computed once per process; 32 nodes resolves the copula integral to well
+ * below 1e-10 for the marginals this engine sees.
+ */
+let glCache: { x: number[]; w: number[] } | null = null;
+function gaussLegendre(n: number): { x: number[]; w: number[] } {
+  if (glCache) return glCache;
+  const x: number[] = [];
+  const w: number[] = [];
+  const m = (n + 1) >> 1;
+  for (let i = 0; i < m; i++) {
+    // Chebyshev start point, then Newton to refine.
+    let z = Math.cos((Math.PI * (i + 0.75)) / (n + 0.5));
+    let pp = 0;
+    for (let it = 0; it < 100; it++) {
+      let p1 = 1;
+      let p2 = 0;
+      for (let j = 0; j < n; j++) {
+        const p3 = p2;
+        p2 = p1;
+        p1 = ((2 * j + 1) * z * p2 - j * p3) / (j + 1);
+      }
+      pp = (n * (z * p1 - p2)) / (z * z - 1);
+      const dz = p1 / pp;
+      z -= dz;
+      if (Math.abs(dz) < 1e-15) break;
+    }
+    x.push(-z);
+    x.push(z);
+    const weight = 2 / ((1 - z * z) * pp * pp);
+    w.push(weight);
+    w.push(weight);
+  }
+  glCache = { x, w };
+  return glCache;
+}
+
+/**
+ * Gaussian-copula joint CDF for binary-thresholded margins:
+ * P(U1 <= p1, U2 <= p2) = Phi2(x, y; rho) where x = Phi^-1(p1), y = Phi^-1(p2).
+ *
+ * Phi2 is evaluated from its defining integral
+ *   Phi2(x, y; r) = Phi(x)Phi(y) + (1/2pi) * Integral_0^r exp(-(x^2 - 2txy + y^2)/(2(1-t^2))) dt
+ * The previous first-order term about t = 0 is a signed quantity with no
+ * probability interpretation: at p1 = p2 = 0.1, rho = -0.9 it returned about
+ * -0.019, a negative probability. No clamp is applied here; a result outside
+ * [0, 1] means the inputs did not describe a sound joint and is refused.
+ */
 export function gaussCopulaJoint(p1: number, p2: number, rho: number): number {
-  // P(U1 <= p1, U2 <= p2) via bivariate normal CDF (Drezner-Wesolowsky approx)
+  if (!(p1 >= 0 && p1 <= 1) || !(p2 >= 0 && p2 <= 1)) {
+    throw new Error(`gaussCopulaJoint: margins must lie in [0, 1], got p1=${p1} p2=${p2}`);
+  }
+  if (!(rho > -1 && rho < 1)) {
+    throw new Error(`gaussCopulaJoint: rho must lie in (-1, 1), got ${rho}`);
+  }
+  if (p1 === 0 || p2 === 0) return 0;
+  if (p1 === 1 || p2 === 1) return Math.min(p1, p2);
+
   const x = normalQuantile(p1);
   const y = normalQuantile(p2);
-  const a = x;
-  const b = y;
-  const r = Math.min(0.999999, Math.max(-0.999999, rho));
-  // tetrachoric series (first-order is enough for the demo)
-  void a; void b;
-  return normalCdf(x) * normalCdf(y) + (r / (2 * Math.PI)) * Math.exp(-(x * x + y * y) / 2);
+  const { x: nodes, w: weights } = gaussLegendre(32);
+  // Map the [-1, 1] rule onto the integration path from 0 to rho.
+  const half = rho / 2;
+  const mid = rho / 2;
+  let integral = 0;
+  for (let i = 0; i < nodes.length; i++) {
+    const t = mid + half * (nodes[i] ?? 0);
+    const denom = 1 - t * t;
+    const expo = -(x * x - 2 * t * x * y + y * y) / (2 * denom);
+    integral += (weights[i] ?? 0) * Math.exp(expo);
+  }
+  integral *= half;
+  const joint = normalCdf(x) * normalCdf(y) + integral / (2 * Math.PI);
+  if (!Number.isFinite(joint) || joint < -1e-12 || joint > 1 + 1e-12) {
+    throw new Error(
+      `gaussCopulaJoint: computed a joint probability of ${joint} for p1=${p1} p2=${p2} rho=${rho}, ` +
+        "which is outside [0, 1]; clamping it would fabricate a probability",
+    );
+  }
+  // Quadrature dust only. Anything past 1e-12 already threw above.
+  if (joint < 0) return 0;
+  if (joint > 1) return 1;
+  return joint;
 }
 
 /** Log-gamma via Lanczos approximation. */

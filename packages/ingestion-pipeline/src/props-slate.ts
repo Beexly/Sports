@@ -237,9 +237,10 @@ export function runPropsSlate(input: PropsSlateInput): PropsSlateResult {
           ? modelP
           : 1 - modelP;
     if (prop == null || pOver == null || !Number.isFinite(pOver)) {
+      const badP = pOver != null && Number.isFinite(pOver) ? pOver : Number.NaN;
       fireRows.push({
         propId: key,
-        pOver: Number.isFinite(pOver) ? pOver : Number.NaN,
+        pOver: badP,
         fire: {
           ok: false,
           fire: false,
@@ -250,7 +251,7 @@ export function runPropsSlate(input: PropsSlateInput): PropsSlateResult {
         priced: {
           ok: false,
           source: "props_hb",
-          pOver: Number.isFinite(pOver) ? pOver : null,
+          pOver: Number.isFinite(badP) ? badP : null,
           qOver: null,
           edgeOver: null,
           priced: false,
@@ -281,16 +282,16 @@ export function runPropsSlate(input: PropsSlateInput): PropsSlateResult {
     const books = shopBooksFromOdds(prop.odds);
     const priced = pricePropAgainstMarket(pOver, quote);
     const shop = shopPostedPrices(pOver, books);
-    const juice =
+    const juice: JuiceFloorResult | JuiceFloorDenied =
       quote && Number.isFinite(quote.overAmerican)
         ? edgeClearsPosted(pOver, quote.overAmerican)
         : {
-            ok: false as const,
-            methodTag: "props_juice_floor_v1" as const,
+            ok: false,
+            methodTag: "props_juice_floor_v1",
             surplus: null,
             clears: false,
             priced: false,
-            refuse: "bad_price" as const,
+            refuse: "bad_price",
           };
     const fire = firePostedProp(pOver, quote, books);
     fireRows.push({ propId: key, pOver, fire, priced, shop, juice });

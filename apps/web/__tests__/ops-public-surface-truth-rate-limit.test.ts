@@ -79,7 +79,6 @@ const opsMocks = vi.hoisted(() => ({
 }));
 
 const dataMocks = vi.hoisted(() => ({
-  resolveContestStorageMode: vi.fn(() => "mode"),
   resolveWaitlistStorageMode: vi.fn(() => "mode"),
   isStubMode: vi.fn(() => false),
   isDemoPicksEnabled: vi.fn(() => false),
@@ -165,10 +164,6 @@ vi.mock("@/lib/launch/public-surface-gate", () => ({
   isContestsPublic: launchMocks.isContestsPublic,
   isStatsPublic: launchMocks.isStatsPublic,
   PUBLIC_NAV_POLICY: launchMocks.PUBLIC_NAV_POLICY,
-}));
-
-vi.mock("@/lib/contests/store", () => ({
-  resolveContestStorageMode: dataMocks.resolveContestStorageMode,
 }));
 
 vi.mock("@/lib/gse/waitlist-store", () => ({

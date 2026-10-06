@@ -8,6 +8,8 @@
  */
 
 import { vor, type Player } from "./players";
+import { applyToPool, readFor } from "@/lib/signals/apply";
+import type { SignalContext } from "@/lib/signals/spine";
 import { activePlayerPool } from "@/lib/integrations/projections";
 
 /** The studs assumed already rostered (top value), excluded from the waiver pool. */
@@ -38,21 +40,34 @@ export type WaiverRec = {
 
 const TIER_PCT: Record<FaabTier, number> = { Priority: 0.34, Target: 0.18, Speculative: 0.07, Dart: 0.02 };
 
-export function waiverTargets(universe: readonly Player[] = activePlayerPool()): WaiverRec[] {
+/**
+ * Waiver board.
+ *
+ * `ctx` is the shared signal spine (`lib/signals/spine.ts`). Passing it makes the
+ * board read the same facts the DFS optimizer and the trade calculator read, so
+ * a WR1 ruled out promotes his backup HERE too rather than only in a lineup.
+ * Omitting it leaves behaviour exactly as before.
+ */
+export function waiverTargets(universe: readonly Player[] = activePlayerPool(), ctx?: SignalContext): WaiverRec[] {
   const rostered = rosteredIds(universe);
-  const pool = universe.filter((p) => !rostered.has(p.id));
+  const raw = universe.filter((p) => !rostered.has(p.id));
+  const pool = ctx ? applyToPool(raw, ctx) : raw;
   const scored = pool.map((p) => ({ p, s: pickupScore(p) })).sort((a, b) => b.s - a.s);
   const max = scored[0]?.s ?? 1;
 
   return scored.map(({ p, s }) => {
     const ratio = s / max;
     const tier: FaabTier = ratio > 0.85 ? "Priority" : ratio > 0.62 ? "Target" : ratio > 0.42 ? "Speculative" : "Dart";
-    const reason =
+    const moved = ctx ? readFor({ name: p.name, pos: p.pos as never, team: p.team }, ctx) : null;
+    const signalReason = moved && moved.effects.length
+      ? `${moved.delta > 0 ? "Signals up" : "Signals down"}: ${moved.effects[0]!.reason} `
+      : "";
+    const reason = signalReason + (
       p.trend === "up" && p.usage > 0.4 ? "Role and usage both trending up: the highest-conviction add."
       : p.trend === "up" ? "Ascending arrow; get ahead of the breakout."
       : p.injury !== "healthy" ? `Upside add gated by a ${p.injury} tag.`
       : p.usage > 0.45 ? "Standalone snaps now; matchup-proof flex."
-      : "Ceiling stash for a second-half role.";
+      : "Ceiling stash for a second-half role.");
     return { player: p, score: Math.round(s), tier, bidPct: TIER_PCT[tier], reason };
   });
 }

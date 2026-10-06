@@ -1,0 +1,65 @@
+{
+  "seeds": [
+    42,
+    123,
+    7
+  ],
+  "beta": 0.9,
+  "results": [
+    {
+      "seed": 42,
+      "test_r2": -0.03,
+      "length": 1,
+      "program": "-0.168",
+      "time_term": {
+        "in_program": false,
+        "swing_rel_pct": 0.0,
+        "retained": false,
+        "is_constant": true
+      },
+      "smooth_linear": {
+        "formula_test_r2": -0.03,
+        "smooth_linear_test_r2": 0.0499,
+        "delta_formula_minus_linear": -0.0799,
+        "kink_is_decoration": true
+      }
+    },
+    {
+      "seed": 123,
+      "test_r2": -0.0207,
+      "length": 1,
+      "program": "-0.139",
+      "time_term": {
+        "in_program": false,
+        "swing_rel_pct": 0.0,
+        "retained": false,
+        "is_constant": true
+      },
+      "smooth_linear": {
+        "formula_test_r2": -0.0207,
+        "smooth_linear_test_r2": 0.0499,
+        "delta_formula_minus_linear": -0.0706,
+        "kink_is_decoration": true
+      }
+    },
+    {
+      "seed": 7,
+      "test_r2": -0.003,
+      "length": 4,
+      "program": "mul(-0.238, sqrt(X3))",
+      "time_term": {
+        "in_program": false,
+        "swing_rel_pct": 0.0,
+        "retained": false,
+        "is_constant": false
+      },
+      "smooth_linear": {
+        "formula_test_r2": -0.003,
+        "smooth_linear_test_r2": 0.0499,
+        "delta_formula_minus_linear": -0.0528,
+        "kink_is_decoration": true
+      }
+    }
+  ],
+  "verdict": "SR METHOD DECLARED STRUCTURALLY INCAPABLE of this target class \u2014 no quarter_seconds_remaining term under log-cosh + soft target (beta=0.9)"
+}

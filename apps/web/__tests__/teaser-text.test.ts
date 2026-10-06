@@ -30,15 +30,21 @@ describe("stripProbabilityFromTeaser", () => {
 
 describe("/api/picks wires the teaser scrub", () => {
   const routeSrc = readFileSync(resolve(__dirname, "..", "app/api/picks/route.ts"), "utf8");
-  it("passes both reasoning fields through teaserForViewer keyed on canSeeConfidence", () => {
-    expect(routeSrc).toContain('from "@/lib/picks/teaser-text"');
-    // Dual-field scrub via projectReasoning helper (binder + teaser) — one
-    // teaserForViewer call site, invoked for both reasoningShort and reasoning.
-    expect(routeSrc).toMatch(/text:\s*teaserForViewer\(source,\s*entitlements\.canSeeConfidence\)/);
+  const projectorSrc = readFileSync(
+    resolve(__dirname, "..", "lib/claims/project-public-consensus-reasoning.ts"),
+    "utf8",
+  );
+  it("passes both reasoning fields through the shared projector (scrub + binder)", () => {
+    // Dual-field scrub via projectReasoning → projectPublicConsensusReasoning
+    // (binder + teaserForViewer). One teaser scrub call site in the projector.
+    expect(routeSrc).toContain('from "@/lib/claims/project-public-consensus-reasoning"');
+    expect(projectorSrc).toContain('from "@/lib/picks/teaser-text"');
+    expect(projectorSrc).toMatch(/teaserForViewer\(source,\s*options\.canSeeConfidence/);
     const projectCalls = routeSrc.match(/projectReasoning\(/g) ?? [];
     expect(projectCalls.length).toBeGreaterThanOrEqual(2);
     expect(routeSrc).toMatch(/projectReasoning\(pick\.reasoningShort\)/);
     expect(routeSrc).toMatch(/projectReasoning\(reasoningSource\)/);
     expect(routeSrc).toContain("entitlements.canSeeConfidence");
+    expect(routeSrc).toContain("scrubConfidence: true");
   });
 });
