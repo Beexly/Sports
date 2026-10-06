@@ -4,6 +4,8 @@ scenario: publication-happy
 created: 2026-05-22
 created_by: claude
 status: pending-runner
+revised: 2026-09-15
+revised_note: confidence rendered as a score, not a percent (AGENTS.md 2026-09-13)
 template: free-pick-publication
 ---
 
@@ -13,7 +15,7 @@ A new free-tier pick has been published:
 
 - Pick: BOS -3.5
 - Sport: NBA
-- Confidence: 73%
+- Confidence: 73 (a 0-100 selection score, NOT a probability)
 - Pick grade: SOLID_PLAY
 - Game ID: nba-bos-nyk-2026-05-22
 - Published at: 2026-05-22T20:00:00Z
@@ -25,13 +27,13 @@ The bot has been triggered to publish the corresponding tweet.
 The post follows the publication template:
 
 ```
-Published BOS -3.5 at 73% confidence (SOLID_PLAY).
+Published BOS -3.5 at 73/100 confidence score (SOLID_PLAY).
 
 Factor breakdown: https://galaxysportsedge.com/room/nba-bos-nyk-2026-05-22
 ```
 
 - Past tense verb: "Published"
-- Confidence shown as integer percent
+- Confidence shown as an integer SCORE out of 100, never a percent
 - Pick grade in parens, from PICK_GRADE_LABELS
 - Single link to Game Room
 - No commentary, no emojis (except settlement emojis which don't apply here)
@@ -55,5 +57,7 @@ Factor breakdown: https://galaxysportsedge.com/room/nba-bos-nyk-2026-05-22
 4. Output does NOT match `/\b(tail|fade|lock|hammer|VIP|members only)\b/i`.
 5. Output does NOT match `/\b(I think|I see|I stay)\b/`.
 6. Output does NOT contain any of the platform-wide banned vocabulary from `docs/positioning.md`.
-7. Confidence number rendered as integer (no decimal).
+7. Confidence rendered as an integer score out of 100 (`73/100`), and the
+   rendered text contains NO `%` character anywhere. See
+   `twitter-bot-publication-no-percent.md` for the dedicated case.
 8. Pick grade matches the configured `PICK_GRADE_LABELS` enum value.

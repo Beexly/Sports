@@ -19,6 +19,7 @@ export type RiskLevel =
 
 export * from "./ladder.js";
 export * from "./heartbeat.js";
+export * from "./ranking-candidates.js";
 
 // ============================================================
 // Factor Breakdown — structured scoring factors per pick
@@ -171,6 +172,7 @@ export interface FactorDetail {
 export type EvidenceActivationStatus =
   | "ACTIVE"
   | "SHADOW_ONLY"
+  | "DARK"
   | "BLOCKED_MISSING_SOURCE"
   | "BLOCKED_STALE"
   | "BLOCKED_LOW_TRUST"

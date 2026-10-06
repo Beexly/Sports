@@ -56,6 +56,12 @@ export type RssFeedConfig = {
   readonly source: string;
   readonly tier: Tier;
   readonly team: string;
+  /**
+   * C-417: this feed belongs to GSN itself. Flagged so corroboration can
+   * exclude it — our own headline can never corroborate our own headline.
+   * Optional, and typed as literal `true` so a falsy value cannot be set.
+   */
+  readonly selfSourced?: true;
 };
 
 /** Parse the NEWS_RSS_FEEDS env format. Malformed entries are skipped. */

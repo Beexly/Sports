@@ -2327,6 +2327,9 @@ export type { InjuryPracticeReport, InjuryTrajectoryAnalysis, OfficialGameStatus
 export { evaluateRedZoneTeLeverage } from "./signals/efficiency/redzone-te-leverage.js";
 export type { RedZoneEfficiencyContext, RedZoneTeLeverageResult } from "./signals/efficiency/redzone-te-leverage.js";
 
+export { evaluateDefensivePassRush } from "./signals/trench/defensive-pass-rush-win-rate.js";
+export type { DefensivePassRushInput, DefensivePassRushResult } from "./signals/trench/defensive-pass-rush-win-rate.js";
+
 export { evaluateOffensiveLineTrench } from "./signals/trench/offensive-line-continuity.js";
 export type { OffensiveLineTrenchInput, OffensiveLineTrenchResult } from "./signals/trench/offensive-line-continuity.js";
 
@@ -2509,6 +2512,26 @@ export type {
   OosSegment,
   SegmentedOosSplit,
 } from "./oos-split.js";
+
+export {
+  getMlbIndependentModelProb,
+  MLB_INDEPENDENT_MODEL_ENABLED,
+  MLB_INDEPENDENT_MODEL_MODE,
+  MLB_INDEPENDENT_MODEL_VERSION,
+} from "./mlb-independent-model.js";
+export type {
+  MlbIndependentModelInput,
+  MlbIndependentModelResult,
+  MlbLineupInput,
+  MlbLineupStatus,
+  MlbModelTarget,
+  MlbParkInput,
+  MlbPitcherInput,
+  MlbPrecipitationType,
+  MlbRoofStatus,
+  MlbTeamRatingInput,
+  MlbWeatherInput,
+} from "./mlb-independent-model.js";
 
 // Canonical model version (frozen at v5.2.7 per founder invariant)
 export { MODEL_VERSION } from "./constants.js";

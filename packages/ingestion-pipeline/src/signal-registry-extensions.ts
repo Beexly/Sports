@@ -3,8 +3,10 @@
  * packages/prediction-engine/src/signals/ but were never registered into
  * the live slate.
  *
- * Every evaluator is real computation. Fail-closed when the evaluation
- * context lacks required inputs — never imputed. These extend
+ * Every evaluator is real computation. None of them has a point-in-time
+ * producer on the mint path, so each one is DARK. Fail-closed when the
+ * evaluation context lacks required inputs — never imputed, and no
+ * homeSign is added to an unsigned value. These extend
  * SIGNAL_REGISTRY (see signal-registry-definitions.ts).
  */
 
@@ -33,6 +35,9 @@ import {
   evaluateRedZonePersonnelGrouping,
   evaluateTwoMinuteHurryUpEfficiency,
 } from "@sports/prediction-engine";
+
+const DARK_NO_PIT =
+  "DARK: no point-in-time producer on the mint path. Env keys are not a feed.";
 
 const KILL_LINE = {
   maxBrierScoreVsMarket: 0.250,
@@ -65,12 +70,12 @@ export const nflTurnoverLuckSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-luck",
   dataDependencies: ["nfl_player_stats_weekly", "nfl_pbp"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.12,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const team = ctx.homeTeam;
@@ -121,12 +126,12 @@ export const nflShortWeekRoadSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-situational",
   dataDependencies: ["nfl_schedule"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.11,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const isRoadTeam = bool(ctx.env, "IS_ROAD_TEAM");
@@ -167,12 +172,12 @@ export const nflAgeConditionedRestSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-situational",
   dataDependencies: ["nfl_schedule", "nfl_rosters"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.08,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const snapWeightedRosterAge = num(ctx.env, "ROSTER_SNAP_WEIGHTED_AGE");
@@ -216,12 +221,12 @@ export const nflFourthDownAggressionSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-coaching",
   dataDependencies: ["nfl_pbp", "nfl_coaching_history"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.09,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const goForItRate = num(ctx.env, "COACH_GO_FOR_IT_RATE");
@@ -250,12 +255,12 @@ export const nflSecondAndTenTendencySignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-coaching",
   dataDependencies: ["nfl_pbp"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.07,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const passRate = num(ctx.env, "SECOND_AND_TEN_PASS_RATE");
@@ -282,12 +287,12 @@ export const nflPrimetimeTargetConcentrationSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-targets",
   dataDependencies: ["nfl_player_stats_weekly", "nfl_schedule"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.08,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const isPrimetime = bool(ctx.env, "IS_PRIMETIME");
@@ -316,12 +321,12 @@ export const nflEarlyDownProeSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-pace",
   dataDependencies: ["nfl_pbp"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.10,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const proe = num(ctx.env, "EARLY_DOWN_PROE");
@@ -348,12 +353,12 @@ export const nflTwoMinuteHurryUpSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-pace",
   dataDependencies: ["nfl_pbp"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.08,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const epa = num(ctx.env, "TWO_MINUTE_EPA_PER_PLAY");
@@ -380,12 +385,12 @@ export const nflByeWeekDefensiveInstallSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-schematic",
   dataDependencies: ["nfl_schedule", "nfl_pbp"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.09,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const comingOffBye = bool(ctx.env, "COMING_OFF_BYE");
@@ -414,12 +419,12 @@ export const nflQbTwpRegressionSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-efficiency",
   dataDependencies: ["nfl_pbp", "nfl_player_stats_weekly"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.13,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const passAttempts = num(ctx.env, "QB_PASS_ATTEMPTS");
@@ -450,12 +455,12 @@ export const nflQbReceiverContinuitySignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-chemistry",
   dataDependencies: ["nfl_rosters", "nfl_player_stats_weekly"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.10,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const gamesTogether = num(ctx.env, "QB_WR_GAMES_TOGETHER");
@@ -482,12 +487,12 @@ export const nflPenaltyDifferentialSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-discipline",
   dataDependencies: ["nfl_pbp"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.07,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const yardsFor = num(ctx.env, "PENALTY_YARDS_FOR");
@@ -516,12 +521,12 @@ export const nflBackupQbTargetSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-targets",
   dataDependencies: ["nfl_injuries", "nfl_player_stats_weekly"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.11,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const isBackup = bool(ctx.env, "QB_IS_BACKUP");
@@ -550,12 +555,12 @@ export const nflManZoneArchetypeSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-matchups",
   dataDependencies: ["nfl_charting", "nfl_player_stats_weekly"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.10,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const manRate = num(ctx.env, "DEF_MAN_RATE");
@@ -584,12 +589,12 @@ export const nflWr1VacatedSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-targets",
   dataDependencies: ["nfl_injuries", "nfl_player_stats_weekly"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.10,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const wr1Out = bool(ctx.env, "WR1_OUT");
@@ -631,12 +636,12 @@ export const nflRedzoneOppConversionSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-redzone",
   dataDependencies: ["nfl_pbp"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.11,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const trips = num(ctx.env, "REDZONE_TRIPS");
@@ -665,12 +670,12 @@ export const nflNegBinomRedzoneTdSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-redzone",
   dataDependencies: ["nfl_pbp"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.10,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const mean = num(ctx.env, "REDZONE_TD_MEAN");
@@ -699,12 +704,12 @@ export const nflRedzonePersonnelSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-redzone",
   dataDependencies: ["nfl_pbp", "nfl_charting"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.09,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const personnel = num(ctx.env, "REDZONE_PERSONNEL_GROUPING");
@@ -733,12 +738,12 @@ export const nflRookieBreakoutSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-narrative",
   dataDependencies: ["nfl_rosters", "nfl_player_stats_weekly"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.06,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const isRookie = bool(ctx.env, "PLAYER_IS_ROOKIE");
@@ -769,12 +774,12 @@ export const nflHighAltitudeSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-weather",
   dataDependencies: ["nfl_stadium_weather_feed"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.07,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const elevationFt = num(ctx.env, "STADIUM_ELEVATION_FT");
@@ -801,12 +806,12 @@ export const nflLinearWindPassSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-weather",
   dataDependencies: ["nfl_stadium_weather_feed"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.08,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const wind = num(ctx.env, "WIND_MPH");
@@ -833,12 +838,12 @@ export const nflTempPrecipSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-weather",
   dataDependencies: ["nfl_stadium_weather_feed"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.08,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const temp = num(ctx.env, "TEMP_F");
@@ -867,12 +872,12 @@ export const nflTurfSurfaceFatigueSignal: SignalDefinition = {
   validSports: ["americanfootball_nfl"],
   owner: "quant-biomechanics",
   dataDependencies: ["nfl_stadium_meta"],
-  activationStatus: "ACTIVE",
+  activationStatus: "DARK",
   trustWeight: 0.06,
   killLine: KILL_LINE,
   isRightsCleared: () => true,
   acquisitionTask: null,
-  blockedReason: null,
+  blockedReason: DARK_NO_PIT,
   evaluate: async (ctx) => {
     if (ctx.sportKey !== "americanfootball_nfl") return null;
     const surface = num(ctx.env, "TURF_SOFTNESS_INDEX");

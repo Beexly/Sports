@@ -1,0 +1,26 @@
+id: A26
+title: Defensive man/zone rate by receiver type (A14 extended)
+hypothesis: Slot vs boundary receivers show a different usage/efficiency response to man-vs-zone coverage rate than the league average.
+estimand: separation-proxy usage delta for slot vs boundary receivers under high-man-rate defenses vs high-zone-rate defenses
+unit: percentage points of target share or a separation proxy
+data: [nflverse.ftn_charting, nflverse.player_stats]
+discover_era: 2022-2023
+validate_era: 2024-2025
+kill_line: "no man/zone or coverage-scheme column exists in the public release — BLOCKED, not run"
+mde_80pct_power: null
+script: scripts/factors/A26.mjs
+status: BLOCKED
+number: null
+ci: null
+n: null
+run_sha: "7a474a6b557bb20e34fa8b826f5d1c3ebe94c57d"
+run_at: "2026-09-15T23:22:52.357Z"
+blocked_on: "verified live 2026-09-15 (season 2024): ftn_charting_2024.csv header (ftn_game_id, nflverse_game_id, season, week, ftn_play_id, nflverse_play_id, starting_hash, qb_location, n_offense_backfield, n_defense_box, is_no_huddle, is_motion, is_play_action, is_screen_pass, is_rpo, is_trick_play, is_qb_out_of_pocket, is_interception_worthy, is_throw_away, read_thrown, is_catchable_ball, is_contested_ball, is_created_reception, is_drop, is_qb_sneak, n_blitzers, n_pass_rushers, is_qb_fault_sack, date_pulled) carries no man/zone or coverage-scheme column. Coverage proxies available are n_defense_box, n_blitzers, n_pass_rushers, none of which distinguish man from zone. The A26 estimand as written cannot be read from any free, public, credential-free source this repo has found."
+notes: >
+  C-407. Pre-registered 2026-09-15 per LAST_PLAN.md section 4.3 (A26). Expected
+  BLOCKED: LAST_PLAN.md section 2.2 and the C-395 loader's own verified header
+  comment already record that the public ftn_charting_<season>.csv release
+  (2022-2025) carries no man/zone or coverage-scheme column, only
+  n_defense_box, n_blitzers, n_pass_rushers, is_motion, is_play_action,
+  is_screen_pass, is_rpo. A26.mjs fetches the live header itself and confirms
+  before writing BLOCKED, rather than asserting it from a prior read.
