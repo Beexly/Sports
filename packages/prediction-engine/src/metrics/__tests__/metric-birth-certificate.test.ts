@@ -27,6 +27,11 @@ import {
   rushOverExpectedGse,
   yacCreationGse,
   driftPressureIndex,
+  routeWinRateScore,
+  yprrScore,
+  separationScoreScore,
+  contestedCatchRateScore,
+  robbedScoreMetric,
 } from "../../index.js";
 
 describe("metric birth certificates", () => {
@@ -52,6 +57,11 @@ describe("metric birth certificates", () => {
       "playable-window-score",
       "portfolio-fit-score",
       "gse-signal-score",
+      "route-win-rate",
+      "yprr",
+      "separation-score",
+      "contested-catch-rate",
+      "robbed-score",
     ];
 
     for (const metricId of required) {
@@ -63,6 +73,11 @@ describe("metric birth certificates", () => {
       expect(certificate.validationMethods.length).toBeGreaterThan(0);
       expect(certificate.sourceRightsRequired.length).toBeGreaterThan(0);
     }
+    expect(typeof routeWinRateScore).toBe("function");
+    expect(typeof yprrScore).toBe("function");
+    expect(typeof separationScoreScore).toBe("function");
+    expect(typeof contestedCatchRateScore).toBe("function");
+    expect(typeof robbedScoreMetric).toBe("function");
   });
 
   it("keeps the registry unique and rejects unknown metrics", () => {

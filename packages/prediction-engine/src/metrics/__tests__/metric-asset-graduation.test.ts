@@ -70,6 +70,11 @@ describe("GSE metric assets and graduation", () => {
       "playable-window-score",
       "portfolio-fit-score",
       "gse-signal-score",
+      "route-win-rate",
+      "yprr",
+      "separation-score",
+      "contested-catch-rate",
+      "robbed-score",
     ]);
     for (const asset of GSE_METRIC_ASSETS) {
       expect(asset.birthCertificate.status).toBe("SHADOW");
