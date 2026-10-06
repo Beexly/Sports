@@ -9411,3 +9411,6 @@ posts in window.
 - TE FPTS/target + separation pairing: efficiency-per-opportunity with
   separation as the leading indicator (Fannin 5.8 avg separation, #1 TE;
   2.19 FPTS/tgt, #7) (@DynatyzeFF).
+
+## Kats Harmonic Regression (v3) Update
+Created `gse-ml-service/app/models/harmonic_regression.py` and `gse-ml-service/app/tests/test_harmonic_regression.py`. Vendored Kats harmonic regression with MIT attribution. Uses raw numpy arrays with absolute epoch seconds to properly handle gappy time series data without imputation. No new pip dependencies were added.
