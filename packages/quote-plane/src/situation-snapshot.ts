@@ -19,7 +19,7 @@ import type { QuoteLine } from "./types";
 import {
   FREE_QUOTE_PRECEDENCE,
   type FreeQuoteTier,
-  citeAllowed,
+  citeEligibleSources as selectCiteEligibleSources,
   certifiableForLiveGate,
   earlierWins,
   isFreeQuoteTier,
@@ -293,9 +293,7 @@ export function buildSituationSnapshotFromQuotes(
 
   // Cite-eligible: kept line AND citeAllowed — NOT gated by live-gate.
   // OddsPapi (citeAllowed=true, certifiableForLiveGate=false) may appear here.
-  const citeEligibleSources = FREE_QUOTE_PRECEDENCE.filter(
-    (t) => keptTiers.has(t) && citeAllowed(t),
-  );
+  const citeEligibleSources = selectCiteEligibleSources(keptTiers);
 
   // Live-gate-eligible: kept line AND certifiableForLiveGate.
   // OddsPapi / parlay / Apify never appear here.
