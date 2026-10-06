@@ -4,6 +4,7 @@
   "private": true,
   "workspaces": [
     "apps/*",
+    "!apps/mobile",
     "packages/*",
     "workers/*"
   ],
@@ -151,12 +152,20 @@
     "orbit:unlock-smoke": "node scripts/ops/orbit-unlock-smoke.mjs",
     "ops:impeccable": "node scripts/ops/impeccable-probe.mjs",
     "check:ledger": "node scripts/ops/check-agent-ledger.mjs",
-    "guardrails:chain": "node scripts/guardrails/run-all.mjs"
+    "guardrails:chain": "node scripts/guardrails/run-all.mjs",
+    "mobile:start": "npm --prefix apps/mobile run start",
+    "mobile:verify": "sh apps/mobile/scripts/verify.sh",
+    "mobile:test": "npm --prefix apps/mobile run test"
   },
   "devDependencies": {
+<<<<<<< HEAD
+    "@playwright/test": "^1.63.0",
+    "tsx": "^4.23.15",
+=======
     "@playwright/test": "^1.60.0",
     "prisma": "^5.22.0",
     "tsx": "^4.22.4",
+>>>>>>> 8c382179 (temp commit before rebase)
     "typescript": "^5.4.5"
   },
   "engines": {
@@ -177,5 +186,11 @@
     "esbuild@0.21.5": true,
     "esbuild@0.28.1": true,
     "fsevents": false
+  },
+  "overrides": {
+    "postcss": {
+      "source-map-js": "^1.2.2"
+    },
+    "source-map-js": "^1.2.2"
   }
 }
