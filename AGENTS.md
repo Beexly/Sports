@@ -4147,7 +4147,7 @@ Window: posts after ~9:00 PM CDT Wed 2026-09-23 through ~9:10 AM CDT Thu 2026-09
 
 - @GridironInfo_, 2026-09-24 8:45 AM CDT — WR success-rate definition (author's wording, verbatim): "A play counts as successful when the receiver is targeted and: 1st down: the target gains ≥40% of the yards-to-go; 2nd down: the target gains ≥60% of the yards-to-go; 3rd/4th down: the target converts the first down." Quotes author's 21h-ago "WR Success Rate Leaders (After Week 2)" post (out of window per sweep): Mike Evans (SF) 90% success rate, Keon Coleman (BUF) 75%. No data-source line. No CSV (the leaders post itself is out of window). https://x.com/GridironInfo_/status/2103118721715736830.
 
-- @PattonAnalytics (Steven Patton, Data Scientist @ StatRankings), 2026-09-24 9:10 AM CDT — "Quarterback Efficiency Throwing to the First Read": scatter plot, x-axis "EPA per Pass Attempt", y-axis "First Read Rate". Author subtitle: "First read throws include screens, minimum of 25 dropbacks (2026)". Footer: "Plot: @PattonAnalytics"; StatRankings branding; no data-source line. Visible QBs (APPROXIMATE visual estimates): D.Lock (SEA) ~+0.65 EPA / ~80% FRR; J.Allen (BUF) ~+0.88 / ~67%; L.Jackson (BAL) ~+0.85 / ~62%; J.Dart (NYG) ~+0.62 / ~73%; B.Purdy (SF) ~+0.62 / ~56%; B.Young (CAR) ~+0.55 / ~66%; D.Prescott (DAL) ~+0.50 / ~72%; G.Smith (NYJ) ~+0.50 / ~52%; J.Hurts (PHI) ~+0.42 / ~64%; J.Goff (DET) ~+0.45 / ~57%; T.Shough (NO) ~+0.42 / ~58%; T.Lawrence (JAX) ~+0.50 / ~63%; C.Wentz (MIN) ~+0.50 / ~65%; J.Daniels (WAS) ~+0.32 / ~68%; M.Stafford (LAR) ~+0.28 / ~70%; J.Brissett (ARI) ~+0.25 / ~75%; P.Mahomes (KC) ~+0.15 / ~68%; C.Rush (ATL) ~−0.38 / ~73%; J.Winston (NYG) ~−0.60 / ~69%; A.Rodgers (PIT) ~−0.35 / ~67%; D.Maye (NE) ~−0.22 / ~61%; B.Nix (DEN) ~−0.08 / ~55%; B.Mayfield (TB) ~+0.02 / ~67%; J.Love (GB) ~+0.02 / ~65%; C.Williams (CHI) ~+0.48 / ~48%; M.Willis (GB) ~+0.05 / ~48%; D.Watson (CLE) ~+0.30 / ~64%; D.Jones (IND) ~+0.05 / ~74%; J.Herbert (LAC) ~−0.05 / ~69%; K.Cousins (ATL) ~+0.18 / ~71%; C.Stroud (HOU) ~+0.18 / ~63%; C.Ward (TEN) ~+0.22 / ~62%; J.Burrow (CIN) ~−0.10 / ~67%. Red dashed league-average reference lines at ~+0.25 EPA/attempt and 65% FRR. No thread critiques observed. https://x.com/PattonAnalytics/status/2103124816886710668. CSV: pattonanalytics-qb-first-read-efficiency-week2-partial.csv (all values approximate — scatter had no labeled values).
+- @PattonAnalytics (Steven Patton, Data Scientist @ StatRankings), 2026-09-24 9:10 AM CDT — "Quarterback Efficiency Throwing to the First Read": scatter plot, x-axis "EPA per Pass Attempt", y-axis "First Read Rate". Author subtitle: "First read throws include screens, minimum of 25 dropbacks (2026)". Footer: "Plot: @PattonAnalytics"; StatRankings branding; no data-source line. Visible QBs (APPROXIMATE visual estimates): D.L_ck (SEA) ~+0.65 EPA / ~80% FRR; J.Allen (BUF) ~+0.88 / ~67%; L.Jackson (BAL) ~+0.85 / ~62%; J.Dart (NYG) ~+0.62 / ~73%; B.Purdy (SF) ~+0.62 / ~56%; B.Young (CAR) ~+0.55 / ~66%; D.Prescott (DAL) ~+0.50 / ~72%; G.Smith (NYJ) ~+0.50 / ~52%; J.Hurts (PHI) ~+0.42 / ~64%; J.Goff (DET) ~+0.45 / ~57%; T.Shough (NO) ~+0.42 / ~58%; T.Lawrence (JAX) ~+0.50 / ~63%; C.Wentz (MIN) ~+0.50 / ~65%; J.Daniels (WAS) ~+0.32 / ~68%; M.Stafford (LAR) ~+0.28 / ~70%; J.Brissett (ARI) ~+0.25 / ~75%; P.Mahomes (KC) ~+0.15 / ~68%; C.Rush (ATL) ~−0.38 / ~73%; J.Winston (NYG) ~−0.60 / ~69%; A.Rodgers (PIT) ~−0.35 / ~67%; D.Maye (NE) ~−0.22 / ~61%; B.Nix (DEN) ~−0.08 / ~55%; B.Mayfield (TB) ~+0.02 / ~67%; J.Love (GB) ~+0.02 / ~65%; C.Williams (CHI) ~+0.48 / ~48%; M.Willis (GB) ~+0.05 / ~48%; D.Watson (CLE) ~+0.30 / ~64%; D.Jones (IND) ~+0.05 / ~74%; J.Herbert (LAC) ~−0.05 / ~69%; K.Cousins (ATL) ~+0.18 / ~71%; C.Stroud (HOU) ~+0.18 / ~63%; C.Ward (TEN) ~+0.22 / ~62%; J.Burrow (CIN) ~−0.10 / ~67%. Red dashed league-average reference lines at ~+0.25 EPA/attempt and 65% FRR. No thread critiques observed. https://x.com/PattonAnalytics/status/2103124816886710668. CSV: pattonanalytics-qb-first-read-efficiency-week2-partial.csv (all values approximate — scatter had no labeled values).
 
 - @DynatyzeFF, 2026-09-24 7:26 AM CDT (thread, parent https://x.com/DynatyzeFF/status/2103098645327364414) — "Carry share — Leaders" (Dynatyze Usage Lab · Targets · 2026, W1–W2; chart: "12 players on this board · W1–W2 sample"; only top 3 visible): Jahmyr Gibbs (DET) 84.9% carry share / 78.2% snap rate / 45 carries; Jonathan Taylor (IND) 82.7% / 91.6% / 43; Chase Brown (CIN) 72% / 71% / 36. Footer: dynatyze.com/football/usage-lab; no separate source line. Five in-window thread replies with backfield charts: GB Snap Distribution (139-team-snaps context): Chris Brooks (RB·Alpha) 51.2% / 65; MarShawn Lloyd 36.2% / 46; Kaleb Johnson 12.6% / 16; top-3 concentration 100.0% (league avg 54.1%); Team PROE +0.0%; red-zone alpha Brooks 61% RZ TGT share; author text: Lloyd led in carries Week 1, Johnson in Week 2, Brooks led in snaps and owns the 3rd-down role. WAS: Rachaad White (RB·Alpha) 46.8% / 66; Jacory Croskey-Merritt 42.6% / 60; Kaytron Allen 9.2% / 13; others 1.4%; top-3 98.6%; Team PROE +0.0%; RZ alpha White 56%; 3.9 AVG/GP; text: White led backfield target share both games and is ahead of JCM in snaps. DEN weekly carry split (28 team carries): J.K. Dobbins 58% (18 carries, 0 TD); Jonah Coleman 32% (10 carries, 1 TD); text: Coleman had 40.3% snap share in W2 and "can step in as the #1 while Dobbins is hurt." NE Snap Distribution (129 team snaps): TreVeyon Henderson (RB·Alpha) 58.1% / 75; Rhamondre Stevenson 34.9% / 45; Terrell Jennings 7.8% / 10; top-3 100.0%; Team PROE +0.0%; RZ alpha Henderson 83%; 4.0 AVG/GP; text: season debut, led NE in Snap%, Carry%, Opp%. SEA Carry Distribution (2026, W1–W2, 58 CAR): Jadarian Price (RB·Alpha) 37.1% / 23; Emanuel Wilson 37.1% / 23; George Holani 19.4% / 12; others 6.4%; top-3 93.6%; Team PROE +0.0%; RZ alpha Price 45%; carries by week W1=10, W2=13; 11.5 AVG/GP; text: Price currently questionable to play but "has shown lead back abilities through 2 weeks." CSVs: dynatyzeff-carry-share-leaders-week2-partial.csv (top 3 of 12) + dynatyzeff-backfield-snap-carry-distributions-week2.csv.
 
@@ -5888,7 +5888,7 @@ home feed + Latest-tab term searches. TNF tonight: Steelers @ Browns.
    PLAYER, TEAM, DROPBACKS, EPA_PER_DROPBACK) in
    `docs/dfs/research/2026-10-01/full-tables/gridironinfo-season-epa-per-dropback-leaders.csv`:
    1. Brock Purdy (SF) 83 dropbacks +0.62; 2. Jaxson Dart (NYG) 36 +0.58;
-   3. Drew Lock (SEA) 50 +0.45; 4. Lamar Jackson (BAL) 79 +0.32; 5. Dak
+   3. Drew L_ck (SEA) 50 +0.45; 4. Lamar Jackson (BAL) 79 +0.32; 5. Dak
    Prescott (DAL) 109 +0.31; 6. Jared Goff (DET) 116 +0.27; 7. Trevor
    Lawrence (JAX) 84 +0.27; 8. Josh Allen (BUF) 95 +0.25; 9. Patrick
    Mahomes (KC) 102 +0.24; 10. Geno Smith (NYJ) 112 +0.22. Data source
@@ -5904,7 +5904,7 @@ home feed + Latest-tab term searches. TNF tonight: Steelers @ Browns.
    brewing in Seattle" (+ image). Chart: X = early-downs EPA/dropback,
    Y = late-downs EPA/dropback; footer/definition as given: "A minimum
    of 25 dropbacks (2026). Data: @nflreadr | Plot: @PattonAnalytics"
-   (statrankings branding). Framing (attributed): Drew Lock (SEA) plots
+   (statrankings branding). Framing (attributed): Drew L_ck (SEA) plots
    high (~+0.42 early, ~+0.68 late) vs Sam Darnold (~+0.2 early, ~-0.42
    late) — hence "controversy". Scatter points are team-logo labels
    without printed numbers, so all values below are APPROXIMATE
@@ -7731,7 +7731,7 @@ inventoried without verbatim evidence.
    as an in-window leaderboard. Full 31-row leaderboard (PLAYER, TEAM,
    PASSER_RATING) in
    `docs/dfs/research/2026-10-03/full-tables/gridironinfo-qb-passer-rating-2026.csv`:
-   Lock (SEA) 127.3 #1; Purdy (SF) 126.3; Rush (ATL) 43.5 last; Winston
+   L_ck (SEA) 127.3 #1; Purdy (SF) 126.3; Rush (ATL) 43.5 last; Winston
    (NYG) 55.6. Data source: same header/footer credits as item 2.
    https://x.com/GridironInfo_/status/2106379300622520472
 
@@ -9027,7 +9027,7 @@ posts). Nothing inventoried without evidence.
 
 42. @MagicSportsGuy — "Asked the AI Connector @StatRankings for Saints
     RB usage in the 4th quarter of week 3 (after Travis Etienne got
-    hurt)" (2026-10-05). AI-GENERATED TABLE (attributed): New Orleans
+    hurt)" (2026-10-05). A_I-GENERATED TABLE (attributed): New Orleans
     RBs - Week 3 - 4th quarter - 11 snaps RB carries; cols RB/Carries/RB
     rush share/Routes/Targets/Tgt share. Full 4-row table in
     `docs/dfs/research/2026-10-05/full-tables/magicsportsguy-saints-rb-q4-week3-ai.csv`:
