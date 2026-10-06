@@ -5,6 +5,7 @@ import { resolveEffectivePerformanceGate } from "@/lib/ops/effective-performance
 import { getReadinessGates } from "@sports/prediction-engine";
 import { evaluatePublicPerformancePolicy } from "@/lib/performance/public-performance-policy";
 import { loadPublicClvPolicy } from "@/lib/performance/public-clv-policy";
+import { publicRateOrNull } from "@/lib/ledger/display-guard";
 
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { BillingNoticeBanner } from "@/components/ui/billing-notice-banner";
@@ -255,26 +256,45 @@ export default async function DashboardPage({
   });
 
   const performanceVisible = performancePolicy.canExposePerformanceStats;
-  const recordDisplay = performanceVisible ? performancePolicy.publicRecord : "Collecting…";
-  const winRateDisplay =
-    performanceVisible && performancePolicy.publicWinRate !== null
-      ? `${performancePolicy.publicWinRate}%`
-      : "—";
-  const winRateHighlight =
-    performanceVisible &&
-    performancePolicy.publicWinRate !== null &&
-    performancePolicy.publicWinRate >= 55;
-  // The band label is assembled by evaluatePublicPerformancePolicy() so the
-  // confidence level travels with the interval it describes. Never rebuild it here.
-  const winRateSubtext = performanceVisible
-    ? performancePolicy.publicWinRateCiLabel
-    : null;
-  // S1 — the headline slot: CLV beat-close rate, or an explicit not-ready
-  // state. Rendered above win-rate on purpose (never in place of it — win
-  // rate stays as a secondary field below). See headlineMetric's own
-  // docstring for why: win rate is gameable by pick selection, CLV is the
-  // sharp-credible signal touts almost never show.
   const headline = performancePolicy.headlineMetric;
+  // Neither number renders unless coverage, a bound, CLV, and walk-forward
+  // lineage are all present. This page does not have the last two, so both
+  // stay withheld. The policy still computes them for operators.
+  const guardedWinRate = publicRateOrNull({
+    label: "win rate",
+    valuePct: performanceVisible ? performancePolicy.publicWinRate : null,
+    fired: performancePolicy.canonicalWins,
+    eligible: performancePolicy.eligibleForRateCount,
+    lowerBound:
+      performancePolicy.publicWinRateCiLowPct == null
+        ? null
+        : {
+            method: "clopper-pearson",
+            value: performancePolicy.publicWinRateCiLowPct / 100,
+          },
+    clv: null,
+    provenance: null,
+  });
+  const recordDisplay = performanceVisible ? performancePolicy.publicRecord : "Collecting…";
+  const winRateDisplay = guardedWinRate !== null ? `${guardedWinRate}%` : "—";
+  const winRateHighlight = guardedWinRate !== null && guardedWinRate >= 55;
+  const winRateSubtext = guardedWinRate !== null ? performancePolicy.publicWinRateCiLabel : null;
+  const guardedHeadline = publicRateOrNull({
+    label: "beat the close",
+    valuePct: headline.kind === "CLV_BEAT_CLOSE" ? headline.beatCloseRatePct : null,
+    fired: headline.gradedSampleSize,
+    eligible: headline.gradedSampleSize,
+    lowerBound:
+      headline.beatCloseCiLowPct == null
+        ? null
+        : { method: "wilson", value: headline.beatCloseCiLowPct / 100 },
+    clv: null,
+    provenance: null,
+  });
+  const headlineText =
+    guardedHeadline !== null
+      ? headline.label
+      : "Closing-line performance is still accruing. No headline number is shown before it can be honestly backed.";
 
   return (
     <div className="flex min-h-screen flex-col bg-obsidian">
@@ -409,7 +429,7 @@ export default async function DashboardPage({
               <p className="font-mono text-[11px] font-semibold uppercase tracking-[0.16em] text-ion-2">
                 Headline
               </p>
-              <p className={`mt-1.5 text-sm text-ion-white ${NUMERIC_TEXT_CLASS}`}>{headline.label}</p>
+              <p className={`mt-1.5 text-sm text-ion-white ${NUMERIC_TEXT_CLASS}`}>{headlineText}</p>
             </div>
           )}
 
