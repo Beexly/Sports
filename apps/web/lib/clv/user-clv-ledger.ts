@@ -1,4 +1,5 @@
 import type { db as RealDb } from "@sports/db";
+import { CLV_WITHDRAWN_RESULT } from "@/lib/clv/clv-sample-policy";
 
 /**
  * Elite CLV ledger — a VIEW of the platform's own already-published,
@@ -112,7 +113,13 @@ export async function loadUserClvLedger(
   if (!canUseClvLedger) return { locked: true, rows: [] };
 
   const picks = await db.pick.findMany({
-    where: { isPublished: true, result: { not: "PENDING" } },
+    // A withdrawn pick has no bet that could have beaten the close, so it never
+    // appears in a member's CLV ledger (C-279). `not: PENDING` alone let VOID
+    // through and rendered a preserved BEAT_CLOSE for a retracted pick.
+    where: {
+      isPublished: true,
+      result: { notIn: ["PENDING", CLV_WITHDRAWN_RESULT] },
+    },
     orderBy: { settledAt: "desc" },
     take: LEDGER_TAKE,
     select: {

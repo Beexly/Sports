@@ -47,7 +47,14 @@ const gateBlock = between(
   "!fetchError && bootstrapState && picks.length === 0",
   "!fetchError && !bootstrapState",
 );
-const emptyBlock = between(pageSrc, "No signals published for this date", "{/* Picks grid */}");
+// Anchored on the block's testid, not its prose. The old marker was the
+// sentence "No signals published for this date", which the humanizer pass
+// replaced with "No picks for this date" (owner copy doctrine: say picks, not
+// signals). A copy edit then broke the SLICE at module scope, so this whole
+// file collected ZERO tests and reported as one quiet failure rather than as
+// the nine assertions it stopped running. The other two slices already anchor
+// on a testid and a branch condition; this one now matches them.
+const emptyBlock = between(pageSrc, 'data-testid="picks-quiet-empty"', "{/* Picks grid */}");
 
 describe("/picks — backend outage is a distinct, honest state (item 3)", () => {
   it("renders a dedicated, testable outage block gated on the fetch-failure branch", () => {
@@ -154,7 +161,11 @@ describe("/picks — empty/gated state fabricates nothing (item 2)", () => {
   });
 
   it("the no-data empty state says nothing was published, not that a pick exists", () => {
-    expect(emptyBlock).toMatch(/No signals published/i);
+    // The shipped copy branches on the active sport filter, so an empty board
+    // never blames "this date" when a sport filter is what emptied it. Both
+    // arms must state absence, and neither may imply a pick exists.
+    expect(emptyBlock).toContain("No picks for this date");
+    expect(emptyBlock).toContain("${activeSportLabel} picks for this date");
     expect(emptyBlock).not.toMatch(/\d{1,3}\s*%/);
   });
 });

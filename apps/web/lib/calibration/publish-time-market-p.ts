@@ -92,14 +92,12 @@ export const PUBLISH_TIME_MARKET_P_METHOD = "mean_implied_proportional_devig" as
  * Bookmaker keys with no book identity. Evidence in the module header; grows
  * only with evidence of a new non-book writer, never to change a count.
  */
-export const NON_BOOK_BOOKMAKER_KEYS: ReadonlySet<string> = new Set(["rundown_default"]);
-
-export function isRealBookmakerKey(key: string | null | undefined): key is string {
-  if (typeof key !== "string") return false;
-  const trimmed = key.trim();
-  if (trimmed.length === 0) return false;
-  return !NON_BOOK_BOOKMAKER_KEYS.has(trimmed);
-}
+// CANONICAL SOURCE is the engine (packages/prediction-engine scoring.ts): the
+// publish guard needs the same list and cannot import from apps/web, so the
+// engine owns it and this module re-exports rather than keeping a second copy
+// (Devin Review, #733).
+export { NON_BOOK_BOOKMAKER_KEYS, isRealBookmakerKey } from "@sports/prediction-engine";
+import { isRealBookmakerKey } from "@sports/prediction-engine";
 
 export type PickedSide = "home" | "away";
 

@@ -23,12 +23,12 @@ import { UnrealBloomPass } from "three/examples/jsm/postprocessing/UnrealBloomPa
 type V3 = InstanceType<typeof THREE.Vector3>;
 
 const REFEREES = [
-  { label: "Market consensus", hex: 0x00e5ff },
-  { label: "Kalshi exchange", hex: 0x00e5ff },
-  { label: "Elo model", hex: 0x7a5cff },
-  { label: "Poisson model", hex: 0x7a5cff },
-  { label: "Closing line", hex: 0xff2dd6 },
-  { label: "Narrative signal", hex: 0xf6f7fa },
+  { label: "Market consensus", hex: 0xFF4D2E },
+  { label: "Kalshi exchange", hex: 0xFF4D2E },
+  { label: "Elo model", hex: 0xC9D4CE },
+  { label: "Poisson model", hex: 0xC9D4CE },
+  { label: "Closing line", hex: 0xFF4D2E },
+  { label: "Narrative signal", hex: 0xEDE8E0 },
 ] as const;
 
 function prefersReducedMotion(): boolean {
@@ -151,7 +151,7 @@ export function ConsensusEngine3D() {
     const fs = new Float32Array(COUNT);
     const fseed = new Float32Array(COUNT);
     const tmpC = new THREE.Color();
-    const WHITE = new THREE.Color(0xf6f7fa), CYAN = new THREE.Color(0x00e5ff), UV = new THREE.Color(0x7a5cff), MAG = new THREE.Color(0xff2dd6);
+    const WHITE = new THREE.Color(0xEDE8E0), CYAN = new THREE.Color(0xFF4D2E), UV = new THREE.Color(0xC9D4CE), MAG = new THREE.Color(0xFF4D2E);
     for (let i = 0; i < COUNT; i++) {
       const radius = Math.pow(rng(), 1.7) * 3.7 + 0.08;
       const arm = Math.floor(rng() * ARMS);
@@ -185,13 +185,13 @@ export function ConsensusEngine3D() {
     const neb = makeSoftTexture();
     const NEBULAS: ReadonlyArray<readonly [number, number, number, number, number, number]> = [
       [0, 0, 0, 0x9fe8ff, 4.6, 0.22],
-      [0, 0, 0, 0x7a5cff, 7.2, 0.13],
-      [1.8, 0.1, 1.1, 0x00e5ff, 3.4, 0.10],
-      [-1.7, -0.1, -1.3, 0x7a5cff, 3.7, 0.10],
-      [0.5, 0.0, -2.0, 0xff2dd6, 2.9, 0.08],
-      [-2.0, 0.1, 1.5, 0xf6f7fa, 2.6, 0.07],
-      [2.3, -0.1, -1.5, 0x7a5cff, 3.0, 0.07],
-      [-1.1, 0.1, 2.3, 0x00e5ff, 2.9, 0.07],
+      [0, 0, 0, 0xC9D4CE, 7.2, 0.13],
+      [1.8, 0.1, 1.1, 0xFF4D2E, 3.4, 0.10],
+      [-1.7, -0.1, -1.3, 0xC9D4CE, 3.7, 0.10],
+      [0.5, 0.0, -2.0, 0xFF4D2E, 2.9, 0.08],
+      [-2.0, 0.1, 1.5, 0xEDE8E0, 2.6, 0.07],
+      [2.3, -0.1, -1.5, 0xC9D4CE, 3.0, 0.07],
+      [-1.1, 0.1, 2.3, 0xFF4D2E, 2.9, 0.07],
     ];
     const nebMats: InstanceType<typeof THREE.SpriteMaterial>[] = [];
     for (const [nx, ny, nz, hex, sc, op] of NEBULAS) {
@@ -271,8 +271,8 @@ export function ConsensusEngine3D() {
       position: "absolute", left: "0", top: "0", transform: "translate(-50%,-50%)",
       padding: "4px 10px", borderRadius: "999px", fontSize: "11px", fontWeight: "700",
       letterSpacing: "0.08em", textTransform: "uppercase", whiteSpace: "nowrap",
-      color: "#F5F7FF", background: "rgba(5,6,8,0.55)", border: "1px solid rgba(0,229,255,0.45)",
-      backdropFilter: "blur(6px)", boxShadow: "0 0 18px rgba(0,229,255,0.25)",
+      color: "#EDE8E0", background: "rgba(5,6,8,0.55)", border: "1px solid rgba(255,77,46,0.45)",
+      backdropFilter: "blur(6px)", boxShadow: "0 0 18px rgba(255,77,46,0.25)",
     });
     overlay.appendChild(coreLabel);
     for (let i = 0; i < N; i++) {
@@ -380,8 +380,8 @@ export function ConsensusEngine3D() {
         const el = labelEls[i]!, s = screen[i]!, active = i === nearest;
         el.style.transform = `translate(-50%,-50%) translate(${s.x.toFixed(1)}px, ${s.y.toFixed(1)}px) scale(${active ? 1.08 : 1})`;
         el.style.opacity = s.vis ? "1" : "0";
-        el.style.color = active ? "#F5F7FF" : "#cfd6e6";
-        el.style.borderColor = active ? "rgba(0,229,255,0.6)" : "rgba(255,255,255,0.1)";
+        el.style.color = active ? "#EDE8E0" : "#cfd6e6";
+        el.style.borderColor = active ? "rgba(255,77,46,0.6)" : "rgba(255,255,255,0.1)";
         const sp = nodeSprites[i]!;
         sp.scale.setScalar(active ? 0.52 : 0.32);
         (sp.material as InstanceType<typeof THREE.SpriteMaterial>).opacity = active ? 1 : 0.85;

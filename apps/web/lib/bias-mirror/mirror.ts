@@ -97,9 +97,9 @@ const ELEVATED = 0.6;
 const LOW = 0.3;
 
 export const MODE_HEX: Record<BiasMode, string> = {
-  Standard: "#00E5FF",
-  "Watch Mode": "#7B61FF",
-  "Cool-down": "#FF38C7",
+  Standard: "#FF4D2E",
+  "Watch Mode": "#C9D4CE",
+  "Cool-down": "#FF7A5C",
 };
 
 export function computeProfile(answers: Record<BiasKey, number>): BiasProfile {

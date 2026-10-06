@@ -63,7 +63,7 @@ const STATUS_TONE: Record<SourceStatus, string> = {
   "scheduled-code": "border-orbital-cyan/30 bg-orbital-cyan/30 text-orbital-cyan",
   "manual-ingest": "border-ultraviolet/30 bg-ultraviolet/30 text-ultraviolet",
   "founder-gated": "border-caution/30 bg-caution/30 text-caution",
-  "permission-required": "border-alert/30 bg-alert/30 text-alert",
+  "permission-required": "border-alarm/30 bg-alarm/30 text-alarm",
   planned: "border-titanium/40 bg-eclipse/60 text-ion-1",
 };
 
@@ -75,8 +75,8 @@ const RIGHTS_STATUS_TONE: Record<SourceRightsStatus, string> = {
   vendor_candidate: "border-caution/30 bg-caution/30 text-caution",
   manual_research_only: "border-ultraviolet/30 bg-ultraviolet/30 text-ultraviolet",
   permission_required: "border-caution/30 bg-caution/10 text-caution",
-  blocked_technical_controls: "border-alert/40 bg-alert/30 text-alert",
-  excluded: "border-alert/60 bg-alert/40 text-alert",
+  blocked_technical_controls: "border-alarm/40 bg-alarm/30 text-alarm",
+  excluded: "border-alarm/60 bg-alarm/40 text-alarm",
 };
 
 const RIGHTS_STATUS_LABEL: Record<SourceRightsStatus, string> = {
@@ -341,7 +341,7 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
           <RightsMetric
             label="Excluded"
             value={String(excludedSources.length)}
-            tone="text-alert"
+            tone="text-alarm"
             detail="No safe path. Permanently blocked."
           />
         </div>
@@ -419,17 +419,17 @@ export default async function CockpitSourcesPage(): Promise<JSX.Element> {
           </div>
         </div>
 
-        <div className="rounded-2xl border border-alert/50 bg-alert/20 p-5">
-          <h2 className="text-xs font-semibold uppercase tracking-widest text-alert">Do-not-automate list</h2>
-          <p className="mt-2 text-sm leading-6 text-alert/80">
+        <div className="rounded-2xl border border-alarm/50 bg-alarm/20 p-5">
+          <h2 className="text-xs font-semibold uppercase tracking-widest text-alarm">Do-not-automate list</h2>
+          <p className="mt-2 text-sm leading-6 text-alarm/80">
             These sources are valuable, but automation would be the wrong default until the owner
             or legal boundary is explicit.
           </p>
           <div className="mt-4 space-y-3">
             {blockedSources.map((source) => (
-              <div key={source.key} className="rounded-lg border border-alert/40 bg-obsidian/70 p-3">
+              <div key={source.key} className="rounded-lg border border-alarm/40 bg-obsidian/70 p-3">
                 <p className="text-sm font-semibold text-ion-white">{source.name}</p>
-                <p className="mt-1 text-xs uppercase tracking-widest text-alert">
+                <p className="mt-1 text-xs uppercase tracking-widest text-alarm">
                   {sourceStatusLabel(source.status)}
                 </p>
                 <p className="mt-2 text-xs leading-5 text-ion-2">
@@ -604,7 +604,7 @@ function priorityLabel(priority: CandidatePriority): string {
 const CONFIDENCE_TONE: Record<ConfidenceLevel, string> = {
   high: "border-verify/30 bg-verify/30 text-verify",
   medium: "border-caution/30 bg-caution/30 text-caution",
-  low: "border-alert/30 bg-alert/30 text-alert",
+  low: "border-alarm/30 bg-alarm/30 text-alarm",
   unknown: "border-titanium bg-eclipse/70 text-ion-2",
 };
 
@@ -688,7 +688,7 @@ function RightsRow({ entry }: { entry: SourceRightsEntry }): JSX.Element {
     v ? (
       <span className="text-xs font-semibold text-verify">yes</span>
     ) : (
-      <span className="text-xs text-alert/80">no</span>
+      <span className="text-xs text-alarm/80">no</span>
     );
   return (
     <tr className="align-top text-ion-1">

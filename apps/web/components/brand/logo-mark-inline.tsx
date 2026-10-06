@@ -32,10 +32,10 @@ export function LogoMarkInline({
   /** Monochrome override (every element uses this color). */
   color?: string;
 }) {
-  const ring = color ?? "#00E5FF";
-  const blade = color ?? "#F5F7FF";
-  const core = color ?? "#FF38C7";
-  const ping = color ?? "#7B61FF";
+  const ring = color ?? "#31353F";
+  const blade = color ?? "#EDE8E0";
+  const core = color ?? "#EDE8E0";
+  const ping = color ?? "#FF4D2E";
 
   return (
     <svg
@@ -47,27 +47,25 @@ export function LogoMarkInline({
       className={`${className}${kinetic ? " logo-mark-kinetic" : ""}`.trim()}
       style={{
         animation: pulse ? "logo-mark-pulse 2.4s ease-in-out infinite" : undefined,
-        filter: glow ? "drop-shadow(0 0 12px rgba(0,229,255,0.5))" : undefined,
+        filter: glow ? "drop-shadow(0 0 12px rgba(255,77,46,0.5))" : undefined,
       }}
     >
-      {/* Split orbital ring — open via the dash gaps so it never reads as a coin */}
-      <circle
+      {/* Field orbit — outer ring + thick arc + core + signal ping */}
+      <circle cx="32" cy="32" r="27" fill="none" stroke={ring} strokeWidth="2" />
+      <ellipse
         cx="32"
         cy="32"
-        r="18"
+        rx="27"
+        ry="10"
         fill="none"
-        stroke={ring}
-        strokeWidth="5"
-        strokeLinecap="round"
-        strokeDasharray="43.5 13"
-        transform="rotate(20 32 32)"
+        stroke={blade}
+        strokeWidth="1.8"
+        transform="rotate(-24 32 32)"
+        opacity="0.5"
       />
-      {/* Edge blade — a sharp read slicing through the market */}
-      <polygon points="50,14 33.84,33.84 14,50 30.16,30.16" fill={blade} />
-      {/* Signal core at the crossing */}
-      <circle cx="32" cy="32" r="4.4" fill={core} />
-      {/* Ping — the moment of detection */}
-      <circle cx="45" cy="17" r="2.3" fill={ping} />
+      <path d="M53 21.5 A27 27 0 0 1 46 52" fill="none" stroke={blade} strokeWidth="5" />
+      <circle cx="32" cy="32" r="7" fill={core} />
+      <circle cx="10" cy="40" r="3.5" fill={ping} />
     </svg>
   );
 }

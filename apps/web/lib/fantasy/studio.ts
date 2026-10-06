@@ -56,7 +56,7 @@ export function generateWeeklyBrief(): WeeklyBrief {
   const dfs = [`${dfsTop.name} (${dfsTop.team}, ${dfsTop.pos}). Leverage ${leverage(dfsTop).toFixed(1)} at ${Math.round(dfsTop.own * 100)}% owned: the contrarian ceiling of the slate.`];
 
   // Pick'em edge
-  const topProp = PROPS.map(readProp).sort((a, b) => b.edge - a.edge)[0]!;
+  const topProp = PROPS.map((p) => readProp(p)).sort((a, b) => b.edge - a.edge)[0]!;
   const props = [`${topProp.prop.player} ${topProp.side.toUpperCase()} ${topProp.prop.market} ${topProp.prop.line}. ${Math.round(topProp.pSide * 100)}% on our number. ${topProp.note}`];
 
   const sections: BriefSection[] = [

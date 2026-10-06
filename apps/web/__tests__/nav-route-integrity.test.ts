@@ -57,21 +57,36 @@ describe("Nav route integrity", () => {
     }
   });
 
-  it("the four doors + Proof + The Beat are all present on desktop and mobile", () => {
-    for (const route of ["/board", "/players", "/intelligence/engines", "/fantasy", "/calibration", "/the-beat"]) {
+  it("the four doors + The Beat are present on desktop and mobile, and Intelligence is NOT", () => {
+    // This list used to include "/intelligence/engines". The 2026-09-12 nav trim
+    // cut the bar to four doors and AGENTS.md now states plainly: "Do NOT restore
+    // Intelligence as a top-bar item." The assertion had become a guard AGAINST
+    // current doctrine - it would have failed the moment the bar was correct.
+    // So it is inverted rather than deleted, which makes it a live guard instead
+    // of a stale one.
+    for (const route of ["/board", "/players", "/fantasy", "/calibration", "/the-beat"]) {
       expect(desktop.includes(`"${route}"`), `desktop missing ${route}`).toBe(true);
     }
     // Mobile parity: the same primary doors are reachable.
-    for (const route of ["/board", "/players", "/intelligence/engines", "/fantasy", "/calibration", "/the-beat"]) {
+    for (const route of ["/board", "/players", "/fantasy", "/calibration", "/the-beat"]) {
       expect(mobile.includes(`"${route}"`), `mobile missing ${route}`).toBe(true);
     }
+    // The doctrine half: Intelligence must not come back to the bar.
+    expect(desktop).not.toContain('"/intelligence/engines"');
+    expect(mobile).not.toContain('"/intelligence/engines"');
   });
 
-  it("GSN is its own door grouping The Beat, The Studio, and The Academy", () => {
-    for (const route of ["/the-beat", "/fantasy/studio", "/academy"]) {
-      expect(desktop.includes(`"${route}"`), `desktop GSN missing ${route}`).toBe(true);
-      expect(mobile.includes(`"${route}"`), `mobile GSN missing ${route}`).toBe(true);
-    }
+  it("GSN is its own door for The Beat; Studio and Academy are unlinked (ASTRA A-5, owner 2026-09-14)", () => {
+    // Owner: Studio "was supposed to be more internal... zero value, causing
+    // confusion" — moved internal. Academy "completely useless... redesign or
+    // remove" — hidden from public nav (route stays, robots noindex).
+    // GSN now carries The Beat only.
+    expect(desktop).toContain('"/the-beat"');
+    expect(mobile).toContain('"/the-beat"');
+    expect(desktop).not.toContain('"/fantasy/studio"');
+    expect(desktop).not.toContain('"/academy"');
+    expect(mobile).not.toContain('"/fantasy/studio"');
+    expect(mobile).not.toContain('"/academy"');
     // Metrics moved out of Intelligence (it lives under Proof / on /calibration).
     expect(desktop).not.toContain('"/intelligence/metrics"');
   });
@@ -85,6 +100,9 @@ describe("Nav route integrity", () => {
     expect(desktop).not.toContain('heading: "The Proof Room"');
     expect(desktop).not.toContain('"/performance"');
     expect(desktop).not.toContain('"/clv"');
-    expect(desktop).toContain('href="/calibration"');
+    // Was href="/calibration". The nav carries routes in a data structure, not
+    // as literal href attributes, so this asserted on markup shape rather than
+    // on reachability. Match the form the other assertions in this file use.
+    expect(desktop).toContain('"/calibration"');
   });
 });

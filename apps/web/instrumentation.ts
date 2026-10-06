@@ -71,6 +71,42 @@ export async function registerProjectionsFromEnv(
   }
 }
 
+/**
+ * Warm the live-evidence cache at instance start. Loader-injectable so it is
+ * unit-testable without network or node-only deps, exactly like
+ * registerProjectionsFromEnv above. ALWAYS resolves: a warm is best-effort by
+ * definition, and its whole purpose is to keep a cold instance's first request from
+ * paying the cost.
+ *
+ * WHY THIS EXISTS (C-328). loadSourceLiveEvidence pulls four nflverse datasets
+ * SEQUENTIALLY — it must be, because running them concurrently OOM-killed the
+ * instance (lib/data-sources/live-evidence.ts records the crash) — each with a 15s
+ * budget, and caches the result for 15 minutes per instance. Steady state is fine
+ * (measured 0.25s warm on /fantasy), but a FRESH instance makes its first request
+ * wait 13-15s before any HTML is returned, and /fantasy, /integrations,
+ * /cockpit/sources and /api/sources/catalog all await it.
+ *
+ * Warming here does NOT raise the memory ceiling: the peak is the same single
+ * largest dataset whether the sequential chain runs on a request or at boot. This
+ * only moves the work off the first user's path. Cold instances are exactly what a
+ * traffic surge produces, so this is the surge case.
+ */
+export async function warmSourceLiveEvidence(
+  load: (options: { timeoutMs: number }) => Promise<unknown>,
+  timeoutMs = 20000,
+): Promise<"warmed" | "failed"> {
+  try {
+    await load({ timeoutMs });
+    return "warmed";
+  } catch (err) {
+    console.warn(
+      "[live-evidence] background warm failed; the first request to this instance will pay the cost",
+      err,
+    );
+    return "failed";
+  }
+}
+
 /** Next.js calls this once at server startup. */
 export async function register(): Promise<void> {
   // Initialise observability (Sentry) at startup. No-op when SENTRY_DSN is absent.
@@ -90,5 +126,16 @@ export async function register(): Promise<void> {
     void registerProjectionsFromEnv(process.env, loadAndRegisterGradedProvider).catch((err) => {
       console.error("[projections] background graded-provider registration failed", err);
     });
+
+    // C-328: the same shape and the same reasoning for the live-evidence cache that
+    // /fantasy, /integrations, /cockpit/sources and /api/sources/catalog all await.
+    // Dynamic import for the SAME Edge-bundle reason as the graded pool above: the
+    // nflverse loaders pull node:zlib, and the literal NEXT_RUNTIME guard lets the
+    // Edge compilation dead-code-eliminate this import.
+    void import("@/lib/data-sources/live-evidence")
+      .then((mod) => warmSourceLiveEvidence(mod.loadSourceLiveEvidence))
+      .catch((err) => {
+        console.error("[live-evidence] background warm could not import the loader", err);
+      });
   }
 }

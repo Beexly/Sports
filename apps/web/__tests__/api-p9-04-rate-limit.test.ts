@@ -51,6 +51,18 @@ const predictionEngineMocks = vi.hoisted(() => ({
   hashLeaf: vi.fn(() => "testhash"),
   parseCanonicalPayload: vi.fn(() => ({})),
   merkleRootFromLeafHashes: vi.fn(() => "root"),
+  // Reached only through the statically-traced call graph from
+  // loadSourceLiveEvidence (@/lib/data-sources/live-evidence -> nflverse
+  // qb-age-rb-trend / birthday-usage-trend), which this file mocks wholesale
+  // below (`catalogMocks.loadSourceLiveEvidence`), so the real trend-discovery
+  // code never runs at runtime under this test. Values are the module's own
+  // documented neutral results, not invented statistics: `welchCompare`
+  // returns its own no-signal case ({ z: 0, pValue: 1 }, trend-discovery.ts),
+  // `discoverCohortTrends` returns no trends, and `range` returns a Bucket
+  // whose test never matches.
+  discoverCohortTrends: vi.fn(() => []),
+  range: vi.fn((label: string) => ({ label, test: () => false })),
+  welchCompare: vi.fn(() => ({ z: 0, pValue: 1 })),
 }));
 
 const catalogMocks = vi.hoisted(() => ({
@@ -119,14 +131,19 @@ function makeRequest(url: string): Request {
 // ─── /api/sources/catalog ─────────────────────────────────────────────────
 
 describe("/api/sources/catalog — rate limiting", () => {
+  const ORIGINAL_ENV = { ...process.env };
   beforeEach(() => {
     vi.resetModules();
     resetRateLimits();
+    // Internal-surface fence (2026-09-28): the catalog is dark by default.
+    // Open it here so these tests exercise the rate limiter, not the 404.
+    process.env["SOURCES_CATALOG_PUBLIC"] = "true";
     catalogMocks.loadSourceLiveEvidence.mockResolvedValue({ status: "ok" });
   });
 
   afterEach(() => {
     vi.restoreAllMocks();
+    process.env = { ...ORIGINAL_ENV };
   });
 
   it("allows requests within the 60/min quota", async () => {

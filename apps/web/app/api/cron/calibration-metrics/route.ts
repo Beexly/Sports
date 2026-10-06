@@ -17,6 +17,7 @@ import { NextResponse } from "next/server";
 import { cronAuthError } from "@/lib/cron/authorize";
 import { mkdir, writeFile } from "node:fs/promises";
 import path from "node:path";
+import { canonicalSampleOrder } from "@/lib/calibration/canonical-sample-order";
 import {
   brierDecomposition,
   expectedCalibrationError,
@@ -25,6 +26,7 @@ import {
   type CalibrationSample,
 } from "@sports/prediction-engine";
 import { captureError } from "@/lib/observability/sentry";
+import { debiasedExpectedCalibrationError } from "@/lib/calibration/ece-debiased";
 import { db, isStubMode } from "@sports/db";
 import {
   evaluateAndPersistEligibility,
@@ -58,6 +60,7 @@ import {
   type OddsTableMarketPStats,
 } from "@/lib/calibration/publish-time-market-p-loader";
 import { persistProvenPathPlan } from "@/lib/ops/proven-path-durable";
+import { rebuildPerformanceSummaries } from "@/lib/performance/rebuild-performance-summaries";
 import { backfillIndependentTrueProb } from "@sports/ingestion-pipeline";
 export const dynamic = "force-dynamic";
 export const runtime = "nodejs";
@@ -111,7 +114,7 @@ async function loadSettledCalibrationSamples(): Promise<{
   settledTo: string | null;
 }> {
   const notes: string[] = [];
-  const emptyExclusions: CalibrationExclusionCounts = { three_way_market: 0, no_market_probability: 0, non_moneyline_market: 0 };
+  const emptyExclusions: CalibrationExclusionCounts = { three_way_market: 0, no_market_probability: 0, non_moneyline_market: 0, in_play: 0, unverifiable_market_p: 0 };
   try {
     const picks = await db.pick.findMany({
       where: {
@@ -139,6 +142,8 @@ async function loadSettledCalibrationSamples(): Promise<{
           select: {
             homeTeamName: true,
             awayTeamName: true,
+            // C-298: a pick generated at or after kickoff is in-play and excluded.
+            commenceTime: true,
             sport: { select: { key: true, name: true } },
           },
         },
@@ -154,6 +159,7 @@ async function loadSettledCalibrationSamples(): Promise<{
       selection: pick.selection,
       homeTeamName: pick.game?.homeTeamName ?? null,
       awayTeamName: pick.game?.awayTeamName ?? null,
+      commenceTime: pick.game?.commenceTime ?? null,
       confidence: pick.confidence,
       result: pick.result ?? "",
       pickType: pick.pickType,
@@ -168,12 +174,16 @@ async function loadSettledCalibrationSamples(): Promise<{
     // picks; their publish-time market probability is recomputed with the
     // receipt's own de-vig and reported as market_p_from_odds_table (two or
     // more books) or market_p_single_book (one book, C-110).
-    const oddsTable = await loadPublishTimeMarketPResolver(db, rows);
+    const oddsTable = await loadPublishTimeMarketPResolver(db as never, rows);
 
     // Eligibility sample: market-anchored p only; three-way moneylines and
     // picks with no market probability are counted in `excluded`, never scored.
     const honest = picksToMarketAnchoredCalibrationSamples(rows, {
       resolveMarketP: oddsTable.resolveMarketP,
+      // C-300: the floors score only rows the odds table can price at
+      // generatedAt; receipt-only and factor-breakdown-only rows are counted
+      // as unverifiable_market_p, never scored.
+      verifiableOnly: true,
     });
     const samples: CalibrationSample[] = honest.samples.map((s) => ({
       p: s.p,
@@ -326,9 +336,15 @@ export async function GET(request: Request): Promise<NextResponse> {
         ],
       };
     } else {
-      const decomp = brierDecomposition(samples);
-      const ece = expectedCalibrationError(samples);
-      const curve = reliabilityCurve(samples);
+      // Canonical order before any seeded estimator (see canonical-sample-order.ts):
+      // the Monte Carlo noise term and the bootstrap bound are order-sensitive, and
+      // an unordered query flipped eligibility on identical metrics on 09-10.
+      const ordered = canonicalSampleOrder(samples);
+      const decomp = brierDecomposition(ordered);
+      const ece = expectedCalibrationError(ordered);
+      // C-290: the floor reads the bias-corrected ECE; raw stays reported.
+      const eceCorrection = debiasedExpectedCalibrationError(ordered);
+      const curve = reliabilityCurve(ordered);
       const mce = mceFromCurve(curve);
       const logLoss = meanLogLoss(samples);
       // bySport / byModelVersion (same functions as the pooled numbers) and the
@@ -364,6 +380,8 @@ export async function GET(request: Request): Promise<NextResponse> {
           brierDecomp: decomp,
           logLoss,
           ece,
+          eceNoise: eceCorrection.noise,
+          eceDebiased: eceCorrection.debiased,
           mce,
           bssHalf: bss(decomp.brier, "half", decomp.baseRate),
           bssClim: bss(decomp.brier, "climatology", decomp.baseRate),
@@ -395,6 +413,8 @@ export async function GET(request: Request): Promise<NextResponse> {
         overall: {
           brier: decomp.brier,
           ece,
+          eceNoise: eceCorrection.noise,
+          eceDebiased: eceCorrection.debiased,
           mce,
           murphy: {
             reliability: decomp.reliability,
@@ -424,6 +444,30 @@ export async function GET(request: Request): Promise<NextResponse> {
     }
 
     await persistCalibrationMetrics(payload);
+
+    // C-319: /performance renders its record section from performance_summaries,
+    // and nothing in this repo has ever written a row to it — measured 2026-09-11,
+    // the table holds 0 rows while the page publishes "No official record yet"
+    // over 2,298 settled picks with the gate open.
+    //
+    // INERT BY DEFAULT: the persist path checks PERFORMANCE_SUMMARIES_WRITE_ENABLED
+    // BEFORE it reads, so an unconfigured deployment pays nothing — no query, no
+    // transaction — and the rebuild only reports `skipped_flag_off`.
+    //
+    // NON-FATAL ON PURPOSE: these rows are a derived artifact, and a failure in a
+    // summary rebuild must never take down the calibration cycle it rides on. The
+    // error is reported in the response rather than thrown.
+    let performanceSummaries: Awaited<ReturnType<typeof rebuildPerformanceSummaries>> | null = null;
+    let performanceSummariesError: string | null = null;
+    try {
+      performanceSummaries = await rebuildPerformanceSummaries();
+    } catch (e) {
+      performanceSummariesError = e instanceof Error ? e.message : String(e);
+      console.warn(
+        "[cron:calibration-metrics] performance_summaries rebuild failed; the calibration cycle is unaffected:",
+        performanceSummariesError,
+      );
+    }
 
     // Offline Bayesian bake-off artifact (internal only; never publish/adjustments).
     if (payload.status === "ok" && samples.length >= 50) {
@@ -563,6 +607,13 @@ export async function GET(request: Request): Promise<NextResponse> {
         canExposePerformanceStats: publish.canExposePerformanceStats,
         autoPublish: publish.autoPublish,
       },
+      /**
+       * C-319: the /performance summary rebuild. `skipped_flag_off` until
+       * PERFORMANCE_SUMMARIES_WRITE_ENABLED is exactly "true"; `null` if it threw,
+       * which is non-fatal by design and reported in performanceSummariesError.
+       */
+      performanceSummaries,
+      performanceSummariesError,
       /** Open post-publish drift marker (scope ops.calibration.drift), or null. */
       calibrationDrift: drift
         ? {

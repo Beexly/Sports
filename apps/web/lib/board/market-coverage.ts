@@ -13,6 +13,8 @@
  * fake data). Pure classifier + a thin loader.
  */
 
+import { collapseGameRowsToFixtures, type FixtureCollapseRow } from "@sports/ingestion-pipeline";
+import { MIN_BOOKMAKERS, MIN_PUBLISH_CONFIDENCE, WEIGHTS } from "@sports/prediction-engine";
 import { freshPickWhere, type FreshPickWhere } from "./stale-pick-policy";
 
 export const MARKET_COVERAGE_WINDOW_HOURS = 72;
@@ -49,22 +51,74 @@ export interface MarketCoverageInput {
   readonly picks: ReadonlyArray<{ readonly sportKey: string; readonly pickType: string }>;
 }
 
-const FOOTBALL_SPORTS = new Set(["americanfootball_nfl", "americanfootball_ncaaf"]);
-
 function isMarketKey(value: string): value is MarketKey {
   return (MARKET_KEYS as readonly string[]).includes(value);
 }
 
+/**
+ * The book-priced moneyline's fair-probability floor. A literal in
+ * `scoreMoneylinePick` (packages/prediction-engine/src/scoring.ts:965, "Need
+ * strong conviction on ML"), not a named constant, so it is restated here for
+ * the operator copy.
+ *
+ * This restatement is NOT pinned by a test: `scoreMoneylinePick` is module
+ * private, no scorer test asserts the 0.58 boundary (verified 2026-09-08,
+ * `grep -rn "0\.58" packages/prediction-engine/src/__tests__`), and the two
+ * other gates this file quotes (MIN_BOOKMAKERS, MIN_PUBLISH_CONFIDENCE) are
+ * real imports while this one cannot be. If the scorer's literal ever moves,
+ * this copy goes stale silently and the hint states a gate the engine does not
+ * apply. Naming it as a named export from the engine would fix that and needs
+ * a MODEL_VERSION-freeze-aware change to the frozen scorer, so it is recorded
+ * as C-263 rather than done here.
+ */
+const MONEYLINE_FAIR_PROB_FLOOR = 0.58;
+
+/**
+ * Operator hint for a market with games but no picks. It names the gates the
+ * frozen scorer applies, in order, and points at the feed posture the truth
+ * surface already reports (`oddsInserting`). It asserts no cause it cannot
+ * see: this module reads pick and game counts, never the odds table or the
+ * environment, so it cannot know whether a key is missing or a feed is down.
+ *
+ * Why the rewrite (C-261, 2026-09-08): the football TOTAL hint read "Known
+ * cause: the zero-key signal slate is moneyline-only and ESPN's single-bookmaker
+ * odds fail MIN_BOOKMAKERS=2, so totals need a live odds feed (THE_ODDS_API_KEY
+ * or TheRundown)" while the same truth surface showed THE_ODDS_API_KEY present,
+ * an odds insert 15 minutes old and 13,306 credits remaining. On the scorer the
+ * NFL Week 1 totals and moneylines fall to the gates below, not to a missing
+ * key, and a hint that names the wrong cause sends the operator to the wrong
+ * console.
+ */
 function hintFor(sportKey: string, market: MarketKey): string {
-  if (market === "TOTAL" && FOOTBALL_SPORTS.has(sportKey)) {
-    return (
-      "No TOTAL picks while games are scheduled. Known cause: the zero-key signal slate is " +
-      "moneyline-only and ESPN's single-bookmaker odds fail MIN_BOOKMAKERS=2, so totals need " +
-      "a live odds feed (THE_ODDS_API_KEY or TheRundown). Check refresh-odds provider status; " +
-      "the board is degraded, not broken."
-    );
+  const feed = "Read oddsInserting on this surface for the live feed state before blaming the feed; the board is degraded, not broken.";
+  const bookFloor = `at least MIN_BOOKMAKERS=${MIN_BOOKMAKERS} books price both sides`;
+  switch (market) {
+    case "MONEYLINE":
+      return (
+        `No MONEYLINE picks while ${sportKey} games are scheduled in the window. A book-priced moneyline ` +
+        `publishes only when ${bookFloor}, the de-vigged consensus fair probability for the favoured side ` +
+        `reaches ${MONEYLINE_FAIR_PROB_FLOOR} and the composite confidence reaches ${MIN_PUBLISH_CONFIDENCE} ` +
+        `(scoreMoneylinePick, packages/prediction-engine/src/scoring.ts); a tight line sits under the ` +
+        `fair-probability floor by design. The zero-key signal slate publishes a moneyline only when an ` +
+        `independent estimate exists for the fixture and clears the selective delta. ${feed}`
+      );
+    case "TOTAL":
+      return (
+        `No TOTAL picks while ${sportKey} games are scheduled in the window. A total publishes only when ` +
+        `${bookFloor}, the over/under vote across those books reaches ${WEIGHTS.CONSENSUS_MIN_PCT} and the ` +
+        `composite confidence reaches ${MIN_PUBLISH_CONFIDENCE} (scoreTotalPick, ` +
+        `packages/prediction-engine/src/scoring.ts); a juice split across books or a thin priced set drops ` +
+        `the total below the floor by design, and a single-bookmaker free feed (ESPN) cannot clear ` +
+        `MIN_BOOKMAKERS=${MIN_BOOKMAKERS}. The zero-key signal slate is moneyline-only. ${feed}`
+      );
+    case "SPREAD":
+      return (
+        `No SPREAD picks while ${sportKey} games are scheduled in the window. A spread publishes only when ` +
+        `${bookFloor}, the favoured-side vote reaches ${WEIGHTS.CONSENSUS_MIN_PCT} and the composite ` +
+        `confidence reaches ${MIN_PUBLISH_CONFIDENCE} (scoreSpreadPick, packages/prediction-engine/src/scoring.ts). ` +
+        `The zero-key signal slate is moneyline-only. ${feed}`
+      );
   }
-  return `No ${market} picks while ${sportKey} games are scheduled in the window; check the odds feed for this sport.`;
 }
 
 export function classifyMarketCoverage(
@@ -120,14 +174,34 @@ export function classifyMarketCoverage(
  */
 const SEED_MODEL_VERSION = "v5.0.0-seed";
 
+/**
+ * The row shape the game count needs: the per-fixture collapse's identity
+ * fields plus the sport key. `_count` rides along so the collapse keeps the
+ * row that carries the picks, the same tiebreak the board lanes use.
+ */
+export type MarketCoverageGameRow = FixtureCollapseRow & {
+  readonly sport: { readonly key: string };
+};
+
 export interface MarketCoverageDb {
   game: {
     findMany(args: {
       // Canonical rows only: a merged alias (tombstone) is the same contest
       // twice and would inflate the game count.
       where: { commenceTime: { gte: Date; lte: Date }; mergedIntoGameId: null };
-      select: { sport: { select: { key: true } } };
-    }): Promise<Array<{ sport: { key: string } }>>;
+      select: {
+        id: true;
+        externalId: true;
+        sportId: true;
+        homeTeamName: true;
+        awayTeamName: true;
+        commenceTime: true;
+        createdAt: true;
+        mergedIntoGameId: true;
+        sport: { select: { key: true } };
+        _count: { select: { picks: true; odds: true; oddsLineSnapshots: true } };
+      };
+    }): Promise<MarketCoverageGameRow[]>;
   };
   pick: {
     findMany(args: {
@@ -157,7 +231,20 @@ export async function loadMarketCoverage(
   const [games, picks] = await Promise.all([
     db.game.findMany({
       where: { commenceTime: range, mergedIntoGameId: null },
-      select: { sport: { select: { key: true } } },
+      select: {
+        id: true,
+        externalId: true,
+        sportId: true,
+        homeTeamName: true,
+        awayTeamName: true,
+        commenceTime: true,
+        createdAt: true,
+        mergedIntoGameId: true,
+        // `key` feeds the collapse's twin window (baseball 2h so a doubleheader
+        // stays two contests); omitting it takes the conservative 18h default.
+        sport: { select: { key: true } },
+        _count: { select: { picks: true, odds: true, oddsLineSnapshots: true } },
+      },
     }),
     db.pick.findMany({
       where: {
@@ -171,9 +258,19 @@ export async function loadMarketCoverage(
       select: { pickType: true, game: { select: { sport: { select: { key: true } } } } },
     }),
   ]);
+  // ONE ROW PER CONTEST, not per feed. Every odds feed writes its own game row
+  // (The Odds API id, `espn:<sport>:<id>`, TheRundown), only some of which the
+  // merge lane has tombstoned, so a raw count over `mergedIntoGameId: null`
+  // reports feeds, not fixtures. Measured 2026-09-08 19:07 UTC on the
+  // production truth surface: americanfootball_nfl `games: 6` for a 72h window
+  // in which ESPN's public scoreboard lists exactly two Week 1 fixtures (NE at
+  // SEA, SF at LAR), i.e. three feed rows per contest. The same fixture-collapse
+  // guard the board lanes and the slate use (C-172) is applied here; picks are
+  // not collapsed because each pick hangs off exactly one row.
+  const fixtures = collapseGameRowsToFixtures(games);
   return classifyMarketCoverage(
     {
-      games: games.map((g) => ({ sportKey: g.sport.key })),
+      games: fixtures.map((g) => ({ sportKey: g.sport.key })),
       picks: picks.map((p) => ({ sportKey: p.game.sport.key, pickType: p.pickType })),
     },
     { from: now, to, windowHours },

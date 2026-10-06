@@ -212,6 +212,11 @@ function calibration(sampleSize: number) {
     data: {
       sampleSize,
       brierScore: null,
+      // C-224: board/page.tsx now reads population + the Clopper-Pearson
+      // interval instead of brierScore for its "Decided W-L" metric.
+      population: { wins: 0, losses: 0, pushes: 0, voids: 0, pending: 0, decided: 0 },
+      headlineClopperPearsonLow: null,
+      headlineClopperPearsonHigh: null,
       isCollecting: sampleSize === 0,
       publicMessage: "Building calibration history from settled canonical picks.",
       updatedAt: NOW,
@@ -372,8 +377,13 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     const text = textOf(tree);
 
     // Board door + signal-vs-noise say "unavailable", not "Gate holding" / zeros.
-    expect(text).toContain("Live board data unavailable");
-    expect(text).toContain("Live board counts are temporarily unavailable");
+    // Was "Live board data unavailable". The FIELD rebuild renamed the board
+    // door's outage stat; the PROPERTY is unchanged and is pinned twice below:
+    // the door says unavailable, and the counts render "n/a" rather than zeros.
+    expect(text).toContain("Board temporarily unavailable");
+    expect(text).toContain("n/a");
+    expect(text).not.toMatch(/Today's picks\s*0/);
+    expect(text).toContain("Board counts are temporarily unavailable");
     expect(text).not.toContain("Gate holding");
     // Lab door says "unavailable", not the reassuring "Intake warming up".
     expect(text).toContain("Live player data unavailable");
@@ -399,8 +409,10 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     const text = textOf(tree);
 
     // Board healthy → its live copy still renders, NOT "unavailable".
-    expect(text).toContain("2 cleared · 1 gated");
-    expect(text).not.toContain("Live board data unavailable");
+    // Was "2 cleared · 1 gated". AGENTS.md records the copy change from
+    // cleared/gated to picks/passes; the counts themselves are the guard.
+    expect(text).toContain("2 picks · 1 passes");
+    expect(text).not.toContain("Board temporarily unavailable");
     // Lab door reflects the nflverse outage honestly.
     expect(text).toContain("Live player data unavailable");
     expect(text).not.toContain("Intake warming up");
@@ -426,8 +438,13 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     const tree = await resolveNflverseDoor(await HomePage());
     const text = textOf(tree);
 
-    expect(text).toContain("Live board data unavailable");
-    expect(text).toContain("Live board counts are temporarily unavailable");
+    // Was "Live board data unavailable". The FIELD rebuild renamed the board
+    // door's outage stat; the PROPERTY is unchanged and is pinned twice below:
+    // the door says unavailable, and the counts render "n/a" rather than zeros.
+    expect(text).toContain("Board temporarily unavailable");
+    expect(text).toContain("n/a");
+    expect(text).not.toMatch(/Today's picks\s*0/);
+    expect(text).toContain("Board counts are temporarily unavailable");
     expect(text).not.toContain("Gate holding");
     expect(text).not.toContain("0 cleared");
     // nflverse is live, so the Lab door still shows real player rows.
@@ -444,8 +461,13 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     const tree = await resolveNflverseDoor(await HomePage());
     const text = textOf(tree);
 
-    expect(text).toContain("Live board data unavailable");
-    expect(text).toContain("Live board counts are temporarily unavailable");
+    // Was "Live board data unavailable". The FIELD rebuild renamed the board
+    // door's outage stat; the PROPERTY is unchanged and is pinned twice below:
+    // the door says unavailable, and the counts render "n/a" rather than zeros.
+    expect(text).toContain("Board temporarily unavailable");
+    expect(text).toContain("n/a");
+    expect(text).not.toMatch(/Today's picks\s*0/);
+    expect(text).toContain("Board counts are temporarily unavailable");
     expect(text).not.toContain("Gate holding");
     expect(text).not.toContain("0 cleared");
     const methodology = findByType(tree, MethodologySection);
@@ -461,9 +483,11 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     const tree = await resolveNflverseDoor(await HomePage());
     const text = textOf(tree);
 
-    expect(text).toContain("2 cleared · 1 gated");
+    // Was "2 cleared · 1 gated". AGENTS.md records the copy change from
+    // cleared/gated to picks/passes; the counts themselves are the guard.
+    expect(text).toContain("2 picks · 1 passes");
     expect(text).toContain("1,234 live player rows");
-    expect(text).not.toContain("Live board data unavailable");
+    expect(text).not.toContain("Board temporarily unavailable");
     expect(text).not.toContain("Live player data unavailable");
     // Healthy: the ledger band renders with the real operational metrics.
     // playerRows is no longer in the static metrics — it is now rendered
@@ -486,9 +510,12 @@ describe("/ (home) — outage renders neutral unavailable, not reassuring live z
     const tree = await resolveNflverseDoor(await HomePage());
     const text = textOf(tree);
 
-    expect(text).toContain("Gate holding. No forced action");
+    // Was "Gate holding. No forced action". AGENTS.md bans "the gate held" style
+    // copy; the quiet-board door now reads "Quiet slate. Nothing forced." Same
+    // property: a genuinely empty board is stated as restraint, not as an outage.
+    expect(text).toContain("Quiet slate. Nothing forced.");
     expect(text).toContain("Intake warming up");
-    expect(text).not.toContain("Live board data unavailable");
+    expect(text).not.toContain("Board temporarily unavailable");
     expect(text).not.toContain("Live player data unavailable");
   });
 });

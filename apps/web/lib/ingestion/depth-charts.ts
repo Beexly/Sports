@@ -15,6 +15,12 @@ import { nflverseIngestionGate } from "@/lib/ingestion/nflverse-gate";
 type CsvRow = Readonly<Record<string, string>>;
 type TableFetcher = (key: NflverseDatasetKey, season: number, variant?: string) => Promise<{ records: readonly CsvRow[] }>;
 
+// Keep Postgres bound-parameter count well under its limit (same pattern and
+// value as historical-games.ts). The full-season depth-chart asset is not
+// small: measured live 2026-09-09, depth_charts_2026.csv carried 505,423 rows
+// across all 32 teams — a single unbatched createMany would fail outright.
+const CREATE_CHUNK = 2000;
+
 export interface DepthChartIngestResult {
   readonly status: "ok" | "clearance-denied" | "source-error";
   readonly season: number;
@@ -34,6 +40,25 @@ function int(value: string): number | null {
   if (value === "") return null;
   const n = Number(value);
   return Number.isFinite(n) ? Math.round(n) : null;
+}
+
+/**
+ * The 2025+ nflverse depth-charts schema drops the `week` column entirely
+ * and instead publishes one row per (team, position) for every refresh
+ * timestamp (`dt`) since the season began — depth_charts_2026.csv carried
+ * 172 distinct `dt` snapshots (2026-03-22..2026-09-08, 505,423 rows total)
+ * as of 2026-09-09 (Devin Review, PR #734). Every row defaults to week 0
+ * below (there is no week to read), so writing them unscoped would persist
+ * six months of roster churn as one indistinguishable season, not the
+ * current depth chart. Legacy (<=2024) rows carry a real week column and
+ * are left untouched — each is already a distinct, meaningful row.
+ */
+function scopeToLatestSnapshot(rows: readonly CsvRow[]): readonly CsvRow[] {
+  if (rows.some((r) => pick(r, ["week"]) !== "")) return rows;
+  const timestamps = rows.map((r) => r["dt"]).filter((d): d is string => !!d);
+  if (timestamps.length === 0) return rows;
+  const latest = timestamps.reduce((max, d) => (d > max ? d : max));
+  return rows.filter((r) => r["dt"] === latest);
 }
 
 export async function ingestDepthCharts(
@@ -57,7 +82,7 @@ export async function ingestDepthCharts(
   const idByGsis = new Map((Array.isArray(playerRows) ? playerRows : []).map((p) => [p.gsisId, p.id]));
 
   const data = [];
-  for (const r of rows) {
+  for (const r of scopeToLatestSnapshot(rows)) {
     const playerName = pick(r, ["full_name", "player_name", "football_name", "player"]);
     if (!playerName) continue;
     const depthRank = int(pick(r, ["depth_team", "pos_rank"]));
@@ -83,8 +108,16 @@ export async function ingestDepthCharts(
   if (data.length === 0) {
     return { status: "source-error", season, rowsWritten: 0, error: "upstream returned no rows; existing data preserved" };
   }
-  await db.depthChartEntry.deleteMany({ where: { season } });
-  const created = data.length > 0 ? await db.depthChartEntry.createMany({ data }) : null;
+  // One atomic transaction covering the delete and every insert batch: a
+  // createMany failure partway through must not leave the season's rows
+  // erased with only some of the replacement written.
+  const chunks: (typeof data)[] = [];
+  for (let i = 0; i < data.length; i += CREATE_CHUNK) chunks.push(data.slice(i, i + CREATE_CHUNK));
+  const [, ...createdChunks] = await db.$transaction([
+    db.depthChartEntry.deleteMany({ where: { season } }),
+    ...chunks.map((c) => db.depthChartEntry.createMany({ data: c })),
+  ]);
+  const rowsWritten = createdChunks.reduce((sum, c) => sum + c.count, 0);
 
-  return { status: "ok", season, rowsWritten: created?.count ?? data.length };
+  return { status: "ok", season, rowsWritten };
 }

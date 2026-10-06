@@ -24,6 +24,11 @@ const dbMock = vi.hoisted(() => ({
   // C-109 credit ledger rows (odds-credit-ledger.ts reads JarvisMemoryEvent);
   // the real ledger read runs against this mock.
   jarvisMemoryEvent: { findFirst: vi.fn(), findMany: vi.fn() },
+  // odds_line_snapshots freshness (2026-09-19): the route calls the REAL
+  // readOddsLineArchiveFreshnessInput + assessOddsLineArchiveFreshness
+  // against this delegate, unmocked, so the test below exercises the actual
+  // wiring rather than a stand-in for it.
+  oddsLineSnapshot: { findFirst: vi.fn(), count: vi.fn() },
 }));
 
 const predictionEngineMocks = vi.hoisted(() => ({
@@ -37,6 +42,12 @@ const predictionEngineMocks = vi.hoisted(() => ({
 
 const stripeWebhookHostsMocks = vi.hoisted(() => ({
   loadStripeWebhookHostsPosture: vi.fn(),
+}));
+
+// C-286: the line-integrity survey is operator-only for the same reason the
+// Stripe probe is — it runs three capped pick scans plus counts on every call.
+const lineIntegrityMocks = vi.hoisted(() => ({
+  surveyLineIntegrity: vi.fn(async () => ({ surveyed: true })),
 }));
 
 const opsMocks = vi.hoisted(() => ({
@@ -68,7 +79,6 @@ const opsMocks = vi.hoisted(() => ({
 }));
 
 const dataMocks = vi.hoisted(() => ({
-  resolveContestStorageMode: vi.fn(() => "mode"),
   resolveWaitlistStorageMode: vi.fn(() => "mode"),
   isStubMode: vi.fn(() => false),
   isDemoPicksEnabled: vi.fn(() => false),
@@ -124,13 +134,17 @@ vi.mock("@sports/db", () => ({
   isDemoPicksEnabled: dataMocks.isDemoPicksEnabled,
 }));
 
-vi.mock("@sports/prediction-engine", () => ({
-  getReadinessGates: predictionEngineMocks.getReadinessGates,
-  // The route reports the stale-data kill switch (gates.forceNoBetIfStale);
-  // this suite only exercises rate limiting and Stripe gating, so the
-  // switch is simply off here.
-  getPlatformConfig: () => ({ forceNoBetIfStale: false }),
-}));
+vi.mock("@sports/prediction-engine", async (importOriginal) => {
+  const actual = await importOriginal<typeof import("@sports/prediction-engine")>();
+  return {
+    ...actual,
+    getReadinessGates: predictionEngineMocks.getReadinessGates,
+    // The route reports the stale-data kill switch (gates.forceNoBetIfStale);
+    // this suite only exercises rate limiting and Stripe gating, so the
+    // switch is simply off here.
+    getPlatformConfig: () => ({ forceNoBetIfStale: false }),
+  };
+});
 
 vi.mock("@sports/data-ingestion", async () => {
   // C-109: the route also reads the credit-governor truth block through the
@@ -152,16 +166,16 @@ vi.mock("@/lib/launch/public-surface-gate", () => ({
   PUBLIC_NAV_POLICY: launchMocks.PUBLIC_NAV_POLICY,
 }));
 
-vi.mock("@/lib/contests/store", () => ({
-  resolveContestStorageMode: dataMocks.resolveContestStorageMode,
-}));
-
 vi.mock("@/lib/gse/waitlist-store", () => ({
   resolveWaitlistStorageMode: dataMocks.resolveWaitlistStorageMode,
 }));
 
 vi.mock("@/lib/ops/stripe-webhook-hosts", () => ({
   loadStripeWebhookHostsPosture: stripeWebhookHostsMocks.loadStripeWebhookHostsPosture,
+}));
+
+vi.mock("@/lib/settlement/line-integrity-lane", () => ({
+  surveyLineIntegrity: lineIntegrityMocks.surveyLineIntegrity,
 }));
 
 vi.mock("@/lib/ops/credit-stack-posture", () => ({
@@ -299,6 +313,7 @@ describe("/api/ops/public-surface-truth — P13-03 rate limiting + Stripe gating
   beforeEach(() => {
     vi.resetModules();
     resetRateLimits();
+    lineIntegrityMocks.surveyLineIntegrity.mockClear();
     // DB lookups (only hit when isStubMode() is false)
     dbMock.ingestionRun.findFirst.mockResolvedValue(null);
     // Credit ledger: no observation recorded yet.
@@ -424,6 +439,64 @@ describe("/api/ops/public-surface-truth — P13-03 rate limiting + Stripe gating
 
     expect(body.detail).toBe("public");
     expect(body).not.toHaveProperty("stripeWebhookHosts");
+    // C-182: the Stripe posture block enumerates which billing variables this
+    // deployment has set, so it is operator-detail only (C-102's finding about
+    // env-var names on the anonymous payload).
+    expect(body).not.toHaveProperty("stripe");
+  });
+
+  /**
+   * C-182 — the code half of F-18, F-19 and F-20. Those founder rows stayed
+   * OPEN because checking them meant opening the Stripe Dashboard. The surface
+   * now reports the half the server can honestly know, and says NOT_READABLE
+   * for the half it cannot — never a guessed Dashboard state.
+   */
+  it("reports the Stripe posture to an operator, with NOT_READABLE where the server cannot know", async () => {
+    const mod = await import("@/app/api/ops/public-surface-truth/route");
+    process.env.CRON_SECRET = "test-secret-123";
+    const savedConsent = process.env["STRIPE_TERMS_CONSENT_ENABLED"];
+    process.env["STRIPE_TERMS_CONSENT_ENABLED"] = "true";
+    try {
+      const req = makeRequest("http://localhost/api/ops/public-surface-truth", {
+        authorization: "Bearer test-secret-123",
+      });
+      const body = await mod.GET(req).then((r) => r.json());
+
+      // F-20: the handled list, read from the handler's own switch.
+      expect(body.stripe.handledEventCount).toBe(10);
+      expect(body.stripe.handledEvents).toContain("checkout.session.expired");
+      expect(body.stripe.handledEvents).toContain("invoice.paid");
+      expect(body.stripe.handledEvents).toContain("charge.refunded");
+
+      // F-18: readable from this deployment's own environment.
+      expect(body.stripe.termsConsentEnabled).toBe(true);
+
+      // The three the server genuinely cannot see. Any value other than
+      // NOT_READABLE here would be an invented Dashboard state — which is the
+      // failure these rows exist to prevent, not a nicety.
+      expect(body.stripe.dashboardSubscribedEvents).toBe("NOT_READABLE");
+      expect(body.stripe.termsUrlConfigured).toBe("NOT_READABLE");
+      expect(body.stripe.foundingPaymentLinkActive).toBe("NOT_READABLE");
+    } finally {
+      if (savedConsent === undefined) delete process.env["STRIPE_TERMS_CONSENT_ENABLED"];
+      else process.env["STRIPE_TERMS_CONSENT_ENABLED"] = savedConsent;
+    }
+  });
+
+  it("reports termsConsentEnabled false when the variable is unset — never assumed on", async () => {
+    const mod = await import("@/app/api/ops/public-surface-truth/route");
+    process.env.CRON_SECRET = "test-secret-123";
+    const savedConsent = process.env["STRIPE_TERMS_CONSENT_ENABLED"];
+    delete process.env["STRIPE_TERMS_CONSENT_ENABLED"];
+    try {
+      const req = makeRequest("http://localhost/api/ops/public-surface-truth", {
+        authorization: "Bearer test-secret-123",
+      });
+      const body = await mod.GET(req).then((r) => r.json());
+      expect(body.stripe.termsConsentEnabled).toBe(false);
+    } finally {
+      if (savedConsent !== undefined) process.env["STRIPE_TERMS_CONSENT_ENABLED"] = savedConsent;
+    }
   });
 
   it("carries the C-109 credits block, all null before the first observation (paceOk is null, not a claim)", async () => {
@@ -514,5 +587,118 @@ describe("/api/ops/public-surface-truth — P13-03 rate limiting + Stripe gating
     expect(body.detail).toBe("operator");
     expect(body).toHaveProperty("stripeWebhookHosts");
     expect(body).toHaveProperty("mainFeatureMarkers");
+  });
+
+  // ── C-286: the line-integrity survey is operator-only ────────────────────
+  //
+  // CodeRabbit (#733): the survey runs three capped pick scans plus counts on
+  // EVERY call. The per-IP rate limit bounds one caller, not the aggregate
+  // database work anonymous callers can provoke. `remainingToVoid` is a number
+  // the operator reads before a flip, never a public claim, so gating it costs
+  // nothing.
+  it("does NOT run surveyLineIntegrity for an anonymous request", async () => {
+    delete process.env.CRON_SECRET;
+    const mod = await import("@/app/api/ops/public-surface-truth/route");
+    const res = await mod.GET(makeRequest("http://localhost/api/ops/public-surface-truth"));
+    const body = await res.json();
+
+    expect(lineIntegrityMocks.surveyLineIntegrity).not.toHaveBeenCalled();
+    // Present but empty, so a public reader cannot mistake "not surveyed" for
+    // "nothing to void".
+    expect(body.detail).toBe("public");
+    expect(body.lineIntegrity).toBeNull();
+  });
+
+  it("DOES run it for an operator request, and returns what it measured", async () => {
+    process.env.CRON_SECRET = "test-secret-123";
+    const mod = await import("@/app/api/ops/public-surface-truth/route");
+    const res = await mod.GET(
+      makeRequest("http://localhost/api/ops/public-surface-truth", {
+        authorization: "Bearer test-secret-123",
+      }),
+    );
+    const body = await res.json();
+
+    expect(lineIntegrityMocks.surveyLineIntegrity).toHaveBeenCalledTimes(1);
+    expect(body.detail).toBe("operator");
+    expect(body.lineIntegrity).toEqual({ surveyed: true });
+  });
+
+  // ── odds_line_snapshots writer freshness (2026-09-19) ───────────────────
+  //
+  // The odds_line_snapshots writer died silently for three weeks in 2026-08
+  // and nothing watched it (see AGENTS.md). This route now wires in
+  // lib/ops/odds-line-archive-freshness.ts to report that state. These tests
+  // run the REAL reader and assessor against the db mock's oddsLineSnapshot
+  // delegate, unmocked, so they exercise the actual wiring rather than a
+  // stand-in that could drift from it, and they prove the reported verdict
+  // tracks the underlying data instead of asserting only that the field is
+  // present.
+  describe("oddsLineArchiveFreshness", () => {
+    it("invokes the real reader against oddsLineSnapshot and reports healthy on a fresh row", async () => {
+      const fresh = new Date(Date.now() - 5 * 60_000); // 5 minutes old
+      dbMock.oddsLineSnapshot.findFirst.mockResolvedValue({ capturedAt: fresh });
+      dbMock.oddsLineSnapshot.count.mockResolvedValue(3);
+
+      delete process.env.CRON_SECRET;
+      const mod = await import("@/app/api/ops/public-surface-truth/route");
+      const req = makeRequest("http://localhost/api/ops/public-surface-truth");
+      const body = await mod.GET(req).then((r) => r.json());
+
+      expect(dbMock.oddsLineSnapshot.findFirst).toHaveBeenCalledWith({
+        orderBy: { capturedAt: "desc" },
+        select: { capturedAt: true },
+      });
+      expect(dbMock.oddsLineSnapshot.count).toHaveBeenCalled();
+      expect(body.oddsLineArchiveFreshness.verdict).toBe("healthy");
+      expect(body.oddsLineArchiveFreshness.ageMinutes).toBe(5);
+      expect(body.oddsLineArchiveFreshness.thresholds).toEqual({
+        degradedAfterMinutes: 60,
+        staleAfterMinutes: 360,
+      });
+    });
+
+    it("reports stale, never healthy, on the identical route call when the underlying row is three weeks old, proving the value tracks the input", async () => {
+      const old = new Date(Date.now() - 21 * 24 * 60 * 60_000); // three weeks old
+      dbMock.oddsLineSnapshot.findFirst.mockResolvedValue({ capturedAt: old });
+      dbMock.oddsLineSnapshot.count.mockResolvedValue(0);
+
+      delete process.env.CRON_SECRET;
+      const mod = await import("@/app/api/ops/public-surface-truth/route");
+      const req = makeRequest("http://localhost/api/ops/public-surface-truth");
+      const body = await mod.GET(req).then((r) => r.json());
+
+      expect(body.oddsLineArchiveFreshness.verdict).toBe("stale");
+      expect(body.oddsLineArchiveFreshness.verdict).not.toBe("healthy");
+    });
+
+    it("fails closed to stale, never healthy, when the db read throws", async () => {
+      dbMock.oddsLineSnapshot.findFirst.mockRejectedValue(new Error("connection terminated"));
+      dbMock.oddsLineSnapshot.count.mockResolvedValue(0);
+
+      delete process.env.CRON_SECRET;
+      const mod = await import("@/app/api/ops/public-surface-truth/route");
+      const req = makeRequest("http://localhost/api/ops/public-surface-truth");
+      const body = await mod.GET(req).then((r) => r.json());
+
+      expect(body.oddsLineArchiveFreshness.verdict).toBe("stale");
+      expect(body.oddsLineArchiveFreshness.verdict).not.toBe("healthy");
+      expect(body.oddsLineArchiveFreshness.mostRecentCapturedAt).toBeNull();
+    });
+
+    it("is additive: existing fields and the public/operator detail split are unchanged", async () => {
+      dbMock.oddsLineSnapshot.findFirst.mockResolvedValue({ capturedAt: new Date() });
+      dbMock.oddsLineSnapshot.count.mockResolvedValue(1);
+
+      delete process.env.CRON_SECRET;
+      const mod = await import("@/app/api/ops/public-surface-truth/route");
+      const req = makeRequest("http://localhost/api/ops/public-surface-truth");
+      const body = await mod.GET(req).then((r) => r.json());
+
+      expect(body.detail).toBe("public");
+      expect(body).toHaveProperty("oddsInserting");
+      expect(body).toHaveProperty("lineIntegrity");
+      expect(body).toHaveProperty("oddsLineArchiveFreshness");
+    });
   });
 });

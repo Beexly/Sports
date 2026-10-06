@@ -24,6 +24,38 @@ describe("rundown-client", () => {
     expect(RUNDOWN_AFFILIATE_BOOK_KEYS["25"]).toBe("kalshi");
   });
 
+  /**
+   * C-278a. Affiliate 25 is Kalshi, an EXCHANGE: its quote carries no book
+   * margin but does carry a taker fee, so the raw ask understates what the
+   * member pays. Every Kalshi price leaving this client is taker-inclusive;
+   * every sportsbook price is untouched.
+   */
+  describe("Kalshi (affiliate 25) prices carry the taker fee", () => {
+    const event = (affiliate: string) => ({
+      event_id: "e-kalshi",
+      teams: [
+        { name: "Kansas City", mascot: "Chiefs", is_away: false },
+        { name: "Buffalo", mascot: "Bills", is_away: true },
+      ],
+      event_date: "2026-09-11T00:00:00Z",
+      lines: { [affiliate]: { moneyline: { moneyline_home: -100, moneyline_away: -100 } } },
+    });
+
+    it("restates a -100 Kalshi moneyline as the taker-inclusive -108", () => {
+      // P = 0.50; fee ceil(0.07 * 1 * 0.50 * 0.50) = 1.75c -> 2c; effective
+      // 0.52 -> -(100*0.52)/(1-0.52) = -108.33… -> -108.
+      const ev = rundownEventToOddsApiEvent(event("25"), "americanfootball_nfl");
+      expect(ev!.bookmakers[0]!.key).toBe("kalshi");
+      expect(ev!.bookmakers[0]!.markets[0]!.outcomes.map((o) => o.price)).toEqual([-108, -108]);
+    });
+
+    it("leaves a sportsbook affiliate's -100 exactly as quoted", () => {
+      const ev = rundownEventToOddsApiEvent(event("23"), "americanfootball_nfl");
+      expect(ev!.bookmakers[0]!.key).toBe("fanduel");
+      expect(ev!.bookmakers[0]!.markets[0]!.outcomes.map((o) => o.price)).toEqual([-100, -100]);
+    });
+  });
+
   it("resolves key from env aliases", () => {
     expect(resolveRundownApiKey({ RUNDOWN_API_KEY: " a " })).toBe("a");
     expect(resolveRundownApiKey({ RUNDOWN_KEY: "b" })).toBe("b");

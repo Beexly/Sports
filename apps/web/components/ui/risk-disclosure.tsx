@@ -54,7 +54,10 @@ export function RiskDisclosure({
       <p
         data-testid="risk-disclosure"
         className={[
-          "text-[10px] leading-relaxed text-ion-1",
+          // FE-14: bumped 10px -> 12px. This is the responsible-gambling
+          // disclosure; it should never be the smallest, hardest-to-read
+          // text on the page.
+          "text-xs leading-relaxed text-ion-1",
           className ?? "",
         ].join(" ")}
       >

@@ -10,6 +10,7 @@
 import { useMemo, useState } from "react";
 import { evaluateTrade, tradeValue, type Fairness } from "@/lib/fantasy/trade";
 import { PLAYERS, POS_HEX, type Player } from "@/lib/fantasy/players";
+import { gseRankPool, isLiveGse } from "@/lib/fantasy/gse-score";
 import { LivePoolEmpty } from "@/components/fantasy/live-pool-empty";
 
 // Verdict tones (design tokens): win = verify, fair = neutral silver,
@@ -31,7 +32,20 @@ const GET_TONE = "var(--orbital-cyan)";
  */
 export function TradeAnalyzer({ pool }: { pool?: readonly Player[] } = {}) {
   const universe = useMemo(() => pool ?? PLAYERS, [pool]);
-  const sortedPool = useMemo(() => [...universe].sort((a, b) => tradeValue(b, universe) - tradeValue(a, universe)), [universe]);
+  const ratings = useMemo(() => gseRankPool(universe), [universe]);
+  const sortedPool = useMemo(
+    () =>
+      [...universe].sort((a, b) => {
+        const ra = ratings.get(a.id)?.score ?? 0;
+        const rb = ratings.get(b.id)?.score ?? 0;
+        return rb - ra || tradeValue(b, universe) - tradeValue(a, universe);
+      }),
+    [universe, ratings],
+  );
+  const isLive = useMemo(
+    () => [...ratings.values()].some((r) => isLiveGse(r)),
+    [ratings],
+  );
   const [give, setGive] = useState<string[]>([]);
   const [get, setGet] = useState<string[]>([]);
 
@@ -84,16 +98,36 @@ export function TradeAnalyzer({ pool }: { pool?: readonly Player[] } = {}) {
 
       {/* pool */}
       <div className="surface-card p-4">
-        <p className="mb-2 font-mono text-[11px] uppercase tracking-[0.18em] text-ion-2">Player pool · add to a side</p>
+        <div className="mb-2 flex flex-wrap items-center justify-between gap-2">
+          <p className="font-mono text-[11px] uppercase tracking-[0.18em] text-ion-2">
+            Player pool · ranked by GSE Score
+          </p>
+          <span
+            className="rounded-full px-2 py-0.5 text-[10px] font-bold uppercase tracking-wider"
+            style={
+              isLive
+                ? { background: "rgba(255,77,46,0.14)", color: "#FF4D2E" }
+                : { background: "rgba(196,191,182,0.12)", color: "#C4BFB6" }
+            }
+          >
+            {isLive ? "Live process grade" : "Sample ranking"}
+          </span>
+        </div>
         <div className="max-h-[40vh] space-y-0.5 overflow-y-auto">
           {sortedPool.map((p) => {
             const used = give.includes(p.id) || get.includes(p.id);
             const phex = POS_HEX[p.pos];
+            const r = ratings.get(p.id);
             return (
               <div key={p.id} className="flex items-center gap-2 rounded px-1.5 py-1" style={{ opacity: used ? 0.4 : 1 }}>
+                <span className="w-6 shrink-0 text-right font-mono text-[10px] tabular-nums text-ion-3" title="GSE Index (overall rank)">
+                  {r?.index ?? "—"}
+                </span>
                 <span className="rounded px-1 py-0.5 font-mono text-[9px] font-bold" style={{ color: phex, background: `${phex}1c` }}>{p.pos}</span>
                 <span className="flex-1 truncate text-xs text-ion-white">{p.name} <span className="text-ion-2">{p.team}</span></span>
-                <span className="w-8 text-right font-mono text-[10px] tabular-nums text-ion-2">{tradeValue(p, universe)}</span>
+                <span className="w-8 text-right font-mono text-[11px] font-bold tabular-nums text-orbital-cyan" title="GSE Score (0–100)">
+                  {r?.score ?? "—"}
+                </span>
                 <button type="button" disabled={used} onClick={() => addTo("give", p.id)} className="rounded px-1.5 py-0.5 text-[10px] font-semibold text-plasma disabled:opacity-30">Give</button>
                 <button type="button" disabled={used} onClick={() => addTo("get", p.id)} className="rounded px-1.5 py-0.5 text-[10px] font-semibold text-orbital-cyan disabled:opacity-30">Get</button>
               </div>

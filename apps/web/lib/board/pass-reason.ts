@@ -35,9 +35,15 @@
  * considered refusal and a silent disappearance are different facts, and only
  * one of them says anything about the game.
  *
- * "Not evaluated" is deliberately /board/gate's own vocabulary, so the same
- * distinction is named in the same words everywhere rather than re-taught in a
- * second dialect.
+ * These three strings were originally /board/gate's own vocabulary ("Not
+ * evaluated", "Market depth below publish threshold", "Evidence health below
+ * publish threshold"), chosen so one distinction was named in one set of words
+ * across both surfaces. The humanizer pass replaced them with plain English and
+ * AGENTS.md now BANS the originals as customer copy. The distinction they
+ * existed to carry is unchanged and still load-bearing: each string names a
+ * real, observable deficiency, or says plainly that nothing scored the game.
+ * None of them claims a judgement. Reword freely; never let a rewording imply
+ * the game was considered and declined.
  *
  * NOT for rows backed by a real `gateDecision`. Those carry `decision.reason`,
  * which IS a genuine judgement, and must pass through verbatim — softening a
@@ -56,10 +62,10 @@ export function unevaluatedPassReason(
   dataQualityScore: number,
 ): string {
   if (bookmakerCoverageMax < MIN_BOOKMAKER_COVERAGE) {
-    return "Market depth below publish threshold.";
+    return "Not enough sportsbooks are pricing this game yet.";
   }
   if (dataQualityScore < MIN_DATA_QUALITY_SCORE) {
-    return "Evidence health below publish threshold.";
+    return "We don't have enough reliable data on this one.";
   }
-  return "Not evaluated: no pick was generated for this game today.";
+  return "We haven't scored this game yet.";
 }

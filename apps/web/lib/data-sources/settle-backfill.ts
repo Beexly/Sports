@@ -30,6 +30,7 @@ import {
 } from "./free-settlement";
 import { ODDS_KEY_TO_FREE } from "./free-settlement-runner";
 import { SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
+import { stampClosingLinesAfterSettle } from "@/lib/settlement/close-stamp";
 import type { NormalizedGame } from "./free-adapters/espn-scores";
 import type { Sport } from "./source-router";
 
@@ -659,5 +660,12 @@ async function persistInTx(db: BackfillDb, args: PersistSettledArgs): Promise<Pe
     }
     return updated;
   });
+  if (written.count > 0) {
+    // Line-archive CLOSE tag, after the transaction has committed and never
+    // inside it (a failed statement would abort the grade's transaction).
+    // Parity with settleSport and the free grader (C-95). Hard-gated on
+    // LINE_ARCHIVE_ENABLED inside the callee; never throws.
+    await stampClosingLinesAfterSettle(db, args.gameId, args.commenceTime, "[settle-backfill]");
+  }
   return { written: written.count > 0, refusal: null };
 }

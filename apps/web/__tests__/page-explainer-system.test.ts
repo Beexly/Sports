@@ -50,7 +50,17 @@ describe("Page-explainer component", () => {
   const layout = read("app/layout.tsx");
 
   it("auto-mounts in the layout and renders only where an explainer exists", () => {
-    expect(layout).toContain("PageExplainerAuto");
+    // Field design (417fa6ae3, "[field-next] Clean Field homepage, board, nav")
+    // hid the Nova launcher: "chrome fought the instrument look". A mount is
+    // still the required state; the one sanctioned alternative is a deliberate
+    // hide that is WRITTEN DOWN in the layout, so a silent removal still fails
+    // here.
+    const mounted = layout.includes("PageExplainerAuto");
+    const hiddenOnPurpose = /Nova explainer launcher hidden/.test(layout);
+    expect(
+      mounted || hiddenOnPurpose,
+      "Nova launcher is neither mounted nor recorded as deliberately hidden in app/layout.tsx",
+    ).toBe(true);
     expect(comp).toContain("usePathname");
     expect(comp).toContain("if (!explainer) return null;");
   });

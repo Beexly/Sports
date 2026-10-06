@@ -1,21 +1,35 @@
 /**
  * Free ESPN public odds → OddsApiEvent shape (zero keys).
  *
- * Source: sports.core.api.espn.com odds + site scoreboard for team names.
- * Docs community: github.com/pseudo-r/Public-ESPN-API
+ * Galaxy Sports API formula (verified 2026-08-27 from the founder's IP):
+ *   1. site.web.api.espn.com scoreboard (site.api + sports.core are Akamai-blocked
+ *      from some hosts; both are tried, site.web.api first)
+ *   2. Read INLINE competition.odds (DraftKings block) — one keyless call, no vendor key
+ *   3. Never invent prices: a spread/total POINT is carried without a price when
+ *      ESPN omits the American price (the engine will not mint from an unpriced row)
+ *   4. Core /odds remains a fallback when inline odds are absent
  *
  * Law:
- *  - Never invent quotes — empty when ESPN has no items / missing ML
- *  - Free tertiary path when THE_ODDS_API + Rundown fail/empty/429
+ *  - Never invent quotes — empty when no moneyline on both sides
  *  - Bookmaker key `espn_public` (labels DraftKings lines as ESPN-routed public feed)
- *  - Rate-friendly: multi-date scoreboard + odds per event with small delay
+ *  - Rights: ESPN public JSON is undocumented and ESPN's ToU favors personal
+ *    use; this path runs ONLY under the "galaxy-espn-inline" registry entry
+ *    (facts only, attribution required, low volume — ledger F-35) and soft-fails
+ *    empty if that entry is ever revoked. Prefer licensed feeds when keyed.
+ *  - Every fetch carries a timeout — a blackholed host must never stall the
+ *    ingestion cron.
  *  - Does not flip LIVE_BOARD / invent PROVEN
- *
- * ToU note: ESPN public JSON is undocumented; use sparingly (in-season sports only,
- * cached fetch window). Prefer licensed Odds API / Rundown when keys work.
+ *  - A second book (Kalshi via PredExon, `galaxy-kalshi-book.ts`) may be
+ *    attached per event through the `secondBook` seam; a miss there is a
+ *    per-event soft miss and never drops the ESPN book.
  */
 
 import type { OddsApiEvent, OddsApiBookmaker, OddsApiMarket } from "@sports/types";
+import { deVigFairProbs } from "./galaxy-devig.js";
+import { isIngestible } from "./source-registry.js";
+
+/** Registry id that gates this keyless path (facts-only ESPN carve-out). */
+export const GALAXY_ESPN_INLINE_SOURCE_ID = "galaxy-espn-inline";
 
 /** Odds-API sport key → ESPN site path + core league path */
 export const ESPN_ODDS_SPORT_MAP: Record<
@@ -148,13 +162,150 @@ export type EspnOddsFetchResult = {
   readonly provider: "espn_public";
 };
 
+/** What a second-book source needs to know about one ESPN event. */
+export interface GalaxySecondBookGameRef {
+  readonly sportKey: string;
+  /** ISO kickoff from the scoreboard. */
+  readonly commenceTime: string;
+  /** ESPN team abbreviations (e.g. BUF / PIT) — the exchange's ticker vocabulary. */
+  readonly homeAbbr: string;
+  readonly awayAbbr: string;
+  /** Full display names — DataNormalizer matches outcomes by event names. */
+  readonly homeTeam: string;
+  readonly awayTeam: string;
+}
+
+/**
+ * Second real bookmaker for the keyless plane (Kalshi via PredExon). Returns
+ * null on any missing leg — an honest miss, never a partial or invented book.
+ */
+export interface GalaxySecondBook {
+  bookmakerFor(game: GalaxySecondBookGameRef): Promise<OddsApiBookmaker | null>;
+}
+
 type Candidate = {
   id: string;
   home: string;
   away: string;
+  homeAbbr: string;
+  awayAbbr: string;
   commence: string;
   completed: boolean;
+  inlineOdds: Loose | null;
 };
+
+function pickInlineOddsBlock(comp: Loose): Loose | null {
+  const blocks = (comp["odds"] as Loose[] | undefined) ?? [];
+  if (blocks.length === 0) return null;
+  const dk = blocks.find((o) => {
+    const name = String(((o["provider"] as Loose | undefined)?.["name"] as string | undefined) ?? "");
+    return name === "DraftKings";
+  });
+  return dk ?? blocks[0] ?? null;
+}
+
+function mlFromClose(side: Loose | undefined): number | null {
+  if (!side) return null;
+  const close = (side["close"] as Loose | undefined) ?? side;
+  return americanNum(close["odds"] ?? close["american"]);
+}
+
+/**
+ * A real American price for one side of an inline spread/total, or null.
+ * Reads the block's `close` line price first, then the legacy team-odds price.
+ * Never returns a default; a missing price stays missing.
+ */
+function inlineSidePrice(block: Loose, marketKey: "pointSpread" | "total", side: string, legacy: unknown): number | null {
+  const market = block[marketKey] as Loose | undefined;
+  const sideBlock = market?.[side] as Loose | undefined;
+  const fromClose = mlFromClose(sideBlock);
+  if (fromClose != null) return fromClose;
+  return americanNum(legacy);
+}
+
+function eventFromInlineOdds(
+  sportKey: string,
+  title: string,
+  ev: Candidate,
+  lastUpdate: string,
+): OddsApiEvent | null {
+  const blk = ev.inlineOdds;
+  if (!blk) return null;
+  const ml = (blk["moneyline"] as Loose | undefined) ?? {};
+  const homeMl = mlFromClose(ml["home"] as Loose | undefined);
+  const awayMl = mlFromClose(ml["away"] as Loose | undefined);
+  if (homeMl == null || awayMl == null) return null;
+
+  const markets: OddsApiMarket[] = [
+    {
+      key: "h2h",
+      last_update: lastUpdate,
+      outcomes: [
+        { name: ev.away, price: awayMl },
+        { name: ev.home, price: homeMl },
+      ],
+    },
+  ];
+  const fair = deVigFairProbs(markets[0]!.outcomes);
+  for (const o of markets[0]!.outcomes) {
+    const fp = fair[o.name];
+    if (fp != null) o.fair_prob = fp;
+  }
+  const homeTeamOdds = blk["homeTeamOdds"] as Loose | undefined;
+  const awayTeamOdds = blk["awayTeamOdds"] as Loose | undefined;
+  if (blk["spread"] != null) {
+    const s = Number(blk["spread"]);
+    if (Number.isFinite(s)) {
+      // Full display names, never abbreviations: DataNormalizer matches
+      // spreads outcomes by exact event.home_team/away_team, which carry
+      // the display names. An abbreviation here normalizes to a row with
+      // spread and both prices undefined (all-NULL Odds row).
+      const homePx = inlineSidePrice(blk, "pointSpread", "home", homeTeamOdds?.["spreadOdds"]);
+      const awayPx = inlineSidePrice(blk, "pointSpread", "away", awayTeamOdds?.["spreadOdds"]);
+      markets.push({
+        key: "spreads",
+        last_update: lastUpdate,
+        outcomes: [
+          { name: ev.home, point: s, ...(homePx != null ? { price: homePx } : {}) },
+          { name: ev.away, point: -s, ...(awayPx != null ? { price: awayPx } : {}) },
+        ],
+      });
+    }
+  }
+  if (blk["overUnder"] != null) {
+    const ou = Number(blk["overUnder"]);
+    if (Number.isFinite(ou)) {
+      const overPx = inlineSidePrice(blk, "total", "over", blk["overOdds"]);
+      const underPx = inlineSidePrice(blk, "total", "under", blk["underOdds"]);
+      markets.push({
+        key: "totals",
+        last_update: lastUpdate,
+        outcomes: [
+          { name: "Over", point: ou, ...(overPx != null ? { price: overPx } : {}) },
+          { name: "Under", point: ou, ...(underPx != null ? { price: underPx } : {}) },
+        ],
+      });
+    }
+  }
+  const providerName = String(
+    ((blk["provider"] as Loose | undefined)?.["name"] as string | undefined) ?? "DraftKings",
+  );
+  const book: OddsApiBookmaker = {
+    key: "espn_public",
+    title: `ESPN/${providerName}`,
+    last_update: lastUpdate,
+    markets,
+  };
+  return {
+    id: `espn:${sportKey}:${ev.id}`,
+    sport_key: sportKey,
+    sport_title: title,
+    commence_time: ev.commence,
+    home_team: ev.home,
+    away_team: ev.away,
+    bookmakers: [book],
+  };
+}
 
 function parseCandidates(scoreboard: Loose): Candidate[] {
   const rawEvents = (scoreboard["events"] as Loose[] | undefined) ?? [];
@@ -166,19 +317,31 @@ function parseCandidates(scoreboard: Loose): Candidate[] {
     const competitors = (c["competitors"] as Loose[] | undefined) ?? [];
     let home = "";
     let away = "";
+    let homeAbbr = "";
+    let awayAbbr = "";
     for (const t of competitors) {
       const team = (t["team"] as Loose | undefined) ?? {};
       const name = String(team["displayName"] ?? team["name"] ?? "").trim();
-      if (String(t["homeAway"] ?? "") === "home") home = name;
-      if (String(t["homeAway"] ?? "") === "away") away = name;
+      const abbr = String(team["abbreviation"] ?? "").trim();
+      if (String(t["homeAway"] ?? "") === "home") {
+        home = name;
+        homeAbbr = abbr;
+      }
+      if (String(t["homeAway"] ?? "") === "away") {
+        away = name;
+        awayAbbr = abbr;
+      }
     }
     const commence = String(c["date"] ?? e["date"] ?? new Date().toISOString());
     out.push({
       id: String(e["id"] ?? ""),
       home,
       away,
+      homeAbbr,
+      awayAbbr,
       commence,
       completed: Boolean(status["completed"]),
+      inlineOdds: pickInlineOddsBlock(c),
     });
   }
   return out;
@@ -198,6 +361,16 @@ export async function fetchEspnOddsForSport(
     readonly interEventMs?: number;
     /** Days ahead for scoreboard dates= (default 3). */
     readonly horizonDays?: number;
+    /** Per-request timeout (ms, default 8000) — blocked hosts fail fast. */
+    readonly fetchTimeoutMs?: number;
+    /**
+     * Optional second real bookmaker (Kalshi via PredExon). When provided,
+     * each event may gain a second book from a live two-way exchange quote —
+     * the honest path past MIN_BOOKMAKERS=2 on the keyless plane. Failures
+     * are per-event soft misses; the second book can never break the ESPN
+     * board.
+     */
+    readonly secondBook?: GalaxySecondBook;
   },
 ): Promise<EspnOddsFetchResult> {
   const meta = ESPN_ODDS_SPORT_MAP[sportKey];
@@ -208,7 +381,16 @@ export async function fetchEspnOddsForSport(
       error: `espn odds: no sport map for ${sportKey}`,
     };
   }
+  // Clearance gate: this keyless path exists only under its registry entry.
+  if (!isIngestible(GALAXY_ESPN_INLINE_SOURCE_ID)) {
+    return {
+      events: [],
+      provider: "espn_public",
+      error: `espn odds: source not cleared (${GALAXY_ESPN_INLINE_SOURCE_ID})`,
+    };
+  }
   const fetchImpl = options?.fetchImpl ?? fetch;
+  const fetchTimeoutMs = Math.min(30000, Math.max(1000, options?.fetchTimeoutMs ?? 8000));
   const maxEvents = Math.min(40, Math.max(1, options?.maxEvents ?? 24));
   const interEventMs = Math.max(0, options?.interEventMs ?? 120);
   const horizonDays = Math.min(7, Math.max(0, options?.horizonDays ?? 3));
@@ -217,31 +399,42 @@ export async function fetchEspnOddsForSport(
   const dateParams = scoreboardDateParams(now, horizonDays);
   const byId = new Map<string, Candidate>();
 
+  const scoreboardHosts = [
+    "https://site.web.api.espn.com/apis/site/v2/sports",
+    "https://site.api.espn.com/apis/site/v2/sports",
+  ];
+
   for (let di = 0; di < dateParams.length; di++) {
     const dates = dateParams[di]!;
-    const scoreboardUrl =
-      `https://site.api.espn.com/apis/site/v2/sports/${meta.sitePath}/scoreboard` +
-      `?lang=en&region=us&limit=50` +
-      (dates ? `&dates=${dates}` : "");
-    try {
-      if (di > 0) await new Promise((r) => setTimeout(r, 80));
-      const res = await fetchImpl(scoreboardUrl, {
-        headers: { Accept: "application/json" },
-        cache: "no-store",
-      });
-      if (!res.ok) {
-        errors.push(`scoreboard${dates ? ` ${dates}` : ""}:HTTP ${res.status}`);
-        continue;
+    let gotBoard = false;
+    for (const host of scoreboardHosts) {
+      const scoreboardUrl =
+        `${host}/${meta.sitePath}/scoreboard` +
+        `?lang=en&region=us&limit=50` +
+        (dates ? `&dates=${dates}` : "");
+      try {
+        if (di > 0 || gotBoard) await new Promise((r) => setTimeout(r, 80));
+        const res = await fetchImpl(scoreboardUrl, {
+          headers: { Accept: "application/json" },
+          cache: "no-store",
+          signal: AbortSignal.timeout(fetchTimeoutMs),
+        });
+        if (!res.ok) {
+          errors.push(`scoreboard${dates ? ` ${dates}` : ""}:${host}:HTTP ${res.status}`);
+          continue;
+        }
+        const scoreboard = (await res.json()) as Loose;
+        for (const c of parseCandidates(scoreboard)) {
+          if (!c.id || !c.home || !c.away || c.completed) continue;
+          if (!byId.has(c.id)) byId.set(c.id, c);
+        }
+        gotBoard = true;
+        break;
+      } catch (err) {
+        errors.push(
+          `scoreboard${dates ? ` ${dates}` : ""}:${err instanceof Error ? err.message : String(err)}`,
+        );
       }
-      const scoreboard = (await res.json()) as Loose;
-      for (const c of parseCandidates(scoreboard)) {
-        if (!c.id || !c.home || !c.away || c.completed) continue;
-        if (!byId.has(c.id)) byId.set(c.id, c);
-      }
-    } catch (err) {
-      errors.push(
-        `scoreboard${dates ? ` ${dates}` : ""}:${err instanceof Error ? err.message : String(err)}`,
-      );
     }
   }
 
@@ -268,6 +461,13 @@ export async function fetchEspnOddsForSport(
     if (i > 0 && interEventMs > 0) {
       await new Promise((r) => setTimeout(r, interEventMs));
     }
+
+    const inline = eventFromInlineOdds(sportKey, meta.title, ev, lastUpdate);
+    if (inline) {
+      out.push(inline);
+      continue;
+    }
+
     const oddsUrl =
       `https://sports.core.api.espn.com/v2/sports/${meta.coreSport}/leagues/${meta.coreLeague}` +
       `/events/${ev.id}/competitions/${ev.id}/odds`;
@@ -275,6 +475,7 @@ export async function fetchEspnOddsForSport(
       const res = await fetchImpl(oddsUrl, {
         headers: { Accept: "application/json" },
         cache: "no-store",
+        signal: AbortSignal.timeout(fetchTimeoutMs),
       });
       if (!res.ok) {
         errors.push(`${ev.id}:HTTP ${res.status}`);
@@ -310,6 +511,11 @@ export async function fetchEspnOddsForSport(
           ],
         },
       ];
+      const fair = deVigFairProbs(markets[0]!.outcomes);
+      for (const o of markets[0]!.outcomes) {
+        const fp = fair[o.name];
+        if (fp != null) o.fair_prob = fp;
+      }
 
       const awaySpreadPt = spreadPointFromSide(away);
       const homeSpreadPt = spreadPointFromSide(home);
@@ -390,8 +596,42 @@ export async function fetchEspnOddsForSport(
         : "espn odds empty: no events with lines",
     };
   }
+
+  // Second real book (Kalshi via PredExon). Per-event soft miss — a second-book
+  // failure or unmapped matchup never drops the ESPN book, it just leaves that
+  // event single-book (and therefore honestly un-mintable).
+  const secondBook = options?.secondBook;
+  const events = !secondBook
+    ? filtered
+    : await (async () => {
+        const withBooks: OddsApiEvent[] = [];
+        for (const e of filtered) {
+          const evId = e.id.slice(e.id.lastIndexOf(":") + 1);
+          const cand = byId.get(evId);
+          if (!cand || !cand.homeAbbr || !cand.awayAbbr) {
+            withBooks.push(e);
+            continue;
+          }
+          try {
+            const book = await secondBook.bookmakerFor({
+              sportKey,
+              commenceTime: e.commence_time,
+              homeAbbr: cand.homeAbbr,
+              awayAbbr: cand.awayAbbr,
+              homeTeam: e.home_team,
+              awayTeam: e.away_team,
+            });
+            withBooks.push(book ? { ...e, bookmakers: [...e.bookmakers, book] } : e);
+          } catch (err) {
+            errors.push(`second-book:${evId}:${err instanceof Error ? err.message : String(err)}`);
+            withBooks.push(e);
+          }
+        }
+        return withBooks;
+      })();
+
   return {
-    events: filtered,
+    events,
     provider: "espn_public",
     error: errors.length
       ? `partial: ${errors.slice(0, 3).join("; ")}`

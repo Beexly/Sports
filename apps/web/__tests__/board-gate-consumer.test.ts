@@ -263,7 +263,14 @@ describe("board gate consumer — excluded candidates are reported, never droppe
     expect(excluded[0]!.rowId).toBe("no-odds-1");
     expect(excluded[0]!.reason).toContain("q (no two-sided odds)");
     // It must NOT read as a judgement about the game.
-    expect(excluded[0]!.reason).toContain("not a judgement");
+    // Was toContain("not a judgement"). The product spells it the American way,
+    // so this asserted on spelling rather than on the property it cares about.
+    // Pin the PROPERTY: the reason must disclaim a judgement about the game, and
+    // must not imply the game was weighed and declined.
+    expect(excluded[0]!.reason.toLowerCase()).toContain("not a judgment about the game");
+    expect(excluded[0]!.reason.toLowerCase()).not.toContain("declin");
+    // Public copy carries no em dash (AGENTS.md brand rules).
+    expect(excluded[0]!.reason).not.toContain("\u2014");
   });
 
   it("an excluded candidate never appears as FIRE or as a refusal", () => {

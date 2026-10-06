@@ -14,6 +14,13 @@ import { nflverseIngestionGate } from "@/lib/ingestion/nflverse-gate";
 type CsvRow = Readonly<Record<string, string>>;
 type TableFetcher = (key: NflverseDatasetKey, season: number, variant?: string) => Promise<{ records: readonly CsvRow[] }>;
 
+// Keep Postgres bound-parameter count well under its limit (same pattern and
+// value as historical-games.ts and depth-charts.ts). A full-season table
+// accumulates a row per player per game across every team and week, so batch
+// defensively rather than wait for it to actually exceed the limit in
+// production.
+const CREATE_CHUNK = 2000;
+
 export interface SnapCountIngestResult {
   readonly status: "ok" | "clearance-denied" | "source-error";
   readonly season: number;
@@ -80,8 +87,16 @@ export async function ingestSnapCounts(
   if (data.length === 0) {
     return { status: "source-error", season, rowsWritten: 0, error: "upstream returned no rows; existing data preserved" };
   }
-  await db.snapCount.deleteMany({ where: { season } });
-  const created = data.length > 0 ? await db.snapCount.createMany({ data }) : null;
+  // One atomic transaction covering the delete and every insert batch: a
+  // createMany failure partway through must not leave the season's rows
+  // erased with only some of the replacement written.
+  const chunks: (typeof data)[] = [];
+  for (let i = 0; i < data.length; i += CREATE_CHUNK) chunks.push(data.slice(i, i + CREATE_CHUNK));
+  const [, ...createdChunks] = await db.$transaction([
+    db.snapCount.deleteMany({ where: { season } }),
+    ...chunks.map((c) => db.snapCount.createMany({ data: c })),
+  ]);
+  const rowsWritten = createdChunks.reduce((sum, c) => sum + c.count, 0);
 
-  return { status: "ok", season, rowsWritten: created?.count ?? data.length };
+  return { status: "ok", season, rowsWritten };
 }

@@ -69,7 +69,13 @@ export interface LineArchiveDb {
     findMany(args: {
       where: {
         gameId: string;
-        market?: readonly string[];
+        /** Prisma list membership on a SCALAR String column is `{ in: [...] }`.
+         *  A bare array is a validation error, not a shorthand — see the call
+         *  site below and line-archive-filter-shape.test.ts. This type is
+         *  deliberately the Prisma shape and not whatever the call happens to
+         *  pass; declaring it the other way round is how the outage survived
+         *  typecheck for three weeks. */
+        market?: { in: readonly string[] };
         capturedAt?: { lte: Date };
       };
       select?: { market?: boolean };
@@ -129,7 +135,14 @@ export async function captureLineSnapshots(
     // Batch: one findMany returning any existing snapshots for these markets
     // — replaces N count() calls (the N+1 that melts Neon on a dense slate).
     const existing = await db.oddsLineSnapshot.findMany({
-      where: { gameId, market: markets },
+      // `{ in: markets }`, NOT `markets`. `OddsLineSnapshot.market` is a scalar
+      // String (schema.prisma:473), so a bare array is a Prisma validation
+      // error rather than a shorthand for list membership. It was written as a
+      // bare array in 544d0148e on 2026-08-22 and the archive's last row is
+      // from that same day: every capture since threw here and was swallowed by
+      // the catch below, which returns { persisted: 0, error } instead of
+      // raising. That is the ESTABLISHED-tier CLV blocker.
+      where: { gameId, market: { in: markets } },
       select: { market: true },
     });
     const seenMarkets = new Set(existing.map((r) => r.market));

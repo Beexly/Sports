@@ -16,13 +16,13 @@ type Command = { label: string; href: string; group: string; keywords?: string }
 
 const COMMANDS: Command[] = [
   // Intelligence
-  { label: "Today's Board", href: "/board", group: "Intelligence", keywords: "picks games slate" },
-  { label: "Edge Map", href: "/observatory", group: "Intelligence", keywords: "observatory market" },
+  { label: "The board", href: "/board", group: "Intelligence", keywords: "picks games slate" },
+  { label: "Published picks", href: "/picks", group: "Intelligence", keywords: "today signals reasoning" },
+  { label: "Founder picks", href: "/founder-picks", group: "Intelligence", keywords: "owner beak personal calls" },
   { label: "Inside the Signal", href: "/intelligence", group: "Intelligence", keywords: "engine reasoning how it works" },
   { label: "The Beat", href: "/the-beat", group: "Intelligence", keywords: "news breaking injuries reporters" },
   { label: "GSN Transmission", href: "/gsn", group: "Intelligence", keywords: "daily news network" },
   { label: "Parlay MRI", href: "/parlay-mri", group: "Intelligence", keywords: "parlay risk genome" },
-  { label: "The Academy", href: "/academy", group: "Intelligence", keywords: "train scenarios lessons" },
   { label: "Trust Ledger", href: "/ledger", group: "Intelligence", keywords: "merkle proof record" },
   { label: "FABLE Evidence Lab", href: "/fable", group: "Intelligence", keywords: "proof evidence source rights claims aws gates fable" },
   { label: "CLV Tracker", href: "/track", group: "Intelligence", keywords: "bets clv closing line value calibration roi" },
@@ -35,7 +35,6 @@ const COMMANDS: Command[] = [
   { label: "GM Autopilot", href: "/fantasy/autopilot", group: "Fantasy", keywords: "delegate manage automation" },
   { label: "The League Twin", href: "/fantasy/league-twin", group: "Fantasy", keywords: "galaxy visual roster 3d" },
   { label: "The GM Ledger", href: "/fantasy/gm-ledger", group: "Fantasy", keywords: "process grade decisions" },
-  { label: "GM Academy", href: "/fantasy/academy", group: "Fantasy", keywords: "drills lessons injury market analytics" },
   { label: "Draft Assistant", href: "/fantasy/draft", group: "Fantasy", keywords: "tiers vor pick" },
   { label: "Best Ball", href: "/fantasy/bestball", group: "Fantasy", keywords: "best ball draft ceiling stack spike bye" },
   { label: "Waiver & FAAB", href: "/fantasy/waivers", group: "Fantasy", keywords: "adds bids drop" },
@@ -44,7 +43,6 @@ const COMMANDS: Command[] = [
   { label: "Pick'em Edge", href: "/fantasy/props", group: "Fantasy", keywords: "underdog prizepicks dk pick6 props" },
   { label: "Trade Analyzer", href: "/fantasy/trade", group: "Fantasy", keywords: "value fairness" },
   { label: "Scheme Intelligence", href: "/fantasy/scheme", group: "Fantasy", keywords: "coaching change cascade" },
-  { label: "Galaxy Studios", href: "/fantasy/studio", group: "Fantasy", keywords: "nova news show brief" },
   // Account
   { label: "Dashboard", href: "/dashboard", group: "Account", keywords: "account" },
   { label: "Sign in", href: "/auth/signin", group: "Account", keywords: "login" },

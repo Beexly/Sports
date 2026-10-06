@@ -4,6 +4,7 @@ import { useId, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { track } from "@/lib/analytics/events";
+import { saveCheckoutIntent } from "@/lib/pricing/checkout-resume";
 
 /**
  * Subscribe button — isolates the Stripe checkout side-effect so the
@@ -22,6 +23,10 @@ import { track } from "@/lib/analytics/events";
  * comes from the pricing-phases single source via the `priceMonthly`/`priceAnnual`
  * props the server page already derives. Stripe Checkout also collects an
  * affirmative Terms consent (see lib/stripe.ts).
+ *
+ * Age gate removed 2026-09-14 (founder: "Remove the age-21 requirement from
+ * subscriptions"). Browsing was already all-ages (C-291); the hard DOB block
+ * on checkout is gone. Compliance "21+" copy on promos/footer is unchanged.
  */
 
 type Tier = "FANTASY" | "PRO" | "ELITE";
@@ -91,7 +96,6 @@ export function SubscribeButton({
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [dateOfBirth, setDateOfBirth] = useState("");
   // Unique id so assistive tech can announce the recurring-billing disclosure as
   // the button's description (aria-describedby). useId keeps it unique even when
   // several SubscribeButtons render on the same /pricing page.
@@ -114,10 +118,6 @@ export function SubscribeButton({
 
   async function handleClick() {
     setError(null);
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateOfBirth)) {
-      setError("Enter your date of birth. You must be 21 or older to subscribe.");
-      return;
-    }
     setLoading(true);
     // Intent signal — the user committed to moving up a tier (before the
     // network round-trip). Inert no-op until a provider is wired.
@@ -140,12 +140,15 @@ export function SubscribeButton({
         body: JSON.stringify({
           tier,
           interval,
-          dateOfBirth,
           ...(intentId !== null ? { clientIntentId: intentId } : {}),
         }),
       });
 
       if (res.status === 401) {
+        // FE-08: the sign-in round trip drops React state entirely — without
+        // this, the tier/interval the visitor just picked vanish and they
+        // land back on a blank pricing form.
+        saveCheckoutIntent({ tier, interval });
         router.push("/auth/signin?callbackUrl=/pricing");
         return;
       }
@@ -172,18 +175,6 @@ export function SubscribeButton({
 
   return (
     <div className="flex flex-col gap-2">
-      <label className="flex flex-col gap-1 text-[11px] leading-relaxed text-ion-3">
-        Date of birth (21+)
-        <input
-          type="date"
-          name="dateOfBirth"
-          required
-          autoComplete="bday"
-          value={dateOfBirth}
-          onChange={(e) => setDateOfBirth(e.target.value)}
-          className="rounded-lg border border-ion-4/40 bg-void px-3 py-2 text-sm text-ion-1"
-        />
-      </label>
       <button
         type="button"
         disabled={loading}

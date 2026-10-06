@@ -111,16 +111,16 @@ export const CASCADE: {
 };
 
 export const VERDICT_HEX: Record<WarVerdict, string> = {
-  PLAY: "#00E5FF",
-  WATCHLIST: "#7B61FF",
-  "NO-BET": "#FF38C7",
+  PLAY: "#FF4D2E",
+  WATCHLIST: "#C9D4CE",
+  "NO-BET": "#FF7A5C",
 };
 
 export const LEVEL_HEX: Record<AgentLevel, string> = {
   calm: "#5B6675",
-  watching: "#00E5FF",
-  elevated: "#7B61FF",
-  alert: "#FF38C7",
+  watching: "#FF4D2E",
+  elevated: "#C9D4CE",
+  alert: "#FF7A5C",
 };
 
 /** Resolve every agent's state at a given step (defaults + cumulative overrides). */

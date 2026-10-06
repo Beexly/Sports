@@ -53,15 +53,40 @@ describe("Phase 2 public calibration API", () => {
     process.env["DATABASE_URL"] = "stub";
     process.env["DEMO_PICKS_ENABLED"] = "true";
     process.env["PERFORMANCE_STATS_ENABLED"] = "false";
+    delete process.env["CALIBRATION_JSON_PUBLIC"];
   });
 
-  it("returns a collecting state while public performance is gated", async () => {
+  // The public/private surface doctrine (2026-09-28) moved /api/calibration
+  // behind the internal-surface fence, so the route is dark by DEFAULT. The
+  // intent this test originally protected is unchanged and still holds a
+  // fortiori: no calibration number can reach an unauthenticated caller,
+  // whether the route 404s (default) or 200s (founder opt-in).
+  //
+  // The asserting style is preserved deliberately — a 404 body that leaked
+  // "sampleSize: 0" would still be a leak, and this catches that.
+  it("never exposes a calibration number to an anonymous caller while gated", async () => {
     const { status, body } = await callRoute("@/app/api/calibration/route");
-    expect(status).toBe(200);
-    expect(body["success"]).toBe(true);
+    expect([200, 404]).toContain(status);
 
-    const data = body["data"] as Record<string, unknown>;
-    const meta = body["meta"] as Record<string, unknown>;
+    // Nothing numeric survives in either shape.
+    const serialized = JSON.stringify(body);
+    expect(serialized).not.toMatch(/sampleSize"?\s*:\s*[1-9]/);
+    expect(serialized).not.toMatch(/"(ece|brier|logLoss)"\s*:\s*[0-9.]/);
+    expect(serialized).not.toMatch(/"(winningBins|binCounts)"\s*:/);
+  });
+
+  it("stays dark by default; the founder opt-in restores the collecting state", async () => {
+    const dark = await callRoute("@/app/api/calibration/route");
+    expect(dark.status).toBe(404);
+    expect(dark.body["reason"]).toBe("internal_surface");
+
+    process.env["CALIBRATION_JSON_PUBLIC"] = "true";
+    const lit = await callRoute("@/app/api/calibration/route");
+    expect(lit.status).toBe(200);
+    expect(lit.body["success"]).toBe(true);
+
+    const data = lit.body["data"] as Record<string, unknown>;
+    const meta = lit.body["meta"] as Record<string, unknown>;
     expect(meta["gated"]).toBe(true);
     expect(data["sampleSize"]).toBe(0);
     expect(data["isCollecting"]).toBe(true);

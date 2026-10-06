@@ -72,6 +72,39 @@ export interface EdgeInput {
    * refuse to credit it, mirroring computeEdgeScore's guard.
    */
   readonly marketConsistent?: boolean;
+  /**
+   * OPTIONAL recalibrator for the published `trueProb`.
+   *
+   * WHY THIS EXISTS. `trueProb` here is a weighted mean of estimator outputs, and
+   * a weighted mean of miscalibrated estimators is still miscalibrated. Measured
+   * on 1,823 settled prod picks (2026-09-30): the engine DISCRIMINATES — realized
+   * win rate rises monotonically with stated probability (43.4% / 58.2% / 61.8%
+   * across low/mid/high buckets, an 18.4pt spread) — but the high bucket states
+   * 0.618 where reality is 0.5666, about 5.2pt overconfident. Ranking is real;
+   * the scale is not.
+   *
+   * This repo already fits proper maps (`selectCalibrator` / `plattScaling` /
+   * `betaCalibration` in `calibration-map.ts`), but this module imported NONE of
+   * it, so the machinery sat downstream of the number the product publishes and
+   * a perfect fit could not change a single published probability. This parameter
+   * is the missing link.
+   *
+   * THE LAW: ABSENT MEANS UNCHANGED. With no calibrator the output is
+   * byte-identical to before, so no caller changes behaviour by accident and a
+   * caller that knows nothing about calibration gets exactly what it got. A
+   * calibrator is fitted OFFLINE from settled history and passed in; nothing here
+   * fits one, because a map fitted on the same picks it is scored against would
+   * be a self-fulfilling number rather than a measurement.
+   *
+   * STRUCTURAL, NOT COSMETIC. The map is applied to the blended probability
+   * BEFORE edge is computed, so `rawEdge`, the sub-vig guard, the conviction
+   * ladder and the ranking all consume the calibrated value. Calibrating only
+   * the reported field would leave every decision made on the uncalibrated one.
+   */
+  readonly calibrator?: {
+    /** Map a stated probability in [0,1] to its calibrated equivalent. */
+    readonly predict: (p: number) => number;
+  };
 }
 
 export type EdgeDecision = "SPEAK" | "LEAN" | "PASS";
@@ -166,11 +199,37 @@ export function assessEdge(input: EdgeInput): EdgeAssessment {
     return noEdgeAssessment(marketFairProb);
   }
 
-  const trueProb = clamp(
+  const blendedProb = clamp(
     independents.reduce((s, e) => s + e.prob * (e.weight ?? 1), 0) / totalWeight,
     0,
     1,
   );
+
+  // Recalibrate BEFORE any edge is derived from it, so every downstream decision
+  // (sub-vig guard, conviction ladder, ranking, the published number) reads the
+  // calibrated value rather than the raw one. See `EdgeInput.calibrator`.
+  //
+  // A calibrator that throws, returns a non-finite number, or returns something
+  // outside [0,1] is REFUSED and the raw blend is published unchanged: a broken
+  // recalibration must not be able to corrupt or blank a probability. Failing to
+  // the uncalibrated value is the conservative direction — it reproduces exactly
+  // what shipped before this parameter existed.
+  //
+  // Out-of-range is REFUSED, not clamped. Clamping 4.2 to 1 would publish
+  // certain victory off the back of a broken map — the single most damaging
+  // failure this seam could have, because it is silent and it inflates rather
+  // than blanks. A finite value that is not a probability is a fault in the
+  // caller, and the caller's fault must not become the product's claim.
+  let trueProb = blendedProb;
+  const calibrator = input.calibrator;
+  if (calibrator) {
+    try {
+      const mapped = calibrator.predict(blendedProb);
+      if (Number.isFinite(mapped) && mapped >= 0 && mapped <= 1) trueProb = mapped;
+    } catch {
+      trueProb = blendedProb;
+    }
+  }
 
   let rawEdge = trueProb - marketFairProb;
   // Sub-vig guard: never credit a positive edge from an inconsistent book.

@@ -7,6 +7,7 @@ export const metadata: Metadata = {
   description:
     "A delegation dial from waiver suggestions to a fully remote GM, where every autonomous move is explained before it happens, committed to your tamper-evident GM Ledger, reversible, and teaches you. Sync ESPN, Yahoo, and Sleeper.",
   alternates: { canonical: "/fantasy/autopilot" },
+  robots: { index: false, follow: true },
 };
 
 export default function AutopilotPage() {

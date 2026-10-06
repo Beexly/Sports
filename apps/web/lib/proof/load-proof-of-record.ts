@@ -11,6 +11,7 @@ import {
 } from "@sports/prediction-engine";
 import { buildH2hMarketRead } from "@/lib/market/game-market-read";
 import type { ConsensusMarketRead } from "@sports/prediction-engine";
+import { carriesLiveClvClaim } from "@/lib/clv/clv-sample-policy";
 
 /**
  * Proof-of-record loader — settled picks with their verifiable evidence trail.
@@ -294,8 +295,13 @@ export async function loadProofOfRecord(
       settledAt: pick.settledAt?.toISOString() ?? null,
       result: pick.result as ProofPickRow["result"],
       modelVersion: pick.modelVersion,
-      clvVerdict: pick.clvVerdict ?? null,
-      clvValue: pick.clvValue ?? null,
+      // The proof board DELIBERATELY keeps VOID rows — withdrawing a pick is
+      // part of the record and hiding it would be the dishonest option. But a
+      // withdrawn pick has no bet that could have beaten the close, so its CLV
+      // claim is blanked here rather than rendered (C-279). The stored verdict
+      // is untouched; this is a read-side rule.
+      clvVerdict: carriesLiveClvClaim(pick.result) ? pick.clvVerdict ?? null : null,
+      clvValue: carriesLiveClvClaim(pick.result) ? pick.clvValue ?? null : null,
       leafHash: hashLeaf(sha256, record),
       receiptHash: displayById.get(pick.id)?.proofReceipt?.contentHash ?? null,
       leafIndex: i,

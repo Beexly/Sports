@@ -85,7 +85,7 @@ export function CipherTerminal({ view, state, boundaryISO }: Props) {
       <div
         aria-hidden="true"
         className="pointer-events-none absolute -left-24 -top-24 h-64 w-64 rounded-full blur-3xl"
-        style={{ background: "rgba(0, 229, 255, 0.12)" }}
+        style={{ background: "rgba(255,77,46, 0.12)" }}
       />
 
       {/* Status + countdown */}
@@ -170,7 +170,7 @@ export function CipherTerminal({ view, state, boundaryISO }: Props) {
           </div>
         )}
         {result?.kind === "miss" && (
-          <p className="text-sm text-plasma">
+          <p className="text-sm text-ion-1">
             {result.message}
           </p>
         )}

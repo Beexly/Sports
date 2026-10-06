@@ -24,6 +24,9 @@
 
 import { db } from "@sports/db";
 import {
+  supersedeUnpublishedPendingPick,
+} from "./supersede-unpublished-pick.js";
+import {
   OddsApiClient,
   DataNormalizer,
   MARKETS,
@@ -33,6 +36,8 @@ import {
   resolveRundownApiKey,
   fetchRundownEventsForSport,
   fetchEspnOddsForSport,
+  createGalaxySecondBook,
+  getOddsPaymentCircuitBreaker,
   NFL_PRESEASON_ODDS_KEY,
   NFL_CANONICAL_SPORT_KEY,
   isNflPreseasonFetchWindow,
@@ -48,6 +53,9 @@ import {
   scoreGames,
   buildPickSignalSnapshot,
   buildPickProofReceipt,
+  MARKET_FAIR_METHOD_TAG,
+  isPlausibleEntryOdds,
+  modelProbForReceipt,
   selectionIsHomeSide,
 } from "@sports/prediction-engine";
 import {
@@ -67,6 +75,7 @@ import type {
   SignalCategory,
   OddsApiEvent,
 } from "@sports/types";
+import { CANONICAL_MODEL_VERSION } from "@sports/types";
 import { recordSourceSnapshot } from "./source-snapshot.js";
 import {
   resolveCanonicalGame,
@@ -81,12 +90,23 @@ import { ingestEventOddsIfEnabled, type EventOddsClient } from "./event-odds-ing
 import { eventOddsId, toPropLineSnapshotRows, type PropEventLike } from "./prop-line-rows.js";
 import { capturePinnacleLineSnapshotsIfEnabled } from "./pinnacle-line-archive.js";
 import { bookLineDispersion } from "./book-dispersion.js";
+import { hasKickedOff, inPlaySkipLine } from "./in-play-guard.js";
+import { loadCalibrationHistoryForSport } from "./load-calibration-history.js";
+import {
+  RUNDOWN_RATE_LIMIT_COOLDOWN_MS,
+  isRundownCoolingDown,
+  isRundownThinFillSport,
+  openRundownCooldown,
+  rundownCooldownRemainingMs,
+  thinFillCandidates,
+} from "./rundown-thin-fill.js";
 import {
   FixtureConfirmer,
   formatFixtureLine,
   type FixtureConfirmation,
   type FixtureProbe,
 } from "./fixture-confirmation.js";
+import { persistGateDecisions, type GateDecisionInput } from "./gate-decision-sink.js";
 
 /**
  * Spend guard (GSE-SEC-039).
@@ -134,6 +154,12 @@ export interface ProcessSportResult {
   provider?: string;
   /** Raw events accepted before freshness filter. */
   eventsCount?: number;
+  /**
+   * Games refused this cycle because their kickoff had already arrived (C-299).
+   * A pick is a pre-game claim; these produced no new pick and no rewrite of an
+   * existing PENDING one.
+   */
+  skippedInPlay?: number;
   /**
    * The Odds API quota headers (x-requests-remaining / x-requests-used) from
    * this run's paid responses, exactly as the client parsed them: the latest
@@ -253,6 +279,55 @@ export function bookDisagreementForPick(
   return null;
 }
 
+/**
+ * One line per 429, with the resume time and never a key. Opening the cooldown
+ * and logging it are the same event, so they are the same call.
+ */
+function noteRundownRateLimit(sportKey: string, logPrefix: string): void {
+  const resumeAt = openRundownCooldown(sportKey);
+  console.warn(
+    `${logPrefix} ${sportKey}: rundown rate_limited (HTTP 429) — skipping this sport for ` +
+      `${Math.round(RUNDOWN_RATE_LIMIT_COOLDOWN_MS / 60000)}m, resumes ${resumeAt.toISOString()}`,
+  );
+}
+
+/**
+ * May this cycle spend ONE TheRundown call to thin-fill this sport?
+ *
+ * All five conditions, in the order they cost least to check (C-278a):
+ *   - a key exists;
+ *   - no 429 cooldown is open for this sport;
+ *   - the sport is NFL or NCAAF — the boards where a missing second book is
+ *     the reason MONEYLINE and TOTAL do not publish at all;
+ *   - at least one game sits UNDER MIN_BOOKMAKERS (a fully covered slate is
+ *     never dual-pulled — that is the whole point of the threshold filter);
+ *   - at least one of those thin games is inside the board window, so a day
+ *     with no live fixture for this sport spends nothing.
+ *
+ * A true answer authorises exactly one call for the whole sport, never one per
+ * game: `fetchRundownEventsForSport` returns the sport's whole slate.
+ */
+function shouldThinFillFromRundown(
+  sportKey: string,
+  events: readonly OddsApiEvent[],
+  rundownKey: string,
+  cooldownMs: number,
+  logPrefix: string,
+): boolean {
+  if (!rundownKey) return false;
+  if (cooldownMs > 0) {
+    console.warn(
+      `${logPrefix} ${sportKey}: rundown thin-fill skipped — cooling down, resumes in ` +
+        `${Math.ceil(cooldownMs / 60000)}m`,
+    );
+    return false;
+  }
+  if (!isRundownThinFillSport(sportKey)) return false;
+  const thin = eventsBelowBookmakerThreshold(events, THIN_FILL_MIN_BOOKMAKERS);
+  if (thin.length === 0) return false;
+  return thinFillCandidates(thin, Date.now()).length > 0;
+}
+
 export async function processSport(
   sport: SportConfig,
   apiKey: string,
@@ -263,9 +338,34 @@ export async function processSport(
   // This is the single gating point for bootstrap provenance.
   const isBootstrap = !gates.canPersistCanonicalHistory;
 
-  const run = await db.ingestionRun.create({
-    data: { sport: sport.key, status: "RUNNING" },
-  });
+  // The IngestionRun row is the only durable record that this cycle ran, and
+  // this is the FIRST write — so a database outage lands right here, above the
+  // try that records failures. Left unguarded the throw escapes processSport
+  // and the owner is never told. Open the run under its own guard and report
+  // through the DB-independent channels. We STOP rather than continue: every
+  // write below needs a real run id (Odds.ingestionRunId is NOT NULL).
+  let run: { id: string };
+  try {
+    run = await db.ingestionRun.create({
+      data: { sport: sport.key, status: "RUNNING" },
+    });
+  } catch (openErr) {
+    const message = openErr instanceof Error ? openErr.message : String(openErr);
+    console.error(
+      `${logPrefix} ${sport.key} failed: ingestion run could not be opened — ${message}`,
+    );
+    await notifyOwner(`GSE ingestion FAILED\nsport: ${sport.key}\nrun_open_failed: ${message}`);
+    return {
+      sport: sport.key,
+      status: "failed",
+      games: 0,
+      picks: 0,
+      oddsInserted: 0,
+      eventsCount: 0,
+      error: `run_open_failed: ${message}`,
+      skippedInPlay: 0,
+    };
+  }
 
   // Paid Odds API accounting for the result envelope (contract with the odds
   // client, C-109). Declared outside the try so the failed envelope carries
@@ -322,7 +422,21 @@ export async function processSport(
     let oddsProviderTag = oddsKeyIsSentinel ? "none" : "the-odds-api";
     const eventOddsByExternalId = new Map<string, unknown>();
 
-    if (!oddsKeyIsSentinel) {
+    // WP-27 step 2: while the HTTP 402 payment circuit is OPEN the paid client
+    // refuses every call anyway (fail-closed, no upstream request). Skip the
+    // paid leg outright so the cycle goes straight to the keyless Galaxy path
+    // and no phantom paid request is counted. half_open still probes upstream
+    // (one call at a time) so a recovered key is noticed on its own.
+    const paidCircuitOpen = !oddsKeyIsSentinel && getOddsPaymentCircuitBreaker().getState() === "open";
+    if (paidCircuitOpen) {
+      oddsProviderTag = "paid-circuit-open";
+      console.warn(
+        `${logPrefix} ${sport.key}: Odds API payment circuit open — skipping paid fetch, ` +
+          `using the keyless Galaxy/ESPN path`,
+      );
+    }
+
+    if (!oddsKeyIsSentinel && !paidCircuitOpen) {
       // GSE-SEC-039: spend guard — refuse paid fetch when a cleared free source
       // covers the need. For "odds" the guard passes today (no free odds source
       // is cleared), so the paid call proceeds. If a free odds source is cleared
@@ -435,14 +549,55 @@ export async function processSport(
       }
     }
 
-    // TheRundown: full replace when primary empty; thin-fill when some games
-    // sit under MIN_BOOKMAKERS. Never dual-pull a fully covered slate.
+    // Galaxy/ESPN keyless (inline scoreboard odds, registry-gated) is the
+    // product path when the paid feed yields nothing (key absent, circuit open,
+    // or an empty/failed paid response). It runs BEFORE Rundown: we are the
+    // provider, Rundown is at most a bridge (ledger C-103/C-104). Never invents
+    // — soft-fails empty. The second book (Kalshi via PredExon) is attached
+    // inside the fetch when PREDEXON_INGEST is on.
     let rundownAttemptNote: string | null = null;
     let espnAttemptNote: string | null = null;
-    const rundownKey = resolveRundownApiKey();
     if (events.length === 0) {
-      if (rundownKey) {
+      try {
+        // One PredExon catalog per sport per cycle (cached inside; undefined
+        // while PREDEXON_INGEST is off, which is the default).
+        const espn = await fetchEspnOddsForSport(sport.key, {
+          secondBook: createGalaxySecondBook(),
+        });
+        if (espn.events.length > 0) {
+          events = espn.events;
+          oddsProviderTag = "espn_public";
+          console.log(
+            `${logPrefix} ${sport.key}: Galaxy/ESPN keyless path ${events.length} events` +
+              (espn.error ? ` (note: ${espn.error})` : ""),
+          );
+        } else {
+          espnAttemptNote = espn.error ?? "espn odds empty";
+          console.warn(`${logPrefix} ${sport.key}: espn odds empty — ${espnAttemptNote}`);
+        }
+      } catch (espnErr) {
+        espnAttemptNote =
+          espnErr instanceof Error ? espnErr.message : String(espnErr);
+        console.warn(`${logPrefix} ${sport.key}: espn odds failed — ${espnAttemptNote}`);
+      }
+    }
+
+    // TheRundown: full replace when primary AND the keyless path are empty;
+    // thin-fill when some games sit under MIN_BOOKMAKERS. Never dual-pull a
+    // fully covered slate.
+    const rundownKey = resolveRundownApiKey();
+    const rundownCooldownMs = rundownCooldownRemainingMs(sport.key);
+    if (events.length === 0) {
+      if (!rundownKey) {
+        rundownAttemptNote = "rundown key ABSENT";
+      } else if (rundownCooldownMs > 0) {
+        // Rate-limit cooldown covers the full-replace leg too: a 429 is the
+        // sport's whole daily quota talking, not this one endpoint's.
+        rundownAttemptNote = `rundown cooling down ${Math.ceil(rundownCooldownMs / 60000)}m`;
+        console.warn(`${logPrefix} ${sport.key}: ${rundownAttemptNote}`);
+      } else {
         const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
+        if (rd.rateLimited) noteRundownRateLimit(sport.key, logPrefix);
         if (rd.events.length > 0) {
           events = rd.events;
           oddsProviderTag = "therundown";
@@ -455,12 +610,11 @@ export async function processSport(
           rundownAttemptNote = rd.error ?? "rundown empty: no bookmaker lines";
           console.warn(`${logPrefix} ${sport.key}: rundown empty — ${rundownAttemptNote}`);
         }
-      } else {
-        rundownAttemptNote = "rundown key ABSENT";
       }
-    } else if (rundownKey && eventsBelowBookmakerThreshold(events, THIN_FILL_MIN_BOOKMAKERS).length > 0) {
+    } else if (shouldThinFillFromRundown(sport.key, events, rundownKey, rundownCooldownMs, logPrefix)) {
       try {
         const rd = await fetchRundownEventsForSport(sport.key, rundownKey);
+        if (rd.rateLimited) noteRundownRateLimit(sport.key, logPrefix);
         if (rd.events.length > 0) {
           const merged = mergeBookmakersIntoPrimary(events, rd.events, THIN_FILL_MIN_BOOKMAKERS);
           events = merged.events;
@@ -480,31 +634,13 @@ export async function processSport(
       }
     }
 
-    // Free tertiary path: ESPN public odds (zero keys) when Odds+Rundown empty.
-    // Never invents — soft-fails empty. Community routing: pseudo-r/Public-ESPN-API.
-    if (events.length === 0) {
-      try {
-        const espn = await fetchEspnOddsForSport(sport.key);
-        if (espn.events.length > 0) {
-          events = espn.events;
-          oddsProviderTag = "espn_public";
-          console.log(
-            `${logPrefix} ${sport.key}: ESPN public free path ${events.length} events` +
-              (espn.error ? ` (note: ${espn.error})` : ""),
-          );
-        } else {
-          oddsProviderTag =
-            oddsProviderTag === "therundown-empty" || oddsProviderTag === "none"
-              ? "espn_public-empty"
-              : oddsProviderTag;
-          espnAttemptNote = espn.error ?? "espn odds empty";
-          console.warn(`${logPrefix} ${sport.key}: espn odds empty — ${espnAttemptNote}`);
-        }
-      } catch (espnErr) {
-        espnAttemptNote =
-          espnErr instanceof Error ? espnErr.message : String(espnErr);
-        console.warn(`${logPrefix} ${sport.key}: espn odds failed — ${espnAttemptNote}`);
-      }
+    // Nothing from any path: keep the provider tag honest about which free
+    // source came up empty last (the truth surface reads it).
+    if (events.length === 0 && espnAttemptNote) {
+      oddsProviderTag =
+        oddsProviderTag === "therundown-empty" || oddsProviderTag === "none" || oddsProviderTag === "paid-circuit-open"
+          ? "espn_public-empty"
+          : oddsProviderTag;
     }
 
     try {
@@ -836,13 +972,20 @@ export async function processSport(
     const fixtureFor = (gameId: string): FixtureConfirmation | null =>
       fixtureBatch.status === "ok" ? (fixtureBatch.byGameId.get(gameId) ?? null) : null;
     let fixtureUnconfirmed = 0;
+    // Games refused because their kickoff had already arrived (C-299).
+    let skippedInPlay = 0;
     // Games that passed the guard; the pick loop below refuses any other gameId.
     const confirmedGameIds = new Set<string>();
+    const gateDecisionsToPersist: GateDecisionInput[] = [];
 
     // Build OddsInputs with full context enrichment
     const oddsInputs: OddsInput[] = [];
     // Elo ratings fitted once per sport/day within this cycle (no fabricated ratings).
     const eloCache: EloRatingsCache = new Map();
+
+    // Settled pick history for the mint-time calibration blind-spot screen.
+    // Loaded once per sport; fail-open — undefined is silence, never a veto.
+    const calibrationHistory = await loadCalibrationHistoryForSport(sport.key);
 
     // gameId -> per-kind book-line dispersion at lock, filled in the game loop
     // and read at pick creation (a separate loop over scoredPicks below).
@@ -856,6 +999,16 @@ export async function processSport(
       const fixture = fixtureFor(gameRecord.id);
       if (!fixture || fixture.status !== "confirmed") {
         fixtureUnconfirmed += 1;
+        gateDecisionsToPersist.push({
+          gameId: gameRecord.id,
+          pickId: null,
+          status: "GATED",
+          reasonCode: "UNCONFIRMED_FIXTURE",
+          reason: "Fixture unconfirmed on official ESPN scoreboard schedule",
+          modelVersion: CANONICAL_MODEL_VERSION,
+          isBootstrap,
+          evaluatedAt: fetchedAt,
+        });
         if (fixtureBatch.status === "ok") {
           const line = formatFixtureLine({
             id: gameRecord.id,
@@ -874,7 +1027,6 @@ export async function processSport(
         }
         continue;
       }
-      confirmedGameIds.add(gameRecord.id);
       // One effective kickoff for every consumer below (enrichment, independent
       // fair values, the OddsInput the scorer reads). It is the feed's time
       // unless ESPN's correction is persisted, so the row and this cycle's
@@ -903,6 +1055,29 @@ export async function processSport(
           );
         }
       }
+
+      // Kickoff guard (C-299). The ESPN check above reads the SCOREBOARD's
+      // clock; this reads the one we priced against, after any correction. A
+      // game already under way gets no OddsInput at all, so it cannot be
+      // scored, cannot create or refresh a pick, and cannot mint a receipt off
+      // a live price. Placed before confirmedGameIds so the write loop's
+      // existing membership test excludes it too.
+      if (hasKickedOff(kickoff, fetchedAt)) {
+        skippedInPlay += 1;
+        console.warn(`${logPrefix} ${sport.key}: ${inPlaySkipLine(gameRecord.id, kickoff, fetchedAt)}`);
+        gateDecisionsToPersist.push({
+          gameId: gameRecord.id,
+          pickId: null,
+          status: "GATED",
+          reasonCode: "IN_PLAY",
+          reason: "Game already underway or completed; pre-game scoring locked",
+          modelVersion: CANONICAL_MODEL_VERSION,
+          isBootstrap,
+          evaluatedAt: fetchedAt,
+        });
+        continue;
+      }
+      confirmedGameIds.add(gameRecord.id);
 
       const gameOdds = normalizedOdds.filter((o) => o.gameExternalId === game.externalId);
 
@@ -1048,6 +1223,9 @@ export async function processSport(
         ...(independentFairValues.length > 0
           ? { independentFairValues }
           : {}),
+        ...(calibrationHistory && calibrationHistory.length > 0
+          ? { calibrationHistory }
+          : {}),
       };
 
       oddsInputs.push({
@@ -1081,17 +1259,24 @@ export async function processSport(
 
     const scoredPicks = scoreGames(oddsInputs, fetchedAt);
     let picksGenerated = 0;
+    const publishedGameIds = new Set<string>();
 
     for (const pick of scoredPicks) {
       // Fixture guard (C-111): no pick is created or refreshed for a game the
       // day's ESPN scoreboard did not confirm, whatever the scorer emitted.
+      // C-299: this same membership test now also carries the kickoff
+      // invariant. A game already under way never enters confirmedGameIds, so
+      // this one line refuses the create, the PENDING refresh of selection /
+      // line / confidence / factorBreakdown, AND the receipt mint below.
       if (!confirmedGameIds.has(pick.gameId)) continue;
-      // Fields refreshed on every cycle (confidence, odds, reasoning).
+      // Fields refreshed on every cycle (confidence, grade, market depth).
       // result, settledAt: intentionally absent — never overwritten by refresh.
       // ingestionRunId: intentionally absent from update — preserves creation run ID.
+      //
+      // selection / line / reasoning / reasoningShort are NOT here. Those four
+      // are the published bet, and settlement grades the write-once lock, so
+      // refreshing them published a bet we do not grade. See publishedTerms below.
       const pickUpdateData = {
-        selection: pick.selection,
-        line: pick.line,
         confidence: pick.confidence,
         edgeScore: pick.edgeScore,
         consensusPct: pick.consensusPct,
@@ -1099,11 +1284,32 @@ export async function processSport(
         tier: pick.tier,
         pickGrade: pick.pickGrade,
         riskLevel: pick.riskLevel,
-        reasoning: pick.reasoning,
-        reasoningShort: pick.reasoningShort,
         factorBreakdown: JSON.parse(JSON.stringify(pick.factorBreakdown)),
         modelVersion: pick.modelVersion,
         dataFreshnessAt: pick.dataFreshnessAt,
+      };
+
+      // The PUBLISHED BET TERMS — write-once at creation, exactly like the CLV
+      // lock they are minted alongside.
+      //
+      // Settlement grades SPREAD/TOTAL against `clvLockLine` (selectGradingLine),
+      // which is create-only. When these four drifted on every refresh, the row
+      // the customer read stopped being the row we graded:
+      //
+      //   Tue: created at consensus -3.0 → clvLockLine = -3.0, card "Chiefs -3.0"
+      //   Thu: consensus moves to -4.5  → card now "Chiefs -4.5", line = -4.5,
+      //                                    lock still -3.0
+      //   Chiefs win by 4 → graded at -3.0 = WIN; every customer who opened
+      //   /picks after Thursday saw -4.5 and lost.
+      //
+      // Freezing here fixes every surface at once. Confidence, grade, market
+      // depth, factor trail and freshness still refresh: freezing the bet is
+      // not freezing the row.
+      const publishedTerms = {
+        selection: pick.selection,
+        line: pick.line,
+        reasoning: pick.reasoning,
+        reasoningShort: pick.reasoningShort,
       };
 
       // Featured promotion gate: only auto-promote when explicitly enabled.
@@ -1121,11 +1327,88 @@ export async function processSport(
       // a unique-key upsert, so check first and skip the rewrite when settled.
       const existingPick = await db.pick.findUnique({
         where: { gameId_pickType: { gameId: pick.gameId, pickType: pick.pickType } },
-        select: { id: true, result: true, selection: true },
+        select: { id: true, result: true, selection: true, isPublished: true, line: true },
       });
 
+      // The CREATE payload — shared by both fresh-mint paths below: the normal
+      // empty-slot create, and the supersede create (an unpublished PENDING
+      // slot-holder was voided through the settlement outbox and the slot is
+      // free again). Identical fields either way: a fresh mint is a fresh mint,
+      // with origin fields and write-once locks created exactly once.
+      const createPickData = {
+        gameId: pick.gameId,
+        pickType: pick.pickType,
+        ingestionRunId: run.id,
+        isBootstrap,
+        isFeatured,
+        // CLV lock snapshot — the line/price we ACTUALLY published at, captured
+        // once at creation. Absent from the updateMany above, so the refresh
+        // cycle can never overwrite it. `Pick.line` is now frozen alongside it
+        // (see publishedTerms), so the two agree for the row's whole life.
+        // Moneyline `pick.line` holds the American price; spread/total `pick.line`
+        // holds the points line. Graded against the closing line at settlement.
+        clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
+        clvLockPrice: pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null,
+        // Book-line dispersion at lock — the CLV decomposition's liquidity
+        // regressor, captured write-once (absent from updateMany, like the
+        // CLV lock). For MONEYLINE this resolves to the PUBLISHED side (home vs
+        // away) via the canonical selectionIsHomeSide, so an away-ML pick
+        // locks the away side's disagreement. null when <2 books quoted the
+        // relevant side at publish.
+        bookDisagreementAtLock: bookDisagreementForPick(
+          pick,
+          dispersionByGame.get(pick.gameId),
+        ),
+        ...pickUpdateData,
+        // Minted in the same write as clvLockLine above, from the same
+        // `pick.line`, so display == lock == graded line from birth.
+        ...publishedTerms,
+      };
+
       let upsertedPick: { id: string };
-      if (existingPick && existingPick.result !== "PENDING") {
+      if (
+        existingPick &&
+        existingPick.result === "PENDING" &&
+        existingPick.isPublished === false
+      ) {
+        // SUPERSEDE — the slot is held by a row the stale-pick policy set
+        // isPublished=false on. See supersede-unpublished-pick.ts for the full
+        // lifecycle: unpublish is never undone by design, the refresh never
+        // re-publishes, and the unique (gameId, pickType) slot would block
+        // every future mint for this game and market forever — the measured
+        // cause of zero NFL Week 3 2026 spreads/totals on the board while all
+        // three scoring gates passed on every game. Void the invisible row
+        // through the settlement outbox (its terminus was already VOID via the
+        // zero-sit lane at kickoff+24h; this only moves that void earlier and
+        // records the accurate cause), then mint the fresh, fully gated pick
+        // with a new CLV lock at the current line.
+        //
+        // A PUBLISHED row never reaches this branch: the side-flip freeze, the
+        // write-once bet terms and the settled-frozen rule below apply to it in
+        // full. The stale-pick policy itself is unchanged.
+        const superseded = await supersedeUnpublishedPendingPick(db, {
+          pickId: existingPick.id,
+          gameId: pick.gameId,
+          sportKey: sport.key,
+          pickType: pick.pickType,
+          supersededSelection: existingPick.selection,
+          supersededBySelection: pick.selection,
+        });
+        if (superseded) {
+          upsertedPick = await db.pick.create({ data: createPickData });
+        } else {
+          // Lost the race: the row left the PENDING+unpublished state before
+          // our scoped void could take it — a settle/void lane now owns it and
+          // it is frozen exactly like the settled branch below. Nothing here
+          // creates against a row we did not just free.
+          console.warn(
+            `${logPrefix} supersede lost race: ${sport.key} ${pick.pickType} ` +
+              `slot "${existingPick.selection}" left PENDING+unpublished before ` +
+              `the void; keeping it this cycle`
+          );
+          upsertedPick = { id: existingPick.id };
+        }
+      } else if (existingPick && existingPick.result !== "PENDING") {
         // Frozen — leave the settled pick exactly as graded.
         upsertedPick = { id: existingPick.id };
       } else if (
@@ -1162,6 +1445,11 @@ export async function processSport(
             ...pickUpdateData,
             // Re-evaluate featured status on each refresh when promotion is enabled.
             isFeatured,
+            // publishedTerms are deliberately NOT here. A row created BEFORE this
+            // change can already carry a selection/line that drifted off its
+            // write-once clvLockLine. Freezing stops the drift going forward;
+            // retro-correcting those rows is a deliberate backfill, not a
+            // refresh-cycle side effect.
           },
         });
 
@@ -1191,36 +1479,30 @@ export async function processSport(
         } else {
           // No existing PENDING pick — create one. Create sets origin fields
           // (ingestionRunId, isBootstrap, isFeatured) and write-once locks.
-          upsertedPick = await db.pick.create({
-            data: {
-              gameId: pick.gameId,
-              pickType: pick.pickType,
-              ingestionRunId: run.id,
-              isBootstrap,
-              isFeatured,
-              // CLV lock snapshot — the line/price we ACTUALLY published at, captured
-              // once at creation. Absent from the updateMany above, so the refresh
-              // cycle can never overwrite it (Pick.line itself IS mutated each cycle).
-              // Moneyline `pick.line` holds the American price; spread/total `pick.line`
-              // holds the points line. Graded against the closing line at settlement.
-              clvLockLine: pick.pickType === "MONEYLINE" ? null : pick.line,
-              clvLockPrice: pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null,
-              // Book-line dispersion at lock — the CLV decomposition's liquidity
-              // regressor, captured write-once (absent from updateMany, like the
-              // CLV lock). For MONEYLINE this resolves to the PUBLISHED side (home vs
-              // away) via the canonical selectionIsHomeSide, so an away-ML pick
-              // locks the away side's disagreement. null when <2 books quoted the
-              // relevant side at publish.
-              bookDisagreementAtLock: bookDisagreementForPick(
-                pick,
-                dispersionByGame.get(pick.gameId),
-              ),
-              ...pickUpdateData,
-            },
-          });
+          upsertedPick = await db.pick.create({ data: createPickData });
         }
       }
       picksGenerated++;
+      publishedGameIds.add(pick.gameId);
+      gateDecisionsToPersist.push({
+        gameId: pick.gameId,
+        pickId: upsertedPick.id,
+        status: "PUBLISHED",
+        reasonCode: "PUBLISHED",
+        reason: `Published ${pick.pickType} pick (${pick.selection} ${pick.line > 0 ? `+${pick.line}` : pick.line}) with confidence ${pick.confidence}`,
+        confidence: pick.confidence,
+        edgeIndex: pick.edgeScore,
+        modelVersion: pick.modelVersion,
+        isBootstrap,
+        evaluatedAt: fetchedAt,
+        evidenceRefs: {
+          pickType: pick.pickType,
+          selection: pick.selection,
+          line: pick.line,
+          bookmakerCount: pick.bookmakerCount,
+          pickGrade: pick.pickGrade,
+        },
+      });
 
       // Capture PickSignalSnapshot — immutable record of signal state at prediction time.
       // Created ONCE (update:{} ensures existing snapshots are never overwritten).
@@ -1256,16 +1538,23 @@ export async function processSport(
       // Freeze a tamper-evident proof receipt — the pre-result, pre-kickoff commitment
       // to exactly what we claimed. Created ONCE (update:{}), never overwritten. Mints
       // only with HONEST inputs: a real devigged market fair prob + the labeled
-      // confidence heuristic; modelProb stays null until a calibrated one exists (never
-      // confidence/100). Non-fatal — a receipt failure must never block a pick.
+      // confidence heuristic, plus the independent model probability when one exists
+      // (never confidence/100 — see modelProbForReceipt). Non-fatal — a receipt failure
+      // must never block a pick.
+      //
+      // P0-2 write-guard (launch audit 2026-09-08): entryOdds must be a plausible
+      // American price (|odds| >= 100). The old `entryOdds !== 0` check let a
+      // non-MONEYLINE pick's raw spread/total line (e.g. -3.5) slip through the
+      // Math.round(pick.line) fallback as a "price" — 199 frozen rows were poisoned
+      // this way. isPlausibleEntryOdds rejects such mints at write time; frozen rows
+      // are immutable, so prevention is the only cure.
       try {
         const entryOdds = pick.entryPrice ?? (pick.pickType === "MONEYLINE" ? Math.round(pick.line) : null);
         if (
           typeof pick.marketFairProb === "number" &&
           pick.marketFairProb > 0 &&
           pick.marketFairProb < 1 &&
-          typeof entryOdds === "number" &&
-          entryOdds !== 0
+          isPlausibleEntryOdds(entryOdds)
         ) {
           const receipt = buildPickProofReceipt(
             {
@@ -1276,11 +1565,28 @@ export async function processSport(
               line: pick.line,
               entryOdds,
               marketFairProb: pick.marketFairProb,
+              // Name the de-vig that produced the committed number (v5.2.8
+              // Phase 2). Additive: it only appears in receipts minted from
+              // here on, and an older receipt still verifies against its own
+              // stored payload, where an absent tag commits as "none".
+              marketFairMethodTag: MARKET_FAIR_METHOD_TAG,
               confidence: pick.confidence,
               edgeScore: pick.edgeScore,
-              modelProb: null,
+              // The REAL model probability — the independent blend from estimators
+              // that never saw the book (Skellam cover for SPREAD, Poisson/Elo/
+              // Dixon-Coles/Kalshi for MONEYLINE). This was hardcoded `null`, so all
+              // 2,213 frozen receipts committed "none" and Brier/ECE could never be
+              // computed: the consumers (clv-report.mjs, db-calibration-pull.cjs)
+              // were already built and starved. Never confidence/100 — modelProbForReceipt
+              // returns null (-> commits "none") whenever no honest estimate exists.
+              modelProb: modelProbForReceipt(pick),
               modelVersion: pick.modelVersion,
               asOf: pick.dataFreshnessAt.toISOString(),
+              // Explicit null commits featureHash=none. Omitting the key would
+              // leave new receipts indistinguishable from pre-field receipts.
+              // There is no feature vector on this mint yet, so none is the
+              // honest seal. A later vector must be a sha256, not a label.
+              featureHash: null,
             },
             sha256Hex,
           );
@@ -1311,6 +1617,34 @@ export async function processSport(
       }
     }
 
+    // Record audit decisions for games evaluated in oddsInputs that produced no published pick
+    for (const input of oddsInputs) {
+      if (!publishedGameIds.has(input.gameId)) {
+        const isThin = (input.bookmakerOdds?.length ?? 0) < 2;
+        gateDecisionsToPersist.push({
+          gameId: input.gameId,
+          pickId: null,
+          status: "GATED",
+          reasonCode: isThin ? "INSUFFICIENT_BOOKMAKERS" : "NO_CONVICTION_EDGE",
+          reason: isThin
+            ? "Market depth insufficient: fewer than 2 distinct bookmakers quoting line"
+            : "Line within market efficiency band; model conviction below publishing threshold",
+          confidence: null,
+          edgeIndex: null,
+          modelVersion: CANONICAL_MODEL_VERSION,
+          isBootstrap,
+          evaluatedAt: fetchedAt,
+          evidenceRefs: {
+            bookmakerCount: input.bookmakerOdds?.length ?? 0,
+            markets: Array.from(new Set(input.bookmakerOdds?.map((o) => o.market) ?? [])),
+          },
+        });
+      }
+    }
+
+    // Persist immutable gate decisions audit trail (GSE-GATE-094 recovery)
+    await persistGateDecisions(gateDecisionsToPersist);
+
     await db.ingestionRun.update({
       where: { id: run.id },
       data: {
@@ -1324,7 +1658,8 @@ export async function processSport(
     console.log(
       `${logPrefix} ${sport.key}: ${Object.keys(gameRecords).length} games, ` +
       `${oddsInserted} odds, ${picksGenerated} picks (bootstrap=${isBootstrap})` +
-      (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : "")
+      (fixtureUnconfirmed > 0 ? ` fixtureUnconfirmed=${fixtureUnconfirmed}` : "") +
+      (skippedInPlay > 0 ? ` skippedInPlay=${skippedInPlay}` : "")
     );
 
     const emptyNote =
@@ -1349,15 +1684,27 @@ export async function processSport(
       // picks; it must stay observable even when the cycle also inserted no
       // odds (an emptiness note would otherwise mask why picks were withheld).
       note: fixtureNote ?? emptyNote,
+      skippedInPlay,
       ...paidAccounting(),
     };
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     console.error(`${logPrefix} ${sport.key} failed: ${message}`);
-    await db.ingestionRun.update({
-      where: { id: run.id },
-      data: { status: "FAILED", errorMessage: message, completedAt: new Date() },
-    });
+    // The database that failed the body is the one most likely to fail THIS
+    // write too. Unguarded it throws, and the throw skips the owner alert and
+    // the failed envelope below — losing the failure record precisely when the
+    // outage is real. Record what we can, then keep going.
+    try {
+      await db.ingestionRun.update({
+        where: { id: run.id },
+        data: { status: "FAILED", errorMessage: message, completedAt: new Date() },
+      });
+    } catch (recordErr) {
+      console.error(
+        `${logPrefix} ${sport.key}: FAILED run not recorded (database unreachable) — ` +
+          `${recordErr instanceof Error ? recordErr.message : String(recordErr)}`,
+      );
+    }
     // Push the failure to the owner's phone (free Telegram bot; no-op until
     // TELEGRAM_BOT_TOKEN/CHAT_ID are set; never throws, never blocks).
     await notifyOwner(
@@ -1371,6 +1718,7 @@ export async function processSport(
       oddsInserted: 0,
       eventsCount: 0,
       error: message,
+      skippedInPlay: 0,
       // A run that fails after a paid response still spent the credits and
       // still saw the vendor's headers; the caller's governor needs both.
       ...paidAccounting(),

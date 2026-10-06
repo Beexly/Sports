@@ -181,6 +181,21 @@ describe("isAdminEmail — fail-closed on non-ASCII / homoglyph", () => {
     vi.stubEnv("ADMIN_EMAILS", "");
     expect(isAdminEmail("founder@example.com")).toBe(false);
   });
+
+  it("code owner allow-list grants admin even when ADMIN_EMAILS is empty", () => {
+    vi.stubEnv("ADMIN_EMAILS", "");
+    expect(isAdminEmail("baxley.garrett@gmail.com")).toBe(true);
+    expect(isAdminEmail("dbax66@icloud.com")).toBe(true);
+    // Unknown emails stay USER when the env list is empty.
+    expect(isAdminEmail("stranger@example.com")).toBe(false);
+  });
+
+  it("code owner allow-list is case-insensitive and still OR'd with ADMIN_EMAILS", () => {
+    vi.stubEnv("ADMIN_EMAILS", "ops@example.com");
+    expect(isAdminEmail("BAXLEY.GARRETT@GMAIL.COM")).toBe(true);
+    expect(isAdminEmail("ops@example.com")).toBe(true);
+    expect(isAdminEmail("other@example.com")).toBe(false);
+  });
 });
 
 describe("session callback — DB-role overlay in both directions", () => {

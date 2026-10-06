@@ -13,7 +13,7 @@ export function SignalRule({ className }: { className?: string }) {
     <div aria-hidden className={`relative h-px w-full overflow-hidden ${className ?? ""}`}>
       <div
         className="absolute inset-0"
-        style={{ background: "linear-gradient(90deg, transparent, var(--mineral, #211A33), transparent)" }}
+        style={{ background: "linear-gradient(90deg, transparent, var(--mineral, #2A3532), transparent)" }}
       />
       <span
         className="gse-cine-anim absolute top-0 h-px w-40"

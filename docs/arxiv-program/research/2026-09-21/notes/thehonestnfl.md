@@ -1,0 +1,10 @@
+# @TheHonestNFL — source notes (read 2026-09-21)
+
+- Display name: Honest NFL | Handle: @TheHonestNFL | Verified. Bio (verbatim): "Football theorist. Private consultant focusing on scheme, process, pedagogy. Vic Fangio enthusiast." Category: Sports, Fitness & Recreation. Location/website: none shown.
+- Scale: 75.6K followers / 4,623 following. Joined December 2017.
+- Account type: scheme-theory educator + private coaching consultant. Recent posts are NFL scheme/theory education and breakdowns (e.g. "The Cover 9... a concept that every coach should know"; "Coverages are not static. They are the opposite.").
+- Pinned post (Jul 4, self-replying thread; **JULY 2026 UPDATE**): sells access to a private coaching drive, $30 one-time via CashApp ($TheHonestNFL) or Venmo (@TheHonestNFL); "if you aren't in a position to contribute, just let me know and I'll make it work…no questions asked."
+- Drive contents (as stated): INSTALLS (hundreds of installs, offense and defense, high school to NFL; special teams coming soon); COVERAGE LIBRARY (organized installs/materials); ROUTE CONCEPT LIBRARY (pass-game installs organized by concept/family); FILM (college + NFL film, downloadable, cycled in/out); CUTUPS (labeled teach-tape, currently focused on the Reid system); MANUALS (includes "Winning With Pre-Snap" manual + glossaries); OFFENSIVE SYSTEM (Reid/Pederson west-coast foundation with modern flourishes).
+- Topic list (as stated): pass game concepts; coverage mechanics; QB process (pre- & post-snap); QB fundamentals (footwork etc.); teaching the pass game; the Andy Reid offense; the Vic Fangio defense; West Coast offense; Baltimore defensive system; coverage techniques; route running; creating & implementing a system; scouting opponents; evaluating talent.
+- Pinned engagement: 4 replies / 4 reposts / 41 likes / 56 bookmarks / 67,106 views.
+- GSE relevance: scheme/theory primary source for coverage and pass-game concept vocabulary (cover shells, route families, pre-snap process). No stats products; no metric definitions inventoried — qualitative scheme pedagogy.

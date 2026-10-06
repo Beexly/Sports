@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkWaitlistGate } from "@/lib/waitlist/access-gate";
-import { AGE_COOKIE, isAgeGatedSurface } from "@/lib/age-verify/surface";
 
 /**
  * Middleware for route protection.
@@ -42,18 +41,19 @@ export function middleware(req: NextRequest): NextResponse {
     return NextResponse.next();
   }
 
-  // ── D-8 / S3 age attestation gate ─────────────────────────────────────────
-  // One-click 21+ cookie gate on every betting-analysis surface. Always on —
-  // no env flag (an off-switch on an age gate is the first thing a regulator
-  // asks about). /age-verify itself is not in AGE_GATED_PREFIXES, so the
-  // redirect target can never loop. This is a UX/attestation floor, not a
-  // real identity check; the money path has its own server-side
-  // assertAtLeast21 (apps/web/lib/auth/age-gate.ts) at checkout.
-  if (isAgeGatedSurface(pathname) && !req.cookies.has(AGE_COOKIE)) {
-    const verifyUrl = new URL("/age-verify", req.url);
-    verifyUrl.searchParams.set("next", pathname);
-    return NextResponse.redirect(verifyUrl);
-  }
+  // ── Age attestation gate: REMOVED from the public surfaces (C-291) ────────
+  // Founder decision 2026-09-09, verbatim: "AGE GATE SHOULD BE OPEN - WE ARE
+  // NOT TAKING BETS OR MONEY AS OF YET SO KEEP IT ALL AGES", then "APPROVED".
+  // The site publishes analysis and a public track record; it takes no wager.
+  // The one-click 21+ cookie redirect (D-8 / S3) that used to 302 every
+  // unattested visitor, crawlers included, off /board, /picks, /pricing,
+  // /performance and the other AGE_GATED_PREFIXES therefore no longer runs
+  // here. The hard DOB gate on paid checkout was also removed 2026-09-14
+  // (ASTRA owner item 1: "Remove the age-21 requirement from subscriptions").
+  // What stays: the /age-verify page itself and the AGE_GATED_PREFIXES
+  // registry (lib/age-verify/surface.ts) for any surface that opts back in,
+  // plus the responsible-play footer on every page. Re-enabling any of it is
+  // a founder decision, not an env flag.
 
   // ── Waitlist Basic Auth gate ──────────────────────────────────────────────
   // Protects /waitlist and /waitlist/* only.
@@ -114,8 +114,18 @@ export function middleware(req: NextRequest): NextResponse {
 }
 
 export const config = {
+  // Cost-leverage (2026-09-28): middleware used to run on EVERY page view
+  // (match-all minus statics) just to reach a `NextResponse.next()` no-op for
+  // public routes. The only real work here is (a) the /dashboard|/admin|/cockpit
+  // cookie redirect, (b) the /waitlist Basic Auth gate, and (c) the /embed
+  // early return — which is itself a no-op pass-through. Narrowing the matcher
+  // to the paths that actually need middleware deletes a middleware invocation
+  // on every public page view (Pro: 1M included, then $0.65/1M). Behavior is
+  // unchanged: /embed/* and all other public paths never needed middleware.
   matcher: [
-    // Match all paths except static files and API routes
-    "/((?!_next/static|_next/image|favicon.ico|api/).*)",
+    "/dashboard/:path*",
+    "/admin/:path*",
+    "/cockpit/:path*",
+    "/waitlist/:path*",
   ],
 };

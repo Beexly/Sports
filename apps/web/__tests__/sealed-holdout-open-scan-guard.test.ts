@@ -53,12 +53,16 @@ async function tempRepo(): Promise<string> {
 }
 
 describe("Sealed-holdout open-call guard", () => {
+  // Walks the whole repository, same wall-clock story as the AI control-plane
+  // sealing guard: ~1.8s idle, over the 60s default when the suite is loaded
+  // (reproduced at 60016ms). The assertion is untouched; only the allowance for
+  // this one repo-wide scan changes.
   it("passes the current repository state", async () => {
     const guard = await loadGuard();
     const hits = await guard.collectSealedHoldoutOpenViolations(repoRoot);
 
     expect(hits).toEqual([]);
-  });
+  }, 180_000);
 
   it("passes a minimal repo where openHoldout is only called inside edge-lab", async () => {
     const guard = await loadGuard();

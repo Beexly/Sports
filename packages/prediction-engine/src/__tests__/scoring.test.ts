@@ -301,6 +301,29 @@ const makeOddsInput = (overrides: Partial<OddsInput> = {}): OddsInput => ({
   ...overrides,
 });
 
+describe("scoreGame — TOTAL reasoningShort", () => {
+  it("uses the snapped published total instead of the scoring mean", () => {
+    const total = scoreGame(
+      makeOddsInput({
+        bookmakerOdds: ["fanduel", "draftkings", "betmgm", "caesars", "pointsbet"].map(
+          (bookmaker, index) => ({
+            bookmaker,
+            market: "TOTALS" as const,
+            total: index < 3 ? 47.5 : 48.5,
+            overPrice: -110,
+            underPrice: -110,
+          }),
+        ),
+      }),
+    ).find((pick) => pick.pickType === "TOTAL");
+    expect(total).toBeTruthy();
+    const [direction, ...lineParts] = total!.selection.split(" ");
+    expect(total!.reasoningShort).toBe(
+      `${Math.round(total!.consensusPct * 100)}% of bookmakers favor ${direction} ${lineParts.join(" ")}.`,
+    );
+  });
+});
+
 // ============================================================
 // scoreGame — new precision fields
 // ============================================================

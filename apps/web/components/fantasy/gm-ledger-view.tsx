@@ -19,7 +19,7 @@ const PROCESS_HEX: Record<ProcessVerdict, string> = {
 const QUAD_HEX: Record<GmQuadrant, string> = {
   earned: BRAND_COLORS.orbitalCyan,
   "bad-beat": BRAND_COLORS.softUltraviolet,
-  "got-lucky": "#E0A800",
+  "got-lucky": "#FFB454",
   deserved: "#7b8794",
 };
 

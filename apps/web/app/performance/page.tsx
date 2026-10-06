@@ -8,6 +8,7 @@ import { Footer } from "@/components/ui/footer";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
 import { PerformanceBootstrapState } from "@/components/performance/bootstrap-state";
 import { CalibrationPanel } from "@/components/performance/calibration-panel";
+import { VerdictLine } from "@/components/performance/verdict-line";
 import {
   NUMERIC_TEXT_CLASS,
   STAT_PLACEHOLDER,
@@ -381,6 +382,11 @@ export default async function PerformancePage() {
                       </span>{" "}
                       finished live-engine picks. Win rate excludes pushes.
                     </p>
+                    <VerdictLine
+                      wins={overall.wins}
+                      losses={overall.losses}
+                      minSample={minSettledFloor}
+                    />
                   </div>
                 </div>
               </section>

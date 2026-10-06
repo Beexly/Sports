@@ -5,6 +5,7 @@ import { Footer } from "@/components/ui/footer";
 import { Reveal } from "@/components/motion/reveal";
 import { Atmosphere } from "@/components/ui/atmosphere";
 import { PunditLedger } from "@/components/airwave/pundit-ledger";
+import { ExpertBoard } from "@/components/airwave/expert-board";
 import {
   leaderboard,
   toPublicLedger,
@@ -48,7 +49,7 @@ export default async function AirwavePage() {
           <div
             aria-hidden="true"
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
-            style={{ background: "radial-gradient(60% 80% at 50% 0%, rgba(255, 56, 199, 0.08), transparent 70%), radial-gradient(40% 60% at 72% 8%, rgba(0, 229, 255, 0.07), transparent 70%)" }}
+            style={{ background: "radial-gradient(60% 80% at 50% 0%, rgba(255,77,46, 0.08), transparent 70%), radial-gradient(40% 60% at 72% 8%, rgba(255,77,46, 0.07), transparent 70%)" }}
           />
           <div className="mx-auto max-w-5xl">
             <Reveal>
@@ -82,7 +83,7 @@ export default async function AirwavePage() {
             {STEPS.map((s) => (
               <Reveal key={s.n} delay={80}>
                 <div className="surface-card h-full p-5">
-                  <span className="font-display text-2xl tabular-nums text-plasma">{s.n}</span>
+                  <span className="font-display text-2xl tabular-nums text-ion-white">{s.n}</span>
                   <h2 className="mt-2 text-base font-semibold text-ion-white">{s.t}</h2>
                   <p className="mt-1.5 text-sm leading-relaxed text-ion-1">{s.b}</p>
                 </div>
@@ -156,7 +157,16 @@ export default async function AirwavePage() {
         {/* The ledger */}
         <section className="px-4 pb-10 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
-            <PunditLedger scorecards={scorecards} claims={claims} />
+            <p className="font-mono text-[11px] uppercase tracking-[0.28em] text-orbital-cyan">The standings</p>
+            <h2 className="mt-1 font-display text-2xl font-semibold text-ion-white sm:text-3xl">
+              Ranked by <span className="gse-editorial" style={{ fontSize: "1.08em" }}>accountability.</span>
+            </h2>
+            <div className="mt-4">
+              <ExpertBoard />
+            </div>
+            <div className="mt-6">
+              <PunditLedger scorecards={scorecards} claims={claims} />
+            </div>
           </div>
         </section>
 

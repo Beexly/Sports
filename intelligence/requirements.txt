@@ -1,0 +1,33 @@
+# PROVENANCE — gse-intelligence-build / requirements.txt
+# Runtime + test dependencies for the GSE intelligence engine.
+#
+# WHY THIS FILE EXISTS (fresh-checkout reproducibility fix, 2026-10-02):
+# The build had NO declared dependency manifest. It was developed against a
+# pre-existing virtualenv (~/.venv, pytest 9.1.1 / numpy 2.5.3 per
+# tests/README.md). On any machine without that venv, 14 qb-behavior test
+# files failed at COLLECTION with `ModuleNotFoundError: No module named
+# 'polars'` — the run_all.py scoreboard then recorded them as errors rather
+# than a clean, diagnosable "you are missing a dependency".
+#
+# Rule followed (AGENTS.md law 7 + trap 10 "dependency sprawl"): new deps
+# need a reason, versions are pinned, and the suite must run on a fresh
+# checkout. This file makes that true instead of implicit.
+#
+# Versions below are the ones the suite was verified against on this run
+# (2026-10-02) unless noted. Upper bounds keep a future major from silently
+# changing numerics under the tests.
+
+# --- test harness ---
+pytest>=9.1,<10            # suite runner (tests/run_all.py, pytest.ini)
+
+# --- numerics ---
+numpy>=2.4,<3             # 43 modules import it; common.py math kernels
+pandas>=3.0,<4            # real-data validation gates (test_coaching_gates)
+pyarrow>=20,<26           # parquet reads for nflverse pbp tables
+scikit-learn>=1.9,<2      # trust-signals/clustering.py (TfidfVectorizer,
+                          # cosine_similarity); dedup clustering only
+
+# --- frame engine for qb-behavior ---
+polars>=1.0,<2            # qb_behavior engine/loader/splits/specs. REQUIRED:
+                          # 14 qb-behavior test files fail to collect without
+                          # it. Single largest collection-error source found.

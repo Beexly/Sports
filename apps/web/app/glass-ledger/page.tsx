@@ -57,6 +57,7 @@ import {
   type LedgerReliabilityBucket,
 } from "@/lib/ledger/ledger-view";
 import { renderableMetricOrNull, type SubstantiatedMetric } from "@/lib/ledger/display-guard";
+import { featureHashForDisplay } from "@sports/prediction-engine";
 import {
   formatClvBacking,
   formatCoverage,
@@ -167,9 +168,9 @@ function ChainMotif({ className, gradientId }: { className?: string; gradientId:
     <svg aria-hidden="true" viewBox="0 0 400 24" preserveAspectRatio="none" className={className}>
       <defs>
         <linearGradient id={gradientId} x1="0" y1="0" x2="1" y2="0">
-          <stop offset="0%" stopColor="#00E5FF" />
-          <stop offset="52%" stopColor="#FF38C7" />
-          <stop offset="100%" stopColor="#7B61FF" />
+          <stop offset="0%" stopColor="#FF4D2E" />
+          <stop offset="52%" stopColor="#FF4D2E" />
+          <stop offset="100%" stopColor="#C9D4CE" />
         </linearGradient>
       </defs>
       {Array.from({ length: linkCount }).map((_, i) => (
@@ -377,9 +378,6 @@ function BucketRow({ bucket }: { bucket: LedgerReliabilityBucket }): JSX.Element
     <tr className="border-b border-mineral/60">
       <td className="px-4 py-3 text-sm text-ion-white">{bucket.label}</td>
       <td className="px-4 py-3">
-        <MetricValue metric={bucket.predicted} unit="percent" />
-      </td>
-      <td className="px-4 py-3">
         <MetricValue metric={bucket.observed} unit="percent" />
       </td>
     </tr>
@@ -481,6 +479,9 @@ export default async function LedgerPage(): Promise<JSX.Element> {
   const { seasons, calibration, significance, note } = view;
   const latestSeason = seasons[0];
   const buckets = calibration?.buckets ?? [];
+  const featureHashes = (view.preKickoffFeatureHashes ?? [])
+    .map((hash) => featureHashForDisplay(hash, true))
+    .filter((hash): hash is string => hash != null);
 
   return (
     <div className="flex min-h-screen flex-col bg-carbon text-ion">
@@ -494,8 +495,9 @@ export default async function LedgerPage(): Promise<JSX.Element> {
         </h1>
         <p className="mt-5 max-w-2xl text-sm leading-6 text-ion-1">
           Every book-priced pick is recorded before kickoff, sealed into a hash-chained record, and
-          never rewritten after the fact. This page leads with calibration — how well confidence numbers
-          matched reality — and closing-line value, not a single headline stat. {note}
+          never rewritten after the fact. This page leads with separation — whether higher-confidence
+          picks settle more often than lower-confidence ones — and closing-line value, not a single
+          headline stat. {note}
         </p>
 
         <ChainMotif gradientId="glass-ledger-chain-published" className="mt-6 h-5 w-full max-w-md" />
@@ -507,10 +509,9 @@ export default async function LedgerPage(): Promise<JSX.Element> {
           <h2 id="ledger-headline-heading" className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
             At a glance
           </h2>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             <MetricTile label="SU% · latest season" metric={latestSeason?.suPct} unit="percent" />
             <MetricTile label="CLV · latest season" metric={latestSeason?.clv} unit="bps" />
-            <MetricTile label="Calibration · Brier score" metric={calibration?.brierScore} unit="score" />
             <MetricTile
               label="Toward significance · LCB clears breakeven"
               metric={significance?.lowerBoundClearsBreakeven}
@@ -540,6 +541,23 @@ export default async function LedgerPage(): Promise<JSX.Element> {
 
         {/* Season table — the nfelo shape (SU% / ATS vs. close / CLV), plus
             the coverage and lower-bound columns nfelo doesn't publish. */}
+        <section aria-labelledby="ledger-feature-hash-heading" className="mt-10">
+          <h2 id="ledger-feature-hash-heading" className="text-xl font-bold text-ion-white">
+            Pre-kickoff feature hash
+          </h2>
+          {featureHashes.length === 0 ? (
+            <p className="mt-3 text-sm text-ion-2">
+              No pre-kickoff feature hash is sealed yet.
+            </p>
+          ) : (
+            <ul className="mt-3 space-y-1 font-mono text-xs text-ion-1">
+              {featureHashes.map((hash) => (
+                <li key={hash}>{hash}</li>
+              ))}
+            </ul>
+          )}
+        </section>
+
         <section aria-labelledby="ledger-seasons-heading" className="mt-10">
           <h2 id="ledger-seasons-heading" className="text-xl font-bold text-ion-white">
             By season
@@ -593,29 +611,28 @@ export default async function LedgerPage(): Promise<JSX.Element> {
           </div>
         </section>
 
-        {/* Reliability / Brier calibration */}
+        {/* Reliability / separation by confidence band */}
         <section aria-labelledby="ledger-calibration-heading" className="mt-10">
           <h2 id="ledger-calibration-heading" className="text-xl font-bold text-ion-white">
-            Reliability &amp; calibration
+            Reliability &amp; separation
           </h2>
           <p className="mt-2 max-w-2xl text-sm leading-6 text-ion-1">
-            The Brier score decomposition and the reliability curve (projected confidence vs.
-            settled outcome, by confidence band) render here once there is a substantiated
-            sample to compute them from.
+            The reliability curve (confidence band vs. settled outcome) renders here once there
+            is a substantiated sample to compute it from. It is a separation read — do
+            higher-confidence bands settle more often than lower ones — not a probability score,
+            since the Edge Index is a ranking signal rather than a forecast probability.
           </p>
-          <div className="mt-4 grid gap-4 sm:grid-cols-2">
-            <MetricTile label="Brier score" metric={calibration?.brierScore} unit="score" />
-          </div>
           {buckets.length > 0 && (
             <div className="mt-4 overflow-x-auto rounded-2xl border border-mineral">
               <table className="w-full border-collapse text-left">
                 <thead>
+                  {/* Devin Review (PR #737): a confidence-band column beside
+                      Observed still read as a predicted-vs-actual table
+                      structurally, whatever its header said — dropped rather
+                      than relabelled. */}
                   <tr className="border-b border-mineral bg-eclipse/50">
                     <th scope="col" className="px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-ion-2">
                       Confidence band
-                    </th>
-                    <th scope="col" className="px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-ion-2">
-                      Predicted
                     </th>
                     <th scope="col" className="px-4 py-3 font-mono text-xs font-semibold uppercase tracking-[0.14em] text-ion-2">
                       Observed

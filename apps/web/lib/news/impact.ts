@@ -2,9 +2,9 @@
  * News Impact Engine — turns a breaking item into a decision.
  *
  * The value isn't aggregating beat-writer chatter (everyone does that). It's
- * answering, the instant a report lands: how reliable is the source, which
- * players and lines does it move, by how much, and what should you do — before
- * the market prices it in. Reliability tier × signal magnitude × freshness decay.
+ * answering, the instant a report lands: the source tier, which players and
+ * lines it may affect, by roughly how much our heuristic reads, and what to
+ * consider. Heuristic tier weights × signal magnitude × freshness decay.
  *
  * Pure functions. Source roster and live ingestion are founder-gated; the engine
  * runs on any item regardless of where it came from.
@@ -31,10 +31,14 @@ export type SignalType =
   | "scheme"
   | "suspension"
   | "weather"
-  | "depth-chart";
+  | "depth-chart"
+  | "coach-report";
 
 /** Base fantasy magnitude (−100..100) and how fast it decays (half-life, minutes). */
-const SIGNAL: Record<SignalType, { fantasy: number; market: number; halfLife: number; label: string }> = {
+export const SIGNAL_MAGNITUDES: Record<
+  SignalType,
+  { fantasy: number; market: number; halfLife: number; label: string }
+> = {
   "injury-out": { fantasy: -88, market: -55, halfLife: 90, label: "Ruled out" },
   "injury-return": { fantasy: 64, market: 40, halfLife: 120, label: "Returning" },
   "role-up": { fantasy: 52, market: 30, halfLife: 240, label: "Role up" },
@@ -44,6 +48,7 @@ const SIGNAL: Record<SignalType, { fantasy: number; market: number; halfLife: nu
   suspension: { fantasy: -70, market: -44, halfLife: 180, label: "Suspension" },
   weather: { fantasy: -24, market: -30, halfLife: 300, label: "Weather" },
   "depth-chart": { fantasy: 34, market: 18, halfLife: 480, label: "Depth chart" },
+  "coach-report": { fantasy: 26, market: 24, halfLife: 480, label: "Coach report" },
 };
 
 export type NewsItem = {
@@ -71,7 +76,7 @@ export type ImpactRead = {
 
 /** Exponential decay by the signal's half-life. */
 function freshnessFor(signal: SignalType, minutesAgo: number): number {
-  const { halfLife } = SIGNAL[signal];
+  const { halfLife } = SIGNAL_MAGNITUDES[signal];
   return Math.pow(0.5, Math.max(0, minutesAgo) / halfLife);
 }
 
@@ -80,37 +85,39 @@ function actionFor(item: NewsItem, fantasyDelta: number, reliability: number): s
   if (reliability < 0.4) return `Hold: single ${item.tier.toLowerCase()} source; wait for a second report before acting on ${who}.`;
   switch (item.signal) {
     case "injury-out":
-      return `Pivot off ${who}. The backup is the speculative add. Get there before your league.`;
+      return `Consider pivoting off ${who}; the backup is worth a look as a speculative add.`;
     case "injury-return":
-      return `${who} back in play; re-slot and discount the contingency you were holding.`;
+      return `${who} may be back in play; re-check status before re-slotting.`;
     case "role-up":
-      return `Buy-low window on ${who} closing; claim or start before the number moves.`;
+      return `${who}'s role may be growing; monitor before claiming or starting.`;
     case "role-down":
-      return `Fade ${who} this week; the touches are leaking elsewhere.`;
+      return `${who}'s touches may be leaking elsewhere; consider fading this week.`;
     case "suspension":
-      return `${who} out multi-week: drop in redraft, the next man up is the real add.`;
+      return `${who} could miss multiple weeks: a possible drop in redraft once confirmed.`;
     case "trade":
-      return `New context for ${who}; revalue on the new offense before the market resets.`;
+      return `New context for ${who}; revalue on the new offense once details land.`;
     case "scheme":
-      return `Scheme change reshapes ${who}'s usage; see Scheme Intelligence for the cascade.`;
+      return `Possible scheme change around ${who}'s usage; see Scheme Intelligence for the cascade.`;
     case "weather":
       return `Game-script risk on ${who}; lean the floor, fade the ceiling.`;
     case "depth-chart":
-      return `${who} climbing the chart: a snap-count story worth a speculative stash.`;
+      return `${who} climbing the chart: a snap-count story worth watching.`;
+    case "coach-report":
+      return `Coach/beat signal on ${who}: context worth weighing before locking lineups or bets.`;
   }
 }
 
 export function readImpact(item: NewsItem): ImpactRead {
   const reliability = TIER_WEIGHT[item.tier];
   const freshness = freshnessFor(item.signal, item.minutesAgo);
-  const base = SIGNAL[item.signal];
+  const base = SIGNAL_MAGNITUDES[item.signal];
   const fantasyDelta = Math.round(base.fantasy * reliability);
   const marketDelta = Math.round(base.market * reliability);
   const urgency = Math.round(Math.abs(base.fantasy) * reliability * freshness);
   return { item, reliability, freshness, fantasyDelta, marketDelta, urgency, action: actionFor(item, fantasyDelta, reliability) };
 }
 
-export const signalLabel = (s: SignalType): string => SIGNAL[s].label;
+export const signalLabel = (s: SignalType): string => SIGNAL_MAGNITUDES[s].label;
 
 /** Rank a wire of items by what deserves attention right now. */
 export function rankWire(items: readonly NewsItem[]): ImpactRead[] {

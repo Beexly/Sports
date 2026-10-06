@@ -22,7 +22,7 @@ const BOOKGRADE_DESCRIPTION =
   "Per-book price quality vs consensus close and book update reliability, from the 241-game MLB clean-close corpus.";
 
 export const metadata: Metadata = {
-  title: `BookGrade · ${BRAND_NAME}`,
+  title: { absolute: `BookGrade · ${BRAND_NAME}` },
   description: BOOKGRADE_DESCRIPTION,
   alternates: { canonical: "/bookgrade" },
   openGraph: {

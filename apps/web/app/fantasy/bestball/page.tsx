@@ -12,6 +12,7 @@ export const metadata: Metadata = {
   description:
     "A glass-box best-ball draft board: roster ceiling and spike upside, QB-to-catcher stack correlation, bye fragility, and a next-pick recommender tuned for draft-only formats.",
   alternates: { canonical: "/fantasy/bestball" },
+  robots: { index: false, follow: true },
 };
 
 // Render per-request so the founder-gated live-projections status is reflected at

@@ -1,4 +1,4 @@
-import { describe, expect, it, vi } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   BACKFILL_CAP,
   BACKFILL_UNRESOLVED_GRACE_DAYS,
@@ -540,5 +540,91 @@ describe("backfillStaleSettlement", () => {
     expect(result.settled).toBe(1);
     expect(result.unresolved).toHaveLength(0);
     expect(fake.game).toEqual({ status: "FINAL", homeScore: 17, awayScore: 16 });
+  });
+});
+
+/**
+ * C-95: the stale backfill stamps the line-archive CLOSE tag after a successful
+ * settle write, as the paid grader always has. Driven through the lane's own
+ * default persister (persistInTx via $transaction), not an injected one, so the
+ * wiring is what is under test.
+ */
+describe("backfill stamps the line-archive CLOSE after a successful settle (C-95)", () => {
+  const ORIGINAL_ENV = process.env["LINE_ARCHIVE_ENABLED"];
+  const KICKOFF = daysAgo(5);
+
+  type TxFn = (tx: unknown) => Promise<{ count: number }>;
+  function dbWithTx(pickWriteCount: number) {
+    const snapshotFindMany = vi.fn(async () => [
+      { id: "snap-1", market: "MONEYLINE", book: "draftkings", side: "home", capturedAt: daysAgo(6), phase: "OPEN" },
+    ]);
+    const snapshotUpdate = vi.fn(async () => ({}));
+    const tx = {
+      pick: {
+        updateMany: vi.fn(async () => ({ count: pickWriteCount })),
+        findUnique: vi.fn(async () => ({ result: "PENDING", game: { commenceTime: KICKOFF } })),
+      },
+      pickSettlementEvent: { create: vi.fn(async (args: unknown) => args) },
+      postSettlementWork: { createMany: vi.fn(async () => ({ count: 2 })) },
+      game: {
+        updateMany: vi.fn(async () => ({ count: 1 })),
+        findUnique: vi.fn(async () => ({ homeScore: null, awayScore: null })),
+      },
+    };
+    const db = {
+      pick: { findMany: vi.fn(async () => [row({ daysAgo: 5 })]) },
+      $transaction: async (fn: TxFn) => fn(tx),
+      oddsLineSnapshot: { findMany: snapshotFindMany, update: snapshotUpdate },
+    };
+    return { db: db as unknown as BackfillDb, tx, snapshotFindMany, snapshotUpdate };
+  }
+
+  afterEach(() => {
+    if (ORIGINAL_ENV === undefined) delete process.env["LINE_ARCHIVE_ENABLED"];
+    else process.env["LINE_ARCHIVE_ENABLED"] = ORIGINAL_ENV;
+  });
+
+  it("re-tags the last pre-kickoff snapshot CLOSE for the game it just graded, after the transaction", async () => {
+    process.env["LINE_ARCHIVE_ENABLED"] = "true";
+    const { db, tx, snapshotFindMany, snapshotUpdate } = dbWithTx(1);
+    const order: string[] = [];
+    tx.pick.updateMany.mockImplementation(async () => {
+      order.push("pick-write");
+      return { count: 1 };
+    });
+    snapshotFindMany.mockImplementation(async () => {
+      order.push("close-stamp");
+      return [{ id: "snap-1", market: "MONEYLINE", book: "draftkings", side: "home", capturedAt: daysAgo(6), phase: "OPEN" }];
+    });
+
+    const result = await backfillStaleSettlement({ db, now: NOW, fetchScores: async () => scores([navyFinal()]) });
+
+    expect(result.settled).toBe(1);
+    expect(order).toEqual(["pick-write", "close-stamp"]);
+    expect(snapshotFindMany).toHaveBeenCalledWith(
+      expect.objectContaining({ where: { gameId: "game-1", capturedAt: { lte: KICKOFF } } }),
+    );
+    expect(snapshotUpdate).toHaveBeenCalledWith({ where: { id: "snap-1" }, data: { phase: "CLOSE" } });
+  });
+
+  it("stamps nothing when the write matched no PENDING row", async () => {
+    process.env["LINE_ARCHIVE_ENABLED"] = "true";
+    const { db, tx, snapshotFindMany } = dbWithTx(0);
+    tx.pick.findUnique.mockResolvedValue({ result: "WIN", game: { commenceTime: KICKOFF } });
+
+    const result = await backfillStaleSettlement({ db, now: NOW, fetchScores: async () => scores([navyFinal()]) });
+
+    expect(result.settled).toBe(0);
+    expect(snapshotFindMany).not.toHaveBeenCalled();
+  });
+
+  it("is a zero-DB-call no-op when LINE_ARCHIVE_ENABLED is unset (hard gate)", async () => {
+    delete process.env["LINE_ARCHIVE_ENABLED"];
+    const { db, snapshotFindMany } = dbWithTx(1);
+
+    const result = await backfillStaleSettlement({ db, now: NOW, fetchScores: async () => scores([navyFinal()]) });
+
+    expect(result.settled).toBe(1);
+    expect(snapshotFindMany).not.toHaveBeenCalled();
   });
 });

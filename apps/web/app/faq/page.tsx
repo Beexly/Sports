@@ -23,7 +23,7 @@ const phase = getCurrentPricingPhase();
  */
 
 export const metadata: Metadata = {
-  title: "FAQ: Common questions about Galaxy Sports Edge",
+  title: { absolute: "FAQ: Common questions about Galaxy Sports Edge" },
   description:
     "Plain answers about how the model scores signals, why the Calibration Report is gated, what Pro and Elite get, and how this is different from a tout service.",
   alternates: { canonical: "/faq" },

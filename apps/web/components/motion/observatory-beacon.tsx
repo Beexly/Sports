@@ -55,10 +55,14 @@ export function ObservatoryBeacon() {
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       aria-label="Return to Observatory"
-      className="pointer-events-none fixed bottom-6 right-6 z-50 flex items-center gap-3 rounded-full transition-all duration-500 lg:pointer-events-auto"
+      // top-20 (80px), not top-6: the sticky Nav occupies 0-64px at z-50
+      // (styles/pickpilot-kit.css .nav-inner height: 64px) — top-6 (24px)
+      // put the beacon inside that band, at the same z-index, over whatever
+      // sits in the nav's right side (sign-in, pricing, account controls).
+      className="pointer-events-none fixed top-20 right-6 z-50 flex items-center gap-3 rounded-full transition-all duration-500 lg:pointer-events-auto"
       style={{
         opacity: visible ? 1 : 0,
-        transform: visible ? "translateY(0)" : "translateY(20px)",
+        transform: visible ? "translateY(0)" : "translateY(-20px)",
       }}
     >
       {/* Tooltip */}
@@ -76,16 +80,16 @@ export function ObservatoryBeacon() {
       <span
         className="relative flex h-10 w-10 items-center justify-center rounded-full"
         style={{
-          background: "rgba(0, 229, 255, 0.12)",
-          border: "1px solid rgba(0, 229, 255, 0.35)",
-          boxShadow: "0 0 20px rgba(0,229,255,0.15), inset 0 0 12px rgba(0,229,255,0.08)",
+          background: "rgba(255,77,46, 0.12)",
+          border: "1px solid rgba(255,77,46, 0.35)",
+          boxShadow: "0 0 20px rgba(255,77,46,0.15), inset 0 0 12px rgba(255,77,46,0.08)",
         }}
       >
         {/* Pulsing inner glow */}
         <span
           className="absolute inset-0 rounded-full"
           style={{
-            background: "radial-gradient(circle, rgba(0,229,255,0.3) 0%, transparent 70%)",
+            background: "radial-gradient(circle, rgba(255,77,46,0.3) 0%, transparent 70%)",
             animation: "observatory-beacon-pulse 3s ease-in-out infinite",
           }}
         />
@@ -93,7 +97,7 @@ export function ObservatoryBeacon() {
         <span
           className="relative h-2 w-2 rounded-full bg-orbital-cyan"
           style={{
-            boxShadow: "0 0 8px 2px rgba(0,229,255,0.6)",
+            boxShadow: "0 0 8px 2px rgba(255,77,46,0.6)",
           }}
         />
         {/* Up arrow */}

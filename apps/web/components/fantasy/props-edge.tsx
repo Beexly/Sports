@@ -17,11 +17,46 @@ import { PROPS, readProp, evalEntry, type Prop, type PropRead } from "@/lib/fant
 // verify/alert; plasma is never a negative.
 const sideTone = (side: "over" | "under") => (side === "over" ? "var(--orbital-cyan)" : "var(--plasma)");
 
-export function PropsEdge({ lines = PROPS }: { lines?: readonly Prop[] }) {
-  const reads = useMemo(() => lines.map(readProp).sort((a, b) => b.edge - a.edge), [lines]);
+export function PropsEdge({
+  lines = PROPS,
+  live = false,
+}: {
+  lines?: readonly Prop[];
+  /**
+   * True only when a licensed lines feed is connected. Defaults FALSE so the
+   * board says "fictional" unless something proves otherwise — the honest
+   * direction to be wrong in, since every row here is an invented player
+   * until a real feed lands.
+   */
+  live?: boolean;
+}) {
   const [entry, setEntry] = useState<Set<string>>(new Set());
+  const [market, setMarket] = useState<string>("All");
+  const [team, setTeam] = useState<string>("All");
 
-  if (reads.length === 0) {
+  const markets = useMemo(
+    () => ["All", ...Array.from(new Set(lines.map((l) => l.market)))],
+    [lines],
+  );
+  const teams = useMemo(
+    () => ["All", ...Array.from(new Set(lines.map((l) => l.team))).sort()],
+    [lines],
+  );
+
+  const reads = useMemo(
+    () =>
+      lines
+        .filter(
+          (l) =>
+            (market === "All" || l.market === market) &&
+            (team === "All" || l.team === team),
+        )
+        .map((p) => readProp(p))
+        .sort((a, b) => b.edge - a.edge),
+    [lines, market, team],
+  );
+
+  if (lines.length === 0) {
     return (
       <div className="surface-card p-8 text-center">
         <p className="text-sm text-ion-1">No pick&apos;em lines are connected right now.</p>
@@ -45,13 +80,67 @@ export function PropsEdge({ lines = PROPS }: { lines?: readonly Prop[] }) {
   const ev = entryReads.length >= 2 ? evalEntry(entryReads) : null;
 
   return (
-    <div className="grid gap-6 lg:grid-cols-[1.55fr_1fr]">
-      {/* board */}
-      <div className="space-y-2.5">
-        {reads.map((r) => (
-          <PropRow key={r.prop.id} r={r} active={inEntry(r.prop.id)} onToggle={() => toggle(r.prop.id)} />
+    <div className="space-y-4">
+      {/* PropFinder-style filters */}
+      <div className="surface-card flex flex-wrap items-center gap-3 p-3">
+        <span className="text-[10px] uppercase tracking-[0.18em] text-ion-3">Market</span>
+        {markets.map((m) => (
+          <button
+            key={m}
+            type="button"
+            onClick={() => setMarket(m)}
+            aria-pressed={market === m}
+            className={`rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider transition-colors ${
+              market === m
+                ? "bg-orbital-cyan/20 text-orbital-cyan"
+                : "text-ion-2 hover:text-ion-white"
+            }`}
+          >
+            {m}
+          </button>
         ))}
+        <select
+          value={team}
+          onChange={(e) => setTeam(e.target.value)}
+          className="ml-auto rounded-md border bg-transparent px-2 py-1 text-xs text-ion-1"
+          style={{ borderColor: "var(--line)" }}
+          aria-label="Filter by team"
+        >
+          {teams.map((t) => (
+            <option key={t} value={t} style={{ color: "#000" }}>
+              {t === "All" ? "All teams" : t}
+            </option>
+          ))}
+        </select>
+        <span className="font-mono text-[10px] tabular-nums text-ion-3">
+          {reads.length} props
+        </span>
+        {/* The source pill sits IN the filter bar, directly above the cards,
+            because that is where a visitor's eye already is when they start
+            reading conviction percentages and EV figures. Mirrors the pill
+            PickemRanker already ships. */}
+        <span
+          data-testid="props-edge-source"
+          className={`ml-auto rounded-full px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider ${
+            live ? "bg-orbital-cyan/20 text-orbital-cyan" : "bg-caution/20 text-caution"
+          }`}
+        >
+          {live ? "Source: live" : "Source: fictional (illustrative)"}
+        </span>
       </div>
+
+      <div className="grid gap-6 lg:grid-cols-[1.55fr_1fr]">
+        {/* board */}
+        <div className="space-y-2.5">
+          {reads.length === 0 && (
+            <div className="surface-card p-6 text-sm text-ion-2">
+              No props match this filter.
+            </div>
+          )}
+          {reads.map((r) => (
+            <PropRow key={r.prop.id} r={r} active={inEntry(r.prop.id)} onToggle={() => toggle(r.prop.id)} />
+          ))}
+        </div>
 
       {/* entry builder */}
       <div className="lg:sticky lg:top-24 self-start">
@@ -95,6 +184,7 @@ export function PropsEdge({ lines = PROPS }: { lines?: readonly Prop[] }) {
             </div>
           )}
         </div>
+      </div>
       </div>
     </div>
   );

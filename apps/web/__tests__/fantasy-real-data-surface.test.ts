@@ -17,7 +17,10 @@ describe("Fantasy real-data entry surface", () => {
     expect(page).toMatch(/Player-stat rows/);
     expect(page).toMatch(/Accepted research/);
     expect(page).toMatch(/Rejected narratives/);
-    expect(page).toMatch(/Source JSON/);
+    // Public/private doctrine (2026-09-28): the source catalog is an internal
+    // surface — the public fantasy page must not link to or name it.
+    expect(page).not.toMatch(/Data sources/);
+    expect(page).not.toMatch(/\/api\/sources\/catalog/);
     expect(page).toMatch(/Baseline map/);
     expect(page).toMatch(/LineStar \/ Elite baseline/);
   });

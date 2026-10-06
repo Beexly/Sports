@@ -41,6 +41,7 @@ import {
   classifySettlementRootCause,
   type SettlementRcaReport,
 } from "@/lib/settlement/root-cause-analysis";
+import { stampClosingLinesAfterSettle } from "@/lib/settlement/close-stamp";
 import { SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import { checkClearance } from "@/lib/scraping/clearance-engine";
 import {
@@ -729,6 +730,13 @@ export async function runFreePathSettlement(options?: {
           picksSettled++;
           settledPickIds.add(o.pickId);
           confirmationByPickId.set(o.pickId, o.confirmation);
+
+          // Line-archive CLOSE tag, after the settlement has committed (C-95).
+          // Parity with settleSport: until 2026-09-08 the paid grader was the
+          // only lane that stamped the close, so a pick graded here had no
+          // close for its CLV ledger. Hard-gated on LINE_ARCHIVE_ENABLED inside
+          // the callee; never throws, never blocks the grade.
+          await stampClosingLinesAfterSettle(db, row.game.id, row.game.commenceTime, "[free-settle]");
           rcaInputs.push({
             pickId: o.pickId,
             sportKey: sport.key,

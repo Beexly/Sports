@@ -8,6 +8,7 @@ export const metadata: Metadata = {
   description:
     "Every roster decision committed before the games to a tamper-evident Merkle record, then graded on process, not luck. A calibrated GM Rating that can't be cherry-picked after the fact.",
   alternates: { canonical: "/fantasy/gm-ledger" },
+  robots: { index: false, follow: true },
 };
 
 export default function GmLedgerPage() {

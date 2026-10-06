@@ -42,7 +42,7 @@ export function GlitchTruth({
       <div
         className="absolute inset-0"
         style={{
-          background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,229,255,0.03) 2px, rgba(0,229,255,0.03) 4px)",
+          background: "repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,77,46,0.03) 2px, rgba(255,77,46,0.03) 4px)",
           animation: "glitch-scan 8s linear infinite",
           opacity: scanOpacity,
         }}
@@ -52,7 +52,7 @@ export function GlitchTruth({
       <div
         className="absolute inset-0"
         style={{
-          boxShadow: `inset ${chromaStrength}px 0 ${chromaStrength * 2}px rgba(255,56,199,0.04), inset -${chromaStrength}px 0 ${chromaStrength * 2}px rgba(0,229,255,0.04)`,
+          boxShadow: `inset ${chromaStrength}px 0 ${chromaStrength * 2}px rgba(255,77,46,0.04), inset -${chromaStrength}px 0 ${chromaStrength * 2}px rgba(255,77,46,0.04)`,
         }}
       />
 
@@ -64,7 +64,7 @@ export function GlitchTruth({
           style={{
             top: `${20 + i * 15}%`,
             height: `${1 + Math.random() * 3}px`,
-            background: `rgba(0,229,255,${0.03 + level * 0.05})`,
+            background: `rgba(255,77,46,${0.03 + level * 0.05})`,
             transform: `translateX(${Math.sin(i * 2.5) * level * 8}px)`,
             animation: `glitch-band ${2 + i * 0.5}s ease-in-out infinite`,
             animationDelay: `${i * 0.3}s`,

@@ -133,3 +133,25 @@ Every agent (Grok CLI, Grok Bot / CoS, Lane Watcher, Claude, Hermes) appends one
 - Merged origin/main (PR #685) mid-branch, clean; both sportKey per-sport fetch and C-64 guard kept.
 - Gates at close: tsc 0 errors, lint clean, guardrails 26/26, test:fast 251/251, settle-backfill 11/11, game-merge-plan 17/17, merge-score-fill 10/10, cron route tests 49/49. Ledger C-64..C-70 all DONE.
 - Next action (one owner): founder review + merge PR #689; next agent opens from origin/main.
+
+### 2026-09-14 13:45 CT | Motif | CLEAN (L1 killed per pre-reg lines; L2/L3 BLOCK)
+- MOVE-37 architect: Minis overnight 13-compound battery audited — contract PASS, 0/13 at game level (closing line absorbs every public pre-kickoff compound). Game-level branch closed; props-space lab prompted (L1→L3→L2→L5, minis-props-followup-prompt.md; corpus aff05d6).
+- L1 stage 1 (Minis-reported 2026-09-14 ~13:36 CT): KILLED on two pre-registered lines — c=+0.082 sign flip vs pre-reg negative; ΔLL≈0.0001 vs 0.002 nats/attempt threshold. Stage-2 nulls running; env throttles repeated fits (~6s each → 1,000 refits ≈100 min), efficient-score permutation used as DISCLOSED deviation + clustered SEs.
+- L2/L3 DATA-BLOCKED in Minis env (no player_stats, no real snap_counts). Step-0 artifact delivery (prereg + res_*.json + build scripts) still open — overnight numbers Minis-reported until rerun locally.
+- TASK-010 filed on agent bus (32f048c): Minis to append its own AGENT.md block.
+- Evidence: corpus commits cd6a786 (prompt v3), dcd1046 (overnight report), aff05d6 (props follow-up).
+- Next: Minis props report 2026-09-15 → architect verdict → IC9 admission runner for any survivors. Owner: Motif.
+
+### 2026-09-15 10:20 CT | Motif | CLEAN — architect verdict on Minis overnight props-lab battery
+- Source: Hermes screenshots 2026-09-15 ~09:53 CT (report not on this host; nothing independently re-verified here). Report: minis-props-lab-report-2026-09-15.md, sha256 c75b2c510a89c3b10a42984e61cf92fb. Both mirrors at 46 files.
+- Verdict: all three hypotheses KILLED on pre-registered lines — honest nulls, no survivors, nothing promoted.
+  - H1/L1: c=+0.082131 vs pre-reg negative (sign flip); OOS ΔLL +0.000145/−0.000372/+0.000139, mean −0.00003 vs 0.002 nats/attempt threshold; game-clustered 90% CI [−0.012464, +0.176727] contains 0. N1 ran as prereg wrote it: 1,000 within-season full refits (381.8 s), confirmed by 2,000-draw clustered bootstrap over 574 games. Power floor met (2,479 flagged). K5/K6 do not fire. Kill is clean.
+  - H2/L2: KILLED as revenge edge (player_stats 2015–2024; 2025 file genuine HTTP 404, logged). FE revenge = −0.366494 targets/game, CI [−0.5975, −0.1190]; sign opposite the hypothesis, confounded with post-transfer role decline. Hermes self-flagged own first-pass geometric mean (0.01998) as artifact — median governs.
+  - H3/L5: KILLED; game-level branch formally closed. Pooled c₃=+0.046342, se 0.148057, 90% CI [−0.197212, +0.289896] covers 0; every family CI covers 0. Pre-registered closure condition met: compounding not detectable at NFL game frequencies with public pre-kickoff information.
+- Infra finding (keep): numpy/BLAS thread-pool collapse on the emulated Minis CPU was the real blocker, not workload size. OMP_NUM_THREADS=1 (+OPENBLAS/MKL/VECLIB/NUMEXPR): one fit 2.32 s → 0.35 s; 200-iteration benchmark >100 s → 3.96 s. Frozen 3,200-refit procedure is ~15 min, not 3.5 h. No package installed, no threshold touched. Apply to all future Minis runs.
+- Data: L2/L3 resolved (player_stats + snap_counts 2015–2024 fetched). L3 shelved with six checked sources — Odds API keys unset, production OddsLineSnapshot is game-level not per-player props. v4 §A5 cross-check passed (max abs diff 0.000601, r=0.9999977, 100% sign agreement); substitution turned out unnecessary, everything ran as frozen.
+- Open question O-1: minis-grout-prompt-v4-gate-amendment.md absent on Minis host — §A5 and the A1 veto applied as quoted, not as read. Sync the file to the host or re-derive the gate before any v4-gated run.
+- The 1999–2025 pull was NOT started by Hermes (evidence: build2.py/build3.py contain zero pbp references; build floor hard-coded 2015; L5 equation has no decay constant). Noted, no action.
+- Resilience: host reloaded mid-run (~3 h wall clock lost, background jobs killed); Hermes re-ran in foreground with incremental saves, nothing lost.
+- State: both mirrors + AGENT.md local and UNCOMMITTED on Minis host — push awaits Garrett's word. Supersedes 2026-09-14 13:45 CT block's "Next": no IC9 admission runner — no survivors to admit. Props branch closed.
+- Next: (1) Garrett decides on push; (2) close O-1 (sync gate file to Minis host); (3) redirect Minis to next lane.

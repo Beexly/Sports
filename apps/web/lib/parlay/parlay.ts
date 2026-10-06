@@ -188,8 +188,8 @@ export function computeVitals(legs: readonly ParlayLeg[]): ParlayVitals {
 
 export const VERDICT_HEX: Record<ParlayVerdict, string> = {
   Empty: "#5B6675",
-  Balanced: "#00E5FF",
-  Stretched: "#7B61FF",
-  Brittle: "#7B61FF",
-  Mutated: "#FF38C7",
+  Balanced: "#FF4D2E",
+  Stretched: "#C9D4CE",
+  Brittle: "#C9D4CE",
+  Mutated: "#FF7A5C",
 };

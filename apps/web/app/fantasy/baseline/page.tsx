@@ -59,9 +59,6 @@ export default function FantasyBaselinePage(): JSX.Element {
                   <Link href="/fantasy" className="btn btn-primary">
                     Fantasy home
                   </Link>
-                  <Link href="/api/sources/catalog" className="btn btn-ghost">
-                    Source JSON
-                  </Link>
                 </div>
               </div>
               <div className="grid gap-3 sm:grid-cols-5">

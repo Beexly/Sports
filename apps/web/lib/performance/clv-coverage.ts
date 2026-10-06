@@ -164,6 +164,9 @@ export async function loadClvCoverage(
     isBootstrap: false,
     isPublished: true,
     NOT: { modelVersion: { contains: "seed" } },
+    // Narrower than CLV_SAMPLE_RESULT_FILTER on purpose and already correct:
+    // an explicit outcome set excludes both PENDING and VOID. Audited for the
+    // C-279 sweep; do not widen this to `not: PENDING`.
     result: { in: ["WIN", "LOSS", "PUSH"] },
   } as const;
 

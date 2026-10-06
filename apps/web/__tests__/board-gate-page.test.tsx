@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { render } from "@testing-library/react";
+import { readFileSync } from "node:fs";
+import { resolve } from "node:path";
 
 /**
  * /board/gate — the gate decided live, in front of the reader.
@@ -32,7 +34,7 @@ vi.mock("@/lib/board/load-gate-slate", () => ({
   fetchGateSlate: (): unknown => fetchSlate(),
 }));
 
-import GatePage, { metadata } from "@/app/board/gate/page";
+import GatePage, { generateMetadata } from "@/app/board/gate/page";
 import { buildCalibrationRows, buildCandidateRows, type RawPickRow } from "@/lib/board/gate-rows";
 
 const DIGIT_PERCENT = /\d+(\.\d+)?%/;
@@ -74,8 +76,10 @@ describe("/board/gate — illustrative mode (the default)", () => {
 
     // These strings live in gate-consumer.ts. If the page ever stops calling
     // the real consumer, they disappear and this fails.
-    expect(text).toContain("not enough settled history");
-    expect(text).toContain("not a judgement about the game");
+    // These strings live in gate-consumer.ts. If the page ever stops calling
+    // the real consumer, they disappear and this fails.
+    expect(text).toContain("Not enough history in this category yet");
+    expect(text).toContain("not a judgment about the game");
   });
 
   it("states plainly that the inputs are illustrative and the logic is real", async () => {
@@ -102,9 +106,9 @@ describe("/board/gate — illustrative mode (the default)", () => {
     expect(text).toContain("No win rate, ROI, or performance result is asserted");
 
     // The page DOES print a lower-bound edge on fired rows — that number is
-    // evidence the gate really ran. It must therefore be labelled as arithmetic
-    // on illustrative inputs, or it reads as a measured edge and contradicts
-    // the non-claim directly above it.
+    // evidence the gate really ran. It must therefore be labelled as
+    // arithmetic on illustrative inputs, or it reads as a measured edge and
+    // contradicts the non-claim directly above it.
     expect(text).toContain("not a measured edge in any real market");
     expect(text).toContain("on illustrative inputs");
 
@@ -152,8 +156,13 @@ describe("/board/gate — illustrative mode (the default)", () => {
     expect(a).toBe(b);
   });
 
-  it("sets a canonical metadata entry", () => {
-    expect(metadata.alternates?.canonical).toBe("/board/gate");
+  it("sets a canonical metadata entry", async () => {
+    expect((await generateMetadata()).alternates?.canonical).toBe("/board/gate");
+  });
+
+  it("noindexes the page in illustrative mode (FE-12) — a demo must not be crawled as a live surface", async () => {
+    const meta = await generateMetadata();
+    expect(meta.robots).toEqual({ index: false, follow: true });
   });
 });
 
@@ -222,6 +231,18 @@ describe("/board/gate — live mode", () => {
     expect(text).toContain("What the gate returned");
   });
 
+  it("does not noindex the page once it is live", async () => {
+    fetchSlate.mockResolvedValue(liveSlate());
+    const meta = await generateMetadata();
+    expect(meta.robots).toBeUndefined();
+  });
+
+  it("noindexes even in live mode when the live read fails (FE-224 fix) — the fallback response is still a demo", async () => {
+    fetchSlate.mockRejectedValue(new Error("connect ECONNREFUSED"));
+    const meta = await generateMetadata();
+    expect(meta.robots).toEqual({ index: false, follow: true });
+  });
+
   it("warns that a live price is the one evaluated, not the one obtainable", async () => {
     fetchSlate.mockResolvedValue(liveSlate());
     const text = await pageText();
@@ -278,5 +299,22 @@ describe("/board/gate — fails closed, and says so", () => {
     expect(text).toContain("had no upcoming games to judge");
     // And the illustrative board is genuinely shown, not an empty page.
     expect(text).toContain("Not judged");
+  });
+});
+
+describe("/board/gate — metadata and body share one resolution (Devin finding, PR #737)", () => {
+  it("both generateMetadata and the page body read through the same memoized resolveGateSlateOnce", () => {
+    // Two independent resolveGateSlate() calls could disagree across a
+    // transient DB blip between them — live content marked noindex, or an
+    // illustrative fallback marked indexable. Pinned at the source because
+    // React's cache() (the fix) only actually dedupes under a real Next.js
+    // build; this repo's plain "react" package resolves it to undefined
+    // under Vitest, so the *behavioral* property (one physical read) isn't
+    // exercisable here — only that both sites go through the same wrapper.
+    const src = readFileSync(resolve(__dirname, "..", "app/board/gate/page.tsx"), "utf8");
+    const siteCount = (src.match(/await resolveGateSlateOnce\(\)/g) ?? []).length;
+    expect(siteCount).toBe(2);
+    expect(src).not.toMatch(/await resolveGateSlate\(\)/);
+    expect(src).toMatch(/from\s+"react"/);
   });
 });

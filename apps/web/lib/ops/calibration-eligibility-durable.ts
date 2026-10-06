@@ -4,9 +4,11 @@
  */
 
 import { db, isStubMode } from "@sports/db";
+import { MODEL_VERSION } from "@sports/prediction-engine";
 import {
   evaluateCalibrationEligibility,
   type CalibrationEligibilityReport,
+  type DeployedVersionSlice,
   type EligibilityStatus,
   type LiveCalibrationMetrics,
   type MurphyTerms,
@@ -52,6 +54,9 @@ export interface DurableMetricsPayload {
   readonly overall: {
     readonly brier: number;
     readonly ece: number;
+    /** C-290: sampling-noise expectation and bias-corrected ECE; absent before 2026-09-09. */
+    readonly eceNoise?: number;
+    readonly eceDebiased?: number;
     readonly mce: number;
     readonly murphy: MurphyTerms;
   } | null;
@@ -76,6 +81,17 @@ export interface DurableMetricsPayload {
   readonly byModelVersion?: readonly CalibrationSliceMetrics[];
   /** Per pick type; the pooled sample holds every market with a market-anchored p. */
   readonly byMarket?: readonly CalibrationSliceMetrics[];
+  /**
+   * ADDITIVE ADVISORY (ASTRA A-12). NOT A GATE. calibration-eligibility.ts
+   * does not read this field. Live eligibility is the pooled MONEYLINE-only
+   * sample; spread/total are excluded from that sample by design. A FAIL here
+   * is an internal measurement, not a product outage.
+   */
+  readonly marketGatesAdvisory?: readonly {
+    readonly market: string;
+    readonly status: "PASS" | "FAIL" | "INSUFFICIENT";
+    readonly reasons: readonly string[];
+  }[];
   /** Seeded percentile bootstrap (bootstrap-metric-ci.ts); null below two samples. */
   readonly brierCi95?: MetricCi95 | null;
   readonly eceCi95?: MetricCi95 | null;
@@ -91,10 +107,49 @@ export interface DurableMetricsPayload {
  * another (consecutiveGreenPriorForBasis), so the v1 to v2 move restarted the
  * streak from 0 with streakResetFromBasis "market_anchored" on the first v2 snap.
  */
-export type CalibrationPBasis = MarketAnchoredPBasis | "market_anchored" | "legacy";
+export type CalibrationPBasis =
+  | MarketAnchoredPBasis
+  | "market_anchored_v3"
+  | "market_anchored_v2"
+  | "market_anchored"
+  | "legacy";
 
 export function metricsPBasis(m: DurableMetricsPayload | null | undefined): CalibrationPBasis {
   return m?.pBasis ?? "legacy";
+}
+
+/**
+ * C-275: the byModelVersion slice for the version actually serving traffic.
+ *
+ * The floors are scored on a POOLED ECE, and pooled can sit below every stratum
+ * it is built from (measured 0.0414 below on live data), so a pooled pass does
+ * not imply the deployed model is calibrated. Handing this slice to the gate
+ * makes it check the deployed version's own rows too.
+ *
+ * Returns null — meaning "no additional check" — when the artifact carries no
+ * byModelVersion breakdown (every artifact written before those were added) or
+ * when MODEL_VERSION has no rows in this sample yet. Null preserves the
+ * pre-C-275 behaviour exactly, so an old artifact is never retro-failed by a
+ * check its data cannot answer.
+ */
+export function deployedVersionSlice(
+  m: DurableMetricsPayload | null | undefined,
+): DeployedVersionSlice | null {
+  const slices = m?.byModelVersion;
+  if (!slices || slices.length === 0) return null;
+  const hit = slices.find((s) => s.key === MODEL_VERSION);
+  if (!hit) return null;
+  // C-292: slices written before the per-slice correction carry neither field;
+  // `?? null` keeps that "not corrected" rather than surfacing undefined, and
+  // the gate then reads the raw value (the stricter direction).
+  return {
+    key: hit.key,
+    n: hit.n,
+    ece: hit.ece,
+    eceNoise: hit.eceNoise ?? null,
+    eceDebiased: hit.eceDebiased ?? null,
+    eceDebiasedCi90Lo: hit.eceDebiasedCi90Lo ?? null,
+  };
 }
 
 export function snapPBasis(snap: EligibilityDurableSnap | null | undefined): CalibrationPBasis {
@@ -115,6 +170,44 @@ export interface EligibilityDurableSnap {
    * streak therefore restarted from 0 on this evaluation; null otherwise.
    */
   readonly streakResetFromBasis?: CalibrationPBasis | null;
+  /**
+   * Determinism guard (2026-09-11): set when this evaluation returned a
+   * DIFFERENT verdict than the previous one while every measured metric was
+   * identical. That is not a data change — it is estimator non-determinism, and
+   * it is what flipped the gate GREEN → RED 15 minutes apart on 09-10. Absent
+   * when the verdict did not move or the metrics actually changed.
+   */
+  readonly verdictStability?: VerdictStability;
+}
+
+export interface VerdictStability {
+  readonly flagged: boolean;
+  readonly note: string;
+}
+
+/**
+ * True when the only thing that changed between two evaluations is the verdict.
+ * Pure; safe to call with a null prior snap.
+ */
+export function verdictStabilityOnIdenticalMetrics(
+  prior: CalibrationEligibilityReport | null | undefined,
+  next: CalibrationEligibilityReport,
+): VerdictStability | undefined {
+  if (!prior || prior.status === next.status) return undefined;
+  const identical =
+    prior.n === next.n &&
+    prior.brier === next.brier &&
+    prior.ece === next.ece &&
+    prior.eceDebiased === next.eceDebiased;
+  if (!identical) return undefined;
+  return {
+    flagged: true,
+    note:
+      `Same metrics, different verdict: ${prior.status} → ${next.status} ` +
+      `(n ${next.n}, ece ${next.ece}, eceDebiased ${next.eceDebiased}). ` +
+      "The sample did not move; the seeded estimator did. See " +
+      "lib/calibration/canonical-sample-order.ts.",
+  };
 }
 
 /**
@@ -294,6 +387,8 @@ export function metricsToLive(m: DurableMetricsPayload | null): LiveCalibrationM
       n: m.n,
       brier: null,
       ece: null,
+      eceNoise: null,
+      eceDebiased: null,
       mce: null,
       murphy: null,
       modelVersion: m.modelVersion,
@@ -305,6 +400,8 @@ export function metricsToLive(m: DurableMetricsPayload | null): LiveCalibrationM
     n: m.n,
     brier: m.overall.brier,
     ece: m.overall.ece,
+    eceNoise: m.overall.eceNoise ?? null,
+    eceDebiased: m.overall.eceDebiased ?? null,
     mce: m.overall.mce,
     murphy: m.overall.murphy,
     modelVersion: m.modelVersion,
@@ -611,6 +708,7 @@ export async function evaluateAndPersistEligibility(input: {
     settlementHealthy: input.settlementHealthy,
     consecutiveGreenPrior,
     streakRequired: streakRequiredFromEnv(),
+    deployedVersion: deployedVersionSlice(input.metrics),
   });
 
   await persistEligibilitySnap({
@@ -619,6 +717,7 @@ export async function evaluateAndPersistEligibility(input: {
     report: eligibility,
     pBasis,
     streakResetFromBasis,
+    verdictStability: verdictStabilityOnIdenticalMetrics(priorSnap?.report, eligibility),
   });
 
   const receipt = await loadPublishReceipt();
@@ -689,6 +788,10 @@ async function seedMetricsIfMissing(): Promise<DurableMetricsPayload | null> {
           select: {
             homeTeamName: true,
             awayTeamName: true,
+            // C-298 parity: without commenceTime the in_play exclusion cannot
+            // fire on this path, and a pick generated after kickoff is scored
+            // with a live price that already encodes part of the outcome.
+            commenceTime: true,
             sport: { select: { key: true } },
           },
         },
@@ -706,6 +809,7 @@ async function seedMetricsIfMissing(): Promise<DurableMetricsPayload | null> {
       selection: pick.selection,
       homeTeamName: pick.game?.homeTeamName ?? null,
       awayTeamName: pick.game?.awayTeamName ?? null,
+      commenceTime: pick.game?.commenceTime ?? null,
       confidence: pick.confidence,
       result: pick.result ?? "",
       modelVersion: pick.modelVersion,
@@ -716,7 +820,7 @@ async function seedMetricsIfMissing(): Promise<DurableMetricsPayload | null> {
       sportKey: pick.game?.sport?.key ?? null,
     }));
     // WP-28: one read-only odds query for the receipt-less moneyline picks.
-    const oddsTable = await loadPublishTimeMarketPResolver(db, rows);
+    const oddsTable = await loadPublishTimeMarketPResolver(db as never, rows);
     const built = picksToCalibrationSamples(rows, { resolveMarketP: oddsTable.resolveMarketP });
     const payload = buildDurableMetricsFromSamples({
       samples: built.samples,
@@ -781,6 +885,7 @@ export async function loadCalibrationOpsSurface(input: {
       settlementHealthy: input.settlementHealthy,
       consecutiveGreenPrior,
       streakRequired: streakRequiredFromEnv(),
+      deployedVersion: deployedVersionSlice(metrics),
     });
   }
 

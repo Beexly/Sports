@@ -18,6 +18,8 @@ import type { FixtureProbe } from "../fixture-confirmation.js";
 
 const mocks = vi.hoisted(() => ({
   // data-ingestion
+  circuitState: vi.fn<() => "closed" | "open" | "half_open">(),
+  createGalaxySecondBook: vi.fn<() => { bookmakerFor: (g: unknown) => Promise<unknown> } | undefined>(),
   // Header fields mirror the client contract: number | null (null = header absent), usedRequests optional in older fixtures.
   getOdds: vi.fn<
     (sport: string, markets: string[]) => Promise<{ data: unknown[]; remainingRequests: number | null; usedRequests?: number | null }>
@@ -47,10 +49,21 @@ const mocks = vi.hoisted(() => ({
   pickUpsert: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   pickCreate: vi.fn<(args: unknown) => Promise<{ id: string }>>(),
   pickUpdateMany: vi.fn<(args: unknown) => Promise<{ count: number }>>(),
-  pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string; selection?: string } | null>>(),
+  pickFindUnique: vi.fn<(args: unknown) => Promise<{ id: string; result: string; selection?: string; isPublished?: boolean; line?: number } | null>>(),
+  // Mint-side supersede of an unpublished PENDING slot-holder (lane B).
+  supersedeUnpublished: vi.fn<(db: unknown, args: unknown) => Promise<boolean>>(),
   snapshotUpsert: vi.fn<(args: unknown) => Promise<unknown>>(),
   resolveRundownApiKey: vi.fn<() => string>(),
-  fetchRundownEventsForSport: vi.fn<(sport: string, key: string) => Promise<{ events: unknown[]; remaining: number | null }>>(),
+  // Mirrors RundownFetchResult: `error` is the human note and `rateLimited`
+  // the structured 429 signal the cooldown reads (C-278a).
+  fetchRundownEventsForSport: vi.fn<
+    (sport: string, key: string) => Promise<{
+      events: unknown[];
+      remaining: number | null;
+      error?: string;
+      rateLimited?: boolean;
+    }>
+  >(),
   eventsBelowBookmakerThreshold: vi.fn<(events: unknown[], min?: number) => unknown[]>(),
   mergeBookmakersIntoPrimary: vi.fn<(primary: unknown[], secondary: unknown[], min?: number) => {
     events: unknown[];
@@ -77,6 +90,7 @@ vi.mock("@sports/db", () => ({
     odds: { createMany: mocks.oddsCreateMany },
     pick: { upsert: mocks.pickUpsert, findUnique: mocks.pickFindUnique, updateMany: mocks.pickUpdateMany, create: mocks.pickCreate },
     pickSignalSnapshot: { upsert: mocks.snapshotUpsert },
+    gateDecision: { createMany: vi.fn().mockResolvedValue({ count: 1 }) },
   },
 }));
 
@@ -129,12 +143,16 @@ vi.mock("@sports/data-ingestion", async () => {
   getSharedClubEloClient: vi.fn(),
   isClubEloSport: vi.fn().mockReturnValue(false),
   isIngestible: vi.fn().mockReturnValue(false),
+  // WP-27 step 2: the paid 402 breaker state the pipeline consults before the paid leg.
+  getOddsPaymentCircuitBreaker: () => ({ getState: mocks.circuitState }),
   resolveRundownApiKey: mocks.resolveRundownApiKey,
   fetchRundownEventsForSport: mocks.fetchRundownEventsForSport,
   eventsBelowBookmakerThreshold: mocks.eventsBelowBookmakerThreshold,
   mergeBookmakersIntoPrimary: mocks.mergeBookmakersIntoPrimary,
   THIN_FILL_MIN_BOOKMAKERS: 2,
   fetchEspnOddsForSport: vi.fn().mockResolvedValue({ events: [], provider: "espn_public" }),
+  // Second book (Kalshi via PredExon) is OFF by default: no catalog, no seam.
+  createGalaxySecondBook: mocks.createGalaxySecondBook,
   NFL_PRESEASON_ODDS_KEY: "americanfootball_nfl_preseason",
   NFL_CANONICAL_SPORT_KEY: "americanfootball_nfl",
   isNflPreseasonFetchWindow: vi.fn().mockReturnValue(false),
@@ -170,6 +188,16 @@ vi.mock("../source-snapshot.js", () => ({
   recordSourceSnapshot: vi.fn().mockResolvedValue(undefined),
 }));
 
+// The supersede void is exercised against its own unit suite
+// (supersede-unpublished-pick.test.ts); here it is a spy so the write-loop
+// branch tests pin WHO calls it and what the loop does with the answer.
+vi.mock("../supersede-unpublished-pick.js", () => ({
+  supersedeUnpublishedPendingPick: mocks.supersedeUnpublished,
+  SUPERSEDED_UNPUBLISHED_RCA_CODE: "STALE_UNPUBLISHED_SUPERSEDED",
+  SUPERSEDE_EVENT_SCHEMA_VERSION: 1,
+  SUPERSEDE_ACTOR: "system:ingestion:process-sport",
+}));
+
 // The confirmer's fetch is replaced; the pure helpers stay real. The batch
 // contract itself is unit-tested in fixture-confirmation.test.ts.
 vi.mock("../fixture-confirmation.js", async () => {
@@ -196,7 +224,8 @@ vi.mock("../build-independent-fair-values.js", async () => {
 });
 
 import { processSport, pickSelectionSide } from "../process-sport.js";
-import { isNflPreseasonFetchWindow } from "@sports/data-ingestion";
+import { resetRundownCooldowns } from "../rundown-thin-fill.js";
+import { fetchEspnOddsForSport, isNflPreseasonFetchWindow } from "@sports/data-ingestion";
 
 /** Default guard behaviour for these tests: every probe is listed on the board. */
 function confirmAll(_sportKey: string, probes: readonly { id: string }[]): Promise<unknown> {
@@ -210,6 +239,43 @@ function confirmAll(_sportKey: string, probes: readonly { id: string }[]): Promi
 }
 
 const SPORT = { key: "americanfootball_nfl", name: "NFL", displayName: "NFL" } as const;
+
+/**
+ * Kickoff fixtures are RELATIVE to real now, not a fixed calendar day.
+ *
+ * The suite used to anchor every game on a fixed day in June 2026, which has
+ * since gone past — and the C-299 kickoff guard refuses a game whose kickoff is
+ * not ahead of the run clock, so a rotted fixture would have read as "in play"
+ * and silently emptied the board these tests assert on. K is six hours out
+ * (inside the quiet-board horizon, like the espnBoard fixture below); every
+ * other clock is an offset from K, preserving the original relationships.
+ */
+// Pinned to the next 16:00 UTC at least six hours out (noon Eastern in
+// summer, 11:00 in winter): every offset below then falls on ONE calendar
+// date in both UTC and Eastern, so FixtureConfirmer issues one scoreboard
+// request per probe day. A bare `now + 6h` put kickoff between 00:00 and
+// 04:00 UTC for part of every day, where the UTC and Eastern date keys
+// differ and the confirmer legitimately fetches two days; the "exactly one
+// request" assertion then failed on the clock, not the code.
+const K_MS = (() => {
+  const earliest = Date.now() + 6 * 3_600_000;
+  const d = new Date(earliest);
+  d.setUTCHours(16, 0, 0, 0);
+  if (d.getTime() < earliest) d.setUTCDate(d.getUTCDate() + 1);
+  return d.getTime();
+})();
+const at = (offsetMs: number) => new Date(K_MS + offsetMs).toISOString();
+/** kickoff */ const T_KICKOFF = at(0);
+/** two hours before kickoff */ const T_RUN_AT = at(-2 * 3_600_000);
+/** four hours before kickoff — a contest already under way */ const T_STARTED = at(-4 * 3_600_000);
+/** ESPN's corrected clock, 2.5h after the feed's */ const T_CORRECTED = at(2.5 * 3_600_000);
+/** five minutes after kickoff */ const T_KICKOFF_P5 = at(5 * 60_000);
+/** six hours ten minutes after kickoff */ const T_LATE = at(6 * 3_600_000 + 10 * 60_000);
+/** two hours before kickoff (twin row) */ const T_TWIN_EARLY = at(-2 * 3_600_000);
+/** two hours after kickoff (twin row) */ const T_TWIN_LATE = at(2 * 3_600_000);
+const MLB = { key: "baseball_mlb", name: "MLB", displayName: "MLB" } as const;
+/** Inside the 72h board window, measured from real now (fixtures must not rot). */
+const KICKOFF_IN_WINDOW = new Date(Date.now() + 6 * 3600 * 1000).toISOString();
 
 function gates(overrides: Partial<ReadinessGates> = {}): ReadinessGates {
   return {
@@ -228,7 +294,7 @@ function normalizedGame(overrides: Record<string, unknown> = {}): Record<string,
     externalId: "ext-1",
     homeTeam: "Chiefs",
     awayTeam: "Bills",
-    commenceTime: new Date("2026-06-12T17:00:00.000Z"),
+    commenceTime: new Date(T_KICKOFF),
     ...overrides,
   };
 }
@@ -283,8 +349,12 @@ describe("processSport", () => {
     mocks.oddsCreateMany.mockResolvedValue({ count: 0 });
     // Default: no existing pick → the create/update upsert path runs as before.
     mocks.pickFindUnique.mockResolvedValue(null);
+    // Default: the supersede void succeeds when the write loop reaches it.
+    mocks.supersedeUnpublished.mockResolvedValue(true);
     mocks.buildPickSignalSnapshot.mockReturnValue({ pickId: "pick-1" });
     mocks.snapshotUpsert.mockResolvedValue({});
+    mocks.circuitState.mockReturnValue("closed");
+    mocks.createGalaxySecondBook.mockReturnValue(undefined);
     mocks.resolveRundownApiKey.mockReturnValue("");
     mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null });
     mocks.eventsBelowBookmakerThreshold.mockImplementation((events: unknown[], min = 2) =>
@@ -297,6 +367,9 @@ describe("processSport", () => {
       skippedWellCovered: 0,
     }));
     mocks.confirmBatch.mockImplementation(confirmAll);
+    // The 429 cooldown is module state in a long-lived worker; each test starts
+    // from a clean one or the previous test's back-off leaks into this one.
+    resetRundownCooldowns();
   });
 
   describe("fixture confirmation guard (C-111)", () => {
@@ -335,7 +408,7 @@ describe("processSport", () => {
             "game-1",
             {
               status: "event_already_started",
-              event: { externalId: "espn:nfl:1", commenceTime: new Date("2026-06-12T13:00:00.000Z") },
+              event: { externalId: "espn:nfl:1", commenceTime: new Date(T_STARTED) },
             },
           ],
         ]),
@@ -363,8 +436,8 @@ describe("processSport", () => {
       // day, so a bare "New York" is an ambiguous city the matcher refuses;
       // the stored name confirms. ESPN-shaped TEST FIXTURE, injected fetch.
       const MLB = { key: "baseball_mlb", name: "MLB", displayName: "MLB" } as const;
-      const kickoff = new Date("2026-06-12T17:00:00.000Z");
-      const runAt = new Date("2026-06-12T15:00:00.000Z");
+      const kickoff = new Date(T_KICKOFF);
+      const runAt = new Date(T_RUN_AT);
       mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
         const where = (args as { where?: { externalId?: string; id?: string } }).where;
         return where?.externalId === "odds-api-1"
@@ -398,8 +471,8 @@ describe("processSport", () => {
       });
       const board = {
         events: [
-          espnEvent("501", "2026-06-12T17:05Z", "New York Yankees", "Tampa Bay Rays"),
-          espnEvent("502", "2026-06-12T23:10Z", "New York Mets", "Atlanta Braves"),
+          espnEvent("501", T_KICKOFF_P5, "New York Yankees", "Tampa Bay Rays"),
+          espnEvent("502", T_LATE, "New York Mets", "Atlanta Braves"),
         ],
       };
       const espnFetch = vi.fn<(url: string) => Promise<Response>>(
@@ -423,7 +496,12 @@ describe("processSport", () => {
         [expect.objectContaining({ id: "game-1", homeTeamName: "New York Yankees", awayTeamName: "Tampa Bay Rays" })],
       );
       expect(espnFetch).toHaveBeenCalledTimes(1);
-      expect(String(espnFetch.mock.calls[0]![0])).toContain("/baseball/mlb/scoreboard?dates=20260612");
+      // The board is fetched for the probe's own date. Derived from the same
+      // relative clock as the fixture, not a hard-coded day, so this cannot rot.
+      const probeDay = new Date(T_KICKOFF).toISOString().slice(0, 10).replace(/-/g, "");
+      expect(String(espnFetch.mock.calls[0]![0])).toContain(
+        `/baseball/mlb/scoreboard?dates=${probeDay}`,
+      );
       expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
       expect(result).toMatchObject({ status: "success", games: 1, picks: 1 });
       // Control on the same cached board: the feed's own name is refused.
@@ -480,7 +558,7 @@ describe("processSport", () => {
     });
 
     it("applies ESPN's kickoff to a confirmed old row when the batch carries a correction", async () => {
-      const corrected = new Date("2026-06-12T19:30:00.000Z");
+      const corrected = new Date(T_CORRECTED);
       mocks.confirmBatch.mockResolvedValue({
         status: "ok",
         eventsOnBoard: 1,
@@ -512,8 +590,8 @@ describe("processSport", () => {
     });
 
     it("keeps the feed kickoff in the row and in every input when the correction write fails", async () => {
-      const feedTime = new Date("2026-06-12T17:00:00.000Z");
-      const corrected = new Date("2026-06-12T19:30:00.000Z");
+      const feedTime = new Date(T_KICKOFF);
+      const corrected = new Date(T_CORRECTED);
       mocks.confirmBatch.mockResolvedValue({
         status: "ok",
         eventsOnBoard: 1,
@@ -558,6 +636,128 @@ describe("processSport", () => {
     });
   });
 
+  describe("WP-27 keyless Galaxy/ESPN path (C-104)", () => {
+    // The ESPN fetch double lives in the module mock, not in `mocks`, so the
+    // global mockReset never touches it: clear its call log per test.
+    beforeEach(() => vi.mocked(fetchEspnOddsForSport).mockClear());
+
+    const espnBoard = (books: readonly string[] = ["espn_public", "kalshi"]) => ({
+      provider: "espn_public" as const,
+      events: [
+        {
+          id: "espn:americanfootball_nfl:401",
+          sport_key: "americanfootball_nfl",
+          sport_title: "NFL",
+          // Within 24h of real now — a stale fixture date trips the quiet-board
+          // carve-out and the run is skipped before any persistence.
+          commence_time: new Date(Date.now() + 6 * 3600 * 1000).toISOString(),
+          home_team: "Chiefs",
+          away_team: "Bills",
+          bookmakers: books.map((key) => ({ key, title: key, markets: [] })),
+        },
+      ],
+    });
+    const oneOddsRow = () => [
+      {
+        gameExternalId: "ext-1",
+        bookmaker: "espn_public",
+        market: "SPREADS",
+        spread: -3,
+        fetchedAt: new Date(),
+        bookmakerLastUpdate: new Date(),
+      },
+    ];
+
+    it("unpaid path: a two-book Galaxy/ESPN board is used BEFORE Rundown and persists odds", async () => {
+      // Key absent → paid fetch skipped; ESPN+Kalshi board fully covered →
+      // Rundown must not be consulted, and the rows flow through normalize+persist.
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      vi.mocked(fetchEspnOddsForSport).mockResolvedValueOnce(espnBoard());
+      mocks.normalizeOdds.mockReturnValue(oneOddsRow());
+      // Fresh upstream odds for the game — the default empty set reads as
+      // "every game stale" and diverts the run into the quiet-board skip.
+      mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+
+      const res = await processSport(SPORT, "", gates());
+
+      expect(vi.mocked(fetchEspnOddsForSport).mock.calls[0]?.[0]).toBe("americanfootball_nfl");
+      expect(mocks.getOdds).not.toHaveBeenCalled();
+      expect(mocks.fetchRundownEventsForSport).not.toHaveBeenCalled();
+      expect(mocks.oddsCreateMany).toHaveBeenCalled();
+      expect(res.status).not.toBe("failed");
+      // Zero paid requests: the envelope carries no paid accounting at all.
+      expect(res.paidRequestCount).toBeUndefined();
+    });
+
+    it("unpaid path, single-book ESPN board: Rundown is only a thin-fill bridge (C-103), the board stays espn_public", async () => {
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      vi.mocked(fetchEspnOddsForSport).mockResolvedValueOnce(espnBoard(["espn_public"]));
+      mocks.normalizeOdds.mockReturnValue(oneOddsRow());
+      mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+
+      await processSport(SPORT, "", gates());
+
+      expect(mocks.getOdds).not.toHaveBeenCalled();
+      // Thin-fill (merge into the ESPN primary), never a full replace of the board.
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
+      expect(mocks.mergeBookmakersIntoPrimary).toHaveBeenCalledTimes(0);
+      expect(mocks.oddsCreateMany).toHaveBeenCalled();
+    });
+
+    it("hands the per-cycle second book (Kalshi via PredExon) to the keyless fetch, one catalog per sport per cycle", async () => {
+      const catalog = { bookmakerFor: vi.fn(async () => null) };
+      mocks.createGalaxySecondBook.mockReturnValue(catalog);
+      vi.mocked(fetchEspnOddsForSport).mockResolvedValueOnce(espnBoard());
+      mocks.normalizeOdds.mockReturnValue(oneOddsRow());
+      mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+
+      await processSport(SPORT, "", gates());
+
+      expect(mocks.createGalaxySecondBook).toHaveBeenCalledTimes(1);
+      expect(vi.mocked(fetchEspnOddsForSport).mock.calls[0]?.[1]).toEqual({ secondBook: catalog });
+    });
+
+    it("paid circuit OPEN: skips the paid leg entirely and takes the keyless path (no phantom paid request)", async () => {
+      mocks.circuitState.mockReturnValue("open");
+      vi.mocked(fetchEspnOddsForSport).mockResolvedValueOnce(espnBoard());
+      mocks.normalizeOdds.mockReturnValue(oneOddsRow());
+      mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const res = await processSport(SPORT, "real-paid-key", gates());
+
+      expect(mocks.getOdds).not.toHaveBeenCalled();
+      expect(fetchEspnOddsForSport).toHaveBeenCalledTimes(1);
+      expect(mocks.oddsCreateMany).toHaveBeenCalled();
+      expect(res.status).not.toBe("failed");
+      expect(res.paidRequestCount).toBeUndefined();
+      expect(warn.mock.calls.some((c) => /payment circuit open/.test(String(c[0])))).toBe(true);
+      warn.mockRestore();
+    });
+
+    it("paid circuit CLOSED with a key: the paid leg still runs first (no behaviour change when paid works)", async () => {
+      mocks.circuitState.mockReturnValue("closed");
+      await processSport(SPORT, "real-paid-key", gates());
+      expect(mocks.getOdds).toHaveBeenCalledTimes(1);
+      // Paid returned an event, so the keyless path is never consulted.
+      expect(fetchEspnOddsForSport).not.toHaveBeenCalled();
+    });
+
+    it("paid empty AND keyless empty: Rundown is consulted only after the Galaxy/ESPN attempt", async () => {
+      mocks.getOdds.mockResolvedValue({ data: [], remainingRequests: 400 });
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      vi.mocked(fetchEspnOddsForSport).mockResolvedValueOnce({ events: [], provider: "espn_public", error: "espn odds empty" });
+
+      await processSport(SPORT, "real-paid-key", gates());
+
+      expect(fetchEspnOddsForSport).toHaveBeenCalledTimes(1);
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
+      const espnOrder = vi.mocked(fetchEspnOddsForSport).mock.invocationCallOrder[0]!;
+      const rundownOrder = mocks.fetchRundownEventsForSport.mock.invocationCallOrder[0]!;
+      expect(espnOrder).toBeLessThan(rundownOrder);
+    });
+  });
+
   it("does not call Rundown when every primary event already has two books", async () => {
     mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
     mocks.getOdds.mockResolvedValue({
@@ -566,7 +766,7 @@ describe("processSport", () => {
           id: "odds-1",
           home_team: "Chiefs",
           away_team: "Bills",
-          commence_time: "2026-08-23T17:00:00Z",
+          commence_time: KICKOFF_IN_WINDOW,
           bookmakers: [{ key: "fanduel" }, { key: "betmgm" }],
         },
       ],
@@ -584,14 +784,16 @@ describe("processSport", () => {
       id: "odds-1",
       home_team: "Chiefs",
       away_team: "Bills",
-      commence_time: "2026-08-23T17:00:00Z",
+      // Relative to real now: the thin-fill gate refuses to spend a rationed
+      // Rundown data point on a slate outside the board window.
+      commence_time: KICKOFF_IN_WINDOW,
       bookmakers: [{ key: "fanduel" }],
     };
     const secondary = {
       id: "rundown-1",
       home_team: "Chiefs",
       away_team: "Bills",
-      commence_time: "2026-08-23T17:00:00Z",
+      commence_time: KICKOFF_IN_WINDOW,
       bookmakers: [{ key: "betmgm" }],
     };
     mocks.getOdds.mockResolvedValue({ data: [primary], remainingRequests: 400 });
@@ -610,6 +812,422 @@ describe("processSport", () => {
     expect(mocks.mergeBookmakersIntoPrimary).toHaveBeenCalledWith([primary], [secondary], 2);
   });
 
+  /**
+   * C-278a — the thin-fill has to survive the whole day, not just the first
+   * cycle. TheRundown's free tier is 20k data-points; production logged
+   * `rundown empty (2d): HTTP 429 rate_limited` on EVERY cycle for all four
+   * in-season sports because our own cadence burned the quota by morning.
+   */
+  /**
+   * Lane B (2026-09-20) — the write loop's remedy for an UNPUBLISHED PENDING
+   * slot-holder. Measured on production: 30 of 30 NFL Week 3 SPREAD/TOTAL
+   * picks were isPublished=false (stale-pick policy) while all three scoring
+   * gates passed on every game, because unpublish is never undone, the refresh
+   * never re-publishes, and the unique (gameId, pickType) slot blocked every
+   * future mint. The loop now voids the invisible row through the settlement
+   * outbox (supersedeUnpublishedPendingPick) and mints the fresh pick.
+   */
+  describe("supersede of an unpublished PENDING slot-holder (lane B)", () => {
+    it("voids the invisible row through the helper and mints a fresh published pick with a new CLV lock", async () => {
+      mocks.pickFindUnique.mockResolvedValue({
+        id: "pick-stale",
+        result: "PENDING",
+        selection: "Bills +3.5",
+        isPublished: false,
+        line: 3.5,
+      });
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.supersedeUnpublished).toHaveBeenCalledTimes(1);
+      expect(mocks.supersedeUnpublished).toHaveBeenCalledWith(
+        expect.anything(),
+        expect.objectContaining({
+          pickId: "pick-stale",
+          gameId: "game-1",
+          sportKey: "americanfootball_nfl",
+          pickType: "SPREAD",
+          supersededSelection: "Bills +3.5",
+          supersededBySelection: "Chiefs -3.5",
+        }),
+      );
+      // The refresh updateMany must not run for a superseded slot: the freed
+      // slot is served by a CREATE, not an update of the voided row.
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+      expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
+      const created = mocks.pickCreate.mock.calls[0]?.[0] as
+        | { data: Record<string, unknown> }
+        | undefined;
+      if (!created) throw new Error("pick.create was not called");
+      expect(created.data).toMatchObject({
+        gameId: "game-1",
+        pickType: "SPREAD",
+        selection: "Chiefs -3.5",
+        line: -3.5,
+        clvLockLine: -3.5,
+        ingestionRunId: "run-1",
+      });
+      // The fresh mint publishes: no isPublished in the create payload, so
+      // the schema default (true) applies.
+      expect("isPublished" in created.data).toBe(false);
+    });
+
+    it("mints nothing when the supersede loses the race (row left PENDING+unpublished before the void)", async () => {
+      mocks.pickFindUnique.mockResolvedValue({
+        id: "pick-stale",
+        result: "PENDING",
+        selection: "Bills +3.5",
+        isPublished: false,
+        line: 3.5,
+      });
+      mocks.supersedeUnpublished.mockResolvedValue(false);
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      await processSport(SPORT, "key", gates());
+
+      // No create against a slot we did not just free, no refresh of the
+      // row another lane now owns.
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+      expect(
+        warn.mock.calls.some((c) => /supersede lost race/.test(String(c[0]))),
+      ).toBe(true);
+      warn.mockRestore();
+    });
+
+    it("never supersedes a PUBLISHED PENDING pick — the side-flip freeze still protects it", async () => {
+      mocks.pickFindUnique.mockResolvedValue({
+        id: "pick-live",
+        result: "PENDING",
+        selection: "Bills +3.5",
+        isPublished: true,
+        line: 3.5,
+      });
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      await processSport(SPORT, "key", gates());
+
+      // The scored pick is "Chiefs -3.5" (home) against a published away
+      // pick: that is a SIDE FLIP, frozen exactly as before — never voided,
+      // never rewritten.
+      expect(mocks.supersedeUnpublished).not.toHaveBeenCalled();
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+      expect(
+        warn.mock.calls.some((c) => /SIDE FLIP frozen/.test(String(c[0]))),
+      ).toBe(true);
+      warn.mockRestore();
+    });
+
+    it("leaves the published PENDING refresh path untouched (same side → updateMany, no supersede)", async () => {
+      mocks.pickFindUnique.mockResolvedValue({
+        id: "pick-live",
+        result: "PENDING",
+        selection: "Chiefs -3.5",
+        isPublished: true,
+        line: -3.5,
+      });
+      mocks.pickUpdateMany.mockResolvedValue({ count: 1 });
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.supersedeUnpublished).not.toHaveBeenCalled();
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(mocks.pickUpdateMany).toHaveBeenCalledTimes(1);
+    });
+  });
+
+  /**
+   * C-299 — a pick is a claim made BEFORE the game, or it is not a pick.
+   *
+   * Measured on production 2026-09-09: 113 of 477 settled moneyline picks carry
+   * generatedAt >= games.commenceTime. One was generated 23 minutes after first
+   * pitch off in-play quotes and froze a proof receipt at marketFairProb 0.884
+   * on a game the other side went on to win. The existing C-111 guard reads the
+   * ESPN scoreboard's clock; this one reads the kickoff we actually priced.
+   */
+  describe("kickoff guard (C-299)", () => {
+    it("creates no pick for a game whose kickoff has already passed, and never reaches the scorer", async () => {
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ commenceTime: new Date(Date.now() - 23 * 60 * 1000) }),
+      ]);
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      // Never scored: the in-play game contributes no OddsInput at all, so no
+      // receipt can be minted off a live price either.
+      expect(mocks.scoreGames).toHaveBeenCalledWith([], expect.any(Date));
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(result).toMatchObject({ status: "success", skippedInPlay: 1 });
+      expect(warn.mock.calls.some((c) => /in-play, no pick/.test(String(c[0])))).toBe(true);
+      warn.mockRestore();
+    });
+
+    it("refuses at the kickoff instant itself, not only after it", async () => {
+      // The scorer's clock is `new Date()` inside processSport, so a kickoff set
+      // to "now" is at or a hair behind it — the `<=` boundary, not `<`.
+      mocks.normalizeGames.mockReturnValue([normalizedGame({ commenceTime: new Date() })]);
+      vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(result).toMatchObject({ skippedInPlay: 1 });
+      vi.mocked(console.warn).mockRestore?.();
+    });
+
+    it("never overwrites an existing PENDING pick once the kickoff has passed", async () => {
+      // The row exists and is PENDING — exactly the state the refresh cycle
+      // would rewrite (selection, line, confidence, factorBreakdown).
+      mocks.pickFindUnique.mockResolvedValue({
+        id: "pick-1",
+        result: "PENDING",
+        selection: "Chiefs -3.5",
+      });
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ commenceTime: new Date(Date.now() - 60 * 60 * 1000) }),
+      ]);
+      vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(mocks.pickUpdateMany).not.toHaveBeenCalled();
+      expect(mocks.pickUpsert).not.toHaveBeenCalled();
+      expect(mocks.pickCreate).not.toHaveBeenCalled();
+      expect(result).toMatchObject({ skippedInPlay: 1, picks: 0 });
+      vi.mocked(console.warn).mockRestore?.();
+    });
+
+    it("still prices a game five minutes from kickoff — no invented pre-game cushion", async () => {
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ commenceTime: new Date(Date.now() + 5 * 60 * 1000) }),
+      ]);
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(mocks.scoreGames).toHaveBeenCalledWith(
+        [expect.objectContaining({ gameId: "game-1" })],
+        expect.any(Date),
+      );
+      expect(mocks.pickCreate).toHaveBeenCalledTimes(1);
+      expect(result).toMatchObject({ status: "success", picks: 1, skippedInPlay: 0 });
+    });
+
+    it("counts every in-play game and still prices the ones still ahead in the same cycle", async () => {
+      mocks.normalizeGames.mockReturnValue([
+        normalizedGame({ externalId: "ext-past-1", commenceTime: new Date(Date.now() - 3_600_000) }),
+        normalizedGame({ externalId: "ext-past-2", commenceTime: new Date(Date.now() - 600_000) }),
+        normalizedGame({ externalId: "ext-live", commenceTime: new Date(Date.now() + 3_600_000) }),
+      ]);
+      // Distinct rows per fixture: the default single-id mocks would collapse
+      // all three onto one game and the counter could never read more than 1.
+      const idFor = (externalId?: string) => `game-${externalId ?? "x"}`;
+      mocks.gameUpsert.mockImplementation(async (args: unknown) => {
+        const create = (args as { create?: { externalId?: string } }).create;
+        return { id: idFor(create?.externalId), homeTeamName: "Chiefs", awayTeamName: "Bills" };
+      });
+      mocks.gameFindUnique.mockImplementation(async (args: unknown) => {
+        const where = (args as { where?: { externalId?: string; id?: string } }).where;
+        return where?.externalId ? { id: idFor(where.externalId), externalId: where.externalId } : null;
+      });
+      mocks.gameUpdate.mockImplementation(async (args: unknown) => {
+        const where = (args as { where?: { id?: string } }).where;
+        return { id: where?.id ?? "game-1", homeTeamName: "Chiefs", awayTeamName: "Bills" };
+      });
+      mocks.confirmBatch.mockImplementation((_s: string, probes: readonly { id: string }[]) =>
+        Promise.resolve({
+          status: "ok",
+          eventsOnBoard: probes.length,
+          byGameId: new Map(
+            probes.map((p) => [
+              p.id,
+              { status: "confirmed", event: { externalId: `espn:${p.id}` }, correctedCommenceTime: null },
+            ]),
+          ),
+        }),
+      );
+      vi.spyOn(console, "warn").mockImplementation(() => {});
+
+      const result = await processSport(SPORT, "key", gates());
+
+      expect(result).toMatchObject({ skippedInPlay: 2 });
+      // Only the game still ahead reaches the scorer.
+      expect(mocks.scoreGames).toHaveBeenCalledWith(
+        [expect.objectContaining({ gameId: "game-ext-live" })],
+        expect.any(Date),
+      );
+      vi.mocked(console.warn).mockRestore?.();
+    });
+  });
+
+  describe("Rundown thin-fill rationing (C-278a)", () => {
+    /** One thin NFL game inside the board window, one Rundown Kalshi quote for it. */
+    function thinNflSlate() {
+      const primary = {
+        id: "odds-1",
+        home_team: "Chiefs",
+        away_team: "Bills",
+        commence_time: KICKOFF_IN_WINDOW,
+        bookmakers: [{ key: "fanduel" }],
+      };
+      const kalshiQuote = {
+        id: "rundown-1",
+        home_team: "Chiefs",
+        away_team: "Bills",
+        commence_time: KICKOFF_IN_WINDOW,
+        bookmakers: [{ key: "kalshi" }],
+      };
+      return { primary, kalshiQuote };
+    }
+
+    /** One normalized odds row, so the merged board reaches persistence. */
+    const mergedOddsRow = () => [
+      {
+        gameExternalId: "ext-1",
+        bookmaker: "fanduel",
+        market: "SPREADS",
+        spread: -3,
+        fetchedAt: new Date(),
+        bookmakerLastUpdate: new Date(),
+      },
+    ];
+
+    it("one paid book plus a Rundown Kalshi quote reaches MIN_BOOKMAKERS and the merged board is priced", async () => {
+      const { primary, kalshiQuote } = thinNflSlate();
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      mocks.getOdds.mockResolvedValue({ data: [primary], remainingRequests: 400 });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null });
+      const twoBooks = { ...primary, bookmakers: [{ key: "fanduel" }, { key: "kalshi" }] };
+      mocks.mergeBookmakersIntoPrimary.mockReturnValue({
+        events: [twoBooks],
+        filledGameIds: ["odds-1"],
+        unmatchedSecondary: 0,
+        skippedWellCovered: 0,
+      });
+      mocks.normalizeOdds.mockReturnValue(mergedOddsRow());
+      mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
+      expect(mocks.mergeBookmakersIntoPrimary).toHaveBeenCalledWith([primary], [kalshiQuote], 2);
+      // The merged two-book board — not the one-book primary — is what gets
+      // normalized and persisted, which is the whole point of the fill.
+      expect(mocks.normalizeOdds).toHaveBeenCalledWith([twoBooks], expect.any(Date));
+      expect(mocks.oddsCreateMany).toHaveBeenCalled();
+    });
+
+    it("makes no Rundown call for a sport outside NFL and NCAAF, on a board thin enough that NFL would be filled", async () => {
+      const { primary } = thinNflSlate();
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null });
+
+      // Same one-book slate, same window, same key — only the sport differs.
+      mocks.getOdds.mockResolvedValue({
+        data: [{ ...primary, home_team: "Yankees", away_team: "Red Sox" }],
+        remainingRequests: 400,
+      });
+      await processSport(MLB, "key", gates());
+      expect(mocks.fetchRundownEventsForSport).not.toHaveBeenCalled();
+
+      // The control: this slate IS thin enough to fill, so the refusal above
+      // is the sport gate and not an accidentally well-covered board.
+      mocks.getOdds.mockResolvedValue({ data: [primary], remainingRequests: 400 });
+      await processSport(SPORT, "key", gates());
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
+    });
+
+    it("a 429 opens a 30-minute cooldown, and the next cycle inside it makes no call", async () => {
+      const { primary, kalshiQuote } = thinNflSlate();
+      const t0 = Date.now();
+      const nowSpy = vi.spyOn(Date, "now").mockReturnValue(t0);
+      const warn = vi.spyOn(console, "warn").mockImplementation(() => {});
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      mocks.getOdds.mockResolvedValue({ data: [primary], remainingRequests: 400 });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({
+        events: [],
+        remaining: null,
+        error: "rundown empty (2d): HTTP 429 rate_limited (abort remaining days)",
+        rateLimited: true,
+      });
+
+      await processSport(SPORT, "key", gates());
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
+
+      // 29 minutes later — still inside the cooldown.
+      nowSpy.mockReturnValue(t0 + 29 * 60 * 1000);
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null });
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
+      const lines = warn.mock.calls.map((c) => String(c[0]));
+      // The 429 line names the resume instant and carries no key material.
+      expect(lines.some((l) => /rate_limited \(HTTP 429\).*resumes \d{4}-/.test(l))).toBe(true);
+      expect(lines.some((l) => /rundown-key/.test(l))).toBe(false);
+      nowSpy.mockRestore();
+      warn.mockRestore();
+    });
+
+    it("resumes calling once the 30-minute cooldown has passed", async () => {
+      const { primary, kalshiQuote } = thinNflSlate();
+      const t0 = Date.now();
+      const nowSpy = vi.spyOn(Date, "now").mockReturnValue(t0);
+      vi.spyOn(console, "warn").mockImplementation(() => {});
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      mocks.getOdds.mockResolvedValue({ data: [primary], remainingRequests: 400 });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({
+        events: [],
+        remaining: null,
+        error: "rundown empty (2d): HTTP 429 rate_limited (abort remaining days)",
+        rateLimited: true,
+      });
+
+      await processSport(SPORT, "key", gates());
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
+
+      // 31 minutes later — the cooldown has lapsed and the sport is eligible again.
+      nowSpy.mockReturnValue(t0 + 31 * 60 * 1000);
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [kalshiQuote], remaining: null });
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(2);
+      nowSpy.mockRestore();
+      vi.mocked(console.warn).mockRestore?.();
+    });
+
+    it("makes one call per sport per cycle, never one per thin game", async () => {
+      const { primary } = thinNflSlate();
+      const second = { ...primary, id: "odds-2", home_team: "Jets", away_team: "Dolphins" };
+      const third = { ...primary, id: "odds-3", home_team: "Ravens", away_team: "Bengals" };
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      mocks.getOdds.mockResolvedValue({ data: [primary, second, third], remainingRequests: 400 });
+      mocks.fetchRundownEventsForSport.mockResolvedValue({ events: [], remaining: null });
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.fetchRundownEventsForSport).toHaveBeenCalledTimes(1);
+    });
+
+    it("makes no call when the sport's only thin fixtures sit outside the board window", async () => {
+      const { primary } = thinNflSlate();
+      mocks.resolveRundownApiKey.mockReturnValue("rundown-key");
+      mocks.getOdds.mockResolvedValue({
+        data: [
+          // Finished two days ago, and kicking off in eight days: neither is
+          // the slate the second book is needed for.
+          { ...primary, commence_time: new Date(Date.now() - 48 * 3600 * 1000).toISOString() },
+          { ...primary, id: "odds-2", commence_time: new Date(Date.now() + 8 * 24 * 3600 * 1000).toISOString() },
+        ],
+        remainingRequests: 400,
+      });
+
+      await processSport(SPORT, "key", gates());
+
+      expect(mocks.fetchRundownEventsForSport).not.toHaveBeenCalled();
+    });
+  });
+
   it("hands the engine the sport KEY, not the display name, so the three-way guard can fire", async () => {
     // The engine suppresses moneylines for three-way markets with
     // isThreeWayMoneylineSport(input.sport), which tests startsWith("soccer").
@@ -626,6 +1244,75 @@ describe("processSport", () => {
     expect(inputs?.length ?? 0).toBeGreaterThan(0);
     expect(inputs![0]!.sport).toBe("soccer_usa_mls");
     expect(inputs![0]!.sport).not.toBe("MLS");
+  });
+
+  describe("three-way moneyline guard on the production path (C-118 verification)", () => {
+    // 2f9f7d90e fixed the one OddsInput.sport site that passed the display name.
+    // This drives processSport with the REAL scorer (not the recorder mock) so
+    // the assertion is about what gets WRITTEN, not about an input field: a
+    // soccer fixture priced by three books writes no MONEYLINE pick, while the
+    // identical odds under a two-way sport do.
+    // Relative to the file's own clock (K_MS/at()), never absolute. The first
+    // draft hardcoded fetchedAt 2026-09-08T19:00Z and a kickoff of
+    // 2026-09-12T23:30Z. Both were in the future when written and the kickoff
+    // went into the past at 23:30Z on 2026-09-12, at which point isQuietBoard
+    // (process-sport.ts:664) saw no game ahead inside the horizon, took the
+    // quiet-board early return, and produced a clean zero-pick SUCCESS. The
+    // status assertion still passed and only writtenPickTypes() went empty, so
+    // the whole repo's CI went red overnight on a test nobody had touched.
+    const NOW = new Date(T_RUN_AT);
+    function twoWayFavouriteOdds(gameExternalId: string, withDraw: boolean) {
+      const books = ["draftkings", "fanduel", "betmgm", "caesars", "betrivers", "pointsbet", "bovada", "betonline", "mybookie", "lowvig", "unibet"];
+      // -800/+650, not -400/+320: the 2026-09-27 market-echo rewire removed the
+      // market-internal edge component from the moneyline confidence sum, and
+      // -400 (de-vigged fair ~0.736, no scorer context in this drive) lands at
+      // ~44 on the current scale — under the unchanged MIN_PUBLISH_CONFIDENCE.
+      // The heavier favourite (fair ~0.87) clears it at ~52, so this control
+      // still discriminates the C-118 guard: the soccer leg mints nothing on
+      // byte-identical prices while the two-way leg writes a MONEYLINE.
+      return books.map((bookmaker) => ({
+        gameExternalId,
+        bookmaker,
+        market: "H2H" as const,
+        homePrice: -800,
+        awayPrice: 650,
+        ...(withDraw ? { drawPrice: 450 } : {}),
+        fetchedAt: NOW,
+        bookmakerLastUpdate: NOW,
+      }));
+    }
+    function writtenPickTypes(): string[] {
+      const created = mocks.pickCreate.mock.calls.map((c) => (c[0] as { data: { pickType: string } }).data.pickType);
+      const upserted = mocks.pickUpsert.mock.calls.map((c) => (c[0] as { create: { pickType: string } }).create.pickType);
+      return [...created, ...upserted];
+    }
+    async function driveWithRealScorer(sport: { key: string; name: string; displayName: string }, home: string, away: string, withDraw: boolean) {
+      const actual = await vi.importActual<typeof import("@sports/prediction-engine")>("@sports/prediction-engine");
+      mocks.scoreGames.mockImplementation((inputs, at) => actual.scoreGames(inputs as never, at));
+      // commenceTime omitted on purpose: normalizedGame defaults to T_KICKOFF,
+      // which is always ahead of now, so this fixture cannot rot again.
+      mocks.normalizeGames.mockReturnValue([normalizedGame({ homeTeam: home, awayTeam: away })]);
+      mocks.normalizeOdds.mockReturnValue(twoWayFavouriteOdds("ext-1", withDraw));
+      mocks.freshGameIds.mockReturnValue(new Set(["ext-1"]));
+      mocks.gameUpsert.mockResolvedValue({ id: "game-1", homeTeamName: home, awayTeamName: away });
+      mocks.gameFindUnique.mockResolvedValue({ id: "game-1" });
+      return processSport(sport as never, "key", gates());
+    }
+
+    it("control: the same heavy-favourite odds on a two-way sport write a MONEYLINE pick", async () => {
+      const result = await driveWithRealScorer(SPORT, "Jacksonville Jaguars", "Cleveland Browns", false);
+      expect(result.status).toBe("success");
+      expect(writtenPickTypes()).toContain("MONEYLINE");
+    });
+
+    it("soccer_usa_mls (display name 'MLS') writes no MONEYLINE pick: the draw is unpriced by construction", async () => {
+      const soccer = { key: "soccer_usa_mls", name: "MLS", displayName: "MLS" } as const;
+      const result = await driveWithRealScorer(soccer, "Inter Miami CF", "Charlotte FC", true);
+      expect(result.status).toBe("success");
+      const inputs = mocks.scoreGames.mock.calls[0]?.[0] as Array<{ sport: string }> | undefined;
+      expect(inputs?.[0]?.sport).toBe("soccer_usa_mls");
+      expect(writtenPickTypes()).not.toContain("MONEYLINE");
+    });
   });
 
   it("runs the happy path and marks the IngestionRun SUCCESS with counts", async () => {
@@ -1269,7 +1956,7 @@ describe("processSport", () => {
       sportId: "sport-1",
       homeTeamName: "Kansas City Chiefs",
       awayTeamName: "Buffalo Bills",
-      commenceTime: new Date("2026-06-12T17:00:00.000Z"),
+      commenceTime: new Date(T_KICKOFF),
     };
 
     beforeEach(() => {
@@ -1353,12 +2040,12 @@ describe("processSport", () => {
       ]);
       // Two rows tie on kickoff distance → no honest winner.
       mocks.gameFindMany.mockResolvedValue([
-        { ...TWIN, id: "twin-a", commenceTime: new Date("2026-06-12T15:00:00.000Z") },
+        { ...TWIN, id: "twin-a", commenceTime: new Date(T_TWIN_EARLY) },
         {
           ...TWIN,
           id: "twin-b",
           externalId: "espn:americanfootball_nfl:401872656",
-          commenceTime: new Date("2026-06-12T19:00:00.000Z"),
+          commenceTime: new Date(T_TWIN_LATE),
         },
       ]);
 
@@ -1454,7 +2141,7 @@ describe("processSport", () => {
         // Stored home is the full name, stored away is city-only.
         homeTeamName: "New York Yankees",
         awayTeamName: "Tampa Bay",
-        commenceTime: new Date("2026-06-12T17:00:00.000Z"),
+        commenceTime: new Date(T_KICKOFF),
         mergedIntoGameId: null,
       };
       mocks.gameFindUnique.mockImplementation(async (args: unknown) => {

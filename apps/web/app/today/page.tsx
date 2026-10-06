@@ -10,9 +10,9 @@ import { buildBriefing } from "@/lib/cockpit/mission-control";
 import { BRAND_COLORS } from "@/lib/brand";
 
 export const metadata: Metadata = {
-  title: "Mission Control: What Matters Now",
+  title: "Today: What Matters Now",
   description:
-    "One glance across the whole platform: breaking news, the scheme move re-pricing an offense, your roster's risk, the sharpest DFS and pick'em edges, and your CLV discipline, prioritized and actionable.",
+    "One glance across the whole platform: breaking news, the sharpest DFS and pick'em edges, and what to watch today.",
   alternates: { canonical: "/today" },
 };
 
@@ -28,7 +28,7 @@ export default function TodayPage() {
           <div aria-hidden className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-80" style={{ background: `radial-gradient(60% 80% at 50% 0%, ${BRAND_COLORS.orbitalCyan}18, transparent 70%), radial-gradient(40% 60% at 76% 6%, ${BRAND_COLORS.ionMagenta}10, transparent 70%)` }} />
           <div className="mx-auto max-w-6xl">
             <Reveal>
-              <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan"><span className="live-dot" /> Mission Control</p>
+              <p className="eyebrow inline-flex items-center gap-2 text-orbital-cyan"><span className="live-dot" /> Today</p>
             </Reveal>
             <Reveal delay={90}>
               <h1 className="mt-5 max-w-3xl font-display text-balance text-ion-white" style={{ fontSize: "clamp(2.4rem, 7vw, 5rem)", lineHeight: 0.98, letterSpacing: "-0.02em" }}>
@@ -50,6 +50,17 @@ export default function TodayPage() {
         </section>
         <section className="px-4 pb-24 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
+            {/* ABOVE the cards, not below them. The featured card renders
+                "Confirmed: Vale will not play" at text-3xl with a P100 priority
+                score; the only qualifier was the word "Sample" concatenated into
+                a 10px eyebrow in the card's own accent colour, reading as a
+                category next to "Breaking" and "Insider" rather than as a
+                warning. A reader who stops after the cards must already know. */}
+            <Reveal>
+              <p className="mb-6 inline-block rounded-full bg-caution/20 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-wider text-caution">
+                Sample briefing · the players, reporters and injury reports below are fictional
+              </p>
+            </Reveal>
             <Reveal><PersonalizedBriefing cards={cards} /></Reveal>
             <Reveal delay={120}>
               <p className="mt-8 text-xs leading-relaxed text-ion-2">

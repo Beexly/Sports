@@ -26,7 +26,7 @@ interface LossRoomRow {
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Loss Room - Galaxy Sports Edge",
+  title: { absolute: "Loss Room - Galaxy Sports Edge" },
   description:
     "A public sub-archive of canonical losses with post-mortems attached when review is complete.",
   alternates: { canonical: "/performance/losses" },

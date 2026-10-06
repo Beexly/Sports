@@ -12,10 +12,12 @@ import {
   type ClosingOddsRow,
 } from "@sports/prediction-engine";
 import {
+  cancelPostSettlementWork,
   markPostSettlementWorkDone,
   markPostSettlementWorkFailed,
   type PostSettlementWorkDelegate,
 } from "@sports/ingestion-pipeline";
+import { CLV_WITHDRAWN_RESULT } from "@/lib/clv/clv-sample-policy";
 
 export type FreePathClvPick = {
   readonly id: string;
@@ -156,13 +158,22 @@ export async function drainPendingClvGrades(
     };
     pick: FreePathClvDb["pick"] & {
       findMany: (args: {
-        where: { id: { in: string[] }; result: { not: string } };
+        where: { id: { in: string[] } };
         select: Record<string, unknown>;
-      }) => Promise<FreePathClvPick[]>;
+      }) => Promise<Array<FreePathClvPick & { result: string }>>;
     };
   },
   options: { take?: number; now?: Date } = {},
-): Promise<{ attempted: number; graded: number; noClose: number; failed: number }> {
+): Promise<{
+  attempted: number;
+  graded: number;
+  noClose: number;
+  failed: number;
+  /** Withdrawn work rows the database CONFIRMED as retired. */
+  retired: number;
+  /** Withdrawn work rows whose retirement did not land; they stay PENDING. */
+  retireFailed: number;
+}> {
   const take = options.take ?? 80;
   const settledAt = options.now ?? new Date();
   const pending = await db.postSettlementWork.findMany({
@@ -172,14 +183,29 @@ export async function drainPendingClvGrades(
     select: { subjectId: true },
   });
   if (pending.length === 0) {
-    return { attempted: 0, graded: 0, noClose: 0, failed: 0 };
+    return { attempted: 0, graded: 0, noClose: 0, failed: 0, retired: 0, retireFailed: 0 };
   }
 
   const ids = pending.map((p) => p.subjectId);
-  const picks = await db.pick.findMany({
-    where: { id: { in: ids }, result: { not: "PENDING" } },
+  // Load the selected subjects WITH their result and partition in code rather
+  // than filtering them out in the query.
+  //
+  // Filtering in SQL was the round-4 fix and it introduced a liveness bug
+  // (round 7): a VOID subject still consumed one of the `take` slots, was
+  // dropped from `picks`, and — because nothing retired its work row — was
+  // re-selected on every subsequent cycle. Enough withdrawn picks at the head
+  // of the oldest-first queue and no valid repair behind them ever runs.
+  //
+  //   WIN | LOSS | PUSH -> grade it
+  //   VOID             -> RETIRE the work row; there is no bet to grade and no
+  //                       repair that would change that. The stored clvVerdict
+  //                       is left untouched (settlement history).
+  //   PENDING          -> leave PENDING; it is legitimately still waiting.
+  const rows = await db.pick.findMany({
+    where: { id: { in: ids } },
     select: {
       id: true,
+      result: true,
       pickType: true,
       selection: true,
       clvLockLine: true,
@@ -195,6 +221,42 @@ export async function drainPendingClvGrades(
     },
   });
 
+  const picks = rows.filter((p) => p.result === "WIN" || p.result === "LOSS" || p.result === "PUSH");
+  const withdrawn = rows.filter((p) => p.result === CLV_WITHDRAWN_RESULT);
+
+  // Retire withdrawn work FIRST, so a batch that is entirely VOID still frees
+  // its slots for the next cycle instead of reselecting the same rows forever.
+  //
+  // COUNT ONLY WHAT THE DATABASE CONFIRMED (Devin Review, #733). Retirement is
+  // best-effort by design — it must not abort a drain that is otherwise making
+  // progress — and the first version of this loop turned that into a lie by
+  // incrementing `retired` for every attempt. A row whose cancellation threw or
+  // matched nothing is still PENDING and still occupies the oldest batch next
+  // cycle, so reporting it as retired hides the exact starvation the retirement
+  // was added to end. Unconfirmed attempts are counted apart, under their own
+  // name, and logged.
+  let retired = 0;
+  let retireFailed = 0;
+  const work = db.postSettlementWork as unknown as PostSettlementWorkDelegate;
+  for (const p of withdrawn) {
+    const cancelled = await cancelPostSettlementWork(
+      work,
+      p.id,
+      "CLV_GRADE",
+      "pick withdrawn to VOID: no bet stood, so there is no closing-line value to grade",
+      settledAt,
+    );
+    if (cancelled > 0) {
+      retired += 1;
+    } else {
+      retireFailed += 1;
+      console.warn(
+        `[free-path-clv] CLV_GRADE for withdrawn pick=${p.id} was NOT retired; ` +
+          `it stays PENDING and will be reselected next cycle`,
+      );
+    }
+  }
+
   let graded = 0;
   let noClose = 0;
   let failed = 0;
@@ -205,5 +267,5 @@ export async function drainPendingClvGrades(
     else failed++;
   }
 
-  return { attempted: picks.length, graded, noClose, failed };
+  return { attempted: picks.length, graded, noClose, failed, retired, retireFailed };
 }

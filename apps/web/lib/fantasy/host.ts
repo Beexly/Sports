@@ -95,12 +95,12 @@ export const ORION: Persona = {
 export type Scene = "studio" | "sideline" | "practice" | "clubhouse" | "draft" | "community" | "office";
 
 export const SCENES: Record<Scene, { readonly label: string; readonly setting: string; readonly accent: string }> = {
-  studio: { label: "Studio desk", setting: "the Galaxy Studios desk", accent: "#00E5FF" },
-  sideline: { label: "Sideline", setting: "field level, warmups behind her", accent: "#FF38C7" },
-  practice: { label: "Practice facility", setting: "the practice facility", accent: "#7B61FF" },
-  clubhouse: { label: "Clubhouse", setting: "the clubhouse", accent: "#F5F7FF" },
-  draft: { label: "Draft floor", setting: "the draft floor", accent: "#00E5FF" },
-  community: { label: "In the community", setting: "out with the fans", accent: "#7B61FF" },
+  studio: { label: "Studio desk", setting: "the Galaxy Studios desk", accent: "#FF4D2E" },
+  sideline: { label: "Sideline", setting: "field level, warmups behind her", accent: "#FF7A5C" },
+  practice: { label: "Practice facility", setting: "the practice facility", accent: "#C9D4CE" },
+  clubhouse: { label: "Clubhouse", setting: "the clubhouse", accent: "#EDE8E0" },
+  draft: { label: "Draft floor", setting: "the draft floor", accent: "#FF4D2E" },
+  community: { label: "In the community", setting: "out with the fans", accent: "#C9D4CE" },
   office: { label: "Front office", setting: "the front office", accent: "#9fb3c8" },
 };
 
@@ -108,7 +108,7 @@ export const SCENES: Record<Scene, { readonly label: string; readonly setting: s
 function sceneForSignal(signal: SignalType): Scene {
   switch (signal) {
     case "injury-out": case "injury-return": case "weather": return "sideline";
-    case "role-up": case "role-down": case "depth-chart": case "scheme": return "practice";
+    case "role-up": case "role-down": case "depth-chart": case "scheme": case "coach-report": return "practice";
     case "trade": case "suspension": return "office";
   }
 }
@@ -151,8 +151,13 @@ export type Broadcast = {
 // Honest and brand-safe: these scripts are composed deterministically from
 // templates in this module (no language model is involved), and the previous
 // wording used a phrase banned by apps/web/lib/positioning-vocab.json (rule 8).
+// The second sentence is load-bearing and was missing. The first only disclosed
+// WHO the anchors are, which a reader can take as "synthetic voice, real news".
+// The script reads out injury and transaction claims about named players, and on
+// an NFL Sunday a visitor could act on one. The players, reporters and reports are
+// invented, and the disclosure has to say so, not merely say the anchors are.
 export const HOST_DISCLOSURE =
-  "Nova and Orion are Galaxy Sports Edge's synthetic presenters. Their scripts are machine-drafted from templates and human-reviewed before anything is published; they do not post or reply on their own.";
+  "Nova and Orion are Galaxy Sports Edge's synthetic presenters. Their scripts are machine-drafted from templates and human-reviewed before anything is published; they do not post or reply on their own. The players, reporters and reports in this script are fictional: nothing here is a real injury report or a real transaction.";
 
 // ─────────────── publish-readiness pipeline (enforced doctrine) ───────────────
 
@@ -194,7 +199,12 @@ export function buildBroadcast(persona: Persona = NOVA): Broadcast {
   const field = reporterTag(persona);
   const desk = reporterTag(ORION);
 
-  const coldOpen = `${persona.signOn} Week ${week} is loaded. Orion's at the desk; let's get you the edge before everybody else does.`;
+  // No week number in the script. `week` here is derived from the FICTIONAL
+  // roster's most common bye (lib/fantasy/league-twin.ts), not the calendar, so
+  // stating it asserts a fact that is simply wrong: it read "Week 10" on NFL
+  // Week 1 Sunday. The slate is invented anyway, so there is no real week to
+  // put here; the line works without one.
+  const coldOpen = `${persona.signOn} The slate is loaded. Orion's at the desk; let's get you the edge before everybody else does.`;
 
   const segments: Segment[] = [];
 
@@ -245,7 +255,7 @@ export function buildBroadcast(persona: Persona = NOVA): Broadcast {
   const signOff = persona.signOff;
 
   const plaintext = [
-    `GALAXY STUDIOS. THE GALAXY BRIEF · WEEK ${week}`,
+    `GALAXY STUDIOS. THE GALAXY BRIEF · SAMPLE SCRIPT`,
     `Anchors: ${persona.name} (${persona.role}) · ${ORION.name} (${ORION.role})`,
     "",
     `[COLD OPEN · ${SCENES.studio.label}]`,
@@ -261,7 +271,7 @@ export function buildBroadcast(persona: Persona = NOVA): Broadcast {
   return {
     persona,
     week,
-    title: `The Galaxy Brief. Week ${week}, with ${persona.name}`,
+    title: `The Galaxy Brief, with ${persona.name}`,
     coldOpen,
     segments,
     signOff,

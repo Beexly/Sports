@@ -28,12 +28,11 @@ import {
 import { BRAND_NAME } from "@/lib/brand";
 import { loadProofOfRecord } from "@/lib/proof/load-proof-of-record";
 import type { ProofPickRow } from "@/lib/proof/load-proof-of-record";
-import { GeneratedPlate } from "@/components/immersive/generated-plate";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: `Proof of Record · ${BRAND_NAME}`,
+  title: { absolute: `Proof of Record · ${BRAND_NAME}` },
   description:
     "Every settled pick carries a tamper-evident Merkle hash stamped at generation time. The record can't be edited after the fact without the hash changing. This page shows the verifiable trail.",
   alternates: { canonical: "/proof" },
@@ -121,8 +120,8 @@ export default async function ProofOfRecordPage() {
   const hasLedger = board.picks.length > 0;
 
   return (
-    <div className="relative isolate flex min-h-screen flex-col bg-carbon">
-      <GeneratedPlate assetId="proof-crystal" className="-z-10 opacity-20" />
+    // Same Field atmosphere as /verify and /calibration — one trust room.
+    <div className="relative isolate flex min-h-screen flex-col bg-carbon gw-nebula">
       <Nav />
 
       <main id="main-content" className="flex-1 px-4 py-12 sm:px-6 lg:px-8">
@@ -356,7 +355,7 @@ export default async function ProofOfRecordPage() {
               data-testid="proof-funnel-close"
               className="mt-10 rounded-2xl border border-plasma/30 bg-plasma/[0.06] px-6 py-8"
             >
-              <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-plasma">
+              <p className="font-mono text-[11px] uppercase tracking-[0.22em] text-ion-2">
                 The same receipts run the live board
               </p>
               <h2 className="mt-2 font-display text-2xl font-semibold text-ion-white">

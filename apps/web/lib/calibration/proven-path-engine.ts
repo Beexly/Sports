@@ -41,6 +41,11 @@ import {
 } from "@/lib/calibration/selective-publish";
 import { buildHoldoutRankingReport } from "@/lib/calibration/holdout-ranking-report";
 import { computeHoldoutSignificance } from "@/lib/calibration/holdout-significance";
+import {
+  buildScoreBakeoffIdenticalRows,
+  type IdenticalRowSelection,
+  type ScoreBakeoffIdenticalRows,
+} from "@/lib/calibration/identical-row-bakeoff";
 
 /** Score kinds that are valid win probabilities (never edge-as-p). */
 export type RankingScoreKind =
@@ -93,6 +98,12 @@ export type ProvenPathPlan = {
   readonly scoreBakeoff: readonly ScoreBakeoffRow[];
   /** scoreBakeoff split by market (2026-09-05, ledger C-28); absent on plans persisted before it. */
   readonly scoreBakeoffByMarket?: readonly ScoreBakeoffMarketRow[];
+  /**
+   * Every score on ONE identical settled-moneyline row set (2026-09-08, ledger
+   * C-265); absent on plans persisted before it and when the loader supplied
+   * no selection. Measurement only: bestScore is still chosen from scoreBakeoff.
+   */
+  readonly scoreBakeoffIdenticalRows?: ScoreBakeoffIdenticalRows;
   readonly bestScore: RankingScoreKind;
   readonly selectiveRecommended: SelectiveMetrics | null;
   readonly selectiveGainRes: number | null;
@@ -214,11 +225,23 @@ function unionSorted(a: readonly string[], b: readonly string[]): string[] {
  */
 export function buildProvenPathPlan(
   rows: readonly ProvenPathPickRow[],
-  options?: { readonly minN?: number; readonly defaultDelta?: number },
+  options?: {
+    readonly minN?: number;
+    readonly defaultDelta?: number;
+    /**
+     * Identical-row selection (identical-row-bakeoff.ts selectIdenticalRows).
+     * When supplied the plan carries scoreBakeoffIdenticalRows; it never
+     * influences bestScore, the sweep, or the pause list.
+     */
+    readonly identicalRows?: IdenticalRowSelection;
+  },
 ): ProvenPathPlan {
   const minN = options?.minN ?? 100;
   const defaultDelta = options?.defaultDelta ?? 0.1;
   const generatedAt = new Date().toISOString();
+  const scoreBakeoffIdenticalRows = options?.identicalRows
+    ? buildScoreBakeoffIdenticalRows(options.identicalRows)
+    : undefined;
 
   // Probability-only kinds. edgeScore / blend_conf_edge intentionally absent.
   const kinds: RankingScoreKind[] = [
@@ -339,6 +362,7 @@ export function buildProvenPathPlan(
     baseline: best,
     scoreBakeoff,
     scoreBakeoffByMarket,
+    ...(scoreBakeoffIdenticalRows ? { scoreBakeoffIdenticalRows } : {}),
     bestScore,
     selectiveRecommended: sweep.recommended,
     selectiveGainRes,

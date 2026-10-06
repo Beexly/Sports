@@ -17,7 +17,6 @@ import { ILLUSTRATIVE_BRIEF } from "@/lib/courtroom/courtroom";
 import { CLOSING_LINE } from "@/lib/brand";
 
 const TICKER_PHRASES = [
-  "Math you can read",
   "See the reasoning, not just the number",
   "Independent referees, judged on their own",
   "Edge lives in the disagreement",
@@ -25,6 +24,7 @@ const TICKER_PHRASES = [
   "It audits its own calibration",
   "A record that can't be rewritten",
   "Silence when there's nothing honest to say",
+  "We detect. You decide.",
 ] as const;
 
 export const metadata: Metadata = {
@@ -49,10 +49,10 @@ export const metadata: Metadata = {
  * literals (not var() refs) because ReasoningShowcase derives hex+alpha
  * washes from them, and the SVG motif needs attribute-safe color values.
  */
-const ACCENT_CYAN = "#00E5FF"; // --orbital-cyan
-const ACCENT_UV = "#7B61FF"; // --ultraviolet
-const ACCENT_MAGENTA = "#FF38C7"; // --plasma
-const ION_WHITE = "#F5F7FF"; // --ion-white
+const ACCENT_CYAN = "#FF4D2E"; // --orbital-cyan
+const ACCENT_UV = "#C9D4CE"; // --ultraviolet
+const ACCENT_MAGENTA = "#FF4D2E"; // --plasma
+const ION_WHITE = "#EDE8E0"; // --ion-white
 
 const CHAIN: ReadonlyArray<{
   readonly step: string;
@@ -276,7 +276,7 @@ export default function IntelligencePage() {
         <section className="px-4 py-12 sm:px-6 lg:px-8" aria-labelledby="courtroom-heading">
           <div className="mx-auto max-w-5xl">
             <Reveal>
-              <p className="eyebrow text-plasma">
+              <p className="eyebrow text-ion-2">
                 A signal is a case, not a badge
               </p>
             </Reveal>

@@ -71,6 +71,19 @@ const DOCS = [
   "packages/stats-api/README.md",
 ];
 
+// Root memory docs — same SCAN_FILES set scripts/guardrails/trust-gate.mjs
+// walks. These carry verbatim social digests where "Lock" / "D.Lock" /
+// "Drew Lock" are NFL QB surname data. Pass lockDigestExempt so this test
+// stays in lock-step with the trust-gate; marketing docs below stay strict.
+const MEMORY_DOCS = new Set([
+  "README.md",
+  "CLAUDE.md",
+  "AGENTS.md",
+  "START_HERE.md",
+  "CONTRIBUTING.md",
+]);
+
+
 // Source files that are NOT walked by scripts/guardrails/trust-gate.mjs at
 // all (workers/** is outside its SCAN_DIRS) or are walked only for the
 // hand-maintained "AI picks" phrases and not the full positioning-vocab list
@@ -128,7 +141,9 @@ describe("Docs — public-copy banned-phrase scan", () => {
         return;
       }
       const stripped = stripCode(text);
-      const hits = scanForBannedPhrases(stripped);
+      const hits = scanForBannedPhrases(stripped, {
+        lockDigestExempt: MEMORY_DOCS.has(doc),
+      });
       if (hits.length > 0) {
         const summary = hits
           .map((h) => `  line ${h.line}: "${h.phrase}" — ${h.snippet}`)

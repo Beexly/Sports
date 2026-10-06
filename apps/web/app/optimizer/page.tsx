@@ -10,7 +10,7 @@ import { poolForViewer } from "@/lib/fantasy/free-trial";
 export const metadata: Metadata = {
   title: "The Optimizer: One Workspace for Every Lineup",
   description:
-    "One door for every lineup: DFS optimizer, season start/sit, and the draft board. Pick your contest type and build, on real data with the math shown.",
+    "One door for every lineup: DFS optimizer, season start/sit, and the draft board. Pick your contest type and build. Opens on sample players until a licensed projections feed is connected — never fake data as live advice.",
   alternates: { canonical: "/optimizer" },
 };
 
@@ -37,9 +37,9 @@ export default async function OptimizerPage(): Promise<JSX.Element> {
             One workspace. Every lineup.
           </h1>
           <p className="max-w-3xl text-sm leading-6 text-ion-1">
-            Pick a contest type and build: DFS, season start/sit, or the draft board, on the same real
-            data (snaps, usage, Next Gen, injuries, weather), with the math shown. Salaries are licensed
-            and gated; projections and ownership stay gated until a real feed is connected, never faked.{" "}
+            Pick a contest type and build: DFS, season start/sit, or the draft board. Salaries,
+            projections, and ownership open when a licensed feed is connected — until then the
+            tools run on clearly-labelled sample players, never faked as live advice.{" "}
             <Link href="/data" className="text-orbital-cyan hover:text-ion-white">How we source data</Link>.
           </p>
         </section>

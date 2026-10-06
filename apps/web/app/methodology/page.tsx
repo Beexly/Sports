@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { notFound } from "next/navigation";
 import type { Metadata } from "next";
 import { Nav } from "@/components/ui/nav";
+import { isPagePublic } from "@/lib/launch/internal-surface-fence";
 import { Footer } from "@/components/ui/footer";
 import { MethodologySection } from "@/components/ui/methodology-section";
 import { RiskDisclosure } from "@/components/ui/risk-disclosure";
@@ -78,6 +80,10 @@ const MARKET_READS = [
 const ACCENTS = [BRAND_COLORS.orbitalCyan, BRAND_COLORS.softUltraviolet, BRAND_COLORS.ionMagenta];
 
 export default function MethodologyPage(): JSX.Element {
+  // Public/private surface doctrine: the factor list and the three-stage
+  // scoring stack are methodology, which is internal. Default dark.
+  if (!isPagePublic("/methodology")) notFound();
+
   return (
     <div className="flex min-h-screen w-full flex-col overflow-x-hidden" style={{ backgroundColor: BRAND_COLORS.obsidianBlack }}>
       <Nav />
@@ -157,7 +163,7 @@ export default function MethodologyPage(): JSX.Element {
 
         <MethodologySection />
 
-        {/* Line freshness — the discipline competitors can't fake */}
+        {/* Line freshness, the discipline competitors can't fake */}
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <Reveal>
@@ -201,17 +207,16 @@ export default function MethodologyPage(): JSX.Element {
               <article className="surface-card p-6">
                 <h3 className="text-lg font-semibold text-white">A quiet board is a position</h3>
                 <p className="mt-2 text-sm leading-6 text-ink-300">
-                  When lines are stale or coverage is thin, the system
-                  publishes nothing rather than something it can&apos;t stand
-                  behind. Zero picks on a given day means the gate held, and
-                  that discipline is the product.
+                  When lines are stale or coverage is thin, we publish nothing
+                  rather than something we can&apos;t stand behind. Zero picks on
+                  a given day means we passed, and that discipline is the product.
                 </p>
               </article>
             </Stagger>
           </div>
         </section>
 
-        {/* Reading the market — and grading ourselves */}
+        {/* Reading the market, and grading ourselves */}
         <section className="px-4 py-16 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-6xl">
             <Reveal>
@@ -260,7 +265,7 @@ export default function MethodologyPage(): JSX.Element {
                 Ranking probability, confidence, and edge are not the same thing.
               </h2>
               <p className="mt-4 max-w-2xl text-sm leading-6 text-ink-300">
-                Calibration and board ranking use a win probability — never a signed
+                Calibration and board ranking use a win probability, never a signed
                 edge gap dressed up as a probability. While live floors are still red,
                 we do not claim PROVEN performance or ROI.
               </p>
@@ -279,7 +284,7 @@ export default function MethodologyPage(): JSX.Element {
                 <p className="mt-2 text-sm leading-6 text-ink-300">
                   The probability used for sort, selective publish, and calibration
                   bake-offs. When independent estimators yield a finite true probability,
-                  ranking uses that (or a blend with confidence) — including when the
+                  ranking uses that (or a blend with confidence), including when the
                   edge claim is PASS. SPEAK/LEAN is the glass-box edge claim, not the
                   ranking gate. Without independents, ranking falls back to confidence
                   on the 0–1 scale.
@@ -289,9 +294,8 @@ export default function MethodologyPage(): JSX.Element {
                 <h3 className="text-lg font-semibold text-white">Edge is not a probability</h3>
                 <p className="mt-2 text-sm leading-6 text-ink-300">
                   Edge is the gap between an independent true probability and the
-                  market's fair price — a signed difference, not P(side wins). Edge
-                  can filter and explain; it never enters Brier, resolution, or separation
-                  as if it were a win probability.
+                  market's fair price, a signed difference, not P(side wins). Edge
+                  can filter and explain; it is never scored as if it were a win probability.
                 </p>
               </article>
             </Stagger>
@@ -349,7 +353,7 @@ export default function MethodologyPage(): JSX.Element {
         </section>
       </main>
       <Footer />
-      {/* Glass Box Cipher — shard 02 hides here; console nudge */}
+      {/* Glass Box Cipher, shard 02 hides here; console nudge */}
       <CipherShard page="methodology" />
       <CipherConsoleMount />
     </div>

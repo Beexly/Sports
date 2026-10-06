@@ -74,9 +74,9 @@ function SealMotif({ className }: { className?: string }): JSX.Element {
       <svg viewBox="0 0 120 120" className="h-28 w-28" role="img" aria-label="A slate sealed under one hash">
         <defs>
           <linearGradient id="gse-seal-fade" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#00E5FF" />
-            <stop offset="52%" stopColor="#FF38C7" />
-            <stop offset="100%" stopColor="#7B61FF" />
+            <stop offset="0%" stopColor="#FF4D2E" />
+            <stop offset="52%" stopColor="#FF4D2E" />
+            <stop offset="100%" stopColor="#C9D4CE" />
           </linearGradient>
         </defs>
         {/* Rotating outer seal ring — dashed, like a wax stamp's serration. */}

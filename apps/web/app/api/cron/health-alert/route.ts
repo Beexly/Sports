@@ -24,10 +24,17 @@ import { computeLiveCapabilityProbes } from "@/lib/health/live-capability-probes
 import {
   classifyHealthAlertSnapshot,
   decideHealthAlertStateless,
+  assessOddsQuota,
 } from "@/lib/ops/health-alert-decision";
 import { loadActiveCalibrationDrift } from "@/lib/ops/calibration-eligibility-durable";
 import { loadSettlementHealth, SETTLEMENT_DEFAULT_GRACE_HOURS } from "@/lib/performance/settlement-health";
 import { db } from "@sports/db";
+import {
+  loadOddsCreditTruthOutcome,
+  emptyOddsCreditTruth,
+  type OddsCreditLedgerDb,
+} from "@sports/data-ingestion";
+import { isLowQuota } from "@sports/ingestion-pipeline";
 import { planAutonomyCycle } from "@/lib/autonomy/operating-kernel";
 import { getReadinessGates } from "@sports/prediction-engine";
 
@@ -124,10 +131,42 @@ export async function GET(request: Request): Promise<NextResponse> {
   // swallows its own errors and returns null in stub mode; the extra guard keeps
   // a thrown rejection from taking the health cron down with it.
   const calibrationDrift = await loadActiveCalibrationDrift().catch(() => null);
+
+  // F1: a quota that could not be READ is not a quota that is fine.
+  // `loadOddsCreditTruth` cannot distinguish "empty ledger" from "database
+  // down" (both are remaining=null), so reporting its boolean reported
+  // oddsApiLowQuota=false straight through a total outage. Read the outcome,
+  // keep the reading three-state, and let it reach the classifier.
+  // The guard keeps this route's "never throw the cron" promise: an unexpected
+  // throw becomes an UNREADABLE quota (red), never a fine one (green).
+  const creditOutcome = await loadOddsCreditTruthOutcome(
+    db as unknown as OddsCreditLedgerDb,
+    new Date(),
+  ).catch((err: unknown) => ({
+    truth: emptyOddsCreditTruth(),
+    readFailed: true,
+    error: err instanceof Error ? err.message : String(err),
+  }));
+  const credits = creditOutcome.truth;
+  if (creditOutcome.readFailed) {
+    console.warn(
+      `[health-alert] odds credit ledger unreadable: ${creditOutcome.error ?? "unknown error"}; ` +
+        "reporting quota as UNMEASURABLE, not fine",
+    );
+  }
+  const oddsQuota = assessOddsQuota({
+    remaining: credits.remaining,
+    readFailed: creditOutcome.readFailed,
+    lowQuotaWhenMeasured: isLowQuota({ oddsApiRemainingRequests: credits.remaining }),
+  });
+  // Tri-state: null when unmeasurable, so this can no longer be read as "fine".
+  const oddsApiLowQuota = oddsQuota.lowQuota;
+
   const snap = classifyHealthAlertSnapshot({
     checks: probes.checks,
     capabilities: probes.capabilities,
     calibrationDrift,
+    quota: oddsQuota,
   });
   const decision = decideHealthAlertStateless(snap);
 
@@ -227,6 +266,12 @@ export async function GET(request: Request): Promise<NextResponse> {
       autonomySeverity: autonomy?.severity ?? null,
       autonomyHeadline: autonomy?.headline ?? null,
       autonomyTopActions: autonomy?.actions.slice(0, 3).map((a) => a.title) ?? [],
+      oddsApiRemainingRequests: credits.remaining,
+      // null (not false) when the quota could not be read. A consumer doing
+      // `if (oddsApiLowQuota === false) ...` sees the difference; one reading
+      // it as a boolean sees null, which is honest rather than reassuring.
+      oddsApiLowQuota,
+      oddsApiQuota: oddsQuota,
     });
 
     if (!webhook.configured) {
@@ -276,6 +321,12 @@ export async function GET(request: Request): Promise<NextResponse> {
     // external monitor should watch to detect that alerting itself is down.
     alertDeliveryFailed: decision.shouldAlert && !webhook.delivered,
     observedAt,
+    oddsApiRemainingRequests: credits.remaining,
+    oddsApiLowQuota,
+    // The full three-state reading: whether the quota was measurable at all,
+    // and whether the ledger read failed. `oddsApiLowQuota: false` alone can
+    // no longer be mistaken for "quota checked out fine".
+    oddsApiQuota: oddsQuota,
     autonomy: autonomy
       ? {
           version: autonomy.version,

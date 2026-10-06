@@ -326,7 +326,7 @@ function SummaryAudit({
         <p className="text-sm font-medium text-plasma-glow">
           Upgrade to see the full chain
         </p>
-        <p className="mt-1 text-xs text-plasma/70">
+        <p className="mt-1 text-xs text-ion-2">
           Pro and Elite tiers see every signal flag at prediction time, line
           movement deltas, payload hashes, and the gates that were active
           when this pick was scored.

@@ -27,18 +27,32 @@ const mocks = vi.hoisted(() => ({
   getUserEntitlements: vi.fn<(userId: string) => Promise<Record<string, unknown>>>(),
 }));
 
-// This file's subject is not rate limiting, and its @sports/db mock has no
-// $queryRawUnsafe / isStubMode surface for the durable limiter. Allow-all so
-// the code under test decides the response; the limiter itself is covered by
-// api-p9-04 / api-p9-05 / b2b-rate-limit.
+// This file's subject is not rate limiting, and its @sports/db mock carries no
+// $queryRawUnsafe surface for the durable limiter. Allow-all so the code under
+// test decides the response; the limiter itself is covered by api-p9-04 /
+// api-p9-05 / b2b-rate-limit.
 vi.mock("@/lib/api/public-form-rate-limit", () => ({
   consumePublicFormRateLimit: vi.fn(async () => ({ ok: true, backend: "memory" })),
 }));
 
+// A db mock has to carry every export the code READS, not just the ones this
+// file's subject uses. `isStubMode` is read by the durable proven-path plan and
+// the durable ranking pause on the way to this handler; omitting it made every
+// property read throw, and both callers absorbed it as UNAVAILABLE and served a
+// fallback. The test still passed, so the omission was invisible in the pass
+// count and visible only as stderr -- which is exactly why it survived. Both
+// values are the production default (a real database is neither stubbed nor in
+// demo mode), so the handler now runs its real path rather than its catch.
 vi.mock("@sports/db", () => ({
   db: {
     pick: { findMany: mocks.pickFindMany, count: mocks.pickCount },
+    // Both durable readers above land here. `null` is "no plan stored", a real
+    // state the readers handle; it is NOT the same as the read failure they
+    // were absorbing, and their own log lines draw that distinction.
+    jarvisMemoryEvent: { findFirst: vi.fn(async () => null) },
   },
+  isStubMode: () => false,
+  isDemoPicksEnabled: () => false,
 }));
 
 vi.mock("@/lib/auth", () => ({ auth: mocks.auth }));

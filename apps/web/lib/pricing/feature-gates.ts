@@ -38,7 +38,20 @@ export interface FeatureGate {
   readonly upgradeCtaTier: ValueTierId | null;
 }
 
-const TIER_ORDER: Record<ValueTierId, number> = { FREE: 0, PRO: 1, ELITE: 2, OPERATOR: 3 };
+/**
+ * FANTASY is a billable tier (packages/types SubscriptionTier) but was missing
+ * from this presentation ladder, so every FANTASY viewer resolved TIER_ORDER to
+ * undefined and every feature read as locked. Added 2026-09-14 (ASTRA A-8) so
+ * the three tier vocabularies stop disagreeing. FANTASY sits between FREE and
+ * PRO: it unlocks the fantasy suite, not the betting depth tools.
+ */
+const TIER_ORDER: Record<ValueTierId | "FANTASY", number> = {
+  FREE: 0,
+  FANTASY: 1,
+  PRO: 2,
+  ELITE: 3,
+  OPERATOR: 4,
+};
 
 export const FEATURE_GATES: readonly FeatureGate[] = [
   // ── Education & trust (open to Free) ─────────────────────────────────────
@@ -103,7 +116,7 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
   {
     key: "confidence",
     displayName: "Confidence",
-    customerExplanation: "Galaxy's estimate of how strong, stable, and supported a signal is. An estimate, never a promise.",
+    customerExplanation: "Galaxy's estimate of how strong, stable, and supported a signal is. An estimate, never a promise. On spreads and totals it does not include the market's probability of the outcome. It is built only from board structure: book agreement, depth, and line movement. On moneylines it is anchored on the market's win probability and labeled as such.",
     internalNote: "Confidence score, Pro and Elite only (packages/types: FREE canSeeConfidence=false; /api/picks nulls it for every viewer without the entitlement). Free's two daily teaser picks carry no confidence score; the free trust signal is the Edge Index. An earlier note here said Free got it on its two picks, which never matched the shipped entitlements.",
     minTier: "PRO", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "PRO",
   },
@@ -148,8 +161,8 @@ export const FEATURE_GATES: readonly FeatureGate[] = [
     key: "galaxy-twin",
     displayName: "Galaxy Twin / Edge Map",
     customerExplanation: "A visual map of how the game, market, and signal environment are changing.",
-    internalNote: "Galaxy Twin layers. Owner set live; underlying data labeled demo/live per surface.",
-    minTier: "ELITE", status: "live", freePreview: true, lockBehaviorForFree: "teaser", upgradeCtaTier: "ELITE",
+    internalNote: "RETIRED FROM THE PRODUCT 2026-09-11 (founder): the surface is not functional and is removed from both navs and the home grid for now. This entry previously read status live with freePreview true and a teaser treatment, which advertised a working feature that is not one. Set to disabled/hidden so the catalog stops claiming it. RESTORING IT IS THREE EDITS: this entry back to live/teaser, the two nav lines in components/ui/nav.tsx and components/ui/mobile-nav.tsx, and the home card in components/home/intelligence-layer.tsx; the /observatory route and the Slate Twin components were deliberately left in the tree.",
+    minTier: "ELITE", status: "disabled", freePreview: false, lockBehaviorForFree: "hidden", upgradeCtaTier: "ELITE",
   },
   {
     key: "market-gravity",
@@ -237,15 +250,15 @@ export function getFeature(key: string): FeatureGate | undefined {
   return FEATURE_GATES.find((f) => f.key === key);
 }
 
-/** True when `tier` fully unlocks the feature. */
-export function isFeatureUnlocked(tier: ValueTierId, key: string): boolean {
+/** True when `tier` fully unlocks the feature. FANTASY is billable and sits between FREE and PRO. */
+export function isFeatureUnlocked(tier: ValueTierId | "FANTASY", key: string): boolean {
   const f = getFeature(key);
   if (!f) return false;
   return TIER_ORDER[tier] >= TIER_ORDER[f.minTier];
 }
 
 /** Features fully unlocked at a tier, in registry order. */
-export function featuresForTier(tier: ValueTierId): readonly FeatureGate[] {
+export function featuresForTier(tier: ValueTierId | "FANTASY"): readonly FeatureGate[] {
   return FEATURE_GATES.filter((f) => TIER_ORDER[tier] >= TIER_ORDER[f.minTier]);
 }
 

@@ -14,7 +14,7 @@ import { STAT_PLACEHOLDER, NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 export const metadata: Metadata = {
   title: "Platform CLV Ledger: Our Own Graded Picks",
   description:
-    "Every published pick's realized closing-line value, as graded by the platform at settlement. A view of Galaxy Sports Edge's own record — Elite tier.",
+    "Every published pick's realized closing-line value, as graded by the platform at settlement. A view of Galaxy Sports Edge's own record. Elite tier.",
   alternates: { canonical: "/track/platform" },
 };
 
@@ -55,7 +55,7 @@ export default async function TrackPlatformPage() {
           <TierGatePanel
             need="ELITE"
             surface="The Platform CLV Ledger"
-            blurb="A view of every published pick's realized closing-line value, graded by the platform at settlement — not a personal log. Reserved for Elite members."
+            blurb="A view of every published pick's realized closing-line value, graded by the platform at settlement, not a personal log. Reserved for Elite members."
           />
         </main>
         <Footer />
@@ -94,7 +94,7 @@ export default async function TrackPlatformPage() {
             <Reveal delay={160}>
               <p className="mt-5 max-w-2xl text-lg text-ion-1">
                 This is a view of the platform&apos;s OWN published picks, exactly as our settlement pipeline grades
-                them against the closing line — not a personal bet log. Your Elite full-board access already covers
+                them against the closing line, not a personal bet log. Your Elite full-board access already covers
                 every pick shown here; this is that same record with the CLV numbers made visible.
               </p>
             </Reveal>
@@ -150,7 +150,7 @@ export default async function TrackPlatformPage() {
             )}
             <Reveal delay={120}>
               <p className="mt-8 text-xs leading-relaxed text-ion-2">
-                Every value above already exists on the pick as published — nothing here is recomputed. See your{" "}
+                Every value above already exists on the pick as published, nothing here is recomputed. See your{" "}
                 <a href="/track" className="font-semibold text-ultraviolet hover:text-ion-white">
                   personal bet ledger
                 </a>{" "}

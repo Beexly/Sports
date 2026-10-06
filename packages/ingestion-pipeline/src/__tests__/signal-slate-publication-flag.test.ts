@@ -1,4 +1,5 @@
 import { beforeEach, describe, expect, it, vi } from "vitest";
+import { associationTrace } from "./slate-trace-fixture.js";
 
 /**
  * C-92: A SLATE REFRESH MUST NOT RE-PUBLISH WHAT AN OPERATOR WITHDREW.
@@ -36,15 +37,19 @@ vi.mock("@sports/db", () => ({
   },
 }));
 
-vi.mock("@sports/prediction-engine", () => ({
-  getReadinessGates: () => ({
-    canExposePublicPicks: mocks.canExpose.value,
-    canPersistCanonicalHistory: true,
-  }),
-  MODEL_VERSION: "vtest",
-  MIN_PUBLISH_CONFIDENCE: 50,
-  PREMIUM_CONFIDENCE_THRESHOLD: 70,
-}));
+vi.mock("@sports/prediction-engine", async (importOriginal) => {
+  const actual = await importOriginal<Record<string, unknown>>();
+  return {
+    ...actual,
+    getReadinessGates: () => ({
+      canExposePublicPicks: mocks.canExpose.value,
+      canPersistCanonicalHistory: true,
+    }),
+    MODEL_VERSION: "vtest",
+    MIN_PUBLISH_CONFIDENCE: 50,
+    PREMIUM_CONFIDENCE_THRESHOLD: 70,
+  };
+});
 
 vi.mock("../build-independent-fair-values.js", () => ({
   buildIndependentFairValues: mocks.buildIndependents,
@@ -79,7 +84,7 @@ const CFB_BOARD = {
 const espnFetch = vi.fn<(url: string) => Promise<Response>>();
 
 function runSlate() {
-  return generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch });
+  return generateSignalSlate({ now: NOW, skipSeed: true, fetchImpl: espnFetch as unknown as typeof fetch, trace: associationTrace() });
 }
 
 /** The row an operator has already withdrawn: still PENDING, no longer public. */

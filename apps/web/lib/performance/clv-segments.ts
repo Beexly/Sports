@@ -34,6 +34,12 @@ export interface ClvSegment {
   readonly lostCloseCount: number;
   /** Unit-free, always comparable: share of the segment that beat the close (one decimal). */
   readonly beatCloseRatePct: number;
+  /**
+   * Decided-only reading beside beatCloseRatePct: ties (MATCHED_CLOSE) are
+   * excluded from both sides, mirroring the push-never-averaged doctrine.
+   * Null when the segment has no decided rows. Additive — nothing gates on it.
+   */
+  readonly decidedBeatCloseRatePct: number | null;
   /** Mean CLV — only meaningful within a single unit. Null when the segment mixes kinds. */
   readonly meanClv: number | null;
   readonly kind: ClvKind | "MIXED";
@@ -104,6 +110,13 @@ export function segmentClv(
       beatCloseCount,
       lostCloseCount,
       beatCloseRatePct: round((beatCloseCount / n) * 100, 1),
+      // Decided-only reading beside the all-graded rate: ties (n − beat − lost)
+      // are excluded from both sides, mirroring the push-never-averaged
+      // doctrine. Null when the segment has no decided rows.
+      decidedBeatCloseRatePct:
+        beatCloseCount + lostCloseCount > 0
+          ? round((beatCloseCount / (beatCloseCount + lostCloseCount)) * 100, 1)
+          : null,
       meanClv,
       kind,
     });

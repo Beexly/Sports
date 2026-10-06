@@ -17,23 +17,44 @@ import { getCurrentPricingPhase } from "@/lib/pricing/pricing-phases";
 import { NUMERIC_TEXT_CLASS } from "@/lib/format/stat";
 import { subDays, format, startOfDay, endOfDay } from "date-fns";
 import { comparePicksByRanking } from "@/lib/ranking/sort-key";
+import { PICK_GRADE_LABELS, RISK_LEVEL_LABELS, type PickGrade, type RiskLevel } from "@sports/types";
+import {
+  isBookmakerConsensusClaim,
+} from "@/lib/claims/public-consensus-claim";
+import {
+  consensusSliceFromResolved,
+  loadPublishTimeConsensusByPickId,
+  type PublishTimeConsensusResolved,
+} from "@/lib/claims/load-publish-time-consensus";
+import { projectPublicConsensusReasoning } from "@/lib/claims/project-public-consensus-reasoning";
 
 export const dynamic = "force-dynamic";
 
 type TodayPick = {
   id: string;
-  pickType: string;
+  gameId: string;
+  pickType: "SPREAD" | "MONEYLINE" | "TOTAL" | string;
   selection: string;
   line: number;
   confidence: number;
   edgeScore: number;
-  pickGrade: string;
-  riskLevel: string;
+  pickGrade: PickGrade;
+  riskLevel: RiskLevel;
   reasoningShort: string;
   isFeatured: boolean;
   result: string;
   generatedAt: Date;
   factorBreakdown?: unknown;
+  consensusPct?: number | null;
+  bookmakerCount?: number;
+  dataFreshnessAt?: Date | string | null;
+  ingestionRunId?: string | null;
+  signalSnapshot?: { bookmakerCount: number } | null;
+  /** Mint-time book-set evidence resolved for the fail-closed binder. */
+  consensusResolved?: PublishTimeConsensusResolved | null;
+  /** Projected short reasoning after binder (null when unbound consensus). */
+  publicReasoningShort?: string | null;
+  consensusEvidence?: string | null;
   game: {
     homeTeamName: string;
     awayTeamName: string;
@@ -123,15 +144,52 @@ export default async function DashboardPage({
           generatedAt: { gte: startOfDay(new Date()), lte: endOfDay(new Date()) },
           ...(entitlements.canSeePremiumPicks ? {} : { tier: "FREE" }),
         },
-        include: { game: { include: { sport: { select: { name: true } } } } },
+        include: {
+          game: { include: { sport: { select: { name: true } } } },
+          signalSnapshot: { select: { bookmakerCount: true } },
+        },
         orderBy: [{ generatedAt: "desc" }],
         take: entitlements.canSeePremiumPicks ? 24 : (entitlements.dailyPickLimit ?? 1),
       })
-      .then((rows) =>
-        [...rows]
+      .then(async (rows) => {
+        const limited = [...rows]
           .sort(comparePicksByRanking)
-          .slice(0, entitlements.canSeePremiumPicks ? 6 : (entitlements.dailyPickLimit ?? 1)),
-      )
+          .slice(0, entitlements.canSeePremiumPicks ? 6 : (entitlements.dailyPickLimit ?? 1)) as TodayPick[];
+        const resolved = await loadPublishTimeConsensusByPickId(
+          limited.map((pick) => ({
+            id: pick.id,
+            gameId: pick.gameId,
+            pickType: (pick.pickType as "SPREAD" | "MONEYLINE" | "TOTAL"),
+            generatedAt: pick.generatedAt,
+            bookmakerCount:
+              pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount ?? 0,
+            ingestionRunId: pick.ingestionRunId ?? null,
+          })),
+        );
+        return limited.map((pick) => {
+          const mint = resolved.get(pick.id) ?? null;
+          const bookmakerCount =
+            pick.signalSnapshot?.bookmakerCount ?? pick.bookmakerCount ?? 0;
+          const projected = projectPublicConsensusReasoning(
+            pick.reasoningShort,
+            consensusSliceFromResolved(mint, {
+              consensusPct: pick.consensusPct,
+              bookmakerCount,
+              dataFreshnessAt: pick.dataFreshnessAt,
+            }),
+            {
+              scrubConfidence: true,
+              canSeeConfidence: entitlements.canSeeConfidence,
+            },
+          );
+          return {
+            ...pick,
+            consensusResolved: mint,
+            publicReasoningShort: projected.text,
+            consensusEvidence: projected.consensusEvidence,
+          };
+        });
+      })
       .catch(() => [] as unknown[]) as Promise<TodayPick[]>,
     db.pick
       .count({
@@ -268,8 +326,8 @@ export default async function DashboardPage({
 
           {/* Purchase-success moment: Stripe checkout returns to
               /dashboard?upgraded=true. One-time (URL-param-driven) banner that
-              confirms the locked founding rate and points at what just unlocked
-              — first-session activation is the strongest churn lever. */}
+              confirms the locked founding rate and points at what just unlocked.
+              First-session activation is the strongest churn lever. */}
           {/* The success banner is gated on the RESOLVED entitlement, not the URL
               param: a buyer whose webhook is still retrying (or who typed the URL)
               must never be told access is live when the board will show the free
@@ -301,7 +359,7 @@ export default async function DashboardPage({
                 Subscription active
               </p>
               <p className="mt-2 text-sm font-semibold text-ion-white">
-                You&apos;re in — at the {phaseName} rate, locked for the life of your
+                You&apos;re in, at the {phaseName} rate, locked for the life of your
                 subscription.
               </p>
               <p className="mt-1 text-xs leading-relaxed text-ion-1">
@@ -309,7 +367,7 @@ export default async function DashboardPage({
                   ? "The fantasy suite is now live on your account."
                   : "Confidence scores, the full factor trail, and line movement are now live on every pick."}
                 {entitlements.tier === "ELITE"
-                  ? " Email and push alerts on your followed picks — delivered when they grade — are included with Elite."
+                  ? " Email and push alerts on your followed picks, delivered when they grade, are included with Elite."
                   : ""}
               </p>
               <Link
@@ -385,7 +443,7 @@ export default async function DashboardPage({
             </p>
           )}
 
-          {/* Today's picks list — the focal region: what matters now. */}
+          {/* Today's picks list, the focal region: what matters now. */}
           <section className="mb-6 rounded-2xl border border-mineral-hi bg-carbon/80 p-6">
             <div className="mb-4 flex items-center justify-between">
               <h2 className="font-mono text-xs font-semibold uppercase tracking-[0.18em] text-ion-2">
@@ -401,7 +459,7 @@ export default async function DashboardPage({
             {todayPicks.length === 0 ? (
               <p className="py-6 text-center text-sm text-ion-2">
                 No picks published yet today. The board fills in as games clear
-                the model — check back closer to game time.
+                the model. Check back closer to game time.
               </p>
             ) : (
               <ul className="divide-y divide-mineral/60">
@@ -492,13 +550,22 @@ function SampleDataBanner() {
  */
 function confidenceBarClass(confidence: number): string {
   if (confidence >= 80) return "bg-plasma/70";
-  if (confidence >= 65) return "bg-orbital-cyan/70";
-  if (confidence >= 50) return "bg-ultraviolet/70";
-  return "bg-ion-1/50";
+  if (confidence >= 65) return "bg-plasma/40";
+  if (confidence >= 50) return "bg-ion-1/50";
+  return "bg-ion-3/50";
 }
 
 function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: boolean }) {
   const homeAway = `${pick.game.awayTeamName} @ ${pick.game.homeTeamName}`;
+  // Fail-closed: consensus claims only surface when mint-time book-set binds
+  // (same path as /api/picks). Confidence bars stay either way (SOLVE).
+  const short =
+    pick.publicReasoningShort !== undefined
+      ? pick.publicReasoningShort
+      : isBookmakerConsensusClaim(pick.reasoningShort)
+        ? null
+        : pick.reasoningShort;
+  const evidence = pick.consensusEvidence ?? null;
   return (
     <li className="flex items-center justify-between gap-3 py-3 first:pt-0 last:pb-0">
       <div className="min-w-0 flex-1">
@@ -522,9 +589,19 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
             {format(pick.game.commenceTime, "h:mm a")}
           </span>
         </p>
-        <p className="truncate text-xs text-ion-2">
-          {pick.reasoningShort}
-        </p>
+        {short ? (
+          <p className="truncate text-xs text-ion-2" data-testid="dashboard-reasoning-short">
+            {short}
+          </p>
+        ) : null}
+        {evidence ? (
+          <p
+            data-testid="dashboard-consensus-evidence"
+            className="truncate font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2"
+          >
+            {evidence}
+          </p>
+        ) : null}
         {showConfidence && (
           <div
             data-testid="confidence-bar"
@@ -564,28 +641,21 @@ function PickRow({ pick, showConfidence }: { pick: TodayPick; showConfidence: bo
             +{pick.edgeScore.toFixed(1)} edge
           </span>
         )}
-        <span className="font-mono text-[10px] uppercase tracking-[0.14em] text-ion-2">
-          {pick.riskLevel}
+        <span className={`font-mono text-[10px] uppercase tracking-[0.14em] ${RISK_LEVEL_LABELS[pick.riskLevel].color}`}>
+          {RISK_LEVEL_LABELS[pick.riskLevel].label}
         </span>
       </div>
     </li>
   );
 }
 
-function GradeBadge({ grade }: { grade: string }) {
-  const styles: Record<string, string> = {
-    A: "bg-verify/15 text-verify",
-    B: "bg-orbital-cyan/15 text-orbital-cyan",
-    C: "bg-titanium text-ion-2",
-  };
+function GradeBadge({ grade }: { grade: PickGrade }) {
+  const info = PICK_GRADE_LABELS[grade];
   return (
     <span
-      className={[
-        "rounded-full px-2 py-0.5 text-xs font-bold",
-        styles[grade] ?? "bg-titanium text-ion-2",
-      ].join(" ")}
+      className={["rounded-full px-2 py-0.5 text-xs font-bold", info.color, info.bgColor].join(" ")}
     >
-      {grade}
+      {info.label}
     </span>
   );
 }

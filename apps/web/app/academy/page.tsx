@@ -27,6 +27,10 @@ export const metadata: Metadata = {
   description:
     "A real curriculum: tracks and modules with saved progress and mastery, interactive courses with graded quizzes, a live-fire decision simulator, the Beat the Close training game, and the GM Academy. Train process, calibration, and restraint.",
   alternates: { canonical: "/academy" },
+  // Hidden from public nav 2026-09-14 (ASTRA A-5, owner item 6). Route stays
+  // reachable by direct link; de-indexed until the surface is redesigned into
+  // membership value.
+  robots: { index: false, follow: true },
 };
 
 /**
@@ -35,10 +39,10 @@ export const metadata: Metadata = {
  * Film Room wears the muted --ion-3 while the wing is in production.
  */
 const WINGS = [
-  { id: "courses", label: "Course Floor", desc: "Interactive lessons + graded quizzes", hex: "#00E5FF" }, // --orbital-cyan
-  { id: "live-fire", label: "Live Fire", desc: "Decide blind, graded on process", hex: "#FF38C7" }, // --plasma
-  { id: "beat-the-close", label: "Beat the Close", desc: "The line-trading arcade", hex: "#7B61FF" }, // --ultraviolet
-  { id: "film-room", label: "Film Room", desc: "Filmed lessons, in production", hex: "#8B97AB" }, // --ion-3
+  { id: "courses", label: "Course Floor", desc: "Interactive lessons + graded quizzes", hex: "#FF4D2E" }, // --orbital-cyan
+  { id: "live-fire", label: "Live Fire", desc: "Decide blind, graded on process", hex: "#FF4D2E" }, // --plasma
+  { id: "beat-the-close", label: "Beat the Close", desc: "The line-trading arcade", hex: "#C9D4CE" }, // --ultraviolet
+  { id: "film-room", label: "Film Room", desc: "Filmed lessons, in production", hex: "#A7B8B2" }, // --ion-3
 ] as const;
 
 export default function AcademyPage() {
@@ -57,7 +61,7 @@ export default function AcademyPage() {
             className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-96"
             style={{
               background:
-                "radial-gradient(60% 80% at 50% 0%, rgba(123, 97, 255, 0.09), transparent 70%), radial-gradient(40% 60% at 72% 8%, rgba(0, 229, 255, 0.07), transparent 70%)",
+                "radial-gradient(60% 80% at 50% 0%, rgba(201, 212, 206, 0.09), transparent 70%), radial-gradient(40% 60% at 72% 8%, rgba(255, 77, 46, 0.07), transparent 70%)",
             }}
           />
           <div className="mx-auto max-w-5xl">
@@ -152,7 +156,7 @@ export default function AcademyPage() {
         <section id="live-fire" className="scroll-mt-24 px-4 py-12 sm:px-6 lg:px-8">
           <div className="mx-auto max-w-3xl">
             <Reveal>
-              <p className="eyebrow text-plasma">live fire</p>
+              <p className="eyebrow text-ion-2">live fire</p>
               <h2 className="mt-3 font-display text-3xl font-semibold text-ion-white">
                 Decide blind. Get graded on the decision.
               </h2>
@@ -195,8 +199,8 @@ export default function AcademyPage() {
                 The filmed curriculum, in production.
               </h2>
               <p className="mt-3 max-w-2xl text-ion-1">
-                Six episodes pairing with the course floor: the real production order, no
-                placeholders. Every lesson is already trainable above.
+                Six episodes pairing with the course floor: the real production order,
+                start to finish. Every lesson is already trainable above.
               </p>
             </Reveal>
             <Reveal delay={120}>

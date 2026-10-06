@@ -1,5 +1,4 @@
 import type {
-  PublicPick,
   PickType,
   PickGrade,
   PickResult,
@@ -13,7 +12,14 @@ import { AskWhy } from "./ask-why";
 import { VerifyPickButton } from "./verify-pick-button";
 import { DevigMethodDisclosure } from "./devig-method-disclosure";
 import { displaySelection, NO_BOOK_PRICE_LABEL } from "@/lib/picks/display-selection";
+import { CENTRAL_TZ } from "@/lib/time/central";
 import { formatMarketImpliedLabel } from "@/lib/picks/market-implied-display";
+import {
+  bindPublicConsensusClaim,
+  consensusEvidenceCaption,
+  isBookmakerConsensusClaim,
+  type PublicConsensusPick,
+} from "@/lib/claims/public-consensus-claim";
 import Link from "next/link";
 
 // ─────────────────────────────────────────────
@@ -21,7 +27,7 @@ import Link from "next/link";
 // ─────────────────────────────────────────────
 
 interface PickCardProps {
-  pick: PublicPick;
+  pick: PublicConsensusPick;
   canSeeConfidence: boolean;
   canSeeEdgeScore: boolean;
   canSeeFactorBreakdown: boolean;
@@ -48,7 +54,13 @@ export function PickCard({
   canSeeEdgeScore,
   canSeeFactorBreakdown,
 }: PickCardProps) {
+  // Kickoff reads Central. Without an explicit timeZone this formatted in the
+  // SERVER's zone (UTC on Vercel) during SSR and in the VIEWER's zone after
+  // hydration — two different answers for the same card, and `timeZoneName`
+  // faithfully printed whichever wrong zone it had used. Pinning the zone makes
+  // the label correct AND makes server and client agree.
   const gameTime = new Date(pick.game.commenceTime).toLocaleString("en-US", {
+    timeZone: CENTRAL_TZ,
     weekday: "short",
     month: "short",
     day: "numeric",
@@ -62,6 +74,24 @@ export function PickCard({
   const freshnessAge = pick.dataFreshnessAt
     ? Math.round((Date.now() - new Date(pick.dataFreshnessAt).getTime()) / 60_000)
     : null;
+
+  const visibleReasoning = canSeeFactorBreakdown
+    ? pick.reasoning
+    : pick.reasoningShort;
+  const boundConsensus = bindPublicConsensusClaim({
+    reasoningShort: visibleReasoning,
+    consensusPct: pick.consensusPct,
+    bookmakerCount: pick.bookmakerCount,
+    dataFreshnessAt: pick.dataFreshnessAt,
+    consensusProvider: pick.consensusProvider,
+    consensusSourceId: pick.consensusSourceId,
+    consensusBooks: pick.consensusBooks,
+    consensusBookSetId: pick.consensusBookSetId,
+    consensusCapturedAt: pick.consensusCapturedAt,
+  });
+  const isConsensusClaim = isBookmakerConsensusClaim(visibleReasoning);
+  const safeReasoning =
+    isConsensusClaim && !boundConsensus ? null : visibleReasoning;
 
   const isFeatured = pick.isFeatured;
 
@@ -182,12 +212,15 @@ export function PickCard({
         </div>
       </div>
 
-      {/* Market-implied win probability (v5.2.8 display side): the receipt's
-          number on book-priced two-way moneyline picks, shown under the same
-          entitlement as confidence. The API omits the field for every other
-          viewer and for signal-slate, SPREAD and TOTAL picks, so this renders
-          no percentage there. Label text is the verified proposal wording. */}
-      {canSeeConfidence && pick.marketImplied && (
+      {/* Market-implied win probability (v5.2.8 Phase 2): the receipt's number
+          on book-priced two-way moneyline picks with at least two books, shown
+          to EVERY tier. Deliberately not gated on canSeeConfidence — this is a
+          de-vig of quoted prices a reader can recompute, and the calibration
+          claim we publish is about it, so the free tier must be able to see the
+          number that claim describes. Scope is enforced server-side: the API
+          omits the field for signal-slate, SPREAD and TOTAL picks, so nothing
+          renders there. Label text is the verified proposal wording. */}
+      {pick.marketImplied && (
         <p
           className="rounded-lg border border-orbital-cyan/30 bg-orbital-cyan/5 px-3 py-2 text-xs leading-relaxed text-ion-1"
           data-testid="market-implied-win-probability"
@@ -199,9 +232,14 @@ export function PickCard({
       {/* Reasoning teaser / full — gated on the SAME flag the API gates the
           full prose on (canSeeFactorBreakdown), so the display gate can never
           drift from the server gate if the two flags ever diverge. */}
-      <p className="text-xs leading-relaxed text-ion-1">
-        {canSeeFactorBreakdown ? pick.reasoning : pick.reasoningShort}
-      </p>
+      {safeReasoning && (
+        <p className="text-xs leading-relaxed text-ion-1">{safeReasoning}</p>
+      )}
+      {isConsensusClaim && boundConsensus && (
+        <p className="font-mono text-[10px] uppercase tracking-[0.16em] text-ion-2">
+          {consensusEvidenceCaption(boundConsensus)}
+        </p>
+      )}
 
       {/* Factor breakdown (PRO+ only) */}
       {canSeeFactorBreakdown && pick.factorBreakdown && (
@@ -355,7 +393,7 @@ function FactorBreakdownPanel({ breakdown }: { breakdown: FactorBreakdown }) {
           {typeof breakdown.marketFairProb === "number" && Number.isFinite(breakdown.marketFairProb) && (
             <>
               <p className="mt-1 text-[10px] text-ion-3">
-                Market fair ({breakdown.marketFairMethod ?? "de-vig"}):{" "}
+                Market fair:{" "}
                 {(breakdown.marketFairProb * 100).toFixed(1)}%
                 <ValueGapBadge rankingP={breakdown.rankingP} marketFairProb={breakdown.marketFairProb} />
               </p>

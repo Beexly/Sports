@@ -34,8 +34,15 @@ export function DoorCard({
     <Reveal delay={index * 70} className="flex">
       <Link
         href={href}
-        className="group relative flex w-full flex-col gap-4 bg-eclipse p-6 transition-colors duration-300 hover:bg-carbon"
+        className="group relative flex w-full flex-col gap-4 overflow-hidden bg-eclipse p-6 transition-colors duration-300 hover:bg-carbon"
       >
+        {/* ghost index watermark */}
+        <span
+          aria-hidden
+          className="ghost-numeral pointer-events-none absolute -bottom-3 right-3 select-none text-[5.5rem]"
+        >
+          {String(index).padStart(2, "0")}
+        </span>
         {/* accent rail. Draws across the top on hover (left origin) */}
         <span aria-hidden className="absolute inset-x-0 top-0 h-px bg-mineral" />
         <span
@@ -54,7 +61,7 @@ export function DoorCard({
           />
         </div>
 
-        <p className="font-display text-2xl font-semibold leading-tight text-ion-white">{label}</p>
+        <p className="relative font-display text-[2rem] font-semibold leading-[1.02] tracking-tight text-ion-white">{label}</p>
         <p className="flex-1 text-sm leading-6 text-ion-1">{decides}</p>
 
         {/* live readout */}

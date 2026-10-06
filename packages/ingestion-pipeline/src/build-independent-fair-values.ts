@@ -61,6 +61,7 @@ import {
 import type { IndependentMarketFairValue } from "@sports/types";
 import { db } from "@sports/db";
 import { resolveKalshiTeamAbbr } from "./kalshi-team-abbr.js";
+import { NFL_NAME_TO_ABBR } from "./nfl-team-abbr.js";
 import { isEspnPowerIndexCleared } from "./independent-source-rights.js";
 
 export type IndependentFairValueBuildInput = {
@@ -183,7 +184,7 @@ export async function getOrFitEloRatings(
   return ratings;
 }
 
-async function tryKalshiFairValue(
+export async function tryKalshiFairValue(
   input: IndependentFairValueBuildInput,
 ): Promise<IndependentMarketFairValue | null> {
   const league = sportKeyToKalshiLeague(input.sportKey);
@@ -221,7 +222,7 @@ async function tryKalshiFairValue(
   return null;
 }
 
-async function tryEspnPowerIndexFairValue(
+export async function tryEspnPowerIndexFairValue(
   input: IndependentFairValueBuildInput,
 ): Promise<IndependentMarketFairValue | null> {
   const league = sportKeyToPowerIndexLeague(input.sportKey);
@@ -246,7 +247,7 @@ async function tryEspnPowerIndexFairValue(
   }
 }
 
-async function tryClubEloFairValue(
+export async function tryClubEloFairValue(
   input: IndependentFairValueBuildInput,
 ): Promise<IndependentMarketFairValue | null> {
   if (!isClubEloSport(input.sportKey)) return null;
@@ -267,7 +268,7 @@ async function tryClubEloFairValue(
   }
 }
 
-async function tryPolymarketIndependentFairValue(
+export async function tryPolymarketIndependentFairValue(
   input: IndependentFairValueBuildInput,
 ): Promise<IndependentMarketFairValue | null> {
   // Compliance hold: default OFF. Internal estimator only.
@@ -288,7 +289,7 @@ let mlbStandingsCache:
   | { readonly season: number; readonly at: number; readonly rows: Awaited<ReturnType<typeof fetchMlbStandings>> }
   | null = null;
 
-async function tryMlbStandingsFairValue(
+export async function tryMlbStandingsFairValue(
   input: IndependentFairValueBuildInput,
 ): Promise<IndependentMarketFairValue | null> {
   if (!input.sportKey.includes("baseball_mlb") && input.sportKey !== "mlb") {
@@ -345,7 +346,7 @@ const nflEpaRatingsCache = new Map<
   { readonly at: number; readonly byTeam: Map<string, { overall: number; games: number }> }
 >();
 
-async function tryNflEpaFairValue(
+export async function tryNflEpaFairValue(
   input: IndependentFairValueBuildInput,
 ): Promise<IndependentMarketFairValue | null> {
   if (
@@ -418,41 +419,10 @@ async function tryNflEpaFairValue(
       return null;
     };
 
-    // Prefer common NFL abbr maps for full names
-    const NFL_NAME_TO_ABBR: Record<string, string> = {
-      "arizona cardinals": "ARI",
-      "atlanta falcons": "ATL",
-      "baltimore ravens": "BAL",
-      "buffalo bills": "BUF",
-      "carolina panthers": "CAR",
-      "chicago bears": "CHI",
-      "cincinnati bengals": "CIN",
-      "cleveland browns": "CLE",
-      "dallas cowboys": "DAL",
-      "denver broncos": "DEN",
-      "detroit lions": "DET",
-      "green bay packers": "GB",
-      "houston texans": "HOU",
-      "indianapolis colts": "IND",
-      "jacksonville jaguars": "JAX",
-      "kansas city chiefs": "KC",
-      "las vegas raiders": "LV",
-      "los angeles chargers": "LAC",
-      "los angeles rams": "LA",
-      "miami dolphins": "MIA",
-      "minnesota vikings": "MIN",
-      "new england patriots": "NE",
-      "new orleans saints": "NO",
-      "new york giants": "NYG",
-      "new york jets": "NYJ",
-      "philadelphia eagles": "PHI",
-      "pittsburgh steelers": "PIT",
-      "san francisco 49ers": "SF",
-      "seattle seahawks": "SEA",
-      "tampa bay buccaneers": "TB",
-      "tennessee titans": "TEN",
-      "washington commanders": "WAS",
-    };
+    // Full-name -> GSE abbreviation. Extracted to ./nfl-team-abbr.ts so the
+    // observation-engine loaders join team_game_efficiency through the SAME
+    // map; a second copy would drift and a drifted abbreviation returns zero
+    // rows silently instead of failing.
     const homeAbbr = NFL_NAME_TO_ABBR[input.homeTeam.toLowerCase().trim()];
     const awayAbbr = NFL_NAME_TO_ABBR[input.awayTeam.toLowerCase().trim()];
     const home =

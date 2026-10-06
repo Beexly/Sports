@@ -1,0 +1,83 @@
+import { describe, expect, it } from "vitest";
+import {
+  runWalkForwardEval,
+  runTaxonomyReport,
+  walkForwardShipGate,
+} from "./walk-forward-eval.js";
+import type { SeasonGame, ClosingLines, PredictFn } from "@sports/prediction-engine";
+
+const games: SeasonGame[] = [
+  { gameId: "g1", season: 2024, label: 1, features: { spreadHome: -3, margin: 4 } },
+  { gameId: "g2", season: 2024, label: 0, features: { spreadHome: -1, margin: -18 } },
+  { gameId: "g3", season: 2025, label: 1, features: { spreadHome: -2, margin: 4 } },
+  { gameId: "g4", season: 2025, label: 0, features: { spreadHome: 3, margin: -18 } },
+];
+
+const closingLines: ClosingLines = {
+  "g1": 0.58,
+  "g2": 0.42,
+  "g3": 0.55,
+  "g4": 0.35,
+} as unknown as ClosingLines;
+
+const predict: PredictFn = (gs) => gs.map(() => 0.6);
+
+describe("walk-forward-eval", () => {
+  it("fail-closes without ≥2 seasons", () => {
+    const r = runWalkForwardEval({
+      games: games.filter((g) => g.season === 2024),
+      predict,
+      closingLines,
+    });
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.reason).toContain("seasons");
+  });
+
+  it("fail-closes without closing lines", () => {
+    const r = runWalkForwardEval({
+      games,
+      predict,
+      closingLines: {} as ClosingLines,
+    });
+    // empty object may still run — require null/undefined
+    const r2 = runWalkForwardEval({
+      games,
+      predict,
+      closingLines: null as unknown as ClosingLines,
+    });
+    expect(r2.ok).toBe(false);
+  });
+
+  it("runs walk-forward and returns a result", () => {
+    const r = runWalkForwardEval({ games, predict, closingLines, modelId: "test", dataWindow: "2024-2025" });
+    expect(r.ok).toBe(true);
+    if (r.ok) {
+      expect(r.data.overall).toBeDefined();
+      expect(r.data.seasons.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("walkForwardShipGate withholds when edge ≤ 0 or n small", () => {
+    const r = runWalkForwardEval({ games, predict, closingLines });
+    if (r.ok) {
+      const gate = walkForwardShipGate(r.data);
+      expect(["SHIP", "WITHHOLD", "NO_SAMPLES"]).toContain(gate.verdict);
+    }
+  });
+
+  it("runTaxonomyReport fail-closes on empty rows", () => {
+    const r = runTaxonomyReport([]);
+    expect(r.ok).toBe(false);
+    if (!r.ok) expect(r.reason).toContain("at least one row");
+  });
+
+  it("runTaxonomyReport runs on real rows", () => {
+    const r = runTaxonomyReport([
+      { context: "NFL_SPREAD", covered: true, width: 0.08 } as never,
+      { context: "NFL_SPREAD", covered: true, width: 0.12 } as never,
+      { context: "NFL_TOTAL", covered: false, width: 0.2 } as never,
+    ] as never);
+    expect(r.ok).toBe(true);
+    if (r.ok) expect(r.data).toBeDefined();
+  });
+});

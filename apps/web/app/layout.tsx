@@ -2,12 +2,7 @@ import type { Metadata, Viewport } from "next";
 import Script from "next/script";
 import { jsonLdScript } from "@/lib/seo/json-ld";
 import { SITE_URL } from "@/lib/seo/site-url";
-import {
-  Exo_2,
-  Instrument_Serif,
-  Inter,
-  JetBrains_Mono,
-} from "next/font/google";
+import { Inter, Barlow_Condensed, Chakra_Petch } from "next/font/google";
 import "./globals.css";
 import {
   BRAND_META,
@@ -17,52 +12,60 @@ import {
   SUPPORT_EMAIL,
 } from "@/lib/brand";
 import { CommandPalette } from "@/components/ui/command-palette";
-import { GalaxyCursor } from "@/components/ui/galaxy-cursor";
 import { SentryClientInit } from "@/components/observability/SentryClientInit";
-import { PageExplainerAuto } from "@/components/explainers/page-explainer";
 import {
   shouldRenderCloudflareAnalytics,
   shouldRenderMicrosoftClarity,
 } from "@/lib/analytics/provider-gating";
 
-// Exo 2 — the official Galaxy Sports Edge display face (Brand Bible §3):
-// geometric, futuristic, uppercase for impact. Loaded ONCE (weights 500-900);
-// it drives the standard headlines (--f-display) directly, and the heavy
-// archetype slams via the `--f-arch: var(--f-display)` alias in
-// styles/design-tokens.css — same font, no duplicate Google Fonts load.
-const displayFont = Exo_2({
+// ONE FAMILY — design contract Law 1: evidence sets the rendering.
+//
+// A figure and its sample size must sit at the SAME optical size at n=10-29, so
+// the claim and its weakness are read in one glance. That is unachievable across
+// two families: a mono figure beside a sans caption reads as machine output
+// annotated by a human, which silently rebuilds the exact hierarchy Law 1 exists
+// to destroy, at the one moment it matters most.
+//
+// Inter carries every role. Tabular figures are enabled globally on `body` in
+// styles/design-tokens.css, which is what the numerals role actually needed —
+// column alignment, not a second typeface.
+//
+// Only --f-body is bound here. The remaining family vars (--f-display, --f-arch,
+// --f-display-tech, --f-numerals, --f-mono, --f-editorial) derive from it in
+// styles/design-tokens.css, so the 245 files using font-display / font-mono /
+// font-numerals / font-arch need no change.
+//
+// Retiring Exo 2, JetBrains Mono and Instrument Serif also removes three Google
+// font downloads from every route. Do not re-introduce a second family without
+// re-opening Law 1.
+const brandFont = Inter({
   subsets: ["latin"],
-  weight: ["500", "600", "700", "800", "900"],
-  variable: "--f-display",
-  display: "swap",
-});
-
-// Next 14.2's Google font manifest does not expose Geist, so --f-body uses
-// the doctrine stack's first available Google fallback while preserving the var.
-const bodyFont = Inter({
-  subsets: ["latin"],
+  weight: ["400", "500", "600"],
   variable: "--f-body",
   display: "swap",
 });
 
-// JetBrains Mono — loaded ONCE for the numerals role; the mono role rides the
-// `--f-mono: var(--f-numerals)` alias in styles/design-tokens.css.
-const numeralsFont = JetBrains_Mono({
+// NEBULA v7 display faces (owner-approved 2026-09-10): Barlow Condensed
+// carries DISPLAY HEADLINES ONLY via --f-display; Chakra Petch carries the
+// wordmark via --f-word. Body, figures and numerals stay Inter with global
+// tabular figures — Law 1's evidence requirement (claim + sample size at the
+// same optical size) is untouched. next/font, zero added network requests.
+const displayFont = Barlow_Condensed({
   subsets: ["latin"],
-  variable: "--f-numerals",
+  weight: ["500", "600", "700"],
+  variable: "--f-cond",
   display: "swap",
 });
 
-const editorialFont = Instrument_Serif({
+const wordmarkFont = Chakra_Petch({
   subsets: ["latin"],
-  weight: ["400"],
-  style: ["normal", "italic"],
-  variable: "--f-editorial",
+  weight: ["600", "700"],
+  variable: "--f-word",
   display: "swap",
 });
 
 export const viewport: Viewport = {
-  themeColor: "#05070B",
+  themeColor: "#08090C",
   width: "device-width",
   initialScale: 1,
 };
@@ -193,12 +196,10 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const fontVariables = [
-    displayFont.variable,
-    bodyFont.variable,
-    numeralsFont.variable,
-    editorialFont.variable,
-  ].join(" ");
+  // One family for body/data, display faces for headlines/wordmark. Every
+  // other family token derives from --f-body in styles/design-tokens.css;
+  // --f-display resolves to --f-cond (Barlow Condensed). See above.
+  const fontVariables = `${brandFont.variable} ${displayFont.variable} ${wordmarkFont.variable}`;
 
   return (
     <html lang="en" className={`scroll-smooth ${fontVariables}`}>
@@ -227,14 +228,17 @@ export default function RootLayout({
         </a>
         {children}
         <CommandPalette />
-        <GalaxyCursor />
+        {/* GalaxyCursor (FE-17) is mounted on the home hero only
+            (app/page.tsx), not globally — a custom cursor overlay on
+            data-dense surfaces (dashboard, board, stats) is a distraction
+            this product's "math you can read" positioning does not need. */}
         {/* SentientShell (GhostJarvis "machine thoughts", a coin-flip "data
             uncertainty" glitch, dream mode, thermal toggle) is no longer mounted
             on public routes: first-person machine narration and a random
             interference effect that claims uncertainty without a data signal
             contradict "not AI, math you can read" and rule 1 (no fabricated
             signals). The components remain for /cockpit use. */}
-        <PageExplainerAuto />
+        {/* Field: Nova explainer launcher hidden � chrome fought the instrument look */}
         <SentryClientInit />
 
         {/* ── Free analytics (prod-only, cookieless / consent-free) ────────── */}

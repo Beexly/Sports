@@ -1,0 +1,56 @@
+{
+  "comment": "Pin the nflverse pbp inputs by URL and sha256. The parquet bytes for 2022-2025 are not committed. Re-fetch and check the hash. A mismatch means tau_hat.csv is not this table.",
+  "measured_at": "2026-10-02T17:33:31Z",
+  "sources": [
+    {
+      "season": 2022,
+      "filename": "play_by_play_2022.parquet",
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2022.parquet",
+      "sha256": "931121d8897779d7944e2a293e92ed8799c8e5cceef84096ac42339003fedc09",
+      "bytes": 20426548,
+      "upstream_updated_at": "2026-02-12T10:25:24Z",
+      "committed": false,
+      "note": "2022-2025 are local inputs to the fit and are NOT committed (80MB). Re-fetch from the URL; sha256 must match or the table is not this table."
+    },
+    {
+      "season": 2023,
+      "filename": "play_by_play_2023.parquet",
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2023.parquet",
+      "sha256": "bd3484731408def6b0ec93225bba2bd7b2c65769ca707a2b9444d891abdc6776",
+      "bytes": 20534088,
+      "upstream_updated_at": "2026-02-12T10:24:52Z",
+      "committed": false,
+      "note": "2022-2025 are local inputs to the fit and are NOT committed (80MB). Re-fetch from the URL; sha256 must match or the table is not this table."
+    },
+    {
+      "season": 2024,
+      "filename": "play_by_play_2024.parquet",
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2024.parquet",
+      "sha256": "3fd2896bc0b911b615142d2f1fabae54a4bbba5ab7b73b28187b118ef8af6a3b",
+      "bytes": 20597560,
+      "upstream_updated_at": "2026-08-13T12:26:27Z",
+      "committed": false,
+      "note": "2022-2025 are local inputs to the fit and are NOT committed (80MB). Re-fetch from the URL; sha256 must match or the table is not this table."
+    },
+    {
+      "season": 2025,
+      "filename": "play_by_play_2025.parquet",
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2025.parquet",
+      "sha256": "c6ecedd6d678cc37ed316b23ef84ee1ec6abb69c514bb11868a7ebd5a367df29",
+      "bytes": 20337029,
+      "upstream_updated_at": "2026-08-13T12:26:09Z",
+      "committed": false,
+      "note": "2022-2025 are local inputs to the fit and are NOT committed (80MB). Re-fetch from the URL; sha256 must match or the table is not this table."
+    },
+    {
+      "season": 2026,
+      "filename": "play_by_play_2026.parquet",
+      "url": "https://github.com/nflverse/nflverse-data/releases/download/pbp/play_by_play_2026.parquet",
+      "sha256": "ad20b9292686d0bbc899020062789f3b42b5c8542b9a3d9c1dc3ce317d2d248d",
+      "bytes": 3723133,
+      "upstream_updated_at": "2026-10-02T15:46:33Z",
+      "committed": true,
+      "note": "2022-2025 are local inputs to the fit and are NOT committed (80MB). Re-fetch from the URL; sha256 must match or the table is not this table."
+    }
+  ]
+}

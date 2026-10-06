@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { usePathname } from "next/navigation";
 
 /**
  * Desktop nav dropdown. Visuals stay pure CSS (group-hover /
@@ -24,6 +25,11 @@ export function NavMenu({
   groups: readonly NavGroup[];
 }) {
   const [open, setOpen] = useState(false);
+  const pathname = usePathname();
+  const active =
+    pathname === href ||
+    pathname.startsWith(`${href}/`) ||
+    groups.some((g) => g.items.some((item) => pathname === item.href || pathname.startsWith(`${item.href}/`)));
 
   return (
     <div
@@ -43,7 +49,9 @@ export function NavMenu({
         href={href}
         aria-haspopup="true"
         aria-expanded={open}
-        className="inline-flex items-center gap-1"
+        aria-current={active ? "page" : undefined}
+        className={`inline-flex items-center gap-1 ${active ? "text-iris" : ""}`}
+        style={active ? { boxShadow: "inset 0 -2px 0 var(--iris)" } : undefined}
       >
         {label}
         <span aria-hidden className="text-[9px] opacity-70 transition-transform duration-150 group-hover:rotate-180">▼</span>

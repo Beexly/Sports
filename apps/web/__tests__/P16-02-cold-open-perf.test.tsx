@@ -80,6 +80,7 @@ afterEach(() => {
   vi.unstubAllGlobals();
   vi.restoreAllMocks();
   localStorage.clear();
+  window.history.pushState({}, "", "/");
 });
 
 beforeEach(() => {
@@ -149,7 +150,7 @@ describe("P16-02 — MontageEntrance cold-open gating", () => {
     expect(container.querySelector("video")).toBeNull();
   });
 
-  it("renders the video when saveData is false and effectiveType is 4g", async () => {
+  it("F-24: does not render for an organic first visit, even on a capable connection", async () => {
     vi.stubGlobal("matchMedia", makeMatchMedia());
     vi.stubGlobal("sessionStorage", makeSessionStorage());
     vi.stubGlobal("navigator", {
@@ -160,7 +161,25 @@ describe("P16-02 — MontageEntrance cold-open gating", () => {
     const { MontageEntrance } = await import("@/components/landing/montage-entrance");
     const { container } = render(<MontageEntrance />);
 
-    // The overlay + video should be present for a capable visitor.
+    // The montage is opt-in only now (?intro=play) — an organic visit with
+    // no query string must never autoplay it, regardless of connection.
+    expect(container.querySelector("video")).toBeNull();
+  });
+
+  it("renders the video when explicitly requested via ?intro=play on a capable connection", async () => {
+    window.history.pushState({}, "", "/?intro=play");
+    vi.stubGlobal("matchMedia", makeMatchMedia());
+    vi.stubGlobal("sessionStorage", makeSessionStorage());
+    vi.stubGlobal("navigator", {
+      ...globalThis.navigator,
+      connection: { saveData: false, effectiveType: "4g" },
+    });
+
+    const { MontageEntrance } = await import("@/components/landing/montage-entrance");
+    const { container } = render(<MontageEntrance />);
+
+    // The overlay + video should be present for a capable visitor who
+    // explicitly requested the replay.
     expect(container.querySelector("video")).not.toBeNull();
     expect(container.querySelector("video")?.getAttribute("src")).toBe("/brand/gse-reveal.mp4");
     expect(container.querySelector("video")?.getAttribute("poster")).toBe("/brand/gse-reveal-poster.png");

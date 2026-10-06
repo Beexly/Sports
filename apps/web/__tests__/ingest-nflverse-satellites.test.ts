@@ -11,6 +11,7 @@ const mocks = vi.hoisted(() => ({
   snapDelete: vi.fn(), snapCreate: vi.fn(),
   injDelete: vi.fn(), injCreate: vi.fn(),
   playerFindMany: vi.fn(),
+  transaction: vi.fn((ops: unknown[]) => Promise.all(ops)),
 }));
 
 vi.mock("@sports/db", () => ({
@@ -18,6 +19,7 @@ vi.mock("@sports/db", () => ({
     snapCount: { deleteMany: mocks.snapDelete, createMany: mocks.snapCreate },
     injury: { deleteMany: mocks.injDelete, createMany: mocks.injCreate },
     player: { findMany: mocks.playerFindMany },
+    $transaction: mocks.transaction,
   },
 }));
 
@@ -39,6 +41,7 @@ beforeEach(() => {
   mocks.snapCreate.mockImplementation(async (a: { data: unknown[] }) => ({ count: a.data.length }));
   mocks.injCreate.mockImplementation(async (a: { data: unknown[] }) => ({ count: a.data.length }));
   mocks.playerFindMany.mockResolvedValue([{ id: "pid-00-1", gsisId: "00-1" }]);
+  mocks.transaction.mockImplementation((ops: unknown[]) => Promise.all(ops));
 });
 
 describe("ingestSnapCounts", () => {
@@ -77,6 +80,29 @@ describe("ingestSnapCounts", () => {
     expect(res.status).toBe("source-error");
     expect(mocks.snapDelete).not.toHaveBeenCalled();
   });
+
+  it("routes the season replace through db.$transaction (Devin Review, PR #734): a createMany failure cannot erase the season with nothing to replace it", async () => {
+    await ingestSnapCounts(2024, { now: NOW, fetcher: async () => fixture() });
+    expect(mocks.transaction).toHaveBeenCalledTimes(1);
+    expect(mocks.transaction.mock.calls[0]![0]).toHaveLength(2);
+
+    mocks.snapCreate.mockRejectedValueOnce(new Error("constraint violation"));
+    await expect(
+      ingestSnapCounts(2024, { now: NOW, fetcher: async () => fixture() }),
+    ).rejects.toThrow("constraint violation");
+  });
+
+  it("batches createMany at 2000 rows so a full-season table doesn't blow Postgres's bound-parameter limit (Devin Review, PR #734)", async () => {
+    const records = Array.from({ length: 4500 }, (_, i) => ({
+      player: `Player ${i}`, pfr_player_id: `P${i}`, season: "2024", week: "1", team: "KC",
+    }));
+    const res = await ingestSnapCounts(2024, { now: NOW, fetcher: async () => ({ records }) });
+    expect(res.status).toBe("ok");
+    expect(res.rowsWritten).toBe(4500);
+    expect(mocks.snapCreate).toHaveBeenCalledTimes(3);
+    expect(mocks.transaction).toHaveBeenCalledTimes(1);
+    expect(mocks.transaction.mock.calls[0]![0]).toHaveLength(4); // delete + 3 batches
+  });
 });
 
 describe("ingestInjuries", () => {
@@ -105,5 +131,28 @@ describe("ingestInjuries", () => {
     const res = await ingestInjuries(2024, { now: NOW, fetcher: async () => fixture() });
     expect(res.status).toBe("clearance-denied");
     expect(mocks.injCreate).not.toHaveBeenCalled();
+  });
+
+  it("routes the season replace through db.$transaction (Devin Review, PR #734): a createMany failure cannot erase the season with nothing to replace it", async () => {
+    await ingestInjuries(2024, { now: NOW, fetcher: async () => fixture() });
+    expect(mocks.transaction).toHaveBeenCalledTimes(1);
+    expect(mocks.transaction.mock.calls[0]![0]).toHaveLength(2);
+
+    mocks.injCreate.mockRejectedValueOnce(new Error("constraint violation"));
+    await expect(
+      ingestInjuries(2024, { now: NOW, fetcher: async () => fixture() }),
+    ).rejects.toThrow("constraint violation");
+  });
+
+  it("batches createMany at 2000 rows so a full-season report doesn't blow Postgres's bound-parameter limit (Devin Review, PR #734)", async () => {
+    const records = Array.from({ length: 4500 }, (_, i) => ({
+      full_name: `Player ${i}`, gsis_id: `00-${i}`, season: "2024", week: "3", team: "KC",
+    }));
+    const res = await ingestInjuries(2024, { now: NOW, fetcher: async () => ({ records }) });
+    expect(res.status).toBe("ok");
+    expect(res.rowsWritten).toBe(4500);
+    expect(mocks.injCreate).toHaveBeenCalledTimes(3);
+    expect(mocks.transaction).toHaveBeenCalledTimes(1);
+    expect(mocks.transaction.mock.calls[0]![0]).toHaveLength(4); // delete + 3 batches
   });
 });

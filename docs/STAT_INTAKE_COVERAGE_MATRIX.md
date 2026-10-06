@@ -57,7 +57,53 @@ each into CONSUMED/PERSISTED signal is the next (founder-gated) layer.
 | Weather (NWS) | ✅ | med | ingested |
 | **College football (cfbfastR / collegefootballdata.com)** | ❌ GAP | **high** | QB college→NFL scheme transition (you named this). **Not nflverse** — needs its own source-rights classification + API terms review before ingest. |
 | Big Data Bowl tracking (Kaggle) | ❌ GAP | med | Phase D — separation/space models; research-sample only |
-| PFF / NGS raw feed / SIS grades | ⛔ | — | proprietary moats — we build equivalents, never copy (legal line) |
+| PFF paid API / NGS raw feed / SIS grades | ⛔ | — | proprietary moats — we build equivalents, never copy (legal line). **Founder override 2026-09-18:** PFF's own *public* player-page embedded grades (`__NEXT_DATA__`) are in scope at CATALOG tier with per-ingestion citation (time/date/exact URL); the paid PFF API stays excluded. |
+| PFF public player-page grades | ✅ | med | **CATALOG (2026-09-18, WIRE-40)** — `pff-grades-client.ts`; fail-closed, sourceUrl+fetchedAt on every payload |
+
+## WIRE-40 — 40 new verified inputs at CATALOG tier (2026-09-18)
+
+Forty inputs live-verified by unauthenticated GET on 2026-09-18 (~01:20–01:42 CDT;
+see `/tmp/verified-40/LIST.md`), registered in `packages/data-ingestion/src/source-registry.ts`
+and wired as GET-only, fail-closed clients (`assertIngestible` + `noStoreFetch` +
+`AbortController` timeout; every `use-with-caution` source defaults OFF behind an env flag).
+**Verdict tally: 1 cleared, 14 cleared-with-attribution, 25 use-with-caution.**
+Deviation from the original verified-40 tally (4/14/22): Sleeper's 3 entries were
+downgraded cleared → use-with-caution because the repo's standing doctrine holds Sleeper
+is free only for non-commercial use with no written commercial grant.
+
+| # | Registry ID(s) | Client file | Verdict | Env flag |
+|---|---|---|---|---|
+| 1–2 | `ftn-statsiq-catalog`, `ftn-statsiq-home` | `ftn-statsiq-client.ts` | use-with-caution | `FTN_STATSIQ_INGEST` |
+| 3 | `pff` | `pff-grades-client.ts` | use-with-caution | `PFF_GRADES_INGEST` |
+| 4–10 | `sharp-football-pace`, `-offensive-tendencies`, `-personnel`, `-coverage`, `-offensive-line`, `-defensive-line`, `-offensive-efficiency` | `sharp-football-client.ts` | use-with-caution | `SHARP_FOOTBALL_INGEST` |
+| 11–15 | `pregame-consensus-history`, `pregame-odds-history`, `pregame-consensus-meta`, `pregame-odds-meta`, `pregame-event-listing` | `pregame-client.ts` | use-with-caution | `PREGAME_INGEST` |
+| 16 | `action-network` | `action-network-client.ts` | use-with-caution | `ACTION_NETWORK_INGEST` |
+| 17–18 | `covers-odds-history`, `covers-live-odds` | `covers-client.ts` | cleared-with-attribution | `COVERS_INGEST` (stricter than minimum) |
+| 19 | `vsin-betting-splits` | `vsin-client.ts` | cleared-with-attribution | `VSIN_INGEST` (stricter than minimum) |
+| 20 | `dkn-betting-splits` | `dknetwork-client.ts` | cleared-with-attribution | `DKN_SPLITS_INGEST` (stricter than minimum) |
+| 21–22 | `draftkings-getcontests`, `draftkings-getavailableplayers` | `draftkings-dfs-client.ts` | use-with-caution | `DRAFTKINGS_DFS_INGEST` |
+| 23 | `spreadspoke-scores` | `spreadspoke-client.ts` | use-with-caution | `SPREADSPOKE_INGEST` |
+| 24 | `keeptradecut-dynasty` | `keeptradecut-client.ts` | cleared-with-attribution | none (cleared tier) |
+| 25 | `fantasypros-ecr` | `fantasypros-ecr-client.ts` | cleared-with-attribution | none (cleared tier) |
+| 26–27 | `underdog-stats`, `underdog-projections` | `underdog-client.ts` | use-with-caution | `UNDERDOG_INGEST` |
+| 28 | `fourforfour-cheatsheet` | `fourforfour-client.ts` | cleared-with-attribution | none (cleared tier) |
+| 29 | `dynastyprocess-values` | `dynastyprocess-client.ts` | cleared | none (cleared tier) |
+| 30–32 | `sleeper-state`, `sleeper-players`, `sleeper-trending` | `sleeper-feeds-client.ts` | use-with-caution | `SLEEPER_FEEDS_INGEST` |
+| 33–34 | `teamrankings-ratings`, `teamrankings-trends` | `teamrankings-client.ts` | cleared-with-attribution | none (cleared tier) |
+| 35 | `rotowire-rss` | `rotowire-rss-client.ts` | cleared-with-attribution | none (cleared tier) |
+| 36–38 | `dvoa-timeseries-local`, `dvoa-historical-local`, `dvoa-fo-finals-local` | `dvoa-archive-client.ts` | cleared-with-attribution | none (local CSVs) |
+| 39 | `ftn-charting-openapi` | `ftn-charting-spec-client.ts` | use-with-caution | `FTN_CHARTING_SPEC_INGEST` |
+| 40 | `fo-wayback-dvoa-1983` | `dvoa-archive-client.ts` | cleared-with-attribution | none (Wayback snapshot) |
+
+Notes:
+- Covers, VSiN, and DK Network are `cleared-with-attribution` in the registry but their
+  clients are env-gated anyway — stricter than the minimum, because their commercial
+  terms (Covers redistribution limits, DK Network personal/non-commercial ToS) are narrow.
+- The DraftKings DFS lobby/lineup website endpoints (#21–22) are not a documented public
+  API; `draftGroupId` is ephemeral per pull and must be resolved from `getContests()` first.
+- PFF: public page-embedded grades only; every ingestion must record the exact page URL
+  and fetch date/time (the client returns `sourceUrl` + `fetchedAt` on every payload).
+  Paid PFF API remains excluded.
 
 ## So: do we have everything? — the calibrated answer
 - **Public *box + advanced* stats (nflverse CC-BY-4.0): now essentially complete at the
