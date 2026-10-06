@@ -63,7 +63,7 @@ import { resolveEffectiveAuthority } from "@/lib/ai-control-plane/validation";
 import { serviceActor } from "@/lib/auth/actor";
 
 const PG_URL = process.env["AI_BUDGET_PG_URL"];
-const suite = describe;
+const suite = PG_URL ? describe : describe.skip;
 
 const SCHEMA = "ai_budget_acceptance";
 const ACTOR = serviceActor({ subjectId: "service:budget-pg-test" });
@@ -120,13 +120,6 @@ suite("§10.9 budget acceptance against real Postgres", () => {
   };
 
   beforeAll(async () => {
-    const dir = join(__dirname, "..", "test-artifacts");
-    mkdirSync(dir, { recursive: true });
-    writeFileSync(
-      join(dir, "ai-budget-acceptance.json"),
-      JSON.stringify(artifact, null, 2),
-    );
-    if (!PG_URL) return;
     pool = new Pool({
       connectionString: PG_URL,
       max: 25,
@@ -212,7 +205,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
 
   // ── 1. The DB CHECK constraints themselves (§10.2/§10.9) ───────────────────────
 
-  it.skipIf(!PG_URL)("DB cap CHECK: an over-cap write on an ACTIVE window is REJECTED by Postgres", async () => {
+  it("DB cap CHECK: an over-cap write on an ACTIVE window is REJECTED by Postgres", async () => {
     await seedWindow("chk-cap", "1.000000");
     await expect(
       pool.query(
@@ -223,7 +216,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     artifact["dbCapCheck"] = "over-cap UPDATE rejected by CHECK constraint";
   });
 
-  it.skipIf(!PG_URL)("DB CHECK: negative money is unrepresentable", async () => {
+  it("DB CHECK: negative money is unrepresentable", async () => {
     await seedWindow("chk-neg", "1.000000");
     await expect(
       pool.query(
@@ -233,7 +226,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     ).rejects.toThrow(/ai_budget_windows_nonneg_check/);
   });
 
-  it.skipIf(!PG_URL)("DB cap CHECK: over-cap IS representable together with OVERAGE_LOCKED (preserved real charge)", async () => {
+  it("DB cap CHECK: over-cap IS representable together with OVERAGE_LOCKED (preserved real charge)", async () => {
     await seedWindow("chk-lock", "1.000000");
     await expect(
       pool.query(
@@ -245,7 +238,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     ).resolves.toBeTruthy();
   });
 
-  it.skipIf(!PG_URL)("the conditional UPDATE admits a fitting hold (1 row) and refuses an over-cap one (0 rows)", async () => {
+  it("the conditional UPDATE admits a fitting hold (1 row) and refuses an over-cap one (0 rows)", async () => {
     await seedWindow("chk-cond", "1.000000");
     const fits = await pool.query(
       `UPDATE "ai_budget_windows"
@@ -266,7 +259,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     expect((await windowRow("chk-cond")).invariant).toBe(true);
   });
 
-  it.skipIf(!PG_URL)("unique (invocationId, windowId, reservationVersion) is DB-enforced", async () => {
+  it("unique (invocationId, windowId, reservationVersion) is DB-enforced", async () => {
     await seedWindow("chk-uniq", "5.000000");
     await seedInvocation("inv-uniq");
     const insert = (id: string) =>
@@ -288,7 +281,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     );
   });
 
-  it.skipIf(!PG_URL)("window FK is RESTRICT: deleting a window can NEVER cascade away reservation evidence", async () => {
+  it("window FK is RESTRICT: deleting a window can NEVER cascade away reservation evidence", async () => {
     await seedWindow("chk-fk-w", "5.000000");
     await seedInvocation("inv-fk-w");
     await pool.query(
@@ -313,7 +306,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     );
   });
 
-  it.skipIf(!PG_URL)("provisional-state CHECK is biconditional: a settled-without-an-amount row is unrepresentable", async () => {
+  it("provisional-state CHECK is biconditional: a settled-without-an-amount row is unrepresentable", async () => {
     await seedWindow("chk-prov", "5.000000");
     await seedInvocation("inv-prov");
     // Direction 1: PROVISIONALLY_SETTLED MUST carry provisionalUsd.
@@ -342,7 +335,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
 
   // ── 2. §10.2 overage on real PG ────────────────────────────────
 
-  it.skipIf(!PG_URL)("actual > hold preserves the charge over-cap, locks the window, blocks further reserves", async () => {
+  it("actual > hold preserves the charge over-cap, locks the window, blocks further reserves", async () => {
     await seedWindow("ovr-w", "0.200000");
     await seedInvocation("inv-ovr");
     await reserve(budgetDb, {
@@ -403,7 +396,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     };
   }
 
-  it.skipIf(!PG_URL)("100 concurrent end-to-end invocations stay within the cap", async () => {
+  it("100 concurrent end-to-end invocations stay within the cap", async () => {
     // Each plan's worst case: 2 billable routes × $0.05 = $0.10.
     // Cap $6.00 fits exactly 60 of the 100.
     await seedWindow(WINDOW_ID, "6.000000");
@@ -595,7 +588,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
 
   // ── 4. §10.9 crash recovery ────────────────────────────────
 
-  it.skipIf(!PG_URL)("crash between reserve and dispatch: the sweeper frees the hold after proving a clean ledger", async () => {
+  it("crash between reserve and dispatch: the sweeper frees the hold after proving a clean ledger", async () => {
     await seedWindow("crash-clean", "1.000000");
     await seedInvocation("inv-crash-clean");
     await reserve(budgetDb, {
@@ -612,7 +605,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     artifact["crashBetweenReserveAndDispatch"] = "hold released by sweeper";
   });
 
-  it.skipIf(!PG_URL)("crash between dispatch and settle: the sweeper converts the hold to an UNRELEASABLE reconciliation hold", async () => {
+  it("crash between dispatch and settle: the sweeper converts the hold to an UNRELEASABLE reconciliation hold", async () => {
     await seedWindow("crash-dirty", "1.000000");
     await seedInvocation("inv-crash-dirty");
     await reserve(budgetDb, {
@@ -650,7 +643,7 @@ suite("§10.9 budget acceptance against real Postgres", () => {
     };
   });
 
-  it.skipIf(!PG_URL)("an ambiguous end-to-end invocation retains every hold (§10.1)", async () => {
+  it("an ambiguous end-to-end invocation retains every hold (§10.1)", async () => {
     const utcDay = new Date().toISOString().slice(0, 10);
     const resolvedId = `entity:GSE:daily:${utcDay}`;
     await seedWindow(resolvedId, "1000"); // plenty (storm test may share it)

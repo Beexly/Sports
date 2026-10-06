@@ -7618,7 +7618,7 @@ inventoried without verbatim evidence.
    as an in-window leaderboard. Full 31-row leaderboard (PLAYER, TEAM,
    PASSER_RATING) in
    `docs/dfs/research/2026-10-03/full-tables/gridironinfo-qb-passer-rating-2026.csv`:
-   Drew Lock (SEA) 127.3 #1; Purdy (SF) 126.3; Rush (ATL) 43.5 last; Winston
+   Lock (SEA) 127.3 #1; Purdy (SF) 126.3; Rush (ATL) 43.5 last; Winston
    (NYG) 55.6. Data source: same header/footer credits as item 2.
    https://x.com/GridironInfo_/status/2106379300622520472
 
@@ -8914,7 +8914,7 @@ posts). Nothing inventoried without evidence.
 
 42. @MagicSportsGuy — "Asked the AI Connector @StatRankings for Saints
     RB usage in the 4th quarter of week 3 (after Travis Etienne got
-    hurt)" (2026-10-05). A.I.-GENERATED TABLE (attributed): New Orleans
+    hurt)" (2026-10-05). AI-GENERATED TABLE (attributed): New Orleans
     RBs - Week 3 - 4th quarter - 11 snaps RB carries; cols RB/Carries/RB
     rush share/Routes/Targets/Tgt share. Full 4-row table in
     `docs/dfs/research/2026-10-05/full-tables/magicsportsguy-saints-rb-q4-week3-ai.csv`:

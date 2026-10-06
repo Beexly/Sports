@@ -181,7 +181,7 @@ describe("Banned-phrase scanner", () => {
   });
 
   // Tripwire (2026-09-02 automated review): the "AI picks" family only
-  // covered plural "AI picks" and hyphenated `AI-generated picks` — the
+  // covered plural "AI picks" and hyphenated "AI-generated picks" — the
   // singular and un-hyphenated variants slipped past the gate. All six
   // singular/plural x hyphen/space combinations must now hit.
   it("flags every singular/plural x hyphen/space variant of the 'AI pick(s)' framing", () => {

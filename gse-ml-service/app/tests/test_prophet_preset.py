@@ -4,11 +4,10 @@ import numpy as np
 try:
     import pandas as pd
     from prophet import Prophet
+    from app.models.prophet_preset import ProphetSportsPredictor
     HAVE_PROPHET = True
 except ImportError:
     HAVE_PROPHET = False
-
-from app.models.prophet_preset import ProphetSportsPredictor
 
 @pytest.mark.skipif(not HAVE_PROPHET, reason="Prophet/pandas not installed")
 def test_prophet_sports_predictor_presets():
