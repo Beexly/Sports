@@ -20,7 +20,7 @@ const gates = { canPersistCanonicalHistory: true, minDataQualityForGameLog: 40 }
 
 beforeEach(() => {
   mocks.settleGameLogs.mockReset();
-  isResearchPowerRatingsEnabled: vi.fn().mockReturnValue(false),
+  mocks.isResearchPowerRatingsEnabled = vi.fn().mockReturnValue(false);
 });
 
 describe("drainPendingTeamGameLogs", () => {
