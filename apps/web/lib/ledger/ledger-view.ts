@@ -67,6 +67,7 @@ export type LedgerView =
       readonly seasons: readonly LedgerSeasonRow[];
       readonly calibration: LedgerCalibrationView | null;
       readonly significance: LedgerSignificanceView | null;
+      readonly preKickoffFeatureHashes: readonly string[];
       readonly note: string;
     };
 
@@ -92,6 +93,7 @@ export function loadLedgerView(): LedgerView {
     seasons: [],
     calibration: null,
     significance: null,
+    preKickoffFeatureHashes: [],
     note: NO_SUBSTANTIATED_SEASONS_NOTE,
   };
 }

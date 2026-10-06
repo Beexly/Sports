@@ -689,7 +689,7 @@ function scoreSpreadPick(input: OddsInput, fetchedAt: Date): ScoredPick | null {
     rankOnAnyTrueProb: true,
   });
   const independentEdge: IndependentEdgeSummary | null = independentEdgeRaw
-    ? { ...independentEdgeRaw, priced: rank.priced }
+    ? { ...independentEdgeRaw, priced: rank.priced, trueProbBasis: "mint" }
     : null;
   const independentEdgeFactors: FactorDetail[] = independentEdge
     ? [
@@ -1333,7 +1333,7 @@ function scoreMoneylinePick(input: OddsInput, fetchedAt: Date): ScoredPick | nul
     rankOnAnyTrueProb: true,
   });
   const independentEdge: IndependentEdgeSummary | null = independentEdgeRaw
-    ? { ...independentEdgeRaw, priced: rank.priced }
+    ? { ...independentEdgeRaw, priced: rank.priced, trueProbBasis: "mint" }
     : null;
 
   const independentEdgeFactors: FactorDetail[] = independentEdge

@@ -1582,6 +1582,11 @@ export async function processSport(
               modelProb: modelProbForReceipt(pick),
               modelVersion: pick.modelVersion,
               asOf: pick.dataFreshnessAt.toISOString(),
+              // Explicit null commits featureHash=none. Omitting the key would
+              // leave new receipts indistinguishable from pre-field receipts.
+              // There is no feature vector on this mint yet, so none is the
+              // honest seal. A later vector must be a sha256, not a label.
+              featureHash: null,
             },
             sha256Hex,
           );
