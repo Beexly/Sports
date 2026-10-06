@@ -6,7 +6,14 @@
  *
  * Law: oddsApiRequired=false · refuse-default · LIVE_BOARD independent
  *
- * Schedule: vercel.json every 30 minutes (ADD — keep existing crons)
+ * Schedule: NONE. This route is NOT registered in vercel.json's `crons` array,
+ * so nothing invokes it on a schedule — it runs only when triggered by hand with
+ * a Bearer CRON_SECRET. The line here previously read as though a 30-minute
+ * schedule existed; it was an unexecuted instruction to add one, and it made a
+ * dead job look live. Registering it is founder-only (vercel.json is sealed):
+ * add { "path": "/api/cron/gamma", "schedule": "0,30 * * * *" } to
+ * apps/web/vercel.json AND the repo-root copy, then mirror the entry into
+ * lib/ops/cron-schedule-manifest.ts so liveness assessment can see it.
  *
  * Durability: set CLOSING_ARCHIVE_PATH for file-backed archive across cold starts.
  * Unset path = process-local only (honest single-isolate).
