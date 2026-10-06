@@ -92,7 +92,7 @@ describe("three-way moneyline exclusion uses the engine's helper", () => {
     expect(out.included).toBe(1);
     expect(out.excluded).toEqual({ three_way_market: 2, no_market_probability: 0, non_moneyline_market: 0 });
     expect(out.samples).toEqual([
-      { p: 0.61, y: 1, sportKey: "baseball_mlb", modelVersion: "v5.2.7", pickType: "MONEYLINE" },
+      { p: 0.61, y: 1, sportKey: "baseball_mlb", modelVersion: "v5.2.7", pickType: "MONEYLINE", settledAtMs: settled.getTime() },
     ]);
     expect(out.bySource).toEqual({ proof_receipt: 1 });
   });
@@ -184,7 +184,7 @@ describe("(b) no market probability: excluded, never scored on confidence/100", 
     expect(out.included).toBe(2);
     expect(out.excluded.no_market_probability).toBe(0);
     expect(out.bySource).toEqual({ proof_receipt: 1, resolver: 1 });
-    expect(out.samples[1]).toEqual({ p: 0.55, y: 0, sportKey: "baseball_mlb", modelVersion: "v5.2.1", pickType: "MONEYLINE" });
+    expect(out.samples[1]).toEqual({ p: 0.55, y: 0, sportKey: "baseball_mlb", modelVersion: "v5.2.1", pickType: "MONEYLINE", settledAtMs: settled.getTime() });
   });
 
   it("C-110: single-book resolver results are scored and counted apart from the two-or-more-book recompute", () => {
@@ -206,7 +206,7 @@ describe("(b) no market probability: excluded, never scored on confidence/100", 
     expect(out.included).toBe(3);
     expect(out.excluded).toEqual({ three_way_market: 0, no_market_probability: 1, non_moneyline_market: 0 });
     expect(out.bySource).toEqual({ proof_receipt: 1, resolver: 1, resolver_single_book: 1 });
-    expect(out.samples[2]).toEqual({ p: 0.58, y: 1, sportKey: "baseball_mlb", modelVersion: "v5.2.6", pickType: "MONEYLINE" });
+    expect(out.samples[2]).toEqual({ p: 0.58, y: 1, sportKey: "baseball_mlb", modelVersion: "v5.2.6", pickType: "MONEYLINE", settledAtMs: settled.getTime() });
     // The composition note says single-book probabilities are in, and how they are tagged.
     expect(out.notes.some((n) => /Single-book market probabilities are included/.test(n) && /market_p_single_book/.test(n))).toBe(true);
     expect(out.notes.some((n) => /resolver_single_book/.test(n))).toBe(true);
