@@ -581,6 +581,7 @@ describe("loadPublishTimeMarketPResolver: bounded two-phase reads for N picks", 
       sportKey: "americanfootball_nfl",
       modelVersion: "v5.2.7",
       pickType: "MONEYLINE",
+      settledAtMs: SETTLED.getTime(),
     });
     expect(built.taggedSamples[2]).toEqual({
       p: 0.571116,
@@ -588,6 +589,7 @@ describe("loadPublishTimeMarketPResolver: bounded two-phase reads for N picks", 
       sportKey: "americanfootball_nfl",
       modelVersion: "v5.2.7",
       pickType: "MONEYLINE",
+      settledAtMs: SETTLED.getTime(),
     });
 
     expect(marketPSourcesFromBySource(built.bySource)).toEqual({
