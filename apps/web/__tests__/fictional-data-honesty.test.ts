@@ -136,9 +136,6 @@ const fictionBearing = (p: { src: string }): boolean =>
  *     not for missing disclosure. Both are honest in body copy.
  */
 const LABELED_SURFACES = new Set([
-  // Renders ILLUSTRATIVE_BRIEF (illustrative: true); SignalCourtroom prints
-  // an "Illustrative" badge off that flag.
-  "intelligence/page.tsx",
   // "the personas are fictional and the matchups are generic" in body copy.
   "airwave/page.tsx",
   // "Running on a sample slate ... the player pool is illustrative", now

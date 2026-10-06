@@ -24,14 +24,18 @@ describe("Fantasy competitive baseline", () => {
     for (const key of [
       "daily-dashboard",
       "projections",
+      "draft-cheatsheets",
       "dfs-optimizer",
       "multi-lineup-manager",
       "ownership",
       "value-plays",
+      "locks-fades-exposures",
+      "social-sentiment",
       "breaking-news-injuries",
       "props-ev",
-      "rankings-cheatsheets",
+      "live-scoring-status",
       "analysis-strategy",
+      "odds-markets",
       "community-support",
       "multi-sport",
     ]) {
@@ -55,7 +59,7 @@ describe("Fantasy competitive baseline", () => {
 
     expect(page).toMatch(/LineStar plus Elite Sports is the floor/);
     expect(page).toMatch(/FANTASY_BASELINE_MODULES/);
-    // The global nav was slimmed to ~6 top-level doors (Board, Players, Intelligence,
+    // The global nav was slimmed to ~6 top-level doors (Board, Players,
     // Fantasy, Today, Pricing); the Fantasy ▾ dropdown now carries only the core
     // manager/DFS tools plus Connect League. The /fantasy/baseline route stays
     // discoverable from its own section (the /fantasy page), not the global chrome —
