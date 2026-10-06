@@ -39,6 +39,14 @@ The mind is the ENTIRE corpus — all the math, all deep and complex equations, 
 
 ### INGEST-AND-LEARN (Garrett, 2026-09-28 — HARD)
 DO NOT CLAIM THINGS ARE DEAD UNTIL TESTED AND CITED AND CONFIRMED. Untested items default to UNTESTED — QUEUED FOR EVALUATION, never SKIP/DEAD. WE INGEST, WE LEARN: commercial data is never used commercially — it is learned from with intelligence and reasoning, then GSE gives its own analysis. A restrictive license means research/learn-only, not "throw it away."
+### REASONING DOCTRINE (Garrett, 2026-10-05 — HARD)
+The mission was NEVER to beat the closing line with a better equation — the close is the sharpest number on earth and no formula outguns it. The mission is a brain that UNDERSTANDS football better than the market and reasons from that understanding with all data underneath. Equations are school, not ammo. Edge lives in: (1) situations models don't read (1–3 pts/spot, literature-measured); (2) timing/news before the move (1–2% CLV); (3) SGP correlation mispricing (books hold 15–30% — biggest structural hole); (4) coverage of every game/prop (softness follows inattention); (5) pass discipline (honest uncertainty = avoided -EV). Measured by CLV, calibration, line-move prediction, pass discipline — NEVER "did μ beat the close."
+
+### THE STACK (Garrett, 2026-10-05 — HARD)
+Layer 1 = the number everyone sees (market line, respected as foundation — start here, not from zero). Layer 2 = hyper-intelligent situational/contextual/emotional reasoning overlay on top. Output = base + reasoning. Ingestion rule: feed EVERYTHING (datasets, equations) even if dormant this moment — dormant is not wasted. Testing rule: test way later down the line; ingestion is never gated by testing.
+
+### THE LEARNING LOOP (Garrett, 2026-10-05 — HARD)
+Test as we go, continuously, at every grain: game by game, play by play, pre-play by pre-play (brain states expectation before each snap, grades after). Interviews/coach-speak are testable signals (stated Tuesday vs observed Sunday). Ingestion never gated by testing; testing never waits for ingestion. Formal bake-offs come later; the learning loop runs from the first snap. Canonical archetypes: atmosphere spot (Saints first home MNF, Superdome), layered revenge (Flores vs Miami: fired + lawsuit + elite blitz + bad QB), logistical disruption (if it can affect the game, it's a signal).
 
 
 **UPDATED 2026-09-13 (Motif — game-day calibration pass + v5.3.0 spec).** Founder ordered a full
