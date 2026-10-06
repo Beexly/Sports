@@ -117,17 +117,12 @@ interface PositioningHit {
  * (buildPositioningRegex) — so "AI-powered", "AI powered", and "ai driven"
  * are all caught the same way they are in apps/web/app and apps/web/components.
  */
-import { isVerbatimSocialDigestLine } from "@/lib/trust-claims";
-
-function scanForPositioningVocab(text: string, lockDigestExempt: boolean = false): PositioningHit[] {
+function scanForPositioningVocab(text: string): PositioningHit[] {
   const hits: PositioningHit[] = [];
   const lines = text.split(/\r?\n/);
   for (const phrase of FORBIDDEN_PHRASES) {
     const pattern = buildPositioningRegex([phrase]);
     lines.forEach((line, idx) => {
-      if (lockDigestExempt && isVerbatimSocialDigestLine(line)) {
-        return;
-      }
       if (pattern.test(line)) {
         hits.push({ phrase, line: idx + 1, snippet: line.trim() });
       }
@@ -166,7 +161,7 @@ describe("Docs — public-copy banned-phrase scan", () => {
       const text = readDoc(doc);
       if (text === "") return;
       const stripped = stripCode(text);
-      const hits = scanForPositioningVocab(stripped, MEMORY_DOCS.has(doc));
+      const hits = scanForPositioningVocab(stripped);
       if (hits.length > 0) {
         const summary = hits
           .map((h) => `  line ${h.line}: "${h.phrase}" — ${h.snippet}`)
