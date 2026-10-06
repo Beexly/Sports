@@ -41,6 +41,12 @@ const ACCEPTED = [
       "by the same next@16 major upgrade. The top-level postcss is already patched.",
     reviewBy: "2027-01-15",
   },
+  {
+    package: "source-map-js",
+    reason:
+      "Only the copy bundled inside vite/node_modules is affected; it is remediated by a major upgrade.",
+    reviewBy: "2027-01-15",
+  },
 ];
 
 const args = new Set(process.argv.slice(2));
