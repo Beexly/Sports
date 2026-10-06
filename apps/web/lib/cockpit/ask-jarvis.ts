@@ -394,22 +394,37 @@ function answerWorkers(summary: OwnerSummary): JarvisAnswer {
     "Workers: BullMQ + Redis queue. Check /admin/dashboard for last run timestamps.",
   ];
 
-  const bothGreen =
-    dataReliability?.status === "GREEN" && settlement?.status === "GREEN";
+  // UNKNOWN is not a failure and it is not health — it means no run history was
+  // readable (fresh deploy, or the loader fell through to zero counts because
+  // the database was unreachable; see classifyIngestion/classifySettlement in
+  // ./jarvis.ts, which return "UNKNOWN" when the last-run timestamp is null).
+  // Reporting it as "workers have issues" at MEDIUM confidence was a confident
+  // guess dressed as a finding.
+  const ingestionStatus = dataReliability?.status ?? "UNKNOWN";
+  const settlementStatus = settlement?.status ?? "UNKNOWN";
+  const statuses = [ingestionStatus, settlementStatus];
+  const bothGreen = statuses.every((s) => s === "GREEN");
+  const anyUnknown = statuses.some((s) => s === "UNKNOWN");
+  const anyProblem = statuses.some((s) => s === "RED" || s === "AMBER");
 
   return {
     intent: "workers",
     question: JARVIS_QUESTIONS["workers"],
     answer: bothGreen
       ? "Ingestion and settlement workers are running normally. No manual intervention needed."
-      : `Workers have issues. Ingestion: ${dataReliability?.status ?? "UNKNOWN"}, Settlement: ${settlement?.status ?? "UNKNOWN"}.`,
+      : anyProblem
+        ? `Workers have issues. Ingestion: ${ingestionStatus}, Settlement: ${settlementStatus}.`
+        : `I cannot tell. Ingestion: ${ingestionStatus}, Settlement: ${settlementStatus}. ` +
+          "UNKNOWN means no run history was readable — it is not evidence of failure, and not evidence of health.",
     supportingState: supporting,
-    confidence: bothGreen ? "HIGH" : "MEDIUM",
+    confidence: bothGreen ? "HIGH" : anyUnknown ? "LOW" : "MEDIUM",
     caveat:
       "Agents are internal operator roles. They produce DRAFTS only — no external actions happen without your approval.",
-    nextAction: !bothGreen
-      ? "Check /admin/dashboard for ingestion and settlement run logs."
-      : "Continue monitoring. Workers are healthy.",
+    nextAction: anyUnknown
+      ? "Check /admin/dashboard for ingestion and settlement run history before assuming a failure."
+      : !bothGreen
+        ? "Check /admin/dashboard for ingestion and settlement run logs."
+        : "Continue monitoring. Workers are healthy.",
   };
 }
 
@@ -538,10 +553,14 @@ function answerWhatIsNotWired(_summary: OwnerSummary): JarvisAnswer {
   return {
     intent: "what-is-not-wired",
     question: JARVIS_QUESTIONS["what-is-not-wired"],
+    // The named list is READ FROM the registry, never restated. A hand-written
+    // list drifts the moment a capability's status changes — this one cannot.
     answer:
-      `${missing.length} of ${CAPABILITY_REGISTRY.length} capabilities are designed but not ` +
-      "functional: memory, tool routing (MCP), agent orchestration runtime, market/CLV " +
-      "intelligence, subscription intelligence, browser control, voice, and workflow automation.",
+      missing.length === 0
+        ? `All ${CAPABILITY_REGISTRY.length} capabilities are at least human-operated today. ` +
+          "None are DESIGNED-only or NOT_WIRED."
+        : `${missing.length} of ${CAPABILITY_REGISTRY.length} capabilities are designed but not ` +
+          `functional: ${missing.map((c) => c.name).join(", ")}.`,
     supportingState: missing.map(describeCapability),
     confidence: "HIGH",
     caveat:
@@ -559,11 +578,13 @@ function answerWhatCanRun(summary: OwnerSummary): JarvisAnswer {
   return {
     intent: "what-can-run",
     question: JARVIS_QUESTIONS["what-can-run"],
+    // The human-triggered examples are READ FROM the registry so the prose can
+    // never name a capability the registry does not actually rate MANUAL.
     answer:
       canExecute.length === 0
         ? `Nothing runs autonomously — by design. ${canAnswer.length} capabilities can answer ` +
-          `questions from live data, and ${manual.length} run when a human triggers them ` +
-          "(settlement, calibration review, AI Ops spot-checks)."
+          `questions from live data, and ${manual.length} run when a human triggers them` +
+          `${manual.length > 0 ? ` (${manual.map((c) => c.name).join(", ")})` : ""}.`
         : `${canExecute.length} capabilities can execute autonomously; the rest answer or recommend only.`,
     supportingState: [
       `Can-execute (within draft gates): ${canExecute.length} capabilities`,
@@ -698,24 +719,29 @@ function answerAiOpsArchitecture(summary: OwnerSummary): JarvisAnswer {
 function answerMemoryStatus(_summary: OwnerSummary): JarvisAnswer {
   const memory = buildMemoryStatus();
 
+  // Every sentence here is READ FROM the MemoryStatus object rather than
+  // paraphrased alongside it. The paraphrase was a second, independent claim
+  // that could disagree with the status the cockpit renders on the same page
+  // (see buildLiveMemoryStatus() in ../jarvis/intelligence-state.ts, which the
+  // Memory Protocol zone uses). Deriving makes that disagreement impossible.
   return {
     intent: "what-is-memory-status",
     question: JARVIS_QUESTIONS["what-is-memory-status"],
-    answer:
-      "Jarvis has no persistent memory yet. Operational truth is rebuilt from the database " +
-      "on every load; architectural truth lives in version-controlled markdown. The memory " +
-      "protocol is designed and documented, but no store is wired.",
+    answer: `${memory.truth} Store: ${memory.store}.`,
     supportingState: [
       `Memory wired: ${memory.wired ? "YES" : "NO"}`,
+      `Store: ${memory.store}`,
       `Truth: ${memory.truth}`,
       `Write path: ${memory.writePath} — ${memory.writePathTruth}`,
       "Protocol docs (designed, version-controlled):",
       ...memory.protocolDocs.map((d) => `  • ${d}`),
     ],
     confidence: "HIGH",
-    caveat:
-      "Nothing is recalled across sessions. Any claim of remembered context before the " +
-      "store is wired would be fabrication.",
+    caveat: memory.wired
+      ? "Only owner-confirmed memories are recalled as fact. Candidates and conflicts are " +
+        "surfaced for review, never asserted."
+      : "Nothing is recalled across sessions. Any claim of remembered context before the " +
+        "store is wired would be fabrication.",
     nextAction: memory.nextAction,
   };
 }

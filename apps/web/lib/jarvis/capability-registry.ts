@@ -159,8 +159,9 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "failed API calls, and schema drift. Keep the prediction engine fed with fresh truth.",
     currentTruth:
       "Free-first adapters (ESPN, henrygd, Open-Meteo, nflverse) + free:doctor. " +
-      "Vercel crons (gamma, hydrate, settle free-path, ingest). Optional BullMQ/Oracle workers. " +
-      "TAL reports status into Jarvis. Stale auto-retrigger still limited.",
+      "Vercel crons (gamma, hydrate, settle free-path, ingest) are the production scheduler. " +
+      "The optional self-hosted worker stack (docker/oracle-vps) is not deployed, and no job-queue " +
+      "library is installed. TAL reports status into Jarvis. Stale auto-retrigger still limited.",
     inputs: [
       "Free adapter responses",
       "Cron run timestamps",
@@ -609,7 +610,8 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
       "content draft → settlement chain. Run on schedule with human checkpoints.",
     currentTruth:
       "No workflow automation layer exists. n8n and similar tools are not wired. " +
-      "BullMQ jobs run independently without a cross-job workflow coordinator.",
+      "No job-queue library is installed either — scheduled jobs run independently under " +
+      "Vercel cron with no cross-job workflow coordinator.",
     inputs: ["Workflow trigger (schedule/event)", "Step definitions", "Human checkpoint gates"],
     outputs: ["Automated job execution", "Workflow status dashboard", "Step completion audit"],
     allowedActions: [
@@ -625,7 +627,8 @@ export const CAPABILITY_REGISTRY: readonly JarvisCapability[] = [
     proofSource: null,
     riskLevel: "MEDIUM",
     nextAction:
-      "Wire BullMQ workflow coordinator: ingestion → scoring → quality check → picks routing.",
+      "Wire a workflow coordinator — no queue library is installed today, so this starts with " +
+      "choosing one: ingestion → scoring → quality check → picks routing.",
     requiresHumanApproval: true,
     canAnswer: false,
     canRecommend: false,
