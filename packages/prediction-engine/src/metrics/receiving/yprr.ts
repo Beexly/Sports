@@ -38,7 +38,7 @@ export function yprrScore(input: YprrInput): YprrMetric {
     drivers: sortedDrivers([
       metricDriver({
         contribution: rawYprr,
-        direction: rawYprr > 0 ? "UP" : rawYprr < 0 ? "DOWN" : "FLAT",
+        direction: rawYprr > 0 ? "UP" : rawYprr < 0 ? "DOWN" : "NEUTRAL",
         explanation: "Receiving yards divided by total routes run.",
         name: "yprr_raw",
       }),
