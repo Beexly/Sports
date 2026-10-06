@@ -105,6 +105,9 @@ jobs:
       - name: Run Vercel skip-gate tests
         run: node --test scripts/vercel-skip-build.test.mjs
 
+      - name: Verify L11 calibration evidence still adds up
+        run: node --test docs/calibration-proposals/evidence/verify-evidence.test.mjs
+
       # §10.9: the budget acceptance run is mandatory and its evidence is
       # RETAINED — a missing artifact fails the build.
       - name: Upload budget acceptance artifact (§10.9)
