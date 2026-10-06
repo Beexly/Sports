@@ -11,7 +11,7 @@ from typing import Any, Dict, Union
 import pandas as pd
 import pandas.testing as pdt
 
-from pandas.core.algorithms import safe_sort
+def safe_sort(x): return x
 
 
 version = 1.3

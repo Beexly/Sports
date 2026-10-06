@@ -51,7 +51,7 @@
 # ---------------------------------------------------------------------------
 # Direct dependencies
 # ---------------------------------------------------------------------------
-numpy==2.4.6
+numpy==1.26.4
 scipy==1.17.1            # cho_factor / cho_solve in the ETKF square-root update
 ripser==0.6.15           # Vietoris-Rips persistent homology (app/models/tda.py)
 scikit-learn==1.9.0      # imported by ripser at import time; not used directly
@@ -101,7 +101,9 @@ sympy==1.14.0
 threadpoolctl==3.6.0
 typing-inspection==0.4.3
 typing_extensions==4.16.0
-pandas==1.5.3
+pandas==2.2.3
 python-dateutil==2.9.0.post0
 pytz==2024.2
 six==1.16.0
+statsmodels==0.14.0
+patsy==0.5.6
